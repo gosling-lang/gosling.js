@@ -18,7 +18,7 @@ export function validateHG(spec: Object): boolean {
     console.warn(JSON.stringify(validate.errors, null, 2));
   }
 
-  const hg = spec as HiGlassSpec;
+  // const hg = spec as HiGlassSpec;
 
   // TODO: check types such as default values and locationLocks
 
