@@ -3,8 +3,9 @@ import MonacoEditor from 'react-monaco-editor';
 import * as Monaco from 'monaco-editor/esm/vs/editor/editor.api';
 import ReactResizeDetector from 'react-resize-detector';
 
-export function EditorPanel(props: {
-  code: string
+function EditorPanel(props: {
+  code: string,
+  onChange: (code: string) => void
 }) {
 
   const {code: templateCode} = props;
@@ -34,6 +35,7 @@ export function EditorPanel(props: {
       <MonacoEditor
         language="json"
         value={code}
+        theme={"vs"}
         options={{
           autoClosingBrackets: 'never',
           autoClosingQuotes: 'never',
@@ -50,3 +52,4 @@ export function EditorPanel(props: {
     </>
   );
 }
+export default EditorPanel;

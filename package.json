@@ -19,6 +19,7 @@
     "react-monaco-editor": "^0.36.0",
     "react-resize-detector": "^4.2.3",
     "react-scripts": "3.4.1",
+    "react-split-pane": "^0.1.91",
     "typescript": "~3.7.2"
   },
   "scripts": {
