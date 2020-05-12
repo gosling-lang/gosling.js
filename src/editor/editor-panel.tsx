@@ -8,7 +8,7 @@ function EditorPanel(props: {
   onChange: (code: string) => void
 }) {
 
-  const {code: templateCode} = props;
+  const { code: templateCode } = props;
   const editor = useRef<Monaco.editor.IStandaloneCodeEditor | null>(null);
   const [code, setCode] = useState(templateCode);
 
@@ -22,14 +22,14 @@ function EditorPanel(props: {
     setCode(code);
     console.log('onChange', code, e);
   }
-  
+
   return (
     <>
       <ReactResizeDetector
         handleWidth
         handleHeight
         onResize={(width: number, height: number) => {
-          editor?.current?.layout({width, height});
+          editor?.current?.layout({ width, height });
         }}
       ></ReactResizeDetector>
       <MonacoEditor
@@ -42,7 +42,7 @@ function EditorPanel(props: {
           cursorBlinking: 'smooth',
           folding: true,
           lineNumbersMinChars: 4,
-          minimap: {enabled: false},
+          minimap: { enabled: false },
           scrollBeyondLastLine: false,
           wordWrap: 'on',
         }}

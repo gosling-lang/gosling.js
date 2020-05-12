@@ -13,26 +13,26 @@ const DEBUG_DO_NOT_RENDER_HIGLASS = true;
 function Editor() {
 
   // DEBUG
-  if(false) validateHG(HGSingleView);
+  if (false) validateHG(HGSingleView);
   // 
-  
+
   return (
     <div className="editor">
-      <SplitPane split="vertical" defaultSize="30%" onChange={() => {}}>
+      <SplitPane split="vertical" defaultSize="30%" onChange={() => { }}>
         <EditorPanel
-          code={stringify({data: "", encoding: { mark: "bar" }})}
+          code={stringify({ data: "", encoding: { mark: "bar" } })}
           onChange={(hl) => {
-            
+
           }}
         />
-        <SplitPane split="vertical" defaultSize="50%" onChange={() => {}}>
+        <SplitPane split="vertical" defaultSize="50%" onChange={() => { }}>
           <EditorPanel
             code={stringify(HGSingleView)}
             onChange={(hg) => {
-            
+
             }}
           />
-          {!DEBUG_DO_NOT_RENDER_HIGLASS && 
+          {!DEBUG_DO_NOT_RENDER_HIGLASS &&
             <HiGlassComponent
               options={{
                 bounded: true,
