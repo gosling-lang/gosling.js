@@ -2,6 +2,7 @@ import React, { useRef, useState } from 'react';
 import MonacoEditor from 'react-monaco-editor';
 import * as Monaco from 'monaco-editor/esm/vs/editor/editor.api';
 import ReactResizeDetector from 'react-resize-detector';
+import MonacoTheme from './editor-theme.json';
 
 function EditorPanel(props: {
   code: string,
@@ -26,6 +27,24 @@ function EditorPanel(props: {
   }
 
   function setupDiagnostics() {
+    Monaco.editor.defineTheme("test", {
+      base: "vs",
+      inherit: true,
+      rules: [
+        {
+          "foreground": "000000",
+          "token": "string"
+        },
+      ],
+      colors: {
+        "editor.foreground": "#000000",
+        "editor.background": "#FFFFFF",
+        "editor.selectionBackground": "#B5D5FF",
+        "editor.lineHighlightBackground": "#00000012",
+        "editorCursor.foreground": "#000000",
+        "editorWhitespace.foreground": "#BFBFBF"
+      }
+    })
     Monaco.languages.json.jsonDefaults.setDiagnosticsOptions({
       allowComments: false,
       enableSchemaRequest: true,
@@ -34,6 +53,17 @@ function EditorPanel(props: {
         uri: "https://raw.githubusercontent.com/higlass/higlass/develop/app/schema.json",
         fileMatch: ['*']
       }]
+    });
+    Monaco.languages.json.jsonDefaults.setModeConfiguration({
+      documentFormattingEdits: false,
+      documentRangeFormattingEdits: false,
+      completionItems: true,
+      hovers: true,
+      documentSymbols: true,
+      tokens: true,
+      colors: true,
+      foldingRanges: true,
+      diagnostics: true,
     });
   }
 
@@ -59,18 +89,22 @@ function EditorPanel(props: {
         }}
       ></ReactResizeDetector>
       <MonacoEditor
+        // Refer to https://github.com/react-monaco-editor/react-monaco-editor
         language="json"
         value={code}
-        theme={"vs"}
+        theme={"test"}
         options={{
-          autoClosingBrackets: 'never',
-          autoClosingQuotes: 'never',
-          cursorBlinking: 'smooth',
+          autoClosingBrackets: "never",
+          autoClosingQuotes: "never",
+          cursorBlinking: "smooth",
           folding: true,
           lineNumbersMinChars: 4,
           minimap: { enabled: false },
           scrollBeyondLastLine: false,
-          wordWrap: 'on',
+          wordWrap: "on",
+          lineNumbers: "off",
+          renderLineHighlight: "line",
+          renderIndentGuides: true
         }}
         onChange={onChangeHandle}
         editorDidMount={editorDidMount}
