@@ -8,6 +8,13 @@ function EditorPanel(props: {
   onChange: (code: string) => void
 }) {
 
+  Monaco.languages.json.jsonDefaults.setDiagnosticsOptions({
+    allowComments: false,
+    enableSchemaRequest: true,
+    validate: true,
+    schemas: [{ uri: "https://raw.githubusercontent.com/higlass/higlass/develop/app/schema.json" }]
+  });
+
   const { code: templateCode } = props;
   const editor = useRef<Monaco.editor.IStandaloneCodeEditor | null>(null);
   const [code, setCode] = useState(templateCode);
@@ -18,9 +25,28 @@ function EditorPanel(props: {
     monacoEditor.focus();
   }
 
-  function onChange(code: string, e: any) {
+  function setupDiagnostics() {
+    Monaco.languages.json.jsonDefaults.setDiagnosticsOptions({
+      allowComments: false,
+      enableSchemaRequest: true,
+      validate: true,
+      schemas: [{
+        uri: "https://raw.githubusercontent.com/higlass/higlass/develop/app/schema.json",
+        fileMatch: ['*']
+      }]
+    });
+  }
+
+  function onChangeHandle(code: string, e: any) {
     setCode(code);
+    props.onChange(code);
     console.log('onChange', code, e);
+
+    setupDiagnostics();
+  }
+
+  function editorWillMount(monaco: typeof Monaco) {
+    setupDiagnostics();
   }
 
   return (
@@ -46,8 +72,9 @@ function EditorPanel(props: {
           scrollBeyondLastLine: false,
           wordWrap: 'on',
         }}
-        onChange={onChange}
+        onChange={onChangeHandle}
         editorDidMount={editorDidMount}
+        editorWillMount={editorWillMount}
       />
     </>
   );

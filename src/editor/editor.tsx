@@ -2,7 +2,7 @@ import React from 'react';
 import EditorPanel from './editor-panel';
 import stringify from 'json-stringify-pretty-compact';
 import SplitPane from 'react-split-pane';
-import HGSingleView from "../lib/test/higlass/single-view.json";
+import hgOnlyHeatmap from "../lib/test/higlass/only-heatmap.json";
 import { validateHG } from '../lib/higlass-lite';
 // @ts-ignore
 import { HiGlassComponent } from 'higlass';
@@ -13,7 +13,7 @@ const DEBUG_DO_NOT_RENDER_HIGLASS = true;
 function Editor() {
 
   // DEBUG
-  if (false) validateHG(HGSingleView);
+  if (false) validateHG(hgOnlyHeatmap);
   // 
 
   return (
@@ -27,9 +27,9 @@ function Editor() {
         />
         <SplitPane split="vertical" defaultSize="50%" onChange={() => { }}>
           <EditorPanel
-            code={stringify(HGSingleView)}
+            code={stringify(hgOnlyHeatmap)}
             onChange={(hg) => {
-
+              validateHG(hg);
             }}
           />
           {!DEBUG_DO_NOT_RENDER_HIGLASS &&
@@ -41,7 +41,7 @@ function Editor() {
                 containerPaddingY: 0,
                 sizeMode: 'default'
               }}
-              viewConfig={HGSingleView}
+              viewConfig={hgOnlyHeatmap}
             />}
         </SplitPane>
       </SplitPane>

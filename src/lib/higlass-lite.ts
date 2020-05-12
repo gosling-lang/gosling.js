@@ -1,5 +1,4 @@
 import Ajv from 'ajv';
-
 import { HiGlassLiteSpec } from "./higlass-lite.schema";
 import { HiGlassSpec } from "./higlass.schema";
 import HiGlassSchema from "./higlass.schema.json";
