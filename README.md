@@ -1,4 +1,4 @@
-# HiGlass-Lite
+# HiGlass-Lite (In Development)
 *A simple and expressive visualization grammar for rendering HiGlass visualizations.*
 
 ## Developement
