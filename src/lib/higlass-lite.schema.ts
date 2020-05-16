@@ -10,12 +10,30 @@
  * 3. Easy to apply and reproduce themes.
  * 4. Shorten key names to be able to easily remember.
  *      e.g., genomePositionSearchBox => searchBox
+ * 5. Low level of hierarchy.
+ *      e.g., views[{tracks:{top:[ ... ], ...}, ...} => 
+ * 6. Targeted for quick authoring visualizations
+ *      e.g., exportViewUrl less preferred
  * (Add more here)
  */
 
 /**
- * What is not supported by HiGlass-Lite.
+ * Something to Think of.
+ * - relative positioning vs. absolute positioning
+ *      e.g., A || B || C vs. Left: [A, B, C]
+ */
+
+/**
+ * What are not supported in HiGlass-Lite.
  * Separate genomePositionSearchBox for each view. (removed genomePositionSearchBoxVisible)
+ */
+
+/**
+ * What are new things supported in HiGlass-Lite.
+ * - TODO: consistency
+ *      - Determines visual consistency across views and/or trakcs
+ *      - e.g., consistency: { color: : "shared" } use same color for same type
+ *      - e.g., consistency: { x: "independent" } not currently supported for track
  */
 
 /**
@@ -26,8 +44,37 @@
 
 export interface HiGlassLiteSpec {
     servers: string | string[]; // EQ_TO trackSourceServers
+    chromInfoPath: string, // TODO: Can we aggregate this to one?
+    views: View[];
+
+
     config?: HLConfig;
+
     // TODO: Support locks (i.e., zoomLocks, locationLocks, valueScaleLocks)
+}
+
+interface View {
+    consistency: Consistency;
+    // TODO: Add more..
+}
+
+interface Consistency {
+    // true and false correspond to "shared" and "independent", respectively.
+    color: "shared" | "independent" | "distinct" | true | false;
+    x: "shared" | "independent" | true | false;
+    y: "shared" | "independent" | true | false;
+}
+
+interface HLConfig {
+    // TODO: How about aggregating these three options?
+    editable?: boolean; // true
+    viewEditable?: boolean; // true
+    tracksEditable?: boolean; // true
+    zoomFixed?: boolean; // false
+    // 
+    searchBox?: boolean | genomePositionSearchBox; // EQ_TO genomePositionSearchBox
+
+    exportViewUrl?: string // /api/v1/viewconfs
 }
 
 interface genomePositionSearchBox {
@@ -37,17 +84,6 @@ interface genomePositionSearchBox {
     chromInfoServer: string, // "//higlass.io/api/v1"
     chromInfoId: string, // "hg19"
     //
-}
-
-interface HLConfig {
-    // TODO: How about aggregating these three options?
-    editable?: boolean; // true
-    viewEditable?: boolean; // true
-    tracksEditable?: boolean; // true
-    // 
-    searchBox?: boolean | genomePositionSearchBox; // EQ_TO genomePositionSearchBox
-
-    exportViewUrl?: string // /api/v1/viewconfs
 }
 
 // TODO: Huge tasks here: Need to include options for each track.
