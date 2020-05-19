@@ -8,13 +8,17 @@
  *      e.g., searchBox?: boolean | genomePositionSearchBox;
  * 2. Optional configs placed separately.
  * 3. Easy to apply and reproduce themes.
- * 4. Shorten key names to be able to easily remember.
+ * 4. Shorten key names to be able to more easily remember.
  *      e.g., genomePositionSearchBox => searchBox
  * 5. Low level of hierarchy.
  *      e.g., views[{tracks:{top:[ ... ], ...}, ...} => 
  * 6. Targeted for quick authoring visualizations
  *      e.g., exportViewUrl less preferred
  * 7. Users do not need to think about uids (e.g., zoomLocks)
+ * 8. Use and auto-generates readable UIDs
+ *      e.g., "view-1-track-2-center-heatmap" vs. OHJakQICQD6gTD7skx4EWA
+ *          (HiGlass is making this ? OHJakQICQD6gTD7skx4EWA?)
+ *      This helps further working on the compiled higlass view configs.
  * (*). Should notice that I do not fully understand use cases, so the coverage can be changed.
  * (Add more here)
  */
@@ -55,10 +59,10 @@ export interface HiGlassLiteSpec {
     config?: HLTopLevelConfig;
 }
 
-interface View {
+export interface View {
     uniqueName?: string;  // EQ_TO uid
     // TODO: change these two similar to that in altair?
-    xDomain?: number[]; // EQ_TO initialXDomain
+    xDomain?: number[]; // EQ_TO initialXDomain // TODO: Can we use more readable format? (e.g., chr1.12322)
     yDomain?: number[]; // EQ_TO initialYDomain
     ///
     // TODO: should we just provide absolute position using the `Track.width and Track.height`?
@@ -75,21 +79,21 @@ interface View {
     config?: HLTopLevelConfig;
 }
 
+/**
+ * Currently covering "heatmap" and "*-gene-annotations" in `EnumTrack`
+ */
+export type TrackType = "heatmap" | "gene-annotation";
 interface Track {
     uniqueName?: string;
-    description?: string; // identical to `description` in Vega
-    type: "heatmap"; // similar to `mark` in Vega
-    // TODO: Can we change this to more readable name?
-    // Or can we just combin tilesetUid with server? data: ".../v1/api/{tilesetuid}"
-    // tilesetUid?: string;    // (Default: ?) 
-    // server?: string;
-    data: string;   // URL of data, i.e., `${server}${tilesetUid}`.
-    ///
+    description?: string;
+    type: TrackType;
+    data: string;   // URL of data (format: `${server}${tilesetUid}`).
     // TOOD: should we support for non-genomic axis?
     xAxis: true | false | "top" | "bottom"; // Default: top
     yAxis: true | false | "left" | "right"; // Default: right
     ///
-    position: "center" | "left" | "top" | "right" | "bottom";
+    position: TrackPosition;
+    chromInfoPath?: string;
     width?: number;     // (Default: ?)
     height?: number;    // (Default: ?)
 
@@ -97,7 +101,12 @@ interface Track {
     // position?: string; // EQ_TO Track.position. What is this for?
     // options?: Object;
     // data?: Data; // ?
+    // fromViewUid?: null | string;
+    // x?: number;
+    // y?: number;
 }
+
+export type TrackPosition = "center" | "left" | "top" | "right" | "bottom" | "gallery" | "whole";
 
 interface Data {
     type?: string;  // TODO: What kinds of types exist?

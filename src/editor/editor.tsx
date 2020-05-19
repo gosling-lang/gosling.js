@@ -1,14 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import EditorPanel from './editor-panel';
 import stringify from 'json-stringify-pretty-compact';
 import SplitPane from 'react-split-pane';
-import hgOnlyHeatmap from "../lib/test/higlass/only-heatmap.json";
 import hlOnlyHeatmap from "../lib/test/higlass-lite/hl-single-view.json";
-import { validateHG, compile } from '../lib/higlass-lite';
+import { compile } from '../lib/higlass-lite';
 // @ts-ignore
 import { HiGlassComponent } from 'higlass';
 import './editor.css';
 import { HiGlassLiteSpec } from '../lib/higlass-lite.schema';
+import { debounce } from "lodash";
 
 const DEBUG_DO_NOT_RENDER_HIGLASS = false;
 
@@ -22,11 +22,10 @@ function Editor() {
             <SplitPane split="vertical" defaultSize="30%" onChange={() => { }}>
                 <EditorPanel
                     code={hl}
-                    onChange={(hl) => {
-                        // setHl(hl);
-                        // TODO: Debounce.
-                        // setHg(stringify(compile(JSON.parse(hl) as HiGlassLiteSpec)))
-                    }}
+                    onChange={debounce(hl => {
+                        setHl(hl);
+                        // setHg(stringify(compile(JSON.parse(hl) as HiGlassLiteSpec)));
+                    }, 2000)}
                 />
                 <SplitPane split="vertical" defaultSize="50%" onChange={() => { }}>
                     <EditorPanel

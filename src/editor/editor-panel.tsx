@@ -2,7 +2,8 @@ import React, { useRef, useState } from 'react';
 import MonacoEditor from 'react-monaco-editor';
 import * as Monaco from 'monaco-editor/esm/vs/editor/editor.api';
 import ReactResizeDetector from 'react-resize-detector';
-import MonacoTheme from './editor-theme.json';
+
+const DEBUG_WITHOUT_DIAGNOSIS = true;
 
 function EditorPanel(props: {
     code: string,
@@ -20,6 +21,7 @@ function EditorPanel(props: {
     }
 
     function setupDiagnostics() {
+        if (DEBUG_WITHOUT_DIAGNOSIS) return;
         Monaco.languages.json.jsonDefaults.setDiagnosticsOptions({
             allowComments: false,
             enableSchemaRequest: true,

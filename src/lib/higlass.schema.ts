@@ -146,6 +146,7 @@ export interface ValueScaleLocks {
     locksDict?: Object; // We are checking the type of `locksDict` with typescript functions.
 }
 
+// export type TrackType = "heatmap" | "combined" | "viewport-projection-horizontal" | "viewport-projection-vertical" | "viewport-projection-center" | EnumTrackType;
 export type EnumTrackType = "2d-annotations" |
     "2d-chromosome-annotations" |
     "2d-chromosome-grid" |
