@@ -14,6 +14,8 @@
  *      e.g., views[{tracks:{top:[ ... ], ...}, ...} => 
  * 6. Targeted for quick authoring visualizations
  *      e.g., exportViewUrl less preferred
+ * 7. Users do not need to think about uids (e.g., zoomLocks)
+ * (*). Should notice that I do not fully understand use cases, so the coverage can be changed.
  * (Add more here)
  */
 
@@ -30,10 +32,11 @@
 
 /**
  * What are new things supported in HiGlass-Lite.
- * - TODO: consistency
+ * - Consistency
  *      - Determines visual consistency across views and/or trakcs
  *      - e.g., consistency: { color: : "shared" } use same color for same type
  *      - e.g., consistency: { x: "independent" } not currently supported for track
+ *      - TODO: include zoomlocks here? e.g., { zoomScale: "shared", zoomCenter: "independent" }
  */
 
 /**
@@ -43,38 +46,94 @@
  */
 
 export interface HiGlassLiteSpec {
-    servers: string | string[]; // EQ_TO trackSourceServers
-    chromInfoPath: string, // TODO: Can we aggregate this to one?
+    servers?: string | string[]; // EQ_TO trackSourceServers
+
     views: View[];
 
+    consistency?: Consistency[];
 
-    config?: HLConfig;
-
-    // TODO: Support locks (i.e., zoomLocks, locationLocks, valueScaleLocks)
+    config?: HLTopLevelConfig;
 }
 
 interface View {
-    consistency: Consistency;
-    // TODO: Add more..
+    uniqueName?: string;  // EQ_TO uid
+    // TODO: change these two similar to that in altair?
+    xDomain?: number[]; // EQ_TO initialXDomain
+    yDomain?: number[]; // EQ_TO initialYDomain
+    ///
+    // TODO: should we just provide absolute position using the `Track.width and Track.height`?
+    w?: number; // EQ_TO `layout.width`, range (0 - 12) (Default: 12)
+    h?: number; // EQ_TO `layout.height`, range (0 - 12) (Default: 12)
+    x?: number;  // EQ_TO `layout.x`, range (0 - 12) (Default: 0)
+    y?: number;  // EQ_TO `layout.y`, range (0 - 12) (Default: 0)
+    ///
+    tracks: Track[];
+
+    // TODO: overlays?: Overlay[];
+    // TODO: selectionView?
+
+    config?: HLTopLevelConfig;
+}
+
+interface Track {
+    uniqueName?: string;
+    description?: string; // identical to `description` in Vega
+    type: "heatmap"; // similar to `mark` in Vega
+    // TODO: Can we change this to more readable name?
+    // Or can we just combin tilesetUid with server? data: ".../v1/api/{tilesetuid}"
+    // tilesetUid?: string;    // (Default: ?) 
+    // server?: string;
+    data: string;   // URL of data, i.e., `${server}${tilesetUid}`.
+    ///
+    // TOOD: should we support for non-genomic axis?
+    xAxis: true | false | "top" | "bottom"; // Default: top
+    yAxis: true | false | "left" | "right"; // Default: right
+    ///
+    position: "center" | "left" | "top" | "right" | "bottom";
+    width?: number;     // (Default: ?)
+    height?: number;    // (Default: ?)
+
+    // TODO: Investigate these more:
+    // position?: string; // EQ_TO Track.position. What is this for?
+    // options?: Object;
+    // data?: Data; // ?
+}
+
+interface Data {
+    type?: string;  // TODO: What kinds of types exist?
+    children?: any[];
+    tiles?: Object;
+    tilesetInfo?: Object;
 }
 
 interface Consistency {
-    // true and false correspond to "shared" and "independent", respectively.
-    color: "shared" | "independent" | "distinct" | true | false;
-    x: "shared" | "independent" | true | false;
-    y: "shared" | "independent" | true | false;
+    /**
+     * `true` and `false` correspond to "shared" and "independent", respectively.
+     */
+    // List of `uniqueName` of `view` or `track` or indexes appear in the specification.
+    targets: string[] | number[];
+    // Default: The first element of `targets`.
+    reference?: string;
+    color?: "shared" | "independent" | "distinct" | true | false;
+    x?: "shared" | "independent" | true | false;
+    y?: "shared" | "independent" | true | false;
+    zoomScale?: "shared" | "independent" | true | false;
+    zoomCenter?: "shared" | "independent" | true | false;
 }
 
-interface HLConfig {
+interface HLTopLevelConfig {
+    /**
+     * This can be applied to the top level, i.e., in HiGlassLiteSpec.
+     */
+    chromInfoPath: string; // TODO: Can we aggregate multiple of these to one?
+    exportViewUrl?: string // /api/v1/viewconfs
     // TODO: How about aggregating these three options?
     editable?: boolean; // true
     viewEditable?: boolean; // true
     tracksEditable?: boolean; // true
     zoomFixed?: boolean; // false
-    // 
+    //
     searchBox?: boolean | genomePositionSearchBox; // EQ_TO genomePositionSearchBox
-
-    exportViewUrl?: string // /api/v1/viewconfs
 }
 
 interface genomePositionSearchBox {

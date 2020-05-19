@@ -5,112 +5,87 @@ import ReactResizeDetector from 'react-resize-detector';
 import MonacoTheme from './editor-theme.json';
 
 function EditorPanel(props: {
-  code: string,
-  onChange: (code: string) => void
+    code: string,
+    onChange: (code: string) => void
 }) {
 
-  Monaco.languages.json.jsonDefaults.setDiagnosticsOptions({
-    allowComments: false,
-    enableSchemaRequest: true,
-    validate: true,
-    schemas: [{ uri: "https://raw.githubusercontent.com/higlass/higlass/develop/app/schema.json" }]
-  });
+    const { code: templateCode } = props;
+    const editor = useRef<Monaco.editor.IStandaloneCodeEditor | null>(null);
+    const [code, setCode] = useState(templateCode);
 
-  const { code: templateCode } = props;
-  const editor = useRef<Monaco.editor.IStandaloneCodeEditor | null>(null);
-  const [code, setCode] = useState(templateCode);
+    function editorDidMount(monacoEditor: Monaco.editor.IStandaloneCodeEditor, monaco: typeof Monaco) {
+        console.log('editorDidMount', monacoEditor);
+        editor.current = monacoEditor;
+        monacoEditor.focus();
+    }
 
-  function editorDidMount(monacoEditor: Monaco.editor.IStandaloneCodeEditor, monaco: typeof Monaco) {
-    console.log('editorDidMount', monacoEditor);
-    editor.current = monacoEditor;
-    monacoEditor.focus();
-  }
+    function setupDiagnostics() {
+        Monaco.languages.json.jsonDefaults.setDiagnosticsOptions({
+            allowComments: false,
+            enableSchemaRequest: true,
+            validate: true,
+            schemas: [{
+                uri: "https://raw.githubusercontent.com/higlass/higlass/develop/app/schema.json",
+                fileMatch: ['*']
+            }]
+        });
+        Monaco.languages.json.jsonDefaults.setModeConfiguration({
+            documentFormattingEdits: false,
+            documentRangeFormattingEdits: false,
+            completionItems: true,
+            hovers: true,
+            documentSymbols: true,
+            tokens: true,
+            colors: true,
+            foldingRanges: true,
+            diagnostics: true,
+        });
+    }
 
-  function setupDiagnostics() {
-    Monaco.editor.defineTheme("test", {
-      base: "vs",
-      inherit: true,
-      rules: [
-        {
-          "foreground": "000000",
-          "token": "string"
-        },
-      ],
-      colors: {
-        "editor.foreground": "#000000",
-        "editor.background": "#FFFFFF",
-        "editor.selectionBackground": "#B5D5FF",
-        "editor.lineHighlightBackground": "#00000012",
-        "editorCursor.foreground": "#000000",
-        "editorWhitespace.foreground": "#BFBFBF"
-      }
-    })
-    Monaco.languages.json.jsonDefaults.setDiagnosticsOptions({
-      allowComments: false,
-      enableSchemaRequest: true,
-      validate: true,
-      schemas: [{
-        uri: "https://raw.githubusercontent.com/higlass/higlass/develop/app/schema.json",
-        fileMatch: ['*']
-      }]
-    });
-    Monaco.languages.json.jsonDefaults.setModeConfiguration({
-      documentFormattingEdits: false,
-      documentRangeFormattingEdits: false,
-      completionItems: true,
-      hovers: true,
-      documentSymbols: true,
-      tokens: true,
-      colors: true,
-      foldingRanges: true,
-      diagnostics: true,
-    });
-  }
+    function onChangeHandle(code: string, e: any) {
+        setCode(code);
+        props.onChange(code);
+        // console.log('onChange', code, e);
 
-  function onChangeHandle(code: string, e: any) {
-    setCode(code);
-    props.onChange(code);
-    console.log('onChange', code, e);
+        setupDiagnostics();
+    }
 
-    setupDiagnostics();
-  }
+    function editorWillMount(monaco: typeof Monaco) {
+        setupDiagnostics();
+    }
 
-  function editorWillMount(monaco: typeof Monaco) {
-    setupDiagnostics();
-  }
-
-  return (
-    <>
-      <ReactResizeDetector
-        handleWidth
-        handleHeight
-        onResize={(width: number, height: number) => {
-          editor?.current?.layout({ width, height });
-        }}
-      ></ReactResizeDetector>
-      <MonacoEditor
-        // Refer to https://github.com/react-monaco-editor/react-monaco-editor
-        language="json"
-        value={code}
-        theme={"test"}
-        options={{
-          autoClosingBrackets: "never",
-          autoClosingQuotes: "never",
-          cursorBlinking: "smooth",
-          folding: true,
-          lineNumbersMinChars: 4,
-          minimap: { enabled: false },
-          scrollBeyondLastLine: false,
-          wordWrap: "on",
-          lineNumbers: "off",
-          renderLineHighlight: "line",
-          renderIndentGuides: true
-        }}
-        onChange={onChangeHandle}
-        editorDidMount={editorDidMount}
-        editorWillMount={editorWillMount}
-      />
-    </>
-  );
+    return (
+        <>
+            <ReactResizeDetector
+                handleWidth
+                handleHeight
+                onResize={(width: number, height: number) => {
+                    editor?.current?.layout({ width, height });
+                }}
+            ></ReactResizeDetector>
+            <MonacoEditor
+                // Refer to https://github.com/react-monaco-editor/react-monaco-editor
+                language="json"
+                value={code}
+                theme={"test"}
+                options={{
+                    autoClosingBrackets: "never",
+                    autoClosingQuotes: "never",
+                    cursorBlinking: "smooth",
+                    folding: true,
+                    lineNumbersMinChars: 4,
+                    minimap: { enabled: false },
+                    scrollBeyondLastLine: false,
+                    wordWrap: "on",
+                    lineNumbers: "off",
+                    renderLineHighlight: "line",
+                    renderIndentGuides: true
+                }}
+                onChange={onChangeHandle}
+                editorDidMount={editorDidMount}
+                editorWillMount={editorWillMount}
+            />
+        </>
+    );
 }
 export default EditorPanel;

@@ -7,7 +7,7 @@
 export interface HiGlassSpec {
     editable?: boolean;
     zoomFixed?: boolean;
-    viewEditable?: boolean;
+    viewEditable?: boolean; // TODO: why not view`s`Editable?
     tracksEditable?: boolean;
     trackSourceServers?: string[];
     exportViewUrl?: string;
