@@ -142,13 +142,13 @@ interface HLTopLevelConfig {
     tracksEditable?: boolean; // true
     zoomFixed?: boolean; // false
     //
-    searchBox?: boolean | genomePositionSearchBox; // EQ_TO genomePositionSearchBox
+    searchBox?: boolean | GenomePositionSearchBox; // EQ_TO genomePositionSearchBox
 }
 
-interface genomePositionSearchBox {
+interface GenomePositionSearchBox {
     // TODO: Can we remove these or aggregate with others?
-    autocompleteServer: string, // "//higlass.io/api/v1"
-    autocompleteId: string, // "OHJakQICQD6gTD7skx4EWA"
+    autocompleteServer?: string, // "//higlass.io/api/v1"
+    autocompleteId?: string, // "OHJakQICQD6gTD7skx4EWA"
     chromInfoServer: string, // "//higlass.io/api/v1"
     chromInfoId: string, // "hg19"
     //

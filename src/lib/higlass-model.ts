@@ -1,4 +1,4 @@
-import { HiGlassSpec, Track as HGTrack } from "./higlass.schema";
+import { HiGlassSpec, View as HGView, Track as HGTrack } from "./higlass.schema";
 import { View as HLView, TrackPosition } from "./higlass-lite.schema";
 
 export class HiGlassModel {
@@ -35,28 +35,8 @@ export class HiGlassModel {
         return this;
     }
 
-    public addNewView(view: HLView) {
-        const viewNum = this.hg.views?.length ? this.hg.views?.length + 1 : 1;
-        const uid = view.uniqueName ? view.uniqueName : `view-${viewNum}`;
-        this.hg.views?.push({
-            uid,
-            layout: {
-                w: view.w as number,
-                h: view.h as number,
-                x: view.x as number,
-                y: view.y as number
-            },
-            tracks: {
-                top: [],
-                left: [],
-                center: [],
-                right: [],
-                bottom: [],
-                gallery: [],
-                whole: []
-            },
-            initialXDomain: [5.960464477539063e-8, 3100000000.0000005] // TODO: default value.
-        });
+    public addNewView(view: HGView) {
+        this.hg.views?.push(view);
         return this;
     }
 

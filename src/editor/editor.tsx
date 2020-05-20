@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import EditorPanel from './editor-panel';
 import stringify from 'json-stringify-pretty-compact';
 import SplitPane from 'react-split-pane';

@@ -29,6 +29,7 @@
     ],
     "config": {
         "editable": true,
+        "searchBox": true,
         "chromInfoPath": "//s3.amazonaws.com/pkerp/data/hg19/chromSizes.tsv"
     }
 }

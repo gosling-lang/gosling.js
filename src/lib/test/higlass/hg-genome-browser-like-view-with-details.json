@@ -1,1737 +1,1737 @@
 {
-  "zoomFixed": false,
-  "views": [
-    {
-      "layout": {
-        "w": 12,
-        "h": 9,
-        "x": 0,
-        "y": 0
-      },
-      "uid": "aa",
-      "initialYDomain": [
-        518460265.4922931,
-        518620898.89910686
-      ],
-      "autocompleteSource": "/api/v1/suggest/?d=OHJakQICQD6gTD7skx4EWA&",
-      "initialXDomain": [
-        511154760.76976734,
-        520462574.2868062
-      ],
-      "tracks": {
-        "bottom": [],
-        "top": [
-          {
-            "type": "combined",
-            "uid": "EA8s7OqNRICQvG1CyAoSXg",
-            "height": 30,
-            "width": 885,
-            "contents": [
-              {
-                "orientation": "1d-horizontal",
-                "tilesetUid": "XO1J2nrTSoilKiS4Ycwngw",
-                "local": true,
-                "minHeight": 30,
-                "thumbnail": null,
-                "server": "",
-                "width": 885,
-                "chromInfoPath": "//s3.amazonaws.com/pkerp/data/mm9/chromSizes.tsv",
-                "height": 30,
-                "type": "horizontal-chromosome-labels",
-                "options": {
-                  "color": "#808080",
-                  "stroke": "#ffffff",
-                  "fontSize": 12,
-                  "fontIsLeftAligned": false,
-                  "showMousePosition": false,
-                  "mousePositionColor": "#000000"
-                },
-                "uid": "Q4PCI5cqS9-R9I3NJoipeg"
-              },
-              {
-                "uid": "DUypD389Q8ysTcrRDe70tw",
-                "type": "viewport-projection-horizontal",
-                "fromViewUid": "dTJTguD7Rhu62n71o1zPdw",
-                "options": {
-                  "projectionFillColor": "#777",
-                  "projectionStrokeColor": "#777",
-                  "projectionFillOpacity": 0.3,
-                  "projectionStrokeOpacity": 0.3,
-                  "strokeWidth": 1
-                },
-                "width": 885,
-                "height": 30
-              },
-              {
-                "uid": "XiHO6LohQbWjEypXqwXfAg",
-                "type": "viewport-projection-horizontal",
-                "fromViewUid": "P0YiGZX6RPO9QevWo9aGkA",
-                "options": {
-                  "projectionFillColor": "#777",
-                  "projectionStrokeColor": "#777",
-                  "projectionFillOpacity": 0.3,
-                  "projectionStrokeOpacity": 0.3,
-                  "strokeWidth": 1
-                }
-              }
-            ],
-            "options": {}
-          },
-          {
-            "type": "combined",
-            "uid": "KmxzBgPJSBGTlj5VDgtK5Q",
-            "height": 20,
-            "width": 885,
-            "contents": [
-              {
-                "uid": "Ubpwl6T9R1WQES7SEFCXEw",
-                "tilesetUid": "G85vBVaMQFGLdk5LF-tzPQ",
-                "height": 20,
-                "width": 885,
-                "server": "//higlass.io/api/v1",
-                "type": "horizontal-line",
-                "options": {
-                  "name": "Busslinger et al. 2017 Stag1 ChIP (WT, 10d resting, GSE76303_14549+14954)",
-                  "valueScaling": "linear",
-                  "coordSystem": "mm9",
-                  "lineStrokeColor": "black",
-                  "labelPosition": "topLeft",
-                  "labelColor": "black",
-                  "axisPositionHorizontal": "right",
-                  "labelTextOpacity": 0.3,
-                  "lineStrokeWidth": 2,
-                  "labelLeftMargin": 0,
-                  "labelRightMargin": 0,
-                  "labelTopMargin": 0,
-                  "labelBottomMargin": 0,
-                  "labelBackgroundColor": "white",
-                  "labelShowResolution": false,
-                  "labelShowAssembly": true,
-                  "axisLabelFormatting": "scientific",
-                  "trackBorderWidth": 0,
-                  "trackBorderColor": "black",
-                  "showMousePosition": false,
-                  "minHeight": 20,
-                  "mousePositionColor": "#000000",
-                  "showTooltip": false
-                }
-              },
-              {
-                "uid": "C67Rwyt2SfGNgTiJ0mf8Ng",
-                "type": "viewport-projection-horizontal",
-                "fromViewUid": "dTJTguD7Rhu62n71o1zPdw",
-                "options": {
-                  "projectionFillColor": "#777",
-                  "projectionStrokeColor": "#777",
-                  "projectionFillOpacity": 0.3,
-                  "projectionStrokeOpacity": 0.3,
-                  "strokeWidth": 1
-                },
-                "width": 885,
-                "height": 20
-              },
-              {
-                "uid": "GoMWEb7CSmmUPipMnuQWIA",
-                "type": "viewport-projection-horizontal",
-                "fromViewUid": "P0YiGZX6RPO9QevWo9aGkA",
-                "options": {
-                  "projectionFillColor": "#777",
-                  "projectionStrokeColor": "#777",
-                  "projectionFillOpacity": 0.3,
-                  "projectionStrokeOpacity": 0.3,
-                  "strokeWidth": 1
-                },
-                "width": 885,
-                "height": 20
-              }
-            ],
-            "options": {}
-          },
-          {
-            "type": "combined",
-            "uid": "NB6pCyLFQuSOqGvBVrn-Gw",
-            "height": 20,
-            "width": 885,
-            "contents": [
-              {
-                "uid": "WOqP5ilQRfqsbC137stWnA",
-                "tilesetUid": "JVOQXLh2STCRpTgpxdgXUQ",
-                "height": 20,
-                "width": 885,
-                "server": "//higlass.io/api/v1",
-                "type": "horizontal-line",
-                "options": {
-                  "name": "Busslinger et al. 2017 Scc1 ChIP (WT, 10d resting, GSE76303_20093+20105)",
-                  "valueScaling": "linear",
-                  "coordSystem": "mm9",
-                  "lineStrokeColor": "black",
-                  "labelPosition": "topLeft",
-                  "labelColor": "black",
-                  "axisPositionHorizontal": "right",
-                  "labelTextOpacity": 0.3,
-                  "lineStrokeWidth": 2,
-                  "labelLeftMargin": 0,
-                  "labelRightMargin": 0,
-                  "labelTopMargin": 0,
-                  "labelBottomMargin": 0,
-                  "labelBackgroundColor": "white",
-                  "labelShowResolution": false,
-                  "labelShowAssembly": true,
-                  "axisLabelFormatting": "scientific",
-                  "trackBorderWidth": 0,
-                  "trackBorderColor": "black",
-                  "showMousePosition": false,
-                  "minHeight": 20,
-                  "mousePositionColor": "#000000",
-                  "showTooltip": false
-                }
-              },
-              {
-                "uid": "EActBuubShK_3LDcESdCsw",
-                "type": "viewport-projection-horizontal",
-                "fromViewUid": "dTJTguD7Rhu62n71o1zPdw",
-                "options": {
-                  "projectionFillColor": "#777",
-                  "projectionStrokeColor": "#777",
-                  "projectionFillOpacity": 0.3,
-                  "projectionStrokeOpacity": 0.3,
-                  "strokeWidth": 1
-                },
-                "width": 885,
-                "height": 20
-              },
-              {
-                "uid": "dDLhDV4gTJqDx_FCC0sTfg",
-                "type": "viewport-projection-horizontal",
-                "fromViewUid": "P0YiGZX6RPO9QevWo9aGkA",
-                "options": {
-                  "projectionFillColor": "#777",
-                  "projectionStrokeColor": "#777",
-                  "projectionFillOpacity": 0.3,
-                  "projectionStrokeOpacity": 0.3,
-                  "strokeWidth": 1
-                },
-                "width": 885,
-                "height": 20
-              }
-            ],
-            "options": {}
-          },
-          {
-            "type": "combined",
-            "uid": "a4hsUlkuRvy0inT-ru3i6g",
-            "height": 20,
-            "width": 885,
-            "contents": [
-              {
-                "uid": "J3FWwBMXS7GPsuHIUZpR2g",
-                "tilesetUid": "VxpNze_cR6ywG4zSeGwOtA",
-                "height": 20,
-                "width": 885,
-                "server": "//higlass.io/api/v1",
-                "type": "horizontal-line",
-                "options": {
-                  "name": "Busslinger et al. 2017 Nipbl ChIP (WT, resting, GSE76303_22603)",
-                  "valueScaling": "linear",
-                  "coordSystem": "mm9",
-                  "lineStrokeColor": "black",
-                  "labelPosition": "topLeft",
-                  "labelColor": "black",
-                  "axisPositionHorizontal": "right",
-                  "labelTextOpacity": 0.3,
-                  "lineStrokeWidth": 2,
-                  "labelLeftMargin": 0,
-                  "labelRightMargin": 0,
-                  "labelTopMargin": 0,
-                  "labelBottomMargin": 0,
-                  "labelBackgroundColor": "white",
-                  "labelShowResolution": false,
-                  "labelShowAssembly": true,
-                  "axisLabelFormatting": "scientific",
-                  "trackBorderWidth": 0,
-                  "trackBorderColor": "black",
-                  "showMousePosition": false,
-                  "minHeight": 20,
-                  "mousePositionColor": "#000000",
-                  "showTooltip": false
-                }
-              },
-              {
-                "uid": "cRvGElTqRCyEFgjr-PIRqw",
-                "type": "viewport-projection-horizontal",
-                "fromViewUid": "dTJTguD7Rhu62n71o1zPdw",
-                "options": {
-                  "projectionFillColor": "#777",
-                  "projectionStrokeColor": "#777",
-                  "projectionFillOpacity": 0.3,
-                  "projectionStrokeOpacity": 0.3,
-                  "strokeWidth": 1
-                },
-                "width": 885,
-                "height": 20
-              },
-              {
-                "uid": "QknXnZTNSceoDIz2Q__Rxg",
-                "type": "viewport-projection-horizontal",
-                "fromViewUid": "P0YiGZX6RPO9QevWo9aGkA",
-                "options": {
-                  "projectionFillColor": "#777",
-                  "projectionStrokeColor": "#777",
-                  "projectionFillOpacity": 0.3,
-                  "projectionStrokeOpacity": 0.3,
-                  "strokeWidth": 1
-                },
-                "width": 885,
-                "height": 20
-              }
-            ],
-            "options": {}
-          },
-          {
-            "type": "combined",
-            "uid": "IqmYWJTPR3qdxF04Dau-BQ",
-            "height": 20,
-            "width": 885,
-            "contents": [
-              {
-                "uid": "LoC3UUO3Q1i7G9jMMDlZdA",
-                "tilesetUid": "JtUCKhlnSAevxeJ1CaLYKA",
-                "height": 20,
-                "width": 885,
-                "server": "//higlass.io/api/v1",
-                "type": "horizontal-line",
-                "options": {
-                  "name": "Busslinger et al. 2017 CTCF ChIP (WT, 10d resting, GSE76303_9147+27719)",
-                  "valueScaling": "linear",
-                  "coordSystem": "mm9",
-                  "lineStrokeColor": "black",
-                  "labelPosition": "topLeft",
-                  "labelColor": "black",
-                  "axisPositionHorizontal": "right",
-                  "labelTextOpacity": 0.3,
-                  "lineStrokeWidth": 2,
-                  "labelLeftMargin": 0,
-                  "labelRightMargin": 0,
-                  "labelTopMargin": 0,
-                  "labelBottomMargin": 0,
-                  "labelBackgroundColor": "white",
-                  "labelShowResolution": false,
-                  "labelShowAssembly": true,
-                  "axisLabelFormatting": "scientific",
-                  "trackBorderWidth": 0,
-                  "trackBorderColor": "black",
-                  "showMousePosition": false,
-                  "minHeight": 20,
-                  "mousePositionColor": "#000000",
-                  "showTooltip": false
-                }
-              },
-              {
-                "uid": "fQ2WFBjvQm2xLExnA4V02g",
-                "type": "viewport-projection-horizontal",
-                "fromViewUid": "dTJTguD7Rhu62n71o1zPdw",
-                "options": {
-                  "projectionFillColor": "#777",
-                  "projectionStrokeColor": "#777",
-                  "projectionFillOpacity": 0.3,
-                  "projectionStrokeOpacity": 0.3,
-                  "strokeWidth": 1
-                },
-                "width": 885,
-                "height": 20
-              },
-              {
-                "uid": "RPi7g-u4RSeQoNydqr0FJg",
-                "type": "viewport-projection-horizontal",
-                "fromViewUid": "P0YiGZX6RPO9QevWo9aGkA",
-                "options": {
-                  "projectionFillColor": "#777",
-                  "projectionStrokeColor": "#777",
-                  "projectionFillOpacity": 0.3,
-                  "projectionStrokeOpacity": 0.3,
-                  "strokeWidth": 1
-                },
-                "width": 885,
-                "height": 20
-              }
-            ],
-            "options": {}
-          },
-          {
-            "type": "combined",
-            "uid": "HkOs4m3-Q4GpcUCZ4w9CIA",
-            "height": 20,
-            "width": 885,
-            "contents": [
-              {
-                "uid": "Noau_lBNQR6PnahQBsqlPg",
-                "tilesetUid": "ButF4G3rQgKjBU9KyZEtZQ",
-                "height": 20,
-                "width": 885,
-                "server": "//higlass.io/api/v1",
-                "type": "horizontal-line",
-                "options": {
-                  "name": "Busslinger et al. 2017 Stag1 ChIP (Ctcf(fl/fl), 4h Adeno-Cre and 10d resting, GSE76303_14551+19587+26233)",
-                  "valueScaling": "linear",
-                  "coordSystem": "mm9",
-                  "lineStrokeColor": "purple",
-                  "labelPosition": "topLeft",
-                  "labelColor": "black",
-                  "labelBackgroundOpacity": 0.3,
-                  "axisPositionHorizontal": "right",
-                  "labelTextOpacity": 0.3,
-                  "lineStrokeWidth": 2,
-                  "labelLeftMargin": 0,
-                  "labelRightMargin": 0,
-                  "labelTopMargin": 0,
-                  "labelBottomMargin": 0,
-                  "labelBackgroundColor": "white",
-                  "labelShowResolution": false,
-                  "labelShowAssembly": true,
-                  "axisLabelFormatting": "scientific",
-                  "trackBorderWidth": 0,
-                  "trackBorderColor": "black",
-                  "showMousePosition": false,
-                  "minHeight": 20,
-                  "mousePositionColor": "#000000",
-                  "showTooltip": false
-                }
-              },
-              {
-                "uid": "OmKnGKIfQ5W9jdRS0puZSg",
-                "type": "viewport-projection-horizontal",
-                "fromViewUid": "dTJTguD7Rhu62n71o1zPdw",
-                "options": {
-                  "projectionFillColor": "#777",
-                  "projectionStrokeColor": "#777",
-                  "projectionFillOpacity": 0.3,
-                  "projectionStrokeOpacity": 0.3,
-                  "strokeWidth": 1
-                },
-                "width": 885,
-                "height": 20
-              },
-              {
-                "uid": "MCBr_YUsRr2UKKxTC1q-uw",
-                "type": "viewport-projection-horizontal",
-                "fromViewUid": "P0YiGZX6RPO9QevWo9aGkA",
-                "options": {
-                  "projectionFillColor": "#777",
-                  "projectionStrokeColor": "#777",
-                  "projectionFillOpacity": 0.3,
-                  "projectionStrokeOpacity": 0.3,
-                  "strokeWidth": 1
-                },
-                "width": 885,
-                "height": 20
-              }
-            ],
-            "options": {}
-          },
-          {
-            "type": "combined",
-            "uid": "cdBmHkNXS6OhOS-ZSvwKWA",
-            "height": 20,
-            "width": 885,
-            "contents": [
-              {
-                "uid": "bca3T49aTkiZVYPqAn-Dzw",
-                "tilesetUid": "dcUTxCRHTIGpTeOrmqW3hQ",
-                "height": 20,
-                "width": 885,
-                "server": "//higlass.io/api/v1",
-                "type": "horizontal-line",
-                "options": {
-                  "name": "Busslinger et al. 2017 Scc1 ChIP (Ctcf(fl/fl), 4h Adeno-Cre and 10d resting, GSE76303_20094+20106)",
-                  "valueScaling": "linear",
-                  "coordSystem": "mm9",
-                  "lineStrokeColor": "purple",
-                  "labelPosition": "topLeft",
-                  "labelColor": "black",
-                  "axisPositionHorizontal": "right",
-                  "labelTextOpacity": 0.3,
-                  "lineStrokeWidth": 2,
-                  "labelLeftMargin": 0,
-                  "labelRightMargin": 0,
-                  "labelTopMargin": 0,
-                  "labelBottomMargin": 0,
-                  "labelBackgroundColor": "white",
-                  "labelShowResolution": false,
-                  "labelShowAssembly": true,
-                  "axisLabelFormatting": "scientific",
-                  "trackBorderWidth": 0,
-                  "trackBorderColor": "black",
-                  "showMousePosition": false,
-                  "minHeight": 20,
-                  "mousePositionColor": "#000000",
-                  "showTooltip": false
-                }
-              },
-              {
-                "uid": "RWVH25z1QcyHSRqcg_J3sg",
-                "type": "viewport-projection-horizontal",
-                "fromViewUid": "dTJTguD7Rhu62n71o1zPdw",
-                "options": {
-                  "projectionFillColor": "#777",
-                  "projectionStrokeColor": "#777",
-                  "projectionFillOpacity": 0.3,
-                  "projectionStrokeOpacity": 0.3,
-                  "strokeWidth": 1
-                },
-                "width": 885,
-                "height": 20
-              },
-              {
-                "uid": "QUINU5ARTKGj-nF8_XqtVA",
-                "type": "viewport-projection-horizontal",
-                "fromViewUid": "P0YiGZX6RPO9QevWo9aGkA",
-                "options": {
-                  "projectionFillColor": "#777",
-                  "projectionStrokeColor": "#777",
-                  "projectionFillOpacity": 0.3,
-                  "projectionStrokeOpacity": 0.3,
-                  "strokeWidth": 1
-                },
-                "width": 885,
-                "height": 20
-              }
-            ],
-            "options": {}
-          },
-          {
-            "type": "combined",
-            "uid": "NDJsZEhwRveimlQrOVCyUw",
-            "height": 20,
-            "width": 885,
-            "contents": [
-              {
-                "uid": "T4Y2QpXURCKSnIR4VZHRqQ",
-                "tilesetUid": "FbjW5up7T1-XnIFz9OyvFQ",
-                "height": 20,
-                "width": 885,
-                "server": "//higlass.io/api/v1",
-                "type": "horizontal-line",
-                "options": {
-                  "name": "Busslinger et al. 2017 Scc1 ChIP (Rosa26(CreER/+) Wapl(fl/-), 2-3d 4'hydroxytamoxifen and 10d resting, GSE76303_20096+20320+27717)",
-                  "valueScaling": "linear",
-                  "coordSystem": "mm9",
-                  "lineStrokeColor": "green",
-                  "labelPosition": "topLeft",
-                  "labelColor": "black",
-                  "axisPositionHorizontal": "right",
-                  "labelTextOpacity": 0.3,
-                  "lineStrokeWidth": 2,
-                  "labelLeftMargin": 0,
-                  "labelRightMargin": 0,
-                  "labelTopMargin": 0,
-                  "labelBottomMargin": 0,
-                  "labelBackgroundColor": "white",
-                  "labelShowResolution": false,
-                  "labelShowAssembly": true,
-                  "axisLabelFormatting": "scientific",
-                  "trackBorderWidth": 0,
-                  "trackBorderColor": "black",
-                  "showMousePosition": false,
-                  "minHeight": 20,
-                  "mousePositionColor": "#000000",
-                  "showTooltip": false
-                }
-              },
-              {
-                "uid": "HMlFN6brTf-pG9zXP7eaeA",
-                "type": "viewport-projection-horizontal",
-                "fromViewUid": "dTJTguD7Rhu62n71o1zPdw",
-                "options": {
-                  "projectionFillColor": "#777",
-                  "projectionStrokeColor": "#777",
-                  "projectionFillOpacity": 0.3,
-                  "projectionStrokeOpacity": 0.3,
-                  "strokeWidth": 1
-                },
-                "width": 885,
-                "height": 20
-              },
-              {
-                "uid": "SySE3bINQ0SevrD3U5rBew",
-                "type": "viewport-projection-horizontal",
-                "fromViewUid": "P0YiGZX6RPO9QevWo9aGkA",
-                "options": {
-                  "projectionFillColor": "#777",
-                  "projectionStrokeColor": "#777",
-                  "projectionFillOpacity": 0.3,
-                  "projectionStrokeOpacity": 0.3,
-                  "strokeWidth": 1
-                },
-                "width": 885,
-                "height": 20
-              }
-            ],
-            "options": {}
-          },
-          {
-            "type": "combined",
-            "uid": "dsQpr7HOQsyX-sjrPzHWng",
-            "height": 20,
-            "width": 885,
-            "contents": [
-              {
-                "uid": "VM8RGZWXQEK3zcwzU9uLCw",
-                "tilesetUid": "Hy1cz_yFRYqqQX8y5bh7Kw",
-                "height": 20,
-                "width": 885,
-                "server": "//higlass.io/api/v1",
-                "type": "horizontal-line",
-                "options": {
-                  "name": "Busslinger et al. 2017 Stag1 ChIP (Rosa26(CreER/+) Wapl(fl/-), 2-3d 4'hydroxytamoxifen and 10d resting, GSE76303_19589+20318+26235)",
-                  "valueScaling": "linear",
-                  "coordSystem": "mm9",
-                  "lineStrokeColor": "green",
-                  "labelPosition": "topLeft",
-                  "labelColor": "black",
-                  "axisPositionHorizontal": "right",
-                  "labelTextOpacity": 0.3,
-                  "lineStrokeWidth": 2,
-                  "labelLeftMargin": 0,
-                  "labelRightMargin": 0,
-                  "labelTopMargin": 0,
-                  "labelBottomMargin": 0,
-                  "labelBackgroundColor": "white",
-                  "labelShowResolution": false,
-                  "labelShowAssembly": true,
-                  "axisLabelFormatting": "scientific",
-                  "trackBorderWidth": 0,
-                  "trackBorderColor": "black",
-                  "showMousePosition": false,
-                  "minHeight": 20,
-                  "mousePositionColor": "#000000",
-                  "showTooltip": false
-                }
-              },
-              {
-                "uid": "JPE41IX0R7CUwgCzlGwzkA",
-                "type": "viewport-projection-horizontal",
-                "fromViewUid": "dTJTguD7Rhu62n71o1zPdw",
-                "options": {
-                  "projectionFillColor": "#777",
-                  "projectionStrokeColor": "#777",
-                  "projectionFillOpacity": 0.3,
-                  "projectionStrokeOpacity": 0.3,
-                  "strokeWidth": 1
-                },
-                "width": 885,
-                "height": 20
-              },
-              {
-                "uid": "NdfGziemRcueSQWArghkWg",
-                "type": "viewport-projection-horizontal",
-                "fromViewUid": "P0YiGZX6RPO9QevWo9aGkA",
-                "options": {
-                  "projectionFillColor": "#777",
-                  "projectionStrokeColor": "#777",
-                  "projectionFillOpacity": 0.3,
-                  "projectionStrokeOpacity": 0.3,
-                  "strokeWidth": 1
-                },
-                "width": 885,
-                "height": 20
-              }
-            ],
-            "options": {}
-          },
-          {
-            "type": "combined",
-            "uid": "NQV_yEXFRdC7KbsKx7Vecw",
-            "height": 20,
-            "width": 885,
-            "contents": [
-              {
-                "uid": "bvt5U1iJTr-7B0ey0bM7pA",
-                "tilesetUid": "bYEAmro5ROSGKKxvl132kw",
-                "height": 20,
-                "width": 885,
-                "server": "//higlass.io/api/v1",
-                "type": "horizontal-line",
-                "options": {
-                  "name": "Busslinger et al. 2017 Scc1 ChIP (Ctcf(fl/fl) Wapl(fl/fl), 4h Adeno-Cre and 10d resting, GSE76303_29079)",
-                  "valueScaling": "linear",
-                  "coordSystem": "mm9",
-                  "lineStrokeColor": "brown",
-                  "labelPosition": "topLeft",
-                  "labelColor": "black",
-                  "axisPositionHorizontal": "right",
-                  "labelTextOpacity": 0.3,
-                  "lineStrokeWidth": 2,
-                  "labelLeftMargin": 0,
-                  "labelRightMargin": 0,
-                  "labelTopMargin": 0,
-                  "labelBottomMargin": 0,
-                  "labelBackgroundColor": "white",
-                  "labelShowResolution": false,
-                  "labelShowAssembly": true,
-                  "axisLabelFormatting": "scientific",
-                  "trackBorderWidth": 0,
-                  "trackBorderColor": "black",
-                  "showMousePosition": false,
-                  "minHeight": 20,
-                  "mousePositionColor": "#000000",
-                  "showTooltip": false
-                }
-              },
-              {
-                "uid": "RFwmpo9tR2qS2MNUF6-hmQ",
-                "type": "viewport-projection-horizontal",
-                "fromViewUid": "dTJTguD7Rhu62n71o1zPdw",
-                "options": {
-                  "projectionFillColor": "#777",
-                  "projectionStrokeColor": "#777",
-                  "projectionFillOpacity": 0.3,
-                  "projectionStrokeOpacity": 0.3,
-                  "strokeWidth": 1
-                },
-                "width": 885,
-                "height": 20
-              },
-              {
-                "uid": "JoRiBPYlT6WqxjQKVNAbpw",
-                "type": "viewport-projection-horizontal",
-                "fromViewUid": "P0YiGZX6RPO9QevWo9aGkA",
-                "options": {
-                  "projectionFillColor": "#777",
-                  "projectionStrokeColor": "#777",
-                  "projectionFillOpacity": 0.3,
-                  "projectionStrokeOpacity": 0.3,
-                  "strokeWidth": 1
-                },
-                "width": 885,
-                "height": 20
-              }
-            ],
-            "options": {}
-          },
-          {
-            "type": "combined",
-            "uid": "bJjSMVnkRRmZ0zohE3nvQw",
-            "height": 20,
-            "width": 885,
-            "contents": [
-              {
-                "uid": "dsSGdLh-RmScFaA6szxXNQ",
-                "tilesetUid": "WUzG919kQ6OydCKysMUKuw",
-                "height": 20,
-                "width": 885,
-                "server": "//higlass.io/api/v1",
-                "type": "horizontal-line",
-                "options": {
-                  "name": "Busslinger et al. 2017 Stag1 ChIP (Ctcf(fl/fl) Wapl(fl/fl), 4h Adeno-Cre and 10d resting, GSE76303_26236+27237)",
-                  "valueScaling": "linear",
-                  "coordSystem": "mm9",
-                  "lineStrokeColor": "brown",
-                  "labelPosition": "topLeft",
-                  "labelColor": "black",
-                  "axisPositionHorizontal": "right",
-                  "labelTextOpacity": 0.3,
-                  "lineStrokeWidth": 2,
-                  "labelLeftMargin": 0,
-                  "labelRightMargin": 0,
-                  "labelTopMargin": 0,
-                  "labelBottomMargin": 0,
-                  "labelBackgroundColor": "white",
-                  "labelShowResolution": false,
-                  "labelShowAssembly": true,
-                  "axisLabelFormatting": "scientific",
-                  "trackBorderWidth": 0,
-                  "trackBorderColor": "black",
-                  "showMousePosition": false,
-                  "minHeight": 20,
-                  "mousePositionColor": "#000000",
-                  "showTooltip": false
-                }
-              },
-              {
-                "uid": "SZKEGMl1SXeO_RC5JToCrw",
-                "type": "viewport-projection-horizontal",
-                "fromViewUid": "dTJTguD7Rhu62n71o1zPdw",
-                "options": {
-                  "projectionFillColor": "#777",
-                  "projectionStrokeColor": "#777",
-                  "projectionFillOpacity": 0.3,
-                  "projectionStrokeOpacity": 0.3,
-                  "strokeWidth": 1
-                },
-                "width": 885,
-                "height": 20
-              },
-              {
-                "uid": "Wd4iQb0kR-iNi1FAkSy50w",
-                "type": "viewport-projection-horizontal",
-                "fromViewUid": "P0YiGZX6RPO9QevWo9aGkA",
-                "options": {
-                  "projectionFillColor": "#777",
-                  "projectionStrokeColor": "#777",
-                  "projectionFillOpacity": 0.3,
-                  "projectionStrokeOpacity": 0.3,
-                  "strokeWidth": 1
-                },
-                "width": 885,
-                "height": 20
-              }
-            ],
-            "options": {}
-          },
-          {
-            "uid": "UN-ji0_yR3uvguIrUrt09Q",
-            "height": 60,
-            "width": 885,
-            "type": "combined",
-            "options": {},
-            "contents": [
-              {
-                "uid": "eqVlm--IQfaonPAE6x38fw",
-                "tilesetUid": "GUm5aBiLRCyz2PsBea7Yzg",
-                "server": "//higlass.io/api/v1",
-                "width": 885,
-                "height": 60,
-                "type": "horizontal-gene-annotations",
-                "options": {
-                  "labelColor": "black",
-                  "plusStrandColor": "blue",
-                  "minusStrandColor": "red",
-                  "labelPosition": "hidden",
-                  "name": "Gene Annotations (mm9)",
-                  "fontSize": 10,
-                  "labelBackgroundColor": "#ffffff",
-                  "labelLeftMargin": 0,
-                  "labelRightMargin": 0,
-                  "labelTopMargin": 0,
-                  "labelBottomMargin": 0,
-                  "minHeight": 24,
-                  "trackBorderWidth": 0,
-                  "trackBorderColor": "black",
-                  "showMousePosition": false,
-                  "mousePositionColor": "#000000",
-                  "geneAnnotationHeight": 16,
-                  "geneLabelPosition": "outside",
-                  "geneStrandSpacing": 4
-                }
-              },
-              {
-                "fromViewUid": "dTJTguD7Rhu62n71o1zPdw",
-                "uid": "TZ9xoYfVTDmxdbguoNtJOg",
-                "height": 60,
-                "width": 885,
-                "type": "viewport-projection-horizontal",
-                "options": {
-                  "projectionFillOpacity": 0.3,
-                  "projectionStrokeColor": "#777",
-                  "projectionFillColor": "#777",
-                  "projectionStrokeOpacity": 0.3,
-                  "strokeWidth": 1
-                }
-              },
-              {
-                "fromViewUid": "P0YiGZX6RPO9QevWo9aGkA",
-                "uid": "DpA_XvBjRMeFxibJljYx7w",
-                "height": 60,
-                "width": 885,
-                "type": "viewport-projection-horizontal",
-                "options": {
-                  "projectionFillOpacity": 0.3,
-                  "projectionStrokeColor": "#777",
-                  "projectionFillColor": "#777",
-                  "projectionStrokeOpacity": 0.3,
-                  "strokeWidth": 1
-                }
-              }
-            ]
-          }
-        ],
-        "right": [],
-        "center": [],
-        "left": [],
-        "whole": [],
-        "gallery": []
-      },
-      "chromInfoPath": "//s3.amazonaws.com/pkerp/data/hg19/chromSizes.tsv",
-      "genomePositionSearchBox": {
-        "visible": true,
-        "chromInfoServer": "//higlass.io/api/v1",
-        "autocompleteId": "GUm5aBiLRCyz2PsBea7Yzg",
-        "chromInfoId": "mm9",
-        "autocompleteServer": "//higlass.io/api/v1"
-      }
-    },
-    {
-      "layout": {
-        "h": 9,
-        "moved": false,
-        "static": false,
-        "w": 6,
-        "y": 9,
-        "x": 0
-      },
-      "uid": "dTJTguD7Rhu62n71o1zPdw",
-      "initialYDomain": [
-        517416534.80157655,
-        517428534.2937772
-      ],
-      "autocompleteSource": "/api/v1/suggest/?d=OHJakQICQD6gTD7skx4EWA&",
-      "initialXDomain": [
-        514011543.5504789,
-        514352862.43974316
-      ],
-      "tracks": {
-        "bottom": [],
-        "top": [
-          {
-            "orientation": "1d-horizontal",
-            "tilesetUid": "Dvg6wsaMSqGEzrJBpgiGFQ",
-            "local": true,
-            "minHeight": 30,
-            "thumbnail": null,
-            "server": "",
-            "width": 20,
-            "chromInfoPath": "//s3.amazonaws.com/pkerp/data/mm9/chromSizes.tsv",
-            "height": 30,
-            "type": "horizontal-chromosome-labels",
-            "options": {
-              "color": "#808080",
-              "stroke": "#ffffff",
-              "fontSize": 12,
-              "fontIsLeftAligned": false,
-              "showMousePosition": false,
-              "mousePositionColor": "#000000"
+    "zoomFixed": false,
+    "views": [
+        {
+            "layout": {
+                "w": 12,
+                "h": 9,
+                "x": 0,
+                "y": 0
             },
-            "uid": "FVrvlT5PTNiveFwURIeMvw"
-          },
-          {
-            "uid": "Ubpwl6T9R1WQES7SEFCXEw",
-            "tilesetUid": "G85vBVaMQFGLdk5LF-tzPQ",
-            "height": 20,
-            "width": 483,
-            "server": "//higlass.io/api/v1",
-            "type": "horizontal-line",
-            "options": {
-              "name": "Busslinger et al. 2017 Stag1 ChIP (WT, 10d resting, GSE76303_14549+14954)",
-              "valueScaling": "linear",
-              "coordSystem": "mm9",
-              "lineStrokeColor": "black",
-              "labelPosition": "topLeft",
-              "labelColor": "black",
-              "axisPositionHorizontal": "right",
-              "labelTextOpacity": 0.3,
-              "lineStrokeWidth": 2,
-              "labelLeftMargin": 0,
-              "labelRightMargin": 0,
-              "labelTopMargin": 0,
-              "labelBottomMargin": 0,
-              "labelBackgroundColor": "white",
-              "labelShowResolution": false,
-              "labelShowAssembly": true,
-              "axisLabelFormatting": "scientific",
-              "trackBorderWidth": 0,
-              "trackBorderColor": "black",
-              "showMousePosition": false,
-              "minHeight": 20,
-              "mousePositionColor": "#000000",
-              "showTooltip": false
-            }
-          },
-          {
-            "uid": "WOqP5ilQRfqsbC137stWnA",
-            "tilesetUid": "JVOQXLh2STCRpTgpxdgXUQ",
-            "height": 20,
-            "width": 483,
-            "server": "//higlass.io/api/v1",
-            "type": "horizontal-line",
-            "options": {
-              "name": "Busslinger et al. 2017 Scc1 ChIP (WT, 10d resting, GSE76303_20093+20105)",
-              "valueScaling": "linear",
-              "coordSystem": "mm9",
-              "lineStrokeColor": "black",
-              "labelPosition": "topLeft",
-              "labelColor": "black",
-              "axisPositionHorizontal": "right",
-              "labelTextOpacity": 0.3,
-              "lineStrokeWidth": 2,
-              "labelLeftMargin": 0,
-              "labelRightMargin": 0,
-              "labelTopMargin": 0,
-              "labelBottomMargin": 0,
-              "labelBackgroundColor": "white",
-              "labelShowResolution": false,
-              "labelShowAssembly": true,
-              "axisLabelFormatting": "scientific",
-              "trackBorderWidth": 0,
-              "trackBorderColor": "black",
-              "showMousePosition": false,
-              "minHeight": 20,
-              "mousePositionColor": "#000000",
-              "showTooltip": false
-            }
-          },
-          {
-            "uid": "J3FWwBMXS7GPsuHIUZpR2g",
-            "tilesetUid": "VxpNze_cR6ywG4zSeGwOtA",
-            "height": 20,
-            "width": 483,
-            "server": "//higlass.io/api/v1",
-            "type": "horizontal-line",
-            "options": {
-              "name": "Busslinger et al. 2017 Nipbl ChIP (WT, resting, GSE76303_22603)",
-              "valueScaling": "linear",
-              "coordSystem": "mm9",
-              "lineStrokeColor": "black",
-              "labelPosition": "topLeft",
-              "labelColor": "black",
-              "axisPositionHorizontal": "right",
-              "labelTextOpacity": 0.3,
-              "lineStrokeWidth": 2,
-              "labelLeftMargin": 0,
-              "labelRightMargin": 0,
-              "labelTopMargin": 0,
-              "labelBottomMargin": 0,
-              "labelBackgroundColor": "white",
-              "labelShowResolution": false,
-              "labelShowAssembly": true,
-              "axisLabelFormatting": "scientific",
-              "trackBorderWidth": 0,
-              "trackBorderColor": "black",
-              "showMousePosition": false,
-              "minHeight": 20,
-              "mousePositionColor": "#000000",
-              "showTooltip": false
-            }
-          },
-          {
-            "uid": "LoC3UUO3Q1i7G9jMMDlZdA",
-            "tilesetUid": "JtUCKhlnSAevxeJ1CaLYKA",
-            "height": 20,
-            "width": 483,
-            "server": "//higlass.io/api/v1",
-            "type": "horizontal-line",
-            "options": {
-              "name": "Busslinger et al. 2017 CTCF ChIP (WT, 10d resting, GSE76303_9147+27719)",
-              "valueScaling": "linear",
-              "coordSystem": "mm9",
-              "lineStrokeColor": "black",
-              "labelPosition": "topLeft",
-              "labelColor": "black",
-              "axisPositionHorizontal": "right",
-              "labelTextOpacity": 0.3,
-              "lineStrokeWidth": 2,
-              "labelLeftMargin": 0,
-              "labelRightMargin": 0,
-              "labelTopMargin": 0,
-              "labelBottomMargin": 0,
-              "labelBackgroundColor": "white",
-              "labelShowResolution": false,
-              "labelShowAssembly": true,
-              "axisLabelFormatting": "scientific",
-              "trackBorderWidth": 0,
-              "trackBorderColor": "black",
-              "showMousePosition": false,
-              "minHeight": 20,
-              "mousePositionColor": "#000000",
-              "showTooltip": false
-            }
-          },
-          {
-            "uid": "Noau_lBNQR6PnahQBsqlPg",
-            "tilesetUid": "ButF4G3rQgKjBU9KyZEtZQ",
-            "height": 20,
-            "width": 483,
-            "server": "//higlass.io/api/v1",
-            "type": "horizontal-line",
-            "options": {
-              "name": "Busslinger et al. 2017 Stag1 ChIP (Ctcf(fl/fl), 4h Adeno-Cre and 10d resting, GSE76303_14551+19587+26233)",
-              "valueScaling": "linear",
-              "coordSystem": "mm9",
-              "lineStrokeColor": "purple",
-              "labelPosition": "topLeft",
-              "labelColor": "black",
-              "labelBackgroundOpacity": 0.3,
-              "axisPositionHorizontal": "right",
-              "labelTextOpacity": 0.3,
-              "lineStrokeWidth": 2,
-              "labelLeftMargin": 0,
-              "labelRightMargin": 0,
-              "labelTopMargin": 0,
-              "labelBottomMargin": 0,
-              "labelBackgroundColor": "white",
-              "labelShowResolution": false,
-              "labelShowAssembly": true,
-              "axisLabelFormatting": "scientific",
-              "trackBorderWidth": 0,
-              "trackBorderColor": "black",
-              "showMousePosition": false,
-              "minHeight": 20,
-              "mousePositionColor": "#000000",
-              "showTooltip": false
-            }
-          },
-          {
-            "uid": "bca3T49aTkiZVYPqAn-Dzw",
-            "tilesetUid": "dcUTxCRHTIGpTeOrmqW3hQ",
-            "height": 20,
-            "width": 483,
-            "server": "//higlass.io/api/v1",
-            "type": "horizontal-line",
-            "options": {
-              "name": "Busslinger et al. 2017 Scc1 ChIP (Ctcf(fl/fl), 4h Adeno-Cre and 10d resting, GSE76303_20094+20106)",
-              "valueScaling": "linear",
-              "coordSystem": "mm9",
-              "lineStrokeColor": "purple",
-              "labelPosition": "topLeft",
-              "labelColor": "black",
-              "axisPositionHorizontal": "right",
-              "labelTextOpacity": 0.3,
-              "lineStrokeWidth": 2,
-              "labelLeftMargin": 0,
-              "labelRightMargin": 0,
-              "labelTopMargin": 0,
-              "labelBottomMargin": 0,
-              "labelBackgroundColor": "white",
-              "labelShowResolution": false,
-              "labelShowAssembly": true,
-              "axisLabelFormatting": "scientific",
-              "trackBorderWidth": 0,
-              "trackBorderColor": "black",
-              "showMousePosition": false,
-              "minHeight": 20,
-              "mousePositionColor": "#000000",
-              "showTooltip": false
-            }
-          },
-          {
-            "uid": "T4Y2QpXURCKSnIR4VZHRqQ",
-            "tilesetUid": "FbjW5up7T1-XnIFz9OyvFQ",
-            "height": 20,
-            "width": 483,
-            "server": "//higlass.io/api/v1",
-            "type": "horizontal-line",
-            "options": {
-              "name": "Busslinger et al. 2017 Scc1 ChIP (Rosa26(CreER/+) Wapl(fl/-), 2-3d 4'hydroxytamoxifen and 10d resting, GSE76303_20096+20320+27717)",
-              "valueScaling": "linear",
-              "coordSystem": "mm9",
-              "lineStrokeColor": "green",
-              "labelPosition": "topLeft",
-              "labelColor": "black",
-              "axisPositionHorizontal": "right",
-              "labelTextOpacity": 0.3,
-              "lineStrokeWidth": 2,
-              "labelLeftMargin": 0,
-              "labelRightMargin": 0,
-              "labelTopMargin": 0,
-              "labelBottomMargin": 0,
-              "labelBackgroundColor": "white",
-              "labelShowResolution": false,
-              "labelShowAssembly": true,
-              "axisLabelFormatting": "scientific",
-              "trackBorderWidth": 0,
-              "trackBorderColor": "black",
-              "showMousePosition": false,
-              "minHeight": 20,
-              "mousePositionColor": "#000000",
-              "showTooltip": false
-            }
-          },
-          {
-            "uid": "VM8RGZWXQEK3zcwzU9uLCw",
-            "tilesetUid": "Hy1cz_yFRYqqQX8y5bh7Kw",
-            "height": 20,
-            "width": 483,
-            "server": "//higlass.io/api/v1",
-            "type": "horizontal-line",
-            "options": {
-              "name": "Busslinger et al. 2017 Stag1 ChIP (Rosa26(CreER/+) Wapl(fl/-), 2-3d 4'hydroxytamoxifen and 10d resting, GSE76303_19589+20318+26235)",
-              "valueScaling": "linear",
-              "coordSystem": "mm9",
-              "lineStrokeColor": "green",
-              "labelPosition": "topLeft",
-              "labelColor": "black",
-              "axisPositionHorizontal": "right",
-              "labelTextOpacity": 0.3,
-              "lineStrokeWidth": 2,
-              "labelLeftMargin": 0,
-              "labelRightMargin": 0,
-              "labelTopMargin": 0,
-              "labelBottomMargin": 0,
-              "labelBackgroundColor": "white",
-              "labelShowResolution": false,
-              "labelShowAssembly": true,
-              "axisLabelFormatting": "scientific",
-              "trackBorderWidth": 0,
-              "trackBorderColor": "black",
-              "showMousePosition": false,
-              "minHeight": 20,
-              "mousePositionColor": "#000000",
-              "showTooltip": false
-            }
-          },
-          {
-            "uid": "bvt5U1iJTr-7B0ey0bM7pA",
-            "tilesetUid": "bYEAmro5ROSGKKxvl132kw",
-            "height": 20,
-            "width": 483,
-            "server": "//higlass.io/api/v1",
-            "type": "horizontal-line",
-            "options": {
-              "name": "Busslinger et al. 2017 Scc1 ChIP (Ctcf(fl/fl) Wapl(fl/fl), 4h Adeno-Cre and 10d resting, GSE76303_29079)",
-              "valueScaling": "linear",
-              "coordSystem": "mm9",
-              "lineStrokeColor": "brown",
-              "labelPosition": "topLeft",
-              "labelColor": "black",
-              "axisPositionHorizontal": "right",
-              "labelTextOpacity": 0.3,
-              "lineStrokeWidth": 2,
-              "labelLeftMargin": 0,
-              "labelRightMargin": 0,
-              "labelTopMargin": 0,
-              "labelBottomMargin": 0,
-              "labelBackgroundColor": "white",
-              "labelShowResolution": false,
-              "labelShowAssembly": true,
-              "axisLabelFormatting": "scientific",
-              "trackBorderWidth": 0,
-              "trackBorderColor": "black",
-              "showMousePosition": false,
-              "minHeight": 20,
-              "mousePositionColor": "#000000",
-              "showTooltip": false
-            }
-          },
-          {
-            "uid": "dsSGdLh-RmScFaA6szxXNQ",
-            "tilesetUid": "WUzG919kQ6OydCKysMUKuw",
-            "height": 20,
-            "width": 483,
-            "server": "//higlass.io/api/v1",
-            "type": "horizontal-line",
-            "options": {
-              "name": "Busslinger et al. 2017 Stag1 ChIP (Ctcf(fl/fl) Wapl(fl/fl), 4h Adeno-Cre and 10d resting, GSE76303_26236+27237)",
-              "valueScaling": "linear",
-              "coordSystem": "mm9",
-              "lineStrokeColor": "brown",
-              "labelPosition": "topLeft",
-              "labelColor": "black",
-              "axisPositionHorizontal": "right",
-              "labelTextOpacity": 0.3,
-              "lineStrokeWidth": 2,
-              "labelLeftMargin": 0,
-              "labelRightMargin": 0,
-              "labelTopMargin": 0,
-              "labelBottomMargin": 0,
-              "labelBackgroundColor": "white",
-              "labelShowResolution": false,
-              "labelShowAssembly": true,
-              "axisLabelFormatting": "scientific",
-              "trackBorderWidth": 0,
-              "trackBorderColor": "black",
-              "showMousePosition": false,
-              "minHeight": 20,
-              "mousePositionColor": "#000000",
-              "showTooltip": false
-            }
-          },
-          {
-            "uid": "eqVlm--IQfaonPAE6x38fw",
-            "tilesetUid": "GUm5aBiLRCyz2PsBea7Yzg",
-            "server": "//higlass.io/api/v1",
-            "width": 483,
-            "height": 60,
-            "type": "horizontal-gene-annotations",
-            "options": {
-              "labelColor": "black",
-              "plusStrandColor": "blue",
-              "minusStrandColor": "red",
-              "labelPosition": "hidden",
-              "name": "Gene Annotations (mm9)",
-              "fontSize": 10,
-              "labelBackgroundColor": "#ffffff",
-              "labelLeftMargin": 0,
-              "labelRightMargin": 0,
-              "labelTopMargin": 0,
-              "labelBottomMargin": 0,
-              "minHeight": 24,
-              "trackBorderWidth": 0,
-              "trackBorderColor": "black",
-              "showMousePosition": false,
-              "mousePositionColor": "#000000",
-              "geneAnnotationHeight": 16,
-              "geneLabelPosition": "outside",
-              "geneStrandSpacing": 4
-            }
-          }
-        ],
-        "right": [],
-        "center": [],
-        "left": [],
-        "whole": [],
-        "gallery": []
-      },
-      "chromInfoPath": "//s3.amazonaws.com/pkerp/data/hg19/chromSizes.tsv",
-      "genomePositionSearchBox": {
-        "visible": true,
-        "chromInfoServer": "//higlass.io/api/v1",
-        "autocompleteId": "GUm5aBiLRCyz2PsBea7Yzg",
-        "chromInfoId": "mm9",
-        "autocompleteServer": "//higlass.io/api/v1"
-      }
-    },
-    {
-      "layout": {
-        "h": 9,
-        "moved": false,
-        "static": false,
-        "w": 6,
-        "y": 9,
-        "x": 6
-      },
-      "uid": "P0YiGZX6RPO9QevWo9aGkA",
-      "initialYDomain": [
-        517226089.02845025,
-        517234201.5566761
-      ],
-      "autocompleteSource": "/api/v1/suggest/?d=OHJakQICQD6gTD7skx4EWA&",
-      "initialXDomain": [
-        517375818.4100014,
-        517606574.76842445
-      ],
-      "tracks": {
-        "bottom": [],
-        "top": [
-          {
-            "orientation": "1d-horizontal",
-            "tilesetUid": "RYcacAlsQWiEPBJkmqgGGQ",
-            "local": true,
-            "minHeight": 30,
-            "thumbnail": null,
-            "server": "",
-            "width": 20,
-            "chromInfoPath": "//s3.amazonaws.com/pkerp/data/mm9/chromSizes.tsv",
-            "height": 30,
-            "type": "horizontal-chromosome-labels",
-            "options": {
-              "color": "#808080",
-              "stroke": "#ffffff",
-              "fontSize": 12,
-              "fontIsLeftAligned": false,
-              "showMousePosition": false,
-              "mousePositionColor": "#000000"
+            "uid": "aa",
+            "initialYDomain": [
+                518460265.4922931,
+                518620898.89910686
+            ],
+            "autocompleteSource": "/api/v1/suggest/?d=OHJakQICQD6gTD7skx4EWA&",
+            "initialXDomain": [
+                511154760.76976734,
+                520462574.2868062
+            ],
+            "tracks": {
+                "bottom": [],
+                "top": [
+                    {
+                        "type": "combined",
+                        "uid": "EA8s7OqNRICQvG1CyAoSXg",
+                        "height": 30,
+                        "width": 885,
+                        "contents": [
+                            {
+                                "orientation": "1d-horizontal",
+                                "tilesetUid": "XO1J2nrTSoilKiS4Ycwngw",
+                                "local": true,
+                                "minHeight": 30,
+                                "thumbnail": null,
+                                "server": "",
+                                "width": 885,
+                                "chromInfoPath": "//s3.amazonaws.com/pkerp/data/mm9/chromSizes.tsv",
+                                "height": 30,
+                                "type": "horizontal-chromosome-labels",
+                                "options": {
+                                    "color": "#808080",
+                                    "stroke": "#ffffff",
+                                    "fontSize": 12,
+                                    "fontIsLeftAligned": false,
+                                    "showMousePosition": false,
+                                    "mousePositionColor": "#000000"
+                                },
+                                "uid": "Q4PCI5cqS9-R9I3NJoipeg"
+                            },
+                            {
+                                "uid": "DUypD389Q8ysTcrRDe70tw",
+                                "type": "viewport-projection-horizontal",
+                                "fromViewUid": "dTJTguD7Rhu62n71o1zPdw",
+                                "options": {
+                                    "projectionFillColor": "#777",
+                                    "projectionStrokeColor": "#777",
+                                    "projectionFillOpacity": 0.3,
+                                    "projectionStrokeOpacity": 0.3,
+                                    "strokeWidth": 1
+                                },
+                                "width": 885,
+                                "height": 30
+                            },
+                            {
+                                "uid": "XiHO6LohQbWjEypXqwXfAg",
+                                "type": "viewport-projection-horizontal",
+                                "fromViewUid": "P0YiGZX6RPO9QevWo9aGkA",
+                                "options": {
+                                    "projectionFillColor": "#777",
+                                    "projectionStrokeColor": "#777",
+                                    "projectionFillOpacity": 0.3,
+                                    "projectionStrokeOpacity": 0.3,
+                                    "strokeWidth": 1
+                                }
+                            }
+                        ],
+                        "options": {}
+                    },
+                    {
+                        "type": "combined",
+                        "uid": "KmxzBgPJSBGTlj5VDgtK5Q",
+                        "height": 20,
+                        "width": 885,
+                        "contents": [
+                            {
+                                "uid": "Ubpwl6T9R1WQES7SEFCXEw",
+                                "tilesetUid": "G85vBVaMQFGLdk5LF-tzPQ",
+                                "height": 20,
+                                "width": 885,
+                                "server": "//higlass.io/api/v1",
+                                "type": "horizontal-line",
+                                "options": {
+                                    "name": "Busslinger et al. 2017 Stag1 ChIP (WT, 10d resting, GSE76303_14549+14954)",
+                                    "valueScaling": "linear",
+                                    "coordSystem": "mm9",
+                                    "lineStrokeColor": "black",
+                                    "labelPosition": "topLeft",
+                                    "labelColor": "black",
+                                    "axisPositionHorizontal": "right",
+                                    "labelTextOpacity": 0.3,
+                                    "lineStrokeWidth": 2,
+                                    "labelLeftMargin": 0,
+                                    "labelRightMargin": 0,
+                                    "labelTopMargin": 0,
+                                    "labelBottomMargin": 0,
+                                    "labelBackgroundColor": "white",
+                                    "labelShowResolution": false,
+                                    "labelShowAssembly": true,
+                                    "axisLabelFormatting": "scientific",
+                                    "trackBorderWidth": 0,
+                                    "trackBorderColor": "black",
+                                    "showMousePosition": false,
+                                    "minHeight": 20,
+                                    "mousePositionColor": "#000000",
+                                    "showTooltip": false
+                                }
+                            },
+                            {
+                                "uid": "C67Rwyt2SfGNgTiJ0mf8Ng",
+                                "type": "viewport-projection-horizontal",
+                                "fromViewUid": "dTJTguD7Rhu62n71o1zPdw",
+                                "options": {
+                                    "projectionFillColor": "#777",
+                                    "projectionStrokeColor": "#777",
+                                    "projectionFillOpacity": 0.3,
+                                    "projectionStrokeOpacity": 0.3,
+                                    "strokeWidth": 1
+                                },
+                                "width": 885,
+                                "height": 20
+                            },
+                            {
+                                "uid": "GoMWEb7CSmmUPipMnuQWIA",
+                                "type": "viewport-projection-horizontal",
+                                "fromViewUid": "P0YiGZX6RPO9QevWo9aGkA",
+                                "options": {
+                                    "projectionFillColor": "#777",
+                                    "projectionStrokeColor": "#777",
+                                    "projectionFillOpacity": 0.3,
+                                    "projectionStrokeOpacity": 0.3,
+                                    "strokeWidth": 1
+                                },
+                                "width": 885,
+                                "height": 20
+                            }
+                        ],
+                        "options": {}
+                    },
+                    {
+                        "type": "combined",
+                        "uid": "NB6pCyLFQuSOqGvBVrn-Gw",
+                        "height": 20,
+                        "width": 885,
+                        "contents": [
+                            {
+                                "uid": "WOqP5ilQRfqsbC137stWnA",
+                                "tilesetUid": "JVOQXLh2STCRpTgpxdgXUQ",
+                                "height": 20,
+                                "width": 885,
+                                "server": "//higlass.io/api/v1",
+                                "type": "horizontal-line",
+                                "options": {
+                                    "name": "Busslinger et al. 2017 Scc1 ChIP (WT, 10d resting, GSE76303_20093+20105)",
+                                    "valueScaling": "linear",
+                                    "coordSystem": "mm9",
+                                    "lineStrokeColor": "black",
+                                    "labelPosition": "topLeft",
+                                    "labelColor": "black",
+                                    "axisPositionHorizontal": "right",
+                                    "labelTextOpacity": 0.3,
+                                    "lineStrokeWidth": 2,
+                                    "labelLeftMargin": 0,
+                                    "labelRightMargin": 0,
+                                    "labelTopMargin": 0,
+                                    "labelBottomMargin": 0,
+                                    "labelBackgroundColor": "white",
+                                    "labelShowResolution": false,
+                                    "labelShowAssembly": true,
+                                    "axisLabelFormatting": "scientific",
+                                    "trackBorderWidth": 0,
+                                    "trackBorderColor": "black",
+                                    "showMousePosition": false,
+                                    "minHeight": 20,
+                                    "mousePositionColor": "#000000",
+                                    "showTooltip": false
+                                }
+                            },
+                            {
+                                "uid": "EActBuubShK_3LDcESdCsw",
+                                "type": "viewport-projection-horizontal",
+                                "fromViewUid": "dTJTguD7Rhu62n71o1zPdw",
+                                "options": {
+                                    "projectionFillColor": "#777",
+                                    "projectionStrokeColor": "#777",
+                                    "projectionFillOpacity": 0.3,
+                                    "projectionStrokeOpacity": 0.3,
+                                    "strokeWidth": 1
+                                },
+                                "width": 885,
+                                "height": 20
+                            },
+                            {
+                                "uid": "dDLhDV4gTJqDx_FCC0sTfg",
+                                "type": "viewport-projection-horizontal",
+                                "fromViewUid": "P0YiGZX6RPO9QevWo9aGkA",
+                                "options": {
+                                    "projectionFillColor": "#777",
+                                    "projectionStrokeColor": "#777",
+                                    "projectionFillOpacity": 0.3,
+                                    "projectionStrokeOpacity": 0.3,
+                                    "strokeWidth": 1
+                                },
+                                "width": 885,
+                                "height": 20
+                            }
+                        ],
+                        "options": {}
+                    },
+                    {
+                        "type": "combined",
+                        "uid": "a4hsUlkuRvy0inT-ru3i6g",
+                        "height": 20,
+                        "width": 885,
+                        "contents": [
+                            {
+                                "uid": "J3FWwBMXS7GPsuHIUZpR2g",
+                                "tilesetUid": "VxpNze_cR6ywG4zSeGwOtA",
+                                "height": 20,
+                                "width": 885,
+                                "server": "//higlass.io/api/v1",
+                                "type": "horizontal-line",
+                                "options": {
+                                    "name": "Busslinger et al. 2017 Nipbl ChIP (WT, resting, GSE76303_22603)",
+                                    "valueScaling": "linear",
+                                    "coordSystem": "mm9",
+                                    "lineStrokeColor": "black",
+                                    "labelPosition": "topLeft",
+                                    "labelColor": "black",
+                                    "axisPositionHorizontal": "right",
+                                    "labelTextOpacity": 0.3,
+                                    "lineStrokeWidth": 2,
+                                    "labelLeftMargin": 0,
+                                    "labelRightMargin": 0,
+                                    "labelTopMargin": 0,
+                                    "labelBottomMargin": 0,
+                                    "labelBackgroundColor": "white",
+                                    "labelShowResolution": false,
+                                    "labelShowAssembly": true,
+                                    "axisLabelFormatting": "scientific",
+                                    "trackBorderWidth": 0,
+                                    "trackBorderColor": "black",
+                                    "showMousePosition": false,
+                                    "minHeight": 20,
+                                    "mousePositionColor": "#000000",
+                                    "showTooltip": false
+                                }
+                            },
+                            {
+                                "uid": "cRvGElTqRCyEFgjr-PIRqw",
+                                "type": "viewport-projection-horizontal",
+                                "fromViewUid": "dTJTguD7Rhu62n71o1zPdw",
+                                "options": {
+                                    "projectionFillColor": "#777",
+                                    "projectionStrokeColor": "#777",
+                                    "projectionFillOpacity": 0.3,
+                                    "projectionStrokeOpacity": 0.3,
+                                    "strokeWidth": 1
+                                },
+                                "width": 885,
+                                "height": 20
+                            },
+                            {
+                                "uid": "QknXnZTNSceoDIz2Q__Rxg",
+                                "type": "viewport-projection-horizontal",
+                                "fromViewUid": "P0YiGZX6RPO9QevWo9aGkA",
+                                "options": {
+                                    "projectionFillColor": "#777",
+                                    "projectionStrokeColor": "#777",
+                                    "projectionFillOpacity": 0.3,
+                                    "projectionStrokeOpacity": 0.3,
+                                    "strokeWidth": 1
+                                },
+                                "width": 885,
+                                "height": 20
+                            }
+                        ],
+                        "options": {}
+                    },
+                    {
+                        "type": "combined",
+                        "uid": "IqmYWJTPR3qdxF04Dau-BQ",
+                        "height": 20,
+                        "width": 885,
+                        "contents": [
+                            {
+                                "uid": "LoC3UUO3Q1i7G9jMMDlZdA",
+                                "tilesetUid": "JtUCKhlnSAevxeJ1CaLYKA",
+                                "height": 20,
+                                "width": 885,
+                                "server": "//higlass.io/api/v1",
+                                "type": "horizontal-line",
+                                "options": {
+                                    "name": "Busslinger et al. 2017 CTCF ChIP (WT, 10d resting, GSE76303_9147+27719)",
+                                    "valueScaling": "linear",
+                                    "coordSystem": "mm9",
+                                    "lineStrokeColor": "black",
+                                    "labelPosition": "topLeft",
+                                    "labelColor": "black",
+                                    "axisPositionHorizontal": "right",
+                                    "labelTextOpacity": 0.3,
+                                    "lineStrokeWidth": 2,
+                                    "labelLeftMargin": 0,
+                                    "labelRightMargin": 0,
+                                    "labelTopMargin": 0,
+                                    "labelBottomMargin": 0,
+                                    "labelBackgroundColor": "white",
+                                    "labelShowResolution": false,
+                                    "labelShowAssembly": true,
+                                    "axisLabelFormatting": "scientific",
+                                    "trackBorderWidth": 0,
+                                    "trackBorderColor": "black",
+                                    "showMousePosition": false,
+                                    "minHeight": 20,
+                                    "mousePositionColor": "#000000",
+                                    "showTooltip": false
+                                }
+                            },
+                            {
+                                "uid": "fQ2WFBjvQm2xLExnA4V02g",
+                                "type": "viewport-projection-horizontal",
+                                "fromViewUid": "dTJTguD7Rhu62n71o1zPdw",
+                                "options": {
+                                    "projectionFillColor": "#777",
+                                    "projectionStrokeColor": "#777",
+                                    "projectionFillOpacity": 0.3,
+                                    "projectionStrokeOpacity": 0.3,
+                                    "strokeWidth": 1
+                                },
+                                "width": 885,
+                                "height": 20
+                            },
+                            {
+                                "uid": "RPi7g-u4RSeQoNydqr0FJg",
+                                "type": "viewport-projection-horizontal",
+                                "fromViewUid": "P0YiGZX6RPO9QevWo9aGkA",
+                                "options": {
+                                    "projectionFillColor": "#777",
+                                    "projectionStrokeColor": "#777",
+                                    "projectionFillOpacity": 0.3,
+                                    "projectionStrokeOpacity": 0.3,
+                                    "strokeWidth": 1
+                                },
+                                "width": 885,
+                                "height": 20
+                            }
+                        ],
+                        "options": {}
+                    },
+                    {
+                        "type": "combined",
+                        "uid": "HkOs4m3-Q4GpcUCZ4w9CIA",
+                        "height": 20,
+                        "width": 885,
+                        "contents": [
+                            {
+                                "uid": "Noau_lBNQR6PnahQBsqlPg",
+                                "tilesetUid": "ButF4G3rQgKjBU9KyZEtZQ",
+                                "height": 20,
+                                "width": 885,
+                                "server": "//higlass.io/api/v1",
+                                "type": "horizontal-line",
+                                "options": {
+                                    "name": "Busslinger et al. 2017 Stag1 ChIP (Ctcf(fl/fl), 4h Adeno-Cre and 10d resting, GSE76303_14551+19587+26233)",
+                                    "valueScaling": "linear",
+                                    "coordSystem": "mm9",
+                                    "lineStrokeColor": "purple",
+                                    "labelPosition": "topLeft",
+                                    "labelColor": "black",
+                                    "labelBackgroundOpacity": 0.3,
+                                    "axisPositionHorizontal": "right",
+                                    "labelTextOpacity": 0.3,
+                                    "lineStrokeWidth": 2,
+                                    "labelLeftMargin": 0,
+                                    "labelRightMargin": 0,
+                                    "labelTopMargin": 0,
+                                    "labelBottomMargin": 0,
+                                    "labelBackgroundColor": "white",
+                                    "labelShowResolution": false,
+                                    "labelShowAssembly": true,
+                                    "axisLabelFormatting": "scientific",
+                                    "trackBorderWidth": 0,
+                                    "trackBorderColor": "black",
+                                    "showMousePosition": false,
+                                    "minHeight": 20,
+                                    "mousePositionColor": "#000000",
+                                    "showTooltip": false
+                                }
+                            },
+                            {
+                                "uid": "OmKnGKIfQ5W9jdRS0puZSg",
+                                "type": "viewport-projection-horizontal",
+                                "fromViewUid": "dTJTguD7Rhu62n71o1zPdw",
+                                "options": {
+                                    "projectionFillColor": "#777",
+                                    "projectionStrokeColor": "#777",
+                                    "projectionFillOpacity": 0.3,
+                                    "projectionStrokeOpacity": 0.3,
+                                    "strokeWidth": 1
+                                },
+                                "width": 885,
+                                "height": 20
+                            },
+                            {
+                                "uid": "MCBr_YUsRr2UKKxTC1q-uw",
+                                "type": "viewport-projection-horizontal",
+                                "fromViewUid": "P0YiGZX6RPO9QevWo9aGkA",
+                                "options": {
+                                    "projectionFillColor": "#777",
+                                    "projectionStrokeColor": "#777",
+                                    "projectionFillOpacity": 0.3,
+                                    "projectionStrokeOpacity": 0.3,
+                                    "strokeWidth": 1
+                                },
+                                "width": 885,
+                                "height": 20
+                            }
+                        ],
+                        "options": {}
+                    },
+                    {
+                        "type": "combined",
+                        "uid": "cdBmHkNXS6OhOS-ZSvwKWA",
+                        "height": 20,
+                        "width": 885,
+                        "contents": [
+                            {
+                                "uid": "bca3T49aTkiZVYPqAn-Dzw",
+                                "tilesetUid": "dcUTxCRHTIGpTeOrmqW3hQ",
+                                "height": 20,
+                                "width": 885,
+                                "server": "//higlass.io/api/v1",
+                                "type": "horizontal-line",
+                                "options": {
+                                    "name": "Busslinger et al. 2017 Scc1 ChIP (Ctcf(fl/fl), 4h Adeno-Cre and 10d resting, GSE76303_20094+20106)",
+                                    "valueScaling": "linear",
+                                    "coordSystem": "mm9",
+                                    "lineStrokeColor": "purple",
+                                    "labelPosition": "topLeft",
+                                    "labelColor": "black",
+                                    "axisPositionHorizontal": "right",
+                                    "labelTextOpacity": 0.3,
+                                    "lineStrokeWidth": 2,
+                                    "labelLeftMargin": 0,
+                                    "labelRightMargin": 0,
+                                    "labelTopMargin": 0,
+                                    "labelBottomMargin": 0,
+                                    "labelBackgroundColor": "white",
+                                    "labelShowResolution": false,
+                                    "labelShowAssembly": true,
+                                    "axisLabelFormatting": "scientific",
+                                    "trackBorderWidth": 0,
+                                    "trackBorderColor": "black",
+                                    "showMousePosition": false,
+                                    "minHeight": 20,
+                                    "mousePositionColor": "#000000",
+                                    "showTooltip": false
+                                }
+                            },
+                            {
+                                "uid": "RWVH25z1QcyHSRqcg_J3sg",
+                                "type": "viewport-projection-horizontal",
+                                "fromViewUid": "dTJTguD7Rhu62n71o1zPdw",
+                                "options": {
+                                    "projectionFillColor": "#777",
+                                    "projectionStrokeColor": "#777",
+                                    "projectionFillOpacity": 0.3,
+                                    "projectionStrokeOpacity": 0.3,
+                                    "strokeWidth": 1
+                                },
+                                "width": 885,
+                                "height": 20
+                            },
+                            {
+                                "uid": "QUINU5ARTKGj-nF8_XqtVA",
+                                "type": "viewport-projection-horizontal",
+                                "fromViewUid": "P0YiGZX6RPO9QevWo9aGkA",
+                                "options": {
+                                    "projectionFillColor": "#777",
+                                    "projectionStrokeColor": "#777",
+                                    "projectionFillOpacity": 0.3,
+                                    "projectionStrokeOpacity": 0.3,
+                                    "strokeWidth": 1
+                                },
+                                "width": 885,
+                                "height": 20
+                            }
+                        ],
+                        "options": {}
+                    },
+                    {
+                        "type": "combined",
+                        "uid": "NDJsZEhwRveimlQrOVCyUw",
+                        "height": 20,
+                        "width": 885,
+                        "contents": [
+                            {
+                                "uid": "T4Y2QpXURCKSnIR4VZHRqQ",
+                                "tilesetUid": "FbjW5up7T1-XnIFz9OyvFQ",
+                                "height": 20,
+                                "width": 885,
+                                "server": "//higlass.io/api/v1",
+                                "type": "horizontal-line",
+                                "options": {
+                                    "name": "Busslinger et al. 2017 Scc1 ChIP (Rosa26(CreER/+) Wapl(fl/-), 2-3d 4'hydroxytamoxifen and 10d resting, GSE76303_20096+20320+27717)",
+                                    "valueScaling": "linear",
+                                    "coordSystem": "mm9",
+                                    "lineStrokeColor": "green",
+                                    "labelPosition": "topLeft",
+                                    "labelColor": "black",
+                                    "axisPositionHorizontal": "right",
+                                    "labelTextOpacity": 0.3,
+                                    "lineStrokeWidth": 2,
+                                    "labelLeftMargin": 0,
+                                    "labelRightMargin": 0,
+                                    "labelTopMargin": 0,
+                                    "labelBottomMargin": 0,
+                                    "labelBackgroundColor": "white",
+                                    "labelShowResolution": false,
+                                    "labelShowAssembly": true,
+                                    "axisLabelFormatting": "scientific",
+                                    "trackBorderWidth": 0,
+                                    "trackBorderColor": "black",
+                                    "showMousePosition": false,
+                                    "minHeight": 20,
+                                    "mousePositionColor": "#000000",
+                                    "showTooltip": false
+                                }
+                            },
+                            {
+                                "uid": "HMlFN6brTf-pG9zXP7eaeA",
+                                "type": "viewport-projection-horizontal",
+                                "fromViewUid": "dTJTguD7Rhu62n71o1zPdw",
+                                "options": {
+                                    "projectionFillColor": "#777",
+                                    "projectionStrokeColor": "#777",
+                                    "projectionFillOpacity": 0.3,
+                                    "projectionStrokeOpacity": 0.3,
+                                    "strokeWidth": 1
+                                },
+                                "width": 885,
+                                "height": 20
+                            },
+                            {
+                                "uid": "SySE3bINQ0SevrD3U5rBew",
+                                "type": "viewport-projection-horizontal",
+                                "fromViewUid": "P0YiGZX6RPO9QevWo9aGkA",
+                                "options": {
+                                    "projectionFillColor": "#777",
+                                    "projectionStrokeColor": "#777",
+                                    "projectionFillOpacity": 0.3,
+                                    "projectionStrokeOpacity": 0.3,
+                                    "strokeWidth": 1
+                                },
+                                "width": 885,
+                                "height": 20
+                            }
+                        ],
+                        "options": {}
+                    },
+                    {
+                        "type": "combined",
+                        "uid": "dsQpr7HOQsyX-sjrPzHWng",
+                        "height": 20,
+                        "width": 885,
+                        "contents": [
+                            {
+                                "uid": "VM8RGZWXQEK3zcwzU9uLCw",
+                                "tilesetUid": "Hy1cz_yFRYqqQX8y5bh7Kw",
+                                "height": 20,
+                                "width": 885,
+                                "server": "//higlass.io/api/v1",
+                                "type": "horizontal-line",
+                                "options": {
+                                    "name": "Busslinger et al. 2017 Stag1 ChIP (Rosa26(CreER/+) Wapl(fl/-), 2-3d 4'hydroxytamoxifen and 10d resting, GSE76303_19589+20318+26235)",
+                                    "valueScaling": "linear",
+                                    "coordSystem": "mm9",
+                                    "lineStrokeColor": "green",
+                                    "labelPosition": "topLeft",
+                                    "labelColor": "black",
+                                    "axisPositionHorizontal": "right",
+                                    "labelTextOpacity": 0.3,
+                                    "lineStrokeWidth": 2,
+                                    "labelLeftMargin": 0,
+                                    "labelRightMargin": 0,
+                                    "labelTopMargin": 0,
+                                    "labelBottomMargin": 0,
+                                    "labelBackgroundColor": "white",
+                                    "labelShowResolution": false,
+                                    "labelShowAssembly": true,
+                                    "axisLabelFormatting": "scientific",
+                                    "trackBorderWidth": 0,
+                                    "trackBorderColor": "black",
+                                    "showMousePosition": false,
+                                    "minHeight": 20,
+                                    "mousePositionColor": "#000000",
+                                    "showTooltip": false
+                                }
+                            },
+                            {
+                                "uid": "JPE41IX0R7CUwgCzlGwzkA",
+                                "type": "viewport-projection-horizontal",
+                                "fromViewUid": "dTJTguD7Rhu62n71o1zPdw",
+                                "options": {
+                                    "projectionFillColor": "#777",
+                                    "projectionStrokeColor": "#777",
+                                    "projectionFillOpacity": 0.3,
+                                    "projectionStrokeOpacity": 0.3,
+                                    "strokeWidth": 1
+                                },
+                                "width": 885,
+                                "height": 20
+                            },
+                            {
+                                "uid": "NdfGziemRcueSQWArghkWg",
+                                "type": "viewport-projection-horizontal",
+                                "fromViewUid": "P0YiGZX6RPO9QevWo9aGkA",
+                                "options": {
+                                    "projectionFillColor": "#777",
+                                    "projectionStrokeColor": "#777",
+                                    "projectionFillOpacity": 0.3,
+                                    "projectionStrokeOpacity": 0.3,
+                                    "strokeWidth": 1
+                                },
+                                "width": 885,
+                                "height": 20
+                            }
+                        ],
+                        "options": {}
+                    },
+                    {
+                        "type": "combined",
+                        "uid": "NQV_yEXFRdC7KbsKx7Vecw",
+                        "height": 20,
+                        "width": 885,
+                        "contents": [
+                            {
+                                "uid": "bvt5U1iJTr-7B0ey0bM7pA",
+                                "tilesetUid": "bYEAmro5ROSGKKxvl132kw",
+                                "height": 20,
+                                "width": 885,
+                                "server": "//higlass.io/api/v1",
+                                "type": "horizontal-line",
+                                "options": {
+                                    "name": "Busslinger et al. 2017 Scc1 ChIP (Ctcf(fl/fl) Wapl(fl/fl), 4h Adeno-Cre and 10d resting, GSE76303_29079)",
+                                    "valueScaling": "linear",
+                                    "coordSystem": "mm9",
+                                    "lineStrokeColor": "brown",
+                                    "labelPosition": "topLeft",
+                                    "labelColor": "black",
+                                    "axisPositionHorizontal": "right",
+                                    "labelTextOpacity": 0.3,
+                                    "lineStrokeWidth": 2,
+                                    "labelLeftMargin": 0,
+                                    "labelRightMargin": 0,
+                                    "labelTopMargin": 0,
+                                    "labelBottomMargin": 0,
+                                    "labelBackgroundColor": "white",
+                                    "labelShowResolution": false,
+                                    "labelShowAssembly": true,
+                                    "axisLabelFormatting": "scientific",
+                                    "trackBorderWidth": 0,
+                                    "trackBorderColor": "black",
+                                    "showMousePosition": false,
+                                    "minHeight": 20,
+                                    "mousePositionColor": "#000000",
+                                    "showTooltip": false
+                                }
+                            },
+                            {
+                                "uid": "RFwmpo9tR2qS2MNUF6-hmQ",
+                                "type": "viewport-projection-horizontal",
+                                "fromViewUid": "dTJTguD7Rhu62n71o1zPdw",
+                                "options": {
+                                    "projectionFillColor": "#777",
+                                    "projectionStrokeColor": "#777",
+                                    "projectionFillOpacity": 0.3,
+                                    "projectionStrokeOpacity": 0.3,
+                                    "strokeWidth": 1
+                                },
+                                "width": 885,
+                                "height": 20
+                            },
+                            {
+                                "uid": "JoRiBPYlT6WqxjQKVNAbpw",
+                                "type": "viewport-projection-horizontal",
+                                "fromViewUid": "P0YiGZX6RPO9QevWo9aGkA",
+                                "options": {
+                                    "projectionFillColor": "#777",
+                                    "projectionStrokeColor": "#777",
+                                    "projectionFillOpacity": 0.3,
+                                    "projectionStrokeOpacity": 0.3,
+                                    "strokeWidth": 1
+                                },
+                                "width": 885,
+                                "height": 20
+                            }
+                        ],
+                        "options": {}
+                    },
+                    {
+                        "type": "combined",
+                        "uid": "bJjSMVnkRRmZ0zohE3nvQw",
+                        "height": 20,
+                        "width": 885,
+                        "contents": [
+                            {
+                                "uid": "dsSGdLh-RmScFaA6szxXNQ",
+                                "tilesetUid": "WUzG919kQ6OydCKysMUKuw",
+                                "height": 20,
+                                "width": 885,
+                                "server": "//higlass.io/api/v1",
+                                "type": "horizontal-line",
+                                "options": {
+                                    "name": "Busslinger et al. 2017 Stag1 ChIP (Ctcf(fl/fl) Wapl(fl/fl), 4h Adeno-Cre and 10d resting, GSE76303_26236+27237)",
+                                    "valueScaling": "linear",
+                                    "coordSystem": "mm9",
+                                    "lineStrokeColor": "brown",
+                                    "labelPosition": "topLeft",
+                                    "labelColor": "black",
+                                    "axisPositionHorizontal": "right",
+                                    "labelTextOpacity": 0.3,
+                                    "lineStrokeWidth": 2,
+                                    "labelLeftMargin": 0,
+                                    "labelRightMargin": 0,
+                                    "labelTopMargin": 0,
+                                    "labelBottomMargin": 0,
+                                    "labelBackgroundColor": "white",
+                                    "labelShowResolution": false,
+                                    "labelShowAssembly": true,
+                                    "axisLabelFormatting": "scientific",
+                                    "trackBorderWidth": 0,
+                                    "trackBorderColor": "black",
+                                    "showMousePosition": false,
+                                    "minHeight": 20,
+                                    "mousePositionColor": "#000000",
+                                    "showTooltip": false
+                                }
+                            },
+                            {
+                                "uid": "SZKEGMl1SXeO_RC5JToCrw",
+                                "type": "viewport-projection-horizontal",
+                                "fromViewUid": "dTJTguD7Rhu62n71o1zPdw",
+                                "options": {
+                                    "projectionFillColor": "#777",
+                                    "projectionStrokeColor": "#777",
+                                    "projectionFillOpacity": 0.3,
+                                    "projectionStrokeOpacity": 0.3,
+                                    "strokeWidth": 1
+                                },
+                                "width": 885,
+                                "height": 20
+                            },
+                            {
+                                "uid": "Wd4iQb0kR-iNi1FAkSy50w",
+                                "type": "viewport-projection-horizontal",
+                                "fromViewUid": "P0YiGZX6RPO9QevWo9aGkA",
+                                "options": {
+                                    "projectionFillColor": "#777",
+                                    "projectionStrokeColor": "#777",
+                                    "projectionFillOpacity": 0.3,
+                                    "projectionStrokeOpacity": 0.3,
+                                    "strokeWidth": 1
+                                },
+                                "width": 885,
+                                "height": 20
+                            }
+                        ],
+                        "options": {}
+                    },
+                    {
+                        "uid": "UN-ji0_yR3uvguIrUrt09Q",
+                        "height": 60,
+                        "width": 885,
+                        "type": "combined",
+                        "options": {},
+                        "contents": [
+                            {
+                                "uid": "eqVlm--IQfaonPAE6x38fw",
+                                "tilesetUid": "GUm5aBiLRCyz2PsBea7Yzg",
+                                "server": "//higlass.io/api/v1",
+                                "width": 885,
+                                "height": 60,
+                                "type": "horizontal-gene-annotations",
+                                "options": {
+                                    "labelColor": "black",
+                                    "plusStrandColor": "blue",
+                                    "minusStrandColor": "red",
+                                    "labelPosition": "hidden",
+                                    "name": "Gene Annotations (mm9)",
+                                    "fontSize": 10,
+                                    "labelBackgroundColor": "#ffffff",
+                                    "labelLeftMargin": 0,
+                                    "labelRightMargin": 0,
+                                    "labelTopMargin": 0,
+                                    "labelBottomMargin": 0,
+                                    "minHeight": 24,
+                                    "trackBorderWidth": 0,
+                                    "trackBorderColor": "black",
+                                    "showMousePosition": false,
+                                    "mousePositionColor": "#000000",
+                                    "geneAnnotationHeight": 16,
+                                    "geneLabelPosition": "outside",
+                                    "geneStrandSpacing": 4
+                                }
+                            },
+                            {
+                                "fromViewUid": "dTJTguD7Rhu62n71o1zPdw",
+                                "uid": "TZ9xoYfVTDmxdbguoNtJOg",
+                                "height": 60,
+                                "width": 885,
+                                "type": "viewport-projection-horizontal",
+                                "options": {
+                                    "projectionFillOpacity": 0.3,
+                                    "projectionStrokeColor": "#777",
+                                    "projectionFillColor": "#777",
+                                    "projectionStrokeOpacity": 0.3,
+                                    "strokeWidth": 1
+                                }
+                            },
+                            {
+                                "fromViewUid": "P0YiGZX6RPO9QevWo9aGkA",
+                                "uid": "DpA_XvBjRMeFxibJljYx7w",
+                                "height": 60,
+                                "width": 885,
+                                "type": "viewport-projection-horizontal",
+                                "options": {
+                                    "projectionFillOpacity": 0.3,
+                                    "projectionStrokeColor": "#777",
+                                    "projectionFillColor": "#777",
+                                    "projectionStrokeOpacity": 0.3,
+                                    "strokeWidth": 1
+                                }
+                            }
+                        ]
+                    }
+                ],
+                "right": [],
+                "center": [],
+                "left": [],
+                "whole": [],
+                "gallery": []
             },
-            "uid": "eSzUiKGrTjuoLDCp_XXelQ"
-          },
-          {
-            "uid": "Ubpwl6T9R1WQES7SEFCXEw",
-            "tilesetUid": "G85vBVaMQFGLdk5LF-tzPQ",
-            "height": 20,
-            "width": 483,
-            "server": "//higlass.io/api/v1",
-            "type": "horizontal-line",
-            "options": {
-              "name": "Busslinger et al. 2017 Stag1 ChIP (WT, 10d resting, GSE76303_14549+14954)",
-              "valueScaling": "linear",
-              "coordSystem": "mm9",
-              "lineStrokeColor": "black",
-              "labelPosition": "topLeft",
-              "labelColor": "black",
-              "axisPositionHorizontal": "right",
-              "labelTextOpacity": 0.3,
-              "lineStrokeWidth": 2,
-              "labelLeftMargin": 0,
-              "labelRightMargin": 0,
-              "labelTopMargin": 0,
-              "labelBottomMargin": 0,
-              "labelBackgroundColor": "white",
-              "labelShowResolution": false,
-              "labelShowAssembly": true,
-              "axisLabelFormatting": "scientific",
-              "trackBorderWidth": 0,
-              "trackBorderColor": "black",
-              "showMousePosition": false,
-              "minHeight": 20,
-              "mousePositionColor": "#000000",
-              "showTooltip": false
+            "chromInfoPath": "//s3.amazonaws.com/pkerp/data/hg19/chromSizes.tsv",
+            "genomePositionSearchBox": {
+                "visible": true,
+                "chromInfoServer": "//higlass.io/api/v1",
+                "autocompleteId": "GUm5aBiLRCyz2PsBea7Yzg",
+                "chromInfoId": "mm9",
+                "autocompleteServer": "//higlass.io/api/v1"
             }
-          },
-          {
-            "uid": "WOqP5ilQRfqsbC137stWnA",
-            "tilesetUid": "JVOQXLh2STCRpTgpxdgXUQ",
-            "height": 20,
-            "width": 483,
-            "server": "//higlass.io/api/v1",
-            "type": "horizontal-line",
-            "options": {
-              "name": "Busslinger et al. 2017 Scc1 ChIP (WT, 10d resting, GSE76303_20093+20105)",
-              "valueScaling": "linear",
-              "coordSystem": "mm9",
-              "lineStrokeColor": "black",
-              "labelPosition": "topLeft",
-              "labelColor": "black",
-              "labelBackgroundOpacity": 0.3,
-              "axisPositionHorizontal": "right",
-              "labelTextOpacity": 0.3,
-              "lineStrokeWidth": 2,
-              "labelLeftMargin": 0,
-              "labelRightMargin": 0,
-              "labelTopMargin": 0,
-              "labelBottomMargin": 0,
-              "labelBackgroundColor": "white",
-              "labelShowResolution": false,
-              "labelShowAssembly": true,
-              "axisLabelFormatting": "scientific",
-              "trackBorderWidth": 0,
-              "trackBorderColor": "black",
-              "showMousePosition": false,
-              "minHeight": 20,
-              "mousePositionColor": "#000000",
-              "showTooltip": false
+        },
+        {
+            "layout": {
+                "h": 9,
+                "moved": false,
+                "static": false,
+                "w": 6,
+                "y": 9,
+                "x": 0
+            },
+            "uid": "dTJTguD7Rhu62n71o1zPdw",
+            "initialYDomain": [
+                517416534.80157655,
+                517428534.2937772
+            ],
+            "autocompleteSource": "/api/v1/suggest/?d=OHJakQICQD6gTD7skx4EWA&",
+            "initialXDomain": [
+                514011543.5504789,
+                514352862.43974316
+            ],
+            "tracks": {
+                "bottom": [],
+                "top": [
+                    {
+                        "orientation": "1d-horizontal",
+                        "tilesetUid": "Dvg6wsaMSqGEzrJBpgiGFQ",
+                        "local": true,
+                        "minHeight": 30,
+                        "thumbnail": null,
+                        "server": "",
+                        "width": 20,
+                        "chromInfoPath": "//s3.amazonaws.com/pkerp/data/mm9/chromSizes.tsv",
+                        "height": 30,
+                        "type": "horizontal-chromosome-labels",
+                        "options": {
+                            "color": "#808080",
+                            "stroke": "#ffffff",
+                            "fontSize": 12,
+                            "fontIsLeftAligned": false,
+                            "showMousePosition": false,
+                            "mousePositionColor": "#000000"
+                        },
+                        "uid": "FVrvlT5PTNiveFwURIeMvw"
+                    },
+                    {
+                        "uid": "Ubpwl6T9R1WQES7SEFCXEw",
+                        "tilesetUid": "G85vBVaMQFGLdk5LF-tzPQ",
+                        "height": 20,
+                        "width": 483,
+                        "server": "//higlass.io/api/v1",
+                        "type": "horizontal-line",
+                        "options": {
+                            "name": "Busslinger et al. 2017 Stag1 ChIP (WT, 10d resting, GSE76303_14549+14954)",
+                            "valueScaling": "linear",
+                            "coordSystem": "mm9",
+                            "lineStrokeColor": "black",
+                            "labelPosition": "topLeft",
+                            "labelColor": "black",
+                            "axisPositionHorizontal": "right",
+                            "labelTextOpacity": 0.3,
+                            "lineStrokeWidth": 2,
+                            "labelLeftMargin": 0,
+                            "labelRightMargin": 0,
+                            "labelTopMargin": 0,
+                            "labelBottomMargin": 0,
+                            "labelBackgroundColor": "white",
+                            "labelShowResolution": false,
+                            "labelShowAssembly": true,
+                            "axisLabelFormatting": "scientific",
+                            "trackBorderWidth": 0,
+                            "trackBorderColor": "black",
+                            "showMousePosition": false,
+                            "minHeight": 20,
+                            "mousePositionColor": "#000000",
+                            "showTooltip": false
+                        }
+                    },
+                    {
+                        "uid": "WOqP5ilQRfqsbC137stWnA",
+                        "tilesetUid": "JVOQXLh2STCRpTgpxdgXUQ",
+                        "height": 20,
+                        "width": 483,
+                        "server": "//higlass.io/api/v1",
+                        "type": "horizontal-line",
+                        "options": {
+                            "name": "Busslinger et al. 2017 Scc1 ChIP (WT, 10d resting, GSE76303_20093+20105)",
+                            "valueScaling": "linear",
+                            "coordSystem": "mm9",
+                            "lineStrokeColor": "black",
+                            "labelPosition": "topLeft",
+                            "labelColor": "black",
+                            "axisPositionHorizontal": "right",
+                            "labelTextOpacity": 0.3,
+                            "lineStrokeWidth": 2,
+                            "labelLeftMargin": 0,
+                            "labelRightMargin": 0,
+                            "labelTopMargin": 0,
+                            "labelBottomMargin": 0,
+                            "labelBackgroundColor": "white",
+                            "labelShowResolution": false,
+                            "labelShowAssembly": true,
+                            "axisLabelFormatting": "scientific",
+                            "trackBorderWidth": 0,
+                            "trackBorderColor": "black",
+                            "showMousePosition": false,
+                            "minHeight": 20,
+                            "mousePositionColor": "#000000",
+                            "showTooltip": false
+                        }
+                    },
+                    {
+                        "uid": "J3FWwBMXS7GPsuHIUZpR2g",
+                        "tilesetUid": "VxpNze_cR6ywG4zSeGwOtA",
+                        "height": 20,
+                        "width": 483,
+                        "server": "//higlass.io/api/v1",
+                        "type": "horizontal-line",
+                        "options": {
+                            "name": "Busslinger et al. 2017 Nipbl ChIP (WT, resting, GSE76303_22603)",
+                            "valueScaling": "linear",
+                            "coordSystem": "mm9",
+                            "lineStrokeColor": "black",
+                            "labelPosition": "topLeft",
+                            "labelColor": "black",
+                            "axisPositionHorizontal": "right",
+                            "labelTextOpacity": 0.3,
+                            "lineStrokeWidth": 2,
+                            "labelLeftMargin": 0,
+                            "labelRightMargin": 0,
+                            "labelTopMargin": 0,
+                            "labelBottomMargin": 0,
+                            "labelBackgroundColor": "white",
+                            "labelShowResolution": false,
+                            "labelShowAssembly": true,
+                            "axisLabelFormatting": "scientific",
+                            "trackBorderWidth": 0,
+                            "trackBorderColor": "black",
+                            "showMousePosition": false,
+                            "minHeight": 20,
+                            "mousePositionColor": "#000000",
+                            "showTooltip": false
+                        }
+                    },
+                    {
+                        "uid": "LoC3UUO3Q1i7G9jMMDlZdA",
+                        "tilesetUid": "JtUCKhlnSAevxeJ1CaLYKA",
+                        "height": 20,
+                        "width": 483,
+                        "server": "//higlass.io/api/v1",
+                        "type": "horizontal-line",
+                        "options": {
+                            "name": "Busslinger et al. 2017 CTCF ChIP (WT, 10d resting, GSE76303_9147+27719)",
+                            "valueScaling": "linear",
+                            "coordSystem": "mm9",
+                            "lineStrokeColor": "black",
+                            "labelPosition": "topLeft",
+                            "labelColor": "black",
+                            "axisPositionHorizontal": "right",
+                            "labelTextOpacity": 0.3,
+                            "lineStrokeWidth": 2,
+                            "labelLeftMargin": 0,
+                            "labelRightMargin": 0,
+                            "labelTopMargin": 0,
+                            "labelBottomMargin": 0,
+                            "labelBackgroundColor": "white",
+                            "labelShowResolution": false,
+                            "labelShowAssembly": true,
+                            "axisLabelFormatting": "scientific",
+                            "trackBorderWidth": 0,
+                            "trackBorderColor": "black",
+                            "showMousePosition": false,
+                            "minHeight": 20,
+                            "mousePositionColor": "#000000",
+                            "showTooltip": false
+                        }
+                    },
+                    {
+                        "uid": "Noau_lBNQR6PnahQBsqlPg",
+                        "tilesetUid": "ButF4G3rQgKjBU9KyZEtZQ",
+                        "height": 20,
+                        "width": 483,
+                        "server": "//higlass.io/api/v1",
+                        "type": "horizontal-line",
+                        "options": {
+                            "name": "Busslinger et al. 2017 Stag1 ChIP (Ctcf(fl/fl), 4h Adeno-Cre and 10d resting, GSE76303_14551+19587+26233)",
+                            "valueScaling": "linear",
+                            "coordSystem": "mm9",
+                            "lineStrokeColor": "purple",
+                            "labelPosition": "topLeft",
+                            "labelColor": "black",
+                            "labelBackgroundOpacity": 0.3,
+                            "axisPositionHorizontal": "right",
+                            "labelTextOpacity": 0.3,
+                            "lineStrokeWidth": 2,
+                            "labelLeftMargin": 0,
+                            "labelRightMargin": 0,
+                            "labelTopMargin": 0,
+                            "labelBottomMargin": 0,
+                            "labelBackgroundColor": "white",
+                            "labelShowResolution": false,
+                            "labelShowAssembly": true,
+                            "axisLabelFormatting": "scientific",
+                            "trackBorderWidth": 0,
+                            "trackBorderColor": "black",
+                            "showMousePosition": false,
+                            "minHeight": 20,
+                            "mousePositionColor": "#000000",
+                            "showTooltip": false
+                        }
+                    },
+                    {
+                        "uid": "bca3T49aTkiZVYPqAn-Dzw",
+                        "tilesetUid": "dcUTxCRHTIGpTeOrmqW3hQ",
+                        "height": 20,
+                        "width": 483,
+                        "server": "//higlass.io/api/v1",
+                        "type": "horizontal-line",
+                        "options": {
+                            "name": "Busslinger et al. 2017 Scc1 ChIP (Ctcf(fl/fl), 4h Adeno-Cre and 10d resting, GSE76303_20094+20106)",
+                            "valueScaling": "linear",
+                            "coordSystem": "mm9",
+                            "lineStrokeColor": "purple",
+                            "labelPosition": "topLeft",
+                            "labelColor": "black",
+                            "axisPositionHorizontal": "right",
+                            "labelTextOpacity": 0.3,
+                            "lineStrokeWidth": 2,
+                            "labelLeftMargin": 0,
+                            "labelRightMargin": 0,
+                            "labelTopMargin": 0,
+                            "labelBottomMargin": 0,
+                            "labelBackgroundColor": "white",
+                            "labelShowResolution": false,
+                            "labelShowAssembly": true,
+                            "axisLabelFormatting": "scientific",
+                            "trackBorderWidth": 0,
+                            "trackBorderColor": "black",
+                            "showMousePosition": false,
+                            "minHeight": 20,
+                            "mousePositionColor": "#000000",
+                            "showTooltip": false
+                        }
+                    },
+                    {
+                        "uid": "T4Y2QpXURCKSnIR4VZHRqQ",
+                        "tilesetUid": "FbjW5up7T1-XnIFz9OyvFQ",
+                        "height": 20,
+                        "width": 483,
+                        "server": "//higlass.io/api/v1",
+                        "type": "horizontal-line",
+                        "options": {
+                            "name": "Busslinger et al. 2017 Scc1 ChIP (Rosa26(CreER/+) Wapl(fl/-), 2-3d 4'hydroxytamoxifen and 10d resting, GSE76303_20096+20320+27717)",
+                            "valueScaling": "linear",
+                            "coordSystem": "mm9",
+                            "lineStrokeColor": "green",
+                            "labelPosition": "topLeft",
+                            "labelColor": "black",
+                            "axisPositionHorizontal": "right",
+                            "labelTextOpacity": 0.3,
+                            "lineStrokeWidth": 2,
+                            "labelLeftMargin": 0,
+                            "labelRightMargin": 0,
+                            "labelTopMargin": 0,
+                            "labelBottomMargin": 0,
+                            "labelBackgroundColor": "white",
+                            "labelShowResolution": false,
+                            "labelShowAssembly": true,
+                            "axisLabelFormatting": "scientific",
+                            "trackBorderWidth": 0,
+                            "trackBorderColor": "black",
+                            "showMousePosition": false,
+                            "minHeight": 20,
+                            "mousePositionColor": "#000000",
+                            "showTooltip": false
+                        }
+                    },
+                    {
+                        "uid": "VM8RGZWXQEK3zcwzU9uLCw",
+                        "tilesetUid": "Hy1cz_yFRYqqQX8y5bh7Kw",
+                        "height": 20,
+                        "width": 483,
+                        "server": "//higlass.io/api/v1",
+                        "type": "horizontal-line",
+                        "options": {
+                            "name": "Busslinger et al. 2017 Stag1 ChIP (Rosa26(CreER/+) Wapl(fl/-), 2-3d 4'hydroxytamoxifen and 10d resting, GSE76303_19589+20318+26235)",
+                            "valueScaling": "linear",
+                            "coordSystem": "mm9",
+                            "lineStrokeColor": "green",
+                            "labelPosition": "topLeft",
+                            "labelColor": "black",
+                            "axisPositionHorizontal": "right",
+                            "labelTextOpacity": 0.3,
+                            "lineStrokeWidth": 2,
+                            "labelLeftMargin": 0,
+                            "labelRightMargin": 0,
+                            "labelTopMargin": 0,
+                            "labelBottomMargin": 0,
+                            "labelBackgroundColor": "white",
+                            "labelShowResolution": false,
+                            "labelShowAssembly": true,
+                            "axisLabelFormatting": "scientific",
+                            "trackBorderWidth": 0,
+                            "trackBorderColor": "black",
+                            "showMousePosition": false,
+                            "minHeight": 20,
+                            "mousePositionColor": "#000000",
+                            "showTooltip": false
+                        }
+                    },
+                    {
+                        "uid": "bvt5U1iJTr-7B0ey0bM7pA",
+                        "tilesetUid": "bYEAmro5ROSGKKxvl132kw",
+                        "height": 20,
+                        "width": 483,
+                        "server": "//higlass.io/api/v1",
+                        "type": "horizontal-line",
+                        "options": {
+                            "name": "Busslinger et al. 2017 Scc1 ChIP (Ctcf(fl/fl) Wapl(fl/fl), 4h Adeno-Cre and 10d resting, GSE76303_29079)",
+                            "valueScaling": "linear",
+                            "coordSystem": "mm9",
+                            "lineStrokeColor": "brown",
+                            "labelPosition": "topLeft",
+                            "labelColor": "black",
+                            "axisPositionHorizontal": "right",
+                            "labelTextOpacity": 0.3,
+                            "lineStrokeWidth": 2,
+                            "labelLeftMargin": 0,
+                            "labelRightMargin": 0,
+                            "labelTopMargin": 0,
+                            "labelBottomMargin": 0,
+                            "labelBackgroundColor": "white",
+                            "labelShowResolution": false,
+                            "labelShowAssembly": true,
+                            "axisLabelFormatting": "scientific",
+                            "trackBorderWidth": 0,
+                            "trackBorderColor": "black",
+                            "showMousePosition": false,
+                            "minHeight": 20,
+                            "mousePositionColor": "#000000",
+                            "showTooltip": false
+                        }
+                    },
+                    {
+                        "uid": "dsSGdLh-RmScFaA6szxXNQ",
+                        "tilesetUid": "WUzG919kQ6OydCKysMUKuw",
+                        "height": 20,
+                        "width": 483,
+                        "server": "//higlass.io/api/v1",
+                        "type": "horizontal-line",
+                        "options": {
+                            "name": "Busslinger et al. 2017 Stag1 ChIP (Ctcf(fl/fl) Wapl(fl/fl), 4h Adeno-Cre and 10d resting, GSE76303_26236+27237)",
+                            "valueScaling": "linear",
+                            "coordSystem": "mm9",
+                            "lineStrokeColor": "brown",
+                            "labelPosition": "topLeft",
+                            "labelColor": "black",
+                            "axisPositionHorizontal": "right",
+                            "labelTextOpacity": 0.3,
+                            "lineStrokeWidth": 2,
+                            "labelLeftMargin": 0,
+                            "labelRightMargin": 0,
+                            "labelTopMargin": 0,
+                            "labelBottomMargin": 0,
+                            "labelBackgroundColor": "white",
+                            "labelShowResolution": false,
+                            "labelShowAssembly": true,
+                            "axisLabelFormatting": "scientific",
+                            "trackBorderWidth": 0,
+                            "trackBorderColor": "black",
+                            "showMousePosition": false,
+                            "minHeight": 20,
+                            "mousePositionColor": "#000000",
+                            "showTooltip": false
+                        }
+                    },
+                    {
+                        "uid": "eqVlm--IQfaonPAE6x38fw",
+                        "tilesetUid": "GUm5aBiLRCyz2PsBea7Yzg",
+                        "server": "//higlass.io/api/v1",
+                        "width": 483,
+                        "height": 60,
+                        "type": "horizontal-gene-annotations",
+                        "options": {
+                            "labelColor": "black",
+                            "plusStrandColor": "blue",
+                            "minusStrandColor": "red",
+                            "labelPosition": "hidden",
+                            "name": "Gene Annotations (mm9)",
+                            "fontSize": 10,
+                            "labelBackgroundColor": "#ffffff",
+                            "labelLeftMargin": 0,
+                            "labelRightMargin": 0,
+                            "labelTopMargin": 0,
+                            "labelBottomMargin": 0,
+                            "minHeight": 24,
+                            "trackBorderWidth": 0,
+                            "trackBorderColor": "black",
+                            "showMousePosition": false,
+                            "mousePositionColor": "#000000",
+                            "geneAnnotationHeight": 16,
+                            "geneLabelPosition": "outside",
+                            "geneStrandSpacing": 4
+                        }
+                    }
+                ],
+                "right": [],
+                "center": [],
+                "left": [],
+                "whole": [],
+                "gallery": []
+            },
+            "chromInfoPath": "//s3.amazonaws.com/pkerp/data/hg19/chromSizes.tsv",
+            "genomePositionSearchBox": {
+                "visible": true,
+                "chromInfoServer": "//higlass.io/api/v1",
+                "autocompleteId": "GUm5aBiLRCyz2PsBea7Yzg",
+                "chromInfoId": "mm9",
+                "autocompleteServer": "//higlass.io/api/v1"
             }
-          },
-          {
-            "uid": "J3FWwBMXS7GPsuHIUZpR2g",
-            "tilesetUid": "VxpNze_cR6ywG4zSeGwOtA",
-            "height": 20,
-            "width": 483,
-            "server": "//higlass.io/api/v1",
-            "type": "horizontal-line",
-            "options": {
-              "name": "Busslinger et al. 2017 Nipbl ChIP (WT, resting, GSE76303_22603)",
-              "valueScaling": "linear",
-              "coordSystem": "mm9",
-              "lineStrokeColor": "black",
-              "labelPosition": "topLeft",
-              "labelColor": "black",
-              "axisPositionHorizontal": "right",
-              "labelTextOpacity": 0.3,
-              "lineStrokeWidth": 2,
-              "labelLeftMargin": 0,
-              "labelRightMargin": 0,
-              "labelTopMargin": 0,
-              "labelBottomMargin": 0,
-              "labelBackgroundColor": "white",
-              "labelShowResolution": false,
-              "labelShowAssembly": true,
-              "axisLabelFormatting": "scientific",
-              "trackBorderWidth": 0,
-              "trackBorderColor": "black",
-              "showMousePosition": false,
-              "minHeight": 20,
-              "mousePositionColor": "#000000",
-              "showTooltip": false
+        },
+        {
+            "layout": {
+                "h": 9,
+                "moved": false,
+                "static": false,
+                "w": 6,
+                "y": 9,
+                "x": 6
+            },
+            "uid": "P0YiGZX6RPO9QevWo9aGkA",
+            "initialYDomain": [
+                517226089.02845025,
+                517234201.5566761
+            ],
+            "autocompleteSource": "/api/v1/suggest/?d=OHJakQICQD6gTD7skx4EWA&",
+            "initialXDomain": [
+                517375818.4100014,
+                517606574.76842445
+            ],
+            "tracks": {
+                "bottom": [],
+                "top": [
+                    {
+                        "orientation": "1d-horizontal",
+                        "tilesetUid": "RYcacAlsQWiEPBJkmqgGGQ",
+                        "local": true,
+                        "minHeight": 30,
+                        "thumbnail": null,
+                        "server": "",
+                        "width": 20,
+                        "chromInfoPath": "//s3.amazonaws.com/pkerp/data/mm9/chromSizes.tsv",
+                        "height": 30,
+                        "type": "horizontal-chromosome-labels",
+                        "options": {
+                            "color": "#808080",
+                            "stroke": "#ffffff",
+                            "fontSize": 12,
+                            "fontIsLeftAligned": false,
+                            "showMousePosition": false,
+                            "mousePositionColor": "#000000"
+                        },
+                        "uid": "eSzUiKGrTjuoLDCp_XXelQ"
+                    },
+                    {
+                        "uid": "Ubpwl6T9R1WQES7SEFCXEw",
+                        "tilesetUid": "G85vBVaMQFGLdk5LF-tzPQ",
+                        "height": 20,
+                        "width": 483,
+                        "server": "//higlass.io/api/v1",
+                        "type": "horizontal-line",
+                        "options": {
+                            "name": "Busslinger et al. 2017 Stag1 ChIP (WT, 10d resting, GSE76303_14549+14954)",
+                            "valueScaling": "linear",
+                            "coordSystem": "mm9",
+                            "lineStrokeColor": "black",
+                            "labelPosition": "topLeft",
+                            "labelColor": "black",
+                            "axisPositionHorizontal": "right",
+                            "labelTextOpacity": 0.3,
+                            "lineStrokeWidth": 2,
+                            "labelLeftMargin": 0,
+                            "labelRightMargin": 0,
+                            "labelTopMargin": 0,
+                            "labelBottomMargin": 0,
+                            "labelBackgroundColor": "white",
+                            "labelShowResolution": false,
+                            "labelShowAssembly": true,
+                            "axisLabelFormatting": "scientific",
+                            "trackBorderWidth": 0,
+                            "trackBorderColor": "black",
+                            "showMousePosition": false,
+                            "minHeight": 20,
+                            "mousePositionColor": "#000000",
+                            "showTooltip": false
+                        }
+                    },
+                    {
+                        "uid": "WOqP5ilQRfqsbC137stWnA",
+                        "tilesetUid": "JVOQXLh2STCRpTgpxdgXUQ",
+                        "height": 20,
+                        "width": 483,
+                        "server": "//higlass.io/api/v1",
+                        "type": "horizontal-line",
+                        "options": {
+                            "name": "Busslinger et al. 2017 Scc1 ChIP (WT, 10d resting, GSE76303_20093+20105)",
+                            "valueScaling": "linear",
+                            "coordSystem": "mm9",
+                            "lineStrokeColor": "black",
+                            "labelPosition": "topLeft",
+                            "labelColor": "black",
+                            "labelBackgroundOpacity": 0.3,
+                            "axisPositionHorizontal": "right",
+                            "labelTextOpacity": 0.3,
+                            "lineStrokeWidth": 2,
+                            "labelLeftMargin": 0,
+                            "labelRightMargin": 0,
+                            "labelTopMargin": 0,
+                            "labelBottomMargin": 0,
+                            "labelBackgroundColor": "white",
+                            "labelShowResolution": false,
+                            "labelShowAssembly": true,
+                            "axisLabelFormatting": "scientific",
+                            "trackBorderWidth": 0,
+                            "trackBorderColor": "black",
+                            "showMousePosition": false,
+                            "minHeight": 20,
+                            "mousePositionColor": "#000000",
+                            "showTooltip": false
+                        }
+                    },
+                    {
+                        "uid": "J3FWwBMXS7GPsuHIUZpR2g",
+                        "tilesetUid": "VxpNze_cR6ywG4zSeGwOtA",
+                        "height": 20,
+                        "width": 483,
+                        "server": "//higlass.io/api/v1",
+                        "type": "horizontal-line",
+                        "options": {
+                            "name": "Busslinger et al. 2017 Nipbl ChIP (WT, resting, GSE76303_22603)",
+                            "valueScaling": "linear",
+                            "coordSystem": "mm9",
+                            "lineStrokeColor": "black",
+                            "labelPosition": "topLeft",
+                            "labelColor": "black",
+                            "axisPositionHorizontal": "right",
+                            "labelTextOpacity": 0.3,
+                            "lineStrokeWidth": 2,
+                            "labelLeftMargin": 0,
+                            "labelRightMargin": 0,
+                            "labelTopMargin": 0,
+                            "labelBottomMargin": 0,
+                            "labelBackgroundColor": "white",
+                            "labelShowResolution": false,
+                            "labelShowAssembly": true,
+                            "axisLabelFormatting": "scientific",
+                            "trackBorderWidth": 0,
+                            "trackBorderColor": "black",
+                            "showMousePosition": false,
+                            "minHeight": 20,
+                            "mousePositionColor": "#000000",
+                            "showTooltip": false
+                        }
+                    },
+                    {
+                        "uid": "LoC3UUO3Q1i7G9jMMDlZdA",
+                        "tilesetUid": "JtUCKhlnSAevxeJ1CaLYKA",
+                        "height": 20,
+                        "width": 483,
+                        "server": "//higlass.io/api/v1",
+                        "type": "horizontal-line",
+                        "options": {
+                            "name": "Busslinger et al. 2017 CTCF ChIP (WT, 10d resting, GSE76303_9147+27719)",
+                            "valueScaling": "linear",
+                            "coordSystem": "mm9",
+                            "lineStrokeColor": "black",
+                            "labelPosition": "topLeft",
+                            "labelColor": "black",
+                            "axisPositionHorizontal": "right",
+                            "labelTextOpacity": 0.3,
+                            "lineStrokeWidth": 2,
+                            "labelLeftMargin": 0,
+                            "labelRightMargin": 0,
+                            "labelTopMargin": 0,
+                            "labelBottomMargin": 0,
+                            "labelBackgroundColor": "white",
+                            "labelShowResolution": false,
+                            "labelShowAssembly": true,
+                            "axisLabelFormatting": "scientific",
+                            "trackBorderWidth": 0,
+                            "trackBorderColor": "black",
+                            "showMousePosition": false,
+                            "minHeight": 20,
+                            "mousePositionColor": "#000000",
+                            "showTooltip": false
+                        }
+                    },
+                    {
+                        "uid": "Noau_lBNQR6PnahQBsqlPg",
+                        "tilesetUid": "ButF4G3rQgKjBU9KyZEtZQ",
+                        "height": 20,
+                        "width": 483,
+                        "server": "//higlass.io/api/v1",
+                        "type": "horizontal-line",
+                        "options": {
+                            "name": "Busslinger et al. 2017 Stag1 ChIP (Ctcf(fl/fl), 4h Adeno-Cre and 10d resting, GSE76303_14551+19587+26233)",
+                            "valueScaling": "linear",
+                            "coordSystem": "mm9",
+                            "lineStrokeColor": "purple",
+                            "labelPosition": "topLeft",
+                            "labelColor": "black",
+                            "labelBackgroundOpacity": 0.3,
+                            "axisPositionHorizontal": "right",
+                            "labelTextOpacity": 0.3,
+                            "lineStrokeWidth": 2,
+                            "labelLeftMargin": 0,
+                            "labelRightMargin": 0,
+                            "labelTopMargin": 0,
+                            "labelBottomMargin": 0,
+                            "labelBackgroundColor": "white",
+                            "labelShowResolution": false,
+                            "labelShowAssembly": true,
+                            "axisLabelFormatting": "scientific",
+                            "trackBorderWidth": 0,
+                            "trackBorderColor": "black",
+                            "showMousePosition": false,
+                            "minHeight": 20,
+                            "mousePositionColor": "#000000",
+                            "showTooltip": false
+                        }
+                    },
+                    {
+                        "uid": "bca3T49aTkiZVYPqAn-Dzw",
+                        "tilesetUid": "dcUTxCRHTIGpTeOrmqW3hQ",
+                        "height": 20,
+                        "width": 483,
+                        "server": "//higlass.io/api/v1",
+                        "type": "horizontal-line",
+                        "options": {
+                            "name": "Busslinger et al. 2017 Scc1 ChIP (Ctcf(fl/fl), 4h Adeno-Cre and 10d resting, GSE76303_20094+20106)",
+                            "valueScaling": "linear",
+                            "coordSystem": "mm9",
+                            "lineStrokeColor": "purple",
+                            "labelPosition": "topLeft",
+                            "labelColor": "black",
+                            "axisPositionHorizontal": "right",
+                            "labelTextOpacity": 0.3,
+                            "lineStrokeWidth": 2,
+                            "labelLeftMargin": 0,
+                            "labelRightMargin": 0,
+                            "labelTopMargin": 0,
+                            "labelBottomMargin": 0,
+                            "labelBackgroundColor": "white",
+                            "labelShowResolution": false,
+                            "labelShowAssembly": true,
+                            "axisLabelFormatting": "scientific",
+                            "trackBorderWidth": 0,
+                            "trackBorderColor": "black",
+                            "showMousePosition": false,
+                            "minHeight": 20,
+                            "mousePositionColor": "#000000",
+                            "showTooltip": false
+                        }
+                    },
+                    {
+                        "uid": "T4Y2QpXURCKSnIR4VZHRqQ",
+                        "tilesetUid": "FbjW5up7T1-XnIFz9OyvFQ",
+                        "height": 20,
+                        "width": 483,
+                        "server": "//higlass.io/api/v1",
+                        "type": "horizontal-line",
+                        "options": {
+                            "name": "Busslinger et al. 2017 Scc1 ChIP (Rosa26(CreER/+) Wapl(fl/-), 2-3d 4'hydroxytamoxifen and 10d resting, GSE76303_20096+20320+27717)",
+                            "valueScaling": "linear",
+                            "coordSystem": "mm9",
+                            "lineStrokeColor": "green",
+                            "labelPosition": "topLeft",
+                            "labelColor": "black",
+                            "axisPositionHorizontal": "right",
+                            "labelTextOpacity": 0.3,
+                            "lineStrokeWidth": 2,
+                            "labelLeftMargin": 0,
+                            "labelRightMargin": 0,
+                            "labelTopMargin": 0,
+                            "labelBottomMargin": 0,
+                            "labelBackgroundColor": "white",
+                            "labelShowResolution": false,
+                            "labelShowAssembly": true,
+                            "axisLabelFormatting": "scientific",
+                            "trackBorderWidth": 0,
+                            "trackBorderColor": "black",
+                            "showMousePosition": false,
+                            "minHeight": 20,
+                            "mousePositionColor": "#000000",
+                            "showTooltip": false
+                        }
+                    },
+                    {
+                        "uid": "VM8RGZWXQEK3zcwzU9uLCw",
+                        "tilesetUid": "Hy1cz_yFRYqqQX8y5bh7Kw",
+                        "height": 20,
+                        "width": 483,
+                        "server": "//higlass.io/api/v1",
+                        "type": "horizontal-line",
+                        "options": {
+                            "name": "Busslinger et al. 2017 Stag1 ChIP (Rosa26(CreER/+) Wapl(fl/-), 2-3d 4'hydroxytamoxifen and 10d resting, GSE76303_19589+20318+26235)",
+                            "valueScaling": "linear",
+                            "coordSystem": "mm9",
+                            "lineStrokeColor": "green",
+                            "labelPosition": "topLeft",
+                            "labelColor": "black",
+                            "axisPositionHorizontal": "right",
+                            "labelTextOpacity": 0.3,
+                            "lineStrokeWidth": 2,
+                            "labelLeftMargin": 0,
+                            "labelRightMargin": 0,
+                            "labelTopMargin": 0,
+                            "labelBottomMargin": 0,
+                            "labelBackgroundColor": "white",
+                            "labelShowResolution": false,
+                            "labelShowAssembly": true,
+                            "axisLabelFormatting": "scientific",
+                            "trackBorderWidth": 0,
+                            "trackBorderColor": "black",
+                            "showMousePosition": false,
+                            "minHeight": 20,
+                            "mousePositionColor": "#000000",
+                            "showTooltip": false
+                        }
+                    },
+                    {
+                        "uid": "bvt5U1iJTr-7B0ey0bM7pA",
+                        "tilesetUid": "bYEAmro5ROSGKKxvl132kw",
+                        "height": 20,
+                        "width": 483,
+                        "server": "//higlass.io/api/v1",
+                        "type": "horizontal-line",
+                        "options": {
+                            "name": "Busslinger et al. 2017 Scc1 ChIP (Ctcf(fl/fl) Wapl(fl/fl), 4h Adeno-Cre and 10d resting, GSE76303_29079)",
+                            "valueScaling": "linear",
+                            "coordSystem": "mm9",
+                            "lineStrokeColor": "brown",
+                            "labelPosition": "topLeft",
+                            "labelColor": "black",
+                            "axisPositionHorizontal": "right",
+                            "labelTextOpacity": 0.3,
+                            "lineStrokeWidth": 2,
+                            "labelLeftMargin": 0,
+                            "labelRightMargin": 0,
+                            "labelTopMargin": 0,
+                            "labelBottomMargin": 0,
+                            "labelBackgroundColor": "white",
+                            "labelShowResolution": false,
+                            "labelShowAssembly": true,
+                            "axisLabelFormatting": "scientific",
+                            "trackBorderWidth": 0,
+                            "trackBorderColor": "black",
+                            "showMousePosition": false,
+                            "minHeight": 20,
+                            "mousePositionColor": "#000000",
+                            "showTooltip": false
+                        }
+                    },
+                    {
+                        "uid": "dsSGdLh-RmScFaA6szxXNQ",
+                        "tilesetUid": "WUzG919kQ6OydCKysMUKuw",
+                        "height": 20,
+                        "width": 483,
+                        "server": "//higlass.io/api/v1",
+                        "type": "horizontal-line",
+                        "options": {
+                            "name": "Busslinger et al. 2017 Stag1 ChIP (Ctcf(fl/fl) Wapl(fl/fl), 4h Adeno-Cre and 10d resting, GSE76303_26236+27237)",
+                            "valueScaling": "linear",
+                            "coordSystem": "mm9",
+                            "lineStrokeColor": "brown",
+                            "labelPosition": "topLeft",
+                            "labelColor": "black",
+                            "axisPositionHorizontal": "right",
+                            "labelTextOpacity": 0.3,
+                            "lineStrokeWidth": 2,
+                            "labelLeftMargin": 0,
+                            "labelRightMargin": 0,
+                            "labelTopMargin": 0,
+                            "labelBottomMargin": 0,
+                            "labelBackgroundColor": "white",
+                            "labelShowResolution": false,
+                            "labelShowAssembly": true,
+                            "axisLabelFormatting": "scientific",
+                            "trackBorderWidth": 0,
+                            "trackBorderColor": "black",
+                            "showMousePosition": false,
+                            "minHeight": 20,
+                            "mousePositionColor": "#000000",
+                            "showTooltip": false
+                        }
+                    },
+                    {
+                        "uid": "eqVlm--IQfaonPAE6x38fw",
+                        "tilesetUid": "GUm5aBiLRCyz2PsBea7Yzg",
+                        "server": "//higlass.io/api/v1",
+                        "width": 483,
+                        "height": 60,
+                        "type": "horizontal-gene-annotations",
+                        "options": {
+                            "labelColor": "black",
+                            "plusStrandColor": "blue",
+                            "minusStrandColor": "red",
+                            "labelPosition": "hidden",
+                            "name": "Gene Annotations (mm9)",
+                            "fontSize": 10,
+                            "labelBackgroundColor": "#ffffff",
+                            "labelLeftMargin": 0,
+                            "labelRightMargin": 0,
+                            "labelTopMargin": 0,
+                            "labelBottomMargin": 0,
+                            "minHeight": 24,
+                            "trackBorderWidth": 0,
+                            "trackBorderColor": "black",
+                            "showMousePosition": false,
+                            "mousePositionColor": "#000000",
+                            "geneAnnotationHeight": 16,
+                            "geneLabelPosition": "outside",
+                            "geneStrandSpacing": 4
+                        }
+                    }
+                ],
+                "right": [],
+                "center": [],
+                "left": [],
+                "whole": [],
+                "gallery": []
+            },
+            "chromInfoPath": "//s3.amazonaws.com/pkerp/data/hg19/chromSizes.tsv",
+            "genomePositionSearchBox": {
+                "visible": true,
+                "chromInfoServer": "//higlass.io/api/v1",
+                "autocompleteId": "GUm5aBiLRCyz2PsBea7Yzg",
+                "chromInfoId": "mm9",
+                "autocompleteServer": "//higlass.io/api/v1"
             }
-          },
-          {
-            "uid": "LoC3UUO3Q1i7G9jMMDlZdA",
-            "tilesetUid": "JtUCKhlnSAevxeJ1CaLYKA",
-            "height": 20,
-            "width": 483,
-            "server": "//higlass.io/api/v1",
-            "type": "horizontal-line",
-            "options": {
-              "name": "Busslinger et al. 2017 CTCF ChIP (WT, 10d resting, GSE76303_9147+27719)",
-              "valueScaling": "linear",
-              "coordSystem": "mm9",
-              "lineStrokeColor": "black",
-              "labelPosition": "topLeft",
-              "labelColor": "black",
-              "axisPositionHorizontal": "right",
-              "labelTextOpacity": 0.3,
-              "lineStrokeWidth": 2,
-              "labelLeftMargin": 0,
-              "labelRightMargin": 0,
-              "labelTopMargin": 0,
-              "labelBottomMargin": 0,
-              "labelBackgroundColor": "white",
-              "labelShowResolution": false,
-              "labelShowAssembly": true,
-              "axisLabelFormatting": "scientific",
-              "trackBorderWidth": 0,
-              "trackBorderColor": "black",
-              "showMousePosition": false,
-              "minHeight": 20,
-              "mousePositionColor": "#000000",
-              "showTooltip": false
-            }
-          },
-          {
-            "uid": "Noau_lBNQR6PnahQBsqlPg",
-            "tilesetUid": "ButF4G3rQgKjBU9KyZEtZQ",
-            "height": 20,
-            "width": 483,
-            "server": "//higlass.io/api/v1",
-            "type": "horizontal-line",
-            "options": {
-              "name": "Busslinger et al. 2017 Stag1 ChIP (Ctcf(fl/fl), 4h Adeno-Cre and 10d resting, GSE76303_14551+19587+26233)",
-              "valueScaling": "linear",
-              "coordSystem": "mm9",
-              "lineStrokeColor": "purple",
-              "labelPosition": "topLeft",
-              "labelColor": "black",
-              "labelBackgroundOpacity": 0.3,
-              "axisPositionHorizontal": "right",
-              "labelTextOpacity": 0.3,
-              "lineStrokeWidth": 2,
-              "labelLeftMargin": 0,
-              "labelRightMargin": 0,
-              "labelTopMargin": 0,
-              "labelBottomMargin": 0,
-              "labelBackgroundColor": "white",
-              "labelShowResolution": false,
-              "labelShowAssembly": true,
-              "axisLabelFormatting": "scientific",
-              "trackBorderWidth": 0,
-              "trackBorderColor": "black",
-              "showMousePosition": false,
-              "minHeight": 20,
-              "mousePositionColor": "#000000",
-              "showTooltip": false
-            }
-          },
-          {
-            "uid": "bca3T49aTkiZVYPqAn-Dzw",
-            "tilesetUid": "dcUTxCRHTIGpTeOrmqW3hQ",
-            "height": 20,
-            "width": 483,
-            "server": "//higlass.io/api/v1",
-            "type": "horizontal-line",
-            "options": {
-              "name": "Busslinger et al. 2017 Scc1 ChIP (Ctcf(fl/fl), 4h Adeno-Cre and 10d resting, GSE76303_20094+20106)",
-              "valueScaling": "linear",
-              "coordSystem": "mm9",
-              "lineStrokeColor": "purple",
-              "labelPosition": "topLeft",
-              "labelColor": "black",
-              "axisPositionHorizontal": "right",
-              "labelTextOpacity": 0.3,
-              "lineStrokeWidth": 2,
-              "labelLeftMargin": 0,
-              "labelRightMargin": 0,
-              "labelTopMargin": 0,
-              "labelBottomMargin": 0,
-              "labelBackgroundColor": "white",
-              "labelShowResolution": false,
-              "labelShowAssembly": true,
-              "axisLabelFormatting": "scientific",
-              "trackBorderWidth": 0,
-              "trackBorderColor": "black",
-              "showMousePosition": false,
-              "minHeight": 20,
-              "mousePositionColor": "#000000",
-              "showTooltip": false
-            }
-          },
-          {
-            "uid": "T4Y2QpXURCKSnIR4VZHRqQ",
-            "tilesetUid": "FbjW5up7T1-XnIFz9OyvFQ",
-            "height": 20,
-            "width": 483,
-            "server": "//higlass.io/api/v1",
-            "type": "horizontal-line",
-            "options": {
-              "name": "Busslinger et al. 2017 Scc1 ChIP (Rosa26(CreER/+) Wapl(fl/-), 2-3d 4'hydroxytamoxifen and 10d resting, GSE76303_20096+20320+27717)",
-              "valueScaling": "linear",
-              "coordSystem": "mm9",
-              "lineStrokeColor": "green",
-              "labelPosition": "topLeft",
-              "labelColor": "black",
-              "axisPositionHorizontal": "right",
-              "labelTextOpacity": 0.3,
-              "lineStrokeWidth": 2,
-              "labelLeftMargin": 0,
-              "labelRightMargin": 0,
-              "labelTopMargin": 0,
-              "labelBottomMargin": 0,
-              "labelBackgroundColor": "white",
-              "labelShowResolution": false,
-              "labelShowAssembly": true,
-              "axisLabelFormatting": "scientific",
-              "trackBorderWidth": 0,
-              "trackBorderColor": "black",
-              "showMousePosition": false,
-              "minHeight": 20,
-              "mousePositionColor": "#000000",
-              "showTooltip": false
-            }
-          },
-          {
-            "uid": "VM8RGZWXQEK3zcwzU9uLCw",
-            "tilesetUid": "Hy1cz_yFRYqqQX8y5bh7Kw",
-            "height": 20,
-            "width": 483,
-            "server": "//higlass.io/api/v1",
-            "type": "horizontal-line",
-            "options": {
-              "name": "Busslinger et al. 2017 Stag1 ChIP (Rosa26(CreER/+) Wapl(fl/-), 2-3d 4'hydroxytamoxifen and 10d resting, GSE76303_19589+20318+26235)",
-              "valueScaling": "linear",
-              "coordSystem": "mm9",
-              "lineStrokeColor": "green",
-              "labelPosition": "topLeft",
-              "labelColor": "black",
-              "axisPositionHorizontal": "right",
-              "labelTextOpacity": 0.3,
-              "lineStrokeWidth": 2,
-              "labelLeftMargin": 0,
-              "labelRightMargin": 0,
-              "labelTopMargin": 0,
-              "labelBottomMargin": 0,
-              "labelBackgroundColor": "white",
-              "labelShowResolution": false,
-              "labelShowAssembly": true,
-              "axisLabelFormatting": "scientific",
-              "trackBorderWidth": 0,
-              "trackBorderColor": "black",
-              "showMousePosition": false,
-              "minHeight": 20,
-              "mousePositionColor": "#000000",
-              "showTooltip": false
-            }
-          },
-          {
-            "uid": "bvt5U1iJTr-7B0ey0bM7pA",
-            "tilesetUid": "bYEAmro5ROSGKKxvl132kw",
-            "height": 20,
-            "width": 483,
-            "server": "//higlass.io/api/v1",
-            "type": "horizontal-line",
-            "options": {
-              "name": "Busslinger et al. 2017 Scc1 ChIP (Ctcf(fl/fl) Wapl(fl/fl), 4h Adeno-Cre and 10d resting, GSE76303_29079)",
-              "valueScaling": "linear",
-              "coordSystem": "mm9",
-              "lineStrokeColor": "brown",
-              "labelPosition": "topLeft",
-              "labelColor": "black",
-              "axisPositionHorizontal": "right",
-              "labelTextOpacity": 0.3,
-              "lineStrokeWidth": 2,
-              "labelLeftMargin": 0,
-              "labelRightMargin": 0,
-              "labelTopMargin": 0,
-              "labelBottomMargin": 0,
-              "labelBackgroundColor": "white",
-              "labelShowResolution": false,
-              "labelShowAssembly": true,
-              "axisLabelFormatting": "scientific",
-              "trackBorderWidth": 0,
-              "trackBorderColor": "black",
-              "showMousePosition": false,
-              "minHeight": 20,
-              "mousePositionColor": "#000000",
-              "showTooltip": false
-            }
-          },
-          {
-            "uid": "dsSGdLh-RmScFaA6szxXNQ",
-            "tilesetUid": "WUzG919kQ6OydCKysMUKuw",
-            "height": 20,
-            "width": 483,
-            "server": "//higlass.io/api/v1",
-            "type": "horizontal-line",
-            "options": {
-              "name": "Busslinger et al. 2017 Stag1 ChIP (Ctcf(fl/fl) Wapl(fl/fl), 4h Adeno-Cre and 10d resting, GSE76303_26236+27237)",
-              "valueScaling": "linear",
-              "coordSystem": "mm9",
-              "lineStrokeColor": "brown",
-              "labelPosition": "topLeft",
-              "labelColor": "black",
-              "axisPositionHorizontal": "right",
-              "labelTextOpacity": 0.3,
-              "lineStrokeWidth": 2,
-              "labelLeftMargin": 0,
-              "labelRightMargin": 0,
-              "labelTopMargin": 0,
-              "labelBottomMargin": 0,
-              "labelBackgroundColor": "white",
-              "labelShowResolution": false,
-              "labelShowAssembly": true,
-              "axisLabelFormatting": "scientific",
-              "trackBorderWidth": 0,
-              "trackBorderColor": "black",
-              "showMousePosition": false,
-              "minHeight": 20,
-              "mousePositionColor": "#000000",
-              "showTooltip": false
-            }
-          },
-          {
-            "uid": "eqVlm--IQfaonPAE6x38fw",
-            "tilesetUid": "GUm5aBiLRCyz2PsBea7Yzg",
-            "server": "//higlass.io/api/v1",
-            "width": 483,
-            "height": 60,
-            "type": "horizontal-gene-annotations",
-            "options": {
-              "labelColor": "black",
-              "plusStrandColor": "blue",
-              "minusStrandColor": "red",
-              "labelPosition": "hidden",
-              "name": "Gene Annotations (mm9)",
-              "fontSize": 10,
-              "labelBackgroundColor": "#ffffff",
-              "labelLeftMargin": 0,
-              "labelRightMargin": 0,
-              "labelTopMargin": 0,
-              "labelBottomMargin": 0,
-              "minHeight": 24,
-              "trackBorderWidth": 0,
-              "trackBorderColor": "black",
-              "showMousePosition": false,
-              "mousePositionColor": "#000000",
-              "geneAnnotationHeight": 16,
-              "geneLabelPosition": "outside",
-              "geneStrandSpacing": 4
-            }
-          }
-        ],
-        "right": [],
-        "center": [],
-        "left": [],
-        "whole": [],
-        "gallery": []
-      },
-      "chromInfoPath": "//s3.amazonaws.com/pkerp/data/hg19/chromSizes.tsv",
-      "genomePositionSearchBox": {
-        "visible": true,
-        "chromInfoServer": "//higlass.io/api/v1",
-        "autocompleteId": "GUm5aBiLRCyz2PsBea7Yzg",
-        "chromInfoId": "mm9",
-        "autocompleteServer": "//higlass.io/api/v1"
-      }
-    }
-  ],
-  "editable": true,
-  "exportViewUrl": "/api/v1/viewconfs",
-  "zoomLocks": {
-    "locksByViewUid": {},
-    "locksDict": {}
-  },
-  "trackSourceServers": [
-    "//higlass.io/api/v1"
-  ],
-  "locationLocks": {
-    "locksByViewUid": {
-      "aa": "BsfcGAx0Rceei2lfktp5bA",
-      "ewZvJwlDSei_dbpIAkGMlg": "BsfcGAx0Rceei2lfktp5bA"
+        }
+    ],
+    "editable": true,
+    "exportViewUrl": "/api/v1/viewconfs",
+    "zoomLocks": {
+        "locksByViewUid": {},
+        "locksDict": {}
     },
-    "locksDict": {
-      "BsfcGAx0Rceei2lfktp5bA": {
-        "aa": [
-          1550000000,
-          1550000000,
-          3380588.876772046
-        ],
-        "ewZvJwlDSei_dbpIAkGMlg": [
-          1550000000.0000002,
-          1549999999.9999993,
-          3380588.876772046
-        ],
-        "uid": "BsfcGAx0Rceei2lfktp5bA"
-      }
+    "trackSourceServers": [
+        "//higlass.io/api/v1"
+    ],
+    "locationLocks": {
+        "locksByViewUid": {
+            "aa": "BsfcGAx0Rceei2lfktp5bA",
+            "ewZvJwlDSei_dbpIAkGMlg": "BsfcGAx0Rceei2lfktp5bA"
+        },
+        "locksDict": {
+            "BsfcGAx0Rceei2lfktp5bA": {
+                "aa": [
+                    1550000000,
+                    1550000000,
+                    3380588.876772046
+                ],
+                "ewZvJwlDSei_dbpIAkGMlg": [
+                    1550000000.0000002,
+                    1549999999.9999993,
+                    3380588.876772046
+                ],
+                "uid": "BsfcGAx0Rceei2lfktp5bA"
+            }
+        }
+    },
+    "valueScaleLocks": {
+        "locksByViewUid": {},
+        "locksDict": {}
     }
-  },
-  "valueScaleLocks": {
-    "locksByViewUid": {},
-    "locksDict": {}
-  }
 }
