@@ -6,6 +6,7 @@ import { HiGlassModel } from './higlass-model';
 import { HiGlassLiteModel } from './higlass-lite-model';
 import { parseServerAndTilesetUidFromUrl, hgToHlTrackType, generateReadableTrackUid } from './utils';
 import { isObject } from 'util';
+import mapper from './compile-mapper';
 
 // TODO: Auto-generate readable uids.
 
@@ -107,8 +108,8 @@ export function compile(ihl: HiGlassLiteSpec): HiGlassSpec {
                 type: hgToHlTrackType(track.type, track.position),
                 server: server,
                 tilesetUid: tilesetUid,
-                width: track.width,
-                height: track.height
+                width: mapper.sizeToWidthOrHeight(track).width,
+                height: mapper.sizeToWidthOrHeight(track).height
             }).addTrackSourceServers(server);
 
             /**

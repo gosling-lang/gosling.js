@@ -9,7 +9,6 @@ import { HiGlassComponent } from 'higlass';
 import './editor.css';
 import { HiGlassLiteSpec } from '../lib/higlass-lite.schema';
 import { debounce } from "lodash";
-import { HiGlassSpec } from '../lib/higlass.schema';
 
 const DEBUG_DO_NOT_RENDER_HIGLASS = false;
 

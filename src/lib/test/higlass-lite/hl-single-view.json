@@ -15,14 +15,13 @@
                     "position": "top",
                     "type": "gene-annotation",
                     "data": "https://higlass.io/api/v1/tileset_info/?d=OHJakQICQD6gTD7skx4EWA",
-                    "width": 400,
-                    "height": 100
+                    "size": 100
                 },
                 {
                     "position": "left",
                     "type": "gene-annotation",
                     "data": "https://higlass.io/api/v1/tileset_info/?d=OHJakQICQD6gTD7skx4EWA",
-                    "width": 100
+                    "size": 100
                 }
             ]
         }

@@ -14,8 +14,8 @@ export const TRACK_LOCATIONS: TrackPosition[] = [
 export function generateReadableTrackUid(pre: string | undefined, n: number) {
     // TODO: Add track type
 
-    // TODO: This is to properly update higlass upon editor changes.
-    // TODO: Ultimately, remove this.
+    // TODO: This is to properly update higlass upon editor changes. Ultimately, remove this.
+    // (Refer to https://github.com/sehilyi/higlass-lite/issues/7)
     const id = uuid.v1();
     if (pre) return `${pre}-track-${n}-(${id})`;
     else return `track-${n}-${id}`;

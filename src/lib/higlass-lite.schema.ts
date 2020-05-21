@@ -83,7 +83,7 @@ export interface View {
  * Currently covering "heatmap" and "*-gene-annotations" in `EnumTrack`
  */
 export type TrackType = "heatmap" | "gene-annotation";
-interface Track {
+export interface Track {
     uniqueName?: string;
     description?: string;
     type: TrackType;
@@ -94,6 +94,7 @@ interface Track {
     ///
     position: TrackPosition;
     chromInfoPath?: string;
+    size?: number;  // Used only for `top`, `left`, `right`, and `bottom` tracks.
     width?: number;     // (Default: ?)
     height?: number;    // (Default: ?)
 
