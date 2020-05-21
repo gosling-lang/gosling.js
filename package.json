@@ -12,6 +12,7 @@
     "@types/node": "^12.0.0",
     "@types/react": "^16.9.0",
     "@types/react-dom": "^16.9.0",
+    "@types/uuid": "^8.0.0",
     "gh-pages": "^2.2.0",
     "higlass": "^1.9.3",
     "json-stringify-pretty-compact": "^2.0.0",

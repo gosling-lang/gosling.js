@@ -1,4 +1,5 @@
 import { TrackPosition, TrackType as HLTrackType } from "../higlass-lite.schema";
+import uuid from "uuid";
 
 export const TRACK_LOCATIONS: TrackPosition[] = [
     'top',
@@ -12,8 +13,12 @@ export const TRACK_LOCATIONS: TrackPosition[] = [
 
 export function generateReadableTrackUid(pre: string | undefined, n: number) {
     // TODO: Add track type
-    if (pre) return `${pre}-track-${n}`;
-    else return `track-${n}`;
+
+    // TODO: This is to properly update higlass upon editor changes.
+    // TODO: Ultimately, remove this.
+    const id = uuid.v1();
+    if (pre) return `${pre}-track-${n}-(${id})`;
+    else return `track-${n}-${id}`;
 }
 
 export function hgToHlTrackType(t: HLTrackType, p: TrackPosition) {
