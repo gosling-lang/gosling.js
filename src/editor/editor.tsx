@@ -59,7 +59,7 @@ function Editor() {
     return (
         <>
             <div className="demo-navbar">
-                HiGlass <span>Lite</span>
+                HiGlass <span>Lite</span> <code>Editor</code>
                 <select
                     onChange={e => {
                         setDemo(demos.find(d => d.name === e.target.value) as any);
