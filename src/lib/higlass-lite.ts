@@ -10,12 +10,12 @@ import mapper from './compile-mapper';
 
 // TODO: Auto-generate readable uids.
 
-export function compile(ihl: HiGlassLiteSpec): HiGlassSpec {
+export function compile(_hl: HiGlassLiteSpec): HiGlassSpec {
 
-    // TODO: Early return with invalidate specs.
+    // TODO: Early return with invalid specs.
     // ...
 
-    const hl = new HiGlassLiteModel(ihl);
+    const hl = new HiGlassLiteModel(_hl);
     const hg = new HiGlassModel();
 
     /**
@@ -66,7 +66,8 @@ export function compile(ihl: HiGlassLiteSpec): HiGlassSpec {
                 gallery: [],
                 whole: []
             },
-            initialXDomain: [5.960464477539063e-8, 3100000000.0000005] // TODO: default value.
+            initialXDomain: view.xDomain ? view.xDomain : [5.960464477539063e-8, 3100000000.0000005],   // TODO: default value.
+            initialYDomain: view.yDomain ? view.yDomain : [5.960464477539063e-8, 3100000000.0000005]    // TODO: default value.
         });
 
         let numTracks = 1;

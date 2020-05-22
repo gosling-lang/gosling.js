@@ -1,0 +1,81 @@
+{
+    "views": [
+        {
+            "xDomain": [
+                1526476039.0098016,
+                1527575168.7283285
+            ],
+            "yDomain": [
+                1526350793.5308473,
+                1527502670.071145
+            ],
+            "w": 6,
+            "h": 12,
+            "x": 0,
+            "y": 0,
+            "tracks": [
+                {
+                    "position": "center",
+                    "type": "heatmap",
+                    "data": "https://higlass.io/api/v1/tileset_info/?d=CQMd6V_cRw6iCI_-Unl3PQ",
+                    "xAxis": "top",
+                    "yAxis": "left",
+                    "size": 100
+                },
+                {
+                    "position": "top",
+                    "type": "gene-annotation",
+                    "data": "https://higlass.io/api/v1/tileset_info/?d=OHJakQICQD6gTD7skx4EWA",
+                    "size": 100
+                },
+                {
+                    "position": "left",
+                    "type": "gene-annotation",
+                    "data": "https://higlass.io/api/v1/tileset_info/?d=OHJakQICQD6gTD7skx4EWA",
+                    "size": 100
+                }
+            ]
+        },
+        {
+            "xDomain": [
+                672134975.488266,
+                675956146.1103806
+            ],
+            "yDomain": [
+                671750489.9661773,
+                675755037.1291716
+            ],
+            "w": 6,
+            "h": 12,
+            "x": 6,
+            "y": 0,
+            "tracks": [
+                {
+                    "position": "center",
+                    "type": "heatmap",
+                    "data": "https://higlass.io/api/v1/tileset_info/?d=CQMd6V_cRw6iCI_-Unl3PQ",
+                    "xAxis": "top",
+                    "yAxis": "left",
+                    "size": 100
+                },
+                {
+                    "position": "top",
+                    "type": "gene-annotation",
+                    "data": "https://higlass.io/api/v1/tileset_info/?d=OHJakQICQD6gTD7skx4EWA",
+                    "size": 100
+                },
+                {
+                    "position": "left",
+                    "type": "gene-annotation",
+                    "data": "https://higlass.io/api/v1/tileset_info/?d=OHJakQICQD6gTD7skx4EWA",
+                    "size": 100
+                }
+            ]
+        }
+    ],
+    "config": {
+        "editable": true,
+        "searchBox": true,
+        "chromInfoPath": "//s3.amazonaws.com/pkerp/data/hg19/chromSizes.tsv"
+    }
+}

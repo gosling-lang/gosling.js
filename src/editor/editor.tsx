@@ -2,25 +2,26 @@ import React, { useState, useEffect, useRef, useMemo } from 'react';
 import EditorPanel from './editor-panel';
 import stringify from 'json-stringify-pretty-compact';
 import SplitPane from 'react-split-pane';
-import hlOnlyHeatmap from "../lib/test/higlass-lite/hl-single-view.json";
 import { compile } from '../lib/higlass-lite';
 // @ts-ignore
 import { HiGlassComponent } from 'higlass';
 import './editor.css';
 import { HiGlassLiteSpec } from '../lib/higlass-lite.schema';
 import { debounce } from "lodash";
+import { demos } from './examples';
 
 const DEBUG_DO_NOT_RENDER_HIGLASS = false;
+const DEBUG_INIT_DEMO_INDEX = 1;
 
 function Editor() {
 
-    const [hl, setHl] = useState(stringify(hlOnlyHeatmap));
-    const [hg, setHg] = useState(stringify(compile(hlOnlyHeatmap as HiGlassLiteSpec)));
+    const [demo, setDemo] = useState(demos[DEBUG_INIT_DEMO_INDEX]);
+    const [hl, setHl] = useState(stringify(demos[DEBUG_INIT_DEMO_INDEX].hl as HiGlassLiteSpec));
+    const [hg, setHg] = useState(stringify(compile(demos[DEBUG_INIT_DEMO_INDEX].hl as HiGlassLiteSpec)));
 
     const hgRef = useRef<typeof HiGlassComponent>();
 
     useEffect(() => {
-
         let newHg;
         try {
             newHg = stringify(compile(JSON.parse(hl)));
@@ -51,27 +52,43 @@ function Editor() {
     }, [hl]);
 
     return (
-        <div className="editor">
-            <SplitPane split="vertical" defaultSize="30%" onChange={() => { }}>
-                {/* HiGlass-Lite Editor */}
-                <EditorPanel
-                    code={hl}
-                    readOnly={false}
-                    onChange={debounce(newHl => {
-                        setHl(newHl);
-                    }, 2000)}
-                />
-                <SplitPane split="vertical" defaultSize="50%" onChange={() => { }}>
-                    {/* HiGlass Editor */}
+        <>
+            <div className="demo-navbar">
+                HiGlass-Lite
+                <select
+                    onChange={e => {
+                        setDemo(demos.find(d => d.name === e.target.value) as any);
+                    }}
+                    defaultValue={demo.name}>
+                    {demos.map(d => (
+                        <option key={d.name} value={d.name}>
+                            {d.name}
+                        </option>
+                    ))}
+                </select>
+            </div>
+            <div className="editor">
+                <SplitPane split="vertical" defaultSize="30%" onChange={() => { }}>
+                    {/* HiGlass-Lite Editor */}
                     <EditorPanel
-                        code={hg}
-                        readOnly={true}
+                        code={hl}
+                        readOnly={false}
+                        onChange={debounce(newHl => {
+                            setHl(newHl);
+                        }, 2000)}
                     />
-                    {/* HiGlass Output */}
-                    {!DEBUG_DO_NOT_RENDER_HIGLASS && hglass}
+                    <SplitPane split="vertical" defaultSize="50%" onChange={() => { }}>
+                        {/* HiGlass Editor */}
+                        <EditorPanel
+                            code={hg}
+                            readOnly={true}
+                        />
+                        {/* HiGlass Output */}
+                        {!DEBUG_DO_NOT_RENDER_HIGLASS && hglass}
+                    </SplitPane>
                 </SplitPane>
-            </SplitPane>
-        </div>
+            </div>
+        </>
     );
 }
 export default Editor;

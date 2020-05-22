@@ -4,9 +4,10 @@ export class HiGlassLiteModel {
     private hl: HiGlassLiteSpec;
     constructor(ihl: HiGlassLiteSpec) {
         this.hl = JSON.parse(JSON.stringify(ihl));
-
+        console.log("here", this.hl.views);
         // Add default specs.
         for (let v = 0; v < this.hl.views.length; v++) {
+            console.log("here", this.hl.views[v].w);
             if (!this.hl.views[v].w) this.hl.views[v].w = 12;
             if (!this.hl.views[v].h) this.hl.views[v].h = 12;
             if (!this.hl.views[v].x) this.hl.views[v].x = 0;
