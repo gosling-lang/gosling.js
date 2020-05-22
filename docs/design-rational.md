@@ -1,4 +1,4 @@
-### Key characteristics for HiGlass-Lite
+### Key characteristics in HiGlass-Lite
 - Flexibility and simplicity
     - Allow multiple types of input (vega)
         - e.g., `trackSourceServers: []` vs. `servers: string[] | string`
@@ -17,7 +17,7 @@
 - Auto-generates readable UIDs
     - e.g., `OHJakQICQD6gTD7skx4EWA` => `view-1-track-2-center-heatmap`
     - This can be helpful in revising the compiled higlass view configs.
-- Easier to determin visual consistency across views and/or tracks
+- Easier to determine visual consistency across views and/or tracks
     - e.g., `consistency: { color: : "shared" }` to use same color for same type
     - e.g., `{ zoomScale: "shared", zoomCenter: "independent" }`
     - e.g., `consistency: { x: "independent" }`: should we support?
