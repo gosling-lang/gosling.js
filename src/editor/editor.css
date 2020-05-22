@@ -1,15 +1,18 @@
 .demo-navbar {
-    border-bottom: 2px solid black;
-    background: #399AB6;
+    border-bottom: 1px solid lightgray;
     font-weight: bold;
-    color: white;
     padding-left: 10px;
-    padding-top: 4px;
+    padding-top: 5px;
     height: 30px;
 }
 
+.demo-navbar span {
+    font-weight: 300;
+    font-style: italic;
+}
+
 .demo-navbar select {
-    margin-left: 5px;
+    margin-left: 10px;
 }
 
 .editor {

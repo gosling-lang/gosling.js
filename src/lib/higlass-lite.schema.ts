@@ -6,6 +6,8 @@
  * 1. Flexibility to users, burden to developers.
  *      e.g., trackSourceServers: [] vs. servers: string[] | string;
  *      e.g., searchBox?: boolean | genomePositionSearchBox;
+ * 1.5. Shorten number of options and the length of names
+ *      e.g., searchBox vs. genomePositionSearchBox
  * 2. Optional configs placed separately.
  * 3. Easy to apply and reproduce themes.
  * 4. Shorten key names to be able to more easily remember.

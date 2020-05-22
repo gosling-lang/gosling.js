@@ -11,7 +11,7 @@ import { debounce } from "lodash";
 import { demos } from './examples';
 
 const DEBUG_DO_NOT_RENDER_HIGLASS = false;
-const DEBUG_INIT_DEMO_INDEX = 1;
+const DEBUG_INIT_DEMO_INDEX = 0;
 
 function Editor() {
 
@@ -20,6 +20,11 @@ function Editor() {
     const [hg, setHg] = useState(stringify(compile(demos[DEBUG_INIT_DEMO_INDEX].hl as HiGlassLiteSpec)));
 
     const hgRef = useRef<typeof HiGlassComponent>();
+
+    useEffect(() => {
+        setHl(stringify(demo.hl as HiGlassLiteSpec));
+        setHg(stringify(compile(demo.hl as HiGlassLiteSpec)));
+    }, [demo]);
 
     useEffect(() => {
         let newHg;
@@ -54,7 +59,7 @@ function Editor() {
     return (
         <>
             <div className="demo-navbar">
-                HiGlass-Lite
+                HiGlass <span>Lite</span>
                 <select
                     onChange={e => {
                         setDemo(demos.find(d => d.name === e.target.value) as any);
