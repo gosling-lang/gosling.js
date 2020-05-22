@@ -20,8 +20,14 @@ function Editor() {
     const hgRef = useRef<typeof HiGlassComponent>();
 
     useEffect(() => {
-        const newHg = stringify(compile(JSON.parse(hl)));
-        setHg(newHg);
+
+        let newHg;
+        try {
+            newHg = stringify(compile(JSON.parse(hl)));
+            setHg(newHg);
+        } catch (e) {
+            console.warn("Invalid HiGlass spec.");
+        }
 
         // TODO: Do we need this?
         // hgRef?.current?.api.setViewConfig(JSON.parse(newHg)).then(() => {
@@ -38,9 +44,9 @@ function Editor() {
                 pixelPreciseMarginPadding: true,
                 containerPaddingX: 0,
                 containerPaddingY: 0,
-                sizeMode: 'default'
+                sizeMode: "default"
             }}
-            viewConfig={compile(JSON.parse(hl))}
+            viewConfig={JSON.parse(hg)}
         />
     }, [hl]);
 
