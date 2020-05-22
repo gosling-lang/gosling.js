@@ -2,50 +2,6 @@
 // https://github.com/vega/vega-lite/blob/23fe2b9c6a82551f321ccab751370ca48ae002c9/src/channeldef.ts#L961
 
 /**
- * Some key characteristics in the HiGlass-Lite grammar.
- * 1. Flexibility to users, burden to developers.
- *      e.g., trackSourceServers: [] vs. servers: string[] | string;
- *      e.g., searchBox?: boolean | genomePositionSearchBox;
- * 1.5. Shorten number of options and the length of names
- *      e.g., searchBox vs. genomePositionSearchBox
- * 2. Optional configs placed separately.
- * 3. Easy to apply and reproduce themes.
- * 4. Shorten key names to be able to more easily remember.
- *      e.g., genomePositionSearchBox => searchBox
- * 5. Low level of hierarchy.
- *      e.g., views[{tracks:{top:[ ... ], ...}, ...} => 
- * 6. Targeted for quick authoring visualizations
- *      e.g., exportViewUrl less preferred
- * 7. Users do not need to think about uids (e.g., zoomLocks)
- * 8. Use and auto-generates readable UIDs
- *      e.g., "view-1-track-2-center-heatmap" vs. OHJakQICQD6gTD7skx4EWA
- *          (HiGlass is making this ? OHJakQICQD6gTD7skx4EWA?)
- *      This helps further working on the compiled higlass view configs.
- * (*). Should notice that I do not fully understand use cases, so the coverage can be changed.
- * (Add more here)
- */
-
-/**
- * Something to Think of.
- * - relative positioning vs. absolute positioning
- *      e.g., A || B || C vs. Left: [A, B, C]
- */
-
-/**
- * What are not supported in HiGlass-Lite.
- * Separate genomePositionSearchBox for each view. (removed genomePositionSearchBoxVisible)
- */
-
-/**
- * What are new things supported in HiGlass-Lite.
- * - Consistency
- *      - Determines visual consistency across views and/or trakcs
- *      - e.g., consistency: { color: : "shared" } use same color for same type
- *      - e.g., consistency: { x: "independent" } not currently supported for track
- *      - TODO: include zoomlocks here? e.g., { zoomScale: "shared", zoomCenter: "independent" }
- */
-
-/**
  * Some rules in naming variables/interfaces.
  * - Make the names that are shown to users simple and short.
  * - Make the names that are internally used to be consistent to HG.
