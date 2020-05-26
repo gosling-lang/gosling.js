@@ -1,4 +1,4 @@
-# Genomic Visualization Grammar
+# Gemini
 *An expressive and reproducible visualization grammar for genomic data.*
 
 ## Developement
