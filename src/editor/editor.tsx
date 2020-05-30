@@ -1,65 +1,54 @@
-import React, { useState, useEffect, useRef, useMemo } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import * as d3 from "d3"; // TODO: performance
 import EditorPanel from './editor-panel';
 import stringify from 'json-stringify-pretty-compact';
 import SplitPane from 'react-split-pane';
-import { compile } from '../lib/higlass-lite';
-// @ts-ignore
-import { HiGlassComponent } from 'higlass';
-import './editor.css';
-import { HiGlassLiteSpec } from '../lib/higlass-lite.schema';
+import { GeminiSpec, MarkDeep, TrackExtended } from '../lib/gemini.schema';
 import { debounce } from "lodash";
 import { demos } from './examples';
+import './editor.css';
+import { renderGlyphPreview } from '../lib/visualizations/glyph-preview';
 
-const DEBUG_DO_NOT_RENDER_HIGLASS = false;
 const DEBUG_INIT_DEMO_INDEX = 0;
 
 function Editor() {
 
+    const glyphSvg = useRef<SVGSVGElement>(null);
+    const layoutSvg = useRef<SVGSVGElement>(null);
     const [demo, setDemo] = useState(demos[DEBUG_INIT_DEMO_INDEX]);
-    const [hl, setHl] = useState(stringify(demos[DEBUG_INIT_DEMO_INDEX].hl as HiGlassLiteSpec));
-    const [hg, setHg] = useState(stringify(compile(demos[DEBUG_INIT_DEMO_INDEX].hl as HiGlassLiteSpec)));
-
-    const hgRef = useRef<typeof HiGlassComponent>();
+    const [gm, setGm] = useState(stringify(demos[DEBUG_INIT_DEMO_INDEX].spec as GeminiSpec));
 
     useEffect(() => {
-        setHl(stringify(demo.hl as HiGlassLiteSpec));
-        setHg(stringify(compile(demo.hl as HiGlassLiteSpec)));
+        setGm(stringify(demo.spec as GeminiSpec));
     }, [demo]);
 
     useEffect(() => {
-        let newHg;
+        let editedGm;
         try {
-            newHg = stringify(compile(JSON.parse(hl)));
-            setHg(newHg);
+            editedGm = JSON.parse(gm);
         } catch (e) {
-            console.warn("Invalid HiGlass spec.");
+            console.warn("Cannnot parse the edited code.");
         }
+        if (!editedGm) return;
 
-        // TODO: Do we need this?
-        // hgRef?.current?.api.setViewConfig(JSON.parse(newHg)).then(() => {
-        //     console.log("onSetViewConfig");
-        // });
-    }, [hl]);
+        const track = (editedGm as GeminiSpec)?.tracks?.find(
+            d => (d.mark as MarkDeep)?.type === "glyph"
+        );
+        if (!track) return;
 
-    // Renders HiGlass by compiling the edited HiGlass-Lite code.
-    const hglass = useMemo(() => {
-        return <HiGlassComponent
-            ref={hgRef}
-            options={{
-                bounded: true,
-                pixelPreciseMarginPadding: true,
-                containerPaddingX: 0,
-                containerPaddingY: 0,
-                sizeMode: "default"
-            }}
-            viewConfig={JSON.parse(hg)}
-        />
-    }, [hl]);
+        // TODO: Faster way of this?
+        d3.csv(track.data as string).then(data =>
+            renderGlyphPreview(
+                glyphSvg.current as SVGSVGElement,
+                { ...track, data } as TrackExtended
+            )
+        );
+    }, [gm]);
 
     return (
         <>
             <div className="demo-navbar">
-                HiGlass <span>Lite</span> <code>Editor</code>
+                Gemini <code>Editor</code>
                 <select
                     onChange={e => {
                         setDemo(demos.find(d => d.name === e.target.value) as any);
@@ -73,23 +62,25 @@ function Editor() {
                 </select>
             </div>
             <div className="editor">
-                <SplitPane split="vertical" defaultSize="30%" onChange={() => { }}>
-                    {/* HiGlass-Lite Editor */}
+                <SplitPane split="vertical" defaultSize="50%" onChange={() => { }}>
+                    {/* Gemini Editor */}
                     <EditorPanel
-                        code={hl}
+                        code={gm}
                         readOnly={false}
-                        onChange={debounce(newHl => {
-                            setHl(newHl);
-                        }, 2000)}
+                        onChange={debounce(code => {
+                            setGm(code);
+                        }, 1000)}
                     />
-                    <SplitPane split="vertical" defaultSize="50%" onChange={() => { }}>
-                        {/* HiGlass Editor */}
-                        <EditorPanel
-                            code={hg}
-                            readOnly={true}
-                        />
-                        {/* HiGlass Output */}
-                        {!DEBUG_DO_NOT_RENDER_HIGLASS && hglass}
+                    {/* D3 Visualizations */}
+                    <SplitPane split="horizontal" defaultSize="35%" onChange={() => { }}>
+                        <div className="preview-container">
+                            <b>Glyph Preview</b>
+                            <div><svg ref={glyphSvg} /></div>
+                        </div>
+                        <div className="preview-container">
+                            <b>Layout Preview</b>
+                            <div><svg ref={layoutSvg} /></div>
+                        </div>
                     </SplitPane>
                 </SplitPane>
             </div>

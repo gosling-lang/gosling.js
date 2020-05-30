@@ -1,36 +1,27 @@
-import { TrackPosition, TrackType as HLTrackType } from "../higlass-lite.schema";
+import Ajv from 'ajv';
 import uuid from "uuid";
+import { GeminiSpec, Mark, GlyphMarkPredefined } from '../gemini.schema';
+import { PREDEFINED_GLYPHS_TYPES, PREDEFINED_GLYPHS } from "../test/gemini/glyph";
 
-export const TRACK_LOCATIONS: TrackPosition[] = [
-    'top',
-    'left',
-    'right',
-    'bottom',
-    'center',
-    'whole',
-    'gallery'
-];
+export function replaceGlyphs(spec: GeminiSpec): GeminiSpec {
+    for (let i = 0; i < spec.tracks.length; i++) {
+        const track = spec.tracks[i];
+        const predefinedGlyph = (track.mark as GlyphMarkPredefined)?.type;
+        if (PREDEFINED_GLYPHS_TYPES.includes(predefinedGlyph)) {
+            track.mark = PREDEFINED_GLYPHS.find(d => d.name === predefinedGlyph)?.mark as Mark;
+        }
+    }
+    return spec;
+}
 
 export function generateReadableTrackUid(pre: string | undefined, n: number) {
     // TODO: Add track type
 
     // TODO: This is to properly update higlass upon editor changes. Ultimately, remove this.
-    // (Refer to https://github.com/sehilyi/higlass-lite/issues/7)
+    // (Refer to https://github.com/sehilyi/gemini/issues/7)
     const id = uuid.v1();
     if (pre) return `${pre}-track-${n}-(${id})`;
     else return `track-${n}-${id}`;
-}
-
-export function hgToHlTrackType(t: HLTrackType, p: TrackPosition) {
-    switch (t) {
-        case "heatmap":
-            return "heatmap";
-        case "gene-annotation":
-            if (p === "left" || p === "right") return "vertical-gene-annotations";
-            else return "horizontal-gene-annotations";
-        default:
-            return "heatmap";
-    }
 }
 
 export function parseServerAndTilesetUidFromUrl(url: string) {
@@ -47,4 +38,18 @@ export function parseServerAndTilesetUidFromUrl(url: string) {
     const server = url.split("tileset_info/?d=")[0].split(pre)[1];
     const tilesetUid = url.split("tileset_info/?d=")[1]
     return { server, tilesetUid };
+}
+
+export function validateHG(hg: any): boolean {
+
+    const validate = new Ajv({ extendRefs: true }).compile({ /*  */ });
+    const valid = validate(hg);
+
+    if (validate.errors) {
+        console.warn(JSON.stringify(validate.errors, null, 2));
+    }
+
+    // TODO: check types such as default values and locationLocks
+
+    return valid as boolean;
 }

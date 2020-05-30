@@ -1,17 +1,9 @@
-import hgSingleView from "../lib/test/higlass/hg-single-view.json";
-import hlSingleView from "../lib/test/higlass-lite/hl-single-view.json";
-import hgTwoIndependentViews from "../lib/test/higlass/hg-two-independent-views.json";
-import hlTwoIndependentViews from "../lib/test/higlass-lite/hl-two-independent-views.json";
+import { GENE_ANNOTATION_PLOT } from "../lib/test/gemini/gene-annotation-plot";
+import { replaceGlyphs } from "../lib/utils";
 
 export const demos = [
     {
-        name: "Single Matrix",
-        hg: hgSingleView,
-        hl: hlSingleView
-    },
-    {
-        name: "Two Independent Views",
-        hg: hgTwoIndependentViews,
-        hl: hlTwoIndependentViews,
+        name: "Gene Annotation Plot",
+        spec: replaceGlyphs(GENE_ANNOTATION_PLOT)
     }
 ];

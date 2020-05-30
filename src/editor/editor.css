@@ -20,6 +20,20 @@
   height: calc(100% - 34px);
 }
 
+.preview-container {
+    width: 100%;
+    height: 100%;
+    padding: 10px;
+    background: #F6F6F6;
+}
+
+.preview-guideline {
+    stroke: lightgray;
+    stroke-width: 1px;
+    stroke-dasharray: 5 1;
+    shape-rendering: crispEdges;
+}
+
 .Resizer {
   background: #000;
   opacity: 0.2;
