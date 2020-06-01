@@ -1,5 +1,9 @@
 import { GlyphElement } from "../gemini.schema";
 
+/**
+ * Domains and ranges in conditional marks are moved into `select` option for the compiling simplicity.
+ * @param elements 
+ */
 export function deepToLongElements(elements: GlyphElement[]) {
     const longElements: GlyphElement[] = [];
     elements.forEach(element => {

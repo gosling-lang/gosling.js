@@ -12,7 +12,7 @@ export const GLYPH_LOGO: Mark = {
         },
         {
             "mark": "text",
-            "color": "black"
+            "color": { "value": "black" }
         }
     ]
 }

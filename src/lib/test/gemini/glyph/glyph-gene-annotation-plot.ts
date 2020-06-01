@@ -1,66 +1,87 @@
-import { Mark } from "../../../gemini.schema";
+import { MarkGlyph } from '../../../gemini.schema';
 
-export const GLYPH_GENE_ANNOTATAION: Mark = {
-    "type": "glyph",
-    "name": "gene-annotation",
-    "requiredChannels": [
-        "x", "x1",
-        "y", // + or - strand?
-        "geneOrExon", // genes or exons?
+export const GLYPH_GENE_ANNOTATAION: MarkGlyph = {
+    type: 'glyph',
+    name: 'gene-annotation',
+    requiredChannels: [
+        // TODO: What about optional channels?
+        'x', 'x1',
+        'y', 'color', // + or - strand?
+        'geneOrExon', // genes or exons?
+        'exonId',
+        'exonVersion' // filtering by
     ],
-    "elements": [
+    elements: [
         {
             // Should render once
-            "description": "horizontal line",
-            "mark": "line",
-            "color": "black",
-            "x": { "bind": "x", "aggregate": "min" },
-            "x1": { "bind": "x1", "aggregate": "max" },
-            "size": 2
+            description: 'horizontal line',
+            select: [
+                { channel: 'geneOrExon', equal: 'gene' },
+            ],
+            mark: 'line',
+            color: { value: 'black' },
+            size: { value: 3 }
         },
         {
-            "description": "exon",
-            "select": [
-                { "channel": "geneOrExon", "equal": "exon" },
+            description: 'exon',
+            select: [
+                { channel: 'geneOrExon', equal: 'exon' },
+                { channel: 'exonVersion', equal: '2' }
             ],
-            "mark": "rect",
-            "size": 20
+            mark: 'rect',
+            size: { value: 25 }
         },
         {
-            "description": "gene left",
-            "select": [
-                { "channel": "geneOrExon", "equal": "gene" },
+            description: 'gene left',
+            select: [
+                { channel: 'geneOrExon', equal: 'gene' },
             ],
-            "mark": {
-                "bind": "y",
-                "domain": ["+", "-"],
-                "range": ['point', "rule"]
+            mark: {
+                bind: 'y',
+                domain: ['-', '+'],
+                range: ['triangle-l', 'rule']
             },
-            "size": 30,
-            "x1": null,
-            "color": "red"
+            size: { value: 25 },
+            x1: null
         },
         {
-            "description": "gene right",
-            "select": [
-                { "channel": "geneOrExon", "equal": "gene" },
+            description: 'gene right',
+            select: [
+                { channel: 'geneOrExon', equal: 'gene' },
             ],
-            "mark": {
-                "bind": "y",
-                "domain": ["+", "-"],
-                "range": ["rule", 'point']
+            mark: {
+                bind: 'y',
+                domain: ['-', '+'],
+                range: ['rule', 'triangle-r']
             },
-            "size": 30,
-            "x": { "bind": "x1" },
-            "color": "red"
+            size: { value: 25 },
+            x: { bind: 'x1' }
         },
         {
-            "mark": "text",
-            "select": [
-                { "channel": "geneOrExon", 'equal': "gene" }
+            mark: 'text',
+            select: [
+                { channel: 'geneOrExon', 'equal': 'gene' }
             ],
-            "color": "black"
-            // Offset
+            color: { value: 'black' },
+            opacity: { value: 1 },
+            size: { value: 18 },
+            styles: {
+                dy: -20
+            }
+        },
+        {
+            mark: 'text',
+            select: [
+                { channel: 'geneOrExon', equal: 'exon' },
+                { channel: 'exonVersion', equal: '2' }
+            ],
+            text: { bind: 'exonId' },
+            color: { value: 'black' },
+            opacity: { value: 1 },
+            size: { value: 6 },
+            styles: {
+                dy: 28
+            }
         }
     ]
 }

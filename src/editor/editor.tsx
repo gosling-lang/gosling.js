@@ -3,7 +3,7 @@ import * as d3 from "d3"; // TODO: performance
 import EditorPanel from './editor-panel';
 import stringify from 'json-stringify-pretty-compact';
 import SplitPane from 'react-split-pane';
-import { GeminiSpec, MarkDeep, TrackExtended } from '../lib/gemini.schema';
+import { GeminiSpec, MarkDeep, Track, Datum } from '../lib/gemini.schema';
 import { debounce } from "lodash";
 import { demos } from './examples';
 import './editor.css';
@@ -37,10 +37,11 @@ function Editor() {
         if (!track) return;
 
         // TODO: Faster way of this?
+        // TODO: Move this inside of a model
         d3.csv(track.data as string).then(data =>
             renderGlyphPreview(
                 glyphSvg.current as SVGSVGElement,
-                { ...track, data } as TrackExtended
+                { ...track, data } as Track
             )
         );
     }, [gm]);

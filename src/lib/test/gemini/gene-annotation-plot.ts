@@ -1,5 +1,22 @@
 import { GeminiSpec } from "../../gemini.schema";
 
+export const GENE_ANNOTATION_PLOT_SIMPLE: GeminiSpec = {
+    tracks: [
+        {
+            data: "https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/Homo_sapiens.GRCh38.92.glyph.csv",
+            mark: { server: "gemini.v1", type: "glyph-gene-annotation-v2" },
+            x: { field: "start", type: "quantitative" },
+            x1: { field: "end", type: "quantitative" },
+            y: { field: "strand", type: "nominal" },
+            text: { field: "gene_name", type: "nominal" },
+            geneOrExon: { field: "feature", type: "nominal" },
+            color: { value: "#D1D28D" },
+            opacity: { value: 0.7 },
+            stroke: { value: "white" }
+        }
+    ]
+};
+
 export const GENE_ANNOTATION_PLOT: GeminiSpec = {
     tracks: [
         {
@@ -8,8 +25,11 @@ export const GENE_ANNOTATION_PLOT: GeminiSpec = {
             x: { field: "start", type: "quantitative" },
             x1: { field: "end", type: "quantitative" },
             y: { field: "strand", type: "nominal" },
+            text: { field: "gene_name", type: "nominal" },
+            color: { value: "#0000FF" },
+            exonVersion: { field: "exon_version", type: "nominal" },
             geneOrExon: { field: "feature", type: "nominal" },
-            opacity: 0.6
+            exonId: { field: "exon_id", type: "nominal" }
         }
     ]
 };

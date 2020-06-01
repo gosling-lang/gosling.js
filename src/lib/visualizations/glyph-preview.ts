@@ -1,13 +1,13 @@
-import { TrackExtended } from "../gemini.schema";
+import { Track, GenericType, Channel } from "../gemini.schema";
 import * as d3 from "d3";
 import { renderGlyph } from "./glyph";
 
-export function renderGlyphPreview(svg: SVGSVGElement, track: TrackExtended) {
+export function renderGlyphPreview(svg: SVGSVGElement, track: Track | GenericType<Channel>) {
     if (!svg || !track) return;
     d3.select(svg).selectAll("*").remove();
 
     // Styles
-    const WIDTH = 300, HEIGHT = 300, PADDING_X = 30, PADDING_Y = 100;
+    const WIDTH = 600, HEIGHT = 300, PADDING_X = 60, PADDING_Y = 100;
 
     // BG and Guidelines
     renderBackground(svg, WIDTH, HEIGHT, PADDING_X, PADDING_Y);
@@ -20,7 +20,7 @@ export function renderGlyphPreview(svg: SVGSVGElement, track: TrackExtended) {
     // TODO: Select a subset of data tuples for a single glyph.
     // ...
 
-    // TODO: Should aggregate data when specified? (e.g., x: {..., aggregate: "mean"})
+    // TODO: Should data be aggregated when specified? (e.g., x: {..., aggregate: "mean"})
     // ...
 
     renderGlyph(
