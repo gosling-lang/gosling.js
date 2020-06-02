@@ -8,6 +8,7 @@ import { debounce } from "lodash";
 import { demos } from './examples';
 import './editor.css';
 import { renderGlyphPreview } from '../lib/visualizations/glyph-preview';
+import { replaceGlyphs } from '../lib/utils';
 
 const DEBUG_INIT_DEMO_INDEX = 0;
 
@@ -16,20 +17,26 @@ function Editor() {
     const glyphSvg = useRef<SVGSVGElement>(null);
     const layoutSvg = useRef<SVGSVGElement>(null);
     const [demo, setDemo] = useState(demos[DEBUG_INIT_DEMO_INDEX]);
+    const [editorMode, setEditorMode] = useState<'Full Glyph Definition' | 'Predefined Glyph'>('Full Glyph Definition');
     const [gm, setGm] = useState(stringify(demos[DEBUG_INIT_DEMO_INDEX].spec as GeminiSpec));
     const [previewWidth, setPreviewWidth] = useState(demos[DEBUG_INIT_DEMO_INDEX].previewWidth);
     const [previewHeight, setPreviewHeight] = useState(demos[DEBUG_INIT_DEMO_INDEX].previewHeight);
 
     useEffect(() => {
-        setGm(stringify(demo.spec as GeminiSpec));
+        if (editorMode === 'Full Glyph Definition') {
+            // TODO: Better copying?
+            setGm(stringify(replaceGlyphs(JSON.parse(stringify(demo.spec)) as GeminiSpec)));
+        } else {
+            setGm(stringify(demo.spec as GeminiSpec));
+        }
         setPreviewWidth(demo.previewWidth);
         setPreviewHeight(demo.previewHeight);
-    }, [demo]);
+    }, [demo, editorMode]);
 
     useEffect(() => {
         let editedGm;
         try {
-            editedGm = JSON.parse(gm);
+            editedGm = replaceGlyphs(JSON.parse(gm));
         } catch (e) {
             console.warn("Cannnot parse the edited code.");
         }
@@ -64,6 +71,17 @@ function Editor() {
                     {demos.map(d => (
                         <option key={d.name} value={d.name}>
                             {d.name}
+                        </option>
+                    ))}
+                </select>
+                <select
+                    onChange={e => {
+                        setEditorMode(e.target.value as any);
+                    }}
+                    defaultValue={'Full Glyph Definition'}>
+                    {['Full Glyph Definition', 'Predefined Glyph'].map(d => (
+                        <option key={d} value={d}>
+                            {d}
                         </option>
                     ))}
                 </select>

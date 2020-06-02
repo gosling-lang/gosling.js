@@ -5,20 +5,20 @@ import { CYTOGENETIC_BAND } from "../lib/test/gemini/cytogenetic-band";
 export const demos = [
     {
         name: "Gene Annotation Plot (Simple)",
-        spec: replaceGlyphs(GENE_ANNOTATION_PLOT_SIMPLE),
+        spec: GENE_ANNOTATION_PLOT_SIMPLE,
         previewWidth: 300,
         previewHeight: 300
     },
     {
         name: "Gene Annotation Plot",
-        spec: replaceGlyphs(GENE_ANNOTATION_PLOT),
+        spec: GENE_ANNOTATION_PLOT,
         previewWidth: 600,
         previewHeight: 300
     },
     {
         name: "Cytogenetic Band",
-        spec: replaceGlyphs(CYTOGENETIC_BAND),
+        spec: CYTOGENETIC_BAND,
         previewWidth: 900,
         previewHeight: 300
     }
-];
+] as const;
