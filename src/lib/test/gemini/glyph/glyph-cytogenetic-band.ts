@@ -5,7 +5,7 @@ export const GLYPH_CYTOGENETIC_BAND: MarkGlyph = {
     "name": "cytogenetic-band",
     "requiredChannels": [
         // TODO: What about optional channels?
-        "x", "x1", // start, end
+        "x", "xe", // start, end
         "y", // chr
         'color', // strain
         'text', // band

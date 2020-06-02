@@ -6,7 +6,7 @@ export const CYTOGENETIC_BAND: GeminiSpec = {
             data: "https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/chr1_cytogenetic_band.glyph.csv",
             mark: { server: "gemini.v1", type: "cytogenetic-band-v1" },
             x: { field: "Basepair_start", type: "quantitative" },
-            x1: { field: "Basepair_stop", type: "quantitative" },
+            xe: { field: "Basepair_stop", type: "quantitative" },
             y: { field: "Chr.", type: "nominal" },
             text: { field: "Band", type: "nominal" },
             stain: { field: 'Stain', type: 'nominal' },

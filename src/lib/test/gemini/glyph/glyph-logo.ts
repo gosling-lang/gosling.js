@@ -4,7 +4,7 @@ export const GLYPH_LOGO: Mark = {
     "type": "glyph",
     "name": "logo",
     "requiredChannels": [
-        "x", "x1", "y"
+        "x", "xe", "y"
     ],
     "elements": [
         {

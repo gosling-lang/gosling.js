@@ -5,7 +5,7 @@ export const GLYPH_GENE_ANNOTATAION: MarkGlyph = {
     name: 'gene-annotation',
     requiredChannels: [
         // TODO: What about optional channels?
-        'x', 'x1',
+        'x', 'xe',
         'y', 'color', // + or - strand?
         'geneOrExon', // genes or exons?
         'exonId',
@@ -42,7 +42,7 @@ export const GLYPH_GENE_ANNOTATAION: MarkGlyph = {
                 range: ['triangle-l', 'rule']
             },
             size: { value: 25 },
-            x1: 'none'
+            xe: 'none'
         },
         {
             description: 'gene right',
@@ -55,8 +55,8 @@ export const GLYPH_GENE_ANNOTATAION: MarkGlyph = {
                 range: ['rule', 'triangle-r']
             },
             size: { value: 25 },
-            x: { bind: 'x1' },
-            x1: 'none'
+            x: { bind: 'xe' },
+            xe: 'none'
         },
         {
             mark: 'text',

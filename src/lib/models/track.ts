@@ -64,7 +64,7 @@ export class TrackModel {
                     this.channelToField[c] = field;
 
                     // Domains for x1 and y1 needs to be added to that of x and y, respectively.
-                    const targetChannel = c === 'x1' ? 'x' : c === 'y1' ? 'y' : c;
+                    const targetChannel = c === 'xe' ? 'x' : c === 'ye' ? 'y' : c;
 
                     if (!this.domains[targetChannel]) {
                         this.domains[targetChannel] = [];
@@ -147,7 +147,7 @@ export class TrackModel {
         }
         ////
 
-        const scaleChannel = c === 'x1' ? 'x' : c === 'y1' ? 'y' : c;
+        const scaleChannel = c === 'xe' ? 'x' : c === 'ye' ? 'y' : c;
 
         if (IsChannelValue(element[c])) {
             switch (c) {
@@ -183,8 +183,8 @@ export class TrackModel {
             }
         }
         else if (c === 'w') {
-            if (this.scales['x'] && IsChannelDeep(this.track.x) && IsChannelDeep(this.track.x1) && element.x !== 'none' && element.x1 !== 'none') {
-                const altSize = Math.abs((datum[this.getFieldByChannel('x1')] as number) - (datum[this.getFieldByChannel('x')] as number));
+            if (this.scales['x'] && IsChannelDeep(this.track.x) && IsChannelDeep(this.track.xe) && element.x !== 'none' && element.xe !== 'none') {
+                const altSize = Math.abs((datum[this.getFieldByChannel('xe')] as number) - (datum[this.getFieldByChannel('x')] as number));
                 return this.scales['x'](altSize);
             } else {
                 return this.getEncoding(element, 'size', datum);

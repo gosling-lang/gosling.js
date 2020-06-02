@@ -24,8 +24,8 @@ export interface Track {
     y?: Channel
     color?: Channel
     opacity?: Channel
-    x1?: Channel
-    y1?: Channel
+    xe?: Channel
+    ye?: Channel
     size?: Channel
     text?: Channel
     w?: Channel
@@ -48,8 +48,8 @@ export interface Datum {
 export const ChannelTypes = {
     x: 'x',
     y: 'y',
-    x1: 'x1',
-    y1: 'y1',
+    xe: 'xe',
+    ye: 'ye',
     color: 'color',
     opacity: 'opacity',
     size: 'size',
@@ -116,8 +116,8 @@ export interface GlyphElement {
     // chennels
     x?: ChannelBind | ChannelValue | 'none'
     y?: ChannelBind | ChannelValue | 'none'
-    x1?: ChannelBind | ChannelValue | 'none'
-    y1?: ChannelBind | ChannelValue | 'none'
+    xe?: ChannelBind | ChannelValue | 'none'
+    ye?: ChannelBind | ChannelValue | 'none'
     color?: ChannelBind | ChannelValue | 'none'
     size?: ChannelBind | ChannelValue | 'none'
     w?: ChannelBind | ChannelValue | 'none'
