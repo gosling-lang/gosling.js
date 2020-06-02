@@ -19,13 +19,19 @@ export interface Track {
     // primitives
     data: string | Datum[]
     mark: Mark
-    // channels
+    // coordinates
     x?: Channel
     y?: Channel
-    color?: Channel
-    opacity?: Channel
     xe?: Channel
     ye?: Channel
+    // coordinates for link
+    x1?: Channel
+    y1?: Channel
+    x1e?: Channel
+    y1e?: Channel
+    // others
+    color?: Channel
+    opacity?: Channel
     size?: Channel
     text?: Channel
     w?: Channel
@@ -46,10 +52,17 @@ export interface Datum {
  * Channel
  */
 export const ChannelTypes = {
+    // coordinates
     x: 'x',
     y: 'y',
     xe: 'xe',
     ye: 'ye',
+    // coordinates for link
+    x1: 'x1',
+    y1: 'y1',
+    x1e: 'x1e',
+    y1e: 'y1e',
+    // others
     color: 'color',
     opacity: 'opacity',
     size: 'size',
@@ -113,11 +126,17 @@ export interface GlyphElement {
     description?: string
     select?: { channel: ChannelType, oneOf: string[] }[]
     mark: MarkType | MarkBind
-    // chennels
+    // coordinates
     x?: ChannelBind | ChannelValue | 'none'
     y?: ChannelBind | ChannelValue | 'none'
     xe?: ChannelBind | ChannelValue | 'none'
     ye?: ChannelBind | ChannelValue | 'none'
+    // coordinates for link
+    x1?: ChannelBind | ChannelValue | 'none'
+    y1?: ChannelBind | ChannelValue | 'none'
+    x1e?: ChannelBind | ChannelValue | 'none'
+    y1e?: ChannelBind | ChannelValue | 'none'
+    // others
     color?: ChannelBind | ChannelValue | 'none'
     size?: ChannelBind | ChannelValue | 'none'
     w?: ChannelBind | ChannelValue | 'none'
