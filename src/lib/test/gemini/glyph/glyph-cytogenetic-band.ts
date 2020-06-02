@@ -13,38 +13,25 @@ export const GLYPH_CYTOGENETIC_BAND: MarkGlyph = {
     ],
     "elements": [
         {
-            "description": "acen bg",
-            "select": [{ channel: 'text', oneOf: ['11', '11.1'] }],
-            "mark": { bind: 'text', domain: ['11', '11.1'], range: ['triangle-l', 'triangle-r'] },
-            'color': { value: '#6E7F8F' },
-            "size": { "value": 29 },
-            styles: {
-                stroke: 'black',
-                strokeWidth: 2
-            }
-        },
-        {
-            "description": "symbols background",
-            "select": [{ channel: 'stain', oneOf: ['gneg', 'gpos', 'gvar'] }],
-            "mark": "rect",
-            "size": { "value": 26 },
-            styles: {
-                stroke: 'black',
-                strokeWidth: 3
-            }
-        },
-        {
             "description": "symbols",
             "select": [{ channel: 'stain', oneOf: ['gneg', 'gpos', 'gvar'] }],
             "mark": "rect",
-            "size": { "value": 25 }
+            "size": { "value": 25 },
+            styles: {
+                stroke: 'black',
+                strokeWidth: 1
+            }
         },
         {
             "description": "acen",
             "select": [{ channel: 'text', oneOf: ['11', '11.1'] }],
             "mark": { bind: 'text', domain: ['11', '11.1'], range: ['triangle-l', 'triangle-r'] },
             'color': { value: '#B40101' },
-            "size": { "value": 30 }
+            "size": { "value": 25 },
+            styles: {
+                stroke: 'black',
+                strokeWidth: 1
+            }
         },
         {
             mark: 'text',
