@@ -14,7 +14,7 @@ export const GLYPH_GENE_ANNOTATAION_V2: MarkGlyph = {
             // Should render once
             "description": "gene",
             "select": [
-                { "channel": "geneOrExon", "equal": "gene" },
+                { "channel": "geneOrExon", "oneOf": ["gene"] },
             ],
             "mark": "rect",
             "size": { "value": 25 }
@@ -22,27 +22,28 @@ export const GLYPH_GENE_ANNOTATAION_V2: MarkGlyph = {
         {
             "description": "gene head",
             "select": [
-                { "channel": "geneOrExon", "equal": "gene" },
-                { "channel": "y", "equal": "-" }
+                { "channel": "geneOrExon", "oneOf": ["gene"] },
+                { "channel": "y", "oneOf": ["-"] }
             ],
             "mark": "triangle-l",
             "size": { "value": 25 },
-            "x1": null
+            "x1": 'none'
         },
         {
             "description": "gene right",
             "select": [
-                { "channel": "geneOrExon", "equal": "gene" },
-                { "channel": "y", "equal": "+" },
+                { "channel": "geneOrExon", "oneOf": ["gene"] },
+                { "channel": "y", "oneOf": ["+"] },
             ],
             "mark": "triangle-r",
             "size": { "value": 25 },
-            "x": { "bind": "x1" }
+            "x": { "bind": "x1" },
+            "x1": 'none'
         },
         {
             "description": "horizontal line",
             "select": [
-                { "channel": "geneOrExon", "equal": "gene" },
+                { "channel": "geneOrExon", "oneOf": ["gene"] },
             ],
             "mark": "line",
             "color": { "value": "gray" },
@@ -54,7 +55,7 @@ export const GLYPH_GENE_ANNOTATAION_V2: MarkGlyph = {
         {
             "mark": "text",
             "select": [
-                { "channel": "geneOrExon", 'equal': "gene" }
+                { "channel": "geneOrExon", 'oneOf': ["gene"] }
             ],
             "color": { "value": "black" },
             "opacity": { "value": 1 },

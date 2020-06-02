@@ -16,7 +16,7 @@ export const GLYPH_GENE_ANNOTATAION: MarkGlyph = {
             // Should render once
             description: 'horizontal line',
             select: [
-                { channel: 'geneOrExon', equal: 'gene' },
+                { channel: 'geneOrExon', oneOf: ['gene'] },
             ],
             mark: 'line',
             color: { value: 'black' },
@@ -25,8 +25,8 @@ export const GLYPH_GENE_ANNOTATAION: MarkGlyph = {
         {
             description: 'exon',
             select: [
-                { channel: 'geneOrExon', equal: 'exon' },
-                { channel: 'exonVersion', equal: '2' }
+                { channel: 'geneOrExon', oneOf: ['exon'] },
+                { channel: 'exonVersion', oneOf: ['2'] }
             ],
             mark: 'rect',
             size: { value: 25 }
@@ -34,7 +34,7 @@ export const GLYPH_GENE_ANNOTATAION: MarkGlyph = {
         {
             description: 'gene left',
             select: [
-                { channel: 'geneOrExon', equal: 'gene' },
+                { channel: 'geneOrExon', oneOf: ['gene'] },
             ],
             mark: {
                 bind: 'y',
@@ -42,12 +42,12 @@ export const GLYPH_GENE_ANNOTATAION: MarkGlyph = {
                 range: ['triangle-l', 'rule']
             },
             size: { value: 25 },
-            x1: null
+            x1: 'none'
         },
         {
             description: 'gene right',
             select: [
-                { channel: 'geneOrExon', equal: 'gene' },
+                { channel: 'geneOrExon', oneOf: ['gene'] },
             ],
             mark: {
                 bind: 'y',
@@ -55,14 +55,14 @@ export const GLYPH_GENE_ANNOTATAION: MarkGlyph = {
                 range: ['rule', 'triangle-r']
             },
             size: { value: 25 },
-            x: { bind: 'x1' }
+            x: { bind: 'x1' },
+            x1: 'none'
         },
         {
             mark: 'text',
             select: [
-                { channel: 'geneOrExon', 'equal': 'gene' }
+                { channel: 'geneOrExon', 'oneOf': ['gene'] }
             ],
-            color: { value: 'black' },
             opacity: { value: 1 },
             size: { value: 18 },
             styles: {
@@ -72,11 +72,10 @@ export const GLYPH_GENE_ANNOTATAION: MarkGlyph = {
         {
             mark: 'text',
             select: [
-                { channel: 'geneOrExon', equal: 'exon' },
-                { channel: 'exonVersion', equal: '2' }
+                { channel: 'geneOrExon', oneOf: ['exon'] },
+                { channel: 'exonVersion', oneOf: ['2'] }
             ],
             text: { bind: 'exonId' },
-            color: { value: 'black' },
             opacity: { value: 1 },
             size: { value: 6 },
             styles: {

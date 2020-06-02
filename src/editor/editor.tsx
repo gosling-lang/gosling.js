@@ -17,9 +17,13 @@ function Editor() {
     const layoutSvg = useRef<SVGSVGElement>(null);
     const [demo, setDemo] = useState(demos[DEBUG_INIT_DEMO_INDEX]);
     const [gm, setGm] = useState(stringify(demos[DEBUG_INIT_DEMO_INDEX].spec as GeminiSpec));
+    const [previewWidth, setPreviewWidth] = useState(demos[DEBUG_INIT_DEMO_INDEX].previewWidth);
+    const [previewHeight, setPreviewHeight] = useState(demos[DEBUG_INIT_DEMO_INDEX].previewHeight);
 
     useEffect(() => {
         setGm(stringify(demo.spec as GeminiSpec));
+        setPreviewWidth(demo.previewWidth);
+        setPreviewHeight(demo.previewHeight);
     }, [demo]);
 
     useEffect(() => {
@@ -41,15 +45,17 @@ function Editor() {
         d3.csv(track.data as string).then(data =>
             renderGlyphPreview(
                 glyphSvg.current as SVGSVGElement,
-                { ...track, data } as Track
+                { ...track, data } as Track,
+                previewWidth,
+                previewHeight
             )
         );
-    }, [gm]);
+    }, [gm, previewWidth, previewHeight]);
 
     return (
         <>
             <div className="demo-navbar">
-                Gemini <code>Editor</code>
+                🧬Gemini <code>Editor</code>
                 <select
                     onChange={e => {
                         setDemo(demos.find(d => d.name === e.target.value) as any);

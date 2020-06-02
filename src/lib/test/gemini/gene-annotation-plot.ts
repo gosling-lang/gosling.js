@@ -26,10 +26,11 @@ export const GENE_ANNOTATION_PLOT: GeminiSpec = {
             x1: { field: "end", type: "quantitative" },
             y: { field: "strand", type: "nominal" },
             text: { field: "gene_name", type: "nominal" },
-            color: { value: "#0000FF" },
+            color: { field: "strand", type: "nominal" },
             exonVersion: { field: "exon_version", type: "nominal" },
             geneOrExon: { field: "feature", type: "nominal" },
-            exonId: { field: "exon_id", type: "nominal" }
+            exonId: { field: "exon_id", type: "nominal" },
+            opacity: { value: 0.9 }
         }
     ]
 };

@@ -18,7 +18,7 @@ export function deepToLongElements(elements: GlyphElement[]) {
                     mark: range,
                     select: [
                         ...select,
-                        { channel: bind, equal: domain }
+                        { channel: bind, oneOf: [domain] }
                     ]
                 });
             }

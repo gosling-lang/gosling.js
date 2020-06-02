@@ -28,6 +28,8 @@ export interface Track {
     y1?: Channel
     size?: Channel
     text?: Channel
+    w?: Channel
+    h?: Channel
     // styles
     width?: number
     height?: number
@@ -51,7 +53,8 @@ export const ChannelTypes = {
     color: 'color',
     opacity: 'opacity',
     size: 'size',
-    text: 'text'
+    text: 'text',
+    w: 'w'
 } as const;
 
 export type ChannelType = keyof typeof ChannelTypes | string
@@ -62,6 +65,8 @@ export interface ChannelDeep {
     field: string
     type: "nominal" | "quantitative"
     aggregate?: Aggregate
+    domain?: string[]
+    range?: string[]
 }
 
 export interface ChannelValue {
@@ -75,7 +80,7 @@ export type Aggregate = "max" | "min" | "mean"
  */
 export type Mark = MarkType | MarkDeep
 
-type MarkType =
+export type MarkType =
     | "bar"
     | "point"
     | "line"
@@ -106,23 +111,26 @@ export interface MarkGlyph {
 export interface GlyphElement {
     // primitives
     description?: string
-    select?: { channel: ChannelType, equal: string }[]
+    select?: { channel: ChannelType, oneOf: string[] }[]
     mark: MarkType | MarkBind
     // chennels
-    x?: ChannelBind | ChannelValue | null
-    y?: ChannelBind | ChannelValue | null
-    x1?: ChannelBind | ChannelValue | null
-    y1?: ChannelBind | ChannelValue | null
-    color?: ChannelBind | ChannelValue | null
-    size?: ChannelBind | ChannelValue | null
-    opacity?: ChannelBind | ChannelValue | null
-    text?: ChannelBind | ChannelValue | null
+    x?: ChannelBind | ChannelValue | 'none'
+    y?: ChannelBind | ChannelValue | 'none'
+    x1?: ChannelBind | ChannelValue | 'none'
+    y1?: ChannelBind | ChannelValue | 'none'
+    color?: ChannelBind | ChannelValue | 'none'
+    size?: ChannelBind | ChannelValue | 'none'
+    w?: ChannelBind | ChannelValue | 'none'
+    opacity?: ChannelBind | ChannelValue | 'none'
+    text?: ChannelBind | ChannelValue | 'none'
     styles?: Style
 }
 
 export interface Style {
     dashed?: string
-    dy?: number;
+    dy?: number
+    stroke?: string
+    strokeWidth?: number
 }
 
 export interface MarkBind {
@@ -173,7 +181,7 @@ export function IsChannelValue(
         | ChannelValue
         | ChannelBind
         | undefined
-        | null
+        | 'none'
 ): channel is ChannelValue {
     return channel !== null && typeof channel === "object" && 'value' in channel;
 }
@@ -184,7 +192,7 @@ export function IsChannelBind(
         | ChannelValue
         | ChannelBind
         | undefined
-        | null
+        | 'none'
 ): channel is ChannelBind {
     return channel !== null && typeof channel === "object" && 'bind' in channel;
 }

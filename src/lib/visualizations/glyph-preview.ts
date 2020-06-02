@@ -2,12 +2,17 @@ import { Track, GenericType, Channel } from "../gemini.schema";
 import * as d3 from "d3";
 import { renderGlyph } from "./glyph";
 
-export function renderGlyphPreview(svg: SVGSVGElement, track: Track | GenericType<Channel>) {
+export function renderGlyphPreview(
+    svg: SVGSVGElement,
+    track: Track | GenericType<Channel>,
+    width: number,
+    height: number
+) {
     if (!svg || !track) return;
     d3.select(svg).selectAll("*").remove();
 
     // Styles
-    const WIDTH = 600, HEIGHT = 300, PADDING_X = 60, PADDING_Y = 100;
+    const WIDTH = width, HEIGHT = height, PADDING_X = 60, PADDING_Y = 100;
 
     // BG and Guidelines
     renderBackground(svg, WIDTH, HEIGHT, PADDING_X, PADDING_Y);

@@ -1,4 +1,4 @@
-import { Track, Channel, GenericType, IsGlyphMark, IsChannelValue, ChannelTypes, ChannelBind, MarkGlyph, IsChannelDeep, ChannelDeep, Datum, ChannelType, GlyphElement, IsChannelBind } from "../gemini.schema";
+import { Track, Channel, MarkType, GenericType, IsGlyphMark, IsChannelValue, ChannelTypes, ChannelBind, MarkGlyph, IsChannelDeep, ChannelDeep, Datum, ChannelType, GlyphElement, IsChannelBind } from "../gemini.schema";
 import { deepToLongElements } from "../utils/spec-preprocess";
 import * as d3 from "d3";
 import { BoundingBox } from "../visualizations/bounding-box";
@@ -8,7 +8,7 @@ export class TrackModel {
     private channelToField: { [k: string]: string };
     private domains: { [channel: string]: (string | number)[] };
     private scales: { [channel: string]: d3.ScaleLinear<any, any> | d3.ScaleOrdinal<any, any> | d3.ScaleSequential<any> };
-    private ranges: { [channel: string]: number[] };
+    private ranges: { [channel: string]: number[] | string[] };
     constructor(track: Track | GenericType<Channel>) {
         this.track = track;
         this.domains = {};
@@ -25,9 +25,10 @@ export class TrackModel {
         /**
          * Default
          */
-        if (IsGlyphMark(track.mark)) {
-            track.mark.elements = deepToLongElements(track.mark.elements);
+        if (IsGlyphMark(this.track.mark)) {
+            this.track.mark.elements = deepToLongElements(this.track.mark.elements);
         }
+        // TODO: Add binds for not-specified channels.
 
         /**
          * Prepare Rendering
@@ -70,7 +71,7 @@ export class TrackModel {
                     }
                     this.domains[targetChannel] = [
                         ...this.domains[targetChannel],
-                        ...data.map(d => d[field])
+                        ...(channel.domain ? channel.domain : data.map(d => d[field]))
                     ]
                 }
             });
@@ -80,7 +81,7 @@ export class TrackModel {
                     const { type } = channel;
                     this.domains[c] = type === "nominal"
                         ? d3.set(this.domains[c]).values()
-                        : d3.extent(this.domains[c] as number[]) as [number, number]
+                        : d3.extent(this.domains[c].map(d => +d)) as [number, number]
                 }
             });
         }
@@ -95,7 +96,7 @@ export class TrackModel {
                 } else if (c === 'y') {
                     this.ranges['y'] = [bb.y, bb.y1];
                 } else if (c === 'color') {
-                    this.ranges['color'] = [-1, -1]
+                    this.ranges['color'] = channel.range ? channel.range : d3.schemeTableau10 as string[]
                 } else {
                     // TODO: Support specifying `range` and `domain`.
                     // ...
@@ -115,7 +116,7 @@ export class TrackModel {
                     this.scales[c] = c === 'color' && type === 'nominal'
                         ? d3.scaleOrdinal()
                             .domain(this.domains[c] as string[])
-                            .range(d3.schemeTableau10)
+                            .range(this.ranges[c])
                         : c === 'color' && type === 'quantitative'
                             ? d3.scaleSequential(d3.interpolateBrBG)
                                 .domain(this.domains[c] as [number, number])
@@ -125,7 +126,7 @@ export class TrackModel {
                                     .range(this.ranges[c])
                                 : d3.scaleLinear()
                                     .domain(this.domains[c] as [number, number])
-                                    .range(this.ranges[c]);
+                                    .range(this.ranges[c] as [number, number]);
                 }
             }
         });
@@ -134,8 +135,9 @@ export class TrackModel {
     public getEncoding(
         element: GlyphElement /* Remove this */,
         c: keyof typeof ChannelTypes,
-        datum: Datum
-    ) {
+        datum: Datum,
+        mark?: MarkType
+    ): any {
         // TODO: Move out
         const DEFAULT_ENCODING: { [k: string]: number | string } = {
             'opacity': 1,
@@ -178,6 +180,14 @@ export class TrackModel {
                     : undefined;
             if (field) {
                 return datum[field];
+            }
+        }
+        else if (c === 'w') {
+            if (this.scales['x'] && IsChannelDeep(this.track.x) && IsChannelDeep(this.track.x1) && element.x !== 'none' && element.x1 !== 'none') {
+                const altSize = Math.abs((datum[this.getFieldByChannel('x1')] as number) - (datum[this.getFieldByChannel('x')] as number));
+                return this.scales['x'](altSize);
+            } else {
+                return this.getEncoding(element, 'size', datum);
             }
         }
         else {

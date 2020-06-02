@@ -11,7 +11,11 @@ export function renderGlyph(
     bb: BoundingBox
 ) {
     const tm = new TrackModel(track);
-    tm.setScales(bb);
+    tm.setScales({
+        ...bb,
+        // TODO: Cheating here!
+        y: (bb.y1 - bb.y) / 2.0
+    });
 
     // checks
     const data = track.data as Datum[];
@@ -36,9 +40,9 @@ export function renderGlyph(
         // Select
         const filters: FilterSpec[] = [];
         select?.forEach(d => {
-            const { channel, equal } = d;
+            const { channel, oneOf } = d;
             if (tm.getFieldByChannel(channel)) {
-                filters.push({ field: tm.getFieldByChannel(channel), equal });
+                filters.push({ field: tm.getFieldByChannel(channel), oneOf });
             }
         });
 
@@ -57,9 +61,9 @@ export function renderGlyph(
                 .attr('stroke', d => tm.getEncoding(element, 'color', d))
                 .attr('stroke-width', d => tm.getEncoding(element, 'size', d))
                 .attr('opacity', d => tm.getEncoding(element, 'opacity', d))
-                .style('stroke-dasharray', (element.styles?.dashed as any))
+                .style('stroke-dasharray', (element.styles?.dashed ?? ''))
         } else if (markE === 'point') {
-            g.selectAll('circle')
+            g.selectAll('point')
                 .data(transformed_data)
                 .enter()
                 .append('circle')
@@ -78,7 +82,9 @@ export function renderGlyph(
                 .attr('width', d => tm.getEncoding(element, 'x1', d) - tm.getEncoding(element, 'x', d))
                 .attr('height', d => tm.getEncoding(element, 'size', d))
                 .attr('fill', d => tm.getEncoding(element, 'color', d))
-                .attr('opacity', d => tm.getEncoding(element, 'opacity', d));
+                .attr('opacity', d => tm.getEncoding(element, 'opacity', d))
+                .attr('stroke', element.styles?.stroke ?? '')
+                .attr('stroke-width', element.styles?.strokeWidth ?? '')
         } else if (markE === 'text') {
             g.selectAll()
                 .data(transformed_data)
@@ -93,7 +99,7 @@ export function renderGlyph(
                 .attr('text-anchor', "middle")
                 .attr('opacity', d => tm.getEncoding(element, 'opacity', d))
         } else if (markE === 'rule') {
-            g.selectAll('line')
+            g.selectAll('rule')
                 .data(transformed_data)
                 .enter()
                 .append('line')
@@ -104,38 +110,42 @@ export function renderGlyph(
                 .attr('stroke', d => tm.getEncoding(element, 'color', d))
                 .attr('stroke-width', 3)
                 .attr('opacity', d => tm.getEncoding(element, 'opacity', d))
-        } else if (markE === 'triangle-l') {
-            g.selectAll('path')
-                .data(transformed_data)
-                .enter()
-                .append('path')
-                .attr('d', d => {
-                    const size = tm.getEncoding(element, 'size', d);
-                    const x = tm.getEncoding(element, 'x', d);
-                    const y = tm.getEncoding(element, 'y', d);
-                    console.log(y);
-                    return `M${x - size} ${y}`
-                        + `L${x} ${y + size / 2.0}`
-                        + `L${x} ${y - size / 2.0} Z`;
-                })
-                .attr('fill', d => tm.getEncoding(element, 'color', d))
-                .attr('opacity', d => tm.getEncoding(element, 'opacity', d))
         } else if (markE === 'triangle-r') {
-            g.selectAll('path')
+            g.selectAll('trangle-r')
                 .data(transformed_data)
                 .enter()
                 .append('path')
                 .attr('d', d => {
-                    const size = tm.getEncoding(element, 'size', d);
+                    const h = tm.getEncoding(element, 'size', d);
+                    const w = tm.getEncoding(element, 'w', d);
                     const x = tm.getEncoding(element, 'x', d);
                     const y = tm.getEncoding(element, 'y', d);
-                    console.log(y);
-                    return `M${x + size} ${y}`
-                        + `L${x} ${y + size / 2.0}`
-                        + `L${x} ${y - size / 2.0} Z`;
+                    return `M${x + w} ${y}`
+                        + `L${x} ${y + h / 2.0}`
+                        + `L${x} ${y - h / 2.0} Z`;
                 })
                 .attr('fill', d => tm.getEncoding(element, 'color', d))
                 .attr('opacity', d => tm.getEncoding(element, 'opacity', d))
+                .attr('stroke', element.styles?.stroke ?? '')
+                .attr('stroke-width', element.styles?.strokeWidth ?? '')
+        } else if (markE === 'triangle-l') {
+            g.selectAll('trangle-l')
+                .data(transformed_data)
+                .enter()
+                .append('path')
+                .attr('d', d => {
+                    const h = tm.getEncoding(element, 'size', d);
+                    const w = tm.getEncoding(element, 'w', d);
+                    const x = tm.getEncoding(element, 'x', d);
+                    const y = tm.getEncoding(element, 'y', d);
+                    return `M${x} ${y}`
+                        + `L${x + w} ${y + h / 2.0}`
+                        + `L${x + w} ${y - h / 2.0} Z`;
+                })
+                .attr('fill', d => tm.getEncoding(element, 'color', d))
+                .attr('opacity', d => tm.getEncoding(element, 'opacity', d))
+                .attr('stroke', element.styles?.stroke ?? '')
+                .attr('stroke-width', element.styles?.strokeWidth ?? '')
         }
     });
 }
