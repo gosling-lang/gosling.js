@@ -1,7 +1,7 @@
 import { Track, Channel, MarkType, GenericType, IsGlyphMark, IsChannelValue, ChannelTypes, ChannelBind, MarkGlyph, IsChannelDeep, ChannelDeep, Datum, ChannelType, GlyphElement, IsChannelBind } from "../gemini.schema";
 import { deepToLongElements } from "../utils/spec-preprocess";
 import * as d3 from "d3";
-import { BoundingBox } from "../visualizations/bounding-box";
+import { BoundingBox } from "../utils/bounding-box";
 
 export class TrackModel {
     private track: Track | GenericType<Channel>;
@@ -92,9 +92,9 @@ export class TrackModel {
             const channel = (this.track as GenericType<Channel>)[c];
             if (IsChannelDeep(channel)) {
                 if (c === 'x') {
-                    this.ranges['x'] = [bb.x, bb.x1];
+                    this.ranges['x'] = [bb.x, bb.x + bb.width];
                 } else if (c === 'y') {
-                    this.ranges['y'] = [bb.y, bb.y1];
+                    this.ranges['y'] = [bb.y, bb.y + bb.height];
                 } else if (c === 'color') {
                     this.ranges['color'] = channel.range ? channel.range : d3.schemeTableau10 as string[]
                 } else {

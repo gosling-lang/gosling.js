@@ -1,9 +1,8 @@
 import * as d3 from "d3";
-import { BoundingBox } from "./bounding-box";
-import { Track, Datum, ChannelDeep, GenericType, GlyphElement, ChannelBind, IsChannelDeep, Channel, MarkGlyph, IsGlyphMark, MarkDeep, ChannelValue, IsChannelValue } from "../gemini.schema";
+import { Track, Datum, GenericType, Channel, IsGlyphMark } from "../gemini.schema";
 import { transformData, FilterSpec } from "../utils/data-process";
-import { DEFAULT_VISUAL_PROPERTIES } from "./defaults";
 import { TrackModel } from "../models/track";
+import { BoundingBox } from "../utils/bounding-box";
 
 export function renderGlyph(
     g: d3.Selection<SVGGElement, any, any, any>,
@@ -14,7 +13,7 @@ export function renderGlyph(
     tm.setScales({
         ...bb,
         // TODO: Cheating here!
-        y: (bb.y1 - bb.y) / 2.0
+        y: bb.y + bb.height / 2.0
     });
 
     // checks
