@@ -4,8 +4,13 @@
 import { PREDEFINED_GLYPHS_TYPE as PREDEFINED_GLYPH_TYPE } from './test/gemini/glyph'
 
 export interface GeminiSpec {
-    references?: string[],
-    description?: string,
+    references?: string[]
+    description?: string
+    layout?: {
+        type: "linear" | "circular"
+        direction: "vertical" | "horizontal"
+        wrap: number // TODO: does not work now
+    }
     tracks: (Track | GenericType<Channel>)[] // TODO: `Track` does not mean anything here because of `GenericType`
     // ...
 }
@@ -107,6 +112,7 @@ export type MarkType =
     | 'triangle-l'
     | 'triangle-r'
     | 'dummy'
+    | 'empty'
 
 /**
  * Glyph

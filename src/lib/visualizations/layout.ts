@@ -14,26 +14,38 @@ export function renderLayout(
 
     // Generate layout data
     const tracksWithBB: { bb: BoundingBox, track: Track | GenericType<Channel> }[] = [];
-    let cumY = 0;
+    let cumY = 0, cumX = 0;
     gm.tracks.forEach(track => {
         // TODO: for demo
         if (track.data === "dummy-link") track.data = DUMMY_LINK_DATA;
         else if (track.data === "dummy-band") track.data = DUMMY_BAND_DATA;
         ///
-        tracksWithBB.push({
-            bb: {
-                x: 0, width: track.width as number,
-                y: cumY, height: track.height as number
-            },
-            track
-        });
-        cumY += track.height as number + VIEW_PADDING;
+        if (gm.layout?.direction !== "horizontal") {
+            tracksWithBB.push({
+                bb: {
+                    x: 0, width: track.width as number,
+                    y: cumY, height: track.height as number
+                },
+                track
+            });
+            cumY += track.height as number + VIEW_PADDING;
+        }
+        else {
+            tracksWithBB.push({
+                bb: {
+                    x: cumX, width: track.width as number,
+                    y: 0, height: track.height as number
+                },
+                track
+            });
+            cumX += track.width as number + VIEW_PADDING;
+        }
     });
 
     g.selectAll('rect')
         .data(tracksWithBB)
         .enter()
-        .filter(d => d.track.mark !== 'link-between')
+        .filter(d => d.track.mark !== 'link-between' && d.track.mark !== 'empty')
         .append('rect')
         .attr('x', d => d.bb.x)
         .attr('width', d => d.bb.width)

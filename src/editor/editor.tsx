@@ -11,9 +11,8 @@ import { renderGlyphPreview } from '../lib/visualizations/glyph-preview';
 import { replaceGlyphs } from '../lib/utils';
 import { renderLayoutPreview } from '../lib/visualizations/layout-preview';
 import { calculateSize } from '../lib/utils/bounding-box';
-import { generateLinkData, generateBandData } from '../lib/script/link-data';
 
-const DEBUG_INIT_DEMO_INDEX = demos.length - 1;
+const DEBUG_INIT_DEMO_INDEX = 0; //demos.length - 1;
 
 function Editor() {
 

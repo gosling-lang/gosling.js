@@ -2,6 +2,8 @@ import { GENE_ANNOTATION_PLOT, GENE_ANNOTATION_PLOT_SIMPLE } from "../lib/test/g
 import { CYTOGENETIC_BAND } from "../lib/test/gemini/cytogenetic-band";
 import { LAYOUT_EXAMPLE_LINK, LAYOUT_EXAMPLE_COMBO } from "../lib/test/gemini/layout-examples";
 import { GeminiSpec } from "../lib/gemini.schema";
+import { LAYOUT_EXAMPLE_COMBO_HORIZONTAL } from "../lib/test/gemini/layout-examples";
+import { LAYOUT_EXAMPLE_DOMINO } from "../lib/test/gemini/layout-examples";
 
 interface Demo {
     name: string,
@@ -41,4 +43,19 @@ export const demos: ReadonlyArray<Demo> = [
         glyphWidth: 0,
         glyphHeight: 0
     },
+    {
+        name: "Between-Links (Combo, Horizontal)",
+        spec: LAYOUT_EXAMPLE_COMBO_HORIZONTAL,
+        glyphWidth: 0,
+        glyphHeight: 0
+    },
+    /*
+    // TODO: not ready
+    {
+        name: "Between-Links (Domino)",
+        spec: LAYOUT_EXAMPLE_DOMINO,
+        glyphWidth: 0,
+        glyphHeight: 0
+    },
+    */
 ] as const;

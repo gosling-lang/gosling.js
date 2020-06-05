@@ -52,17 +52,81 @@ export const LAYOUT_EXAMPLE_COMBO: GeminiSpec = {
     tracks: [
         {
             data: 'dummy', mark: 'dummy',
-            width: 500, height: 100
+            width: 600, height: 50
         },
         {
             data: 'dummy-link', mark: 'link-between',
             x1: { field: 'from', type: "nominal" },
             x: { field: 'to', type: "nominal" },
-            width: 500, height: 100
+            width: 600, height: 50
         },
         {
             data: 'dummy', mark: 'dummy',
-            width: 500, height: 100
+            width: 600, height: 50
+        }
+    ]
+}
+
+export const LAYOUT_EXAMPLE_COMBO_HORIZONTAL: GeminiSpec = {
+    layout: { type: 'linear', direction: 'horizontal', wrap: -1 },
+    tracks: [
+        {
+            data: 'dummy', mark: 'dummy',
+            width: 60, height: 500
+        },
+        {
+            data: 'dummy-link', mark: 'link-between',
+            y: { field: 'from', type: "nominal" },
+            y1: { field: 'to', type: "nominal" },
+            width: 60, height: 500
+        },
+        {
+            data: 'dummy', mark: 'dummy',
+            width: 60, height: 500
+        }
+    ]
+}
+
+export const LAYOUT_EXAMPLE_DOMINO: GeminiSpec = {
+    layout: { type: 'linear', direction: 'horizontal', wrap: 3 },
+    tracks: [
+        {
+            data: 'dummy', mark: 'empty',
+            width: 50, height: 50
+        },
+        {
+            data: 'dummy', mark: 'dummy',
+            width: 500, height: 50
+        },
+        {
+            data: 'dummy', mark: 'empty',
+            width: 50, height: 50
+        },
+        {
+            data: 'dummy', mark: 'dummy',
+            width: 50, height: 500
+        },
+        {
+            data: 'dummy-link', mark: 'link-between',
+            y: { field: 'from', type: "nominal" },
+            y1: { field: 'to', type: "nominal" },
+            width: 500, height: 500
+        },
+        {
+            data: 'dummy', mark: 'dummy',
+            width: 50, height: 500
+        },
+        {
+            data: 'dummy', mark: 'empty',
+            width: 50, height: 50
+        },
+        {
+            data: 'dummy', mark: 'dummy',
+            width: 500, height: 50
+        },
+        {
+            data: 'dummy', mark: 'empty',
+            width: 50, height: 50
         },
     ]
 }
