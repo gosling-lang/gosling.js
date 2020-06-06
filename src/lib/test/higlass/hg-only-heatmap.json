@@ -1,5 +1,5 @@
 {
-    "editable": true,
+    "editable": false,
     "zoomFixed": false,
     "trackSourceServers": [
         "//higlass.io/api/v1",

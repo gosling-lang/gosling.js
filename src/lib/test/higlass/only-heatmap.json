@@ -1,111 +1,113 @@
 {
-  "editable": true,
-  "zoomFixed": false,
-  "trackSourceServers": [
-    "//higlass.io/api/v1",
-    "https://resgen.io/api/v1/gt/paper-data"
-  ],
-  "exportViewUrl": "/api/v1/viewconfs",
-  "views": [
-    {
-      "uid": "aa",
-      "initialXDomain": [
-        884821671.7712812,
-        2890747436.219704
-      ],
-      "initialYDomain": [
-        966709582.1482128,
-        2027732744.7281957
-      ],
-      "autocompleteSource": "/api/v1/suggest/?d=OHJakQICQD6gTD7skx4EWA&",
-      "genomePositionSearchBox": {
-        "autocompleteServer": "//higlass.io/api/v1",
-        "autocompleteId": "OHJakQICQD6gTD7skx4EWA",
-        "chromInfoServer": "//higlass.io/api/v1",
-        "chromInfoId": "hg19",
-        "visible": true
-      },
-      "chromInfoPath": "//s3.amazonaws.com/pkerp/data/hg19/chromSizes.tsv",
-      "tracks": {
-        "center": [
-          {
-            "uid": "c1",
-            "type": "combined",
-            "height": 200,
-            "contents": [
-              {
-                "server": "//higlass.io/api/v1",
-                "tilesetUid": "CQMd6V_cRw6iCI_-Unl3PQ",
-                "type": "heatmap",
-                "options": {
-                  "maxZoom": null,
-                  "labelPosition": "bottomRight",
-                  "name": "Rao et al. (2014) GM12878 MboI (allreps) 1kb",
-                  "backgroundColor": "#eeeeee",
-                  "labelLeftMargin": 0,
-                  "labelRightMargin": 0,
-                  "labelTopMargin": 0,
-                  "labelBottomMargin": 0,
-                  "labelShowResolution": true,
-                  "labelShowAssembly": true,
-                  "colorRange": [
-                    "white",
-                    "rgba(245,166,35,1.0)",
-                    "rgba(208,2,27,1.0)",
-                    "black"
-                  ],
-                  "colorbarBackgroundColor": "#ffffff",
-                  "minWidth": 100,
-                  "minHeight": 100,
-                  "colorbarPosition": "topRight",
-                  "trackBorderWidth": 0,
-                  "trackBorderColor": "black",
-                  "heatmapValueScaling": "log",
-                  "showMousePosition": false,
-                  "mousePositionColor": "#000000",
-                  "showTooltip": false,
-                  "extent": "full",
-                  "zeroValueColor": null,
-                  "scaleStartPercent": "0.00000",
-                  "scaleEndPercent": "1.00000"
-                },
-                "uid": "GjuZed1ySGW1IzZZqFB9BA",
-                "transforms": [
-                  {
-                    "name": "ICE",
-                    "value": "weight"
-                  }
-                ]
-              }
+    "editable": false,
+    "zoomFixed": false,
+    "tracksEditable": false,
+    "trackSourceServers": [
+        "//higlass.io/api/v1",
+        "https://resgen.io/api/v1/gt/paper-data"
+    ],
+    "exportViewUrl": "/api/v1/viewconfs",
+    "views": [
+        {
+            "uid": "aa",
+            "initialXDomain": [
+                884821671.7712812,
+                2890747436.219704
             ],
-            "options": {}
-          }
-        ],
-        "left": [],
-        "right": [],
-        "top": [],
-        "bottom": [],
-        "whole": [],
-        "gallery": []
-      },
-      "layout": {
-        "w": 12,
-        "h": 12,
-        "x": 0,
-        "y": 0
-      }
+            "initialYDomain": [
+                966709582.1482128,
+                2027732744.7281957
+            ],
+            "autocompleteSource": "/api/v1/suggest/?d=OHJakQICQD6gTD7skx4EWA&",
+            "genomePositionSearchBox": {
+                "autocompleteServer": "//higlass.io/api/v1",
+                "autocompleteId": "OHJakQICQD6gTD7skx4EWA",
+                "chromInfoServer": "//higlass.io/api/v1",
+                "chromInfoId": "hg19",
+                "visible": false
+            },
+            "chromInfoPath": "//s3.amazonaws.com/pkerp/data/hg19/chromSizes.tsv",
+            "tracks": {
+                "center": [
+                    {
+                        "uid": "c1",
+                        "type": "combined",
+                        "width": 500,
+                        "height": 500,
+                        "contents": [
+                            {
+                                "server": "//higlass.io/api/v1",
+                                "tilesetUid": "CQMd6V_cRw6iCI_-Unl3PQ",
+                                "type": "heatmap",
+                                "options": {
+                                    "maxZoom": null,
+                                    "labelPosition": "bottomRight",
+                                    "name": "Rao et al. (2014) GM12878 MboI (allreps) 1kb",
+                                    "backgroundColor": "#eeeeee",
+                                    "labelLeftMargin": 0,
+                                    "labelRightMargin": 0,
+                                    "labelTopMargin": 0,
+                                    "labelBottomMargin": 0,
+                                    "labelShowResolution": true,
+                                    "labelShowAssembly": true,
+                                    "colorRange": [
+                                        "white",
+                                        "rgba(245,166,35,1.0)",
+                                        "rgba(208,2,27,1.0)",
+                                        "black"
+                                    ],
+                                    "colorbarBackgroundColor": "#ffffff",
+                                    "minWidth": 100,
+                                    "minHeight": 500,
+                                    "colorbarPosition": "topRight",
+                                    "trackBorderWidth": 0,
+                                    "trackBorderColor": "black",
+                                    "heatmapValueScaling": "log",
+                                    "showMousePosition": false,
+                                    "mousePositionColor": "#000000",
+                                    "showTooltip": false,
+                                    "extent": "full",
+                                    "zeroValueColor": null,
+                                    "scaleStartPercent": "0.00000",
+                                    "scaleEndPercent": "1.00000"
+                                },
+                                "uid": "GjuZed1ySGW1IzZZqFB9BA",
+                                "transforms": [
+                                    {
+                                        "name": "ICE",
+                                        "value": "weight"
+                                    }
+                                ]
+                            }
+                        ],
+                        "options": {}
+                    }
+                ],
+                "left": [],
+                "right": [],
+                "top": [],
+                "bottom": [],
+                "whole": [],
+                "gallery": []
+            },
+            "layout": {
+                "w": 12,
+                "h": 12,
+                "x": 0,
+                "y": 0
+            }
+        }
+    ],
+    "zoomLocks": {
+        "locksByViewUid": {},
+        "locksDict": {}
+    },
+    "locationLocks": {
+        "locksByViewUid": {},
+        "locksDict": {}
+    },
+    "valueScaleLocks": {
+        "locksByViewUid": {},
+        "locksDict": {}
     }
-  ],
-  "zoomLocks": {
-    "locksByViewUid": {},
-    "locksDict": {}
-  },
-  "locationLocks": {
-    "locksByViewUid": {},
-    "locksDict": {}
-  },
-  "valueScaleLocks": {
-    "locksByViewUid": {},
-    "locksDict": {}
-  }
 }

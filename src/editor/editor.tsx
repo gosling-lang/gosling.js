@@ -1,4 +1,6 @@
-import React, { useState, useEffect, useRef } from 'react';
+// @ts-ignore
+import { HiGlassComponent } from 'higlass';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import * as d3 from "d3"; // TODO: performance
 import EditorPanel from './editor-panel';
 import stringify from 'json-stringify-pretty-compact';
@@ -11,13 +13,19 @@ import { renderGlyphPreview } from '../lib/visualizations/glyph-preview';
 import { replaceGlyphs } from '../lib/utils';
 import { renderLayoutPreview } from '../lib/visualizations/layout-preview';
 import { calculateSize } from '../lib/utils/bounding-box';
+import { HiGlassTrack } from '../lib/visualizations/higlass';
+import testViewConfig from '../lib/test/higlass/only-heatmap.json';
 
-const DEBUG_INIT_DEMO_INDEX = 0; //demos.length - 1;
+const DEBUG_INIT_DEMO_INDEX = demos.length - 1;
 
 function Editor() {
 
     const glyphSvg = useRef<SVGSVGElement>(null);
     const layoutSvg = useRef<SVGSVGElement>(null);
+    const [higlassTrackOptions, setHiGlassTrackOptions] = useState<HiGlassTrack[]>([
+        // Debug
+        // { viewConfig: testViewConfig, boundingBox: { x: 60, y: 60, width: 60, height: 500 } }
+    ]);
     const [demo, setDemo] = useState(demos[DEBUG_INIT_DEMO_INDEX]);
     const [editorMode, setEditorMode] = useState<'Full Glyph Definition' | 'Predefined Glyph'>('Full Glyph Definition');
     const [gm, setGm] = useState(stringify(demos[DEBUG_INIT_DEMO_INDEX].spec as GeminiSpec));
@@ -47,8 +55,14 @@ function Editor() {
         renderLayoutPreview(
             layoutSvg.current as SVGSVGElement,
             editedGm as GeminiSpec,
-            calculateSize(editedGm).width,
-            calculateSize(editedGm).height
+            {
+                x: 60, y: 60,
+                width: calculateSize(editedGm).width,
+                height: calculateSize(editedGm).height
+            },
+            (higlassInfo: HiGlassTrack[]) => {
+                setHiGlassTrackOptions(higlassInfo);
+            }
         );
         d3.select(glyphSvg.current).selectAll('*').remove(); // TODO:
         const track = (editedGm as GeminiSpec)?.tracks?.find(
@@ -67,6 +81,37 @@ function Editor() {
             )
         );
     }, [gm, glyphWidth, glyphHeight]);
+
+    const hglass = useMemo(() => {
+        return higlassTrackOptions.map(op =>
+            <div style={{
+                position: 'absolute',
+                display: 'block',
+                left: op.boundingBox.x,
+                top: op.boundingBox.y,
+                width: op.boundingBox.width,
+                height: op.boundingBox.height,
+            }}>
+                <HiGlassComponent
+                    options={{
+                        bounded: true,
+                        containerPaddingX: 0,
+                        containerPaddingY: 0,
+                        viewMarginTop: 0,
+                        viewMarginBottom: 0,
+                        viewMarginLeft: 0,
+                        viewMarginRight: 0,
+                        viewPaddingTop: 0,
+                        viewPaddingBottom: 0,
+                        viewPaddingLeft: 0,
+                        viewPaddingRight: 0,
+                        sizeMode: "bounded"
+                    }}
+                    viewConfig={op.viewConfig}
+                />
+            </div>
+        );
+    }, [higlassTrackOptions]);
 
     return (
         <>
@@ -113,7 +158,10 @@ function Editor() {
                         </div>
                         <div className="preview-container">
                             <b>Layout Preview</b>
-                            <div><svg ref={layoutSvg} /></div>
+                            <div style={{ position: 'relative' }}>
+                                <svg ref={layoutSvg} />
+                                {hglass}
+                            </div>
                         </div>
                     </SplitPane>
                 </SplitPane>

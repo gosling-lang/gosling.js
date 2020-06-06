@@ -6,7 +6,7 @@ export function renderLink(
     g: d3.Selection<SVGGElement, any, any, any>,
     tracksWithBB: { bb: BoundingBox, track: Track | GenericType<Channel> }[]
 ) {
-    tracksWithBB.filter(d => d.track.mark === 'link-between').forEach(tb => {
+    tracksWithBB.forEach(tb => {
         const { bb } = tb;
         const xScale = d3.scaleLinear<number, number>()
             .domain([0, 100]) // TODO:

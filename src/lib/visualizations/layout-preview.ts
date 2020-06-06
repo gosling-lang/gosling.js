@@ -2,19 +2,22 @@ import { GeminiSpec } from "../gemini.schema";
 import * as d3 from 'd3';
 import { renderBackground } from "./guidelines";
 import { renderLayout } from "./layout";
+import { BoundingBox } from "../utils/bounding-box";
+import { HiGlassTrack } from "./higlass";
 
 export function renderLayoutPreview(
     svg: SVGSVGElement,
     gm: GeminiSpec,
-    width: number,
-    height: number
+    boundingBox: BoundingBox,
+    setHiGlassInfo: (higlassInfo: HiGlassTrack[]) => void
 ) {
     if (!svg || !gm) return;
     d3.select(svg).selectAll('*').remove();
 
     // Styles
-    const PADDING_X = 60, PADDING_Y = 60;
-    const WIDTH = width + PADDING_X * 2, HEIGHT = height + PADDING_Y * 2;
+    const PADDING_X = boundingBox.x, PADDING_Y = boundingBox.y;
+    const WIDTH = boundingBox.width + PADDING_X * 2;
+    const HEIGHT = boundingBox.height + PADDING_Y * 2;
 
     // BG and Guidelines
     renderBackground(svg, WIDTH, HEIGHT, PADDING_X, PADDING_Y, false);
@@ -26,7 +29,8 @@ export function renderLayoutPreview(
 
     renderLayout(
         innerG,
-        gm
+        gm,
+        setHiGlassInfo
     );
 
 }
