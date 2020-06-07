@@ -1,7 +1,7 @@
 import { Mark } from "../../../gemini.schema";
 
 export const GLYPH_LOGO: Mark = {
-    "type": "glyph",
+    "type": 'groupMark',
     "name": "logo",
     "requiredChannels": [
         "x", "xe", "y"

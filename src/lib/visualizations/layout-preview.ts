@@ -19,18 +19,19 @@ export function renderLayoutPreview(
     const WIDTH = boundingBox.width + PADDING_X * 2;
     const HEIGHT = boundingBox.height + PADDING_Y * 2;
 
-    // BG and Guidelines
+    // Background and guidelines
     renderBackground(svg, WIDTH, HEIGHT, PADDING_X, PADDING_Y, false);
 
     const innerG = d3.select(svg).append("g")
         .attr("width", WIDTH - PADDING_X * 2)
         .attr("height", HEIGHT - PADDING_Y * 2)
-        .attr("transform", `translate(${PADDING_X},${PADDING_Y})`);
 
     renderLayout(
         innerG,
         gm,
-        setHiGlassInfo
+        setHiGlassInfo,
+        PADDING_X,
+        PADDING_Y
     );
 
 }

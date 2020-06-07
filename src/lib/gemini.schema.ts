@@ -1,7 +1,7 @@
 // Refer to the following url for dealing with defaults:
 // https://github.com/vega/vega-lite/blob/23fe2b9c6a82551f321ccab751370ca48ae002c9/src/channeldef.ts#L961
 
-import { PREDEFINED_GLYPHS_TYPE as PREDEFINED_GLYPH_TYPE } from './test/gemini/glyph'
+import { GLYPH_LOCAL_PRESET_TYPE, GLYPH_HIGLASS_PRESET_TYPE } from './test/gemini/glyph'
 
 export interface GeminiSpec {
     references?: string[]
@@ -12,7 +12,6 @@ export interface GeminiSpec {
         wrap: number // TODO: does not work now
     }
     tracks: (Track | GenericType<Channel>)[] // TODO: `Track` does not mean anything here because of `GenericType`
-    // ...
 }
 
 export interface GenericType<T> {
@@ -117,15 +116,20 @@ export type MarkType =
 /**
  * Glyph
  */
-export type MarkDeep = MarkGlyphPredefined | MarkGlyph
+export type MarkDeep = MarkGlyphPreset | MarkGlyph | MarkWithStyle
 
-export interface MarkGlyphPredefined {
-    type: PREDEFINED_GLYPH_TYPE
+export interface MarkWithStyle {
+    type: MarkType
+    curvature?: 'straight' | 'stepwise' | 'curved'
+}
+
+export interface MarkGlyphPreset {
+    type: GLYPH_LOCAL_PRESET_TYPE | GLYPH_HIGLASS_PRESET_TYPE
     server: string // TODO: Support this.
 }
 
 export interface MarkGlyph {
-    type: 'glyph'
+    type: 'groupMark'
     name: string
     referenceColumn?: string // reference column for selecting data tuples for each glyph
     requiredChannels: ChannelType[] // channels that must be assigned
@@ -202,7 +206,12 @@ interface Consistency {
  */
 export function IsGlyphMark(mark: any): mark is MarkGlyph {
     // TODO: MarkType | MarkDeep
-    return typeof mark === 'object' && mark.type === 'glyph';
+    return typeof mark === 'object' && mark.type === 'groupMark';
+}
+
+export function IsHiGlassTrack(mark: any): mark is MarkGlyphPreset {
+    // TODO: MarkType | MarkDeep
+    return typeof mark === 'object' && mark.type !== 'groupMark';
 }
 
 export function IsChannelValue(
@@ -227,6 +236,11 @@ export function IsChannelBind(
     return channel !== null && typeof channel === 'object' && 'bind' in channel;
 }
 
-export function IsChannelDeep(channel: ChannelDeep | ChannelValue | undefined): channel is ChannelDeep {
+export function IsChannelDeep(
+    channel:
+        | ChannelDeep
+        | ChannelValue
+        | undefined
+): channel is ChannelDeep {
     return typeof channel === 'object' && 'field' in channel;
 }

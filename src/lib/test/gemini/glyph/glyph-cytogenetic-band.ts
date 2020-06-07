@@ -1,7 +1,7 @@
 import { MarkGlyph } from "../../../gemini.schema";
 
 export const GLYPH_CYTOGENETIC_BAND: MarkGlyph = {
-    "type": "glyph",
+    "type": 'groupMark',
     "name": "cytogenetic-band",
     "requiredChannels": [
         // TODO: What about optional channels?

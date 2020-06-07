@@ -1,7 +1,7 @@
 import { MarkGlyph } from "../../../gemini.schema";
 
 export const GLYPH_GENE_ANNOTATAION_V2: MarkGlyph = {
-    "type": "glyph",
+    "type": 'groupMark',
     "name": "gene-annotation",
     "requiredChannels": [
         // TODO: What about optional channels?

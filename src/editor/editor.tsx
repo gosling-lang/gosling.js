@@ -66,12 +66,10 @@ function Editor() {
         );
         d3.select(glyphSvg.current).selectAll('*').remove(); // TODO:
         const track = (editedGm as GeminiSpec)?.tracks?.find(
-            d => (d.mark as MarkDeep)?.type === "glyph"
+            d => (d.mark as MarkDeep)?.type === 'groupMark'
         );
         if (!track) return;
 
-        // TODO: Faster way of this?
-        // TODO: Move this inside of a model
         d3.csv(track.data as string).then(data =>
             renderGlyphPreview(
                 glyphSvg.current as SVGSVGElement,
