@@ -1,0 +1,91 @@
+import Ajv from 'ajv';
+import uuid from "uuid";
+import { HiGlassSpec, Track, EnumTrackType, EnumTrack } from "./higlass.schema";
+import HiGlassSchema from "./higlass.schema.json";
+
+/**
+ * Model for managing HiGlass spec.
+ * (We are only using one center track with additional tracks for axes in a single view)
+ */
+export class HiGlassModel {
+    private hg: HiGlassSpec;
+    constructor() {
+        this.hg = {};
+
+        // Add default specs.
+        this.setEditable(false);
+        this.setChromInfoPath('//s3.amazonaws.com/pkerp/data/hg19/chromSizes.tsv');
+        this.hg.trackSourceServers = [];
+        this.hg.views = [{
+            uid: uuid.v1(),
+            genomePositionSearchBoxVisible: false,
+            layout: { w: 12, h: 12, x: 0, y: 0 },
+            tracks: {
+                top: [],
+                left: [],
+                center: [],
+                right: [],
+                bottom: [],
+                gallery: [],
+                whole: []
+            },
+            // TODO: better default values
+            initialXDomain: [5.960464477539063e-8, 3100000000.0000005],
+            initialYDomain: [5.960464477539063e-8, 3100000000.0000005]
+        }];
+    }
+
+    public spec(): Readonly<HiGlassSpec> {
+        return this.hg;
+    }
+
+    private getView() {
+        return this.hg.views?.[0];
+    }
+    private setEditable(editable: boolean | undefined) {
+        this.hg.editable = editable;
+        return this;
+    }
+
+    private setChromInfoPath(chromInfoPath: string | undefined) {
+        this.hg.chromInfoPath = chromInfoPath;
+        return this;
+    }
+
+    public addTrackSourceServers(trackSourceServers: string | undefined) {
+        if (trackSourceServers && this.hg.trackSourceServers?.indexOf(trackSourceServers) === -1)
+            this.hg.trackSourceServers?.push(trackSourceServers);
+        return this;
+    }
+
+    public setMainTrack(track: Track) {
+        if (!this.hg.views) return this;
+        this.hg.views[0].tracks.center = [track];
+        return this;
+    }
+
+    public setAxisTrack(position: 'left' | 'right' | 'top' | 'bottom') {
+        if (!this.hg.views) return this;
+        const baseTrackType = '-chromosome-labels';
+        const direction = position === 'left' || position === 'right' ? 'vertical' : 'horizontal';
+        const widthOrHeight = direction === 'vertical' ? 'width' : 'height'
+        this.hg.views[0].tracks[position] = [{
+            uid: uuid.v1(),
+            type: (direction + baseTrackType) as any /* TODO */,
+            [widthOrHeight]: 20,
+            chromInfoPath: this.hg.chromInfoPath
+        }]
+        return this;
+    }
+
+    public validateSpec() {
+        const validate = new Ajv({ extendRefs: true }).compile(HiGlassSchema);
+        const valid = validate(this.spec());
+
+        if (validate.errors) {
+            console.warn(JSON.stringify(validate.errors, null, 2));
+        }
+
+        return valid as boolean;
+    }
+} 

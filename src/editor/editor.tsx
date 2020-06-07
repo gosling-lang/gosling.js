@@ -5,7 +5,7 @@ import * as d3 from "d3"; // TODO: performance
 import EditorPanel from './editor-panel';
 import stringify from 'json-stringify-pretty-compact';
 import SplitPane from 'react-split-pane';
-import { GeminiSpec, MarkDeep, Track, Datum } from '../lib/gemini.schema';
+import { GeminiSpec, MarkDeep, Track, Datum, DataDeep, IsDataDeep } from '../lib/gemini.schema';
 import { debounce } from "lodash";
 import { demos } from './examples';
 import './editor.css';
@@ -70,14 +70,16 @@ function Editor() {
         );
         if (!track) return;
 
-        d3.csv(track.data as string).then(data =>
-            renderGlyphPreview(
-                glyphSvg.current as SVGSVGElement,
-                { ...track, data } as Track,
-                glyphWidth,
-                glyphHeight
-            )
-        );
+        if (IsDataDeep(track.data)) {
+            d3.csv(track.data.url).then(data =>
+                renderGlyphPreview(
+                    glyphSvg.current as SVGSVGElement,
+                    { ...track, data } as Track,
+                    glyphWidth,
+                    glyphHeight
+                )
+            );
+        }
     }, [gm, glyphWidth, glyphHeight]);
 
     const hglass = useMemo(() => {

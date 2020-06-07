@@ -34,10 +34,10 @@ export type GLYPH_LOCAL_PRESET_TYPE =
     | 'glyph-logo-plot-v1'
 
 export type GLYPH_HIGLASS_PRESET_TYPE =
-    | 'higlass-gene-annotation'
+    | 'gene-annotation-higlass'
 
 export const GLYPH_HIGLASS_PRESET_TYPES: GLYPH_HIGLASS_PRESET_TYPE[] = [
-    'higlass-gene-annotation'
+    'gene-annotation-higlass'
 ]
 
 export const GLYPH_LOCAL_PRESET_TYPES: (GLYPH_LOCAL_PRESET_TYPE | GLYPH_HIGLASS_PRESET_TYPE)[] = [

@@ -50,7 +50,7 @@ export function renderLayout(
         .attr('width', d => d.bb.width)
         .attr('y', d => d.bb.y)
         .attr('height', d => d.bb.height)
-        .attr('fill', '#F6F6F6')
+        .attr('fill', 'white')
         .attr('stroke', 'lightgray')
         .attr('stroke-width', 1)
 
@@ -58,5 +58,5 @@ export function renderLayout(
     renderBetweenLink(g, tracksWithBB.filter(d => d.track.mark === 'link-between'));
 
     // Render HiGlass tracks
-    renderHiGlass(g, tracksWithBB.filter(d => IsHiGlassTrack(d.track.mark)), setHiGlassInfo);
+    renderHiGlass(g, tracksWithBB.filter(d => IsHiGlassTrack(d.track)), setHiGlassInfo);
 }

@@ -1,5 +1,5 @@
 import { BoundingBox } from "../utils/bounding-box";
-import { Track, GenericType, Channel, IsChannelDeep, Datum, IsChannelValue } from "../gemini.schema";
+import { Track, GenericType, Channel, IsChannelDeep, Datum, IsChannelValue, IsDataDeep } from "../gemini.schema";
 import * as d3 from 'd3'
 import { validateBetweenLinkSpec } from "./link-validate";
 import { getChartType } from "./chart-type";
@@ -82,14 +82,18 @@ export function renderBetweenLink(
         // render
         switch (getChartType(tb.track)) {
             case 'line-connection':
-                d3.csv(tb.track.data as string).then(data =>
-                    renderBetweenLineLink(g, { ...tb.track, data } as Track, tb.bb)
-                )
+                if (IsDataDeep(tb.track.data)) {
+                    d3.csv(tb.track.data.url).then(data =>
+                        renderBetweenLineLink(g, { ...tb.track, data } as Track, tb.bb)
+                    )
+                }
                 break;
             case 'band-connection':
-                d3.csv(tb.track.data as string).then(data =>
-                    renderBetweenBandLink(g, { ...tb.track, data } as Track, tb.bb)
-                )
+                if (IsDataDeep(tb.track.data)) {
+                    d3.csv(tb.track.data.url).then(data =>
+                        renderBetweenBandLink(g, { ...tb.track, data } as Track, tb.bb)
+                    )
+                }
                 break;
             default:
                 break;

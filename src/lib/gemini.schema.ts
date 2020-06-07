@@ -2,6 +2,7 @@
 // https://github.com/vega/vega-lite/blob/23fe2b9c6a82551f321ccab751370ca48ae002c9/src/channeldef.ts#L961
 
 import { GLYPH_LOCAL_PRESET_TYPE, GLYPH_HIGLASS_PRESET_TYPE } from './test/gemini/glyph'
+import { validTilesetUrl } from './utils';
 
 export interface GeminiSpec {
     references?: string[]
@@ -21,9 +22,10 @@ export interface GenericType<T> {
 /**
  * Tracks
  */
+export interface DataDeep { url: string, type: 'tileset' | 'csv' }
 export interface Track {
     // primitives
-    data: string | Datum[]
+    data: DataDeep | Datum[]
     mark: Mark
     // coordinates
     x?: Channel
@@ -81,11 +83,12 @@ export type ChannelType = keyof typeof ChannelTypes | string
 export type Channel = ChannelDeep | ChannelValue
 
 export interface ChannelDeep {
-    field: string
-    type: 'nominal' | 'quantitative'
+    field?: string
+    type?: 'genomic' | 'nominal' | 'quantitative'
     aggregate?: Aggregate
     domain?: string[]
     range?: string[]
+    axis?: boolean
 }
 
 export interface ChannelValue {
@@ -204,14 +207,39 @@ interface Consistency {
 /**
  * Type Checks
  */
-export function IsGlyphMark(mark: any): mark is MarkGlyph {
-    // TODO: MarkType | MarkDeep
-    return typeof mark === 'object' && mark.type === 'groupMark';
+export function IsDataDeep(data:
+    | DataDeep
+    | Datum[]
+    /* remove the two types below */
+    | ChannelDeep
+    | ChannelValue
+): data is DataDeep {
+    return typeof data === 'object'
 }
 
-export function IsHiGlassTrack(mark: any): mark is MarkGlyphPreset {
+export function IsShallowMark(mark: any): mark is MarkType {
     // TODO: MarkType | MarkDeep
-    return typeof mark === 'object' && mark.type !== 'groupMark';
+    return typeof mark !== 'object'
+}
+
+export function IsMarkDeep(mark: any): mark is MarkDeep {
+    // TODO: MarkType | MarkDeep
+    return typeof mark === 'object'
+}
+
+export function IsGlyphMark(mark: any): mark is MarkGlyph {
+    // TODO: MarkType | MarkDeep
+    return typeof mark === 'object' && mark.type === 'groupMark'
+}
+
+export function IsHiGlassTrack(track: Track | GenericType<Channel>) {
+    return (
+        (
+            typeof track.mark === 'object' &&
+            IsGlyphMark(track.mark) &&
+            track.mark.type !== 'groupMark'
+        ) || (IsDataDeep(track.data) && validTilesetUrl(track.data.url))
+    );
 }
 
 export function IsChannelValue(
@@ -242,5 +270,5 @@ export function IsChannelDeep(
         | ChannelValue
         | undefined
 ): channel is ChannelDeep {
-    return typeof channel === 'object' && 'field' in channel;
+    return typeof channel === 'object' && !('value' in channel);
 }

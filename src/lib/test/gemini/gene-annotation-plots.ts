@@ -3,7 +3,7 @@ import { GeminiSpec } from "../../gemini.schema";
 export const GENE_ANNOTATION_PLOT_SIMPLE: GeminiSpec = {
     tracks: [
         {
-            data: "https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/Homo_sapiens.GRCh38.92.glyph.csv",
+            data: { url: "https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/Homo_sapiens.GRCh38.92.glyph.csv", type: 'csv' },
             mark: { server: "gemini.v1", type: "glyph-gene-annotation-v2" },
             x: { field: "start", type: "quantitative" },
             xe: { field: "end", type: "quantitative" },
@@ -20,7 +20,7 @@ export const GENE_ANNOTATION_PLOT_SIMPLE: GeminiSpec = {
 export const GENE_ANNOTATION_PLOT: GeminiSpec = {
     tracks: [
         {
-            data: "https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/Homo_sapiens.GRCh38.92.glyph.csv",
+            data: { url: "https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/Homo_sapiens.GRCh38.92.glyph.csv", type: 'csv' },
             mark: { server: "gemini.v1", type: "glyph-gene-annotation-v1" },
             x: { field: "start", type: "quantitative" },
             xe: { field: "end", type: "quantitative" },

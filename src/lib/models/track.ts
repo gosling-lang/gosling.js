@@ -61,6 +61,9 @@ export class TrackModel {
                 const channel = (this.track as GenericType<Channel>)[c];
                 if (IsChannelDeep(channel)) {
                     const { field } = channel;
+
+                    if (!field) return;
+
                     this.channelToField[c] = field;
 
                     // Domains for x1 and y1 needs to be added to that of x and y, respectively.
