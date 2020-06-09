@@ -12,33 +12,42 @@ export function renderLinearLayout(
     setHiGlassInfo: (higlassInfo: HiGlassTrack[]) => void,
     boundingBox: BoundingBox
 ) {
+    const wrap: number = gm.layout?.wrap ?? 999;
+
     // Generate layout data
-    // TODO: support `wrap`
     const trackInfo: { boundingBox: BoundingBox, track: Track | GenericType<Channel> }[] = [];
+    let cumX = boundingBox.x
+    let cumY = boundingBox.y
     if (gm.layout?.direction === 'horizontal') {
-        let cumX = boundingBox.x
-        gm.tracks.forEach(track => {
+        gm.tracks.forEach((track, i) => {
             if (IsNotEmptyTrack(track)) {
                 trackInfo.push({
                     track, boundingBox: {
                         x: cumX, width: track.width as number,
-                        y: boundingBox.y, height: track.height as number
+                        y: cumY, height: track.height as number
                     }
                 })
-                cumX += track.width as number + TRACK_GAP;
+                cumX += track.width as number + TRACK_GAP
+                if (i % wrap === wrap - 1) {
+                    cumX = boundingBox.x
+                    cumY = cumY += track.height as number + TRACK_GAP
+                }
             }
         })
     } else {
-        let cumY = boundingBox.y
-        gm.tracks.forEach(track => {
+        gm.tracks.forEach((track, i) => {
             if (IsNotEmptyTrack(track)) {
                 trackInfo.push({
                     track, boundingBox: {
-                        x: boundingBox.x, width: track.width as number,
+                        x: cumX, width: track.width as number,
                         y: cumY, height: track.height as number
                     }
                 })
                 cumY += track.height as number + TRACK_GAP;
+                if (i % wrap === wrap - 1) {
+                    cumX = cumX += track.width as number + TRACK_GAP
+                    cumY = boundingBox.y
+                }
             }
         })
     }

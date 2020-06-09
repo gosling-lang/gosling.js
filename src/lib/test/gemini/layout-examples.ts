@@ -75,7 +75,7 @@ export const LAYOUT_EXAMPLE_COMBO: GeminiSpec = {
 }
 
 export const LAYOUT_EXAMPLE_COMBO_HORIZONTAL: GeminiSpec = {
-    layout: { type: 'linear', direction: 'horizontal', wrap: -1 },
+    layout: { type: 'linear', direction: 'horizontal' },
     tracks: [
         {
             data: { url: 'dummy', type: 'csv' }, mark: 'dummy',
@@ -161,19 +161,19 @@ export const LAYOUT_EXAMPLE_COMBO_BAND: GeminiSpec = {
 }
 
 export const LAYOUT_EXAMPLE_STACKED_MULTI_TRACKS: GeminiSpec = {
-    layout: { type: 'linear', direction: 'vertical' },
+    layout: { type: 'linear', direction: 'horizontal', wrap: 2 },
     tracks: [
-        { data: { url: 'dummy', type: 'csv' }, mark: 'dummy', width: 500, height: 30, style: { background: '#FAF9F7' } },
-        { data: { url: 'dummy', type: 'csv' }, mark: 'dummy', width: 500, height: 30 },
-        { data: { url: 'dummy', type: 'csv' }, mark: 'dummy', width: 500, height: 30, style: { background: '#FAF9F7' } },
-        { data: { url: 'dummy', type: 'csv' }, mark: 'dummy', width: 500, height: 30 },
-        { data: { url: 'dummy', type: 'csv' }, mark: 'dummy', width: 500, height: 30, style: { background: '#FAF9F7' } },
-        { data: { url: 'dummy', type: 'csv' }, mark: 'dummy', width: 500, height: 30 },
+        { data: { url: 'dummy', type: 'csv' }, mark: 'dummy', width: 350, height: 30, style: { background: '#FAF9F7' } },
+        { data: { url: 'dummy', type: 'csv' }, mark: 'dummy', width: 350, height: 30 },
+        { data: { url: 'dummy', type: 'csv' }, mark: 'dummy', width: 350, height: 30, style: { background: '#FAF9F7' } },
+        { data: { url: 'dummy', type: 'csv' }, mark: 'dummy', width: 350, height: 30 },
+        { data: { url: 'dummy', type: 'csv' }, mark: 'dummy', width: 350, height: 30, style: { background: '#FAF9F7' } },
+        { data: { url: 'dummy', type: 'csv' }, mark: 'dummy', width: 350, height: 30 },
     ]
 }
 
 export const LAYOUT_EXAMPLE_STACKED_MULTI_TRACKS_CIRCULAR: GeminiSpec = {
-    layout: { type: 'circular', direction: 'vertical' },
+    layout: { type: 'circular', direction: 'horizontal', wrap: 2 },
     tracks: [
         { data: { url: 'dummy', type: 'csv' }, mark: 'dummy', width: 500, height: 30, style: { background: '#FAF9F7' } },
         { data: { url: 'dummy', type: 'csv' }, mark: 'dummy', width: 500, height: 30 },
