@@ -10,18 +10,17 @@ export interface HiGlassTrack {
 
 export function renderHiGlass(
     g: d3.Selection<SVGGElement, any, any, any>,
-    tracksWithBB: { bb: BoundingBox, track: Track | GenericType<Channel> }[],
+    tracksWithBB: { boundingBox: BoundingBox, track: Track | GenericType<Channel> }[],
     setHiGlassInfo: (higlassInfo: HiGlassTrack[]) => void
 ) {
     const hiGlassInfo: HiGlassTrack[] = [];
     tracksWithBB.forEach(tb => {
-        const { track, bb } = tb;
+        const { track, boundingBox: bb } = tb;
 
         // add a HiGlass view config
         hiGlassInfo.push({ boundingBox: bb, viewConfig: compiler(track, bb) });
     })
     setHiGlassInfo(hiGlassInfo);
-    console.log(hiGlassInfo);
 
     /////// DEBUG
     // const testHGInfo = tracksWithBB.map(tb => ({ boundingBox: tb.bb, viewConfig: testViewConfig }));

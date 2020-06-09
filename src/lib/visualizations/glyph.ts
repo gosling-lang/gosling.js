@@ -60,7 +60,7 @@ export function renderGlyph(
                 .attr('stroke', d => tm.getEncoding(element, 'color', d))
                 .attr('stroke-width', d => tm.getEncoding(element, 'size', d))
                 .attr('opacity', d => tm.getEncoding(element, 'opacity', d))
-                .style('stroke-dasharray', (element.styles?.dashed ?? ''))
+                .style('stroke-dasharray', (element.style?.dashed ?? ''))
         } else if (markE === 'point') {
             g.selectAll('point')
                 .data(transformed_data)
@@ -82,8 +82,8 @@ export function renderGlyph(
                 .attr('height', d => tm.getEncoding(element, 'size', d))
                 .attr('fill', d => tm.getEncoding(element, 'color', d))
                 .attr('opacity', d => tm.getEncoding(element, 'opacity', d))
-                .attr('stroke', element.styles?.stroke ?? '')
-                .attr('stroke-width', element.styles?.strokeWidth ?? '')
+                .attr('stroke', element.style?.stroke ?? '')
+                .attr('stroke-width', element.style?.strokeWidth ?? '')
         } else if (markE === 'text') {
             g.selectAll()
                 .data(transformed_data)
@@ -91,7 +91,7 @@ export function renderGlyph(
                 .append('text')
                 .text(d => tm.getEncoding(element, 'text', d))
                 .attr('x', d => (tm.getEncoding(element, 'x', d) + tm.getEncoding(element, 'xe', d)) / 2.0)
-                .attr('y', d => tm.getEncoding(element, 'y', d) + element.styles?.dy)
+                .attr('y', d => tm.getEncoding(element, 'y', d) + element.style?.dy)
                 .attr('fill', d => tm.getEncoding(element, 'color', d))
                 .attr('font-size', d => tm.getEncoding(element, 'size', d))
                 .attr('alignment-baseline', "top")
@@ -125,8 +125,8 @@ export function renderGlyph(
                 })
                 .attr('fill', d => tm.getEncoding(element, 'color', d))
                 .attr('opacity', d => tm.getEncoding(element, 'opacity', d))
-                .attr('stroke', element.styles?.stroke ?? '')
-                .attr('stroke-width', element.styles?.strokeWidth ?? '')
+                .attr('stroke', element.style?.stroke ?? '')
+                .attr('stroke-width', element.style?.strokeWidth ?? '')
         } else if (markE === 'triangle-l') {
             g.selectAll('trangle-l')
                 .data(transformed_data)
@@ -143,8 +143,8 @@ export function renderGlyph(
                 })
                 .attr('fill', d => tm.getEncoding(element, 'color', d))
                 .attr('opacity', d => tm.getEncoding(element, 'opacity', d))
-                .attr('stroke', element.styles?.stroke ?? '')
-                .attr('stroke-width', element.styles?.strokeWidth ?? '')
+                .attr('stroke', element.style?.stroke ?? '')
+                .attr('stroke-width', element.style?.strokeWidth ?? '')
         }
     });
 }

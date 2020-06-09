@@ -20,7 +20,6 @@ function EditorPanel(props: {
     }, [templateCode]);
 
     function editorDidMount(monacoEditor: Monaco.editor.IStandaloneCodeEditor, monaco: typeof Monaco) {
-        console.log('editorDidMount', monacoEditor);
         editor.current = monacoEditor;
         monacoEditor.focus();
     }

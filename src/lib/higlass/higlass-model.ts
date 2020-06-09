@@ -39,6 +39,18 @@ export class HiGlassModel {
         return this.hg;
     }
 
+    public setDomain(
+        xDomain: [number, number] | undefined,
+        yDomain: [number, number] | undefined
+    ) {
+        if (xDomain && this.hg.views?.[0]) {
+            this.hg.views[0].initialXDomain = xDomain;
+        }
+        if (yDomain && this.hg.views?.[0]) {
+            this.hg.views[0].initialYDomain = yDomain;
+        }
+    }
+
     private getView() {
         return this.hg.views?.[0];
     }

@@ -106,9 +106,15 @@ export const LAYOUT_EXAMPLE_COMBO_BAND: GeminiSpec = {
     tracks: [
         {
             data: { url: 'https://resgen.io/api/v1/tileset_info/?d=a-iBpdh3Q_uO2FLCWKpOOw', type: 'tileset' },
-            mark: 'point',
+            mark: 'rect',
             x: { type: 'genomic' },
-            width: 600, height: 120
+            width: 600, height: 60
+        },
+        {
+            data: { url: 'https://resgen.io/api/v1/tileset_info/?d=a-iBpdh3Q_uO2FLCWKpOOw', type: 'tileset' },
+            mark: 'line',
+            x: { type: 'genomic' },
+            width: 600, height: 60
         },
         {
             data: { url: 'http://higlass.io/api/v1/tileset_info/?d=OHJakQICQD6gTD7skx4EWA', type: 'tileset' },
@@ -116,7 +122,7 @@ export const LAYOUT_EXAMPLE_COMBO_BAND: GeminiSpec = {
                 type: 'gene-annotation-higlass',
                 server: 'gemini-v1'
             },
-            x: { type: 'genomic', axis: true },
+            x: { type: 'genomic', axis: true, domain: [1519086324.7628496, 1519471836.3240566] },
             width: 600, height: 120
         },
         {
@@ -138,50 +144,42 @@ export const LAYOUT_EXAMPLE_COMBO_BAND: GeminiSpec = {
             x: { type: 'genomic' },
             x1: { axis: true },
             width: 600, height: 120
-        }
+        },
+        {
+            data: { url: 'https://resgen.io/api/v1/tileset_info/?d=a-iBpdh3Q_uO2FLCWKpOOw', type: 'tileset' },
+            mark: 'bar',
+            x: { type: 'genomic' },
+            width: 600, height: 60
+        },
+        {
+            data: { url: 'https://resgen.io/api/v1/tileset_info/?d=a-iBpdh3Q_uO2FLCWKpOOw', type: 'tileset' },
+            mark: 'point',
+            x: { type: 'genomic' },
+            width: 600, height: 60
+        },
     ]
 }
 
-export const LAYOUT_EXAMPLE_DOMINO: GeminiSpec = {
-    layout: { type: 'linear', direction: 'horizontal', wrap: 3 },
+export const LAYOUT_EXAMPLE_STACKED_MULTI_TRACKS: GeminiSpec = {
+    layout: { type: 'linear', direction: 'vertical' },
     tracks: [
-        {
-            data: { url: 'dummy', type: 'csv' }, mark: 'empty',
-            width: 50, height: 50
-        },
-        {
-            data: { url: 'dummy', type: 'csv' }, mark: 'dummy',
-            width: 500, height: 50
-        },
-        {
-            data: { url: 'dummy', type: 'csv' }, mark: 'empty',
-            width: 50, height: 50
-        },
-        {
-            data: { url: 'dummy', type: 'csv' }, mark: 'dummy',
-            width: 50, height: 500
-        },
-        {
-            data: { url: 'dummy-link', type: 'csv' }, mark: 'link-between',
-            y: { field: 'from', type: "nominal" },
-            y1: { field: 'to', type: "nominal" },
-            width: 500, height: 500
-        },
-        {
-            data: { url: 'dummy', type: 'csv' }, mark: 'dummy',
-            width: 50, height: 500
-        },
-        {
-            data: { url: 'dummy', type: 'csv' }, mark: 'empty',
-            width: 50, height: 50
-        },
-        {
-            data: { url: 'dummy', type: 'csv' }, mark: 'dummy',
-            width: 500, height: 50
-        },
-        {
-            data: { url: 'dummy', type: 'csv' }, mark: 'empty',
-            width: 50, height: 50
-        },
+        { data: { url: 'dummy', type: 'csv' }, mark: 'dummy', width: 500, height: 30, style: { background: '#FAF9F7' } },
+        { data: { url: 'dummy', type: 'csv' }, mark: 'dummy', width: 500, height: 30 },
+        { data: { url: 'dummy', type: 'csv' }, mark: 'dummy', width: 500, height: 30, style: { background: '#FAF9F7' } },
+        { data: { url: 'dummy', type: 'csv' }, mark: 'dummy', width: 500, height: 30 },
+        { data: { url: 'dummy', type: 'csv' }, mark: 'dummy', width: 500, height: 30, style: { background: '#FAF9F7' } },
+        { data: { url: 'dummy', type: 'csv' }, mark: 'dummy', width: 500, height: 30 },
+    ]
+}
+
+export const LAYOUT_EXAMPLE_STACKED_MULTI_TRACKS_CIRCULAR: GeminiSpec = {
+    layout: { type: 'circular', direction: 'vertical' },
+    tracks: [
+        { data: { url: 'dummy', type: 'csv' }, mark: 'dummy', width: 500, height: 30, style: { background: '#FAF9F7' } },
+        { data: { url: 'dummy', type: 'csv' }, mark: 'dummy', width: 500, height: 30 },
+        { data: { url: 'dummy', type: 'csv' }, mark: 'dummy', width: 500, height: 30, style: { background: '#FAF9F7' } },
+        { data: { url: 'dummy', type: 'csv' }, mark: 'dummy', width: 500, height: 30 },
+        { data: { url: 'dummy', type: 'csv' }, mark: 'dummy', width: 500, height: 30, style: { background: '#FAF9F7' } },
+        { data: { url: 'dummy', type: 'csv' }, mark: 'dummy', width: 500, height: 30 },
     ]
 }

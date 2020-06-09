@@ -1,14 +1,16 @@
 import Ajv from 'ajv';
 import uuid from "uuid";
-import { GeminiSpec, Mark, MarkGlyphPreset } from '../gemini.schema';
+import { GeminiSpec, Mark, IsNotEmptyTrack, IsMarkDeep } from '../gemini.schema';
 import { GLYPH_LOCAL_PRESET_TYPES, GLYPH_PRESETS } from "../test/gemini/glyph";
 
 export function replaceGlyphs(spec: GeminiSpec): GeminiSpec {
     for (let i = 0; i < spec.tracks.length; i++) {
         const track = spec.tracks[i];
-        const predefinedGlyph = (track.mark as MarkGlyphPreset)?.type;
-        if (GLYPH_LOCAL_PRESET_TYPES.includes(predefinedGlyph)) {
-            track.mark = GLYPH_PRESETS.find(d => d.name === predefinedGlyph)?.mark as Mark;
+        if (IsNotEmptyTrack(track) && IsMarkDeep(track.mark)) {
+            const predefinedGlyph = track.mark.type;
+            if (GLYPH_LOCAL_PRESET_TYPES.includes(predefinedGlyph as any /* TODO */)) {
+                track.mark = GLYPH_PRESETS.find(d => d.name === predefinedGlyph)?.mark as Mark;
+            }
         }
     }
     return spec;
@@ -46,7 +48,6 @@ export function parseServerAndTilesetUidFromUrl(url: string) {
         return { server: undefined, tilesetUid: undefined };
     }
 
-    const pre = url.includes("https:") ? "https:" : "http:";
 
     const server = url.split("tileset_info/?d=")[0]
     const tilesetUid = url.split("tileset_info/?d=")[1]

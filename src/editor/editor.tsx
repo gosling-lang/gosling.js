@@ -5,7 +5,7 @@ import * as d3 from "d3"; // TODO: performance
 import EditorPanel from './editor-panel';
 import stringify from 'json-stringify-pretty-compact';
 import SplitPane from 'react-split-pane';
-import { GeminiSpec, MarkDeep, Track, Datum, DataDeep, IsDataDeep } from '../lib/gemini.schema';
+import { GeminiSpec, Track, IsDataDeep, IsMarkDeep, IsNotEmptyTrack } from '../lib/gemini.schema';
 import { debounce } from "lodash";
 import { demos } from './examples';
 import './editor.css';
@@ -14,7 +14,6 @@ import { replaceGlyphs } from '../lib/utils';
 import { renderLayoutPreview } from '../lib/visualizations/layout-preview';
 import { calculateSize } from '../lib/utils/bounding-box';
 import { HiGlassTrack } from '../lib/visualizations/higlass';
-import testViewConfig from '../lib/test/higlass/only-heatmap.json';
 
 const DEBUG_INIT_DEMO_INDEX = demos.length - 1;
 
@@ -52,6 +51,7 @@ function Editor() {
         }
         if (!editedGm) return;
 
+        // Render layout preview
         renderLayoutPreview(
             layoutSvg.current as SVGSVGElement,
             editedGm as GeminiSpec,
@@ -66,11 +66,12 @@ function Editor() {
         );
         d3.select(glyphSvg.current).selectAll('*').remove(); // TODO:
         const track = (editedGm as GeminiSpec)?.tracks?.find(
-            d => (d.mark as MarkDeep)?.type === 'groupMark'
-        );
+            d => IsNotEmptyTrack(d) && IsMarkDeep(d.mark) ? d.mark.type === 'groupMark' : false
+        )
         if (!track) return;
 
-        if (IsDataDeep(track.data)) {
+        // Render glyph preview
+        if (IsNotEmptyTrack(track) && IsDataDeep(track.data)) {
             d3.csv(track.data.url).then(data =>
                 renderGlyphPreview(
                     glyphSvg.current as SVGSVGElement,
@@ -151,7 +152,7 @@ function Editor() {
                         }, 1000)}
                     />
                     {/* D3 Visualizations */}
-                    <SplitPane split="horizontal" defaultSize="35%" onChange={() => { }}>
+                    <SplitPane split="horizontal" defaultSize="20%" onChange={() => { }}>
                         <div className="preview-container">
                             <b>Glyph Preview</b>
                             <div><svg ref={glyphSvg} /></div>

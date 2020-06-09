@@ -17,7 +17,7 @@ export const GLYPH_CYTOGENETIC_BAND: MarkGlyph = {
             "select": [{ channel: 'stain', oneOf: ['gneg', 'gpos', 'gvar'] }],
             "mark": "rect",
             "size": { "value": 25 },
-            styles: {
+            style: {
                 stroke: 'black',
                 strokeWidth: 1
             }
@@ -28,7 +28,7 @@ export const GLYPH_CYTOGENETIC_BAND: MarkGlyph = {
             "mark": { bind: 'text', domain: ['11', '11.1'], range: ['triangle-l', 'triangle-r'] },
             'color': { value: '#B40101' },
             "size": { "value": 25 },
-            styles: {
+            style: {
                 stroke: 'black',
                 strokeWidth: 1
             }
@@ -38,7 +38,7 @@ export const GLYPH_CYTOGENETIC_BAND: MarkGlyph = {
             select: [{ channel: 'color', oneOf: ['100', '75', '50'] }],
             color: { value: 'black' },
             size: { value: 10 },
-            styles: {
+            style: {
                 dy: -20
             }
         }

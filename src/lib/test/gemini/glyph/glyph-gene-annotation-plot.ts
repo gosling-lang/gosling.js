@@ -65,7 +65,7 @@ export const GLYPH_GENE_ANNOTATAION: MarkGlyph = {
             ],
             opacity: { value: 1 },
             size: { value: 18 },
-            styles: {
+            style: {
                 dy: -20
             }
         },
@@ -78,7 +78,7 @@ export const GLYPH_GENE_ANNOTATAION: MarkGlyph = {
             text: { bind: 'exonId' },
             opacity: { value: 1 },
             size: { value: 6 },
-            styles: {
+            style: {
                 dy: 28
             }
         }

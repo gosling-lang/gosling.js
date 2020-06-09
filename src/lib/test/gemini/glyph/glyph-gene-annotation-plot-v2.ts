@@ -48,7 +48,7 @@ export const GLYPH_GENE_ANNOTATAION_V2: MarkGlyph = {
             "mark": "line",
             "color": { "value": "gray" },
             "size": { "value": 2 },
-            'styles': {
+            'style': {
                 dashed: "3, 3"
             }
         },
@@ -60,7 +60,7 @@ export const GLYPH_GENE_ANNOTATAION_V2: MarkGlyph = {
             "color": { "value": "black" },
             "opacity": { "value": 1 },
             size: { value: 18 },
-            styles: {
+            style: {
                 dy: -20
             }
         }

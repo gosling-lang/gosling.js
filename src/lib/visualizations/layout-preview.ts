@@ -14,24 +14,17 @@ export function renderLayoutPreview(
     if (!svg || !gm) return;
     d3.select(svg).selectAll('*').remove();
 
-    // Styles
+    // styles
     const PADDING_X = boundingBox.x, PADDING_Y = boundingBox.y;
     const WIDTH = boundingBox.width + PADDING_X * 2;
     const HEIGHT = boundingBox.height + PADDING_Y * 2;
 
-    // Background and guidelines
+    // background and guidelines
     renderBackground(svg, WIDTH, HEIGHT, PADDING_X, PADDING_Y, false);
 
     const innerG = d3.select(svg).append("g")
-        .attr("width", WIDTH - PADDING_X * 2)
-        .attr("height", HEIGHT - PADDING_Y * 2)
+        .attr("width", boundingBox.width)
+        .attr("height", boundingBox.height)
 
-    renderLayout(
-        innerG,
-        gm,
-        setHiGlassInfo,
-        PADDING_X,
-        PADDING_Y
-    );
-
+    renderLayout(innerG, gm, setHiGlassInfo, boundingBox);
 }

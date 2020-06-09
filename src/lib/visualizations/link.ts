@@ -70,7 +70,7 @@ export function getLinkPosition(track: Track | GenericType<Channel>): LinkPositi
 
 export function renderBetweenLink(
     g: d3.Selection<SVGGElement, any, any, any>,
-    tracksWithBB: { bb: BoundingBox, track: Track | GenericType<Channel> }[]
+    tracksWithBB: { boundingBox: BoundingBox, track: Track | GenericType<Channel> }[]
 ) {
     tracksWithBB.forEach(tb => {
         // validate
@@ -84,14 +84,14 @@ export function renderBetweenLink(
             case 'line-connection':
                 if (IsDataDeep(tb.track.data)) {
                     d3.csv(tb.track.data.url).then(data =>
-                        renderBetweenLineLink(g, { ...tb.track, data } as Track, tb.bb)
+                        renderBetweenLineLink(g, { ...tb.track, data } as Track, tb.boundingBox)
                     )
                 }
                 break;
             case 'band-connection':
                 if (IsDataDeep(tb.track.data)) {
                     d3.csv(tb.track.data.url).then(data =>
-                        renderBetweenBandLink(g, { ...tb.track, data } as Track, tb.bb)
+                        renderBetweenBandLink(g, { ...tb.track, data } as Track, tb.boundingBox)
                     )
                 }
                 break;

@@ -5,6 +5,7 @@ import { HiGlassModel } from './higlass-model';
 import { parseServerAndTilesetUidFromUrl, validTilesetUrl } from '../utils';
 import { GenericType, Track, Channel, IsDataDeep, IsHiGlassTrack, IsChannelDeep, IsShallowMark, IsMarkDeep } from '../gemini.schema';
 import { BoundingBox } from '../utils/bounding-box';
+import { COLOR_SCHEME_VIRIDIS } from '../utils/contants';
 
 export function compiler(track: Track | GenericType<Channel>, bb: BoundingBox): HiGlassSpec {
 
@@ -16,21 +17,44 @@ export function compiler(track: Track | GenericType<Channel>, bb: BoundingBox): 
         // Is this track horizontal or vertical?
         const isXGenomic = IsChannelDeep(track.x) && track.x.type === "genomic"
         const isYGenomic = IsChannelDeep(track.y) && track.y.type === "genomic"
+        const xDomain = isXGenomic && IsChannelDeep(track.x) ? track.x.domain as [number, number] : undefined
+        const yDomain = isYGenomic && IsChannelDeep(track.y) ? track.y.domain as [number, number] : undefined
         const trackDirection = isXGenomic && isYGenomic ? 'both' : isXGenomic ? 'horizontal' : 'vertical'
         const trackType = IsShallowMark(track.mark) ? track.mark : IsMarkDeep(track.mark) ? track.mark.type : 'unknown'
+
+        higlass.setDomain(xDomain, yDomain);
 
         const typeMap: { [k: string]: EnumTrackType } = {
             // TODO: Add horizontal vs. vertical
             'gene-annotation-higlass': `${trackDirection}-gene-annotations`,
-            'point': `${trackDirection}-point`
+            'point': `${trackDirection}-point`,
+            'bar': `${trackDirection}-bar`,
+            'line': `${trackDirection}-line`,
+            'rect': `${trackDirection}-1d-heatmap`,
             // ...
         } as { [k: string]: EnumTrackType }
 
         const defaultOptions: { [k: string]: Object } = {
             'point': {
                 pointColor: '#0072B2',
+                labelPosition: 'hidden',
+                axisPositionHorizontal: 'left'
+            },
+            'bar': {
+                barFillColor: '#0072B2',
+                labelPosition: 'hidden',
+                axisPositionHorizontal: 'left'
+            },
+            'line': {
+                lineStrokeColor: '#0072B2',
+                labelPosition: 'hidden',
+                axisPositionHorizontal: 'left'
+            },
+            'rect': {
+                colorRange: COLOR_SCHEME_VIRIDIS,
                 labelPosition: 'hidden'
             }
+
         }
         const higlassTrackType = typeMap[trackType];
         if (!higlassTrackType) return {};

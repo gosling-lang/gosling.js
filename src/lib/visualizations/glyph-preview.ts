@@ -13,7 +13,7 @@ export function renderGlyphPreview(
     d3.select(svg).selectAll("*").remove();
 
     // Styles
-    const WIDTH = width, HEIGHT = height, PADDING_X = 60, PADDING_Y = 100;
+    const WIDTH = width, HEIGHT = height, PADDING_X = 60, PADDING_Y = 30;
 
     // BG and Guidelines
     renderBackground(svg, WIDTH, HEIGHT, PADDING_X, PADDING_Y);
