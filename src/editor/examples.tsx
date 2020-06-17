@@ -58,12 +58,6 @@ export const demos: ReadonlyArray<Demo> = [
         glyphHeight: 0
     },
     {
-        name: "Between-Bands (HiGlass Tracks)",
-        spec: LAYOUT_EXAMPLE_COMBO_BAND,
-        glyphWidth: 0,
-        glyphHeight: 0
-    },
-    {
         name: "Stacked Multiple Tracks",
         spec: LAYOUT_EXAMPLE_STACKED_MULTI_TRACKS,
         glyphWidth: 0,
@@ -74,5 +68,11 @@ export const demos: ReadonlyArray<Demo> = [
         spec: LAYOUT_EXAMPLE_STACKED_MULTI_TRACKS_CIRCULAR,
         glyphWidth: 0,
         glyphHeight: 0
-    }
+    },
+    {
+        name: "Between-Bands (HiGlass Tracks)",
+        spec: LAYOUT_EXAMPLE_COMBO_BAND,
+        glyphWidth: 0,
+        glyphHeight: 0
+    },
 ] as const;

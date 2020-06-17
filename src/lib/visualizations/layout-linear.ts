@@ -63,8 +63,8 @@ export function renderLinearLayout(
         .attr('y', d => d.boundingBox.y)
         .attr('height', d => d.boundingBox.height)
         .attr('fill', d => trackStyle.background(d.track as Track))
-        .attr('stroke', trackStyle.stroke())
-        .attr('stroke-width', trackStyle.strokeWidth())
+        .attr('stroke', d => trackStyle.stroke(d.track as Track))
+        .attr('stroke-width', d => trackStyle.strokeWidth(d.track as Track))
 
     // Render links and bands
     renderBetweenLink(g, trackInfo.filter(d => d.track.mark === 'link-between'));

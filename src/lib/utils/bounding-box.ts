@@ -17,7 +17,7 @@ export function calculateSize(gm: GeminiSpec) {
     const size = { width: 0, height: 0 };
     const wrap: number = gm.layout?.wrap ?? 999;
     if (gm.layout?.type === 'circular') {
-        // TODO:
+        // TODO: https://github.com/sehilyi/gemini/issues/57
         // square and tightest bounding box enclousing circular tracks
         size.height = INNER_CIRCLE_RADIUS * 2
         size.height += d3.sum(

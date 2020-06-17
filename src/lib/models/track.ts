@@ -1,4 +1,4 @@
-import { Track, Channel, MarkType, GenericType, IsGlyphMark, IsChannelValue, ChannelTypes, ChannelBind, MarkGlyph, IsChannelDeep, ChannelDeep, Datum, ChannelType, GlyphElement, IsChannelBind } from "../gemini.schema";
+import { Track, Channel, MarkType, GenericType, IsGlyphMark, IsChannelValue, ChannelTypes, ChannelBind, MarkGlyph, IsChannelDeep, ChannelDeep, Datum, ChannelType, GlyphElement, IsChannelBind, IsDomainFlat } from "../gemini.schema";
 import { deepToLongElements } from "../utils/spec-preprocess";
 import * as d3 from "d3";
 import { BoundingBox } from "../utils/bounding-box";
@@ -74,7 +74,8 @@ export class TrackModel {
                     }
                     this.domains[targetChannel] = [
                         ...this.domains[targetChannel],
-                        ...(channel.domain ? channel.domain : data.map(d => d[field]))
+                        ...(channel.domain && IsDomainFlat(channel.domain)
+                            ? channel.domain : data.map(d => d[field]))
                     ]
                 }
             });

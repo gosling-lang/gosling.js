@@ -4,6 +4,7 @@ import { BoundingBox } from "../utils/bounding-box";
 import { HiGlassTrack } from "./higlass";
 import { TRACK_GAP } from "./defaults";
 import { DefaultArcObject } from "d3";
+import { trackStyle } from "./layout";
 
 interface ArcInfo {
     innerRadius: number
@@ -84,12 +85,6 @@ export function renderCircularLayout(
         })
     }
 
-    const trackStyle = {
-        background: (track: Track) => track.style?.background ?? 'white',
-        stroke: () => 'lightgray',
-        strokeWidth: () => 1
-    }
-
     console.log('arcs', trackInfo);
     g.append('g')
         .attr('transform', `translate(${boundingBox.x + totalRadius}, ${boundingBox.y + totalRadius})`)
@@ -98,16 +93,11 @@ export function renderCircularLayout(
         .enter()
         .append('path')
         .attr('fill', d => trackStyle.background(d.track as Track))
-        .attr('stroke', trackStyle.stroke())
-        .attr('stroke-width', trackStyle.strokeWidth())
+        .attr('stroke', d => trackStyle.stroke(d.track as Track))
+        .attr('stroke-width', d => trackStyle.strokeWidth(d.track as Track))
         .attr('d', d => d3.arc()
             .innerRadius(d.arc.innerRadius)
-            .outerRadius(d.arc.outerRadius)({
-                ...d.arc,
-                // Add PI to rotate in 180 deg.
-                startAngle: d.arc.startAngle,
-                endAngle: d.arc.endAngle,
-            } as DefaultArcObject)
+            .outerRadius(d.arc.outerRadius)(d.arc)
         )
 
 }

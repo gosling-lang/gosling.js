@@ -8,12 +8,12 @@ import SplitPane from 'react-split-pane';
 import { GeminiSpec, Track, IsDataDeep, IsMarkDeep, IsNotEmptyTrack } from '../lib/gemini.schema';
 import { debounce } from "lodash";
 import { demos } from './examples';
-import './editor.css';
 import { renderGlyphPreview } from '../lib/visualizations/glyph-preview';
 import { replaceGlyphs } from '../lib/utils';
 import { renderLayoutPreview } from '../lib/visualizations/layout-preview';
 import { calculateSize } from '../lib/utils/bounding-box';
 import { HiGlassTrack } from '../lib/visualizations/higlass';
+import './editor.css';
 
 const DEBUG_INIT_DEMO_INDEX = demos.length - 1;
 
@@ -40,6 +40,7 @@ function Editor() {
         }
         setGlyphWidth(demo.glyphWidth);
         setGlyphHeight(demo.glyphHeight);
+        setHiGlassTrackOptions([]);
     }, [demo, editorMode]);
 
     useEffect(() => {
@@ -66,7 +67,7 @@ function Editor() {
         );
         d3.select(glyphSvg.current).selectAll('*').remove(); // TODO:
         const track = (editedGm as GeminiSpec)?.tracks?.find(
-            d => IsNotEmptyTrack(d) && IsMarkDeep(d.mark) ? d.mark.type === 'groupMark' : false
+            d => IsNotEmptyTrack(d) && IsMarkDeep(d.mark) ? d.mark.type === 'compositeMark' : false
         )
         if (!track) return;
 
@@ -85,14 +86,15 @@ function Editor() {
 
     const hglass = useMemo(() => {
         return higlassTrackOptions.map(op =>
-            <div style={{
-                position: 'absolute',
-                display: 'block',
-                left: op.boundingBox.x,
-                top: op.boundingBox.y,
-                width: op.boundingBox.width,
-                height: op.boundingBox.height,
-            }}>
+            <div key={stringify(op.viewConfig)}
+                style={{
+                    position: 'absolute',
+                    display: 'block',
+                    left: op.boundingBox.x,
+                    top: op.boundingBox.y,
+                    width: op.boundingBox.width,
+                    height: op.boundingBox.height,
+                }}>
                 <HiGlassComponent
                     options={{
                         bounded: true,
@@ -117,7 +119,7 @@ function Editor() {
     return (
         <>
             <div className="demo-navbar">
-                🧬Gemini <code>Editor</code>
+                🧬 Gemini <code>Editor</code>
                 <select
                     onChange={e => {
                         setDemo(demos.find(d => d.name === e.target.value) as any);
@@ -154,7 +156,7 @@ function Editor() {
                     {/* D3 Visualizations */}
                     <SplitPane split="horizontal" defaultSize="20%" onChange={() => { }}>
                         <div className="preview-container">
-                            <b>Glyph Preview</b>
+                            <b>Composite Mark Preview</b>
                             <div><svg ref={glyphSvg} /></div>
                         </div>
                         <div className="preview-container">

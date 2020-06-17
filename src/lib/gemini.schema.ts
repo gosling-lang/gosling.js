@@ -7,15 +7,14 @@ import { validTilesetUrl } from './utils';
 export interface GeminiSpec {
     references?: string[]
     description?: string
-    layout?: {
-        type: "linear" | "circular"
-        direction: "vertical" | "horizontal"
-        wrap?: number // TODO: does not work now
-        // TODO: Currently, these two are used only for circular layout.
-        width?: number
-        height?: number
-    }
+    layout?: Layout
     tracks: (Track | GenericType<Channel> | EmptyTrack)[] // TODO: `Track` does not mean anything here because of `GenericType`
+}
+
+export interface Layout {
+    type: "linear" | "circular"
+    direction: "vertical" | "horizontal"
+    wrap?: number
 }
 
 export interface GenericType<T> {
@@ -56,6 +55,8 @@ export interface Track {
 
 export interface TrackStyle {
     background?: string
+    stroke?: string
+    strokeWidth?: number
 }
 
 /**
@@ -95,9 +96,29 @@ export interface ChannelDeep {
     field?: string
     type?: 'genomic' | 'nominal' | 'quantitative'
     aggregate?: Aggregate
-    domain?: string[] | number[]
+    domain?: Domain
     range?: string[]
     axis?: boolean
+}
+
+export type Domain = string[] | number[] | DomainInterval | DomainChrInterval | DomainChr | DomainGene
+export interface DomainChr {
+    // For showing a certain chromosome
+    chromosome: string
+}
+export interface DomainChrInterval {
+    // For showing a certain interval in a chromosome
+    chromosome: string
+    interval: [number, number]
+}
+export interface DomainInterval {
+    // For showing a certain interval in intire chromosomes
+    interval: [number, number] // This is consistent to HiGlass's initXDomain and initYDomain.
+}
+export interface DomainGene {
+    // For showing genes
+    // TODO: not supported yet
+    gene: string | [string, string]
 }
 
 export interface ChannelValue {
@@ -140,7 +161,7 @@ export interface MarkGlyphPreset {
 }
 
 export interface MarkGlyph {
-    type: 'groupMark'
+    type: 'compositeMark'
     name: string
     referenceColumn?: string // reference column for selecting data tuples for each glyph
     requiredChannels: ChannelType[] // channels that must be assigned
@@ -226,6 +247,26 @@ export function IsDataDeep(data:
     return typeof data === 'object'
 }
 
+export function IsDomainFlat(domain: Domain): domain is string[] | number[] {
+    return Array.isArray(domain)
+}
+
+export function IsDomainChr(domain: Domain): domain is DomainChr {
+    return 'chromosome' in domain && !('interval' in domain)
+}
+
+export function IsDomainInterval(domain: Domain): domain is DomainInterval {
+    return !('chromosome' in domain) && 'interval' in domain
+}
+
+export function IsDomainChrInterval(domain: Domain): domain is DomainChrInterval {
+    return 'chromosome' in domain && 'interval' in domain
+}
+
+export function IsDomainGene(domain: Domain): domain is DomainGene {
+    return 'gene' in domain
+}
+
 export function IsNotEmptyTrack(
     track:
         | Track
@@ -248,7 +289,7 @@ export function IsMarkDeep(mark: any /* TODO */): mark is MarkDeep {
 }
 
 export function IsGlyphMark(mark: any /* TODO */): mark is MarkGlyph {
-    return typeof mark === 'object' && mark.type === 'groupMark'
+    return typeof mark === 'object' && mark.type === 'compositeMark'
 }
 
 export function IsHiGlassTrack(track: Track | GenericType<Channel>) {
@@ -256,7 +297,7 @@ export function IsHiGlassTrack(track: Track | GenericType<Channel>) {
         (
             typeof track.mark === 'object' &&
             IsGlyphMark(track.mark) &&
-            track.mark.type !== 'groupMark'
+            track.mark.type !== 'compositeMark'
         ) ||
         (IsDataDeep(track.data) && validTilesetUrl(track.data.url))
     );

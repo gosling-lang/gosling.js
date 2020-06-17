@@ -1,7 +1,11 @@
 import Ajv from 'ajv';
 import uuid from "uuid";
-import { HiGlassSpec, Track, EnumTrackType, EnumTrack } from "./higlass.schema";
+import { HiGlassSpec, Track } from "./higlass.schema";
 import HiGlassSchema from "./higlass.schema.json";
+import { TOTAL_CHROM_SIZE_HG19, CHROM_RANGE_HG19 } from '../utils/chrom-size';
+import { Domain, IsDomainChr, IsDomainInterval, IsDomainChrInterval, IsDomainGene } from '../gemini.schema';
+
+const DEFAULT_CHROMOSOME_INFO_PATH = '//s3.amazonaws.com/pkerp/data/hg19/chromSizes.tsv'
 
 /**
  * Model for managing HiGlass spec.
@@ -14,7 +18,7 @@ export class HiGlassModel {
 
         // Add default specs.
         this.setEditable(false);
-        this.setChromInfoPath('//s3.amazonaws.com/pkerp/data/hg19/chromSizes.tsv');
+        this.setChromInfoPath(DEFAULT_CHROMOSOME_INFO_PATH);
         this.hg.trackSourceServers = [];
         this.hg.views = [{
             uid: uuid.v1(),
@@ -29,9 +33,8 @@ export class HiGlassModel {
                 gallery: [],
                 whole: []
             },
-            // TODO: better default values
-            initialXDomain: [5.960464477539063e-8, 3100000000.0000005],
-            initialYDomain: [5.960464477539063e-8, 3100000000.0000005]
+            initialXDomain: [0, TOTAL_CHROM_SIZE_HG19],
+            initialYDomain: [0, TOTAL_CHROM_SIZE_HG19]
         }];
     }
 
@@ -39,21 +42,37 @@ export class HiGlassModel {
         return this.hg;
     }
 
+    private getNumericDomain(domain: Domain) {
+        if (IsDomainChr(domain)) {
+            return CHROM_RANGE_HG19[`chr${domain.chromosome}`]
+        }
+        else if (IsDomainInterval(domain)) {
+            return domain.interval
+        }
+        else if (IsDomainChrInterval(domain)) {
+            const chrStart = CHROM_RANGE_HG19[`chr${domain.chromosome}`][0]
+            const [start, end] = domain.interval
+            return [
+                chrStart + start,
+                chrStart + end
+            ]
+
+        } else if (IsDomainGene(domain)) {
+            // TODO: not supported yet
+        }
+    }
     public setDomain(
-        xDomain: [number, number] | undefined,
-        yDomain: [number, number] | undefined
+        xDomain: Domain | undefined,
+        yDomain: Domain | undefined
     ) {
         if (xDomain && this.hg.views?.[0]) {
-            this.hg.views[0].initialXDomain = xDomain;
+            this.hg.views[0].initialXDomain = this.getNumericDomain(xDomain)
         }
         if (yDomain && this.hg.views?.[0]) {
-            this.hg.views[0].initialYDomain = yDomain;
+            this.hg.views[0].initialYDomain = this.getNumericDomain(yDomain)
         }
     }
 
-    private getView() {
-        return this.hg.views?.[0];
-    }
     private setEditable(editable: boolean | undefined) {
         this.hg.editable = editable;
         return this;
