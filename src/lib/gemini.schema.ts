@@ -2,7 +2,7 @@
 // https://github.com/vega/vega-lite/blob/23fe2b9c6a82551f321ccab751370ca48ae002c9/src/channeldef.ts#L961
 
 import { GLYPH_LOCAL_PRESET_TYPE, GLYPH_HIGLASS_PRESET_TYPE } from './test/gemini/glyph'
-import { validTilesetUrl } from './utils';
+import { validTilesetUrl } from './utils'
 
 export interface GeminiSpec {
     references?: string[]
@@ -86,7 +86,7 @@ export const ChannelTypes = {
     size: 'size',
     text: 'text',
     w: 'w'
-} as const;
+} as const
 
 export type ChannelType = keyof typeof ChannelTypes | string
 
@@ -117,7 +117,7 @@ export interface DomainInterval {
 }
 export interface DomainGene {
     // For showing genes
-    // TODO: not supported yet
+    // TODO: Not supported yet
     gene: string | [string, string]
 }
 
@@ -157,14 +157,14 @@ export interface MarkWithStyle {
 
 export interface MarkGlyphPreset {
     type: GLYPH_LOCAL_PRESET_TYPE | GLYPH_HIGLASS_PRESET_TYPE
-    server: string // TODO: Support this.
+    server: string // TODO: Not supported yet
 }
 
 export interface MarkGlyph {
     type: 'compositeMark'
     name: string
     referenceColumn?: string // reference column for selecting data tuples for each glyph
-    requiredChannels: ChannelType[] // channels that must be assigned
+    requiredChannels: ChannelType[] // channels that must be assigned // TODO: What about optional channels?
     elements: GlyphElement[]
 }
 
@@ -300,7 +300,7 @@ export function IsHiGlassTrack(track: Track | GenericType<Channel>) {
             track.mark.type !== 'compositeMark'
         ) ||
         (IsDataDeep(track.data) && validTilesetUrl(track.data.url))
-    );
+    )
 }
 
 export function IsChannelValue(
@@ -311,7 +311,7 @@ export function IsChannelValue(
         | undefined
         | 'none'
 ): channel is ChannelValue {
-    return channel !== null && typeof channel === 'object' && 'value' in channel;
+    return channel !== null && typeof channel === 'object' && 'value' in channel
 }
 
 export function IsChannelBind(
@@ -322,7 +322,7 @@ export function IsChannelBind(
         | undefined
         | 'none'
 ): channel is ChannelBind {
-    return channel !== null && typeof channel === 'object' && 'bind' in channel;
+    return channel !== null && typeof channel === 'object' && 'bind' in channel
 }
 
 export function IsChannelDeep(
@@ -331,5 +331,5 @@ export function IsChannelDeep(
         | ChannelValue
         | undefined
 ): channel is ChannelDeep {
-    return typeof channel === 'object' && !('value' in channel);
+    return typeof channel === 'object' && !('value' in channel)
 }

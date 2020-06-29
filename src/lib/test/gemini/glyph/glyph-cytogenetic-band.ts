@@ -1,10 +1,9 @@
-import { MarkGlyph } from "../../../gemini.schema";
+import { MarkGlyph } from "../../../gemini.schema"
 
 export const GLYPH_CYTOGENETIC_BAND: MarkGlyph = {
     "type": 'compositeMark',
     "name": "cytogenetic-band",
     "requiredChannels": [
-        // TODO: What about optional channels?
         "x", "xe", // start, end
         "y", // chr
         'color', // strain

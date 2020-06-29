@@ -1,10 +1,9 @@
-import { MarkGlyph } from '../../../gemini.schema';
+import { MarkGlyph } from '../../../gemini.schema'
 
 export const GLYPH_GENE_ANNOTATAION: MarkGlyph = {
     type: 'compositeMark',
     name: 'gene-annotation',
     requiredChannels: [
-        // TODO: What about optional channels?
         'x', 'xe',
         'y', 'color', // + or - strand?
         'geneOrExon', // genes or exons?
@@ -13,7 +12,6 @@ export const GLYPH_GENE_ANNOTATAION: MarkGlyph = {
     ],
     elements: [
         {
-            // Should render once
             description: 'horizontal line',
             select: [
                 { channel: 'geneOrExon', oneOf: ['gene'] },

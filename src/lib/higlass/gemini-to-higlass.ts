@@ -1,18 +1,18 @@
-import Ajv from 'ajv';
-import HiGlassSchema from "./higlass.schema.json";
-import { HiGlassSpec, EnumTrackType } from "./higlass.schema";
-import { HiGlassModel } from './higlass-model';
-import { parseServerAndTilesetUidFromUrl, validTilesetUrl } from '../utils';
-import { GenericType, Track, Channel, IsDataDeep, IsHiGlassTrack, IsChannelDeep, IsShallowMark, IsMarkDeep, Domain } from '../gemini.schema';
-import { BoundingBox } from '../utils/bounding-box';
-import { COLOR_SCHEME_VIRIDIS } from '../utils/contants';
+import Ajv from 'ajv'
+import HiGlassSchema from "./higlass.schema.json"
+import { HiGlassSpec, EnumTrackType } from "./higlass.schema"
+import { HiGlassModel } from './higlass-model'
+import { parseServerAndTilesetUidFromUrl, validTilesetUrl } from '../utils'
+import { GenericType, Track, Channel, IsDataDeep, IsHiGlassTrack, IsChannelDeep, IsShallowMark, IsMarkDeep, Domain } from '../gemini.schema'
+import { BoundingBox } from '../utils/bounding-box'
+import { COLOR_SCHEME_VIRIDIS } from '../utils/contants'
 
 export function compiler(track: Track | GenericType<Channel>, bb: BoundingBox): HiGlassSpec {
 
-    const higlass = new HiGlassModel();
+    const higlass = new HiGlassModel()
 
     if (IsHiGlassTrack(track) && IsDataDeep(track.data)) {
-        const { server, tilesetUid } = parseServerAndTilesetUidFromUrl(track.data.url);
+        const { server, tilesetUid } = parseServerAndTilesetUidFromUrl(track.data.url)
 
         // Is this track horizontal or vertical?
         const isXGenomic = IsChannelDeep(track.x) && track.x.type === "genomic"
@@ -22,10 +22,9 @@ export function compiler(track: Track | GenericType<Channel>, bb: BoundingBox): 
         const trackDirection = isXGenomic && isYGenomic ? 'both' : isXGenomic ? 'horizontal' : 'vertical'
         const trackType = IsShallowMark(track.mark) ? track.mark : IsMarkDeep(track.mark) ? track.mark.type : 'unknown'
 
-        higlass.setDomain(xDomain, yDomain);
+        higlass.setDomain(xDomain, yDomain)
 
         const typeMap: { [k: string]: EnumTrackType } = {
-            // TODO: Add horizontal vs. vertical
             'gene-annotation-higlass': `${trackDirection}-gene-annotations`,
             'point': `${trackDirection}-point`,
             'bar': `${trackDirection}-bar`,
@@ -56,8 +55,8 @@ export function compiler(track: Track | GenericType<Channel>, bb: BoundingBox): 
             }
 
         }
-        const higlassTrackType = typeMap[trackType];
-        if (!higlassTrackType) return {};
+        const higlassTrackType = typeMap[trackType]
+        if (!higlassTrackType) return {}
 
         higlass.setMainTrack({
             type: higlassTrackType,
@@ -66,7 +65,7 @@ export function compiler(track: Track | GenericType<Channel>, bb: BoundingBox): 
             width: bb.width,
             height: bb.height, // TODO: consider the height of axes
             options: defaultOptions[trackType]
-        }).addTrackSourceServers(server);
+        }).addTrackSourceServers(server)
 
         const chanToPos: { [k: string]: 'left' | 'right' | 'top' | 'bottom' } = {
             x: 'bottom',
@@ -75,31 +74,31 @@ export function compiler(track: Track | GenericType<Channel>, bb: BoundingBox): 
             y1: 'right'
         }
         Object.keys(chanToPos).forEach(c => {
-            const channelDef = (track as GenericType<Channel>)[c];
+            const channelDef = (track as GenericType<Channel>)[c]
             if (IsChannelDeep(channelDef) && channelDef.axis) {
-                higlass.setAxisTrack(chanToPos[c]);
+                higlass.setAxisTrack(chanToPos[c])
             }
         })
 
-        higlass.validateSpec();
+        higlass.validateSpec()
 
-        console.log('HiGlass viewConfig:', higlass.spec());
+        console.log('HiGlass viewConfig:', higlass.spec())
 
-        return higlass.spec();
+        return higlass.spec()
     }
-    return {};
+    return {}
 }
 
 export function validateHG(hg: HiGlassSpec): boolean {
 
-    const validate = new Ajv({ extendRefs: true }).compile(HiGlassSchema);
-    const valid = validate(hg);
+    const validate = new Ajv({ extendRefs: true }).compile(HiGlassSchema)
+    const valid = validate(hg)
 
     if (validate.errors) {
-        console.warn(JSON.stringify(validate.errors, null, 2));
+        console.warn(JSON.stringify(validate.errors, null, 2))
     }
 
-    // TODO: check types such as default values and locationLocks
+    // TODO: Check types such as default values and locationLocks
 
-    return valid as boolean;
+    return valid as boolean
 } 

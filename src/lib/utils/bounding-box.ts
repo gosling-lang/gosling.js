@@ -1,6 +1,6 @@
-import { GeminiSpec, IsNotEmptyTrack } from "../gemini.schema";
-import { TRACK_GAP, INNER_CIRCLE_RADIUS } from "../visualizations/defaults";
-import * as d3 from "d3";
+import { GeminiSpec, IsNotEmptyTrack } from "../gemini.schema"
+import { TRACK_GAP, INNER_CIRCLE_RADIUS } from "../visualizations/defaults"
+import * as d3 from "d3"
 
 export interface BoundingBox {
     x: number
@@ -14,10 +14,9 @@ export interface BoundingBox {
  * @param gm 
  */
 export function calculateSize(gm: GeminiSpec) {
-    const size = { width: 0, height: 0 };
-    const wrap: number = gm.layout?.wrap ?? 999;
+    const size = { width: 0, height: 0 }
+    const wrap: number = gm.layout?.wrap ?? 999
     if (gm.layout?.type === 'circular') {
-        // TODO: https://github.com/sehilyi/gemini/issues/57
         // square and tightest bounding box enclousing circular tracks
         size.height = INNER_CIRCLE_RADIUS * 2
         size.height += d3.sum(
@@ -57,5 +56,5 @@ export function calculateSize(gm: GeminiSpec) {
         size.width += Math.floor(gm.tracks.length / wrap) * TRACK_GAP
         size.height += d3.min([wrap - 1, gm.tracks.length - 1]) as number * TRACK_GAP
     }
-    return size;
+    return size
 }

@@ -1,13 +1,13 @@
 import * as d3 from 'd3'
-import { GeminiSpec, Track, Layout, GenericType, EmptyTrack, Channel } from '../gemini.schema';
-import { HiGlassTrack } from './higlass';
-import { BoundingBox } from '../utils/bounding-box';
-import { renderCircularLayout } from './layout-circular';
-import { renderLinearLayout } from './layout-linear';
+import { GeminiSpec, Track, Layout, GenericType, EmptyTrack, Channel } from '../gemini.schema'
+import { HiGlassTrack } from './higlass'
+import { BoundingBox } from '../utils/bounding-box'
+import { renderCircularLayout } from './layout-circular'
+import { renderLinearLayout } from './layout-linear'
 
 export const trackStyle = {
     background: (track: Track) => track.style?.background ?? 'white',
-    stroke: (track: Track) => track.style?.stroke ?? '#377FB8',   // TODO: for demo
+    stroke: (track: Track) => track.style?.stroke ?? 'lightgray',
     strokeWidth: (track: Track) => track.style?.strokeWidth ?? 1
 }
 
@@ -17,7 +17,7 @@ export function renderLayout(
     setHiGlassInfo: (higlassInfo: HiGlassTrack[]) => void,
     boundingBox: BoundingBox
 ) {
-    g.selectAll('*').remove();
+    g.selectAll('*').remove()
 
     if (gm.layout?.type === 'circular') {
         renderCircularLayout(g, gm, setHiGlassInfo, boundingBox)
@@ -34,10 +34,10 @@ export function renderLayout(
  */
 export function convertLayout(gm: GeminiSpec) {
     if (gm.layout?.direction !== 'vertical') {
-        return gm;
+        return gm
     }
-    const wrap = (gm.layout.wrap ?? 0) > gm.tracks.length ? gm.tracks.length : (gm.layout.wrap ?? gm.tracks.length);
-    const newWrap = Math.ceil(gm.tracks.length / wrap);
+    const wrap = (gm.layout.wrap ?? 0) > gm.tracks.length ? gm.tracks.length : (gm.layout.wrap ?? gm.tracks.length)
+    const newWrap = Math.ceil(gm.tracks.length / wrap)
 
     const newLayout: Layout = {
         ...gm.layout,

@@ -5,145 +5,145 @@
 // https://github.com/quicktype/quicktype
 // and then revised manually.
 export interface HiGlassSpec {
-    editable?: boolean;
-    zoomFixed?: boolean;
-    viewEditable?: boolean; // TODO: why not view`s`Editable?
-    tracksEditable?: boolean;
-    trackSourceServers?: string[];
-    exportViewUrl?: string;
-    chromInfoPath?: string;
-    views?: View[];
-    zoomLocks?: GenericLocks;
-    locationLocks?: GenericLocks;
-    valueScaleLocks?: ValueScaleLocks;
+    editable?: boolean
+    zoomFixed?: boolean
+    viewEditable?: boolean
+    tracksEditable?: boolean
+    trackSourceServers?: string[]
+    exportViewUrl?: string
+    chromInfoPath?: string
+    views?: View[]
+    zoomLocks?: GenericLocks
+    locationLocks?: GenericLocks
+    valueScaleLocks?: ValueScaleLocks
 }
 
 export interface View {
-    uid?: string;
-    initialXDomain?: number[];
-    initialYDomain?: number[];
-    autocompleteSource?: string;
-    genomePositionSearchBox?: GenomePositionSearchBox;
-    genomePositionSearchBoxVisible?: boolean;
-    chromInfoPath?: string;
-    tracks: Tracks;
-    layout: Layout;
-    overlays?: Overlay[];
-    selectionView?: boolean;
-    zoomFixed?: boolean;
+    uid?: string
+    initialXDomain?: number[]
+    initialYDomain?: number[]
+    autocompleteSource?: string
+    genomePositionSearchBox?: GenomePositionSearchBox
+    genomePositionSearchBoxVisible?: boolean
+    chromInfoPath?: string
+    tracks: Tracks
+    layout: Layout
+    overlays?: Overlay[]
+    selectionView?: boolean
+    zoomFixed?: boolean
 }
 export interface GenomePositionSearchBox {
-    chromInfoId: string;
-    chromInfoServer: string;
-    autocompleteId?: string;
-    autocompleteServer?: string;
-    visible?: boolean;
+    chromInfoId: string
+    chromInfoServer: string
+    autocompleteId?: string
+    autocompleteServer?: string
+    visible?: boolean
 }
 
 export interface Tracks {
-    top?: Track[];
-    left?: Track[];
-    center?: Track[];
-    right?: Track[];
-    bottom?: Track[];
-    gallery?: Track[];
-    whole?: Track[];
+    top?: Track[]
+    left?: Track[]
+    center?: Track[]
+    right?: Track[]
+    bottom?: Track[]
+    gallery?: Track[]
+    whole?: Track[]
 }
-export type Track = HeatmapTrack | CombinedTrack | IndependentViewportProjectionTrack | EnumTrack;
+export type Track = HeatmapTrack | CombinedTrack | IndependentViewportProjectionTrack | EnumTrack
 export interface HeatmapTrack {
-    type: 'heatmap';
-    uid?: string;
-    data?: Data;
-    server?: string;
-    tilesetUid?: string;
-    position?: string;
-    width?: number;
-    height?: number;
-    options?: Object;
+    type: 'heatmap'
+    uid?: string
+    data?: Data
+    server?: string
+    tilesetUid?: string
+    position?: string
+    width?: number
+    height?: number
+    options?: Object
 }
 export interface CombinedTrack {
-    type: 'combined';
-    contents: Track[];
-    uid?: string;
-    width?: number;
-    height?: number;
-    position?: string;
-    options?: Object;
+    type: 'combined'
+    contents: Track[]
+    uid?: string
+    width?: number
+    height?: number
+    position?: string
+    options?: Object
 }
 export interface IndependentViewportProjectionTrack {
-    type: 'viewport-projection-horizontal' | 'viewport-projection-vertical' | 'viewport-projection-center';
-    uid?: string;
-    fromViewUid?: null;
-    projectionXDomain?: number[];
-    projectionYDomain?: number[];
-    transforms?: any[];
-    width?: number;
-    x?: number;
-    y?: number;
-    options?: Object;
+    type: 'viewport-projection-horizontal' | 'viewport-projection-vertical' | 'viewport-projection-center'
+    uid?: string
+    fromViewUid?: null
+    projectionXDomain?: number[]
+    projectionYDomain?: number[]
+    transforms?: any[]
+    width?: number
+    x?: number
+    y?: number
+    options?: Object
 }
 export interface EnumTrack {
-    type: EnumTrackType;
-    uid?: string;
-    server?: string;
-    tilesetUid?: string;
-    chromInfoPath?: string;
-    data?: Data;
-    fromViewUid?: null | string;
-    width?: number;
-    height?: number;
-    x?: number;
-    y?: number;
-    options?: any;
+    type: EnumTrackType
+    uid?: string
+    server?: string
+    tilesetUid?: string
+    chromInfoPath?: string
+    data?: Data
+    fromViewUid?: null | string
+    width?: number
+    height?: number
+    x?: number
+    y?: number
+    options?: any
 }
 export interface Data {
-    type?: string;  // TODO: What kinds of types exist?
-    children?: any[];
-    tiles?: Object;
-    tilesetInfo?: Object;
+    type?: string  // TODO: What kinds of types exist?
+    children?: any[]
+    tiles?: Object
+    tilesetInfo?: Object
 }
 
 export interface Overlay {
-    uid?: string;
-    type?: string;  // TODO: What kinds of types exist?
-    chromInfoPath?: string;
-    includes?: any[];
-    options?: OverlayOptions;
+    uid?: string
+    type?: string  // TODO: What kinds of types exist?
+    chromInfoPath?: string
+    includes?: any[]
+    options?: OverlayOptions
 }
 export interface OverlayOptions {
-    extent?: any[];
-    fill?: string;
-    fillOpacity?: number;
-    minWidth?: number;
-    outline?: string;
-    outlineOpacity?: number;
-    outlinePos?: any[] | string;
-    outlineWidth?: number;
-    stroke?: string;
-    strokeOpacity?: number;
-    strokePos?: any[] | string;
-    strokeWidth?: number;
+    extent?: any[]
+    fill?: string
+    fillOpacity?: number
+    minWidth?: number
+    outline?: string
+    outlineOpacity?: number
+    outlinePos?: any[] | string
+    outlineWidth?: number
+    stroke?: string
+    strokeOpacity?: number
+    strokePos?: any[] | string
+    strokeWidth?: number
 }
 
 export interface Layout {
-    h: number;
-    w: number;
-    x: number;
-    y: number;
+    h: number
+    w: number
+    x: number
+    y: number
 }
 
 export interface GenericLocks {
-    locksByViewUid?: LocksByViewUid;
-    locksDict?: Object; // We are checking the type of `locksDict` with typescript functions.
+    locksByViewUid?: LocksByViewUid
+    locksDict?: Object // We are checking the type of `locksDict` with typescript functions.
 }
 
 export interface LocksByViewUid {
-    [k: string]: string;
+    [k: string]: string
 }
 
 export interface ValueScaleLocks {
-    locksByViewUid: LocksByViewUid;
-    locksDict?: Object; // We are checking the type of `locksDict` with typescript functions.
+    locksByViewUid: LocksByViewUid
+    locksDict?: Object // We are checking the type of `locksDict` with typescript functions.
 }
 
 // export type TrackType = 'heatmap' | 'combined' | 'viewport-projection-horizontal' | 'viewport-projection-vertical' | 'viewport-projection-center' | EnumTrackType;
