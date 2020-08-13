@@ -30,9 +30,21 @@ export type GLYPH_LOCAL_PRESET_TYPE =
 
 export type GLYPH_HIGLASS_PRESET_TYPE =
     | 'gene-annotation-higlass'
+    | 'gemini-track-higlass'
+    // remove ultimtely
+    | 'point-higlass'
+    | 'line-higlass'
+    | '1d-heatmap-higlass'
+    | 'bar-higlass'
 
 export const GLYPH_HIGLASS_PRESET_TYPES: GLYPH_HIGLASS_PRESET_TYPE[] = [
-    'gene-annotation-higlass'
+    'gene-annotation-higlass',
+    'gemini-track-higlass',
+    // remove ultimtely
+    'point-higlass',
+    'line-higlass',
+    '1d-heatmap-higlass',
+    'bar-higlass'
 ]
 
 export const GLYPH_LOCAL_PRESET_TYPES: (GLYPH_LOCAL_PRESET_TYPE | GLYPH_HIGLASS_PRESET_TYPE)[] = [

@@ -103,7 +103,7 @@ export class HiGlassModel {
         this.hg.views[0].tracks[position] = [{
             uid: uuid.v1(),
             type: (direction + baseTrackType) as any /* TODO */,
-            [widthOrHeight]: 20,
+            [widthOrHeight]: 30,
             chromInfoPath: this.hg.chromInfoPath
         }]
         return this

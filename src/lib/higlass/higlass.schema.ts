@@ -204,3 +204,5 @@ export type EnumTrackType =
     | 'viewport-projection-center'
     | 'viewport-projection-horizontal'
     | 'viewport-projection-vertical'
+    // custom tracks
+    | 'gemini-track'

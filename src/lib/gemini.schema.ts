@@ -30,6 +30,8 @@ export interface Track {
     // primitives
     data: DataDeep | Datum[]
     mark: Mark
+    // zoom technique
+    zoomOutTechnique?: ZoomOutTechnique
     // coordinates
     x?: Channel
     y?: Channel
@@ -40,6 +42,8 @@ export interface Track {
     y1?: Channel
     x1e?: Channel
     y1e?: Channel
+    // separation
+    row?: Channel
     // others
     color?: Channel
     opacity?: Channel
@@ -65,6 +69,19 @@ export interface TrackStyle {
 export interface Datum {
     [k: string]: number | string
 }
+
+/**
+ * Zoom technique (How should we show visualization based on different zoom level?)
+ */
+export interface ZoomOutTechnique {
+    // TODO: separate this interface by type, e.g., { type: 'aggregate', aggFunction: 'max' | ... }
+    type: 'auto' | 'none' | 'aggregate' | 'filter' | 'alt-representation'
+    // zoomLevel?: number // TODO: what meaning to contain?
+    aggFunction?: 'max' | 'min' | 'mean' | 'count' | 'sum'
+    importance?: string // field name
+    spec?: Partial<Track>
+}
+
 
 /**
  * Channel
@@ -97,11 +114,16 @@ export interface ChannelDeep {
     type?: 'genomic' | 'nominal' | 'quantitative'
     aggregate?: Aggregate
     domain?: Domain
-    range?: string[]
+    range?: Range
     axis?: boolean
 }
 
+export interface ChannelValue {
+    value: number | string
+}
+
 export type Domain = string[] | number[] | DomainInterval | DomainChrInterval | DomainChr | DomainGene
+export type Range = string[] | number[]
 export interface DomainChr {
     // For showing a certain chromosome
     chromosome: string
@@ -119,10 +141,6 @@ export interface DomainGene {
     // For showing genes
     // TODO: Not supported yet
     gene: string | [string, string]
-}
-
-export interface ChannelValue {
-    value: number | string
 }
 
 export type Aggregate = 'max' | 'min' | 'mean'

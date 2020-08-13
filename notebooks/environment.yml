@@ -1,0 +1,31 @@
+name: gemini-notebooks
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - python>=3.5
+  - numpy
+  - pandas
+  - requests
+  - h5py
+  - dask
+  - flake8
+  - autopep8
+  - pysam
+  - snakemake
+  - scipy
+  - jupyterlab
+  - nb_conda
+  - pip
+  - pip:
+    - negspy
+    - slugid
+    - sortedcontainers
+    - nose
+    - cooler>=0.8.5
+    - click>=7
+    - pytest
+    - pytest-cov
+    - bumpversion
+    - pybbi>=0.2.2
+    - clodius

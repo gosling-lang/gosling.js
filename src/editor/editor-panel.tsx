@@ -1,9 +1,9 @@
-import React, { useRef, useState, useEffect } from 'react';
-import MonacoEditor from 'react-monaco-editor';
-import * as Monaco from 'monaco-editor/esm/vs/editor/editor.api';
-import ReactResizeDetector from 'react-resize-detector';
+import React, { useRef, useState, useEffect } from 'react'
+import MonacoEditor from 'react-monaco-editor'
+import * as Monaco from 'monaco-editor/esm/vs/editor/editor.api'
+import ReactResizeDetector from 'react-resize-detector'
 
-const DEBUG_WITHOUT_DIAGNOSIS = true;
+const DEBUG_WITHOUT_DIAGNOSIS = true
 
 function EditorPanel(props: {
     code: string,
@@ -11,21 +11,21 @@ function EditorPanel(props: {
     onChange?: (code: string) => void
 }) {
 
-    const { code: templateCode, readOnly } = props;
-    const editor = useRef<Monaco.editor.IStandaloneCodeEditor | null>(null);
-    const [code, setCode] = useState(templateCode);
+    const { code: templateCode, readOnly } = props
+    const editor = useRef<Monaco.editor.IStandaloneCodeEditor | null>(null)
+    const [code, setCode] = useState(templateCode)
 
     useEffect(() => {
-        setCode(templateCode);
-    }, [templateCode]);
+        setCode(templateCode)
+    }, [templateCode])
 
     function editorDidMount(monacoEditor: Monaco.editor.IStandaloneCodeEditor, monaco: typeof Monaco) {
-        editor.current = monacoEditor;
-        monacoEditor.focus();
+        editor.current = monacoEditor
+        monacoEditor.focus()
     }
 
     function setupDiagnostics() {
-        if (DEBUG_WITHOUT_DIAGNOSIS) return;
+        if (DEBUG_WITHOUT_DIAGNOSIS) return
         Monaco.languages.json.jsonDefaults.setDiagnosticsOptions({
             allowComments: false,
             enableSchemaRequest: true,
@@ -34,7 +34,7 @@ function EditorPanel(props: {
                 uri: "https://raw.githubusercontent.com/higlass/higlass/develop/app/schema.json",
                 fileMatch: ['*']
             }]
-        });
+        })
         Monaco.languages.json.jsonDefaults.setModeConfiguration({
             documentFormattingEdits: false,
             documentRangeFormattingEdits: false,
@@ -45,19 +45,19 @@ function EditorPanel(props: {
             colors: true,
             foldingRanges: true,
             diagnostics: true,
-        });
+        })
     }
 
     function onChangeHandle(code: string, e: any) {
-        setCode(code);
-        if (props.onChange) props.onChange(code);
+        setCode(code)
+        if (props.onChange) props.onChange(code)
         // console.log('onChange', code, e);
 
-        setupDiagnostics();
+        setupDiagnostics()
     }
 
     function editorWillMount(monaco: typeof Monaco) {
-        setupDiagnostics();
+        setupDiagnostics()
     }
 
     return (
@@ -66,7 +66,7 @@ function EditorPanel(props: {
                 handleWidth
                 handleHeight
                 onResize={(width: number, height: number) => {
-                    editor?.current?.layout({ width, height });
+                    editor?.current?.layout({ width, height })
                 }}
             ></ReactResizeDetector>
             <MonacoEditor
@@ -93,6 +93,6 @@ function EditorPanel(props: {
                 editorWillMount={editorWillMount}
             />
         </>
-    );
+    )
 }
-export default EditorPanel;
+export default EditorPanel
