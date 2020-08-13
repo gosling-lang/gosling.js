@@ -8,7 +8,7 @@ export const GEMINI_TRACK_EXAMPLE: GeminiSpec = {
       url: LOCAL_MULTIVEC, //'https://resgen.io/api/v1/tileset_info/?d=RTGsPv37TB2aKk9ujTIu6Q', 
       type: 'tileset'
     },
-    zoomOutTechnique: { type: 'auto' },
+    zoomAction: { type: 'auto' },
     mark: 'bar',
     x: { field: '__G__', type: 'genomic', domain: { chromosome: '1', interval: [3000000, 3000500] } },
     x1: { axis: true },
@@ -39,8 +39,8 @@ export const GEMINI_TRACK_EXAMPLE2: GeminiSpec = {
       url: LOCAL_MULTIVEC, //'https://resgen.io/api/v1/tileset_info/?d=RTGsPv37TB2aKk9ujTIu6Q', 
       type: 'tileset'
     },
-    zoomOutTechnique: {
-      type: 'alt-representation',
+    zoomAction: {
+      type: 'alternative-encoding',
       spec: {
         row: { field: '__N__', type: 'nominal' }
       }
@@ -75,8 +75,8 @@ export const GEMINI_TRACK_EXAMPLE3: GeminiSpec = {
       url: LOCAL_MULTIVEC, //'https://resgen.io/api/v1/tileset_info/?d=RTGsPv37TB2aKk9ujTIu6Q', 
       type: 'tileset'
     },
-    zoomOutTechnique: {
-      type: 'alt-representation',
+    zoomAction: {
+      type: 'alternative-encoding',
       spec: {
         mark: 'line'
       }

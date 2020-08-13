@@ -24,10 +24,8 @@ export function compiler(track: Track | GenericType<Channel>, bb: BoundingBox): 
         const isYGenomic = IsChannelDeep(track.y) && track.y.type === "genomic"
         const xDomain = isXGenomic && IsChannelDeep(track.x) ? track.x.domain as Domain : undefined
         const yDomain = isYGenomic && IsChannelDeep(track.y) ? track.y.domain as Domain : undefined
-        const colorRange = IsChannelDeep(track.color) ? track.color.range as Range : undefined
         const trackDirection = isXGenomic && isYGenomic ? 'both' : isXGenomic ? 'horizontal' : 'vertical'
         const trackType = IsShallowMark(track.mark) ? track.mark : IsMarkDeep(track.mark) ? track.mark.type : 'unknown'
-        const zoomOutTechnique = track.zoomOutTechnique ?? defaultZoomTech
 
         higlass.setDomain(xDomain, yDomain)
 
@@ -81,7 +79,6 @@ export function compiler(track: Track | GenericType<Channel>, bb: BoundingBox): 
             height: bb.height, // TODO: consider the height of axes
             options: {
                 ...defaultOptions[trackType],
-                colorScale: colorRange,
                 spec: { ...track, data: undefined }
             }
         }).addTrackSourceServers(server)

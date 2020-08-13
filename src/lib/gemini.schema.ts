@@ -31,7 +31,7 @@ export interface Track {
     data: DataDeep | Datum[]
     mark: Mark
     // zoom technique
-    zoomOutTechnique?: ZoomOutTechnique
+    zoomAction?: ZoomAction
     // coordinates
     x?: Channel
     y?: Channel
@@ -44,6 +44,7 @@ export interface Track {
     y1e?: Channel
     // separation
     row?: Channel
+    column?: Channel
     // others
     color?: Channel
     opacity?: Channel
@@ -56,6 +57,7 @@ export interface Track {
     height?: number
     style?: TrackStyle
 }
+// export type TrackKey = keyof Track
 
 export interface TrackStyle {
     background?: string
@@ -73,9 +75,9 @@ export interface Datum {
 /**
  * Zoom technique (How should we show visualization based on different zoom level?)
  */
-export interface ZoomOutTechnique {
+export interface ZoomAction {
     // TODO: separate this interface by type, e.g., { type: 'aggregate', aggFunction: 'max' | ... }
-    type: 'auto' | 'none' | 'aggregate' | 'filter' | 'alt-representation'
+    type: 'auto' | 'none' | 'aggregate' | 'filter' | 'alternative-encoding'
     // zoomLevel?: number // TODO: what meaning to contain?
     aggFunction?: 'max' | 'min' | 'mean' | 'count' | 'sum'
     importance?: string // field name
@@ -350,4 +352,25 @@ export function IsChannelDeep(
         | undefined
 ): channel is ChannelDeep {
     return typeof channel === 'object' && !('value' in channel)
+}
+
+export type VisualizationType = 'unknown' | 'composite' | 'stacked-bar' | 'multiple-bar' | 'line' // ...
+export function getVisualizationType(track: Track): VisualizationType {
+    if (IsGlyphMark(track)) {
+        return 'composite'
+    }
+    else if (track.mark === 'bar' && track.row) {
+        // this work fine only because we use a multivec file (1Gx1Cx1Q)
+        // TODO: when we accept other data types, consider using different fields for track.row and track.color
+        return 'multiple-bar'
+    }
+    else if (track.mark === 'bar' && track.color) {
+        return 'stacked-bar'
+    }
+    else if (track.mark === 'line') {
+        return 'line'
+    }
+    else {
+        return 'unknown'
+    }
 }
