@@ -62,25 +62,26 @@ function GeminiTrack(HGC: any, ...args: any[]) {
             this.pBorder.removeChildren()
             tile.drawnAtScale = this._xScale.copy() // being used in `draw()`
 
-            const isMaxZoomLevel = tile?.tileData?.zoomLevel !== getMaxZoomLevel()
+            const isNotMaxZoomLevel = tile?.tileData?.zoomLevel !== getMaxZoomLevel()
 
-            if (isMaxZoomLevel && this.geminiModel.spec().zoomAction?.type === 'none') {
+            if (isNotMaxZoomLevel && this.geminiModel.spec().zoomAction?.type === 'none') {
                 vis.drawZoomInstruction(HGC, this)
                 return
             }
 
             // select spec based on the zoom level
-            const spec: Track = this.geminiModel.spec(isMaxZoomLevel)
+            const spec: Track = this.geminiModel.spec(isNotMaxZoomLevel)
 
             switch (getVisualizationType(spec)) {
                 case 'multiple-bar':
-                    vis.drawBarChart(HGC, this, tile, isMaxZoomLevel)
+                    vis.drawBarChart(HGC, this, tile, isNotMaxZoomLevel)
                     break
                 case 'stacked-bar':
-                    vis.drawStackedBarChart(HGC, this, tile, isMaxZoomLevel)
+                    vis.drawStackedBarChart(HGC, this, tile, isNotMaxZoomLevel)
+                    // if (!isNotMaxZoomLevel) vis.drawTextSequence(HGC, this, tile, isNotMaxZoomLevel)
                     break
                 case 'line':
-                    vis.drawLineCharts(HGC, this, tile, isMaxZoomLevel)
+                    vis.drawLineCharts(HGC, this, tile, isNotMaxZoomLevel)
                     break
                 default:
                     break
@@ -99,20 +100,20 @@ function GeminiTrack(HGC: any, ...args: any[]) {
             })
         }
 
-        // rescales the sprites of all visible tiles when zooming and panning.
+        // rescales the sprites of all visible tiles when zooming and panning
         rescaleTiles() {
             const visibleAndFetched = this.visibleAndFetchedTiles()
 
             this.syncMaxAndMin()
 
-            visibleAndFetched.map((a: any) => {
+            visibleAndFetched.map((tile: any) => {
                 const valueToPixels = scaleLinear()
                     .domain([0, this.maxAndMin.max + Math.abs(this.maxAndMin.min)])
                     .range([0, this.dimensions[1]])
                 const newZero = this.dimensions[1] - valueToPixels(Math.abs(this.maxAndMin.min))
-                const height = valueToPixels(a.minValue + a.maxValue)
-                const sprite = a.sprite
-                const y = newZero - valueToPixels(a.maxValue)
+                const height = valueToPixels(tile.minValue + tile.maxValue)
+                const sprite = tile.sprite
+                const y = newZero - valueToPixels(tile.maxValue)
 
                 if (sprite) {
                     sprite.height = height

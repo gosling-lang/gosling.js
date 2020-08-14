@@ -63,25 +63,25 @@ export function drawBarChart(HGC: any, trackInfo: any, tile: any, alt: boolean) 
     tile.graphics.addChild(sprite)
 }
 
-export function drawStackedBarChart(HGC: any, obj: any, tile: any, alt: boolean) {
+export function drawStackedBarChart(HGC: any, trackInfo: any, tile: any, alt: boolean) {
 
     // Services
     const { pixiRenderer } = HGC.services
 
-    const matrix = obj.mapOriginalColors(obj.unFlatten(tile), alt)
+    const matrix = trackInfo.mapOriginalColors(trackInfo.unFlatten(tile), alt)
 
-    const positiveMax = obj.maxAndMin.max
-    const negativeMax = obj.maxAndMin.min
+    const positiveMax = trackInfo.maxAndMin.max
+    const negativeMax = trackInfo.maxAndMin.min
 
     // we're setting the start of the tile to the current zoom level
-    const { tileX, tileWidth } = obj.getTilePosAndDimensions(
+    const { tileX, tileWidth } = trackInfo.getTilePosAndDimensions(
         tile.tileData.zoomLevel,
         tile.tileData.tilePos,
-        obj.tilesetInfo.tile_size
+        trackInfo.tilesetInfo.tile_size
     )
 
     let graphics = new HGC.libraries.PIXI.Graphics()
-    const trackHeight = obj.dimensions[1]
+    const trackHeight = trackInfo.dimensions[1]
 
     // get amount of trackHeight reserved for positive and for negative
     const unscaledHeight = positiveMax + (Math.abs(negativeMax))
@@ -89,15 +89,15 @@ export function drawStackedBarChart(HGC: any, obj: any, tile: any, alt: boolean)
     // fraction of the track devoted to positive values
     const positiveTrackHeight = (positiveMax * trackHeight) / unscaledHeight
 
-    let lowestY = obj.dimensions[1]
+    let lowestY = trackInfo.dimensions[1]
 
     const width = 10
 
     // calls drawBackground in PixiTrack.js
-    obj.drawBackground(matrix, graphics)
+    trackInfo.drawBackground(matrix, graphics)
 
     // borders around each bar
-    if (obj.options.barBorder) {
+    if (trackInfo.options.barBorder) {
         graphics.lineStyle(1, 0x333333, 1, 0)
     }
 
@@ -118,8 +118,8 @@ export function drawStackedBarChart(HGC: any, obj: any, tile: any, alt: boolean)
 
             const y = positiveTrackHeight - (posStackedHeight + height)
 
-            obj.addSVGInfo(tile, x, y, width, height, posBars[i].color)
-            graphics.beginFill(obj.colorHexMap[posBars[i].color])
+            trackInfo.addSVGInfo(tile, x, y, width, height, posBars[i].color)
+            graphics.beginFill(trackInfo.colorHexMap[posBars[i].color])
             graphics.drawRect(x, y, width, height)
 
             posStackedHeight += height
@@ -135,8 +135,8 @@ export function drawStackedBarChart(HGC: any, obj: any, tile: any, alt: boolean)
         graphics, HGC.libraries.PIXI.SCALE_MODES.NEAREST
     )
     const sprite = new HGC.libraries.PIXI.Sprite(texture)
-    sprite.width = obj._xScale(tileX + tileWidth) - obj._xScale(tileX)
-    sprite.x = obj._xScale(tileX)
+    sprite.width = trackInfo._xScale(tileX + tileWidth) - trackInfo._xScale(tileX)
+    sprite.x = trackInfo._xScale(tileX)
     tile.sprite = sprite
     tile.lowestY = lowestY
     tile.graphics.addChild(tile.sprite)
