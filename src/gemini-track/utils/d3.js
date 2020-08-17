@@ -15,4 +15,4 @@ export default {
     min,
     max,
     extent
-}
+};

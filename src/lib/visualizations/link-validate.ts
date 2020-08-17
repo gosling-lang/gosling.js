@@ -1,5 +1,5 @@
-import { Track, GenericType, Channel, IsChannelDeep } from "../gemini.schema";
-import { SpecValidityModel } from "./validate";
+import { Track, GenericType, Channel, IsChannelDeep } from '../gemini.schema';
+import { SpecValidityModel } from './validate';
 
 export function validateBetweenLinkSpec(track: Track | GenericType<Channel>) {
     const validity = new SpecValidityModel(true);
@@ -14,8 +14,7 @@ export function validateBetweenLinkSpec(track: Track | GenericType<Channel>) {
     if (definedFields.length < 2) {
         validity.setMsg('Less than two fields are specified for a `link-between` mark.');
         validity.setIsValid(false);
-    }
-    else if (definedFields.length > 2) {
+    } else if (definedFields.length > 2) {
         validity.setMsg('More than two fields are specified for a `link-between` mark.');
     }
     return validity;

@@ -24,14 +24,14 @@ export const CHROM_SIZE_HG19: { [k: string]: number } = {
     chrX: 155270560,
     chrY: 59373566,
     chrM: 16571
-}
+};
 
 // chromosome ranges
-export const CHROM_RANGE_HG19: { [k: string]: [number, number] } = {}
+export const CHROM_RANGE_HG19: { [k: string]: [number, number] } = {};
 
 Object.keys(CHROM_SIZE_HG19).reduce((sum, k) => {
-    CHROM_RANGE_HG19[k] = [sum, sum + CHROM_SIZE_HG19[k]]
-    return sum + CHROM_SIZE_HG19[k]
-}, 0)
+    CHROM_RANGE_HG19[k] = [sum, sum + CHROM_SIZE_HG19[k]];
+    return sum + CHROM_SIZE_HG19[k];
+}, 0);
 
 export const TOTAL_CHROM_SIZE_HG19 = Object.values(CHROM_SIZE_HG19).reduce((sum, current) => sum + current, 0);

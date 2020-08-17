@@ -1,15 +1,15 @@
 export interface SpecValidity {
-    msg: string
-    isValid: boolean
+    msg: string;
+    isValid: boolean;
 }
 
 export class SpecValidityModel {
-    private validity: SpecValidity
+    private validity: SpecValidity;
     constructor(valid?: boolean) {
         this.validity = {
-            msg: "No message",
+            msg: 'No message',
             isValid: valid ? valid : false
-        }
+        };
     }
     public getValidity() {
         return this.validity;

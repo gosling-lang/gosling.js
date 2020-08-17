@@ -1,4 +1,4 @@
-import { Datum } from "../gemini.schema";
+import { Datum } from '../gemini.schema';
 
 export interface FilterSpec {
     field: string;

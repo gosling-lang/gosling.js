@@ -1,11 +1,13 @@
-import { MarkGlyph } from '../../../gemini.schema'
+import { MarkGlyph } from '../../../gemini.schema';
 
 export const GLYPH_GENE_ANNOTATAION: MarkGlyph = {
     type: 'compositeMark',
     name: 'gene-annotation',
     requiredChannels: [
-        'x', 'xe',
-        'y', 'color', // + or - strand?
+        'x',
+        'xe',
+        'y',
+        'color', // + or - strand?
         'geneOrExon', // genes or exons?
         'exonId',
         'exonVersion' // filtering by
@@ -13,9 +15,7 @@ export const GLYPH_GENE_ANNOTATAION: MarkGlyph = {
     elements: [
         {
             description: 'horizontal line',
-            select: [
-                { channel: 'geneOrExon', oneOf: ['gene'] },
-            ],
+            select: [{ channel: 'geneOrExon', oneOf: ['gene'] }],
             mark: 'line',
             color: { value: 'black' },
             size: { value: 3 }
@@ -31,9 +31,7 @@ export const GLYPH_GENE_ANNOTATAION: MarkGlyph = {
         },
         {
             description: 'gene left',
-            select: [
-                { channel: 'geneOrExon', oneOf: ['gene'] },
-            ],
+            select: [{ channel: 'geneOrExon', oneOf: ['gene'] }],
             mark: {
                 bind: 'y',
                 domain: ['-', '+'],
@@ -44,9 +42,7 @@ export const GLYPH_GENE_ANNOTATAION: MarkGlyph = {
         },
         {
             description: 'gene right',
-            select: [
-                { channel: 'geneOrExon', oneOf: ['gene'] },
-            ],
+            select: [{ channel: 'geneOrExon', oneOf: ['gene'] }],
             mark: {
                 bind: 'y',
                 domain: ['-', '+'],
@@ -58,9 +54,7 @@ export const GLYPH_GENE_ANNOTATAION: MarkGlyph = {
         },
         {
             mark: 'text',
-            select: [
-                { channel: 'geneOrExon', 'oneOf': ['gene'] }
-            ],
+            select: [{ channel: 'geneOrExon', oneOf: ['gene'] }],
             opacity: { value: 1 },
             size: { value: 18 },
             style: {
@@ -81,4 +75,4 @@ export const GLYPH_GENE_ANNOTATAION: MarkGlyph = {
             }
         }
     ]
-}
+};

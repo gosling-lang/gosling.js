@@ -1,13 +1,13 @@
-import { GlyphElement } from "../gemini.schema";
+import { GlyphElement } from '../gemini.schema';
 
 /**
  * Domains and ranges in conditional marks are moved into `select` option for the compiling simplicity.
- * @param elements 
+ * @param elements
  */
 export function deepToLongElements(elements: GlyphElement[]) {
     const longElements: GlyphElement[] = [];
     elements.forEach(element => {
-        if (typeof element.mark === "object") {
+        if (typeof element.mark === 'object') {
             const { bind } = element.mark;
             for (let i = 0; i < element.mark.domain.length; i++) {
                 const domain = element.mark.domain[i];
@@ -16,10 +16,7 @@ export function deepToLongElements(elements: GlyphElement[]) {
                 longElements.push({
                     ...element,
                     mark: range,
-                    select: [
-                        ...select,
-                        { channel: bind, oneOf: [domain] }
-                    ]
+                    select: [...select, { channel: bind, oneOf: [domain] }]
                 });
             }
         } else {

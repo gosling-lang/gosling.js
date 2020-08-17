@@ -1,32 +1,37 @@
-import { MarkGlyph } from "../../../gemini.schema"
+import { MarkGlyph } from '../../../gemini.schema';
 
 export const GLYPH_CYTOGENETIC_BAND: MarkGlyph = {
-    "type": 'compositeMark',
-    "name": "cytogenetic-band",
-    "requiredChannels": [
-        "x", "xe", // start, end
-        "y", // chr
+    type: 'compositeMark',
+    name: 'cytogenetic-band',
+    requiredChannels: [
+        'x',
+        'xe', // start, end
+        'y', // chr
         'color', // strain
         'text', // band
         'stain' // gneg, gpos, gvar, or acen
     ],
-    "elements": [
+    elements: [
         {
-            "description": "symbols",
-            "select": [{ channel: 'stain', oneOf: ['gneg', 'gpos', 'gvar'] }],
-            "mark": "rect",
-            "size": { "value": 25 },
+            description: 'symbols',
+            select: [{ channel: 'stain', oneOf: ['gneg', 'gpos', 'gvar'] }],
+            mark: 'rect',
+            size: { value: 25 },
             style: {
                 stroke: 'black',
                 strokeWidth: 1
             }
         },
         {
-            "description": "acen",
-            "select": [{ channel: 'text', oneOf: ['11', '11.1'] }],
-            "mark": { bind: 'text', domain: ['11', '11.1'], range: ['triangle-l', 'triangle-r'] },
-            'color': { value: '#B40101' },
-            "size": { "value": 25 },
+            description: 'acen',
+            select: [{ channel: 'text', oneOf: ['11', '11.1'] }],
+            mark: {
+                bind: 'text',
+                domain: ['11', '11.1'],
+                range: ['triangle-l', 'triangle-r']
+            },
+            color: { value: '#B40101' },
+            size: { value: 25 },
             style: {
                 stroke: 'black',
                 strokeWidth: 1
@@ -42,4 +47,4 @@ export const GLYPH_CYTOGENETIC_BAND: MarkGlyph = {
             }
         }
     ]
-}
+};

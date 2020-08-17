@@ -1,12 +1,10 @@
-import { min, max, sum } from 'd3';
+import { max, sum, set } from 'd3';
 
 export function getMaxZoomLevel() {
     // TODO: How to calculate maxZoomLevel?
     const TILE_SIZE = 256;
     const totalLength = 4795370;
-    return Math.ceil(
-        Math.log(totalLength / TILE_SIZE) / Math.log(2)
-    );
+    return Math.ceil(Math.log(totalLength / TILE_SIZE) / Math.log(2));
 }
 
 /**
@@ -21,19 +19,17 @@ export function findExtent(matrix) {
         min: null
     };
 
-    for (let i = 0; i < matrix.length; i++) {
-        const temp = matrix[i];
-
+    matrix.forEach(row => {
         // find total heights of each positive column and each negative column
         // and compare to highest value so far for the tile
-        const localPositiveMax = temp.filter(a => a >= 0).reduce((a, b) => a + b, 0);
+        const localPositiveMax = row.filter(a => a >= 0).reduce((a, b) => a + b, 0);
         if (localPositiveMax > maxAndMin.max) {
             maxAndMin.max = localPositiveMax;
         }
 
         // When dealing with states data we have positive values including 0
         // maxAndMin.min should be 0 in this case
-        let negativeValues = temp.filter(a => a <= 0);
+        let negativeValues = row.filter(a => a <= 0);
 
         if (negativeValues.length > 0) {
             negativeValues = negativeValues.map(a => Math.abs(a));
@@ -42,7 +38,7 @@ export function findExtent(matrix) {
                 maxAndMin.min = localNegativeMax;
             }
         }
-    }
+    });
 
     return maxAndMin;
 }
@@ -51,10 +47,11 @@ export function findExtentByTrackType(data, isStacked) {
     // TODO: do not consider negative values here yet
     if (isStacked) {
         const extent = {
-            min: 0, max: null
+            min: 0,
+            max: null
         };
 
-        const positions = Array.from(new Set(data.map(d => d['__G__'])));
+        const positions = Array.from(set(data.map(d => d['__G__']).values()));
         positions.forEach(pos => {
             const curMax = sum(data.filter(d => d['__G__'] === pos).map(d => d['__Q__']));
             if (extent.max < curMax) {

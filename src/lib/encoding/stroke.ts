@@ -1,3 +1,1 @@
-export function stroke() {
-
-}
+export function stroke() {}

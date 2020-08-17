@@ -1,7 +1,7 @@
 export function generateLinkData() {
     // four columns: from, to
     // domain: 0~100
-    const data: { from: number, to: number }[] = [];
+    const data: { from: number; to: number }[] = [];
     const tos = [];
     for (let i = 0; i < 100; i++) {
         tos.push(i);
@@ -20,7 +20,7 @@ export function generateLinkData() {
 export function generateBandData() {
     // four columns: from, from1, to, to1
     // domain: 0~100
-    const data: { from: number, from1: number, to: number, to1: number }[] = [];
+    const data: { from: number; from1: number; to: number; to1: number }[] = [];
     const tos = [];
     for (let i = 0; i < 10; i++) {
         tos.push(i);

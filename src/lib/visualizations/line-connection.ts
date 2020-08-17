@@ -1,7 +1,7 @@
-import { BoundingBox } from "../utils/bounding-box";
-import { Track, GenericType, Channel, IsChannelDeep, Datum } from "../gemini.schema";
-import * as d3 from 'd3'
-import { getLinkPosition, LinkStyleModel } from "./link";
+import { BoundingBox } from '../utils/bounding-box';
+import { Track, GenericType, Channel, IsChannelDeep, Datum } from '../gemini.schema';
+import * as d3 from 'd3';
+import { getLinkPosition, LinkStyleModel } from './link';
 
 export function renderBetweenLineLink(
     g: d3.Selection<SVGGElement, any, any, any>,
@@ -17,17 +17,19 @@ export function renderBetweenLineLink(
 
     const [f1, f2] = [xField, x1Field, yField, y1Field].filter(d => d);
 
-    const xScale = d3.scaleLinear<number, number>()
+    const xScale = d3
+        .scaleLinear<number, number>()
         .domain([0, 99]) // TODO: Support data-driven domain.
-        .range([bb.x, bb.x + bb.width])
-    const yScale = d3.scaleLinear<number, number>()
+        .range([bb.x, bb.x + bb.width]);
+    const yScale = d3
+        .scaleLinear<number, number>()
         .domain([0, 99])
-        .range([bb.y, bb.y + bb.height])
+        .range([bb.y, bb.y + bb.height]);
 
     // calculate position of points
     const point: {
-        x: (d: Datum) => number,
-        y: (d: Datum) => number,
+        x: (d: Datum) => number;
+        y: (d: Datum) => number;
     }[] = [];
 
     const position = getLinkPosition(track);
@@ -52,7 +54,7 @@ export function renderBetweenLineLink(
     if (position.includes('right')) {
         point.push({
             x: () => bb.x + bb.width,
-            y: (d: Datum) => yScale((d[y1Field as string] as number))
+            y: (d: Datum) => yScale(d[y1Field as string] as number)
         });
     }
 
@@ -72,5 +74,5 @@ export function renderBetweenLineLink(
         .attr('fill', styles.getStyle().fill)
         .attr('stroke', styles.getStyle().stroke)
         .attr('stroke-width', styles.getStyle().strokeWidth)
-        .attr('opacity', styles.getStyle().opacity)
+        .attr('opacity', styles.getStyle().opacity);
 }

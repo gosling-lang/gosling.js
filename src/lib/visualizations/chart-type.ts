@@ -1,13 +1,10 @@
-import { Track, GenericType, Channel, IsChannelDeep } from "../gemini.schema";
+import { Track, GenericType, Channel, IsChannelDeep } from '../gemini.schema';
 
 export type ChartType =
     // ...
-    | 'line-connection'
-    | 'band-connection'
-    | 'unknown'
+    'line-connection' | 'band-connection' | 'unknown';
 
 export function getChartType(track: Track | GenericType<Channel>): ChartType {
-
     type PrimitiveChannel = 'x' | 'xe' | 'y' | 'ye';
 
     const xField = IsChannelDeep(track.x) ? track.x.field : undefined;
@@ -24,12 +21,12 @@ export function getChartType(track: Track | GenericType<Channel>): ChartType {
         xe: [x1Field, x1eField].filter(d => d).length,
         y: [yField, yeField].filter(d => d).length,
         ye: [y1Field, y1eField].filter(d => d).length
-    }
+    };
 
     if (track.mark === 'link-between') {
-        const numPairOfChannelsDefined = Object.keys(numOfChannelsDefined).map(
-            key => numOfChannelsDefined[key as PrimitiveChannel]
-        ).filter(d => d >= 2).length;
+        const numPairOfChannelsDefined = Object.keys(numOfChannelsDefined)
+            .map(key => numOfChannelsDefined[key as PrimitiveChannel])
+            .filter(d => d >= 2).length;
         if (numPairOfChannelsDefined >= 2) {
             return 'band-connection';
         } else {

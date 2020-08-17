@@ -1,8 +1,8 @@
-import * as d3 from "d3";
-import { Track, Datum, GenericType, Channel, IsGlyphMark } from "../gemini.schema";
-import { transformData, FilterSpec } from "../utils/data-process";
-import { TrackModel } from "../models/track";
-import { BoundingBox } from "../utils/bounding-box";
+import * as d3 from 'd3';
+import { Track, Datum, GenericType, Channel, IsGlyphMark } from '../gemini.schema';
+import { transformData, FilterSpec } from '../utils/data-process';
+import { TrackModel } from '../models/track';
+import { BoundingBox } from '../utils/bounding-box';
 
 export function renderGlyph(
     g: d3.Selection<SVGGElement, any, any, any>,
@@ -19,12 +19,12 @@ export function renderGlyph(
     // checks
     const data = track.data as Datum[];
     if (!data) {
-        console.warn("No array of a JSON object suggested.");
+        console.warn('No array of a JSON object suggested.');
         return;
     }
 
     if (!IsGlyphMark(track.mark)) {
-        console.warn("Glyph is not defined.");
+        console.warn('Glyph is not defined.');
         return;
     }
     /////////////
@@ -34,7 +34,7 @@ export function renderGlyph(
 
     // Render each element
     tm.getElements().forEach(element => {
-        const { select, mark: markE, } = element;
+        const { select, mark: markE } = element;
 
         // Select
         const filters: FilterSpec[] = [];
@@ -48,7 +48,7 @@ export function renderGlyph(
         // Render glyph
         const transformed_data = transformData(data, filters);
         // TODO: Aggregation
-        if (markE === "line") {
+        if (markE === 'line') {
             g.selectAll()
                 .data(transformed_data)
                 .enter()
@@ -60,7 +60,7 @@ export function renderGlyph(
                 .attr('stroke', d => tm.getEncoding(element, 'color', d))
                 .attr('stroke-width', d => tm.getEncoding(element, 'size', d))
                 .attr('opacity', d => tm.getEncoding(element, 'opacity', d))
-                .style('stroke-dasharray', (element.style?.dashed ?? ''))
+                .style('stroke-dasharray', element.style?.dashed ?? '');
         } else if (markE === 'point') {
             g.selectAll('point')
                 .data(transformed_data)
@@ -70,8 +70,8 @@ export function renderGlyph(
                 .attr('cx', d => tm.getEncoding(element, 'x', d))
                 .attr('cy', d => tm.getEncoding(element, 'x', d))
                 .attr('r', 15)
-                .attr('opacity', d => tm.getEncoding(element, 'opacity', d))
-        } else if (markE === "rect") {
+                .attr('opacity', d => tm.getEncoding(element, 'opacity', d));
+        } else if (markE === 'rect') {
             g.selectAll()
                 .data(transformed_data)
                 .enter()
@@ -83,7 +83,7 @@ export function renderGlyph(
                 .attr('fill', d => tm.getEncoding(element, 'color', d))
                 .attr('opacity', d => tm.getEncoding(element, 'opacity', d))
                 .attr('stroke', element.style?.stroke ?? '')
-                .attr('stroke-width', element.style?.strokeWidth ?? '')
+                .attr('stroke-width', element.style?.strokeWidth ?? '');
         } else if (markE === 'text') {
             g.selectAll()
                 .data(transformed_data)
@@ -94,9 +94,9 @@ export function renderGlyph(
                 .attr('y', d => tm.getEncoding(element, 'y', d) + element.style?.dy)
                 .attr('fill', d => tm.getEncoding(element, 'color', d))
                 .attr('font-size', d => tm.getEncoding(element, 'size', d))
-                .attr('alignment-baseline', "top")
-                .attr('text-anchor', "middle")
-                .attr('opacity', d => tm.getEncoding(element, 'opacity', d))
+                .attr('alignment-baseline', 'top')
+                .attr('text-anchor', 'middle')
+                .attr('opacity', d => tm.getEncoding(element, 'opacity', d));
         } else if (markE === 'rule') {
             g.selectAll('rule')
                 .data(transformed_data)
@@ -108,7 +108,7 @@ export function renderGlyph(
                 .attr('y2', d => tm.getEncoding(element, 'x', d) - tm.getEncoding(element, 'size', d) / 2.0)
                 .attr('stroke', d => tm.getEncoding(element, 'color', d))
                 .attr('stroke-width', 3)
-                .attr('opacity', d => tm.getEncoding(element, 'opacity', d))
+                .attr('opacity', d => tm.getEncoding(element, 'opacity', d));
         } else if (markE === 'triangle-r') {
             g.selectAll('trangle-r')
                 .data(transformed_data)
@@ -119,14 +119,12 @@ export function renderGlyph(
                     const w = tm.getEncoding(element, 'w', d);
                     const x = tm.getEncoding(element, 'x', d);
                     const y = tm.getEncoding(element, 'y', d);
-                    return `M${x + w} ${y}`
-                        + `L${x} ${y + h / 2.0}`
-                        + `L${x} ${y - h / 2.0} Z`;
+                    return `M${x + w} ${y} L${x} ${y + h / 2.0} L${x} ${y - h / 2.0} Z`;
                 })
                 .attr('fill', d => tm.getEncoding(element, 'color', d))
                 .attr('opacity', d => tm.getEncoding(element, 'opacity', d))
                 .attr('stroke', element.style?.stroke ?? '')
-                .attr('stroke-width', element.style?.strokeWidth ?? '')
+                .attr('stroke-width', element.style?.strokeWidth ?? '');
         } else if (markE === 'triangle-l') {
             g.selectAll('trangle-l')
                 .data(transformed_data)
@@ -137,14 +135,12 @@ export function renderGlyph(
                     const w = tm.getEncoding(element, 'w', d);
                     const x = tm.getEncoding(element, 'x', d);
                     const y = tm.getEncoding(element, 'y', d);
-                    return `M${x} ${y}`
-                        + `L${x + w} ${y + h / 2.0}`
-                        + `L${x + w} ${y - h / 2.0} Z`;
+                    return `M${x} ${y} L${x + w} ${y + h / 2.0} L${x + w} ${y - h / 2.0} Z`;
                 })
                 .attr('fill', d => tm.getEncoding(element, 'color', d))
                 .attr('opacity', d => tm.getEncoding(element, 'opacity', d))
                 .attr('stroke', element.style?.stroke ?? '')
-                .attr('stroke-width', element.style?.strokeWidth ?? '')
+                .attr('stroke-width', element.style?.strokeWidth ?? '');
         }
     });
 }

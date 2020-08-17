@@ -1,19 +1,19 @@
-import { MarkGlyph } from '../../../gemini.schema'
+import { MarkGlyph } from '../../../gemini.schema';
 
 export const GLYPH_GENE_ANNOTATAION_V2: MarkGlyph = {
     type: 'compositeMark',
     name: 'gene-annotation',
     requiredChannels: [
-        'x', 'xe',
-        'y', 'color', // + or - strand?
+        'x',
+        'xe',
+        'y',
+        'color', // + or - strand?
         'geneOrExon' // genes or exons?
     ],
     elements: [
         {
             description: 'gene range rect',
-            select: [
-                { channel: 'geneOrExon', oneOf: ['gene'] },
-            ],
+            select: [{ channel: 'geneOrExon', oneOf: ['gene'] }],
             mark: 'rect',
             size: { value: 25 }
         },
@@ -30,19 +30,17 @@ export const GLYPH_GENE_ANNOTATAION_V2: MarkGlyph = {
         {
             description: 'gene right',
             select: [
-                { 'channel': 'geneOrExon', oneOf: ['gene'] },
-                { 'channel': 'y', 'oneOf': ['+'] },
+                { channel: 'geneOrExon', oneOf: ['gene'] },
+                { channel: 'y', oneOf: ['+'] }
             ],
             mark: 'triangle-r',
             size: { value: 25 },
-            'x': { 'bind': 'xe' },
-            'xe': 'none'
+            x: { bind: 'xe' },
+            xe: 'none'
         },
         {
             description: 'gene range line',
-            select: [
-                { channel: 'geneOrExon', oneOf: ['gene'] },
-            ],
+            select: [{ channel: 'geneOrExon', oneOf: ['gene'] }],
             mark: 'line',
             color: { value: 'gray' },
             size: { value: 2 },
@@ -53,9 +51,7 @@ export const GLYPH_GENE_ANNOTATAION_V2: MarkGlyph = {
         {
             description: 'gene name',
             mark: 'text',
-            select: [
-                { channel: 'geneOrExon', oneOf: ['gene'] }
-            ],
+            select: [{ channel: 'geneOrExon', oneOf: ['gene'] }],
             color: { value: 'black' },
             opacity: { value: 1 },
             size: { value: 18 },
@@ -64,4 +60,4 @@ export const GLYPH_GENE_ANNOTATAION_V2: MarkGlyph = {
             }
         }
     ]
-}
+};
