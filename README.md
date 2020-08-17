@@ -3,7 +3,7 @@
 
 ## Developement
 
-To open gemini online editor, run the following commands.
+To install and open a gemini online editor, run the following commands:
 
 ```sh
 yarn
