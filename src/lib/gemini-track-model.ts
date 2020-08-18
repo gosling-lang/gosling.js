@@ -86,6 +86,10 @@ export class GeminiTrackModel {
         return getVisualizationType(this.spec(alt));
     }
 
+    public originalSpec(): Track {
+        return this.specOriginal;
+    }
+
     public spec(alt?: boolean): Track {
         // TODO: determine to use alternative spec inside this function, not outside
         return alt ? this.specCompleteAlt : this.specComplete;
