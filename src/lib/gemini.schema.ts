@@ -159,6 +159,7 @@ export type MarkType =
     | 'bar'
     | 'point'
     | 'line'
+    | 'area'
     | 'link-between'
     | 'link-within' // uses either x and x1 or y and y1
     | 'rect'
@@ -336,7 +337,18 @@ export function IsChannelDeep(channel: ChannelDeep | ChannelValue | undefined): 
     return typeof channel === 'object' && !('value' in channel);
 }
 
-export type VisualizationType = 'unknown' | 'composite' | 'bar' | 'line'; // ...
+export function getChannelRange(track: Track, key: keyof typeof ChannelTypes): string[] {
+    // TODO: Add domains as well
+    const channel = track[key];
+    if (IsChannelDeep(channel)) {
+        return channel.range as string[];
+    } else if (IsChannelValue(channel)) {
+        return [channel.value] as string[];
+    }
+    return [];
+}
+
+export type VisualizationType = 'unknown' | 'composite' | 'bar' | 'line' | 'area'; // ...
 export function getVisualizationType(track: Track): VisualizationType {
     if (IsGlyphMark(track)) {
         return 'composite';
@@ -344,6 +356,8 @@ export function getVisualizationType(track: Track): VisualizationType {
         return 'bar';
     } else if (track.mark === 'line') {
         return 'line';
+    } else if (track.mark === 'area') {
+        return 'area';
     } else {
         return 'unknown';
     }

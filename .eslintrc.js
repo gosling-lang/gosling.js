@@ -49,7 +49,8 @@ module.exports = {
         ],
         // https://eslint.org/docs/rules/
         'linebreak-style': ['error', 'unix'],
-        'no-console': ["error", { allow: ["warn", "error"] }],
+        'no-console': ['error', { allow: ['warn', 'error'] }],
+        'no-trailing-spaces': 'error',
         'no-irregular-whitespace': ['error', { skipComments: true }],
         'no-alert': 'error',
         'prefer-const': 'error',

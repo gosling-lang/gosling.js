@@ -25,7 +25,7 @@ higlassRegister({
     config: GeminiTrack.config
 });
 
-const DEBUG_INIT_DEMO_INDEX = demos.length - 2;
+const DEBUG_INIT_DEMO_INDEX = demos.length - 1;
 
 function Editor() {
     const glyphSvg = useRef<SVGSVGElement>(null);
@@ -180,9 +180,9 @@ function Editor() {
                                     onChange={undefined}
                                 />
                             </>
-                            {/* 
-                TODO: This is only for showing a scroll view for the higlass view config editor 
-                Remove the below line and the nearest SplitPane after figuring out a better way 
+                            {/*
+                TODO: This is only for showing a scroll view for the higlass view config editor
+                Remove the below line and the nearest SplitPane after figuring out a better way
                 of showing the scroll view.
               */}
                             <></>

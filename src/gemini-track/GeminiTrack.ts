@@ -2,7 +2,7 @@ import { scaleLinear, min, max } from 'd3';
 import { findExtent, getMaxZoomLevel, findExtentByTrackType } from './utils/zoom';
 import vis from './visualizations';
 
-import { Track, getVisualizationType } from '../lib/gemini.schema';
+import { Track, getVisualizationType, getChannelRange } from '../lib/gemini.schema';
 import { GeminiTrackModel } from '../lib/gemini-track-model';
 
 // @ts-ignore
@@ -29,6 +29,9 @@ function GeminiTrack(HGC: any, ...args: any[]): any {
         }
 
         initTile(tile: any) {
+            // TODO: support gene annotation tilesets
+            // e.g., https://higlass.io/api/v1/tileset_info/?d=OHJakQICQD6gTD7skx4EWA
+
             // create the tile
             // should be overwritten by child classes
             this.scale.minRawValue = this.minVisibleValue();
@@ -73,10 +76,9 @@ function GeminiTrack(HGC: any, ...args: any[]): any {
 
             switch (getVisualizationType(spec)) {
                 case 'bar':
-                    vis.drawBars(HGC, this, tile, isNotMaxZoomLevel);
-                    break;
                 case 'line':
-                    vis.drawLineCharts(HGC, this, tile, isNotMaxZoomLevel);
+                case 'area':
+                    vis.drawGeminiTrack(HGC, this, tile, isNotMaxZoomLevel);
                     break;
                 default:
                     console.warn('Not supported visualization');
@@ -120,7 +122,10 @@ function GeminiTrack(HGC: any, ...args: any[]): any {
 
         // converts all colors in a colorScale to Hex colors.
         localColorToHexScale() {
-            const colorScale = [...this.geminiModel.getChannelRange('color'), ...this.geminiModel.getChannelRange('color', true)];
+            const colorScale = [
+                ...getChannelRange(this.geminiModel.spec(), 'color'),
+                ...getChannelRange(this.geminiModel.spec(true), 'color')
+            ];
             const colorHexMap: { [k: string]: string } = {};
             colorScale.forEach((color: string) => {
                 colorHexMap[color] = colorToHex(color);
@@ -212,6 +217,7 @@ function GeminiTrack(HGC: any, ...args: any[]): any {
             return matrix;
         }
 
+        // deprecated
         // Map each value in every array in the matrix to a color depending on position in the array
         // Divides each array into positive and negative sections and sorts them
         mapOriginalColors(matrix: any, alt: boolean) {
@@ -222,7 +228,7 @@ function GeminiTrack(HGC: any, ...args: any[]): any {
                 row.forEach((value: any, i: number) => {
                     columnColors[i] = {
                         value: isNaN(value) ? 0 : value,
-                        color: this.geminiModel.getChannelRange('color', alt)[i] as any
+                        color: getChannelRange(this.geminiModel.spec(alt), 'color')[i] as any
                     };
                 });
 
@@ -248,6 +254,80 @@ function GeminiTrack(HGC: any, ...args: any[]): any {
             });
             return matrixWithColors;
         }
+
+        getIndicesOfVisibleDataInTile(tile: any) {
+            const visible = this._xScale.range();
+
+            if (!this.tilesetInfo) return [null, null];
+
+            const { tileX, tileWidth } = this.getTilePosAndDimensions(
+                tile.tileData.zoomLevel,
+                tile.tileData.tilePos,
+                this.tilesetInfo.bins_per_dimension || this.tilesetInfo.tile_size
+            );
+
+            const tileXScale = scaleLinear()
+                .domain([0, this.tilesetInfo.tile_size || this.tilesetInfo.bins_per_dimension])
+                .range([tileX, tileX + tileWidth]);
+
+            const start = Math.max(0, Math.round(tileXScale.invert(this._xScale.invert(visible[0]))));
+            const end = Math.min(
+                tile.tileData.dense.length,
+                Math.round(tileXScale.invert(this._xScale.invert(visible[1])))
+            );
+
+            return [start, end];
+        }
+
+        /**
+         * Returns the minimum in the visible area (not visible tiles)
+         */
+        minVisibleValue() {}
+        // minVisibleValue(ignoreFixedScale = false) {
+        //     let visibleAndFetchedIds = this.visibleAndFetchedIds();
+
+        //     if (visibleAndFetchedIds.length === 0) {
+        //     visibleAndFetchedIds = Object.keys(this.fetchedTiles);
+        //     }
+
+        //     const minimumsPerTile = visibleAndFetchedIds
+        //     .map(x => this.fetchedTiles[x])
+        //     .map(tile => {
+        //         const ind = this.getIndicesOfVisibleDataInTile(tile);
+        //         return tile.tileData.denseDataExtrema.getMinNonZeroInSubset(ind);
+        //     });
+
+        //     const min = Math.min(...minimumsPerTile);
+
+        //     if (ignoreFixedScale) return min;
+
+        //     return this.valueScaleMin !== null ? this.valueScaleMin : min;
+        // }
+
+        /**
+         * Returns the maximum in the visible area (not visible tiles)
+         */
+        maxVisibleValue() {}
+        //   maxVisibleValue(ignoreFixedScale = false) {
+        //     let visibleAndFetchedIds = this.visibleAndFetchedIds();
+
+        //     if (visibleAndFetchedIds.length === 0) {
+        //       visibleAndFetchedIds = Object.keys(this.fetchedTiles);
+        //     }
+
+        //     const maximumsPerTile = visibleAndFetchedIds
+        //       .map(x => this.fetchedTiles[x])
+        //       .map(tile => {
+        //         const ind = this.getIndicesOfVisibleDataInTile(tile);
+        //         return tile.tileData.denseDataExtrema.getMaxNonZeroInSubset(ind);
+        //       });
+
+        //     const max = Math.max(...maximumsPerTile);
+
+        //     if (ignoreFixedScale) return max;
+
+        //     return this.valueScaleMax !== null ? this.valueScaleMax : max;
+        //   }
 
         // rerender all tiles every time track size is changed
         setDimensions(newDimensions: any) {
@@ -312,7 +392,8 @@ GeminiTrack.config = {
         'scaledHeight',
         'backgroundColor',
         'barBorder',
-        'sortLargestOnTop'
+        'sortLargestOnTop',
+        'axisPositionHorizontal' // TODO: support this
     ],
     defaultOptions: {
         labelPosition: 'none',
@@ -322,7 +403,8 @@ GeminiTrack.config = {
         trackBorderColor: 'black',
         backgroundColor: 'white',
         barBorder: false,
-        sortLargestOnTop: true
+        sortLargestOnTop: true,
+        axisPositionHorizontal: 'left'
     }
 };
 

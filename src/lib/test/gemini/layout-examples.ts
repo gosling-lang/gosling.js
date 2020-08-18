@@ -76,7 +76,8 @@ export const GEMINI_TRACK_EXAMPLE3: GeminiSpec = {
             zoomAction: {
                 type: 'alternative-encoding',
                 spec: {
-                    mark: 'line'
+                    mark: 'area',
+                    row: { field: '__N__' }
                 }
             },
             mark: 'bar',

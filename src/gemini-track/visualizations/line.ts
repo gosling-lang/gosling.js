@@ -1,9 +1,9 @@
 import { scaleLinear } from 'd3';
+import { getChannelRange } from '../../lib/gemini.schema';
 
+// deprecated
 export function drawLineCharts(HGC: any, trackInfo: any, tile: any, alt: boolean) {
     const graphics = tile.graphics;
-
-    tile.drawnAtScale = trackInfo._xScale.copy();
 
     // we're setting the start of the tile to the current zoom level
     const { tileX, tileWidth } = trackInfo.getTilePosAndDimensions(
@@ -27,13 +27,13 @@ export function drawLineCharts(HGC: any, trackInfo: any, tile: any, alt: boolean
         // (i === matrix[0].length - 1) ?
         //     (intervals * i) + ((intervals * (i + 1) - (intervals * i))) - 1 :
         //     (intervals * i) + ((intervals * (i + 1) - (intervals * i)));
-        graphics.lineStyle(1, trackInfo.colorHexMap[trackInfo.geminiModel.getChannelRange('color', alt)[i]], 1);
+        graphics.lineStyle(1, trackInfo.colorHexMap[getChannelRange(trackInfo.geminiModel.spec(alt), 'color')[i]], 1);
 
         for (let j = 0; j < matrix.length; j++) {
             // 3070 or something
             const x = trackInfo._xScale(tileX + (j * tileWidth) / trackInfo.tilesetInfo.tile_size);
             const y = linePlacement - valueToPixels(matrix[j][i]);
-            trackInfo.addSVGInfo(tile, x, y, trackInfo.geminiModel.getChannelRange('color', alt)[i]);
+            trackInfo.addSVGInfo(tile, x, y, getChannelRange(trackInfo.geminiModel.spec(alt), 'color')[i]);
             // move draw position back to the start at beginning of each line
             j === 0 ? graphics.moveTo(x, y) : graphics.lineTo(x, y);
         }

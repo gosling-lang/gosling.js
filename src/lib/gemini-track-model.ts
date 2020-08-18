@@ -1,4 +1,10 @@
-import { Track, getVisualizationType, IsChannelDeep, IsChannelValue, Channel, ChannelDeep, ChannelTypes } from './gemini.schema';
+import {
+    Track,
+    getVisualizationType,
+    IsChannelDeep,
+    Channel,
+    ChannelDeep
+} from './gemini.schema';
 import merge from 'lodash/merge';
 import { schemeCategory10 } from 'd3';
 
@@ -84,17 +90,6 @@ export class GeminiTrackModel {
 
     public getVisualizationType(alt?: boolean) {
         return getVisualizationType(this.spec(alt));
-    }
-
-    public getChannelRange(key: keyof typeof ChannelTypes, alt?: boolean): string[] {
-        // TODO: Add domains as well
-        const channel = this.spec(alt)[key];
-        if (IsChannelDeep(channel)) {
-            return channel.range as string[];
-        } else if (IsChannelValue(channel)) {
-            return [channel.value] as string[];
-        }
-        return [];
     }
 
     public spec(alt?: boolean): Track {
