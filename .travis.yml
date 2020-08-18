@@ -8,7 +8,6 @@ cache:
 script:
   - yarn test
   - yarn build
-  - yarn deploy
   - npm install codecov -g
 after_success:
   - codecov
@@ -17,4 +16,6 @@ deploy:
     skip-cleanup: true
     github-token: $github_token
     local-dir: build
+    on:
+      branch: master
 keep-history: true
