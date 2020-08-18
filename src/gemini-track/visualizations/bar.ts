@@ -53,7 +53,7 @@ export function drawBarChart(HGC: any, trackInfo: any, tile: any, alt: boolean) 
         // pixi
         localGraphics.beginFill(trackInfo.colorHexMap[color as string]);
         localGraphics.drawRect(x, y, barWidth, height);
-
+        
         // svg
         trackInfo.addSVGInfo(tile, x, y, barWidth, height, color);
     });
@@ -67,8 +67,7 @@ export function drawBarChart(HGC: any, trackInfo: any, tile: any, alt: boolean) 
     tile.graphics.addChild(sprite);
 }
 
-export function drawStackedBarChart(HGC: any, trackInfo: any, tile: any, alt: boolean) {
-    // Services
+export function drawStackedBarChart(HGC: any, trackInfo: any, tile: any, alt: boolean) { 
     const { pixiRenderer } = HGC.services;
 
     const matrix = trackInfo.mapOriginalColors(trackInfo.unFlatten(tile), alt);
@@ -104,7 +103,7 @@ export function drawStackedBarChart(HGC: any, trackInfo: any, tile: any, alt: bo
         graphics.lineStyle(1, 0x333333, 1, 0);
     }
 
-    matrix.forEach((row: number[][], j: number) => {
+    matrix.forEach((row: any, j: number) => {
         const x = j * width;
 
         // draw positive values
@@ -115,14 +114,14 @@ export function drawStackedBarChart(HGC: any, trackInfo: any, tile: any, alt: bo
         posBars.forEach((posBar: any) => {
             const height = posScale(posBar.value);
 
-            if (height === 0) return;
+            // if (height === 0) return;
 
             const y = positiveTrackHeight - (posStackedHeight + height);
 
             trackInfo.addSVGInfo(tile, x, y, width, height, posBar.color);
             graphics.beginFill(trackInfo.colorHexMap[posBar.color]);
             graphics.drawRect(x, y, width, height);
-
+            
             posStackedHeight += height;
 
             if (lowestY > y)
@@ -133,12 +132,13 @@ export function drawStackedBarChart(HGC: any, trackInfo: any, tile: any, alt: bo
 
     // vertical bars are drawn onto the graphics object
     // and a texture is generated from that
+    const xScale = trackInfo._xScale;
     const texture = pixiRenderer.generateTexture(graphics, HGC.libraries.PIXI.SCALE_MODES.NEAREST);
     const sprite = new HGC.libraries.PIXI.Sprite(texture);
-    sprite.width = trackInfo._xScale(tileX + tileWidth) - trackInfo._xScale(tileX);
-    sprite.x = trackInfo._xScale(tileX);
-    tile.sprite = sprite;
+    sprite.width = xScale(tileX + tileWidth) - xScale(tileX);
+    sprite.x = xScale(tileX);
+    // tile.sprite = sprite;
     tile.lowestY = lowestY;
 
-    tile.graphics.addChild(tile.sprite);
+    tile.graphics.addChild(sprite);
 }

@@ -77,12 +77,12 @@ function GeminiTrack(HGC: any, ...args: any[]): any {
                     break;
                 case 'stacked-bar':
                     vis.drawStackedBarChart(HGC, this, tile, isNotMaxZoomLevel);
-                    // if (!isNotMaxZoomLevel) vis.drawTextSequence(HGC, this, tile, isNotMaxZoomLevel)
                     break;
                 case 'line':
                     vis.drawLineCharts(HGC, this, tile, isNotMaxZoomLevel);
                     break;
                 default:
+                    console.warn('Not supported visualization');
                     break;
             }
         }
@@ -220,9 +220,9 @@ function GeminiTrack(HGC: any, ...args: any[]): any {
         mapOriginalColors(matrix: any, alt: boolean) {
             // mapping colors to unsorted values
             const matrixWithColors: any[] = [];
-            matrix.forEach((row: number[]) => {
+            matrix.forEach((row: any) => {
                 const columnColors: any[] = [];
-                row.forEach((value, i) => {
+                row.forEach((value: any, i: number) => {
                     columnColors[i] = {
                         value: isNaN(value) ? 0 : value,
                         color: this.geminiModel.getColorRange(alt)[i] as any
