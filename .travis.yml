@@ -8,9 +8,10 @@ cache:
 script:
   - yarn test
   - yarn build
-#   - npm install codecov -g
-# after_success:
-#   - codecov
+  - yarn deploy
+  - npm install codecov -g
+after_success:
+  - codecov
 deploy:
   - provider: pages
     skip-cleanup: true
