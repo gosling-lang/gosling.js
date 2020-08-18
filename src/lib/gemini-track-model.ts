@@ -1,10 +1,4 @@
-import {
-    Track,
-    getVisualizationType,
-    IsChannelDeep,
-    Channel,
-    ChannelDeep
-} from './gemini.schema';
+import { Track, getVisualizationType, IsChannelDeep, Channel, ChannelDeep } from './gemini.schema';
 import merge from 'lodash/merge';
 import { schemeCategory10 } from 'd3';
 
