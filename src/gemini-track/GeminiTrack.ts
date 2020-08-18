@@ -72,11 +72,8 @@ function GeminiTrack(HGC: any, ...args: any[]): any {
             const spec: Track = this.geminiModel.spec(isNotMaxZoomLevel);
 
             switch (getVisualizationType(spec)) {
-                case 'multiple-bar':
-                    vis.drawBarChart(HGC, this, tile, isNotMaxZoomLevel);
-                    break;
-                case 'stacked-bar':
-                    vis.drawStackedBarChart(HGC, this, tile, isNotMaxZoomLevel);
+                case 'bar':
+                    vis.drawBars(HGC, this, tile, isNotMaxZoomLevel);
                     break;
                 case 'line':
                     vis.drawLineCharts(HGC, this, tile, isNotMaxZoomLevel);
@@ -123,7 +120,7 @@ function GeminiTrack(HGC: any, ...args: any[]): any {
 
         // converts all colors in a colorScale to Hex colors.
         localColorToHexScale() {
-            const colorScale = [...this.geminiModel.getColorRange(), ...this.geminiModel.getColorRange(true)];
+            const colorScale = [...this.geminiModel.getChannelRange('color'), ...this.geminiModel.getChannelRange('color', true)];
             const colorHexMap: { [k: string]: string } = {};
             colorScale.forEach((color: string) => {
                 colorHexMap[color] = colorToHex(color);
@@ -225,7 +222,7 @@ function GeminiTrack(HGC: any, ...args: any[]): any {
                 row.forEach((value: any, i: number) => {
                     columnColors[i] = {
                         value: isNaN(value) ? 0 : value,
-                        color: this.geminiModel.getColorRange(alt)[i] as any
+                        color: this.geminiModel.getChannelRange('color', alt)[i] as any
                     };
                 });
 

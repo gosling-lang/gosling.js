@@ -1,4 +1,4 @@
-import { Track, getVisualizationType, IsChannelDeep, IsChannelValue, Channel, ChannelDeep } from './gemini.schema';
+import { Track, getVisualizationType, IsChannelDeep, IsChannelValue, Channel, ChannelDeep, ChannelTypes } from './gemini.schema';
 import merge from 'lodash/merge';
 import { schemeCategory10 } from 'd3';
 
@@ -48,11 +48,18 @@ export class GeminiTrackModel {
 
     private _generateCompleteSpec(track: Track) {
         /* color */
+        if (!track.color) {
+            track.color = { value: this.DEFAULT_OPTIONS.NOMINAL_COLOR[0] };
+        }
         if (IsChannelDeep(track.color) && !track.color.range) {
             track.color.type = 'nominal';
         }
         if (IsChannelDeep(track.color) && !track.color.range) {
             track.color.range = this.DEFAULT_OPTIONS.NOMINAL_COLOR as string[];
+        }
+        if (IsChannelDeep(track.color) && !track.color.domain) {
+            // we do not have data yet
+            // track.color.domain = Array.from(new Set(data.map(d => d[encodedFields['color']])))
         }
     }
 
@@ -79,12 +86,13 @@ export class GeminiTrackModel {
         return getVisualizationType(this.spec(alt));
     }
 
-    public getColorRange(alt?: boolean): string[] {
-        const spec = this.spec(alt);
-        if (IsChannelDeep(spec.color)) {
-            return spec.color.range as string[];
-        } else if (IsChannelValue(spec.color)) {
-            return [spec.color.value] as string[];
+    public getChannelRange(key: keyof typeof ChannelTypes, alt?: boolean): string[] {
+        // TODO: Add domains as well
+        const channel = this.spec(alt)[key];
+        if (IsChannelDeep(channel)) {
+            return channel.range as string[];
+        } else if (IsChannelValue(channel)) {
+            return [channel.value] as string[];
         }
         return [];
     }

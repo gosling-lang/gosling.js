@@ -1,72 +1,154 @@
-import { scaleLinear, scaleOrdinal, max } from 'd3';
+import * as d3 from 'd3';
+import { group } from 'd3-array';
 import { GeminiTrackModel } from '../../lib/gemini-track-model';
+import { IsChannelDeep } from '../../lib/gemini.schema'
 
-export function drawBarChart(HGC: any, trackInfo: any, tile: any, alt: boolean) {
+export function drawBars(HGC: any, trackInfo: any, tile: any, alt: boolean) {
     /* spec */
     const geminiModel = trackInfo.geminiModel as GeminiTrackModel;
+    const spec = geminiModel.spec(alt);
 
     /* data */
     const data = tile.tabularData as { [k: string]: number | string }[];
 
-    /* encoding */
-    const encodedFields = geminiModel.getEncodedFields(alt);
+    /* renderer */
+    const localGraphics = new HGC.libraries.PIXI.Graphics();
 
-    const colorRange = geminiModel.getColorRange();
-    const colorCategories = encodedFields['color'] ? Array.from(new Set(data.map(d => d[encodedFields['color']]))) : [];
-    const rowCategories = encodedFields['row'] ? Array.from(new Set(data.map(d => d[encodedFields['row']]))) : [];
-
+    /* essentials */
     const trackHeight = trackInfo.dimensions[1];
     const tileSize = trackInfo.tilesetInfo.tile_size;
-    const rowHeight = trackHeight / rowCategories.length;
     const { tileX, tileWidth } = trackInfo.getTilePosAndDimensions(
         tile.tileData.zoomLevel,
         tile.tileData.tilePos,
         tileSize
     );
-
-    const xScale = trackInfo._xScale;
-    const yScale = scaleLinear()
-        .domain([0, max(data.map(d => d['__Q__'] as any))])
-        .range([0, rowHeight]);
-    const cScale = scaleOrdinal()
-        .domain(colorCategories as string[])
-        .range(colorRange);
-    const barWidth = xScale(tileX + tileWidth / tileSize) - xScale(tileX);
-
-    const localGraphics = new HGC.libraries.PIXI.Graphics();
-
-    if (trackInfo.options.barBorder) {
-        localGraphics.lineStyle(1, 0x333333, 0.5, 0);
-        tile.barBorders = true;
+    let xField  : string | undefined, yField  : string | undefined, colorField : string | undefined, rowField  : string | undefined;
+    if(IsChannelDeep(spec.color)) {
+        colorField = spec.color.field;
+    }
+    if(IsChannelDeep(spec.x)) {
+        xField = spec.x.field;
+    }
+    if(IsChannelDeep(spec.y)) {
+        yField = spec.y.field;
+    }
+    if(IsChannelDeep(spec.row)) {
+        rowField = spec.row.field;
     }
 
-    data.forEach(d => {
-        const category = d['__N__'] as string;
-        const value = d['__Q__'] as number;
-        const gposition = d['__G__'] as number;
+    /* scales */
+    const xScale = trackInfo._xScale;
 
-        const color = cScale(category);
-        const x = xScale(tileX + gposition * (tileWidth / tileSize));
-        const height = yScale(value);
-        const y = rowHeight * (rowCategories.indexOf(category) + 1) - height;
+    const colorRange = geminiModel.getChannelRange('color', alt);
+    const colorCategories = colorField ? Array.from(new Set(data.map(d => d[colorField as string]))) : [];
+    const cScale = d3.scaleOrdinal().range(colorRange);
+    if(colorField) {
+        cScale.domain(colorCategories as string[]);
+    }
 
-        // pixi
-        localGraphics.beginFill(trackInfo.colorHexMap[color as string]);
-        localGraphics.drawRect(x, y, barWidth, height);
+    const DUMMY_ROW = 'DUMMY_ROW'; // if `row` is undefined, use only one row internally
+    const rowCategories = rowField ? Array.from(new Set(data.map(d => d[rowField as string]))) : [ DUMMY_ROW ];
+    const rowScale = d3.scaleBand()
+        .domain(rowCategories as string[])
+        .range([0, trackHeight])
 
-        // svg
-        trackInfo.addSVGInfo(tile, x, y, barWidth, height, color);
-    });
+    // TODO: If no colorField and rowField, merge!
 
-    const { pixiRenderer } = HGC.services;
-    const texture = pixiRenderer.generateTexture(localGraphics, HGC.libraries.PIXI.SCALE_MODES.NEAREST);
+    /* render */
+    // stacked bars
+    if(colorField && colorField !== xField && !rowField) {
+        const pivotedData = group(data, d => d[xField as string]);
+        const xKeys = [ ...pivotedData.keys()];
+        const yBaseline = 0; // TODO: we can support none-zero base line
+        const yMax = d3.max(xKeys.map(d => d3.sum(
+            (pivotedData.get(d) as any).map((_d: any) => _d[yField as string]))) as number[]
+        );
+        const yExtent = [yBaseline, yMax];
+
+        const rowHeight = trackHeight / 1; // only one row in stacked bars
+
+        const yScale = d3.scaleLinear()
+            .domain(yExtent as number[])
+            .range([0, rowHeight]);
+        const barWidth = xScale(tileX + tileWidth / tileSize) - xScale(tileX);
+    
+        if (trackInfo.options.barBorder) {
+            localGraphics.lineStyle(1, 0x333333, 0.5, 0);
+            tile.barBorders = true;
+        }
+    
+        xKeys.forEach(k => {
+            let prevYEnd = 0;
+            pivotedData.get(k)?.forEach(d => {
+                const R = d[rowField as string] as string ?? DUMMY_ROW;
+                const C = d[colorField as string] as string;
+                const Y = d[yField as string] as number;
+                const X = d[xField as string] as number;
+        
+                const color = cScale(C);
+                const x = xScale(tileX + X * (tileWidth / tileSize));
+                const height = yScale(Y);
+                const y = -height - prevYEnd + (rowScale(R) as number);
+
+                prevYEnd += height;
+                
+                // pixi
+                localGraphics.beginFill(trackInfo.colorHexMap[color as string], 0.5);
+                localGraphics.drawRect(x, y, barWidth, height);
+        
+                // svg
+                trackInfo.addSVGInfo(tile, x, y, barWidth, height, color);
+            });
+        });
+    }
+    // regular bars (no stacking)
+    else {
+        const yBaseline = 0; // TODO: we can support none-zero base line
+        const yMax = d3.max(data.map(d => d[yField as string] as number));
+        const yExtent = [yBaseline, yMax];
+
+        const rowHeight = trackHeight / rowCategories.length;
+    
+        const yScale = d3.scaleLinear()
+            .domain(yExtent as number[])
+            .range([0, rowHeight]);
+        const barWidth = xScale(tileX + tileWidth / tileSize) - xScale(tileX);
+    
+        if (trackInfo.options.barBorder) {
+            localGraphics.lineStyle(1, 0x333333, 0.5, 0);
+            tile.barBorders = true;
+        }
+    
+        data.forEach(d => {
+            const R = d[rowField as string] as string ?? DUMMY_ROW;
+            const C = d[colorField as string] as string;
+            const Y = d[yField as string] as number;
+            const X = d[xField as string] as number;
+    
+            const color = cScale(C);
+            const x = xScale(tileX + X * (tileWidth / tileSize));
+            const height = yScale(Y);
+            const y = -height + (rowScale(R) as number);
+    
+            // pixi
+            localGraphics.beginFill(trackInfo.colorHexMap[color as string], 0.5);
+            localGraphics.drawRect(x, y, barWidth, height);
+    
+            // svg
+            trackInfo.addSVGInfo(tile, x, y, barWidth, height, color);
+        });
+    }
+
+    const texture = HGC.services.pixiRenderer.generateTexture(localGraphics, HGC.libraries.PIXI.SCALE_MODES.NEAREST);
     const sprite = new HGC.libraries.PIXI.Sprite(texture);
+
     sprite.width = xScale(tileX + tileWidth) - xScale(tileX);
     sprite.x = xScale(tileX);
 
     tile.graphics.addChild(sprite);
 }
 
+// deprecated
 export function drawStackedBarChart(HGC: any, trackInfo: any, tile: any, alt: boolean) {
     const { pixiRenderer } = HGC.services;
 
@@ -108,7 +190,7 @@ export function drawStackedBarChart(HGC: any, trackInfo: any, tile: any, alt: bo
 
         // draw positive values
         const posBars = row[0];
-        const posScale = scaleLinear().domain([0, positiveMax]).range([0, positiveTrackHeight]);
+        const posScale = d3.scaleLinear().domain([0, positiveMax]).range([0, positiveTrackHeight]);
 
         let posStackedHeight = 0;
         posBars.forEach((posBar: any) => {
@@ -119,7 +201,7 @@ export function drawStackedBarChart(HGC: any, trackInfo: any, tile: any, alt: bo
             const y = positiveTrackHeight - (posStackedHeight + height);
 
             trackInfo.addSVGInfo(tile, x, y, width, height, posBar.color);
-            graphics.beginFill(trackInfo.colorHexMap[posBar.color]);
+            graphics.beginFill(trackInfo.colorHexMap[posBar.color], 0.5);
             graphics.drawRect(x, y, width, height);
 
             posStackedHeight += height;
@@ -130,8 +212,6 @@ export function drawStackedBarChart(HGC: any, trackInfo: any, tile: any, alt: bo
         });
     });
 
-    // vertical bars are drawn onto the graphics object
-    // and a texture is generated from that
     const xScale = trackInfo._xScale;
     const texture = pixiRenderer.generateTexture(graphics, HGC.libraries.PIXI.SCALE_MODES.NEAREST);
     const sprite = new HGC.libraries.PIXI.Sprite(texture);

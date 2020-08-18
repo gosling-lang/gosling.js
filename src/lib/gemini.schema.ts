@@ -103,6 +103,7 @@ export const ChannelTypes = {
     y1e: 'y1e',
     // others
     color: 'color',
+    row: 'row',
     opacity: 'opacity',
     size: 'size',
     text: 'text',
@@ -335,16 +336,12 @@ export function IsChannelDeep(channel: ChannelDeep | ChannelValue | undefined): 
     return typeof channel === 'object' && !('value' in channel);
 }
 
-export type VisualizationType = 'unknown' | 'composite' | 'stacked-bar' | 'multiple-bar' | 'line'; // ...
+export type VisualizationType = 'unknown' | 'composite' | 'bar' | 'line'; // ...
 export function getVisualizationType(track: Track): VisualizationType {
     if (IsGlyphMark(track)) {
         return 'composite';
-    } else if (track.mark === 'bar' && track.row) {
-        // this work fine only because we use a multivec file (1Gx1Cx1Q)
-        // TODO: when we accept other data types, consider using different fields for track.row and track.color
-        return 'multiple-bar';
-    } else if (track.mark === 'bar' && track.color) {
-        return 'stacked-bar';
+    } else if (track.mark === 'bar') {
+        return 'bar';
     } else if (track.mark === 'line') {
         return 'line';
     } else {
