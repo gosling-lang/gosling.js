@@ -34,7 +34,7 @@ export class SpecValidityModel {
         if (!this.getValidity().isValid) {
             console.warn(this.validity.msg);
         } else {
-            console.log(this.validity.msg);
+            console.warn(this.validity.msg);
         }
     }
 }

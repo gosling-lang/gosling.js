@@ -13,7 +13,7 @@ export function generateLinkData() {
         tos.splice(toIndex, 1);
         data.push({ from, to });
     }
-    console.log(data);
+    // console.log(data);
     return data;
 }
 
@@ -37,6 +37,6 @@ export function generateBandData() {
             to1: to * 10 + 9
         });
     }
-    console.log(data);
+    // console.log(data);
     return data;
 }

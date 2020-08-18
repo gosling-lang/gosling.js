@@ -104,8 +104,6 @@ export function compiler(track: Track | GenericType<Channel>, bb: BoundingBox): 
 
         higlass.validateSpec();
 
-        console.log('HiGlass viewConfig:', higlass.spec());
-
         return higlass.spec();
     }
     return {};

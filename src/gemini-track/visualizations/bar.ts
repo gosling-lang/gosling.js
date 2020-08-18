@@ -53,7 +53,7 @@ export function drawBarChart(HGC: any, trackInfo: any, tile: any, alt: boolean) 
         // pixi
         localGraphics.beginFill(trackInfo.colorHexMap[color as string]);
         localGraphics.drawRect(x, y, barWidth, height);
-        
+
         // svg
         trackInfo.addSVGInfo(tile, x, y, barWidth, height, color);
     });
@@ -67,7 +67,7 @@ export function drawBarChart(HGC: any, trackInfo: any, tile: any, alt: boolean) 
     tile.graphics.addChild(sprite);
 }
 
-export function drawStackedBarChart(HGC: any, trackInfo: any, tile: any, alt: boolean) { 
+export function drawStackedBarChart(HGC: any, trackInfo: any, tile: any, alt: boolean) {
     const { pixiRenderer } = HGC.services;
 
     const matrix = trackInfo.mapOriginalColors(trackInfo.unFlatten(tile), alt);
@@ -121,7 +121,7 @@ export function drawStackedBarChart(HGC: any, trackInfo: any, tile: any, alt: bo
             trackInfo.addSVGInfo(tile, x, y, width, height, posBar.color);
             graphics.beginFill(trackInfo.colorHexMap[posBar.color]);
             graphics.drawRect(x, y, width, height);
-            
+
             posStackedHeight += height;
 
             if (lowestY > y)

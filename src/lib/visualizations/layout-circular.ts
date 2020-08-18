@@ -82,7 +82,7 @@ export function renderCircularLayout(
         });
     }
 
-    console.log('arcs', trackInfo);
+    // console.log('arcs', trackInfo);
     g.append('g')
         .attr('transform', `translate(${boundingBox.x + totalRadius}, ${boundingBox.y + totalRadius})`)
         .selectAll('path')
