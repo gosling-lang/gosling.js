@@ -48,7 +48,6 @@
         "@babel/core": "^7.11.1",
         "@babel/preset-env": "^7.11.0",
         "@babel/preset-react": "^7.10.4",
-        "@babel/preset-typescript": "^7.10.4",
         "@testing-library/jest-dom": "^5.11.3",
         "@testing-library/react": "^10.4.8",
         "@testing-library/user-event": "^12.1.1",
@@ -72,6 +71,7 @@
         "postcss-loader": "^3.0.0",
         "prettier": "^2.0.5",
         "style-loader": "^1.2.1",
+        "ts-jest": "^26.2.0",
         "ts-loader": "^8.0.2",
         "webpack": "^4.44.1",
         "webpack-bundle-analyzer": "^3.8.0",
@@ -91,6 +91,7 @@
         ]
     },
     "jest": {
+        "preset": "ts-jest",
         "verbose": true,
         "moduleFileExtensions": [
             "js",
@@ -99,7 +100,7 @@
     },
     "husky": {
         "hooks": {
-            "pre-commit": "yarn format"
+            "pre-commit": "yarn format && git add ."
         }
     }
 }

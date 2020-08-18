@@ -78,7 +78,7 @@ function GeminiTrack(HGC: any, ...args: any[]): any {
                 case 'bar':
                 case 'line':
                 case 'area':
-                    vis.drawGeminiTrack(HGC, this, tile, isNotMaxZoomLevel);
+                    vis.drawPrimitiveMarks(HGC, this, tile, isNotMaxZoomLevel);
                     break;
                 default:
                     console.warn('Not supported visualization');

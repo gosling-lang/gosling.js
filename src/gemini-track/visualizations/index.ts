@@ -1,11 +1,11 @@
 import { drawZoomInstruction } from './zoom-instruction';
-import { drawGeminiTrack, drawStackedBarChart } from './bar';
+import { drawPrimitiveMarks, drawStackedBarChart } from './primitives';
 import { drawLineCharts } from './line';
 import { drawTextSequence } from './text';
 
 export default {
     drawZoomInstruction,
-    drawGeminiTrack,
+    drawPrimitiveMarks,
     drawLineCharts,
     drawStackedBarChart,
     drawTextSequence

@@ -3,7 +3,7 @@ import { group } from 'd3-array';
 import { GeminiTrackModel } from '../../lib/gemini-track-model';
 import { IsChannelDeep, getChannelRange } from '../../lib/gemini.schema';
 
-export function drawGeminiTrack(HGC: any, trackInfo: any, tile: any, alt: boolean) {
+export function drawPrimitiveMarks(HGC: any, trackInfo: any, tile: any, alt: boolean) {
     /* spec */
     const geminiModel = trackInfo.geminiModel as GeminiTrackModel;
     const spec = geminiModel.spec(alt);
