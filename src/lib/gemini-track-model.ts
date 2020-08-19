@@ -1,4 +1,4 @@
-import { Track, getVisualizationType, IsChannelDeep, Channel, ChannelDeep } from './gemini.schema';
+import { Track, IsChannelDeep, Channel, ChannelDeep } from './gemini.schema';
 import merge from 'lodash/merge';
 import { schemeCategory10 } from 'd3';
 
@@ -80,10 +80,6 @@ export class GeminiTrackModel {
                 : undefined;
         });
         return encodedField;
-    }
-
-    public getVisualizationType(alt?: boolean) {
-        return getVisualizationType(this.spec(alt));
     }
 
     public originalSpec(): Track {

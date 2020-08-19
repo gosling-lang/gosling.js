@@ -1,11 +1,11 @@
 import { scaleLinear, min, max } from 'd3';
-import { findExtent, getMaxZoomLevel, findExtentByTrackType } from './utils/zoom';
 import vis from './visualizations';
-
+import { getMaxZoomLevel } from './utils/zoom';
 import { Track, getVisualizationType, getChannelRange } from '../lib/gemini.schema';
 import { GeminiTrackModel } from '../lib/gemini-track-model';
+import { findValueExtent } from './utils/minmax';
+import { SpriteInfo } from './utils/sprite';
 
-// @ts-ignore
 function GeminiTrack(HGC: any, ...args: any[]): any {
     if (!new.target) {
         throw new Error('Uncaught TypeError: Class constructor cannot be invoked without "new"');
@@ -15,6 +15,7 @@ function GeminiTrack(HGC: any, ...args: any[]): any {
 
     class GeminiTrackClass extends HGC.tracks.BarTrack {
         private geminiModel: GeminiTrackModel;
+        private extent: { min: number; max: number };
 
         constructor(params: any[]) {
             const [context, options] = params;
@@ -22,6 +23,9 @@ function GeminiTrack(HGC: any, ...args: any[]): any {
 
             this.geminiModel = new GeminiTrackModel(this.options.spec);
 
+            this.extent = { min: Number.MAX_SAFE_INTEGER, max: Number.MIN_SAFE_INTEGER };
+
+            // deprecated
             this.maxAndMin = {
                 max: null,
                 min: null
@@ -45,11 +49,7 @@ function GeminiTrack(HGC: any, ...args: any[]): any {
 
             this.localColorToHexScale();
 
-            this.unFlatten(tile);
-
-            // TODO: Metadata, such as field names, should be come from the server
-            // This should replace the `unFlatten()`
-            this.tabularizeTile(tile);
+            this.preprocessTile(tile);
 
             this.renderTile(tile);
             this.rescaleTiles();
@@ -87,37 +87,107 @@ function GeminiTrack(HGC: any, ...args: any[]): any {
         }
 
         // y scale should be synced across all tiles
-        syncMaxAndMin() {
+        setTrackLevelExtent() {
+            // reset extent
+            this.extent = {
+                min: Number.MAX_SAFE_INTEGER,
+                max: Number.MIN_SAFE_INTEGER
+            };
+
             const visibleAndFetched = this.visibleAndFetchedTiles();
 
-            visibleAndFetched.map((tile: any) => {
+            visibleAndFetched.forEach((tile: any) => {
+                // deprecated
                 if (tile.minValue + tile.maxValue > this.maxAndMin.min + this.maxAndMin.max) {
                     this.maxAndMin.min = tile.minValue;
                     this.maxAndMin.max = tile.maxValue;
                 }
+                //
+
+                if (!tile.extent) {
+                    return;
+                }
+                if (tile.extent.min + tile.extent.max > this.extent.min + this.extent.max) {
+                    this.extent.min = tile.extent.min;
+                    this.extent.max = tile.extent.max;
+                }
             });
         }
 
-        // rescales the sprites of all visible tiles when zooming and panning
+        // realign the sprites of all visible tiles when zooming and panning
         rescaleTiles() {
             const visibleAndFetched = this.visibleAndFetchedTiles();
+            const trackHeight = this.dimensions[1];
 
-            this.syncMaxAndMin();
+            this.setTrackLevelExtent();
 
             visibleAndFetched.map((tile: any) => {
-                const valueToPixels = scaleLinear()
-                    .domain([0, this.maxAndMin.max + Math.abs(this.maxAndMin.min)])
-                    .range([0, this.dimensions[1]]);
-                const newZero = this.dimensions[1] - valueToPixels(Math.abs(this.maxAndMin.min));
-                const height = valueToPixels(tile.minValue + tile.maxValue);
-                const sprite = tile.sprite;
-                const y = newZero - valueToPixels(tile.maxValue);
-
-                if (sprite) {
-                    sprite.height = height;
-                    sprite.y = y;
+                if (!tile.extent || !tile.rowScale) {
+                    // data is not ready
+                    return;
                 }
+
+                const rowHeight = trackHeight / tile.rowScale.domain().length;
+                const yScale = scaleLinear()
+                    .domain([0, Math.abs(this.extent.min) + this.extent.max])
+                    .range([0, rowHeight]);
+                const tileBaseline = rowHeight - yScale(Math.abs(this.extent.min));
+                const tileHeight = yScale(tile.extent.min + tile.extent.max);
+                const tileY = tileBaseline - yScale(tile.extent.max);
+
+                const sprites = tile.sprites;
+                if (!sprites) return;
+
+                sprites.forEach((spriteInfo: SpriteInfo) => {
+                    const { sprite, scaleKey } = spriteInfo;
+
+                    sprite.height = tileHeight;
+                    sprite.y = tileY + tile.rowScale(scaleKey);
+                });
             });
+        }
+
+        preprocessTile(tile: any) {
+            if (tile.tabularData) return;
+
+            // TODO: the server should give us the following metadata of fields, such as field names and categories
+            const N_FIELD_FROM_SERVER = '__N__';
+            const Q_FIELD_FROM_SERVER = '__Q__';
+            const G_FIELD_FROM_SERVER = '__G__';
+            const CATEGORIES_OF_N_FIELD_FROM_SERVER = ['A', 'T', 'G', 'C']; // NOTICE: this should be consistent across all tiles
+
+            const numericValues = tile.tileData.dense;
+            const numOfGenomicPositions = tile.tileData.shape[1];
+
+            const tabularData: { [k: string]: number | string }[] = [];
+
+            // convert data to visualization-friendly format
+            CATEGORIES_OF_N_FIELD_FROM_SERVER.forEach((c: string, i: number) => {
+                Array.from(Array(numOfGenomicPositions).keys()).forEach((g: number, j: number) => {
+                    tabularData.push({
+                        [N_FIELD_FROM_SERVER]: c,
+                        [Q_FIELD_FROM_SERVER]: numericValues[numOfGenomicPositions * i + j],
+                        [G_FIELD_FROM_SERVER]: j
+                    });
+                });
+            });
+
+            tile.tabularData = tabularData;
+
+            const isMaxZoomLevel = tile?.tileData?.zoomLevel !== getMaxZoomLevel();
+            tile.extent = findValueExtent(this.geminiModel.spec(isMaxZoomLevel), tabularData);
+
+            // we need to sync the domain of y-axis so that all tiles are aligned each other
+            this.setTrackLevelExtent();
+        }
+
+        // rerender all tiles every time track size is changed
+        setDimensions(newDimensions: any) {
+            this.oldDimensions = this.dimensions;
+            super.setDimensions(newDimensions);
+
+            const visibleAndFetched = this.visibleAndFetchedTiles();
+            visibleAndFetched.map((a: any) => this.initTile(a));
         }
 
         // converts all colors in a colorScale to Hex colors.
@@ -131,128 +201,6 @@ function GeminiTrack(HGC: any, ...args: any[]): any {
                 colorHexMap[color] = colorToHex(color);
             });
             this.colorHexMap = colorHexMap;
-        }
-
-        // un-flatten data into matrix of tile.tileData.shape[0] x tile.tileData.shape[1]
-        unFlatten(tile: any) {
-            if (tile.matrix) {
-                return tile.matrix;
-            }
-
-            const flattenedArray = tile.tileData.dense;
-
-            const matrix = this.simpleUnFlatten(tile, flattenedArray);
-
-            const maxAndMin = findExtent(matrix);
-
-            tile.matrix = matrix;
-            tile.maxValue = maxAndMin.max;
-            tile.minValue = maxAndMin.min;
-
-            this.syncMaxAndMin();
-
-            return matrix;
-        }
-
-        tabularizeTile(tile: any) {
-            if (tile.tabularData) return;
-
-            // TODO: These data should be come from the server
-            const N_FIELD = '__N__',
-                Q_FIELD = '__Q__',
-                G_FIELD = '__G__';
-            const CATEGORIES = ['A', 'T', 'G', 'C'];
-            const numericValues = tile.tileData.dense;
-            const numOfCategories = min([tile.tileData.shape[0], CATEGORIES.length]); // TODO:
-            const numOfGenomicPositions = tile.tileData.shape[1];
-            ///
-
-            const tabularData = [];
-
-            for (let i = 0; i < numOfCategories; i++) {
-                for (let j = 0; j < numOfGenomicPositions; j++) {
-                    tabularData.push({
-                        [N_FIELD]: CATEGORIES[i],
-                        [Q_FIELD]: numericValues[numOfGenomicPositions * i + j],
-                        [G_FIELD]: j
-                    });
-                }
-            }
-
-            tile.tabularData = tabularData;
-
-            const isMaxZoomLevel = tile?.tileData?.zoomLevel !== getMaxZoomLevel();
-            const isStackedBarChart = this.geminiModel.getVisualizationType(isMaxZoomLevel);
-            const { min: minValue, max: maxValue } = findExtentByTrackType(tabularData, isStackedBarChart);
-
-            tile.maxValue = maxValue;
-            tile.minValue = minValue;
-
-            // we need to sync the domain of y-axis so that all tiles are aligned each other
-            this.syncMaxAndMin();
-        }
-
-        simpleUnFlatten(tile: any, data: any) {
-            const shapeX = tile.tileData.shape[0]; // number of different nucleotides in each bar
-            const shapeY = tile.tileData.shape[1]; // number of bars
-
-            // matrix[0] will be [flattenedArray[0], flattenedArray[256], flattenedArray[512], etc.]
-            // because of how flattenedArray comes back from the server.
-            const matrix: number[][] = [];
-            for (let i = 0; i < shapeX; i++) {
-                // 6
-                for (let j = 0; j < shapeY; j++) {
-                    // 256;
-                    let singleBar: number[];
-                    if (matrix[j] === undefined) {
-                        singleBar = [];
-                    } else {
-                        singleBar = matrix[j];
-                    }
-                    singleBar.push(data[shapeY * i + j]);
-                    matrix[j] = singleBar;
-                }
-            }
-
-            return matrix;
-        }
-
-        // deprecated
-        // Map each value in every array in the matrix to a color depending on position in the array
-        // Divides each array into positive and negative sections and sorts them
-        mapOriginalColors(matrix: any, alt: boolean) {
-            // mapping colors to unsorted values
-            const matrixWithColors: any[] = [];
-            matrix.forEach((row: any) => {
-                const columnColors: any[] = [];
-                row.forEach((value: any, i: number) => {
-                    columnColors[i] = {
-                        value: isNaN(value) ? 0 : value,
-                        color: getChannelRange(this.geminiModel.spec(alt), 'color')[i] as any
-                    };
-                });
-
-                // separate positive and negative array values
-                const positive: any[] = [];
-                const negative: any[] = [];
-                columnColors.forEach(color => {
-                    if (color.value >= 0) {
-                        positive.push(color);
-                    } else if (color.value < 0) {
-                        negative.push(color);
-                    }
-                });
-                if (this.options.sortLargestOnTop) {
-                    positive.sort((a, b) => a.color - b.color);
-                    negative.sort((a, b) => b.value - a.value);
-                } else {
-                    positive.sort((a, b) => b.value - a.value);
-                    negative.sort((a, b) => a.value - b.value);
-                }
-
-                matrixWithColors.push([positive, negative]);
-            });
-            return matrixWithColors;
         }
 
         getIndicesOfVisibleDataInTile(tile: any) {
@@ -329,15 +277,6 @@ function GeminiTrack(HGC: any, ...args: any[]): any {
         //     return this.valueScaleMax !== null ? this.valueScaleMax : max;
         //   }
 
-        // rerender all tiles every time track size is changed
-        setDimensions(newDimensions: any) {
-            this.oldDimensions = this.dimensions;
-            super.setDimensions(newDimensions);
-
-            const visibleAndFetched = this.visibleAndFetchedTiles();
-            visibleAndFetched.map((a: any) => this.initTile(a));
-        }
-
         // rerender tiles using the new options
         rerender(newOptions: any) {
             super.rerender(newOptions);
@@ -354,8 +293,9 @@ function GeminiTrack(HGC: any, ...args: any[]): any {
             const visibleAndFetched = this.visibleAndFetchedTiles();
 
             visibleAndFetched.forEach((tile: any) => {
-                this.unFlatten(tile);
-                this.tabularizeTile(tile);
+                // deprecated
+                // this.unFlatten(tile);
+                this.preprocessTile(tile);
             });
 
             this.rescaleTiles();

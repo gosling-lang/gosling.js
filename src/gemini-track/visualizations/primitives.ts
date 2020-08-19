@@ -4,15 +4,18 @@ import { GeminiTrackModel } from '../../lib/gemini-track-model';
 import { IsChannelDeep, getChannelRange } from '../../lib/gemini.schema';
 
 export function drawPrimitiveMarks(HGC: any, trackInfo: any, tile: any, alt: boolean) {
+    /**
+     * TODO: Major Missing Things That We Need To Support Here
+     * (1) Supporting vertical tracks
+     * (2) Covering differet field type combinations, other than 1G, 1C, 1Q (e.g., multiple stacked bar charts)
+     */
+
     /* spec */
     const geminiModel = trackInfo.geminiModel as GeminiTrackModel;
     const spec = geminiModel.spec(alt);
 
     /* data */
     const data = tile.tabularData as { [k: string]: number | string }[];
-
-    /* renderer */
-    const g = new HGC.libraries.PIXI.Graphics();
 
     /* essentials */
     const trackHeight = trackInfo.dimensions[1];
@@ -59,16 +62,16 @@ export function drawPrimitiveMarks(HGC: any, trackInfo: any, tile: any, alt: boo
 
     // TODO: If no colorField and rowField, merge!
 
+    tile.sprites = [];
+
     /* render */
     // stacked marks
     if ((spec.mark === 'bar' || spec.mark === 'area') && colorField && colorField !== xField && !rowField) {
+        const rowGraphics = new HGC.libraries.PIXI.Graphics(); // only one row for stacked marks
+
         const pivotedData = group(data, d => d[xField as string]);
         const xKeys = [...pivotedData.keys()];
-        const yBaseline = 0; // TODO: we can support none-zero base line
-        const yMax = d3.max(
-            xKeys.map(d => d3.sum((pivotedData.get(d) as any).map((_d: any) => _d[yField as string]))) as number[]
-        );
-        const yExtent = [yBaseline, yMax];
+        const yExtent = [tile.extent.min, tile.extent.max];
 
         const rowHeight = trackHeight / rowCategories.length; // only one row in stacked bars
 
@@ -79,10 +82,11 @@ export function drawPrimitiveMarks(HGC: any, trackInfo: any, tile: any, alt: boo
         const barWidth = xScale(tileX + tileWidth / tileSize) - xScale(tileX);
 
         if (trackInfo.options.barBorder) {
-            g.lineStyle(1, 0x333333, 0.5, 0);
+            rowGraphics.lineStyle(1, 0x333333, 0.5, 0);
             tile.barBorders = true;
         }
 
+        // TODO: we may want to align rows by values
         xKeys.forEach(k => {
             let prevYEnd = 0;
             pivotedData.get(k)?.forEach(d => {
@@ -99,19 +103,28 @@ export function drawPrimitiveMarks(HGC: any, trackInfo: any, tile: any, alt: boo
                 prevYEnd += height;
 
                 // pixi
-                g.beginFill(trackInfo.colorHexMap[color as string], 1);
-                g.drawRect(x, y, barWidth, height);
+                rowGraphics.beginFill(trackInfo.colorHexMap[color as string], 1);
+                rowGraphics.drawRect(x, y, barWidth, height);
 
                 // svg
                 trackInfo.addSVGInfo(tile, x, y, barWidth, height, color);
             });
         });
+
+        // add row graphics
+        const texture = HGC.services.pixiRenderer.generateTexture(rowGraphics, HGC.libraries.PIXI.SCALE_MODES.NEAREST);
+        const sprite = new HGC.libraries.PIXI.Sprite(texture);
+
+        sprite.width = xScale(tileX + tileWidth) - xScale(tileX);
+        sprite.x = xScale(tileX);
+        sprite.y = 0;
+
+        tile.sprites.push({ sprite: sprite, scaleKey: DUMMY_ROW });
+        tile.graphics.addChild(sprite);
     }
     // regular bars (no stacking)
     else {
-        const yBaseline = 0; // TODO: we can support none-zero base line
-        const yMax = d3.max(data.map(d => d[yField as string] as number)); // we are having shared y-axis scale
-        const yExtent = [yBaseline, yMax];
+        const yExtent = [tile.extent.min, tile.extent.max];
 
         const rowHeight = trackHeight / rowCategories.length;
 
@@ -121,13 +134,16 @@ export function drawPrimitiveMarks(HGC: any, trackInfo: any, tile: any, alt: boo
             .range([0, rowHeight]);
         const barWidth = xScale(tileX + tileWidth / tileSize) - xScale(tileX);
 
-        if (trackInfo.options.barBorder) {
-            g.lineStyle(1, 0x333333, 0.5, 0);
-            tile.barBorders = true;
-        }
-
         // draw each row and each color starting from the left to the right
         rowCategories.forEach(R => {
+            // we are separately drawing each row so that y scale can be shared across tiles
+            const rowGraphics = new HGC.libraries.PIXI.Graphics();
+
+            if (trackInfo.options.barBorder) {
+                rowGraphics.lineStyle(1, 0x333333, 0.5, 0);
+                tile.barBorders = true;
+            }
+
             const rowPosition = rowScale(R as string) as number;
 
             colorCategories.forEach(C => {
@@ -137,9 +153,9 @@ export function drawPrimitiveMarks(HGC: any, trackInfo: any, tile: any, alt: boo
                 const areaPoints: number[] = []; // only used for `area` mark
 
                 if (spec.mark === 'line') {
-                    g.lineStyle(1, colorHex, 1);
+                    rowGraphics.lineStyle(1, colorHex, 1);
                 } else if (spec.mark === 'area') {
-                    g.beginFill(colorHex, 1);
+                    rowGraphics.beginFill(colorHex, 1);
                 }
 
                 data.filter(d => {
@@ -157,12 +173,12 @@ export function drawPrimitiveMarks(HGC: any, trackInfo: any, tile: any, alt: boo
 
                         const x = xScale(tileX + xNumber * (tileWidth / tileSize));
                         const height = yScale(yNumber);
-                        const y = -height + rowPosition;
+                        const y = -height + rowHeight;
 
                         if (spec.mark === 'bar') {
                             // pixi
-                            g.beginFill(colorHex, 1);
-                            g.drawRect(x, y, barWidth, height);
+                            rowGraphics.beginFill(colorHex, 1);
+                            rowGraphics.drawRect(x, y, barWidth, height);
 
                             // svg
                             trackInfo.addSVGInfo(tile, x, y, barWidth, height, colorStr);
@@ -170,43 +186,52 @@ export function drawPrimitiveMarks(HGC: any, trackInfo: any, tile: any, alt: boo
                             // TODO: fix the resolution issue
                             // pixi
                             if (i === 0) {
-                                g.moveTo(x, y);
+                                rowGraphics.moveTo(x, y);
                             } else {
-                                g.lineTo(x, y);
+                                rowGraphics.lineTo(x, y);
                             }
 
                             // svg
                             trackInfo.addSVGInfo(tile, x, y, colorStr);
                         } else if (spec.mark === 'area') {
                             if (i === 0) {
-                                areaPoints.push(x, rowPosition);
+                                areaPoints.push(x, rowHeight);
                             }
                             areaPoints.push(x, y);
                             if (i === array.length - 1) {
-                                areaPoints.push(x, rowPosition);
-                                areaPoints.push(xScale(tileX), rowPosition); // close the polygon with the point at the start
+                                areaPoints.push(x, rowHeight);
+                                areaPoints.push(xScale(tileX), rowHeight); // close the polygon with the point at the start
                             }
                         }
                     });
 
                 // draw polygon for `area` marks
                 if (spec.mark === 'area') {
-                    g.drawPolygon(areaPoints);
-                    g.endFill();
+                    rowGraphics.drawPolygon(areaPoints);
+                    rowGraphics.endFill();
 
                     // TODO: svg
                 }
             });
+
+            // add row graphics
+            const texture = HGC.services.pixiRenderer.generateTexture(
+                rowGraphics,
+                HGC.libraries.PIXI.SCALE_MODES.NEAREST
+            );
+            const sprite = new HGC.libraries.PIXI.Sprite(texture);
+
+            sprite.width = xScale(tileX + tileWidth) - xScale(tileX);
+            sprite.x = xScale(tileX);
+            sprite.y = rowPosition;
+
+            tile.sprites.push({ sprite: sprite, scaleKey: R });
+            tile.graphics.addChild(sprite);
         });
     }
 
-    const texture = HGC.services.pixiRenderer.generateTexture(g, HGC.libraries.PIXI.SCALE_MODES.NEAREST);
-    const sprite = new HGC.libraries.PIXI.Sprite(texture);
-
-    sprite.width = xScale(tileX + tileWidth) - xScale(tileX);
-    sprite.x = xScale(tileX);
-
-    tile.graphics.addChild(sprite);
+    // used for rescaling tiles
+    tile.rowScale = rowScale;
 }
 
 // deprecated
@@ -233,8 +258,6 @@ export function drawStackedBarChart(HGC: any, trackInfo: any, tile: any, alt: bo
 
     // fraction of the track devoted to positive values
     const positiveTrackHeight = (positiveMax * trackHeight) / unscaledHeight;
-
-    let lowestY = trackInfo.dimensions[1];
 
     const width = 10;
 
@@ -266,10 +289,6 @@ export function drawStackedBarChart(HGC: any, trackInfo: any, tile: any, alt: bo
             graphics.drawRect(x, y, width, height);
 
             posStackedHeight += height;
-
-            if (lowestY > y)
-                // TODO: when do we use this?
-                lowestY = y;
         });
     });
 
@@ -279,7 +298,6 @@ export function drawStackedBarChart(HGC: any, trackInfo: any, tile: any, alt: bo
     sprite.width = xScale(tileX + tileWidth) - xScale(tileX);
     sprite.x = xScale(tileX);
     // tile.sprite = sprite;
-    tile.lowestY = lowestY;
 
     tile.graphics.addChild(sprite);
 }
