@@ -116,8 +116,8 @@ export type ChannelType = keyof typeof ChannelTypes | string;
 export type Channel = ChannelDeep | ChannelValue;
 
 export interface ChannelDeep {
-    field: string;
-    type: FieldType;
+    field?: string;
+    type?: FieldType;
     aggregate?: Aggregate;
     domain?: Domain;
     range?: Range;
@@ -214,6 +214,7 @@ export interface GlyphElement {
     x1e?: ChannelBind | ChannelValue | 'none';
     y1e?: ChannelBind | ChannelValue | 'none';
     // others
+    row?: ChannelBind | ChannelValue | 'none';
     color?: ChannelBind | ChannelValue | 'none';
     size?: ChannelBind | ChannelValue | 'none';
     w?: ChannelBind | ChannelValue | 'none';

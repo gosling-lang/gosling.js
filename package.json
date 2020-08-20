@@ -96,6 +96,18 @@
         "moduleFileExtensions": [
             "js",
             "ts"
+        ],
+        "coverageDirectory": "./coverage/",
+        "collectCoverage": true,
+        "collectCoverageFrom": [
+            "**/*.{js,jsx,ts,tsx}",
+            "!**/node_modules/**",
+            "!**/coverage/**",
+            "!**/public/**"
+        ],
+        "coverageReporters": [
+            "lcov",
+            "text"
         ]
     },
     "husky": {

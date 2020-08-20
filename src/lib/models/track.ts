@@ -24,7 +24,7 @@ export class TrackModel {
     private scales: {
         [channel: string]: d3.ScaleLinear<any, any> | d3.ScaleOrdinal<any, any> | d3.ScaleSequential<any>;
     };
-    private ranges: { [channel: string]: number[] | string[] };
+    private ranges: { [channel: string]: string | number[] | string[] };
     constructor(track: Track | GenericType<Channel>) {
         this.track = track;
         this.domains = {};
@@ -138,14 +138,14 @@ export class TrackModel {
                             ? d3
                                   .scaleOrdinal()
                                   .domain(this.domains[c] as string[])
-                                  .range(this.ranges[c])
+                                  .range(this.ranges[c] as string[]) // was without string[]
                             : c === 'color' && type === 'quantitative'
                             ? d3.scaleSequential(d3.interpolateBrBG).domain(this.domains[c] as [number, number])
                             : type === 'nominal'
                             ? d3
                                   .scaleOrdinal()
                                   .domain(this.domains[c] as string[])
-                                  .range(this.ranges[c])
+                                  .range(this.ranges[c] as string[]) // was without string[]
                             : d3
                                   .scaleLinear()
                                   .domain(this.domains[c] as [number, number])
