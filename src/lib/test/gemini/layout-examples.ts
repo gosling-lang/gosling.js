@@ -1,9 +1,31 @@
-import { GeminiSpec } from '../../gemini.schema';
+import { GeminiSpec, ChannelDeep } from '../../gemini.schema';
 
 const MULTIVEC_FILE = [
     'http://localhost:8001/api/v1/tileset_info/?d=XX4dPR0dSCGzD2n-xtlhbA',
     'https://resgen.io/api/v1/tileset_info/?d=WipsnEDMStahGPpRfH9adA'
 ][1];
+
+export const GEMINI_TRACK_EXAMPLE_RECT: GeminiSpec = {
+    tracks: [
+        {
+            data: {
+                url: MULTIVEC_FILE,
+                type: 'tileset'
+            },
+            mark: 'rect',
+            x: {
+                field: '__G__',
+                type: 'genomic',
+                domain: { chromosome: '1', interval: [3000000, 3000500] }
+            } as ChannelDeep,
+            x1: { axis: true } as ChannelDeep,
+            y: { field: '__N__', type: 'nominal' } as ChannelDeep,
+            color: { field: '__Q__', type: 'quantitative', range: 'viridis' } as ChannelDeep,
+            width: 1000,
+            height: 180
+        }
+    ]
+};
 
 export const GEMINI_TRACK_EXAMPLE: GeminiSpec = {
     tracks: [
@@ -76,7 +98,7 @@ export const GEMINI_TRACK_EXAMPLE3: GeminiSpec = {
             zoomAction: {
                 type: 'alternative-encoding',
                 spec: {
-                    mark: 'area',
+                    mark: 'line',
                     row: { field: '__N__' }
                 }
             },

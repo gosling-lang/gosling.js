@@ -12,15 +12,32 @@ describe('gemini track model should properly generate specs', () => {
         expect(isEqual(model.originalSpec(), track)).toEqual(true);
     });
 
-    it('Default options should be added into the original spec', () => {
+    it('default options should be added into the original spec', () => {
         const track: Track = {
             data: { url: '', type: 'tileset' },
             mark: 'bar',
-            color: { field: 'f' }
+            color: { field: 'f', type: 'quantitative' }
         };
         const model = new GeminiTrackModel(track);
         const spec = model.spec();
         const range = IsChannelDeep(spec.color) ? spec.color.range : [];
-        expect(range?.length).not.toBe(0);
+        expect(range).not.toBeUndefined();
+        expect(range).toBe('viridis');
+    });
+
+    it('model should properly validate the original spec', () => {
+        const track: Track = {
+            data: { url: '', type: 'tileset' },
+            mark: 'bar',
+            color: { field: 'f', type: 'genomic' } // `genomic` type cannot be used for `color`
+        };
+        const model = new GeminiTrackModel(track);
+        expect(model.validateSpec().valid).toBe(false);
+
+        if (IsChannelDeep(track.color)) {
+            track.color.type = 'nominal';
+        }
+        const model2 = new GeminiTrackModel(track);
+        expect(model2.validateSpec().valid).toBe(true);
     });
 });

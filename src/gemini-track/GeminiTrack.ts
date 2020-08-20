@@ -1,17 +1,15 @@
-import { scaleLinear, min, max } from 'd3';
+import * as d3 from 'd3';
 import vis from './visualizations';
 import { getMaxZoomLevel } from './utils/zoom';
-import { Track, getVisualizationType, getChannelRange } from '../lib/gemini.schema';
+import { Track, getVisualizationType } from '../lib/gemini.schema';
 import { GeminiTrackModel } from '../lib/gemini-track-model';
-import { findValueExtent } from './utils/minmax';
+import { findQValueExtent } from './utils/extent';
 import { SpriteInfo } from './utils/sprite';
 
 function GeminiTrack(HGC: any, ...args: any[]): any {
     if (!new.target) {
         throw new Error('Uncaught TypeError: Class constructor cannot be invoked without "new"');
     }
-
-    const { colorToHex } = HGC.utils;
 
     class GeminiTrackClass extends HGC.tracks.BarTrack {
         private geminiModel: GeminiTrackModel;
@@ -22,6 +20,16 @@ function GeminiTrack(HGC: any, ...args: any[]): any {
             super(context, options);
 
             this.geminiModel = new GeminiTrackModel(this.options.spec);
+
+            const { valid, errorMessages } = this.geminiModel.validateSpec();
+            if (!valid) {
+                console.warn(
+                    'This track spec is not valid by the following issues:',
+                    errorMessages,
+                    'Original track spec',
+                    this.geminiModel.originalSpec()
+                );
+            }
 
             this.extent = { min: Number.MAX_SAFE_INTEGER, max: Number.MIN_SAFE_INTEGER };
 
@@ -44,10 +52,8 @@ function GeminiTrack(HGC: any, ...args: any[]): any {
             this.scale.minValue = this.scale.minRawValue;
             this.scale.maxValue = this.scale.maxRawValue;
 
-            this.maxAndMin.min = min(tile.tileData.dense);
-            this.maxAndMin.max = max(tile.tileData.dense);
-
-            this.localColorToHexScale();
+            this.maxAndMin.min = d3.min(tile.tileData.dense);
+            this.maxAndMin.max = d3.max(tile.tileData.dense);
 
             this.preprocessTile(tile);
 
@@ -78,6 +84,8 @@ function GeminiTrack(HGC: any, ...args: any[]): any {
                 case 'bar':
                 case 'line':
                 case 'area':
+                case 'point':
+                case 'rect':
                     vis.drawPrimitiveMarks(HGC, this, tile, isNotMaxZoomLevel);
                     break;
                 default:
@@ -86,8 +94,9 @@ function GeminiTrack(HGC: any, ...args: any[]): any {
             }
         }
 
-        // y scale should be synced across all tiles
-        setTrackLevelExtent() {
+        // scales in visualizations, such as y axis, color, and size, should be shared across all tiles
+        setGlobalScales() {
+            // return; // first need to figure out how to store extent
             // reset extent
             this.extent = {
                 min: Number.MAX_SAFE_INTEGER,
@@ -107,19 +116,21 @@ function GeminiTrack(HGC: any, ...args: any[]): any {
                 if (!tile.extent) {
                     return;
                 }
-                if (tile.extent.min + tile.extent.max > this.extent.min + this.extent.max) {
-                    this.extent.min = tile.extent.min;
-                    this.extent.max = tile.extent.max;
+                if (tile.extent.y.min + tile.extent.y.max > this.extent.min + this.extent.max) {
+                    this.extent.min = tile.extent.y.min;
+                    this.extent.max = tile.extent.y.max;
                 }
             });
         }
 
         // realign the sprites of all visible tiles when zooming and panning
         rescaleTiles() {
+            // return; // first need to figure out how to store extent
+
             const visibleAndFetched = this.visibleAndFetchedTiles();
             const trackHeight = this.dimensions[1];
 
-            this.setTrackLevelExtent();
+            this.setGlobalScales();
 
             visibleAndFetched.map((tile: any) => {
                 if (!tile.extent || !tile.rowScale) {
@@ -128,12 +139,13 @@ function GeminiTrack(HGC: any, ...args: any[]): any {
                 }
 
                 const rowHeight = trackHeight / tile.rowScale.domain().length;
-                const yScale = scaleLinear()
+                const yScale = d3
+                    .scaleLinear()
                     .domain([0, Math.abs(this.extent.min) + this.extent.max])
                     .range([0, rowHeight]);
                 const tileBaseline = rowHeight - yScale(Math.abs(this.extent.min));
-                const tileHeight = yScale(tile.extent.min + tile.extent.max);
-                const tileY = tileBaseline - yScale(tile.extent.max);
+                const tileHeight = yScale(tile.extent.y.min + tile.extent.y.max);
+                const tileY = tileBaseline - yScale(tile.extent.y.max);
 
                 const sprites = tile.sprites;
                 if (!sprites) return;
@@ -175,10 +187,10 @@ function GeminiTrack(HGC: any, ...args: any[]): any {
             tile.tabularData = tabularData;
 
             const isMaxZoomLevel = tile?.tileData?.zoomLevel !== getMaxZoomLevel();
-            tile.extent = findValueExtent(this.geminiModel.spec(isMaxZoomLevel), tabularData);
+            tile.extent = findQValueExtent(this.geminiModel.spec(isMaxZoomLevel), tabularData);
 
             // we need to sync the domain of y-axis so that all tiles are aligned each other
-            this.setTrackLevelExtent();
+            this.setGlobalScales();
         }
 
         // rerender all tiles every time track size is changed
@@ -188,19 +200,6 @@ function GeminiTrack(HGC: any, ...args: any[]): any {
 
             const visibleAndFetched = this.visibleAndFetchedTiles();
             visibleAndFetched.map((a: any) => this.initTile(a));
-        }
-
-        // converts all colors in a colorScale to Hex colors.
-        localColorToHexScale() {
-            const colorScale = [
-                ...getChannelRange(this.geminiModel.spec(), 'color'),
-                ...getChannelRange(this.geminiModel.spec(true), 'color')
-            ];
-            const colorHexMap: { [k: string]: string } = {};
-            colorScale.forEach((color: string) => {
-                colorHexMap[color] = colorToHex(color);
-            });
-            this.colorHexMap = colorHexMap;
         }
 
         getIndicesOfVisibleDataInTile(tile: any) {
@@ -214,7 +213,8 @@ function GeminiTrack(HGC: any, ...args: any[]): any {
                 this.tilesetInfo.bins_per_dimension || this.tilesetInfo.tile_size
             );
 
-            const tileXScale = scaleLinear()
+            const tileXScale = d3
+                .scaleLinear()
                 .domain([0, this.tilesetInfo.tile_size || this.tilesetInfo.bins_per_dimension])
                 .range([tileX, tileX + tileWidth]);
 
@@ -277,7 +277,7 @@ function GeminiTrack(HGC: any, ...args: any[]): any {
         //     return this.valueScaleMax !== null ? this.valueScaleMax : max;
         //   }
 
-        // rerender tiles using the new options
+        // rerender tiles using the new options, including the change of positions and zoom levels
         rerender(newOptions: any) {
             super.rerender(newOptions);
 
@@ -286,19 +286,21 @@ function GeminiTrack(HGC: any, ...args: any[]): any {
             this.updateTile();
 
             this.rescaleTiles();
-            this.draw();
+            this.draw(); // TODO: any effect?
         }
 
         updateTile() {
             const visibleAndFetched = this.visibleAndFetchedTiles();
 
             visibleAndFetched.forEach((tile: any) => {
-                // deprecated
-                // this.unFlatten(tile);
                 this.preprocessTile(tile);
             });
 
             this.rescaleTiles();
+
+            // TODO: Should rerender tile only when neccesary for performance
+            // e.g., changing color scale
+            // ...
         }
 
         draw() {

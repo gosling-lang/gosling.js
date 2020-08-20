@@ -3,6 +3,7 @@
 
 import { GLYPH_LOCAL_PRESET_TYPE, GLYPH_HIGLASS_PRESET_TYPE } from './test/gemini/glyph';
 import { validTilesetUrl } from './utils';
+import * as d3 from 'd3';
 
 export interface GeminiSpec {
     references?: string[];
@@ -115,20 +116,25 @@ export type ChannelType = keyof typeof ChannelTypes | string;
 export type Channel = ChannelDeep | ChannelValue;
 
 export interface ChannelDeep {
-    field?: string;
-    type?: 'genomic' | 'nominal' | 'quantitative';
+    field: string;
+    type: FieldType;
     aggregate?: Aggregate;
     domain?: Domain;
     range?: Range;
     axis?: boolean;
 }
+export type FieldType = 'genomic' | 'nominal' | 'quantitative';
 
 export interface ChannelValue {
     value: number | string;
 }
 
 export type Domain = string[] | number[] | DomainInterval | DomainChrInterval | DomainChr | DomainGene;
-export type Range = string[] | number[];
+export type Range = string[] | number[] | PREDEFINED_COLORS;
+export type PREDEFINED_COLORS = 'viridis';
+export const PREDEFINED_COLOR_STR_MAP: { [k: string]: (t: number) => string } = {
+    viridis: d3.interpolateViridis
+};
 export interface DomainChr {
     // For showing a certain chromosome
     chromosome: string;
@@ -348,7 +354,7 @@ export function getChannelRange(track: Track, key: keyof typeof ChannelTypes): s
     return [];
 }
 
-export type VisualizationType = 'unknown' | 'composite' | 'bar' | 'line' | 'area'; // ...
+export type VisualizationType = 'unknown' | 'composite' | 'bar' | 'line' | 'area' | 'point' | 'rect'; // ...
 export function getVisualizationType(track: Track): VisualizationType {
     if (IsGlyphMark(track)) {
         return 'composite';
@@ -358,6 +364,10 @@ export function getVisualizationType(track: Track): VisualizationType {
         return 'line';
     } else if (track.mark === 'area') {
         return 'area';
+    } else if (track.mark === 'point') {
+        return 'point';
+    } else if (track.mark === 'rect') {
+        return 'rect';
     } else {
         return 'unknown';
     }

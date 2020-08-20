@@ -1,4 +1,4 @@
-import { Track, IsChannelDeep, Channel, ChannelDeep } from './gemini.schema';
+import { Track, IsChannelDeep, Channel, ChannelDeep, PREDEFINED_COLORS } from './gemini.schema';
 import merge from 'lodash/merge';
 import { schemeCategory10 } from 'd3';
 
@@ -8,7 +8,8 @@ export class GeminiTrackModel {
     private specCompleteAlt: Track; // processed spec used when zoomed out
 
     private DEFAULT_OPTIONS = {
-        NOMINAL_COLOR: schemeCategory10
+        NOMINAL_COLOR: schemeCategory10,
+        QUANTITATIVE_COLOR: 'viridis'
     };
 
     constructor(track: Track) {
@@ -35,15 +36,26 @@ export class GeminiTrackModel {
         // ...
     }
 
-    public validateSpec(): boolean {
-        const valid = true;
-
+    public validateSpec(): { valid: boolean; errorMessages: string[] } {
+        let valid = true;
+        const errorMessages = [];
         // check with json schema
+        // ...
 
-        // additionally check with schema that cannot be validated with a json schema file
+        // additionally check with the schema that cannot be validated with a json schema file
         // (e.g., check if certain field names actually exist in the data)
+        const color = this.originalSpec().color;
+        if (IsChannelDeep(color) && color.type === 'genomic') {
+            errorMessages.push('genomic type cannot be used for a color channel');
+            valid = false;
+        }
+        const row = this.originalSpec().row;
+        if (IsChannelDeep(row) && row.type !== 'nominal') {
+            errorMessages.push(`${row.type} type cannot be used for a color channel`);
+            valid = false;
+        }
 
-        return valid;
+        return { valid, errorMessages };
     }
 
     private _generateCompleteSpec(track: Track) {
@@ -52,10 +64,11 @@ export class GeminiTrackModel {
             track.color = { value: this.DEFAULT_OPTIONS.NOMINAL_COLOR[0] };
         }
         if (IsChannelDeep(track.color) && !track.color.range) {
-            track.color.type = 'nominal';
-        }
-        if (IsChannelDeep(track.color) && !track.color.range) {
-            track.color.range = this.DEFAULT_OPTIONS.NOMINAL_COLOR as string[];
+            if (track.color.type === 'nominal') {
+                track.color.range = this.DEFAULT_OPTIONS.NOMINAL_COLOR as string[];
+            } else {
+                track.color.range = this.DEFAULT_OPTIONS.QUANTITATIVE_COLOR as PREDEFINED_COLORS;
+            }
         }
         if (IsChannelDeep(track.color) && !track.color.domain) {
             // we do not have data yet
