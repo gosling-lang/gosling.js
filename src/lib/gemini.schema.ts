@@ -357,7 +357,6 @@ export function IsChannelDeep(channel: ChannelDeep | ChannelValue | undefined): 
  */
 export function isStackedMark(track: Track): boolean {
     return (
-        // TODO: confirm this
         (track.mark === 'bar' || track.mark === 'area') &&
         IsChannelDeep(track.color) &&
         track.color.type === 'nominal' &&
@@ -379,24 +378,6 @@ export function isStackedChannel(track: Track, channelKey: keyof typeof ChannelT
         IsChannelDeep(channel) &&
         channel.type === 'quantitative'
     );
-}
-
-/**
- * Get `range` of a certain channel.
- * `undefined` if missing.
- */
-export function getChannelRangeFromTrack(
-    track: Track,
-    channelKey: keyof typeof ChannelTypes
-): string[] | number[] | undefined {
-    const channel = track[channelKey];
-    if (IsChannelValue(channel) && channel.value) {
-        return [channel.value] as string[] | number[];
-    }
-    if (IsChannelDeep(channel) && channel.range) {
-        return channel.range as string[] | number[];
-    }
-    return undefined;
 }
 
 /**
