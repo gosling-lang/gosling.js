@@ -1,7 +1,7 @@
 import Ajv from 'ajv';
 import HiGlassSchema from './higlass.schema.json';
 import { HiGlassSpec, EnumTrackType } from './higlass.schema';
-import { HiGlassModel } from './higlass-model';
+import { HiGlassModel, HIGLASS_AXIS_SIZE } from './higlass-model';
 import { parseServerAndTilesetUidFromUrl } from '../utils';
 import {
     GenericType,
@@ -31,6 +31,20 @@ export function compiler(track: Track | GenericType<Channel>, bb: BoundingBox): 
         const trackDirection = isXGenomic && isYGenomic ? 'both' : isXGenomic ? 'horizontal' : 'vertical';
         const trackType = IsShallowMark(track.mark) ? track.mark : IsMarkDeep(track.mark) ? track.mark.type : 'unknown';
 
+        // TODO: better way to sync between height/width of track in the description and actual track size?
+        let isAxisShown = false;
+        if (isXGenomic) {
+            isAxisShown =
+                (IsChannelDeep(track.x1) && (track.x1.axis as boolean)) ||
+                (IsChannelDeep(track.x) && (track.x.axis as boolean));
+        }
+        if (isYGenomic) {
+            isAxisShown =
+                (IsChannelDeep(track.y1) && (track.y1.axis as boolean)) ||
+                (IsChannelDeep(track.y) && (track.y.axis as boolean));
+        }
+        ///
+
         higlass.setDomain(xDomain, yDomain);
 
         // TODO: remove below
@@ -41,6 +55,8 @@ export function compiler(track: Track | GenericType<Channel>, bb: BoundingBox): 
             bar: 'gemini-track',
             line: 'gemini-track',
             rect: 'gemini-track',
+            area: 'gemini-track',
+            //...
 
             // higlass track types
             'gene-annotation-higlass': `${trackDirection}-gene-annotations`,
@@ -80,8 +96,8 @@ export function compiler(track: Track | GenericType<Channel>, bb: BoundingBox): 
                 type: higlassTrackType,
                 server: server,
                 tilesetUid: tilesetUid,
-                width: bb.width,
-                height: bb.height, // TODO: consider the height of axes
+                width: bb.width - (isYGenomic && isAxisShown ? HIGLASS_AXIS_SIZE : 0),
+                height: bb.height - (isXGenomic && isAxisShown ? HIGLASS_AXIS_SIZE : 0),
                 options: {
                     ...defaultOptions[trackType],
                     spec: { ...track, data: undefined }

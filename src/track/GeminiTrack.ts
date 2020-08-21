@@ -1,10 +1,11 @@
 import * as d3 from 'd3';
-import vis from './visualizations';
+import { drawMark } from './mark';
 import { getMaxZoomLevel } from './utils/zoom';
-import { Track, getVisualizationType } from '../lib/gemini.schema';
 import { GeminiTrackModel } from '../lib/gemini-track-model';
 import { findQValueExtent } from './utils/extent';
 import { SpriteInfo } from './utils/sprite';
+import { validateTrack } from './validate';
+import { drawZoomInstruction } from './mark/zoom-instruction';
 
 function GeminiTrack(HGC: any, ...args: any[]): any {
     if (!new.target) {
@@ -12,22 +13,19 @@ function GeminiTrack(HGC: any, ...args: any[]): any {
     }
 
     class GeminiTrackClass extends HGC.tracks.BarTrack {
-        private geminiModel: GeminiTrackModel;
         private extent: { min: number; max: number };
 
         constructor(params: any[]) {
             const [context, options] = params;
             super(context, options);
 
-            this.geminiModel = new GeminiTrackModel(this.options.spec);
-
-            const { valid, errorMessages } = this.geminiModel.validateSpec();
+            const { valid, errorMessages } = validateTrack(this.options.spec);
             if (!valid) {
                 console.warn(
                     'This track spec is not valid by the following issues:',
                     errorMessages,
                     'Original track spec',
-                    this.geminiModel.originalSpec()
+                    this.options.spec
                 );
             }
 
@@ -72,26 +70,12 @@ function GeminiTrack(HGC: any, ...args: any[]): any {
 
             const isNotMaxZoomLevel = tile?.tileData?.zoomLevel !== getMaxZoomLevel();
 
-            if (isNotMaxZoomLevel && this.geminiModel.spec().zoomAction?.type === 'hide') {
-                vis.drawZoomInstruction(HGC, this);
+            if (isNotMaxZoomLevel && tile.geminiModel.spec().zoomAction?.type === 'hide') {
+                drawZoomInstruction(HGC, this);
                 return;
             }
 
-            // select spec based on the zoom level
-            const spec: Track = this.geminiModel.spec(isNotMaxZoomLevel);
-
-            switch (getVisualizationType(spec)) {
-                case 'bar':
-                case 'line':
-                case 'area':
-                case 'point':
-                case 'rect':
-                    vis.drawPrimitiveMarks(HGC, this, tile, isNotMaxZoomLevel);
-                    break;
-                default:
-                    console.warn('Not supported visualization');
-                    break;
-            }
+            drawMark(HGC, this, tile);
         }
 
         // scales in visualizations, such as y axis, color, and size, should be shared across all tiles
@@ -123,42 +107,6 @@ function GeminiTrack(HGC: any, ...args: any[]): any {
             });
         }
 
-        // realign the sprites of all visible tiles when zooming and panning
-        rescaleTiles() {
-            // return; // first need to figure out how to store extent
-
-            const visibleAndFetched = this.visibleAndFetchedTiles();
-            const trackHeight = this.dimensions[1];
-
-            this.setGlobalScales();
-
-            visibleAndFetched.map((tile: any) => {
-                if (!tile.extent || !tile.rowScale) {
-                    // data is not ready
-                    return;
-                }
-
-                const rowHeight = trackHeight / tile.rowScale.domain().length;
-                const yScale = d3
-                    .scaleLinear()
-                    .domain([0, Math.abs(this.extent.min) + this.extent.max])
-                    .range([0, rowHeight]);
-                const tileBaseline = rowHeight - yScale(Math.abs(this.extent.min));
-                const tileHeight = yScale(tile.extent.y.min + tile.extent.y.max);
-                const tileY = tileBaseline - yScale(tile.extent.y.max);
-
-                const sprites = tile.sprites;
-                if (!sprites) return;
-
-                sprites.forEach((spriteInfo: SpriteInfo) => {
-                    const { sprite, scaleKey } = spriteInfo;
-
-                    sprite.height = tileHeight;
-                    sprite.y = tileY + tile.rowScale(scaleKey);
-                });
-            });
-        }
-
         preprocessTile(tile: any) {
             if (tile.tabularData) return;
 
@@ -187,10 +135,60 @@ function GeminiTrack(HGC: any, ...args: any[]): any {
             tile.tabularData = tabularData;
 
             const isMaxZoomLevel = tile?.tileData?.zoomLevel !== getMaxZoomLevel();
-            tile.extent = findQValueExtent(this.geminiModel.spec(isMaxZoomLevel), tabularData);
+            tile.geminiModel = new GeminiTrackModel(this.options.spec, tile.tabularData, isMaxZoomLevel);
+            // TODO:
+            tile.extent = findQValueExtent(tile.geminiModel.spec(isMaxZoomLevel), tabularData);
 
             // we need to sync the domain of y-axis so that all tiles are aligned each other
             this.setGlobalScales();
+        }
+
+        /**
+         * Re-align the sprites of all visible tiles when zooming and panning
+         */
+
+        rescaleTiles() {
+            // return; // first need to figure out how to store extent
+
+            const visibleAndFetched = this.visibleAndFetchedTiles();
+            const trackHeight = this.dimensions[1];
+
+            this.setGlobalScales();
+
+            visibleAndFetched.map((tile: any) => {
+                if (!tile.extent || !tile.rowScale) {
+                    // data is not ready
+                    return;
+                }
+
+                // TODO:
+                if (tile.extent.y.min === 0 && tile.extent.y.max === 0) {
+                    // y channel is not being used
+                    return;
+                }
+
+                const rowHeight =
+                    // if `tile.rowScale.domain()` is `undefined`, we are using constant value
+                    // TODO: better way to represent this?
+                    trackHeight / (!tile.rowScale.domain ? 1 : tile.rowScale.domain().length);
+                const yScale = d3
+                    .scaleLinear()
+                    .domain([0, Math.abs(this.extent.min) + this.extent.max])
+                    .range([0, rowHeight]);
+                const tileBaseline = rowHeight - yScale(Math.abs(this.extent.min));
+                const tileHeight = yScale(tile.extent.y.min + tile.extent.y.max);
+                const tileY = tileBaseline - yScale(tile.extent.y.max);
+
+                const sprites = tile.spriteInfos;
+                if (!sprites) return;
+
+                sprites.forEach((spriteInfo: SpriteInfo) => {
+                    const { sprite, scaleKey } = spriteInfo;
+
+                    sprite.height = tileHeight;
+                    sprite.y = tileY + tile.rowScale(scaleKey);
+                });
+            });
         }
 
         // rerender all tiles every time track size is changed
@@ -277,7 +275,9 @@ function GeminiTrack(HGC: any, ...args: any[]): any {
         //     return this.valueScaleMax !== null ? this.valueScaleMax : max;
         //   }
 
-        // rerender tiles using the new options, including the change of positions and zoom levels
+        /**
+         * Rerender tiles using the new options, including the change of positions and zoom levels
+         */
         rerender(newOptions: any) {
             super.rerender(newOptions);
 

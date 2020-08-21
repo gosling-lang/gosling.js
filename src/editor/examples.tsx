@@ -1,6 +1,8 @@
 import { GeminiSpec } from '../lib/gemini.schema';
 import { GENE_ANNOTATION_PLOT, GENE_ANNOTATION_PLOT_SIMPLE, CYTOGENETIC_BAND } from '../lib/test/gemini/glyph-examples';
 import {
+    GEMINI_PLUGIN_TRACK_LINE,
+    GEMINI_PLUGIN_TRACK_HEATMAP,
     LAYOUT_EXAMPLE_COMBO_HORIZONTAL,
     LAYOUT_EXAMPLE_LINK,
     LAYOUT_EXAMPLE_COMBO,
@@ -10,7 +12,9 @@ import {
     GEMINI_TRACK_EXAMPLE,
     GEMINI_TRACK_EXAMPLE2,
     GEMINI_TRACK_EXAMPLE3,
-    GEMINI_TRACK_EXAMPLE_RECT
+    GEMINI_PLUGIN_TRACK_POINT,
+    GEMINI_PLUGIN_TRACK_BAR,
+    GEMINI_PLUGIN_TRACK_AREA
 } from '../lib/test/gemini/layout-examples';
 
 interface Demo {
@@ -21,6 +25,54 @@ interface Demo {
 }
 
 export const demos: ReadonlyArray<Demo> = [
+    {
+        name: 'Heatmap (HiGlass Gemini Plugin Track)',
+        spec: GEMINI_PLUGIN_TRACK_HEATMAP,
+        glyphWidth: 0,
+        glyphHeight: 0
+    },
+    {
+        name: 'Area Chart (HiGlass Gemini Plugin Track)',
+        spec: GEMINI_PLUGIN_TRACK_AREA,
+        glyphWidth: 0,
+        glyphHeight: 0
+    },
+    {
+        name: 'Bar Chart (HiGlass Gemini Plugin Track)',
+        spec: GEMINI_PLUGIN_TRACK_BAR,
+        glyphWidth: 0,
+        glyphHeight: 0
+    },
+    {
+        name: 'Line Chart (HiGlass Gemini Plugin Track)',
+        spec: GEMINI_PLUGIN_TRACK_LINE,
+        glyphWidth: 0,
+        glyphHeight: 0
+    },
+    {
+        name: 'Scatterplot (HiGlass Gemini Plugin Track)',
+        spec: GEMINI_PLUGIN_TRACK_POINT,
+        glyphWidth: 0,
+        glyphHeight: 0
+    },
+    {
+        name: 'HiGlass Gemini Track (zoom action example 1)',
+        spec: GEMINI_TRACK_EXAMPLE,
+        glyphWidth: 0,
+        glyphHeight: 0
+    },
+    {
+        name: 'HiGlass Gemini Track (zoom action example 2)',
+        spec: GEMINI_TRACK_EXAMPLE2,
+        glyphWidth: 0,
+        glyphHeight: 0
+    },
+    {
+        name: 'HiGlass Gemini Track (zoom action example 3)',
+        spec: GEMINI_TRACK_EXAMPLE3,
+        glyphWidth: 0,
+        glyphHeight: 0
+    },
     {
         name: 'Gene Annotation Plot (Simple)',
         spec: GENE_ANNOTATION_PLOT_SIMPLE,
@@ -72,30 +124,6 @@ export const demos: ReadonlyArray<Demo> = [
     {
         name: 'Between-Bands (HiGlass Tracks)',
         spec: LAYOUT_EXAMPLE_COMBO_BAND,
-        glyphWidth: 0,
-        glyphHeight: 0
-    },
-    {
-        name: 'HiGlass Gemini Track (zoom action example 1)',
-        spec: GEMINI_TRACK_EXAMPLE,
-        glyphWidth: 0,
-        glyphHeight: 0
-    },
-    {
-        name: 'HiGlass Gemini Track (zoom action example 2)',
-        spec: GEMINI_TRACK_EXAMPLE2,
-        glyphWidth: 0,
-        glyphHeight: 0
-    },
-    {
-        name: 'HiGlass Gemini Track (zoom action example 3)',
-        spec: GEMINI_TRACK_EXAMPLE3,
-        glyphWidth: 0,
-        glyphHeight: 0
-    },
-    {
-        name: 'HiGlass Gemini Track 1',
-        spec: GEMINI_TRACK_EXAMPLE_RECT,
         glyphWidth: 0,
         glyphHeight: 0
     }

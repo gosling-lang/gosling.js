@@ -1,5 +1,5 @@
 // @ts-ignore
-import { GeminiTrack } from '../gemini-track/index';
+import { GeminiTrack } from '../track/index';
 // @ts-ignore
 import { HiGlassComponent } from 'higlass';
 // @ts-ignore
@@ -25,7 +25,7 @@ higlassRegister({
     config: GeminiTrack.config
 });
 
-const DEBUG_INIT_DEMO_INDEX = demos.length - 1;
+const DEBUG_INIT_DEMO_INDEX = 0;
 
 function Editor() {
     const glyphSvg = useRef<SVGSVGElement>(null);
@@ -172,7 +172,7 @@ function Editor() {
                         <SplitPane split="vertical" defaultSize="100%" onChange={undefined}>
                             <>
                                 <div className="editor-header">
-                                    <b>Compiled HiGlass ViewConfigs</b>
+                                    <b>Compiled HiGlass ViewConfigs</b> (Read Only)
                                 </div>
                                 <EditorPanel
                                     code={stringify(higlassTrackOptions.map(d => d.viewConfig))}

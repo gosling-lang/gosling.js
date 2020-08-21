@@ -6,6 +6,7 @@ import { TOTAL_CHROM_SIZE_HG19, CHROM_RANGE_HG19 } from '../utils/chrom-size';
 import { Domain, IsDomainChr, IsDomainInterval, IsDomainChrInterval, IsDomainGene } from '../gemini.schema';
 
 const DEFAULT_CHROMOSOME_INFO_PATH = '//s3.amazonaws.com/pkerp/data/hg19/chromSizes.tsv';
+export const HIGLASS_AXIS_SIZE = 30;
 
 /**
  * Model for managing HiGlass spec.
@@ -97,7 +98,7 @@ export class HiGlassModel {
             {
                 uid: uuid.v1(),
                 type: (direction + baseTrackType) as any /* TODO */,
-                [widthOrHeight]: 30,
+                [widthOrHeight]: HIGLASS_AXIS_SIZE,
                 chromInfoPath: this.hg.chromInfoPath
             }
         ];

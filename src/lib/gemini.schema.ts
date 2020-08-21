@@ -56,6 +56,8 @@ export interface Track {
     text?: Channel;
     w?: Channel;
     h?: Channel;
+    stroke?: Channel;
+    strokeWidth?: Channel;
     // styles
     width?: number;
     height?: number;
@@ -106,6 +108,8 @@ export const ChannelTypes = {
     color: 'color',
     row: 'row',
     opacity: 'opacity',
+    stroke: 'stroke',
+    strokeWidth: 'strokeWidth',
     size: 'size',
     text: 'text',
     w: 'w'
@@ -121,6 +125,7 @@ export interface ChannelDeep {
     aggregate?: Aggregate;
     domain?: Domain;
     range?: Range;
+    zeroBaseline?: boolean;
     axis?: boolean;
 }
 export type FieldType = 'genomic' | 'nominal' | 'quantitative';
@@ -214,6 +219,8 @@ export interface GlyphElement {
     x1e?: ChannelBind | ChannelValue | 'none';
     y1e?: ChannelBind | ChannelValue | 'none';
     // others
+    stroke?: ChannelBind | ChannelValue | 'none';
+    strokeWidth?: ChannelBind | ChannelValue | 'none';
     row?: ChannelBind | ChannelValue | 'none';
     color?: ChannelBind | ChannelValue | 'none';
     size?: ChannelBind | ChannelValue | 'none';
@@ -344,15 +351,63 @@ export function IsChannelDeep(channel: ChannelDeep | ChannelValue | undefined): 
     return typeof channel === 'object' && !('value' in channel);
 }
 
-export function getChannelRange(track: Track, key: keyof typeof ChannelTypes): string[] {
-    // TODO: Add domains as well
-    const channel = track[key];
-    if (IsChannelDeep(channel)) {
-        return channel.range as string[];
-    } else if (IsChannelValue(channel)) {
-        return [channel.value] as string[];
+// TODO: perhaps, combine this with `isStackedChannel`
+/**
+ * Check whether visual marks can be stacked on top of each other.
+ */
+export function isStackedMark(track: Track): boolean {
+    return (
+        // TODO: confirm this
+        (track.mark === 'bar' || track.mark === 'area') &&
+        IsChannelDeep(track.color) &&
+        track.color.type === 'nominal' &&
+        (!track.row || IsChannelValue(track.row))
+    );
+}
+
+/**
+ * Check whether visual marks in this channel are stacked on top of each other.
+ * For example, `area` marks with a `quantitative` `y` channel are being stacked.
+ */
+export function isStackedChannel(track: Track, channelKey: keyof typeof ChannelTypes): boolean {
+    const channel = track[channelKey];
+    return (
+        isStackedMark(track) &&
+        // only x or y channel can be stacked
+        (channelKey === 'x' || channelKey === 'y') &&
+        // only quantitative channel can be stacked
+        IsChannelDeep(channel) &&
+        channel.type === 'quantitative'
+    );
+}
+
+/**
+ * Get `range` of a certain channel.
+ * `undefined` if missing.
+ */
+export function getChannelRangeFromTrack(
+    track: Track,
+    channelKey: keyof typeof ChannelTypes
+): string[] | number[] | undefined {
+    const channel = track[channelKey];
+    if (IsChannelValue(channel) && channel.value) {
+        return [channel.value] as string[] | number[];
     }
-    return [];
+    if (IsChannelDeep(channel) && channel.range) {
+        return channel.range as string[] | number[];
+    }
+    return undefined;
+}
+
+/**
+ * Retreive value using a `channel`.
+ * `undefined` if unable to retreive the value.
+ */
+export function getValueUsingChannel(datum: { [k: string]: string | number }, channel: Channel) {
+    if (IsChannelDeep(channel) && channel.field) {
+        return datum[channel.field];
+    }
+    return undefined;
 }
 
 export type VisualizationType = 'unknown' | 'composite' | 'bar' | 'line' | 'area' | 'point' | 'rect'; // ...

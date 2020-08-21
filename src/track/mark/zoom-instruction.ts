@@ -1,5 +1,3 @@
-import { LIGHT_GRAY } from '../utils/colors';
-
 export function drawZoomInstruction(HGC: any, trackInfo: any) {
     if (!trackInfo.zoomInstruction) {
         // assigning to the track object since we need only one of this graphics
@@ -15,7 +13,7 @@ export function drawZoomInstruction(HGC: any, trackInfo: any) {
     const graphics = trackInfo.pBorder; // use pBorder not to affected by zoomming
 
     // bg
-    graphics.beginFill(LIGHT_GRAY);
+    graphics.beginFill(0xeaeaea);
     graphics.drawRect(trackInfo.position[0], trackInfo.position[1], trackInfo.dimensions[0], trackInfo.dimensions[1]);
 
     // text

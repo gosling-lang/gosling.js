@@ -17,6 +17,7 @@ import { deepToLongElements } from '../utils/spec-preprocess';
 import * as d3 from 'd3';
 import { BoundingBox } from '../utils/bounding-box';
 
+// deprecated
 export class TrackModel {
     private track: Track | GenericType<Channel>;
     private channelToField: { [k: string]: string };

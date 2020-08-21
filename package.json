@@ -100,7 +100,7 @@
         "coverageDirectory": "./coverage/",
         "collectCoverage": true,
         "collectCoverageFrom": [
-            "**/*.{js,jsx,ts,tsx}",
+            "**/src/**/*.{js,jsx,ts,tsx}",
             "!**/node_modules/**",
             "!**/coverage/**",
             "!**/public/**"

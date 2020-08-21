@@ -1,4 +1,4 @@
-import { Track, IsChannelDeep, FieldType, ChannelTypes } from '../../lib/gemini.schema';
+import { Track, IsChannelDeep, FieldType, ChannelTypes, Channel } from '../../lib/gemini.schema';
 import * as d3 from 'd3';
 import { group } from 'd3-array';
 
@@ -12,7 +12,7 @@ interface Extent {
     max: number | undefined;
 }
 
-// TODO: support vertical tracks
+// deprecated
 export function findQValueExtent(track: Track, data: { [k: string]: string | number }[]) {
     const extent: QChannelExtent = {
         color: { min: 0, max: 0 },
@@ -51,20 +51,40 @@ export function findQValueExtent(track: Track, data: { [k: string]: string | num
         const xKeys = [...pivotedData.keys()];
 
         QChannels.forEach(channelType => {
-            const channel = track[channelType as keyof typeof ChannelTypes];
+            const channel = track[channelType as keyof typeof ChannelTypes] as Channel;
             if (IsChannelDeep(channel) && channel.type === 'quantitative') {
-                extent[channelType].min = 0; // TODO: we can support none-zero baseline
+                extent[channelType].min = channel.zeroBaseline
+                    ? 0
+                    : d3.min(
+                          xKeys.map(d =>
+                              d3.sum(
+                                  (pivotedData.get(d) as any).map((_d: any) =>
+                                      channel.field ? _d[channel.field] : undefined
+                                  )
+                              )
+                          ) as number[]
+                      );
                 extent[channelType].max = d3.max(
-                    xKeys.map(d => d3.sum((pivotedData.get(d) as any).map((_d: any) => _d[channel.field]))) as number[]
+                    xKeys.map(d =>
+                        d3.sum(
+                            (pivotedData.get(d) as any).map((_d: any) =>
+                                channel.field ? _d[channel.field] : undefined
+                            )
+                        )
+                    ) as number[]
                 );
             }
         });
     } else {
         QChannels.forEach(channelType => {
-            const channel = track[channelType as keyof typeof ChannelTypes];
+            const channel = track[channelType as keyof typeof ChannelTypes] as Channel;
             if (IsChannelDeep(channel) && channel.type === 'quantitative') {
-                extent[channelType].min = 0; // TODO: we can support none-zero base line
-                extent[channelType].max = d3.max(data.map(d => d[channel.field] as number));
+                extent[channelType].min = channel.zeroBaseline
+                    ? 0
+                    : d3.min(data.map(d => (channel.field ? d[channel.field] : undefined)) as number[]);
+                extent[channelType].max = d3.max(
+                    data.map(d => (channel.field ? d[channel.field] : undefined)) as number[]
+                );
             }
         });
     }
