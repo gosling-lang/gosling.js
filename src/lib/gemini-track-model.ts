@@ -56,7 +56,7 @@ export class GeminiTrackModel {
 
         const validity = this.validateSpec();
         if (!validity.valid) {
-            console.error('Gemini specification is not valid!', validity.errorMessages);
+            console.warn('Gemini specification is not valid!', validity.errorMessages);
             return;
         }
 

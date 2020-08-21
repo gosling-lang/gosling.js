@@ -6,7 +6,8 @@ describe('gemini track model should properly generate specs', () => {
     it('original spec should be the same', () => {
         const track: Track = {
             data: { url: '', type: 'tileset' },
-            mark: 'bar'
+            mark: 'bar',
+            x: { field: 'x', type: 'genomic' }
         };
         const model = new GeminiTrackModel(track, [], false);
         expect(isEqual(model.originalSpec(), track)).toEqual(true);
@@ -16,6 +17,7 @@ describe('gemini track model should properly generate specs', () => {
         const track: Track = {
             data: { url: '', type: 'tileset' },
             mark: 'bar',
+            x: { field: 'x', type: 'genomic' },
             color: { field: 'f', type: 'quantitative' }
         };
         const model = new GeminiTrackModel(track, [], false);
@@ -29,6 +31,7 @@ describe('gemini track model should properly generate specs', () => {
         const track: Track = {
             data: { url: '', type: 'tileset' },
             mark: 'bar',
+            x: { field: 'x', type: 'genomic' },
             color: { field: 'f', type: 'genomic' } // `genomic` type cannot be used for `color`
         };
         const model = new GeminiTrackModel(track, [], false);
