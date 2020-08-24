@@ -29,10 +29,18 @@ export interface DataDeep {
     url: string;
     type: 'tileset' | 'csv';
 }
+export type DataMetadata = MultivecMetadata;
+export interface MultivecMetadata {
+    type: 'higlass-multivec';
+    column: string;
+    row: string;
+    categories?: string[];
+}
 export interface EmptyTrack {}
 export interface Track {
     // primitives
     data: DataDeep | Datum[];
+    metadata?: DataMetadata; // we could remove this and get this information from the server
     mark: Mark;
     // zoom technique
     zoomAction?: SemanticZoom;

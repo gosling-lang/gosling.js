@@ -13,16 +13,23 @@ export const GEMINI_PLUGIN_TRACK_HEATMAP: GeminiSpec = {
                 url: MULTIVEC_FILE_CISTROME,
                 type: 'tileset'
             },
+            metadata: {
+                type: 'higlass-multivec',
+                row: 'sample',
+                column: 'position',
+                value: 'peak',
+                categories: ['sample 1', 'sample 2', 'sample 3', 'sample 4', 'sample 5']
+            },
             mark: 'rect',
             x: {
-                field: '__G__',
+                field: 'position',
                 type: 'genomic',
                 domain: { chromosome: '1', interval: [1, 3000500] }
             },
             x1: { axis: true },
-            y: { field: '__N__', type: 'nominal' },
-            // row: { field: '__N__', type: 'nominal' },
-            color: { field: '__Q__', type: 'quantitative' },
+            y: { field: 'sample', type: 'nominal' },
+            // row: { field: 'sample', type: 'nominal' },
+            color: { field: 'peak', type: 'quantitative' },
             // stroke: {value: 'white'},
             // strokeWidth: {value: 1},
             width: 1000,
@@ -38,16 +45,23 @@ export const GEMINI_PLUGIN_TRACK_AREA: GeminiSpec = {
                 url: MULTIVEC_FILE_CISTROME,
                 type: 'tileset'
             },
+            metadata: {
+                type: 'higlass-multivec',
+                row: 'sample',
+                column: 'position',
+                value: 'peak',
+                categories: ['sample 1', 'sample 2', 'sample 3', 'sample 4', 'sample 5']
+            },
             mark: 'area',
             x: {
-                field: '__G__',
+                field: 'position',
                 type: 'genomic',
                 domain: { chromosome: '1', interval: [1, 3000500] }
             },
             x1: { axis: true },
-            y: { field: '__Q__', type: 'quantitative' },
-            row: { field: '__N__', type: 'nominal' },
-            color: { field: '__N__', type: 'nominal' },
+            y: { field: 'peak', type: 'quantitative' },
+            row: { field: 'sample', type: 'nominal' },
+            color: { field: 'sample', type: 'nominal' },
             // stroke: {value: 'white'},
             // strokeWidth: {value: 1},
             width: 1000,
@@ -63,16 +77,23 @@ export const GEMINI_PLUGIN_TRACK_BAR: GeminiSpec = {
                 url: MULTIVEC_FILE_CISTROME,
                 type: 'tileset'
             },
+            metadata: {
+                type: 'higlass-multivec',
+                row: 'sample',
+                column: 'position',
+                value: 'peak',
+                categories: ['sample 1', 'sample 2', 'sample 3', 'sample 4', 'sample 5']
+            },
             mark: 'bar',
             x: {
-                field: '__G__',
+                field: 'position',
                 type: 'genomic',
                 domain: { chromosome: '1', interval: [1, 3000500] }
             },
             x1: { axis: true },
-            y: { field: '__Q__', type: 'quantitative' },
-            // row: { field: '__N__', type: 'nominal' },
-            color: { field: '__N__', type: 'nominal' },
+            y: { field: 'peak', type: 'quantitative' },
+            // row: { field: 'sample', type: 'nominal' },
+            color: { field: 'sample', type: 'nominal' },
             // stroke: {value: 'white'},
             // strokeWidth: {value: 1},
             width: 1000,
@@ -88,16 +109,23 @@ export const GEMINI_PLUGIN_TRACK_LINE: GeminiSpec = {
                 url: MULTIVEC_FILE_CISTROME,
                 type: 'tileset'
             },
+            metadata: {
+                type: 'higlass-multivec',
+                row: 'sample',
+                column: 'position',
+                value: 'peak',
+                categories: ['sample 1', 'sample 2', 'sample 3', 'sample 4', 'sample 5']
+            },
             mark: 'line',
             x: {
-                field: '__G__',
+                field: 'position',
                 type: 'genomic',
                 domain: { chromosome: '1', interval: [1, 3000500] }
             },
             x1: { axis: true },
-            y: { field: '__Q__', type: 'quantitative' },
-            row: { field: '__N__', type: 'nominal' },
-            color: { field: '__N__', type: 'nominal' },
+            y: { field: 'peak', type: 'quantitative' },
+            row: { field: 'sample', type: 'nominal' },
+            color: { field: 'sample', type: 'nominal' },
             width: 1000,
             height: 180
         }
@@ -111,17 +139,24 @@ export const GEMINI_PLUGIN_TRACK_POINT: GeminiSpec = {
                 url: MULTIVEC_FILE_CISTROME,
                 type: 'tileset'
             },
+            metadata: {
+                type: 'higlass-multivec',
+                row: 'sample',
+                column: 'position',
+                value: 'peak',
+                categories: ['sample 1', 'sample 2', 'sample 3', 'sample 4', 'sample 5']
+            },
             mark: 'point',
             x: {
-                field: '__G__',
+                field: 'position',
                 type: 'genomic',
                 domain: { chromosome: '1', interval: [1, 3000500] }
             },
             x1: { axis: true },
-            y: { field: '__Q__', type: 'quantitative' },
-            row: { field: '__N__', type: 'nominal' },
-            size: { field: '__Q__', type: 'quantitative' },
-            color: { field: '__N__', type: 'nominal' },
+            y: { field: 'peak', type: 'quantitative' },
+            row: { field: 'sample', type: 'nominal' },
+            size: { field: 'peak', type: 'quantitative' },
+            color: { field: 'sample', type: 'nominal' },
             stroke: { value: 'white' },
             strokeWidth: { value: 1 },
             width: 1000,
@@ -137,17 +172,24 @@ export const GEMINI_TRACK_EXAMPLE: GeminiSpec = {
                 url: MULTIVEC_FA,
                 type: 'tileset'
             },
+            metadata: {
+                type: 'higlass-multivec',
+                row: 'base',
+                column: 'position',
+                value: 'count',
+                categories: ['A', 'T', 'G', 'C']
+            },
             zoomAction: { type: 'auto' },
             mark: 'bar',
             x: {
-                field: '__G__',
+                field: 'position',
                 type: 'genomic',
                 domain: { chromosome: '1', interval: [3000000, 3000500] }
             },
             x1: { axis: true },
-            y: { field: '__Q__', type: 'quantitative' },
+            y: { field: 'count', type: 'quantitative' },
             color: {
-                field: '__N__',
+                field: 'base',
                 type: 'nominal',
                 domain: ['A', 'T', 'G', 'C', 'N', 'other'],
                 range: ['#007FFF', '#e8e500', '#008000', '#FF0038', '#800080', '#DCDCDC']
@@ -165,22 +207,29 @@ export const GEMINI_TRACK_EXAMPLE2: GeminiSpec = {
                 url: MULTIVEC_FA,
                 type: 'tileset'
             },
+            metadata: {
+                type: 'higlass-multivec',
+                row: 'base',
+                column: 'position',
+                value: 'count',
+                categories: ['A', 'T', 'G', 'C']
+            },
             zoomAction: {
                 type: 'alternative-encoding',
                 spec: {
-                    row: { field: '__N__', type: 'nominal' }
+                    row: { field: 'base', type: 'nominal' }
                 }
             },
             mark: 'bar',
             x: {
-                field: '__G__',
+                field: 'position',
                 type: 'genomic',
                 domain: { chromosome: '1', interval: [3000000, 3000500] }
             },
             x1: { axis: true },
-            y: { field: '__Q__', type: 'quantitative' },
+            y: { field: 'count', type: 'quantitative' },
             color: {
-                field: '__N__',
+                field: 'base',
                 type: 'nominal',
                 domain: ['A', 'T', 'G', 'C', 'N', 'other'],
                 range: ['#007FFF', '#e8e500', '#008000', '#FF0038', '#800080', '#DCDCDC']
@@ -198,23 +247,30 @@ export const GEMINI_TRACK_EXAMPLE3: GeminiSpec = {
                 url: MULTIVEC_FA,
                 type: 'tileset'
             },
+            metadata: {
+                type: 'higlass-multivec',
+                row: 'base',
+                column: 'position',
+                value: 'count',
+                categories: ['A', 'T', 'G', 'C']
+            },
             zoomAction: {
                 type: 'alternative-encoding',
                 spec: {
                     mark: 'line',
-                    row: { field: '__N__', type: 'nominal' }
+                    row: { field: 'base', type: 'nominal' }
                 }
             },
             mark: 'bar',
             x: {
-                field: '__G__',
+                field: 'position',
                 type: 'genomic',
                 domain: { chromosome: '1', interval: [3000000, 3000500] }
             },
             x1: { axis: true },
-            y: { field: '__Q__', type: 'quantitative' },
+            y: { field: 'count', type: 'quantitative' },
             color: {
-                field: '__N__',
+                field: 'base',
                 type: 'nominal',
                 domain: ['A', 'T', 'G', 'C', 'N', 'other'],
                 range: ['#007FFF', '#e8e500', '#008000', '#FF0038', '#800080', '#DCDCDC']

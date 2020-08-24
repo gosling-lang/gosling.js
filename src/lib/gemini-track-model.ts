@@ -68,6 +68,7 @@ export class GeminiTrackModel {
             );
         }
 
+        // fill missing options
         this._generateToCompleteSpec(this.specComplete);
         this._generateToCompleteSpec(this.specCompleteAlt);
 
@@ -167,7 +168,7 @@ export class GeminiTrackModel {
         }
 
         const WARN_MSG = (c: string, t: string) =>
-            `The channel key and type pair {${c},${t}} is not supported when generating channel scales`;
+            `The channel key and type pair {${c}, ${t}} is not supported when generating channel scales`;
 
         SUPPORTED_CHANNELS.forEach(channelKey => {
             const channel = spec[channelKey];

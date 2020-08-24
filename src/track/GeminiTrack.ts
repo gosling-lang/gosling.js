@@ -68,6 +68,11 @@ function GeminiTrack(HGC: any, ...args: any[]): any {
             this.pBorder.removeChildren();
             tile.drawnAtScale = this._xScale.copy(); // being used in `draw()`
 
+            if (!tile.geminiModel) {
+                // we do not have a track model prepared to visualize the track
+                return;
+            }
+
             const isNotMaxZoomLevel = tile?.tileData?.zoomLevel !== getMaxZoomLevel();
 
             if (isNotMaxZoomLevel && tile.geminiModel.spec().zoomAction?.type === 'hide') {
@@ -110,24 +115,38 @@ function GeminiTrack(HGC: any, ...args: any[]): any {
         preprocessTile(tile: any) {
             if (tile.tabularData) return;
 
-            // TODO: the server should give us the following metadata of fields, such as field names and categories
-            const N_FIELD_FROM_SERVER = '__N__';
-            const Q_FIELD_FROM_SERVER = '__Q__';
-            const G_FIELD_FROM_SERVER = '__G__';
-            const CATEGORIES_OF_N_FIELD_FROM_SERVER = ['A', 'T', 'G', 'C']; // NOTICE: this should be consistent across all tiles
+            if (this.options.spec?.metadata?.type !== 'higlass-multivec') {
+                console.warn('We currently only support higlass multivec type tilesets');
+                return;
+            }
 
+            if (
+                !this.options.spec?.metadata?.row ||
+                !this.options.spec?.metadata?.column ||
+                !this.options.spec?.metadata?.value
+            ) {
+                console.warn('Proper metadata of the tileset is not provided. Please specify the name of data fields');
+                return;
+            }
+
+            const numOfTotalCategories = tile.tileData.shape[0];
             const numericValues = tile.tileData.dense;
             const numOfGenomicPositions = tile.tileData.shape[1];
+
+            const rowName = this.options.spec.metadata.row;
+            const valueName = this.options.spec.metadata.value;
+            const columnName = this.options.spec.metadata.column;
+            const categories = this.options.spec.metadata.categories ?? [...Array(numOfTotalCategories).keys()];
 
             const tabularData: { [k: string]: number | string }[] = [];
 
             // convert data to visualization-friendly format
-            CATEGORIES_OF_N_FIELD_FROM_SERVER.forEach((c: string, i: number) => {
+            categories.forEach((c: string, i: number) => {
                 Array.from(Array(numOfGenomicPositions).keys()).forEach((g: number, j: number) => {
                     tabularData.push({
-                        [N_FIELD_FROM_SERVER]: c,
-                        [Q_FIELD_FROM_SERVER]: numericValues[numOfGenomicPositions * i + j],
-                        [G_FIELD_FROM_SERVER]: j
+                        [rowName]: c,
+                        [valueName]: numericValues[numOfGenomicPositions * i + j],
+                        [columnName]: j
                     });
                 });
             });

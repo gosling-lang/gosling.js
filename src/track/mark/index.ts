@@ -47,6 +47,11 @@ export function drawMark(HGC: any, trackInfo: any, tile: any) {
      * (19) Occasional black screen when zoomed in
      */
 
+    if (!tile.geminiModel) {
+        // we do not have a track model prepared to render a visualization
+        return;
+    }
+
     /* spec */
     const gm = tile.geminiModel as GeminiTrackModel;
     const spec = gm.spec();
