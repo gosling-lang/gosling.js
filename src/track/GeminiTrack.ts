@@ -32,31 +32,12 @@ function GeminiTrack(HGC: any, ...args: any[]): any {
             }
 
             this.extent = { min: Number.MAX_SAFE_INTEGER, max: Number.MIN_SAFE_INTEGER };
-
             this.domains = {};
-
-            // deprecated
-            // this.maxAndMin = {
-            //     max: null,
-            //     min: null
-            // };
         }
 
         initTile(tile: any) {
             // TODO: support gene annotation tilesets
             // e.g., https://higlass.io/api/v1/tileset_info/?d=OHJakQICQD6gTD7skx4EWA
-
-            // deprecated
-            // this.scale.minRawValue = this.minVisibleValue();
-            // this.scale.maxRawValue = this.maxVisibleValue();
-
-            // deprecated
-            // this.scale.minValue = this.scale.minRawValue;
-            // this.scale.maxValue = this.scale.maxRawValue;
-
-            // deprecated
-            // this.maxAndMin.min = d3.min(tile.tileData.dense);
-            // this.maxAndMin.max = d3.max(tile.tileData.dense);
 
             // preprocess all tiles at once so that we can share the value scales
             const gms: GeminiTrackModel[] = [];
@@ -65,7 +46,7 @@ function GeminiTrack(HGC: any, ...args: any[]): any {
                 gms.push(this.preprocessTile(t));
             });
 
-            // IMPORTANT: when panning the tiles, the extent becomes larger
+            // TODO: IMPORTANT: when panning the tiles, the extent becomes larger
             shareScaleAcrossTracks(gms);
 
             this.renderTile(tile);
@@ -98,6 +79,7 @@ function GeminiTrack(HGC: any, ...args: any[]): any {
 
         // scales in visualizations, such as y axis, color, and size, should be shared across all tiles
         setGlobalScales() {
+            return;
             // reset extent
             this.extent = {
                 min: Number.MAX_SAFE_INTEGER,
@@ -165,9 +147,6 @@ function GeminiTrack(HGC: any, ...args: any[]): any {
 
             // we make separate models for indivisual tiles because they contain different data (e.g., genomic positions)
             tile.geminiModel = new GeminiTrackModel(this.options.spec, tile.tabularData, isMaxZoomLevel);
-
-            // deprecated
-            // tile.extent = findQValueExtent(tile.geminiModel.spec(isMaxZoomLevel), tabularData);
 
             // we need to sync the domain of y-axis so that all tiles are aligned each other
             this.setGlobalScales();
@@ -329,7 +308,7 @@ function GeminiTrack(HGC: any, ...args: any[]): any {
                 gms.push(this.preprocessTile(tile));
             });
 
-            shareScaleAcrossTracks(gms, 'y'); // TODO: multiple channels
+            shareScaleAcrossTracks(gms);
 
             this.visibleAndFetchedTiles().forEach((tile: any) => {
                 this.renderTile(tile);

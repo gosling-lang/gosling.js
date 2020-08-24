@@ -34,6 +34,7 @@ export interface MultivecMetadata {
     type: 'higlass-multivec';
     column: string;
     row: string;
+    value: string;
     categories?: string[];
 }
 export interface EmptyTrack {}
