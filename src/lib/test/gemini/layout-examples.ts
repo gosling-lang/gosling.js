@@ -18,7 +18,7 @@ export const GEMINI_PLUGIN_TRACK_HEATMAP: GeminiSpec = {
                 row: 'sample',
                 column: 'position',
                 value: 'peak',
-                categories: ['sample 1', 'sample 2', 'sample 3', 'sample 4', 'sample 5']
+                categories: ['sample 1', 'sample 2', 'sample 3', 'sample 4']
             },
             mark: 'rect',
             x: {
@@ -50,7 +50,7 @@ export const GEMINI_PLUGIN_TRACK_AREA: GeminiSpec = {
                 row: 'sample',
                 column: 'position',
                 value: 'peak',
-                categories: ['sample 1', 'sample 2', 'sample 3', 'sample 4', 'sample 5']
+                categories: ['sample 1', 'sample 2', 'sample 3', 'sample 4']
             },
             mark: 'area',
             x: {
@@ -82,7 +82,7 @@ export const GEMINI_PLUGIN_TRACK_BAR: GeminiSpec = {
                 row: 'sample',
                 column: 'position',
                 value: 'peak',
-                categories: ['sample 1', 'sample 2', 'sample 3', 'sample 4', 'sample 5']
+                categories: ['sample 1', 'sample 2', 'sample 3', 'sample 4']
             },
             mark: 'bar',
             x: {
@@ -114,7 +114,7 @@ export const GEMINI_PLUGIN_TRACK_LINE: GeminiSpec = {
                 row: 'sample',
                 column: 'position',
                 value: 'peak',
-                categories: ['sample 1', 'sample 2', 'sample 3', 'sample 4', 'sample 5']
+                categories: ['sample 1', 'sample 2', 'sample 3', 'sample 4']
             },
             mark: 'line',
             x: {
@@ -144,7 +144,7 @@ export const GEMINI_PLUGIN_TRACK_POINT: GeminiSpec = {
                 row: 'sample',
                 column: 'position',
                 value: 'peak',
-                categories: ['sample 1', 'sample 2', 'sample 3', 'sample 4', 'sample 5']
+                categories: ['sample 1', 'sample 2', 'sample 3', 'sample 4']
             },
             mark: 'point',
             x: {

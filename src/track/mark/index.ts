@@ -6,6 +6,9 @@ import { drawArea } from './area';
 import { drawRect } from './rect';
 import { ChannelTypes } from '../../lib/gemini.schema';
 
+/**
+ * Visual channels currently supported for visual encoding.
+ */
 export const SUPPORTED_CHANNELS: (keyof typeof ChannelTypes)[] = [
     'color',
     'x',

@@ -1,7 +1,7 @@
 import { GeminiTrackModel } from '../../lib/gemini-track-model';
 import { IsChannelDeep, getValueUsingChannel, Channel, isStackedMark } from '../../lib/gemini.schema';
-import { RESOLUTION } from '.';
 import { group } from 'd3-array';
+// import { RESOLUTION } from '.';
 
 export function drawBar(HGC: any, trackInfo: any, tile: any) {
     /* gemini model */
@@ -44,7 +44,7 @@ export function drawBar(HGC: any, trackInfo: any, tile: any) {
     /* render */
     if (isStackedMark(spec)) {
         // TODO: many parts in this scope are identical as the below `else` statement, so encaptulate this?
-        const rowGraphics = new HGC.libraries.PIXI.Graphics(); // only one row for stacked marks
+        const rowGraphics = tile.graphics; // new HGC.libraries.PIXI.Graphics(); // only one row for stacked marks
 
         const genomicChannel = gm.getGenomicChannel();
         if (!genomicChannel || !genomicChannel.field) {
@@ -86,26 +86,27 @@ export function drawBar(HGC: any, trackInfo: any, tile: any) {
         });
 
         // add graphics of this row
-        const texture = HGC.services.pixiRenderer.generateTexture(
-            rowGraphics,
-            HGC.libraries.PIXI.SCALE_MODES.NEAREST,
-            RESOLUTION
-        );
-        const sprite = new HGC.libraries.PIXI.Sprite(texture);
+        // const texture = HGC.services.pixiRenderer.generateTexture(
+        //     rowGraphics,
+        //     HGC.libraries.PIXI.SCALE_MODES.NEAREST,
+        //     RESOLUTION
+        // );
+        // const sprite = new HGC.libraries.PIXI.Sprite(texture);
 
-        sprite.width = xScale(tileX + tileWidth) - xScale(tileX);
-        sprite.x = xScale(tileX);
-        sprite.y = 0;
-        sprite.height = rowHeight;
+        // sprite.width = xScale(tileX + tileWidth) - xScale(tileX);
+        // sprite.x = xScale(tileX);
+        // sprite.y = 0;
+        // sprite.height = rowHeight;
 
-        tile.spriteInfos.push({ sprite: sprite, scaleKey: undefined });
-        tile.graphics.addChild(sprite);
+        // tile.spriteInfos.push({ sprite: sprite, scaleKey: undefined });
+        // tile.graphics.addChild(sprite);
     } else {
         rowCategories.forEach(rowCategory => {
             // we are separately drawing each row so that y scale can be more effectively shared across tiles without rerendering from the bottom
-            const rowGraphics = new HGC.libraries.PIXI.Graphics();
+            const rowGraphics = tile.graphics; //new HGC.libraries.PIXI.Graphics();
             const rowPosition = gm.encodedValue('row', rowCategory);
 
+            // TODO: line for each layer?
             // stroke
             rowGraphics.lineStyle(
                 gm.encodedValue('strokeWidth'),
@@ -129,27 +130,27 @@ export function drawBar(HGC: any, trackInfo: any, tile: any) {
 
                 // pixi
                 rowGraphics.beginFill(colorToHex(color), 1);
-                rowGraphics.drawRect(x, rowHeight - y, barWidth, y);
+                rowGraphics.drawRect(x, rowHeight + rowPosition - y, barWidth, y);
 
                 // svg
-                trackInfo.addSVGInfo(tile, x, rowHeight - y, barWidth, y, color);
+                trackInfo.addSVGInfo(tile, x, rowHeight + rowPosition - y, barWidth, y, color);
             });
 
             // add graphics of this row
-            const texture = HGC.services.pixiRenderer.generateTexture(
-                rowGraphics,
-                HGC.libraries.PIXI.SCALE_MODES.NEAREST,
-                RESOLUTION
-            );
-            const sprite = new HGC.libraries.PIXI.Sprite(texture);
+            // const texture = HGC.services.pixiRenderer.generateTexture(
+            //     rowGraphics,
+            //     HGC.libraries.PIXI.SCALE_MODES.NEAREST,
+            //     RESOLUTION
+            // );
+            // const sprite = new HGC.libraries.PIXI.Sprite(texture);
 
-            sprite.width = xScale(tileX + tileWidth) - xScale(tileX);
-            sprite.x = xScale(tileX);
-            sprite.y = rowPosition;
-            sprite.height = rowHeight;
+            // sprite.width = xScale(tileX + tileWidth) - xScale(tileX);
+            // sprite.x = xScale(tileX);
+            // sprite.y = rowPosition;
+            // sprite.height = rowHeight;
 
-            tile.spriteInfos.push({ sprite: sprite, scaleKey: rowCategory });
-            tile.graphics.addChild(sprite);
+            // tile.spriteInfos.push({ sprite: sprite, scaleKey: rowCategory });
+            // tile.graphics.addChild(sprite);
         });
     }
 }

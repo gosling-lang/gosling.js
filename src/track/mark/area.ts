@@ -1,6 +1,5 @@
 import { GeminiTrackModel } from '../../lib/gemini-track-model';
 import { IsChannelDeep, getValueUsingChannel, Channel, isStackedMark } from '../../lib/gemini.schema';
-import { RESOLUTION } from '.';
 import { group } from 'd3-array';
 
 export function drawArea(HGC: any, trackInfo: any, tile: any) {
@@ -51,7 +50,7 @@ export function drawArea(HGC: any, trackInfo: any, tile: any) {
     /* render */
     if (isStackedMark(spec)) {
         // TODO: many parts in this scope are identical as the below `else` statement, so encaptulate this?
-        const rowGraphics = new HGC.libraries.PIXI.Graphics(); // only one row for stacked marks
+        const rowGraphics = tile.graphics; //new HGC.libraries.PIXI.Graphics(); // only one row for stacked marks
 
         const genomicChannel = gm.getGenomicChannel();
         if (!genomicChannel || !genomicChannel.field) {
@@ -71,6 +70,7 @@ export function drawArea(HGC: any, trackInfo: any, tile: any) {
 
         const prevYEndByGPos: { [k: string]: number } = {};
 
+        // TODO: we can have a multiple rows when color and row are mapped with different fields
         // are marks are drawn for each color
         colorCategories.forEach(colorCategory => {
             // we have two sets of points since we need to draw the bottom line as well
@@ -120,25 +120,28 @@ export function drawArea(HGC: any, trackInfo: any, tile: any) {
             rowGraphics.endFill();
         });
 
+        // Temporally, we do not convert graphics to sprite until we find a general way
+        // to share global scales across tiles.
+
         // add graphics of this row
-        const texture = HGC.services.pixiRenderer.generateTexture(
-            rowGraphics,
-            HGC.libraries.PIXI.SCALE_MODES.NEAREST,
-            RESOLUTION
-        );
-        const sprite = new HGC.libraries.PIXI.Sprite(texture);
+        // const texture = HGC.services.pixiRenderer.generateTexture(
+        //     rowGraphics,
+        //     HGC.libraries.PIXI.SCALE_MODES.NEAREST,
+        //     RESOLUTION
+        // );
+        // const sprite = new HGC.libraries.PIXI.Sprite(texture);
 
-        sprite.width = xScale(tileX + tileWidth) - xScale(tileX);
-        sprite.x = xScale(tileX);
-        sprite.y = 0;
-        sprite.height = rowHeight;
+        // sprite.width = xScale(tileX + tileWidth) - xScale(tileX);
+        // sprite.x = xScale(tileX);
+        // sprite.y = 0;
+        // sprite.height = rowHeight;
 
-        tile.spriteInfos.push({ sprite: sprite, scaleKey: undefined });
-        tile.graphics.addChild(sprite);
+        // tile.spriteInfos.push({ sprite: sprite, scaleKey: undefined });
+        // tile.graphics.addChild(sprite);
     } else {
         rowCategories.forEach(rowCategory => {
             // we are separately drawing each row so that y scale can be more effectively shared across tiles without rerendering from the bottom
-            const rowGraphics = new HGC.libraries.PIXI.Graphics();
+            const rowGraphics = tile.graphics; //new HGC.libraries.PIXI.Graphics();
             const rowPosition = gm.encodedValue('row', rowCategory);
 
             // area marks are drawn for each color
@@ -147,9 +150,9 @@ export function drawArea(HGC: any, trackInfo: any, tile: any) {
 
                 data.filter(
                     d =>
-                        (!getValueUsingChannel(d, spec.row as Channel) ||
+                        (typeof getValueUsingChannel(d, spec.row as Channel) === 'undefined' ||
                             (getValueUsingChannel(d, spec.row as Channel) as string) === rowCategory) &&
-                        (!getValueUsingChannel(d, spec.color as Channel) ||
+                        (typeof getValueUsingChannel(d, spec.color as Channel) === 'undefined' ||
                             (getValueUsingChannel(d, spec.color as Channel) as string) === colorCategory)
                 ).forEach((d, i, array) => {
                     const xValue = getValueUsingChannel(d, spec.x as Channel) as number;
@@ -160,16 +163,16 @@ export function drawArea(HGC: any, trackInfo: any, tile: any) {
 
                     if (i === 0) {
                         // start position of the polygon
-                        areaPoints.push(x, rowHeight);
+                        areaPoints.push(x, rowPosition + rowHeight);
                     }
 
-                    areaPoints.push(x, y);
+                    areaPoints.push(x, rowPosition + rowHeight - y);
 
                     if (i === array.length - 1) {
                         // close the polygon with a point at the start
                         const startX = xScale(tileX);
-                        areaPoints.push(x, rowHeight);
-                        areaPoints.push(startX, rowHeight);
+                        areaPoints.push(x, rowPosition + rowHeight);
+                        areaPoints.push(startX, rowPosition + rowHeight);
                     }
                 });
 
@@ -179,21 +182,24 @@ export function drawArea(HGC: any, trackInfo: any, tile: any) {
                 rowGraphics.endFill();
             });
 
+            // Temporally, we do not convert graphics to sprite until we find a general way
+            // to share global scales across tiles.
+
             // add graphics of this row
-            const texture = HGC.services.pixiRenderer.generateTexture(
-                rowGraphics,
-                HGC.libraries.PIXI.SCALE_MODES.NEAREST,
-                RESOLUTION
-            );
-            const sprite = new HGC.libraries.PIXI.Sprite(texture);
+            // const texture = HGC.services.pixiRenderer.generateTexture(
+            //     rowGraphics,
+            //     HGC.libraries.PIXI.SCALE_MODES.NEAREST,
+            //     RESOLUTION
+            // );
+            // const sprite = new HGC.libraries.PIXI.Sprite(texture);
 
-            sprite.width = xScale(tileX + tileWidth) - xScale(tileX);
-            sprite.x = xScale(tileX);
-            sprite.y = rowPosition;
-            sprite.height = rowHeight;
+            // sprite.width = xScale(tileX + tileWidth) - xScale(tileX);
+            // sprite.x = xScale(tileX);
+            // sprite.y = rowPosition;
+            // sprite.height = rowHeight;
 
-            tile.spriteInfos.push({ sprite: sprite, scaleKey: rowCategory });
-            tile.graphics.addChild(sprite);
+            // tile.spriteInfos.push({ sprite: sprite, scaleKey: rowCategory });
+            // tile.graphics.addChild(sprite);
         });
     }
 }

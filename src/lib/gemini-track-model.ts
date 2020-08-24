@@ -72,7 +72,7 @@ export class GeminiTrackModel {
         this._generateToCompleteSpec(this.specComplete);
         this._generateToCompleteSpec(this.specCompleteAlt);
 
-        this.setChannelScales();
+        this.setChannelScalesBasedOnCompleteSpec();
 
         // Add default specs.
         // ...
@@ -147,6 +147,36 @@ export class GeminiTrackModel {
      */
     public getGenomicChannel(): ChannelDeep | undefined {
         return getGenomicChannelFromTrack(this.spec());
+    }
+
+    /**
+     * Replace a domain with a new one in the complete spec(s).
+     * A domain is replaced only when the channel is bound with data (i.e., `ChannelDeep`).
+     */
+    public setChannelDomain(channelKey: keyof typeof ChannelTypes, domain: string[] | number[]) {
+        const channel = this.specComplete[channelKey];
+        if (IsChannelDeep(channel)) {
+            channel.domain = domain;
+        }
+        const channelAlt = this.specCompleteAlt[channelKey];
+        if (IsChannelDeep(channelAlt)) {
+            channelAlt.domain = domain;
+        }
+    }
+
+    /**
+     * Replace a domain with a new one in the complete spec(s).
+     * A domain is replaced only when the channel is bound with data (i.e., `ChannelDeep`).
+     */
+    public setChannelRange(channelKey: keyof typeof ChannelTypes, range: string[] | number[]) {
+        const channel = this.specComplete[channelKey];
+        if (IsChannelDeep(channel)) {
+            channel.range = range;
+        }
+        const channelAlt = this.specComplete[channelKey];
+        if (IsChannelDeep(channelAlt)) {
+            channelAlt.range = range;
+        }
     }
 
     // TODO: better organize this, perhaps, by combining several if statements
@@ -328,9 +358,9 @@ export class GeminiTrackModel {
     }
 
     /**
-     * Store the scale of individual visual channels.
+     * Store the scale of individual visual channels based on the `complete` spec.
      */
-    public setChannelScales() {
+    public setChannelScalesBasedOnCompleteSpec() {
         const spec = this.spec();
 
         SUPPORTED_CHANNELS.forEach(channelKey => {

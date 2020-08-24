@@ -1,6 +1,6 @@
 import { GeminiTrackModel } from '../../lib/gemini-track-model';
 import { IsChannelDeep, getValueUsingChannel, Channel } from '../../lib/gemini.schema';
-import { RESOLUTION } from '.';
+// import { RESOLUTION } from '.';
 
 export function drawPoint(HGC: any, trackInfo: any, tile: any) {
     /* gemini model */
@@ -42,7 +42,7 @@ export function drawPoint(HGC: any, trackInfo: any, tile: any) {
     /* render */
     rowCategories.forEach(rowCategory => {
         // we are separately drawing each row so that y scale can be more effectively shared across tiles without rerendering from the bottom
-        const rowGraphics = new HGC.libraries.PIXI.Graphics();
+        const rowGraphics = tile.graphics; // new HGC.libraries.PIXI.Graphics();
         const rowPosition = gm.encodedValue('row', rowCategory);
 
         // stroke
@@ -63,29 +63,34 @@ export function drawPoint(HGC: any, trackInfo: any, tile: any) {
             const colorValue = getValueUsingChannel(d, spec.color as Channel) as string;
             const sizeValue = getValueUsingChannel(d, spec.size as Channel) as number;
 
+            if (yValue === 0) return; // TODO: don't draw zero values, but this should be included in the users' spec
+
             const x = xScale(tileX + xValue * (tileWidth / tileSize));
             const y = gm.encodedValue('y', yValue);
             const color = gm.encodedValue('color', colorValue);
             const size = gm.encodedValue('size', sizeValue);
 
             rowGraphics.beginFill(colorToHex(color), 0.6);
-            rowGraphics.drawCircle(x, rowHeight - y, size);
+            rowGraphics.drawCircle(x, rowPosition + rowHeight - y, size);
         });
 
+        // Because simply scaling row graphics along y axis distort the shape of points,
+        // we do not convert graphics to sprites.
+
         // add graphics of this row
-        const texture = HGC.services.pixiRenderer.generateTexture(
-            rowGraphics,
-            HGC.libraries.PIXI.SCALE_MODES.NEAREST,
-            RESOLUTION
-        );
-        const sprite = new HGC.libraries.PIXI.Sprite(texture);
+        // const texture = HGC.services.pixiRenderer.generateTexture(
+        //     rowGraphics,
+        //     HGC.libraries.PIXI.SCALE_MODES.NEAREST,
+        //     RESOLUTION
+        // );
+        // const sprite = new HGC.libraries.PIXI.Sprite(texture);
 
-        sprite.width = xScale(tileX + tileWidth) - xScale(tileX);
-        sprite.x = xScale(tileX);
-        sprite.y = rowPosition;
-        sprite.height = rowHeight;
+        // sprite.width = xScale(tileX + tileWidth) - xScale(tileX);
+        // sprite.x = xScale(tileX);
+        // sprite.y = rowPosition;
+        // sprite.height = rowHeight;
 
-        tile.spriteInfos.push({ sprite: sprite, scaleKey: rowCategory });
-        tile.graphics.addChild(sprite);
+        // tile.spriteInfos.push({ sprite: sprite, scaleKey: rowCategory });
+        // tile.graphics.addChild(sprite);
     });
 }

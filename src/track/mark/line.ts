@@ -1,6 +1,6 @@
 import { GeminiTrackModel } from '../../lib/gemini-track-model';
 import { IsChannelDeep, getValueUsingChannel, Channel } from '../../lib/gemini.schema';
-import { RESOLUTION } from '.';
+// import { RESOLUTION } from '.';
 
 export function drawLine(HGC: any, trackInfo: any, tile: any) {
     /* gemini model */
@@ -48,7 +48,7 @@ export function drawLine(HGC: any, trackInfo: any, tile: any) {
     /* render */
     rowCategories.forEach(rowCategory => {
         // we are separately drawing each row so that y scale can be more effectively shared across tiles without rerendering from the bottom
-        const rowGraphics = new HGC.libraries.PIXI.Graphics();
+        const rowGraphics = tile.graphics; // new HGC.libraries.PIXI.Graphics();
         const rowPosition = gm.encodedValue('row', rowCategory);
 
         // line marks are drawn for each color
@@ -82,30 +82,30 @@ export function drawLine(HGC: any, trackInfo: any, tile: any) {
                     const y = gm.encodedValue('y', yValue);
 
                     if (i === 0) {
-                        rowGraphics.moveTo(x, y);
+                        rowGraphics.moveTo(x, rowPosition + rowHeight - y);
                     } else {
-                        rowGraphics.lineTo(x, y);
+                        rowGraphics.lineTo(x, rowPosition + rowHeight - y);
                     }
 
                     // svg
-                    trackInfo.addSVGInfo(tile, x, y, color);
+                    trackInfo.addSVGInfo(tile, x, rowPosition + rowHeight - y, color);
                 });
         });
 
         // add graphics of this row
-        const texture = HGC.services.pixiRenderer.generateTexture(
-            rowGraphics,
-            HGC.libraries.PIXI.SCALE_MODES.NEAREST,
-            RESOLUTION
-        );
-        const sprite = new HGC.libraries.PIXI.Sprite(texture);
+        // const texture = HGC.services.pixiRenderer.generateTexture(
+        //     rowGraphics,
+        //     HGC.libraries.PIXI.SCALE_MODES.NEAREST,
+        //     RESOLUTION
+        // );
+        // const sprite = new HGC.libraries.PIXI.Sprite(texture);
 
-        sprite.width = xScale(tileX + tileWidth) - xScale(tileX);
-        sprite.x = xScale(tileX);
-        sprite.y = rowPosition;
-        sprite.height = rowHeight;
+        // sprite.width = xScale(tileX + tileWidth) - xScale(tileX);
+        // sprite.x = xScale(tileX);
+        // sprite.y = rowPosition;
+        // sprite.height = rowHeight;
 
-        tile.spriteInfos.push({ sprite: sprite, scaleKey: rowCategory });
-        tile.graphics.addChild(sprite);
+        // tile.spriteInfos.push({ sprite: sprite, scaleKey: rowCategory });
+        // tile.graphics.addChild(sprite);
     });
 }

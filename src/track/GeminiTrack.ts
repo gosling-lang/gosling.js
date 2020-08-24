@@ -2,18 +2,20 @@ import * as d3 from 'd3';
 import { drawMark } from './mark';
 import { getMaxZoomLevel } from './utils/zoom';
 import { GeminiTrackModel } from '../lib/gemini-track-model';
-import { findQValueExtent } from './utils/extent';
 import { SpriteInfo } from './utils/sprite';
 import { validateTrack } from './validate';
 import { drawZoomInstruction } from './mark/zoom-instruction';
+import { shareScaleAcrossTracks } from './scales';
 
 function GeminiTrack(HGC: any, ...args: any[]): any {
     if (!new.target) {
         throw new Error('Uncaught TypeError: Class constructor cannot be invoked without "new"');
     }
 
+    // TODO: change the parent class (look into TiledPixiTrack)
     class GeminiTrackClass extends HGC.tracks.BarTrack {
         private extent: { min: number; max: number };
+        private domains: { [channel: string]: number[] | string[] };
 
         constructor(params: any[]) {
             const [context, options] = params;
@@ -31,29 +33,40 @@ function GeminiTrack(HGC: any, ...args: any[]): any {
 
             this.extent = { min: Number.MAX_SAFE_INTEGER, max: Number.MIN_SAFE_INTEGER };
 
+            this.domains = {};
+
             // deprecated
-            this.maxAndMin = {
-                max: null,
-                min: null
-            };
+            // this.maxAndMin = {
+            //     max: null,
+            //     min: null
+            // };
         }
 
         initTile(tile: any) {
             // TODO: support gene annotation tilesets
             // e.g., https://higlass.io/api/v1/tileset_info/?d=OHJakQICQD6gTD7skx4EWA
 
-            // create the tile
-            // should be overwritten by child classes
-            this.scale.minRawValue = this.minVisibleValue();
-            this.scale.maxRawValue = this.maxVisibleValue();
+            // deprecated
+            // this.scale.minRawValue = this.minVisibleValue();
+            // this.scale.maxRawValue = this.maxVisibleValue();
 
-            this.scale.minValue = this.scale.minRawValue;
-            this.scale.maxValue = this.scale.maxRawValue;
+            // deprecated
+            // this.scale.minValue = this.scale.minRawValue;
+            // this.scale.maxValue = this.scale.maxRawValue;
 
-            this.maxAndMin.min = d3.min(tile.tileData.dense);
-            this.maxAndMin.max = d3.max(tile.tileData.dense);
+            // deprecated
+            // this.maxAndMin.min = d3.min(tile.tileData.dense);
+            // this.maxAndMin.max = d3.max(tile.tileData.dense);
 
-            this.preprocessTile(tile);
+            // preprocess all tiles at once so that we can share the value scales
+            const gms: GeminiTrackModel[] = [];
+            this.visibleAndFetchedTiles().forEach((t: any) => {
+                // tile preprocessing is done only once per tile
+                gms.push(this.preprocessTile(t));
+            });
+
+            // IMPORTANT: when panning the tiles, the extent becomes larger
+            shareScaleAcrossTracks(gms);
 
             this.renderTile(tile);
             this.rescaleTiles();
@@ -85,7 +98,6 @@ function GeminiTrack(HGC: any, ...args: any[]): any {
 
         // scales in visualizations, such as y axis, color, and size, should be shared across all tiles
         setGlobalScales() {
-            // return; // first need to figure out how to store extent
             // reset extent
             this.extent = {
                 min: Number.MAX_SAFE_INTEGER,
@@ -95,16 +107,8 @@ function GeminiTrack(HGC: any, ...args: any[]): any {
             const visibleAndFetched = this.visibleAndFetchedTiles();
 
             visibleAndFetched.forEach((tile: any) => {
-                // deprecated
-                if (tile.minValue + tile.maxValue > this.maxAndMin.min + this.maxAndMin.max) {
-                    this.maxAndMin.min = tile.minValue;
-                    this.maxAndMin.max = tile.maxValue;
-                }
-                //
+                if (!tile.extent) return;
 
-                if (!tile.extent) {
-                    return;
-                }
                 if (tile.extent.y.min + tile.extent.y.max > this.extent.min + this.extent.max) {
                     this.extent.min = tile.extent.y.min;
                     this.extent.max = tile.extent.y.max;
@@ -112,8 +116,12 @@ function GeminiTrack(HGC: any, ...args: any[]): any {
             });
         }
 
+        /**
+         * Construct tabular data from a higlass tileset and a gemini track model.
+         * Return the generated gemini track model.
+         */
         preprocessTile(tile: any) {
-            if (tile.tabularData) return;
+            if (tile.geminiModel) return tile.geminiModel;
 
             if (this.options.spec?.metadata?.type !== 'higlass-multivec') {
                 console.warn('We currently only support higlass multivec type tilesets');
@@ -125,7 +133,7 @@ function GeminiTrack(HGC: any, ...args: any[]): any {
                 !this.options.spec?.metadata?.column ||
                 !this.options.spec?.metadata?.value
             ) {
-                console.warn('Proper metadata of the tileset is not provided. Please specify the name of data fields');
+                console.warn('Proper metadata of the tileset is not provided. Please specify the name of data fields.');
                 return;
             }
 
@@ -154,20 +162,24 @@ function GeminiTrack(HGC: any, ...args: any[]): any {
             tile.tabularData = tabularData;
 
             const isMaxZoomLevel = tile?.tileData?.zoomLevel !== getMaxZoomLevel();
+
+            // we make separate models for indivisual tiles because they contain different data (e.g., genomic positions)
             tile.geminiModel = new GeminiTrackModel(this.options.spec, tile.tabularData, isMaxZoomLevel);
-            // TODO:
-            tile.extent = findQValueExtent(tile.geminiModel.spec(isMaxZoomLevel), tabularData);
+
+            // deprecated
+            // tile.extent = findQValueExtent(tile.geminiModel.spec(isMaxZoomLevel), tabularData);
 
             // we need to sync the domain of y-axis so that all tiles are aligned each other
             this.setGlobalScales();
+
+            return tile.geminiModel;
         }
 
         /**
-         * Re-align the sprites of all visible tiles when zooming and panning
+         * Re-align the sprites of all visible tiles when zooming and panning.
          */
-
         rescaleTiles() {
-            // return; // first need to figure out how to store extent
+            return; // first need to figure out how to store extent
 
             const visibleAndFetched = this.visibleAndFetchedTiles();
             const trackHeight = this.dimensions[1];
@@ -186,9 +198,10 @@ function GeminiTrack(HGC: any, ...args: any[]): any {
                     return;
                 }
 
+                // rescale y position of each graphics
+                // TODO: do this only when neccesary? For example, we do not need to do this for heatmaps
                 const rowHeight =
                     // if `tile.rowScale.domain()` is `undefined`, we are using constant value
-                    // TODO: better way to represent this?
                     trackHeight / (!tile.rowScale.domain ? 1 : tile.rowScale.domain().length);
                 const yScale = d3
                     .scaleLinear()
@@ -309,10 +322,17 @@ function GeminiTrack(HGC: any, ...args: any[]): any {
         }
 
         updateTile() {
-            const visibleAndFetched = this.visibleAndFetchedTiles();
+            // preprocess all tiles at once so that we can share the value scales
+            const gms: GeminiTrackModel[] = [];
+            this.visibleAndFetchedTiles().forEach((tile: any) => {
+                // tile preprocessing is done only once per tile
+                gms.push(this.preprocessTile(tile));
+            });
 
-            visibleAndFetched.forEach((tile: any) => {
-                this.preprocessTile(tile);
+            shareScaleAcrossTracks(gms, 'y'); // TODO: multiple channels
+
+            this.visibleAndFetchedTiles().forEach((tile: any) => {
+                this.renderTile(tile);
             });
 
             this.rescaleTiles();
@@ -325,7 +345,9 @@ function GeminiTrack(HGC: any, ...args: any[]): any {
         draw() {
             super.draw();
         }
-        drawTile() {} // prevent BarTracks draw method from having an effect
+        drawTile(tile: any) {
+            this.renderTile(tile);
+        } // prevent BarTracks draw method from having an effect
         exportSVG() {}
         getMouseOverHtml() {}
     }

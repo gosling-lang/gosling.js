@@ -26,14 +26,20 @@ interface Demo {
 
 export const demos: ReadonlyArray<Demo> = [
     {
-        name: 'Heatmap (HiGlass Gemini Plugin Track)',
-        spec: GEMINI_PLUGIN_TRACK_HEATMAP,
+        name: 'Area Chart (HiGlass Gemini Plugin Track)',
+        spec: GEMINI_PLUGIN_TRACK_AREA,
         glyphWidth: 0,
         glyphHeight: 0
     },
     {
-        name: 'Area Chart (HiGlass Gemini Plugin Track)',
-        spec: GEMINI_PLUGIN_TRACK_AREA,
+        name: 'Scatterplot (HiGlass Gemini Plugin Track)',
+        spec: GEMINI_PLUGIN_TRACK_POINT,
+        glyphWidth: 0,
+        glyphHeight: 0
+    },
+    {
+        name: 'Heatmap (HiGlass Gemini Plugin Track)',
+        spec: GEMINI_PLUGIN_TRACK_HEATMAP,
         glyphWidth: 0,
         glyphHeight: 0
     },
@@ -46,12 +52,6 @@ export const demos: ReadonlyArray<Demo> = [
     {
         name: 'Line Chart (HiGlass Gemini Plugin Track)',
         spec: GEMINI_PLUGIN_TRACK_LINE,
-        glyphWidth: 0,
-        glyphHeight: 0
-    },
-    {
-        name: 'Scatterplot (HiGlass Gemini Plugin Track)',
-        spec: GEMINI_PLUGIN_TRACK_POINT,
         glyphWidth: 0,
         glyphHeight: 0
     },
