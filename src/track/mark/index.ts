@@ -31,7 +31,6 @@ export function drawMark(HGC: any, trackInfo: any, tile: any, gm: GeminiTrackMod
      * TODO: Major Missing Things That We Need To Support Here
      * - Supporting vertical tracks
      * - Covering differet field type combinations, other than 1G, 1C, 1Q (e.g., multiple stacked bar charts)
-     * - Get opacity of marks
      * - Draw axis for individual rows
      * - Misconnection between tiles (e.g., lines)
      * - Differentiate categorical colors from quantitative colors
@@ -41,7 +40,6 @@ export function drawMark(HGC: any, trackInfo: any, tile: any, gm: GeminiTrackMod
      * - Legends
      * - Glyph
      * - Data aggregation
-     * - Ellipse instead of circle
      * - If invalide spec, show message
      * - Gap between rows
      * - Incorrect scale at the end of the genomic coordinate

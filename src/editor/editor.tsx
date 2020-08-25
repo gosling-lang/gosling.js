@@ -149,6 +149,7 @@ function Editor() {
                         setEditorMode(e.target.value as any);
                     }}
                     defaultValue={'Full Glyph Definition'}
+                    disabled
                 >
                     {['Full Glyph Definition', 'Predefined Glyph'].map(d => (
                         <option key={d} value={d}>
@@ -159,7 +160,7 @@ function Editor() {
             </div>
             <div className="editor">
                 <SplitPane className="split-pane-root" split="vertical" defaultSize="35%" onChange={undefined}>
-                    <SplitPane split="horizontal" defaultSize="50%" onChange={undefined}>
+                    <SplitPane split="horizontal" defaultSize="26px" primary="second" onChange={undefined}>
                         {/* Gemini Editor */}
                         <EditorPanel
                             code={gm}
@@ -180,24 +181,24 @@ function Editor() {
                                     onChange={undefined}
                                 />
                             </>
-                            {/*
-                TODO: This is only for showing a scroll view for the higlass view config editor
-                Remove the below line and the nearest SplitPane after figuring out a better way
-                of showing the scroll view.
-              */}
+                            {/**
+                             * TODO: This is only for showing a scroll view for the higlass view config editor
+                             * Remove the below line and the nearest SplitPane after figuring out a better way
+                             * of showing the scroll view.
+                             */}
                             <></>
                         </SplitPane>
                     </SplitPane>
                     {/* D3 Visualizations */}
                     <SplitPane split="horizontal" defaultSize="0%" onChange={undefined}>
-                        <div className="preview-container" hidden>
+                        <div className="preview-container">
                             <b>Composite Mark Preview</b>
                             <div>
                                 <svg ref={glyphSvg} />
                             </div>
                         </div>
                         <div className="preview-container">
-                            <b>Layout Preview</b>
+                            {/* <b>Layout Preview</b> */}
                             <div style={{ position: 'relative' }}>
                                 <svg ref={layoutSvg} />
                                 {hglass}
