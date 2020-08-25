@@ -3,9 +3,9 @@ import { IsChannelDeep, getValueUsingChannel, Channel, IsStackedMark } from '../
 import { group } from 'd3-array';
 // import { RESOLUTION } from '.';
 
-export function drawBar(HGC: any, trackInfo: any, tile: any, gm: GeminiTrackModel) {
+export function drawBar(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackModel) {
     /* track spec */
-    const spec = gm.spec();
+    const spec = tm.spec();
 
     /* helper */
     const { colorToHex } = HGC.utils;
@@ -35,7 +35,7 @@ export function drawBar(HGC: any, trackInfo: any, tile: any, gm: GeminiTrackMode
     const rowHeight = trackHeight / rowCategories.length;
 
     /* information for rescaling tiles */
-    tile.rowScale = gm.getChannelScale('row');
+    tile.rowScale = tm.getChannelScale('row');
     tile.spriteInfos = []; // sprites for individual rows or columns
 
     /* render */
@@ -43,7 +43,7 @@ export function drawBar(HGC: any, trackInfo: any, tile: any, gm: GeminiTrackMode
         // TODO: many parts in this scope are identical as the below `else` statement, so encaptulate this?
         const rowGraphics = tile.graphics; // new HGC.libraries.PIXI.Graphics(); // only one row for stacked marks
 
-        const genomicChannel = gm.getGenomicChannel();
+        const genomicChannel = tm.getGenomicChannel();
         if (!genomicChannel || !genomicChannel.field) {
             console.warn('Genomic field is not provided in the specification');
             return;
@@ -53,8 +53,8 @@ export function drawBar(HGC: any, trackInfo: any, tile: any, gm: GeminiTrackMode
 
         // stroke
         rowGraphics.lineStyle(
-            gm.encodedValue('strokeWidth'),
-            colorToHex(gm.encodedValue('stroke')),
+            tm.encodedValue('strokeWidth'),
+            colorToHex(tm.encodedValue('stroke')),
             1, // alpha
             1 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
         );
@@ -68,11 +68,12 @@ export function drawBar(HGC: any, trackInfo: any, tile: any, gm: GeminiTrackMode
                 const colorValue = getValueUsingChannel(d, spec.color as Channel) as string;
 
                 const x = xScale(tileX + xValue * (tileWidth / tileSize));
-                const y = gm.encodedValue('y', yValue);
-                const color = gm.encodedValue('color', colorValue);
+                const y = tm.encodedValue('y', yValue);
+                const color = tm.encodedValue('color', colorValue);
+                const opacity = tm.encodedValue('opacity');
 
                 // pixi
-                rowGraphics.beginFill(colorToHex(color), 1);
+                rowGraphics.beginFill(colorToHex(color), opacity);
                 rowGraphics.drawRect(x, rowHeight - y - prevYEnd, barWidth, y);
 
                 // svg
@@ -101,13 +102,13 @@ export function drawBar(HGC: any, trackInfo: any, tile: any, gm: GeminiTrackMode
         rowCategories.forEach(rowCategory => {
             // we are separately drawing each row so that y scale can be more effectively shared across tiles without rerendering from the bottom
             const rowGraphics = tile.graphics; //new HGC.libraries.PIXI.Graphics();
-            const rowPosition = gm.encodedValue('row', rowCategory);
+            const rowPosition = tm.encodedValue('row', rowCategory);
 
             // TODO: line for each layer?
             // stroke
             rowGraphics.lineStyle(
-                gm.encodedValue('strokeWidth'),
-                colorToHex(gm.encodedValue('stroke')),
+                tm.encodedValue('strokeWidth'),
+                colorToHex(tm.encodedValue('stroke')),
                 1, // alpha
                 1 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
             );
@@ -122,11 +123,12 @@ export function drawBar(HGC: any, trackInfo: any, tile: any, gm: GeminiTrackMode
                 const colorValue = getValueUsingChannel(d, spec.color as Channel) as string;
 
                 const x = xScale(tileX + xValue * (tileWidth / tileSize));
-                const y = gm.encodedValue('y', yValue);
-                const color = gm.encodedValue('color', colorValue);
+                const y = tm.encodedValue('y', yValue);
+                const color = tm.encodedValue('color', colorValue);
+                const opacity = tm.encodedValue('opacity');
 
                 // pixi
-                rowGraphics.beginFill(colorToHex(color), 1);
+                rowGraphics.beginFill(colorToHex(color), opacity);
                 rowGraphics.drawRect(x, rowHeight + rowPosition - y, barWidth, y);
 
                 // svg

@@ -70,7 +70,7 @@ export function drawPoint(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMo
             // TODO: this should be included in the users' spec
             if (yValue === 0 || size === 0 || opacity === 0) return;
 
-            rowGraphics.beginFill(colorToHex(color));
+            rowGraphics.beginFill(colorToHex(color), opacity);
             rowGraphics.drawCircle(x, rowPosition + rowHeight - y, size);
         });
 

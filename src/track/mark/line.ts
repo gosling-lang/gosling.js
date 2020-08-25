@@ -54,7 +54,7 @@ export function drawLine(HGC: any, trackInfo: any, tile: any, gm: GeminiTrackMod
             rowGraphics.lineStyle(
                 gm.encodedValue('size'),
                 colorToHex(color),
-                1, // alpha
+                gm.encodedValue('opacity'), // alpha
                 1 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
             );
 
