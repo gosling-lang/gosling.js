@@ -1,11 +1,11 @@
 import Ajv from 'ajv';
 import uuid from 'uuid';
-import { GeminiSpec, Mark, IsNotEmptyTrack, IsMarkDeep } from '../gemini.schema';
+import { GeminiSpec, Mark, IsMarkDeep, IsSingleTrack } from '../gemini.schema';
 import { GLYPH_LOCAL_PRESET_TYPES, GLYPH_PRESETS } from '../test/gemini/glyph';
 
 export function replaceGlyphs(spec: GeminiSpec): GeminiSpec {
     spec.tracks.forEach(track => {
-        if (IsNotEmptyTrack(track) && IsMarkDeep(track.mark)) {
+        if (IsSingleTrack(track) && IsMarkDeep(track.mark)) {
             const predefinedGlyph = track.mark.type;
             if (GLYPH_LOCAL_PRESET_TYPES.includes(predefinedGlyph as any /* TODO */)) {
                 track.mark = GLYPH_PRESETS.find(d => d.name === predefinedGlyph)?.mark as Mark;

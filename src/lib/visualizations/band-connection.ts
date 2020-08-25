@@ -1,11 +1,11 @@
 import { BoundingBox } from '../utils/bounding-box';
-import { Track, GenericType, Channel, IsChannelDeep, Datum } from '../gemini.schema';
+import { IsChannelDeep, Datum, BasicSingleTrack } from '../gemini.schema';
 import * as d3 from 'd3';
 import { getLinkPosition, LinkStyleModel } from './link';
 
 export function renderBetweenBandLink(
     g: d3.Selection<SVGGElement, any, any, any>,
-    track: Track | GenericType<Channel>,
+    track: BasicSingleTrack,
     bb: BoundingBox
 ) {
     const styles = new LinkStyleModel(track);

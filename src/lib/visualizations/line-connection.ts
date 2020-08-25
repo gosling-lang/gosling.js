@@ -1,13 +1,9 @@
 import { BoundingBox } from '../utils/bounding-box';
-import { Track, GenericType, Channel, IsChannelDeep, Datum } from '../gemini.schema';
+import { Track, IsChannelDeep, Datum, BasicSingleTrack } from '../gemini.schema';
 import * as d3 from 'd3';
 import { getLinkPosition, LinkStyleModel } from './link';
 
-export function renderBetweenLineLink(
-    g: d3.Selection<SVGGElement, any, any, any>,
-    track: Track | GenericType<Channel>,
-    bb: BoundingBox
-) {
+export function renderBetweenLineLink(g: d3.Selection<SVGGElement, any, any, any>, track: Track, bb: BoundingBox) {
     const styles = new LinkStyleModel(track);
 
     const xField = IsChannelDeep(track.x) ? track.x.field : undefined;
@@ -32,7 +28,7 @@ export function renderBetweenLineLink(
         y: (d: Datum) => number;
     }[] = [];
 
-    const position = getLinkPosition(track);
+    const position = getLinkPosition(track as BasicSingleTrack);
     if (position.includes('left')) {
         point.push({
             x: () => bb.x,

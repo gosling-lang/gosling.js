@@ -7,11 +7,11 @@ import { HiGlassTrack } from './higlass';
 
 export function renderLayoutPreview(
     svg: SVGSVGElement,
-    gm: GeminiSpec,
+    spec: GeminiSpec,
     boundingBox: BoundingBox,
     setHiGlassInfo: (higlassInfo: HiGlassTrack[]) => void
 ) {
-    if (!svg || !gm) return;
+    if (!svg || !spec) return;
     d3.select(svg).selectAll('*').remove();
 
     // styles
@@ -25,5 +25,5 @@ export function renderLayoutPreview(
 
     const innerG = d3.select(svg).append('g').attr('width', boundingBox.width).attr('height', boundingBox.height);
 
-    renderLayout(innerG, gm, setHiGlassInfo, boundingBox);
+    renderLayout(innerG, spec, setHiGlassInfo, boundingBox);
 }

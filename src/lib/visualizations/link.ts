@@ -1,5 +1,5 @@
 import { BoundingBox } from '../utils/bounding-box';
-import { Track, GenericType, Channel, IsChannelDeep, IsChannelValue, IsDataDeep } from '../gemini.schema';
+import { Track, IsChannelDeep, IsChannelValue, IsDataDeep, BasicSingleTrack } from '../gemini.schema';
 import * as d3 from 'd3';
 import { validateBetweenLinkSpec } from './link-validate';
 import { getChartType } from './chart-type';
@@ -41,11 +41,11 @@ export const LinkChannelToStyleMap: {
 
 export class LinkStyleModel {
     private style: Required<LinkStyle>;
-    constructor(track: Track | GenericType<Channel>) {
+    constructor(track: Track) {
         this.style = { ...DEFAULT_LINK_STYLE };
         // Fill styles using spec.
         Object.keys(LinkChannelToStyleMap).forEach(c => {
-            const channel = (track as GenericType<Channel>)[c];
+            const channel = (track as any)[c];
             if (IsChannelValue(channel)) {
                 (this.style[LinkChannelToStyleMap[c]] as any) /* TODO: remove `any` */ = channel.value;
             }
@@ -56,7 +56,7 @@ export class LinkStyleModel {
     }
 }
 
-export function getLinkPosition(track: Track | GenericType<Channel>): LinkPosition {
+export function getLinkPosition(track: BasicSingleTrack): LinkPosition {
     const xField = IsChannelDeep(track.x) ? track.x.field : undefined;
     const x1Field = IsChannelDeep(track.x1) ? track.x1.field : undefined;
     const yField = IsChannelDeep(track.y) ? track.y.field : undefined;
@@ -75,7 +75,7 @@ export function renderBetweenLink(
     g: d3.Selection<SVGGElement, any, any, any>,
     tracksWithBB: {
         boundingBox: BoundingBox;
-        track: Track | GenericType<Channel>;
+        track: BasicSingleTrack;
     }[]
 ) {
     tracksWithBB.forEach(tb => {
@@ -90,14 +90,14 @@ export function renderBetweenLink(
             case 'line-connection':
                 if (IsDataDeep(tb.track.data)) {
                     d3.csv(tb.track.data.url).then(data =>
-                        renderBetweenLineLink(g, { ...tb.track, data } as Track, tb.boundingBox)
+                        renderBetweenLineLink(g, { ...tb.track, data } as BasicSingleTrack, tb.boundingBox)
                     );
                 }
                 break;
             case 'band-connection':
                 if (IsDataDeep(tb.track.data)) {
                     d3.csv(tb.track.data.url).then(data =>
-                        renderBetweenBandLink(g, { ...tb.track, data } as Track, tb.boundingBox)
+                        renderBetweenBandLink(g, { ...tb.track, data } as BasicSingleTrack, tb.boundingBox)
                     );
                 }
                 break;

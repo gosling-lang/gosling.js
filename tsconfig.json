@@ -8,6 +8,7 @@
       "dom.iterable",
       "esnext"
     ],
+    // "alwaysStrict": true,
     "allowJs": true,
     "sourceMap": true,
     "declaration": true,
@@ -21,7 +22,7 @@
     "isolatedModules": false,
     "jsx": "react"
   },
-  "files": ["index.tsx"],
+  // "files": ["index.tsx"],
   "include": [
     "src",
     "test"

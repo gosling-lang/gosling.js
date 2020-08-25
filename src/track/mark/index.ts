@@ -26,54 +26,46 @@ export const RESOLUTION = 4;
 /**
  * Draw a track based on the track specification in a Gemini grammar.
  */
-export function drawMark(HGC: any, trackInfo: any, tile: any) {
+export function drawMark(HGC: any, trackInfo: any, tile: any, gm: GeminiTrackModel) {
     /**
      * TODO: Major Missing Things That We Need To Support Here
-     * (1) Supporting vertical tracks
-     * (2) Covering differet field type combinations, other than 1G, 1C, 1Q (e.g., multiple stacked bar charts)
-     * (3) Get opacity of marks
-     * (4) Draw axis for individual rows
-     * (5) Misconnection between tiles (e.g., lines)
-     * (6) Differentiate categorical colors from quantitative colors
-     * (7) SVG support
-     * (8) Layering multiple tracks
-     * (9) Genomic coordinates on both x and y axes
-     * (10) Tooltip
-     * (11) Legends
-     * (12) Glyph
-     * (13) Data aggregation
-     * (14) Ellipse instead of circle
-     * (15) If invalide spec, show message
-     * (16) Gap between rows
-     * (17) Incorrect scale at the end of the genomic coordinate
-     * (18) Scaling not consistent with zoom level
-     * (19) Occasional black screen when zoomed in
+     * - Supporting vertical tracks
+     * - Covering differet field type combinations, other than 1G, 1C, 1Q (e.g., multiple stacked bar charts)
+     * - Get opacity of marks
+     * - Draw axis for individual rows
+     * - Misconnection between tiles (e.g., lines)
+     * - Differentiate categorical colors from quantitative colors
+     * - SVG support
+     * - Genomic coordinates on both x and y axes
+     * - Tooltip
+     * - Legends
+     * - Glyph
+     * - Data aggregation
+     * - Ellipse instead of circle
+     * - If invalide spec, show message
+     * - Gap between rows
+     * - Incorrect scale at the end of the genomic coordinate
+     * - Scaling not consistent with zoom level
+     * - Occasional black screen when zoomed in
+     * - Support half resolution of tiles from the server
      */
 
-    if (!tile.geminiModel) {
-        // we do not have a track model prepared to render a visualization
-        return;
-    }
-
     /* spec */
-    const gm = tile.geminiModel as GeminiTrackModel;
-    const spec = gm.spec();
-
-    switch (spec.mark) {
+    switch (gm.spec().mark) {
         case 'point':
-            drawPoint(HGC, trackInfo, tile);
+            drawPoint(HGC, trackInfo, tile, gm);
             break;
         case 'bar':
-            drawBar(HGC, trackInfo, tile);
+            drawBar(HGC, trackInfo, tile, gm);
             break;
         case 'line':
-            drawLine(HGC, trackInfo, tile);
+            drawLine(HGC, trackInfo, tile, gm);
             break;
         case 'area':
-            drawArea(HGC, trackInfo, tile);
+            drawArea(HGC, trackInfo, tile, gm);
             break;
         case 'rect':
-            drawRect(HGC, trackInfo, tile);
+            drawRect(HGC, trackInfo, tile, gm);
             break;
         default:
             console.warn('Unsupported mark type');

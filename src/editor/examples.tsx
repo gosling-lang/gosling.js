@@ -1,8 +1,6 @@
 import { GeminiSpec } from '../lib/gemini.schema';
 import { GENE_ANNOTATION_PLOT, GENE_ANNOTATION_PLOT_SIMPLE, CYTOGENETIC_BAND } from '../lib/test/gemini/glyph-examples';
 import {
-    GEMINI_PLUGIN_TRACK_LINE,
-    GEMINI_PLUGIN_TRACK_HEATMAP,
     LAYOUT_EXAMPLE_COMBO_HORIZONTAL,
     LAYOUT_EXAMPLE_LINK,
     LAYOUT_EXAMPLE_COMBO,
@@ -12,9 +10,8 @@ import {
     GEMINI_TRACK_EXAMPLE,
     GEMINI_TRACK_EXAMPLE2,
     GEMINI_TRACK_EXAMPLE3,
-    GEMINI_PLUGIN_TRACK_POINT,
-    GEMINI_PLUGIN_TRACK_BAR,
-    GEMINI_PLUGIN_TRACK_AREA
+    GEMINI_PLUGIN_TRACK_BASIC_MARKS,
+    GEMINI_PLUGIN_TRACK_SUPERPOSE
 } from '../lib/test/gemini/layout-examples';
 
 interface Demo {
@@ -26,32 +23,14 @@ interface Demo {
 
 export const demos: ReadonlyArray<Demo> = [
     {
-        name: 'Area Chart (HiGlass Gemini Plugin Track)',
-        spec: GEMINI_PLUGIN_TRACK_AREA,
+        name: 'Basic Marks (HiGlass Gemini Plugin Track)',
+        spec: GEMINI_PLUGIN_TRACK_BASIC_MARKS,
         glyphWidth: 0,
         glyphHeight: 0
     },
     {
-        name: 'Scatterplot (HiGlass Gemini Plugin Track)',
-        spec: GEMINI_PLUGIN_TRACK_POINT,
-        glyphWidth: 0,
-        glyphHeight: 0
-    },
-    {
-        name: 'Heatmap (HiGlass Gemini Plugin Track)',
-        spec: GEMINI_PLUGIN_TRACK_HEATMAP,
-        glyphWidth: 0,
-        glyphHeight: 0
-    },
-    {
-        name: 'Bar Chart (HiGlass Gemini Plugin Track)',
-        spec: GEMINI_PLUGIN_TRACK_BAR,
-        glyphWidth: 0,
-        glyphHeight: 0
-    },
-    {
-        name: 'Line Chart (HiGlass Gemini Plugin Track)',
-        spec: GEMINI_PLUGIN_TRACK_LINE,
+        name: 'Superposed Tracks (HiGlass Gemini Plugin Track)',
+        spec: GEMINI_PLUGIN_TRACK_SUPERPOSE,
         glyphWidth: 0,
         glyphHeight: 0
     },

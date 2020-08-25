@@ -2,12 +2,9 @@ import { GeminiTrackModel } from '../../lib/gemini-track-model';
 import { IsChannelDeep, getValueUsingChannel, Channel } from '../../lib/gemini.schema';
 // import { RESOLUTION } from '.';
 
-export function drawPoint(HGC: any, trackInfo: any, tile: any) {
-    /* gemini model */
-    const gm = tile.geminiModel as GeminiTrackModel;
-
+export function drawPoint(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackModel) {
     /* track spec */
-    const spec = gm.spec();
+    const spec = tm.spec();
 
     /* helper */
     const { colorToHex } = HGC.utils;
@@ -36,19 +33,19 @@ export function drawPoint(HGC: any, trackInfo: any, tile: any) {
     const rowHeight = trackHeight / rowCategories.length;
 
     /* information for rescaling tiles */
-    tile.rowScale = gm.getChannelScale('row');
+    tile.rowScale = tm.getChannelScale('row');
     tile.spriteInfos = []; // sprites for individual rows or columns
 
     /* render */
     rowCategories.forEach(rowCategory => {
         // we are separately drawing each row so that y scale can be more effectively shared across tiles without rerendering from the bottom
         const rowGraphics = tile.graphics; // new HGC.libraries.PIXI.Graphics();
-        const rowPosition = gm.encodedValue('row', rowCategory);
+        const rowPosition = tm.encodedValue('row', rowCategory);
 
         // stroke
         rowGraphics.lineStyle(
-            gm.encodedValue('strokeWidth'),
-            colorToHex(gm.encodedValue('stroke')),
+            tm.encodedValue('strokeWidth'),
+            colorToHex(tm.encodedValue('stroke')),
             1, // alpha
             1 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
         );
@@ -63,14 +60,17 @@ export function drawPoint(HGC: any, trackInfo: any, tile: any) {
             const colorValue = getValueUsingChannel(d, spec.color as Channel) as string;
             const sizeValue = getValueUsingChannel(d, spec.size as Channel) as number;
 
-            if (yValue === 0) return; // TODO: don't draw zero values, but this should be included in the users' spec
-
             const x = xScale(tileX + xValue * (tileWidth / tileSize));
-            const y = gm.encodedValue('y', yValue);
-            const color = gm.encodedValue('color', colorValue);
-            const size = gm.encodedValue('size', sizeValue);
+            const y = tm.encodedValue('y', yValue);
+            const color = tm.encodedValue('color', colorValue);
+            const size = tm.encodedValue('size', sizeValue);
+            const opacity = tm.encodedValue('opacity');
 
-            rowGraphics.beginFill(colorToHex(color), 0.6);
+            // don't draw zero values
+            // TODO: this should be included in the users' spec
+            if (yValue === 0 || size === 0 || opacity === 0) return;
+
+            rowGraphics.beginFill(colorToHex(color));
             rowGraphics.drawCircle(x, rowPosition + rowHeight - y, size);
         });
 

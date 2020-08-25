@@ -2,24 +2,19 @@
 // https://github.com/vega/vega-lite/blob/23fe2b9c6a82551f321ccab751370ca48ae002c9/src/channeldef.ts#L961
 
 import { GLYPH_LOCAL_PRESET_TYPE, GLYPH_HIGLASS_PRESET_TYPE } from './test/gemini/glyph';
-import { validTilesetUrl } from './utils';
 import * as d3 from 'd3';
 
 export interface GeminiSpec {
     references?: string[];
     description?: string;
     layout?: Layout;
-    tracks: (Track | GenericType<Channel> | EmptyTrack)[]; // TODO: `Track` does not mean anything here because of `GenericType`
+    tracks: Track[];
 }
 
 export interface Layout {
     type: 'linear' | 'circular';
     direction: 'vertical' | 'horizontal';
     wrap?: number;
-}
-
-export interface GenericType<T> {
-    [k: string]: T;
 }
 
 /**
@@ -29,7 +24,9 @@ export interface DataDeep {
     url: string;
     type: 'tileset' | 'csv';
 }
-export type DataMetadata = MultivecMetadata;
+
+export type DataMetadata = MultivecMetadata; // ...
+
 export interface MultivecMetadata {
     type: 'higlass-multivec';
     column: string;
@@ -37,8 +34,19 @@ export interface MultivecMetadata {
     value: string;
     categories?: string[];
 }
-export interface EmptyTrack {}
-export interface Track {
+
+export type Track = SingleTrack | SuperposedTrack;
+
+export type SingleTrack = BasicSingleTrack | CustomChannel;
+
+// TODO: how to exclude keys defined in the `BasicSingleTrack`?
+export type CustomChannel = {
+    [k: string]: Channel;
+} & {
+    [k in CHANNEL_KEYS]?: never;
+};
+
+export interface BasicSingleTrack {
     // primitives
     data: DataDeep | Datum[];
     metadata?: DataMetadata; // we could remove this and get this information from the server
@@ -72,8 +80,15 @@ export interface Track {
     height?: number;
     style?: TrackStyle;
 }
-// export type TrackKey = keyof Track
 
+/**
+ * Superposing multiple tracks.
+ */
+export type SuperposedTrack = Partial<SingleTrack> & {
+    superpose: Partial<SingleTrack>[];
+};
+
+// deprecated
 export interface TrackStyle {
     background?: string;
     stroke?: string;
@@ -97,6 +112,27 @@ export interface SemanticZoom {
     aggFunction?: 'max' | 'min' | 'mean' | 'count' | 'sum';
     importance?: string; // field name
     spec?: Partial<Track>;
+}
+
+export const enum CHANNEL_KEYS {
+    x = 'x',
+    y = 'y',
+    xe = 'xe',
+    ye = 'ye',
+    // = '//',
+    x1 = 'x1',
+    y1 = 'y1',
+    x1e = 'x1e',
+    y1e = 'y1e',
+    // = '//',
+    color = 'color',
+    row = 'row',
+    opacity = 'opacity',
+    stroke = 'stroke',
+    strokeWidth = 'strokeWidth',
+    size = 'size',
+    text = 'text',
+    w = 'w'
 }
 
 /**
@@ -282,8 +318,14 @@ interface Consistency {
 }
 
 /**
- * Type Checks
+ * Type guards
  */
+
+// TODO: this is not neccessary. Resolve the issue with `Channel`.
+export function IsDataMetadata(_: DataMetadata | ChannelDeep | ChannelValue | undefined): _ is DataMetadata {
+    return typeof _ === 'object' && 'type' in _ && _.type === 'higlass-multivec';
+}
+
 export function IsDataDeep(
     data:
         | DataDeep
@@ -315,12 +357,6 @@ export function IsDomainGene(domain: Domain): domain is DomainGene {
     return 'gene' in domain;
 }
 
-export function IsNotEmptyTrack(
-    track: Track | GenericType<Channel> | EmptyTrack
-): track is Track | GenericType<Channel> {
-    return track !== {};
-}
-
 export function IsTrackStyle(track: TrackStyle | undefined): track is TrackStyle {
     return track !== undefined;
 }
@@ -337,11 +373,33 @@ export function IsGlyphMark(mark: any /* TODO */): mark is MarkGlyph {
     return typeof mark === 'object' && mark.type === 'compositeMark';
 }
 
-export function IsHiGlassTrack(track: Track | GenericType<Channel>) {
-    return (
-        (typeof track.mark === 'object' && IsGlyphMark(track.mark) && track.mark.type !== 'compositeMark') ||
-        (IsDataDeep(track.data) && validTilesetUrl(track.data.url))
-    );
+export function IsSingleTrack(track: Track): track is BasicSingleTrack {
+    return !('superpose' in track);
+}
+
+export function IsSuperposedTrack(track: Track): track is SuperposedTrack {
+    return 'superpose' in track;
+}
+
+// TODO: if superposed track, merge specs to remove `superpose`, and deal with the array of tracks.
+export function IsHiGlassTrack(track?: Track) {
+    return track !== undefined; // do not mean any
+    /*(
+            IsSingleTrack(track) &&
+            (
+                (typeof track.mark === 'object' && IsGlyphMark(track.mark) && track.mark.type !== 'compositeMark') ||
+                (IsDataDeep(track.data) && validTilesetUrl(track.data.url))
+            ) ||
+            IsSuperposedTrack(track) &&
+            (
+                track.superpose.filter(t =>
+                    !(typeof t.mark === 'object' && IsGlyphMark(t.mark) && t.mark.type !== 'compositeMark')
+                ).length === 0 ||
+                track.superpose.filter(t =>
+                    !(t.data !== undefined && IsDataDeep(t.data) && validTilesetUrl(t.data.url))
+                ).length === 0
+            )
+        );*/
 }
 
 export function IsChannelValue(
@@ -364,7 +422,7 @@ export function IsChannelDeep(channel: ChannelDeep | ChannelValue | undefined): 
 /**
  * Check whether visual marks can be stacked on top of each other.
  */
-export function isStackedMark(track: Track): boolean {
+export function IsStackedMark(track: BasicSingleTrack): boolean {
     return (
         (track.mark === 'bar' || track.mark === 'area') &&
         IsChannelDeep(track.color) &&
@@ -377,10 +435,10 @@ export function isStackedMark(track: Track): boolean {
  * Check whether visual marks in this channel are stacked on top of each other.
  * For example, `area` marks with a `quantitative` `y` channel are being stacked.
  */
-export function isStackedChannel(track: Track, channelKey: keyof typeof ChannelTypes): boolean {
+export function IsStackedChannel(track: BasicSingleTrack, channelKey: keyof typeof ChannelTypes): boolean {
     const channel = track[channelKey];
     return (
-        isStackedMark(track) &&
+        IsStackedMark(track) &&
         // only x or y channel can be stacked
         (channelKey === 'x' || channelKey === 'y') &&
         // only quantitative channel can be stacked
@@ -401,7 +459,7 @@ export function getValueUsingChannel(datum: { [k: string]: string | number }, ch
 }
 
 export type VisualizationType = 'unknown' | 'composite' | 'bar' | 'line' | 'area' | 'point' | 'rect'; // ...
-export function getVisualizationType(track: Track): VisualizationType {
+export function getVisualizationType(track: BasicSingleTrack): VisualizationType {
     if (IsGlyphMark(track)) {
         return 'composite';
     } else if (track.mark === 'bar') {

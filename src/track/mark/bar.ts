@@ -1,12 +1,9 @@
 import { GeminiTrackModel } from '../../lib/gemini-track-model';
-import { IsChannelDeep, getValueUsingChannel, Channel, isStackedMark } from '../../lib/gemini.schema';
+import { IsChannelDeep, getValueUsingChannel, Channel, IsStackedMark } from '../../lib/gemini.schema';
 import { group } from 'd3-array';
 // import { RESOLUTION } from '.';
 
-export function drawBar(HGC: any, trackInfo: any, tile: any) {
-    /* gemini model */
-    const gm = tile.geminiModel as GeminiTrackModel;
-
+export function drawBar(HGC: any, trackInfo: any, tile: any, gm: GeminiTrackModel) {
     /* track spec */
     const spec = gm.spec();
 
@@ -42,7 +39,7 @@ export function drawBar(HGC: any, trackInfo: any, tile: any) {
     tile.spriteInfos = []; // sprites for individual rows or columns
 
     /* render */
-    if (isStackedMark(spec)) {
+    if (IsStackedMark(spec)) {
         // TODO: many parts in this scope are identical as the below `else` statement, so encaptulate this?
         const rowGraphics = tile.graphics; // new HGC.libraries.PIXI.Graphics(); // only one row for stacked marks
 

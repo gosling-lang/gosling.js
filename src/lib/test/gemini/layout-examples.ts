@@ -6,7 +6,70 @@ const MULTIVEC_FA = [
     'https://resgen.io/api/v1/tileset_info/?d=WipsnEDMStahGPpRfH9adA'
 ][1];
 
-export const GEMINI_PLUGIN_TRACK_HEATMAP: GeminiSpec = {
+export const GEMINI_PLUGIN_TRACK_SUPERPOSE: GeminiSpec = {
+    tracks: [
+        {
+            data: {
+                url: MULTIVEC_FILE_CISTROME,
+                type: 'tileset'
+            },
+            metadata: {
+                type: 'higlass-multivec',
+                row: 'sample',
+                column: 'position',
+                value: 'peak',
+                categories: ['sample 1', 'sample 2', 'sample 3', 'sample 4']
+            },
+            superpose: [
+                { mark: 'line', opacity: { value: 1 } },
+                { mark: 'point', opacity: { value: 1 }, size: { field: 'peak', type: 'quantitative', range: [0, 6] } }
+            ],
+            x: {
+                field: 'position',
+                type: 'genomic',
+                domain: { chromosome: '1', interval: [1, 3000500] }
+            },
+            x1: { axis: true },
+            y: { field: 'peak', type: 'quantitative' },
+            row: { field: 'sample', type: 'nominal' },
+            color: { field: 'sample', type: 'nominal' },
+            width: 1000,
+            height: 180
+        },
+        {
+            data: {
+                url: MULTIVEC_FILE_CISTROME,
+                type: 'tileset'
+            },
+            metadata: {
+                type: 'higlass-multivec',
+                row: 'sample',
+                column: 'position',
+                value: 'peak',
+                categories: ['sample 1', 'sample 2', 'sample 3', 'sample 4']
+            },
+            mark: 'area',
+            x: {
+                field: 'position',
+                type: 'genomic',
+                domain: { chromosome: '1', interval: [1, 3000500] }
+            },
+            x1: { axis: true },
+            superpose: [
+                { y: { field: 'peak', type: 'quantitative', domain: [0, 1] } },
+                { y: { field: 'peak', type: 'quantitative', domain: [1, 8] } },
+                { y: { field: 'peak', type: 'quantitative', domain: [8, 15] } }
+            ],
+            color: { field: 'sample', type: 'nominal' },
+            row: { field: 'sample', type: 'nominal' },
+            opacity: { value: 0.4 },
+            width: 1000,
+            height: 180
+        }
+    ]
+};
+
+export const GEMINI_PLUGIN_TRACK_BASIC_MARKS: GeminiSpec = {
     tracks: [
         {
             data: {
@@ -34,12 +97,7 @@ export const GEMINI_PLUGIN_TRACK_HEATMAP: GeminiSpec = {
             // strokeWidth: {value: 1},
             width: 1000,
             height: 180
-        }
-    ]
-};
-
-export const GEMINI_PLUGIN_TRACK_AREA: GeminiSpec = {
-    tracks: [
+        },
         {
             data: {
                 url: MULTIVEC_FILE_CISTROME,
@@ -62,16 +120,11 @@ export const GEMINI_PLUGIN_TRACK_AREA: GeminiSpec = {
             y: { field: 'peak', type: 'quantitative' },
             row: { field: 'sample', type: 'nominal' },
             color: { field: 'sample', type: 'nominal' },
-            // stroke: {value: 'white'},
-            // strokeWidth: {value: 1},
+            stroke: { value: 'white' },
+            strokeWidth: { value: 0.5 },
             width: 1000,
             height: 180
-        }
-    ]
-};
-
-export const GEMINI_PLUGIN_TRACK_BAR: GeminiSpec = {
-    tracks: [
+        },
         {
             data: {
                 url: MULTIVEC_FILE_CISTROME,
@@ -92,18 +145,13 @@ export const GEMINI_PLUGIN_TRACK_BAR: GeminiSpec = {
             },
             x1: { axis: true },
             y: { field: 'peak', type: 'quantitative' },
-            // row: { field: 'sample', type: 'nominal' },
+            row: { field: 'sample', type: 'nominal' },
             color: { field: 'sample', type: 'nominal' },
-            // stroke: {value: 'white'},
-            // strokeWidth: {value: 1},
+            stroke: { value: 'white' },
+            strokeWidth: { value: 0.5 },
             width: 1000,
             height: 180
-        }
-    ]
-};
-
-export const GEMINI_PLUGIN_TRACK_LINE: GeminiSpec = {
-    tracks: [
+        },
         {
             data: {
                 url: MULTIVEC_FILE_CISTROME,
@@ -128,12 +176,7 @@ export const GEMINI_PLUGIN_TRACK_LINE: GeminiSpec = {
             color: { field: 'sample', type: 'nominal' },
             width: 1000,
             height: 180
-        }
-    ]
-};
-
-export const GEMINI_PLUGIN_TRACK_POINT: GeminiSpec = {
-    tracks: [
+        },
         {
             data: {
                 url: MULTIVEC_FILE_CISTROME,
@@ -435,37 +478,66 @@ export const LAYOUT_EXAMPLE_COMBO_BAND: GeminiSpec = {
     tracks: [
         {
             data: {
-                url: 'https://resgen.io/api/v1/tileset_info/?d=a-iBpdh3Q_uO2FLCWKpOOw',
+                url: MULTIVEC_FILE_CISTROME,
                 type: 'tileset'
             },
-            mark: { type: '1d-heatmap-higlass', server: 'gemini-v1' },
-            x: { type: 'genomic', domain: { chromosome: '2' } },
-            width: 800,
-            height: 60
-        },
-        {
-            data: {
-                url: 'https://resgen.io/api/v1/tileset_info/?d=a-iBpdh3Q_uO2FLCWKpOOw',
-                type: 'tileset'
+            metadata: {
+                type: 'higlass-multivec',
+                row: 'sample',
+                column: 'position',
+                value: 'peak',
+                categories: ['sample 1', 'sample 2', 'sample 3', 'sample 4']
             },
-            mark: { type: 'line-higlass', server: 'gemini-v1' },
-            x: { type: 'genomic', domain: { chromosome: '2' } },
+            mark: 'rect',
+            x: {
+                field: 'position',
+                type: 'genomic',
+                domain: { chromosome: '1', interval: [1, 3000500] }
+            },
+            x1: { axis: true },
+            y: { field: 'sample', type: 'nominal' },
+            color: { field: 'peak', type: 'quantitative' },
             width: 800,
             height: 90
         },
         {
             data: {
-                url: 'https://higlass.io/api/v1/tileset_info/?d=OHJakQICQD6gTD7skx4EWA',
+                url: MULTIVEC_FILE_CISTROME,
                 type: 'tileset'
             },
-            mark: {
-                type: 'gene-annotation-higlass',
-                server: 'gemini-v1'
+            metadata: {
+                type: 'higlass-multivec',
+                row: 'sample',
+                column: 'position',
+                value: 'peak',
+                categories: ['sample 1', 'sample 2', 'sample 3', 'sample 4']
             },
-            x: { type: 'genomic', axis: true, domain: { chromosome: '2' } },
+            mark: 'line',
+            x: {
+                field: 'position',
+                type: 'genomic',
+                domain: { chromosome: '1', interval: [1, 3000500] }
+            },
+            x1: { axis: true },
+            y: { field: 'peak', type: 'quantitative' },
+            row: { field: 'sample', type: 'nominal' },
+            color: { field: 'sample', type: 'nominal' },
             width: 800,
-            height: 140
+            height: 90
         },
+        // {
+        //     data: {
+        //         url: 'https://higlass.io/api/v1/tileset_info/?d=OHJakQICQD6gTD7skx4EWA',
+        //         type: 'tileset'
+        //     },
+        //     mark: {
+        //         type: 'gene-annotation-higlass',
+        //         server: 'gemini-v1'
+        //     },
+        //     x: { type: 'genomic', axis: true, domain: { chromosome: '2' } },
+        //     width: 800,
+        //     height: 140
+        // },
         {
             data: {
                 url:
@@ -481,39 +553,69 @@ export const LAYOUT_EXAMPLE_COMBO_BAND: GeminiSpec = {
             height: 260,
             stroke: { value: 'none' }
         },
+        // {
+        //     data: {
+        //         url: 'https://higlass.io/api/v1/tileset_info/?d=OHJakQICQD6gTD7skx4EWA',
+        //         type: 'tileset'
+        //     },
+        //     mark: {
+        //         type: 'gene-annotation-higlass',
+        //         server: 'gemini-v1'
+        //     },
+        //     x: { type: 'genomic', domain: { chromosome: '3' } },
+        //     x1: { axis: true },
+        //     width: 800,
+        //     height: 140
+        // },
         {
             data: {
-                url: 'https://higlass.io/api/v1/tileset_info/?d=OHJakQICQD6gTD7skx4EWA',
+                url: MULTIVEC_FILE_CISTROME,
                 type: 'tileset'
             },
-            mark: {
-                type: 'gene-annotation-higlass',
-                server: 'gemini-v1'
+            metadata: {
+                type: 'higlass-multivec',
+                row: 'sample',
+                column: 'position',
+                value: 'peak',
+                categories: ['sample 1', 'sample 2', 'sample 3', 'sample 4']
             },
-            x: { type: 'genomic', domain: { chromosome: '3' } },
+            mark: 'bar',
+            x: {
+                field: 'position',
+                type: 'genomic',
+                domain: { chromosome: '1', interval: [1, 3000500] }
+            },
             x1: { axis: true },
+            y: { field: 'peak', type: 'quantitative' },
+            row: { field: 'sample', type: 'nominal' },
+            color: { field: 'sample', type: 'nominal' },
             width: 800,
-            height: 140
+            height: 90
         },
         {
             data: {
-                url: 'https://resgen.io/api/v1/tileset_info/?d=a-iBpdh3Q_uO2FLCWKpOOw',
+                url: MULTIVEC_FILE_CISTROME,
                 type: 'tileset'
             },
-            mark: { type: 'bar-higlass', server: 'gemini-v1' },
-            x: { type: 'genomic', domain: { chromosome: '4' } },
-            width: 800,
-            height: 80
-        },
-        {
-            data: {
-                url: 'https://resgen.io/api/v1/tileset_info/?d=a-iBpdh3Q_uO2FLCWKpOOw',
-                type: 'tileset'
+            metadata: {
+                type: 'higlass-multivec',
+                row: 'sample',
+                column: 'position',
+                value: 'peak',
+                categories: ['sample 1', 'sample 2', 'sample 3', 'sample 4']
             },
-            mark: { type: 'point-higlass', server: 'gemini-v1' },
-            x: { type: 'genomic' },
+            mark: 'point',
+            x: {
+                field: 'position',
+                type: 'genomic',
+                domain: { chromosome: '1', interval: [1, 3000500] }
+            },
+            x1: { axis: true },
+            y: { field: 'peak', type: 'quantitative' },
+            row: { field: 'sample', type: 'nominal' },
+            color: { field: 'sample', type: 'nominal' },
             width: 800,
-            height: 80
+            height: 90
         }
     ]
 };

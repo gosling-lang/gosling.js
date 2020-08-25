@@ -1,10 +1,10 @@
-import { Track, GenericType, Channel, IsChannelDeep } from '../gemini.schema';
+import { Track, IsChannelDeep } from '../gemini.schema';
 
 export type ChartType =
     // ...
     'line-connection' | 'band-connection' | 'unknown';
 
-export function getChartType(track: Track | GenericType<Channel>): ChartType {
+export function getChartType(track: Track): ChartType {
     type PrimitiveChannel = 'x' | 'xe' | 'y' | 'ye';
 
     const xField = IsChannelDeep(track.x) ? track.x.field : undefined;

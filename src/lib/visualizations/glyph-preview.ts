@@ -1,14 +1,9 @@
-import { Track, GenericType, Channel } from '../gemini.schema';
+import { Track } from '../gemini.schema';
 import * as d3 from 'd3';
 import { renderGlyph } from './glyph';
 import { renderBackground } from './guidelines';
 
-export function renderGlyphPreview(
-    svg: SVGSVGElement,
-    track: Track | GenericType<Channel>,
-    width: number,
-    height: number
-) {
+export function renderGlyphPreview(svg: SVGSVGElement, track: Track, width: number, height: number) {
     if (!svg || !track) return;
     d3.select(svg).selectAll('*').remove();
 

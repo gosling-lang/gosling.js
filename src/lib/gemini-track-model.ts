@@ -1,12 +1,13 @@
 import {
-    Track,
     IsChannelDeep,
     ChannelDeep,
     PREDEFINED_COLORS,
     ChannelTypes,
     IsChannelValue,
-    isStackedChannel,
-    ChannelValue
+    IsStackedChannel,
+    ChannelValue,
+    BasicSingleTrack,
+    SingleTrack
 } from './gemini.schema';
 import merge from 'lodash/merge';
 import * as d3 from 'd3';
@@ -17,9 +18,9 @@ import { SUPPORTED_CHANNELS } from '../track/mark';
 
 export class GeminiTrackModel {
     /* spec */
-    private specOriginal: Track; // original spec of users
-    private specComplete: Track; // processed spec used in visualizations
-    private specCompleteAlt: Track; // processed spec used when zoomed out // TODO: remove this and have only one track?
+    private specOriginal: BasicSingleTrack; // original spec of users
+    private specComplete: BasicSingleTrack; // processed spec used in visualizations
+    private specCompleteAlt: BasicSingleTrack; // processed spec used when zoomed out // TODO: remove this and have only one track?
 
     /* whether to use alternative spec */
     private _isAlt: boolean; // we could ultimately remove this
@@ -44,7 +45,7 @@ export class GeminiTrackModel {
         SIZE: 3
     };
 
-    constructor(track: Track, data: { [k: string]: number | string }[], isAlt: boolean) {
+    constructor(track: SingleTrack, data: { [k: string]: number | string }[], isAlt: boolean) {
         this.specOriginal = JSON.parse(JSON.stringify(track));
         this._data = JSON.parse(JSON.stringify(data));
 
@@ -78,11 +79,11 @@ export class GeminiTrackModel {
         // ...
     }
 
-    public originalSpec(): Track {
+    public originalSpec(): BasicSingleTrack {
         return this.specOriginal;
     }
 
-    public spec(): Track {
+    public spec(): BasicSingleTrack {
         return this._isAlt ? this.specCompleteAlt : this.specComplete;
     }
 
@@ -93,7 +94,7 @@ export class GeminiTrackModel {
     /**
      * Fill the missing options with default values or values calculated based on the data.
      */
-    private _generateToCompleteSpec(track: Track) {
+    private _generateToCompleteSpec(track: BasicSingleTrack) {
         if (!track.width) {
             track.width = 300;
         }
@@ -150,10 +151,15 @@ export class GeminiTrackModel {
     }
 
     /**
-     * Replace a domain with a new one in the complete spec(s).
+     * Replace a domain with a new one in the complete spec(s) if the original spec does not define the domain.
      * A domain is replaced only when the channel is bound with data (i.e., `ChannelDeep`).
      */
-    public setChannelDomain(channelKey: keyof typeof ChannelTypes, domain: string[] | number[]) {
+    public setChannelDomain(channelKey: keyof typeof ChannelTypes, domain: string[] | number[], force?: boolean) {
+        const channelRaw = this.originalSpec()[channelKey];
+        if (!force && IsChannelDeep(channelRaw) && channelRaw.domain !== undefined) {
+            // if domain is provided in the original spec, we do not replace the domain in the complete spec(s)
+            return;
+        }
         const channel = this.specComplete[channelKey];
         if (IsChannelDeep(channel)) {
             channel.domain = domain;
@@ -179,11 +185,63 @@ export class GeminiTrackModel {
         }
     }
 
+    /**
+     * With the scales already constructed, get the encoded value.
+     */
+    public encodedValue(channelKey: keyof typeof ChannelTypes, value?: number | string) {
+        const channel = this.spec()[channelKey];
+        const channelFieldType = IsChannelDeep(channel)
+            ? channel.type
+            : IsChannelValue(channel)
+            ? 'constant'
+            : undefined;
+
+        // DEBUG
+        // console.log(value, (this.channelScales[channelKey] as any).domain(), (this.channelScales[channelKey] as any).range(), (this.channelScales[channelKey] as any)(0));
+
+        if (channelFieldType === 'constant') {
+            return (this.channelScales[channelKey] as () => number | string)();
+        }
+
+        // the type of channel scale is determined by a { channel type, field type } pair
+        switch (channelKey) {
+            case 'color':
+                if (channelFieldType === 'quantitative')
+                    return (this.channelScales[channelKey] as d3.ScaleSequential<any>)(value as number);
+                if (channelFieldType === 'nominal')
+                    return (this.channelScales[channelKey] as d3.ScaleOrdinal<any, any>)(value as string);
+                /* genomic is not supported */
+                break;
+            case 'x':
+            case 'y':
+                if (channelFieldType === 'quantitative' || channelFieldType === 'genomic')
+                    return (this.channelScales[channelKey] as d3.ScaleLinear<any, any>)(value as number);
+                if (channelFieldType === 'nominal')
+                    return (this.channelScales[channelKey] as d3.ScaleBand<any>)(value as string);
+                break;
+            case 'size':
+                if (channelFieldType === 'quantitative')
+                    return (this.channelScales[channelKey] as d3.ScaleLinear<any, any>)(value as number);
+                /* nominal is not supported */
+                /* genomic is not supported */
+                break;
+            case 'row':
+                /* quantitative is not supported */
+                if (channelFieldType === 'nominal')
+                    return (this.channelScales[channelKey] as d3.ScaleBand<any>)(value as string);
+                /* genomic is not supported */
+                break;
+            default:
+                console.warn(`${channelKey} is not supported yet for encoding values, so returning a undefined value`);
+                return undefined;
+        }
+    }
+
     // TODO: better organize this, perhaps, by combining several if statements
     /**
      * Set missing `range`, `domain`, and/or `value` of each channel by looking into data.
      */
-    public addChannelRangeDomainValue(spec: Track) {
+    public addChannelRangeDomainValue(spec: BasicSingleTrack) {
         const data = this.data();
 
         const genomicChannel = this.getGenomicChannel();
@@ -208,7 +266,7 @@ export class GeminiTrackModel {
                 return;
             }
 
-            if (isStackedChannel(spec, channelKey) && IsChannelDeep(channel)) {
+            if (IsStackedChannel(spec, channelKey) && IsChannelDeep(channel)) {
                 // we need to group data before calculating scales because marks are going to be stacked
                 const pivotedData = group(data, d => d[genomicChannel.field as string]);
                 const xKeys = [...pivotedData.keys()];
@@ -430,58 +488,6 @@ export class GeminiTrackModel {
     // update `range` in the spec
     // update scales with the new `range`
     // }
-
-    /**
-     * With the scales already constructed, get the encoded value.
-     */
-    public encodedValue(channelKey: keyof typeof ChannelTypes, value?: number | string) {
-        const channel = this.spec()[channelKey];
-        const channelFieldType = IsChannelDeep(channel)
-            ? channel.type
-            : IsChannelValue(channel)
-            ? 'constant'
-            : undefined;
-
-        // DEBUG
-        // console.log(value, (this.channelScales[channelKey] as any).domain(), (this.channelScales[channelKey] as any).range(), (this.channelScales[channelKey] as any)(0));
-
-        if (channelFieldType === 'constant') {
-            return (this.channelScales[channelKey] as () => number | string)();
-        }
-
-        // the type of channel scale is determined by a { channel type, field type } pair
-        switch (channelKey) {
-            case 'color':
-                if (channelFieldType === 'quantitative')
-                    return (this.channelScales[channelKey] as d3.ScaleSequential<any>)(value as number);
-                if (channelFieldType === 'nominal')
-                    return (this.channelScales[channelKey] as d3.ScaleOrdinal<any, any>)(value as string);
-                /* genomic is not supported */
-                break;
-            case 'x':
-            case 'y':
-                if (channelFieldType === 'quantitative' || channelFieldType === 'genomic')
-                    return (this.channelScales[channelKey] as d3.ScaleLinear<any, any>)(value as number);
-                if (channelFieldType === 'nominal')
-                    return (this.channelScales[channelKey] as d3.ScaleBand<any>)(value as string);
-                break;
-            case 'size':
-                if (channelFieldType === 'quantitative')
-                    return (this.channelScales[channelKey] as d3.ScaleLinear<any, any>)(value as number);
-                /* nominal is not supported */
-                /* genomic is not supported */
-                break;
-            case 'row':
-                /* quantitative is not supported */
-                if (channelFieldType === 'nominal')
-                    return (this.channelScales[channelKey] as d3.ScaleBand<any>)(value as string);
-                /* genomic is not supported */
-                break;
-            default:
-                console.warn(`${channelKey} is not supported yet for encoding values, so returning a undefined value`);
-                return undefined;
-        }
-    }
 
     /**
      * Return the scale of a visual channel.

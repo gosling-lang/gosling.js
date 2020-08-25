@@ -1,11 +1,13 @@
 import { GeminiTrackModel } from '../../lib/gemini-track-model';
-import { IsChannelDeep, getValueUsingChannel, Channel, isStackedMark } from '../../lib/gemini.schema';
+import { IsChannelDeep, getValueUsingChannel, Channel, IsStackedMark } from '../../lib/gemini.schema';
+import * as d3 from 'd3';
 import { group } from 'd3-array';
 
-export function drawArea(HGC: any, trackInfo: any, tile: any) {
-    /* gemini model */
-    const gm = tile.geminiModel as GeminiTrackModel;
-
+// TODO: fill the white gap betwee tiles.
+/**
+ * Draw area marks
+ */
+export function drawArea(HGC: any, trackInfo: any, tile: any, gm: GeminiTrackModel) {
     /* track spec */
     const spec = gm.spec();
 
@@ -48,7 +50,7 @@ export function drawArea(HGC: any, trackInfo: any, tile: any) {
     const constantOpacity = gm.encodedValue('opacity');
 
     /* render */
-    if (isStackedMark(spec)) {
+    if (IsStackedMark(spec)) {
         // TODO: many parts in this scope are identical as the below `else` statement, so encaptulate this?
         const rowGraphics = tile.graphics; //new HGC.libraries.PIXI.Graphics(); // only one row for stacked marks
 
@@ -87,7 +89,7 @@ export function drawArea(HGC: any, trackInfo: any, tile: any) {
                         const yValue = getValueUsingChannel(d, spec.y as Channel) as string | number;
 
                         const x = xScale(tileX + xValue * (tileWidth / tileSize));
-                        const y = gm.encodedValue('y', yValue);
+                        const y = d3.max([gm.encodedValue('y', yValue), 0]); // make should not to overflow
 
                         if (i === 0) {
                             // start position of the polygon
@@ -158,8 +160,9 @@ export function drawArea(HGC: any, trackInfo: any, tile: any) {
                     const xValue = getValueUsingChannel(d, spec.x as Channel) as number;
                     const yValue = getValueUsingChannel(d, spec.y as Channel) as string | number;
 
+                    // make should not to overflow; we could add this into the `encodedValue` function
                     const x = xScale(tileX + xValue * (tileWidth / tileSize));
-                    const y = gm.encodedValue('y', yValue);
+                    const y = d3.min([d3.max([gm.encodedValue('y', yValue), 0]), rowHeight]);
 
                     if (i === 0) {
                         // start position of the polygon

@@ -8,21 +8,23 @@ import { SUPPORTED_CHANNELS } from './mark';
 /**
  * Use a shared scale (i.e., `domain`) across multiple gemini tracks.
  */
-export function shareScaleAcrossTracks(tracks: GeminiTrackModel[]) {
+export function shareScaleAcrossTracks(trackModels: GeminiTrackModel[], force?: boolean) {
     // we update the spec with a global domain
     const globalDomain: { [k: string]: number[] | string[] } = {};
     const channelKeys = SUPPORTED_CHANNELS;
 
-    // get global domains
-    tracks.forEach(track => {
+    // generate global domains
+    trackModels.forEach(model => {
         channelKeys.forEach(channelKey => {
-            const channel = track.spec()[channelKey];
-            if (!IsChannelDeep(channel) || typeof channel.domain === 'undefined') return;
+            const channel = model.spec()[channelKey];
+            if (!IsChannelDeep(channel) || channel.domain === undefined) {
+                return;
+            }
 
             const { domain, type } = channel;
 
             if (type === 'quantitative') {
-                const numericDomain: number[] = domain as number[];
+                const numericDomain: number[] = Array.from(domain as number[]);
                 if (!globalDomain[channelKey]) {
                     globalDomain[channelKey] = numericDomain;
                 } else {
@@ -34,7 +36,7 @@ export function shareScaleAcrossTracks(tracks: GeminiTrackModel[]) {
                     }
                 }
             } else if (type === 'nominal') {
-                const nominalDomain: string[] = domain as string[];
+                const nominalDomain: string[] = Array.from(domain as string[]);
                 if (!globalDomain[channelKey]) {
                     globalDomain[channelKey] = nominalDomain;
                 } else {
@@ -47,14 +49,10 @@ export function shareScaleAcrossTracks(tracks: GeminiTrackModel[]) {
     });
 
     // replace the domain and update scales
-    tracks.forEach(gm => {
+    trackModels.forEach(model => {
         channelKeys.forEach(channelKey => {
-            const channel = gm.spec()[channelKey];
-            if (!IsChannelDeep(channel) || typeof channel.domain === 'undefined') return;
-
-            gm.setChannelDomain(channelKey, globalDomain[channelKey]);
-
-            gm.setChannelScalesBasedOnCompleteSpec();
+            model.setChannelDomain(channelKey, globalDomain[channelKey], force);
+            model.setChannelScalesBasedOnCompleteSpec();
         });
     });
 }

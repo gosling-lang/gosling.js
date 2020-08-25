@@ -9,7 +9,7 @@ import * as d3 from 'd3';
 import EditorPanel from './editor-panel';
 import stringify from 'json-stringify-pretty-compact';
 import SplitPane from 'react-split-pane';
-import { GeminiSpec, Track, IsDataDeep, IsMarkDeep, IsNotEmptyTrack } from '../lib/gemini.schema';
+import { GeminiSpec, Track, IsDataDeep, IsMarkDeep, IsSingleTrack } from '../lib/gemini.schema';
 import { debounce } from 'lodash';
 import { demos } from './examples';
 import { renderGlyphPreview } from '../lib/visualizations/glyph-preview';
@@ -78,11 +78,11 @@ function Editor() {
         // Render glyph preview
         d3.select(glyphSvg.current).selectAll('*').remove();
         const track = (editedGm as GeminiSpec)?.tracks?.find(d =>
-            IsNotEmptyTrack(d) && IsMarkDeep(d.mark) ? d.mark.type === 'compositeMark' : false
+            IsSingleTrack(d) && IsMarkDeep(d.mark) ? d.mark.type === 'compositeMark' : false
         );
         if (!track) return;
 
-        if (IsNotEmptyTrack(track) && IsDataDeep(track.data)) {
+        if (IsSingleTrack(track) && IsDataDeep(track.data)) {
             d3.csv(track.data.url).then(data =>
                 renderGlyphPreview(
                     glyphSvg.current as SVGSVGElement,

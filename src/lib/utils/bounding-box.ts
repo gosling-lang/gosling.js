@@ -1,6 +1,7 @@
-import { GeminiSpec, IsNotEmptyTrack } from '../gemini.schema';
+import { GeminiSpec } from '../gemini.schema';
 import { TRACK_GAP, INNER_CIRCLE_RADIUS } from '../visualizations/defaults';
 import * as d3 from 'd3';
+import { resolveSuperposedTracks } from '../../track/superpose';
 
 export interface BoundingBox {
     x: number;
@@ -22,21 +23,17 @@ export function calculateSize(gm: GeminiSpec) {
         size.height += d3.sum(
             // Add the height of tracks in the first column.
             // TODO: not considering different directions
-            gm.tracks
-                .filter((t, i) => i % wrap === 0)
-                .map(track => (IsNotEmptyTrack(track) ? (track.height as number) : 0))
+            gm.tracks.filter((t, i) => i % wrap === 0).map(track => resolveSuperposedTracks(track)[0].height as number)
         );
         size.width = size.height;
     } else if (gm.layout?.direction === 'horizontal') {
         size.width = d3.sum(
             // Add the width of tracks in the first row.
-            gm.tracks.filter((t, i) => i < wrap).map(track => (IsNotEmptyTrack(track) ? (track.width as number) : 0))
+            gm.tracks.filter((t, i) => i < wrap).map(track => resolveSuperposedTracks(track)[0].width as number)
         );
         size.height = d3.sum(
             // Add the height of tracks in the first column.
-            gm.tracks
-                .filter((t, i) => i % wrap === 0)
-                .map(track => (IsNotEmptyTrack(track) ? (track.height as number) : 0))
+            gm.tracks.filter((t, i) => i % wrap === 0).map(track => resolveSuperposedTracks(track)[0].height as number)
         ) as number;
         // Add gaps
         size.width += (d3.min([wrap - 1, gm.tracks.length - 1]) as number) * TRACK_GAP;
@@ -44,13 +41,11 @@ export function calculateSize(gm: GeminiSpec) {
     } else {
         size.width = d3.sum(
             // Add the width of tracks in the first row.
-            gm.tracks
-                .filter((t, i) => i % wrap === 0)
-                .map(track => (IsNotEmptyTrack(track) ? (track.width as number) : 0))
+            gm.tracks.filter((t, i) => i % wrap === 0).map(track => resolveSuperposedTracks(track)[0].width as number)
         );
         size.height = d3.sum(
             // Add the height of tracks in the first column.
-            gm.tracks.filter((t, i) => i < wrap).map(track => (IsNotEmptyTrack(track) ? (track.height as number) : 0))
+            gm.tracks.filter((t, i) => i < wrap).map(track => resolveSuperposedTracks(track)[0].height as number)
         ) as number;
         // Add gaps
         size.width += Math.floor(gm.tracks.length / wrap) * TRACK_GAP;

@@ -1,7 +1,5 @@
 import {
     Track,
-    Channel,
-    GenericType,
     IsGlyphMark,
     IsChannelValue,
     ChannelTypes,
@@ -19,14 +17,14 @@ import { BoundingBox } from '../utils/bounding-box';
 
 // deprecated
 export class TrackModel {
-    private track: Track | GenericType<Channel>;
+    private track: Track;
     private channelToField: { [k: string]: string };
     private domains: { [channel: string]: (string | number)[] };
     private scales: {
         [channel: string]: d3.ScaleLinear<any, any> | d3.ScaleOrdinal<any, any> | d3.ScaleSequential<any>;
     };
     private ranges: { [channel: string]: string | number[] | string[] };
-    constructor(track: Track | GenericType<Channel>) {
+    constructor(track: Track) {
         this.track = track;
         this.domains = {};
         this.channelToField = {};
@@ -74,8 +72,9 @@ export class TrackModel {
             const { requiredChannels: required } = this.track.mark;
 
             // Add channel-to-domain mappings when `field` suggested.
-            required.forEach(c => {
-                const channel = (this.track as GenericType<Channel>)[c];
+            required.forEach((c: any) => {
+                // as GenericType<Channel>
+                const channel = (this.track as any)[c];
                 if (IsChannelDeep(channel)) {
                     const { field } = channel;
 
@@ -96,7 +95,7 @@ export class TrackModel {
                 }
             });
             Object.keys(this.domains).forEach(c => {
-                const channel = (this.track as GenericType<Channel>)[c];
+                const channel = (this.track as any)[c];
                 if (IsChannelDeep(channel)) {
                     const { type } = channel;
                     this.domains[c] =
@@ -110,7 +109,7 @@ export class TrackModel {
 
     private setRanges(bb: BoundingBox) {
         Object.keys(this.domains).forEach(c => {
-            const channel = (this.track as GenericType<Channel>)[c];
+            const channel = (this.track as any)[c];
             if (IsChannelDeep(channel)) {
                 if (c === 'x') {
                     this.ranges['x'] = [bb.x, bb.x + bb.width];
@@ -129,7 +128,7 @@ export class TrackModel {
     public setScales(boundingBox: BoundingBox) {
         this.setRanges(boundingBox);
         Object.keys(this.domains).forEach(c => {
-            const channel = (this.track as GenericType<Channel>)[c];
+            const channel = (this.track as any)[c];
             if (IsChannelDeep(channel)) {
                 const { type } = channel;
                 if (this.ranges[c]) {

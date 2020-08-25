@@ -1,12 +1,12 @@
 import {
     getValueUsingChannel,
-    isStackedMark,
-    Track,
-    isStackedChannel,
+    IsStackedMark,
+    IsStackedChannel,
     getVisualizationType,
     IsChannelDeep,
     Channel,
-    IsChannelValue
+    IsChannelValue,
+    BasicSingleTrack
 } from '../src/lib/gemini.schema';
 
 describe('gemini schema should be checked correctly', () => {
@@ -25,75 +25,75 @@ describe('gemini schema should be checked correctly', () => {
 
     it('Spec for stacked bar/area charts should be detected as using a stacked mark', () => {
         expect(
-            isStackedMark({
+            IsStackedMark({
                 mark: 'bar',
                 x: { field: 'x', type: 'genomic' },
                 y: { field: 'y', type: 'quantitative' },
                 color: { field: 'y', type: 'nominal' }
-            } as Track)
+            } as BasicSingleTrack)
         ).toBe(true);
 
         expect(
-            isStackedMark({
+            IsStackedMark({
                 mark: 'area',
                 x: { field: 'x', type: 'genomic' },
                 y: { field: 'y', type: 'quantitative' },
                 color: { field: 'y', type: 'nominal' }
-            } as Track)
+            } as BasicSingleTrack)
         ).toBe(true);
     });
 
     it('Spec for regular charts without stacking marks should be detected as using a non-stacked mark', () => {
         expect(
-            isStackedMark({
+            IsStackedMark({
                 mark: 'bar',
                 x: { field: 'x', type: 'genomic' },
                 y: { field: 'y', type: 'quantitative' },
                 color: { field: 'y', type: 'quantitative' }
-            } as Track)
+            } as BasicSingleTrack)
         ).toBe(false);
 
         expect(
-            isStackedMark({
+            IsStackedMark({
                 mark: 'bar',
                 x: { field: 'x', type: 'genomic' },
                 y: { field: 'y', type: 'quantitative' },
                 color: { field: 'y', type: 'nominal' },
                 row: { field: 'y', type: 'nominal' }
-            } as Track)
+            } as BasicSingleTrack)
         ).toBe(false);
 
         expect(
-            isStackedMark({
+            IsStackedMark({
                 mark: 'line',
                 x: { field: 'x', type: 'genomic' },
                 y: { field: 'y', type: 'quantitative' },
                 color: { field: 'y', type: 'nominal' }
-            } as Track)
+            } as BasicSingleTrack)
         ).toBe(false);
     });
 
     it('Stacked channels should be detected correctly', () => {
         expect(
-            isStackedChannel(
+            IsStackedChannel(
                 {
                     mark: 'bar',
                     x: { field: 'x', type: 'genomic' },
                     y: { field: 'y', type: 'quantitative' },
                     color: { field: 'y', type: 'nominal' }
-                } as Track,
+                } as BasicSingleTrack,
                 'y'
             )
         ).toBe(true);
 
         expect(
-            isStackedChannel(
+            IsStackedChannel(
                 {
                     mark: 'bar',
                     x: { field: 'x', type: 'genomic' },
                     y: { field: 'y', type: 'quantitative' },
                     color: { field: 'y', type: 'nominal' }
-                } as Track,
+                } as BasicSingleTrack,
                 'x'
             )
         ).toBe(false);
@@ -103,7 +103,7 @@ describe('gemini schema should be checked correctly', () => {
         expect(
             getVisualizationType({
                 mark: 'line'
-            } as Track)
+            } as BasicSingleTrack)
         ).toBe('line');
     });
 });

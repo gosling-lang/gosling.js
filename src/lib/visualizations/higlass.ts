@@ -1,5 +1,5 @@
 import { BoundingBox } from '../utils/bounding-box';
-import { Track, GenericType, Channel } from '../gemini.schema';
+import { Track } from '../gemini.schema';
 import { compiler } from '../higlass/gemini-to-higlass';
 
 export interface HiGlassTrack {
@@ -11,7 +11,7 @@ export function renderHiGlass(
     g: d3.Selection<SVGGElement, any, any, any>,
     tracksWithBB: {
         boundingBox: BoundingBox;
-        track: Track | GenericType<Channel>;
+        track: Track;
     }[],
     setHiGlassInfo: (higlassInfo: HiGlassTrack[]) => void
 ) {

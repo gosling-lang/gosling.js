@@ -6,33 +6,50 @@ import { SpriteInfo } from './utils/sprite';
 import { validateTrack } from './validate';
 import { drawZoomInstruction } from './mark/zoom-instruction';
 import { shareScaleAcrossTracks } from './scales';
+import { resolveSuperposedTracks } from './superpose';
+import { SingleTrack, IsDataMetadata } from '../lib/gemini.schema';
 
 function GeminiTrack(HGC: any, ...args: any[]): any {
     if (!new.target) {
         throw new Error('Uncaught TypeError: Class constructor cannot be invoked without "new"');
     }
 
-    // TODO: change the parent class (look into TiledPixiTrack)
+    // TODO: change the parent class to a more generic one (e.g., TiledPixiTrack)
     class GeminiTrackClass extends HGC.tracks.BarTrack {
+        private resolvedSpecs: SingleTrack[]; // superpose is resolved to multiple tracks
         private extent: { min: number; max: number };
-        private domains: { [channel: string]: number[] | string[] };
 
         constructor(params: any[]) {
             const [context, options] = params;
             super(context, options);
 
-            const { valid, errorMessages } = validateTrack(this.options.spec);
-            if (!valid) {
+            this.resolvedSpecs = resolveSuperposedTracks(this.options.spec);
+
+            // DEBUG
+            // console.log('resolvedSpecs:', this.resolvedSpecs);
+            ///
+
+            let allValid = true;
+            const allErrorMessages: string[] = [];
+
+            this.resolvedSpecs.forEach(spec => {
+                const { valid, errorMessages } = validateTrack(spec);
+                if (!valid) {
+                    allValid = false;
+                }
+                errorMessages.forEach(msg => allErrorMessages.push(msg));
+            });
+
+            if (!allValid) {
                 console.warn(
                     'This track spec is not valid by the following issues:',
-                    errorMessages,
+                    allErrorMessages,
                     'Original track spec',
                     this.options.spec
                 );
             }
 
             this.extent = { min: Number.MAX_SAFE_INTEGER, max: Number.MIN_SAFE_INTEGER };
-            this.domains = {};
         }
 
         initTile(tile: any) {
@@ -43,14 +60,59 @@ function GeminiTrack(HGC: any, ...args: any[]): any {
             const gms: GeminiTrackModel[] = [];
             this.visibleAndFetchedTiles().forEach((t: any) => {
                 // tile preprocessing is done only once per tile
-                gms.push(this.preprocessTile(t));
+                const tileModels = this.preprocessTile(t);
+                tileModels.forEach((m: GeminiTrackModel) => {
+                    gms.push(m);
+                });
             });
 
-            // TODO: IMPORTANT: when panning the tiles, the extent becomes larger
+            // TODO: IMPORTANT: when panning the tiles, the extent only becomes larger
             shareScaleAcrossTracks(gms);
+
+            // DEBUG
+            // console.log(gms.map(d => d.spec()));
+            //
 
             this.renderTile(tile);
             this.rescaleTiles();
+        }
+
+        /**
+         * Rerender tiles using the new options, including the change of positions and zoom levels
+         */
+        rerender(newOptions: any) {
+            super.rerender(newOptions);
+
+            this.options = newOptions;
+
+            this.updateTile();
+
+            this.rescaleTiles();
+            this.draw(); // TODO: any effect?
+        }
+
+        updateTile() {
+            // preprocess all tiles at once so that we can share the value scales
+            const gms: GeminiTrackModel[] = [];
+            this.visibleAndFetchedTiles().forEach((tile: any) => {
+                // tile preprocessing is done only once per tile
+                const tileModels = this.preprocessTile(tile);
+                tileModels.forEach((m: GeminiTrackModel) => {
+                    gms.push(m);
+                });
+            });
+
+            shareScaleAcrossTracks(gms);
+
+            this.visibleAndFetchedTiles().forEach((tile: any) => {
+                this.renderTile(tile);
+            });
+
+            this.rescaleTiles();
+
+            // TODO: Should rerender tile only when neccesary for performance
+            // e.g., changing color scale
+            // ...
         }
 
         // draws exactly one tile
@@ -62,24 +124,27 @@ function GeminiTrack(HGC: any, ...args: any[]): any {
             this.pBorder.removeChildren();
             tile.drawnAtScale = this._xScale.copy(); // being used in `draw()`
 
-            if (!tile.geminiModel) {
-                // we do not have a track model prepared to visualize the track
+            if (!tile.geminiModels) {
+                // we do not have a track model prepared to visualize
                 return;
             }
 
             const isNotMaxZoomLevel = tile?.tileData?.zoomLevel !== getMaxZoomLevel();
 
-            if (isNotMaxZoomLevel && tile.geminiModel.spec().zoomAction?.type === 'hide') {
-                drawZoomInstruction(HGC, this);
-                return;
-            }
+            tile.geminiModels.forEach((gm: GeminiTrackModel) => {
+                if (isNotMaxZoomLevel && gm.spec().zoomAction?.type === 'hide') {
+                    drawZoomInstruction(HGC, this);
+                    return;
+                }
 
-            drawMark(HGC, this, tile);
+                drawMark(HGC, this, tile, gm);
+            });
         }
 
         // scales in visualizations, such as y axis, color, and size, should be shared across all tiles
         setGlobalScales() {
-            return;
+            return; // TODO: we are temporally drawing marks everytime.
+
             // reset extent
             this.extent = {
                 min: Number.MAX_SAFE_INTEGER,
@@ -103,62 +168,64 @@ function GeminiTrack(HGC: any, ...args: any[]): any {
          * Return the generated gemini track model.
          */
         preprocessTile(tile: any) {
-            if (tile.geminiModel) return tile.geminiModel;
+            if (tile.geminiModels && tile.geminiModels.length !== 0) return tile.geminiModels;
 
-            if (this.options.spec?.metadata?.type !== 'higlass-multivec') {
-                console.warn('We currently only support higlass multivec type tilesets');
-                return;
-            }
+            tile.geminiModels = [];
 
-            if (
-                !this.options.spec?.metadata?.row ||
-                !this.options.spec?.metadata?.column ||
-                !this.options.spec?.metadata?.value
-            ) {
-                console.warn('Proper metadata of the tileset is not provided. Please specify the name of data fields.');
-                return;
-            }
+            this.resolvedSpecs.forEach(spec => {
+                if (!IsDataMetadata(spec.metadata) || spec.metadata.type !== 'higlass-multivec') {
+                    console.warn('We currently only support higlass multivec type tilesets');
+                    return;
+                }
 
-            const numOfTotalCategories = tile.tileData.shape[0];
-            const numericValues = tile.tileData.dense;
-            const numOfGenomicPositions = tile.tileData.shape[1];
+                if (!spec.metadata.row || !spec.metadata.column || !spec.metadata.value) {
+                    console.warn(
+                        'Proper metadata of the tileset is not provided. Please specify the name of data fields.'
+                    );
+                    return;
+                }
 
-            const rowName = this.options.spec.metadata.row;
-            const valueName = this.options.spec.metadata.value;
-            const columnName = this.options.spec.metadata.column;
-            const categories = this.options.spec.metadata.categories ?? [...Array(numOfTotalCategories).keys()];
+                const numOfTotalCategories = tile.tileData.shape[0];
+                const numericValues = tile.tileData.dense;
+                const numOfGenomicPositions = tile.tileData.shape[1];
 
-            const tabularData: { [k: string]: number | string }[] = [];
+                const rowName = spec.metadata.row;
+                const valueName = spec.metadata.value;
+                const columnName = spec.metadata.column;
+                const categories: any = spec.metadata.categories ?? [...Array(numOfTotalCategories).keys()]; // TODO:
 
-            // convert data to visualization-friendly format
-            categories.forEach((c: string, i: number) => {
-                Array.from(Array(numOfGenomicPositions).keys()).forEach((g: number, j: number) => {
-                    tabularData.push({
-                        [rowName]: c,
-                        [valueName]: numericValues[numOfGenomicPositions * i + j],
-                        [columnName]: j
+                const tabularData: { [k: string]: number | string }[] = [];
+
+                // convert data to a visualization-friendly format
+                categories.forEach((c: string, i: number) => {
+                    Array.from(Array(numOfGenomicPositions).keys()).forEach((g: number, j: number) => {
+                        tabularData.push({
+                            [rowName]: c,
+                            [valueName]: numericValues[numOfGenomicPositions * i + j],
+                            [columnName]: j
+                        });
                     });
                 });
+
+                tile.tabularData = tabularData;
+
+                const isMaxZoomLevel = tile?.tileData?.zoomLevel !== getMaxZoomLevel();
+
+                // we make separate models for indivisual tiles because they contain different data (e.g., genomic positions)
+                tile.geminiModels.push(new GeminiTrackModel(spec, tile.tabularData, isMaxZoomLevel));
+
+                // we need to sync the domain of y-axis so that all tiles are aligned each other
+                this.setGlobalScales();
             });
 
-            tile.tabularData = tabularData;
-
-            const isMaxZoomLevel = tile?.tileData?.zoomLevel !== getMaxZoomLevel();
-
-            // we make separate models for indivisual tiles because they contain different data (e.g., genomic positions)
-            tile.geminiModel = new GeminiTrackModel(this.options.spec, tile.tabularData, isMaxZoomLevel);
-
-            // we need to sync the domain of y-axis so that all tiles are aligned each other
-            this.setGlobalScales();
-
-            return tile.geminiModel;
+            return tile.geminiModels;
         }
 
         /**
          * Re-align the sprites of all visible tiles when zooming and panning.
          */
         rescaleTiles() {
-            return; // first need to figure out how to store extent
+            return; // TODO: we are temporally drawing marks everytime.
 
             const visibleAndFetched = this.visibleAndFetchedTiles();
             const trackHeight = this.dimensions[1];
@@ -285,41 +352,6 @@ function GeminiTrack(HGC: any, ...args: any[]): any {
 
         //     return this.valueScaleMax !== null ? this.valueScaleMax : max;
         //   }
-
-        /**
-         * Rerender tiles using the new options, including the change of positions and zoom levels
-         */
-        rerender(newOptions: any) {
-            super.rerender(newOptions);
-
-            this.options = newOptions;
-
-            this.updateTile();
-
-            this.rescaleTiles();
-            this.draw(); // TODO: any effect?
-        }
-
-        updateTile() {
-            // preprocess all tiles at once so that we can share the value scales
-            const gms: GeminiTrackModel[] = [];
-            this.visibleAndFetchedTiles().forEach((tile: any) => {
-                // tile preprocessing is done only once per tile
-                gms.push(this.preprocessTile(tile));
-            });
-
-            shareScaleAcrossTracks(gms);
-
-            this.visibleAndFetchedTiles().forEach((tile: any) => {
-                this.renderTile(tile);
-            });
-
-            this.rescaleTiles();
-
-            // TODO: Should rerender tile only when neccesary for performance
-            // e.g., changing color scale
-            // ...
-        }
 
         draw() {
             super.draw();

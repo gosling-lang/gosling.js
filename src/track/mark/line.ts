@@ -2,10 +2,7 @@ import { GeminiTrackModel } from '../../lib/gemini-track-model';
 import { IsChannelDeep, getValueUsingChannel, Channel } from '../../lib/gemini.schema';
 // import { RESOLUTION } from '.';
 
-export function drawLine(HGC: any, trackInfo: any, tile: any) {
-    /* gemini model */
-    const gm = tile.geminiModel as GeminiTrackModel;
-
+export function drawLine(HGC: any, trackInfo: any, tile: any, gm: GeminiTrackModel) {
     /* track spec */
     const spec = gm.spec();
 
