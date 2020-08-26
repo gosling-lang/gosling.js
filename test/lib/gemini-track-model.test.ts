@@ -17,7 +17,7 @@ describe('gemini track model should properly validate the original spec', () => 
     it('row cannot be encoded with quantitative field', () => {
         const track: Track = {
             ...MINIMAL_TRACK_SPEC,
-            row: { field: 'x', type: 'quantitative' }
+            row: { field: 'x', type: 'nominal' }
         };
         const model = new GeminiTrackModel(track, [], false);
         expect(model.validateSpec().valid).toBe(false);
@@ -38,7 +38,7 @@ describe('gemini track model should properly validate the original spec', () => 
     it('genomic coordinate cannot be encoded with a color channel', () => {
         const track: Track = {
             ...MINIMAL_TRACK_SPEC,
-            color: { field: 'f', type: 'genomic' } // `genomic` type cannot be used for `color`
+            color: { field: 'f', type: 'genomic' }
         };
         const model = new GeminiTrackModel(track, [], false);
         expect(model.validateSpec().valid).toBe(false);

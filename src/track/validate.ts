@@ -18,7 +18,7 @@ export function validateTrack(track: Track) {
     }
     const row = track.row;
     if (IsChannelDeep(row) && row.type !== 'nominal') {
-        errorMessages.push(`${row.type} type cannot be used for a color channel`);
+        errorMessages.push(`${row.type} type cannot be used for a row channel`);
         valid = false;
     }
 

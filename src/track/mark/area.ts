@@ -146,6 +146,14 @@ export function drawArea(HGC: any, trackInfo: any, tile: any, gm: GeminiTrackMod
             const rowGraphics = tile.graphics; //new HGC.libraries.PIXI.Graphics();
             const rowPosition = gm.encodedValue('row', rowCategory);
 
+            // stroke
+            rowGraphics.lineStyle(
+                gm.encodedValue('strokeWidth'),
+                colorToHex(gm.encodedValue('stroke')),
+                constantOpacity,
+                1 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
+            );
+
             // area marks are drawn for each color
             colorCategories.forEach(colorCategory => {
                 const areaPoints: number[] = [];
