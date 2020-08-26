@@ -74,10 +74,10 @@ export function drawBar(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMode
 
                 // pixi
                 rowGraphics.beginFill(colorToHex(color), opacity);
-                rowGraphics.drawRect(x, rowHeight - y - prevYEnd, barWidth, y);
+                rowGraphics.drawRect(x - barWidth / 2.0, rowHeight - y - prevYEnd, barWidth, y);
 
                 // svg
-                trackInfo.addSVGInfo(tile, x, rowHeight - y - prevYEnd, barWidth, y, color);
+                trackInfo.addSVGInfo(tile, x - barWidth / 2.0, rowHeight - y - prevYEnd, barWidth, y, color);
 
                 prevYEnd += y;
             });
@@ -104,7 +104,6 @@ export function drawBar(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMode
             const rowGraphics = tile.graphics; //new HGC.libraries.PIXI.Graphics();
             const rowPosition = tm.encodedValue('row', rowCategory);
 
-            // TODO: line for each layer?
             // stroke
             rowGraphics.lineStyle(
                 tm.encodedValue('strokeWidth'),
@@ -129,10 +128,10 @@ export function drawBar(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMode
 
                 // pixi
                 rowGraphics.beginFill(colorToHex(color), opacity);
-                rowGraphics.drawRect(x, rowHeight + rowPosition - y, barWidth, y);
+                rowGraphics.drawRect(x - barWidth / 2.0, rowHeight + rowPosition - y, barWidth, y);
 
                 // svg
-                trackInfo.addSVGInfo(tile, x, rowHeight + rowPosition - y, barWidth, y, color);
+                trackInfo.addSVGInfo(tile, x - barWidth / 2.0, rowHeight + rowPosition - y, barWidth, y, color);
             });
 
             // add graphics of this row

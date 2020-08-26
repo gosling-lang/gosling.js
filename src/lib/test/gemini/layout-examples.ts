@@ -6,6 +6,45 @@ const MULTIVEC_FA = [
     'https://resgen.io/api/v1/tileset_info/?d=WipsnEDMStahGPpRfH9adA'
 ][1];
 
+export const SPEC_TO_SUPPORT: GeminiSpec = {
+    tracks: [
+        {
+            data: {
+                url: 'https://resgen.io/api/v1/tileset_info/?d=UvVPeLHuRDiYA3qwFlm7xQ',
+                type: 'tileset'
+            },
+            metadata: {
+                type: 'higlass-multivec',
+                row: 'sample',
+                column: 'position',
+                value: 'peak',
+                categories: ['sample 1', 'sample 2', 'sample 3', 'sample 4']
+            },
+            superpose: [
+                {
+                    mark: 'line',
+                    color: { field: 'sample', type: 'nominal' }
+                },
+                {
+                    mark: 'point',
+                    size: { field: 'peak', type: 'quantitative', range: [0, 6] },
+                    color: { field: 'peak', type: 'quantitative' }
+                }
+            ],
+            x: {
+                field: 'position',
+                type: 'genomic',
+                domain: { chromosome: '1', interval: [1, 3000500] }
+            },
+            x1: { axis: true },
+            y: { field: 'peak', type: 'quantitative' },
+            row: { field: 'sample', type: 'nominal' },
+            width: 1000,
+            height: 180
+        }
+    ]
+};
+
 export const GEMINI_PLUGIN_TRACK_SUPERPOSE: GeminiSpec = {
     tracks: [
         {
@@ -21,8 +60,13 @@ export const GEMINI_PLUGIN_TRACK_SUPERPOSE: GeminiSpec = {
                 categories: ['sample 1', 'sample 2', 'sample 3', 'sample 4']
             },
             superpose: [
-                { mark: 'line', opacity: { value: 1 } },
-                { mark: 'point', opacity: { value: 1 }, size: { field: 'peak', type: 'quantitative', range: [0, 6] } }
+                {
+                    mark: 'line'
+                },
+                {
+                    mark: 'point',
+                    size: { field: 'peak', type: 'quantitative', range: [0, 6] }
+                }
             ],
             x: {
                 field: 'position',

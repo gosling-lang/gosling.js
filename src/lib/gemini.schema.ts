@@ -47,6 +47,7 @@ export type CustomChannel = {
 };
 
 export interface BasicSingleTrack {
+    description?: string;
     // primitives
     data: DataDeep | Datum[];
     metadata?: DataMetadata; // we could remove this and get this information from the server

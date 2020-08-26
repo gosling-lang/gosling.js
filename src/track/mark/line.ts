@@ -51,12 +51,6 @@ export function drawLine(HGC: any, trackInfo: any, tile: any, gm: GeminiTrackMod
         // line marks are drawn for each color
         colorCategories.forEach(colorCategory => {
             const color = gm.encodedValue('color', colorCategory);
-            rowGraphics.lineStyle(
-                gm.encodedValue('size'),
-                colorToHex(color),
-                gm.encodedValue('opacity'), // alpha
-                1 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
-            );
 
             data.filter(
                 d =>
@@ -74,9 +68,18 @@ export function drawLine(HGC: any, trackInfo: any, tile: any, gm: GeminiTrackMod
                 .forEach((d, i) => {
                     const xValue = getValueUsingChannel(d, spec.x as Channel) as number;
                     const yValue = getValueUsingChannel(d, spec.y as Channel) as string | number;
+                    const sizeValue = getValueUsingChannel(d, spec.y as Channel) as string | number;
 
                     const x = xScale(tileX + xValue * (tileWidth / tileSize));
                     const y = gm.encodedValue('y', yValue);
+                    const size = gm.encodedValue('size', sizeValue);
+
+                    rowGraphics.lineStyle(
+                        size,
+                        colorToHex(color),
+                        gm.encodedValue('opacity'), // alpha
+                        1 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
+                    );
 
                     if (i === 0) {
                         rowGraphics.moveTo(x, rowPosition + rowHeight - y);

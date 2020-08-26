@@ -160,7 +160,7 @@ function Editor() {
             </div>
             <div className="editor">
                 <SplitPane className="split-pane-root" split="vertical" defaultSize="35%" onChange={undefined}>
-                    <SplitPane split="horizontal" defaultSize="26px" primary="second" onChange={undefined}>
+                    <SplitPane split="horizontal" defaultSize="70%" onChange={undefined}>
                         {/* Gemini Editor */}
                         <EditorPanel
                             code={gm}
