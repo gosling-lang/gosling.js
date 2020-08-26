@@ -6,15 +6,20 @@ import {
     IsChannelDeep,
     Channel,
     IsChannelValue,
-    BasicSingleTrack
+    BasicSingleTrack,
+    IsDataMetadata,
+    IsDomainChrInterval
 } from '../src/lib/gemini.schema';
 
 describe('gemini schema should be checked correctly', () => {
-    it('Deep channels or value channels should be detected correctly', () => {
+    it('Type guards should be checked correctly', () => {
         expect(IsChannelDeep({ value: 1 } as Channel)).toBe(false);
         expect(IsChannelDeep({ field: 'x' } as Channel)).toBe(true);
         expect(IsChannelValue({ value: 1 } as Channel)).toBe(true);
         expect(IsChannelValue({ field: 'x' } as Channel)).toBe(false);
+
+        expect(IsDataMetadata({ type: 'higlass-multivec', column: 'c', row: 'r', value: 'v' })).toBe(true);
+        expect(IsDomainChrInterval({ chromosome: '1', interval: [1, 1000] })).toBe(true);
     });
 
     it('Should properly retreive values from data with channel spec', () => {

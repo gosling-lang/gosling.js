@@ -47,6 +47,10 @@ export function drawMark(HGC: any, trackInfo: any, tile: any, gm: GeminiTrackMod
      * - Occasional black screen when zoomed in
      * - Support half resolution of tiles from the server
      */
+    if (!HGC || !trackInfo || !tile) {
+        // we do not receive proper parameters
+        return;
+    }
 
     /* spec */
     switch (gm.spec().mark) {

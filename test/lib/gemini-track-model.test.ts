@@ -76,3 +76,32 @@ describe('default options should be added into the original spec', () => {
         expect(range).toBe('viridis');
     });
 });
+
+describe('Gemini track model should be properly generated with data', () => {
+    it('Default values, such as domain, should be correctly generated based on the data', () => {
+        const track: Track = {
+            ...MINIMAL_TRACK_SPEC,
+            color: { field: 'color', type: 'quantitative' },
+            row: { field: 'row', type: 'nominal' }
+        };
+        const model = new GeminiTrackModel(
+            track,
+            [
+                { color: 1, row: 'a' },
+                { color: 2, row: 'b' },
+                { color: 3, row: 'a' }
+            ],
+            false
+        );
+        const spec = model.spec();
+        const colorDomain = IsChannelDeep(spec.color) ? (spec.color.domain as string[]) : [];
+        const rowDomain = IsChannelDeep(spec.row) ? (spec.row.domain as string[]) : [];
+        expect(colorDomain).not.toBeUndefined();
+        expect(colorDomain[0]).toBe(0);
+        expect(colorDomain[1]).toBe(3);
+        expect(rowDomain).not.toBeUndefined();
+        expect(rowDomain).toHaveLength(2);
+        expect(rowDomain[0]).toBe('a');
+        expect(rowDomain[1]).toBe('b');
+    });
+});
