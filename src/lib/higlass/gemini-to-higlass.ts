@@ -1,11 +1,11 @@
 import Ajv from 'ajv';
 import HiGlassSchema from './higlass.schema.json';
-import { HiGlassSpec } from './higlass.schema';
+import { HiGlassSpec, Track as HiGlassTrack } from './higlass.schema';
 import { HiGlassModel, HIGLASS_AXIS_SIZE } from './higlass-model';
 import { parseServerAndTilesetUidFromUrl } from '../utils';
 import { Track, IsDataDeep, IsHiGlassTrack, IsChannelDeep, Domain } from '../gemini.schema';
 import { BoundingBox } from '../utils/bounding-box';
-import { resolveSuperposedTracks } from '../../track/superpose';
+import { resolveSuperposedTracks } from '../../higlass-gemini-track/superpose';
 
 export function compiler(track: Track, bb: BoundingBox): HiGlassSpec {
     const higlass = new HiGlassModel();
@@ -48,18 +48,29 @@ export function compiler(track: Track, bb: BoundingBox): HiGlassSpec {
 
         higlass.setDomain(xDomain, yDomain);
 
-        higlass
-            .setMainTrack({
-                type: 'gemini-track',
-                server: server,
-                tilesetUid: tilesetUid,
-                width: bb.width - (isYGenomic && isAxisShown ? HIGLASS_AXIS_SIZE : 0),
-                height: bb.height - (isXGenomic && isAxisShown ? HIGLASS_AXIS_SIZE : 0),
-                options: {
-                    spec: { ...track, data: undefined }
-                }
-            })
-            .addTrackSourceServers(server);
+        const hgTrack: HiGlassTrack = {
+            type: 'gemini-track',
+            server: server,
+            tilesetUid: tilesetUid,
+            width: bb.width - (isYGenomic && isAxisShown ? HIGLASS_AXIS_SIZE : 0),
+            height: bb.height - (isXGenomic && isAxisShown ? HIGLASS_AXIS_SIZE : 0),
+            options: {
+                spec: { ...track, data: undefined }
+            }
+        };
+
+        if (track.data && IsDataDeep(track.data) && track.data.type === 'csv') {
+            // use a CSV data fetcher
+            hgTrack.data = track.data;
+
+            // TODO: for demo
+            // higlass._addGeneAnnotationTrack();
+            // hgTrack.height = 30
+            // hgTrack.options.spec.height = hgTrack.options.spec.height - 120;
+            //
+        }
+
+        higlass.setMainTrack(hgTrack).addTrackSourceServers(server);
 
         const chanToPos: { [k: string]: 'left' | 'right' | 'top' | 'bottom' } = {
             x: 'bottom',

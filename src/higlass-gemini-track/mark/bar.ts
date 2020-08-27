@@ -11,7 +11,7 @@ export function drawBar(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMode
     const { colorToHex } = HGC.utils;
 
     /* data */
-    const data = tile.tabularData as { [k: string]: number | string }[];
+    const data = tm.data();
 
     /* track size */
     const trackHeight = trackInfo.dimensions[1];
@@ -67,7 +67,7 @@ export function drawBar(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMode
                 const yValue = getValueUsingChannel(d, spec.y as Channel) as string | number;
                 const colorValue = getValueUsingChannel(d, spec.color as Channel) as string;
 
-                const x = xScale(tileX + xValue * (tileWidth / tileSize));
+                const x = xScale(xValue);
                 const y = tm.encodedValue('y', yValue);
                 const color = tm.encodedValue('color', colorValue);
                 const opacity = tm.encodedValue('opacity');
@@ -121,7 +121,7 @@ export function drawBar(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMode
                 const yValue = getValueUsingChannel(d, spec.y as Channel) as string | number;
                 const colorValue = getValueUsingChannel(d, spec.color as Channel) as string;
 
-                const x = xScale(tileX + xValue * (tileWidth / tileSize));
+                const x = xScale(xValue);
                 const y = tm.encodedValue('y', yValue);
                 const color = tm.encodedValue('color', colorValue);
                 const opacity = tm.encodedValue('opacity');

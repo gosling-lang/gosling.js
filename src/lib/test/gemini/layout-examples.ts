@@ -134,7 +134,7 @@ export const GEMINI_PLUGIN_TRACK_BASIC_MARKS: GeminiSpec = {
                 domain: { chromosome: '1', interval: [1, 3000500] }
             },
             x1: { axis: true },
-            y: { field: 'sample', type: 'nominal' },
+            row: { field: 'sample', type: 'nominal' },
             // row: { field: 'sample', type: 'nominal' },
             color: { field: 'peak', type: 'quantitative' },
             // stroke: {value: 'white'},

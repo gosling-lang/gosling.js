@@ -1,12 +1,5 @@
 import { GeminiSpec } from '../lib/gemini.schema';
-import { GENE_ANNOTATION_PLOT, GENE_ANNOTATION_PLOT_SIMPLE, CYTOGENETIC_BAND } from '../lib/test/gemini/glyph-examples';
 import {
-    LAYOUT_EXAMPLE_COMBO_HORIZONTAL,
-    LAYOUT_EXAMPLE_LINK,
-    LAYOUT_EXAMPLE_COMBO,
-    LAYOUT_EXAMPLE_COMBO_BAND,
-    LAYOUT_EXAMPLE_STACKED_MULTI_TRACKS,
-    LAYOUT_EXAMPLE_STACKED_MULTI_TRACKS_CIRCULAR,
     GEMINI_TRACK_EXAMPLE,
     GEMINI_TRACK_EXAMPLE2,
     GEMINI_TRACK_EXAMPLE3,
@@ -35,6 +28,76 @@ export const demos: ReadonlyArray<Demo> = [
         glyphHeight: 0
     },
     {
+        name: 'Cytogenetic Band',
+        spec: {
+            tracks: [
+                {
+                    data: {
+                        url:
+                            'https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/chr1_cytogenetic_band.glyph.csv',
+                        type: 'csv',
+                        quantitativeFields: [
+                            'Band',
+                            'ISCN_start',
+                            'ISCN_stop',
+                            'Basepair_start',
+                            'Basepair_stop',
+                            'Density'
+                        ]
+                    },
+                    superpose: [
+                        // {
+                        //     mark: 'text',
+                        //     text: { field: 'Band', type: 'nominal' }
+                        // },
+                        {
+                            mark: 'rect',
+                            dataTransform: {
+                                filter: { field: 'Band', oneOf: [11, 11.1], not: true }
+                            },
+                            color: {
+                                field: 'Density',
+                                type: 'nominal',
+                                domain: ['', '25', '50', '75', '100'],
+                                range: ['white', '#D9D9D9', '#979797', '#636363', 'black']
+                            }
+                        },
+                        {
+                            mark: 'rect',
+                            dataTransform: {
+                                filter: { field: 'Stain', oneOf: ['gvar'], not: false }
+                            },
+                            color: { value: '#A0A0F2' }
+                        },
+                        {
+                            mark: 'triangle-l',
+                            dataTransform: {
+                                filter: { field: 'Band', oneOf: [11], not: false }
+                            },
+                            color: { value: '#B40101' }
+                        },
+                        {
+                            mark: 'triangle-r',
+                            dataTransform: {
+                                filter: { field: 'Band', oneOf: [11.1], not: false }
+                            },
+                            color: { value: '#B40101' }
+                        }
+                    ],
+                    x: { field: 'Basepair_start', type: 'genomic', domain: { chromosome: '1' } },
+                    xe: { field: 'Basepair_stop', type: 'genomic' },
+                    x1: { axis: true },
+                    stroke: { value: 'black' },
+                    strokeWidth: { value: 0.5 },
+                    width: 1000,
+                    height: 60
+                }
+            ]
+        } as GeminiSpec,
+        glyphWidth: 0,
+        glyphHeight: 0
+    },
+    {
         name: 'HiGlass Gemini Track (zoom action example 1)',
         spec: GEMINI_TRACK_EXAMPLE,
         glyphWidth: 0,
@@ -51,7 +114,9 @@ export const demos: ReadonlyArray<Demo> = [
         spec: GEMINI_TRACK_EXAMPLE3,
         glyphWidth: 0,
         glyphHeight: 0
-    },
+    }
+    /*
+    // old demos that we will need to support again in the future
     {
         name: 'Gene Annotation Plot (Simple)',
         spec: GENE_ANNOTATION_PLOT_SIMPLE,
@@ -106,4 +171,5 @@ export const demos: ReadonlyArray<Demo> = [
         glyphWidth: 0,
         glyphHeight: 0
     }
+    */
 ] as const;

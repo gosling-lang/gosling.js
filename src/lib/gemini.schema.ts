@@ -23,6 +23,7 @@ export interface Layout {
 export interface DataDeep {
     url: string;
     type: 'tileset' | 'csv';
+    quantitativeFields?: string[];
 }
 
 export type DataMetadata = MultivecMetadata; // ...
@@ -33,6 +34,10 @@ export interface MultivecMetadata {
     row: string;
     value: string;
     categories?: string[];
+}
+
+export interface DataTransform {
+    filter: { field: string; oneOf: string[] | number[]; not: boolean };
 }
 
 export type Track = SingleTrack | SuperposedTrack;
@@ -52,6 +57,8 @@ export interface BasicSingleTrack {
     data: DataDeep | Datum[];
     metadata?: DataMetadata; // we could remove this and get this information from the server
     mark: Mark;
+    // data transform
+    dataTransform?: DataTransform;
     // zoom technique
     zoomAction?: SemanticZoom;
     // coordinates
@@ -322,10 +329,14 @@ interface Consistency {
  * Type guards
  */
 
-// TODO: this is not neccessary. Resolve the issue with `Channel`.
+// TODO: these are not neccessary. Resolve the issue with `Channel`.
 export function IsDataMetadata(_: DataMetadata | ChannelDeep | ChannelValue | undefined): _ is DataMetadata {
     return typeof _ === 'object' && 'type' in _ && _.type === 'higlass-multivec';
 }
+export function IsDataTransform(_: DataTransform | ChannelDeep | ChannelValue): _ is DataTransform {
+    return 'filter' in _;
+}
+//
 
 export function IsDataDeep(
     data:

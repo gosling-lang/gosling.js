@@ -1,5 +1,6 @@
 // @ts-ignore
-import { GeminiTrack } from '../track/index';
+import { GeminiTrack } from '../higlass-gemini-track/index';
+import { CSVDataFetcher } from '../higlass-csv-datafetcher/index';
 // @ts-ignore
 import { HiGlassComponent } from 'higlass';
 // @ts-ignore
@@ -25,7 +26,9 @@ higlassRegister({
     config: GeminiTrack.config
 });
 
-const DEBUG_INIT_DEMO_INDEX = 0;
+higlassRegister({ dataFetcher: CSVDataFetcher, config: CSVDataFetcher.config }, { pluginType: 'dataFetcher' });
+
+const DEBUG_INIT_DEMO_INDEX = 2;
 
 function Editor() {
     const glyphSvg = useRef<SVGSVGElement>(null);
@@ -160,7 +163,7 @@ function Editor() {
             </div>
             <div className="editor">
                 <SplitPane className="split-pane-root" split="vertical" defaultSize="35%" onChange={undefined}>
-                    <SplitPane split="horizontal" defaultSize="70%" onChange={undefined}>
+                    <SplitPane split="horizontal" defaultSize="50%" onChange={undefined}>
                         {/* Gemini Editor */}
                         <EditorPanel
                             code={gm}

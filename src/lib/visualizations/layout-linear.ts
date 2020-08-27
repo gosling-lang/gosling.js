@@ -5,7 +5,7 @@ import { BoundingBox } from '../utils/bounding-box';
 import { TRACK_GAP } from './defaults';
 import { renderBetweenLink } from './link';
 import { trackStyle } from './layout';
-import { resolveSuperposedTracks } from '../../track/superpose';
+import { resolveSuperposedTracks } from '../../higlass-gemini-track/superpose';
 
 export function renderLinearLayout(
     g: d3.Selection<SVGGElement, any, any, any>,

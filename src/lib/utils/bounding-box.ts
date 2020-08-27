@@ -1,7 +1,7 @@
 import { GeminiSpec } from '../gemini.schema';
 import { TRACK_GAP, INNER_CIRCLE_RADIUS } from '../visualizations/defaults';
 import * as d3 from 'd3';
-import { resolveSuperposedTracks } from '../../track/superpose';
+import { resolveSuperposedTracks } from '../../higlass-gemini-track/superpose';
 
 export interface BoundingBox {
     x: number;

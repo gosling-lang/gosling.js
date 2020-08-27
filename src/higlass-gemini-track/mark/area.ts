@@ -7,24 +7,20 @@ import { group } from 'd3-array';
 /**
  * Draw area marks
  */
-export function drawArea(HGC: any, trackInfo: any, tile: any, gm: GeminiTrackModel) {
+export function drawArea(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackModel) {
     /* track spec */
-    const spec = gm.spec();
+    const spec = tm.spec();
 
     /* helper */
     const { colorToHex } = HGC.utils;
 
     /* data */
-    const data = tile.tabularData as { [k: string]: number | string }[];
+    const data = tm.data();
 
     /* track size */
     const trackHeight = trackInfo.dimensions[1];
     const tileSize = trackInfo.tilesetInfo.tile_size;
-    const { tileX, tileWidth } = trackInfo.getTilePosAndDimensions(
-        tile.tileData.zoomLevel,
-        tile.tileData.tilePos,
-        tileSize
-    );
+    const { tileX } = trackInfo.getTilePosAndDimensions(tile.tileData.zoomLevel, tile.tileData.tilePos, tileSize);
 
     /* genomic scale */
     const xScale = trackInfo._xScale;
@@ -44,17 +40,17 @@ export function drawArea(HGC: any, trackInfo: any, tile: any, gm: GeminiTrackMod
             : ['___SINGLE_COLOR___']; // if `color` is undefined, use only one row internally
 
     /* information for rescaling tiles */
-    tile.rowScale = gm.getChannelScale('row');
+    tile.rowScale = tm.getChannelScale('row');
     tile.spriteInfos = []; // sprites for individual rows or columns
 
-    const constantOpacity = gm.encodedValue('opacity');
+    const constantOpacity = tm.encodedValue('opacity');
 
     /* render */
     if (IsStackedMark(spec)) {
         // TODO: many parts in this scope are identical as the below `else` statement, so encaptulate this?
         const rowGraphics = tile.graphics; //new HGC.libraries.PIXI.Graphics(); // only one row for stacked marks
 
-        const genomicChannel = gm.getGenomicChannel();
+        const genomicChannel = tm.getGenomicChannel();
         if (!genomicChannel || !genomicChannel.field) {
             console.warn('Genomic field is not provided in the specification');
             return;
@@ -64,8 +60,8 @@ export function drawArea(HGC: any, trackInfo: any, tile: any, gm: GeminiTrackMod
 
         // stroke
         rowGraphics.lineStyle(
-            gm.encodedValue('strokeWidth'),
-            colorToHex(gm.encodedValue('stroke')),
+            tm.encodedValue('strokeWidth'),
+            colorToHex(tm.encodedValue('stroke')),
             constantOpacity,
             1 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
         );
@@ -88,8 +84,8 @@ export function drawArea(HGC: any, trackInfo: any, tile: any, gm: GeminiTrackMod
                         const xValue = +genomicPosCategory;
                         const yValue = getValueUsingChannel(d, spec.y as Channel) as string | number;
 
-                        const x = xScale(tileX + xValue * (tileWidth / tileSize));
-                        const y = d3.max([gm.encodedValue('y', yValue), 0]); // make should not to overflow
+                        const x = xScale(xValue);
+                        const y = d3.max([tm.encodedValue('y', yValue), 0]); // make should not to overflow
 
                         if (i === 0) {
                             // start position of the polygon
@@ -113,7 +109,7 @@ export function drawArea(HGC: any, trackInfo: any, tile: any, gm: GeminiTrackMod
                         prevYEndByGPos[genomicPosCategory] += y;
                     });
             });
-            const color = gm.encodedValue('color', colorCategory);
+            const color = tm.encodedValue('color', colorCategory);
             rowGraphics.beginFill(colorToHex(color), constantOpacity);
             rowGraphics.drawPolygon([
                 ...areaPointsTop.reduce((a, b) => a.concat(b)),
@@ -144,12 +140,12 @@ export function drawArea(HGC: any, trackInfo: any, tile: any, gm: GeminiTrackMod
         rowCategories.forEach(rowCategory => {
             // we are separately drawing each row so that y scale can be more effectively shared across tiles without rerendering from the bottom
             const rowGraphics = tile.graphics; //new HGC.libraries.PIXI.Graphics();
-            const rowPosition = gm.encodedValue('row', rowCategory);
+            const rowPosition = tm.encodedValue('row', rowCategory);
 
             // stroke
             rowGraphics.lineStyle(
-                gm.encodedValue('strokeWidth'),
-                colorToHex(gm.encodedValue('stroke')),
+                tm.encodedValue('strokeWidth'),
+                colorToHex(tm.encodedValue('stroke')),
                 constantOpacity,
                 1 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
             );
@@ -169,8 +165,8 @@ export function drawArea(HGC: any, trackInfo: any, tile: any, gm: GeminiTrackMod
                     const yValue = getValueUsingChannel(d, spec.y as Channel) as string | number;
 
                     // make should not to overflow; we could add this into the `encodedValue` function
-                    const x = xScale(tileX + xValue * (tileWidth / tileSize));
-                    const y = d3.min([d3.max([gm.encodedValue('y', yValue), 0]), rowHeight]);
+                    const x = xScale(xValue);
+                    const y = d3.min([d3.max([tm.encodedValue('y', yValue), 0]), rowHeight]);
 
                     if (i === 0) {
                         // start position of the polygon
@@ -187,7 +183,7 @@ export function drawArea(HGC: any, trackInfo: any, tile: any, gm: GeminiTrackMod
                     }
                 });
 
-                const color = gm.encodedValue('color', colorCategory);
+                const color = tm.encodedValue('color', colorCategory);
                 rowGraphics.beginFill(colorToHex(color), constantOpacity);
                 rowGraphics.drawPolygon(areaPoints);
                 rowGraphics.endFill();

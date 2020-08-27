@@ -89,6 +89,41 @@ export class HiGlassModel {
         return this;
     }
 
+    public _addGeneAnnotationTrack() {
+        if (!this.hg.views) return this;
+        this.hg.views[0].tracks.bottom = [
+            {
+                type: 'horizontal-gene-annotations',
+                height: 90,
+                tilesetUid: 'OHJakQICQD6gTD7skx4EWA',
+                server: '//higlass.io/api/v1',
+                uid: 'OHJakQICQD6gTD7skx4EWA',
+                options: {
+                    name: 'Gene Annotations (hg19)',
+                    fontSize: 10,
+                    labelColor: 'black',
+                    labelBackgroundColor: '#ffffff',
+                    labelPosition: 'hidden',
+                    labelLeftMargin: 0,
+                    labelRightMargin: 0,
+                    labelTopMargin: 0,
+                    labelBottomMargin: 0,
+                    minHeight: 24,
+                    plusStrandColor: 'blue',
+                    minusStrandColor: 'red',
+                    trackBorderWidth: 0,
+                    trackBorderColor: 'black',
+                    showMousePosition: false,
+                    mousePositionColor: '#000000',
+                    geneAnnotationHeight: 16,
+                    geneLabelPosition: 'outside',
+                    geneStrandSpacing: 4
+                }
+            }
+        ];
+        return this;
+    }
+
     public setAxisTrack(position: 'left' | 'right' | 'top' | 'bottom') {
         if (!this.hg.views) return this;
         const baseTrackType = '-chromosome-labels';

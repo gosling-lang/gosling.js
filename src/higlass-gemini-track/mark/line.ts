@@ -2,24 +2,18 @@ import { GeminiTrackModel } from '../../lib/gemini-track-model';
 import { IsChannelDeep, getValueUsingChannel, Channel } from '../../lib/gemini.schema';
 // import { RESOLUTION } from '.';
 
-export function drawLine(HGC: any, trackInfo: any, tile: any, gm: GeminiTrackModel) {
+export function drawLine(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackModel) {
     /* track spec */
-    const spec = gm.spec();
+    const spec = tm.spec();
 
     /* helper */
     const { colorToHex } = HGC.utils;
 
     /* data */
-    const data = tile.tabularData as { [k: string]: number | string }[];
+    const data = tm.data();
 
     /* track size */
     const trackHeight = trackInfo.dimensions[1];
-    const tileSize = trackInfo.tilesetInfo.tile_size;
-    const { tileX, tileWidth } = trackInfo.getTilePosAndDimensions(
-        tile.tileData.zoomLevel,
-        tile.tileData.tilePos,
-        tileSize
-    );
 
     /* genomic scale */
     const xScale = trackInfo._xScale;
@@ -39,18 +33,18 @@ export function drawLine(HGC: any, trackInfo: any, tile: any, gm: GeminiTrackMod
             : ['___SINGLE_COLOR___']; // if `color` is undefined, use only one row internally
 
     /* information for rescaling tiles */
-    tile.rowScale = gm.getChannelScale('row');
+    tile.rowScale = tm.getChannelScale('row');
     tile.spriteInfos = []; // sprites for individual rows or columns
 
     /* render */
     rowCategories.forEach(rowCategory => {
         // we are separately drawing each row so that y scale can be more effectively shared across tiles without rerendering from the bottom
         const rowGraphics = tile.graphics; // new HGC.libraries.PIXI.Graphics();
-        const rowPosition = gm.encodedValue('row', rowCategory);
+        const rowPosition = tm.encodedValue('row', rowCategory);
 
         // line marks are drawn for each color
         colorCategories.forEach(colorCategory => {
-            const color = gm.encodedValue('color', colorCategory);
+            const color = tm.encodedValue('color', colorCategory);
 
             data.filter(
                 d =>
@@ -70,14 +64,14 @@ export function drawLine(HGC: any, trackInfo: any, tile: any, gm: GeminiTrackMod
                     const yValue = getValueUsingChannel(d, spec.y as Channel) as string | number;
                     const sizeValue = getValueUsingChannel(d, spec.y as Channel) as string | number;
 
-                    const x = xScale(tileX + xValue * (tileWidth / tileSize));
-                    const y = gm.encodedValue('y', yValue);
-                    const size = gm.encodedValue('size', sizeValue);
+                    const x = xScale(xValue);
+                    const y = tm.encodedValue('y', yValue);
+                    const size = tm.encodedValue('size', sizeValue);
 
                     rowGraphics.lineStyle(
                         size,
                         colorToHex(color),
-                        gm.encodedValue('opacity'), // alpha
+                        tm.encodedValue('opacity'), // alpha
                         1 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
                     );
 

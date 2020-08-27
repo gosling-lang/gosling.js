@@ -12,9 +12,15 @@ import {
 import merge from 'lodash/merge';
 import * as d3 from 'd3';
 import { group } from 'd3-array';
-import { validateTrack, getGenomicChannelFromTrack, getGenomicChannelKeyFromTrack } from '../track/validate';
+import {
+    validateTrack,
+    getGenomicChannelFromTrack,
+    getGenomicChannelKeyFromTrack
+} from '../higlass-gemini-track/validate';
 import { HIGLASS_AXIS_SIZE } from './higlass/higlass-model';
-import { SUPPORTED_CHANNELS } from '../track/mark';
+import { SUPPORTED_CHANNELS } from '../higlass-gemini-track/mark';
+
+const TRACK_ROW_PADDING = 3;
 
 export class GeminiTrackModel {
     /* spec */
@@ -189,6 +195,8 @@ export class GeminiTrackModel {
      * With the scales already constructed, get the encoded value.
      */
     public encodedValue(channelKey: keyof typeof ChannelTypes, value?: number | string) {
+        if (channelKey === 'text') return value;
+
         const channel = this.spec()[channelKey];
         const channelFieldType = IsChannelDeep(channel)
             ? channel.type
@@ -213,6 +221,7 @@ export class GeminiTrackModel {
                 /* genomic is not supported */
                 break;
             case 'x':
+            case 'xe':
             case 'y':
                 if (channelFieldType === 'quantitative' || channelFieldType === 'genomic')
                     return (this.channelScales[channelKey] as d3.ScaleLinear<any, any>)(value as number);
@@ -366,10 +375,11 @@ export class GeminiTrackModel {
                         let range;
                         switch (channelKey) {
                             case 'x':
+                            case 'xe':
                                 range = [0, spec.width];
                                 break;
                             case 'y':
-                                range = [0, rowHeight];
+                                range = [0 + TRACK_ROW_PADDING, rowHeight - TRACK_ROW_PADDING];
                                 break;
                             case 'color':
                                 range = this.DEFAULTS.QUANTITATIVE_COLOR as PREDEFINED_COLORS;
@@ -392,10 +402,11 @@ export class GeminiTrackModel {
                         let range;
                         switch (channelKey) {
                             case 'x':
+                            case 'xe':
                                 range = [0, spec.width];
                                 break;
                             case 'y':
-                                range = [0, rowHeight];
+                                range = [0 + TRACK_ROW_PADDING, rowHeight - TRACK_ROW_PADDING];
                                 break;
                             case 'color':
                                 range = this.DEFAULTS.NOMINAL_COLOR;
@@ -438,6 +449,7 @@ export class GeminiTrackModel {
                 if (channel.type === 'quantitative') {
                     switch (channelKey) {
                         case 'x':
+                        case 'xe':
                         case 'y':
                         case 'size':
                             this.channelScales[channelKey] = d3
@@ -456,6 +468,7 @@ export class GeminiTrackModel {
                 } else if (channel.type === 'nominal') {
                     switch (channelKey) {
                         case 'x':
+                        case 'xe':
                         case 'y':
                         case 'row':
                             this.channelScales[channelKey] = d3

@@ -7,7 +7,7 @@ import { validateTrack } from './validate';
 import { drawZoomInstruction } from './mark/zoom-instruction';
 import { shareScaleAcrossTracks } from './scales';
 import { resolveSuperposedTracks } from './superpose';
-import { SingleTrack, IsDataMetadata } from '../lib/gemini.schema';
+import { SingleTrack, IsDataMetadata, IsDataTransform } from '../lib/gemini.schema';
 
 function GeminiTrack(HGC: any, ...args: any[]): any {
     if (!new.target) {
@@ -24,10 +24,6 @@ function GeminiTrack(HGC: any, ...args: any[]): any {
             super(context, options);
 
             this.resolvedSpecs = resolveSuperposedTracks(this.options.spec);
-
-            // DEBUG
-            // console.log('resolvedSpecs:', this.resolvedSpecs);
-            ///
 
             let allValid = true;
             const allErrorMessages: string[] = [];
@@ -53,9 +49,6 @@ function GeminiTrack(HGC: any, ...args: any[]): any {
         }
 
         initTile(tile: any) {
-            // TODO: support gene annotation tilesets
-            // e.g., https://higlass.io/api/v1/tileset_info/?d=OHJakQICQD6gTD7skx4EWA
-
             // preprocess all tiles at once so that we can share the value scales
             const gms: GeminiTrackModel[] = [];
             this.visibleAndFetchedTiles().forEach((t: any) => {
@@ -68,10 +61,6 @@ function GeminiTrack(HGC: any, ...args: any[]): any {
 
             // TODO: IMPORTANT: when panning the tiles, the extent only becomes larger
             shareScaleAcrossTracks(gms);
-
-            // DEBUG
-            // console.log(gms.map(d => d.spec()));
-            //
 
             this.renderTile(tile);
             this.rescaleTiles();
@@ -173,49 +162,73 @@ function GeminiTrack(HGC: any, ...args: any[]): any {
             tile.geminiModels = [];
 
             this.resolvedSpecs.forEach(spec => {
-                if (!IsDataMetadata(spec.metadata) || spec.metadata.type !== 'higlass-multivec') {
-                    console.warn('We currently only support higlass multivec type tilesets');
-                    return;
-                }
+                if (!tile.tileData.tabularData) {
+                    if (!IsDataMetadata(spec.metadata) || spec.metadata.type !== 'higlass-multivec') {
+                        console.warn('We currently only support higlass multivec type tilesets');
+                        return;
+                    }
 
-                if (!spec.metadata.row || !spec.metadata.column || !spec.metadata.value) {
-                    console.warn(
-                        'Proper metadata of the tileset is not provided. Please specify the name of data fields.'
+                    if (!spec.metadata.row || !spec.metadata.column || !spec.metadata.value) {
+                        console.warn(
+                            'Proper metadata of the tileset is not provided. Please specify the name of data fields.'
+                        );
+                        return;
+                    }
+
+                    const tileSize = this.tilesetInfo.tile_size;
+
+                    const { tileX, tileWidth } = this.getTilePosAndDimensions(
+                        tile.tileData.zoomLevel,
+                        tile.tileData.tilePos,
+                        tileSize
                     );
-                    return;
-                }
 
-                const numOfTotalCategories = tile.tileData.shape[0];
-                const numericValues = tile.tileData.dense;
-                const numOfGenomicPositions = tile.tileData.shape[1];
+                    const numOfTotalCategories = tile.tileData.shape[0];
+                    const numericValues = tile.tileData.dense;
+                    const numOfGenomicPositions = tile.tileData.shape[1];
 
-                const rowName = spec.metadata.row;
-                const valueName = spec.metadata.value;
-                const columnName = spec.metadata.column;
-                const categories: any = spec.metadata.categories ?? [...Array(numOfTotalCategories).keys()]; // TODO:
+                    const rowName = spec.metadata.row;
+                    const valueName = spec.metadata.value;
+                    const columnName = spec.metadata.column;
+                    const categories: any = spec.metadata.categories ?? [...Array(numOfTotalCategories).keys()]; // TODO:
 
-                const tabularData: { [k: string]: number | string }[] = [];
+                    const tabularData: { [k: string]: number | string }[] = [];
 
-                // convert data to a visualization-friendly format
-                categories.forEach((c: string, i: number) => {
-                    Array.from(Array(numOfGenomicPositions).keys()).forEach((g: number, j: number) => {
-                        tabularData.push({
-                            [rowName]: c,
-                            [valueName]: numericValues[numOfGenomicPositions * i + j],
-                            [columnName]: j
+                    // convert data to a visualization-friendly format
+                    categories.forEach((c: string, i: number) => {
+                        Array.from(Array(numOfGenomicPositions).keys()).forEach((g: number, j: number) => {
+                            tabularData.push({
+                                [rowName]: c,
+                                [valueName]: numericValues[numOfGenomicPositions * i + j],
+                                [columnName]: tileX + j * (tileWidth / tileSize)
+                            });
                         });
                     });
-                });
 
-                tile.tabularData = tabularData;
+                    tile.tileData.tabularData = tabularData;
+                }
+
+                tile.tileData.tabularDataFiltered = Array.from(tile.tileData.tabularData);
+
+                // simple filtering
+                if (spec.dataTransform !== undefined && IsDataTransform(spec.dataTransform)) {
+                    const { field, oneOf, not } = spec.dataTransform.filter;
+                    tile.tileData.tabularDataFiltered = tile.tileData.tabularDataFiltered.filter(
+                        (d: { [k: string]: number | string }) => {
+                            return not
+                                ? (oneOf as any[]).indexOf(d[field]) === -1
+                                : (oneOf as any[]).indexOf(d[field]) !== -1;
+                        }
+                    );
+                }
 
                 const isMaxZoomLevel = tile?.tileData?.zoomLevel !== getMaxZoomLevel();
 
                 // we make separate models for indivisual tiles because they contain different data (e.g., genomic positions)
-                tile.geminiModels.push(new GeminiTrackModel(spec, tile.tabularData, isMaxZoomLevel));
+                tile.geminiModels.push(new GeminiTrackModel(spec, tile.tileData.tabularDataFiltered, isMaxZoomLevel));
 
                 // we need to sync the domain of y-axis so that all tiles are aligned each other
-                this.setGlobalScales();
+                // this.setGlobalScales();
             });
 
             return tile.geminiModels;

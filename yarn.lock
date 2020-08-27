@@ -5534,6 +5534,15 @@ d3-dsv@1, d3-dsv@^1.0.8:
     iconv-lite "0.4"
     rw "1"
 
+d3-dsv@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/d3-dsv/-/d3-dsv-2.0.0.tgz#b37b194b6df42da513a120d913ad1be22b5fe7c5"
+  integrity sha512-E+Pn8UJYx9mViuIUkoc93gJGGYut6mSDKy2+XaPwccwkRGlR+LO97L2VCCRjQivTwLHkSnAJG7yo00BWY6QM+w==
+  dependencies:
+    commander "2"
+    iconv-lite "0.4"
+    rw "1"
+
 d3-ease@1:
   version "1.0.6"
   resolved "https://registry.yarnpkg.com/d3-ease/-/d3-ease-1.0.6.tgz#ebdb6da22dfac0a22222f2d4da06f66c416a0ec0"
@@ -7976,10 +7985,10 @@ highlight.js@^9.15.5:
   resolved "https://registry.yarnpkg.com/highlight.js/-/highlight.js-9.18.3.tgz#a1a0a2028d5e3149e2380f8a865ee8516703d634"
   integrity sha512-zBZAmhSupHIl5sITeMqIJnYCDfAEc3Gdkqj65wC1lpI468MMQeeQkhcIAvk+RylAkxrCcI9xy9piHiXeQ1BdzQ==
 
-higlass-register@^0.1.0:
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/higlass-register/-/higlass-register-0.1.0.tgz#521f4b12ed5d8e2923d0c81b3edf4b71b856b205"
-  integrity sha512-5og/1oft7/6cwjOmBr5IakNOe2G58OROpyLOOt3rS40GqbBgvL8cB4nJLN96pwTVdUH2JDuFXl9CDObltcD+9g==
+higlass-register@^0.3.0:
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/higlass-register/-/higlass-register-0.3.0.tgz#6c728ad911359bd7e88749aceaffd8812415c52a"
+  integrity sha512-D4I+ATxFuTn+Q6p8Y9rUa+X3b3cqMqhu9Tya6uHtvgV5cs39Mk7i6Z+7PMA8YuwQd5gLMSxCm2lCyWmxRVBQsQ==
 
 higlass@^1.11.1:
   version "1.11.1"

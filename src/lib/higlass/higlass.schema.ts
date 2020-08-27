@@ -101,6 +101,10 @@ export interface Data {
     children?: any[];
     tiles?: any;
     tilesetInfo?: any;
+    url?: string;
+
+    // csv
+    quantitativeFields?: string[];
 }
 
 export interface Overlay {

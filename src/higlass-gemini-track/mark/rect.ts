@@ -2,7 +2,7 @@ import { GeminiTrackModel } from '../../lib/gemini-track-model';
 import { IsChannelDeep, getValueUsingChannel, Channel } from '../../lib/gemini.schema';
 // import { RESOLUTION } from '.';
 
-export function drawPoint(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackModel) {
+export function drawRect(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackModel) {
     /* track spec */
     const spec = tm.spec();
 
@@ -10,7 +10,7 @@ export function drawPoint(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMo
     const { colorToHex } = HGC.utils;
 
     /* data */
-    const data = tile.tabularData as { [k: string]: number | string }[];
+    const data = tm.data();
 
     /* track size */
     const trackHeight = trackInfo.dimensions[1];
@@ -23,6 +23,7 @@ export function drawPoint(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMo
 
     /* genomic scale */
     const xScale = trackInfo._xScale;
+    const barWidth = xScale(tileX + tileWidth / tileSize) - xScale(tileX);
 
     /* row separation */
     const rowCategories =
@@ -36,6 +37,13 @@ export function drawPoint(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMo
     tile.rowScale = tm.getChannelScale('row');
     tile.spriteInfos = []; // sprites for individual rows or columns
 
+    // TODO: what is quantitative Y field is used for heatmap?
+    const yCategories =
+        IsChannelDeep(spec.y) && spec.y.field
+            ? Array.from(new Set(data.map(d => getValueUsingChannel(d, spec.y as Channel) as string)))
+            : ['___SINGLE_Y_POSITION___']; // if `y` is undefined, use only one row internally
+    const cellHeight = rowHeight / yCategories.length;
+
     /* render */
     rowCategories.forEach(rowCategory => {
         // we are separately drawing each row so that y scale can be more effectively shared across tiles without rerendering from the bottom
@@ -47,7 +55,7 @@ export function drawPoint(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMo
             tm.encodedValue('strokeWidth'),
             colorToHex(tm.encodedValue('stroke')),
             1, // alpha
-            1 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
+            0 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
         );
 
         data.filter(
@@ -56,26 +64,19 @@ export function drawPoint(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMo
                 (getValueUsingChannel(d, spec.row as Channel) as string) === rowCategory
         ).forEach(d => {
             const xValue = getValueUsingChannel(d, spec.x as Channel) as number;
+            const xeValue = getValueUsingChannel(d, spec.xe as Channel) as number;
             const yValue = getValueUsingChannel(d, spec.y as Channel) as string | number;
             const colorValue = getValueUsingChannel(d, spec.color as Channel) as string;
-            const sizeValue = getValueUsingChannel(d, spec.size as Channel) as number;
 
-            const x = xScale(tileX + xValue * (tileWidth / tileSize));
+            const x = xScale(xValue);
+            const xe = xScale(xeValue);
             const y = tm.encodedValue('y', yValue);
             const color = tm.encodedValue('color', colorValue);
-            const size = tm.encodedValue('size', sizeValue);
             const opacity = tm.encodedValue('opacity');
 
-            // don't draw zero values
-            // TODO: this should be included in the users' spec
-            if (yValue === 0 || size === 0 || opacity === 0) return;
-
             rowGraphics.beginFill(colorToHex(color), opacity);
-            rowGraphics.drawCircle(x, rowPosition + rowHeight - y, size);
+            rowGraphics.drawRect(x, rowPosition + y - cellHeight / 2.0, xe ? xe - x : barWidth, cellHeight);
         });
-
-        // Because simply scaling row graphics along y axis distort the shape of points,
-        // we do not convert graphics to sprites.
 
         // add graphics of this row
         // const texture = HGC.services.pixiRenderer.generateTexture(
