@@ -332,6 +332,7 @@ export class GeminiTrackModel {
                     let value;
                     switch (channelKey) {
                         case 'x':
+                        case 'xe':
                             value = (spec.width as number) / 2.0;
                             break;
                         case 'y':
@@ -355,6 +356,9 @@ export class GeminiTrackModel {
                             break;
                         case 'opacity':
                             value = 1;
+                            break;
+                        case 'text':
+                            value = '';
                             break;
                         default:
                             console.warn(WARN_MSG(channelKey, 'value'));

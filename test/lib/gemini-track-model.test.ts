@@ -17,7 +17,7 @@ describe('gemini track model should properly validate the original spec', () => 
     it('row cannot be encoded with quantitative field', () => {
         const track: Track = {
             ...MINIMAL_TRACK_SPEC,
-            row: { field: 'x', type: 'nominal' }
+            row: { field: 'x', type: 'quantitative' }
         };
         const model = new GeminiTrackModel(track, [], false);
         expect(model.validateSpec().valid).toBe(false);
