@@ -1,4 +1,4 @@
-# Gemini [![Build Status](https://travis-ci.com/sehilyi/gemini.svg?branch=master)](https://travis-ci.com/sehilyi/gemini) [![codecov](https://codecov.io/gh/sehilyi/gemini/branch/master/graph/badge.svg?maxAge=2592000)](https://codecov.io/gh/sehilyi/gemini) [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg)](https://github.com/prettier/prettier)
+# Gemini [![Build Status](https://travis-ci.com/sehilyi/gemini.svg?branch=master)](https://travis-ci.com/sehilyi/gemini) [![codecov](https://codecov.io/gh/sehilyi/gemini/branch/master/graph/badge.svg?maxAge=600)](https://codecov.io/gh/sehilyi/gemini) [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg)](https://github.com/prettier/prettier)
 
 *An expressive and reproducible visualization grammar for genomic data.*
 
