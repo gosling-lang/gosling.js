@@ -20,7 +20,7 @@ import {
 import { HIGLASS_AXIS_SIZE } from './higlass/higlass-model';
 import { SUPPORTED_CHANNELS } from '../higlass-gemini-track/mark';
 
-const TRACK_ROW_PADDING = 3;
+export const TRACK_ROW_PADDING = 3;
 
 export class GeminiTrackModel {
     /* spec */

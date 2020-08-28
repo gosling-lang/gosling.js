@@ -1,4 +1,4 @@
-import { GeminiTrackModel } from '../../src/lib/gemini-track-model';
+import { GeminiTrackModel, TRACK_ROW_PADDING } from '../../src/lib/gemini-track-model';
 import { Track, IsChannelDeep, IsChannelValue } from '../../src/lib/gemini.schema';
 import isEqual from 'lodash/isEqual';
 
@@ -81,27 +81,48 @@ describe('Gemini track model should be properly generated with data', () => {
     it('Default values, such as domain, should be correctly generated based on the data', () => {
         const track: Track = {
             ...MINIMAL_TRACK_SPEC,
-            color: { field: 'color', type: 'quantitative' },
-            row: { field: 'row', type: 'nominal' }
+            color: { field: 'color', type: 'nominal' },
+            row: { field: 'row', type: 'nominal' },
+            y: { field: 'y', type: 'quantitative' },
+            text: { field: 'row', type: 'nominal' },
+            size: { value: 1 },
+            stroke: { value: 'white' },
+            strokeWidth: { value: 0.5 },
+            opacity: { value: 1 },
+            height: 300
         };
         const model = new GeminiTrackModel(
             track,
             [
-                { color: 1, row: 'a' },
-                { color: 2, row: 'b' },
-                { color: 3, row: 'a' }
+                { color: 1, row: 'a', y: 5 },
+                { color: 2, row: 'b', y: 7 },
+                { color: 3, row: 'a', y: 10 }
             ],
             false
         );
         const spec = model.spec();
         const colorDomain = IsChannelDeep(spec.color) ? (spec.color.domain as string[]) : [];
         const rowDomain = IsChannelDeep(spec.row) ? (spec.row.domain as string[]) : [];
+        const yDomain = IsChannelDeep(spec.y) ? (spec.y.domain as number[]) : [];
+
+        // domain
         expect(colorDomain).not.toBeUndefined();
-        expect(colorDomain[0]).toBe(0);
-        expect(colorDomain[1]).toBe(3);
+        expect(colorDomain[0]).toBe(1);
+        expect(colorDomain[1]).toBe(2);
+        expect(colorDomain[2]).toBe(3);
         expect(rowDomain).not.toBeUndefined();
         expect(rowDomain).toHaveLength(2);
         expect(rowDomain[0]).toBe('a');
         expect(rowDomain[1]).toBe('b');
+        expect(yDomain[0]).toBe(0); // zeroBaseline
+        expect(yDomain[1]).toBe(10);
+
+        // encoded value
+        expect(model.encodedValue('y', 0)).toBe(0 + TRACK_ROW_PADDING);
+        expect(model.encodedValue('y', 10)).toBe(300 / 2.0 - TRACK_ROW_PADDING); // there are two rows
+        expect(model.encodedValue('size')).toBe(1);
+        expect(model.encodedValue('size', 999)).toBe(1);
+        expect(model.encodedValue('stroke', 999)).toBe('white');
+        expect(model.encodedValue('text', 'a')).toBe('a');
     });
 });
