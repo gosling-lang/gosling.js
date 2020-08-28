@@ -21,7 +21,8 @@ export const SUPPORTED_CHANNELS: (keyof typeof ChannelTypes)[] = [
     'stroke',
     'strokeWidth',
     'opacity',
-    'text'
+    'text',
+    'background'
     // ...
 ];
 

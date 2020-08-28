@@ -28,7 +28,7 @@ higlassRegister({
 
 higlassRegister({ dataFetcher: CSVDataFetcher, config: CSVDataFetcher.config }, { pluginType: 'dataFetcher' });
 
-const DEBUG_INIT_DEMO_INDEX = 2;
+const DEBUG_INIT_DEMO_INDEX = 1;
 
 function Editor() {
     const glyphSvg = useRef<SVGSVGElement>(null);

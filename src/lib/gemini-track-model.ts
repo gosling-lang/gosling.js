@@ -360,6 +360,9 @@ export class GeminiTrackModel {
                         case 'text':
                             value = '';
                             break;
+                        case 'background':
+                            value = undefined;
+                            break;
                         default:
                             console.warn(WARN_MSG(channelKey, 'value'));
                     }

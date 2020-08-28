@@ -83,6 +83,7 @@ export interface BasicSingleTrack {
     h?: Channel;
     stroke?: Channel;
     strokeWidth?: Channel;
+    background?: ChannelValue;
     // styles
     width?: number;
     height?: number;
@@ -140,7 +141,8 @@ export const enum CHANNEL_KEYS {
     strokeWidth = 'strokeWidth',
     size = 'size',
     text = 'text',
-    w = 'w'
+    w = 'w',
+    background = 'background'
 }
 
 /**
@@ -165,7 +167,8 @@ export const ChannelTypes = {
     strokeWidth: 'strokeWidth',
     size: 'size',
     text: 'text',
-    w: 'w'
+    w: 'w',
+    background: 'background'
 } as const;
 
 export type ChannelType = keyof typeof ChannelTypes | string;

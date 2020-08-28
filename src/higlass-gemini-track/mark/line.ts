@@ -14,6 +14,12 @@ export function drawLine(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMod
 
     /* track size */
     const trackHeight = trackInfo.dimensions[1];
+    const tileSize = trackInfo.tilesetInfo.tile_size;
+    const { tileX, tileWidth } = trackInfo.getTilePosAndDimensions(
+        tile.tileData.zoomLevel,
+        tile.tileData.tilePos,
+        tileSize
+    );
 
     /* genomic scale */
     const xScale = trackInfo._xScale;
@@ -35,6 +41,12 @@ export function drawLine(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMod
     /* information for rescaling tiles */
     tile.rowScale = tm.getChannelScale('row');
     tile.spriteInfos = []; // sprites for individual rows or columns
+
+    /* background */
+    if (tm.encodedValue('background')) {
+        tile.graphics.beginFill(colorToHex(tm.encodedValue('background')), 1);
+        tile.graphics.drawRect(xScale(tileX), 0, xScale(tileX + tileWidth) - xScale(tileX), trackHeight);
+    }
 
     /* render */
     rowCategories.forEach(rowCategory => {
