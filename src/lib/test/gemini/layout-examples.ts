@@ -55,10 +55,10 @@ export const GEMINI_PLUGIN_TRACK_SUPERPOSE: GeminiSpec = {
                 quantitativeFields: ['Band', 'ISCN_start', 'ISCN_stop', 'Basepair_start', 'Basepair_stop', 'Density']
             },
             superpose: [
-                {
-                    mark: 'text',
-                    text: { field: 'Band', type: 'nominal' }
-                },
+                // {
+                //     mark: 'text',
+                //     text: { field: 'Band', type: 'nominal' }
+                // },
                 {
                     mark: 'rect',
                     dataTransform: {
@@ -132,6 +132,58 @@ export const GEMINI_PLUGIN_TRACK_SUPERPOSE: GeminiSpec = {
             row: { field: 'sample', type: 'nominal' },
             color: { field: 'sample', type: 'nominal' },
             // background: {"value": "red"},
+            width: 1000,
+            height: 180
+        },
+        {
+            data: {
+                url: MULTIVEC_FILE_CISTROME,
+                type: 'tileset'
+            },
+            metadata: {
+                type: 'higlass-multivec',
+                row: 'sample',
+                column: 'position',
+                value: 'peak',
+                categories: [
+                    '1',
+                    '2',
+                    '3',
+                    '4',
+                    '5',
+                    '6',
+                    '7',
+                    '8',
+                    '9',
+                    '10',
+                    '11'
+                    // '12','13','14','15','16','17','18','19','20'
+                ]
+            },
+            superpose: [
+                {
+                    mark: 'bar',
+                    color: { field: 'sample', type: 'nominal', range: ['lightgray'] }
+                },
+                {
+                    mark: 'bar',
+                    dataTransform: { filter: { field: 'sample', oneOf: ['11'], not: false } },
+                    color: { field: 'sample', type: 'nominal', range: ['steelblue'] }
+                },
+                {
+                    mark: 'line',
+                    color: { field: 'sample', type: 'nominal', range: ['salmon'] }
+                }
+            ],
+            x: {
+                field: 'position',
+                type: 'genomic',
+                domain: { chromosome: '1', interval: [2540000, 2620000] }
+            },
+            x1: { axis: true },
+            y: { field: 'peak', type: 'quantitative' },
+            stroke: { value: 'white' },
+            strokeWidth: { value: 0.5 },
             width: 1000,
             height: 180
         },

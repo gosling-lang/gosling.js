@@ -38,6 +38,12 @@ export function drawBar(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMode
     tile.rowScale = tm.getChannelScale('row');
     tile.spriteInfos = []; // sprites for individual rows or columns
 
+    /* background */
+    if (tm.encodedValue('background')) {
+        tile.graphics.beginFill(colorToHex(tm.encodedValue('background')), 1);
+        tile.graphics.drawRect(xScale(tileX), 0, xScale(tileX + tileWidth) - xScale(tileX), trackHeight);
+    }
+
     /* render */
     if (IsStackedMark(spec)) {
         // TODO: many parts in this scope are identical as the below `else` statement, so encaptulate this?
