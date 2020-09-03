@@ -298,6 +298,7 @@ export interface GlyphElement {
     w?: ChannelBind | ChannelValue | 'none';
     opacity?: ChannelBind | ChannelValue | 'none';
     text?: ChannelBind | ChannelValue | 'none';
+    background?: ChannelBind | ChannelValue | 'none';
     style?: MarkStyle;
 }
 
