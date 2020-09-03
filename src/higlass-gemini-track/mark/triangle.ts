@@ -1,8 +1,8 @@
 import { GeminiTrackModel } from '../../lib/gemini-track-model';
-import { IsChannelDeep, getValueUsingChannel, Channel } from '../../lib/gemini.schema';
+import { IsChannelDeep, getValueUsingChannel, Channel, MarkType } from '../../lib/gemini.schema';
 // import { RESOLUTION } from '.';
 
-export function drawTriangle(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackModel, isLeft: boolean) {
+export function drawTriangle(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackModel) {
     /* track spec */
     const spec = tm.spec();
 
@@ -23,13 +23,13 @@ export function drawTriangle(HGC: any, trackInfo: any, tile: any, tm: GeminiTrac
 
     /* genomic scale */
     const xScale = trackInfo._xScale;
-    const barWidth = xScale(tileX + tileWidth / tileSize) - xScale(tileX);
+    const markWidth = tm.encodedValue('size') ?? xScale(tileX + tileWidth / tileSize) - xScale(tileX);
 
     /* row separation */
-    const rowCategories =
-        IsChannelDeep(spec.row) && spec.row.field
-            ? Array.from(new Set(data.map(d => getValueUsingChannel(d, spec.row as Channel) as string)))
-            : ['___SINGLE_ROW___']; // if `row` is undefined, use only one row internally
+    const rowCategories: string[] = (tm.getChannelDomainArray('row') as string[]) ?? ['___SINGLE_ROW___'];
+    // IsChannelDeep(spec.row) && spec.row.field
+    //     ? Array.from(new Set(data.map(d => getValueUsingChannel(d, spec.row as Channel) as string)))
+    //     : ['___SINGLE_ROW___']; // if `row` is undefined, use only one row internally
 
     const rowHeight = trackHeight / rowCategories.length;
 
@@ -42,7 +42,7 @@ export function drawTriangle(HGC: any, trackInfo: any, tile: any, tm: GeminiTrac
         IsChannelDeep(spec.y) && spec.y.field
             ? Array.from(new Set(data.map(d => getValueUsingChannel(d, spec.y as Channel) as string)))
             : ['___SINGLE_Y_POSITION___']; // if `y` is undefined, use only one row internally
-    const triHeight = rowHeight / yCategories.length;
+    const triHeight = tm.encodedValue('size') ?? rowHeight / yCategories.length;
 
     /* render */
     rowCategories.forEach(rowCategory => {
@@ -74,13 +74,20 @@ export function drawTriangle(HGC: any, trackInfo: any, tile: any, tm: GeminiTrac
             const color = tm.encodedValue('color', colorValue);
             const opacity = tm.encodedValue('opacity');
 
-            const x0 = x;
-            const x1 = xe ? xe : x + barWidth;
+            const x0 = x ? x : xe - markWidth;
+            const x1 = xe ? xe : x + markWidth;
+            const xm = x0 + (x1 - x0) / 2.0;
+            const ym = rowPosition + y;
             const y0 = rowPosition + y - triHeight / 2.0;
             const y1 = rowPosition + y + triHeight / 2.0;
 
+            const markToPoints = {
+                'triangle-l': [x1, y0, x0, ym, x1, y1, x1, y0],
+                'triangle-r': [x0, y0, x1, ym, x0, y1, x0, y0],
+                'triangle-d': [x0, y0, x1, y0, xm, y1, x0, y0]
+            };
             rowGraphics.beginFill(colorToHex(color), opacity);
-            rowGraphics.drawPolygon(isLeft ? [x1, y0, x0, y, x1, y1, x1, y0] : [x0, y0, x1, y, x0, y1, x0, y0]);
+            rowGraphics.drawPolygon((markToPoints as any)[spec.mark as MarkType]);
             rowGraphics.endFill();
         });
 

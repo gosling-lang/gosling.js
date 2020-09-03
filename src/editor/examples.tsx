@@ -4,7 +4,8 @@ import {
     GEMINI_TRACK_EXAMPLE2,
     GEMINI_TRACK_EXAMPLE3,
     GEMINI_PLUGIN_TRACK_BASIC_MARKS,
-    GEMINI_PLUGIN_TRACK_SUPERPOSE
+    GEMINI_PLUGIN_TRACK_SUPERPOSE,
+    GEMINI_PLUGIN_TRACK_GENE_ANNOTATION
 } from '../lib/test/gemini/layout-examples';
 
 interface Demo {
@@ -16,14 +17,20 @@ interface Demo {
 
 export const demos: ReadonlyArray<Demo> = [
     {
-        name: 'Basic Marks (HiGlass Gemini Plugin Track)',
+        name: 'Basic Marks',
         spec: GEMINI_PLUGIN_TRACK_BASIC_MARKS,
         glyphWidth: 0,
         glyphHeight: 0
     },
     {
-        name: 'Superposed Tracks (HiGlass Gemini Plugin Track)',
+        name: 'Superposed Tracks',
         spec: GEMINI_PLUGIN_TRACK_SUPERPOSE,
+        glyphWidth: 0,
+        glyphHeight: 0
+    },
+    {
+        name: 'Custom Gene Annotation Tracks',
+        spec: GEMINI_PLUGIN_TRACK_GENE_ANNOTATION,
         glyphWidth: 0,
         glyphHeight: 0
     },

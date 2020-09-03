@@ -3,6 +3,7 @@
 
 import { GLYPH_LOCAL_PRESET_TYPE, GLYPH_HIGLASS_PRESET_TYPE } from './test/gemini/glyph';
 import * as d3 from 'd3';
+import { isArray } from 'lodash';
 
 export interface GeminiSpec {
     references?: string[];
@@ -26,7 +27,7 @@ export interface DataDeep {
     quantitativeFields?: string[];
 }
 
-export type DataMetadata = MultivecMetadata; // ...
+export type DataMetadata = MultivecMetadata | GeneAnnotationMetadata; // ...
 
 export interface MultivecMetadata {
     type: 'higlass-multivec';
@@ -36,8 +37,20 @@ export interface MultivecMetadata {
     categories?: string[];
 }
 
+export interface GeneAnnotationMetadata {
+    type: 'higlass-gene-annotation';
+    chromosome: number;
+    geneName: number;
+    geneStart: number;
+    geneEnd: number;
+    strand: number;
+    exonName: number;
+    exonStarts: number;
+    exonEnds: number;
+}
+
 export interface DataTransform {
-    filter: { field: string; oneOf: string[] | number[]; not: boolean };
+    filter: { field: string; oneOf: string[] | number[]; not: boolean }[];
 }
 
 export type Track = SingleTrack | SuperposedTrack;
@@ -97,11 +110,12 @@ export type SuperposedTrack = Partial<SingleTrack> & {
     superpose: Partial<SingleTrack>[];
 };
 
-// deprecated
 export interface TrackStyle {
-    background?: string;
-    stroke?: string;
-    strokeWidth?: number;
+    dashed?: [number, number];
+    linePattern?: { type: 'triangle-l' | 'triangle-r'; size: number };
+    background?: string; // deprecated
+    stroke?: string; // deprecated
+    strokeWidth?: number; // deprecated
 }
 
 /**
@@ -234,6 +248,7 @@ export type MarkType =
     | 'rule'
     | 'triangle-l'
     | 'triangle-r'
+    | 'triangle-d'
     | 'dummy';
 
 /**
@@ -334,7 +349,9 @@ interface Consistency {
 
 // TODO: these are not neccessary. Resolve the issue with `Channel`.
 export function IsDataMetadata(_: DataMetadata | ChannelDeep | ChannelValue | undefined): _ is DataMetadata {
-    return typeof _ === 'object' && 'type' in _ && _.type === 'higlass-multivec';
+    return (
+        typeof _ === 'object' && 'type' in _ && (_.type === 'higlass-multivec' || _.type === 'higlass-gene-annotation')
+    );
 }
 export function IsDataTransform(_: DataTransform | ChannelDeep | ChannelValue): _ is DataTransform {
     return 'filter' in _;
@@ -431,6 +448,13 @@ export function IsChannelBind(
 
 export function IsChannelDeep(channel: ChannelDeep | ChannelValue | undefined): channel is ChannelDeep {
     return typeof channel === 'object' && !('value' in channel);
+}
+
+/**
+ * Check whether domain is in array shape.
+ */
+export function IsDomainArray(domain?: Domain): domain is string[] | number[] {
+    return isArray(domain);
 }
 
 // TODO: perhaps, combine this with `isStackedChannel`

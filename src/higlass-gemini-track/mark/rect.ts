@@ -26,11 +26,10 @@ export function drawRect(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMod
     const barWidth = xScale(tileX + tileWidth / tileSize) - xScale(tileX);
 
     /* row separation */
-    const rowCategories =
-        IsChannelDeep(spec.row) && spec.row.field
-            ? Array.from(new Set(data.map(d => getValueUsingChannel(d, spec.row as Channel) as string)))
-            : ['___SINGLE_ROW___']; // if `row` is undefined, use only one row internally
-
+    const rowCategories: string[] = (tm.getChannelDomainArray('row') as string[]) ?? ['___SINGLE_ROW___'];
+    // IsChannelDeep(spec.row) && spec.row.field
+    // ? Array.from(new Set(data.map(d => getValueUsingChannel(d, spec.row as Channel) as string)))
+    // : ['___SINGLE_ROW___']; // if `row` is undefined, use only one row internally
     const rowHeight = trackHeight / rowCategories.length;
 
     /* information for rescaling tiles */
@@ -71,11 +70,14 @@ export function drawRect(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMod
             const x = xScale(xValue);
             const xe = xScale(xeValue);
             const y = tm.encodedValue('y', yValue);
+
+            const size = tm.encodedValue('size');
             const color = tm.encodedValue('color', colorValue);
             const opacity = tm.encodedValue('opacity');
+            const rectHeight = size === undefined ? cellHeight : size;
 
             rowGraphics.beginFill(colorToHex(color), opacity);
-            rowGraphics.drawRect(x, rowPosition + y - cellHeight / 2.0, xe ? xe - x : barWidth, cellHeight);
+            rowGraphics.drawRect(x, rowPosition + y - rectHeight / 2.0, xe ? xe - x : barWidth, rectHeight);
         });
 
         // add graphics of this row

@@ -163,63 +163,103 @@ function GeminiTrack(HGC: any, ...args: any[]): any {
 
             this.resolvedSpecs.forEach(spec => {
                 if (!tile.tileData.tabularData) {
-                    if (!IsDataMetadata(spec.metadata) || spec.metadata.type !== 'higlass-multivec') {
-                        console.warn('We currently only support higlass multivec type tilesets');
+                    if (!IsDataMetadata(spec.metadata)) {
+                        console.warn('No metadata of tilesets specified');
                         return;
                     }
 
-                    if (!spec.metadata.row || !spec.metadata.column || !spec.metadata.value) {
-                        console.warn(
-                            'Proper metadata of the tileset is not provided. Please specify the name of data fields.'
+                    if (spec.metadata.type === 'higlass-multivec') {
+                        if (!spec.metadata.row || !spec.metadata.column || !spec.metadata.value) {
+                            console.warn(
+                                'Proper metadata of the tileset is not provided. Please specify the name of data fields.'
+                            );
+                            return;
+                        }
+
+                        const tileSize = this.tilesetInfo.tile_size;
+
+                        const { tileX, tileWidth } = this.getTilePosAndDimensions(
+                            tile.tileData.zoomLevel,
+                            tile.tileData.tilePos,
+                            tileSize
                         );
-                        return;
-                    }
 
-                    const tileSize = this.tilesetInfo.tile_size;
+                        const numOfTotalCategories = tile.tileData.shape[0];
+                        const numericValues = tile.tileData.dense;
+                        const numOfGenomicPositions = tile.tileData.shape[1];
 
-                    const { tileX, tileWidth } = this.getTilePosAndDimensions(
-                        tile.tileData.zoomLevel,
-                        tile.tileData.tilePos,
-                        tileSize
-                    );
+                        const rowName = spec.metadata.row;
+                        const valueName = spec.metadata.value;
+                        const columnName = spec.metadata.column;
+                        const categories: any = spec.metadata.categories ?? [...Array(numOfTotalCategories).keys()]; // TODO:
 
-                    const numOfTotalCategories = tile.tileData.shape[0];
-                    const numericValues = tile.tileData.dense;
-                    const numOfGenomicPositions = tile.tileData.shape[1];
+                        const tabularData: { [k: string]: number | string }[] = [];
 
-                    const rowName = spec.metadata.row;
-                    const valueName = spec.metadata.value;
-                    const columnName = spec.metadata.column;
-                    const categories: any = spec.metadata.categories ?? [...Array(numOfTotalCategories).keys()]; // TODO:
-
-                    const tabularData: { [k: string]: number | string }[] = [];
-
-                    // convert data to a visualization-friendly format
-                    categories.forEach((c: string, i: number) => {
-                        Array.from(Array(numOfGenomicPositions).keys()).forEach((g: number, j: number) => {
-                            tabularData.push({
-                                [rowName]: c,
-                                [valueName]: numericValues[numOfGenomicPositions * i + j],
-                                [columnName]: tileX + j * (tileWidth / tileSize)
+                        // convert data to a visualization-friendly format
+                        categories.forEach((c: string, i: number) => {
+                            Array.from(Array(numOfGenomicPositions).keys()).forEach((g: number, j: number) => {
+                                tabularData.push({
+                                    [rowName]: c,
+                                    [valueName]: numericValues[numOfGenomicPositions * i + j],
+                                    [columnName]: tileX + j * (tileWidth / tileSize)
+                                });
                             });
                         });
-                    });
 
-                    tile.tileData.tabularData = tabularData;
+                        tile.tileData.tabularData = tabularData;
+                    } else if (spec.metadata.type === 'higlass-gene-annotation') {
+                        const { strand, geneName, geneStart, geneEnd, exonName, exonStarts, exonEnds } = spec.metadata;
+
+                        tile.tileData.tabularData = [];
+                        tile.tileData.forEach((d: any) => {
+                            const { chrOffset, fields } = d;
+
+                            // this can be used to group the visual marks that belong to a single gene
+                            const id = fields[geneName];
+
+                            tile.tileData.tabularData.push({
+                                id,
+                                strand: fields[strand],
+                                name: fields[geneName],
+                                start: +fields[geneStart] + chrOffset,
+                                end: +fields[geneEnd] + chrOffset,
+                                type: 'gene'
+                            });
+
+                            const exonStartStrs = (fields[exonStarts] as string).split(',');
+                            const exonEndStrs = (fields[exonEnds] as string).split(',');
+
+                            exonStartStrs.forEach((es, i) => {
+                                const ee = exonEndStrs[i];
+
+                                tile.tileData.tabularData.push({
+                                    id,
+                                    strand: fields[strand],
+                                    name: fields[exonName],
+                                    start: +es + chrOffset,
+                                    end: +ee + chrOffset,
+                                    type: 'exon'
+                                });
+                            });
+                        });
+                        // console.log(tile.tileData.tabularData);
+                    }
                 }
 
                 tile.tileData.tabularDataFiltered = Array.from(tile.tileData.tabularData);
 
                 // simple filtering
                 if (spec.dataTransform !== undefined && IsDataTransform(spec.dataTransform)) {
-                    const { field, oneOf, not } = spec.dataTransform.filter;
-                    tile.tileData.tabularDataFiltered = tile.tileData.tabularDataFiltered.filter(
-                        (d: { [k: string]: number | string }) => {
-                            return not
-                                ? (oneOf as any[]).indexOf(d[field]) === -1
-                                : (oneOf as any[]).indexOf(d[field]) !== -1;
-                        }
-                    );
+                    spec.dataTransform.filter.forEach(filter => {
+                        const { field, oneOf, not } = filter;
+                        tile.tileData.tabularDataFiltered = tile.tileData.tabularDataFiltered.filter(
+                            (d: { [k: string]: number | string }) => {
+                                return not
+                                    ? (oneOf as any[]).indexOf(d[field]) === -1
+                                    : (oneOf as any[]).indexOf(d[field]) !== -1;
+                            }
+                        );
+                    });
                 }
 
                 const isMaxZoomLevel = tile?.tileData?.zoomLevel !== getMaxZoomLevel();

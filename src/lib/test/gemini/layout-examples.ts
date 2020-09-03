@@ -5,6 +5,7 @@ const MULTIVEC_FA = [
     'http://localhost:8001/api/v1/tileset_info/?d=XX4dPR0dSCGzD2n-xtlhbA',
     'https://resgen.io/api/v1/tileset_info/?d=WipsnEDMStahGPpRfH9adA'
 ][1];
+const GENE_ANNOTATION_TILESET = 'https://higlass.io/api/v1/tileset_info/?d=OHJakQICQD6gTD7skx4EWA';
 
 export const SPEC_TO_SUPPORT: GeminiSpec = {
     tracks: [
@@ -55,6 +56,7 @@ export const GEMINI_PLUGIN_TRACK_SUPERPOSE: GeminiSpec = {
                 quantitativeFields: ['Band', 'ISCN_start', 'ISCN_stop', 'Basepair_start', 'Basepair_stop', 'Density']
             },
             superpose: [
+                // this slows down the rendering process
                 // {
                 //     mark: 'text',
                 //     text: { field: 'Band', type: 'nominal' }
@@ -62,7 +64,7 @@ export const GEMINI_PLUGIN_TRACK_SUPERPOSE: GeminiSpec = {
                 {
                     mark: 'rect',
                     dataTransform: {
-                        filter: { field: 'Band', oneOf: [11, 11.1], not: true }
+                        filter: [{ field: 'Band', oneOf: [11, 11.1], not: true }]
                     },
                     color: {
                         field: 'Density',
@@ -74,21 +76,21 @@ export const GEMINI_PLUGIN_TRACK_SUPERPOSE: GeminiSpec = {
                 {
                     mark: 'rect',
                     dataTransform: {
-                        filter: { field: 'Stain', oneOf: ['gvar'], not: false }
+                        filter: [{ field: 'Stain', oneOf: ['gvar'], not: false }]
                     },
                     color: { value: '#A0A0F2' }
                 },
                 {
                     mark: 'triangle-l',
                     dataTransform: {
-                        filter: { field: 'Band', oneOf: [11], not: false }
+                        filter: [{ field: 'Band', oneOf: [11], not: false }]
                     },
                     color: { value: '#B40101' }
                 },
                 {
                     mark: 'triangle-r',
                     dataTransform: {
-                        filter: { field: 'Band', oneOf: [11.1], not: false }
+                        filter: [{ field: 'Band', oneOf: [11.1], not: false }]
                     },
                     color: { value: '#B40101' }
                 }
@@ -167,7 +169,7 @@ export const GEMINI_PLUGIN_TRACK_SUPERPOSE: GeminiSpec = {
                 },
                 {
                     mark: 'bar',
-                    dataTransform: { filter: { field: 'sample', oneOf: ['11'], not: false } },
+                    dataTransform: { filter: [{ field: 'sample', oneOf: ['11'], not: false }] },
                     color: { field: 'sample', type: 'nominal', range: ['steelblue'] }
                 },
                 {
@@ -216,6 +218,384 @@ export const GEMINI_PLUGIN_TRACK_SUPERPOSE: GeminiSpec = {
             opacity: { value: 0.4 },
             width: 1000,
             height: 180
+        }
+    ]
+};
+
+export const GEMINI_PLUGIN_TRACK_GENE_ANNOTATION: GeminiSpec = {
+    tracks: [
+        {
+            data: {
+                url: GENE_ANNOTATION_TILESET,
+                type: 'tileset'
+            },
+            metadata: {
+                type: 'higlass-gene-annotation',
+                chromosome: 0,
+                geneName: 3,
+                geneStart: 1,
+                geneEnd: 2,
+                strand: 5,
+                exonName: 6,
+                exonStarts: 12,
+                exonEnds: 13
+            },
+            superpose: [
+                {
+                    dataTransform: {
+                        filter: [
+                            { field: 'type', oneOf: ['gene'], not: false },
+                            { field: 'strand', oneOf: ['+'], not: false }
+                        ]
+                    },
+                    mark: 'triangle-r',
+                    x: {
+                        field: 'end',
+                        type: 'genomic',
+                        domain: { chromosome: '1', interval: [3400100, 3800100] }
+                    },
+                    size: { value: 20 }
+                },
+                {
+                    dataTransform: {
+                        filter: [
+                            { field: 'type', oneOf: ['gene'], not: false },
+                            { field: 'strand', oneOf: ['-'], not: false }
+                        ]
+                    },
+                    mark: 'triangle-l',
+                    xe: {
+                        field: 'start',
+                        type: 'genomic'
+                    },
+                    size: { value: 20 }
+                },
+                {
+                    dataTransform: { filter: [{ field: 'type', oneOf: ['exon'], not: false }] },
+                    mark: 'rect',
+                    x: {
+                        field: 'start',
+                        type: 'genomic'
+                    },
+                    size: { value: 20 },
+                    xe: {
+                        field: 'end',
+                        type: 'genomic'
+                    }
+                },
+                {
+                    dataTransform: {
+                        filter: [
+                            { field: 'type', oneOf: ['gene'], not: false },
+                            { field: 'strand', oneOf: ['+'], not: false }
+                        ]
+                    },
+                    mark: 'rule',
+                    x: {
+                        field: 'start',
+                        type: 'genomic'
+                    },
+                    strokeWidth: { value: 3 },
+                    xe: {
+                        field: 'end',
+                        type: 'genomic'
+                    },
+                    style: {
+                        // dashed: [3, 3],
+                        linePattern: { type: 'triangle-r', size: 5 }
+                    }
+                },
+                {
+                    dataTransform: {
+                        filter: [
+                            { field: 'type', oneOf: ['gene'], not: false },
+                            { field: 'strand', oneOf: ['-'], not: false }
+                        ]
+                    },
+                    mark: 'rule',
+                    x: {
+                        field: 'start',
+                        type: 'genomic'
+                    },
+                    strokeWidth: { value: 3 },
+                    xe: {
+                        field: 'end',
+                        type: 'genomic'
+                    },
+                    style: {
+                        // dashed: [3, 3],
+                        linePattern: { type: 'triangle-l', size: 5 }
+                    }
+                }
+            ],
+            x1: { axis: true },
+            // y: { field: 'strand', type: 'nominal' },
+            row: { field: 'strand', type: 'nominal', domain: ['+', '-'] },
+            color: { field: 'strand', type: 'nominal', domain: ['+', '-'], range: ['#7585FF', '#FF8A85'] },
+            // background: {"value": "red"},
+            opacity: { value: 0.5 },
+            width: 1000,
+            height: 120
+        },
+        {
+            data: {
+                url: GENE_ANNOTATION_TILESET,
+                type: 'tileset'
+            },
+            metadata: {
+                type: 'higlass-gene-annotation',
+                chromosome: 0,
+                geneName: 3,
+                geneStart: 1,
+                geneEnd: 2,
+                strand: 5,
+                exonName: 6,
+                exonStarts: 12,
+                exonEnds: 13
+            },
+            superpose: [
+                {
+                    dataTransform: { filter: [{ field: 'type', oneOf: ['gene'], not: false }] },
+                    mark: 'rect',
+                    x: {
+                        field: 'start',
+                        type: 'genomic',
+                        domain: { chromosome: '1', interval: [3400100, 3800100] }
+                    },
+                    size: { value: 20 },
+                    xe: {
+                        field: 'end',
+                        type: 'genomic'
+                    }
+                },
+                {
+                    dataTransform: {
+                        filter: [
+                            { field: 'type', oneOf: ['gene'], not: false },
+                            { field: 'strand', oneOf: ['-'], not: false }
+                        ]
+                    },
+                    mark: 'rule',
+                    x: {
+                        field: 'start',
+                        type: 'genomic'
+                    },
+                    strokeWidth: { value: 0 },
+                    xe: {
+                        field: 'end',
+                        type: 'genomic'
+                    },
+                    color: { value: 'white' },
+                    opacity: { value: 0.6 },
+                    style: {
+                        linePattern: { type: 'triangle-l', size: 10 }
+                    }
+                },
+                {
+                    dataTransform: {
+                        filter: [
+                            { field: 'type', oneOf: ['gene'], not: false },
+                            { field: 'strand', oneOf: ['+'], not: false }
+                        ]
+                    },
+                    mark: 'rule',
+                    x: {
+                        field: 'start',
+                        type: 'genomic'
+                    },
+                    strokeWidth: { value: 0 },
+                    xe: {
+                        field: 'end',
+                        type: 'genomic'
+                    },
+                    color: { value: 'white' },
+                    opacity: { value: 0.6 },
+                    style: {
+                        linePattern: { type: 'triangle-r', size: 10 }
+                    }
+                }
+            ],
+            x1: { axis: true },
+            // y: { field: 'strand', type: 'nominal' },
+            row: { field: 'strand', type: 'nominal', domain: ['+', '-'] },
+            color: { value: '#0900B1' },
+            // background: {"value": "red"},
+            width: 1000,
+            height: 120
+        },
+        {
+            data: {
+                url: GENE_ANNOTATION_TILESET,
+                type: 'tileset'
+            },
+            metadata: {
+                type: 'higlass-gene-annotation',
+                chromosome: 0,
+                geneName: 3,
+                geneStart: 1,
+                geneEnd: 2,
+                strand: 5,
+                exonName: 6,
+                exonStarts: 12,
+                exonEnds: 13
+            },
+            superpose: [
+                {
+                    dataTransform: {
+                        filter: [
+                            { field: 'type', oneOf: ['gene'], not: false },
+                            { field: 'strand', oneOf: ['+'], not: false }
+                        ]
+                    },
+                    mark: 'triangle-r',
+                    x: {
+                        field: 'end',
+                        type: 'genomic',
+                        domain: { chromosome: '1', interval: [3540100, 3555100] }
+                    },
+                    color: { value: '#999999' }
+                },
+                {
+                    dataTransform: {
+                        filter: [
+                            { field: 'type', oneOf: ['gene'], not: false },
+                            { field: 'strand', oneOf: ['-'], not: false }
+                        ]
+                    },
+                    mark: 'triangle-l',
+                    xe: {
+                        field: 'start',
+                        type: 'genomic'
+                    },
+                    color: { value: '#999999' }
+                },
+                {
+                    dataTransform: { filter: [{ field: 'type', oneOf: ['gene'], not: false }] },
+                    mark: 'rect',
+                    x: {
+                        field: 'start',
+                        type: 'genomic'
+                    },
+                    xe: {
+                        field: 'end',
+                        type: 'genomic'
+                    },
+                    color: { value: 'lightgray' }
+                },
+                {
+                    dataTransform: { filter: [{ field: 'type', oneOf: ['gene'], not: false }] },
+                    mark: 'rule',
+                    x: {
+                        field: 'start',
+                        type: 'genomic'
+                    },
+                    strokeWidth: { value: 5 },
+                    xe: {
+                        field: 'end',
+                        type: 'genomic'
+                    },
+                    color: { value: 'gray' }
+                },
+                {
+                    dataTransform: { filter: [{ field: 'type', oneOf: ['exon'], not: false }] },
+                    mark: 'rect',
+                    x: {
+                        field: 'start',
+                        type: 'genomic'
+                    },
+                    xe: {
+                        field: 'end',
+                        type: 'genomic'
+                    },
+                    color: { value: '#E2A6F5' },
+                    stroke: { value: '#BB57C9' },
+                    strokeWidth: { value: 1 }
+                }
+            ],
+            x1: { axis: true },
+            row: { field: 'strand', type: 'nominal', domain: ['+', '-'] },
+            size: { value: 17 },
+            width: 1000,
+            height: 120
+        },
+        {
+            data: {
+                url: GENE_ANNOTATION_TILESET,
+                type: 'tileset'
+            },
+            metadata: {
+                type: 'higlass-gene-annotation',
+                chromosome: 0,
+                geneName: 3,
+                geneStart: 1,
+                geneEnd: 2,
+                strand: 5,
+                exonName: 6,
+                exonStarts: 12,
+                exonEnds: 13
+            },
+            superpose: [
+                {
+                    dataTransform: {
+                        filter: [
+                            { field: 'type', oneOf: ['gene'], not: false },
+                            { field: 'strand', oneOf: ['+'], not: false }
+                        ]
+                    },
+                    mark: 'triangle-r',
+                    x: {
+                        field: 'end',
+                        type: 'genomic',
+                        domain: { chromosome: '1', interval: [3400100, 3800100] }
+                    },
+                    size: { value: 20 }
+                },
+                {
+                    dataTransform: {
+                        filter: [
+                            { field: 'type', oneOf: ['gene'], not: false },
+                            { field: 'strand', oneOf: ['-'], not: false }
+                        ]
+                    },
+                    mark: 'triangle-l',
+                    xe: {
+                        field: 'start',
+                        type: 'genomic'
+                    },
+                    size: { value: 20 }
+                },
+                {
+                    dataTransform: { filter: [{ field: 'type', oneOf: ['exon'], not: false }] },
+                    mark: 'rect',
+                    x: {
+                        field: 'start',
+                        type: 'genomic'
+                    },
+                    size: { value: 10 },
+                    xe: {
+                        field: 'end',
+                        type: 'genomic'
+                    }
+                },
+                {
+                    dataTransform: { filter: [{ field: 'type', oneOf: ['gene'], not: false }] },
+                    mark: 'rule',
+                    x: {
+                        field: 'start',
+                        type: 'genomic'
+                    },
+                    strokeWidth: { value: 3 },
+                    xe: {
+                        field: 'end',
+                        type: 'genomic'
+                    }
+                }
+            ],
+            x1: { axis: true },
+            row: { field: 'strand', type: 'nominal', domain: ['+', '-'] },
+            color: { field: 'strand', type: 'nominal', domain: ['+', '-'], range: ['blue', 'red'] },
+            width: 1000,
+            height: 120
         }
     ]
 };

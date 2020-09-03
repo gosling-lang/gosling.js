@@ -7,7 +7,8 @@ import {
     IsStackedChannel,
     ChannelValue,
     BasicSingleTrack,
-    SingleTrack
+    SingleTrack,
+    IsDomainArray
 } from './gemini.schema';
 import merge from 'lodash/merge';
 import * as d3 from 'd3';
@@ -111,18 +112,19 @@ export class GeminiTrackModel {
         // TODO: better way to deal with axis?
         const xOrY = this.getGenomicChannelKey();
         let isAxisShown = false;
-        if (xOrY === 'x') {
+        if (xOrY === 'x' || xOrY === 'xe') {
             isAxisShown =
                 (IsChannelDeep(track.x1) && (track.x1.axis as boolean)) ||
                 (IsChannelDeep(track.x) && (track.x.axis as boolean));
         }
-        if (xOrY === 'y') {
+        if (xOrY === 'y' || xOrY === 'ye') {
             isAxisShown =
                 (IsChannelDeep(track.y1) && (track.y1.axis as boolean)) ||
                 (IsChannelDeep(track.y) && (track.y.axis as boolean));
         }
         if (xOrY && isAxisShown) {
-            const widthOrHeight = xOrY === 'x' ? 'height' : 'width';
+            // TODO: supprot all of x1, x, xe
+            const widthOrHeight = xOrY === 'x' || xOrY === 'xe' ? 'height' : 'width';
             track[widthOrHeight] = ((track[widthOrHeight] as number) - HIGLASS_AXIS_SIZE) as number;
         }
         ///
@@ -142,10 +144,10 @@ export class GeminiTrackModel {
     }
 
     /**
-     * Find an either `x` or `y` that is encoded with genomic coordinate and return 'x' or 'y'.
+     * Find an either `x`, `xe`, `y`, or `ye` that is encoded with genomic coordinate and return the key (e.g., 'x').
      * `undefined` if not found.
      */
-    public getGenomicChannelKey(): 'x' | 'y' | undefined {
+    public getGenomicChannelKey(): 'x' | 'xe' | 'y' | 'ye' | undefined {
         return getGenomicChannelKeyFromTrack(this.spec());
     }
     /**
@@ -223,6 +225,7 @@ export class GeminiTrackModel {
             case 'x':
             case 'xe':
             case 'y':
+            case 'ye':
                 if (channelFieldType === 'quantitative' || channelFieldType === 'genomic')
                     return (this.channelScales[channelKey] as d3.ScaleLinear<any, any>)(value as number);
                 if (channelFieldType === 'nominal')
@@ -239,6 +242,8 @@ export class GeminiTrackModel {
                 if (channelFieldType === 'nominal')
                     return (this.channelScales[channelKey] as d3.ScaleBand<any>)(value as string);
                 /* genomic is not supported */
+                break;
+            case 'background':
                 break;
             default:
                 console.warn(`${channelKey} is not supported yet for encoding values, so returning a undefined value`);
@@ -308,7 +313,9 @@ export class GeminiTrackModel {
                 if (!channel.range) {
                     const rowChannel = spec.row;
                     const rowField = IsChannelDeep(rowChannel) ? rowChannel.field : undefined;
-                    const rowCategories = rowField ? Array.from(new Set(data.map(d => d[rowField as string]))) : [1];
+                    const rowCategories =
+                        this.getChannelDomainArray('row') ??
+                        (rowField ? Array.from(new Set(data.map(d => d[rowField as string]))) : [1]);
                     const rowHeight = (spec.height as number) / rowCategories.length;
 
                     // `channel` here is either `x` or `y` because they only can ba stacked
@@ -324,7 +331,9 @@ export class GeminiTrackModel {
             } else {
                 const rowChannel = spec.row;
                 const rowField = IsChannelDeep(rowChannel) ? rowChannel.field : undefined;
-                const rowCategories = rowField ? Array.from(new Set(data.map(d => d[rowField as string]))) : [1];
+                const rowCategories =
+                    this.getChannelDomainArray('row') ??
+                    (rowField ? Array.from(new Set(data.map(d => d[rowField as string]))) : [1]);
                 const rowHeight = (spec.height as number) / rowCategories.length;
 
                 if (!channel) {
@@ -340,6 +349,10 @@ export class GeminiTrackModel {
                             break;
                         case 'size':
                             if (spec.mark === 'line') value = 1;
+                            else if (spec.mark === 'rect') value = undefined;
+                            else if (spec.mark === 'triangle-r') value = undefined;
+                            else if (spec.mark === 'triangle-l') value = undefined;
+                            else if (spec.mark === 'triangle-d') value = undefined;
                             else value = this.DEFAULTS.SIZE;
                             break;
                         case 'color':
@@ -352,7 +365,8 @@ export class GeminiTrackModel {
                             value = 'black';
                             break;
                         case 'strokeWidth':
-                            value = 0;
+                            if (spec.mark === 'rule') value = 1;
+                            else value = 0;
                             break;
                         case 'opacity':
                             value = 1;
@@ -402,7 +416,7 @@ export class GeminiTrackModel {
                         }
                     }
                 } else if (IsChannelDeep(channel) && channel.type === 'nominal') {
-                    if (!channel.domain) {
+                    if (channel.domain === undefined) {
                         channel.domain = Array.from(new Set(data.map(d => d[channel.field as string]))) as string[];
                     }
                     if (!channel.range) {
@@ -515,6 +529,15 @@ export class GeminiTrackModel {
      */
     public getChannelScale(channelKey: keyof typeof ChannelTypes) {
         return this.channelScales[channelKey];
+    }
+
+    /**
+     * Return the domain of a visual channel.
+     * `undefined` if we do not have domain in array.
+     */
+    public getChannelDomainArray(channelKey: keyof typeof ChannelTypes): string[] | number[] | undefined {
+        const c = this.spec()[channelKey];
+        return IsChannelDeep(c) && IsDomainArray(c.domain) ? c.domain : undefined;
     }
 
     /**

@@ -6,6 +6,7 @@ import { parseServerAndTilesetUidFromUrl } from '../utils';
 import { Track, IsDataDeep, IsHiGlassTrack, IsChannelDeep, Domain } from '../gemini.schema';
 import { BoundingBox } from '../utils/bounding-box';
 import { resolveSuperposedTracks } from '../../higlass-gemini-track/superpose';
+import { getGenomicChannelKeyFromTrack, getGenomicChannelFromTrack } from '../../higlass-gemini-track/validate';
 
 export function compiler(track: Track, bb: BoundingBox): HiGlassSpec {
     const higlass = new HiGlassModel();
@@ -23,12 +24,12 @@ export function compiler(track: Track, bb: BoundingBox): HiGlassSpec {
         const { server, tilesetUid } = parseServerAndTilesetUidFromUrl(firstResolvedSpec.data.url);
 
         // Is this track horizontal or vertical?
-        const isXGenomic = IsChannelDeep(firstResolvedSpec.x) && firstResolvedSpec.x.type === 'genomic';
-        const isYGenomic = IsChannelDeep(firstResolvedSpec.y) && firstResolvedSpec.y.type === 'genomic';
-        const xDomain =
-            isXGenomic && IsChannelDeep(firstResolvedSpec.x) ? (firstResolvedSpec.x.domain as Domain) : undefined;
-        const yDomain =
-            isYGenomic && IsChannelDeep(firstResolvedSpec.y) ? (firstResolvedSpec.y.domain as Domain) : undefined;
+        const genomicChannel = getGenomicChannelFromTrack(firstResolvedSpec);
+        const genomicChannelKey = getGenomicChannelKeyFromTrack(firstResolvedSpec);
+        const isXGenomic = genomicChannelKey === 'x' || genomicChannelKey === 'xe';
+        const isYGenomic = genomicChannelKey === 'y' || genomicChannelKey === 'ye';
+        const xDomain = isXGenomic && IsChannelDeep(genomicChannel) ? (genomicChannel.domain as Domain) : undefined;
+        const yDomain = isYGenomic && IsChannelDeep(genomicChannel) ? (genomicChannel.domain as Domain) : undefined;
         // const trackDirection = isXGenomic && isYGenomic ? 'both' : isXGenomic ? 'horizontal' : 'vertical';
         // const trackType = IsShallowMark(track.mark) ? track.mark : IsMarkDeep(track.mark) ? track.mark.type : 'unknown';
 
