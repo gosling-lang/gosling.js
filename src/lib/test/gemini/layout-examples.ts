@@ -147,6 +147,42 @@ export const GEMINI_PLUGIN_TRACK_SUPERPOSE: GeminiSpec = {
                 row: 'sample',
                 column: 'position',
                 value: 'peak',
+                categories: ['sample 1', 'sample 2', 'sample 3', 'sample 4']
+            },
+            superpose: [
+                {
+                    mark: 'bar',
+                    size: { value: 1 },
+                    color: { value: 'black' }
+                },
+                {
+                    mark: 'point',
+                    size: { field: 'peak', type: 'quantitative', range: [0, 6] }
+                }
+            ],
+            x: {
+                field: 'position',
+                type: 'genomic',
+                domain: { chromosome: '1', interval: [1250000, 1450000] }
+            },
+            x1: { axis: true },
+            y: { field: 'peak', type: 'quantitative' },
+            row: { field: 'sample', type: 'nominal' },
+            color: { field: 'sample', type: 'nominal' },
+            // background: {"value": "red"},
+            width: 1000,
+            height: 180
+        },
+        {
+            data: {
+                url: MULTIVEC_FILE_CISTROME,
+                type: 'tileset'
+            },
+            metadata: {
+                type: 'higlass-multivec',
+                row: 'sample',
+                column: 'position',
+                value: 'peak',
                 categories: [
                     '1',
                     '2',
@@ -546,7 +582,7 @@ export const GEMINI_PLUGIN_TRACK_GENE_ANNOTATION: GeminiSpec = {
                     x: {
                         field: 'end',
                         type: 'genomic',
-                        domain: { chromosome: '1', interval: [3400100, 3800100] }
+                        domain: { chromosome: '1', interval: [3540100, 3555100] }
                     },
                     size: { value: 20 }
                 },
@@ -590,6 +626,12 @@ export const GEMINI_PLUGIN_TRACK_GENE_ANNOTATION: GeminiSpec = {
                         type: 'genomic'
                     }
                 }
+                // {
+                //  // TODO: Gemini Datafetcher to support multiple data types
+                //     data: [
+                //         { position: 3700000, strand: '+' }
+                //     ]
+                // }
             ],
             x1: { axis: true },
             row: { field: 'strand', type: 'nominal', domain: ['+', '-'] },

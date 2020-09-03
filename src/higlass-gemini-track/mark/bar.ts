@@ -24,7 +24,7 @@ export function drawBar(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMode
 
     /* genomic scale */
     const xScale = trackInfo._xScale;
-    const barWidth = xScale(tileX + tileWidth / tileSize) - xScale(tileX);
+    const barWidth = tm.encodedValue('size') ?? xScale(tileX + tileWidth / tileSize) - xScale(tileX);
 
     /* row separation */
     const rowCategories =

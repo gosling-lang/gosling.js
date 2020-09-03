@@ -349,6 +349,7 @@ export class GeminiTrackModel {
                             break;
                         case 'size':
                             if (spec.mark === 'line') value = 1;
+                            else if (spec.mark === 'bar') value = undefined;
                             else if (spec.mark === 'rect') value = undefined;
                             else if (spec.mark === 'triangle-r') value = undefined;
                             else if (spec.mark === 'triangle-l') value = undefined;

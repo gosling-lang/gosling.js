@@ -1,4 +1,5 @@
 import * as d3 from 'd3-dsv';
+import { Datum } from '../lib/gemini.schema';
 
 // TODO: include to the dataConfig
 const EXAMPLE_CHR_SIZES: any = {
@@ -38,7 +39,7 @@ function CSVDataFetcher(HGC: any, ...args: any): any {
 
     class CSVDataFetcherClass {
         // @ts-ignore
-        private dataConfig: { url: string; type: 'csv' };
+        private dataConfig: { url: string; type: 'csv'; data: Datum[] };
         // @ts-ignore
         private tilesetInfoLoading: boolean;
         // @ts-ignore
@@ -58,54 +59,59 @@ function CSVDataFetcher(HGC: any, ...args: any): any {
                 return;
             }
 
-            this.dataPromise = fetch(dataConfig.url)
-                .then(response => {
-                    return response.ok ? response.text() : Promise.reject(response.status);
-                })
-                .then(text => {
-                    return d3.csvParse(text, (row: any) => {
-                        if (!dataConfig.quantitativeFields && !dataConfig.nominalFields) {
+            if (dataConfig.data && dataConfig.data.length !== 0) {
+                // we have raw data that we can use right away
+                this.data = dataConfig.data;
+            } else {
+                this.dataPromise = fetch(dataConfig.url)
+                    .then(response => {
+                        return response.ok ? response.text() : Promise.reject(response.status);
+                    })
+                    .then(text => {
+                        return d3.csvParse(text, (row: any) => {
+                            if (!dataConfig.quantitativeFields && !dataConfig.nominalFields) {
+                                return row;
+                            }
+                            dataConfig.quantitativeFields.forEach((q: string) => {
+                                row[q] = +row[q];
+                            });
                             return row;
-                        }
-                        dataConfig.quantitativeFields.forEach((q: string) => {
-                            row[q] = +row[q];
                         });
-                        return row;
-                    });
-                })
-                .then(json => {
-                    // chrom sizes
-                    const cumPositions: { id: number; chr: string; pos: number }[] = [];
-                    const chromLengths: { [k: string]: number } = EXAMPLE_CHR_SIZES;
-                    const chrPositions: { [k: string]: { id: number; chr: string; pos: number } } = {};
-                    let prevEndPosition = 0;
+                    })
+                    .then(json => {
+                        // chrom sizes
+                        const cumPositions: { id: number; chr: string; pos: number }[] = [];
+                        const chromLengths: { [k: string]: number } = EXAMPLE_CHR_SIZES;
+                        const chrPositions: { [k: string]: { id: number; chr: string; pos: number } } = {};
+                        let prevEndPosition = 0;
 
-                    Object.keys(EXAMPLE_CHR_SIZES).forEach((chrStr, i) => {
-                        const positionInfo = {
-                            id: i,
-                            chr: chrStr,
-                            pos: prevEndPosition
+                        Object.keys(EXAMPLE_CHR_SIZES).forEach((chrStr, i) => {
+                            const positionInfo = {
+                                id: i,
+                                chr: chrStr,
+                                pos: prevEndPosition
+                            };
+
+                            cumPositions.push(positionInfo);
+                            chrPositions[chrStr] = positionInfo;
+
+                            prevEndPosition += EXAMPLE_CHR_SIZES[chrStr];
+                        });
+                        this.chromSizes = {
+                            chrToAbs: (chrom: string, chromPos: number) =>
+                                this.chromSizes.chrPositions[chrom].pos + chromPos,
+                            cumPositions,
+                            chrPositions,
+                            totalLength: prevEndPosition,
+                            chromLengths
                         };
 
-                        cumPositions.push(positionInfo);
-                        chrPositions[chrStr] = positionInfo;
-
-                        prevEndPosition += EXAMPLE_CHR_SIZES[chrStr];
+                        this.data = json;
+                    })
+                    .catch(error => {
+                        console.error('Error fetching data', error);
                     });
-                    this.chromSizes = {
-                        chrToAbs: (chrom: string, chromPos: number) =>
-                            this.chromSizes.chrPositions[chrom].pos + chromPos,
-                        cumPositions,
-                        chrPositions,
-                        totalLength: prevEndPosition,
-                        chromLengths
-                    };
-
-                    this.data = json;
-                })
-                .catch(error => {
-                    console.error('Error fetching data', error);
-                });
+            }
         }
 
         tilesetInfo(callback?: any) {
