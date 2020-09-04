@@ -214,7 +214,7 @@ function GeminiTrack(HGC: any, ...args: any[]): any {
                         tile.tileData.forEach((d: any) => {
                             const { chrOffset, fields } = d;
 
-                            // this can be used to group the visual marks that belong to a single gene
+                            // this can be used to group the visual marks that belong to a single gene for brushing and linking
                             const id = fields[geneName];
 
                             tile.tileData.tabularData.push({
@@ -232,16 +232,31 @@ function GeminiTrack(HGC: any, ...args: any[]): any {
                             exonStartStrs.forEach((es, i) => {
                                 const ee = exonEndStrs[i];
 
+                                // exon
                                 tile.tileData.tabularData.push({
                                     id,
                                     strand: fields[strand],
-                                    name: fields[exonName],
+                                    name: fields[exonName], // TODO: exon name not correct
                                     start: +es + chrOffset,
                                     end: +ee + chrOffset,
                                     type: 'exon'
                                 });
+
+                                // intron
+                                if (i + 1 < exonStartStrs.length) {
+                                    const nextEs = exonStartStrs[i + 1];
+                                    tile.tileData.tabularData.push({
+                                        id,
+                                        strand: fields[strand],
+                                        name: fields[exonName],
+                                        start: +ee + chrOffset,
+                                        end: +nextEs + chrOffset,
+                                        type: 'intron'
+                                    });
+                                }
                             });
                         });
+                        /// DEBUG
                         // console.log(tile.tileData.tabularData);
                     }
                 }

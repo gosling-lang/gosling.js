@@ -43,6 +43,7 @@ export function drawRule(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMod
     /* style */
     const dashed = spec.style?.dashed;
     const linePattern = spec.style?.linePattern;
+    const curved = spec.style?.curve;
 
     /* render */
     rowCategories.forEach(rowCategory => {
@@ -94,10 +95,24 @@ export function drawRule(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMod
                     curPos += dashSize + gapSize;
                 } while (curPos < xe);
             } else {
-                rowGraphics.moveTo(x, rowPosition + rowHeight - y);
-                rowGraphics.lineTo(xe, rowPosition + rowHeight - y);
+                if (curved === undefined) {
+                    rowGraphics.moveTo(x, rowPosition + rowHeight - y);
+                    rowGraphics.lineTo(xe, rowPosition + rowHeight - y);
+                } else if (curved === 'top') {
+                    // TODO: to default value
+                    const CURVE_HEIGHT = 2;
+                    ///
+
+                    const xm = x + (xe - x) / 2.0;
+
+                    rowGraphics.moveTo(x, rowPosition + rowHeight - y + CURVE_HEIGHT / 2.0);
+                    rowGraphics.lineTo(xm, rowPosition + rowHeight - y - CURVE_HEIGHT / 2.0);
+                    rowGraphics.moveTo(xm, rowPosition + rowHeight - y - CURVE_HEIGHT / 2.0);
+                    rowGraphics.lineTo(xe, rowPosition + rowHeight - y + CURVE_HEIGHT / 2.0);
+                }
             }
 
+            // TODO: do not support using pattern with curved
             if (linePattern) {
                 const { type: pType, size: pSize } = linePattern;
                 let curPos = x;

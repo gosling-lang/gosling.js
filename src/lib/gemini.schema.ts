@@ -113,6 +113,8 @@ export type SuperposedTrack = Partial<SingleTrack> & {
 export interface TrackStyle {
     dashed?: [number, number];
     linePattern?: { type: 'triangle-l' | 'triangle-r'; size: number };
+    curve?: 'top' | 'bottom' | 'left' | 'right';
+    //
     background?: string; // deprecated
     stroke?: string; // deprecated
     strokeWidth?: number; // deprecated

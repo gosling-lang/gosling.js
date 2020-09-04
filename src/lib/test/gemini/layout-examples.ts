@@ -638,6 +638,60 @@ export const GEMINI_PLUGIN_TRACK_GENE_ANNOTATION: GeminiSpec = {
             color: { field: 'strand', type: 'nominal', domain: ['+', '-'], range: ['blue', 'red'] },
             width: 1000,
             height: 120
+        },
+        {
+            data: {
+                url: GENE_ANNOTATION_TILESET,
+                type: 'tileset'
+            },
+            metadata: {
+                type: 'higlass-gene-annotation',
+                chromosome: 0,
+                geneName: 3,
+                geneStart: 1,
+                geneEnd: 2,
+                strand: 5,
+                exonName: 6,
+                exonStarts: 12,
+                exonEnds: 13
+            },
+            superpose: [
+                {
+                    dataTransform: { filter: [{ field: 'type', oneOf: ['exon'], not: false }] },
+                    mark: 'rect',
+                    x: {
+                        field: 'start',
+                        type: 'genomic',
+                        domain: { chromosome: '1', interval: [3540100, 3555100] }
+                    },
+                    size: { value: 10 },
+                    xe: {
+                        field: 'end',
+                        type: 'genomic'
+                    }
+                },
+                {
+                    dataTransform: { filter: [{ field: 'type', oneOf: ['intron'], not: false }] },
+                    mark: 'rule',
+                    x: {
+                        field: 'start',
+                        type: 'genomic'
+                    },
+                    strokeWidth: { value: 2 },
+                    xe: {
+                        field: 'end',
+                        type: 'genomic'
+                    },
+                    style: {
+                        curve: 'top'
+                    }
+                }
+            ],
+            x1: { axis: true },
+            row: { field: 'strand', type: 'nominal', domain: ['+', '-'] },
+            color: { value: '#B54F4A' },
+            width: 1000,
+            height: 120
         }
     ]
 };

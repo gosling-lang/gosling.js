@@ -348,6 +348,7 @@ export class GeminiTrackModel {
                             value = rowHeight / 2.0;
                             break;
                         case 'size':
+                            // TODO: make as an object
                             if (spec.mark === 'line') value = 1;
                             else if (spec.mark === 'bar') value = undefined;
                             else if (spec.mark === 'rect') value = undefined;
