@@ -692,6 +692,73 @@ export const GEMINI_PLUGIN_TRACK_GENE_ANNOTATION: GeminiSpec = {
             color: { value: '#B54F4A' },
             width: 1000,
             height: 120
+        },
+        {
+            data: {
+                url: GENE_ANNOTATION_TILESET,
+                type: 'tileset'
+            },
+            metadata: {
+                type: 'higlass-gene-annotation',
+                chromosome: 0,
+                geneName: 3,
+                geneStart: 1,
+                geneEnd: 2,
+                strand: 5,
+                exonName: 6,
+                exonStarts: 12,
+                exonEnds: 13
+            },
+            superpose: [
+                {
+                    dataTransform: { filter: [{ field: 'type', oneOf: ['gene'], not: false }] },
+                    mark: 'rect',
+                    x: {
+                        field: 'start',
+                        type: 'genomic',
+                        domain: { chromosome: '1', interval: [3540100, 3555100] }
+                    },
+                    xe: {
+                        field: 'end',
+                        type: 'genomic'
+                    },
+                    color: { value: '#666666' }
+                },
+                {
+                    dataTransform: { filter: [{ field: 'type', oneOf: ['exon'], not: false }] },
+                    mark: 'rect',
+                    x: {
+                        field: 'start',
+                        type: 'genomic',
+                        domain: { chromosome: '1', interval: [3540100, 3555100] }
+                    },
+                    xe: {
+                        field: 'end',
+                        type: 'genomic'
+                    },
+                    color: { value: '#FF6666' }
+                },
+                {
+                    dataTransform: { filter: [{ field: 'type', oneOf: ['intron'], not: false }] },
+                    mark: 'rect',
+                    x: {
+                        field: 'start',
+                        type: 'genomic'
+                    },
+                    xe: {
+                        field: 'end',
+                        type: 'genomic'
+                    },
+                    color: { value: '#99FEFF' }
+                }
+            ],
+            x1: { axis: true },
+            size: { value: 30 },
+            row: { field: 'strand', type: 'nominal', domain: ['+', '-'] },
+            stroke: { value: '#777777' },
+            strokeWidth: { value: 1 },
+            width: 1000,
+            height: 120
         }
     ]
 };

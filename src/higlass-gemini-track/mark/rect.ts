@@ -54,7 +54,7 @@ export function drawRect(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMod
             tm.encodedValue('strokeWidth'),
             colorToHex(tm.encodedValue('stroke')),
             1, // alpha
-            0 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
+            0.5 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
         );
 
         data.filter(
