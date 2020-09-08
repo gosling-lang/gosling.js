@@ -259,6 +259,24 @@ function GeminiTrack(HGC: any, ...args: any[]): any {
                         /// DEBUG
                         // console.log(tile.tileData.tabularData);
                     }
+                    // TODO: Since the data format is quite similar to gene annotation, combine the two
+                    else if (spec.metadata.type === 'higlass-bed') {
+                        const { start1, end1, start2, end2 } = spec.metadata;
+
+                        tile.tileData.tabularData = [];
+                        tile.tileData.forEach((d: any) => {
+                            const { chrOffset, fields } = d;
+
+                            tile.tileData.tabularData.push({
+                                start1: +fields[start1] + chrOffset,
+                                end1: +fields[end1] + chrOffset,
+                                start2: +fields[start2] + chrOffset,
+                                end2: +fields[end2] + chrOffset
+                            });
+                        });
+                        /// DEBUG
+                        // console.log(tile.tileData.tabularData);
+                    }
                 }
 
                 tile.tileData.tabularDataFiltered = Array.from(tile.tileData.tabularData);

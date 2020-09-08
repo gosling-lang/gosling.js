@@ -8,6 +8,7 @@ import { ChannelTypes } from '../../lib/gemini.schema';
 import { drawTriangle } from './triangle';
 import { drawText } from './text';
 import { drawRule } from './rule';
+import { drawLink } from './link';
 
 /**
  * Visual channels currently supported for visual encoding.
@@ -17,6 +18,11 @@ export const SUPPORTED_CHANNELS: (keyof typeof ChannelTypes)[] = [
     'x',
     'xe',
     'y',
+    'ye',
+    'x1',
+    'x1e',
+    'y1',
+    'y1e',
     'size',
     'row',
     'stroke',
@@ -85,6 +91,9 @@ export function drawMark(HGC: any, trackInfo: any, tile: any, gm: GeminiTrackMod
             break;
         case 'rule':
             drawRule(HGC, trackInfo, tile, gm);
+            break;
+        case 'link':
+            drawLink(HGC, trackInfo, tile, gm);
             break;
         default:
             console.warn('Unsupported mark type');

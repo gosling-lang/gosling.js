@@ -112,19 +112,18 @@ export class GeminiTrackModel {
         // TODO: better way to deal with axis?
         const xOrY = this.getGenomicChannelKey();
         let isAxisShown = false;
-        if (xOrY === 'x' || xOrY === 'xe') {
+        if (xOrY === 'x' || xOrY === 'xe' || xOrY === 'x1' || xOrY === 'x1e') {
             isAxisShown =
                 (IsChannelDeep(track.x1) && (track.x1.axis as boolean)) ||
                 (IsChannelDeep(track.x) && (track.x.axis as boolean));
         }
-        if (xOrY === 'y' || xOrY === 'ye') {
+        if (xOrY === 'y' || xOrY === 'ye' || xOrY === 'y1' || xOrY === 'y1e') {
             isAxisShown =
                 (IsChannelDeep(track.y1) && (track.y1.axis as boolean)) ||
                 (IsChannelDeep(track.y) && (track.y.axis as boolean));
         }
         if (xOrY && isAxisShown) {
-            // TODO: supprot all of x1, x, xe
-            const widthOrHeight = xOrY === 'x' || xOrY === 'xe' ? 'height' : 'width';
+            const widthOrHeight = xOrY === 'x' || xOrY === 'xe' || xOrY === 'x1' || xOrY === 'x1e' ? 'height' : 'width';
             track[widthOrHeight] = ((track[widthOrHeight] as number) - HIGLASS_AXIS_SIZE) as number;
         }
         ///
@@ -144,10 +143,10 @@ export class GeminiTrackModel {
     }
 
     /**
-     * Find an either `x`, `xe`, `y`, or `ye` that is encoded with genomic coordinate and return the key (e.g., 'x').
+     * Find an axis channel that is encoded with genomic coordinate and return the key (e.g., 'x').
      * `undefined` if not found.
      */
-    public getGenomicChannelKey(): 'x' | 'xe' | 'y' | 'ye' | undefined {
+    public getGenomicChannelKey(): 'x' | 'xe' | 'y' | 'ye' | 'x1' | 'x1e' | 'y1' | 'y1e' | undefined {
         return getGenomicChannelKeyFromTrack(this.spec());
     }
     /**
@@ -342,9 +341,14 @@ export class GeminiTrackModel {
                     switch (channelKey) {
                         case 'x':
                         case 'xe':
+                        case 'x1':
+                        case 'x1e':
                             value = (spec.width as number) / 2.0;
                             break;
                         case 'y':
+                        case 'ye':
+                        case 'y1':
+                        case 'y1e':
                             value = rowHeight / 2.0;
                             break;
                         case 'size':
@@ -368,6 +372,7 @@ export class GeminiTrackModel {
                             break;
                         case 'strokeWidth':
                             if (spec.mark === 'rule') value = 1;
+                            else if (spec.mark === 'link') value = 1;
                             else value = 0;
                             break;
                         case 'opacity':

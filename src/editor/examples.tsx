@@ -5,7 +5,10 @@ import {
     GEMINI_TRACK_EXAMPLE3,
     GEMINI_PLUGIN_TRACK_BASIC_MARKS,
     GEMINI_PLUGIN_TRACK_SUPERPOSE,
-    GEMINI_PLUGIN_TRACK_GENE_ANNOTATION
+    GEMINI_PLUGIN_TRACK_GENE_ANNOTATION,
+    GEMINI_PLUGIN_TRACK_LINKS,
+    GEMINI_HIGHLEVEL_USE_CASES,
+    GEMINI_HIGHLEVEL_PERIPHERY
 } from '../lib/test/gemini/layout-examples';
 
 interface Demo {
@@ -31,6 +34,24 @@ export const demos: ReadonlyArray<Demo> = [
     {
         name: 'Custom Gene Annotation Tracks',
         spec: GEMINI_PLUGIN_TRACK_GENE_ANNOTATION,
+        glyphWidth: 0,
+        glyphHeight: 0
+    },
+    {
+        name: 'Between and Within Links',
+        spec: GEMINI_PLUGIN_TRACK_LINKS,
+        glyphWidth: 0,
+        glyphHeight: 0
+    },
+    {
+        name: 'High-level Examples',
+        spec: GEMINI_HIGHLEVEL_USE_CASES,
+        glyphWidth: 0,
+        glyphHeight: 0
+    },
+    {
+        name: 'High-level Examples (Peripheral Plot)',
+        spec: GEMINI_HIGHLEVEL_PERIPHERY,
         glyphWidth: 0,
         glyphHeight: 0
     },

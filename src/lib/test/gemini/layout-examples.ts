@@ -6,6 +6,7 @@ const MULTIVEC_FA = [
     'https://resgen.io/api/v1/tileset_info/?d=WipsnEDMStahGPpRfH9adA'
 ][1];
 const GENE_ANNOTATION_TILESET = 'https://higlass.io/api/v1/tileset_info/?d=OHJakQICQD6gTD7skx4EWA';
+const ARC_TILESET = 'https://resgen.io/api/v1/tileset_info/?d=JzccFAJUQEiz-0188xaWZg';
 
 export const SPEC_TO_SUPPORT: GeminiSpec = {
     tracks: [
@@ -99,7 +100,7 @@ export const GEMINI_PLUGIN_TRACK_SUPERPOSE: GeminiSpec = {
             xe: { field: 'Basepair_stop', type: 'genomic' },
             x1: { axis: true },
             stroke: { value: 'black' },
-            strokeWidth: { value: 0.1 },
+            strokeWidth: { value: 0.5 },
             width: 1000,
             height: 60
         },
@@ -288,7 +289,7 @@ export const GEMINI_PLUGIN_TRACK_GENE_ANNOTATION: GeminiSpec = {
                     x: {
                         field: 'end',
                         type: 'genomic',
-                        domain: { chromosome: '1', interval: [3400100, 3800100] }
+                        domain: { chromosome: '1', interval: [3540100, 3555100] }
                     },
                     size: { value: 20 }
                 },
@@ -396,7 +397,7 @@ export const GEMINI_PLUGIN_TRACK_GENE_ANNOTATION: GeminiSpec = {
                     x: {
                         field: 'start',
                         type: 'genomic',
-                        domain: { chromosome: '1', interval: [3400100, 3800100] }
+                        domain: { chromosome: '1', interval: [3540100, 3555100] }
                     },
                     size: { value: 20 },
                     xe: {
@@ -759,6 +760,660 @@ export const GEMINI_PLUGIN_TRACK_GENE_ANNOTATION: GeminiSpec = {
             strokeWidth: { value: 1 },
             width: 1000,
             height: 120
+        }
+    ]
+};
+
+export const GEMINI_PLUGIN_TRACK_LINKS: GeminiSpec = {
+    tracks: [
+        // {
+        //     data: {
+        //         url: GENE_ANNOTATION_TILESET,
+        //         type: 'tileset'
+        //     },
+        //     metadata: {
+        //         type: 'higlass-gene-annotation',
+        //         chromosome: 0,
+        //         geneName: 3,
+        //         geneStart: 1,
+        //         geneEnd: 2,
+        //         strand: 5,
+        //         exonName: 6,
+        //         exonStarts: 12,
+        //         exonEnds: 13
+        //     },
+        //     superpose: [
+        //         {
+        //             dataTransform: { filter: [{ field: 'type', oneOf: ['gene'], not: false }] },
+        //             mark: 'link',
+        //             x: {
+        //                 field: 'start',
+        //                 type: 'genomic',
+        //                 domain: { chromosome: '1', interval: [3540100, 3555100] }
+        //             },
+        //             xe: {
+        //                 field: 'end',
+        //                 type: 'genomic'
+        //             },
+        //             color: { value: '#666666' }
+        //         },
+        //     ],
+        //     x1: { axis: true },
+        //     size: { value: 30 },
+        //     stroke: { value: '#777777' },
+        //     strokeWidth: { value: 1 },
+        //     width: 1000,
+        //     height: 120
+        // },
+        {
+            data: {
+                url: ARC_TILESET,
+                type: 'tileset'
+            },
+            metadata: {
+                type: 'higlass-bed',
+                chromosome1: 8,
+                start1: 9,
+                end1: 10,
+                chromosome2: 13,
+                start2: 14,
+                end2: 15
+            },
+            superpose: [
+                {
+                    mark: 'link',
+                    x: {
+                        field: 'start1',
+                        type: 'genomic',
+                        domain: { chromosome: '1', interval: [19300000, 22000000] }
+                    },
+                    x1: { field: 'end1', type: 'genomic', axis: true },
+                    xe: {
+                        field: 'start2',
+                        type: 'genomic'
+                    },
+                    x1e: { field: 'end2', type: 'genomic' }
+                }
+            ],
+            color: { value: '#399AB6' },
+            stroke: { value: '#399AB6' },
+            opacity: { value: 0.5 },
+            width: 1000,
+            height: 120
+        }
+    ]
+};
+
+export const GEMINI_HIGHLEVEL_USE_CASES: GeminiSpec = {
+    layout: { type: 'linear', direction: 'horizontal', wrap: 2 },
+    tracks: [
+        {
+            data: {
+                url:
+                    'https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/chr1_cytogenetic_band.glyph.csv',
+                type: 'csv',
+                quantitativeFields: ['Band', 'ISCN_start', 'ISCN_stop', 'Basepair_start', 'Basepair_stop', 'Density']
+            },
+            superpose: [
+                // this slows down the rendering process
+                // {
+                //     mark: 'text',
+                //     text: { field: 'Band', type: 'nominal' }
+                // },
+                {
+                    mark: 'rect',
+                    dataTransform: {
+                        filter: [{ field: 'Band', oneOf: [11, 11.1], not: true }]
+                    },
+                    color: {
+                        field: 'Density',
+                        type: 'nominal',
+                        domain: ['', '25', '50', '75', '100'],
+                        range: ['white', '#D9D9D9', '#979797', '#636363', 'black']
+                    }
+                },
+                {
+                    mark: 'rect',
+                    dataTransform: {
+                        filter: [{ field: 'Stain', oneOf: ['gvar'], not: false }]
+                    },
+                    color: { value: '#A0A0F2' }
+                },
+                {
+                    mark: 'triangle-l',
+                    dataTransform: {
+                        filter: [{ field: 'Band', oneOf: [11], not: false }]
+                    },
+                    color: { value: '#B40101' }
+                },
+                {
+                    mark: 'triangle-r',
+                    dataTransform: {
+                        filter: [{ field: 'Band', oneOf: [11.1], not: false }]
+                    },
+                    color: { value: '#B40101' }
+                }
+            ],
+            x: { field: 'Basepair_start', type: 'genomic', domain: { chromosome: '1' } },
+            xe: { field: 'Basepair_stop', type: 'genomic' },
+            x1: { axis: true },
+            stroke: { value: 'black' },
+            strokeWidth: { value: 0.5 },
+            width: 1000,
+            height: 60
+        },
+        {
+            data: { url: 'dummy', type: 'csv' },
+            mark: 'dummy',
+            width: 0,
+            height: 60
+        },
+        {
+            data: {
+                url: ARC_TILESET,
+                type: 'tileset'
+            },
+            metadata: {
+                type: 'higlass-bed',
+                chromosome1: 8,
+                start1: 9,
+                end1: 10,
+                chromosome2: 13,
+                start2: 14,
+                end2: 15
+            },
+            superpose: [
+                {
+                    mark: 'link',
+                    x: {
+                        field: 'start1',
+                        type: 'genomic',
+                        domain: { chromosome: '1', interval: [17600000, 20400000] }
+                    },
+                    x1: { field: 'end1', type: 'genomic', axis: true },
+                    xe: {
+                        field: 'start2',
+                        type: 'genomic'
+                    },
+                    x1e: { field: 'end2', type: 'genomic' }
+                }
+            ],
+            color: { value: 'lightgray' },
+            stroke: { value: 'gray' },
+            opacity: { value: 0.2 },
+            width: 1000,
+            height: 120
+        },
+        {
+            data: { url: 'dummy', type: 'csv' },
+            mark: 'dummy',
+            width: 0,
+            height: 120
+        },
+        {
+            data: {
+                url: MULTIVEC_FILE_CISTROME,
+                type: 'tileset'
+            },
+            metadata: {
+                type: 'higlass-multivec',
+                row: 'sample',
+                column: 'position',
+                value: 'peak',
+                categories: ['sample 1', 'sample 2', 'sample 3', 'sample 4']
+            },
+            mark: 'rect',
+            x: {
+                field: 'position',
+                type: 'genomic',
+                domain: { chromosome: '1' }
+            },
+            row: { field: 'sample', type: 'nominal' },
+            // row: { field: 'sample', type: 'nominal' },
+            color: { field: 'peak', type: 'quantitative' },
+            // stroke: {value: 'white'},
+            // strokeWidth: {value: 1},
+            width: 1000,
+            height: 180
+        },
+        {
+            data: { url: 'dummy', type: 'csv' },
+            mark: 'dummy',
+            width: 0,
+            height: 180
+        },
+        {
+            data: { url: 'dummy', type: 'csv' },
+            mark: 'dummy',
+            width: 0,
+            height: 50
+        },
+        {
+            data: { url: 'dummy', type: 'csv' },
+            mark: 'dummy',
+            width: 0,
+            height: 50
+        },
+        {
+            data: {
+                url: GENE_ANNOTATION_TILESET,
+                type: 'tileset'
+            },
+            metadata: {
+                type: 'higlass-gene-annotation',
+                chromosome: 0,
+                geneName: 3,
+                geneStart: 1,
+                geneEnd: 2,
+                strand: 5,
+                exonName: 6,
+                exonStarts: 12,
+                exonEnds: 13
+            },
+            superpose: [
+                {
+                    dataTransform: { filter: [{ field: 'type', oneOf: ['exon'], not: false }] },
+                    mark: 'rect',
+                    x: {
+                        field: 'start',
+                        type: 'genomic',
+                        domain: { chromosome: '1', interval: [3550000, 3700000] }
+                    },
+                    size: { value: 10 },
+                    xe: {
+                        field: 'end',
+                        type: 'genomic'
+                    }
+                },
+                {
+                    dataTransform: { filter: [{ field: 'type', oneOf: ['intron'], not: false }] },
+                    mark: 'rule',
+                    x: {
+                        field: 'start',
+                        type: 'genomic'
+                    },
+                    strokeWidth: { value: 2 },
+                    xe: {
+                        field: 'end',
+                        type: 'genomic'
+                    },
+                    style: {
+                        curve: 'top'
+                    }
+                }
+            ],
+            x1: { axis: true },
+            row: { field: 'strand', type: 'nominal', domain: ['+', '-'] },
+            color: { value: '#B54F4A' },
+            width: 500,
+            height: 120,
+            style: {
+                stroke: 'blue'
+            }
+        },
+        {
+            data: {
+                url: GENE_ANNOTATION_TILESET,
+                type: 'tileset'
+            },
+            metadata: {
+                type: 'higlass-gene-annotation',
+                chromosome: 0,
+                geneName: 3,
+                geneStart: 1,
+                geneEnd: 2,
+                strand: 5,
+                exonName: 6,
+                exonStarts: 12,
+                exonEnds: 13
+            },
+            superpose: [
+                {
+                    dataTransform: { filter: [{ field: 'type', oneOf: ['exon'], not: false }] },
+                    mark: 'rect',
+                    x: {
+                        field: 'start',
+                        type: 'genomic',
+                        domain: { chromosome: '2', interval: [10000000, 10400000] }
+                    },
+                    size: { value: 10 },
+                    xe: {
+                        field: 'end',
+                        type: 'genomic'
+                    }
+                },
+                {
+                    dataTransform: { filter: [{ field: 'type', oneOf: ['intron'], not: false }] },
+                    mark: 'rule',
+                    x: {
+                        field: 'start',
+                        type: 'genomic'
+                    },
+                    strokeWidth: { value: 2 },
+                    xe: {
+                        field: 'end',
+                        type: 'genomic'
+                    },
+                    style: {
+                        curve: 'top'
+                    }
+                }
+            ],
+            x1: { axis: true },
+            row: { field: 'strand', type: 'nominal', domain: ['+', '-'] },
+            color: { value: '#B54F4A' },
+            width: 500,
+            height: 120,
+            style: {
+                stroke: 'red'
+            }
+        },
+        {
+            data: {
+                url: MULTIVEC_FILE_CISTROME,
+                type: 'tileset'
+            },
+            metadata: {
+                type: 'higlass-multivec',
+                row: 'sample',
+                column: 'position',
+                value: 'peak',
+                categories: ['sample 1', 'sample 2', 'sample 3', 'sample 4']
+            },
+            mark: 'rect',
+            x: {
+                field: 'position',
+                type: 'genomic',
+                domain: { chromosome: '1', interval: [3550000, 3700000] }
+            },
+            row: { field: 'sample', type: 'nominal' },
+            // row: { field: 'sample', type: 'nominal' },
+            color: { field: 'peak', type: 'quantitative' },
+            // stroke: {value: 'white'},
+            // strokeWidth: {value: 1},
+            width: 500,
+            height: 180,
+            style: {
+                stroke: 'blue'
+            }
+        },
+        {
+            data: {
+                url: MULTIVEC_FILE_CISTROME,
+                type: 'tileset'
+            },
+            metadata: {
+                type: 'higlass-multivec',
+                row: 'sample',
+                column: 'position',
+                value: 'peak',
+                categories: ['sample 1', 'sample 2', 'sample 3', 'sample 4']
+            },
+            mark: 'rect',
+            x: {
+                field: 'position',
+                type: 'genomic',
+                domain: { chromosome: '2', interval: [10000000, 10400000] }
+            },
+            row: { field: 'sample', type: 'nominal' },
+            // row: { field: 'sample', type: 'nominal' },
+            color: { field: 'peak', type: 'quantitative' },
+            // stroke: {value: 'white'},
+            // strokeWidth: {value: 1},
+            width: 500,
+            height: 180,
+            style: {
+                stroke: 'red'
+            }
+        }
+    ]
+};
+
+export const GEMINI_HIGHLEVEL_PERIPHERY: GeminiSpec = {
+    layout: { type: 'linear', direction: 'horizontal', wrap: 3 },
+    tracks: [
+        {
+            data: {
+                url:
+                    'https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/chr1_cytogenetic_band.glyph.csv',
+                type: 'csv',
+                quantitativeFields: ['Band', 'ISCN_start', 'ISCN_stop', 'Basepair_start', 'Basepair_stop', 'Density']
+            },
+            superpose: [
+                // this slows down the rendering process
+                // {
+                //     mark: 'text',
+                //     text: { field: 'Band', type: 'nominal' }
+                // },
+                {
+                    mark: 'rect',
+                    dataTransform: {
+                        filter: [{ field: 'Band', oneOf: [11, 11.1], not: true }]
+                    },
+                    color: {
+                        field: 'Density',
+                        type: 'nominal',
+                        domain: ['', '25', '50', '75', '100'],
+                        range: ['white', '#D9D9D9', '#979797', '#636363', 'black']
+                    }
+                },
+                {
+                    mark: 'rect',
+                    dataTransform: {
+                        filter: [{ field: 'Stain', oneOf: ['gvar'], not: false }]
+                    },
+                    color: { value: '#A0A0F2' }
+                },
+                {
+                    mark: 'triangle-l',
+                    dataTransform: {
+                        filter: [{ field: 'Band', oneOf: [11], not: false }]
+                    },
+                    color: { value: '#B40101' }
+                },
+                {
+                    mark: 'triangle-r',
+                    dataTransform: {
+                        filter: [{ field: 'Band', oneOf: [11.1], not: false }]
+                    },
+                    color: { value: '#B40101' }
+                }
+            ],
+            x: { field: 'Basepair_start', type: 'genomic', domain: { chromosome: '1' } },
+            xe: { field: 'Basepair_stop', type: 'genomic' },
+            x1: { axis: true },
+            stroke: { value: 'black' },
+            strokeWidth: { value: 0.5 },
+            width: 1000,
+            height: 60
+        },
+        {
+            data: { url: 'dummy', type: 'csv' },
+            mark: 'dummy',
+            width: 0,
+            height: 60
+        },
+        {
+            data: { url: 'dummy', type: 'csv' },
+            mark: 'dummy',
+            width: 0,
+            height: 60
+        },
+        {
+            data: { url: 'dummy', type: 'csv' },
+            mark: 'dummy',
+            width: 0,
+            height: 60
+        },
+        {
+            data: { url: 'dummy', type: 'csv' },
+            mark: 'dummy',
+            width: 0,
+            height: 60
+        },
+        {
+            data: { url: 'dummy', type: 'csv' },
+            mark: 'dummy',
+            width: 0,
+            height: 60
+        },
+        {
+            data: {
+                url: MULTIVEC_FILE_CISTROME,
+                type: 'tileset'
+            },
+            metadata: {
+                type: 'higlass-multivec',
+                row: 'sample',
+                column: 'position',
+                value: 'peak',
+                categories: ['sample 1', 'sample 2', 'sample 3', 'sample 4']
+            },
+            mark: 'bar',
+            x: {
+                field: 'position',
+                type: 'genomic',
+                domain: { chromosome: '1', interval: [1, 3000500] }
+            },
+            x1: { axis: true },
+            y: { field: 'peak', type: 'quantitative' },
+            row: { field: 'sample', type: 'nominal' },
+            color: { field: 'sample', type: 'nominal' },
+            stroke: { value: 'white' },
+            strokeWidth: { value: 0.5 },
+            width: 200,
+            height: 180
+        },
+        {
+            data: {
+                url: MULTIVEC_FILE_CISTROME,
+                type: 'tileset'
+            },
+            metadata: {
+                type: 'higlass-multivec',
+                row: 'sample',
+                column: 'position',
+                value: 'peak',
+                categories: ['sample 1', 'sample 2', 'sample 3', 'sample 4']
+            },
+            mark: 'line',
+            x: {
+                field: 'position',
+                type: 'genomic',
+                domain: { chromosome: '1', interval: [1, 3000500] }
+            },
+            x1: { axis: true },
+            y: { field: 'peak', type: 'quantitative' },
+            row: { field: 'sample', type: 'nominal' },
+            color: { field: 'sample', type: 'nominal' },
+            width: 600,
+            height: 180
+        },
+        {
+            data: {
+                url: MULTIVEC_FILE_CISTROME,
+                type: 'tileset'
+            },
+            metadata: {
+                type: 'higlass-multivec',
+                row: 'sample',
+                column: 'position',
+                value: 'peak',
+                categories: ['sample 1', 'sample 2', 'sample 3', 'sample 4']
+            },
+            mark: 'bar',
+            x: {
+                field: 'position',
+                type: 'genomic',
+                domain: { chromosome: '1', interval: [1, 3000500] }
+            },
+            x1: { axis: true },
+            y: { field: 'peak', type: 'quantitative' },
+            row: { field: 'sample', type: 'nominal' },
+            color: { field: 'sample', type: 'nominal' },
+            stroke: { value: 'white' },
+            strokeWidth: { value: 0.5 },
+            width: 200,
+            height: 180
+        },
+        {
+            data: {
+                url: MULTIVEC_FILE_CISTROME,
+                type: 'tileset'
+            },
+            metadata: {
+                type: 'higlass-multivec',
+                row: 'sample',
+                column: 'position',
+                value: 'peak',
+                categories: ['sample 1', 'sample 2', 'sample 3', 'sample 4']
+            },
+            mark: 'bar',
+            x: {
+                field: 'position',
+                type: 'genomic',
+                domain: { chromosome: '1', interval: [1, 3000500] }
+            },
+            x1: { axis: true },
+            y: { field: 'peak', type: 'quantitative' },
+            row: { field: 'sample', type: 'nominal' },
+            color: { field: 'sample', type: 'nominal' },
+            stroke: { value: 'white' },
+            strokeWidth: { value: 0.5 },
+            width: 200,
+            height: 180
+        },
+        {
+            data: {
+                url: MULTIVEC_FILE_CISTROME,
+                type: 'tileset'
+            },
+            metadata: {
+                type: 'higlass-multivec',
+                row: 'sample',
+                column: 'position',
+                value: 'peak',
+                categories: ['sample 1', 'sample 2', 'sample 3', 'sample 4']
+            },
+            mark: 'point',
+            x: {
+                field: 'position',
+                type: 'genomic',
+                domain: { chromosome: '1', interval: [1, 3000500] }
+            },
+            x1: { axis: true },
+            y: { field: 'peak', type: 'quantitative' },
+            row: { field: 'sample', type: 'nominal' },
+            color: { field: 'sample', type: 'nominal' },
+            width: 600,
+            height: 180
+        },
+        {
+            data: {
+                url: MULTIVEC_FILE_CISTROME,
+                type: 'tileset'
+            },
+            metadata: {
+                type: 'higlass-multivec',
+                row: 'sample',
+                column: 'position',
+                value: 'peak',
+                categories: ['sample 1', 'sample 2', 'sample 3', 'sample 4']
+            },
+            mark: 'bar',
+            x: {
+                field: 'position',
+                type: 'genomic',
+                domain: { chromosome: '1', interval: [1, 3000500] }
+            },
+            x1: { axis: true },
+            y: { field: 'peak', type: 'quantitative' },
+            row: { field: 'sample', type: 'nominal' },
+            color: { field: 'sample', type: 'nominal' },
+            stroke: { value: 'white' },
+            strokeWidth: { value: 0.5 },
+            width: 200,
+            height: 180
         }
     ]
 };

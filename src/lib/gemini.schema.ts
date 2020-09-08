@@ -27,7 +27,7 @@ export interface DataDeep {
     quantitativeFields?: string[];
 }
 
-export type DataMetadata = MultivecMetadata | GeneAnnotationMetadata; // ...
+export type DataMetadata = MultivecMetadata | GeneAnnotationMetadata | BEDMetadata; // ...
 
 export interface MultivecMetadata {
     type: 'higlass-multivec';
@@ -47,6 +47,16 @@ export interface GeneAnnotationMetadata {
     exonName: number;
     exonStarts: number;
     exonEnds: number;
+}
+
+export interface BEDMetadata {
+    type: 'higlass-bed';
+    chromosome1: number;
+    chromosome2: number;
+    start1: number;
+    end1: number;
+    start2: number;
+    end2: number;
 }
 
 export interface DataTransform {
@@ -243,6 +253,7 @@ export type MarkType =
     | 'point'
     | 'line'
     | 'area'
+    | 'link'
     | 'link-between'
     | 'link-within' // uses either x and x1 or y and y1
     | 'rect'
@@ -353,7 +364,9 @@ interface Consistency {
 // TODO: these are not neccessary. Resolve the issue with `Channel`.
 export function IsDataMetadata(_: DataMetadata | ChannelDeep | ChannelValue | undefined): _ is DataMetadata {
     return (
-        typeof _ === 'object' && 'type' in _ && (_.type === 'higlass-multivec' || _.type === 'higlass-gene-annotation')
+        typeof _ === 'object' &&
+        'type' in _ &&
+        (_.type === 'higlass-multivec' || _.type === 'higlass-gene-annotation' || _.type === 'higlass-bed')
     );
 }
 export function IsDataTransform(_: DataTransform | ChannelDeep | ChannelValue): _ is DataTransform {
