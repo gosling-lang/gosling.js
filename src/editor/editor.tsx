@@ -1,23 +1,21 @@
 // @ts-ignore
 import { GeminiTrack } from '../higlass-gemini-track/index';
-import { CSVDataFetcher } from '../higlass-csv-datafetcher/index';
+import { CSVDataFetcher } from '../higlass-gemini-datafetcher/index';
 // @ts-ignore
 import { HiGlassComponent } from 'higlass';
 // @ts-ignore
 import { default as higlassRegister } from 'higlass-register';
 import React, { useState, useEffect, useRef, useMemo } from 'react';
-import * as d3 from 'd3';
 import EditorPanel from './editor-panel';
 import stringify from 'json-stringify-pretty-compact';
 import SplitPane from 'react-split-pane';
-import { GeminiSpec, Track, IsDataDeep, IsMarkDeep, IsSingleTrack } from '../lib/gemini.schema';
+import { GeminiSpec } from '../core/gemini.schema';
 import { debounce } from 'lodash';
-import { demos } from './examples';
-import { renderGlyphPreview } from '../lib/visualizations/glyph-preview';
-import { replaceGlyphs } from '../lib/utils';
-import { renderLayoutPreview } from '../lib/visualizations/layout-preview';
-import { calculateSize } from '../lib/utils/bounding-box';
-import { HiGlassTrack } from '../lib/visualizations/higlass';
+import { examples } from './example';
+import { replaceGlyphs } from '../core/utils';
+import { renderLayoutPreview } from '../core/visualizations/layout-preview';
+import { calculateSize } from '../core/utils/bounding-box';
+import { HiGlassTrack } from '../core/visualizations/higlass';
 import './editor.css';
 
 higlassRegister({
@@ -31,17 +29,14 @@ higlassRegister({ dataFetcher: CSVDataFetcher, config: CSVDataFetcher.config }, 
 const DEBUG_INIT_DEMO_INDEX = 5;
 
 function Editor() {
-    const glyphSvg = useRef<SVGSVGElement>(null);
     const layoutSvg = useRef<SVGSVGElement>(null);
     const [higlassTrackOptions, setHiGlassTrackOptions] = useState<HiGlassTrack[]>([
         // Debug
         // { viewConfig: testViewConfig, boundingBox: { x: 60, y: 60, width: 60, height: 500 } }
     ]);
-    const [demo, setDemo] = useState(demos[DEBUG_INIT_DEMO_INDEX]);
+    const [demo, setDemo] = useState(examples[DEBUG_INIT_DEMO_INDEX]);
     const [editorMode, setEditorMode] = useState<'Full Glyph Definition' | 'Predefined Glyph'>('Full Glyph Definition');
-    const [gm, setGm] = useState(stringify(demos[DEBUG_INIT_DEMO_INDEX].spec as GeminiSpec));
-    const [glyphWidth, setGlyphWidth] = useState(demos[DEBUG_INIT_DEMO_INDEX].glyphWidth);
-    const [glyphHeight, setGlyphHeight] = useState(demos[DEBUG_INIT_DEMO_INDEX].glyphHeight);
+    const [gm, setGm] = useState(stringify(examples[DEBUG_INIT_DEMO_INDEX].spec as GeminiSpec));
 
     useEffect(() => {
         if (editorMode === 'Full Glyph Definition') {
@@ -49,8 +44,6 @@ function Editor() {
         } else {
             setGm(stringify(demo.spec as GeminiSpec));
         }
-        setGlyphWidth(demo.glyphWidth);
-        setGlyphHeight(demo.glyphHeight);
         setHiGlassTrackOptions([]);
     }, [demo, editorMode]);
 
@@ -77,25 +70,7 @@ function Editor() {
                 setHiGlassTrackOptions(higlassInfo);
             }
         );
-
-        // Render glyph preview
-        d3.select(glyphSvg.current).selectAll('*').remove();
-        const track = (editedGm as GeminiSpec)?.tracks?.find(d =>
-            IsSingleTrack(d) && IsMarkDeep(d.mark) ? d.mark.type === 'compositeMark' : false
-        );
-        if (!track) return;
-
-        if (IsSingleTrack(track) && IsDataDeep(track.data)) {
-            d3.csv(track.data.url).then(data =>
-                renderGlyphPreview(
-                    glyphSvg.current as SVGSVGElement,
-                    { ...track, data } as Track,
-                    glyphWidth,
-                    glyphHeight
-                )
-            );
-        }
-    }, [gm, glyphWidth, glyphHeight]);
+    }, [gm]);
 
     const hglass = useMemo(() => {
         return higlassTrackOptions.map(op => (
@@ -137,11 +112,11 @@ function Editor() {
                 🧬 Gemini <code>Editor</code>
                 <select
                     onChange={e => {
-                        setDemo(demos.find(d => d.name === e.target.value) as any);
+                        setDemo(examples.find(d => d.name === e.target.value) as any);
                     }}
                     defaultValue={demo.name}
                 >
-                    {demos.map(d => (
+                    {examples.map(d => (
                         <option key={d.name} value={d.name}>
                             {d.name}
                         </option>
@@ -192,22 +167,12 @@ function Editor() {
                             <></>
                         </SplitPane>
                     </SplitPane>
-                    {/* D3 Visualizations */}
-                    <SplitPane split="horizontal" defaultSize="0%" onChange={undefined}>
-                        <div className="preview-container">
-                            <b>Composite Mark Preview</b>
-                            <div>
-                                <svg ref={glyphSvg} />
-                            </div>
+                    <div className="preview-container">
+                        <div style={{ position: 'relative' }}>
+                            <svg ref={layoutSvg} />
+                            {hglass}
                         </div>
-                        <div className="preview-container">
-                            {/* <b>Layout Preview</b> */}
-                            <div style={{ position: 'relative' }}>
-                                <svg ref={layoutSvg} />
-                                {hglass}
-                            </div>
-                        </div>
-                    </SplitPane>
+                    </div>
                 </SplitPane>
             </div>
         </>

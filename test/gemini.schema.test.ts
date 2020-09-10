@@ -9,7 +9,7 @@ import {
     BasicSingleTrack,
     IsDataMetadata,
     IsDomainChrInterval
-} from '../src/lib/gemini.schema';
+} from '../src/core/gemini.schema';
 
 describe('gemini schema should be checked correctly', () => {
     it('Type guards should be checked correctly', () => {

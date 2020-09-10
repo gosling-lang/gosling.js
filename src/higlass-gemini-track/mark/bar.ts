@@ -1,5 +1,5 @@
-import { GeminiTrackModel } from '../../lib/gemini-track-model';
-import { IsChannelDeep, getValueUsingChannel, Channel, IsStackedMark } from '../../lib/gemini.schema';
+import { GeminiTrackModel } from '../../core/gemini-track-model';
+import { IsChannelDeep, getValueUsingChannel, Channel, IsStackedMark } from '../../core/gemini.schema';
 import { group } from 'd3-array';
 // import { RESOLUTION } from '.';
 

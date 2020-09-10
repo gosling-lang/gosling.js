@@ -1,10 +1,10 @@
-import { GeminiTrackModel } from '../../lib/gemini-track-model';
+import { GeminiTrackModel } from '../../core/gemini-track-model';
 import { drawPoint } from './point';
 import { drawLine } from './line';
 import { drawBar } from './bar';
 import { drawArea } from './area';
 import { drawRect } from './rect';
-import { ChannelTypes } from '../../lib/gemini.schema';
+import { ChannelTypes } from '../../core/gemini.schema';
 import { drawTriangle } from './triangle';
 import { drawText } from './text';
 import { drawRule } from './rule';

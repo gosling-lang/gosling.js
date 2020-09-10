@@ -1,3 +1,3 @@
-import GeminiTrack from './GeminiTrack';
+import GeminiTrack from './gemini-plugin-track';
 
 export { GeminiTrack };
