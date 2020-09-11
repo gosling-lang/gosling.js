@@ -207,75 +207,60 @@ function GeminiTrack(HGC: any, ...args: any[]): any {
                         });
 
                         tile.tileData.tabularData = tabularData;
-                    } else if (spec.metadata.type === 'higlass-gene-annotation') {
-                        const { strand, geneName, geneStart, geneEnd, exonName, exonStarts, exonEnds } = spec.metadata;
+                    } else if (spec.metadata.type === 'higlass-bed') {
+                        const { genomicFields, exonIntervalFields, valueFields } = spec.metadata;
 
                         tile.tileData.tabularData = [];
                         tile.tileData.forEach((d: any) => {
                             const { chrOffset, fields } = d;
 
-                            // this can be used to group the visual marks that belong to a single gene for brushing and linking
-                            const id = fields[geneName];
-
-                            tile.tileData.tabularData.push({
-                                id,
-                                strand: fields[strand],
-                                name: fields[geneName],
-                                start: +fields[geneStart] + chrOffset,
-                                end: +fields[geneEnd] + chrOffset,
-                                type: 'gene'
+                            const datum: { [k: string]: number | string } = {};
+                            genomicFields.forEach(g => {
+                                datum[g.name] = +fields[g.index] + chrOffset;
                             });
 
-                            const exonStartStrs = (fields[exonStarts] as string).split(',');
-                            const exonEndStrs = (fields[exonEnds] as string).split(',');
+                            // values
+                            valueFields?.forEach(v => {
+                                datum[v.name] = v.type === 'quantitative' ? +fields[v.index] : fields[v.index];
+                            });
 
-                            exonStartStrs.forEach((es, i) => {
-                                const ee = exonEndStrs[i];
+                            tile.tileData.tabularData.push({
+                                ...datum,
+                                type: 'gene' // this should be described in the spec
+                            });
 
-                                // exon
-                                tile.tileData.tabularData.push({
-                                    id,
-                                    strand: fields[strand],
-                                    name: fields[exonName], // TODO: exon name not correct
-                                    start: +es + chrOffset,
-                                    end: +ee + chrOffset,
-                                    type: 'exon'
-                                });
+                            if (exonIntervalFields) {
+                                const [exonStartField, exonEndField] = exonIntervalFields;
+                                const exonStartStrs = (fields[exonStartField.index] as string).split(',');
+                                const exonEndStrs = (fields[exonEndField.index] as string).split(',');
 
-                                // intron
-                                if (i + 1 < exonStartStrs.length) {
-                                    const nextEs = exonStartStrs[i + 1];
+                                exonStartStrs.forEach((es, i) => {
+                                    const ee = exonEndStrs[i];
+
+                                    // exon
                                     tile.tileData.tabularData.push({
-                                        id,
-                                        strand: fields[strand],
-                                        name: fields[exonName],
-                                        start: +ee + chrOffset,
-                                        end: +nextEs + chrOffset,
-                                        type: 'intron'
+                                        ...datum,
+                                        [exonStartField.name]: +es + chrOffset,
+                                        [exonEndField.name]: +ee + chrOffset,
+                                        type: 'exon'
                                     });
-                                }
-                            });
+
+                                    // intron
+                                    if (i + 1 < exonStartStrs.length) {
+                                        const nextEs = exonStartStrs[i + 1];
+                                        tile.tileData.tabularData.push({
+                                            ...datum,
+                                            [exonStartField.name]: +ee + chrOffset,
+                                            [exonEndField.name]: +nextEs + chrOffset,
+                                            type: 'intron'
+                                        });
+                                    }
+                                });
+                            }
                         });
                         /// DEBUG
                         // console.log(tile.tileData.tabularData);
-                    }
-                    // TODO: Since the data format is quite similar to gene annotation, combine the two
-                    else if (spec.metadata.type === 'higlass-bed') {
-                        const { start1, end1, start2, end2 } = spec.metadata;
-
-                        tile.tileData.tabularData = [];
-                        tile.tileData.forEach((d: any) => {
-                            const { chrOffset, fields } = d;
-
-                            tile.tileData.tabularData.push({
-                                start1: +fields[start1] + chrOffset,
-                                end1: +fields[end1] + chrOffset,
-                                start2: +fields[start2] + chrOffset,
-                                end2: +fields[end2] + chrOffset
-                            });
-                        });
-                        /// DEBUG
-                        // console.log(tile.tileData.tabularData);
+                        // console.log(new Set(tile.tileData.tabularData.map((d: any) => d.significance)));
                     }
                 }
 

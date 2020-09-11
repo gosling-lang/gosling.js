@@ -60,6 +60,88 @@ export const EXAMPLE_SUPERPOSE: GeminiSpec = {
         },
         {
             data: {
+                url: EXAMPLE_DATASETS.clinvar,
+                type: 'tileset'
+            },
+            metadata: {
+                type: 'higlass-bed',
+                genomicFields: [
+                    { index: 1, name: 'start' },
+                    { index: 2, name: 'end' }
+                ],
+                valueFields: [{ index: 7, name: 'significance', type: 'nominal' }]
+            },
+            superpose: [
+                {
+                    mark: 'bar',
+                    stroke: {
+                        field: 'significance',
+                        type: 'nominal',
+                        domain: [
+                            'Pathogenic',
+                            'Pathogenic/Likely_pathogenic',
+                            'Likely_pathogenic',
+                            'Uncertain_significance',
+                            'Likely_benign',
+                            'Benign/Likely_benign',
+                            'Benign'
+                        ],
+                        range: ['#D45E00', '#D45E00', '#D45E00', 'black', '#029F73', '#029F73', '#029F73']
+                    },
+                    strokeWidth: { value: 0.5 },
+                    size: { value: 5 }
+                },
+                {
+                    mark: 'point',
+                    size: { value: 5 }
+                }
+            ],
+            x: {
+                field: 'start',
+                type: 'genomic',
+                domain: { chromosome: '3' }
+            },
+            x1: {
+                field: 'end',
+                type: 'genomic',
+                axis: true
+            },
+            y: {
+                field: 'significance',
+                type: 'nominal',
+                domain: [
+                    'Pathogenic',
+                    'Pathogenic/Likely_pathogenic',
+                    'Likely_pathogenic',
+                    'Uncertain_significance',
+                    'Likely_benign',
+                    'Benign/Likely_benign',
+                    'Benign'
+                ],
+                baseline: 'Uncertain_significance',
+                range: [150, 20], // TODO: support more accurate positioning
+                grid: true
+            },
+            color: {
+                field: 'significance',
+                type: 'nominal',
+                domain: [
+                    'Pathogenic',
+                    'Pathogenic/Likely_pathogenic',
+                    'Likely_pathogenic',
+                    'Uncertain_significance',
+                    'Likely_benign',
+                    'Benign/Likely_benign',
+                    'Benign'
+                ],
+                range: ['#D45E00', '#D45E00', '#D45E00', 'black', '#029F73', '#029F73', '#029F73']
+            },
+            opacity: { value: 0.6 },
+            width: 1000,
+            height: 180
+        },
+        {
+            data: {
                 url: EXAMPLE_DATASETS.multivec,
                 type: 'tileset'
             },
@@ -125,58 +207,6 @@ export const EXAMPLE_SUPERPOSE: GeminiSpec = {
             row: { field: 'sample', type: 'nominal' },
             color: { field: 'sample', type: 'nominal' },
             // background: {"value": "red"},
-            width: 1000,
-            height: 180
-        },
-        {
-            data: {
-                url: EXAMPLE_DATASETS.multivec,
-                type: 'tileset'
-            },
-            metadata: {
-                type: 'higlass-multivec',
-                row: 'sample',
-                column: 'position',
-                value: 'peak',
-                categories: [
-                    '1',
-                    '2',
-                    '3',
-                    '4',
-                    '5',
-                    '6',
-                    '7',
-                    '8',
-                    '9',
-                    '10',
-                    '11'
-                    // '12','13','14','15','16','17','18','19','20'
-                ]
-            },
-            superpose: [
-                {
-                    mark: 'bar',
-                    color: { field: 'sample', type: 'nominal', range: ['lightgray'] }
-                },
-                {
-                    mark: 'bar',
-                    dataTransform: { filter: [{ field: 'sample', oneOf: ['11'], not: false }] },
-                    color: { field: 'sample', type: 'nominal', range: ['steelblue'] }
-                },
-                {
-                    mark: 'line',
-                    color: { field: 'sample', type: 'nominal', range: ['salmon'] }
-                }
-            ],
-            x: {
-                field: 'position',
-                type: 'genomic',
-                domain: { chromosome: '1', interval: [2540000, 2620000] }
-            },
-            x1: { axis: true },
-            y: { field: 'peak', type: 'quantitative' },
-            stroke: { value: 'white' },
-            strokeWidth: { value: 0.5 },
             width: 1000,
             height: 180
         },

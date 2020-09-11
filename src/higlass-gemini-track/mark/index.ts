@@ -9,6 +9,7 @@ import { drawTriangle } from './triangle';
 import { drawText } from './text';
 import { drawRule } from './rule';
 import { drawLink } from './link';
+import { drawGrid } from './grid';
 
 /**
  * Visual channels currently supported for visual encoding.
@@ -63,6 +64,9 @@ export function drawMark(HGC: any, trackInfo: any, tile: any, gm: GeminiTrackMod
         // we do not receive proper parameters
         return;
     }
+
+    /* embellishment */
+    drawGrid(HGC, trackInfo, tile, gm);
 
     /* spec */
     switch (gm.spec().mark) {

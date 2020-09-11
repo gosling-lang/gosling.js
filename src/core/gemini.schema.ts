@@ -27,7 +27,7 @@ export interface DataDeep {
     quantitativeFields?: string[];
 }
 
-export type DataMetadata = MultivecMetadata | GeneAnnotationMetadata | BEDMetadata; // ...
+export type DataMetadata = MultivecMetadata | BEDMetadata;
 
 export interface MultivecMetadata {
     type: 'higlass-multivec';
@@ -37,26 +37,13 @@ export interface MultivecMetadata {
     categories?: string[];
 }
 
-export interface GeneAnnotationMetadata {
-    type: 'higlass-gene-annotation';
-    chromosome: number;
-    geneName: number;
-    geneStart: number;
-    geneEnd: number;
-    strand: number;
-    exonName: number;
-    exonStarts: number;
-    exonEnds: number;
-}
-
 export interface BEDMetadata {
     type: 'higlass-bed';
-    chromosome1: number;
-    chromosome2: number;
-    start1: number;
-    end1: number;
-    start2: number;
-    end2: number;
+    genomicFields: { index: number; name: string }[];
+    valueFields?: { index: number; name: string; type: 'nominal' | 'quantitative' }[];
+    // this is a somewhat arbitrary option for reading gene annotation datasets
+    // should be multi-value fields (e.g., "1,2,3")
+    exonIntervalFields?: [{ index: number; name: string }, { index: number; name: string }];
 }
 
 export interface DataTransform {
@@ -111,6 +98,8 @@ export interface BasicSingleTrack {
     width?: number;
     height?: number;
     style?: TrackStyle;
+    // experimental
+    // ...
 }
 
 /**
@@ -207,8 +196,10 @@ export interface ChannelDeep {
     aggregate?: Aggregate;
     domain?: Domain;
     range?: Range;
+    baseline?: string | number;
     zeroBaseline?: boolean;
     axis?: boolean;
+    grid?: boolean;
 }
 export type FieldType = 'genomic' | 'nominal' | 'quantitative';
 
@@ -363,11 +354,7 @@ interface Consistency {
 
 // TODO: these are not neccessary. Resolve the issue with `Channel`.
 export function IsDataMetadata(_: DataMetadata | ChannelDeep | ChannelValue | undefined): _ is DataMetadata {
-    return (
-        typeof _ === 'object' &&
-        'type' in _ &&
-        (_.type === 'higlass-multivec' || _.type === 'higlass-gene-annotation' || _.type === 'higlass-bed')
-    );
+    return typeof _ === 'object' && 'type' in _ && (_.type === 'higlass-multivec' || _.type === 'higlass-bed');
 }
 export function IsDataTransform(_: DataTransform | ChannelDeep | ChannelValue): _ is DataTransform {
     return 'filter' in _;
@@ -482,7 +469,10 @@ export function IsStackedMark(track: BasicSingleTrack): boolean {
         (track.mark === 'bar' || track.mark === 'area') &&
         IsChannelDeep(track.color) &&
         track.color.type === 'nominal' &&
-        (!track.row || IsChannelValue(track.row))
+        (!track.row || IsChannelValue(track.row)) &&
+        // TODO: determine whether to use stacked bar for nominal fields or not
+        IsChannelDeep(track.y) &&
+        track.y.type === 'quantitative'
     );
 }
 

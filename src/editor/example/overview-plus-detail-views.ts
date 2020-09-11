@@ -67,12 +67,12 @@ export const EXAMPLE_OVERVIEW_DEATIL: GeminiSpec = {
             },
             metadata: {
                 type: 'higlass-bed',
-                chromosome1: 8,
-                start1: 9,
-                end1: 10,
-                chromosome2: 13,
-                start2: 14,
-                end2: 15
+                genomicFields: [
+                    { name: 'start1', index: 9 },
+                    { name: 'end1', index: 10 },
+                    { name: 'start2', index: 14 },
+                    { name: 'end2', index: 15 }
+                ]
             },
             superpose: [
                 {
@@ -152,15 +152,19 @@ export const EXAMPLE_OVERVIEW_DEATIL: GeminiSpec = {
                 type: 'tileset'
             },
             metadata: {
-                type: 'higlass-gene-annotation',
-                chromosome: 0,
-                geneName: 3,
-                geneStart: 1,
-                geneEnd: 2,
-                strand: 5,
-                exonName: 6,
-                exonStarts: 12,
-                exonEnds: 13
+                type: 'higlass-bed',
+                genomicFields: [
+                    { index: 1, name: 'start' },
+                    { index: 2, name: 'end' }
+                ],
+                valueFields: [
+                    { index: 5, name: 'strand', type: 'nominal' },
+                    { index: 3, name: 'name', type: 'nominal' }
+                ],
+                exonIntervalFields: [
+                    { index: 12, name: 'start' },
+                    { index: 13, name: 'end' }
+                ]
             },
             superpose: [
                 {
@@ -209,15 +213,19 @@ export const EXAMPLE_OVERVIEW_DEATIL: GeminiSpec = {
                 type: 'tileset'
             },
             metadata: {
-                type: 'higlass-gene-annotation',
-                chromosome: 0,
-                geneName: 3,
-                geneStart: 1,
-                geneEnd: 2,
-                strand: 5,
-                exonName: 6,
-                exonStarts: 12,
-                exonEnds: 13
+                type: 'higlass-bed',
+                genomicFields: [
+                    { index: 1, name: 'start' },
+                    { index: 2, name: 'end' }
+                ],
+                valueFields: [
+                    { index: 5, name: 'strand', type: 'nominal' },
+                    { index: 3, name: 'name', type: 'nominal' }
+                ],
+                exonIntervalFields: [
+                    { index: 12, name: 'start' },
+                    { index: 13, name: 'end' }
+                ]
             },
             superpose: [
                 {

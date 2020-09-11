@@ -57,33 +57,38 @@ export function drawBar(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMode
         const pivotedData = group(data, d => d[genomicChannel.field as string]);
         const xKeys = [...pivotedData.keys()];
 
-        // stroke
-        rowGraphics.lineStyle(
-            tm.encodedValue('strokeWidth'),
-            colorToHex(tm.encodedValue('stroke')),
-            1, // alpha
-            1 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
-        );
-
         // TODO: users may want to align rows by values
         xKeys.forEach(k => {
             let prevYEnd = 0;
             pivotedData.get(k)?.forEach(d => {
                 const xValue = getValueUsingChannel(d, spec.x as Channel) as number;
+                const x1Value = getValueUsingChannel(d, spec.x1 as Channel) as number;
                 const yValue = getValueUsingChannel(d, spec.y as Channel) as string | number;
                 const colorValue = getValueUsingChannel(d, spec.color as Channel) as string;
+                const strokeValue = getValueUsingChannel(d, spec.stroke as Channel) as string;
 
                 const x = xScale(xValue);
+                const x1 = xScale(x1Value);
                 const y = tm.encodedValue('y', yValue);
                 const color = tm.encodedValue('color', colorValue);
+                const stroke = tm.encodedValue('stroke', strokeValue);
                 const opacity = tm.encodedValue('opacity');
 
+                const actualBarWidth = x1 ? x1 - x : barWidth;
+                const barStart = x1 ? x : x - actualBarWidth / 2.0;
+
                 // pixi
+                rowGraphics.lineStyle(
+                    tm.encodedValue('strokeWidth'),
+                    colorToHex(stroke),
+                    1, // alpha
+                    1 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
+                );
                 rowGraphics.beginFill(colorToHex(color), opacity);
-                rowGraphics.drawRect(x - barWidth / 2.0, rowHeight - y - prevYEnd, barWidth, y);
+                rowGraphics.drawRect(barStart, rowHeight - y - prevYEnd, actualBarWidth, y);
 
                 // svg
-                trackInfo.addSVGInfo(tile, x - barWidth / 2.0, rowHeight - y - prevYEnd, barWidth, y, color);
+                trackInfo.addSVGInfo(tile, x, rowHeight - y - prevYEnd, actualBarWidth, y, color);
 
                 prevYEnd += y;
             });
@@ -110,13 +115,9 @@ export function drawBar(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMode
             const rowGraphics = tile.graphics; //new HGC.libraries.PIXI.Graphics();
             const rowPosition = tm.encodedValue('row', rowCategory);
 
-            // stroke
-            rowGraphics.lineStyle(
-                tm.encodedValue('strokeWidth'),
-                colorToHex(tm.encodedValue('stroke')),
-                1, // alpha
-                1 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
-            );
+            // baseline
+            const baselineValue = IsChannelDeep(spec.y) ? spec.y?.baseline : undefined;
+            const baselinePosition = baselineValue ? tm.encodedValue('y', baselineValue) : 0;
 
             data.filter(
                 d =>
@@ -124,20 +125,47 @@ export function drawBar(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMode
                     (getValueUsingChannel(d, spec.row as Channel) as string) === rowCategory
             ).forEach(d => {
                 const xValue = getValueUsingChannel(d, spec.x as Channel) as number;
+                const x1Value = getValueUsingChannel(d, spec.x1 as Channel) as number;
                 const yValue = getValueUsingChannel(d, spec.y as Channel) as string | number;
                 const colorValue = getValueUsingChannel(d, spec.color as Channel) as string;
+                const strokeValue = getValueUsingChannel(d, spec.stroke as Channel) as string;
 
                 const x = xScale(xValue);
+                const x1 = xScale(x1Value);
                 const y = tm.encodedValue('y', yValue);
                 const color = tm.encodedValue('color', colorValue);
+                const stroke = tm.encodedValue('stroke', strokeValue);
                 const opacity = tm.encodedValue('opacity');
 
+                // improve readability
+                const actualBarWidth = x1 ? x1 - x : barWidth;
+                const barXStart = x1 ? x : x - actualBarWidth / 2.0;
+                const barHeight = y - baselinePosition;
+
                 // pixi
+                rowGraphics.lineStyle(
+                    tm.encodedValue('strokeWidth'),
+                    colorToHex(stroke),
+                    1, // alpha
+                    1 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
+                );
                 rowGraphics.beginFill(colorToHex(color), opacity);
-                rowGraphics.drawRect(x - barWidth / 2.0, rowHeight + rowPosition - y, barWidth, y);
+                rowGraphics.drawRect(
+                    barXStart,
+                    rowPosition + rowHeight - barHeight - baselinePosition,
+                    actualBarWidth,
+                    barHeight
+                );
 
                 // svg
-                trackInfo.addSVGInfo(tile, x - barWidth / 2.0, rowHeight + rowPosition - y, barWidth, y, color);
+                trackInfo.addSVGInfo(
+                    tile,
+                    barXStart,
+                    rowPosition + rowHeight - barHeight - baselinePosition,
+                    actualBarWidth,
+                    barHeight,
+                    color
+                );
             });
 
             // add graphics of this row

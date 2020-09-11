@@ -50,11 +50,15 @@ export function drawPoint(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMo
                 (getValueUsingChannel(d, spec.row as Channel) as string) === rowCategory
         ).forEach(d => {
             const xValue = getValueUsingChannel(d, spec.x as Channel) as number;
+            const x1Value = getValueUsingChannel(d, spec.x1 as Channel) as number;
             const yValue = getValueUsingChannel(d, spec.y as Channel) as string | number;
             const colorValue = getValueUsingChannel(d, spec.color as Channel) as string;
             const sizeValue = getValueUsingChannel(d, spec.size as Channel) as number;
 
             const x = xScale(xValue);
+            const x1 = xScale(x1Value);
+            const centerX = x1 ? x + (x1 - x) / 2.0 : x;
+
             const y = tm.encodedValue('y', yValue);
             const color = tm.encodedValue('color', colorValue);
             const size = tm.encodedValue('size', sizeValue);
@@ -65,7 +69,7 @@ export function drawPoint(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMo
             if (yValue === 0 || size === 0 || opacity === 0) return;
 
             rowGraphics.beginFill(colorToHex(color), opacity);
-            rowGraphics.drawCircle(x, rowPosition + rowHeight - y, size);
+            rowGraphics.drawCircle(centerX, rowPosition + rowHeight - y, size);
         });
 
         // Because simply scaling row graphics along y axis distort the shape of points,

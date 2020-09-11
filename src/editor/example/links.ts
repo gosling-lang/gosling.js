@@ -10,12 +10,12 @@ export const EXAMPLE_LINKS: GeminiSpec = {
             },
             metadata: {
                 type: 'higlass-bed',
-                chromosome1: 8,
-                start1: 9,
-                end1: 10,
-                chromosome2: 13,
-                start2: 14,
-                end2: 15
+                genomicFields: [
+                    { name: 'start1', index: 9 },
+                    { name: 'end1', index: 10 },
+                    { name: 'start2', index: 14 },
+                    { name: 'end2', index: 15 }
+                ]
             },
             superpose: [
                 {

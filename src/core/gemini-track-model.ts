@@ -47,7 +47,7 @@ export class GeminiTrackModel {
 
     // TODO: make mark-specific default
     private DEFAULTS = {
-        NOMINAL_COLOR: d3.schemeCategory10,
+        NOMINAL_COLOR: ['#E79F00', '#029F73', '#0072B2', '#CB7AA7', '#D45E00', '#57B4E9', '#EFE441', '#000000'],
         QUANTITATIVE_COLOR: 'viridis',
         SIZE: 3
     };
@@ -215,6 +215,7 @@ export class GeminiTrackModel {
         // the type of channel scale is determined by a { channel type, field type } pair
         switch (channelKey) {
             case 'color':
+            case 'stroke':
                 if (channelFieldType === 'quantitative')
                     return (this.channelScales[channelKey] as d3.ScaleSequential<any>)(value as number);
                 if (channelFieldType === 'nominal')
@@ -410,6 +411,7 @@ export class GeminiTrackModel {
                                 range = [0 + TRACK_ROW_PADDING, rowHeight - TRACK_ROW_PADDING];
                                 break;
                             case 'color':
+                            case 'stroke':
                                 range = this.DEFAULTS.QUANTITATIVE_COLOR as PREDEFINED_COLORS;
                                 break;
                             case 'size':
@@ -434,9 +436,10 @@ export class GeminiTrackModel {
                                 range = [0, spec.width];
                                 break;
                             case 'y':
-                                range = [0 + TRACK_ROW_PADDING, rowHeight - TRACK_ROW_PADDING];
+                                range = [rowHeight - TRACK_ROW_PADDING, 0 + TRACK_ROW_PADDING]; // reversed because the origin is on the top
                                 break;
                             case 'color':
+                            case 'stroke':
                                 range = this.DEFAULTS.NOMINAL_COLOR;
                                 break;
                             case 'row':
@@ -486,6 +489,7 @@ export class GeminiTrackModel {
                                 .range(range as [number, number]);
                             break;
                         case 'color':
+                        case 'stroke':
                             this.channelScales[channelKey] = d3
                                 .scaleSequential(d3.interpolateViridis /* TODO */)
                                 .domain(domain as [number, number]);
@@ -505,6 +509,7 @@ export class GeminiTrackModel {
                                 .range(range as [number, number]);
                             break;
                         case 'color':
+                        case 'stroke':
                             this.channelScales[channelKey] = d3
                                 .scaleOrdinal(range as string[])
                                 .domain(domain as string[]);
