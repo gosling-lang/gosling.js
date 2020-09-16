@@ -213,6 +213,11 @@
                 },
                 "zoomFixed": {
                     "type": "boolean"
+                },
+                "zoomLimits": {
+                    "type": "array",
+                    "minLength": 2,
+                    "maxLength": 2
                 }
             }
         },
