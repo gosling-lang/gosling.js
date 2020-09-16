@@ -6,10 +6,12 @@ import { EXAMPLE_LINKS } from './links';
 import { EXAMPLE_OVERVIEW_DEATIL } from './overview-plus-detail-views';
 import { EXAMPLE_PERIPHERAL_PLOT } from './peripheral-plot';
 import { EXAMPLE_SEMANTIC_ZOOMING_SEQ } from './semantic-zoom-seq';
+import { EXAMPLE_DATA_FETCHER } from './data-fetcher';
 
 export const examples: ReadonlyArray<{
     name: string;
     spec: GeminiSpec;
+    underDevelopment?: boolean;
 }> = [
     {
         name: 'Basic Marks',
@@ -28,16 +30,23 @@ export const examples: ReadonlyArray<{
         spec: EXAMPLE_LINKS
     },
     {
-        name: 'Overview + Detail views (under development)',
-        spec: EXAMPLE_OVERVIEW_DEATIL
+        name: 'Overview + Detail views',
+        spec: EXAMPLE_OVERVIEW_DEATIL,
+        underDevelopment: true
     },
     {
-        name: 'Peripheral Plot (under development)',
-        spec: EXAMPLE_PERIPHERAL_PLOT
+        name: 'Peripheral Plot',
+        spec: EXAMPLE_PERIPHERAL_PLOT,
+        underDevelopment: true
     },
     {
         name: 'Semantic Zooming for Sequence Data',
         spec: EXAMPLE_SEMANTIC_ZOOMING_SEQ
+    },
+    {
+        name: 'Fetchining From Multiple Tilesets',
+        spec: EXAMPLE_DATA_FETCHER,
+        underDevelopment: true
     }
     /*
     // old demos that we may need to support again in the future

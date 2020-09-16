@@ -26,7 +26,7 @@ higlassRegister({
 
 higlassRegister({ dataFetcher: CSVDataFetcher, config: CSVDataFetcher.config }, { pluginType: 'dataFetcher' });
 
-const DEBUG_INIT_DEMO_INDEX = 1;
+const INIT_DEMO_INDEX = 0; // examples.length;
 
 function Editor() {
     const layoutSvg = useRef<SVGSVGElement>(null);
@@ -34,9 +34,9 @@ function Editor() {
         // Debug
         // { viewConfig: testViewConfig, boundingBox: { x: 60, y: 60, width: 60, height: 500 } }
     ]);
-    const [demo, setDemo] = useState(examples[DEBUG_INIT_DEMO_INDEX]);
+    const [demo, setDemo] = useState(examples[INIT_DEMO_INDEX]);
     const [editorMode, setEditorMode] = useState<'Full Glyph Definition' | 'Predefined Glyph'>('Full Glyph Definition');
-    const [gm, setGm] = useState(stringify(examples[DEBUG_INIT_DEMO_INDEX].spec as GeminiSpec));
+    const [gm, setGm] = useState(stringify(examples[INIT_DEMO_INDEX].spec as GeminiSpec));
 
     useEffect(() => {
         if (editorMode === 'Full Glyph Definition') {
@@ -118,7 +118,7 @@ function Editor() {
                 >
                     {examples.map(d => (
                         <option key={d.name} value={d.name}>
-                            {d.name}
+                            {d.name + (d.underDevelopment ? ' (under development)' : '')}
                         </option>
                     ))}
                 </select>
@@ -135,6 +135,17 @@ function Editor() {
                         </option>
                     ))}
                 </select>
+                {demo.underDevelopment ? (
+                    <span
+                        style={{
+                            paddingLeft: 12,
+                            fontStyle: 'normal',
+                            fontSize: 13
+                        }}
+                    >
+                        🚧 This example is under development 🚧
+                    </span>
+                ) : null}
             </div>
             <div className="editor">
                 <SplitPane className="split-pane-root" split="vertical" defaultSize="35%" onChange={undefined}>

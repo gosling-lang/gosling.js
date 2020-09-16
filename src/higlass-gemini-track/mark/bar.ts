@@ -74,7 +74,7 @@ export function drawBar(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMode
                 const stroke = tm.encodedValue('stroke', strokeValue);
                 const opacity = tm.encodedValue('opacity');
 
-                const actualBarWidth = x1 ? x1 - x : barWidth;
+                const actualBarWidth = tm.encodedValue('size') ?? (x1 ? x1 - x : barWidth);
                 const barStart = x1 ? x : x - actualBarWidth / 2.0;
 
                 // pixi
@@ -138,8 +138,8 @@ export function drawBar(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMode
                 const opacity = tm.encodedValue('opacity');
 
                 // improve readability
-                const actualBarWidth = x1 ? x1 - x : barWidth;
-                const barXStart = x1 ? x : x - actualBarWidth / 2.0;
+                const actualBarWidth = tm.encodedValue('size') ?? (x1 ? x1 - x : barWidth);
+                const barXStart = x1 ? x + (x1 - x - actualBarWidth) / 2.0 : x - actualBarWidth / 2.0;
                 const barHeight = y - baselinePosition;
 
                 // pixi

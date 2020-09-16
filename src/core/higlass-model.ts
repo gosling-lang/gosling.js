@@ -36,7 +36,8 @@ export class HiGlassModel {
                     whole: []
                 },
                 initialXDomain: [0, TOTAL_CHROM_SIZE_HG19],
-                initialYDomain: [0, TOTAL_CHROM_SIZE_HG19]
+                initialYDomain: [0, TOTAL_CHROM_SIZE_HG19],
+                zoomLimits: [1, null]
             }
         ];
     }

@@ -1,48 +1,39 @@
 import * as d3 from 'd3';
 import { drawMark } from './mark';
-import { getMaxZoomLevel } from './utils/zoom';
+import { getMaxZoomLevel, isSemanticZoomTriggered } from './utils/semantic-zoom';
 import { GeminiTrackModel } from '../core/gemini-track-model';
 import { SpriteInfo } from './utils/sprite';
 import { validateTrack } from './utils/validate';
 import { drawZoomInstruction } from './mark/zoom-instruction';
 import { shareScaleAcrossTracks } from './utils/scales';
 import { resolveSuperposedTracks } from './utils/superpose';
-import { SingleTrack, IsDataMetadata, IsDataTransform } from '../core/gemini.schema';
+import { IsDataMetadata, IsDataTransform, Track } from '../core/gemini.schema';
+import assign from 'lodash/assign';
 
 function GeminiTrack(HGC: any, ...args: any[]): any {
     if (!new.target) {
         throw new Error('Uncaught TypeError: Class constructor cannot be invoked without "new"');
     }
 
-    // TODO: change the parent class to a more generic one (e.g., TiledPixiTrack)
     class GeminiTrackClass extends HGC.tracks.BarTrack {
-        private resolvedSpecs: SingleTrack[]; // superpose is resolved to multiple tracks
+        // TODO: change the parent class to a more generic one (e.g., TiledPixiTrack)
+
+        // Spec of Gemini track
+        private originalSpec: Track;
+
+        // deprecated
         private extent: { min: number; max: number };
 
         constructor(params: any[]) {
             const [context, options] = params;
             super(context, options);
 
-            this.resolvedSpecs = resolveSuperposedTracks(this.options.spec);
+            this.originalSpec = this.options.spec;
 
-            let allValid = true;
-            const allErrorMessages: string[] = [];
+            const { valid, errorMessages } = validateTrack(this.originalSpec);
 
-            this.resolvedSpecs.forEach(spec => {
-                const { valid, errorMessages } = validateTrack(spec);
-                if (!valid) {
-                    allValid = false;
-                }
-                errorMessages.forEach(msg => allErrorMessages.push(msg));
-            });
-
-            if (!allValid) {
-                console.warn(
-                    'This track spec is not valid by the following issues:',
-                    allErrorMessages,
-                    'Original track spec',
-                    this.options.spec
-                );
+            if (!valid) {
+                console.warn('The specification of the following track is invalid', errorMessages, this.originalSpec);
             }
 
             this.extent = { min: Number.MAX_SAFE_INTEGER, max: Number.MIN_SAFE_INTEGER };
@@ -121,7 +112,7 @@ function GeminiTrack(HGC: any, ...args: any[]): any {
             const isNotMaxZoomLevel = tile?.tileData?.zoomLevel !== getMaxZoomLevel();
 
             tile.geminiModels.forEach((gm: GeminiTrackModel) => {
-                if (isNotMaxZoomLevel && gm.spec().zoomAction?.type === 'hide') {
+                if (isNotMaxZoomLevel && gm.spec().semanticZoom?.type === 'hide') {
                     drawZoomInstruction(HGC, this);
                     return;
                 }
@@ -157,11 +148,23 @@ function GeminiTrack(HGC: any, ...args: any[]): any {
          * Return the generated gemini track model.
          */
         preprocessTile(tile: any) {
-            if (tile.geminiModels && tile.geminiModels.length !== 0) return tile.geminiModels;
+            if (tile.geminiModels && tile.geminiModels.length !== 0) {
+                return tile.geminiModels;
+            }
 
+            // Single tile can contain multiple Gemini models if multiple tracks are superposed.
             tile.geminiModels = [];
 
-            this.resolvedSpecs.forEach(spec => {
+            // Determine whether to trigger semantic zooming.
+            const semanticZoomTriggered = isSemanticZoomTriggered(this.originalSpec, tile?.tileData?.zoomLevel);
+
+            let semanticSpec = JSON.parse(JSON.stringify(this.originalSpec));
+            if (semanticZoomTriggered && this.options.spec?.semanticZoom?.type === 'alternative-encoding') {
+                // Assign the alternative encoding to the original spec
+                semanticSpec = assign({}, semanticSpec, this.options.spec.semanticZoom.spec);
+            }
+
+            resolveSuperposedTracks(semanticSpec).forEach(spec => {
                 if (!tile.tileData.tabularData) {
                     if (!IsDataMetadata(spec.metadata)) {
                         console.warn('No metadata of tilesets specified');
@@ -264,9 +267,14 @@ function GeminiTrack(HGC: any, ...args: any[]): any {
                     }
                 }
 
-                tile.tileData.tabularDataFiltered = Array.from(tile.tileData.tabularData);
+                if (semanticZoomTriggered && tile.tileData.tabularDataAlt) {
+                    // This means we are using an alternative dataset for semantic zooming
+                    tile.tileData.tabularDataFiltered = Array.from(tile.tileData.tabularDataAlt);
+                } else {
+                    tile.tileData.tabularDataFiltered = Array.from(tile.tileData.tabularData);
+                }
 
-                // simple filtering
+                // Apply filters
                 if (spec.dataTransform !== undefined && IsDataTransform(spec.dataTransform)) {
                     spec.dataTransform.filter.forEach(filter => {
                         const { field, oneOf, not } = filter;
@@ -280,10 +288,9 @@ function GeminiTrack(HGC: any, ...args: any[]): any {
                     });
                 }
 
-                const isMaxZoomLevel = tile?.tileData?.zoomLevel !== getMaxZoomLevel();
-
-                // we make separate models for indivisual tiles because they contain different data (e.g., genomic positions)
-                tile.geminiModels.push(new GeminiTrackModel(spec, tile.tileData.tabularDataFiltered, isMaxZoomLevel));
+                // Construct separate gemini models for individual tiles
+                const gm = new GeminiTrackModel(spec, tile.tileData.tabularDataFiltered, false);
+                tile.geminiModels.push(gm);
 
                 // we need to sync the domain of y-axis so that all tiles are aligned each other
                 // this.setGlobalScales();

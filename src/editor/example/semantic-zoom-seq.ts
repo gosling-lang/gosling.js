@@ -15,7 +15,7 @@ export const EXAMPLE_SEMANTIC_ZOOMING_SEQ: GeminiSpec = {
                 value: 'count',
                 categories: ['A', 'T', 'G', 'C']
             },
-            zoomAction: { type: 'auto' },
+            semanticZoom: { type: 'auto' },
             mark: 'bar',
             x: {
                 field: 'position',
@@ -45,10 +45,15 @@ export const EXAMPLE_SEMANTIC_ZOOMING_SEQ: GeminiSpec = {
                 value: 'count',
                 categories: ['A', 'T', 'G', 'C']
             },
-            zoomAction: {
+            semanticZoom: {
                 type: 'alternative-encoding',
                 spec: {
                     row: { field: 'base', type: 'nominal' }
+                },
+                trigger: {
+                    type: 'less-than',
+                    condition: { zoomLevel: 15 },
+                    target: 'track'
                 }
             },
             mark: 'bar',
@@ -80,11 +85,16 @@ export const EXAMPLE_SEMANTIC_ZOOMING_SEQ: GeminiSpec = {
                 value: 'count',
                 categories: ['A', 'T', 'G', 'C']
             },
-            zoomAction: {
+            semanticZoom: {
                 type: 'alternative-encoding',
                 spec: {
                     mark: 'line',
                     row: { field: 'base', type: 'nominal' }
+                },
+                trigger: {
+                    type: 'less-than',
+                    condition: { zoomLevel: 15 },
+                    target: 'track'
                 }
             },
             mark: 'bar',

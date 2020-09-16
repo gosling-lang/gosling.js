@@ -22,6 +22,7 @@ export interface View {
     uid?: string;
     initialXDomain?: number[];
     initialYDomain?: number[];
+    zoomLimits?: [number | null, number | null];
     autocompleteSource?: string;
     genomePositionSearchBox?: GenomePositionSearchBox;
     genomePositionSearchBoxVisible?: boolean;

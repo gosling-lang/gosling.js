@@ -1,32 +1,38 @@
 import { Track, IsChannelDeep, ChannelDeep, ChannelTypes } from '../../core/gemini.schema';
+import { resolveSuperposedTracks } from './superpose';
 
 export function validateTrack(track: Track) {
     let valid = true;
-    const errorMessages = [];
-    // check with json schema
-    // ...
+    const errorMessages: string[] = [];
 
-    // additionally check with the schema that cannot be validated with a json schema file
-    if (!getGenomicChannelFromTrack(track)) {
-        errorMessages.push('genomic type is not encoded to either a x- or y- axis');
-        valid = false;
-    }
-    const color = track.color;
-    if (IsChannelDeep(color) && color.type === 'genomic') {
-        errorMessages.push('genomic type cannot be used for a color channel');
-        valid = false;
-    }
-    const row = track.row;
-    if (IsChannelDeep(row) && row.type !== 'nominal') {
-        errorMessages.push(`${row.type} type cannot be used for a row channel`);
-        valid = false;
-    }
+    const resolvedTrack = resolveSuperposedTracks(track);
 
-    // combination of visual mark and channel
-    if (track.mark === 'line' && IsChannelDeep(color) && color.type === 'quantitative') {
-        errorMessages.push('`line` mark cannot be used with `quantitative` value');
-        valid = false;
-    }
+    resolvedTrack.forEach(spec => {
+        // Validate with json schema
+        // ...
+
+        // Additionally valideate the schema with the aspects that cannot be validated by the json schema
+        if (!getGenomicChannelFromTrack(spec)) {
+            errorMessages.push('genomic type is not encoded to either a x- or y- axis');
+            valid = false;
+        }
+        const color = spec.color;
+        if (IsChannelDeep(color) && color.type === 'genomic') {
+            errorMessages.push('genomic type cannot be used for a color channel');
+            valid = false;
+        }
+        const row = spec.row;
+        if (IsChannelDeep(row) && row.type !== 'nominal') {
+            errorMessages.push(`${row.type} type cannot be used for a row channel`);
+            valid = false;
+        }
+
+        // combination of visual mark and channel
+        if (spec.mark === 'line' && IsChannelDeep(color) && color.type === 'quantitative') {
+            errorMessages.push('`line` mark cannot be used with `quantitative` value');
+            valid = false;
+        }
+    });
 
     return { valid, errorMessages };
 }

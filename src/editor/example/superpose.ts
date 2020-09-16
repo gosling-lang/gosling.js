@@ -89,7 +89,7 @@ export const EXAMPLE_SUPERPOSE: GeminiSpec = {
                         range: ['#D45E00', '#D45E00', '#D45E00', 'black', '#029F73', '#029F73', '#029F73']
                     },
                     strokeWidth: { value: 0.5 },
-                    size: { value: 5 }
+                    size: { value: 1 }
                 },
                 {
                     mark: 'point',
@@ -165,42 +165,6 @@ export const EXAMPLE_SUPERPOSE: GeminiSpec = {
                 field: 'position',
                 type: 'genomic',
                 domain: { chromosome: '1', interval: [1, 3000500] }
-            },
-            x1: { axis: true },
-            y: { field: 'peak', type: 'quantitative' },
-            row: { field: 'sample', type: 'nominal' },
-            color: { field: 'sample', type: 'nominal' },
-            // background: {"value": "red"},
-            width: 1000,
-            height: 180
-        },
-        {
-            data: {
-                url: EXAMPLE_DATASETS.multivec,
-                type: 'tileset'
-            },
-            metadata: {
-                type: 'higlass-multivec',
-                row: 'sample',
-                column: 'position',
-                value: 'peak',
-                categories: ['sample 1', 'sample 2', 'sample 3', 'sample 4']
-            },
-            superpose: [
-                {
-                    mark: 'bar',
-                    size: { value: 1 },
-                    color: { value: 'black' }
-                },
-                {
-                    mark: 'point',
-                    size: { field: 'peak', type: 'quantitative', range: [0, 6] }
-                }
-            ],
-            x: {
-                field: 'position',
-                type: 'genomic',
-                domain: { chromosome: '1', interval: [1250000, 1450000] }
             },
             x1: { axis: true },
             y: { field: 'peak', type: 'quantitative' },

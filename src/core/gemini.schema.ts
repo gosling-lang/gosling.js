@@ -21,10 +21,21 @@ export interface Layout {
 /**
  * Tracks
  */
-export interface DataDeep {
+export type DataDeep = DataDeepTileset | DataDeepGemini;
+
+export interface DataDeepTileset {
+    type: 'tileset';
     url: string;
-    type: 'tileset' | 'csv';
+}
+
+export interface DataDeepGemini {
+    type: 'csv';
+    url: string;
     quantitativeFields?: string[];
+
+    // being used for semantic zooming
+    urlAlt?: string;
+    quantitativeFieldsAlt?: string[];
 }
 
 export type DataMetadata = MultivecMetadata | BEDMetadata;
@@ -70,7 +81,7 @@ export interface BasicSingleTrack {
     // data transform
     dataTransform?: DataTransform;
     // zoom technique
-    zoomAction?: SemanticZoom;
+    semanticZoom?: SemanticZoom;
     // coordinates
     x?: Channel;
     y?: Channel;
@@ -127,11 +138,28 @@ export interface Datum {
 }
 
 /**
- * Zoom technique (How should we show visualization based on different zoom level?)
+ * Semantic Zoom - Determine how to change visual representations
  */
-export interface SemanticZoom {
+export type SemanticZoom = SemanticZoomRedefinition | SemanticZoomCombined;
+
+export interface SemanticZoomRedefinition {
+    type: 'alternative-encoding';
+    spec: Partial<Track>;
+    trigger: {
+        type: 'less-than' | 'greater-than';
+        condition: {
+            width?: number;
+            height?: number;
+            zoomLevel: number;
+        }; // TODO: support AND or OR
+        target: 'track' | 'mark' | 'glyph'; // TODO: only `track` is supported currently
+    };
+}
+
+// deprecated
+export interface SemanticZoomCombined {
     // TODO: separate this interface by type, e.g., { type: 'aggregate', aggFunction: 'max' | ... }
-    type: 'auto' | 'hide' | 'aggregate' | 'filter' | 'alternative-encoding';
+    type: 'auto' | 'hide' | 'aggregate' | 'filter';
     zoomLevel?: number; // TODO: what meaning to contain?
     aggFunction?: 'max' | 'min' | 'mean' | 'count' | 'sum';
     importance?: string; // field name
@@ -414,6 +442,10 @@ export function IsSingleTrack(track: Track): track is BasicSingleTrack {
 
 export function IsSuperposedTrack(track: Track): track is SuperposedTrack {
     return 'superpose' in track;
+}
+
+export function IsSemanticZoomRedefinition(_: any): _ is SemanticZoomRedefinition {
+    return _?.type === 'alternative-encoding';
 }
 
 // TODO: if superposed track, merge specs to remove `superpose`, and deal with the array of tracks.

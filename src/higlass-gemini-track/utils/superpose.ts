@@ -1,5 +1,5 @@
 import { Track, SingleTrack, IsSuperposedTrack, SuperposedTrack } from '../../core/gemini.schema';
-import merge from 'lodash/merge';
+import assign from 'lodash/assign';
 
 /**
  * Resolve superposed tracks into multiple track specifications.
@@ -15,7 +15,7 @@ export function resolveSuperposedTracks(track: Track): SingleTrack[] {
 
     const resolved: SingleTrack[] = [];
     track.superpose.forEach(subSpec => {
-        resolved.push(merge(JSON.parse(JSON.stringify(base)), subSpec));
+        resolved.push(assign(JSON.parse(JSON.stringify(base)), subSpec));
     });
 
     return resolved;
