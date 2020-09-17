@@ -219,7 +219,7 @@ export const ChannelTypes = {
 
 export type ChannelType = keyof typeof ChannelTypes | string;
 
-export type Channel = ChannelDeep | ChannelValue;
+export type Channel = ChannelDeep | ChannelValue; // TODO: support null to allow removing spec when overriding
 
 export interface ChannelDeep {
     field?: string;

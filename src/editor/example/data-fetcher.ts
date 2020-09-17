@@ -54,6 +54,7 @@ export const EXAMPLE_DATA_FETCHER: GeminiSpec = {
                     x: { field: 'Basepair_start', type: 'genomic', domain: { chromosome: '1' } },
                     xe: { field: 'Basepair_stop', type: 'genomic' },
                     x1: { axis: true },
+                    row: { value: 0 }, // null,
                     stroke: { value: 'black' },
                     strokeWidth: { value: 0.5 },
                     dataTransform: { filter: [] }
@@ -138,6 +139,8 @@ export const EXAMPLE_DATA_FETCHER: GeminiSpec = {
                 }
             ],
             x1: { axis: true },
+            row: { field: 'strand', type: 'nominal', domain: ['+', '-'] },
+            size: { value: 17 },
             width: 1000,
             height: 60
         }

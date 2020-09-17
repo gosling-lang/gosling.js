@@ -32,7 +32,17 @@ export const examples: ReadonlyArray<{
     },
     {
         name: 'Between and Within Links',
-        spec: EXAMPLE_LINKS
+        spec: EXAMPLE_LINKS,
+        underDevelopment: true
+    },
+    {
+        name: 'Semantic Zooming for Sequence Data',
+        spec: EXAMPLE_SEMANTIC_ZOOMING_SEQ
+    },
+    {
+        name: 'Semantic Zooming with Multiple Tilesets',
+        spec: EXAMPLE_DATA_FETCHER,
+        underDevelopment: true
     },
     {
         name: 'Overview + Detail views',
@@ -42,15 +52,6 @@ export const examples: ReadonlyArray<{
     {
         name: 'Peripheral Plot',
         spec: EXAMPLE_PERIPHERAL_PLOT,
-        underDevelopment: true
-    },
-    {
-        name: 'Semantic Zooming for Sequence Data',
-        spec: EXAMPLE_SEMANTIC_ZOOMING_SEQ
-    },
-    {
-        name: 'Fetchining From Multiple Tilesets',
-        spec: EXAMPLE_DATA_FETCHER,
         underDevelopment: true
     }
 ] as const;
