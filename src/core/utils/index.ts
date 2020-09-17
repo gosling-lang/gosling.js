@@ -1,28 +1,17 @@
 import Ajv from 'ajv';
-import uuid from 'uuid';
-import { GLYPH_LOCAL_PRESET_TYPES, GLYPH_PRESETS } from '../../editor/example/deprecated-glyph-examples/index';
+import { GLYPH_LOCAL_PRESET_TYPES, GLYPH_PRESETS } from '../../editor/example/deprecated/index';
 import { GeminiSpec, Mark, IsMarkDeep, IsSingleTrack } from '../gemini.schema';
 
-export function replaceGlyphs(spec: GeminiSpec): GeminiSpec {
+export function replaceTemplate(spec: GeminiSpec): GeminiSpec {
     spec.tracks.forEach(track => {
         if (IsSingleTrack(track) && IsMarkDeep(track.mark)) {
-            const predefinedGlyph = track.mark.type;
-            if (GLYPH_LOCAL_PRESET_TYPES.includes(predefinedGlyph as any /* TODO */)) {
-                track.mark = GLYPH_PRESETS.find(d => d.name === predefinedGlyph)?.mark as Mark;
+            const predefinedTemplate = track.mark.type;
+            if (GLYPH_LOCAL_PRESET_TYPES.includes(predefinedTemplate as any)) {
+                track.mark = GLYPH_PRESETS.find(d => d.name === predefinedTemplate)?.mark as Mark;
             }
         }
     });
     return spec;
-}
-
-export function generateReadableTrackUid(pre: string | undefined, n: number) {
-    // TODO: Add track type
-
-    // This is to properly update higlass upon editor changes. Ultimately, remove this.
-    // (Refer to https://github.com/sehilyi/gemini/issues/7)
-    const id = uuid.v1();
-    if (pre) return `${pre}-track-${n}-(${id})`;
-    else return `track-${n}-${id}`;
 }
 
 export function validTilesetUrl(url: string) {
@@ -34,7 +23,7 @@ export function validTilesetUrl(url: string) {
 
 export function parseServerAndTilesetUidFromUrl(url: string) {
     if (!url.includes('tileset_info/?d=') || (!url.includes('https:') && !url.includes('http:'))) {
-        // TODO: Add RE to validate the format.
+        // TODO: Add regular expression to validate the format.
         console.warn(`Data url format is incorrect:${url}`);
         return { server: undefined, tilesetUid: undefined };
     }

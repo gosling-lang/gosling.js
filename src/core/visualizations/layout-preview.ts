@@ -15,8 +15,8 @@ export function renderLayoutPreview(
     d3.select(svg).selectAll('*').remove();
 
     // styles
-    const PADDING_X = boundingBox.x,
-        PADDING_Y = boundingBox.y;
+    const PADDING_X = boundingBox.x;
+    const PADDING_Y = boundingBox.y;
     const WIDTH = boundingBox.width + PADDING_X * 2;
     const HEIGHT = boundingBox.height + PADDING_Y * 2;
 

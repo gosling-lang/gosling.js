@@ -3,7 +3,7 @@ import { GeminiSpec, Track, BasicSingleTrack } from '../gemini.schema';
 import { BoundingBox } from '../utils/bounding-box';
 import { HiGlassTrack } from './higlass';
 import { TRACK_GAP } from './defaults';
-import { trackStyle } from './layout';
+import { TRACK_BG_STYLE } from './layout';
 
 interface ArcInfo {
     innerRadius: number;
@@ -85,8 +85,8 @@ export function renderCircularLayout(
         .data(trackInfo)
         .enter()
         .append('path')
-        .attr('fill', d => trackStyle.background(d.track as BasicSingleTrack))
-        .attr('stroke', d => trackStyle.stroke(d.track as BasicSingleTrack))
-        .attr('stroke-width', d => trackStyle.strokeWidth(d.track as BasicSingleTrack))
+        .attr('fill', d => TRACK_BG_STYLE.background(d.track as BasicSingleTrack))
+        .attr('stroke', d => TRACK_BG_STYLE.stroke(d.track as BasicSingleTrack))
+        .attr('stroke-width', d => TRACK_BG_STYLE.strokeWidth(d.track as BasicSingleTrack))
         .attr('d', d => d3.arc().innerRadius(d.arc.innerRadius).outerRadius(d.arc.outerRadius)(d.arc));
 }

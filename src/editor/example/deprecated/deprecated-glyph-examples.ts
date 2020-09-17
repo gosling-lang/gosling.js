@@ -1,4 +1,4 @@
-import { GeminiSpec } from '../../core/gemini.schema';
+import { GeminiSpec } from '../../../core/gemini.schema';
 
 export const GENE_ANNOTATION_PLOT_SIMPLE: GeminiSpec = {
     tracks: [

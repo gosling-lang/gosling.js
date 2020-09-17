@@ -12,59 +12,70 @@ import SplitPane from 'react-split-pane';
 import { GeminiSpec } from '../core/gemini.schema';
 import { debounce } from 'lodash';
 import { examples } from './example';
-import { replaceGlyphs } from '../core/utils';
+import { replaceTemplate } from '../core/utils';
 import { renderLayoutPreview } from '../core/visualizations/layout-preview';
-import { calculateSize } from '../core/utils/bounding-box';
+import { calculateBoundingBox } from '../core/utils/bounding-box';
 import { HiGlassTrack } from '../core/visualizations/higlass';
 import './editor.css';
 
+/**
+ * Register a Gemini plugin track to HiGlassComponent
+ */
 higlassRegister({
     name: 'GeminiTrack',
     track: GeminiTrack,
     config: GeminiTrack.config
 });
 
+/**
+ * Register a Gemini data fetcher to HiGlassComponent
+ */
 higlassRegister({ dataFetcher: CSVDataFetcher, config: CSVDataFetcher.config }, { pluginType: 'dataFetcher' });
 
-const INIT_DEMO_INDEX = 0; // examples.length;
+const INIT_DEMO_INDEX = 2; // examples.length;
 
+/**
+ * React component for editing Gemini specs
+ */
 function Editor() {
     const layoutSvg = useRef<SVGSVGElement>(null);
-    const [higlassTrackOptions, setHiGlassTrackOptions] = useState<HiGlassTrack[]>([
-        // Debug
-        // { viewConfig: testViewConfig, boundingBox: { x: 60, y: 60, width: 60, height: 500 } }
-    ]);
+    const [higlassTrackOptions, setHiGlassTrackOptions] = useState<HiGlassTrack[]>([]);
     const [demo, setDemo] = useState(examples[INIT_DEMO_INDEX]);
-    const [editorMode, setEditorMode] = useState<'Full Glyph Definition' | 'Predefined Glyph'>('Full Glyph Definition');
+    const [editorMode, setEditorMode] = useState<'Normal Mode' | 'Template-based Mode'>('Normal Mode');
     const [gm, setGm] = useState(stringify(examples[INIT_DEMO_INDEX].spec as GeminiSpec));
 
+    /**
+     * Editor moode
+     */
     useEffect(() => {
-        if (editorMode === 'Full Glyph Definition') {
-            setGm(stringify(replaceGlyphs(JSON.parse(stringify(demo.spec)) as GeminiSpec)));
+        if (editorMode === 'Normal Mode') {
+            setGm(stringify(replaceTemplate(JSON.parse(stringify(demo.spec)) as GeminiSpec)));
         } else {
             setGm(stringify(demo.spec as GeminiSpec));
         }
         setHiGlassTrackOptions([]);
     }, [demo, editorMode]);
 
+    /**
+     * Render background of tracks.
+     */
     useEffect(() => {
         let editedGm;
         try {
-            editedGm = replaceGlyphs(JSON.parse(gm));
+            editedGm = replaceTemplate(JSON.parse(gm));
         } catch (e) {
             console.warn('Cannnot parse the edited code.');
         }
         if (!editedGm) return;
 
-        // Render layout preview
         renderLayoutPreview(
             layoutSvg.current as SVGSVGElement,
             editedGm as GeminiSpec,
             {
                 x: 60,
                 y: 60,
-                width: calculateSize(editedGm).width,
-                height: calculateSize(editedGm).height
+                width: calculateBoundingBox(editedGm).width,
+                height: calculateBoundingBox(editedGm).height
             },
             (higlassInfo: HiGlassTrack[]) => {
                 setHiGlassTrackOptions(higlassInfo);
@@ -72,17 +83,20 @@ function Editor() {
         );
     }, [gm]);
 
+    /**
+     * HiGlass components to render Gemini Tracks.
+     */
     const hglass = useMemo(() => {
-        return higlassTrackOptions.map(op => (
+        return higlassTrackOptions.map(o => (
             <div
-                key={stringify(op.viewConfig)}
+                key={stringify(o.viewConfig)}
                 style={{
                     position: 'absolute',
                     display: 'block',
-                    left: op.boundingBox.x,
-                    top: op.boundingBox.y,
-                    width: op.boundingBox.width,
-                    height: op.boundingBox.height
+                    left: o.boundingBox.x,
+                    top: o.boundingBox.y,
+                    width: o.boundingBox.width,
+                    height: o.boundingBox.height
                 }}
             >
                 <HiGlassComponent
@@ -100,7 +114,7 @@ function Editor() {
                         viewPaddingRight: 0,
                         sizeMode: 'bounded'
                     }}
-                    viewConfig={op.viewConfig}
+                    viewConfig={o.viewConfig}
                 />
             </div>
         ));
@@ -126,10 +140,10 @@ function Editor() {
                     onChange={e => {
                         setEditorMode(e.target.value as any);
                     }}
-                    defaultValue={'Full Glyph Definition'}
+                    defaultValue={'Normal Mode'}
                     disabled
                 >
-                    {['Full Glyph Definition', 'Predefined Glyph'].map(d => (
+                    {['Normal Mode', 'Template-based Mode'].map(d => (
                         <option key={d} value={d}>
                             {d}
                         </option>
@@ -149,7 +163,7 @@ function Editor() {
             </div>
             <div className="editor">
                 <SplitPane className="split-pane-root" split="vertical" defaultSize="35%" onChange={undefined}>
-                    <SplitPane split="horizontal" defaultSize="50%" onChange={undefined}>
+                    <SplitPane split="horizontal" defaultSize="80%" onChange={undefined}>
                         {/* Gemini Editor */}
                         <EditorPanel
                             code={gm}

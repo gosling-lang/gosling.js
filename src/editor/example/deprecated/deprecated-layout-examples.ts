@@ -1,4 +1,4 @@
-import { GeminiSpec } from '../../core/gemini.schema';
+import { GeminiSpec } from '../../../core/gemini.schema';
 
 const MULTIVEC_FILE_CISTROME = 'https://resgen.io/api/v1/tileset_info/?d=UvVPeLHuRDiYA3qwFlm7xQ';
 

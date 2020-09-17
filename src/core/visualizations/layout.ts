@@ -5,10 +5,10 @@ import { BoundingBox } from '../utils/bounding-box';
 import { renderCircularLayout } from './layout-circular';
 import { renderLinearLayout } from './layout-linear';
 
-export const trackStyle = {
+export const TRACK_BG_STYLE = {
     background: (track: BasicSingleTrack) => track.style?.background ?? 'white',
     stroke: (track: BasicSingleTrack) => track.style?.stroke ?? '#e0e0e0',
-    strokeWidth: (track: BasicSingleTrack) => track.style?.strokeWidth ?? 1
+    strokeWidth: (track: BasicSingleTrack) => track.style?.strokeWidth ?? 0
 };
 
 export function renderLayout(

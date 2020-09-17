@@ -2,7 +2,7 @@ import Ajv from 'ajv';
 import uuid from 'uuid';
 import { HiGlassSpec, Track } from './higlass.schema';
 import HiGlassSchema from './higlass.schema.json';
-import { TOTAL_CHROM_SIZE_HG19, CHROM_RANGE_HG19 } from './utils/chrom-size';
+import { TOTAL_CHROMOSOME_SIZE_HG19, CHROMOSOME_INTERVAL_HG19 } from './utils/chrom-size';
 import { Domain, IsDomainChr, IsDomainInterval, IsDomainChrInterval, IsDomainGene } from './gemini.schema';
 
 const DEFAULT_CHROMOSOME_INFO_PATH = '//s3.amazonaws.com/pkerp/data/hg19/chromSizes.tsv';
@@ -35,8 +35,9 @@ export class HiGlassModel {
                     gallery: [],
                     whole: []
                 },
-                initialXDomain: [0, TOTAL_CHROM_SIZE_HG19],
-                initialYDomain: [0, TOTAL_CHROM_SIZE_HG19],
+                initialXDomain: [0, TOTAL_CHROMOSOME_SIZE_HG19],
+                initialYDomain: [0, TOTAL_CHROMOSOME_SIZE_HG19],
+                zoomFixed: false,
                 zoomLimits: [1, null]
             }
         ];
@@ -48,11 +49,11 @@ export class HiGlassModel {
 
     private getNumericDomain(domain: Domain) {
         if (IsDomainChr(domain)) {
-            return CHROM_RANGE_HG19[`chr${domain.chromosome}`];
+            return CHROMOSOME_INTERVAL_HG19[`chr${domain.chromosome}`];
         } else if (IsDomainInterval(domain)) {
             return domain.interval;
         } else if (IsDomainChrInterval(domain)) {
-            const chrStart = CHROM_RANGE_HG19[`chr${domain.chromosome}`][0];
+            const chrStart = CHROMOSOME_INTERVAL_HG19[`chr${domain.chromosome}`][0];
             const [start, end] = domain.interval;
             return [chrStart + start, chrStart + end];
         } else if (IsDomainGene(domain)) {
@@ -66,6 +67,14 @@ export class HiGlassModel {
         if (yDomain && this.hg.views?.[0]) {
             this.hg.views[0].initialYDomain = this.getNumericDomain(yDomain);
         }
+    }
+
+    /**
+     * Allow a zoom interaction?
+     */
+    public setZoomFixed(_?: boolean) {
+        this.hg.zoomFixed = _ !== undefined ? true : _;
+        return this;
     }
 
     private setEditable(editable: boolean | undefined) {

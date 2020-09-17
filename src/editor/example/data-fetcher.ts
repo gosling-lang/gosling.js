@@ -6,17 +6,11 @@ export const EXAMPLE_DATA_FETCHER: GeminiSpec = {
             data: {
                 url:
                     'https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/Homo_sapiens.GRCh38.92.small.csv',
+                chromosomeField: 'Chr.',
+                genomicFields: ['ISCN_start', 'ISCN_stop', 'Basepair_start', 'Basepair_stop'],
                 quantitativeFields: ['start', 'end'],
-                urlAlt:
-                    'https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/chr1_cytogenetic_band.glyph.csv',
-                quantitativeFieldsAlt: [
-                    'Band',
-                    'ISCN_start',
-                    'ISCN_stop',
-                    'Basepair_start',
-                    'Basepair_stop',
-                    'Density'
-                ],
+                urlAlt: 'https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/cytogenetic_band.csv',
+                quantitativeFieldsAlt: ['Band', 'Density'],
                 type: 'csv'
             },
             semanticZoom: {
@@ -26,7 +20,7 @@ export const EXAMPLE_DATA_FETCHER: GeminiSpec = {
                         {
                             mark: 'rect',
                             dataTransform: {
-                                filter: [{ field: 'Band', oneOf: [11, 11.1], not: true }]
+                                filter: [{ field: 'Stain', oneOf: ['acen-1', 'acen-2'], not: true }]
                             },
                             color: {
                                 field: 'Density',
@@ -45,14 +39,14 @@ export const EXAMPLE_DATA_FETCHER: GeminiSpec = {
                         {
                             mark: 'triangle-l',
                             dataTransform: {
-                                filter: [{ field: 'Band', oneOf: [11], not: false }]
+                                filter: [{ field: 'Stain', oneOf: ['acen-2'], not: false }]
                             },
                             color: { value: '#B40101' }
                         },
                         {
                             mark: 'triangle-r',
                             dataTransform: {
-                                filter: [{ field: 'Band', oneOf: [11.1], not: false }]
+                                filter: [{ field: 'Stain', oneOf: ['acen-1'], not: false }]
                             },
                             color: { value: '#B40101' }
                         }

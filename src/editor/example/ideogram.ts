@@ -1,0 +1,118 @@
+import { GeminiSpec, Track } from '../../core/gemini.schema';
+import { EXAMPLE_DATASETS } from './datasets';
+
+export const EXAMPLE_DEOGRAM_TRACK: Track = {
+    data: {
+        url: 'https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/cytogenetic_band.csv',
+        type: 'csv',
+        chromosomeField: 'Chr.',
+        genomicFields: ['ISCN_start', 'ISCN_stop', 'Basepair_start', 'Basepair_stop'],
+        quantitativeFields: ['Band', 'Density']
+    },
+    superpose: [
+        // this slows down the rendering process
+        // {
+        //     mark: 'text',
+        //     text: { field: 'Band', type: 'nominal' }
+        // },
+        {
+            mark: 'rect',
+            dataTransform: {
+                filter: [{ field: 'Stain', oneOf: ['acen-1', 'acen-2'], not: true }]
+            },
+            color: {
+                field: 'Density',
+                type: 'nominal',
+                domain: ['', '25', '50', '75', '100'],
+                range: ['white', '#D9D9D9', '#979797', '#636363', 'black']
+            }
+        },
+        {
+            mark: 'rect',
+            dataTransform: {
+                filter: [{ field: 'Stain', oneOf: ['gvar'], not: false }]
+            },
+            color: { value: '#A0A0F2' }
+        },
+        {
+            mark: 'triangle-r',
+            dataTransform: {
+                filter: [{ field: 'Stain', oneOf: ['acen-1'], not: false }]
+            },
+            color: { value: '#B40101' }
+        },
+        {
+            mark: 'triangle-l',
+            dataTransform: {
+                filter: [{ field: 'Stain', oneOf: ['acen-2'], not: false }]
+            },
+            color: { value: '#B40101' }
+        }
+    ],
+    x: { field: 'Basepair_start', type: 'genomic', domain: { chromosome: '1' } },
+    xe: { field: 'Basepair_stop', type: 'genomic' },
+    x1: { axis: true },
+    stroke: { value: 'gray' },
+    strokeWidth: { value: 0.5 },
+    width: 1000,
+    height: 60
+};
+
+export const EXAMPLE_STACKED_AREA: Track = {
+    data: {
+        url: EXAMPLE_DATASETS.multivec,
+        type: 'tileset'
+    },
+    metadata: {
+        type: 'higlass-multivec',
+        row: 'sample',
+        column: 'position',
+        value: 'peak',
+        categories: ['sample 1', 'sample 2', 'sample 3', 'sample 4']
+    },
+    mark: 'area',
+    x: {
+        field: 'position',
+        type: 'genomic',
+        domain: { chromosome: '1' }
+    },
+    x1: { axis: true },
+    y: { field: 'peak', type: 'quantitative' },
+    color: { field: 'sample', type: 'nominal' },
+    width: 1000,
+    height: 60
+};
+
+const ideogramTracks: Track[] = [];
+[
+    { chr: '1', width: 1000 },
+    { chr: '2', width: 970 },
+    { chr: '3', width: 850 },
+    { chr: '4', width: 830 },
+    { chr: '5', width: 820 },
+    // {chr: '6', width: 810},
+    // {chr: '7', width: 800},
+    // {chr: '8', width: 740},
+    { chr: '9', width: 730 }
+    // {chr: '10', width: 730},
+].map(d => {
+    ideogramTracks.push(
+        {
+            ...EXAMPLE_STACKED_AREA,
+            x: { ...EXAMPLE_STACKED_AREA.x, domain: { chromosome: d.chr } },
+            width: d.width,
+            zoomable: false
+        },
+        {
+            ...EXAMPLE_DEOGRAM_TRACK,
+            x: { ...EXAMPLE_DEOGRAM_TRACK.x, domain: { chromosome: d.chr } },
+            x1: undefined,
+            height: 24,
+            width: d.width,
+            zoomable: false
+        }
+    );
+});
+export const EXAMPLE_IDEOGRAM: GeminiSpec = {
+    tracks: ideogramTracks
+};

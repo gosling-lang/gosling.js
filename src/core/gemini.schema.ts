@@ -3,7 +3,7 @@
 
 import * as d3 from 'd3';
 import { isArray } from 'lodash';
-import { GLYPH_LOCAL_PRESET_TYPE, GLYPH_HIGLASS_PRESET_TYPE } from '../editor/example/deprecated-glyph-examples/index';
+import { GLYPH_LOCAL_PRESET_TYPE, GLYPH_HIGLASS_PRESET_TYPE } from '../editor/example/deprecated/index';
 
 export interface GeminiSpec {
     references?: string[];
@@ -32,6 +32,8 @@ export interface DataDeepGemini {
     type: 'csv';
     url: string;
     quantitativeFields?: string[];
+    chromosomeField?: string;
+    genomicFields?: string[];
 
     // being used for semantic zooming
     urlAlt?: string;
@@ -74,6 +76,7 @@ export type CustomChannel = {
 
 export interface BasicSingleTrack {
     description?: string;
+    zoomable?: boolean;
     // primitives
     data: DataDeep | Datum[];
     metadata?: DataMetadata; // we could remove this and get this information from the server

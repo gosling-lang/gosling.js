@@ -43,6 +43,7 @@ export function renderGlyph(g: d3.Selection<SVGGElement, any, any, any>, track: 
 
         // Render glyph
         const transformed_data = transformData(data, filters);
+
         // TODO: Aggregation
         if (markE === 'line') {
             g.selectAll()

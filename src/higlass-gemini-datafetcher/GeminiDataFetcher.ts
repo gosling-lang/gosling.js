@@ -1,33 +1,5 @@
 import * as d3 from 'd3-dsv';
-
-// TODO: include to the dataConfig
-const EXAMPLE_CHR_SIZES: any = {
-    chr1: 249250621,
-    chr2: 243199373,
-    chr3: 198022430,
-    chr4: 191154276,
-    chr5: 180915260,
-    chr6: 171115067,
-    chr7: 159138663,
-    chr8: 146364022,
-    chr9: 141213431,
-    chr10: 135534747,
-    chr11: 135006516,
-    chr12: 133851895,
-    chr13: 115169878,
-    chr14: 107349540,
-    chr15: 102531392,
-    chr16: 90354753,
-    chr17: 81195210,
-    chr18: 78077248,
-    chr19: 59128983,
-    chr20: 63025520,
-    chr21: 48129895,
-    chr22: 51304566,
-    chrX: 155270560,
-    chrY: 59373566,
-    chrM: 16571
-};
+import { CHROMOSOME_INTERVAL_HG19, CHROMOSOME_SIZE_HG19 } from '../core/utils/chrom-size';
 
 function GeminiDataFetcher(HGC: any, ...args: any): any {
     if (!new.target) {
@@ -64,58 +36,70 @@ function GeminiDataFetcher(HGC: any, ...args: any): any {
                 // we have raw data that we can use right away
                 this.data = dataConfig.data;
             } else {
-                this.dataPromise = this.fetchCSV(this.dataConfig.url, this.dataConfig.quantitativeFields);
+                this.dataPromise = this.fetchCSV(
+                    this.dataConfig.url,
+                    this.dataConfig.chromosomeField,
+                    this.dataConfig.genomicFields,
+                    this.dataConfig.quantitativeFields
+                );
                 if (this.dataConfig.urlAlt) {
-                    this.dataPromiseAlt = this.fetchCSV(this.dataConfig.urlAlt, this.dataConfig.quantitativeFieldsAlt);
+                    this.dataPromiseAlt = this.fetchCSV(
+                        this.dataConfig.urlAlt,
+                        this.dataConfig.chromosomeField,
+                        this.dataConfig.genomicFields,
+                        this.dataConfig.quantitativeFieldsAlt
+                    );
                 }
             }
         }
 
-        fetchCSV(url: string, qFields?: string[]) {
+        fetchCSV(url: string, chromosomeField: string, genomicFields: string[], quantitativeFields?: string[]) {
             return fetch(url)
                 .then(response => {
                     return response.ok ? response.text() : Promise.reject(response.status);
                 })
                 .then(text => {
                     return d3.csvParse(text, (row: any) => {
-                        if (!qFields) {
-                            return row;
-                        }
-                        qFields.forEach((q: string) => {
+                        genomicFields.forEach(g => {
+                            try {
+                                row[g] = CHROMOSOME_INTERVAL_HG19[`chr${row[chromosomeField]}`][0] + +row[g];
+                            } catch (e) {
+                                console.warn('[Gemini Data Fetcher] Genomic position cannot be parsed correctly.');
+                            }
+                        });
+                        quantitativeFields?.forEach(q => {
                             row[q] = +row[q];
                         });
                         return row;
                     });
                 })
                 .then(json => {
-                    // chrom sizes
-                    const cumPositions: { id: number; chr: string; pos: number }[] = [];
-                    const chromLengths: { [k: string]: number } = EXAMPLE_CHR_SIZES;
-                    const chrPositions: { [k: string]: { id: number; chr: string; pos: number } } = {};
+                    const chromosomeSizes: { [k: string]: number } = CHROMOSOME_SIZE_HG19;
+                    const chromosomeCumPositions: { id: number; chr: string; pos: number }[] = [];
+                    const chromosomePositions: { [k: string]: { id: number; chr: string; pos: number } } = {};
                     let prevEndPosition = 0;
 
-                    Object.keys(EXAMPLE_CHR_SIZES).forEach((chrStr, i) => {
+                    Object.keys(CHROMOSOME_SIZE_HG19).forEach((chrStr, i) => {
                         const positionInfo = {
                             id: i,
                             chr: chrStr,
                             pos: prevEndPosition
                         };
 
-                        cumPositions.push(positionInfo);
-                        chrPositions[chrStr] = positionInfo;
+                        chromosomeCumPositions.push(positionInfo);
+                        chromosomePositions[chrStr] = positionInfo;
 
-                        prevEndPosition += EXAMPLE_CHR_SIZES[chrStr];
+                        prevEndPosition += CHROMOSOME_SIZE_HG19[chrStr];
                     });
                     this.chromSizes = {
                         chrToAbs: (chrom: string, chromPos: number) =>
                             this.chromSizes.chrPositions[chrom].pos + chromPos,
-                        cumPositions,
-                        chrPositions,
+                        cumPositions: chromosomeCumPositions,
+                        chrPositions: chromosomePositions,
                         totalLength: prevEndPosition,
-                        chromLengths
+                        chromLengths: chromosomeSizes
                     };
 
-                    // TODO:
                     if (url === this.dataConfig.url) this.data = json;
                     else this.dataAlt = json;
                 })

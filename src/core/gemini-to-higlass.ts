@@ -71,7 +71,10 @@ export function compiler(track: Track, bb: BoundingBox): HiGlassSpec {
             //
         }
 
-        higlass.setMainTrack(hgTrack).addTrackSourceServers(server);
+        higlass
+            .setMainTrack(hgTrack)
+            .addTrackSourceServers(server)
+            .setZoomFixed(firstResolvedSpec.zoomable as undefined | boolean);
 
         const chanToPos: { [k: string]: 'left' | 'right' | 'top' | 'bottom' } = {
             x: 'bottom',
