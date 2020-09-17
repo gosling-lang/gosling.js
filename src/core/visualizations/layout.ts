@@ -8,7 +8,7 @@ import { renderLinearLayout } from './layout-linear';
 export const TRACK_BG_STYLE = {
     background: (track: BasicSingleTrack) => track.style?.background ?? 'white',
     stroke: (track: BasicSingleTrack) => track.style?.stroke ?? '#e0e0e0',
-    strokeWidth: (track: BasicSingleTrack) => track.style?.strokeWidth ?? 0
+    strokeWidth: (track: BasicSingleTrack) => track.style?.strokeWidth ?? 0.5
 };
 
 export function renderLayout(
