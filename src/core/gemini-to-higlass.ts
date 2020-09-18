@@ -19,7 +19,8 @@ export function compiler(track: Track, bb: BoundingBox): HiGlassSpec {
     if (
         IsHiGlassTrack(firstResolvedSpec) &&
         typeof firstResolvedSpec.data !== 'undefined' &&
-        IsDataDeep(firstResolvedSpec.data)
+        IsDataDeep(firstResolvedSpec.data) &&
+        firstResolvedSpec.data.url
     ) {
         const { server, tilesetUid } = parseServerAndTilesetUidFromUrl(firstResolvedSpec.data.url);
 
