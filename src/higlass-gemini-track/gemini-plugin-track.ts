@@ -18,7 +18,7 @@ function GeminiTrack(HGC: any, ...args: any[]): any {
     class GeminiTrackClass extends HGC.tracks.BarTrack {
         // TODO: change the parent class to a more generic one (e.g., TiledPixiTrack)
 
-        // Spec of Gemini track
+        // Spec of a Gemini track
         private originalSpec: Track;
 
         // deprecated
@@ -154,6 +154,9 @@ function GeminiTrack(HGC: any, ...args: any[]): any {
 
             // Single tile can contain multiple Gemini models if multiple tracks are superposed.
             tile.geminiModels = [];
+
+            // TODO: IMPORTANT: semantic zooming could be ultimately considered as superposing multiple tracks, and
+            // its visibility is determined by certain user-defined condition.
 
             // Determine whether to trigger semantic zooming.
             const semanticZoomTriggered = isSemanticZoomTriggered(this.originalSpec, tile?.tileData?.zoomLevel);

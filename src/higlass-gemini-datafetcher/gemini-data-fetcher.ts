@@ -1,6 +1,10 @@
 import * as d3 from 'd3-dsv';
 import { CHROMOSOME_INTERVAL_HG19, CHROMOSOME_SIZE_HG19 } from '../core/utils/chrom-size';
 
+// TODO: Accept multiple data infos as array, instead of having `Alt` variables.
+/**
+ * HiGlass data fetcher specific for Gemini which ultimately will accept any types of data other than CSV files.
+ */
 function GeminiDataFetcher(HGC: any, ...args: any): any {
     if (!new.target) {
         throw new Error('Uncaught TypeError: Class constructor cannot be invoked without "new"');
@@ -31,6 +35,32 @@ function GeminiDataFetcher(HGC: any, ...args: any): any {
                 console.error('Please provide the `url` of the data');
                 return;
             }
+
+            // Prepare chromosome interval information
+            const chromosomeSizes: { [k: string]: number } = CHROMOSOME_SIZE_HG19;
+            const chromosomeCumPositions: { id: number; chr: string; pos: number }[] = [];
+            const chromosomePositions: { [k: string]: { id: number; chr: string; pos: number } } = {};
+            let prevEndPosition = 0;
+
+            Object.keys(CHROMOSOME_SIZE_HG19).forEach((chrStr, i) => {
+                const positionInfo = {
+                    id: i,
+                    chr: chrStr,
+                    pos: prevEndPosition
+                };
+
+                chromosomeCumPositions.push(positionInfo);
+                chromosomePositions[chrStr] = positionInfo;
+
+                prevEndPosition += CHROMOSOME_SIZE_HG19[chrStr];
+            });
+            this.chromSizes = {
+                chrToAbs: (chrom: string, chromPos: number) => this.chromSizes.chrPositions[chrom].pos + chromPos,
+                cumPositions: chromosomeCumPositions,
+                chrPositions: chromosomePositions,
+                totalLength: prevEndPosition,
+                chromLengths: chromosomeSizes
+            };
 
             if (dataConfig.data && dataConfig.data.length !== 0) {
                 // we have raw data that we can use right away
@@ -74,37 +104,11 @@ function GeminiDataFetcher(HGC: any, ...args: any): any {
                     });
                 })
                 .then(json => {
-                    const chromosomeSizes: { [k: string]: number } = CHROMOSOME_SIZE_HG19;
-                    const chromosomeCumPositions: { id: number; chr: string; pos: number }[] = [];
-                    const chromosomePositions: { [k: string]: { id: number; chr: string; pos: number } } = {};
-                    let prevEndPosition = 0;
-
-                    Object.keys(CHROMOSOME_SIZE_HG19).forEach((chrStr, i) => {
-                        const positionInfo = {
-                            id: i,
-                            chr: chrStr,
-                            pos: prevEndPosition
-                        };
-
-                        chromosomeCumPositions.push(positionInfo);
-                        chromosomePositions[chrStr] = positionInfo;
-
-                        prevEndPosition += CHROMOSOME_SIZE_HG19[chrStr];
-                    });
-                    this.chromSizes = {
-                        chrToAbs: (chrom: string, chromPos: number) =>
-                            this.chromSizes.chrPositions[chrom].pos + chromPos,
-                        cumPositions: chromosomeCumPositions,
-                        chrPositions: chromosomePositions,
-                        totalLength: prevEndPosition,
-                        chromLengths: chromosomeSizes
-                    };
-
                     if (url === this.dataConfig.url) this.data = json;
                     else this.dataAlt = json;
                 })
                 .catch(error => {
-                    console.error('Error fetching data', error);
+                    console.error('[Gemini Data Fetcher] Error fetching data', error);
                 });
         }
 
@@ -145,7 +149,7 @@ function GeminiDataFetcher(HGC: any, ...args: any): any {
 
                     if (callback) {
                         callback({
-                            error: `Error parsing gff: ${err}`
+                            error: `[Gemini Data Fetcher] Error parsing gff: ${err}`
                         });
                     }
                 });
@@ -163,7 +167,7 @@ function GeminiDataFetcher(HGC: any, ...args: any): any {
                 const x = parseInt(parts[1], 10);
 
                 if (Number.isNaN(x) || Number.isNaN(z)) {
-                    console.warn('Invalid tile zoom or position:', z, x);
+                    console.warn('[Gemini Data Fetcher] Invalid tile zoom or position:', z, x);
                     continue;
                 }
 

@@ -30,7 +30,9 @@ export interface DataDeepTileset {
 
 export interface DataDeepGemini {
     type: 'csv';
-    url: string;
+    // TODO: Separate url and data
+    url?: string;
+    data?: { [k: string]: number | string }[];
     quantitativeFields?: string[];
     chromosomeField?: string;
     genomicFields?: string[];
@@ -147,6 +149,7 @@ export type SemanticZoom = SemanticZoomRedefinition | SemanticZoomCombined;
 
 export interface SemanticZoomRedefinition {
     type: 'alternative-encoding';
+    // TODO: consider making the spec and trigger part as an array of object
     spec: Partial<Track>;
     trigger: {
         type: 'less-than' | 'greater-than';
@@ -174,12 +177,10 @@ export const enum CHANNEL_KEYS {
     y = 'y',
     xe = 'xe',
     ye = 'ye',
-    // = '//',
     x1 = 'x1',
     y1 = 'y1',
     x1e = 'x1e',
     y1e = 'y1e',
-    // = '//',
     color = 'color',
     row = 'row',
     opacity = 'opacity',

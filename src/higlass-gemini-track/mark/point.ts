@@ -1,5 +1,5 @@
 import { GeminiTrackModel } from '../../core/gemini-track-model';
-import { IsChannelDeep, getValueUsingChannel, Channel } from '../../core/gemini.schema';
+import { getValueUsingChannel, Channel } from '../../core/gemini.schema';
 // import { RESOLUTION } from '.';
 
 export function drawPoint(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackModel) {
@@ -19,11 +19,7 @@ export function drawPoint(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMo
     const xScale = trackInfo._xScale;
 
     /* row separation */
-    const rowCategories =
-        IsChannelDeep(spec.row) && spec.row.field
-            ? Array.from(new Set(data.map(d => getValueUsingChannel(d, spec.row as Channel) as string)))
-            : ['___SINGLE_ROW___']; // if `row` is undefined, use only one row internally
-
+    const rowCategories = (tm.getChannelDomainArray('row') as string[]) ?? ['___SINGLE_ROW___']; // if `row` is undefined, use only one row internally
     const rowHeight = trackHeight / rowCategories.length;
 
     /* information for rescaling tiles */
@@ -64,9 +60,12 @@ export function drawPoint(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMo
             const size = tm.encodedValue('size', sizeValue);
             const opacity = tm.encodedValue('opacity');
 
-            // don't draw zero values
-            // TODO: this should be included in the users' spec
-            if (yValue === 0 || size === 0 || opacity === 0) return;
+            // Don't draw invisible marks
+            if (size === 0 || opacity === 0) return;
+
+            // TODO: Let users use dataTransform filter instead.
+            // Don't draw zero values
+            if (yValue === 0) return;
 
             rowGraphics.beginFill(colorToHex(color), opacity);
             rowGraphics.drawCircle(centerX, rowPosition + rowHeight - y, size);

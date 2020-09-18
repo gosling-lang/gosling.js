@@ -46,7 +46,7 @@ export function drawBar(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMode
 
     /* render */
     if (IsStackedMark(spec)) {
-        // TODO: many parts in this scope are identical as the below `else` statement, so encaptulate this?
+        // TODO: many parts in this scope are identical to the below `else` statement, so encaptulate this?
         const rowGraphics = tile.graphics; // new HGC.libraries.PIXI.Graphics(); // only one row for stacked marks
 
         const genomicChannel = tm.getGenomicChannel();
@@ -137,7 +137,9 @@ export function drawBar(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMode
                 const stroke = tm.encodedValue('stroke', strokeValue);
                 const opacity = tm.encodedValue('opacity');
 
-                // improve readability
+                // TODO: improve readability
+                // Bar size is determined by `size` channel and genomic interval values.
+                // TODO: better way to test this so that we determine this more consistently?
                 const actualBarWidth = tm.encodedValue('size') ?? (x1 ? x1 - x : barWidth);
                 const barXStart = x1 ? x + (x1 - x - actualBarWidth) / 2.0 : x - actualBarWidth / 2.0;
                 const barHeight = y - baselinePosition;

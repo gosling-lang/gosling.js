@@ -1,5 +1,5 @@
 import { GeminiTrackModel } from '../../core/gemini-track-model';
-import { IsChannelDeep, getValueUsingChannel, Channel } from '../../core/gemini.schema';
+import { getValueUsingChannel, Channel } from '../../core/gemini.schema';
 // import { RESOLUTION } from '.';
 
 export function drawRect(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackModel) {
@@ -26,21 +26,15 @@ export function drawRect(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMod
     const barWidth = xScale(tileX + tileWidth / tileSize) - xScale(tileX);
 
     /* row separation */
-    const rowCategories: string[] = (tm.getChannelDomainArray('row') as string[]) ?? ['___SINGLE_ROW___'];
-    // IsChannelDeep(spec.row) && spec.row.field
-    // ? Array.from(new Set(data.map(d => getValueUsingChannel(d, spec.row as Channel) as string)))
-    // : ['___SINGLE_ROW___']; // if `row` is undefined, use only one row internally
+    const rowCategories: string[] = (tm.getChannelDomainArray('row') as string[]) ?? ['___SINGLE_ROW___']; // if `row` is undefined, use only one row internally
     const rowHeight = trackHeight / rowCategories.length;
 
     /* information for rescaling tiles */
     tile.rowScale = tm.getChannelScale('row');
     tile.spriteInfos = []; // sprites for individual rows or columns
 
-    // TODO: what is quantitative Y field is used for heatmap?
-    const yCategories =
-        IsChannelDeep(spec.y) && spec.y.field
-            ? Array.from(new Set(data.map(d => getValueUsingChannel(d, spec.y as Channel) as string)))
-            : ['___SINGLE_Y_POSITION___']; // if `y` is undefined, use only one row internally
+    // TODO: what if quantitative Y field is used?
+    const yCategories = (tm.getChannelDomainArray('y') as string[]) ?? ['___SINGLE_Y_POSITION___']; // if `y` is undefined, use only one row internally
     const cellHeight = rowHeight / yCategories.length;
 
     /* render */

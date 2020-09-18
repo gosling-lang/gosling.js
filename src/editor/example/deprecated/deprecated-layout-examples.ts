@@ -3,6 +3,7 @@ import { GeminiSpec } from '../../../core/gemini.schema';
 const MULTIVEC_FILE_CISTROME = 'https://resgen.io/api/v1/tileset_info/?d=UvVPeLHuRDiYA3qwFlm7xQ';
 
 export const SPEC_TO_SUPPORT: GeminiSpec = {
+    // Color channel should be shared only when the data types are the same
     tracks: [
         {
             data: {

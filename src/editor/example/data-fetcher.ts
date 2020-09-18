@@ -4,14 +4,15 @@ export const EXAMPLE_DATA_FETCHER: GeminiSpec = {
     tracks: [
         {
             data: {
+                type: 'csv',
                 url:
                     'https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/Homo_sapiens.GRCh38.92.small.csv',
                 chromosomeField: 'Chr.',
                 genomicFields: ['ISCN_start', 'ISCN_stop', 'Basepair_start', 'Basepair_stop'],
                 quantitativeFields: ['start', 'end'],
+                /* TODO: add this to the semanticZoom spec below */
                 urlAlt: 'https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/cytogenetic_band.csv',
-                quantitativeFieldsAlt: ['Band', 'Density'],
-                type: 'csv'
+                quantitativeFieldsAlt: ['Band', 'Density']
             },
             semanticZoom: {
                 type: 'alternative-encoding',
@@ -61,7 +62,7 @@ export const EXAMPLE_DATA_FETCHER: GeminiSpec = {
                 },
                 trigger: {
                     type: 'less-than',
-                    condition: { zoomLevel: 9 },
+                    condition: { zoomLevel: 11 },
                     target: 'track'
                 }
             },

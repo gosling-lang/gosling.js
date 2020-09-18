@@ -21,8 +21,6 @@ import {
 import { HIGLASS_AXIS_SIZE } from './higlass-model';
 import { SUPPORTED_CHANNELS } from '../higlass-gemini-track/mark';
 
-export const TRACK_ROW_PADDING = 3;
-
 export class GeminiTrackModel {
     /* spec */
     private specOriginal: BasicSingleTrack; // original spec of users
@@ -52,13 +50,13 @@ export class GeminiTrackModel {
         SIZE: 3
     };
 
-    constructor(track: SingleTrack, data: { [k: string]: number | string }[], isAlt: boolean) {
+    constructor(track: SingleTrack, data: { [k: string]: number | string }[], isAlt?: boolean) {
         this.specOriginal = JSON.parse(JSON.stringify(track));
         this._data = JSON.parse(JSON.stringify(data));
 
         this.specComplete = JSON.parse(JSON.stringify(track));
         this.specCompleteAlt = JSON.parse(JSON.stringify(track));
-        this._isAlt = isAlt;
+        this._isAlt = isAlt ?? false;
 
         this.channelScales = {};
 
@@ -132,7 +130,11 @@ export class GeminiTrackModel {
         // zero baseline
         SUPPORTED_CHANNELS.forEach(channelKey => {
             const channel = track[channelKey];
-            if (IsChannelDeep(channel) && typeof channel.zeroBaseline === 'undefined') {
+            if (
+                IsChannelDeep(channel) &&
+                typeof channel.zeroBaseline === 'undefined' &&
+                ['x', 'y'].includes(channelKey)
+            ) {
                 channel.zeroBaseline = true;
             }
         });
@@ -215,14 +217,6 @@ export class GeminiTrackModel {
 
         // the type of channel scale is determined by a { channel type, field type } pair
         switch (channelKey) {
-            case 'color':
-            case 'stroke':
-                if (channelFieldType === 'quantitative')
-                    return (this.channelScales[channelKey] as d3.ScaleSequential<any>)(value as number);
-                if (channelFieldType === 'nominal')
-                    return (this.channelScales[channelKey] as d3.ScaleOrdinal<any, any>)(value as string);
-                /* genomic is not supported */
-                break;
             case 'x':
             case 'xe':
             case 'y':
@@ -232,10 +226,19 @@ export class GeminiTrackModel {
                 if (channelFieldType === 'nominal')
                     return (this.channelScales[channelKey] as d3.ScaleBand<any>)(value as string);
                 break;
+            case 'color':
+            case 'stroke':
+                if (channelFieldType === 'quantitative')
+                    return (this.channelScales[channelKey] as d3.ScaleSequential<any>)(value as number);
+                if (channelFieldType === 'nominal')
+                    return (this.channelScales[channelKey] as d3.ScaleOrdinal<any, any>)(value as string);
+                /* genomic is not supported */
+                break;
             case 'size':
                 if (channelFieldType === 'quantitative')
                     return (this.channelScales[channelKey] as d3.ScaleLinear<any, any>)(value as number);
-                /* nominal is not supported */
+                if (channelFieldType === 'nominal')
+                    return (this.channelScales[channelKey] as d3.ScaleOrdinal<any, any>)(value as string);
                 /* genomic is not supported */
                 break;
             case 'row':
@@ -409,7 +412,7 @@ export class GeminiTrackModel {
                                 range = [0, spec.width];
                                 break;
                             case 'y':
-                                range = [0 + TRACK_ROW_PADDING, rowHeight - TRACK_ROW_PADDING];
+                                range = [0, rowHeight];
                                 break;
                             case 'color':
                             case 'stroke':
@@ -430,6 +433,7 @@ export class GeminiTrackModel {
                         channel.domain = Array.from(new Set(data.map(d => d[channel.field as string]))) as string[];
                     }
                     if (!channel.range) {
+                        let startSize = 2;
                         let range;
                         switch (channelKey) {
                             case 'x':
@@ -437,7 +441,7 @@ export class GeminiTrackModel {
                                 range = [0, spec.width];
                                 break;
                             case 'y':
-                                range = [rowHeight - TRACK_ROW_PADDING, 0 + TRACK_ROW_PADDING]; // reversed because the origin is on the top
+                                range = [rowHeight, 0]; // reversed because the origin is on the top
                                 break;
                             case 'color':
                             case 'stroke':
@@ -445,6 +449,9 @@ export class GeminiTrackModel {
                                 break;
                             case 'row':
                                 range = [0, spec.height];
+                                break;
+                            case 'size':
+                                range = (channel.domain as number[]).map(() => startSize++);
                                 break;
                             default:
                                 console.warn(WARN_MSG(channelKey, channel.type));
@@ -508,6 +515,12 @@ export class GeminiTrackModel {
                                 .scaleBand()
                                 .domain(domain as string[])
                                 .range(range as [number, number]);
+                            break;
+                        case 'size':
+                            this.channelScales[channelKey] = d3
+                                .scaleOrdinal()
+                                .domain(domain as string[])
+                                .range(range as number[]);
                             break;
                         case 'color':
                         case 'stroke':

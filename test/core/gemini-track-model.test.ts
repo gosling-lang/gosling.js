@@ -1,4 +1,4 @@
-import { GeminiTrackModel, TRACK_ROW_PADDING } from '../../src/core/gemini-track-model';
+import { GeminiTrackModel } from '../../src/core/gemini-track-model';
 import { Track, IsChannelDeep, IsChannelValue } from '../../src/core/gemini.schema';
 import isEqual from 'lodash/isEqual';
 
@@ -118,11 +118,79 @@ describe('Gemini track model should be properly generated with data', () => {
         expect(yDomain[1]).toBe(10);
 
         // encoded value
-        expect(model.encodedValue('y', 0)).toBe(0 + TRACK_ROW_PADDING);
-        expect(model.encodedValue('y', 10)).toBe(300 / 2.0 - TRACK_ROW_PADDING); // there are two rows
+        expect(model.encodedValue('y', 0)).toBe(0);
+        expect(model.encodedValue('y', 10)).toBe(300 / 2.0); // there are two rows
         expect(model.encodedValue('size')).toBe(1);
         expect(model.encodedValue('size', 999)).toBe(1);
         expect(model.encodedValue('stroke', 999)).toBe('white');
         expect(model.encodedValue('text', 'a')).toBe('a');
+    });
+});
+
+describe('Visual marks should be correctly encoded with data', () => {
+    const data = [
+        { q: 1, n: 'a', g: 11 },
+        { q: 2, n: 'b', g: 12 },
+        { q: 3, n: 'a', g: 13 }
+    ];
+    const qExtent = [1, 3];
+    const nSize = 2;
+
+    it('Point marks', () => {
+        const size = { width: 100, height: 200 };
+        const track: Track = {
+            data: { type: 'tileset', url: 'dummy' },
+            mark: 'point',
+            x: { field: 'g', type: 'genomic' },
+            row: { field: 'n', type: 'nominal' },
+            size: { field: 'q', type: 'quantitative', range: [1, 3] },
+            text: { field: 'n', type: 'nominal' },
+            width: size.width,
+            height: size.height
+        };
+        const model = new GeminiTrackModel(track, data);
+
+        // y channel not encoded, hence middle of the height
+        expect(model.encodedValue('y', 0)).toBe(size.height / 2.0 / nSize);
+        expect(model.encodedValue('y', 3)).toBe(size.height / 2.0 / nSize);
+        expect(model.encodedValue('y', 10)).toBe(size.height / 2.0 / nSize);
+
+        // row is encoded with nominal values, so top position of each row
+        expect(model.encodedValue('row', 'a')).toBe((size.height / nSize) * 0);
+        expect(model.encodedValue('row', 'b')).toBe((size.height / nSize) * 1);
+        expect(model.encodedValue('row', 'missing')).toBeUndefined();
+
+        // size is encoded with quantitative values, so linear scale values without zero baseline
+        expect(model.encodedValue('size', 1)).toBe(1);
+        expect(model.encodedValue('size', 3)).toBe(3);
+        expect(model.encodedValue('size', 4)).toBe(4);
+        expect(model.encodedValue('size', 'missing')).toBeUndefined();
+
+        // text just returns the value, currently
+        expect(model.encodedValue('text', 'a')).toBe('a');
+        expect(model.encodedValue('text', 'b')).toBe('b');
+        expect(model.encodedValue('text', 'missing')).toBe('missing');
+
+        const track2: Track = {
+            data: { type: 'tileset', url: 'dummy' },
+            mark: 'point',
+            x: { field: 'g', type: 'genomic' },
+            y: { field: 'q', type: 'quantitative', range: [0, size.height] },
+            size: { field: 'n', type: 'nominal', range: [1, 3] },
+            width: size.width,
+            height: size.height
+        };
+        const model2 = new GeminiTrackModel(track2, data);
+
+        // y is encoded with quantitative values, hence linear scale values with zero baseline
+        expect(model2.encodedValue('y', 0)).toBe(0);
+        expect(Math.floor(model2.encodedValue('y', 1))).toBe(Math.floor(size.height / 3));
+        expect(Math.floor(model2.encodedValue('y', 2))).toBe(Math.floor((size.height / 3) * 2));
+        expect(model2.encodedValue('y', qExtent[1])).toBe(size.height);
+
+        // size is encoded with nominal values, hence ordinal scale values
+        expect(model2.encodedValue('size', 'a')).toBe(1);
+        expect(model2.encodedValue('size', 'b')).toBe(3);
+        expect(model2.encodedValue('size', 'missing')).toBe(1);
     });
 });

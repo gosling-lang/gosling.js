@@ -1,4 +1,4 @@
-// size of each chromosome
+// Size of each chromosome
 export const CHROMOSOME_SIZE_HG19: { [k: string]: number } = {
     chr1: 249250621,
     chr2: 243199373,
@@ -27,7 +27,7 @@ export const CHROMOSOME_SIZE_HG19: { [k: string]: number } = {
     chrM: 16571
 };
 
-// cumulative interval of each chromosome
+// Cumulative interval of each chromosome
 export const CHROMOSOME_INTERVAL_HG19: { [k: string]: [number, number] } = {};
 
 Object.keys(CHROMOSOME_SIZE_HG19).reduce((sum, k) => {
