@@ -89,16 +89,20 @@ export function renderBetweenLink(
         switch (getChartType(tb.track)) {
             case 'line-connection':
                 if (IsDataDeep(tb.track.data)) {
-                    d3.csv(tb.track.data.url).then(data =>
-                        renderBetweenLineLink(g, { ...tb.track, data } as BasicSingleTrack, tb.boundingBox)
-                    );
+                    if (tb.track.data.url) {
+                        d3.csv(tb.track.data.url).then(data =>
+                            renderBetweenLineLink(g, { ...tb.track, data } as BasicSingleTrack, tb.boundingBox)
+                        );
+                    }
                 }
                 break;
             case 'band-connection':
                 if (IsDataDeep(tb.track.data)) {
-                    d3.csv(tb.track.data.url).then(data =>
-                        renderBetweenBandLink(g, { ...tb.track, data } as BasicSingleTrack, tb.boundingBox)
-                    );
+                    if (tb.track.data.url) {
+                        d3.csv(tb.track.data.url).then(data =>
+                            renderBetweenBandLink(g, { ...tb.track, data } as BasicSingleTrack, tb.boundingBox)
+                        );
+                    }
                 }
                 break;
             default:
