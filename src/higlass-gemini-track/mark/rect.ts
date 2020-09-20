@@ -26,7 +26,7 @@ export function drawRect(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMod
     const barWidth = xScale(tileX + tileWidth / tileSize) - xScale(tileX);
 
     /* row separation */
-    const rowCategories: string[] = (tm.getChannelDomainArray('row') as string[]) ?? ['___SINGLE_ROW___']; // if `row` is undefined, use only one row internally
+    const rowCategories: string[] = (tm.getChannelDomainArray('row') as string[]) ?? ['___SINGLE_ROW___'];
     const rowHeight = trackHeight / rowCategories.length;
 
     /* information for rescaling tiles */
@@ -34,7 +34,7 @@ export function drawRect(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMod
     tile.spriteInfos = []; // sprites for individual rows or columns
 
     // TODO: what if quantitative Y field is used?
-    const yCategories = (tm.getChannelDomainArray('y') as string[]) ?? ['___SINGLE_Y_POSITION___']; // if `y` is undefined, use only one row internally
+    const yCategories = (tm.getChannelDomainArray('y') as string[]) ?? ['___SINGLE_Y_POSITION___'];
     const cellHeight = rowHeight / yCategories.length;
 
     /* render */

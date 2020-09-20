@@ -19,7 +19,7 @@ export function drawPoint(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMo
     const xScale = trackInfo._xScale;
 
     /* row separation */
-    const rowCategories = (tm.getChannelDomainArray('row') as string[]) ?? ['___SINGLE_ROW___']; // if `row` is undefined, use only one row internally
+    const rowCategories = (tm.getChannelDomainArray('row') as string[]) ?? ['___SINGLE_ROW___'];
     const rowHeight = trackHeight / rowCategories.length;
 
     /* information for rescaling tiles */

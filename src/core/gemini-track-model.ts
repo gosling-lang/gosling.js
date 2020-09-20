@@ -1,3 +1,6 @@
+import assign from 'lodash/assign';
+import * as d3 from 'd3';
+import { group } from 'd3-array';
 import {
     IsChannelDeep,
     ChannelDeep,
@@ -10,9 +13,6 @@ import {
     SingleTrack,
     IsDomainArray
 } from './gemini.schema';
-import assign from 'lodash/assign';
-import * as d3 from 'd3';
-import { group } from 'd3-array';
 import {
     validateTrack,
     getGenomicChannelFromTrack,
@@ -20,6 +20,13 @@ import {
 } from '../higlass-gemini-track/utils/validate';
 import { HIGLASS_AXIS_SIZE } from './higlass-model';
 import { SUPPORTED_CHANNELS } from '../higlass-gemini-track/mark';
+
+export type ScaleType =
+    | d3.ScaleLinear<any, any>
+    | d3.ScaleOrdinal<any, any>
+    | d3.ScaleBand<any>
+    | d3.ScaleSequential<any>
+    | (() => string | number); // constant value
 
 export class GeminiTrackModel {
     /* spec */
@@ -35,12 +42,7 @@ export class GeminiTrackModel {
 
     /* channel scales */
     private channelScales: {
-        [channel: string]:
-            | d3.ScaleLinear<any, any>
-            | d3.ScaleOrdinal<any, any>
-            | d3.ScaleBand<any>
-            | d3.ScaleSequential<any>
-            | (() => string | number); // constant value
+        [channel: string]: ScaleType;
     };
 
     // TODO: make mark-specific default
@@ -196,10 +198,13 @@ export class GeminiTrackModel {
     }
 
     /**
-     * With the scales already constructed, get the encoded value.
+     * Get the encoded value using the scales already constructed.
      */
     public encodedValue(channelKey: keyof typeof ChannelTypes, value?: number | string) {
-        if (channelKey === 'text') return value;
+        if (channelKey === 'text') {
+            // TODO: Textual values could be set with orginal scales as well
+            return value;
+        }
 
         const channel = this.spec()[channelKey];
         const channelFieldType = IsChannelDeep(channel)
@@ -208,18 +213,26 @@ export class GeminiTrackModel {
             ? 'constant'
             : undefined;
 
-        // DEBUG
-        // console.log(value, (this.channelScales[channelKey] as any).domain(), (this.channelScales[channelKey] as any).range(), (this.channelScales[channelKey] as any)(0));
+        if (!channelFieldType) {
+            // Shouldn't be reached. Channel should be either encoded with data or a constant value.
+            return undefined;
+        }
 
         if (channelFieldType === 'constant') {
+            // Just return the constant value.
             return (this.channelScales[channelKey] as () => number | string)();
         }
 
-        // the type of channel scale is determined by a { channel type, field type } pair
+        if (typeof value === 'undefined') {
+            // Value is undefined, so returning undefined.
+            return undefined;
+        }
+
+        // The type of a channel scale is determined by a { channel type, field type } pair
         switch (channelKey) {
             case 'x':
-            case 'xe':
             case 'y':
+            case 'xe':
             case 'ye':
                 if (channelFieldType === 'quantitative' || channelFieldType === 'genomic')
                     return (this.channelScales[channelKey] as d3.ScaleLinear<any, any>)(value as number);
@@ -248,11 +261,21 @@ export class GeminiTrackModel {
                 /* genomic is not supported */
                 break;
             case 'background':
+                // TODO:
                 break;
             default:
-                console.warn(`${channelKey} is not supported yet for encoding values, so returning a undefined value`);
+                console.warn(`${channelKey} is not supported for encoding values, so returning a undefined value`);
                 return undefined;
         }
+    }
+
+    /**
+     * Get a visual property of a visual mark considering the priority of visual channels for the certain property.
+     * For example, to determine the width of bars, `size` or `x` and `x1` can be considered.
+     */
+    public visualProperty() {
+        // additionalInfo: any // datum: { [k: string]: string | number }, // ... // propertyKey: 'width',
+        // TODO: support this
     }
 
     // TODO: better organize this, perhaps, by combining several if statements
@@ -555,6 +578,13 @@ export class GeminiTrackModel {
      */
     public getChannelScale(channelKey: keyof typeof ChannelTypes) {
         return this.channelScales[channelKey];
+    }
+
+    /**
+     * Set a new scale for a certain channel.
+     */
+    public setChannelScale(channelKey: keyof typeof ChannelTypes, scale: ScaleType) {
+        this.channelScales[channelKey] = scale;
     }
 
     /**

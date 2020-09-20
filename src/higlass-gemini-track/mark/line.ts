@@ -25,11 +25,7 @@ export function drawLine(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMod
     const xScale = trackInfo._xScale;
 
     /* row separation */
-    const rowCategories =
-        IsChannelDeep(spec.row) && spec.row.field
-            ? Array.from(new Set(data.map(d => getValueUsingChannel(d, spec.row as Channel) as string)))
-            : ['___SINGLE_ROW___']; // if `row` is undefined, use only one row internally
-
+    const rowCategories = (tm.getChannelDomainArray('row') as string[]) ?? ['___SINGLE_ROW___'];
     const rowHeight = trackHeight / rowCategories.length;
 
     /* color separation */

@@ -23,15 +23,11 @@ export function drawBar(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMode
     );
 
     /* genomic scale */
-    const xScale = trackInfo._xScale;
-    const barWidth = tm.encodedValue('size') ?? xScale(tileX + tileWidth / tileSize) - xScale(tileX);
+    const xScale = trackInfo._xScale; // TODO: replace to use the internal scale defiend in the model
+    const cellWidth = xScale(tileX + tileWidth / tileSize) - xScale(tileX);
 
     /* row separation */
-    const rowCategories =
-        IsChannelDeep(spec.row) && spec.row.field
-            ? Array.from(new Set(data.map(d => getValueUsingChannel(d, spec.row as Channel) as string)))
-            : ['___SINGLE_ROW___']; // if `row` is undefined, use only one row internally
-
+    const rowCategories = (tm.getChannelDomainArray('row') as string[]) ?? ['___SINGLE_ROW___'];
     const rowHeight = trackHeight / rowCategories.length;
 
     /* information for rescaling tiles */
@@ -43,6 +39,10 @@ export function drawBar(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMode
         tile.graphics.beginFill(colorToHex(tm.encodedValue('background')), 1);
         tile.graphics.drawRect(xScale(tileX), 0, xScale(tileX + tileWidth) - xScale(tileX), trackHeight);
     }
+
+    /* baseline */
+    const baselineValue = IsChannelDeep(spec.y) ? spec.y?.baseline : undefined;
+    const baselinePosition = tm.encodedValue('y', baselineValue) ?? 0;
 
     /* render */
     if (IsStackedMark(spec)) {
@@ -73,6 +73,7 @@ export function drawBar(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMode
                 const color = tm.encodedValue('color', colorValue);
                 const stroke = tm.encodedValue('stroke', strokeValue);
                 const opacity = tm.encodedValue('opacity');
+                const barWidth = tm.encodedValue('size') ?? cellWidth;
 
                 const actualBarWidth = tm.encodedValue('size') ?? (x1 ? x1 - x : barWidth);
                 const barStart = x1 ? x : x - actualBarWidth / 2.0;
@@ -115,10 +116,6 @@ export function drawBar(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMode
             const rowGraphics = tile.graphics; //new HGC.libraries.PIXI.Graphics();
             const rowPosition = tm.encodedValue('row', rowCategory);
 
-            // baseline
-            const baselineValue = IsChannelDeep(spec.y) ? spec.y?.baseline : undefined;
-            const baselinePosition = baselineValue ? tm.encodedValue('y', baselineValue) : 0;
-
             data.filter(
                 d =>
                     !getValueUsingChannel(d, spec.row as Channel) ||
@@ -140,8 +137,8 @@ export function drawBar(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMode
                 // TODO: improve readability
                 // Bar size is determined by `size` channel and genomic interval values.
                 // TODO: better way to test this so that we determine this more consistently?
-                const actualBarWidth = tm.encodedValue('size') ?? (x1 ? x1 - x : barWidth);
-                const barXStart = x1 ? x + (x1 - x - actualBarWidth) / 2.0 : x - actualBarWidth / 2.0;
+                const barWidth = tm.encodedValue('size') ?? (x1 ? x1 - x : cellWidth);
+                const barStartX = x1 ? x + (x1 - x - barWidth) / 2.0 : x - barWidth / 2.0;
                 const barHeight = y - baselinePosition;
 
                 // pixi
@@ -153,18 +150,18 @@ export function drawBar(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMode
                 );
                 rowGraphics.beginFill(colorToHex(color), opacity);
                 rowGraphics.drawRect(
-                    barXStart,
+                    barStartX,
                     rowPosition + rowHeight - barHeight - baselinePosition,
-                    actualBarWidth,
+                    barWidth,
                     barHeight
                 );
 
                 // svg
                 trackInfo.addSVGInfo(
                     tile,
-                    barXStart,
+                    barStartX,
                     rowPosition + rowHeight - barHeight - baselinePosition,
-                    actualBarWidth,
+                    barWidth,
                     barHeight,
                     color
                 );
