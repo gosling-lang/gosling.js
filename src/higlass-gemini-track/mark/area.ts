@@ -1,5 +1,5 @@
 import { GeminiTrackModel } from '../../core/gemini-track-model';
-import { IsChannelDeep, getValueUsingChannel, Channel, IsStackedMark } from '../../core/gemini.schema';
+import { getValueUsingChannel, Channel, IsStackedMark } from '../../core/gemini.schema';
 import * as d3 from 'd3';
 import { group } from 'd3-array';
 
@@ -23,27 +23,23 @@ export function drawArea(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMod
     const { tileX } = trackInfo.getTilePosAndDimensions(tile.tileData.zoomLevel, tile.tileData.tilePos, tileSize);
 
     /* genomic scale */
-    const xScale = trackInfo._xScale;
+    const xScale = tm.getChannelScale('x');
 
     /* row separation */
-    const rowCategories =
-        IsChannelDeep(spec.row) && spec.row.field
-            ? Array.from(new Set(data.map(d => getValueUsingChannel(d, spec.row as Channel) as string)))
-            : ['___SINGLE_ROW___']; // if `row` is undefined, use only one row internally
-
+    const rowCategories = (tm.getChannelDomainArray('row') as string[]) ?? ['___SINGLE_ROW___'];
     const rowHeight = trackHeight / rowCategories.length;
 
     /* color separation */
-    const colorCategories =
-        IsChannelDeep(spec.color) && spec.color.field
-            ? Array.from(new Set(data.map(d => getValueUsingChannel(d, spec.color as Channel) as string)))
-            : ['___SINGLE_COLOR___']; // if `color` is undefined, use only one row internally
+    const colorCategories = (tm.getChannelDomainArray('color') as string[]) ?? ['___SINGLE_COLOR___'];
 
     /* information for rescaling tiles */
     tile.rowScale = tm.getChannelScale('row');
     tile.spriteInfos = []; // sprites for individual rows or columns
 
-    const constantOpacity = tm.encodedValue('opacity');
+    /* constant values */
+    const constantOpacity = tm.visualProperty('opacity');
+    const constantStrokeWidth = tm.visualProperty('strokeWidth');
+    const constantStroke = tm.visualProperty('stroke');
 
     /* render */
     if (IsStackedMark(spec)) {
@@ -60,8 +56,8 @@ export function drawArea(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMod
 
         // stroke
         rowGraphics.lineStyle(
-            tm.encodedValue('strokeWidth'),
-            colorToHex(tm.encodedValue('stroke')),
+            constantStrokeWidth,
+            colorToHex(constantStroke),
             constantOpacity,
             1 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
         );
@@ -82,10 +78,9 @@ export function drawArea(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMod
                     ?.filter(d => getValueUsingChannel(d, spec.color as Channel) === colorCategory)
                     ?.forEach(d => {
                         const xValue = +genomicPosCategory;
-                        const yValue = getValueUsingChannel(d, spec.y as Channel) as string | number;
 
                         const x = xScale(xValue);
-                        const y = d3.max([tm.encodedValue('y', yValue), 0]); // make should not to overflow
+                        const y = d3.max([tm.visualProperty('y', d), 0]); // make should not to overflow
 
                         if (i === 0) {
                             // start position of the polygon
@@ -144,8 +139,8 @@ export function drawArea(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMod
 
             // stroke
             rowGraphics.lineStyle(
-                tm.encodedValue('strokeWidth'),
-                colorToHex(tm.encodedValue('stroke')),
+                constantStrokeWidth,
+                colorToHex(constantStroke),
                 constantOpacity,
                 1 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
             );
@@ -161,12 +156,10 @@ export function drawArea(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMod
                         (typeof getValueUsingChannel(d, spec.color as Channel) === 'undefined' ||
                             (getValueUsingChannel(d, spec.color as Channel) as string) === colorCategory)
                 ).forEach((d, i, array) => {
-                    const xValue = getValueUsingChannel(d, spec.x as Channel) as number;
-                    const yValue = getValueUsingChannel(d, spec.y as Channel) as string | number;
-
-                    // make should not to overflow; we could add this into the `encodedValue` function
-                    const x = xScale(xValue);
-                    const y = d3.min([d3.max([tm.encodedValue('y', yValue), 0]), rowHeight]);
+                    // TODO: this should be included in the `encodedValue` functions
+                    // make should not to overflow when using use-defined `domain`
+                    const y = d3.min([d3.max([tm.visualProperty('y', d), 0]), rowHeight]);
+                    const x = tm.visualProperty('x', d);
 
                     if (i === 0) {
                         // start position of the polygon

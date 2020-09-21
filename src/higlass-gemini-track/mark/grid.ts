@@ -22,7 +22,7 @@ export function drawGrid(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMod
     );
 
     /* genomic scale */
-    const xScale = trackInfo._xScale;
+    const xScale = tm.getChannelScale('x');
 
     /* row separation */
     const rowCategories: string[] = (tm.getChannelDomainArray('row') as string[]) ?? ['___SINGLE_ROW___'];
@@ -43,8 +43,7 @@ export function drawGrid(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMod
     const x1 = xScale(tileX + tileWidth);
 
     rowCategories.forEach(rowCategory => {
-        // we are separately drawing each row so that y scale can be more effectively shared across tiles without rerendering from the bottom
-        const rowGraphics = tile.graphics; // new HGC.libraries.PIXI.Graphics();
+        const rowGraphics = tile.graphics;
         const rowPosition = tm.encodedValue('row', rowCategory);
 
         yCategories.forEach(yCategory => {

@@ -14,16 +14,6 @@ export function drawRule(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMod
 
     /* track size */
     const trackHeight = trackInfo.dimensions[1];
-    // const tileSize = trackInfo.tilesetInfo.tile_size;
-    // const { tileX, tileWidth } = trackInfo.getTilePosAndDimensions(
-    //     tile.tileData.zoomLevel,
-    //     tile.tileData.tilePos,
-    //     tileSize
-    // );
-
-    /* genomic scale */
-    const xScale = trackInfo._xScale;
-    // const barWidth = xScale(tileX + tileWidth / tileSize) - xScale(tileX);
 
     /* row separation */
     const rowCategories: string[] = (tm.getChannelDomainArray('row') as string[]) ?? ['___SINGLE_ROW___'];
@@ -33,53 +23,33 @@ export function drawRule(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMod
     tile.rowScale = tm.getChannelScale('row');
     tile.spriteInfos = []; // sprites for individual rows or columns
 
-    // TODO: this should be supported
-    // const yCategories =
-    //     IsChannelDeep(spec.y) && spec.y.field
-    //         ? Array.from(new Set(data.map(d => getValueUsingChannel(d, spec.y as Channel) as string)))
-    //         : ['___SINGLE_Y_POSITION___']; // if `y` is undefined, use only one row internally
-    // const cellHeight = rowHeight / yCategories.length;
-
     /* style */
     const dashed = spec.style?.dashed;
     const linePattern = spec.style?.linePattern;
     const curved = spec.style?.curve;
 
+    /* constant values */
+    const strokeWidth = tm.visualProperty('strokeWidth');
+
     /* render */
     rowCategories.forEach(rowCategory => {
         // we are separately drawing each row so that y scale can be more effectively shared across tiles without rerendering from the bottom
-        const rowGraphics = tile.graphics; // new HGC.libraries.PIXI.Graphics();
+        const rowGraphics = tile.graphics;
         const rowPosition = tm.encodedValue('row', rowCategory);
-
-        // stroke
-        // rowGraphics.lineStyle(
-        //     tm.encodedValue('strokeWidth'),
-        //     colorToHex(tm.encodedValue('stroke')),
-        //     1, // alpha
-        //     0 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
-        // );
 
         data.filter(
             d =>
                 !getValueUsingChannel(d, spec.row as Channel) ||
                 (getValueUsingChannel(d, spec.row as Channel) as string) === rowCategory
         ).forEach(d => {
-            const xValue = getValueUsingChannel(d, spec.x as Channel) as number;
-            const xeValue = getValueUsingChannel(d, spec.xe as Channel) as number;
-            const yValue = getValueUsingChannel(d, spec.y as Channel) as string | number;
-            const colorValue = getValueUsingChannel(d, spec.color as Channel) as string;
-
-            const x = xScale(xValue);
-            const xe = xScale(xeValue);
-            const y = tm.encodedValue('y', yValue);
-
-            // const size = tm.encodedValue('size');
-            const color = tm.encodedValue('color', colorValue);
-            const opacity = tm.encodedValue('opacity');
-            // const rectHeight = size === undefined ? cellHeight : size;
+            const x = tm.visualProperty('x', d);
+            const xe = tm.visualProperty('xe', d);
+            const y = tm.visualProperty('y', d);
+            const color = tm.visualProperty('color', d);
+            const opacity = tm.visualProperty('opacity', d);
 
             rowGraphics.lineStyle(
-                tm.encodedValue('strokeWidth'),
+                strokeWidth,
                 colorToHex(color),
                 opacity, // alpha
                 0.5 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
@@ -139,21 +109,5 @@ export function drawRule(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMod
                 } while (curPos < xe);
             }
         });
-
-        // add graphics of this row
-        // const texture = HGC.services.pixiRenderer.generateTexture(
-        //     rowGraphics,
-        //     HGC.libraries.PIXI.SCALE_MODES.NEAREST,
-        //     RESOLUTION
-        // );
-        // const sprite = new HGC.libraries.PIXI.Sprite(texture);
-
-        // sprite.width = xScale(tileX + tileWidth) - xScale(tileX);
-        // sprite.x = xScale(tileX);
-        // sprite.y = rowPosition;
-        // sprite.height = rowHeight;
-
-        // tile.spriteInfos.push({ sprite: sprite, scaleKey: rowCategory });
-        // tile.graphics.addChild(sprite);
     });
 }

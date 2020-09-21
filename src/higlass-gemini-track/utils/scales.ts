@@ -53,8 +53,10 @@ export function shareScaleAcrossTracks(trackModels: GeminiTrackModel[], force?: 
     // replace the domain and update scales
     trackModels.forEach(model => {
         channelKeys.forEach(channelKey => {
+            const channel = model.spec()[channelKey];
+            if (IsChannelDeep(channel) && channel.type === 'genomic') return;
             model.setChannelDomain(channelKey, globalDomain[channelKey], force);
-            model.setChannelScalesBasedOnCompleteSpec();
+            model.generateScales();
         });
     });
 }

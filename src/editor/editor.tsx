@@ -32,7 +32,7 @@ higlassRegister({
  */
 higlassRegister({ dataFetcher: CSVDataFetcher, config: CSVDataFetcher.config }, { pluginType: 'dataFetcher' });
 
-const INIT_DEMO_INDEX = 2; // examples.length;
+const INIT_DEMO_INDEX = 0; // examples.length;
 
 /**
  * React component for editing Gemini specs

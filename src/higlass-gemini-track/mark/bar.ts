@@ -23,8 +23,8 @@ export function drawBar(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMode
     );
 
     /* genomic scale */
-    const xScale = trackInfo._xScale; // TODO: replace to use the internal scale defiend in the model
-    const cellWidth = xScale(tileX + tileWidth / tileSize) - xScale(tileX);
+    const xScale = tm.getChannelScale('x');
+    const tileUnitWidth = xScale(tileX + tileWidth / tileSize) - xScale(tileX);
 
     /* row separation */
     const rowCategories = (tm.getChannelDomainArray('row') as string[]) ?? ['___SINGLE_ROW___'];
@@ -42,7 +42,7 @@ export function drawBar(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMode
 
     /* baseline */
     const baselineValue = IsChannelDeep(spec.y) ? spec.y?.baseline : undefined;
-    const baselinePosition = tm.encodedValue('y', baselineValue) ?? 0;
+    const baselineY = tm.encodedValue('y', baselineValue) ?? 0;
 
     /* render */
     if (IsStackedMark(spec)) {
@@ -61,35 +61,24 @@ export function drawBar(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMode
         xKeys.forEach(k => {
             let prevYEnd = 0;
             pivotedData.get(k)?.forEach(d => {
-                const xValue = getValueUsingChannel(d, spec.x as Channel) as number;
-                const x1Value = getValueUsingChannel(d, spec.x1 as Channel) as number;
-                const yValue = getValueUsingChannel(d, spec.y as Channel) as string | number;
-                const colorValue = getValueUsingChannel(d, spec.color as Channel) as string;
-                const strokeValue = getValueUsingChannel(d, spec.stroke as Channel) as string;
+                const color = tm.visualProperty('color', d);
+                const stroke = tm.visualProperty('stroke', d);
+                const strokeWidth = tm.visualProperty('strokeWidth', d);
+                const opacity = tm.visualProperty('opacity', d);
+                const y = tm.visualProperty('y', d);
 
-                const x = xScale(xValue);
-                const x1 = xScale(x1Value);
-                const y = tm.encodedValue('y', yValue);
-                const color = tm.encodedValue('color', colorValue);
-                const stroke = tm.encodedValue('stroke', strokeValue);
-                const opacity = tm.encodedValue('opacity');
-                const barWidth = tm.encodedValue('size') ?? cellWidth;
-
-                const actualBarWidth = tm.encodedValue('size') ?? (x1 ? x1 - x : barWidth);
-                const barStart = x1 ? x : x - actualBarWidth / 2.0;
+                const barWidth = tm.visualProperty('width', d, { tileUnitWidth });
+                const barStartX = tm.visualProperty('x-start', d, { markWidth: barWidth });
 
                 // pixi
                 rowGraphics.lineStyle(
-                    tm.encodedValue('strokeWidth'),
+                    strokeWidth,
                     colorToHex(stroke),
                     1, // alpha
                     1 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
                 );
                 rowGraphics.beginFill(colorToHex(color), opacity);
-                rowGraphics.drawRect(barStart, rowHeight - y - prevYEnd, actualBarWidth, y);
-
-                // svg
-                trackInfo.addSVGInfo(tile, x, rowHeight - y - prevYEnd, actualBarWidth, y, color);
+                rowGraphics.drawRect(barStartX, rowHeight - y - prevYEnd, barWidth, y);
 
                 prevYEnd += y;
             });
@@ -121,50 +110,25 @@ export function drawBar(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMode
                     !getValueUsingChannel(d, spec.row as Channel) ||
                     (getValueUsingChannel(d, spec.row as Channel) as string) === rowCategory
             ).forEach(d => {
-                const xValue = getValueUsingChannel(d, spec.x as Channel) as number;
-                const x1Value = getValueUsingChannel(d, spec.x1 as Channel) as number;
-                const yValue = getValueUsingChannel(d, spec.y as Channel) as string | number;
-                const colorValue = getValueUsingChannel(d, spec.color as Channel) as string;
-                const strokeValue = getValueUsingChannel(d, spec.stroke as Channel) as string;
+                const color = tm.visualProperty('color', d);
+                const stroke = tm.visualProperty('stroke', d);
+                const strokeWidth = tm.visualProperty('strokeWidth', d);
+                const opacity = tm.visualProperty('opacity');
+                const y = tm.visualProperty('y', d); // TODO: we could even retrieve a actual y position of bars
 
-                const x = xScale(xValue);
-                const x1 = xScale(x1Value);
-                const y = tm.encodedValue('y', yValue);
-                const color = tm.encodedValue('color', colorValue);
-                const stroke = tm.encodedValue('stroke', strokeValue);
-                const opacity = tm.encodedValue('opacity');
-
-                // TODO: improve readability
-                // Bar size is determined by `size` channel and genomic interval values.
-                // TODO: better way to test this so that we determine this more consistently?
-                const barWidth = tm.encodedValue('size') ?? (x1 ? x1 - x : cellWidth);
-                const barStartX = x1 ? x + (x1 - x - barWidth) / 2.0 : x - barWidth / 2.0;
-                const barHeight = y - baselinePosition;
+                const barWidth = tm.visualProperty('width', d, { tileUnitWidth });
+                const barStartX = tm.visualProperty('x-start', d, { markWidth: barWidth });
+                const barHeight = y - baselineY;
 
                 // pixi
                 rowGraphics.lineStyle(
-                    tm.encodedValue('strokeWidth'),
+                    strokeWidth,
                     colorToHex(stroke),
                     1, // alpha
                     1 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
                 );
                 rowGraphics.beginFill(colorToHex(color), opacity);
-                rowGraphics.drawRect(
-                    barStartX,
-                    rowPosition + rowHeight - barHeight - baselinePosition,
-                    barWidth,
-                    barHeight
-                );
-
-                // svg
-                trackInfo.addSVGInfo(
-                    tile,
-                    barStartX,
-                    rowPosition + rowHeight - barHeight - baselinePosition,
-                    barWidth,
-                    barHeight,
-                    color
-                );
+                rowGraphics.drawRect(barStartX, rowPosition + rowHeight - barHeight - baselineY, barWidth, barHeight);
             });
 
             // add graphics of this row

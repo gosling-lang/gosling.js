@@ -294,9 +294,6 @@ function GeminiTrack(HGC: any, ...args: any[]): any {
                 // Construct separate gemini models for individual tiles
                 const gm = new GeminiTrackModel(spec, tile.tileData.tabularDataFiltered, false);
 
-                // Replace the scale of a genomic axis with the one that is generated in the HiGlass data fetcher.
-                gm.setChannelScale('x', tile._xScale);
-
                 // Add a track model to the tile object
                 tile.geminiModels.push(gm);
 
