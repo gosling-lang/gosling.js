@@ -1,5 +1,6 @@
 import { GeminiTrackModel } from '../../core/gemini-track-model';
 import { getValueUsingChannel, Channel } from '../../core/gemini.schema';
+import { VisualProperty } from '../../core/visual-property.schema';
 // import { RESOLUTION } from '.';
 
 export function drawPoint(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackModel) {
@@ -24,8 +25,8 @@ export function drawPoint(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMo
     tile.spriteInfos = []; // sprites for individual rows or columns
 
     /* constant values */
-    const constantStrokeWidth = tm.visualProperty('strokeWidth');
-    const constantStroke = tm.visualProperty('stroke');
+    const constantStrokeWidth = tm.encodedProperty('strokeWidth');
+    const constantStroke = tm.encodedProperty('stroke');
 
     const graphics = tile.graphics;
 
@@ -46,11 +47,11 @@ export function drawPoint(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMo
                 !getValueUsingChannel(d, spec.row as Channel) ||
                 (getValueUsingChannel(d, spec.row as Channel) as string) === rowCategory
         ).forEach(d => {
-            const cx = tm.visualProperty('x-center', d);
-            const y = tm.visualProperty('y', d);
-            const color = tm.visualProperty('color', d);
-            const size = tm.visualProperty('size', d);
-            const opacity = tm.visualProperty('opacity', d);
+            const cx = tm.encodedProperty('x-center', d);
+            const y = tm.encodedProperty('y', d);
+            const color = tm.encodedProperty('color', d);
+            const size = tm.encodedProperty('size', d);
+            const opacity = tm.encodedProperty('opacity', d);
 
             // Don't draw invisible marks
             if (size === 0 || opacity === 0) return;
@@ -62,4 +63,24 @@ export function drawPoint(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMo
         // Because simply scaling row graphics along y axis distort the shape of points, we do not convert graphics to sprites.
         // ...
     });
+}
+
+export function pointProperty(
+    gm: GeminiTrackModel,
+    propertyKey: VisualProperty,
+    datum?: { [k: string]: string | number }
+) {
+    // priority of channels
+    switch (propertyKey) {
+        case 'x-center':
+            return (
+                // (1) x + (x1 - x) / 2.0
+                gm.visualPropertyByChannel('x1', datum)
+                    ? (gm.visualPropertyByChannel('x1', datum) + gm.visualPropertyByChannel('x', datum)) / 2.0
+                    : // (2) x
+                      gm.visualPropertyByChannel('x', datum)
+            );
+        default:
+            return undefined;
+    }
 }

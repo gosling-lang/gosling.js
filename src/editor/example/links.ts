@@ -23,9 +23,10 @@ export const EXAMPLE_LINKS: GeminiSpec = {
                     x: {
                         field: 'start1',
                         type: 'genomic',
-                        domain: { chromosome: '1', interval: [19300000, 22000000] }
+                        domain: { chromosome: '1', interval: [19300000, 22000000] },
+                        axis: 'top'
                     },
-                    x1: { field: 'end1', type: 'genomic', axis: true },
+                    x1: { field: 'end1', type: 'genomic' },
                     xe: {
                         field: 'start2',
                         type: 'genomic'

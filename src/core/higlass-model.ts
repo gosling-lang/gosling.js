@@ -2,8 +2,9 @@ import Ajv from 'ajv';
 import uuid from 'uuid';
 import { HiGlassSpec, Track } from './higlass.schema';
 import HiGlassSchema from './higlass.schema.json';
-import { TOTAL_CHROMOSOME_SIZE_HG19, CHROMOSOME_INTERVAL_HG19 } from './utils/chrom-size';
-import { Domain, IsDomainChr, IsDomainInterval, IsDomainChrInterval, IsDomainGene } from './gemini.schema';
+import { TOTAL_CHROMOSOME_SIZE_HG19 } from './utils/chrom-size';
+import { Domain } from './gemini.schema';
+import { getNumericDomain } from '../higlass-gemini-track/utils/scales';
 
 const DEFAULT_CHROMOSOME_INFO_PATH = '//s3.amazonaws.com/pkerp/data/hg19/chromSizes.tsv';
 export const HIGLASS_AXIS_SIZE = 30;
@@ -47,25 +48,12 @@ export class HiGlassModel {
         return this.hg;
     }
 
-    private getNumericDomain(domain: Domain) {
-        if (IsDomainChr(domain)) {
-            return CHROMOSOME_INTERVAL_HG19[`chr${domain.chromosome}`];
-        } else if (IsDomainInterval(domain)) {
-            return domain.interval;
-        } else if (IsDomainChrInterval(domain)) {
-            const chrStart = CHROMOSOME_INTERVAL_HG19[`chr${domain.chromosome}`][0];
-            const [start, end] = domain.interval;
-            return [chrStart + start, chrStart + end];
-        } else if (IsDomainGene(domain)) {
-            // TODO: Not supported yet
-        }
-    }
     public setDomain(xDomain: Domain | undefined, yDomain: Domain | undefined) {
         if (xDomain && this.hg.views?.[0]) {
-            this.hg.views[0].initialXDomain = this.getNumericDomain(xDomain);
+            this.hg.views[0].initialXDomain = getNumericDomain(xDomain);
         }
         if (yDomain && this.hg.views?.[0]) {
-            this.hg.views[0].initialYDomain = this.getNumericDomain(yDomain);
+            this.hg.views[0].initialYDomain = getNumericDomain(yDomain);
         }
     }
 

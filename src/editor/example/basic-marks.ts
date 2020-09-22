@@ -15,13 +15,14 @@ export const EXMAPLE_BASIC_MARKS: GeminiSpec = {
                 value: 'peak',
                 categories: ['sample 1', 'sample 2', 'sample 3', 'sample 4']
             },
+            // superpose: [ { mark: 'text', text: { field: 'peak', type: 'quantitative' }, color: { value: 'white' } } ],
             mark: 'rect',
             x: {
                 field: 'position',
                 type: 'genomic',
-                domain: { chromosome: '1', interval: [1, 3000500] }
+                domain: { chromosome: '1', interval: [1, 3000500] },
+                axis: 'top'
             },
-            x1: { axis: true },
             row: { field: 'sample', type: 'nominal' },
             color: { field: 'peak', type: 'quantitative' },
             width: 1000,
@@ -43,9 +44,9 @@ export const EXMAPLE_BASIC_MARKS: GeminiSpec = {
             x: {
                 field: 'position',
                 type: 'genomic',
-                domain: { chromosome: '1', interval: [1, 3000500] }
+                domain: { chromosome: '1', interval: [1, 3000500] },
+                axis: 'top'
             },
-            x1: { axis: true },
             y: { field: 'peak', type: 'quantitative' },
             row: { field: 'sample', type: 'nominal' },
             color: { field: 'sample', type: 'nominal' },
@@ -70,9 +71,9 @@ export const EXMAPLE_BASIC_MARKS: GeminiSpec = {
             x: {
                 field: 'position',
                 type: 'genomic',
-                domain: { chromosome: '1', interval: [1, 3000500] }
+                domain: { chromosome: '1', interval: [1, 3000500] },
+                axis: 'top'
             },
-            x1: { axis: true },
             y: { field: 'peak', type: 'quantitative' },
             row: { field: 'sample', type: 'nominal' },
             color: { field: 'sample', type: 'nominal' },
@@ -97,9 +98,9 @@ export const EXMAPLE_BASIC_MARKS: GeminiSpec = {
             x: {
                 field: 'position',
                 type: 'genomic',
-                domain: { chromosome: '1', interval: [1, 3000500] }
+                domain: { chromosome: '1', interval: [1, 3000500] },
+                axis: 'top'
             },
-            x1: { axis: true },
             y: { field: 'peak', type: 'quantitative' },
             row: { field: 'sample', type: 'nominal' },
             color: { field: 'sample', type: 'nominal' },
@@ -122,9 +123,9 @@ export const EXMAPLE_BASIC_MARKS: GeminiSpec = {
             x: {
                 field: 'position',
                 type: 'genomic',
-                domain: { chromosome: '1', interval: [1, 3000500] }
+                domain: { chromosome: '1', interval: [1, 3000500] },
+                axis: 'top'
             },
-            x1: { axis: true },
             y: { field: 'peak', type: 'quantitative' },
             row: { field: 'sample', type: 'nominal' },
             size: { field: 'peak', type: 'quantitative' },

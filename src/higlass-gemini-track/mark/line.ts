@@ -63,11 +63,11 @@ export function drawLine(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMod
                         (getValueUsingChannel(d2, spec.x as Channel) as number)
                 )
                 .forEach((d, i) => {
-                    const x = tm.visualProperty('x', d);
-                    const y = tm.visualProperty('y', d);
-                    const size = tm.visualProperty('size', d);
-                    const color = tm.visualProperty('color', d); // should be identical for a single line
-                    const opacity = tm.visualProperty('opacity', d);
+                    const x = tm.encodedProperty('x', d);
+                    const y = tm.encodedProperty('y', d);
+                    const size = tm.encodedProperty('size', d);
+                    const color = tm.encodedProperty('color', d); // should be identical for a single line
+                    const opacity = tm.encodedProperty('opacity', d);
 
                     rowGraphics.lineStyle(
                         size,

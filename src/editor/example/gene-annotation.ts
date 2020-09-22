@@ -26,6 +26,23 @@ export const EXAMPLE_GENE_ANNOTATION: GeminiSpec = {
             superpose: [
                 {
                     dataTransform: {
+                        filter: [{ field: 'type', oneOf: ['gene'], not: false }]
+                    },
+                    mark: 'text',
+                    text: { field: 'name', type: 'nominal' },
+                    x: {
+                        field: 'start',
+                        type: 'genomic',
+                        domain: { chromosome: '1', interval: [3540100, 3555100] },
+                        axis: 'top'
+                    },
+                    xe: {
+                        field: 'end',
+                        type: 'genomic'
+                    }
+                },
+                {
+                    dataTransform: {
                         filter: [
                             { field: 'type', oneOf: ['gene'], not: false },
                             { field: 'strand', oneOf: ['+'], not: false }
@@ -35,7 +52,7 @@ export const EXAMPLE_GENE_ANNOTATION: GeminiSpec = {
                     x: {
                         field: 'end',
                         type: 'genomic',
-                        domain: { chromosome: '1', interval: [3540100, 3555100] }
+                        axis: 'top'
                     },
                     size: { value: 20 }
                 },
@@ -47,18 +64,21 @@ export const EXAMPLE_GENE_ANNOTATION: GeminiSpec = {
                         ]
                     },
                     mark: 'triangle-l',
-                    xe: {
+                    x: {
                         field: 'start',
-                        type: 'genomic'
+                        type: 'genomic',
+                        axis: 'top'
                     },
-                    size: { value: 20 }
+                    size: { value: 20 },
+                    style: { align: 'right' }
                 },
                 {
                     dataTransform: { filter: [{ field: 'type', oneOf: ['exon'], not: false }] },
                     mark: 'rect',
                     x: {
                         field: 'start',
-                        type: 'genomic'
+                        type: 'genomic',
+                        axis: 'top'
                     },
                     size: { value: 20 },
                     xe: {
@@ -76,7 +96,8 @@ export const EXAMPLE_GENE_ANNOTATION: GeminiSpec = {
                     mark: 'rule',
                     x: {
                         field: 'start',
-                        type: 'genomic'
+                        type: 'genomic',
+                        axis: 'top'
                     },
                     strokeWidth: { value: 3 },
                     xe: {
@@ -98,7 +119,8 @@ export const EXAMPLE_GENE_ANNOTATION: GeminiSpec = {
                     mark: 'rule',
                     x: {
                         field: 'start',
-                        type: 'genomic'
+                        type: 'genomic',
+                        axis: 'top'
                     },
                     strokeWidth: { value: 3 },
                     xe: {
@@ -111,7 +133,6 @@ export const EXAMPLE_GENE_ANNOTATION: GeminiSpec = {
                     }
                 }
             ],
-            x1: { axis: true },
             // y: { field: 'strand', type: 'nominal', domain: ['+', '-'] },
             row: { field: 'strand', type: 'nominal', domain: ['+', '-'] },
             color: { field: 'strand', type: 'nominal', domain: ['+', '-'], range: ['#7585FF', '#FF8A85'] },
@@ -142,12 +163,30 @@ export const EXAMPLE_GENE_ANNOTATION: GeminiSpec = {
             },
             superpose: [
                 {
+                    dataTransform: {
+                        filter: [{ field: 'type', oneOf: ['gene'], not: false }]
+                    },
+                    mark: 'text',
+                    text: { field: 'name', type: 'nominal' },
+                    x: {
+                        field: 'start',
+                        type: 'genomic',
+                        domain: { chromosome: '1', interval: [3540100, 3555100] },
+                        axis: 'top'
+                    },
+                    xe: {
+                        field: 'end',
+                        type: 'genomic'
+                    }
+                },
+                {
                     dataTransform: { filter: [{ field: 'type', oneOf: ['gene'], not: false }] },
                     mark: 'rect',
                     x: {
                         field: 'start',
                         type: 'genomic',
-                        domain: { chromosome: '1', interval: [3540100, 3555100] }
+                        domain: { chromosome: '1', interval: [3540100, 3555100] },
+                        axis: 'top'
                     },
                     size: { value: 20 },
                     xe: {
@@ -165,7 +204,8 @@ export const EXAMPLE_GENE_ANNOTATION: GeminiSpec = {
                     mark: 'rule',
                     x: {
                         field: 'start',
-                        type: 'genomic'
+                        type: 'genomic',
+                        axis: 'top'
                     },
                     strokeWidth: { value: 0 },
                     xe: {
@@ -188,7 +228,8 @@ export const EXAMPLE_GENE_ANNOTATION: GeminiSpec = {
                     mark: 'rule',
                     x: {
                         field: 'start',
-                        type: 'genomic'
+                        type: 'genomic',
+                        axis: 'top'
                     },
                     strokeWidth: { value: 0 },
                     xe: {
@@ -202,7 +243,6 @@ export const EXAMPLE_GENE_ANNOTATION: GeminiSpec = {
                     }
                 }
             ],
-            x1: { axis: true },
             // y: { field: 'strand', type: 'nominal' },
             row: { field: 'strand', type: 'nominal', domain: ['+', '-'] },
             color: { value: '#0900B1' },
@@ -233,6 +273,24 @@ export const EXAMPLE_GENE_ANNOTATION: GeminiSpec = {
             superpose: [
                 {
                     dataTransform: {
+                        filter: [{ field: 'type', oneOf: ['gene'], not: false }]
+                    },
+                    mark: 'text',
+                    text: { field: 'name', type: 'nominal' },
+                    x: {
+                        field: 'start',
+                        type: 'genomic',
+                        domain: { chromosome: '1', interval: [3540100, 3555100] },
+                        axis: 'top'
+                    },
+                    xe: {
+                        field: 'end',
+                        type: 'genomic'
+                    },
+                    color: { value: 'black' }
+                },
+                {
+                    dataTransform: {
                         filter: [
                             { field: 'type', oneOf: ['gene'], not: false },
                             { field: 'strand', oneOf: ['+'], not: false }
@@ -242,7 +300,8 @@ export const EXAMPLE_GENE_ANNOTATION: GeminiSpec = {
                     x: {
                         field: 'end',
                         type: 'genomic',
-                        domain: { chromosome: '1', interval: [3540100, 3555100] }
+                        domain: { chromosome: '1', interval: [3540100, 3555100] },
+                        axis: 'top'
                     },
                     color: { value: '#999999' }
                 },
@@ -254,18 +313,23 @@ export const EXAMPLE_GENE_ANNOTATION: GeminiSpec = {
                         ]
                     },
                     mark: 'triangle-l',
-                    xe: {
+                    x: {
                         field: 'start',
-                        type: 'genomic'
+                        type: 'genomic',
+                        axis: 'top'
                     },
-                    color: { value: '#999999' }
+                    color: { value: '#999999' },
+                    style: {
+                        align: 'right'
+                    }
                 },
                 {
                     dataTransform: { filter: [{ field: 'type', oneOf: ['gene'], not: false }] },
                     mark: 'rect',
                     x: {
                         field: 'start',
-                        type: 'genomic'
+                        type: 'genomic',
+                        axis: 'top'
                     },
                     xe: {
                         field: 'end',
@@ -278,7 +342,8 @@ export const EXAMPLE_GENE_ANNOTATION: GeminiSpec = {
                     mark: 'rule',
                     x: {
                         field: 'start',
-                        type: 'genomic'
+                        type: 'genomic',
+                        axis: 'top'
                     },
                     strokeWidth: { value: 5 },
                     xe: {
@@ -292,7 +357,8 @@ export const EXAMPLE_GENE_ANNOTATION: GeminiSpec = {
                     mark: 'rect',
                     x: {
                         field: 'start',
-                        type: 'genomic'
+                        type: 'genomic',
+                        axis: 'top'
                     },
                     xe: {
                         field: 'end',
@@ -303,7 +369,6 @@ export const EXAMPLE_GENE_ANNOTATION: GeminiSpec = {
                     strokeWidth: { value: 1 }
                 }
             ],
-            x1: { axis: true },
             row: { field: 'strand', type: 'nominal', domain: ['+', '-'] },
             size: { value: 17 },
             width: 1000,
@@ -332,6 +397,23 @@ export const EXAMPLE_GENE_ANNOTATION: GeminiSpec = {
             superpose: [
                 {
                     dataTransform: {
+                        filter: [{ field: 'type', oneOf: ['gene'], not: false }]
+                    },
+                    mark: 'text',
+                    text: { field: 'name', type: 'nominal' },
+                    x: {
+                        field: 'start',
+                        type: 'genomic',
+                        domain: { chromosome: '1', interval: [3540100, 3555100] },
+                        axis: 'top'
+                    },
+                    xe: {
+                        field: 'end',
+                        type: 'genomic'
+                    }
+                },
+                {
+                    dataTransform: {
                         filter: [
                             { field: 'type', oneOf: ['gene'], not: false },
                             { field: 'strand', oneOf: ['+'], not: false }
@@ -341,7 +423,8 @@ export const EXAMPLE_GENE_ANNOTATION: GeminiSpec = {
                     x: {
                         field: 'end',
                         type: 'genomic',
-                        domain: { chromosome: '1', interval: [3540100, 3555100] }
+                        domain: { chromosome: '1', interval: [3540100, 3555100] },
+                        axis: 'top'
                     },
                     size: { value: 20 }
                 },
@@ -353,18 +436,23 @@ export const EXAMPLE_GENE_ANNOTATION: GeminiSpec = {
                         ]
                     },
                     mark: 'triangle-l',
-                    xe: {
+                    x: {
                         field: 'start',
-                        type: 'genomic'
+                        type: 'genomic',
+                        axis: 'top'
                     },
-                    size: { value: 20 }
+                    size: { value: 20 },
+                    style: {
+                        align: 'right'
+                    }
                 },
                 {
                     dataTransform: { filter: [{ field: 'type', oneOf: ['exon'], not: false }] },
                     mark: 'rect',
                     x: {
                         field: 'start',
-                        type: 'genomic'
+                        type: 'genomic',
+                        axis: 'top'
                     },
                     size: { value: 10 },
                     xe: {
@@ -377,7 +465,8 @@ export const EXAMPLE_GENE_ANNOTATION: GeminiSpec = {
                     mark: 'rule',
                     x: {
                         field: 'start',
-                        type: 'genomic'
+                        type: 'genomic',
+                        axis: 'top'
                     },
                     strokeWidth: { value: 3 },
                     xe: {
@@ -392,7 +481,6 @@ export const EXAMPLE_GENE_ANNOTATION: GeminiSpec = {
                 //     ]
                 // }
             ],
-            x1: { axis: true },
             row: { field: 'strand', type: 'nominal', domain: ['+', '-'] },
             color: { field: 'strand', type: 'nominal', domain: ['+', '-'], range: ['blue', 'red'] },
             width: 1000,
@@ -420,12 +508,30 @@ export const EXAMPLE_GENE_ANNOTATION: GeminiSpec = {
             },
             superpose: [
                 {
+                    dataTransform: {
+                        filter: [{ field: 'type', oneOf: ['gene'], not: false }]
+                    },
+                    mark: 'text',
+                    text: { field: 'name', type: 'nominal' },
+                    x: {
+                        field: 'start',
+                        type: 'genomic',
+                        domain: { chromosome: '1', interval: [3540100, 3555100] },
+                        axis: 'top'
+                    },
+                    xe: {
+                        field: 'end',
+                        type: 'genomic'
+                    }
+                },
+                {
                     dataTransform: { filter: [{ field: 'type', oneOf: ['exon'], not: false }] },
                     mark: 'rect',
                     x: {
                         field: 'start',
                         type: 'genomic',
-                        domain: { chromosome: '1', interval: [3540100, 3555100] }
+                        domain: { chromosome: '1', interval: [3540100, 3555100] },
+                        axis: 'top'
                     },
                     size: { value: 10 },
                     xe: {
@@ -438,7 +544,8 @@ export const EXAMPLE_GENE_ANNOTATION: GeminiSpec = {
                     mark: 'rule',
                     x: {
                         field: 'start',
-                        type: 'genomic'
+                        type: 'genomic',
+                        axis: 'top'
                     },
                     strokeWidth: { value: 2 },
                     xe: {
@@ -450,7 +557,6 @@ export const EXAMPLE_GENE_ANNOTATION: GeminiSpec = {
                     }
                 }
             ],
-            x1: { axis: true },
             row: { field: 'strand', type: 'nominal', domain: ['+', '-'] },
             color: { value: '#B54F4A' },
             width: 1000,
@@ -478,12 +584,30 @@ export const EXAMPLE_GENE_ANNOTATION: GeminiSpec = {
             },
             superpose: [
                 {
+                    dataTransform: {
+                        filter: [{ field: 'type', oneOf: ['gene'], not: false }]
+                    },
+                    mark: 'text',
+                    text: { field: 'name', type: 'nominal' },
+                    x: {
+                        field: 'start',
+                        type: 'genomic',
+                        domain: { chromosome: '1', interval: [3540100, 3555100] },
+                        axis: 'top'
+                    },
+                    xe: {
+                        field: 'end',
+                        type: 'genomic'
+                    }
+                },
+                {
                     dataTransform: { filter: [{ field: 'type', oneOf: ['gene'], not: false }] },
                     mark: 'rect',
                     x: {
                         field: 'start',
                         type: 'genomic',
-                        domain: { chromosome: '1', interval: [3540100, 3555100] }
+                        domain: { chromosome: '1', interval: [3540100, 3555100] },
+                        axis: 'top'
                     },
                     xe: {
                         field: 'end',
@@ -497,7 +621,8 @@ export const EXAMPLE_GENE_ANNOTATION: GeminiSpec = {
                     x: {
                         field: 'start',
                         type: 'genomic',
-                        domain: { chromosome: '1', interval: [3540100, 3555100] }
+                        domain: { chromosome: '1', interval: [3540100, 3555100] },
+                        axis: 'top'
                     },
                     xe: {
                         field: 'end',
@@ -510,7 +635,8 @@ export const EXAMPLE_GENE_ANNOTATION: GeminiSpec = {
                     mark: 'rect',
                     x: {
                         field: 'start',
-                        type: 'genomic'
+                        type: 'genomic',
+                        axis: 'top'
                     },
                     xe: {
                         field: 'end',
@@ -519,7 +645,6 @@ export const EXAMPLE_GENE_ANNOTATION: GeminiSpec = {
                     color: { value: '#99FEFF' }
                 }
             ],
-            x1: { axis: true },
             size: { value: 30 },
             row: { field: 'strand', type: 'nominal', domain: ['+', '-'] },
             stroke: { value: '#777777' },

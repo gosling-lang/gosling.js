@@ -212,6 +212,6 @@ describe('The properties of visual marks should be correctly retrieved', () => {
         };
         const model = new GeminiTrackModel(track, data);
 
-        expect(model.visualProperty('x-center', { g: 11 })).toEqual(model.visualPropertyByChannel('x', { g: 11 }));
+        expect(model.encodedProperty('x-center', { g: 11 })).toEqual(model.visualPropertyByChannel('x', { g: 11 }));
     });
 });

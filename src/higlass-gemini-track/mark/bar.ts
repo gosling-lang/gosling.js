@@ -1,6 +1,7 @@
 import { GeminiTrackModel } from '../../core/gemini-track-model';
 import { IsChannelDeep, getValueUsingChannel, Channel, IsStackedMark } from '../../core/gemini.schema';
 import { group } from 'd3-array';
+import { VisualProperty } from '../../core/visual-property.schema';
 // import { RESOLUTION } from '.';
 
 export function drawBar(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackModel) {
@@ -61,14 +62,14 @@ export function drawBar(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMode
         xKeys.forEach(k => {
             let prevYEnd = 0;
             pivotedData.get(k)?.forEach(d => {
-                const color = tm.visualProperty('color', d);
-                const stroke = tm.visualProperty('stroke', d);
-                const strokeWidth = tm.visualProperty('strokeWidth', d);
-                const opacity = tm.visualProperty('opacity', d);
-                const y = tm.visualProperty('y', d);
+                const color = tm.encodedProperty('color', d);
+                const stroke = tm.encodedProperty('stroke', d);
+                const strokeWidth = tm.encodedProperty('strokeWidth', d);
+                const opacity = tm.encodedProperty('opacity', d);
+                const y = tm.encodedProperty('y', d);
 
-                const barWidth = tm.visualProperty('width', d, { tileUnitWidth });
-                const barStartX = tm.visualProperty('x-start', d, { markWidth: barWidth });
+                const barWidth = tm.encodedProperty('width', d, { tileUnitWidth });
+                const barStartX = tm.encodedProperty('x-start', d, { markWidth: barWidth });
 
                 // pixi
                 rowGraphics.lineStyle(
@@ -110,14 +111,14 @@ export function drawBar(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMode
                     !getValueUsingChannel(d, spec.row as Channel) ||
                     (getValueUsingChannel(d, spec.row as Channel) as string) === rowCategory
             ).forEach(d => {
-                const color = tm.visualProperty('color', d);
-                const stroke = tm.visualProperty('stroke', d);
-                const strokeWidth = tm.visualProperty('strokeWidth', d);
-                const opacity = tm.visualProperty('opacity');
-                const y = tm.visualProperty('y', d); // TODO: we could even retrieve a actual y position of bars
+                const color = tm.encodedProperty('color', d);
+                const stroke = tm.encodedProperty('stroke', d);
+                const strokeWidth = tm.encodedProperty('strokeWidth', d);
+                const opacity = tm.encodedProperty('opacity');
+                const y = tm.encodedProperty('y', d); // TODO: we could even retrieve a actual y position of bars
 
-                const barWidth = tm.visualProperty('width', d, { tileUnitWidth });
-                const barStartX = tm.visualProperty('x-start', d, { markWidth: barWidth });
+                const barWidth = tm.encodedProperty('width', d, { tileUnitWidth });
+                const barStartX = tm.encodedProperty('x-start', d, { markWidth: barWidth });
                 const barHeight = y - baselineY;
 
                 // pixi
@@ -147,5 +148,46 @@ export function drawBar(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMode
             // tile.spriteInfos.push({ sprite: sprite, scaleKey: rowCategory });
             // tile.graphics.addChild(sprite);
         });
+    }
+}
+
+export function barProperty(
+    gm: GeminiTrackModel,
+    propertyKey: VisualProperty,
+    datum?: { [k: string]: string | number },
+    additionalInfo?: {
+        tileUnitWidth?: number;
+        markWidth?: number;
+    }
+) {
+    // priority of channels
+    switch (propertyKey) {
+        case 'width':
+            return (
+                // (1) size
+                gm.visualPropertyByChannel('size', datum) ??
+                // (2) x1 - x
+                (gm.visualPropertyByChannel('x1', datum)
+                    ? gm.visualPropertyByChannel('x1', datum) - gm.visualPropertyByChannel('x', datum)
+                    : // (3) unit size of tile
+                      additionalInfo?.tileUnitWidth)
+            );
+        case 'x-start':
+            if (!additionalInfo?.markWidth) {
+                // `markWidth` is required
+                return;
+            }
+            return (
+                // (1) x + (x1 - x - barWidth) / 2.0
+                gm.visualPropertyByChannel('x1', datum)
+                    ? (gm.visualPropertyByChannel('x1', datum) +
+                          gm.visualPropertyByChannel('x', datum) -
+                          additionalInfo?.markWidth) /
+                          2.0
+                    : // (2) x - barWidth / 2.0
+                      gm.visualPropertyByChannel('x', datum) - additionalInfo?.markWidth / 2.0
+            );
+        default:
+            return undefined;
     }
 }

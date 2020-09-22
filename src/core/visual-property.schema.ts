@@ -8,6 +8,7 @@ export type VisualProperty =
     | 'xe' // naive xe value encoded
     | 'y' // naive y value encoded
     | 'size' // size of visual marks, such as radius of points
+    | 'text' // text annotations
     /* mark-specific visual properties */
     | 'x-center' // center x position of visual marks
     | 'x-start' // start x position of visual marks

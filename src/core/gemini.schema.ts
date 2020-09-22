@@ -129,6 +129,7 @@ export interface TrackStyle {
     dashed?: [number, number];
     linePattern?: { type: 'triangle-l' | 'triangle-r'; size: number };
     curve?: 'top' | 'bottom' | 'left' | 'right';
+    align?: 'left' | 'right';
     //
     background?: string; // deprecated
     stroke?: string; // deprecated
@@ -230,7 +231,7 @@ export interface ChannelDeep {
     range?: Range;
     baseline?: string | number;
     zeroBaseline?: boolean;
-    axis?: boolean;
+    axis?: 'top' | 'bottom' | 'left' | 'right';
     grid?: boolean;
 }
 export type FieldType = 'genomic' | 'nominal' | 'quantitative';

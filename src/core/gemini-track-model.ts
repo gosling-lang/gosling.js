@@ -1,6 +1,3 @@
-import assign from 'lodash/assign';
-import * as d3 from 'd3';
-import { group } from 'd3-array';
 import {
     IsChannelDeep,
     ChannelDeep,
@@ -14,16 +11,24 @@ import {
     IsDomainArray,
     IsShallowMark,
     getValueUsingChannel,
-    Channel
+    Channel,
+    FieldType
 } from './gemini.schema';
 import {
     validateTrack,
     getGenomicChannelFromTrack,
     getGenomicChannelKeyFromTrack
 } from '../higlass-gemini-track/utils/validate';
+import assign from 'lodash/assign';
+import * as d3 from 'd3';
+import { group } from 'd3-array';
 import { HIGLASS_AXIS_SIZE } from './higlass-model';
 import { SUPPORTED_CHANNELS } from '../higlass-gemini-track/mark';
 import { VisualProperty } from './visual-property.schema';
+import { rectProperty } from '../higlass-gemini-track/mark/rect';
+import { pointProperty } from '../higlass-gemini-track/mark/point';
+import { barProperty } from '../higlass-gemini-track/mark/bar';
+import { getNumericDomain } from '../higlass-gemini-track/utils/scales';
 
 export type ScaleType =
     | d3.ScaleLinear<any, any>
@@ -42,7 +47,8 @@ export class GeminiTrackModel {
     private _isAlt: boolean; // we could ultimately remove this
 
     /* data */
-    private _data: { [k: string]: number | string }[];
+    private dataOriginal: { [k: string]: number | string }[];
+    private dataAggregated: { [k: string]: number | string }[];
 
     /* channel scales */
     private channelScales: {
@@ -57,11 +63,13 @@ export class GeminiTrackModel {
     };
 
     constructor(spec: SingleTrack, data: { [k: string]: number | string }[], isAlt?: boolean) {
-        this.specOriginal = JSON.parse(JSON.stringify(spec));
-        this._data = JSON.parse(JSON.stringify(data));
+        this.dataOriginal = JSON.parse(JSON.stringify(data));
+        this.dataAggregated = JSON.parse(JSON.stringify(data));
 
+        this.specOriginal = JSON.parse(JSON.stringify(spec));
         this.specComplete = JSON.parse(JSON.stringify(spec));
         this.specCompleteAlt = JSON.parse(JSON.stringify(spec));
+
         this._isAlt = isAlt ?? false;
 
         this.channelScales = {};
@@ -82,16 +90,20 @@ export class GeminiTrackModel {
         }
 
         // fill missing options
-        this._generateToCompleteSpec(this.specComplete);
-        this._generateToCompleteSpec(this.specCompleteAlt);
+        this.generateCompleteSpec(this.specComplete);
+        this.generateCompleteSpec(this.specCompleteAlt);
 
+        // generate scales based on domains and ranges
         this.generateScales();
+
+        // EXPERIMENTAL: aggregate data when `aggregate` option is used
+        this.aggregateData();
 
         // Add default specs.
         // ...
 
-        /// DEBUG
-        // console.log(this.spec());
+        // DEBUG
+        // console.log('corrected track', this.spec());
     }
 
     public originalSpec(): BasicSingleTrack {
@@ -103,13 +115,13 @@ export class GeminiTrackModel {
     }
 
     public data(): { [k: string]: number | string }[] {
-        return this._data;
+        return this.dataOriginal;
     }
 
     /**
      * Fill the missing options with default values or with the values calculated based on the data.
      */
-    private _generateToCompleteSpec(spec: BasicSingleTrack) {
+    private generateCompleteSpec(spec: BasicSingleTrack) {
         if (!spec.width) {
             spec.width = 300;
         }
@@ -120,18 +132,14 @@ export class GeminiTrackModel {
         // TODO: better way to deal with axis?
         const xOrY = this.getGenomicChannelKey();
         let isAxisShown = false;
-        if (xOrY === 'x' || xOrY === 'xe' || xOrY === 'x1' || xOrY === 'x1e') {
-            isAxisShown =
-                (IsChannelDeep(spec.x1) && (spec.x1.axis as boolean)) ||
-                (IsChannelDeep(spec.x) && (spec.x.axis as boolean));
+        if (xOrY === 'x') {
+            isAxisShown = IsChannelDeep(spec.x) && spec.x.axis !== undefined;
         }
-        if (xOrY === 'y' || xOrY === 'ye' || xOrY === 'y1' || xOrY === 'y1e') {
-            isAxisShown =
-                (IsChannelDeep(spec.y1) && (spec.y1.axis as boolean)) ||
-                (IsChannelDeep(spec.y) && (spec.y.axis as boolean));
+        if (xOrY === 'y') {
+            isAxisShown = IsChannelDeep(spec.y) && spec.y.axis !== undefined;
         }
         if (xOrY && isAxisShown) {
-            const widthOrHeight = xOrY === 'x' || xOrY === 'xe' || xOrY === 'x1' || xOrY === 'x1e' ? 'height' : 'width';
+            const widthOrHeight = xOrY === 'x' ? 'height' : 'width';
             spec[widthOrHeight] = ((spec[widthOrHeight] as number) - HIGLASS_AXIS_SIZE) as number;
         }
         ///
@@ -150,9 +158,30 @@ export class GeminiTrackModel {
         });
 
         this.addScaleMaterials(spec);
+    }
 
-        // DEBUG
-        // console.log('corrected track', track);
+    /**
+     * Experimental!
+     */
+    public aggregateData() {
+        // const data = this.dataAggregated;
+        // const nominalChKey = this.getChannelKeysByType('nominal');
+        // const quantitativeChKeys = this.getChannelKeysByType('quantitative');
+    }
+
+    /**
+     *
+     */
+    public getChannelKeysByType(t: FieldType) {
+        const spec = this.spec();
+        const nKeys: string[] = [];
+        SUPPORTED_CHANNELS.forEach(d => {
+            const c = spec[d];
+            if (IsChannelDeep(c) && c.type === t) {
+                nKeys.push(d);
+            }
+        });
+        return nKeys;
     }
 
     /**
@@ -211,7 +240,7 @@ export class GeminiTrackModel {
     public encodedValue(channelKey: keyof typeof ChannelTypes, value?: number | string) {
         if (channelKey === 'text') {
             // TODO: Textual values could be set with scales as well
-            return value;
+            return `${value}`;
         }
 
         const channel = this.spec()[channelKey];
@@ -288,118 +317,34 @@ export class GeminiTrackModel {
     }
 
     /**
-     * Retrieve a visual property of a visual mark considering the priority of visual channels for the certain property.
-     * For example, to determine the width of bars, `size` or `x` and `x1` can be considered.
+     * Retrieve an encoded visual property of a visual mark.
      */
-    public visualProperty(propertyKey: VisualProperty, datum?: { [k: string]: string | number }, additionalInfo?: any) {
+    public encodedProperty(
+        propertyKey: VisualProperty,
+        datum?: { [k: string]: string | number },
+        additionalInfo?: any
+    ) {
         const mark = this.spec().mark;
 
         if (!IsShallowMark(mark)) {
-            // We do not consider deep marks, yet
+            // we do not consider deep marks, yet
             return undefined;
         }
 
         // common visual properties, not specific to visual marks
-        if (['color', 'stroke', 'opacity', 'strokeWidth', 'x', 'y', 'xe', 'size'].includes(propertyKey)) {
+        if (['text', 'color', 'stroke', 'opacity', 'strokeWidth', 'x', 'y', 'xe', 'size'].includes(propertyKey)) {
             return this.visualPropertyByChannel(propertyKey as any, datum);
         }
 
         switch (mark) {
             case 'bar':
-                return this.barProperty(propertyKey, datum, additionalInfo);
+                return barProperty(this, propertyKey, datum, additionalInfo);
             case 'point':
-                return this.pointProperty(propertyKey, datum);
+                return pointProperty(this, propertyKey, datum);
             case 'rect':
-                return this.rectProperty(propertyKey, datum, additionalInfo);
+                return rectProperty(this, propertyKey, datum, additionalInfo);
             default:
                 // Mark type that is not supported yet
-                return undefined;
-        }
-    }
-
-    // TODO: This can be moved to the individual files for marks
-    private rectProperty(
-        propertyKey: VisualProperty,
-        datum?: { [k: string]: string | number },
-        additionalInfo?: {
-            markHeight?: number;
-            markWidth?: number;
-        }
-    ) {
-        // priority of channels
-        switch (propertyKey) {
-            case 'width':
-                return (
-                    // (1) size
-                    this.visualPropertyByChannel('xe', datum)
-                        ? this.visualPropertyByChannel('xe', datum) - this.visualPropertyByChannel('x', datum)
-                        : // (2) unit mark height
-                          additionalInfo?.markWidth
-                );
-            case 'height':
-                return (
-                    // (1) size
-                    this.visualPropertyByChannel('size', datum) ??
-                    // (2) unit mark height
-                    additionalInfo?.markHeight
-                );
-            default:
-                return undefined;
-        }
-    }
-
-    private pointProperty(propertyKey: VisualProperty, datum?: { [k: string]: string | number }) {
-        // priority of channels
-        switch (propertyKey) {
-            case 'x-center':
-                return (
-                    // (1) x + (x1 - x) / 2.0
-                    this.visualPropertyByChannel('x1', datum)
-                        ? (this.visualPropertyByChannel('x1', datum) + this.visualPropertyByChannel('x', datum)) / 2.0
-                        : // (2) x
-                          this.visualPropertyByChannel('x', datum)
-                );
-            default:
-                return undefined;
-        }
-    }
-
-    private barProperty(
-        propertyKey: VisualProperty,
-        datum?: { [k: string]: string | number },
-        additionalInfo?: {
-            tileUnitWidth?: number;
-            markWidth?: number;
-        }
-    ) {
-        // priority of channels
-        switch (propertyKey) {
-            case 'width':
-                return (
-                    // (1) size
-                    this.visualPropertyByChannel('size', datum) ??
-                    // (2) x1 - x
-                    (this.visualPropertyByChannel('x1', datum)
-                        ? this.visualPropertyByChannel('x1', datum) - this.visualPropertyByChannel('x', datum)
-                        : // (3) unit size of tile
-                          additionalInfo?.tileUnitWidth)
-                );
-            case 'x-start':
-                if (!additionalInfo?.markWidth) {
-                    // `markWidth` is required
-                    return;
-                }
-                return (
-                    // (1) x + (x1 - x - barWidth) / 2.0
-                    this.visualPropertyByChannel('x1', datum)
-                        ? (this.visualPropertyByChannel('x1', datum) +
-                              this.visualPropertyByChannel('x', datum) -
-                              additionalInfo?.markWidth) /
-                              2.0
-                        : // (2) x - barWidth / 2.0
-                          this.visualPropertyByChannel('x', datum) - additionalInfo?.markWidth / 2.0
-                );
-            default:
                 return undefined;
         }
     }
@@ -422,8 +367,8 @@ export class GeminiTrackModel {
             return;
         }
 
-        const WARN_MSG = (c: string, t: string) =>
-            `The channel key and type pair {${c}, ${t}} is not supported when generating channel scales`;
+        // const WARN_MSG = (c: string, t: string) =>
+        //     `The channel key and type pair {${c}, ${t}} is not supported when generating channel scales`;
 
         SUPPORTED_CHANNELS.forEach(channelKey => {
             const channel = spec[channelKey];
@@ -489,15 +434,9 @@ export class GeminiTrackModel {
                     let value;
                     switch (channelKey) {
                         case 'x':
-                            // case 'xe':
-                            // case 'x1':
-                            // case 'x1e':
                             value = (spec.width as number) / 2.0;
                             break;
                         case 'y':
-                            // case 'ye':
-                            // case 'y1':
-                            // case 'y1e':
                             value = rowHeight / 2.0;
                             break;
                         case 'size':
@@ -534,8 +473,7 @@ export class GeminiTrackModel {
                             value = undefined;
                             break;
                         default:
-                            // console.warn(WARN_MSG(channelKey, 'value'));
-                            break;
+                        // console.warn(WARN_MSG(channelKey, 'value'));
                     }
                     if (typeof value !== 'undefined') {
                         spec[channelKey] = { value } as ChannelValue;
@@ -547,6 +485,8 @@ export class GeminiTrackModel {
                             : (d3.min(data.map(d => d[channel.field as string]) as number[]) as number);
                         const max = d3.max(data.map(d => d[channel.field as string]) as number[]) as number;
                         channel.domain = [min, max]; // TODO: what if data ranges in negative values
+                    } else if (channel.type === 'genomic' && !IsDomainArray(channel.domain)) {
+                        channel.domain = getNumericDomain(channel.domain);
                     }
 
                     if (!channel.range) {
@@ -601,7 +541,7 @@ export class GeminiTrackModel {
                                 range = (channel.domain as number[]).map(() => startSize++);
                                 break;
                             default:
-                                console.warn(WARN_MSG(channelKey, channel.type));
+                                // console.warn(WARN_MSG(channelKey, channel.type));
                                 break;
                         }
                         if (range) {
@@ -620,6 +560,10 @@ export class GeminiTrackModel {
         const spec = this.spec();
 
         SUPPORTED_CHANNELS.forEach(channelKey => {
+            if (channelKey === 'text') {
+                return;
+            }
+
             const channel = spec[channelKey];
 
             if (IsChannelValue(channel)) {
@@ -647,7 +591,7 @@ export class GeminiTrackModel {
                                 .domain(domain as [number, number]);
                             break;
                         default:
-                            console.warn('Not supported channel for calculating scales');
+                        // console.warn('Not supported channel for calculating scales');
                     }
                 } else if (channel.type === 'nominal') {
                     switch (channelKey) {
@@ -673,25 +617,12 @@ export class GeminiTrackModel {
                                 .domain(domain as string[]);
                             break;
                         default:
-                            console.warn('Not supported channel for calculating scales');
+                        // console.warn('Not supported channel for calculating scales');
                     }
                 }
             }
         });
     }
-
-    // TODO: better performance?
-    /**
-     * Update `x` or `y` scale reflecting the size changes.
-     */
-    // public setXOrYScale(xOrY: 'x' | 'y', widthOrHeight: number) {
-    // update `width` or `height` in the spec
-    // this.specOriginal[xOrY === 'x' ? 'width' : 'height'] = widthOrHeight;
-    // this.specComplete[xOrY === 'x' ? 'width' : 'height'] = widthOrHeight;
-    // this.specCompleteAlt[xOrY === 'x' ? 'width' : 'height'] = widthOrHeight;
-    // update `range` in the spec
-    // update scales with the new `range`
-    // }
 
     /**
      * Return the scale of a visual channel.

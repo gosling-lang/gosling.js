@@ -32,9 +32,10 @@ export const EXAMPLE_OVERVIEW_DEATIL: GeminiSpec = {
                     x: {
                         field: 'start1',
                         type: 'genomic',
-                        domain: { chromosome: '1', interval: [17600000, 20400000] }
+                        domain: { chromosome: '1', interval: [17600000, 20400000] },
+                        axis: 'top'
                     },
-                    x1: { field: 'end1', type: 'genomic', axis: true },
+                    x1: { field: 'end1', type: 'genomic' },
                     xe: {
                         field: 'start2',
                         type: 'genomic'
@@ -125,7 +126,8 @@ export const EXAMPLE_OVERVIEW_DEATIL: GeminiSpec = {
                     x: {
                         field: 'start',
                         type: 'genomic',
-                        domain: { chromosome: '1', interval: [3550000, 3700000] }
+                        domain: { chromosome: '1', interval: [3550000, 3700000] },
+                        axis: 'top'
                     },
                     size: { value: 10 },
                     xe: {
@@ -138,7 +140,8 @@ export const EXAMPLE_OVERVIEW_DEATIL: GeminiSpec = {
                     mark: 'rule',
                     x: {
                         field: 'start',
-                        type: 'genomic'
+                        type: 'genomic',
+                        axis: 'top'
                     },
                     strokeWidth: { value: 2 },
                     xe: {
@@ -150,7 +153,6 @@ export const EXAMPLE_OVERVIEW_DEATIL: GeminiSpec = {
                     }
                 }
             ],
-            x1: { axis: true },
             row: { field: 'strand', type: 'nominal', domain: ['+', '-'] },
             color: { value: '#B54F4A' },
             width: 500,
@@ -186,7 +188,8 @@ export const EXAMPLE_OVERVIEW_DEATIL: GeminiSpec = {
                     x: {
                         field: 'start',
                         type: 'genomic',
-                        domain: { chromosome: '2', interval: [10000000, 10400000] }
+                        domain: { chromosome: '2', interval: [10000000, 10400000] },
+                        axis: 'top'
                     },
                     size: { value: 10 },
                     xe: {
@@ -199,7 +202,8 @@ export const EXAMPLE_OVERVIEW_DEATIL: GeminiSpec = {
                     mark: 'rule',
                     x: {
                         field: 'start',
-                        type: 'genomic'
+                        type: 'genomic',
+                        axis: 'top'
                     },
                     strokeWidth: { value: 2 },
                     xe: {
@@ -211,7 +215,6 @@ export const EXAMPLE_OVERVIEW_DEATIL: GeminiSpec = {
                     }
                 }
             ],
-            x1: { axis: true },
             row: { field: 'strand', type: 'nominal', domain: ['+', '-'] },
             color: { value: '#B54F4A' },
             width: 500,

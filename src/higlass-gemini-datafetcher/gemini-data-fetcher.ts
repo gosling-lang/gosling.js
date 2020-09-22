@@ -91,10 +91,17 @@ function GeminiDataFetcher(HGC: any, ...args: any): any {
                 .then(text => {
                     return d3.csvParse(text, (row: any) => {
                         genomicFields.forEach(g => {
+                            if (!row[chromosomeField]) {
+                                // TODO:
+                                return;
+                            }
                             try {
                                 row[g] = CHROMOSOME_INTERVAL_HG19[`chr${row[chromosomeField]}`][0] + +row[g];
                             } catch (e) {
-                                console.warn('[Gemini Data Fetcher] Genomic position cannot be parsed correctly.');
+                                console.warn(
+                                    '[Gemini Data Fetcher] Genomic position cannot be parsed correctly.',
+                                    chromosomeField
+                                );
                             }
                         });
                         quantitativeFields?.forEach(q => {

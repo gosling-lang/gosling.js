@@ -37,6 +37,8 @@ function GeminiTrack(HGC: any, ...args: any[]): any {
             }
 
             this.extent = { min: Number.MAX_SAFE_INTEGER, max: Number.MIN_SAFE_INTEGER };
+
+            this.textGraphics = [];
         }
 
         initTile(tile: any) {

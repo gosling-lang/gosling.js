@@ -1,6 +1,32 @@
 import { GeminiTrackModel } from '../../core/gemini-track-model';
-import { IsChannelDeep } from '../../core/gemini.schema';
+import {
+    Domain,
+    IsChannelDeep,
+    IsDomainChr,
+    IsDomainChrInterval,
+    IsDomainGene,
+    IsDomainInterval
+} from '../../core/gemini.schema';
+import { CHROMOSOME_INTERVAL_HG19 } from '../../core/utils/chrom-size';
 import { SUPPORTED_CHANNELS } from '../mark';
+
+/**
+ * Get a numeric domain based on a domain specification.
+ * For example, domain: { chromosome: '1', interval: [1, 300,000] } => domain: [1, 300,000]
+ */
+export function getNumericDomain(domain: Domain) {
+    if (IsDomainChr(domain)) {
+        return CHROMOSOME_INTERVAL_HG19[`chr${domain.chromosome}`];
+    } else if (IsDomainInterval(domain)) {
+        return domain.interval;
+    } else if (IsDomainChrInterval(domain)) {
+        const chrStart = CHROMOSOME_INTERVAL_HG19[`chr${domain.chromosome}`][0];
+        const [start, end] = domain.interval;
+        return [chrStart + start, chrStart + end];
+    } else if (IsDomainGene(domain)) {
+        // TODO: Not supported yet
+    }
+}
 
 // TODO: this could be based on the spec (e.g., shareX: [track1, track2, ...])
 // TODO: we do not consider sharing `genomic` scales yet

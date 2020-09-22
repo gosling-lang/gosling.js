@@ -20,9 +20,9 @@ export const EXAMPLE_SEMANTIC_ZOOMING_SEQ: GeminiSpec = {
             x: {
                 field: 'position',
                 type: 'genomic',
-                domain: { chromosome: '1', interval: [3000000, 3000500] }
+                domain: { chromosome: '1', interval: [3000000, 3000500] },
+                axis: 'top'
             },
-            x1: { axis: true },
             y: { field: 'count', type: 'quantitative' },
             color: {
                 field: 'base',
@@ -60,9 +60,9 @@ export const EXAMPLE_SEMANTIC_ZOOMING_SEQ: GeminiSpec = {
             x: {
                 field: 'position',
                 type: 'genomic',
-                domain: { chromosome: '1', interval: [3000000, 3000500] }
+                domain: { chromosome: '1', interval: [3000000, 3000500] },
+                axis: 'top'
             },
-            x1: { axis: true },
             y: { field: 'count', type: 'quantitative' },
             color: {
                 field: 'base',
@@ -101,9 +101,9 @@ export const EXAMPLE_SEMANTIC_ZOOMING_SEQ: GeminiSpec = {
             x: {
                 field: 'position',
                 type: 'genomic',
-                domain: { chromosome: '1', interval: [3000000, 3000500] }
+                domain: { chromosome: '1', interval: [3000000, 3000500] },
+                axis: 'top'
             },
-            x1: { axis: true },
             y: { field: 'count', type: 'quantitative' },
             color: {
                 field: 'base',

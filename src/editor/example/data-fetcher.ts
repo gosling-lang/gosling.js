@@ -52,10 +52,10 @@ export const EXAMPLE_DATA_FETCHER: GeminiSpec = {
                             color: { value: '#B40101' }
                         }
                     ],
-                    x: { field: 'Basepair_start', type: 'genomic', domain: { chromosome: '1' } },
+                    x: { field: 'Basepair_start', type: 'genomic', domain: { chromosome: '1' }, axis: 'top' },
                     xe: { field: 'Basepair_stop', type: 'genomic' },
-                    x1: { axis: true },
                     row: { value: 0 }, // null,
+                    size: { value: 30 },
                     stroke: { value: 'black' },
                     strokeWidth: { value: 0.5 },
                     dataTransform: { filter: [] }
@@ -78,7 +78,8 @@ export const EXAMPLE_DATA_FETCHER: GeminiSpec = {
                     x: {
                         field: 'end',
                         type: 'genomic',
-                        domain: { chromosome: '1', interval: [1, 300000] }
+                        domain: { chromosome: '1', interval: [1, 300000] },
+                        axis: 'top'
                     },
                     color: { value: '#999999' }
                 },
@@ -90,18 +91,21 @@ export const EXAMPLE_DATA_FETCHER: GeminiSpec = {
                         ]
                     },
                     mark: 'triangle-l',
-                    xe: {
+                    x: {
                         field: 'start',
-                        type: 'genomic'
+                        type: 'genomic',
+                        axis: 'top'
                     },
-                    color: { value: '#999999' }
+                    color: { value: '#999999' },
+                    style: { align: 'right' }
                 },
                 {
                     dataTransform: { filter: [{ field: 'feature', oneOf: ['gene'], not: false }] },
                     mark: 'rect',
                     x: {
                         field: 'start',
-                        type: 'genomic'
+                        type: 'genomic',
+                        axis: 'top'
                     },
                     xe: {
                         field: 'end',
@@ -114,7 +118,8 @@ export const EXAMPLE_DATA_FETCHER: GeminiSpec = {
                     mark: 'rule',
                     x: {
                         field: 'start',
-                        type: 'genomic'
+                        type: 'genomic',
+                        axis: 'top'
                     },
                     strokeWidth: { value: 5 },
                     xe: {
@@ -128,7 +133,8 @@ export const EXAMPLE_DATA_FETCHER: GeminiSpec = {
                     mark: 'rect',
                     x: {
                         field: 'start',
-                        type: 'genomic'
+                        type: 'genomic',
+                        axis: 'top'
                     },
                     xe: {
                         field: 'end',
@@ -139,9 +145,8 @@ export const EXAMPLE_DATA_FETCHER: GeminiSpec = {
                     strokeWidth: { value: 1 }
                 }
             ],
-            x1: { axis: true },
             row: { field: 'strand', type: 'nominal', domain: ['+', '-'] },
-            size: { value: 17 },
+            size: { value: 15 },
             width: 1000,
             height: 60
         }

@@ -10,11 +10,14 @@ export const EXAMPLE_DEOGRAM_TRACK: Track = {
         quantitativeFields: ['Band', 'Density']
     },
     superpose: [
-        // this slows down the rendering process
-        // {
-        //     mark: 'text',
-        //     text: { field: 'Band', type: 'nominal' }
-        // },
+        {
+            mark: 'text',
+            dataTransform: {
+                filter: [{ field: 'Stain', oneOf: ['acen-1', 'acen-2'], not: true }]
+            },
+            text: { field: 'Band', type: 'nominal' },
+            color: { value: 'black' }
+        },
         {
             mark: 'rect',
             dataTransform: {
@@ -49,9 +52,8 @@ export const EXAMPLE_DEOGRAM_TRACK: Track = {
             color: { value: '#B40101' }
         }
     ],
-    x: { field: 'Basepair_start', type: 'genomic', domain: { chromosome: '1' } },
+    x: { field: 'Basepair_start', type: 'genomic', domain: { chromosome: '1' }, axis: 'top' },
     xe: { field: 'Basepair_stop', type: 'genomic' },
-    x1: { axis: true },
     stroke: { value: 'gray' },
     strokeWidth: { value: 0.5 },
     width: 1000,
@@ -74,9 +76,9 @@ export const EXAMPLE_STACKED_AREA: Track = {
     x: {
         field: 'position',
         type: 'genomic',
-        domain: { chromosome: '1' }
+        domain: { chromosome: '1' },
+        axis: 'top'
     },
-    x1: { axis: true },
     y: { field: 'peak', type: 'quantitative' },
     color: { field: 'sample', type: 'nominal' },
     width: 1000,
@@ -90,11 +92,7 @@ const ideogramTracks: Track[] = [];
     { chr: '3', width: 850 },
     { chr: '4', width: 830 },
     { chr: '5', width: 820 },
-    // {chr: '6', width: 810},
-    // {chr: '7', width: 800},
-    // {chr: '8', width: 740},
     { chr: '9', width: 730 }
-    // {chr: '10', width: 730},
 ].map(d => {
     ideogramTracks.push(
         {
@@ -105,8 +103,7 @@ const ideogramTracks: Track[] = [];
         },
         {
             ...EXAMPLE_DEOGRAM_TRACK,
-            x: { ...EXAMPLE_DEOGRAM_TRACK.x, domain: { chromosome: d.chr } },
-            x1: undefined,
+            x: { ...EXAMPLE_DEOGRAM_TRACK.x, domain: { chromosome: d.chr }, axis: undefined },
             height: 24,
             width: d.width,
             zoomable: false

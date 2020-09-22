@@ -74,12 +74,18 @@ export function drawTriangle(HGC: any, trackInfo: any, tile: any, tm: GeminiTrac
             const color = tm.encodedValue('color', colorValue);
             const opacity = tm.encodedValue('opacity');
 
-            const x0 = x ? x : xe - markWidth;
-            const x1 = xe ? xe : x + markWidth;
-            const xm = x0 + (x1 - x0) / 2.0;
+            let x0 = x ? x : xe - markWidth;
+            let x1 = xe ? xe : x + markWidth;
+            let xm = x0 + (x1 - x0) / 2.0;
             const ym = rowPosition + y;
             const y0 = rowPosition + y - triHeight / 2.0;
             const y1 = rowPosition + y + triHeight / 2.0;
+
+            if (spec.style?.align === 'right' && !xe) {
+                x0 -= markWidth;
+                x1 -= markWidth;
+                xm -= markWidth;
+            }
 
             const markToPoints = {
                 'triangle-l': [x1, y0, x0, ym, x1, y1, x1, y0],

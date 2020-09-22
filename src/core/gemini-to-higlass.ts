@@ -38,13 +38,11 @@ export function compiler(track: Track, bb: BoundingBox): HiGlassSpec {
         let isAxisShown = false;
         if (isXGenomic) {
             isAxisShown =
-                (IsChannelDeep(firstResolvedSpec.x1) && (firstResolvedSpec.x1.axis as boolean)) ||
-                (IsChannelDeep(firstResolvedSpec.x) && (firstResolvedSpec.x.axis as boolean));
+                IsChannelDeep(firstResolvedSpec.x) && ['top', 'bottom'].includes(firstResolvedSpec.x.axis as any);
         }
         if (isYGenomic) {
             isAxisShown =
-                (IsChannelDeep(firstResolvedSpec.y1) && (firstResolvedSpec.y1.axis as boolean)) ||
-                (IsChannelDeep(firstResolvedSpec.y) && (firstResolvedSpec.y.axis as boolean));
+                IsChannelDeep(firstResolvedSpec.y) && ['left', 'right'].includes(firstResolvedSpec.y.axis as any);
         }
         ///
 
@@ -77,17 +75,10 @@ export function compiler(track: Track, bb: BoundingBox): HiGlassSpec {
             .addTrackSourceServers(server)
             .setZoomFixed(firstResolvedSpec.zoomable as undefined | boolean);
 
-        const chanToPos: { [k: string]: 'left' | 'right' | 'top' | 'bottom' } = {
-            x: 'bottom',
-            x1: 'top',
-            y: 'left',
-            y1: 'right'
-        };
-
-        Object.keys(chanToPos).forEach(c => {
-            const channelDef = (firstResolvedSpec as any)[c];
-            if (IsChannelDeep(channelDef) && channelDef.axis) {
-                higlass.setAxisTrack(chanToPos[c]);
+        ['x', 'y'].forEach(c => {
+            const channel = (firstResolvedSpec as any)[c];
+            if (IsChannelDeep(channel) && channel.axis) {
+                higlass.setAxisTrack(channel.axis);
             }
         });
 

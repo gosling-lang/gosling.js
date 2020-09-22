@@ -1,5 +1,6 @@
 import { GeminiTrackModel } from '../../core/gemini-track-model';
 import { getValueUsingChannel, Channel } from '../../core/gemini.schema';
+import { VisualProperty } from '../../core/visual-property.schema';
 // import { RESOLUTION } from '.';
 
 export function drawRect(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackModel) {
@@ -38,7 +39,7 @@ export function drawRect(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMod
     const cellHeight = rowHeight / yCategories.length;
 
     /* constant values */
-    const strokeWidth = tm.visualProperty('strokeWidth');
+    const strokeWidth = tm.encodedProperty('strokeWidth');
     const stroke = tm.encodedValue('stroke');
 
     /* render */
@@ -60,12 +61,12 @@ export function drawRect(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMod
                 !getValueUsingChannel(d, spec.row as Channel) ||
                 (getValueUsingChannel(d, spec.row as Channel) as string) === rowCategory
         ).forEach(d => {
-            const x = tm.visualProperty('x', d);
-            const y = tm.visualProperty('y', d);
-            const color = tm.visualProperty('color', d);
-            const opacity = tm.visualProperty('opacity', d);
-            const rectWidth = tm.visualProperty('width', d, { markWidth: tileUnitWidth });
-            const rectHeight = tm.visualProperty('height', d, { markHeight: cellHeight });
+            const x = tm.encodedProperty('x', d);
+            const y = tm.encodedProperty('y', d);
+            const color = tm.encodedProperty('color', d);
+            const opacity = tm.encodedProperty('opacity', d);
+            const rectWidth = tm.encodedProperty('width', d, { markWidth: tileUnitWidth });
+            const rectHeight = tm.encodedProperty('height', d, { markHeight: cellHeight });
 
             rowGraphics.beginFill(colorToHex(color), opacity);
             rowGraphics.drawRect(x, rowPosition + y - rectHeight / 2.0, rectWidth, rectHeight);
@@ -87,4 +88,34 @@ export function drawRect(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMod
         // tile.spriteInfos.push({ sprite: sprite, scaleKey: rowCategory });
         // tile.graphics.addChild(sprite);
     });
+}
+
+export function rectProperty(
+    gm: GeminiTrackModel,
+    propertyKey: VisualProperty,
+    datum?: { [k: string]: string | number },
+    additionalInfo?: {
+        markHeight?: number;
+        markWidth?: number;
+    }
+) {
+    switch (propertyKey) {
+        case 'width':
+            return (
+                // (1) size
+                gm.visualPropertyByChannel('xe', datum)
+                    ? gm.visualPropertyByChannel('xe', datum) - gm.visualPropertyByChannel('x', datum)
+                    : // (2) unit mark height
+                      additionalInfo?.markWidth
+            );
+        case 'height':
+            return (
+                // (1) size
+                gm.visualPropertyByChannel('size', datum) ??
+                // (2) unit mark height
+                additionalInfo?.markHeight
+            );
+        default:
+            return undefined;
+    }
 }
