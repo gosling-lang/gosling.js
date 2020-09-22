@@ -61,7 +61,7 @@ export const EXAMPLE_DATA_FETCHER: GeminiSpec = {
                     dataTransform: { filter: [] }
                 },
                 trigger: {
-                    type: 'less-than',
+                    operation: 'less-than',
                     condition: { zoomLevel: 11 },
                     target: 'track'
                 }

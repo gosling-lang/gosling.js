@@ -31,9 +31,9 @@ export const SPEC_TO_SUPPORT: GeminiSpec = {
             x: {
                 field: 'position',
                 type: 'genomic',
-                domain: { chromosome: '1', interval: [1, 3000500] }
+                domain: { chromosome: '1', interval: [1, 3000500] },
+                axis: 'top'
             },
-            x1: { axis: true },
             y: { field: 'peak', type: 'quantitative' },
             row: { field: 'sample', type: 'nominal' },
             width: 1000,
@@ -210,9 +210,9 @@ export const LAYOUT_EXAMPLE_COMBO_BAND: GeminiSpec = {
             x: {
                 field: 'position',
                 type: 'genomic',
-                domain: { chromosome: '1', interval: [1, 3000500] }
+                domain: { chromosome: '1', interval: [1, 3000500] },
+                axis: 'top'
             },
-            x1: { axis: true },
             y: { field: 'sample', type: 'nominal' },
             color: { field: 'peak', type: 'quantitative' },
             width: 800,
@@ -234,9 +234,9 @@ export const LAYOUT_EXAMPLE_COMBO_BAND: GeminiSpec = {
             x: {
                 field: 'position',
                 type: 'genomic',
-                domain: { chromosome: '1', interval: [1, 3000500] }
+                domain: { chromosome: '1', interval: [1, 3000500] },
+                axis: 'top'
             },
-            x1: { axis: true },
             y: { field: 'peak', type: 'quantitative' },
             row: { field: 'sample', type: 'nominal' },
             color: { field: 'sample', type: 'nominal' },
@@ -301,9 +301,9 @@ export const LAYOUT_EXAMPLE_COMBO_BAND: GeminiSpec = {
             x: {
                 field: 'position',
                 type: 'genomic',
-                domain: { chromosome: '1', interval: [1, 3000500] }
+                domain: { chromosome: '1', interval: [1, 3000500] },
+                axis: 'top'
             },
-            x1: { axis: true },
             y: { field: 'peak', type: 'quantitative' },
             row: { field: 'sample', type: 'nominal' },
             color: { field: 'sample', type: 'nominal' },
@@ -326,9 +326,9 @@ export const LAYOUT_EXAMPLE_COMBO_BAND: GeminiSpec = {
             x: {
                 field: 'position',
                 type: 'genomic',
-                domain: { chromosome: '1', interval: [1, 3000500] }
+                domain: { chromosome: '1', interval: [1, 3000500] },
+                axis: 'top'
             },
-            x1: { axis: true },
             y: { field: 'peak', type: 'quantitative' },
             row: { field: 'sample', type: 'nominal' },
             color: { field: 'sample', type: 'nominal' },

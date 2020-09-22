@@ -113,13 +113,18 @@ function GeminiTrack(HGC: any, ...args: any[]): any {
 
             const isNotMaxZoomLevel = tile?.tileData?.zoomLevel !== getMaxZoomLevel();
 
-            tile.geminiModels.forEach((gm: GeminiTrackModel) => {
-                if (isNotMaxZoomLevel && gm.spec().semanticZoom?.type === 'hide') {
+            tile.geminiModels.forEach((tm: GeminiTrackModel) => {
+                if (isNotMaxZoomLevel && tm.spec().semanticZoom?.type === 'hide') {
                     drawZoomInstruction(HGC, this);
                     return;
                 }
 
-                drawMark(HGC, this, tile, gm);
+                if (!tm.trackVisibility({ zoomLevel: tile?.tileData?.zoomLevel })) {
+                    // check visibility condition
+                    return;
+                }
+
+                drawMark(HGC, this, tile, tm);
             });
         }
 
@@ -195,10 +200,13 @@ function GeminiTrack(HGC: any, ...args: any[]): any {
                         const numOfTotalCategories = tile.tileData.shape[0];
                         const numericValues = tile.tileData.dense;
                         const numOfGenomicPositions = tile.tileData.shape[1];
+                        const tileUnitSize = tileWidth / tileSize;
 
                         const rowName = spec.metadata.row;
                         const valueName = spec.metadata.value;
                         const columnName = spec.metadata.column;
+                        const startName = spec.metadata.start ?? 'start';
+                        const endName = spec.metadata.end ?? 'end';
                         const categories: any = spec.metadata.categories ?? [...Array(numOfTotalCategories).keys()]; // TODO:
 
                         const tabularData: { [k: string]: number | string }[] = [];
@@ -209,7 +217,9 @@ function GeminiTrack(HGC: any, ...args: any[]): any {
                                 tabularData.push({
                                     [rowName]: c,
                                     [valueName]: numericValues[numOfGenomicPositions * i + j],
-                                    [columnName]: tileX + j * (tileWidth / tileSize)
+                                    [columnName]: tileX + (j + 0.5) * tileUnitSize,
+                                    [startName]: tileX + j * tileUnitSize,
+                                    [endName]: tileX + (j + 1) * tileUnitSize
                                 });
                             });
                         });

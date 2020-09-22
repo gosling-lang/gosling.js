@@ -160,33 +160,18 @@ export function barProperty(
         markWidth?: number;
     }
 ) {
-    // priority of channels
+    const x = gm.visualPropertyByChannel('x', datum);
+    const xe = gm.visualPropertyByChannel('xe', datum);
+    const size = gm.visualPropertyByChannel('size', datum);
     switch (propertyKey) {
         case 'width':
-            return (
-                // (1) size
-                gm.visualPropertyByChannel('size', datum) ??
-                // (2) x1 - x
-                (gm.visualPropertyByChannel('x1', datum)
-                    ? gm.visualPropertyByChannel('x1', datum) - gm.visualPropertyByChannel('x', datum)
-                    : // (3) unit size of tile
-                      additionalInfo?.tileUnitWidth)
-            );
+            return size ?? (xe ? xe - x : additionalInfo?.tileUnitWidth);
         case 'x-start':
             if (!additionalInfo?.markWidth) {
                 // `markWidth` is required
-                return;
+                return undefined;
             }
-            return (
-                // (1) x + (x1 - x - barWidth) / 2.0
-                gm.visualPropertyByChannel('x1', datum)
-                    ? (gm.visualPropertyByChannel('x1', datum) +
-                          gm.visualPropertyByChannel('x', datum) -
-                          additionalInfo?.markWidth) /
-                          2.0
-                    : // (2) x - barWidth / 2.0
-                      gm.visualPropertyByChannel('x', datum) - additionalInfo?.markWidth / 2.0
-            );
+            return xe ? (x + xe - additionalInfo?.markWidth) / 2.0 : x - additionalInfo?.markWidth / 2.0;
         default:
             return undefined;
     }

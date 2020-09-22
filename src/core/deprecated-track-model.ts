@@ -202,22 +202,24 @@ export class TrackModel {
             if (field) {
                 return datum[field];
             }
-        } else if (c === 'w') {
-            if (
-                this.scales['x'] &&
-                IsChannelDeep(this.track.x) &&
-                IsChannelDeep(this.track.xe) &&
-                element.x !== 'none' &&
-                element.xe !== 'none'
-            ) {
-                const altSize = Math.abs(
-                    (datum[this.getFieldByChannel('xe')] as number) - (datum[this.getFieldByChannel('x')] as number)
-                );
-                return this.scales['x'](altSize);
-            } else {
-                return this.getEncoding(element, 'size', datum);
-            }
-        } else {
+        }
+        // else if (/*c === 'w' */ false) {
+        //     if (
+        //         this.scales['x'] &&
+        //         IsChannelDeep(this.track.x) &&
+        //         IsChannelDeep(this.track.xe) &&
+        //         element.x !== 'none' &&
+        //         element.xe !== 'none'
+        //     ) {
+        //         const altSize = Math.abs(
+        //             (datum[this.getFieldByChannel('xe')] as number) - (datum[this.getFieldByChannel('x')] as number)
+        //         );
+        //         return this.scales['x'](altSize);
+        //     } else {
+        //         return this.getEncoding(element, 'size', datum);
+        //     }
+        // }
+        else {
             // If not specified, use default value.
             return DEFAULT_ENCODING[c];
         }

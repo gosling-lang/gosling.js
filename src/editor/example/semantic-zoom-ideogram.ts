@@ -20,7 +20,12 @@ export const EXAMPLE_SEMANTIC_ZOOMING_IDEOGRAM: GeminiSpec = {
                                 filter: [{ field: 'Stain', oneOf: ['acen-1', 'acen-2'], not: true }]
                             },
                             text: { field: 'Band', type: 'nominal' },
-                            color: { value: 'black' }
+                            color: { value: 'black' },
+                            visibleWhen: {
+                                operation: 'less-than',
+                                condition: { width: '|xe-x|', conditionPadding: 10 },
+                                target: 'mark'
+                            }
                         },
                         {
                             mark: 'rect',
@@ -63,7 +68,7 @@ export const EXAMPLE_SEMANTIC_ZOOMING_IDEOGRAM: GeminiSpec = {
                     dataTransform: { filter: [] }
                 },
                 trigger: {
-                    type: 'greater-than',
+                    operation: 'greater-than',
                     condition: { zoomLevel: 1 },
                     target: 'track'
                 }

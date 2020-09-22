@@ -5,6 +5,7 @@ export type VisualProperty =
     | 'strokeWidth' // stroke width of visual marks
     | 'opacity' // transparent level of visual marks
     | 'x' // naive x value encoded
+    | 'x1' // naive x1 value encoded
     | 'xe' // naive xe value encoded
     | 'y' // naive y value encoded
     | 'size' // size of visual marks, such as radius of points

@@ -50,6 +50,8 @@ export interface MultivecMetadata {
     row: string;
     value: string;
     categories?: string[];
+    start?: string;
+    end?: string;
 }
 
 export interface BEDMetadata {
@@ -77,45 +79,50 @@ export type CustomChannel = {
 };
 
 export interface BasicSingleTrack {
+    // high-level options
     description?: string;
     zoomable?: boolean;
-    // primitives
+    width?: number;
+    height?: number;
+
+    // data
     data: DataDeep | Datum[];
     metadata?: DataMetadata; // we could remove this and get this information from the server
-    mark: Mark;
+
     // data transform
     dataTransform?: DataTransform;
-    // zoom technique
+
+    // semantic zooming
     semanticZoom?: SemanticZoom;
-    // coordinates
+
+    // conditional visibility
+    visibleWhen?: TriggerCondition;
+
+    mark: Mark;
+
     x?: Channel;
     y?: Channel;
     xe?: Channel;
     ye?: Channel;
-    // coordinates for link
+
     x1?: Channel;
     y1?: Channel;
     x1e?: Channel;
     y1e?: Channel;
-    // separation
+
     row?: Channel;
     column?: Channel;
-    // others
+
     color?: Channel;
-    opacity?: Channel;
     size?: Channel;
     text?: Channel;
-    w?: Channel;
-    h?: Channel;
+
+    opacity?: Channel;
     stroke?: Channel;
     strokeWidth?: Channel;
     background?: ChannelValue;
-    // styles
-    width?: number;
-    height?: number;
+
     style?: TrackStyle;
-    // experimental
-    // ...
 }
 
 /**
@@ -130,6 +137,12 @@ export interface TrackStyle {
     linePattern?: { type: 'triangle-l' | 'triangle-r'; size: number };
     curve?: 'top' | 'bottom' | 'left' | 'right';
     align?: 'left' | 'right';
+    dy?: number;
+    // below options could instead be used with channel options (e.g., size, stroke, strokeWidth)
+    textFontSize?: number;
+    textStroke?: string;
+    textStrokeWidth?: number;
+    textFontWeight?: 'bold' | 'normal';
     //
     background?: string; // deprecated
     stroke?: string; // deprecated
@@ -152,15 +165,30 @@ export interface SemanticZoomRedefinition {
     type: 'alternative-encoding';
     // TODO: consider making the spec and trigger part as an array of object
     spec: Partial<Track>;
-    trigger: {
-        type: 'less-than' | 'greater-than';
-        condition: {
-            width?: number;
-            height?: number;
-            zoomLevel: number;
-        }; // TODO: support AND or OR
-        target: 'track' | 'mark' | 'glyph'; // TODO: only `track` is supported currently
-    };
+    trigger: TriggerCondition;
+}
+
+export type LogicalOperation =
+    | 'less-than'
+    | 'greater-than'
+    | 'less-than-or-equal-to'
+    | 'greater-than-or-equal-to'
+    | 'LT'
+    | 'GT'
+    | 'LTET'
+    | 'GTET';
+
+export interface TriggerCondition {
+    operation: LogicalOperation;
+    condition: {
+        width?: number | '|xe-x|';
+        height?: number;
+        zoomLevel?: number;
+        conditionPadding?: number; // buffer px size of width or height for calculating the condition
+        transitionPadding?: number; // buffer px size of width or height for calculating the level of opacity for smooth transition
+    }; // TODO: support AND or OR
+    // TODO: separate condition by targets
+    target: 'track' | 'mark' | 'glyph';
 }
 
 // deprecated
@@ -189,7 +217,6 @@ export const enum CHANNEL_KEYS {
     strokeWidth = 'strokeWidth',
     size = 'size',
     text = 'text',
-    w = 'w',
     background = 'background'
 }
 
@@ -215,7 +242,6 @@ export const ChannelTypes = {
     strokeWidth: 'strokeWidth',
     size: 'size',
     text: 'text',
-    w: 'w',
     background: 'background'
 } as const;
 
@@ -229,10 +255,12 @@ export interface ChannelDeep {
     aggregate?: Aggregate;
     domain?: Domain;
     range?: Range;
-    baseline?: string | number;
-    zeroBaseline?: boolean;
     axis?: 'top' | 'bottom' | 'left' | 'right';
+    baseline?: string | number;
+    zeroBaseline?: boolean; // we could remove this and use the `baseline` option instead
     grid?: boolean;
+
+    // IMPORTANT: TODO: Add TriggerCondition to Channel?
 }
 export type FieldType = 'genomic' | 'nominal' | 'quantitative';
 

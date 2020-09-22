@@ -113,7 +113,7 @@ export function renderGlyph(g: d3.Selection<SVGGElement, any, any, any>, track: 
                 .append('path')
                 .attr('d', d => {
                     const h = tm.getEncoding(element, 'size', d);
-                    const w = tm.getEncoding(element, 'w', d);
+                    const w = 0; // tm.getEncoding(element, 'w', d);
                     const x = tm.getEncoding(element, 'x', d);
                     const y = tm.getEncoding(element, 'y', d);
                     return `M${x + w} ${y} L${x} ${y + h / 2.0} L${x} ${y - h / 2.0} Z`;
@@ -129,7 +129,7 @@ export function renderGlyph(g: d3.Selection<SVGGElement, any, any, any>, track: 
                 .append('path')
                 .attr('d', d => {
                     const h = tm.getEncoding(element, 'size', d);
-                    const w = tm.getEncoding(element, 'w', d);
+                    const w = 0; //tm.getEncoding(element, 'w', d);
                     const x = tm.getEncoding(element, 'x', d);
                     const y = tm.getEncoding(element, 'y', d);
                     return `M${x} ${y} L${x + w} ${y + h / 2.0} L${x + w} ${y - h / 2.0} Z`;

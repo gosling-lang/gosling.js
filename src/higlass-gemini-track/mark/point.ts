@@ -73,13 +73,9 @@ export function pointProperty(
     // priority of channels
     switch (propertyKey) {
         case 'x-center':
-            return (
-                // (1) x + (x1 - x) / 2.0
-                gm.visualPropertyByChannel('x1', datum)
-                    ? (gm.visualPropertyByChannel('x1', datum) + gm.visualPropertyByChannel('x', datum)) / 2.0
-                    : // (2) x
-                      gm.visualPropertyByChannel('x', datum)
-            );
+            const xe = gm.visualPropertyByChannel('xe', datum);
+            const x = gm.visualPropertyByChannel('x', datum);
+            return xe ? (xe + x) / 2.0 : x;
         default:
             return undefined;
     }

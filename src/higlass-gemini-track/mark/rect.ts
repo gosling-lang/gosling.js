@@ -48,14 +48,6 @@ export function drawRect(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMod
         const rowGraphics = tile.graphics; // new HGC.libraries.PIXI.Graphics();
         const rowPosition = tm.encodedValue('row', rowCategory);
 
-        // stroke
-        rowGraphics.lineStyle(
-            strokeWidth,
-            colorToHex(stroke),
-            1, // alpha
-            0.5 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
-        );
-
         data.filter(
             d =>
                 !getValueUsingChannel(d, spec.row as Channel) ||
@@ -68,7 +60,23 @@ export function drawRect(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMod
             const rectWidth = tm.encodedProperty('width', d, { markWidth: tileUnitWidth });
             const rectHeight = tm.encodedProperty('height', d, { markHeight: cellHeight });
 
-            rowGraphics.beginFill(colorToHex(color), opacity);
+            const alphaTransition = tm.markVisibility(d, { width: rectWidth });
+            const actualOpacity = Math.min(alphaTransition, opacity);
+
+            if (actualOpacity === 0) {
+                // do not need to draw invisible objects
+                return;
+            }
+
+            // stroke
+            rowGraphics.lineStyle(
+                strokeWidth,
+                colorToHex(stroke),
+                actualOpacity, // alpha
+                0.5 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
+            );
+
+            rowGraphics.beginFill(colorToHex(color), actualOpacity);
             rowGraphics.drawRect(x, rowPosition + y - rectHeight / 2.0, rectWidth, rectHeight);
         });
 

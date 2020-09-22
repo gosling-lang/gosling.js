@@ -29,6 +29,7 @@ import { rectProperty } from '../higlass-gemini-track/mark/rect';
 import { pointProperty } from '../higlass-gemini-track/mark/point';
 import { barProperty } from '../higlass-gemini-track/mark/bar';
 import { getNumericDomain } from '../higlass-gemini-track/utils/scales';
+import { logicalComparison } from '../higlass-gemini-track/utils/semantic-zoom';
 
 export type ScaleType =
     | d3.ScaleLinear<any, any>
@@ -238,9 +239,9 @@ export class GeminiTrackModel {
      * Get the encoded value using the scales already constructed.
      */
     public encodedValue(channelKey: keyof typeof ChannelTypes, value?: number | string) {
-        if (channelKey === 'text') {
+        if (channelKey === 'text' && value !== undefined) {
             // TODO: Textual values could be set with scales as well
-            return `${value}`;
+            return `${+value ? ~~value : value}`;
         }
 
         const channel = this.spec()[channelKey];
@@ -308,6 +309,71 @@ export class GeminiTrackModel {
         }
     }
 
+    public trackVisibility(currentStage: { zoomLevel?: number }): boolean {
+        const spec = this.spec();
+        if (spec.visibleWhen === undefined || spec.visibleWhen.target !== 'track') {
+            // if condition is not defined, just show them.
+            return true;
+        }
+
+        const { operation, condition } = spec.visibleWhen;
+        if (condition.zoomLevel && currentStage.zoomLevel) {
+            return logicalComparison(currentStage.zoomLevel, operation, condition.zoomLevel) === 1;
+        }
+        return true;
+    }
+
+    /**
+     * Check whether the visual mark should be visible or not.
+     * Return 0 (invisible) only when the predefined condition is correct.
+     */
+    public markVisibility(datum: { [k: string]: string | number }, metrics?: any): number {
+        const spec = this.spec();
+        if (spec.visibleWhen === undefined || spec.visibleWhen.target !== 'mark') {
+            // if condition is not defined, just show them.
+            return 1;
+        }
+
+        const vSpec = spec.visibleWhen;
+        const mark = spec.mark;
+        switch (mark) {
+            case 'text':
+                if (vSpec.condition.width === '|xe-x|') {
+                    // compare between the actual width and the |xe-x|
+                    const xe = this.encodedProperty('xe', datum);
+                    const x = this.encodedProperty('x', datum);
+                    const padding = vSpec.condition.conditionPadding ?? 0;
+                    if (xe === undefined || !metrics?.width) {
+                        // we do not have xe to compare, so just make the marks visible
+                        return 1;
+                    }
+                    return logicalComparison(
+                        metrics.width + padding,
+                        vSpec.operation,
+                        Math.abs(xe - x),
+                        vSpec.condition.transitionPadding
+                    );
+                }
+                return 1;
+            default:
+                if (typeof vSpec.condition.width === 'number') {
+                    // compare between the actual width and the constant width that user specified
+                    const padding = vSpec.condition.conditionPadding ?? 0;
+                    if (!metrics?.width) {
+                        // we do not have xe to compare, so just make the marks visible
+                        return 1;
+                    }
+                    return logicalComparison(
+                        metrics.width + padding,
+                        vSpec.operation,
+                        vSpec.condition.width,
+                        vSpec.condition.transitionPadding
+                    );
+                }
+                return 1;
+        }
+    }
+
     /**
      *
      */
@@ -332,7 +398,7 @@ export class GeminiTrackModel {
         }
 
         // common visual properties, not specific to visual marks
-        if (['text', 'color', 'stroke', 'opacity', 'strokeWidth', 'x', 'y', 'xe', 'size'].includes(propertyKey)) {
+        if (['text', 'color', 'stroke', 'opacity', 'strokeWidth', 'x', 'y', 'x1', 'xe', 'size'].includes(propertyKey)) {
             return this.visualPropertyByChannel(propertyKey as any, datum);
         }
 
@@ -340,6 +406,7 @@ export class GeminiTrackModel {
             case 'bar':
                 return barProperty(this, propertyKey, datum, additionalInfo);
             case 'point':
+            case 'text':
                 return pointProperty(this, propertyKey, datum);
             case 'rect':
                 return rectProperty(this, propertyKey, datum, additionalInfo);

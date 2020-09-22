@@ -1,6 +1,16 @@
 import { GeminiTrackModel } from '../../core/gemini-track-model';
 import { getValueUsingChannel, Channel } from '../../core/gemini.schema';
-// import { RESOLUTION } from '.';
+
+export const TEXT_STYLE_GLOBAL = {
+    fontSize: '12px',
+    fontFamily: 'Arial',
+    fontWeight: 'normal',
+    fill: 'black',
+    background: 'white',
+    lineJoin: 'round',
+    stroke: '#ffffff',
+    strokeThickness: 2
+};
 
 export function drawText(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackModel) {
     /* track spec */
@@ -16,21 +26,24 @@ export function drawText(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMod
     tile.rowScale = tm.getChannelScale('row');
     tile.spriteInfos = []; // sprites for individual rows or columns
 
-    const style = {
-        fontSize: '12px',
-        fontFamily: 'Arial',
-        fill: 'black',
-        lineJoin: 'round',
-        stroke: '#ffffff',
-        strokeThickness: 2
+    /* text styles */
+    const localTextStyle = {
+        ...TEXT_STYLE_GLOBAL,
+        fontSize: spec.style?.textFontSize ? `${spec.style?.textFontSize}px` : TEXT_STYLE_GLOBAL.fontSize,
+        stroke: spec.style?.textStroke ?? TEXT_STYLE_GLOBAL.stroke,
+        strokeThickness: spec.style?.textStrokeWidth ?? TEXT_STYLE_GLOBAL.strokeThickness,
+        fontWeight: spec.style?.textFontWeight ?? TEXT_STYLE_GLOBAL.fontWeight
     };
-    const textStyle = new HGC.libraries.PIXI.TextStyle(style);
+    const textStyleObj = new HGC.libraries.PIXI.TextStyle(localTextStyle);
     let textAdded = 0;
+
+    /* styles */
+    const dy = spec.style?.dy ?? 0;
 
     /* render */
     rowCategories.forEach(rowCategory => {
         // we are separately drawing each row so that y scale can be more effectively shared across tiles without rerendering from the bottom
-        const rowGraphics = tile.graphics; // new HGC.libraries.PIXI.Graphics();
+        const rowGraphics = tile.graphics;
         const rowPosition = tm.encodedValue('row', rowCategory);
 
         data.filter(
@@ -40,17 +53,18 @@ export function drawText(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMod
         ).forEach(d => {
             const text = tm.encodedProperty('text', d);
             const color = tm.encodedProperty('color', d);
+            const cx = tm.encodedProperty('x-center', d);
             const x = tm.encodedProperty('x', d);
             const xe = tm.encodedProperty('xe', d);
-            const y = tm.encodedProperty('y', d);
+            const y = tm.encodedProperty('y', d) + dy;
 
-            if ((xe && xe < 0) || (spec.width && x > spec.width)) {
+            if ((xe && xe < 0) || (!xe && x < 0) || (spec.width && x > spec.width)) {
                 // we do not draw texts that are out of the view
                 return;
             }
 
-            if (textAdded > 50) {
-                // we do not draw many texts for the performance
+            if (textAdded > 100) {
+                // we do not draw a large number of texts for the performance
                 return;
             }
 
@@ -60,25 +74,30 @@ export function drawText(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMod
                 textGraphic.style.fill = color;
                 textGraphic.visible = true;
                 textGraphic.text = text;
+                textGraphic.alpha = 1;
             } else {
                 textGraphic = new HGC.libraries.PIXI.Text(text, {
-                    ...style,
+                    ...localTextStyle,
                     fill: color
                 });
                 trackInfo.textGraphics.push(textGraphic);
             }
 
-            const metric = HGC.libraries.PIXI.TextMetrics.measureText(text, textStyle);
+            const metric = HGC.libraries.PIXI.TextMetrics.measureText(text, textStyleObj);
             textAdded++;
 
-            if (!text || (xe && xe - x < metric.width + 10)) {
+            const alphaTransition = tm.markVisibility(d, metric);
+            if (!text || alphaTransition === 0) {
                 textAdded--;
                 textGraphic.visible = false;
                 return;
             }
 
-            textGraphic.position.x = (x - metric.width) / 2.0 + (xe ? xe / 2.0 : 0);
-            textGraphic.position.y = rowPosition + y - metric.height / 2.0;
+            textGraphic.alpha = alphaTransition;
+            textGraphic.anchor.x = 0.5;
+            textGraphic.anchor.y = 0.5;
+            textGraphic.position.x = cx; // xe ? (xe + x) / 2.0 : x;
+            textGraphic.position.y = rowPosition + y;
 
             rowGraphics.addChild(textGraphic);
         });

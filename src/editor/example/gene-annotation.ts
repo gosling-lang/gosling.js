@@ -39,6 +39,9 @@ export const EXAMPLE_GENE_ANNOTATION: GeminiSpec = {
                     xe: {
                         field: 'end',
                         type: 'genomic'
+                    },
+                    style: {
+                        dy: -17
                     }
                 },
                 {
@@ -136,6 +139,11 @@ export const EXAMPLE_GENE_ANNOTATION: GeminiSpec = {
             // y: { field: 'strand', type: 'nominal', domain: ['+', '-'] },
             row: { field: 'strand', type: 'nominal', domain: ['+', '-'] },
             color: { field: 'strand', type: 'nominal', domain: ['+', '-'], range: ['#7585FF', '#FF8A85'] },
+            visibleWhen: {
+                operation: 'less-than',
+                condition: { width: '|xe-x|', transitionPadding: 10 },
+                target: 'mark'
+            },
             // background: {"value": "red"},
             opacity: { value: 0.5 },
             width: 1000,
@@ -177,6 +185,9 @@ export const EXAMPLE_GENE_ANNOTATION: GeminiSpec = {
                     xe: {
                         field: 'end',
                         type: 'genomic'
+                    },
+                    style: {
+                        dy: -17
                     }
                 },
                 {
@@ -246,6 +257,11 @@ export const EXAMPLE_GENE_ANNOTATION: GeminiSpec = {
             // y: { field: 'strand', type: 'nominal' },
             row: { field: 'strand', type: 'nominal', domain: ['+', '-'] },
             color: { value: '#0900B1' },
+            visibleWhen: {
+                operation: 'less-than',
+                condition: { width: '|xe-x|', transitionPadding: 10 },
+                target: 'mark'
+            },
             // background: {"value": "red"},
             width: 1000,
             height: 120
@@ -287,7 +303,10 @@ export const EXAMPLE_GENE_ANNOTATION: GeminiSpec = {
                         field: 'end',
                         type: 'genomic'
                     },
-                    color: { value: 'black' }
+                    color: { value: 'black' },
+                    style: {
+                        dy: -17
+                    }
                 },
                 {
                     dataTransform: {
@@ -370,6 +389,11 @@ export const EXAMPLE_GENE_ANNOTATION: GeminiSpec = {
                 }
             ],
             row: { field: 'strand', type: 'nominal', domain: ['+', '-'] },
+            visibleWhen: {
+                operation: 'less-than',
+                condition: { width: '|xe-x|', transitionPadding: 10 },
+                target: 'mark'
+            },
             size: { value: 17 },
             width: 1000,
             height: 120
@@ -410,6 +434,9 @@ export const EXAMPLE_GENE_ANNOTATION: GeminiSpec = {
                     xe: {
                         field: 'end',
                         type: 'genomic'
+                    },
+                    style: {
+                        dy: -17
                     }
                 },
                 {
@@ -483,6 +510,11 @@ export const EXAMPLE_GENE_ANNOTATION: GeminiSpec = {
             ],
             row: { field: 'strand', type: 'nominal', domain: ['+', '-'] },
             color: { field: 'strand', type: 'nominal', domain: ['+', '-'], range: ['blue', 'red'] },
+            visibleWhen: {
+                operation: 'less-than',
+                condition: { width: '|xe-x|', transitionPadding: 10 },
+                target: 'mark'
+            },
             width: 1000,
             height: 120
         },
@@ -522,6 +554,9 @@ export const EXAMPLE_GENE_ANNOTATION: GeminiSpec = {
                     xe: {
                         field: 'end',
                         type: 'genomic'
+                    },
+                    style: {
+                        dy: -17
                     }
                 },
                 {
@@ -559,6 +594,11 @@ export const EXAMPLE_GENE_ANNOTATION: GeminiSpec = {
             ],
             row: { field: 'strand', type: 'nominal', domain: ['+', '-'] },
             color: { value: '#B54F4A' },
+            visibleWhen: {
+                operation: 'less-than',
+                condition: { width: '|xe-x|', transitionPadding: 10 },
+                target: 'mark'
+            },
             width: 1000,
             height: 120
         },
@@ -595,6 +635,7 @@ export const EXAMPLE_GENE_ANNOTATION: GeminiSpec = {
                         domain: { chromosome: '1', interval: [3540100, 3555100] },
                         axis: 'top'
                     },
+                    color: { value: 'black' },
                     xe: {
                         field: 'end',
                         type: 'genomic'
@@ -649,6 +690,11 @@ export const EXAMPLE_GENE_ANNOTATION: GeminiSpec = {
             row: { field: 'strand', type: 'nominal', domain: ['+', '-'] },
             stroke: { value: '#777777' },
             strokeWidth: { value: 1 },
+            visibleWhen: {
+                operation: 'less-than',
+                condition: { width: '|xe-x|', transitionPadding: 10 },
+                target: 'mark'
+            },
             width: 1000,
             height: 120
         }

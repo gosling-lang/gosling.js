@@ -54,6 +54,7 @@ module.exports = {
         'no-irregular-whitespace': ['error', { skipComments: true }],
         'no-alert': 'error',
         'prefer-const': 'error',
+        'no-case-declarations': 'warn',
         'no-return-assign': 'error',
         'no-useless-call': 'error',
         'no-shadow': 'error',

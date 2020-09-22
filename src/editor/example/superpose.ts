@@ -49,7 +49,7 @@ export const EXAMPLE_SUPERPOSE: GeminiSpec = {
                 domain: { chromosome: '3' },
                 axis: 'top'
             },
-            x1: {
+            xe: {
                 field: 'end',
                 type: 'genomic'
             },

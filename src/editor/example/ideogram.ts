@@ -16,7 +16,12 @@ export const EXAMPLE_DEOGRAM_TRACK: Track = {
                 filter: [{ field: 'Stain', oneOf: ['acen-1', 'acen-2'], not: true }]
             },
             text: { field: 'Band', type: 'nominal' },
-            color: { value: 'black' }
+            color: { value: 'black' },
+            visibleWhen: {
+                operation: 'less-than',
+                condition: { width: '|xe-x|', transitionPadding: 10 },
+                target: 'mark'
+            }
         },
         {
             mark: 'rect',
@@ -54,6 +59,11 @@ export const EXAMPLE_DEOGRAM_TRACK: Track = {
     ],
     x: { field: 'Basepair_start', type: 'genomic', domain: { chromosome: '1' }, axis: 'top' },
     xe: { field: 'Basepair_stop', type: 'genomic' },
+    visibleWhen: {
+        operation: 'greater-than',
+        condition: { width: 1 },
+        target: 'mark'
+    },
     stroke: { value: 'gray' },
     strokeWidth: { value: 0.5 },
     width: 1000,
