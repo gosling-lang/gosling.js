@@ -139,7 +139,7 @@ export const EXAMPLE_GENE_ANNOTATION: GeminiSpec = {
             // y: { field: 'strand', type: 'nominal', domain: ['+', '-'] },
             row: { field: 'strand', type: 'nominal', domain: ['+', '-'] },
             color: { field: 'strand', type: 'nominal', domain: ['+', '-'], range: ['#7585FF', '#FF8A85'] },
-            visibleWhen: {
+            visibility: {
                 operation: 'less-than',
                 condition: { width: '|xe-x|', transitionPadding: 10 },
                 target: 'mark'
@@ -257,7 +257,7 @@ export const EXAMPLE_GENE_ANNOTATION: GeminiSpec = {
             // y: { field: 'strand', type: 'nominal' },
             row: { field: 'strand', type: 'nominal', domain: ['+', '-'] },
             color: { value: '#0900B1' },
-            visibleWhen: {
+            visibility: {
                 operation: 'less-than',
                 condition: { width: '|xe-x|', transitionPadding: 10 },
                 target: 'mark'
@@ -389,7 +389,7 @@ export const EXAMPLE_GENE_ANNOTATION: GeminiSpec = {
                 }
             ],
             row: { field: 'strand', type: 'nominal', domain: ['+', '-'] },
-            visibleWhen: {
+            visibility: {
                 operation: 'less-than',
                 condition: { width: '|xe-x|', transitionPadding: 10 },
                 target: 'mark'
@@ -510,7 +510,7 @@ export const EXAMPLE_GENE_ANNOTATION: GeminiSpec = {
             ],
             row: { field: 'strand', type: 'nominal', domain: ['+', '-'] },
             color: { field: 'strand', type: 'nominal', domain: ['+', '-'], range: ['blue', 'red'] },
-            visibleWhen: {
+            visibility: {
                 operation: 'less-than',
                 condition: { width: '|xe-x|', transitionPadding: 10 },
                 target: 'mark'
@@ -594,7 +594,7 @@ export const EXAMPLE_GENE_ANNOTATION: GeminiSpec = {
             ],
             row: { field: 'strand', type: 'nominal', domain: ['+', '-'] },
             color: { value: '#B54F4A' },
-            visibleWhen: {
+            visibility: {
                 operation: 'less-than',
                 condition: { width: '|xe-x|', transitionPadding: 10 },
                 target: 'mark'
@@ -690,7 +690,7 @@ export const EXAMPLE_GENE_ANNOTATION: GeminiSpec = {
             row: { field: 'strand', type: 'nominal', domain: ['+', '-'] },
             stroke: { value: '#777777' },
             strokeWidth: { value: 1 },
-            visibleWhen: {
+            visibility: {
                 operation: 'less-than',
                 condition: { width: '|xe-x|', transitionPadding: 10 },
                 target: 'mark'

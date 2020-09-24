@@ -18,18 +18,20 @@ export function isSemanticZoomTriggered(track: Track, zoomLevel: number): boolea
         switch (semanticZoom.trigger.operation) {
             case 'less-than':
             case 'LT':
+            case 'lt':
                 return level > zoomLevel;
             case 'greater-than':
             case 'GT':
+            case 'gt':
                 return level < zoomLevel;
             case 'less-than-or-equal-to':
             case 'LTET':
+            case 'ltet':
                 return level >= zoomLevel;
             case 'greater-than-or-equal-to':
             case 'GTET':
+            case 'gtet':
                 return level <= zoomLevel;
-            default:
-                return false;
         }
     }
     return false;
@@ -44,25 +46,28 @@ export function logicalComparison(
     ref: number,
     transitionPadding?: number
 ): number {
-    const padding = transitionPadding ?? 1;
-
+    const padding = transitionPadding && transitionPadding !== 0 ? transitionPadding : undefined;
     let alpha = 0;
     switch (op) {
         case 'less-than':
         case 'LT':
-            alpha = ref > value ? (ref - value) / padding : 0;
+        case 'lt':
+            alpha = ref > value ? (padding ? (ref - value) / padding : 1) : 0;
             break;
         case 'less-than-or-equal-to':
         case 'LTET':
-            alpha = ref >= value ? (ref - value) / padding : 0;
+        case 'ltet':
+            alpha = ref >= value ? (padding ? (ref - value) / padding : 1) : 0;
             break;
         case 'greater-than':
         case 'GT':
-            alpha = ref < value ? (value - ref) / padding : 0;
+        case 'gt':
+            alpha = ref < value ? (padding ? (value - ref) / padding : 1) : 0;
             break;
         case 'greater-than-or-equal-to':
         case 'GTET':
-            alpha = ref <= value ? (value - ref) / padding : 0;
+        case 'gtet':
+            alpha = ref <= value ? (padding ? (value - ref) / padding : 1) : 0;
             break;
     }
 

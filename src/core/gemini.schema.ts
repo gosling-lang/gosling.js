@@ -4,6 +4,7 @@
 import * as d3 from 'd3';
 import { isArray } from 'lodash';
 import { GLYPH_LOCAL_PRESET_TYPE, GLYPH_HIGLASS_PRESET_TYPE } from '../editor/example/deprecated/index';
+import { SUPPORTED_CHANNELS } from './mark';
 
 export interface GeminiSpec {
     references?: string[];
@@ -67,7 +68,7 @@ export interface DataTransform {
     filter: { field: string; oneOf: string[] | number[]; not: boolean }[];
 }
 
-export type Track = SingleTrack | SuperposedTrack;
+export type Track = SingleTrack | SuperposedTrack | SuperposedTrackTwoLevels;
 
 export type SingleTrack = BasicSingleTrack | CustomChannel;
 
@@ -96,7 +97,7 @@ export interface BasicSingleTrack {
     semanticZoom?: SemanticZoom;
 
     // conditional visibility
-    visibleWhen?: TriggerCondition;
+    visibility?: TriggerCondition;
 
     mark: Mark;
 
@@ -130,6 +131,11 @@ export interface BasicSingleTrack {
  */
 export type SuperposedTrack = Partial<SingleTrack> & {
     superpose: Partial<SingleTrack>[];
+};
+
+// TODO: support this to be able to ues two level superposition
+export type SuperposedTrackTwoLevels = Partial<SingleTrack> & {
+    superpose: Partial<SuperposedTrack>[];
 };
 
 export interface TrackStyle {
@@ -170,12 +176,16 @@ export interface SemanticZoomRedefinition {
 
 export type LogicalOperation =
     | 'less-than'
-    | 'greater-than'
-    | 'less-than-or-equal-to'
-    | 'greater-than-or-equal-to'
+    | 'lt'
     | 'LT'
+    | 'greater-than'
+    | 'gt'
     | 'GT'
+    | 'less-than-or-equal-to'
+    | 'ltet'
     | 'LTET'
+    | 'greater-than-or-equal-to'
+    | 'gtet'
     | 'GTET';
 
 export interface TriggerCondition {
@@ -566,6 +576,31 @@ export function getValueUsingChannel(datum: { [k: string]: string | number }, ch
         return datum[channel.field];
     }
     return undefined;
+}
+
+export function getChannelKeysByAggregateFnc(spec: BasicSingleTrack) {
+    const keys: (keyof typeof ChannelTypes)[] = [];
+    SUPPORTED_CHANNELS.forEach(k => {
+        const c = spec[k];
+        if (IsChannelDeep(c) && 'aggregate' in c) {
+            keys.push(k);
+        }
+    });
+    return keys;
+}
+
+/**
+ * Get channel keys by a field type.
+ */
+export function getChannelKeysByType(spec: BasicSingleTrack, t: FieldType) {
+    const keys: (keyof typeof ChannelTypes)[] = [];
+    SUPPORTED_CHANNELS.forEach(k => {
+        const c = spec[k];
+        if (IsChannelDeep(c) && c.type === t) {
+            keys.push(k);
+        }
+    });
+    return keys;
 }
 
 export type VisualizationType = 'unknown' | 'composite' | 'bar' | 'line' | 'area' | 'point' | 'rect'; // ...

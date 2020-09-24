@@ -1,5 +1,5 @@
-import { GeminiTrackModel } from '../../core/gemini-track-model';
-import { getValueUsingChannel, Channel, IsStackedMark } from '../../core/gemini.schema';
+import { GeminiTrackModel } from '../gemini-track-model';
+import { getValueUsingChannel, Channel, IsStackedMark } from '../gemini.schema';
 import * as d3 from 'd3';
 import { group } from 'd3-array';
 

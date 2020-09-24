@@ -1,11 +1,11 @@
 import { GeminiSpec } from '../../core/gemini.schema';
 import { EXAMPLE_DATASETS } from './datasets';
-import { EXAMPLE_DEOGRAM_TRACK } from './ideogram';
+import { EXAMPLE_IDEOGRAM_TRACK } from './ideogram';
 
 export const EXAMPLE_OVERVIEW_DEATIL: GeminiSpec = {
     layout: { type: 'linear', direction: 'horizontal', wrap: 2 },
     tracks: [
-        EXAMPLE_DEOGRAM_TRACK,
+        EXAMPLE_IDEOGRAM_TRACK,
         {
             data: { url: 'dummy', type: 'csv' },
             mark: 'dummy',

@@ -1,6 +1,6 @@
 import * as d3 from 'd3';
 import { Track, Datum, IsGlyphMark } from '../gemini.schema';
-import { transformData, FilterSpec } from '../utils/data-process';
+import { transformData, FilterSpec } from '../utils/data-transform';
 import { TrackModel } from '../deprecated-track-model';
 import { BoundingBox } from '../utils/bounding-box';
 

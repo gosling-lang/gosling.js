@@ -1,6 +1,6 @@
-import { GeminiTrackModel } from '../../core/gemini-track-model';
-import { getValueUsingChannel, Channel } from '../../core/gemini.schema';
-import { VisualProperty } from '../../core/visual-property.schema';
+import { GeminiTrackModel } from '../gemini-track-model';
+import { getValueUsingChannel, Channel } from '../gemini.schema';
+import { VisualProperty } from '../visual-property.schema';
 // import { RESOLUTION } from '.';
 
 export function drawPoint(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackModel) {

@@ -1,5 +1,5 @@
-import { GeminiTrackModel } from '../../core/gemini-track-model';
-import { IsChannelDeep } from '../../core/gemini.schema';
+import { GeminiTrackModel } from '../gemini-track-model';
+import { IsChannelDeep } from '../gemini.schema';
 
 export function drawGrid(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackModel) {
     /* track spec */

@@ -1,4 +1,4 @@
-import { shareScaleAcrossTracks } from '../../../src/higlass-gemini-track/utils/scales';
+import { shareScaleAcrossTracks } from '../../../src/core/utils/scales';
 import { GeminiTrackModel } from '../../../src/core/gemini-track-model';
 import { IsChannelDeep } from '../../../src/core/gemini.schema';
 

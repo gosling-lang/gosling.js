@@ -1,4 +1,4 @@
-import { resolveSuperposedTracks } from '../src/higlass-gemini-track/utils/superpose';
+import { resolveSuperposedTracks } from '../src/core/utils/superpose';
 
 describe('Should handle superposition options correctly', () => {
     it('Should return an 1-element array if superpose option is not used', () => {

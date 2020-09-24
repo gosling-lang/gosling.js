@@ -6,9 +6,8 @@ import { EXAMPLE_GENE_ANNOTATION } from './gene-annotation';
 import { EXAMPLE_LINKS } from './links';
 import { EXAMPLE_OVERVIEW_DEATIL } from './overview-plus-detail-views';
 import { EXAMPLE_PERIPHERAL_PLOT } from './peripheral-plot';
-import { EXAMPLE_SEMANTIC_ZOOMING_SEQ } from './semantic-zoom-seq';
+import { EXAMPLE_SEMANTIC_ZOOMING } from './semantic-zoom';
 import { EXAMPLE_DATA_FETCHER } from './data-fetcher';
-import { EXAMPLE_SEMANTIC_ZOOMING_IDEOGRAM } from './semantic-zoom-ideogram';
 
 export const examples: ReadonlyArray<{
     name: string;
@@ -37,13 +36,8 @@ export const examples: ReadonlyArray<{
         underDevelopment: true
     },
     {
-        name: 'Semantic Zooming for Sequence Data',
-        spec: EXAMPLE_SEMANTIC_ZOOMING_SEQ
-    },
-    {
-        name: 'Semantic Zooming for Ideogram',
-        spec: EXAMPLE_SEMANTIC_ZOOMING_IDEOGRAM,
-        underDevelopment: true
+        name: 'Semantic Zooming',
+        spec: EXAMPLE_SEMANTIC_ZOOMING
     },
     {
         name: 'Semantic Zooming with Multiple Tilesets',

@@ -4,7 +4,7 @@ import { HiGlassSpec, Track } from './higlass.schema';
 import HiGlassSchema from './higlass.schema.json';
 import { TOTAL_CHROMOSOME_SIZE_HG19 } from './utils/chrom-size';
 import { Domain } from './gemini.schema';
-import { getNumericDomain } from '../higlass-gemini-track/utils/scales';
+import { getNumericDomain } from './utils/scales';
 
 const DEFAULT_CHROMOSOME_INFO_PATH = '//s3.amazonaws.com/pkerp/data/hg19/chromSizes.tsv';
 export const HIGLASS_AXIS_SIZE = 30;

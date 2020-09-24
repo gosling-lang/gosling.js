@@ -11,25 +11,21 @@ import {
     IsDomainArray,
     IsShallowMark,
     getValueUsingChannel,
-    Channel,
-    FieldType
+    Channel
 } from './gemini.schema';
-import {
-    validateTrack,
-    getGenomicChannelFromTrack,
-    getGenomicChannelKeyFromTrack
-} from '../higlass-gemini-track/utils/validate';
+import { validateTrack, getGenomicChannelFromTrack, getGenomicChannelKeyFromTrack } from './utils/validate';
 import assign from 'lodash/assign';
 import * as d3 from 'd3';
 import { group } from 'd3-array';
 import { HIGLASS_AXIS_SIZE } from './higlass-model';
-import { SUPPORTED_CHANNELS } from '../higlass-gemini-track/mark';
+import { SUPPORTED_CHANNELS } from './mark';
 import { VisualProperty } from './visual-property.schema';
-import { rectProperty } from '../higlass-gemini-track/mark/rect';
-import { pointProperty } from '../higlass-gemini-track/mark/point';
-import { barProperty } from '../higlass-gemini-track/mark/bar';
-import { getNumericDomain } from '../higlass-gemini-track/utils/scales';
-import { logicalComparison } from '../higlass-gemini-track/utils/semantic-zoom';
+import { rectProperty } from './mark/rect';
+import { pointProperty } from './mark/point';
+import { barProperty } from './mark/bar';
+import { getNumericDomain } from './utils/scales';
+import { logicalComparison } from './utils/semantic-zoom';
+import { aggregateData } from './utils/data-transform';
 
 export type ScaleType =
     | d3.ScaleLinear<any, any>
@@ -98,7 +94,7 @@ export class GeminiTrackModel {
         this.generateScales();
 
         // EXPERIMENTAL: aggregate data when `aggregate` option is used
-        this.aggregateData();
+        this.dataAggregated = aggregateData(this.spec(), this.dataAggregated);
 
         // Add default specs.
         // ...
@@ -116,7 +112,7 @@ export class GeminiTrackModel {
     }
 
     public data(): { [k: string]: number | string }[] {
-        return this.dataOriginal;
+        return this.dataAggregated;
     }
 
     /**
@@ -159,30 +155,6 @@ export class GeminiTrackModel {
         });
 
         this.addScaleMaterials(spec);
-    }
-
-    /**
-     * Experimental!
-     */
-    public aggregateData() {
-        // const data = this.dataAggregated;
-        // const nominalChKey = this.getChannelKeysByType('nominal');
-        // const quantitativeChKeys = this.getChannelKeysByType('quantitative');
-    }
-
-    /**
-     *
-     */
-    public getChannelKeysByType(t: FieldType) {
-        const spec = this.spec();
-        const nKeys: string[] = [];
-        SUPPORTED_CHANNELS.forEach(d => {
-            const c = spec[d];
-            if (IsChannelDeep(c) && c.type === t) {
-                nKeys.push(d);
-            }
-        });
-        return nKeys;
     }
 
     /**
@@ -311,14 +283,18 @@ export class GeminiTrackModel {
 
     public trackVisibility(currentStage: { zoomLevel?: number }): boolean {
         const spec = this.spec();
-        if (spec.visibleWhen === undefined || spec.visibleWhen.target !== 'track') {
+        if (spec.visibility === undefined || spec.visibility.target !== 'track') {
             // if condition is not defined, just show them.
             return true;
         }
 
-        const { operation, condition } = spec.visibleWhen;
+        const { operation, condition } = spec.visibility;
         if (condition.zoomLevel && currentStage.zoomLevel) {
             return logicalComparison(currentStage.zoomLevel, operation, condition.zoomLevel) === 1;
+        } else if (condition.height && spec.height) {
+            return logicalComparison(spec.height, operation, condition.height) === 1;
+        } else if (typeof condition.width === 'number' && spec.width) {
+            return logicalComparison(spec.width, operation, condition.width) === 1;
         }
         return true;
     }
@@ -329,12 +305,12 @@ export class GeminiTrackModel {
      */
     public markVisibility(datum: { [k: string]: string | number }, metrics?: any): number {
         const spec = this.spec();
-        if (spec.visibleWhen === undefined || spec.visibleWhen.target !== 'mark') {
+        if (spec.visibility === undefined || spec.visibility.target !== 'mark') {
             // if condition is not defined, just show them.
             return 1;
         }
 
-        const vSpec = spec.visibleWhen;
+        const vSpec = spec.visibility;
         const mark = spec.mark;
         switch (mark) {
             case 'text':

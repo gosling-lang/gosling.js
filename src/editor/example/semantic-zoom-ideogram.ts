@@ -21,7 +21,7 @@ export const EXAMPLE_SEMANTIC_ZOOMING_IDEOGRAM: GeminiSpec = {
                             },
                             text: { field: 'Band', type: 'nominal' },
                             color: { value: 'black' },
-                            visibleWhen: {
+                            visibility: {
                                 operation: 'less-than',
                                 condition: { width: '|xe-x|', conditionPadding: 10 },
                                 target: 'mark'
@@ -83,12 +83,10 @@ export const EXAMPLE_SEMANTIC_ZOOMING_IDEOGRAM: GeminiSpec = {
                     x: {
                         field: 'Basepair_start',
                         type: 'genomic',
-                        aggregate: 'min',
                         axis: 'top'
                     },
                     xe: {
                         field: 'Basepair_stop',
-                        aggregate: 'max',
                         type: 'genomic'
                     }
                 },

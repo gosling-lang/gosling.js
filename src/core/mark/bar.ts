@@ -1,7 +1,7 @@
-import { GeminiTrackModel } from '../../core/gemini-track-model';
-import { IsChannelDeep, getValueUsingChannel, Channel, IsStackedMark } from '../../core/gemini.schema';
+import { GeminiTrackModel } from '../gemini-track-model';
+import { IsChannelDeep, getValueUsingChannel, Channel, IsStackedMark } from '../gemini.schema';
 import { group } from 'd3-array';
-import { VisualProperty } from '../../core/visual-property.schema';
+import { VisualProperty } from '../visual-property.schema';
 // import { RESOLUTION } from '.';
 
 export function drawBar(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackModel) {
@@ -71,11 +71,19 @@ export function drawBar(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMode
                 const barWidth = tm.encodedProperty('width', d, { tileUnitWidth });
                 const barStartX = tm.encodedProperty('x-start', d, { markWidth: barWidth });
 
+                const alphaTransition = tm.markVisibility(d, { width: barWidth });
+                const actualOpacity = Math.min(alphaTransition, opacity);
+
+                if (actualOpacity === 0 || barWidth <= 0 || y <= 0) {
+                    // do not draw invisible marks
+                    return;
+                }
+
                 // pixi
                 rowGraphics.lineStyle(
                     strokeWidth,
                     colorToHex(stroke),
-                    1, // alpha
+                    actualOpacity,
                     1 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
                 );
                 rowGraphics.beginFill(colorToHex(color), opacity);
@@ -121,11 +129,19 @@ export function drawBar(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMode
                 const barStartX = tm.encodedProperty('x-start', d, { markWidth: barWidth });
                 const barHeight = y - baselineY;
 
+                const alphaTransition = tm.markVisibility(d, { width: barWidth });
+                const actualOpacity = Math.min(alphaTransition, opacity);
+
+                if (actualOpacity === 0 || barWidth === 0 || y === 0) {
+                    // do not draw invisible marks
+                    return;
+                }
+
                 // pixi
                 rowGraphics.lineStyle(
                     strokeWidth,
                     colorToHex(stroke),
-                    1, // alpha
+                    actualOpacity,
                     1 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
                 );
                 rowGraphics.beginFill(colorToHex(color), opacity);

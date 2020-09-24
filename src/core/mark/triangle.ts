@@ -1,5 +1,5 @@
-import { GeminiTrackModel } from '../../core/gemini-track-model';
-import { getValueUsingChannel, Channel, MarkType } from '../../core/gemini.schema';
+import { GeminiTrackModel } from '../gemini-track-model';
+import { getValueUsingChannel, Channel, MarkType } from '../gemini.schema';
 // import { RESOLUTION } from '.';
 
 export function drawTriangle(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackModel) {

@@ -12,10 +12,10 @@ export function validateBetweenLinkSpec(track: Track) {
     const definedFields = [xField, x1Field, yField, y1Field].filter(d => d);
 
     if (definedFields.length < 2) {
-        validity.setMsg('Less than two fields are specified for a `link-between` mark.');
-        validity.setIsValid(false);
+        validity.addErrorMessage('Less than two fields are specified for a `link-between` mark.');
+        validity.setValid(false);
     } else if (definedFields.length > 2) {
-        validity.setMsg('More than two fields are specified for a `link-between` mark.');
+        validity.addErrorMessage('More than two fields are specified for a `link-between` mark.');
     }
     return validity;
 }

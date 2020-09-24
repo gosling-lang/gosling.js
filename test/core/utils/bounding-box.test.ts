@@ -1,6 +1,6 @@
 import { Track } from '../../../src/core/gemini.schema';
 import { calculateBoundingBox } from '../../../src/core/utils/bounding-box';
-import { INNER_CIRCLE_RADIUS, TRACK_GAP } from '../../../src/core/visualizations/defaults';
+import { INNER_CIRCLE_RADIUS, TRACK_GAP } from '../../../src/core/layout/defaults';
 
 describe('Calculate the bounding box of Gemini views correctly', () => {
     it('Calculate the bounding box of linear layouts correctly', () => {

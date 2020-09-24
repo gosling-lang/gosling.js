@@ -1,8 +1,4 @@
-import {
-    getMaxZoomLevel,
-    isSemanticZoomTriggered,
-    logicalComparison
-} from '../../../src/higlass-gemini-track/utils/semantic-zoom';
+import { getMaxZoomLevel, isSemanticZoomTriggered, logicalComparison } from '../../../src/core/utils/semantic-zoom';
 
 describe('Should determine the zoom level correctly', () => {
     it('Default zoom level should be correct', () => {
@@ -13,7 +9,7 @@ describe('Should determine the zoom level correctly', () => {
 describe('Logical operation for semantic zooming should be correctly performed', () => {
     it('Basic logical operations', () => {
         expect(logicalComparison(1, 'GT', 1)).toEqual(0);
-        expect(logicalComparison(1, 'GTET', 1)).toEqual(0);
+        expect(logicalComparison(1, 'GTET', 1)).toEqual(1);
         expect(logicalComparison(1, 'LT', 2)).toEqual(logicalComparison(1, 'less-than', 2));
     });
 
@@ -57,6 +53,41 @@ describe('Should correctly determin whether to trigger semantic zooming or not',
                             target: 'track',
                             condition: { zoomLevel: 10 },
                             operation: 'greater-than-or-equal-to'
+                        }
+                    }
+                },
+                10
+            )
+        ).toEqual(true);
+
+        expect(
+            isSemanticZoomTriggered(
+                {
+                    superpose: [],
+                    semanticZoom: {
+                        type: 'alternative-encoding',
+                        spec: {},
+                        trigger: {
+                            target: 'track',
+                            condition: { zoomLevel: 10 },
+                            operation: 'lt'
+                        }
+                    }
+                },
+                10
+            )
+        ).toEqual(false);
+        expect(
+            isSemanticZoomTriggered(
+                {
+                    superpose: [],
+                    semanticZoom: {
+                        type: 'alternative-encoding',
+                        spec: {},
+                        trigger: {
+                            target: 'track',
+                            condition: { zoomLevel: 10 },
+                            operation: 'ltet'
                         }
                     }
                 },

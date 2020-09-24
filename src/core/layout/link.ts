@@ -81,7 +81,7 @@ export function renderBetweenLink(
     tracksWithBB.forEach(tb => {
         // validate
         const valid = validateBetweenLinkSpec(tb.track);
-        if (!valid.isValid()) {
+        if (!valid.valid()) {
             valid.printValidity();
             return;
         }

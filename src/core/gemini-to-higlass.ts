@@ -5,8 +5,8 @@ import { HiGlassModel, HIGLASS_AXIS_SIZE } from './higlass-model';
 import { parseServerAndTilesetUidFromUrl } from './utils';
 import { Track, IsDataDeep, IsHiGlassTrack, IsChannelDeep, Domain } from './gemini.schema';
 import { BoundingBox } from './utils/bounding-box';
-import { resolveSuperposedTracks } from '../higlass-gemini-track/utils/superpose';
-import { getGenomicChannelKeyFromTrack, getGenomicChannelFromTrack } from '../higlass-gemini-track/utils/validate';
+import { resolveSuperposedTracks } from './utils/superpose';
+import { getGenomicChannelKeyFromTrack, getGenomicChannelFromTrack } from './utils/validate';
 
 export function compiler(track: Track, bb: BoundingBox): HiGlassSpec {
     const higlass = new HiGlassModel();

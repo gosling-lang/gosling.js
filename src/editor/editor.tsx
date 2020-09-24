@@ -13,9 +13,9 @@ import { GeminiSpec } from '../core/gemini.schema';
 import { debounce } from 'lodash';
 import { examples } from './example';
 import { replaceTemplate } from '../core/utils';
-import { renderLayoutPreview } from '../core/visualizations/layout-preview';
+import { renderLayoutPreview } from '../core/layout/layout-preview';
 import { calculateBoundingBox } from '../core/utils/bounding-box';
-import { HiGlassTrack } from '../core/visualizations/higlass';
+import { HiGlassTrack } from '../core/layout/higlass';
 import './editor.css';
 
 /**

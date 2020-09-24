@@ -1,12 +1,12 @@
 import * as d3 from 'd3';
-import { drawMark } from './mark';
-import { getMaxZoomLevel, isSemanticZoomTriggered } from './utils/semantic-zoom';
+import { drawMark } from '../core/mark';
+import { getMaxZoomLevel, isSemanticZoomTriggered } from '../core/utils/semantic-zoom';
 import { GeminiTrackModel } from '../core/gemini-track-model';
-import { SpriteInfo } from './utils/sprite';
-import { validateTrack } from './utils/validate';
-import { drawZoomInstruction } from './mark/zoom-instruction';
-import { shareScaleAcrossTracks } from './utils/scales';
-import { resolveSuperposedTracks } from './utils/superpose';
+import { SpriteInfo } from '../core/utils/sprite';
+import { validateTrack } from '../core/utils/validate';
+import { drawZoomInstruction } from '../core/mark/zoom-instruction';
+import { shareScaleAcrossTracks } from '../core/utils/scales';
+import { resolveSuperposedTracks } from '../core/utils/superpose';
 import { IsDataMetadata, IsDataTransform, Track } from '../core/gemini.schema';
 import assign from 'lodash/assign';
 
@@ -119,8 +119,8 @@ function GeminiTrack(HGC: any, ...args: any[]): any {
                     return;
                 }
 
+                // check visibility condition
                 if (!tm.trackVisibility({ zoomLevel: tile?.tileData?.zoomLevel })) {
-                    // check visibility condition
                     return;
                 }
 

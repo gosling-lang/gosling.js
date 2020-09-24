@@ -1,4 +1,4 @@
-import { GeminiTrackModel } from '../../core/gemini-track-model';
+import { GeminiTrackModel } from '../gemini-track-model';
 import {
     Domain,
     IsChannelDeep,
@@ -6,8 +6,8 @@ import {
     IsDomainChrInterval,
     IsDomainGene,
     IsDomainInterval
-} from '../../core/gemini.schema';
-import { CHROMOSOME_INTERVAL_HG19 } from '../../core/utils/chrom-size';
+} from '../gemini.schema';
+import { CHROMOSOME_INTERVAL_HG19 } from './chrom-size';
 import { SUPPORTED_CHANNELS } from '../mark';
 
 /**

@@ -1,10 +1,10 @@
 import { GeminiSpec } from '../../core/gemini.schema';
 import { EXAMPLE_DATASETS } from './datasets';
-import { EXAMPLE_DEOGRAM_TRACK } from './ideogram';
+import { EXAMPLE_IDEOGRAM_TRACK } from './ideogram';
 
 export const EXAMPLE_SUPERPOSE: GeminiSpec = {
     tracks: [
-        EXAMPLE_DEOGRAM_TRACK,
+        EXAMPLE_IDEOGRAM_TRACK,
         {
             data: {
                 url: EXAMPLE_DATASETS.clinvar,

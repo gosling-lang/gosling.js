@@ -1,5 +1,5 @@
-import { GeminiTrackModel } from '../../core/gemini-track-model';
-import { getValueUsingChannel, Channel } from '../../core/gemini.schema';
+import { GeminiTrackModel } from '../gemini-track-model';
+import { getValueUsingChannel, Channel } from '../gemini.schema';
 // import { RESOLUTION } from '.';
 
 export function drawLine(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackModel) {

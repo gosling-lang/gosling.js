@@ -1,7 +1,7 @@
-import { GeminiSpec, Track } from '../../core/gemini.schema';
+import { GeminiSpec, SuperposedTrack, Track } from '../../core/gemini.schema';
 import { EXAMPLE_DATASETS } from './datasets';
 
-export const EXAMPLE_DEOGRAM_TRACK: Track = {
+export const EXAMPLE_IDEOGRAM_TRACK: SuperposedTrack = {
     data: {
         url: 'https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/cytogenetic_band.csv',
         type: 'csv',
@@ -17,10 +17,13 @@ export const EXAMPLE_DEOGRAM_TRACK: Track = {
             },
             text: { field: 'Band', type: 'nominal' },
             color: { value: 'black' },
-            visibleWhen: {
+            visibility: {
                 operation: 'less-than',
                 condition: { width: '|xe-x|', transitionPadding: 10 },
                 target: 'mark'
+            },
+            style: {
+                textStrokeWidth: 0
             }
         },
         {
@@ -59,9 +62,9 @@ export const EXAMPLE_DEOGRAM_TRACK: Track = {
     ],
     x: { field: 'Basepair_start', type: 'genomic', domain: { chromosome: '1' }, axis: 'top' },
     xe: { field: 'Basepair_stop', type: 'genomic' },
-    visibleWhen: {
+    visibility: {
         operation: 'greater-than',
-        condition: { width: 1 },
+        condition: { width: 3, transitionPadding: 5 },
         target: 'mark'
     },
     stroke: { value: 'gray' },
@@ -112,8 +115,8 @@ const ideogramTracks: Track[] = [];
             zoomable: false
         },
         {
-            ...EXAMPLE_DEOGRAM_TRACK,
-            x: { ...EXAMPLE_DEOGRAM_TRACK.x, domain: { chromosome: d.chr }, axis: undefined },
+            ...EXAMPLE_IDEOGRAM_TRACK,
+            x: { ...EXAMPLE_IDEOGRAM_TRACK.x, domain: { chromosome: d.chr }, axis: undefined },
             height: 24,
             width: d.width,
             zoomable: false

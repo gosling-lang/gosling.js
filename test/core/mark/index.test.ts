@@ -1,4 +1,4 @@
-import { drawMark } from '../../../src/higlass-gemini-track/mark';
+import { drawMark } from '../../../src/core/mark';
 import { GeminiTrackModel } from '../../../src/core/gemini-track-model';
 
 describe('Should draw marks correctly', () => {

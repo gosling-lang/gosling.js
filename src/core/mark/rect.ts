@@ -1,6 +1,6 @@
-import { GeminiTrackModel } from '../../core/gemini-track-model';
-import { getValueUsingChannel, Channel } from '../../core/gemini.schema';
-import { VisualProperty } from '../../core/visual-property.schema';
+import { GeminiTrackModel } from '../gemini-track-model';
+import { getValueUsingChannel, Channel } from '../gemini.schema';
+import { VisualProperty } from '../visual-property.schema';
 // import { RESOLUTION } from '.';
 
 export function drawRect(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackModel) {
@@ -63,7 +63,7 @@ export function drawRect(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMod
             const alphaTransition = tm.markVisibility(d, { width: rectWidth });
             const actualOpacity = Math.min(alphaTransition, opacity);
 
-            if (actualOpacity === 0) {
+            if (actualOpacity === 0 || rectHeight === 0 || rectWidth === 0) {
                 // do not need to draw invisible objects
                 return;
             }

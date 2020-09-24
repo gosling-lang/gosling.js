@@ -11,7 +11,7 @@ export function resolveSuperposedTracks(track: Track): SingleTrack[] {
     }
 
     const base: SingleTrack = JSON.parse(JSON.stringify(track));
-    delete (base as SuperposedTrack).superpose; // remove `superpose`
+    delete (base as Partial<SuperposedTrack>).superpose; // remove `superpose` from the base spec
 
     const resolved: SingleTrack[] = [];
     track.superpose.forEach(subSpec => {
