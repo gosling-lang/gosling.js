@@ -1,5 +1,6 @@
 import * as d3 from 'd3';
 import {
+    NonEmptyTrack,
     ChannelBind,
     ChannelType,
     ChannelTypes,
@@ -9,22 +10,21 @@ import {
     IsChannelDeep,
     IsChannelValue,
     IsDomainFlat,
-    IsGlyphMark,
-    Track
+    IsGlyphMark
 } from './gemini.schema';
 import { BoundingBox } from './utils/bounding-box';
 import { deepToLongElements } from './utils/spec-preprocess';
 
 // deprecated
 export class TrackModel {
-    private track: Track;
+    private track: NonEmptyTrack;
     private channelToField: { [k: string]: string };
     private domains: { [channel: string]: (string | number)[] };
     private scales: {
         [channel: string]: d3.ScaleLinear<any, any> | d3.ScaleOrdinal<any, any> | d3.ScaleSequential<any>;
     };
     private ranges: { [channel: string]: string | number[] | string[] };
-    constructor(track: Track) {
+    constructor(track: NonEmptyTrack) {
         this.track = track;
         this.domains = {};
         this.channelToField = {};

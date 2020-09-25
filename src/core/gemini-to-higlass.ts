@@ -9,6 +9,8 @@ import { resolveSuperposedTracks } from './utils/superpose';
 import { getGenomicChannelKeyFromTrack, getGenomicChannelFromTrack } from './utils/validate';
 
 export function compiler(track: Track, bb: BoundingBox): HiGlassSpec {
+    if (IsEmptyTrack(track)) return {};
+
     const higlass = new HiGlassModel();
 
     // TODO: check whether there are multiple track.data across superposed tracks
@@ -18,7 +20,6 @@ export function compiler(track: Track, bb: BoundingBox): HiGlassSpec {
     const firstResolvedSpec = resolveSuperposedTracks(track)[0];
 
     if (
-        !IsEmptyTrack(track) &&
         // type guides
         typeof firstResolvedSpec.data !== 'undefined' &&
         IsDataDeep(firstResolvedSpec.data) &&

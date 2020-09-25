@@ -1,10 +1,10 @@
-import { Track, SingleTrack, IsSuperposedTrack, SuperposedTrack } from '../../core/gemini.schema';
+import { SingleTrack, IsSuperposedTrack, SuperposedTrack, NonEmptyTrack } from '../../core/gemini.schema';
 import assign from 'lodash/assign';
 
 /**
  * Resolve superposed tracks into multiple track specifications.
  */
-export function resolveSuperposedTracks(track: Track): SingleTrack[] {
+export function resolveSuperposedTracks(track: NonEmptyTrack): SingleTrack[] {
     if (!IsSuperposedTrack(track)) {
         // no `superpose` to resolve
         return [track];

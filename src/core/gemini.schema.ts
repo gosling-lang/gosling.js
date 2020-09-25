@@ -71,7 +71,8 @@ export interface DataTransform {
     filter: { field: string; oneOf: string[] | number[]; not: boolean }[];
 }
 
-export type Track = SingleTrack | SuperposedTrack | SuperposedTrackTwoLevels | EmptyTrack;
+export type Track = NonEmptyTrack | EmptyTrack;
+export type NonEmptyTrack = SingleTrack | SuperposedTrack | SuperposedTrackTwoLevels;
 
 export interface EmptyTrack {
     type: 'empty';

@@ -1,10 +1,10 @@
 import * as d3 from 'd3';
-import { Track, Datum, IsGlyphMark } from '../gemini.schema';
+import { Datum, IsGlyphMark, NonEmptyTrack } from '../gemini.schema';
 import { transformData, FilterSpec } from '../utils/data-transform';
 import { TrackModel } from '../deprecated-track-model';
 import { BoundingBox } from '../utils/bounding-box';
 
-export function renderGlyph(g: d3.Selection<SVGGElement, any, any, any>, track: Track, bb: BoundingBox) {
+export function renderGlyph(g: d3.Selection<SVGGElement, any, any, any>, track: NonEmptyTrack, bb: BoundingBox) {
     const tm = new TrackModel(track);
     tm.setScales({
         ...bb,
