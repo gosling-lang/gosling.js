@@ -3,38 +3,22 @@ import { EXAMPLE_DATASETS } from './datasets';
 import { EXAMPLE_IDEOGRAM_TRACK } from './ideogram';
 
 export const EXAMPLE_PERIPHERAL_PLOT: GeminiSpec = {
-    layout: { type: 'linear', direction: 'horizontal', wrap: 3 },
+    layout: {
+        type: 'linear',
+        direction: 'horizontal',
+        wrap: 3,
+        columnSize: [200, 600, 200],
+        rowSize: [60, 60, 180, 180]
+    },
     tracks: [
-        EXAMPLE_IDEOGRAM_TRACK,
         {
-            data: { url: 'dummy', type: 'csv' },
-            mark: 'dummy',
-            width: 0,
-            height: 60
+            ...EXAMPLE_IDEOGRAM_TRACK,
+            width: undefined,
+            span: 3
         },
         {
-            data: { url: 'dummy', type: 'csv' },
-            mark: 'dummy',
-            width: 0,
-            height: 60
-        },
-        {
-            data: { url: 'dummy', type: 'csv' },
-            mark: 'dummy',
-            width: 0,
-            height: 60
-        },
-        {
-            data: { url: 'dummy', type: 'csv' },
-            mark: 'dummy',
-            width: 0,
-            height: 60
-        },
-        {
-            data: { url: 'dummy', type: 'csv' },
-            mark: 'dummy',
-            width: 0,
-            height: 60
+            type: 'empty',
+            span: 3
         },
         {
             data: {

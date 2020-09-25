@@ -17,6 +17,9 @@ export interface Layout {
     type: 'linear' | 'circular';
     direction: 'vertical' | 'horizontal';
     wrap?: number;
+    gap?: number;
+    rowSize?: number | number[];
+    columnSize?: number | number[];
 }
 
 /**
@@ -68,7 +71,14 @@ export interface DataTransform {
     filter: { field: string; oneOf: string[] | number[]; not: boolean }[];
 }
 
-export type Track = SingleTrack | SuperposedTrack | SuperposedTrackTwoLevels;
+export type Track = SingleTrack | SuperposedTrack | SuperposedTrackTwoLevels | EmptyTrack;
+
+export interface EmptyTrack {
+    type: 'empty';
+    width?: number;
+    height?: number;
+    span?: number;
+}
 
 export type SingleTrack = BasicSingleTrack | CustomChannel;
 
@@ -80,11 +90,14 @@ export type CustomChannel = {
 };
 
 export interface BasicSingleTrack {
-    // high-level options
+    // high-level configuration
     description?: string;
     zoomable?: boolean;
+
+    // layout
     width?: number;
     height?: number;
+    span?: number;
 
     // data
     data: DataDeep | Datum[];
@@ -420,7 +433,7 @@ interface Consistency {
 }
 
 /**
- * Type guards
+ * Type Guards
  */
 
 // TODO: these are not neccessary. Resolve the issue with `Channel`.
@@ -491,25 +504,8 @@ export function IsSemanticZoomRedefinition(_: any): _ is SemanticZoomRedefinitio
     return _?.type === 'alternative-encoding';
 }
 
-// TODO: if superposed track, merge specs to remove `superpose`, and deal with the array of tracks.
-export function IsHiGlassTrack(track?: Track) {
-    return track !== undefined; // do not mean any
-    /*(
-            IsSingleTrack(track) &&
-            (
-                (typeof track.mark === 'object' && IsGlyphMark(track.mark) && track.mark.type !== 'compositeMark') ||
-                (IsDataDeep(track.data) && validTilesetUrl(track.data.url))
-            ) ||
-            IsSuperposedTrack(track) &&
-            (
-                track.superpose.filter(t =>
-                    !(typeof t.mark === 'object' && IsGlyphMark(t.mark) && t.mark.type !== 'compositeMark')
-                ).length === 0 ||
-                track.superpose.filter(t =>
-                    !(t.data !== undefined && IsDataDeep(t.data) && validTilesetUrl(t.data.url))
-                ).length === 0
-            )
-        );*/
+export function IsEmptyTrack(_: Track): _ is EmptyTrack {
+    return 'type' in _ && _.type === 'empty';
 }
 
 export function IsChannelValue(

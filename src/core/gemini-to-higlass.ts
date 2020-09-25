@@ -3,7 +3,7 @@ import HiGlassSchema from './higlass.schema.json';
 import { HiGlassSpec, Track as HiGlassTrack } from './higlass.schema';
 import { HiGlassModel, HIGLASS_AXIS_SIZE } from './higlass-model';
 import { parseServerAndTilesetUidFromUrl } from './utils';
-import { Track, IsDataDeep, IsHiGlassTrack, IsChannelDeep, Domain } from './gemini.schema';
+import { Track, IsDataDeep, IsEmptyTrack, IsChannelDeep, Domain } from './gemini.schema';
 import { BoundingBox } from './utils/bounding-box';
 import { resolveSuperposedTracks } from './utils/superpose';
 import { getGenomicChannelKeyFromTrack, getGenomicChannelFromTrack } from './utils/validate';
@@ -11,13 +11,15 @@ import { getGenomicChannelKeyFromTrack, getGenomicChannelFromTrack } from './uti
 export function compiler(track: Track, bb: BoundingBox): HiGlassSpec {
     const higlass = new HiGlassModel();
 
-    // TODO: check whether the track.data are the same across superposed tracks
+    // TODO: check whether there are multiple track.data across superposed tracks
+    // ...
 
     // we only look into the first resolved spec to get information, such as size of the track
     const firstResolvedSpec = resolveSuperposedTracks(track)[0];
 
     if (
-        IsHiGlassTrack(firstResolvedSpec) &&
+        !IsEmptyTrack(track) &&
+        // type guides
         typeof firstResolvedSpec.data !== 'undefined' &&
         IsDataDeep(firstResolvedSpec.data) &&
         firstResolvedSpec.data.url
@@ -31,8 +33,6 @@ export function compiler(track: Track, bb: BoundingBox): HiGlassSpec {
         const isYGenomic = genomicChannelKey === 'y' || genomicChannelKey === 'ye';
         const xDomain = isXGenomic && IsChannelDeep(genomicChannel) ? (genomicChannel.domain as Domain) : undefined;
         const yDomain = isYGenomic && IsChannelDeep(genomicChannel) ? (genomicChannel.domain as Domain) : undefined;
-        // const trackDirection = isXGenomic && isYGenomic ? 'both' : isXGenomic ? 'horizontal' : 'vertical';
-        // const trackType = IsShallowMark(track.mark) ? track.mark : IsMarkDeep(track.mark) ? track.mark.type : 'unknown';
 
         // TODO: better way to sync between height/width of track in the description and actual track size?
         let isAxisShown = false;
@@ -62,12 +62,6 @@ export function compiler(track: Track, bb: BoundingBox): HiGlassSpec {
         if (track.data && IsDataDeep(track.data) && track.data.type === 'csv') {
             // use a CSV data fetcher
             hgTrack.data = track.data;
-
-            // TODO: for demo
-            // higlass._addGeneAnnotationTrack();
-            // hgTrack.height = 30
-            // hgTrack.options.spec.height = hgTrack.options.spec.height - 120;
-            //
         }
 
         higlass
@@ -75,6 +69,7 @@ export function compiler(track: Track, bb: BoundingBox): HiGlassSpec {
             .addTrackSourceServers(server)
             .setZoomFixed(firstResolvedSpec.zoomable as undefined | boolean);
 
+        // check whether to show axis
         ['x', 'y'].forEach(c => {
             const channel = (firstResolvedSpec as any)[c];
             if (IsChannelDeep(channel) && channel.axis) {

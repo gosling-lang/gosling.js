@@ -2,7 +2,7 @@ import * as d3 from 'd3';
 import { GeminiSpec, Track, BasicSingleTrack } from '../gemini.schema';
 import { BoundingBox } from '../utils/bounding-box';
 import { HiGlassTrack } from './higlass';
-import { TRACK_GAP } from './defaults';
+import { DEFAULT_TRACK_GAP } from './defaults';
 import { TRACK_BG_STYLE } from './layout';
 
 interface ArcInfo {
@@ -51,7 +51,7 @@ export function renderCircularLayout(
             cumLength += length;
             if (i % wrap === wrap - 1) {
                 cumLength = 0;
-                cumDonutBandWidth += donutBandWidth + TRACK_GAP;
+                cumDonutBandWidth += donutBandWidth + DEFAULT_TRACK_GAP;
             }
         });
     } else {
@@ -70,7 +70,7 @@ export function renderCircularLayout(
                     endAngle
                 }
             });
-            cumDonutBandWidth += donutBandWidth + TRACK_GAP;
+            cumDonutBandWidth += donutBandWidth + DEFAULT_TRACK_GAP;
             if (i % wrap === wrap - 1) {
                 cumDonutBandWidth = 0;
                 cumLength += length;

@@ -3,6 +3,11 @@ import { EXAMPLE_DATASETS } from './datasets';
 import { EXAMPLE_IDEOGRAM_TRACK } from './ideogram';
 
 export const EXAMPLE_SUPERPOSE: GeminiSpec = {
+    layout: {
+        type: 'linear',
+        direction: 'vertical',
+        rowSize: [60, 180, 180, 180]
+    },
     tracks: [
         EXAMPLE_IDEOGRAM_TRACK,
         {

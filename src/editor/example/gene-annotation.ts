@@ -2,6 +2,11 @@ import { GeminiSpec } from '../../core/gemini.schema';
 import { EXAMPLE_DATASETS } from './datasets';
 
 export const EXAMPLE_GENE_ANNOTATION: GeminiSpec = {
+    layout: {
+        type: 'linear',
+        direction: 'vertical',
+        rowSize: 120
+    },
     tracks: [
         {
             data: {

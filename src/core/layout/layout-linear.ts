@@ -1,67 +1,22 @@
 import * as d3 from 'd3';
-import { GeminiSpec, Track, IsHiGlassTrack, BasicSingleTrack } from '../gemini.schema';
+import { GeminiSpec, IsEmptyTrack, BasicSingleTrack } from '../gemini.schema';
 import { HiGlassTrack, renderHiGlass } from './higlass';
-import { BoundingBox } from '../utils/bounding-box';
-import { TRACK_GAP } from './defaults';
+import { BoundingBox, getTrackPositionInfo } from '../utils/bounding-box';
 import { renderBetweenLink } from './link';
 import { TRACK_BG_STYLE } from './layout';
-import { resolveSuperposedTracks } from '../utils/superpose';
 
 export function renderLinearLayout(
     g: d3.Selection<SVGGElement, any, any, any>,
-    gm: GeminiSpec,
+    spec: GeminiSpec,
     setHiGlassInfo: (higlassInfo: HiGlassTrack[]) => void,
     boundingBox: BoundingBox
 ) {
-    const wrap: number = gm.layout?.wrap ?? 999;
+    // generate layout data
+    const trackInfo = getTrackPositionInfo(spec, boundingBox);
 
-    // Generate layout data
-    const trackInfo: {
-        boundingBox: BoundingBox;
-        track: Track;
-    }[] = [];
-    let cumX = boundingBox.x;
-    let cumY = boundingBox.y;
-    if (gm.layout?.direction === 'horizontal') {
-        gm.tracks.forEach((track, i) => {
-            trackInfo.push({
-                track,
-                boundingBox: {
-                    x: cumX,
-                    width: resolveSuperposedTracks(track)[0].width as number,
-                    y: cumY,
-                    height: resolveSuperposedTracks(track)[0].height as number
-                }
-            });
-            cumX += (resolveSuperposedTracks(track)[0].width as number) + TRACK_GAP;
-            if (i % wrap === wrap - 1) {
-                cumX = boundingBox.x;
-                cumY = cumY += (resolveSuperposedTracks(track)[0].height as number) + TRACK_GAP;
-            }
-        });
-    } else {
-        gm.tracks.forEach((track, i) => {
-            trackInfo.push({
-                track,
-                boundingBox: {
-                    x: cumX,
-                    width: resolveSuperposedTracks(track)[0].width as number,
-                    y: cumY,
-                    height: resolveSuperposedTracks(track)[0].height as number
-                }
-            });
-            cumY += (resolveSuperposedTracks(track)[0].height as number) + TRACK_GAP;
-            if (i % wrap === wrap - 1) {
-                cumX = cumX += (resolveSuperposedTracks(track)[0].width as number) + TRACK_GAP;
-                cumY = boundingBox.y;
-            }
-        });
-    }
-    ///
-
-    // Render track backgrounds
+    // render the backgrounds of non-empty tracks
     g.selectAll('rect')
-        .data(trackInfo)
+        .data(trackInfo.filter(d => !IsEmptyTrack(d.track)))
         .enter()
         .append('rect')
         .attr('x', d => d.boundingBox.x - 1)
@@ -72,13 +27,12 @@ export function renderLinearLayout(
         .attr('stroke', d => TRACK_BG_STYLE.stroke(d.track as BasicSingleTrack))
         .attr('stroke-width', d => TRACK_BG_STYLE.strokeWidth(d.track as BasicSingleTrack));
 
-    // Render links and bands
+    // render links and bands
     renderBetweenLink(g, trackInfo.filter(d => (d.track as any).mark === 'link-between') as any);
 
-    // Render HiGlass tracks
+    // render HiGlass tracks
     renderHiGlass(
-        g,
-        trackInfo.filter(d => IsHiGlassTrack(d.track as any)),
+        trackInfo.filter(d => !IsEmptyTrack(d.track as any)),
         setHiGlassInfo
     );
 }

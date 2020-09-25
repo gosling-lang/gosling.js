@@ -14,7 +14,7 @@ import { debounce } from 'lodash';
 import { examples } from './example';
 import { replaceTemplate } from '../core/utils';
 import { renderLayoutPreview } from '../core/layout/layout-preview';
-import { calculateBoundingBox } from '../core/utils/bounding-box';
+import { getBoundingBox } from '../core/utils/bounding-box';
 import { HiGlassTrack } from '../core/layout/higlass';
 import './editor.css';
 
@@ -32,7 +32,7 @@ higlassRegister({
  */
 higlassRegister({ dataFetcher: CSVDataFetcher, config: CSVDataFetcher.config }, { pluginType: 'dataFetcher' });
 
-const INIT_DEMO_INDEX = 5; // examples.length;
+const INIT_DEMO_INDEX = 5;
 
 /**
  * React component for editing Gemini specs
@@ -74,8 +74,8 @@ function Editor() {
             {
                 x: 60,
                 y: 60,
-                width: calculateBoundingBox(editedGm).width,
-                height: calculateBoundingBox(editedGm).height
+                width: getBoundingBox(editedGm)?.width,
+                height: getBoundingBox(editedGm)?.height
             },
             (higlassInfo: HiGlassTrack[]) => {
                 setHiGlassTrackOptions(higlassInfo);

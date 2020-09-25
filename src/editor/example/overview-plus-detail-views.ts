@@ -3,14 +3,17 @@ import { EXAMPLE_DATASETS } from './datasets';
 import { EXAMPLE_IDEOGRAM_TRACK } from './ideogram';
 
 export const EXAMPLE_OVERVIEW_DEATIL: GeminiSpec = {
-    layout: { type: 'linear', direction: 'horizontal', wrap: 2 },
+    layout: {
+        type: 'linear',
+        direction: 'horizontal',
+        wrap: 2,
+        columnSize: 500,
+        rowSize: [60, 120, 180, 80, 120, 180]
+    },
     tracks: [
-        EXAMPLE_IDEOGRAM_TRACK,
         {
-            data: { url: 'dummy', type: 'csv' },
-            mark: 'dummy',
-            width: 0,
-            height: 60
+            ...EXAMPLE_IDEOGRAM_TRACK,
+            span: 2
         },
         {
             data: {
@@ -46,13 +49,8 @@ export const EXAMPLE_OVERVIEW_DEATIL: GeminiSpec = {
             color: { value: 'lightgray' },
             stroke: { value: 'gray' },
             opacity: { value: 0.2 },
+            span: 2,
             width: 1000,
-            height: 120
-        },
-        {
-            data: { url: 'dummy', type: 'csv' },
-            mark: 'dummy',
-            width: 0,
             height: 120
         },
         {
@@ -78,26 +76,15 @@ export const EXAMPLE_OVERVIEW_DEATIL: GeminiSpec = {
             color: { field: 'peak', type: 'quantitative' },
             // stroke: {value: 'white'},
             // strokeWidth: {value: 1},
+            span: 2,
             width: 1000,
             height: 180
         },
         {
-            data: { url: 'dummy', type: 'csv' },
-            mark: 'dummy',
+            type: 'empty',
             width: 0,
-            height: 180
-        },
-        {
-            data: { url: 'dummy', type: 'csv' },
-            mark: 'dummy',
-            width: 0,
-            height: 50
-        },
-        {
-            data: { url: 'dummy', type: 'csv' },
-            mark: 'dummy',
-            width: 0,
-            height: 50
+            height: 180,
+            span: 2
         },
         {
             data: {

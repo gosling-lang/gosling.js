@@ -1,6 +1,6 @@
 import { Track } from '../../../src/core/gemini.schema';
 import { calculateBoundingBox } from '../../../src/core/utils/bounding-box';
-import { INNER_CIRCLE_RADIUS, TRACK_GAP } from '../../../src/core/layout/defaults';
+import { INNER_CIRCLE_RADIUS, DEFAULT_TRACK_GAP } from '../../../src/core/layout/defaults';
 
 describe('Calculate the bounding box of Gemini views correctly', () => {
     it('Calculate the bounding box of linear layouts correctly', () => {
@@ -20,13 +20,13 @@ describe('Calculate the bounding box of Gemini views correctly', () => {
             tracks: [t, t]
         });
         expect(verTrack.width).toEqual(100);
-        expect(verTrack.height).toEqual(600 + TRACK_GAP);
+        expect(verTrack.height).toEqual(600 + DEFAULT_TRACK_GAP);
 
         const horTrack = calculateBoundingBox({
             layout: { type: 'linear', direction: 'horizontal' },
             tracks: [t, t]
         });
-        expect(horTrack.width).toEqual(200 + TRACK_GAP);
+        expect(horTrack.width).toEqual(200 + DEFAULT_TRACK_GAP);
         expect(horTrack.height).toEqual(300);
 
         const horWrapTrack = calculateBoundingBox({
@@ -34,7 +34,7 @@ describe('Calculate the bounding box of Gemini views correctly', () => {
             tracks: [t, t]
         });
         expect(horWrapTrack.width).toEqual(100);
-        expect(horWrapTrack.height).toEqual(600 + TRACK_GAP * 2);
+        expect(horWrapTrack.height).toEqual(600 + DEFAULT_TRACK_GAP * 2);
     });
 
     it('Calculate the bounding box of circular layouts correctly', () => {
