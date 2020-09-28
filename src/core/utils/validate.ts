@@ -1,7 +1,7 @@
-import { IsChannelDeep, ChannelDeep, ChannelTypes, NonEmptyTrack } from '../../core/gemini.schema';
+import { IsChannelDeep, ChannelDeep, ChannelTypes, Track } from '../../core/gemini.schema';
 import { resolveSuperposedTracks } from './superpose';
 
-export function validateTrack(track: NonEmptyTrack) {
+export function validateTrack(track: Track) {
     let valid = true;
     const errorMessages: string[] = [];
 
@@ -41,7 +41,7 @@ export function validateTrack(track: NonEmptyTrack) {
  * Find an axis channel that is encoded with genomic coordinate.
  * `undefined` if not found.
  */
-export function getGenomicChannelFromTrack(track: NonEmptyTrack): ChannelDeep | undefined {
+export function getGenomicChannelFromTrack(track: Track): ChannelDeep | undefined {
     // we do not support using two genomic coordinates yet
     let genomicChannel: ChannelDeep | undefined = undefined;
     ['x', 'y', 'xe', 'ye', 'x1', 'y1', 'x1e', 'y1e'].reverse().forEach(channelType => {
@@ -58,7 +58,7 @@ export function getGenomicChannelFromTrack(track: NonEmptyTrack): ChannelDeep | 
  * `undefined` if not found.
  */
 export function getGenomicChannelKeyFromTrack(
-    track: NonEmptyTrack
+    track: Track
 ): 'x' | 'xe' | 'y' | 'ye' | 'x1' | 'y1' | 'x1e' | 'y1e' | undefined {
     // we do not support using two genomic coordinates yet
     let genomicChannelKey: string | undefined = undefined;

@@ -1,5 +1,4 @@
 import { GeminiTrackModel } from '../../../src/core/gemini-track-model';
-import { IsEmptyTrack } from '../../../src/core/gemini.schema';
 import { resolveSuperposedTracks } from '../../../src/core/utils/superpose';
 import { EXAMPLE_IDEOGRAM_TRACK } from '../../../src/editor/example/ideogram';
 import { EXAMPLE_SEMANTIC_ZOOMING } from '../../../src/editor/example/semantic-zoom';
@@ -31,7 +30,6 @@ describe('Example specs should be valid', () => {
         const msgs: string[] = [];
 
         EXAMPLE_SEMANTIC_ZOOMING.tracks.forEach(t => {
-            if (IsEmptyTrack(t)) return;
             const resolvedIdeograms = resolveSuperposedTracks(t);
             resolvedIdeograms.forEach(spec => {
                 const ideogramMark = new GeminiTrackModel(spec, []);

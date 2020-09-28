@@ -8,7 +8,7 @@
       "dom.iterable",
       "esnext"
     ],
-    // "alwaysStrict": true,
+    "alwaysStrict": true,
     "allowJs": true,
     "sourceMap": true,
     "declaration": true,

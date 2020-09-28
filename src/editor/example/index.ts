@@ -8,6 +8,7 @@ import { EXAMPLE_OVERVIEW_DEATIL } from './overview-plus-detail-views';
 import { EXAMPLE_PERIPHERAL_PLOT } from './peripheral-plot';
 import { EXAMPLE_SEMANTIC_ZOOMING } from './semantic-zoom';
 import { EXAMPLE_DATA_FETCHER } from './data-fetcher';
+import { EXMAPLE_BASIC_LINKING } from './linking';
 
 export const examples: ReadonlyArray<{
     name: string;
@@ -43,6 +44,10 @@ export const examples: ReadonlyArray<{
         name: 'Semantic Zooming with Multiple Tilesets',
         spec: EXAMPLE_DATA_FETCHER,
         underDevelopment: true
+    },
+    {
+        name: 'Basic Linking',
+        spec: EXMAPLE_BASIC_LINKING
     },
     {
         name: 'Overview + Detail views',

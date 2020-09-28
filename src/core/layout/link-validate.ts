@@ -1,7 +1,7 @@
-import { IsChannelDeep, NonEmptyTrack } from '../gemini.schema';
+import { IsChannelDeep, Track } from '../gemini.schema';
 import { SpecValidityModel } from './validate';
 
-export function validateBetweenLinkSpec(track: NonEmptyTrack) {
+export function validateBetweenLinkSpec(track: Track) {
     const validity = new SpecValidityModel(true);
 
     const xField = IsChannelDeep(track.x) ? track.x.field : undefined;

@@ -3,14 +3,12 @@ import HiGlassSchema from './higlass.schema.json';
 import { HiGlassSpec, Track as HiGlassTrack } from './higlass.schema';
 import { HiGlassModel, HIGLASS_AXIS_SIZE } from './higlass-model';
 import { parseServerAndTilesetUidFromUrl } from './utils';
-import { Track, IsDataDeep, IsEmptyTrack, IsChannelDeep, Domain } from './gemini.schema';
+import { Track, IsDataDeep, IsChannelDeep, Domain } from './gemini.schema';
 import { BoundingBox } from './utils/bounding-box';
 import { resolveSuperposedTracks } from './utils/superpose';
 import { getGenomicChannelKeyFromTrack, getGenomicChannelFromTrack } from './utils/validate';
 
 export function compiler(track: Track, bb: BoundingBox): HiGlassSpec {
-    if (IsEmptyTrack(track)) return {};
-
     const higlass = new HiGlassModel();
 
     // TODO: check whether there are multiple track.data across superposed tracks

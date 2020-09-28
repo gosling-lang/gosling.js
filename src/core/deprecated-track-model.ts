@@ -1,6 +1,6 @@
 import * as d3 from 'd3';
 import {
-    NonEmptyTrack,
+    Track,
     ChannelBind,
     ChannelType,
     ChannelTypes,
@@ -17,14 +17,14 @@ import { deepToLongElements } from './utils/spec-preprocess';
 
 // deprecated
 export class TrackModel {
-    private track: NonEmptyTrack;
+    private track: Track;
     private channelToField: { [k: string]: string };
     private domains: { [channel: string]: (string | number)[] };
     private scales: {
         [channel: string]: d3.ScaleLinear<any, any> | d3.ScaleOrdinal<any, any> | d3.ScaleSequential<any>;
     };
     private ranges: { [channel: string]: string | number[] | string[] };
-    constructor(track: NonEmptyTrack) {
+    constructor(track: Track) {
         this.track = track;
         this.domains = {};
         this.channelToField = {};

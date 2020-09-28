@@ -8,7 +8,7 @@ export const EXAMPLE_OVERVIEW_DEATIL: GeminiSpec = {
         direction: 'horizontal',
         wrap: 2,
         columnSize: 500,
-        rowSize: [60, 120, 180, 80, 120, 180]
+        rowSize: [60, 120, 180, 120, 180]
     },
     tracks: [
         {
@@ -79,12 +79,6 @@ export const EXAMPLE_OVERVIEW_DEATIL: GeminiSpec = {
             span: 2,
             width: 1000,
             height: 180
-        },
-        {
-            type: 'empty',
-            width: 0,
-            height: 180,
-            span: 2
         },
         {
             data: {

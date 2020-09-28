@@ -1,4 +1,4 @@
-import { IsSemanticZoomRedefinition, LogicalOperation, NonEmptyTrack } from '../../core/gemini.schema';
+import { IsSemanticZoomRedefinition, LogicalOperation, Track } from '../../core/gemini.schema';
 
 export function getMaxZoomLevel() {
     // TODO: How to correctly calculate maxZoomLevel?
@@ -10,7 +10,7 @@ export function getMaxZoomLevel() {
 /**
  * Find whether the semantic zooming is triggered or not.
  */
-export function isSemanticZoomTriggered(track: NonEmptyTrack, zoomLevel: number): boolean {
+export function isSemanticZoomTriggered(track: Track, zoomLevel: number): boolean {
     const semanticZoom = track.semanticZoom;
     if (IsSemanticZoomRedefinition(semanticZoom)) {
         const level = semanticZoom.trigger.condition.zoomLevel;

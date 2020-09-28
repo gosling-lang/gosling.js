@@ -1,4 +1,4 @@
-import { GeminiSpec, IsEmptyTrack, Track } from '../gemini.schema';
+import { GeminiSpec, Track } from '../gemini.schema';
 import { DEFAULT_TRACK_GAP, DEFAULT_TRACK_HEIGHT, DEFAULT_TRACK_WIDTH, INNER_CIRCLE_RADIUS } from '../layout/defaults';
 import * as d3 from 'd3';
 import { resolveSuperposedTracks } from '../utils/superpose';
@@ -21,9 +21,7 @@ export function getTrackPositionInfo(spec: GeminiSpec, boundingBox: BoundingBox)
     // length of tracks + (span-1) of each track
     const length =
         spec.tracks.length +
-        spec.tracks
-            .map(t => (!IsEmptyTrack(t) && typeof t.span === 'number' ? t.span - 1 : 0))
-            .reduce((a, b) => a + b, 0);
+        spec.tracks.map(t => (typeof t.span === 'number' ? t.span - 1 : 0)).reduce((a, b) => a + b, 0);
 
     let numCols = 0,
         numRows = 0;
@@ -151,9 +149,7 @@ export function getBoundingBox(spec: GeminiSpec) {
     // length of tracks + (span-1) of each track
     const length =
         spec.tracks.length +
-        spec.tracks
-            .map(t => (!IsEmptyTrack(t) && typeof t.span === 'number' ? t.span - 1 : 0))
-            .reduce((a, b) => a + b, 0);
+        spec.tracks.map(t => (typeof t.span === 'number' ? t.span - 1 : 0)).reduce((a, b) => a + b, 0);
     const wrap: number = spec.layout?.wrap ?? 999;
 
     let numCols = 0,

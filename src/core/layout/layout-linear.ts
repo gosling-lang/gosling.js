@@ -1,5 +1,5 @@
 import * as d3 from 'd3';
-import { GeminiSpec, IsEmptyTrack, BasicSingleTrack } from '../gemini.schema';
+import { GeminiSpec, BasicSingleTrack } from '../gemini.schema';
 import { HiGlassTrack, renderHiGlass } from './higlass';
 import { BoundingBox, getTrackPositionInfo } from '../utils/bounding-box';
 import { renderBetweenLink } from './link';
@@ -16,7 +16,7 @@ export function renderLinearLayout(
 
     // render the backgrounds of non-empty tracks
     g.selectAll('rect')
-        .data(trackInfo.filter(d => !IsEmptyTrack(d.track)))
+        .data(trackInfo) //.filter(d => !IsEmptyTrack(d.track)))
         .enter()
         .append('rect')
         .attr('x', d => d.boundingBox.x - 1)
@@ -32,7 +32,7 @@ export function renderLinearLayout(
 
     // render HiGlass tracks
     renderHiGlass(
-        trackInfo.filter(d => !IsEmptyTrack(d.track as any)),
+        trackInfo, //.filter(d => !IsEmptyTrack(d.track as any)),
         setHiGlassInfo
     );
 }

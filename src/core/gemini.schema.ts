@@ -71,8 +71,8 @@ export interface DataTransform {
     filter: { field: string; oneOf: string[] | number[]; not: boolean }[];
 }
 
-export type Track = NonEmptyTrack | EmptyTrack;
-export type NonEmptyTrack = SingleTrack | SuperposedTrack | SuperposedTrackTwoLevels;
+// export type Track = NonEmptyTrack | EmptyTrack;
+export type Track = SingleTrack | SuperposedTrack | SuperposedTrackTwoLevels;
 
 export interface EmptyTrack {
     type: 'empty';
@@ -505,9 +505,9 @@ export function IsSemanticZoomRedefinition(_: any): _ is SemanticZoomRedefinitio
     return _?.type === 'alternative-encoding';
 }
 
-export function IsEmptyTrack(_: Track): _ is EmptyTrack {
-    return 'type' in _ && _.type === 'empty';
-}
+// export function IsEmptyTrack(_: Track): _ is EmptyTrack {
+//     return 'type' in _ && _.type === 'empty';
+// }
 
 export function IsChannelValue(
     channel: ChannelDeep | ChannelValue | ChannelBind | undefined | 'none'

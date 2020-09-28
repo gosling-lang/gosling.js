@@ -8,16 +8,12 @@ export const EXAMPLE_PERIPHERAL_PLOT: GeminiSpec = {
         direction: 'horizontal',
         wrap: 3,
         columnSize: [200, 600, 200],
-        rowSize: [60, 60, 180, 180]
+        rowSize: [60, 180, 180]
     },
     tracks: [
         {
             ...EXAMPLE_IDEOGRAM_TRACK,
             width: undefined,
-            span: 3
-        },
-        {
-            type: 'empty',
             span: 3
         },
         {
