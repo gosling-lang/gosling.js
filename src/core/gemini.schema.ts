@@ -11,6 +11,8 @@ export interface GeminiSpec {
     description?: string;
     layout?: Layout;
     tracks: Track[];
+    // DEBUG:
+    isLinking?: boolean;
 }
 
 export interface Layout {

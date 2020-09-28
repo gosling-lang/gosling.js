@@ -5,7 +5,7 @@ import { CSVDataFetcher } from '../higlass-gemini-datafetcher/index';
 import { HiGlassComponent } from 'higlass';
 // @ts-ignore
 import { default as higlassRegister } from 'higlass-register';
-import React, { useState, useEffect, useRef, useMemo } from 'react';
+import React, { useState, useEffect, useRef, createRef, useMemo } from 'react';
 import EditorPanel from './editor-panel';
 import stringify from 'json-stringify-pretty-compact';
 import SplitPane from 'react-split-pane';
@@ -32,7 +32,17 @@ higlassRegister({
  */
 higlassRegister({ dataFetcher: CSVDataFetcher, config: CSVDataFetcher.config }, { pluginType: 'dataFetcher' });
 
-const INIT_DEMO_INDEX = 5; //examples.length - 3;
+const INIT_DEMO_INDEX = examples.length - 3;
+
+/**
+ * An API helper to contain information about domain and range of x-axis and y-axis for the HiGlass' 'location' API
+ */
+interface XYDomainRange {
+    xDomain: [number, number];
+    yDomain: [number, number];
+    xRange: [number, number];
+    yRange: [number, number];
+}
 
 /**
  * React component for editing Gemini specs
@@ -43,6 +53,8 @@ function Editor() {
     const [demo, setDemo] = useState(examples[INIT_DEMO_INDEX]);
     const [editorMode, setEditorMode] = useState<'Normal Mode' | 'Template-based Mode'>('Normal Mode');
     const [gm, setGm] = useState(stringify(examples[INIT_DEMO_INDEX].spec as GeminiSpec));
+
+    const [hgRefs, setHgRefs] = useState<HiGlassComponent[]>([]);
 
     /**
      * Editor moode
@@ -84,40 +96,113 @@ function Editor() {
     }, [gm]);
 
     /**
+     * Listen to higlass API to link between tracks
+     */
+    useEffect(() => {
+        if (!(JSON.parse(gm) as GeminiSpec).isLinking) {
+            // experimental option: link entire tracks only when `isLinking` is `true`
+            return;
+        }
+
+        hgRefs.forEach((refFrom, iFrom) => {
+            if (refFrom.current) {
+                refFrom.current.api.on(
+                    'location',
+                    debounce((_: XYDomainRange) => {
+                        hgRefs.forEach((refTo, iTo) => {
+                            // sync the x scales in the rest of the tracks
+                            if (iFrom !== iTo) {
+                                try {
+                                    refTo.current.zoomTo(
+                                        higlassTrackOptions[iTo].viewConfig.views[0].uid,
+                                        ..._.xDomain,
+                                        ..._.yDomain,
+                                        0 // duration of animation
+                                    );
+                                } catch (e) {
+                                    console.warn(e);
+                                }
+                            }
+                        });
+                    }, 100)
+                );
+
+                // TEST: force zoom to certain position
+                // setTimeout(() => {
+                //     try {
+                //         ref.current.api.zoomTo(
+                //             higlassTrackOptions[i].viewConfig.views[0].uid,//'gemini-view',
+                //             1, 100000,
+                //             1, 100000,
+                //             0
+                //         );
+                //     } catch(e) {
+                //         console.warn(e);
+                //     }
+                // }, 2500);
+
+                // TEST: listen to view config updates
+                // refFrom.current.api.on('viewConfig', (_: string) => {
+                //     console.log(_);
+                // });
+            }
+        });
+        return () => {
+            hgRefs.forEach((ref: HiGlassComponent) => {
+                ref.current ? ref.current.api.off('location') : null;
+            });
+        };
+    }, [hgRefs]);
+
+    /**
      * HiGlass components to render Gemini Tracks.
      */
     const hglass = useMemo(() => {
-        return higlassTrackOptions.map(o => (
-            <div
-                key={stringify(o.viewConfig)}
-                style={{
-                    position: 'absolute',
-                    display: 'block',
-                    left: o.boundingBox.x,
-                    top: o.boundingBox.y,
-                    width: o.boundingBox.width,
-                    height: o.boundingBox.height
-                }}
-            >
-                <HiGlassComponent
-                    options={{
-                        bounded: true,
-                        containerPaddingX: 0,
-                        containerPaddingY: 0,
-                        viewMarginTop: 0,
-                        viewMarginBottom: 0,
-                        viewMarginLeft: 0,
-                        viewMarginRight: 0,
-                        viewPaddingTop: 0,
-                        viewPaddingBottom: 0,
-                        viewPaddingLeft: 0,
-                        viewPaddingRight: 0,
-                        sizeMode: 'bounded'
+        const refs: HiGlassComponent[] = [];
+        const hgComponents = higlassTrackOptions.map(o => {
+            const ref = createRef<HiGlassComponent>();
+
+            // store `ref` to use HiGlass APIs later
+            refs.push(ref);
+
+            return (
+                <div
+                    key={stringify(o.viewConfig.views[0].uid)}
+                    style={{
+                        position: 'absolute',
+                        display: 'block',
+                        left: o.boundingBox.x,
+                        top: o.boundingBox.y,
+                        width: o.boundingBox.width,
+                        height: o.boundingBox.height
                     }}
-                    viewConfig={o.viewConfig}
-                />
-            </div>
-        ));
+                >
+                    <HiGlassComponent
+                        options={{
+                            bounded: true,
+                            containerPaddingX: 0,
+                            containerPaddingY: 0,
+                            viewMarginTop: 0,
+                            viewMarginBottom: 0,
+                            viewMarginLeft: 0,
+                            viewMarginRight: 0,
+                            viewPaddingTop: 0,
+                            viewPaddingBottom: 0,
+                            viewPaddingLeft: 0,
+                            viewPaddingRight: 0,
+                            sizeMode: 'bounded'
+                        }}
+                        viewConfig={o.viewConfig}
+                        ref={ref}
+                    />
+                </div>
+            );
+        });
+
+        // update refs of higlass components
+        setHgRefs(refs);
+
+        return hgComponents;
     }, [higlassTrackOptions]);
 
     return (
