@@ -106,17 +106,17 @@ const ideogramTracks: Track[] = [];
     { chr: '4', width: 830 },
     { chr: '5', width: 820 },
     { chr: '9', width: 730 }
-].map(d => {
+].map((d, i) => {
     ideogramTracks.push(
         {
             ...EXAMPLE_STACKED_AREA,
-            x: { ...EXAMPLE_STACKED_AREA.x, domain: { chromosome: d.chr } },
+            x: { ...EXAMPLE_STACKED_AREA.x, domain: { chromosome: d.chr }, linking: `link-${i}` },
             width: d.width,
             zoomable: false
         },
         {
             ...EXAMPLE_IDEOGRAM_TRACK,
-            x: { ...EXAMPLE_IDEOGRAM_TRACK.x, domain: { chromosome: d.chr }, axis: undefined },
+            x: { ...EXAMPLE_IDEOGRAM_TRACK.x, domain: { chromosome: d.chr }, axis: undefined, linking: `link-${i}` },
             height: 24,
             width: d.width,
             zoomable: false

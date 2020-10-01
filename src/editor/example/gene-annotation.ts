@@ -32,7 +32,8 @@ export const HIGLASS_GENE_ANNOTATION: Track = {
                 field: 'start',
                 type: 'genomic',
                 domain: { chromosome: '1', interval: [3540100, 3555100] },
-                axis: 'top'
+                axis: 'top',
+                linking: 'link-1'
             },
             xe: {
                 field: 'end',
@@ -187,7 +188,8 @@ export const EXAMPLE_GENE_ANNOTATION: GeminiSpec = {
                         field: 'start',
                         type: 'genomic',
                         domain: { chromosome: '1', interval: [3540100, 3555100] },
-                        axis: 'top'
+                        axis: 'top',
+                        linking: 'link-1'
                     },
                     xe: {
                         field: 'end',
@@ -304,7 +306,8 @@ export const EXAMPLE_GENE_ANNOTATION: GeminiSpec = {
                         field: 'start',
                         type: 'genomic',
                         domain: { chromosome: '1', interval: [3540100, 3555100] },
-                        axis: 'top'
+                        axis: 'top',
+                        linking: 'link-1'
                     },
                     xe: {
                         field: 'end',
@@ -436,7 +439,8 @@ export const EXAMPLE_GENE_ANNOTATION: GeminiSpec = {
                         field: 'start',
                         type: 'genomic',
                         domain: { chromosome: '1', interval: [3540100, 3555100] },
-                        axis: 'top'
+                        axis: 'top',
+                        linking: 'link-1'
                     },
                     xe: {
                         field: 'end',
@@ -556,7 +560,8 @@ export const EXAMPLE_GENE_ANNOTATION: GeminiSpec = {
                         field: 'start',
                         type: 'genomic',
                         domain: { chromosome: '1', interval: [3540100, 3555100] },
-                        axis: 'top'
+                        axis: 'top',
+                        linking: 'link-1'
                     },
                     xe: {
                         field: 'end',
@@ -640,7 +645,8 @@ export const EXAMPLE_GENE_ANNOTATION: GeminiSpec = {
                         field: 'start',
                         type: 'genomic',
                         domain: { chromosome: '1', interval: [3540100, 3555100] },
-                        axis: 'top'
+                        axis: 'top',
+                        linking: 'link-1'
                     },
                     color: { value: 'black' },
                     xe: {

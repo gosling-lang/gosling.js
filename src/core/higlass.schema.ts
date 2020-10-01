@@ -138,8 +138,8 @@ export interface Layout {
 }
 
 export interface GenericLocks {
-    locksByViewUid?: LocksByViewUid;
-    locksDict?: any; // We are checking the type of `locksDict` with typescript functions.
+    locksByViewUid: LocksByViewUid;
+    locksDict: any; // We are checking the type of `locksDict` with typescript functions.
 }
 
 export interface LocksByViewUid {

@@ -34,7 +34,18 @@ const HIGLASS_VIEW_TEMPLATE: View = {
 export class HiGlassModel {
     private hg: HiGlassSpec;
     constructor() {
-        this.hg = { trackSourceServers: [], views: [], zoomLocks: {}, locationLocks: {} };
+        this.hg = {
+            trackSourceServers: [],
+            views: [],
+            zoomLocks: {
+                locksByViewUid: {},
+                locksDict: {}
+            },
+            locationLocks: {
+                locksByViewUid: {},
+                locksDict: {}
+            }
+        };
 
         // Add default specs.
         this.setEditable(false);

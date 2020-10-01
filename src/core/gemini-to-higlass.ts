@@ -7,7 +7,7 @@ import { resolveSuperposedTracks } from './utils/superpose';
 import { getGenomicChannelKeyFromTrack, getGenomicChannelFromTrack } from './utils/validate';
 
 /**
- * Convert a gemini track into a HiGlass view.
+ * Convert a gemini track into a HiGlass view and add it into higlass model.
  */
 export function geminiToHiGlass(
     hgModel: HiGlassModel,
