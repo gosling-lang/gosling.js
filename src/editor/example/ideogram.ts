@@ -110,13 +110,13 @@ const ideogramTracks: Track[] = [];
     ideogramTracks.push(
         {
             ...EXAMPLE_STACKED_AREA,
-            x: { ...EXAMPLE_STACKED_AREA.x, domain: { chromosome: d.chr }, linking: `link-${i}` },
+            x: { ...EXAMPLE_STACKED_AREA.x, domain: { chromosome: d.chr }, linkID: `link-${i}` },
             width: d.width,
             zoomable: false
         },
         {
             ...EXAMPLE_IDEOGRAM_TRACK,
-            x: { ...EXAMPLE_IDEOGRAM_TRACK.x, domain: { chromosome: d.chr }, axis: undefined, linking: `link-${i}` },
+            x: { ...EXAMPLE_IDEOGRAM_TRACK.x, domain: { chromosome: d.chr }, axis: undefined, linkID: `link-${i}` },
             height: 24,
             width: d.width,
             zoomable: false

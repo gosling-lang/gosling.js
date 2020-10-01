@@ -1,4 +1,5 @@
 import { GeminiSpec } from '../../core/gemini.schema';
+import { EXAMPLE_BASIC_AREA } from './basic-marks';
 import { EXAMPLE_DATASETS } from './datasets';
 
 export const EXMAPLE_BASIC_LINKING: GeminiSpec = {
@@ -21,7 +22,7 @@ export const EXMAPLE_BASIC_LINKING: GeminiSpec = {
                 type: 'genomic',
                 domain: { chromosome: '1' },
                 axis: 'top',
-                linking: 'link1'
+                linkID: 'link1'
             },
             y: { field: 'peak', type: 'quantitative' },
             row: { field: 'sample', type: 'nominal' },
@@ -49,7 +50,7 @@ export const EXMAPLE_BASIC_LINKING: GeminiSpec = {
                 type: 'genomic',
                 domain: { chromosome: '1' },
                 axis: 'top',
-                linking: 'link1'
+                linkID: 'link1'
             },
             y: { field: 'peak', type: 'quantitative' },
             row: { field: 'sample', type: 'nominal' },
@@ -57,7 +58,22 @@ export const EXMAPLE_BASIC_LINKING: GeminiSpec = {
             stroke: { value: 'white' },
             strokeWidth: { value: 0.5 },
             width: 1000,
-            height: 180
+            height: 180,
+            superpose: [
+                {},
+                {
+                    mark: 'rect-brush',
+                    x: { linkID: 'linking-with-brush' }
+                }
+            ]
+        },
+        {
+            ...EXAMPLE_BASIC_AREA,
+            x: {
+                ...EXAMPLE_BASIC_AREA.x,
+                domain: { chromosome: '1', interval: [160000000, 200000000] },
+                linkID: 'linking-with-brush'
+            }
         }
     ]
-};
+} as GeminiSpec;

@@ -61,8 +61,34 @@ export class HiGlassModel {
         return this;
     }
 
+    public addBrush(
+        viewId: string,
+        fromViewUid?: string,
+        style?: { color?: string; stroke?: string; opacity?: string; strokeWidth?: number }
+    ) {
+        if (!fromViewUid) return;
+
+        // we could do this to `whole` track or `center` track with `combined`
+        (this.getView(viewId) as any).tracks.whole.push({
+            type: 'viewport-projection-horizontal',
+            fromViewUid,
+            options: {
+                projectionFillColor: style?.color ?? '#777',
+                projectionStrokeColor: style?.stroke ?? '#777',
+                projectionFillOpacity: style?.opacity ?? 0.3,
+                projectionStrokeOpacity: 0,
+                strokeWidth: style?.strokeWidth ?? 1
+            }
+        });
+        return this;
+    }
+
     public getLastView() {
         return this.hg.views[this.hg.views.length - 1];
+    }
+
+    public getView(viewId: string) {
+        return this.hg.views.find(d => d.uid === viewId);
     }
 
     public validateSpec() {
@@ -117,7 +143,14 @@ export class HiGlassModel {
 
     public setMainTrack(track: Track) {
         if (!this.hg.views) return this;
-        this.getLastView().tracks.center = [track];
+        this.getLastView().tracks.center = [
+            {
+                type: 'combined',
+                width: track.width,
+                height: (track as any).height, // TODO:
+                contents: [track]
+            }
+        ];
         return this;
     }
 

@@ -16,16 +16,28 @@ export function renderHiGlass(trackInfos: TrackInfo[], setHg: (hg: HiGlassSpec) 
         geminiToHiGlass(hgModel, track, bb, layout);
     });
 
-    // Linking views
+    /* Linking views */
     const linkingInfos = getLinkingInfo(hgModel);
 
-    // console.log(linkingInfos);
+    // brushing (between a view with `rect-brush` and a view having the same linking name)
+    linkingInfos
+        .filter(d => d.isBrush)
+        .forEach(info => {
+            hgModel.addBrush(
+                info.viewId,
+                linkingInfos.find(d => !d.isBrush && d.linkId === info.linkId)?.viewId,
+                info.style
+            );
+        });
 
+    // location/zoom lock information
     // fill `locksByViewUid`
-    linkingInfos.forEach(d => {
-        hgModel.spec().zoomLocks.locksByViewUid[d.viewId] = d.linkId;
-        hgModel.spec().locationLocks.locksByViewUid[d.viewId] = d.linkId;
-    });
+    linkingInfos
+        .filter(d => !d.isBrush)
+        .forEach(d => {
+            hgModel.spec().zoomLocks.locksByViewUid[d.viewId] = d.linkId;
+            hgModel.spec().locationLocks.locksByViewUid[d.viewId] = d.linkId;
+        });
 
     // fill `locksDict`
     const uniqueLinkIds = Array.from(new Set(linkingInfos.map(d => d.linkId)));
@@ -35,6 +47,7 @@ export function renderHiGlass(trackInfos: TrackInfo[], setHg: (hg: HiGlassSpec) 
         hgModel.spec().locationLocks.locksDict[linkId] = { uid: linkId };
 
         linkingInfos
+            .filter(d => !d.isBrush)
             .filter(d => d.linkId === linkId)
             .forEach(d => {
                 hgModel.spec().zoomLocks.locksDict[linkId][d.viewId] = [124625310.5, 1547846991.5, 249250.621];

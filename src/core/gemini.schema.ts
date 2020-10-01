@@ -71,15 +71,7 @@ export interface DataTransform {
     filter: { field: string; oneOf: string[] | number[]; not: boolean }[];
 }
 
-// export type Track = NonEmptyTrack | EmptyTrack;
 export type Track = SingleTrack | SuperposedTrack | SuperposedTrackTwoLevels;
-
-export interface EmptyTrack {
-    type: 'empty';
-    width?: number;
-    height?: number;
-    span?: number;
-}
 
 export type SingleTrack = BasicSingleTrack | CustomChannel;
 
@@ -283,7 +275,7 @@ export interface ChannelDeep {
     baseline?: string | number;
     zeroBaseline?: boolean; // we could remove this and use the `baseline` option instead
     grid?: boolean;
-    linking?: string;
+    linkID?: string;
 }
 export type FieldType = 'genomic' | 'nominal' | 'quantitative';
 
@@ -337,6 +329,9 @@ export type MarkType =
     | 'triangle-l'
     | 'triangle-r'
     | 'triangle-d'
+    // experimental
+    | 'rect-brush'
+    // deprecated
     | 'dummy';
 
 /**
@@ -503,10 +498,6 @@ export function IsSuperposedTrack(track: Track): track is SuperposedTrack {
 export function IsSemanticZoomRedefinition(_: any): _ is SemanticZoomRedefinition {
     return _?.type === 'alternative-encoding';
 }
-
-// export function IsEmptyTrack(_: Track): _ is EmptyTrack {
-//     return 'type' in _ && _.type === 'empty';
-// }
 
 export function IsChannelValue(
     channel: ChannelDeep | ChannelValue | ChannelBind | undefined | 'none'

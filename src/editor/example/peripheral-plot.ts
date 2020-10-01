@@ -13,6 +13,12 @@ export const EXAMPLE_PERIPHERAL_PLOT: GeminiSpec = {
     tracks: [
         {
             ...EXAMPLE_IDEOGRAM_TRACK,
+            superpose: [
+                ...EXAMPLE_IDEOGRAM_TRACK.superpose,
+                { mark: 'rect-brush', x: { linkID: 'periphery-left' } },
+                { mark: 'rect-brush', x: { linkID: 'focus' }, color: { value: 'black' } },
+                { mark: 'rect-brush', x: { linkID: 'periphery-right' } }
+            ],
             width: undefined,
             span: 3
         },
@@ -32,8 +38,9 @@ export const EXAMPLE_PERIPHERAL_PLOT: GeminiSpec = {
             x: {
                 field: 'position',
                 type: 'genomic',
-                domain: { chromosome: '1', interval: [1, 3000500] },
-                axis: 'top'
+                domain: { chromosome: '1', interval: [1, 50000000] },
+                axis: 'top',
+                linkID: 'periphery-left'
             },
             y: { field: 'peak', type: 'quantitative' },
             row: { field: 'sample', type: 'nominal' },
@@ -59,8 +66,9 @@ export const EXAMPLE_PERIPHERAL_PLOT: GeminiSpec = {
             x: {
                 field: 'position',
                 type: 'genomic',
-                domain: { chromosome: '1', interval: [1, 3000500] },
-                axis: 'top'
+                domain: { chromosome: '1', interval: [50000000, 100000000] },
+                axis: 'top',
+                linkID: 'focus'
             },
             y: { field: 'peak', type: 'quantitative' },
             row: { field: 'sample', type: 'nominal' },
@@ -84,8 +92,9 @@ export const EXAMPLE_PERIPHERAL_PLOT: GeminiSpec = {
             x: {
                 field: 'position',
                 type: 'genomic',
-                domain: { chromosome: '1', interval: [1, 3000500] },
-                axis: 'top'
+                domain: { chromosome: '1', interval: [100000000, 150000000] },
+                axis: 'top',
+                linkID: 'periphery-right'
             },
             y: { field: 'peak', type: 'quantitative' },
             row: { field: 'sample', type: 'nominal' },
@@ -111,8 +120,8 @@ export const EXAMPLE_PERIPHERAL_PLOT: GeminiSpec = {
             x: {
                 field: 'position',
                 type: 'genomic',
-                domain: { chromosome: '1', interval: [1, 3000500] },
-                axis: 'top'
+                domain: { chromosome: '1', interval: [1, 50000000] },
+                linkID: 'periphery-left'
             },
             y: { field: 'peak', type: 'quantitative' },
             row: { field: 'sample', type: 'nominal' },
@@ -138,8 +147,8 @@ export const EXAMPLE_PERIPHERAL_PLOT: GeminiSpec = {
             x: {
                 field: 'position',
                 type: 'genomic',
-                domain: { chromosome: '1', interval: [1, 3000500] },
-                axis: 'top'
+                domain: { chromosome: '1', interval: [50000000, 100000000] },
+                linkID: 'focus'
             },
             y: { field: 'peak', type: 'quantitative' },
             row: { field: 'sample', type: 'nominal' },
@@ -163,8 +172,8 @@ export const EXAMPLE_PERIPHERAL_PLOT: GeminiSpec = {
             x: {
                 field: 'position',
                 type: 'genomic',
-                domain: { chromosome: '1', interval: [1, 3000500] },
-                axis: 'top'
+                domain: { chromosome: '1', interval: [100000000, 150000000] },
+                linkID: 'periphery-right'
             },
             y: { field: 'peak', type: 'quantitative' },
             row: { field: 'sample', type: 'nominal' },

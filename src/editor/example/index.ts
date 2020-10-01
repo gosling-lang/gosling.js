@@ -15,6 +15,7 @@ export const examples: ReadonlyArray<{
     spec: GeminiSpec;
     underDevelopment?: boolean;
     hidden?: boolean;
+    forceShow?: boolean;
 }> = [
     {
         name: 'Basic Marks',
@@ -49,8 +50,7 @@ export const examples: ReadonlyArray<{
     },
     {
         name: 'Basic Linking',
-        spec: EXMAPLE_BASIC_LINKING,
-        underDevelopment: true
+        spec: EXMAPLE_BASIC_LINKING
     },
     {
         name: 'Overview + Detail views',
@@ -60,6 +60,7 @@ export const examples: ReadonlyArray<{
     {
         name: 'Peripheral Plot',
         spec: EXAMPLE_PERIPHERAL_PLOT,
-        underDevelopment: true
+        underDevelopment: true,
+        forceShow: true
     }
 ].filter(d => !d.hidden);

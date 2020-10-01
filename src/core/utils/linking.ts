@@ -7,25 +7,35 @@ import { resolveSuperposedTracks } from './superpose';
  *
  */
 export function getLinkingInfo(hgModel: HiGlassModel) {
-    const linkingInfo: { viewId: string; linkId: string }[] = [];
+    const linkingInfo: { viewId: string; linkId: string; isBrush: boolean; style: any }[] = [];
 
     hgModel.spec().views.forEach(v => {
         const viewId = v.uid;
-        const spec = v.tracks.center?.[0].options.spec;
+        const spec = /* TODO: */ (v.tracks as any).center?.[0].contents?.[0].options.spec;
 
         if (!viewId || !spec) return;
 
-        const firstResolvedSpec = resolveSuperposedTracks(spec)[0];
+        const resolved = resolveSuperposedTracks(spec);
 
-        // console.log(viewId, firstResolvedSpec);
+        resolved.forEach(s => {
+            SUPPORTED_CHANNELS.forEach(cKey => {
+                const channel = s[cKey];
 
-        SUPPORTED_CHANNELS.forEach(cKey => {
-            const channel = firstResolvedSpec[cKey];
-
-            if (IsChannelDeep(channel) && channel.linking) {
-                linkingInfo.push({ viewId, linkId: channel.linking });
-                return;
-            }
+                if (IsChannelDeep(channel) && channel.linkID) {
+                    linkingInfo.push({
+                        viewId,
+                        linkId: channel.linkID,
+                        isBrush: s.mark === 'rect-brush',
+                        style: {
+                            color: (s as any).color?.value,
+                            stroke: (s as any).stroke?.value,
+                            strokeWidth: (s as any).strokeWidth?.value,
+                            opacity: (s as any).opacity?.value
+                        }
+                    });
+                    return;
+                }
+            });
         });
     });
     return linkingInfo;

@@ -69,6 +69,11 @@ export function getTrackPositionInfo(spec: GeminiSpec, boundingBox: BoundingBox)
     const colSizes = arrayRepeat(baseColSizes, numCols);
     const rowSizes = arrayRepeat(baseRowSizes, numRows);
 
+    const totalWidth = colSizes.reduce((a, b) => a + b, 0) + (colSizes.length - 1) * DEFAULT_TRACK_GAP;
+    const totalHeight = rowSizes.reduce((a, b) => a + b, 0) + (rowSizes.length - 1) * DEFAULT_TRACK_GAP;
+    const verticalGap = (DEFAULT_TRACK_GAP / totalHeight) * 12.0;
+    const horizontalGap = (DEFAULT_TRACK_GAP / totalWidth) * 12.0;
+
     if (spec.layout?.direction === 'horizontal') {
         let ci = 0,
             ri = 0;
@@ -79,14 +84,8 @@ export function getTrackPositionInfo(spec: GeminiSpec, boundingBox: BoundingBox)
             const trackWidth = resolveSuperposedTracks(track)[0].width;
             const trackHeight = resolveSuperposedTracks(track)[0].height;
 
-            const x =
-                boundingBox.x +
-                colSizes.slice(0, ci).reduce((a, b) => a + b, 0) +
-                (colSizes.slice(0, ci).length - 1) * DEFAULT_TRACK_GAP;
-            const y =
-                boundingBox.y +
-                rowSizes.slice(0, ri).reduce((a, b) => a + b, 0) +
-                (rowSizes.slice(0, ri).length - 1) * DEFAULT_TRACK_GAP;
+            const x = boundingBox.x + colSizes.slice(0, ci).reduce((a, b) => a + b, 0) + ci * DEFAULT_TRACK_GAP;
+            const y = boundingBox.y + rowSizes.slice(0, ri).reduce((a, b) => a + b, 0) + ri * DEFAULT_TRACK_GAP;
             const _width =
                 // calculated width with `span`
                 span === 1
@@ -104,10 +103,10 @@ export function getTrackPositionInfo(spec: GeminiSpec, boundingBox: BoundingBox)
                 track,
                 boundingBox: { x, y, width, height },
                 layout: {
-                    x: (colSizes.slice(0, ci).reduce((a, b) => a + b, 0) / colSizes.reduce((a, b) => a + b, 0)) * 12.0,
-                    y: (rowSizes.slice(0, ri).reduce((a, b) => a + b, 0) / rowSizes.reduce((a, b) => a + b, 0)) * 12.0,
-                    w: (width / colSizes.reduce((a, b) => a + b, 0)) * 12.0,
-                    h: (height / rowSizes.reduce((a, b) => a + b, 0)) * 12.0
+                    x: (colSizes.slice(0, ci).reduce((a, b) => a + b, 0) / totalWidth) * 12.0 + ci * horizontalGap,
+                    y: (rowSizes.slice(0, ri).reduce((a, b) => a + b, 0) / totalHeight) * 12.0 + ri * verticalGap,
+                    w: (width / totalWidth) * 12.0,
+                    h: (height / totalHeight) * 12.0
                 }
             });
 
@@ -129,14 +128,8 @@ export function getTrackPositionInfo(spec: GeminiSpec, boundingBox: BoundingBox)
             const trackWidth = resolveSuperposedTracks(track)[0].width;
             const trackHeight = resolveSuperposedTracks(track)[0].height;
 
-            const x =
-                boundingBox.x +
-                colSizes.slice(0, ci).reduce((a, b) => a + b, 0) +
-                (colSizes.slice(0, ci).length - 1) * DEFAULT_TRACK_GAP;
-            const y =
-                boundingBox.y +
-                rowSizes.slice(0, ri).reduce((a, b) => a + b, 0) +
-                (rowSizes.slice(0, ri).length - 1) * DEFAULT_TRACK_GAP;
+            const x = boundingBox.x + colSizes.slice(0, ci).reduce((a, b) => a + b, 0) + ci * DEFAULT_TRACK_GAP;
+            const y = boundingBox.y + rowSizes.slice(0, ri).reduce((a, b) => a + b, 0) + ri * DEFAULT_TRACK_GAP;
             const _height =
                 // calculated height with `span`
                 span === 1
@@ -154,10 +147,10 @@ export function getTrackPositionInfo(spec: GeminiSpec, boundingBox: BoundingBox)
                 track,
                 boundingBox: { x, y, width, height },
                 layout: {
-                    x: (colSizes.slice(0, ci).reduce((a, b) => a + b, 0) / colSizes.reduce((a, b) => a + b, 0)) * 12.0,
-                    y: (rowSizes.slice(0, ri).reduce((a, b) => a + b, 0) / rowSizes.reduce((a, b) => a + b, 0)) * 12.0,
-                    w: (width / colSizes.reduce((a, b) => a + b, 0)) * 12.0,
-                    h: (height / rowSizes.reduce((a, b) => a + b, 0)) * 12.0
+                    x: (colSizes.slice(0, ci).reduce((a, b) => a + b, 0) / totalWidth) * 12.0 + ci * horizontalGap,
+                    y: (rowSizes.slice(0, ri).reduce((a, b) => a + b, 0) / totalHeight) * 12.0 + ri * verticalGap,
+                    w: (width / totalWidth) * 12.0,
+                    h: (height / totalHeight) * 12.0
                 }
             });
 

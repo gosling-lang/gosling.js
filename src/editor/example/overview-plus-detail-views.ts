@@ -13,72 +13,27 @@ export const EXAMPLE_OVERVIEW_DEATIL: GeminiSpec = {
     tracks: [
         {
             ...EXAMPLE_IDEOGRAM_TRACK,
-            span: 2
-        },
-        {
-            data: {
-                url: EXAMPLE_DATASETS.interaction,
-                type: 'tileset'
-            },
-            metadata: {
-                type: 'higlass-bed',
-                genomicFields: [
-                    { name: 'start1', index: 9 },
-                    { name: 'end1', index: 10 },
-                    { name: 'start2', index: 14 },
-                    { name: 'end2', index: 15 }
-                ]
+            x: {
+                ...EXAMPLE_IDEOGRAM_TRACK.x,
+                domain: { chromosome: '1' },
+                linkID: 'linking-overview'
             },
             superpose: [
+                ...EXAMPLE_IDEOGRAM_TRACK.superpose,
                 {
-                    mark: 'link',
-                    x: {
-                        field: 'start1',
-                        type: 'genomic',
-                        domain: { chromosome: '1', interval: [17600000, 20400000] },
-                        axis: 'top'
-                    },
-                    x1: { field: 'end1', type: 'genomic' },
-                    xe: {
-                        field: 'start2',
-                        type: 'genomic'
-                    },
-                    x1e: { field: 'end2', type: 'genomic' }
+                    mark: 'rect-brush',
+                    x: { linkID: 'linking-detail-1' },
+                    color: { value: 'blue' },
+                    opacity: { value: 0.2 }
+                },
+                {
+                    mark: 'rect-brush',
+                    x: { linkID: 'linking-detail-2' },
+                    color: { value: 'red' },
+                    opacity: { value: 0.2 }
                 }
             ],
-            color: { value: 'lightgray' },
-            stroke: { value: 'gray' },
-            opacity: { value: 0.2 },
-            span: 2,
-            width: 1000,
-            height: 120
-        },
-        {
-            data: {
-                url: EXAMPLE_DATASETS.multivec,
-                type: 'tileset'
-            },
-            metadata: {
-                type: 'higlass-multivec',
-                row: 'sample',
-                column: 'position',
-                value: 'peak',
-                categories: ['sample 1', 'sample 2', 'sample 3', 'sample 4']
-            },
-            mark: 'rect',
-            x: {
-                field: 'position',
-                type: 'genomic',
-                domain: { chromosome: '1' }
-            },
-            row: { field: 'sample', type: 'nominal' },
-            // row: { field: 'sample', type: 'nominal' },
-            color: { field: 'peak', type: 'quantitative' },
-            // stroke: {value: 'white'},
-            // strokeWidth: {value: 1},
-            span: 2,
-            width: 1000,
-            height: 180
+            span: 2
         },
         {
             data: {
@@ -107,8 +62,9 @@ export const EXAMPLE_OVERVIEW_DEATIL: GeminiSpec = {
                     x: {
                         field: 'start',
                         type: 'genomic',
-                        domain: { chromosome: '1', interval: [3550000, 3700000] },
-                        axis: 'top'
+                        domain: { chromosome: '1' },
+                        axis: 'top',
+                        linkID: 'linking-detail-1'
                     },
                     size: { value: 10 },
                     xe: {
@@ -169,8 +125,9 @@ export const EXAMPLE_OVERVIEW_DEATIL: GeminiSpec = {
                     x: {
                         field: 'start',
                         type: 'genomic',
-                        domain: { chromosome: '2', interval: [10000000, 10400000] },
-                        axis: 'top'
+                        domain: { chromosome: '1', interval: [10000000, 15000000] },
+                        axis: 'top',
+                        linkID: 'linking-detail-2'
                     },
                     size: { value: 10 },
                     xe: {
@@ -220,7 +177,8 @@ export const EXAMPLE_OVERVIEW_DEATIL: GeminiSpec = {
             x: {
                 field: 'position',
                 type: 'genomic',
-                domain: { chromosome: '1', interval: [3550000, 3700000] }
+                domain: { chromosome: '1', interval: [70000000, 100000000] },
+                linkID: 'linking-detail-1'
             },
             row: { field: 'sample', type: 'nominal' },
             // row: { field: 'sample', type: 'nominal' },
@@ -249,7 +207,8 @@ export const EXAMPLE_OVERVIEW_DEATIL: GeminiSpec = {
             x: {
                 field: 'position',
                 type: 'genomic',
-                domain: { chromosome: '2', interval: [10000000, 10400000] }
+                domain: { chromosome: '1', interval: [30000000, 65000000] },
+                linkID: 'linking-detail-2'
             },
             row: { field: 'sample', type: 'nominal' },
             // row: { field: 'sample', type: 'nominal' },

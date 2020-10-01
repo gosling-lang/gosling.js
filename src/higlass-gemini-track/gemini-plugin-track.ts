@@ -175,6 +175,12 @@ function GeminiTrack(HGC: any, ...args: any[]): any {
             }
 
             resolveSuperposedTracks(semanticSpec).forEach(spec => {
+                if (spec.mark === 'rect-brush') {
+                    // TODO:
+                    // we do not draw rectangular brush ourselves.
+                    return;
+                }
+
                 if (!tile.tileData.tabularData) {
                     if (!IsDataMetadata(spec.metadata)) {
                         console.warn('No metadata of tilesets specified');

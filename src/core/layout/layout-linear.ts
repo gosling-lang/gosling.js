@@ -17,7 +17,7 @@ export function renderLinearLayout(
 
     // render the backgrounds of non-empty tracks
     g.selectAll('rect')
-        .data(trackInfo) //.filter(d => !IsEmptyTrack(d.track)))
+        .data(trackInfo)
         .enter()
         .append('rect')
         .attr('x', d => d.boundingBox.x - 1)
