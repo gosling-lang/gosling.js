@@ -1,9 +1,8 @@
 import * as d3 from 'd3';
 import { GeminiSpec, Track, Layout, BasicSingleTrack } from '../gemini.schema';
-import { HiGlassTrack } from './higlass';
 import { BoundingBox } from '../utils/bounding-box';
-import { renderCircularLayout } from './layout-circular';
 import { renderLinearLayout } from './layout-linear';
+import { HiGlassSpec } from '../higlass.schema';
 
 export const TRACK_BG_STYLE = {
     background: (track: BasicSingleTrack) => track.style?.background ?? 'white',
@@ -14,15 +13,15 @@ export const TRACK_BG_STYLE = {
 export function renderLayout(
     g: d3.Selection<SVGGElement, any, any, any>,
     gm: GeminiSpec,
-    setHiGlassInfo: (higlassInfo: HiGlassTrack[]) => void,
+    setHg: (hg: HiGlassSpec) => void,
     boundingBox: BoundingBox
 ) {
     g.selectAll('*').remove();
 
     if (gm.layout?.type === 'circular') {
-        renderCircularLayout(g, gm, setHiGlassInfo, boundingBox);
+        // renderCircularLayout(g, gm, setHiGlassInfo, boundingBox);
     } else {
-        renderLinearLayout(g, gm, setHiGlassInfo, boundingBox);
+        renderLinearLayout(g, gm, setHg, boundingBox);
     }
 }
 

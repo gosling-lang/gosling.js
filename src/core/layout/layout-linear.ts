@@ -1,14 +1,15 @@
 import * as d3 from 'd3';
 import { GeminiSpec, BasicSingleTrack } from '../gemini.schema';
-import { HiGlassTrack, renderHiGlass } from './higlass';
+import { renderHiGlass } from './higlass';
 import { BoundingBox, getTrackPositionInfo } from '../utils/bounding-box';
 import { renderBetweenLink } from './link';
 import { TRACK_BG_STYLE } from './layout';
+import { HiGlassSpec } from '../higlass.schema';
 
 export function renderLinearLayout(
     g: d3.Selection<SVGGElement, any, any, any>,
     spec: GeminiSpec,
-    setHiGlassInfo: (higlassInfo: HiGlassTrack[]) => void,
+    setHg: (hg: HiGlassSpec) => void,
     boundingBox: BoundingBox
 ) {
     // generate layout data
@@ -31,8 +32,5 @@ export function renderLinearLayout(
     renderBetweenLink(g, trackInfo.filter(d => (d.track as any).mark === 'link-between') as any);
 
     // render HiGlass tracks
-    renderHiGlass(
-        trackInfo, //.filter(d => !IsEmptyTrack(d.track as any)),
-        setHiGlassInfo
-    );
+    renderHiGlass(trackInfo, setHg);
 }

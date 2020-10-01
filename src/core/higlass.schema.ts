@@ -12,9 +12,9 @@ export interface HiGlassSpec {
     trackSourceServers?: string[];
     exportViewUrl?: string;
     chromInfoPath?: string;
-    views?: View[];
-    zoomLocks?: GenericLocks;
-    locationLocks?: GenericLocks;
+    views: View[];
+    zoomLocks: GenericLocks;
+    locationLocks: GenericLocks;
     valueScaleLocks?: ValueScaleLocks;
 }
 

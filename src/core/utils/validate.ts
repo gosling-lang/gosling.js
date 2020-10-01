@@ -11,7 +11,7 @@ export function validateTrack(track: Track) {
         // Validate with json schema
         // ...
 
-        // Additionally valideate the schema with the aspects that cannot be validated by the json schema
+        // Additionally, validate the schema with the aspects that cannot be validated by the json schema
         if (!getGenomicChannelFromTrack(spec)) {
             errorMessages.push('genomic type is not encoded to either a x- or y- axis');
             valid = false;
@@ -32,6 +32,11 @@ export function validateTrack(track: Track) {
             errorMessages.push('`line` mark cannot be used with `quantitative` value');
             valid = false;
         }
+
+        /**
+         * Linking
+         */
+        // are the linking used for same visual channels (do not work betwee `x` and `size`)
     });
 
     return { valid, errorMessages };

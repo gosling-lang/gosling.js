@@ -12,10 +12,26 @@ export interface BoundingBox {
 }
 
 /**
+ * Relative positioning of views, used in HiGlass view configs as `layout`.
+ */
+export interface RelativePosition {
+    w: number;
+    h: number;
+    x: number;
+    y: number;
+}
+
+export interface TrackInfo {
+    boundingBox: BoundingBox;
+    track: Track;
+    layout: RelativePosition;
+}
+
+/**
  *
  */
 export function getTrackPositionInfo(spec: GeminiSpec, boundingBox: BoundingBox) {
-    const info: { boundingBox: BoundingBox; track: Track }[] = [];
+    const info: TrackInfo[] = [];
     const wrap: number = spec.layout?.wrap ?? 999;
 
     // length of tracks + (span-1) of each track
@@ -83,7 +99,17 @@ export function getTrackPositionInfo(spec: GeminiSpec, boundingBox: BoundingBox)
             const height =
                 // use the smaller size
                 typeof trackHeight === 'number' ? Math.min(trackHeight, rowSizes[ri]) : rowSizes[ri];
-            info.push({ track, boundingBox: { x, y, width, height } });
+
+            info.push({
+                track,
+                boundingBox: { x, y, width, height },
+                layout: {
+                    x: (colSizes.slice(0, ci).reduce((a, b) => a + b, 0) / colSizes.reduce((a, b) => a + b, 0)) * 12.0,
+                    y: (rowSizes.slice(0, ri).reduce((a, b) => a + b, 0) / rowSizes.reduce((a, b) => a + b, 0)) * 12.0,
+                    w: (width / colSizes.reduce((a, b) => a + b, 0)) * 12.0,
+                    h: (height / rowSizes.reduce((a, b) => a + b, 0)) * 12.0
+                }
+            });
 
             ci += span;
 
@@ -123,7 +149,17 @@ export function getTrackPositionInfo(spec: GeminiSpec, boundingBox: BoundingBox)
             const height =
                 // use the smaller size
                 typeof trackHeight === 'number' ? Math.min(trackHeight, _height) : _height;
-            info.push({ track, boundingBox: { x, y, width, height } });
+
+            info.push({
+                track,
+                boundingBox: { x, y, width, height },
+                layout: {
+                    x: (colSizes.slice(0, ci).reduce((a, b) => a + b, 0) / colSizes.reduce((a, b) => a + b, 0)) * 12.0,
+                    y: (rowSizes.slice(0, ri).reduce((a, b) => a + b, 0) / rowSizes.reduce((a, b) => a + b, 0)) * 12.0,
+                    w: (width / colSizes.reduce((a, b) => a + b, 0)) * 12.0,
+                    h: (height / rowSizes.reduce((a, b) => a + b, 0)) * 12.0
+                }
+            });
 
             ri += typeof track.span === 'number' ? track.span : 1;
 

@@ -11,8 +11,6 @@ export interface GeminiSpec {
     description?: string;
     layout?: Layout;
     tracks: Track[];
-    // DEBUG:
-    isLinking?: boolean;
 }
 
 export interface Layout {
@@ -285,8 +283,7 @@ export interface ChannelDeep {
     baseline?: string | number;
     zeroBaseline?: boolean; // we could remove this and use the `baseline` option instead
     grid?: boolean;
-
-    // IMPORTANT: TODO: Add TriggerCondition to Channel?
+    linking?: string;
 }
 export type FieldType = 'genomic' | 'nominal' | 'quantitative';
 

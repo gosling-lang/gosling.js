@@ -1,21 +1,25 @@
-import Ajv from 'ajv';
-import HiGlassSchema from './higlass.schema.json';
-import { HiGlassSpec, Track as HiGlassTrack } from './higlass.schema';
+import { Track as HiGlassTrack } from './higlass.schema';
 import { HiGlassModel, HIGLASS_AXIS_SIZE } from './higlass-model';
 import { parseServerAndTilesetUidFromUrl } from './utils';
 import { Track, IsDataDeep, IsChannelDeep, Domain } from './gemini.schema';
-import { BoundingBox } from './utils/bounding-box';
+import { BoundingBox, RelativePosition } from './utils/bounding-box';
 import { resolveSuperposedTracks } from './utils/superpose';
 import { getGenomicChannelKeyFromTrack, getGenomicChannelFromTrack } from './utils/validate';
 
-export function compiler(track: Track, bb: BoundingBox): HiGlassSpec {
-    const higlass = new HiGlassModel();
-
+/**
+ * Convert a gemini track into a HiGlass view.
+ */
+export function geminiToHiGlass(
+    hgModel: HiGlassModel,
+    gm: Track,
+    bb: BoundingBox,
+    layout: RelativePosition
+): HiGlassModel {
     // TODO: check whether there are multiple track.data across superposed tracks
     // ...
 
     // we only look into the first resolved spec to get information, such as size of the track
-    const firstResolvedSpec = resolveSuperposedTracks(track)[0];
+    const firstResolvedSpec = resolveSuperposedTracks(gm)[0];
 
     if (
         // type guides
@@ -23,6 +27,9 @@ export function compiler(track: Track, bb: BoundingBox): HiGlassSpec {
         IsDataDeep(firstResolvedSpec.data) &&
         firstResolvedSpec.data.url
     ) {
+        // add a default view
+        hgModel.addDefaultView();
+
         const { server, tilesetUid } = parseServerAndTilesetUidFromUrl(firstResolvedSpec.data.url);
 
         // Is this track horizontal or vertical?
@@ -45,7 +52,7 @@ export function compiler(track: Track, bb: BoundingBox): HiGlassSpec {
         }
         ///
 
-        higlass.setDomain(xDomain, yDomain);
+        hgModel.setDomain(xDomain, yDomain);
 
         const hgTrack: HiGlassTrack = {
             type: 'gemini-track',
@@ -54,43 +61,30 @@ export function compiler(track: Track, bb: BoundingBox): HiGlassSpec {
             width: bb.width - (isYGenomic && isAxisShown ? HIGLASS_AXIS_SIZE : 0),
             height: bb.height - (isXGenomic && isAxisShown ? HIGLASS_AXIS_SIZE : 0),
             options: {
-                spec: { ...track, data: undefined }
+                spec: { ...gm, data: undefined }
             }
         };
 
-        if (track.data && IsDataDeep(track.data) && track.data.type === 'csv') {
+        if (gm.data && IsDataDeep(gm.data) && gm.data.type === 'csv') {
             // use a CSV data fetcher
-            hgTrack.data = track.data;
+            hgTrack.data = gm.data;
         }
 
-        higlass
+        hgModel
             .setMainTrack(hgTrack)
             .addTrackSourceServers(server)
-            .setZoomFixed(firstResolvedSpec.zoomable as undefined | boolean);
+            .setZoomFixed(firstResolvedSpec.zoomable as undefined | boolean)
+            .setLayout(layout);
 
         // check whether to show axis
         ['x', 'y'].forEach(c => {
             const channel = (firstResolvedSpec as any)[c];
             if (IsChannelDeep(channel) && channel.axis) {
-                higlass.setAxisTrack(channel.axis);
+                hgModel.setAxisTrack(channel.axis);
             }
         });
 
-        higlass.validateSpec();
-        return higlass.spec();
+        hgModel.validateSpec();
     }
-    return {};
-}
-
-export function validateHG(hg: HiGlassSpec): boolean {
-    const validate = new Ajv({ extendRefs: true }).compile(HiGlassSchema);
-    const valid = validate(hg);
-
-    if (validate.errors) {
-        console.warn(JSON.stringify(validate.errors, null, 2));
-    }
-
-    // TODO: Check types such as default values and locationLocks
-
-    return valid as boolean;
+    return hgModel;
 }

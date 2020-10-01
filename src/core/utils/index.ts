@@ -1,4 +1,3 @@
-import Ajv from 'ajv';
 import { GLYPH_LOCAL_PRESET_TYPES, GLYPH_PRESETS } from '../../editor/example/deprecated/index';
 import { GeminiSpec, Mark, IsMarkDeep, IsSingleTrack } from '../gemini.schema';
 
@@ -31,19 +30,4 @@ export function parseServerAndTilesetUidFromUrl(url: string) {
     const server = url.split('tileset_info/?d=')[0];
     const tilesetUid = url.split('tileset_info/?d=')[1];
     return { server, tilesetUid };
-}
-
-export function validateHG(hg: any): boolean {
-    const validate = new Ajv({ extendRefs: true }).compile({
-        /*  */
-    });
-    const valid = validate(hg);
-
-    if (validate.errors) {
-        console.warn(JSON.stringify(validate.errors, null, 2));
-    }
-
-    // TODO: check types such as default values and locationLocks
-
-    return valid as boolean;
 }

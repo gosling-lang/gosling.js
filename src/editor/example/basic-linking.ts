@@ -1,16 +1,8 @@
 import { GeminiSpec } from '../../core/gemini.schema';
 import { EXAMPLE_DATASETS } from './datasets';
-import { EXAMPLE_IDEOGRAM_TRACK } from './ideogram';
 
 export const EXMAPLE_BASIC_LINKING: GeminiSpec = {
-    isLinking: true,
-    layout: {
-        type: 'linear',
-        direction: 'vertical',
-        rowSize: [60, 180, 180]
-    },
     tracks: [
-        EXAMPLE_IDEOGRAM_TRACK,
         {
             data: {
                 url: EXAMPLE_DATASETS.multivec,
@@ -28,7 +20,8 @@ export const EXMAPLE_BASIC_LINKING: GeminiSpec = {
                 field: 'position',
                 type: 'genomic',
                 domain: { chromosome: '1' },
-                axis: 'top'
+                axis: 'top',
+                linking: 'link1'
             },
             y: { field: 'peak', type: 'quantitative' },
             row: { field: 'sample', type: 'nominal' },
@@ -55,7 +48,8 @@ export const EXMAPLE_BASIC_LINKING: GeminiSpec = {
                 field: 'position',
                 type: 'genomic',
                 domain: { chromosome: '1' },
-                axis: 'top'
+                axis: 'top',
+                linking: 'link1'
             },
             y: { field: 'peak', type: 'quantitative' },
             row: { field: 'sample', type: 'nominal' },

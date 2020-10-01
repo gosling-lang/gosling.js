@@ -14,6 +14,7 @@ export const examples: ReadonlyArray<{
     name: string;
     spec: GeminiSpec;
     underDevelopment?: boolean;
+    hidden?: boolean;
 }> = [
     {
         name: 'Basic Marks',
@@ -43,11 +44,13 @@ export const examples: ReadonlyArray<{
     {
         name: 'Semantic Zooming with Multiple Tilesets',
         spec: EXAMPLE_DATA_FETCHER,
-        underDevelopment: true
+        underDevelopment: true,
+        hidden: true
     },
     {
         name: 'Basic Linking',
-        spec: EXMAPLE_BASIC_LINKING
+        spec: EXMAPLE_BASIC_LINKING,
+        underDevelopment: true
     },
     {
         name: 'Overview + Detail views',
@@ -59,4 +62,4 @@ export const examples: ReadonlyArray<{
         spec: EXAMPLE_PERIPHERAL_PLOT,
         underDevelopment: true
     }
-] as const;
+].filter(d => !d.hidden);

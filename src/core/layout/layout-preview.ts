@@ -3,13 +3,13 @@ import * as d3 from 'd3';
 import { renderBackground } from './layout-background';
 import { renderLayout } from './layout';
 import { BoundingBox } from '../utils/bounding-box';
-import { HiGlassTrack } from './higlass';
+import { HiGlassSpec } from '../higlass.schema';
 
 export function renderLayoutPreview(
     svg: SVGSVGElement,
     spec: GeminiSpec,
     boundingBox: BoundingBox,
-    setHiGlassInfo: (higlassInfo: HiGlassTrack[]) => void
+    setHg: (hg: HiGlassSpec) => void
 ) {
     if (!svg || !spec) return;
     d3.select(svg).selectAll('*').remove();
@@ -25,5 +25,5 @@ export function renderLayoutPreview(
 
     const innerG = d3.select(svg).append('g').attr('width', boundingBox.width).attr('height', boundingBox.height);
 
-    renderLayout(innerG, spec, setHiGlassInfo, boundingBox);
+    renderLayout(innerG, spec, setHg, boundingBox);
 }

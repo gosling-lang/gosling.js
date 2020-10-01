@@ -1,13 +1,31 @@
 import Ajv from 'ajv';
 import uuid from 'uuid';
-import { HiGlassSpec, Track } from './higlass.schema';
+import { HiGlassSpec, Track, View } from './higlass.schema';
 import HiGlassSchema from './higlass.schema.json';
 import { TOTAL_CHROMOSOME_SIZE_HG19 } from './utils/chrom-size';
 import { Domain } from './gemini.schema';
 import { getNumericDomain } from './utils/scales';
+import { RelativePosition } from './utils/bounding-box';
 
 const DEFAULT_CHROMOSOME_INFO_PATH = '//s3.amazonaws.com/pkerp/data/hg19/chromSizes.tsv';
 export const HIGLASS_AXIS_SIZE = 30;
+const HIGLASS_VIEW_TEMPLATE: View = {
+    genomePositionSearchBoxVisible: false,
+    layout: { w: 12, h: 12, x: 0, y: 0 },
+    tracks: {
+        top: [],
+        left: [],
+        center: [],
+        right: [],
+        bottom: [],
+        gallery: [],
+        whole: []
+    },
+    initialXDomain: [0, TOTAL_CHROMOSOME_SIZE_HG19],
+    initialYDomain: [0, TOTAL_CHROMOSOME_SIZE_HG19],
+    zoomFixed: false,
+    zoomLimits: [1, null]
+};
 
 /**
  * Model for managing the HiGlass view config.
@@ -16,52 +34,57 @@ export const HIGLASS_AXIS_SIZE = 30;
 export class HiGlassModel {
     private hg: HiGlassSpec;
     constructor() {
-        this.hg = {};
+        this.hg = { trackSourceServers: [], views: [], zoomLocks: {}, locationLocks: {} };
 
         // Add default specs.
         this.setEditable(false);
         this.setChromInfoPath(DEFAULT_CHROMOSOME_INFO_PATH);
-        this.hg.trackSourceServers = [];
-        this.hg.views = [
-            {
-                uid: uuid.v1(),
-                genomePositionSearchBoxVisible: false,
-                layout: { w: 12, h: 12, x: 0, y: 0 },
-                tracks: {
-                    top: [],
-                    left: [],
-                    center: [],
-                    right: [],
-                    bottom: [],
-                    gallery: [],
-                    whole: []
-                },
-                initialXDomain: [0, TOTAL_CHROMOSOME_SIZE_HG19],
-                initialYDomain: [0, TOTAL_CHROMOSOME_SIZE_HG19],
-                zoomFixed: false,
-                zoomLimits: [1, null]
-            }
-        ];
     }
 
     public spec(): Readonly<HiGlassSpec> {
         return this.hg;
     }
 
+    public addDefaultView() {
+        this.hg.views.push(JSON.parse(JSON.stringify({ ...HIGLASS_VIEW_TEMPLATE, uid: uuid.v1() })));
+        return this;
+    }
+
+    public getLastView() {
+        return this.hg.views[this.hg.views.length - 1];
+    }
+
+    public validateSpec() {
+        const validate = new Ajv({ extendRefs: true }).compile(HiGlassSchema);
+        const valid = validate(this.spec());
+
+        if (validate.errors) {
+            console.warn(JSON.stringify(validate.errors, null, 2));
+        }
+
+        return valid as boolean;
+    }
+
     public setDomain(xDomain: Domain | undefined, yDomain: Domain | undefined) {
-        if (xDomain && this.hg.views?.[0]) {
-            this.hg.views[0].initialXDomain = getNumericDomain(xDomain);
+        if (xDomain) {
+            this.getLastView().initialXDomain = getNumericDomain(xDomain);
         }
-        if (yDomain && this.hg.views?.[0]) {
-            this.hg.views[0].initialYDomain = getNumericDomain(yDomain);
+        if (yDomain) {
+            this.getLastView().initialYDomain = getNumericDomain(yDomain);
         }
+        return this;
     }
 
     /**
      * Allow a zoom interaction?
      */
-    public setZoomFixed(_?: boolean) {
-        this.hg.zoomFixed = _ !== undefined ? true : _;
+    public setZoomFixed(zoom?: boolean) {
+        this.hg.zoomFixed = zoom !== undefined ? true : zoom;
+        return this;
+    }
+
+    public setLayout(layout: RelativePosition) {
+        this.getLastView().layout = layout;
         return this;
     }
 
@@ -83,13 +106,13 @@ export class HiGlassModel {
 
     public setMainTrack(track: Track) {
         if (!this.hg.views) return this;
-        this.hg.views[0].tracks.center = [track];
+        this.getLastView().tracks.center = [track];
         return this;
     }
 
     public _addGeneAnnotationTrack() {
         if (!this.hg.views) return this;
-        this.hg.views[0].tracks.bottom = [
+        this.getLastView().tracks.bottom = [
             {
                 type: 'horizontal-gene-annotations',
                 height: 90,
@@ -127,7 +150,7 @@ export class HiGlassModel {
         const baseTrackType = '-chromosome-labels';
         const direction = position === 'left' || position === 'right' ? 'vertical' : 'horizontal';
         const widthOrHeight = direction === 'vertical' ? 'width' : 'height';
-        this.hg.views[0].tracks[position] = [
+        this.getLastView().tracks[position] = [
             {
                 uid: uuid.v1(),
                 type: (direction + baseTrackType) as any /* TODO */,
@@ -136,16 +159,5 @@ export class HiGlassModel {
             }
         ];
         return this;
-    }
-
-    public validateSpec() {
-        const validate = new Ajv({ extendRefs: true }).compile(HiGlassSchema);
-        const valid = validate(this.spec());
-
-        if (validate.errors) {
-            console.warn(JSON.stringify(validate.errors, null, 2));
-        }
-
-        return valid as boolean;
     }
 }

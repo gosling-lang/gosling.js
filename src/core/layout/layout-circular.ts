@@ -1,7 +1,6 @@
 import * as d3 from 'd3';
 import { GeminiSpec, Track, BasicSingleTrack } from '../gemini.schema';
 import { BoundingBox } from '../utils/bounding-box';
-import { HiGlassTrack } from './higlass';
 import { DEFAULT_TRACK_GAP } from './defaults';
 import { TRACK_BG_STYLE } from './layout';
 
@@ -15,7 +14,6 @@ interface ArcInfo {
 export function renderCircularLayout(
     g: d3.Selection<SVGGElement, any, any, any>,
     gm: GeminiSpec,
-    setHiGlassInfo: (higlassInfo: HiGlassTrack[]) => void,
     boundingBox: BoundingBox
 ) {
     const wrap: number = gm.layout?.wrap ?? 999;

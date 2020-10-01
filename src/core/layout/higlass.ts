@@ -1,34 +1,24 @@
-import { BoundingBox } from '../utils/bounding-box';
-import { Track } from '../gemini.schema';
-import { compiler } from '../gemini-to-higlass';
+import { BoundingBox, TrackInfo } from '../utils/bounding-box';
+import { geminiToHiGlass } from '../gemini-to-higlass';
+import { HiGlassModel } from '../higlass-model';
+import { HiGlassSpec } from '../higlass.schema';
 
-export interface HiGlassTrack {
+export interface HiGlassInfo {
     viewConfig: any;
     boundingBox: BoundingBox;
 }
 
-export function renderHiGlass(
-    tracksWithBB: {
-        boundingBox: BoundingBox;
-        track: Track;
-    }[],
-    setHiGlassInfo: (higlassInfo: HiGlassTrack[]) => void
-) {
-    const higlassInfo: HiGlassTrack[] = [];
-    tracksWithBB.forEach(tb => {
-        const { track, boundingBox: bb } = tb;
+export function renderHiGlass(trackInfos: TrackInfo[], setHg: (hg: HiGlassSpec) => void) {
+    if (trackInfos.length === 0) {
+        // no tracks to render
+        return;
+    }
 
-        // add a HiGlass view config
-        higlassInfo.push({ boundingBox: bb, viewConfig: compiler(track, bb) });
+    const hgModel = new HiGlassModel();
+    trackInfos.forEach(tb => {
+        const { track, boundingBox: bb, layout } = tb;
+        geminiToHiGlass(hgModel, track, bb, layout);
     });
-    setHiGlassInfo(higlassInfo);
 
-    /////// DEBUG
-    // const testHGInfo = tracksWithBB.map(tb => ({ boundingBox: tb.bb, viewConfig: testViewConfig }));
-    // console.log(testHGInfo);
-    // setHiGlassInfo(tracksWithBB.map(tb => ({
-    //     boundingBox: tb.bb,
-    //     viewConfig: testViewConfig
-    // })));
-    ///////
+    setHg(hgModel.spec());
 }
