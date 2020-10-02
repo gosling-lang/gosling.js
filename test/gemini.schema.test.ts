@@ -1,15 +1,14 @@
+import { Channel, BasicSingleTrack } from '../src/core/gemini.schema';
 import {
+    IsChannelDeep,
+    IsChannelValue,
+    IsDataMetadata,
+    IsDomainChrInterval,
     getValueUsingChannel,
     IsStackedMark,
     IsStackedChannel,
-    getVisualizationType,
-    IsChannelDeep,
-    Channel,
-    IsChannelValue,
-    BasicSingleTrack,
-    IsDataMetadata,
-    IsDomainChrInterval
-} from '../src/core/gemini.schema';
+    getVisualizationType
+} from '../src/core/gemini.schema.guards';
 
 describe('gemini schema should be checked correctly', () => {
     it('Type guards should be checked correctly', () => {

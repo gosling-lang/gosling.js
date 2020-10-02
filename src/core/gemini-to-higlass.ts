@@ -1,10 +1,11 @@
 import { Track as HiGlassTrack } from './higlass.schema';
 import { HiGlassModel, HIGLASS_AXIS_SIZE } from './higlass-model';
 import { parseServerAndTilesetUidFromUrl } from './utils';
-import { Track, IsDataDeep, IsChannelDeep, Domain } from './gemini.schema';
+import { Track, Domain } from './gemini.schema';
 import { BoundingBox, RelativePosition } from './utils/bounding-box';
 import { resolveSuperposedTracks } from './utils/superpose';
 import { getGenomicChannelKeyFromTrack, getGenomicChannelFromTrack } from './utils/validate';
+import { IsDataDeep, IsChannelDeep } from './gemini.schema.guards';
 
 /**
  * Convert a gemini track into a HiGlass view and add it into higlass model.

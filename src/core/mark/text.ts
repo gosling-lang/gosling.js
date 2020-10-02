@@ -1,5 +1,6 @@
 import { GeminiTrackModel } from '../gemini-track-model';
-import { getValueUsingChannel, Channel } from '../gemini.schema';
+import { Channel } from '../gemini.schema';
+import { getValueUsingChannel } from '../gemini.schema.guards';
 
 export const TEXT_STYLE_GLOBAL = {
     fontSize: '12px',

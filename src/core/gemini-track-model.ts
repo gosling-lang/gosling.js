@@ -1,20 +1,13 @@
 import {
-    IsChannelDeep,
     ChannelDeep,
     PREDEFINED_COLORS,
     ChannelTypes,
-    IsChannelValue,
-    IsStackedChannel,
     ChannelValue,
     BasicSingleTrack,
     SingleTrack,
-    IsDomainArray,
-    IsShallowMark,
-    getValueUsingChannel,
     Channel
 } from './gemini.schema';
 import { validateTrack, getGenomicChannelFromTrack, getGenomicChannelKeyFromTrack } from './utils/validate';
-import assign from 'lodash/assign';
 import * as d3 from 'd3';
 import { group } from 'd3-array';
 import { HIGLASS_AXIS_SIZE } from './higlass-model';
@@ -26,6 +19,14 @@ import { barProperty } from './mark/bar';
 import { getNumericDomain } from './utils/scales';
 import { logicalComparison } from './utils/semantic-zoom';
 import { aggregateData } from './utils/data-transform';
+import {
+    IsChannelDeep,
+    IsChannelValue,
+    getValueUsingChannel,
+    IsShallowMark,
+    IsStackedChannel,
+    IsDomainArray
+} from './gemini.schema.guards';
 
 export type ScaleType =
     | d3.ScaleLinear<any, any>
@@ -75,15 +76,6 @@ export class GeminiTrackModel {
         if (!validity.valid) {
             console.warn('Gemini specification is not valid!', validity.errorMessages);
             return;
-        }
-
-        // deprecated
-        if (this.specComplete?.semanticZoom?.type === 'alternative-encoding') {
-            // override the original spec for using alternative encoding
-            this.specCompleteAlt = assign(
-                JSON.parse(JSON.stringify(this.specComplete)),
-                JSON.parse(JSON.stringify(this.specComplete.semanticZoom.spec))
-            );
         }
 
         // fill missing options

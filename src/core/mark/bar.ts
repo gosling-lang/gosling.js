@@ -1,7 +1,8 @@
 import { GeminiTrackModel } from '../gemini-track-model';
-import { IsChannelDeep, getValueUsingChannel, Channel, IsStackedMark } from '../gemini.schema';
+import { Channel } from '../gemini.schema';
 import { group } from 'd3-array';
 import { VisualProperty } from '../visual-property.schema';
+import { IsChannelDeep, IsStackedMark, getValueUsingChannel } from '../gemini.schema.guards';
 // import { RESOLUTION } from '.';
 
 export function drawBar(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackModel) {

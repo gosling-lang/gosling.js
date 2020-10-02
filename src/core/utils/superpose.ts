@@ -1,5 +1,6 @@
-import { SingleTrack, IsSuperposedTrack, SuperposedTrack, Track } from '../../core/gemini.schema';
+import { SingleTrack, SuperposedTrack, Track } from '../../core/gemini.schema';
 import assign from 'lodash/assign';
+import { IsSuperposedTrack } from '../gemini.schema.guards';
 
 /**
  * Resolve superposed tracks into multiple track specifications.

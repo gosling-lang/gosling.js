@@ -1,6 +1,6 @@
 import { shareScaleAcrossTracks } from '../../../src/core/utils/scales';
 import { GeminiTrackModel } from '../../../src/core/gemini-track-model';
-import { IsChannelDeep } from '../../../src/core/gemini.schema';
+import { IsChannelDeep } from '../../../src/core/gemini.schema.guards';
 
 describe('Should use shared scales', () => {
     it('Quantitative and nominal values should be shared properly', () => {

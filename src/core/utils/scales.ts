@@ -1,14 +1,14 @@
 import { GeminiTrackModel } from '../gemini-track-model';
-import {
-    Domain,
-    IsChannelDeep,
-    IsDomainChr,
-    IsDomainChrInterval,
-    IsDomainGene,
-    IsDomainInterval
-} from '../gemini.schema';
+import { Domain } from '../gemini.schema';
 import { CHROMOSOME_INTERVAL_HG19 } from './chrom-size';
 import { SUPPORTED_CHANNELS } from '../mark';
+import {
+    IsDomainChr,
+    IsDomainInterval,
+    IsDomainChrInterval,
+    IsDomainGene,
+    IsChannelDeep
+} from '../gemini.schema.guards';
 
 /**
  * Get a numeric domain based on a domain specification.

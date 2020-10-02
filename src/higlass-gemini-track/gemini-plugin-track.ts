@@ -1,14 +1,12 @@
 import * as d3 from 'd3';
 import { drawMark } from '../core/mark';
-import { getMaxZoomLevel, isSemanticZoomTriggered } from '../core/utils/semantic-zoom';
 import { GeminiTrackModel } from '../core/gemini-track-model';
 import { SpriteInfo } from '../core/utils/sprite';
 import { validateTrack } from '../core/utils/validate';
-import { drawZoomInstruction } from '../core/mark/zoom-instruction';
 import { shareScaleAcrossTracks } from '../core/utils/scales';
 import { resolveSuperposedTracks } from '../core/utils/superpose';
-import { IsDataMetadata, IsDataTransform, Track } from '../core/gemini.schema';
-import assign from 'lodash/assign';
+import { Track } from '../core/gemini.schema';
+import { IsDataMetadata, IsDataTransform } from '../core/gemini.schema.guards';
 
 function GeminiTrack(HGC: any, ...args: any[]): any {
     if (!new.target) {
@@ -111,14 +109,7 @@ function GeminiTrack(HGC: any, ...args: any[]): any {
                 return;
             }
 
-            const isNotMaxZoomLevel = tile?.tileData?.zoomLevel !== getMaxZoomLevel();
-
             tile.geminiModels.forEach((tm: GeminiTrackModel) => {
-                if (isNotMaxZoomLevel && tm.spec().semanticZoom?.type === 'hide') {
-                    drawZoomInstruction(HGC, this);
-                    return;
-                }
-
                 // check visibility condition
                 if (!tm.trackVisibility({ zoomLevel: tile?.tileData?.zoomLevel })) {
                     return;
@@ -165,30 +156,23 @@ function GeminiTrack(HGC: any, ...args: any[]): any {
             // TODO: IMPORTANT: semantic zooming could be ultimately considered as superposing multiple tracks, and
             // its visibility is determined by certain user-defined condition.
 
-            // Determine whether to trigger semantic zooming.
-            const semanticZoomTriggered = isSemanticZoomTriggered(this.originalSpec, tile?.tileData?.zoomLevel);
+            const spec = JSON.parse(JSON.stringify(this.originalSpec));
 
-            let semanticSpec = JSON.parse(JSON.stringify(this.originalSpec));
-            if (semanticZoomTriggered && this.options.spec?.semanticZoom?.type === 'alternative-encoding') {
-                // Assign the alternative encoding to the original spec
-                semanticSpec = assign({}, semanticSpec, this.options.spec.semanticZoom.spec);
-            }
-
-            resolveSuperposedTracks(semanticSpec).forEach(spec => {
-                if (spec.mark === 'rect-brush') {
+            resolveSuperposedTracks(spec).forEach(resolved => {
+                if (resolved.mark === 'rect-brush') {
                     // TODO:
                     // we do not draw rectangular brush ourselves.
                     return;
                 }
 
                 if (!tile.tileData.tabularData) {
-                    if (!IsDataMetadata(spec.metadata)) {
+                    if (!IsDataMetadata(resolved.metadata)) {
                         console.warn('No metadata of tilesets specified');
                         return;
                     }
 
-                    if (spec.metadata.type === 'higlass-multivec') {
-                        if (!spec.metadata.row || !spec.metadata.column || !spec.metadata.value) {
+                    if (resolved.metadata.type === 'higlass-multivec') {
+                        if (!resolved.metadata.row || !resolved.metadata.column || !resolved.metadata.value) {
                             console.warn(
                                 'Proper metadata of the tileset is not provided. Please specify the name of data fields.'
                             );
@@ -208,12 +192,12 @@ function GeminiTrack(HGC: any, ...args: any[]): any {
                         const numOfGenomicPositions = tile.tileData.shape[1];
                         const tileUnitSize = tileWidth / tileSize;
 
-                        const rowName = spec.metadata.row;
-                        const valueName = spec.metadata.value;
-                        const columnName = spec.metadata.column;
-                        const startName = spec.metadata.start ?? 'start';
-                        const endName = spec.metadata.end ?? 'end';
-                        const categories: any = spec.metadata.categories ?? [...Array(numOfTotalCategories).keys()]; // TODO:
+                        const rowName = resolved.metadata.row;
+                        const valueName = resolved.metadata.value;
+                        const columnName = resolved.metadata.column;
+                        const startName = resolved.metadata.start ?? 'start';
+                        const endName = resolved.metadata.end ?? 'end';
+                        const categories: any = resolved.metadata.categories ?? [...Array(numOfTotalCategories).keys()]; // TODO:
 
                         const tabularData: { [k: string]: number | string }[] = [];
 
@@ -231,8 +215,8 @@ function GeminiTrack(HGC: any, ...args: any[]): any {
                         });
 
                         tile.tileData.tabularData = tabularData;
-                    } else if (spec.metadata.type === 'higlass-bed') {
-                        const { genomicFields, exonIntervalFields, valueFields } = spec.metadata;
+                    } else if (resolved.metadata.type === 'higlass-bed') {
+                        const { genomicFields, exonIntervalFields, valueFields } = resolved.metadata;
 
                         tile.tileData.tabularData = [];
                         tile.tileData.forEach((d: any) => {
@@ -288,16 +272,11 @@ function GeminiTrack(HGC: any, ...args: any[]): any {
                     }
                 }
 
-                if (semanticZoomTriggered && tile.tileData.tabularDataAlt) {
-                    // This means we are using an alternative dataset for semantic zooming
-                    tile.tileData.tabularDataFiltered = Array.from(tile.tileData.tabularDataAlt);
-                } else {
-                    tile.tileData.tabularDataFiltered = Array.from(tile.tileData.tabularData);
-                }
+                tile.tileData.tabularDataFiltered = Array.from(tile.tileData.tabularData);
 
                 // Apply filters
-                if (spec.dataTransform !== undefined && IsDataTransform(spec.dataTransform)) {
-                    spec.dataTransform.filter.forEach(filter => {
+                if (resolved.dataTransform !== undefined && IsDataTransform(resolved.dataTransform)) {
+                    resolved.dataTransform.filter.forEach(filter => {
                         const { field, oneOf, not } = filter;
                         tile.tileData.tabularDataFiltered = tile.tileData.tabularDataFiltered.filter(
                             (d: { [k: string]: number | string }) => {
@@ -310,7 +289,7 @@ function GeminiTrack(HGC: any, ...args: any[]): any {
                 }
 
                 // Construct separate gemini models for individual tiles
-                const gm = new GeminiTrackModel(spec, tile.tileData.tabularDataFiltered, false);
+                const gm = new GeminiTrackModel(resolved, tile.tileData.tabularDataFiltered, false);
 
                 // Add a track model to the tile object
                 tile.geminiModels.push(gm);

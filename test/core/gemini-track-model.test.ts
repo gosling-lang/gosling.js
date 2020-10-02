@@ -1,6 +1,7 @@
 import { GeminiTrackModel } from '../../src/core/gemini-track-model';
-import { Track, IsChannelDeep, IsChannelValue } from '../../src/core/gemini.schema';
+import { Track } from '../../src/core/gemini.schema';
 import isEqual from 'lodash/isEqual';
+import { IsChannelDeep, IsChannelValue } from '../../src/core/gemini.schema.guards';
 
 const MINIMAL_TRACK_SPEC: Track = {
     data: { url: '', type: 'tileset' },

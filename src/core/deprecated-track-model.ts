@@ -1,17 +1,6 @@
 import * as d3 from 'd3';
-import {
-    Track,
-    ChannelBind,
-    ChannelType,
-    ChannelTypes,
-    Datum,
-    GlyphElement,
-    IsChannelBind,
-    IsChannelDeep,
-    IsChannelValue,
-    IsDomainFlat,
-    IsGlyphMark
-} from './gemini.schema';
+import { Track, ChannelBind, ChannelType, ChannelTypes, Datum, GlyphElement } from './gemini.schema';
+import { IsGlyphMark, IsChannelDeep, IsDomainFlat, IsChannelValue, IsChannelBind } from './gemini.schema.guards';
 import { BoundingBox } from './utils/bounding-box';
 import { deepToLongElements } from './utils/spec-preprocess';
 

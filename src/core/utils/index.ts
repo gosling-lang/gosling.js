@@ -1,5 +1,6 @@
 import { GLYPH_LOCAL_PRESET_TYPES, GLYPH_PRESETS } from '../../editor/example/deprecated/index';
-import { GeminiSpec, Mark, IsMarkDeep, IsSingleTrack } from '../gemini.schema';
+import { GeminiSpec, Mark } from '../gemini.schema';
+import { IsSingleTrack, IsMarkDeep } from '../gemini.schema.guards';
 
 export function replaceTemplate(spec: GeminiSpec): GeminiSpec {
     spec.tracks.forEach(track => {

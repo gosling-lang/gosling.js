@@ -1,7 +1,8 @@
 import { GeminiTrackModel } from '../gemini-track-model';
-import { getValueUsingChannel, Channel, IsStackedMark } from '../gemini.schema';
+import { Channel } from '../gemini.schema';
 import * as d3 from 'd3';
 import { group } from 'd3-array';
+import { IsStackedMark, getValueUsingChannel } from '../gemini.schema.guards';
 
 // TODO: fill the white gap betwee tiles.
 /**

@@ -1,4 +1,5 @@
-import { IsChannelDeep, Track } from '../gemini.schema';
+import { Track } from '../gemini.schema';
+import { IsChannelDeep } from '../gemini.schema.guards';
 
 export type ChartType =
     // ...

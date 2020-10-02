@@ -22,7 +22,6 @@
     "isolatedModules": false,
     "jsx": "react"
   },
-  // "files": ["index.tsx"],
   "include": [
     "src",
     "test"

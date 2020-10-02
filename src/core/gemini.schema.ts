@@ -1,10 +1,4 @@
-// Refer to the following url for dealing with defaults:
-// https://github.com/vega/vega-lite/blob/23fe2b9c6a82551f321ccab751370ca48ae002c9/src/channeldef.ts#L961
-
-import * as d3 from 'd3';
-import { isArray } from 'lodash';
 import { GLYPH_LOCAL_PRESET_TYPE, GLYPH_HIGLASS_PRESET_TYPE } from '../editor/example/deprecated/index';
-import { SUPPORTED_CHANNELS } from './mark';
 
 export interface GeminiSpec {
     references?: string[];
@@ -98,9 +92,6 @@ export interface BasicSingleTrack {
 
     // data transform
     dataTransform?: DataTransform;
-
-    // semantic zooming
-    semanticZoom?: SemanticZoom;
 
     // conditional visibility
     visibility?: TriggerCondition;
@@ -286,9 +277,7 @@ export interface ChannelValue {
 export type Domain = string[] | number[] | DomainInterval | DomainChrInterval | DomainChr | DomainGene;
 export type Range = string[] | number[] | PREDEFINED_COLORS;
 export type PREDEFINED_COLORS = 'viridis';
-export const PREDEFINED_COLOR_STR_MAP: { [k: string]: (t: number) => string } = {
-    viridis: d3.interpolateViridis
-};
+
 export interface DomainChr {
     // For showing a certain chromosome
     chromosome: string;
@@ -407,204 +396,4 @@ export interface ChannelBind {
 export interface AnyGlyphChannels {
     // Allow defining any kinds of chennels for binding data in Glyph
     [key: string]: ChannelBind | ChannelValue;
-}
-
-/**
- * Consistency
- */
-interface Consistency {
-    /**
-     * `true` and `false` correspond to 'shared' and 'independent', respectively.
-     */
-    // List of `uniqueName` of `view` or `track` or indexes appear in the specification.
-    targets: string[] | number[];
-    // Default: The first element of `targets`.
-    reference?: string;
-    color?: 'shared' | 'independent' | 'distinct' | true | false;
-    x?: 'shared' | 'independent' | true | false;
-    y?: 'shared' | 'independent' | true | false;
-    zoomScale?: 'shared' | 'independent' | true | false;
-    zoomCenter?: 'shared' | 'independent' | true | false;
-}
-
-/**
- * Type Guards
- */
-
-// TODO: these are not neccessary. Resolve the issue with `Channel`.
-export function IsDataMetadata(_: DataMetadata | ChannelDeep | ChannelValue | undefined): _ is DataMetadata {
-    return typeof _ === 'object' && 'type' in _ && (_.type === 'higlass-multivec' || _.type === 'higlass-bed');
-}
-export function IsDataTransform(_: DataTransform | ChannelDeep | ChannelValue): _ is DataTransform {
-    return 'filter' in _;
-}
-//
-
-export function IsDataDeep(
-    data:
-        | DataDeep
-        | Datum[]
-        /* remove the two types below */
-        | ChannelDeep
-        | ChannelValue
-): data is DataDeep {
-    return typeof data === 'object';
-}
-
-export function IsDomainFlat(domain: Domain): domain is string[] | number[] {
-    return Array.isArray(domain);
-}
-
-export function IsDomainChr(domain: Domain): domain is DomainChr {
-    return 'chromosome' in domain && !('interval' in domain);
-}
-
-export function IsDomainInterval(domain: Domain): domain is DomainInterval {
-    return !('chromosome' in domain) && 'interval' in domain;
-}
-
-export function IsDomainChrInterval(domain: Domain): domain is DomainChrInterval {
-    return 'chromosome' in domain && 'interval' in domain;
-}
-
-export function IsDomainGene(domain: Domain): domain is DomainGene {
-    return 'gene' in domain;
-}
-
-export function IsTrackStyle(track: TrackStyle | undefined): track is TrackStyle {
-    return track !== undefined;
-}
-
-export function IsShallowMark(mark: any /* TODO */): mark is MarkType {
-    return typeof mark !== 'object';
-}
-
-export function IsMarkDeep(mark: any /* TODO */): mark is MarkDeep {
-    return typeof mark === 'object';
-}
-
-export function IsGlyphMark(mark: any /* TODO */): mark is MarkGlyph {
-    return typeof mark === 'object' && mark.type === 'compositeMark';
-}
-
-export function IsSingleTrack(track: Track): track is BasicSingleTrack {
-    return !('superpose' in track);
-}
-
-export function IsSuperposedTrack(track: Track): track is SuperposedTrack {
-    return 'superpose' in track;
-}
-
-export function IsSemanticZoomRedefinition(_: any): _ is SemanticZoomRedefinition {
-    return _?.type === 'alternative-encoding';
-}
-
-export function IsChannelValue(
-    channel: ChannelDeep | ChannelValue | ChannelBind | undefined | 'none'
-): channel is ChannelValue {
-    return channel !== null && typeof channel === 'object' && 'value' in channel;
-}
-
-export function IsChannelBind(
-    channel: ChannelDeep | ChannelValue | ChannelBind | undefined | 'none'
-): channel is ChannelBind {
-    return channel !== null && typeof channel === 'object' && 'bind' in channel;
-}
-
-export function IsChannelDeep(channel: ChannelDeep | ChannelValue | undefined): channel is ChannelDeep {
-    return typeof channel === 'object' && !('value' in channel);
-}
-
-/**
- * Check whether domain is in array shape.
- */
-export function IsDomainArray(domain?: Domain): domain is string[] | number[] {
-    return isArray(domain);
-}
-
-// TODO: perhaps, combine this with `isStackedChannel`
-/**
- * Check whether visual marks can be stacked on top of each other.
- */
-export function IsStackedMark(track: BasicSingleTrack): boolean {
-    return (
-        (track.mark === 'bar' || track.mark === 'area') &&
-        IsChannelDeep(track.color) &&
-        track.color.type === 'nominal' &&
-        (!track.row || IsChannelValue(track.row)) &&
-        // TODO: determine whether to use stacked bar for nominal fields or not
-        IsChannelDeep(track.y) &&
-        track.y.type === 'quantitative'
-    );
-}
-
-/**
- * Check whether visual marks in this channel are stacked on top of each other.
- * For example, `area` marks with a `quantitative` `y` channel are being stacked.
- */
-export function IsStackedChannel(track: BasicSingleTrack, channelKey: keyof typeof ChannelTypes): boolean {
-    const channel = track[channelKey];
-    return (
-        IsStackedMark(track) &&
-        // only x or y channel can be stacked
-        (channelKey === 'x' || channelKey === 'y') &&
-        // only quantitative channel can be stacked
-        IsChannelDeep(channel) &&
-        channel.type === 'quantitative'
-    );
-}
-
-/**
- * Retreive value using a `channel`.
- * `undefined` if unable to retreive the value.
- */
-export function getValueUsingChannel(datum: { [k: string]: string | number }, channel: Channel) {
-    if (IsChannelDeep(channel) && channel.field) {
-        return datum[channel.field];
-    }
-    return undefined;
-}
-
-export function getChannelKeysByAggregateFnc(spec: BasicSingleTrack) {
-    const keys: (keyof typeof ChannelTypes)[] = [];
-    SUPPORTED_CHANNELS.forEach(k => {
-        const c = spec[k];
-        if (IsChannelDeep(c) && 'aggregate' in c) {
-            keys.push(k);
-        }
-    });
-    return keys;
-}
-
-/**
- * Get channel keys by a field type.
- */
-export function getChannelKeysByType(spec: BasicSingleTrack, t: FieldType) {
-    const keys: (keyof typeof ChannelTypes)[] = [];
-    SUPPORTED_CHANNELS.forEach(k => {
-        const c = spec[k];
-        if (IsChannelDeep(c) && c.type === t) {
-            keys.push(k);
-        }
-    });
-    return keys;
-}
-
-export type VisualizationType = 'unknown' | 'composite' | 'bar' | 'line' | 'area' | 'point' | 'rect'; // ...
-export function getVisualizationType(track: BasicSingleTrack): VisualizationType {
-    if (IsGlyphMark(track)) {
-        return 'composite';
-    } else if (track.mark === 'bar') {
-        return 'bar';
-    } else if (track.mark === 'line') {
-        return 'line';
-    } else if (track.mark === 'area') {
-        return 'area';
-    } else if (track.mark === 'point') {
-        return 'point';
-    } else if (track.mark === 'rect') {
-        return 'rect';
-    } else {
-        return 'unknown';
-    }
 }

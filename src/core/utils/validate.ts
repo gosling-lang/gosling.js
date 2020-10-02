@@ -1,4 +1,5 @@
-import { IsChannelDeep, ChannelDeep, ChannelTypes, Track } from '../../core/gemini.schema';
+import { ChannelDeep, ChannelTypes, Track } from '../../core/gemini.schema';
+import { IsChannelDeep } from '../gemini.schema.guards';
 import { resolveSuperposedTracks } from './superpose';
 
 export function validateTrack(track: Track) {
