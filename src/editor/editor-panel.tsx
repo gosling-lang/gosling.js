@@ -2,8 +2,9 @@ import React, { useRef, useState, useEffect } from 'react'; // eslint-disable-li
 import MonacoEditor from 'react-monaco-editor';
 import * as Monaco from 'monaco-editor/esm/vs/editor/editor.api';
 import ReactResizeDetector from 'react-resize-detector';
+import * as schema from '../../build/gemini.schema.json';
 
-const DEBUG_WITHOUT_DIAGNOSIS = true;
+const DEBUG_WITHOUT_DIAGNOSIS = false;
 
 function EditorPanel(props: { code: string; readOnly?: boolean; onChange?: (code: string) => void }) {
     const { code: templateCode, readOnly } = props;
@@ -25,13 +26,13 @@ function EditorPanel(props: { code: string; readOnly?: boolean; onChange?: (code
     function setupDiagnostics() {
         if (DEBUG_WITHOUT_DIAGNOSIS) return;
         Monaco.languages.json.jsonDefaults.setDiagnosticsOptions({
-            allowComments: false,
+            allowComments: true,
             enableSchemaRequest: true,
             validate: true,
             schemas: [
                 {
-                    uri: 'https://raw.githubusercontent.com/higlass/higlass/develop/app/schema.json',
-                    fileMatch: ['*']
+                    uri: 'https://raw.githubusercontent.com/sehilyi/gemini/master/build/gemini.schema.json',
+                    schema
                 }
             ]
         });
