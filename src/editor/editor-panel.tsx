@@ -2,9 +2,6 @@ import React, { useRef, useState, useEffect } from 'react'; // eslint-disable-li
 import MonacoEditor from 'react-monaco-editor';
 import * as Monaco from 'monaco-editor/esm/vs/editor/editor.api';
 import ReactResizeDetector from 'react-resize-detector';
-import * as schema from '../../build/gemini.schema.json';
-
-const DEBUG_WITHOUT_DIAGNOSIS = false;
 
 function EditorPanel(props: { code: string; readOnly?: boolean; onChange?: (code: string) => void }) {
     const { code: templateCode, readOnly } = props;
@@ -15,54 +12,43 @@ function EditorPanel(props: { code: string; readOnly?: boolean; onChange?: (code
         setCode(templateCode);
     }, [templateCode]);
 
-    function editorDidMount(
-        monacoEditor: Monaco.editor.IStandaloneCodeEditor
-        // monaco: typeof Monaco
-    ) {
+    function editorDidMount(monacoEditor: Monaco.editor.IStandaloneCodeEditor) {
         editor.current = monacoEditor;
         monacoEditor.focus();
     }
 
-    function setupDiagnostics() {
-        if (DEBUG_WITHOUT_DIAGNOSIS) return;
+    function editorWillMount() {
         Monaco.languages.json.jsonDefaults.setDiagnosticsOptions({
             allowComments: true,
             enableSchemaRequest: true,
             validate: true,
             schemas: [
                 {
-                    uri: 'https://raw.githubusercontent.com/sehilyi/gemini/master/build/gemini.schema.json',
-                    schema
+                    uri: 'GeminiSchema',
+                    fileMatch: ['*'],
+                    schema: {
+                        $ref: 'https://raw.githubusercontent.com/sehilyi/gemini/master/build/gemini.schema.json'
+                    }
                 }
             ]
         });
         Monaco.languages.json.jsonDefaults.setModeConfiguration({
+            diagnostics: true,
             documentFormattingEdits: false,
             documentRangeFormattingEdits: false,
+            documentSymbols: true,
             completionItems: true,
             hovers: true,
-            documentSymbols: true,
             tokens: true,
             colors: true,
             foldingRanges: true,
-            diagnostics: true
+            selectionRanges: false
         });
     }
 
-    function onChangeHandle(
-        newCode: string
-        // e: any
-    ) {
+    function onChangeHandle(newCode: string) {
         setCode(newCode);
         if (props.onChange) props.onChange(newCode);
-        // console.log('onChange', code, e);
-
-        setupDiagnostics();
-    }
-
-    function editorWillMount() {
-        // monaco: typeof Monaco
-        setupDiagnostics();
     }
 
     return (
@@ -78,19 +64,20 @@ function EditorPanel(props: { code: string; readOnly?: boolean; onChange?: (code
                 // Refer to https://github.com/react-monaco-editor/react-monaco-editor
                 language="json"
                 value={code}
-                theme={'test'}
+                theme={'vs-light'}
                 options={{
-                    autoClosingBrackets: 'never',
-                    autoClosingQuotes: 'never',
+                    autoClosingBrackets: 'beforeWhitespace',
+                    autoClosingQuotes: 'beforeWhitespace',
                     cursorBlinking: 'smooth',
                     folding: true,
                     lineNumbersMinChars: 4,
                     minimap: { enabled: false },
                     scrollBeyondLastLine: false,
                     wordWrap: 'on',
-                    lineNumbers: 'off',
+                    lineNumbers: 'on',
                     renderLineHighlight: 'line',
                     renderIndentGuides: true,
+                    fontSize: 14,
                     readOnly
                 }}
                 onChange={onChangeHandle}
