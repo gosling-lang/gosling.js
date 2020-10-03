@@ -47,6 +47,31 @@
     shape-rendering: crispEdges;
 }
 
+.compile-message {
+    position: absolute;
+    padding: 2px;
+    padding-left: 6px;
+    padding-right: 6px;
+    right: 16px;
+    margin-top: -60px;
+    opacity: 0.75;
+    transition: margin-top 500ms;
+}
+
+.compile-message-error {
+    background: #ff6a63;
+    border-left: 6px solid #dd3c34;
+    color: white;
+    margin-top: 0;
+}
+
+.compile-message-warn {
+    background: #e9a80a;
+    border-left: 6px solid #a07508;
+    color: black;
+    margin-top: 0;
+}
+
 .Resizer {
     background: #000;
     opacity: 0.2;

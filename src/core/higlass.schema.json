@@ -349,22 +349,22 @@
                 ],
                 "properties": {
                     "x": {
-                        "type": "integer",
+                        "type": "number",
                         "title": "The X Position",
                         "default": 0
                     },
                     "y": {
-                        "type": "integer",
+                        "type": "number",
                         "title": "The Y Position",
                         "default": 0
                     },
                     "w": {
-                        "type": "integer",
+                        "type": "number",
                         "title": "Width",
                         "default": 12
                     },
                     "h": {
-                        "type": "integer",
+                        "type": "number",
                         "title": "Height",
                         "default": 12
                     }

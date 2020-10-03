@@ -1,4 +1,3 @@
-import Ajv from 'ajv';
 import uuid from 'uuid';
 import { HiGlassSpec, Track, View } from './higlass.schema';
 import HiGlassSchema from './higlass.schema.json';
@@ -6,6 +5,7 @@ import { TOTAL_CHROMOSOME_SIZE_HG19 } from './utils/chrom-size';
 import { Domain } from './gemini.schema';
 import { getNumericDomain } from './utils/scales';
 import { RelativePosition } from './utils/bounding-box';
+import { validateSpec } from './utils/validate';
 
 const DEFAULT_CHROMOSOME_INFO_PATH = '//s3.amazonaws.com/pkerp/data/hg19/chromSizes.tsv';
 export const HIGLASS_AXIS_SIZE = 30;
@@ -92,14 +92,7 @@ export class HiGlassModel {
     }
 
     public validateSpec() {
-        const validate = new Ajv({ extendRefs: true }).compile(HiGlassSchema);
-        const valid = validate(this.spec());
-
-        if (validate.errors) {
-            console.warn(JSON.stringify(validate.errors, null, 2));
-        }
-
-        return valid as boolean;
+        return validateSpec(HiGlassSchema, this.spec()).state === 'success';
     }
 
     public setDomain(xDomain: Domain | undefined, yDomain: Domain | undefined) {

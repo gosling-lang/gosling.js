@@ -1,6 +1,31 @@
+import Ajv from 'ajv';
 import { ChannelDeep, ChannelTypes, Track } from '../../core/gemini.schema';
 import { IsChannelDeep } from '../gemini.schema.guards';
 import { resolveSuperposedTracks } from './superpose';
+
+export interface Validity {
+    message: string;
+    state: 'success' | 'warn' | 'error';
+    details?: string;
+}
+/**
+ *
+ */
+export function validateSpec(schema: any, spec: any): Validity {
+    const validate = new Ajv({ extendRefs: true }).compile(schema);
+    const valid = validate(spec);
+
+    let message = '',
+        details = '';
+    if (validate.errors) {
+        details = JSON.stringify(validate.errors, null, 2);
+        console.warn(details);
+
+        message = '⚠️ Some properties are incorrectly used.';
+    }
+
+    return { state: valid ? 'success' : 'warn', message, details };
+}
 
 export function validateTrack(track: Track) {
     let valid = true;

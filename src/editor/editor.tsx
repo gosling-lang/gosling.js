@@ -15,8 +15,10 @@ import { examples } from './example';
 import { replaceTemplate } from '../core/utils';
 import { renderLayoutPreview } from '../core/layout/layout-preview';
 import { getBoundingBox } from '../core/utils/bounding-box';
-import './editor.css';
 import { HiGlassSpec } from '../core/higlass.schema';
+import GeminiSchema from '../../build/gemini.schema.json';
+import { validateSpec, Validity } from '../core/utils/validate';
+import './editor.css';
 
 /**
  * Register a Gemini plugin track to HiGlassComponent
@@ -43,6 +45,7 @@ function Editor() {
     const [editorMode, setEditorMode] = useState<'Normal Mode' | 'Template-based Mode'>('Normal Mode');
     const [hg, setHg] = useState<HiGlassSpec>();
     const [gm, setGm] = useState(stringify(examples[INIT_DEMO_INDEX].spec as GeminiSpec));
+    const [log, setLog] = useState<Validity>({ message: '', state: 'success' });
 
     /**
      * Editor moode
@@ -63,8 +66,13 @@ function Editor() {
         let editedGm;
         try {
             editedGm = replaceTemplate(JSON.parse(gm));
+
+            // validate
+            setLog(validateSpec(GeminiSchema, editedGm));
         } catch (e) {
-            console.warn('Cannnot parse the edited code.');
+            const message = '✘ Cannnot parse the code.';
+            console.warn(message);
+            setLog({ message, state: 'error' });
         }
         if (!editedGm) return;
 
@@ -166,13 +174,16 @@ function Editor() {
                 <SplitPane className="split-pane-root" split="vertical" defaultSize="35%" onChange={undefined}>
                     <SplitPane split="horizontal" defaultSize="80%" onChange={undefined}>
                         {/* Gemini Editor */}
-                        <EditorPanel
-                            code={gm}
-                            readOnly={false}
-                            onChange={debounce(code => {
-                                setGm(code);
-                            }, 1000)}
-                        />
+                        <>
+                            <EditorPanel
+                                code={gm}
+                                readOnly={false}
+                                onChange={debounce(code => {
+                                    setGm(code);
+                                }, 1000)}
+                            />
+                            <div className={`compile-message compile-message-${log.state}`}>{log.message}</div>
+                        </>
                         {/* HiGlass View Config */}
                         <SplitPane split="vertical" defaultSize="100%" onChange={undefined}>
                             <>
