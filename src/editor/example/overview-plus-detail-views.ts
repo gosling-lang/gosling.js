@@ -6,9 +6,7 @@ export const EXAMPLE_OVERVIEW_DEATIL: GeminiSpec = {
     layout: {
         type: 'linear',
         direction: 'horizontal',
-        wrap: 2,
-        columnSize: 500,
-        rowSize: [60, 120, 180, 120, 180]
+        wrap: 3
     },
     tracks: [
         {
@@ -33,8 +31,11 @@ export const EXAMPLE_OVERVIEW_DEATIL: GeminiSpec = {
                     opacity: { value: 0.2 }
                 }
             ],
-            span: 2
+            span: 3
         },
+        { mark: 'empty', data: { type: 'csv', url: '' }, width: 50, height: 100 },
+        { mark: 'empty', data: { type: 'csv', url: '' }, width: 50, height: 100 },
+        { mark: 'empty', data: { type: 'csv', url: '' }, width: 50, height: 100 },
         {
             data: {
                 url: EXAMPLE_DATASETS.geneAnnotation,
@@ -92,12 +93,13 @@ export const EXAMPLE_OVERVIEW_DEATIL: GeminiSpec = {
             ],
             row: { field: 'strand', type: 'nominal', domain: ['+', '-'] },
             color: { value: '#B54F4A' },
-            width: 500,
+            width: 425,
             height: 120,
             style: {
                 stroke: 'blue'
             }
         },
+        { mark: 'empty', data: { type: 'csv', url: '' }, width: 50, height: 50 },
         {
             data: {
                 url: EXAMPLE_DATASETS.geneAnnotation,
@@ -155,7 +157,7 @@ export const EXAMPLE_OVERVIEW_DEATIL: GeminiSpec = {
             ],
             row: { field: 'strand', type: 'nominal', domain: ['+', '-'] },
             color: { value: '#B54F4A' },
-            width: 500,
+            width: 425,
             height: 120,
             style: {
                 stroke: 'red'
@@ -185,12 +187,13 @@ export const EXAMPLE_OVERVIEW_DEATIL: GeminiSpec = {
             color: { field: 'peak', type: 'quantitative' },
             // stroke: {value: 'white'},
             // strokeWidth: {value: 1},
-            width: 500,
+            width: 425,
             height: 180,
             style: {
                 stroke: 'blue'
             }
         },
+        { mark: 'empty', data: { type: 'csv', url: '' }, width: 50, height: 50 },
         {
             data: {
                 url: EXAMPLE_DATASETS.multivec,
@@ -215,7 +218,7 @@ export const EXAMPLE_OVERVIEW_DEATIL: GeminiSpec = {
             color: { field: 'peak', type: 'quantitative' },
             // stroke: {value: 'white'},
             // strokeWidth: {value: 1},
-            width: 500,
+            width: 425,
             height: 180,
             style: {
                 stroke: 'red'

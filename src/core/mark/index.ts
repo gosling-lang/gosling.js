@@ -10,6 +10,7 @@ import { drawText } from './text';
 import { drawRule } from './rule';
 import { drawLink } from './link';
 import { drawGrid } from './grid';
+import { drawChartOutlines } from './chart-outline';
 
 /**
  * Visual channels currently supported for visual encoding.
@@ -79,6 +80,7 @@ export function drawMark(HGC: any, trackInfo: any, tile: any, gm: GeminiTrackMod
 
     /* embellishment */
     drawGrid(HGC, trackInfo, tile, gm);
+    drawChartOutlines(HGC, trackInfo, gm);
 
     /* spec */
     switch (gm.spec().mark) {

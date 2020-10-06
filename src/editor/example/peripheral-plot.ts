@@ -6,9 +6,7 @@ export const EXAMPLE_PERIPHERAL_PLOT: GeminiSpec = {
     layout: {
         type: 'linear',
         direction: 'horizontal',
-        wrap: 3,
-        columnSize: [200, 600, 200],
-        rowSize: [60, 180, 180]
+        wrap: 3
     },
     tracks: [
         {
@@ -19,9 +17,12 @@ export const EXAMPLE_PERIPHERAL_PLOT: GeminiSpec = {
                 { mark: 'rect-brush', x: { linkID: 'focus' }, color: { value: 'black' } },
                 { mark: 'rect-brush', x: { linkID: 'periphery-right' } }
             ],
-            width: undefined,
+            width: 900,
             span: 3
         },
+        { mark: 'empty', data: { type: 'csv', url: '' }, width: 50, height: 50 },
+        { mark: 'empty', data: { type: 'csv', url: '' }, width: 50, height: 50 },
+        { mark: 'empty', data: { type: 'csv', url: '' }, width: 50, height: 50 },
         {
             data: {
                 url: EXAMPLE_DATASETS.multivec,
@@ -47,7 +48,7 @@ export const EXAMPLE_PERIPHERAL_PLOT: GeminiSpec = {
             color: { field: 'sample', type: 'nominal' },
             stroke: { value: 'white' },
             strokeWidth: { value: 0.5 },
-            width: 200,
+            width: 300,
             height: 180
         },
         {
@@ -73,7 +74,7 @@ export const EXAMPLE_PERIPHERAL_PLOT: GeminiSpec = {
             y: { field: 'peak', type: 'quantitative' },
             row: { field: 'sample', type: 'nominal' },
             color: { field: 'sample', type: 'nominal' },
-            width: 600,
+            width: 300,
             height: 180
         },
         {
@@ -101,7 +102,7 @@ export const EXAMPLE_PERIPHERAL_PLOT: GeminiSpec = {
             color: { field: 'sample', type: 'nominal' },
             stroke: { value: 'white' },
             strokeWidth: { value: 0.5 },
-            width: 200,
+            width: 300,
             height: 180
         },
         {
@@ -128,7 +129,7 @@ export const EXAMPLE_PERIPHERAL_PLOT: GeminiSpec = {
             color: { field: 'sample', type: 'nominal' },
             stroke: { value: 'white' },
             strokeWidth: { value: 0.5 },
-            width: 200,
+            width: 300,
             height: 180
         },
         {
@@ -153,7 +154,7 @@ export const EXAMPLE_PERIPHERAL_PLOT: GeminiSpec = {
             y: { field: 'peak', type: 'quantitative' },
             row: { field: 'sample', type: 'nominal' },
             color: { field: 'sample', type: 'nominal' },
-            width: 600,
+            width: 300,
             height: 180
         },
         {
@@ -180,7 +181,7 @@ export const EXAMPLE_PERIPHERAL_PLOT: GeminiSpec = {
             color: { field: 'sample', type: 'nominal' },
             stroke: { value: 'white' },
             strokeWidth: { value: 0.5 },
-            width: 200,
+            width: 300,
             height: 180
         }
     ]

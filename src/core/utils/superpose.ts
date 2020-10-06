@@ -1,9 +1,10 @@
-import { SingleTrack, SuperposedTrack, Track } from '../../core/gemini.schema';
+import { AxisPosition, SingleTrack, SuperposedTrack, Track } from '../../core/gemini.schema';
 import assign from 'lodash/assign';
-import { IsSuperposedTrack } from '../gemini.schema.guards';
+import { IsChannelDeep, IsSuperposedTrack } from '../gemini.schema.guards';
 
 /**
  * Resolve superposed tracks into multiple track specifications.
+ * Some options are corrected to ensure the resolved tracks use consistent visual properties, such as the existence of the axis for genomic coordinates.
  */
 export function resolveSuperposedTracks(track: Track): SingleTrack[] {
     if (!IsSuperposedTrack(track)) {
@@ -19,5 +20,24 @@ export function resolveSuperposedTracks(track: Track): SingleTrack[] {
         resolved.push(assign(JSON.parse(JSON.stringify(base)), subSpec));
     });
 
-    return resolved;
+    /* Correct spec for consistency */
+    // x-axis
+    let xAxisPosition: undefined | AxisPosition = undefined;
+    resolved.forEach(d => {
+        if (IsChannelDeep(d.x) && d.x.axis && !xAxisPosition) {
+            xAxisPosition = d.x.axis;
+        }
+    });
+
+    const corrected = resolved.map(d => {
+        return {
+            ...d,
+            x: { ...d.x, axis: xAxisPosition }
+        } as SingleTrack;
+    });
+
+    // height
+    // ...
+
+    return corrected;
 }

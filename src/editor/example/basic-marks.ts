@@ -30,6 +30,11 @@ export const EXAMPLE_BASIC_AREA: Track = {
 };
 
 export const EXMAPLE_BASIC_MARKS: GeminiSpec = {
+    layout: {
+        type: 'linear',
+        direction: 'vertical',
+        gap: 30
+    },
     tracks: [
         {
             data: {
@@ -43,7 +48,6 @@ export const EXMAPLE_BASIC_MARKS: GeminiSpec = {
                 value: 'peak',
                 categories: ['sample 1', 'sample 2', 'sample 3', 'sample 4']
             },
-            // superpose: [ { mark: 'text', text: { field: 'peak', type: 'quantitative' }, color: { value: 'white' } } ],
             mark: 'rect',
             x: {
                 field: 'position',

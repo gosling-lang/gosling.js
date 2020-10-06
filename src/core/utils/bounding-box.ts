@@ -1,9 +1,10 @@
 import { GeminiSpec, Track } from '../gemini.schema';
-import { DEFAULT_TRACK_GAP, DEFAULT_TRACK_HEIGHT, DEFAULT_TRACK_WIDTH, INNER_CIRCLE_RADIUS } from '../layout/defaults';
-import * as d3 from 'd3';
+import { DEFAULT_TRACK_HEIGHT, DEFAULT_TRACK_WIDTH } from '../layout/defaults';
 import { resolveSuperposedTracks } from '../utils/superpose';
-import { arrayRepeat } from './array';
 
+/**
+ * Position information of each track.
+ */
 export interface BoundingBox {
     x: number;
     y: number;
@@ -21,246 +22,203 @@ export interface RelativePosition {
     y: number;
 }
 
+/**
+ * Track information for its arrangement.
+ */
 export interface TrackInfo {
-    boundingBox: BoundingBox;
     track: Track;
+    boundingBox: BoundingBox;
     layout: RelativePosition;
 }
 
 /**
- *
+ * Calculate the arrangement information of tracks.
  */
-export function getTrackPositionInfo(spec: GeminiSpec, boundingBox: BoundingBox) {
+export function getTrackArrangementInfo(spec: GeminiSpec, trackLevel?: boolean) {
     const info: TrackInfo[] = [];
     const wrap: number = spec.layout?.wrap ?? 999;
 
-    // length of tracks + (span-1) of each track
-    const length =
-        spec.tracks.length +
+    // Number of cells in the tabular layout
+    const numCells =
+        +spec.tracks.length +
         spec.tracks.map(t => (typeof t.span === 'number' ? t.span - 1 : 0)).reduce((a, b) => a + b, 0);
 
-    let numCols = 0,
-        numRows = 0;
+    // Number of columns and rows
+    let numCols = 0;
+    let numRows = 0;
     if (spec.layout?.direction === 'horizontal') {
-        numRows = Math.ceil(length / wrap);
-        numCols = Math.min(wrap, length);
+        numRows = Math.ceil(numCells / wrap);
+        numCols = Math.min(wrap, numCells);
     } else {
         // by default, vertical
-        numCols = Math.ceil(length / wrap);
-        numRows = Math.min(wrap, length);
+        numCols = Math.ceil(numCells / wrap);
+        numRows = Math.min(wrap, numCells);
     }
 
-    const baseColSizes =
-        // can be undefined | [number, number, ...] | number
-        !spec.layout?.columnSize
-            ? [DEFAULT_TRACK_WIDTH]
-            : typeof spec.layout?.columnSize === 'number'
-            ? [spec.layout?.columnSize]
-            : spec.layout?.columnSize;
-    const baseRowSizes =
-        // can be undefined | [number, number, ...] | number
-        !spec.layout?.rowSize
-            ? [DEFAULT_TRACK_HEIGHT]
-            : typeof spec.layout?.rowSize === 'number'
-            ? [spec.layout?.rowSize]
-            : spec.layout?.rowSize;
+    // Consider gaps between tracks.
+    const gap: number = spec.layout?.gap ?? 0;
+    if (gap !== 0) {
+        // If `gap` is not zero, we add empty tracks between tracks.
+        numRows += numRows - 1;
+        numCols += numCols - 1;
+    }
+    const emptyTrack = {
+        mark: 'empty',
+        data: { type: 'csv', url: '' },
+        width: gap,
+        height: gap
+    } as Track;
 
-    // size of columns and rows
-    const colSizes = arrayRepeat(baseColSizes, numCols);
-    const rowSizes = arrayRepeat(baseRowSizes, numRows);
+    // Size of columns and rows
+    const colSizes = Array(numCols).fill(0);
+    const rowSizes = Array(numRows).fill(0);
 
-    const totalWidth = colSizes.reduce((a, b) => a + b, 0) + (colSizes.length - 1) * DEFAULT_TRACK_GAP;
-    const totalHeight = rowSizes.reduce((a, b) => a + b, 0) + (rowSizes.length - 1) * DEFAULT_TRACK_GAP;
-    const verticalGap = (DEFAULT_TRACK_GAP / totalHeight) * 12.0;
-    const horizontalGap = (DEFAULT_TRACK_GAP / totalWidth) * 12.0;
+    // Iterate tracks to determine the size of columns and rows. We use the largest size of tracks that belongs to each column/row.
+    let colI = 0;
+    let rowI = 0;
+    const correctedTracks: Track[] = [];
+    spec.tracks.forEach((track, i) => {
+        correctedTracks.push(track);
 
-    if (spec.layout?.direction === 'horizontal') {
-        let ci = 0,
-            ri = 0;
-        spec.tracks.forEach(track => {
-            // TODO: handle overflow by the ill-defined spec
-            const span = typeof track.span === 'number' ? track.span : 1;
+        const span = typeof track.span === 'number' ? track.span : 1;
 
-            const trackWidth = resolveSuperposedTracks(track)[0].width;
-            const trackHeight = resolveSuperposedTracks(track)[0].height;
+        const trackWidth = (resolveSuperposedTracks(track)[0].width as number) ?? DEFAULT_TRACK_WIDTH;
+        const trackHeight = (resolveSuperposedTracks(track)[0].height as number) ?? DEFAULT_TRACK_HEIGHT;
 
-            const x = boundingBox.x + colSizes.slice(0, ci).reduce((a, b) => a + b, 0) + ci * DEFAULT_TRACK_GAP;
-            const y = boundingBox.y + rowSizes.slice(0, ri).reduce((a, b) => a + b, 0) + ri * DEFAULT_TRACK_GAP;
-            const _width =
-                // calculated width with `span`
-                span === 1
-                    ? colSizes[ci]
-                    : colSizes.slice(ci, ci + span).reduce((a, b) => a + b, 0) +
-                      DEFAULT_TRACK_GAP * (colSizes.slice(ci, ci + span).length - 1);
-            const width =
-                // use the smaller size
-                typeof trackWidth === 'number' ? Math.min(trackWidth, _width) : _width;
-            const height =
-                // use the smaller size
-                typeof trackHeight === 'number' ? Math.min(trackHeight, rowSizes[ri]) : rowSizes[ri];
+        const unitWidth = trackWidth / span;
+        const unitHeight = trackHeight / span;
 
-            info.push({
-                track,
-                boundingBox: { x, y, width, height },
-                layout: {
-                    x: (colSizes.slice(0, ci).reduce((a, b) => a + b, 0) / totalWidth) * 12.0 + ci * horizontalGap,
-                    y: (rowSizes.slice(0, ri).reduce((a, b) => a + b, 0) / totalHeight) * 12.0 + ri * verticalGap,
-                    w: (width / totalWidth) * 12.0,
-                    h: (height / totalHeight) * 12.0
-                }
-            });
-
-            ci += span;
-
-            if (ci >= numCols) {
-                ci = 0;
-                ri++;
+        if (spec.layout?.direction === 'horizontal') {
+            if (rowSizes[rowI] < trackHeight) {
+                rowSizes[rowI] = trackHeight;
             }
-        });
-    } else {
-        // by default, vertical direction
-        let ci = 0,
-            ri = 0;
-        spec.tracks.forEach(track => {
-            // TODO: handle overflow by the ill-defined spec
-            const span = typeof track.span === 'number' ? track.span : 1;
+            Array(span)
+                .fill(0)
+                .forEach(() => {
+                    if (colSizes[colI] < unitWidth) {
+                        colSizes[colI] = unitWidth;
+                    }
+                    colI += span;
+                });
 
-            const trackWidth = resolveSuperposedTracks(track)[0].width;
-            const trackHeight = resolveSuperposedTracks(track)[0].height;
-
-            const x = boundingBox.x + colSizes.slice(0, ci).reduce((a, b) => a + b, 0) + ci * DEFAULT_TRACK_GAP;
-            const y = boundingBox.y + rowSizes.slice(0, ri).reduce((a, b) => a + b, 0) + ri * DEFAULT_TRACK_GAP;
-            const _height =
-                // calculated height with `span`
-                span === 1
-                    ? rowSizes[ri]
-                    : rowSizes.slice(ri, ri + span).reduce((a, b) => a + b, 0) +
-                      DEFAULT_TRACK_GAP * (rowSizes.slice(ri, ri + span).length - 1);
-            const width =
-                // use the smaller size
-                typeof trackWidth === 'number' ? Math.min(trackWidth, colSizes[ci]) : colSizes[ci];
-            const height =
-                // use the smaller size
-                typeof trackHeight === 'number' ? Math.min(trackHeight, _height) : _height;
-
-            info.push({
-                track,
-                boundingBox: { x, y, width, height },
-                layout: {
-                    x: (colSizes.slice(0, ci).reduce((a, b) => a + b, 0) / totalWidth) * 12.0 + ci * horizontalGap,
-                    y: (rowSizes.slice(0, ri).reduce((a, b) => a + b, 0) / totalHeight) * 12.0 + ri * verticalGap,
-                    w: (width / totalWidth) * 12.0,
-                    h: (height / totalHeight) * 12.0
+            if (gap !== 0 && spec.tracks.length > i + 1) {
+                if (colSizes[colI] < gap) {
+                    colSizes[colI] = gap;
                 }
-            });
-
-            ri += typeof track.span === 'number' ? track.span : 1;
-
-            if (ri >= numRows) {
-                ri = 0;
-                ci++;
+                Array(span)
+                    .fill(0)
+                    .forEach(() => correctedTracks.push(JSON.parse(JSON.stringify(emptyTrack))));
+                colI++;
             }
-        });
+
+            if (colI >= numCols) {
+                colI = 0;
+                rowI++;
+
+                if (gap !== 0 && spec.tracks.length > i + 1) {
+                    if (rowSizes[rowI] < gap) {
+                        rowSizes[rowI] = gap;
+                    }
+                    Array(numCols)
+                        .fill(0)
+                        .forEach(() => correctedTracks.push(JSON.parse(JSON.stringify(emptyTrack))));
+                    rowI++;
+                }
+            }
+        } else {
+            // by default, vertical direction
+            if (colSizes[colI] < trackWidth) {
+                colSizes[colI] = trackWidth;
+            }
+            Array(span)
+                .fill(0)
+                .forEach(() => {
+                    if (rowSizes[rowI] < unitHeight) {
+                        rowSizes[rowI] = unitHeight;
+                    }
+                    rowI += span;
+                });
+
+            if (gap !== 0 && spec.tracks.length > i + 1) {
+                if (rowSizes[rowI] < gap) {
+                    rowSizes[rowI] = gap;
+                }
+                Array(span)
+                    .fill(0)
+                    .forEach(() => correctedTracks.push(JSON.parse(JSON.stringify(emptyTrack))));
+                rowI++;
+            }
+
+            if (rowI >= numRows) {
+                rowI = 0;
+                colI++;
+
+                if (gap !== 0 && spec.tracks.length > i + 1) {
+                    if (colSizes[colI] < gap) {
+                        colSizes[colI] = gap;
+                    }
+                    Array(numRows)
+                        .fill(0)
+                        .forEach(() => correctedTracks.push(JSON.parse(JSON.stringify(emptyTrack))));
+                    colI++;
+                }
+            }
+        }
+    });
+
+    const totalWidth = colSizes.reduce((a, b) => a + b, 0);
+    const totalHeight = rowSizes.reduce((a, b) => a + b, 0);
+
+    if (!trackLevel) {
+        // Just return the bounding box of entire tracks.
+        return {
+            x: 0,
+            y: 0,
+            width: totalWidth,
+            height: totalHeight
+        };
     }
 
+    // Iterate tracks again to generate arrangement information using the size of tabular layouts.
+    colI = 0;
+    rowI = 0;
+    correctedTracks.forEach(track => {
+        const span = typeof track.span === 'number' ? track.span : 1;
+
+        const width = (resolveSuperposedTracks(track)[0].width as number) ?? DEFAULT_TRACK_WIDTH;
+        const height = (resolveSuperposedTracks(track)[0].height as number) ?? DEFAULT_TRACK_HEIGHT;
+
+        const cumWidth = colSizes.slice(0, colI).reduce((a, b) => a + b, 0);
+        const cumHeight = rowSizes.slice(0, rowI).reduce((a, b) => a + b, 0);
+
+        info.push({
+            track,
+            boundingBox: { x: cumWidth, y: cumHeight, width, height },
+            layout: {
+                x: (cumWidth / totalWidth) * 12.0,
+                y: (cumHeight / totalHeight) * 12.0,
+                w: (width / totalWidth) * 12.0,
+                h: (height / totalHeight) * 12.0
+            }
+        });
+
+        if (spec.layout?.direction === 'horizontal') {
+            colI += span;
+
+            if (colI >= numCols) {
+                colI = 0;
+                rowI++;
+            }
+        } else {
+            // by default, vertical direction
+            rowI += span;
+
+            if (rowI >= numRows) {
+                rowI = 0;
+                colI++;
+            }
+        }
+    });
+    // console.log(info);
     return info;
-}
-
-/**
- *
- */
-export function getBoundingBox(spec: GeminiSpec) {
-    if (spec.layout?.type === 'circular') {
-        // no support for circular yet
-        return undefined;
-    }
-
-    // length of tracks + (span-1) of each track
-    const length =
-        spec.tracks.length +
-        spec.tracks.map(t => (typeof t.span === 'number' ? t.span - 1 : 0)).reduce((a, b) => a + b, 0);
-    const wrap: number = spec.layout?.wrap ?? 999;
-
-    let numCols = 0,
-        numRows = 0;
-    if (spec.layout?.direction === 'horizontal') {
-        numRows = Math.ceil(length / wrap);
-        numCols = Math.min(wrap, length);
-    } else {
-        // by default, vertical
-        numCols = Math.ceil(length / wrap);
-        numRows = Math.min(wrap, length);
-    }
-
-    const baseColSizes =
-        // can be undefined | [number, number, ...] | number
-        !spec.layout?.columnSize
-            ? [DEFAULT_TRACK_WIDTH]
-            : typeof spec.layout?.columnSize === 'number'
-            ? [spec.layout?.columnSize]
-            : spec.layout?.columnSize;
-    const baseRowSizes =
-        // can be undefined | [number, number, ...] | number
-        !spec.layout?.rowSize
-            ? [DEFAULT_TRACK_HEIGHT]
-            : typeof spec.layout?.rowSize === 'number'
-            ? [spec.layout?.rowSize]
-            : spec.layout?.rowSize;
-
-    const colSizes = arrayRepeat(baseColSizes, numCols);
-    const rowSizes = arrayRepeat(baseRowSizes, numRows);
-
-    return {
-        x: 0,
-        y: 0,
-        width: colSizes.reduce((a, b) => a + b, 0) + (colSizes.length - 1) * DEFAULT_TRACK_GAP,
-        height: rowSizes.reduce((a, b) => a + b, 0) + (rowSizes.length - 1) * DEFAULT_TRACK_GAP
-    };
-}
-
-/**
- * (deprecated) Naive approach to calculate the entire size of a Gemini view.
- */
-export function calculateBoundingBox(spec: GeminiSpec) {
-    const bb = { width: 0, height: 0 };
-    const wrap: number = spec.layout?.wrap ?? 999;
-    if (spec.layout?.type === 'circular') {
-        // square and tightest bounding box enclousing circular tracks
-        bb.height = INNER_CIRCLE_RADIUS * 2;
-        bb.height += d3.sum(
-            // Add the height of tracks in the first column.
-            // TODO: not considering different directions
-            spec.tracks
-                .filter((t, i) => i % wrap === 0)
-                .map(track => resolveSuperposedTracks(track)[0].height as number)
-        );
-        bb.width = bb.height;
-    } else if (spec.layout?.direction === 'horizontal') {
-        bb.width = d3.sum(
-            // Add the width of tracks in the first row.
-            spec.tracks.filter((t, i) => i < wrap).map(track => resolveSuperposedTracks(track)[0].width as number)
-        );
-        bb.height = d3.sum(
-            // Add the height of tracks in the first column.
-            spec.tracks
-                .filter((t, i) => i % wrap === 0)
-                .map(track => resolveSuperposedTracks(track)[0].height as number)
-        ) as number;
-        // Add gaps
-        bb.width += (d3.min([wrap - 1, spec.tracks.length - 1]) as number) * DEFAULT_TRACK_GAP;
-        bb.height += Math.floor(spec.tracks.length / wrap) * DEFAULT_TRACK_GAP;
-    } else {
-        bb.width = d3.sum(
-            // Add the width of tracks in the first row.
-            spec.tracks.filter((t, i) => i % wrap === 0).map(track => resolveSuperposedTracks(track)[0].width as number)
-        );
-        bb.height = d3.sum(
-            // Add the height of tracks in the first column.
-            spec.tracks.filter((t, i) => i < wrap).map(track => resolveSuperposedTracks(track)[0].height as number)
-        ) as number;
-        // Add gaps
-        bb.width += Math.floor(spec.tracks.length / wrap) * DEFAULT_TRACK_GAP;
-        bb.height += (d3.min([wrap - 1, spec.tracks.length - 1]) as number) * DEFAULT_TRACK_GAP;
-    }
-    return bb;
 }

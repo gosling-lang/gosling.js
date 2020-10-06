@@ -12,8 +12,6 @@ export interface Layout {
     direction: 'vertical' | 'horizontal';
     wrap?: number;
     gap?: number;
-    rowSize?: number | number[];
-    columnSize?: number | number[];
 }
 
 /**
@@ -65,6 +63,10 @@ export interface DataTransform {
     filter: { field: string; oneOf: string[] | number[]; not: boolean }[];
 }
 
+// TODO: Ensure to use `EmptyTrack` for the convenient
+// export type Track = EmptyTrack | NonEmptyTrack;
+// export type NonEmptyTrack = SingleTrack | SuperposedTrack | SuperposedTrackTwoLevels;
+
 export type Track = SingleTrack | SuperposedTrack | SuperposedTrackTwoLevels;
 
 export type SingleTrack = BasicSingleTrack | CustomChannel;
@@ -75,6 +77,12 @@ export type CustomChannel = {
 } & {
     [k in CHANNEL_KEYS]?: never;
 };
+
+export interface EmptyTrack {
+    type: 'empty';
+    width: number;
+    height: number;
+}
 
 export interface BasicSingleTrack {
     // high-level configuration
@@ -262,12 +270,13 @@ export interface ChannelDeep {
     aggregate?: Aggregate;
     domain?: Domain;
     range?: Range;
-    axis?: 'top' | 'bottom' | 'left' | 'right';
+    axis?: AxisPosition;
     baseline?: string | number;
     zeroBaseline?: boolean; // we could remove this and use the `baseline` option instead
     grid?: boolean;
     linkID?: string;
 }
+export type AxisPosition = 'top' | 'bottom' | 'left' | 'right';
 export type FieldType = 'genomic' | 'nominal' | 'quantitative';
 
 export interface ChannelValue {
@@ -321,7 +330,8 @@ export type MarkType =
     // experimental
     | 'rect-brush'
     // deprecated
-    | 'dummy';
+    | 'dummy'
+    | 'empty';
 
 /**
  * Glyph

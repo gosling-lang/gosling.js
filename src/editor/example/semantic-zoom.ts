@@ -47,8 +47,7 @@ const EXAMPLE_SEMANTIC_ZOOMING_LINES: Track = {
 export const EXAMPLE_SEMANTIC_ZOOMING: GeminiSpec = {
     layout: {
         type: 'linear',
-        direction: 'vertical',
-        rowSize: [180, 60, 180, 120, 60]
+        direction: 'vertical'
     },
     tracks: [
         {
@@ -125,6 +124,7 @@ export const EXAMPLE_SEMANTIC_ZOOMING: GeminiSpec = {
             width: 1000,
             height: 180
         },
+        { mark: 'empty', data: { type: 'csv', url: '' }, width: 50, height: 50 },
         {
             ...EXAMPLE_IDEOGRAM_TRACK,
             superpose: [
@@ -157,6 +157,7 @@ export const EXAMPLE_SEMANTIC_ZOOMING: GeminiSpec = {
                 ...EXAMPLE_IDEOGRAM_TRACK.superpose
             ]
         },
+        { mark: 'empty', data: { type: 'csv', url: '' }, width: 50, height: 50 },
         EXAMPLE_SEMANTIC_ZOOMING_LINES,
         { ...EXAMPLE_SEMANTIC_ZOOMING_LINES, height: 120 },
         { ...EXAMPLE_SEMANTIC_ZOOMING_LINES, height: 60 }

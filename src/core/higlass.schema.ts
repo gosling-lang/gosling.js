@@ -209,5 +209,7 @@ export type EnumTrackType =
     | 'viewport-projection-center'
     | 'viewport-projection-horizontal'
     | 'viewport-projection-vertical'
+    // Not included in the HiGlass schema, but used in its exmaples
+    | 'empty'
     // custom tracks
     | 'gemini-track';

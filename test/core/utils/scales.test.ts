@@ -12,8 +12,7 @@ describe('Should use shared scales', () => {
                 y: { field: 'y', type: 'quantitative', domain: [0, 1] },
                 color: { field: 'color', type: 'nominal', domain: ['a'] }
             },
-            [],
-            false
+            []
         );
         const forceShare = true;
         shareScaleAcrossTracks(
@@ -27,8 +26,7 @@ describe('Should use shared scales', () => {
                         y: { field: 'y', type: 'quantitative', domain: [0, 2] },
                         color: { field: 'color', type: 'nominal', domain: ['a', 'b'] }
                     },
-                    [],
-                    false
+                    []
                 ),
                 new GeminiTrackModel(
                     {
@@ -38,8 +36,7 @@ describe('Should use shared scales', () => {
                         y: { field: 'y', type: 'quantitative', domain: [-1, 3] },
                         color: { field: 'color', type: 'nominal', domain: ['c'] }
                     },
-                    [],
-                    false
+                    []
                 )
             ],
             forceShare
@@ -61,8 +58,7 @@ describe('Should use shared scales', () => {
                 y: { field: 'y', type: 'quantitative', domain: [0, 1] },
                 color: { field: 'color', type: 'nominal', domain: ['a'] }
             },
-            [],
-            false
+            []
         );
         const forceShare = false;
         shareScaleAcrossTracks(
@@ -76,8 +72,7 @@ describe('Should use shared scales', () => {
                         y: { field: 'y', type: 'quantitative', domain: [0, 2] },
                         color: { field: 'color', type: 'nominal', domain: ['a', 'b'] }
                     },
-                    [],
-                    false
+                    []
                 ),
                 new GeminiTrackModel(
                     {
@@ -87,8 +82,7 @@ describe('Should use shared scales', () => {
                         y: { field: 'y', type: 'quantitative', domain: [0, 3] },
                         color: { field: 'color', type: 'nominal', domain: ['c'] }
                     },
-                    [],
-                    false
+                    []
                 )
             ],
             forceShare

@@ -4,7 +4,7 @@ export const DEFAULT_VISUAL_PROPERTIES = {
 
 // default track size
 export const DEFAULT_TRACK_HEIGHT = 180;
-export const DEFAULT_TRACK_WIDTH = 1000;
+export const DEFAULT_TRACK_WIDTH = 360;
 
 // gab between tracks
 export const DEFAULT_TRACK_GAP = 0;

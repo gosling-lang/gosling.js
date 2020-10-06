@@ -61,6 +61,21 @@ export class HiGlassModel {
         return this;
     }
 
+    // Trick to add a vertical gap between tracks. We are using this trick because HiGlass `layout` do not support vertical gaps.
+    public setEmptyTrack(width: number, height: number) {
+        if (this.getLastView()) {
+            this.getLastView().tracks.center = [
+                {
+                    server: 'http://higlass.io/api/v1',
+                    type: 'empty',
+                    width,
+                    height
+                }
+            ];
+        }
+        return this;
+    }
+
     public addBrush(
         viewId: string,
         fromViewUid?: string,
@@ -68,16 +83,17 @@ export class HiGlassModel {
     ) {
         if (!fromViewUid) return;
 
-        // we could do this to `whole` track or `center` track with `combined`
-        (this.getView(viewId) as any).tracks.whole.push({
+        // we could do this to either a `whole` track or a `center` track with `combined`
+        // (this.getView(viewId) as any).tracks.whole.push({
+        (this.getView(viewId) as any).tracks.center[0].contents.push({
             type: 'viewport-projection-horizontal',
             fromViewUid,
             options: {
                 projectionFillColor: style?.color ?? '#777',
-                projectionStrokeColor: style?.stroke ?? '#777',
+                projectionStrokeColor: 'black', // style?.stroke ?? '#777',
                 projectionFillOpacity: style?.opacity ?? 0.3,
-                projectionStrokeOpacity: 0,
-                strokeWidth: style?.strokeWidth ?? 1
+                projectionStrokeOpacity: 1,
+                strokeWidth: 1 //style?.strokeWidth ?? 1
             }
         });
         return this;
@@ -192,7 +208,11 @@ export class HiGlassModel {
                 uid: uuid.v1(),
                 type: (direction + baseTrackType) as any /* TODO */,
                 [widthOrHeight]: HIGLASS_AXIS_SIZE,
-                chromInfoPath: this.hg.chromInfoPath
+                chromInfoPath: this.hg.chromInfoPath,
+                options: {
+                    color: 'black',
+                    tickColor: 'black'
+                }
             }
         ];
         return this;

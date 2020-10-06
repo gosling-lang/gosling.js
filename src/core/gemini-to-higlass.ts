@@ -1,5 +1,5 @@
 import { Track as HiGlassTrack } from './higlass.schema';
-import { HiGlassModel, HIGLASS_AXIS_SIZE } from './higlass-model';
+import { HiGlassModel } from './higlass-model';
 import { parseServerAndTilesetUidFromUrl } from './utils';
 import { Track, Domain } from './gemini.schema';
 import { BoundingBox, RelativePosition } from './utils/bounding-box';
@@ -22,12 +22,7 @@ export function geminiToHiGlass(
     // we only look into the first resolved spec to get information, such as size of the track
     const firstResolvedSpec = resolveSuperposedTracks(gm)[0];
 
-    if (
-        // type guides
-        typeof firstResolvedSpec.data !== 'undefined' &&
-        IsDataDeep(firstResolvedSpec.data) &&
-        firstResolvedSpec.data.url
-    ) {
+    if (IsDataDeep(firstResolvedSpec.data) && firstResolvedSpec.data.url) {
         // add a default view
         hgModel.addDefaultView();
 
@@ -41,26 +36,14 @@ export function geminiToHiGlass(
         const xDomain = isXGenomic && IsChannelDeep(genomicChannel) ? (genomicChannel.domain as Domain) : undefined;
         const yDomain = isYGenomic && IsChannelDeep(genomicChannel) ? (genomicChannel.domain as Domain) : undefined;
 
-        // TODO: better way to sync between height/width of track in the description and actual track size?
-        let isAxisShown = false;
-        if (isXGenomic) {
-            isAxisShown =
-                IsChannelDeep(firstResolvedSpec.x) && ['top', 'bottom'].includes(firstResolvedSpec.x.axis as any);
-        }
-        if (isYGenomic) {
-            isAxisShown =
-                IsChannelDeep(firstResolvedSpec.y) && ['left', 'right'].includes(firstResolvedSpec.y.axis as any);
-        }
-        ///
-
         hgModel.setDomain(xDomain, yDomain);
 
         const hgTrack: HiGlassTrack = {
             type: 'gemini-track',
             server: server,
             tilesetUid: tilesetUid,
-            width: bb.width - (isYGenomic && isAxisShown ? HIGLASS_AXIS_SIZE : 0),
-            height: bb.height - (isXGenomic && isAxisShown ? HIGLASS_AXIS_SIZE : 0),
+            width: bb.width,
+            height: bb.height,
             options: {
                 spec: { ...gm, data: undefined }
             }
@@ -86,6 +69,8 @@ export function geminiToHiGlass(
         });
 
         hgModel.validateSpec();
+    } else if (firstResolvedSpec.mark === 'empty') {
+        hgModel.addDefaultView().setLayout(layout).setEmptyTrack(bb.width, bb.height);
     }
     return hgModel;
 }

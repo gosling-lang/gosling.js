@@ -39,7 +39,7 @@ export const HIGLASS_GENE_ANNOTATION: Track = {
                 type: 'genomic'
             },
             style: {
-                dy: -17
+                dy: -14
             }
         },
         {
@@ -152,7 +152,7 @@ export const EXAMPLE_GENE_ANNOTATION: GeminiSpec = {
     layout: {
         type: 'linear',
         direction: 'vertical',
-        rowSize: 120
+        gap: 20
     },
     tracks: [
         HIGLASS_GENE_ANNOTATION,
@@ -194,7 +194,7 @@ export const EXAMPLE_GENE_ANNOTATION: GeminiSpec = {
                         type: 'genomic'
                     },
                     style: {
-                        dy: -17
+                        dy: -14
                     }
                 },
                 {
@@ -312,7 +312,7 @@ export const EXAMPLE_GENE_ANNOTATION: GeminiSpec = {
                     },
                     color: { value: 'black' },
                     style: {
-                        dy: -17
+                        dy: -14
                     }
                 },
                 {
@@ -443,7 +443,7 @@ export const EXAMPLE_GENE_ANNOTATION: GeminiSpec = {
                         type: 'genomic'
                     },
                     style: {
-                        dy: -17
+                        dy: -14
                     }
                 },
                 {
@@ -563,7 +563,7 @@ export const EXAMPLE_GENE_ANNOTATION: GeminiSpec = {
                         type: 'genomic'
                     },
                     style: {
-                        dy: -17
+                        dy: -14
                     }
                 },
                 {

@@ -289,7 +289,7 @@ function GeminiTrack(HGC: any, ...args: any[]): any {
                 }
 
                 // Construct separate gemini models for individual tiles
-                const gm = new GeminiTrackModel(resolved, tile.tileData.tabularDataFiltered, false);
+                const gm = new GeminiTrackModel(resolved, tile.tileData.tabularDataFiltered);
 
                 // Add a track model to the tile object
                 tile.geminiModels.push(gm);

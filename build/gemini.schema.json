@@ -10,6 +10,15 @@
       ],
       "type": "string"
     },
+    "AxisPosition": {
+      "enum": [
+        "top",
+        "bottom",
+        "left",
+        "right"
+      ],
+      "type": "string"
+    },
     "BEDMetadata": {
       "additionalProperties": false,
       "properties": {
@@ -245,13 +254,7 @@
           "$ref": "#/definitions/Aggregate"
         },
         "axis": {
-          "enum": [
-            "top",
-            "bottom",
-            "left",
-            "right"
-          ],
-          "type": "string"
+          "$ref": "#/definitions/AxisPosition"
         },
         "baseline": {
           "type": [
@@ -1128,7 +1131,8 @@
         "triangle-r",
         "triangle-d",
         "rect-brush",
-        "dummy"
+        "dummy",
+        "empty"
       ],
       "type": "string"
     },

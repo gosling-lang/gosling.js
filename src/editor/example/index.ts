@@ -19,7 +19,8 @@ export const examples: ReadonlyArray<{
     {
         name: 'Basic Marks',
         spec: EXMAPLE_BASIC_MARKS,
-        hidden: false
+        hidden: false,
+        forceShow: false
     },
     {
         name: 'Superposed Tracks',
@@ -55,6 +56,6 @@ export const examples: ReadonlyArray<{
         name: 'Peripheral Plot',
         spec: EXAMPLE_PERIPHERAL_PLOT,
         underDevelopment: true,
-        forceShow: true
+        forceShow: false
     }
 ].filter(d => !d.hidden);

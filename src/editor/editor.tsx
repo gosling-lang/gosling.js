@@ -5,7 +5,7 @@ import { CSVDataFetcher } from '../higlass-gemini-datafetcher/index';
 import { HiGlassComponent } from 'higlass';
 // @ts-ignore
 import { default as higlassRegister } from 'higlass-register';
-import React, { useState, useEffect, useRef, useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import EditorPanel from './editor-panel';
 import stringify from 'json-stringify-pretty-compact';
 import SplitPane from 'react-split-pane';
@@ -13,12 +13,12 @@ import { GeminiSpec } from '../core/gemini.schema';
 import { debounce } from 'lodash';
 import { examples } from './example';
 import { replaceTemplate } from '../core/utils';
-import { renderLayoutPreview } from '../core/layout/layout-preview';
-import { getBoundingBox } from '../core/utils/bounding-box';
+import { BoundingBox, getTrackArrangementInfo } from '../core/utils/bounding-box';
 import { HiGlassSpec } from '../core/higlass.schema';
 import GeminiSchema from '../../build/gemini.schema.json';
 import { validateSpec, Validity } from '../core/utils/validate';
 import './editor.css';
+import { renderLayout } from '../core/layout/layout';
 
 /**
  * Register a Gemini plugin track to HiGlassComponent
@@ -40,7 +40,6 @@ const INIT_DEMO_INDEX = examples.findIndex(d => d.forceShow) !== -1 ? examples.f
  * React component for editing Gemini specs
  */
 function Editor() {
-    const layoutSvg = useRef<SVGSVGElement>(null);
     const [demo, setDemo] = useState(examples[INIT_DEMO_INDEX]);
     const [editorMode, setEditorMode] = useState<'Normal Mode' | 'Template-based Mode'>('Normal Mode');
     const [hg, setHg] = useState<HiGlassSpec>();
@@ -66,8 +65,6 @@ function Editor() {
         let editedGm;
         try {
             editedGm = replaceTemplate(JSON.parse(gm));
-
-            // validate
             setLog(validateSpec(GeminiSchema, editedGm));
         } catch (e) {
             const message = '✘ Cannnot parse the code.';
@@ -76,19 +73,9 @@ function Editor() {
         }
         if (!editedGm) return;
 
-        renderLayoutPreview(
-            layoutSvg.current as SVGSVGElement,
-            editedGm as GeminiSpec,
-            {
-                x: 60,
-                y: 60,
-                width: getBoundingBox(editedGm)?.width,
-                height: getBoundingBox(editedGm)?.height
-            },
-            (newHg: HiGlassSpec) => {
-                setHg(newHg);
-            }
-        );
+        renderLayout(editedGm as GeminiSpec, (newHg: HiGlassSpec) => {
+            setHg(newHg);
+        });
     }, [gm]);
 
     /**
@@ -96,35 +83,47 @@ function Editor() {
      */
     const hglass = useMemo(() => {
         const editedGm = replaceTemplate(JSON.parse(gm));
-        return hg ? (
+        const bb = getTrackArrangementInfo(editedGm) as BoundingBox;
+        return hg && bb ? (
             <div
-                key={stringify(hg.views[0].uid)}
                 style={{
-                    position: 'absolute',
-                    display: 'block',
-                    left: 60,
-                    top: 60,
-                    width: getBoundingBox(editedGm)?.width,
-                    height: getBoundingBox(editedGm)?.height
+                    position: 'relative',
+                    padding: 60,
+                    background: 'white',
+                    width: bb.width + 120,
+                    height: bb.height + 120
                 }}
             >
-                <HiGlassComponent
-                    options={{
-                        bounded: true,
-                        containerPaddingX: 0,
-                        containerPaddingY: 0,
-                        viewMarginTop: 0,
-                        viewMarginBottom: 0,
-                        viewMarginLeft: 0,
-                        viewMarginRight: 0,
-                        viewPaddingTop: 0,
-                        viewPaddingBottom: 0,
-                        viewPaddingLeft: 0,
-                        viewPaddingRight: 0,
-                        sizeMode: 'bounded'
+                <div
+                    key={stringify(hg.views[0].uid)}
+                    style={{
+                        position: 'relative',
+                        display: 'block',
+                        background: 'white',
+                        margin: 10,
+                        padding: 0, // non-zero padding act unexpectedly with HiGlass components
+                        width: bb.width,
+                        height: bb.height
                     }}
-                    viewConfig={hg}
-                />
+                >
+                    <HiGlassComponent
+                        options={{
+                            bounded: true,
+                            containerPaddingX: 0,
+                            containerPaddingY: 0,
+                            viewMarginTop: 0,
+                            viewMarginBottom: 0,
+                            viewMarginLeft: 0,
+                            viewMarginRight: 0,
+                            viewPaddingTop: 0,
+                            viewPaddingBottom: 0,
+                            viewPaddingLeft: 0,
+                            viewPaddingRight: 0,
+                            sizeMode: 'bounded'
+                        }}
+                        viewConfig={hg}
+                    />
+                </div>
             </div>
         ) : null;
     }, [hg]);
@@ -171,8 +170,8 @@ function Editor() {
                 ) : null}
             </div>
             <div className="editor">
-                <SplitPane className="split-pane-root" split="vertical" defaultSize="35%" onChange={undefined}>
-                    <SplitPane split="horizontal" defaultSize="80%" onChange={undefined}>
+                <SplitPane className="split-pane-root" split="vertical" defaultSize="40%" onChange={undefined}>
+                    <SplitPane split="horizontal" defaultSize="calc(100% - 48px)" onChange={undefined}>
                         {/* Gemini Editor */}
                         <>
                             <EditorPanel
@@ -200,12 +199,7 @@ function Editor() {
                             <></>
                         </SplitPane>
                     </SplitPane>
-                    <div className="preview-container">
-                        <div style={{ position: 'relative' }}>
-                            <svg ref={layoutSvg} />
-                            {hglass}
-                        </div>
-                    </div>
+                    <div className="preview-container">{hglass}</div>
                 </SplitPane>
             </div>
         </>

@@ -39,10 +39,6 @@ export class GeminiTrackModel {
     /* spec */
     private specOriginal: BasicSingleTrack; // original spec of users
     private specComplete: BasicSingleTrack; // processed spec, being used in visualizations
-    private specCompleteAlt: BasicSingleTrack; // processed spec, being used when zoomed out // TODO: remove this and have only one spec?
-
-    /* whether to use alternative spec */
-    private _isAlt: boolean; // we could ultimately remove this
 
     /* data */
     private dataOriginal: { [k: string]: number | string }[];
@@ -60,15 +56,12 @@ export class GeminiTrackModel {
         SIZE: 3
     };
 
-    constructor(spec: SingleTrack, data: { [k: string]: number | string }[], isAlt?: boolean) {
+    constructor(spec: SingleTrack, data: { [k: string]: number | string }[]) {
         this.dataOriginal = JSON.parse(JSON.stringify(data));
         this.dataAggregated = JSON.parse(JSON.stringify(data));
 
         this.specOriginal = JSON.parse(JSON.stringify(spec));
         this.specComplete = JSON.parse(JSON.stringify(spec));
-        this.specCompleteAlt = JSON.parse(JSON.stringify(spec));
-
-        this._isAlt = isAlt ?? false;
 
         this.channelScales = {};
 
@@ -80,7 +73,6 @@ export class GeminiTrackModel {
 
         // fill missing options
         this.generateCompleteSpec(this.specComplete);
-        this.generateCompleteSpec(this.specCompleteAlt);
 
         // generate scales based on domains and ranges
         this.generateScales();
@@ -100,7 +92,7 @@ export class GeminiTrackModel {
     }
 
     public spec(): BasicSingleTrack {
-        return this._isAlt ? this.specCompleteAlt : this.specComplete;
+        return this.specComplete;
     }
 
     public data(): { [k: string]: number | string }[] {
@@ -178,10 +170,6 @@ export class GeminiTrackModel {
         if (IsChannelDeep(channel)) {
             channel.domain = domain;
         }
-        const channelAlt = this.specCompleteAlt[channelKey];
-        if (IsChannelDeep(channelAlt)) {
-            channelAlt.domain = domain;
-        }
     }
 
     /**
@@ -192,10 +180,6 @@ export class GeminiTrackModel {
         const channel = this.specComplete[channelKey];
         if (IsChannelDeep(channel)) {
             channel.range = range;
-        }
-        const channelAlt = this.specComplete[channelKey];
-        if (IsChannelDeep(channelAlt)) {
-            channelAlt.range = range;
         }
     }
 

@@ -11,7 +11,7 @@ const MINIMAL_TRACK_SPEC: Track = {
 
 describe('gemini track model should properly validate the original spec', () => {
     it('minimal spec with on genomic coordiate should be valid', () => {
-        const model = new GeminiTrackModel(MINIMAL_TRACK_SPEC, [], false);
+        const model = new GeminiTrackModel(MINIMAL_TRACK_SPEC, []);
         expect(model.validateSpec().valid).toBe(true);
     });
 
@@ -20,7 +20,7 @@ describe('gemini track model should properly validate the original spec', () => 
             ...MINIMAL_TRACK_SPEC,
             row: { field: 'x', type: 'quantitative' }
         };
-        const model = new GeminiTrackModel(track, [], false);
+        const model = new GeminiTrackModel(track, []);
         expect(model.validateSpec().valid).toBe(false);
     });
 
@@ -29,10 +29,10 @@ describe('gemini track model should properly validate the original spec', () => 
             data: { url: '', type: 'tileset' },
             mark: 'bar'
         };
-        const model = new GeminiTrackModel(track, [], false);
+        const model = new GeminiTrackModel(track, []);
         expect(model.validateSpec().valid).toBe(false);
 
-        const model2 = new GeminiTrackModel({ ...track, x: { field: 'x', type: 'genomic' } }, [], false);
+        const model2 = new GeminiTrackModel({ ...track, x: { field: 'x', type: 'genomic' } }, []);
         expect(model2.validateSpec().valid).toBe(true);
     });
 
@@ -41,25 +41,25 @@ describe('gemini track model should properly validate the original spec', () => 
             ...MINIMAL_TRACK_SPEC,
             color: { field: 'f', type: 'genomic' }
         };
-        const model = new GeminiTrackModel(track, [], false);
+        const model = new GeminiTrackModel(track, []);
         expect(model.validateSpec().valid).toBe(false);
 
         if (IsChannelDeep(track.color)) {
             track.color.type = 'nominal';
         }
-        const model2 = new GeminiTrackModel(track, [], false);
+        const model2 = new GeminiTrackModel(track, []);
         expect(model2.validateSpec().valid).toBe(true);
     });
 });
 
 describe('default options should be added into the original spec', () => {
     it('original spec should be the same after making a gemini model', () => {
-        const model = new GeminiTrackModel(MINIMAL_TRACK_SPEC, [], false);
+        const model = new GeminiTrackModel(MINIMAL_TRACK_SPEC, []);
         expect(isEqual(model.originalSpec(), MINIMAL_TRACK_SPEC)).toEqual(true);
     });
 
     it('default opacity should be added if it is missing in the spec', () => {
-        const model = new GeminiTrackModel(MINIMAL_TRACK_SPEC, [], false);
+        const model = new GeminiTrackModel(MINIMAL_TRACK_SPEC, []);
         const spec = model.spec();
         expect(spec.opacity).not.toBeUndefined();
         expect(IsChannelValue(spec.opacity) ? spec.opacity.value : undefined).toBe(1);
@@ -70,7 +70,7 @@ describe('default options should be added into the original spec', () => {
             ...MINIMAL_TRACK_SPEC,
             color: { field: 'f', type: 'quantitative' }
         };
-        const model = new GeminiTrackModel(track, [], false);
+        const model = new GeminiTrackModel(track, []);
         const spec = model.spec();
         const range = IsChannelDeep(spec.color) ? spec.color.range : [];
         expect(range).not.toBeUndefined();
@@ -92,15 +92,11 @@ describe('Gemini track model should be properly generated with data', () => {
             opacity: { value: 1 },
             height: 300
         };
-        const model = new GeminiTrackModel(
-            track,
-            [
-                { color: 1, row: 'a', y: 5 },
-                { color: 2, row: 'b', y: 7 },
-                { color: 3, row: 'a', y: 10 }
-            ],
-            false
-        );
+        const model = new GeminiTrackModel(track, [
+            { color: 1, row: 'a', y: 5 },
+            { color: 2, row: 'b', y: 7 },
+            { color: 3, row: 'a', y: 10 }
+        ]);
         const spec = model.spec();
         const colorDomain = IsChannelDeep(spec.color) ? (spec.color.domain as string[]) : [];
         const rowDomain = IsChannelDeep(spec.row) ? (spec.row.domain as string[]) : [];

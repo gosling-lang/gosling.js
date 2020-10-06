@@ -6,7 +6,7 @@ export const EXAMPLE_SUPERPOSE: GeminiSpec = {
     layout: {
         type: 'linear',
         direction: 'vertical',
-        rowSize: [60, 180, 180, 180]
+        gap: 30
     },
     tracks: [
         EXAMPLE_IDEOGRAM_TRACK,

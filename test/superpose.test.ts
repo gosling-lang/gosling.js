@@ -1,3 +1,4 @@
+import { IsChannelDeep } from '../src/core/gemini.schema.guards';
 import { resolveSuperposedTracks } from '../src/core/utils/superpose';
 
 describe('Should handle superposition options correctly', () => {
@@ -23,5 +24,14 @@ describe('Should handle superposition options correctly', () => {
         expect(tracks).toHaveLength(2);
         expect(tracks[0].mark).toBe('line');
         expect(tracks[1].mark).toBe('point');
+    });
+    it('Should correct several options for consistency', () => {
+        const tracks = resolveSuperposedTracks({
+            superpose: [{ x: { axis: 'top' } }, { x: { axis: 'bottom' } }]
+        });
+        expect(IsChannelDeep(tracks[0].x) && tracks[0].x.axis === 'top').toBe(true);
+        expect(IsChannelDeep(tracks[0].x) && IsChannelDeep(tracks[1].x) && tracks[0].x.axis === tracks[1].x.axis).toBe(
+            true
+        );
     });
 });
