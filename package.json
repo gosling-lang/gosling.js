@@ -115,7 +115,7 @@
     },
     "husky": {
         "hooks": {
-            "pre-commit": "yarn format && git add ."
+            "pre-commit": "yarn schema && yarn format && git add ."
         }
     }
 }

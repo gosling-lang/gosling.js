@@ -916,19 +916,6 @@
     "Layout": {
       "additionalProperties": false,
       "properties": {
-        "columnSize": {
-          "anyOf": [
-            {
-              "type": "number"
-            },
-            {
-              "items": {
-                "type": "number"
-              },
-              "type": "array"
-            }
-          ]
-        },
         "direction": {
           "enum": [
             "vertical",
@@ -938,19 +925,6 @@
         },
         "gap": {
           "type": "number"
-        },
-        "rowSize": {
-          "anyOf": [
-            {
-              "type": "number"
-            },
-            {
-              "items": {
-                "type": "number"
-              },
-              "type": "array"
-            }
-          ]
         },
         "type": {
           "enum": [
