@@ -39,7 +39,7 @@ export const HIGLASS_GENE_ANNOTATION: Track = {
                 type: 'genomic'
             },
             style: {
-                dy: -14
+                dy: -15
             }
         },
         {
@@ -52,8 +52,7 @@ export const HIGLASS_GENE_ANNOTATION: Track = {
             mark: 'triangle-r',
             x: {
                 field: 'end',
-                type: 'genomic',
-                axis: 'top'
+                type: 'genomic'
             },
             size: { value: 20 }
         },
@@ -67,8 +66,7 @@ export const HIGLASS_GENE_ANNOTATION: Track = {
             mark: 'triangle-l',
             x: {
                 field: 'start',
-                type: 'genomic',
-                axis: 'top'
+                type: 'genomic'
             },
             size: { value: 20 },
             style: { align: 'right' }
@@ -78,8 +76,7 @@ export const HIGLASS_GENE_ANNOTATION: Track = {
             mark: 'rect',
             x: {
                 field: 'start',
-                type: 'genomic',
-                axis: 'top'
+                type: 'genomic'
             },
             size: { value: 20 },
             xe: {
@@ -97,8 +94,7 @@ export const HIGLASS_GENE_ANNOTATION: Track = {
             mark: 'rule',
             x: {
                 field: 'start',
-                type: 'genomic',
-                axis: 'top'
+                type: 'genomic'
             },
             strokeWidth: { value: 3 },
             xe: {
@@ -120,8 +116,7 @@ export const HIGLASS_GENE_ANNOTATION: Track = {
             mark: 'rule',
             x: {
                 field: 'start',
-                type: 'genomic',
-                axis: 'top'
+                type: 'genomic'
             },
             strokeWidth: { value: 3 },
             xe: {
@@ -192,9 +187,6 @@ export const EXAMPLE_GENE_ANNOTATION: GeminiSpec = {
                     xe: {
                         field: 'end',
                         type: 'genomic'
-                    },
-                    style: {
-                        dy: -14
                     }
                 },
                 {
@@ -310,10 +302,7 @@ export const EXAMPLE_GENE_ANNOTATION: GeminiSpec = {
                         field: 'end',
                         type: 'genomic'
                     },
-                    color: { value: 'black' },
-                    style: {
-                        dy: -14
-                    }
+                    color: { value: 'black' }
                 },
                 {
                     dataTransform: {

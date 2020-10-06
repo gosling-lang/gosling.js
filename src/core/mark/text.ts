@@ -20,8 +20,12 @@ export function drawText(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMod
     /* data */
     const data = tm.data();
 
+    /* track size */
+    const trackHeight = trackInfo.dimensions[1];
+
     /* row separation */
     const rowCategories = (tm.getChannelDomainArray('row') as string[]) ?? ['___SINGLE_ROW___'];
+    const rowHeight = trackHeight / rowCategories.length;
 
     /* information for rescaling tiles */
     tile.rowScale = tm.getChannelScale('row');
@@ -98,7 +102,7 @@ export function drawText(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMod
             textGraphic.anchor.x = 0.5;
             textGraphic.anchor.y = 0.5;
             textGraphic.position.x = cx; // xe ? (xe + x) / 2.0 : x;
-            textGraphic.position.y = rowPosition + y;
+            textGraphic.position.y = rowPosition + rowHeight - y;
 
             rowGraphics.addChild(textGraphic);
         });

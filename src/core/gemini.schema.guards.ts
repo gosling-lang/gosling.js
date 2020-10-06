@@ -21,7 +21,10 @@ import {
     ChannelTypes,
     Channel,
     FieldType,
-    Domain
+    Domain,
+    Filter,
+    OneOfFilter,
+    RangeFilter
 } from './gemini.schema';
 import { SUPPORTED_CHANNELS } from './mark';
 import { isArray } from 'lodash';
@@ -113,6 +116,14 @@ export function IsChannelBind(
 
 export function IsChannelDeep(channel: ChannelDeep | ChannelValue | undefined): channel is ChannelDeep {
     return typeof channel === 'object' && !('value' in channel);
+}
+
+export function IsOneOfFilter(_: Filter): _ is OneOfFilter {
+    return 'oneOf' in _;
+}
+
+export function IsRangeFilter(_: Filter): _ is RangeFilter {
+    return 'inRange' in _;
 }
 
 /**

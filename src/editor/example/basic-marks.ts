@@ -83,8 +83,6 @@ export const EXMAPLE_BASIC_MARKS: GeminiSpec = {
             y: { field: 'peak', type: 'quantitative' },
             row: { field: 'sample', type: 'nominal' },
             color: { field: 'sample', type: 'nominal' },
-            stroke: { value: 'white' },
-            strokeWidth: { value: 0.5 },
             width: 1000,
             height: 180
         },
@@ -136,8 +134,7 @@ export const EXMAPLE_BASIC_MARKS: GeminiSpec = {
             row: { field: 'sample', type: 'nominal' },
             size: { field: 'peak', type: 'quantitative' },
             color: { field: 'sample', type: 'nominal' },
-            stroke: { value: 'white' },
-            strokeWidth: { value: 1 },
+            opacity: { value: 0.5 },
             width: 1000,
             height: 180
         }

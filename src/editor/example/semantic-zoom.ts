@@ -44,6 +44,39 @@ const EXAMPLE_SEMANTIC_ZOOMING_LINES: Track = {
     height: 180
 };
 
+export const EXAMPLE_SEMANTIC_ZOOMING_IDEOGRAM: Track = {
+    ...EXAMPLE_IDEOGRAM_TRACK,
+    superpose: [
+        {
+            mark: 'rect',
+            color: {
+                field: 'Chr.',
+                type: 'nominal',
+                range: ['#F6F6F6', 'gray']
+            },
+            x: {
+                field: 'Basepair_start',
+                type: 'genomic',
+                aggregate: 'min',
+                axis: 'top'
+            },
+            xe: {
+                field: 'Basepair_stop',
+                aggregate: 'max',
+                type: 'genomic'
+            },
+            strokeWidth: { value: 2 },
+            stroke: { value: 'gray' },
+            visibility: {
+                operation: 'less-than',
+                condition: { zoomLevel: 3 },
+                target: 'track'
+            }
+        },
+        ...EXAMPLE_IDEOGRAM_TRACK.superpose
+    ]
+};
+
 export const EXAMPLE_SEMANTIC_ZOOMING: GeminiSpec = {
     layout: {
         type: 'linear',
@@ -125,38 +158,7 @@ export const EXAMPLE_SEMANTIC_ZOOMING: GeminiSpec = {
             height: 180
         },
         { mark: 'empty', data: { type: 'csv', url: '' }, width: 50, height: 50 },
-        {
-            ...EXAMPLE_IDEOGRAM_TRACK,
-            superpose: [
-                {
-                    mark: 'rect',
-                    color: {
-                        field: 'Chr.',
-                        type: 'nominal',
-                        range: ['#F6F6F6', 'gray']
-                    },
-                    x: {
-                        field: 'Basepair_start',
-                        type: 'genomic',
-                        aggregate: 'min',
-                        axis: 'top'
-                    },
-                    xe: {
-                        field: 'Basepair_stop',
-                        aggregate: 'max',
-                        type: 'genomic'
-                    },
-                    strokeWidth: { value: 2 },
-                    stroke: { value: 'gray' },
-                    visibility: {
-                        operation: 'less-than',
-                        condition: { zoomLevel: 3 },
-                        target: 'track'
-                    }
-                },
-                ...EXAMPLE_IDEOGRAM_TRACK.superpose
-            ]
-        },
+        EXAMPLE_SEMANTIC_ZOOMING_IDEOGRAM,
         { mark: 'empty', data: { type: 'csv', url: '' }, width: 50, height: 50 },
         EXAMPLE_SEMANTIC_ZOOMING_LINES,
         { ...EXAMPLE_SEMANTIC_ZOOMING_LINES, height: 120 },

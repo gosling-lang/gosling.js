@@ -10,6 +10,7 @@ export const EXAMPLE_OVERVIEW_DEATIL: GeminiSpec = {
     },
     tracks: [
         {
+            title: 'Overview',
             ...EXAMPLE_IDEOGRAM_TRACK,
             x: {
                 ...EXAMPLE_IDEOGRAM_TRACK.x,
@@ -37,6 +38,7 @@ export const EXAMPLE_OVERVIEW_DEATIL: GeminiSpec = {
         { mark: 'empty', data: { type: 'csv', url: '' }, width: 50, height: 100 },
         { mark: 'empty', data: { type: 'csv', url: '' }, width: 50, height: 100 },
         {
+            title: 'Detail View 1',
             data: {
                 url: EXAMPLE_DATASETS.geneAnnotation,
                 type: 'tileset'
@@ -101,6 +103,7 @@ export const EXAMPLE_OVERVIEW_DEATIL: GeminiSpec = {
         },
         { mark: 'empty', data: { type: 'csv', url: '' }, width: 50, height: 50 },
         {
+            title: 'Detail View 2',
             data: {
                 url: EXAMPLE_DATASETS.geneAnnotation,
                 type: 'tileset'

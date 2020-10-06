@@ -6,7 +6,7 @@ import { validateTrack } from '../core/utils/validate';
 import { shareScaleAcrossTracks } from '../core/utils/scales';
 import { resolveSuperposedTracks } from '../core/utils/superpose';
 import { Track } from '../core/gemini.schema';
-import { IsDataMetadata, IsDataTransform } from '../core/gemini.schema.guards';
+import { IsDataMetadata, IsDataTransform, IsOneOfFilter, IsRangeFilter } from '../core/gemini.schema.guards';
 
 function GeminiTrack(HGC: any, ...args: any[]): any {
     if (!new.target) {
@@ -100,6 +100,9 @@ function GeminiTrack(HGC: any, ...args: any[]): any {
             tile.mouseOverData = null;
             tile.graphics.clear();
             tile.graphics.removeChildren();
+            // this.textGraphics.forEach((text: any) => {
+            //     tile.graphics.addChild(text);
+            // });
             this.pBorder.clear();
             this.pBorder.removeChildren();
             tile.drawnAtScale = this._xScale.copy(); // being used in `draw()`
@@ -179,6 +182,7 @@ function GeminiTrack(HGC: any, ...args: any[]): any {
                             return;
                         }
 
+                        const bin = resolved.metadata.bin ?? 1;
                         const tileSize = this.tilesetInfo.tile_size;
 
                         const { tileX, tileWidth } = this.getTilePosAndDimensions(
@@ -203,14 +207,51 @@ function GeminiTrack(HGC: any, ...args: any[]): any {
 
                         // convert data to a visualization-friendly format
                         categories.forEach((c: string, i: number) => {
+                            let cumVal = 0;
+                            let binStart = Number.MIN_SAFE_INTEGER;
+                            let binEnd = Number.MAX_SAFE_INTEGER;
                             Array.from(Array(numOfGenomicPositions).keys()).forEach((g: number, j: number) => {
-                                tabularData.push({
-                                    [rowName]: c,
-                                    [valueName]: numericValues[numOfGenomicPositions * i + j],
-                                    [columnName]: tileX + (j + 0.5) * tileUnitSize,
-                                    [startName]: tileX + j * tileUnitSize,
-                                    [endName]: tileX + (j + 1) * tileUnitSize
-                                });
+                                // add individual rows
+                                if (bin === 1) {
+                                    tabularData.push({
+                                        [rowName]: c,
+                                        [valueName]: numericValues[numOfGenomicPositions * i + j],
+                                        [columnName]: tileX + (j + 0.5) * tileUnitSize,
+                                        [startName]: tileX + j * tileUnitSize,
+                                        [endName]: tileX + (j + 1) * tileUnitSize
+                                    });
+                                } else {
+                                    // EXPERIMENTAL: bin the data considering the `bin` options
+                                    if (j % bin === 0) {
+                                        // Start storing information for this bin
+                                        cumVal = numericValues[numOfGenomicPositions * i + j];
+                                        binStart = j;
+                                        binEnd = j + bin;
+                                    } else if (j % bin === bin - 1) {
+                                        // Add a row using the cumulative value
+                                        tabularData.push({
+                                            [rowName]: c,
+                                            [valueName]: cumVal / bin,
+                                            [columnName]: tileX + (binStart + bin / 2.0) * tileUnitSize,
+                                            [startName]: tileX + binStart * tileUnitSize,
+                                            [endName]: tileX + binEnd * tileUnitSize
+                                        });
+                                    } else if (j === numOfGenomicPositions - 1) {
+                                        // Manage the remainders. Just add them as a single row.
+                                        const smallBin = numOfGenomicPositions % bin;
+                                        const correctedBinEnd = binStart + smallBin;
+                                        tabularData.push({
+                                            [rowName]: c,
+                                            [valueName]: cumVal / smallBin,
+                                            [columnName]: tileX + (binStart + smallBin / 2.0) * tileUnitSize,
+                                            [startName]: tileX + binStart * tileUnitSize,
+                                            [endName]: tileX + correctedBinEnd * tileUnitSize
+                                        });
+                                    } else {
+                                        // Add a current value
+                                        cumVal += numericValues[numOfGenomicPositions * i + j];
+                                    }
+                                }
                             });
                         });
 
@@ -277,14 +318,25 @@ function GeminiTrack(HGC: any, ...args: any[]): any {
                 // Apply filters
                 if (resolved.dataTransform !== undefined && IsDataTransform(resolved.dataTransform)) {
                     resolved.dataTransform.filter.forEach(filter => {
-                        const { field, oneOf, not } = filter;
-                        tile.tileData.tabularDataFiltered = tile.tileData.tabularDataFiltered.filter(
-                            (d: { [k: string]: number | string }) => {
-                                return not
-                                    ? (oneOf as any[]).indexOf(d[field]) === -1
-                                    : (oneOf as any[]).indexOf(d[field]) !== -1;
-                            }
-                        );
+                        if (IsOneOfFilter(filter)) {
+                            const { field, oneOf, not } = filter;
+                            tile.tileData.tabularDataFiltered = tile.tileData.tabularDataFiltered.filter(
+                                (d: { [k: string]: number | string }) => {
+                                    return not
+                                        ? (oneOf as any[]).indexOf(d[field]) === -1
+                                        : (oneOf as any[]).indexOf(d[field]) !== -1;
+                                }
+                            );
+                        } else if (IsRangeFilter(filter)) {
+                            const { field, inRange, not } = filter;
+                            tile.tileData.tabularDataFiltered = tile.tileData.tabularDataFiltered.filter(
+                                (d: { [k: string]: number | string }) => {
+                                    return not
+                                        ? !(inRange[0] <= d[field] && d[field] <= inRange[1])
+                                        : inRange[0] <= d[field] && d[field] <= inRange[1];
+                                }
+                            );
+                        }
                     });
                 }
 

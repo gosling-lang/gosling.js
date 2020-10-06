@@ -1,4 +1,4 @@
-import { AxisPosition, SingleTrack, SuperposedTrack, Track } from '../../core/gemini.schema';
+import { AxisPosition, BasicSingleTrack, SingleTrack, SuperposedTrack, Track } from '../../core/gemini.schema';
 import assign from 'lodash/assign';
 import { IsChannelDeep, IsSuperposedTrack } from '../gemini.schema.guards';
 
@@ -16,8 +16,12 @@ export function resolveSuperposedTracks(track: Track): SingleTrack[] {
     delete (base as Partial<SuperposedTrack>).superpose; // remove `superpose` from the base spec
 
     const resolved: SingleTrack[] = [];
-    track.superpose.forEach(subSpec => {
-        resolved.push(assign(JSON.parse(JSON.stringify(base)), subSpec));
+    track.superpose.forEach((subSpec, i) => {
+        const spec = assign(JSON.parse(JSON.stringify(base)), subSpec) as BasicSingleTrack;
+        if (spec.title && i !== 0) {
+            delete spec.title; // remove `title` for the rest of the superposed tracks
+        }
+        resolved.push(spec);
     });
 
     /* Correct spec for consistency */

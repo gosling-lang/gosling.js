@@ -8,10 +8,12 @@ import { EXAMPLE_OVERVIEW_DEATIL } from './overview-plus-detail-views';
 import { EXAMPLE_PERIPHERAL_PLOT } from './peripheral-plot';
 import { EXAMPLE_SEMANTIC_ZOOMING } from './semantic-zoom';
 import { EXMAPLE_BASIC_LINKING } from './basic-linking';
+import { EXAMPLE_UPSET } from './upset';
 
 export const examples: ReadonlyArray<{
     name: string;
     spec: GeminiSpec;
+    description?: string;
     underDevelopment?: boolean;
     hidden?: boolean;
     forceShow?: boolean;
@@ -44,7 +46,7 @@ export const examples: ReadonlyArray<{
         spec: EXAMPLE_SEMANTIC_ZOOMING
     },
     {
-        name: 'Basic Linking',
+        name: 'Basic Linking Views',
         spec: EXMAPLE_BASIC_LINKING
     },
     {
@@ -57,5 +59,11 @@ export const examples: ReadonlyArray<{
         spec: EXAMPLE_PERIPHERAL_PLOT,
         underDevelopment: true,
         forceShow: false
+    },
+    {
+        name: 'UpSet-like Plot',
+        spec: EXAMPLE_UPSET,
+        underDevelopment: true,
+        forceShow: true
     }
 ].filter(d => !d.hidden);

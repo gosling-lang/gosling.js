@@ -85,46 +85,59 @@ function Editor() {
         const editedGm = replaceTemplate(JSON.parse(gm));
         const bb = getTrackArrangementInfo(editedGm) as BoundingBox;
         return hg && bb ? (
-            <div
-                style={{
-                    position: 'relative',
-                    padding: 60,
-                    background: 'white',
-                    width: bb.width + 120,
-                    height: bb.height + 120
-                }}
-            >
+            <>
                 <div
-                    key={stringify(hg.views[0].uid)}
                     style={{
                         position: 'relative',
-                        display: 'block',
+                        padding: 60,
                         background: 'white',
-                        margin: 10,
-                        padding: 0, // non-zero padding act unexpectedly with HiGlass components
-                        width: bb.width,
-                        height: bb.height
+                        width: bb.width + 120,
+                        height: bb.height + 120
                     }}
                 >
-                    <HiGlassComponent
-                        options={{
-                            bounded: true,
-                            containerPaddingX: 0,
-                            containerPaddingY: 0,
-                            viewMarginTop: 0,
-                            viewMarginBottom: 0,
-                            viewMarginLeft: 0,
-                            viewMarginRight: 0,
-                            viewPaddingTop: 0,
-                            viewPaddingBottom: 0,
-                            viewPaddingLeft: 0,
-                            viewPaddingRight: 0,
-                            sizeMode: 'bounded'
+                    <div
+                        key={stringify(hg.views[0].uid)}
+                        style={{
+                            position: 'relative',
+                            display: 'block',
+                            background: 'white',
+                            margin: 10,
+                            padding: 0, // non-zero padding act unexpectedly with HiGlass components
+                            width: bb.width,
+                            height: bb.height
                         }}
-                        viewConfig={hg}
-                    />
+                    >
+                        <HiGlassComponent
+                            options={{
+                                bounded: true,
+                                containerPaddingX: 0,
+                                containerPaddingY: 0,
+                                viewMarginTop: 0,
+                                viewMarginBottom: 0,
+                                viewMarginLeft: 0,
+                                viewMarginRight: 0,
+                                viewPaddingTop: 0,
+                                viewPaddingBottom: 0,
+                                viewPaddingLeft: 0,
+                                viewPaddingRight: 0,
+                                sizeMode: 'bounded'
+                            }}
+                            viewConfig={hg}
+                        />
+                    </div>
                 </div>
-            </div>
+                {editedGm.description ? (
+                    <div
+                        style={{
+                            width: bb.width + 120,
+                            margin: 20,
+                            color: 'black'
+                        }}
+                    >
+                        {editedGm.description}
+                    </div>
+                ) : null}
+            </>
         ) : null;
     }, [hg]);
 

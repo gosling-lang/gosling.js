@@ -84,16 +84,16 @@ export class HiGlassModel {
         if (!fromViewUid) return;
 
         // we could do this to either a `whole` track or a `center` track with `combined`
-        // (this.getView(viewId) as any).tracks.whole.push({
-        (this.getView(viewId) as any).tracks.center[0].contents.push({
+        (this.getView(viewId) as any).tracks.whole.push({
             type: 'viewport-projection-horizontal',
+            uid: uuid.v4(),
             fromViewUid,
             options: {
                 projectionFillColor: style?.color ?? '#777',
-                projectionStrokeColor: 'black', // style?.stroke ?? '#777',
+                projectionStrokeColor: style?.stroke ?? '#777',
                 projectionFillOpacity: style?.opacity ?? 0.3,
                 projectionStrokeOpacity: 1,
-                strokeWidth: 1 //style?.strokeWidth ?? 1
+                strokeWidth: style?.strokeWidth ?? 1
             }
         });
         return this;

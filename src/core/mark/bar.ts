@@ -85,7 +85,7 @@ export function drawBar(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMode
                     strokeWidth,
                     colorToHex(stroke),
                     actualOpacity,
-                    1 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
+                    0 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
                 );
                 rowGraphics.beginFill(colorToHex(color), opacity);
                 rowGraphics.drawRect(barStartX, rowHeight - y - prevYEnd, barWidth, y);
@@ -143,7 +143,7 @@ export function drawBar(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMode
                     strokeWidth,
                     colorToHex(stroke),
                     actualOpacity,
-                    1 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
+                    0 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
                 );
                 rowGraphics.beginFill(colorToHex(color), opacity);
                 rowGraphics.drawRect(barStartX, rowPosition + rowHeight - barHeight - baselineY, barWidth, barHeight);

@@ -179,8 +179,14 @@
         "style": {
           "$ref": "#/definitions/TrackStyle"
         },
+        "subtitle": {
+          "type": "string"
+        },
         "text": {
           "$ref": "#/definitions/Channel"
+        },
+        "title": {
+          "type": "string"
         },
         "visibility": {
           "$ref": "#/definitions/TriggerCondition"
@@ -407,37 +413,7 @@
       "properties": {
         "filter": {
           "items": {
-            "additionalProperties": false,
-            "properties": {
-              "field": {
-                "type": "string"
-              },
-              "not": {
-                "type": "boolean"
-              },
-              "oneOf": {
-                "anyOf": [
-                  {
-                    "items": {
-                      "type": "string"
-                    },
-                    "type": "array"
-                  },
-                  {
-                    "items": {
-                      "type": "number"
-                    },
-                    "type": "array"
-                  }
-                ]
-              }
-            },
-            "required": [
-              "field",
-              "oneOf",
-              "not"
-            ],
-            "type": "object"
+            "$ref": "#/definitions/Filter"
           },
           "type": "array"
         }
@@ -581,6 +557,16 @@
         "quantitative"
       ],
       "type": "string"
+    },
+    "Filter": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/OneOfFilter"
+        },
+        {
+          "$ref": "#/definitions/RangeFilter"
+        }
+      ]
     },
     "GLYPH_HIGLASS_PRESET_TYPE": {
       "enum": [
@@ -1133,6 +1119,9 @@
     "MultivecMetadata": {
       "additionalProperties": false,
       "properties": {
+        "bin": {
+          "type": "number"
+        },
         "categories": {
           "items": {
             "type": "string"
@@ -1167,6 +1156,39 @@
       ],
       "type": "object"
     },
+    "OneOfFilter": {
+      "additionalProperties": false,
+      "properties": {
+        "field": {
+          "type": "string"
+        },
+        "not": {
+          "type": "boolean"
+        },
+        "oneOf": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "items": {
+                "type": "number"
+              },
+              "type": "array"
+            }
+          ]
+        }
+      },
+      "required": [
+        "field",
+        "oneOf",
+        "not"
+      ],
+      "type": "object"
+    },
     "PREDEFINED_COLORS": {
       "const": "viridis",
       "type": "string"
@@ -1189,6 +1211,29 @@
           "$ref": "#/definitions/PREDEFINED_COLORS"
         }
       ]
+    },
+    "RangeFilter": {
+      "additionalProperties": false,
+      "properties": {
+        "field": {
+          "type": "string"
+        },
+        "inRange": {
+          "items": {
+            "type": "number"
+          },
+          "type": "array"
+        },
+        "not": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "field",
+        "inRange",
+        "not"
+      ],
+      "type": "object"
     },
     "SingleTrack": {
       "anyOf": [
@@ -1321,6 +1366,16 @@
             }
           ]
         },
+        "subtitle": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "$ref": "#/definitions/Channel"
+            }
+          ]
+        },
         "superpose": {
           "items": {
             "additionalProperties": false,
@@ -1442,8 +1497,28 @@
                   }
                 ]
               },
+              "subtitle": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "$ref": "#/definitions/Channel"
+                  }
+                ]
+              },
               "text": {
                 "$ref": "#/definitions/Channel"
+              },
+              "title": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "$ref": "#/definitions/Channel"
+                  }
+                ]
               },
               "visibility": {
                 "anyOf": [
@@ -1506,6 +1581,16 @@
         },
         "text": {
           "$ref": "#/definitions/Channel"
+        },
+        "title": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "$ref": "#/definitions/Channel"
+            }
+          ]
         },
         "visibility": {
           "anyOf": [
@@ -1687,6 +1772,16 @@
             }
           ]
         },
+        "subtitle": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "$ref": "#/definitions/Channel"
+            }
+          ]
+        },
         "superpose": {
           "items": {
             "additionalProperties": false,
@@ -1802,6 +1897,16 @@
                 "anyOf": [
                   {
                     "$ref": "#/definitions/TrackStyle"
+                  },
+                  {
+                    "$ref": "#/definitions/Channel"
+                  }
+                ]
+              },
+              "subtitle": {
+                "anyOf": [
+                  {
+                    "type": "string"
                   },
                   {
                     "$ref": "#/definitions/Channel"
@@ -1929,8 +2034,28 @@
                         }
                       ]
                     },
+                    "subtitle": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "$ref": "#/definitions/Channel"
+                        }
+                      ]
+                    },
                     "text": {
                       "$ref": "#/definitions/Channel"
+                    },
+                    "title": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "$ref": "#/definitions/Channel"
+                        }
+                      ]
                     },
                     "visibility": {
                       "anyOf": [
@@ -1994,6 +2119,16 @@
               "text": {
                 "$ref": "#/definitions/Channel"
               },
+              "title": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "$ref": "#/definitions/Channel"
+                  }
+                ]
+              },
               "visibility": {
                 "anyOf": [
                   {
@@ -2055,6 +2190,16 @@
         },
         "text": {
           "$ref": "#/definitions/Channel"
+        },
+        "title": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "$ref": "#/definitions/Channel"
+            }
+          ]
         },
         "visibility": {
           "anyOf": [
@@ -2186,6 +2331,9 @@
             "size"
           ],
           "type": "object"
+        },
+        "outline": {
+          "type": "string"
         },
         "stroke": {
           "type": "string"

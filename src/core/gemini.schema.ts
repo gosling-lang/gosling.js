@@ -48,6 +48,7 @@ export interface MultivecMetadata {
     categories?: string[];
     start?: string;
     end?: string;
+    bin?: number; // EXPERIMENTAL: binning the genomic positions // tile unit size is 256
 }
 
 export interface BEDMetadata {
@@ -60,7 +61,21 @@ export interface BEDMetadata {
 }
 
 export interface DataTransform {
-    filter: { field: string; oneOf: string[] | number[]; not: boolean }[];
+    filter: Filter[];
+}
+
+export type Filter = OneOfFilter | RangeFilter;
+
+export interface RangeFilter {
+    field: string;
+    inRange: number[];
+    not: boolean;
+}
+
+export interface OneOfFilter {
+    field: string;
+    oneOf: string[] | number[];
+    not: boolean;
 }
 
 // TODO: Ensure to use `EmptyTrack` for the convenient
@@ -87,6 +102,8 @@ export interface EmptyTrack {
 export interface BasicSingleTrack {
     // high-level configuration
     description?: string;
+    title?: string;
+    subtitle?: string;
     zoomable?: boolean;
 
     // layout
@@ -149,6 +166,7 @@ export interface TrackStyle {
     curve?: 'top' | 'bottom' | 'left' | 'right';
     align?: 'left' | 'right';
     dy?: number;
+    outline?: string;
     // below options could instead be used with channel options (e.g., size, stroke, strokeWidth)
     textFontSize?: number;
     textStroke?: string;
