@@ -65,6 +65,6 @@ export const examples: ReadonlyArray<{
         name: 'UpSet-like Plot',
         spec: EXAMPLE_UPSET,
         underDevelopment: true,
-        forceShow: true
+        forceShow: false
     }
 ].filter(d => !d.hidden);

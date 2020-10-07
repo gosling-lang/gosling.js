@@ -40,7 +40,6 @@ export function drawText(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMod
         fontWeight: spec.style?.textFontWeight ?? TEXT_STYLE_GLOBAL.fontWeight
     };
     const textStyleObj = new HGC.libraries.PIXI.TextStyle(localTextStyle);
-    let textsBeingUsed = 0; // Should change to use `trackInfo.textsBeingUsed` instead
 
     /* styles */
     const dy = spec.style?.dy ?? 0;
@@ -59,8 +58,6 @@ export function drawText(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMod
             const text = tm.encodedProperty('text', d);
             const color = tm.encodedProperty('color', d);
             const cx = tm.encodedProperty('x-center', d);
-            // const x = tm.encodedProperty('x', d);
-            // const xe = tm.encodedProperty('xe', d);
             const y = tm.encodedProperty('y', d) + dy;
 
             if (cx < 0 || (spec.width && cx > spec.width)) {
@@ -68,14 +65,14 @@ export function drawText(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMod
                 return;
             }
 
-            if (/*trackInfo.*/ textsBeingUsed > 1000) {
+            if (trackInfo.textsBeingUsed > 1000) {
                 // we do not draw a large number of texts for the performance
                 return;
             }
 
             let textGraphic;
-            if (trackInfo.textGraphics.length > /*trackInfo.*/ textsBeingUsed) {
-                textGraphic = trackInfo.textGraphics[/*trackInfo.*/ textsBeingUsed];
+            if (trackInfo.textGraphics.length > trackInfo.textsBeingUsed) {
+                textGraphic = trackInfo.textGraphics[trackInfo.textsBeingUsed];
                 textGraphic.style.fill = color;
                 textGraphic.visible = true;
                 textGraphic.text = text;
@@ -89,11 +86,11 @@ export function drawText(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMod
             }
 
             const metric = HGC.libraries.PIXI.TextMetrics.measureText(text, textStyleObj);
-            /*trackInfo.*/ textsBeingUsed++;
+            trackInfo.textsBeingUsed++;
 
             const alphaTransition = tm.markVisibility(d, metric);
             if (!text || alphaTransition === 0) {
-                /*trackInfo.*/ textsBeingUsed--;
+                trackInfo.textsBeingUsed--;
                 textGraphic.visible = false;
                 return;
             }
