@@ -26,7 +26,8 @@ export const examples: ReadonlyArray<{
     },
     {
         name: 'Superposed Tracks',
-        spec: EXAMPLE_SUPERPOSE
+        spec: EXAMPLE_SUPERPOSE,
+        forceShow: false
     },
     {
         name: 'Ideograms (Static)',

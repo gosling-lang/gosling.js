@@ -291,8 +291,9 @@ export interface ChannelDeep {
     axis?: AxisPosition;
     baseline?: string | number;
     zeroBaseline?: boolean; // we could remove this and use the `baseline` option instead
+    mirrored?: boolean; // baseline on the top or right?
     grid?: boolean;
-    linkID?: string;
+    linker?: string;
 }
 export type AxisPosition = 'top' | 'bottom' | 'left' | 'right';
 export type FieldType = 'genomic' | 'nominal' | 'quantitative';
@@ -324,7 +325,7 @@ export interface DomainGene {
     gene: string | [string, string];
 }
 
-export type Aggregate = 'max' | 'min' | 'mean';
+export type Aggregate = 'max' | 'min' | 'mean' | 'bin' | 'count';
 
 /**
  * Mark

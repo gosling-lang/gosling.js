@@ -105,7 +105,7 @@ export const EXAMPLE_SEMANTIC_ZOOMING: GeminiSpec = {
                 {
                     mark: 'bar',
                     y: { field: 'count', type: 'quantitative' },
-                    strokeWidth: { value: 2 },
+                    strokeWidth: { value: 1 },
                     stroke: { value: 'white' },
                     visibility: {
                         operation: 'gtet',

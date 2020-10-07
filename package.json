@@ -14,7 +14,7 @@
         "test": "jest test/",
         "format": "eslint . --fix && prettier '**/*.css' --write",
         "schema": "mkdir -p build & ts-json-schema-generator -p src/core/gemini.schema.ts -f tsconfig.json -t GeminiSpec > build/gemini.schema.json",
-        "predeploy": "yarn schema & yarn build",
+        "predeploy": "yarn build",
         "deploy": "gh-pages -d build"
     },
     "peerDependencies": {},

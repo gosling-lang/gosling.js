@@ -6,7 +6,9 @@
       "enum": [
         "max",
         "min",
-        "mean"
+        "mean",
+        "bin",
+        "count"
       ],
       "type": "string"
     },
@@ -277,8 +279,11 @@
         "grid": {
           "type": "boolean"
         },
-        "linkID": {
+        "linker": {
           "type": "string"
+        },
+        "mirrored": {
+          "type": "boolean"
         },
         "range": {
           "$ref": "#/definitions/Range"

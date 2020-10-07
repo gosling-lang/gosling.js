@@ -40,7 +40,7 @@ export function drawText(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMod
         fontWeight: spec.style?.textFontWeight ?? TEXT_STYLE_GLOBAL.fontWeight
     };
     const textStyleObj = new HGC.libraries.PIXI.TextStyle(localTextStyle);
-    let textAdded = 0;
+    let textsBeingUsed = 0; // Should change to use `trackInfo.textsBeingUsed` instead
 
     /* styles */
     const dy = spec.style?.dy ?? 0;
@@ -59,23 +59,23 @@ export function drawText(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMod
             const text = tm.encodedProperty('text', d);
             const color = tm.encodedProperty('color', d);
             const cx = tm.encodedProperty('x-center', d);
-            const x = tm.encodedProperty('x', d);
-            const xe = tm.encodedProperty('xe', d);
+            // const x = tm.encodedProperty('x', d);
+            // const xe = tm.encodedProperty('xe', d);
             const y = tm.encodedProperty('y', d) + dy;
 
-            if ((xe && xe < 0) || (!xe && x < 0) || (spec.width && x > spec.width)) {
+            if (cx < 0 || (spec.width && cx > spec.width)) {
                 // we do not draw texts that are out of the view
                 return;
             }
 
-            if (textAdded > 100) {
+            if (/*trackInfo.*/ textsBeingUsed > 1000) {
                 // we do not draw a large number of texts for the performance
                 return;
             }
 
             let textGraphic;
-            if (trackInfo.textGraphics.length > textAdded) {
-                textGraphic = trackInfo.textGraphics[textAdded];
+            if (trackInfo.textGraphics.length > /*trackInfo.*/ textsBeingUsed) {
+                textGraphic = trackInfo.textGraphics[/*trackInfo.*/ textsBeingUsed];
                 textGraphic.style.fill = color;
                 textGraphic.visible = true;
                 textGraphic.text = text;
@@ -89,11 +89,11 @@ export function drawText(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMod
             }
 
             const metric = HGC.libraries.PIXI.TextMetrics.measureText(text, textStyleObj);
-            textAdded++;
+            /*trackInfo.*/ textsBeingUsed++;
 
             const alphaTransition = tm.markVisibility(d, metric);
             if (!text || alphaTransition === 0) {
-                textAdded--;
+                /*trackInfo.*/ textsBeingUsed--;
                 textGraphic.visible = false;
                 return;
             }

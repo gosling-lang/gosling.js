@@ -146,9 +146,9 @@ export const EXAMPLE_SUPERPOSE: GeminiSpec = {
                 axis: 'top'
             },
             superpose: [
-                { y: { field: 'peak', type: 'quantitative', domain: [0, 1] } },
-                { y: { field: 'peak', type: 'quantitative', domain: [1, 8] } },
-                { y: { field: 'peak', type: 'quantitative', domain: [8, 15] } }
+                { y: { field: 'peak', type: 'quantitative', domain: [0, 0.001] } },
+                { y: { field: 'peak', type: 'quantitative', domain: [0.001, 0.002] } },
+                { y: { field: 'peak', type: 'quantitative', domain: [0.002, 0.003] } }
             ],
             color: { field: 'sample', type: 'nominal' },
             row: { field: 'sample', type: 'nominal' },

@@ -37,21 +37,12 @@ function GeminiTrack(HGC: any, ...args: any[]): any {
             this.extent = { min: Number.MAX_SAFE_INTEGER, max: Number.MIN_SAFE_INTEGER };
 
             this.textGraphics = [];
+            this.textsBeingUsed = 0; // this variable is being used to improve the performance of text rendering
         }
 
         initTile(tile: any) {
             // preprocess all tiles at once so that we can share the value scales
-            const gms: GeminiTrackModel[] = [];
-            this.visibleAndFetchedTiles().forEach((t: any) => {
-                // tile preprocessing is done only once per tile
-                const tileModels = this.preprocessTile(t);
-                tileModels.forEach((m: GeminiTrackModel) => {
-                    gms.push(m);
-                });
-            });
-
-            // TODO: IMPORTANT: when panning the tiles, the extent only becomes larger
-            shareScaleAcrossTracks(gms);
+            this.preprocessAllTiles();
 
             this.renderTile(tile);
             this.rescaleTiles();
@@ -73,16 +64,7 @@ function GeminiTrack(HGC: any, ...args: any[]): any {
 
         updateTile() {
             // preprocess all tiles at once so that we can share the value scales
-            const gms: GeminiTrackModel[] = [];
-            this.visibleAndFetchedTiles().forEach((tile: any) => {
-                // tile preprocessing is done only once per tile
-                const tileModels = this.preprocessTile(tile);
-                tileModels.forEach((m: GeminiTrackModel) => {
-                    gms.push(m);
-                });
-            });
-
-            shareScaleAcrossTracks(gms);
+            this.preprocessAllTiles();
 
             this.visibleAndFetchedTiles().forEach((tile: any) => {
                 this.renderTile(tile);
@@ -100,9 +82,6 @@ function GeminiTrack(HGC: any, ...args: any[]): any {
             tile.mouseOverData = null;
             tile.graphics.clear();
             tile.graphics.removeChildren();
-            // this.textGraphics.forEach((text: any) => {
-            //     tile.graphics.addChild(text);
-            // });
             this.pBorder.clear();
             this.pBorder.removeChildren();
             tile.drawnAtScale = this._xScale.copy(); // being used in `draw()`
@@ -142,6 +121,41 @@ function GeminiTrack(HGC: any, ...args: any[]): any {
                     this.extent.max = tile.extent.y.max;
                 }
             });
+        }
+
+        preprocessAllTiles() {
+            this.textsBeingUsed = 0;
+
+            const gms: GeminiTrackModel[] = [];
+            this.visibleAndFetchedTiles().forEach((tile: any) => {
+                // tile preprocessing is done only once per tile
+                const tileModels = this.preprocessTile(tile);
+                tileModels.forEach((m: GeminiTrackModel) => {
+                    gms.push(m);
+                });
+            });
+
+            shareScaleAcrossTracks(gms);
+
+            // IMPORTANT: If no genomic fields specified, no point to use multiple tiles, i.e., we need to draw a track only once with the data combined.
+            /*
+            if (!getGenomicChannelKeyFromTrack(this.originalSpec) && false) {
+                // TODO:
+                const visibleModels: GeminiTrackModel[][] = this.visibleAndFetchedTiles().map(
+                    (d: any) => d.geminiModels
+                );
+                const modelsWeUse: GeminiTrackModel[] = visibleModels[0];
+                const modelsWeIgnore: GeminiTrackModel[][] = visibleModels.slice(1);
+
+                // concatenate the rows in the data
+                modelsWeIgnore.forEach((ignored, i) => {
+                    modelsWeUse.forEach(m => {
+                        m.addDataRows(ignored[0].data());
+                    });
+                    this.visibleAndFetchedTiles()[i + 1].geminiModels = [];
+                });
+            }
+            */
         }
 
         /**
@@ -215,7 +229,7 @@ function GeminiTrack(HGC: any, ...args: any[]): any {
                                 if (bin === 1) {
                                     tabularData.push({
                                         [rowName]: c,
-                                        [valueName]: numericValues[numOfGenomicPositions * i + j],
+                                        [valueName]: numericValues[numOfGenomicPositions * i + j] / tileUnitSize,
                                         [columnName]: tileX + (j + 0.5) * tileUnitSize,
                                         [startName]: tileX + j * tileUnitSize,
                                         [endName]: tileX + (j + 1) * tileUnitSize
@@ -231,7 +245,7 @@ function GeminiTrack(HGC: any, ...args: any[]): any {
                                         // Add a row using the cumulative value
                                         tabularData.push({
                                             [rowName]: c,
-                                            [valueName]: cumVal / bin,
+                                            [valueName]: cumVal / bin / tileUnitSize,
                                             [columnName]: tileX + (binStart + bin / 2.0) * tileUnitSize,
                                             [startName]: tileX + binStart * tileUnitSize,
                                             [endName]: tileX + binEnd * tileUnitSize
@@ -242,7 +256,7 @@ function GeminiTrack(HGC: any, ...args: any[]): any {
                                         const correctedBinEnd = binStart + smallBin;
                                         tabularData.push({
                                             [rowName]: c,
-                                            [valueName]: cumVal / smallBin,
+                                            [valueName]: cumVal / smallBin / tileUnitSize,
                                             [columnName]: tileX + (binStart + smallBin / 2.0) * tileUnitSize,
                                             [startName]: tileX + binStart * tileUnitSize,
                                             [endName]: tileX + correctedBinEnd * tileUnitSize

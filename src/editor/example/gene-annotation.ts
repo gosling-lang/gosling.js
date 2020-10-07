@@ -24,26 +24,6 @@ export const HIGLASS_GENE_ANNOTATION: Track = {
     superpose: [
         {
             dataTransform: {
-                filter: [{ field: 'type', oneOf: ['gene'], not: false }]
-            },
-            mark: 'text',
-            text: { field: 'name', type: 'nominal' },
-            x: {
-                field: 'start',
-                type: 'genomic',
-                domain: { chromosome: '1', interval: [3540100, 3555100] },
-                axis: 'top'
-            },
-            xe: {
-                field: 'end',
-                type: 'genomic'
-            },
-            style: {
-                dy: -15
-            }
-        },
-        {
-            dataTransform: {
                 filter: [
                     { field: 'type', oneOf: ['gene'], not: false },
                     { field: 'strand', oneOf: ['+'], not: false }
@@ -52,9 +32,29 @@ export const HIGLASS_GENE_ANNOTATION: Track = {
             mark: 'triangle-r',
             x: {
                 field: 'end',
-                type: 'genomic'
+                type: 'genomic',
+                domain: { chromosome: '1', interval: [3540100, 3555100] },
+                axis: 'top'
             },
             size: { value: 20 }
+        },
+        {
+            dataTransform: {
+                filter: [{ field: 'type', oneOf: ['gene'], not: false }]
+            },
+            mark: 'text',
+            text: { field: 'name', type: 'nominal' },
+            x: {
+                field: 'start',
+                type: 'genomic'
+            },
+            xe: {
+                field: 'end',
+                type: 'genomic'
+            },
+            style: {
+                dy: -15
+            }
         },
         {
             dataTransform: {

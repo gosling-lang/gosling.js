@@ -15,19 +15,19 @@ export const EXAMPLE_OVERVIEW_DEATIL: GeminiSpec = {
             x: {
                 ...EXAMPLE_IDEOGRAM_TRACK.x,
                 domain: { chromosome: '1' },
-                linkID: 'linking-overview'
+                linker: 'linking-overview'
             },
             superpose: [
                 ...EXAMPLE_IDEOGRAM_TRACK.superpose,
                 {
                     mark: 'rect-brush',
-                    x: { linkID: 'linking-detail-1' },
+                    x: { linker: 'linking-detail-1' },
                     color: { value: 'blue' },
                     opacity: { value: 0.2 }
                 },
                 {
                     mark: 'rect-brush',
-                    x: { linkID: 'linking-detail-2' },
+                    x: { linker: 'linking-detail-2' },
                     color: { value: 'red' },
                     opacity: { value: 0.2 }
                 }
@@ -67,7 +67,7 @@ export const EXAMPLE_OVERVIEW_DEATIL: GeminiSpec = {
                         type: 'genomic',
                         domain: { chromosome: '1' },
                         axis: 'top',
-                        linkID: 'linking-detail-1'
+                        linker: 'linking-detail-1'
                     },
                     size: { value: 10 },
                     xe: {
@@ -132,7 +132,7 @@ export const EXAMPLE_OVERVIEW_DEATIL: GeminiSpec = {
                         type: 'genomic',
                         domain: { chromosome: '1', interval: [10000000, 15000000] },
                         axis: 'top',
-                        linkID: 'linking-detail-2'
+                        linker: 'linking-detail-2'
                     },
                     size: { value: 10 },
                     xe: {
@@ -183,7 +183,7 @@ export const EXAMPLE_OVERVIEW_DEATIL: GeminiSpec = {
                 field: 'position',
                 type: 'genomic',
                 domain: { chromosome: '1', interval: [70000000, 100000000] },
-                linkID: 'linking-detail-1'
+                linker: 'linking-detail-1'
             },
             row: { field: 'sample', type: 'nominal' },
             // row: { field: 'sample', type: 'nominal' },
@@ -214,7 +214,7 @@ export const EXAMPLE_OVERVIEW_DEATIL: GeminiSpec = {
                 field: 'position',
                 type: 'genomic',
                 domain: { chromosome: '1', interval: [30000000, 65000000] },
-                linkID: 'linking-detail-2'
+                linker: 'linking-detail-2'
             },
             row: { field: 'sample', type: 'nominal' },
             // row: { field: 'sample', type: 'nominal' },

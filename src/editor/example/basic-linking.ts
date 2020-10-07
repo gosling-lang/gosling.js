@@ -22,7 +22,7 @@ export const EXMAPLE_BASIC_LINKING: GeminiSpec = {
                 type: 'genomic',
                 domain: { chromosome: '1' },
                 axis: 'top',
-                linkID: 'link1'
+                linker: 'link1'
             },
             y: { field: 'peak', type: 'quantitative' },
             row: { field: 'sample', type: 'nominal' },
@@ -50,7 +50,7 @@ export const EXMAPLE_BASIC_LINKING: GeminiSpec = {
                 type: 'genomic',
                 domain: { chromosome: '1' },
                 axis: 'top',
-                linkID: 'link1'
+                linker: 'link1'
             },
             y: { field: 'peak', type: 'quantitative' },
             row: { field: 'sample', type: 'nominal' },
@@ -63,7 +63,7 @@ export const EXMAPLE_BASIC_LINKING: GeminiSpec = {
                 {},
                 {
                     mark: 'rect-brush',
-                    x: { linkID: 'linking-with-brush' }
+                    x: { linker: 'linking-with-brush' }
                 }
             ]
         },
@@ -72,7 +72,7 @@ export const EXMAPLE_BASIC_LINKING: GeminiSpec = {
             x: {
                 ...EXAMPLE_BASIC_AREA.x,
                 domain: { chromosome: '1', interval: [160000000, 200000000] },
-                linkID: 'linking-with-brush'
+                linker: 'linking-with-brush'
             }
         }
     ]

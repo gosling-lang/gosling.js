@@ -188,8 +188,9 @@ export class GeminiTrackModel {
      */
     public encodedValue(channelKey: keyof typeof ChannelTypes, value?: number | string) {
         if (channelKey === 'text' && value !== undefined) {
-            // TODO: Textual values could be set with scales as well
             return `${+value ? ~~value : value}`;
+            // TODO: Better formatting?
+            // return `${+value ? (+value - ~~value) > 0 ? (+value).toExponential(1) : ~~value : value}`;
         }
 
         const channel = this.spec()[channelKey];
@@ -222,30 +223,37 @@ export class GeminiTrackModel {
             case 'y1':
             case 'xe':
             case 'ye':
-                if (channelFieldType === 'quantitative' || channelFieldType === 'genomic')
+                if (channelFieldType === 'quantitative' || channelFieldType === 'genomic') {
                     return (this.channelScales[channelKey] as d3.ScaleLinear<any, any>)(value as number);
-                if (channelFieldType === 'nominal')
+                }
+                if (channelFieldType === 'nominal') {
                     return (this.channelScales[channelKey] as d3.ScaleBand<any>)(value as string);
+                }
                 break;
             case 'color':
             case 'stroke':
-                if (channelFieldType === 'quantitative')
+                if (channelFieldType === 'quantitative') {
                     return (this.channelScales[channelKey] as d3.ScaleSequential<any>)(value as number);
-                if (channelFieldType === 'nominal')
+                }
+                if (channelFieldType === 'nominal') {
                     return (this.channelScales[channelKey] as d3.ScaleOrdinal<any, any>)(value as string);
+                }
                 /* genomic is not supported */
                 break;
             case 'size':
-                if (channelFieldType === 'quantitative')
+                if (channelFieldType === 'quantitative') {
                     return (this.channelScales[channelKey] as d3.ScaleLinear<any, any>)(value as number);
-                if (channelFieldType === 'nominal')
+                }
+                if (channelFieldType === 'nominal') {
                     return (this.channelScales[channelKey] as d3.ScaleOrdinal<any, any>)(value as string);
+                }
                 /* genomic is not supported */
                 break;
             case 'row':
                 /* quantitative is not supported */
-                if (channelFieldType === 'nominal')
+                if (channelFieldType === 'nominal') {
                     return (this.channelScales[channelKey] as d3.ScaleBand<any>)(value as string);
+                }
                 /* genomic is not supported */
                 break;
             case 'background':
@@ -378,6 +386,7 @@ export class GeminiTrackModel {
         const genomicChannel = this.getGenomicChannel();
         if (!genomicChannel || !genomicChannel.field) {
             console.warn('Genomic field is not provided in the specification');
+            // EXPERIMENTAL: we are removing this rule in our spec.
             return;
         }
 
@@ -394,6 +403,7 @@ export class GeminiTrackModel {
 
             if (IsStackedChannel(spec, channelKey) && IsChannelDeep(channel)) {
                 // we need to group data before calculating scales because marks are going to be stacked
+                // (spec as any /* TODO: select more accurately */).x
                 const pivotedData = group(data, d => d[genomicChannel.field as string]);
                 const xKeys = [...pivotedData.keys()];
 
@@ -578,6 +588,10 @@ export class GeminiTrackModel {
     public generateScales() {
         const spec = this.spec();
 
+        /// DEBUG
+        // console.log(spec);
+        //
+
         SUPPORTED_CHANNELS.forEach(channelKey => {
             if (channelKey === 'text') {
                 return;
@@ -656,6 +670,10 @@ export class GeminiTrackModel {
      */
     public setChannelScale(channelKey: keyof typeof ChannelTypes, scale: ScaleType) {
         this.channelScales[channelKey] = scale;
+    }
+
+    public addDataRows(_: { [k: string]: number | string }[]) {
+        this.dataAggregated = [...this.dataAggregated, ..._];
     }
 
     /**
