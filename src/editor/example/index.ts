@@ -9,6 +9,7 @@ import { EXAMPLE_PERIPHERAL_PLOT } from './peripheral-plot';
 import { EXAMPLE_SEMANTIC_ZOOMING } from './semantic-zoom';
 import { EXMAPLE_BASIC_LINKING } from './basic-linking';
 import { EXAMPLE_UPSET } from './upset';
+import { EXAMPLE_LOGO_LIKE } from './text-stretch';
 
 export const examples: ReadonlyArray<{
     name: string;
@@ -23,6 +24,10 @@ export const examples: ReadonlyArray<{
         spec: EXMAPLE_BASIC_MARKS,
         hidden: false,
         forceShow: false
+    },
+    {
+        name: 'Text Marks',
+        spec: EXAMPLE_LOGO_LIKE
     },
     {
         name: 'Superposed Tracks',

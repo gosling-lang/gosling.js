@@ -121,8 +121,10 @@ export interface BasicSingleTrack {
     // conditional visibility
     visibility?: TriggerCondition;
 
+    // mark
     mark: Mark;
 
+    // channels
     x?: Channel;
     y?: Channel;
     xe?: Channel;
@@ -144,6 +146,9 @@ export interface BasicSingleTrack {
     stroke?: Channel;
     strokeWidth?: Channel;
     background?: ChannelValue;
+
+    // stretch to the given range? (e.g., [x, xe])
+    stretch?: boolean;
 
     style?: TrackStyle;
 }

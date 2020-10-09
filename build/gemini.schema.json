@@ -172,6 +172,9 @@
         "span": {
           "type": "number"
         },
+        "stretch": {
+          "type": "boolean"
+        },
         "stroke": {
           "$ref": "#/definitions/Channel"
         },
@@ -1355,6 +1358,16 @@
             }
           ]
         },
+        "stretch": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "$ref": "#/definitions/Channel"
+            }
+          ]
+        },
         "stroke": {
           "$ref": "#/definitions/Channel"
         },
@@ -1480,6 +1493,16 @@
                 "anyOf": [
                   {
                     "type": "number"
+                  },
+                  {
+                    "$ref": "#/definitions/Channel"
+                  }
+                ]
+              },
+              "stretch": {
+                "anyOf": [
+                  {
+                    "type": "boolean"
                   },
                   {
                     "$ref": "#/definitions/Channel"
@@ -1761,6 +1784,16 @@
             }
           ]
         },
+        "stretch": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "$ref": "#/definitions/Channel"
+            }
+          ]
+        },
         "stroke": {
           "$ref": "#/definitions/Channel"
         },
@@ -1892,6 +1925,16 @@
                   }
                 ]
               },
+              "stretch": {
+                "anyOf": [
+                  {
+                    "type": "boolean"
+                  },
+                  {
+                    "$ref": "#/definitions/Channel"
+                  }
+                ]
+              },
               "stroke": {
                 "$ref": "#/definitions/Channel"
               },
@@ -2017,6 +2060,16 @@
                       "anyOf": [
                         {
                           "type": "number"
+                        },
+                        {
+                          "$ref": "#/definitions/Channel"
+                        }
+                      ]
+                    },
+                    "stretch": {
+                      "anyOf": [
+                        {
+                          "type": "boolean"
                         },
                         {
                           "$ref": "#/definitions/Channel"

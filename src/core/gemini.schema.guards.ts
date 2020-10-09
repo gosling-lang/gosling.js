@@ -139,7 +139,7 @@ export function IsDomainArray(domain?: Domain): domain is string[] | number[] {
  */
 export function IsStackedMark(track: BasicSingleTrack): boolean {
     return (
-        (track.mark === 'bar' || track.mark === 'area') &&
+        (track.mark === 'bar' || track.mark === 'area' || track.mark === 'text') &&
         IsChannelDeep(track.color) &&
         track.color.type === 'nominal' &&
         (!track.row || IsChannelValue(track.row)) &&
