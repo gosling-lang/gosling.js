@@ -19,6 +19,7 @@ import GeminiSchema from '../../build/gemini.schema.json';
 import { validateSpec, Validity } from '../core/utils/validate';
 import './editor.css';
 import { renderLayout } from '../core/layout/layout';
+import stripJsonComments from 'strip-json-comments';
 
 /**
  * Register a Gemini plugin track to HiGlassComponent
@@ -64,7 +65,7 @@ function Editor() {
     useEffect(() => {
         let editedGm;
         try {
-            editedGm = replaceTemplate(JSON.parse(gm));
+            editedGm = replaceTemplate(JSON.parse(stripJsonComments(gm)));
             setLog(validateSpec(GeminiSchema, editedGm));
         } catch (e) {
             const message = '✘ Cannnot parse the code.';
@@ -82,7 +83,7 @@ function Editor() {
      * HiGlass components to render Gemini Tracks.
      */
     const hglass = useMemo(() => {
-        const editedGm = replaceTemplate(JSON.parse(gm));
+        const editedGm = replaceTemplate(JSON.parse(stripJsonComments(gm)));
         const bb = getTrackArrangementInfo(editedGm) as BoundingBox;
         return hg && bb ? (
             <>
