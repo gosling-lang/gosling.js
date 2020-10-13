@@ -26,9 +26,8 @@ export const EXAMPLE_UPSET: GeminiSpec = {
             // title: 'Overview',
             ...JSON.parse(JSON.stringify(EXAMPLE_SEMANTIC_ZOOMING_IDEOGRAM).replace('/gray/g', '#3B3B3B')),
             superpose: [
-                ...(JSON.parse(
-                    JSON.stringify(EXAMPLE_SEMANTIC_ZOOMING_IDEOGRAM).replaceAll('/gray/g', '#3B3B3B')
-                ) as any).superpose,
+                ...(JSON.parse(JSON.stringify(EXAMPLE_SEMANTIC_ZOOMING_IDEOGRAM).replace('/gray/g', '#3B3B3B')) as any)
+                    .superpose,
                 {
                     mark: 'rect-brush',
                     x: { linker: '1' },
