@@ -11,6 +11,7 @@ import { drawRule } from './rule';
 import { drawLink } from './link';
 import { drawGrid } from './grid';
 import { drawChartOutlines } from './chart-outline';
+import { drawColorLegend, drawYLegend } from './legend';
 
 /**
  * Visual channels currently supported for visual encoding.
@@ -61,7 +62,7 @@ export function drawMark(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMod
         // }
     });
 
-    /* embellishment */
+    /* before-embellishment */
     drawGrid(HGC, trackInfo, tile, tm);
     drawChartOutlines(HGC, trackInfo, tm);
 
@@ -100,6 +101,10 @@ export function drawMark(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMod
             console.warn('Unsupported mark type');
             break;
     }
+
+    /* after-embellishment */
+    drawColorLegend(HGC, trackInfo, tile, tm);
+    drawYLegend(HGC, trackInfo, tile, tm);
 
     if (!tile.rowScale || !tile.spriteInfos) {
         console.warn('Information for resaling tiles is not properly generated after drawing a track');

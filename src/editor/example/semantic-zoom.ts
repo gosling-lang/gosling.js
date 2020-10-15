@@ -148,7 +148,8 @@ export const EXAMPLE_SEMANTIC_ZOOMING: GeminiSpec = {
             color: {
                 field: 'base',
                 type: 'nominal',
-                domain: ['A', 'T', 'G', 'C']
+                domain: ['A', 'T', 'G', 'C'],
+                legend: true
             },
             text: {
                 field: 'base',

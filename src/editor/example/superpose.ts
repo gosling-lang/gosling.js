@@ -45,7 +45,23 @@ export const EXAMPLE_SUPERPOSE: GeminiSpec = {
                 },
                 {
                     mark: 'point',
-                    size: { value: 5 }
+                    size: { value: 5 },
+                    // just for adding a legend only once
+                    color: {
+                        field: 'significance',
+                        type: 'nominal',
+                        domain: [
+                            'Pathogenic',
+                            'Pathogenic/Likely_pathogenic',
+                            'Likely_pathogenic',
+                            'Uncertain_significance',
+                            'Likely_benign',
+                            'Benign/Likely_benign',
+                            'Benign'
+                        ],
+                        range: ['#D45E00', '#D45E00', '#D45E00', 'black', '#029F73', '#029F73', '#029F73'],
+                        legend: true
+                    }
                 }
             ],
             x: {

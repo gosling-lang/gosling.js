@@ -20,9 +20,9 @@ export const EXAMPLE_HEATMAP: Track = {
         domain: { chromosome: '1', interval: [1, 3000500] },
         axis: 'top'
     },
-    row: { field: 'sample', type: 'nominal' },
+    row: { field: 'sample', type: 'nominal', legend: true },
     color: { field: 'peak', type: 'quantitative' },
-    width: 1000,
+    width: 800,
     height: 180
 };
 
@@ -47,10 +47,10 @@ export const EXAMPLE_BASIC_AREA: Track = {
     },
     y: { field: 'peak', type: 'quantitative' },
     row: { field: 'sample', type: 'nominal' },
-    color: { field: 'sample', type: 'nominal' },
+    color: { field: 'sample', type: 'nominal', legend: true },
     stroke: { value: 'white' },
     strokeWidth: { value: 0.5 },
-    width: 1000,
+    width: 800,
     height: 180
 };
 
@@ -84,8 +84,8 @@ export const EXMAPLE_BASIC_MARKS: GeminiSpec = {
             },
             y: { field: 'peak', type: 'quantitative' },
             row: { field: 'sample', type: 'nominal' },
-            color: { field: 'sample', type: 'nominal' },
-            width: 1000,
+            color: { field: 'sample', type: 'nominal', legend: true },
+            width: 800,
             height: 180
         },
         {
@@ -109,8 +109,8 @@ export const EXMAPLE_BASIC_MARKS: GeminiSpec = {
             },
             y: { field: 'peak', type: 'quantitative' },
             row: { field: 'sample', type: 'nominal' },
-            color: { field: 'sample', type: 'nominal' },
-            width: 1000,
+            color: { field: 'sample', type: 'nominal', legend: true },
+            width: 800,
             height: 180
         },
         {
@@ -135,9 +135,9 @@ export const EXMAPLE_BASIC_MARKS: GeminiSpec = {
             y: { field: 'peak', type: 'quantitative' },
             row: { field: 'sample', type: 'nominal' },
             size: { field: 'peak', type: 'quantitative' },
-            color: { field: 'sample', type: 'nominal' },
+            color: { field: 'sample', type: 'nominal', legend: true },
             opacity: { value: 0.5 },
-            width: 1000,
+            width: 800,
             height: 180
         }
     ]

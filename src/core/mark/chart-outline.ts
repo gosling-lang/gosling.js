@@ -22,9 +22,9 @@ export function drawChartOutlines(HGC: any, trackInfo: any, tm: GeminiTrackModel
 
         const text = tm.spec().title;
         const textGraphic = new HGC.libraries.PIXI.Text(text, { ...TITLE_STYLE });
-        textGraphic.anchor.x = 1;
+        textGraphic.anchor.x = 0;
         textGraphic.anchor.y = 0;
-        textGraphic.position.x = trackInfo.position[0] + trackInfo.dimensions[0] - paddingX;
+        textGraphic.position.x = trackInfo.position[0] + paddingX;
         textGraphic.position.y = trackInfo.position[1] + paddingY;
         graphics.addChild(textGraphic);
 
@@ -40,7 +40,7 @@ export function drawChartOutlines(HGC: any, trackInfo: any, tm: GeminiTrackModel
             0 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
         );
         graphics.drawRect(
-            trackInfo.position[0] + trackInfo.dimensions[0] - textWidth - paddingX * 2,
+            trackInfo.position[0],
             trackInfo.position[1],
             textWidth + paddingX * 2,
             textHeight + paddingY * 2

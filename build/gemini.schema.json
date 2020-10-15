@@ -285,6 +285,9 @@
         "grid": {
           "type": "boolean"
         },
+        "legend": {
+          "type": "boolean"
+        },
         "linker": {
           "type": "string"
         },

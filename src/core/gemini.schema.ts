@@ -297,6 +297,7 @@ export interface ChannelDeep {
     domain?: Domain;
     range?: Range;
     axis?: AxisPosition;
+    legend?: boolean;
     baseline?: string | number;
     zeroBaseline?: boolean; // we could remove this and use the `baseline` option instead
     mirrored?: boolean; // baseline on the top or right?
