@@ -151,6 +151,9 @@ export interface BasicSingleTrack {
     stretch?: boolean;
 
     style?: TrackStyle;
+
+    // experimental/internal options
+    _is_circular?: boolean;
 }
 
 /**

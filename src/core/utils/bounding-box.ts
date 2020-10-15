@@ -32,7 +32,7 @@ export interface TrackInfo {
 }
 
 /**
- * Calculate the arrangement information of tracks.
+ * Calculate the arrangement information of tracks in linear layouts.
  */
 export function getTrackArrangementInfo(spec: GeminiSpec, trackLevel?: boolean) {
     const info: TrackInfo[] = [];

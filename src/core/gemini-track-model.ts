@@ -40,6 +40,9 @@ export class GeminiTrackModel {
     private specOriginal: BasicSingleTrack; // original spec of users
     private specComplete: BasicSingleTrack; // processed spec, being used in visualizations
 
+    /* high-level configuration */
+    private isCircular: boolean;
+
     /* data */
     private dataOriginal: { [k: string]: number | string }[];
     private dataAggregated: { [k: string]: number | string }[];
@@ -56,12 +59,15 @@ export class GeminiTrackModel {
         SIZE: 3
     };
 
-    constructor(spec: SingleTrack, data: { [k: string]: number | string }[]) {
+    constructor(spec: SingleTrack, data: { [k: string]: number | string }[], isCircular?: boolean) {
         this.dataOriginal = JSON.parse(JSON.stringify(data));
         this.dataAggregated = JSON.parse(JSON.stringify(data));
 
         this.specOriginal = JSON.parse(JSON.stringify(spec));
         this.specComplete = JSON.parse(JSON.stringify(spec));
+
+        // EXPERIMENTAL
+        this.isCircular = !!isCircular || !!this.specOriginal._is_circular;
 
         this.channelScales = {};
 
@@ -93,6 +99,10 @@ export class GeminiTrackModel {
 
     public spec(): BasicSingleTrack {
         return this.specComplete;
+    }
+
+    public circular(): boolean {
+        return this.isCircular;
     }
 
     public data(): { [k: string]: number | string }[] {

@@ -1,6 +1,31 @@
 import { GeminiSpec, Track } from '../../core/gemini.schema';
 import { EXAMPLE_DATASETS } from './datasets';
 
+export const EXAMPLE_HEATMAP: Track = {
+    data: {
+        url: EXAMPLE_DATASETS.multivec,
+        type: 'tileset'
+    },
+    metadata: {
+        type: 'higlass-multivec',
+        row: 'sample',
+        column: 'position',
+        value: 'peak',
+        categories: ['sample 1', 'sample 2', 'sample 3', 'sample 4']
+    },
+    mark: 'rect',
+    x: {
+        field: 'position',
+        type: 'genomic',
+        domain: { chromosome: '1', interval: [1, 3000500] },
+        axis: 'top'
+    },
+    row: { field: 'sample', type: 'nominal' },
+    color: { field: 'peak', type: 'quantitative' },
+    width: 1000,
+    height: 180
+};
+
 export const EXAMPLE_BASIC_AREA: Track = {
     data: {
         url: EXAMPLE_DATASETS.multivec,
@@ -36,30 +61,7 @@ export const EXMAPLE_BASIC_MARKS: GeminiSpec = {
         gap: 30
     },
     tracks: [
-        {
-            data: {
-                url: EXAMPLE_DATASETS.multivec,
-                type: 'tileset'
-            },
-            metadata: {
-                type: 'higlass-multivec',
-                row: 'sample',
-                column: 'position',
-                value: 'peak',
-                categories: ['sample 1', 'sample 2', 'sample 3', 'sample 4']
-            },
-            mark: 'rect',
-            x: {
-                field: 'position',
-                type: 'genomic',
-                domain: { chromosome: '1', interval: [1, 3000500] },
-                axis: 'top'
-            },
-            row: { field: 'sample', type: 'nominal' },
-            color: { field: 'peak', type: 'quantitative' },
-            width: 1000,
-            height: 180
-        },
+        EXAMPLE_HEATMAP,
         EXAMPLE_BASIC_AREA,
         {
             data: {

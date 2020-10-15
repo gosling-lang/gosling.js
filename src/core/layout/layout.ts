@@ -10,8 +10,8 @@ export const TRACK_BG_STYLE = {
 
 export function renderLayout(gm: GeminiSpec, setHg: (hg: HiGlassSpec) => void) {
     if (gm.layout?.type === 'circular') {
-        // ...
-        // renderCircularLayout(g, gm, setHiGlassInfo, boundingBox);
+        // EXPERIMENTAL
+        renderLinearLayout(gm, setHg);
     } else {
         renderLinearLayout(gm, setHg);
     }

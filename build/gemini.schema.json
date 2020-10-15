@@ -123,6 +123,9 @@
     "BasicSingleTrack": {
       "additionalProperties": false,
       "properties": {
+        "_is_circular": {
+          "type": "boolean"
+        },
         "background": {
           "$ref": "#/definitions/ChannelValue"
         },
@@ -1257,6 +1260,16 @@
       "additionalProperties": false,
       "description": "Superposing multiple tracks.",
       "properties": {
+        "_is_circular": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "$ref": "#/definitions/Channel"
+            }
+          ]
+        },
         "background": {
           "anyOf": [
             {
@@ -1398,6 +1411,16 @@
           "items": {
             "additionalProperties": false,
             "properties": {
+              "_is_circular": {
+                "anyOf": [
+                  {
+                    "type": "boolean"
+                  },
+                  {
+                    "$ref": "#/definitions/Channel"
+                  }
+                ]
+              },
               "background": {
                 "anyOf": [
                   {
@@ -1683,6 +1706,16 @@
     "SuperposedTrackTwoLevels": {
       "additionalProperties": false,
       "properties": {
+        "_is_circular": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "$ref": "#/definitions/Channel"
+            }
+          ]
+        },
         "background": {
           "anyOf": [
             {
@@ -1824,6 +1857,16 @@
           "items": {
             "additionalProperties": false,
             "properties": {
+              "_is_circular": {
+                "anyOf": [
+                  {
+                    "type": "boolean"
+                  },
+                  {
+                    "$ref": "#/definitions/Channel"
+                  }
+                ]
+              },
               "background": {
                 "anyOf": [
                   {
@@ -1965,6 +2008,16 @@
                 "items": {
                   "additionalProperties": false,
                   "properties": {
+                    "_is_circular": {
+                      "anyOf": [
+                        {
+                          "type": "boolean"
+                        },
+                        {
+                          "$ref": "#/definitions/Channel"
+                        }
+                      ]
+                    },
                     "background": {
                       "anyOf": [
                         {

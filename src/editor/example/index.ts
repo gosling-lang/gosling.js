@@ -10,6 +10,7 @@ import { EXAMPLE_SEMANTIC_ZOOMING } from './semantic-zoom';
 import { EXMAPLE_BASIC_LINKING } from './basic-linking';
 import { EXAMPLE_UPSET } from './upset';
 import { EXAMPLE_LOGO_LIKE } from './text-stretch';
+import { EXAMPLE_CIRCOS } from './circos';
 
 export const examples: ReadonlyArray<{
     name: string;
@@ -67,8 +68,15 @@ export const examples: ReadonlyArray<{
         forceShow: false
     },
     {
+        name: 'Circos',
+        spec: EXAMPLE_CIRCOS,
+        underDevelopment: true,
+        forceShow: false
+    },
+    {
         name: 'UpSet-like Plot',
         spec: EXAMPLE_UPSET,
+        hidden: true,
         underDevelopment: true,
         forceShow: false
     }

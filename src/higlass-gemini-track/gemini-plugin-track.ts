@@ -7,6 +7,7 @@ import { shareScaleAcrossTracks } from '../core/utils/scales';
 import { resolveSuperposedTracks } from '../core/utils/superpose';
 import { Track } from '../core/gemini.schema';
 import { IsDataMetadata, IsDataTransform, IsOneOfFilter, IsRangeFilter } from '../core/gemini.schema.guards';
+import { drawCircularMark } from '../core/circular-mark';
 
 function GeminiTrack(HGC: any, ...args: any[]): any {
     if (!new.target) {
@@ -97,7 +98,12 @@ function GeminiTrack(HGC: any, ...args: any[]): any {
                     return;
                 }
 
-                drawMark(HGC, this, tile, tm);
+                if (tm.circular()) {
+                    // EXPERIMENTAL
+                    drawCircularMark(HGC, this, tile, tm);
+                } else {
+                    drawMark(HGC, this, tile, tm);
+                }
             });
         }
 

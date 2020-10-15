@@ -43,33 +43,13 @@ export const RESOLUTION = 4;
  * Draw a track based on the track specification in a Gemini grammar.
  */
 export function drawMark(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackModel) {
-    /**
-     * TODO: Major Missing Things That We Need To Support Here
-     * - Supporting vertical tracks
-     * - Covering differet field type combinations, other than 1G, 1C, 1Q (e.g., multiple stacked bar charts)
-     * - Draw axis for individual rows
-     * - Misconnection between tiles (e.g., lines)
-     * - Differentiate categorical colors from quantitative colors
-     * - SVG support
-     * - Genomic coordinates on both x and y axes
-     * - Tooltip
-     * - Legends
-     * - Glyph
-     * - Data aggregation
-     * - If invalide spec, show message
-     * - Gap between rows
-     * - Incorrect scale at the end of the genomic coordinate
-     * - Scaling not consistent with zoom level
-     * - Occasional black screen when zoomed in
-     * - Support half resolution of tiles from the server
-     */
     if (!HGC || !trackInfo || !tile) {
-        // We do not receive parameters correctly
+        // We did not receive parameters correctly.
         return;
     }
 
     if (tm.spec().mark === 'rect-brush') {
-        // we do not draw brush. Instead, higlass do.
+        // We do not draw brush. Instead, higlass do.
         return;
     }
 
