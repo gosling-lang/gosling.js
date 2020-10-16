@@ -31,7 +31,12 @@ import { isArray } from 'lodash';
 import * as d3 from 'd3';
 
 export const PREDEFINED_COLOR_STR_MAP: { [k: string]: (t: number) => string } = {
-    viridis: d3.interpolateViridis
+    viridis: d3.interpolateViridis,
+    grey: d3.interpolateGreys,
+    warm: d3.interpolateWarm,
+    spectral: d3.interpolateSpectral,
+    cividis: d3.interpolateCividis,
+    bupu: d3.interpolateBuPu
 };
 
 // TODO: these are not neccessary. Resolve the issue with `Channel`.

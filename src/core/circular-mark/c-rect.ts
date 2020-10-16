@@ -1,7 +1,6 @@
 import { GeminiTrackModel } from '../gemini-track-model';
 import { Channel } from '../gemini.schema';
 import { getValueUsingChannel } from '../gemini.schema.guards';
-import { VisualProperty } from '../visual-property.schema';
 
 export function drawCircularRect(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackModel) {
     /* track spec */
@@ -14,7 +13,8 @@ export function drawCircularRect(HGC: any, trackInfo: any, tile: any, tm: Gemini
     const data = tm.data();
 
     /* track size */
-    const trackHeight = trackInfo.dimensions[1];
+    // const trackHeight = trackInfo.dimensions[1];
+    const trackHeight = 80;
     const tileSize = trackInfo.tilesetInfo.tile_size;
     const { tileX, tileWidth } = trackInfo.getTilePosAndDimensions(
         tile.tileData.zoomLevel,
@@ -30,10 +30,6 @@ export function drawCircularRect(HGC: any, trackInfo: any, tile: any, tm: Gemini
     const rowCategories: string[] = (tm.getChannelDomainArray('row') as string[]) ?? ['___SINGLE_ROW___'];
     const rowHeight = trackHeight / rowCategories.length;
 
-    /* information for rescaling tiles */
-    tile.rowScale = tm.getChannelScale('row');
-    tile.spriteInfos = []; // sprites for individual rows or columns
-
     // TODO: what if quantitative Y field is used?
     const yCategories = (tm.getChannelDomainArray('y') as string[]) ?? ['___SINGLE_Y_POSITION___'];
     const cellHeight = rowHeight / yCategories.length;
@@ -43,20 +39,29 @@ export function drawCircularRect(HGC: any, trackInfo: any, tile: any, tm: Gemini
     const stroke = tm.encodedValue('stroke');
 
     // EXPERIMENTAL PARAMETERS
-    const RADIUS = 280;
-    const ENTRANCE_PADDING = 0.04;
+    const baseR = 280;
+    const GAP = 0.04;
     const xMax = 640;
     const CX = 600 / 2.0;
     const CY = CX;
+
+    // TODO: move the `polar.ts`
     const xToDt = (x: number) => {
-        return (-x / xMax) * (Math.PI * 2 - ENTRANCE_PADDING * 2) - Math.PI / 2.0 - ENTRANCE_PADDING;
+        const safeX = Math.max(Math.min(xMax, x), 0);
+        return (-safeX / xMax) * (Math.PI * 2 - GAP * 2) - Math.PI / 2.0 - GAP;
     };
+    const xToPos = (x: number, r: number) => {
+        return {
+            x: CX + r * Math.cos(xToDt(x)),
+            y: CY + r * Math.sin(xToDt(x))
+        };
+    };
+
+    const graphics = tile.graphics;
 
     /* render */
     rowCategories.forEach(rowCategory => {
-        // we are separately drawing each row so that y scale can be more effectively shared across tiles without rerendering from the bottom
-        const rowGraphics = tile.graphics; // new HGC.libraries.PIXI.Graphics();
-        // const rowPosition = tm.encodedValue('row', rowCategory);
+        const rowPosition = tm.encodedValue('row', rowCategory);
 
         data.filter(
             d =>
@@ -64,6 +69,7 @@ export function drawCircularRect(HGC: any, trackInfo: any, tile: any, tm: Gemini
                 (getValueUsingChannel(d, spec.row as Channel) as string) === rowCategory
         ).forEach(d => {
             const x = tm.encodedProperty('x', d);
+            // const xe = tm.encodedProperty('xe', d);
             // const y = tm.encodedProperty('y', d);
             const color = tm.encodedProperty('color', d);
             const opacity = tm.encodedProperty('opacity', d);
@@ -79,82 +85,61 @@ export function drawCircularRect(HGC: any, trackInfo: any, tile: any, tm: Gemini
             }
 
             if (x + rectWidth < 0 || xMax < x) {
+                // do not draw overflewed visual marks
                 return;
             }
 
             // stroke
-            rowGraphics.lineStyle(
+            graphics.lineStyle(
                 strokeWidth,
                 colorToHex(stroke),
                 actualOpacity, // alpha
                 0.5 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
             );
 
-            rowGraphics.beginFill(colorToHex(color), actualOpacity);
-            rowGraphics.moveTo(CX, CY);
-            rowGraphics.arc(CX, CY, RADIUS, xToDt(x), xToDt(x + rectWidth), true);
-            rowGraphics.closePath();
+            const longRadius = baseR - (rowPosition / 640) * trackHeight;
+            const shortRadius = baseR - ((rowPosition / 640) * trackHeight + rectHeight);
+
+            graphics.beginFill(colorToHex(color), actualOpacity);
+            graphics.moveTo(xToPos(x, shortRadius).x, xToPos(x, shortRadius).y);
+            graphics.arc(CX, CY, shortRadius, xToDt(x), xToDt(x + rectWidth), true);
+            graphics.arc(CX, CY, longRadius, xToDt(x + rectWidth), xToDt(x), false);
+            graphics.closePath();
         });
     });
 
     // outline
-    tile.graphics.lineStyle(
-        1,
-        colorToHex('black'),
-        1, // alpha
-        0.5 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
-    );
-    tile.graphics.beginFill(colorToHex('white'), 0);
-    tile.graphics.drawCircle(CX, CY, RADIUS);
-
-    // center white hole
-    tile.graphics.lineStyle(
+    graphics.lineStyle(
         1,
         colorToHex('#DBDBDB'),
         0.7, // alpha
         0 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
     );
-    tile.graphics.beginFill(colorToHex('white'), 1);
-    tile.graphics.drawCircle(CX, CY, 250);
+    graphics.beginFill(colorToHex('white'), 0);
+    graphics.moveTo(xToPos(0, baseR - trackHeight).x, xToPos(0, baseR - trackHeight).y);
+    graphics.arc(CX, CY, baseR - trackHeight, xToDt(0), xToDt(xMax), true);
+    graphics.arc(CX, CY, baseR, xToDt(xMax), xToDt(0), false);
+    graphics.closePath();
 
-    // entrance of the circular layout
     tile.graphics.lineStyle(
-        2,
+        0.5,
         colorToHex('black'),
-        0, // alpha
+        1, // alpha
         0.5 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
     );
-    tile.graphics.beginFill(colorToHex('white'), 1);
-    tile.graphics.moveTo(CX, CY);
-    tile.graphics.arc(CX, CY, RADIUS + 6, -Math.PI / 2.0 - ENTRANCE_PADDING, -Math.PI / 2.0 + ENTRANCE_PADDING);
-}
+    graphics.beginFill(colorToHex('white'), 0);
+    graphics.moveTo(xToPos(0, baseR - 0.5).x, xToPos(0, baseR - 0.5).y);
+    graphics.arc(CX, CY, baseR - 0.5, xToDt(0), xToDt(xMax), true);
+    graphics.arc(CX, CY, baseR, xToDt(xMax), xToDt(0), false);
+    graphics.closePath();
 
-export function rectProperty(
-    gm: GeminiTrackModel,
-    propertyKey: VisualProperty,
-    datum?: { [k: string]: string | number },
-    additionalInfo?: {
-        markHeight?: number;
-        markWidth?: number;
-    }
-) {
-    switch (propertyKey) {
-        case 'width':
-            return (
-                // (1) size
-                gm.visualPropertyByChannel('xe', datum)
-                    ? gm.visualPropertyByChannel('xe', datum) - gm.visualPropertyByChannel('x', datum)
-                    : // (2) unit mark height
-                      additionalInfo?.markWidth
-            );
-        case 'height':
-            return (
-                // (1) size
-                gm.visualPropertyByChannel('size', datum) ??
-                // (2) unit mark height
-                additionalInfo?.markHeight
-            );
-        default:
-            return undefined;
-    }
+    // center white hole
+    // tile.graphics.lineStyle(
+    //     1,
+    //     colorToHex('#DBDBDB'),
+    //     0.7, // alpha
+    //     0 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
+    // );
+    // tile.graphics.beginFill(colorToHex('white'), 1);
+    // tile.graphics.drawCircle(CX, CY, 250);
 }

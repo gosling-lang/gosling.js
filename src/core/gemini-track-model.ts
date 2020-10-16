@@ -25,7 +25,8 @@ import {
     getValueUsingChannel,
     IsShallowMark,
     IsStackedChannel,
-    IsDomainArray
+    IsDomainArray,
+    PREDEFINED_COLOR_STR_MAP
 } from './gemini.schema.guards';
 
 export type ScaleType =
@@ -629,8 +630,12 @@ export class GeminiTrackModel {
                             break;
                         case 'color':
                         case 'stroke':
+                            let interpolate = d3.interpolateViridis;
+                            if (Object.keys(PREDEFINED_COLOR_STR_MAP).includes(range as string)) {
+                                interpolate = PREDEFINED_COLOR_STR_MAP[range as string];
+                            }
                             this.channelScales[channelKey] = d3
-                                .scaleSequential(d3.interpolateViridis /* TODO */)
+                                .scaleSequential(interpolate)
                                 .domain(domain as [number, number]);
                             break;
                         default:

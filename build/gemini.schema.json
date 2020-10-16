@@ -1204,7 +1204,14 @@
       "type": "object"
     },
     "PREDEFINED_COLORS": {
-      "const": "viridis",
+      "enum": [
+        "viridis",
+        "grey",
+        "spectral",
+        "warm",
+        "cividis",
+        "bupu"
+      ],
       "type": "string"
     },
     "Range": {

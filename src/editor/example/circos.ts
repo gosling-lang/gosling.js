@@ -1,8 +1,48 @@
-import { GeminiSpec } from '../../core/gemini.schema';
+import { GeminiSpec, Track } from '../../core/gemini.schema';
 import { EXAMPLE_DATASETS } from './datasets';
 
 // refer to the following for supporting zooming and panning in circular layouts:
 // higlass/app/scripts/TrackRenderer.js
+
+const CIRCOS_HEATMAP: Track = {
+    data: {
+        url: EXAMPLE_DATASETS.multivec,
+        type: 'tileset'
+    },
+    metadata: {
+        type: 'higlass-multivec',
+        row: 'sample',
+        column: 'position',
+        value: 'peak',
+        categories: [
+            'sample 1',
+            'sample 2',
+            'sample 3',
+            'sample 4'
+            // 'sample 5', 'sample 6', 'sample 7', 'sample 8',
+            // 'sample 9', 'sample 10', 'sample 11', 'sample 12',
+            // 'sample 13', 'sample 14', 'sample 15', 'sample 16',
+            // 'sample 17', 'sample 18', 'sample 19', 'sample 20'
+        ]
+    },
+    mark: 'rect',
+    x: {
+        field: 'start',
+        type: 'genomic',
+        domain: { chromosome: '1', interval: [100000000, 150000000] },
+        linker: 'link-1'
+    },
+    xe: {
+        field: 'end',
+        type: 'genomic'
+    },
+    row: { field: 'sample', type: 'nominal' },
+    color: { field: 'peak', type: 'quantitative', range: 'bupu' },
+    width: 640,
+    height: 640,
+
+    _is_circular: true
+};
 
 export const EXAMPLE_CIRCOS: GeminiSpec = {
     layout: { type: 'circular', direction: 'vertical', gap: 20 },
@@ -80,63 +120,13 @@ export const EXAMPLE_CIRCOS: GeminiSpec = {
             height: 60
         },
         {
-            data: {
-                url: EXAMPLE_DATASETS.multivec,
-                type: 'tileset'
-            },
-            metadata: {
-                type: 'higlass-multivec',
-                row: 'sample',
-                column: 'position',
-                value: 'peak',
-                categories: ['sample 1']
-            },
-            mark: 'rect',
-            x: {
-                field: 'start',
-                type: 'genomic',
-                domain: { chromosome: '1', interval: [100000000, 150000000] },
-                axis: 'top',
-                linker: 'link-1'
-            },
-            xe: {
-                field: 'end',
-                type: 'genomic'
-            },
-            row: { field: 'sample', type: 'nominal' },
-            color: { field: 'peak', type: 'quantitative' },
-            width: 640,
-            height: 60
+            ...CIRCOS_HEATMAP,
+            height: 120,
+            x: { ...CIRCOS_HEATMAP.x, axis: 'top' },
+            _is_circular: false
         },
         {
-            data: {
-                url: EXAMPLE_DATASETS.multivec,
-                type: 'tileset'
-            },
-            metadata: {
-                type: 'higlass-multivec',
-                row: 'sample',
-                column: 'position',
-                value: 'peak',
-                categories: ['sample 1']
-            },
-            mark: 'rect',
-            x: {
-                field: 'start',
-                type: 'genomic',
-                domain: { chromosome: '1', interval: [100000000, 150000000] },
-                linker: 'link-1'
-            },
-            xe: {
-                field: 'end',
-                type: 'genomic'
-            },
-            row: { field: 'sample', type: 'nominal' },
-            color: { field: 'peak', type: 'quantitative' },
-            width: 640,
-            height: 640,
-
-            _is_circular: true
+            ...CIRCOS_HEATMAP
         }
     ]
 };

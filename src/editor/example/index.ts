@@ -71,7 +71,7 @@ export const examples: ReadonlyArray<{
         name: 'Circos',
         spec: EXAMPLE_CIRCOS,
         underDevelopment: true,
-        forceShow: false
+        forceShow: true
     },
     {
         name: 'UpSet-like Plot',

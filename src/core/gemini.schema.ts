@@ -313,7 +313,7 @@ export interface ChannelValue {
 
 export type Domain = string[] | number[] | DomainInterval | DomainChrInterval | DomainChr | DomainGene;
 export type Range = string[] | number[] | PREDEFINED_COLORS;
-export type PREDEFINED_COLORS = 'viridis';
+export type PREDEFINED_COLORS = 'viridis' | 'grey' | 'spectral' | 'warm' | 'cividis' | 'bupu';
 
 export interface DomainChr {
     // For showing a certain chromosome
