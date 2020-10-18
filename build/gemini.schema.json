@@ -157,6 +157,9 @@
         "height": {
           "type": "number"
         },
+        "innerRadius": {
+          "type": "number"
+        },
         "mark": {
           "$ref": "#/definitions/Mark"
         },
@@ -165,6 +168,9 @@
         },
         "opacity": {
           "$ref": "#/definitions/Channel"
+        },
+        "outerRadius": {
+          "type": "number"
         },
         "row": {
           "$ref": "#/definitions/Channel"
@@ -1342,6 +1348,16 @@
             }
           ]
         },
+        "innerRadius": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/definitions/Channel"
+            }
+          ]
+        },
         "mark": {
           "anyOf": [
             {
@@ -1364,6 +1380,16 @@
         },
         "opacity": {
           "$ref": "#/definitions/Channel"
+        },
+        "outerRadius": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/definitions/Channel"
+            }
+          ]
         },
         "row": {
           "$ref": "#/definitions/Channel"
@@ -1493,6 +1519,16 @@
                   }
                 ]
               },
+              "innerRadius": {
+                "anyOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "$ref": "#/definitions/Channel"
+                  }
+                ]
+              },
               "mark": {
                 "anyOf": [
                   {
@@ -1515,6 +1551,16 @@
               },
               "opacity": {
                 "$ref": "#/definitions/Channel"
+              },
+              "outerRadius": {
+                "anyOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "$ref": "#/definitions/Channel"
+                  }
+                ]
               },
               "row": {
                 "$ref": "#/definitions/Channel"
@@ -1788,6 +1834,16 @@
             }
           ]
         },
+        "innerRadius": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/definitions/Channel"
+            }
+          ]
+        },
         "mark": {
           "anyOf": [
             {
@@ -1810,6 +1866,16 @@
         },
         "opacity": {
           "$ref": "#/definitions/Channel"
+        },
+        "outerRadius": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/definitions/Channel"
+            }
+          ]
         },
         "row": {
           "$ref": "#/definitions/Channel"
@@ -1939,6 +2005,16 @@
                   }
                 ]
               },
+              "innerRadius": {
+                "anyOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "$ref": "#/definitions/Channel"
+                  }
+                ]
+              },
               "mark": {
                 "anyOf": [
                   {
@@ -1961,6 +2037,16 @@
               },
               "opacity": {
                 "$ref": "#/definitions/Channel"
+              },
+              "outerRadius": {
+                "anyOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "$ref": "#/definitions/Channel"
+                  }
+                ]
               },
               "row": {
                 "$ref": "#/definitions/Channel"
@@ -2090,6 +2176,16 @@
                         }
                       ]
                     },
+                    "innerRadius": {
+                      "anyOf": [
+                        {
+                          "type": "number"
+                        },
+                        {
+                          "$ref": "#/definitions/Channel"
+                        }
+                      ]
+                    },
                     "mark": {
                       "anyOf": [
                         {
@@ -2112,6 +2208,16 @@
                     },
                     "opacity": {
                       "$ref": "#/definitions/Channel"
+                    },
+                    "outerRadius": {
+                      "anyOf": [
+                        {
+                          "type": "number"
+                        },
+                        {
+                          "$ref": "#/definitions/Channel"
+                        }
+                      ]
                     },
                     "row": {
                       "$ref": "#/definitions/Channel"

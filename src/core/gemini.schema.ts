@@ -110,6 +110,8 @@ export interface BasicSingleTrack {
     width?: number;
     height?: number;
     span?: number;
+    outerRadius?: number; // for circular layout
+    innerRadius?: number; // for circular layout
 
     // data
     data: DataDeep | Datum[];

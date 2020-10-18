@@ -29,7 +29,7 @@ const CIRCOS_HEATMAP: Track = {
     x: {
         field: 'start',
         type: 'genomic',
-        domain: { chromosome: '1', interval: [100000000, 150000000] },
+        domain: { chromosome: '5' },
         linker: 'link-1'
     },
     xe: {
@@ -37,10 +37,12 @@ const CIRCOS_HEATMAP: Track = {
         type: 'genomic'
     },
     row: { field: 'sample', type: 'nominal' },
-    color: { field: 'peak', type: 'quantitative', range: 'bupu' },
+    color: { field: 'peak', type: 'quantitative', range: 'spectral' },
     width: 640,
     height: 640,
 
+    outerRadius: 300,
+    innerRadius: 200,
     _is_circular: true
 };
 
@@ -112,7 +114,7 @@ export const EXAMPLE_CIRCOS: GeminiSpec = {
                     opacity: { value: 0.2 }
                 }
             ],
-            x: { field: 'Basepair_start', type: 'genomic', domain: { chromosome: '1' }, axis: 'top' },
+            x: { field: 'Basepair_start', type: 'genomic', axis: 'top' },
             xe: { field: 'Basepair_stop', type: 'genomic' },
             stroke: { value: 'gray' },
             strokeWidth: { value: 0.5 },
