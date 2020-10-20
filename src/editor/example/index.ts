@@ -68,7 +68,7 @@ export const examples: ReadonlyArray<{
         forceShow: false
     },
     {
-        name: 'Circos',
+        name: 'Basic Circular Marks',
         spec: EXAMPLE_CIRCOS,
         underDevelopment: true,
         forceShow: true

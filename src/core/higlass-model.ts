@@ -125,7 +125,7 @@ export class HiGlassModel {
      * Allow a zoom interaction?
      */
     public setZoomFixed(zoom?: boolean) {
-        this.hg.zoomFixed = zoom !== undefined ? true : zoom;
+        this.getLastView().zoomFixed = zoom !== undefined ? true : zoom;
         return this;
     }
 

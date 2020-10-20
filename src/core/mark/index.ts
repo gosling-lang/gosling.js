@@ -10,7 +10,7 @@ import { drawText } from './text';
 import { drawRule } from './rule';
 import { drawLink } from './link';
 import { drawGrid } from './grid';
-import { drawChartOutlines } from './chart-outline';
+import { drawChartOutlines } from './outline';
 import { drawColorLegend, drawYLegend } from './legend';
 
 /**
@@ -62,7 +62,7 @@ export function drawMark(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMod
         // }
     });
 
-    /* before-embellishment */
+    /* embellishment before rendering plots */
     drawGrid(HGC, trackInfo, tile, tm);
     drawChartOutlines(HGC, trackInfo, tm);
 
@@ -102,11 +102,11 @@ export function drawMark(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMod
             break;
     }
 
-    /* after-embellishment */
+    /* embellishment after rendering plots */
     drawColorLegend(HGC, trackInfo, tile, tm);
     drawYLegend(HGC, trackInfo, tile, tm);
 
     if (!tile.rowScale || !tile.spriteInfos) {
-        console.warn('Information for resaling tiles is not properly generated after drawing a track');
+        console.warn('Information for rescaling tiles is not properly generated after drawing a track');
     }
 }

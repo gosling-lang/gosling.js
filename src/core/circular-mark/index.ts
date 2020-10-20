@@ -1,5 +1,12 @@
 import { GeminiTrackModel } from '../gemini-track-model';
+import { drawCircularArea } from './c-area';
+import { drawCircularLine } from './c-line';
+import { drawCircularPoint } from './c-point';
 import { drawCircularRect } from './c-rect';
+import { drawCircularGrid } from './c-grid';
+import { drawCircularOutlines } from './c-outline';
+import { drawCircularBar } from './c-bar';
+import { drawColorLegend } from '../mark/legend';
 
 /**
  * Draw a track based on the track specification in a Gemini grammar.
@@ -20,18 +27,22 @@ export function drawCircularMark(HGC: any, trackInfo: any, tile: any, tm: Gemini
         tm.setChannelScale(d, trackInfo._xScale);
     });
 
-    /* embellishment */
-    // ...
+    /* embellishment before rendering plots */
+    drawCircularGrid(HGC, trackInfo, tile, tm);
 
     /* spec */
     switch (tm.spec().mark) {
         case 'point':
+            drawCircularPoint(HGC, trackInfo, tile, tm);
             break;
         case 'bar':
+            drawCircularBar(HGC, trackInfo, tile, tm);
             break;
         case 'line':
+            drawCircularLine(HGC, trackInfo, tile, tm);
             break;
         case 'area':
+            drawCircularArea(HGC, trackInfo, tile, tm);
             break;
         case 'rect':
             drawCircularRect(HGC, trackInfo, tile, tm);
@@ -51,7 +62,7 @@ export function drawCircularMark(HGC: any, trackInfo: any, tile: any, tm: Gemini
             break;
     }
 
-    if (!tile.rowScale || !tile.spriteInfos) {
-        console.warn('Information for resaling tiles is not properly generated after drawing a track');
-    }
+    /* embellishment after rendering plots */
+    drawCircularOutlines(HGC, trackInfo, tile, tm);
+    drawColorLegend(HGC, trackInfo, tile, tm);
 }
