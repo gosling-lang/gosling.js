@@ -191,24 +191,3 @@ describe('Visual marks should be correctly encoded with data', () => {
         expect(model2.encodedValue('size', 'missing')).toBe(1);
     });
 });
-
-describe('The properties of visual marks should be correctly retrieved', () => {
-    it('point', () => {
-        const data = [
-            { q: 1, n: 'a', g: 11 },
-            { q: 2, n: 'b', g: 12 },
-            { q: 3, n: 'a', g: 13 }
-        ];
-        const size = { width: 100, height: 200 };
-        const track: Track = {
-            data: { type: 'tileset', url: 'dummy' },
-            mark: 'point',
-            x: { field: 'g', type: 'genomic' },
-            width: size.width,
-            height: size.height
-        };
-        const model = new GeminiTrackModel(track, data);
-
-        expect(model.encodedProperty('x-center', { g: 11 })).toEqual(model.visualPropertyByChannel('x', { g: 11 }));
-    });
-});

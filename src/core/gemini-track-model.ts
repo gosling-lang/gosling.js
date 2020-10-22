@@ -28,6 +28,7 @@ import {
     IsDomainArray,
     PREDEFINED_COLOR_STR_MAP
 } from './gemini.schema.guards';
+import { CHANNEL_DEFAULTS } from './channel';
 
 export type ScaleType =
     | d3.ScaleLinear<any, any>
@@ -51,13 +52,6 @@ export class GeminiTrackModel {
     /* channel scales */
     private channelScales: {
         [channel: string]: ScaleType;
-    };
-
-    // TODO: make mark-specific default
-    private DEFAULTS = {
-        NOMINAL_COLOR: ['#E79F00', '#029F73', '#0072B2', '#CB7AA7', '#D45E00', '#57B4E9', '#EFE441' /*'#000000'*/],
-        QUANTITATIVE_COLOR: 'viridis',
-        SIZE: 3
     };
 
     constructor(spec: SingleTrack, data: { [k: string]: number | string }[], isCircular?: boolean) {
@@ -487,10 +481,10 @@ export class GeminiTrackModel {
                             else if (spec.mark === 'triangle-r') value = undefined;
                             else if (spec.mark === 'triangle-l') value = undefined;
                             else if (spec.mark === 'triangle-d') value = undefined;
-                            else value = this.DEFAULTS.SIZE;
+                            else value = CHANNEL_DEFAULTS.SIZE;
                             break;
                         case 'color':
-                            value = this.DEFAULTS.NOMINAL_COLOR[0];
+                            value = CHANNEL_DEFAULTS.NOMINAL_COLOR[0];
                             break;
                         case 'row':
                             value = 0;
@@ -542,7 +536,7 @@ export class GeminiTrackModel {
                                 break;
                             case 'color':
                             case 'stroke':
-                                range = this.DEFAULTS.QUANTITATIVE_COLOR as PREDEFINED_COLORS;
+                                range = CHANNEL_DEFAULTS.QUANTITATIVE_COLOR as PREDEFINED_COLORS;
                                 break;
                             case 'size':
                                 range = [2, 6];
@@ -572,7 +566,7 @@ export class GeminiTrackModel {
                                 break;
                             case 'color':
                             case 'stroke':
-                                range = this.DEFAULTS.NOMINAL_COLOR;
+                                range = CHANNEL_DEFAULTS.NOMINAL_COLOR;
                                 break;
                             case 'row':
                                 range = [0, spec.height];
@@ -588,6 +582,34 @@ export class GeminiTrackModel {
                             channel.range = range as number[] | string[];
                         }
                     }
+                }
+            }
+        });
+
+        /* Merge domains of neighbor channels (e.g., x and xe) */
+        [
+            ['x', 'xe'],
+            ['y', 'ye']
+        ].forEach(pair => {
+            const [k1, k2] = pair as [keyof typeof ChannelTypes, keyof typeof ChannelTypes];
+            const c1 = spec[k1],
+                c2 = spec[k2];
+            if (
+                IsChannelDeep(c1) &&
+                IsChannelDeep(c2) &&
+                c1.type === c2.type &&
+                c1.domain &&
+                c2.domain &&
+                Array.isArray(c1.domain) &&
+                Array.isArray(c2.domain)
+            ) {
+                if (c1.type === 'genomic' || c1.type === 'quantitative') {
+                    const min = d3.min([c1.domain[0] as number, c2.domain[0] as number]) as number;
+                    const max = d3.max([c1.domain[1] as number, c2.domain[1] as number]) as number;
+                    c1.domain = c2.domain = [min, max];
+                } else if (c1.type === 'nominal') {
+                    const range = Array.from(new Set([...c1.domain, ...c2.domain])) as string[];
+                    c1.range = c2.range = range;
                 }
             }
         });

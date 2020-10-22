@@ -167,7 +167,7 @@
           "$ref": "#/definitions/DataMetadata"
         },
         "opacity": {
-          "$ref": "#/definitions/Channel"
+          "$ref": "#/definitions/ChannelValue"
         },
         "outerRadius": {
           "type": "number"
@@ -192,9 +192,6 @@
         },
         "style": {
           "$ref": "#/definitions/TrackStyle"
-        },
-        "subtitle": {
-          "type": "string"
         },
         "text": {
           "$ref": "#/definitions/Channel"
@@ -347,7 +344,7 @@
           "$ref": "#/definitions/DataDeepGemini"
         }
       ],
-      "description": "Tracks"
+      "description": "Data specification"
     },
     "DataDeepGemini": {
       "additionalProperties": false,
@@ -357,13 +354,7 @@
         },
         "data": {
           "items": {
-            "additionalProperties": {
-              "type": [
-                "number",
-                "string"
-              ]
-            },
-            "type": "object"
+            "$ref": "#/definitions/Datum"
           },
           "type": "array"
         },
@@ -450,7 +441,6 @@
           "string"
         ]
       },
-      "description": "Data",
       "type": "object"
     },
     "Domain": {
@@ -609,18 +599,13 @@
     },
     "GeminiSpec": {
       "additionalProperties": false,
+      "description": "Root-level specification",
       "properties": {
         "description": {
           "type": "string"
         },
         "layout": {
           "$ref": "#/definitions/Layout"
-        },
-        "references": {
-          "items": {
-            "type": "string"
-          },
-          "type": "array"
         },
         "tracks": {
           "items": {
@@ -921,6 +906,7 @@
     },
     "Layout": {
       "additionalProperties": false,
+      "description": "Layout specification for multiple tracks",
       "properties": {
         "direction": {
           "enum": [
@@ -1379,7 +1365,14 @@
           ]
         },
         "opacity": {
-          "$ref": "#/definitions/Channel"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/ChannelValue"
+            },
+            {
+              "$ref": "#/definitions/Channel"
+            }
+          ]
         },
         "outerRadius": {
           "anyOf": [
@@ -1427,16 +1420,6 @@
           "anyOf": [
             {
               "$ref": "#/definitions/TrackStyle"
-            },
-            {
-              "$ref": "#/definitions/Channel"
-            }
-          ]
-        },
-        "subtitle": {
-          "anyOf": [
-            {
-              "type": "string"
             },
             {
               "$ref": "#/definitions/Channel"
@@ -1550,7 +1533,14 @@
                 ]
               },
               "opacity": {
-                "$ref": "#/definitions/Channel"
+                "anyOf": [
+                  {
+                    "$ref": "#/definitions/ChannelValue"
+                  },
+                  {
+                    "$ref": "#/definitions/Channel"
+                  }
+                ]
               },
               "outerRadius": {
                 "anyOf": [
@@ -1598,16 +1588,6 @@
                 "anyOf": [
                   {
                     "$ref": "#/definitions/TrackStyle"
-                  },
-                  {
-                    "$ref": "#/definitions/Channel"
-                  }
-                ]
-              },
-              "subtitle": {
-                "anyOf": [
-                  {
-                    "type": "string"
                   },
                   {
                     "$ref": "#/definitions/Channel"
@@ -1865,7 +1845,14 @@
           ]
         },
         "opacity": {
-          "$ref": "#/definitions/Channel"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/ChannelValue"
+            },
+            {
+              "$ref": "#/definitions/Channel"
+            }
+          ]
         },
         "outerRadius": {
           "anyOf": [
@@ -1913,16 +1900,6 @@
           "anyOf": [
             {
               "$ref": "#/definitions/TrackStyle"
-            },
-            {
-              "$ref": "#/definitions/Channel"
-            }
-          ]
-        },
-        "subtitle": {
-          "anyOf": [
-            {
-              "type": "string"
             },
             {
               "$ref": "#/definitions/Channel"
@@ -2036,7 +2013,14 @@
                 ]
               },
               "opacity": {
-                "$ref": "#/definitions/Channel"
+                "anyOf": [
+                  {
+                    "$ref": "#/definitions/ChannelValue"
+                  },
+                  {
+                    "$ref": "#/definitions/Channel"
+                  }
+                ]
               },
               "outerRadius": {
                 "anyOf": [
@@ -2084,16 +2068,6 @@
                 "anyOf": [
                   {
                     "$ref": "#/definitions/TrackStyle"
-                  },
-                  {
-                    "$ref": "#/definitions/Channel"
-                  }
-                ]
-              },
-              "subtitle": {
-                "anyOf": [
-                  {
-                    "type": "string"
                   },
                   {
                     "$ref": "#/definitions/Channel"
@@ -2207,7 +2181,14 @@
                       ]
                     },
                     "opacity": {
-                      "$ref": "#/definitions/Channel"
+                      "anyOf": [
+                        {
+                          "$ref": "#/definitions/ChannelValue"
+                        },
+                        {
+                          "$ref": "#/definitions/Channel"
+                        }
+                      ]
                     },
                     "outerRadius": {
                       "anyOf": [
@@ -2255,16 +2236,6 @@
                       "anyOf": [
                         {
                           "$ref": "#/definitions/TrackStyle"
-                        },
-                        {
-                          "$ref": "#/definitions/Channel"
-                        }
-                      ]
-                    },
-                    "subtitle": {
-                      "anyOf": [
-                        {
-                          "type": "string"
                         },
                         {
                           "$ref": "#/definitions/Channel"

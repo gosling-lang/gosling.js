@@ -5,33 +5,29 @@ export const EXAMPLE_LINKS: GeminiSpec = {
     tracks: [
         {
             data: {
-                url: EXAMPLE_DATASETS.interaction,
+                url: EXAMPLE_DATASETS.region2,
                 type: 'tileset'
             },
             metadata: {
                 type: 'higlass-bed',
                 genomicFields: [
-                    { name: 'start1', index: 9 },
-                    { name: 'end1', index: 10 },
-                    { name: 'start2', index: 14 },
-                    { name: 'end2', index: 15 }
+                    { name: 'start', index: 1 },
+                    { name: 'end', index: 2 }
                 ]
             },
             superpose: [
                 {
                     mark: 'link',
                     x: {
-                        field: 'start1',
+                        field: 'start',
                         type: 'genomic',
-                        domain: { chromosome: '1', interval: [19300000, 22000000] },
+                        domain: { chromosome: '1', interval: [19590000, 19630000] },
                         axis: 'top'
                     },
-                    x1: { field: 'end1', type: 'genomic' },
                     xe: {
-                        field: 'start2',
+                        field: 'end',
                         type: 'genomic'
-                    },
-                    x1e: { field: 'end2', type: 'genomic' }
+                    }
                 }
             ],
             color: { value: '#399AB6' },

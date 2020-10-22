@@ -1,12 +1,17 @@
 import { GLYPH_LOCAL_PRESET_TYPE, GLYPH_HIGLASS_PRESET_TYPE } from '../editor/example/deprecated/index';
 
+/**
+ * Root-level specification
+ */
 export interface GeminiSpec {
-    references?: string[];
-    description?: string;
     layout?: Layout;
     tracks: Track[];
+    description?: string;
 }
 
+/**
+ * Layout specification for multiple tracks
+ */
 export interface Layout {
     type: 'linear' | 'circular';
     direction: 'vertical' | 'horizontal';
@@ -15,9 +20,13 @@ export interface Layout {
 }
 
 /**
- * Tracks
+ * Data specification
  */
 export type DataDeep = DataDeepTileset | DataDeepGemini;
+
+export interface Datum {
+    [k: string]: number | string;
+}
 
 export interface DataDeepTileset {
     type: 'tileset';
@@ -28,7 +37,7 @@ export interface DataDeepGemini {
     type: 'csv';
     // TODO: Separate url and data
     url?: string;
-    data?: { [k: string]: number | string }[];
+    data?: Datum[];
     quantitativeFields?: string[];
     chromosomeField?: string;
     genomicFields?: string[];
@@ -48,7 +57,7 @@ export interface MultivecMetadata {
     categories?: string[];
     start?: string;
     end?: string;
-    bin?: number; // EXPERIMENTAL: binning the genomic positions // tile unit size is 256
+    bin?: number; // Binning the genomic interval in tiles (unit size: 256)
 }
 
 export interface BEDMetadata {
@@ -100,33 +109,28 @@ export interface EmptyTrack {
 }
 
 export interface BasicSingleTrack {
-    // high-level configuration
-    description?: string;
     title?: string;
-    subtitle?: string;
+    description?: string;
     zoomable?: boolean;
 
-    // layout
+    // Layout
     width?: number;
     height?: number;
     span?: number;
-    outerRadius?: number; // for circular layout
-    innerRadius?: number; // for circular layout
+    outerRadius?: number; // circular layout
+    innerRadius?: number; // circular layout
 
-    // data
+    // Data
     data: DataDeep | Datum[];
     metadata?: DataMetadata; // we could remove this and get this information from the server
 
-    // data transform
+    // Data transformation
     dataTransform?: DataTransform;
 
-    // conditional visibility
-    visibility?: TriggerCondition;
-
-    // mark
+    // Mark
     mark: Mark;
 
-    // channels
+    // Visual channels
     x?: Channel;
     y?: Channel;
     xe?: Channel;
@@ -144,14 +148,18 @@ export interface BasicSingleTrack {
     size?: Channel;
     text?: Channel;
 
-    opacity?: Channel;
     stroke?: Channel;
     strokeWidth?: Channel;
+    opacity?: ChannelValue;
     background?: ChannelValue;
 
-    // stretch to the given range? (e.g., [x, xe])
+    // Stretch the size to the given range? (e.g., [x, xe])
     stretch?: boolean;
 
+    // Visibility
+    visibility?: TriggerCondition;
+
+    // Styling
     style?: TrackStyle;
 
     // experimental/internal options
@@ -189,18 +197,9 @@ export interface TrackStyle {
 }
 
 /**
- * Data
+ * Semantic zoom: Determine how to change visual representations.
  */
-export interface Datum {
-    [k: string]: number | string;
-}
-
-/**
- * Semantic Zoom - Determine how to change visual representations
- */
-export type SemanticZoom = SemanticZoomRedefinition | SemanticZoomCombined;
-
-export interface SemanticZoomRedefinition {
+export interface SemanticZoom {
     type: 'alternative-encoding';
     // TODO: consider making the spec and trigger part as an array of object
     spec: Partial<Track>;
@@ -232,16 +231,6 @@ export interface TriggerCondition {
     }; // TODO: support AND or OR
     // TODO: separate condition by targets
     target: 'track' | 'mark' | 'glyph';
-}
-
-// deprecated
-export interface SemanticZoomCombined {
-    // TODO: separate this interface by type, e.g., { type: 'aggregate', aggFunction: 'max' | ... }
-    type: 'auto' | 'hide' | 'aggregate' | 'filter';
-    zoomLevel?: number; // TODO: what meaning to contain?
-    aggFunction?: 'max' | 'min' | 'mean' | 'count' | 'sum';
-    importance?: string; // field name
-    spec?: Partial<Track>;
 }
 
 export const enum CHANNEL_KEYS {
@@ -301,8 +290,8 @@ export interface ChannelDeep {
     axis?: AxisPosition;
     legend?: boolean;
     baseline?: string | number;
-    zeroBaseline?: boolean; // we could remove this and use the `baseline` option instead
-    mirrored?: boolean; // baseline on the top or right?
+    zeroBaseline?: boolean; // We could remove this and use the `baseline` option instead
+    mirrored?: boolean; // Show baseline on the top or right instead of bottom or left?
     grid?: boolean;
     linker?: string;
 }

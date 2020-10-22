@@ -118,13 +118,6 @@ export const LAYOUT_EXAMPLE_LINK: GeminiSpec = {
 };
 
 export const LAYOUT_EXAMPLE_COMBO: GeminiSpec = {
-    references: [
-        'http://genocat.tools/tools/combo.html',
-        'http://genocat.tools/tools/gbrowse_syn.html',
-        'http://genocat.tools/tools/ggbio.html',
-        'http://genocat.tools/tools/give.html',
-        'http://genocat.tools/tools/variant_view.html'
-    ],
     tracks: [
         {
             data: { url: 'dummy', type: 'csv' },
