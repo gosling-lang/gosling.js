@@ -16,7 +16,6 @@ import {
     Track,
     BasicSingleTrack,
     SuperposedTrack,
-    SemanticZoomRedefinition,
     ChannelBind,
     ChannelTypes,
     Channel,
@@ -101,10 +100,6 @@ export function IsSingleTrack(track: Track): track is BasicSingleTrack {
 
 export function IsSuperposedTrack(track: Track): track is SuperposedTrack {
     return 'superpose' in track;
-}
-
-export function IsSemanticZoomRedefinition(_: any): _ is SemanticZoomRedefinition {
-    return _?.type === 'alternative-encoding';
 }
 
 export function IsChannelValue(
