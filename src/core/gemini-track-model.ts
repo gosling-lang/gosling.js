@@ -12,7 +12,7 @@ import * as d3 from 'd3';
 import { group } from 'd3-array';
 import { HIGLASS_AXIS_SIZE } from './higlass-model';
 import { SUPPORTED_CHANNELS } from './mark';
-import { VisualProperty } from './visual-property.schema';
+import { PIXIVisualProperty } from './visual-property.schema';
 import { rectProperty } from './mark/rect';
 import { pointProperty } from './mark/point';
 import { barProperty } from './mark/bar';
@@ -305,8 +305,8 @@ export class GeminiTrackModel {
             case 'text':
                 if (vSpec.condition.width === '|xe-x|') {
                     // compare between the actual width and the |xe-x|
-                    const xe = this.encodedProperty('xe', datum);
-                    const x = this.encodedProperty('x', datum);
+                    const xe = this.encodedPIXIProperty('xe', datum);
+                    const x = this.encodedPIXIProperty('x', datum);
                     const padding = vSpec.condition.conditionPadding ?? 0;
                     if (xe === undefined || !metrics?.width) {
                         // we do not have xe to compare, so just make the marks visible
@@ -350,8 +350,8 @@ export class GeminiTrackModel {
     /**
      * Retrieve an encoded visual property of a visual mark.
      */
-    public encodedProperty(
-        propertyKey: VisualProperty,
+    public encodedPIXIProperty(
+        propertyKey: PIXIVisualProperty,
         datum?: { [k: string]: string | number },
         additionalInfo?: any
     ) {
@@ -539,7 +539,7 @@ export class GeminiTrackModel {
                                 range = CHANNEL_DEFAULTS.QUANTITATIVE_COLOR as PREDEFINED_COLORS;
                                 break;
                             case 'size':
-                                range = [2, 6];
+                                range = CHANNEL_DEFAULTS.SIZE_RANGE;
                                 break;
                             default:
                                 // console.warn(WARN_MSG(channelKey, channel.type));

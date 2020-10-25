@@ -30,7 +30,7 @@ export function drawRule(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMod
     const curved = spec.style?.curve;
 
     /* constant values */
-    const strokeWidth = tm.encodedProperty('strokeWidth');
+    const strokeWidth = tm.encodedPIXIProperty('strokeWidth');
 
     /* render */
     rowCategories.forEach(rowCategory => {
@@ -43,11 +43,11 @@ export function drawRule(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMod
                 !getValueUsingChannel(d, spec.row as Channel) ||
                 (getValueUsingChannel(d, spec.row as Channel) as string) === rowCategory
         ).forEach(d => {
-            const x = tm.encodedProperty('x', d);
-            const xe = tm.encodedProperty('xe', d);
-            const y = tm.encodedProperty('y', d);
-            const color = tm.encodedProperty('color', d);
-            const opacity = tm.encodedProperty('opacity', d);
+            const x = tm.encodedPIXIProperty('x', d);
+            const xe = tm.encodedPIXIProperty('xe', d);
+            const y = tm.encodedPIXIProperty('y', d);
+            const color = tm.encodedPIXIProperty('color', d);
+            const opacity = tm.encodedPIXIProperty('opacity', d);
 
             rowGraphics.lineStyle(
                 strokeWidth,

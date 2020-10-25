@@ -67,11 +67,11 @@ export function drawCircularLine(HGC: any, trackInfo: any, tile: any, tm: Gemini
                         (getValueUsingChannel(d2, spec.x as Channel) as number)
                 )
                 .forEach((d, i) => {
-                    const x = tm.encodedProperty('x', d);
-                    const y = tm.encodedProperty('y', d);
-                    const size = tm.encodedProperty('size', d);
-                    const color = tm.encodedProperty('color', d); // should be identical for a single line
-                    const opacity = tm.encodedProperty('opacity', d);
+                    const x = tm.encodedPIXIProperty('x', d);
+                    const y = tm.encodedPIXIProperty('y', d);
+                    const size = tm.encodedPIXIProperty('size', d);
+                    const color = tm.encodedPIXIProperty('color', d); // should be identical for a single line
+                    const opacity = tm.encodedPIXIProperty('opacity', d);
 
                     graphics.lineStyle(
                         size,

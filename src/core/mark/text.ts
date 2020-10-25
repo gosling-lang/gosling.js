@@ -61,12 +61,12 @@ export function drawText(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMod
         xKeys.forEach(k => {
             let prevYEnd = 0;
             pivotedData.get(k)?.forEach(d => {
-                const text = tm.encodedProperty('text', d);
-                const color = tm.encodedProperty('color', d);
-                const x = tm.encodedProperty('x', d);
-                const xe = tm.encodedProperty('xe', d);
-                const cx = tm.encodedProperty('x-center', d);
-                const y = tm.encodedProperty('y', d) + dy;
+                const text = tm.encodedPIXIProperty('text', d);
+                const color = tm.encodedPIXIProperty('color', d);
+                const x = tm.encodedPIXIProperty('x', d);
+                const xe = tm.encodedPIXIProperty('xe', d);
+                const cx = tm.encodedPIXIProperty('x-center', d);
+                const y = tm.encodedPIXIProperty('y', d) + dy;
 
                 if (cx < 0 || (spec.width && cx > spec.width)) {
                     // we do not draw texts that are out of the view
@@ -133,10 +133,10 @@ export function drawText(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMod
                     !getValueUsingChannel(d, spec.row as Channel) ||
                     (getValueUsingChannel(d, spec.row as Channel) as string) === rowCategory
             ).forEach(d => {
-                const text = tm.encodedProperty('text', d);
-                const color = tm.encodedProperty('color', d);
-                const cx = tm.encodedProperty('x-center', d);
-                const y = tm.encodedProperty('y', d) + dy;
+                const text = tm.encodedPIXIProperty('text', d);
+                const color = tm.encodedPIXIProperty('color', d);
+                const cx = tm.encodedPIXIProperty('x-center', d);
+                const y = tm.encodedPIXIProperty('y', d) + dy;
 
                 if (cx < 0 || (spec.width && cx > spec.width)) {
                     // we do not draw texts that are out of the view

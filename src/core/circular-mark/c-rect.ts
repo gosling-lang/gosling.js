@@ -43,7 +43,7 @@ export function drawCircularRect(HGC: any, trackInfo: any, tile: any, tm: Gemini
     const cellHeight = rowRingSize / yCategories.length;
 
     /* constant values */
-    const strokeWidth = tm.encodedProperty('strokeWidth');
+    const strokeWidth = tm.encodedPIXIProperty('strokeWidth');
     const stroke = tm.encodedValue('stroke');
 
     /* render */
@@ -56,11 +56,11 @@ export function drawCircularRect(HGC: any, trackInfo: any, tile: any, tm: Gemini
                 !getValueUsingChannel(d, spec.row as Channel) ||
                 (getValueUsingChannel(d, spec.row as Channel) as string) === rowCategory
         ).forEach(d => {
-            const x = tm.encodedProperty('x', d);
-            const color = tm.encodedProperty('color', d);
-            const opacity = tm.encodedProperty('opacity', d);
-            const rectWidth = tm.encodedProperty('width', d, { markWidth: tileUnitWidth });
-            const rectHeight = tm.encodedProperty('height', d, { markHeight: cellHeight });
+            const x = tm.encodedPIXIProperty('x', d);
+            const color = tm.encodedPIXIProperty('color', d);
+            const opacity = tm.encodedPIXIProperty('opacity', d);
+            const rectWidth = tm.encodedPIXIProperty('width', d, { markWidth: tileUnitWidth });
+            const rectHeight = tm.encodedPIXIProperty('height', d, { markHeight: cellHeight });
 
             const alphaTransition = tm.markVisibility(d, { width: rectWidth });
             const actualOpacity = Math.min(alphaTransition, opacity);

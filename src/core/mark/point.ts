@@ -1,7 +1,7 @@
 import { GeminiTrackModel } from '../gemini-track-model';
 import { Channel } from '../gemini.schema';
 import { getValueUsingChannel } from '../gemini.schema.guards';
-import { VisualProperty } from '../visual-property.schema';
+import { PIXIVisualProperty } from '../visual-property.schema';
 // import { RESOLUTION } from '.';
 
 export function drawPoint(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackModel) {
@@ -26,8 +26,8 @@ export function drawPoint(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMo
     tile.spriteInfos = []; // sprites for individual rows or columns
 
     /* constant values */
-    const constantStrokeWidth = tm.encodedProperty('strokeWidth');
-    const constantStroke = tm.encodedProperty('stroke');
+    const constantStrokeWidth = tm.encodedPIXIProperty('strokeWidth');
+    const constantStroke = tm.encodedPIXIProperty('stroke');
 
     const graphics = tile.graphics;
 
@@ -48,17 +48,17 @@ export function drawPoint(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMo
                 !getValueUsingChannel(d, spec.row as Channel) ||
                 (getValueUsingChannel(d, spec.row as Channel) as string) === rowCategory
         ).forEach(d => {
-            const cx = tm.encodedProperty('x-center', d);
-            const y = tm.encodedProperty('y', d);
-            const color = tm.encodedProperty('color', d);
-            const size = tm.encodedProperty('size', d);
-            const opacity = tm.encodedProperty('opacity', d);
+            const cx = tm.encodedPIXIProperty('x-center', d);
+            const cy = tm.encodedPIXIProperty('y-center', d);
+            const color = tm.encodedPIXIProperty('color', d);
+            const size = tm.encodedPIXIProperty('size', d);
+            const opacity = tm.encodedPIXIProperty('opacity', d);
 
             // Don't draw invisible marks
             if (size === 0 || opacity === 0) return;
 
             graphics.beginFill(colorToHex(color), opacity);
-            graphics.drawCircle(cx, rowPosition + rowHeight - y, size);
+            graphics.drawCircle(cx, rowPosition + rowHeight - cy, size);
         });
 
         // Because simply scaling row graphics along y axis distort the shape of points, we do not convert graphics to sprites.
@@ -68,7 +68,7 @@ export function drawPoint(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMo
 
 export function pointProperty(
     gm: GeminiTrackModel,
-    propertyKey: VisualProperty,
+    propertyKey: PIXIVisualProperty,
     datum?: { [k: string]: string | number }
 ) {
     // priority of channels
@@ -77,6 +77,10 @@ export function pointProperty(
             const xe = gm.visualPropertyByChannel('xe', datum);
             const x = gm.visualPropertyByChannel('x', datum);
             return xe ? (xe + x) / 2.0 : x;
+        case 'y-center':
+            const ye = gm.visualPropertyByChannel('ye', datum);
+            const y = gm.visualPropertyByChannel('y', datum);
+            return ye ? (ye + y) / 2.0 : y;
         default:
             return undefined;
     }

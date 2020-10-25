@@ -43,9 +43,9 @@ export function drawCircularArea(HGC: any, trackInfo: any, tile: any, tm: Gemini
     tile.spriteInfos = []; // sprites for individual rows or columns
 
     /* constant values */
-    const constantOpacity = tm.encodedProperty('opacity');
-    const constantStrokeWidth = tm.encodedProperty('strokeWidth');
-    const constantStroke = tm.encodedProperty('stroke');
+    const constantOpacity = tm.encodedPIXIProperty('opacity');
+    const constantStrokeWidth = tm.encodedPIXIProperty('strokeWidth');
+    const constantStroke = tm.encodedPIXIProperty('stroke');
 
     /* render */
     const graphics = tile.graphics;
@@ -86,7 +86,7 @@ export function drawCircularArea(HGC: any, trackInfo: any, tile: any, tm: Gemini
                         const xValue = +genomicPosCategory;
 
                         const x = xScale(xValue);
-                        const y = d3.max([tm.encodedProperty('y', d), 0]); // make should not to overflow
+                        const y = d3.max([tm.encodedPIXIProperty('y', d), 0]); // make should not to overflow
 
                         if (i === 0) {
                             // start position of the polygon
@@ -158,8 +158,8 @@ export function drawCircularArea(HGC: any, trackInfo: any, tile: any, tm: Gemini
                 ).forEach((d, i, array) => {
                     // TODO: this should be included in the `encodedValue` functions
                     // make should not to overflow when using use-defined `domain`
-                    const y = d3.min([d3.max([tm.encodedProperty('y', d), 0]), rowHeight]);
-                    const x = tm.encodedProperty('x', d);
+                    const y = d3.min([d3.max([tm.encodedPIXIProperty('y', d), 0]), rowHeight]);
+                    const x = tm.encodedPIXIProperty('x', d);
 
                     const baselineR = trackOuterRadius - ((rowPosition + rowHeight) / trackHeight) * trackRingSize;
                     const baselinePos = cartesianToPolar(x, trackWidth, baselineR, cx, cy);

@@ -1,7 +1,7 @@
 import { GeminiTrackModel } from '../gemini-track-model';
 import { Channel } from '../gemini.schema';
 import { getValueUsingChannel } from '../gemini.schema.guards';
-import { VisualProperty } from '../visual-property.schema';
+import { PIXIVisualProperty } from '../visual-property.schema';
 // import { RESOLUTION } from '.';
 
 export function drawRect(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackModel) {
@@ -40,7 +40,7 @@ export function drawRect(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMod
     const cellHeight = rowHeight / yCategories.length;
 
     /* constant values */
-    const strokeWidth = tm.encodedProperty('strokeWidth');
+    const strokeWidth = tm.encodedPIXIProperty('strokeWidth');
     const stroke = tm.encodedValue('stroke');
 
     /* render */
@@ -54,12 +54,12 @@ export function drawRect(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMod
                 !getValueUsingChannel(d, spec.row as Channel) ||
                 (getValueUsingChannel(d, spec.row as Channel) as string) === rowCategory
         ).forEach(d => {
-            const x = tm.encodedProperty('x', d);
-            const y = tm.encodedProperty('y', d);
-            const color = tm.encodedProperty('color', d);
-            const opacity = tm.encodedProperty('opacity', d);
-            const rectWidth = tm.encodedProperty('width', d, { markWidth: tileUnitWidth });
-            const rectHeight = tm.encodedProperty('height', d, { markHeight: cellHeight });
+            const x = tm.encodedPIXIProperty('x', d);
+            const y = tm.encodedPIXIProperty('y', d);
+            const color = tm.encodedPIXIProperty('color', d);
+            const opacity = tm.encodedPIXIProperty('opacity', d);
+            const rectWidth = tm.encodedPIXIProperty('width', d, { markWidth: tileUnitWidth });
+            const rectHeight = tm.encodedPIXIProperty('height', d, { markHeight: cellHeight });
 
             const alphaTransition = tm.markVisibility(d, { width: rectWidth });
             const actualOpacity = Math.min(alphaTransition, opacity);
@@ -101,7 +101,7 @@ export function drawRect(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMod
 
 export function rectProperty(
     gm: GeminiTrackModel,
-    propertyKey: VisualProperty,
+    propertyKey: PIXIVisualProperty,
     datum?: { [k: string]: string | number },
     additionalInfo?: {
         markHeight?: number;

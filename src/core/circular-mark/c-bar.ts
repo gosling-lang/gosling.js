@@ -70,14 +70,14 @@ export function drawCircularBar(HGC: any, trackInfo: any, tile: any, tm: GeminiT
         xKeys.forEach(k => {
             let prevYEnd = 0;
             pivotedData.get(k)?.forEach(d => {
-                const color = tm.encodedProperty('color', d);
-                const stroke = tm.encodedProperty('stroke', d);
-                const strokeWidth = tm.encodedProperty('strokeWidth', d);
-                const opacity = tm.encodedProperty('opacity', d);
-                const y = tm.encodedProperty('y', d);
+                const color = tm.encodedPIXIProperty('color', d);
+                const stroke = tm.encodedPIXIProperty('stroke', d);
+                const strokeWidth = tm.encodedPIXIProperty('strokeWidth', d);
+                const opacity = tm.encodedPIXIProperty('opacity', d);
+                const y = tm.encodedPIXIProperty('y', d);
 
-                const barWidth = tm.encodedProperty('width', d, { tileUnitWidth });
-                const barStartX = tm.encodedProperty('x-start', d, { markWidth: barWidth });
+                const barWidth = tm.encodedPIXIProperty('width', d, { tileUnitWidth });
+                const barStartX = tm.encodedPIXIProperty('x-start', d, { markWidth: barWidth });
 
                 const alphaTransition = tm.markVisibility(d, { width: barWidth });
                 const actualOpacity = Math.min(alphaTransition, opacity);
@@ -128,14 +128,14 @@ export function drawCircularBar(HGC: any, trackInfo: any, tile: any, tm: GeminiT
                     !getValueUsingChannel(d, spec.row as Channel) ||
                     (getValueUsingChannel(d, spec.row as Channel) as string) === rowCategory
             ).forEach(d => {
-                const color = tm.encodedProperty('color', d);
-                const stroke = tm.encodedProperty('stroke', d);
-                const strokeWidth = tm.encodedProperty('strokeWidth', d);
-                const opacity = tm.encodedProperty('opacity');
-                const y = tm.encodedProperty('y', d); // TODO: we could even retrieve a actual y position of bars
+                const color = tm.encodedPIXIProperty('color', d);
+                const stroke = tm.encodedPIXIProperty('stroke', d);
+                const strokeWidth = tm.encodedPIXIProperty('strokeWidth', d);
+                const opacity = tm.encodedPIXIProperty('opacity');
+                const y = tm.encodedPIXIProperty('y', d); // TODO: we could even retrieve a actual y position of bars
 
-                const barWidth = tm.encodedProperty('width', d, { tileUnitWidth });
-                const barStartX = tm.encodedProperty('x-start', d, { markWidth: barWidth });
+                const barWidth = tm.encodedPIXIProperty('width', d, { tileUnitWidth });
+                const barStartX = tm.encodedPIXIProperty('x-start', d, { markWidth: barWidth });
                 const barHeight = y - baselineY;
 
                 const alphaTransition = tm.markVisibility(d, { width: barWidth });

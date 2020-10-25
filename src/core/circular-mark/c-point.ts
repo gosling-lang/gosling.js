@@ -29,8 +29,8 @@ export function drawCircularPoint(HGC: any, trackInfo: any, tile: any, tm: Gemin
     const rowHeight = trackHeight / rowCategories.length;
 
     /* constant values */
-    const constantStrokeWidth = tm.encodedProperty('strokeWidth');
-    const constantStroke = tm.encodedProperty('stroke');
+    const constantStrokeWidth = tm.encodedPIXIProperty('strokeWidth');
+    const constantStroke = tm.encodedPIXIProperty('stroke');
 
     /* render */
     const graphics = tile.graphics;
@@ -51,11 +51,11 @@ export function drawCircularPoint(HGC: any, trackInfo: any, tile: any, tm: Gemin
                 !getValueUsingChannel(d, spec.row as Channel) ||
                 (getValueUsingChannel(d, spec.row as Channel) as string) === rowCategory
         ).forEach(d => {
-            const x = tm.encodedProperty('x-center', d);
-            const y = tm.encodedProperty('y', d);
-            const color = tm.encodedProperty('color', d);
-            const size = tm.encodedProperty('size', d);
-            const opacity = tm.encodedProperty('opacity', d);
+            const x = tm.encodedPIXIProperty('x-center', d);
+            const y = tm.encodedPIXIProperty('y', d);
+            const color = tm.encodedPIXIProperty('color', d);
+            const size = tm.encodedPIXIProperty('size', d);
+            const opacity = tm.encodedPIXIProperty('opacity', d);
 
             // Don't draw invisible marks
             if (size === 0 || opacity === 0) return;

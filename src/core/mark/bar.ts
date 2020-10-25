@@ -1,7 +1,7 @@
 import { GeminiTrackModel } from '../gemini-track-model';
 import { Channel } from '../gemini.schema';
 import { group } from 'd3-array';
-import { VisualProperty } from '../visual-property.schema';
+import { PIXIVisualProperty } from '../visual-property.schema';
 import { IsChannelDeep, IsStackedMark, getValueUsingChannel } from '../gemini.schema.guards';
 // import { RESOLUTION } from '.';
 
@@ -63,14 +63,14 @@ export function drawBar(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMode
         xKeys.forEach(k => {
             let prevYEnd = 0;
             pivotedData.get(k)?.forEach(d => {
-                const color = tm.encodedProperty('color', d);
-                const stroke = tm.encodedProperty('stroke', d);
-                const strokeWidth = tm.encodedProperty('strokeWidth', d);
-                const opacity = tm.encodedProperty('opacity', d);
-                const y = tm.encodedProperty('y', d);
+                const color = tm.encodedPIXIProperty('color', d);
+                const stroke = tm.encodedPIXIProperty('stroke', d);
+                const strokeWidth = tm.encodedPIXIProperty('strokeWidth', d);
+                const opacity = tm.encodedPIXIProperty('opacity', d);
+                const y = tm.encodedPIXIProperty('y', d);
 
-                const barWidth = tm.encodedProperty('width', d, { tileUnitWidth });
-                const barStartX = tm.encodedProperty('x-start', d, { markWidth: barWidth });
+                const barWidth = tm.encodedPIXIProperty('width', d, { tileUnitWidth });
+                const barStartX = tm.encodedPIXIProperty('x-start', d, { markWidth: barWidth });
 
                 const alphaTransition = tm.markVisibility(d, { width: barWidth });
                 const actualOpacity = Math.min(alphaTransition, opacity);
@@ -120,14 +120,14 @@ export function drawBar(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMode
                     !getValueUsingChannel(d, spec.row as Channel) ||
                     (getValueUsingChannel(d, spec.row as Channel) as string) === rowCategory
             ).forEach(d => {
-                const color = tm.encodedProperty('color', d);
-                const stroke = tm.encodedProperty('stroke', d);
-                const strokeWidth = tm.encodedProperty('strokeWidth', d);
-                const opacity = tm.encodedProperty('opacity');
-                const y = tm.encodedProperty('y', d); // TODO: we could even retrieve a actual y position of bars
+                const color = tm.encodedPIXIProperty('color', d);
+                const stroke = tm.encodedPIXIProperty('stroke', d);
+                const strokeWidth = tm.encodedPIXIProperty('strokeWidth', d);
+                const opacity = tm.encodedPIXIProperty('opacity');
+                const y = tm.encodedPIXIProperty('y', d); // TODO: we could even retrieve a actual y position of bars
 
-                const barWidth = tm.encodedProperty('width', d, { tileUnitWidth });
-                const barStartX = tm.encodedProperty('x-start', d, { markWidth: barWidth });
+                const barWidth = tm.encodedPIXIProperty('width', d, { tileUnitWidth });
+                const barStartX = tm.encodedPIXIProperty('x-start', d, { markWidth: barWidth });
                 const barHeight = y - baselineY;
 
                 const alphaTransition = tm.markVisibility(d, { width: barWidth });
@@ -170,7 +170,7 @@ export function drawBar(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMode
 
 export function barProperty(
     gm: GeminiTrackModel,
-    propertyKey: VisualProperty,
+    propertyKey: PIXIVisualProperty,
     datum?: { [k: string]: string | number },
     additionalInfo?: {
         tileUnitWidth?: number;

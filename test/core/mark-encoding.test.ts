@@ -1,6 +1,7 @@
 import { CHANNEL_DEFAULTS } from '../../src/core/channel';
 import { GeminiTrackModel } from '../../src/core/gemini-track-model';
 import { Track } from '../../src/core/gemini.schema';
+import { HIGLASS_AXIS_SIZE } from '../../src/core/higlass-model';
 
 describe('Position and size of each visual mark should be corrected encoded', () => {
     // Common dummy data
@@ -23,19 +24,19 @@ describe('Position and size of each visual mark should be corrected encoded', ()
     it('point mark', () => {
         const mark = 'point';
 
-        // (1) X --> G, Y --> NONE, XE --> NONE, ROW --> NONE, SIZE --> NONE
+        // (1) { X: G }
         {
             const track: Track = { ...baseTrack, mark, x: { field: 'G', type: 'genomic' } };
             const model = new GeminiTrackModel(track, data);
 
-            const cx = model.encodedProperty('x-center', data[1]);
-            const y = model.encodedProperty('y', data[1]); // TODO: change to y-center
-            const size = model.encodedProperty('size', data[1]);
+            const cx = model.encodedPIXIProperty('x-center', data[1]);
+            const cy = model.encodedPIXIProperty('y-center', data[1]);
+            const size = model.encodedPIXIProperty('size', data[1]);
             expect(cx).toEqual(width / 2.0);
-            expect(y).toEqual(height / 2.0);
+            expect(cy).toEqual(height / 2.0);
             expect(size).toEqual(CHANNEL_DEFAULTS.SIZE);
         }
-        // (2) X --> G, Y --> Q, XE --> NONE, ROW --> NONE, SIZE --> NONE
+        // (2) { X: G, Y: Q }
         {
             const track: Track = {
                 ...baseTrack,
@@ -45,14 +46,31 @@ describe('Position and size of each visual mark should be corrected encoded', ()
             };
             const model = new GeminiTrackModel(track, data);
 
-            const cx = model.encodedProperty('x-center', data[1]);
-            const y = model.encodedProperty('y', data[1]); // TODO: change to y-center
-            const size = model.encodedProperty('size', data[1]);
+            const cx = model.encodedPIXIProperty('x-center', data[1]);
+            const cy = model.encodedPIXIProperty('y-center', data[1]);
+            const size = model.encodedPIXIProperty('size', data[1]);
             expect(cx).toEqual(width / 2.0);
-            expect(y).toEqual(height / 2.0);
+            expect(cy).toEqual(height / 2.0);
             expect(size).toEqual(CHANNEL_DEFAULTS.SIZE);
         }
-        // (3) X --> G, Y --> Q, XE --> G, ROW --> NONE, SIZE --> NONE
+        // (2.5) { X: G, Y: Q } + x-axis
+        {
+            const track: Track = {
+                ...baseTrack,
+                mark,
+                x: { field: 'G', type: 'genomic', axis: 'top' },
+                y: { field: 'Q', type: 'quantitative' }
+            };
+            const model = new GeminiTrackModel(track, data);
+
+            const cx = model.encodedPIXIProperty('x-center', data[1]);
+            const cy = model.encodedPIXIProperty('y-center', data[1]);
+            const size = model.encodedPIXIProperty('size', data[1]);
+            expect(cx).toEqual(width / 2.0);
+            expect(cy).toEqual((height - HIGLASS_AXIS_SIZE) / 2.0);
+            expect(size).toEqual(CHANNEL_DEFAULTS.SIZE);
+        }
+        // (3) { X: G, Y: Q, XE: G }
         {
             const track: Track = {
                 ...baseTrack,
@@ -63,12 +81,55 @@ describe('Position and size of each visual mark should be corrected encoded', ()
             };
             const model = new GeminiTrackModel(track, data);
 
-            const cx = model.encodedProperty('x-center', data[1]);
-            const y = model.encodedProperty('y', data[1]); // TODO: change to y-center
-            const size = model.encodedProperty('size', data[1]);
-            expect(cx).toEqual(width / 2.0); // middle position of the [x, xe]
-            expect(y).toEqual(height / 2.0);
+            const cx = model.encodedPIXIProperty('x-center', data[1]);
+            const cy = model.encodedPIXIProperty('y-center', data[1]);
+            const size = model.encodedPIXIProperty('size', data[1]);
+            expect(cx).toEqual(width / 2.0); // middle position of [x, xe]
+            expect(cy).toEqual(height / 2.0);
             expect(size).toEqual(CHANNEL_DEFAULTS.SIZE); // TODO: Allow to stretch the size to [x, xe]
+        }
+        // (4) { X: G, Y: Q, XE: G, ROW: N }
+        {
+            const track: Track = {
+                ...baseTrack,
+                mark,
+                x: { field: 'G', type: 'genomic' },
+                xe: { field: 'G2', type: 'genomic' },
+                y: { field: 'Q', type: 'quantitative' },
+                row: { field: 'N', type: 'nominal' }
+            };
+            const model = new GeminiTrackModel(track, data);
+
+            const cx = model.encodedPIXIProperty('x-center', data[1]);
+            const cy = model.encodedPIXIProperty('y-center', data[1]);
+            const size = model.encodedPIXIProperty('size', data[1]);
+            const rowOffset = model.encodedValue('row', data[1].N);
+            expect(cx).toEqual(width / 2.0); // middle position of [x, xe]
+            expect(cy).toEqual(height / 2.0 / 2.0);
+            expect(rowOffset).toEqual(height / 2.0);
+            expect(size).toEqual(CHANNEL_DEFAULTS.SIZE); // TODO: Allow to stretch the size to [x, xe]
+        }
+        // (5) { X: G, Y: Q, XE: G, ROW: N, SIZE: Q }
+        {
+            const track: Track = {
+                ...baseTrack,
+                mark,
+                x: { field: 'G', type: 'genomic' },
+                xe: { field: 'G2', type: 'genomic' },
+                y: { field: 'Q', type: 'quantitative' },
+                size: { field: 'Q', type: 'quantitative' },
+                row: { field: 'N', type: 'nominal' }
+            };
+            const model = new GeminiTrackModel(track, data);
+
+            const cx = model.encodedPIXIProperty('x-center', data[1]);
+            const cy = model.encodedPIXIProperty('y-center', data[1]);
+            const size = model.encodedPIXIProperty('size', data[1]);
+            const rowOffset = model.encodedValue('row', data[1].N);
+            expect(cx).toEqual(width / 2.0); // middle position of [x, xe]
+            expect(cy).toEqual(height / 2.0 / 2.0);
+            expect(rowOffset).toEqual(height / 2.0);
+            expect(size).toEqual((CHANNEL_DEFAULTS.SIZE_RANGE[0] + CHANNEL_DEFAULTS.SIZE_RANGE[1]) / 2.0);
         }
     });
 });
