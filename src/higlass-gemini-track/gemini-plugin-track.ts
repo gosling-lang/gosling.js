@@ -1,13 +1,11 @@
 import * as d3 from 'd3';
 import { drawMark } from '../core/mark';
 import { GeminiTrackModel } from '../core/gemini-track-model';
-import { SpriteInfo } from '../core/utils/sprite';
 import { validateTrack } from '../core/utils/validate';
 import { shareScaleAcrossTracks } from '../core/utils/scales';
 import { resolveSuperposedTracks } from '../core/utils/superpose';
 import { Track } from '../core/gemini.schema';
 import { IsDataMetadata, IsDataTransform, IsOneOfFilter, IsRangeFilter } from '../core/gemini.schema.guards';
-import { drawCircularMark } from '../core/circular-mark';
 
 function GeminiTrack(HGC: any, ...args: any[]): any {
     if (!new.target) {
@@ -19,9 +17,6 @@ function GeminiTrack(HGC: any, ...args: any[]): any {
 
         // Spec of a Gemini track
         private originalSpec: Track;
-
-        // deprecated
-        private extent: { min: number; max: number };
 
         constructor(params: any[]) {
             const [context, options] = params;
@@ -46,7 +41,6 @@ function GeminiTrack(HGC: any, ...args: any[]): any {
             this.preprocessAllTiles();
 
             this.renderTile(tile);
-            this.rescaleTiles();
         }
 
         /**
@@ -59,7 +53,6 @@ function GeminiTrack(HGC: any, ...args: any[]): any {
 
             this.updateTile();
 
-            this.rescaleTiles();
             this.draw(); // TODO: any effect?
         }
 
@@ -70,8 +63,6 @@ function GeminiTrack(HGC: any, ...args: any[]): any {
             this.visibleAndFetchedTiles().forEach((tile: any) => {
                 this.renderTile(tile);
             });
-
-            this.rescaleTiles();
 
             // TODO: Should rerender tile only when neccesary for performance
             // e.g., changing color scale
@@ -98,34 +89,7 @@ function GeminiTrack(HGC: any, ...args: any[]): any {
                     return;
                 }
 
-                if (tm.circular()) {
-                    // EXPERIMENTAL
-                    drawCircularMark(HGC, this, tile, tm);
-                } else {
-                    drawMark(HGC, this, tile, tm);
-                }
-            });
-        }
-
-        // scales in visualizations, such as y axis, color, and size, should be shared across all tiles
-        setGlobalScales() {
-            return; // TODO: we are temporally drawing marks everytime.
-
-            // reset extent
-            this.extent = {
-                min: Number.MAX_SAFE_INTEGER,
-                max: Number.MIN_SAFE_INTEGER
-            };
-
-            const visibleAndFetched = this.visibleAndFetchedTiles();
-
-            visibleAndFetched.forEach((tile: any) => {
-                if (!tile.extent) return;
-
-                if (tile.extent.y.min + tile.extent.y.max > this.extent.min + this.extent.max) {
-                    this.extent.min = tile.extent.y.min;
-                    this.extent.max = tile.extent.y.max;
-                }
+                drawMark(HGC, this, tile, tm);
             });
         }
 
@@ -365,60 +329,9 @@ function GeminiTrack(HGC: any, ...args: any[]): any {
 
                 // Add a track model to the tile object
                 tile.geminiModels.push(gm);
-
-                // we need to sync the domain of y-axis so that all tiles are aligned each other
-                // this.setGlobalScales();
             });
 
             return tile.geminiModels;
-        }
-
-        /**
-         * Re-align the sprites of all visible tiles when zooming and panning.
-         */
-        rescaleTiles() {
-            return; // TODO: we are temporally drawing marks everytime.
-
-            const visibleAndFetched = this.visibleAndFetchedTiles();
-            const trackHeight = this.dimensions[1];
-
-            this.setGlobalScales();
-
-            visibleAndFetched.map((tile: any) => {
-                if (!tile.extent || !tile.rowScale) {
-                    // data is not ready
-                    return;
-                }
-
-                // TODO:
-                if (tile.extent.y.min === 0 && tile.extent.y.max === 0) {
-                    // y channel is not being used
-                    return;
-                }
-
-                // rescale y position of each graphics
-                // TODO: do this only when neccesary? For example, we do not need to do this for heatmaps
-                const rowHeight =
-                    // if `tile.rowScale.domain()` is `undefined`, we are using constant value
-                    trackHeight / (!tile.rowScale.domain ? 1 : tile.rowScale.domain().length);
-                const yScale = d3
-                    .scaleLinear()
-                    .domain([0, Math.abs(this.extent.min) + this.extent.max])
-                    .range([0, rowHeight]);
-                const tileBaseline = rowHeight - yScale(Math.abs(this.extent.min));
-                const tileHeight = yScale(tile.extent.y.min + tile.extent.y.max);
-                const tileY = tileBaseline - yScale(tile.extent.y.max);
-
-                const sprites = tile.spriteInfos;
-                if (!sprites) return;
-
-                sprites.forEach((spriteInfo: SpriteInfo) => {
-                    const { sprite, scaleKey } = spriteInfo;
-
-                    sprite.height = tileHeight;
-                    sprite.y = tileY + tile.rowScale(scaleKey);
-                });
-            });
         }
 
         // rerender all tiles every time track size is changed
@@ -455,63 +368,26 @@ function GeminiTrack(HGC: any, ...args: any[]): any {
             return [start, end];
         }
 
+        draw() {
+            super.draw();
+        }
+
+        drawTile(tile: any) {
+            this.renderTile(tile);
+        } // prevent BarTracks draw method from having an effect
+
         /**
          * Returns the minimum in the visible area (not visible tiles)
          */
         minVisibleValue() {}
-        // minVisibleValue(ignoreFixedScale = false) {
-        //     let visibleAndFetchedIds = this.visibleAndFetchedIds();
-
-        //     if (visibleAndFetchedIds.length === 0) {
-        //     visibleAndFetchedIds = Object.keys(this.fetchedTiles);
-        //     }
-
-        //     const minimumsPerTile = visibleAndFetchedIds
-        //     .map(x => this.fetchedTiles[x])
-        //     .map(tile => {
-        //         const ind = this.getIndicesOfVisibleDataInTile(tile);
-        //         return tile.tileData.denseDataExtrema.getMinNonZeroInSubset(ind);
-        //     });
-
-        //     const min = Math.min(...minimumsPerTile);
-
-        //     if (ignoreFixedScale) return min;
-
-        //     return this.valueScaleMin !== null ? this.valueScaleMin : min;
-        // }
 
         /**
          * Returns the maximum in the visible area (not visible tiles)
          */
         maxVisibleValue() {}
-        //   maxVisibleValue(ignoreFixedScale = false) {
-        //     let visibleAndFetchedIds = this.visibleAndFetchedIds();
 
-        //     if (visibleAndFetchedIds.length === 0) {
-        //       visibleAndFetchedIds = Object.keys(this.fetchedTiles);
-        //     }
-
-        //     const maximumsPerTile = visibleAndFetchedIds
-        //       .map(x => this.fetchedTiles[x])
-        //       .map(tile => {
-        //         const ind = this.getIndicesOfVisibleDataInTile(tile);
-        //         return tile.tileData.denseDataExtrema.getMaxNonZeroInSubset(ind);
-        //       });
-
-        //     const max = Math.max(...maximumsPerTile);
-
-        //     if (ignoreFixedScale) return max;
-
-        //     return this.valueScaleMax !== null ? this.valueScaleMax : max;
-        //   }
-
-        draw() {
-            super.draw();
-        }
-        drawTile(tile: any) {
-            this.renderTile(tile);
-        } // prevent BarTracks draw method from having an effect
         exportSVG() {}
+
         getMouseOverHtml() {}
     }
     return new GeminiTrackClass(args);

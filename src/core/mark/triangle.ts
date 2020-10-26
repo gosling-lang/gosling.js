@@ -1,7 +1,6 @@
 import { GeminiTrackModel } from '../gemini-track-model';
 import { Channel, MarkType } from '../gemini.schema';
 import { getValueUsingChannel } from '../gemini.schema.guards';
-// import { RESOLUTION } from '.';
 
 export function drawTriangle(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackModel) {
     /* track spec */
@@ -30,10 +29,6 @@ export function drawTriangle(HGC: any, trackInfo: any, tile: any, tm: GeminiTrac
     const rowCategories: string[] = (tm.getChannelDomainArray('row') as string[]) ?? ['___SINGLE_ROW___'];
 
     const rowHeight = trackHeight / rowCategories.length;
-
-    /* information for rescaling tiles */
-    tile.rowScale = tm.getChannelScale('row');
-    tile.spriteInfos = []; // sprites for individual rows or columns
 
     const yCategories: string[] = (tm.getChannelDomainArray('y') as string[]) ?? ['___SINGLE_Y___'];
     const triHeight = tm.encodedValue('size') ?? rowHeight / yCategories.length;

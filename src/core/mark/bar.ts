@@ -3,7 +3,7 @@ import { Channel } from '../gemini.schema';
 import { group } from 'd3-array';
 import { PIXIVisualProperty } from '../visual-property.schema';
 import { IsChannelDeep, IsStackedMark, getValueUsingChannel } from '../gemini.schema.guards';
-// import { RESOLUTION } from '.';
+import { cartesianToPolar, valueToRadian } from '../utils/polar';
 
 export function drawBar(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackModel) {
     /* track spec */
@@ -16,6 +16,7 @@ export function drawBar(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMode
     const data = tm.data();
 
     /* track size */
+    const trackWidth = trackInfo.dimensions[0];
     const trackHeight = trackInfo.dimensions[1];
     const tileSize = trackInfo.tilesetInfo.tile_size;
     const { tileX, tileWidth } = trackInfo.getTilePosAndDimensions(
@@ -24,6 +25,14 @@ export function drawBar(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMode
         tileSize
     );
 
+    /* circular parameters */
+    const circular = spec._is_circular;
+    const trackInnerRadius = spec.innerRadius ?? 220;
+    const trackOuterRadius = spec.outerRadius ?? 300; // TODO: should be smaller than Math.min(width, height)
+    const trackRingSize = trackOuterRadius - trackInnerRadius;
+    const cx = trackWidth / 2.0;
+    const cy = trackHeight / 2.0;
+
     /* genomic scale */
     const xScale = tm.getChannelScale('x');
     const tileUnitWidth = xScale(tileX + tileWidth / tileSize) - xScale(tileX);
@@ -31,10 +40,6 @@ export function drawBar(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMode
     /* row separation */
     const rowCategories = (tm.getChannelDomainArray('row') as string[]) ?? ['___SINGLE_ROW___'];
     const rowHeight = trackHeight / rowCategories.length;
-
-    /* information for rescaling tiles */
-    tile.rowScale = tm.getChannelScale('row');
-    tile.spriteInfos = []; // sprites for individual rows or columns
 
     /* background */
     if (tm.encodedValue('background')) {
@@ -80,35 +85,33 @@ export function drawBar(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMode
                     return;
                 }
 
-                // pixi
                 rowGraphics.lineStyle(
                     strokeWidth,
                     colorToHex(stroke),
                     actualOpacity,
                     0 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
                 );
-                rowGraphics.beginFill(colorToHex(color), opacity);
-                rowGraphics.drawRect(barStartX, rowHeight - y - prevYEnd, barWidth, y);
+
+                if (circular) {
+                    const farR = trackOuterRadius - ((rowHeight - prevYEnd) / trackHeight) * trackRingSize;
+                    const nearR = trackOuterRadius - ((rowHeight - y - prevYEnd) / trackHeight) * trackRingSize;
+                    const sPos = cartesianToPolar(barStartX, trackWidth, nearR, cx, cy);
+                    const startRad = valueToRadian(barStartX, trackWidth);
+                    const endRad = valueToRadian(barStartX + barWidth, trackWidth);
+
+                    rowGraphics.beginFill(colorToHex(color), actualOpacity);
+                    rowGraphics.moveTo(sPos.x, sPos.y);
+                    rowGraphics.arc(cx, cy, nearR, startRad, endRad, true);
+                    rowGraphics.arc(cx, cy, farR, endRad, startRad, false);
+                    rowGraphics.closePath();
+                } else {
+                    rowGraphics.beginFill(colorToHex(color), opacity);
+                    rowGraphics.drawRect(barStartX, rowHeight - y - prevYEnd, barWidth, y);
+                }
 
                 prevYEnd += y;
             });
         });
-
-        // add graphics of this row
-        // const texture = HGC.services.pixiRenderer.generateTexture(
-        //     rowGraphics,
-        //     HGC.libraries.PIXI.SCALE_MODES.NEAREST,
-        //     RESOLUTION
-        // );
-        // const sprite = new HGC.libraries.PIXI.Sprite(texture);
-
-        // sprite.width = xScale(tileX + tileWidth) - xScale(tileX);
-        // sprite.x = xScale(tileX);
-        // sprite.y = 0;
-        // sprite.height = rowHeight;
-
-        // tile.spriteInfos.push({ sprite: sprite, scaleKey: undefined });
-        // tile.graphics.addChild(sprite);
     } else {
         rowCategories.forEach(rowCategory => {
             // we are separately drawing each row so that y scale can be more effectively shared across tiles without rerendering from the bottom
@@ -138,32 +141,38 @@ export function drawBar(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMode
                     return;
                 }
 
-                // pixi
                 rowGraphics.lineStyle(
                     strokeWidth,
                     colorToHex(stroke),
                     actualOpacity,
                     0 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
                 );
-                rowGraphics.beginFill(colorToHex(color), opacity);
-                rowGraphics.drawRect(barStartX, rowPosition + rowHeight - barHeight - baselineY, barWidth, barHeight);
+
+                if (circular) {
+                    const farR =
+                        trackOuterRadius -
+                        ((rowPosition + rowHeight - barHeight - baselineY) / trackHeight) * trackRingSize;
+                    const nearR =
+                        trackOuterRadius - ((rowPosition + rowHeight - baselineY) / trackHeight) * trackRingSize;
+                    const sPos = cartesianToPolar(barStartX, trackWidth, nearR, cx, cy);
+                    const startRad = valueToRadian(barStartX, trackWidth);
+                    const endRad = valueToRadian(barStartX + barWidth, trackWidth);
+
+                    rowGraphics.beginFill(colorToHex(color), actualOpacity);
+                    rowGraphics.moveTo(sPos.x, sPos.y);
+                    rowGraphics.arc(cx, cy, nearR, startRad, endRad, true);
+                    rowGraphics.arc(cx, cy, farR, endRad, startRad, false);
+                    rowGraphics.closePath();
+                } else {
+                    rowGraphics.beginFill(colorToHex(color), opacity);
+                    rowGraphics.drawRect(
+                        barStartX,
+                        rowPosition + rowHeight - barHeight - baselineY,
+                        barWidth,
+                        barHeight
+                    );
+                }
             });
-
-            // add graphics of this row
-            // const texture = HGC.services.pixiRenderer.generateTexture(
-            //     rowGraphics,
-            //     HGC.libraries.PIXI.SCALE_MODES.NEAREST,
-            //     RESOLUTION
-            // );
-            // const sprite = new HGC.libraries.PIXI.Sprite(texture);
-
-            // sprite.width = xScale(tileX + tileWidth) - xScale(tileX);
-            // sprite.x = xScale(tileX);
-            // sprite.y = rowPosition;
-            // sprite.height = rowHeight;
-
-            // tile.spriteInfos.push({ sprite: sprite, scaleKey: rowCategory });
-            // tile.graphics.addChild(sprite);
         });
     }
 }

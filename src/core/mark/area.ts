@@ -3,6 +3,7 @@ import { Channel } from '../gemini.schema';
 import * as d3 from 'd3';
 import { group } from 'd3-array';
 import { IsStackedMark, getValueUsingChannel } from '../gemini.schema.guards';
+import { cartesianToPolar } from '../utils/polar';
 
 // TODO: fill the white gap betwee tiles.
 /**
@@ -19,9 +20,18 @@ export function drawArea(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMod
     const data = tm.data();
 
     /* track size */
+    const trackWidth = trackInfo.dimensions[0];
     const trackHeight = trackInfo.dimensions[1];
     const tileSize = trackInfo.tilesetInfo.tile_size;
     const { tileX } = trackInfo.getTilePosAndDimensions(tile.tileData.zoomLevel, tile.tileData.tilePos, tileSize);
+
+    /* circular parameters */
+    const circular = spec._is_circular;
+    const trackInnerRadius = spec.innerRadius ?? 220; // TODO: should default values be filled already
+    const trackOuterRadius = spec.outerRadius ?? 300; // TODO: should be smaller than Math.min(width, height)
+    const trackRingSize = trackOuterRadius - trackInnerRadius;
+    const cx = trackWidth / 2.0;
+    const cy = trackHeight / 2.0;
 
     /* genomic scale */
     const xScale = tm.getChannelScale('x');
@@ -33,19 +43,15 @@ export function drawArea(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMod
     /* color separation */
     const colorCategories = (tm.getChannelDomainArray('color') as string[]) ?? ['___SINGLE_COLOR___'];
 
-    /* information for rescaling tiles */
-    tile.rowScale = tm.getChannelScale('row');
-    tile.spriteInfos = []; // sprites for individual rows or columns
-
     /* constant values */
     const constantOpacity = tm.encodedPIXIProperty('opacity');
     const constantStrokeWidth = tm.encodedPIXIProperty('strokeWidth');
     const constantStroke = tm.encodedPIXIProperty('stroke');
 
     /* render */
+    const graphics = tile.graphics;
     if (IsStackedMark(spec)) {
         // TODO: many parts in this scope are identical as the below `else` statement, so encaptulate this?
-        const rowGraphics = tile.graphics; //new HGC.libraries.PIXI.Graphics(); // only one row for stacked marks
 
         const genomicChannel = tm.getGenomicChannel();
         if (!genomicChannel || !genomicChannel.field) {
@@ -56,7 +62,7 @@ export function drawArea(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMod
         const genomicPosCategories = [...pivotedData.keys()]; // TODO: make sure to be sorted from left to right or top to bottom
 
         // stroke
-        rowGraphics.lineStyle(
+        graphics.lineStyle(
             constantStrokeWidth,
             colorToHex(constantStroke),
             constantOpacity,
@@ -83,63 +89,76 @@ export function drawArea(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMod
                         const x = xScale(xValue);
                         const y = d3.max([tm.encodedPIXIProperty('y', d), 0]); // make should not to overflow
 
-                        if (i === 0) {
-                            // start position of the polygon
-                            areaPointsTop.push([x, rowHeight]); // TODO: confirm if this is correct
-                            areaPointsBottom.push([x, rowHeight]);
-                        }
+                        if (circular) {
+                            if (i === 0) {
+                                // start position of the polygon
+                                const r = trackOuterRadius - (rowHeight / trackHeight) * trackRingSize;
+                                const pos = cartesianToPolar(x, trackWidth, r, cx, cy);
+                                areaPointsTop.push([pos.x, pos.y]);
+                                areaPointsBottom.push([pos.x, pos.y]);
+                            }
 
-                        if (typeof prevYEndByGPos[genomicPosCategory] === 'undefined') {
-                            prevYEndByGPos[genomicPosCategory] = 0;
-                        }
+                            if (typeof prevYEndByGPos[genomicPosCategory] === 'undefined') {
+                                prevYEndByGPos[genomicPosCategory] = 0;
+                            }
 
-                        areaPointsTop.push([x, rowHeight - y - prevYEndByGPos[genomicPosCategory]]);
-                        areaPointsBottom.push([x, rowHeight - prevYEndByGPos[genomicPosCategory]]);
+                            const rTop =
+                                trackOuterRadius -
+                                ((rowHeight - y - prevYEndByGPos[genomicPosCategory]) / trackHeight) * trackRingSize;
+                            const posTop = cartesianToPolar(x, trackWidth, rTop, cx, cy);
+                            areaPointsTop.push([posTop.x, posTop.y]);
 
-                        if (i === array.length - 1) {
-                            // end position of the polygon
-                            areaPointsTop.push([x, rowHeight]);
-                            areaPointsBottom.push([x, rowHeight]);
+                            const rBot =
+                                trackOuterRadius -
+                                ((rowHeight - prevYEndByGPos[genomicPosCategory]) / trackHeight) * trackRingSize;
+                            const posBot = cartesianToPolar(x, trackWidth, rBot, cx, cy);
+                            areaPointsBottom.push([posBot.x, posBot.y]);
+
+                            if (i === array.length - 1) {
+                                // end position of the polygon
+                                const r = trackOuterRadius - (rowHeight / trackHeight) * trackRingSize;
+                                const pos = cartesianToPolar(x, trackWidth, r, cx, cy);
+                                areaPointsTop.push([pos.x, pos.y]);
+                                areaPointsBottom.push([pos.x, pos.y]);
+                            }
+                        } else {
+                            if (i === 0) {
+                                // start position of the polygon
+                                areaPointsTop.push([x, rowHeight]); // TODO: confirm if this is correct
+                                areaPointsBottom.push([x, rowHeight]);
+                            }
+
+                            if (typeof prevYEndByGPos[genomicPosCategory] === 'undefined') {
+                                prevYEndByGPos[genomicPosCategory] = 0;
+                            }
+
+                            areaPointsTop.push([x, rowHeight - y - prevYEndByGPos[genomicPosCategory]]);
+                            areaPointsBottom.push([x, rowHeight - prevYEndByGPos[genomicPosCategory]]);
+
+                            if (i === array.length - 1) {
+                                // end position of the polygon
+                                areaPointsTop.push([x, rowHeight]);
+                                areaPointsBottom.push([x, rowHeight]);
+                            }
                         }
 
                         prevYEndByGPos[genomicPosCategory] += y;
                     });
             });
             const color = tm.encodedValue('color', colorCategory);
-            rowGraphics.beginFill(colorToHex(color), constantOpacity);
-            rowGraphics.drawPolygon([
+            graphics.beginFill(colorToHex(color), constantOpacity);
+            graphics.drawPolygon([
                 ...areaPointsTop.reduce((a, b) => a.concat(b)),
                 ...areaPointsBottom.reverse().reduce((a, b) => a.concat(b))
             ]);
-            rowGraphics.endFill();
+            graphics.endFill();
         });
-
-        // Temporally, we do not convert graphics to sprite until we find a general way
-        // to share global scales across tiles.
-
-        // add graphics of this row
-        // const texture = HGC.services.pixiRenderer.generateTexture(
-        //     rowGraphics,
-        //     HGC.libraries.PIXI.SCALE_MODES.NEAREST,
-        //     RESOLUTION
-        // );
-        // const sprite = new HGC.libraries.PIXI.Sprite(texture);
-
-        // sprite.width = xScale(tileX + tileWidth) - xScale(tileX);
-        // sprite.x = xScale(tileX);
-        // sprite.y = 0;
-        // sprite.height = rowHeight;
-
-        // tile.spriteInfos.push({ sprite: sprite, scaleKey: undefined });
-        // tile.graphics.addChild(sprite);
     } else {
         rowCategories.forEach(rowCategory => {
-            // we are separately drawing each row so that y scale can be more effectively shared across tiles without rerendering from the bottom
-            const rowGraphics = tile.graphics; //new HGC.libraries.PIXI.Graphics();
             const rowPosition = tm.encodedValue('row', rowCategory);
 
             // stroke
-            rowGraphics.lineStyle(
+            graphics.lineStyle(
                 constantStrokeWidth,
                 colorToHex(constantStroke),
                 constantOpacity,
@@ -148,6 +167,7 @@ export function drawArea(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMod
 
             // area marks are drawn for each color
             colorCategories.forEach(colorCategory => {
+                const baselinePoints: number[][] = [];
                 const areaPoints: number[] = [];
 
                 data.filter(
@@ -162,45 +182,58 @@ export function drawArea(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMod
                     const y = d3.min([d3.max([tm.encodedPIXIProperty('y', d), 0]), rowHeight]);
                     const x = tm.encodedPIXIProperty('x', d);
 
-                    if (i === 0) {
-                        // start position of the polygon
-                        areaPoints.push(x, rowPosition + rowHeight);
-                    }
+                    if (circular) {
+                        const baselineR = trackOuterRadius - ((rowPosition + rowHeight) / trackHeight) * trackRingSize;
+                        const baselinePos = cartesianToPolar(x, trackWidth, baselineR, cx, cy);
+                        baselinePoints.push([baselinePos.x, baselinePos.y]);
 
-                    areaPoints.push(x, rowPosition + rowHeight - y);
+                        if (i === 0) {
+                            // start position of the polygon
+                            areaPoints.push(baselinePos.x, baselinePos.y);
+                        }
 
-                    if (i === array.length - 1) {
-                        // close the polygon with a point at the start
-                        const startX = xScale(tileX);
-                        areaPoints.push(x, rowPosition + rowHeight);
-                        areaPoints.push(startX, rowPosition + rowHeight);
+                        const r = trackOuterRadius - ((rowPosition + rowHeight - y) / trackHeight) * trackRingSize;
+                        const pos = cartesianToPolar(x, trackWidth, r, cx, cy);
+                        areaPoints.push(pos.x, pos.y);
+
+                        if (i === array.length - 1) {
+                            // close the polygon with a point at the start
+                            const startX = xScale(tileX);
+
+                            const startR = trackOuterRadius - ((rowPosition + rowHeight) / trackHeight) * trackRingSize;
+                            const curPos = cartesianToPolar(x, trackWidth, startR, cx, cy);
+                            const startPos = cartesianToPolar(startX, trackWidth, startR, cx, cy);
+
+                            areaPoints.push(curPos.x, curPos.y);
+                            areaPoints.push(startPos.x, startPos.y);
+                        }
+                    } else {
+                        if (i === 0) {
+                            // start position of the polygon
+                            areaPoints.push(x, rowPosition + rowHeight);
+                        }
+
+                        areaPoints.push(x, rowPosition + rowHeight - y);
+
+                        if (i === array.length - 1) {
+                            // close the polygon with a point at the start
+                            const startX = xScale(tileX);
+                            areaPoints.push(x, rowPosition + rowHeight);
+                            areaPoints.push(startX, rowPosition + rowHeight);
+                        }
                     }
                 });
 
+                if (circular && baselinePoints.length !== 0) {
+                    // Add baseline points
+                    areaPoints.push(...baselinePoints.reverse().reduce((a, b) => a.concat(b)));
+                }
+
                 const color = tm.encodedValue('color', colorCategory);
-                rowGraphics.beginFill(colorToHex(color), constantOpacity);
-                rowGraphics.drawPolygon(areaPoints);
-                rowGraphics.endFill();
+                graphics.beginFill(colorToHex(color), constantOpacity);
+                graphics.drawPolygon(areaPoints);
+                graphics.endFill();
             });
-
-            // Temporally, we do not convert graphics to sprite until we find a general way
-            // to share global scales across tiles.
-
-            // add graphics of this row
-            // const texture = HGC.services.pixiRenderer.generateTexture(
-            //     rowGraphics,
-            //     HGC.libraries.PIXI.SCALE_MODES.NEAREST,
-            //     RESOLUTION
-            // );
-            // const sprite = new HGC.libraries.PIXI.Sprite(texture);
-
-            // sprite.width = xScale(tileX + tileWidth) - xScale(tileX);
-            // sprite.x = xScale(tileX);
-            // sprite.y = rowPosition;
-            // sprite.height = rowHeight;
-
-            // tile.spriteInfos.push({ sprite: sprite, scaleKey: rowCategory });
-            // tile.graphics.addChild(sprite);
         });
     }
 }

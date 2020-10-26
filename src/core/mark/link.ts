@@ -1,7 +1,6 @@
 import { GeminiTrackModel } from '../gemini-track-model';
 import { Channel } from '../gemini.schema';
 import { getValueUsingChannel } from '../gemini.schema.guards';
-// import { RESOLUTION } from '.';
 
 export function drawLink(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackModel) {
     /* track spec */
@@ -29,10 +28,6 @@ export function drawLink(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMod
     /* row separation */
     const rowCategories: string[] = (tm.getChannelDomainArray('row') as string[]) ?? ['___SINGLE_ROW___'];
     const rowHeight = trackHeight / rowCategories.length;
-
-    /* information for rescaling tiles */
-    tile.rowScale = tm.getChannelScale('row');
-    tile.spriteInfos = []; // sprites for individual rows or columns
 
     // TODO: what is quantitative Y field is used for heatmap?
     // const yCategories =
@@ -119,21 +114,5 @@ export function drawLink(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMod
                 );
             }
         });
-
-        // add graphics of this row
-        // const texture = HGC.services.pixiRenderer.generateTexture(
-        //     rowGraphics,
-        //     HGC.libraries.PIXI.SCALE_MODES.NEAREST,
-        //     RESOLUTION
-        // );
-        // const sprite = new HGC.libraries.PIXI.Sprite(texture);
-
-        // sprite.width = xScale(tileX + tileWidth) - xScale(tileX);
-        // sprite.x = xScale(tileX);
-        // sprite.y = rowPosition;
-        // sprite.height = rowHeight;
-
-        // tile.spriteInfos.push({ sprite: sprite, scaleKey: rowCategory });
-        // tile.graphics.addChild(sprite);
     });
 }

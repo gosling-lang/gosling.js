@@ -1,7 +1,6 @@
 import { GeminiTrackModel } from '../gemini-track-model';
 import { Channel } from '../gemini.schema';
 import { getValueUsingChannel } from '../gemini.schema.guards';
-// import { RESOLUTION } from '.';
 
 export function drawRule(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackModel) {
     /* track spec */
@@ -19,10 +18,6 @@ export function drawRule(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMod
     /* row separation */
     const rowCategories: string[] = (tm.getChannelDomainArray('row') as string[]) ?? ['___SINGLE_ROW___'];
     const rowHeight = trackHeight / rowCategories.length;
-
-    /* information for rescaling tiles */
-    tile.rowScale = tm.getChannelScale('row');
-    tile.spriteInfos = []; // sprites for individual rows or columns
 
     /* style */
     const dashed = spec.style?.dashed;

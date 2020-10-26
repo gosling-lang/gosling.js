@@ -28,10 +28,6 @@ export function drawText(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMod
     const rowCategories = (tm.getChannelDomainArray('row') as string[]) ?? ['___SINGLE_ROW___'];
     const rowHeight = trackHeight / rowCategories.length;
 
-    /* information for rescaling tiles */
-    tile.rowScale = tm.getChannelScale('row');
-    tile.spriteInfos = []; // sprites for individual rows or columns
-
     /* text styles */
     const localTextStyle = {
         ...TEXT_STYLE_GLOBAL,

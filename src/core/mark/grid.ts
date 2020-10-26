@@ -34,10 +34,6 @@ export function drawGrid(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMod
     /* baseline */
     const baseline = IsChannelDeep(spec.y) ? spec.y.baseline : undefined;
 
-    /* information for rescaling tiles */
-    tile.rowScale = tm.getChannelScale('row');
-    tile.spriteInfos = []; // sprites for individual rows or columns
-
     /* render */
     const x = xScale(tileX);
     const x1 = xScale(tileX + tileWidth);

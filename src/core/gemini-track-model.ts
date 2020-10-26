@@ -114,6 +114,12 @@ export class GeminiTrackModel {
         if (!spec.height) {
             spec.height = 300;
         }
+        if (!spec.innerRadius) {
+            spec.innerRadius = 220;
+        }
+        if (!spec.outerRadius) {
+            spec.outerRadius = 300;
+        }
 
         // TODO: better way to deal with axis?
         const xOrY = this.getGenomicChannelKey();

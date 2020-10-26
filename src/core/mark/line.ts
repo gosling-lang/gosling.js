@@ -1,7 +1,7 @@
 import { GeminiTrackModel } from '../gemini-track-model';
 import { Channel } from '../gemini.schema';
 import { getValueUsingChannel } from '../gemini.schema.guards';
-// import { RESOLUTION } from '.';
+import { cartesianToPolar } from '../utils/polar';
 
 export function drawLine(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackModel) {
     /* track spec */
@@ -14,6 +14,7 @@ export function drawLine(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMod
     const data = tm.data();
 
     /* track size */
+    const trackWidth = trackInfo.dimensions[0];
     const trackHeight = trackInfo.dimensions[1];
     const tileSize = trackInfo.tilesetInfo.tile_size;
     const { tileX, tileWidth } = trackInfo.getTilePosAndDimensions(
@@ -21,6 +22,14 @@ export function drawLine(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMod
         tile.tileData.tilePos,
         tileSize
     );
+
+    /* circular parameters */
+    const circular = spec._is_circular;
+    const trackInnerRadius = spec.innerRadius ?? 220; // TODO: should default values be filled already
+    const trackOuterRadius = spec.outerRadius ?? 300; // TODO: should be smaller than Math.min(width, height)
+    const trackRingSize = trackOuterRadius - trackInnerRadius;
+    const cx = trackWidth / 2.0;
+    const cy = trackHeight / 2.0;
 
     /* genomic scale */
     const xScale = tm.getChannelScale('x');
@@ -32,10 +41,6 @@ export function drawLine(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMod
     /* color separation */
     const colorCategories = (tm.getChannelDomainArray('color') as string[]) ?? ['___SINGLE_COLOR___'];
 
-    /* information for rescaling tiles */
-    tile.rowScale = tm.getChannelScale('row');
-    tile.spriteInfos = []; // sprites for individual rows or columns
-
     /* background */
     if (tm.encodedValue('background')) {
         tile.graphics.beginFill(colorToHex(tm.encodedValue('background')), 1);
@@ -43,9 +48,8 @@ export function drawLine(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMod
     }
 
     /* render */
+    const graphics = tile.graphics;
     rowCategories.forEach(rowCategory => {
-        // we are separately drawing each row so that y scale can be more effectively shared across tiles without rerendering from the bottom
-        const rowGraphics = tile.graphics;
         const rowPosition = tm.encodedValue('row', rowCategory);
 
         // line marks are drawn for each color
@@ -70,17 +74,28 @@ export function drawLine(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMod
                     const color = tm.encodedPIXIProperty('color', d); // should be identical for a single line
                     const opacity = tm.encodedPIXIProperty('opacity', d);
 
-                    rowGraphics.lineStyle(
+                    graphics.lineStyle(
                         size,
                         colorToHex(color),
                         opacity,
                         1 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
                     );
 
-                    if (i === 0) {
-                        rowGraphics.moveTo(x, rowPosition + rowHeight - y);
+                    if (circular) {
+                        const r = trackOuterRadius - ((rowPosition + rowHeight - y) / trackHeight) * trackRingSize;
+                        const pos = cartesianToPolar(x, trackWidth, r, cx, cy);
+
+                        if (i === 0) {
+                            graphics.moveTo(pos.x, pos.y);
+                        } else {
+                            graphics.lineTo(pos.x, pos.y);
+                        }
                     } else {
-                        rowGraphics.lineTo(x, rowPosition + rowHeight - y);
+                        if (i === 0) {
+                            graphics.moveTo(x, rowPosition + rowHeight - y);
+                        } else {
+                            graphics.lineTo(x, rowPosition + rowHeight - y);
+                        }
                     }
                 });
         });
