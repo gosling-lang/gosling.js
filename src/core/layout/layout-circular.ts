@@ -2,7 +2,12 @@ import * as d3 from 'd3';
 import { GeminiSpec, Track, BasicSingleTrack } from '../gemini.schema';
 import { BoundingBox } from '../utils/bounding-box';
 import { DEFAULT_TRACK_GAP } from './defaults';
-import { TRACK_BG_STYLE } from './layout';
+
+export const TRACK_BG_STYLE = {
+    background: (track: BasicSingleTrack) => track.style?.background ?? 'white',
+    stroke: (track: BasicSingleTrack) => track.style?.stroke ?? '#e0e0e0',
+    strokeWidth: (track: BasicSingleTrack) => track.style?.strokeWidth ?? 0.5
+};
 
 interface ArcInfo {
     innerRadius: number;

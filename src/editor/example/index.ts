@@ -12,6 +12,7 @@ import { EXAMPLE_UPSET } from './upset';
 import { EXAMPLE_LOGO_LIKE } from './text-stretch';
 import { EXAMPLE_CIRCOS } from './circos';
 import { EXAMPLE_CIRCOS_MANY } from './circos-many-rows';
+import { EXAMPLE_CIRCOS_3 } from './circos-2';
 
 export const examples: ReadonlyArray<{
     name: string;
@@ -73,13 +74,20 @@ export const examples: ReadonlyArray<{
         name: 'Basic Circular Marks',
         spec: EXAMPLE_CIRCOS,
         underDevelopment: true,
-        forceShow: false
+        forceShow: true
     },
     {
         name: 'Basic Circular Marks 2',
         spec: EXAMPLE_CIRCOS_MANY,
         underDevelopment: true,
         forceShow: true
+    },
+    {
+        name: 'Basic Circular Marks 3',
+        spec: EXAMPLE_CIRCOS_3,
+        hidden: true,
+        underDevelopment: true,
+        forceShow: false
     },
     {
         name: 'UpSet-like Plot',

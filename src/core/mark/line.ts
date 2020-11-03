@@ -78,7 +78,7 @@ export function drawLine(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMod
                         size,
                         colorToHex(color),
                         opacity,
-                        1 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
+                        0.5 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
                     );
 
                     if (circular) {

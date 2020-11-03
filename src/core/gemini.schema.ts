@@ -162,7 +162,7 @@ export interface BasicSingleTrack {
     // Styling
     style?: TrackStyle;
 
-    // experimental/internal options
+    // Specs internally used
     _is_circular?: boolean;
 }
 

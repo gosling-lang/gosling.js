@@ -50,8 +50,7 @@ const CIRCOS_HEATMAP: Track = {
 
     outerRadius,
     innerRadius,
-    zoomable: false,
-    _is_circular: true
+    zoomable: false
 } as Track;
 
 const CIRCOS_LINE: Track = {
@@ -75,8 +74,7 @@ const CIRCOS_LINE: Track = {
 
     outerRadius,
     innerRadius,
-    zoomable: false,
-    _is_circular: true
+    zoomable: false
 } as Track;
 
 const IDEOGRAM: Track = {
@@ -153,15 +151,9 @@ const IDEOGRAM: Track = {
 };
 
 export const EXAMPLE_CIRCOS: GeminiSpec = {
-    layout: { type: 'circular', direction: 'horizontal', wrap: 3 },
+    layout: { type: 'circular', direction: 'vertical' },
     tracks: [
         { ...IDEOGRAM, span: 3 },
-        // {
-        //     ...CIRCOS_HEATMAP,
-        //     height: 60,
-        //     x: { ...CIRCOS_HEATMAP.x, axis: 'top' },
-        //     _is_circular: false
-        // },
         CIRCOS_HEATMAP,
         CIRCOS_LINE,
         { ...CIRCOS_LINE, mark: 'area', row: undefined },
@@ -174,5 +166,5 @@ export const EXAMPLE_CIRCOS: GeminiSpec = {
         },
         { ...CIRCOS_LINE, mark: 'bar' },
         { ...CIRCOS_LINE, mark: 'bar', row: undefined /* color: { ...CIRCOS_LINE.color, legend: true } */ }
-    ]
+    ].slice(1)
 } as GeminiSpec;

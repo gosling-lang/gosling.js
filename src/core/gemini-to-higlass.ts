@@ -12,7 +12,7 @@ import { IsDataDeep, IsChannelDeep } from './gemini.schema.guards';
  */
 export function geminiToHiGlass(
     hgModel: HiGlassModel,
-    gm: Track,
+    gmTrack: Track,
     bb: BoundingBox,
     layout: RelativePosition
 ): HiGlassModel {
@@ -20,7 +20,7 @@ export function geminiToHiGlass(
     // ...
 
     // we only look into the first resolved spec to get information, such as size of the track
-    const firstResolvedSpec = resolveSuperposedTracks(gm)[0];
+    const firstResolvedSpec = resolveSuperposedTracks(gmTrack)[0];
 
     if (IsDataDeep(firstResolvedSpec.data) && firstResolvedSpec.data.url) {
         // add a default view
@@ -45,13 +45,13 @@ export function geminiToHiGlass(
             width: bb.width,
             height: bb.height,
             options: {
-                spec: { ...gm, data: undefined }
+                spec: { ...gmTrack, data: undefined }
             }
         };
 
-        if (gm.data && IsDataDeep(gm.data) && gm.data.type === 'csv') {
+        if (gmTrack.data && IsDataDeep(gmTrack.data) && gmTrack.data.type === 'csv') {
             // use a CSV data fetcher
-            hgTrack.data = gm.data;
+            hgTrack.data = gmTrack.data;
         }
 
         hgModel

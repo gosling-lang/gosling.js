@@ -18,7 +18,7 @@ import { HiGlassSpec } from '../core/higlass.schema';
 import GeminiSchema from '../../build/gemini.schema.json';
 import { validateSpec, Validity } from '../core/utils/validate';
 import './editor.css';
-import { renderLayout } from '../core/layout/layout';
+import { renderView } from '../core/layout/view';
 import stripJsonComments from 'strip-json-comments';
 
 /**
@@ -74,7 +74,7 @@ function Editor() {
         }
         if (!editedGm) return;
 
-        renderLayout(editedGm as GeminiSpec, (newHg: HiGlassSpec) => {
+        renderView(editedGm as GeminiSpec, (newHg: HiGlassSpec) => {
             setHg(newHg);
         });
     }, [gm]);

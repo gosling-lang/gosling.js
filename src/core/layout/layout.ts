@@ -1,20 +1,14 @@
-import { GeminiSpec, Track, Layout, BasicSingleTrack } from '../gemini.schema';
-import { renderLinearLayout } from './layout-linear';
+import { GeminiSpec, Track, Layout } from '../gemini.schema';
+import { renderHiGlass } from './higlass';
+import { getTrackArrangementInfo, TrackInfo } from '../utils/bounding-box';
 import { HiGlassSpec } from '../higlass.schema';
 
-export const TRACK_BG_STYLE = {
-    background: (track: BasicSingleTrack) => track.style?.background ?? 'white',
-    stroke: (track: BasicSingleTrack) => track.style?.stroke ?? '#e0e0e0',
-    strokeWidth: (track: BasicSingleTrack) => track.style?.strokeWidth ?? 0.5
-};
+export function renderLayout(spec: GeminiSpec, setHg: (hg: HiGlassSpec) => void) {
+    // generate layout data
+    const trackInfo = getTrackArrangementInfo(spec, true) as TrackInfo[];
 
-export function renderLayout(gm: GeminiSpec, setHg: (hg: HiGlassSpec) => void) {
-    if (gm.layout?.type === 'circular') {
-        // EXPERIMENTAL
-        renderLinearLayout(gm, setHg);
-    } else {
-        renderLinearLayout(gm, setHg);
-    }
+    // render HiGlass tracks
+    renderHiGlass(trackInfo, setHg);
 }
 
 /**

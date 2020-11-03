@@ -1,4 +1,16 @@
-import { GlyphElement } from '../gemini.schema';
+import { GeminiSpec, GlyphElement } from '../gemini.schema';
+
+/**
+ * Transfer options from the root-level to track-level.
+ */
+export function downstreamSpecAssignments(spec: GeminiSpec) {
+    if (spec.layout?.type === 'circular') {
+        // We need to let individual tracks know that they are rendered in a circular layout
+        spec.tracks.forEach(t => {
+            t._is_circular = true;
+        });
+    }
+}
 
 /**
  * Domains and ranges in conditional marks are moved into `select` option for the compiling simplicity.

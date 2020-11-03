@@ -42,8 +42,8 @@ export function drawCircularOutlines(HGC: any, trackInfo: any, tile: any, tm: Ge
 
     graphics.lineStyle(
         1,
-        colorToHex('#DBDBDB'),
-        0.7, // alpha
+        colorToHex(spec.style?.outline ?? '#DBDBDB'),
+        0.4, // alpha
         0 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
     );
     graphics.beginFill(colorToHex('white'), 0);
@@ -56,7 +56,7 @@ export function drawCircularOutlines(HGC: any, trackInfo: any, tile: any, tm: Ge
     graphics.lineStyle(
         0.5,
         colorToHex('black'),
-        1, // alpha
+        0, // 1, // alpha
         0.5 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
     );
     graphics.beginFill(colorToHex('white'), 0);
@@ -91,12 +91,12 @@ export function drawCircularOutlines(HGC: any, trackInfo: any, tile: any, tm: Ge
     graphics.closePath();
 
     // center white hole
-    // graphics.lineStyle(
-    //     1,
-    //     colorToHex('#DBDBDB'),
-    //     0.7, // alpha
-    //     0 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
-    // );
-    // graphics.beginFill(colorToHex('white'), 1);
-    // graphics.drawCircle(cx, cy, 250);
+    graphics.lineStyle(
+        1,
+        colorToHex('#DBDBDB'),
+        0, // alpha
+        0 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
+    );
+    graphics.beginFill(colorToHex('white'), 1);
+    graphics.drawCircle(cx, cy, innerRadius - 1);
 }
