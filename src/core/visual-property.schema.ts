@@ -13,6 +13,7 @@ export type PIXIVisualProperty =
     /* mark-specific visual properties */
     | 'x-center' // center x position of visual marks
     | 'y-center' // center y position of visual marks
+    | 'p-size' // radius of point marks
     | 'x-start' // start x position of visual marks
     | 'height' // actual height of visual marks
     | 'width'; // actual width of visual marks

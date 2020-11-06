@@ -68,7 +68,7 @@ export function drawRect(HGC: any, trackInfo: any, tile: any, model: GeminiTrack
             const alphaTransition = model.markVisibility(d, { width: rectWidth });
             const actualOpacity = Math.min(alphaTransition, opacity);
 
-            if (actualOpacity === 0 || rectHeight === 0 || rectWidth === 0) {
+            if (actualOpacity === 0 || rectHeight === 0 || rectWidth <= 0.01) {
                 // do not need to draw invisible objects
                 return;
             }

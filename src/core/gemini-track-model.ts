@@ -487,6 +487,14 @@ export class GeminiTrackModel {
                             else if (spec.mark === 'triangle-r') value = undefined;
                             else if (spec.mark === 'triangle-l') value = undefined;
                             else if (spec.mark === 'triangle-d') value = undefined;
+                            // Points in this case are stretched from `x` to `xe`
+                            else if (
+                                spec.stretch &&
+                                spec.mark === 'point' &&
+                                IsChannelDeep(spec.x) &&
+                                IsChannelDeep(spec.xe)
+                            )
+                                value = undefined;
                             else value = CHANNEL_DEFAULTS.SIZE;
                             break;
                         case 'color':

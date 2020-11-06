@@ -8000,10 +8000,10 @@ higlass-register@^0.3.0:
   resolved "https://registry.yarnpkg.com/higlass-register/-/higlass-register-0.3.0.tgz#6c728ad911359bd7e88749aceaffd8812415c52a"
   integrity sha512-D4I+ATxFuTn+Q6p8Y9rUa+X3b3cqMqhu9Tya6uHtvgV5cs39Mk7i6Z+7PMA8YuwQd5gLMSxCm2lCyWmxRVBQsQ==
 
-higlass@^1.11.1:
-  version "1.11.1"
-  resolved "https://registry.yarnpkg.com/higlass/-/higlass-1.11.1.tgz#ecdc38c0f8c1ba272b9c818ac9f3a92ec65aff49"
-  integrity sha512-k+nD5hCYmb/Q6K8td2hrA/ZNkLaguWL+AlYLTFX/tKZeBmqFdKmTwncSAoa6JkmDYN1d+jgzqwwCCbzF9BsGVA==
+higlass@^1.11.3:
+  version "1.11.3"
+  resolved "https://registry.yarnpkg.com/higlass/-/higlass-1.11.3.tgz#179e8bf4bd7292aaf9a97528299c750c09b6f598"
+  integrity sha512-NqtijUuJxb8Cet/0hOhPLgoB8slPnjxFCYTE6LXXv+AJyAs1iRWDndlrQEb0UlU0n5Meuh9Bg3j6R2UGxDXNRA==
   dependencies:
     ajv "^6.10.0"
     box-intersect "^1.0.1"

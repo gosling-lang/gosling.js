@@ -2485,6 +2485,9 @@
         "background": {
           "type": "string"
         },
+        "circularLink": {
+          "type": "boolean"
+        },
         "curve": {
           "enum": [
             "top",

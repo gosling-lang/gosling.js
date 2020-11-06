@@ -48,7 +48,7 @@ export const examples: ReadonlyArray<{
         name: 'Between and Within Links',
         spec: EXAMPLE_LINKS,
         underDevelopment: true,
-        forceShow: false
+        forceShow: true
     },
     {
         name: 'Semantic Zooming',
@@ -73,7 +73,7 @@ export const examples: ReadonlyArray<{
         name: 'Basic Circular Marks',
         spec: EXAMPLE_CIRCOS,
         underDevelopment: true,
-        forceShow: false
+        forceShow: true
     },
     {
         name: 'Basic Circular Marks 2',

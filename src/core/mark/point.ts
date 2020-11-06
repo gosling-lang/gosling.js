@@ -4,15 +4,15 @@ import { getValueUsingChannel } from '../gemini.schema.guards';
 import { cartesianToPolar } from '../utils/polar';
 import { PIXIVisualProperty } from '../visual-property.schema';
 
-export function drawPoint(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackModel) {
+export function drawPoint(HGC: any, trackInfo: any, tile: any, model: GeminiTrackModel) {
     /* track spec */
-    const spec = tm.spec();
+    const spec = model.spec();
 
     /* helper */
     const { colorToHex } = HGC.utils;
 
     /* data */
-    const data = tm.data();
+    const data = model.data();
 
     /* track size */
     const trackWidth = trackInfo.dimensions[0];
@@ -27,18 +27,18 @@ export function drawPoint(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMo
     const tcy = trackHeight / 2.0;
 
     /* row separation */
-    const rowCategories = (tm.getChannelDomainArray('row') as string[]) ?? ['___SINGLE_ROW___'];
+    const rowCategories = (model.getChannelDomainArray('row') as string[]) ?? ['___SINGLE_ROW___'];
     const rowHeight = trackHeight / rowCategories.length;
 
     /* constant values */
-    const constantStrokeWidth = tm.encodedPIXIProperty('strokeWidth');
-    const constantStroke = tm.encodedPIXIProperty('stroke');
+    const constantStrokeWidth = model.encodedPIXIProperty('strokeWidth');
+    const constantStroke = model.encodedPIXIProperty('stroke');
 
     /* render */
-    const graphics = tile.graphics;
+    const g = tile.graphics;
 
     // stroke
-    graphics.lineStyle(
+    g.lineStyle(
         constantStrokeWidth,
         colorToHex(constantStroke),
         1, // alpha
@@ -46,51 +46,57 @@ export function drawPoint(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMo
     );
 
     rowCategories.forEach(rowCategory => {
-        const rowPosition = tm.encodedValue('row', rowCategory);
+        const rowPosition = model.encodedValue('row', rowCategory);
 
         data.filter(
             d =>
                 !getValueUsingChannel(d, spec.row as Channel) ||
                 (getValueUsingChannel(d, spec.row as Channel) as string) === rowCategory
         ).forEach(d => {
-            const cx = tm.encodedPIXIProperty('x-center', d);
-            const cy = tm.encodedPIXIProperty('y-center', d);
-            const color = tm.encodedPIXIProperty('color', d);
-            const size = tm.encodedPIXIProperty('size', d);
-            const opacity = tm.encodedPIXIProperty('opacity', d);
+            const cx = model.encodedPIXIProperty('x-center', d);
+            const cy = model.encodedPIXIProperty('y-center', d);
+            const color = model.encodedPIXIProperty('color', d);
+            const size = model.encodedPIXIProperty('p-size', d);
+            const opacity = model.encodedPIXIProperty('opacity', d);
 
-            // Don't draw invisible marks
-            if (size === 0 || opacity === 0) return;
+            if (size <= 0.1 || opacity === 0 || cx + size < 0 || cx - size > trackWidth) {
+                // Don't draw invisible marks
+                return;
+            }
 
             if (circular) {
                 const r = trackOuterRadius - ((rowPosition + rowHeight - cy) / trackHeight) * trackRingSize;
                 const pos = cartesianToPolar(cx, trackWidth, r, tcx, tcy);
 
-                graphics.beginFill(colorToHex(color), opacity);
-                graphics.drawCircle(pos.x, pos.y, size);
+                g.beginFill(colorToHex(color), opacity);
+                g.drawCircle(pos.x, pos.y, size);
             } else {
-                graphics.beginFill(colorToHex(color), opacity);
-                graphics.drawCircle(cx, rowPosition + rowHeight - cy, size);
+                g.beginFill(colorToHex(color), opacity);
+                g.drawCircle(cx, rowPosition + rowHeight - cy, size);
             }
         });
     });
 }
 
 export function pointProperty(
-    gm: GeminiTrackModel,
+    model: GeminiTrackModel,
     propertyKey: PIXIVisualProperty,
     datum?: { [k: string]: string | number }
 ) {
+    const xe = model.visualPropertyByChannel('xe', datum);
+    const x = model.visualPropertyByChannel('x', datum);
+    const size = model.visualPropertyByChannel('size', datum);
+
     // priority of channels
     switch (propertyKey) {
         case 'x-center':
-            const xe = gm.visualPropertyByChannel('xe', datum);
-            const x = gm.visualPropertyByChannel('x', datum);
             return xe ? (xe + x) / 2.0 : x;
         case 'y-center':
-            const ye = gm.visualPropertyByChannel('ye', datum);
-            const y = gm.visualPropertyByChannel('y', datum);
+            const ye = model.visualPropertyByChannel('ye', datum);
+            const y = model.visualPropertyByChannel('y', datum);
             return ye ? (ye + y) / 2.0 : y;
+        case 'p-size':
+            return xe && model.spec().stretch ? (xe - x) / 2.0 : size;
         default:
             return undefined;
     }
