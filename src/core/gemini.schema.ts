@@ -185,6 +185,7 @@ export interface TrackStyle {
     align?: 'left' | 'right';
     dy?: number;
     outline?: string;
+    circularLink?: boolean;
     // below options could instead be used with channel options (e.g., size, stroke, strokeWidth)
     textFontSize?: number;
     textStroke?: string;

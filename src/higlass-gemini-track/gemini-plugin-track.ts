@@ -34,6 +34,8 @@ function GeminiTrack(HGC: any, ...args: any[]): any {
 
             this.textGraphics = [];
             this.textsBeingUsed = 0; // this variable is being used to improve the performance of text rendering
+
+            HGC.libraries.PIXI.GRAPHICS_CURVES.adaptive = false;
         }
 
         initTile(tile: any) {

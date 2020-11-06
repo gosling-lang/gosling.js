@@ -211,7 +211,8 @@ export class HiGlassModel {
                 chromInfoPath: this.hg.chromInfoPath,
                 options: {
                     color: 'black',
-                    tickColor: 'black'
+                    tickColor: 'black',
+                    reverseOrientation: position === 'bottom' ? true : false
                 }
             }
         ];
