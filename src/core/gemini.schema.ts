@@ -6,6 +6,8 @@ import { GLYPH_LOCAL_PRESET_TYPE, GLYPH_HIGLASS_PRESET_TYPE } from '../editor/ex
 export interface GeminiSpec {
     layout?: Layout;
     tracks: Track[];
+    width?: number;
+    height?: number;
     description?: string;
 }
 
@@ -15,6 +17,14 @@ export interface GeminiSpec {
 export interface Layout {
     type: 'linear' | 'circular';
     direction: 'vertical' | 'horizontal';
+
+    colGaps?: number[];
+    rowGaps?: number[];
+
+    colSizes?: number[];
+    rowSizes?: number[];
+
+    // !deprecated
     wrap?: number;
     gap?: number;
 }
@@ -116,9 +126,11 @@ export interface BasicSingleTrack {
     // Layout
     width?: number;
     height?: number;
-    span?: number;
     outerRadius?: number; // circular layout
     innerRadius?: number; // circular layout
+    colSpan?: number;
+    rowSpan?: number;
+    span?: number; // !deprecated
 
     // Data
     data: DataDeep | Datum[];

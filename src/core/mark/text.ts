@@ -22,7 +22,15 @@ export function drawText(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMod
     const data = tm.data();
 
     /* track size */
-    const trackHeight = trackInfo.dimensions[1];
+    const [, trackHeight] = trackInfo.dimensions;
+
+    /* circular parameters */
+    // const circular = spec._is_circular;
+    // const trackInnerRadius = spec.innerRadius ?? 220;
+    // const trackOuterRadius = spec.outerRadius ?? 300; // TODO: should be smaller than Math.min(width, height)
+    // const trackRingSize = trackOuterRadius - trackInnerRadius;
+    // const tcx = trackWidth / 2.0;
+    // const tcy = trackHeight / 2.0;
 
     /* row separation */
     const rowCategories = (tm.getChannelDomainArray('row') as string[]) ?? ['___SINGLE_ROW___'];
@@ -172,7 +180,7 @@ export function drawText(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMod
                 textGraphic.alpha = alphaTransition;
                 textGraphic.anchor.x = 0.5;
                 textGraphic.anchor.y = 0.5;
-                textGraphic.position.x = cx; // xe ? (xe + x) / 2.0 : x;
+                textGraphic.position.x = cx;
                 textGraphic.position.y = rowPosition + rowHeight - y;
 
                 rowGraphics.addChild(textGraphic);

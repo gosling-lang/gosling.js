@@ -1,11 +1,11 @@
 import { GeminiSpec, Track, Layout } from '../gemini.schema';
 import { renderHiGlass } from './higlass';
-import { getTrackArrangementInfo, TrackInfo } from '../utils/bounding-box';
+import { getTrackArrangementInfo } from '../utils/bounding-box';
 import { HiGlassSpec } from '../higlass.schema';
 
 export function renderLayout(spec: GeminiSpec, setHg: (hg: HiGlassSpec) => void) {
     // generate layout data
-    const trackInfo = getTrackArrangementInfo(spec, true) as TrackInfo[];
+    const trackInfo = getTrackArrangementInfo(spec);
 
     // render HiGlass tracks
     renderHiGlass(trackInfo, setHg);

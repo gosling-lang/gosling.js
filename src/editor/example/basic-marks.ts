@@ -55,9 +55,12 @@ export const EXAMPLE_BASIC_AREA: Track = {
 };
 
 export const EXMAPLE_BASIC_MARKS: GeminiSpec = {
+    width: 1000,
+    height: 1000,
     layout: {
         type: 'linear',
-        direction: 'vertical',
+        direction: 'horizontal',
+        wrap: 2,
         gap: 30
     },
     tracks: [

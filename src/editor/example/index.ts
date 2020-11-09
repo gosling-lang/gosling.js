@@ -26,7 +26,7 @@ export const examples: ReadonlyArray<{
         name: 'Basic Marks',
         spec: EXMAPLE_BASIC_MARKS,
         hidden: false,
-        forceShow: false
+        forceShow: true
     },
     {
         name: 'Text Marks',
@@ -49,7 +49,7 @@ export const examples: ReadonlyArray<{
         name: 'Between and Within Links',
         spec: EXAMPLE_LINKS,
         underDevelopment: true,
-        forceShow: true
+        forceShow: false
     },
     {
         name: 'Semantic Zooming',

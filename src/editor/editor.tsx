@@ -13,7 +13,7 @@ import { GeminiSpec } from '../core/gemini.schema';
 import { debounce } from 'lodash';
 import { examples } from './example';
 import { replaceTemplate } from '../core/utils';
-import { BoundingBox, getTrackArrangementInfo } from '../core/utils/bounding-box';
+import { getEntireBoundingBox } from '../core/utils/bounding-box';
 import { HiGlassSpec } from '../core/higlass.schema';
 import GeminiSchema from '../../build/gemini.schema.json';
 import { validateSpec, Validity } from '../core/utils/validate';
@@ -84,7 +84,7 @@ function Editor() {
      */
     const hglass = useMemo(() => {
         const editedGm = replaceTemplate(JSON.parse(stripJsonComments(gm)));
-        const bb = getTrackArrangementInfo(editedGm) as BoundingBox;
+        const bb = getEntireBoundingBox(editedGm);
         return hg && bb ? (
             <>
                 <div

@@ -142,10 +142,11 @@ const IDEOGRAM: Track = {
             opacity: { value: 0.2 }
         }
     ],
-    x: { field: 'Basepair_start', type: 'genomic', axis: 'top' },
+    x: { field: 'Basepair_start', type: 'genomic', axis: 'top', domain: { chromosome: '1' } },
     xe: { field: 'Basepair_stop', type: 'genomic' },
     stroke: { value: 'gray' },
     strokeWidth: { value: 0.5 },
+    style: { outline: 'white' },
     width: width * 3,
     height: 60
 };
@@ -153,7 +154,7 @@ const IDEOGRAM: Track = {
 export const EXAMPLE_CIRCOS: GeminiSpec = {
     layout: { type: 'circular', direction: 'vertical' },
     tracks: [
-        { ...IDEOGRAM, span: 3 },
+        { ...IDEOGRAM, span: 3, width, height: 350, outerRadius, innerRadius: 80 },
         CIRCOS_HEATMAP,
         CIRCOS_LINE,
         { ...CIRCOS_LINE, mark: 'area', row: undefined },
@@ -166,5 +167,5 @@ export const EXAMPLE_CIRCOS: GeminiSpec = {
         },
         { ...CIRCOS_LINE, mark: 'bar' },
         { ...CIRCOS_LINE, mark: 'bar', row: undefined /* color: { ...CIRCOS_LINE.color, legend: true } */ }
-    ].slice(1)
+    ] //.slice(1)
 } as GeminiSpec;

@@ -129,6 +129,9 @@
         "background": {
           "$ref": "#/definitions/ChannelValue"
         },
+        "colSpan": {
+          "type": "number"
+        },
         "color": {
           "$ref": "#/definitions/Channel"
         },
@@ -174,6 +177,9 @@
         },
         "row": {
           "$ref": "#/definitions/Channel"
+        },
+        "rowSpan": {
+          "type": "number"
         },
         "size": {
           "$ref": "#/definitions/Channel"
@@ -604,6 +610,9 @@
         "description": {
           "type": "string"
         },
+        "height": {
+          "type": "number"
+        },
         "layout": {
           "$ref": "#/definitions/Layout"
         },
@@ -612,6 +621,9 @@
             "$ref": "#/definitions/Track"
           },
           "type": "array"
+        },
+        "width": {
+          "type": "number"
         }
       },
       "required": [
@@ -908,6 +920,18 @@
       "additionalProperties": false,
       "description": "Layout specification for multiple tracks",
       "properties": {
+        "colGaps": {
+          "items": {
+            "type": "number"
+          },
+          "type": "array"
+        },
+        "colSizes": {
+          "items": {
+            "type": "number"
+          },
+          "type": "array"
+        },
         "direction": {
           "enum": [
             "vertical",
@@ -917,6 +941,18 @@
         },
         "gap": {
           "type": "number"
+        },
+        "rowGaps": {
+          "items": {
+            "type": "number"
+          },
+          "type": "array"
+        },
+        "rowSizes": {
+          "items": {
+            "type": "number"
+          },
+          "type": "array"
         },
         "type": {
           "enum": [
@@ -1282,6 +1318,16 @@
             }
           ]
         },
+        "colSpan": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/definitions/Channel"
+            }
+          ]
+        },
         "color": {
           "$ref": "#/definitions/Channel"
         },
@@ -1387,6 +1433,16 @@
         "row": {
           "$ref": "#/definitions/Channel"
         },
+        "rowSpan": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/definitions/Channel"
+            }
+          ]
+        },
         "size": {
           "$ref": "#/definitions/Channel"
         },
@@ -1444,6 +1500,16 @@
                 "anyOf": [
                   {
                     "$ref": "#/definitions/ChannelValue"
+                  },
+                  {
+                    "$ref": "#/definitions/Channel"
+                  }
+                ]
+              },
+              "colSpan": {
+                "anyOf": [
+                  {
+                    "type": "number"
                   },
                   {
                     "$ref": "#/definitions/Channel"
@@ -1554,6 +1620,16 @@
               },
               "row": {
                 "$ref": "#/definitions/Channel"
+              },
+              "rowSpan": {
+                "anyOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "$ref": "#/definitions/Channel"
+                  }
+                ]
               },
               "size": {
                 "$ref": "#/definitions/Channel"
@@ -1762,6 +1838,16 @@
             }
           ]
         },
+        "colSpan": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/definitions/Channel"
+            }
+          ]
+        },
         "color": {
           "$ref": "#/definitions/Channel"
         },
@@ -1867,6 +1953,16 @@
         "row": {
           "$ref": "#/definitions/Channel"
         },
+        "rowSpan": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "$ref": "#/definitions/Channel"
+            }
+          ]
+        },
         "size": {
           "$ref": "#/definitions/Channel"
         },
@@ -1924,6 +2020,16 @@
                 "anyOf": [
                   {
                     "$ref": "#/definitions/ChannelValue"
+                  },
+                  {
+                    "$ref": "#/definitions/Channel"
+                  }
+                ]
+              },
+              "colSpan": {
+                "anyOf": [
+                  {
+                    "type": "number"
                   },
                   {
                     "$ref": "#/definitions/Channel"
@@ -2035,6 +2141,16 @@
               "row": {
                 "$ref": "#/definitions/Channel"
               },
+              "rowSpan": {
+                "anyOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "$ref": "#/definitions/Channel"
+                  }
+                ]
+              },
               "size": {
                 "$ref": "#/definitions/Channel"
               },
@@ -2092,6 +2208,16 @@
                       "anyOf": [
                         {
                           "$ref": "#/definitions/ChannelValue"
+                        },
+                        {
+                          "$ref": "#/definitions/Channel"
+                        }
+                      ]
+                    },
+                    "colSpan": {
+                      "anyOf": [
+                        {
+                          "type": "number"
                         },
                         {
                           "$ref": "#/definitions/Channel"
@@ -2202,6 +2328,16 @@
                     },
                     "row": {
                       "$ref": "#/definitions/Channel"
+                    },
+                    "rowSpan": {
+                      "anyOf": [
+                        {
+                          "type": "number"
+                        },
+                        {
+                          "$ref": "#/definitions/Channel"
+                        }
+                      ]
                     },
                     "size": {
                       "$ref": "#/definitions/Channel"
