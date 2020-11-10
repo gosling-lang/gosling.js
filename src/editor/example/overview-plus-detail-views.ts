@@ -6,7 +6,9 @@ export const EXAMPLE_OVERVIEW_DEATIL: GeminiSpec = {
     layout: {
         type: 'linear',
         direction: 'horizontal',
-        wrap: 3
+        wrap: 2,
+        rowSizes: [60, 180, 180],
+        rowGaps: [30, 0]
     },
     tracks: [
         {
@@ -32,11 +34,8 @@ export const EXAMPLE_OVERVIEW_DEATIL: GeminiSpec = {
                     opacity: { value: 0.2 }
                 }
             ],
-            span: 3
+            span: 2
         },
-        { mark: 'empty', data: { type: 'csv', url: '' }, width: 50, height: 100 },
-        { mark: 'empty', data: { type: 'csv', url: '' }, width: 50, height: 100 },
-        { mark: 'empty', data: { type: 'csv', url: '' }, width: 50, height: 100 },
         {
             title: 'Detail View 1',
             data: {
@@ -101,7 +100,6 @@ export const EXAMPLE_OVERVIEW_DEATIL: GeminiSpec = {
                 stroke: 'blue'
             }
         },
-        { mark: 'empty', data: { type: 'csv', url: '' }, width: 50, height: 50 },
         {
             title: 'Detail View 2',
             data: {
@@ -196,7 +194,6 @@ export const EXAMPLE_OVERVIEW_DEATIL: GeminiSpec = {
                 stroke: 'blue'
             }
         },
-        { mark: 'empty', data: { type: 'csv', url: '' }, width: 50, height: 50 },
         {
             data: {
                 url: EXAMPLE_DATASETS.multivec,

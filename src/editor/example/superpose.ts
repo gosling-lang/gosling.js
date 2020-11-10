@@ -6,7 +6,8 @@ export const EXAMPLE_SUPERPOSE: GeminiSpec = {
     layout: {
         type: 'linear',
         direction: 'vertical',
-        gap: 30
+        columnSizes: 800,
+        rowSizes: [60, 180, 180, 180]
     },
     tracks: [
         EXAMPLE_IDEOGRAM_TRACK,
@@ -104,9 +105,7 @@ export const EXAMPLE_SUPERPOSE: GeminiSpec = {
                 ],
                 range: ['#D45E00', '#D45E00', '#D45E00', 'black', '#029F73', '#029F73', '#029F73']
             },
-            opacity: { value: 0.6 },
-            width: 1000,
-            height: 180
+            opacity: { value: 0.6 }
         },
         {
             data: {
@@ -137,10 +136,8 @@ export const EXAMPLE_SUPERPOSE: GeminiSpec = {
             },
             y: { field: 'peak', type: 'quantitative' },
             row: { field: 'sample', type: 'nominal' },
-            color: { field: 'sample', type: 'nominal' },
-            // background: {"value": "red"},
-            width: 1000,
-            height: 180
+            color: { field: 'sample', type: 'nominal' }
+            // background: {"value": "red"}
         },
         {
             data: {
@@ -168,9 +165,7 @@ export const EXAMPLE_SUPERPOSE: GeminiSpec = {
             ],
             color: { field: 'sample', type: 'nominal' },
             row: { field: 'sample', type: 'nominal' },
-            opacity: { value: 0.4 },
-            width: 1000,
-            height: 180
+            opacity: { value: 0.4 }
         }
     ]
 };

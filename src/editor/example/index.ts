@@ -39,18 +39,17 @@ export const examples: ReadonlyArray<{
     },
     {
         name: 'Ideograms (Static)',
-        spec: EXAMPLE_IDEOGRAM,
-        forceShow: true
+        spec: EXAMPLE_IDEOGRAM
     },
     {
         name: 'Custom Gene Annotation Tracks',
-        spec: EXAMPLE_GENE_ANNOTATION
+        spec: EXAMPLE_GENE_ANNOTATION,
+        forceShow: false
     },
     {
         name: 'Between and Within Links',
         spec: EXAMPLE_LINKS,
-        underDevelopment: true,
-        forceShow: false
+        underDevelopment: true
     },
     {
         name: 'Semantic Zooming',
@@ -68,8 +67,7 @@ export const examples: ReadonlyArray<{
     {
         name: 'Peripheral Plot',
         spec: EXAMPLE_PERIPHERAL_PLOT,
-        underDevelopment: true,
-        forceShow: false
+        underDevelopment: true
     },
     {
         name: 'Basic Circular Marks',

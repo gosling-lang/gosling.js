@@ -148,6 +148,7 @@ export function getArrangement(spec: GeminiSpec): TrackInfo[] {
         width = typeof trackWidth === 'number' ? Math.min(trackWidth, width) : width;
         // height = ... // NOTICE: using the smaller height is not supported
 
+        // Assign actual size determined by the layout definition
         track.width = width;
         track.height = height;
 

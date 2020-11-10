@@ -57,9 +57,7 @@ export const EXAMPLE_LOGO_LIKE: GeminiSpec = {
             text: {
                 field: 'base',
                 type: 'nominal'
-            },
-            width: 1000,
-            height: 180
+            }
         },
         {
             title: 'based on dummy data',
@@ -104,9 +102,7 @@ export const EXAMPLE_LOGO_LIKE: GeminiSpec = {
             text: {
                 field: 'base',
                 type: 'nominal'
-            },
-            width: 1000,
-            height: 180
+            }
         }
     ]
 };

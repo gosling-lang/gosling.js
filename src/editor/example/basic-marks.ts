@@ -21,9 +21,7 @@ export const EXAMPLE_HEATMAP: Track = {
         axis: 'top'
     },
     row: { field: 'sample', type: 'nominal', legend: true },
-    color: { field: 'peak', type: 'quantitative' },
-    width: 800,
-    height: 180
+    color: { field: 'peak', type: 'quantitative' }
 };
 
 export const EXAMPLE_BASIC_AREA: Track = {
@@ -49,9 +47,7 @@ export const EXAMPLE_BASIC_AREA: Track = {
     row: { field: 'sample', type: 'nominal' },
     color: { field: 'sample', type: 'nominal', legend: true },
     stroke: { value: 'white' },
-    strokeWidth: { value: 0.5 },
-    width: 800,
-    height: 180
+    strokeWidth: { value: 0.5 }
 };
 
 export const EXMAPLE_BASIC_MARKS: GeminiSpec = {

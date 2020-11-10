@@ -21,7 +21,11 @@ export const EXAMPLE_PERIPHERAL_PLOT: GeminiSpec = {
     layout: {
         type: 'linear',
         direction: 'horizontal',
-        wrap: 3
+        wrap: 3,
+        columnSizes: [100, 600, 100],
+        columnGaps: 2,
+        rowSizes: [60, 120, 90],
+        rowGaps: [60, 2]
     },
     tracks: [
         {
@@ -33,10 +37,8 @@ export const EXAMPLE_PERIPHERAL_PLOT: GeminiSpec = {
                 { mark: 'rect-brush', x: { linker: 'focus' }, color: { value: 'black' } },
                 { mark: 'rect-brush', x: { linker: 'periphery-right' } }
             ],
-            width: 900,
             span: 3
         },
-        { mark: 'empty', data: { type: 'csv', url: '' }, width: 900, height: 50, span: 3 },
         {
             title: 'Context View',
             ...(MULTIVEC_SPEC as any),
@@ -50,8 +52,6 @@ export const EXAMPLE_PERIPHERAL_PLOT: GeminiSpec = {
             },
             y: { field: 'peak', type: 'quantitative' },
             color: { value: '#3875A3' },
-            width: 300,
-            height: 120,
             style: { outline: 'black' }
         },
         {
@@ -67,8 +67,6 @@ export const EXAMPLE_PERIPHERAL_PLOT: GeminiSpec = {
             },
             y: { field: 'peak', type: 'quantitative' },
             color: { value: '#3875A3' },
-            width: 300,
-            height: 120,
             style: { outline: 'black' }
         },
         {
@@ -84,11 +82,8 @@ export const EXAMPLE_PERIPHERAL_PLOT: GeminiSpec = {
             },
             y: { field: 'peak', type: 'quantitative' },
             color: { value: '#3875A3' },
-            width: 300,
-            height: 120,
             style: { outline: 'black' }
         },
-        { mark: 'empty', data: { type: 'csv', url: '' }, width: 900, height: 20, span: 3 },
         {
             ...(MULTIVEC_SPEC as any),
             mark: 'point',
@@ -101,8 +96,6 @@ export const EXAMPLE_PERIPHERAL_PLOT: GeminiSpec = {
             y: { field: 'peak', type: 'quantitative' },
             color: { value: '#3875A3' },
             opacity: { value: 0.7 },
-            width: 300,
-            height: 90,
             style: { outline: 'black' }
         },
         {
@@ -116,8 +109,6 @@ export const EXAMPLE_PERIPHERAL_PLOT: GeminiSpec = {
             },
             y: { field: 'peak', type: 'quantitative' },
             color: { value: '#3875A3' },
-            width: 300,
-            height: 90,
             style: { outline: 'black' }
         },
         {
@@ -132,9 +123,7 @@ export const EXAMPLE_PERIPHERAL_PLOT: GeminiSpec = {
             y: { field: 'peak', type: 'quantitative' },
             color: { value: '#3875A3' },
             opacity: { value: 0.7 },
-            width: 300,
-            height: 90,
             style: { outline: 'black' }
         }
-    ] //.slice(2, 3)
+    ]
 };

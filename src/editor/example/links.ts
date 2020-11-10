@@ -5,7 +5,8 @@ export const EXAMPLE_LINKS: GeminiSpec = {
     layout: {
         type: 'linear',
         direction: 'vertical',
-        gap: 0
+        columnSizes: 800,
+        rowGaps: [30, 0]
     },
     tracks: [
         {
@@ -43,9 +44,7 @@ export const EXAMPLE_LINKS: GeminiSpec = {
             color: { value: 'steelblue' },
             stroke: { value: 'steelblue' },
             opacity: { value: 0.1 },
-            style: { circularLink: true },
-            width: 1000,
-            height: 320
+            style: { circularLink: true }
         },
         {
             data: {
@@ -96,9 +95,7 @@ export const EXAMPLE_LINKS: GeminiSpec = {
             opacity: { value: 0.3 },
             style: {
                 circularLink: true
-            },
-            width: 1000,
-            height: 220
+            }
         },
         {
             data: {
@@ -127,9 +124,7 @@ export const EXAMPLE_LINKS: GeminiSpec = {
             y: { value: 190 },
             stretch: true,
             color: { value: 'steelblue' },
-            opacity: { value: 0.05 },
-            width: 1000,
-            height: 190
+            opacity: { value: 0.05 }
         }
     ]
 };
