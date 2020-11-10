@@ -148,6 +148,9 @@ export function getArrangement(spec: GeminiSpec): TrackInfo[] {
         width = typeof trackWidth === 'number' ? Math.min(trackWidth, width) : width;
         // height = ... // NOTICE: using the smaller height is not supported
 
+        // TODO: might need to use no `compact` options for `react-grid-layout` (e.g., verticalCompact = false)
+        // reference: https://github.com/STRML/react-grid-layout/blob/master/test/examples/11-no-vertical-compact.jsx
+
         // Assign actual size determined by the layout definition
         track.width = width;
         track.height = height;
