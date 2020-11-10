@@ -29,6 +29,8 @@ export function drawArea(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMod
     const circular = spec._is_circular;
     const trackInnerRadius = spec.innerRadius ?? 220; // TODO: should default values be filled already
     const trackOuterRadius = spec.outerRadius ?? 300; // TODO: should be smaller than Math.min(width, height)
+    const startAngle = spec.startAngle ?? 0;
+    const endAngle = spec.endAngle ?? 360;
     const trackRingSize = trackOuterRadius - trackInnerRadius;
     const cx = trackWidth / 2.0;
     const cy = trackHeight / 2.0;
@@ -93,7 +95,7 @@ export function drawArea(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMod
                             if (i === 0) {
                                 // start position of the polygon
                                 const r = trackOuterRadius - (rowHeight / trackHeight) * trackRingSize;
-                                const pos = cartesianToPolar(x, trackWidth, r, cx, cy);
+                                const pos = cartesianToPolar(x, trackWidth, r, cx, cy, startAngle, endAngle);
                                 areaPointsTop.push([pos.x, pos.y]);
                                 areaPointsBottom.push([pos.x, pos.y]);
                             }
@@ -105,19 +107,19 @@ export function drawArea(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMod
                             const rTop =
                                 trackOuterRadius -
                                 ((rowHeight - y - prevYEndByGPos[genomicPosCategory]) / trackHeight) * trackRingSize;
-                            const posTop = cartesianToPolar(x, trackWidth, rTop, cx, cy);
+                            const posTop = cartesianToPolar(x, trackWidth, rTop, cx, cy, startAngle, endAngle);
                             areaPointsTop.push([posTop.x, posTop.y]);
 
                             const rBot =
                                 trackOuterRadius -
                                 ((rowHeight - prevYEndByGPos[genomicPosCategory]) / trackHeight) * trackRingSize;
-                            const posBot = cartesianToPolar(x, trackWidth, rBot, cx, cy);
+                            const posBot = cartesianToPolar(x, trackWidth, rBot, cx, cy, startAngle, endAngle);
                             areaPointsBottom.push([posBot.x, posBot.y]);
 
                             if (i === array.length - 1) {
                                 // end position of the polygon
                                 const r = trackOuterRadius - (rowHeight / trackHeight) * trackRingSize;
-                                const pos = cartesianToPolar(x, trackWidth, r, cx, cy);
+                                const pos = cartesianToPolar(x, trackWidth, r, cx, cy, startAngle, endAngle);
                                 areaPointsTop.push([pos.x, pos.y]);
                                 areaPointsBottom.push([pos.x, pos.y]);
                             }
@@ -184,7 +186,7 @@ export function drawArea(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMod
 
                     if (circular) {
                         const baselineR = trackOuterRadius - ((rowPosition + rowHeight) / trackHeight) * trackRingSize;
-                        const baselinePos = cartesianToPolar(x, trackWidth, baselineR, cx, cy);
+                        const baselinePos = cartesianToPolar(x, trackWidth, baselineR, cx, cy, startAngle, endAngle);
                         baselinePoints.push([baselinePos.x, baselinePos.y]);
 
                         if (i === 0) {
@@ -193,7 +195,7 @@ export function drawArea(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMod
                         }
 
                         const r = trackOuterRadius - ((rowPosition + rowHeight - y) / trackHeight) * trackRingSize;
-                        const pos = cartesianToPolar(x, trackWidth, r, cx, cy);
+                        const pos = cartesianToPolar(x, trackWidth, r, cx, cy, startAngle, endAngle);
                         areaPoints.push(pos.x, pos.y);
 
                         if (i === array.length - 1) {
@@ -201,8 +203,8 @@ export function drawArea(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMod
                             const startX = xScale(tileX);
 
                             const startR = trackOuterRadius - ((rowPosition + rowHeight) / trackHeight) * trackRingSize;
-                            const curPos = cartesianToPolar(x, trackWidth, startR, cx, cy);
-                            const startPos = cartesianToPolar(startX, trackWidth, startR, cx, cy);
+                            const curPos = cartesianToPolar(x, trackWidth, startR, cx, cy, startAngle, endAngle);
+                            const startPos = cartesianToPolar(startX, trackWidth, startR, cx, cy, startAngle, endAngle);
 
                             areaPoints.push(curPos.x, curPos.y);
                             areaPoints.push(startPos.x, startPos.y);

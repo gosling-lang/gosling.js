@@ -152,9 +152,17 @@ const IDEOGRAM: Track = {
 };
 
 export const EXAMPLE_CIRCOS: GeminiSpec = {
-    layout: { type: 'circular', direction: 'vertical' },
+    layout: {
+        type: 'circular',
+        direction: 'horizontal',
+        wrap: 3,
+        rowSizes: 300,
+        columnSizes: 300,
+        columnGaps: 0,
+        rowGaps: 0
+    },
     tracks: [
-        { ...IDEOGRAM, span: 3, width, height: 350, outerRadius, innerRadius: 80 },
+        { ...IDEOGRAM, width, height: 350, outerRadius, innerRadius: 80 },
         CIRCOS_HEATMAP,
         CIRCOS_LINE,
         { ...CIRCOS_LINE, mark: 'area', row: undefined },

@@ -29,6 +29,8 @@ export function drawBar(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMode
     const circular = spec._is_circular;
     const trackInnerRadius = spec.innerRadius ?? 220;
     const trackOuterRadius = spec.outerRadius ?? 300; // TODO: should be smaller than Math.min(width, height)
+    const startAngle = spec.startAngle ?? 0;
+    const endAngle = spec.endAngle ?? 360;
     const trackRingSize = trackOuterRadius - trackInnerRadius;
     const cx = trackWidth / 2.0;
     const cy = trackHeight / 2.0;
@@ -95,9 +97,9 @@ export function drawBar(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMode
                 if (circular) {
                     const farR = trackOuterRadius - ((rowHeight - prevYEnd) / trackHeight) * trackRingSize;
                     const nearR = trackOuterRadius - ((rowHeight - y - prevYEnd) / trackHeight) * trackRingSize;
-                    const sPos = cartesianToPolar(barStartX, trackWidth, nearR, cx, cy);
-                    const startRad = valueToRadian(barStartX, trackWidth);
-                    const endRad = valueToRadian(barStartX + barWidth, trackWidth);
+                    const sPos = cartesianToPolar(barStartX, trackWidth, nearR, cx, cy, startAngle, endAngle);
+                    const startRad = valueToRadian(barStartX, trackWidth, startAngle, endAngle);
+                    const endRad = valueToRadian(barStartX + barWidth, trackWidth, startAngle, endAngle);
 
                     rowGraphics.beginFill(colorToHex(color), actualOpacity);
                     rowGraphics.moveTo(sPos.x, sPos.y);
@@ -154,9 +156,9 @@ export function drawBar(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMode
                         ((rowPosition + rowHeight - barHeight - baselineY) / trackHeight) * trackRingSize;
                     const nearR =
                         trackOuterRadius - ((rowPosition + rowHeight - baselineY) / trackHeight) * trackRingSize;
-                    const sPos = cartesianToPolar(barStartX, trackWidth, nearR, cx, cy);
-                    const startRad = valueToRadian(barStartX, trackWidth);
-                    const endRad = valueToRadian(barStartX + barWidth, trackWidth);
+                    const sPos = cartesianToPolar(barStartX, trackWidth, nearR, cx, cy, startAngle, endAngle);
+                    const startRad = valueToRadian(barStartX, trackWidth, startAngle, endAngle);
+                    const endRad = valueToRadian(barStartX + barWidth, trackWidth, startAngle, endAngle);
 
                     rowGraphics.beginFill(colorToHex(color), actualOpacity);
                     rowGraphics.moveTo(sPos.x, sPos.y);

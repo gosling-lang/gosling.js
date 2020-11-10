@@ -1,4 +1,5 @@
 import { GeminiTrackModel } from '../gemini-track-model';
+import { cartesianToPolar, valueToRadian } from '../utils/polar';
 
 export function drawCircularOutlines(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackModel) {
     /* track spec */
@@ -8,34 +9,19 @@ export function drawCircularOutlines(HGC: any, trackInfo: any, tile: any, tm: Ge
     const { colorToHex } = HGC.utils;
 
     /* track size */
-    const trackWidth = trackInfo.dimensions[0];
-    const trackHeight = trackInfo.dimensions[1];
-    // const tileSize = trackInfo.tilesetInfo.tile_size;
-    // const { tileX, tileWidth } = trackInfo.getTilePosAndDimensions(
-    //     tile.tileData.zoomLevel,
-    //     tile.tileData.tilePos,
-    //     tileSize
-    // );
+    const [trackWidth, trackHeight] = trackInfo.dimensions;
 
-    // EXPERIMENTAL PARAMETERS
-    const innerRadius = spec.innerRadius ?? 220; // TODO: should default values be filled already
-    const outerRadius = spec.outerRadius ?? 300; // TODO: should be smaller than Math.min(width, height)
-    const ringWidth = outerRadius - innerRadius;
+    /* circular parameters */
+    const trackInnerRadius = spec.innerRadius ?? 220; // TODO: should default values be filled already
+    const trackOuterRadius = spec.outerRadius ?? 300; // TODO: should be smaller than Math.min(width, height)
+    const startAngle = spec.startAngle ?? 0;
+    const endAngle = spec.endAngle ?? 360;
     const cx = trackWidth / 2.0;
     const cy = trackHeight / 2.0;
-    const gapRadian = 0.04;
 
-    // TODO: move the `polar.ts`
-    const xToDt = (x: number) => {
-        const safeX = Math.max(Math.min(trackWidth, x), 0);
-        return (-safeX / trackWidth) * (Math.PI * 2 - gapRadian * 2) - Math.PI / 2.0 - gapRadian;
-    };
-    const xToPos = (x: number, r: number) => {
-        return {
-            x: cx + r * Math.cos(xToDt(x)),
-            y: cy + r * Math.sin(xToDt(x))
-        };
-    };
+    const posStartInner = cartesianToPolar(0, trackWidth, trackInnerRadius, cx, cy, startAngle, endAngle);
+    const startRad = valueToRadian(0, trackWidth, startAngle, endAngle);
+    const endRad = valueToRadian(trackWidth, trackWidth, startAngle, endAngle);
 
     /* render */
     const graphics = tile.graphics;
@@ -47,9 +33,9 @@ export function drawCircularOutlines(HGC: any, trackInfo: any, tile: any, tm: Ge
         0 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
     );
     graphics.beginFill(colorToHex('white'), 0);
-    graphics.moveTo(xToPos(0, outerRadius - ringWidth).x, xToPos(0, outerRadius - ringWidth).y);
-    graphics.arc(cx, cy, outerRadius - ringWidth, xToDt(0), xToDt(trackWidth), true);
-    graphics.arc(cx, cy, outerRadius, xToDt(trackWidth), xToDt(0), false);
+    graphics.moveTo(posStartInner.x, posStartInner.y);
+    graphics.arc(cx, cy, trackInnerRadius, startRad, endRad, true);
+    graphics.arc(cx, cy, trackOuterRadius, endRad, startRad, false);
     graphics.closePath();
 
     // outer line
@@ -60,9 +46,9 @@ export function drawCircularOutlines(HGC: any, trackInfo: any, tile: any, tm: Ge
         0.5 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
     );
     graphics.beginFill(colorToHex('white'), 0);
-    graphics.moveTo(xToPos(0, outerRadius - 0.5).x, xToPos(0, outerRadius - 0.5).y);
-    graphics.arc(cx, cy, outerRadius - 0.5, xToDt(0), xToDt(trackWidth), true);
-    graphics.arc(cx, cy, outerRadius, xToDt(trackWidth), xToDt(0), false);
+    graphics.moveTo(posStartInner.x, posStartInner.y);
+    graphics.arc(cx, cy, trackOuterRadius - 0.5, startRad, endRad, true);
+    graphics.arc(cx, cy, trackOuterRadius, endRad, startRad, false);
     graphics.closePath();
 
     // inner line
@@ -87,7 +73,7 @@ export function drawCircularOutlines(HGC: any, trackInfo: any, tile: any, tm: Ge
     );
     graphics.beginFill(colorToHex('white'), 1);
     graphics.moveTo(cx, cy);
-    graphics.arc(cx, cy, outerRadius + 3, xToDt(0), xToDt(trackWidth), false);
+    graphics.arc(cx, cy, trackOuterRadius + 3, startRad, endRad, false);
     graphics.closePath();
 
     // center white hole
@@ -98,5 +84,5 @@ export function drawCircularOutlines(HGC: any, trackInfo: any, tile: any, tm: Ge
         0 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
     );
     graphics.beginFill(colorToHex('white'), 1);
-    graphics.drawCircle(cx, cy, innerRadius - 1);
+    graphics.drawCircle(cx, cy, trackInnerRadius - 1);
 }

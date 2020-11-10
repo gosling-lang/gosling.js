@@ -28,6 +28,8 @@ export function drawCircularGrid(HGC: any, trackInfo: any, tile: any, tm: Gemini
     /* circular parameters */
     const trackInnerRadius = spec.innerRadius ?? 220; // TODO: should default values be filled already
     const trackOuterRadius = spec.outerRadius ?? 300; // TODO: should be smaller than Math.min(width, height)
+    const startAngle = spec.startAngle ?? 0;
+    const endAngle = spec.endAngle ?? 360;
     const trackRingSize = trackOuterRadius - trackInnerRadius;
     const cx = trackWidth / 2.0;
     const cy = trackHeight / 2.0;
@@ -56,8 +58,8 @@ export function drawCircularGrid(HGC: any, trackInfo: any, tile: any, tm: Gemini
         );
 
         const r = trackOuterRadius - ((rowPosition + rowHeight) / trackHeight) * trackRingSize;
-        const pos = cartesianToPolar(x, trackWidth, r, cx, cy);
-        const pos1 = cartesianToPolar(x1, trackWidth, r, cx, cy);
+        const pos = cartesianToPolar(x, trackWidth, r, cx, cy, startAngle, endAngle);
+        const pos1 = cartesianToPolar(x1, trackWidth, r, cx, cy, startAngle, endAngle);
 
         graphics.moveTo(pos.x, pos.y);
         graphics.lineTo(pos1.x, pos1.y);

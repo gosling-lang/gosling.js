@@ -15,7 +15,7 @@ export interface GeminiSpec {
  * Layout specification for multiple tracks
  */
 export interface Layout {
-    type: 'linear' | 'circular';
+    type: 'linear' | 'circular'; // TODO: should this be moved to the track-level spec?
     direction: 'vertical' | 'horizontal';
     wrap?: number;
 
@@ -126,11 +126,14 @@ export interface BasicSingleTrack {
     // Layout
     width?: number;
     height?: number;
-    outerRadius?: number; // circular layout
-    innerRadius?: number; // circular layout
-    colSpan?: number;
-    rowSpan?: number;
-    span?: number; // !deprecated
+    span?: number;
+    superposeOnPreviousTrack?: boolean;
+
+    // Circular Layout
+    outerRadius?: number;
+    innerRadius?: number;
+    startAngle?: number; // [0, 360]
+    endAngle?: number; // [0, 360]
 
     // Data
     data: DataDeep | Datum[];

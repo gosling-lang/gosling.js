@@ -129,9 +129,6 @@
         "background": {
           "$ref": "#/definitions/ChannelValue"
         },
-        "colSpan": {
-          "type": "number"
-        },
         "color": {
           "$ref": "#/definitions/Channel"
         },
@@ -157,6 +154,9 @@
         "description": {
           "type": "string"
         },
+        "endAngle": {
+          "type": "number"
+        },
         "height": {
           "type": "number"
         },
@@ -178,13 +178,13 @@
         "row": {
           "$ref": "#/definitions/Channel"
         },
-        "rowSpan": {
-          "type": "number"
-        },
         "size": {
           "$ref": "#/definitions/Channel"
         },
         "span": {
+          "type": "number"
+        },
+        "startAngle": {
           "type": "number"
         },
         "stretch": {
@@ -198,6 +198,9 @@
         },
         "style": {
           "$ref": "#/definitions/TrackStyle"
+        },
+        "superposeOnPreviousTrack": {
+          "type": "boolean"
         },
         "text": {
           "$ref": "#/definitions/Channel"
@@ -1346,16 +1349,6 @@
             }
           ]
         },
-        "colSpan": {
-          "anyOf": [
-            {
-              "type": "number"
-            },
-            {
-              "$ref": "#/definitions/Channel"
-            }
-          ]
-        },
         "color": {
           "$ref": "#/definitions/Channel"
         },
@@ -1392,6 +1385,16 @@
           "anyOf": [
             {
               "type": "string"
+            },
+            {
+              "$ref": "#/definitions/Channel"
+            }
+          ]
+        },
+        "endAngle": {
+          "anyOf": [
+            {
+              "type": "number"
             },
             {
               "$ref": "#/definitions/Channel"
@@ -1461,7 +1464,10 @@
         "row": {
           "$ref": "#/definitions/Channel"
         },
-        "rowSpan": {
+        "size": {
+          "$ref": "#/definitions/Channel"
+        },
+        "span": {
           "anyOf": [
             {
               "type": "number"
@@ -1471,10 +1477,7 @@
             }
           ]
         },
-        "size": {
-          "$ref": "#/definitions/Channel"
-        },
-        "span": {
+        "startAngle": {
           "anyOf": [
             {
               "type": "number"
@@ -1534,16 +1537,6 @@
                   }
                 ]
               },
-              "colSpan": {
-                "anyOf": [
-                  {
-                    "type": "number"
-                  },
-                  {
-                    "$ref": "#/definitions/Channel"
-                  }
-                ]
-              },
               "color": {
                 "$ref": "#/definitions/Channel"
               },
@@ -1580,6 +1573,16 @@
                 "anyOf": [
                   {
                     "type": "string"
+                  },
+                  {
+                    "$ref": "#/definitions/Channel"
+                  }
+                ]
+              },
+              "endAngle": {
+                "anyOf": [
+                  {
+                    "type": "number"
                   },
                   {
                     "$ref": "#/definitions/Channel"
@@ -1649,7 +1652,10 @@
               "row": {
                 "$ref": "#/definitions/Channel"
               },
-              "rowSpan": {
+              "size": {
+                "$ref": "#/definitions/Channel"
+              },
+              "span": {
                 "anyOf": [
                   {
                     "type": "number"
@@ -1659,10 +1665,7 @@
                   }
                 ]
               },
-              "size": {
-                "$ref": "#/definitions/Channel"
-              },
-              "span": {
+              "startAngle": {
                 "anyOf": [
                   {
                     "type": "number"
@@ -1692,6 +1695,16 @@
                 "anyOf": [
                   {
                     "$ref": "#/definitions/TrackStyle"
+                  },
+                  {
+                    "$ref": "#/definitions/Channel"
+                  }
+                ]
+              },
+              "superposeOnPreviousTrack": {
+                "anyOf": [
+                  {
+                    "type": "boolean"
                   },
                   {
                     "$ref": "#/definitions/Channel"
@@ -1769,6 +1782,16 @@
             "type": "object"
           },
           "type": "array"
+        },
+        "superposeOnPreviousTrack": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "$ref": "#/definitions/Channel"
+            }
+          ]
         },
         "text": {
           "$ref": "#/definitions/Channel"
@@ -1866,16 +1889,6 @@
             }
           ]
         },
-        "colSpan": {
-          "anyOf": [
-            {
-              "type": "number"
-            },
-            {
-              "$ref": "#/definitions/Channel"
-            }
-          ]
-        },
         "color": {
           "$ref": "#/definitions/Channel"
         },
@@ -1912,6 +1925,16 @@
           "anyOf": [
             {
               "type": "string"
+            },
+            {
+              "$ref": "#/definitions/Channel"
+            }
+          ]
+        },
+        "endAngle": {
+          "anyOf": [
+            {
+              "type": "number"
             },
             {
               "$ref": "#/definitions/Channel"
@@ -1981,7 +2004,10 @@
         "row": {
           "$ref": "#/definitions/Channel"
         },
-        "rowSpan": {
+        "size": {
+          "$ref": "#/definitions/Channel"
+        },
+        "span": {
           "anyOf": [
             {
               "type": "number"
@@ -1991,10 +2017,7 @@
             }
           ]
         },
-        "size": {
-          "$ref": "#/definitions/Channel"
-        },
-        "span": {
+        "startAngle": {
           "anyOf": [
             {
               "type": "number"
@@ -2054,16 +2077,6 @@
                   }
                 ]
               },
-              "colSpan": {
-                "anyOf": [
-                  {
-                    "type": "number"
-                  },
-                  {
-                    "$ref": "#/definitions/Channel"
-                  }
-                ]
-              },
               "color": {
                 "$ref": "#/definitions/Channel"
               },
@@ -2100,6 +2113,16 @@
                 "anyOf": [
                   {
                     "type": "string"
+                  },
+                  {
+                    "$ref": "#/definitions/Channel"
+                  }
+                ]
+              },
+              "endAngle": {
+                "anyOf": [
+                  {
+                    "type": "number"
                   },
                   {
                     "$ref": "#/definitions/Channel"
@@ -2169,7 +2192,10 @@
               "row": {
                 "$ref": "#/definitions/Channel"
               },
-              "rowSpan": {
+              "size": {
+                "$ref": "#/definitions/Channel"
+              },
+              "span": {
                 "anyOf": [
                   {
                     "type": "number"
@@ -2179,10 +2205,7 @@
                   }
                 ]
               },
-              "size": {
-                "$ref": "#/definitions/Channel"
-              },
-              "span": {
+              "startAngle": {
                 "anyOf": [
                   {
                     "type": "number"
@@ -2242,16 +2265,6 @@
                         }
                       ]
                     },
-                    "colSpan": {
-                      "anyOf": [
-                        {
-                          "type": "number"
-                        },
-                        {
-                          "$ref": "#/definitions/Channel"
-                        }
-                      ]
-                    },
                     "color": {
                       "$ref": "#/definitions/Channel"
                     },
@@ -2288,6 +2301,16 @@
                       "anyOf": [
                         {
                           "type": "string"
+                        },
+                        {
+                          "$ref": "#/definitions/Channel"
+                        }
+                      ]
+                    },
+                    "endAngle": {
+                      "anyOf": [
+                        {
+                          "type": "number"
                         },
                         {
                           "$ref": "#/definitions/Channel"
@@ -2357,7 +2380,10 @@
                     "row": {
                       "$ref": "#/definitions/Channel"
                     },
-                    "rowSpan": {
+                    "size": {
+                      "$ref": "#/definitions/Channel"
+                    },
+                    "span": {
                       "anyOf": [
                         {
                           "type": "number"
@@ -2367,10 +2393,7 @@
                         }
                       ]
                     },
-                    "size": {
-                      "$ref": "#/definitions/Channel"
-                    },
-                    "span": {
+                    "startAngle": {
                       "anyOf": [
                         {
                           "type": "number"
@@ -2400,6 +2423,16 @@
                       "anyOf": [
                         {
                           "$ref": "#/definitions/TrackStyle"
+                        },
+                        {
+                          "$ref": "#/definitions/Channel"
+                        }
+                      ]
+                    },
+                    "superposeOnPreviousTrack": {
+                      "anyOf": [
+                        {
+                          "type": "boolean"
                         },
                         {
                           "$ref": "#/definitions/Channel"
@@ -2478,6 +2511,16 @@
                 },
                 "type": "array"
               },
+              "superposeOnPreviousTrack": {
+                "anyOf": [
+                  {
+                    "type": "boolean"
+                  },
+                  {
+                    "$ref": "#/definitions/Channel"
+                  }
+                ]
+              },
               "text": {
                 "$ref": "#/definitions/Channel"
               },
@@ -2549,6 +2592,16 @@
             "type": "object"
           },
           "type": "array"
+        },
+        "superposeOnPreviousTrack": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "$ref": "#/definitions/Channel"
+            }
+          ]
         },
         "text": {
           "$ref": "#/definitions/Channel"

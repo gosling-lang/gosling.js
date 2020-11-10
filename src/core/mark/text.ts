@@ -2,6 +2,7 @@ import { GeminiTrackModel } from '../gemini-track-model';
 import { Channel } from '../gemini.schema';
 import { group } from 'd3-array';
 import { getValueUsingChannel, IsStackedMark } from '../gemini.schema.guards';
+import { cartesianToPolar } from '../utils/polar';
 
 export const TEXT_STYLE_GLOBAL = {
     fontSize: '12px',
@@ -22,15 +23,17 @@ export function drawText(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMod
     const data = tm.data();
 
     /* track size */
-    const [, trackHeight] = trackInfo.dimensions;
+    const [trackWidth, trackHeight] = trackInfo.dimensions;
 
     /* circular parameters */
-    // const circular = spec._is_circular;
-    // const trackInnerRadius = spec.innerRadius ?? 220;
-    // const trackOuterRadius = spec.outerRadius ?? 300; // TODO: should be smaller than Math.min(width, height)
-    // const trackRingSize = trackOuterRadius - trackInnerRadius;
-    // const tcx = trackWidth / 2.0;
-    // const tcy = trackHeight / 2.0;
+    const circular = spec._is_circular;
+    const trackInnerRadius = spec.innerRadius ?? 220;
+    const trackOuterRadius = spec.outerRadius ?? 300; // TODO: should be smaller than Math.min(width, height)
+    const startAngle = spec.startAngle ?? 0;
+    const endAngle = spec.endAngle ?? 360;
+    const trackRingSize = trackOuterRadius - trackInnerRadius;
+    const tcx = trackWidth / 2.0;
+    const tcy = trackHeight / 2.0;
 
     /* row separation */
     const rowCategories = (tm.getChannelDomainArray('row') as string[]) ?? ['___SINGLE_ROW___'];
@@ -180,8 +183,17 @@ export function drawText(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMod
                 textGraphic.alpha = alphaTransition;
                 textGraphic.anchor.x = 0.5;
                 textGraphic.anchor.y = 0.5;
-                textGraphic.position.x = cx;
-                textGraphic.position.y = rowPosition + rowHeight - y;
+
+                if (circular) {
+                    const r = trackOuterRadius - ((rowPosition + rowHeight - y) / trackHeight) * trackRingSize;
+                    const pos = cartesianToPolar(cx, trackWidth, r, tcx, tcy, startAngle, endAngle);
+
+                    textGraphic.position.x = pos.x;
+                    textGraphic.position.y = pos.y;
+                } else {
+                    textGraphic.position.x = cx;
+                    textGraphic.position.y = rowPosition + rowHeight - y;
+                }
 
                 rowGraphics.addChild(textGraphic);
             });

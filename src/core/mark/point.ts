@@ -22,6 +22,8 @@ export function drawPoint(HGC: any, trackInfo: any, tile: any, model: GeminiTrac
     const circular = spec._is_circular;
     const trackInnerRadius = spec.innerRadius ?? 220;
     const trackOuterRadius = spec.outerRadius ?? 300;
+    const startAngle = spec.startAngle ?? 0;
+    const endAngle = spec.endAngle ?? 360;
     const trackRingSize = trackOuterRadius - trackInnerRadius;
     const tcx = trackWidth / 2.0;
     const tcy = trackHeight / 2.0;
@@ -66,7 +68,7 @@ export function drawPoint(HGC: any, trackInfo: any, tile: any, model: GeminiTrac
 
             if (circular) {
                 const r = trackOuterRadius - ((rowPosition + rowHeight - cy) / trackHeight) * trackRingSize;
-                const pos = cartesianToPolar(cx, trackWidth, r, tcx, tcy);
+                const pos = cartesianToPolar(cx, trackWidth, r, tcx, tcy, startAngle, endAngle);
 
                 g.beginFill(colorToHex(color), opacity);
                 g.drawCircle(pos.x, pos.y, size);

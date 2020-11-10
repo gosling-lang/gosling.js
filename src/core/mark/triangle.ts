@@ -26,6 +26,8 @@ export function drawTriangle(HGC: any, trackInfo: any, tile: any, tm: GeminiTrac
     const circular = spec._is_circular;
     const trackInnerRadius = spec.innerRadius ?? 220;
     const trackOuterRadius = spec.outerRadius ?? 300; // TODO: should be smaller than Math.min(width, height)
+    const startAngle = spec.startAngle ?? 0;
+    const endAngle = spec.endAngle ?? 360;
     const trackRingSize = trackOuterRadius - trackInnerRadius;
     const cx = trackWidth / 2.0;
     const cy = trackHeight / 2.0;
@@ -107,7 +109,9 @@ export function drawTriangle(HGC: any, trackInfo: any, tile: any, tm: GeminiTrac
                             curY = markToPoints[i + 1];
                         }
                         const r = trackOuterRadius - ((rowPosition + rowHeight - curY) / trackHeight) * trackRingSize;
-                        return cartesianToPolar(curX, trackWidth, r, cx, cy)[i % 2 === 0 ? 'x' : 'y'];
+                        return cartesianToPolar(curX, trackWidth, r, cx, cy, startAngle, endAngle)[
+                            i % 2 === 0 ? 'x' : 'y'
+                        ];
                     })
                 );
             } else {

@@ -12,7 +12,7 @@ import { EXAMPLE_UPSET } from './upset';
 import { EXAMPLE_LOGO_LIKE } from './text-stretch';
 import { EXAMPLE_CIRCOS } from './circos';
 import { EXAMPLE_CIRCOS_MANY } from './circos-many-rows';
-import { EXAMPLE_CIRCOS_3 } from './circos-2';
+import { EXAMPLE_CIRCOS_STACKING } from './circos-stacking';
 
 export const examples: ReadonlyArray<{
     name: string;
@@ -25,6 +25,7 @@ export const examples: ReadonlyArray<{
     {
         name: 'Basic Marks',
         spec: EXMAPLE_BASIC_MARKS,
+        underDevelopment: false,
         hidden: false,
         forceShow: false
     },
@@ -61,8 +62,7 @@ export const examples: ReadonlyArray<{
     },
     {
         name: 'Overview + Detail views',
-        spec: EXAMPLE_OVERVIEW_DEATIL,
-        underDevelopment: true
+        spec: EXAMPLE_OVERVIEW_DEATIL
     },
     {
         name: 'Peripheral Plot',
@@ -73,20 +73,19 @@ export const examples: ReadonlyArray<{
         name: 'Basic Circular Marks',
         spec: EXAMPLE_CIRCOS,
         underDevelopment: true,
-        forceShow: true
+        forceShow: false
     },
     {
         name: 'Basic Circular Marks 2',
         spec: EXAMPLE_CIRCOS_MANY,
         underDevelopment: true,
-        forceShow: true
+        forceShow: false
     },
     {
-        name: 'Basic Circular Marks 3',
-        spec: EXAMPLE_CIRCOS_3,
-        hidden: true,
+        name: 'Stacking Circular Tracks',
+        spec: EXAMPLE_CIRCOS_STACKING,
         underDevelopment: true,
-        forceShow: false
+        forceShow: true
     },
     {
         name: 'UpSet-like Plot',
