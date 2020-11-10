@@ -124,6 +124,6 @@ const ideogramTracks: Track[] = [];
     );
 });
 export const EXAMPLE_IDEOGRAM: GeminiSpec = {
-    layout: { direction: 'vertical', type: 'linear' },
+    layout: { direction: 'vertical', type: 'linear', rowSizes: [60, 20], columnSizes: 1000, rowGaps: [0, 30] },
     tracks: ideogramTracks
 };

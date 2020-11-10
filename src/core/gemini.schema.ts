@@ -17,15 +17,15 @@ export interface GeminiSpec {
 export interface Layout {
     type: 'linear' | 'circular';
     direction: 'vertical' | 'horizontal';
+    wrap?: number;
 
-    colGaps?: number[];
-    rowGaps?: number[];
+    columnSizes?: number | number[];
+    rowSizes?: number | number[];
 
-    colSizes?: number[];
-    rowSizes?: number[];
+    columnGaps?: number | number[];
+    rowGaps?: number | number[];
 
     // !deprecated
-    wrap?: number;
     gap?: number;
 }
 

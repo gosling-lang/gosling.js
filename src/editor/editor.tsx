@@ -13,13 +13,13 @@ import { GeminiSpec } from '../core/gemini.schema';
 import { debounce } from 'lodash';
 import { examples } from './example';
 import { replaceTemplate } from '../core/utils';
-import { getEntireBoundingBox } from '../core/utils/bounding-box';
+import { getGridInfo } from '../core/utils/bounding-box';
 import { HiGlassSpec } from '../core/higlass.schema';
 import GeminiSchema from '../../build/gemini.schema.json';
 import { validateSpec, Validity } from '../core/utils/validate';
-import './editor.css';
 import { renderView } from '../core/layout/view';
 import stripJsonComments from 'strip-json-comments';
+import './editor.css';
 
 /**
  * Register a Gemini plugin track to HiGlassComponent
@@ -84,16 +84,16 @@ function Editor() {
      */
     const hglass = useMemo(() => {
         const editedGm = replaceTemplate(JSON.parse(stripJsonComments(gm)));
-        const bb = getEntireBoundingBox(editedGm);
-        return hg && bb ? (
+        const size = getGridInfo(editedGm);
+        return hg && size ? (
             <>
                 <div
                     style={{
                         position: 'relative',
                         padding: 60,
                         background: 'white',
-                        width: bb.width + 120,
-                        height: bb.height + 120
+                        width: size.width + 120,
+                        height: size.height + 120
                     }}
                 >
                     <div
@@ -104,8 +104,8 @@ function Editor() {
                             background: 'white',
                             margin: 10,
                             padding: 0, // non-zero padding act unexpectedly with HiGlass components
-                            width: bb.width,
-                            height: bb.height
+                            width: size.width,
+                            height: size.height
                         }}
                     >
                         <HiGlassComponent
@@ -130,7 +130,7 @@ function Editor() {
                 {editedGm.description ? (
                     <div
                         style={{
-                            width: bb.width + 120,
+                            width: size.width + 120,
                             margin: 20,
                             color: 'black'
                         }}

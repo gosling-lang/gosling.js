@@ -920,17 +920,31 @@
       "additionalProperties": false,
       "description": "Layout specification for multiple tracks",
       "properties": {
-        "colGaps": {
-          "items": {
-            "type": "number"
-          },
-          "type": "array"
+        "columnGaps": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "items": {
+                "type": "number"
+              },
+              "type": "array"
+            }
+          ]
         },
-        "colSizes": {
-          "items": {
-            "type": "number"
-          },
-          "type": "array"
+        "columnSizes": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "items": {
+                "type": "number"
+              },
+              "type": "array"
+            }
+          ]
         },
         "direction": {
           "enum": [
@@ -943,16 +957,30 @@
           "type": "number"
         },
         "rowGaps": {
-          "items": {
-            "type": "number"
-          },
-          "type": "array"
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "items": {
+                "type": "number"
+              },
+              "type": "array"
+            }
+          ]
         },
         "rowSizes": {
-          "items": {
-            "type": "number"
-          },
-          "type": "array"
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "items": {
+                "type": "number"
+              },
+              "type": "array"
+            }
+          ]
         },
         "type": {
           "enum": [

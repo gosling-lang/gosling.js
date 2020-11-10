@@ -26,7 +26,7 @@ export const examples: ReadonlyArray<{
         name: 'Basic Marks',
         spec: EXMAPLE_BASIC_MARKS,
         hidden: false,
-        forceShow: true
+        forceShow: false
     },
     {
         name: 'Text Marks',
@@ -39,7 +39,8 @@ export const examples: ReadonlyArray<{
     },
     {
         name: 'Ideograms (Static)',
-        spec: EXAMPLE_IDEOGRAM
+        spec: EXAMPLE_IDEOGRAM,
+        forceShow: true
     },
     {
         name: 'Custom Gene Annotation Tracks',
