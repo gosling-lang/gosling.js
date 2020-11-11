@@ -26,7 +26,7 @@ export function drawArea(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMod
     const { tileX } = trackInfo.getTilePosAndDimensions(tile.tileData.zoomLevel, tile.tileData.tilePos, tileSize);
 
     /* circular parameters */
-    const circular = spec._is_circular;
+    const circular = spec.circularLayout;
     const trackInnerRadius = spec.innerRadius ?? 220; // TODO: should default values be filled already
     const trackOuterRadius = spec.outerRadius ?? 300; // TODO: should be smaller than Math.min(width, height)
     const startAngle = spec.startAngle ?? 0;

@@ -2,6 +2,80 @@ import { GeminiSpec, Track } from '../../core/gemini.schema';
 import { EXAMPLE_DATASETS } from './datasets';
 import { EXAMPLE_IDEOGRAM_TRACK } from './ideogram';
 
+export const EXMAPLE_SEMANTIC_ZOOM_SEQ: Track = {
+    data: {
+        url: EXAMPLE_DATASETS.fasta,
+        type: 'tileset'
+    },
+    metadata: {
+        type: 'higlass-multivec',
+        row: 'base',
+        column: 'position',
+        value: 'count',
+        categories: ['A', 'T', 'G', 'C'],
+        start: 'start',
+        end: 'end'
+    },
+    superpose: [
+        {
+            mark: 'bar',
+            y: { field: 'count', type: 'quantitative' }
+        },
+        {
+            mark: 'bar',
+            y: { field: 'count', type: 'quantitative' },
+            strokeWidth: { value: 1 },
+            stroke: { value: 'white' },
+            visibility: {
+                operation: 'gtet',
+                condition: { width: 20, transitionPadding: 10 },
+                target: 'mark'
+            }
+        },
+        {
+            dataTransform: { filter: [{ field: 'count', oneOf: [0], not: true }] },
+            mark: 'text',
+            x: {
+                field: 'start',
+                type: 'genomic',
+                domain: { chromosome: '1', interval: [3000000, 3000010] },
+                axis: 'top'
+            },
+            xe: {
+                field: 'end',
+                type: 'genomic'
+            },
+            color: { value: 'white' },
+            visibility: {
+                operation: 'less-than',
+                condition: { width: '|xe-x|', transitionPadding: 30 },
+                target: 'mark'
+            }
+        }
+    ],
+    x: {
+        field: 'position',
+        type: 'genomic',
+        domain: { chromosome: '1', interval: [3000000, 3000010] },
+        axis: 'top'
+    },
+    color: {
+        field: 'base',
+        type: 'nominal',
+        domain: ['A', 'T', 'G', 'C'],
+        legend: true
+    },
+    text: {
+        field: 'base',
+        type: 'nominal'
+    },
+    style: {
+        textFontSize: 24,
+        textStrokeWidth: 0,
+        textFontWeight: 'bold'
+    }
+};
+
 const EXAMPLE_SEMANTIC_ZOOMING_LINES: Track = {
     data: {
         url: EXAMPLE_DATASETS.multivec,
@@ -55,8 +129,8 @@ export const EXAMPLE_SEMANTIC_ZOOMING_IDEOGRAM: Track = {
             x: {
                 field: 'Basepair_start',
                 type: 'genomic',
-                aggregate: 'min',
-                axis: 'top'
+                aggregate: 'min'
+                // axis: 'top'
             },
             xe: {
                 field: 'Basepair_stop',
@@ -83,79 +157,7 @@ export const EXAMPLE_SEMANTIC_ZOOMING: GeminiSpec = {
         rowSizes: [180, 60, 180, 100, 60]
     },
     tracks: [
-        {
-            data: {
-                url: EXAMPLE_DATASETS.fasta,
-                type: 'tileset'
-            },
-            metadata: {
-                type: 'higlass-multivec',
-                row: 'base',
-                column: 'position',
-                value: 'count',
-                categories: ['A', 'T', 'G', 'C'],
-                start: 'start',
-                end: 'end'
-            },
-            superpose: [
-                {
-                    mark: 'bar',
-                    y: { field: 'count', type: 'quantitative' }
-                },
-                {
-                    mark: 'bar',
-                    y: { field: 'count', type: 'quantitative' },
-                    strokeWidth: { value: 1 },
-                    stroke: { value: 'white' },
-                    visibility: {
-                        operation: 'gtet',
-                        condition: { width: 20, transitionPadding: 10 },
-                        target: 'mark'
-                    }
-                },
-                {
-                    dataTransform: { filter: [{ field: 'count', oneOf: [0], not: true }] },
-                    mark: 'text',
-                    x: {
-                        field: 'start',
-                        type: 'genomic',
-                        domain: { chromosome: '1', interval: [3000000, 3000010] },
-                        axis: 'top'
-                    },
-                    xe: {
-                        field: 'end',
-                        type: 'genomic'
-                    },
-                    color: { value: 'white' },
-                    visibility: {
-                        operation: 'less-than',
-                        condition: { width: '|xe-x|', transitionPadding: 30 },
-                        target: 'mark'
-                    },
-                    style: {
-                        textFontSize: 24,
-                        textStrokeWidth: 0,
-                        textFontWeight: 'bold'
-                    }
-                }
-            ],
-            x: {
-                field: 'position',
-                type: 'genomic',
-                domain: { chromosome: '1', interval: [3000000, 3000010] },
-                axis: 'top'
-            },
-            color: {
-                field: 'base',
-                type: 'nominal',
-                domain: ['A', 'T', 'G', 'C'],
-                legend: true
-            },
-            text: {
-                field: 'base',
-                type: 'nominal'
-            }
-        },
+        EXMAPLE_SEMANTIC_ZOOM_SEQ,
         EXAMPLE_SEMANTIC_ZOOMING_IDEOGRAM,
         EXAMPLE_SEMANTIC_ZOOMING_LINES,
         EXAMPLE_SEMANTIC_ZOOMING_LINES,

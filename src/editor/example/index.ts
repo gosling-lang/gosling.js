@@ -48,7 +48,7 @@ export const examples: ReadonlyArray<{
         forceShow: false
     },
     {
-        name: 'Between and Within Links',
+        name: 'Band and Line Connections',
         spec: EXAMPLE_LINKS,
         underDevelopment: true
     },

@@ -1,12 +1,12 @@
-import { GeminiSpec, Track } from '../../core/gemini.schema';
+import { GeminiSpec, SuperposedTrack, Track } from '../../core/gemini.schema';
 import { EXAMPLE_DATASETS } from './datasets';
+import { EXAMPLE_SEMANTIC_ZOOMING_IDEOGRAM, EXMAPLE_SEMANTIC_ZOOM_SEQ } from './semantic-zoom';
 
 // refer to the following for supporting zooming and panning in circular layouts:
 // higlass/app/scripts/TrackRenderer.js
-
-const width = 320;
-const outerRadius = 110;
-const innerRadius = 40;
+const size = 210;
+const outerRadius = 100;
+const innerRadius = 70;
 
 const commonMultivecSpec: Partial<Track> = {
     data: {
@@ -18,6 +18,7 @@ const commonMultivecSpec: Partial<Track> = {
         row: 'sample',
         column: 'position',
         value: 'peak',
+        bin: 2,
         categories: [
             'sample 1',
             'sample 2',
@@ -45,8 +46,6 @@ const CIRCOS_HEATMAP: Track = {
     },
     row: { field: 'sample', type: 'nominal' },
     color: { field: 'peak', type: 'quantitative', range: 'spectral' },
-    width,
-    height: 250,
 
     outerRadius,
     innerRadius,
@@ -69,8 +68,6 @@ const CIRCOS_LINE: Track = {
     y: { field: 'peak', type: 'quantitative' },
     row: { field: 'sample', type: 'nominal', grid: true },
     color: { field: 'sample', type: 'nominal' },
-    width,
-    height: 250,
 
     outerRadius,
     innerRadius,
@@ -134,35 +131,132 @@ const IDEOGRAM: Track = {
                 filter: [{ field: 'Stain', oneOf: ['acen-2'], not: false }]
             },
             color: { value: '#B40101' }
-        },
-        {
-            mark: 'rect-brush',
-            x: { linker: 'link-1' },
-            color: { value: 'blue' },
-            opacity: { value: 0.2 }
         }
     ],
-    x: { field: 'Basepair_start', type: 'genomic', axis: 'top', domain: { chromosome: '1' } },
+    x: { field: 'Basepair_start', type: 'genomic', linker: 'link-1', domain: { chromosome: '1' } },
     xe: { field: 'Basepair_stop', type: 'genomic' },
     stroke: { value: 'gray' },
     strokeWidth: { value: 0.5 },
-    style: { outline: 'white' },
-    width: width * 3,
-    height: 60
+    style: { outline: 'white' }
+};
+
+export const EXAMPLE_LINK: Track = {
+    data: {
+        url: EXAMPLE_DATASETS.region2,
+        type: 'tileset'
+    },
+    metadata: {
+        type: 'higlass-bed',
+        genomicFields: [
+            { name: 'start', index: 1 },
+            { name: 'end', index: 2 }
+        ]
+    },
+    superpose: [
+        {
+            mark: 'link',
+            x: {
+                field: 'start',
+                type: 'genomic',
+                domain: { chromosome: '4', interval: [132650000, 132680000] },
+                linker: 'link-2'
+            },
+            xe: {
+                field: 'end',
+                type: 'genomic'
+            },
+            strokeWidth: { value: 1 }
+        }
+    ],
+    color: { value: 'none' },
+    // stroke: { value: 'steelblue' },
+    stroke: { field: 'start', type: 'nominal' },
+    opacity: { value: 0.3 },
+    // style: { circularLink: true, background: "lightgray" },
+    outerRadius,
+    innerRadius: 80
+};
+
+export const EXAMPLE_BAND: Track = {
+    data: {
+        url: 'https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/circos-segdup-edited.txt',
+        type: 'csv',
+        chromosomeField: 'c2',
+        genomicFields: ['s1', 'e1', 's2', 'e2']
+    },
+    superpose: [
+        {
+            mark: 'link',
+            x: {
+                field: 's1',
+                type: 'genomic',
+                domain: { chromosome: '1', interval: [103900000, 104100000] },
+                linker: 'link-3'
+            },
+            xe: {
+                field: 'e1',
+                type: 'genomic'
+            },
+            x1: {
+                field: 's2',
+                type: 'genomic',
+                domain: { chromosome: '1' }
+            },
+            x1e: {
+                field: 'e2',
+                type: 'genomic'
+            }
+        }
+    ],
+    color: { field: 's1', type: 'nominal' },
+    stroke: { value: 'steelblue' },
+    opacity: { value: 0.4 },
+    style: { circularLink: true },
+    outerRadius,
+    innerRadius: 80
 };
 
 export const EXAMPLE_CIRCOS: GeminiSpec = {
     layout: {
         type: 'circular',
         direction: 'horizontal',
-        wrap: 3,
-        rowSizes: 300,
-        columnSizes: 300,
-        columnGaps: 0,
-        rowGaps: 0
+        wrap: 4,
+        rowSizes: [60, size, size, size, size],
+        columnSizes: size,
+        columnGaps: 6,
+        rowGaps: 6
     },
     tracks: [
-        { ...IDEOGRAM, width, height: 350, outerRadius, innerRadius: 80 },
+        {
+            circularLayout: false,
+            ...EXAMPLE_SEMANTIC_ZOOMING_IDEOGRAM,
+            x: {
+                ...EXAMPLE_SEMANTIC_ZOOMING_IDEOGRAM.x,
+                domain: undefined
+            },
+            superpose: [
+                ...(EXAMPLE_SEMANTIC_ZOOMING_IDEOGRAM as SuperposedTrack).superpose,
+                {
+                    mark: 'rect-brush',
+                    x: { linker: 'link-1' },
+                    color: { value: 'blue' },
+                    opacity: { value: 0.2 }
+                },
+                {
+                    mark: 'rect-brush',
+                    x: { linker: 'link-2' },
+                    color: { value: 'red' },
+                    opacity: { value: 0.2 }
+                },
+                {
+                    mark: 'rect-brush',
+                    x: { linker: 'link-3' },
+                    color: { value: 'green' },
+                    opacity: { value: 0.2 }
+                }
+            ],
+            span: 4
+        },
         CIRCOS_HEATMAP,
         CIRCOS_LINE,
         { ...CIRCOS_LINE, mark: 'area', row: undefined },
@@ -170,10 +264,130 @@ export const EXAMPLE_CIRCOS: GeminiSpec = {
         {
             ...CIRCOS_LINE,
             mark: 'point',
-            size: { field: 'peak', type: 'quantitative', range: [1, 3] },
+            size: { field: 'peak', type: 'quantitative', range: [0, 3] },
             opacity: { value: 0.8 }
         },
         { ...CIRCOS_LINE, mark: 'bar' },
-        { ...CIRCOS_LINE, mark: 'bar', row: undefined /* color: { ...CIRCOS_LINE.color, legend: true } */ }
+        { ...CIRCOS_LINE, mark: 'bar', row: undefined /* color: { ...CIRCOS_LINE.color, legend: true } */ },
+        { ...IDEOGRAM, outerRadius, innerRadius: 80 },
+        EXAMPLE_BAND,
+        EXAMPLE_LINK,
+        {
+            ...EXMAPLE_SEMANTIC_ZOOM_SEQ,
+            x: {
+                ...EXMAPLE_SEMANTIC_ZOOM_SEQ.x,
+                axis: 'none',
+                domain: { chromosome: '1', interval: [3000000, 3000006] }
+            },
+            outerRadius,
+            innerRadius: 40,
+            style: {
+                ...EXMAPLE_SEMANTIC_ZOOM_SEQ.style,
+                textFontSize: 16
+            }
+        },
+        {
+            ...EXAMPLE_SEMANTIC_ZOOMING_IDEOGRAM,
+            x: { ...EXAMPLE_SEMANTIC_ZOOMING_IDEOGRAM.x, axis: 'none', linker: 'overview' },
+            outerRadius,
+            innerRadius: 80
+        }
+        // { ...HIGLASS_GENE_ANNOTATION, outerRadius, innerRadius: 80 }
+        // {
+        //     outerRadius, innerRadius: 30,
+        //     data: {
+        //         url: EXAMPLE_DATASETS.clinvar,
+        //         type: 'tileset'
+        //     },
+        //     metadata: {
+        //         type: 'higlass-bed',
+        //         genomicFields: [
+        //             { index: 1, name: 'start' },
+        //             { index: 2, name: 'end' }
+        //         ],
+        //         valueFields: [{ index: 7, name: 'significance', type: 'nominal' }]
+        //     },
+        //     superpose: [
+        //         {
+        //             mark: 'bar',
+        //             stroke: {
+        //                 field: 'significance',
+        //                 type: 'nominal',
+        //                 domain: [
+        //                     'Pathogenic',
+        //                     'Pathogenic/Likely_pathogenic',
+        //                     'Likely_pathogenic',
+        //                     'Uncertain_significance',
+        //                     'Likely_benign',
+        //                     'Benign/Likely_benign',
+        //                     'Benign'
+        //                 ],
+        //                 range: ['#D45E00', '#D45E00', '#D45E00', 'black', '#029F73', '#029F73', '#029F73']
+        //             },
+        //             strokeWidth: { value: 0.5 },
+        //             size: { value: 1 }
+        //         },
+        //         {
+        //             mark: 'point',
+        //             size: { value: 3 },
+        //             // just for adding a legend only once
+        //             color: {
+        //                 field: 'significance',
+        //                 type: 'nominal',
+        //                 domain: [
+        //                     'Pathogenic',
+        //                     'Pathogenic/Likely_pathogenic',
+        //                     'Likely_pathogenic',
+        //                     'Uncertain_significance',
+        //                     'Likely_benign',
+        //                     'Benign/Likely_benign',
+        //                     'Benign'
+        //                 ],
+        //                 range: ['#D45E00', '#D45E00', '#D45E00', 'black', '#029F73', '#029F73', '#029F73'],
+        //                 legend: false
+        //             }
+        //         }
+        //     ],
+        //     x: {
+        //         field: 'start',
+        //         type: 'genomic',
+        //         domain: { chromosome: '3' },
+        //     },
+        //     xe: {
+        //         field: 'end',
+        //         type: 'genomic'
+        //     },
+        //     y: {
+        //         field: 'significance',
+        //         type: 'nominal',
+        //         domain: [
+        //             'Pathogenic',
+        //             'Pathogenic/Likely_pathogenic',
+        //             'Likely_pathogenic',
+        //             'Uncertain_significance',
+        //             'Likely_benign',
+        //             'Benign/Likely_benign',
+        //             'Benign'
+        //         ],
+        //         baseline: 'Uncertain_significance',
+        //         range: [150, 20], // TODO: support more accurate positioning
+        //         grid: false
+        //     },
+        //     color: {
+        //         field: 'significance',
+        //         type: 'nominal',
+        //         domain: [
+        //             'Pathogenic',
+        //             'Pathogenic/Likely_pathogenic',
+        //             'Likely_pathogenic',
+        //             'Uncertain_significance',
+        //             'Likely_benign',
+        //             'Benign/Likely_benign',
+        //             'Benign'
+        //         ],
+        //         range: ['#D45E00', '#D45E00', '#D45E00', 'black', '#029F73', '#029F73', '#029F73']
+        //     },
+        //     opacity: { value: 0.6 }
+        // },
     ] //.slice(1)
 } as GeminiSpec;

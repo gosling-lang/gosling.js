@@ -11,7 +11,10 @@ export function fixSpecDownstream(spec: GeminiSpec) {
     if (spec.layout?.type === 'circular') {
         // We need to let individual tracks know that they are rendered in a circular layout
         spec.tracks.forEach(t => {
-            t._is_circular = true;
+            if (t.circularLayout === undefined) {
+                // EXPERIMENTAL: Remove if statement
+                t.circularLayout = true;
+            }
         });
     }
 }

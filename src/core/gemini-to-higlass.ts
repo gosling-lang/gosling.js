@@ -63,7 +63,7 @@ export function geminiToHiGlass(
         // check whether to show axis
         ['x', 'y'].forEach(c => {
             const channel = (firstResolvedSpec as any)[c];
-            if (IsChannelDeep(channel) && channel.axis) {
+            if (IsChannelDeep(channel) && channel.axis && channel.axis !== 'none') {
                 hgModel.setAxisTrack(channel.axis);
             }
         });

@@ -15,11 +15,10 @@ export function drawPoint(HGC: any, trackInfo: any, tile: any, model: GeminiTrac
     const data = model.data();
 
     /* track size */
-    const trackWidth = trackInfo.dimensions[0];
-    const trackHeight = trackInfo.dimensions[1];
+    const [trackWidth, trackHeight] = trackInfo.dimensions;
 
     /* circular parameters */
-    const circular = spec._is_circular;
+    const circular = spec.circularLayout;
     const trackInnerRadius = spec.innerRadius ?? 220;
     const trackOuterRadius = spec.outerRadius ?? 300;
     const startAngle = spec.startAngle ?? 0;

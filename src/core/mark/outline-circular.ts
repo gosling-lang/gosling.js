@@ -29,7 +29,7 @@ export function drawCircularOutlines(HGC: any, trackInfo: any, tile: any, tm: Ge
     graphics.lineStyle(
         1,
         colorToHex(spec.style?.outline ?? '#DBDBDB'),
-        0.4, // alpha
+        0, // 0.4, // alpha
         0 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
     );
     graphics.beginFill(colorToHex('white'), 0);
@@ -71,7 +71,7 @@ export function drawCircularOutlines(HGC: any, trackInfo: any, tile: any, tm: Ge
         0, // alpha
         0.5 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
     );
-    graphics.beginFill(colorToHex('white'), 1);
+    graphics.beginFill(colorToHex('white'), 0);
     graphics.moveTo(cx, cy);
     graphics.arc(cx, cy, trackOuterRadius + 3, startRad, endRad, false);
     graphics.closePath();
@@ -83,6 +83,6 @@ export function drawCircularOutlines(HGC: any, trackInfo: any, tile: any, tm: Ge
         0, // alpha
         0 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
     );
-    graphics.beginFill(colorToHex('white'), 1);
+    graphics.beginFill(colorToHex('white'), 0);
     graphics.drawCircle(cx, cy, trackInnerRadius - 1);
 }

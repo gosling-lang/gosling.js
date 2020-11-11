@@ -25,7 +25,7 @@ export function drawRect(HGC: any, trackInfo: any, tile: any, model: GeminiTrack
     );
 
     /* circular parameters */
-    const circular = spec._is_circular;
+    const circular = spec.circularLayout;
     const trackInnerRadius = spec.innerRadius ?? 220;
     const trackOuterRadius = spec.outerRadius ?? 300; // TODO: should be smaller than Math.min(width, height)
     const startAngle = spec.startAngle ?? 0;
@@ -51,7 +51,7 @@ export function drawRect(HGC: any, trackInfo: any, tile: any, model: GeminiTrack
     const stroke = model.encodedValue('stroke');
 
     /* render */
-    const graphics = tile.graphics;
+    const g = tile.graphics;
     rowCategories.forEach(rowCategory => {
         const rowPosition = model.encodedValue('row', rowCategory);
 
@@ -76,7 +76,7 @@ export function drawRect(HGC: any, trackInfo: any, tile: any, model: GeminiTrack
             }
 
             // stroke
-            graphics.lineStyle(
+            g.lineStyle(
                 strokeWidth,
                 colorToHex(stroke),
                 actualOpacity, // alpha
@@ -95,14 +95,14 @@ export function drawRect(HGC: any, trackInfo: any, tile: any, model: GeminiTrack
                 const startRad = valueToRadian(x, trackWidth, startAngle, endAngle);
                 const endRad = valueToRadian(x + rectWidth, trackWidth, startAngle, endAngle);
 
-                graphics.beginFill(colorToHex(color), actualOpacity);
-                graphics.moveTo(sPos.x, sPos.y);
-                graphics.arc(cx, cy, nearR, startRad, endRad, true);
-                graphics.arc(cx, cy, farR, endRad, startRad, false);
-                graphics.closePath();
+                g.beginFill(colorToHex(color), actualOpacity);
+                g.moveTo(sPos.x, sPos.y);
+                g.arc(cx, cy, nearR, startRad, endRad, true);
+                g.arc(cx, cy, farR, endRad, startRad, false);
+                g.closePath();
             } else {
-                graphics.beginFill(colorToHex(color), actualOpacity);
-                graphics.drawRect(x, rowPosition + y - rectHeight / 2.0, rectWidth, rectHeight);
+                g.beginFill(colorToHex(color), actualOpacity);
+                g.drawRect(x, rowPosition + y - rectHeight / 2.0, rectWidth, rectHeight);
             }
         });
     });

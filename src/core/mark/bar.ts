@@ -26,7 +26,7 @@ export function drawBar(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMode
     );
 
     /* circular parameters */
-    const circular = spec._is_circular;
+    const circular = spec.circularLayout;
     const trackInnerRadius = spec.innerRadius ?? 220;
     const trackOuterRadius = spec.outerRadius ?? 300; // TODO: should be smaller than Math.min(width, height)
     const startAngle = spec.startAngle ?? 0;

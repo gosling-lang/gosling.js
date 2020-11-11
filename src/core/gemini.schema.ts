@@ -130,6 +130,7 @@ export interface BasicSingleTrack {
     superposeOnPreviousTrack?: boolean;
 
     // Circular Layout
+    circularLayout?: boolean;
     outerRadius?: number;
     innerRadius?: number;
     startAngle?: number; // [0, 360]
@@ -176,9 +177,6 @@ export interface BasicSingleTrack {
 
     // Styling
     style?: TrackStyle;
-
-    // Specs internally used
-    _is_circular?: boolean;
 }
 
 /**
@@ -200,7 +198,7 @@ export interface TrackStyle {
     align?: 'left' | 'right';
     dy?: number;
     outline?: string;
-    circularLink?: boolean;
+    circularLink?: boolean; // draw arc instead of bazier curve?
     // below options could instead be used with channel options (e.g., size, stroke, strokeWidth)
     textFontSize?: number;
     textStroke?: string;
@@ -311,7 +309,7 @@ export interface ChannelDeep {
     grid?: boolean;
     linker?: string;
 }
-export type AxisPosition = 'top' | 'bottom' | 'left' | 'right';
+export type AxisPosition = 'none' | 'top' | 'bottom' | 'left' | 'right';
 export type FieldType = 'genomic' | 'nominal' | 'quantitative';
 
 export interface ChannelValue {

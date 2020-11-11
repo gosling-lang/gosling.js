@@ -19,3 +19,11 @@ export function cartesianToPolar(x: number, max: number, r: number, cx: number, 
         y: cy + r * Math.sin(valueToRadian(x, max, sa, ea))
     };
 }
+
+export function positionToRadian(x: number, y: number, cx: number, cy: number) {
+    if (cx <= x) {
+        return Math.atan((y - cy) / (x - cx));
+    } else {
+        return Math.atan((y - cy) / (x - cx)) - Math.PI;
+    }
+}

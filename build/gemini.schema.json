@@ -14,6 +14,7 @@
     },
     "AxisPosition": {
       "enum": [
+        "none",
         "top",
         "bottom",
         "left",
@@ -123,11 +124,11 @@
     "BasicSingleTrack": {
       "additionalProperties": false,
       "properties": {
-        "_is_circular": {
-          "type": "boolean"
-        },
         "background": {
           "$ref": "#/definitions/ChannelValue"
+        },
+        "circularLayout": {
+          "type": "boolean"
         },
         "color": {
           "$ref": "#/definitions/Channel"
@@ -1329,20 +1330,20 @@
       "additionalProperties": false,
       "description": "Superposing multiple tracks.",
       "properties": {
-        "_is_circular": {
+        "background": {
           "anyOf": [
             {
-              "type": "boolean"
+              "$ref": "#/definitions/ChannelValue"
             },
             {
               "$ref": "#/definitions/Channel"
             }
           ]
         },
-        "background": {
+        "circularLayout": {
           "anyOf": [
             {
-              "$ref": "#/definitions/ChannelValue"
+              "type": "boolean"
             },
             {
               "$ref": "#/definitions/Channel"
@@ -1517,20 +1518,20 @@
           "items": {
             "additionalProperties": false,
             "properties": {
-              "_is_circular": {
+              "background": {
                 "anyOf": [
                   {
-                    "type": "boolean"
+                    "$ref": "#/definitions/ChannelValue"
                   },
                   {
                     "$ref": "#/definitions/Channel"
                   }
                 ]
               },
-              "background": {
+              "circularLayout": {
                 "anyOf": [
                   {
-                    "$ref": "#/definitions/ChannelValue"
+                    "type": "boolean"
                   },
                   {
                     "$ref": "#/definitions/Channel"
@@ -1869,20 +1870,20 @@
     "SuperposedTrackTwoLevels": {
       "additionalProperties": false,
       "properties": {
-        "_is_circular": {
+        "background": {
           "anyOf": [
             {
-              "type": "boolean"
+              "$ref": "#/definitions/ChannelValue"
             },
             {
               "$ref": "#/definitions/Channel"
             }
           ]
         },
-        "background": {
+        "circularLayout": {
           "anyOf": [
             {
-              "$ref": "#/definitions/ChannelValue"
+              "type": "boolean"
             },
             {
               "$ref": "#/definitions/Channel"
@@ -2057,20 +2058,20 @@
           "items": {
             "additionalProperties": false,
             "properties": {
-              "_is_circular": {
+              "background": {
                 "anyOf": [
                   {
-                    "type": "boolean"
+                    "$ref": "#/definitions/ChannelValue"
                   },
                   {
                     "$ref": "#/definitions/Channel"
                   }
                 ]
               },
-              "background": {
+              "circularLayout": {
                 "anyOf": [
                   {
-                    "$ref": "#/definitions/ChannelValue"
+                    "type": "boolean"
                   },
                   {
                     "$ref": "#/definitions/Channel"
@@ -2245,20 +2246,20 @@
                 "items": {
                   "additionalProperties": false,
                   "properties": {
-                    "_is_circular": {
+                    "background": {
                       "anyOf": [
                         {
-                          "type": "boolean"
+                          "$ref": "#/definitions/ChannelValue"
                         },
                         {
                           "$ref": "#/definitions/Channel"
                         }
                       ]
                     },
-                    "background": {
+                    "circularLayout": {
                       "anyOf": [
                         {
-                          "$ref": "#/definitions/ChannelValue"
+                          "type": "boolean"
                         },
                         {
                           "$ref": "#/definitions/Channel"
