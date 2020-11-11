@@ -6,6 +6,8 @@ import { GLYPH_LOCAL_PRESET_TYPE, GLYPH_HIGLASS_PRESET_TYPE } from '../editor/ex
 export interface GeminiSpec {
     layout?: Layout;
     tracks: Track[];
+    width?: number;
+    height?: number;
     description?: string;
 }
 
@@ -13,9 +15,17 @@ export interface GeminiSpec {
  * Layout specification for multiple tracks
  */
 export interface Layout {
-    type: 'linear' | 'circular';
+    type: 'linear' | 'circular'; // TODO: should this be moved to the track-level spec?
     direction: 'vertical' | 'horizontal';
     wrap?: number;
+
+    columnSizes?: number | number[];
+    rowSizes?: number | number[];
+
+    columnGaps?: number | number[];
+    rowGaps?: number | number[];
+
+    // !deprecated
     gap?: number;
 }
 
@@ -117,8 +127,13 @@ export interface BasicSingleTrack {
     width?: number;
     height?: number;
     span?: number;
-    outerRadius?: number; // circular layout
-    innerRadius?: number; // circular layout
+    superposeOnPreviousTrack?: boolean;
+
+    // Circular Layout
+    outerRadius?: number;
+    innerRadius?: number;
+    startAngle?: number; // [0, 360]
+    endAngle?: number; // [0, 360]
 
     // Data
     data: DataDeep | Datum[];
@@ -162,7 +177,7 @@ export interface BasicSingleTrack {
     // Styling
     style?: TrackStyle;
 
-    // experimental/internal options
+    // Specs internally used
     _is_circular?: boolean;
 }
 

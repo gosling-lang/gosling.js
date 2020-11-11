@@ -3,6 +3,11 @@ import { EXAMPLE_BASIC_AREA } from './basic-marks';
 import { EXAMPLE_DATASETS } from './datasets';
 
 export const EXMAPLE_BASIC_LINKING: GeminiSpec = {
+    layout: {
+        type: 'linear',
+        direction: 'vertical',
+        columnSizes: 800
+    },
     tracks: [
         {
             data: {

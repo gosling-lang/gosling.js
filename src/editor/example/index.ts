@@ -12,6 +12,7 @@ import { EXAMPLE_UPSET } from './upset';
 import { EXAMPLE_LOGO_LIKE } from './text-stretch';
 import { EXAMPLE_CIRCOS } from './circos';
 import { EXAMPLE_CIRCOS_MANY } from './circos-many-rows';
+import { EXAMPLE_CIRCOS_STACKING } from './circos-stacking';
 
 export const examples: ReadonlyArray<{
     name: string;
@@ -24,6 +25,7 @@ export const examples: ReadonlyArray<{
     {
         name: 'Basic Marks',
         spec: EXMAPLE_BASIC_MARKS,
+        underDevelopment: false,
         hidden: false,
         forceShow: false
     },
@@ -42,13 +44,13 @@ export const examples: ReadonlyArray<{
     },
     {
         name: 'Custom Gene Annotation Tracks',
-        spec: EXAMPLE_GENE_ANNOTATION
+        spec: EXAMPLE_GENE_ANNOTATION,
+        forceShow: false
     },
     {
         name: 'Between and Within Links',
         spec: EXAMPLE_LINKS,
-        underDevelopment: true,
-        forceShow: true
+        underDevelopment: true
     },
     {
         name: 'Semantic Zooming',
@@ -60,14 +62,12 @@ export const examples: ReadonlyArray<{
     },
     {
         name: 'Overview + Detail views',
-        spec: EXAMPLE_OVERVIEW_DEATIL,
-        underDevelopment: true
+        spec: EXAMPLE_OVERVIEW_DEATIL
     },
     {
         name: 'Peripheral Plot',
         spec: EXAMPLE_PERIPHERAL_PLOT,
-        underDevelopment: true,
-        forceShow: false
+        underDevelopment: true
     },
     {
         name: 'Basic Circular Marks',
@@ -78,6 +78,12 @@ export const examples: ReadonlyArray<{
     {
         name: 'Basic Circular Marks 2',
         spec: EXAMPLE_CIRCOS_MANY,
+        underDevelopment: true,
+        forceShow: false
+    },
+    {
+        name: 'Stacking Circular Tracks',
+        spec: EXAMPLE_CIRCOS_STACKING,
         underDevelopment: true,
         forceShow: true
     },

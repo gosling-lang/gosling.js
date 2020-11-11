@@ -2,6 +2,7 @@ import { GeminiSpec } from '../../core/gemini.schema';
 import { EXAMPLE_DATASETS } from './datasets';
 
 export const EXAMPLE_LOGO_LIKE: GeminiSpec = {
+    layout: { type: 'linear', direction: 'vertical', columnSizes: 800 },
     tracks: [
         {
             title: 'based on dummy data',
@@ -56,9 +57,7 @@ export const EXAMPLE_LOGO_LIKE: GeminiSpec = {
             text: {
                 field: 'base',
                 type: 'nominal'
-            },
-            width: 1000,
-            height: 180
+            }
         },
         {
             title: 'based on dummy data',
@@ -103,9 +102,7 @@ export const EXAMPLE_LOGO_LIKE: GeminiSpec = {
             text: {
                 field: 'base',
                 type: 'nominal'
-            },
-            width: 1000,
-            height: 180
+            }
         }
     ]
 };

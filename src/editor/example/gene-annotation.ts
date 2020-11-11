@@ -138,16 +138,15 @@ export const HIGLASS_GENE_ANNOTATION: Track = {
         target: 'mark'
     },
     // background: {"value": "red"},
-    opacity: { value: 0.5 },
-    width: 1000,
-    height: 120
+    opacity: { value: 0.5 }
 };
 
 export const EXAMPLE_GENE_ANNOTATION: GeminiSpec = {
     layout: {
         type: 'linear',
         direction: 'vertical',
-        gap: 20
+        columnSizes: 800,
+        rowSizes: 110
     },
     tracks: [
         HIGLASS_GENE_ANNOTATION,
@@ -260,10 +259,8 @@ export const EXAMPLE_GENE_ANNOTATION: GeminiSpec = {
                 operation: 'less-than',
                 condition: { width: '|xe-x|', transitionPadding: 10 },
                 target: 'mark'
-            },
+            }
             // background: {"value": "red"},
-            width: 1000,
-            height: 120
         },
         {
             data: {
@@ -390,9 +387,7 @@ export const EXAMPLE_GENE_ANNOTATION: GeminiSpec = {
                 condition: { width: '|xe-x|', transitionPadding: 10 },
                 target: 'mark'
             },
-            size: { value: 17 },
-            width: 1000,
-            height: 120
+            size: { value: 17 }
         },
         {
             data: {
@@ -510,9 +505,7 @@ export const EXAMPLE_GENE_ANNOTATION: GeminiSpec = {
                 operation: 'less-than',
                 condition: { width: '|xe-x|', transitionPadding: 10 },
                 target: 'mark'
-            },
-            width: 1000,
-            height: 120
+            }
         },
         {
             data: {
@@ -594,9 +587,7 @@ export const EXAMPLE_GENE_ANNOTATION: GeminiSpec = {
                 operation: 'less-than',
                 condition: { width: '|xe-x|', transitionPadding: 10 },
                 target: 'mark'
-            },
-            width: 1000,
-            height: 120
+            }
         },
         {
             data: {
@@ -690,9 +681,7 @@ export const EXAMPLE_GENE_ANNOTATION: GeminiSpec = {
                 operation: 'less-than',
                 condition: { width: '|xe-x|', transitionPadding: 10 },
                 target: 'mark'
-            },
-            width: 1000,
-            height: 120
+            }
         }
     ]
 };

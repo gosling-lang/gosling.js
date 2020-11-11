@@ -28,6 +28,8 @@ export function drawRect(HGC: any, trackInfo: any, tile: any, model: GeminiTrack
     const circular = spec._is_circular;
     const trackInnerRadius = spec.innerRadius ?? 220;
     const trackOuterRadius = spec.outerRadius ?? 300; // TODO: should be smaller than Math.min(width, height)
+    const startAngle = spec.startAngle ?? 0;
+    const endAngle = spec.endAngle ?? 360;
     const trackRingSize = trackOuterRadius - trackInnerRadius;
     const cx = trackWidth / 2.0;
     const cy = trackHeight / 2.0;
@@ -89,9 +91,9 @@ export function drawRect(HGC: any, trackInfo: any, tile: any, model: GeminiTrack
 
                 const farR = trackOuterRadius - (rowPosition / trackHeight) * trackRingSize;
                 const nearR = trackOuterRadius - ((rowPosition + rectHeight) / trackHeight) * trackRingSize;
-                const sPos = cartesianToPolar(x, trackWidth, nearR, cx, cy);
-                const startRad = valueToRadian(x, trackWidth);
-                const endRad = valueToRadian(x + rectWidth, trackWidth);
+                const sPos = cartesianToPolar(x, trackWidth, nearR, cx, cy, startAngle, endAngle);
+                const startRad = valueToRadian(x, trackWidth, startAngle, endAngle);
+                const endRad = valueToRadian(x + rectWidth, trackWidth, startAngle, endAngle);
 
                 graphics.beginFill(colorToHex(color), actualOpacity);
                 graphics.moveTo(sPos.x, sPos.y);

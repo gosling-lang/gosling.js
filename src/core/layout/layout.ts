@@ -1,49 +1,12 @@
-import { GeminiSpec, Track, Layout, BasicSingleTrack } from '../gemini.schema';
-import { renderLinearLayout } from './layout-linear';
+import { GeminiSpec } from '../gemini.schema';
+import { renderHiGlass } from './higlass';
+import { getArrangement } from '../utils/bounding-box';
 import { HiGlassSpec } from '../higlass.schema';
 
-export const TRACK_BG_STYLE = {
-    background: (track: BasicSingleTrack) => track.style?.background ?? 'white',
-    stroke: (track: BasicSingleTrack) => track.style?.stroke ?? '#e0e0e0',
-    strokeWidth: (track: BasicSingleTrack) => track.style?.strokeWidth ?? 0.5
-};
+export function renderLayout(spec: GeminiSpec, setHg: (hg: HiGlassSpec) => void) {
+    // generate layout data
+    const trackInfo = getArrangement(spec);
 
-export function renderLayout(gm: GeminiSpec, setHg: (hg: HiGlassSpec) => void) {
-    if (gm.layout?.type === 'circular') {
-        // EXPERIMENTAL
-        renderLinearLayout(gm, setHg);
-    } else {
-        renderLinearLayout(gm, setHg);
-    }
-}
-
-/**
- * Convert the vertical-direction layout of tracks to the identical, horizontal-version, tracks.
- * This is deprecated since this cannot support some specifications (e.g., six tracks with `wrap` === 3).
- * @param gm A Gemini specification.
- */
-export function convertLayout(gm: GeminiSpec) {
-    if (gm.layout?.direction !== 'vertical') {
-        return gm;
-    }
-    const wrap = (gm.layout.wrap ?? 0) > gm.tracks.length ? gm.tracks.length : gm.layout.wrap ?? gm.tracks.length;
-    const newWrap = Math.ceil(gm.tracks.length / wrap);
-
-    const newLayout: Layout = {
-        ...gm.layout,
-        direction: 'horizontal',
-        wrap: newWrap
-    };
-
-    const tracks = gm.tracks;
-    const newTracks: Track[] = [];
-    for (let remainder = 0; remainder < wrap; remainder++) {
-        newTracks.push(...tracks.filter((t, i) => i % wrap === remainder));
-    }
-
-    return {
-        ...gm,
-        layout: newLayout,
-        tracks: newTracks
-    };
+    // render HiGlass tracks
+    renderHiGlass(trackInfo, setHg);
 }

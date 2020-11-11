@@ -37,6 +37,7 @@ const commonMultivecSpec: Partial<Track> = {
         bin: 2
     }
 };
+
 const CIRCOS_HEATMAP: Track = {
     ...commonMultivecSpec,
     mark: 'rect',
@@ -57,8 +58,7 @@ const CIRCOS_HEATMAP: Track = {
 
     outerRadius,
     innerRadius,
-    zoomable: false,
-    _is_circular: true
+    zoomable: false
 } as Track;
 
 const CIRCOS_LINE: Track = {
@@ -82,8 +82,7 @@ const CIRCOS_LINE: Track = {
 
     outerRadius,
     innerRadius,
-    zoomable: false,
-    _is_circular: true
+    zoomable: false
 } as Track;
 
 const IDEOGRAM: Track = {
@@ -166,5 +165,5 @@ export const EXAMPLE_CIRCOS_MANY: GeminiSpec = {
         CIRCOS_HEATMAP,
         { ...CIRCOS_LINE, mark: 'area' },
         { ...CIRCOS_LINE, mark: 'bar', row: undefined /* color: { ...CIRCOS_LINE.color, legend: true } */ }
-    ]
+    ].slice(1)
 } as GeminiSpec;

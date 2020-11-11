@@ -39,9 +39,7 @@ const EXAMPLE_SEMANTIC_ZOOMING_LINES: Track = {
             row: { field: 'sample', type: 'nominal' },
             visibility: { target: 'track', condition: { height: 60 }, operation: 'gtet' }
         }
-    ],
-    width: 1000,
-    height: 180
+    ]
 };
 
 export const EXAMPLE_SEMANTIC_ZOOMING_IDEOGRAM: Track = {
@@ -80,7 +78,9 @@ export const EXAMPLE_SEMANTIC_ZOOMING_IDEOGRAM: Track = {
 export const EXAMPLE_SEMANTIC_ZOOMING: GeminiSpec = {
     layout: {
         type: 'linear',
-        direction: 'vertical'
+        direction: 'vertical',
+        columnSizes: 800,
+        rowSizes: [180, 60, 180, 100, 60]
     },
     tracks: [
         {
@@ -154,15 +154,11 @@ export const EXAMPLE_SEMANTIC_ZOOMING: GeminiSpec = {
             text: {
                 field: 'base',
                 type: 'nominal'
-            },
-            width: 1000,
-            height: 180
+            }
         },
-        { mark: 'empty', data: { type: 'csv', url: '' }, width: 50, height: 50 },
         EXAMPLE_SEMANTIC_ZOOMING_IDEOGRAM,
-        { mark: 'empty', data: { type: 'csv', url: '' }, width: 50, height: 50 },
         EXAMPLE_SEMANTIC_ZOOMING_LINES,
-        { ...EXAMPLE_SEMANTIC_ZOOMING_LINES, height: 120 },
-        { ...EXAMPLE_SEMANTIC_ZOOMING_LINES, height: 60 }
+        EXAMPLE_SEMANTIC_ZOOMING_LINES,
+        EXAMPLE_SEMANTIC_ZOOMING_LINES
     ]
 };

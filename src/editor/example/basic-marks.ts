@@ -21,9 +21,7 @@ export const EXAMPLE_HEATMAP: Track = {
         axis: 'top'
     },
     row: { field: 'sample', type: 'nominal', legend: true },
-    color: { field: 'peak', type: 'quantitative' },
-    width: 800,
-    height: 180
+    color: { field: 'peak', type: 'quantitative' }
 };
 
 export const EXAMPLE_BASIC_AREA: Track = {
@@ -49,16 +47,15 @@ export const EXAMPLE_BASIC_AREA: Track = {
     row: { field: 'sample', type: 'nominal' },
     color: { field: 'sample', type: 'nominal', legend: true },
     stroke: { value: 'white' },
-    strokeWidth: { value: 0.5 },
-    width: 800,
-    height: 180
+    strokeWidth: { value: 0.5 }
 };
 
 export const EXMAPLE_BASIC_MARKS: GeminiSpec = {
     layout: {
         type: 'linear',
         direction: 'vertical',
-        gap: 30
+        rowSizes: 180,
+        columnSizes: 800
     },
     tracks: [
         EXAMPLE_HEATMAP,
@@ -84,9 +81,7 @@ export const EXMAPLE_BASIC_MARKS: GeminiSpec = {
             },
             y: { field: 'peak', type: 'quantitative' },
             row: { field: 'sample', type: 'nominal' },
-            color: { field: 'sample', type: 'nominal', legend: true },
-            width: 800,
-            height: 180
+            color: { field: 'sample', type: 'nominal', legend: true }
         },
         {
             data: {
@@ -109,9 +104,7 @@ export const EXMAPLE_BASIC_MARKS: GeminiSpec = {
             },
             y: { field: 'peak', type: 'quantitative' },
             row: { field: 'sample', type: 'nominal' },
-            color: { field: 'sample', type: 'nominal', legend: true },
-            width: 800,
-            height: 180
+            color: { field: 'sample', type: 'nominal', legend: true }
         },
         {
             data: {
@@ -136,9 +129,7 @@ export const EXMAPLE_BASIC_MARKS: GeminiSpec = {
             row: { field: 'sample', type: 'nominal' },
             size: { field: 'peak', type: 'quantitative' },
             color: { field: 'sample', type: 'nominal', legend: true },
-            opacity: { value: 0.5 },
-            width: 800,
-            height: 180
+            opacity: { value: 0.5 }
         }
     ]
 };

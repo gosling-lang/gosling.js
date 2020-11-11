@@ -68,9 +68,7 @@ export const EXAMPLE_IDEOGRAM_TRACK: SuperposedTrack = {
         target: 'mark'
     },
     stroke: { value: 'gray' },
-    strokeWidth: { value: 0.5 },
-    width: 1000,
-    height: 60
+    strokeWidth: { value: 0.5 }
 };
 
 export const EXAMPLE_STACKED_AREA: Track = {
@@ -93,9 +91,7 @@ export const EXAMPLE_STACKED_AREA: Track = {
         axis: 'top'
     },
     y: { field: 'peak', type: 'quantitative' },
-    color: { field: 'sample', type: 'nominal' },
-    width: 1000,
-    height: 60
+    color: { field: 'sample', type: 'nominal' }
 };
 
 const ideogramTracks: Track[] = [];
@@ -124,6 +120,6 @@ const ideogramTracks: Track[] = [];
     );
 });
 export const EXAMPLE_IDEOGRAM: GeminiSpec = {
-    layout: { direction: 'vertical', type: 'linear' },
+    layout: { direction: 'vertical', type: 'linear', rowSizes: [60, 20], columnSizes: 1000, rowGaps: [0, 30] },
     tracks: ideogramTracks
 };

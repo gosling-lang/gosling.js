@@ -50,8 +50,7 @@ const CIRCOS_HEATMAP: Track = {
 
     outerRadius,
     innerRadius,
-    zoomable: false,
-    _is_circular: true
+    zoomable: false
 } as Track;
 
 const CIRCOS_LINE: Track = {
@@ -75,8 +74,7 @@ const CIRCOS_LINE: Track = {
 
     outerRadius,
     innerRadius,
-    zoomable: false,
-    _is_circular: true
+    zoomable: false
 } as Track;
 
 const IDEOGRAM: Track = {
@@ -144,24 +142,27 @@ const IDEOGRAM: Track = {
             opacity: { value: 0.2 }
         }
     ],
-    x: { field: 'Basepair_start', type: 'genomic', axis: 'top' },
+    x: { field: 'Basepair_start', type: 'genomic', axis: 'top', domain: { chromosome: '1' } },
     xe: { field: 'Basepair_stop', type: 'genomic' },
     stroke: { value: 'gray' },
     strokeWidth: { value: 0.5 },
+    style: { outline: 'white' },
     width: width * 3,
     height: 60
 };
 
 export const EXAMPLE_CIRCOS: GeminiSpec = {
-    layout: { type: 'circular', direction: 'horizontal', wrap: 3 },
+    layout: {
+        type: 'circular',
+        direction: 'horizontal',
+        wrap: 3,
+        rowSizes: 300,
+        columnSizes: 300,
+        columnGaps: 0,
+        rowGaps: 0
+    },
     tracks: [
-        { ...IDEOGRAM, span: 3 },
-        // {
-        //     ...CIRCOS_HEATMAP,
-        //     height: 60,
-        //     x: { ...CIRCOS_HEATMAP.x, axis: 'top' },
-        //     _is_circular: false
-        // },
+        { ...IDEOGRAM, width, height: 350, outerRadius, innerRadius: 80 },
         CIRCOS_HEATMAP,
         CIRCOS_LINE,
         { ...CIRCOS_LINE, mark: 'area', row: undefined },
@@ -174,5 +175,5 @@ export const EXAMPLE_CIRCOS: GeminiSpec = {
         },
         { ...CIRCOS_LINE, mark: 'bar' },
         { ...CIRCOS_LINE, mark: 'bar', row: undefined /* color: { ...CIRCOS_LINE.color, legend: true } */ }
-    ]
+    ] //.slice(1)
 } as GeminiSpec;
