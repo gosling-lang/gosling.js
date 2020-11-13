@@ -35,7 +35,7 @@ const CIRCOS_LINE: Track = {
         field: 'start',
         type: 'genomic',
         domain: { chromosome: '6' },
-        linker: 'link-1'
+        linkingID: 'link-1'
     },
     xe: {
         field: 'end',

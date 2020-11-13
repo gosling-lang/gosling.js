@@ -24,9 +24,6 @@ export interface Layout {
 
     columnGaps?: number | number[];
     rowGaps?: number | number[];
-
-    // !deprecated
-    gap?: number;
 }
 
 /**
@@ -307,7 +304,7 @@ export interface ChannelDeep {
     zeroBaseline?: boolean; // We could remove this and use the `baseline` option instead
     mirrored?: boolean; // Show baseline on the top or right instead of bottom or left?
     grid?: boolean;
-    linker?: string;
+    linkingID?: string;
 }
 export type AxisPosition = 'none' | 'top' | 'bottom' | 'left' | 'right';
 export type FieldType = 'genomic' | 'nominal' | 'quantitative';

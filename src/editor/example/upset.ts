@@ -30,7 +30,7 @@ export const EXAMPLE_UPSET: GeminiSpec = {
                     .superpose,
                 {
                     mark: 'rect-brush',
-                    x: { linker: '1' },
+                    x: { linkingID: '1' },
                     color: { value: 'blue' },
                     opacity: { value: 0.2 }
                 }
@@ -57,7 +57,7 @@ export const EXAMPLE_UPSET: GeminiSpec = {
                 field: 'start',
                 type: 'genomic',
                 domain: { chromosome: '1' },
-                linker: '1'
+                linkingID: '1'
             },
             xe: { field: 'end', type: 'genomic' },
             y: { field: 'peak', type: 'quantitative', range: [0, 340] },
@@ -85,7 +85,7 @@ export const EXAMPLE_UPSET: GeminiSpec = {
                 type: 'genomic',
                 domain: { chromosome: '1' },
                 axis: 'top',
-                linker: '1'
+                linkingID: '1'
             },
             row: { field: 'sample', type: 'nominal', domain: ['sample 1', 'sample 2', 'sample 3', 'sample 4'] },
             color: { value: '#3B3B3B' },

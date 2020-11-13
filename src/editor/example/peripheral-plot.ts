@@ -33,9 +33,9 @@ export const EXAMPLE_PERIPHERAL_PLOT: GeminiSpec = {
             ...EXAMPLE_IDEOGRAM_TRACK,
             superpose: [
                 ...EXAMPLE_IDEOGRAM_TRACK.superpose,
-                { mark: 'rect-brush', x: { linker: 'periphery-left' } },
-                { mark: 'rect-brush', x: { linker: 'focus' }, color: { value: 'black' } },
-                { mark: 'rect-brush', x: { linker: 'periphery-right' } }
+                { mark: 'rect-brush', x: { linkingID: 'periphery-left' } },
+                { mark: 'rect-brush', x: { linkingID: 'focus' }, color: { value: 'black' } },
+                { mark: 'rect-brush', x: { linkingID: 'periphery-right' } }
             ],
             span: 3
         },
@@ -47,7 +47,7 @@ export const EXAMPLE_PERIPHERAL_PLOT: GeminiSpec = {
                 field: 'position',
                 type: 'genomic',
                 domain: { chromosome: '1', interval: [1, 50000000] },
-                linker: 'periphery-left',
+                linkingID: 'periphery-left',
                 axis: 'top'
             },
             y: { field: 'peak', type: 'quantitative' },
@@ -63,7 +63,7 @@ export const EXAMPLE_PERIPHERAL_PLOT: GeminiSpec = {
                 type: 'genomic',
                 domain: { chromosome: '1', interval: [50000000, 100000000] },
                 axis: 'top',
-                linker: 'focus'
+                linkingID: 'focus'
             },
             y: { field: 'peak', type: 'quantitative' },
             color: { value: '#3875A3' },
@@ -78,7 +78,7 @@ export const EXAMPLE_PERIPHERAL_PLOT: GeminiSpec = {
                 type: 'genomic',
                 domain: { chromosome: '1', interval: [100000000, 150000000] },
                 axis: 'top',
-                linker: 'periphery-right'
+                linkingID: 'periphery-right'
             },
             y: { field: 'peak', type: 'quantitative' },
             color: { value: '#3875A3' },
@@ -91,7 +91,7 @@ export const EXAMPLE_PERIPHERAL_PLOT: GeminiSpec = {
                 field: 'position',
                 type: 'genomic',
                 domain: { chromosome: '1', interval: [1, 50000000] },
-                linker: 'periphery-left'
+                linkingID: 'periphery-left'
             },
             y: { field: 'peak', type: 'quantitative' },
             color: { value: '#3875A3' },
@@ -105,7 +105,7 @@ export const EXAMPLE_PERIPHERAL_PLOT: GeminiSpec = {
                 field: 'position',
                 type: 'genomic',
                 domain: { chromosome: '1', interval: [50000000, 100000000] },
-                linker: 'focus'
+                linkingID: 'focus'
             },
             y: { field: 'peak', type: 'quantitative' },
             color: { value: '#3875A3' },
@@ -118,7 +118,7 @@ export const EXAMPLE_PERIPHERAL_PLOT: GeminiSpec = {
                 field: 'position',
                 type: 'genomic',
                 domain: { chromosome: '1', interval: [100000000, 150000000] },
-                linker: 'periphery-right'
+                linkingID: 'periphery-right'
             },
             y: { field: 'peak', type: 'quantitative' },
             color: { value: '#3875A3' },

@@ -56,7 +56,7 @@ const CIRCOS_LINE: Track = {
         field: 'start',
         type: 'genomic',
         domain: { chromosome: '6' },
-        linker: 'link-1'
+        linkingID: 'link-1'
     },
     xe: {
         field: 'end',
@@ -156,7 +156,7 @@ export const EXAMPLE_LINK: Track = {
                 field: 'start',
                 type: 'genomic',
                 domain: { chromosome: '4', interval: [132650000, 132680000] },
-                linker: 'link-2'
+                linkingID: 'link-2'
             },
             xe: {
                 field: 'end',
@@ -226,7 +226,7 @@ export const EXAMPLE_SUPERPOSED_CIRCULAR_TRACKS: GeminiSpec = {
                 ...(IDEOGRAM_DETAIL as SuperposedTrack).superpose,
                 {
                     mark: 'rect-brush',
-                    x: { linker: 'link' },
+                    x: { linkingID: 'link' },
                     color: { value: 'blue' },
                     opacity: { value: 0.2 }
                 }
@@ -238,7 +238,7 @@ export const EXAMPLE_SUPERPOSED_CIRCULAR_TRACKS: GeminiSpec = {
             x: {
                 ...IDEOGRAM_DETAIL.x,
                 axis: 'none',
-                linker: 'link',
+                linkingID: 'link',
                 domain: { chromosome: '1', interval: [0, 500000000] }
             },
             outerRadius: 190,
@@ -305,7 +305,7 @@ export const EXAMPLE_SUPERPOSED_CIRCULAR_TRACKS: GeminiSpec = {
                         field: 's1',
                         type: 'genomic',
                         domain: { chromosome: '1', interval: [103900000, 104100000] },
-                        linker: 'link-3'
+                        linkingID: 'link-3'
                     },
                     xe: {
                         field: 'e1',
@@ -345,7 +345,7 @@ export const EXAMPLE_SUPERPOSED_CIRCULAR_TRACKS: GeminiSpec = {
                         field: 's1',
                         type: 'genomic',
                         domain: { chromosome: '1', interval: [103900000, 104100000] },
-                        linker: 'link-3'
+                        linkingID: 'link-3'
                     },
                     xe: {
                         field: 'e1',

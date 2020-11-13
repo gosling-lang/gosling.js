@@ -38,7 +38,7 @@ const CIRCOS_HEATMAP: Track = {
         field: 'start',
         type: 'genomic',
         domain: { chromosome: '6' },
-        linker: 'link-1'
+        linkingID: 'link-1'
     },
     xe: {
         field: 'end',
@@ -59,7 +59,7 @@ const CIRCOS_LINE: Track = {
         field: 'start',
         type: 'genomic',
         domain: { chromosome: '6' },
-        linker: 'link-1'
+        linkingID: 'link-1'
     },
     xe: {
         field: 'end',
@@ -133,7 +133,7 @@ const IDEOGRAM: Track = {
             color: { value: '#B40101' }
         }
     ],
-    x: { field: 'Basepair_start', type: 'genomic', linker: 'link-1', domain: { chromosome: '1' } },
+    x: { field: 'Basepair_start', type: 'genomic', linkingID: 'link-1', domain: { chromosome: '1' } },
     xe: { field: 'Basepair_stop', type: 'genomic' },
     stroke: { value: 'gray' },
     strokeWidth: { value: 0.5 },
@@ -159,7 +159,7 @@ export const EXAMPLE_LINK: Track = {
                 field: 'start',
                 type: 'genomic',
                 domain: { chromosome: '4', interval: [132650000, 132680000] },
-                linker: 'link-2'
+                linkingID: 'link-2'
             },
             xe: {
                 field: 'end',
@@ -191,7 +191,7 @@ export const EXAMPLE_BAND: Track = {
                 field: 's1',
                 type: 'genomic',
                 domain: { chromosome: '1', interval: [103900000, 104100000] },
-                linker: 'link-3'
+                linkingID: 'link-3'
             },
             xe: {
                 field: 'e1',
@@ -238,19 +238,19 @@ export const EXAMPLE_CIRCOS: GeminiSpec = {
                 ...(EXAMPLE_SEMANTIC_ZOOMING_IDEOGRAM as SuperposedTrack).superpose,
                 {
                     mark: 'rect-brush',
-                    x: { linker: 'link-1' },
+                    x: { linkingID: 'link-1' },
                     color: { value: 'blue' },
                     opacity: { value: 0.2 }
                 },
                 {
                     mark: 'rect-brush',
-                    x: { linker: 'link-2' },
+                    x: { linkingID: 'link-2' },
                     color: { value: 'red' },
                     opacity: { value: 0.2 }
                 },
                 {
                     mark: 'rect-brush',
-                    x: { linker: 'link-3' },
+                    x: { linkingID: 'link-3' },
                     color: { value: 'green' },
                     opacity: { value: 0.2 }
                 }
@@ -288,7 +288,7 @@ export const EXAMPLE_CIRCOS: GeminiSpec = {
         },
         {
             ...EXAMPLE_SEMANTIC_ZOOMING_IDEOGRAM,
-            x: { ...EXAMPLE_SEMANTIC_ZOOMING_IDEOGRAM.x, axis: 'none', linker: 'overview' },
+            x: { ...EXAMPLE_SEMANTIC_ZOOMING_IDEOGRAM.x, axis: 'none', linkingID: 'overview' },
             outerRadius,
             innerRadius: 80
         }

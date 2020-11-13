@@ -85,7 +85,7 @@ export class HiGlassModel {
         if (!fromViewUid) return;
 
         // we could do this to either a `whole` track or a `center` track with `combined`
-        (this.getView(viewId) as any).tracks.whole.push({
+        (this.getView(viewId) as any)?.tracks.whole.push({
             type: 'viewport-projection-horizontal',
             uid: uuid.v4(),
             fromViewUid,

@@ -301,7 +301,7 @@
         "legend": {
           "type": "boolean"
         },
-        "linker": {
+        "linkingID": {
           "type": "string"
         },
         "mirrored": {
@@ -956,9 +956,6 @@
             "horizontal"
           ],
           "type": "string"
-        },
-        "gap": {
-          "type": "number"
         },
         "rowGaps": {
           "anyOf": [

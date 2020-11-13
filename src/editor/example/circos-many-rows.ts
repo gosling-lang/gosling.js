@@ -45,7 +45,7 @@ const CIRCOS_HEATMAP: Track = {
         field: 'start',
         type: 'genomic',
         // domain: { chromosome: '5' },
-        linker: 'link-1'
+        linkingID: 'link-1'
     },
     xe: {
         field: 'end',
@@ -68,7 +68,7 @@ const CIRCOS_LINE: Track = {
         field: 'start',
         type: 'genomic',
         // domain: { chromosome: '5' },
-        linker: 'link-1'
+        linkingID: 'link-1'
     },
     xe: {
         field: 'end',
@@ -145,7 +145,7 @@ const IDEOGRAM: Track = {
         },
         {
             mark: 'rect-brush',
-            x: { linker: 'link-1' },
+            x: { linkingID: 'link-1' },
             color: { value: 'blue' },
             opacity: { value: 0.2 }
         }

@@ -80,7 +80,7 @@ export const EXAMPLE_LINKS: GeminiSpec = {
                         field: 'start',
                         type: 'genomic',
                         // domain: { chromosome: '4', interval: [132600000, 132900000] },
-                        linker: '1',
+                        linkingID: '1',
                         axis: 'top'
                     },
                     xe: {
@@ -115,7 +115,7 @@ export const EXAMPLE_LINKS: GeminiSpec = {
                 type: 'genomic',
                 // domain: { chromosome: '4', interval: [132600000, 132900000] },
                 domain: { chromosome: '4', interval: [144650000, 145100000] },
-                linker: '1'
+                linkingID: '1'
             },
             xe: {
                 field: 'end',
