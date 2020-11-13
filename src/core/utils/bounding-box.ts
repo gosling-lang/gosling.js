@@ -48,7 +48,10 @@ export interface TrackInfo {
  */
 export function getGridInfo(spec: GeminiSpec): GridInfo {
     // total number of cells in the tabular layout
-    const numCells = spec.tracks.map(t => (typeof t.span === 'number' ? t.span : 1)).reduce((a, b) => a + b, 0);
+    const numCells = spec.tracks
+        .filter(t => !t.superposeOnPreviousTrack)
+        .map(t => (typeof t.span === 'number' ? t.span : 1))
+        .reduce((a, b) => a + b, 0);
     const wrap: number = spec.layout?.wrap ?? 999;
 
     let numColumns = 0,
@@ -165,6 +168,11 @@ export function getArrangement(spec: GeminiSpec): TrackInfo[] {
                 h: (height / totalHeight) * 12.0
             }
         });
+
+        if (track.superposeOnPreviousTrack) {
+            // do not count this track to calculate cumulative sizes and positions
+            return;
+        }
 
         if (spec.layout?.direction === 'horizontal') {
             ci += span;

@@ -6,6 +6,7 @@ import { Domain } from './gemini.schema';
 import { getNumericDomain } from './utils/scales';
 import { RelativePosition } from './utils/bounding-box';
 import { validateSpec } from './utils/validate';
+import { SUPERPOSE_VIEWCONFIG } from '../editor/example/compiled-view-config/superpose-viewconfig';
 
 const DEFAULT_CHROMOSOME_INFO_PATH = '//s3.amazonaws.com/pkerp/data/hg19/chromSizes.tsv';
 export const HIGLASS_AXIS_SIZE = 30;
@@ -103,6 +104,14 @@ export class HiGlassModel {
         return this.hg.views[this.hg.views.length - 1];
     }
 
+    /**
+     * Get the last view that renders any visualization, so skiping empty tracks.
+     */
+    public getLastVisView() {
+        const vs = this.hg.views.filter(v => (v.tracks as any).center[0].type === 'combined');
+        return vs[vs.length - 1];
+    }
+
     public getView(viewId: string) {
         return this.hg.views.find(d => d.uid === viewId);
     }
@@ -163,6 +172,41 @@ export class HiGlassModel {
         return this;
     }
 
+    public addTrackToCombined(track: Track) {
+        if (!this.getLastVisView()) return this;
+        (this.getLastVisView() as any).tracks.center[0].contents.push(track);
+        return this;
+    }
+
+    public setAxisTrack(position: 'left' | 'right' | 'top' | 'bottom') {
+        if (!this.hg.views) return this;
+        const baseTrackType = '-chromosome-labels';
+        const direction = position === 'left' || position === 'right' ? 'vertical' : 'horizontal';
+        const widthOrHeight = direction === 'vertical' ? 'width' : 'height';
+        this.getLastView().tracks[position] = [
+            {
+                uid: uuid.v1(),
+                type: (direction + baseTrackType) as any /* TODO */,
+                [widthOrHeight]: HIGLASS_AXIS_SIZE,
+                chromInfoPath: this.hg.chromInfoPath,
+                options: {
+                    color: 'black',
+                    tickColor: 'black',
+                    reverseOrientation: position === 'bottom' ? true : false
+                }
+            }
+        ];
+        return this;
+    }
+
+    /**
+     * DEBUGING PURPOSE FUNCTIONS
+     */
+    public _addDebugView() {
+        if (!this.hg.views) return this;
+        this.hg.views.push(SUPERPOSE_VIEWCONFIG);
+    }
+
     public _addGeneAnnotationTrack() {
         if (!this.hg.views) return this;
         this.getLastView().tracks.bottom = [
@@ -192,27 +236,6 @@ export class HiGlassModel {
                     geneAnnotationHeight: 16,
                     geneLabelPosition: 'outside',
                     geneStrandSpacing: 4
-                }
-            }
-        ];
-        return this;
-    }
-
-    public setAxisTrack(position: 'left' | 'right' | 'top' | 'bottom') {
-        if (!this.hg.views) return this;
-        const baseTrackType = '-chromosome-labels';
-        const direction = position === 'left' || position === 'right' ? 'vertical' : 'horizontal';
-        const widthOrHeight = direction === 'vertical' ? 'width' : 'height';
-        this.getLastView().tracks[position] = [
-            {
-                uid: uuid.v1(),
-                type: (direction + baseTrackType) as any /* TODO */,
-                [widthOrHeight]: HIGLASS_AXIS_SIZE,
-                chromInfoPath: this.hg.chromInfoPath,
-                options: {
-                    color: 'black',
-                    tickColor: 'black',
-                    reverseOrientation: position === 'bottom' ? true : false
                 }
             }
         ];

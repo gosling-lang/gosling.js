@@ -14,6 +14,7 @@ const commonMultivecSpec: Partial<Track> = {
         row: 'sample',
         column: 'position',
         value: 'peak',
+        bin: 16,
         categories: [
             'sample 1',
             'sample 2',
@@ -61,9 +62,30 @@ export const EXAMPLE_CIRCOS_STACKING: GeminiSpec = {
         rowGaps: 0
     },
     tracks: [
-        CIRCOS_LINE,
-        { ...CIRCOS_LINE, innerRadius: 110, startAngle: 180, endAngle: 270, superposeOnPreviousTrack: true },
-        { ...CIRCOS_LINE, innerRadius: 120, startAngle: 270, endAngle: 340, superposeOnPreviousTrack: true },
-        { ...CIRCOS_LINE, innerRadius: 130, startAngle: 340, endAngle: 360, superposeOnPreviousTrack: true }
+        { ...CIRCOS_LINE, innerRadius: 50, outerRadius: 140 },
+        {
+            ...CIRCOS_LINE,
+            innerRadius: 50,
+            outerRadius: 140,
+            startAngle: 180,
+            endAngle: 270,
+            superposeOnPreviousTrack: true
+        },
+        {
+            ...CIRCOS_LINE,
+            innerRadius: 50,
+            outerRadius: 100,
+            startAngle: 270,
+            endAngle: 340,
+            superposeOnPreviousTrack: true
+        },
+        {
+            ...CIRCOS_LINE,
+            innerRadius: 50,
+            outerRadius: 80,
+            startAngle: 340,
+            endAngle: 360,
+            superposeOnPreviousTrack: true
+        }
     ]
 } as GeminiSpec;

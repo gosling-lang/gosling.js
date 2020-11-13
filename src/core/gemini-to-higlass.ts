@@ -8,7 +8,7 @@ import { getGenomicChannelKeyFromTrack, getGenomicChannelFromTrack } from './uti
 import { IsDataDeep, IsChannelDeep } from './gemini.schema.guards';
 
 /**
- * Convert a gemini track into a HiGlass view and add it into higlass model.
+ * Convert a gemini track into a HiGlass view and add it into a higlass model.
  */
 export function geminiToHiGlass(
     hgModel: HiGlassModel,
@@ -23,9 +23,6 @@ export function geminiToHiGlass(
     const firstResolvedSpec = resolveSuperposedTracks(gmTrack)[0];
 
     if (IsDataDeep(firstResolvedSpec.data) && firstResolvedSpec.data.url) {
-        // add a default view
-        hgModel.addDefaultView();
-
         const { server, tilesetUid } = parseServerAndTilesetUidFromUrl(firstResolvedSpec.data.url);
 
         // Is this track horizontal or vertical?
@@ -36,8 +33,6 @@ export function geminiToHiGlass(
         const xDomain = isXGenomic && IsChannelDeep(genomicChannel) ? (genomicChannel.domain as Domain) : undefined;
         const yDomain = isYGenomic && IsChannelDeep(genomicChannel) ? (genomicChannel.domain as Domain) : undefined;
 
-        hgModel.setDomain(xDomain, yDomain);
-
         const hgTrack: HiGlassTrack = {
             type: 'gemini-track',
             server: server,
@@ -45,6 +40,7 @@ export function geminiToHiGlass(
             width: bb.width,
             height: bb.height,
             options: {
+                backgroundColor: 'transparent', // in this way, we can superpose multiple tracks
                 spec: { ...gmTrack, data: undefined }
             }
         };
@@ -54,11 +50,17 @@ export function geminiToHiGlass(
             hgTrack.data = gmTrack.data;
         }
 
-        hgModel
-            .setMainTrack(hgTrack)
-            .addTrackSourceServers(server)
-            .setZoomFixed(firstResolvedSpec.zoomable as undefined | boolean)
-            .setLayout(layout);
+        if (gmTrack.superposeOnPreviousTrack) {
+            hgModel.addTrackToCombined(hgTrack);
+        } else {
+            hgModel
+                .addDefaultView()
+                .setDomain(xDomain, yDomain)
+                .setMainTrack(hgTrack)
+                .addTrackSourceServers(server)
+                .setZoomFixed(firstResolvedSpec.zoomable as undefined | boolean)
+                .setLayout(layout);
+        }
 
         // check whether to show axis
         ['x', 'y'].forEach(c => {
@@ -70,6 +72,7 @@ export function geminiToHiGlass(
 
         hgModel.validateSpec();
     } else if (firstResolvedSpec.mark === 'empty') {
+        // The `empty` tracks are used to add gaps between tracks vertically.
         hgModel.addDefaultView().setLayout(layout).setEmptyTrack(bb.width, bb.height);
     }
     return hgModel;

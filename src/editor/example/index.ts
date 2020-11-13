@@ -13,6 +13,7 @@ import { EXAMPLE_LOGO_LIKE } from './text-stretch';
 import { EXAMPLE_CIRCOS } from './circos';
 import { EXAMPLE_CIRCOS_MANY } from './circos-many-rows';
 import { EXAMPLE_CIRCOS_STACKING } from './circos-stacking';
+import { EXAMPLE_SUPERPOSED_CIRCULAR_TRACKS } from './superposed-circular';
 
 export const examples: ReadonlyArray<{
     name: string;
@@ -80,6 +81,12 @@ export const examples: ReadonlyArray<{
         spec: EXAMPLE_CIRCOS_MANY,
         underDevelopment: true,
         forceShow: false
+    },
+    {
+        name: 'Superposed Circular Tracks',
+        spec: EXAMPLE_SUPERPOSED_CIRCULAR_TRACKS,
+        underDevelopment: true,
+        forceShow: true
     },
     {
         name: 'Stacking Circular Tracks',
