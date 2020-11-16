@@ -3,13 +3,13 @@ import { GLYPH_LOCAL_PRESET_TYPE, GLYPH_HIGLASS_PRESET_TYPE } from '../editor/ex
 /**
  * Root-level specification
  */
-export interface GeminiSpec {
+export type GeminiSpec = {
     layout?: Layout;
     tracks: Track[];
     width?: number;
     height?: number;
     description?: string;
-}
+};
 
 /**
  * Layout specification for multiple tracks

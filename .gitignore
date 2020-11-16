@@ -3,6 +3,7 @@
 .pnp.js
 /coverage
 src/lib/test/data
+dist
 .DS_Store
 .env.local
 .env.development.local

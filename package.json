@@ -8,9 +8,13 @@
         "url": "https://github.com/sehilyi/gemini"
     },
     "homepage": "https://sehilyi.github.io/gemini/",
+    "main": "dist/gemini.js",
+    "types": "dist/gemini.d.ts",
+    "unpkg": "dist/gemini.min.js",
     "scripts": {
         "start": "webpack-dev-server --mode development",
         "build": "webpack --mode production",
+        "build-lib": "tsc && webpack --mode production --config webpack.config.build.js",
         "test": "jest test/",
         "format": "eslint . --fix && prettier '**/*.css' --write",
         "schema": "mkdir -p build & ts-json-schema-generator -p src/core/gemini.schema.ts -f tsconfig.json -t GeminiSpec > build/gemini.schema.json",

@@ -17,9 +17,19 @@ import { getGridInfo } from '../core/utils/bounding-box';
 import { HiGlassSpec } from '../core/higlass.schema';
 import GeminiSchema from '../../build/gemini.schema.json';
 import { validateSpec, Validity } from '../core/utils/validate';
-import { renderView } from '../core/layout/view';
+import { compile } from '../core/compile';
 import stripJsonComments from 'strip-json-comments';
 import './editor.css';
+
+// DEBUG
+// import * as _ from '../../dist/gemini.min';
+// import { EXMAPLE_BASIC_MARKS } from './example/basic-marks';
+// console.log('sdf', _.version, _);
+// console.log(_.validateGeminiSpec('{}'));
+// console.log(_.validateGeminiSpec(EXMAPLE_BASIC_MARKS));
+// _.compile(EXMAPLE_BASIC_MARKS, (h: any) => {
+//     console.log(h);
+// });
 
 /**
  * Register a Gemini plugin track to HiGlassComponent
@@ -74,7 +84,7 @@ function Editor() {
         }
         if (!editedGm) return;
 
-        renderView(editedGm as GeminiSpec, (newHg: HiGlassSpec) => {
+        compile(editedGm as GeminiSpec, (newHg: HiGlassSpec) => {
             setHg(newHg);
         });
     }, [gm]);

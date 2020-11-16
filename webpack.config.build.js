@@ -1,3 +1,4 @@
+const pkg = require('./package.json');
 const path = require("path");
 const webpack = require("webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
@@ -6,18 +7,21 @@ const PeerDepsExternalsPlugin = require("peer-deps-externals-webpack-plugin");
 
 module.exports = (env, argv) => {
   const config = {
-    entry: { main: './src/editor/index.tsx' },
+    entry: { main: './src/core/index.ts' },
     output: {
-      filename: '[name].js',
-      path: path.resolve(__dirname, 'build'),
+      filename: "gemini.min.js",
+      path: path.resolve(__dirname, "dist"),
       pathinfo: false,
+      library: 'gemini',
+      libraryTarget: 'umd',
+      umdNamedDefine: true
     },
-    performance: {
-      hints: false,
-      maxEntrypointSize: 512000,
-      maxAssetSize: 512000,
-    },
-    devtool: argv.mode === 'development' ? 'cheap-module-source-map' : 'source-map',
+    // performance: {
+    //   hints: false,
+    //   maxEntrypointSize: 512000,
+    //   maxAssetSize: 512000,
+    // },
+    // devtool: argv.mode === 'development' ? 'cheap-module-source-map' : 'source-map',
     resolve: {
       extensions: ['.ts', '.tsx', '.js', '.mjs', '.json'],
     },
@@ -52,38 +56,31 @@ module.exports = (env, argv) => {
       ],
     },
     plugins: [
-      new HtmlWebpackPlugin({
-        filename: 'index.html',
-        template: './public/index.html',
-      }),
-      new MonacoWebpackPlugin({
-        languages: ['json'],
-      }),
       new webpack.SourceMapDevToolPlugin({
         exclude: ['higlass']
       }),
       // new PeerDepsExternalsPlugin(), // this can be added later
     ],
-    devServer: {
-      stats: {
-        colors: true,
-      },
-      overlay: {
-        warnings: true,
-        errors: true,
-      },
-      hot: true,
-      stats: 'errors-only',
-      open: false,
-      contentBase: path.join(__dirname, 'public'),
-      watchContentBase: true,
-      watchOptions: {
-        ignored: /node_modules/,
-      },
-    },
-    node: {
-      fs: 'empty',
-    },
+    // devServer: {
+    //   stats: {
+    //     colors: true,
+    //   },
+    //   overlay: {
+    //     warnings: true,
+    //     errors: true,
+    //   },
+    //   hot: true,
+    //   stats: 'errors-only',
+    //   open: false,
+    //   contentBase: path.join(__dirname, 'public'),
+    //   watchContentBase: true,
+    //   watchOptions: {
+    //     ignored: /node_modules/,
+    //   },
+    // },
+    // node: {
+    //   fs: 'empty',
+    // },
   };
   return config;
 };
