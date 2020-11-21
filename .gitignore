@@ -1,9 +1,9 @@
 /node_modules
+/coverage
+/build
+/dist
 /.pnp
 .pnp.js
-/coverage
-src/lib/test/data
-dist
 .DS_Store
 .env.local
 .env.development.local

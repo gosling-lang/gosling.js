@@ -16,7 +16,7 @@ module.exports = {
         node: true
     },
     parserOptions: {
-        project: 'tsconfig.json',
+        project: 'tsconfig.editor.json',
         ecmaVersion: 6,
         sourceType: 'module'
     },
@@ -57,8 +57,8 @@ module.exports = {
         'no-case-declarations': 'warn',
         'no-return-assign': 'error',
         'no-useless-call': 'error',
-        'no-shadow': 'error',
+        'no-shadow': 'off', // 'error', // we could enable this later
         'no-useless-concat': 'error',
-        "prefer-template": "error"
+        "prefer-template": 'error'
     }
 };

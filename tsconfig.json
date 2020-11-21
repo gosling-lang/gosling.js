@@ -8,6 +8,7 @@
       "dom.iterable",
       "esnext"
     ],
+    "outDir": "dist",
     "alwaysStrict": true,
     "allowJs": true,
     "sourceMap": true,
@@ -19,15 +20,16 @@
     "strict": true,
     "strictNullChecks": true,
     "resolveJsonModule": true,
-    "isolatedModules": false,
     "jsx": "react"
   },
-  "include": [
-    "src",
-    "test"
+  "files": [
+    "src/index.ts"
   ],
+  "include": ["src"],
   "exclude": [
     "node_modules",
-    "public"
+    "public",
+    "build",
+    "dist",
   ]
 }
