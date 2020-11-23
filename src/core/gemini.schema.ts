@@ -344,15 +344,13 @@ export type Aggregate = 'max' | 'min' | 'mean' | 'bin' | 'count';
 export type Mark = MarkType | MarkDeep;
 
 export type MarkType =
-    | 'bar'
     | 'point'
     | 'line'
     | 'area'
-    | 'link'
-    | 'link-between'
-    | 'link-within' // uses either x and x1 or y and y1
+    | 'bar'
     | 'rect'
     | 'text'
+    | 'link'
     | 'rule'
     | 'triangle-l'
     | 'triangle-r'
@@ -360,6 +358,8 @@ export type MarkType =
     // experimental
     | 'rect-brush'
     // deprecated
+    | 'link-between'
+    | 'link-within' // uses either x and x1 or y and y1
     | 'dummy'
     | 'empty';
 
