@@ -1,9 +1,11 @@
 <div align="center">
 
-<div style="display: grid;">
-    <span style="font-size:82pt;grid-column:1;grid-row:1;">🌌</span>
-    <span style="font-size:60pt;grid-column:1;grid-row:1;display:flex;justify-content:center;align-items:center;opacity:0.5;">🧬</span>
-</div>
+<!-- <div style="display: grid;">
+    <span style="font-size:180pt;grid-column:1;grid-row:1;">🌌</span>
+    <span style="font-size:120pt;grid-column:1;grid-row:1;display:flex;justify-content:center;align-items:center;opacity:0.5;">🧬</span>
+</div> -->
+
+<img src="./geminid.png" alt="Geminid" width="100">
 
 # Geminid
 
