@@ -6,3 +6,6 @@ export const version = pkg.version;
 
 export { compile } from './core/compile';
 export { validateGeminiSpec } from './core/utils/validate';
+
+export { GeminiTrack } from './higlass-gemini-track';
+export { CSVDataFetcher } from './higlass-gemini-datafetcher';

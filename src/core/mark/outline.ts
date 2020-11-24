@@ -48,7 +48,7 @@ export function drawChartOutlines(HGC: any, trackInfo: any, tm: GeminiTrackModel
 
     // Rectangular outline
     g.lineStyle(
-        1,
+        tm.spec().style?.outlineWidth ?? 1,
         // TODO: outline not working
         colorToHex(tm.spec().style?.outline ?? '#DBDBDB'),
         1, // alpha

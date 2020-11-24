@@ -195,6 +195,7 @@ export interface TrackStyle {
     align?: 'left' | 'right';
     dy?: number;
     outline?: string;
+    outlineWidth?: number;
     circularLink?: boolean; // draw arc instead of bazier curve?
     // below options could instead be used with channel options (e.g., size, stroke, strokeWidth)
     textFontSize?: number;

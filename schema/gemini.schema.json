@@ -2751,6 +2751,9 @@
         "outline": {
           "type": "string"
         },
+        "outlineWidth": {
+          "type": "number"
+        },
         "stroke": {
           "type": "string"
         },

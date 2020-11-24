@@ -14,6 +14,7 @@ import { EXAMPLE_CIRCOS } from './circos';
 import { EXAMPLE_CIRCOS_MANY } from './circos-many-rows';
 import { EXAMPLE_CIRCOS_STACKING } from './circos-stacking';
 import { EXAMPLE_SUPERPOSED_CIRCULAR_TRACKS } from './superposed-circular';
+import { EXAMPLE_LOGO } from './logo';
 
 export const examples: ReadonlyArray<{
     name: string;
@@ -23,6 +24,13 @@ export const examples: ReadonlyArray<{
     hidden?: boolean;
     forceShow?: boolean;
 }> = [
+    {
+        name: 'Geminid Logo',
+        spec: EXAMPLE_LOGO,
+        underDevelopment: false,
+        hidden: true,
+        forceShow: false
+    },
     {
         name: 'Basic Marks',
         spec: EXMAPLE_BASIC_MARKS,

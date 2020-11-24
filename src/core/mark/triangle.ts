@@ -58,13 +58,16 @@ export function drawTriangle(HGC: any, trackInfo: any, tile: any, tm: GeminiTrac
             const xeValue = getValueUsingChannel(d, spec.xe as Channel) as number;
             const yValue = getValueUsingChannel(d, spec.y as Channel) as string | number;
             const colorValue = getValueUsingChannel(d, spec.color as Channel) as string;
+            // const sizeValue = getValueUsingChannel(d, spec.size as Channel) as number;
 
             const x = xScale(xValue);
             const xe = xScale(xeValue);
             const y = tm.encodedValue('y', yValue);
             const color = tm.encodedValue('color', colorValue);
             const opacity = tm.encodedValue('opacity');
+            // const size = tm.encodedValue('size', sizeValue);
 
+            // TODO: Consider the `size` channel below
             let x0 = x ? x : xe - markWidth;
             let x1 = xe ? xe : x + markWidth;
             let xm = x0 + (x1 - x0) / 2.0;
