@@ -1,7 +1,7 @@
 import { GeminidSpec } from '../../../src/core/geminid.schema';
 import { fixSpecDownstream } from '../../../src/core/utils/spec-preprocess';
 
-describe('Preprocess the spec correctly', () => {
+describe('Spec Preprocess', () => {
     it('circular layout', () => {
         const spec: GeminidSpec = { layout: { type: 'circular', direction: 'horizontal' }, tracks: [{}] };
         fixSpecDownstream(spec);

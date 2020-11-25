@@ -177,7 +177,7 @@ export function getArrangement(spec: GeminidSpec): TrackInfo[] {
         if (spec.layout?.direction === 'horizontal') {
             ci += span;
 
-            if (ci >= numColumns) {
+            if (ci >= numColumns && ri < numRows - 1) {
                 // Add between-row gaps.
                 const yOffset = y + height;
                 const gapHeight = rowGaps[ri];

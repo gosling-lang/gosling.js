@@ -1,11 +1,11 @@
-import { BoundingBox } from '../utils/bounding-box';
-import { Track, BasicSingleTrack } from '../geminid.schema';
+import { BoundingBox } from '../../utils/bounding-box';
+import { Track, BasicSingleTrack } from '../../geminid.schema';
 import * as d3 from 'd3';
 import { validateBetweenLinkSpec } from './link-validate';
 import { getChartType } from './chart-type';
 import { renderBetweenLineLink } from './line-connection';
 import { renderBetweenBandLink } from './band-connection';
-import { IsChannelValue, IsChannelDeep, IsDataDeep } from '../geminid.schema.guards';
+import { IsChannelValue, IsChannelDeep, IsDataDeep } from '../../geminid.schema.guards';
 
 export type LinkPosition =
     | 'left-bottom'

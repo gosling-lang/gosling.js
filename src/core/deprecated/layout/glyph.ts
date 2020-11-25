@@ -1,9 +1,9 @@
 import * as d3 from 'd3';
-import { Datum, GlyphElement, Track } from '../geminid.schema';
+import { Datum, GlyphElement, Track } from '../../geminid.schema';
 import { transformData, FilterSpec } from '../utils/data-transform';
 import { TrackModel } from '../deprecated-track-model';
-import { BoundingBox } from '../utils/bounding-box';
-import { IsGlyphMark } from '../geminid.schema.guards';
+import { BoundingBox } from '../../utils/bounding-box';
+import { IsGlyphMark } from '../../geminid.schema.guards';
 
 export function renderGlyph(g: d3.Selection<SVGGElement, any, any, any>, track: Track, bb: BoundingBox) {
     const tm = new TrackModel(track);

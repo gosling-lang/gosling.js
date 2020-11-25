@@ -114,7 +114,9 @@
             "**/src/**/*.{js,jsx,ts,tsx}",
             "!**/node_modules/**",
             "!**/coverage/**",
-            "!**/public/**"
+            "!**/public/**",
+            "!**/dist/**",
+            "!**/deprecated/**"
         ],
         "coverageReporters": [
             "lcov",

@@ -1,5 +1,5 @@
-import { Track } from '../geminid.schema';
-import { IsChannelDeep } from '../geminid.schema.guards';
+import { Track } from '../../geminid.schema';
+import { IsChannelDeep } from '../../geminid.schema.guards';
 
 export type ChartType =
     // ...

@@ -1,7 +1,7 @@
 import * as d3 from 'd3';
-import { GeminidSpec, Track, BasicSingleTrack } from '../geminid.schema';
-import { BoundingBox } from '../utils/bounding-box';
-import { DEFAULT_TRACK_GAP } from './defaults';
+import { GeminidSpec, Track, BasicSingleTrack } from '../../geminid.schema';
+import { BoundingBox } from '../../utils/bounding-box';
+import { DEFAULT_TRACK_GAP } from '../../layout/defaults';
 
 export const TRACK_BG_STYLE = {
     background: (track: BasicSingleTrack) => track.style?.background ?? 'white',
