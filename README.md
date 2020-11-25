@@ -13,7 +13,7 @@
 
 [![npm version](https://img.shields.io/npm/v/geminid.svg?style=flat-square)](https://www.npmjs.com/package/geminid)
 [![Build Status](https://img.shields.io/travis/sehilyi/geminid/master.svg?style=flat-square)](https://travis-ci.com/sehilyi/geminid)
-[![codecov](https://img.shields.io/codecov/c/github/sehilyi/geminid/master.svg?style=flat-square)](https://codecov.io/gh/sehilyi/geminid)
+[![codecov](https://img.shields.io/codecov/c/github/sehilyi/geminid/master.svg?style=flat-square&?cacheSeconds=3600)](https://codecov.io/gh/sehilyi/geminid)
 [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
 
 </div>
