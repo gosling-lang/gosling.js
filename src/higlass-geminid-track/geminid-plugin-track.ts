@@ -1,18 +1,18 @@
 import * as d3 from 'd3';
 import { drawMark } from '../core/mark';
-import { GeminiTrackModel } from '../core/gemini-track-model';
+import { GeminidTrackModel } from '../core/geminid-track-model';
 import { validateTrack } from '../core/utils/validate';
 import { shareScaleAcrossTracks } from '../core/utils/scales';
 import { resolveSuperposedTracks } from '../core/utils/superpose';
-import { Track } from '../core/gemini.schema';
-import { IsDataMetadata, IsDataTransform, IsOneOfFilter, IsRangeFilter } from '../core/gemini.schema.guards';
+import { Track } from '../core/geminid.schema';
+import { IsDataMetadata, IsDataTransform, IsOneOfFilter, IsRangeFilter } from '../core/geminid.schema.guards';
 
-function GeminiTrack(HGC: any, ...args: any[]): any {
+function GeminidTrack(HGC: any, ...args: any[]): any {
     if (!new.target) {
         throw new Error('Uncaught TypeError: Class constructor cannot be invoked without "new"');
     }
 
-    class GeminiTrackClass extends HGC.tracks.BarTrack {
+    class GeminidTrackClass extends HGC.tracks.BarTrack {
         // TODO: change the parent class to a more generic one (e.g., TiledPixiTrack)
 
         // Spec of a Gemini track
@@ -85,7 +85,7 @@ function GeminiTrack(HGC: any, ...args: any[]): any {
                 return;
             }
 
-            tile.geminiModels.forEach((tm: GeminiTrackModel) => {
+            tile.geminiModels.forEach((tm: GeminidTrackModel) => {
                 // check visibility condition
                 if (!tm.trackVisibility({ zoomLevel: tile?.tileData?.zoomLevel })) {
                     return;
@@ -98,11 +98,11 @@ function GeminiTrack(HGC: any, ...args: any[]): any {
         preprocessAllTiles() {
             this.textsBeingUsed = 0;
 
-            const gms: GeminiTrackModel[] = [];
+            const gms: GeminidTrackModel[] = [];
             this.visibleAndFetchedTiles().forEach((tile: any) => {
                 // tile preprocessing is done only once per tile
                 const tileModels = this.preprocessTile(tile);
-                tileModels.forEach((m: GeminiTrackModel) => {
+                tileModels.forEach((m: GeminidTrackModel) => {
                     gms.push(m);
                 });
             });
@@ -327,7 +327,7 @@ function GeminiTrack(HGC: any, ...args: any[]): any {
                 }
 
                 // Construct separate gemini models for individual tiles
-                const gm = new GeminiTrackModel(resolved, tile.tileData.tabularDataFiltered);
+                const gm = new GeminidTrackModel(resolved, tile.tileData.tabularDataFiltered);
 
                 // Add a track model to the tile object
                 tile.geminiModels.push(gm);
@@ -392,14 +392,14 @@ function GeminiTrack(HGC: any, ...args: any[]): any {
 
         getMouseOverHtml() {}
     }
-    return new GeminiTrackClass(args);
+    return new GeminidTrackClass(args);
 }
 
 const icon =
     '<svg version="1.0" xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" viewBox="0 0 5640 5420" preserveAspectRatio="xMidYMid meet"> <g id="layer101" fill="#000000" stroke="none"> <path d="M0 2710 l0 -2710 2820 0 2820 0 0 2710 0 2710 -2820 0 -2820 0 0 -2710z"/> </g> <g id="layer102" fill="#750075" stroke="none"> <path d="M200 4480 l0 -740 630 0 630 0 0 740 0 740 -630 0 -630 0 0 -740z"/> <path d="M1660 4420 l0 -800 570 0 570 0 0 800 0 800 -570 0 -570 0 0 -800z"/> <path d="M3000 3450 l0 -1770 570 0 570 0 0 1770 0 1770 -570 0 -570 0 0 -1770z"/> <path d="M4340 2710 l0 -2510 560 0 560 0 0 2510 0 2510 -560 0 -560 0 0 -2510z"/> <path d="M200 1870 l0 -1670 630 0 630 0 0 1670 0 1670 -630 0 -630 0 0 -1670z"/> <path d="M1660 1810 l0 -1610 570 0 570 0 0 1610 0 1610 -570 0 -570 0 0 -1610z"/> <path d="M3000 840 l0 -640 570 0 570 0 0 640 0 640 -570 0 -570 0 0 -640z"/> </g> <g id="layer103" fill="#ffff04" stroke="none"> <path d="M200 4480 l0 -740 630 0 630 0 0 740 0 740 -630 0 -630 0 0 -740z"/> <path d="M1660 4420 l0 -800 570 0 570 0 0 800 0 800 -570 0 -570 0 0 -800z"/> <path d="M3000 3450 l0 -1770 570 0 570 0 0 1770 0 1770 -570 0 -570 0 0 -1770z"/> </g> </svg>';
 
 // default
-GeminiTrack.config = {
+GeminidTrack.config = {
     type: 'gemini-track',
     datatype: ['multivec', 'epilogos'],
     local: false,
@@ -432,4 +432,4 @@ GeminiTrack.config = {
     }
 };
 
-export default GeminiTrack;
+export default GeminidTrack;

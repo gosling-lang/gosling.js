@@ -3,7 +3,7 @@ import { GLYPH_LOCAL_PRESET_TYPE, GLYPH_HIGLASS_PRESET_TYPE } from '../editor/ex
 /**
  * Root-level specification
  */
-export type GeminiSpec = {
+export type GeminidSpec = {
     layout?: Layout;
     tracks: Track[];
     width?: number;
@@ -206,16 +206,6 @@ export interface TrackStyle {
     background?: string; // deprecated
     stroke?: string; // deprecated
     strokeWidth?: number; // deprecated
-}
-
-/**
- * Semantic zoom: Determine how to change visual representations.
- */
-export interface SemanticZoom {
-    type: 'alternative-encoding';
-    // TODO: consider making the spec and trigger part as an array of object
-    spec: Partial<Track>;
-    trigger: TriggerCondition;
 }
 
 export type LogicalOperation =

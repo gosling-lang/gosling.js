@@ -1,4 +1,4 @@
-import { GeminiSpec, Track } from '../../core/gemini.schema';
+import { GeminidSpec, Track } from '../../core/geminid.schema';
 import { EXAMPLE_DATASETS } from './datasets';
 
 export const EXAMPLE_HEATMAP: Track = {
@@ -50,7 +50,7 @@ export const EXAMPLE_BASIC_AREA: Track = {
     strokeWidth: { value: 0.5 }
 };
 
-export const EXMAPLE_BASIC_MARKS: GeminiSpec = {
+export const EXMAPLE_BASIC_MARKS: GeminidSpec = {
     layout: {
         type: 'linear',
         direction: 'vertical',

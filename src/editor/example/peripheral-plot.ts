@@ -1,4 +1,4 @@
-import { BasicSingleTrack, GeminiSpec } from '../../core/gemini.schema';
+import { BasicSingleTrack, GeminidSpec } from '../../core/geminid.schema';
 import { EXAMPLE_DATASETS } from './datasets';
 import { EXAMPLE_IDEOGRAM_TRACK } from './ideogram';
 
@@ -17,7 +17,7 @@ export const MULTIVEC_SPEC: Partial<BasicSingleTrack> = {
     dataTransform: { filter: [{ field: 'peak', oneOf: [0], not: true }] }
 };
 
-export const EXAMPLE_PERIPHERAL_PLOT: GeminiSpec = {
+export const EXAMPLE_PERIPHERAL_PLOT: GeminidSpec = {
     layout: {
         type: 'linear',
         direction: 'horizontal',

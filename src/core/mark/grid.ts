@@ -1,7 +1,7 @@
-import { GeminiTrackModel } from '../gemini-track-model';
-import { IsChannelDeep } from '../gemini.schema.guards';
+import { GeminidTrackModel } from '../geminid-track-model';
+import { IsChannelDeep } from '../geminid.schema.guards';
 
-export function drawGrid(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackModel) {
+export function drawGrid(HGC: any, trackInfo: any, tile: any, tm: GeminidTrackModel) {
     /* track spec */
     const spec = tm.spec();
     if (!IsChannelDeep(spec.y) || !spec.y.grid) {

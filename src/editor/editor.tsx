@@ -1,6 +1,6 @@
 // @ts-ignore
-import { GeminiTrack } from '../higlass-gemini-track/index';
-import { CSVDataFetcher } from '../higlass-gemini-datafetcher/index';
+import { GeminidTrack } from '../higlass-geminid-track/index';
+import { CSVDataFetcher } from '../higlass-geminid-datafetcher/index';
 // @ts-ignore
 import { HiGlassComponent } from 'higlass';
 // @ts-ignore
@@ -9,13 +9,13 @@ import React, { useState, useEffect, useMemo } from 'react';
 import EditorPanel from './editor-panel';
 import stringify from 'json-stringify-pretty-compact';
 import SplitPane from 'react-split-pane';
-import { GeminiSpec } from '../core/gemini.schema';
+import { GeminidSpec } from '../core/geminid.schema';
 import { debounce } from 'lodash';
 import { examples } from './example';
 import { replaceTemplate } from '../core/utils';
 import { getGridInfo } from '../core/utils/bounding-box';
 import { HiGlassSpec } from '../core/higlass.schema';
-import GeminiSchema from '../../schema/gemini.schema.json';
+import GeminidSchema from '../../schema/geminid.schema.json';
 import { validateSpec, Validity } from '../core/utils/validate';
 import { compile } from '../core/compile';
 import stripJsonComments from 'strip-json-comments';
@@ -25,9 +25,9 @@ import './editor.css';
  * Register a Gemini plugin track to HiGlassComponent
  */
 higlassRegister({
-    name: 'GeminiTrack',
-    track: GeminiTrack,
-    config: GeminiTrack.config
+    name: 'GeminidTrack',
+    track: GeminidTrack,
+    config: GeminidTrack.config
 });
 
 /**
@@ -44,7 +44,7 @@ function Editor() {
     const [demo, setDemo] = useState(examples[INIT_DEMO_INDEX]);
     const [editorMode, setEditorMode] = useState<'Normal Mode' | 'Template-based Mode'>('Normal Mode');
     const [hg, setHg] = useState<HiGlassSpec>();
-    const [gm, setGm] = useState(stringify(examples[INIT_DEMO_INDEX].spec as GeminiSpec));
+    const [gm, setGm] = useState(stringify(examples[INIT_DEMO_INDEX].spec as GeminidSpec));
     const [log, setLog] = useState<Validity>({ message: '', state: 'success' });
 
     /**
@@ -52,9 +52,9 @@ function Editor() {
      */
     useEffect(() => {
         if (editorMode === 'Normal Mode') {
-            setGm(stringify(replaceTemplate(JSON.parse(stringify(demo.spec)) as GeminiSpec)));
+            setGm(stringify(replaceTemplate(JSON.parse(stringify(demo.spec)) as GeminidSpec)));
         } else {
-            setGm(stringify(demo.spec as GeminiSpec));
+            setGm(stringify(demo.spec as GeminidSpec));
         }
         setHg(undefined);
     }, [demo, editorMode]);
@@ -66,7 +66,7 @@ function Editor() {
         let editedGm;
         try {
             editedGm = replaceTemplate(JSON.parse(stripJsonComments(gm)));
-            setLog(validateSpec(GeminiSchema, editedGm));
+            setLog(validateSpec(GeminidSchema, editedGm));
         } catch (e) {
             const message = '✘ Cannnot parse the code.';
             console.warn(message);
@@ -74,7 +74,7 @@ function Editor() {
         }
         if (!editedGm) return;
 
-        compile(editedGm as GeminiSpec, (newHg: HiGlassSpec) => {
+        compile(editedGm as GeminidSpec, (newHg: HiGlassSpec) => {
             setHg(newHg);
         });
     }, [gm]);
@@ -145,7 +145,7 @@ function Editor() {
     return (
         <>
             <div className="demo-navbar">
-                🧬 Gemini <code>Editor</code>
+                🌌 Geminid <code>Editor</code>
                 <select
                     onChange={e => {
                         setDemo(examples.find(d => d.name === e.target.value) as any);

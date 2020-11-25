@@ -1,6 +1,6 @@
 import { CHANNEL_DEFAULTS } from '../../../src/core/channel';
-import { GeminiTrackModel } from '../../../src/core/gemini-track-model';
-import { Track } from '../../../src/core/gemini.schema';
+import { GeminidTrackModel } from '../../../src/core/geminid-track-model';
+import { Track } from '../../../src/core/geminid.schema';
 import { HIGLASS_AXIS_SIZE } from '../../../src/core/higlass-model';
 
 describe('Point marks should correctly encode visual channels', () => {
@@ -23,7 +23,7 @@ describe('Point marks should correctly encode visual channels', () => {
 
     it('x --> G', () => {
         const track: Track = { ...baseTrack, x: { field: 'G', type: 'genomic' } };
-        const model = new GeminiTrackModel(track, data);
+        const model = new GeminidTrackModel(track, data);
 
         const cx = model.encodedPIXIProperty('x-center', data[1]);
         const cy = model.encodedPIXIProperty('y-center', data[1]);
@@ -40,7 +40,7 @@ describe('Point marks should correctly encode visual channels', () => {
                 x: { field: 'G', type: 'genomic' },
                 y: { field: 'Q', type: 'quantitative' }
             };
-            const model = new GeminiTrackModel(track, data);
+            const model = new GeminidTrackModel(track, data);
 
             const cx = model.encodedPIXIProperty('x-center', data[1]);
             const cy = model.encodedPIXIProperty('y-center', data[1]);
@@ -56,7 +56,7 @@ describe('Point marks should correctly encode visual channels', () => {
                 x: { field: 'G', type: 'genomic', axis: 'top' },
                 y: { field: 'Q', type: 'quantitative' }
             };
-            const model = new GeminiTrackModel(track, data);
+            const model = new GeminidTrackModel(track, data);
 
             const cx = model.encodedPIXIProperty('x-center', data[1]);
             const cy = model.encodedPIXIProperty('y-center', data[1]);
@@ -74,7 +74,7 @@ describe('Point marks should correctly encode visual channels', () => {
             xe: { field: 'G2', type: 'genomic' },
             y: { field: 'Q', type: 'quantitative' }
         };
-        const model = new GeminiTrackModel(track, data);
+        const model = new GeminidTrackModel(track, data);
 
         const cx = model.encodedPIXIProperty('x-center', data[1]);
         const cy = model.encodedPIXIProperty('y-center', data[1]);
@@ -92,7 +92,7 @@ describe('Point marks should correctly encode visual channels', () => {
             y: { field: 'Q', type: 'quantitative' },
             row: { field: 'N', type: 'nominal' }
         };
-        const model = new GeminiTrackModel(track, data);
+        const model = new GeminidTrackModel(track, data);
 
         const cx = model.encodedPIXIProperty('x-center', data[1]);
         const cy = model.encodedPIXIProperty('y-center', data[1]);
@@ -113,7 +113,7 @@ describe('Point marks should correctly encode visual channels', () => {
             size: { field: 'Q', type: 'quantitative' },
             row: { field: 'N', type: 'nominal' }
         };
-        const model = new GeminiTrackModel(track, data);
+        const model = new GeminidTrackModel(track, data);
 
         const cx = model.encodedPIXIProperty('x-center', data[1]);
         const cy = model.encodedPIXIProperty('y-center', data[1]);

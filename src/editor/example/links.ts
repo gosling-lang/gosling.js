@@ -1,7 +1,7 @@
-import { GeminiSpec } from '../../core/gemini.schema';
+import { GeminidSpec } from '../../core/geminid.schema';
 import { EXAMPLE_DATASETS } from './datasets';
 
-export const EXAMPLE_LINKS: GeminiSpec = {
+export const EXAMPLE_LINKS: GeminidSpec = {
     layout: {
         type: 'linear',
         direction: 'vertical',

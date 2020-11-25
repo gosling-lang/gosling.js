@@ -1,11 +1,11 @@
 import pkg from '../package.json';
-export type { GeminiSpec } from './core/gemini.schema';
+export type { GeminidSpec } from './core/geminid.schema';
 
 export const name = pkg.name;
 export const version = pkg.version;
 
 export { compile } from './core/compile';
-export { validateGeminiSpec } from './core/utils/validate';
+export { validateGeminidSpec } from './core/utils/validate';
 
-export { GeminiTrack } from './higlass-gemini-track';
-export { CSVDataFetcher } from './higlass-gemini-datafetcher';
+export { GeminidTrack } from './higlass-geminid-track';
+export { CSVDataFetcher } from './higlass-geminid-datafetcher';

@@ -1,4 +1,4 @@
-import { GeminiSpec, Track } from '../../core/gemini.schema';
+import { GeminidSpec, Track } from '../../core/geminid.schema';
 import { EXAMPLE_DATASETS } from './datasets';
 
 // refer to the following for supporting zooming and panning in circular layouts:
@@ -158,7 +158,7 @@ const IDEOGRAM: Track = {
     height: 60
 };
 
-export const EXAMPLE_CIRCOS_MANY: GeminiSpec = {
+export const EXAMPLE_CIRCOS_MANY: GeminidSpec = {
     layout: { type: 'circular', direction: 'horizontal', wrap: 2 },
     tracks: [
         { ...IDEOGRAM, span: 2 },
@@ -166,4 +166,4 @@ export const EXAMPLE_CIRCOS_MANY: GeminiSpec = {
         { ...CIRCOS_LINE, mark: 'area' },
         { ...CIRCOS_LINE, mark: 'bar', row: undefined /* color: { ...CIRCOS_LINE.color, legend: true } */ }
     ].slice(1)
-} as GeminiSpec;
+} as GeminidSpec;

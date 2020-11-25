@@ -1,7 +1,7 @@
-import { GeminiTrackModel } from '../gemini-track-model';
+import { GeminidTrackModel } from '../geminid-track-model';
 import { cartesianToPolar, valueToRadian } from '../utils/polar';
 
-export function drawCircularOutlines(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackModel) {
+export function drawCircularOutlines(HGC: any, trackInfo: any, tile: any, tm: GeminidTrackModel) {
     /* track spec */
     const spec = tm.spec();
 

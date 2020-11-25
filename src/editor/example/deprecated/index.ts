@@ -1,4 +1,4 @@
-import { Mark } from '../../../core/gemini.schema';
+import { Mark } from '../../../core/geminid.schema';
 
 import { GLYPH_GENE_ANNOTATAION } from './gene-annotation';
 import { GLYPH_GENE_ANNOTATAION_V2 } from './gene-annotation-simple';

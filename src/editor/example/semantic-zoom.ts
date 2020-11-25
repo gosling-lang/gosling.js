@@ -1,4 +1,4 @@
-import { GeminiSpec, Track } from '../../core/gemini.schema';
+import { GeminidSpec, Track } from '../../core/geminid.schema';
 import { EXAMPLE_DATASETS } from './datasets';
 import { EXAMPLE_IDEOGRAM_TRACK } from './ideogram';
 
@@ -149,7 +149,7 @@ export const EXAMPLE_SEMANTIC_ZOOMING_IDEOGRAM: Track = {
     ]
 };
 
-export const EXAMPLE_SEMANTIC_ZOOMING: GeminiSpec = {
+export const EXAMPLE_SEMANTIC_ZOOMING: GeminidSpec = {
     layout: {
         type: 'linear',
         direction: 'vertical',

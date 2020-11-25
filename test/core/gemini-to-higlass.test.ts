@@ -1,11 +1,11 @@
-import { geminiToHiGlass } from '../../src/core/gemini-to-higlass';
+import { geminidToHiGlass } from '../../src/core/geminid-to-higlass';
 import { HiGlassModel } from '../../src/core/higlass-model';
 import { EXMAPLE_BASIC_MARKS } from '../../src/editor/example/basic-marks';
 
 describe('Should convert gemini spec to higlass view config.', () => {
     it('Should return a generated higlass view config correctly', () => {
         const model = new HiGlassModel();
-        const higlass = geminiToHiGlass(
+        const higlass = geminidToHiGlass(
             model,
             EXMAPLE_BASIC_MARKS.tracks[0],
             {
@@ -25,7 +25,7 @@ describe('Should convert gemini spec to higlass view config.', () => {
     });
     it('Should not generate a higlass view config when not supported', () => {
         const model = new HiGlassModel();
-        const higlass = geminiToHiGlass(
+        const higlass = geminidToHiGlass(
             model,
             {
                 // no spec

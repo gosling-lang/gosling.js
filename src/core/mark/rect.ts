@@ -1,10 +1,10 @@
-import { GeminiTrackModel } from '../gemini-track-model';
-import { Channel } from '../gemini.schema';
-import { getValueUsingChannel } from '../gemini.schema.guards';
+import { GeminidTrackModel } from '../geminid-track-model';
+import { Channel } from '../geminid.schema';
+import { getValueUsingChannel } from '../geminid.schema.guards';
 import { cartesianToPolar, valueToRadian } from '../utils/polar';
 import { PIXIVisualProperty } from '../visual-property.schema';
 
-export function drawRect(HGC: any, trackInfo: any, tile: any, model: GeminiTrackModel) {
+export function drawRect(HGC: any, trackInfo: any, tile: any, model: GeminidTrackModel) {
     /* track spec */
     const spec = model.spec();
 
@@ -109,7 +109,7 @@ export function drawRect(HGC: any, trackInfo: any, tile: any, model: GeminiTrack
 }
 
 export function rectProperty(
-    gm: GeminiTrackModel,
+    gm: GeminidTrackModel,
     propertyKey: PIXIVisualProperty,
     datum?: { [k: string]: string | number },
     additionalInfo?: {

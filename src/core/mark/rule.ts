@@ -1,8 +1,8 @@
-import { GeminiTrackModel } from '../gemini-track-model';
-import { Channel } from '../gemini.schema';
-import { getValueUsingChannel } from '../gemini.schema.guards';
+import { GeminidTrackModel } from '../geminid-track-model';
+import { Channel } from '../geminid.schema';
+import { getValueUsingChannel } from '../geminid.schema.guards';
 
-export function drawRule(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackModel) {
+export function drawRule(HGC: any, trackInfo: any, tile: any, tm: GeminidTrackModel) {
     /* track spec */
     const spec = tm.spec();
 

@@ -1,4 +1,4 @@
-import { MarkGlyph } from '../../../core/gemini.schema';
+import { MarkGlyph } from '../../../core/geminid.schema';
 
 export const GLYPH_GENE_ANNOTATAION: MarkGlyph = {
     type: 'compositeMark',

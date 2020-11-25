@@ -1,4 +1,4 @@
-import { GeminiSpec, SuperposedTrack, Track } from '../../core/gemini.schema';
+import { GeminidSpec, SuperposedTrack, Track } from '../../core/geminid.schema';
 import { EXAMPLE_DATASETS } from './datasets';
 
 export const EXAMPLE_IDEOGRAM_TRACK: SuperposedTrack = {
@@ -119,7 +119,7 @@ const ideogramTracks: Track[] = [];
         }
     );
 });
-export const EXAMPLE_IDEOGRAM: GeminiSpec = {
+export const EXAMPLE_IDEOGRAM: GeminidSpec = {
     layout: { direction: 'vertical', type: 'linear', rowSizes: [60, 20], columnSizes: 1000, rowGaps: [0, 30] },
     tracks: ideogramTracks
 };

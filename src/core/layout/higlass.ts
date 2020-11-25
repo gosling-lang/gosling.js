@@ -1,5 +1,5 @@
 import { TrackInfo } from '../utils/bounding-box';
-import { geminiToHiGlass } from '../gemini-to-higlass';
+import { geminidToHiGlass } from '../geminid-to-higlass';
 import { HiGlassModel } from '../higlass-model';
 import { HiGlassSpec } from '../higlass.schema';
 import { getLinkingInfo } from '../utils/linking';
@@ -13,7 +13,7 @@ export function renderHiGlass(trackInfos: TrackInfo[], setHg: (hg: HiGlassSpec) 
     const hgModel = new HiGlassModel();
     trackInfos.forEach(tb => {
         const { track, boundingBox: bb, layout } = tb;
-        geminiToHiGlass(hgModel, track, bb, layout);
+        geminidToHiGlass(hgModel, track, bb, layout);
     });
 
     /* Linking views */

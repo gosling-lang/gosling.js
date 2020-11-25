@@ -1,10 +1,10 @@
-import { GeminiTrackModel } from '../gemini-track-model';
-import { Channel } from '../gemini.schema';
-import { getValueUsingChannel } from '../gemini.schema.guards';
+import { GeminidTrackModel } from '../geminid-track-model';
+import { Channel } from '../geminid.schema';
+import { getValueUsingChannel } from '../geminid.schema.guards';
 import { cartesianToPolar } from '../utils/polar';
 import { PIXIVisualProperty } from '../visual-property.schema';
 
-export function drawPoint(HGC: any, trackInfo: any, tile: any, model: GeminiTrackModel) {
+export function drawPoint(HGC: any, trackInfo: any, tile: any, model: GeminidTrackModel) {
     /* track spec */
     const spec = model.spec();
 
@@ -80,7 +80,7 @@ export function drawPoint(HGC: any, trackInfo: any, tile: any, model: GeminiTrac
 }
 
 export function pointProperty(
-    model: GeminiTrackModel,
+    model: GeminidTrackModel,
     propertyKey: PIXIVisualProperty,
     datum?: { [k: string]: string | number }
 ) {

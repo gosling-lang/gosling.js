@@ -1,4 +1,4 @@
-import { GeminiSpec, Track } from '../../core/gemini.schema';
+import { GeminidSpec, Track } from '../../core/geminid.schema';
 import { EXAMPLE_DATASETS } from './datasets';
 
 export const HIGLASS_GENE_ANNOTATION: Track = {
@@ -141,7 +141,7 @@ export const HIGLASS_GENE_ANNOTATION: Track = {
     opacity: { value: 0.5 }
 };
 
-export const EXAMPLE_GENE_ANNOTATION: GeminiSpec = {
+export const EXAMPLE_GENE_ANNOTATION: GeminidSpec = {
     layout: {
         type: 'linear',
         direction: 'vertical',

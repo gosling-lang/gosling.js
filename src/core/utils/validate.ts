@@ -1,8 +1,8 @@
 import Ajv from 'ajv';
-import { ChannelDeep, ChannelTypes, Track } from '../../core/gemini.schema';
-import { IsChannelDeep } from '../gemini.schema.guards';
+import { ChannelDeep, ChannelTypes, Track } from '../geminid.schema';
+import { IsChannelDeep } from '../geminid.schema.guards';
 import { resolveSuperposedTracks } from './superpose';
-import GeminiSchema from '../../../schema/gemini.schema.json';
+import GeminidSchema from '../../../schema/geminid.schema.json';
 
 export interface Validity {
     message: string;
@@ -10,8 +10,8 @@ export interface Validity {
     details?: string;
 }
 
-export function validateGeminiSpec(spec: any): Validity {
-    return validateSpec(GeminiSchema, spec);
+export function validateGeminidSpec(spec: any): Validity {
+    return validateSpec(GeminidSchema, spec);
 }
 
 /**

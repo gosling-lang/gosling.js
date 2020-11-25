@@ -1,5 +1,5 @@
 import * as d3 from 'd3';
-import { GeminiSpec, Track, BasicSingleTrack } from '../gemini.schema';
+import { GeminidSpec, Track, BasicSingleTrack } from '../geminid.schema';
 import { BoundingBox } from '../utils/bounding-box';
 import { DEFAULT_TRACK_GAP } from './defaults';
 
@@ -18,7 +18,7 @@ interface ArcInfo {
 
 export function renderCircularLayout(
     g: d3.Selection<SVGGElement, any, any, any>,
-    gm: GeminiSpec,
+    gm: GeminidSpec,
     boundingBox: BoundingBox
 ) {
     const wrap: number = gm.layout?.wrap ?? 999;

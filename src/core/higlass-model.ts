@@ -2,7 +2,7 @@ import uuid from 'uuid';
 import { HiGlassSpec, Track, View } from './higlass.schema';
 import HiGlassSchema from './higlass.schema.json';
 import { TOTAL_CHROMOSOME_SIZE_HG19 } from './utils/chrom-size';
-import { Domain } from './gemini.schema';
+import { Domain } from './geminid.schema';
 import { getNumericDomain } from './utils/scales';
 import { RelativePosition } from './utils/bounding-box';
 import { validateSpec } from './utils/validate';

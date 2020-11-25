@@ -1,5 +1,5 @@
-import { GeminiTrackModel } from '../gemini-track-model';
-import { Domain } from '../gemini.schema';
+import { GeminidTrackModel } from '../geminid-track-model';
+import { Domain } from '../geminid.schema';
 import { CHROMOSOME_INTERVAL_HG19 } from './chrom-size';
 import { SUPPORTED_CHANNELS } from '../mark';
 import {
@@ -8,7 +8,7 @@ import {
     IsDomainChrInterval,
     IsDomainGene,
     IsChannelDeep
-} from '../gemini.schema.guards';
+} from '../geminid.schema.guards';
 
 /**
  * Get a numeric domain based on a domain specification.
@@ -35,7 +35,7 @@ export function getNumericDomain(domain: Domain) {
 /**
  * Use a shared scale (i.e., `domain`) across multiple gemini tracks.
  */
-export function shareScaleAcrossTracks(trackModels: GeminiTrackModel[], force?: boolean) {
+export function shareScaleAcrossTracks(trackModels: GeminidTrackModel[], force?: boolean) {
     // we update the spec with a global domain
     const globalDomain: { [k: string]: number[] | string[] } = {};
     const channelKeys = SUPPORTED_CHANNELS;

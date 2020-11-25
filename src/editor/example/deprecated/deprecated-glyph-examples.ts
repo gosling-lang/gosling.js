@@ -1,6 +1,6 @@
-import { GeminiSpec } from '../../../core/gemini.schema';
+import { GeminidSpec } from '../../../core/geminid.schema';
 
-export const GENE_ANNOTATION_PLOT_SIMPLE: GeminiSpec = {
+export const GENE_ANNOTATION_PLOT_SIMPLE: GeminidSpec = {
     tracks: [
         {
             data: {
@@ -20,7 +20,7 @@ export const GENE_ANNOTATION_PLOT_SIMPLE: GeminiSpec = {
     ]
 };
 
-export const GENE_ANNOTATION_PLOT: GeminiSpec = {
+export const GENE_ANNOTATION_PLOT: GeminidSpec = {
     tracks: [
         {
             data: {
@@ -42,7 +42,7 @@ export const GENE_ANNOTATION_PLOT: GeminiSpec = {
     ]
 };
 
-export const CYTOGENETIC_BAND: GeminiSpec = {
+export const CYTOGENETIC_BAND: GeminidSpec = {
     tracks: [
         {
             data: {

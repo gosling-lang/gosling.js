@@ -6,7 +6,7 @@ import {
     BasicSingleTrack,
     SingleTrack,
     Channel
-} from './gemini.schema';
+} from './geminid.schema';
 import { validateTrack, getGenomicChannelFromTrack, getGenomicChannelKeyFromTrack } from './utils/validate';
 import * as d3 from 'd3';
 import { group } from 'd3-array';
@@ -27,7 +27,7 @@ import {
     IsStackedChannel,
     IsDomainArray,
     PREDEFINED_COLOR_STR_MAP
-} from './gemini.schema.guards';
+} from './geminid.schema.guards';
 import { CHANNEL_DEFAULTS } from './channel';
 
 export type ScaleType =
@@ -37,7 +37,7 @@ export type ScaleType =
     | d3.ScaleSequential<any>
     | (() => string | number); // constant value
 
-export class GeminiTrackModel {
+export class GeminidTrackModel {
     /* spec */
     private specOriginal: BasicSingleTrack; // original spec of users
     private specComplete: BasicSingleTrack; // processed spec, being used in visualizations

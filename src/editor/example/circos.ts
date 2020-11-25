@@ -1,4 +1,4 @@
-import { GeminiSpec, SuperposedTrack, Track } from '../../core/gemini.schema';
+import { GeminidSpec, SuperposedTrack, Track } from '../../core/geminid.schema';
 import { EXAMPLE_DATASETS } from './datasets';
 import { EXAMPLE_SEMANTIC_ZOOMING_IDEOGRAM, EXMAPLE_SEMANTIC_ZOOM_SEQ } from './semantic-zoom';
 
@@ -216,7 +216,7 @@ export const EXAMPLE_BAND: Track = {
     innerRadius: 80
 };
 
-export const EXAMPLE_CIRCOS: GeminiSpec = {
+export const EXAMPLE_CIRCOS: GeminidSpec = {
     layout: {
         type: 'circular',
         direction: 'horizontal',
@@ -390,4 +390,4 @@ export const EXAMPLE_CIRCOS: GeminiSpec = {
         //     opacity: { value: 0.6 }
         // },
     ] //.slice(1)
-} as GeminiSpec;
+} as GeminidSpec;

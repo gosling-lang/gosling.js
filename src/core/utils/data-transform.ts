@@ -1,5 +1,5 @@
-import { BasicSingleTrack, Datum } from '../gemini.schema';
-import { getChannelKeysByAggregateFnc, getChannelKeysByType, IsChannelDeep } from '../gemini.schema.guards';
+import { BasicSingleTrack, Datum } from '../geminid.schema';
+import { getChannelKeysByAggregateFnc, getChannelKeysByType, IsChannelDeep } from '../geminid.schema.guards';
 
 export interface FilterSpec {
     field: string;

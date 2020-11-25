@@ -1,8 +1,8 @@
-import { GeminiSpec } from '../../core/gemini.schema';
+import { GeminidSpec } from '../../core/geminid.schema';
 import { EXAMPLE_BASIC_AREA } from './basic-marks';
 import { EXAMPLE_DATASETS } from './datasets';
 
-export const EXMAPLE_BASIC_LINKING: GeminiSpec = {
+export const EXMAPLE_BASIC_LINKING: GeminidSpec = {
     layout: {
         type: 'linear',
         direction: 'vertical',
@@ -81,4 +81,4 @@ export const EXMAPLE_BASIC_LINKING: GeminiSpec = {
             }
         }
     ]
-} as GeminiSpec;
+} as GeminidSpec;

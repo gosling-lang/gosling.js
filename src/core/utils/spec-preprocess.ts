@@ -1,10 +1,10 @@
-import { GeminiSpec, GlyphElement } from '../gemini.schema';
+import { GeminidSpec, GlyphElement } from '../geminid.schema';
 
 /**
  * Update track-level specs considering the root-level specs (e.g., arrangements).
  * @param spec
  */
-export function fixSpecDownstream(spec: GeminiSpec) {
+export function fixSpecDownstream(spec: GeminidSpec) {
     /**
      * Flag tracks to use circular marks
      */

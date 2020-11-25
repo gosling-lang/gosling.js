@@ -1,7 +1,7 @@
-import { GeminiSpec } from '../../core/gemini.schema';
+import { GeminidSpec } from '../../core/geminid.schema';
 import { EXAMPLE_DATASETS } from './datasets';
 
-export const EXAMPLE_CIRCOS_3: GeminiSpec = {
+export const EXAMPLE_CIRCOS_3: GeminidSpec = {
     layout: { type: 'circular', direction: 'horizontal' },
     tracks: [
         {
@@ -49,4 +49,4 @@ export const EXAMPLE_CIRCOS_3: GeminiSpec = {
             style: { outline: 'white' }
         }
     ]
-} as GeminiSpec;
+} as GeminidSpec;

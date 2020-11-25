@@ -1,6 +1,6 @@
-import { AxisPosition, BasicSingleTrack, SingleTrack, SuperposedTrack, Track } from '../../core/gemini.schema';
+import { AxisPosition, BasicSingleTrack, SingleTrack, SuperposedTrack, Track } from '../geminid.schema';
 import assign from 'lodash/assign';
-import { IsChannelDeep, IsSuperposedTrack } from '../gemini.schema.guards';
+import { IsChannelDeep, IsSuperposedTrack } from '../geminid.schema.guards';
 
 /**
  * Resolve superposed tracks into multiple track specifications.

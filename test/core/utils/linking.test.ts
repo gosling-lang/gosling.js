@@ -1,10 +1,10 @@
-import { geminiToHiGlass } from '../../../src/core/gemini-to-higlass';
+import { geminidToHiGlass } from '../../../src/core/geminid-to-higlass';
 import { HiGlassModel } from '../../../src/core/higlass-model';
 import { getLinkingInfo } from '../../../src/core/utils/linking';
 
 describe('Should get linking information correctly', () => {
     it('Simple linking', () => {
-        const higlass = geminiToHiGlass(
+        const higlass = geminidToHiGlass(
             new HiGlassModel(),
             {
                 data: { type: 'csv', url: 'https://' },

@@ -1,4 +1,4 @@
-import { Channel, BasicSingleTrack } from '../src/core/gemini.schema';
+import { Channel, BasicSingleTrack } from '../src/core/geminid.schema';
 import {
     IsChannelDeep,
     IsChannelValue,
@@ -8,7 +8,7 @@ import {
     IsStackedMark,
     IsStackedChannel,
     getVisualizationType
-} from '../src/core/gemini.schema.guards';
+} from '../src/core/geminid.schema.guards';
 
 describe('gemini schema should be checked correctly', () => {
     it('Type guards should be checked correctly', () => {

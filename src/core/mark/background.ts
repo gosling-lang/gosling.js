@@ -1,6 +1,6 @@
-import { GeminiTrackModel } from '../gemini-track-model';
+import { GeminidTrackModel } from '../geminid-track-model';
 
-export function drawBackground(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackModel) {
+export function drawBackground(HGC: any, trackInfo: any, tile: any, tm: GeminidTrackModel) {
     /* helper */
     const { colorToHex } = HGC.utils;
 

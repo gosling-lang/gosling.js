@@ -1,8 +1,8 @@
-import { GeminiTrackModel } from '../gemini-track-model';
-import { IsChannelDeep } from '../gemini.schema.guards';
+import { GeminidTrackModel } from '../geminid-track-model';
+import { IsChannelDeep } from '../geminid.schema.guards';
 import { cartesianToPolar } from '../utils/polar';
 
-export function drawCircularGrid(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackModel) {
+export function drawCircularGrid(HGC: any, trackInfo: any, tile: any, tm: GeminidTrackModel) {
     /* track spec */
     const spec = tm.spec();
     if (!IsChannelDeep(spec.row) || !spec.row.grid) {

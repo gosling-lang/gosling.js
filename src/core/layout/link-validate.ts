@@ -1,5 +1,5 @@
-import { Track } from '../gemini.schema';
-import { IsChannelDeep } from '../gemini.schema.guards';
+import { Track } from '../geminid.schema';
+import { IsChannelDeep } from '../geminid.schema.guards';
 import { SpecValidityModel } from './validate';
 
 export function validateBetweenLinkSpec(track: Track) {

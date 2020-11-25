@@ -27,7 +27,7 @@ function EditorPanel(props: { code: string; readOnly?: boolean; onChange?: (code
                     uri: 'GeminiSchema',
                     fileMatch: ['*'],
                     schema: {
-                        $ref: 'https://raw.githubusercontent.com/sehilyi/gemini/master/schema/gemini.schema.json'
+                        $ref: 'https://raw.githubusercontent.com/sehilyi/gemini/master/schema/geminid.schema.json'
                     }
                 }
             ]

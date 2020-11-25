@@ -1,11 +1,11 @@
-import { GeminiTrackModel } from '../gemini-track-model';
-import { Channel } from '../gemini.schema';
+import { GeminidTrackModel } from '../geminid-track-model';
+import { Channel } from '../geminid.schema';
 import { group } from 'd3-array';
 import { PIXIVisualProperty } from '../visual-property.schema';
-import { IsChannelDeep, IsStackedMark, getValueUsingChannel } from '../gemini.schema.guards';
+import { IsChannelDeep, IsStackedMark, getValueUsingChannel } from '../geminid.schema.guards';
 import { cartesianToPolar, valueToRadian } from '../utils/polar';
 
-export function drawBar(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackModel) {
+export function drawBar(HGC: any, trackInfo: any, tile: any, tm: GeminidTrackModel) {
     /* track spec */
     const spec = tm.spec();
 
@@ -180,7 +180,7 @@ export function drawBar(HGC: any, trackInfo: any, tile: any, tm: GeminiTrackMode
 }
 
 export function barProperty(
-    gm: GeminiTrackModel,
+    gm: GeminidTrackModel,
     propertyKey: PIXIVisualProperty,
     datum?: { [k: string]: string | number },
     additionalInfo?: {

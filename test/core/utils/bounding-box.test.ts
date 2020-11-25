@@ -1,4 +1,4 @@
-import { Track } from '../../../src/core/gemini.schema';
+import { Track } from '../../../src/core/geminid.schema';
 import { DEFAULT_TRACK_HEIGHT, DEFAULT_TRACK_WIDTH } from '../../../src/core/layout/defaults';
 import { getArrangement, getGridInfo } from '../../../src/core/utils/bounding-box';
 

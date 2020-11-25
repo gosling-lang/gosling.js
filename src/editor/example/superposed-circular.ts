@@ -1,4 +1,4 @@
-import { GeminiSpec, SuperposedTrack, Track } from '../../core/gemini.schema';
+import { GeminidSpec, SuperposedTrack, Track } from '../../core/geminid.schema';
 import { EXAMPLE_DATASETS } from './datasets';
 
 // refer to the following for supporting zooming and panning in circular layouts:
@@ -207,7 +207,7 @@ export const EXAMPLE_BAND: Track = {
     innerRadius: 80
 };
 
-export const EXAMPLE_SUPERPOSED_CIRCULAR_TRACKS: GeminiSpec = {
+export const EXAMPLE_SUPERPOSED_CIRCULAR_TRACKS: GeminidSpec = {
     layout: {
         type: 'circular',
         direction: 'horizontal',
@@ -371,4 +371,4 @@ export const EXAMPLE_SUPERPOSED_CIRCULAR_TRACKS: GeminiSpec = {
             superposeOnPreviousTrack: true
         }
     ]
-} as GeminiSpec;
+} as GeminidSpec;

@@ -1,4 +1,4 @@
-import { GeminiSpec } from '../../core/gemini.schema';
+import { GeminidSpec } from '../../core/geminid.schema';
 import { EXMAPLE_BASIC_MARKS } from './basic-marks';
 import { EXAMPLE_SUPERPOSE } from './superpose';
 import { EXAMPLE_IDEOGRAM } from './ideogram';
@@ -18,7 +18,7 @@ import { EXAMPLE_LOGO } from './logo';
 
 export const examples: ReadonlyArray<{
     name: string;
-    spec: GeminiSpec;
+    spec: GeminidSpec;
     description?: string;
     underDevelopment?: boolean;
     hidden?: boolean;

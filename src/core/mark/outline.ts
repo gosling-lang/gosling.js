@@ -1,5 +1,5 @@
-import { GeminiTrackModel } from '../gemini-track-model';
-import { IsChannelDeep } from '../gemini.schema.guards';
+import { GeminidTrackModel } from '../geminid-track-model';
+import { IsChannelDeep } from '../geminid.schema.guards';
 
 export const TITLE_STYLE = {
     fontSize: '12px',
@@ -10,7 +10,7 @@ export const TITLE_STYLE = {
     lineJoin: 'round'
 };
 
-export function drawChartOutlines(HGC: any, trackInfo: any, tm: GeminiTrackModel) {
+export function drawChartOutlines(HGC: any, trackInfo: any, tm: GeminidTrackModel) {
     /* helper */
     const { colorToHex } = HGC.utils;
 

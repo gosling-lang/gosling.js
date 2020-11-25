@@ -1,10 +1,10 @@
 import { shareScaleAcrossTracks } from '../../../src/core/utils/scales';
-import { GeminiTrackModel } from '../../../src/core/gemini-track-model';
-import { IsChannelDeep } from '../../../src/core/gemini.schema.guards';
+import { GeminidTrackModel } from '../../../src/core/geminid-track-model';
+import { IsChannelDeep } from '../../../src/core/geminid.schema.guards';
 
 describe('Should use shared scales', () => {
     it('Quantitative and nominal values should be shared properly', () => {
-        const gm = new GeminiTrackModel(
+        const gm = new GeminidTrackModel(
             {
                 data: { type: 'csv', url: '' },
                 mark: 'line',
@@ -18,7 +18,7 @@ describe('Should use shared scales', () => {
         shareScaleAcrossTracks(
             [
                 gm,
-                new GeminiTrackModel(
+                new GeminidTrackModel(
                     {
                         data: { type: 'csv', url: '' },
                         mark: 'line',
@@ -28,7 +28,7 @@ describe('Should use shared scales', () => {
                     },
                     []
                 ),
-                new GeminiTrackModel(
+                new GeminidTrackModel(
                     {
                         data: { type: 'csv', url: '' },
                         mark: 'line',
@@ -50,7 +50,7 @@ describe('Should use shared scales', () => {
     });
 
     it('Quantitative and nominal values should not be shared if domain already defined', () => {
-        const gm = new GeminiTrackModel(
+        const gm = new GeminidTrackModel(
             {
                 data: { type: 'csv', url: '' },
                 mark: 'line',
@@ -64,7 +64,7 @@ describe('Should use shared scales', () => {
         shareScaleAcrossTracks(
             [
                 gm,
-                new GeminiTrackModel(
+                new GeminidTrackModel(
                     {
                         data: { type: 'csv', url: '' },
                         mark: 'line',
@@ -74,7 +74,7 @@ describe('Should use shared scales', () => {
                     },
                     []
                 ),
-                new GeminiTrackModel(
+                new GeminidTrackModel(
                     {
                         data: { type: 'csv', url: '' },
                         mark: 'line',

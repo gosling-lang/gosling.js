@@ -1,8 +1,8 @@
-import { GeminiSpec } from '../../core/gemini.schema';
+import { GeminidSpec } from '../../core/geminid.schema';
 import { EXAMPLE_DATASETS } from './datasets';
 import { EXAMPLE_IDEOGRAM_TRACK } from './ideogram';
 
-export const EXAMPLE_SUPERPOSE: GeminiSpec = {
+export const EXAMPLE_SUPERPOSE: GeminidSpec = {
     layout: {
         type: 'linear',
         direction: 'vertical',

@@ -1,4 +1,4 @@
-import { GeminiSpec, Track } from '../gemini.schema';
+import { GeminidSpec, Track } from '../geminid.schema';
 import { DEFAULT_TRACK_GAP, DEFAULT_TRACK_HEIGHT, DEFAULT_TRACK_WIDTH } from '../layout/defaults';
 import { resolveSuperposedTracks } from '../utils/superpose';
 import { arrayRepeat } from './array';
@@ -46,7 +46,7 @@ export interface TrackInfo {
  *
  * @param spec
  */
-export function getGridInfo(spec: GeminiSpec): GridInfo {
+export function getGridInfo(spec: GeminidSpec): GridInfo {
     // total number of cells in the tabular layout
     const numCells = spec.tracks
         .filter(t => !t.superposeOnPreviousTrack)
@@ -118,7 +118,7 @@ const getGapTrack = (size: Size) => {
  *
  * @param spec
  */
-export function getArrangement(spec: GeminiSpec): TrackInfo[] {
+export function getArrangement(spec: GeminidSpec): TrackInfo[] {
     const { width: totalWidth, height: totalHeight, columnSizes, rowSizes, columnGaps, rowGaps } = getGridInfo(spec);
 
     const numColumns = columnSizes.length;

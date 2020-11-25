@@ -24,7 +24,7 @@ import {
     Filter,
     OneOfFilter,
     RangeFilter
-} from './gemini.schema';
+} from './geminid.schema';
 import { SUPPORTED_CHANNELS } from './mark';
 import { isArray } from 'lodash';
 import * as d3 from 'd3';

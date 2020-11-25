@@ -1,4 +1,4 @@
-import { IsChannelDeep } from '../src/core/gemini.schema.guards';
+import { IsChannelDeep } from '../src/core/geminid.schema.guards';
 import { resolveSuperposedTracks } from '../src/core/utils/superpose';
 
 describe('Should handle superposition options correctly', () => {
