@@ -1,10 +1,15 @@
-import { TrackInfo } from '../utils/bounding-box';
+import { getGridInfo, Size, TrackInfo } from '../utils/bounding-box';
 import { geminidToHiGlass } from '../geminid-to-higlass';
 import { HiGlassModel } from '../higlass-model';
 import { HiGlassSpec } from '../higlass.schema';
 import { getLinkingInfo } from '../utils/linking';
+import { GeminidSpec } from '../geminid.schema';
 
-export function renderHiGlass(trackInfos: TrackInfo[], setHg: (hg: HiGlassSpec) => void) {
+export function renderHiGlass(
+    spec: GeminidSpec,
+    trackInfos: TrackInfo[],
+    setHg: (hg: HiGlassSpec, size: Size) => void
+) {
     if (trackInfos.length === 0) {
         // no tracks to render
         return;
@@ -55,5 +60,5 @@ export function renderHiGlass(trackInfos: TrackInfo[], setHg: (hg: HiGlassSpec) 
             });
     });
 
-    setHg(hgModel.spec());
+    setHg(hgModel.spec(), getGridInfo(spec));
 }

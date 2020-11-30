@@ -13,7 +13,7 @@ import { GeminidSpec } from '../core/geminid.schema';
 import { debounce } from 'lodash';
 import { examples } from './example';
 import { replaceTemplate } from '../core/utils';
-import { getGridInfo } from '../core/utils/bounding-box';
+import { Size } from '../core/utils/bounding-box';
 import { HiGlassSpec } from '../core/higlass.schema';
 import GeminidSchema from '../../schema/geminid.schema.json';
 import { validateSpec, Validity } from '../core/utils/validate';
@@ -44,6 +44,7 @@ function Editor() {
     const [demo, setDemo] = useState(examples[INIT_DEMO_INDEX]);
     const [editorMode, setEditorMode] = useState<'Normal Mode' | 'Template-based Mode'>('Normal Mode');
     const [hg, setHg] = useState<HiGlassSpec>();
+    const [size, setSize] = useState<{ width: number; height: number }>();
     const [gm, setGm] = useState(stringify(examples[INIT_DEMO_INDEX].spec as GeminidSpec));
     const [log, setLog] = useState<Validity>({ message: '', state: 'success' });
 
@@ -74,8 +75,9 @@ function Editor() {
         }
         if (!editedGm) return;
 
-        compile(editedGm as GeminidSpec, (newHg: HiGlassSpec) => {
+        compile(editedGm as GeminidSpec, (newHg: HiGlassSpec, newSize: Size) => {
             setHg(newHg);
+            setSize(newSize);
         });
     }, [gm]);
 
@@ -84,7 +86,6 @@ function Editor() {
      */
     const hglass = useMemo(() => {
         const editedGm = replaceTemplate(JSON.parse(stripJsonComments(gm)));
-        const size = getGridInfo(editedGm);
         return hg && size ? (
             <>
                 <div
