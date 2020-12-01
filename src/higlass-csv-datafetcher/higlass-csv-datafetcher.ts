@@ -1,24 +1,21 @@
 import * as d3 from 'd3-dsv';
 import { CHROMOSOME_INTERVAL_HG19, CHROMOSOME_SIZE_HG19 } from '../core/utils/chrom-size';
+import fetch from 'cross-fetch'; // TODO: Can we remove this and make the test working
 
 // TODO: Accept multiple data infos as array, instead of having `Alt` variables.
 /**
  * HiGlass data fetcher specific for Gemini which ultimately will accept any types of data other than CSV files.
  */
-function GeminiDataFetcher(HGC: any, ...args: any): any {
+function CSVDataFetcher(HGC: any, ...args: any): any {
     if (!new.target) {
         throw new Error('Uncaught TypeError: Class constructor cannot be invoked without "new"');
     }
-
-    const { slugid } = HGC.libraries;
 
     class CSVDataFetcherClass {
         // @ts-ignore
         private dataConfig: GeminiDataConfig;
         // @ts-ignore
         private tilesetInfoLoading: boolean;
-        // @ts-ignore
-        private trackUid: string;
         private dataPromise: Promise<any> | undefined;
         private dataPromiseAlt: Promise<any> | undefined; // being used for semantic zooming
         private chromSizes: any;
@@ -28,7 +25,6 @@ function GeminiDataFetcher(HGC: any, ...args: any): any {
         constructor(params: any[]) {
             const [dataConfig] = params;
             this.dataConfig = dataConfig;
-            this.trackUid = slugid.nice();
             this.tilesetInfoLoading = false;
 
             if (!dataConfig.url) {
@@ -226,8 +222,8 @@ function GeminiDataFetcher(HGC: any, ...args: any): any {
     return new CSVDataFetcherClass(args);
 }
 
-GeminiDataFetcher.config = {
+CSVDataFetcher.config = {
     type: 'csv'
 };
 
-export default GeminiDataFetcher;
+export default CSVDataFetcher;

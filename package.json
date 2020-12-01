@@ -59,6 +59,7 @@
         "@typescript-eslint/parser": "^4.8.1",
         "ajv": "^6.12.2",
         "babel-jest": "^26.3.0",
+        "cross-fetch": "^3.0.6",
         "css-loader": "^4.2.1",
         "documentation": "^13.0.2",
         "eslint": "^7.6.0",
@@ -111,11 +112,12 @@
         "coverageDirectory": "./coverage/",
         "collectCoverage": true,
         "collectCoverageFrom": [
-            "**/src/**/*.{js,jsx,ts,tsx}",
+            "**/src/**/*.{js,ts}",
             "!**/node_modules/**",
             "!**/coverage/**",
             "!**/public/**",
             "!**/dist/**",
+            "!**/editor/**",
             "!**/deprecated/**"
         ],
         "coverageReporters": [

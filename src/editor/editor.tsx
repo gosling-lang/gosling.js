@@ -1,6 +1,6 @@
 // @ts-ignore
 import { GeminidTrack } from '../higlass-geminid-track/index';
-import { CSVDataFetcher } from '../higlass-geminid-datafetcher/index';
+import { CSVDataFetcher } from '../higlass-csv-datafetcher/index';
 // @ts-ignore
 import { HiGlassComponent } from 'higlass';
 // @ts-ignore

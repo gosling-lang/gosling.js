@@ -8,4 +8,4 @@ export { compile } from './core/compile';
 export { validateGeminidSpec } from './core/utils/validate';
 
 export { GeminidTrack } from './higlass-geminid-track';
-export { CSVDataFetcher } from './higlass-geminid-datafetcher';
+export { CSVDataFetcher } from './higlass-csv-datafetcher';
