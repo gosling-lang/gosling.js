@@ -28,6 +28,7 @@ module.exports = {
     rules: {
         // https://github.com/jest-community/eslint-plugin-jest#rules
         'prettier/prettier': 'warn',
+        'jest/no-test-callback': 'warn',
         // https://github.com/typescript-eslint/typescript-eslint/tree/master/packages/eslint-plugin#supported-rules
         '@typescript-eslint/no-explicit-any': 'off',
         '@typescript-eslint/no-empty-interface': 'off',
