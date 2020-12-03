@@ -39,6 +39,7 @@
     height: 100%;
     padding: 10px;
     background: #f6f6f6;
+    overflow-y: auto;
 }
 
 .preview-guideline {

@@ -8,6 +8,7 @@ export type GeminidSpec = {
     tracks: Track[];
     width?: number;
     height?: number;
+    static?: boolean;
     description?: string;
 };
 
@@ -54,7 +55,16 @@ export interface DataDeepGemini {
     quantitativeFieldsAlt?: string[];
 }
 
-export type DataMetadata = MultivecMetadata | BEDMetadata;
+export type DataMetadata = VectorMetadata | MultivecMetadata | BEDMetadata;
+
+export interface VectorMetadata {
+    type: 'higlass-vector';
+    column: string;
+    value: string;
+    start?: string;
+    end?: string;
+    bin?: number; // Binning the genomic interval in tiles (unit size: 256)
+}
 
 export interface MultivecMetadata {
     type: 'higlass-multivec';
@@ -168,6 +178,9 @@ export interface BasicSingleTrack {
 
     // Stretch the size to the given range? (e.g., [x, xe])
     stretch?: boolean;
+
+    // Flip a track vertically?
+    flipY?: boolean;
 
     // Visibility
     visibility?: TriggerCondition;
@@ -293,7 +306,7 @@ export interface ChannelDeep {
     legend?: boolean;
     baseline?: string | number;
     zeroBaseline?: boolean; // We could remove this and use the `baseline` option instead
-    mirrored?: boolean; // Show baseline on the top or right instead of bottom or left?
+    mirrored?: boolean; // Show baseline on the top or right instead of bottom or left
     grid?: boolean;
     linkingID?: string;
 }

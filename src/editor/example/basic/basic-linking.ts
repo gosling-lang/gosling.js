@@ -1,4 +1,4 @@
-import { GeminidSpec } from '../../core/geminid.schema';
+import { GeminidSpec } from '../../../core/geminid.schema';
 import { EXAMPLE_BASIC_AREA } from './basic-marks';
 import { EXAMPLE_DATASETS } from './datasets';
 

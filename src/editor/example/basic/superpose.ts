@@ -1,4 +1,4 @@
-import { GeminidSpec } from '../../core/geminid.schema';
+import { GeminidSpec } from '../../../core/geminid.schema';
 import { EXAMPLE_DATASETS } from './datasets';
 import { EXAMPLE_IDEOGRAM_TRACK } from './ideogram';
 

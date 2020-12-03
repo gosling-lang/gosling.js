@@ -1,4 +1,4 @@
-import { GeminidSpec, Track } from '../../core/geminid.schema';
+import { GeminidSpec, Track } from '../../../core/geminid.schema';
 import { EXAMPLE_DATASETS } from './datasets';
 
 export const EXAMPLE_HEATMAP: Track = {

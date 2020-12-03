@@ -1,20 +1,25 @@
 import { GeminidSpec } from '../../core/geminid.schema';
-import { EXMAPLE_BASIC_MARKS } from './basic-marks';
-import { EXAMPLE_SUPERPOSE } from './superpose';
-import { EXAMPLE_IDEOGRAM } from './ideogram';
-import { EXAMPLE_GENE_ANNOTATION } from './gene-annotation';
-import { EXAMPLE_LINKS } from './links';
-import { EXAMPLE_OVERVIEW_DEATIL } from './overview-plus-detail-views';
-import { EXAMPLE_PERIPHERAL_PLOT } from './peripheral-plot';
-import { EXAMPLE_SEMANTIC_ZOOMING } from './semantic-zoom';
-import { EXMAPLE_BASIC_LINKING } from './basic-linking';
-import { EXAMPLE_UPSET } from './upset';
-import { EXAMPLE_LOGO_LIKE } from './text-stretch';
-import { EXAMPLE_CIRCOS } from './circos';
-import { EXAMPLE_CIRCOS_MANY } from './circos-many-rows';
-import { EXAMPLE_CIRCOS_STACKING } from './circos-stacking';
-import { EXAMPLE_SUPERPOSED_CIRCULAR_TRACKS } from './superposed-circular';
-import { EXAMPLE_LOGO } from './logo';
+
+// Real-world examples
+import { CORCES_2020_NATURE_GENETICS } from './corces-2020-nature-genetics';
+
+// Basic examples
+import { EXMAPLE_BASIC_MARKS } from './basic/basic-marks';
+import { EXAMPLE_SUPERPOSE } from './basic/superpose';
+import { EXAMPLE_IDEOGRAM } from './basic/ideogram';
+import { EXAMPLE_GENE_ANNOTATION } from './basic/gene-annotation';
+import { EXAMPLE_LINKS } from './basic/links';
+import { EXAMPLE_OVERVIEW_DEATIL } from './basic/overview-plus-detail-views';
+import { EXAMPLE_PERIPHERAL_PLOT } from './basic/peripheral-plot';
+import { EXAMPLE_SEMANTIC_ZOOMING } from './basic/semantic-zoom';
+import { EXMAPLE_BASIC_LINKING } from './basic/basic-linking';
+import { EXAMPLE_UPSET } from './basic/upset';
+import { EXAMPLE_LOGO_LIKE } from './basic/text-stretch';
+import { EXAMPLE_CIRCOS } from './basic/circos';
+import { EXAMPLE_CIRCOS_MANY } from './basic/circos-many-rows';
+import { EXAMPLE_CIRCOS_STACKING } from './basic/circos-stacking';
+import { EXAMPLE_SUPERPOSED_CIRCULAR_TRACKS } from './basic/superposed-circular';
+import { EXAMPLE_LOGO } from './basic/logo';
 
 export const examples: ReadonlyArray<{
     name: string;
@@ -24,6 +29,13 @@ export const examples: ReadonlyArray<{
     hidden?: boolean;
     forceShow?: boolean;
 }> = [
+    {
+        name: 'Corces et al. 2020 (Nature Genetics)',
+        spec: CORCES_2020_NATURE_GENETICS,
+        underDevelopment: false,
+        hidden: false,
+        forceShow: true
+    },
     {
         name: 'Geminid Logo',
         spec: EXAMPLE_LOGO,

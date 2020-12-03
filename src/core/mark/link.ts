@@ -69,7 +69,7 @@ export function drawLink(HGC: any, trackInfo: any, tile: any, tm: GeminidTrackMo
                 0.5 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
             );
 
-            const botY = rowPosition + rowHeight;
+            const baseY = rowPosition + (spec.flipY ? 0 : rowHeight);
 
             if (x1Value !== undefined && x1eValue !== undefined && xValue !== x1Value && xeValue !== x1eValue) {
                 // This means we need to draw 'band' connections
@@ -132,12 +132,12 @@ export function drawLink(HGC: any, trackInfo: any, tile: any, tm: GeminidTrackMo
                     g.endFill();
                 } else {
                     // Linear mark
-                    g.moveTo(x, botY);
+                    g.moveTo(x, baseY);
 
                     if (spec.style?.circularLink) {
-                        g.arc((x + x1e) / 2.0, botY, (x1e - x) / 2.0, -Math.PI, 0, false);
+                        g.arc((x + x1e) / 2.0, baseY, (x1e - x) / 2.0, -Math.PI, 0, false);
                         // g.lineTo(xe, botY);
-                        g.arc((xe + x1) / 2.0, botY, (x1 - xe) / 2.0, 0, -Math.PI, true);
+                        g.arc((xe + x1) / 2.0, baseY, (x1 - xe) / 2.0, 0, -Math.PI, true);
                         // g.lineTo(x, botY);
                         g.closePath();
                     } else {
@@ -192,7 +192,7 @@ export function drawLink(HGC: any, trackInfo: any, tile: any, tm: GeminidTrackMo
                     // g.moveTo(posS.x, posS.y);
                     // g.lineTo(posE.x, posE.y);
                 } else {
-                    g.moveTo(x, botY);
+                    g.moveTo(x, baseY);
 
                     if (spec.style?.circularLink) {
                         if (xe < 0 || x > trackWidth) {
@@ -200,18 +200,18 @@ export function drawLink(HGC: any, trackInfo: any, tile: any, tm: GeminidTrackMo
                         }
                         // TODO: Better way to simply this line (i.e., 'none' for 0 opacity)?
                         g.beginFill(color === 'none' ? 'white' : colorToHex(color), color === 'none' ? 0 : opacity);
-                        g.arc(midX, botY, (xe - x) / 2.0, -Math.PI, Math.PI);
+                        g.arc(midX, baseY, (xe - x) / 2.0, -Math.PI, Math.PI);
                         g.closePath();
                     } else {
                         g.bezierCurveTo(
                             x + (xe - x) / 3.0,
                             // rowPosition,
-                            rowPosition + rowHeight - Math.min(rowHeight, (xe - x) / 2.0),
+                            baseY + Math.min(rowHeight, (xe - x) / 2.0) * (spec.flipY ? 1 : -1),
                             x + ((xe - x) / 3.0) * 2,
                             // rowPosition,
-                            rowPosition + rowHeight - Math.min(rowHeight, (xe - x) / 2.0),
+                            baseY + Math.min(rowHeight, (xe - x) / 2.0) * (spec.flipY ? 1 : -1),
                             xe,
-                            rowPosition + rowHeight
+                            baseY
                         );
                     }
                 }

@@ -1,4 +1,4 @@
-import { GeminidSpec } from '../../core/geminid.schema';
+import { GeminidSpec } from '../../../core/geminid.schema';
 import { EXAMPLE_BASIC_AREA } from './basic-marks';
 
 export const EXMAPLE_BASIC_BRUSH = {

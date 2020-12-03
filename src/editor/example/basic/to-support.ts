@@ -1,4 +1,4 @@
-import { GeminidSpec } from '../../core/geminid.schema';
+import { GeminidSpec } from '../../../core/geminid.schema';
 
 export const SPEC_TO_SUPPORT: GeminidSpec = {
     // Color channel should be shared only when the data types are the same

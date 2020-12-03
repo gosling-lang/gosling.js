@@ -1,4 +1,4 @@
-import { GeminidSpec, SuperposedTrack, Track } from '../../core/geminid.schema';
+import { GeminidSpec, SuperposedTrack, Track } from '../../../core/geminid.schema';
 import { EXAMPLE_DATASETS } from './datasets';
 
 export const EXAMPLE_IDEOGRAM_TRACK: SuperposedTrack = {

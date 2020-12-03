@@ -1,4 +1,4 @@
-import { GeminidSpec, SuperposedTrack, Track } from '../../core/geminid.schema';
+import { GeminidSpec, SuperposedTrack, Track } from '../../../core/geminid.schema';
 import { EXAMPLE_DATASETS } from './datasets';
 
 // refer to the following for supporting zooming and panning in circular layouts:

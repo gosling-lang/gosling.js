@@ -6,6 +6,16 @@ import { GeminidSpec } from '../geminid.schema';
  */
 export function fixSpecDownstream(spec: GeminidSpec) {
     /**
+     * Zoomability
+     */
+    if (spec.static) {
+        // Force disable zoomability when the top-level static option is enabled
+        spec.tracks.forEach(t => {
+            t.zoomable = false;
+        });
+    }
+
+    /**
      * Flag tracks to use circular marks
      */
     if (spec.layout?.type === 'circular') {

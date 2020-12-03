@@ -181,6 +181,12 @@ export function getArrangement(spec: GeminidSpec): TrackInfo[] {
                 // Add between-row gaps.
                 const yOffset = y + height;
                 const gapHeight = rowGaps[ri];
+
+                if (gapHeight === 0) {
+                    // No point to add row gaps
+                    return;
+                }
+
                 Array(numColumns)
                     .fill(0)
                     .forEach((_, _ci) => {
@@ -217,6 +223,12 @@ export function getArrangement(spec: GeminidSpec): TrackInfo[] {
                     const xOffset = x;
                     const gapHeight = rowGaps[ri - 1];
                     const colWidth = width;
+
+                    if (gapHeight === 0) {
+                        // No point to add row gaps
+                        return;
+                    }
+
                     info.push({
                         track: getGapTrack({ width: colWidth, height: gapHeight }),
                         boundingBox: { x: xOffset, y: yOffset, width: colWidth, height: gapHeight },

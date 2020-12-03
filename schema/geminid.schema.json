@@ -158,6 +158,9 @@
         "endAngle": {
           "type": "number"
         },
+        "flipY": {
+          "type": "boolean"
+        },
         "height": {
           "type": "number"
         },
@@ -422,6 +425,9 @@
     "DataMetadata": {
       "anyOf": [
         {
+          "$ref": "#/definitions/VectorMetadata"
+        },
+        {
           "$ref": "#/definitions/MultivecMetadata"
         },
         {
@@ -619,6 +625,9 @@
         },
         "layout": {
           "$ref": "#/definitions/Layout"
+        },
+        "static": {
+          "type": "boolean"
         },
         "tracks": {
           "items": {
@@ -1399,6 +1408,16 @@
             }
           ]
         },
+        "flipY": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "$ref": "#/definitions/Channel"
+            }
+          ]
+        },
         "height": {
           "anyOf": [
             {
@@ -1581,6 +1600,16 @@
                 "anyOf": [
                   {
                     "type": "number"
+                  },
+                  {
+                    "$ref": "#/definitions/Channel"
+                  }
+                ]
+              },
+              "flipY": {
+                "anyOf": [
+                  {
+                    "type": "boolean"
                   },
                   {
                     "$ref": "#/definitions/Channel"
@@ -1939,6 +1968,16 @@
             }
           ]
         },
+        "flipY": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "$ref": "#/definitions/Channel"
+            }
+          ]
+        },
         "height": {
           "anyOf": [
             {
@@ -2127,6 +2166,16 @@
                   }
                 ]
               },
+              "flipY": {
+                "anyOf": [
+                  {
+                    "type": "boolean"
+                  },
+                  {
+                    "$ref": "#/definitions/Channel"
+                  }
+                ]
+              },
               "height": {
                 "anyOf": [
                   {
@@ -2309,6 +2358,16 @@
                       "anyOf": [
                         {
                           "type": "number"
+                        },
+                        {
+                          "$ref": "#/definitions/Channel"
+                        }
+                      ]
+                    },
+                    "flipY": {
+                      "anyOf": [
+                        {
+                          "type": "boolean"
                         },
                         {
                           "$ref": "#/definitions/Channel"
@@ -2827,6 +2886,36 @@
         "operation",
         "condition",
         "target"
+      ],
+      "type": "object"
+    },
+    "VectorMetadata": {
+      "additionalProperties": false,
+      "properties": {
+        "bin": {
+          "type": "number"
+        },
+        "column": {
+          "type": "string"
+        },
+        "end": {
+          "type": "string"
+        },
+        "start": {
+          "type": "string"
+        },
+        "type": {
+          "const": "higlass-vector",
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "type",
+        "column",
+        "value"
       ],
       "type": "object"
     }

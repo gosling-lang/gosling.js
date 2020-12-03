@@ -21,7 +21,7 @@ export function drawChartOutlines(HGC: any, trackInfo: any, tm: GeminidTrackMode
     const [w, h] = trackInfo.dimensions;
 
     if (tm.spec().title) {
-        const paddingX = 10;
+        const paddingX = 3;
         const paddingY = 3;
 
         const text = tm.spec().title;
@@ -38,7 +38,7 @@ export function drawChartOutlines(HGC: any, trackInfo: any, tm: GeminidTrackMode
         const textHeight = textMetrics.height;
         g.beginFill(colorToHex('white'), 0.7);
         g.lineStyle(
-            1,
+            0,
             colorToHex('#DBDBDB'),
             0.7, // alpha
             0 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)

@@ -1,4 +1,4 @@
-import { GeminidSpec, SuperposedTrack, Track } from '../../core/geminid.schema';
+import { GeminidSpec, SuperposedTrack, Track } from '../../../core/geminid.schema';
 import { EXAMPLE_DATASETS } from './datasets';
 import { EXAMPLE_SEMANTIC_ZOOMING_IDEOGRAM, EXMAPLE_SEMANTIC_ZOOM_SEQ } from './semantic-zoom';
 

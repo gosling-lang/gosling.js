@@ -93,7 +93,7 @@ export class HiGlassModel {
                 projectionFillColor: style?.color ?? '#777',
                 projectionStrokeColor: style?.stroke ?? '#777',
                 projectionFillOpacity: style?.opacity ?? 0.3,
-                projectionStrokeOpacity: 1,
+                projectionStrokeOpacity: 0,
                 strokeWidth: style?.strokeWidth ?? 1
             }
         });

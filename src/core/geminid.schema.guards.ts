@@ -40,7 +40,11 @@ export const PREDEFINED_COLOR_STR_MAP: { [k: string]: (t: number) => string } = 
 
 // TODO: these are not neccessary. Resolve the issue with `Channel`.
 export function IsDataMetadata(_: DataMetadata | ChannelDeep | ChannelValue | undefined): _ is DataMetadata {
-    return typeof _ === 'object' && 'type' in _ && (_.type === 'higlass-multivec' || _.type === 'higlass-bed');
+    return (
+        typeof _ === 'object' &&
+        'type' in _ &&
+        (_.type === 'higlass-vector' || _.type === 'higlass-multivec' || _.type === 'higlass-bed')
+    );
 }
 export function IsDataTransform(_: DataTransform | ChannelDeep | ChannelValue): _ is DataTransform {
     return 'filter' in _;

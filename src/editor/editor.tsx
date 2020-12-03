@@ -132,8 +132,8 @@ function Editor() {
                     <div
                         style={{
                             width: size.width + 120,
-                            margin: 20,
-                            color: 'black'
+                            padding: 20,
+                            color: 'gray'
                         }}
                     >
                         {editedGm.description}

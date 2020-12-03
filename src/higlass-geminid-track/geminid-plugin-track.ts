@@ -160,7 +160,82 @@ function GeminidTrack(HGC: any, ...args: any[]): any {
                         return;
                     }
 
-                    if (resolved.metadata.type === 'higlass-multivec') {
+                    // TODO: encapsulation this conversion part
+                    if (resolved.metadata.type === 'higlass-vector') {
+                        if (!resolved.metadata.column || !resolved.metadata.value) {
+                            console.warn(
+                                'Proper metadata of the tileset is not provided. Please specify the name of data fields.'
+                            );
+                            return;
+                        }
+
+                        const bin = resolved.metadata.bin ?? 1;
+                        const tileSize = this.tilesetInfo.tile_size;
+
+                        const { tileX, tileWidth } = this.getTilePosAndDimensions(
+                            tile.tileData.zoomLevel,
+                            tile.tileData.tilePos,
+                            tileSize
+                        );
+
+                        const numericValues = tile.tileData.dense;
+                        const numOfGenomicPositions = tileSize;
+                        const tileUnitSize = tileWidth / tileSize;
+
+                        const valueName = resolved.metadata.value;
+                        const columnName = resolved.metadata.column;
+                        const startName = resolved.metadata.start ?? 'start';
+                        const endName = resolved.metadata.end ?? 'end';
+
+                        const tabularData: { [k: string]: number | string }[] = [];
+
+                        // convert data to a visualization-friendly format
+                        let cumVal = 0;
+                        let binStart = Number.MIN_SAFE_INTEGER;
+                        let binEnd = Number.MAX_SAFE_INTEGER;
+                        Array.from(Array(numOfGenomicPositions).keys()).forEach((g: number, j: number) => {
+                            // add individual rows
+                            if (bin === 1) {
+                                tabularData.push({
+                                    [valueName]: numericValues[j] / tileUnitSize,
+                                    [columnName]: tileX + (j + 0.5) * tileUnitSize,
+                                    [startName]: tileX + j * tileUnitSize,
+                                    [endName]: tileX + (j + 1) * tileUnitSize
+                                });
+                            } else {
+                                // EXPERIMENTAL: bin the data considering the `bin` options
+                                if (j % bin === 0) {
+                                    // Start storing information for this bin
+                                    cumVal = numericValues[j];
+                                    binStart = j;
+                                    binEnd = j + bin;
+                                } else if (j % bin === bin - 1) {
+                                    // Add a row using the cumulative value
+                                    tabularData.push({
+                                        [valueName]: cumVal / bin / tileUnitSize,
+                                        [columnName]: tileX + (binStart + bin / 2.0) * tileUnitSize,
+                                        [startName]: tileX + binStart * tileUnitSize,
+                                        [endName]: tileX + binEnd * tileUnitSize
+                                    });
+                                } else if (j === numOfGenomicPositions - 1) {
+                                    // Manage the remainders. Just add them as a single row.
+                                    const smallBin = numOfGenomicPositions % bin;
+                                    const correctedBinEnd = binStart + smallBin;
+                                    tabularData.push({
+                                        [valueName]: cumVal / smallBin / tileUnitSize,
+                                        [columnName]: tileX + (binStart + smallBin / 2.0) * tileUnitSize,
+                                        [startName]: tileX + binStart * tileUnitSize,
+                                        [endName]: tileX + correctedBinEnd * tileUnitSize
+                                    });
+                                } else {
+                                    // Add a current value
+                                    cumVal += numericValues[j];
+                                }
+                            }
+                        });
+
+                        tile.tileData.tabularData = tabularData;
+                    } else if (resolved.metadata.type === 'higlass-multivec') {
                         if (!resolved.metadata.row || !resolved.metadata.column || !resolved.metadata.value) {
                             console.warn(
                                 'Proper metadata of the tileset is not provided. Please specify the name of data fields.'

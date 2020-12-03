@@ -1,4 +1,4 @@
-import { GeminidSpec, MultivecMetadata } from '../../core/geminid.schema';
+import { GeminidSpec, MultivecMetadata } from '../../../core/geminid.schema';
 import { EXAMPLE_DATASETS } from './datasets';
 import { HIGLASS_GENE_ANNOTATION } from './gene-annotation';
 import { EXAMPLE_SEMANTIC_ZOOMING_IDEOGRAM } from './semantic-zoom';
