@@ -9,7 +9,7 @@ export const CORCES_2020_NATURE_GENETICS: GeminidSpec = {
         type: 'linear',
         direction: 'vertical',
         columnSizes: [550],
-        rowSizes: [30, 45, 45, 45, 45, 45, 45, 45, 100, 100, 90, 100],
+        rowSizes: [30, 44, 44, 44, 44, 44, 44, 44, 100, 100, 90, 100],
         rowGaps: [40, 0, 0, 0, 0, 0, 0, 0, 0, 0, 40]
     },
     tracks: [
