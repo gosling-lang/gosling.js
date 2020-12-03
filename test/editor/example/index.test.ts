@@ -1,7 +1,7 @@
 import { GeminidTrackModel } from '../../../src/core/geminid-track-model';
 import { resolveSuperposedTracks } from '../../../src/core/utils/superpose';
-import { EXAMPLE_IDEOGRAM_TRACK } from '../../../src/editor/example/ideogram';
-import { EXAMPLE_SEMANTIC_ZOOMING } from '../../../src/editor/example/semantic-zoom';
+import { EXAMPLE_IDEOGRAM_TRACK } from '../../../src/editor/example/basic/ideogram';
+import { EXAMPLE_SEMANTIC_ZOOMING } from '../../../src/editor/example/basic/semantic-zoom';
 
 describe('Example specs should be valid', () => {
     it('Ideogram', () => {

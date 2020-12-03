@@ -1,6 +1,6 @@
 import { geminidToHiGlass } from '../../src/core/geminid-to-higlass';
 import { HiGlassModel } from '../../src/core/higlass-model';
-import { EXMAPLE_BASIC_MARKS } from '../../src/editor/example/basic-marks';
+import { EXMAPLE_BASIC_MARKS } from '../../src/editor/example/basic/basic-marks';
 
 describe('Should convert gemini spec to higlass view config.', () => {
     it('Should return a generated higlass view config correctly', () => {
