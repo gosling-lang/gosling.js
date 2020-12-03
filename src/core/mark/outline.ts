@@ -52,7 +52,7 @@ export function drawChartOutlines(HGC: any, trackInfo: any, tm: GeminidTrackMode
         // TODO: outline not working
         colorToHex(tm.spec().style?.outline ?? '#DBDBDB'),
         1, // alpha
-        0 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
+        0.5 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
     );
     g.beginFill(colorToHex('white'), 0);
     g.drawRect(l, t, w, h);
