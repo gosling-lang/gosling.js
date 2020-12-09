@@ -23,7 +23,8 @@ import {
     Domain,
     Filter,
     OneOfFilter,
-    RangeFilter
+    RangeFilter,
+    IncludeFilter
 } from './geminid.schema';
 import { SUPPORTED_CHANNELS } from './mark';
 import { isArray } from 'lodash';
@@ -128,6 +129,10 @@ export function IsOneOfFilter(_: Filter): _ is OneOfFilter {
 
 export function IsRangeFilter(_: Filter): _ is RangeFilter {
     return 'inRange' in _;
+}
+
+export function IsIncludeFilter(_: Filter): _ is IncludeFilter {
+    return 'include' in _;
 }
 
 /**

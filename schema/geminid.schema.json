@@ -252,6 +252,40 @@
       ],
       "type": "object"
     },
+    "CSVDataGeminid": {
+      "additionalProperties": false,
+      "properties": {
+        "chromosomeField": {
+          "type": "string"
+        },
+        "genomicFields": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "quantitativeFields": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "sampleLength": {
+          "type": "number"
+        },
+        "type": {
+          "const": "csv",
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "type"
+      ],
+      "type": "object"
+    },
     "Channel": {
       "anyOf": [
         {
@@ -360,53 +394,14 @@
       "description": "Data specification"
     },
     "DataDeepGemini": {
-      "additionalProperties": false,
-      "properties": {
-        "chromosomeField": {
-          "type": "string"
+      "anyOf": [
+        {
+          "$ref": "#/definitions/CSVDataGeminid"
         },
-        "genomicFields": {
-          "items": {
-            "type": "string"
-          },
-          "type": "array"
-        },
-        "quantitativeFields": {
-          "items": {
-            "type": "string"
-          },
-          "type": "array"
-        },
-        "quantitativeFieldsAlt": {
-          "items": {
-            "type": "string"
-          },
-          "type": "array"
-        },
-        "type": {
-          "enum": [
-            "csv",
-            "json"
-          ],
-          "type": "string"
-        },
-        "url": {
-          "type": "string"
-        },
-        "urlAlt": {
-          "type": "string"
-        },
-        "values": {
-          "items": {
-            "$ref": "#/definitions/Datum"
-          },
-          "type": "array"
+        {
+          "$ref": "#/definitions/JSONDataGeminid"
         }
-      },
-      "required": [
-        "type"
-      ],
-      "type": "object"
+      ]
     },
     "DataDeepTileset": {
       "additionalProperties": false,
@@ -594,6 +589,9 @@
         },
         {
           "$ref": "#/definitions/RangeFilter"
+        },
+        {
+          "$ref": "#/definitions/IncludeFilter"
         }
       ]
     },
@@ -929,6 +927,63 @@
       },
       "required": [
         "mark"
+      ],
+      "type": "object"
+    },
+    "IncludeFilter": {
+      "additionalProperties": false,
+      "properties": {
+        "field": {
+          "type": "string"
+        },
+        "include": {
+          "type": "string"
+        },
+        "not": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "field",
+        "include",
+        "not"
+      ],
+      "type": "object"
+    },
+    "JSONDataGeminid": {
+      "additionalProperties": false,
+      "properties": {
+        "chromosomeField": {
+          "type": "string"
+        },
+        "genomicFields": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "quantitativeFields": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "sampleLength": {
+          "type": "number"
+        },
+        "type": {
+          "const": "json",
+          "type": "string"
+        },
+        "values": {
+          "items": {
+            "$ref": "#/definitions/Datum"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "type"
       ],
       "type": "object"
     },

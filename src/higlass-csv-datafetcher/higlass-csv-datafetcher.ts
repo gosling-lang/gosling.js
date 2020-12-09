@@ -1,5 +1,5 @@
 import * as d3 from 'd3-dsv';
-import { CHROMOSOME_INTERVAL_HG19, CHROMOSOME_SIZE_HG19 } from '../core/utils/chrom-size';
+import { CHROMOSOME_INTERVAL_HG38, CHROMOSOME_SIZE_HG38 } from '../core/utils/chrom-size';
 import fetch from 'cross-fetch'; // TODO: Can we remove this and make the test working
 import { sampleSize } from 'lodash';
 
@@ -31,12 +31,12 @@ function CSVDataFetcher(HGC: any, ...args: any): any {
             }
 
             // Prepare chromosome interval information
-            const chromosomeSizes: { [k: string]: number } = CHROMOSOME_SIZE_HG19;
+            const chromosomeSizes: { [k: string]: number } = CHROMOSOME_SIZE_HG38;
             const chromosomeCumPositions: { id: number; chr: string; pos: number }[] = [];
             const chromosomePositions: { [k: string]: { id: number; chr: string; pos: number } } = {};
             let prevEndPosition = 0;
 
-            Object.keys(CHROMOSOME_SIZE_HG19).forEach((chrStr, i) => {
+            Object.keys(CHROMOSOME_SIZE_HG38).forEach((chrStr, i) => {
                 const positionInfo = {
                     id: i,
                     chr: chrStr,
@@ -46,7 +46,7 @@ function CSVDataFetcher(HGC: any, ...args: any): any {
                 chromosomeCumPositions.push(positionInfo);
                 chromosomePositions[chrStr] = positionInfo;
 
-                prevEndPosition += CHROMOSOME_SIZE_HG19[chrStr];
+                prevEndPosition += CHROMOSOME_SIZE_HG38[chrStr];
             });
             this.chromSizes = {
                 chrToAbs: (chrom: string, chromPos: number) => this.chromSizes.chrPositions[chrom].pos + chromPos,
@@ -85,7 +85,7 @@ function CSVDataFetcher(HGC: any, ...args: any): any {
                                 const chr = row[chromosomeField].includes('chr')
                                     ? row[chromosomeField]
                                     : `chr${row[chromosomeField]}`;
-                                row[g] = CHROMOSOME_INTERVAL_HG19[chr][0] + +row[g];
+                                row[g] = CHROMOSOME_INTERVAL_HG38[chr][0] + +row[g];
                             } catch (e) {
                                 console.warn(
                                     '[Gemini Data Fetcher] Genomic position cannot be parsed correctly.',
@@ -196,7 +196,7 @@ function CSVDataFetcher(HGC: any, ...args: any): any {
 
                 return {
                     // sample the data to make it managable for visualization components
-                    tabularData: sampleSize(tabularData, 2500),
+                    tabularData: sampleSize(tabularData, this.dataConfig.sampleLength ?? 1000),
                     server: null,
                     tilePos: [x],
                     zoomLevel: z

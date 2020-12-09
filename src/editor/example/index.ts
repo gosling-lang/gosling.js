@@ -21,6 +21,7 @@ import { EXAMPLE_CIRCOS_STACKING } from './basic/circos-stacking';
 import { EXAMPLE_SUPERPOSED_CIRCULAR_TRACKS } from './basic/superposed-circular';
 import { EXAMPLE_LOGO } from './basic/logo';
 import { EXAMPLE_OF_EXPERIMENT } from './experimental';
+import { EXAMPLE_CYTOAND_HG38 } from './cytoband-hg38';
 
 export const examples: ReadonlyArray<{
     name: string;
@@ -38,11 +39,18 @@ export const examples: ReadonlyArray<{
         forceShow: false
     },
     {
+        name: 'UCSC Cyto band (hg38)',
+        spec: EXAMPLE_CYTOAND_HG38,
+        underDevelopment: false,
+        hidden: false,
+        forceShow: false
+    },
+    {
         name: 'Corces et al. 2020 (Nature Genetics)',
         spec: CORCES_2020_NATURE_GENETICS,
         underDevelopment: false,
         hidden: false,
-        forceShow: true
+        forceShow: false
     },
     {
         name: 'Geminid Logo',
@@ -56,7 +64,7 @@ export const examples: ReadonlyArray<{
         spec: EXMAPLE_BASIC_MARKS,
         underDevelopment: false,
         hidden: false,
-        forceShow: false
+        forceShow: true
     },
     {
         name: 'Text Marks',

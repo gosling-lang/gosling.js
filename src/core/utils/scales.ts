@@ -1,6 +1,6 @@
 import { GeminidTrackModel } from '../geminid-track-model';
 import { Domain } from '../geminid.schema';
-import { CHROMOSOME_INTERVAL_HG19 } from './chrom-size';
+import { CHROMOSOME_INTERVAL_HG38 } from './chrom-size';
 import { SUPPORTED_CHANNELS } from '../mark';
 import {
     IsDomainChr,
@@ -16,11 +16,11 @@ import {
  */
 export function getNumericDomain(domain: Domain) {
     if (IsDomainChr(domain)) {
-        return CHROMOSOME_INTERVAL_HG19[`chr${domain.chromosome}`];
+        return CHROMOSOME_INTERVAL_HG38[`chr${domain.chromosome}`];
     } else if (IsDomainInterval(domain)) {
         return domain.interval;
     } else if (IsDomainChrInterval(domain)) {
-        const chrStart = CHROMOSOME_INTERVAL_HG19[`chr${domain.chromosome}`][0];
+        const chrStart = CHROMOSOME_INTERVAL_HG38[`chr${domain.chromosome}`][0];
         const [start, end] = domain.interval;
         return [chrStart + start, chrStart + end];
     } else if (IsDomainGene(domain)) {

@@ -5,7 +5,14 @@ import { validateTrack } from '../core/utils/validate';
 import { shareScaleAcrossTracks } from '../core/utils/scales';
 import { resolveSuperposedTracks } from '../core/utils/superpose';
 import { Track } from '../core/geminid.schema';
-import { IsDataMetadata, IsDataTransform, IsOneOfFilter, IsRangeFilter } from '../core/geminid.schema.guards';
+import {
+    IsDataMetadata,
+    IsDataTransform,
+    IsIncludeFilter,
+    IsIncludeFilter,
+    IsOneOfFilter,
+    IsRangeFilter
+} from '../core/geminid.schema.guards';
 
 function GeminidTrack(HGC: any, ...args: any[]): any {
     if (!new.target) {
@@ -396,6 +403,13 @@ function GeminidTrack(HGC: any, ...args: any[]): any {
                                     return not
                                         ? !(inRange[0] <= d[field] && d[field] <= inRange[1])
                                         : inRange[0] <= d[field] && d[field] <= inRange[1];
+                                }
+                            );
+                        } else if (IsIncludeFilter(filter)) {
+                            const { field, include, not } = filter;
+                            tile.tileData.tabularDataFiltered = tile.tileData.tabularDataFiltered.filter(
+                                (d: { [k: string]: number | string }) => {
+                                    return not ? `${d[field]}`.includes(include) : !`${d[field]}`.includes(include);
                                 }
                             );
                         }

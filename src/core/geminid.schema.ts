@@ -41,18 +41,23 @@ export interface DataDeepTileset {
     url: string;
 }
 
-export interface DataDeepGemini {
-    type: 'csv' | 'json';
-    // TODO: Separate url and data
-    url?: string;
-    values?: Datum[];
+export type DataDeepGemini = CSVDataGeminid | JSONDataGeminid;
+
+export interface DataDeepGeminidCommon {
     quantitativeFields?: string[];
     chromosomeField?: string;
     genomicFields?: string[];
+    sampleLength?: number; // This limit the total number of rows fetched (default: 1000)
+}
 
-    // being used for semantic zooming
-    urlAlt?: string;
-    quantitativeFieldsAlt?: string[];
+export interface CSVDataGeminid extends DataDeepGeminidCommon {
+    type: 'csv';
+    url?: string;
+}
+
+export interface JSONDataGeminid extends DataDeepGeminidCommon {
+    type: 'json';
+    values?: Datum[];
 }
 
 export type DataMetadata = VectorMetadata | MultivecMetadata | BEDMetadata;
@@ -90,11 +95,17 @@ export interface DataTransform {
     filter: Filter[];
 }
 
-export type Filter = OneOfFilter | RangeFilter;
+export type Filter = OneOfFilter | RangeFilter | IncludeFilter;
 
 export interface RangeFilter {
     field: string;
     inRange: number[];
+    not: boolean;
+}
+
+export interface IncludeFilter {
+    field: string;
+    include: string;
     not: boolean;
 }
 

@@ -1,14 +1,14 @@
 import uuid from 'uuid';
 import { HiGlassSpec, Track, View } from './higlass.schema';
 import HiGlassSchema from './higlass.schema.json';
-import { TOTAL_CHROMOSOME_SIZE_HG19 } from './utils/chrom-size';
+import { TOTAL_CHROMOSOME_SIZE_HG38 } from './utils/chrom-size';
 import { Domain } from './geminid.schema';
 import { getNumericDomain } from './utils/scales';
 import { RelativePosition } from './utils/bounding-box';
 import { validateSpec } from './utils/validate';
 import { SUPERPOSE_VIEWCONFIG } from '../editor/example/compiled-view-config/superpose-viewconfig';
 
-const DEFAULT_CHROMOSOME_INFO_PATH = '//s3.amazonaws.com/pkerp/data/hg19/chromSizes.tsv';
+const DEFAULT_CHROMOSOME_INFO_PATH = '//aveit.s3.amazonaws.com/higlass/data/sequence/hg38.mod.chrom.sizes';
 export const HIGLASS_AXIS_SIZE = 30;
 const HIGLASS_VIEW_TEMPLATE: View = {
     genomePositionSearchBoxVisible: false,
@@ -22,8 +22,8 @@ const HIGLASS_VIEW_TEMPLATE: View = {
         gallery: [],
         whole: []
     },
-    initialXDomain: [0, TOTAL_CHROMOSOME_SIZE_HG19],
-    initialYDomain: [0, TOTAL_CHROMOSOME_SIZE_HG19],
+    initialXDomain: [0, TOTAL_CHROMOSOME_SIZE_HG38],
+    initialYDomain: [0, TOTAL_CHROMOSOME_SIZE_HG38],
     zoomFixed: false,
     zoomLimits: [1, null]
 };
