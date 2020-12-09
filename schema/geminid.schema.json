@@ -365,12 +365,6 @@
         "chromosomeField": {
           "type": "string"
         },
-        "data": {
-          "items": {
-            "$ref": "#/definitions/Datum"
-          },
-          "type": "array"
-        },
         "genomicFields": {
           "items": {
             "type": "string"
@@ -390,7 +384,10 @@
           "type": "array"
         },
         "type": {
-          "const": "csv",
+          "enum": [
+            "csv",
+            "json"
+          ],
           "type": "string"
         },
         "url": {
@@ -398,6 +395,12 @@
         },
         "urlAlt": {
           "type": "string"
+        },
+        "values": {
+          "items": {
+            "$ref": "#/definitions/Datum"
+          },
+          "type": "array"
         }
       },
       "required": [

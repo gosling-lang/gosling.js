@@ -45,8 +45,8 @@ export function geminidToHiGlass(
             }
         };
 
-        if (gmTrack.data && IsDataDeep(gmTrack.data) && gmTrack.data.type === 'csv') {
-            // use a CSV data fetcher
+        if (gmTrack.data && IsDataDeep(gmTrack.data) && (gmTrack.data.type === 'csv' || gmTrack.data.type === 'json')) {
+            // use geminid's custom data fetchers
             hgTrack.data = gmTrack.data;
         }
 

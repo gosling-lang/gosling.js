@@ -42,10 +42,10 @@ export interface DataDeepTileset {
 }
 
 export interface DataDeepGemini {
-    type: 'csv';
+    type: 'csv' | 'json';
     // TODO: Separate url and data
     url?: string;
-    data?: Datum[];
+    values?: Datum[];
     quantitativeFields?: string[];
     chromosomeField?: string;
     genomicFields?: string[];

@@ -1,11 +1,13 @@
 import { GeminidSpec } from '../../core/geminid.schema';
+import bed from './bed.json';
 
 export const EXAMPLE_OF_EXPERIMENT: GeminidSpec = {
     tracks: [
         {
             data: {
                 url: 'https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/275_peaks.bed',
-                type: 'csv',
+                type: 'json',
+                values: bed,
                 chromosomeField: 'chr',
                 genomicFields: ['start', 'end'],
                 quantitativeFields: ['peak']

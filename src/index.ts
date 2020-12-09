@@ -9,3 +9,4 @@ export { validateGeminidSpec } from './core/utils/validate';
 
 export { GeminidTrack } from './higlass-geminid-track';
 export { CSVDataFetcher } from './higlass-csv-datafetcher';
+export { RawDataFetcher } from './higlass-raw-datafetcher';

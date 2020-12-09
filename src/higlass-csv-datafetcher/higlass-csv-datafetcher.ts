@@ -18,7 +18,7 @@ function CSVDataFetcher(HGC: any, ...args: any): any {
         private tilesetInfoLoading: boolean;
         private dataPromise: Promise<any> | undefined;
         private chromSizes: any;
-        private data: any;
+        private values: any;
 
         constructor(params: any[]) {
             const [dataConfig] = params;
@@ -58,7 +58,7 @@ function CSVDataFetcher(HGC: any, ...args: any): any {
 
             if (dataConfig.data) {
                 // we have raw data that we can use right away
-                this.data = dataConfig.data;
+                this.values = dataConfig.data;
             } else {
                 this.dataPromise = this.fetchCSV(
                     this.dataConfig.url,
@@ -100,7 +100,7 @@ function CSVDataFetcher(HGC: any, ...args: any): any {
                     });
                 })
                 .then(json => {
-                    this.data = json;
+                    this.values = json;
                 })
                 .catch(error => {
                     console.error('[Gemini Data Fetcher] Error fetching data', error);
@@ -139,14 +139,7 @@ function CSVDataFetcher(HGC: any, ...args: any): any {
                 .then(() => this.generateTilesetInfo(callback))
                 .catch(err => {
                     this.tilesetInfoLoading = false;
-
-                    console.error(err);
-
-                    if (callback) {
-                        callback({
-                            error: `[Gemini Data Fetcher] Error parsing data: ${err}`
-                        });
-                    }
+                    console.error('[Gemini Data Fetcher] Error parsing data:', err);
                 });
         }
 
@@ -191,7 +184,7 @@ function CSVDataFetcher(HGC: any, ...args: any): any {
                 const maxX = tsInfo.min_pos[0] + (x + 1) * tileWidth;
 
                 // filter the data so that visible data is sent to tracks
-                const tabularData = this.data.filter((d: any) => {
+                const tabularData = this.values.filter((d: any) => {
                     let inRange = false;
                     this.dataConfig.genomicFields.forEach((g: any) => {
                         if (d[g] > minX && d[g] < maxX) {

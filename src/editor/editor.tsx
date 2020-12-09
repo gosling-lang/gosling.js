@@ -1,6 +1,7 @@
 // @ts-ignore
 import { GeminidTrack } from '../higlass-geminid-track/index';
 import { CSVDataFetcher } from '../higlass-csv-datafetcher/index';
+import { RawDataFetcher } from '../higlass-raw-datafetcher/index';
 // @ts-ignore
 import { HiGlassComponent } from 'higlass';
 // @ts-ignore
@@ -34,6 +35,7 @@ higlassRegister({
  * Register a Gemini data fetcher to HiGlassComponent
  */
 higlassRegister({ dataFetcher: CSVDataFetcher, config: CSVDataFetcher.config }, { pluginType: 'dataFetcher' });
+higlassRegister({ dataFetcher: RawDataFetcher, config: RawDataFetcher.config }, { pluginType: 'dataFetcher' });
 
 const INIT_DEMO_INDEX = examples.findIndex(d => d.forceShow) !== -1 ? examples.findIndex(d => d.forceShow) : 0;
 
