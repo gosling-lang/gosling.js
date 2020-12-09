@@ -5,7 +5,6 @@ export const EXAMPLE_OF_EXPERIMENT: GeminidSpec = {
     tracks: [
         {
             data: {
-                url: 'https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/275_peaks.bed',
                 type: 'json',
                 values: bed,
                 chromosomeField: 'chr',

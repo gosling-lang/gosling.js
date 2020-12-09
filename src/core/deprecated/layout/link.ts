@@ -2,10 +2,7 @@ import { BoundingBox } from '../../utils/bounding-box';
 import { Track, BasicSingleTrack } from '../../geminid.schema';
 import * as d3 from 'd3';
 import { validateBetweenLinkSpec } from './link-validate';
-import { getChartType } from './chart-type';
-import { renderBetweenLineLink } from './line-connection';
-import { renderBetweenBandLink } from './band-connection';
-import { IsChannelValue, IsChannelDeep, IsDataDeep } from '../../geminid.schema.guards';
+import { IsChannelValue, IsChannelDeep } from '../../geminid.schema.guards';
 
 export type LinkPosition =
     | 'left-bottom'
@@ -87,27 +84,27 @@ export function renderBetweenLink(
             return;
         }
         // render
-        switch (getChartType(tb.track)) {
-            case 'line-connection':
-                if (IsDataDeep(tb.track.data)) {
-                    if (tb.track.data.url) {
-                        d3.csv(tb.track.data.url).then(data =>
-                            renderBetweenLineLink(g, { ...tb.track, data } as BasicSingleTrack, tb.boundingBox)
-                        );
-                    }
-                }
-                break;
-            case 'band-connection':
-                if (IsDataDeep(tb.track.data)) {
-                    if (tb.track.data.url) {
-                        d3.csv(tb.track.data.url).then(data =>
-                            renderBetweenBandLink(g, { ...tb.track, data } as BasicSingleTrack, tb.boundingBox)
-                        );
-                    }
-                }
-                break;
-            default:
-                break;
-        }
+        // switch (getChartType(tb.track)) {
+        //     case 'line-connection':
+        //         if (IsDataDeep(tb.track.data)) {
+        //             if (tb.track.data.url) {
+        //                 d3.csv(tb.track.data.url).then(data =>
+        //                     renderBetweenLineLink(g, { ...tb.track, data } as BasicSingleTrack, tb.boundingBox)
+        //                 );
+        //             }
+        //         }
+        //         break;
+        //     case 'band-connection':
+        //         if (IsDataDeep(tb.track.data)) {
+        //             if (tb.track.data.url) {
+        //                 d3.csv(tb.track.data.url).then(data =>
+        //                     renderBetweenBandLink(g, { ...tb.track, data } as BasicSingleTrack, tb.boundingBox)
+        //                 );
+        //             }
+        //         }
+        //         break;
+        //     default:
+        //         break;
+        // }
     });
 }

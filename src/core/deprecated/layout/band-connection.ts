@@ -1,7 +1,7 @@
 import { BoundingBox } from '../../utils/bounding-box';
 import { Datum, BasicSingleTrack } from '../../geminid.schema';
 import * as d3 from 'd3';
-import { getLinkPosition, LinkStyleModel } from './link';
+import { getLinkPosition } from './link';
 import { IsChannelDeep } from '../../geminid.schema.guards';
 
 export function renderBetweenBandLink(
@@ -9,7 +9,7 @@ export function renderBetweenBandLink(
     track: BasicSingleTrack,
     bb: BoundingBox
 ) {
-    const styles = new LinkStyleModel(track);
+    // const styles = new LinkStyleModel(track);
 
     const xField = IsChannelDeep(track.x) ? track.x.field : undefined;
     const xeField = IsChannelDeep(track.xe) ? track.xe.field : undefined;
@@ -72,19 +72,19 @@ export function renderBetweenBandLink(
     }
 
     // render
-    g.selectAll('.polygon')
-        .data(track.data as Datum[])
-        .enter()
-        .append('polygon')
-        .attr('points', d => {
-            const primaryPointStart = `${point[0].x(d)},${point[0].y(d)}`;
-            const primaryPointEnd = `${point[0].xe(d)},${point[0].ye(d)}`;
-            const secondaryPointStart = `${point[1].xe(d)},${point[1].ye(d)}`;
-            const secondaryPointEnd = `${point[1].x(d)},${point[1].y(d)}`;
-            return `${primaryPointStart} ${primaryPointEnd} ${secondaryPointStart} ${secondaryPointEnd}`;
-        })
-        .attr('fill', styles.getStyle().fill)
-        .attr('stroke', styles.getStyle().stroke)
-        .attr('stroke-width', styles.getStyle().strokeWidth)
-        .attr('opacity', styles.getStyle().opacity);
+    // g.selectAll('.polygon')
+    //     .data(track.data as any)
+    //     .enter()
+    //     .append('polygon')
+    //     .attr('points', d => {
+    //         const primaryPointStart = `${point[0].x(d)},${point[0].y(d)}`;
+    //         const primaryPointEnd = `${point[0].xe(d)},${point[0].ye(d)}`;
+    //         const secondaryPointStart = `${point[1].xe(d)},${point[1].ye(d)}`;
+    //         const secondaryPointEnd = `${point[1].x(d)},${point[1].y(d)}`;
+    //         return `${primaryPointStart} ${primaryPointEnd} ${secondaryPointStart} ${secondaryPointEnd}`;
+    //     })
+    //     .attr('fill', styles.getStyle().fill)
+    //     .attr('stroke', styles.getStyle().stroke)
+    //     .attr('stroke-width', styles.getStyle().strokeWidth)
+    //     .attr('opacity', styles.getStyle().opacity);
 }
