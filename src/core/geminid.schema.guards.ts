@@ -24,7 +24,8 @@ import {
     Filter,
     OneOfFilter,
     RangeFilter,
-    IncludeFilter
+    IncludeFilter,
+    DataDeepTileset
 } from './geminid.schema';
 import { SUPPORTED_CHANNELS } from './mark';
 import { isArray } from 'lodash';
@@ -117,6 +118,10 @@ export function IsChannelBind(
     channel: ChannelDeep | ChannelValue | ChannelBind | undefined | 'none'
 ): channel is ChannelBind {
     return channel !== null && typeof channel === 'object' && 'bind' in channel;
+}
+
+export function IsDataDeepTileset(_: DataDeep): _ is DataDeepTileset {
+    return _.type === 'tileset';
 }
 
 export function IsChannelDeep(channel: ChannelDeep | ChannelValue | undefined): channel is ChannelDeep {

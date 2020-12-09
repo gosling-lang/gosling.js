@@ -5,7 +5,7 @@ import { Track, Domain } from './geminid.schema';
 import { BoundingBox, RelativePosition } from './utils/bounding-box';
 import { resolveSuperposedTracks } from './utils/superpose';
 import { getGenomicChannelKeyFromTrack, getGenomicChannelFromTrack } from './utils/validate';
-import { IsDataDeep, IsChannelDeep } from './geminid.schema.guards';
+import { IsDataDeep, IsChannelDeep, IsDataDeepTileset } from './geminid.schema.guards';
 
 /**
  * Convert a gemini track into a HiGlass view and add it into a higlass model.
@@ -22,8 +22,14 @@ export function geminidToHiGlass(
     // we only look into the first resolved spec to get information, such as size of the track
     const firstResolvedSpec = resolveSuperposedTracks(gmTrack)[0];
 
-    if (IsDataDeep(firstResolvedSpec.data) && firstResolvedSpec.data.url) {
-        const { server, tilesetUid } = parseServerAndTilesetUidFromUrl(firstResolvedSpec.data.url);
+    if (IsDataDeep(firstResolvedSpec.data)) {
+        let server, tilesetUid;
+
+        if (IsDataDeepTileset(firstResolvedSpec.data)) {
+            const parsed = parseServerAndTilesetUidFromUrl(firstResolvedSpec.data.url);
+            server = parsed.server;
+            tilesetUid = parsed.tilesetUid;
+        }
 
         // Is this track horizontal or vertical?
         const genomicChannel = getGenomicChannelFromTrack(firstResolvedSpec);
