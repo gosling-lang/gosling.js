@@ -1,8 +1,8 @@
 import * as d3 from 'd3-dsv';
 import { CHROMOSOME_INTERVAL_HG19, CHROMOSOME_SIZE_HG19 } from '../core/utils/chrom-size';
 import fetch from 'cross-fetch'; // TODO: Can we remove this and make the test working
+import { sampleSize } from 'lodash';
 
-// TODO: Accept multiple data infos as array, instead of having `Alt` variables.
 /**
  * HiGlass data fetcher specific for Gemini which ultimately will accept any types of data other than CSV files.
  */
@@ -17,10 +17,8 @@ function CSVDataFetcher(HGC: any, ...args: any): any {
         // @ts-ignore
         private tilesetInfoLoading: boolean;
         private dataPromise: Promise<any> | undefined;
-        private dataPromiseAlt: Promise<any> | undefined; // being used for semantic zooming
         private chromSizes: any;
         private data: any;
-        private dataAlt: any;
 
         constructor(params: any[]) {
             const [dataConfig] = params;
@@ -58,7 +56,7 @@ function CSVDataFetcher(HGC: any, ...args: any): any {
                 chromLengths: chromosomeSizes
             };
 
-            if (dataConfig.data && dataConfig.data.length !== 0) {
+            if (dataConfig.data) {
                 // we have raw data that we can use right away
                 this.data = dataConfig.data;
             } else {
@@ -68,14 +66,6 @@ function CSVDataFetcher(HGC: any, ...args: any): any {
                     this.dataConfig.genomicFields,
                     this.dataConfig.quantitativeFields
                 );
-                if (this.dataConfig.urlAlt) {
-                    this.dataPromiseAlt = this.fetchCSV(
-                        this.dataConfig.urlAlt,
-                        this.dataConfig.chromosomeField,
-                        this.dataConfig.genomicFields,
-                        this.dataConfig.quantitativeFieldsAlt
-                    );
-                }
             }
         }
 
@@ -92,7 +82,10 @@ function CSVDataFetcher(HGC: any, ...args: any): any {
                                 return;
                             }
                             try {
-                                row[g] = CHROMOSOME_INTERVAL_HG19[`chr${row[chromosomeField]}`][0] + +row[g];
+                                const chr = row[chromosomeField].includes('chr')
+                                    ? row[chromosomeField]
+                                    : `chr${row[chromosomeField]}`;
+                                row[g] = CHROMOSOME_INTERVAL_HG19[chr][0] + +row[g];
                             } catch (e) {
                                 console.warn(
                                     '[Gemini Data Fetcher] Genomic position cannot be parsed correctly.',
@@ -107,16 +100,35 @@ function CSVDataFetcher(HGC: any, ...args: any): any {
                     });
                 })
                 .then(json => {
-                    if (url === this.dataConfig.url) this.data = json;
-                    else this.dataAlt = json;
+                    this.data = json;
                 })
                 .catch(error => {
                     console.error('[Gemini Data Fetcher] Error fetching data', error);
                 });
         }
 
+        generateTilesetInfo(callback?: any) {
+            this.tilesetInfoLoading = false;
+
+            const TILE_SIZE = 1024;
+            const totalLength = this.chromSizes.totalLength;
+            const retVal = {
+                tile_size: TILE_SIZE,
+                max_zoom: Math.ceil(Math.log(totalLength / TILE_SIZE) / Math.log(2)),
+                max_width: totalLength,
+                min_pos: [0],
+                max_pos: [totalLength]
+            };
+
+            if (callback) {
+                callback(retVal);
+            }
+
+            return retVal;
+        }
+
         tilesetInfo(callback?: any) {
-            if (!this.dataPromise || (this.dataConfig.urlAlt && !this.dataPromiseAlt)) {
+            if (!this.dataPromise) {
                 // data promise is not prepared yet
                 return;
             }
@@ -124,27 +136,7 @@ function CSVDataFetcher(HGC: any, ...args: any): any {
             this.tilesetInfoLoading = true;
 
             return this.dataPromise
-                .then(() => {
-                    this.tilesetInfoLoading = false;
-
-                    const TILE_SIZE = 1024;
-                    const totalLength = this.chromSizes.totalLength;
-                    let retVal = {};
-
-                    retVal = {
-                        tile_size: TILE_SIZE,
-                        max_zoom: Math.ceil(Math.log(totalLength / TILE_SIZE) / Math.log(2)),
-                        max_width: totalLength,
-                        min_pos: [0],
-                        max_pos: [totalLength]
-                    };
-
-                    if (callback) {
-                        callback(retVal);
-                    }
-
-                    return retVal;
-                })
+                .then(() => this.generateTilesetInfo(callback))
                 .catch(err => {
                     this.tilesetInfoLoading = false;
 
@@ -152,7 +144,7 @@ function CSVDataFetcher(HGC: any, ...args: any): any {
 
                     if (callback) {
                         callback({
-                            error: `[Gemini Data Fetcher] Error parsing gff: ${err}`
+                            error: `[Gemini Data Fetcher] Error parsing data: ${err}`
                         });
                     }
                 });
@@ -191,26 +183,27 @@ function CSVDataFetcher(HGC: any, ...args: any): any {
         }
 
         tile(z: any, x: any) {
-            return this.tilesetInfo()?.then((/*tsInfo: any*/) => {
-                // const tileWidth = +tsInfo.max_width / 2 ** +z;
+            return this.tilesetInfo()?.then((tsInfo: any) => {
+                const tileWidth = +tsInfo.max_width / 2 ** +z;
 
                 // get the bounds of the tile
-                // const minX = tsInfo.min_pos[0] + x * tileWidth;
-                // const maxX = tsInfo.min_pos[0] + (x + 1) * tileWidth;
+                const minX = tsInfo.min_pos[0] + x * tileWidth;
+                const maxX = tsInfo.min_pos[0] + (x + 1) * tileWidth;
 
-                const tabularData = this.data;
-                // .filter(
-                //     (d: any) => d['Basepair_stop'] > minX && d['Basepair_start'] < maxX
-                // );
-
-                const tabularDataAlt = this.dataAlt;
-                // ?.filter(
-                //     (d: any) => d['end'] > minX && d['start'] < maxX
-                // );
+                // filter the data so that visible data is sent to tracks
+                const tabularData = this.data.filter((d: any) => {
+                    let inRange = false;
+                    this.dataConfig.genomicFields.forEach((g: any) => {
+                        if (d[g] > minX && d[g] < maxX) {
+                            inRange = true;
+                        }
+                    });
+                    return inRange;
+                });
 
                 return {
-                    tabularData,
-                    tabularDataAlt,
+                    // sample the data to make it managable for visualization components
+                    tabularData: sampleSize(tabularData, 2500),
                     server: null,
                     tilePos: [x],
                     zoomLevel: z

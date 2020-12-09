@@ -136,6 +136,7 @@ function GeminidTrack(HGC: any, ...args: any[]): any {
          */
         preprocessTile(tile: any) {
             if (tile.geminiModels && tile.geminiModels.length !== 0) {
+                // already have the geminid models constructed
                 return tile.geminiModels;
             }
 

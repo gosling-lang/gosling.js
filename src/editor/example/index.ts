@@ -20,6 +20,7 @@ import { EXAMPLE_CIRCOS_MANY } from './basic/circos-many-rows';
 import { EXAMPLE_CIRCOS_STACKING } from './basic/circos-stacking';
 import { EXAMPLE_SUPERPOSED_CIRCULAR_TRACKS } from './basic/superposed-circular';
 import { EXAMPLE_LOGO } from './basic/logo';
+import { EXAMPLE_OF_EXPERIMENT } from './experimental';
 
 export const examples: ReadonlyArray<{
     name: string;
@@ -29,6 +30,13 @@ export const examples: ReadonlyArray<{
     hidden?: boolean;
     forceShow?: boolean;
 }> = [
+    {
+        name: 'Experimental',
+        spec: EXAMPLE_OF_EXPERIMENT,
+        underDevelopment: true,
+        hidden: true,
+        forceShow: false
+    },
     {
         name: 'Corces et al. 2020 (Nature Genetics)',
         spec: CORCES_2020_NATURE_GENETICS,

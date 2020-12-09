@@ -24,7 +24,7 @@ export function resolveSuperposedTracks(track: Track): SingleTrack[] {
         resolved.push(spec);
     });
 
-    /* Correct spec for consistency */
+    /* Correct the spec for consistency */
     // x-axis
     let xAxisPosition: undefined | AxisPosition = undefined;
     resolved.forEach(d => {
