@@ -155,7 +155,7 @@ export interface BasicSingleTrack {
     endAngle?: number; // [0, 360]
 
     // Data
-    data: DataDeep | Datum[];
+    data: DataDeep;
     metadata?: DataMetadata; // we could remove this and get this information from the server
 
     // Data transformation

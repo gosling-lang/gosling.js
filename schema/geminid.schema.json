@@ -137,17 +137,7 @@
           "$ref": "#/definitions/Channel"
         },
         "data": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/DataDeep"
-            },
-            {
-              "items": {
-                "$ref": "#/definitions/Datum"
-              },
-              "type": "array"
-            }
-          ]
+          "$ref": "#/definitions/DataDeep"
         },
         "dataTransform": {
           "$ref": "#/definitions/DataTransform"
@@ -1426,12 +1416,6 @@
               "$ref": "#/definitions/DataDeep"
             },
             {
-              "items": {
-                "$ref": "#/definitions/Datum"
-              },
-              "type": "array"
-            },
-            {
               "$ref": "#/definitions/Channel"
             }
           ]
@@ -1622,12 +1606,6 @@
                 "anyOf": [
                   {
                     "$ref": "#/definitions/DataDeep"
-                  },
-                  {
-                    "items": {
-                      "$ref": "#/definitions/Datum"
-                    },
-                    "type": "array"
                   },
                   {
                     "$ref": "#/definitions/Channel"
@@ -1986,12 +1964,6 @@
               "$ref": "#/definitions/DataDeep"
             },
             {
-              "items": {
-                "$ref": "#/definitions/Datum"
-              },
-              "type": "array"
-            },
-            {
               "$ref": "#/definitions/Channel"
             }
           ]
@@ -2184,12 +2156,6 @@
                     "$ref": "#/definitions/DataDeep"
                   },
                   {
-                    "items": {
-                      "$ref": "#/definitions/Datum"
-                    },
-                    "type": "array"
-                  },
-                  {
                     "$ref": "#/definitions/Channel"
                   }
                 ]
@@ -2380,12 +2346,6 @@
                       "anyOf": [
                         {
                           "$ref": "#/definitions/DataDeep"
-                        },
-                        {
-                          "items": {
-                            "$ref": "#/definitions/Datum"
-                          },
-                          "type": "array"
                         },
                         {
                           "$ref": "#/definitions/Channel"

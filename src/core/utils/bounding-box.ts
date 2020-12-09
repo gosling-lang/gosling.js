@@ -106,7 +106,7 @@ const getGapTrack = (size: Size) => {
     return JSON.parse(
         JSON.stringify({
             mark: 'empty',
-            data: { type: 'csv', url: '' },
+            data: { type: 'csv', url: 'tileset_info/?d=' },
             width: size.width,
             height: size.height
         })

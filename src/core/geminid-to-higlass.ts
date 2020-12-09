@@ -22,7 +22,7 @@ export function geminidToHiGlass(
     // we only look into the first resolved spec to get information, such as size of the track
     const firstResolvedSpec = resolveSuperposedTracks(gmTrack)[0];
 
-    if (IsDataDeep(firstResolvedSpec.data)) {
+    if (IsDataDeep(firstResolvedSpec.data) && firstResolvedSpec.mark !== 'empty') {
         let server, tilesetUid;
 
         if (IsDataDeepTileset(firstResolvedSpec.data)) {
@@ -41,8 +41,8 @@ export function geminidToHiGlass(
 
         const hgTrack: HiGlassTrack = {
             type: 'gemini-track',
-            server: server,
-            tilesetUid: tilesetUid,
+            server,
+            tilesetUid,
             width: bb.width,
             height: bb.height,
             options: {
