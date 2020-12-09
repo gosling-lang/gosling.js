@@ -1,6 +1,6 @@
-import { GeminidSpec, Track } from '../../../core/geminid.schema';
+import { GeminidSpec, SuperposedTrack, Track } from '../../../core/geminid.schema';
+import { EXAMPLE_CYTOAND_HG38 } from '../cytoband-hg38';
 import { EXAMPLE_DATASETS } from './datasets';
-import { EXAMPLE_IDEOGRAM_TRACK } from './ideogram';
 
 export const EXMAPLE_SEMANTIC_ZOOM_SEQ: Track = {
     data: {
@@ -117,23 +117,48 @@ const EXAMPLE_SEMANTIC_ZOOMING_LINES: Track = {
 };
 
 export const EXAMPLE_SEMANTIC_ZOOMING_IDEOGRAM: Track = {
-    ...EXAMPLE_IDEOGRAM_TRACK,
+    ...EXAMPLE_CYTOAND_HG38.tracks[0],
     superpose: [
         {
             mark: 'rect',
             color: {
-                field: 'Chr.',
+                field: 'Chromosome',
                 type: 'nominal',
+                domain: [
+                    'chr1',
+                    'chr2',
+                    'chr3',
+                    'chr4',
+                    'chr5',
+                    'chr6',
+                    'chr7',
+                    'chr8',
+                    'chr9',
+                    'chr10',
+                    'chr11',
+                    'chr12',
+                    'chr13',
+                    'chr14',
+                    'chr15',
+                    'chr16',
+                    'chr17',
+                    'chr18',
+                    'chr19',
+                    'chr20',
+                    'chr21',
+                    'chr22',
+                    'chrX',
+                    'chrY'
+                ],
                 range: ['#F6F6F6', 'gray']
             },
             x: {
-                field: 'Basepair_start',
+                field: 'chromStart',
                 type: 'genomic',
                 aggregate: 'min'
-                // axis: 'top'
             },
             xe: {
-                field: 'Basepair_stop',
+                field: 'chromEnd',
                 aggregate: 'max',
                 type: 'genomic'
             },
@@ -145,8 +170,13 @@ export const EXAMPLE_SEMANTIC_ZOOMING_IDEOGRAM: Track = {
                 target: 'track'
             }
         },
-        ...EXAMPLE_IDEOGRAM_TRACK.superpose
-    ]
+        ...(EXAMPLE_CYTOAND_HG38.tracks[0] as SuperposedTrack).superpose
+    ],
+    visibility: {
+        operation: 'greater-than',
+        condition: { width: 3, transitionPadding: 5 },
+        target: 'mark'
+    }
 };
 
 export const EXAMPLE_SEMANTIC_ZOOMING: GeminidSpec = {

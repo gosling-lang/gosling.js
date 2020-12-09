@@ -1,6 +1,6 @@
-import { BasicSingleTrack, GeminidSpec } from '../../../core/geminid.schema';
+import { BasicSingleTrack, GeminidSpec, SuperposedTrack } from '../../../core/geminid.schema';
+import { EXAMPLE_CYTOAND_HG38 } from '../cytoband-hg38';
 import { EXAMPLE_DATASETS } from './datasets';
-import { EXAMPLE_IDEOGRAM_TRACK } from './ideogram';
 
 export const MULTIVEC_SPEC: Partial<BasicSingleTrack> = {
     data: {
@@ -30,9 +30,9 @@ export const EXAMPLE_PERIPHERAL_PLOT: GeminidSpec = {
     tracks: [
         {
             title: 'Overview',
-            ...EXAMPLE_IDEOGRAM_TRACK,
+            ...EXAMPLE_CYTOAND_HG38.tracks[0],
             superpose: [
-                ...EXAMPLE_IDEOGRAM_TRACK.superpose,
+                ...(EXAMPLE_CYTOAND_HG38.tracks[0] as SuperposedTrack).superpose,
                 { mark: 'rect-brush', x: { linkingID: 'periphery-left' } },
                 { mark: 'rect-brush', x: { linkingID: 'focus' }, color: { value: 'black' } },
                 { mark: 'rect-brush', x: { linkingID: 'periphery-right' } }

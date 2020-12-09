@@ -1,14 +1,14 @@
 import { GeminidTrackModel } from '../../../src/core/geminid-track-model';
 import { resolveSuperposedTracks } from '../../../src/core/utils/superpose';
-import { EXAMPLE_IDEOGRAM_TRACK } from '../../../src/editor/example/basic/ideogram';
 import { EXAMPLE_SEMANTIC_ZOOMING } from '../../../src/editor/example/basic/semantic-zoom';
+import { EXAMPLE_CYTOAND_HG38 } from '../../../src/editor/example/cytoband-hg38';
 
 describe('Example specs should be valid', () => {
     it('Ideogram', () => {
         let valid = true;
         const msgs: string[] = [];
 
-        const resolvedIdeograms = resolveSuperposedTracks(EXAMPLE_IDEOGRAM_TRACK);
+        const resolvedIdeograms = resolveSuperposedTracks(EXAMPLE_CYTOAND_HG38.tracks[0]);
         resolvedIdeograms.forEach(spec => {
             const ideogramMark = new GeminidTrackModel(spec, []);
             const validity = ideogramMark.validateSpec();

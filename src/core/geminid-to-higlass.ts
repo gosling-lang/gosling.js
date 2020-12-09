@@ -46,6 +46,21 @@ export function geminidToHiGlass(
             width: bb.width,
             height: bb.height,
             options: {
+                /* Mouse hover position */
+                showMousePosition: firstResolvedSpec.circularLayout ? false : true, // show mouse position only for linear tracks
+                mousePositionColor: '#333333',
+                /* Track title */
+                name: firstResolvedSpec.title,
+                labelPosition: firstResolvedSpec.title ? 'topLeft' : 'none',
+                fontSize: 12,
+                labelColor: 'black',
+                labelBackgroundColor: 'white',
+                labelTextOpacity: 1,
+                labelLeftMargin: 1,
+                labelTopMargin: 1,
+                labelRightMargin: 0,
+                labelBottomMargin: 0,
+                /* Others */
                 backgroundColor: 'transparent', // in this way, we can superpose multiple tracks
                 spec: { ...gmTrack, data: undefined }
             }

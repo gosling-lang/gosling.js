@@ -1,6 +1,6 @@
 import { GeminidSpec } from '../../../core/geminid.schema';
+import { EXAMPLE_CYTOAND_HG38 } from '../cytoband-hg38';
 import { EXAMPLE_DATASETS } from './datasets';
-import { EXAMPLE_IDEOGRAM_TRACK } from './ideogram';
 
 export const EXAMPLE_SUPERPOSE: GeminidSpec = {
     layout: {
@@ -10,7 +10,7 @@ export const EXAMPLE_SUPERPOSE: GeminidSpec = {
         rowSizes: [60, 180, 180, 180]
     },
     tracks: [
-        EXAMPLE_IDEOGRAM_TRACK,
+        EXAMPLE_CYTOAND_HG38.tracks[0],
         {
             data: {
                 url: EXAMPLE_DATASETS.clinvar,

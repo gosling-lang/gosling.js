@@ -1,4 +1,5 @@
 import { GeminidSpec, SuperposedTrack, Track } from '../../../core/geminid.schema';
+import { EXAMPLE_CYTOAND_HG38 } from '../cytoband-hg38';
 import { EXAMPLE_DATASETS } from './datasets';
 
 export const EXAMPLE_IDEOGRAM_TRACK: SuperposedTrack = {
@@ -111,15 +112,20 @@ const ideogramTracks: Track[] = [];
             zoomable: false
         },
         {
-            ...EXAMPLE_IDEOGRAM_TRACK,
-            x: { ...EXAMPLE_IDEOGRAM_TRACK.x, domain: { chromosome: d.chr }, axis: undefined, linkingID: `link-${i}` },
+            ...EXAMPLE_CYTOAND_HG38.tracks[0],
+            x: {
+                ...EXAMPLE_CYTOAND_HG38.tracks[0].x,
+                domain: { chromosome: d.chr },
+                axis: undefined,
+                linkingID: `link-${i}`
+            },
             height: 24,
             width: d.width,
             zoomable: false
-        }
+        } as any
     );
 });
 export const EXAMPLE_IDEOGRAM: GeminidSpec = {
-    layout: { direction: 'vertical', type: 'linear', rowSizes: [60, 20], columnSizes: 1000, rowGaps: [0, 30] },
+    layout: { direction: 'vertical', type: 'linear', rowSizes: [60, 24], columnSizes: 1000, rowGaps: [0, 30] },
     tracks: ideogramTracks
 };

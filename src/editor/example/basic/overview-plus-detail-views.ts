@@ -1,26 +1,26 @@
-import { GeminidSpec } from '../../../core/geminid.schema';
+import { GeminidSpec, SuperposedTrack } from '../../../core/geminid.schema';
+import { EXAMPLE_CYTOAND_HG38 } from '../cytoband-hg38';
 import { EXAMPLE_DATASETS } from './datasets';
-import { EXAMPLE_IDEOGRAM_TRACK } from './ideogram';
 
 export const EXAMPLE_OVERVIEW_DEATIL: GeminidSpec = {
     layout: {
         type: 'linear',
         direction: 'horizontal',
         wrap: 2,
-        rowSizes: [60, 180, 180],
+        rowSizes: [55, 180, 180],
         rowGaps: [30, 0]
     },
     tracks: [
         {
             title: 'Overview',
-            ...EXAMPLE_IDEOGRAM_TRACK,
+            ...EXAMPLE_CYTOAND_HG38.tracks[0],
             x: {
-                ...EXAMPLE_IDEOGRAM_TRACK.x,
+                ...EXAMPLE_CYTOAND_HG38.tracks[0].x,
                 domain: { chromosome: '1' },
                 linkingID: 'linking-overview'
             },
             superpose: [
-                ...EXAMPLE_IDEOGRAM_TRACK.superpose,
+                ...(EXAMPLE_CYTOAND_HG38.tracks[0] as SuperposedTrack).superpose,
                 {
                     mark: 'rect-brush',
                     x: { linkingID: 'linking-detail-1' },

@@ -149,9 +149,10 @@ function RawDataFetcher(HGC: any, ...args: any): any {
                 return inRange;
             });
 
+            const sizeLimit = this.dataConfig.sampleLength ?? 1000;
             return {
                 // sample the data to make it managable for visualization components
-                tabularData: sampleSize(tabularData, this.dataConfig.sampleLength ?? 1000),
+                tabularData: tabularData.length > sizeLimit ? sampleSize(tabularData, sizeLimit) : tabularData,
                 server: null,
                 tilePos: [x],
                 zoomLevel: z
