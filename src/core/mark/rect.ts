@@ -34,6 +34,9 @@ export function drawRect(HGC: any, trackInfo: any, tile: any, model: GeminidTrac
     const cx = trackWidth / 2.0;
     const cy = trackHeight / 2.0;
 
+    /* stacking */
+    const stackY = spec.stackY;
+
     /* genomic scale */
     const xScale = trackInfo._xScale;
     const tileUnitWidth = xScale(tileX + tileWidth / tileSize) - xScale(tileX);
@@ -48,61 +51,124 @@ export function drawRect(HGC: any, trackInfo: any, tile: any, model: GeminidTrac
 
     /* constant values */
     const strokeWidth = model.encodedPIXIProperty('strokeWidth');
-    const stroke = model.encodedValue('stroke');
+    // const stroke = model.encodedValue('stroke');
 
     /* render */
     const g = tile.graphics;
     rowCategories.forEach(rowCategory => {
         const rowPosition = model.encodedValue('row', rowCategory);
 
+        // factor to multiply size unless using constant value
+        // sort by size and position
+
+        // Use this array to collect stacking history and use this to find the spot to stack
+        const pixiProps: {
+            xs: number;
+            xe: number;
+            ys: number;
+            ye: number;
+            color: string;
+            stroke: string;
+            opacity: number;
+        }[] = [];
+
         data.filter(
             d =>
                 !getValueUsingChannel(d, spec.row as Channel) ||
                 (getValueUsingChannel(d, spec.row as Channel) as string) === rowCategory
-        ).forEach(d => {
-            const x = model.encodedPIXIProperty('x', d);
-            const y = model.encodedPIXIProperty('y', d);
-            const color = model.encodedPIXIProperty('color', d);
-            const opacity = model.encodedPIXIProperty('opacity', d);
-            const rectWidth = model.encodedPIXIProperty('width', d, { markWidth: tileUnitWidth });
-            const rectHeight = model.encodedPIXIProperty('height', d, { markHeight: cellHeight });
+        )
+            .sort((a, b) => model.encodedPIXIProperty('x', a) - model.encodedPIXIProperty('x', b))
+            .forEach(d => {
+                const x = model.encodedPIXIProperty('x', d);
+                const color = model.encodedPIXIProperty('color', d);
+                const stroke = model.encodedPIXIProperty('stroke', d);
+                const opacity = model.encodedPIXIProperty('opacity', d);
+                const rectWidth = model.encodedPIXIProperty('width', d, { markWidth: tileUnitWidth });
+                const rectHeight = model.encodedPIXIProperty('height', d, { markHeight: cellHeight });
+                let y = model.encodedPIXIProperty('y', d) - rectHeight / 2.0;
 
-            const alphaTransition = model.markVisibility(d, { width: rectWidth });
-            const actualOpacity = Math.min(alphaTransition, opacity);
+                const alphaTransition = model.markVisibility(d, { width: rectWidth });
+                const actualOpacity = Math.min(alphaTransition, opacity);
 
-            if (actualOpacity === 0 || rectHeight === 0 || rectWidth <= 0.01) {
-                // do not need to draw invisible objects
-                return;
-            }
+                if (actualOpacity === 0 || rectHeight === 0 || rectWidth <= 0.01) {
+                    // No need to draw invisible objects
+                    // return;
+                }
+
+                if (stackY) {
+                    // A `stack` option is being used, so let's further transform data to find the non-overlap area.
+                    const infoInRangeX = pixiProps.filter(
+                        d => (d.xs <= x && x < d.xe) || (d.xs <= x + rectWidth && x + rectWidth < d.xe)
+                    );
+
+                    let newYStart = 0; // start from the top position
+                    if (infoInRangeX.length > 0) {
+                        // This means, existing visual marks are being overlapped along x-axis.
+                        let infoInRangeXY;
+
+                        do {
+                            // a naive apporach to find a spot to position the current visul mark
+                            infoInRangeXY = infoInRangeX.filter(
+                                d =>
+                                    (d.ys <= newYStart && newYStart < d.ye) ||
+                                    (d.ys <= newYStart + rectHeight && newYStart + rectHeight < d.ye)
+                            );
+                            if (infoInRangeXY.length > 0) {
+                                newYStart += rectHeight;
+                            }
+                        } while (infoInRangeXY.length > 0);
+                        y = newYStart;
+                    }
+
+                    y = newYStart;
+                }
+
+                pixiProps.push({
+                    xs: x,
+                    xe: x + rectWidth,
+                    ys: y,
+                    ye: y + rectHeight,
+                    color,
+                    stroke,
+                    opacity: actualOpacity
+                });
+            });
+
+        // this is used to scale the height of visual marks to stretch the track along y axis to use the entire vertical space
+        const yScaleFactor = 1; // Math.max(...pixiProps.map(d => d.ye)) / rowHeight;
+
+        pixiProps.forEach(prop => {
+            const { xs, xe, ys, ye, color, stroke, opacity } = prop;
 
             // stroke
             g.lineStyle(
                 strokeWidth,
                 colorToHex(stroke),
-                actualOpacity, // alpha
+                opacity, // alpha
                 0.5 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
             );
 
             if (circular) {
-                if (x + rectWidth < 0 || trackWidth < x) {
+                if (xe < 0 || trackWidth < xs) {
                     // do not draw overflewed visual marks
                     return;
                 }
 
-                const farR = trackOuterRadius - (rowPosition / trackHeight) * trackRingSize;
-                const nearR = trackOuterRadius - ((rowPosition + rectHeight) / trackHeight) * trackRingSize;
-                const sPos = cartesianToPolar(x, trackWidth, nearR, cx, cy, startAngle, endAngle);
-                const startRad = valueToRadian(x, trackWidth, startAngle, endAngle);
-                const endRad = valueToRadian(x + rectWidth, trackWidth, startAngle, endAngle);
+                // TODO: Does a `row` channel affect here?
+                const farR = trackOuterRadius - ((rowPosition + ys) / trackHeight) * trackRingSize;
+                const nearR = trackOuterRadius - ((rowPosition + ye) / trackHeight) * trackRingSize;
+                const sPos = cartesianToPolar(xs, trackWidth, nearR, cx, cy, startAngle, endAngle);
+                const startRad = valueToRadian(xs, trackWidth, startAngle, endAngle);
+                const endRad = valueToRadian(xe, trackWidth, startAngle, endAngle);
 
-                g.beginFill(colorToHex(color), actualOpacity);
+                g.beginFill(colorToHex(color), opacity);
                 g.moveTo(sPos.x, sPos.y);
                 g.arc(cx, cy, nearR, startRad, endRad, true);
                 g.arc(cx, cy, farR, endRad, startRad, false);
                 g.closePath();
             } else {
-                g.beginFill(colorToHex(color), actualOpacity);
-                g.drawRect(x, rowPosition + y - rectHeight / 2.0, rectWidth, rectHeight);
+                g.beginFill(colorToHex(color), opacity);
+                g.drawRect(xs, rowPosition + ys / yScaleFactor, xe - xs, (ye - ys) / yScaleFactor);
             }
         });
     });
@@ -119,13 +185,13 @@ export function rectProperty(
 ) {
     switch (propertyKey) {
         case 'width':
-            return (
+            const width =
                 // (1) size
                 gm.visualPropertyByChannel('xe', datum)
                     ? gm.visualPropertyByChannel('xe', datum) - gm.visualPropertyByChannel('x', datum)
                     : // (2) unit mark height
-                      additionalInfo?.markWidth
-            );
+                      additionalInfo?.markWidth;
+            return width === 0 ? 0.1 : width; // TODO: not sure if this is necessary for all cases. Perhaps, we can have an option.
         case 'height':
             return (
                 // (1) size

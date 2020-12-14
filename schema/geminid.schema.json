@@ -175,6 +175,9 @@
         "span": {
           "type": "number"
         },
+        "stackY": {
+          "type": "boolean"
+        },
         "startAngle": {
           "type": "number"
         },
@@ -987,6 +990,10 @@
       "additionalProperties": false,
       "description": "Layout specification for multiple tracks",
       "properties": {
+        "assembly": {
+          "const": "hm38",
+          "type": "string"
+        },
         "columnGaps": {
           "anyOf": [
             {
@@ -1532,6 +1539,16 @@
             }
           ]
         },
+        "stackY": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "$ref": "#/definitions/Channel"
+            }
+          ]
+        },
         "startAngle": {
           "anyOf": [
             {
@@ -1708,6 +1725,16 @@
                 "anyOf": [
                   {
                     "type": "number"
+                  },
+                  {
+                    "$ref": "#/definitions/Channel"
+                  }
+                ]
+              },
+              "stackY": {
+                "anyOf": [
+                  {
+                    "type": "boolean"
                   },
                   {
                     "$ref": "#/definitions/Channel"
@@ -2060,6 +2087,16 @@
             }
           ]
         },
+        "stackY": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "$ref": "#/definitions/Channel"
+            }
+          ]
+        },
         "startAngle": {
           "anyOf": [
             {
@@ -2242,6 +2279,16 @@
                   }
                 ]
               },
+              "stackY": {
+                "anyOf": [
+                  {
+                    "type": "boolean"
+                  },
+                  {
+                    "$ref": "#/definitions/Channel"
+                  }
+                ]
+              },
               "startAngle": {
                 "anyOf": [
                   {
@@ -2418,6 +2465,16 @@
                       "anyOf": [
                         {
                           "type": "number"
+                        },
+                        {
+                          "$ref": "#/definitions/Channel"
+                        }
+                      ]
+                    },
+                    "stackY": {
+                      "anyOf": [
+                        {
+                          "type": "boolean"
                         },
                         {
                           "$ref": "#/definitions/Channel"

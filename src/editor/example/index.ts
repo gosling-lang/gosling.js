@@ -22,6 +22,7 @@ import { EXAMPLE_SUPERPOSED_CIRCULAR_TRACKS } from './basic/superposed-circular'
 import { EXAMPLE_LOGO } from './basic/logo';
 import { EXAMPLE_OF_EXPERIMENT } from './experimental';
 import { EXAMPLE_CYTOAND_HG38 } from './cytoband-hg38';
+import { EXAMPLE_2019_WENGER } from './wenger-2019';
 
 export const examples: ReadonlyArray<{
     name: string;
@@ -44,6 +45,13 @@ export const examples: ReadonlyArray<{
         underDevelopment: false,
         hidden: false,
         forceShow: false
+    },
+    {
+        name: 'Wenger et al. 2019 (SV)',
+        spec: EXAMPLE_2019_WENGER,
+        underDevelopment: false,
+        hidden: false,
+        forceShow: true
     },
     {
         name: 'Corces et al. 2020 (Nature Genetics)',

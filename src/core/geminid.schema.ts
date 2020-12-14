@@ -6,8 +6,8 @@ import { GLYPH_LOCAL_PRESET_TYPE, GLYPH_HIGLASS_PRESET_TYPE } from '../editor/ex
 export type GeminidSpec = {
     layout?: Layout;
     tracks: Track[];
-    width?: number;
-    height?: number;
+    width?: number; // deprecated
+    height?: number; // deprecated
     static?: boolean;
     description?: string;
 };
@@ -16,6 +16,7 @@ export type GeminidSpec = {
  * Layout specification for multiple tracks
  */
 export interface Layout {
+    assembly?: 'hm38'; // TODO: support others as well
     type: 'linear' | 'circular'; // TODO: should this be moved to the track-level spec?
     direction: 'vertical' | 'horizontal';
     wrap?: number;
@@ -166,7 +167,7 @@ export interface BasicSingleTrack {
     mark: Mark;
 
     // Visual channels
-    x?: Channel;
+    x?: Channel; // We could have a special type of Channel for axes
     y?: Channel;
     xe?: Channel;
     ye?: Channel;
@@ -187,6 +188,9 @@ export interface BasicSingleTrack {
     strokeWidth?: Channel;
     opacity?: ChannelValue;
     background?: ChannelValue;
+
+    // Experimental
+    stackY?: boolean; // Eventually, will be added to y's `Channel` w/ gap
 
     // Stretch the size to the given range? (e.g., [x, xe])
     stretch?: boolean;
