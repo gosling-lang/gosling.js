@@ -53,6 +53,7 @@ export interface DataDeepGeminidCommon {
 export interface CSVDataGeminid extends DataDeepGeminidCommon {
     type: 'csv';
     url?: string;
+    separator?: string;
 }
 
 export interface JSONDataGeminid extends DataDeepGeminidCommon {
@@ -190,9 +191,6 @@ export interface BasicSingleTrack {
     // Stretch the size to the given range? (e.g., [x, xe])
     stretch?: boolean;
 
-    // Flip a track vertically?
-    flipY?: boolean;
-
     // Visibility
     visibility?: TriggerCondition;
 
@@ -320,6 +318,8 @@ export interface ChannelDeep {
     mirrored?: boolean; // Show baseline on the top or right instead of bottom or left
     grid?: boolean;
     linkingID?: string;
+    flip?: boolean; // Flip a track vertically or horizontally?
+    stack?: boolean; // Experimental: We could use this option to stack visual marks, addressing the visual overlap (e.g., stacked bar).
 }
 export type AxisPosition = 'none' | 'top' | 'bottom' | 'left' | 'right';
 export type FieldType = 'genomic' | 'nominal' | 'quantitative';

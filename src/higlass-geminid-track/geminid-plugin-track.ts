@@ -86,12 +86,12 @@ function GeminidTrack(HGC: any, ...args: any[]): any {
             this.pBorder.removeChildren();
             tile.drawnAtScale = this._xScale.copy(); // being used in `draw()`
 
-            if (!tile.geminiModels) {
+            if (!tile.geminidModels) {
                 // we do not have a track model prepared to visualize
                 return;
             }
 
-            tile.geminiModels.forEach((tm: GeminidTrackModel) => {
+            tile.geminidModels.forEach((tm: GeminidTrackModel) => {
                 // check visibility condition
                 if (!tm.trackVisibility({ zoomLevel: tile?.tileData?.zoomLevel })) {
                     return;
@@ -120,7 +120,7 @@ function GeminidTrack(HGC: any, ...args: any[]): any {
             if (!getGenomicChannelKeyFromTrack(this.originalSpec) && false) {
                 // TODO:
                 const visibleModels: GeminiTrackModel[][] = this.visibleAndFetchedTiles().map(
-                    (d: any) => d.geminiModels
+                    (d: any) => d.geminidModels
                 );
                 const modelsWeUse: GeminiTrackModel[] = visibleModels[0];
                 const modelsWeIgnore: GeminiTrackModel[][] = visibleModels.slice(1);
@@ -130,7 +130,7 @@ function GeminidTrack(HGC: any, ...args: any[]): any {
                     modelsWeUse.forEach(m => {
                         m.addDataRows(ignored[0].data());
                     });
-                    this.visibleAndFetchedTiles()[i + 1].geminiModels = [];
+                    this.visibleAndFetchedTiles()[i + 1].geminidModels = [];
                 });
             }
             */
@@ -141,13 +141,13 @@ function GeminidTrack(HGC: any, ...args: any[]): any {
          * Return the generated gemini track model.
          */
         preprocessTile(tile: any) {
-            if (tile.geminiModels && tile.geminiModels.length !== 0) {
+            if (tile.geminidModels && tile.geminidModels.length !== 0) {
                 // already have the geminid models constructed
-                return tile.geminiModels;
+                return tile.geminidModels;
             }
 
             // Single tile can contain multiple Gemini models if multiple tracks are superposed.
-            tile.geminiModels = [];
+            tile.geminidModels = [];
 
             // TODO: IMPORTANT: semantic zooming could be ultimately considered as superposing multiple tracks, and
             // its visibility is determined by certain user-defined condition.
@@ -419,10 +419,10 @@ function GeminidTrack(HGC: any, ...args: any[]): any {
                 const gm = new GeminidTrackModel(resolved, tile.tileData.tabularDataFiltered);
 
                 // Add a track model to the tile object
-                tile.geminiModels.push(gm);
+                tile.geminidModels.push(gm);
             });
 
-            return tile.geminiModels;
+            return tile.geminidModels;
         }
 
         // rerender all tiles every time track size is changed

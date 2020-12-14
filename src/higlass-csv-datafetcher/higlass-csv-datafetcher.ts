@@ -75,7 +75,7 @@ function CSVDataFetcher(HGC: any, ...args: any): any {
                     return response.ok ? response.text() : Promise.reject(response.status);
                 })
                 .then(text => {
-                    return d3.csvParse(text, (row: any) => {
+                    return d3.dsvFormat(this.dataConfig.separator ?? ',').parse(text, (row: any) => {
                         genomicFields.forEach(g => {
                             if (!row[chromosomeField]) {
                                 // TODO:

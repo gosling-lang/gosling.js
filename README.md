@@ -18,6 +18,11 @@
 
 </div>
 
+## Installation
+```
+npm install geminid
+```
+
 ## Developement
 
 To install and open a geminid online editor, run the following commands:

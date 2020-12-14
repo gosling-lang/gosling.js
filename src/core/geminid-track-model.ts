@@ -75,6 +75,8 @@ export class GeminidTrackModel {
         // fill missing options
         this.generateCompleteSpec(this.specComplete);
 
+        this.flipRanges(this.specComplete);
+
         // generate scales based on domains and ranges
         this.generateScales();
 
@@ -150,6 +152,19 @@ export class GeminidTrackModel {
         });
 
         this.addScaleMaterials(spec);
+    }
+
+    /**
+     * TODO: This is experimental. For bar charts, for example, additional care should be taken to correctly flip the visual marks.
+     * Flip the x or y scales when `flip` options are used.
+     */
+    private flipRanges(spec: BasicSingleTrack) {
+        if (IsChannelDeep(spec.x) && spec.x.flip && Array.isArray(spec.x.range)) {
+            spec.x.range = spec.x.range.reverse();
+        }
+        if (IsChannelDeep(spec.y) && spec.y.flip && Array.isArray(spec.y.range)) {
+            spec.y.range = spec.y.range.reverse();
+        }
     }
 
     /**

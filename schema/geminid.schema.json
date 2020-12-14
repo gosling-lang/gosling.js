@@ -148,9 +148,6 @@
         "endAngle": {
           "type": "number"
         },
-        "flipY": {
-          "type": "boolean"
-        },
         "height": {
           "type": "number"
         },
@@ -263,6 +260,9 @@
         "sampleLength": {
           "type": "number"
         },
+        "separator": {
+          "type": "string"
+        },
         "type": {
           "const": "csv",
           "type": "string"
@@ -322,6 +322,9 @@
         "field": {
           "type": "string"
         },
+        "flip": {
+          "type": "boolean"
+        },
         "grid": {
           "type": "boolean"
         },
@@ -336,6 +339,9 @@
         },
         "range": {
           "$ref": "#/definitions/Range"
+        },
+        "stack": {
+          "type": "boolean"
         },
         "type": {
           "$ref": "#/definitions/FieldType"
@@ -1450,16 +1456,6 @@
             }
           ]
         },
-        "flipY": {
-          "anyOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "$ref": "#/definitions/Channel"
-            }
-          ]
-        },
         "height": {
           "anyOf": [
             {
@@ -1636,16 +1632,6 @@
                 "anyOf": [
                   {
                     "type": "number"
-                  },
-                  {
-                    "$ref": "#/definitions/Channel"
-                  }
-                ]
-              },
-              "flipY": {
-                "anyOf": [
-                  {
-                    "type": "boolean"
                   },
                   {
                     "$ref": "#/definitions/Channel"
@@ -1998,16 +1984,6 @@
             }
           ]
         },
-        "flipY": {
-          "anyOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "$ref": "#/definitions/Channel"
-            }
-          ]
-        },
         "height": {
           "anyOf": [
             {
@@ -2190,16 +2166,6 @@
                   }
                 ]
               },
-              "flipY": {
-                "anyOf": [
-                  {
-                    "type": "boolean"
-                  },
-                  {
-                    "$ref": "#/definitions/Channel"
-                  }
-                ]
-              },
               "height": {
                 "anyOf": [
                   {
@@ -2376,16 +2342,6 @@
                       "anyOf": [
                         {
                           "type": "number"
-                        },
-                        {
-                          "$ref": "#/definitions/Channel"
-                        }
-                      ]
-                    },
-                    "flipY": {
-                      "anyOf": [
-                        {
-                          "type": "boolean"
                         },
                         {
                           "$ref": "#/definitions/Channel"

@@ -48,7 +48,7 @@ export function geminidToHiGlass(
             options: {
                 /* Mouse hover position */
                 showMousePosition: firstResolvedSpec.circularLayout ? false : true, // show mouse position only for linear tracks
-                mousePositionColor: '#333333',
+                mousePositionColor: '#B8BCC1',
                 /* Track title */
                 name: firstResolvedSpec.title,
                 labelPosition: firstResolvedSpec.title ? 'topLeft' : 'none',

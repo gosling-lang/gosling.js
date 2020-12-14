@@ -1,6 +1,6 @@
 import { GeminidTrackModel } from '../geminid-track-model';
 import { Channel } from '../geminid.schema';
-import { getValueUsingChannel } from '../geminid.schema.guards';
+import { IsChannelDeep, getValueUsingChannel } from '../geminid.schema.guards';
 import { cartesianToPolar, positionToRadian } from '../utils/polar';
 
 export function drawLink(HGC: any, trackInfo: any, tile: any, tm: GeminidTrackModel) {
@@ -69,7 +69,8 @@ export function drawLink(HGC: any, trackInfo: any, tile: any, tm: GeminidTrackMo
                 0.5 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
             );
 
-            const baseY = rowPosition + (spec.flipY ? 0 : rowHeight);
+            const flipY = IsChannelDeep(spec.y) && spec.y.flip;
+            const baseY = rowPosition + (flipY ? 0 : rowHeight);
 
             if (x1Value !== undefined && x1eValue !== undefined && xValue !== x1Value && xeValue !== x1eValue) {
                 // This means we need to draw 'band' connections
@@ -206,10 +207,10 @@ export function drawLink(HGC: any, trackInfo: any, tile: any, tm: GeminidTrackMo
                         g.bezierCurveTo(
                             x + (xe - x) / 3.0,
                             // rowPosition,
-                            baseY + Math.min(rowHeight, (xe - x) / 2.0) * (spec.flipY ? 1 : -1),
+                            baseY + Math.min(rowHeight, (xe - x) / 2.0) * (flipY ? 1 : -1),
                             x + ((xe - x) / 3.0) * 2,
                             // rowPosition,
-                            baseY + Math.min(rowHeight, (xe - x) / 2.0) * (spec.flipY ? 1 : -1),
+                            baseY + Math.min(rowHeight, (xe - x) / 2.0) * (flipY ? 1 : -1),
                             xe,
                             baseY
                         );
