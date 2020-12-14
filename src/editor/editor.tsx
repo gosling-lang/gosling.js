@@ -21,6 +21,7 @@ import { validateSpec, Validity } from '../core/utils/validate';
 import { compile } from '../core/compile';
 import stripJsonComments from 'strip-json-comments';
 import './editor.css';
+import * as qs from 'qs';
 
 /**
  * Register a Gemini plugin track to HiGlassComponent
@@ -39,15 +40,19 @@ higlassRegister({ dataFetcher: RawDataFetcher, config: RawDataFetcher.config }, 
 
 const INIT_DEMO_INDEX = examples.findIndex(d => d.forceShow) !== -1 ? examples.findIndex(d => d.forceShow) : 0;
 
+// TODO: what is the type of prop?
 /**
  * React component for editing Gemini specs
  */
-function Editor() {
+function Editor(props: any) {
+    const urlParams = qs.parse(props.location.search, { ignoreQueryPrefix: true });
+    const urlSpec = urlParams?.spec ? (urlParams.spec as string) : null;
+
     const [demo, setDemo] = useState(examples[INIT_DEMO_INDEX]);
     const [editorMode, setEditorMode] = useState<'Normal Mode' | 'Template-based Mode'>('Normal Mode');
     const [hg, setHg] = useState<HiGlassSpec>();
     const [size, setSize] = useState<{ width: number; height: number }>();
-    const [gm, setGm] = useState(stringify(examples[INIT_DEMO_INDEX].spec as GeminidSpec));
+    const [gm, setGm] = useState(stringify(urlSpec ?? (examples[INIT_DEMO_INDEX].spec as GeminidSpec)));
     const [log, setLog] = useState<Validity>({ message: '', state: 'success' });
 
     /**
@@ -55,9 +60,9 @@ function Editor() {
      */
     useEffect(() => {
         if (editorMode === 'Normal Mode') {
-            setGm(stringify(replaceTemplate(JSON.parse(stringify(demo.spec)) as GeminidSpec)));
+            setGm(urlSpec ?? stringify(replaceTemplate(JSON.parse(stringify(demo.spec)) as GeminidSpec)));
         } else {
-            setGm(stringify(demo.spec as GeminidSpec));
+            setGm(urlSpec ?? stringify(demo.spec as GeminidSpec));
         }
         setHg(undefined);
     }, [demo, editorMode]);
@@ -87,7 +92,7 @@ function Editor() {
      * HiGlass components to render Gemini Tracks.
      */
     const hglass = useMemo(() => {
-        const editedGm = replaceTemplate(JSON.parse(stripJsonComments(gm)));
+        const editedGm = JSON.parse(stripJsonComments(gm));
         return hg && size ? (
             <>
                 <div
@@ -143,7 +148,7 @@ function Editor() {
                 ) : null}
             </>
         ) : null;
-    }, [hg]);
+    }, [hg, gm]);
 
     return (
         <>
