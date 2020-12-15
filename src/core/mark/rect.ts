@@ -1,4 +1,4 @@
-import { Tooltip } from '../../geminid-tooltip';
+import { Tooltip, TOOLTIP_MOUSEOVER_MARGIN as G } from '../../geminid-tooltip';
 import { GeminidTrackModel } from '../geminid-track-model';
 import { Channel, Datum } from '../geminid.schema';
 import { getValueUsingChannel } from '../geminid.schema.guards';
@@ -137,7 +137,7 @@ export function drawRect(HGC: any, trackInfo: any, tile: any, model: GeminidTrac
                 });
             });
 
-        // this is used to scale the height of visual marks to stretch the track along y axis to use the entire vertical space
+        // this is used to stretch the height of visual marks to the entire height of a track
         const yScaleFactor = 1; // Math.max(...pixiProps.map(d => d.ye)) / rowHeight;
 
         pixiProps.forEach(prop => {
@@ -176,7 +176,9 @@ export function drawRect(HGC: any, trackInfo: any, tile: any, model: GeminidTrac
                 // Prepare data for tooltips
                 trackInfo.tooltips.push({
                     datum,
-                    isMouseOver: (x: number, y: number) => xs < x && x < xe && ys < y && y < ye
+                    isMouseOver: (x: number, y: number) =>
+                        xs - G < x && x < xe + G && rowPosition + ys - G < y && y < rowPosition + ye + G,
+                    markInfo: { x: xs, y: ys, width: xe - xs, height: ye - ys, type: 'rect' }
                 } as Tooltip);
             }
         });

@@ -18,7 +18,7 @@ export const EXAMPLE_2019_WENGER_TRACK: Track = {
         { field: 'Variant Region type', type: 'nominal' }
     ],
     mark: 'rect',
-    x: { field: 'Start', type: 'genomic', axis: 'bottom', domain: { chromosome: '1', interval: [1, 100000] } },
+    x: { field: 'Start', type: 'genomic', axis: 'top', domain: { chromosome: '1', interval: [1, 100000] } },
     xe: { field: 'End', type: 'genomic' },
     // y: { stack: true },
     color: {

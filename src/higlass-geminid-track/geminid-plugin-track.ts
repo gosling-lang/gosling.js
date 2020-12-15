@@ -41,6 +41,9 @@ function GeminidTrack(HGC: any, ...args: any[]): any {
 
             this.extent = { min: Number.MAX_SAFE_INTEGER, max: Number.MIN_SAFE_INTEGER };
 
+            this.mouseOverGraphics = new HGC.libraries.PIXI.Graphics();
+            this.pMain.addChild(this.mouseOverGraphics);
+
             this.textGraphics = [];
             this.textsBeingUsed = 0; // this variable is being used to improve the performance of text rendering
 
@@ -467,6 +470,7 @@ function GeminidTrack(HGC: any, ...args: any[]): any {
         }
 
         draw() {
+            this.tooltips = [];
             super.draw();
         }
 
@@ -487,24 +491,51 @@ function GeminidTrack(HGC: any, ...args: any[]): any {
         exportSVG() {}
 
         getMouseOverHtml(mouseX: number, mouseY: number) {
-            if (!this.tilesetInfo || !this.tooltips || !this.originalSpec.tooltip) {
+            if (!this.tilesetInfo || !this.tooltips) {
                 // Do not have enough information to show tooltips
                 return;
             }
+
+            this.mouseOverGraphics.clear();
+            // place on the top
+            this.pMain.removeChild(this.mouseOverGraphics);
+            this.pMain.addChild(this.mouseOverGraphics);
 
             // TODO: Get tooltip information prepared during the mark rendering, and use the info here to show tooltips.
 
             const tooltip: Tooltip | undefined = this.tooltips.find((d: Tooltip) => d.isMouseOver(mouseX, mouseY));
 
             if (tooltip) {
-                const content = (this.originalSpec.tooltip as any).map(
-                    (d: any) =>
-                        `<tr><td style='padding: 4px 8px'>${d.field}</td><td style='padding: 4px 8px'><b>${
-                            tooltip.datum[d.field]
-                        }</b></td></tr>`
-                );
+                // render mouse over effect
+                if (tooltip.markInfo.type === 'rect') {
+                    this.mouseOverGraphics.lineStyle(
+                        1,
+                        HGC.utils.colorToHex('black'),
+                        1, // alpha
+                        1 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
+                    );
+                    this.mouseOverGraphics.beginFill(HGC.utils.colorToHex('white'), 0);
+                    this.mouseOverGraphics.drawRect(
+                        tooltip.markInfo.x,
+                        tooltip.markInfo.y,
+                        tooltip.markInfo.width,
+                        tooltip.markInfo.height
+                    );
+                }
 
-                return `<table style='text-align: left'>${content}</table>`;
+                if (this.originalSpec.tooltip) {
+                    // render a tooltip
+                    const content = (this.originalSpec.tooltip as any)
+                        .map(
+                            (d: any) =>
+                                '<tr>' +
+                                `<td style='padding: 4px 8px'>${d.field}</td>` +
+                                `<td style='padding: 4px 8px'><b>${tooltip.datum[d.field]}</b></td>` +
+                                '</tr>'
+                        )
+                        .join('');
+                    return `<table style='text-align: left; margin-top: 12px'>${content}</table>`;
+                }
             }
         }
     }

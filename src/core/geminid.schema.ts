@@ -4,12 +4,14 @@ import { GLYPH_LOCAL_PRESET_TYPE, GLYPH_HIGLASS_PRESET_TYPE } from '../editor/ex
  * Root-level specification
  */
 export type GeminidSpec = {
-    layout?: Layout;
-    tracks: Track[];
-    width?: number; // deprecated
-    height?: number; // deprecated
     static?: boolean;
     description?: string;
+
+    layout?: Layout;
+    tracks: Track[];
+
+    width?: number;
+    height?: number;
 };
 
 /**
