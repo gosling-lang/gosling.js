@@ -202,6 +202,28 @@
         "title": {
           "type": "string"
         },
+        "tooltip": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "alt": {
+                "type": "string"
+              },
+              "field": {
+                "type": "string"
+              },
+              "type": {
+                "$ref": "#/definitions/FieldType"
+              }
+            },
+            "required": [
+              "field",
+              "type"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        },
         "visibility": {
           "$ref": "#/definitions/TriggerCondition"
         },
@@ -1800,6 +1822,35 @@
                   }
                 ]
               },
+              "tooltip": {
+                "anyOf": [
+                  {
+                    "items": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "alt": {
+                          "type": "string"
+                        },
+                        "field": {
+                          "type": "string"
+                        },
+                        "type": {
+                          "$ref": "#/definitions/FieldType"
+                        }
+                      },
+                      "required": [
+                        "field",
+                        "type"
+                      ],
+                      "type": "object"
+                    },
+                    "type": "array"
+                  },
+                  {
+                    "$ref": "#/definitions/Channel"
+                  }
+                ]
+              },
               "visibility": {
                 "anyOf": [
                   {
@@ -1876,6 +1927,35 @@
           "anyOf": [
             {
               "type": "string"
+            },
+            {
+              "$ref": "#/definitions/Channel"
+            }
+          ]
+        },
+        "tooltip": {
+          "anyOf": [
+            {
+              "items": {
+                "additionalProperties": false,
+                "properties": {
+                  "alt": {
+                    "type": "string"
+                  },
+                  "field": {
+                    "type": "string"
+                  },
+                  "type": {
+                    "$ref": "#/definitions/FieldType"
+                  }
+                },
+                "required": [
+                  "field",
+                  "type"
+                ],
+                "type": "object"
+              },
+              "type": "array"
             },
             {
               "$ref": "#/definitions/Channel"
@@ -2540,6 +2620,35 @@
                         }
                       ]
                     },
+                    "tooltip": {
+                      "anyOf": [
+                        {
+                          "items": {
+                            "additionalProperties": false,
+                            "properties": {
+                              "alt": {
+                                "type": "string"
+                              },
+                              "field": {
+                                "type": "string"
+                              },
+                              "type": {
+                                "$ref": "#/definitions/FieldType"
+                              }
+                            },
+                            "required": [
+                              "field",
+                              "type"
+                            ],
+                            "type": "object"
+                          },
+                          "type": "array"
+                        },
+                        {
+                          "$ref": "#/definitions/Channel"
+                        }
+                      ]
+                    },
                     "visibility": {
                       "anyOf": [
                         {
@@ -2622,6 +2731,35 @@
                   }
                 ]
               },
+              "tooltip": {
+                "anyOf": [
+                  {
+                    "items": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "alt": {
+                          "type": "string"
+                        },
+                        "field": {
+                          "type": "string"
+                        },
+                        "type": {
+                          "$ref": "#/definitions/FieldType"
+                        }
+                      },
+                      "required": [
+                        "field",
+                        "type"
+                      ],
+                      "type": "object"
+                    },
+                    "type": "array"
+                  },
+                  {
+                    "$ref": "#/definitions/Channel"
+                  }
+                ]
+              },
               "visibility": {
                 "anyOf": [
                   {
@@ -2698,6 +2836,35 @@
           "anyOf": [
             {
               "type": "string"
+            },
+            {
+              "$ref": "#/definitions/Channel"
+            }
+          ]
+        },
+        "tooltip": {
+          "anyOf": [
+            {
+              "items": {
+                "additionalProperties": false,
+                "properties": {
+                  "alt": {
+                    "type": "string"
+                  },
+                  "field": {
+                    "type": "string"
+                  },
+                  "type": {
+                    "$ref": "#/definitions/FieldType"
+                  }
+                },
+                "required": [
+                  "field",
+                  "type"
+                ],
+                "type": "object"
+              },
+              "type": "array"
             },
             {
               "$ref": "#/definitions/Channel"

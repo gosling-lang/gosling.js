@@ -163,6 +163,8 @@ export interface BasicSingleTrack {
     // Data transformation
     dataTransform?: DataTransform;
 
+    tooltip?: { field: string; type: FieldType; alt?: string }[];
+
     // Mark
     mark: Mark;
 

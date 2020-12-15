@@ -9,6 +9,14 @@ export const EXAMPLE_2019_WENGER_TRACK: Track = {
         chromosomeField: 'Chromosome',
         genomicFields: ['Start', 'End']
     },
+    tooltip: [
+        { field: 'Study ID', type: 'nominal' },
+        { field: 'Variant ID', type: 'nominal' },
+        { field: 'Chromosome', type: 'nominal' },
+        { field: 'Start', type: 'genomic' },
+        { field: 'End', type: 'genomic' },
+        { field: 'Variant Region type', type: 'nominal' }
+    ],
     mark: 'rect',
     x: { field: 'Start', type: 'genomic', axis: 'bottom', domain: { chromosome: '1', interval: [1, 100000] } },
     xe: { field: 'End', type: 'genomic' },

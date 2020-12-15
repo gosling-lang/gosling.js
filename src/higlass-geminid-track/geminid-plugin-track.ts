@@ -12,6 +12,7 @@ import {
     IsOneOfFilter,
     IsRangeFilter
 } from '../core/geminid.schema.guards';
+import { Tooltip } from '../geminid-tooltip';
 
 function GeminidTrack(HGC: any, ...args: any[]): any {
     if (!new.target) {
@@ -36,6 +37,8 @@ function GeminidTrack(HGC: any, ...args: any[]): any {
                 console.warn('The specification of the following track is invalid', errorMessages, this.originalSpec);
             }
 
+            this.tooltips = [];
+
             this.extent = { min: Number.MAX_SAFE_INTEGER, max: Number.MIN_SAFE_INTEGER };
 
             this.textGraphics = [];
@@ -45,6 +48,8 @@ function GeminidTrack(HGC: any, ...args: any[]): any {
         }
 
         initTile(tile: any) {
+            this.tooltips = [];
+
             // preprocess all tiles at once so that we can share the value scales
             this.preprocessAllTiles();
 
@@ -58,6 +63,8 @@ function GeminidTrack(HGC: any, ...args: any[]): any {
             super.rerender(newOptions);
 
             this.options = newOptions;
+
+            this.tooltips = [];
 
             this.updateTile();
 
@@ -479,7 +486,27 @@ function GeminidTrack(HGC: any, ...args: any[]): any {
 
         exportSVG() {}
 
-        getMouseOverHtml() {}
+        getMouseOverHtml(mouseX: number, mouseY: number) {
+            if (!this.tilesetInfo || !this.tooltips || !this.originalSpec.tooltip) {
+                // Do not have enough information to show tooltips
+                return;
+            }
+
+            // TODO: Get tooltip information prepared during the mark rendering, and use the info here to show tooltips.
+
+            const tooltip: Tooltip | undefined = this.tooltips.find((d: Tooltip) => d.isMouseOver(mouseX, mouseY));
+
+            if (tooltip) {
+                const content = (this.originalSpec.tooltip as any).map(
+                    (d: any) =>
+                        `<tr><td style='padding: 4px 8px'>${d.field}</td><td style='padding: 4px 8px'><b>${
+                            tooltip.datum[d.field]
+                        }</b></td></tr>`
+                );
+
+                return `<table style='text-align: left'>${content}</table>`;
+            }
+        }
     }
     return new GeminidTrackClass(args);
 }

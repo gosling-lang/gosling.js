@@ -87,10 +87,11 @@ function CSVDataFetcher(HGC: any, ...args: any): any {
                                     : `chr${row[chromosomeField]}`;
                                 row[g] = CHROMOSOME_INTERVAL_HG38[chr][0] + +row[g];
                             } catch (e) {
-                                console.warn(
-                                    '[Gemini Data Fetcher] Genomic position cannot be parsed correctly.',
-                                    chromosomeField
-                                );
+                                // genomic position did not parse properly
+                                // console.warn(
+                                //     '[Gemini Data Fetcher] Genomic position cannot be parsed correctly.',
+                                //     chromosomeField
+                                // );
                             }
                         });
                         quantitativeFields?.forEach(q => {

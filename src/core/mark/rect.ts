@@ -1,5 +1,6 @@
+import { Tooltip } from '../../geminid-tooltip';
 import { GeminidTrackModel } from '../geminid-track-model';
-import { Channel } from '../geminid.schema';
+import { Channel, Datum } from '../geminid.schema';
 import { getValueUsingChannel } from '../geminid.schema.guards';
 import { cartesianToPolar, valueToRadian } from '../utils/polar';
 import { PIXIVisualProperty } from '../visual-property.schema';
@@ -70,6 +71,7 @@ export function drawRect(HGC: any, trackInfo: any, tile: any, model: GeminidTrac
             color: string;
             stroke: string;
             opacity: number;
+            datum: Datum;
         }[] = [];
 
         data.filter(
@@ -130,7 +132,8 @@ export function drawRect(HGC: any, trackInfo: any, tile: any, model: GeminidTrac
                     ye: y + rectHeight,
                     color,
                     stroke,
-                    opacity: actualOpacity
+                    opacity: actualOpacity,
+                    datum: d
                 });
             });
 
@@ -138,7 +141,7 @@ export function drawRect(HGC: any, trackInfo: any, tile: any, model: GeminidTrac
         const yScaleFactor = 1; // Math.max(...pixiProps.map(d => d.ye)) / rowHeight;
 
         pixiProps.forEach(prop => {
-            const { xs, xe, ys, ye, color, stroke, opacity } = prop;
+            const { xs, xe, ys, ye, color, stroke, opacity, datum } = prop;
 
             // stroke
             g.lineStyle(
@@ -169,6 +172,12 @@ export function drawRect(HGC: any, trackInfo: any, tile: any, model: GeminidTrac
             } else {
                 g.beginFill(colorToHex(color), opacity);
                 g.drawRect(xs, rowPosition + ys / yScaleFactor, xe - xs, (ye - ys) / yScaleFactor);
+
+                // Prepare data for tooltips
+                trackInfo.tooltips.push({
+                    datum,
+                    isMouseOver: (x: number, y: number) => xs < x && x < xe && ys < y && y < ye
+                } as Tooltip);
             }
         });
     });
