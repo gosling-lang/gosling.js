@@ -178,7 +178,7 @@ export function drawRect(HGC: any, trackInfo: any, tile: any, model: GeminidTrac
                     datum,
                     isMouseOver: (x: number, y: number) =>
                         xs - G < x && x < xe + G && rowPosition + ys - G < y && y < rowPosition + ye + G,
-                    markInfo: { x: xs, y: ys, width: xe - xs, height: ye - ys, type: 'rect' }
+                    markInfo: { x: xs, y: ys + rowPosition, width: xe - xs, height: ye - ys, type: 'rect' }
                 } as Tooltip);
             }
         });
