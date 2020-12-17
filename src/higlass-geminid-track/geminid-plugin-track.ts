@@ -75,6 +75,14 @@ function GeminidTrack(HGC: any, ...args: any[]): any {
             this.draw(); // TODO: any effect?
         }
 
+        draw() {
+            this.tooltips = [];
+            this.textsBeingUsed = 0;
+            this.mouseOverGraphics?.clear(); // remove mouse over effects
+
+            super.draw();
+        }
+
         updateTile() {
             // preprocess all tiles at once so that we can share the value scales
             this.preprocessAllTiles();
@@ -95,7 +103,7 @@ function GeminidTrack(HGC: any, ...args: any[]): any {
             tile.graphics.removeChildren();
             this.pBorder.clear();
             this.pBorder.removeChildren();
-            tile.drawnAtScale = this._xScale.copy(); // being used in `draw()`
+            tile.drawnAtScale = this._xScale.copy(); // being used in `draw()` internally
 
             if (!tile.geminidModels) {
                 // we do not have a track model prepared to visualize
@@ -467,13 +475,6 @@ function GeminidTrack(HGC: any, ...args: any[]): any {
             );
 
             return [start, end];
-        }
-
-        draw() {
-            this.tooltips = [];
-            this.textsBeingUsed = 0;
-
-            super.draw();
         }
 
         drawTile(tile: any) {

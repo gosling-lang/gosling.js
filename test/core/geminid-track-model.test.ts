@@ -122,6 +122,20 @@ describe('Gemini track model should be properly generated with data', () => {
         expect(model.encodedValue('stroke', 999)).toBe('white');
         expect(model.encodedValue('text', 'a')).toBe('a');
     });
+
+    it('Correctly generate default domains when no data presents', () => {
+        const track: Track = {
+            ...MINIMAL_TRACK_SPEC,
+            y: { field: 'y', type: 'quantitative' }
+        };
+        const model = new GeminidTrackModel(track, []);
+        const spec = model.spec();
+        const yDomain = IsChannelDeep(spec.y) ? (spec.y.domain as number[]) : [];
+
+        // This shouldn't be undefined
+        expect(yDomain[0]).toBe(0);
+        expect(yDomain[1]).toBe(0);
+    });
 });
 
 describe('Visual marks should be correctly encoded with data', () => {
