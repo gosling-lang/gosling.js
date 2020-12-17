@@ -6,7 +6,7 @@ import { RawDataFetcher } from '../higlass-raw-datafetcher/index';
 import { HiGlassComponent } from 'higlass';
 // @ts-ignore
 import { default as higlassRegister } from 'higlass-register';
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import EditorPanel from './editor-panel';
 import stringify from 'json-stringify-pretty-compact';
 import SplitPane from 'react-split-pane';
@@ -55,6 +55,8 @@ function Editor(props: any) {
     const [gm, setGm] = useState(stringify(urlSpec ?? (examples[INIT_DEMO_INDEX].spec as GeminidSpec)));
     const [log, setLog] = useState<Validity>({ message: '', state: 'success' });
 
+    const hgRef = useRef<any>();
+
     /**
      * Editor moode
      */
@@ -88,6 +90,13 @@ function Editor(props: any) {
         });
     }, [gm]);
 
+    // Uncommnet below to use HiGlass APIs
+    // useEffect(() => {
+    //     if(hgRef.current) {
+    //         hgRef.current.api.activateTool('select');
+    //     }
+    // }, [hg, hgRef]); // TODO: should `hg` be here?
+
     /**
      * HiGlass components to render Gemini Tracks.
      */
@@ -111,12 +120,13 @@ function Editor(props: any) {
                             display: 'block',
                             background: 'white',
                             margin: 10,
-                            padding: 0, // non-zero padding act unexpectedly with HiGlass components
+                            padding: 0, // non-zero padding acts unexpectedly w/ HiGlassComponent
                             width: size.width,
                             height: size.height
                         }}
                     >
                         <HiGlassComponent
+                            ref={hgRef}
                             options={{
                                 bounded: true,
                                 containerPaddingX: 0,
@@ -129,7 +139,8 @@ function Editor(props: any) {
                                 viewPaddingBottom: 0,
                                 viewPaddingLeft: 0,
                                 viewPaddingRight: 0,
-                                sizeMode: 'bounded'
+                                sizeMode: 'bounded',
+                                rangeSelectionOnAlt: true // this allows switching between `selection` and `zoom&pan` mode
                             }}
                             viewConfig={hg}
                         />
@@ -148,7 +159,7 @@ function Editor(props: any) {
                 ) : null}
             </>
         ) : null;
-    }, [hg, gm]);
+    }, [hg, gm, size]);
 
     return (
         <>

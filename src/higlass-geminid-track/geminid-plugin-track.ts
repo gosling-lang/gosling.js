@@ -37,13 +37,12 @@ function GeminidTrack(HGC: any, ...args: any[]): any {
                 console.warn('The specification of the following track is invalid', errorMessages, this.originalSpec);
             }
 
-            this.tooltips = [];
-
             this.extent = { min: Number.MAX_SAFE_INTEGER, max: Number.MIN_SAFE_INTEGER };
 
             this.mouseOverGraphics = new HGC.libraries.PIXI.Graphics();
             this.pMain.addChild(this.mouseOverGraphics);
 
+            this.tooltips = [];
             this.textGraphics = [];
             this.textsBeingUsed = 0; // this variable is being used to improve the performance of text rendering
 
@@ -52,6 +51,7 @@ function GeminidTrack(HGC: any, ...args: any[]): any {
 
         initTile(tile: any) {
             this.tooltips = [];
+            this.textsBeingUsed = 0;
 
             // preprocess all tiles at once so that we can share the value scales
             this.preprocessAllTiles();
@@ -68,6 +68,7 @@ function GeminidTrack(HGC: any, ...args: any[]): any {
             this.options = newOptions;
 
             this.tooltips = [];
+            this.textsBeingUsed = 0;
 
             this.updateTile();
 
@@ -112,8 +113,6 @@ function GeminidTrack(HGC: any, ...args: any[]): any {
         }
 
         preprocessAllTiles() {
-            this.textsBeingUsed = 0;
-
             const gms: GeminidTrackModel[] = [];
             this.visibleAndFetchedTiles().forEach((tile: any) => {
                 // tile preprocessing is done only once per tile
@@ -471,6 +470,8 @@ function GeminidTrack(HGC: any, ...args: any[]): any {
 
         draw() {
             this.tooltips = [];
+            this.textsBeingUsed = 0;
+
             super.draw();
         }
 

@@ -75,15 +75,14 @@ export function drawText(HGC: any, trackInfo: any, tile: any, tm: GeminidTrackMo
                 const cx = tm.encodedPIXIProperty('x-center', d);
                 const y = tm.encodedPIXIProperty('y', d) + dy;
 
-                if (cx < 0 || (spec.width && cx > spec.width)) {
+                if (cx < 0 || cx > trackWidth) {
                     // we do not draw texts that are out of the view
                     return;
                 }
 
                 if (trackInfo.textsBeingUsed > 1000) {
-                    // TODO:
-                    // we do not draw a large number of texts for the performance
-                    // return;
+                    // prevent from drawing too many text elements for the performance
+                    return;
                 }
 
                 let textGraphic;
@@ -145,13 +144,13 @@ export function drawText(HGC: any, trackInfo: any, tile: any, tm: GeminidTrackMo
                 const cx = tm.encodedPIXIProperty('x-center', d);
                 const y = tm.encodedPIXIProperty('y', d) + dy;
 
-                if (cx < 0 || (spec.width && cx > spec.width)) {
+                if (cx < 0 || cx > trackWidth) {
                     // we do not draw texts that are out of the view
                     return;
                 }
 
                 if (trackInfo.textsBeingUsed > 1000) {
-                    // we do not draw a large number of texts for the performance
+                    // prevent from drawing too many text elements for the performance
                     return;
                 }
 

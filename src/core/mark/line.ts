@@ -14,8 +14,7 @@ export function drawLine(HGC: any, trackInfo: any, tile: any, tm: GeminidTrackMo
     const data = tm.data();
 
     /* track size */
-    const trackWidth = trackInfo.dimensions[0];
-    const trackHeight = trackInfo.dimensions[1];
+    const [trackWidth, trackHeight] = trackInfo.dimensions;
     const tileSize = trackInfo.tilesetInfo.tile_size;
     const { tileX, tileWidth } = trackInfo.getTilePosAndDimensions(
         tile.tileData.zoomLevel,
