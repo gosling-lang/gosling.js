@@ -19,11 +19,11 @@ function GeminidTrack(HGC: any, ...args: any[]): any {
         throw new Error('Uncaught TypeError: Class constructor cannot be invoked without "new"');
     }
 
+    // TODO: change the parent class to a more generic one (e.g., TiledPixiTrack)
     class GeminidTrackClass extends HGC.tracks.BarTrack {
-        // TODO: change the parent class to a more generic one (e.g., TiledPixiTrack)
-
-        // Spec of a Gemini track
         private originalSpec: Track;
+        private tooltips: Tooltip[];
+        // TODO: add members that are used explicitly in the code
 
         constructor(params: any[]) {
             const [context, options] = params;
@@ -145,6 +145,7 @@ function GeminidTrack(HGC: any, ...args: any[]): any {
             */
         }
 
+        // TODO: Encapsulate this function
         /**
          * Construct tabular data from a higlass tileset and a gemini track model.
          * Return the generated gemini track model.
@@ -440,7 +441,7 @@ function GeminidTrack(HGC: any, ...args: any[]): any {
             super.setDimensions(newDimensions);
 
             const visibleAndFetched = this.visibleAndFetchedTiles();
-            visibleAndFetched.map((a: any) => this.initTile(a));
+            visibleAndFetched.map((tile: any) => this.initTile(tile));
         }
 
         getIndicesOfVisibleDataInTile(tile: any) {
@@ -516,12 +517,33 @@ function GeminidTrack(HGC: any, ...args: any[]): any {
                         1 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
                     );
                     this.mouseOverGraphics.beginFill(HGC.utils.colorToHex('white'), 0);
-                    this.mouseOverGraphics.drawRect(
-                        tooltip.markInfo.x,
-                        tooltip.markInfo.y,
-                        tooltip.markInfo.width,
-                        tooltip.markInfo.height
-                    );
+
+                    // Experimental
+                    const showOutline = true;
+                    if (showOutline) {
+                        this.mouseOverGraphics.drawRect(
+                            tooltip.markInfo.x,
+                            tooltip.markInfo.y,
+                            tooltip.markInfo.width,
+                            tooltip.markInfo.height
+                        );
+                    } else {
+                        const [tw, th] = this.dimensions;
+                        const cx = tooltip.markInfo.x + tooltip.markInfo.width / 2.0;
+                        const cy = tooltip.markInfo.y + tooltip.markInfo.height / 2.0;
+
+                        // horizontal line
+                        this.mouseOverGraphics.moveTo(0, cy);
+                        this.mouseOverGraphics.lineTo(tw, cy);
+
+                        // vertical line
+                        this.mouseOverGraphics.moveTo(cx, 0);
+                        this.mouseOverGraphics.lineTo(cx, th);
+
+                        // center point
+                        this.mouseOverGraphics.beginFill(HGC.utils.colorToHex('black'), 1);
+                        this.mouseOverGraphics.drawCircle(cx, cy, 1);
+                    }
                 }
 
                 if (this.originalSpec.tooltip) {
@@ -543,6 +565,7 @@ function GeminidTrack(HGC: any, ...args: any[]): any {
     return new GeminidTrackClass(args);
 }
 
+// TODO: Change the icon
 const icon =
     '<svg version="1.0" xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" viewBox="0 0 5640 5420" preserveAspectRatio="xMidYMid meet"> <g id="layer101" fill="#000000" stroke="none"> <path d="M0 2710 l0 -2710 2820 0 2820 0 0 2710 0 2710 -2820 0 -2820 0 0 -2710z"/> </g> <g id="layer102" fill="#750075" stroke="none"> <path d="M200 4480 l0 -740 630 0 630 0 0 740 0 740 -630 0 -630 0 0 -740z"/> <path d="M1660 4420 l0 -800 570 0 570 0 0 800 0 800 -570 0 -570 0 0 -800z"/> <path d="M3000 3450 l0 -1770 570 0 570 0 0 1770 0 1770 -570 0 -570 0 0 -1770z"/> <path d="M4340 2710 l0 -2510 560 0 560 0 0 2510 0 2510 -560 0 -560 0 0 -2510z"/> <path d="M200 1870 l0 -1670 630 0 630 0 0 1670 0 1670 -630 0 -630 0 0 -1670z"/> <path d="M1660 1810 l0 -1610 570 0 570 0 0 1610 0 1610 -570 0 -570 0 0 -1610z"/> <path d="M3000 840 l0 -640 570 0 570 0 0 640 0 640 -570 0 -570 0 0 -640z"/> </g> <g id="layer103" fill="#ffff04" stroke="none"> <path d="M200 4480 l0 -740 630 0 630 0 0 740 0 740 -630 0 -630 0 0 -740z"/> <path d="M1660 4420 l0 -800 570 0 570 0 0 800 0 800 -570 0 -570 0 0 -800z"/> <path d="M3000 3450 l0 -1770 570 0 570 0 0 1770 0 1770 -570 0 -570 0 0 -1770z"/> </g> </svg>';
 

@@ -115,7 +115,7 @@ export function drawText(HGC: any, trackInfo: any, tile: any, tm: GeminidTrackMo
                 textGraphic.resolution = 8;
                 textGraphic.updateText();
 
-                textGraphic.texture.baseTexture.scaleMode = HGC.libraries.PIXI.SCALE_MODES.NEAREST;
+                textGraphic.texture.baseTexture.scaleMode = HGC.libraries.PIXI.SCALE_MODES.LINEAR; // or .NEAREST
 
                 const sprite = new HGC.libraries.PIXI.Sprite(textGraphic.texture);
                 sprite.x = x;
