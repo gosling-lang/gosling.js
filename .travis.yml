@@ -13,9 +13,22 @@ after_success:
   - codecov
 deploy:
   - provider: pages
-    skip-cleanup: true
-    github-token: $github_token
+    skip_cleanup: true
+    github_token: $github_token
     local-dir: build
     on:
       branch: master
+  - provider: npm
+    skip_cleanup: true
+    email: $npm_email
+    api_key: $npm_api_token
+    on:
+      branch: master
+      tags: true
+  - provider: releases
+    skip_cleanup: true
+    api_key: $github_token
+    on:
+      branch: master
+      tags: true
 keep-history: true
