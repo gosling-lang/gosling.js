@@ -65,10 +65,11 @@ function RawDataFetcher(HGC: any, ...args: any): any {
                             : `chr${row[this.dataConfig.chromosomeField]}`;
                         row[g] = CHROMOSOME_INTERVAL_HG38[chr][0] + +row[g];
                     } catch (e) {
-                        console.warn(
-                            '[Gemini Data Fetcher] Genomic position cannot be parsed correctly.',
-                            this.dataConfig.chromosomeField
-                        );
+                        // genomic position did not parse properly
+                        // console.warn(
+                        //     '[Gemini Data Fetcher] Genomic position cannot be parsed correctly.',
+                        //     this.dataConfig.chromosomeField
+                        // );
                     }
                 });
                 this.dataConfig.quantitativeFields?.forEach((q: string) => {
@@ -140,13 +141,7 @@ function RawDataFetcher(HGC: any, ...args: any): any {
 
             // filter the data so that visible data is sent to tracks
             const tabularData = this.values.filter((d: any) => {
-                let inRange = false;
-                this.dataConfig.genomicFields.forEach((g: any) => {
-                    if (d[g] > minX && d[g] < maxX) {
-                        inRange = true;
-                    }
-                });
-                return inRange;
+                return this.dataConfig.genomicFields.find((g: any) => minX < d[g] && d[g] <= maxX);
             });
 
             const sizeLimit = this.dataConfig.sampleLength ?? 1000;

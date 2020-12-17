@@ -545,8 +545,8 @@ export class GeminidTrackModel {
                     if (channel.domain === undefined) {
                         const min = channel.zeroBaseline
                             ? 0
-                            : (d3.min(data.map(d => d[channel.field as string]) as number[]) as number);
-                        const max = d3.max(data.map(d => d[channel.field as string]) as number[]) as number;
+                            : (d3.min(data.map(d => d[channel.field as string]) as number[]) as number) ?? 0;
+                        const max = (d3.max(data.map(d => d[channel.field as string]) as number[]) as number) ?? 0;
                         channel.domain = [min, max]; // TODO: what if data ranges in negative values
                     } else if (channel.type === 'genomic' && !IsDomainArray(channel.domain)) {
                         channel.domain = getNumericDomain(channel.domain);
