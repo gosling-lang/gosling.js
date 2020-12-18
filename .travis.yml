@@ -14,7 +14,7 @@ after_success:
 deploy:
   - provider: pages
     skip_cleanup: true
-    github_token: $github_token
+    token: $github_token
     local-dir: build
     on:
       branch: master
