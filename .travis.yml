@@ -14,7 +14,7 @@ after_success:
 deploy:
   - provider: pages
     skip_cleanup: true
-    github_token: $github_token
+    token: $github_token
     local-dir: build
     on:
       branch: master
@@ -24,9 +24,11 @@ deploy:
     api_key: $npm_api_token
     on:
       branch: master
+      tags: true
   - provider: releases
     skip_cleanup: true
     api_key: $github_token
     on:
       branch: master
+      tags: true
 keep-history: true
