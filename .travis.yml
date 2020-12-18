@@ -24,11 +24,9 @@ deploy:
     api_key: $npm_api_token
     on:
       branch: master
-      tags: true
   - provider: releases
     skip_cleanup: true
     api_key: $github_token
     on:
       branch: master
-      tags: true
 keep-history: true
