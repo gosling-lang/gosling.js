@@ -201,6 +201,17 @@ function Editor(props: any) {
                         🚧 This example is under development 🚧
                     </span>
                 ) : null}
+                <span
+                    style={{ color: 'white' }}
+                    onClick={() => {
+                        if (hgRef.current) {
+                            console.warn('Exporting SVG', hgRef.current.api.exportAsSvg());
+                            // TODO: save as a html file
+                        }
+                    }}
+                >
+                    {' Click here to export svg '}
+                </span>
             </div>
             <div className="editor">
                 <SplitPane className="split-pane-root" split="vertical" defaultSize="40%" onChange={undefined}>

@@ -173,7 +173,10 @@ export function drawRect(HGC: any, trackInfo: any, tile: any, model: GeminidTrac
                 g.beginFill(colorToHex(color), opacity);
                 g.drawRect(xs, rowPosition + ys / yScaleFactor, xe - xs, (ye - ys) / yScaleFactor);
 
-                // Prepare data for tooltips
+                /* SVG data */
+                trackInfo.svgData.push({ type: 'rect', xs, xe, ys, ye, color, stroke, opacity });
+
+                /* Tooltip data */
                 trackInfo.tooltips.push({
                     datum,
                     isMouseOver: (x: number, y: number) =>
