@@ -38,6 +38,7 @@ jobs:
     if: github.ref == 'refs/heads/master'
 
     steps:
+      - uses: actions/checkout@v2
       - name: Deploy editor
         run: |
           git config --global user.name "action@github.com"
