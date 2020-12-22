@@ -42,8 +42,8 @@ jobs:
         run: |
           git config --global user.name "action@github.com"
           git config --global user.email "GitHub Action"
-          git remote set-url origin https://${GITHUB_TOKEN}@github.com/${REPO}.git
+          git remote set-url origin https://${ACCESS_TOKEN}@github.com/${REPO}.git
           yarn deploy
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
           REPO: ${{ github.repository }}
