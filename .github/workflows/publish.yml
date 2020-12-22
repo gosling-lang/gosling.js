@@ -16,7 +16,7 @@ jobs:
         with:
           node-version: 12
       - run: yarn install
-      - run: yarn teset
+      - run: yarn test
       - run: yarn build
 
   publish-npm:
@@ -32,7 +32,7 @@ jobs:
         with:
           node-version: 12
           registry-url: https://registry.npmjs.org/
-      - run: yarn install
+      - run: yarn
       - run: yarn publish
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
