@@ -124,9 +124,6 @@
     "BasicSingleTrack": {
       "additionalProperties": false,
       "properties": {
-        "background": {
-          "$ref": "#/definitions/ChannelValue"
-        },
         "circularLayout": {
           "type": "boolean"
         },
@@ -161,7 +158,7 @@
           "$ref": "#/definitions/DataMetadata"
         },
         "opacity": {
-          "$ref": "#/definitions/ChannelValue"
+          "$ref": "#/definitions/Channel"
         },
         "outerRadius": {
           "type": "number"
@@ -1419,16 +1416,6 @@
       "additionalProperties": false,
       "description": "Superposing multiple tracks.",
       "properties": {
-        "background": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/ChannelValue"
-            },
-            {
-              "$ref": "#/definitions/Channel"
-            }
-          ]
-        },
         "circularLayout": {
           "anyOf": [
             {
@@ -1526,14 +1513,7 @@
           ]
         },
         "opacity": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/ChannelValue"
-            },
-            {
-              "$ref": "#/definitions/Channel"
-            }
-          ]
+          "$ref": "#/definitions/Channel"
         },
         "outerRadius": {
           "anyOf": [
@@ -1611,16 +1591,6 @@
           "items": {
             "additionalProperties": false,
             "properties": {
-              "background": {
-                "anyOf": [
-                  {
-                    "$ref": "#/definitions/ChannelValue"
-                  },
-                  {
-                    "$ref": "#/definitions/Channel"
-                  }
-                ]
-              },
               "circularLayout": {
                 "anyOf": [
                   {
@@ -1718,14 +1688,7 @@
                 ]
               },
               "opacity": {
-                "anyOf": [
-                  {
-                    "$ref": "#/definitions/ChannelValue"
-                  },
-                  {
-                    "$ref": "#/definitions/Channel"
-                  }
-                ]
+                "$ref": "#/definitions/Channel"
               },
               "outerRadius": {
                 "anyOf": [
@@ -2025,16 +1988,6 @@
     "SuperposedTrackTwoLevels": {
       "additionalProperties": false,
       "properties": {
-        "background": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/ChannelValue"
-            },
-            {
-              "$ref": "#/definitions/Channel"
-            }
-          ]
-        },
         "circularLayout": {
           "anyOf": [
             {
@@ -2132,14 +2085,7 @@
           ]
         },
         "opacity": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/ChannelValue"
-            },
-            {
-              "$ref": "#/definitions/Channel"
-            }
-          ]
+          "$ref": "#/definitions/Channel"
         },
         "outerRadius": {
           "anyOf": [
@@ -2217,16 +2163,6 @@
           "items": {
             "additionalProperties": false,
             "properties": {
-              "background": {
-                "anyOf": [
-                  {
-                    "$ref": "#/definitions/ChannelValue"
-                  },
-                  {
-                    "$ref": "#/definitions/Channel"
-                  }
-                ]
-              },
               "circularLayout": {
                 "anyOf": [
                   {
@@ -2324,14 +2260,7 @@
                 ]
               },
               "opacity": {
-                "anyOf": [
-                  {
-                    "$ref": "#/definitions/ChannelValue"
-                  },
-                  {
-                    "$ref": "#/definitions/Channel"
-                  }
-                ]
+                "$ref": "#/definitions/Channel"
               },
               "outerRadius": {
                 "anyOf": [
@@ -2409,16 +2338,6 @@
                 "items": {
                   "additionalProperties": false,
                   "properties": {
-                    "background": {
-                      "anyOf": [
-                        {
-                          "$ref": "#/definitions/ChannelValue"
-                        },
-                        {
-                          "$ref": "#/definitions/Channel"
-                        }
-                      ]
-                    },
                     "circularLayout": {
                       "anyOf": [
                         {
@@ -2516,14 +2435,7 @@
                       ]
                     },
                     "opacity": {
-                      "anyOf": [
-                        {
-                          "$ref": "#/definitions/ChannelValue"
-                        },
-                        {
-                          "$ref": "#/definitions/Channel"
-                        }
-                      ]
+                      "$ref": "#/definitions/Channel"
                     },
                     "outerRadius": {
                       "anyOf": [

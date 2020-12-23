@@ -43,12 +43,6 @@ export function drawBar(HGC: any, trackInfo: any, tile: any, tm: GeminidTrackMod
     const rowCategories = (tm.getChannelDomainArray('row') as string[]) ?? ['___SINGLE_ROW___'];
     const rowHeight = trackHeight / rowCategories.length;
 
-    /* background */
-    if (tm.encodedValue('background')) {
-        tile.graphics.beginFill(colorToHex(tm.encodedValue('background')), 1);
-        tile.graphics.drawRect(xScale(tileX), 0, xScale(tileX + tileWidth) - xScale(tileX), trackHeight);
-    }
-
     /* baseline */
     const baselineValue = IsChannelDeep(spec.y) ? spec.y?.baseline : undefined;
     const baselineY = tm.encodedValue('y', baselineValue) ?? 0;

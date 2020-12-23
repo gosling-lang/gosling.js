@@ -282,8 +282,13 @@ export class GeminidTrackModel {
                 }
                 /* genomic is not supported */
                 break;
-            case 'background':
-                // TODO:
+            case 'strokeWidth':
+            case 'opacity':
+                if (channelFieldType === 'quantitative') {
+                    return (this.channelScales[channelKey] as d3.ScaleLinear<any, any>)(value as number);
+                }
+                /* nominal is not supported */
+                /* genomic is not supported */
                 break;
             default:
                 console.warn(`${channelKey} is not supported for encoding values, so returning a undefined value`);
@@ -532,9 +537,6 @@ export class GeminidTrackModel {
                         case 'text':
                             value = '';
                             break;
-                        case 'background':
-                            value = undefined;
-                            break;
                         default:
                         // console.warn(WARN_MSG(channelKey, 'value'));
                     }
@@ -569,6 +571,12 @@ export class GeminidTrackModel {
                                 break;
                             case 'size':
                                 range = CHANNEL_DEFAULTS.SIZE_RANGE;
+                                break;
+                            case 'strokeWidth':
+                                range = [1, 3];
+                                break;
+                            case 'opacity':
+                                range = [0, 1];
                                 break;
                             default:
                                 // console.warn(WARN_MSG(channelKey, channel.type));
@@ -674,6 +682,8 @@ export class GeminidTrackModel {
                         case 'xe':
                         case 'y':
                         case 'size':
+                        case 'opacity':
+                        case 'strokeWidth':
                             this.channelScales[channelKey] = d3
                                 .scaleLinear()
                                 .domain(domain as [number, number])
