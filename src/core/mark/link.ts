@@ -50,16 +50,15 @@ export function drawLink(HGC: any, trackInfo: any, tile: any, tm: GeminidTrackMo
             const xeValue = getValueUsingChannel(d, spec.xe as Channel) as number;
             const x1Value = getValueUsingChannel(d, spec.x1 as Channel) as number;
             const x1eValue = getValueUsingChannel(d, spec.x1e as Channel) as number;
-            const colorValue = getValueUsingChannel(d, spec.color as Channel) as string;
+
             const stroke = tm.encodedPIXIProperty('stroke', d);
+            const color = tm.encodedPIXIProperty('color', d);
+            const opacity = tm.encodedPIXIProperty('opacity', d);
 
             let x = xScale(xValue);
             let xe = xScale(xeValue);
             let x1 = xScale(x1Value);
             let x1e = xScale(x1eValue);
-
-            const color = tm.encodedValue('color', colorValue);
-            const opacity = tm.encodedValue('opacity');
 
             // stroke
             g.lineStyle(

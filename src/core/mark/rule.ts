@@ -24,9 +24,6 @@ export function drawRule(HGC: any, trackInfo: any, tile: any, tm: GeminidTrackMo
     const linePattern = spec.style?.linePattern;
     const curved = spec.style?.curve;
 
-    /* constant values */
-    const strokeWidth = tm.encodedPIXIProperty('strokeWidth');
-
     /* render */
     rowCategories.forEach(rowCategory => {
         // we are separately drawing each row so that y scale can be more effectively shared across tiles without rerendering from the bottom
@@ -42,6 +39,7 @@ export function drawRule(HGC: any, trackInfo: any, tile: any, tm: GeminidTrackMo
             const xe = tm.encodedPIXIProperty('xe', d);
             const y = tm.encodedPIXIProperty('y', d);
             const color = tm.encodedPIXIProperty('color', d);
+            const strokeWidth = tm.encodedPIXIProperty('strokeWidth', d);
             const opacity = tm.encodedPIXIProperty('opacity', d);
 
             rowGraphics.lineStyle(

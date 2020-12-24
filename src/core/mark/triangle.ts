@@ -57,14 +57,15 @@ export function drawTriangle(HGC: any, trackInfo: any, tile: any, tm: GeminidTra
             const xValue = getValueUsingChannel(d, spec.x as Channel) as number;
             const xeValue = getValueUsingChannel(d, spec.xe as Channel) as number;
             const yValue = getValueUsingChannel(d, spec.y as Channel) as string | number;
-            const colorValue = getValueUsingChannel(d, spec.color as Channel) as string;
             // const sizeValue = getValueUsingChannel(d, spec.size as Channel) as number;
 
             const x = xScale(xValue);
             const xe = xScale(xeValue);
             const y = tm.encodedValue('y', yValue);
-            const color = tm.encodedValue('color', colorValue);
-            const opacity = tm.encodedValue('opacity');
+            const strokeWidth = tm.encodedPIXIProperty('strokeWidth', d);
+            const stroke = tm.encodedPIXIProperty('stroke', d);
+            const color = tm.encodedPIXIProperty('color', d);
+            const opacity = tm.encodedPIXIProperty('opacity', d);
             // const size = tm.encodedValue('size', sizeValue);
 
             // TODO: Consider the `size` channel below
@@ -92,8 +93,8 @@ export function drawTriangle(HGC: any, trackInfo: any, tile: any, tm: GeminidTra
 
             // stroke
             g.lineStyle(
-                tm.encodedValue('strokeWidth'),
-                colorToHex(tm.encodedValue('stroke')),
+                strokeWidth,
+                colorToHex(stroke),
                 0, // actualOpacity, // alpha // TODO: becoming too sharp when drawing narrow triangle
                 0 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
             );

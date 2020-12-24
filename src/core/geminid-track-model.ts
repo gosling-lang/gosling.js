@@ -369,7 +369,7 @@ export class GeminidTrackModel {
      *
      */
     public visualPropertyByChannel(channelKey: keyof typeof ChannelTypes, datum?: { [k: string]: string | number }) {
-        const value = datum !== undefined ? getValueUsingChannel(datum, this.spec()[channelKey] as Channel) : undefined;
+        const value = datum !== undefined ? getValueUsingChannel(datum, this.spec()[channelKey] as Channel) : undefined; // Is this safe enough?
         return this.encodedValue(channelKey, value);
     }
 
