@@ -23,7 +23,7 @@ export function geminidToHiGlass(
     // we only look into the first resolved spec to get information, such as size of the track
     const firstResolvedSpec = resolveSuperposedTracks(gmTrack)[0];
 
-    if (IsDataDeep(firstResolvedSpec.data) && firstResolvedSpec.mark !== 'empty') {
+    if (IsDataDeep(firstResolvedSpec.data)) {
         let server, tilesetUid;
 
         if (IsDataDeepTileset(firstResolvedSpec.data)) {
@@ -93,9 +93,6 @@ export function geminidToHiGlass(
         });
 
         hgModel.validateSpec();
-    } else if (firstResolvedSpec.mark === 'empty') {
-        // The `empty` tracks are used to add gaps between tracks vertically.
-        hgModel.addDefaultView().setLayout(layout).setEmptyTrack(bb.width, bb.height);
     } else if (firstResolvedSpec.mark === 'header') {
         // `text` tracks are used to show title and subtitle of the views
         hgModel.addDefaultView().setLayout(layout);

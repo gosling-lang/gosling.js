@@ -16,13 +16,6 @@ describe('Should produce higlass model correctly', () => {
         expect(higlass.spec().views?.[0].initialYDomain?.[1]).toEqual(CHROMOSOME_INTERVAL_HG38['chr2'][0] + 200);
     });
 
-    it('Should set empty track correctly', () => {
-        const higlass = new HiGlassModel();
-        higlass.addDefaultView();
-        higlass.setEmptyTrack(10, 10);
-        expect(higlass.spec().views?.[0].tracks.center?.[0].type).toEqual('empty');
-    });
-
     it('Should add brush correctly', () => {
         const higlass = new HiGlassModel();
         higlass.addDefaultView();

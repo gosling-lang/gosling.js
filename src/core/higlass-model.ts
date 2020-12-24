@@ -36,6 +36,7 @@ export class HiGlassModel {
     private hg: HiGlassSpec;
     constructor() {
         this.hg = {
+            compactLayout: false,
             trackSourceServers: [],
             views: [],
             zoomLocks: {
@@ -90,21 +91,6 @@ export class HiGlassModel {
         return this;
     }
 
-    // Trick to add a vertical gap between tracks. We are using this trick because HiGlass `layout` do not support vertical gaps.
-    public setEmptyTrack(width: number, height: number) {
-        if (this.getLastView()) {
-            this.getLastView().tracks.center = [
-                {
-                    server: 'http://higlass.io/api/v1',
-                    type: 'empty',
-                    width,
-                    height
-                }
-            ];
-        }
-        return this;
-    }
-
     public addBrush(
         viewId: string,
         fromViewUid?: string,
@@ -136,7 +122,7 @@ export class HiGlassModel {
      * Get the last view that renders any visualization, so skiping empty tracks.
      */
     public getLastVisView() {
-        const vs = this.hg.views.filter(v => (v.tracks as any).center[0].type === 'combined');
+        const vs = this.hg.views.filter(v => (v.tracks as any).center?.[0]?.type === 'combined');
         return vs[vs.length - 1];
     }
 

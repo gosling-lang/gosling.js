@@ -37,12 +37,6 @@ export const EXAMPLE_UPSET: GeminidSpec = {
             ]
         },
         {
-            mark: 'empty',
-            data: { type: 'csv', url: '' },
-            width: 50,
-            height: 50
-        },
-        {
             data: {
                 url: EXAMPLE_DATASETS.multivec,
                 type: 'tileset'

@@ -44,7 +44,8 @@ export function validateTrack(track: Track) {
         // ...
 
         // Additionally, validate the schema with the aspects that cannot be validated by the json schema
-        if (!getGenomicChannelFromTrack(spec)) {
+        if (!getGenomicChannelFromTrack(spec) && spec.mark !== 'rect-brush') {
+            // as an exception, rect-brush can encode no genomic data
             errorMessages.push('genomic type is not encoded to either a x- or y- axis');
             // EXPERIMENTAL: we are removing this rule in our spec.
             valid = false;

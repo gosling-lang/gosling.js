@@ -1,4 +1,4 @@
-import { Track } from '../../../src/core/geminid.schema';
+import { GeminidSpec, Track } from '../../../src/core/geminid.schema';
 import { DEFAULT_TRACK_HEIGHT, DEFAULT_TRACK_WIDTH, DEFAULT_TRACK_GAP } from '../../../src/core/layout/defaults';
 import { getArrangement, getGridInfo } from '../../../src/core/utils/bounding-box';
 
@@ -64,19 +64,19 @@ describe('Arrangement', () => {
     describe('multiple tracks', () => {
         it('2x1', () => {
             const a = getArrangement({ tracks: [t, t] });
-            expect(a).toHaveLength(3); // including an empty track between actual tracks
+            expect(a).toHaveLength(2);
 
             // bounding box
-            expect(a[2].boundingBox.x).toEqual(0);
-            expect(a[2].boundingBox.y).toEqual(DEFAULT_TRACK_HEIGHT + DEFAULT_TRACK_GAP);
+            expect(a[1].boundingBox.x).toEqual(0);
+            expect(a[1].boundingBox.y).toEqual(DEFAULT_TRACK_HEIGHT + DEFAULT_TRACK_GAP);
 
             // relative arrangements for `react-grid-layout`
-            expect(a[2].layout.x).toEqual(0);
-            expect(a[2].layout.y).toEqual(
+            expect(a[1].layout.x).toEqual(0);
+            expect(a[1].layout.y).toEqual(
                 ((DEFAULT_TRACK_HEIGHT + DEFAULT_TRACK_GAP) / (DEFAULT_TRACK_HEIGHT * 2 + DEFAULT_TRACK_GAP)) * 12
             );
-            expect(a[2].layout.w).toEqual(12);
-            expect(a[2].layout.h).toEqual((DEFAULT_TRACK_HEIGHT / (DEFAULT_TRACK_HEIGHT * 2 + DEFAULT_TRACK_GAP)) * 12);
+            expect(a[1].layout.w).toEqual(12);
+            expect(a[1].layout.h).toEqual((DEFAULT_TRACK_HEIGHT / (DEFAULT_TRACK_HEIGHT * 2 + DEFAULT_TRACK_GAP)) * 12);
         });
         it('1x2', () => {
             const a = getArrangement({ layout: { type: 'linear', direction: 'horizontal' }, tracks: [t, t] });
@@ -99,11 +99,41 @@ describe('Arrangement', () => {
                 layout: { type: 'linear', direction: 'horizontal', wrap: 2 },
                 tracks: [t, t, t, t]
             });
-            expect(a).toHaveLength(6); // including empty tracks between actual tracks
+            expect(a).toHaveLength(4);
 
             // bounding box
-            expect(a[5].boundingBox.x).toEqual(DEFAULT_TRACK_WIDTH + DEFAULT_TRACK_GAP);
-            expect(a[5].boundingBox.y).toEqual(DEFAULT_TRACK_HEIGHT + DEFAULT_TRACK_GAP);
+            expect(a[3].boundingBox.x).toEqual(DEFAULT_TRACK_WIDTH + DEFAULT_TRACK_GAP);
+            expect(a[3].boundingBox.y).toEqual(DEFAULT_TRACK_HEIGHT + DEFAULT_TRACK_GAP);
+        });
+        it('12x1 complex', () => {
+            const rowSizes = [30, 44, 44, 44, 44, 44, 44, 44, 100, 100, 90, 100];
+            const rowGaps = [40, 0, 0, 0, 0, 0, 0, 0, 0, 0, 40];
+            const tracks = [t, t, t, t, t, t, t, t, t, t, t, t];
+            const spec: GeminidSpec = {
+                layout: {
+                    type: 'linear',
+                    direction: 'vertical',
+                    columnSizes: [550],
+                    rowSizes,
+                    rowGaps
+                },
+                tracks // 12 tracks
+            };
+
+            const g = getGridInfo(spec);
+            expect(g.height).toEqual(rowSizes.reduce((a, b) => a + b, 0) + rowGaps.reduce((a, b) => a + b, 0));
+
+            const a = getArrangement(spec);
+            expect(a).toHaveLength(tracks.length);
+
+            // bounding box of the last one
+            expect(a[tracks.length - 1].boundingBox.x).toEqual(0);
+            expect(a[tracks.length - 1].boundingBox.y).toEqual(
+                rowSizes.reduce((a, b) => a + b, 0) + rowGaps.reduce((a, b) => a + b, 0) - 100 /* last track's height */
+            );
+            expect(a[tracks.length - 1].layout.y).toEqual(
+                (1 - 100 / (rowSizes.reduce((a, b) => a + b, 0) + rowGaps.reduce((a, b) => a + b, 0))) * 12
+            );
         });
     });
 });
