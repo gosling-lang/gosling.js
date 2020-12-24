@@ -1,7 +1,13 @@
 import { GeminidSpec, Track } from '../geminid.schema';
-import { DEFAULT_TRACK_GAP, DEFAULT_TRACK_HEIGHT, DEFAULT_TRACK_WIDTH } from '../layout/defaults';
+import {
+    DEFAULT_SUBTITLE_HEIGHT,
+    DEFAULT_TITLE_HEIGHT,
+    DEFAULT_TRACK_GAP,
+    DEFAULT_TRACK_HEIGHT,
+    DEFAULT_TRACK_WIDTH
+} from '../layout/defaults';
 import { resolveSuperposedTracks } from '../utils/superpose';
-import { arrayRepeat } from './array';
+import { arrayRepeat, insertItemToArray } from './array';
 
 export interface Size {
     width: number;
@@ -92,15 +98,34 @@ export function getGridInfo(spec: GeminidSpec): GridInfo {
             : spec.layout?.rowGaps;
 
     const columnSizes = arrayRepeat(baseColumnSizes, numColumns);
-    const rowSizes = arrayRepeat(baseRowSizes, numRows);
     const columnGaps = arrayRepeat(baseColumnGaps, numColumns - 1);
-    const rowGaps = arrayRepeat(baseRowGaps, numRows - 1);
+    let rowSizes = arrayRepeat(baseRowSizes, numRows);
+    let rowGaps = arrayRepeat(baseRowGaps, numRows - 1);
+
+    // consider title and subtitle if any
+    if (spec.title || spec.subtitle) {
+        const headerHeight = (spec.title ? DEFAULT_TITLE_HEIGHT : 0) + (spec.subtitle ? DEFAULT_SUBTITLE_HEIGHT : 0);
+        rowSizes = insertItemToArray(rowSizes, 0, headerHeight);
+        rowGaps = insertItemToArray(rowGaps, 0, 0);
+    }
 
     const width = columnSizes.reduce((a, b) => a + b, 0) + columnGaps.reduce((a, b) => a + b, 0);
     const height = rowSizes.reduce((a, b) => a + b, 0) + rowGaps.reduce((a, b) => a + b, 0);
 
     return { width, height, columnSizes, rowSizes, columnGaps, rowGaps };
 }
+
+const getTextTrack = (size: Size, title?: string, subtitle?: string) => {
+    return JSON.parse(
+        JSON.stringify({
+            mark: 'header',
+            width: size.width,
+            height: size.height,
+            title,
+            subtitle
+        })
+    ) as Track;
+};
 
 const getGapTrack = (size: Size) => {
     return JSON.parse(
@@ -128,6 +153,22 @@ export function getArrangement(spec: GeminidSpec): TrackInfo[] {
     let ri = 0;
 
     const info: TrackInfo[] = [];
+
+    // consider title and subtitle if any
+    if (spec.title || spec.subtitle) {
+        const height = rowSizes[ri];
+        info.push({
+            track: getTextTrack({ width: totalWidth, height }, spec.title, spec.subtitle),
+            boundingBox: { x: 0, y: 0, width: totalWidth, height },
+            layout: {
+                x: 0,
+                y: 0,
+                w: 12.0,
+                h: (height / totalHeight) * 12.0
+            }
+        });
+        ri++;
+    }
 
     spec.tracks.forEach(track => {
         const span = typeof track.span === 'number' ? track.span : 1;

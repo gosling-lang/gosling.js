@@ -11,7 +11,7 @@ export function getLinkingInfo(hgModel: HiGlassModel) {
 
     hgModel.spec().views.forEach(v => {
         const viewId = v.uid;
-        const spec = /* TODO: */ (v.tracks as any).center?.[0].contents?.[0].options.spec;
+        const spec = /* TODO: */ (v.tracks as any).center?.[0]?.contents?.[0]?.options?.spec;
 
         if (!viewId || !spec) return;
 

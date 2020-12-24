@@ -212,4 +212,5 @@ export type EnumTrackType =
     // Not included in the HiGlass schema, but used in its exmaples
     | 'empty'
     // custom tracks
-    | 'gemini-track';
+    | 'gemini-track'
+    | 'text';

@@ -6,6 +6,7 @@ import { BoundingBox, RelativePosition } from './utils/bounding-box';
 import { resolveSuperposedTracks } from './utils/superpose';
 import { getGenomicChannelKeyFromTrack, getGenomicChannelFromTrack } from './utils/validate';
 import { IsDataDeep, IsChannelDeep, IsDataDeepTileset } from './geminid.schema.guards';
+import { DEFAULT_SUBTITLE_HEIGHT, DEFAULT_TITLE_HEIGHT } from './layout/defaults';
 
 /**
  * Convert a gemini track into a HiGlass view and add it into a higlass model.
@@ -95,6 +96,15 @@ export function geminidToHiGlass(
     } else if (firstResolvedSpec.mark === 'empty') {
         // The `empty` tracks are used to add gaps between tracks vertically.
         hgModel.addDefaultView().setLayout(layout).setEmptyTrack(bb.width, bb.height);
+    } else if (firstResolvedSpec.mark === 'header') {
+        // `text` tracks are used to show title and subtitle of the views
+        hgModel.addDefaultView().setLayout(layout);
+        if (typeof firstResolvedSpec.title === 'string') {
+            hgModel.setTextTrack(bb.width, DEFAULT_TITLE_HEIGHT, firstResolvedSpec.title, 'black', 18, 'bold');
+        }
+        if (typeof firstResolvedSpec.subtitle === 'string') {
+            hgModel.setTextTrack(bb.width, DEFAULT_SUBTITLE_HEIGHT, firstResolvedSpec.subtitle, 'gray', 14, 'normal');
+        }
     }
     return hgModel;
 }

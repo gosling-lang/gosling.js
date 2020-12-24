@@ -3,6 +3,8 @@ import { GeminidTrack } from '../higlass-geminid-track/index';
 import { CSVDataFetcher } from '../higlass-csv-datafetcher/index';
 import { RawDataFetcher } from '../higlass-raw-datafetcher/index';
 // @ts-ignore
+import { TextTrack } from 'higlass-text';
+// @ts-ignore
 import { HiGlassComponent } from 'higlass';
 // @ts-ignore
 import { default as higlassRegister } from 'higlass-register';
@@ -30,6 +32,15 @@ higlassRegister({
     name: 'GeminidTrack',
     track: GeminidTrack,
     config: GeminidTrack.config
+});
+
+/**
+ * Register a higlass-text plugin track to HiGlassComponent
+ */
+higlassRegister({
+    name: 'TextTrack',
+    track: TextTrack,
+    config: TextTrack.config
 });
 
 /**
