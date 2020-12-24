@@ -190,8 +190,7 @@ export interface BasicSingleTrack {
 
     stroke?: Channel;
     strokeWidth?: Channel;
-    opacity?: ChannelValue;
-    background?: ChannelValue;
+    opacity?: Channel;
 
     // Experimental
     stackY?: boolean; // Eventually, will be added to y's `Channel` w/ gap
@@ -219,6 +218,7 @@ export type SuperposedTrackTwoLevels = Partial<SingleTrack> & {
 };
 
 export interface TrackStyle {
+    background?: string;
     dashed?: [number, number];
     linePattern?: { type: 'triangle-l' | 'triangle-r'; size: number };
     curve?: 'top' | 'bottom' | 'left' | 'right';
@@ -233,7 +233,6 @@ export interface TrackStyle {
     textStrokeWidth?: number;
     textFontWeight?: 'bold' | 'normal';
     //
-    background?: string; // deprecated
     stroke?: string; // deprecated
     strokeWidth?: number; // deprecated
 }
@@ -280,8 +279,7 @@ export const enum CHANNEL_KEYS {
     stroke = 'stroke',
     strokeWidth = 'strokeWidth',
     size = 'size',
-    text = 'text',
-    background = 'background'
+    text = 'text'
 }
 
 /**
@@ -305,8 +303,7 @@ export const ChannelTypes = {
     stroke: 'stroke',
     strokeWidth: 'strokeWidth',
     size: 'size',
-    text: 'text',
-    background: 'background'
+    text: 'text'
 } as const;
 
 export type ChannelType = keyof typeof ChannelTypes | string;

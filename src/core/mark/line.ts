@@ -15,12 +15,6 @@ export function drawLine(HGC: any, trackInfo: any, tile: any, tm: GeminidTrackMo
 
     /* track size */
     const [trackWidth, trackHeight] = trackInfo.dimensions;
-    const tileSize = trackInfo.tilesetInfo.tile_size;
-    const { tileX, tileWidth } = trackInfo.getTilePosAndDimensions(
-        tile.tileData.zoomLevel,
-        tile.tileData.tilePos,
-        tileSize
-    );
 
     /* circular parameters */
     const circular = spec.circularLayout;
@@ -32,21 +26,12 @@ export function drawLine(HGC: any, trackInfo: any, tile: any, tm: GeminidTrackMo
     const cx = trackWidth / 2.0;
     const cy = trackHeight / 2.0;
 
-    /* genomic scale */
-    const xScale = tm.getChannelScale('x');
-
     /* row separation */
     const rowCategories = (tm.getChannelDomainArray('row') as string[]) ?? ['___SINGLE_ROW___'];
     const rowHeight = trackHeight / rowCategories.length;
 
     /* color separation */
     const colorCategories = (tm.getChannelDomainArray('color') as string[]) ?? ['___SINGLE_COLOR___'];
-
-    /* background */
-    if (tm.encodedValue('background')) {
-        tile.graphics.beginFill(colorToHex(tm.encodedValue('background')), 1);
-        tile.graphics.drawRect(xScale(tileX), 0, xScale(tileX + tileWidth) - xScale(tileX), trackHeight);
-    }
 
     /* render */
     const graphics = tile.graphics;

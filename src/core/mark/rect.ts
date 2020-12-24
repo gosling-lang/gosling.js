@@ -50,10 +50,6 @@ export function drawRect(HGC: any, trackInfo: any, tile: any, model: GeminidTrac
     const yCategories = (model.getChannelDomainArray('y') as string[]) ?? ['___SINGLE_Y_POSITION___'];
     const cellHeight = rowHeight / yCategories.length;
 
-    /* constant values */
-    const strokeWidth = model.encodedPIXIProperty('strokeWidth');
-    // const stroke = model.encodedValue('stroke');
-
     /* render */
     const g = tile.graphics;
     rowCategories.forEach(rowCategory => {
@@ -70,6 +66,7 @@ export function drawRect(HGC: any, trackInfo: any, tile: any, model: GeminidTrac
             ye: number;
             color: string;
             stroke: string;
+            strokeWidth: number;
             opacity: number;
             datum: Datum;
         }[] = [];
@@ -84,6 +81,7 @@ export function drawRect(HGC: any, trackInfo: any, tile: any, model: GeminidTrac
                 const x = model.encodedPIXIProperty('x', d);
                 const color = model.encodedPIXIProperty('color', d);
                 const stroke = model.encodedPIXIProperty('stroke', d);
+                const strokeWidth = model.encodedPIXIProperty('strokeWidth', d);
                 const opacity = model.encodedPIXIProperty('opacity', d);
                 const rectWidth = model.encodedPIXIProperty('width', d, { markWidth: tileUnitWidth });
                 const rectHeight = model.encodedPIXIProperty('height', d, { markHeight: cellHeight });
@@ -132,6 +130,7 @@ export function drawRect(HGC: any, trackInfo: any, tile: any, model: GeminidTrac
                     ye: y + rectHeight,
                     color,
                     stroke,
+                    strokeWidth,
                     opacity: actualOpacity,
                     datum: d
                 });
@@ -141,7 +140,7 @@ export function drawRect(HGC: any, trackInfo: any, tile: any, model: GeminidTrac
         const yScaleFactor = 1; // Math.max(...pixiProps.map(d => d.ye)) / rowHeight;
 
         pixiProps.forEach(prop => {
-            const { xs, xe, ys, ye, color, stroke, opacity, datum } = prop;
+            const { xs, xe, ys, ye, color, stroke, strokeWidth, opacity, datum } = prop;
 
             // stroke
             g.lineStyle(
