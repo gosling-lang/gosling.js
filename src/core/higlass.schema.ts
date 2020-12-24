@@ -9,6 +9,7 @@ export interface HiGlassSpec {
     zoomFixed?: boolean;
     viewEditable?: boolean;
     tracksEditable?: boolean;
+    compactLayout?: boolean;
     trackSourceServers?: string[];
     exportViewUrl?: string;
     chromInfoPath?: string;
@@ -209,8 +210,6 @@ export type EnumTrackType =
     | 'viewport-projection-center'
     | 'viewport-projection-horizontal'
     | 'viewport-projection-vertical'
-    // Not included in the HiGlass schema, but used in its exmaples
-    | 'empty'
     // custom tracks
     | 'gemini-track'
     | 'text';

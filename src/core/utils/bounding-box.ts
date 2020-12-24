@@ -127,17 +127,6 @@ const getTextTrack = (size: Size, title?: string, subtitle?: string) => {
     ) as Track;
 };
 
-const getGapTrack = (size: Size) => {
-    return JSON.parse(
-        JSON.stringify({
-            mark: 'empty',
-            data: { type: 'csv', url: 'tileset_info/?d=' },
-            width: size.width,
-            height: size.height
-        })
-    ) as Track;
-};
-
 // TODO: handle overflow by the ill-defined spec
 /**
  *
@@ -216,34 +205,9 @@ export function getArrangement(spec: GeminidSpec): TrackInfo[] {
         }
 
         if (spec.layout?.direction === 'horizontal') {
-            ci += span;
+            ci += typeof track.span === 'number' ? track.span : 1;
 
             if (ci >= numColumns && ri < numRows - 1) {
-                // Add between-row gaps.
-                const yOffset = y + height;
-                const gapHeight = rowGaps[ri];
-
-                if (gapHeight !== 0) {
-                    Array(numColumns)
-                        .fill(0)
-                        .forEach((_, _ci) => {
-                            const xOffset =
-                                columnSizes.slice(0, _ci).reduce((a, b) => a + b, 0) +
-                                columnGaps.slice(0, _ci).reduce((a, b) => a + b, 0);
-                            const colWidth = columnSizes[_ci];
-                            info.push({
-                                track: getGapTrack({ width: colWidth, height: gapHeight }),
-                                boundingBox: { x: xOffset, y: yOffset, width: colWidth, height: gapHeight },
-                                layout: {
-                                    x: (xOffset / totalWidth) * 12.0,
-                                    y: (yOffset / totalHeight) * 12.0,
-                                    w: (colWidth / totalWidth) * 12.0,
-                                    h: (gapHeight / totalHeight) * 12.0
-                                }
-                            });
-                        });
-                }
-
                 ci = 0;
                 ri++;
             }
@@ -254,27 +218,6 @@ export function getArrangement(spec: GeminidSpec): TrackInfo[] {
             if (ri >= numRows) {
                 ri = 0;
                 ci++;
-            } else {
-                // Add between-row gaps.
-                if (ri < numRows) {
-                    const yOffset = y + height;
-                    const xOffset = x;
-                    const gapHeight = rowGaps[ri - 1];
-                    const colWidth = width;
-
-                    if (gapHeight !== 0) {
-                        info.push({
-                            track: getGapTrack({ width: colWidth, height: gapHeight }),
-                            boundingBox: { x: xOffset, y: yOffset, width: colWidth, height: gapHeight },
-                            layout: {
-                                x: (xOffset / totalWidth) * 12.0,
-                                y: (yOffset / totalHeight) * 12.0,
-                                w: (colWidth / totalWidth) * 12.0,
-                                h: (gapHeight / totalHeight) * 12.0
-                            }
-                        });
-                    }
-                }
             }
         }
     });

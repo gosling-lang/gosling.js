@@ -122,10 +122,6 @@ export interface OneOfFilter {
     not: boolean;
 }
 
-// TODO: Ensure to use `EmptyTrack` for the convenient
-// export type Track = EmptyTrack | NonEmptyTrack;
-// export type NonEmptyTrack = SingleTrack | SuperposedTrack | SuperposedTrackTwoLevels;
-
 export type Track = SingleTrack | SuperposedTrack | SuperposedTrackTwoLevels;
 
 export type SingleTrack = BasicSingleTrack | CustomChannel;
@@ -136,12 +132,6 @@ export type CustomChannel = {
 } & {
     [k in CHANNEL_KEYS]?: never;
 };
-
-export interface EmptyTrack {
-    type: 'empty';
-    width: number;
-    height: number;
-}
 
 export interface BasicSingleTrack {
     title?: string;
@@ -385,8 +375,6 @@ export type MarkType =
     | 'link-between'
     | 'link-within' // uses either x and x1 or y and y1
     | 'dummy'
-    // being used to add gaps between tracks
-    | 'empty'
     // being used to show title/subtitle internally
     | 'header';
 

@@ -36,7 +36,7 @@
         "d3-scale": "^3.2.1",
         "file-loader": "^6.0.0",
         "gh-pages": "^2.2.0",
-        "higlass": "^1.11.3",
+        "higlass": "1.11.5",
         "higlass-register": "^0.3.0",
         "higlass-text": "^0.1.1",
         "json-stringify-pretty-compact": "^2.0.0",
