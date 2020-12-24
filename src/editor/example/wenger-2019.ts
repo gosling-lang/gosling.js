@@ -2,7 +2,6 @@ import { GeminidSpec, Track } from '../../core/geminid.schema';
 
 export const EXAMPLE_2019_WENGER_TRACK: Track = {
     description: 'https://www.ncbi.nlm.nih.gov/dbvar/browse/org/?assm=GCF_000001405.25&studies=nstd167',
-    title: 'Wenger et al. 2019 (nstd167)',
     data: {
         type: 'csv',
         url: 'https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/variants_for_nstd167.csv',
@@ -44,7 +43,8 @@ export const EXAMPLE_2019_WENGER_TRACK: Track = {
 };
 
 export const EXAMPLE_2019_WENGER: GeminidSpec = {
-    description: 'https://www.ncbi.nlm.nih.gov/dbvar/browse/org/?assm=GCF_000001405.25&studies=nstd167',
+    title: 'Wenger et al. 2019 (nstd167)',
+    subtitle: 'Data is from https://www.ncbi.nlm.nih.gov/dbvar/browse/org/?assm=GCF_000001405.25&studies=nstd167',
     layout: {
         type: 'linear',
         direction: 'vertical',

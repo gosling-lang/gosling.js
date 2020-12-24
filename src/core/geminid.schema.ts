@@ -4,6 +4,9 @@ import { GLYPH_LOCAL_PRESET_TYPE, GLYPH_HIGLASS_PRESET_TYPE } from '../editor/ex
  * Root-level specification
  */
 export type GeminidSpec = {
+    title?: string;
+    subtitle?: string;
+
     static?: boolean;
     description?: string;
 
@@ -142,6 +145,7 @@ export interface EmptyTrack {
 
 export interface BasicSingleTrack {
     title?: string;
+    subtitle?: string;
     description?: string;
     zoomable?: boolean;
 
@@ -381,7 +385,10 @@ export type MarkType =
     | 'link-between'
     | 'link-within' // uses either x and x1 or y and y1
     | 'dummy'
-    | 'empty';
+    // being used to add gaps between tracks
+    | 'empty'
+    // being used to show title/subtitle internally
+    | 'header';
 
 /**
  * Glyph

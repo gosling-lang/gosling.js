@@ -62,6 +62,34 @@ export class HiGlassModel {
         return this;
     }
 
+    public setTextTrack(
+        width: number,
+        height: number,
+        text: string,
+        textColor = 'black',
+        fontSize = 14,
+        fontWeight = 'normal'
+    ) {
+        if (this.getLastView()) {
+            this.getLastView().tracks.top?.push({
+                type: 'text',
+                width,
+                height,
+                options: {
+                    backgroundColor: 'white',
+                    textColor,
+                    fontSize,
+                    fontWeight,
+                    fontFamily: 'Arial',
+                    offsetY: 0, // offset from the top of the track
+                    align: 'left',
+                    text
+                }
+            });
+        }
+        return this;
+    }
+
     // Trick to add a vertical gap between tracks. We are using this trick because HiGlass `layout` do not support vertical gaps.
     public setEmptyTrack(width: number, height: number) {
         if (this.getLastView()) {

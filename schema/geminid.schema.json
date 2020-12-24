@@ -190,6 +190,9 @@
         "style": {
           "$ref": "#/definitions/TrackStyle"
         },
+        "subtitle": {
+          "type": "string"
+        },
         "superposeOnPreviousTrack": {
           "type": "boolean"
         },
@@ -647,6 +650,12 @@
         },
         "static": {
           "type": "boolean"
+        },
+        "subtitle": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
         },
         "tracks": {
           "items": {
@@ -1252,7 +1261,8 @@
         "link-between",
         "link-within",
         "dummy",
-        "empty"
+        "empty",
+        "header"
       ],
       "type": "string"
     },
@@ -1587,6 +1597,16 @@
             }
           ]
         },
+        "subtitle": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "$ref": "#/definitions/Channel"
+            }
+          ]
+        },
         "superpose": {
           "items": {
             "additionalProperties": false,
@@ -1756,6 +1776,16 @@
                 "anyOf": [
                   {
                     "$ref": "#/definitions/TrackStyle"
+                  },
+                  {
+                    "$ref": "#/definitions/Channel"
+                  }
+                ]
+              },
+              "subtitle": {
+                "anyOf": [
+                  {
+                    "type": "string"
                   },
                   {
                     "$ref": "#/definitions/Channel"
@@ -2159,6 +2189,16 @@
             }
           ]
         },
+        "subtitle": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "$ref": "#/definitions/Channel"
+            }
+          ]
+        },
         "superpose": {
           "items": {
             "additionalProperties": false,
@@ -2334,6 +2374,16 @@
                   }
                 ]
               },
+              "subtitle": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "$ref": "#/definitions/Channel"
+                  }
+                ]
+              },
               "superpose": {
                 "items": {
                   "additionalProperties": false,
@@ -2503,6 +2553,16 @@
                       "anyOf": [
                         {
                           "$ref": "#/definitions/TrackStyle"
+                        },
+                        {
+                          "$ref": "#/definitions/Channel"
+                        }
+                      ]
+                    },
+                    "subtitle": {
+                      "anyOf": [
+                        {
+                          "type": "string"
                         },
                         {
                           "$ref": "#/definitions/Channel"
