@@ -116,11 +116,11 @@ export class GeminidTrackModel {
         if (!spec.height) {
             spec.height = 300;
         }
-        if (!spec.innerRadius) {
-            spec.innerRadius = 220;
-        }
         if (!spec.outerRadius) {
-            spec.outerRadius = 300;
+            spec.outerRadius = Math.min(spec.width, spec.height) / 2.0;
+        }
+        if (!spec.innerRadius) {
+            spec.innerRadius = Math.max(spec.outerRadius - 80, 0);
         }
 
         // TODO: better way to deal with axis?
