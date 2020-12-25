@@ -114,7 +114,6 @@ function Editor(props: any) {
      * HiGlass components to render Gemini Tracks.
      */
     const hglass = useMemo(() => {
-        const editedGm = JSON.parse(stripJsonComments(gm));
         return hg && size ? (
             <>
                 <div
@@ -159,17 +158,6 @@ function Editor(props: any) {
                         />
                     </div>
                 </div>
-                {editedGm.description ? (
-                    <div
-                        style={{
-                            width: size.width + 120,
-                            padding: 20,
-                            color: 'gray'
-                        }}
-                    >
-                        {editedGm.description}
-                    </div>
-                ) : null}
             </>
         ) : null;
     }, [hg, gm, size]);
