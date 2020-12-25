@@ -55,6 +55,10 @@ const INIT_DEMO_INDEX = examples.findIndex(d => d.forceShow) !== -1 ? examples.f
 // Limit of the character length to allow copy to clipboard
 const LIMIT_CLIPBOARD_LEN = 4096;
 
+// ! these should be updated upon change in css files
+const EDITOR_HEADER_HEIGHT = 30;
+const VIEWCONFIG_HEADER_HEIGHT = 30;
+
 // TODO: what is the type of prop?
 /**
  * React component for editing Gemini specs
@@ -70,6 +74,8 @@ function Editor(props: any) {
     const [size, setSize] = useState<{ width: number; height: number }>();
     const [gm, setGm] = useState(stringify(urlSpec ?? (examples[INIT_DEMO_INDEX].spec as GeminidSpec)));
     const [log, setLog] = useState<Validity>({ message: '', state: 'success' });
+    const [showVC, setShowVC] = useState<boolean>(false);
+    const [isMaximizeVis, setIsMaximizeVis] = useState<boolean>(false);
 
     const hgRef = useRef<any>();
 
@@ -264,9 +270,29 @@ function Editor(props: any) {
                     </svg>
                 </span>
             </div>
+            {/* ------------ main view ------------ */}
             <div className="editor">
-                <SplitPane className="split-pane-root" split="vertical" defaultSize="40%" onChange={undefined}>
-                    <SplitPane split="horizontal" defaultSize="calc(100% - 48px)" onChange={undefined}>
+                <SplitPane
+                    className="split-pane-root"
+                    split="vertical"
+                    defaultSize={'40%'}
+                    size={isMaximizeVis ? '0px' : '40%'}
+                    minSize="0px"
+                >
+                    <SplitPane
+                        split="horizontal"
+                        defaultSize="calc(100% - 30px)"
+                        maxSize={window.innerHeight - EDITOR_HEADER_HEIGHT - VIEWCONFIG_HEADER_HEIGHT}
+                        onChange={(size: number) => {
+                            const secondSize = window.innerHeight - EDITOR_HEADER_HEIGHT - size;
+                            if (secondSize > VIEWCONFIG_HEADER_HEIGHT && !showVC) {
+                                setShowVC(true);
+                            } else if (secondSize <= VIEWCONFIG_HEADER_HEIGHT && showVC) {
+                                // hide the viewConfig view when no enough space assigned
+                                setShowVC(false);
+                            }
+                        }}
+                    >
                         {/* Gemini Editor */}
                         <>
                             <EditorPanel
@@ -279,12 +305,14 @@ function Editor(props: any) {
                             <div className={`compile-message compile-message-${log.state}`}>{log.message}</div>
                         </>
                         {/* HiGlass View Config */}
-                        <SplitPane split="vertical" defaultSize="100%" onChange={undefined}>
+                        <SplitPane split="vertical" defaultSize="100%">
                             <>
                                 <div className="editor-header">
-                                    <b>Compiled HiGlass ViewConfigs</b> (Read Only)
+                                    <b>Compiled HiGlass ViewConfig</b> (Read Only)
                                 </div>
-                                <EditorPanel code={stringify(hg)} readOnly={true} onChange={undefined} />
+                                <div style={{ height: '100%', visibility: showVC ? 'visible' : 'hidden' }}>
+                                    <EditorPanel code={stringify(hg)} readOnly={true} />
+                                </div>
                             </>
                             {/**
                              * TODO: This is only for showing a scroll view for the higlass view config editor
@@ -297,6 +325,50 @@ function Editor(props: any) {
                     <div className="preview-container">{hglass}</div>
                 </SplitPane>
             </div>
+            {/* ------------ floating buttons ------------ */}
+            <span
+                title={isMaximizeVis ? 'Show Geminid code' : 'Maximize a visualization panel'}
+                style={{
+                    position: 'fixed',
+                    right: '10px',
+                    top: '40px',
+                    color: 'black',
+                    cursor: 'pointer'
+                }}
+                onClick={() => {
+                    setIsMaximizeVis(!isMaximizeVis);
+                }}
+            >
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    strokeWidth="2"
+                    stroke="currentColor"
+                    fill="none"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                >
+                    {isMaximizeVis ? (
+                        <>
+                            <path d="M5 9h2a2 2 0 0 0 2 -2v-2" />
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                            <path d="M15 19v-2a2 2 0 0 1 2 -2h2" />
+                            <path d="M15 5v2a2 2 0 0 0 2 2h2" />
+                            <path d="M5 15h2a2 2 0 0 1 2 2v2" />
+                        </>
+                    ) : (
+                        <>
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                            <path d="M4 8v-2a2 2 0 0 1 2 -2h2" />
+                            <path d="M4 16v2a2 2 0 0 0 2 2h2" />
+                            <path d="M16 4h2a2 2 0 0 1 2 2v2" />
+                            <path d="M16 20h2a2 2 0 0 0 2 -2v-2" />
+                        </>
+                    )}
+                </svg>
+            </span>
         </>
     );
 }

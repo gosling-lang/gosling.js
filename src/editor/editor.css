@@ -17,11 +17,11 @@
 
 .editor {
     width: 100%;
-    height: calc(100% - 34px);
+    height: calc(100% - 30px);
 }
 
 .split-pane-root {
-    height: calc(100% - 34px) !important;
+    height: calc(100% - 30px) !important;
 }
 
 .editor-header {
@@ -37,7 +37,7 @@
 .preview-container {
     width: 100%;
     height: 100%;
-    padding: 10px;
+    padding: 6px;
     background: #f6f6f6;
     overflow-y: auto;
 }
