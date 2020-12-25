@@ -11,31 +11,31 @@
 // @output_file_name JSONCrush.min.js
 // ==/ClosureCompiler==
 
-export const JSONCrush=(string, maxSubstringLength=50)=>
+export const JSONCrush=(s: string, maxSubstringLength=50)=>
 {
     const delimiter = '\u0001'; // used to split parts of crushed string
         
-    const JSCrush=(string, replaceCharacters)=>
+    const JSCrush=(str: string, replaceCharacters: any)=>
     {
         // JSCrush Algorithm (repleace repeated substrings with single characters)
         let replaceCharacterPos = replaceCharacters.length;
         let splitString = '';
         
-        const ByteLength =(string)=>encodeURI(encodeURIComponent(string)).replace(/%../g,'i').length;
-        const HasUnmatchedSurrogate =(string)=>
+        const ByteLength =(_str: string)=>encodeURI(encodeURIComponent(_str)).replace(/%../g,'i').length;
+        const HasUnmatchedSurrogate =(_str: string)=>
         {
             // check ends of string for unmatched surrogate pairs
-            let c1 = string.charCodeAt(0);
-            let c2 = string.charCodeAt(string.length-1);
+            let c1 = _str.charCodeAt(0);
+            let c2 = _str.charCodeAt(_str.length-1);
             return (c1 >= 0xDC00 && c1 <= 0xDFFF) || (c2 >= 0xD800 && c2 <= 0xDBFF);
         }
         
         // count instances of substrings
-        let substringCount = {};
+        let substringCount: any = {};
         for (let substringLength = 2; substringLength < maxSubstringLength; substringLength++)
-        for (let i = 0; i < string.length - substringLength; ++i)
+        for (let i = 0; i < str.length - substringLength; ++i)
         {
-            let substring = string.substr(i, substringLength);
+            let substring = str.substr(i, substringLength);
 
             // don't recount if already in list
             if (substringCount[substring])
@@ -47,8 +47,8 @@ export const JSONCrush=(string, maxSubstringLength=50)=>
 
             // count how many times the substring appears
             let count = 1;
-            for (let substringPos = string.indexOf(substring, i+substringLength); substringPos >= 0; ++count)
-                substringPos = string.indexOf(substring, substringPos + substringLength);
+            for (let substringPos = str.indexOf(substring, i+substringLength); substringPos >= 0; ++count)
+                substringPos = str.indexOf(substring, substringPos + substringLength);
                 
             // add to list if it appears multiple times
             if (count > 1)
@@ -58,7 +58,7 @@ export const JSONCrush=(string, maxSubstringLength=50)=>
         while(true) // loop while string can be crushed more
         {
             // get the next character that is not in the string
-            for (;replaceCharacterPos-- && string.includes(replaceCharacters[replaceCharacterPos]);){}
+            for (;replaceCharacterPos-- && str.includes(replaceCharacters[replaceCharacterPos]);){}
             if (replaceCharacterPos < 0)
                 break; // ran out of replacement characters
             let replaceCharacter = replaceCharacters[replaceCharacterPos];
@@ -86,11 +86,11 @@ export const JSONCrush=(string, maxSubstringLength=50)=>
                 break; // string can't be compressed further
                 
             // create new string with the split character
-            string = string.split(bestSubstring).join(replaceCharacter) + replaceCharacter + bestSubstring;
+            str = str.split(bestSubstring).join(replaceCharacter) + replaceCharacter + bestSubstring;
             splitString = replaceCharacter + splitString;
             
             // update substring count list after the replacement
-            let newSubstringCount = {};
+            let newSubstringCount : any = {};
             for (let substring in substringCount)
             {
                 // make a new substring with the replacement
@@ -98,8 +98,8 @@ export const JSONCrush=(string, maxSubstringLength=50)=>
                 
                 // count how many times the new substring appears
                 let count = 0;
-                for (let i = string.indexOf(newSubstring); i >= 0; ++count)
-                    i = string.indexOf(newSubstring, i + newSubstring.length);
+                for (let i = str.indexOf(newSubstring); i >= 0; ++count)
+                    i = str.indexOf(newSubstring, i + newSubstring.length);
                     
                 // add to list if it appears multiple times
                 if (count > 1)
@@ -109,7 +109,7 @@ export const JSONCrush=(string, maxSubstringLength=50)=>
             substringCount = newSubstringCount;
         }
 
-        return {a:string, b:splitString};
+        return {a:str, b:splitString};
     }
     
     // create a string of replacement characters
@@ -138,13 +138,13 @@ export const JSONCrush=(string, maxSubstringLength=50)=>
     }
 
     // remove delimiter if it is found in the string
-    string = string.replace(new RegExp(delimiter,'g'),'');
+    s = s.replace(new RegExp(delimiter,'g'),'');
     
     // swap out common json characters
-    string = JSONCrushSwap(string);
+    s = JSONCrushSwap(s);
     
     // crush with JS crush
-    const crushed = JSCrush(string, characters);
+    const crushed = JSCrush(s, characters);
     
     // insert delimiter between JSCrush parts
     let crushedString = crushed.a;
@@ -158,15 +158,15 @@ export const JSONCrush=(string, maxSubstringLength=50)=>
     return encodeURIComponent(crushedString);
 }
 
-export const JSONUncrush=(string)=>
+export const JSONUncrush=(str: string)=>
 {
     // string must be a decoded URI component, searchParams.get() does this automatically
     
     // remove last character
-    string = string.substring(0, string.length - 1);
+    str = str.substring(0, str.length - 1);
 
     // unsplit the string using the delimiter
-    const stringParts = string.split('\u0001');
+    const stringParts = str.split('\u0001');
     
     // JSUncrush algorithm
     let uncrushedString = stringParts[0];
@@ -187,7 +187,7 @@ export const JSONUncrush=(string)=>
     return JSONCrushSwap(uncrushedString, 0);
 }
 
-export const JSONCrushSwap=(string, forward=1)=>
+export const JSONCrushSwap=(str: string, forward=1)=>
 {
     // swap out characters for lesser used ones that wont get escaped
     const swapGroups = 
@@ -199,19 +199,19 @@ export const JSONCrushSwap=(string, forward=1)=>
         ['{', "(", '\\', '\\'],
     ];
     
-    const Swap=(string, g)=>
+    const Swap=(_str: string, g: any)=>
     {
         let regex = new RegExp(`${(g[2]?g[2]:'')+g[0]}|${(g[3]?g[3]:'')+g[1]}`,'g');
-        return string.replace(regex, $1 => ($1 === g[0] ? g[1] : g[0]));
+        return _str.replace(regex, $1 => ($1 === g[0] ? g[1] : g[0]));
     }
 
     // need to be able to swap characters in reverse direction for uncrush
     if (forward)
         for (let i = 0; i < swapGroups.length; ++i)
-            string = Swap(string, swapGroups[i]);
+            str = Swap(str, swapGroups[i]);
     else
         for (let i = swapGroups.length; i--;)
-            string = Swap(string, swapGroups[i]);
+            str = Swap(str, swapGroups[i]);
 
-    return string;
+    return str;
 }
