@@ -52,6 +52,9 @@ higlassRegister({ dataFetcher: RawDataFetcher, config: RawDataFetcher.config }, 
 
 const INIT_DEMO_INDEX = examples.findIndex(d => d.forceShow) !== -1 ? examples.findIndex(d => d.forceShow) : 0;
 
+// Limit of the character length to allow copy to clipboard
+const LIMIT_CLIPBOARD_LEN = 5000;
+
 // TODO: what is the type of prop?
 /**
  * React component for editing Gemini specs
@@ -218,24 +221,30 @@ function Editor(props: any) {
                 </span>
                 <input type="hidden" id="spec-url-exporter" />
                 <span
-                    title="Copy unique URL of current view to clipboard"
+                    title={
+                        gm.length <= LIMIT_CLIPBOARD_LEN
+                            ? 'Copy unique URL of current view to clipboard (limit: 5,000 characters)'
+                            : 'The current code contains characters more than 5,000'
+                    }
                     style={{
                         display: 'inline-block',
                         verticalAlign: 'middle',
                         float: 'right',
                         marginRight: '5px',
-                        cursor: 'pointer'
+                        color: gm.length <= LIMIT_CLIPBOARD_LEN ? 'black' : 'lightgray',
+                        cursor: gm.length <= LIMIT_CLIPBOARD_LEN ? 'pointer' : 'not-allowed'
                     }}
                     onClick={() => {
-                        // copy the unique url to clipboard using `<input/>`
-                        const url = `https://sehilyi.github.io/geminid/?spec=${JSONCrush(gm)}`;
-                        const element = document.getElementById('spec-url-exporter');
-                        (element as any).type = 'text';
-                        (element as any).value = url;
-                        (element as any).select();
-                        (element as any).setSelectionRange(0, 99999);
-                        document.execCommand('copy');
-                        (element as any).type = 'hidden';
+                        if (gm.length <= LIMIT_CLIPBOARD_LEN) {
+                            // copy the unique url to clipboard using `<input/>`
+                            const url = `https://sehilyi.github.io/geminid/?spec=${JSONCrush(gm)}`;
+                            const element = document.getElementById('spec-url-exporter');
+                            (element as any).type = 'text';
+                            (element as any).value = url;
+                            (element as any).select();
+                            document.execCommand('copy');
+                            (element as any).type = 'hidden';
+                        }
                     }}
                 >
                     <svg
