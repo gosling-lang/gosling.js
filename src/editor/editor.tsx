@@ -53,7 +53,7 @@ higlassRegister({ dataFetcher: RawDataFetcher, config: RawDataFetcher.config }, 
 const INIT_DEMO_INDEX = examples.findIndex(d => d.forceShow) !== -1 ? examples.findIndex(d => d.forceShow) : 0;
 
 // Limit of the character length to allow copy to clipboard
-const LIMIT_CLIPBOARD_LEN = 5000;
+const LIMIT_CLIPBOARD_LEN = 4096;
 
 // TODO: what is the type of prop?
 /**
@@ -223,8 +223,8 @@ function Editor(props: any) {
                 <span
                     title={
                         gm.length <= LIMIT_CLIPBOARD_LEN
-                            ? 'Copy unique URL of current view to clipboard (limit: 5,000 characters)'
-                            : 'The current code contains characters more than 5,000'
+                            ? `Copy unique URL of current view to clipboard (limit: ${LIMIT_CLIPBOARD_LEN} characters)`
+                            : `The current code contains characters more than ${LIMIT_CLIPBOARD_LEN}`
                     }
                     style={{
                         display: 'inline-block',
