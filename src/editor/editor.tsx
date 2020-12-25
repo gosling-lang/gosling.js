@@ -22,8 +22,9 @@ import GeminidSchema from '../../schema/geminid.schema.json';
 import { validateSpec, Validity } from '../core/utils/validate';
 import { compile } from '../core/compile';
 import stripJsonComments from 'strip-json-comments';
-import './editor.css';
 import * as qs from 'qs';
+import { JSONCrush, JSONUncrush } from '../core/utils/json-crush';
+import './editor.css';
 
 /**
  * Register a Gemini plugin track to HiGlassComponent
@@ -56,8 +57,9 @@ const INIT_DEMO_INDEX = examples.findIndex(d => d.forceShow) !== -1 ? examples.f
  * React component for editing Gemini specs
  */
 function Editor(props: any) {
+    // custom spec contained in the URL
     const urlParams = qs.parse(props.location.search, { ignoreQueryPrefix: true });
-    const urlSpec = urlParams?.spec ? (urlParams.spec as string) : null;
+    const urlSpec = urlParams?.spec ? JSONUncrush(urlParams.spec as string) : null;
 
     const [demo, setDemo] = useState(examples[INIT_DEMO_INDEX]);
     const [editorMode, setEditorMode] = useState<'Normal Mode' | 'Template-based Mode'>('Normal Mode');
@@ -176,11 +178,13 @@ function Editor(props: any) {
         <>
             <div className="demo-navbar">
                 🌌 Geminid <code>Editor</code>
+                {urlSpec ? <small> Displaying a custom spec contained in URL</small> : null}
                 <select
                     onChange={e => {
                         setDemo(examples.find(d => d.name === e.target.value) as any);
                     }}
                     defaultValue={demo.name}
+                    hidden={urlSpec !== null}
                 >
                     {examples.map(d => (
                         <option key={d.name} value={d.name}>
@@ -194,6 +198,7 @@ function Editor(props: any) {
                     }}
                     defaultValue={'Normal Mode'}
                     disabled
+                    hidden={urlSpec !== null}
                 >
                     {['Normal Mode', 'Template-based Mode'].map(d => (
                         <option key={d} value={d}>
@@ -222,6 +227,44 @@ function Editor(props: any) {
                     }}
                 >
                     {' Click here to export svg '}
+                </span>
+                <input type="hidden" id="spec-url-exporter" />
+                <span
+                    title="Copy unique URL of current view to clipboard"
+                    style={{
+                        display: 'inline-block',
+                        verticalAlign: 'middle',
+                        float: 'right',
+                        marginRight: '5px',
+                        cursor: 'pointer'
+                    }}
+                    onClick={() => {
+                        // copy the unique url to clipboard using `<input/>`
+                        const url = `https://sehilyi.github.io/geminid/?spec=${JSONCrush(gm)}`;
+                        const element = document.getElementById('spec-url-exporter');
+                        (element as any).type = 'text';
+                        (element as any).value = url;
+                        (element as any).select();
+                        (element as any).setSelectionRange(0, 99999);
+                        document.execCommand('copy');
+                        (element as any).type = 'hidden';
+                    }}
+                >
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="18"
+                        height="18"
+                        viewBox="0 0 24 24"
+                        strokeWidth="2"
+                        stroke="currentColor"
+                        fill="none"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                    >
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                        <path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" />
+                        <path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" />
+                    </svg>
                 </span>
             </div>
             <div className="editor">
