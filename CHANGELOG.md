@@ -1,3 +1,7 @@
+## [0.0.11](https://github.com/sehilyi/geminid/compare/v0.0.10...v0.0.11) (2020-12-26)
+
+
+
 ## [0.0.10](https://github.com/sehilyi/geminid/compare/v0.0.8...v0.0.10) (2020-12-26)
 
 
