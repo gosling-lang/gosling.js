@@ -74,9 +74,14 @@ function Editor(props: any) {
     const [size, setSize] = useState<{ width: number; height: number }>();
     const [gm, setGm] = useState(stringify(urlSpec ?? (examples[INIT_DEMO_INDEX].spec as GeminidSpec)));
     const [log, setLog] = useState<Validity>({ message: '', state: 'success' });
-    const [showVC, setShowVC] = useState<boolean>(false);
-    const [isMaximizeVis, setIsMaximizeVis] = useState<boolean>(false);
 
+    // whether to show HiGlass' viewConfig on the left-bottom
+    const [showVC, setShowVC] = useState<boolean>(false);
+
+    // whether to hide source code on the left
+    const [isMaximizeVis, setIsMaximizeVis] = useState<boolean>((urlParams?.full as string) === 'true' || false);
+
+    // for using HiGlass JS API
     const hgRef = useRef<any>();
 
     /**
@@ -84,9 +89,9 @@ function Editor(props: any) {
      */
     useEffect(() => {
         if (editorMode === 'Normal Mode') {
-            setGm(urlSpec ?? stringify(replaceTemplate(JSON.parse(stringify(demo.spec)) as GeminidSpec)));
+            setGm(stringify(replaceTemplate(JSON.parse(stringify(demo.spec)) as GeminidSpec)));
         } else {
-            setGm(urlSpec ?? stringify(demo.spec as GeminidSpec));
+            setGm(stringify(demo.spec as GeminidSpec));
         }
         setHg(undefined);
     }, [demo, editorMode]);
@@ -140,7 +145,7 @@ function Editor(props: any) {
                             position: 'relative',
                             display: 'block',
                             background: 'white',
-                            margin: 10,
+                            margin: 0,
                             padding: 0, // non-zero padding acts unexpectedly w/ HiGlassComponent
                             width: size.width,
                             height: size.height
@@ -243,7 +248,9 @@ function Editor(props: any) {
                     onClick={() => {
                         if (gm.length <= LIMIT_CLIPBOARD_LEN) {
                             // copy the unique url to clipboard using `<input/>`
-                            const url = `https://sehilyi.github.io/geminid/?spec=${JSONCrush(gm)}`;
+                            const url = `https://sehilyi.github.io/geminid/?full=${isMaximizeVis}&spec=${JSONCrush(
+                                gm
+                            )}`;
                             const element = document.getElementById('spec-url-exporter');
                             (element as any).type = 'text';
                             (element as any).value = url;
