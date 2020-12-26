@@ -19,6 +19,7 @@
         "build-log": "yarn build --display-error-details",
         "build-editor": "webpack --mode production --config webpack.config.editor.js",
         "test": "jest test/",
+        "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s -r 0",
         "format": "eslint . --fix && prettier '**/*.css' --write",
         "schema": "mkdir -p schema & ts-json-schema-generator -p src/core/geminid.schema.ts -f tsconfig.json -t GeminidSpec > schema/geminid.schema.json",
         "predeploy": "yarn build-editor",
@@ -64,6 +65,7 @@
         "@typescript-eslint/parser": "^4.8.1",
         "ajv": "^6.12.2",
         "babel-jest": "^26.3.0",
+        "conventional-changelog-cli": "^2.1.1",
         "cross-fetch": "^3.0.6",
         "css-loader": "^4.2.1",
         "documentation": "^13.0.2",
@@ -134,7 +136,7 @@
     },
     "husky": {
         "hooks": {
-            "pre-commit": "yarn schema && yarn format && git add .",
+            "pre-commit": "yarn changelog && yarn schema && yarn format && git add .",
             "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
         }
     }
