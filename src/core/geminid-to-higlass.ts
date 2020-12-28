@@ -80,7 +80,7 @@ export function geminidToHiGlass(
                 .setDomain(xDomain, yDomain)
                 .setMainTrack(hgTrack)
                 .addTrackSourceServers(server)
-                .setZoomFixed(firstResolvedSpec.zoomable as undefined | boolean)
+                .setZoomFixed(firstResolvedSpec.static as undefined | boolean)
                 .setLayout(layout);
         }
 

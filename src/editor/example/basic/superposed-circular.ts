@@ -46,7 +46,7 @@ const CIRCOS_HEATMAP: Track = {
 
     outerRadius,
     innerRadius,
-    zoomable: false
+    static: true
 } as Track;
 
 const CIRCOS_LINE: Track = {
@@ -68,7 +68,7 @@ const CIRCOS_LINE: Track = {
 
     outerRadius,
     innerRadius,
-    zoomable: false
+    static: true
 } as Track;
 
 const IDEOGRAM_DETAIL: Track = {

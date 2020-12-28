@@ -254,6 +254,9 @@
         "startAngle": {
           "type": "number"
         },
+        "static": {
+          "type": "boolean"
+        },
         "stretch": {
           "type": "boolean"
         },
@@ -329,9 +332,6 @@
         },
         "ye": {
           "$ref": "#/definitions/Channel"
-        },
-        "zoomable": {
-          "type": "boolean"
         }
       },
       "required": [
@@ -735,6 +735,9 @@
           ],
           "type": "string"
         },
+        "static": {
+          "type": "boolean"
+        },
         "subtitle": {
           "type": "string"
         },
@@ -749,9 +752,6 @@
         },
         "width": {
           "type": "number"
-        },
-        "zoomable": {
-          "type": "boolean"
         }
       },
       "required": [
@@ -1578,6 +1578,16 @@
             }
           ]
         },
+        "static": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "$ref": "#/definitions/Channel"
+            }
+          ]
+        },
         "stretch": {
           "anyOf": [
             {
@@ -1768,6 +1778,16 @@
                   }
                 ]
               },
+              "static": {
+                "anyOf": [
+                  {
+                    "type": "boolean"
+                  },
+                  {
+                    "$ref": "#/definitions/Channel"
+                  }
+                ]
+              },
               "stretch": {
                 "anyOf": [
                   {
@@ -1899,16 +1919,6 @@
               },
               "ye": {
                 "$ref": "#/definitions/Channel"
-              },
-              "zoomable": {
-                "anyOf": [
-                  {
-                    "type": "boolean"
-                  },
-                  {
-                    "$ref": "#/definitions/Channel"
-                  }
-                ]
               }
             },
             "type": "object"
@@ -2010,16 +2020,6 @@
         },
         "ye": {
           "$ref": "#/definitions/Channel"
-        },
-        "zoomable": {
-          "anyOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "$ref": "#/definitions/Channel"
-            }
-          ]
         }
       },
       "required": [
@@ -2180,6 +2180,16 @@
             }
           ]
         },
+        "static": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "$ref": "#/definitions/Channel"
+            }
+          ]
+        },
         "stretch": {
           "anyOf": [
             {
@@ -2364,6 +2374,16 @@
                 "anyOf": [
                   {
                     "type": "number"
+                  },
+                  {
+                    "$ref": "#/definitions/Channel"
+                  }
+                ]
+              },
+              "static": {
+                "anyOf": [
+                  {
+                    "type": "boolean"
                   },
                   {
                     "$ref": "#/definitions/Channel"
@@ -2560,6 +2580,16 @@
                         }
                       ]
                     },
+                    "static": {
+                      "anyOf": [
+                        {
+                          "type": "boolean"
+                        },
+                        {
+                          "$ref": "#/definitions/Channel"
+                        }
+                      ]
+                    },
                     "stretch": {
                       "anyOf": [
                         {
@@ -2691,16 +2721,6 @@
                     },
                     "ye": {
                       "$ref": "#/definitions/Channel"
-                    },
-                    "zoomable": {
-                      "anyOf": [
-                        {
-                          "type": "boolean"
-                        },
-                        {
-                          "$ref": "#/definitions/Channel"
-                        }
-                      ]
                     }
                   },
                   "type": "object"
@@ -2802,16 +2822,6 @@
               },
               "ye": {
                 "$ref": "#/definitions/Channel"
-              },
-              "zoomable": {
-                "anyOf": [
-                  {
-                    "type": "boolean"
-                  },
-                  {
-                    "$ref": "#/definitions/Channel"
-                  }
-                ]
               }
             },
             "type": "object"
@@ -2913,16 +2923,6 @@
         },
         "ye": {
           "$ref": "#/definitions/Channel"
-        },
-        "zoomable": {
-          "anyOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "$ref": "#/definitions/Channel"
-            }
-          ]
         }
       },
       "required": [

@@ -9,7 +9,7 @@ export type GeminidSpec = {
     title?: string;
     subtitle?: string;
 
-    zoomable?: boolean;
+    static?: boolean;
     description?: string;
 
     layout?: 'linear' | 'circular';
@@ -138,7 +138,7 @@ export interface BasicSingleTrack {
     title?: string;
     subtitle?: string;
     description?: string;
-    zoomable?: boolean;
+    static?: boolean;
 
     // Layout
     width?: number;

@@ -108,8 +108,7 @@ const ideogramTracks: Track[] = [];
         {
             ...EXAMPLE_STACKED_AREA,
             x: { ...EXAMPLE_STACKED_AREA.x, domain: { chromosome: d.chr }, linkingID: `link-${i}` },
-            width: d.width,
-            zoomable: false
+            width: d.width
         },
         {
             ...EXAMPLE_CYTOAND_HG38.tracks[0],
@@ -120,12 +119,12 @@ const ideogramTracks: Track[] = [];
                 linkingID: `link-${i}`
             },
             height: 24,
-            width: d.width,
-            zoomable: false
+            width: d.width
         } as any
     );
 });
 export const EXAMPLE_IDEOGRAM: GeminidSpec = {
+    static: true,
     layout: 'linear',
     arrangement: { direction: 'vertical', rowSizes: [60, 24], columnSizes: 1000, rowGaps: [0, 30] },
     tracks: ideogramTracks
