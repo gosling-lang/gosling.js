@@ -89,9 +89,9 @@ function Editor(props: any) {
      */
     useEffect(() => {
         if (editorMode === 'Normal Mode') {
-            setGm(stringify(replaceTemplate(JSON.parse(stringify(demo.spec)) as GeminidSpec)));
+            setGm(urlSpec ?? stringify(replaceTemplate(JSON.parse(stringify(demo.spec)) as GeminidSpec)));
         } else {
-            setGm(stringify(demo.spec as GeminidSpec));
+            setGm(urlSpec ?? stringify(demo.spec as GeminidSpec));
         }
         setHg(undefined);
     }, [demo, editorMode]);
