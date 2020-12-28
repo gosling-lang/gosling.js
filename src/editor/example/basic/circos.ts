@@ -217,8 +217,8 @@ export const EXAMPLE_BAND: Track = {
 };
 
 export const EXAMPLE_CIRCOS: GeminidSpec = {
-    layout: {
-        type: 'circular',
+    layout: 'circular',
+    arrangement: {
         direction: 'horizontal',
         wrap: 4,
         rowSizes: [60, size, size, size, size],
@@ -228,7 +228,7 @@ export const EXAMPLE_CIRCOS: GeminidSpec = {
     },
     tracks: [
         {
-            circularLayout: false,
+            layout: false,
             ...EXAMPLE_SEMANTIC_ZOOMING_IDEOGRAM,
             x: {
                 ...EXAMPLE_SEMANTIC_ZOOMING_IDEOGRAM.x,

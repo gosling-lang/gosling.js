@@ -58,11 +58,11 @@ export function getGridInfo(spec: GeminidSpec): GridInfo {
         .filter(t => !t.superposeOnPreviousTrack)
         .map(t => (typeof t.span === 'number' ? t.span : 1))
         .reduce((a, b) => a + b, 0);
-    const wrap: number = spec.layout?.wrap ?? 999;
+    const wrap: number = spec.arrangement?.wrap ?? 999;
 
     let numColumns = 0,
         numRows = 0;
-    if (spec.layout?.direction === 'horizontal') {
+    if (spec.arrangement?.direction === 'horizontal') {
         numRows = Math.ceil(numCells / wrap);
         numColumns = Math.min(wrap, numCells);
     } else {
@@ -73,29 +73,29 @@ export function getGridInfo(spec: GeminidSpec): GridInfo {
 
     // undefined | [number, number, ...] | number
     const baseColumnSizes =
-        spec.layout?.columnSizes === undefined
+        spec.arrangement?.columnSizes === undefined
             ? [DEFAULT_TRACK_WIDTH]
-            : typeof spec.layout?.columnSizes === 'number'
-            ? [spec.layout?.columnSizes]
-            : spec.layout?.columnSizes;
+            : typeof spec.arrangement?.columnSizes === 'number'
+            ? [spec.arrangement?.columnSizes]
+            : spec.arrangement?.columnSizes;
     const baseRowSizes =
-        spec.layout?.rowSizes === undefined
+        spec.arrangement?.rowSizes === undefined
             ? [DEFAULT_TRACK_HEIGHT]
-            : typeof spec.layout?.rowSizes === 'number'
-            ? [spec.layout?.rowSizes]
-            : spec.layout?.rowSizes;
+            : typeof spec.arrangement?.rowSizes === 'number'
+            ? [spec.arrangement?.rowSizes]
+            : spec.arrangement?.rowSizes;
     const baseColumnGaps =
-        spec.layout?.columnGaps === undefined
+        spec.arrangement?.columnGaps === undefined
             ? [DEFAULT_TRACK_GAP]
-            : typeof spec.layout?.columnGaps === 'number'
-            ? [spec.layout?.columnGaps]
-            : spec.layout?.columnGaps;
+            : typeof spec.arrangement?.columnGaps === 'number'
+            ? [spec.arrangement?.columnGaps]
+            : spec.arrangement?.columnGaps;
     const baseRowGaps =
-        spec.layout?.rowGaps === undefined
+        spec.arrangement?.rowGaps === undefined
             ? [DEFAULT_TRACK_GAP]
-            : typeof spec.layout?.rowGaps === 'number'
-            ? [spec.layout?.rowGaps]
-            : spec.layout?.rowGaps;
+            : typeof spec.arrangement?.rowGaps === 'number'
+            ? [spec.arrangement?.rowGaps]
+            : spec.arrangement?.rowGaps;
 
     const columnSizes = arrayRepeat(baseColumnSizes, numColumns);
     const columnGaps = arrayRepeat(baseColumnGaps, numColumns - 1);
@@ -169,11 +169,11 @@ export function getArrangement(spec: GeminidSpec): TrackInfo[] {
 
         let width = columnSizes[ci];
         let height = rowSizes[ri];
-        if (spec.layout?.direction === 'horizontal' && span !== 1) {
+        if (spec.arrangement?.direction === 'horizontal' && span !== 1) {
             width =
                 columnSizes.slice(ci, ci + span).reduce((a, b) => a + b, 0) +
                 columnGaps.slice(ci, ci + span).reduce((a, b) => a + b, 0);
-        } else if (spec.layout?.direction === 'vertical' && span !== 1) {
+        } else if (spec.arrangement?.direction === 'vertical' && span !== 1) {
             height =
                 rowSizes.slice(ri, ri + span).reduce((a, b) => a + b, 0) +
                 rowGaps.slice(ri, ri + span).reduce((a, b) => a + b, 0);
@@ -204,7 +204,7 @@ export function getArrangement(spec: GeminidSpec): TrackInfo[] {
             return;
         }
 
-        if (spec.layout?.direction === 'horizontal') {
+        if (spec.arrangement?.direction === 'horizontal') {
             ci += typeof track.span === 'number' ? track.span : 1;
 
             if (ci >= numColumns && ri < numRows - 1) {

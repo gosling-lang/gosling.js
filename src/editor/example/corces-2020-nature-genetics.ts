@@ -4,9 +4,9 @@ import { EXAMPLE_DATASETS } from './basic/datasets';
 export const CORCES_2020_NATURE_GENETICS: GeminidSpec = {
     description:
         'Corces et al. 2020. Single-cell epigenomic analyses implicate candidate causal variants at inherited risk loci for Alzheimer’s and Parkinson’s diseases. Nature Genetics, pp.1-11.',
-    static: true,
-    layout: {
-        type: 'linear',
+    zoomable: true,
+    layout: 'linear',
+    arrangement: {
         direction: 'vertical',
         columnSizes: [550],
         rowSizes: [30, 44, 44, 44, 44, 44, 44, 44, 100, 100, 90, 100],

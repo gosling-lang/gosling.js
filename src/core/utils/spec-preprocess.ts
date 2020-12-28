@@ -8,7 +8,7 @@ export function fixSpecDownstream(spec: GeminidSpec) {
     /**
      * Zoomability
      */
-    if (spec.static) {
+    if (!spec.zoomable) {
         // Force disable zoomability when the top-level static option is enabled
         spec.tracks.forEach(t => {
             t.zoomable = false;
@@ -18,12 +18,12 @@ export function fixSpecDownstream(spec: GeminidSpec) {
     /**
      * Flag tracks to use circular marks
      */
-    if (spec.layout?.type === 'circular') {
+    if (spec?.layout === 'circular') {
         // We need to let individual tracks know that they are rendered in a circular layout
         spec.tracks.forEach(t => {
-            if (t.circularLayout === undefined) {
+            if (t.layout === undefined) {
                 // EXPERIMENTAL: Remove if statement
-                t.circularLayout = true;
+                t.layout = 'circular';
             }
         });
     }

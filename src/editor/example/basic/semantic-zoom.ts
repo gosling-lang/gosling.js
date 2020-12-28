@@ -180,8 +180,8 @@ export const EXAMPLE_SEMANTIC_ZOOMING_IDEOGRAM: Track = {
 };
 
 export const EXAMPLE_SEMANTIC_ZOOMING: GeminidSpec = {
-    layout: {
-        type: 'linear',
+    layout: 'linear',
+    arrangement: {
         direction: 'vertical',
         columnSizes: 800,
         rowSizes: [180, 60, 180, 100, 60]

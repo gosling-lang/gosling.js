@@ -2,7 +2,8 @@ import { GeminidSpec } from '../../../core/geminid.schema';
 import { EXAMPLE_DATASETS } from './datasets';
 
 export const EXAMPLE_LOGO_LIKE: GeminidSpec = {
-    layout: { type: 'linear', direction: 'vertical', columnSizes: 800 },
+    layout: 'linear',
+    arrangement: { direction: 'vertical', columnSizes: 800 },
     tracks: [
         {
             title: 'based on dummy data',

@@ -126,6 +126,7 @@ const ideogramTracks: Track[] = [];
     );
 });
 export const EXAMPLE_IDEOGRAM: GeminidSpec = {
-    layout: { direction: 'vertical', type: 'linear', rowSizes: [60, 24], columnSizes: 1000, rowGaps: [0, 30] },
+    layout: 'linear',
+    arrangement: { direction: 'vertical', rowSizes: [60, 24], columnSizes: 1000, rowGaps: [0, 30] },
     tracks: ideogramTracks
 };

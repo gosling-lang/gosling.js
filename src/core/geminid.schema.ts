@@ -4,13 +4,16 @@ import { GLYPH_LOCAL_PRESET_TYPE, GLYPH_HIGLASS_PRESET_TYPE } from '../editor/ex
  * Root-level specification
  */
 export type GeminidSpec = {
+    assembly?: 'hm38'; // TODO: support others as well
+
     title?: string;
     subtitle?: string;
 
-    static?: boolean;
+    zoomable?: boolean;
     description?: string;
 
-    layout?: Layout;
+    layout?: 'linear' | 'circular';
+    arrangement?: Arrangement;
     tracks: Track[];
 
     width?: number;
@@ -18,11 +21,9 @@ export type GeminidSpec = {
 };
 
 /**
- * Layout specification for multiple tracks
+ * Arrangement of multiple tracks
  */
-export interface Layout {
-    assembly?: 'hm38'; // TODO: support others as well
-    type: 'linear' | 'circular'; // TODO: should this be moved to the track-level spec?
+export interface Arrangement {
     direction: 'vertical' | 'horizontal';
     wrap?: number;
 
@@ -146,7 +147,7 @@ export interface BasicSingleTrack {
     superposeOnPreviousTrack?: boolean;
 
     // Circular Layout
-    circularLayout?: boolean;
+    layout?: 'circular' | 'linear';
     outerRadius?: number;
     innerRadius?: number;
     startAngle?: number; // [0, 360]

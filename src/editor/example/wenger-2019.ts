@@ -45,8 +45,8 @@ export const EXAMPLE_2019_WENGER_TRACK: Track = {
 export const EXAMPLE_2019_WENGER: GeminidSpec = {
     title: 'Wenger et al. 2019 (nstd167)',
     subtitle: 'Data is from https://www.ncbi.nlm.nih.gov/dbvar/browse/org/?assm=GCF_000001405.25&studies=nstd167',
-    layout: {
-        type: 'linear',
+    layout: 'linear',
+    arrangement: {
         direction: 'vertical',
         columnSizes: 800,
         rowSizes: [200, 300]
@@ -56,7 +56,7 @@ export const EXAMPLE_2019_WENGER: GeminidSpec = {
         {
             ...EXAMPLE_2019_WENGER_TRACK,
             x: { ...EXAMPLE_2019_WENGER_TRACK.x, axis: undefined },
-            circularLayout: true
+            layout: 'circular'
         }
     ]
 };

@@ -52,8 +52,8 @@ const CIRCOS_LINE: Track = {
 } as Track;
 
 export const EXAMPLE_CIRCOS_STACKING: GeminidSpec = {
-    layout: {
-        type: 'circular',
+    layout: 'circular',
+    arrangement: {
         direction: 'horizontal',
         wrap: 2,
         rowSizes: 300,

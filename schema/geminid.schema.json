@@ -12,6 +12,78 @@
       ],
       "type": "string"
     },
+    "Arrangement": {
+      "additionalProperties": false,
+      "description": "Arrangement of multiple tracks",
+      "properties": {
+        "columnGaps": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "items": {
+                "type": "number"
+              },
+              "type": "array"
+            }
+          ]
+        },
+        "columnSizes": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "items": {
+                "type": "number"
+              },
+              "type": "array"
+            }
+          ]
+        },
+        "direction": {
+          "enum": [
+            "vertical",
+            "horizontal"
+          ],
+          "type": "string"
+        },
+        "rowGaps": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "items": {
+                "type": "number"
+              },
+              "type": "array"
+            }
+          ]
+        },
+        "rowSizes": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "items": {
+                "type": "number"
+              },
+              "type": "array"
+            }
+          ]
+        },
+        "wrap": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "direction"
+      ],
+      "type": "object"
+    },
     "AxisPosition": {
       "enum": [
         "none",
@@ -124,9 +196,6 @@
     "BasicSingleTrack": {
       "additionalProperties": false,
       "properties": {
-        "circularLayout": {
-          "type": "boolean"
-        },
         "color": {
           "$ref": "#/definitions/Channel"
         },
@@ -150,6 +219,13 @@
         },
         "innerRadius": {
           "type": "number"
+        },
+        "layout": {
+          "enum": [
+            "circular",
+            "linear"
+          ],
+          "type": "string"
         },
         "mark": {
           "$ref": "#/definitions/Mark"
@@ -639,6 +715,13 @@
       "additionalProperties": false,
       "description": "Root-level specification",
       "properties": {
+        "arrangement": {
+          "$ref": "#/definitions/Arrangement"
+        },
+        "assembly": {
+          "const": "hm38",
+          "type": "string"
+        },
         "description": {
           "type": "string"
         },
@@ -646,10 +729,11 @@
           "type": "number"
         },
         "layout": {
-          "$ref": "#/definitions/Layout"
-        },
-        "static": {
-          "type": "boolean"
+          "enum": [
+            "linear",
+            "circular"
+          ],
+          "type": "string"
         },
         "subtitle": {
           "type": "string"
@@ -665,6 +749,9 @@
         },
         "width": {
           "type": "number"
+        },
+        "zoomable": {
+          "type": "boolean"
         }
       },
       "required": [
@@ -1014,90 +1101,6 @@
       ],
       "type": "object"
     },
-    "Layout": {
-      "additionalProperties": false,
-      "description": "Layout specification for multiple tracks",
-      "properties": {
-        "assembly": {
-          "const": "hm38",
-          "type": "string"
-        },
-        "columnGaps": {
-          "anyOf": [
-            {
-              "type": "number"
-            },
-            {
-              "items": {
-                "type": "number"
-              },
-              "type": "array"
-            }
-          ]
-        },
-        "columnSizes": {
-          "anyOf": [
-            {
-              "type": "number"
-            },
-            {
-              "items": {
-                "type": "number"
-              },
-              "type": "array"
-            }
-          ]
-        },
-        "direction": {
-          "enum": [
-            "vertical",
-            "horizontal"
-          ],
-          "type": "string"
-        },
-        "rowGaps": {
-          "anyOf": [
-            {
-              "type": "number"
-            },
-            {
-              "items": {
-                "type": "number"
-              },
-              "type": "array"
-            }
-          ]
-        },
-        "rowSizes": {
-          "anyOf": [
-            {
-              "type": "number"
-            },
-            {
-              "items": {
-                "type": "number"
-              },
-              "type": "array"
-            }
-          ]
-        },
-        "type": {
-          "enum": [
-            "linear",
-            "circular"
-          ],
-          "type": "string"
-        },
-        "wrap": {
-          "type": "number"
-        }
-      },
-      "required": [
-        "type",
-        "direction"
-      ],
-      "type": "object"
-    },
     "LogicalOperation": {
       "enum": [
         "less-than",
@@ -1425,16 +1428,6 @@
       "additionalProperties": false,
       "description": "Superposing multiple tracks.",
       "properties": {
-        "circularLayout": {
-          "anyOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "$ref": "#/definitions/Channel"
-            }
-          ]
-        },
         "color": {
           "$ref": "#/definitions/Channel"
         },
@@ -1495,6 +1488,21 @@
           "anyOf": [
             {
               "type": "number"
+            },
+            {
+              "$ref": "#/definitions/Channel"
+            }
+          ]
+        },
+        "layout": {
+          "anyOf": [
+            {
+              "const": "circular",
+              "type": "string"
+            },
+            {
+              "const": "linear",
+              "type": "string"
             },
             {
               "$ref": "#/definitions/Channel"
@@ -1610,16 +1618,6 @@
           "items": {
             "additionalProperties": false,
             "properties": {
-              "circularLayout": {
-                "anyOf": [
-                  {
-                    "type": "boolean"
-                  },
-                  {
-                    "$ref": "#/definitions/Channel"
-                  }
-                ]
-              },
               "color": {
                 "$ref": "#/definitions/Channel"
               },
@@ -1680,6 +1678,21 @@
                 "anyOf": [
                   {
                     "type": "number"
+                  },
+                  {
+                    "$ref": "#/definitions/Channel"
+                  }
+                ]
+              },
+              "layout": {
+                "anyOf": [
+                  {
+                    "const": "circular",
+                    "type": "string"
+                  },
+                  {
+                    "const": "linear",
+                    "type": "string"
                   },
                   {
                     "$ref": "#/definitions/Channel"
@@ -2017,16 +2030,6 @@
     "SuperposedTrackTwoLevels": {
       "additionalProperties": false,
       "properties": {
-        "circularLayout": {
-          "anyOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "$ref": "#/definitions/Channel"
-            }
-          ]
-        },
         "color": {
           "$ref": "#/definitions/Channel"
         },
@@ -2087,6 +2090,21 @@
           "anyOf": [
             {
               "type": "number"
+            },
+            {
+              "$ref": "#/definitions/Channel"
+            }
+          ]
+        },
+        "layout": {
+          "anyOf": [
+            {
+              "const": "circular",
+              "type": "string"
+            },
+            {
+              "const": "linear",
+              "type": "string"
             },
             {
               "$ref": "#/definitions/Channel"
@@ -2202,16 +2220,6 @@
           "items": {
             "additionalProperties": false,
             "properties": {
-              "circularLayout": {
-                "anyOf": [
-                  {
-                    "type": "boolean"
-                  },
-                  {
-                    "$ref": "#/definitions/Channel"
-                  }
-                ]
-              },
               "color": {
                 "$ref": "#/definitions/Channel"
               },
@@ -2272,6 +2280,21 @@
                 "anyOf": [
                   {
                     "type": "number"
+                  },
+                  {
+                    "$ref": "#/definitions/Channel"
+                  }
+                ]
+              },
+              "layout": {
+                "anyOf": [
+                  {
+                    "const": "circular",
+                    "type": "string"
+                  },
+                  {
+                    "const": "linear",
+                    "type": "string"
                   },
                   {
                     "$ref": "#/definitions/Channel"
@@ -2387,16 +2410,6 @@
                 "items": {
                   "additionalProperties": false,
                   "properties": {
-                    "circularLayout": {
-                      "anyOf": [
-                        {
-                          "type": "boolean"
-                        },
-                        {
-                          "$ref": "#/definitions/Channel"
-                        }
-                      ]
-                    },
                     "color": {
                       "$ref": "#/definitions/Channel"
                     },
@@ -2457,6 +2470,21 @@
                       "anyOf": [
                         {
                           "type": "number"
+                        },
+                        {
+                          "$ref": "#/definitions/Channel"
+                        }
+                      ]
+                    },
+                    "layout": {
+                      "anyOf": [
+                        {
+                          "const": "circular",
+                          "type": "string"
+                        },
+                        {
+                          "const": "linear",
+                          "type": "string"
                         },
                         {
                           "$ref": "#/definitions/Channel"

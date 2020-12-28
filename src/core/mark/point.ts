@@ -18,7 +18,7 @@ export function drawPoint(HGC: any, trackInfo: any, tile: any, model: GeminidTra
     const [trackWidth, trackHeight] = trackInfo.dimensions;
 
     /* circular parameters */
-    const circular = spec.circularLayout;
+    const circular = spec.layout === 'circular';
     const trackInnerRadius = spec.innerRadius ?? 220;
     const trackOuterRadius = spec.outerRadius ?? 300;
     const startAngle = spec.startAngle ?? 0;
