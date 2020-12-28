@@ -91,7 +91,7 @@ export const SUPERPOSE_VIEWCONFIG: View = {
                                 outerRadius: 100,
                                 innerRadius: 50,
                                 zoomable: false,
-                                circularLayout: true,
+                                layout: 'circular',
                                 width: 210,
                                 height: 210
                             }
@@ -130,7 +130,7 @@ export const SUPERPOSE_VIEWCONFIG: View = {
                                 outerRadius: 170,
                                 innerRadius: 100,
                                 zoomable: false,
-                                circularLayout: true,
+                                circular: 'circular',
                                 width: 210,
                                 height: 110
                             }
