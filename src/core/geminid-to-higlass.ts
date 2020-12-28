@@ -88,7 +88,16 @@ export function geminidToHiGlass(
         ['x', 'y'].forEach(c => {
             const channel = (firstResolvedSpec as any)[c];
             if (IsChannelDeep(channel) && channel.axis && channel.axis !== 'none') {
-                hgModel.setAxisTrack(channel.axis);
+                const narrowSize = 400;
+                const narrowerSize = 200;
+                const narrowType =
+                    // show two labels at the end in a `si` format when the track is too narrow
+                    (c === 'x' && bb.width <= narrowerSize) || (c === 'y' && bb.height <= narrowerSize)
+                        ? 'narrower'
+                        : (c === 'x' && bb.width <= narrowSize) || (c === 'y' && bb.height <= narrowSize)
+                        ? 'narrow'
+                        : 'regular';
+                hgModel.setAxisTrack(channel.axis, narrowType);
             }
         });
 

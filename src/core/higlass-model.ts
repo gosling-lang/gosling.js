@@ -192,7 +192,10 @@ export class HiGlassModel {
         return this;
     }
 
-    public setAxisTrack(position: 'left' | 'right' | 'top' | 'bottom') {
+    public setAxisTrack(
+        position: 'left' | 'right' | 'top' | 'bottom',
+        type: 'regular' | 'narrow' | 'narrower' = 'regular'
+    ) {
         if (!this.hg.views) return this;
         const baseTrackType = '-chromosome-labels';
         const direction = position === 'left' || position === 'right' ? 'vertical' : 'horizontal';
@@ -206,6 +209,8 @@ export class HiGlassModel {
                 options: {
                     color: 'black',
                     tickColor: 'black',
+                    tickFormat: type === 'narrower' ? 'si' : 'plain',
+                    tickPositions: type === 'regular' ? 'even' : 'ends',
                     reverseOrientation: position === 'bottom' ? true : false
                 }
             }
