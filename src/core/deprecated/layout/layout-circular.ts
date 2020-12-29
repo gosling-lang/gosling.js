@@ -21,11 +21,11 @@ export function renderCircularLayout(
     gm: GeminidSpec,
     boundingBox: BoundingBox
 ) {
-    const wrap: number = gm.layout?.wrap ?? 999;
+    const wrap: number = gm.arrangement?.wrap ?? 999;
     const totalRadius = boundingBox.height / 2.0;
     const totalLength = d3.sum(
         // Look into the first row
-        gm.layout?.direction === 'horizontal'
+        gm.arrangement?.direction === 'horizontal'
             ? gm.tracks.filter((t, i) => i < wrap).map(d => d.width as number)
             : gm.tracks.filter((t, i) => i % wrap == 0).map(d => d.width as number)
     );
@@ -35,7 +35,7 @@ export function renderCircularLayout(
     const trackInfo: { arc: ArcInfo; track: Track }[] = [];
     let cumDonutBandWidth = 0;
     let cumLength = 0;
-    if (gm.layout?.direction === 'horizontal') {
+    if (gm.arrangement?.direction === 'horizontal') {
         // adjacently place first
         gm.tracks.forEach((track, i) => {
             const donutBandWidth = track.height as number; // Height is used for the width of donut band.

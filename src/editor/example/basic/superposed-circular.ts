@@ -46,7 +46,7 @@ const CIRCOS_HEATMAP: Track = {
 
     outerRadius,
     innerRadius,
-    zoomable: false
+    static: true
 } as Track;
 
 const CIRCOS_LINE: Track = {
@@ -68,7 +68,7 @@ const CIRCOS_LINE: Track = {
 
     outerRadius,
     innerRadius,
-    zoomable: false
+    static: true
 } as Track;
 
 const IDEOGRAM_DETAIL: Track = {
@@ -208,8 +208,8 @@ export const EXAMPLE_BAND: Track = {
 };
 
 export const EXAMPLE_SUPERPOSED_CIRCULAR_TRACKS: GeminidSpec = {
-    layout: {
-        type: 'circular',
+    layout: 'circular',
+    arrangement: {
         direction: 'horizontal',
         wrap: 2,
         rowSizes: [60, size, size, size, size],
@@ -219,7 +219,7 @@ export const EXAMPLE_SUPERPOSED_CIRCULAR_TRACKS: GeminidSpec = {
     },
     tracks: [
         {
-            circularLayout: false,
+            layout: false,
             ...IDEOGRAM_DETAIL,
             x: { ...IDEOGRAM_DETAIL.x, axis: 'top', domain: undefined },
             superpose: [

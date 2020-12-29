@@ -3,8 +3,8 @@ import { EXAMPLE_CYTOAND_HG38 } from '../cytoband-hg38';
 import { EXAMPLE_DATASETS } from './datasets';
 
 export const EXAMPLE_OVERVIEW_DEATIL: GeminidSpec = {
-    layout: {
-        type: 'linear',
+    layout: 'linear',
+    arrangement: {
         direction: 'horizontal',
         wrap: 2,
         rowSizes: [55, 180, 180],

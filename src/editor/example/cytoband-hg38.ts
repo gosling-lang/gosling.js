@@ -1,8 +1,8 @@
 import { GeminidSpec } from '../../core/geminid.schema';
 
 export const EXAMPLE_CYTOAND_HG38: GeminidSpec = {
-    layout: {
-        type: 'linear',
+    layout: 'linear',
+    arrangement: {
         direction: 'vertical',
         columnSizes: 800,
         rowSizes: 60

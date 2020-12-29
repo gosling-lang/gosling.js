@@ -142,8 +142,8 @@ export const HIGLASS_GENE_ANNOTATION: Track = {
 };
 
 export const EXAMPLE_GENE_ANNOTATION: GeminidSpec = {
-    layout: {
-        type: 'linear',
+    layout: 'linear',
+    arrangement: {
         direction: 'vertical',
         columnSizes: 800,
         rowSizes: 110
