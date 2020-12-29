@@ -202,7 +202,7 @@ function Editor(props: any) {
                         </option>
                     ))}
                 </select>
-                <small style={{ marginLeft: '10px' }}>{' Auto Update'}</small>
+                <small style={{ marginLeft: '10px' }}>{' Auto Run'}</small>
                 {autoRun ? (
                     <span
                         title="Automatically update visualization upon editing spec"
