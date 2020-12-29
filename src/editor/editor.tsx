@@ -8,7 +8,7 @@ import { TextTrack } from 'higlass-text';
 import { HiGlassComponent } from 'higlass';
 // @ts-ignore
 import { default as higlassRegister } from 'higlass-register';
-import React, { useState, useEffect, useMemo, useRef } from 'react';
+import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import EditorPanel from './editor-panel';
 import stringify from 'json-stringify-pretty-compact';
 import SplitPane from 'react-split-pane';
@@ -56,7 +56,7 @@ const INIT_DEMO_INDEX = examples.findIndex(d => d.forceShow) !== -1 ? examples.f
 const LIMIT_CLIPBOARD_LEN = 4096;
 
 // ! these should be updated upon change in css files
-const EDITOR_HEADER_HEIGHT = 30;
+const EDITOR_HEADER_HEIGHT = 40;
 const VIEWCONFIG_HEADER_HEIGHT = 30;
 
 // TODO: what is the type of prop?
@@ -74,6 +74,7 @@ function Editor(props: any) {
     const [size, setSize] = useState<{ width: number; height: number }>();
     const [gm, setGm] = useState(stringify(urlSpec ?? (examples[INIT_DEMO_INDEX].spec as GeminidSpec)));
     const [log, setLog] = useState<Validity>({ message: '', state: 'success' });
+    const [autoRun, setAutoRun] = useState(true);
 
     // whether to show HiGlass' viewConfig on the left-bottom
     const [showVC, setShowVC] = useState<boolean>(false);
@@ -96,26 +97,33 @@ function Editor(props: any) {
         setHg(undefined);
     }, [demo, editorMode]);
 
+    const runSpecUpdateVis = useCallback(
+        (run?: boolean) => {
+            let editedGm;
+            try {
+                editedGm = replaceTemplate(JSON.parse(stripJsonComments(gm)));
+                setLog(validateSpec(GeminidSchema, editedGm));
+            } catch (e) {
+                const message = '✘ Cannnot parse the code.';
+                console.warn(message);
+                setLog({ message, state: 'error' });
+            }
+            if (!editedGm || (!autoRun && !run)) return;
+
+            compile(editedGm as GeminidSpec, (newHg: HiGlassSpec, newSize: Size) => {
+                setHg(newHg);
+                setSize(newSize);
+            });
+        },
+        [gm, autoRun]
+    );
+
     /**
      * Render background of tracks.
      */
     useEffect(() => {
-        let editedGm;
-        try {
-            editedGm = replaceTemplate(JSON.parse(stripJsonComments(gm)));
-            setLog(validateSpec(GeminidSchema, editedGm));
-        } catch (e) {
-            const message = '✘ Cannnot parse the code.';
-            console.warn(message);
-            setLog({ message, state: 'error' });
-        }
-        if (!editedGm) return;
-
-        compile(editedGm as GeminidSpec, (newHg: HiGlassSpec, newSize: Size) => {
-            setHg(newHg);
-            setSize(newSize);
-        });
-    }, [gm]);
+        runSpecUpdateVis();
+    }, [gm, autoRun]);
 
     // Uncommnet below to use HiGlass APIs
     // useEffect(() => {
@@ -174,7 +182,7 @@ function Editor(props: any) {
                 </div>
             </>
         ) : null;
-    }, [hg, gm, size]);
+    }, [hg, size]);
 
     return (
         <>
@@ -194,13 +202,92 @@ function Editor(props: any) {
                         </option>
                     ))}
                 </select>
+                <small style={{ marginLeft: '10px' }}>{' Auto Update'}</small>
+                {autoRun ? (
+                    <span
+                        title="Automatically update visualization upon editing spec"
+                        className="editor-nav-button"
+                        style={{
+                            marginLeft: 0,
+                            color: '#0072B2'
+                        }}
+                        onClick={() => setAutoRun(false)}
+                    >
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="22"
+                            height="22"
+                            viewBox="0 0 2048 1792"
+                            strokeWidth="2"
+                            stroke="currentColor"
+                            fill="none"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                        >
+                            <path
+                                fill="currentColor"
+                                d="M0 896q0-130 51-248.5t136.5-204 204-136.5 248.5-51h768q130 0 248.5 51t204 136.5 136.5 204 51 248.5-51 248.5-136.5 204-204 136.5-248.5 51h-768q-130 0-248.5-51t-204-136.5-136.5-204-51-248.5zm1408 512q104 0 198.5-40.5t163.5-109.5 109.5-163.5 40.5-198.5-40.5-198.5-109.5-163.5-163.5-109.5-198.5-40.5-198.5 40.5-163.5 109.5-109.5 163.5-40.5 198.5 40.5 198.5 109.5 163.5 163.5 109.5 198.5 40.5z"
+                            />
+                        </svg>
+                    </span>
+                ) : (
+                    <span
+                        title="Pause updating visualization"
+                        className="editor-nav-button"
+                        style={{
+                            marginLeft: 0
+                        }}
+                        onClick={() => setAutoRun(true)}
+                    >
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="22"
+                            height="22"
+                            viewBox="0 0 2048 1792"
+                            strokeWidth="2"
+                            stroke="currentColor"
+                            fill="none"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                        >
+                            <path
+                                fill="currentColor"
+                                d="M1152 896q0-104-40.5-198.5t-109.5-163.5-163.5-109.5-198.5-40.5-198.5 40.5-163.5 109.5-109.5 163.5-40.5 198.5 40.5 198.5 109.5 163.5 163.5 109.5 198.5 40.5 198.5-40.5 163.5-109.5 109.5-163.5 40.5-198.5zm768 0q0-104-40.5-198.5t-109.5-163.5-163.5-109.5-198.5-40.5h-386q119 90 188.5 224t69.5 288-69.5 288-188.5 224h386q104 0 198.5-40.5t163.5-109.5 109.5-163.5 40.5-198.5zm128 0q0 130-51 248.5t-136.5 204-204 136.5-248.5 51h-768q-130 0-248.5-51t-204-136.5-136.5-204-51-248.5 51-248.5 136.5-204 204-136.5 248.5-51h768q130 0 248.5 51t204 136.5 136.5 204 51 248.5z"
+                            />
+                        </svg>
+                    </span>
+                )}
+                <small style={{ marginLeft: '10px' }}>{' Run'}</small>
+                <span
+                    title="Run"
+                    className="editor-nav-button"
+                    style={{
+                        marginLeft: '0px',
+                        paddingTop: '10px'
+                    }}
+                    onClick={() => runSpecUpdateVis(true)}
+                >
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="18"
+                        height="18"
+                        viewBox="0 0 24 24"
+                        strokeWidth="2"
+                        stroke="none"
+                        fill="currentColor"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                    >
+                        <path d="M7 4v16l13 -8z" />
+                    </svg>
+                </span>
                 <select
                     onChange={e => {
                         setEditorMode(e.target.value as any);
                     }}
                     defaultValue={'Normal Mode'}
                     disabled
-                    hidden={urlSpec !== null}
+                    hidden={true}
                 >
                     {['Normal Mode', 'Template-based Mode'].map(d => (
                         <option key={d} value={d}>
@@ -240,8 +327,10 @@ function Editor(props: any) {
                     style={{
                         display: 'inline-block',
                         verticalAlign: 'middle',
+                        height: '100%',
+                        paddingTop: '9px',
                         float: 'right',
-                        marginRight: '5px',
+                        marginRight: '10px',
                         color: gm.length <= LIMIT_CLIPBOARD_LEN ? 'black' : 'lightgray',
                         cursor: gm.length <= LIMIT_CLIPBOARD_LEN ? 'pointer' : 'not-allowed'
                     }}
@@ -288,7 +377,7 @@ function Editor(props: any) {
                 >
                     <SplitPane
                         split="horizontal"
-                        defaultSize="calc(100% - 30px)"
+                        defaultSize={`calc(100% - ${VIEWCONFIG_HEADER_HEIGHT}px)`}
                         maxSize={window.innerHeight - EDITOR_HEADER_HEIGHT - VIEWCONFIG_HEADER_HEIGHT}
                         onChange={(size: number) => {
                             const secondSize = window.innerHeight - EDITOR_HEADER_HEIGHT - size;
@@ -338,7 +427,7 @@ function Editor(props: any) {
                 style={{
                     position: 'fixed',
                     right: '10px',
-                    top: '40px',
+                    top: `${EDITOR_HEADER_HEIGHT + 10}px`,
                     color: 'black',
                     cursor: 'pointer'
                 }}
