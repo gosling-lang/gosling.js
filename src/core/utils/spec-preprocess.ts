@@ -11,19 +11,19 @@ export function fixSpecDownstream(spec: GeminidSpec) {
     if (spec.static) {
         // Force disable zoomability when the top-level static option is enabled
         spec.tracks.forEach(t => {
-            t.zoomable = false;
+            t.static = true;
         });
     }
 
     /**
      * Flag tracks to use circular marks
      */
-    if (spec.layout?.type === 'circular') {
+    if (spec?.layout === 'circular') {
         // We need to let individual tracks know that they are rendered in a circular layout
         spec.tracks.forEach(t => {
-            if (t.circularLayout === undefined) {
+            if (t.layout === undefined) {
                 // EXPERIMENTAL: Remove if statement
-                t.circularLayout = true;
+                t.layout = 'circular';
             }
         });
     }

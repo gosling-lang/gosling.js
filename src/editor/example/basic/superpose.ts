@@ -3,8 +3,8 @@ import { EXAMPLE_CYTOAND_HG38 } from '../cytoband-hg38';
 import { EXAMPLE_DATASETS } from './datasets';
 
 export const EXAMPLE_SUPERPOSE: GeminidSpec = {
-    layout: {
-        type: 'linear',
+    layout: 'linear',
+    arrangement: {
         direction: 'vertical',
         columnSizes: 800,
         rowSizes: [60, 180, 180, 180]

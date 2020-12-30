@@ -26,7 +26,7 @@ export function drawText(HGC: any, trackInfo: any, tile: any, tm: GeminidTrackMo
     const [trackWidth, trackHeight] = trackInfo.dimensions;
 
     /* circular parameters */
-    const circular = spec.circularLayout;
+    const circular = spec.layout === 'circular';
     const trackInnerRadius = spec.innerRadius ?? 220;
     const trackOuterRadius = spec.outerRadius ?? 300; // TODO: should be smaller than Math.min(width, height)
     const startAngle = spec.startAngle ?? 0;

@@ -62,7 +62,7 @@ export class GeminidTrackModel {
         this.specComplete = JSON.parse(JSON.stringify(spec));
 
         // EXPERIMENTAL
-        this.isCircular = !!isCircular || !!this.specOriginal.circularLayout;
+        this.isCircular = !!isCircular || this.specOriginal.layout === 'circular';
 
         this.channelScales = {};
 

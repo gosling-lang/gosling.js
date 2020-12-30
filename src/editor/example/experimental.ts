@@ -2,7 +2,8 @@ import { GeminidSpec } from '../../core/geminid.schema';
 // import bed from './bed.json';
 
 export const EXAMPLE_OF_EXPERIMENT: GeminidSpec = {
-    layout: { type: 'linear', direction: 'horizontal', columnSizes: 800 },
+    layout: 'linear',
+    arrangement: { direction: 'horizontal', columnSizes: 800 },
     tracks: [
         {
             data: {

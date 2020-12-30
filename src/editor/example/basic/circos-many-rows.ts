@@ -58,7 +58,7 @@ const CIRCOS_HEATMAP: Track = {
 
     outerRadius,
     innerRadius,
-    zoomable: false
+    static: true
 } as Track;
 
 const CIRCOS_LINE: Track = {
@@ -82,7 +82,7 @@ const CIRCOS_LINE: Track = {
 
     outerRadius,
     innerRadius,
-    zoomable: false
+    static: true
 } as Track;
 
 const IDEOGRAM: Track = {
@@ -159,7 +159,8 @@ const IDEOGRAM: Track = {
 };
 
 export const EXAMPLE_CIRCOS_MANY: GeminidSpec = {
-    layout: { type: 'circular', direction: 'horizontal', wrap: 2 },
+    layout: 'circular',
+    arrangement: { direction: 'horizontal', wrap: 2 },
     tracks: [
         { ...IDEOGRAM, span: 2 },
         CIRCOS_HEATMAP,

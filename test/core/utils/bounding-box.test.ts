@@ -16,21 +16,24 @@ describe('Arrangement', () => {
         expect(defaultTrack.height).toEqual(DEFAULT_TRACK_HEIGHT);
 
         const vTrack = getGridInfo({
-            layout: { type: 'linear', direction: 'vertical', columnSizes: width, rowSizes: height },
+            layout: 'circular',
+            arrangement: { direction: 'vertical', columnSizes: width, rowSizes: height },
             tracks: [t]
         });
         expect(vTrack.width).toEqual(width);
         expect(vTrack.height).toEqual(height);
 
         const hTrack = getGridInfo({
-            layout: { type: 'linear', direction: 'horizontal', columnSizes: width, rowSizes: height },
+            layout: 'circular',
+            arrangement: { direction: 'horizontal', columnSizes: width, rowSizes: height },
             tracks: [t]
         });
         expect(hTrack.width).toEqual(vTrack.width);
         expect(hTrack.height).toEqual(vTrack.height);
 
         const cTrack = getGridInfo({
-            layout: { type: 'circular', direction: 'horizontal', columnSizes: width, rowSizes: height },
+            layout: 'circular',
+            arrangement: { direction: 'horizontal', columnSizes: width, rowSizes: height },
             tracks: [t]
         });
         expect(cTrack.width).toEqual(vTrack.width);
@@ -79,7 +82,7 @@ describe('Arrangement', () => {
             expect(a[1].layout.h).toEqual((DEFAULT_TRACK_HEIGHT / (DEFAULT_TRACK_HEIGHT * 2 + DEFAULT_TRACK_GAP)) * 12);
         });
         it('1x2', () => {
-            const a = getArrangement({ layout: { type: 'linear', direction: 'horizontal' }, tracks: [t, t] });
+            const a = getArrangement({ layout: 'linear', arrangement: { direction: 'horizontal' }, tracks: [t, t] });
             expect(a).toHaveLength(2);
 
             // bounding box
@@ -96,7 +99,8 @@ describe('Arrangement', () => {
         });
         it('2x2', () => {
             const a = getArrangement({
-                layout: { type: 'linear', direction: 'horizontal', wrap: 2 },
+                layout: 'linear',
+                arrangement: { direction: 'horizontal', wrap: 2 },
                 tracks: [t, t, t, t]
             });
             expect(a).toHaveLength(4);
@@ -110,8 +114,8 @@ describe('Arrangement', () => {
             const rowGaps = [40, 0, 0, 0, 0, 0, 0, 0, 0, 0, 40];
             const tracks = [t, t, t, t, t, t, t, t, t, t, t, t];
             const spec: GeminidSpec = {
-                layout: {
-                    type: 'linear',
+                layout: 'linear',
+                arrangement: {
                     direction: 'vertical',
                     columnSizes: [550],
                     rowSizes,
