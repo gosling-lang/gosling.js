@@ -27,6 +27,15 @@
     height: calc(100% - 40px);
 }
 
+.editor-button {
+    transition: transform 0.2s ease-in-out;
+    background: transparent;
+}
+
+.editor-button:hover {
+    transform: scale(1.1);
+}
+
 .split-pane-root {
     height: calc(100% - 40px) !important;
 }

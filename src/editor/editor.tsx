@@ -25,6 +25,7 @@ import stripJsonComments from 'strip-json-comments';
 import * as qs from 'qs';
 import { JSONCrush, JSONUncrush } from '../core/utils/json-crush';
 import './editor.css';
+import { ICONS, ICON_INFO } from './icon';
 
 /**
  * Register a Gemini plugin track to HiGlassComponent
@@ -59,7 +60,25 @@ const LIMIT_CLIPBOARD_LEN = 4096;
 const EDITOR_HEADER_HEIGHT = 40;
 const VIEWCONFIG_HEADER_HEIGHT = 30;
 
-// TODO: what is the type of prop?
+const getIconSVG = (d: ICON_INFO) => (
+    <svg
+        key={stringify(d)}
+        xmlns="http://www.w3.org/2000/svg"
+        width={d.width}
+        height={d.height}
+        viewBox={d.viewBox}
+        strokeWidth="2"
+        stroke={d.stroke}
+        fill={d.fill}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+    >
+        {d.path.map(path => (
+            <path key={path} d={path} />
+        ))}
+    </svg>
+);
+
 /**
  * React component for editing Gemini specs
  */
@@ -206,80 +225,38 @@ function Editor(props: any) {
                 {autoRun ? (
                     <span
                         title="Automatically update visualization upon editing spec"
-                        className="editor-nav-button"
+                        className="editor-button editor-nav-button"
                         style={{
                             marginLeft: 0,
                             color: '#0072B2'
                         }}
                         onClick={() => setAutoRun(false)}
                     >
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="22"
-                            height="22"
-                            viewBox="0 0 2048 1792"
-                            strokeWidth="2"
-                            stroke="currentColor"
-                            fill="none"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                        >
-                            <path
-                                fill="currentColor"
-                                d="M0 896q0-130 51-248.5t136.5-204 204-136.5 248.5-51h768q130 0 248.5 51t204 136.5 136.5 204 51 248.5-51 248.5-136.5 204-204 136.5-248.5 51h-768q-130 0-248.5-51t-204-136.5-136.5-204-51-248.5zm1408 512q104 0 198.5-40.5t163.5-109.5 109.5-163.5 40.5-198.5-40.5-198.5-109.5-163.5-163.5-109.5-198.5-40.5-198.5 40.5-163.5 109.5-109.5 163.5-40.5 198.5 40.5 198.5 109.5 163.5 163.5 109.5 198.5 40.5z"
-                            />
-                        </svg>
+                        {getIconSVG(ICONS.TOGGLE_ON)}
                     </span>
                 ) : (
                     <span
                         title="Pause updating visualization"
-                        className="editor-nav-button"
+                        className="editor-button editor-nav-button"
                         style={{
                             marginLeft: 0
                         }}
                         onClick={() => setAutoRun(true)}
                     >
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="22"
-                            height="22"
-                            viewBox="0 0 2048 1792"
-                            strokeWidth="2"
-                            stroke="currentColor"
-                            fill="none"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                        >
-                            <path
-                                fill="currentColor"
-                                d="M1152 896q0-104-40.5-198.5t-109.5-163.5-163.5-109.5-198.5-40.5-198.5 40.5-163.5 109.5-109.5 163.5-40.5 198.5 40.5 198.5 109.5 163.5 163.5 109.5 198.5 40.5 198.5-40.5 163.5-109.5 109.5-163.5 40.5-198.5zm768 0q0-104-40.5-198.5t-109.5-163.5-163.5-109.5-198.5-40.5h-386q119 90 188.5 224t69.5 288-69.5 288-188.5 224h386q104 0 198.5-40.5t163.5-109.5 109.5-163.5 40.5-198.5zm128 0q0 130-51 248.5t-136.5 204-204 136.5-248.5 51h-768q-130 0-248.5-51t-204-136.5-136.5-204-51-248.5 51-248.5 136.5-204 204-136.5 248.5-51h768q130 0 248.5 51t204 136.5 136.5 204 51 248.5z"
-                            />
-                        </svg>
+                        {getIconSVG(ICONS.TOGGLE_OFF)}
                     </span>
                 )}
                 <small style={{ marginLeft: '10px' }}>{' Run'}</small>
                 <span
                     title="Run"
-                    className="editor-nav-button"
+                    className="editor-button editor-nav-button"
                     style={{
                         marginLeft: '0px',
                         paddingTop: '10px'
                     }}
                     onClick={() => runSpecUpdateVis(true)}
                 >
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="18"
-                        height="18"
-                        viewBox="0 0 24 24"
-                        strokeWidth="2"
-                        stroke="none"
-                        fill="currentColor"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                    >
-                        <path d="M7 4v16l13 -8z" />
-                    </svg>
+                    {getIconSVG(ICONS.PLAY)}
                 </span>
                 <select
                     onChange={e => {
@@ -307,7 +284,7 @@ function Editor(props: any) {
                     </span>
                 ) : null}
                 <span
-                    style={{ color: 'white' }}
+                    style={{ color: 'white', cursor: 'default', userSelect: 'none' }}
                     onClick={() => {
                         if (hgRef.current) {
                             console.warn('Exporting SVG', hgRef.current.api.exportAsSvg());
@@ -315,7 +292,7 @@ function Editor(props: any) {
                         }
                     }}
                 >
-                    {' Click here to export svg '}
+                    {'‌‌ ‌‌ ‌‌ ‌‌ ‌‌ ‌‌ ‌‌ ‌‌ '}
                 </span>
                 <input type="hidden" id="spec-url-exporter" />
                 <span
@@ -324,6 +301,7 @@ function Editor(props: any) {
                             ? `Copy unique URL of current view to clipboard (limit: ${LIMIT_CLIPBOARD_LEN} characters)`
                             : `The current code contains characters more than ${LIMIT_CLIPBOARD_LEN}`
                     }
+                    className="editor-button"
                     style={{
                         display: 'inline-block',
                         verticalAlign: 'middle',
@@ -349,24 +327,10 @@ function Editor(props: any) {
                         }
                     }}
                 >
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="18"
-                        height="18"
-                        viewBox="0 0 24 24"
-                        strokeWidth="2"
-                        stroke="currentColor"
-                        fill="none"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                    >
-                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                        <path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" />
-                        <path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" />
-                    </svg>
+                    {getIconSVG(ICONS.LINK)}
                 </span>
             </div>
-            {/* ------------ main view ------------ */}
+            {/* ------------------------ Main View ------------------------ */}
             <div className="editor">
                 <SplitPane
                     className="split-pane-root"
@@ -421,9 +385,10 @@ function Editor(props: any) {
                     <div className="preview-container">{hglass}</div>
                 </SplitPane>
             </div>
-            {/* ------------ floating buttons ------------ */}
+            {/* ------------------------ Floating Buttons ------------------------ */}
             <span
                 title={isMaximizeVis ? 'Show Geminid code' : 'Maximize a visualization panel'}
+                className="editor-button"
                 style={{
                     position: 'fixed',
                     right: '10px',
@@ -435,35 +400,7 @@ function Editor(props: any) {
                     setIsMaximizeVis(!isMaximizeVis);
                 }}
             >
-                <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="18"
-                    height="18"
-                    viewBox="0 0 24 24"
-                    strokeWidth="2"
-                    stroke="currentColor"
-                    fill="none"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                >
-                    {isMaximizeVis ? (
-                        <>
-                            <path d="M5 9h2a2 2 0 0 0 2 -2v-2" />
-                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                            <path d="M15 19v-2a2 2 0 0 1 2 -2h2" />
-                            <path d="M15 5v2a2 2 0 0 0 2 2h2" />
-                            <path d="M5 15h2a2 2 0 0 1 2 2v2" />
-                        </>
-                    ) : (
-                        <>
-                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                            <path d="M4 8v-2a2 2 0 0 1 2 -2h2" />
-                            <path d="M4 16v2a2 2 0 0 0 2 2h2" />
-                            <path d="M16 4h2a2 2 0 0 1 2 2v2" />
-                            <path d="M16 20h2a2 2 0 0 0 2 -2v-2" />
-                        </>
-                    )}
-                </svg>
+                {isMaximizeVis ? getIconSVG(ICONS.MAXIMIZE) : getIconSVG(ICONS.MINIMIZE)}
             </span>
         </>
     );
