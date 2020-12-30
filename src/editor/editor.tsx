@@ -8,7 +8,7 @@ import { TextTrack } from 'higlass-text';
 import { HiGlassComponent } from 'higlass';
 // @ts-ignore
 import { default as higlassRegister } from 'higlass-register';
-import React, { useState, useEffect, useMemo, useRef } from 'react';
+import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import EditorPanel from './editor-panel';
 import stringify from 'json-stringify-pretty-compact';
 import SplitPane from 'react-split-pane';
@@ -25,6 +25,7 @@ import stripJsonComments from 'strip-json-comments';
 import * as qs from 'qs';
 import { JSONCrush, JSONUncrush } from '../core/utils/json-crush';
 import './editor.css';
+import { ICONS, ICON_INFO } from './icon';
 
 /**
  * Register a Gemini plugin track to HiGlassComponent
@@ -56,10 +57,28 @@ const INIT_DEMO_INDEX = examples.findIndex(d => d.forceShow) !== -1 ? examples.f
 const LIMIT_CLIPBOARD_LEN = 4096;
 
 // ! these should be updated upon change in css files
-const EDITOR_HEADER_HEIGHT = 30;
+const EDITOR_HEADER_HEIGHT = 40;
 const VIEWCONFIG_HEADER_HEIGHT = 30;
 
-// TODO: what is the type of prop?
+const getIconSVG = (d: ICON_INFO) => (
+    <svg
+        key={stringify(d)}
+        xmlns="http://www.w3.org/2000/svg"
+        width={d.width}
+        height={d.height}
+        viewBox={d.viewBox}
+        strokeWidth="2"
+        stroke={d.stroke}
+        fill={d.fill}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+    >
+        {d.path.map(path => (
+            <path key={path} d={path} />
+        ))}
+    </svg>
+);
+
 /**
  * React component for editing Gemini specs
  */
@@ -74,6 +93,7 @@ function Editor(props: any) {
     const [size, setSize] = useState<{ width: number; height: number }>();
     const [gm, setGm] = useState(stringify(urlSpec ?? (examples[INIT_DEMO_INDEX].spec as GeminidSpec)));
     const [log, setLog] = useState<Validity>({ message: '', state: 'success' });
+    const [autoRun, setAutoRun] = useState(true);
 
     // whether to show HiGlass' viewConfig on the left-bottom
     const [showVC, setShowVC] = useState<boolean>(false);
@@ -96,26 +116,33 @@ function Editor(props: any) {
         setHg(undefined);
     }, [demo, editorMode]);
 
+    const runSpecUpdateVis = useCallback(
+        (run?: boolean) => {
+            let editedGm;
+            try {
+                editedGm = replaceTemplate(JSON.parse(stripJsonComments(gm)));
+                setLog(validateSpec(GeminidSchema, editedGm));
+            } catch (e) {
+                const message = '✘ Cannnot parse the code.';
+                console.warn(message);
+                setLog({ message, state: 'error' });
+            }
+            if (!editedGm || (!autoRun && !run)) return;
+
+            compile(editedGm as GeminidSpec, (newHg: HiGlassSpec, newSize: Size) => {
+                setHg(newHg);
+                setSize(newSize);
+            });
+        },
+        [gm, autoRun]
+    );
+
     /**
      * Render background of tracks.
      */
     useEffect(() => {
-        let editedGm;
-        try {
-            editedGm = replaceTemplate(JSON.parse(stripJsonComments(gm)));
-            setLog(validateSpec(GeminidSchema, editedGm));
-        } catch (e) {
-            const message = '✘ Cannnot parse the code.';
-            console.warn(message);
-            setLog({ message, state: 'error' });
-        }
-        if (!editedGm) return;
-
-        compile(editedGm as GeminidSpec, (newHg: HiGlassSpec, newSize: Size) => {
-            setHg(newHg);
-            setSize(newSize);
-        });
-    }, [gm]);
+        runSpecUpdateVis();
+    }, [gm, autoRun]);
 
     // Uncommnet below to use HiGlass APIs
     // useEffect(() => {
@@ -174,7 +201,7 @@ function Editor(props: any) {
                 </div>
             </>
         ) : null;
-    }, [hg, gm, size]);
+    }, [hg, size]);
 
     return (
         <>
@@ -194,13 +221,50 @@ function Editor(props: any) {
                         </option>
                     ))}
                 </select>
+                <small style={{ marginLeft: '10px' }}>{' Auto Run'}</small>
+                {autoRun ? (
+                    <span
+                        title="Automatically update visualization upon editing spec"
+                        className="editor-button editor-nav-button"
+                        style={{
+                            marginLeft: 0,
+                            color: '#0072B2'
+                        }}
+                        onClick={() => setAutoRun(false)}
+                    >
+                        {getIconSVG(ICONS.TOGGLE_ON)}
+                    </span>
+                ) : (
+                    <span
+                        title="Pause updating visualization"
+                        className="editor-button editor-nav-button"
+                        style={{
+                            marginLeft: 0
+                        }}
+                        onClick={() => setAutoRun(true)}
+                    >
+                        {getIconSVG(ICONS.TOGGLE_OFF)}
+                    </span>
+                )}
+                <small style={{ marginLeft: '10px' }}>{' Run'}</small>
+                <span
+                    title="Run"
+                    className="editor-button editor-nav-button"
+                    style={{
+                        marginLeft: '0px',
+                        paddingTop: '10px'
+                    }}
+                    onClick={() => runSpecUpdateVis(true)}
+                >
+                    {getIconSVG(ICONS.PLAY)}
+                </span>
                 <select
                     onChange={e => {
                         setEditorMode(e.target.value as any);
                     }}
                     defaultValue={'Normal Mode'}
                     disabled
-                    hidden={urlSpec !== null}
+                    hidden={true}
                 >
                     {['Normal Mode', 'Template-based Mode'].map(d => (
                         <option key={d} value={d}>
@@ -220,7 +284,7 @@ function Editor(props: any) {
                     </span>
                 ) : null}
                 <span
-                    style={{ color: 'white' }}
+                    style={{ color: 'white', cursor: 'default', userSelect: 'none' }}
                     onClick={() => {
                         if (hgRef.current) {
                             console.warn('Exporting SVG', hgRef.current.api.exportAsSvg());
@@ -228,7 +292,7 @@ function Editor(props: any) {
                         }
                     }}
                 >
-                    {' Click here to export svg '}
+                    {'‌‌ ‌‌ ‌‌ ‌‌ ‌‌ ‌‌ ‌‌ ‌‌ '}
                 </span>
                 <input type="hidden" id="spec-url-exporter" />
                 <span
@@ -237,11 +301,14 @@ function Editor(props: any) {
                             ? `Copy unique URL of current view to clipboard (limit: ${LIMIT_CLIPBOARD_LEN} characters)`
                             : `The current code contains characters more than ${LIMIT_CLIPBOARD_LEN}`
                     }
+                    className="editor-button"
                     style={{
                         display: 'inline-block',
                         verticalAlign: 'middle',
+                        height: '100%',
+                        paddingTop: '9px',
                         float: 'right',
-                        marginRight: '5px',
+                        marginRight: '10px',
                         color: gm.length <= LIMIT_CLIPBOARD_LEN ? 'black' : 'lightgray',
                         cursor: gm.length <= LIMIT_CLIPBOARD_LEN ? 'pointer' : 'not-allowed'
                     }}
@@ -260,24 +327,10 @@ function Editor(props: any) {
                         }
                     }}
                 >
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="18"
-                        height="18"
-                        viewBox="0 0 24 24"
-                        strokeWidth="2"
-                        stroke="currentColor"
-                        fill="none"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                    >
-                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                        <path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" />
-                        <path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" />
-                    </svg>
+                    {getIconSVG(ICONS.LINK)}
                 </span>
             </div>
-            {/* ------------ main view ------------ */}
+            {/* ------------------------ Main View ------------------------ */}
             <div className="editor">
                 <SplitPane
                     className="split-pane-root"
@@ -288,7 +341,7 @@ function Editor(props: any) {
                 >
                     <SplitPane
                         split="horizontal"
-                        defaultSize="calc(100% - 30px)"
+                        defaultSize={`calc(100% - ${VIEWCONFIG_HEADER_HEIGHT}px)`}
                         maxSize={window.innerHeight - EDITOR_HEADER_HEIGHT - VIEWCONFIG_HEADER_HEIGHT}
                         onChange={(size: number) => {
                             const secondSize = window.innerHeight - EDITOR_HEADER_HEIGHT - size;
@@ -332,13 +385,14 @@ function Editor(props: any) {
                     <div className="preview-container">{hglass}</div>
                 </SplitPane>
             </div>
-            {/* ------------ floating buttons ------------ */}
+            {/* ------------------------ Floating Buttons ------------------------ */}
             <span
                 title={isMaximizeVis ? 'Show Geminid code' : 'Maximize a visualization panel'}
+                className="editor-button"
                 style={{
                     position: 'fixed',
                     right: '10px',
-                    top: '40px',
+                    top: `${EDITOR_HEADER_HEIGHT + 10}px`,
                     color: 'black',
                     cursor: 'pointer'
                 }}
@@ -346,35 +400,7 @@ function Editor(props: any) {
                     setIsMaximizeVis(!isMaximizeVis);
                 }}
             >
-                <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="18"
-                    height="18"
-                    viewBox="0 0 24 24"
-                    strokeWidth="2"
-                    stroke="currentColor"
-                    fill="none"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                >
-                    {isMaximizeVis ? (
-                        <>
-                            <path d="M5 9h2a2 2 0 0 0 2 -2v-2" />
-                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                            <path d="M15 19v-2a2 2 0 0 1 2 -2h2" />
-                            <path d="M15 5v2a2 2 0 0 0 2 2h2" />
-                            <path d="M5 15h2a2 2 0 0 1 2 2v2" />
-                        </>
-                    ) : (
-                        <>
-                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                            <path d="M4 8v-2a2 2 0 0 1 2 -2h2" />
-                            <path d="M4 16v2a2 2 0 0 0 2 2h2" />
-                            <path d="M16 4h2a2 2 0 0 1 2 2v2" />
-                            <path d="M16 20h2a2 2 0 0 0 2 -2v-2" />
-                        </>
-                    )}
-                </svg>
+                {isMaximizeVis ? getIconSVG(ICONS.MAXIMIZE) : getIconSVG(ICONS.MINIMIZE)}
             </span>
         </>
     );
