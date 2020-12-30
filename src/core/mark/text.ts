@@ -26,7 +26,7 @@ export function drawText(HGC: any, trackInfo: any, tile: any, tm: GeminidTrackMo
     const [trackWidth, trackHeight] = trackInfo.dimensions;
 
     /* circular parameters */
-    const circular = spec.circularLayout;
+    const circular = spec.layout === 'circular';
     const trackInnerRadius = spec.innerRadius ?? 220;
     const trackOuterRadius = spec.outerRadius ?? 300; // TODO: should be smaller than Math.min(width, height)
     const startAngle = spec.startAngle ?? 0;
@@ -74,6 +74,7 @@ export function drawText(HGC: any, trackInfo: any, tile: any, tm: GeminidTrackMo
                 const xe = tm.encodedPIXIProperty('xe', d);
                 const cx = tm.encodedPIXIProperty('x-center', d);
                 const y = tm.encodedPIXIProperty('y', d) + dy;
+                const opacity = tm.encodedPIXIProperty('opacity', d);
 
                 if (cx < 0 || cx > trackWidth) {
                     // we do not draw texts that are out of the view
@@ -104,13 +105,15 @@ export function drawText(HGC: any, trackInfo: any, tile: any, tm: GeminidTrackMo
                 trackInfo.textsBeingUsed++;
 
                 const alphaTransition = tm.markVisibility(d, metric);
-                if (!text || alphaTransition === 0) {
+                const actualOpacity = Math.min(alphaTransition, opacity);
+
+                if (!text || actualOpacity === 0) {
                     trackInfo.textsBeingUsed--;
                     textGraphic.visible = false;
                     return;
                 }
 
-                textGraphic.alpha = alphaTransition;
+                textGraphic.alpha = actualOpacity;
 
                 textGraphic.resolution = 8;
                 textGraphic.updateText();
@@ -143,6 +146,7 @@ export function drawText(HGC: any, trackInfo: any, tile: any, tm: GeminidTrackMo
                 const color = tm.encodedPIXIProperty('color', d);
                 const cx = tm.encodedPIXIProperty('x-center', d);
                 const y = tm.encodedPIXIProperty('y', d) + dy;
+                const opacity = tm.encodedPIXIProperty('opacity', d);
 
                 if (cx < 0 || cx > trackWidth) {
                     // we do not draw texts that are out of the view
@@ -173,13 +177,15 @@ export function drawText(HGC: any, trackInfo: any, tile: any, tm: GeminidTrackMo
                 trackInfo.textsBeingUsed++;
 
                 const alphaTransition = tm.markVisibility(d, metric);
-                if (!text || alphaTransition === 0) {
+                const actualOpacity = Math.min(alphaTransition, opacity);
+
+                if (!text || actualOpacity === 0) {
                     trackInfo.textsBeingUsed--;
                     textGraphic.visible = false;
                     return;
                 }
 
-                textGraphic.alpha = alphaTransition;
+                textGraphic.alpha = actualOpacity;
                 textGraphic.anchor.x = 0.5;
                 textGraphic.anchor.y = 0.5;
 

@@ -6,6 +6,7 @@ import { BoundingBox, RelativePosition } from './utils/bounding-box';
 import { resolveSuperposedTracks } from './utils/superpose';
 import { getGenomicChannelKeyFromTrack, getGenomicChannelFromTrack } from './utils/validate';
 import { IsDataDeep, IsChannelDeep, IsDataDeepTileset } from './geminid.schema.guards';
+import { DEFAULT_SUBTITLE_HEIGHT, DEFAULT_TITLE_HEIGHT } from './layout/defaults';
 
 /**
  * Convert a gemini track into a HiGlass view and add it into a higlass model.
@@ -22,7 +23,7 @@ export function geminidToHiGlass(
     // we only look into the first resolved spec to get information, such as size of the track
     const firstResolvedSpec = resolveSuperposedTracks(gmTrack)[0];
 
-    if (IsDataDeep(firstResolvedSpec.data) && firstResolvedSpec.mark !== 'empty') {
+    if (IsDataDeep(firstResolvedSpec.data)) {
         let server, tilesetUid;
 
         if (IsDataDeepTileset(firstResolvedSpec.data)) {
@@ -47,7 +48,7 @@ export function geminidToHiGlass(
             height: bb.height,
             options: {
                 /* Mouse hover position */
-                showMousePosition: firstResolvedSpec.circularLayout ? false : true, // show mouse position only for linear tracks
+                showMousePosition: firstResolvedSpec.layout === 'circular' ? false : true, // show mouse position only for linear tracks
                 mousePositionColor: '#B8BCC1',
                 /* Track title */
                 name: firstResolvedSpec.title,
@@ -79,7 +80,7 @@ export function geminidToHiGlass(
                 .setDomain(xDomain, yDomain)
                 .setMainTrack(hgTrack)
                 .addTrackSourceServers(server)
-                .setZoomFixed(firstResolvedSpec.zoomable as undefined | boolean)
+                .setZoomFixed(firstResolvedSpec.static as undefined | boolean)
                 .setLayout(layout);
         }
 
@@ -87,14 +88,29 @@ export function geminidToHiGlass(
         ['x', 'y'].forEach(c => {
             const channel = (firstResolvedSpec as any)[c];
             if (IsChannelDeep(channel) && channel.axis && channel.axis !== 'none') {
-                hgModel.setAxisTrack(channel.axis);
+                const narrowSize = 400;
+                const narrowerSize = 200;
+                const narrowType =
+                    // show two labels at the end in a `si` format when the track is too narrow
+                    (c === 'x' && bb.width <= narrowerSize) || (c === 'y' && bb.height <= narrowerSize)
+                        ? 'narrower'
+                        : (c === 'x' && bb.width <= narrowSize) || (c === 'y' && bb.height <= narrowSize)
+                        ? 'narrow'
+                        : 'regular';
+                hgModel.setAxisTrack(channel.axis, narrowType);
             }
         });
 
         hgModel.validateSpec();
-    } else if (firstResolvedSpec.mark === 'empty') {
-        // The `empty` tracks are used to add gaps between tracks vertically.
-        hgModel.addDefaultView().setLayout(layout).setEmptyTrack(bb.width, bb.height);
+    } else if (firstResolvedSpec.mark === 'header') {
+        // `text` tracks are used to show title and subtitle of the views
+        hgModel.addDefaultView().setLayout(layout);
+        if (typeof firstResolvedSpec.title === 'string') {
+            hgModel.setTextTrack(bb.width, DEFAULT_TITLE_HEIGHT, firstResolvedSpec.title, 'black', 18, 'bold');
+        }
+        if (typeof firstResolvedSpec.subtitle === 'string') {
+            hgModel.setTextTrack(bb.width, DEFAULT_SUBTITLE_HEIGHT, firstResolvedSpec.subtitle, 'gray', 14, 'normal');
+        }
     }
     return hgModel;
 }

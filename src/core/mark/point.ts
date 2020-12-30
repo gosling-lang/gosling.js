@@ -18,7 +18,7 @@ export function drawPoint(HGC: any, trackInfo: any, tile: any, model: GeminidTra
     const [trackWidth, trackHeight] = trackInfo.dimensions;
 
     /* circular parameters */
-    const circular = spec.circularLayout;
+    const circular = spec.layout === 'circular';
     const trackInnerRadius = spec.innerRadius ?? 220;
     const trackOuterRadius = spec.outerRadius ?? 300;
     const startAngle = spec.startAngle ?? 0;
@@ -31,20 +31,8 @@ export function drawPoint(HGC: any, trackInfo: any, tile: any, model: GeminidTra
     const rowCategories = (model.getChannelDomainArray('row') as string[]) ?? ['___SINGLE_ROW___'];
     const rowHeight = trackHeight / rowCategories.length;
 
-    /* constant values */
-    const constantStrokeWidth = model.encodedPIXIProperty('strokeWidth');
-    const constantStroke = model.encodedPIXIProperty('stroke');
-
     /* render */
     const g = tile.graphics;
-
-    // stroke
-    g.lineStyle(
-        constantStrokeWidth,
-        colorToHex(constantStroke),
-        1, // alpha
-        1 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
-    );
 
     rowCategories.forEach(rowCategory => {
         const rowPosition = model.encodedValue('row', rowCategory);
@@ -58,12 +46,22 @@ export function drawPoint(HGC: any, trackInfo: any, tile: any, model: GeminidTra
             const cy = model.encodedPIXIProperty('y-center', d);
             const color = model.encodedPIXIProperty('color', d);
             const size = model.encodedPIXIProperty('p-size', d);
+            const strokeWidth = model.encodedPIXIProperty('strokeWidth', d);
+            const stroke = model.encodedPIXIProperty('stroke', d);
             const opacity = model.encodedPIXIProperty('opacity', d);
 
             if (size <= 0.1 || opacity === 0 || cx + size < 0 || cx - size > trackWidth) {
                 // Don't draw invisible marks
                 return;
             }
+
+            // stroke
+            g.lineStyle(
+                strokeWidth,
+                colorToHex(stroke),
+                opacity, // alpha
+                1 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
+            );
 
             if (circular) {
                 const r = trackOuterRadius - ((rowPosition + rowHeight - cy) / trackHeight) * trackRingSize;

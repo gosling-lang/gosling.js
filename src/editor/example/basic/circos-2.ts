@@ -2,7 +2,8 @@ import { GeminidSpec } from '../../../core/geminid.schema';
 import { EXAMPLE_DATASETS } from './datasets';
 
 export const EXAMPLE_CIRCOS_3: GeminidSpec = {
-    layout: { type: 'circular', direction: 'horizontal' },
+    layout: 'circular',
+    arrangement: { direction: 'horizontal' },
     tracks: [
         {
             data: {

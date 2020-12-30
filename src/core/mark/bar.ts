@@ -26,7 +26,7 @@ export function drawBar(HGC: any, trackInfo: any, tile: any, tm: GeminidTrackMod
     );
 
     /* circular parameters */
-    const circular = spec.circularLayout;
+    const circular = spec.layout === 'circular';
     const trackInnerRadius = spec.innerRadius ?? 220;
     const trackOuterRadius = spec.outerRadius ?? 300; // TODO: should be smaller than Math.min(width, height)
     const startAngle = spec.startAngle ?? 0;
@@ -42,12 +42,6 @@ export function drawBar(HGC: any, trackInfo: any, tile: any, tm: GeminidTrackMod
     /* row separation */
     const rowCategories = (tm.getChannelDomainArray('row') as string[]) ?? ['___SINGLE_ROW___'];
     const rowHeight = trackHeight / rowCategories.length;
-
-    /* background */
-    if (tm.encodedValue('background')) {
-        tile.graphics.beginFill(colorToHex(tm.encodedValue('background')), 1);
-        tile.graphics.drawRect(xScale(tileX), 0, xScale(tileX + tileWidth) - xScale(tileX), trackHeight);
-    }
 
     /* baseline */
     const baselineValue = IsChannelDeep(spec.y) ? spec.y?.baseline : undefined;

@@ -51,8 +51,10 @@ export const EXAMPLE_BASIC_AREA: Track = {
 };
 
 export const EXMAPLE_BASIC_MARKS: GeminidSpec = {
-    layout: {
-        type: 'linear',
+    title: 'Basic Marks',
+    subtitle: 'Tutorial Examples',
+    layout: 'linear',
+    arrangement: {
         direction: 'vertical',
         rowSizes: 180,
         columnSizes: 800

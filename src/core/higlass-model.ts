@@ -36,6 +36,7 @@ export class HiGlassModel {
     private hg: HiGlassSpec;
     constructor() {
         this.hg = {
+            compactLayout: false,
             trackSourceServers: [],
             views: [],
             zoomLocks: {
@@ -62,17 +63,30 @@ export class HiGlassModel {
         return this;
     }
 
-    // Trick to add a vertical gap between tracks. We are using this trick because HiGlass `layout` do not support vertical gaps.
-    public setEmptyTrack(width: number, height: number) {
+    public setTextTrack(
+        width: number,
+        height: number,
+        text: string,
+        textColor = 'black',
+        fontSize = 14,
+        fontWeight = 'normal'
+    ) {
         if (this.getLastView()) {
-            this.getLastView().tracks.center = [
-                {
-                    server: 'http://higlass.io/api/v1',
-                    type: 'empty',
-                    width,
-                    height
+            this.getLastView().tracks.top?.push({
+                type: 'text',
+                width,
+                height,
+                options: {
+                    backgroundColor: 'white',
+                    textColor,
+                    fontSize,
+                    fontWeight,
+                    fontFamily: 'Arial',
+                    offsetY: 0, // offset from the top of the track
+                    align: 'left',
+                    text
                 }
-            ];
+            });
         }
         return this;
     }
@@ -108,7 +122,7 @@ export class HiGlassModel {
      * Get the last view that renders any visualization, so skiping empty tracks.
      */
     public getLastVisView() {
-        const vs = this.hg.views.filter(v => (v.tracks as any).center[0].type === 'combined');
+        const vs = this.hg.views.filter(v => (v.tracks as any).center?.[0]?.type === 'combined');
         return vs[vs.length - 1];
     }
 
@@ -178,7 +192,10 @@ export class HiGlassModel {
         return this;
     }
 
-    public setAxisTrack(position: 'left' | 'right' | 'top' | 'bottom') {
+    public setAxisTrack(
+        position: 'left' | 'right' | 'top' | 'bottom',
+        type: 'regular' | 'narrow' | 'narrower' = 'regular'
+    ) {
         if (!this.hg.views) return this;
         const baseTrackType = '-chromosome-labels';
         const direction = position === 'left' || position === 'right' ? 'vertical' : 'horizontal';
@@ -192,6 +209,8 @@ export class HiGlassModel {
                 options: {
                     color: 'black',
                     tickColor: 'black',
+                    tickFormat: type === 'narrower' ? 'si' : 'plain',
+                    tickPositions: type === 'regular' ? 'even' : 'ends',
                     reverseOrientation: position === 'bottom' ? true : false
                 }
             }

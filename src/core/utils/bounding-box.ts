@@ -1,7 +1,13 @@
 import { GeminidSpec, Track } from '../geminid.schema';
-import { DEFAULT_TRACK_GAP, DEFAULT_TRACK_HEIGHT, DEFAULT_TRACK_WIDTH } from '../layout/defaults';
+import {
+    DEFAULT_SUBTITLE_HEIGHT,
+    DEFAULT_TITLE_HEIGHT,
+    DEFAULT_TRACK_GAP,
+    DEFAULT_TRACK_HEIGHT,
+    DEFAULT_TRACK_WIDTH
+} from '../layout/defaults';
 import { resolveSuperposedTracks } from '../utils/superpose';
-import { arrayRepeat } from './array';
+import { arrayRepeat, insertItemToArray } from './array';
 
 export interface Size {
     width: number;
@@ -52,11 +58,11 @@ export function getGridInfo(spec: GeminidSpec): GridInfo {
         .filter(t => !t.superposeOnPreviousTrack)
         .map(t => (typeof t.span === 'number' ? t.span : 1))
         .reduce((a, b) => a + b, 0);
-    const wrap: number = spec.layout?.wrap ?? 999;
+    const wrap: number = spec.arrangement?.wrap ?? 999;
 
     let numColumns = 0,
         numRows = 0;
-    if (spec.layout?.direction === 'horizontal') {
+    if (spec.arrangement?.direction === 'horizontal') {
         numRows = Math.ceil(numCells / wrap);
         numColumns = Math.min(wrap, numCells);
     } else {
@@ -67,34 +73,41 @@ export function getGridInfo(spec: GeminidSpec): GridInfo {
 
     // undefined | [number, number, ...] | number
     const baseColumnSizes =
-        spec.layout?.columnSizes === undefined
+        spec.arrangement?.columnSizes === undefined
             ? [DEFAULT_TRACK_WIDTH]
-            : typeof spec.layout?.columnSizes === 'number'
-            ? [spec.layout?.columnSizes]
-            : spec.layout?.columnSizes;
+            : typeof spec.arrangement?.columnSizes === 'number'
+            ? [spec.arrangement?.columnSizes]
+            : spec.arrangement?.columnSizes;
     const baseRowSizes =
-        spec.layout?.rowSizes === undefined
+        spec.arrangement?.rowSizes === undefined
             ? [DEFAULT_TRACK_HEIGHT]
-            : typeof spec.layout?.rowSizes === 'number'
-            ? [spec.layout?.rowSizes]
-            : spec.layout?.rowSizes;
+            : typeof spec.arrangement?.rowSizes === 'number'
+            ? [spec.arrangement?.rowSizes]
+            : spec.arrangement?.rowSizes;
     const baseColumnGaps =
-        spec.layout?.columnGaps === undefined
+        spec.arrangement?.columnGaps === undefined
             ? [DEFAULT_TRACK_GAP]
-            : typeof spec.layout?.columnGaps === 'number'
-            ? [spec.layout?.columnGaps]
-            : spec.layout?.columnGaps;
+            : typeof spec.arrangement?.columnGaps === 'number'
+            ? [spec.arrangement?.columnGaps]
+            : spec.arrangement?.columnGaps;
     const baseRowGaps =
-        spec.layout?.rowGaps === undefined
+        spec.arrangement?.rowGaps === undefined
             ? [DEFAULT_TRACK_GAP]
-            : typeof spec.layout?.rowGaps === 'number'
-            ? [spec.layout?.rowGaps]
-            : spec.layout?.rowGaps;
+            : typeof spec.arrangement?.rowGaps === 'number'
+            ? [spec.arrangement?.rowGaps]
+            : spec.arrangement?.rowGaps;
 
     const columnSizes = arrayRepeat(baseColumnSizes, numColumns);
-    const rowSizes = arrayRepeat(baseRowSizes, numRows);
     const columnGaps = arrayRepeat(baseColumnGaps, numColumns - 1);
-    const rowGaps = arrayRepeat(baseRowGaps, numRows - 1);
+    let rowSizes = arrayRepeat(baseRowSizes, numRows);
+    let rowGaps = arrayRepeat(baseRowGaps, numRows - 1);
+
+    // consider title and subtitle if any
+    if (spec.title || spec.subtitle) {
+        const headerHeight = (spec.title ? DEFAULT_TITLE_HEIGHT : 0) + (spec.subtitle ? DEFAULT_SUBTITLE_HEIGHT : 0);
+        rowSizes = insertItemToArray(rowSizes, 0, headerHeight);
+        rowGaps = insertItemToArray(rowGaps, 0, 0);
+    }
 
     const width = columnSizes.reduce((a, b) => a + b, 0) + columnGaps.reduce((a, b) => a + b, 0);
     const height = rowSizes.reduce((a, b) => a + b, 0) + rowGaps.reduce((a, b) => a + b, 0);
@@ -102,13 +115,14 @@ export function getGridInfo(spec: GeminidSpec): GridInfo {
     return { width, height, columnSizes, rowSizes, columnGaps, rowGaps };
 }
 
-const getGapTrack = (size: Size) => {
+const getTextTrack = (size: Size, title?: string, subtitle?: string) => {
     return JSON.parse(
         JSON.stringify({
-            mark: 'empty',
-            data: { type: 'csv', url: 'tileset_info/?d=' },
+            mark: 'header',
             width: size.width,
-            height: size.height
+            height: size.height,
+            title,
+            subtitle
         })
     ) as Track;
 };
@@ -129,6 +143,22 @@ export function getArrangement(spec: GeminidSpec): TrackInfo[] {
 
     const info: TrackInfo[] = [];
 
+    // consider title and subtitle if any
+    if (spec.title || spec.subtitle) {
+        const height = rowSizes[ri];
+        info.push({
+            track: getTextTrack({ width: totalWidth, height }, spec.title, spec.subtitle),
+            boundingBox: { x: 0, y: 0, width: totalWidth, height },
+            layout: {
+                x: 0,
+                y: 0,
+                w: 12.0,
+                h: (height / totalHeight) * 12.0
+            }
+        });
+        ri++;
+    }
+
     spec.tracks.forEach(track => {
         const span = typeof track.span === 'number' ? track.span : 1;
         const trackWidth = resolveSuperposedTracks(track)[0].width;
@@ -139,11 +169,11 @@ export function getArrangement(spec: GeminidSpec): TrackInfo[] {
 
         let width = columnSizes[ci];
         let height = rowSizes[ri];
-        if (spec.layout?.direction === 'horizontal' && span !== 1) {
+        if (spec.arrangement?.direction === 'horizontal' && span !== 1) {
             width =
                 columnSizes.slice(ci, ci + span).reduce((a, b) => a + b, 0) +
                 columnGaps.slice(ci, ci + span).reduce((a, b) => a + b, 0);
-        } else if (spec.layout?.direction === 'vertical' && span !== 1) {
+        } else if (spec.arrangement?.direction === 'vertical' && span !== 1) {
             height =
                 rowSizes.slice(ri, ri + span).reduce((a, b) => a + b, 0) +
                 rowGaps.slice(ri, ri + span).reduce((a, b) => a + b, 0);
@@ -174,35 +204,10 @@ export function getArrangement(spec: GeminidSpec): TrackInfo[] {
             return;
         }
 
-        if (spec.layout?.direction === 'horizontal') {
-            ci += span;
+        if (spec.arrangement?.direction === 'horizontal') {
+            ci += typeof track.span === 'number' ? track.span : 1;
 
             if (ci >= numColumns && ri < numRows - 1) {
-                // Add between-row gaps.
-                const yOffset = y + height;
-                const gapHeight = rowGaps[ri];
-
-                if (gapHeight !== 0) {
-                    Array(numColumns)
-                        .fill(0)
-                        .forEach((_, _ci) => {
-                            const xOffset =
-                                columnSizes.slice(0, _ci).reduce((a, b) => a + b, 0) +
-                                columnGaps.slice(0, _ci).reduce((a, b) => a + b, 0);
-                            const colWidth = columnSizes[_ci];
-                            info.push({
-                                track: getGapTrack({ width: colWidth, height: gapHeight }),
-                                boundingBox: { x: xOffset, y: yOffset, width: colWidth, height: gapHeight },
-                                layout: {
-                                    x: (xOffset / totalWidth) * 12.0,
-                                    y: (yOffset / totalHeight) * 12.0,
-                                    w: (colWidth / totalWidth) * 12.0,
-                                    h: (gapHeight / totalHeight) * 12.0
-                                }
-                            });
-                        });
-                }
-
                 ci = 0;
                 ri++;
             }
@@ -213,27 +218,6 @@ export function getArrangement(spec: GeminidSpec): TrackInfo[] {
             if (ri >= numRows) {
                 ri = 0;
                 ci++;
-            } else {
-                // Add between-row gaps.
-                if (ri < numRows) {
-                    const yOffset = y + height;
-                    const xOffset = x;
-                    const gapHeight = rowGaps[ri - 1];
-                    const colWidth = width;
-
-                    if (gapHeight !== 0) {
-                        info.push({
-                            track: getGapTrack({ width: colWidth, height: gapHeight }),
-                            boundingBox: { x: xOffset, y: yOffset, width: colWidth, height: gapHeight },
-                            layout: {
-                                x: (xOffset / totalWidth) * 12.0,
-                                y: (yOffset / totalHeight) * 12.0,
-                                w: (colWidth / totalWidth) * 12.0,
-                                h: (gapHeight / totalHeight) * 12.0
-                            }
-                        });
-                    }
-                }
             }
         }
     });

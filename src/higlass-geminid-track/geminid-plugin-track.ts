@@ -46,6 +46,7 @@ function GeminidTrack(HGC: any, ...args: any[]): any {
             this.pMain.addChild(this.mouseOverGraphics);
 
             this.tooltips = [];
+            this.svgData = [];
             this.textGraphics = [];
             this.textsBeingUsed = 0; // this variable is being used to improve the performance of text rendering
 
@@ -54,6 +55,7 @@ function GeminidTrack(HGC: any, ...args: any[]): any {
 
         initTile(tile: any) {
             this.tooltips = [];
+            this.svgData = [];
             this.textsBeingUsed = 0;
 
             // preprocess all tiles at once so that we can share the value scales
@@ -71,6 +73,7 @@ function GeminidTrack(HGC: any, ...args: any[]): any {
             this.options = newOptions;
 
             this.tooltips = [];
+            this.svgData = [];
             this.textsBeingUsed = 0;
 
             this.updateTile();
@@ -80,6 +83,7 @@ function GeminidTrack(HGC: any, ...args: any[]): any {
 
         draw() {
             this.tooltips = [];
+            this.svgData = [];
             this.textsBeingUsed = 0;
             this.mouseOverGraphics?.clear(); // remove mouse over effects
 
@@ -610,7 +614,45 @@ function GeminidTrack(HGC: any, ...args: any[]): any {
          */
         maxVisibleValue() {}
 
-        exportSVG() {}
+        exportSVG() {
+            let track = null;
+            let base = null;
+
+            [base, track] = super.superSVG();
+
+            base.setAttribute('class', 'exported-arcs-track');
+            const output = document.createElement('g');
+
+            track.appendChild(output);
+
+            output.setAttribute(
+                'transform',
+                `translate(${this.pMain.position.x},${this.pMain.position.y}) scale(${this.pMain.scale.x},${this.pMain.scale.y})`
+            );
+
+            this.svgData?.forEach((d: any /* TODO: define type */) => {
+                switch (d.type) {
+                    case 'rect':
+                        const { xs, xe, ys, ye, color, stroke, opacity } = d;
+                        const g = document.createElement('rect');
+                        g.setAttribute('fill', color);
+                        g.setAttribute('stroke', stroke);
+
+                        g.setAttribute('x', xs);
+                        g.setAttribute('y', ys);
+                        g.setAttribute('width', `${xe - xs}`);
+                        g.setAttribute('height', `${ye - ys}`);
+                        g.setAttribute('opacity', opacity);
+
+                        output.appendChild(g);
+                        break;
+                    default:
+                        break;
+                }
+            });
+
+            return [base, track];
+        }
 
         getMouseOverHtml(mouseX: number, mouseY: number) {
             if (!this.tilesetInfo || !this.tooltips) {

@@ -18,8 +18,8 @@ export const MULTIVEC_SPEC: Partial<BasicSingleTrack> = {
 };
 
 export const EXAMPLE_PERIPHERAL_PLOT: GeminidSpec = {
-    layout: {
-        type: 'linear',
+    layout: 'linear',
+    arrangement: {
         direction: 'horizontal',
         wrap: 3,
         columnSizes: [100, 600, 100],

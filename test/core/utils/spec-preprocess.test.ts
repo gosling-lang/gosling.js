@@ -3,8 +3,8 @@ import { fixSpecDownstream } from '../../../src/core/utils/spec-preprocess';
 
 describe('Spec Preprocess', () => {
     it('circular layout', () => {
-        const spec: GeminidSpec = { layout: { type: 'circular', direction: 'horizontal' }, tracks: [{}] };
+        const spec: GeminidSpec = { layout: 'circular', arrangement: { direction: 'horizontal' }, tracks: [{}] };
         fixSpecDownstream(spec);
-        expect(spec.tracks[0].circularLayout).toEqual(true);
+        expect(spec.tracks[0].layout).toEqual('circular');
     });
 });

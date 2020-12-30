@@ -21,6 +21,9 @@
         "zoomFixed": {
             "type": "boolean"
         },
+        "compactLayout": {
+            "type": "boolean"
+        },
         "exportViewUrl": {
             "type": "string"
         },

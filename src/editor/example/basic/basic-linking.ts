@@ -3,8 +3,8 @@ import { EXAMPLE_BASIC_AREA } from './basic-marks';
 import { EXAMPLE_DATASETS } from './datasets';
 
 export const EXMAPLE_BASIC_LINKING: GeminidSpec = {
-    layout: {
-        type: 'linear',
+    layout: 'linear',
+    arrangement: {
         direction: 'vertical',
         columnSizes: 800
     },

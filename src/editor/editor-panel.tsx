@@ -3,7 +3,7 @@ import MonacoEditor from 'react-monaco-editor';
 import * as Monaco from 'monaco-editor/esm/vs/editor/editor.api';
 import ReactResizeDetector from 'react-resize-detector';
 
-function EditorPanel(props: { code: string; readOnly?: boolean; onChange?: (code: string) => void }) {
+function EditorPanel(props: { code: string; readOnly?: boolean; onChange?: (code: string) => void; hide?: boolean }) {
     const { code: templateCode, readOnly } = props;
     const editor = useRef<Monaco.editor.IStandaloneCodeEditor | null>(null);
     const [code, setCode] = useState(templateCode);

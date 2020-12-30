@@ -4,10 +4,16 @@ import { GLYPH_LOCAL_PRESET_TYPE, GLYPH_HIGLASS_PRESET_TYPE } from '../editor/ex
  * Root-level specification
  */
 export type GeminidSpec = {
+    assembly?: 'hm38'; // TODO: support others as well
+
+    title?: string;
+    subtitle?: string;
+
     static?: boolean;
     description?: string;
 
-    layout?: Layout;
+    layout?: 'linear' | 'circular';
+    arrangement?: Arrangement;
     tracks: Track[];
 
     width?: number;
@@ -15,11 +21,9 @@ export type GeminidSpec = {
 };
 
 /**
- * Layout specification for multiple tracks
+ * Arrangement of multiple tracks
  */
-export interface Layout {
-    assembly?: 'hm38'; // TODO: support others as well
-    type: 'linear' | 'circular'; // TODO: should this be moved to the track-level spec?
+export interface Arrangement {
     direction: 'vertical' | 'horizontal';
     wrap?: number;
 
@@ -119,10 +123,6 @@ export interface OneOfFilter {
     not: boolean;
 }
 
-// TODO: Ensure to use `EmptyTrack` for the convenient
-// export type Track = EmptyTrack | NonEmptyTrack;
-// export type NonEmptyTrack = SingleTrack | SuperposedTrack | SuperposedTrackTwoLevels;
-
 export type Track = SingleTrack | SuperposedTrack | SuperposedTrackTwoLevels;
 
 export type SingleTrack = BasicSingleTrack | CustomChannel;
@@ -134,16 +134,11 @@ export type CustomChannel = {
     [k in CHANNEL_KEYS]?: never;
 };
 
-export interface EmptyTrack {
-    type: 'empty';
-    width: number;
-    height: number;
-}
-
 export interface BasicSingleTrack {
     title?: string;
+    subtitle?: string;
     description?: string;
-    zoomable?: boolean;
+    static?: boolean;
 
     // Layout
     width?: number;
@@ -152,7 +147,7 @@ export interface BasicSingleTrack {
     superposeOnPreviousTrack?: boolean;
 
     // Circular Layout
-    circularLayout?: boolean;
+    layout?: 'circular' | 'linear';
     outerRadius?: number;
     innerRadius?: number;
     startAngle?: number; // [0, 360]
@@ -190,8 +185,7 @@ export interface BasicSingleTrack {
 
     stroke?: Channel;
     strokeWidth?: Channel;
-    opacity?: ChannelValue;
-    background?: ChannelValue;
+    opacity?: Channel;
 
     // Experimental
     stackY?: boolean; // Eventually, will be added to y's `Channel` w/ gap
@@ -219,6 +213,7 @@ export type SuperposedTrackTwoLevels = Partial<SingleTrack> & {
 };
 
 export interface TrackStyle {
+    background?: string;
     dashed?: [number, number];
     linePattern?: { type: 'triangle-l' | 'triangle-r'; size: number };
     curve?: 'top' | 'bottom' | 'left' | 'right';
@@ -233,7 +228,6 @@ export interface TrackStyle {
     textStrokeWidth?: number;
     textFontWeight?: 'bold' | 'normal';
     //
-    background?: string; // deprecated
     stroke?: string; // deprecated
     strokeWidth?: number; // deprecated
 }
@@ -280,8 +274,7 @@ export const enum CHANNEL_KEYS {
     stroke = 'stroke',
     strokeWidth = 'strokeWidth',
     size = 'size',
-    text = 'text',
-    background = 'background'
+    text = 'text'
 }
 
 /**
@@ -305,8 +298,7 @@ export const ChannelTypes = {
     stroke: 'stroke',
     strokeWidth: 'strokeWidth',
     size: 'size',
-    text: 'text',
-    background: 'background'
+    text: 'text'
 } as const;
 
 export type ChannelType = keyof typeof ChannelTypes | string;
@@ -384,7 +376,8 @@ export type MarkType =
     | 'link-between'
     | 'link-within' // uses either x and x1 or y and y1
     | 'dummy'
-    | 'empty';
+    // being used to show title/subtitle internally
+    | 'header';
 
 /**
  * Glyph
