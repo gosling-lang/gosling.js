@@ -76,6 +76,8 @@ function CSVDataFetcher(HGC: any, ...args: any): any {
                 })
                 .then(text => {
                     return d3.dsvFormat(this.dataConfig.separator ?? ',').parse(text, (row: any) => {
+                        let successfullyGotChrInfo = true;
+
                         genomicFields.forEach(g => {
                             if (!row[chromosomeField]) {
                                 // TODO:
@@ -88,12 +90,19 @@ function CSVDataFetcher(HGC: any, ...args: any): any {
                                 row[g] = CHROMOSOME_INTERVAL_HG38[chr][0] + +row[g];
                             } catch (e) {
                                 // genomic position did not parse properly
+                                successfullyGotChrInfo = false;
                                 // console.warn(
                                 //     '[Gemini Data Fetcher] Genomic position cannot be parsed correctly.',
                                 //     chromosomeField
                                 // );
                             }
                         });
+
+                        if (!successfullyGotChrInfo) {
+                            // store row only when chromosome information is correctly parsed
+                            return undefined;
+                        }
+
                         quantitativeFields?.forEach(q => {
                             row[q] = +row[q];
                         });

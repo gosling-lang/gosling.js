@@ -219,7 +219,7 @@ export const EXAMPLE_SUPERPOSED_CIRCULAR_TRACKS: GeminidSpec = {
     },
     tracks: [
         {
-            layout: false,
+            layout: 'linear',
             ...IDEOGRAM_DETAIL,
             x: { ...IDEOGRAM_DETAIL.x, axis: 'top', domain: undefined },
             superpose: [
