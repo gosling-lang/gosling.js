@@ -179,7 +179,7 @@ function GeminidTrack(HGC: any, ...args: any[]): any {
             resolveSuperposedTracks(spec).forEach(resolved => {
                 if (resolved.mark === 'rect-brush') {
                     // TODO:
-                    // we do not draw rectangular brush ourselves.
+                    // we do not draw rectangular brush ourselves, higlass does.
                     return;
                 }
 
