@@ -6,6 +6,13 @@ import { GeminidSpec } from '../geminid.schema';
  */
 export function fixSpecDownstream(spec: GeminidSpec) {
     /**
+     * superposeOnPreviousTrack
+     */
+    if (spec.tracks[0]?.superposeOnPreviousTrack) {
+        spec.tracks[0].superposeOnPreviousTrack = false;
+    }
+
+    /**
      * Zoomability
      */
     if (spec.static) {
