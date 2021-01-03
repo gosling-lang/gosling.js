@@ -118,7 +118,7 @@ export const examples: ReadonlyArray<{
         name: 'Basic Circular Marks',
         spec: EXAMPLE_CIRCOS,
         underDevelopment: true,
-        forceShow: true
+        forceShow: false
     },
     {
         name: 'Basic Circular Marks 2',
@@ -136,7 +136,7 @@ export const examples: ReadonlyArray<{
         name: 'Stacking Circular Tracks',
         spec: EXAMPLE_CIRCOS_STACKING,
         underDevelopment: true,
-        forceShow: true
+        forceShow: false
     },
     {
         name: 'UpSet-like Plot',
