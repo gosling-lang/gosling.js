@@ -72,7 +72,7 @@ export const examples: ReadonlyArray<{
         spec: EXMAPLE_BASIC_MARKS,
         underDevelopment: false,
         hidden: false,
-        forceShow: false
+        forceShow: true
     },
     {
         name: 'Text Marks',
@@ -136,7 +136,7 @@ export const examples: ReadonlyArray<{
         name: 'Stacking Circular Tracks',
         spec: EXAMPLE_CIRCOS_STACKING,
         underDevelopment: true,
-        forceShow: true
+        forceShow: false
     },
     {
         name: 'UpSet-like Plot',
