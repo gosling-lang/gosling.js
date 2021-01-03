@@ -72,7 +72,7 @@ export const examples: ReadonlyArray<{
         spec: EXMAPLE_BASIC_MARKS,
         underDevelopment: false,
         hidden: false,
-        forceShow: true
+        forceShow: false
     },
     {
         name: 'Text Marks',
@@ -118,7 +118,7 @@ export const examples: ReadonlyArray<{
         name: 'Basic Circular Marks',
         spec: EXAMPLE_CIRCOS,
         underDevelopment: true,
-        forceShow: true
+        forceShow: false
     },
     {
         name: 'Basic Circular Marks 2',

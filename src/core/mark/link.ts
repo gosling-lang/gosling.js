@@ -90,6 +90,7 @@ export function drawLink(HGC: any, trackInfo: any, tile: any, tm: GeminidTrackMo
                         return;
                     }
 
+                    // https://pixijs.download/dev/docs/PIXI.Graphics.html#bezierCurveTo
                     const r = trackOuterRadius - (rowPosition / trackHeight) * trackRingSize;
                     const posX = cartesianToPolar(x, trackWidth, r, tcx, tcy, startAngle, endAngle);
                     const posXE = cartesianToPolar(xe, trackWidth, r, tcx, tcy, startAngle, endAngle);
@@ -99,7 +100,7 @@ export function drawLink(HGC: any, trackInfo: any, tile: any, tm: GeminidTrackMo
                     g.moveTo(posX.x, posX.y);
 
                     // outer curve
-                    g.bezierCurveTo(posX.x, posX.y, tcx, tcy, posX1E.x, posX1E.y);
+                    g.bezierCurveTo(tcx, tcy, tcx, tcy, posX1E.x, posX1E.y);
 
                     g.arc(
                         tcx,
@@ -111,15 +112,7 @@ export function drawLink(HGC: any, trackInfo: any, tile: any, tm: GeminidTrackMo
                     );
 
                     // inner curve
-                    g.bezierCurveTo(
-                        posX1.x,
-                        posX1.y,
-                        // this control point should be closer towards the axis and more far from the center
-                        tcx,
-                        tcy,
-                        posXE.x,
-                        posXE.y
-                    );
+                    g.bezierCurveTo(tcx, tcy, tcx, tcy, posXE.x, posXE.y);
 
                     g.arc(
                         tcx,
