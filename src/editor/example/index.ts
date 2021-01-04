@@ -26,6 +26,7 @@ import { EXAMPLE_2019_WENGER } from './wenger-2019';
 import { GENOCAT_CIRCOS } from './genocat-circos';
 import { GENOCAT_CNVKIT } from './genocat-cnvkit';
 import { GENOCAT_SWAV } from './genocat-swav';
+import { GENOCAT_GIVE } from './genocat-give';
 
 export const examples: ReadonlyArray<{
     name: string;
@@ -46,17 +47,21 @@ export const examples: ReadonlyArray<{
         name: '[GenoCAT] Circos',
         spec: GENOCAT_CIRCOS,
         underDevelopment: true,
-        forceShow: true
+        forceShow: false
     },
     {
         name: '[GenoCAT] CNVkit',
         spec: GENOCAT_CNVKIT,
-        underDevelopment: true,
-        forceShow: false
+        underDevelopment: true
     },
     {
         name: '[GenoCAT] SWAV',
         spec: GENOCAT_SWAV,
+        underDevelopment: true
+    },
+    {
+        name: '[GenoCAT] GIVE',
+        spec: GENOCAT_GIVE,
         underDevelopment: true,
         forceShow: true
     },
