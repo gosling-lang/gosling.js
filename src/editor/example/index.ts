@@ -23,6 +23,10 @@ import { EXAMPLE_LOGO } from './basic/logo';
 import { EXAMPLE_OF_EXPERIMENT } from './experimental';
 import { EXAMPLE_CYTOAND_HG38 } from './cytoband-hg38';
 import { EXAMPLE_2019_WENGER } from './wenger-2019';
+import { GENOCAT_CIRCOS } from './genocat-circos';
+import { GENOCAT_CNVKIT } from './genocat-cnvkit';
+import { GENOCAT_SWAV } from './genocat-swav';
+import { GENOCAT_GIVE } from './genocat-give';
 
 export const examples: ReadonlyArray<{
     name: string;
@@ -38,6 +42,28 @@ export const examples: ReadonlyArray<{
         underDevelopment: true,
         hidden: true,
         forceShow: false
+    },
+    {
+        name: '[GenoCAT] Circos',
+        spec: GENOCAT_CIRCOS,
+        underDevelopment: true,
+        forceShow: false
+    },
+    {
+        name: '[GenoCAT] CNVkit',
+        spec: GENOCAT_CNVKIT,
+        underDevelopment: true
+    },
+    {
+        name: '[GenoCAT] SWAV',
+        spec: GENOCAT_SWAV,
+        underDevelopment: true
+    },
+    {
+        name: '[GenoCAT] GIVE',
+        spec: GENOCAT_GIVE,
+        underDevelopment: true,
+        forceShow: true
     },
     {
         name: 'UCSC Cyto band (hg38)',

@@ -37,7 +37,8 @@ export const PREDEFINED_COLOR_STR_MAP: { [k: string]: (t: number) => string } = 
     warm: d3.interpolateWarm,
     spectral: d3.interpolateSpectral,
     cividis: d3.interpolateCividis,
-    bupu: d3.interpolateBuPu
+    bupu: d3.interpolateBuPu,
+    rdbu: d3.interpolateRdBu
 };
 
 // TODO: these are not neccessary. Resolve the issue with `Channel`.

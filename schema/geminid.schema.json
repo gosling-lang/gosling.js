@@ -79,9 +79,6 @@
           "type": "number"
         }
       },
-      "required": [
-        "direction"
-      ],
       "type": "object"
     },
     "AxisPosition": {
@@ -1368,7 +1365,8 @@
         "spectral",
         "warm",
         "cividis",
-        "bupu"
+        "bupu",
+        "rdbu"
       ],
       "type": "string"
     },
