@@ -85,7 +85,7 @@ export const GENOCAT_CIRCOS: GeminidSpec = {
             xe: { field: 'e1', type: 'genomic' },
             x1: { field: 's2', type: 'genomic' },
             x1e: { field: 'e2', type: 'genomic' },
-            stroke: { field: 's1', type: 'nominal' }, // use `color`?
+            stroke: { field: 'c2', type: 'nominal' }, // use `color`?
             opacity: { value: 0.1 },
             style: { circularLink: true },
             outerRadius: 271,
