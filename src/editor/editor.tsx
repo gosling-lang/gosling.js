@@ -121,6 +121,12 @@ function Editor(props: any) {
             let editedGm;
             try {
                 editedGm = replaceTemplate(JSON.parse(stripJsonComments(gm)));
+
+                if (!editedGm.tracks) {
+                    // at least, spec should contain a `tracks` property to correctly show visualization
+                    editedGm = null;
+                }
+
                 setLog(validateSpec(GeminidSchema, editedGm));
             } catch (e) {
                 const message = '✘ Cannnot parse the code.';
@@ -138,7 +144,7 @@ function Editor(props: any) {
     );
 
     /**
-     * Render background of tracks.
+     * Render visualization when edited
      */
     useEffect(() => {
         runSpecUpdateVis();
