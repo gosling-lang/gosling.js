@@ -16,26 +16,47 @@ export const GENOCAT_CNVKIT: GeminidSpec = {
         {
             title: 'Copy ratio (log2)',
             data: {
-                url: EXAMPLE_DATASETS.multivec,
-                type: 'tileset'
+                url: 'https://raw.githubusercontent.com/etal/cnvkit/master/test/formats/tr95t.cns',
+                type: 'csv',
+                separator: '\t',
+                quantitativeFields: ['log2'], //, 'depth', 'weight'],
+                genomicFields: ['start', 'end'],
+                chromosomeField: 'chromosome'
             },
-            metadata: {
-                type: 'higlass-multivec',
-                row: 'sample',
-                column: 'position',
-                value: 'peak',
-                categories: ['sample 1']
-            },
-            mark: 'point',
-            x: { field: 'position', type: 'genomic', axis: 'bottom' },
-            y: { field: 'peak', type: 'quantitative', zeroBaseline: false },
-            size: { value: 1 },
-            color: { value: '#818181' },
-            opacity: { value: 0.5 },
+            mark: 'rect',
+            x: { field: 'start', type: 'genomic', axis: 'bottom' },
+            xe: { field: 'end', type: 'genomic' },
+            y: { field: 'log2', type: 'quantitative', domain: [4, -1], zeroBaseline: false },
+            size: { value: 2 },
+            color: { value: 'red' },
+            opacity: { value: 1 },
             style: {
                 outline: 'black',
                 outlineWidth: 2
             }
+        },
+        {
+            title: 'Copy ratio (log2)',
+            data: {
+                url: 'https://raw.githubusercontent.com/etal/cnvkit/master/test/formats/tr95t.segmetrics.cns',
+                type: 'csv',
+                separator: '\t',
+                quantitativeFields: ['log2'], //, 'depth', 'weight'],
+                genomicFields: ['start', 'end'],
+                chromosomeField: 'chromosome'
+            },
+            mark: 'point',
+            x: { field: 'start', type: 'genomic', axis: 'bottom' },
+            xe: { field: 'end', type: 'genomic' },
+            y: { field: 'log2', type: 'quantitative', domain: [-1, 4], zeroBaseline: false },
+            size: { value: 2 },
+            color: { value: 'gray' },
+            opacity: { value: 1 },
+            style: {
+                outline: 'black',
+                outlineWidth: 2
+            },
+            superposeOnPreviousTrack: true
         },
         {
             data: {
@@ -59,6 +80,7 @@ export const GENOCAT_CNVKIT: GeminidSpec = {
             }
         },
         {
+            static: true,
             span: 2,
             title: 'chr1',
             width: 420,
@@ -83,6 +105,7 @@ export const GENOCAT_CNVKIT: GeminidSpec = {
             }
         },
         {
+            static: true,
             span: 2,
             title: 'chr2',
             width: 380,
