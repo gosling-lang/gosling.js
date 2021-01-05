@@ -47,12 +47,13 @@ export const examples: ReadonlyArray<{
         name: '[GenoCAT] Circos',
         spec: GENOCAT_CIRCOS,
         underDevelopment: true,
-        forceShow: false
+        forceShow: true
     },
     {
         name: '[GenoCAT] CNVkit',
         spec: GENOCAT_CNVKIT,
-        underDevelopment: true
+        underDevelopment: true,
+        forceShow: true
     },
     {
         name: '[GenoCAT] SWAV',

@@ -207,6 +207,13 @@ export type SuperposedTrack = Partial<SingleTrack> & {
     superpose: Partial<SingleTrack>[];
 };
 
+/**
+ * Juxtaposing multiple tracks.
+ */
+export type JuxtaposedTrack = Partial<SingleTrack> & {
+    juxtapose: Partial<SingleTrack>[];
+};
+
 // TODO: support this to be able to ues two level superposition
 export type SuperposedTrackTwoLevels = Partial<SingleTrack> & {
     superpose: Partial<SuperposedTrack>[];

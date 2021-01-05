@@ -109,6 +109,17 @@ describe('Arrangement', () => {
             expect(a[3].boundingBox.x).toEqual(DEFAULT_TRACK_WIDTH + DEFAULT_TRACK_GAP);
             expect(a[3].boundingBox.y).toEqual(DEFAULT_TRACK_HEIGHT + DEFAULT_TRACK_GAP);
         });
+        it('3x1 w/ superpose', () => {
+            const a = getArrangement({
+                layout: 'linear',
+                arrangement: { direction: 'horizontal', wrap: 2 },
+                tracks: [t, t, t, { ...t, superposeOnPreviousTrack: true }]
+            });
+            expect(a).toHaveLength(4);
+
+            // bounding box
+            expect(a[2].boundingBox).toEqual(a[3].boundingBox);
+        });
         it('12x1 complex', () => {
             const rowSizes = [30, 44, 44, 44, 44, 44, 44, 44, 100, 100, 90, 100];
             const rowGaps = [40, 0, 0, 0, 0, 0, 0, 0, 0, 0, 40];
