@@ -197,7 +197,7 @@ export function getArrangement(spec: GeminidSpec): TrackInfo[] {
             }
         });
 
-        if (track.superposeOnPreviousTrack || nextTrack?.superposeOnPreviousTrack) {
+        if (nextTrack?.superposeOnPreviousTrack) {
             // do not count this track to calculate cumulative sizes and positions
             return;
         }
