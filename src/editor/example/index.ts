@@ -47,7 +47,7 @@ export const examples: ReadonlyArray<{
         name: '[GenoCAT] Circos',
         spec: GENOCAT_CIRCOS,
         underDevelopment: true,
-        forceShow: true
+        forceShow: false
     },
     {
         name: '[GenoCAT] CNVkit',
@@ -78,7 +78,7 @@ export const examples: ReadonlyArray<{
         spec: EXAMPLE_2019_WENGER,
         underDevelopment: false,
         hidden: false,
-        forceShow: true
+        forceShow: false
     },
     {
         name: 'Corces et al. 2020 (Nature Genetics)',

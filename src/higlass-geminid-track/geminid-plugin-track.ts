@@ -22,7 +22,6 @@ function GeminidTrack(HGC: any, ...args: any[]): any {
     // Services
     const { tileProxy } = HGC.services;
 
-    // TODO: change the parent class to a more generic one (e.g., TiledPixiTrack)
     class GeminidTrackClass extends HGC.tracks.TiledPixiTrack {
         private originalSpec: Track;
         private tooltips: Tooltip[];
@@ -62,6 +61,46 @@ function GeminidTrack(HGC: any, ...args: any[]): any {
             this.preprocessAllTiles();
 
             this.renderTile(tile);
+        }
+
+        setPosition(newPosition: [number, number]) {
+            super.setPosition(newPosition);
+
+            this.pMain.position.y = this.position[1];
+            this.pMain.position.x = this.position[0];
+        }
+
+        zoomed(newXScale: any, newYScale: any) {
+            this.xScale(newXScale);
+            this.yScale(newYScale);
+
+            this.refreshTiles(); // or this.refreshTilesDebounced();
+
+            this.draw();
+        }
+
+        refreshTiles() {
+            if (!this.tilesetInfo) {
+                return;
+            }
+
+            this.calculateVisibleTiles();
+
+            // tiles that are fetched
+            const fetchedTileIDs = new Set(Object.keys(this.fetchedTiles));
+
+            // fetch the tiles that should be visible but haven't been fetched
+            // and aren't in the process of being fetched
+            const toFetch = [...this.visibleTiles].filter(
+                x => !this.fetching.has(x.remoteId) && !fetchedTileIDs.has(x.tileId)
+            );
+
+            toFetch.forEach(f => {
+                this.fetching.add(f.remoteId);
+            });
+
+            this.removeOldTiles();
+            this.fetchNewTiles(toFetch);
         }
 
         /**
@@ -105,11 +144,7 @@ function GeminidTrack(HGC: any, ...args: any[]): any {
 
         // draws exactly one tile
         renderTile(tile: any) {
-            tile.mouseOverData = null;
-            tile.graphics.clear();
-            tile.graphics.removeChildren();
-            this.pBorder.clear();
-            this.pBorder.removeChildren();
+            this.destroyTile(tile);
             tile.drawnAtScale = this._xScale.copy(); // being used in `draw()` internally
 
             if (!tile.geminidModels) {
@@ -137,7 +172,7 @@ function GeminidTrack(HGC: any, ...args: any[]): any {
 
         drawTile(tile: any) {
             this.renderTile(tile);
-        } // prevent BarTracks draw method from having an effect
+        }
 
         preprocessAllTiles() {
             const gms: GeminidTrackModel[] = [];
@@ -475,6 +510,19 @@ function GeminidTrack(HGC: any, ...args: any[]): any {
             visibleAndFetched.map((tile: any) => this.initTile(tile));
         }
 
+        /**
+         * Which scale should we use for calculating tile positions?
+         *
+         * Horizontal tracks should use the xScale and vertical tracks
+         * should use the yScale
+         *
+         * This function should be overwritten by HorizontalTiled1DPixiTrack.js
+         * and VerticalTiled1DPixiTrack.js
+         */
+        relevantScale() {
+            return this._xScale;
+        }
+
         calculateVisibleTiles() {
             // if we don't know anything about this dataset, no point
             // in trying to get tiles
@@ -482,43 +530,62 @@ function GeminidTrack(HGC: any, ...args: any[]): any {
                 return;
             }
 
+            // calculate the zoom level given the scales and the data bounds
             this.zoomLevel = this.calculateZoomLevel();
 
             if (this.tilesetInfo.resolutions) {
                 const sortedResolutions = this.tilesetInfo.resolutions
-                    .map((x: number) => +x)
-                    .sort((a: number, b: number) => b - a);
+                    .map((x: any) => +x)
+                    .sort((a: any, b: any) => b - a);
 
-                this.xTiles = HGC.services.tileProxy.calculateTilesFromResolution(
+                const xTiles = tileProxy.calculateTilesFromResolution(
                     sortedResolutions[this.zoomLevel],
                     this._xScale,
                     this.tilesetInfo.min_pos[0],
-                    null,
-                    this.tilesetInfo.tile_size
+                    this.tilesetInfo.max_pos[0]
                 );
-            } else {
-                this.xTiles = HGC.services.tileProxy.calculateTiles(
-                    this.zoomLevel,
-                    this._xScale,
-                    this.tilesetInfo.min_pos[0],
-                    this.tilesetInfo.max_pos[0],
-                    this.tilesetInfo.max_zoom,
-                    this.tilesetInfo.max_width
-                );
+
+                const tiles = xTiles.map((x: any) => [this.zoomLevel, x]);
+                this.setVisibleTiles(tiles);
+                return;
             }
 
-            const tiles = this.xTiles.map((x: number) => [this.zoomLevel, x]);
+            // x doesn't necessary mean 'x' axis, it just refers to the relevant axis
+            // (x if horizontal, y if vertical)
+            const xTiles = tileProxy.calculateTiles(
+                this.zoomLevel,
+                this.relevantScale(),
+                this.tilesetInfo.min_pos[0],
+                this.tilesetInfo.max_pos[0],
+                this.tilesetInfo.max_zoom,
+                this.tilesetInfo.max_width
+            );
 
+            const tiles = xTiles.map((x: any) => [this.zoomLevel, x]);
             this.setVisibleTiles(tiles);
         }
 
         calculateZoomLevel() {
-            if (!this.tilesetInfo) return undefined;
+            // offset by 2 because 1D tiles are more dense than 2D tiles
+            // 1024 points per tile vs 256 for 2D tiles
+            if (this.tilesetInfo.resolutions) {
+                const zoomIndexX = tileProxy.calculateZoomLevelFromResolutions(
+                    this.tilesetInfo.resolutions,
+                    this._xScale,
+                    this.tilesetInfo.min_pos[0],
+                    this.tilesetInfo.max_pos[0] - 2
+                );
 
+                return zoomIndexX;
+            }
+
+            // the tileProxy calculateZoomLevel function only cares about the
+            // difference between the minimum and maximum position
             const xZoomLevel = tileProxy.calculateZoomLevel(
                 this._xScale,
                 this.tilesetInfo.min_pos[0],
-                this.tilesetInfo.max_pos[0]
+                this.tilesetInfo.max_pos[0],
+                this.tilesetInfo.bins_per_dimension || this.tilesetInfo.tile_size
             );
 
             let zoomLevel = Math.min(xZoomLevel, this.maxZoom);
@@ -533,6 +600,11 @@ function GeminidTrack(HGC: any, ...args: any[]): any {
 
         tileToRemoteId(tile: any) {
             return tile.join('.');
+        }
+
+        localToRemoteId(remoteId: any) {
+            const idParts = remoteId.split('.');
+            return idParts.slice(0, idParts.length - 1).join('.');
         }
 
         getTilePosAndDimensions(zoomLevel: number, tilePos: any, binsPerTileIn: any) {
