@@ -228,7 +228,7 @@ export const EXAMPLE_CIRCOS: GeminidSpec = {
     },
     tracks: [
         {
-            layout: false,
+            layout: 'linear',
             ...EXAMPLE_SEMANTIC_ZOOMING_IDEOGRAM,
             x: {
                 ...EXAMPLE_SEMANTIC_ZOOMING_IDEOGRAM.x,

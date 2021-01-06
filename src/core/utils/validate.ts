@@ -21,8 +21,9 @@ export function validateSpec(schema: any, spec: any): Validity {
     const validate = new Ajv({ extendRefs: true }).compile(schema);
     const valid = validate(spec);
 
-    let message = '',
-        details = '';
+    let message = '';
+    let details = '';
+
     if (validate.errors) {
         details = JSON.stringify(validate.errors, null, 2);
         console.warn(details);

@@ -79,9 +79,6 @@
           "type": "number"
         }
       },
-      "required": [
-        "direction"
-      ],
       "type": "object"
     },
     "AxisPosition": {
@@ -346,11 +343,23 @@
         "chromosomeField": {
           "type": "string"
         },
+        "chromosomePrefix": {
+          "type": "string"
+        },
         "genomicFields": {
           "items": {
             "type": "string"
           },
           "type": "array"
+        },
+        "headerNames": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "longToWideId": {
+          "type": "string"
         },
         "quantitativeFields": {
           "items": {
@@ -1368,7 +1377,8 @@
         "spectral",
         "warm",
         "cividis",
-        "bupu"
+        "bupu",
+        "rdbu"
       ],
       "type": "string"
     },

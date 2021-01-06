@@ -60,48 +60,83 @@ function CSVDataFetcher(HGC: any, ...args: any): any {
                 // we have raw data that we can use right away
                 this.values = dataConfig.data;
             } else {
-                this.dataPromise = this.fetchCSV(
-                    this.dataConfig.url,
-                    this.dataConfig.chromosomeField,
-                    this.dataConfig.genomicFields,
-                    this.dataConfig.quantitativeFields
-                );
+                this.dataPromise = this.fetchCSV();
             }
         }
 
-        fetchCSV(url: string, chromosomeField: string, genomicFields: string[], quantitativeFields?: string[]) {
+        fetchCSV() {
+            const {
+                url,
+                chromosomeField,
+                genomicFields,
+                quantitativeFields,
+                headerNames,
+                chromosomePrefix,
+                longToWideId
+            } = this.dataConfig;
+
+            const separator = this.dataConfig.separator ?? ',';
+
             return fetch(url)
                 .then(response => {
                     return response.ok ? response.text() : Promise.reject(response.status);
                 })
                 .then(text => {
-                    return d3.dsvFormat(this.dataConfig.separator ?? ',').parse(text, (row: any) => {
-                        genomicFields.forEach(g => {
+                    const textWithHeader = headerNames ? `${headerNames.join(separator)}\n${text}` : text;
+                    return d3.dsvFormat(separator).parse(textWithHeader, (row: any) => {
+                        let successfullyGotChrInfo = true;
+
+                        genomicFields.forEach((g: string) => {
                             if (!row[chromosomeField]) {
                                 // TODO:
                                 return;
                             }
                             try {
-                                const chr = row[chromosomeField].includes('chr')
+                                const chr = chromosomePrefix
+                                    ? row[chromosomeField].replace(chromosomePrefix, 'chr')
+                                    : row[chromosomeField].includes('chr')
                                     ? row[chromosomeField]
                                     : `chr${row[chromosomeField]}`;
                                 row[g] = CHROMOSOME_INTERVAL_HG38[chr][0] + +row[g];
                             } catch (e) {
                                 // genomic position did not parse properly
+                                successfullyGotChrInfo = false;
                                 // console.warn(
                                 //     '[Gemini Data Fetcher] Genomic position cannot be parsed correctly.',
                                 //     chromosomeField
                                 // );
                             }
                         });
-                        quantitativeFields?.forEach(q => {
+
+                        if (!successfullyGotChrInfo) {
+                            // store row only when chromosome information is correctly parsed
+                            return undefined;
+                        }
+
+                        quantitativeFields?.forEach((q: string) => {
                             row[q] = +row[q];
                         });
                         return row;
                     });
                 })
                 .then(json => {
-                    this.values = json;
+                    if (longToWideId && json[0]?.[longToWideId]) {
+                        // rows having identical IDs are juxtaposed horizontally
+                        const keys = Object.keys(json[0]);
+                        const newJson: { [k: string]: { [k: string]: string | number } } = {};
+                        json.forEach(d => {
+                            if (!newJson[d[longToWideId]]) {
+                                newJson[d[longToWideId]] = JSON.parse(JSON.stringify(d));
+                            } else {
+                                keys.forEach(k => {
+                                    newJson[d[longToWideId]][`${k}_2`] = d[k];
+                                });
+                            }
+                        });
+                        this.values = Object.keys(newJson).map(k => newJson[k]);
+                    } else {
+                        this.values = json;
+                    }
                 })
                 .catch(error => {
                     console.error('[Gemini Data Fetcher] Error fetching data', error);

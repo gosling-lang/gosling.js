@@ -54,6 +54,8 @@ function RawDataFetcher(HGC: any, ...args: any): any {
             };
 
             this.values = dataConfig.values.map((row: any) => {
+                let successfullyGotChrInfo = true;
+
                 this.dataConfig.genomicFields.forEach((g: any) => {
                     if (!row[this.dataConfig.chromosomeField]) {
                         // TODO:
@@ -66,12 +68,19 @@ function RawDataFetcher(HGC: any, ...args: any): any {
                         row[g] = CHROMOSOME_INTERVAL_HG38[chr][0] + +row[g];
                     } catch (e) {
                         // genomic position did not parse properly
+                        successfullyGotChrInfo = false;
                         // console.warn(
                         //     '[Gemini Data Fetcher] Genomic position cannot be parsed correctly.',
                         //     this.dataConfig.chromosomeField
                         // );
                     }
                 });
+
+                if (!successfullyGotChrInfo) {
+                    // store row only when chromosome information is correctly parsed
+                    return undefined;
+                }
+
                 this.dataConfig.quantitativeFields?.forEach((q: string) => {
                     row[q] = +row[q];
                 });

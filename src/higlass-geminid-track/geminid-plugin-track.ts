@@ -194,7 +194,7 @@ function GeminidTrack(HGC: any, ...args: any[]): any {
             resolveSuperposedTracks(spec).forEach(resolved => {
                 if (resolved.mark === 'rect-brush') {
                     // TODO:
-                    // we do not draw rectangular brush ourselves.
+                    // we do not draw rectangular brush ourselves, higlass does.
                     return;
                 }
 
@@ -417,6 +417,10 @@ function GeminidTrack(HGC: any, ...args: any[]): any {
                         // console.log(new Set(tile.tileData.tabularData.map((d: any) => d.significance)));
                     }
                 }
+
+                /// DEBUG
+                // console.log(tile.tileData.tabularData);
+                ///
 
                 tile.tileData.tabularDataFiltered = Array.from(tile.tileData.tabularData);
 

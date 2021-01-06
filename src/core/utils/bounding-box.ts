@@ -159,7 +159,8 @@ export function getArrangement(spec: GeminidSpec): TrackInfo[] {
         ri++;
     }
 
-    spec.tracks.forEach(track => {
+    spec.tracks.forEach((track, i) => {
+        const nextTrack = spec.tracks[i + 1];
         const span = typeof track.span === 'number' ? track.span : 1;
         const trackWidth = resolveSuperposedTracks(track)[0].width;
 
@@ -181,9 +182,6 @@ export function getArrangement(spec: GeminidSpec): TrackInfo[] {
         width = typeof trackWidth === 'number' ? Math.min(trackWidth, width) : width;
         // height = ... // NOTICE: using the smaller height is not supported
 
-        // TODO: might need to use no `compact` options for `react-grid-layout` (e.g., verticalCompact = false)
-        // reference: https://github.com/STRML/react-grid-layout/blob/master/test/examples/11-no-vertical-compact.jsx
-
         // Assign actual size determined by the layout definition
         track.width = width;
         track.height = height;
@@ -199,7 +197,7 @@ export function getArrangement(spec: GeminidSpec): TrackInfo[] {
             }
         });
 
-        if (track.superposeOnPreviousTrack) {
+        if (nextTrack?.superposeOnPreviousTrack) {
             // do not count this track to calculate cumulative sizes and positions
             return;
         }

@@ -3,7 +3,7 @@ import { GeminidSpec, Mark } from '../geminid.schema';
 import { IsSingleTrack, IsMarkDeep } from '../geminid.schema.guards';
 
 export function replaceTemplate(spec: GeminidSpec): GeminidSpec {
-    spec.tracks.forEach(track => {
+    spec.tracks?.forEach(track => {
         if (IsSingleTrack(track) && IsMarkDeep(track.mark)) {
             const predefinedTemplate = track.mark.type;
             if (GLYPH_LOCAL_PRESET_TYPES.includes(predefinedTemplate as any)) {

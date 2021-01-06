@@ -23,6 +23,10 @@ import { EXAMPLE_LOGO } from './basic/logo';
 import { EXAMPLE_OF_EXPERIMENT } from './experimental';
 import { EXAMPLE_CYTOAND_HG38 } from './cytoband-hg38';
 import { EXAMPLE_2019_WENGER } from './wenger-2019';
+import { GENOCAT_CIRCOS } from './genocat-circos';
+import { GENOCAT_CNVKIT } from './genocat-cnvkit';
+import { GENOCAT_SWAV } from './genocat-swav';
+import { GENOCAT_GIVE } from './genocat-give';
 
 export const examples: ReadonlyArray<{
     name: string;
@@ -40,6 +44,29 @@ export const examples: ReadonlyArray<{
         forceShow: false
     },
     {
+        name: '[GenoCAT] Circos',
+        spec: GENOCAT_CIRCOS,
+        underDevelopment: true,
+        forceShow: false
+    },
+    {
+        name: '[GenoCAT] CNVkit',
+        spec: GENOCAT_CNVKIT,
+        underDevelopment: true,
+        forceShow: false
+    },
+    {
+        name: '[GenoCAT] SWAV',
+        spec: GENOCAT_SWAV,
+        underDevelopment: true
+    },
+    {
+        name: '[GenoCAT] GIVE',
+        spec: GENOCAT_GIVE,
+        underDevelopment: true,
+        forceShow: false
+    },
+    {
         name: 'UCSC Cyto band (hg38)',
         spec: EXAMPLE_CYTOAND_HG38,
         underDevelopment: false,
@@ -51,7 +78,7 @@ export const examples: ReadonlyArray<{
         spec: EXAMPLE_2019_WENGER,
         underDevelopment: false,
         hidden: false,
-        forceShow: false
+        forceShow: true
     },
     {
         name: 'Corces et al. 2020 (Nature Genetics)',
@@ -118,7 +145,7 @@ export const examples: ReadonlyArray<{
         name: 'Basic Circular Marks',
         spec: EXAMPLE_CIRCOS,
         underDevelopment: true,
-        forceShow: true
+        forceShow: false
     },
     {
         name: 'Basic Circular Marks 2',
@@ -136,7 +163,7 @@ export const examples: ReadonlyArray<{
         name: 'Stacking Circular Tracks',
         spec: EXAMPLE_CIRCOS_STACKING,
         underDevelopment: true,
-        forceShow: true
+        forceShow: false
     },
     {
         name: 'UpSet-like Plot',

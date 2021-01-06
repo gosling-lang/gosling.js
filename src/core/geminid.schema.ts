@@ -24,7 +24,7 @@ export type GeminidSpec = {
  * Arrangement of multiple tracks
  */
 export interface Arrangement {
-    direction: 'vertical' | 'horizontal';
+    direction?: 'vertical' | 'horizontal';
     wrap?: number;
 
     columnSizes?: number | number[];
@@ -61,6 +61,10 @@ export interface CSVDataGeminid extends DataDeepGeminidCommon {
     type: 'csv';
     url?: string;
     separator?: string;
+    // experimental
+    headerNames?: string[];
+    chromosomePrefix?: string;
+    longToWideId?: string;
 }
 
 export interface JSONDataGeminid extends DataDeepGeminidCommon {
@@ -207,6 +211,13 @@ export type SuperposedTrack = Partial<SingleTrack> & {
     superpose: Partial<SingleTrack>[];
 };
 
+/**
+ * Juxtaposing multiple tracks.
+ */
+export type JuxtaposedTrack = Partial<SingleTrack> & {
+    juxtapose: Partial<SingleTrack>[];
+};
+
 // TODO: support this to be able to ues two level superposition
 export type SuperposedTrackTwoLevels = Partial<SingleTrack> & {
     superpose: Partial<SuperposedTrack>[];
@@ -330,7 +341,7 @@ export interface ChannelValue {
 
 export type Domain = string[] | number[] | DomainInterval | DomainChrInterval | DomainChr | DomainGene;
 export type Range = string[] | number[] | PREDEFINED_COLORS;
-export type PREDEFINED_COLORS = 'viridis' | 'grey' | 'spectral' | 'warm' | 'cividis' | 'bupu';
+export type PREDEFINED_COLORS = 'viridis' | 'grey' | 'spectral' | 'warm' | 'cividis' | 'bupu' | 'rdbu';
 
 export interface DomainChr {
     // For showing a certain chromosome
