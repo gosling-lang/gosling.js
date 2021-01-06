@@ -75,18 +75,24 @@ export const GENOCAT_CIRCOS: GeminidSpec = {
         },
         {
             data: {
-                url: 'https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/circos-segdup-edited.txt',
+                url: 'https://raw.githubusercontent.com/vigsterkr/circos/master/data/5/segdup.txt',
                 type: 'csv',
-                chromosomeField: 'c2',
-                genomicFields: ['s1', 'e1', 's2', 'e2']
+                headerNames: ['id', 'chr', 'p1', 'p2'],
+                chromosomePrefix: 'hs',
+                chromosomeField: 'chr',
+                genomicFields: ['p1', 'p2'],
+                separator: ' ',
+                longToWideId: 'id'
+                //sampleLength: 5000
             },
             mark: 'link',
-            x: { field: 's1', type: 'genomic' },
-            xe: { field: 'e1', type: 'genomic' },
-            x1: { field: 's2', type: 'genomic' },
-            x1e: { field: 'e2', type: 'genomic' },
-            stroke: { field: 'c2', type: 'nominal' }, // use `color`?
-            opacity: { value: 0.1 },
+            x: { field: 'p1', type: 'genomic' },
+            xe: { field: 'p1_2', type: 'genomic' },
+            x1: { field: 'p2', type: 'genomic' },
+            x1e: { field: 'P2_2', type: 'genomic' },
+            stroke: { field: 'p1', type: 'nominal' },
+            strokeWidth: { value: 2 },
+            opacity: { value: 0.3 },
             style: { circularLink: true },
             outerRadius: 271,
             innerRadius: 0,

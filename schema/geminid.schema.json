@@ -343,11 +343,23 @@
         "chromosomeField": {
           "type": "string"
         },
+        "chromosomePrefix": {
+          "type": "string"
+        },
         "genomicFields": {
           "items": {
             "type": "string"
           },
           "type": "array"
+        },
+        "headerNames": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "longToWideId": {
+          "type": "string"
         },
         "quantitativeFields": {
           "items": {
