@@ -90,33 +90,37 @@ export function drawRect(HGC: any, trackInfo: any, tile: any, model: GeminidTrac
                 const alphaTransition = model.markVisibility(d, { width: rectWidth });
                 const actualOpacity = Math.min(alphaTransition, opacity);
 
-                if (actualOpacity === 0 || rectHeight === 0 || rectWidth <= 0.01) {
+                if (actualOpacity === 0 || rectHeight === 0 || rectWidth <= 0.0001) {
                     // No need to draw invisible objects
-                    // return;
+                    return;
                 }
 
                 if (stackY) {
                     // A `stack` option is being used, so let's further transform data to find the non-overlap area.
-                    const infoInRangeX = pixiProps.filter(
-                        d => (d.xs <= x && x < d.xe) || (d.xs <= x + rectWidth && x + rectWidth < d.xe)
+                    const xOverlapMarks = pixiProps.filter(
+                        d =>
+                            (d.xs < x && x < d.xe) ||
+                            (d.xs < x + rectWidth && x + rectWidth < d.xe) ||
+                            (d.xs === x && d.xe === x + rectWidth) // exact match
                     );
 
                     let newYStart = 0; // start from the top position
-                    if (infoInRangeX.length > 0) {
+                    if (xOverlapMarks.length > 0) {
                         // This means, existing visual marks are being overlapped along x-axis.
-                        let infoInRangeXY;
+                        let xyOverlapMarks;
 
                         do {
                             // a naive apporach to find a spot to position the current visul mark
-                            infoInRangeXY = infoInRangeX.filter(
+                            xyOverlapMarks = xOverlapMarks.filter(
                                 d =>
-                                    (d.ys <= newYStart && newYStart < d.ye) ||
-                                    (d.ys <= newYStart + rectHeight && newYStart + rectHeight < d.ye)
+                                    (d.ys < newYStart && newYStart < d.ye) ||
+                                    (d.ys < newYStart + rectHeight && newYStart + rectHeight < d.ye) ||
+                                    (d.ys === newYStart && d.ye === newYStart + rectHeight) // exact match
                             );
-                            if (infoInRangeXY.length > 0) {
+                            if (xyOverlapMarks.length > 0) {
                                 newYStart += rectHeight;
                             }
-                        } while (infoInRangeXY.length > 0);
+                        } while (xyOverlapMarks.length > 0);
                         y = newYStart;
                     }
 
@@ -136,8 +140,8 @@ export function drawRect(HGC: any, trackInfo: any, tile: any, model: GeminidTrac
                 });
             });
 
-        // this is used to stretch the height of visual marks to the entire height of a track
-        const yScaleFactor = 1; // Math.max(...pixiProps.map(d => d.ye)) / rowHeight;
+        // this is being used to stretch the height of visual marks to the entire height of a track
+        const yScaleFactor = stackY ? Math.max(...pixiProps.map(d => d.ye)) / rowHeight : 1;
 
         pixiProps.forEach(prop => {
             const { xs, xe, ys, ye, color, stroke, strokeWidth, opacity, datum } = prop;
@@ -157,8 +161,8 @@ export function drawRect(HGC: any, trackInfo: any, tile: any, model: GeminidTrac
                 }
 
                 // TODO: Does a `row` channel affect here?
-                const farR = trackOuterRadius - ((rowPosition + ys) / trackHeight) * trackRingSize;
-                const nearR = trackOuterRadius - ((rowPosition + ye) / trackHeight) * trackRingSize;
+                const farR = trackOuterRadius - ((rowPosition + ys / yScaleFactor) / trackHeight) * trackRingSize;
+                const nearR = trackOuterRadius - ((rowPosition + ye / yScaleFactor) / trackHeight) * trackRingSize;
                 const sPos = cartesianToPolar(xs, trackWidth, nearR, cx, cy, startAngle, endAngle);
                 const startRad = valueToRadian(xs, trackWidth, startAngle, endAngle);
                 const endRad = valueToRadian(xe, trackWidth, startAngle, endAngle);
