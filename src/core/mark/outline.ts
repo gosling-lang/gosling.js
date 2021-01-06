@@ -58,8 +58,9 @@ export function drawChartOutlines(HGC: any, trackInfo: any, tm: GeminidTrackMode
     g.beginFill(colorToHex('white'), 0);
     g.drawRect(l, t, w, h);
 
-    // Borders
+    // axis borders
     const x = tm.spec().x;
+    const y = tm.spec().y;
 
     g.lineStyle(
         1,
@@ -69,20 +70,18 @@ export function drawChartOutlines(HGC: any, trackInfo: any, tm: GeminidTrackMode
     );
 
     if (IsChannelDeep(x) && x.axis === 'top') {
-        // top
         g.moveTo(l, t);
         g.lineTo(l + w, t);
-
-        // left
-        // g.moveTo(l, t);
-        // g.lineTo(l, t + h);
     } else if (IsChannelDeep(x) && x.axis === 'bottom') {
-        // bottom
         g.moveTo(l, t + h);
         g.lineTo(l + w, t + h);
+    }
 
-        // left
-        // g.moveTo(l, t);
-        // g.lineTo(l, t + h);
+    if (IsChannelDeep(y) && y.axis === 'left') {
+        g.moveTo(l, t);
+        g.lineTo(l, t + h);
+    } else if (IsChannelDeep(y) && y.axis === 'right') {
+        g.moveTo(l + w, t);
+        g.lineTo(l + w, t + h);
     }
 }
