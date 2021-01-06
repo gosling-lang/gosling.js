@@ -72,7 +72,7 @@ export interface JSONDataGeminid extends DataDeepGeminidCommon {
     values?: Datum[];
 }
 
-export type DataMetadata = VectorMetadata | MultivecMetadata | BEDMetadata;
+export type DataMetadata = VectorMetadata | MatrixMetadata | MultivecMetadata | BEDMetadata;
 
 export interface VectorMetadata {
     type: 'higlass-vector';
@@ -81,6 +81,13 @@ export interface VectorMetadata {
     start?: string;
     end?: string;
     bin?: number; // Binning the genomic interval in tiles (unit size: 256)
+}
+
+export interface MatrixMetadata {
+    type: 'higlass-matrix';
+    column: string;
+    row: string;
+    value: string;
 }
 
 export interface MultivecMetadata {

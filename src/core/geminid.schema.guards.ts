@@ -46,7 +46,10 @@ export function IsDataMetadata(_: DataMetadata | ChannelDeep | ChannelValue | un
     return (
         typeof _ === 'object' &&
         'type' in _ &&
-        (_.type === 'higlass-vector' || _.type === 'higlass-multivec' || _.type === 'higlass-bed')
+        (_.type === 'higlass-vector' ||
+            _.type === 'higlass-matrix' ||
+            _.type === 'higlass-multivec' ||
+            _.type === 'higlass-bed')
     );
 }
 export function IsDataTransform(_: DataTransform | ChannelDeep | ChannelValue): _ is DataTransform {
@@ -233,4 +236,23 @@ export function getVisualizationType(track: BasicSingleTrack): VisualizationType
     } else {
         return 'unknown';
     }
+}
+
+/**
+ * Defines the orientation of a Geminid track.
+ */
+export type Orientation = 'horizontal' | 'vertical' | 'matrix' | 'none';
+
+/**
+ * Returns the orientation of a given track by looking into `x` and `y` channels.
+ * @param spec
+ */
+export function getOrientation(t: Track): Orientation {
+    const xGenomic = IsChannelDeep(t['x']) && t['x'].type === 'genomic';
+    const yGenomic = IsChannelDeep(t['y']) && t['y'].type === 'genomic';
+
+    if (xGenomic && yGenomic) return 'matrix';
+    if (xGenomic && !yGenomic) return 'horizontal';
+    if (!xGenomic && yGenomic) return 'vertical';
+    else return 'none';
 }

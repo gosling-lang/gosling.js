@@ -18,7 +18,7 @@ export function drawCircularGrid(HGC: any, trackInfo: any, tile: any, tm: Gemini
     /* track size */
     const trackWidth = trackInfo.dimensions[1];
     const trackHeight = trackInfo.dimensions[1];
-    const tileSize = trackInfo.tilesetInfo.tile_size;
+    const tileSize = trackInfo.tilesetInfo.bins_per_dimension || trackInfo.tilesetInfo.tile_size;
     const { tileX, tileWidth } = trackInfo.getTilePosAndDimensions(
         tile.tileData.zoomLevel,
         tile.tileData.tilePos,

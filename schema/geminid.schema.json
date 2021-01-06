@@ -532,6 +532,9 @@
           "$ref": "#/definitions/VectorMetadata"
         },
         {
+          "$ref": "#/definitions/MatrixMetadata"
+        },
+        {
           "$ref": "#/definitions/MultivecMetadata"
         },
         {
@@ -1294,6 +1297,31 @@
       },
       "required": [
         "type"
+      ],
+      "type": "object"
+    },
+    "MatrixMetadata": {
+      "additionalProperties": false,
+      "properties": {
+        "column": {
+          "type": "string"
+        },
+        "row": {
+          "type": "string"
+        },
+        "type": {
+          "const": "higlass-matrix",
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "type",
+        "column",
+        "row",
+        "value"
       ],
       "type": "object"
     },

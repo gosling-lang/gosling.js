@@ -27,6 +27,7 @@ import { GENOCAT_CIRCOS } from './genocat-circos';
 import { GENOCAT_CNVKIT } from './genocat-cnvkit';
 import { GENOCAT_SWAV } from './genocat-swav';
 import { GENOCAT_GIVE } from './genocat-give';
+import { EXMAPLE_BASIC_MATRIX } from './basic/basic-matrix';
 
 export const examples: ReadonlyArray<{
     name: string;
@@ -93,6 +94,13 @@ export const examples: ReadonlyArray<{
         underDevelopment: false,
         hidden: true,
         forceShow: false
+    },
+    {
+        name: 'Basic Matrix',
+        spec: EXMAPLE_BASIC_MATRIX,
+        underDevelopment: false,
+        hidden: false,
+        forceShow: true
     },
     {
         name: 'Basic Marks',

@@ -15,6 +15,7 @@ import { drawColorLegend, drawYLegend } from './legend';
 import { drawCircularGrid } from './grid-circular';
 import { drawCircularOutlines } from './outline-circular';
 import { drawBackground } from './background';
+import { getOrientation } from '../geminid.schema.guards';
 
 /**
  * Visual channels currently supported for visual encoding.
@@ -65,6 +66,12 @@ export function drawMark(HGC: any, trackInfo: any, tile: any, model: GeminidTrac
         model.setChannelScale(d, trackInfo._xScale);
         // }
     });
+
+    if (getOrientation(model.spec()) === 'matrix') {
+        ['y', 'x1', 'y1e', 'ye'].forEach((d: any) => {
+            model.setChannelScale(d, trackInfo._yScale);
+        });
+    }
 
     /* embellishment before rendering plots */
     drawBackground(HGC, trackInfo, tile, model);

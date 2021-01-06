@@ -15,7 +15,7 @@ export function drawTriangle(HGC: any, trackInfo: any, tile: any, tm: GeminidTra
 
     /* track size */
     const [trackWidth, trackHeight] = trackInfo.dimensions;
-    const tileSize = trackInfo.tilesetInfo.tile_size;
+    const tileSize = trackInfo.tilesetInfo.bins_per_dimension || trackInfo.tilesetInfo.tile_size;
     const { tileX, tileWidth } = trackInfo.getTilePosAndDimensions(
         tile.tileData.zoomLevel,
         tile.tileData.tilePos,
