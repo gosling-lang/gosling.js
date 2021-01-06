@@ -85,14 +85,41 @@ export const GENOCAT_CIRCOS: GeminidSpec = {
                 longToWideId: 'id'
                 //sampleLength: 5000
             },
+            dataTransform: { filter: [{ field: 'chr', oneOf: ['hs1'], not: true }] },
             mark: 'link',
             x: { field: 'p1', type: 'genomic' },
             xe: { field: 'p1_2', type: 'genomic' },
             x1: { field: 'p2', type: 'genomic' },
             x1e: { field: 'P2_2', type: 'genomic' },
-            stroke: { field: 'p1', type: 'nominal' },
+            stroke: { value: 'lightgray' },
             strokeWidth: { value: 2 },
-            opacity: { value: 0.3 },
+            opacity: { value: 0.4 },
+            style: { circularLink: true },
+            outerRadius: 271,
+            innerRadius: 0,
+            superposeOnPreviousTrack: true
+        },
+        {
+            data: {
+                url: 'https://raw.githubusercontent.com/vigsterkr/circos/master/data/5/segdup.txt',
+                type: 'csv',
+                headerNames: ['id', 'chr', 'p1', 'p2'],
+                chromosomePrefix: 'hs',
+                chromosomeField: 'chr',
+                genomicFields: ['p1', 'p2'],
+                separator: ' ',
+                longToWideId: 'id'
+                //sampleLength: 5000
+            },
+            dataTransform: { filter: [{ field: 'chr', oneOf: ['hs1'], not: false }] },
+            mark: 'link',
+            x: { field: 'p1', type: 'genomic' },
+            xe: { field: 'p1_2', type: 'genomic' },
+            x1: { field: 'p2', type: 'genomic' },
+            x1e: { field: 'P2_2', type: 'genomic' },
+            stroke: { field: 'chr_2', type: 'nominal' },
+            strokeWidth: { value: 2 },
+            opacity: { value: 0.4 },
             style: { circularLink: true },
             outerRadius: 271,
             innerRadius: 0,
