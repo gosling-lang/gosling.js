@@ -61,6 +61,10 @@ export interface CSVDataGeminid extends DataDeepGeminidCommon {
     type: 'csv';
     url?: string;
     separator?: string;
+    // experimental
+    headerNames?: string[];
+    chromosomePrefix?: string;
+    longToWideId?: string;
 }
 
 export interface JSONDataGeminid extends DataDeepGeminidCommon {

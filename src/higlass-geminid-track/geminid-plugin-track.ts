@@ -403,6 +403,10 @@ function GeminidTrack(HGC: any, ...args: any[]): any {
                     }
                 }
 
+                /// DEBUG
+                // console.log(tile.tileData.tabularData);
+                ///
+
                 tile.tileData.tabularDataFiltered = Array.from(tile.tileData.tabularData);
 
                 // Apply filters
