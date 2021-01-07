@@ -241,7 +241,7 @@ export function getVisualizationType(track: BasicSingleTrack): VisualizationType
 /**
  * Defines the orientation of a Geminid track.
  */
-export type Orientation = 'horizontal' | 'vertical' | 'matrix' | 'none';
+export type Orientation = 'horizontal' | 'vertical' | 'orthogonal' | 'none';
 
 /**
  * Returns the orientation of a given track by looking into `x` and `y` channels.
@@ -251,7 +251,7 @@ export function getOrientation(t: Track): Orientation {
     const xGenomic = IsChannelDeep(t['x']) && t['x'].type === 'genomic';
     const yGenomic = IsChannelDeep(t['y']) && t['y'].type === 'genomic';
 
-    if (xGenomic && yGenomic) return 'matrix';
+    if (xGenomic && yGenomic) return 'orthogonal';
     if (xGenomic && !yGenomic) return 'horizontal';
     if (!xGenomic && yGenomic) return 'vertical';
     else return 'none';

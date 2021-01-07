@@ -72,6 +72,8 @@ export class GeminidTrackModel {
             return;
         }
 
+        this.easyFixSpec(this.specComplete);
+
         // fill missing options
         this.generateCompleteSpec(this.specComplete);
 
@@ -104,6 +106,17 @@ export class GeminidTrackModel {
 
     public data(): { [k: string]: number | string }[] {
         return this.dataAggregated;
+    }
+
+    /**
+     * Correct spec for some extent to more safely render visualization
+     * @param spec
+     */
+    private easyFixSpec(spec: BasicSingleTrack) {
+        if (IsChannelDeep(spec.y) && spec.y.type === 'genomic' && spec.row) {
+            // `row` cannot be used when y axis encode genomic position
+            spec.row = undefined;
+        }
     }
 
     /**

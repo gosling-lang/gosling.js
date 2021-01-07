@@ -67,7 +67,7 @@ export function drawMark(HGC: any, trackInfo: any, tile: any, model: GeminidTrac
         // }
     });
 
-    if (getOrientation(model.spec()) === 'matrix') {
+    if (getOrientation(model.spec()) === 'orthogonal') {
         ['y', 'x1', 'y1e', 'ye'].forEach((d: any) => {
             model.setChannelScale(d, trackInfo._yScale);
         });

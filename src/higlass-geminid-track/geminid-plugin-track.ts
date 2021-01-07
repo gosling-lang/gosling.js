@@ -684,7 +684,7 @@ function GeminidTrack(HGC: any, ...args: any[]): any {
                     this.tilesetInfo.max_pos[0]
                 );
 
-                if (this.trackOrientation === 'matrix') {
+                if (this.trackOrientation === 'orthogonal') {
                     // it makes sense only when the y-axis is being used for a genomic field
                     this.yTiles = tileProxy.calculateTilesFromResolution(
                         sortedResolutions[this.zoomLevel],
@@ -703,7 +703,7 @@ function GeminidTrack(HGC: any, ...args: any[]): any {
                     this.tilesetInfo.max_width
                 );
 
-                if (this.trackOrientation === 'matrix') {
+                if (this.trackOrientation === 'orthogonal') {
                     // it makes sense only when the y-axis is being used for a genomic field
                     this.yTiles = tileProxy.calculateTiles(
                         this.zoomLevel,
