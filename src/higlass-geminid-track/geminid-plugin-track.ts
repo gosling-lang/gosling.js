@@ -356,11 +356,11 @@ function GeminidTrack(HGC: any, ...args: any[]): any {
                                     endY: tileY + (r + 1) * tileUnitHeight,
                                     [valueName]: numericValues[r * tileSize + c]
                                 });
-                                if (limitForTest++ > 400) {
+                                if (limitForTest++ > 5000) {
                                     break;
                                 }
                             }
-                            if (limitForTest > 400) {
+                            if (limitForTest > 5000) {
                                 break;
                             }
                         }

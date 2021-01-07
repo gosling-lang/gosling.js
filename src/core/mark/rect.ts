@@ -212,9 +212,11 @@ export function rectProperty(
         case 'height':
             return (
                 // (1) size
-                gm.visualPropertyByChannel('size', datum) ??
-                // (2) unit mark height
-                additionalInfo?.markHeight
+                gm.visualPropertyByChannel('ye', datum)
+                    ? gm.visualPropertyByChannel('ye', datum) - gm.visualPropertyByChannel('y', datum)
+                    : gm.visualPropertyByChannel('size', datum) ??
+                          // (2) unit mark height
+                          additionalInfo?.markHeight
             );
         default:
             return undefined;
