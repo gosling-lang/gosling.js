@@ -6,6 +6,7 @@ export const GENOCAT_SWAV: GeminidSpec = {
     subtitle: 'Reimplementation of GenoCAT examples',
     arrangement: {
         rowSizes: [110, 170],
+        rowGaps: 0,
         columnSizes: 800
     },
     tracks: [
