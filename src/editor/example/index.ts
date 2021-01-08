@@ -27,6 +27,8 @@ import { GENOCAT_CIRCOS } from './genocat-circos';
 import { GENOCAT_CNVKIT } from './genocat-cnvkit';
 import { GENOCAT_SWAV } from './genocat-swav';
 import { GENOCAT_GIVE } from './genocat-give';
+import { GENOCAT_GREMLIN } from './genocat-gremlin';
+import { GENOCAT_MIZBEE } from './genocat-mizbee';
 
 export const examples: ReadonlyArray<{
     name: string;
@@ -46,8 +48,24 @@ export const examples: ReadonlyArray<{
     {
         name: '[GenoCAT] Circos',
         spec: GENOCAT_CIRCOS,
+        underDevelopment: true
+    },
+    {
+        name: '[GenoCAT] GIVE',
+        spec: GENOCAT_GIVE,
+        underDevelopment: true,
+        forceShow: false
+    },
+    {
+        name: '[GenoCAT] Gremlin',
+        spec: GENOCAT_GREMLIN,
         underDevelopment: true,
         forceShow: true
+    },
+    {
+        name: '[GenoCAT] MizBee',
+        spec: GENOCAT_MIZBEE,
+        underDevelopment: true
     },
     {
         name: '[GenoCAT] CNVkit',
@@ -59,12 +77,6 @@ export const examples: ReadonlyArray<{
         name: '[GenoCAT] SWAV',
         spec: GENOCAT_SWAV,
         underDevelopment: true
-    },
-    {
-        name: '[GenoCAT] GIVE',
-        spec: GENOCAT_GIVE,
-        underDevelopment: true,
-        forceShow: false
     },
     {
         name: 'UCSC Cyto band (hg38)',
