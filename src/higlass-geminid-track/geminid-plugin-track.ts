@@ -81,6 +81,9 @@ function GeminidTrack(HGC: any, ...args: any[]): any {
             this.draw();
         }
 
+        /**
+         * This function requests for new tiles by calling `super.fetchNewTiles()`.
+         */
         refreshTiles() {
             if (!this.tilesetInfo) {
                 return;
@@ -109,6 +112,7 @@ function GeminidTrack(HGC: any, ...args: any[]): any {
          * Rerender tiles using the new options, including the change of positions and zoom levels
          */
         rerender(newOptions: any) {
+            // console.log('rerender()');
             super.rerender(newOptions);
 
             this.options = newOptions;
@@ -123,6 +127,7 @@ function GeminidTrack(HGC: any, ...args: any[]): any {
         }
 
         draw() {
+            // console.log('draw()');
             this.tooltips = [];
             this.svgData = [];
             this.textsBeingUsed = 0;
@@ -131,7 +136,12 @@ function GeminidTrack(HGC: any, ...args: any[]): any {
             super.draw();
         }
 
+        drawTile(tile: any) {
+            this.renderTile(tile);
+        }
+
         updateTile() {
+            // console.log('updateTile()');
             // preprocess all tiles at once so that we can share the value scales
             this.preprocessAllTiles();
 
@@ -146,6 +156,7 @@ function GeminidTrack(HGC: any, ...args: any[]): any {
 
         // draws exactly one tile
         renderTile(tile: any) {
+            // console.log('renderTile()');
             this.destroyTile(tile);
 
             // TODO: seems to be not being used by TiledPixiTrack
@@ -172,10 +183,6 @@ function GeminidTrack(HGC: any, ...args: any[]): any {
             tile.graphics.removeChildren();
             this.pBorder.clear();
             this.pBorder.removeChildren();
-        }
-
-        drawTile(tile: any) {
-            this.renderTile(tile);
         }
 
         preprocessAllTiles() {
@@ -357,11 +364,11 @@ function GeminidTrack(HGC: any, ...args: any[]): any {
                                     [valueName]: numericValues[r * tileSize + c]
                                 });
                                 if (limitForTest++ > 5000) {
-                                    break;
+                                    // break;
                                 }
                             }
                             if (limitForTest > 5000) {
-                                break;
+                                // break;
                             }
                         }
                         tile.tileData.tabularData = tabularData;
@@ -608,61 +615,6 @@ function GeminidTrack(HGC: any, ...args: any[]): any {
             return zoomLevel;
         }
 
-        // getIndicesOfVisibleDataInTile(tile: any) {
-        //     const visibleX = this._xScale.range();
-        //     const visibleY = this._yScale.range();
-
-        //     const tilePos = tile.mirrored
-        //       ? [tile.tileData.tilePos[1], tile.tileData.tilePos[0]]
-        //       : tile.tileData.tilePos;
-
-        //     const {
-        //       tileX,
-        //       tileY,
-        //       tileWidth,
-        //       tileHeight,
-        //     } = this.getTilePosAndDimensions(
-        //       tile.tileData.zoomLevel,
-        //       tilePos,
-        //       this.binsPerTile(),
-        //     );
-
-        //     const tileXScale = d3.scaleLinear()
-        //       .domain([0, this.binsPerTile()])
-        //       .range([tileX, tileX + tileWidth]);
-
-        //     const startX = Math.max(
-        //       0,
-        //       Math.round(tileXScale.invert(this._xScale.invert(visibleX[0]))) - 1,
-        //     );
-
-        //     const endX = Math.min(
-        //       this.binsPerTile(),
-        //       Math.round(tileXScale.invert(this._xScale.invert(visibleX[1]))),
-        //     );
-
-        //     const tileYScale = d3.scaleLinear()
-        //       .domain([0, this.binsPerTile()])
-        //       .range([tileY, tileY + tileHeight]);
-
-        //     const startY = Math.max(
-        //       0,
-        //       Math.round(tileYScale.invert(this._yScale.invert(visibleY[0]))) - 1,
-        //     );
-
-        //     const endY = Math.min(
-        //       this.binsPerTile(),
-        //       Math.round(tileYScale.invert(this._yScale.invert(visibleY[1]))),
-        //     );
-
-        //     const result =
-        //       tile.mirrored && tilePos[0] !== tilePos[1]
-        //         ? [startY, startX, endY, endX]
-        //         : [startX, startY, endX, endY];
-
-        //     return result;
-        //   }
-
         calculateVisibleTiles() {
             if (!this.tilesetInfo) {
                 // if we don't know anything about this dataset, no point in trying to get tiles
@@ -716,7 +668,8 @@ function GeminidTrack(HGC: any, ...args: any[]): any {
                 }
             }
 
-            this.setVisibleTiles(this.tilesToId(this.xTiles, this.yTiles, this.zoomLevel));
+            const tiles = this.tilesToId(this.xTiles, this.yTiles, this.zoomLevel);
+            this.setVisibleTiles(tiles);
         }
 
         /**
@@ -845,6 +798,10 @@ function GeminidTrack(HGC: any, ...args: any[]): any {
         }
 
         getMouseOverHtml(mouseX: number, mouseY: number) {
+            // Important: disable mouse over temporally
+            this.tooltips = [];
+            ///
+
             if (!this.tilesetInfo || !this.tooltips) {
                 // Do not have enough information to show tooltips
                 return;

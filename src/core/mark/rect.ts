@@ -1,13 +1,14 @@
 import { Tooltip, TOOLTIP_MOUSEOVER_MARGIN as G } from '../../geminid-tooltip';
 import { GeminidTrackModel } from '../geminid-track-model';
 import { Channel, Datum } from '../geminid.schema';
-import { getValueUsingChannel } from '../geminid.schema.guards';
+import { getOrientation, getValueUsingChannel } from '../geminid.schema.guards';
 import { cartesianToPolar, valueToRadian } from '../utils/polar';
 import { PIXIVisualProperty } from '../visual-property.schema';
 
 export function drawRect(HGC: any, trackInfo: any, tile: any, model: GeminidTrackModel) {
     /* track spec */
     const spec = model.spec();
+    const orientation = getOrientation(spec);
 
     /* helper */
     const { colorToHex } = HGC.utils;
@@ -19,7 +20,7 @@ export function drawRect(HGC: any, trackInfo: any, tile: any, model: GeminidTrac
     const trackWidth = trackInfo.dimensions[0];
     const trackHeight = trackInfo.dimensions[1];
     const tileSize = trackInfo.tilesetInfo.bins_per_dimension || trackInfo.tilesetInfo.tile_size;
-    const { tileX, tileWidth } = trackInfo.getTilePosAndDimensions(
+    const { tileX, tileY, tileWidth, tileHeight } = trackInfo.getTilePosAndDimensions(
         tile.tileData.zoomLevel,
         tile.tileData.tilePos,
         tileSize
@@ -40,6 +41,7 @@ export function drawRect(HGC: any, trackInfo: any, tile: any, model: GeminidTrac
 
     /* genomic scale */
     const xScale = trackInfo._xScale;
+    const yScale = trackInfo._yScale;
     const tileUnitWidth = xScale(tileX + tileWidth / tileSize) - xScale(tileX);
 
     /* row separation */
@@ -51,7 +53,6 @@ export function drawRect(HGC: any, trackInfo: any, tile: any, model: GeminidTrac
     const cellHeight = rowHeight / yCategories.length;
 
     /* render */
-    const g = tile.graphics;
     rowCategories.forEach(rowCategory => {
         const rowPosition = model.encodedValue('row', rowCategory);
 
@@ -143,11 +144,15 @@ export function drawRect(HGC: any, trackInfo: any, tile: any, model: GeminidTrac
         // this is being used to stretch the height of visual marks to the entire height of a track
         const yScaleFactor = stackY ? Math.max(...pixiProps.map(d => d.ye)) / rowHeight : 1;
 
+        // TODO: for non-zero baseline, negative and positive values should be separately stored
+        // separately draw each so so that y scale can be more effectively shared across tiles without rendering from the bottom
+        const rowG = orientation === 'orthogonal' ? new HGC.libraries.PIXI.Graphics() : tile.graphics;
+
         pixiProps.forEach(prop => {
             const { xs, xe, ys, ye, color, stroke, strokeWidth, opacity, datum } = prop;
 
             // stroke
-            g.lineStyle(
+            rowG.lineStyle(
                 strokeWidth,
                 colorToHex(stroke),
                 opacity, // alpha
@@ -167,14 +172,14 @@ export function drawRect(HGC: any, trackInfo: any, tile: any, model: GeminidTrac
                 const startRad = valueToRadian(xs, trackWidth, startAngle, endAngle);
                 const endRad = valueToRadian(xe, trackWidth, startAngle, endAngle);
 
-                g.beginFill(colorToHex(color), opacity);
-                g.moveTo(sPos.x, sPos.y);
-                g.arc(cx, cy, nearR, startRad, endRad, true);
-                g.arc(cx, cy, farR, endRad, startRad, false);
-                g.closePath();
+                rowG.beginFill(colorToHex(color), opacity);
+                rowG.moveTo(sPos.x, sPos.y);
+                rowG.arc(cx, cy, nearR, startRad, endRad, true);
+                rowG.arc(cx, cy, farR, endRad, startRad, false);
+                rowG.closePath();
             } else {
-                g.beginFill(colorToHex(color), opacity);
-                g.drawRect(xs, rowPosition + ys / yScaleFactor, xe - xs, (ye - ys) / yScaleFactor);
+                rowG.beginFill(colorToHex(color), opacity);
+                rowG.drawRect(xs, rowPosition + ys / yScaleFactor, xe - xs, (ye - ys) / yScaleFactor);
 
                 /* SVG data */
                 trackInfo.svgData.push({ type: 'rect', xs, xe, ys, ye, color, stroke, opacity });
@@ -188,6 +193,39 @@ export function drawRect(HGC: any, trackInfo: any, tile: any, model: GeminidTrac
                 } as Tooltip);
             }
         });
+
+        /* -------------- Generate Texture -------------- */
+        // refer to https://github.com/sehilyi/geminid/blob/e57b0ca30c3a8c91d99b5a41dba0bb0940ab1e88/src/track/mark/bar.ts#L139
+        if (orientation === 'orthogonal') {
+            rowG.lineStyle(
+                3,
+                colorToHex('blue'),
+                1, // alpha
+                0.5 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
+            );
+            rowG.beginFill(colorToHex('white'), 0);
+            rowG.drawRect(
+                xScale(tileX),
+                yScale(tileY),
+                xScale(tileX + tileWidth) - xScale(tileX),
+                yScale(tileY + tileHeight) - yScale(tileY)
+            );
+
+            const texture = HGC.services.pixiRenderer.generateTexture(
+                rowG,
+                HGC.libraries.PIXI.SCALE_MODES.NEAREST,
+                1 // resolution
+            );
+            const sprite = new HGC.libraries.PIXI.Sprite(texture);
+
+            sprite.width = xScale(tileX + tileWidth) - xScale(tileX);
+            sprite.x = xScale(tileX);
+            sprite.y = orientation === 'orthogonal' ? yScale(tileY) : rowPosition;
+            sprite.height = orientation === 'orthogonal' ? yScale(tileY + tileHeight) - yScale(tileY) : trackHeight;
+
+            tile.graphics.addChild(sprite);
+            // tile.spriteInfos.push({ sprite: sprite, scaleKey: rowCategory });
+        }
     });
 }
 
@@ -206,7 +244,8 @@ export function rectProperty(
                 // (1) size
                 gm.visualPropertyByChannel('xe', datum)
                     ? gm.visualPropertyByChannel('xe', datum) - gm.visualPropertyByChannel('x', datum)
-                    : // (2) unit mark height
+                    : gm.visualPropertyByChannel('size', datum) ??
+                      // (2) unit mark height
                       additionalInfo?.markWidth;
             return width === 0 ? 0.1 : width; // TODO: not sure if this is necessary for all cases. Perhaps, we can have an option.
         case 'height':

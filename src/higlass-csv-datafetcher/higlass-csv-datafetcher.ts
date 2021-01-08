@@ -152,8 +152,8 @@ function CSVDataFetcher(HGC: any, ...args: any): any {
                 tile_size: TILE_SIZE,
                 max_zoom: Math.ceil(Math.log(totalLength / TILE_SIZE) / Math.log(2)),
                 max_width: totalLength,
-                min_pos: [0],
-                max_pos: [totalLength]
+                min_pos: [0, 0],
+                max_pos: [totalLength, totalLength]
             };
 
             if (callback) {
@@ -189,14 +189,15 @@ function CSVDataFetcher(HGC: any, ...args: any): any {
                 const parts = tileId.split('.');
                 const z = parseInt(parts[0], 10);
                 const x = parseInt(parts[1], 10);
+                const y = parseInt(parts[2], 10);
 
                 if (Number.isNaN(x) || Number.isNaN(z)) {
-                    console.warn('[Gemini Data Fetcher] Invalid tile zoom or position:', z, x);
+                    console.warn('[Gemini Data Fetcher] Invalid tile zoom or position:', z, x, y);
                     continue;
                 }
 
                 validTileIds.push(tileId);
-                tilePromises.push(this.tile(z, x));
+                tilePromises.push(this.tile(z, x, y));
             }
 
             Promise.all(tilePromises).then(values => {
@@ -211,13 +212,17 @@ function CSVDataFetcher(HGC: any, ...args: any): any {
             return tiles;
         }
 
-        tile(z: any, x: any) {
+        tile(z: any, x: any, y: any) {
             return this.tilesetInfo()?.then((tsInfo: any) => {
                 const tileWidth = +tsInfo.max_width / 2 ** +z;
 
                 // get the bounds of the tile
                 const minX = tsInfo.min_pos[0] + x * tileWidth;
                 const maxX = tsInfo.min_pos[0] + (x + 1) * tileWidth;
+
+                // TODO;
+                // let minY = tsInfo.min_pos[0] + x * tileWidth;
+                // let maxY = tsInfo.min_pos[0] + (x + 1) * tileWidth;
 
                 // filter the data so that visible data is sent to tracks
                 const tabularData = this.values.filter((d: any) => {
@@ -229,7 +234,7 @@ function CSVDataFetcher(HGC: any, ...args: any): any {
                     // sample the data to make it managable for visualization components
                     tabularData: tabularData.length > sizeLimit ? sampleSize(tabularData, sizeLimit) : tabularData,
                     server: null,
-                    tilePos: [x],
+                    tilePos: [x, y],
                     zoomLevel: z
                 };
             });
