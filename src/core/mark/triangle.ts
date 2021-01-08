@@ -95,7 +95,8 @@ export function drawTriangle(HGC: any, trackInfo: any, tile: any, tm: GeminidTra
             g.lineStyle(
                 strokeWidth,
                 colorToHex(stroke),
-                actualOpacity, // alpha // TODO: becoming too sharp when drawing narrow triangle
+                // too narrow triangle's stroke is becoming too sharp
+                x1 - x0 > 2 ? actualOpacity : 0, // alpha
                 0 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
             );
 

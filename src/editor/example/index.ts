@@ -46,8 +46,7 @@ export const examples: ReadonlyArray<{
     {
         name: '[GenoCAT] Circos',
         spec: GENOCAT_CIRCOS,
-        underDevelopment: true,
-        forceShow: true
+        underDevelopment: true
     },
     {
         name: '[GenoCAT] CNVkit',
@@ -64,7 +63,7 @@ export const examples: ReadonlyArray<{
         name: '[GenoCAT] GIVE',
         spec: GENOCAT_GIVE,
         underDevelopment: true,
-        forceShow: false
+        forceShow: true
     },
     {
         name: 'UCSC Cyto band (hg38)',
