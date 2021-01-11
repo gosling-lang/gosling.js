@@ -1,4 +1,4 @@
-import { GeminidSpec } from '../../../src/core/geminid.schema';
+import { GeminidSpec, Track } from '../../../src/core/geminid.schema';
 import { fixSpecDownstream } from '../../../src/core/utils/spec-preprocess';
 
 describe('Spec Preprocess', () => {
@@ -13,7 +13,11 @@ describe('Spec Preprocess', () => {
     });
 
     it('circular layout', () => {
-        const spec: GeminidSpec = { layout: 'circular', arrangement: { direction: 'horizontal' }, tracks: [{}] };
+        const spec: GeminidSpec = {
+            layout: 'circular',
+            arrangement: { direction: 'horizontal' },
+            tracks: [{} as Track]
+        };
         fixSpecDownstream(spec);
         expect(spec.tracks[0].layout).toEqual('circular');
     });
