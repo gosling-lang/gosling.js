@@ -127,9 +127,9 @@ export interface OneOfFilter {
     not: boolean;
 }
 
-export type Track = SingleTrack | SuperposedTrack | SuperposedTrackTwoLevels;
+export type Track = SingleTrack | SuperposedTrack | DataTrack; // | SuperposedTrackTwoLevels; // we could support this in the future
 
-export type SingleTrack = BasicSingleTrack | DataTrack; // | CustomChannel;
+export type SingleTrack = BasicSingleTrack; // | CustomChannel; // we could support this in the future
 
 // TODO: how to exclude keys defined in the `BasicSingleTrack`?
 export type CustomChannel = {

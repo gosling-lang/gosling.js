@@ -57,6 +57,44 @@ export function getVectorTemplate(column: string, value: string): BasicSingleTra
     };
 }
 
+export function getMultivecTemplate(
+    row: string,
+    column: string,
+    value: string,
+    categories: string[] | undefined
+): BasicSingleTrack {
+    return categories && categories.length < 10
+        ? {
+              data: { type: 'tileset', url: 'https://localhost:8080/api/v1/tileset_info/?d=VLFaiSVjTjW6mkbjRjWREA' },
+              metadata: {
+                  type: 'higlass-multivec',
+                  row,
+                  column,
+                  value,
+                  categories
+              },
+              mark: 'bar',
+              x: { field: column, type: 'genomic', axis: 'bottom' },
+              y: { field: value, type: 'quantitative' },
+              row: { field: row, type: 'nominal', legend: true },
+              color: { field: row, type: 'nominal' }
+          }
+        : {
+              data: { type: 'tileset', url: 'https://localhost:8080/api/v1/tileset_info/?d=VLFaiSVjTjW6mkbjRjWREA' },
+              metadata: {
+                  type: 'higlass-multivec',
+                  row,
+                  column,
+                  value,
+                  categories
+              },
+              mark: 'rect',
+              x: { field: column, type: 'genomic', axis: 'bottom' },
+              row: { field: row, type: 'nominal', legend: true },
+              color: { field: value, type: 'quantitative' }
+          };
+}
+
 /**
  * Override default visual encoding in each track for given data type.
  * @param spec
@@ -76,6 +114,12 @@ export function resolvePartialSpec(spec: GeminidSpec) {
         switch (t.metadata.type) {
             case 'higlass-vector':
                 spec.tracks[i] = assign(getVectorTemplate(t.metadata.column, t.metadata.value), t);
+                break;
+            case 'higlass-multivec':
+                spec.tracks[i] = assign(
+                    getMultivecTemplate(t.metadata.row, t.metadata.column, t.metadata.value, t.metadata.categories),
+                    t
+                );
                 break;
         }
     });
