@@ -4,7 +4,7 @@ import { GeminidTrackModel } from '../core/geminid-track-model';
 import { validateTrack } from '../core/utils/validate';
 import { shareScaleAcrossTracks } from '../core/utils/scales';
 import { resolveSuperposedTracks } from '../core/utils/superpose';
-import { Track } from '../core/geminid.schema';
+import { BasicSingleTrack, SuperposedTrack } from '../core/geminid.schema';
 import {
     IsDataMetadata,
     IsDataTransform,
@@ -21,7 +21,7 @@ function GeminidTrack(HGC: any, ...args: any[]): any {
 
     // TODO: change the parent class to a more generic one (e.g., TiledPixiTrack)
     class GeminidTrackClass extends HGC.tracks.BarTrack {
-        private originalSpec: Track;
+        private originalSpec: BasicSingleTrack | SuperposedTrack;
         private tooltips: Tooltip[];
         // TODO: add members that are used explicitly in the code
 

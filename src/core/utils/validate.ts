@@ -1,5 +1,5 @@
 import Ajv from 'ajv';
-import { ChannelDeep, ChannelTypes, Track } from '../geminid.schema';
+import { BasicSingleTrack, ChannelDeep, ChannelTypes, SuperposedTrack, Track } from '../geminid.schema';
 import { IsChannelDeep } from '../geminid.schema.guards';
 import { resolveSuperposedTracks } from './superpose';
 import GeminidSchema from '../../../schema/geminid.schema.json';
@@ -81,7 +81,7 @@ export function validateTrack(track: Track) {
  * Find an axis channel that is encoded with genomic coordinate.
  * `undefined` if not found.
  */
-export function getGenomicChannelFromTrack(track: Track): ChannelDeep | undefined {
+export function getGenomicChannelFromTrack(track: BasicSingleTrack | SuperposedTrack): ChannelDeep | undefined {
     // we do not support using two genomic coordinates yet
     let genomicChannel: ChannelDeep | undefined = undefined;
     ['x', 'y', 'xe', 'ye', 'x1', 'y1', 'x1e', 'y1e'].reverse().forEach(channelType => {
@@ -98,7 +98,7 @@ export function getGenomicChannelFromTrack(track: Track): ChannelDeep | undefine
  * `undefined` if not found.
  */
 export function getGenomicChannelKeyFromTrack(
-    track: Track
+    track: BasicSingleTrack | SuperposedTrack
 ): 'x' | 'xe' | 'y' | 'ye' | 'x1' | 'y1' | 'x1e' | 'y1e' | undefined {
     // we do not support using two genomic coordinates yet
     let genomicChannelKey: string | undefined = undefined;
