@@ -56,7 +56,8 @@ export function IsDataTransform(_: DataTransform | ChannelDeep | ChannelValue): 
 //
 
 export function IsDataTrack(_: Track): _ is DataTrack {
-    return 'data' in _ && 'metadata' in _ && !('mark' in _);
+    // !!! Track might not contain `mark` when it is superposed one
+    return !IsSuperposedTrack(_) && 'data' in _ && 'metadata' in _ && !('mark' in _);
 }
 
 export function IsTemplate(_: Track): boolean {
