@@ -172,13 +172,13 @@ export function drawRect(HGC: any, trackInfo: any, tile: any, model: GeminidTrac
                 const startRad = valueToRadian(xs, trackWidth, startAngle, endAngle);
                 const endRad = valueToRadian(xe, trackWidth, startAngle, endAngle);
 
-                rowG.beginFill(colorToHex(color), opacity);
+                rowG.beginFill(colorToHex(color === 'none' ? 'white' : color), color === 'none' ? 0 : opacity);
                 rowG.moveTo(sPos.x, sPos.y);
                 rowG.arc(cx, cy, nearR, startRad, endRad, true);
                 rowG.arc(cx, cy, farR, endRad, startRad, false);
                 rowG.closePath();
             } else {
-                rowG.beginFill(colorToHex(color), opacity);
+                rowG.beginFill(colorToHex(color === 'none' ? 'white' : color), color === 'none' ? 0 : opacity);
                 rowG.drawRect(xs, rowPosition + ys / yScaleFactor, xe - xs, (ye - ys) / yScaleFactor);
 
                 /* SVG data */
