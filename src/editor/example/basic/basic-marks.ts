@@ -1,4 +1,4 @@
-import { GeminidSpec, Track } from '../../../core/geminid.schema';
+import { BasicSingleTrack, GeminidSpec, Track } from '../../../core/geminid.schema';
 import { EXAMPLE_DATASETS } from './datasets';
 
 export const EXAMPLE_HEATMAP: Track = {
@@ -24,7 +24,7 @@ export const EXAMPLE_HEATMAP: Track = {
     color: { field: 'peak', type: 'quantitative' }
 };
 
-export const EXAMPLE_BASIC_AREA: Track = {
+export const EXAMPLE_BASIC_AREA: BasicSingleTrack = {
     data: {
         url: EXAMPLE_DATASETS.multivec,
         type: 'tileset'

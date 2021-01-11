@@ -1,21 +1,26 @@
-import { AxisPosition, BasicSingleTrack, SingleTrack, SuperposedTrack, Track } from '../geminid.schema';
+import { AxisPosition, BasicSingleTrack, SuperposedTrack, Track } from '../geminid.schema';
 import assign from 'lodash/assign';
-import { IsChannelDeep, IsSuperposedTrack } from '../geminid.schema.guards';
+import { IsChannelDeep, IsDataTrack, IsSuperposedTrack } from '../geminid.schema.guards';
 
 /**
  * Resolve superposed tracks into multiple track specifications.
  * Some options are corrected to ensure the resolved tracks use consistent visual properties, such as the existence of the axis for genomic coordinates.
  */
-export function resolveSuperposedTracks(track: Track): SingleTrack[] {
+export function resolveSuperposedTracks(track: Track): BasicSingleTrack[] {
+    if (IsDataTrack(track)) {
+        // no BasicSingleTrack to return
+        return [];
+    }
+
     if (!IsSuperposedTrack(track)) {
         // no `superpose` to resolve
         return [track];
     }
 
-    const base: SingleTrack = JSON.parse(JSON.stringify(track));
+    const base: BasicSingleTrack = JSON.parse(JSON.stringify(track));
     delete (base as Partial<SuperposedTrack>).superpose; // remove `superpose` from the base spec
 
-    const resolved: SingleTrack[] = [];
+    const resolved: BasicSingleTrack[] = [];
     track.superpose.forEach((subSpec, i) => {
         const spec = assign(JSON.parse(JSON.stringify(base)), subSpec) as BasicSingleTrack;
         if (spec.title && i !== 0) {
@@ -37,7 +42,7 @@ export function resolveSuperposedTracks(track: Track): SingleTrack[] {
         return {
             ...d,
             x: { ...d.x, axis: xAxisPosition }
-        } as SingleTrack;
+        } as BasicSingleTrack;
     });
 
     // height

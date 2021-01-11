@@ -1,10 +1,14 @@
 import { BoundingBox } from '../../utils/bounding-box';
-import { Datum, BasicSingleTrack, Track } from '../../geminid.schema';
+import { Datum, BasicSingleTrack } from '../../geminid.schema';
 import * as d3 from 'd3';
 import { getLinkPosition, LinkStyleModel } from './link';
 import { IsChannelDeep } from '../../geminid.schema.guards';
 
-export function renderBetweenLineLink(g: d3.Selection<SVGGElement, any, any, any>, track: Track, bb: BoundingBox) {
+export function renderBetweenLineLink(
+    g: d3.Selection<SVGGElement, any, any, any>,
+    track: BasicSingleTrack,
+    bb: BoundingBox
+) {
     const styles = new LinkStyleModel(track);
 
     const xField = IsChannelDeep(track.x) ? track.x.field : undefined;
@@ -57,17 +61,17 @@ export function renderBetweenLineLink(g: d3.Selection<SVGGElement, any, any, any
 
     // render
     g.selectAll('.line')
-        .data(track.data as Datum[])
+        .data(track.data as any) //Datum[])
         .enter()
         .filter(
             // TODO: only for demo
-            d => Math.abs((d[f1 as string] as number) - (d[f2 as string] as number)) < 30
+            (d: any) => Math.abs((d[f1 as string] as number) - (d[f2 as string] as number)) < 30
         )
         .append('line')
-        .attr('x1', d => point[0].x(d))
-        .attr('y1', d => point[0].y(d))
-        .attr('x2', d => point[1].x(d))
-        .attr('y2', d => point[1].y(d))
+        .attr('x1', (d: any) => point[0].x(d))
+        .attr('y1', (d: any) => point[0].y(d))
+        .attr('x2', (d: any) => point[1].x(d))
+        .attr('y2', (d: any) => point[1].y(d))
         .attr('fill', styles.getStyle().fill)
         .attr('stroke', styles.getStyle().stroke)
         .attr('stroke-width', styles.getStyle().strokeWidth)

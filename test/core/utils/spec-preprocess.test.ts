@@ -1,5 +1,5 @@
-import { GeminidSpec } from '../../../src/core/geminid.schema';
-import { fixSpecDownstream } from '../../../src/core/utils/spec-preprocess';
+import { GeminidSpec, Track } from '../../../src/core/geminid.schema';
+import { fixSpecDownstream, overrideTemplates } from '../../../src/core/utils/spec-preprocess';
 
 describe('Spec Preprocess', () => {
     it('superposeOnPreviousTrack', () => {
@@ -13,8 +13,28 @@ describe('Spec Preprocess', () => {
     });
 
     it('circular layout', () => {
-        const spec: GeminidSpec = { layout: 'circular', arrangement: { direction: 'horizontal' }, tracks: [{}] };
+        const spec: GeminidSpec = {
+            layout: 'circular',
+            arrangement: { direction: 'horizontal' },
+            tracks: [{} as Track]
+        };
         fixSpecDownstream(spec);
         expect(spec.tracks[0].layout).toEqual('circular');
+    });
+
+    it('override template (higlass-vector)', () => {
+        const spec: GeminidSpec = {
+            tracks: [{ data: {}, metadata: { type: 'higlass-vector', column: 'c', value: 'v' } } as Track]
+        };
+        overrideTemplates(spec);
+        expect(spec.tracks[0]).toHaveProperty('mark');
+    });
+
+    it('override template (higlass-multivec)', () => {
+        const spec: GeminidSpec = {
+            tracks: [{ data: {}, metadata: { type: 'higlass-multivec', row: 'r', column: 'c', value: 'v' } } as Track]
+        };
+        overrideTemplates(spec);
+        expect(spec.tracks[0]).toHaveProperty('mark');
     });
 });

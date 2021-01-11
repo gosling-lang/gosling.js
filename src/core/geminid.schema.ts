@@ -134,9 +134,9 @@ export interface OneOfFilter {
     not: boolean;
 }
 
-export type Track = SingleTrack | SuperposedTrack | SuperposedTrackTwoLevels;
+export type Track = SingleTrack | SuperposedTrack | DataTrack; // | SuperposedTrackTwoLevels; // we could support this in the future
 
-export type SingleTrack = BasicSingleTrack | CustomChannel;
+export type SingleTrack = BasicSingleTrack; // | CustomChannel; // we could support this in the future
 
 // TODO: how to exclude keys defined in the `BasicSingleTrack`?
 export type CustomChannel = {
@@ -145,7 +145,7 @@ export type CustomChannel = {
     [k in CHANNEL_KEYS]?: never;
 };
 
-export interface BasicSingleTrack {
+export interface CommonTrackDef {
     title?: string;
     subtitle?: string;
     description?: string;
@@ -163,7 +163,21 @@ export interface BasicSingleTrack {
     innerRadius?: number;
     startAngle?: number; // [0, 360]
     endAngle?: number; // [0, 360]
+}
 
+/**
+ * Partial specification of `BasicSingleTrack` to use default visual encoding predefined by data type.
+ */
+export interface DataTrack extends CommonTrackDef {
+    // !!! The below properties should be required ones since metadata determines the visualization type.
+    data: DataDeep;
+    metadata: DataMetadata;
+}
+
+/**
+ * The baic form of a track definition
+ */
+export interface BasicSingleTrack extends CommonTrackDef {
     // Data
     data: DataDeep;
     metadata?: DataMetadata; // we could remove this and get this information from the server
@@ -209,6 +223,9 @@ export interface BasicSingleTrack {
 
     // Styling
     style?: TrackStyle;
+
+    // Override a spec template that is defined for a given data type
+    overrideTemplate?: boolean;
 }
 
 /**

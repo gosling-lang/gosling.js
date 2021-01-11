@@ -1,4 +1,4 @@
-import { GeminidSpec, SuperposedTrack, Track } from '../../../core/geminid.schema';
+import { BasicSingleTrack, GeminidSpec, SuperposedTrack, Track } from '../../../core/geminid.schema';
 import { EXAMPLE_CYTOAND_HG38 } from '../cytoband-hg38';
 import { EXAMPLE_DATASETS } from './datasets';
 
@@ -113,7 +113,7 @@ const ideogramTracks: Track[] = [];
         {
             ...EXAMPLE_CYTOAND_HG38.tracks[0],
             x: {
-                ...EXAMPLE_CYTOAND_HG38.tracks[0].x,
+                ...(EXAMPLE_CYTOAND_HG38.tracks[0] as BasicSingleTrack).x,
                 domain: { chromosome: d.chr },
                 axis: undefined,
                 linkingID: `link-${i}`

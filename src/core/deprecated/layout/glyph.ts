@@ -1,11 +1,11 @@
 import * as d3 from 'd3';
-import { Datum, GlyphElement, Track } from '../../geminid.schema';
+import { BasicSingleTrack, GlyphElement } from '../../geminid.schema';
 import { transformData, FilterSpec } from '../utils/data-transform';
 import { TrackModel } from '../deprecated-track-model';
 import { BoundingBox } from '../../utils/bounding-box';
 import { IsGlyphMark } from '../../geminid.schema.guards';
 
-export function renderGlyph(g: d3.Selection<SVGGElement, any, any, any>, track: Track, bb: BoundingBox) {
+export function renderGlyph(g: d3.Selection<SVGGElement, any, any, any>, track: BasicSingleTrack, bb: BoundingBox) {
     const tm = new TrackModel(track);
     tm.setScales({
         ...bb,
@@ -14,7 +14,7 @@ export function renderGlyph(g: d3.Selection<SVGGElement, any, any, any>, track: 
     });
 
     // checks
-    const data = track.data as Datum[];
+    const data = track.data as any; //Datum[];
     if (!data) {
         console.warn('No array of a JSON object suggested.');
         return;

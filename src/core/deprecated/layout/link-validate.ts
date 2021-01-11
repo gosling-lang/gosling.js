@@ -1,8 +1,8 @@
-import { Track } from '../../geminid.schema';
+import { BasicSingleTrack } from '../../geminid.schema';
 import { IsChannelDeep } from '../../geminid.schema.guards';
 import { SpecValidityModel } from './validate';
 
-export function validateBetweenLinkSpec(track: Track) {
+export function validateBetweenLinkSpec(track: BasicSingleTrack) {
     const validity = new SpecValidityModel(true);
 
     const xField = IsChannelDeep(track.x) ? track.x.field : undefined;

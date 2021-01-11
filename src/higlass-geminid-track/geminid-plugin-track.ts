@@ -3,7 +3,7 @@ import { GeminidTrackModel } from '../core/geminid-track-model';
 import { validateTrack } from '../core/utils/validate';
 import { shareScaleAcrossTracks } from '../core/utils/scales';
 import { resolveSuperposedTracks } from '../core/utils/superpose';
-import { Track } from '../core/geminid.schema';
+import { BasicSingleTrack, SuperposedTrack } from '../core/geminid.schema';
 import {
     getOrientation,
     IsDataMetadata,
@@ -23,8 +23,8 @@ function GeminidTrack(HGC: any, ...args: any[]): any {
     // Services
     const { tileProxy } = HGC.services;
 
-    class GeminidTrackClass extends HGC.tracks.TiledPixiTrack {
-        private originalSpec: Track;
+    class GeminidTrackClass extends HGC.tracks.BarTrack {
+        private originalSpec: BasicSingleTrack | SuperposedTrack;
         private tooltips: Tooltip[];
         private trackOrientation: Orientation;
         // TODO: add members that are used explicitly in the code
