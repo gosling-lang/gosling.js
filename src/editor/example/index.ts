@@ -103,22 +103,17 @@ export const examples: ReadonlyArray<{
     },
     {
         name: 'Simplest Spec',
-        spec: EXAMPLE_SIMPLEST,
-        underDevelopment: false,
-        hidden: false,
-        forceShow: true
+        spec: EXAMPLE_SIMPLEST
     },
     {
         name: 'Basic Matrix',
         spec: EXMAPLE_BASIC_MATRIX,
         underDevelopment: false,
-        hidden: false,
         forceShow: true
     },
     {
         name: 'Basic Marks',
         spec: EXMAPLE_BASIC_MARKS,
-        underDevelopment: false,
         hidden: false,
         forceShow: true
     },
@@ -128,8 +123,7 @@ export const examples: ReadonlyArray<{
     },
     {
         name: 'Superposed Tracks',
-        spec: EXAMPLE_SUPERPOSE,
-        forceShow: false
+        spec: EXAMPLE_SUPERPOSE
     },
     {
         name: 'Ideograms (Static)',
@@ -137,13 +131,11 @@ export const examples: ReadonlyArray<{
     },
     {
         name: 'Custom Gene Annotation Tracks',
-        spec: EXAMPLE_GENE_ANNOTATION,
-        forceShow: false
+        spec: EXAMPLE_GENE_ANNOTATION
     },
     {
         name: 'Band and Line Connections',
-        spec: EXAMPLE_LINKS,
-        underDevelopment: true
+        spec: EXAMPLE_LINKS
     },
     {
         name: 'Semantic Zooming',

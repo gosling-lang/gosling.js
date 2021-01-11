@@ -4,6 +4,7 @@ import { validateTrack } from '../core/utils/validate';
 import { shareScaleAcrossTracks } from '../core/utils/scales';
 import { resolveSuperposedTracks } from '../core/utils/superpose';
 import { BasicSingleTrack, SuperposedTrack } from '../core/geminid.schema';
+import { Tooltip } from '../geminid-tooltip';
 import {
     getOrientation,
     IsDataMetadata,
@@ -13,7 +14,6 @@ import {
     IsRangeFilter,
     Orientation
 } from '../core/geminid.schema.guards';
-import { Tooltip } from '../geminid-tooltip';
 
 function GeminidTrack(HGC: any, ...args: any[]): any {
     if (!new.target) {
@@ -27,7 +27,11 @@ function GeminidTrack(HGC: any, ...args: any[]): any {
         private originalSpec: BasicSingleTrack | SuperposedTrack;
         private tooltips: Tooltip[];
         private trackOrientation: Orientation;
+
+        public textsBeingUsed: number; // being used to improve the performance of text rendering
+
         // TODO: add members that are used explicitly in the code
+        // ...
 
         constructor(params: any[]) {
             super(...params); // context, options
@@ -41,6 +45,7 @@ function GeminidTrack(HGC: any, ...args: any[]): any {
                 console.warn('The specification of the following track is invalid', errorMessages, this.originalSpec);
             }
 
+            // !!! deprecated
             this.extent = { min: Number.MAX_SAFE_INTEGER, max: Number.MIN_SAFE_INTEGER };
 
             this.mouseOverGraphics = new HGC.libraries.PIXI.Graphics();
@@ -49,36 +54,133 @@ function GeminidTrack(HGC: any, ...args: any[]): any {
             this.tooltips = [];
             this.svgData = [];
             this.textGraphics = [];
-            this.textsBeingUsed = 0; // this variable is being used to improve the performance of text rendering
+            this.textsBeingUsed = 0;
 
             HGC.libraries.PIXI.GRAPHICS_CURVES.adaptive = false;
         }
 
-        initTile(tile: any) {
-            this.tooltips = [];
-            this.svgData = [];
-            this.textsBeingUsed = 0;
+        /* ---------------------------------- LIFE CYCLE ---------------------------------- */
+
+        /**
+         * Initialize variables upon receiving tiles. Nextly called function: `updateTile()`.
+         */
+        initTile(/* tile: any */) {
+            // Do not need to do anything here.
+            // Refer to https://github.com/higlass/higlass/blob/f82c0a4f7b2ab1c145091166b0457638934b15f3/app/scripts/TiledPixiTrack.js#L518
+            // console.log('initTile()');
+        }
+
+        /**
+         * Compute something before rendering each tile. Nextly called function: `drawTile()`.
+         */
+        updateTile() {
+            // Refer to https://github.com/higlass/higlass/blob/f82c0a4f7b2ab1c145091166b0457638934b15f3/app/scripts/TiledPixiTrack.js#L532
+            // console.log('updateTile()');
 
             // preprocess all tiles at once so that we can share the value scales
             this.preprocessAllTiles();
 
-            this.renderTile(tile);
+            this.visibleAndFetchedTiles().forEach((tile: any) => this.drawTile(tile));
+
+            // TODO: Should re-render tile only when neccesary for performance
+            // e.g., changing color scale
+            // ...
+        }
+
+        /**
+         * This function calls `drawTile` on each tile.
+         */
+        draw() {
+            // console.log('draw()');
+            this.tooltips = [];
+            this.svgData = [];
+            this.textsBeingUsed = 0;
+            this.mouseOverGraphics?.clear(); // remove mouse over effects
+            this.pBorder.clear();
+            this.pBorder.removeChildren();
+
+            super.draw();
+        }
+
+        /**
+         * Render a tile.
+         */
+        drawTile(tile: any) {
+            if (!tile.geminidModels) {
+                // we do not have a track model prepared to visualize
+                return;
+            }
+            this.destroyTile(tile);
+
+            // console.log('drawTile()');
+
+            // TODO: Need to fully understand what this variable does
+            // this is being used in `super.draw()`
+            tile.drawnAtScale = this._xScale.copy();
+
+            tile.geminidModels.forEach((tm: GeminidTrackModel) => {
+                if (!tm.trackVisibility({ zoomLevel: tile?.tileData?.zoomLevel })) {
+                    // check whether to show this track or not
+                    return;
+                }
+
+                drawMark(HGC, this, tile, tm);
+            });
+        }
+
+        /**
+         * Clear variables that have been used for tile rendering.
+         */
+        destroyTile(tile: any) {
+            // console.log('destroyTile()');
+            tile.mouseOverData = null;
+            tile.graphics.clear();
+            tile.graphics.removeChildren();
+
+            // !!!
+            tile.spriteInfos = [];
+        }
+
+        /**
+         * Called when location or zoom level has been changed.
+         * @param newXScale
+         * @param newYScale
+         */
+        zoomed(newXScale: any, newYScale: any) {
+            // console.log('zoomed()');
+            this.xScale(newXScale);
+            this.yScale(newYScale);
+
+            this.refreshTilesDebounced();
+            // this.refreshTiles();
+
+            if (this.trackOrientation === 'orthogonal') {
+                // !!! temporally, efficient rendering is only applied to orthogonal visualization
+                // Refer to https://github.com/higlass/higlass-multivec/blob/6dbc68a243de71c52e3794a4bc8aa0956a2ea93c/src/scripts/StackedBarTrack.js#L185
+                this.visibleAndFetchedTiles().map((t: any) => {
+                    if (t.spriteInfos) {
+                        // console.log(t.spriteInfos);
+                        t.spriteInfos.forEach((info: any) => {
+                            const { sprite, tileX, tileWidth, tileY, tileHeight } = info;
+                            sprite.x = this._xScale(tileX);
+                            sprite.y = this._yScale(tileY);
+                            sprite.width = this._xScale(tileX + tileWidth) - this._xScale(tileX);
+                            sprite.height = this._yScale(tileY + tileHeight) - this._yScale(tileY);
+                        });
+                    }
+                });
+            } else {
+                // draw every tiles again
+                this.draw();
+            }
         }
 
         setPosition(newPosition: any) {
+            // console.log('setPosition()');
             super.setPosition(newPosition);
 
             this.pMain.position.y = this.position[1];
             this.pMain.position.x = this.position[0];
-        }
-
-        zoomed(newXScale: any, newYScale: any) {
-            this.xScale(newXScale);
-            this.yScale(newYScale);
-
-            this.refreshTiles(); // or this.refreshTilesDebounced();
-
-            this.draw();
         }
 
         /**
@@ -91,16 +193,17 @@ function GeminidTrack(HGC: any, ...args: any[]): any {
 
             this.calculateVisibleTiles();
 
-            // tiles that are fetched
+            // tiles that are already fetched
             const fetchedTileIDs = new Set(Object.keys(this.fetchedTiles));
 
-            // fetch the tiles that should be visible but haven't been fetched
-            // and aren't in the process of being fetched
+            // fetch the tiles that should be visible but haven't been fetched and aren't in the process of being fetched
             const toFetch = [...this.visibleTiles].filter(
                 x => !this.fetching.has(x.remoteId) && !fetchedTileIDs.has(x.tileId)
             );
 
             toFetch.forEach(f => {
+                // this Set will be refreshed in `super.receivedTiles()`
+                // Refer to https://github.com/higlass/higlass/blob/f82c0a4f7b2ab1c145091166b0457638934b15f3/app/scripts/TiledPixiTrack.js#L634
                 this.fetching.add(f.remoteId);
             });
 
@@ -108,6 +211,7 @@ function GeminidTrack(HGC: any, ...args: any[]): any {
             this.fetchNewTiles(toFetch);
         }
 
+        // TODO: This should be tested.
         /**
          * Rerender tiles using the new options, including the change of positions and zoom levels
          */
@@ -123,67 +227,10 @@ function GeminidTrack(HGC: any, ...args: any[]): any {
 
             this.updateTile();
 
-            this.draw(); // TODO: any effect?
+            this.draw();
         }
 
-        draw() {
-            // console.log('draw()');
-            this.tooltips = [];
-            this.svgData = [];
-            this.textsBeingUsed = 0;
-            this.mouseOverGraphics?.clear(); // remove mouse over effects
-
-            super.draw();
-        }
-
-        drawTile(tile: any) {
-            this.renderTile(tile);
-        }
-
-        updateTile() {
-            // console.log('updateTile()');
-            // preprocess all tiles at once so that we can share the value scales
-            this.preprocessAllTiles();
-
-            this.visibleAndFetchedTiles().forEach((tile: any) => {
-                this.renderTile(tile);
-            });
-
-            // TODO: Should rerender tile only when neccesary for performance
-            // e.g., changing color scale
-            // ...
-        }
-
-        // draws exactly one tile
-        renderTile(tile: any) {
-            // console.log('renderTile()');
-            this.destroyTile(tile);
-
-            // TODO: seems to be not being used by TiledPixiTrack
-            // tile.drawnAtScale = this._xScale.copy(); // being used in `draw()` internally
-
-            if (!tile.geminidModels) {
-                // we do not have a track model prepared to visualize
-                return;
-            }
-
-            tile.geminidModels.forEach((tm: GeminidTrackModel) => {
-                // check visibility condition
-                if (!tm.trackVisibility({ zoomLevel: tile?.tileData?.zoomLevel })) {
-                    return;
-                }
-
-                drawMark(HGC, this, tile, tm);
-            });
-        }
-
-        destroyTile(tile: any) {
-            tile.mouseOverData = null;
-            tile.graphics.clear();
-            tile.graphics.removeChildren();
-            this.pBorder.clear();
-            this.pBorder.removeChildren();
-        }
+        /* ---------------------------------- END OF LIFE CYCLE ---------------------------------- */
 
         preprocessAllTiles() {
             const gms: GeminidTrackModel[] = [];
@@ -364,11 +411,11 @@ function GeminidTrack(HGC: any, ...args: any[]): any {
                                     [valueName]: numericValues[r * tileSize + c]
                                 });
                                 if (limitForTest++ > 5000) {
-                                    // break;
+                                    break;
                                 }
                             }
                             if (limitForTest > 5000) {
-                                // break;
+                                break;
                             }
                         }
                         tile.tileData.tabularData = tabularData;
@@ -568,8 +615,8 @@ function GeminidTrack(HGC: any, ...args: any[]): any {
             this.oldDimensions = this.dimensions;
             super.setDimensions(newDimensions);
 
-            const visibleAndFetched = this.visibleAndFetchedTiles();
-            visibleAndFetched.map((tile: any) => this.initTile(tile));
+            // Our `initTile` function does not do anything.
+            // this.visibleAndFetchedTiles().map((tile: any) => this.initTile(tile));
         }
 
         /**
@@ -798,7 +845,7 @@ function GeminidTrack(HGC: any, ...args: any[]): any {
         }
 
         getMouseOverHtml(mouseX: number, mouseY: number) {
-            // Important: disable mouse over temporally
+            // !!! disabling mouse over temporally
             this.tooltips = [];
             ///
 

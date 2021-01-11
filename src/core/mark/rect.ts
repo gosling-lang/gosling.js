@@ -220,10 +220,11 @@ export function drawRect(HGC: any, trackInfo: any, tile: any, model: GeminidTrac
 
             sprite.width = xScale(tileX + tileWidth) - xScale(tileX);
             sprite.x = xScale(tileX);
-            sprite.y = orientation === 'orthogonal' ? yScale(tileY) : rowPosition;
-            sprite.height = orientation === 'orthogonal' ? yScale(tileY + tileHeight) - yScale(tileY) : trackHeight;
+            sprite.y = yScale(tileY);
+            sprite.height = yScale(tileY + tileHeight) - yScale(tileY);
 
             tile.graphics.addChild(sprite);
+            tile.spriteInfos.push({ sprite, tileX, tileWidth, tileY, tileHeight });
             // tile.spriteInfos.push({ sprite: sprite, scaleKey: rowCategory });
         }
     });

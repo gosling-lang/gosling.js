@@ -5,8 +5,7 @@
 
 * correctly calculate arrangement of tracks ([04d68a9](https://github.com/sehilyi/geminid/commit/04d68a9d62093ccd21ba11c0eafaf1999c0288a7))
 * correctly calculate layout when title is specified ([#82](https://github.com/sehilyi/geminid/issues/82)) ([b2e0130](https://github.com/sehilyi/geminid/commit/b2e01304570a696275360252e65581315252a337))
-* correctly encode height of rect in 2d ([426d7c7](https://github.com/sehilyi/geminid/commit/426d7c78fc157950d92f6d0c25579fa1c41450cc))
-* remove row def when y encodes genomic ([4871ee8](https://github.com/sehilyi/geminid/commit/4871ee83d692a71d8c5e66540166917fdcb8e34b))
+* do not show y-axis since it is not prepared yet ([#94](https://github.com/sehilyi/geminid/issues/94)) ([c130edd](https://github.com/sehilyi/geminid/commit/c130eddd79c8bec78bec2fbdc08e7e004a91dcb6))
 * remove rows where chr info is incorrectly parsed ([#67](https://github.com/sehilyi/geminid/issues/67)) ([1a703ec](https://github.com/sehilyi/geminid/commit/1a703eca99baaa667abee27a9d5d174812cb8f8c))
 * superposeOnPreviousTrack of first track is always false ([#71](https://github.com/sehilyi/geminid/issues/71)) ([3f5aa99](https://github.com/sehilyi/geminid/commit/3f5aa995ab1f5bf1712fb04bd2ffeaab83553af7))
 * unique editor urls for custom specs work correctly ([#60](https://github.com/sehilyi/geminid/issues/60)) ([f017ef6](https://github.com/sehilyi/geminid/commit/f017ef62fdae7fcf19b0adf105901e1cfb339cc4))
@@ -16,7 +15,7 @@
 ### Features
 
 * adaptive axis format considering width/height of track ([#58](https://github.com/sehilyi/geminid/issues/58)) ([43df1e9](https://github.com/sehilyi/geminid/commit/43df1e98db1176d520c1f3658c2dee8ea77abbcf))
-* support axis borders for y-axis ([5cd2e2d](https://github.com/sehilyi/geminid/commit/5cd2e2db18a849063df56e1b15087bc76bb79c2d))
+* support basic templates for given data type ([#96](https://github.com/sehilyi/geminid/issues/96)) ([81d59eb](https://github.com/sehilyi/geminid/commit/81d59ebd892cc67b86e7a0c372fa69e996a64fb8))
 * support turning on/off auto run in editor ([#62](https://github.com/sehilyi/geminid/issues/62)) ([b79c20d](https://github.com/sehilyi/geminid/commit/b79c20dc7978f1c3de2283008894c76c82541630))
 
 
