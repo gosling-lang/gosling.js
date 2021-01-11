@@ -1,5 +1,5 @@
 import * as d3 from 'd3';
-import { Track, ChannelBind, ChannelType, ChannelTypes, Datum, GlyphElement } from '../geminid.schema';
+import { ChannelBind, ChannelType, ChannelTypes, Datum, GlyphElement, BasicSingleTrack } from '../geminid.schema';
 import { IsGlyphMark, IsChannelDeep, IsDomainFlat, IsChannelValue, IsChannelBind } from '../geminid.schema.guards';
 import { BoundingBox } from '../utils/bounding-box';
 
@@ -31,14 +31,14 @@ export function deepToLongElements(elements: GlyphElement[]) {
 
 // deprecated
 export class TrackModel {
-    private track: Track;
+    private track: BasicSingleTrack;
     private channelToField: { [k: string]: string };
     private domains: { [channel: string]: (string | number)[] };
     private scales: {
         [channel: string]: d3.ScaleLinear<any, any> | d3.ScaleOrdinal<any, any> | d3.ScaleSequential<any>;
     };
     private ranges: { [channel: string]: string | number[] | string[] };
-    constructor(track: Track) {
+    constructor(track: BasicSingleTrack) {
         this.track = track;
         this.domains = {};
         this.channelToField = {};
@@ -80,7 +80,7 @@ export class TrackModel {
     }
 
     private setDomains() {
-        const data = this.track.data as Datum[];
+        const data = this.track.data as any; //as Datum[];
 
         if (IsGlyphMark(this.track.mark)) {
             const { requiredChannels: required } = this.track.mark;
@@ -104,7 +104,9 @@ export class TrackModel {
                     }
                     this.domains[targetChannel] = [
                         ...this.domains[targetChannel],
-                        ...(channel.domain && IsDomainFlat(channel.domain) ? channel.domain : data.map(d => d[field]))
+                        ...(channel.domain && IsDomainFlat(channel.domain)
+                            ? channel.domain
+                            : data.map((d: any) => d[field]))
                     ];
                 }
             });

@@ -1,4 +1,4 @@
-import { GeminidSpec, SuperposedTrack, Track } from '../../../core/geminid.schema';
+import { BasicSingleTrack, GeminidSpec, SuperposedTrack, Track } from '../../../core/geminid.schema';
 import { EXAMPLE_DATASETS } from './datasets';
 
 // refer to the following for supporting zooming and panning in circular layouts:
@@ -30,7 +30,7 @@ const commonMultivecSpec: Partial<Track> = {
         ]
     }
 };
-const CIRCOS_HEATMAP: Track = {
+const CIRCOS_HEATMAP: BasicSingleTrack | SuperposedTrack = {
     ...commonMultivecSpec,
     mark: 'rect',
     x: {
@@ -47,9 +47,9 @@ const CIRCOS_HEATMAP: Track = {
     outerRadius,
     innerRadius,
     static: true
-} as Track;
+} as BasicSingleTrack | SuperposedTrack;
 
-const CIRCOS_LINE: Track = {
+const CIRCOS_LINE: BasicSingleTrack | SuperposedTrack = {
     ...commonMultivecSpec,
     mark: 'line',
     x: {
@@ -69,7 +69,7 @@ const CIRCOS_LINE: Track = {
     outerRadius,
     innerRadius,
     static: true
-} as Track;
+} as BasicSingleTrack | SuperposedTrack;
 
 const IDEOGRAM_DETAIL: Track = {
     data: {

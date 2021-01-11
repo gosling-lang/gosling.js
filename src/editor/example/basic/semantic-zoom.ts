@@ -1,8 +1,8 @@
-import { GeminidSpec, SuperposedTrack, Track } from '../../../core/geminid.schema';
+import { BasicSingleTrack, GeminidSpec, SuperposedTrack, Track } from '../../../core/geminid.schema';
 import { EXAMPLE_CYTOAND_HG38 } from '../cytoband-hg38';
 import { EXAMPLE_DATASETS } from './datasets';
 
-export const EXMAPLE_SEMANTIC_ZOOM_SEQ: Track = {
+export const EXMAPLE_SEMANTIC_ZOOM_SEQ: BasicSingleTrack | SuperposedTrack = {
     data: {
         url: EXAMPLE_DATASETS.fasta,
         type: 'tileset'
@@ -116,7 +116,7 @@ const EXAMPLE_SEMANTIC_ZOOMING_LINES: Track = {
     ]
 };
 
-export const EXAMPLE_SEMANTIC_ZOOMING_IDEOGRAM: Track = {
+export const EXAMPLE_SEMANTIC_ZOOMING_IDEOGRAM: BasicSingleTrack | SuperposedTrack = {
     ...EXAMPLE_CYTOAND_HG38.tracks[0],
     superpose: [
         {

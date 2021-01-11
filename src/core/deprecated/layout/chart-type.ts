@@ -1,11 +1,11 @@
-import { Track } from '../../geminid.schema';
+import { BasicSingleTrack } from '../../geminid.schema';
 import { IsChannelDeep } from '../../geminid.schema.guards';
 
 export type ChartType =
     // ...
     'line-connection' | 'band-connection' | 'unknown';
 
-export function getChartType(track: Track): ChartType {
+export function getChartType(track: BasicSingleTrack): ChartType {
     type PrimitiveChannel = 'x' | 'xe' | 'y' | 'ye';
 
     const xField = IsChannelDeep(track.x) ? track.x.field : undefined;

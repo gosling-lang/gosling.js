@@ -15,7 +15,7 @@ export const EXAMPLE_OVERVIEW_DEATIL: GeminidSpec = {
             title: 'Overview',
             ...EXAMPLE_CYTOAND_HG38.tracks[0],
             x: {
-                ...EXAMPLE_CYTOAND_HG38.tracks[0].x,
+                ...(EXAMPLE_CYTOAND_HG38.tracks[0] as SuperposedTrack).x,
                 domain: { chromosome: '1' },
                 linkingID: 'linking-overview'
             },
