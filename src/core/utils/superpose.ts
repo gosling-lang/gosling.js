@@ -1,4 +1,4 @@
-import { AxisPosition, BasicSingleTrack, SingleTrack, SuperposedTrack, Track } from '../geminid.schema';
+import { AxisPosition, BasicSingleTrack, SuperposedTrack, Track } from '../geminid.schema';
 import assign from 'lodash/assign';
 import { IsChannelDeep, IsDataTrack, IsSuperposedTrack } from '../geminid.schema.guards';
 
@@ -6,9 +6,9 @@ import { IsChannelDeep, IsDataTrack, IsSuperposedTrack } from '../geminid.schema
  * Resolve superposed tracks into multiple track specifications.
  * Some options are corrected to ensure the resolved tracks use consistent visual properties, such as the existence of the axis for genomic coordinates.
  */
-export function resolveSuperposedTracks(track: Track): SingleTrack[] {
+export function resolveSuperposedTracks(track: Track): BasicSingleTrack[] {
     if (IsDataTrack(track)) {
-        // no Single Track to return
+        // no BasicSingleTrack to return
         return [];
     }
 

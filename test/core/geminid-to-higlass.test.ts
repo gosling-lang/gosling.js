@@ -1,4 +1,5 @@
 import { geminidToHiGlass } from '../../src/core/geminid-to-higlass';
+import { BasicSingleTrack } from '../../src/core/geminid.schema';
 import { HiGlassModel } from '../../src/core/higlass-model';
 import { EXMAPLE_BASIC_MARKS } from '../../src/editor/example/basic/basic-marks';
 
@@ -29,7 +30,7 @@ describe('Should convert gemini spec to higlass view config.', () => {
             model,
             {
                 // no spec
-            },
+            } as BasicSingleTrack,
             {
                 width: 1000,
                 height: 100,

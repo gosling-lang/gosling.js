@@ -29,6 +29,7 @@ import { GENOCAT_SWAV } from './genocat-swav';
 import { GENOCAT_GIVE } from './genocat-give';
 import { GENOCAT_GREMLIN } from './genocat-gremlin';
 import { GENOCAT_MIZBEE } from './genocat-mizbee';
+import { EXAMPLE_SIMPLEST } from './basic/simplest-spec';
 
 export const examples: ReadonlyArray<{
     name: string;
@@ -53,14 +54,12 @@ export const examples: ReadonlyArray<{
     {
         name: '[GenoCAT] GIVE',
         spec: GENOCAT_GIVE,
-        underDevelopment: true,
-        forceShow: false
+        underDevelopment: true
     },
     {
         name: '[GenoCAT] Gremlin',
         spec: GENOCAT_GREMLIN,
-        underDevelopment: true,
-        forceShow: true
+        underDevelopment: true
     },
     {
         name: '[GenoCAT] MizBee',
@@ -70,8 +69,7 @@ export const examples: ReadonlyArray<{
     {
         name: '[GenoCAT] CNVkit',
         spec: GENOCAT_CNVKIT,
-        underDevelopment: true,
-        forceShow: false
+        underDevelopment: true
     },
     {
         name: '[GenoCAT] SWAV',
@@ -82,29 +80,32 @@ export const examples: ReadonlyArray<{
         name: 'UCSC Cyto band (hg38)',
         spec: EXAMPLE_CYTOAND_HG38,
         underDevelopment: false,
-        hidden: false,
-        forceShow: false
+        hidden: false
     },
     {
         name: 'Wenger et al. 2019 (SV)',
         spec: EXAMPLE_2019_WENGER,
         underDevelopment: false,
-        hidden: false,
-        forceShow: true
+        hidden: false
     },
     {
         name: 'Corces et al. 2020 (Nature Genetics)',
         spec: CORCES_2020_NATURE_GENETICS,
         underDevelopment: false,
-        hidden: false,
-        forceShow: false
+        hidden: false
     },
     {
         name: 'Geminid Logo',
         spec: EXAMPLE_LOGO,
         underDevelopment: false,
-        hidden: true,
-        forceShow: false
+        hidden: true
+    },
+    {
+        name: 'Simplest Spec',
+        spec: EXAMPLE_SIMPLEST,
+        underDevelopment: false,
+        hidden: false,
+        forceShow: true
     },
     {
         name: 'Basic Marks',
