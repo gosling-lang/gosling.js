@@ -99,7 +99,7 @@ export function getMultivecTemplate(
  * Override default visual encoding in each track for given data type.
  * @param spec
  */
-export function resolvePartialSpec(spec: GeminidSpec) {
+export function overrideTemplates(spec: GeminidSpec) {
     spec.tracks.forEach((t, i) => {
         if (!t.metadata || !IsDataMetadata(t.metadata)) {
             // if `metadata` is not specified, we can not provide a correct template since we do not know the exact data type.
