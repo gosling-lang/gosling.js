@@ -1,10 +1,13 @@
 import { GeminidSpec } from './geminid.schema';
 import { compileLayout } from './layout/layout';
 import { HiGlassSpec } from './higlass.schema';
-import { fixSpecDownstream } from './utils/spec-preprocess';
+import { fixSpecDownstream, resolvePartialSpec } from './utils/spec-preprocess';
 import { Size } from './utils/bounding-box';
 
 export function compile(gm: GeminidSpec, setHg: (hg: HiGlassSpec, size: Size) => void) {
+    // Override default visual encoding (`DataTrack` => `BasicSingleTrack`)
+    resolvePartialSpec(gm);
+
     // Fix track specs by looking into the root-level spec
     fixSpecDownstream(gm);
 

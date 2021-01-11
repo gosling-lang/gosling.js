@@ -12,10 +12,10 @@ export function resolveSuperposedTracks(track: Track): SingleTrack[] {
         return [track];
     }
 
-    const base: SingleTrack = JSON.parse(JSON.stringify(track));
+    const base: BasicSingleTrack = JSON.parse(JSON.stringify(track));
     delete (base as Partial<SuperposedTrack>).superpose; // remove `superpose` from the base spec
 
-    const resolved: SingleTrack[] = [];
+    const resolved: BasicSingleTrack[] = [];
     track.superpose.forEach((subSpec, i) => {
         const spec = assign(JSON.parse(JSON.stringify(base)), subSpec) as BasicSingleTrack;
         if (spec.title && i !== 0) {
@@ -37,7 +37,7 @@ export function resolveSuperposedTracks(track: Track): SingleTrack[] {
         return {
             ...d,
             x: { ...d.x, axis: xAxisPosition }
-        } as SingleTrack;
+        } as BasicSingleTrack;
     });
 
     // height

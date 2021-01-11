@@ -25,7 +25,8 @@ import {
     OneOfFilter,
     RangeFilter,
     IncludeFilter,
-    DataDeepTileset
+    DataDeepTileset,
+    DataTrack
 } from './geminid.schema';
 import { SUPPORTED_CHANNELS } from './mark';
 import { isArray } from 'lodash';
@@ -53,6 +54,14 @@ export function IsDataTransform(_: DataTransform | ChannelDeep | ChannelValue): 
     return 'filter' in _;
 }
 //
+
+export function IsDataTrack(_: Track): _ is DataTrack {
+    return 'data' in _ && 'metadata' in _ && !('mark' in _);
+}
+
+export function IsTemplate(_: Track): boolean {
+    return !!('data' in _ && 'metadata' in _ && (!('mark' in _) || _.overrideTemplate) && !IsSuperposedTrack(_));
+}
 
 export function IsDataDeep(
     data:
