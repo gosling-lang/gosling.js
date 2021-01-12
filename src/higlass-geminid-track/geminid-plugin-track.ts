@@ -15,6 +15,8 @@ import {
     Orientation
 } from '../core/geminid.schema.guards';
 
+const DEBUG = false;
+
 function GeminidTrack(HGC: any, ...args: any[]): any {
     if (!new.target) {
         throw new Error('Uncaught TypeError: Class constructor cannot be invoked without "new"');
@@ -63,28 +65,18 @@ function GeminidTrack(HGC: any, ...args: any[]): any {
 
         /**
          * Initialize variables upon receiving tiles. Nextly called function: `updateTile()`.
+         * Refer to https://github.com/higlass/higlass/blob/f82c0a4f7b2ab1c145091166b0457638934b15f3/app/scripts/TiledPixiTrack.js#L518
          */
-        initTile(/* tile: any */) {
-            // Do not need to do anything here.
-            // Refer to https://github.com/higlass/higlass/blob/f82c0a4f7b2ab1c145091166b0457638934b15f3/app/scripts/TiledPixiTrack.js#L518
+        initTile(/*tile: any*/) {
             // console.log('initTile()');
         }
 
         /**
          * Compute something before rendering each tile. Nextly called function: `drawTile()`.
+         * Refer to https://github.com/higlass/higlass/blob/f82c0a4f7b2ab1c145091166b0457638934b15f3/app/scripts/TiledPixiTrack.js#L532
          */
-        updateTile() {
-            // Refer to https://github.com/higlass/higlass/blob/f82c0a4f7b2ab1c145091166b0457638934b15f3/app/scripts/TiledPixiTrack.js#L532
+        updateTile(/* tile: any */) {
             // console.log('updateTile()');
-
-            // preprocess all tiles at once so that we can share the value scales
-            this.preprocessAllTiles();
-
-            this.visibleAndFetchedTiles().forEach((tile: any) => this.drawTile(tile));
-
-            // TODO: Should re-render tile only when neccesary for performance
-            // e.g., changing color scale
-            // ...
         }
 
         /**
@@ -92,12 +84,16 @@ function GeminidTrack(HGC: any, ...args: any[]): any {
          */
         draw() {
             // console.log('draw()');
+
             this.tooltips = [];
             this.svgData = [];
             this.textsBeingUsed = 0;
             this.mouseOverGraphics?.clear(); // remove mouse over effects
             this.pBorder.clear();
             this.pBorder.removeChildren();
+
+            // preprocess all tiles at once so that we can share the value scales
+            this.preprocessAllTiles();
 
             super.draw();
         }
@@ -133,26 +129,32 @@ function GeminidTrack(HGC: any, ...args: any[]): any {
          */
         destroyTile(tile: any) {
             // console.log('destroyTile()');
+
             tile.mouseOverData = null;
             tile.graphics.clear();
             tile.graphics.removeChildren();
 
             // !!!
-            tile.spriteInfos = [];
+            tile.spriteInfos = []; // At this point, not sure if we need to use this.
         }
 
         /**
-         * Called when location or zoom level has been changed.
+         * Called when location or zoom level has been changed by click-and-drag interaction
+         * For brushing, refer to https://github.com/higlass/higlass/blob/caf230b5ee41168ea491572618612ac0cc804e5a/app/scripts/HeatmapTiledPixiTrack.js#L1493
          * @param newXScale
          * @param newYScale
          */
         zoomed(newXScale: any, newYScale: any) {
             // console.log('zoomed()');
+
             this.xScale(newXScale);
             this.yScale(newYScale);
 
-            this.refreshTilesDebounced();
-            // this.refreshTiles();
+            this.refreshTilesDebounced(); // this.refreshTiles();
+
+            // !!! TODO: Should re-render tile only when neccesary for performance
+            // e.g., changing color scale
+            // ...
 
             if (this.trackOrientation === 'orthogonal') {
                 // !!! temporally, efficient rendering is only applied to orthogonal visualization
@@ -266,6 +268,7 @@ function GeminidTrack(HGC: any, ...args: any[]): any {
         }
 
         // TODO: Encapsulate this function
+        // !!! To use worker for this process, refer to https://github.com/higlass/higlass/blob/f82c0a4f7b2ab1c145091166b0457638934b15f3/app/scripts/worker.js#L113
         /**
          * Construct tabular data from a higlass tileset and a gemini track model.
          * Return the generated gemini track model.
@@ -410,11 +413,11 @@ function GeminidTrack(HGC: any, ...args: any[]): any {
                                     endY: tileY + (r + 1) * tileUnitHeight,
                                     [valueName]: numericValues[r * tileSize + c]
                                 });
-                                if (limitForTest++ > 5000) {
+                                if (limitForTest++ > 5000 && DEBUG) {
                                     break;
                                 }
                             }
-                            if (limitForTest > 5000) {
+                            if (limitForTest > 5000 && DEBUG) {
                                 break;
                             }
                         }
