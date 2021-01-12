@@ -30,6 +30,7 @@ import { GENOCAT_GIVE } from './genocat-give';
 import { GENOCAT_GREMLIN } from './genocat-gremlin';
 import { GENOCAT_MIZBEE } from './genocat-mizbee';
 import { EXAMPLE_SIMPLEST } from './basic/simplest-spec';
+import { FUJI_PLOT } from './fuji-plot';
 
 export const examples: ReadonlyArray<{
     name: string;
@@ -45,6 +46,12 @@ export const examples: ReadonlyArray<{
         underDevelopment: true,
         hidden: true,
         forceShow: false
+    },
+    {
+        name: 'Fuji Plot',
+        spec: FUJI_PLOT,
+        underDevelopment: true,
+        forceShow: true
     },
     {
         name: '[GenoCAT] Circos',
@@ -104,8 +111,7 @@ export const examples: ReadonlyArray<{
         name: 'Simplest Spec',
         spec: EXAMPLE_SIMPLEST,
         underDevelopment: false,
-        hidden: false,
-        forceShow: true
+        hidden: false
     },
     {
         name: 'Basic Marks',
