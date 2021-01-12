@@ -257,7 +257,7 @@ export type Orientation = 'horizontal' | 'vertical' | 'orthogonal' | 'none';
  * Returns the orientation of a given track by looking into `x` and `y` channels.
  * @param spec
  */
-export function getOrientation(t: Track): Orientation {
+export function getOrientation(t: SuperposedTrack | BasicSingleTrack): Orientation {
     const xGenomic = IsChannelDeep(t['x']) && t['x'].type === 'genomic';
     const yGenomic = IsChannelDeep(t['y']) && t['y'].type === 'genomic';
 
