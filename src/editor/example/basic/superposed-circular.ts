@@ -250,7 +250,7 @@ export const EXAMPLE_SUPERPOSED_CIRCULAR_TRACKS: GeminidSpec = {
             innerRadius: 150,
             outerRadius: 170,
             x: { ...CIRCOS_HEATMAP.x },
-            color: { ...CIRCOS_HEATMAP.color, range: 'gray' },
+            color: { ...CIRCOS_HEATMAP.color, range: 'grey' },
             superposeOnPreviousTrack: true
         },
         {

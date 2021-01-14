@@ -122,12 +122,13 @@ function Editor(props: any) {
             try {
                 editedGm = replaceTemplate(JSON.parse(stripJsonComments(gm)));
 
-                if (!editedGm.tracks) {
-                    // at least, spec should contain a `tracks` property to correctly show visualization
+                const check = validateSpec(GeminidSchema, editedGm);
+                if (check.state !== 'success') {
+                    // we do not compile when the spec is not valid
                     editedGm = null;
                 }
 
-                setLog(validateSpec(GeminidSchema, editedGm));
+                setLog(check);
             } catch (e) {
                 const message = '✘ Cannnot parse the code.';
                 console.warn(message);
