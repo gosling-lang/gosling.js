@@ -92,17 +92,24 @@ export class HiGlassModel {
     }
 
     public addBrush(
+        layout: 'circular' | 'linear',
         viewId: string,
         fromViewUid?: string,
-        style?: { color?: string; stroke?: string; opacity?: string; strokeWidth?: number }
+        style?: {
+            color?: string;
+            stroke?: string;
+            opacity?: string;
+            strokeWidth?: number;
+            innerRadius?: number;
+            outerRadius?: number;
+        }
     ) {
         if (!fromViewUid) return;
 
         // we could do this to either a `whole` track or a `center` track with `combined`
         (this.getView(viewId) as any)?.tracks.whole.push({
-            // type: 'viewport-projection-horizontal',
-            type: 'brush-track',
             // type: 'viewport-projection-center',
+            type: layout === 'circular' ? 'brush-track' : 'viewport-projection-horizontal',
             uid: uuid.v4(),
             fromViewUid,
             options: {
@@ -110,7 +117,9 @@ export class HiGlassModel {
                 projectionStrokeColor: style?.stroke ?? '#777',
                 projectionFillOpacity: style?.opacity ?? 0.3,
                 projectionStrokeOpacity: 0,
-                strokeWidth: style?.strokeWidth ?? 1
+                strokeWidth: style?.strokeWidth ?? 1,
+                innerRadius: style?.innerRadius,
+                outerRadius: style?.outerRadius
             }
         });
         return this;

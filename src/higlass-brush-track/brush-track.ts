@@ -1,6 +1,6 @@
 import * as d3 from 'd3';
 import uuid from 'uuid';
-import { RADIAN_GAP, valueToRadian } from '../core/utils/polar';
+import { valueToRadian } from '../core/utils/polar';
 
 type CircularBrushData = {
     type: 'brush' | 'start' | 'end';
@@ -37,9 +37,6 @@ function BrushTrack(HGC: any, ...args: any[]): any {
             this.viewportYDomain = this.hasFromView ? null : [0, 0];
 
             /* ---------------------------- */
-            const outerRadius = 200;
-            const innerRadius = 150;
-
             this.prevExtent = [0, 0];
             this.RR = 0.02; // radian angle of resizers on the both sides
 
@@ -65,7 +62,11 @@ function BrushTrack(HGC: any, ...args: any[]): any {
                 }
             ];
 
-            this.brushC = d3.arc().outerRadius(outerRadius).innerRadius(innerRadius);
+            this.brushC = d3
+                .arc()
+                .innerRadius(this.options.innerRadius ?? 100)
+                .outerRadius(this.options.outerRadius ?? 200);
+
             this.gBrushC = this.gMain
                 .append('g')
                 .attr('id', `brushC-${this.uid}`)
@@ -95,7 +96,21 @@ function BrushTrack(HGC: any, ...args: any[]): any {
          * Update the position and size of brush.
          */
         updateBrush(extent: [number, number]) {
-            const [startAngle, endAngle] = extent;
+            let [startAngle, endAngle] = extent;
+
+            // crop angles if they are out of the visible area
+            if (startAngle < 0) {
+                startAngle = 0;
+            }
+            if (startAngle > Math.PI * 2) {
+                startAngle = Math.PI * 2;
+            }
+            if (endAngle < 0) {
+                endAngle = 0;
+            }
+            if (endAngle > Math.PI * 2) {
+                endAngle = Math.PI * 2;
+            }
 
             this.circularBrushData = [
                 {
@@ -150,28 +165,28 @@ function BrushTrack(HGC: any, ...args: any[]): any {
                 } else if (d.type === 'start') {
                     startAngle = startAngle + radDiff;
 
-                    if (startAngle < 0) {
-                        startAngle += Math.PI * 2;
-                    }
+                    // if (startAngle < 0) {
+                    //     startAngle += Math.PI * 2;
+                    // }
 
-                    startAngle = Math.max(0 + RADIAN_GAP, Math.min(startAngle, endAngle));
+                    // startAngle = Math.max(0 + RADIAN_GAP, Math.min(startAngle, endAngle));
                 } else if (d.type === 'end') {
                     endAngle = endAngle + radDiff;
 
-                    if (endAngle > Math.PI * 2) {
-                        endAngle -= Math.PI * 2;
-                    }
+                    // if (endAngle > Math.PI * 2) {
+                    //     endAngle -= Math.PI * 2;
+                    // }
 
-                    endAngle = Math.min(Math.PI * 2 - RADIAN_GAP, Math.max(endAngle, startAngle));
+                    // endAngle = Math.min(Math.PI * 2 - RADIAN_GAP, Math.max(endAngle, startAngle));
                 }
 
-                if (startAngle > Math.PI * 2 || endAngle > Math.PI * 2) {
-                    startAngle -= Math.PI * 2;
-                    endAngle -= Math.PI * 2;
-                } else if (startAngle < 0 || endAngle < 0) {
-                    startAngle += Math.PI * 2;
-                    endAngle += Math.PI * 2;
-                }
+                // if (startAngle > Math.PI * 2 || endAngle > Math.PI * 2) {
+                //     startAngle -= Math.PI * 2;
+                //     endAngle -= Math.PI * 2;
+                // } else if (startAngle < 0 || endAngle < 0) {
+                //     startAngle += Math.PI * 2;
+                //     endAngle += Math.PI * 2;
+                // }
 
                 if (!this._xScale || !this._yScale) {
                     return;
