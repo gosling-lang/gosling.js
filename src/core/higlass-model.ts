@@ -100,7 +100,9 @@ export class HiGlassModel {
 
         // we could do this to either a `whole` track or a `center` track with `combined`
         (this.getView(viewId) as any)?.tracks.whole.push({
-            type: 'viewport-projection-horizontal',
+            // type: 'viewport-projection-horizontal',
+            type: 'brush-track',
+            // type: 'viewport-projection-center',
             uid: uuid.v4(),
             fromViewUid,
             options: {

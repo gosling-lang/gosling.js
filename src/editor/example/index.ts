@@ -30,6 +30,7 @@ import { GENOCAT_GIVE } from './genocat-give';
 import { GENOCAT_GREMLIN } from './genocat-gremlin';
 import { GENOCAT_MIZBEE } from './genocat-mizbee';
 import { EXAMPLE_SIMPLEST } from './basic/simplest-spec';
+import { EXMAPLE_BASIC_LINKING_CIRCULAR } from './basic/basic-linking-circular';
 
 export const examples: ReadonlyArray<{
     name: string;
@@ -104,15 +105,13 @@ export const examples: ReadonlyArray<{
         name: 'Simplest Spec',
         spec: EXAMPLE_SIMPLEST,
         underDevelopment: false,
-        hidden: false,
-        forceShow: true
+        hidden: false
     },
     {
         name: 'Basic Marks',
         spec: EXMAPLE_BASIC_MARKS,
         underDevelopment: false,
-        hidden: false,
-        forceShow: true
+        hidden: false
     },
     {
         name: 'Text Marks',
@@ -120,8 +119,7 @@ export const examples: ReadonlyArray<{
     },
     {
         name: 'Superposed Tracks',
-        spec: EXAMPLE_SUPERPOSE,
-        forceShow: false
+        spec: EXAMPLE_SUPERPOSE
     },
     {
         name: 'Ideograms (Static)',
@@ -129,8 +127,7 @@ export const examples: ReadonlyArray<{
     },
     {
         name: 'Custom Gene Annotation Tracks',
-        spec: EXAMPLE_GENE_ANNOTATION,
-        forceShow: false
+        spec: EXAMPLE_GENE_ANNOTATION
     },
     {
         name: 'Band and Line Connections',
@@ -144,6 +141,11 @@ export const examples: ReadonlyArray<{
     {
         name: 'Basic Linking Views',
         spec: EXMAPLE_BASIC_LINKING
+    },
+    {
+        name: 'Basic Linking Circular Views',
+        spec: EXMAPLE_BASIC_LINKING_CIRCULAR,
+        forceShow: true
     },
     {
         name: 'Overview + Detail views',
