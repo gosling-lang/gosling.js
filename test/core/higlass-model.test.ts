@@ -19,7 +19,7 @@ describe('Should produce higlass model correctly', () => {
     it('Should add brush correctly', () => {
         const higlass = new HiGlassModel();
         higlass.addDefaultView();
-        higlass.addBrush(higlass.getLastView().uid ?? '', 'from');
+        higlass.addBrush('linear', higlass.getLastView().uid ?? '', 'from');
         expect(JSON.stringify(higlass.spec())).toContain('viewport-projection-horizontal');
     });
 

@@ -4,11 +4,14 @@ import { EXAMPLE_DATASETS } from './datasets';
 
 export const EXMAPLE_BASIC_LINKING_CIRCULAR: GeminidSpec = {
     arrangement: {
-        columnSizes: 500,
+        direction: 'horizontal',
+        wrap: 2,
+        columnSizes: [200, 200],
         rowSizes: [500, 100]
     },
     tracks: [
         {
+            span: 2,
             outerRadius: 200,
             innerRadius: 150,
             layout: 'circular',
@@ -30,7 +33,7 @@ export const EXMAPLE_BASIC_LINKING_CIRCULAR: GeminidSpec = {
             },
             y: { field: 'peak', type: 'quantitative' },
             row: { field: 'sample', type: 'nominal' },
-            color: { field: 'sample', type: 'nominal' },
+            color: { field: 'sample', type: 'nominal', legend: true },
             stroke: { value: 'white' },
             strokeWidth: { value: 0.5 },
             width: 1000,
@@ -39,7 +42,13 @@ export const EXMAPLE_BASIC_LINKING_CIRCULAR: GeminidSpec = {
                 {},
                 {
                     mark: 'rect-brush',
-                    x: { linkingID: 'linking-with-brush' }
+                    x: { linkingID: 'linking-with-brush' },
+                    color: { value: 'blue' }
+                },
+                {
+                    mark: 'rect-brush',
+                    x: { linkingID: 'linking-with-brush-2' },
+                    color: { value: 'red' }
                 }
             ]
         },
@@ -47,9 +56,28 @@ export const EXMAPLE_BASIC_LINKING_CIRCULAR: GeminidSpec = {
             ...EXAMPLE_BASIC_AREA,
             x: {
                 ...EXAMPLE_BASIC_AREA.x,
-                domain: { chromosome: '5' },
+                domain: { chromosome: '2' },
                 axis: undefined,
                 linkingID: 'linking-with-brush'
+            },
+            color: { field: 'sample', type: 'nominal', legend: false },
+            style: {
+                background: 'blue',
+                backgroundOpacity: 0.1
+            }
+        },
+        {
+            ...EXAMPLE_BASIC_AREA,
+            x: {
+                ...EXAMPLE_BASIC_AREA.x,
+                domain: { chromosome: '5' },
+                axis: undefined,
+                linkingID: 'linking-with-brush-2'
+            },
+            color: { field: 'sample', type: 'nominal', legend: false },
+            style: {
+                background: 'red',
+                backgroundOpacity: 0.1
             }
         }
     ]
