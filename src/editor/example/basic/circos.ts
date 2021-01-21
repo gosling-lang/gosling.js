@@ -292,7 +292,7 @@ export const EXAMPLE_CIRCOS: GeminidSpec = {
             outerRadius,
             innerRadius: 80
         }
-        // { ...HIGLASS_GENE_ANNOTATION, outerRadius, innerRadius: 80 }
+        // { ...HIGLASS_GENE_ANNOTATION, outerRadius, innerRadius: 80 },
         // {
         //     outerRadius, innerRadius: 30,
         //     data: {
@@ -351,7 +351,8 @@ export const EXAMPLE_CIRCOS: GeminidSpec = {
         //     x: {
         //         field: 'start',
         //         type: 'genomic',
-        //         domain: { chromosome: '3' },
+        //         domain: { chromosome: '1' },
+        //         linkingID: 'link-1'
         //     },
         //     xe: {
         //         field: 'end',
@@ -389,5 +390,5 @@ export const EXAMPLE_CIRCOS: GeminidSpec = {
         //     },
         //     opacity: { value: 0.6 }
         // },
-    ] //.slice(1)
+    ]
 } as GeminidSpec;

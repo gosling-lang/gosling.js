@@ -27,7 +27,6 @@ export const EXAMPLE_2019_WENGER_TRACK: Track = {
         legend: true
     },
     stackY: true,
-    size: { value: 10 },
     stroke: {
         field: 'Variant Region type',
         type: 'nominal',

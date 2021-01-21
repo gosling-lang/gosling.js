@@ -59,27 +59,11 @@ export const EXAMPLE_LINKS: GeminidSpec = {
                 ]
             },
             superpose: [
-                // {
-                //     mark: 'rect',
-                //     x: {
-                //         field: 'start',
-                //         type: 'genomic',
-                //         domain: { chromosome: '1', interval: [19590000, 19630000] },
-                //         axis: 'top'
-                //     },
-                //     xe: {
-                //         field: 'end',
-                //         type: 'genomic'
-                //     },
-                //     color: { value: '#F0F0F0' },
-                //     opacity: { value: 0.1 },
-                // },
                 {
                     mark: 'link',
                     x: {
                         field: 'start',
                         type: 'genomic',
-                        // domain: { chromosome: '4', interval: [132600000, 132900000] },
                         linkingID: '1',
                         axis: 'top'
                     },
@@ -113,8 +97,7 @@ export const EXAMPLE_LINKS: GeminidSpec = {
             x: {
                 field: 'start',
                 type: 'genomic',
-                // domain: { chromosome: '4', interval: [132600000, 132900000] },
-                domain: { chromosome: '4', interval: [144650000, 145100000] },
+                domain: { chromosome: '4', interval: [145750000, 146100000] },
                 linkingID: '1'
             },
             xe: {
