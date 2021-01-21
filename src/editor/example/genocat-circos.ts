@@ -67,7 +67,6 @@ export const GENOCAT_CIRCOS: GeminidSpec = {
             },
             x: { field: 'chromStart', type: 'genomic' },
             xe: { field: 'chromEnd', type: 'genomic' },
-            size: { value: 620 },
             stroke: { value: 'lightgray' },
             strokeWidth: { value: 0.5 },
             outerRadius: 294,
