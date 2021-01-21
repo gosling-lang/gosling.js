@@ -1,5 +1,6 @@
 import { GeminidSpec } from '../../core/geminid.schema';
 import { EXAMPLE_DATASETS } from './basic/datasets';
+import { EXAMPLE_CYTOAND_HG38 } from './cytoband-hg38';
 
 export const GENOCAT_CIRCOS: GeminidSpec = {
     title: 'Circos',
@@ -7,17 +8,22 @@ export const GENOCAT_CIRCOS: GeminidSpec = {
     description: 'http://circos.ca/intro/genomic_data/',
     layout: 'circular',
     static: true,
-    arrangement: { columnSizes: 700, rowSizes: 700 },
+    arrangement: { columnSizes: 700, rowSizes: [60, 700] },
     tracks: [
+        {
+            // just for debuging
+            ...EXAMPLE_CYTOAND_HG38.tracks[0],
+            layout: 'linear'
+        },
         {
             data: { type: 'tileset', url: 'https://resgen.io/api/v1/tileset_info/?d=VLFaiSVjTjW6mkbjRjWREA' },
             metadata: { type: 'higlass-vector', column: 'position', value: 'peak' },
             mark: 'bar',
-            x: { field: 'position', type: 'genomic' }, //, domain: { chromosome: '1' }},
+            x: { field: 'position', type: 'genomic', axis: 'outer' },
             y: { field: 'peak', type: 'quantitative' },
             color: { value: '#EEEDA1' },
             outerRadius: 340,
-            innerRadius: 320
+            innerRadius: 290
         },
         {
             data: { url: EXAMPLE_DATASETS.multivec, type: 'tileset' },
@@ -45,8 +51,8 @@ export const GENOCAT_CIRCOS: GeminidSpec = {
             color: { value: '#FF6205' },
             stroke: { value: 'white' },
             strokeWidth: { value: 1 },
-            outerRadius: 317,
-            innerRadius: 297,
+            outerRadius: 287,
+            innerRadius: 267,
             superposeOnPreviousTrack: true
         },
         {
@@ -69,8 +75,8 @@ export const GENOCAT_CIRCOS: GeminidSpec = {
             xe: { field: 'chromEnd', type: 'genomic' },
             stroke: { value: 'lightgray' },
             strokeWidth: { value: 0.5 },
-            outerRadius: 294,
-            innerRadius: 274,
+            outerRadius: 264,
+            innerRadius: 244,
             superposeOnPreviousTrack: true
         },
         {
@@ -95,7 +101,7 @@ export const GENOCAT_CIRCOS: GeminidSpec = {
             strokeWidth: { value: 1 },
             opacity: { value: 0.4 },
             style: { circularLink: true },
-            outerRadius: 271,
+            outerRadius: 241,
             innerRadius: 0,
             superposeOnPreviousTrack: true
         },
@@ -121,7 +127,7 @@ export const GENOCAT_CIRCOS: GeminidSpec = {
             strokeWidth: { value: 1.5 },
             opacity: { value: 0.4 },
             style: { circularLink: true },
-            outerRadius: 271,
+            outerRadius: 241,
             innerRadius: 0,
             superposeOnPreviousTrack: true
         }

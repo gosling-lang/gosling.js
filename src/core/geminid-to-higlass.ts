@@ -97,6 +97,7 @@ export function geminidToHiGlass(
                         : (c === 'x' && bb.width <= narrowSize) || (c === 'y' && bb.height <= narrowSize)
                         ? 'narrow'
                         : 'regular';
+                // TODO: add innerRadius and outerRadius
                 hgModel.setAxisTrack(channel.axis, narrowType);
             }
         });

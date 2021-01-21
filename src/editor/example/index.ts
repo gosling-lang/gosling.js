@@ -48,7 +48,8 @@ export const examples: ReadonlyArray<{
     {
         name: '[GenoCAT] Circos',
         spec: GENOCAT_CIRCOS,
-        underDevelopment: true
+        underDevelopment: true,
+        forceShow: true
     },
     {
         name: '[GenoCAT] GIVE',
@@ -58,8 +59,7 @@ export const examples: ReadonlyArray<{
     {
         name: '[GenoCAT] Gremlin',
         spec: GENOCAT_GREMLIN,
-        underDevelopment: true,
-        forceShow: true
+        underDevelopment: true
     },
     {
         name: '[GenoCAT] MizBee',

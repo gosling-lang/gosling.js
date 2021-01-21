@@ -193,35 +193,36 @@ export class HiGlassModel {
     }
 
     public setAxisTrack(position: Exclude<AxisPosition, 'none'>, type: 'regular' | 'narrow' | 'narrower' = 'regular') {
-        if (!this.hg.views) {
-            // view is not prepared yet
-            return this;
-        }
+        if (!this.hg.views) return this;
 
-        if (position === 'outer' || position === 'inner') {
-            // we do not support circular axis yet
-            // to support, refer to https://github.com/higlass/higlass/blob/83dc4fddb33582ef3c26b608c04a81e8f33c7f5f/app/scripts/HorizontalChromosomeLabels.js
-            return this;
-        }
-
-        // const baseTrackType = '-chromosome-labels';
-        const direction = position === 'left' || position === 'right' ? 'vertical' : 'horizontal';
-        const widthOrHeight = direction === 'vertical' ? 'width' : 'height';
-        this.getLastView().tracks[position] = [
-            {
-                uid: uuid.v1(),
-                type: 'axis-track', //(direction + baseTrackType) as any /* TODO */,
-                [widthOrHeight]: HIGLASS_AXIS_SIZE,
-                chromInfoPath: this.hg.chromInfoPath,
-                options: {
-                    color: 'black',
-                    tickColor: 'black',
-                    tickFormat: type === 'narrower' ? 'si' : 'plain',
-                    tickPositions: type === 'regular' ? 'even' : 'ends',
-                    reverseOrientation: position === 'bottom' ? true : false
-                }
+        const widthOrHeight = position === 'left' || position === 'right' ? 'width' : 'height';
+        const axisTrackTemplate: Track = {
+            uid: uuid.v1(),
+            type: 'axis-track',
+            chromInfoPath: this.hg.chromInfoPath,
+            options: {
+                color: 'black',
+                tickColor: 'black',
+                tickFormat: type === 'narrower' ? 'si' : 'plain',
+                tickPositions: type === 'regular' ? 'even' : 'ends',
+                reverseOrientation: position === 'bottom' ? true : false
             }
-        ];
+        };
+        if (position === 'outer' || position === 'inner') {
+            // circular axis: superpose an axis track on top of the `center` track
+            this.addTrackToCombined({
+                ...axisTrackTemplate,
+                options: { ...axisTrackTemplate.options, layout: 'circular' }
+            });
+        } else {
+            // linear axis: position an axis track on the top, left, bottom, or right
+            this.getLastView().tracks[position] = [
+                {
+                    ...axisTrackTemplate,
+                    [widthOrHeight]: HIGLASS_AXIS_SIZE
+                }
+            ];
+        }
         return this;
     }
 

@@ -6,6 +6,7 @@ import boxIntersect from 'box-intersect';
 import { scaleLinear } from 'd3-scale';
 import { format, precisionPrefix, formatPrefix } from 'd3-format';
 import { CHROMOSOME_INTERVAL_HG38, CHROMOSOME_SIZE_HG38 } from '../core/utils/chrom-size';
+import { cartesianToPolar } from '../core/utils/polar';
 
 const TICK_WIDTH = 200;
 const TICK_HEIGHT = 6;
@@ -225,6 +226,11 @@ function AxisTrack(HGC: any, ...args: any[]): any {
             return f(pos);
         }
 
+        /**
+         * Show two labels at the end of both left and right sides
+         * @param x1
+         * @param x2
+         */
         drawBoundsTicks(x1: any, x2: any) {
             const graphics = this.gBoundTicks;
             graphics.clear();
@@ -306,15 +312,11 @@ function AxisTrack(HGC: any, ...args: any[]): any {
             // not sure why we're separating these out by chromosome, but ok
             const tickTexts = this.tickTexts[cumPos.chr];
 
-            const tickHeight = this.options.fontIsLeftAligned
-                ? (+this.options.fontSize || this.textFontSize) / 2
-                : this.tickHeight;
+            const tickHeight = this.tickHeight;
 
-            const flipTextSign = this.flipText ? -1 : 1;
+            const xPadding = 0;
 
-            const xPadding = this.options.fontIsLeftAligned ? flipTextSign * 4 : 0;
-
-            let yPadding = this.options.fontIsLeftAligned ? 0 : tickHeight + this.tickTextSeparation;
+            let yPadding = tickHeight + this.tickTextSeparation;
 
             if (this.options.reverseOrientation) {
                 yPadding = this.dimensions[1] - yPadding;
@@ -338,7 +340,7 @@ function AxisTrack(HGC: any, ...args: any[]): any {
             while (i < ticks.length) {
                 tickTexts[i].visible = true;
 
-                tickTexts[i].anchor.x = this.options.fontIsLeftAligned ? 0 : 0.5;
+                tickTexts[i].anchor.x = 0.5;
                 tickTexts[i].anchor.y = this.options.reverseOrientation ? 0 : 1;
 
                 if (this.flipText) tickTexts[i].scale.x = -1;
@@ -361,23 +363,13 @@ function AxisTrack(HGC: any, ...args: any[]): any {
                 graphics.lineStyle(1, this.stroke);
                 graphics.moveTo(x - 1, lineYStart);
                 graphics.lineTo(x - 1, lineYEnd - 1);
-                if (this.options.fontIsLeftAligned) {
-                    graphics.lineTo(x + 2 * flipTextSign + 1 * flipTextSign, lineYEnd - 1);
-                    graphics.lineTo(x + 2 * flipTextSign + 1 * flipTextSign, lineYEnd + 1);
-                    graphics.lineTo(x + 1, lineYEnd + 1);
-                } else {
-                    graphics.lineTo(x + 1, lineYEnd - 1);
-                }
+                graphics.lineTo(x + 1, lineYEnd - 1);
                 graphics.lineTo(x + 1, lineYStart);
 
-                // draw the tick lines
+                // draw the vertical tick lines
                 graphics.lineStyle(1, this.tickColor);
                 graphics.moveTo(x, lineYStart);
                 graphics.lineTo(x, lineYEnd);
-
-                if (this.options.fontIsLeftAligned) {
-                    graphics.lineTo(x + 2 * flipTextSign, lineYEnd);
-                }
 
                 i += 1;
             }
@@ -426,7 +418,7 @@ function AxisTrack(HGC: any, ...args: any[]): any {
                 this.gTicks[this.chromInfo.cumPositions[i].chr].visible = false;
             }
 
-            let yPadding = this.options.fontIsLeftAligned ? 0 : this.tickHeight + this.tickTextSeparation;
+            let yPadding = this.tickHeight + this.tickTextSeparation;
 
             if (this.options.reverseOrientation) {
                 yPadding = this.dimensions[1] - yPadding;
@@ -452,24 +444,33 @@ function AxisTrack(HGC: any, ...args: any[]): any {
                 const viewportMidX = this._xScale(midX);
 
                 // This is ONLY the bare chromosome name. Not the tick label!
-                const text = this.texts[i];
+                const chrText = this.texts[i];
 
-                text.anchor.x = this.options.fontIsLeftAligned ? 0 : 0.5;
-                text.anchor.y = this.options.reverseOrientation ? 0 : 1;
-                text.x = viewportMidX;
-                text.y = this.dimensions[1] - yPadding;
-                text.updateTransform();
+                chrText.anchor.x = 0.5;
+                chrText.anchor.y = 0.5; // this.options.reverseOrientation ? 0 : 1;
 
-                if (this.flipText) text.scale.x = -1;
+                if (this.options.layout === 'circular') {
+                    const r = (this.options.outerRadius + this.options.innerRadius) / 2.0;
+                    const pos = cartesianToPolar(viewportMidX, 700, r, 350, 350, 0, 360);
+                    chrText.x = pos.x;
+                    chrText.y = pos.y;
+                } else {
+                    chrText.x = viewportMidX;
+                    chrText.y = this.dimensions[1] - yPadding;
+                }
+
+                chrText.updateTransform();
+
+                if (this.flipText) chrText.scale.x = -1;
 
                 const numTicksDrawn = this.drawTicks(xCumPos);
 
                 // only show chromsome labels if there's no ticks drawn
-                text.visible = numTicksDrawn <= 0;
+                chrText.visible = numTicksDrawn <= 0;
 
                 this.allTexts.push({
-                    importance: text.hashValue,
-                    text,
+                    importance: chrText.hashValue,
+                    text: chrText,
                     caption: null
                 });
             }
@@ -582,6 +583,9 @@ AxisTrack.config = {
     orientation: '1d-horizontal',
     thumbnail: new DOMParser().parseFromString(icon, 'text/xml').documentElement,
     availableOptions: [
+        'innerRadius',
+        'outerRadius',
+        'layout',
         'labelPosition',
         'labelColor',
         'labelTextOpacity',
@@ -589,22 +593,22 @@ AxisTrack.config = {
         'trackBorderWidth',
         'trackBorderColor',
         'trackType',
+        'tickPositions',
         'scaledHeight',
-        'backgroundColor',
-        'barBorder',
-        'sortLargestOnTop',
-        'axisPositionHorizontal' // TODO: support this
+        'backgroundColor'
+        // 'fontIsLeftAligned' // we do not support this
     ],
     defaultOptions: {
+        innerRadius: 340,
+        outerRadius: 310,
+        layout: 'linear',
         labelPosition: 'none',
         labelColor: 'black',
         labelTextOpacity: 0.4,
         trackBorderWidth: 0,
         trackBorderColor: 'black',
-        backgroundColor: 'white',
-        barBorder: false,
-        sortLargestOnTop: true,
-        axisPositionHorizontal: 'left'
+        tickPositions: ['even', 'ends'][0],
+        backgroundColor: 'transparent'
     }
 };
 
