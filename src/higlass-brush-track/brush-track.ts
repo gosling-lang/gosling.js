@@ -305,8 +305,9 @@ const icon =
 // default
 BrushTrack.config = {
     type: 'brush-track',
-    datatype: ['multivec', 'matrix', 'vector', 'csv', 'bed', 'json'],
+    datatype: ['projection'],
     local: false, // TODO:
+    projection: true,
     orientation: '2d',
     thumbnail: new DOMParser().parseFromString(icon, 'text/xml').documentElement,
     availableOptions: [
