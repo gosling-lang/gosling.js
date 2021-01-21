@@ -19,7 +19,6 @@ import { EXAMPLE_CIRCOS } from './basic/circos';
 import { EXAMPLE_CIRCOS_MANY } from './basic/circos-many-rows';
 import { EXAMPLE_CIRCOS_STACKING } from './basic/circos-stacking';
 import { EXAMPLE_SUPERPOSED_CIRCULAR_TRACKS } from './basic/superposed-circular';
-import { EXAMPLE_LOGO } from './basic/logo';
 import { EXAMPLE_OF_EXPERIMENT } from './experimental';
 import { EXAMPLE_CYTOAND_HG38 } from './cytoband-hg38';
 import { EXAMPLE_2019_WENGER } from './wenger-2019';
@@ -60,7 +59,8 @@ export const examples: ReadonlyArray<{
     {
         name: '[GenoCAT] Gremlin',
         spec: GENOCAT_GREMLIN,
-        underDevelopment: true
+        underDevelopment: true,
+        forceShow: true
     },
     {
         name: '[GenoCAT] MizBee',
@@ -79,39 +79,23 @@ export const examples: ReadonlyArray<{
     },
     {
         name: 'UCSC Cyto band (hg38)',
-        spec: EXAMPLE_CYTOAND_HG38,
-        underDevelopment: false,
-        hidden: false
+        spec: EXAMPLE_CYTOAND_HG38
     },
     {
         name: 'Wenger et al. 2019 (SV)',
-        spec: EXAMPLE_2019_WENGER,
-        underDevelopment: false,
-        hidden: false
+        spec: EXAMPLE_2019_WENGER
     },
     {
         name: 'Corces et al. 2020 (Nature Genetics)',
-        spec: CORCES_2020_NATURE_GENETICS,
-        underDevelopment: false,
-        hidden: false
-    },
-    {
-        name: 'Geminid Logo',
-        spec: EXAMPLE_LOGO,
-        underDevelopment: false,
-        hidden: true
+        spec: CORCES_2020_NATURE_GENETICS
     },
     {
         name: 'Simplest Spec',
-        spec: EXAMPLE_SIMPLEST,
-        underDevelopment: false,
-        hidden: false
+        spec: EXAMPLE_SIMPLEST
     },
     {
         name: 'Basic Marks',
-        spec: EXMAPLE_BASIC_MARKS,
-        underDevelopment: false,
-        hidden: false
+        spec: EXMAPLE_BASIC_MARKS
     },
     {
         name: 'Text Marks',
@@ -131,8 +115,7 @@ export const examples: ReadonlyArray<{
     },
     {
         name: 'Band and Line Connections',
-        spec: EXAMPLE_LINKS,
-        underDevelopment: true
+        spec: EXAMPLE_LINKS
     },
     {
         name: 'Semantic Zooming',
@@ -159,32 +142,26 @@ export const examples: ReadonlyArray<{
     {
         name: 'Basic Circular Marks',
         spec: EXAMPLE_CIRCOS,
-        underDevelopment: true,
-        forceShow: false
+        underDevelopment: true
     },
     {
         name: 'Basic Circular Marks 2',
         spec: EXAMPLE_CIRCOS_MANY,
-        underDevelopment: true,
-        forceShow: false
+        underDevelopment: true
     },
     {
         name: 'Superposed Circular Tracks',
         spec: EXAMPLE_SUPERPOSED_CIRCULAR_TRACKS,
-        underDevelopment: true,
-        forceShow: true
+        underDevelopment: true
     },
     {
         name: 'Stacking Circular Tracks',
         spec: EXAMPLE_CIRCOS_STACKING,
-        underDevelopment: true,
-        forceShow: false
+        underDevelopment: true
     },
     {
         name: 'UpSet-like Plot',
         spec: EXAMPLE_UPSET,
-        hidden: true,
-        underDevelopment: true,
-        forceShow: false
+        hidden: true
     }
 ].filter(d => !d.hidden);

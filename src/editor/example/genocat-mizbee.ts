@@ -110,9 +110,8 @@ export const GENOCAT_MIZBEE: GeminidSpec = {
             },
             strokeWidth: { value: 1 },
             stroke: { value: '#E1E2E3' },
-            size: { value: 400 },
-            outerRadius: 325,
-            innerRadius: 225,
+            outerRadius: 300,
+            innerRadius: 250,
             superposeOnPreviousTrack: true
         },
         {
@@ -141,9 +140,8 @@ export const GENOCAT_MIZBEE: GeminidSpec = {
                 type: 'genomic'
             },
             strokeWidth: { value: 0 },
-            size: { value: 400 },
-            outerRadius: 325,
-            innerRadius: 225,
+            outerRadius: 300,
+            innerRadius: 250,
             superposeOnPreviousTrack: true
         },
         {
@@ -215,9 +213,8 @@ export const GENOCAT_MIZBEE: GeminidSpec = {
             },
             strokeWidth: { value: 2 },
             stroke: { value: 'black' },
-            size: { value: 400 },
-            outerRadius: 325,
-            innerRadius: 225,
+            outerRadius: 300,
+            innerRadius: 250,
             superposeOnPreviousTrack: true
         },
         {
@@ -246,9 +243,8 @@ export const GENOCAT_MIZBEE: GeminidSpec = {
             },
             strokeWidth: { value: 1 },
             stroke: { value: '#E1E2E3' },
-            size: { value: 400 },
-            // outerRadius: 325,
-            // innerRadius: 225,
+            outerRadius: 380,
+            innerRadius: 340,
             superposeOnPreviousTrack: true
         },
         {
@@ -263,10 +259,6 @@ export const GENOCAT_MIZBEE: GeminidSpec = {
                 longToWideId: 'id',
                 sampleLength: 1000
             },
-            // dataTransform: { filter: [
-            //     // { field: 'chr', oneOf: ['hs1'], not: false },
-            //     // { field: 'chr_2', oneOf: ['hs3', 'hs10', 'hs12', 'hs16'], not: false }
-            // ] },
             mark: 'rect',
             superpose: [
                 {
@@ -286,7 +278,6 @@ export const GENOCAT_MIZBEE: GeminidSpec = {
             },
             strokeWidth: { value: 1.5 },
             opacity: { value: 0.4 },
-            style: { circularLink: true },
             outerRadius: 380,
             innerRadius: 340,
             superposeOnPreviousTrack: true
@@ -317,9 +308,8 @@ export const GENOCAT_MIZBEE: GeminidSpec = {
             },
             strokeWidth: { value: 3 },
             stroke: { value: '#CCCECF' },
-            size: { value: 400 },
-            // outerRadius: 380,
-            // innerRadius: 340,
+            outerRadius: 380,
+            innerRadius: 340,
             superposeOnPreviousTrack: true
         }
     ]

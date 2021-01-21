@@ -62,6 +62,8 @@ export function drawRect(HGC: any, trackInfo: any, tile: any, model: GeminidTrac
         const pixiProps: {
             xs: number;
             xe: number;
+            y: number;
+            absoluteHeight?: number;
             ys: number;
             ye: number;
             color: string;
@@ -130,6 +132,9 @@ export function drawRect(HGC: any, trackInfo: any, tile: any, model: GeminidTrac
                 pixiProps.push({
                     xs: x,
                     xe: x + rectWidth,
+                    y: y - rectHeight,
+                    // this is making it complicated, way to simplify this?
+                    absoluteHeight: model.visualPropertyByChannel('size', d) ?? undefined,
                     ys: y,
                     ye: y + rectHeight,
                     color,
@@ -144,7 +149,7 @@ export function drawRect(HGC: any, trackInfo: any, tile: any, model: GeminidTrac
         const yScaleFactor = stackY ? Math.max(...pixiProps.map(d => d.ye)) / rowHeight : 1;
 
         pixiProps.forEach(prop => {
-            const { xs, xe, ys, ye, color, stroke, strokeWidth, opacity, datum } = prop;
+            const { xs, xe, y, absoluteHeight, ys, ye, color, stroke, strokeWidth, opacity, datum } = prop;
 
             // stroke
             g.lineStyle(
@@ -161,8 +166,15 @@ export function drawRect(HGC: any, trackInfo: any, tile: any, model: GeminidTrac
                 }
 
                 // TODO: Does a `row` channel affect here?
-                const farR = trackOuterRadius - ((rowPosition + ys / yScaleFactor) / trackHeight) * trackRingSize;
-                const nearR = trackOuterRadius - ((rowPosition + ye / yScaleFactor) / trackHeight) * trackRingSize;
+                let farR = trackOuterRadius - ((rowPosition + ys / yScaleFactor) / trackHeight) * trackRingSize;
+                let nearR = trackOuterRadius - ((rowPosition + ye / yScaleFactor) / trackHeight) * trackRingSize;
+
+                if (absoluteHeight) {
+                    const midR = trackOuterRadius - ((rowPosition + y / yScaleFactor) / trackHeight) * trackRingSize;
+                    farR = midR - absoluteHeight / 2.0;
+                    nearR = midR + absoluteHeight / 2.0;
+                }
+
                 const sPos = cartesianToPolar(xs, trackWidth, nearR, cx, cy, startAngle, endAngle);
                 const startRad = valueToRadian(xs, trackWidth, startAngle, endAngle);
                 const endRad = valueToRadian(xe, trackWidth, startAngle, endAngle);
