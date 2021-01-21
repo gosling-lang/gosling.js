@@ -14,6 +14,7 @@ import {
 } from '../core/geminid.schema.guards';
 import { Tooltip } from '../geminid-tooltip';
 
+// For using libraries, refer to https://github.com/higlass/higlass/blob/f82c0a4f7b2ab1c145091166b0457638934b15f3/app/scripts/configs/available-for-plugins.js
 function GeminidTrack(HGC: any, ...args: any[]): any {
     if (!new.target) {
         throw new Error('Uncaught TypeError: Class constructor cannot be invoked without "new"');

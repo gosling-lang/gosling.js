@@ -7,7 +7,7 @@ describe('Arrangement', () => {
         height = 300;
     const t: Track = {
         data: { url: 'dummy', type: 'csv' },
-        mark: 'dummy'
+        mark: 'point'
     };
 
     it('single track', () => {

@@ -2,7 +2,7 @@ import uuid from 'uuid';
 import { HiGlassSpec, Track, View } from './higlass.schema';
 import HiGlassSchema from './higlass.schema.json';
 import { TOTAL_CHROMOSOME_SIZE_HG38 } from './utils/chrom-size';
-import { Domain } from './geminid.schema';
+import { AxisPosition, Domain } from './geminid.schema';
 import { getNumericDomain } from './utils/scales';
 import { RelativePosition } from './utils/bounding-box';
 import { validateSpec } from './utils/validate';
@@ -192,18 +192,25 @@ export class HiGlassModel {
         return this;
     }
 
-    public setAxisTrack(
-        position: 'left' | 'right' | 'top' | 'bottom',
-        type: 'regular' | 'narrow' | 'narrower' = 'regular'
-    ) {
-        if (!this.hg.views) return this;
-        const baseTrackType = '-chromosome-labels';
+    public setAxisTrack(position: Exclude<AxisPosition, 'none'>, type: 'regular' | 'narrow' | 'narrower' = 'regular') {
+        if (!this.hg.views) {
+            // view is not prepared yet
+            return this;
+        }
+
+        if (position === 'outer' || position === 'inner') {
+            // we do not support circular axis yet
+            // to support, refer to https://github.com/higlass/higlass/blob/83dc4fddb33582ef3c26b608c04a81e8f33c7f5f/app/scripts/HorizontalChromosomeLabels.js
+            return this;
+        }
+
+        // const baseTrackType = '-chromosome-labels';
         const direction = position === 'left' || position === 'right' ? 'vertical' : 'horizontal';
         const widthOrHeight = direction === 'vertical' ? 'width' : 'height';
         this.getLastView().tracks[position] = [
             {
                 uid: uuid.v1(),
-                type: (direction + baseTrackType) as any /* TODO */,
+                type: 'axis-track', //(direction + baseTrackType) as any /* TODO */,
                 [widthOrHeight]: HIGLASS_AXIS_SIZE,
                 chromInfoPath: this.hg.chromInfoPath,
                 options: {
