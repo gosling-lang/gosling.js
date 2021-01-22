@@ -1,7 +1,7 @@
-import { GeminidSpec } from '../../core/geminid.schema';
+import { GoslingSpec } from '../../core/gosling.schema';
 import { EXAMPLE_DATASETS } from './basic/datasets';
 
-export const CORCES_2020_NATURE_GENETICS: GeminidSpec = {
+export const CORCES_2020_NATURE_GENETICS: GoslingSpec = {
     description:
         'Corces et al. 2020. Single-cell epigenomic analyses implicate candidate causal variants at inherited risk loci for Alzheimer’s and Parkinson’s diseases. Nature Genetics, pp.1-11.',
     static: true,

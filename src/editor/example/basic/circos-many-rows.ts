@@ -1,4 +1,4 @@
-import { GeminidSpec, Track } from '../../../core/geminid.schema';
+import { GoslingSpec, Track } from '../../../core/gosling.schema';
 import { EXAMPLE_DATASETS } from './datasets';
 
 // refer to the following for supporting zooming and panning in circular layouts:
@@ -158,7 +158,7 @@ const IDEOGRAM: Track = {
     height: 60
 };
 
-export const EXAMPLE_CIRCOS_MANY: GeminidSpec = {
+export const EXAMPLE_CIRCOS_MANY: GoslingSpec = {
     layout: 'circular',
     arrangement: { direction: 'horizontal', wrap: 2 },
     tracks: [
@@ -167,4 +167,4 @@ export const EXAMPLE_CIRCOS_MANY: GeminidSpec = {
         { ...CIRCOS_LINE, mark: 'area' },
         { ...CIRCOS_LINE, mark: 'bar', row: undefined /* color: { ...CIRCOS_LINE.color, legend: true } */ }
     ].slice(1)
-} as GeminidSpec;
+} as GoslingSpec;

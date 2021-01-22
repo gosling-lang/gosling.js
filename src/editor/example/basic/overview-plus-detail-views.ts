@@ -1,8 +1,8 @@
-import { GeminidSpec, SuperposedTrack } from '../../../core/geminid.schema';
+import { GoslingSpec, SuperposedTrack } from '../../../core/gosling.schema';
 import { EXAMPLE_CYTOAND_HG38 } from '../cytoband-hg38';
 import { EXAMPLE_DATASETS } from './datasets';
 
-export const EXAMPLE_OVERVIEW_DEATIL: GeminidSpec = {
+export const EXAMPLE_OVERVIEW_DEATIL: GoslingSpec = {
     layout: 'linear',
     arrangement: {
         direction: 'horizontal',

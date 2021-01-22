@@ -1,4 +1,4 @@
-import { BasicSingleTrack, GeminidSpec, SuperposedTrack, Track } from '../../../core/geminid.schema';
+import { BasicSingleTrack, GoslingSpec, SuperposedTrack, Track } from '../../../core/gosling.schema';
 import { EXAMPLE_CYTOAND_HG38 } from '../cytoband-hg38';
 import { EXAMPLE_DATASETS } from './datasets';
 
@@ -179,7 +179,7 @@ export const EXAMPLE_SEMANTIC_ZOOMING_IDEOGRAM: BasicSingleTrack | SuperposedTra
     }
 };
 
-export const EXAMPLE_SEMANTIC_ZOOMING: GeminidSpec = {
+export const EXAMPLE_SEMANTIC_ZOOMING: GoslingSpec = {
     layout: 'linear',
     arrangement: {
         direction: 'vertical',

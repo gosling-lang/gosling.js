@@ -1,6 +1,6 @@
-import { GeminidSpec } from '../../core/geminid.schema';
+import { GoslingSpec } from '../../core/gosling.schema';
 
-export const GENOCAT_MIZBEE: GeminidSpec = {
+export const GENOCAT_MIZBEE: GoslingSpec = {
     layout: 'circular',
     static: true,
     arrangement: {
@@ -313,4 +313,4 @@ export const GENOCAT_MIZBEE: GeminidSpec = {
             superposeOnPreviousTrack: true
         }
     ]
-} as GeminidSpec;
+} as GoslingSpec;

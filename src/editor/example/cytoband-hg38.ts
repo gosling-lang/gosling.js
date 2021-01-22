@@ -1,6 +1,6 @@
-import { GeminidSpec } from '../../core/geminid.schema';
+import { GoslingSpec } from '../../core/gosling.schema';
 
-export const EXAMPLE_CYTOAND_HG38: GeminidSpec = {
+export const EXAMPLE_CYTOAND_HG38: GoslingSpec = {
     layout: 'linear',
     arrangement: {
         direction: 'vertical',

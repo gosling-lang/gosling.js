@@ -1,4 +1,4 @@
-name: gemini-notebooks
+name: gosling-notebooks
 channels:
   - conda-forge
   - bioconda

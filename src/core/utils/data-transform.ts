@@ -1,5 +1,5 @@
-import { BasicSingleTrack, Datum } from '../geminid.schema';
-import { getChannelKeysByAggregateFnc, getChannelKeysByType, IsChannelDeep } from '../geminid.schema.guards';
+import { BasicSingleTrack, Datum } from '../gosling.schema';
+import { getChannelKeysByAggregateFnc, getChannelKeysByType, IsChannelDeep } from '../gosling.schema.guards';
 
 /**
  * Experimental! Only support one category supported yet.

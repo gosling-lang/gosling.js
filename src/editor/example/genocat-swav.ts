@@ -1,7 +1,7 @@
-import { GeminidSpec } from '../../core/geminid.schema';
+import { GoslingSpec } from '../../core/gosling.schema';
 import { EXAMPLE_DATASETS } from './basic/datasets';
 
-export const GENOCAT_SWAV: GeminidSpec = {
+export const GENOCAT_SWAV: GoslingSpec = {
     title: 'SWAV',
     subtitle: 'Reimplementation of GenoCAT examples',
     arrangement: {

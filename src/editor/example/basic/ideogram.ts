@@ -1,4 +1,4 @@
-import { BasicSingleTrack, GeminidSpec, SuperposedTrack, Track } from '../../../core/geminid.schema';
+import { BasicSingleTrack, GoslingSpec, SuperposedTrack, Track } from '../../../core/gosling.schema';
 import { EXAMPLE_CYTOAND_HG38 } from '../cytoband-hg38';
 import { EXAMPLE_DATASETS } from './datasets';
 
@@ -123,7 +123,7 @@ const ideogramTracks: Track[] = [];
         } as any
     );
 });
-export const EXAMPLE_IDEOGRAM: GeminidSpec = {
+export const EXAMPLE_IDEOGRAM: GoslingSpec = {
     static: true,
     layout: 'linear',
     arrangement: { direction: 'vertical', rowSizes: [60, 24], columnSizes: 1000, rowGaps: [0, 30] },

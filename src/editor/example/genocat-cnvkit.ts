@@ -1,7 +1,7 @@
-import { GeminidSpec } from '../../core/geminid.schema';
+import { GoslingSpec } from '../../core/gosling.schema';
 import { EXAMPLE_DATASETS } from './basic/datasets';
 
-export const GENOCAT_CNVKIT: GeminidSpec = {
+export const GENOCAT_CNVKIT: GoslingSpec = {
     title: 'CNVkit',
     subtitle: 'Reimplementation of GenoCAT examples',
     arrangement: {

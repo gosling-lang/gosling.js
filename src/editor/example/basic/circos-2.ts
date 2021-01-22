@@ -1,7 +1,7 @@
-import { GeminidSpec } from '../../../core/geminid.schema';
+import { GoslingSpec } from '../../../core/gosling.schema';
 import { EXAMPLE_DATASETS } from './datasets';
 
-export const EXAMPLE_CIRCOS_3: GeminidSpec = {
+export const EXAMPLE_CIRCOS_3: GoslingSpec = {
     layout: 'circular',
     arrangement: { direction: 'horizontal' },
     tracks: [
@@ -50,4 +50,4 @@ export const EXAMPLE_CIRCOS_3: GeminidSpec = {
             style: { outline: 'white' }
         }
     ]
-} as GeminidSpec;
+} as GoslingSpec;

@@ -1,5 +1,5 @@
-import { GeminidTrackModel } from '../geminid-track-model';
-import { IsChannelDeep } from '../geminid.schema.guards';
+import { GoslingTrackModel } from '../gosling-track-model';
+import { IsChannelDeep } from '../gosling.schema.guards';
 
 export const LEGEND_LABEL_STYLE = {
     fontSize: '12px',
@@ -12,7 +12,7 @@ export const LEGEND_LABEL_STYLE = {
     // strokeThickness: 2
 };
 
-export function drawColorLegend(HGC: any, trackInfo: any, tile: any, tm: GeminidTrackModel) {
+export function drawColorLegend(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackModel) {
     /* track spec */
     const spec = tm.spec();
     if (!IsChannelDeep(spec.color) || spec.color.type !== 'nominal' || !spec.color.legend) {
@@ -93,7 +93,7 @@ export function drawColorLegend(HGC: any, trackInfo: any, tile: any, tm: Geminid
     });
 }
 
-export function drawYLegend(HGC: any, trackInfo: any, tile: any, tm: GeminidTrackModel) {
+export function drawYLegend(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackModel) {
     /* track spec */
     const spec = tm.spec();
     if (

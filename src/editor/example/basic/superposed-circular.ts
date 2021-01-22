@@ -1,4 +1,4 @@
-import { BasicSingleTrack, GeminidSpec, SuperposedTrack, Track } from '../../../core/geminid.schema';
+import { BasicSingleTrack, GoslingSpec, SuperposedTrack, Track } from '../../../core/gosling.schema';
 import { EXAMPLE_DATASETS } from './datasets';
 
 // refer to the following for supporting zooming and panning in circular layouts:
@@ -207,7 +207,7 @@ export const EXAMPLE_BAND: Track = {
     innerRadius: 80
 };
 
-export const EXAMPLE_SUPERPOSED_CIRCULAR_TRACKS: GeminidSpec = {
+export const EXAMPLE_SUPERPOSED_CIRCULAR_TRACKS: GoslingSpec = {
     layout: 'circular',
     arrangement: {
         direction: 'horizontal',
@@ -371,4 +371,4 @@ export const EXAMPLE_SUPERPOSED_CIRCULAR_TRACKS: GeminidSpec = {
             superposeOnPreviousTrack: true
         }
     ]
-} as GeminidSpec;
+} as GoslingSpec;

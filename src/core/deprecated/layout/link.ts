@@ -1,8 +1,8 @@
 import { BoundingBox } from '../../utils/bounding-box';
-import { Track, BasicSingleTrack } from '../../geminid.schema';
+import { Track, BasicSingleTrack } from '../../gosling.schema';
 import * as d3 from 'd3';
 import { validateBetweenLinkSpec } from './link-validate';
-import { IsChannelValue, IsChannelDeep } from '../../geminid.schema.guards';
+import { IsChannelValue, IsChannelDeep } from '../../gosling.schema.guards';
 
 export type LinkPosition =
     | 'left-bottom'

@@ -1,12 +1,12 @@
 import { getGridInfo, Size, TrackInfo } from '../utils/bounding-box';
-import { geminidToHiGlass } from '../geminid-to-higlass';
+import { goslingToHiGlass } from '../gosling-to-higlass';
 import { HiGlassModel } from '../higlass-model';
 import { HiGlassSpec } from '../higlass.schema';
 import { getLinkingInfo } from '../utils/linking';
-import { GeminidSpec } from '../geminid.schema';
+import { GoslingSpec } from '../gosling.schema';
 
 export function renderHiGlass(
-    spec: GeminidSpec,
+    spec: GoslingSpec,
     trackInfos: TrackInfo[],
     setHg: (hg: HiGlassSpec, size: Size) => void
 ) {
@@ -18,7 +18,7 @@ export function renderHiGlass(
     const hgModel = new HiGlassModel();
     trackInfos.forEach(tb => {
         const { track, boundingBox: bb, layout } = tb;
-        geminidToHiGlass(hgModel, track, bb, layout);
+        goslingToHiGlass(hgModel, track, bb, layout);
     });
 
     /* Linking views */

@@ -1,8 +1,8 @@
-import { GeminidTrackModel } from '../geminid-track-model';
-import { Channel } from '../geminid.schema';
-import { getValueUsingChannel } from '../geminid.schema.guards';
+import { GoslingTrackModel } from '../gosling-track-model';
+import { Channel } from '../gosling.schema';
+import { getValueUsingChannel } from '../gosling.schema.guards';
 
-export function drawRule(HGC: any, trackInfo: any, tile: any, tm: GeminidTrackModel) {
+export function drawRule(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackModel) {
     /* track spec */
     const spec = tm.spec();
 

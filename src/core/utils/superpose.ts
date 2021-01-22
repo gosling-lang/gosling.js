@@ -1,6 +1,6 @@
-import { AxisPosition, BasicSingleTrack, SuperposedTrack, Track } from '../geminid.schema';
+import { AxisPosition, BasicSingleTrack, SuperposedTrack, Track } from '../gosling.schema';
 import assign from 'lodash/assign';
-import { IsChannelDeep, IsDataTrack, IsSuperposedTrack } from '../geminid.schema.guards';
+import { IsChannelDeep, IsDataTrack, IsSuperposedTrack } from '../gosling.schema.guards';
 
 /**
  * Resolve superposed tracks into multiple track specifications.

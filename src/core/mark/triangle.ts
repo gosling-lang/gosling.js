@@ -1,9 +1,9 @@
-import { GeminidTrackModel } from '../geminid-track-model';
-import { Channel, MarkType } from '../geminid.schema';
-import { getValueUsingChannel } from '../geminid.schema.guards';
+import { GoslingTrackModel } from '../gosling-track-model';
+import { Channel, MarkType } from '../gosling.schema';
+import { getValueUsingChannel } from '../gosling.schema.guards';
 import { cartesianToPolar } from '../utils/polar';
 
-export function drawTriangle(HGC: any, trackInfo: any, tile: any, tm: GeminidTrackModel) {
+export function drawTriangle(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackModel) {
     /* track spec */
     const spec = tm.spec();
 

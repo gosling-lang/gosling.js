@@ -1,4 +1,4 @@
-import { BasicSingleTrack, GeminidSpec, Track } from '../../../core/geminid.schema';
+import { BasicSingleTrack, GoslingSpec, Track } from '../../../core/gosling.schema';
 import { EXAMPLE_DATASETS } from './datasets';
 
 export const EXAMPLE_HEATMAP: Track = {
@@ -50,7 +50,7 @@ export const EXAMPLE_BASIC_AREA: BasicSingleTrack = {
     strokeWidth: { value: 0.5 }
 };
 
-export const EXMAPLE_BASIC_MARKS: GeminidSpec = {
+export const EXMAPLE_BASIC_MARKS: GoslingSpec = {
     title: 'Basic Marks',
     subtitle: 'Tutorial Examples',
     layout: 'linear',

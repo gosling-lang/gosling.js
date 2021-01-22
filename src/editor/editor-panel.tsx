@@ -24,10 +24,11 @@ function EditorPanel(props: { code: string; readOnly?: boolean; onChange?: (code
             validate: true,
             schemas: [
                 {
-                    uri: 'GeminidSchema',
+                    uri: 'GoslingSchema',
                     fileMatch: ['*'],
                     schema: {
-                        $ref: 'https://raw.githubusercontent.com/sehilyi/gemini/master/schema/geminid.schema.json'
+                        $ref:
+                            'https://raw.githubusercontent.com/gosling-lang/gosling.js/master/schema/gosling.schema.json'
                     }
                 }
             ]

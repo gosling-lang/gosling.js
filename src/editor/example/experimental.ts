@@ -1,7 +1,7 @@
-import { GeminidSpec } from '../../core/geminid.schema';
+import { GoslingSpec } from '../../core/gosling.schema';
 // import bed from './bed.json';
 
-export const EXAMPLE_OF_EXPERIMENT: GeminidSpec = {
+export const EXAMPLE_OF_EXPERIMENT: GoslingSpec = {
     layout: 'linear',
     arrangement: { direction: 'horizontal', columnSizes: 800 },
     tracks: [

@@ -1,8 +1,8 @@
-import { GeminidSpec } from '../../../core/geminid.schema';
+import { GoslingSpec } from '../../../core/gosling.schema';
 import { EXAMPLE_BASIC_AREA } from './basic-marks';
 import { EXAMPLE_DATASETS } from './datasets';
 
-export const EXMAPLE_BASIC_LINKING: GeminidSpec = {
+export const EXMAPLE_BASIC_LINKING: GoslingSpec = {
     layout: 'linear',
     arrangement: {
         direction: 'vertical',
@@ -81,4 +81,4 @@ export const EXMAPLE_BASIC_LINKING: GeminidSpec = {
             }
         }
     ]
-} as GeminidSpec;
+} as GoslingSpec;

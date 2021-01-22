@@ -4,7 +4,7 @@ import fetch from 'cross-fetch'; // TODO: Can we remove this and make the test w
 import { sampleSize } from 'lodash';
 
 /**
- * HiGlass data fetcher specific for Gemini which ultimately will accept any types of data other than CSV files.
+ * HiGlass data fetcher specific for Gosling which ultimately will accept any types of data other than CSV files.
  */
 function CSVDataFetcher(HGC: any, ...args: any): any {
     if (!new.target) {
@@ -102,7 +102,7 @@ function CSVDataFetcher(HGC: any, ...args: any): any {
                                 // genomic position did not parse properly
                                 successfullyGotChrInfo = false;
                                 // console.warn(
-                                //     '[Gemini Data Fetcher] Genomic position cannot be parsed correctly.',
+                                //     '[Gosling Data Fetcher] Genomic position cannot be parsed correctly.',
                                 //     chromosomeField
                                 // );
                             }
@@ -139,7 +139,7 @@ function CSVDataFetcher(HGC: any, ...args: any): any {
                     }
                 })
                 .catch(error => {
-                    console.error('[Gemini Data Fetcher] Error fetching data', error);
+                    console.error('[Gosling Data Fetcher] Error fetching data', error);
                 });
         }
 
@@ -175,7 +175,7 @@ function CSVDataFetcher(HGC: any, ...args: any): any {
                 .then(() => this.generateTilesetInfo(callback))
                 .catch(err => {
                     this.tilesetInfoLoading = false;
-                    console.error('[Gemini Data Fetcher] Error parsing data:', err);
+                    console.error('[Gosling Data Fetcher] Error parsing data:', err);
                 });
         }
 
@@ -191,7 +191,7 @@ function CSVDataFetcher(HGC: any, ...args: any): any {
                 const x = parseInt(parts[1], 10);
 
                 if (Number.isNaN(x) || Number.isNaN(z)) {
-                    console.warn('[Gemini Data Fetcher] Invalid tile zoom or position:', z, x);
+                    console.warn('[Gosling Data Fetcher] Invalid tile zoom or position:', z, x);
                     continue;
                 }
 

@@ -1,4 +1,4 @@
-import { GeminidSpec, Track } from '../../../core/geminid.schema';
+import { GoslingSpec, Track } from '../../../core/gosling.schema';
 import { EXAMPLE_DATASETS } from './datasets';
 
 export const HIGLASS_GENE_ANNOTATION: Track = {
@@ -141,7 +141,7 @@ export const HIGLASS_GENE_ANNOTATION: Track = {
     opacity: { value: 0.5 }
 };
 
-export const EXAMPLE_GENE_ANNOTATION: GeminidSpec = {
+export const EXAMPLE_GENE_ANNOTATION: GoslingSpec = {
     layout: 'linear',
     arrangement: {
         direction: 'vertical',
@@ -493,7 +493,7 @@ export const EXAMPLE_GENE_ANNOTATION: GeminidSpec = {
                     }
                 }
                 // {
-                //  // TODO: Gemini Datafetcher to support multiple data types
+                //  // TODO: Gosling Datafetcher to support multiple data types
                 //     data: [
                 //         { position: 3700000, strand: '+' }
                 //     ]

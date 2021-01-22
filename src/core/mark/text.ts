@@ -1,7 +1,7 @@
-import { GeminidTrackModel } from '../geminid-track-model';
-import { Channel } from '../geminid.schema';
+import { GoslingTrackModel } from '../gosling-track-model';
+import { Channel } from '../gosling.schema';
 import { group } from 'd3-array';
-import { getValueUsingChannel, IsStackedMark } from '../geminid.schema.guards';
+import { getValueUsingChannel, IsStackedMark } from '../gosling.schema.guards';
 import { cartesianToPolar } from '../utils/polar';
 
 export const TEXT_STYLE_GLOBAL = {
@@ -15,7 +15,7 @@ export const TEXT_STYLE_GLOBAL = {
     strokeThickness: 2
 };
 
-export function drawText(HGC: any, trackInfo: any, tile: any, tm: GeminidTrackModel) {
+export function drawText(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackModel) {
     /* track spec */
     const spec = tm.spec();
 

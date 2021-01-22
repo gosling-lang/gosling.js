@@ -7,7 +7,7 @@ module.exports = () => {
       main: './src/index.ts'
     },
     output: {
-      filename: "geminid.js",
+      filename: "gosling.js",
       path: path.resolve(__dirname, "dist"),
       libraryTarget: 'umd',
       umdNamedDefine: true

@@ -13,7 +13,7 @@ export const SUPERPOSE_VIEWCONFIG: View = {
                 height: 210,
                 contents: [
                     // {
-                    //     "type": "gemini-track",
+                    //     "type": "gosling-track",
                     //     "width": 110,
                     //     "height": 110,
                     //     "options": {
@@ -58,7 +58,7 @@ export const SUPERPOSE_VIEWCONFIG: View = {
                     //     }
                     // },
                     {
-                        type: 'gemini-track',
+                        type: 'gosling-track',
                         server: 'https://resgen.io/api/v1/',
                         tilesetUid: 'UvVPeLHuRDiYA3qwFlm7xQ',
                         width: 210,
@@ -98,7 +98,7 @@ export const SUPERPOSE_VIEWCONFIG: View = {
                         }
                     },
                     {
-                        type: 'gemini-track',
+                        type: 'gosling-track',
                         server: 'https://resgen.io/api/v1/',
                         tilesetUid: 'UvVPeLHuRDiYA3qwFlm7xQ',
                         width: 210,

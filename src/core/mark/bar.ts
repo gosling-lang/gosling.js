@@ -1,11 +1,11 @@
-import { GeminidTrackModel } from '../geminid-track-model';
-import { Channel } from '../geminid.schema';
+import { GoslingTrackModel } from '../gosling-track-model';
+import { Channel } from '../gosling.schema';
 import { group } from 'd3-array';
 import { PIXIVisualProperty } from '../visual-property.schema';
-import { IsChannelDeep, IsStackedMark, getValueUsingChannel } from '../geminid.schema.guards';
+import { IsChannelDeep, IsStackedMark, getValueUsingChannel } from '../gosling.schema.guards';
 import { cartesianToPolar, valueToRadian } from '../utils/polar';
 
-export function drawBar(HGC: any, trackInfo: any, tile: any, tm: GeminidTrackModel) {
+export function drawBar(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackModel) {
     /* track spec */
     const spec = tm.spec();
 
@@ -174,7 +174,7 @@ export function drawBar(HGC: any, trackInfo: any, tile: any, tm: GeminidTrackMod
 }
 
 export function barProperty(
-    gm: GeminidTrackModel,
+    gm: GoslingTrackModel,
     propertyKey: PIXIVisualProperty,
     datum?: { [k: string]: string | number },
     additionalInfo?: {

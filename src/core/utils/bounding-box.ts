@@ -1,4 +1,4 @@
-import { GeminidSpec, Track } from '../geminid.schema';
+import { GoslingSpec, Track } from '../gosling.schema';
 import {
     DEFAULT_SUBTITLE_HEIGHT,
     DEFAULT_TITLE_HEIGHT,
@@ -52,7 +52,7 @@ export interface TrackInfo {
  *
  * @param spec
  */
-export function getGridInfo(spec: GeminidSpec): GridInfo {
+export function getGridInfo(spec: GoslingSpec): GridInfo {
     // total number of cells in the tabular layout
     const numCells = spec.tracks
         .filter(t => !t.superposeOnPreviousTrack)
@@ -132,7 +132,7 @@ const getTextTrack = (size: Size, title?: string, subtitle?: string) => {
  *
  * @param spec
  */
-export function getArrangement(spec: GeminidSpec): TrackInfo[] {
+export function getArrangement(spec: GoslingSpec): TrackInfo[] {
     const { width: totalWidth, height: totalHeight, columnSizes, rowSizes, columnGaps, rowGaps } = getGridInfo(spec);
 
     const numColumns = columnSizes.length;

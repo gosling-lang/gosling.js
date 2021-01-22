@@ -1,8 +1,8 @@
 import { BoundingBox } from '../../utils/bounding-box';
-import { Datum, BasicSingleTrack } from '../../geminid.schema';
+import { Datum, BasicSingleTrack } from '../../gosling.schema';
 import * as d3 from 'd3';
 import { getLinkPosition } from './link';
-import { IsChannelDeep } from '../../geminid.schema.guards';
+import { IsChannelDeep } from '../../gosling.schema.guards';
 
 export function renderBetweenBandLink(
     g: d3.Selection<SVGGElement, any, any, any>,

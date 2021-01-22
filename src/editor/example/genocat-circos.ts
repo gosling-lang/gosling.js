@@ -1,7 +1,7 @@
-import { GeminidSpec } from '../../core/geminid.schema';
+import { GoslingSpec } from '../../core/gosling.schema';
 import { EXAMPLE_DATASETS } from './basic/datasets';
 
-export const GENOCAT_CIRCOS: GeminidSpec = {
+export const GENOCAT_CIRCOS: GoslingSpec = {
     title: 'Circos',
     subtitle: 'Reimplementation of GenoCAT examples',
     description: 'http://circos.ca/intro/genomic_data/',

@@ -1,6 +1,6 @@
-import { GeminidSpec } from '../../../core/geminid.schema';
+import { GoslingSpec } from '../../../core/gosling.schema';
 
-export const EXAMPLE_SIMPLEST: GeminidSpec = {
+export const EXAMPLE_SIMPLEST: GoslingSpec = {
     tracks: [
         {
             data: {

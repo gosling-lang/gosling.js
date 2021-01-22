@@ -1,7 +1,7 @@
-import { GeminidSpec } from '../../../core/geminid.schema';
+import { GoslingSpec } from '../../../core/gosling.schema';
 import { EXAMPLE_DATASETS } from './datasets';
 
-export const EXAMPLE_LOGO_LIKE: GeminidSpec = {
+export const EXAMPLE_LOGO_LIKE: GoslingSpec = {
     layout: 'linear',
     arrangement: { direction: 'vertical', columnSizes: 800 },
     tracks: [

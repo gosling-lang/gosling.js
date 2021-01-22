@@ -1,11 +1,11 @@
-import { Tooltip, TOOLTIP_MOUSEOVER_MARGIN as G } from '../../geminid-tooltip';
-import { GeminidTrackModel } from '../geminid-track-model';
-import { Channel, Datum } from '../geminid.schema';
-import { getValueUsingChannel } from '../geminid.schema.guards';
+import { Tooltip, TOOLTIP_MOUSEOVER_MARGIN as G } from '../../gosling-tooltip';
+import { GoslingTrackModel } from '../gosling-track-model';
+import { Channel, Datum } from '../gosling.schema';
+import { getValueUsingChannel } from '../gosling.schema.guards';
 import { cartesianToPolar, valueToRadian } from '../utils/polar';
 import { PIXIVisualProperty } from '../visual-property.schema';
 
-export function drawRect(HGC: any, trackInfo: any, tile: any, model: GeminidTrackModel) {
+export function drawRect(HGC: any, trackInfo: any, tile: any, model: GoslingTrackModel) {
     /* track spec */
     const spec = model.spec();
 
@@ -204,7 +204,7 @@ export function drawRect(HGC: any, trackInfo: any, tile: any, model: GeminidTrac
 }
 
 export function rectProperty(
-    gm: GeminidTrackModel,
+    gm: GoslingTrackModel,
     propertyKey: PIXIVisualProperty,
     datum?: { [k: string]: string | number },
     additionalInfo?: {
