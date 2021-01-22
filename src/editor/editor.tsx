@@ -26,6 +26,7 @@ import * as qs from 'qs';
 import { JSONCrush, JSONUncrush } from '../core/utils/json-crush';
 import './editor.css';
 import { ICONS, ICON_INFO } from './icon';
+import { AxisTrack } from '../higlass-axis-track';
 import { BrushTrack } from '../higlass-brush-track';
 
 /**
@@ -35,6 +36,15 @@ higlassRegister({
     name: 'GeminidTrack',
     track: GeminidTrack,
     config: GeminidTrack.config
+});
+
+/**
+ * Register an axis plugin track to HiGlassComponent
+ */
+higlassRegister({
+    name: 'AxisTrack',
+    track: AxisTrack,
+    config: AxisTrack.config
 });
 
 /**

@@ -1,4 +1,5 @@
 import { GeminidTrackModel } from '../geminid-track-model';
+import { IsChannelDeep } from '../geminid.schema.guards';
 import { cartesianToPolar, valueToRadian } from '../utils/polar';
 
 export function drawCircularOutlines(HGC: any, trackInfo: any, tile: any, tm: GeminidTrackModel) {
@@ -38,18 +39,20 @@ export function drawCircularOutlines(HGC: any, trackInfo: any, tile: any, tm: Ge
     graphics.arc(cx, cy, trackOuterRadius, endRad, startRad, false);
     graphics.closePath();
 
-    // outer line
-    graphics.lineStyle(
-        0.5,
-        colorToHex('black'),
-        0, // 1, // alpha
-        0.5 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
-    );
-    graphics.beginFill(colorToHex('white'), 0);
-    graphics.moveTo(posStartInner.x, posStartInner.y);
-    graphics.arc(cx, cy, trackOuterRadius - 0.5, startRad, endRad, true);
-    graphics.arc(cx, cy, trackOuterRadius, endRad, startRad, false);
-    graphics.closePath();
+    if (IsChannelDeep(spec.x) && spec.x.axis === 'outer') {
+        // outer line
+        graphics.lineStyle(
+            0.5,
+            colorToHex('black'),
+            0, // 1, // alpha
+            0.5 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
+        );
+        graphics.beginFill(colorToHex('white'), 0);
+        graphics.moveTo(posStartInner.x, posStartInner.y);
+        graphics.arc(cx, cy, trackOuterRadius - 0.5, startRad, endRad, true);
+        graphics.arc(cx, cy, trackOuterRadius, endRad, startRad, false);
+        graphics.closePath();
+    }
 
     // inner line
     // graphics.lineStyle(

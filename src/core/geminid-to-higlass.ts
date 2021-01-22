@@ -1,5 +1,5 @@
 import { Track as HiGlassTrack } from './higlass.schema';
-import { HiGlassModel } from './higlass-model';
+import { HiGlassModel, HIGLASS_AXIS_SIZE } from './higlass-model';
 import { parseServerAndTilesetUidFromUrl } from './utils';
 import { Track, Domain } from './geminid.schema';
 import { BoundingBox, RelativePosition } from './utils/bounding-box';
@@ -97,7 +97,20 @@ export function geminidToHiGlass(
                         : (c === 'x' && bb.width <= narrowSize) || (c === 'y' && bb.height <= narrowSize)
                         ? 'narrow'
                         : 'regular';
-                hgModel.setAxisTrack(channel.axis, narrowType);
+                hgModel.setAxisTrack(channel.axis, narrowType, {
+                    innerRadius:
+                        channel.axis === 'outer'
+                            ? (firstResolvedSpec.outerRadius as number) - HIGLASS_AXIS_SIZE
+                            : firstResolvedSpec.innerRadius,
+                    outerRadius:
+                        channel.axis === 'outer'
+                            ? firstResolvedSpec.outerRadius
+                            : (firstResolvedSpec.innerRadius as number) + HIGLASS_AXIS_SIZE,
+                    width: firstResolvedSpec.width,
+                    height: firstResolvedSpec.height,
+                    startAngle: firstResolvedSpec.startAngle,
+                    endAngle: firstResolvedSpec.endAngle
+                });
             }
         });
 

@@ -2,7 +2,7 @@ import uuid from 'uuid';
 import { HiGlassSpec, Track, View } from './higlass.schema';
 import HiGlassSchema from './higlass.schema.json';
 import { TOTAL_CHROMOSOME_SIZE_HG38 } from './utils/chrom-size';
-import { Domain } from './geminid.schema';
+import { AxisPosition, Domain } from './geminid.schema';
 import { getNumericDomain } from './utils/scales';
 import { RelativePosition } from './utils/bounding-box';
 import { validateSpec } from './utils/validate';
@@ -204,28 +204,49 @@ export class HiGlassModel {
     }
 
     public setAxisTrack(
-        position: 'left' | 'right' | 'top' | 'bottom',
-        type: 'regular' | 'narrow' | 'narrower' = 'regular'
+        position: Exclude<AxisPosition, 'none'>,
+        type: 'regular' | 'narrow' | 'narrower' = 'regular',
+        options: {
+            // These are currently used for circular layout
+            innerRadius?: number;
+            outerRadius?: number;
+            width?: number;
+            height?: number;
+            startAngle?: number;
+            endAngle?: number;
+        }
     ) {
         if (!this.hg.views) return this;
-        const baseTrackType = '-chromosome-labels';
-        const direction = position === 'left' || position === 'right' ? 'vertical' : 'horizontal';
-        const widthOrHeight = direction === 'vertical' ? 'width' : 'height';
-        this.getLastView().tracks[position] = [
-            {
-                uid: uuid.v1(),
-                type: (direction + baseTrackType) as any /* TODO */,
-                [widthOrHeight]: HIGLASS_AXIS_SIZE,
-                chromInfoPath: this.hg.chromInfoPath,
-                options: {
-                    color: 'black',
-                    tickColor: 'black',
-                    tickFormat: type === 'narrower' ? 'si' : 'plain',
-                    tickPositions: type === 'regular' ? 'even' : 'ends',
-                    reverseOrientation: position === 'bottom' ? true : false
-                }
+
+        const widthOrHeight = position === 'left' || position === 'right' ? 'width' : 'height';
+        const axisTrackTemplate: Track = {
+            uid: uuid.v1(),
+            type: 'axis-track',
+            chromInfoPath: this.hg.chromInfoPath,
+            options: {
+                ...options,
+                color: 'black',
+                tickColor: 'black',
+                tickFormat: type === 'narrower' ? 'si' : 'plain',
+                tickPositions: type === 'regular' ? 'even' : 'ends',
+                reverseOrientation: position === 'bottom' ? true : false
             }
-        ];
+        };
+        if (position === 'outer' || position === 'inner') {
+            // circular axis: superpose an axis track on top of the `center` track
+            this.addTrackToCombined({
+                ...axisTrackTemplate,
+                options: { ...axisTrackTemplate.options, layout: 'circular' }
+            });
+        } else {
+            // linear axis: position an axis track on the top, left, bottom, or right
+            this.getLastView().tracks[position] = [
+                {
+                    ...axisTrackTemplate,
+                    [widthOrHeight]: HIGLASS_AXIS_SIZE
+                }
+            ];
+        }
         return this;
     }
 

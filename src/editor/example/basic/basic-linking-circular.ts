@@ -6,13 +6,13 @@ export const EXMAPLE_BASIC_LINKING_CIRCULAR: GeminidSpec = {
     arrangement: {
         direction: 'horizontal',
         wrap: 2,
-        columnSizes: [200, 200],
+        columnSizes: [350, 350],
         rowSizes: [500, 100]
     },
     tracks: [
         {
             span: 2,
-            outerRadius: 200,
+            outerRadius: 250,
             innerRadius: 150,
             layout: 'circular',
             data: {
@@ -29,7 +29,8 @@ export const EXMAPLE_BASIC_LINKING_CIRCULAR: GeminidSpec = {
             mark: 'area',
             x: {
                 field: 'position',
-                type: 'genomic'
+                type: 'genomic',
+                axis: 'outer'
             },
             y: { field: 'peak', type: 'quantitative' },
             row: { field: 'sample', type: 'nominal' },
@@ -57,10 +58,11 @@ export const EXMAPLE_BASIC_LINKING_CIRCULAR: GeminidSpec = {
             x: {
                 ...EXAMPLE_BASIC_AREA.x,
                 domain: { chromosome: '2' },
-                axis: undefined,
+                axis: 'top',
                 linkingID: 'linking-with-brush'
             },
             color: { field: 'sample', type: 'nominal', legend: false },
+            strokeWidth: { value: 0 },
             style: {
                 background: 'blue',
                 backgroundOpacity: 0.1
@@ -71,10 +73,11 @@ export const EXMAPLE_BASIC_LINKING_CIRCULAR: GeminidSpec = {
             x: {
                 ...EXAMPLE_BASIC_AREA.x,
                 domain: { chromosome: '5' },
-                axis: undefined,
+                axis: 'top',
                 linkingID: 'linking-with-brush-2'
             },
             color: { field: 'sample', type: 'nominal', legend: false },
+            strokeWidth: { value: 0 },
             style: {
                 background: 'red',
                 backgroundOpacity: 0.1

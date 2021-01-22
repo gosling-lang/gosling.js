@@ -87,7 +87,9 @@
         "top",
         "bottom",
         "left",
-        "right"
+        "right",
+        "outer",
+        "inner"
       ],
       "type": "string"
     },
@@ -1326,9 +1328,6 @@
         "triangle-r",
         "triangle-d",
         "rect-brush",
-        "link-between",
-        "link-within",
-        "dummy",
         "header"
       ],
       "type": "string"

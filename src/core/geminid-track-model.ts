@@ -123,7 +123,7 @@ export class GeminidTrackModel {
             spec.innerRadius = Math.max(spec.outerRadius - 80, 0);
         }
 
-        // TODO: better way to deal with axis?
+        // If axis presents, reserve a space to show axis
         const xOrY = this.getGenomicChannelKey();
         let isAxisShown = false;
         if (xOrY === 'x') {
@@ -132,11 +132,20 @@ export class GeminidTrackModel {
         if (xOrY === 'y') {
             isAxisShown = IsChannelDeep(spec.y) && spec.y.axis !== undefined;
         }
-        if (xOrY && isAxisShown) {
-            const widthOrHeight = xOrY === 'x' ? 'height' : 'width';
-            spec[widthOrHeight] = ((spec[widthOrHeight] as number) - HIGLASS_AXIS_SIZE) as number;
+        if (spec.layout !== 'circular') {
+            // for linear layouts, prepare a horizontal or vertical space for the axis
+            if (xOrY && isAxisShown) {
+                const widthOrHeight = xOrY === 'x' ? 'height' : 'width';
+                spec[widthOrHeight] = ((spec[widthOrHeight] as number) - HIGLASS_AXIS_SIZE) as number;
+            }
+        } else {
+            // for circular layouts, prepare a space in radius for the axis
+            if (xOrY === 'x' && isAxisShown && IsChannelDeep(spec.x) && spec.x.axis === 'outer') {
+                spec['outerRadius'] = ((spec['outerRadius'] as number) - HIGLASS_AXIS_SIZE) as number;
+            } else if (xOrY === 'x' && isAxisShown && IsChannelDeep(spec.x) && spec.x.axis === 'inner') {
+                spec['innerRadius'] = ((spec['innerRadius'] as number) + HIGLASS_AXIS_SIZE) as number;
+            }
         }
-        ///
 
         // zero baseline
         SUPPORTED_CHANNELS.forEach(channelKey => {

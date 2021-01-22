@@ -24,7 +24,7 @@ export function getChartType(track: BasicSingleTrack): ChartType {
         ye: [y1Field, y1eField].filter(d => d).length
     };
 
-    if (track.mark === 'link-between') {
+    if ((track.mark as any) === 'link-between') {
         const numPairOfChannelsDefined = Object.keys(numOfChannelsDefined)
             .map(key => numOfChannelsDefined[key as PrimitiveChannel])
             .filter(d => d >= 2).length;

@@ -212,4 +212,5 @@ export type EnumTrackType =
     | 'viewport-projection-vertical'
     // custom tracks
     | 'gemini-track'
+    | 'axis-track'
     | 'text';

@@ -59,8 +59,7 @@ export const examples: ReadonlyArray<{
     {
         name: '[GenoCAT] Gremlin',
         spec: GENOCAT_GREMLIN,
-        underDevelopment: true,
-        forceShow: true
+        underDevelopment: true
     },
     {
         name: '[GenoCAT] MizBee',
