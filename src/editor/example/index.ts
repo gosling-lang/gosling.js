@@ -29,6 +29,7 @@ import { GENOCAT_GIVE } from './genocat-give';
 import { GENOCAT_GREMLIN } from './genocat-gremlin';
 import { GENOCAT_MIZBEE } from './genocat-mizbee';
 import { EXAMPLE_SIMPLEST } from './basic/simplest-spec';
+import { EXMAPLE_BASIC_LINKING_CIRCULAR } from './basic/basic-linking-circular';
 
 export const examples: ReadonlyArray<{
     name: string;
@@ -123,6 +124,11 @@ export const examples: ReadonlyArray<{
     {
         name: 'Basic Linking Views',
         spec: EXMAPLE_BASIC_LINKING
+    },
+    {
+        name: 'Basic Linking Circular Views',
+        spec: EXMAPLE_BASIC_LINKING_CIRCULAR,
+        forceShow: true
     },
     {
         name: 'Overview + Detail views',

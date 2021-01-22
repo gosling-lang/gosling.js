@@ -29,6 +29,7 @@ export function renderHiGlass(
         .filter(d => d.isBrush)
         .forEach(info => {
             hgModel.addBrush(
+                info.layout,
                 info.viewId,
                 linkingInfos.find(d => !d.isBrush && d.linkId === info.linkId)?.viewId,
                 info.style

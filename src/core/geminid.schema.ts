@@ -242,6 +242,7 @@ export type SuperposedTrackTwoLevels = Partial<SingleTrack> & {
 
 export interface TrackStyle {
     background?: string;
+    backgroundOpacity?: number;
     dashed?: [number, number];
     linePattern?: { type: 'triangle-l' | 'triangle-r'; size: number };
     curve?: 'top' | 'bottom' | 'left' | 'right';

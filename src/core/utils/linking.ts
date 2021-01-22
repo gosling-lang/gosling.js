@@ -7,7 +7,13 @@ import { resolveSuperposedTracks } from './superpose';
  *
  */
 export function getLinkingInfo(hgModel: HiGlassModel) {
-    const linkingInfo: { viewId: string; linkId: string; isBrush: boolean; style: any }[] = [];
+    const linkingInfo: {
+        layout: 'circular' | 'linear';
+        viewId: string;
+        linkId: string;
+        isBrush: boolean;
+        style: any;
+    }[] = [];
 
     hgModel.spec().views.forEach(v => {
         const viewId = v.uid;
@@ -23,6 +29,7 @@ export function getLinkingInfo(hgModel: HiGlassModel) {
 
                 if (IsChannelDeep(channel) && channel.linkingID) {
                     linkingInfo.push({
+                        layout: s.layout === 'circular' ? 'circular' : 'linear',
                         viewId,
                         linkId: channel.linkingID,
                         isBrush: s.mark === 'rect-brush',
@@ -30,7 +37,9 @@ export function getLinkingInfo(hgModel: HiGlassModel) {
                             color: (s as any).color?.value,
                             stroke: (s as any).stroke?.value,
                             strokeWidth: (s as any).strokeWidth?.value,
-                            opacity: (s as any).opacity?.value
+                            opacity: (s as any).opacity?.value,
+                            innerRadius: s.innerRadius,
+                            outerRadius: s.outerRadius
                         }
                     });
                     return;
