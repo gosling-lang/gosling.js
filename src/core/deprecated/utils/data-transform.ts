@@ -1,4 +1,4 @@
-import { Datum } from '../../geminid.schema';
+import { Datum } from '../../gosling.schema';
 
 export interface FilterSpec {
     field: string;

@@ -1,4 +1,4 @@
-import { LogicalOperation } from '../geminid.schema';
+import { LogicalOperation } from '../gosling.schema';
 
 export function getMaxZoomLevel() {
     // TODO: How to correctly calculate maxZoomLevel?

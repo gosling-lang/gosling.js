@@ -1,4 +1,4 @@
-import { GeminidSpec, Track } from '../../core/geminid.schema';
+import { GoslingSpec, Track } from '../../core/gosling.schema';
 
 export const EXAMPLE_2019_WENGER_TRACK: Track = {
     description: 'https://www.ncbi.nlm.nih.gov/dbvar/browse/org/?assm=GCF_000001405.25&studies=nstd167',
@@ -40,7 +40,7 @@ export const EXAMPLE_2019_WENGER_TRACK: Track = {
     innerRadius: 10
 };
 
-export const EXAMPLE_2019_WENGER: GeminidSpec = {
+export const EXAMPLE_2019_WENGER: GoslingSpec = {
     title: 'Wenger et al. 2019 (nstd167)',
     subtitle: 'Data is from https://www.ncbi.nlm.nih.gov/dbvar/browse/org/?assm=GCF_000001405.25&studies=nstd167',
     layout: 'linear',

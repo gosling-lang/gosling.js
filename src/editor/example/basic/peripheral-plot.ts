@@ -1,4 +1,4 @@
-import { BasicSingleTrack, GeminidSpec, SuperposedTrack } from '../../../core/geminid.schema';
+import { BasicSingleTrack, GoslingSpec, SuperposedTrack } from '../../../core/gosling.schema';
 import { EXAMPLE_CYTOAND_HG38 } from '../cytoband-hg38';
 import { EXAMPLE_DATASETS } from './datasets';
 
@@ -17,7 +17,7 @@ export const MULTIVEC_SPEC: Partial<BasicSingleTrack> = {
     dataTransform: { filter: [{ field: 'peak', oneOf: [0], not: true }] }
 };
 
-export const EXAMPLE_PERIPHERAL_PLOT: GeminidSpec = {
+export const EXAMPLE_PERIPHERAL_PLOT: GoslingSpec = {
     layout: 'linear',
     arrangement: {
         direction: 'horizontal',

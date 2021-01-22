@@ -1,7 +1,7 @@
 import { isUndefined } from 'lodash';
-import { GeminidTrackModel } from '../geminid-track-model';
+import { GoslingTrackModel } from '../gosling-track-model';
 
-export function drawBackground(HGC: any, trackInfo: any, tile: any, tm: GeminidTrackModel) {
+export function drawBackground(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackModel) {
     /* helper */
     const { colorToHex } = HGC.utils;
 

@@ -1,6 +1,6 @@
 import * as d3 from 'd3';
-import { ChannelBind, ChannelType, ChannelTypes, Datum, GlyphElement, BasicSingleTrack } from '../geminid.schema';
-import { IsGlyphMark, IsChannelDeep, IsDomainFlat, IsChannelValue, IsChannelBind } from '../geminid.schema.guards';
+import { ChannelBind, ChannelType, ChannelTypes, Datum, GlyphElement, BasicSingleTrack } from '../gosling.schema';
+import { IsGlyphMark, IsChannelDeep, IsDomainFlat, IsChannelValue, IsChannelBind } from '../gosling.schema.guards';
 import { BoundingBox } from '../utils/bounding-box';
 
 /**

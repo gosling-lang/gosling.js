@@ -1,6 +1,6 @@
-import { GeminidSpec } from '../../../core/geminid.schema';
+import { GoslingSpec } from '../../../core/gosling.schema';
 
-export const SPEC_TO_SUPPORT: GeminidSpec = {
+export const SPEC_TO_SUPPORT: GoslingSpec = {
     // Color channel should be shared only when the data types are the same
     tracks: [
         {

@@ -1,10 +1,10 @@
-import { GeminidTrackModel } from '../geminid-track-model';
+import { GoslingTrackModel } from '../gosling-track-model';
 import { drawPoint } from './point';
 import { drawLine } from './line';
 import { drawBar } from './bar';
 import { drawArea } from './area';
 import { drawRect } from './rect';
-import { ChannelTypes } from '../geminid.schema';
+import { ChannelTypes } from '../gosling.schema';
 import { drawTriangle } from './triangle';
 import { drawText } from './text';
 import { drawRule } from './rule';
@@ -43,9 +43,9 @@ export const SUPPORTED_CHANNELS: (keyof typeof ChannelTypes)[] = [
 export const RESOLUTION = 4;
 
 /**
- * Draw a track based on the track specification in a Geminid grammar.
+ * Draw a track based on the track specification in a Gosling grammar.
  */
-export function drawMark(HGC: any, trackInfo: any, tile: any, model: GeminidTrackModel) {
+export function drawMark(HGC: any, trackInfo: any, tile: any, model: GoslingTrackModel) {
     if (!HGC || !trackInfo || !tile) {
         // We did not receive parameters correctly.
         return;

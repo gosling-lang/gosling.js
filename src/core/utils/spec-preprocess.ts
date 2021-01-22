@@ -1,12 +1,12 @@
-import { BasicSingleTrack, GeminidSpec } from '../geminid.schema';
-import { IsDataMetadata, IsTemplate } from '../geminid.schema.guards';
+import { BasicSingleTrack, GoslingSpec } from '../gosling.schema';
+import { IsDataMetadata, IsTemplate } from '../gosling.schema.guards';
 import assign from 'lodash/assign';
 
 /**
  * Update track-level specs considering the root-level specs (e.g., arrangements).
  * @param spec
  */
-export function fixSpecDownstream(spec: GeminidSpec) {
+export function fixSpecDownstream(spec: GoslingSpec) {
     /**
      * superposeOnPreviousTrack
      */
@@ -99,7 +99,7 @@ export function getMultivecTemplate(
  * Override default visual encoding in each track for given data type.
  * @param spec
  */
-export function overrideTemplates(spec: GeminidSpec) {
+export function overrideTemplates(spec: GoslingSpec) {
     spec.tracks.forEach((t, i) => {
         if (!t.metadata || !IsDataMetadata(t.metadata)) {
             // if `metadata` is not specified, we can not provide a correct template since we do not know the exact data type.

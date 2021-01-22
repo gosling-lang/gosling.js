@@ -1,4 +1,4 @@
-import { MarkGlyph } from '../../../core/geminid.schema';
+import { MarkGlyph } from '../../../core/gosling.schema';
 
 export const GLYPH_CYTOGENETIC_BAND: MarkGlyph = {
     type: 'compositeMark',

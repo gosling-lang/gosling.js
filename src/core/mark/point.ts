@@ -1,10 +1,10 @@
-import { GeminidTrackModel } from '../geminid-track-model';
-import { Channel } from '../geminid.schema';
-import { getValueUsingChannel } from '../geminid.schema.guards';
+import { GoslingTrackModel } from '../gosling-track-model';
+import { Channel } from '../gosling.schema';
+import { getValueUsingChannel } from '../gosling.schema.guards';
 import { cartesianToPolar } from '../utils/polar';
 import { PIXIVisualProperty } from '../visual-property.schema';
 
-export function drawPoint(HGC: any, trackInfo: any, tile: any, model: GeminidTrackModel) {
+export function drawPoint(HGC: any, trackInfo: any, tile: any, model: GoslingTrackModel) {
     /* track spec */
     const spec = model.spec();
 
@@ -78,7 +78,7 @@ export function drawPoint(HGC: any, trackInfo: any, tile: any, model: GeminidTra
 }
 
 export function pointProperty(
-    model: GeminidTrackModel,
+    model: GoslingTrackModel,
     propertyKey: PIXIVisualProperty,
     datum?: { [k: string]: string | number }
 ) {

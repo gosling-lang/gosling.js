@@ -1,7 +1,7 @@
-import { GeminidTrackModel } from '../geminid-track-model';
-import { IsChannelDeep } from '../geminid.schema.guards';
+import { GoslingTrackModel } from '../gosling-track-model';
+import { IsChannelDeep } from '../gosling.schema.guards';
 
-export function drawGrid(HGC: any, trackInfo: any, tile: any, tm: GeminidTrackModel) {
+export function drawGrid(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackModel) {
     /* track spec */
     const spec = tm.spec();
     if (!IsChannelDeep(spec.y) || !spec.y.grid) {

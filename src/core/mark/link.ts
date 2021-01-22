@@ -1,9 +1,9 @@
-import { GeminidTrackModel } from '../geminid-track-model';
-import { Channel } from '../geminid.schema';
-import { IsChannelDeep, getValueUsingChannel } from '../geminid.schema.guards';
+import { GoslingTrackModel } from '../gosling-track-model';
+import { Channel } from '../gosling.schema';
+import { IsChannelDeep, getValueUsingChannel } from '../gosling.schema.guards';
 import { cartesianToPolar, positionToRadian } from '../utils/polar';
 
-export function drawLink(HGC: any, trackInfo: any, tile: any, tm: GeminidTrackModel) {
+export function drawLink(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackModel) {
     /* track spec */
     const spec = tm.spec();
 

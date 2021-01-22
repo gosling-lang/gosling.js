@@ -1,15 +1,15 @@
-import { GeminidTrackModel } from '../geminid-track-model';
-import { Channel } from '../geminid.schema';
+import { GoslingTrackModel } from '../gosling-track-model';
+import { Channel } from '../gosling.schema';
 import * as d3 from 'd3';
 import { group } from 'd3-array';
-import { IsStackedMark, getValueUsingChannel } from '../geminid.schema.guards';
+import { IsStackedMark, getValueUsingChannel } from '../gosling.schema.guards';
 import { cartesianToPolar } from '../utils/polar';
 
 // TODO: fill the white gap betwee tiles.
 /**
  * Draw area marks
  */
-export function drawArea(HGC: any, trackInfo: any, tile: any, tm: GeminidTrackModel) {
+export function drawArea(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackModel) {
     /* track spec */
     const spec = tm.spec();
 

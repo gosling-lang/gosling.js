@@ -1,5 +1,5 @@
 // @ts-ignore
-import { GeminidTrack } from '../higlass-geminid-track/index';
+import { GoslingTrack } from '../gosling-track/index';
 import { CSVDataFetcher } from '../higlass-csv-datafetcher/index';
 import { RawDataFetcher } from '../higlass-raw-datafetcher/index';
 // @ts-ignore
@@ -12,13 +12,13 @@ import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react'
 import EditorPanel from './editor-panel';
 import stringify from 'json-stringify-pretty-compact';
 import SplitPane from 'react-split-pane';
-import { GeminidSpec } from '../core/geminid.schema';
+import { GoslingSpec } from '../core/gosling.schema';
 import { debounce } from 'lodash';
 import { examples } from './example';
 import { replaceTemplate } from '../core/utils';
 import { Size } from '../core/utils/bounding-box';
 import { HiGlassSpec } from '../core/higlass.schema';
-import GeminidSchema from '../../schema/geminid.schema.json';
+import GoslingSchema from '../../schema/gosling.schema.json';
 import { validateSpec, Validity } from '../core/utils/validate';
 import { compile } from '../core/compile';
 import stripJsonComments from 'strip-json-comments';
@@ -26,16 +26,16 @@ import * as qs from 'qs';
 import { JSONCrush, JSONUncrush } from '../core/utils/json-crush';
 import './editor.css';
 import { ICONS, ICON_INFO } from './icon';
-import { AxisTrack } from '../higlass-axis-track';
+import { AxisTrack } from '../axis-track';
 import { BrushTrack } from '../higlass-brush-track';
 
 /**
- * Register a Gemini plugin track to HiGlassComponent
+ * Register a Gosling plugin track to HiGlassComponent
  */
 higlassRegister({
-    name: 'GeminidTrack',
-    track: GeminidTrack,
-    config: GeminidTrack.config
+    name: 'GoslingTrack',
+    track: GoslingTrack,
+    config: GoslingTrack.config
 });
 
 /**
@@ -64,7 +64,7 @@ higlassRegister({
 });
 
 /**
- * Register a Gemini data fetcher to HiGlassComponent
+ * Register a Gosling data fetcher to HiGlassComponent
  */
 higlassRegister({ dataFetcher: CSVDataFetcher, config: CSVDataFetcher.config }, { pluginType: 'dataFetcher' });
 higlassRegister({ dataFetcher: RawDataFetcher, config: RawDataFetcher.config }, { pluginType: 'dataFetcher' });
@@ -98,7 +98,7 @@ const getIconSVG = (d: ICON_INFO) => (
 );
 
 /**
- * React component for editing Gemini specs
+ * React component for editing Gosling specs
  */
 function Editor(props: any) {
     // custom spec contained in the URL
@@ -109,7 +109,7 @@ function Editor(props: any) {
     const [editorMode, setEditorMode] = useState<'Normal Mode' | 'Template-based Mode'>('Normal Mode');
     const [hg, setHg] = useState<HiGlassSpec>();
     const [size, setSize] = useState<{ width: number; height: number }>();
-    const [gm, setGm] = useState(stringify(urlSpec ?? (examples[INIT_DEMO_INDEX].spec as GeminidSpec)));
+    const [gm, setGm] = useState(stringify(urlSpec ?? (examples[INIT_DEMO_INDEX].spec as GoslingSpec)));
     const [log, setLog] = useState<Validity>({ message: '', state: 'success' });
     const [autoRun, setAutoRun] = useState(true);
 
@@ -127,9 +127,9 @@ function Editor(props: any) {
      */
     useEffect(() => {
         if (editorMode === 'Normal Mode') {
-            setGm(urlSpec ?? stringify(replaceTemplate(JSON.parse(stringify(demo.spec)) as GeminidSpec)));
+            setGm(urlSpec ?? stringify(replaceTemplate(JSON.parse(stringify(demo.spec)) as GoslingSpec)));
         } else {
-            setGm(urlSpec ?? stringify(demo.spec as GeminidSpec));
+            setGm(urlSpec ?? stringify(demo.spec as GoslingSpec));
         }
         setHg(undefined);
     }, [demo, editorMode]);
@@ -145,7 +145,7 @@ function Editor(props: any) {
                     editedGm = null;
                 }
 
-                setLog(validateSpec(GeminidSchema, editedGm));
+                setLog(validateSpec(GoslingSchema, editedGm));
             } catch (e) {
                 const message = '✘ Cannnot parse the code.';
                 console.warn(message);
@@ -153,7 +153,7 @@ function Editor(props: any) {
             }
             if (!editedGm || (!autoRun && !run)) return;
 
-            compile(editedGm as GeminidSpec, (newHg: HiGlassSpec, newSize: Size) => {
+            compile(editedGm as GoslingSpec, (newHg: HiGlassSpec, newSize: Size) => {
                 setHg(newHg);
                 setSize(newSize);
             });
@@ -176,7 +176,7 @@ function Editor(props: any) {
     // }, [hg, hgRef]); // TODO: should `hg` be here?
 
     /**
-     * HiGlass components to render Gemini Tracks.
+     * HiGlass components to render Gosling Tracks.
      */
     const hglass = useMemo(() => {
         return hg && size ? (
@@ -230,7 +230,7 @@ function Editor(props: any) {
     return (
         <>
             <div className="demo-navbar">
-                🌌 Geminid <code>Editor</code>
+                🐥 Gosling <code>Editor</code>
                 {urlSpec ? <small> Displaying a custom spec contained in URL</small> : null}
                 <select
                     onChange={e => {
@@ -339,7 +339,7 @@ function Editor(props: any) {
                     onClick={() => {
                         if (gm.length <= LIMIT_CLIPBOARD_LEN) {
                             // copy the unique url to clipboard using `<input/>`
-                            const url = `https://sehilyi.github.io/geminid/?full=${isMaximizeVis}&spec=${JSONCrush(
+                            const url = `https://gosling-lang.github.io/gosling.js/?full=${isMaximizeVis}&spec=${JSONCrush(
                                 gm
                             )}`;
                             const element = document.getElementById('spec-url-exporter');
@@ -377,7 +377,7 @@ function Editor(props: any) {
                             }
                         }}
                     >
-                        {/* Gemini Editor */}
+                        {/* Gosling Editor */}
                         <>
                             <EditorPanel
                                 code={gm}
@@ -411,7 +411,7 @@ function Editor(props: any) {
             </div>
             {/* ------------------------ Floating Buttons ------------------------ */}
             <span
-                title={isMaximizeVis ? 'Show Geminid code' : 'Maximize a visualization panel'}
+                title={isMaximizeVis ? 'Show Gosling code' : 'Maximize a visualization panel'}
                 className="editor-button"
                 style={{
                     position: 'fixed',

@@ -1,4 +1,4 @@
-import { GeminidSpec } from '../../../core/geminid.schema';
+import { GoslingSpec } from '../../../core/gosling.schema';
 import { EXAMPLE_BASIC_AREA } from './basic-marks';
 
 export const EXMAPLE_BASIC_BRUSH = {
@@ -26,4 +26,4 @@ export const EXMAPLE_BASIC_BRUSH = {
             }
         }
     ]
-} as GeminidSpec;
+} as GoslingSpec;

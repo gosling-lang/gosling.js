@@ -1,4 +1,4 @@
-import { GeminidSpec, MultivecMetadata } from '../../../core/geminid.schema';
+import { GoslingSpec, MultivecMetadata } from '../../../core/gosling.schema';
 import { EXAMPLE_DATASETS } from './datasets';
 import { HIGLASS_GENE_ANNOTATION } from './gene-annotation';
 import { EXAMPLE_SEMANTIC_ZOOMING_IDEOGRAM } from './semantic-zoom';
@@ -19,7 +19,7 @@ NO_AXIS_HIGLASS_GENE_ANNOTATION.superpose[0].x.domain = { chromosome: '6' };
 NO_AXIS_HIGLASS_GENE_ANNOTATION.superpose[0].x.linker = '1';
 NO_AXIS_HIGLASS_GENE_ANNOTATION.color.range = ['#3B3B3B', '#3B3B3B'];
 
-export const EXAMPLE_UPSET: GeminidSpec = {
+export const EXAMPLE_UPSET: GoslingSpec = {
     // description: '*Circular glyphs on the middle represent that peaks in the corresponding region are greater than 500',
     tracks: [
         {

@@ -1,4 +1,4 @@
-import { Mark } from '../../../core/geminid.schema';
+import { Mark } from '../../../core/gosling.schema';
 
 import { GLYPH_GENE_ANNOTATAION } from './gene-annotation';
 import { GLYPH_GENE_ANNOTATAION_V2 } from './gene-annotation-simple';
@@ -26,7 +26,7 @@ export type GLYPH_LOCAL_PRESET_TYPE = 'gene-annotation-simple' | 'gene-annotatio
 
 export type GLYPH_HIGLASS_PRESET_TYPE =
     | 'gene-annotation-higlass'
-    | 'gemini-track-higlass'
+    | 'gosling-track-higlass'
     // remove ultimtely
     | 'point-higlass'
     | 'line-higlass'
@@ -35,7 +35,7 @@ export type GLYPH_HIGLASS_PRESET_TYPE =
 
 export const GLYPH_HIGLASS_PRESET_TYPES: GLYPH_HIGLASS_PRESET_TYPE[] = [
     'gene-annotation-higlass',
-    'gemini-track-higlass',
+    'gosling-track-higlass',
     // remove ultimtely
     'point-higlass',
     'line-higlass',

@@ -1,5 +1,5 @@
-import { BasicSingleTrack } from '../../geminid.schema';
-import { IsChannelDeep } from '../../geminid.schema.guards';
+import { BasicSingleTrack } from '../../gosling.schema';
+import { IsChannelDeep } from '../../gosling.schema.guards';
 import { SpecValidityModel } from './validate';
 
 export function validateBetweenLinkSpec(track: BasicSingleTrack) {

@@ -11,6 +11,6 @@ conda env create -f environment.yml
 ## Develop
 
 ```sh
-conda activate gemini-notebooks
+conda activate gosling-notebooks
 jupyter lab
 ```

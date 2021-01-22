@@ -1,8 +1,8 @@
 import Ajv from 'ajv';
-import { BasicSingleTrack, ChannelDeep, ChannelTypes, SuperposedTrack, Track } from '../geminid.schema';
-import { IsChannelDeep } from '../geminid.schema.guards';
+import { BasicSingleTrack, ChannelDeep, ChannelTypes, SuperposedTrack, Track } from '../gosling.schema';
+import { IsChannelDeep } from '../gosling.schema.guards';
 import { resolveSuperposedTracks } from './superpose';
-import GeminidSchema from '../../../schema/geminid.schema.json';
+import GoslingSchema from '../../../schema/gosling.schema.json';
 
 export interface Validity {
     message: string;
@@ -10,8 +10,8 @@ export interface Validity {
     details?: string;
 }
 
-export function validateGeminidSpec(spec: any): Validity {
-    return validateSpec(GeminidSchema, spec);
+export function validateGoslingSpec(spec: any): Validity {
+    return validateSpec(GoslingSchema, spec);
 }
 
 /**

@@ -1,5 +1,5 @@
-import { GeminidTrackModel } from '../geminid-track-model';
-import { Domain } from '../geminid.schema';
+import { GoslingTrackModel } from '../gosling-track-model';
+import { Domain } from '../gosling.schema';
 import { CHROMOSOME_INTERVAL_HG38 } from './chrom-size';
 import { SUPPORTED_CHANNELS } from '../mark';
 import {
@@ -8,7 +8,7 @@ import {
     IsDomainChrInterval,
     IsDomainGene,
     IsChannelDeep
-} from '../geminid.schema.guards';
+} from '../gosling.schema.guards';
 
 /**
  * Get a numeric domain based on a domain specification.
@@ -33,9 +33,9 @@ export function getNumericDomain(domain: Domain) {
 // TODO: we consider data-driven values and not constant values yet (e.g., color: { value: 'red' })
 // TODO: IMPORTANT: when panning the tiles, the extent only becomes larger
 /**
- * Use a shared scale (i.e., `domain`) across multiple gemini tracks.
+ * Use a shared scale (i.e., `domain`) across multiple gosling tracks.
  */
-export function shareScaleAcrossTracks(trackModels: GeminidTrackModel[], force?: boolean) {
+export function shareScaleAcrossTracks(trackModels: GoslingTrackModel[], force?: boolean) {
     // we update the spec with a global domain
     const globalDomain: { [k: string]: number[] | string[] } = {};
     const channelKeys = SUPPORTED_CHANNELS;

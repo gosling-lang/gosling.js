@@ -1,4 +1,4 @@
-import { GeminidSpec } from '../../core/geminid.schema';
+import { GoslingSpec } from '../../core/gosling.schema';
 
 // Real-world examples
 import { CORCES_2020_NATURE_GENETICS } from './corces-2020-nature-genetics';
@@ -33,7 +33,7 @@ import { EXMAPLE_BASIC_LINKING_CIRCULAR } from './basic/basic-linking-circular';
 
 export const examples: ReadonlyArray<{
     name: string;
-    spec: GeminidSpec;
+    spec: GoslingSpec;
     description?: string;
     underDevelopment?: boolean;
     hidden?: boolean;

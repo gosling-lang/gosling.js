@@ -1,14 +1,14 @@
 {
-    "name": "geminid",
+    "name": "gosling.js",
     "author": "Sehi L'Yi",
     "version": "0.0.14",
     "license": "MIT",
     "repository": {
         "type": "git",
-        "url": "https://github.com/sehilyi/geminid"
+        "url": "https://github.com/gosling-lang/gosling.js"
     },
-    "homepage": "https://sehilyi.github.io/geminid/",
-    "main": "dist/geminid.js",
+    "homepage": "https://gosling-lang.github.com/gosling.js",
+    "main": "dist/gosling.js",
     "types": "dist/index.d.ts",
     "files": [
         "dist"
@@ -18,10 +18,10 @@
         "build": "webpack --mode production",
         "build-log": "yarn build --display-error-details",
         "build-editor": "webpack --mode production --config webpack.config.editor.js",
-        "test": "jest test/",
+        "test": "jest src/",
         "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s -r 0",
         "format": "eslint . --fix && prettier '**/*.css' --write",
-        "schema": "mkdir -p schema & ts-json-schema-generator -p src/core/geminid.schema.ts -f tsconfig.json -t GeminidSpec > schema/geminid.schema.json",
+        "schema": "mkdir -p schema & ts-json-schema-generator -p src/core/gosling.schema.ts -f tsconfig.json -t GoslingSpec > schema/gosling.schema.json",
         "predeploy": "yarn build-editor",
         "deploy": "gh-pages -d build"
     },

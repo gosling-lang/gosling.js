@@ -1,6 +1,6 @@
-import { GeminidSpec } from '../../core/geminid.schema';
+import { GoslingSpec } from '../../core/gosling.schema';
 
-export const GENOCAT_GIVE: GeminidSpec = {
+export const GENOCAT_GIVE: GoslingSpec = {
     title: 'GIVE',
     subtitle: 'Reimplementation of GenoCAT examples',
     arrangement: {

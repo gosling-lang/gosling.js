@@ -2,7 +2,7 @@ import { CHROMOSOME_INTERVAL_HG38, CHROMOSOME_SIZE_HG38 } from '../core/utils/ch
 import { sampleSize } from 'lodash';
 
 /**
- * HiGlass data fetcher specific for Gemini which ultimately will accept any types of data other than CSV files.
+ * HiGlass data fetcher specific for Gosling which ultimately will accept any types of data other than CSV files.
  */
 function RawDataFetcher(HGC: any, ...args: any): any {
     if (!new.target) {
@@ -70,7 +70,7 @@ function RawDataFetcher(HGC: any, ...args: any): any {
                         // genomic position did not parse properly
                         successfullyGotChrInfo = false;
                         // console.warn(
-                        //     '[Gemini Data Fetcher] Genomic position cannot be parsed correctly.',
+                        //     '[Gosling Data Fetcher] Genomic position cannot be parsed correctly.',
                         //     this.dataConfig.chromosomeField
                         // );
                     }
@@ -120,7 +120,7 @@ function RawDataFetcher(HGC: any, ...args: any): any {
                 const x = parseInt(parts[1], 10);
 
                 if (Number.isNaN(x) || Number.isNaN(z)) {
-                    console.warn('[Gemini Data Fetcher] Invalid tile zoom or position:', z, x);
+                    console.warn('[Gosling Data Fetcher] Invalid tile zoom or position:', z, x);
                     continue;
                 }
 
