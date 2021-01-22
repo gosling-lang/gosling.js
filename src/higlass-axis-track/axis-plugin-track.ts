@@ -354,39 +354,7 @@ function AxisTrack(HGC: any, ...args: any[]): any {
 
                 // show the tick text labels
                 if (this.options.layout === 'circular') {
-                    const chrText = tickTexts[i];
-                    const viewportMidX = x + xPadding;
-                    const r = (this.options.outerRadius + this.options.innerRadius) / 2.0;
-                    const pos = cartesianToPolar(viewportMidX, 700, r, 350, 350, 0, 360);
-                    chrText.x = pos.x;
-                    chrText.y = pos.y;
-
-                    // Experiment w/ Rope
-                    chrText.resolution = 4;
-                    const txtStyle = new HGC.libraries.PIXI.TextStyle(this.pixiTextConfig);
-                    const metric = HGC.libraries.PIXI.TextMetrics.measureText(chrText.text, txtStyle);
-
-                    // scale the width of text label so that its width is the same when converted into circular form
-                    const tw = (metric.width / (2 * r * Math.PI)) * 700;
-                    let [minX, maxX] = [viewportMidX - tw / 2.0, viewportMidX + tw / 2.0];
-                    if (minX < 0) {
-                        const gap = -minX;
-                        minX = 0;
-                        maxX += gap;
-                    } else if (maxX > 700) {
-                        const gap = maxX - 700;
-                        maxX = 700;
-                        minX -= gap;
-                    }
-                    const points: number[] = [];
-                    for (let j = maxX; j > minX; j -= tw / 10) {
-                        const p = cartesianToPolar(j, 700, r, 350, 350, 0, 360);
-                        points.push(new HGC.libraries.PIXI.Point(p.x, p.y));
-                    }
-                    const p = cartesianToPolar(minX, 700, r, 350, 350, 0, 360);
-                    points.push(new HGC.libraries.PIXI.Point(p.x, p.y));
-                    chrText.updateText();
-                    const rope = new HGC.libraries.PIXI.SimpleRope(chrText.texture, points);
+                    const rope = this.addCurvedText(tickTexts[i], x + xPadding);
                     this.pTicksCircular.addChild(rope);
                 } else {
                     tickTexts[i].x = x + xPadding;
@@ -426,10 +394,48 @@ function AxisTrack(HGC: any, ...args: any[]): any {
             return ticks.length;
         }
 
+        addCurvedText(textObj: any, cx: number) {
+            const { innerRadius, outerRadius, startAngle, endAngle, width, height } = this.options;
+
+            const r = (outerRadius + innerRadius) / 2.0;
+            const centerPos = cartesianToPolar(cx, width, r, width / 2.0, height / 2.0, startAngle, endAngle);
+            textObj.x = centerPos.x;
+            textObj.y = centerPos.y;
+
+            textObj.resolution = 4;
+            const txtStyle = new HGC.libraries.PIXI.TextStyle(this.pixiTextConfig);
+            const metric = HGC.libraries.PIXI.TextMetrics.measureText(textObj.text, txtStyle);
+
+            // scale the width of text label so that its width is the same when converted into circular form
+            const tw = (metric.width / (2 * r * Math.PI)) * width;
+            let [minX, maxX] = [cx - tw / 2.0, cx + tw / 2.0];
+
+            // make sure not to place the label on the origin
+            if (minX < 0) {
+                const gap = -minX;
+                minX = 0;
+                maxX += gap;
+            } else if (maxX > width) {
+                const gap = maxX - width;
+                maxX = width;
+                minX -= gap;
+            }
+
+            const ropePoints: number[] = [];
+            for (let i = maxX; i >= minX; i -= tw / 10.0) {
+                const p = cartesianToPolar(i, width, r, width / 2.0, height / 2.0, startAngle, endAngle);
+                ropePoints.push(new HGC.libraries.PIXI.Point(p.x, p.y));
+            }
+
+            textObj.updateText();
+            const rope = new HGC.libraries.PIXI.SimpleRope(textObj.texture, ropePoints);
+            return rope;
+        }
+
         draw() {
             this.allTexts = [];
 
-            if (!this.texts /* || !this.searchField*/) return;
+            if (!this.texts) return;
 
             const x1 = absToChr(this._xScale.domain()[0], this.chromInfo);
             const x2 = absToChr(this._xScale.domain()[1], this.chromInfo);
@@ -453,6 +459,8 @@ function AxisTrack(HGC: any, ...args: any[]): any {
                 // options.tickPositiosn was probably just changed to 'even' and initChromLabels hasn't been called yet
                 return;
             }
+
+            const circular = this.options.layout === 'circular';
 
             for (let i = 0; i < this.texts.length; i++) {
                 this.texts[i].visible = false;
@@ -489,31 +497,11 @@ function AxisTrack(HGC: any, ...args: any[]): any {
                 const chrText = this.texts[i];
 
                 chrText.anchor.x = 0.5;
-                chrText.anchor.y = 0.5; // this.options.reverseOrientation ? 0 : 1;
+                chrText.anchor.y = circular ? 0.5 : this.options.reverseOrientation ? 0 : 1;
 
                 let rope;
-                if (this.options.layout === 'circular') {
-                    const r = (this.options.outerRadius + this.options.innerRadius) / 2.0;
-                    const pos = cartesianToPolar(viewportMidX, 700, r, 350, 350, 0, 360);
-                    chrText.x = pos.x;
-                    chrText.y = pos.y;
-
-                    // Experiment w/ Rope
-                    chrText.resolution = 4;
-                    const txtStyle = new HGC.libraries.PIXI.TextStyle(this.pixiTextConfig);
-                    const metric = HGC.libraries.PIXI.TextMetrics.measureText(chrText.text, txtStyle);
-
-                    // scale the width of text label so that its width is the same when converted into circular form
-                    const tw = (metric.width / (2 * r * Math.PI)) * 700;
-                    const [minX, maxX] = [viewportMidX - tw / 2.0, viewportMidX + tw / 2.0];
-                    const points: number[] = [];
-                    for (let j = maxX; j > minX; j -= tw / 10) {
-                        const p = cartesianToPolar(j, 700, r, 350, 350, 0, 360);
-                        points.push(new HGC.libraries.PIXI.Point(p.x, p.y));
-                    }
-                    const p = cartesianToPolar(minX, 700, r, 350, 350, 0, 360);
-                    points.push(new HGC.libraries.PIXI.Point(p.x, p.y));
-                    rope = new HGC.libraries.PIXI.SimpleRope(chrText.texture, points);
+                if (circular) {
+                    rope = this.addCurvedText(chrText, viewportMidX);
                     this.pTicksCircular.addChild(rope);
                 } else {
                     chrText.x = viewportMidX;
@@ -527,15 +515,19 @@ function AxisTrack(HGC: any, ...args: any[]): any {
                 const numTicksDrawn = this.drawTicks(xCumPos);
 
                 // only show chromsome labels if there's no ticks drawn
-                chrText.visible = numTicksDrawn <= 0 && this.options.layout !== 'circular';
-                if (numTicksDrawn > 0) {
-                    this.pTicksCircular.removeChild(rope);
+                if (!circular) {
+                    chrText.visible = numTicksDrawn <= 0;
+                } else {
+                    if (numTicksDrawn > 0) {
+                        this.pTicksCircular.removeChild(rope);
+                    }
                 }
 
                 this.allTexts.push({
                     importance: chrText.hashValue,
                     text: chrText,
-                    caption: null
+                    caption: null,
+                    rope
                 });
             }
             /* tslint:enable */
@@ -558,8 +550,14 @@ function AxisTrack(HGC: any, ...args: any[]): any {
             boxIntersect(allBoxes, (i: number, j: number) => {
                 if (allTexts[i].importance > allTexts[j].importance) {
                     allTexts[j].text.visible = false;
+                    if (this.options.circular && allTexts[j].rope) {
+                        this.pTicksCircular.removeChild(allTexts[j].rope);
+                    }
                 } else {
                     allTexts[i].text.visible = false;
+                    if (this.options.circular && allTexts[i].rope) {
+                        this.pTicksCircular.removeChild(allTexts[i].rope);
+                    }
                 }
             });
         }
@@ -649,6 +647,10 @@ AxisTrack.config = {
     availableOptions: [
         'innerRadius',
         'outerRadius',
+        'startAngle',
+        'endAngle',
+        'width',
+        'height',
         'layout',
         'labelPosition',
         'labelColor',
@@ -664,6 +666,10 @@ AxisTrack.config = {
     defaultOptions: {
         innerRadius: 340,
         outerRadius: 310,
+        startAngle: 0,
+        endAngle: 360,
+        width: 700,
+        height: 700,
         layout: 'linear',
         labelPosition: 'none',
         labelColor: 'black',

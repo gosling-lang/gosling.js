@@ -203,7 +203,19 @@ export class HiGlassModel {
         return this;
     }
 
-    public setAxisTrack(position: Exclude<AxisPosition, 'none'>, type: 'regular' | 'narrow' | 'narrower' = 'regular') {
+    public setAxisTrack(
+        position: Exclude<AxisPosition, 'none'>,
+        type: 'regular' | 'narrow' | 'narrower' = 'regular',
+        options: {
+            // These are currently used for circular layout
+            innerRadius?: number;
+            outerRadius?: number;
+            width?: number;
+            height?: number;
+            startAngle?: number;
+            endAngle?: number;
+        }
+    ) {
         if (!this.hg.views) return this;
 
         const widthOrHeight = position === 'left' || position === 'right' ? 'width' : 'height';
@@ -212,6 +224,7 @@ export class HiGlassModel {
             type: 'axis-track',
             chromInfoPath: this.hg.chromInfoPath,
             options: {
+                ...options,
                 color: 'black',
                 tickColor: 'black',
                 tickFormat: type === 'narrower' ? 'si' : 'plain',
