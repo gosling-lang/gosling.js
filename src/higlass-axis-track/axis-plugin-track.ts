@@ -30,8 +30,10 @@ function AxisTrack(HGC: any, ...args: any[]): any {
             this.chromInfo = null;
             this.dataConfig = dataConfig;
 
+            this.pTicksCircular = new HGC.libraries.PIXI.Graphics();
             this.pTicks = new HGC.libraries.PIXI.Graphics();
             this.pMain.addChild(this.pTicks);
+            this.pMain.addChild(this.pTicksCircular);
 
             this.gTicks = {};
             this.tickTexts = {};
@@ -352,10 +354,40 @@ function AxisTrack(HGC: any, ...args: any[]): any {
 
                 // show the tick text labels
                 if (this.options.layout === 'circular') {
+                    const chrText = tickTexts[i];
+                    const viewportMidX = x + xPadding;
                     const r = (this.options.outerRadius + this.options.innerRadius) / 2.0;
-                    const pos = cartesianToPolar(x + xPadding, 700, r, 350, 350, 0, 360);
-                    tickTexts[i].x = pos.x;
-                    tickTexts[i].y = pos.y;
+                    const pos = cartesianToPolar(viewportMidX, 700, r, 350, 350, 0, 360);
+                    chrText.x = pos.x;
+                    chrText.y = pos.y;
+
+                    // Experiment w/ Rope
+                    chrText.resolution = 4;
+                    const txtStyle = new HGC.libraries.PIXI.TextStyle(this.pixiTextConfig);
+                    const metric = HGC.libraries.PIXI.TextMetrics.measureText(chrText.text, txtStyle);
+
+                    // scale the width of text label so that its width is the same when converted into circular form
+                    const tw = (metric.width / (2 * r * Math.PI)) * 700;
+                    let [minX, maxX] = [viewportMidX - tw / 2.0, viewportMidX + tw / 2.0];
+                    if (minX < 0) {
+                        const gap = -minX;
+                        minX = 0;
+                        maxX += gap;
+                    } else if (maxX > 700) {
+                        const gap = maxX - 700;
+                        maxX = 700;
+                        minX -= gap;
+                    }
+                    const points: number[] = [];
+                    for (let j = maxX; j > minX; j -= tw / 10) {
+                        const p = cartesianToPolar(j, 700, r, 350, 350, 0, 360);
+                        points.push(new HGC.libraries.PIXI.Point(p.x, p.y));
+                    }
+                    const p = cartesianToPolar(minX, 700, r, 350, 350, 0, 360);
+                    points.push(new HGC.libraries.PIXI.Point(p.x, p.y));
+                    chrText.updateText();
+                    const rope = new HGC.libraries.PIXI.SimpleRope(chrText.texture, points);
+                    this.pTicksCircular.addChild(rope);
                 } else {
                     tickTexts[i].x = x + xPadding;
                     tickTexts[i].y = this.dimensions[1] - yPadding;
@@ -383,6 +415,7 @@ function AxisTrack(HGC: any, ...args: any[]): any {
                 i += 1;
             }
 
+            if (this.options.layout === 'circular') i = 0;
             while (i < tickTexts.length) {
                 // we don't need this text so we'll turn it off for now
                 tickTexts[i].visible = false;
@@ -442,6 +475,8 @@ function AxisTrack(HGC: any, ...args: any[]): any {
             });
 
             /* tslint:disable */
+            this.pTicksCircular.removeChildren();
+
             // iterate over each chromosome
             for (let i = x1[3]; i <= x2[3]; i++) {
                 const xCumPos = this.chromInfo.cumPositions[i];
@@ -456,11 +491,30 @@ function AxisTrack(HGC: any, ...args: any[]): any {
                 chrText.anchor.x = 0.5;
                 chrText.anchor.y = 0.5; // this.options.reverseOrientation ? 0 : 1;
 
+                let rope;
                 if (this.options.layout === 'circular') {
                     const r = (this.options.outerRadius + this.options.innerRadius) / 2.0;
                     const pos = cartesianToPolar(viewportMidX, 700, r, 350, 350, 0, 360);
                     chrText.x = pos.x;
                     chrText.y = pos.y;
+
+                    // Experiment w/ Rope
+                    chrText.resolution = 4;
+                    const txtStyle = new HGC.libraries.PIXI.TextStyle(this.pixiTextConfig);
+                    const metric = HGC.libraries.PIXI.TextMetrics.measureText(chrText.text, txtStyle);
+
+                    // scale the width of text label so that its width is the same when converted into circular form
+                    const tw = (metric.width / (2 * r * Math.PI)) * 700;
+                    const [minX, maxX] = [viewportMidX - tw / 2.0, viewportMidX + tw / 2.0];
+                    const points: number[] = [];
+                    for (let j = maxX; j > minX; j -= tw / 10) {
+                        const p = cartesianToPolar(j, 700, r, 350, 350, 0, 360);
+                        points.push(new HGC.libraries.PIXI.Point(p.x, p.y));
+                    }
+                    const p = cartesianToPolar(minX, 700, r, 350, 350, 0, 360);
+                    points.push(new HGC.libraries.PIXI.Point(p.x, p.y));
+                    rope = new HGC.libraries.PIXI.SimpleRope(chrText.texture, points);
+                    this.pTicksCircular.addChild(rope);
                 } else {
                     chrText.x = viewportMidX;
                     chrText.y = this.dimensions[1] - yPadding;
@@ -473,7 +527,10 @@ function AxisTrack(HGC: any, ...args: any[]): any {
                 const numTicksDrawn = this.drawTicks(xCumPos);
 
                 // only show chromsome labels if there's no ticks drawn
-                chrText.visible = numTicksDrawn <= 0;
+                chrText.visible = numTicksDrawn <= 0 && this.options.layout !== 'circular';
+                if (numTicksDrawn > 0) {
+                    this.pTicksCircular.removeChild(rope);
+                }
 
                 this.allTexts.push({
                     importance: chrText.hashValue,
@@ -482,8 +539,6 @@ function AxisTrack(HGC: any, ...args: any[]): any {
                 });
             }
             /* tslint:enable */
-
-            // Experimental with role
 
             // define the edge chromosome which are visible
             this.hideOverlaps(this.allTexts);
@@ -605,7 +660,6 @@ AxisTrack.config = {
         'tickPositions',
         'scaledHeight',
         'backgroundColor'
-        // 'fontIsLeftAligned' // we do not support this
     ],
     defaultOptions: {
         innerRadius: 340,

@@ -1,4 +1,4 @@
-import { GeminidSpec } from '../../core/geminid.schema';
+import { GeminidSpec, Track } from '../../core/geminid.schema';
 import { EXAMPLE_DATASETS } from './basic/datasets';
 import { EXAMPLE_CYTOAND_HG38 } from './cytoband-hg38';
 
@@ -7,7 +7,7 @@ export const GENOCAT_CIRCOS: GeminidSpec = {
     subtitle: 'Reimplementation of GenoCAT examples',
     description: 'http://circos.ca/intro/genomic_data/',
     layout: 'circular',
-    static: true,
+    // static: true,
     arrangement: { columnSizes: 700, rowSizes: [60, 700] },
     tracks: [
         {
@@ -131,5 +131,5 @@ export const GENOCAT_CIRCOS: GeminidSpec = {
             innerRadius: 0,
             superposeOnPreviousTrack: true
         }
-    ]
+    ].slice(0, 2) as Track[]
 };
