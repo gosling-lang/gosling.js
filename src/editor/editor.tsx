@@ -27,6 +27,7 @@ import { JSONCrush, JSONUncrush } from '../core/utils/json-crush';
 import './editor.css';
 import { ICONS, ICON_INFO } from './icon';
 import { AxisTrack } from '../higlass-axis-track';
+import { BrushTrack } from '../higlass-brush-track';
 
 /**
  * Register a Gemini plugin track to HiGlassComponent
@@ -53,6 +54,13 @@ higlassRegister({
     name: 'TextTrack',
     track: TextTrack,
     config: TextTrack.config
+});
+
+// TODO:
+higlassRegister({
+    name: 'BrushTrack',
+    track: BrushTrack,
+    config: BrushTrack.config
 });
 
 /**
@@ -132,13 +140,12 @@ function Editor(props: any) {
             try {
                 editedGm = replaceTemplate(JSON.parse(stripJsonComments(gm)));
 
-                const check = validateSpec(GeminidSchema, editedGm);
-                if (check.state !== 'success') {
-                    // we do not compile when the spec is not valid
+                if (!editedGm.tracks) {
+                    // at least, spec should contain a `tracks` property to correctly show visualization
                     editedGm = null;
                 }
 
-                setLog(check);
+                setLog(validateSpec(GeminidSchema, editedGm));
             } catch (e) {
                 const message = '✘ Cannnot parse the code.';
                 console.warn(message);

@@ -1,3 +1,4 @@
+import { isUndefined } from 'lodash';
 import { GeminidTrackModel } from '../geminid-track-model';
 
 export function drawBackground(HGC: any, trackInfo: any, tile: any, tm: GeminidTrackModel) {
@@ -15,6 +16,7 @@ export function drawBackground(HGC: any, trackInfo: any, tile: any, tm: GeminidT
         g.clear();
 
         const bg = tm.spec().style?.background;
+        const alpha = isUndefined(tm.spec().style?.backgroundOpacity) ? 1 : tm.spec().style?.backgroundOpacity;
         // background
         g.lineStyle(
             1,
@@ -22,7 +24,7 @@ export function drawBackground(HGC: any, trackInfo: any, tile: any, tm: GeminidT
             0, // alpha
             0 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
         );
-        g.beginFill(colorToHex(bg), 1);
+        g.beginFill(colorToHex(bg), alpha);
         g.drawRect(l, t, w, h);
     }
 }
