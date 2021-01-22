@@ -9513,10 +9513,10 @@ higlass@1.11.2:
     vkbeautify "^0.99.3"
     whatwg-fetch "^3.0.0"
 
-higlass@1.11.5:
-  version "1.11.5"
-  resolved "https://registry.yarnpkg.com/higlass/-/higlass-1.11.5.tgz#356385febc307a3c1f9d70d09c7b3a067175de64"
-  integrity sha512-1wqJtAqKu4fPivDHHNyFzqrSt1eb9WHdvXvqwtaGoqWldghVCk9jig8+SQ0DIHuvuyY5KRbif0tEkFmFqE521A==
+higlass@1.11.6:
+  version "1.11.6"
+  resolved "https://registry.yarnpkg.com/higlass/-/higlass-1.11.6.tgz#bf3df256908ee094662da5877241cb36c540e9f6"
+  integrity sha512-ADIDPw16jb7PqXz5xNcPP+H62zzjDesHZ3Ei7UbD68sp6IX6HSSE3JCrC7gWsZmyBC9rLF7OzN+1ORtHyOTZ/w==
   dependencies:
     ajv "^6.10.0"
     box-intersect "^1.0.1"
