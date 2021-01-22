@@ -7,7 +7,7 @@
         "type": "git",
         "url": "https://github.com/gosling-lang/gosling.js"
     },
-    "homepage": "https://gosling-lang.github.com/gosling.js",
+    "homepage": "https://gosling-lang.github.io/gosling.js/",
     "main": "dist/gosling.js",
     "types": "dist/index.d.ts",
     "files": [
