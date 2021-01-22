@@ -1,3 +1,19 @@
+## [0.0.15](https://github.com/gosling-lang/gosling.js/compare/v0.0.14...v0.0.15) (2021-01-22)
+
+
+### Bug Fixes
+
+* prevent from crash due to unsafe IsDataTrack checking ([5068903](https://github.com/gosling-lang/gosling.js/commit/5068903c137c14a1281703c323934412cb3b07eb))
+* use absolute height of rect in circular layout when size is provided ([#109](https://github.com/gosling-lang/gosling.js/issues/109)) ([93ef22b](https://github.com/gosling-lang/gosling.js/commit/93ef22b310b4706cdba52a95c258fe2977659fb8))
+
+
+### Features
+
+* allow showing axis in circular tracks ([#110](https://github.com/gosling-lang/gosling.js/issues/110)) ([b14769e](https://github.com/gosling-lang/gosling.js/commit/b14769ee21d7774322b340323b889b72374d7ad8))
+* circular brush ([#106](https://github.com/gosling-lang/gosling.js/issues/106)) ([8c6001f](https://github.com/gosling-lang/gosling.js/commit/8c6001fac138648f62192fa8b3b99919f007149b))
+
+
+
 ## [0.0.14](https://github.com/gosling-lang/gosling.js/compare/v0.0.13...v0.0.14) (2021-01-11)
 
 
