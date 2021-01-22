@@ -19,7 +19,7 @@ export const GENOCAT_CIRCOS: GeminidSpec = {
             data: { type: 'tileset', url: 'https://resgen.io/api/v1/tileset_info/?d=VLFaiSVjTjW6mkbjRjWREA' },
             metadata: { type: 'higlass-vector', column: 'position', value: 'peak' },
             mark: 'bar',
-            x: { field: 'position', type: 'genomic', axis: 'outer' },
+            x: { field: 'position', type: 'genomic', axis: 'outer' }, // domain: { chromosome: '1' } },
             y: { field: 'peak', type: 'quantitative' },
             color: { value: '#EEEDA1' },
             outerRadius: 340,

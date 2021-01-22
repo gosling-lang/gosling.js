@@ -341,35 +341,44 @@ function AxisTrack(HGC: any, ...args: any[]): any {
                 tickTexts[i].visible = true;
 
                 tickTexts[i].anchor.x = 0.5;
-                tickTexts[i].anchor.y = this.options.reverseOrientation ? 0 : 1;
+                tickTexts[i].anchor.y =
+                    this.options.layout === 'circular' ? 0 : this.options.reverseOrientation ? 0 : 1;
 
                 if (this.flipText) tickTexts[i].scale.x = -1;
-
-                // draw the tick labels
-                tickTexts[i].x = this._xScale(cumPos.pos + ticks[i]) + xPadding;
-                tickTexts[i].y = this.dimensions[1] - yPadding;
 
                 tickTexts[i].text = ticks[i] === 0 ? `${cumPos.chr}: 1` : `${cumPos.chr}: ${this.formatTick(ticks[i])}`;
 
                 const x = this._xScale(cumPos.pos + ticks[i]);
 
-                // store the position of the tick line so that it can
-                // be used in the export function
-                tickTexts[i].tickLine = [x - 1, this.dimensions[1], x - 1, this.dimensions[1] - tickHeight - 1];
+                // show the tick text labels
+                if (this.options.layout === 'circular') {
+                    const r = (this.options.outerRadius + this.options.innerRadius) / 2.0;
+                    const pos = cartesianToPolar(x + xPadding, 700, r, 350, 350, 0, 360);
+                    tickTexts[i].x = pos.x;
+                    tickTexts[i].y = pos.y;
+                } else {
+                    tickTexts[i].x = x + xPadding;
+                    tickTexts[i].y = this.dimensions[1] - yPadding;
 
-                // draw outline
-                const lineYStart = this.options.reverseOrientation ? 0 : this.dimensions[1];
-                const lineYEnd = this.options.reverseOrientation ? tickHeight : this.dimensions[1] - tickHeight;
-                graphics.lineStyle(1, this.stroke);
-                graphics.moveTo(x - 1, lineYStart);
-                graphics.lineTo(x - 1, lineYEnd - 1);
-                graphics.lineTo(x + 1, lineYEnd - 1);
-                graphics.lineTo(x + 1, lineYStart);
+                    // store the position of the tick line so that it can
+                    // be used in the export function
+                    // TODO:
+                    tickTexts[i].tickLine = [x - 1, this.dimensions[1], x - 1, this.dimensions[1] - tickHeight - 1];
 
-                // draw the vertical tick lines
-                graphics.lineStyle(1, this.tickColor);
-                graphics.moveTo(x, lineYStart);
-                graphics.lineTo(x, lineYEnd);
+                    // draw outline
+                    const lineYStart = this.options.reverseOrientation ? 0 : this.dimensions[1];
+                    const lineYEnd = this.options.reverseOrientation ? tickHeight : this.dimensions[1] - tickHeight;
+                    // graphics.lineStyle(1, this.stroke);
+                    // graphics.moveTo(x - 1, lineYStart);
+                    // graphics.lineTo(x - 1, lineYEnd - 1);
+                    // graphics.lineTo(x + 1, lineYEnd - 1);
+                    // graphics.lineTo(x + 1, lineYStart);
+
+                    // draw the vertical tick lines
+                    graphics.lineStyle(1, this.tickColor);
+                    graphics.moveTo(x, lineYStart);
+                    graphics.lineTo(x, lineYEnd);
+                }
 
                 i += 1;
             }
@@ -408,8 +417,7 @@ function AxisTrack(HGC: any, ...args: any[]): any {
             }
 
             if (!this.pTicks) {
-                // options.tickPositiosn was probably just changed to 'even'
-                // and initChromLabels hasn't been called yet
+                // options.tickPositiosn was probably just changed to 'even' and initChromLabels hasn't been called yet
                 return;
             }
 
@@ -424,8 +432,7 @@ function AxisTrack(HGC: any, ...args: any[]): any {
                 yPadding = this.dimensions[1] - yPadding;
             }
 
-            // hide all the chromosome labels in preparation for drawing
-            // new ones
+            // hide all the chromosome labels in preparation for drawing new ones
             Object.keys(this.chromInfo.chrPositions).forEach(chrom => {
                 if (this.tickTexts[chrom]) {
                     this.tickTexts[chrom].forEach((tick: any) => {
@@ -475,6 +482,8 @@ function AxisTrack(HGC: any, ...args: any[]): any {
                 });
             }
             /* tslint:enable */
+
+            // Experimental with role
 
             // define the edge chromosome which are visible
             this.hideOverlaps(this.allTexts);
