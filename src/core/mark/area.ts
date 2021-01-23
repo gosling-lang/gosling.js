@@ -165,13 +165,14 @@ export function drawArea(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackMo
                 constantStrokeWidth,
                 colorToHex(constantStroke),
                 constantOpacity,
-                1 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
+                0 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
             );
 
             // area marks are drawn for each color
             colorCategories.forEach(colorCategory => {
                 const baselinePoints: number[][] = [];
                 const areaPoints: number[] = [];
+                const baselineR = trackOuterRadius - ((rowPosition + rowHeight) / trackHeight) * trackRingSize;
 
                 data.filter(
                     d =>
@@ -186,7 +187,7 @@ export function drawArea(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackMo
                     const x = tm.encodedPIXIProperty('x', d);
 
                     if (circular) {
-                        const baselineR = trackOuterRadius - ((rowPosition + rowHeight) / trackHeight) * trackRingSize;
+                        // we need to prepare the points for drawing baseline
                         const baselinePos = cartesianToPolar(x, trackWidth, baselineR, cx, cy, startAngle, endAngle);
                         baselinePoints.push([baselinePos.x, baselinePos.y]);
 
@@ -201,14 +202,10 @@ export function drawArea(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackMo
 
                         if (i === array.length - 1) {
                             // close the polygon with a point at the start
-                            const startX = xScale(tileX);
-
                             const startR = trackOuterRadius - ((rowPosition + rowHeight) / trackHeight) * trackRingSize;
                             const curPos = cartesianToPolar(x, trackWidth, startR, cx, cy, startAngle, endAngle);
-                            const startPos = cartesianToPolar(startX, trackWidth, startR, cx, cy, startAngle, endAngle);
 
                             areaPoints.push(curPos.x, curPos.y);
-                            areaPoints.push(startPos.x, startPos.y);
                         }
                     } else {
                         if (i === 0) {

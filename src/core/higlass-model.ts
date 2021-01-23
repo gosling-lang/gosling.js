@@ -208,6 +208,7 @@ export class HiGlassModel {
         type: 'regular' | 'narrow' | 'narrower' = 'regular',
         options: {
             // These are currently used for circular layout
+            layout?: 'circular' | 'linear';
             innerRadius?: number;
             outerRadius?: number;
             width?: number;
@@ -232,7 +233,7 @@ export class HiGlassModel {
                 reverseOrientation: position === 'bottom' ? true : false
             }
         };
-        if (position === 'outer' || position === 'inner') {
+        if (options.layout === 'circular') {
             // circular axis: superpose an axis track on top of the `center` track
             this.addTrackToCombined({
                 ...axisTrackTemplate,
