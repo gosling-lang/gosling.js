@@ -35,10 +35,8 @@ export const EXMAPLE_BASIC_LINKING_CIRCULAR: GoslingSpec = {
             y: { field: 'peak', type: 'quantitative' },
             row: { field: 'sample', type: 'nominal' },
             color: { field: 'sample', type: 'nominal', legend: true },
-            stroke: { value: 'white' },
+            stroke: { value: 'black' },
             strokeWidth: { value: 0.5 },
-            width: 1000,
-            height: 180,
             superpose: [
                 {},
                 {
