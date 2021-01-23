@@ -29,7 +29,7 @@ export const EXAMPLE_UPSET: GoslingSpec = {
                 ...(JSON.parse(JSON.stringify(EXAMPLE_SEMANTIC_ZOOMING_IDEOGRAM).replace('/gray/g', '#3B3B3B')) as any)
                     .superpose,
                 {
-                    mark: 'rect-brush',
+                    mark: 'brush',
                     x: { linkingID: '1' },
                     color: { value: 'blue' },
                     opacity: { value: 0.2 }

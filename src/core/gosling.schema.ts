@@ -400,7 +400,7 @@ export type MarkType =
     | 'triangle-r'
     | 'triangle-d'
     // experimental
-    | 'rect-brush'
+    | 'brush'
     // TODO: perhaps need to make this invisible to users
     // being used to show title/subtitle internally
     | 'header';

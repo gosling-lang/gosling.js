@@ -51,7 +51,7 @@ export function drawMark(HGC: any, trackInfo: any, tile: any, model: GoslingTrac
         return;
     }
 
-    if (model.spec().mark === 'rect-brush') {
+    if (model.spec().mark === 'brush') {
         // We do not draw brush. Instead, higlass do.
         return;
     }

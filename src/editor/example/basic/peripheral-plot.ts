@@ -33,9 +33,9 @@ export const EXAMPLE_PERIPHERAL_PLOT: GoslingSpec = {
             ...EXAMPLE_CYTOAND_HG38.tracks[0],
             superpose: [
                 ...(EXAMPLE_CYTOAND_HG38.tracks[0] as SuperposedTrack).superpose,
-                { mark: 'rect-brush', x: { linkingID: 'periphery-left' } },
-                { mark: 'rect-brush', x: { linkingID: 'focus' }, color: { value: 'black' } },
-                { mark: 'rect-brush', x: { linkingID: 'periphery-right' } }
+                { mark: 'brush', x: { linkingID: 'periphery-left' } },
+                { mark: 'brush', x: { linkingID: 'focus' }, color: { value: 'black' } },
+                { mark: 'brush', x: { linkingID: 'periphery-right' } }
             ],
             span: 3
         },

@@ -31,7 +31,7 @@ export const GENOCAT_GREMLIN: GoslingSpec = {
             superpose: [
                 {},
                 {
-                    mark: 'rect-brush',
+                    mark: 'brush',
                     x: { linkingID: 'view2' },
                     strokeWidth: { value: 0 }
                 }
@@ -68,7 +68,7 @@ export const GENOCAT_GREMLIN: GoslingSpec = {
             superpose: [
                 {},
                 {
-                    mark: 'rect-brush',
+                    mark: 'brush',
                     x: { linkingID: 'view2' },
                     strokeWidth: { value: 0 }
                 }
@@ -160,7 +160,7 @@ export const GENOCAT_GREMLIN: GoslingSpec = {
                     }
                 },
                 {
-                    mark: 'rect-brush',
+                    mark: 'brush',
                     x: { linkingID: 'view2' },
                     strokeWidth: { value: 0 }
                 }

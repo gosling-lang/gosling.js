@@ -178,7 +178,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             const spec = JSON.parse(JSON.stringify(this.originalSpec));
 
             resolveSuperposedTracks(spec).forEach(resolved => {
-                if (resolved.mark === 'rect-brush') {
+                if (resolved.mark === 'brush') {
                     // TODO:
                     // we do not draw rectangular brush ourselves, higlass does.
                     return;

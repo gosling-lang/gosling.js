@@ -67,7 +67,7 @@ export const EXMAPLE_BASIC_LINKING: GoslingSpec = {
             superpose: [
                 {},
                 {
-                    mark: 'rect-brush',
+                    mark: 'brush',
                     x: { linkingID: 'linking-with-brush' }
                 }
             ]

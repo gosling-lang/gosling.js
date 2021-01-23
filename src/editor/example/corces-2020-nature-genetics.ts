@@ -59,7 +59,7 @@ export const CORCES_2020_NATURE_GENETICS: GoslingSpec = {
                     size: { value: 20 }
                 },
                 {
-                    mark: 'rect-brush',
+                    mark: 'brush',
                     x: { linkingID: 'l' },
                     color: { value: 'red' },
                     opacity: { value: 1 },
@@ -84,7 +84,7 @@ export const CORCES_2020_NATURE_GENETICS: GoslingSpec = {
             superpose: [
                 {},
                 {
-                    mark: 'rect-brush',
+                    mark: 'brush',
                     x: { linkingID: 'l-h' },
                     color: { value: 'blue' },
                     opacity: { value: 0.2 },
@@ -108,7 +108,7 @@ export const CORCES_2020_NATURE_GENETICS: GoslingSpec = {
             superpose: [
                 {},
                 {
-                    mark: 'rect-brush',
+                    mark: 'brush',
                     x: { linkingID: 'l-h' },
                     color: { value: 'blue' },
                     opacity: { value: 0.2 },
@@ -132,7 +132,7 @@ export const CORCES_2020_NATURE_GENETICS: GoslingSpec = {
             superpose: [
                 {},
                 {
-                    mark: 'rect-brush',
+                    mark: 'brush',
                     x: { linkingID: 'l-h' },
                     color: { value: 'blue' },
                     opacity: { value: 0.2 },
@@ -156,7 +156,7 @@ export const CORCES_2020_NATURE_GENETICS: GoslingSpec = {
             superpose: [
                 {},
                 {
-                    mark: 'rect-brush',
+                    mark: 'brush',
                     x: { linkingID: 'l-h' },
                     color: { value: 'blue' },
                     opacity: { value: 0.2 },
@@ -180,7 +180,7 @@ export const CORCES_2020_NATURE_GENETICS: GoslingSpec = {
             superpose: [
                 {},
                 {
-                    mark: 'rect-brush',
+                    mark: 'brush',
                     x: { linkingID: 'l-h' },
                     color: { value: 'blue' },
                     opacity: { value: 0.2 },
@@ -204,7 +204,7 @@ export const CORCES_2020_NATURE_GENETICS: GoslingSpec = {
             superpose: [
                 {},
                 {
-                    mark: 'rect-brush',
+                    mark: 'brush',
                     x: { linkingID: 'l-h' },
                     color: { value: 'blue' },
                     opacity: { value: 0.2 },
@@ -228,7 +228,7 @@ export const CORCES_2020_NATURE_GENETICS: GoslingSpec = {
             superpose: [
                 {},
                 {
-                    mark: 'rect-brush',
+                    mark: 'brush',
                     x: { linkingID: 'l-h' },
                     color: { value: 'blue' },
                     opacity: { value: 0.2 },
@@ -254,7 +254,7 @@ export const CORCES_2020_NATURE_GENETICS: GoslingSpec = {
             superpose: [
                 {},
                 {
-                    mark: 'rect-brush',
+                    mark: 'brush',
                     x: { linkingID: 'l-h' },
                     color: { value: 'blue' },
                     opacity: { value: 0.2 },
@@ -330,7 +330,7 @@ export const CORCES_2020_NATURE_GENETICS: GoslingSpec = {
             superpose: [
                 {},
                 {
-                    mark: 'rect-brush',
+                    mark: 'brush',
                     x: { linkingID: 'l-h' },
                     color: { value: 'blue' },
                     opacity: { value: 0.2 },
@@ -475,7 +475,7 @@ export const CORCES_2020_NATURE_GENETICS: GoslingSpec = {
                     strokeWidth: { value: 3 }
                 },
                 {
-                    mark: 'rect-brush',
+                    mark: 'brush',
                     x: { linkingID: 'l-h' },
                     color: { value: 'blue' },
                     opacity: { value: 0.2 },

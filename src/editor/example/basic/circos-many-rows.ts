@@ -144,7 +144,7 @@ const IDEOGRAM: Track = {
             color: { value: '#B40101' }
         },
         {
-            mark: 'rect-brush',
+            mark: 'brush',
             x: { linkingID: 'link-1' },
             color: { value: 'blue' },
             opacity: { value: 0.2 }

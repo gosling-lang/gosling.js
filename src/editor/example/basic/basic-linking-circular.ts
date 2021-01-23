@@ -42,12 +42,12 @@ export const EXMAPLE_BASIC_LINKING_CIRCULAR: GoslingSpec = {
             superpose: [
                 {},
                 {
-                    mark: 'rect-brush',
+                    mark: 'brush',
                     x: { linkingID: 'linking-with-brush' },
                     color: { value: 'blue' }
                 },
                 {
-                    mark: 'rect-brush',
+                    mark: 'brush',
                     x: { linkingID: 'linking-with-brush-2' },
                     color: { value: 'red' }
                 }
