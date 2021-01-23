@@ -39,7 +39,7 @@ export function drawCircularOutlines(HGC: any, trackInfo: any, tile: any, tm: Go
     graphics.arc(cx, cy, trackOuterRadius, endRad, startRad, false);
     graphics.closePath();
 
-    if (IsChannelDeep(spec.x) && spec.x.axis === 'outer') {
+    if (IsChannelDeep(spec.x) && spec.x.axis === 'top') {
         // outer line
         graphics.lineStyle(
             0.5,

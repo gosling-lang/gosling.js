@@ -30,7 +30,7 @@ export const EXMAPLE_BASIC_LINKING_CIRCULAR: GoslingSpec = {
             x: {
                 field: 'position',
                 type: 'genomic',
-                axis: 'outer'
+                axis: 'top'
             },
             y: { field: 'peak', type: 'quantitative' },
             row: { field: 'sample', type: 'nominal' },

@@ -133,16 +133,16 @@ export class GoslingTrackModel {
             isAxisShown = IsChannelDeep(spec.y) && spec.y.axis !== undefined;
         }
         if (spec.layout !== 'circular') {
-            // for linear layouts, prepare a horizontal or vertical space for the axis
             if (xOrY && isAxisShown) {
+                // for linear layouts, prepare a horizontal or vertical space for the axis
                 const widthOrHeight = xOrY === 'x' ? 'height' : 'width';
                 spec[widthOrHeight] = ((spec[widthOrHeight] as number) - HIGLASS_AXIS_SIZE) as number;
             }
         } else {
             // for circular layouts, prepare a space in radius for the axis
-            if (xOrY === 'x' && isAxisShown && IsChannelDeep(spec.x) && spec.x.axis === 'outer') {
+            if (xOrY === 'x' && isAxisShown && IsChannelDeep(spec.x) && spec.x.axis === 'top') {
                 spec['outerRadius'] = ((spec['outerRadius'] as number) - HIGLASS_AXIS_SIZE) as number;
-            } else if (xOrY === 'x' && isAxisShown && IsChannelDeep(spec.x) && spec.x.axis === 'inner') {
+            } else if (xOrY === 'x' && isAxisShown && IsChannelDeep(spec.x) && spec.x.axis === 'bottom') {
                 spec['innerRadius'] = ((spec['innerRadius'] as number) + HIGLASS_AXIS_SIZE) as number;
             }
         }

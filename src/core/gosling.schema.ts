@@ -350,7 +350,7 @@ export interface ChannelDeep {
     flip?: boolean; // Flip a track vertically or horizontally?
     stack?: boolean; // Experimental: We could use this option to stack visual marks, addressing the visual overlap (e.g., stacked bar).
 }
-export type AxisPosition = 'none' | 'top' | 'bottom' | 'left' | 'right' | 'outer' | 'inner';
+export type AxisPosition = 'none' | 'top' | 'bottom' | 'left' | 'right';
 export type FieldType = 'genomic' | 'nominal' | 'quantitative';
 
 export interface ChannelValue {
