@@ -225,7 +225,7 @@ export const EXAMPLE_SUPERPOSED_CIRCULAR_TRACKS: GoslingSpec = {
             superpose: [
                 ...(IDEOGRAM_DETAIL as SuperposedTrack).superpose,
                 {
-                    mark: 'rect-brush',
+                    mark: 'brush',
                     x: { linkingID: 'link' },
                     color: { value: 'blue' },
                     opacity: { value: 0.2 }

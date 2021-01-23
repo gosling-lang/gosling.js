@@ -22,13 +22,13 @@ export const EXAMPLE_OVERVIEW_DEATIL: GoslingSpec = {
             superpose: [
                 ...(EXAMPLE_CYTOAND_HG38.tracks[0] as SuperposedTrack).superpose,
                 {
-                    mark: 'rect-brush',
+                    mark: 'brush',
                     x: { linkingID: 'linking-detail-1' },
                     color: { value: 'blue' },
                     opacity: { value: 0.2 }
                 },
                 {
-                    mark: 'rect-brush',
+                    mark: 'brush',
                     x: { linkingID: 'linking-detail-2' },
                     color: { value: 'red' },
                     opacity: { value: 0.2 }

@@ -12,7 +12,7 @@ export const EXMAPLE_BASIC_BRUSH = {
             superpose: [
                 {},
                 {
-                    mark: 'rect-brush',
+                    mark: 'brush',
                     x: { linkingID: 'linking-with-brush' }
                 }
             ]

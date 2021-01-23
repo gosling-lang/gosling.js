@@ -14,7 +14,7 @@ describe('Should get linking information correctly', () => {
                         x: { linkingID: 'regular' }
                     },
                     {
-                        mark: 'rect-brush',
+                        mark: 'brush',
                         x: { linkingID: 'brush' }
                     }
                 ]

@@ -32,7 +32,7 @@ export function getLinkingInfo(hgModel: HiGlassModel) {
                         layout: s.layout === 'circular' ? 'circular' : 'linear',
                         viewId,
                         linkId: channel.linkingID,
-                        isBrush: s.mark === 'rect-brush',
+                        isBrush: s.mark === 'brush',
                         style: {
                             color: (s as any).color?.value,
                             stroke: (s as any).stroke?.value,

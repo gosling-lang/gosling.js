@@ -1327,7 +1327,7 @@
         "triangle-l",
         "triangle-r",
         "triangle-d",
-        "rect-brush",
+        "brush",
         "header"
       ],
       "type": "string"

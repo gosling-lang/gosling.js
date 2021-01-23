@@ -24,7 +24,7 @@ export function renderHiGlass(
     /* Linking views */
     const linkingInfos = getLinkingInfo(hgModel);
 
-    // brushing (between a view with `rect-brush` and a view having the same linking name)
+    // brushing (between a view with `brush` and a view having the same linking name)
     linkingInfos
         .filter(d => d.isBrush)
         .forEach(info => {

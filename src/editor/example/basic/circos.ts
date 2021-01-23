@@ -237,19 +237,19 @@ export const EXAMPLE_CIRCOS: GoslingSpec = {
             superpose: [
                 ...(EXAMPLE_SEMANTIC_ZOOMING_IDEOGRAM as SuperposedTrack).superpose,
                 {
-                    mark: 'rect-brush',
+                    mark: 'brush',
                     x: { linkingID: 'link-1' },
                     color: { value: 'blue' },
                     opacity: { value: 0.2 }
                 },
                 {
-                    mark: 'rect-brush',
+                    mark: 'brush',
                     x: { linkingID: 'link-2' },
                     color: { value: 'red' },
                     opacity: { value: 0.2 }
                 },
                 {
-                    mark: 'rect-brush',
+                    mark: 'brush',
                     x: { linkingID: 'link-3' },
                     color: { value: 'green' },
                     opacity: { value: 0.2 }
