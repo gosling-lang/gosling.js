@@ -1,3 +1,17 @@
+## [0.0.16](https://github.com/gosling-lang/gosling.js/compare/v0.0.15...v0.0.16) (2021-01-24)
+
+
+### Bug Fixes
+
+* layout of axis and its track should be the same ([#119](https://github.com/gosling-lang/gosling.js/issues/119)) ([83ae75e](https://github.com/gosling-lang/gosling.js/commit/83ae75ec48436822fc829b816ace79ed531bcc33))
+
+
+### Features
+
+* make plugin axis and brush tracks visible in the package ([34bcaa7](https://github.com/gosling-lang/gosling.js/commit/34bcaa7b89fffe90ecb5fe777c9e450a82811866))
+
+
+
 ## [0.0.15](https://github.com/gosling-lang/gosling.js/compare/v0.0.14...v0.0.15) (2021-01-22)
 
 
