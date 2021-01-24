@@ -24,21 +24,24 @@ export const EXMAPLE_BASIC_LINKING_CIRCULAR: GoslingSpec = {
                 row: 'sample',
                 column: 'position',
                 value: 'peak',
-                categories: ['sample 1', 'sample 2', 'sample 3', 'sample 4']
+                categories: ['sample 1', 'sample 2', 'sample 3', 'sample 4'],
+                bin: 4
             },
-            mark: 'area',
+            mark: 'bar',
             x: {
-                field: 'position',
+                field: 'start',
                 type: 'genomic',
-                axis: 'outer'
+                axis: 'top'
+            },
+            xe: {
+                field: 'end',
+                type: 'genomic'
             },
             y: { field: 'peak', type: 'quantitative' },
             row: { field: 'sample', type: 'nominal' },
             color: { field: 'sample', type: 'nominal', legend: true },
             stroke: { value: 'white' },
-            strokeWidth: { value: 0.5 },
-            width: 1000,
-            height: 180,
+            strokeWidth: { value: 0.3 },
             superpose: [
                 {},
                 {
@@ -55,6 +58,7 @@ export const EXMAPLE_BASIC_LINKING_CIRCULAR: GoslingSpec = {
         },
         {
             ...EXAMPLE_BASIC_AREA,
+            mark: 'bar',
             x: {
                 ...EXAMPLE_BASIC_AREA.x,
                 domain: { chromosome: '2' },
@@ -70,6 +74,7 @@ export const EXMAPLE_BASIC_LINKING_CIRCULAR: GoslingSpec = {
         },
         {
             ...EXAMPLE_BASIC_AREA,
+            mark: 'bar',
             x: {
                 ...EXAMPLE_BASIC_AREA.x,
                 domain: { chromosome: '5' },

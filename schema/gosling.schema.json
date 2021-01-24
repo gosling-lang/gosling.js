@@ -87,9 +87,7 @@
         "top",
         "bottom",
         "left",
-        "right",
-        "outer",
-        "inner"
+        "right"
       ],
       "type": "string"
     },

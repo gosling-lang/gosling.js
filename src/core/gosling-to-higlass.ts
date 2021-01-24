@@ -98,12 +98,13 @@ export function goslingToHiGlass(
                         ? 'narrow'
                         : 'regular';
                 hgModel.setAxisTrack(channel.axis, narrowType, {
+                    layout: firstResolvedSpec.layout,
                     innerRadius:
-                        channel.axis === 'outer'
+                        channel.axis === 'top'
                             ? (firstResolvedSpec.outerRadius as number) - HIGLASS_AXIS_SIZE
                             : firstResolvedSpec.innerRadius,
                     outerRadius:
-                        channel.axis === 'outer'
+                        channel.axis === 'top'
                             ? firstResolvedSpec.outerRadius
                             : (firstResolvedSpec.innerRadius as number) + HIGLASS_AXIS_SIZE,
                     width: firstResolvedSpec.width,
