@@ -17,10 +17,12 @@ export function fixSpecDownstream(spec: GoslingSpec) {
     /**
      * Zoomability
      */
-    if (spec.static) {
+    if (spec.static !== undefined) {
         // Force disable zoomability when the top-level static option is enabled
         spec.tracks.forEach(t => {
-            t.static = true;
+            if (t.static === undefined) {
+                t.static = spec.static;
+            }
         });
     }
 
