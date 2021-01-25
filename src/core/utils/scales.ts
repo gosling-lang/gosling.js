@@ -16,7 +16,10 @@ import {
  */
 export function getNumericDomain(domain: Domain) {
     if (IsDomainChr(domain)) {
-        return CHROMOSOME_INTERVAL_HG38[`chr${domain.chromosome}`];
+        return [
+            CHROMOSOME_INTERVAL_HG38[`chr${domain.chromosome}`][0] + 1,
+            CHROMOSOME_INTERVAL_HG38[`chr${domain.chromosome}`][1]
+        ];
     } else if (IsDomainInterval(domain)) {
         return domain.interval;
     } else if (IsDomainChrInterval(domain)) {

@@ -72,7 +72,8 @@ function CSVDataFetcher(HGC: any, ...args: any): any {
                 quantitativeFields,
                 headerNames,
                 chromosomePrefix,
-                longToWideId
+                longToWideId,
+                genomicFieldsToConvert
             } = this.dataConfig;
 
             const separator = this.dataConfig.separator ?? ',';
@@ -86,27 +87,44 @@ function CSVDataFetcher(HGC: any, ...args: any): any {
                     return d3.dsvFormat(separator).parse(textWithHeader, (row: any) => {
                         let successfullyGotChrInfo = true;
 
-                        genomicFields.forEach((g: string) => {
-                            if (!row[chromosomeField]) {
-                                // TODO:
-                                return;
-                            }
-                            try {
-                                const chr = chromosomePrefix
-                                    ? row[chromosomeField].replace(chromosomePrefix, 'chr')
-                                    : row[chromosomeField].includes('chr')
-                                    ? row[chromosomeField]
-                                    : `chr${row[chromosomeField]}`;
-                                row[g] = CHROMOSOME_INTERVAL_HG38[chr][0] + +row[g];
-                            } catch (e) {
-                                // genomic position did not parse properly
-                                successfullyGotChrInfo = false;
-                                // console.warn(
-                                //     '[Gosling Data Fetcher] Genomic position cannot be parsed correctly.',
-                                //     chromosomeField
-                                // );
-                            }
-                        });
+                        // !!! Experimental
+                        if (genomicFieldsToConvert) {
+                            // This spec is used when multiple chromosomes are stored in a single row
+                            genomicFieldsToConvert.forEach((d: any) => {
+                                const cField = d.chromosomeField;
+                                d.genomicFields.forEach((g: string) => {
+                                    try {
+                                        const chr = chromosomePrefix
+                                            ? row[cField].replace(chromosomePrefix, 'chr')
+                                            : row[cField].includes('chr')
+                                            ? row[cField]
+                                            : `chr${row[cField]}`;
+                                        row[g] = CHROMOSOME_INTERVAL_HG38[chr][0] + +row[g];
+                                    } catch (e) {
+                                        // genomic position did not parse properly
+                                        successfullyGotChrInfo = false;
+                                    }
+                                });
+                            });
+                        } else {
+                            genomicFields.forEach((g: string) => {
+                                if (!row[chromosomeField]) {
+                                    // TODO:
+                                    return;
+                                }
+                                try {
+                                    const chr = chromosomePrefix
+                                        ? row[chromosomeField].replace(chromosomePrefix, 'chr')
+                                        : row[chromosomeField].includes('chr')
+                                        ? row[chromosomeField]
+                                        : `chr${row[chromosomeField]}`;
+                                    row[g] = CHROMOSOME_INTERVAL_HG38[chr][0] + +row[g];
+                                } catch (e) {
+                                    // genomic position did not parse properly
+                                    successfullyGotChrInfo = false;
+                                }
+                            });
+                        }
 
                         if (!successfullyGotChrInfo) {
                             // store row only when chromosome information is correctly parsed
@@ -221,7 +239,15 @@ function CSVDataFetcher(HGC: any, ...args: any): any {
 
                 // filter the data so that visible data is sent to tracks
                 const tabularData = this.values.filter((d: any) => {
-                    return this.dataConfig.genomicFields.find((g: any) => minX < d[g] && d[g] <= maxX);
+                    if (this.dataConfig.genomicFields) {
+                        return this.dataConfig.genomicFields.find((g: any) => minX < d[g] && d[g] <= maxX);
+                    } else {
+                        const allGenomicFields: string[] = [];
+                        this.dataConfig.genomicFieldsToConvert.forEach((d: any) =>
+                            allGenomicFields.push(...d.genomicFields)
+                        );
+                        return allGenomicFields.find((g: any) => minX < d[g] && d[g] <= maxX);
+                    }
                 });
 
                 const sizeLimit = this.dataConfig.sampleLength ?? 1000;
