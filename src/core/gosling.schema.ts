@@ -55,6 +55,12 @@ export interface DataDeepGoslingCommon {
     chromosomeField?: string;
     genomicFields?: string[];
     sampleLength?: number; // This limit the total number of rows fetched (default: 1000)
+
+    // !!! experimental
+    genomicFieldsToConvert?: {
+        chromosomeField: string;
+        genomicFields: string[];
+    }[];
 }
 
 export interface CSVDataGosling extends DataDeepGoslingCommon {
