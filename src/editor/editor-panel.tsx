@@ -18,6 +18,20 @@ function EditorPanel(props: { code: string; readOnly?: boolean; onChange?: (code
     }
 
     function editorWillMount() {
+        Monaco.editor.defineTheme('gosling', {
+            base: 'vs', // vs, vs-dark, or hc-black
+            inherit: true,
+            // Complete rules: https://github.com/microsoft/vscode/blob/93028e44ea7752bd53e2471051acbe6362e157e9/src/vs/editor/standalone/common/themes.ts#L13
+            rules: [
+                { token: 'string.key.json', foreground: '#000000' }, // all keys
+                { token: 'string.value.json', foreground: '#035CC5' }, // all values
+                { token: 'number', foreground: '#E32A4F' },
+                { token: 'keyword.json', foreground: '#E32A4F' } // true and false
+            ],
+            colors: {
+                // ...
+            }
+        });
         Monaco.languages.json.jsonDefaults.setDiagnosticsOptions({
             allowComments: true,
             enableSchemaRequest: true,
@@ -65,14 +79,14 @@ function EditorPanel(props: { code: string; readOnly?: boolean; onChange?: (code
                 // Refer to https://github.com/react-monaco-editor/react-monaco-editor
                 language="json"
                 value={code}
-                theme={'vs-light'}
+                theme={'gosling'}
                 options={{
                     autoClosingBrackets: 'beforeWhitespace',
                     autoClosingQuotes: 'beforeWhitespace',
                     cursorBlinking: 'smooth',
                     folding: true,
                     lineNumbersMinChars: 4,
-                    minimap: { enabled: false },
+                    minimap: { enabled: true },
                     scrollBeyondLastLine: false,
                     wordWrap: 'on',
                     lineNumbers: 'on',
