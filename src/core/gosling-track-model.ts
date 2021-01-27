@@ -323,7 +323,7 @@ export class GoslingTrackModel {
             compareValue = spec[measure];
         }
 
-        if (compareValue != undefined) {
+        if (compareValue !== undefined) {
             return logicalComparison(compareValue, operation, threshold as number) === 1;
         } else {
             return true;
