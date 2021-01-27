@@ -20,7 +20,9 @@ export const EXAMPLE_IDEOGRAM_TRACK: SuperposedTrack = {
             color: { value: 'black' },
             visibility: {
                 operation: 'less-than',
-                condition: { width: '|xe-x|', transitionPadding: 10 },
+                measure: 'width',
+                threshold: '|xe-x|',
+                transitionPadding: 10,
                 target: 'mark'
             },
             style: {
@@ -65,7 +67,9 @@ export const EXAMPLE_IDEOGRAM_TRACK: SuperposedTrack = {
     xe: { field: 'Basepair_stop', type: 'genomic' },
     visibility: {
         operation: 'greater-than',
-        condition: { width: 3, transitionPadding: 5 },
+        measure: 'width',
+        threshold: 3,
+        transitionPadding: 5,
         target: 'mark'
     },
     stroke: { value: 'gray' },

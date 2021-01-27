@@ -89,7 +89,9 @@ const IDEOGRAM_DETAIL: Track = {
             color: { value: 'black' },
             visibility: {
                 operation: 'less-than',
-                condition: { width: '|xe-x|', transitionPadding: 10 },
+                measure: 'width',
+                threshold: '|xe-x|',
+                transitionPadding: 10,
                 target: 'mark'
             },
             style: {
