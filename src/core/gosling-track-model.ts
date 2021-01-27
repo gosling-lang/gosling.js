@@ -315,15 +315,15 @@ export class GoslingTrackModel {
 
         const { operation, measure, threshold } = spec.visibility;
 
-        let compareValue: number | undefined = undefined;
+        let compareValue: number | undefined;
 
-        if (measure == 'zoomLevel') {
+        if (measure === 'zoomLevel') {
             compareValue = currentStage[measure];
         } else {
             compareValue = spec[measure];
         }
 
-        if (compareValue != undefined) {
+        if (compareValue !== undefined) {
             return logicalComparison(compareValue, operation, threshold as number) === 1;
         } else {
             return true;
