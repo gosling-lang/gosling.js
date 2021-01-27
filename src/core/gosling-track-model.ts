@@ -363,7 +363,7 @@ export class GoslingTrackModel {
                 }
                 return 1;
             default:
-                if (typeof vSpec.target === 'number') {
+                if (typeof vSpec.threshold === 'number') {
                     // compare between the actual width and the constant width that user specified
                     const padding = vSpec.conditionPadding ?? 0;
                     if (!metrics?.width) {
@@ -373,7 +373,7 @@ export class GoslingTrackModel {
                     return logicalComparison(
                         metrics.width + padding,
                         vSpec.operation,
-                        vSpec.target,
+                        vSpec.threshold,
                         vSpec.transitionPadding
                     );
                 }
