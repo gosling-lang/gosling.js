@@ -315,7 +315,7 @@ export class GoslingTrackModel {
 
         const { operation, measure, threshold } = spec.visibility;
 
-        let compareValue: number | undefined = undefined;
+        let compareValue: number | undefined;
 
         if (measure == 'zoomLevel') {
             compareValue = currentStage[measure];
