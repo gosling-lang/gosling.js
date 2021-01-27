@@ -317,7 +317,7 @@ export class GoslingTrackModel {
 
         let compareValue: number | undefined;
 
-        if (measure == 'zoomLevel') {
+        if (measure === 'zoomLevel') {
             compareValue = currentStage[measure];
         } else {
             compareValue = spec[measure];
