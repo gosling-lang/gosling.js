@@ -279,10 +279,10 @@ export type VisibilityCondition = SizeVisibilityCondition | ZoomLevelVisibilityC
 
 interface CommonVisibilityCondition {
     operation: LogicalOperation;
-    target: 'track' | 'mark';
 }
 
 export interface SizeVisibilityCondition extends CommonVisibilityCondition {
+    target: 'track' | 'mark';
     measure: 'width' | 'height';
     threshold: number | '|xe-x|';
     conditionPadding?: number;
@@ -290,6 +290,7 @@ export interface SizeVisibilityCondition extends CommonVisibilityCondition {
 }
 
 export interface ZoomLevelVisibilityCondition extends CommonVisibilityCondition {
+    target: 'track';
     measure: 'zoomLevel';
     threshold: number;
 }
