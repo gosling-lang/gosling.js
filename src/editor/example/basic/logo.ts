@@ -51,7 +51,7 @@ export const EXAMPLE_LOGO: GoslingSpec = {
                 bin: 8
             },
             dataTransform: {
-                filter: [{ field: 'sample', oneOf: ['sample 6'], not: false }]
+                filter: [{ field: 'sample', oneOf: ['sample 6'] }]
             },
             mark: 'point',
             x: {
@@ -83,7 +83,7 @@ export const EXAMPLE_LOGO: GoslingSpec = {
                 bin: 8
             },
             dataTransform: {
-                filter: [{ field: 'sample', oneOf: ['sample 5'], not: false }]
+                filter: [{ field: 'sample', oneOf: ['sample 5'] }]
             },
             mark: 'area',
             x: {

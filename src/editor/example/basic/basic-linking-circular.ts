@@ -88,8 +88,8 @@ export const EXMAPLE_BASIC_LINKING_CIRCULAR: GoslingSpec = {
             },
             dataTransform: {
                 filter: [
-                    { field: 'chr1', oneOf: ['16', '14', '9', '6', '5', '3'], not: false },
-                    { field: 'chr2', oneOf: ['16', '14', '9', '6', '5', '3'], not: false }
+                    { field: 'chr1', oneOf: ['16', '14', '9', '6', '5', '3'] },
+                    { field: 'chr2', oneOf: ['16', '14', '9', '6', '5', '3'] }
                 ]
             },
             mark: 'link',

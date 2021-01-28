@@ -37,7 +37,7 @@ export const GENOCAT_CIRCOS: GoslingSpec = {
                     'sample 8'
                 ]
             },
-            dataTransform: { filter: [{ field: 'peak', inRange: [0, 0.001], not: false }] },
+            dataTransform: { filter: [{ field: 'peak', inRange: [0, 0.001] }] },
             mark: 'rect',
             x: { field: 'start', type: 'genomic' },
             xe: { field: 'end', type: 'genomic' },
@@ -111,7 +111,7 @@ export const GENOCAT_CIRCOS: GoslingSpec = {
                 longToWideId: 'id'
                 //sampleLength: 5000
             },
-            dataTransform: { filter: [{ field: 'chr', oneOf: ['hs1'], not: false }] },
+            dataTransform: { filter: [{ field: 'chr', oneOf: ['hs1'] }] },
             mark: 'link',
             x: { field: 'p1', type: 'genomic' },
             xe: { field: 'p1_2', type: 'genomic' },

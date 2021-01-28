@@ -37,7 +37,7 @@ export const CORCES_2020_NATURE_GENETICS: GoslingSpec = {
                 {
                     mark: 'rect',
                     dataTransform: {
-                        filter: [{ field: 'Stain', oneOf: ['gvar'], not: false }]
+                        filter: [{ field: 'Stain', oneOf: ['gvar'] }]
                     },
                     color: { value: '#A0A0F2' },
                     size: { value: 20 }
@@ -45,7 +45,7 @@ export const CORCES_2020_NATURE_GENETICS: GoslingSpec = {
                 {
                     mark: 'triangle-r',
                     dataTransform: {
-                        filter: [{ field: 'Stain', oneOf: ['acen-1'], not: false }]
+                        filter: [{ field: 'Stain', oneOf: ['acen-1'] }]
                     },
                     color: { value: '#B40101' },
                     size: { value: 20 }
@@ -53,7 +53,7 @@ export const CORCES_2020_NATURE_GENETICS: GoslingSpec = {
                 {
                     mark: 'triangle-l',
                     dataTransform: {
-                        filter: [{ field: 'Stain', oneOf: ['acen-2'], not: false }]
+                        filter: [{ field: 'Stain', oneOf: ['acen-2'] }]
                     },
                     color: { value: '#B40101' },
                     size: { value: 20 }
@@ -281,7 +281,7 @@ export const CORCES_2020_NATURE_GENETICS: GoslingSpec = {
                 ]
             },
             dataTransform: {
-                filter: [{ field: 'start', inRange: [492449994 + 52450000, 492449994 + 52460000], not: false }]
+                filter: [{ field: 'start', inRange: [492449994 + 52450000, 492449994 + 52460000] }]
             },
             mark: 'link',
             x: { field: 'start', type: 'genomic', linkingID: 'l' },
@@ -304,7 +304,7 @@ export const CORCES_2020_NATURE_GENETICS: GoslingSpec = {
                 ]
             },
             dataTransform: {
-                filter: [{ field: 'end', inRange: [492449994 + 52450000, 492449994 + 52460000], not: false }]
+                filter: [{ field: 'end', inRange: [492449994 + 52450000, 492449994 + 52460000] }]
             },
             mark: 'link',
             x: { field: 'start', type: 'genomic', linkingID: 'l' },
@@ -409,8 +409,8 @@ export const CORCES_2020_NATURE_GENETICS: GoslingSpec = {
                 {
                     dataTransform: {
                         filter: [
-                            { field: 'type', oneOf: ['gene'], not: false },
-                            { field: 'strand', oneOf: ['+'], not: false }
+                            { field: 'type', oneOf: ['gene'] },
+                            { field: 'strand', oneOf: ['+'] }
                         ]
                     },
                     mark: 'text',
@@ -428,8 +428,8 @@ export const CORCES_2020_NATURE_GENETICS: GoslingSpec = {
                 {
                     dataTransform: {
                         filter: [
-                            { field: 'type', oneOf: ['gene'], not: false },
-                            { field: 'strand', oneOf: ['-'], not: false }
+                            { field: 'type', oneOf: ['gene'] },
+                            { field: 'strand', oneOf: ['-'] }
                         ]
                     },
                     mark: 'text',
@@ -441,8 +441,8 @@ export const CORCES_2020_NATURE_GENETICS: GoslingSpec = {
                 {
                     dataTransform: {
                         filter: [
-                            { field: 'type', oneOf: ['gene'], not: false },
-                            { field: 'strand', oneOf: ['+'], not: false }
+                            { field: 'type', oneOf: ['gene'] },
+                            { field: 'strand', oneOf: ['+'] }
                         ]
                     },
                     mark: 'rect',
@@ -452,8 +452,8 @@ export const CORCES_2020_NATURE_GENETICS: GoslingSpec = {
                 {
                     dataTransform: {
                         filter: [
-                            { field: 'type', oneOf: ['gene'], not: false },
-                            { field: 'strand', oneOf: ['-'], not: false }
+                            { field: 'type', oneOf: ['gene'] },
+                            { field: 'strand', oneOf: ['-'] }
                         ]
                     },
                     mark: 'rect',
@@ -461,14 +461,14 @@ export const CORCES_2020_NATURE_GENETICS: GoslingSpec = {
                     size: { value: 7 }
                 },
                 {
-                    dataTransform: { filter: [{ field: 'type', oneOf: ['exon'], not: false }] },
+                    dataTransform: { filter: [{ field: 'type', oneOf: ['exon'] }] },
                     mark: 'rect',
                     x: { field: 'start', type: 'genomic' },
                     xe: { field: 'end', type: 'genomic' },
                     size: { value: 14 }
                 },
                 {
-                    dataTransform: { filter: [{ field: 'type', oneOf: ['gene'], not: false }] },
+                    dataTransform: { filter: [{ field: 'type', oneOf: ['gene'] }] },
                     mark: 'rule',
                     x: { field: 'start', type: 'genomic' },
                     xe: { field: 'end', type: 'genomic' },

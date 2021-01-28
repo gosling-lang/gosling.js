@@ -413,29 +413,32 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                 // Apply filters
                 if (resolved.dataTransform !== undefined && IsDataTransform(resolved.dataTransform)) {
                     resolved.dataTransform.filter.forEach(filter => {
+                        const { field, not } = filter;
                         if (IsOneOfFilter(filter)) {
-                            const { field, oneOf, not } = filter;
+                            const { oneOf } = filter;
                             tile.tileData.tabularDataFiltered = tile.tileData.tabularDataFiltered.filter(
                                 (d: { [k: string]: number | string }) => {
-                                    return not
+                                    return not ?? false
                                         ? (oneOf as any[]).indexOf(d[field]) === -1
                                         : (oneOf as any[]).indexOf(d[field]) !== -1;
                                 }
                             );
                         } else if (IsRangeFilter(filter)) {
-                            const { field, inRange, not } = filter;
+                            const { inRange } = filter;
                             tile.tileData.tabularDataFiltered = tile.tileData.tabularDataFiltered.filter(
                                 (d: { [k: string]: number | string }) => {
-                                    return not
+                                    return not ?? false
                                         ? !(inRange[0] <= d[field] && d[field] <= inRange[1])
                                         : inRange[0] <= d[field] && d[field] <= inRange[1];
                                 }
                             );
                         } else if (IsIncludeFilter(filter)) {
-                            const { field, include, not } = filter;
+                            const { include } = filter;
                             tile.tileData.tabularDataFiltered = tile.tileData.tabularDataFiltered.filter(
                                 (d: { [k: string]: number | string }) => {
-                                    return not ? `${d[field]}`.includes(include) : !`${d[field]}`.includes(include);
+                                    return not ?? false
+                                        ? `${d[field]}`.includes(include)
+                                        : !`${d[field]}`.includes(include);
                                 }
                             );
                         }

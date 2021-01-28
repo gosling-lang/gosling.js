@@ -118,19 +118,19 @@ export type Filter = OneOfFilter | RangeFilter | IncludeFilter;
 export interface RangeFilter {
     field: string;
     inRange: number[];
-    not: boolean;
+    not?: boolean;
 }
 
 export interface IncludeFilter {
     field: string;
     include: string;
-    not: boolean;
+    not?: boolean;
 }
 
 export interface OneOfFilter {
     field: string;
     oneOf: string[] | number[];
-    not: boolean;
+    not?: boolean;
 }
 
 export type Track = SingleTrack | SuperposedTrack | DataTrack; // | SuperposedTrackTwoLevels; // we could support this in the future

@@ -127,21 +127,21 @@ const IDEOGRAM: Track = {
         {
             mark: 'rect',
             dataTransform: {
-                filter: [{ field: 'Stain', oneOf: ['gvar'], not: false }]
+                filter: [{ field: 'Stain', oneOf: ['gvar'] }]
             },
             color: { value: '#A0A0F2' }
         },
         {
             mark: 'triangle-r',
             dataTransform: {
-                filter: [{ field: 'Stain', oneOf: ['acen-1'], not: false }]
+                filter: [{ field: 'Stain', oneOf: ['acen-1'] }]
             },
             color: { value: '#B40101' }
         },
         {
             mark: 'triangle-l',
             dataTransform: {
-                filter: [{ field: 'Stain', oneOf: ['acen-2'], not: false }]
+                filter: [{ field: 'Stain', oneOf: ['acen-2'] }]
             },
             color: { value: '#B40101' }
         },
