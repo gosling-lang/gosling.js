@@ -356,6 +356,28 @@
           },
           "type": "array"
         },
+        "genomicFieldsToConvert": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "chromosomeField": {
+                "type": "string"
+              },
+              "genomicFields": {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              }
+            },
+            "required": [
+              "chromosomeField",
+              "genomicFields"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        },
         "headerNames": {
           "items": {
             "type": "string"
@@ -1138,6 +1160,28 @@
         "genomicFields": {
           "items": {
             "type": "string"
+          },
+          "type": "array"
+        },
+        "genomicFieldsToConvert": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "chromosomeField": {
+                "type": "string"
+              },
+              "genomicFields": {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              }
+            },
+            "required": [
+              "chromosomeField",
+              "genomicFields"
+            ],
+            "type": "object"
           },
           "type": "array"
         },

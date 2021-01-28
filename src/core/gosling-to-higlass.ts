@@ -80,7 +80,7 @@ export function goslingToHiGlass(
                 .setDomain(xDomain, yDomain)
                 .setMainTrack(hgTrack)
                 .addTrackSourceServers(server)
-                .setZoomFixed(firstResolvedSpec.static as undefined | boolean)
+                .setZoomFixed(firstResolvedSpec.static === true)
                 .setLayout(layout);
         }
 

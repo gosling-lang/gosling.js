@@ -14,13 +14,28 @@ export function fixSpecDownstream(spec: GoslingSpec) {
         spec.tracks[0].superposeOnPreviousTrack = false;
     }
 
+    spec.tracks.forEach((t, i) => {
+        if (t.superposeOnPreviousTrack) {
+            // If this track should be superposed on top of the previous one, copy the properties that should be shared with the reference track
+            const prevTrack = spec.tracks[i - 1];
+            t.span = prevTrack.span;
+            t.layout = prevTrack.layout;
+            t.width = prevTrack.width;
+            t.height = prevTrack.height;
+            t.title = prevTrack.title;
+            t.subtitle = prevTrack.subtitle;
+        }
+    });
+
     /**
      * Zoomability
      */
-    if (spec.static) {
+    if (spec.static !== undefined) {
         // Force disable zoomability when the top-level static option is enabled
         spec.tracks.forEach(t => {
-            t.static = true;
+            if (t.static === undefined) {
+                t.static = spec.static;
+            }
         });
     }
 
