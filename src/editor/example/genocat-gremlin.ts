@@ -131,7 +131,9 @@ export const GENOCAT_GREMLIN: GoslingSpec = {
                     text: { field: 'Name', type: 'nominal' },
                     visibility: {
                         operation: 'less-than',
-                        condition: { width: '|xe-x|', transitionPadding: 10 },
+                        measure: 'width',
+                        threshold: '|xe-x|',
+                        transitionPadding: 10,
                         target: 'mark'
                     },
                     style: {
@@ -149,7 +151,9 @@ export const GENOCAT_GREMLIN: GoslingSpec = {
                     text: { field: 'Name', type: 'nominal' },
                     visibility: {
                         operation: 'less-than',
-                        condition: { width: '|xe-x|', transitionPadding: 10 },
+                        measure: 'width',
+                        threshold: '|xe-x|',
+                        transitionPadding: 10,
                         target: 'mark'
                     },
                     style: {

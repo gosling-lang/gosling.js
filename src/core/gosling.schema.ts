@@ -218,7 +218,7 @@ export interface BasicSingleTrack extends CommonTrackDef {
     stretch?: boolean;
 
     // Visibility
-    visibility?: TriggerCondition;
+    visibility?: VisibilityCondition;
 
     // Styling
     style?: TrackStyle;
@@ -281,17 +281,24 @@ export type LogicalOperation =
     | 'gtet'
     | 'GTET';
 
-export interface TriggerCondition {
+export type VisibilityCondition = SizeVisibilityCondition | ZoomLevelVisibilityCondition;
+
+interface CommonVisibilityCondition {
     operation: LogicalOperation;
-    condition: {
-        width?: number | '|xe-x|';
-        height?: number;
-        zoomLevel?: number;
-        conditionPadding?: number; // buffer px size of width or height for calculating the condition
-        transitionPadding?: number; // buffer px size of width or height for calculating the level of opacity for smooth transition
-    }; // TODO: support AND or OR
-    // TODO: separate condition by targets
-    target: 'track' | 'mark' | 'glyph';
+}
+
+export interface SizeVisibilityCondition extends CommonVisibilityCondition {
+    target: 'track' | 'mark';
+    measure: 'width' | 'height';
+    threshold: number | '|xe-x|';
+    conditionPadding?: number;
+    transitionPadding?: number;
+}
+
+export interface ZoomLevelVisibilityCondition extends CommonVisibilityCondition {
+    target: 'track';
+    measure: 'zoomLevel';
+    threshold: number;
 }
 
 export const enum CHANNEL_KEYS {

@@ -28,7 +28,9 @@ export const EXMAPLE_SEMANTIC_ZOOM_SEQ: BasicSingleTrack | SuperposedTrack = {
             stroke: { value: 'white' },
             visibility: {
                 operation: 'gtet',
-                condition: { width: 20, transitionPadding: 10 },
+                measure: 'width',
+                threshold: 20,
+                transitionPadding: 10,
                 target: 'mark'
             }
         },
@@ -48,7 +50,9 @@ export const EXMAPLE_SEMANTIC_ZOOM_SEQ: BasicSingleTrack | SuperposedTrack = {
             color: { value: 'white' },
             visibility: {
                 operation: 'less-than',
-                condition: { width: '|xe-x|', transitionPadding: 30 },
+                measure: 'width',
+                threshold: '|xe-x|',
+                transitionPadding: 30,
                 target: 'mark'
             }
         }
@@ -107,11 +111,11 @@ const EXAMPLE_SEMANTIC_ZOOMING_LINES: Track = {
     color: { field: 'sample', type: 'nominal' },
     superpose: [
         {
-            visibility: { target: 'track', condition: { height: 60 }, operation: 'lt' }
+            visibility: { target: 'track', measure: 'height', threshold: 60, operation: 'lt' }
         },
         {
             row: { field: 'sample', type: 'nominal' },
-            visibility: { target: 'track', condition: { height: 60 }, operation: 'gtet' }
+            visibility: { target: 'track', measure: 'height', threshold: 60, operation: 'gtet' }
         }
     ]
 };
@@ -166,7 +170,8 @@ export const EXAMPLE_SEMANTIC_ZOOMING_IDEOGRAM: BasicSingleTrack | SuperposedTra
             stroke: { value: 'gray' },
             visibility: {
                 operation: 'less-than',
-                condition: { zoomLevel: 3 },
+                measure: 'zoomLevel',
+                threshold: 3,
                 target: 'track'
             }
         },
@@ -174,7 +179,9 @@ export const EXAMPLE_SEMANTIC_ZOOMING_IDEOGRAM: BasicSingleTrack | SuperposedTra
     ],
     visibility: {
         operation: 'greater-than',
-        condition: { width: 3, transitionPadding: 5 },
+        measure: 'width',
+        threshold: 3,
+        transitionPadding: 5,
         target: 'mark'
     }
 };

@@ -69,7 +69,9 @@ export const GENOCAT_SWAV: GoslingSpec = {
             color: { value: '#008001' },
             visibility: {
                 operation: 'less-than',
-                condition: { width: '|xe-x|', transitionPadding: 10 },
+                measure: 'width',
+                threshold: '|xe-x|',
+                transitionPadding: 10,
                 target: 'mark'
             },
             style: { outline: 'white' }

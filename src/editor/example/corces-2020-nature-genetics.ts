@@ -486,7 +486,9 @@ export const CORCES_2020_NATURE_GENETICS: GoslingSpec = {
             color: { field: 'strand', type: 'nominal', domain: ['+', '-'], range: ['#012DB8', '#BE1E2C'] },
             visibility: {
                 operation: 'less-than',
-                condition: { width: '|xe-x|', transitionPadding: 10 },
+                measure: 'width',
+                threshold: '|xe-x|',
+                transitionPadding: 10,
                 target: 'mark'
             },
             style: { outline: '#20102F' }

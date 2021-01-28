@@ -305,7 +305,7 @@
           "type": "array"
         },
         "visibility": {
-          "$ref": "#/definitions/TriggerCondition"
+          "$ref": "#/definitions/VisibilityCondition"
         },
         "width": {
           "type": "number"
@@ -1524,6 +1524,52 @@
     "SingleTrack": {
       "$ref": "#/definitions/BasicSingleTrack"
     },
+    "SizeVisibilityCondition": {
+      "additionalProperties": false,
+      "properties": {
+        "conditionPadding": {
+          "type": "number"
+        },
+        "measure": {
+          "enum": [
+            "width",
+            "height"
+          ],
+          "type": "string"
+        },
+        "operation": {
+          "$ref": "#/definitions/LogicalOperation"
+        },
+        "target": {
+          "enum": [
+            "track",
+            "mark"
+          ],
+          "type": "string"
+        },
+        "threshold": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "const": "|xe-x|",
+              "type": "string"
+            }
+          ]
+        },
+        "transitionPadding": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "measure",
+        "operation",
+        "target",
+        "threshold"
+      ],
+      "type": "object"
+    },
     "SuperposedTrack": {
       "additionalProperties": false,
       "description": "Superposing multiple tracks.",
@@ -1722,7 +1768,7 @@
                 "type": "array"
               },
               "visibility": {
-                "$ref": "#/definitions/TriggerCondition"
+                "$ref": "#/definitions/VisibilityCondition"
               },
               "width": {
                 "type": "number"
@@ -1788,7 +1834,7 @@
           "type": "array"
         },
         "visibility": {
-          "$ref": "#/definitions/TriggerCondition"
+          "$ref": "#/definitions/VisibilityCondition"
         },
         "width": {
           "type": "number"
@@ -1931,57 +1977,6 @@
       },
       "type": "object"
     },
-    "TriggerCondition": {
-      "additionalProperties": false,
-      "properties": {
-        "condition": {
-          "additionalProperties": false,
-          "properties": {
-            "conditionPadding": {
-              "type": "number"
-            },
-            "height": {
-              "type": "number"
-            },
-            "transitionPadding": {
-              "type": "number"
-            },
-            "width": {
-              "anyOf": [
-                {
-                  "type": "number"
-                },
-                {
-                  "const": "|xe-x|",
-                  "type": "string"
-                }
-              ]
-            },
-            "zoomLevel": {
-              "type": "number"
-            }
-          },
-          "type": "object"
-        },
-        "operation": {
-          "$ref": "#/definitions/LogicalOperation"
-        },
-        "target": {
-          "enum": [
-            "track",
-            "mark",
-            "glyph"
-          ],
-          "type": "string"
-        }
-      },
-      "required": [
-        "operation",
-        "condition",
-        "target"
-      ],
-      "type": "object"
-    },
     "VectorMetadata": {
       "additionalProperties": false,
       "properties": {
@@ -2009,6 +2004,42 @@
         "type",
         "column",
         "value"
+      ],
+      "type": "object"
+    },
+    "VisibilityCondition": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/SizeVisibilityCondition"
+        },
+        {
+          "$ref": "#/definitions/ZoomLevelVisibilityCondition"
+        }
+      ]
+    },
+    "ZoomLevelVisibilityCondition": {
+      "additionalProperties": false,
+      "properties": {
+        "measure": {
+          "const": "zoomLevel",
+          "type": "string"
+        },
+        "operation": {
+          "$ref": "#/definitions/LogicalOperation"
+        },
+        "target": {
+          "const": "track",
+          "type": "string"
+        },
+        "threshold": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "measure",
+        "operation",
+        "target",
+        "threshold"
       ],
       "type": "object"
     }

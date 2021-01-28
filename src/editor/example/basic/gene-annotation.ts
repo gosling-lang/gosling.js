@@ -134,7 +134,9 @@ export const HIGLASS_GENE_ANNOTATION: Track = {
     color: { field: 'strand', type: 'nominal', domain: ['+', '-'], range: ['#7585FF', '#FF8A85'] },
     visibility: {
         operation: 'less-than',
-        condition: { width: '|xe-x|', transitionPadding: 10 },
+        measure: 'width',
+        threshold: '|xe-x|',
+        transitionPadding: 10,
         target: 'mark'
     },
     // background: {"value": "red"},
@@ -257,7 +259,9 @@ export const EXAMPLE_GENE_ANNOTATION: GoslingSpec = {
             color: { value: '#0900B1' },
             visibility: {
                 operation: 'less-than',
-                condition: { width: '|xe-x|', transitionPadding: 10 },
+                measure: 'width',
+                threshold: '|xe-x|',
+                transitionPadding: 10,
                 target: 'mark'
             }
             // background: {"value": "red"},
@@ -384,7 +388,9 @@ export const EXAMPLE_GENE_ANNOTATION: GoslingSpec = {
             row: { field: 'strand', type: 'nominal', domain: ['+', '-'] },
             visibility: {
                 operation: 'less-than',
-                condition: { width: '|xe-x|', transitionPadding: 10 },
+                measure: 'width',
+                threshold: '|xe-x|',
+                transitionPadding: 10,
                 target: 'mark'
             },
             size: { value: 17 }
@@ -503,7 +509,9 @@ export const EXAMPLE_GENE_ANNOTATION: GoslingSpec = {
             color: { field: 'strand', type: 'nominal', domain: ['+', '-'], range: ['blue', 'red'] },
             visibility: {
                 operation: 'less-than',
-                condition: { width: '|xe-x|', transitionPadding: 10 },
+                measure: 'width',
+                threshold: '|xe-x|',
+                transitionPadding: 10,
                 target: 'mark'
             }
         },
@@ -585,7 +593,9 @@ export const EXAMPLE_GENE_ANNOTATION: GoslingSpec = {
             color: { value: '#B54F4A' },
             visibility: {
                 operation: 'less-than',
-                condition: { width: '|xe-x|', transitionPadding: 10 },
+                measure: 'width',
+                threshold: '|xe-x|',
+                transitionPadding: 10,
                 target: 'mark'
             }
         },
@@ -679,7 +689,9 @@ export const EXAMPLE_GENE_ANNOTATION: GoslingSpec = {
             strokeWidth: { value: 1 },
             visibility: {
                 operation: 'less-than',
-                condition: { width: '|xe-x|', transitionPadding: 10 },
+                measure: 'width',
+                threshold: '|xe-x|',
+                transitionPadding: 10,
                 target: 'mark'
             }
         }

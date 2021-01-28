@@ -5,7 +5,8 @@ import {
     ChannelValue,
     BasicSingleTrack,
     SingleTrack,
-    Channel
+    Channel,
+    SizeVisibilityCondition
 } from './gosling.schema';
 import { validateTrack, getGenomicChannelFromTrack, getGenomicChannelKeyFromTrack } from './utils/validate';
 import * as d3 from 'd3';
@@ -312,15 +313,21 @@ export class GoslingTrackModel {
             return true;
         }
 
-        const { operation, condition } = spec.visibility;
-        if (condition.zoomLevel && currentStage.zoomLevel) {
-            return logicalComparison(currentStage.zoomLevel, operation, condition.zoomLevel) === 1;
-        } else if (condition.height && spec.height) {
-            return logicalComparison(spec.height, operation, condition.height) === 1;
-        } else if (typeof condition.width === 'number' && spec.width) {
-            return logicalComparison(spec.width, operation, condition.width) === 1;
+        const { operation, measure, threshold } = spec.visibility;
+
+        let compareValue: number | undefined;
+
+        if (measure === 'zoomLevel') {
+            compareValue = currentStage[measure];
+        } else {
+            compareValue = spec[measure];
         }
-        return true;
+
+        if (compareValue !== undefined) {
+            return logicalComparison(compareValue, operation, threshold as number) === 1;
+        } else {
+            return true;
+        }
     }
 
     /**
@@ -334,15 +341,15 @@ export class GoslingTrackModel {
             return 1;
         }
 
-        const vSpec = spec.visibility;
+        const vSpec = spec.visibility as SizeVisibilityCondition;
         const mark = spec.mark;
         switch (mark) {
             case 'text':
-                if (vSpec.condition.width === '|xe-x|') {
+                if (vSpec.threshold === '|xe-x|') {
                     // compare between the actual width and the |xe-x|
                     const xe = this.encodedPIXIProperty('xe', datum);
                     const x = this.encodedPIXIProperty('x', datum);
-                    const padding = vSpec.condition.conditionPadding ?? 0;
+                    const padding = vSpec.conditionPadding ?? 0;
                     if (xe === undefined || !metrics?.width) {
                         // we do not have xe to compare, so just make the marks visible
                         return 1;
@@ -351,14 +358,14 @@ export class GoslingTrackModel {
                         metrics.width + padding,
                         vSpec.operation,
                         Math.abs(xe - x),
-                        vSpec.condition.transitionPadding
+                        vSpec.transitionPadding
                     );
                 }
                 return 1;
             default:
-                if (typeof vSpec.condition.width === 'number') {
+                if (typeof vSpec.threshold === 'number') {
                     // compare between the actual width and the constant width that user specified
-                    const padding = vSpec.condition.conditionPadding ?? 0;
+                    const padding = vSpec.conditionPadding ?? 0;
                     if (!metrics?.width) {
                         // we do not have xe to compare, so just make the marks visible
                         return 1;
@@ -366,8 +373,8 @@ export class GoslingTrackModel {
                     return logicalComparison(
                         metrics.width + padding,
                         vSpec.operation,
-                        vSpec.condition.width,
-                        vSpec.condition.transitionPadding
+                        vSpec.threshold,
+                        vSpec.transitionPadding
                     );
                 }
                 return 1;
