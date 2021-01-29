@@ -56,8 +56,8 @@ export const EXAMPLE_CYTOAND_HG38: GoslingSpec = {
                     mark: 'triangle-r',
                     dataTransform: {
                         filter: [
-                            { field: 'Stain', oneOf: ['acen'], not: false },
-                            { field: 'Name', include: 'q', not: false }
+                            { field: 'Stain', oneOf: ['acen'] },
+                            { field: 'Name', include: 'q' }
                         ]
                     },
                     color: { value: '#B40101' }
@@ -66,8 +66,8 @@ export const EXAMPLE_CYTOAND_HG38: GoslingSpec = {
                     mark: 'triangle-l',
                     dataTransform: {
                         filter: [
-                            { field: 'Stain', oneOf: ['acen'], not: false },
-                            { field: 'Name', include: 'p', not: false }
+                            { field: 'Stain', oneOf: ['acen'] },
+                            { field: 'Name', include: 'p' }
                         ]
                     },
                     color: { value: '#B40101' }

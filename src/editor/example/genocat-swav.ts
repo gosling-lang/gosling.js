@@ -34,7 +34,7 @@ export const GENOCAT_SWAV: GoslingSpec = {
             superpose: [
                 {
                     dataTransform: {
-                        filter: [{ field: 'type', oneOf: ['gene'], not: false }]
+                        filter: [{ field: 'type', oneOf: ['gene'] }]
                     },
                     mark: 'text',
                     text: { field: 'name', type: 'nominal' },
@@ -55,7 +55,7 @@ export const GENOCAT_SWAV: GoslingSpec = {
                     }
                 },
                 {
-                    dataTransform: { filter: [{ field: 'type', oneOf: ['gene'], not: false }] },
+                    dataTransform: { filter: [{ field: 'type', oneOf: ['gene'] }] },
                     mark: 'rect',
                     x: { field: 'start', type: 'genomic' },
                     size: { value: 14 },
