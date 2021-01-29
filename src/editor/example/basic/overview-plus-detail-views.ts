@@ -59,7 +59,7 @@ export const EXAMPLE_OVERVIEW_DEATIL: GoslingSpec = {
             },
             superpose: [
                 {
-                    dataTransform: { filter: [{ field: 'type', oneOf: ['exon'], not: false }] },
+                    dataTransform: { filter: [{ field: 'type', oneOf: ['exon'] }] },
                     mark: 'rect',
                     x: {
                         field: 'start',
@@ -75,7 +75,7 @@ export const EXAMPLE_OVERVIEW_DEATIL: GoslingSpec = {
                     }
                 },
                 {
-                    dataTransform: { filter: [{ field: 'type', oneOf: ['intron'], not: false }] },
+                    dataTransform: { filter: [{ field: 'type', oneOf: ['intron'] }] },
                     mark: 'rule',
                     x: {
                         field: 'start',
@@ -123,7 +123,7 @@ export const EXAMPLE_OVERVIEW_DEATIL: GoslingSpec = {
             },
             superpose: [
                 {
-                    dataTransform: { filter: [{ field: 'type', oneOf: ['exon'], not: false }] },
+                    dataTransform: { filter: [{ field: 'type', oneOf: ['exon'] }] },
                     mark: 'rect',
                     x: {
                         field: 'start',
@@ -139,7 +139,7 @@ export const EXAMPLE_OVERVIEW_DEATIL: GoslingSpec = {
                     }
                 },
                 {
-                    dataTransform: { filter: [{ field: 'type', oneOf: ['intron'], not: false }] },
+                    dataTransform: { filter: [{ field: 'type', oneOf: ['intron'] }] },
                     mark: 'rule',
                     x: {
                         field: 'start',

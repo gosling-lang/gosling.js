@@ -25,8 +25,8 @@ export const HIGLASS_GENE_ANNOTATION: Track = {
         {
             dataTransform: {
                 filter: [
-                    { field: 'type', oneOf: ['gene'], not: false },
-                    { field: 'strand', oneOf: ['+'], not: false }
+                    { field: 'type', oneOf: ['gene'] },
+                    { field: 'strand', oneOf: ['+'] }
                 ]
             },
             mark: 'triangle-r',
@@ -40,7 +40,7 @@ export const HIGLASS_GENE_ANNOTATION: Track = {
         },
         {
             dataTransform: {
-                filter: [{ field: 'type', oneOf: ['gene'], not: false }]
+                filter: [{ field: 'type', oneOf: ['gene'] }]
             },
             mark: 'text',
             text: { field: 'name', type: 'nominal' },
@@ -59,8 +59,8 @@ export const HIGLASS_GENE_ANNOTATION: Track = {
         {
             dataTransform: {
                 filter: [
-                    { field: 'type', oneOf: ['gene'], not: false },
-                    { field: 'strand', oneOf: ['-'], not: false }
+                    { field: 'type', oneOf: ['gene'] },
+                    { field: 'strand', oneOf: ['-'] }
                 ]
             },
             mark: 'triangle-l',
@@ -72,7 +72,7 @@ export const HIGLASS_GENE_ANNOTATION: Track = {
             style: { align: 'right' }
         },
         {
-            dataTransform: { filter: [{ field: 'type', oneOf: ['exon'], not: false }] },
+            dataTransform: { filter: [{ field: 'type', oneOf: ['exon'] }] },
             mark: 'rect',
             x: {
                 field: 'start',
@@ -87,8 +87,8 @@ export const HIGLASS_GENE_ANNOTATION: Track = {
         {
             dataTransform: {
                 filter: [
-                    { field: 'type', oneOf: ['gene'], not: false },
-                    { field: 'strand', oneOf: ['+'], not: false }
+                    { field: 'type', oneOf: ['gene'] },
+                    { field: 'strand', oneOf: ['+'] }
                 ]
             },
             mark: 'rule',
@@ -109,8 +109,8 @@ export const HIGLASS_GENE_ANNOTATION: Track = {
         {
             dataTransform: {
                 filter: [
-                    { field: 'type', oneOf: ['gene'], not: false },
-                    { field: 'strand', oneOf: ['-'], not: false }
+                    { field: 'type', oneOf: ['gene'] },
+                    { field: 'strand', oneOf: ['-'] }
                 ]
             },
             mark: 'rule',
@@ -175,7 +175,7 @@ export const EXAMPLE_GENE_ANNOTATION: GoslingSpec = {
             superpose: [
                 {
                     dataTransform: {
-                        filter: [{ field: 'type', oneOf: ['gene'], not: false }]
+                        filter: [{ field: 'type', oneOf: ['gene'] }]
                     },
                     mark: 'text',
                     text: { field: 'name', type: 'nominal' },
@@ -191,7 +191,7 @@ export const EXAMPLE_GENE_ANNOTATION: GoslingSpec = {
                     }
                 },
                 {
-                    dataTransform: { filter: [{ field: 'type', oneOf: ['gene'], not: false }] },
+                    dataTransform: { filter: [{ field: 'type', oneOf: ['gene'] }] },
                     mark: 'rect',
                     x: {
                         field: 'start',
@@ -208,8 +208,8 @@ export const EXAMPLE_GENE_ANNOTATION: GoslingSpec = {
                 {
                     dataTransform: {
                         filter: [
-                            { field: 'type', oneOf: ['gene'], not: false },
-                            { field: 'strand', oneOf: ['-'], not: false }
+                            { field: 'type', oneOf: ['gene'] },
+                            { field: 'strand', oneOf: ['-'] }
                         ]
                     },
                     mark: 'rule',
@@ -232,8 +232,8 @@ export const EXAMPLE_GENE_ANNOTATION: GoslingSpec = {
                 {
                     dataTransform: {
                         filter: [
-                            { field: 'type', oneOf: ['gene'], not: false },
-                            { field: 'strand', oneOf: ['+'], not: false }
+                            { field: 'type', oneOf: ['gene'] },
+                            { field: 'strand', oneOf: ['+'] }
                         ]
                     },
                     mark: 'rule',
@@ -289,7 +289,7 @@ export const EXAMPLE_GENE_ANNOTATION: GoslingSpec = {
             superpose: [
                 {
                     dataTransform: {
-                        filter: [{ field: 'type', oneOf: ['gene'], not: false }]
+                        filter: [{ field: 'type', oneOf: ['gene'] }]
                     },
                     mark: 'text',
                     text: { field: 'name', type: 'nominal' },
@@ -308,8 +308,8 @@ export const EXAMPLE_GENE_ANNOTATION: GoslingSpec = {
                 {
                     dataTransform: {
                         filter: [
-                            { field: 'type', oneOf: ['gene'], not: false },
-                            { field: 'strand', oneOf: ['+'], not: false }
+                            { field: 'type', oneOf: ['gene'] },
+                            { field: 'strand', oneOf: ['+'] }
                         ]
                     },
                     mark: 'triangle-r',
@@ -324,8 +324,8 @@ export const EXAMPLE_GENE_ANNOTATION: GoslingSpec = {
                 {
                     dataTransform: {
                         filter: [
-                            { field: 'type', oneOf: ['gene'], not: false },
-                            { field: 'strand', oneOf: ['-'], not: false }
+                            { field: 'type', oneOf: ['gene'] },
+                            { field: 'strand', oneOf: ['-'] }
                         ]
                     },
                     mark: 'triangle-l',
@@ -340,7 +340,7 @@ export const EXAMPLE_GENE_ANNOTATION: GoslingSpec = {
                     }
                 },
                 {
-                    dataTransform: { filter: [{ field: 'type', oneOf: ['gene'], not: false }] },
+                    dataTransform: { filter: [{ field: 'type', oneOf: ['gene'] }] },
                     mark: 'rect',
                     x: {
                         field: 'start',
@@ -354,7 +354,7 @@ export const EXAMPLE_GENE_ANNOTATION: GoslingSpec = {
                     color: { value: 'lightgray' }
                 },
                 {
-                    dataTransform: { filter: [{ field: 'type', oneOf: ['gene'], not: false }] },
+                    dataTransform: { filter: [{ field: 'type', oneOf: ['gene'] }] },
                     mark: 'rule',
                     x: {
                         field: 'start',
@@ -369,7 +369,7 @@ export const EXAMPLE_GENE_ANNOTATION: GoslingSpec = {
                     color: { value: 'gray' }
                 },
                 {
-                    dataTransform: { filter: [{ field: 'type', oneOf: ['exon'], not: false }] },
+                    dataTransform: { filter: [{ field: 'type', oneOf: ['exon'] }] },
                     mark: 'rect',
                     x: {
                         field: 'start',
@@ -418,7 +418,7 @@ export const EXAMPLE_GENE_ANNOTATION: GoslingSpec = {
             superpose: [
                 {
                     dataTransform: {
-                        filter: [{ field: 'type', oneOf: ['gene'], not: false }]
+                        filter: [{ field: 'type', oneOf: ['gene'] }]
                     },
                     mark: 'text',
                     text: { field: 'name', type: 'nominal' },
@@ -439,8 +439,8 @@ export const EXAMPLE_GENE_ANNOTATION: GoslingSpec = {
                 {
                     dataTransform: {
                         filter: [
-                            { field: 'type', oneOf: ['gene'], not: false },
-                            { field: 'strand', oneOf: ['+'], not: false }
+                            { field: 'type', oneOf: ['gene'] },
+                            { field: 'strand', oneOf: ['+'] }
                         ]
                     },
                     mark: 'triangle-r',
@@ -455,8 +455,8 @@ export const EXAMPLE_GENE_ANNOTATION: GoslingSpec = {
                 {
                     dataTransform: {
                         filter: [
-                            { field: 'type', oneOf: ['gene'], not: false },
-                            { field: 'strand', oneOf: ['-'], not: false }
+                            { field: 'type', oneOf: ['gene'] },
+                            { field: 'strand', oneOf: ['-'] }
                         ]
                     },
                     mark: 'triangle-l',
@@ -471,7 +471,7 @@ export const EXAMPLE_GENE_ANNOTATION: GoslingSpec = {
                     }
                 },
                 {
-                    dataTransform: { filter: [{ field: 'type', oneOf: ['exon'], not: false }] },
+                    dataTransform: { filter: [{ field: 'type', oneOf: ['exon'] }] },
                     mark: 'rect',
                     x: {
                         field: 'start',
@@ -485,7 +485,7 @@ export const EXAMPLE_GENE_ANNOTATION: GoslingSpec = {
                     }
                 },
                 {
-                    dataTransform: { filter: [{ field: 'type', oneOf: ['gene'], not: false }] },
+                    dataTransform: { filter: [{ field: 'type', oneOf: ['gene'] }] },
                     mark: 'rule',
                     x: {
                         field: 'start',
@@ -538,7 +538,7 @@ export const EXAMPLE_GENE_ANNOTATION: GoslingSpec = {
             superpose: [
                 {
                     dataTransform: {
-                        filter: [{ field: 'type', oneOf: ['gene'], not: false }]
+                        filter: [{ field: 'type', oneOf: ['gene'] }]
                     },
                     mark: 'text',
                     text: { field: 'name', type: 'nominal' },
@@ -557,7 +557,7 @@ export const EXAMPLE_GENE_ANNOTATION: GoslingSpec = {
                     }
                 },
                 {
-                    dataTransform: { filter: [{ field: 'type', oneOf: ['exon'], not: false }] },
+                    dataTransform: { filter: [{ field: 'type', oneOf: ['exon'] }] },
                     mark: 'rect',
                     x: {
                         field: 'start',
@@ -572,7 +572,7 @@ export const EXAMPLE_GENE_ANNOTATION: GoslingSpec = {
                     }
                 },
                 {
-                    dataTransform: { filter: [{ field: 'type', oneOf: ['intron'], not: false }] },
+                    dataTransform: { filter: [{ field: 'type', oneOf: ['intron'] }] },
                     mark: 'rule',
                     x: {
                         field: 'start',
@@ -622,7 +622,7 @@ export const EXAMPLE_GENE_ANNOTATION: GoslingSpec = {
             superpose: [
                 {
                     dataTransform: {
-                        filter: [{ field: 'type', oneOf: ['gene'], not: false }]
+                        filter: [{ field: 'type', oneOf: ['gene'] }]
                     },
                     mark: 'text',
                     text: { field: 'name', type: 'nominal' },
@@ -639,7 +639,7 @@ export const EXAMPLE_GENE_ANNOTATION: GoslingSpec = {
                     }
                 },
                 {
-                    dataTransform: { filter: [{ field: 'type', oneOf: ['gene'], not: false }] },
+                    dataTransform: { filter: [{ field: 'type', oneOf: ['gene'] }] },
                     mark: 'rect',
                     x: {
                         field: 'start',
@@ -654,7 +654,7 @@ export const EXAMPLE_GENE_ANNOTATION: GoslingSpec = {
                     color: { value: '#666666' }
                 },
                 {
-                    dataTransform: { filter: [{ field: 'type', oneOf: ['exon'], not: false }] },
+                    dataTransform: { filter: [{ field: 'type', oneOf: ['exon'] }] },
                     mark: 'rect',
                     x: {
                         field: 'start',
@@ -669,7 +669,7 @@ export const EXAMPLE_GENE_ANNOTATION: GoslingSpec = {
                     color: { value: '#FF6666' }
                 },
                 {
-                    dataTransform: { filter: [{ field: 'type', oneOf: ['intron'], not: false }] },
+                    dataTransform: { filter: [{ field: 'type', oneOf: ['intron'] }] },
                     mark: 'rect',
                     x: {
                         field: 'start',

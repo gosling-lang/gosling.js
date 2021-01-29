@@ -1146,8 +1146,7 @@
       },
       "required": [
         "field",
-        "include",
-        "not"
+        "include"
       ],
       "type": "object"
     },
@@ -1462,8 +1461,7 @@
       },
       "required": [
         "field",
-        "oneOf",
-        "not"
+        "oneOf"
       ],
       "type": "object"
     },
@@ -1516,8 +1514,7 @@
       },
       "required": [
         "field",
-        "inRange",
-        "not"
+        "inRange"
       ],
       "type": "object"
     },

@@ -24,8 +24,8 @@ export const GENOCAT_MIZBEE: GoslingSpec = {
             },
             dataTransform: {
                 filter: [
-                    { field: 'chr', oneOf: ['hs1'], not: false },
-                    { field: 'chr_2', oneOf: ['hs3', 'hs10', 'hs12', 'hs16'], not: false }
+                    { field: 'chr', oneOf: ['hs1'] },
+                    { field: 'chr_2', oneOf: ['hs3', 'hs10', 'hs12', 'hs16'] }
                 ]
             },
             mark: 'rect',
@@ -63,8 +63,8 @@ export const GENOCAT_MIZBEE: GoslingSpec = {
             },
             dataTransform: {
                 filter: [
-                    { field: 'chr', oneOf: ['hs1'], not: false },
-                    { field: 'chr_2', oneOf: ['hs3', 'hs10', 'hs12', 'hs16'], not: false }
+                    { field: 'chr', oneOf: ['hs1'] },
+                    { field: 'chr_2', oneOf: ['hs3', 'hs10', 'hs12', 'hs16'] }
                 ]
             },
             mark: 'link',
@@ -122,7 +122,7 @@ export const GENOCAT_MIZBEE: GoslingSpec = {
                 chromosomeField: 'Chromosome',
                 genomicFields: ['chromStart', 'chromEnd']
             },
-            dataTransform: { filter: [{ field: 'Chromosome', oneOf: ['chr1'], not: false }] },
+            dataTransform: { filter: [{ field: 'Chromosome', oneOf: ['chr1'] }] },
             mark: 'rect',
             color: {
                 field: 'Chromosome',
@@ -158,8 +158,8 @@ export const GENOCAT_MIZBEE: GoslingSpec = {
             },
             dataTransform: {
                 filter: [
-                    { field: 'chr', oneOf: ['hs1'], not: false },
-                    { field: 'chr_2', oneOf: ['hs3', 'hs10', 'hs12', 'hs16'], not: false }
+                    { field: 'chr', oneOf: ['hs1'] },
+                    { field: 'chr_2', oneOf: ['hs3', 'hs10', 'hs12', 'hs16'] }
                 ]
             },
             mark: 'rect',
@@ -194,7 +194,7 @@ export const GENOCAT_MIZBEE: GoslingSpec = {
                 chromosomeField: 'Chromosome',
                 genomicFields: ['chromStart', 'chromEnd']
             },
-            dataTransform: { filter: [{ field: 'Chromosome', oneOf: ['chr1'], not: false }] },
+            dataTransform: { filter: [{ field: 'Chromosome', oneOf: ['chr1'] }] },
             mark: 'rect',
             color: {
                 field: 'Chromosome',

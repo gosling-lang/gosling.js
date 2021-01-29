@@ -24,8 +24,8 @@ export const GENOCAT_GREMLIN: GoslingSpec = {
             },
             dataTransform: {
                 filter: [
-                    { field: 'chr', oneOf: ['hs5'], not: false },
-                    { field: 'chr_2', oneOf: ['hs5'], not: false }
+                    { field: 'chr', oneOf: ['hs5'] },
+                    { field: 'chr_2', oneOf: ['hs5'] }
                 ]
             },
             superpose: [
@@ -61,8 +61,8 @@ export const GENOCAT_GREMLIN: GoslingSpec = {
             },
             dataTransform: {
                 filter: [
-                    { field: 'chr', oneOf: ['hs5', 'hs4', 'hs6'], not: false },
-                    { field: 'chr_2', oneOf: ['hs5', 'hs4', 'hs6'], not: false }
+                    { field: 'chr', oneOf: ['hs5', 'hs4', 'hs6'] },
+                    { field: 'chr_2', oneOf: ['hs5', 'hs4', 'hs6'] }
                 ]
             },
             superpose: [
@@ -118,7 +118,7 @@ export const GENOCAT_GREMLIN: GoslingSpec = {
                 {
                     mark: 'rect',
                     dataTransform: {
-                        filter: [{ field: 'Stain', oneOf: ['acen'], not: false }]
+                        filter: [{ field: 'Stain', oneOf: ['acen'] }]
                     },
                     size: { value: 10 },
                     color: { value: '#B74780' }
@@ -126,7 +126,7 @@ export const GENOCAT_GREMLIN: GoslingSpec = {
                 {
                     mark: 'text',
                     dataTransform: {
-                        filter: [{ field: 'Stain', oneOf: ['gpos25', 'gpos50', 'gpos100'], not: false }]
+                        filter: [{ field: 'Stain', oneOf: ['gpos25', 'gpos50', 'gpos100'] }]
                     },
                     text: { field: 'Name', type: 'nominal' },
                     visibility: {
@@ -146,7 +146,7 @@ export const GENOCAT_GREMLIN: GoslingSpec = {
                 {
                     mark: 'text',
                     dataTransform: {
-                        filter: [{ field: 'Stain', oneOf: ['gneg', 'gpos75', 'gvar'], not: false }]
+                        filter: [{ field: 'Stain', oneOf: ['gneg', 'gpos75', 'gvar'] }]
                     },
                     text: { field: 'Name', type: 'nominal' },
                     visibility: {
@@ -196,8 +196,8 @@ export const GENOCAT_GREMLIN: GoslingSpec = {
             },
             dataTransform: {
                 filter: [
-                    { field: 'chr', oneOf: ['hs5', 'hs4', 'hs6'], not: false },
-                    { field: 'chr_2', oneOf: ['hs5', 'hs4', 'hs6'], not: false }
+                    { field: 'chr', oneOf: ['hs5', 'hs4', 'hs6'] },
+                    { field: 'chr_2', oneOf: ['hs5', 'hs4', 'hs6'] }
                 ]
             },
             mark: 'link',
@@ -234,7 +234,7 @@ export const GENOCAT_GREMLIN: GoslingSpec = {
                 longToWideId: 'id',
                 sampleLength: 1000
             },
-            dataTransform: { filter: [{ field: 'chr', oneOf: ['hs5'], not: false }] },
+            dataTransform: { filter: [{ field: 'chr', oneOf: ['hs5'] }] },
             mark: 'link',
             x: {
                 field: 'p1',
