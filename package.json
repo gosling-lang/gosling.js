@@ -22,7 +22,7 @@
         "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s -r 0",
         "format": "eslint . --fix && prettier '**/*.css' --write",
         "schema": "mkdir -p schema & ts-json-schema-generator -p src/core/gosling.schema.ts -f tsconfig.json -t GoslingSpec > schema/gosling.schema.json",
-        "predeploy": "yarn build-editor",
+        "predeploy": "yarn build-editor; echo \"gosling.js.org\" >> build/CNAME",
         "deploy": "gh-pages -d build"
     },
     "peerDependencies": {},
