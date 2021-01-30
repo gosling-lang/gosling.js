@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🐥 Gosling.js
+# Gosling.js
 
 **Grammar Of Scalable Linked Interactive Nucleotide Graphics**
 
