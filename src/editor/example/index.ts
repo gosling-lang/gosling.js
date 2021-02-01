@@ -126,8 +126,8 @@ export const examples: ReadonlyArray<{
     },
     {
         name: 'Basic Linking Circular Views',
-        spec: EXMAPLE_BASIC_LINKING_CIRCULAR,
-        forceShow: true
+        spec: EXMAPLE_BASIC_LINKING_CIRCULAR
+        // forceShow: true
     },
     {
         name: 'Overview + Detail views',
@@ -141,12 +141,11 @@ export const examples: ReadonlyArray<{
     {
         name: 'Basic Circular Marks',
         spec: EXAMPLE_CIRCOS,
-        underDevelopment: true
+        forceShow: true
     },
     {
         name: 'Basic Circular Marks 2',
-        spec: EXAMPLE_CIRCOS_MANY,
-        underDevelopment: true
+        spec: EXAMPLE_CIRCOS_MANY
     },
     {
         name: 'Superposed Circular Tracks',

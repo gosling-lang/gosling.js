@@ -27,18 +27,7 @@ export function fixSpecDownstream(spec: GoslingSpec) {
         }
     });
 
-    /**
-     * Zoomability
-     */
-    if (spec.static !== undefined) {
-        // Force disable zoomability when the top-level static option is enabled
-        spec.tracks.forEach(t => {
-            if (t.static === undefined) {
-                t.static = spec.static;
-            }
-        });
-    }
-
+    // !!! This should be taken before fixing `static` options so that `layout` can be considered when disabling zoomability.
     /**
      * Flag tracks to use circular marks
      */
@@ -48,6 +37,28 @@ export function fixSpecDownstream(spec: GoslingSpec) {
             if (t.layout === undefined) {
                 // EXPERIMENTAL: Remove if statement
                 t.layout = 'circular';
+            }
+        });
+    }
+
+    /**
+     * Default `static` option is `true` for `circular` layouts.
+     */
+    // Force disable zoomability when the top-level static option is enabled
+    spec.tracks.forEach(t => {
+        if (t.static === undefined && t.layout === 'circular') {
+            t.static = true;
+        }
+    });
+
+    /**
+     * Zoomability
+     */
+    if (spec.static !== undefined) {
+        // Force disable zoomability when the top-level static option is enabled
+        spec.tracks.forEach(t => {
+            if (t.static === undefined) {
+                t.static = spec.static;
             }
         });
     }
