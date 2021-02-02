@@ -8,7 +8,11 @@ describe('Example specs should be valid', () => {
         let valid = true;
         const msgs: string[] = [];
 
-        const resolvedIdeograms = resolveSuperposedTracks(EXAMPLE_CYTOAND_HG38.tracks[0]);
+        const resolvedIdeograms = resolveSuperposedTracks({
+            ...EXAMPLE_CYTOAND_HG38.tracks[0],
+            width: 300,
+            height: 300
+        });
         resolvedIdeograms.forEach(spec => {
             const ideogramMark = new GoslingTrackModel(spec, []);
             const validity = ideogramMark.validateSpec();
@@ -30,7 +34,7 @@ describe('Example specs should be valid', () => {
         const msgs: string[] = [];
 
         EXAMPLE_SEMANTIC_ZOOMING.tracks.forEach(t => {
-            const resolvedIdeograms = resolveSuperposedTracks(t);
+            const resolvedIdeograms = resolveSuperposedTracks({ ...t, width: 300, height: 300 });
             resolvedIdeograms.forEach(spec => {
                 const ideogramMark = new GoslingTrackModel(spec, []);
                 const validity = ideogramMark.validateSpec();
