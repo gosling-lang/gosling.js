@@ -129,13 +129,15 @@ export const GENOCAT_GREMLIN: GoslingSpec = {
                         filter: [{ field: 'Stain', oneOf: ['gpos25', 'gpos50', 'gpos100'] }]
                     },
                     text: { field: 'Name', type: 'nominal' },
-                    visibility: {
-                        operation: 'less-than',
-                        measure: 'width',
-                        threshold: '|xe-x|',
-                        transitionPadding: 10,
-                        target: 'mark'
-                    },
+                    visibility: [
+                        {
+                            operation: 'less-than',
+                            measure: 'width',
+                            threshold: '|xe-x|',
+                            transitionPadding: 10,
+                            target: 'mark'
+                        }
+                    ],
                     style: {
                         dy: 16,
                         textFontSize: 6,
@@ -149,13 +151,15 @@ export const GENOCAT_GREMLIN: GoslingSpec = {
                         filter: [{ field: 'Stain', oneOf: ['gneg', 'gpos75', 'gvar'] }]
                     },
                     text: { field: 'Name', type: 'nominal' },
-                    visibility: {
-                        operation: 'less-than',
-                        measure: 'width',
-                        threshold: '|xe-x|',
-                        transitionPadding: 10,
-                        target: 'mark'
-                    },
+                    visibility: [
+                        {
+                            operation: 'less-than',
+                            measure: 'width',
+                            threshold: '|xe-x|',
+                            transitionPadding: 10,
+                            target: 'mark'
+                        }
+                    ],
                     style: {
                         dy: -16,
                         textFontSize: 6,

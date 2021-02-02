@@ -186,7 +186,7 @@ function AxisTrack(HGC: any, ...args: any[]): any {
 
             this.tickColor = this.options.tickColor ? colorToHex(this.options.tickColor) : TICK_COLOR;
 
-            if (this.options.tickPositions === 'ends') {
+            if (this.options.tickPositions === 'ends' && this.options.layout !== 'circular') {
                 this.initBoundsTicks();
             } else {
                 this.initChromLabels();
@@ -445,7 +445,8 @@ function AxisTrack(HGC: any, ...args: any[]): any {
                 return;
             }
 
-            if (this.options.tickPositions === 'ends') {
+            if (this.options.tickPositions === 'ends' && this.options.layout !== 'circular') {
+                // We only support linear layouts for this.
                 if (!this.gBoundTicks) return;
 
                 this.gBoundTicks.visible = true;

@@ -101,13 +101,15 @@ const IDEOGRAM: Track = {
             },
             text: { field: 'Band', type: 'nominal' },
             color: { value: 'black' },
-            visibility: {
-                operation: 'less-than',
-                measure: 'width',
-                threshold: '|xe-x|',
-                transitionPadding: 10,
-                target: 'mark'
-            },
+            visibility: [
+                {
+                    operation: 'less-than',
+                    measure: 'width',
+                    threshold: '|xe-x|',
+                    transitionPadding: 10,
+                    target: 'mark'
+                }
+            ],
             style: {
                 textStrokeWidth: 0
             }

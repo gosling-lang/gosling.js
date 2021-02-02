@@ -117,7 +117,9 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
 
             tile.goslingModels.forEach((tm: GoslingTrackModel) => {
                 // check visibility condition
-                if (!tm.trackVisibility({ zoomLevel: tile?.tileData?.zoomLevel })) {
+                const trackWidth = this.dimensions[1];
+                const zoomLevel = this._xScale.invert(trackWidth) - this._xScale.invert(0);
+                if (!tm.trackVisibility({ zoomLevel })) {
                     return;
                 }
 
@@ -542,6 +544,11 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
         }
 
         getMouseOverHtml(mouseX: number, mouseY: number) {
+            const isMouseOverPrepared = false;
+            if (!isMouseOverPrepared) {
+                return;
+            }
+
             if (!this.tilesetInfo || !this.tooltips) {
                 // Do not have enough information to show tooltips
                 return;

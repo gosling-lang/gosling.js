@@ -35,7 +35,6 @@ export function fixSpecDownstream(spec: GoslingSpec) {
         // We need to let individual tracks know that they are rendered in a circular layout
         spec.tracks.forEach(t => {
             if (t.layout === undefined) {
-                // EXPERIMENTAL: Remove if statement
                 t.layout = 'circular';
             }
         });

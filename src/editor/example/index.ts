@@ -48,13 +48,11 @@ export const examples: ReadonlyArray<{
     },
     {
         name: '[GenoCAT] Circos',
-        spec: GENOCAT_CIRCOS,
-        underDevelopment: true
+        spec: GENOCAT_CIRCOS
     },
     {
         name: '[GenoCAT] GIVE',
-        spec: GENOCAT_GIVE,
-        underDevelopment: true
+        spec: GENOCAT_GIVE
     },
     {
         name: '[GenoCAT] Gremlin',
@@ -74,7 +72,7 @@ export const examples: ReadonlyArray<{
     {
         name: '[GenoCAT] SWAV',
         spec: GENOCAT_SWAV,
-        underDevelopment: true
+        hidden: true
     },
     {
         name: 'UCSC Cyto band (hg38)',
@@ -126,8 +124,8 @@ export const examples: ReadonlyArray<{
     },
     {
         name: 'Basic Linking Circular Views',
-        spec: EXMAPLE_BASIC_LINKING_CIRCULAR
-        // forceShow: true
+        spec: EXMAPLE_BASIC_LINKING_CIRCULAR,
+        forceShow: true
     },
     {
         name: 'Overview + Detail views',
@@ -140,8 +138,7 @@ export const examples: ReadonlyArray<{
     },
     {
         name: 'Basic Circular Marks',
-        spec: EXAMPLE_CIRCOS,
-        forceShow: true
+        spec: EXAMPLE_CIRCOS
     },
     {
         name: 'Basic Circular Marks 2',

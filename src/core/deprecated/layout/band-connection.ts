@@ -31,10 +31,10 @@ export function renderBetweenBandLink(
 
     // calculate position of points
     const point: {
-        x: (d: Datum) => number;
-        xe: (d: Datum) => number;
-        y: (d: Datum) => number;
-        ye: (d: Datum) => number;
+        x: (d: Datum) => number | undefined;
+        xe: (d: Datum) => number | undefined;
+        y: (d: Datum) => number | undefined;
+        ye: (d: Datum) => number | undefined;
     }[] = [];
 
     const position = getLinkPosition(track);
