@@ -54,6 +54,11 @@ export function drawText(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackMo
 
     /* render */
     if (IsStackedMark(spec)) {
+        if (circular) {
+            // TODO: Not supported for circular layouts yet.
+            return;
+        }
+
         const rowGraphics = tile.graphics; // new HGC.libraries.PIXI.Graphics(); // only one row for stacked marks
 
         const genomicChannel = tm.getGenomicChannel();
@@ -197,16 +202,44 @@ export function drawText(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackMo
 
                 if (circular) {
                     const r = trackOuterRadius - ((rowPosition + rowHeight - y) / trackHeight) * trackRingSize;
-                    const pos = cartesianToPolar(cx, trackWidth, r, tcx, tcy, startAngle, endAngle);
+                    const centerPos = cartesianToPolar(cx, trackWidth, r, tcx, tcy, startAngle, endAngle);
+                    textGraphic.x = centerPos.x;
+                    textGraphic.y = centerPos.y;
 
-                    textGraphic.position.x = pos.x;
-                    textGraphic.position.y = pos.y;
+                    textGraphic.resolution = 4;
+                    const txtStyle = new HGC.libraries.PIXI.TextStyle(textStyleObj);
+                    const metric = HGC.libraries.PIXI.TextMetrics.measureText(textGraphic.text, txtStyle);
+
+                    // scale the width of text label so that its width is the same when converted into circular form
+                    const tw = (metric.width / (2 * r * Math.PI)) * trackWidth;
+                    let [minX, maxX] = [cx - tw / 2.0, cx + tw / 2.0];
+
+                    // make sure not to place the label on the origin
+                    if (minX < 0) {
+                        const gap = -minX;
+                        minX = 0;
+                        maxX += gap;
+                    } else if (maxX > trackWidth) {
+                        const gap = maxX - trackWidth;
+                        maxX = trackWidth;
+                        minX -= gap;
+                    }
+
+                    const ropePoints: number[] = [];
+                    for (let i = maxX; i >= minX; i -= tw / 10.0) {
+                        const p = cartesianToPolar(i, trackWidth, r, tcx, tcy, startAngle, endAngle);
+                        ropePoints.push(new HGC.libraries.PIXI.Point(p.x, p.y));
+                    }
+
+                    textGraphic.updateText();
+                    const rope = new HGC.libraries.PIXI.SimpleRope(textGraphic.texture, ropePoints);
+                    rope.alpha = actualOpacity;
+                    rowGraphics.addChild(rope);
                 } else {
                     textGraphic.position.x = cx;
                     textGraphic.position.y = rowPosition + rowHeight - y;
+                    rowGraphics.addChild(textGraphic);
                 }
-
-                rowGraphics.addChild(textGraphic);
             });
         });
     }

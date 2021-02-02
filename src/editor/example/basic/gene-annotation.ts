@@ -142,12 +142,9 @@ export const HIGLASS_GENE_ANNOTATION: Track = {
 };
 
 export const EXAMPLE_GENE_ANNOTATION: GoslingSpec = {
-    layout: 'circular',
     arrangement: {
         direction: 'vertical',
-        wrap: 3,
-        columnSizes: 400,
-        rowSizes: 400
+        wrap: 3
     },
     tracks: [
         {
