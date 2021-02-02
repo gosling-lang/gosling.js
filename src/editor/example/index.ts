@@ -108,8 +108,7 @@ export const examples: ReadonlyArray<{
     },
     {
         name: 'Custom Gene Annotation Tracks',
-        spec: EXAMPLE_GENE_ANNOTATION,
-        forceShow: true
+        spec: EXAMPLE_GENE_ANNOTATION
     },
     {
         name: 'Band and Line Connections',
@@ -125,8 +124,8 @@ export const examples: ReadonlyArray<{
     },
     {
         name: 'Basic Linking Circular Views',
-        spec: EXMAPLE_BASIC_LINKING_CIRCULAR
-        // forceShow: true
+        spec: EXMAPLE_BASIC_LINKING_CIRCULAR,
+        forceShow: true
     },
     {
         name: 'Overview + Detail views',
