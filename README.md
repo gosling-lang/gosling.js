@@ -47,21 +47,24 @@ In Gosling, users can easily create interactive and scalable visualizations thro
 
 
 # Resources
-- [Documentations](https://github.com/gosling-lang/gosling.js/wiki)
+- [Gosling Website](https://gosling.js.org/)
+- [Documentations](https://github.com/gosling-lang/gosling.js/wiki/Documentation)
 - [Online Examples](https://gosling.js.org/)
+- [Tutorial](https://github.com/gosling-lang/gosling.js/wiki/GettingStarted)
 - [Use Gosling in your React app](https://github.com/sehilyi/geminid-react)
+- [Future Plans](https://github.com/gosling-lang/gosling.js/projects/1)
 
 
 
 # Run a Gosling editor
 
-To install and run a Gosling.js editor locally, you can run the following commands (ensure you have installed [yarn](https://yarnpkg.com/getting-started/install) in your computer):
+The following commands install and run a Gosling.js editor locally in your computer (ensure you have installed [yarn](https://yarnpkg.com/getting-started/install)):
 
 ```sh
 yarn
 yarn start
 ```
-Then you can open <http://localhost:8080/> in your web browser to play with the editor.
+Then you can open <http://localhost:8080/> in a web browser to play with the editor.
 
 # Installation
 ```
@@ -75,3 +78,6 @@ npm install gosling.js
 # License
 
 This project is licensed under the terms of the [MIT license](https://github.com/gosling-lang/gosling.js/blob/master/LICENSE.md).
+
+
+<!-- # Cite Gosling -->
