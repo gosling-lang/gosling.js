@@ -5,8 +5,7 @@ import {
     ChannelValue,
     BasicSingleTrack,
     SingleTrack,
-    Channel,
-    SizeVisibilityCondition
+    Channel
 } from './gosling.schema';
 import { validateTrack, getGenomicChannelFromTrack, getGenomicChannelKeyFromTrack } from './utils/validate';
 import * as d3 from 'd3';
@@ -111,17 +110,10 @@ export class GoslingTrackModel {
      * Fill the missing options with default values or with the values calculated based on the data.
      */
     private generateCompleteSpec(spec: BasicSingleTrack) {
-        if (!spec.width) {
-            spec.width = 300;
-        }
-        if (!spec.height) {
-            spec.height = 300;
-        }
-        if (!spec.outerRadius) {
-            spec.outerRadius = Math.min(spec.width, spec.height) / 2.0;
-        }
-        if (!spec.innerRadius) {
-            spec.innerRadius = Math.max(spec.outerRadius - 80, 0);
+        if (!spec.width || !spec.height) {
+            // This shouldn't be reached.
+            console.warn('Size of track is not determined yet.');
+            return;
         }
 
         // If axis presents, reserve a space to show axis
@@ -308,26 +300,36 @@ export class GoslingTrackModel {
 
     public trackVisibility(currentStage: { zoomLevel?: number }): boolean {
         const spec = this.spec();
-        if (spec.visibility === undefined || spec.visibility.target !== 'track') {
+        if (
+            !spec.visibility ||
+            spec.visibility.length === 0 ||
+            spec.visibility.filter(d => d.target === 'track').length === 0
+        ) {
             // if condition is not defined, just show them.
             return true;
         }
 
-        const { operation, measure, threshold } = spec.visibility;
+        // We are using a logical operation AND, so if unless all options are `true`, we hide this track.
+        let visibility = true;
+        spec.visibility
+            .filter(d => d.target === 'track')
+            .forEach(d => {
+                const { operation, measure, threshold } = d;
 
-        let compareValue: number | undefined;
+                let compareValue: number | undefined;
 
-        if (measure === 'zoomLevel') {
-            compareValue = currentStage[measure];
-        } else {
-            compareValue = spec[measure];
-        }
+                if (measure === 'zoomLevel') {
+                    compareValue = currentStage[measure];
+                } else {
+                    compareValue = spec[measure];
+                }
 
-        if (compareValue !== undefined) {
-            return logicalComparison(compareValue, operation, threshold as number) === 1;
-        } else {
-            return true;
-        }
+                if (compareValue !== undefined) {
+                    // compare only when the measure is suggested
+                    visibility = visibility && logicalComparison(compareValue, operation, threshold as number) === 1;
+                }
+            });
+        return visibility;
     }
 
     /**
@@ -336,49 +338,54 @@ export class GoslingTrackModel {
      */
     public markVisibility(datum: { [k: string]: string | number }, metrics?: any): number {
         const spec = this.spec();
-        if (spec.visibility === undefined || spec.visibility.target !== 'mark') {
+        if (
+            !spec.visibility ||
+            spec.visibility.length === 0 ||
+            spec.visibility.filter(d => d.target === 'mark').length === 0
+        ) {
             // if condition is not defined, just show them.
             return 1;
         }
 
-        const vSpec = spec.visibility as SizeVisibilityCondition;
-        const mark = spec.mark;
-        switch (mark) {
-            case 'text':
-                if (vSpec.threshold === '|xe-x|') {
+        let visibility = 1;
+
+        // Find the lowest visibility
+        spec.visibility
+            .filter(d => d.target === 'mark')
+            .forEach(d => {
+                const { operation, threshold, conditionPadding, transitionPadding, measure } = d;
+
+                const padding = conditionPadding ?? 0;
+                const mark = spec.mark;
+
+                let newVisibility = 1;
+
+                if (mark === 'text' && threshold === '|xe-x|' && measure === 'width') {
                     // compare between the actual width and the |xe-x|
                     const xe = this.encodedPIXIProperty('xe', datum);
                     const x = this.encodedPIXIProperty('x', datum);
-                    const padding = vSpec.conditionPadding ?? 0;
-                    if (xe === undefined || !metrics?.width) {
-                        // we do not have xe to compare, so just make the marks visible
-                        return 1;
+
+                    if (xe !== undefined && metrics?.width) {
+                        newVisibility = logicalComparison(
+                            metrics.width + padding,
+                            operation,
+                            Math.abs(xe - x),
+                            transitionPadding
+                        );
                     }
-                    return logicalComparison(
-                        metrics.width + padding,
-                        vSpec.operation,
-                        Math.abs(xe - x),
-                        vSpec.transitionPadding
-                    );
-                }
-                return 1;
-            default:
-                if (typeof vSpec.threshold === 'number') {
+                } else if (measure === 'width' && typeof threshold === 'number' && metrics?.width) {
                     // compare between the actual width and the constant width that user specified
-                    const padding = vSpec.conditionPadding ?? 0;
-                    if (!metrics?.width) {
-                        // we do not have xe to compare, so just make the marks visible
-                        return 1;
-                    }
-                    return logicalComparison(
-                        metrics.width + padding,
-                        vSpec.operation,
-                        vSpec.threshold,
-                        vSpec.transitionPadding
-                    );
+                    newVisibility = logicalComparison(metrics.width + padding, operation, threshold, transitionPadding);
+                } else if (measure === 'zoomLevel' && typeof threshold === 'number' && metrics?.zoomLevel) {
+                    newVisibility = logicalComparison(metrics.zoomLevel, operation, threshold, transitionPadding);
                 }
-                return 1;
-        }
+
+                // Update only if the upcoming one is smaller
+                if (visibility > newVisibility) {
+                    visibility = newVisibility;
+                }
+            });
+        return visibility;
     }
 
     /**

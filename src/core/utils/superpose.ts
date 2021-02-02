@@ -17,6 +17,11 @@ export function resolveSuperposedTracks(track: Track): BasicSingleTrack[] {
         return [track];
     }
 
+    if (track.superpose.length === 0) {
+        // This makes sure not to return empty object
+        return [{ ...track, superpose: undefined } as BasicSingleTrack];
+    }
+
     const base: BasicSingleTrack = JSON.parse(JSON.stringify(track));
     delete (base as Partial<SuperposedTrack>).superpose; // remove `superpose` from the base spec
 

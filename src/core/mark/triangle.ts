@@ -41,7 +41,9 @@ export function drawTriangle(HGC: any, trackInfo: any, tile: any, tm: GoslingTra
     const rowHeight = trackHeight / rowCategories.length;
 
     const yCategories: string[] = (tm.getChannelDomainArray('y') as string[]) ?? ['___SINGLE_Y___'];
-    const triHeight = tm.encodedValue('size') ?? rowHeight / yCategories.length;
+    const triHeight =
+        tm.encodedValue('size') ??
+        (circular ? trackRingSize / rowCategories.length / yCategories.length : rowHeight / yCategories.length);
 
     /* render */
     const g = tile.graphics;
@@ -68,61 +70,92 @@ export function drawTriangle(HGC: any, trackInfo: any, tile: any, tm: GoslingTra
             const opacity = tm.encodedPIXIProperty('opacity', d);
             // const size = tm.encodedValue('size', sizeValue);
 
-            // TODO: Consider the `size` channel below
-            let x0 = x ? x : xe - markWidth;
-            let x1 = xe ? xe : x + markWidth;
-            let xm = x0 + (x1 - x0) / 2.0;
-            const ym = rowPosition + y;
-            const y0 = rowPosition + y - triHeight / 2.0;
-            const y1 = rowPosition + y + triHeight / 2.0;
-
-            if (spec.style?.align === 'right' && !xe) {
-                x0 -= markWidth;
-                x1 -= markWidth;
-                xm -= markWidth;
-            }
-
-            const markToPoints: number[] = ({
-                'triangle-l': [x1, y0, x0, ym, x1, y1, x1, y0],
-                'triangle-r': [x0, y0, x1, ym, x0, y1, x0, y0],
-                'triangle-d': [x0, y0, x1, y0, xm, y1, x0, y0]
-            } as any)[spec.mark as MarkType];
-
-            const alphaTransition = tm.markVisibility(d, { width: x1 - x0 });
-            const actualOpacity = Math.min(alphaTransition, opacity);
-
-            // stroke
-            g.lineStyle(
-                strokeWidth,
-                colorToHex(stroke),
-                // too narrow triangle's stroke is becoming too sharp
-                x1 - x0 > 2 ? actualOpacity : 0, // alpha
-                0 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
-            );
-
-            g.beginFill(colorToHex(color), actualOpacity);
-
             if (circular) {
-                let curX = 0,
-                    curY = 0;
+                let x0 = x ? x : xe - markWidth;
+                let x1 = xe ? xe : x + markWidth;
+                // let xm = x0 + (x1 - x0) / 2.0;
+                const rm = trackOuterRadius - ((rowPosition + y) / trackHeight) * trackRingSize;
+                const r0 = rm - triHeight / 2.0;
+                const r1 = rm + triHeight / 2.0;
 
-                g.drawPolygon(
-                    markToPoints.map((_d, i) => {
-                        if (i % 2 === 0) {
-                            // x
-                            curX = _d;
-                            curY = markToPoints[i + 1];
-                        }
-                        const r = trackOuterRadius - ((rowPosition + rowHeight - curY) / trackHeight) * trackRingSize;
-                        return cartesianToPolar(curX, trackWidth, r, cx, cy, startAngle, endAngle)[
-                            i % 2 === 0 ? 'x' : 'y'
-                        ];
-                    })
+                if (spec.style?.align === 'right' && !xe) {
+                    x0 -= markWidth;
+                    x1 -= markWidth;
+                    // xm -= markWidth;
+                }
+
+                let markToPoints: number[] = [];
+                if (spec.mark === 'triangle-l') {
+                    const p0 = cartesianToPolar(x1, trackWidth, r0, cx, cy, startAngle, endAngle);
+                    const p1 = cartesianToPolar(x0, trackWidth, rm, cx, cy, startAngle, endAngle);
+                    const p2 = cartesianToPolar(x1, trackWidth, r1, cx, cy, startAngle, endAngle);
+                    const p3 = cartesianToPolar(x1, trackWidth, r0, cx, cy, startAngle, endAngle);
+                    markToPoints = [p0.x, p0.y, p1.x, p1.y, p2.x, p2.y, p3.x, p3.y];
+                } else if (spec.mark === 'triangle-r') {
+                    const p0 = cartesianToPolar(x0, trackWidth, r0, cx, cy, startAngle, endAngle);
+                    const p1 = cartesianToPolar(x1, trackWidth, rm, cx, cy, startAngle, endAngle);
+                    const p2 = cartesianToPolar(x0, trackWidth, r1, cx, cy, startAngle, endAngle);
+                    const p3 = cartesianToPolar(x0, trackWidth, r0, cx, cy, startAngle, endAngle);
+                    markToPoints = [p0.x, p0.y, p1.x, p1.y, p2.x, p2.y, p3.x, p3.y];
+                }
+
+                const alphaTransition = tm.markVisibility(d, {
+                    width: x1 - x0,
+                    zoomLevel: trackInfo._xScale.invert(trackWidth) - trackInfo._xScale.invert(0)
+                });
+                const actualOpacity = Math.min(alphaTransition, opacity);
+
+                // stroke
+                g.lineStyle(
+                    strokeWidth,
+                    colorToHex(stroke),
+                    // too narrow triangle's stroke is becoming too sharp
+                    x1 - x0 > 2 ? actualOpacity : 0, // alpha
+                    0 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
                 );
-            } else {
+
+                g.beginFill(colorToHex(color), actualOpacity);
                 g.drawPolygon(markToPoints);
+                g.endFill();
+            } else {
+                let x0 = x ? x : xe - markWidth;
+                let x1 = xe ? xe : x + markWidth;
+                let xm = x0 + (x1 - x0) / 2.0;
+                const ym = rowPosition + y;
+                const y0 = rowPosition + y - triHeight / 2.0;
+                const y1 = rowPosition + y + triHeight / 2.0;
+
+                if (spec.style?.align === 'right' && !xe) {
+                    x0 -= markWidth;
+                    x1 -= markWidth;
+                    xm -= markWidth;
+                }
+
+                const markToPoints: number[] = ({
+                    'triangle-l': [x1, y0, x0, ym, x1, y1, x1, y0],
+                    'triangle-r': [x0, y0, x1, ym, x0, y1, x0, y0],
+                    'triangle-d': [x0, y0, x1, y0, xm, y1, x0, y0]
+                } as any)[spec.mark as MarkType];
+
+                const alphaTransition = tm.markVisibility(d, {
+                    width: x1 - x0,
+                    zoomLevel: trackInfo._xScale.invert(trackWidth) - trackInfo._xScale.invert(0)
+                });
+                const actualOpacity = Math.min(alphaTransition, opacity);
+
+                // stroke
+                g.lineStyle(
+                    strokeWidth,
+                    colorToHex(stroke),
+                    // too narrow triangle's stroke is becoming too sharp
+                    x1 - x0 > 2 ? actualOpacity : 0, // alpha
+                    0 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
+                );
+
+                g.beginFill(colorToHex(color), actualOpacity);
+                g.drawPolygon(markToPoints);
+                g.endFill();
             }
-            g.endFill();
         });
     });
 }

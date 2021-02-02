@@ -42,5 +42,5 @@ export function logicalComparison(
     }
 
     // make sure to return a value in [0, 1]
-    return alpha > 1 ? 1 : alpha < 0 ? 0 : alpha;
+    return Math.max(Math.min(1, alpha), 0);
 }

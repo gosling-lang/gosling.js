@@ -1,6 +1,7 @@
 import { GoslingTrackModel } from '../gosling-track-model';
 import { Channel } from '../gosling.schema';
 import { getValueUsingChannel } from '../gosling.schema.guards';
+import { cartesianToPolar, valueToRadian } from '../utils/polar';
 
 export function drawRule(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackModel) {
     /* track spec */
@@ -13,7 +14,17 @@ export function drawRule(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackMo
     const data = tm.data();
 
     /* track size */
-    const trackHeight = trackInfo.dimensions[1];
+    const [trackWidth, trackHeight] = trackInfo.dimensions;
+
+    /* circular parameters */
+    const circular = spec.layout === 'circular';
+    const trackInnerRadius = spec.innerRadius ?? 220;
+    const trackOuterRadius = spec.outerRadius ?? 300; // TODO: should be smaller than Math.min(width, height)
+    const startAngle = spec.startAngle ?? 0;
+    const endAngle = spec.endAngle ?? 360;
+    const trackRingSize = trackOuterRadius - trackInnerRadius;
+    const cx = trackWidth / 2.0;
+    const cy = trackHeight / 2.0;
 
     /* row separation */
     const rowCategories: string[] = (tm.getChannelDomainArray('row') as string[]) ?? ['___SINGLE_ROW___'];
@@ -37,7 +48,7 @@ export function drawRule(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackMo
         ).forEach(d => {
             const x = tm.encodedPIXIProperty('x', d);
             const xe = tm.encodedPIXIProperty('xe', d);
-            const y = tm.encodedPIXIProperty('y', d);
+            const y = tm.encodedPIXIProperty('y', d); // y middle position
             const color = tm.encodedPIXIProperty('color', d);
             const strokeWidth = tm.encodedPIXIProperty('strokeWidth', d);
             const opacity = tm.encodedPIXIProperty('opacity', d);
@@ -49,7 +60,35 @@ export function drawRule(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackMo
                 0.5 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
             );
 
-            if (dashed) {
+            if (circular) {
+                // !!! Currently, we only support simple straight lines for circular layouts.
+                if (strokeWidth === 0) {
+                    // Do not render invisible elements.
+                    return;
+                }
+
+                // Actually, we are drawing arcs instead of lines, so lets remove stroke.
+                rowGraphics.lineStyle(
+                    strokeWidth,
+                    colorToHex(color),
+                    0, // alpha
+                    0.5 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
+                );
+
+                const midR = trackOuterRadius - ((rowPosition + y) / trackHeight) * trackRingSize;
+                const farR = midR + strokeWidth / 2.0;
+                const nearR = midR - strokeWidth + 2.0;
+
+                const sPos = cartesianToPolar(x, trackWidth, nearR, cx, cy, startAngle, endAngle);
+                const startRad = valueToRadian(x, trackWidth, startAngle, endAngle);
+                const endRad = valueToRadian(xe, trackWidth, startAngle, endAngle);
+
+                rowGraphics.beginFill(colorToHex(color), opacity);
+                rowGraphics.moveTo(sPos.x, sPos.y);
+                rowGraphics.arc(cx, cy, nearR, startRad, endRad, true);
+                rowGraphics.arc(cx, cy, farR, endRad, startRad, false);
+                rowGraphics.closePath();
+            } else if (dashed) {
                 const [dashSize, gapSize] = dashed;
                 let curPos = x;
 
@@ -59,6 +98,7 @@ export function drawRule(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackMo
                     curPos += dashSize + gapSize;
                 } while (curPos < xe);
             } else {
+                /* regular horizontal lines */
                 if (curved === undefined) {
                     rowGraphics.moveTo(x, rowPosition + rowHeight - y);
                     rowGraphics.lineTo(xe, rowPosition + rowHeight - y);
@@ -76,8 +116,7 @@ export function drawRule(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackMo
                 }
             }
 
-            // TODO: do not support using pattern with curved
-            if (linePattern) {
+            if (linePattern && curved === undefined && !circular) {
                 const { type: pType, size: pSize } = linePattern;
                 let curPos = x;
 

@@ -104,7 +104,10 @@ export function drawText(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackMo
                 const metric = HGC.libraries.PIXI.TextMetrics.measureText(text, textStyleObj);
                 trackInfo.textsBeingUsed++;
 
-                const alphaTransition = tm.markVisibility(d, metric);
+                const alphaTransition = tm.markVisibility(d, {
+                    ...metric,
+                    zoomLevel: trackInfo._xScale.invert(trackWidth) - trackInfo._xScale.invert(0)
+                });
                 const actualOpacity = Math.min(alphaTransition, opacity);
 
                 if (!text || actualOpacity === 0) {
@@ -176,7 +179,10 @@ export function drawText(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackMo
                 const metric = HGC.libraries.PIXI.TextMetrics.measureText(text, textStyleObj);
                 trackInfo.textsBeingUsed++;
 
-                const alphaTransition = tm.markVisibility(d, metric);
+                const alphaTransition = tm.markVisibility(d, {
+                    ...metric,
+                    zoomLevel: trackInfo._xScale.invert(trackWidth) - trackInfo._xScale.invert(0)
+                });
                 const actualOpacity = Math.min(alphaTransition, opacity);
 
                 if (!text || actualOpacity === 0) {

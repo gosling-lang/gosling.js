@@ -29,13 +29,15 @@ export const EXAMPLE_CYTOAND_HG38: GoslingSpec = {
                         domain: ['gneg', 'gpos25', 'gpos50', 'gpos75', 'gpos100', 'gvar'],
                         range: ['black', 'black', 'black', 'black', 'white', 'black']
                     },
-                    visibility: {
-                        operation: 'less-than',
-                        measure: 'width',
-                        threshold: '|xe-x|',
-                        transitionPadding: 10,
-                        target: 'mark'
-                    },
+                    visibility: [
+                        {
+                            operation: 'less-than',
+                            measure: 'width',
+                            threshold: '|xe-x|',
+                            transitionPadding: 10,
+                            target: 'mark'
+                        }
+                    ],
                     style: {
                         textStrokeWidth: 0
                     }

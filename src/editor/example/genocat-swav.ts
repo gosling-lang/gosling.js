@@ -67,13 +67,15 @@ export const GENOCAT_SWAV: GoslingSpec = {
             ],
             row: { field: 'strand', type: 'nominal', domain: ['+', '-'] },
             color: { value: '#008001' },
-            visibility: {
-                operation: 'less-than',
-                measure: 'width',
-                threshold: '|xe-x|',
-                transitionPadding: 10,
-                target: 'mark'
-            },
+            visibility: [
+                {
+                    operation: 'less-than',
+                    measure: 'width',
+                    threshold: '|xe-x|',
+                    transitionPadding: 10,
+                    target: 'mark'
+                }
+            ],
             style: { outline: 'white' }
         },
         {

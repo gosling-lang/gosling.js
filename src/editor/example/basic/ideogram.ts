@@ -65,13 +65,15 @@ export const EXAMPLE_IDEOGRAM_TRACK: SuperposedTrack = {
     ],
     x: { field: 'Basepair_start', type: 'genomic', domain: { chromosome: '1' }, axis: 'top' },
     xe: { field: 'Basepair_stop', type: 'genomic' },
-    visibility: {
-        operation: 'greater-than',
-        measure: 'width',
-        threshold: 3,
-        transitionPadding: 5,
-        target: 'mark'
-    },
+    visibility: [
+        {
+            operation: 'greater-than',
+            measure: 'width',
+            threshold: 3,
+            transitionPadding: 5,
+            target: 'mark'
+        }
+    ],
     stroke: { value: 'gray' },
     strokeWidth: { value: 0.5 }
 };

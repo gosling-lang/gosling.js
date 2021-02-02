@@ -23,23 +23,23 @@ export function getLinkingInfo(hgModel: HiGlassModel) {
 
         const resolved = resolveSuperposedTracks(spec);
 
-        resolved.forEach(s => {
+        resolved.forEach(spec => {
             SUPPORTED_CHANNELS.forEach(cKey => {
-                const channel = s[cKey];
+                const channel = spec[cKey];
 
                 if (IsChannelDeep(channel) && channel.linkingID) {
                     linkingInfo.push({
-                        layout: s.layout === 'circular' ? 'circular' : 'linear',
+                        layout: spec.layout === 'circular' ? 'circular' : 'linear',
                         viewId,
                         linkId: channel.linkingID,
-                        isBrush: s.mark === 'brush',
+                        isBrush: spec.mark === 'brush',
                         style: {
-                            color: (s as any).color?.value,
-                            stroke: (s as any).stroke?.value,
-                            strokeWidth: (s as any).strokeWidth?.value,
-                            opacity: (s as any).opacity?.value,
-                            innerRadius: s.innerRadius,
-                            outerRadius: s.outerRadius
+                            color: (spec as any).color?.value,
+                            stroke: (spec as any).stroke?.value,
+                            strokeWidth: (spec as any).strokeWidth?.value,
+                            opacity: (spec as any).opacity?.value,
+                            innerRadius: spec.innerRadius,
+                            outerRadius: spec.outerRadius
                         }
                     });
                     return;

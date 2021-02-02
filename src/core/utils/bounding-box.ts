@@ -3,8 +3,9 @@ import {
     DEFAULT_SUBTITLE_HEIGHT,
     DEFAULT_TITLE_HEIGHT,
     DEFAULT_TRACK_GAP,
-    DEFAULT_TRACK_HEIGHT,
-    DEFAULT_TRACK_WIDTH
+    DEFAULT_TRACK_HEIGHT_LINEAR,
+    DEFAULT_TRACK_WIDTH_CIRCULAR,
+    DEFAULT_TRACK_WIDTH_LINEAR
 } from '../layout/defaults';
 import { resolveSuperposedTracks } from '../utils/superpose';
 import { arrayRepeat, insertItemToArray } from './array';
@@ -74,13 +75,17 @@ export function getGridInfo(spec: GoslingSpec): GridInfo {
     // undefined | [number, number, ...] | number
     const baseColumnSizes =
         spec.arrangement?.columnSizes === undefined
-            ? [DEFAULT_TRACK_WIDTH]
+            ? spec.layout === 'circular'
+                ? [DEFAULT_TRACK_WIDTH_CIRCULAR]
+                : [DEFAULT_TRACK_WIDTH_LINEAR]
             : typeof spec.arrangement?.columnSizes === 'number'
             ? [spec.arrangement?.columnSizes]
             : spec.arrangement?.columnSizes;
     const baseRowSizes =
         spec.arrangement?.rowSizes === undefined
-            ? [DEFAULT_TRACK_HEIGHT]
+            ? spec.layout === 'circular'
+                ? [DEFAULT_TRACK_WIDTH_CIRCULAR]
+                : [DEFAULT_TRACK_HEIGHT_LINEAR]
             : typeof spec.arrangement?.rowSizes === 'number'
             ? [spec.arrangement?.rowSizes]
             : spec.arrangement?.rowSizes;
@@ -129,7 +134,7 @@ const getTextTrack = (size: Size, title?: string, subtitle?: string) => {
 
 // TODO: handle overflow by the ill-defined spec
 /**
- *
+ * Determine how to arrange multiple tracks. This also assign `width`, `height`, `innerRadius`, and `outerRadius` of a track.
  * @param spec
  */
 export function getArrangement(spec: GoslingSpec): TrackInfo[] {
@@ -185,6 +190,14 @@ export function getArrangement(spec: GoslingSpec): TrackInfo[] {
         // Assign actual size determined by the layout definition
         track.width = width;
         track.height = height;
+
+        // Assign default outerRadius and innerRadius
+        if (!track.outerRadius) {
+            track.outerRadius = Math.min(track.width, track.height) / 2.0 - 30;
+        }
+        if (!track.innerRadius) {
+            track.innerRadius = Math.max(track.outerRadius - 80, 0);
+        }
 
         info.push({
             track,
