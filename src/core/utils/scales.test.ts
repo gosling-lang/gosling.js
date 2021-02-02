@@ -10,9 +10,7 @@ describe('Should use shared scales', () => {
                 mark: 'line',
                 x: { field: 'x', type: 'genomic' },
                 y: { field: 'y', type: 'quantitative', domain: [0, 1] },
-                color: { field: 'color', type: 'nominal', domain: ['a'] },
-                width: 300,
-                height: 300
+                color: { field: 'color', type: 'nominal', domain: ['a'] }
             },
             []
         );
@@ -26,9 +24,7 @@ describe('Should use shared scales', () => {
                         mark: 'line',
                         x: { field: 'x', type: 'genomic' },
                         y: { field: 'y', type: 'quantitative', domain: [0, 2] },
-                        color: { field: 'color', type: 'nominal', domain: ['a', 'b'] },
-                        width: 300,
-                        height: 300
+                        color: { field: 'color', type: 'nominal', domain: ['a', 'b'] }
                     },
                     []
                 ),
@@ -38,9 +34,7 @@ describe('Should use shared scales', () => {
                         mark: 'line',
                         x: { field: 'x', type: 'genomic' },
                         y: { field: 'y', type: 'quantitative', domain: [-1, 3] },
-                        color: { field: 'color', type: 'nominal', domain: ['c'] },
-                        width: 300,
-                        height: 300
+                        color: { field: 'color', type: 'nominal', domain: ['c'] }
                     },
                     []
                 )
@@ -62,9 +56,7 @@ describe('Should use shared scales', () => {
                 mark: 'line',
                 x: { field: 'x', type: 'genomic' },
                 y: { field: 'y', type: 'quantitative', domain: [0, 1] },
-                color: { field: 'color', type: 'nominal', domain: ['a'] },
-                width: 300,
-                height: 300
+                color: { field: 'color', type: 'nominal', domain: ['a'] }
             },
             []
         );
@@ -78,9 +70,7 @@ describe('Should use shared scales', () => {
                         mark: 'line',
                         x: { field: 'x', type: 'genomic' },
                         y: { field: 'y', type: 'quantitative', domain: [0, 2] },
-                        color: { field: 'color', type: 'nominal', domain: ['a', 'b'] },
-                        width: 300,
-                        height: 300
+                        color: { field: 'color', type: 'nominal', domain: ['a', 'b'] }
                     },
                     []
                 ),
@@ -90,9 +80,7 @@ describe('Should use shared scales', () => {
                         mark: 'line',
                         x: { field: 'x', type: 'genomic' },
                         y: { field: 'y', type: 'quantitative', domain: [0, 3] },
-                        color: { field: 'color', type: 'nominal', domain: ['c'] },
-                        width: 300,
-                        height: 300
+                        color: { field: 'color', type: 'nominal', domain: ['c'] }
                     },
                     []
                 )

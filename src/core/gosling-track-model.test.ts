@@ -6,9 +6,7 @@ import { IsChannelDeep, IsChannelValue } from './gosling.schema.guards';
 const MINIMAL_TRACK_SPEC: Track = {
     data: { url: '', type: 'tileset' },
     mark: 'bar',
-    x: { field: 'x', type: 'genomic' },
-    width: 300,
-    height: 300
+    x: { field: 'x', type: 'genomic' }
 };
 
 describe('gosling track model should properly validate the original spec', () => {
@@ -29,9 +27,7 @@ describe('gosling track model should properly validate the original spec', () =>
     it('genomic coordinate should be present in the spec', () => {
         const track: Track = {
             data: { url: '', type: 'tileset' },
-            mark: 'bar',
-            width: 300,
-            height: 300
+            mark: 'bar'
         };
         const model = new GoslingTrackModel(track, []);
         expect(model.validateSpec().valid).toBe(false);
