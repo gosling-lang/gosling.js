@@ -29,8 +29,8 @@ export function renderBetweenLineLink(
 
     // calculate position of points
     const point: {
-        x: (d: Datum) => number;
-        y: (d: Datum) => number;
+        x: (d: Datum) => number | undefined;
+        y: (d: Datum) => number | undefined;
     }[] = [];
 
     const position = getLinkPosition(track as BasicSingleTrack);
@@ -68,10 +68,10 @@ export function renderBetweenLineLink(
             (d: any) => Math.abs((d[f1 as string] as number) - (d[f2 as string] as number)) < 30
         )
         .append('line')
-        .attr('x1', (d: any) => point[0].x(d))
-        .attr('y1', (d: any) => point[0].y(d))
-        .attr('x2', (d: any) => point[1].x(d))
-        .attr('y2', (d: any) => point[1].y(d))
+        .attr('x1', (d: any) => point[0].x(d) ?? 0)
+        .attr('y1', (d: any) => point[0].y(d) ?? 0)
+        .attr('x2', (d: any) => point[1].x(d) ?? 0)
+        .attr('y2', (d: any) => point[1].y(d) ?? 0)
         .attr('fill', styles.getStyle().fill)
         .attr('stroke', styles.getStyle().stroke)
         .attr('stroke-width', styles.getStyle().strokeWidth)
