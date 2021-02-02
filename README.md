@@ -1,10 +1,24 @@
+
+
+
 <div align="center">
 
-![Gosling Logo (2)@0 25x](https://user-images.githubusercontent.com/9922882/106369962-ddbba700-6323-11eb-9e47-f8b06ba24178.png)
+<table>
+<tr>
+<th style="vertical-align: bottom;">
 
-# Gosling.js
+<img src="https://user-images.githubusercontent.com/9922882/106369962-ddbba700-6323-11eb-9e47-f8b06ba24178.png" style="display: block">
 
-## Grammar Of Scalable Linked Interactive Nucleotide Graphics
+</th>
+<th>
+<span style="font-size: 30px">Gosling.js</span>
+<br/>
+<span style="font-size: 20px"> Grammar Of Scalable Linked Interactive Nucleotide Graphics </span>
+
+
+</th>
+</tr>
+</table>
 
 [![npm version](https://img.shields.io/npm/v/gosling.js.svg?style=flat-square)](https://www.npmjs.com/package/gosling.js)
 [![Build Status](https://img.shields.io/travis/sehilyi/geminid/master.svg?style=flat-square)](https://travis-ci.com/gosling-lang/gosling.js)
@@ -15,15 +29,13 @@
 
 </div>
 
+<br/>
+<br/>
+
 # Introduction
 
 Gosling is a declarative visualization grammar tailored for interactive genomic visualizations.   
 In Gosling, users can easily create interactive and scalable visualizations through writing a JSON configuration. 
-
-
-<img src="https://raw.githubusercontent.com/wiki/gosling-lang/gosling.js/images/demo.gif"  width="400"/>
-
-[Try Online](<https://gosling.js.org/?full=false&spec=('trackG(0'BurlKhttps%3A%2F%2Fresgen.io%2Fapi%2Fv1%2FC_info%2F%3Fd%3DUvVPeLHuRDiYA3qwFlm7xQ8EC'0)%2C0'metaBEhiglass-multivec8row698columnKposition8valueKpeak8categorieGM1525354'%5D0)I)%5D%0A)*%20%200I*5J%20M6!%208J0*'9'sampleBdata6(0*'CtilesetEtypeKGs6%5BI%0A**J'%2CK6'M9%20%01MKJIGECB98650*_>)
 
     
 ```json
@@ -42,6 +54,12 @@ In Gosling, users can easily create interactive and scalable visualizations thro
     }]
 }
 ```
+
+<img src="https://raw.githubusercontent.com/wiki/gosling-lang/gosling.js/images/demo.gif"  width="400"/>
+
+[Try Online](<https://gosling.js.org/?full=false&spec=('trackG(0'BurlKhttps%3A%2F%2Fresgen.io%2Fapi%2Fv1%2FC_info%2F%3Fd%3DUvVPeLHuRDiYA3qwFlm7xQ8EC'0)%2C0'metaBEhiglass-multivec8row698columnKposition8valueKpeak8categorieGM1525354'%5D0)I)%5D%0A)*%20%200I*5J%20M6!%208J0*'9'sampleBdata6(0*'CtilesetEtypeKGs6%5BI%0A**J'%2CK6'M9%20%01MKJIGECB98650*_>)
+
+
 
 
 
@@ -73,7 +91,10 @@ npm install gosling.js
 
 # Contact
 - [GitHub Issues](https://github.com/gosling-lang/gosling.js/issues/)
-- Email: <sehi_lyi@hms.harvard.edu>, <qianwen_wang@hms.harvard.edu>, <nils@hms.harvard.edu>
+- Email: 
+  - Sehi L'Yi <sehi_lyi@hms.harvard.edu>
+  - Qianwen Wang <qianwen_wang@hms.harvard.edu>
+  - Nils Gehlengborg <nils@hms.harvard.edu>
 
 # License
 
