@@ -94,7 +94,7 @@ npm install gosling.js
 - Email: 
   - Sehi L'Yi <sehi_lyi@hms.harvard.edu>
   - Qianwen Wang <qianwen_wang@hms.harvard.edu>
-  - Nils Gehlengborg <nils@hms.harvard.edu>
+  - Nils Gehlenborg <nils@hms.harvard.edu>
 
 # License
 
