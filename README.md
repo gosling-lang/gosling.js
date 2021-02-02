@@ -50,7 +50,7 @@ In Gosling, users can easily create interactive and scalable visualizations thro
 - [Documentations](https://github.com/gosling-lang/gosling.js/wiki/Documentation)
 - [Online Examples](https://gosling.js.org/)
 - [Tutorial](https://github.com/gosling-lang/gosling.js/wiki/GettingStarted)
-- [Use Gosling in your React app](https://github.com/sehilyi/geminid-react)
+- [Use Gosling in your React app](https://github.com/gosling-lang/gosling-react)
 - [Future Plans](https://github.com/gosling-lang/gosling.js/projects/1)
 
 
