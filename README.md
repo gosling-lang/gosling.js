@@ -1,33 +1,14 @@
-
-
-
+<p align="center"><img src="https://raw.githubusercontent.com/wiki/gosling-lang/gosling.js/images/logo.png" width="450" /></p>
 <div align="center">
-
-<table>
-<tr>
-<th style="vertical-align: bottom;">
-
-<img src="https://user-images.githubusercontent.com/9922882/106369962-ddbba700-6323-11eb-9e47-f8b06ba24178.png" style="display: block">
-
-</th>
-<th>
-<span style="font-size: 30px">Gosling.js</span>
-<br/>
-<span style="font-size: 20px"> Grammar Of Scalable Linked Interactive Nucleotide Graphics </span>
-
-
-</th>
-</tr>
-</table>
 
 [![npm version](https://img.shields.io/npm/v/gosling.js.svg?style=flat-square)](https://www.npmjs.com/package/gosling.js)
 [![Build Status](https://img.shields.io/travis/sehilyi/geminid/master.svg?style=flat-square)](https://travis-ci.com/gosling-lang/gosling.js)
 [![codecov](https://img.shields.io/codecov/c/github/gosling-lang/gosling.js/master.svg?style=flat-square&?cacheSeconds=60)](https://codecov.io/gh/gosling-lang/gosling.js)
 [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
 
-<img src="https://raw.githubusercontent.com/wiki/gosling-lang/gosling.js/images/cover.png" width="700"/>
-
 </div>
+
+<p align="center"><img src="https://raw.githubusercontent.com/wiki/gosling-lang/gosling.js/images/cover.png" width="700"/></p>
 
 <br/>
 <br/>
