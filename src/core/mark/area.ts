@@ -1,5 +1,5 @@
 import { GoslingTrackModel } from '../gosling-track-model';
-import { Channel } from '../gosling.schema';
+import { Channel, Datum } from '../gosling.schema';
 import * as d3 from 'd3';
 import { group } from 'd3-array';
 import { IsStackedMark, getValueUsingChannel } from '../gosling.schema.guards';
@@ -180,49 +180,63 @@ export function drawArea(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackMo
                             (getValueUsingChannel(d, spec.row as Channel) as string) === rowCategory) &&
                         (typeof getValueUsingChannel(d, spec.color as Channel) === 'undefined' ||
                             (getValueUsingChannel(d, spec.color as Channel) as string) === colorCategory)
-                ).forEach((d, i, array) => {
-                    // TODO: this should be included in the `encodedValue` functions
-                    // make should not to overflow when using use-defined `domain`
-                    const y = d3.min([d3.max([tm.encodedPIXIProperty('y', d), 0]), rowHeight]);
-                    const x = tm.encodedPIXIProperty('x', d);
+                )
+                    .sort(
+                        // should sort properly before visualizing it so that the path is correctly drawn
+                        (a: Datum, b: Datum) => tm.encodedPIXIProperty('x', a) - tm.encodedPIXIProperty('x', b)
+                    )
+                    .forEach((d, i, array) => {
+                        // TODO: this should be included in the `encodedValue` functions
+                        // make should not to overflow when using use-defined `domain`
+                        const y = d3.min([d3.max([tm.encodedPIXIProperty('y', d), 0]), rowHeight]);
+                        const x = tm.encodedPIXIProperty('x', d);
 
-                    if (circular) {
-                        // we need to prepare the points for drawing baseline
-                        const baselinePos = cartesianToPolar(x, trackWidth, baselineR, cx, cy, startAngle, endAngle);
-                        baselinePoints.push([baselinePos.x, baselinePos.y]);
+                        if (circular) {
+                            // we need to prepare the points for drawing baseline
+                            const baselinePos = cartesianToPolar(
+                                x,
+                                trackWidth,
+                                baselineR,
+                                cx,
+                                cy,
+                                startAngle,
+                                endAngle
+                            );
+                            baselinePoints.push([baselinePos.x, baselinePos.y]);
 
-                        if (i === 0) {
-                            // start position of the polygon
-                            areaPoints.push(baselinePos.x, baselinePos.y);
+                            if (i === 0) {
+                                // start position of the polygon
+                                areaPoints.push(baselinePos.x, baselinePos.y);
+                            }
+
+                            const r = trackOuterRadius - ((rowPosition + rowHeight - y) / trackHeight) * trackRingSize;
+                            const pos = cartesianToPolar(x, trackWidth, r, cx, cy, startAngle, endAngle);
+                            areaPoints.push(pos.x, pos.y);
+
+                            if (i === array.length - 1) {
+                                // close the polygon with a point at the start
+                                const startR =
+                                    trackOuterRadius - ((rowPosition + rowHeight) / trackHeight) * trackRingSize;
+                                const curPos = cartesianToPolar(x, trackWidth, startR, cx, cy, startAngle, endAngle);
+
+                                areaPoints.push(curPos.x, curPos.y);
+                            }
+                        } else {
+                            if (i === 0) {
+                                // start position of the polygon
+                                areaPoints.push(x, rowPosition + rowHeight);
+                            }
+
+                            areaPoints.push(x, rowPosition + rowHeight - y);
+
+                            if (i === array.length - 1) {
+                                // close the polygon with a point at the start
+                                const startX = xScale(tileX);
+                                areaPoints.push(x, rowPosition + rowHeight);
+                                areaPoints.push(startX, rowPosition + rowHeight);
+                            }
                         }
-
-                        const r = trackOuterRadius - ((rowPosition + rowHeight - y) / trackHeight) * trackRingSize;
-                        const pos = cartesianToPolar(x, trackWidth, r, cx, cy, startAngle, endAngle);
-                        areaPoints.push(pos.x, pos.y);
-
-                        if (i === array.length - 1) {
-                            // close the polygon with a point at the start
-                            const startR = trackOuterRadius - ((rowPosition + rowHeight) / trackHeight) * trackRingSize;
-                            const curPos = cartesianToPolar(x, trackWidth, startR, cx, cy, startAngle, endAngle);
-
-                            areaPoints.push(curPos.x, curPos.y);
-                        }
-                    } else {
-                        if (i === 0) {
-                            // start position of the polygon
-                            areaPoints.push(x, rowPosition + rowHeight);
-                        }
-
-                        areaPoints.push(x, rowPosition + rowHeight - y);
-
-                        if (i === array.length - 1) {
-                            // close the polygon with a point at the start
-                            const startX = xScale(tileX);
-                            areaPoints.push(x, rowPosition + rowHeight);
-                            areaPoints.push(startX, rowPosition + rowHeight);
-                        }
-                    }
-                });
+                    });
 
                 if (circular && baselinePoints.length !== 0) {
                     // Add baseline points
