@@ -1,6 +1,8 @@
 <div align="center">
 
-# 🐥 Gosling.js
+![Gosling Logo (2)@0 25x](https://user-images.githubusercontent.com/9922882/106369962-ddbba700-6323-11eb-9e47-f8b06ba24178.png)
+
+# Gosling.js
 
 **Grammar Of Scalable Linked Interactive Nucleotide Graphics**
 
