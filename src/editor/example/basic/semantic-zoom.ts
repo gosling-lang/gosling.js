@@ -190,7 +190,7 @@ export const EXAMPLE_SEMANTIC_ZOOMING_IDEOGRAM: BasicSingleTrack | SuperposedTra
                     measure: 'zoomLevel',
                     threshold: 100000000,
                     target: 'mark',
-                    transitionPadding: 50000000
+                    transitionPadding: 100000000
                 }
             ]
         },
