@@ -13,7 +13,6 @@
 <p align="center"><img src="https://raw.githubusercontent.com/wiki/gosling-lang/gosling.js/images/cover.png" width="700"/></p>
 
 <br/>
-<br/>
 
 ## Introduction
 
