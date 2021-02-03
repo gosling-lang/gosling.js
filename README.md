@@ -13,25 +13,27 @@
 <br/>
 <br/>
 
-# Introduction
+## Introduction
 
-Gosling is a declarative visualization grammar tailored for interactive genomic visualizations.   
-In Gosling, users can easily create interactive and scalable visualizations through writing a JSON configuration. 
+Gosling is a declarative visualization grammar tailored for interactive genomic visualizations. 
+Using Gosling.js, users can easily create interactive and scalable genomic visualizations through writing a JSON configuration. 
 
     
 ```json
-{"tracks": [{
-      "data": {
-        "url": "https://resgen.io/api/v1/tileset_info/?d=UvVPeLHuRDiYA3qwFlm7xQ",
-        "type": "tileset"
-      },
-      "metadata": {
-        "type": "higlass-multivec",
-        "row": "sample",
-        "column": "position",
-        "value": "peak",
-        "categories": ["sample 1", "sample 2", "sample 3", "sample 4"]
-      }
+{
+    // Simplest example with only data configuration
+    "tracks": [{
+        "data": {
+            "url": "https://resgen.io/api/v1/tileset_info/?d=UvVPeLHuRDiYA3qwFlm7xQ",
+            "type": "tileset"
+        },
+        "metadata": {
+            "type": "higlass-multivec",
+            "row": "sample",
+            "column": "position",
+            "value": "peak",
+            "categories": ["sample 1", "sample 2", "sample 3", "sample 4"]
+        }
     }]
 }
 ```
@@ -40,22 +42,20 @@ In Gosling, users can easily create interactive and scalable visualizations thro
 
 [Try Online](<https://gosling.js.org/?full=false&spec=('trackG(0'BurlKhttps%3A%2F%2Fresgen.io%2Fapi%2Fv1%2FC_info%2F%3Fd%3DUvVPeLHuRDiYA3qwFlm7xQ8EC'0)%2C0'metaBEhiglass-multivec8row698columnKposition8valueKpeak8categorieGM1525354'%5D0)I)%5D%0A)*%20%200I*5J%20M6!%208J0*'9'sampleBdata6(0*'CtilesetEtypeKGs6%5BI%0A**J'%2CK6'M9%20%01MKJIGECB98650*_>)
 
-
-
-
-
-
-# Resources
-- [Gosling Website](https://gosling.js.org/)
-- [Documentations](https://github.com/gosling-lang/gosling.js/wiki/Documentation)
+## Learn More About Gosling
+- [Gosling.js Website](https://gosling.js.org/)
+- [Documentation](https://github.com/gosling-lang/gosling.js/wiki/Documentation)
 - [Online Examples](https://gosling.js.org/)
-- [Tutorial](https://github.com/gosling-lang/gosling.js/wiki/GettingStarted)
-- [Use Gosling in your React app](https://github.com/gosling-lang/gosling-react)
-- [Future Plans](https://github.com/gosling-lang/gosling.js/projects/1)
+- [Getting Started](https://github.com/gosling-lang/gosling.js/wiki/GettingStarted)
+- [Use Gosling.js in your React app](https://github.com/gosling-lang/gosling-react)
+- [Roadmap](https://github.com/gosling-lang/gosling.js/projects/1)
 
+## Installation
+```
+npm install gosling.js
+```
 
-
-# Run a Gosling editor
+## Run Editor Locally
 
 The following commands install and run a Gosling.js editor locally in your computer (ensure you have installed [yarn](https://yarnpkg.com/getting-started/install)):
 
@@ -65,19 +65,15 @@ yarn start
 ```
 Then you can open <http://localhost:8080/> in a web browser to play with the editor.
 
-# Installation
-```
-npm install gosling.js
-```
+## Contact
+- Open [Github Issues](https://github.com/gosling-lang/gosling.js/issues/) to ask questions or request features
 
-# Contact
-- [GitHub Issues](https://github.com/gosling-lang/gosling.js/issues/)
-- Email: 
-  - Sehi L'Yi <sehi_lyi@hms.harvard.edu>
-  - Qianwen Wang <qianwen_wang@hms.harvard.edu>
-  - Nils Gehlenborg <nils@hms.harvard.edu>
+## Team
+- Sehi L'Yi (<sehi_lyi@hms.harvard.edu>)
+- Qianwen Wang (<qianwen_wang@hms.harvard.edu>)
+- Nils Gehlenborg (<nils@hms.harvard.edu>)
 
-# License
+## License
 
 This project is licensed under the terms of the [MIT license](https://github.com/gosling-lang/gosling.js/blob/master/LICENSE.md).
 
