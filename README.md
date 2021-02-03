@@ -1,5 +1,7 @@
-<p align="center"><img src="https://raw.githubusercontent.com/wiki/gosling-lang/gosling.js/images/logo.png" width="450" /></p>
+<!-- <p align="center"><img src="https://raw.githubusercontent.com/wiki/gosling-lang/gosling.js/images/logo.png" width="450" /></p> -->
+
 <div align="center">
+<h1>Gosling.js</h1>
 
 [![npm version](https://img.shields.io/npm/v/gosling.js.svg?style=flat-square)](https://www.npmjs.com/package/gosling.js)
 [![Build Status](https://img.shields.io/travis/sehilyi/geminid/master.svg?style=flat-square)](https://travis-ci.com/gosling-lang/gosling.js)
