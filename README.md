@@ -19,7 +19,7 @@ Gosling is a declarative visualization grammar tailored for interactive genomic 
 Using Gosling.js, users can easily create interactive and scalable genomic visualizations through writing a JSON configuration. 
 
     
-```json
+```js
 {
     // Simplest example with only data configuration
     "tracks": [{
