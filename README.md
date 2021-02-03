@@ -41,9 +41,9 @@ Using Gosling.js, users can easily create interactive and scalable genomic visua
 </pre>
 
 </td>
-<td>
+<td align="center">
 <img src="https://raw.githubusercontent.com/wiki/gosling-lang/gosling.js/images/demo.gif"  width="400"/>
-<center><a href="https://gosling.js.org/">Try Online</></center>
+<a href="https://gosling.js.org/">Try Online</>
 </td>
 </tr>
 </table>
