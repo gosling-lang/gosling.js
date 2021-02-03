@@ -66,7 +66,7 @@ yarn start
 Then you can open <http://localhost:8080/> in a web browser to play with the editor.
 
 ## Contact
-- Open [Github Issues](https://github.com/gosling-lang/gosling.js/issues/) to ask questions or request features
+- Open [Github Issues](https://github.com/gosling-lang/gosling.js/issues/) to ask questions or request features.
 
 ## Team
 - Sehi L'Yi (<sehi_lyi@hms.harvard.edu>)
