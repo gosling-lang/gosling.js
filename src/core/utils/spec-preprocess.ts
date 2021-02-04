@@ -1,12 +1,22 @@
 import { BasicSingleTrack, GoslingSpec } from '../gosling.schema';
 import { IsDataMetadata, IsTemplate } from '../gosling.schema.guards';
 import assign from 'lodash/assign';
+import { spreadTracksByData } from './superpose';
 
 /**
  * Update track-level specs considering the root-level specs (e.g., arrangements).
  * @param spec
  */
 export function fixSpecDownstream(spec: GoslingSpec) {
+    // !!! TODO: (FOR THE RENDERING PERFORMANCE) We need to also combine superposed tracks if they use identical data and metadata so tha we have to load the data only once.
+
+    // !!! This should be taken before fixing `superposeOnPreviousTrack` options.
+    /**
+     * Spread superposed tracks if they are assigned to different data/metadata.
+     * This process is necessary since we are passing over each track to HiGlass, and if a track contain multiple datastes, HiGlass cannot handle that.
+     */
+    spec.tracks = spreadTracksByData(spec.tracks);
+
     /**
      * superposeOnPreviousTrack
      */

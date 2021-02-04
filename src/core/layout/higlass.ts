@@ -15,16 +15,20 @@ export function renderHiGlass(
         return;
     }
 
+    // HiGlass model
     const hgModel = new HiGlassModel();
+
+    /* Update the HiGlass model by iterating tracks */
     trackInfos.forEach(tb => {
         const { track, boundingBox: bb, layout } = tb;
         goslingToHiGlass(hgModel, track, bb, layout);
     });
 
-    /* Linking views */
+    /* Add linking information to the HiGlass model */
     const linkingInfos = getLinkingInfo(hgModel);
 
-    // brushing (between a view with `brush` and a view having the same linking name)
+    // Brushing
+    // (between a view with `brush` and a view having the same linking name)
     linkingInfos
         .filter(d => d.isBrush)
         .forEach(info => {
