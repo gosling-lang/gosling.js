@@ -75,6 +75,7 @@
         "eslint-plugin-jest": "^23.20.0",
         "eslint-plugin-prettier": "^3.1.4",
         "eslint-plugin-react": "^7.20.6",
+        "git-branch-is": "^4.0.0",
         "html-webpack-plugin": "^4.3.0",
         "husky": "^4.2.5",
         "jest": "^26.4.0",
@@ -137,7 +138,7 @@
     },
     "husky": {
         "hooks": {
-            "pre-commit": "yarn changelog && yarn schema && yarn format && git add .",
+            "pre-commit": "git-branch-is --not -r \"^master\" && yarn changelog && yarn schema && yarn format && git add .",
             "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
         }
     }
