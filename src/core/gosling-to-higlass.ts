@@ -63,7 +63,7 @@ export function goslingToHiGlass(
                 labelBottomMargin: 0,
                 /* Others */
                 backgroundColor: 'transparent', // in this way, we can superpose multiple tracks
-                spec: { ...gmTrack, data: undefined }
+                spec: { ...gmTrack }
             }
         };
 

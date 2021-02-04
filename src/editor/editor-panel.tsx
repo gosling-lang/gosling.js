@@ -23,7 +23,7 @@ function EditorPanel(props: { code: string; readOnly?: boolean; onChange?: (code
             inherit: true,
             // Complete rules: https://github.com/microsoft/vscode/blob/93028e44ea7752bd53e2471051acbe6362e157e9/src/vs/editor/standalone/common/themes.ts#L13
             rules: [
-                { token: 'string.key.json', foreground: '#000000' }, // all keys
+                { token: 'string.key.json', foreground: '#222222' }, // all keys
                 { token: 'string.value.json', foreground: '#035CC5' }, // all values
                 { token: 'number', foreground: '#E32A4F' },
                 { token: 'keyword.json', foreground: '#E32A4F' } // true and false

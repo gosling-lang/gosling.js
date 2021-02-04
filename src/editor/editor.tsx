@@ -9,10 +9,11 @@ import { HiGlassComponent } from 'higlass';
 // @ts-ignore
 import { default as higlassRegister } from 'higlass-register';
 import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
+import PubSub from 'pubsub-js';
 import EditorPanel from './editor-panel';
 import stringify from 'json-stringify-pretty-compact';
 import SplitPane from 'react-split-pane';
-import { GoslingSpec } from '../core/gosling.schema';
+import { Datum, GoslingSpec } from '../core/gosling.schema';
 import { debounce } from 'lodash';
 import { examples } from './example';
 import { replaceTemplate } from '../core/utils';
@@ -97,6 +98,12 @@ const getIconSVG = (d: ICON_INFO) => (
     </svg>
 );
 
+interface PreviewData {
+    id: string;
+    dataConfig: string;
+    data: Datum[];
+}
+
 /**
  * React component for editing Gosling specs
  */
@@ -112,6 +119,8 @@ function Editor(props: any) {
     const [gm, setGm] = useState(stringify(urlSpec ?? (examples[INIT_DEMO_INDEX].spec as GoslingSpec)));
     const [log, setLog] = useState<Validity>({ message: '', state: 'success' });
     const [autoRun, setAutoRun] = useState(true);
+    const [previewData, setPreviewData] = useState<PreviewData[]>([]);
+    const [selectedPreviewData, setSelectedPreviewData] = useState<number>(0);
 
     // whether to show HiGlass' viewConfig on the left-bottom
     const [showVC, setShowVC] = useState<boolean>(false);
@@ -126,6 +135,7 @@ function Editor(props: any) {
      * Editor moode
      */
     useEffect(() => {
+        setPreviewData([]);
         if (editorMode === 'Normal Mode') {
             setGm(urlSpec ?? stringify(replaceTemplate(JSON.parse(stringify(demo.spec)) as GoslingSpec)));
         } else {
@@ -160,6 +170,22 @@ function Editor(props: any) {
         },
         [gm, autoRun]
     );
+
+    /**
+     * Subscribe preview data that is being processed in the Gosling tracks.
+     */
+    useEffect(() => {
+        // We want to show data preview in the editor.
+        const token = PubSub.subscribe('data-preview', (_: string, data: PreviewData) => {
+            // Data with different `dataConfig`, which is a pair of `data` and `metadata` specs, is shown in data preview
+            const id = `${data.dataConfig}`;
+            const newPreviewData = previewData.filter(d => d.id !== id);
+            setPreviewData([...newPreviewData, { ...data, id }]);
+        });
+        return () => {
+            PubSub.unsubscribe(token);
+        };
+    });
 
     /**
      * Render visualization when edited
@@ -227,10 +253,33 @@ function Editor(props: any) {
         ) : null;
     }, [hg, size]);
 
+    function getDataPreviewInfo(dataConfig: string) {
+        // Detailed information of data config to show in the editor
+        const dataConfigObj = JSON.parse(dataConfig);
+        if (!dataConfigObj.data?.type) {
+            // We do not have enough information
+            return '';
+        }
+
+        let info = dataConfigObj.data.type;
+
+        if (dataConfigObj.data.url) {
+            info += ` | ${dataConfigObj.data.url}`;
+        }
+
+        if (dataConfigObj.metadata) {
+            Object.keys(dataConfigObj.metadata).forEach(key => {
+                info += ` | ${dataConfigObj.metadata[key]}`;
+            });
+        }
+
+        return info;
+    }
+
     return (
         <>
             <div className="demo-navbar">
-                🐥 Gosling <code>Editor</code>
+                Gosling.js <code>Editor</code>
                 {urlSpec ? <small> Displaying a custom spec contained in URL</small> : null}
                 <select
                     onChange={e => {
@@ -383,6 +432,7 @@ function Editor(props: any) {
                                 code={gm}
                                 readOnly={false}
                                 onChange={debounce(code => {
+                                    setPreviewData([]);
                                     setGm(code);
                                 }, 1000)}
                             />
@@ -406,7 +456,78 @@ function Editor(props: any) {
                             <></>
                         </SplitPane>
                     </SplitPane>
-                    <div className="preview-container">{hglass}</div>
+                    <SplitPane
+                        split="horizontal"
+                        defaultSize="60%"
+                        maxSize={window.innerHeight - EDITOR_HEADER_HEIGHT - VIEWCONFIG_HEADER_HEIGHT}
+                    >
+                        <div className="preview-container">{hglass}</div>
+                        <SplitPane split="vertical" defaultSize="100%">
+                            <>
+                                <div className="editor-header">
+                                    <b>Data Preview</b> (~100 Rows, Data Before Transformation)
+                                </div>
+                                <div className="editor-data-preview-panel">
+                                    {previewData.length > selectedPreviewData &&
+                                    previewData[selectedPreviewData] &&
+                                    previewData[selectedPreviewData].data.length > 0 ? (
+                                        <>
+                                            <div className="editor-data-preview-tab">
+                                                {previewData.map((d: PreviewData, i: number) => (
+                                                    <button
+                                                        className={
+                                                            i === selectedPreviewData
+                                                                ? 'selected-tab'
+                                                                : 'unselected-tab'
+                                                        }
+                                                        key={JSON.stringify(d)}
+                                                        onClick={() => setSelectedPreviewData(i)}
+                                                    >
+                                                        {`${(JSON.parse(d.dataConfig).data
+                                                            .type as string).toUpperCase()} `}
+                                                        <small>{i}</small>
+                                                    </button>
+                                                ))}
+                                            </div>
+                                            <div className="editor-data-preview-tab-info">
+                                                {getDataPreviewInfo(previewData[selectedPreviewData].dataConfig)}
+                                            </div>
+                                            <div className="editor-data-preview-table">
+                                                <table>
+                                                    <tbody>
+                                                        <tr>
+                                                            {Object.keys(previewData[selectedPreviewData].data[0]).map(
+                                                                (field: string, i: number) => (
+                                                                    <th key={i}>{field}</th>
+                                                                )
+                                                            )}
+                                                        </tr>
+                                                        {previewData[selectedPreviewData].data.map(
+                                                            (row: Datum, i: number) => (
+                                                                <tr key={i}>
+                                                                    {Object.keys(row).map(
+                                                                        (field: string, j: number) => (
+                                                                            <td key={j}>{row[field].toString()}</td>
+                                                                        )
+                                                                    )}
+                                                                </tr>
+                                                            )
+                                                        )}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </>
+                                    ) : null}
+                                </div>
+                            </>
+                            {/**
+                             * TODO: This is only for showing a scroll view for the higlass view config editor
+                             * Remove the below line and the nearest SplitPane after figuring out a better way
+                             * of showing the scroll view.
+                             */}
+                            <></>
+                        </SplitPane>
+                    </SplitPane>
                 </SplitPane>
             </div>
             {/* ------------------------ Floating Buttons ------------------------ */}

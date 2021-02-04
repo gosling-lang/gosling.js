@@ -49,6 +49,85 @@
     height: 30px;
 }
 
+.editor-data-preview-panel {
+    height: 100%;
+    /* border: 1px solid #ccc; */
+}
+
+.editor-data-preview-tab .selected-tab {
+    border-top: 1px solid gray;
+    background-color: white;
+    /* hide bottom gray bar */
+    /* border-bottom: 2px solid white; */
+}
+
+.editor-data-preview-tab .unselected-tab {
+    background-color: #f6f6f6;
+}
+
+.editor-data-preview-tab {
+    /* position: absolute; */
+    height: 40px;
+    overflow-x: auto;
+    white-space: nowrap;
+    border-bottom: 0.25px solid #cccccc;
+    background-color: #f6f6f6;
+}
+
+.editor-data-preview-tab button {
+    min-width: 100px;
+    height: 40px;
+    border: none;
+    border-right: 0.25px solid #cccccc;
+    border-radius: 0px;
+}
+
+.editor-data-preview-tab button:focus {
+    outline: none;
+}
+/* #F6F6F6; */
+.editor-data-preview-tab-info {
+    background-color: white;
+    width: 100%;
+    line-height: 30px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    color: gray;
+    white-space: nowrap;
+    /* border-top: 0.5px solid #CCCCCC; */
+    border-bottom: 0.5px solid #cccccc;
+    padding-left: 6px;
+}
+
+.editor-data-preview-table {
+    height: calc(100% - 80px);
+    border-collapse: collapse;
+    overflow-y: auto;
+}
+
+.editor-data-preview-table table {
+    width: 100%;
+}
+
+.editor-data-preview-table th,
+td {
+    padding: 12px;
+    text-align: left;
+}
+
+.editor-data-preview-table th {
+    background-color: white;
+    border-bottom: 0.5px solid black;
+}
+
+.editor-data-preview-table tr:nth-child(even) {
+    background-color: #f6f6f6;
+}
+
+.editor-data-preview-table tr:nth-child(odd) {
+    background-color: white;
+}
+
 .preview-container {
     width: 100%;
     height: 100%;
