@@ -19,23 +19,29 @@
 Gosling is a declarative visualization grammar tailored for interactive genomic visualizations. 
 Using Gosling.js, users can easily create interactive and scalable genomic visualizations through writing a JSON configuration. 
 
+<div align="center">
 <table>
 <tr><td>  
 <pre>
 {
-    // Simplest example with only data configuration
-    "tracks": [{
-        "data": {
-            "url": "https://resgen.io/api/v1/tileset_info/?d=UvVPeLHuRDiYA3qwFlm7xQ",
-            "type": "tileset"
-        },
-        "metadata": {
-            "type": "higlass-multivec",
-            "row": "sample",
-            "column": "position",
-            "value": "peak",
-            "categories": ["sample 1", "sample 2", "sample 3", "sample 4"]
-        }
+  // A simple example
+  "tracks": [{
+      "data": {
+        "url": "data_url",
+        "type": "multivec",
+        "row": "sample",
+        "column": "position",
+        "value": "peak",
+        "categories": [
+          "sample 1", 
+          "sample 2", 
+          "sample 3", 
+          "sample 4"
+          ],
+        ,
+        "mark": "area",
+        "overrideTemplate": true
+      }
     }]
 }
 </pre>
@@ -43,11 +49,12 @@ Using Gosling.js, users can easily create interactive and scalable genomic visua
 </td>
 <td align="center">
 <img src="https://raw.githubusercontent.com/wiki/gosling-lang/gosling.js/images/demo.gif"  width="400"/>
-<a href="https://gosling.js.org/">Try Online</>
+
+<a href="https://gosling.js.org/">Try Online</a>
 </td>
 </tr>
 </table>
-<!--[Try Online](<https://gosling.js.org/?full=false&spec=('trackG(0'BurlKhttps%3A%2F%2Fresgen.io%2Fapi%2Fv1%2FC_info%2F%3Fd%3DUvVPeLHuRDiYA3qwFlm7xQ8EC'0)%2C0'metaBEhiglass-multivec8row698columnKposition8valueKpeak8categorieGM1525354'%5D0)I)%5D%0A)*%20%200I*5J%20M6!%208J0*'9'sampleBdata6(0*'CtilesetEtypeKGs6%5BI%0A**J'%2CK6'M9%20%01MKJIGECB98650*_>) -->
+</div>
 
 ## Learn More About Gosling
 - [Gosling.js Website](https://gosling.js.org/)
