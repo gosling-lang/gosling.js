@@ -4,7 +4,8 @@ import { GLYPH_LOCAL_PRESET_TYPE, GLYPH_HIGLASS_PRESET_TYPE } from '../editor/ex
  * Root-level specification
  */
 export type GoslingSpec = {
-    assembly?: 'hm38'; // TODO: support others as well
+    assembly?: Assembly;
+    chromSizes?: [string, number][]; // TODO: not supported yet
 
     title?: string;
     subtitle?: string;
@@ -19,6 +20,11 @@ export type GoslingSpec = {
     width?: number;
     height?: number;
 };
+
+export type Assembly = 'hg38' | 'hg19' | 'hg18' | 'hg17' | 'hg16' | 'mm10' | 'mm9';
+// | 'mm8'
+// | 'mm7'
+// | 'mm6'
 
 /**
  * Arrangement of multiple tracks
@@ -145,6 +151,8 @@ export type CustomChannel = {
 };
 
 export interface CommonTrackDef {
+    assembly?: Assembly;
+    chromSizes?: [string, number][]; // TODO: not supported yet
     title?: string;
     subtitle?: string;
     description?: string;

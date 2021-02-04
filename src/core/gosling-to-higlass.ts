@@ -23,6 +23,8 @@ export function goslingToHiGlass(
     // we only look into the first resolved spec to get information, such as size of the track
     const firstResolvedSpec = resolveSuperposedTracks(gmTrack)[0];
 
+    const assembly = firstResolvedSpec.assembly;
+
     if (IsDataDeep(firstResolvedSpec.data)) {
         let server, tilesetUid;
 
@@ -69,13 +71,18 @@ export function goslingToHiGlass(
 
         if (gmTrack.data && IsDataDeep(gmTrack.data) && (gmTrack.data.type === 'csv' || gmTrack.data.type === 'json')) {
             // use gosling's custom data fetchers
-            hgTrack.data = gmTrack.data;
+            hgTrack.data = {
+                ...gmTrack.data,
+                // Additionally, add assembly, otherwise, a default build is used
+                assembly
+            };
         }
 
         if (gmTrack.superposeOnPreviousTrack) {
             hgModel.addTrackToCombined(hgTrack);
         } else {
             hgModel
+                .setAssembly(assembly)
                 .addDefaultView()
                 .setDomain(xDomain, yDomain)
                 .setMainTrack(hgTrack)

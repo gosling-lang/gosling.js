@@ -1,31 +1,32 @@
 import uuid from 'uuid';
-import { HiGlassSpec, Track, View } from './higlass.schema';
+import { HiGlassSpec, Track } from './higlass.schema';
 import HiGlassSchema from './higlass.schema.json';
-import { TOTAL_CHROMOSOME_SIZE_HG38 } from './utils/chrom-size';
-import { AxisPosition, Domain } from './gosling.schema';
+import { Assembly, AxisPosition, Domain } from './gosling.schema';
 import { getNumericDomain } from './utils/scales';
 import { RelativePosition } from './utils/bounding-box';
 import { validateSpec } from './utils/validate';
 import { SUPERPOSE_VIEWCONFIG } from '../editor/example/compiled-view-config/superpose-viewconfig';
+import { GET_CHROM_SIZES } from './utils/assembly';
 
-const DEFAULT_CHROMOSOME_INFO_PATH = '//aveit.s3.amazonaws.com/higlass/data/sequence/hg38.mod.chrom.sizes';
 export const HIGLASS_AXIS_SIZE = 30;
-const HIGLASS_VIEW_TEMPLATE: View = {
-    genomePositionSearchBoxVisible: false,
-    layout: { w: 12, h: 12, x: 0, y: 0 },
-    tracks: {
-        top: [],
-        left: [],
-        center: [],
-        right: [],
-        bottom: [],
-        gallery: [],
-        whole: []
-    },
-    initialXDomain: [0, TOTAL_CHROMOSOME_SIZE_HG38],
-    initialYDomain: [0, TOTAL_CHROMOSOME_SIZE_HG38],
-    zoomFixed: false,
-    zoomLimits: [1, null]
+const getViewTemplate = (assembly?: string) => {
+    return {
+        genomePositionSearchBoxVisible: false,
+        layout: { w: 12, h: 12, x: 0, y: 0 },
+        tracks: {
+            top: [],
+            left: [],
+            center: [],
+            right: [],
+            bottom: [],
+            gallery: [],
+            whole: []
+        },
+        initialXDomain: [0, GET_CHROM_SIZES(assembly).total],
+        initialYDomain: [0, GET_CHROM_SIZES(assembly).total],
+        zoomFixed: false,
+        zoomLimits: [1, null]
+    };
 };
 
 /**
@@ -33,8 +34,10 @@ const HIGLASS_VIEW_TEMPLATE: View = {
  * We are currently only using a center track with additional tracks for axes in a single view.
  */
 export class HiGlassModel {
+    private assembly?: Assembly;
     private hg: HiGlassSpec;
     constructor() {
+        this.assembly = 'hg38';
         this.hg = {
             compactLayout: false,
             trackSourceServers: [],
@@ -51,16 +54,25 @@ export class HiGlassModel {
 
         // Add default specs.
         this.setEditable(false);
-        this.setChromInfoPath(DEFAULT_CHROMOSOME_INFO_PATH);
     }
 
     public spec(): Readonly<HiGlassSpec> {
         return this.hg;
     }
 
-    public addDefaultView() {
-        this.hg.views.push(JSON.parse(JSON.stringify({ ...HIGLASS_VIEW_TEMPLATE, uid: uuid.v1() })));
+    public addDefaultView(assembly?: string) {
+        this.hg.views.push(JSON.parse(JSON.stringify({ ...getViewTemplate(assembly), uid: uuid.v1() })));
         return this;
+    }
+
+    public setAssembly(assembly?: Assembly) {
+        this.assembly = assembly;
+        this.setChromInfoPath(GET_CHROM_SIZES(this.assembly).path);
+        return this;
+    }
+
+    public getAssembly() {
+        return this.assembly;
     }
 
     public setTextTrack(
@@ -147,10 +159,10 @@ export class HiGlassModel {
 
     public setDomain(xDomain: Domain | undefined, yDomain: Domain | undefined) {
         if (xDomain) {
-            this.getLastView().initialXDomain = getNumericDomain(xDomain);
+            this.getLastView().initialXDomain = getNumericDomain(xDomain, this.getAssembly());
         }
         if (yDomain) {
-            this.getLastView().initialYDomain = getNumericDomain(yDomain);
+            this.getLastView().initialYDomain = getNumericDomain(yDomain, this.getAssembly());
         }
         return this;
     }
@@ -226,6 +238,7 @@ export class HiGlassModel {
             chromInfoPath: this.hg.chromInfoPath,
             options: {
                 ...options,
+                assembly: this.getAssembly(),
                 color: 'black',
                 tickColor: 'black',
                 tickFormat: type === 'narrower' ? 'si' : 'plain',

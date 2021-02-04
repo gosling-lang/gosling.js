@@ -1,5 +1,31 @@
-// Size of each chromosome
-export const CHROMOSOME_SIZE_HG19: { [k: string]: number } = {
+export const CHROM_SIZE_HG38 = {
+    chr1: 248956422,
+    chr2: 242193529,
+    chr3: 198295559,
+    chr4: 190214555,
+    chr5: 181538259,
+    chr6: 170805979,
+    chr7: 159345973,
+    chr8: 145138636,
+    chr9: 138394717,
+    chr10: 133797422,
+    chr11: 135086622,
+    chr12: 133275309,
+    chr13: 114364328,
+    chr14: 107043718,
+    chr15: 101991189,
+    chr16: 90338345,
+    chr17: 83257441,
+    chr18: 80373285,
+    chr19: 58617616,
+    chr20: 64444167,
+    chr21: 46709983,
+    chr22: 50818468,
+    chrX: 156040895,
+    chrY: 57227415
+};
+
+export const CHROM_SIZE_HG19 = {
     chr1: 249250621,
     chr2: 243199373,
     chr3: 198022430,
@@ -27,56 +53,136 @@ export const CHROMOSOME_SIZE_HG19: { [k: string]: number } = {
     chrM: 16571
 };
 
-// Cumulative interval of each chromosome
-export const CHROMOSOME_INTERVAL_HG19: { [k: string]: [number, number] } = {};
-
-Object.keys(CHROMOSOME_SIZE_HG19).reduce((sum, k) => {
-    CHROMOSOME_INTERVAL_HG19[k] = [sum, sum + CHROMOSOME_SIZE_HG19[k]];
-    return sum + CHROMOSOME_SIZE_HG19[k];
-}, 0);
-
-// Total size of chromosome
-export const TOTAL_CHROMOSOME_SIZE_HG19: number = Object.values(CHROMOSOME_SIZE_HG19).reduce(
-    (sum, current) => sum + current,
-    0
-);
-
-export const CHROMOSOME_SIZE_HG38: { [k: string]: number } = {
-    chr1: 248956422,
-    chr2: 242193529,
-    chr3: 198295559,
-    chr4: 190214555,
-    chr5: 181538259,
-    chr6: 170805979,
-    chr7: 159345973,
-    chr8: 145138636,
-    chr9: 138394717,
-    chr10: 133797422,
-    chr11: 135086622,
-    chr12: 133275309,
-    chr13: 114364328,
-    chr14: 107043718,
-    chr15: 101991189,
-    chr16: 90338345,
-    chr17: 83257441,
-    chr18: 80373285,
-    chr19: 58617616,
-    chr20: 64444167,
-    chr21: 46709983,
-    chr22: 50818468,
-    chrX: 156040895,
-    chrY: 57227415
+export const CHROM_SIZE_HG18 = {
+    chr1: 247249719,
+    chr2: 242951149,
+    chr3: 199501827,
+    chr4: 191273063,
+    chr5: 180857866,
+    chr6: 170899992,
+    chr7: 158821424,
+    chr8: 146274826,
+    chr9: 140273252,
+    chr10: 135374737,
+    chr11: 134452384,
+    chr12: 132349534,
+    chr13: 114142980,
+    chr14: 106368585,
+    chr15: 100338915,
+    chr16: 88827254,
+    chr17: 78774742,
+    chr18: 76117153,
+    chr19: 63811651,
+    chr20: 62435964,
+    chr21: 46944323,
+    chr22: 49691432,
+    chrX: 154913754,
+    chrY: 57772954,
+    chrM: 16571
 };
 
-export const CHROMOSOME_INTERVAL_HG38: { [k: string]: [number, number] } = {};
+export const CHROM_SIZE_HG17 = {
+    chr1: 245522847,
+    chr2: 243018229,
+    chr3: 199505740,
+    chr4: 191411218,
+    chr5: 180857866,
+    chr6: 170975699,
+    chr7: 158628139,
+    chr8: 146274826,
+    chr9: 138429268,
+    chr10: 135413628,
+    chr11: 134452384,
+    chr12: 132449811,
+    chr13: 114142980,
+    chr14: 106368585,
+    chr15: 100338915,
+    chr16: 88827254,
+    chr17: 78774742,
+    chr18: 76117153,
+    chr19: 63811651,
+    chr20: 62435964,
+    chr21: 46944323,
+    chr22: 49554710,
+    chrX: 154824264,
+    chrY: 57701691,
+    chrM: 16571
+};
 
-Object.keys(CHROMOSOME_SIZE_HG38).reduce((sum, k) => {
-    CHROMOSOME_INTERVAL_HG38[k] = [sum, sum + CHROMOSOME_SIZE_HG38[k]];
-    return sum + CHROMOSOME_SIZE_HG38[k];
-}, 0);
+export const CHROM_SIZE_HG16 = {
+    chr1: 246127941,
+    chr2: 243615958,
+    chr3: 199344050,
+    chr4: 191731959,
+    chr5: 181034922,
+    chr6: 170914576,
+    chr7: 158545518,
+    chr8: 146308819,
+    chr9: 136372045,
+    chr10: 135037215,
+    chr11: 134482954,
+    chr12: 132078379,
+    chr13: 113042980,
+    chr14: 105311216,
+    chr15: 100256656,
+    chr16: 90041932,
+    chr17: 81860266,
+    chr18: 76115139,
+    chr19: 63811651,
+    chr20: 63741868,
+    chr21: 46976097,
+    chr22: 49396972,
+    chrX: 153692391,
+    chrY: 50286555,
+    chrM: 16571
+};
 
-// Total size of chromosome
-export const TOTAL_CHROMOSOME_SIZE_HG38: number = Object.values(CHROMOSOME_SIZE_HG38).reduce(
-    (sum, current) => sum + current,
-    0
-);
+export const CHROM_SIZE_MM10 = {
+    chr1: 195471971,
+    chr2: 182113224,
+    chr3: 160039680,
+    chr4: 156508116,
+    chr5: 151834684,
+    chr6: 149736546,
+    chr7: 145441459,
+    chr8: 129401213,
+    chr9: 124595110,
+    chr10: 130694993,
+    chr11: 122082543,
+    chr12: 120129022,
+    chr13: 120421639,
+    chr14: 124902244,
+    chr15: 104043685,
+    chr16: 98207768,
+    chr17: 94987271,
+    chr18: 90702639,
+    chr19: 61431566,
+    chrX: 171031299,
+    chrY: 91744698,
+    chrM: 16299
+};
+
+export const CHROM_SIZE_MM9 = {
+    chr1: 197195432,
+    chr2: 181748087,
+    chr3: 159599783,
+    chr4: 155630120,
+    chr5: 152537259,
+    chr6: 149517037,
+    chr7: 152524553,
+    chr8: 131738871,
+    chr9: 124076172,
+    chr10: 129993255,
+    chr11: 121843856,
+    chr12: 121257530,
+    chr13: 120284312,
+    chr14: 125194864,
+    chr15: 103494974,
+    chr16: 98319150,
+    chr17: 95272651,
+    chr18: 90772031,
+    chr19: 61342430,
+    chrX: 166650296,
+    chrY: 15902555,
+    chrM: 16299
+};

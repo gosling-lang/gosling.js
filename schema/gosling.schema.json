@@ -81,6 +81,18 @@
       },
       "type": "object"
     },
+    "Assembly": {
+      "enum": [
+        "hg38",
+        "hg19",
+        "hg18",
+        "hg17",
+        "hg16",
+        "mm10",
+        "mm9"
+      ],
+      "type": "string"
+    },
     "AxisPosition": {
       "enum": [
         "none",
@@ -194,6 +206,25 @@
       "additionalProperties": false,
       "description": "The baic form of a track definition",
       "properties": {
+        "assembly": {
+          "$ref": "#/definitions/Assembly"
+        },
+        "chromSizes": {
+          "items": {
+            "items": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "number"
+              }
+            ],
+            "maxItems": 2,
+            "minItems": 2,
+            "type": "array"
+          },
+          "type": "array"
+        },
         "color": {
           "$ref": "#/definitions/Channel"
         },
@@ -564,6 +595,25 @@
       "additionalProperties": false,
       "description": "Partial specification of `BasicSingleTrack` to use default visual encoding predefined by data type.",
       "properties": {
+        "assembly": {
+          "$ref": "#/definitions/Assembly"
+        },
+        "chromSizes": {
+          "items": {
+            "items": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "number"
+              }
+            ],
+            "maxItems": 2,
+            "minItems": 2,
+            "type": "array"
+          },
+          "type": "array"
+        },
         "data": {
           "$ref": "#/definitions/DataDeep"
         },
@@ -1094,8 +1144,23 @@
           "$ref": "#/definitions/Arrangement"
         },
         "assembly": {
-          "const": "hm38",
-          "type": "string"
+          "$ref": "#/definitions/Assembly"
+        },
+        "chromSizes": {
+          "items": {
+            "items": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "number"
+              }
+            ],
+            "maxItems": 2,
+            "minItems": 2,
+            "type": "array"
+          },
+          "type": "array"
         },
         "description": {
           "type": "string"
@@ -1574,6 +1639,25 @@
       "additionalProperties": false,
       "description": "Superposing multiple tracks.",
       "properties": {
+        "assembly": {
+          "$ref": "#/definitions/Assembly"
+        },
+        "chromSizes": {
+          "items": {
+            "items": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "number"
+              }
+            ],
+            "maxItems": 2,
+            "minItems": 2,
+            "type": "array"
+          },
+          "type": "array"
+        },
         "color": {
           "$ref": "#/definitions/Channel"
         },
@@ -1657,6 +1741,25 @@
           "items": {
             "additionalProperties": false,
             "properties": {
+              "assembly": {
+                "$ref": "#/definitions/Assembly"
+              },
+              "chromSizes": {
+                "items": {
+                  "items": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "number"
+                    }
+                  ],
+                  "maxItems": 2,
+                  "minItems": 2,
+                  "type": "array"
+                },
+                "type": "array"
+              },
               "color": {
                 "$ref": "#/definitions/Channel"
               },

@@ -8,8 +8,18 @@ import { spreadTracksByData } from './superpose';
  * @param spec
  */
 export function fixSpecDownstream(spec: GoslingSpec) {
-    // !!! TODO: (FOR THE RENDERING PERFORMANCE) We need to also combine superposed tracks if they use identical data and metadata so tha we have to load the data only once.
+    /**
+     * Genome builds
+     */
+    if (spec.assembly) {
+        spec.tracks.forEach(t => {
+            if (t.assembly === undefined) {
+                t.assembly = spec.assembly;
+            }
+        });
+    }
 
+    // !!! TODO: (FOR THE RENDERING PERFORMANCE) We need to also combine superposed tracks if they use identical data and metadata so tha we have to load the data only once.
     // !!! This should be taken before fixing `superposeOnPreviousTrack` options.
     /**
      * Spread superposed tracks if they are assigned to different data/metadata.
