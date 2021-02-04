@@ -73,7 +73,10 @@ export function drawBar(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackMod
                 const barWidth = tm.encodedPIXIProperty('width', d, { tileUnitWidth });
                 const barStartX = tm.encodedPIXIProperty('x-start', d, { markWidth: barWidth });
 
-                const alphaTransition = tm.markVisibility(d, { width: barWidth });
+                const alphaTransition = tm.markVisibility(d, {
+                    width: barWidth,
+                    zoomLevel: trackInfo._xScale.invert(trackWidth) - trackInfo._xScale.invert(0)
+                });
                 const actualOpacity = Math.min(alphaTransition, opacity);
 
                 if (actualOpacity === 0 || barWidth <= 0 || y <= 0) {

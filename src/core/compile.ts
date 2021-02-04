@@ -5,7 +5,7 @@ import { fixSpecDownstream, overrideTemplates } from './utils/spec-preprocess';
 import { Size } from './utils/bounding-box';
 
 export function compile(gm: GoslingSpec, setHg: (hg: HiGlassSpec, size: Size) => void) {
-    // Override default visual encoding (`DataTrack` => `BasicSingleTrack`)
+    // Override default visual encoding (i.e., `DataTrack` => `BasicSingleTrack`)
     overrideTemplates(gm);
 
     // Fix track specs by looking into the root-level spec

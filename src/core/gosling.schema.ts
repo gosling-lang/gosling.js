@@ -216,7 +216,7 @@ export interface BasicSingleTrack extends CommonTrackDef {
     stretch?: boolean;
 
     // Visibility
-    visibility?: VisibilityCondition;
+    visibility?: VisibilityCondition[];
 
     // Styling
     style?: TrackStyle;
@@ -283,18 +283,18 @@ export type VisibilityCondition = SizeVisibilityCondition | ZoomLevelVisibilityC
 
 interface CommonVisibilityCondition {
     operation: LogicalOperation;
+    conditionPadding?: number;
+    transitionPadding?: number;
 }
 
 export interface SizeVisibilityCondition extends CommonVisibilityCondition {
     target: 'track' | 'mark';
     measure: 'width' | 'height';
     threshold: number | '|xe-x|';
-    conditionPadding?: number;
-    transitionPadding?: number;
 }
 
 export interface ZoomLevelVisibilityCondition extends CommonVisibilityCondition {
-    target: 'track';
+    target: 'track' | 'mark';
     measure: 'zoomLevel';
     threshold: number;
 }

@@ -23,13 +23,21 @@ export const EXMAPLE_SEMANTIC_ZOOM_SEQ: BasicSingleTrack | SuperposedTrack = {
             y: { field: 'count', type: 'quantitative' },
             strokeWidth: { value: 1 },
             stroke: { value: 'white' },
-            visibility: {
-                operation: 'gtet',
-                measure: 'width',
-                threshold: 20,
-                transitionPadding: 10,
-                target: 'mark'
-            }
+            visibility: [
+                {
+                    operation: 'gtet',
+                    measure: 'width',
+                    threshold: 20,
+                    transitionPadding: 10,
+                    target: 'mark'
+                },
+                {
+                    operation: 'LT',
+                    measure: 'zoomLevel',
+                    threshold: 50,
+                    target: 'track'
+                }
+            ]
         },
         {
             dataTransform: { filter: [{ field: 'count', oneOf: [0], not: true }] },
@@ -45,13 +53,21 @@ export const EXMAPLE_SEMANTIC_ZOOM_SEQ: BasicSingleTrack | SuperposedTrack = {
                 type: 'genomic'
             },
             color: { value: 'white' },
-            visibility: {
-                operation: 'less-than',
-                measure: 'width',
-                threshold: '|xe-x|',
-                transitionPadding: 30,
-                target: 'mark'
-            }
+            visibility: [
+                {
+                    operation: 'less-than',
+                    measure: 'width',
+                    threshold: '|xe-x|',
+                    transitionPadding: 30,
+                    target: 'mark'
+                },
+                {
+                    operation: 'LT',
+                    measure: 'zoomLevel',
+                    threshold: 50,
+                    target: 'track'
+                }
+            ]
         }
     ],
     x: {
@@ -105,11 +121,11 @@ const EXAMPLE_SEMANTIC_ZOOMING_LINES: Track = {
     color: { field: 'sample', type: 'nominal' },
     superpose: [
         {
-            visibility: { target: 'track', measure: 'height', threshold: 60, operation: 'lt' }
+            visibility: [{ target: 'track', measure: 'height', threshold: 60, operation: 'lt' }]
         },
         {
             row: { field: 'sample', type: 'nominal' },
-            visibility: { target: 'track', measure: 'height', threshold: 60, operation: 'gtet' }
+            visibility: [{ target: 'track', measure: 'height', threshold: 60, operation: 'gtet' }]
         }
     ]
 };
@@ -162,22 +178,27 @@ export const EXAMPLE_SEMANTIC_ZOOMING_IDEOGRAM: BasicSingleTrack | SuperposedTra
             },
             strokeWidth: { value: 2 },
             stroke: { value: 'gray' },
-            visibility: {
-                operation: 'less-than',
-                measure: 'zoomLevel',
-                threshold: 3,
-                target: 'track'
-            }
+            visibility: [
+                {
+                    operation: 'greater-than',
+                    measure: 'zoomLevel',
+                    threshold: 100000000,
+                    target: 'mark',
+                    transitionPadding: 100000000
+                }
+            ]
         },
         ...(EXAMPLE_CYTOAND_HG38.tracks[0] as SuperposedTrack).superpose
     ],
-    visibility: {
-        operation: 'greater-than',
-        measure: 'width',
-        threshold: 3,
-        transitionPadding: 5,
-        target: 'mark'
-    }
+    visibility: [
+        {
+            operation: 'greater-than',
+            measure: 'width',
+            threshold: 3,
+            transitionPadding: 5,
+            target: 'mark'
+        }
+    ]
 };
 
 export const EXAMPLE_SEMANTIC_ZOOMING: GoslingSpec = {

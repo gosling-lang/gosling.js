@@ -87,13 +87,15 @@ const IDEOGRAM: Track = {
             },
             text: { field: 'Band', type: 'nominal' },
             color: { value: 'black' },
-            visibility: {
-                operation: 'less-than',
-                measure: 'width',
-                threshold: '|xe-x|',
-                transitionPadding: 10,
-                target: 'mark'
-            },
+            visibility: [
+                {
+                    operation: 'less-than',
+                    measure: 'width',
+                    threshold: '|xe-x|',
+                    transitionPadding: 10,
+                    target: 'mark'
+                }
+            ],
             style: {
                 textStrokeWidth: 0
             }
@@ -288,7 +290,6 @@ export const EXAMPLE_CIRCOS: GoslingSpec = {
             outerRadius,
             innerRadius: 80
         }
-        // { ...HIGLASS_GENE_ANNOTATION, outerRadius, innerRadius: 80 },
         // {
         //     outerRadius, innerRadius: 30,
         //     data: {

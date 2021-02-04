@@ -306,7 +306,10 @@
           "type": "array"
         },
         "visibility": {
-          "$ref": "#/definitions/VisibilityCondition"
+          "items": {
+            "$ref": "#/definitions/VisibilityCondition"
+          },
+          "type": "array"
         },
         "width": {
           "type": "number"
@@ -1728,7 +1731,10 @@
                 "type": "array"
               },
               "visibility": {
-                "$ref": "#/definitions/VisibilityCondition"
+                "items": {
+                  "$ref": "#/definitions/VisibilityCondition"
+                },
+                "type": "array"
               },
               "width": {
                 "type": "number"
@@ -1794,7 +1800,10 @@
           "type": "array"
         },
         "visibility": {
-          "$ref": "#/definitions/VisibilityCondition"
+          "items": {
+            "$ref": "#/definitions/VisibilityCondition"
+          },
+          "type": "array"
         },
         "width": {
           "type": "number"
@@ -1984,6 +1993,9 @@
     "ZoomLevelVisibilityCondition": {
       "additionalProperties": false,
       "properties": {
+        "conditionPadding": {
+          "type": "number"
+        },
         "measure": {
           "const": "zoomLevel",
           "type": "string"
@@ -1992,10 +2004,16 @@
           "$ref": "#/definitions/LogicalOperation"
         },
         "target": {
-          "const": "track",
+          "enum": [
+            "track",
+            "mark"
+          ],
           "type": "string"
         },
         "threshold": {
+          "type": "number"
+        },
+        "transitionPadding": {
           "type": "number"
         }
       },

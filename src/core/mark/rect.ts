@@ -87,9 +87,12 @@ export function drawRect(HGC: any, trackInfo: any, tile: any, model: GoslingTrac
                 const opacity = model.encodedPIXIProperty('opacity', d);
                 const rectWidth = model.encodedPIXIProperty('width', d, { markWidth: tileUnitWidth });
                 const rectHeight = model.encodedPIXIProperty('height', d, { markHeight: cellHeight });
-                let y = model.encodedPIXIProperty('y', d) - rectHeight / 2.0;
+                let y = model.encodedPIXIProperty('y', d) - rectHeight / 2.0; // It is top posiiton now
 
-                const alphaTransition = model.markVisibility(d, { width: rectWidth });
+                const alphaTransition = model.markVisibility(d, {
+                    width: rectWidth,
+                    zoomLevel: trackInfo._xScale.invert(trackWidth) - trackInfo._xScale.invert(0)
+                });
                 const actualOpacity = Math.min(alphaTransition, opacity);
 
                 if (actualOpacity === 0 || rectHeight === 0 || rectWidth <= 0.0001) {
@@ -132,8 +135,8 @@ export function drawRect(HGC: any, trackInfo: any, tile: any, model: GoslingTrac
                 pixiProps.push({
                     xs: x,
                     xe: x + rectWidth,
-                    y: y - rectHeight,
-                    // this is making it complicated, way to simplify this?
+                    y: y + rectHeight / 2.0,
+                    // TODO: this is making it complicated, way to simplify this?
                     absoluteHeight: model.visualPropertyByChannel('size', d) ?? undefined,
                     ys: y,
                     ye: y + rectHeight,

@@ -18,13 +18,15 @@ export const EXAMPLE_IDEOGRAM_TRACK: SuperposedTrack = {
             },
             text: { field: 'Band', type: 'nominal' },
             color: { value: 'black' },
-            visibility: {
-                operation: 'less-than',
-                measure: 'width',
-                threshold: '|xe-x|',
-                transitionPadding: 10,
-                target: 'mark'
-            },
+            visibility: [
+                {
+                    operation: 'less-than',
+                    measure: 'width',
+                    threshold: '|xe-x|',
+                    transitionPadding: 10,
+                    target: 'mark'
+                }
+            ],
             style: {
                 textStrokeWidth: 0
             }
@@ -65,13 +67,15 @@ export const EXAMPLE_IDEOGRAM_TRACK: SuperposedTrack = {
     ],
     x: { field: 'Basepair_start', type: 'genomic', domain: { chromosome: '1' }, axis: 'top' },
     xe: { field: 'Basepair_stop', type: 'genomic' },
-    visibility: {
-        operation: 'greater-than',
-        measure: 'width',
-        threshold: 3,
-        transitionPadding: 5,
-        target: 'mark'
-    },
+    visibility: [
+        {
+            operation: 'greater-than',
+            measure: 'width',
+            threshold: 3,
+            transitionPadding: 5,
+            target: 'mark'
+        }
+    ],
     stroke: { value: 'gray' },
     strokeWidth: { value: 0.5 }
 };

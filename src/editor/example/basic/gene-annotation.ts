@@ -99,7 +99,6 @@ export const HIGLASS_GENE_ANNOTATION: Track = {
                 type: 'genomic'
             },
             style: {
-                // dashed: [3, 3],
                 linePattern: { type: 'triangle-r', size: 5 }
             }
         },
@@ -121,35 +120,38 @@ export const HIGLASS_GENE_ANNOTATION: Track = {
                 type: 'genomic'
             },
             style: {
-                // dashed: [3, 3],
                 linePattern: { type: 'triangle-l', size: 5 }
             }
         }
     ],
-    // y: { field: 'strand', type: 'nominal', domain: ['+', '-'] },
     row: { field: 'strand', type: 'nominal', domain: ['+', '-'] },
     color: { field: 'strand', type: 'nominal', domain: ['+', '-'], range: ['#7585FF', '#FF8A85'] },
-    visibility: {
-        operation: 'less-than',
-        measure: 'width',
-        threshold: '|xe-x|',
-        transitionPadding: 10,
-        target: 'mark'
-    },
-    // background: {"value": "red"},
+    visibility: [
+        {
+            operation: 'less-than',
+            measure: 'width',
+            threshold: '|xe-x|',
+            transitionPadding: 10,
+            target: 'mark'
+        }
+    ],
     opacity: { value: 0.5 }
 };
 
 export const EXAMPLE_GENE_ANNOTATION: GoslingSpec = {
-    layout: 'linear',
     arrangement: {
         direction: 'vertical',
-        columnSizes: 800,
-        rowSizes: 110
+        wrap: 3
     },
     tracks: [
-        HIGLASS_GENE_ANNOTATION,
         {
+            ...HIGLASS_GENE_ANNOTATION,
+            outerRadius: 150,
+            innerRadius: 30
+        },
+        {
+            outerRadius: 150,
+            innerRadius: 30,
             data: {
                 url: EXAMPLE_DATASETS.geneAnnotation,
                 type: 'bed',
@@ -251,13 +253,15 @@ export const EXAMPLE_GENE_ANNOTATION: GoslingSpec = {
             // y: { field: 'strand', type: 'nominal' },
             row: { field: 'strand', type: 'nominal', domain: ['+', '-'] },
             color: { value: '#0900B1' },
-            visibility: {
-                operation: 'less-than',
-                measure: 'width',
-                threshold: '|xe-x|',
-                transitionPadding: 10,
-                target: 'mark'
-            }
+            visibility: [
+                {
+                    operation: 'less-than',
+                    measure: 'width',
+                    threshold: '|xe-x|',
+                    transitionPadding: 10,
+                    target: 'mark'
+                }
+            ]
             // background: {"value": "red"},
         },
         {
@@ -377,13 +381,15 @@ export const EXAMPLE_GENE_ANNOTATION: GoslingSpec = {
                 }
             ],
             row: { field: 'strand', type: 'nominal', domain: ['+', '-'] },
-            visibility: {
-                operation: 'less-than',
-                measure: 'width',
-                threshold: '|xe-x|',
-                transitionPadding: 10,
-                target: 'mark'
-            },
+            visibility: [
+                {
+                    operation: 'less-than',
+                    measure: 'width',
+                    threshold: '|xe-x|',
+                    transitionPadding: 10,
+                    target: 'mark'
+                }
+            ],
             size: { value: 17 }
         },
         {
@@ -495,13 +501,15 @@ export const EXAMPLE_GENE_ANNOTATION: GoslingSpec = {
             ],
             row: { field: 'strand', type: 'nominal', domain: ['+', '-'] },
             color: { field: 'strand', type: 'nominal', domain: ['+', '-'], range: ['blue', 'red'] },
-            visibility: {
-                operation: 'less-than',
-                measure: 'width',
-                threshold: '|xe-x|',
-                transitionPadding: 10,
-                target: 'mark'
-            }
+            visibility: [
+                {
+                    operation: 'less-than',
+                    measure: 'width',
+                    threshold: '|xe-x|',
+                    transitionPadding: 10,
+                    target: 'mark'
+                }
+            ]
         },
         {
             data: {
@@ -576,13 +584,15 @@ export const EXAMPLE_GENE_ANNOTATION: GoslingSpec = {
             ],
             row: { field: 'strand', type: 'nominal', domain: ['+', '-'] },
             color: { value: '#B54F4A' },
-            visibility: {
-                operation: 'less-than',
-                measure: 'width',
-                threshold: '|xe-x|',
-                transitionPadding: 10,
-                target: 'mark'
-            }
+            visibility: [
+                {
+                    operation: 'less-than',
+                    measure: 'width',
+                    threshold: '|xe-x|',
+                    transitionPadding: 10,
+                    target: 'mark'
+                }
+            ]
         },
         {
             data: {
@@ -669,13 +679,15 @@ export const EXAMPLE_GENE_ANNOTATION: GoslingSpec = {
             row: { field: 'strand', type: 'nominal', domain: ['+', '-'] },
             stroke: { value: '#777777' },
             strokeWidth: { value: 1 },
-            visibility: {
-                operation: 'less-than',
-                measure: 'width',
-                threshold: '|xe-x|',
-                transitionPadding: 10,
-                target: 'mark'
-            }
+            visibility: [
+                {
+                    operation: 'less-than',
+                    measure: 'width',
+                    threshold: '|xe-x|',
+                    transitionPadding: 10,
+                    target: 'mark'
+                }
+            ]
         }
     ]
 };
