@@ -458,7 +458,7 @@ function Editor(props: any) {
                     </SplitPane>
                     <SplitPane
                         split="horizontal"
-                        defaultSize="60%"
+                        defaultSize={`calc(100% - ${VIEWCONFIG_HEADER_HEIGHT}px)`}
                         maxSize={window.innerHeight - EDITOR_HEADER_HEIGHT - VIEWCONFIG_HEADER_HEIGHT}
                     >
                         <div className="preview-container">{hglass}</div>
