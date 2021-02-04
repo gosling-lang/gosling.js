@@ -177,9 +177,6 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
 
             const spec = JSON.parse(JSON.stringify(this.originalSpec));
 
-            // eslint-disable-next-line no-console
-            console.info(tile, this.originalSpec, resolveSuperposedTracks(spec));
-
             resolveSuperposedTracks(spec).forEach(resolved => {
                 if (resolved.mark === 'brush') {
                     // TODO:
@@ -189,7 +186,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
 
                 if (!tile.tileData.tabularData) {
                     if (!IsDataDeepTileset(resolved.data)) {
-                        console.warn('No data of tilesets specified');
+                        console.warn('No data is specified');
                         return;
                     }
 
