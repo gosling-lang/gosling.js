@@ -1,4 +1,4 @@
-import { CHROMOSOME_INTERVAL_HG38, CHROMOSOME_SIZE_HG38 } from '../core/utils/chrom-size';
+import { GET_CHROM_SIZES } from '../core/utils/assembly';
 import { sampleSize } from 'lodash';
 
 /**
@@ -16,11 +16,13 @@ function RawDataFetcher(HGC: any, ...args: any): any {
         private tilesetInfoLoading: boolean;
         private chromSizes: any;
         private values: any;
+        private assembly: string;
 
         constructor(params: any[]) {
             const [dataConfig] = params;
             this.dataConfig = dataConfig;
             this.tilesetInfoLoading = false;
+            this.assembly = this.dataConfig.assembly;
 
             if (!dataConfig.values) {
                 console.error('Please provide `values` of the raw data');
@@ -28,12 +30,12 @@ function RawDataFetcher(HGC: any, ...args: any): any {
             }
 
             // Prepare chromosome interval information
-            const chromosomeSizes: { [k: string]: number } = CHROMOSOME_SIZE_HG38;
+            const chromosomeSizes: { [k: string]: number } = GET_CHROM_SIZES(this.assembly).size;
             const chromosomeCumPositions: { id: number; chr: string; pos: number }[] = [];
             const chromosomePositions: { [k: string]: { id: number; chr: string; pos: number } } = {};
             let prevEndPosition = 0;
 
-            Object.keys(CHROMOSOME_SIZE_HG38).forEach((chrStr, i) => {
+            Object.keys(GET_CHROM_SIZES(this.assembly).size).forEach((chrStr, i) => {
                 const positionInfo = {
                     id: i,
                     chr: chrStr,
@@ -43,7 +45,7 @@ function RawDataFetcher(HGC: any, ...args: any): any {
                 chromosomeCumPositions.push(positionInfo);
                 chromosomePositions[chrStr] = positionInfo;
 
-                prevEndPosition += CHROMOSOME_SIZE_HG38[chrStr];
+                prevEndPosition += GET_CHROM_SIZES(this.assembly).size[chrStr];
             });
             this.chromSizes = {
                 chrToAbs: (chrom: string, chromPos: number) => this.chromSizes.chrPositions[chrom].pos + chromPos,
@@ -65,7 +67,7 @@ function RawDataFetcher(HGC: any, ...args: any): any {
                         const chr = row[this.dataConfig.chromosomeField].includes('chr')
                             ? row[this.dataConfig.chromosomeField]
                             : `chr${row[this.dataConfig.chromosomeField]}`;
-                        row[g] = CHROMOSOME_INTERVAL_HG38[chr][0] + +row[g];
+                        row[g] = GET_CHROM_SIZES(this.assembly).interval[chr][0] + +row[g];
                     } catch (e) {
                         // genomic position did not parse properly
                         successfullyGotChrInfo = false;

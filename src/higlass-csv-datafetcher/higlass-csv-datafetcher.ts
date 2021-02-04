@@ -1,5 +1,5 @@
 import * as d3 from 'd3-dsv';
-import { CHROMOSOME_INTERVAL_HG38, CHROMOSOME_SIZE_HG38 } from '../core/utils/chrom-size';
+import { GET_CHROM_SIZES } from '../core/utils/assembly';
 import fetch from 'cross-fetch'; // TODO: Can we remove this and make the test working
 import { sampleSize } from 'lodash';
 
@@ -19,11 +19,13 @@ function CSVDataFetcher(HGC: any, ...args: any): any {
         private dataPromise: Promise<any> | undefined;
         private chromSizes: any;
         private values: any;
+        private assembly: string;
 
         constructor(params: any[]) {
             const [dataConfig] = params;
             this.dataConfig = dataConfig;
             this.tilesetInfoLoading = false;
+            this.assembly = this.dataConfig.assembly;
 
             if (!dataConfig.url) {
                 console.error('Please provide the `url` of the data');
@@ -31,12 +33,12 @@ function CSVDataFetcher(HGC: any, ...args: any): any {
             }
 
             // Prepare chromosome interval information
-            const chromosomeSizes: { [k: string]: number } = CHROMOSOME_SIZE_HG38;
+            const chromosomeSizes: { [k: string]: number } = GET_CHROM_SIZES(this.assembly).size;
             const chromosomeCumPositions: { id: number; chr: string; pos: number }[] = [];
             const chromosomePositions: { [k: string]: { id: number; chr: string; pos: number } } = {};
             let prevEndPosition = 0;
 
-            Object.keys(CHROMOSOME_SIZE_HG38).forEach((chrStr, i) => {
+            Object.keys(GET_CHROM_SIZES(this.assembly).size).forEach((chrStr, i) => {
                 const positionInfo = {
                     id: i,
                     chr: chrStr,
@@ -46,7 +48,7 @@ function CSVDataFetcher(HGC: any, ...args: any): any {
                 chromosomeCumPositions.push(positionInfo);
                 chromosomePositions[chrStr] = positionInfo;
 
-                prevEndPosition += CHROMOSOME_SIZE_HG38[chrStr];
+                prevEndPosition += GET_CHROM_SIZES(this.assembly).size[chrStr];
             });
             this.chromSizes = {
                 chrToAbs: (chrom: string, chromPos: number) => this.chromSizes.chrPositions[chrom].pos + chromPos,
@@ -99,7 +101,7 @@ function CSVDataFetcher(HGC: any, ...args: any): any {
                                             : row[cField].includes('chr')
                                             ? row[cField]
                                             : `chr${row[cField]}`;
-                                        row[g] = CHROMOSOME_INTERVAL_HG38[chr][0] + +row[g];
+                                        row[g] = GET_CHROM_SIZES(this.assembly).interval[chr][0] + +row[g];
                                     } catch (e) {
                                         // genomic position did not parse properly
                                         successfullyGotChrInfo = false;
@@ -118,7 +120,7 @@ function CSVDataFetcher(HGC: any, ...args: any): any {
                                         : row[chromosomeField].includes('chr')
                                         ? row[chromosomeField]
                                         : `chr${row[chromosomeField]}`;
-                                    row[g] = CHROMOSOME_INTERVAL_HG38[chr][0] + +row[g];
+                                    row[g] = GET_CHROM_SIZES(this.assembly).interval[chr][0] + +row[g];
                                 } catch (e) {
                                     // genomic position did not parse properly
                                     successfullyGotChrInfo = false;
