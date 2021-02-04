@@ -61,10 +61,7 @@ export const GENOCAT_CNVKIT: GoslingSpec = {
         {
             data: {
                 url: EXAMPLE_DATASETS.multivec,
-                type: 'tileset'
-            },
-            metadata: {
-                type: 'higlass-multivec',
+                type: 'multivec',
                 row: 'sample',
                 column: 'position',
                 value: 'peak',
@@ -86,10 +83,7 @@ export const GENOCAT_CNVKIT: GoslingSpec = {
             width: 420,
             data: {
                 url: EXAMPLE_DATASETS.multivec,
-                type: 'tileset'
-            },
-            metadata: {
-                type: 'higlass-multivec',
+                type: 'multivec',
                 row: 'sample',
                 column: 'position',
                 value: 'peak',
@@ -111,10 +105,7 @@ export const GENOCAT_CNVKIT: GoslingSpec = {
             width: 380,
             data: {
                 url: EXAMPLE_DATASETS.multivec,
-                type: 'tileset'
-            },
-            metadata: {
-                type: 'higlass-multivec',
+                type: 'multivec',
                 row: 'sample',
                 column: 'position',
                 value: 'peak',

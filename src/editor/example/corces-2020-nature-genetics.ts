@@ -74,9 +74,9 @@ export const CORCES_2020_NATURE_GENETICS: GoslingSpec = {
             style: { outline: 'lightgray' }
         },
         {
-            data: { type: 'tileset', url: 'https://resgen.io/api/v1/tileset_info/?d=VLFaiSVjTjW6mkbjRjWREA' },
-            metadata: {
-                type: 'higlass-vector',
+            data: {
+                url: 'https://resgen.io/api/v1/tileset_info/?d=VLFaiSVjTjW6mkbjRjWREA',
+                type: 'vector',
                 column: 'position',
                 value: 'peak'
             },
@@ -98,9 +98,9 @@ export const CORCES_2020_NATURE_GENETICS: GoslingSpec = {
             style: { outline: '#20102F' }
         },
         {
-            data: { type: 'tileset', url: 'https://resgen.io/api/v1/tileset_info/?d=UtUGUu9rS3yQ7Ie-YtX32g' },
-            metadata: {
-                type: 'higlass-vector',
+            data: {
+                url: 'https://resgen.io/api/v1/tileset_info/?d=UtUGUu9rS3yQ7Ie-YtX32g',
+                type: 'vector',
                 column: 'position',
                 value: 'peak'
             },
@@ -122,9 +122,9 @@ export const CORCES_2020_NATURE_GENETICS: GoslingSpec = {
             style: { outline: '#20102F' }
         },
         {
-            data: { type: 'tileset', url: 'https://resgen.io/api/v1/tileset_info/?d=FBwldgSdQQWxh7R7-jemNA' },
-            metadata: {
-                type: 'higlass-vector',
+            data: {
+                url: 'https://resgen.io/api/v1/tileset_info/?d=FBwldgSdQQWxh7R7-jemNA',
+                type: 'vector',
                 column: 'position',
                 value: 'peak'
             },
@@ -146,9 +146,9 @@ export const CORCES_2020_NATURE_GENETICS: GoslingSpec = {
             style: { outline: '#20102F' }
         },
         {
-            data: { type: 'tileset', url: 'https://resgen.io/api/v1/tileset_info/?d=Zz3CBDSqQ3ySrOSe2yj1eg' },
-            metadata: {
-                type: 'higlass-vector',
+            data: {
+                url: 'https://resgen.io/api/v1/tileset_info/?d=Zz3CBDSqQ3ySrOSe2yj1eg',
+                type: 'vector',
                 column: 'position',
                 value: 'peak'
             },
@@ -170,9 +170,9 @@ export const CORCES_2020_NATURE_GENETICS: GoslingSpec = {
             style: { outline: '#20102F' }
         },
         {
-            data: { type: 'tileset', url: 'https://resgen.io/api/v1/tileset_info/?d=dc_SOjdCRgq_8PYf6W--7w' },
-            metadata: {
-                type: 'higlass-vector',
+            data: {
+                type: 'vector',
+                url: 'https://resgen.io/api/v1/tileset_info/?d=dc_SOjdCRgq_8PYf6W--7w',
                 column: 'position',
                 value: 'peak'
             },
@@ -194,9 +194,9 @@ export const CORCES_2020_NATURE_GENETICS: GoslingSpec = {
             style: { outline: '#20102F' }
         },
         {
-            data: { type: 'tileset', url: 'https://resgen.io/api/v1/tileset_info/?d=Nolbrk9kS3CE0jJL_7OW1g' },
-            metadata: {
-                type: 'higlass-vector',
+            data: {
+                url: 'https://resgen.io/api/v1/tileset_info/?d=Nolbrk9kS3CE0jJL_7OW1g',
+                type: 'vector',
                 column: 'position',
                 value: 'peak'
             },
@@ -218,9 +218,9 @@ export const CORCES_2020_NATURE_GENETICS: GoslingSpec = {
             style: { outline: '#20102F' }
         },
         {
-            data: { type: 'tileset', url: 'https://resgen.io/api/v1/tileset_info/?d=UZLlJyRBScWdGQ7L1eNk_g' },
-            metadata: {
-                type: 'higlass-vector',
+            data: {
+                url: 'https://resgen.io/api/v1/tileset_info/?d=UZLlJyRBScWdGQ7L1eNk_g',
+                type: 'vector',
                 column: 'position',
                 value: 'peak'
             },
@@ -243,9 +243,9 @@ export const CORCES_2020_NATURE_GENETICS: GoslingSpec = {
         },
         {
             title: 'HiChIP (H3K27ac)',
-            data: { type: 'tileset', url: 'https://resgen.io/api/v1/tileset_info/?d=fyY8k9PlS-mGLnBob05_Ow' },
-            metadata: {
-                type: 'higlass-bed',
+            data: {
+                url: 'https://resgen.io/api/v1/tileset_info/?d=fyY8k9PlS-mGLnBob05_Ow',
+                type: 'bed',
                 genomicFields: [
                     { name: 'start', index: 1 },
                     { name: 'end', index: 2 }
@@ -272,9 +272,9 @@ export const CORCES_2020_NATURE_GENETICS: GoslingSpec = {
             style: { outline: '#20102F', circularLink: false }
         },
         {
-            data: { type: 'tileset', url: 'https://resgen.io/api/v1/tileset_info/?d=fyY8k9PlS-mGLnBob05_Ow' },
-            metadata: {
-                type: 'higlass-bed',
+            data: {
+                url: 'https://resgen.io/api/v1/tileset_info/?d=fyY8k9PlS-mGLnBob05_Ow',
+                type: 'bed',
                 genomicFields: [
                     { name: 'start', index: 1 },
                     { name: 'end', index: 2 }
@@ -295,9 +295,9 @@ export const CORCES_2020_NATURE_GENETICS: GoslingSpec = {
             superposeOnPreviousTrack: true
         },
         {
-            data: { type: 'tileset', url: 'https://resgen.io/api/v1/tileset_info/?d=fyY8k9PlS-mGLnBob05_Ow' },
-            metadata: {
-                type: 'higlass-bed',
+            data: {
+                url: 'https://resgen.io/api/v1/tileset_info/?d=fyY8k9PlS-mGLnBob05_Ow',
+                type: 'bed',
                 genomicFields: [
                     { name: 'start', index: 1 },
                     { name: 'end', index: 2 }
@@ -319,9 +319,9 @@ export const CORCES_2020_NATURE_GENETICS: GoslingSpec = {
         },
         {
             title: 'PLAC-seq (H3K4me3) Nott et al.',
-            data: { type: 'tileset', url: 'https://resgen.io/api/v1/tileset_info/?d=EqSENQSXRL-EWYeBe-Y1rA' },
-            metadata: {
-                type: 'higlass-bed',
+            data: {
+                url: 'https://resgen.io/api/v1/tileset_info/?d=EqSENQSXRL-EWYeBe-Y1rA',
+                type: 'bed',
                 genomicFields: [
                     { name: 'start', index: 1 },
                     { name: 'end', index: 2 }
@@ -348,9 +348,9 @@ export const CORCES_2020_NATURE_GENETICS: GoslingSpec = {
             style: { outline: '#20102F', circularLink: false }
         },
         {
-            data: { type: 'tileset', url: 'https://resgen.io/api/v1/tileset_info/?d=R4e7-rVfQPWTleJIJjLOEQ' },
-            metadata: {
-                type: 'higlass-bed',
+            data: {
+                url: 'https://resgen.io/api/v1/tileset_info/?d=R4e7-rVfQPWTleJIJjLOEQ',
+                type: 'bed',
                 genomicFields: [
                     { name: 'start', index: 1 },
                     { name: 'end', index: 2 }
@@ -368,9 +368,9 @@ export const CORCES_2020_NATURE_GENETICS: GoslingSpec = {
             superposeOnPreviousTrack: true
         },
         {
-            data: { type: 'tileset', url: 'https://resgen.io/api/v1/tileset_info/?d=JzccFAJUQEiz-0188xaWZg' },
-            metadata: {
-                type: 'higlass-bed',
+            data: {
+                url: 'https://resgen.io/api/v1/tileset_info/?d=JzccFAJUQEiz-0188xaWZg',
+                type: 'bed',
                 genomicFields: [
                     { name: 'start', index: 1 },
                     { name: 'end', index: 2 }
@@ -389,9 +389,9 @@ export const CORCES_2020_NATURE_GENETICS: GoslingSpec = {
         },
         {
             title: 'Genes',
-            data: { type: 'tileset', url: 'https://resgen.io/api/v1/tileset_info/?d=M9A9klpwTci5Vf4bHZ864g' },
-            metadata: {
-                type: 'higlass-bed',
+            data: {
+                url: 'https://resgen.io/api/v1/tileset_info/?d=M9A9klpwTci5Vf4bHZ864g',
+                type: 'bed',
                 genomicFields: [
                     { index: 1, name: 'start' },
                     { index: 2, name: 'end' }
@@ -497,10 +497,7 @@ export const CORCES_2020_NATURE_GENETICS: GoslingSpec = {
             title: '(Artificial data)',
             data: {
                 url: EXAMPLE_DATASETS.multivec,
-                type: 'tileset'
-            },
-            metadata: {
-                type: 'higlass-multivec',
+                type: 'multivec',
                 row: 'base',
                 column: 'position',
                 value: 'count',

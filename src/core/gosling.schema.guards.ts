@@ -1,5 +1,4 @@
 import {
-    DataMetadata,
     ChannelDeep,
     ChannelValue,
     DataTransform,
@@ -25,7 +24,9 @@ import {
     OneOfFilter,
     RangeFilter,
     IncludeFilter,
-    DataDeepTileset,
+    BEDData,
+    MultivecData,
+    VectorData,
     DataTrack
 } from './gosling.schema';
 import { SUPPORTED_CHANNELS } from './mark';
@@ -42,26 +43,17 @@ export const PREDEFINED_COLOR_STR_MAP: { [k: string]: (t: number) => string } = 
     rdbu: d3.interpolateRdBu
 };
 
-// TODO: these are not neccessary. Resolve the issue with `Channel`.
-export function IsDataMetadata(_: DataMetadata | ChannelDeep | ChannelValue | undefined): _ is DataMetadata {
-    return (
-        typeof _ === 'object' &&
-        'type' in _ &&
-        (_.type === 'higlass-vector' || _.type === 'higlass-multivec' || _.type === 'higlass-bed')
-    );
-}
 export function IsDataTransform(_: DataTransform | ChannelDeep | ChannelValue): _ is DataTransform {
     return 'filter' in _;
 }
-//
 
 export function IsDataTrack(_: Track): _ is DataTrack {
     // !!! Track might not contain `mark` when it is superposed one
-    return !IsSuperposedTrack(_) && 'data' in _ && 'metadata' in _ && !('mark' in _);
+    return !IsSuperposedTrack(_) && 'data' in _ && !('mark' in _);
 }
 
 export function IsTemplate(_: Track): boolean {
-    return !!('data' in _ && 'metadata' in _ && (!('mark' in _) || _.overrideTemplate) && !IsSuperposedTrack(_));
+    return !!('data' in _ && (!('mark' in _) || _.overrideTemplate) && !IsSuperposedTrack(_));
 }
 
 export function IsDataDeep(
@@ -131,8 +123,8 @@ export function IsChannelBind(
     return channel !== null && typeof channel === 'object' && 'bind' in channel;
 }
 
-export function IsDataDeepTileset(_: DataDeep): _ is DataDeepTileset {
-    return _.type === 'tileset';
+export function IsDataDeepTileset(_: DataDeep | undefined): _ is BEDData | VectorData | MultivecData {
+    return _ !== undefined && (_.type === 'vector' || _.type === 'bed' || _.type === 'multivec');
 }
 
 export function IsChannelDeep(channel: ChannelDeep | ChannelValue | undefined): channel is ChannelDeep {

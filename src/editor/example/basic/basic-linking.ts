@@ -12,10 +12,7 @@ export const EXMAPLE_BASIC_LINKING: GoslingSpec = {
         {
             data: {
                 url: EXAMPLE_DATASETS.multivec,
-                type: 'tileset'
-            },
-            metadata: {
-                type: 'higlass-multivec',
+                type: 'multivec',
                 row: 'sample',
                 column: 'position',
                 value: 'peak',
@@ -40,10 +37,7 @@ export const EXMAPLE_BASIC_LINKING: GoslingSpec = {
         {
             data: {
                 url: EXAMPLE_DATASETS.multivec,
-                type: 'tileset'
-            },
-            metadata: {
-                type: 'higlass-multivec',
+                type: 'multivec',
                 row: 'sample',
                 column: 'position',
                 value: 'peak',

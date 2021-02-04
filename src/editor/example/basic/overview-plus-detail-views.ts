@@ -40,10 +40,7 @@ export const EXAMPLE_OVERVIEW_DEATIL: GoslingSpec = {
             title: 'Detail View 1',
             data: {
                 url: EXAMPLE_DATASETS.geneAnnotation,
-                type: 'tileset'
-            },
-            metadata: {
-                type: 'higlass-bed',
+                type: 'bed',
                 genomicFields: [
                     { index: 1, name: 'start' },
                     { index: 2, name: 'end' }
@@ -104,10 +101,7 @@ export const EXAMPLE_OVERVIEW_DEATIL: GoslingSpec = {
             title: 'Detail View 2',
             data: {
                 url: EXAMPLE_DATASETS.geneAnnotation,
-                type: 'tileset'
-            },
-            metadata: {
-                type: 'higlass-bed',
+                type: 'bed',
                 genomicFields: [
                     { index: 1, name: 'start' },
                     { index: 2, name: 'end' }
@@ -167,10 +161,7 @@ export const EXAMPLE_OVERVIEW_DEATIL: GoslingSpec = {
         {
             data: {
                 url: EXAMPLE_DATASETS.multivec,
-                type: 'tileset'
-            },
-            metadata: {
-                type: 'higlass-multivec',
+                type: 'multivec',
                 row: 'sample',
                 column: 'position',
                 value: 'peak',
@@ -197,10 +188,7 @@ export const EXAMPLE_OVERVIEW_DEATIL: GoslingSpec = {
         {
             data: {
                 url: EXAMPLE_DATASETS.multivec,
-                type: 'tileset'
-            },
-            metadata: {
-                type: 'higlass-multivec',
+                type: 'multivec',
                 row: 'sample',
                 column: 'position',
                 value: 'peak',

@@ -4,10 +4,7 @@ import { EXAMPLE_DATASETS } from './datasets';
 export const HIGLASS_GENE_ANNOTATION: Track = {
     data: {
         url: EXAMPLE_DATASETS.geneAnnotation,
-        type: 'tileset'
-    },
-    metadata: {
-        type: 'higlass-bed',
+        type: 'bed',
         genomicFields: [
             { index: 1, name: 'start' },
             { index: 2, name: 'end' }
@@ -155,10 +152,7 @@ export const EXAMPLE_GENE_ANNOTATION: GoslingSpec = {
         {
             data: {
                 url: EXAMPLE_DATASETS.geneAnnotation,
-                type: 'tileset'
-            },
-            metadata: {
-                type: 'higlass-bed',
+                type: 'bed',
                 genomicFields: [
                     { index: 1, name: 'start' },
                     { index: 2, name: 'end' }
@@ -269,10 +263,7 @@ export const EXAMPLE_GENE_ANNOTATION: GoslingSpec = {
         {
             data: {
                 url: EXAMPLE_DATASETS.geneAnnotation,
-                type: 'tileset'
-            },
-            metadata: {
-                type: 'higlass-bed',
+                type: 'bed',
                 genomicFields: [
                     { index: 1, name: 'start' },
                     { index: 2, name: 'end' }
@@ -398,10 +389,7 @@ export const EXAMPLE_GENE_ANNOTATION: GoslingSpec = {
         {
             data: {
                 url: EXAMPLE_DATASETS.geneAnnotation,
-                type: 'tileset'
-            },
-            metadata: {
-                type: 'higlass-bed',
+                type: 'bed',
                 genomicFields: [
                     { index: 1, name: 'start' },
                     { index: 2, name: 'end' }
@@ -518,10 +506,7 @@ export const EXAMPLE_GENE_ANNOTATION: GoslingSpec = {
         {
             data: {
                 url: EXAMPLE_DATASETS.geneAnnotation,
-                type: 'tileset'
-            },
-            metadata: {
-                type: 'higlass-bed',
+                type: 'bed',
                 genomicFields: [
                     { index: 1, name: 'start' },
                     { index: 2, name: 'end' }
@@ -602,10 +587,7 @@ export const EXAMPLE_GENE_ANNOTATION: GoslingSpec = {
         {
             data: {
                 url: EXAMPLE_DATASETS.geneAnnotation,
-                type: 'tileset'
-            },
-            metadata: {
-                type: 'higlass-bed',
+                type: 'bed',
                 genomicFields: [
                     { index: 1, name: 'start' },
                     { index: 2, name: 'end' }

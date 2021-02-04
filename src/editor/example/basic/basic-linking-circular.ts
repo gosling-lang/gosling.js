@@ -18,10 +18,7 @@ export const EXMAPLE_BASIC_LINKING_CIRCULAR: GoslingSpec = {
             layout: 'circular',
             data: {
                 url: EXAMPLE_DATASETS.multivec,
-                type: 'tileset'
-            },
-            metadata: {
-                type: 'higlass-multivec',
+                type: 'multivec',
                 row: 'sample',
                 column: 'position',
                 value: 'peak',

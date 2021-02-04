@@ -9,10 +9,7 @@ export const EXAMPLE_LOGO_LIKE: GoslingSpec = {
             title: 'based on dummy data',
             data: {
                 url: EXAMPLE_DATASETS.multivec,
-                type: 'tileset'
-            },
-            metadata: {
-                type: 'higlass-multivec',
+                type: 'multivec',
                 row: 'base',
                 column: 'position',
                 value: 'count',
@@ -64,10 +61,7 @@ export const EXAMPLE_LOGO_LIKE: GoslingSpec = {
             title: 'based on dummy data',
             data: {
                 url: EXAMPLE_DATASETS.multivec,
-                type: 'tileset'
-            },
-            metadata: {
-                type: 'higlass-multivec',
+                type: 'multivec',
                 row: 'base',
                 column: 'position',
                 value: 'count',

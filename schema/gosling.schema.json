@@ -91,7 +91,7 @@
       ],
       "type": "string"
     },
-    "BEDMetadata": {
+    "BEDData": {
       "additionalProperties": false,
       "properties": {
         "exonIntervalFields": {
@@ -153,7 +153,10 @@
           "type": "array"
         },
         "type": {
-          "const": "higlass-bed",
+          "const": "bed",
+          "type": "string"
+        },
+        "url": {
           "type": "string"
         },
         "valueFields": {
@@ -186,6 +189,7 @@
       },
       "required": [
         "type",
+        "url",
         "genomicFields"
       ],
       "type": "object"
@@ -227,9 +231,6 @@
         },
         "mark": {
           "$ref": "#/definitions/Mark"
-        },
-        "metadata": {
-          "$ref": "#/definitions/DataMetadata"
         },
         "opacity": {
           "$ref": "#/definitions/Channel"
@@ -341,7 +342,7 @@
       ],
       "type": "object"
     },
-    "CSVDataGosling": {
+    "CSVData": {
       "additionalProperties": false,
       "properties": {
         "chromosomeField": {
@@ -408,7 +409,8 @@
         }
       },
       "required": [
-        "type"
+        "type",
+        "url"
       ],
       "type": "object"
     },
@@ -509,53 +511,22 @@
     "DataDeep": {
       "anyOf": [
         {
-          "$ref": "#/definitions/DataDeepTileset"
+          "$ref": "#/definitions/JSONData"
         },
         {
-          "$ref": "#/definitions/DataDeepGosling"
+          "$ref": "#/definitions/CSVData"
+        },
+        {
+          "$ref": "#/definitions/MultivecData"
+        },
+        {
+          "$ref": "#/definitions/BEDData"
+        },
+        {
+          "$ref": "#/definitions/VectorData"
         }
       ],
       "description": "Data specification"
-    },
-    "DataDeepGosling": {
-      "anyOf": [
-        {
-          "$ref": "#/definitions/CSVDataGosling"
-        },
-        {
-          "$ref": "#/definitions/JSONDataGosling"
-        }
-      ]
-    },
-    "DataDeepTileset": {
-      "additionalProperties": false,
-      "properties": {
-        "type": {
-          "const": "tileset",
-          "type": "string"
-        },
-        "url": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "type",
-        "url"
-      ],
-      "type": "object"
-    },
-    "DataMetadata": {
-      "anyOf": [
-        {
-          "$ref": "#/definitions/VectorMetadata"
-        },
-        {
-          "$ref": "#/definitions/MultivecMetadata"
-        },
-        {
-          "$ref": "#/definitions/BEDMetadata"
-        }
-      ]
     },
     "DataTrack": {
       "additionalProperties": false,
@@ -583,9 +554,6 @@
           ],
           "type": "string"
         },
-        "metadata": {
-          "$ref": "#/definitions/DataMetadata"
-        },
         "outerRadius": {
           "type": "number"
         },
@@ -612,8 +580,7 @@
         }
       },
       "required": [
-        "data",
-        "metadata"
+        "data"
       ],
       "type": "object"
     },
@@ -1150,7 +1117,7 @@
       ],
       "type": "object"
     },
-    "JSONDataGosling": {
+    "JSONData": {
       "additionalProperties": false,
       "properties": {
         "chromosomeField": {
@@ -1198,14 +1165,12 @@
           "type": "string"
         },
         "values": {
-          "items": {
-            "$ref": "#/definitions/Datum"
-          },
-          "type": "array"
+          "$ref": "#/definitions/Datum"
         }
       },
       "required": [
-        "type"
+        "type",
+        "values"
       ],
       "type": "object"
     },
@@ -1393,7 +1358,7 @@
       ],
       "type": "object"
     },
-    "MultivecMetadata": {
+    "MultivecData": {
       "additionalProperties": false,
       "properties": {
         "bin": {
@@ -1418,7 +1383,10 @@
           "type": "string"
         },
         "type": {
-          "const": "higlass-multivec",
+          "const": "multivec",
+          "type": "string"
+        },
+        "url": {
           "type": "string"
         },
         "value": {
@@ -1427,6 +1395,7 @@
       },
       "required": [
         "type",
+        "url",
         "column",
         "row",
         "value"
@@ -1605,9 +1574,6 @@
         "mark": {
           "$ref": "#/definitions/Mark"
         },
-        "metadata": {
-          "$ref": "#/definitions/DataMetadata"
-        },
         "opacity": {
           "$ref": "#/definitions/Channel"
         },
@@ -1687,9 +1653,6 @@
               },
               "mark": {
                 "$ref": "#/definitions/Mark"
-              },
-              "metadata": {
-                "$ref": "#/definitions/DataMetadata"
               },
               "opacity": {
                 "$ref": "#/definitions/Channel"
@@ -1974,7 +1937,7 @@
       },
       "type": "object"
     },
-    "VectorMetadata": {
+    "VectorData": {
       "additionalProperties": false,
       "properties": {
         "bin": {
@@ -1990,7 +1953,10 @@
           "type": "string"
         },
         "type": {
-          "const": "higlass-vector",
+          "const": "vector",
+          "type": "string"
+        },
+        "url": {
           "type": "string"
         },
         "value": {
@@ -1999,6 +1965,7 @@
       },
       "required": [
         "type",
+        "url",
         "column",
         "value"
       ],

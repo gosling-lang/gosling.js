@@ -1,5 +1,5 @@
 import { BasicSingleTrack, GoslingSpec } from '../gosling.schema';
-import { IsDataMetadata, IsTemplate } from '../gosling.schema.guards';
+import { IsTemplate, IsDataDeepTileset } from '../gosling.schema.guards';
 import assign from 'lodash/assign';
 
 /**
@@ -71,9 +71,9 @@ export function fixSpecDownstream(spec: GoslingSpec) {
  */
 export function getVectorTemplate(column: string, value: string): BasicSingleTrack {
     return {
-        data: { type: 'tileset', url: 'https://localhost:8080/api/v1/tileset_info/?d=VLFaiSVjTjW6mkbjRjWREA' },
-        metadata: {
-            type: 'higlass-vector',
+        data: {
+            type: 'vector',
+            url: 'https://localhost:8080/api/v1/tileset_info/?d=VLFaiSVjTjW6mkbjRjWREA',
             column,
             value
         },
@@ -91,9 +91,9 @@ export function getMultivecTemplate(
 ): BasicSingleTrack {
     return categories && categories.length < 10
         ? {
-              data: { type: 'tileset', url: 'https://localhost:8080/api/v1/tileset_info/?d=VLFaiSVjTjW6mkbjRjWREA' },
-              metadata: {
-                  type: 'higlass-multivec',
+              data: {
+                  type: 'multivec',
+                  url: 'https://localhost:8080/api/v1/tileset_info/?d=VLFaiSVjTjW6mkbjRjWREA',
                   row,
                   column,
                   value,
@@ -106,9 +106,9 @@ export function getMultivecTemplate(
               color: { field: row, type: 'nominal' }
           }
         : {
-              data: { type: 'tileset', url: 'https://localhost:8080/api/v1/tileset_info/?d=VLFaiSVjTjW6mkbjRjWREA' },
-              metadata: {
-                  type: 'higlass-multivec',
+              data: {
+                  type: 'multivec',
+                  url: 'https://localhost:8080/api/v1/tileset_info/?d=VLFaiSVjTjW6mkbjRjWREA',
                   row,
                   column,
                   value,
@@ -127,7 +127,7 @@ export function getMultivecTemplate(
  */
 export function overrideTemplates(spec: GoslingSpec) {
     spec.tracks.forEach((t, i) => {
-        if (!t.metadata || !IsDataMetadata(t.metadata)) {
+        if (!t.data || !IsDataDeepTileset(t.data)) {
             // if `metadata` is not specified, we can not provide a correct template since we do not know the exact data type.
             return;
         }
@@ -137,13 +137,13 @@ export function overrideTemplates(spec: GoslingSpec) {
             return;
         }
 
-        switch (t.metadata.type) {
-            case 'higlass-vector':
-                spec.tracks[i] = assign(getVectorTemplate(t.metadata.column, t.metadata.value), t);
+        switch (t.data.type) {
+            case 'vector':
+                spec.tracks[i] = assign(getVectorTemplate(t.data.column, t.data.value), t);
                 break;
-            case 'higlass-multivec':
+            case 'multivec':
                 spec.tracks[i] = assign(
-                    getMultivecTemplate(t.metadata.row, t.metadata.column, t.metadata.value, t.metadata.categories),
+                    getMultivecTemplate(t.data.row, t.data.column, t.data.value, t.data.categories),
                     t
                 );
                 break;

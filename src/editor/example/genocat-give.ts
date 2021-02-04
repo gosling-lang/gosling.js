@@ -11,9 +11,9 @@ export const GENOCAT_GIVE: GoslingSpec = {
     tracks: [
         {
             title: 'Genes',
-            data: { type: 'tileset', url: 'https://resgen.io/api/v1/tileset_info/?d=M9A9klpwTci5Vf4bHZ864g' },
-            metadata: {
-                type: 'higlass-bed',
+            data: {
+                url: 'https://resgen.io/api/v1/tileset_info/?d=M9A9klpwTci5Vf4bHZ864g',
+                type: 'bed',
                 genomicFields: [
                     { index: 1, name: 'start' },
                     { index: 2, name: 'end' }
@@ -76,9 +76,9 @@ export const GENOCAT_GIVE: GoslingSpec = {
             style: { outline: 'white' }
         },
         {
-            data: { type: 'tileset', url: 'https://resgen.io/api/v1/tileset_info/?d=Zz3CBDSqQ3ySrOSe2yj1eg' },
-            metadata: {
-                type: 'higlass-vector',
+            data: {
+                url: 'https://resgen.io/api/v1/tileset_info/?d=Zz3CBDSqQ3ySrOSe2yj1eg',
+                type: 'vector',
                 column: 'position',
                 value: 'peak'
             },
@@ -91,9 +91,9 @@ export const GENOCAT_GIVE: GoslingSpec = {
             style: { outline: 'white' }
         },
         {
-            data: { type: 'tileset', url: 'https://resgen.io/api/v1/tileset_info/?d=dc_SOjdCRgq_8PYf6W--7w' },
-            metadata: {
-                type: 'higlass-vector',
+            data: {
+                url: 'https://resgen.io/api/v1/tileset_info/?d=dc_SOjdCRgq_8PYf6W--7w',
+                type: 'vector',
                 column: 'position',
                 value: 'peak'
             },
@@ -106,9 +106,9 @@ export const GENOCAT_GIVE: GoslingSpec = {
             style: { outline: 'white' }
         },
         {
-            data: { type: 'tileset', url: 'https://resgen.io/api/v1/tileset_info/?d=Nolbrk9kS3CE0jJL_7OW1g' },
-            metadata: {
-                type: 'higlass-vector',
+            data: {
+                url: 'https://resgen.io/api/v1/tileset_info/?d=Nolbrk9kS3CE0jJL_7OW1g',
+                type: 'vector',
                 column: 'position',
                 value: 'peak'
             },
@@ -325,9 +325,9 @@ export const GENOCAT_GIVE: GoslingSpec = {
             superposeOnPreviousTrack: true
         },
         {
-            data: { type: 'tileset', url: 'https://resgen.io/api/v1/tileset_info/?d=Zz3CBDSqQ3ySrOSe2yj1eg' },
-            metadata: {
-                type: 'higlass-vector',
+            data: {
+                url: 'https://resgen.io/api/v1/tileset_info/?d=Zz3CBDSqQ3ySrOSe2yj1eg',
+                type: 'vector',
                 column: 'position',
                 value: 'peak'
             },
@@ -340,9 +340,9 @@ export const GENOCAT_GIVE: GoslingSpec = {
             style: { outline: 'white' }
         },
         {
-            data: { type: 'tileset', url: 'https://resgen.io/api/v1/tileset_info/?d=dc_SOjdCRgq_8PYf6W--7w' },
-            metadata: {
-                type: 'higlass-vector',
+            data: {
+                url: 'https://resgen.io/api/v1/tileset_info/?d=dc_SOjdCRgq_8PYf6W--7w',
+                type: 'vector',
                 column: 'position',
                 value: 'peak'
             },
@@ -355,9 +355,9 @@ export const GENOCAT_GIVE: GoslingSpec = {
             style: { outline: 'white' }
         },
         {
-            data: { type: 'tileset', url: 'https://resgen.io/api/v1/tileset_info/?d=Nolbrk9kS3CE0jJL_7OW1g' },
-            metadata: {
-                type: 'higlass-vector',
+            data: {
+                url: 'https://resgen.io/api/v1/tileset_info/?d=Nolbrk9kS3CE0jJL_7OW1g',
+                type: 'vector',
                 column: 'position',
                 value: 'peak'
             },
@@ -371,9 +371,9 @@ export const GENOCAT_GIVE: GoslingSpec = {
         },
         {
             title: 'Genes',
-            data: { type: 'tileset', url: 'https://resgen.io/api/v1/tileset_info/?d=M9A9klpwTci5Vf4bHZ864g' },
-            metadata: {
-                type: 'higlass-bed',
+            data: {
+                url: 'https://resgen.io/api/v1/tileset_info/?d=M9A9klpwTci5Vf4bHZ864g',
+                type: 'bed',
                 genomicFields: [
                     { index: 1, name: 'start' },
                     { index: 2, name: 'end' }

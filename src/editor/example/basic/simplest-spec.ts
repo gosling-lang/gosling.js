@@ -4,11 +4,8 @@ export const EXAMPLE_SIMPLEST: GoslingSpec = {
     tracks: [
         {
             data: {
-                type: 'tileset',
-                url: 'https://resgen.io/api/v1/tileset_info/?d=VLFaiSVjTjW6mkbjRjWREA'
-            },
-            metadata: {
-                type: 'higlass-vector',
+                url: 'https://resgen.io/api/v1/tileset_info/?d=VLFaiSVjTjW6mkbjRjWREA',
+                type: 'vector',
                 column: 'position',
                 value: 'peak',
                 bin: 16
@@ -19,10 +16,7 @@ export const EXAMPLE_SIMPLEST: GoslingSpec = {
         {
             data: {
                 url: 'https://resgen.io/api/v1/tileset_info/?d=UvVPeLHuRDiYA3qwFlm7xQ',
-                type: 'tileset'
-            },
-            metadata: {
-                type: 'higlass-multivec',
+                type: 'multivec',
                 row: 'sample',
                 column: 'position',
                 value: 'peak',
@@ -32,10 +26,7 @@ export const EXAMPLE_SIMPLEST: GoslingSpec = {
         {
             data: {
                 url: 'https://resgen.io/api/v1/tileset_info/?d=UvVPeLHuRDiYA3qwFlm7xQ',
-                type: 'tileset'
-            },
-            metadata: {
-                type: 'higlass-multivec',
+                type: 'multivec',
                 row: 'sample',
                 column: 'position',
                 value: 'peak',

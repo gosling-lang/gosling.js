@@ -2,12 +2,12 @@ import { Channel, BasicSingleTrack } from './gosling.schema';
 import {
     IsChannelDeep,
     IsChannelValue,
-    IsDataMetadata,
     IsDomainChrInterval,
     getValueUsingChannel,
     IsStackedMark,
     IsStackedChannel,
-    getVisualizationType
+    getVisualizationType,
+    IsDataDeepTileset
 } from './gosling.schema.guards';
 
 describe('gosling schema should be checked correctly', () => {
@@ -16,8 +16,7 @@ describe('gosling schema should be checked correctly', () => {
         expect(IsChannelDeep({ field: 'x' } as Channel)).toBe(true);
         expect(IsChannelValue({ value: 1 } as Channel)).toBe(true);
         expect(IsChannelValue({ field: 'x' } as Channel)).toBe(false);
-
-        expect(IsDataMetadata({ type: 'higlass-multivec', column: 'c', row: 'r', value: 'v' })).toBe(true);
+        expect(IsDataDeepTileset({ type: 'multivec', url: '', column: 'c', row: 'r', value: 'v' })).toBe(true);
         expect(IsDomainChrInterval({ chromosome: '1', interval: [1, 1000] })).toBe(true);
     });
 

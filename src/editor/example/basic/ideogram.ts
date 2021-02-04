@@ -79,10 +79,7 @@ export const EXAMPLE_IDEOGRAM_TRACK: SuperposedTrack = {
 export const EXAMPLE_STACKED_AREA: Track = {
     data: {
         url: EXAMPLE_DATASETS.multivec,
-        type: 'tileset'
-    },
-    metadata: {
-        type: 'higlass-multivec',
+        type: 'multivec',
         row: 'sample',
         column: 'position',
         value: 'peak',

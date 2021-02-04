@@ -5,10 +5,7 @@ import { EXAMPLE_DATASETS } from './datasets';
 export const EXMAPLE_SEMANTIC_ZOOM_SEQ: BasicSingleTrack | SuperposedTrack = {
     data: {
         url: EXAMPLE_DATASETS.fasta,
-        type: 'tileset'
-    },
-    metadata: {
-        type: 'higlass-multivec',
+        type: 'multivec',
         row: 'base',
         column: 'position',
         value: 'count',
@@ -83,10 +80,7 @@ export const EXMAPLE_SEMANTIC_ZOOM_SEQ: BasicSingleTrack | SuperposedTrack = {
 const EXAMPLE_SEMANTIC_ZOOMING_LINES: Track = {
     data: {
         url: EXAMPLE_DATASETS.multivec,
-        type: 'tileset'
-    },
-    metadata: {
-        type: 'higlass-multivec',
+        type: 'multivec',
         row: 'sample',
         column: 'position',
         value: 'peak',

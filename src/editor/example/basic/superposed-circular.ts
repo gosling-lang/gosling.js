@@ -10,10 +10,7 @@ const innerRadius = 70;
 const commonMultivecSpec: Partial<Track> = {
     data: {
         url: EXAMPLE_DATASETS.multivec,
-        type: 'tileset'
-    },
-    metadata: {
-        type: 'higlass-multivec',
+        type: 'multivec',
         row: 'sample',
         column: 'position',
         value: 'peak',
@@ -142,10 +139,7 @@ const IDEOGRAM_DETAIL: Track = {
 export const EXAMPLE_LINK: Track = {
     data: {
         url: EXAMPLE_DATASETS.region2,
-        type: 'tileset'
-    },
-    metadata: {
-        type: 'higlass-bed',
+        type: 'bed',
         genomicFields: [
             { name: 'start', index: 1 },
             { name: 'end', index: 2 }
