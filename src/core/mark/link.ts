@@ -45,15 +45,27 @@ export function drawLink(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackMo
                 !getValueUsingChannel(d, spec.row as Channel) ||
                 (getValueUsingChannel(d, spec.row as Channel) as string) === rowCategory
         ).forEach(d => {
-            // TODO: support y1, y1e
             const xValue = getValueUsingChannel(d, spec.x as Channel) as number;
-            const xeValue = getValueUsingChannel(d, spec.xe as Channel) as number;
+            let xeValue = getValueUsingChannel(d, spec.xe as Channel) as number;
             const x1Value = getValueUsingChannel(d, spec.x1 as Channel) as number;
             const x1eValue = getValueUsingChannel(d, spec.x1e as Channel) as number;
 
             const stroke = tm.encodedPIXIProperty('stroke', d);
             const color = tm.encodedPIXIProperty('color', d);
             const opacity = tm.encodedPIXIProperty('opacity', d);
+
+            // Is this band or line?
+            const isBand =
+                x1Value !== undefined &&
+                x1eValue !== undefined &&
+                // This means the strokeWidth of a band is 1, so we just need to draw a line instead
+                xValue !== xeValue &&
+                x1Value !== x1eValue;
+
+            if (!isBand && xValue === xeValue && x1Value == x1eValue) {
+                // Put the larger value on `xe` so that it can be used in line connection
+                xeValue = x1Value;
+            }
 
             let x = xScale(xValue);
             let xe = xScale(xeValue);
@@ -71,9 +83,7 @@ export function drawLink(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackMo
             const flipY = IsChannelDeep(spec.y) && spec.y.flip;
             const baseY = rowPosition + (flipY ? 0 : rowHeight);
 
-            if (x1Value !== undefined && x1eValue !== undefined && xValue !== x1Value && xeValue !== x1eValue) {
-                // This means we need to draw 'band' connections
-                // TODO: Better way to simply this line (i.e., 'none' for 0 opacity)?
+            if (isBand) {
                 g.beginFill(color === 'none' ? 'white' : colorToHex(color), color === 'none' ? 0 : opacity);
 
                 // Sort values to safely draw bands
@@ -160,13 +170,17 @@ export function drawLink(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackMo
                     }
                 }
             } else {
-                // This means we need to draw 'line' connections
+                /* Line Connection */
+
                 if (xe - x <= 0.1) {
                     // Do not draw very small links
                     return;
                 }
 
                 const midX = (x + xe) / 2.0;
+
+                // Must not fill color for `line`, just use `stroke`
+                g.beginFill('white', 0);
 
                 if (circular) {
                     if (x < 0 || xe > trackWidth) {
@@ -180,28 +194,21 @@ export function drawLink(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackMo
 
                     g.moveTo(posS.x, posS.y);
                     g.bezierCurveTo(posS.x, posS.y, trackWidth / 2.0, trackHeight / 2.0, posE.x, posE.y);
-
-                    // straight line
-                    // g.moveTo(posS.x, posS.y);
-                    // g.lineTo(posE.x, posE.y);
                 } else {
                     g.moveTo(x, baseY);
 
                     if (spec.style?.circularLink) {
                         if (xe < 0 || x > trackWidth) {
+                            // Q: Do we really need this?
                             return;
                         }
-                        // TODO: Better way to simply this line (i.e., 'none' for 0 opacity)?
-                        g.beginFill(color === 'none' ? 'white' : colorToHex(color), color === 'none' ? 0 : opacity);
                         g.arc(midX, baseY, (xe - x) / 2.0, -Math.PI, Math.PI);
                         g.closePath();
                     } else {
                         g.bezierCurveTo(
                             x + (xe - x) / 3.0,
-                            // rowPosition,
                             baseY + Math.min(rowHeight, (xe - x) / 2.0) * (flipY ? 1 : -1),
                             x + ((xe - x) / 3.0) * 2,
-                            // rowPosition,
                             baseY + Math.min(rowHeight, (xe - x) / 2.0) * (flipY ? 1 : -1),
                             xe,
                             baseY
