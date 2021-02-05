@@ -2927,6 +2927,11 @@
   resolved "https://registry.yarnpkg.com/@types/prop-types/-/prop-types-15.7.3.tgz#2ab0d5da2e5815f94b0b9d4b95d1e5f243ab2ca7"
   integrity sha512-KfRL3PuHmqQLOG+2tGpRO26Ctg+Cq1E01D2DMriKEATHgWLfeNDmq9e29Q9WIky0dQ3NPkd1mzYH8Lm936Z9qw==
 
+"@types/pubsub-js@^1.8.2":
+  version "1.8.2"
+  resolved "https://registry.yarnpkg.com/@types/pubsub-js/-/pubsub-js-1.8.2.tgz#4f4592dd28a2c832f60ffca99e4a991886db682e"
+  integrity sha512-cj3ZoAopr2ZmUYwRuXUiq48PlfNj5sBcUIkBnSJunfXlmf6y8o2kx4l70h1X1j0fR3IBorPrPM3B9SoyWwoqLg==
+
 "@types/q@^1.5.1":
   version "1.5.4"
   resolved "https://registry.yarnpkg.com/@types/q/-/q-1.5.4.tgz#15925414e0ad2cd765bfef58842f7e26a7accb24"
@@ -14917,6 +14922,11 @@ public-encrypt@^4.0.0:
     parse-asn1 "^5.0.0"
     randombytes "^2.0.1"
     safe-buffer "^5.1.2"
+
+pubsub-js@^1.9.2:
+  version "1.9.2"
+  resolved "https://registry.yarnpkg.com/pubsub-js/-/pubsub-js-1.9.2.tgz#4d01fe4df7d1957efa681f6338ebc9ba11b7ef3a"
+  integrity sha512-t+djzDvEKv4GoP5nPJ5Ar5h+4MrwPw+C9/9l75GV8TzO49HezXnxR1G6E/QJZdE2EDsXRNMu6O9MFjpjkSV7zg==
 
 pump@^2.0.0:
   version "2.0.1"

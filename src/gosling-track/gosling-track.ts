@@ -13,6 +13,7 @@ import {
     IsRangeFilter
 } from '../core/gosling.schema.guards';
 import { Tooltip } from '../gosling-tooltip';
+import { sampleSize } from 'lodash';
 
 // For using libraries, refer to https://github.com/higlass/higlass/blob/f82c0a4f7b2ab1c145091166b0457638934b15f3/app/scripts/configs/available-for-plugins.js
 function GoslingTrack(HGC: any, ...args: any[]): any {
@@ -30,6 +31,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             const [context, options] = params;
             super(context, options);
 
+            this.context = context;
             this.originalSpec = this.options.spec;
 
             const { valid, errorMessages } = validateTrack(this.originalSpec);
@@ -438,12 +440,26 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                             const { include } = filter;
                             tile.tileData.tabularDataFiltered = tile.tileData.tabularDataFiltered.filter(
                                 (d: { [k: string]: number | string }) => {
-                                    return not
-                                        ? `${d[field]}`.includes(include)
-                                        : !`${d[field]}`.includes(include);
+                                    return not ? `${d[field]}`.includes(include) : !`${d[field]}`.includes(include);
                                 }
                             );
                         }
+                    });
+                }
+
+                if (PubSub) {
+                    // !!! This shouldn't be called while using npm gosling.js package.
+                    // Send data preview to the editor so that it can be shown to users.
+                    const NUM_OF_ROWS_IN_PREVIEW = 100;
+                    const numOrRows = tile.tileData.tabularData.length;
+                    PubSub.publish('data-preview', {
+                        id: this.context.id,
+                        dataConfig: JSON.stringify({ metadata: resolved.metadata, data: resolved.data }),
+                        data:
+                            NUM_OF_ROWS_IN_PREVIEW > numOrRows
+                                ? tile.tileData.tabularData
+                                : sampleSize(tile.tileData.tabularData, NUM_OF_ROWS_IN_PREVIEW)
+                        // ...
                     });
                 }
 
