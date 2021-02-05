@@ -135,6 +135,7 @@ function Editor(props: any) {
      * Editor moode
      */
     useEffect(() => {
+        setSelectedPreviewData(0);
         setPreviewData([]);
         if (editorMode === 'Normal Mode') {
             setGm(urlSpec ?? stringify(replaceTemplate(JSON.parse(stringify(demo.spec)) as GoslingSpec)));
@@ -177,7 +178,7 @@ function Editor(props: any) {
     useEffect(() => {
         // We want to show data preview in the editor.
         const token = PubSub.subscribe('data-preview', (_: string, data: PreviewData) => {
-            // Data with different `dataConfig`, which is a pair of `data` and `metadata` specs, is shown in data preview
+            // Data with different `dataConfig` is shown separately in data preview.
             const id = `${data.dataConfig}`;
             const newPreviewData = previewData.filter(d => d.id !== id);
             setPreviewData([...newPreviewData, { ...data, id }]);
@@ -191,6 +192,8 @@ function Editor(props: any) {
      * Render visualization when edited
      */
     useEffect(() => {
+        setPreviewData([]);
+        setSelectedPreviewData(0);
         runSpecUpdateVis();
     }, [gm, autoRun]);
 
@@ -261,19 +264,14 @@ function Editor(props: any) {
             return '';
         }
 
-        let info = dataConfigObj.data.type;
-
-        if (dataConfigObj.data.url) {
-            info += ` | ${dataConfigObj.data.url}`;
-        }
-
-        if (dataConfigObj.metadata) {
-            Object.keys(dataConfigObj.metadata).forEach(key => {
-                info += ` | ${dataConfigObj.metadata[key]}`;
+        let info = '';
+        if (dataConfigObj.data) {
+            Object.keys(dataConfigObj.data).forEach(key => {
+                info += `${dataConfigObj.data[key]} | `;
             });
         }
 
-        return info;
+        return info.slice(0, info.length - 2);
     }
 
     return (
@@ -432,7 +430,6 @@ function Editor(props: any) {
                                 code={gm}
                                 readOnly={false}
                                 onChange={debounce(code => {
-                                    setPreviewData([]);
                                     setGm(code);
                                 }, 1000)}
                             />

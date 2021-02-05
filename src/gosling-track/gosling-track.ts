@@ -440,9 +440,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                             const { include } = filter;
                             tile.tileData.tabularDataFiltered = tile.tileData.tabularDataFiltered.filter(
                                 (d: { [k: string]: number | string }) => {
-                                    return not
-                                        ? `${d[field]}`.includes(include)
-                                        : !`${d[field]}`.includes(include);
+                                    return not ? `${d[field]}`.includes(include) : !`${d[field]}`.includes(include);
                                 }
                             );
                         }
