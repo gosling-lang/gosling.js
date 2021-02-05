@@ -80,13 +80,13 @@ export const EXMAPLE_BASIC_LINKING_CIRCULAR: GoslingSpec = {
                 separator: '\t',
                 genomicFieldsToConvert: [
                     { chromosomeField: 'chr1', genomicFields: ['p1s', 'p1e'] },
-                    { chromosomeField: 'chr2', genomicFields: ['pes', 'pee'] }
+                    { chromosomeField: 'chr2', genomicFields: ['p2s', 'p2e'] }
                 ]
             },
             dataTransform: {
                 filter: [
-                    { field: 'chr1', oneOf: ['16', '14', '9', '6', '5', '3'] },
-                    { field: 'chr2', oneOf: ['16', '14', '9', '6', '5', '3'] }
+                    { field: 'chr1', oneOf: ['1', '16', '14', '9', '6', '5', '3'] },
+                    { field: 'chr2', oneOf: ['1', '16', '14', '9', '6', '5', '3'] }
                 ]
             },
             mark: 'link',
