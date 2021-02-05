@@ -14,7 +14,7 @@ import EditorPanel from './editor-panel';
 import stringify from 'json-stringify-pretty-compact';
 import SplitPane from 'react-split-pane';
 import { Datum, GoslingSpec } from '../core/gosling.schema';
-import { debounce } from 'lodash';
+import { debounce, delay } from 'lodash';
 import { examples } from './example';
 import { replaceTemplate } from '../core/utils';
 import { Size } from '../core/utils/bounding-box';
@@ -121,6 +121,7 @@ function Editor(props: any) {
     const [autoRun, setAutoRun] = useState(true);
     const [previewData, setPreviewData] = useState<PreviewData[]>([]);
     const [selectedPreviewData, setSelectedPreviewData] = useState<number>(0);
+    const [dataLoading, setDataLoading] = useState<boolean>(false);
 
     // whether to show HiGlass' viewConfig on the left-bottom
     const [showVC, setShowVC] = useState<boolean>(false);
@@ -144,6 +145,17 @@ function Editor(props: any) {
         }
         setHg(undefined);
     }, [demo, editorMode]);
+
+    /**
+     * Show animation of small loading icon for visual feedback.
+     */
+    useEffect(() => {
+        if (dataLoading) {
+            delay(() => {
+                setDataLoading(false);
+            }, 3500);
+        }
+    }, [dataLoading]);
 
     const runSpecUpdateVis = useCallback(
         (run?: boolean) => {
@@ -182,6 +194,7 @@ function Editor(props: any) {
             const id = `${data.dataConfig}`;
             const newPreviewData = previewData.filter(d => d.id !== id);
             setPreviewData([...newPreviewData, { ...data, id }]);
+            setDataLoading(true);
         });
         return () => {
             PubSub.unsubscribe(token);
@@ -267,7 +280,11 @@ function Editor(props: any) {
         let info = '';
         if (dataConfigObj.data) {
             Object.keys(dataConfigObj.data).forEach(key => {
-                info += `${dataConfigObj.data[key]} | `;
+                if (typeof dataConfigObj.data[key] === 'object') {
+                    info += `${JSON.stringify(dataConfigObj.data[key])} | `;
+                } else {
+                    info += `${dataConfigObj.data[key]} | `;
+                }
             });
         }
 
@@ -462,6 +479,11 @@ function Editor(props: any) {
                         <SplitPane split="vertical" defaultSize="100%">
                             <>
                                 <div className="editor-header">
+                                    <span
+                                        className={dataLoading ? 'data-preview-loading-icon' : 'data-preview-stop-icon'}
+                                    >
+                                        ●{' '}
+                                    </span>
                                     <b>Data Preview</b> (~100 Rows, Data Before Transformation)
                                 </div>
                                 <div className="editor-data-preview-panel">

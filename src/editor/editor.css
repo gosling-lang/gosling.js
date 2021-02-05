@@ -49,6 +49,27 @@
     height: 30px;
 }
 
+.data-preview-loading-icon {
+    color: rgb(12, 186, 12);
+    animation-duration: 700ms;
+    animation-name: blink;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+}
+
+.data-preview-stop-icon {
+    color: rgb(12, 186, 12);
+}
+
+@keyframes blink {
+    from {
+        color: rgb(12, 186, 12);
+    }
+    to {
+        color: #f6f6f6;
+    }
+}
+
 .editor-data-preview-panel {
     height: 100%;
     /* border: 1px solid #ccc; */
