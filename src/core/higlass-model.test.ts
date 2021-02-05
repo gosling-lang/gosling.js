@@ -1,5 +1,5 @@
 import { HiGlassModel } from './higlass-model';
-import { CHROMOSOME_INTERVAL_HG38 } from './utils/chrom-size';
+import { GET_CHROM_SIZES } from './utils/assembly';
 
 describe('Should produce higlass model correctly', () => {
     it('Should set default values correctly', () => {
@@ -12,11 +12,11 @@ describe('Should produce higlass model correctly', () => {
         higlass.addDefaultView();
         higlass.setDomain({ chromosome: '2' }, { chromosome: '2', interval: [100, 200] });
         expect(higlass.spec().views?.[0].initialXDomain).toEqual([
-            CHROMOSOME_INTERVAL_HG38['chr2'][0] + 1,
-            CHROMOSOME_INTERVAL_HG38['chr2'][1]
+            GET_CHROM_SIZES().interval['chr2'][0] + 1,
+            GET_CHROM_SIZES().interval['chr2'][1]
         ]);
-        expect(higlass.spec().views?.[0].initialYDomain?.[0]).toEqual(CHROMOSOME_INTERVAL_HG38['chr2'][0] + 100);
-        expect(higlass.spec().views?.[0].initialYDomain?.[1]).toEqual(CHROMOSOME_INTERVAL_HG38['chr2'][0] + 200);
+        expect(higlass.spec().views?.[0].initialYDomain?.[0]).toEqual(GET_CHROM_SIZES().interval['chr2'][0] + 100);
+        expect(higlass.spec().views?.[0].initialYDomain?.[1]).toEqual(GET_CHROM_SIZES().interval['chr2'][0] + 200);
     });
 
     it('Should add brush correctly', () => {

@@ -1,12 +1,32 @@
 import { BasicSingleTrack, GoslingSpec } from '../gosling.schema';
-import { IsDataMetadata, IsTemplate } from '../gosling.schema.guards';
+import { IsTemplate, IsDataDeepTileset } from '../gosling.schema.guards';
 import assign from 'lodash/assign';
+import { spreadTracksByData } from './superpose';
 
 /**
  * Update track-level specs considering the root-level specs (e.g., arrangements).
  * @param spec
  */
 export function fixSpecDownstream(spec: GoslingSpec) {
+    /**
+     * Genome builds
+     */
+    if (spec.assembly) {
+        spec.tracks.forEach(t => {
+            if (t.assembly === undefined) {
+                t.assembly = spec.assembly;
+            }
+        });
+    }
+
+    // !!! TODO: (FOR THE RENDERING PERFORMANCE) We need to also combine superposed tracks if they use identical data and metadata so tha we have to load the data only once.
+    // !!! This should be taken before fixing `superposeOnPreviousTrack` options.
+    /**
+     * Spread superposed tracks if they are assigned to different data/metadata.
+     * This process is necessary since we are passing over each track to HiGlass, and if a track contain multiple datastes, HiGlass cannot handle that.
+     */
+    spec.tracks = spreadTracksByData(spec.tracks);
+
     /**
      * superposeOnPreviousTrack
      */
@@ -70,9 +90,9 @@ export function fixSpecDownstream(spec: GoslingSpec) {
  */
 export function getVectorTemplate(column: string, value: string): BasicSingleTrack {
     return {
-        data: { type: 'tileset', url: 'https://localhost:8080/api/v1/tileset_info/?d=VLFaiSVjTjW6mkbjRjWREA' },
-        metadata: {
-            type: 'higlass-vector',
+        data: {
+            type: 'vector',
+            url: 'https://localhost:8080/api/v1/tileset_info/?d=VLFaiSVjTjW6mkbjRjWREA',
             column,
             value
         },
@@ -90,9 +110,9 @@ export function getMultivecTemplate(
 ): BasicSingleTrack {
     return categories && categories.length < 10
         ? {
-              data: { type: 'tileset', url: 'https://localhost:8080/api/v1/tileset_info/?d=VLFaiSVjTjW6mkbjRjWREA' },
-              metadata: {
-                  type: 'higlass-multivec',
+              data: {
+                  type: 'multivec',
+                  url: 'https://localhost:8080/api/v1/tileset_info/?d=VLFaiSVjTjW6mkbjRjWREA',
                   row,
                   column,
                   value,
@@ -105,9 +125,9 @@ export function getMultivecTemplate(
               color: { field: row, type: 'nominal' }
           }
         : {
-              data: { type: 'tileset', url: 'https://localhost:8080/api/v1/tileset_info/?d=VLFaiSVjTjW6mkbjRjWREA' },
-              metadata: {
-                  type: 'higlass-multivec',
+              data: {
+                  type: 'multivec',
+                  url: 'https://localhost:8080/api/v1/tileset_info/?d=VLFaiSVjTjW6mkbjRjWREA',
                   row,
                   column,
                   value,
@@ -126,8 +146,8 @@ export function getMultivecTemplate(
  */
 export function overrideTemplates(spec: GoslingSpec) {
     spec.tracks.forEach((t, i) => {
-        if (!t.metadata || !IsDataMetadata(t.metadata)) {
-            // if `metadata` is not specified, we can not provide a correct template since we do not know the exact data type.
+        if (!t.data || !IsDataDeepTileset(t.data)) {
+            // if `data` is not specified, we can not provide a correct template.
             return;
         }
 
@@ -136,13 +156,13 @@ export function overrideTemplates(spec: GoslingSpec) {
             return;
         }
 
-        switch (t.metadata.type) {
-            case 'higlass-vector':
-                spec.tracks[i] = assign(getVectorTemplate(t.metadata.column, t.metadata.value), t);
+        switch (t.data.type) {
+            case 'vector':
+                spec.tracks[i] = assign(getVectorTemplate(t.data.column, t.data.value), t);
                 break;
-            case 'higlass-multivec':
+            case 'multivec':
                 spec.tracks[i] = assign(
-                    getMultivecTemplate(t.metadata.row, t.metadata.column, t.metadata.value, t.metadata.categories),
+                    getMultivecTemplate(t.data.row, t.data.column, t.data.value, t.data.categories),
                     t
                 );
                 break;

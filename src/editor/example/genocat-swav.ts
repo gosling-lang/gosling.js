@@ -14,10 +14,7 @@ export const GENOCAT_SWAV: GoslingSpec = {
             title: 'Gene Model',
             data: {
                 url: EXAMPLE_DATASETS.geneAnnotation,
-                type: 'tileset'
-            },
-            metadata: {
-                type: 'higlass-bed',
+                type: 'bed',
                 genomicFields: [
                     { index: 1, name: 'start' },
                     { index: 2, name: 'end' }
@@ -81,10 +78,7 @@ export const GENOCAT_SWAV: GoslingSpec = {
         {
             data: {
                 url: EXAMPLE_DATASETS.multivec,
-                type: 'tileset'
-            },
-            metadata: {
-                type: 'higlass-multivec',
+                type: 'multivec',
                 row: 'sample',
                 column: 'position',
                 value: 'peak',

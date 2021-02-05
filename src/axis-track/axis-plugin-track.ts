@@ -5,7 +5,7 @@
 import boxIntersect from 'box-intersect';
 import { scaleLinear } from 'd3-scale';
 import { format, precisionPrefix, formatPrefix } from 'd3-format';
-import { CHROMOSOME_INTERVAL_HG38, CHROMOSOME_SIZE_HG38 } from '../core/utils/chrom-size';
+import { GET_CHROM_SIZES } from '../core/utils/assembly';
 import { cartesianToPolar } from '../core/utils/polar';
 
 const TICK_WIDTH = 200;
@@ -91,18 +91,19 @@ function AxisTrack(HGC: any, ...args: any[]): any {
             //     { chr: "chr2", pos: 1000 },
             // ]
 
+            const assembly = this.options.assembly;
             type ChrPosInfo = { chr: string; pos: number };
 
             const chrPositions: { [k: string]: ChrPosInfo } = {};
-            const chromLengths: { [k: string]: number } = { ...CHROMOSOME_SIZE_HG38 };
+            const chromLengths: { [k: string]: number } = { ...GET_CHROM_SIZES(assembly).size };
             const cumPositions: ChrPosInfo[] = [];
 
-            Object.keys(CHROMOSOME_SIZE_HG38).forEach(k => {
-                chrPositions[k] = { chr: k, pos: CHROMOSOME_SIZE_HG38[k] };
+            Object.keys(GET_CHROM_SIZES(assembly).size).forEach(k => {
+                chrPositions[k] = { chr: k, pos: GET_CHROM_SIZES(assembly).size[k] };
             });
 
-            Object.keys(CHROMOSOME_INTERVAL_HG38).forEach(k => {
-                cumPositions.push({ chr: k, pos: CHROMOSOME_INTERVAL_HG38[k][0] });
+            Object.keys(GET_CHROM_SIZES(assembly).interval).forEach(k => {
+                cumPositions.push({ chr: k, pos: GET_CHROM_SIZES(assembly).interval[k][0] });
             });
 
             this.chromInfo = { chrPositions, chromLengths, cumPositions };

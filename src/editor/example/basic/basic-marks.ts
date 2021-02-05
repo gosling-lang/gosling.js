@@ -4,10 +4,7 @@ import { EXAMPLE_DATASETS } from './datasets';
 export const EXAMPLE_HEATMAP: Track = {
     data: {
         url: EXAMPLE_DATASETS.multivec,
-        type: 'tileset'
-    },
-    metadata: {
-        type: 'higlass-multivec',
+        type: 'multivec',
         row: 'sample',
         column: 'position',
         value: 'peak',
@@ -27,10 +24,7 @@ export const EXAMPLE_HEATMAP: Track = {
 export const EXAMPLE_BASIC_AREA: BasicSingleTrack = {
     data: {
         url: EXAMPLE_DATASETS.multivec,
-        type: 'tileset'
-    },
-    metadata: {
-        type: 'higlass-multivec',
+        type: 'multivec',
         row: 'sample',
         column: 'position',
         value: 'peak',
@@ -65,10 +59,7 @@ export const EXMAPLE_BASIC_MARKS: GoslingSpec = {
         {
             data: {
                 url: EXAMPLE_DATASETS.multivec,
-                type: 'tileset'
-            },
-            metadata: {
-                type: 'higlass-multivec',
+                type: 'multivec',
                 row: 'sample',
                 column: 'position',
                 value: 'peak',
@@ -88,10 +79,7 @@ export const EXMAPLE_BASIC_MARKS: GoslingSpec = {
         {
             data: {
                 url: EXAMPLE_DATASETS.multivec,
-                type: 'tileset'
-            },
-            metadata: {
-                type: 'higlass-multivec',
+                type: 'multivec',
                 row: 'sample',
                 column: 'position',
                 value: 'peak',
@@ -111,10 +99,7 @@ export const EXMAPLE_BASIC_MARKS: GoslingSpec = {
         {
             data: {
                 url: EXAMPLE_DATASETS.multivec,
-                type: 'tileset'
-            },
-            metadata: {
-                type: 'higlass-multivec',
+                type: 'multivec',
                 row: 'sample',
                 column: 'position',
                 value: 'peak',

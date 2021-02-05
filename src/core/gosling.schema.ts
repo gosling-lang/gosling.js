@@ -4,7 +4,8 @@ import { GLYPH_LOCAL_PRESET_TYPE, GLYPH_HIGLASS_PRESET_TYPE } from '../editor/ex
  * Root-level specification
  */
 export type GoslingSpec = {
-    assembly?: 'hm38'; // TODO: support others as well
+    assembly?: Assembly;
+    chromSizes?: [string, number][]; // TODO: not supported yet
 
     title?: string;
     subtitle?: string;
@@ -19,6 +20,11 @@ export type GoslingSpec = {
     width?: number;
     height?: number;
 };
+
+export type Assembly = 'hg38' | 'hg19' | 'hg18' | 'hg17' | 'hg16' | 'mm10' | 'mm9';
+// | 'mm8'
+// | 'mm7'
+// | 'mm6'
 
 /**
  * Arrangement of multiple tracks
@@ -37,20 +43,11 @@ export interface Arrangement {
 /**
  * Data specification
  */
-export type DataDeep = DataDeepTileset | DataDeepGosling;
+export type DataDeep = JSONData | CSVData | MultivecData | BEDData | VectorData;
 
-export interface Datum {
-    [k: string]: number | string;
-}
-
-export interface DataDeepTileset {
-    type: 'tileset';
-    url: string;
-}
-
-export type DataDeepGosling = CSVDataGosling | JSONDataGosling;
-
-export interface DataDeepGoslingCommon {
+export interface JSONData {
+    type: 'json';
+    values: Datum;
     quantitativeFields?: string[];
     chromosomeField?: string;
     genomicFields?: string[];
@@ -63,34 +60,32 @@ export interface DataDeepGoslingCommon {
     }[];
 }
 
-export interface CSVDataGosling extends DataDeepGoslingCommon {
+export interface Datum {
+    [k: string]: number | string;
+}
+
+export interface CSVData {
     type: 'csv';
-    url?: string;
+    url: string;
     separator?: string;
+    quantitativeFields?: string[];
+    chromosomeField?: string;
+    genomicFields?: string[];
+    sampleLength?: number; // This limit the total number of rows fetched (default: 1000)
     // experimental
     headerNames?: string[];
     chromosomePrefix?: string;
     longToWideId?: string;
+    // !!! experimental
+    genomicFieldsToConvert?: {
+        chromosomeField: string;
+        genomicFields: string[];
+    }[];
 }
 
-export interface JSONDataGosling extends DataDeepGoslingCommon {
-    type: 'json';
-    values?: Datum[];
-}
-
-export type DataMetadata = VectorMetadata | MultivecMetadata | BEDMetadata;
-
-export interface VectorMetadata {
-    type: 'higlass-vector';
-    column: string;
-    value: string;
-    start?: string;
-    end?: string;
-    bin?: number; // Binning the genomic interval in tiles (unit size: 256)
-}
-
-export interface MultivecMetadata {
-    type: 'higlass-multivec';
+export interface MultivecData {
+    type: 'multivec';
+    url: string;
     column: string;
     row: string;
     value: string;
@@ -100,8 +95,19 @@ export interface MultivecMetadata {
     bin?: number; // Binning the genomic interval in tiles (unit size: 256)
 }
 
-export interface BEDMetadata {
-    type: 'higlass-bed';
+export interface VectorData {
+    type: 'vector';
+    url: string;
+    column: string;
+    value: string;
+    start?: string;
+    end?: string;
+    bin?: number; // Binning the genomic interval in tiles (unit size: 256)
+}
+
+export interface BEDData {
+    type: 'bed';
+    url: string;
     genomicFields: { index: number; name: string }[];
     valueFields?: { index: number; name: string; type: 'nominal' | 'quantitative' }[];
     // this is a somewhat arbitrary option for reading gene annotation datasets
@@ -145,6 +151,8 @@ export type CustomChannel = {
 };
 
 export interface CommonTrackDef {
+    assembly?: Assembly;
+    chromSizes?: [string, number][]; // TODO: not supported yet
     title?: string;
     subtitle?: string;
     description?: string;
@@ -168,9 +176,7 @@ export interface CommonTrackDef {
  * Partial specification of `BasicSingleTrack` to use default visual encoding predefined by data type.
  */
 export interface DataTrack extends CommonTrackDef {
-    // !!! The below properties should be required ones since metadata determines the visualization type.
     data: DataDeep;
-    metadata: DataMetadata;
 }
 
 /**
@@ -179,7 +185,6 @@ export interface DataTrack extends CommonTrackDef {
 export interface BasicSingleTrack extends CommonTrackDef {
     // Data
     data: DataDeep;
-    metadata?: DataMetadata; // we could remove this and get this information from the server
 
     // Data transformation
     dataTransform?: DataTransform;

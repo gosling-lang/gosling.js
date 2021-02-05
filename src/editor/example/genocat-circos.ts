@@ -10,8 +10,12 @@ export const GENOCAT_CIRCOS: GoslingSpec = {
     arrangement: { columnSizes: 700, rowSizes: 700 },
     tracks: [
         {
-            data: { type: 'tileset', url: 'https://resgen.io/api/v1/tileset_info/?d=VLFaiSVjTjW6mkbjRjWREA' },
-            metadata: { type: 'higlass-vector', column: 'position', value: 'peak' },
+            data: {
+                type: 'vector',
+                url: 'https://resgen.io/api/v1/tileset_info/?d=VLFaiSVjTjW6mkbjRjWREA',
+                column: 'position',
+                value: 'peak'
+            },
             mark: 'bar',
             x: { field: 'position', type: 'genomic', axis: 'top' }, // domain: { chromosome: '1' } },
             y: { field: 'peak', type: 'quantitative' },
@@ -20,9 +24,9 @@ export const GENOCAT_CIRCOS: GoslingSpec = {
             innerRadius: 290
         },
         {
-            data: { url: EXAMPLE_DATASETS.multivec, type: 'tileset' },
-            metadata: {
-                type: 'higlass-multivec',
+            data: {
+                url: EXAMPLE_DATASETS.multivec,
+                type: 'multivec',
                 row: 'sample',
                 column: 'position',
                 value: 'peak',

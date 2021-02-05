@@ -4,9 +4,9 @@ import { getArrangement, Size } from '../utils/bounding-box';
 import { HiGlassSpec } from '../higlass.schema';
 
 export function compileLayout(spec: GoslingSpec, setHg: (hg: HiGlassSpec, size: Size) => void) {
-    // generate layout data
+    // Generate layout data
     const trackInfo = getArrangement(spec);
 
-    // render HiGlass tracks
+    // Render HiGlass tracks
     renderHiGlass(spec, trackInfo, setHg);
 }

@@ -4,7 +4,7 @@ import isEqual from 'lodash/isEqual';
 import { IsChannelDeep, IsChannelValue } from './gosling.schema.guards';
 
 const MINIMAL_TRACK_SPEC: Track = {
-    data: { url: '', type: 'tileset' },
+    data: { url: '', type: 'csv' },
     mark: 'bar',
     x: { field: 'x', type: 'genomic' },
     width: 300,
@@ -28,7 +28,7 @@ describe('gosling track model should properly validate the original spec', () =>
 
     it('genomic coordinate should be present in the spec', () => {
         const track: Track = {
-            data: { url: '', type: 'tileset' },
+            data: { url: '', type: 'vector', column: '', value: '' },
             mark: 'bar',
             width: 300,
             height: 300
@@ -154,7 +154,7 @@ describe('Visual marks should be correctly encoded with data', () => {
     it('Point marks', () => {
         const size = { width: 100, height: 200 };
         const track: Track = {
-            data: { type: 'tileset', url: 'dummy' },
+            data: { type: 'csv', url: 'dummy' },
             mark: 'point',
             x: { field: 'g', type: 'genomic' },
             row: { field: 'n', type: 'nominal' },
@@ -187,7 +187,7 @@ describe('Visual marks should be correctly encoded with data', () => {
         expect(model.encodedValue('text', 'missing')).toBe('missing');
 
         const track2: Track = {
-            data: { type: 'tileset', url: 'dummy' },
+            data: { type: 'csv', url: 'dummy' },
             mark: 'point',
             x: { field: 'g', type: 'genomic' },
             y: { field: 'q', type: 'quantitative', range: [0, size.height] },

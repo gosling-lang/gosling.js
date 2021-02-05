@@ -16,7 +16,7 @@ describe('Point marks should correctly encode visual channels', () => {
         height = 200;
     const baseTrack: Track = {
         mark: 'point',
-        data: { type: 'tileset', url: 'dummy' },
+        data: { type: 'vector', url: 'dummy', column: '', value: '' },
         width,
         height
     };
