@@ -454,7 +454,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                     const numOrRows = tile.tileData.tabularData.length;
                     PubSub.publish('data-preview', {
                         id: this.context.id,
-                        dataConfig: JSON.stringify({ metadata: resolved.metadata, data: resolved.data }),
+                        dataConfig: JSON.stringify({ data: resolved.data }),
                         data:
                             NUM_OF_ROWS_IN_PREVIEW > numOrRows
                                 ? tile.tileData.tabularData

@@ -4,20 +4,23 @@ import { group } from 'd3-array';
 import { PIXIVisualProperty } from '../visual-property.schema';
 import { IsChannelDeep, IsStackedMark, getValueUsingChannel } from '../gosling.schema.guards';
 import { cartesianToPolar, valueToRadian } from '../utils/polar';
+import colorToHex from '../utils/color-to-hex';
 
-export function drawBar(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackModel) {
+export function drawBar(trackInfo: any, tile: any, model: GoslingTrackModel) {
     /* track spec */
-    const spec = tm.spec();
+    const spec = model.spec();
 
-    /* helper */
-    const { colorToHex } = HGC.utils;
+    if (!spec.width || !spec.height) {
+        console.warn('Size of a track is not properly determined, so visual mark cannot be rendered');
+        return;
+    }
 
     /* data */
-    const data = tm.data();
+    const data = model.data();
 
     /* track size */
-    const trackWidth = trackInfo.dimensions[0];
-    const trackHeight = trackInfo.dimensions[1];
+    const trackWidth = spec.width;
+    const trackHeight = spec.height;
     const tileSize = trackInfo.tilesetInfo.tile_size;
     const { tileX, tileWidth } = trackInfo.getTilePosAndDimensions(
         tile.tileData.zoomLevel,
@@ -36,23 +39,23 @@ export function drawBar(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackMod
     const cy = trackHeight / 2.0;
 
     /* genomic scale */
-    const xScale = tm.getChannelScale('x');
+    const xScale = model.getChannelScale('x');
     const tileUnitWidth = xScale(tileX + tileWidth / tileSize) - xScale(tileX);
 
     /* row separation */
-    const rowCategories = (tm.getChannelDomainArray('row') as string[]) ?? ['___SINGLE_ROW___'];
+    const rowCategories = (model.getChannelDomainArray('row') as string[]) ?? ['___SINGLE_ROW___'];
     const rowHeight = trackHeight / rowCategories.length;
 
     /* baseline */
     const baselineValue = IsChannelDeep(spec.y) ? spec.y?.baseline : undefined;
-    const baselineY = tm.encodedValue('y', baselineValue) ?? 0;
+    const baselineY = model.encodedValue('y', baselineValue) ?? 0;
 
     /* render */
     if (IsStackedMark(spec)) {
         // TODO: many parts in this scope are identical to the below `else` statement, so encaptulate this?
         const rowGraphics = tile.graphics; // new HGC.libraries.PIXI.Graphics(); // only one row for stacked marks
 
-        const genomicChannel = tm.getGenomicChannel();
+        const genomicChannel = model.getGenomicChannel();
         if (!genomicChannel || !genomicChannel.field) {
             console.warn('Genomic field is not provided in the specification');
             return;
@@ -64,16 +67,16 @@ export function drawBar(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackMod
         xKeys.forEach(k => {
             let prevYEnd = 0;
             pivotedData.get(k)?.forEach(d => {
-                const color = tm.encodedPIXIProperty('color', d);
-                const stroke = tm.encodedPIXIProperty('stroke', d);
-                const strokeWidth = tm.encodedPIXIProperty('strokeWidth', d);
-                const opacity = tm.encodedPIXIProperty('opacity', d);
-                const y = tm.encodedPIXIProperty('y', d);
+                const color = model.encodedPIXIProperty('color', d);
+                const stroke = model.encodedPIXIProperty('stroke', d);
+                const strokeWidth = model.encodedPIXIProperty('strokeWidth', d);
+                const opacity = model.encodedPIXIProperty('opacity', d);
+                const y = model.encodedPIXIProperty('y', d);
 
-                const barWidth = tm.encodedPIXIProperty('width', d, { tileUnitWidth });
-                const barStartX = tm.encodedPIXIProperty('x-start', d, { markWidth: barWidth });
+                const barWidth = model.encodedPIXIProperty('width', d, { tileUnitWidth });
+                const barStartX = model.encodedPIXIProperty('x-start', d, { markWidth: barWidth });
 
-                const alphaTransition = tm.markVisibility(d, {
+                const alphaTransition = model.markVisibility(d, {
                     width: barWidth,
                     zoomLevel: trackInfo._xScale.invert(trackWidth) - trackInfo._xScale.invert(0)
                 });
@@ -115,24 +118,24 @@ export function drawBar(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackMod
         rowCategories.forEach(rowCategory => {
             // we are separately drawing each row so that y scale can be more effectively shared across tiles without rerendering from the bottom
             const rowGraphics = tile.graphics; //new HGC.libraries.PIXI.Graphics();
-            const rowPosition = tm.encodedValue('row', rowCategory);
+            const rowPosition = model.encodedValue('row', rowCategory);
 
             data.filter(
                 d =>
                     !getValueUsingChannel(d, spec.row as Channel) ||
                     (getValueUsingChannel(d, spec.row as Channel) as string) === rowCategory
             ).forEach(d => {
-                const color = tm.encodedPIXIProperty('color', d);
-                const stroke = tm.encodedPIXIProperty('stroke', d);
-                const strokeWidth = tm.encodedPIXIProperty('strokeWidth', d);
-                const opacity = tm.encodedPIXIProperty('opacity');
-                const y = tm.encodedPIXIProperty('y', d); // TODO: we could even retrieve a actual y position of bars
+                const color = model.encodedPIXIProperty('color', d);
+                const stroke = model.encodedPIXIProperty('stroke', d);
+                const strokeWidth = model.encodedPIXIProperty('strokeWidth', d);
+                const opacity = model.encodedPIXIProperty('opacity');
+                const y = model.encodedPIXIProperty('y', d); // TODO: we could even retrieve a actual y position of bars
 
-                const barWidth = tm.encodedPIXIProperty('width', d, { tileUnitWidth });
-                const barStartX = tm.encodedPIXIProperty('x-start', d, { markWidth: barWidth });
+                const barWidth = model.encodedPIXIProperty('width', d, { tileUnitWidth });
+                const barStartX = model.encodedPIXIProperty('x-start', d, { markWidth: barWidth });
                 const barHeight = y - baselineY;
 
-                const alphaTransition = tm.markVisibility(d, { width: barWidth });
+                const alphaTransition = model.markVisibility(d, { width: barWidth });
                 const actualOpacity = Math.min(alphaTransition, opacity);
 
                 if (actualOpacity === 0 || barWidth === 0 || y === 0) {

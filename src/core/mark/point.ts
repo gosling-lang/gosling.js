@@ -1,21 +1,25 @@
 import { GoslingTrackModel } from '../gosling-track-model';
 import { Channel } from '../gosling.schema';
 import { getValueUsingChannel } from '../gosling.schema.guards';
+import colorToHex from '../utils/color-to-hex';
 import { cartesianToPolar } from '../utils/polar';
 import { PIXIVisualProperty } from '../visual-property.schema';
 
-export function drawPoint(HGC: any, trackInfo: any, tile: any, model: GoslingTrackModel) {
+export function drawPoint(g: PIXI.Graphics, model: GoslingTrackModel) {
     /* track spec */
     const spec = model.spec();
 
-    /* helper */
-    const { colorToHex } = HGC.utils;
+    if (!spec.width || !spec.height) {
+        console.warn('Size of a track is not properly determined, so visual mark cannot be rendered');
+        return;
+    }
 
     /* data */
     const data = model.data();
 
     /* track size */
-    const [trackWidth, trackHeight] = trackInfo.dimensions;
+    const trackWidth = spec.width;
+    const trackHeight = spec.height;
 
     /* circular parameters */
     const circular = spec.layout === 'circular';
@@ -32,8 +36,6 @@ export function drawPoint(HGC: any, trackInfo: any, tile: any, model: GoslingTra
     const rowHeight = trackHeight / rowCategories.length;
 
     /* render */
-    const g = tile.graphics;
-
     rowCategories.forEach(rowCategory => {
         const rowPosition = model.encodedValue('row', rowCategory);
 

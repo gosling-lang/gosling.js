@@ -67,6 +67,7 @@
         "@typescript-eslint/parser": "^4.8.1",
         "ajv": "^6.12.2",
         "babel-jest": "^26.3.0",
+        "canvas": "^2.6.1",
         "conventional-changelog-cli": "^2.1.1",
         "cross-fetch": "^3.0.6",
         "css-loader": "^4.2.1",
@@ -80,6 +81,7 @@
         "html-webpack-plugin": "^4.3.0",
         "husky": "^4.2.5",
         "jest": "^26.4.0",
+        "jest-canvas-mock": "^2.3.0",
         "monaco-editor-webpack-plugin": "^1.9.0",
         "peer-deps-externals-webpack-plugin": "^1.0.4",
         "postcss-loader": "^3.0.0",
@@ -116,6 +118,7 @@
         ]
     },
     "jest": {
+        "setupFiles": ["jest-canvas-mock"],
         "preset": "ts-jest",
         "verbose": true,
         "moduleFileExtensions": [
