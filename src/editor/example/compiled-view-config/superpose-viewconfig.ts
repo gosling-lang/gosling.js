@@ -66,8 +66,8 @@ export const SUPERPOSE_VIEWCONFIG: View = {
                         options: {
                             backgroundColor: 'transparent',
                             spec: {
-                                metadata: {
-                                    type: 'higlass-multivec',
+                                data: {
+                                    type: 'multivec',
                                     row: 'sample',
                                     column: 'position',
                                     value: 'peak',
@@ -106,8 +106,8 @@ export const SUPERPOSE_VIEWCONFIG: View = {
                         options: {
                             backgroundColor: 'transparent',
                             spec: {
-                                metadata: {
-                                    type: 'higlass-multivec',
+                                data: {
+                                    type: 'multivec',
                                     row: 'sample',
                                     column: 'position',
                                     value: 'peak',

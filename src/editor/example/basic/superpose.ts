@@ -14,10 +14,7 @@ export const EXAMPLE_SUPERPOSE: GoslingSpec = {
         {
             data: {
                 url: EXAMPLE_DATASETS.clinvar,
-                type: 'tileset'
-            },
-            metadata: {
-                type: 'higlass-bed',
+                type: 'bed',
                 genomicFields: [
                     { index: 1, name: 'start' },
                     { index: 2, name: 'end' }
@@ -110,10 +107,7 @@ export const EXAMPLE_SUPERPOSE: GoslingSpec = {
         {
             data: {
                 url: EXAMPLE_DATASETS.multivec,
-                type: 'tileset'
-            },
-            metadata: {
-                type: 'higlass-multivec',
+                type: 'multivec',
                 row: 'sample',
                 column: 'position',
                 value: 'peak',
@@ -142,10 +136,7 @@ export const EXAMPLE_SUPERPOSE: GoslingSpec = {
         {
             data: {
                 url: EXAMPLE_DATASETS.multivec,
-                type: 'tileset'
-            },
-            metadata: {
-                type: 'higlass-multivec',
+                type: 'multivec',
                 row: 'sample',
                 column: 'position',
                 value: 'peak',

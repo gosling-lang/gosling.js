@@ -5,10 +5,7 @@ import { EXAMPLE_DATASETS } from './datasets';
 export const MULTIVEC_SPEC: Partial<BasicSingleTrack> = {
     data: {
         url: EXAMPLE_DATASETS.multivec,
-        type: 'tileset'
-    },
-    metadata: {
-        type: 'higlass-multivec',
+        type: 'multivec',
         row: 'sample',
         column: 'position',
         value: 'peak',

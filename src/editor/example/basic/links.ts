@@ -49,10 +49,7 @@ export const EXAMPLE_LINKS: GoslingSpec = {
         {
             data: {
                 url: EXAMPLE_DATASETS.region2,
-                type: 'tileset'
-            },
-            metadata: {
-                type: 'higlass-bed',
+                type: 'bed',
                 genomicFields: [
                     { name: 'start', index: 1 },
                     { name: 'end', index: 2 }
@@ -84,10 +81,7 @@ export const EXAMPLE_LINKS: GoslingSpec = {
         {
             data: {
                 url: EXAMPLE_DATASETS.region2,
-                type: 'tileset'
-            },
-            metadata: {
-                type: 'higlass-bed',
+                type: 'bed',
                 genomicFields: [
                     { name: 'start', index: 1 },
                     { name: 'end', index: 2 }

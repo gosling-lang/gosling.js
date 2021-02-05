@@ -1,10 +1,11 @@
-import { GoslingSpec, MultivecMetadata } from '../../../core/gosling.schema';
+import { GoslingSpec, MultivecData } from '../../../core/gosling.schema';
 import { EXAMPLE_DATASETS } from './datasets';
 import { HIGLASS_GENE_ANNOTATION } from './gene-annotation';
 import { EXAMPLE_SEMANTIC_ZOOMING_IDEOGRAM } from './semantic-zoom';
 
-const MULTIVEC_METADATA: MultivecMetadata = {
-    type: 'higlass-multivec',
+const MULTIVEC_DATA: MultivecData = {
+    type: 'multivec',
+    url: EXAMPLE_DATASETS.multivec,
     row: 'sample',
     column: 'position',
     value: 'peak',
@@ -37,11 +38,7 @@ export const EXAMPLE_UPSET: GoslingSpec = {
             ]
         },
         {
-            data: {
-                url: EXAMPLE_DATASETS.multivec,
-                type: 'tileset'
-            },
-            metadata: MULTIVEC_METADATA,
+            data: MULTIVEC_DATA,
             dataTransform: { filter: [{ field: 'peak', inRange: [0, 0], not: true }] },
             superpose: [
                 { mark: 'bar' }
@@ -67,12 +64,8 @@ export const EXAMPLE_UPSET: GoslingSpec = {
         },
         {
             title: '(Peak > 0.001)',
-            data: {
-                url: EXAMPLE_DATASETS.multivec,
-                type: 'tileset'
-            },
+            data: { ...MULTIVEC_DATA, categories: ['sample 1', 'sample 2', 'sample 3', 'sample 4'] },
             dataTransform: { filter: [{ field: 'peak', inRange: [0, 0.001], not: true }] },
-            metadata: { ...MULTIVEC_METADATA, categories: ['sample 1', 'sample 2', 'sample 3', 'sample 4'] },
             mark: 'point',
             x: {
                 field: 'position',

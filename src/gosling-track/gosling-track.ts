@@ -6,7 +6,7 @@ import { shareScaleAcrossTracks } from '../core/utils/scales';
 import { resolveSuperposedTracks } from '../core/utils/superpose';
 import { BasicSingleTrack, SuperposedTrack } from '../core/gosling.schema';
 import {
-    IsDataMetadata,
+    IsDataDeepTileset,
     IsDataTransform,
     IsIncludeFilter,
     IsOneOfFilter,
@@ -187,21 +187,21 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                 }
 
                 if (!tile.tileData.tabularData) {
-                    if (!IsDataMetadata(resolved.metadata)) {
-                        console.warn('No metadata of tilesets specified');
+                    if (!IsDataDeepTileset(resolved.data)) {
+                        console.warn('No data is specified');
                         return;
                     }
 
                     // TODO: encapsulation this conversion part
-                    if (resolved.metadata.type === 'higlass-vector') {
-                        if (!resolved.metadata.column || !resolved.metadata.value) {
+                    if (resolved.data.type === 'vector') {
+                        if (!resolved.data.column || !resolved.data.value) {
                             console.warn(
-                                'Proper metadata of the tileset is not provided. Please specify the name of data fields.'
+                                'Proper data configuration is not provided. Please specify the name of data fields.'
                             );
                             return;
                         }
 
-                        const bin = resolved.metadata.bin ?? 1;
+                        const bin = resolved.data.bin ?? 1;
                         const tileSize = this.tilesetInfo.tile_size;
 
                         const { tileX, tileWidth } = this.getTilePosAndDimensions(
@@ -214,10 +214,10 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                         const numOfGenomicPositions = tileSize;
                         const tileUnitSize = tileWidth / tileSize;
 
-                        const valueName = resolved.metadata.value;
-                        const columnName = resolved.metadata.column;
-                        const startName = resolved.metadata.start ?? 'start';
-                        const endName = resolved.metadata.end ?? 'end';
+                        const valueName = resolved.data.value;
+                        const columnName = resolved.data.column;
+                        const startName = resolved.data.start ?? 'start';
+                        const endName = resolved.data.end ?? 'end';
 
                         const tabularData: { [k: string]: number | string }[] = [];
 
@@ -267,15 +267,15 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                         });
 
                         tile.tileData.tabularData = tabularData;
-                    } else if (resolved.metadata.type === 'higlass-multivec') {
-                        if (!resolved.metadata.row || !resolved.metadata.column || !resolved.metadata.value) {
+                    } else if (resolved.data.type === 'multivec') {
+                        if (!resolved.data.row || !resolved.data.column || !resolved.data.value) {
                             console.warn(
-                                'Proper metadata of the tileset is not provided. Please specify the name of data fields.'
+                                'Proper data configuration is not provided. Please specify the name of data fields.'
                             );
                             return;
                         }
 
-                        const bin = resolved.metadata.bin ?? 1;
+                        const bin = resolved.data.bin ?? 1;
                         const tileSize = this.tilesetInfo.tile_size;
 
                         const { tileX, tileWidth } = this.getTilePosAndDimensions(
@@ -289,12 +289,12 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                         const numOfGenomicPositions = tile.tileData.shape[1];
                         const tileUnitSize = tileWidth / tileSize;
 
-                        const rowName = resolved.metadata.row;
-                        const valueName = resolved.metadata.value;
-                        const columnName = resolved.metadata.column;
-                        const startName = resolved.metadata.start ?? 'start';
-                        const endName = resolved.metadata.end ?? 'end';
-                        const categories: any = resolved.metadata.categories ?? [...Array(numOfTotalCategories).keys()]; // TODO:
+                        const rowName = resolved.data.row;
+                        const valueName = resolved.data.value;
+                        const columnName = resolved.data.column;
+                        const startName = resolved.data.start ?? 'start';
+                        const endName = resolved.data.end ?? 'end';
+                        const categories: any = resolved.data.categories ?? [...Array(numOfTotalCategories).keys()]; // TODO:
 
                         const tabularData: { [k: string]: number | string }[] = [];
 
@@ -349,8 +349,8 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                         });
 
                         tile.tileData.tabularData = tabularData;
-                    } else if (resolved.metadata.type === 'higlass-bed') {
-                        const { genomicFields, exonIntervalFields, valueFields } = resolved.metadata;
+                    } else if (resolved.data.type === 'bed') {
+                        const { genomicFields, exonIntervalFields, valueFields } = resolved.data;
 
                         tile.tileData.tabularData = [];
                         tile.tileData.forEach((d: any) => {
@@ -438,7 +438,9 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                             const { include } = filter;
                             tile.tileData.tabularDataFiltered = tile.tileData.tabularDataFiltered.filter(
                                 (d: { [k: string]: number | string }) => {
-                                    return not ? `${d[field]}`.includes(include) : !`${d[field]}`.includes(include);
+                                    return not
+                                        ? `${d[field]}`.includes(include)
+                                        : !`${d[field]}`.includes(include);
                                 }
                             );
                         }

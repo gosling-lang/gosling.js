@@ -70,7 +70,7 @@ export function spreadTracksByData(tracks: Track[]): Track[] {
                 return [t];
             }
 
-            if (t.superpose.filter(s => s.data || s.metadata).length === 0) {
+            if (t.superpose.filter(s => s.data).length === 0) {
                 // superposed tracks use the same data and metadata, so no point to spread.
                 return [t];
             }
@@ -84,7 +84,7 @@ export function spreadTracksByData(tracks: Track[]): Track[] {
 
             // TODO: This is a very naive apporach, and we can do better!
             t.superpose.forEach((subSpec, i) => {
-                if (!subSpec.metadata && !subSpec.data) {
+                if (!subSpec.data) {
                     // Neither metadata nor data is used, so just put that into the original `superpose` option.
                     original.superpose.push(subSpec);
                     return;

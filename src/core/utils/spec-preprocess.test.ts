@@ -6,7 +6,7 @@ describe('Spec Preprocess', () => {
         const spec: GoslingSpec = {
             layout: 'circular',
             arrangement: { direction: 'horizontal' },
-            tracks: [{ data: { type: 'csv' }, mark: 'bar', superposeOnPreviousTrack: true }]
+            tracks: [{ data: { type: 'csv', url: '' }, mark: 'bar', superposeOnPreviousTrack: true }]
         };
         fixSpecDownstream(spec);
 
@@ -33,7 +33,7 @@ describe('Spec Preprocess', () => {
 
     it('override template (higlass-vector)', () => {
         const spec: GoslingSpec = {
-            tracks: [{ data: {}, metadata: { type: 'higlass-vector', column: 'c', value: 'v' } } as Track]
+            tracks: [{ data: { type: 'vector', url: '', column: 'c', value: 'v' } } as Track]
         };
         overrideTemplates(spec);
         expect(spec.tracks[0]).toHaveProperty('mark');
@@ -41,7 +41,7 @@ describe('Spec Preprocess', () => {
 
     it('override template (higlass-multivec)', () => {
         const spec: GoslingSpec = {
-            tracks: [{ data: {}, metadata: { type: 'higlass-multivec', row: 'r', column: 'c', value: 'v' } } as Track]
+            tracks: [{ data: { type: 'multivec', url: '', row: 'r', column: 'c', value: 'v' } } as Track]
         };
         overrideTemplates(spec);
         expect(spec.tracks[0]).toHaveProperty('mark');
