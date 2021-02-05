@@ -420,7 +420,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                             const { oneOf } = filter;
                             tile.tileData.tabularDataFiltered = tile.tileData.tabularDataFiltered.filter(
                                 (d: { [k: string]: number | string }) => {
-                                    return not ?? false
+                                    return not
                                         ? (oneOf as any[]).indexOf(d[field]) === -1
                                         : (oneOf as any[]).indexOf(d[field]) !== -1;
                                 }
@@ -429,7 +429,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                             const { inRange } = filter;
                             tile.tileData.tabularDataFiltered = tile.tileData.tabularDataFiltered.filter(
                                 (d: { [k: string]: number | string }) => {
-                                    return not ?? false
+                                    return not
                                         ? !(inRange[0] <= d[field] && d[field] <= inRange[1])
                                         : inRange[0] <= d[field] && d[field] <= inRange[1];
                                 }
@@ -438,7 +438,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                             const { include } = filter;
                             tile.tileData.tabularDataFiltered = tile.tileData.tabularDataFiltered.filter(
                                 (d: { [k: string]: number | string }) => {
-                                    return not ?? false
+                                    return not
                                         ? `${d[field]}`.includes(include)
                                         : !`${d[field]}`.includes(include);
                                 }

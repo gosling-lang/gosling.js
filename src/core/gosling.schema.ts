@@ -168,7 +168,6 @@ export interface CommonTrackDef {
  * Partial specification of `BasicSingleTrack` to use default visual encoding predefined by data type.
  */
 export interface DataTrack extends CommonTrackDef {
-    // !!! The below properties should be required ones since metadata determines the visualization type.
     data: DataDeep;
 }
 

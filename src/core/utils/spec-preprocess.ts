@@ -137,7 +137,7 @@ export function getMultivecTemplate(
 export function overrideTemplates(spec: GoslingSpec) {
     spec.tracks.forEach((t, i) => {
         if (!t.data || !IsDataDeepTileset(t.data)) {
-            // if `metadata` is not specified, we can not provide a correct template since we do not know the exact data type.
+            // if `data` is not specified, we can not provide a correct template.
             return;
         }
 

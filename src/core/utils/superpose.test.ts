@@ -62,4 +62,20 @@ describe('Spread Tracks By Data', () => {
         expect('data' in spread[1]).toBe(true); // Any superposed tracks w/ data/metadata will be spread
         expect(spread[1].superposeOnPreviousTrack).toBe(true); // Any spread tracks will have `superposeOnPreviousTrack` flags
     });
+    it('superpose: [{}, { data }, { data }]', () => {	
+        const spread = spreadTracksByData([	
+            {	
+                superpose: [	
+                    {},	
+                    { data: { type: 'csv', url: '' } },	
+                    { data: { type: 'vector', url: '', column: 'c', value: 'p' } }	
+                ]	
+            }	
+        ]);	
+        expect(spread).toHaveLength(3);	
+        expect('data' in spread[1]).toBe(true);	
+        expect('data' in spread[2]).toBe(true);	
+        expect(spread[1].superposeOnPreviousTrack).toBe(true); // Any spread tracks will have `superposeOnPreviousTrack` flags	
+        expect(spread[2].superposeOnPreviousTrack).toBe(true); // Any spread tracks will have `superposeOnPreviousTrack` flags	
+    });
 });
