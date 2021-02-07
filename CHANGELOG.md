@@ -1,3 +1,12 @@
+## [0.0.18](https://github.com/gosling-lang/gosling.js/compare/v0.0.17...v0.0.18) (2021-02-07)
+
+
+### Bug Fixes
+
+* use corret json values type ([76cac9f](https://github.com/gosling-lang/gosling.js/commit/76cac9fb71127d3f2bb6fbca7d1e60b5afcd4f5b))
+
+
+
 ## [0.0.17](https://github.com/gosling-lang/gosling.js/compare/v0.0.16...v0.0.17) (2021-02-07)
 
 
