@@ -1,13 +1,5 @@
 // @ts-ignore
-import { GoslingTrack } from '../gosling-track/index';
-import { CSVDataFetcher } from '../higlass-csv-datafetcher/index';
-import { RawDataFetcher } from '../higlass-raw-datafetcher/index';
-// @ts-ignore
-import { TextTrack } from 'higlass-text';
-// @ts-ignore
 import { HiGlassComponent } from 'higlass';
-// @ts-ignore
-import { default as higlassRegister } from 'higlass-register';
 import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import PubSub from 'pubsub-js';
 import EditorPanel from './editor-panel';
@@ -21,54 +13,17 @@ import { Size } from '../core/utils/bounding-box';
 import { HiGlassSpec } from '../core/higlass.schema';
 import GoslingSchema from '../../schema/gosling.schema.json';
 import { validateSpec, Validity } from '../core/utils/validate';
-import { compile } from '../core/compile';
 import stripJsonComments from 'strip-json-comments';
 import * as qs from 'qs';
 import { JSONCrush, JSONUncrush } from '../core/utils/json-crush';
 import './editor.css';
 import { ICONS, ICON_INFO } from './icon';
-import { AxisTrack } from '../axis-track';
-import { BrushTrack } from '../higlass-brush-track';
+import * as gosling from '../';
 
 /**
- * Register a Gosling plugin track to HiGlassComponent
+ * Register plugin tracks and data fetchers to HiGlass. This is necessary for the first time before using Gosling.
  */
-higlassRegister({
-    name: 'GoslingTrack',
-    track: GoslingTrack,
-    config: GoslingTrack.config
-});
-
-/**
- * Register an axis plugin track to HiGlassComponent
- */
-higlassRegister({
-    name: 'AxisTrack',
-    track: AxisTrack,
-    config: AxisTrack.config
-});
-
-/**
- * Register a higlass-text plugin track to HiGlassComponent
- */
-higlassRegister({
-    name: 'TextTrack',
-    track: TextTrack,
-    config: TextTrack.config
-});
-
-// TODO:
-higlassRegister({
-    name: 'BrushTrack',
-    track: BrushTrack,
-    config: BrushTrack.config
-});
-
-/**
- * Register a Gosling data fetcher to HiGlassComponent
- */
-higlassRegister({ dataFetcher: CSVDataFetcher, config: CSVDataFetcher.config }, { pluginType: 'dataFetcher' });
-higlassRegister({ dataFetcher: RawDataFetcher, config: RawDataFetcher.config }, { pluginType: 'dataFetcher' });
+gosling.init();
 
 const INIT_DEMO_INDEX = examples.findIndex(d => d.forceShow) !== -1 ? examples.findIndex(d => d.forceShow) : 0;
 
@@ -176,7 +131,7 @@ function Editor(props: any) {
             }
             if (!editedGm || (!autoRun && !run)) return;
 
-            compile(editedGm as GoslingSpec, (newHg: HiGlassSpec, newSize: Size) => {
+            gosling.compile(editedGm as GoslingSpec, (newHg: HiGlassSpec, newSize: Size) => {
                 setHg(newHg);
                 setSize(newSize);
             });
