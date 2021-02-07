@@ -1,7 +1,7 @@
 {
     "name": "gosling.js",
     "author": "Sehi L'Yi",
-    "version": "0.0.16",
+    "version": "0.0.17",
     "license": "MIT",
     "repository": {
         "type": "git",
@@ -118,7 +118,9 @@
         ]
     },
     "jest": {
-        "setupFiles": ["jest-canvas-mock"],
+        "setupFiles": [
+            "jest-canvas-mock"
+        ],
         "preset": "ts-jest",
         "verbose": true,
         "moduleFileExtensions": [
@@ -143,7 +145,7 @@
     },
     "husky": {
         "hooks": {
-            "pre-commit": "git-branch-is --not -r \"^master\" && yarn changelog && yarn schema && yarn format && git add .",
+            "pre-commit": "yarn changelog && yarn schema && yarn format && git add .",
             "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
         }
     }

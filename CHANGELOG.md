@@ -1,3 +1,23 @@
+## [0.0.17](https://github.com/gosling-lang/gosling.js/compare/v0.0.16...v0.0.17) (2021-02-07)
+
+
+### Bug Fixes
+
+* correctly draw links when strokeWidth is zero ([#186](https://github.com/gosling-lang/gosling.js/issues/186)) ([b968579](https://github.com/gosling-lang/gosling.js/commit/b96857965d5e4978a992ffe6571bdf25ec734ae4))
+* default static option for circular layouts is true ([#153](https://github.com/gosling-lang/gosling.js/issues/153)) ([f490765](https://github.com/gosling-lang/gosling.js/commit/f4907657993cd7fd1351ffccbd9cd3717e847506))
+* position text on the exact middle ([#172](https://github.com/gosling-lang/gosling.js/issues/172)) ([f2dd2a2](https://github.com/gosling-lang/gosling.js/commit/f2dd2a23efc7adeb77dac815ed39eae6c752546d))
+* properly sort data before area ([#173](https://github.com/gosling-lang/gosling.js/issues/173)) ([8e92557](https://github.com/gosling-lang/gosling.js/commit/8e9255748113e3e8b8e797000c4d749ac05e6819))
+
+
+### Features
+
+* add a data preview panel in the editor ([#175](https://github.com/gosling-lang/gosling.js/issues/175)) ([137b5eb](https://github.com/gosling-lang/gosling.js/commit/137b5eb242cf06cfe2ddb942f6ee7dd7cd9159b4))
+* support genome builds ([#178](https://github.com/gosling-lang/gosling.js/issues/178)) ([79a8fd0](https://github.com/gosling-lang/gosling.js/commit/79a8fd03d9a47bb89a934ae6c59ba8da34f15a6d))
+* support multiple visibility options ([#159](https://github.com/gosling-lang/gosling.js/issues/159)) ([fe60459](https://github.com/gosling-lang/gosling.js/commit/fe60459b2cb69ba0d6e1d98eaa707479177f7b1b))
+* support using superpose with multiple datasets ([38967eb](https://github.com/gosling-lang/gosling.js/commit/38967eb3ee9b01965431564179f0ede95632c03c))
+
+
+
 ## [0.0.16](https://github.com/gosling-lang/gosling.js/compare/v0.0.15...v0.0.16) (2021-01-24)
 
 
