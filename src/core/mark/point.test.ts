@@ -1,7 +1,31 @@
+import * as PIXI from 'pixi.js';
 import { CHANNEL_DEFAULTS } from '../channel';
 import { GoslingTrackModel } from '../gosling-track-model';
 import { Track } from '../gosling.schema';
 import { HIGLASS_AXIS_SIZE } from '../higlass-model';
+import { BasicSingleTrack } from '../gosling.schema';
+import { drawPoint } from './point';
+
+describe('Rendering Point', () => {
+    const g = new PIXI.Graphics();
+    it('Simple', () => {
+        const t: BasicSingleTrack = {
+            data: { type: 'csv', url: '' },
+            mark: 'point',
+            x: { field: 'x', type: 'genomic' },
+            y: { field: 'y', type: 'quantitative' },
+            width: 100,
+            height: 100
+        };
+        const d = [
+            { x: 1, y: 2 },
+            { x: 11, y: 22 },
+            { x: 111, y: 222 }
+        ];
+        const model = new GoslingTrackModel(t, d);
+        drawPoint(g, model);
+    });
+});
 
 describe('Point marks should correctly encode visual channels', () => {
     // Common dummy data

@@ -2,19 +2,23 @@ import { GoslingTrackModel } from '../gosling-track-model';
 import { Channel } from '../gosling.schema';
 import { IsChannelDeep, getValueUsingChannel } from '../gosling.schema.guards';
 import { cartesianToPolar, positionToRadian } from '../utils/polar';
+import colorToHex from '../utils/color-to-hex';
 
-export function drawLink(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackModel) {
+export function drawLink(g: PIXI.Graphics, model: GoslingTrackModel) {
     /* track spec */
-    const spec = tm.spec();
+    const spec = model.spec();
 
-    /* helper */
-    const { colorToHex } = HGC.utils;
+    if (!spec.width || !spec.height) {
+        console.warn('Size of a track is not properly determined, so visual mark cannot be rendered');
+        return;
+    }
 
     /* data */
-    const data = tm.data();
+    const data = model.data();
 
     /* track size */
-    const [trackWidth, trackHeight] = trackInfo.dimensions;
+    const trackWidth = spec.width;
+    const trackHeight = spec.height;
 
     /* circular parameters */
     const circular = spec.layout === 'circular';
@@ -26,43 +30,31 @@ export function drawLink(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackMo
     const tcx = trackWidth / 2.0;
     const tcy = trackHeight / 2.0;
 
-    /* genomic scale */
-    const xScale = trackInfo._xScale;
-
     /* row separation */
-    const rowCategories: string[] = (tm.getChannelDomainArray('row') as string[]) ?? ['___SINGLE_ROW___'];
+    const rowCategories: string[] = (model.getChannelDomainArray('row') as string[]) ?? ['___SINGLE_ROW___'];
     const rowHeight = trackHeight / rowCategories.length;
 
     /* render */
-    const g = tile.graphics;
-
     // TODO: Can row be actually used for circular layouts?
     rowCategories.forEach(rowCategory => {
-        const rowPosition = tm.encodedValue('row', rowCategory);
+        const rowPosition = model.encodedValue('row', rowCategory);
 
         data.filter(
             d =>
                 !getValueUsingChannel(d, spec.row as Channel) ||
                 (getValueUsingChannel(d, spec.row as Channel) as string) === rowCategory
         ).forEach(d => {
-            // TODO: support y1, y1e
-            const xValue = getValueUsingChannel(d, spec.x as Channel) as number;
-            const xeValue = getValueUsingChannel(d, spec.xe as Channel) as number;
-            const x1Value = getValueUsingChannel(d, spec.x1 as Channel) as number;
-            const x1eValue = getValueUsingChannel(d, spec.x1e as Channel) as number;
-
-            const stroke = tm.encodedPIXIProperty('stroke', d);
-            const color = tm.encodedPIXIProperty('color', d);
-            const opacity = tm.encodedPIXIProperty('opacity', d);
-
-            let x = xScale(xValue);
-            let xe = xScale(xeValue);
-            let x1 = xScale(x1Value);
-            let x1e = xScale(x1eValue);
+            let x = model.encodedPIXIProperty('x', d);
+            let xe = model.encodedPIXIProperty('xe', d);
+            let x1 = model.encodedPIXIProperty('x1', d);
+            let x1e = model.encodedPIXIProperty('x1e', d);
+            const stroke = model.encodedPIXIProperty('stroke', d);
+            const color = model.encodedPIXIProperty('color', d);
+            const opacity = model.encodedPIXIProperty('opacity', d);
 
             // stroke
             g.lineStyle(
-                tm.encodedValue('strokeWidth'),
+                model.encodedValue('strokeWidth'),
                 colorToHex(stroke),
                 opacity, // alpha
                 0.5 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
@@ -71,10 +63,10 @@ export function drawLink(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackMo
             const flipY = IsChannelDeep(spec.y) && spec.y.flip;
             const baseY = rowPosition + (flipY ? 0 : rowHeight);
 
-            if (x1Value !== undefined && x1eValue !== undefined && xValue !== x1Value && xeValue !== x1eValue) {
+            if (x1 !== undefined && x1e !== undefined) {
                 // This means we need to draw 'band' connections
                 // TODO: Better way to simply this line (i.e., 'none' for 0 opacity)?
-                g.beginFill(color === 'none' ? 'white' : colorToHex(color), color === 'none' ? 0 : opacity);
+                g.beginFill(color === 'none' ? colorToHex('white') : colorToHex(color), color === 'none' ? 0 : opacity);
 
                 // Sort values to safely draw bands
                 [x, xe, x1, x1e] = [x, xe, x1, x1e].sort((a, b) => a - b);
@@ -191,8 +183,6 @@ export function drawLink(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackMo
                         if (xe < 0 || x > trackWidth) {
                             return;
                         }
-                        // TODO: Better way to simply this line (i.e., 'none' for 0 opacity)?
-                        g.beginFill(color === 'none' ? 'white' : colorToHex(color), color === 'none' ? 0 : opacity);
                         g.arc(midX, baseY, (xe - x) / 2.0, -Math.PI, Math.PI);
                         g.closePath();
                     } else {
