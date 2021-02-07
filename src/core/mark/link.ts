@@ -52,6 +52,29 @@ export function drawLink(g: PIXI.Graphics, model: GoslingTrackModel) {
             const color = model.encodedPIXIProperty('color', d);
             const opacity = model.encodedPIXIProperty('opacity', d);
 
+            // Is this band or line?
+            const isBand =
+                xe !== undefined &&
+                x1e !== undefined &&
+                // This means the strokeWidth of a band is 1, so we just need to draw a line instead
+                x !== xe &&
+                x1 !== x1e;
+
+            // Should we do this when building Gosling Model?
+            if (!isBand && xe === undefined) {
+                // We need to use a valid number to draw lines, so lets find alternative one.
+                if (x1 === undefined && x1e === undefined) {
+                    // We do not have a valid ones.
+                    return;
+                }
+                xe = x1 !== undefined ? x1 : x1e;
+            }
+
+            if (!isBand && x === xe && x1 == x1e) {
+                // Put the larger value on `xe` so that it can be used in line connection
+                xe = x1;
+            }
+
             // stroke
             g.lineStyle(
                 model.encodedValue('strokeWidth'),
@@ -63,9 +86,7 @@ export function drawLink(g: PIXI.Graphics, model: GoslingTrackModel) {
             const flipY = IsChannelDeep(spec.y) && spec.y.flip;
             const baseY = rowPosition + (flipY ? 0 : rowHeight);
 
-            if (x1 !== undefined && x1e !== undefined) {
-                // This means we need to draw 'band' connections
-                // TODO: Better way to simply this line (i.e., 'none' for 0 opacity)?
+            if (isBand) {
                 g.beginFill(color === 'none' ? colorToHex('white') : colorToHex(color), color === 'none' ? 0 : opacity);
 
                 // Sort values to safely draw bands
@@ -152,13 +173,17 @@ export function drawLink(g: PIXI.Graphics, model: GoslingTrackModel) {
                     }
                 }
             } else {
-                // This means we need to draw 'line' connections
+                /* Line Connection */
+
                 if (xe - x <= 0.1) {
                     // Do not draw very small links
                     return;
                 }
 
                 const midX = (x + xe) / 2.0;
+
+                // Must not fill color for `line`, just use `stroke`
+                g.beginFill(colorToHex('white'), 0);
 
                 if (circular) {
                     if (x < 0 || xe > trackWidth) {
@@ -172,15 +197,12 @@ export function drawLink(g: PIXI.Graphics, model: GoslingTrackModel) {
 
                     g.moveTo(posS.x, posS.y);
                     g.bezierCurveTo(posS.x, posS.y, trackWidth / 2.0, trackHeight / 2.0, posE.x, posE.y);
-
-                    // straight line
-                    // g.moveTo(posS.x, posS.y);
-                    // g.lineTo(posE.x, posE.y);
                 } else {
                     g.moveTo(x, baseY);
 
                     if (spec.style?.circularLink) {
                         if (xe < 0 || x > trackWidth) {
+                            // Q: Do we really need this?
                             return;
                         }
                         g.arc(midX, baseY, (xe - x) / 2.0, -Math.PI, Math.PI);
@@ -188,10 +210,8 @@ export function drawLink(g: PIXI.Graphics, model: GoslingTrackModel) {
                     } else {
                         g.bezierCurveTo(
                             x + (xe - x) / 3.0,
-                            // rowPosition,
                             baseY + Math.min(rowHeight, (xe - x) / 2.0) * (flipY ? 1 : -1),
                             x + ((xe - x) / 3.0) * 2,
-                            // rowPosition,
                             baseY + Math.min(rowHeight, (xe - x) / 2.0) * (flipY ? 1 : -1),
                             xe,
                             baseY
