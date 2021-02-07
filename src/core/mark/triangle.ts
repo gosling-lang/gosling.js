@@ -1,26 +1,26 @@
 import { GoslingTrackModel } from '../gosling-track-model';
 import { Channel, MarkType } from '../gosling.schema';
 import { getValueUsingChannel } from '../gosling.schema.guards';
+import colorToHex from '../utils/color-to-hex';
 import { cartesianToPolar } from '../utils/polar';
 
-export function drawTriangle(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackModel) {
+export function drawTriangle(g: PIXI.Graphics, model: GoslingTrackModel) {
     /* track spec */
-    const spec = tm.spec();
+    const spec = model.spec();
 
-    /* helper */
-    const { colorToHex } = HGC.utils;
+    if (!spec.width || !spec.height) {
+        console.warn('Size of a track is not properly determined, so visual mark cannot be rendered');
+        return;
+    }
 
     /* data */
-    const data = tm.data();
+    const data = model.data();
 
     /* track size */
-    const [trackWidth, trackHeight] = trackInfo.dimensions;
-    const tileSize = trackInfo.tilesetInfo.tile_size;
-    const { tileX, tileWidth } = trackInfo.getTilePosAndDimensions(
-        tile.tileData.zoomLevel,
-        tile.tileData.tilePos,
-        tileSize
-    );
+    const trackWidth = spec.width;
+    const trackHeight = spec.height;
+    const zoomLevel =
+        (model.getChannelScale('x') as any).invert(trackWidth) - (model.getChannelScale('x') as any).invert(0);
 
     /* circular parameters */
     const circular = spec.layout === 'circular';
@@ -32,43 +32,34 @@ export function drawTriangle(HGC: any, trackInfo: any, tile: any, tm: GoslingTra
     const cx = trackWidth / 2.0;
     const cy = trackHeight / 2.0;
 
-    /* genomic scale */
-    const xScale = trackInfo._xScale;
-    const markWidth = tm.encodedValue('size') ?? xScale(tileX + tileWidth / tileSize) - xScale(tileX);
-
     /* row separation */
-    const rowCategories: string[] = (tm.getChannelDomainArray('row') as string[]) ?? ['___SINGLE_ROW___'];
+    const rowCategories: string[] = (model.getChannelDomainArray('row') as string[]) ?? ['___SINGLE_ROW___'];
     const rowHeight = trackHeight / rowCategories.length;
 
-    const yCategories: string[] = (tm.getChannelDomainArray('y') as string[]) ?? ['___SINGLE_Y___'];
+    const yCategories: string[] = (model.getChannelDomainArray('y') as string[]) ?? ['___SINGLE_Y___'];
     const triHeight =
-        tm.encodedValue('size') ??
+        model.encodedValue('size') ??
         (circular ? trackRingSize / rowCategories.length / yCategories.length : rowHeight / yCategories.length);
 
     /* render */
-    const g = tile.graphics;
-
     rowCategories.forEach(rowCategory => {
-        const rowPosition = tm.encodedValue('row', rowCategory);
+        const rowPosition = model.encodedValue('row', rowCategory);
 
         data.filter(
             d =>
                 !getValueUsingChannel(d, spec.row as Channel) ||
                 (getValueUsingChannel(d, spec.row as Channel) as string) === rowCategory
         ).forEach(d => {
-            const xValue = getValueUsingChannel(d, spec.x as Channel) as number;
-            const xeValue = getValueUsingChannel(d, spec.xe as Channel) as number;
+            const x = model.encodedPIXIProperty('x', d);
+            const xe = model.encodedPIXIProperty('xe', d);
             const yValue = getValueUsingChannel(d, spec.y as Channel) as string | number;
-            // const sizeValue = getValueUsingChannel(d, spec.size as Channel) as number;
+            const markWidth = model.encodedPIXIProperty('size', d) ?? xe - x;
 
-            const x = xScale(xValue);
-            const xe = xScale(xeValue);
-            const y = tm.encodedValue('y', yValue);
-            const strokeWidth = tm.encodedPIXIProperty('strokeWidth', d);
-            const stroke = tm.encodedPIXIProperty('stroke', d);
-            const color = tm.encodedPIXIProperty('color', d);
-            const opacity = tm.encodedPIXIProperty('opacity', d);
-            // const size = tm.encodedValue('size', sizeValue);
+            const y = model.encodedValue('y', yValue);
+            const strokeWidth = model.encodedPIXIProperty('strokeWidth', d);
+            const stroke = model.encodedPIXIProperty('stroke', d);
+            const color = model.encodedPIXIProperty('color', d);
+            const opacity = model.encodedPIXIProperty('opacity', d);
 
             if (circular) {
                 let x0 = x ? x : xe - markWidth;
@@ -99,10 +90,7 @@ export function drawTriangle(HGC: any, trackInfo: any, tile: any, tm: GoslingTra
                     markToPoints = [p0.x, p0.y, p1.x, p1.y, p2.x, p2.y, p3.x, p3.y];
                 }
 
-                const alphaTransition = tm.markVisibility(d, {
-                    width: x1 - x0,
-                    zoomLevel: trackInfo._xScale.invert(trackWidth) - trackInfo._xScale.invert(0)
-                });
+                const alphaTransition = model.markVisibility(d, { width: x1 - x0, zoomLevel });
                 const actualOpacity = Math.min(alphaTransition, opacity);
 
                 // stroke
@@ -137,10 +125,7 @@ export function drawTriangle(HGC: any, trackInfo: any, tile: any, tm: GoslingTra
                     'triangle-d': [x0, y0, x1, y0, xm, y1, x0, y0]
                 } as any)[spec.mark as MarkType];
 
-                const alphaTransition = tm.markVisibility(d, {
-                    width: x1 - x0,
-                    zoomLevel: trackInfo._xScale.invert(trackWidth) - trackInfo._xScale.invert(0)
-                });
+                const alphaTransition = model.markVisibility(d, { width: x1 - x0, zoomLevel });
                 const actualOpacity = Math.min(alphaTransition, opacity);
 
                 // stroke

@@ -78,13 +78,13 @@ export function drawMark(HGC: any, trackInfo: any, tile: any, model: GoslingTrac
     /* spec */
     switch (model.spec().mark) {
         case 'point':
-            drawPoint(HGC, trackInfo, tile, model);
+            drawPoint(tile.graphics, model);
             break;
         case 'bar':
-            drawBar(HGC, trackInfo, tile, model);
+            drawBar(trackInfo, tile, model);
             break;
         case 'line':
-            drawLine(HGC, trackInfo, tile, model);
+            drawLine(tile.graphics, model);
             break;
         case 'area':
             drawArea(HGC, trackInfo, tile, model);
@@ -95,7 +95,7 @@ export function drawMark(HGC: any, trackInfo: any, tile: any, model: GoslingTrac
         case 'triangle-l':
         case 'triangle-r':
         case 'triangle-d':
-            drawTriangle(HGC, trackInfo, tile, model);
+            drawTriangle(tile.graphics, model);
             break;
         case 'text':
             drawText(HGC, trackInfo, tile, model);
@@ -104,7 +104,7 @@ export function drawMark(HGC: any, trackInfo: any, tile: any, model: GoslingTrac
             drawRule(HGC, trackInfo, tile, model);
             break;
         case 'link':
-            drawLink(HGC, trackInfo, tile, model);
+            drawLink(tile.graphics, model);
             break;
         default:
             console.warn('Unsupported mark type');

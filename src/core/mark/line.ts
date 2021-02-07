@@ -1,20 +1,24 @@
 import { GoslingTrackModel } from '../gosling-track-model';
 import { Channel } from '../gosling.schema';
 import { getValueUsingChannel } from '../gosling.schema.guards';
+import colorToHex from '../utils/color-to-hex';
 import { cartesianToPolar } from '../utils/polar';
 
-export function drawLine(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackModel) {
+export function drawLine(g: PIXI.Graphics, tm: GoslingTrackModel) {
     /* track spec */
     const spec = tm.spec();
 
-    /* helper */
-    const { colorToHex } = HGC.utils;
+    if (!spec.width || !spec.height) {
+        console.warn('Size of a track is not properly determined, so visual mark cannot be rendered');
+        return;
+    }
 
     /* data */
     const data = tm.data();
 
     /* track size */
-    const [trackWidth, trackHeight] = trackInfo.dimensions;
+    const trackWidth = spec.width;
+    const trackHeight = spec.height;
 
     /* circular parameters */
     const circular = spec.layout === 'circular';
@@ -34,7 +38,6 @@ export function drawLine(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackMo
     const colorCategories = (tm.getChannelDomainArray('color') as string[]) ?? ['___SINGLE_COLOR___'];
 
     /* render */
-    const graphics = tile.graphics;
     rowCategories.forEach(rowCategory => {
         const rowPosition = tm.encodedValue('row', rowCategory);
 
@@ -60,7 +63,7 @@ export function drawLine(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackMo
                     const color = tm.encodedPIXIProperty('color', d); // should be identical for a single line
                     const opacity = tm.encodedPIXIProperty('opacity', d);
 
-                    graphics.lineStyle(
+                    g.lineStyle(
                         size,
                         colorToHex(color),
                         opacity,
@@ -72,15 +75,15 @@ export function drawLine(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackMo
                         const pos = cartesianToPolar(x, trackWidth, r, cx, cy, startAngle, endAngle);
 
                         if (i === 0) {
-                            graphics.moveTo(pos.x, pos.y);
+                            g.moveTo(pos.x, pos.y);
                         } else {
-                            graphics.lineTo(pos.x, pos.y);
+                            g.lineTo(pos.x, pos.y);
                         }
                     } else {
                         if (i === 0) {
-                            graphics.moveTo(x, rowPosition + rowHeight - y);
+                            g.moveTo(x, rowPosition + rowHeight - y);
                         } else {
-                            graphics.lineTo(x, rowPosition + rowHeight - y);
+                            g.lineTo(x, rowPosition + rowHeight - y);
                         }
                     }
                 });

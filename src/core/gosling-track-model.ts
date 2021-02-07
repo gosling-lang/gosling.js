@@ -251,6 +251,7 @@ export class GoslingTrackModel {
             case 'y1':
             case 'xe':
             case 'ye':
+            case 'x1e':
                 if (channelFieldType === 'quantitative' || channelFieldType === 'genomic') {
                     return (this.channelScales[channelKey] as d3.ScaleLinear<any, any>)(value as number);
                 }
@@ -412,7 +413,11 @@ export class GoslingTrackModel {
         }
 
         // common visual properties, not specific to visual marks
-        if (['text', 'color', 'stroke', 'opacity', 'strokeWidth', 'x', 'y', 'x1', 'xe', 'size'].includes(propertyKey)) {
+        if (
+            ['text', 'color', 'stroke', 'opacity', 'strokeWidth', 'x', 'y', 'xe', 'x1', 'x1e', 'size'].includes(
+                propertyKey
+            )
+        ) {
             return this.visualPropertyByChannel(propertyKey as any, datum);
         }
 
@@ -583,6 +588,7 @@ export class GoslingTrackModel {
                             case 'x':
                             case 'xe':
                             case 'x1':
+                            case 'x1e':
                                 range = [0, spec.width];
                                 break;
                             case 'y':
@@ -703,6 +709,7 @@ export class GoslingTrackModel {
                         case 'x':
                         case 'x1':
                         case 'xe':
+                        case 'x1e':
                         case 'y':
                         case 'size':
                         case 'opacity':

@@ -2,19 +2,23 @@ import { GoslingTrackModel } from '../gosling-track-model';
 import { Channel } from '../gosling.schema';
 import { IsChannelDeep, getValueUsingChannel } from '../gosling.schema.guards';
 import { cartesianToPolar, positionToRadian } from '../utils/polar';
+import colorToHex from '../utils/color-to-hex';
 
-export function drawLink(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackModel) {
+export function drawLink(g: PIXI.Graphics, model: GoslingTrackModel) {
     /* track spec */
-    const spec = tm.spec();
+    const spec = model.spec();
 
-    /* helper */
-    const { colorToHex } = HGC.utils;
+    if (!spec.width || !spec.height) {
+        console.warn('Size of a track is not properly determined, so visual mark cannot be rendered');
+        return;
+    }
 
     /* data */
-    const data = tm.data();
+    const data = model.data();
 
     /* track size */
-    const [trackWidth, trackHeight] = trackInfo.dimensions;
+    const trackWidth = spec.width;
+    const trackHeight = spec.height;
 
     /* circular parameters */
     const circular = spec.layout === 'circular';
@@ -26,55 +30,54 @@ export function drawLink(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackMo
     const tcx = trackWidth / 2.0;
     const tcy = trackHeight / 2.0;
 
-    /* genomic scale */
-    const xScale = trackInfo._xScale;
-
     /* row separation */
-    const rowCategories: string[] = (tm.getChannelDomainArray('row') as string[]) ?? ['___SINGLE_ROW___'];
+    const rowCategories: string[] = (model.getChannelDomainArray('row') as string[]) ?? ['___SINGLE_ROW___'];
     const rowHeight = trackHeight / rowCategories.length;
 
     /* render */
-    const g = tile.graphics;
-
     // TODO: Can row be actually used for circular layouts?
     rowCategories.forEach(rowCategory => {
-        const rowPosition = tm.encodedValue('row', rowCategory);
+        const rowPosition = model.encodedValue('row', rowCategory);
 
         data.filter(
             d =>
                 !getValueUsingChannel(d, spec.row as Channel) ||
                 (getValueUsingChannel(d, spec.row as Channel) as string) === rowCategory
         ).forEach(d => {
-            const xValue = getValueUsingChannel(d, spec.x as Channel) as number;
-            let xeValue = getValueUsingChannel(d, spec.xe as Channel) as number;
-            const x1Value = getValueUsingChannel(d, spec.x1 as Channel) as number;
-            const x1eValue = getValueUsingChannel(d, spec.x1e as Channel) as number;
-
-            const stroke = tm.encodedPIXIProperty('stroke', d);
-            const color = tm.encodedPIXIProperty('color', d);
-            const opacity = tm.encodedPIXIProperty('opacity', d);
+            let x = model.encodedPIXIProperty('x', d);
+            let xe = model.encodedPIXIProperty('xe', d);
+            let x1 = model.encodedPIXIProperty('x1', d);
+            let x1e = model.encodedPIXIProperty('x1e', d);
+            const stroke = model.encodedPIXIProperty('stroke', d);
+            const color = model.encodedPIXIProperty('color', d);
+            const opacity = model.encodedPIXIProperty('opacity', d);
 
             // Is this band or line?
             const isBand =
-                x1Value !== undefined &&
-                x1eValue !== undefined &&
+                xe !== undefined &&
+                x1e !== undefined &&
                 // This means the strokeWidth of a band is 1, so we just need to draw a line instead
-                xValue !== xeValue &&
-                x1Value !== x1eValue;
+                x !== xe &&
+                x1 !== x1e;
 
-            if (!isBand && xValue === xeValue && x1Value == x1eValue) {
-                // Put the larger value on `xe` so that it can be used in line connection
-                xeValue = x1Value;
+            // Should we do this when building Gosling Model?
+            if (!isBand && xe === undefined) {
+                // We need to use a valid number to draw lines, so lets find alternative one.
+                if (x1 === undefined && x1e === undefined) {
+                    // We do not have a valid ones.
+                    return;
+                }
+                xe = x1 !== undefined ? x1 : x1e;
             }
 
-            let x = xScale(xValue);
-            let xe = xScale(xeValue);
-            let x1 = xScale(x1Value);
-            let x1e = xScale(x1eValue);
+            if (!isBand && x === xe && x1 == x1e) {
+                // Put the larger value on `xe` so that it can be used in line connection
+                xe = x1;
+            }
 
             // stroke
             g.lineStyle(
-                tm.encodedValue('strokeWidth'),
+                model.encodedValue('strokeWidth'),
                 colorToHex(stroke),
                 opacity, // alpha
                 0.5 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
@@ -84,7 +87,7 @@ export function drawLink(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackMo
             const baseY = rowPosition + (flipY ? 0 : rowHeight);
 
             if (isBand) {
-                g.beginFill(color === 'none' ? 'white' : colorToHex(color), color === 'none' ? 0 : opacity);
+                g.beginFill(color === 'none' ? colorToHex('white') : colorToHex(color), color === 'none' ? 0 : opacity);
 
                 // Sort values to safely draw bands
                 [x, xe, x1, x1e] = [x, xe, x1, x1e].sort((a, b) => a - b);
@@ -180,7 +183,7 @@ export function drawLink(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackMo
                 const midX = (x + xe) / 2.0;
 
                 // Must not fill color for `line`, just use `stroke`
-                g.beginFill('white', 0);
+                g.beginFill(colorToHex('white'), 0);
 
                 if (circular) {
                     if (x < 0 || xe > trackWidth) {
