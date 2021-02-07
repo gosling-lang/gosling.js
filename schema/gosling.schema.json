@@ -1233,7 +1233,10 @@
           "type": "string"
         },
         "values": {
-          "$ref": "#/definitions/Datum"
+          "items": {
+            "$ref": "#/definitions/Datum"
+          },
+          "type": "array"
         }
       },
       "required": [

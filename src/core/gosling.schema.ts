@@ -47,7 +47,7 @@ export type DataDeep = JSONData | CSVData | MultivecData | BEDData | VectorData;
 
 export interface JSONData {
     type: 'json';
-    values: Datum;
+    values: Datum[];
     quantitativeFields?: string[];
     chromosomeField?: string;
     genomicFields?: string[];
