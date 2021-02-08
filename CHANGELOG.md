@@ -1,3 +1,12 @@
+## [0.0.19](https://github.com/gosling-lang/gosling.js/compare/v0.0.18...v0.0.19) (2021-02-08)
+
+
+### Features
+
+* support embedding a Gosling component to a HTML element ([#190](https://github.com/gosling-lang/gosling.js/issues/190)) ([d5f63c1](https://github.com/gosling-lang/gosling.js/commit/d5f63c12321a9ca5dc45514b6ab02322f771bded))
+
+
+
 ## [0.0.18](https://github.com/gosling-lang/gosling.js/compare/v0.0.17...v0.0.18) (2021-02-07)
 
 
