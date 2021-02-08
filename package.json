@@ -15,8 +15,8 @@
     ],
     "scripts": {
         "start": "webpack-dev-server --mode development --config webpack.config.editor.js",
-        "build": "webpack --mode production",
-        "build-log": "yarn build --display-error-details",
+        "build": "rm -rf build/*; rm -rf dist/*; webpack --mode production",
+        "build-log": "rm -rf build/*; rm -rf dist/*; yarn build --display-error-details",
         "build-editor": "webpack --mode production --config webpack.config.editor.js",
         "test": "jest src/",
         "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s -r 0",
