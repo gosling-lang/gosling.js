@@ -29,6 +29,7 @@ import { GENOCAT_GIVE } from './genocat-give';
 import { GENOCAT_GREMLIN } from './genocat-gremlin';
 import { GENOCAT_MIZBEE } from './genocat-mizbee';
 import { EXAMPLE_SIMPLEST } from './basic/simplest-spec';
+import { EXAMPLE_DATA } from './basic/data';
 import { EXMAPLE_BASIC_LINKING_CIRCULAR } from './basic/basic-linking-circular';
 
 export const examples: ReadonlyArray<{
@@ -89,6 +90,11 @@ export const examples: ReadonlyArray<{
     {
         name: 'Simplest Spec',
         spec: EXAMPLE_SIMPLEST
+    },
+    {
+        name: 'Data Support',
+        spec: EXAMPLE_DATA,
+        forceShow: true
     },
     {
         name: 'Basic Marks',

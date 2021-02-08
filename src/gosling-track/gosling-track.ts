@@ -195,7 +195,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                     }
 
                     // TODO: encapsulation this conversion part
-                    if (resolved.data.type === 'vector') {
+                    if (resolved.data.type === 'vector' || resolved.data.type === 'bigwig') {
                         if (!resolved.data.column || !resolved.data.value) {
                             console.warn(
                                 'Proper data configuration is not provided. Please specify the name of data fields.'

@@ -6,6 +6,7 @@ import { AxisTrack } from '../axis-track';
 import { BrushTrack } from '../higlass-brush-track';
 import { CSVDataFetcher } from '../higlass-csv-datafetcher/index';
 import { RawDataFetcher } from '../higlass-raw-datafetcher/index';
+import { BBIDataFetcher } from '../higlass-bw-datafetcher/index';
 import { GoslingTrack } from '../gosling-track/index';
 
 /**
@@ -47,8 +48,9 @@ export function init() {
     });
 
     /**
-     * Register a Gosling data fetcher to HiGlassComponent
+     * Register data fetchers to HiGlassComponent
      */
     higlassRegister({ dataFetcher: CSVDataFetcher, config: CSVDataFetcher.config }, { pluginType: 'dataFetcher' });
     higlassRegister({ dataFetcher: RawDataFetcher, config: RawDataFetcher.config }, { pluginType: 'dataFetcher' });
+    higlassRegister({ dataFetcher: BBIDataFetcher, config: BBIDataFetcher.config }, { pluginType: 'dataFetcher' });
 }
