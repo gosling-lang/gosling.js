@@ -24,7 +24,7 @@ export function validateSpec(schema: any, spec: any): Validity {
     let message = '';
     let details = '';
 
-    if (validate.errors) {
+    if (validate.errors || !spec.tracks) {
         details = JSON.stringify(validate.errors, null, 2);
         console.warn(details);
 

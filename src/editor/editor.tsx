@@ -1,6 +1,5 @@
-// @ts-ignore
-import { HiGlassComponent } from 'higlass';
-import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
+import * as gosling from '../';
+import React, { useState, useEffect, useCallback } from 'react';
 import PubSub from 'pubsub-js';
 import EditorPanel from './editor-panel';
 import stringify from 'json-stringify-pretty-compact';
@@ -9,7 +8,6 @@ import { Datum, GoslingSpec } from '../core/gosling.schema';
 import { debounce, delay } from 'lodash';
 import { examples } from './example';
 import { replaceTemplate } from '../core/utils';
-import { Size } from '../core/utils/bounding-box';
 import { HiGlassSpec } from '../core/higlass.schema';
 import GoslingSchema from '../../schema/gosling.schema.json';
 import { validateSpec, Validity } from '../core/utils/validate';
@@ -18,12 +16,6 @@ import * as qs from 'qs';
 import { JSONCrush, JSONUncrush } from '../core/utils/json-crush';
 import './editor.css';
 import { ICONS, ICON_INFO } from './icon';
-import * as gosling from '../';
-
-/**
- * Register plugin tracks and data fetchers to HiGlass. This is necessary for the first time before using Gosling.
- */
-gosling.init();
 
 const INIT_DEMO_INDEX = examples.findIndex(d => d.forceShow) !== -1 ? examples.findIndex(d => d.forceShow) : 0;
 
@@ -68,10 +60,9 @@ function Editor(props: any) {
     const urlSpec = urlParams?.spec ? JSONUncrush(urlParams.spec as string) : null;
 
     const [demo, setDemo] = useState(examples[INIT_DEMO_INDEX]);
-    const [editorMode, setEditorMode] = useState<'Normal Mode' | 'Template-based Mode'>('Normal Mode');
     const [hg, setHg] = useState<HiGlassSpec>();
-    const [size, setSize] = useState<{ width: number; height: number }>();
-    const [gm, setGm] = useState(stringify(urlSpec ?? (examples[INIT_DEMO_INDEX].spec as GoslingSpec)));
+    const [code, setCode] = useState(stringify(urlSpec ?? (examples[INIT_DEMO_INDEX].spec as GoslingSpec)));
+    const [goslingSpec, setGoslingSpec] = useState<gosling.GoslingSpec>();
     const [log, setLog] = useState<Validity>({ message: '', state: 'success' });
     const [autoRun, setAutoRun] = useState(true);
     const [previewData, setPreviewData] = useState<PreviewData[]>([]);
@@ -85,7 +76,7 @@ function Editor(props: any) {
     const [isMaximizeVis, setIsMaximizeVis] = useState<boolean>((urlParams?.full as string) === 'true' || false);
 
     // for using HiGlass JS API
-    const hgRef = useRef<any>();
+    // const hgRef = useRef<any>();
 
     /**
      * Editor moode
@@ -93,13 +84,9 @@ function Editor(props: any) {
     useEffect(() => {
         setSelectedPreviewData(0);
         setPreviewData([]);
-        if (editorMode === 'Normal Mode') {
-            setGm(urlSpec ?? stringify(replaceTemplate(JSON.parse(stringify(demo.spec)) as GoslingSpec)));
-        } else {
-            setGm(urlSpec ?? stringify(demo.spec as GoslingSpec));
-        }
+        setCode(urlSpec ?? stringify(demo.spec as GoslingSpec));
         setHg(undefined);
-    }, [demo, editorMode]);
+    }, [demo]);
 
     /**
      * Show animation of small loading icon for visual feedback.
@@ -116,13 +103,7 @@ function Editor(props: any) {
         (run?: boolean) => {
             let editedGm;
             try {
-                editedGm = replaceTemplate(JSON.parse(stripJsonComments(gm)));
-
-                if (!editedGm.tracks) {
-                    // at least, spec should contain a `tracks` property to correctly show visualization
-                    editedGm = null;
-                }
-
+                editedGm = replaceTemplate(JSON.parse(stripJsonComments(code)));
                 setLog(validateSpec(GoslingSchema, editedGm));
             } catch (e) {
                 const message = '✘ Cannnot parse the code.';
@@ -131,12 +112,9 @@ function Editor(props: any) {
             }
             if (!editedGm || (!autoRun && !run)) return;
 
-            gosling.compile(editedGm as GoslingSpec, (newHg: HiGlassSpec, newSize: Size) => {
-                setHg(newHg);
-                setSize(newSize);
-            });
+            setGoslingSpec(editedGm);
         },
-        [gm, autoRun]
+        [code, autoRun]
     );
 
     /**
@@ -163,7 +141,7 @@ function Editor(props: any) {
         setPreviewData([]);
         setSelectedPreviewData(0);
         runSpecUpdateVis();
-    }, [gm, autoRun]);
+    }, [code, autoRun]);
 
     // Uncommnet below to use HiGlass APIs
     // useEffect(() => {
@@ -171,58 +149,6 @@ function Editor(props: any) {
     //         hgRef.current.api.activateTool('select');
     //     }
     // }, [hg, hgRef]); // TODO: should `hg` be here?
-
-    /**
-     * HiGlass components to render Gosling Tracks.
-     */
-    const hglass = useMemo(() => {
-        return hg && size ? (
-            <>
-                <div
-                    style={{
-                        position: 'relative',
-                        padding: 60,
-                        background: 'white',
-                        width: size.width + 120,
-                        height: size.height + 120
-                    }}
-                >
-                    <div
-                        key={stringify(hg.views[0].uid)}
-                        style={{
-                            position: 'relative',
-                            display: 'block',
-                            background: 'white',
-                            margin: 0,
-                            padding: 0, // non-zero padding acts unexpectedly w/ HiGlassComponent
-                            width: size.width,
-                            height: size.height
-                        }}
-                    >
-                        <HiGlassComponent
-                            ref={hgRef}
-                            options={{
-                                bounded: true,
-                                containerPaddingX: 0,
-                                containerPaddingY: 0,
-                                viewMarginTop: 0,
-                                viewMarginBottom: 0,
-                                viewMarginLeft: 0,
-                                viewMarginRight: 0,
-                                viewPaddingTop: 0,
-                                viewPaddingBottom: 0,
-                                viewPaddingLeft: 0,
-                                viewPaddingRight: 0,
-                                sizeMode: 'bounded',
-                                rangeSelectionOnAlt: true // this allows switching between `selection` and `zoom&pan` mode
-                            }}
-                            viewConfig={hg}
-                        />
-                    </div>
-                </div>
-            </>
-        ) : null;
-    }, [hg, size]);
 
     function getDataPreviewInfo(dataConfig: string) {
         // Detailed information of data config to show in the editor
@@ -301,20 +227,6 @@ function Editor(props: any) {
                 >
                     {getIconSVG(ICONS.PLAY)}
                 </span>
-                <select
-                    onChange={e => {
-                        setEditorMode(e.target.value as any);
-                    }}
-                    defaultValue={'Normal Mode'}
-                    disabled
-                    hidden={true}
-                >
-                    {['Normal Mode', 'Template-based Mode'].map(d => (
-                        <option key={d} value={d}>
-                            {d}
-                        </option>
-                    ))}
-                </select>
                 {demo.underDevelopment ? (
                     <span
                         style={{
@@ -329,10 +241,10 @@ function Editor(props: any) {
                 <span
                     style={{ color: 'white', cursor: 'default', userSelect: 'none' }}
                     onClick={() => {
-                        if (hgRef.current) {
-                            console.warn('Exporting SVG', hgRef.current.api.exportAsSvg());
-                            // TODO: save as a html file
-                        }
+                        // if (hgRef.current) {
+                        //     console.warn('Exporting SVG', hgRef.current.api.exportAsSvg());
+                        //     // TODO: save as a html file
+                        // }
                     }}
                 >
                     {'‌‌ ‌‌ ‌‌ ‌‌ ‌‌ ‌‌ ‌‌ ‌‌ '}
@@ -340,7 +252,7 @@ function Editor(props: any) {
                 <input type="hidden" id="spec-url-exporter" />
                 <span
                     title={
-                        gm.length <= LIMIT_CLIPBOARD_LEN
+                        code.length <= LIMIT_CLIPBOARD_LEN
                             ? `Copy unique URL of current view to clipboard (limit: ${LIMIT_CLIPBOARD_LEN} characters)`
                             : `The current code contains characters more than ${LIMIT_CLIPBOARD_LEN}`
                     }
@@ -352,14 +264,14 @@ function Editor(props: any) {
                         paddingTop: '9px',
                         float: 'right',
                         marginRight: '10px',
-                        color: gm.length <= LIMIT_CLIPBOARD_LEN ? 'black' : 'lightgray',
-                        cursor: gm.length <= LIMIT_CLIPBOARD_LEN ? 'pointer' : 'not-allowed'
+                        color: code.length <= LIMIT_CLIPBOARD_LEN ? 'black' : 'lightgray',
+                        cursor: code.length <= LIMIT_CLIPBOARD_LEN ? 'pointer' : 'not-allowed'
                     }}
                     onClick={() => {
-                        if (gm.length <= LIMIT_CLIPBOARD_LEN) {
+                        if (code.length <= LIMIT_CLIPBOARD_LEN) {
                             // copy the unique url to clipboard using `<input/>`
                             const url = `https://gosling-lang.github.io/gosling.js/?full=${isMaximizeVis}&spec=${JSONCrush(
-                                gm
+                                code
                             )}`;
                             const element = document.getElementById('spec-url-exporter');
                             (element as any).type = 'text';
@@ -399,11 +311,11 @@ function Editor(props: any) {
                         {/* Gosling Editor */}
                         <>
                             <EditorPanel
-                                code={gm}
+                                code={code}
                                 readOnly={false}
                                 onChange={debounce(code => {
-                                    setGm(code);
-                                }, 1000)}
+                                    setCode(code);
+                                }, 1500)}
                             />
                             <div className={`compile-message compile-message-${log.state}`}>{log.message}</div>
                         </>
@@ -430,7 +342,14 @@ function Editor(props: any) {
                         defaultSize={`calc(100% - ${VIEWCONFIG_HEADER_HEIGHT}px)`}
                         maxSize={window.innerHeight - EDITOR_HEADER_HEIGHT - VIEWCONFIG_HEADER_HEIGHT}
                     >
-                        <div className="preview-container">{hglass}</div>
+                        <div className="preview-container">
+                            <gosling.GoslingComponent
+                                spec={goslingSpec}
+                                compiled={(g, h) => {
+                                    setHg(h);
+                                }}
+                            />
+                        </div>
                         <SplitPane split="vertical" defaultSize="100%">
                             <>
                                 <div className="editor-header">
