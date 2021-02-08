@@ -38,8 +38,7 @@ module.exports = (env, argv) => {
       "higlass": {
         commonjs: "higlass",
         commonjs2: "higlass",
-        amd: "higlass",
-        root: "hglib",
+        amd: "higlass"
       },
       "pixi.js": {
         commonjs: "pixi.js",
