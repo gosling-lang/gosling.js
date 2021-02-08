@@ -158,6 +158,7 @@ export function overrideTemplates(spec: GoslingSpec) {
 
         switch (t.data.type) {
             case 'vector':
+            case 'bigwig':
                 spec.tracks[i] = assign(getVectorTemplate(t.data.column, t.data.value), t);
                 break;
             case 'multivec':

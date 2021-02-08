@@ -27,7 +27,8 @@ import {
     BEDData,
     MultivecData,
     VectorData,
-    DataTrack
+    DataTrack,
+    BIGWIGData
 } from './gosling.schema';
 import { SUPPORTED_CHANNELS } from './mark';
 import { isArray } from 'lodash';
@@ -131,8 +132,8 @@ export function IsChannelBind(
     return channel !== null && typeof channel === 'object' && 'bind' in channel;
 }
 
-export function IsDataDeepTileset(_: DataDeep | undefined): _ is BEDData | VectorData | MultivecData {
-    return _ !== undefined && (_.type === 'vector' || _.type === 'bed' || _.type === 'multivec');
+export function IsDataDeepTileset(_: DataDeep | undefined): _ is BEDData | VectorData | MultivecData | BIGWIGData {
+    return _ !== undefined && (_.type === 'vector' || _.type === 'bed' || _.type === 'multivec' || _.type === 'bigwig');
 }
 
 export function IsChannelDeep(channel: ChannelDeep | ChannelValue | undefined): channel is ChannelDeep {

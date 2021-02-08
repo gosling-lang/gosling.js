@@ -43,7 +43,7 @@ export interface Arrangement {
 /**
  * Data specification
  */
-export type DataDeep = JSONData | CSVData | MultivecData | BEDData | VectorData;
+export type DataDeep = JSONData | CSVData | BIGWIGData | MultivecData | BEDData | VectorData;
 
 export interface JSONData {
     type: 'json';
@@ -90,6 +90,16 @@ export interface MultivecData {
     row: string;
     value: string;
     categories?: string[];
+    start?: string;
+    end?: string;
+    bin?: number; // Binning the genomic interval in tiles (unit size: 256)
+}
+
+export interface BIGWIGData {
+    type: 'bigwig';
+    url: string;
+    column: string;
+    value: string;
     start?: string;
     end?: string;
     bin?: number; // Binning the genomic interval in tiles (unit size: 256)

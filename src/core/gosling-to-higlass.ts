@@ -69,7 +69,11 @@ export function goslingToHiGlass(
             }
         };
 
-        if (gmTrack.data && IsDataDeep(gmTrack.data) && (gmTrack.data.type === 'csv' || gmTrack.data.type === 'json')) {
+        if (
+            gmTrack.data &&
+            IsDataDeep(gmTrack.data) &&
+            (gmTrack.data.type === 'csv' || gmTrack.data.type === 'json' || gmTrack.data.type === 'bigwig')
+        ) {
             // use gosling's custom data fetchers
             hgTrack.data = {
                 ...gmTrack.data,

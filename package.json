@@ -20,7 +20,7 @@
         "build-editor": "webpack --mode production --config webpack.config.editor.js",
         "test": "jest src/",
         "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s -r 0",
-        "format": "eslint . --fix && prettier '**/*.css' --write",
+        "format": "eslint src/ --fix && prettier 'src/**/*.css' --write",
         "schema": "mkdir -p schema & ts-json-schema-generator -p src/core/gosling.schema.ts -f tsconfig.json -t GoslingSpec > schema/gosling.schema.json",
         "predeploy": "yarn build-editor; echo \"gosling.js.org\" >> build/CNAME",
         "deploy": "gh-pages -d build"
@@ -30,6 +30,7 @@
         "pixi.js": "^5.3.7"
     },
     "dependencies": {
+        "@gmod/bbi": "^1.0.30",
         "@types/d3": "^5.7.2",
         "@types/lodash": "^4.14.151",
         "@types/node": "^12.0.0",
@@ -42,6 +43,7 @@
         "d3-scale-chromatic": "^2.0.0",
         "d3-shape": "^2.0.0",
         "file-loader": "^6.0.0",
+        "generic-filehandle": "^2.0.3",
         "higlass-register": "^0.3.0",
         "higlass-text": "^0.1.1",
         "json-stringify-pretty-compact": "^2.0.0",

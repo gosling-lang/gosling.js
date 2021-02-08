@@ -206,6 +206,40 @@
       ],
       "type": "object"
     },
+    "BIGWIGData": {
+      "additionalProperties": false,
+      "properties": {
+        "bin": {
+          "type": "number"
+        },
+        "column": {
+          "type": "string"
+        },
+        "end": {
+          "type": "string"
+        },
+        "start": {
+          "type": "string"
+        },
+        "type": {
+          "const": "bigwig",
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "type",
+        "url",
+        "column",
+        "value"
+      ],
+      "type": "object"
+    },
     "BasicSingleTrack": {
       "additionalProperties": false,
       "description": "The baic form of a track definition",
@@ -549,6 +583,9 @@
         },
         {
           "$ref": "#/definitions/CSVData"
+        },
+        {
+          "$ref": "#/definitions/BIGWIGData"
         },
         {
           "$ref": "#/definitions/MultivecData"
