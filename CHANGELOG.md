@@ -1,3 +1,12 @@
+## [0.0.22](https://github.com/gosling-lang/gosling.js/compare/v0.0.21...v0.0.22) (2021-02-08)
+
+
+### Features
+
+* reduce the pkg size by specifying external libs ([#192](https://github.com/gosling-lang/gosling.js/issues/192)) ([03f4a04](https://github.com/gosling-lang/gosling.js/commit/03f4a0415c735ec897cf3c0ff4d591b6f13e153a))
+
+
+
 ## [0.0.21](https://github.com/gosling-lang/gosling.js/compare/v0.0.20...v0.0.21) (2021-02-08)
 
 
