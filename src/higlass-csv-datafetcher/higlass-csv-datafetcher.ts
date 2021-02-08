@@ -1,4 +1,4 @@
-import * as d3 from 'd3-dsv';
+import { dsvFormat as d3dsvFormat } from 'd3-dsv';
 import { GET_CHROM_SIZES } from '../core/utils/assembly';
 import fetch from 'cross-fetch'; // TODO: Can we remove this and make the test working
 import { sampleSize } from 'lodash';
@@ -86,7 +86,7 @@ function CSVDataFetcher(HGC: any, ...args: any): any {
                 })
                 .then(text => {
                     const textWithHeader = headerNames ? `${headerNames.join(separator)}\n${text}` : text;
-                    return d3.dsvFormat(separator).parse(textWithHeader, (row: any) => {
+                    return d3dsvFormat(separator).parse(textWithHeader, (row: any) => {
                         let successfullyGotChrInfo = true;
 
                         // !!! Experimental

@@ -1,7 +1,6 @@
 import { GoslingTrackModel } from '../gosling-track-model';
 import { Channel, Datum } from '../gosling.schema';
-import * as d3 from 'd3';
-import { group } from 'd3-array';
+import { min as d3min, max as d3max, group } from 'd3-array';
 import { IsStackedMark, getValueUsingChannel } from '../gosling.schema.guards';
 import { cartesianToPolar } from '../utils/polar';
 
@@ -90,7 +89,7 @@ export function drawArea(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackMo
                         const xValue = +genomicPosCategory;
 
                         const x = xScale(xValue);
-                        const y = d3.max([tm.encodedPIXIProperty('y', d), 0]); // make should not to overflow
+                        const y = d3max([tm.encodedPIXIProperty('y', d), 0]); // make should not to overflow
 
                         if (circular) {
                             if (i === 0) {
@@ -188,7 +187,7 @@ export function drawArea(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackMo
                     .forEach((d, i, array) => {
                         // TODO: this should be included in the `encodedValue` functions
                         // make should not to overflow when using use-defined `domain`
-                        const y = d3.min([d3.max([tm.encodedPIXIProperty('y', d), 0]), rowHeight]);
+                        const y = d3min([d3max([tm.encodedPIXIProperty('y', d), 0]), rowHeight]);
                         const x = tm.encodedPIXIProperty('x', d);
 
                         if (circular) {

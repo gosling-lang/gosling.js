@@ -1,4 +1,4 @@
-import * as d3 from 'd3';
+import { arc as d3arc } from 'd3-shape';
 import uuid from 'uuid';
 import { RADIAN_GAP, valueToRadian } from '../core/utils/polar';
 
@@ -42,8 +42,7 @@ function BrushTrack(HGC: any, ...args: any[]): any {
             const extent: [number, number] = [0, Math.PI * 1.7];
             this.circularBrushData = this.getBrushData(extent);
 
-            this.brush = d3
-                .arc()
+            this.brush = d3arc()
                 .innerRadius(this.options.innerRadius ?? 100)
                 .outerRadius(this.options.outerRadius ?? 200);
 
