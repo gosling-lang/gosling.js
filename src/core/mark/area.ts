@@ -89,7 +89,7 @@ export function drawArea(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackMo
                         const xValue = +genomicPosCategory;
 
                         const x = xScale(xValue);
-                        const y = d3.max([tm.encodedPIXIProperty('y', d), 0]); // make should not to overflow
+                        const y = d3max([tm.encodedPIXIProperty('y', d), 0]); // make should not to overflow
 
                         if (circular) {
                             if (i === 0) {
