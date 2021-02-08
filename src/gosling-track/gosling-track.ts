@@ -447,12 +447,12 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                     });
                 }
 
-                if (PubSub) {
+                // Send data preview to the editor so that it can be shown to users.
+                import('pubsub-js').then(pubsub => {
                     // !!! This shouldn't be called while using npm gosling.js package.
-                    // Send data preview to the editor so that it can be shown to users.
                     const NUM_OF_ROWS_IN_PREVIEW = 100;
                     const numOrRows = tile.tileData.tabularData.length;
-                    PubSub.publish('data-preview', {
+                    pubsub.publish('data-preview', {
                         id: this.context.id,
                         dataConfig: JSON.stringify({ data: resolved.data }),
                         data:
@@ -461,7 +461,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                                 : sampleSize(tile.tileData.tabularData, NUM_OF_ROWS_IN_PREVIEW)
                         // ...
                     });
-                }
+                });
 
                 // Construct separate gosling models for individual tiles
                 const gm = new GoslingTrackModel(resolved, tile.tileData.tabularDataFiltered);
