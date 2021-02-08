@@ -95,5 +95,3 @@ export function GoslingComponent(props: GoslingCompProps) {
 
     return higlassComponent;
 }
-
-export default GoslingComponent;

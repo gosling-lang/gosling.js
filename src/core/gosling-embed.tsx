@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import GoslingComponent from './gosling-component';
+import { GoslingComponent } from './gosling-component';
 import { GoslingSpec } from './gosling.schema';
 
 /**

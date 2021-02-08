@@ -20,12 +20,12 @@ module.exports = () => {
     mode: 'production',
     devtool: 'source-map',
     resolve: {
-      extensions: ['.ts', '.js', '.json'],
+      extensions: ['.ts', '.tsx', '.js', '.json'],
     },
     module: {
       rules: [
         {
-          test: /\.ts$/,
+          test: /\.tsx?$/,
           use: [{
               loader: 'ts-loader',
           }],
