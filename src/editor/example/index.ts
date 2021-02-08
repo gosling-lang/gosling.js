@@ -93,8 +93,7 @@ export const examples: ReadonlyArray<{
     },
     {
         name: 'Data Support',
-        spec: EXAMPLE_DATA,
-        forceShow: true
+        spec: EXAMPLE_DATA
     },
     {
         name: 'Basic Marks',
