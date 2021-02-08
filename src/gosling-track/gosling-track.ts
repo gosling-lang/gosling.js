@@ -450,7 +450,10 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                 // Send data preview to the editor so that it can be shown to users.
                 try {
                     // !!! This shouldn't be called while using npm gosling.js package.
-                    import('pubsub-js').then(pubsub => {
+                    /*eslint-disable */
+                    const pubsub = require('pubsub-js');
+                    /*eslint-enable */
+                    if (pubsub) {
                         const NUM_OF_ROWS_IN_PREVIEW = 100;
                         const numOrRows = tile.tileData.tabularData.length;
                         pubsub.publish('data-preview', {
@@ -462,7 +465,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                                     : sampleSize(tile.tileData.tabularData, NUM_OF_ROWS_IN_PREVIEW)
                             // ...
                         });
-                    });
+                    }
                 } catch (e) {
                     // ..
                 }
