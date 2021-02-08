@@ -1,3 +1,12 @@
+## [0.0.20](https://github.com/gosling-lang/gosling.js/compare/v0.0.19...v0.0.20) (2021-02-08)
+
+
+### Features
+
+* modify dependency to make the pkg light-weighted ([#191](https://github.com/gosling-lang/gosling.js/issues/191)) ([e7c3b88](https://github.com/gosling-lang/gosling.js/commit/e7c3b889f7857089c0e9f2ba30621586e7ed0692))
+
+
+
 ## [0.0.19](https://github.com/gosling-lang/gosling.js/compare/v0.0.18...v0.0.19) (2021-02-08)
 
 
