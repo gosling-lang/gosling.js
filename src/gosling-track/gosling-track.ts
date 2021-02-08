@@ -1,4 +1,3 @@
-import * as d3 from 'd3';
 import { drawMark } from '../core/mark';
 import { GoslingTrackModel } from '../core/gosling-track-model';
 import { validateTrack } from '../core/utils/validate';
@@ -14,6 +13,7 @@ import {
 } from '../core/gosling.schema.guards';
 import { Tooltip } from '../gosling-tooltip';
 import { sampleSize } from 'lodash';
+import { scaleLinear } from 'd3-scale';
 
 // For using libraries, refer to https://github.com/higlass/higlass/blob/f82c0a4f7b2ab1c145091166b0457638934b15f3/app/scripts/configs/available-for-plugins.js
 function GoslingTrack(HGC: any, ...args: any[]): any {
@@ -448,20 +448,24 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                 }
 
                 // Send data preview to the editor so that it can be shown to users.
-                import('pubsub-js').then(pubsub => {
+                try {
                     // !!! This shouldn't be called while using npm gosling.js package.
-                    const NUM_OF_ROWS_IN_PREVIEW = 100;
-                    const numOrRows = tile.tileData.tabularData.length;
-                    pubsub.publish('data-preview', {
-                        id: this.context.id,
-                        dataConfig: JSON.stringify({ data: resolved.data }),
-                        data:
-                            NUM_OF_ROWS_IN_PREVIEW > numOrRows
-                                ? tile.tileData.tabularData
-                                : sampleSize(tile.tileData.tabularData, NUM_OF_ROWS_IN_PREVIEW)
-                        // ...
+                    import('pubsub-js').then(pubsub => {
+                        const NUM_OF_ROWS_IN_PREVIEW = 100;
+                        const numOrRows = tile.tileData.tabularData.length;
+                        pubsub.publish('data-preview', {
+                            id: this.context.id,
+                            dataConfig: JSON.stringify({ data: resolved.data }),
+                            data:
+                                NUM_OF_ROWS_IN_PREVIEW > numOrRows
+                                    ? tile.tileData.tabularData
+                                    : sampleSize(tile.tileData.tabularData, NUM_OF_ROWS_IN_PREVIEW)
+                            // ...
+                        });
                     });
-                });
+                } catch (e) {
+                    // ..
+                }
 
                 // Construct separate gosling models for individual tiles
                 const gm = new GoslingTrackModel(resolved, tile.tileData.tabularDataFiltered);
@@ -493,8 +497,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                 this.tilesetInfo.bins_per_dimension || this.tilesetInfo.tile_size
             );
 
-            const tileXScale = d3
-                .scaleLinear()
+            const tileXScale = scaleLinear()
                 .domain([0, this.tilesetInfo.tile_size || this.tilesetInfo.bins_per_dimension])
                 .range([tileX, tileX + tileWidth]);
 

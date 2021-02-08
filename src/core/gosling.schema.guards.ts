@@ -31,16 +31,24 @@ import {
 } from './gosling.schema';
 import { SUPPORTED_CHANNELS } from './mark';
 import { isArray } from 'lodash';
-import * as d3 from 'd3';
+import {
+    interpolateGreys,
+    interpolateWarm,
+    interpolateSpectral,
+    interpolateCividis,
+    interpolateBuPu,
+    interpolateRdBu,
+    interpolateViridis
+} from 'd3-scale-chromatic';
 
 export const PREDEFINED_COLOR_STR_MAP: { [k: string]: (t: number) => string } = {
-    viridis: d3.interpolateViridis,
-    grey: d3.interpolateGreys,
-    warm: d3.interpolateWarm,
-    spectral: d3.interpolateSpectral,
-    cividis: d3.interpolateCividis,
-    bupu: d3.interpolateBuPu,
-    rdbu: d3.interpolateRdBu
+    viridis: interpolateViridis,
+    grey: interpolateGreys,
+    warm: interpolateWarm,
+    spectral: interpolateSpectral,
+    cividis: interpolateCividis,
+    bupu: interpolateBuPu,
+    rdbu: interpolateRdBu
 };
 
 export function IsDataTransform(_: DataTransform | ChannelDeep | ChannelValue): _ is DataTransform {

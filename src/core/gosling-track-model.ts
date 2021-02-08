@@ -8,8 +8,18 @@ import {
     Channel
 } from './gosling.schema';
 import { validateTrack, getGenomicChannelFromTrack, getGenomicChannelKeyFromTrack } from './utils/validate';
-import * as d3 from 'd3';
-import { group } from 'd3-array';
+import {
+    ScaleLinear,
+    scaleLinear,
+    ScaleOrdinal,
+    scaleOrdinal,
+    ScaleBand,
+    scaleBand,
+    ScaleSequential,
+    scaleSequential
+} from 'd3-scale';
+import { interpolateViridis } from 'd3-scale-chromatic';
+import { min as d3min, max as d3max, sum as d3sum, group } from 'd3-array';
 import { HIGLASS_AXIS_SIZE } from './higlass-model';
 import { SUPPORTED_CHANNELS } from './mark';
 import { PIXIVisualProperty } from './visual-property.schema';
@@ -31,10 +41,10 @@ import {
 import { CHANNEL_DEFAULTS } from './channel';
 
 export type ScaleType =
-    | d3.ScaleLinear<any, any>
-    | d3.ScaleOrdinal<any, any>
-    | d3.ScaleBand<any>
-    | d3.ScaleSequential<any>
+    | ScaleLinear<any, any>
+    | ScaleOrdinal<any, any>
+    | ScaleBand<any>
+    | ScaleSequential<any>
     | (() => string | number); // constant value
 
 export class GoslingTrackModel {
@@ -253,42 +263,42 @@ export class GoslingTrackModel {
             case 'ye':
             case 'x1e':
                 if (channelFieldType === 'quantitative' || channelFieldType === 'genomic') {
-                    return (this.channelScales[channelKey] as d3.ScaleLinear<any, any>)(value as number);
+                    return (this.channelScales[channelKey] as ScaleLinear<any, any>)(value as number);
                 }
                 if (channelFieldType === 'nominal') {
-                    return (this.channelScales[channelKey] as d3.ScaleBand<any>)(value as string);
+                    return (this.channelScales[channelKey] as ScaleBand<any>)(value as string);
                 }
                 break;
             case 'color':
             case 'stroke':
                 if (channelFieldType === 'quantitative') {
-                    return (this.channelScales[channelKey] as d3.ScaleSequential<any>)(value as number);
+                    return (this.channelScales[channelKey] as ScaleSequential<any>)(value as number);
                 }
                 if (channelFieldType === 'nominal') {
-                    return (this.channelScales[channelKey] as d3.ScaleOrdinal<any, any>)(value as string);
+                    return (this.channelScales[channelKey] as ScaleOrdinal<any, any>)(value as string);
                 }
                 /* genomic is not supported */
                 break;
             case 'size':
                 if (channelFieldType === 'quantitative') {
-                    return (this.channelScales[channelKey] as d3.ScaleLinear<any, any>)(value as number);
+                    return (this.channelScales[channelKey] as ScaleLinear<any, any>)(value as number);
                 }
                 if (channelFieldType === 'nominal') {
-                    return (this.channelScales[channelKey] as d3.ScaleOrdinal<any, any>)(value as string);
+                    return (this.channelScales[channelKey] as ScaleOrdinal<any, any>)(value as string);
                 }
                 /* genomic is not supported */
                 break;
             case 'row':
                 /* quantitative is not supported */
                 if (channelFieldType === 'nominal') {
-                    return (this.channelScales[channelKey] as d3.ScaleBand<any>)(value as string);
+                    return (this.channelScales[channelKey] as ScaleBand<any>)(value as string);
                 }
                 /* genomic is not supported */
                 break;
             case 'strokeWidth':
             case 'opacity':
                 if (channelFieldType === 'quantitative') {
-                    return (this.channelScales[channelKey] as d3.ScaleLinear<any, any>)(value as number);
+                    return (this.channelScales[channelKey] as ScaleLinear<any, any>)(value as number);
                 }
                 /* nominal is not supported */
                 /* genomic is not supported */
@@ -470,18 +480,18 @@ export class GoslingTrackModel {
                     // TODO: consider data ranges in negative values
                     const min = channel.zeroBaseline
                         ? 0
-                        : d3.min(
+                        : d3min(
                               xKeys.map(d =>
-                                  d3.sum(
+                                  d3sum(
                                       (pivotedData.get(d) as any).map((_d: any) =>
                                           channel.field ? _d[channel.field] : undefined
                                       )
                                   )
                               ) as number[]
                           );
-                    const max = d3.max(
+                    const max = d3max(
                         xKeys.map(d =>
-                            d3.sum(
+                            d3sum(
                                 (pivotedData.get(d) as any).map((_d: any) =>
                                     channel.field ? _d[channel.field] : undefined
                                 )
@@ -575,8 +585,8 @@ export class GoslingTrackModel {
                     if (channel.domain === undefined) {
                         const min = channel.zeroBaseline
                             ? 0
-                            : (d3.min(data.map(d => d[channel.field as string]) as number[]) as number) ?? 0;
-                        const max = (d3.max(data.map(d => d[channel.field as string]) as number[]) as number) ?? 0;
+                            : (d3min(data.map(d => d[channel.field as string]) as number[]) as number) ?? 0;
+                        const max = (d3max(data.map(d => d[channel.field as string]) as number[]) as number) ?? 0;
                         channel.domain = [min, max]; // TODO: what if data ranges in negative values
                     } else if (channel.type === 'genomic' && !IsDomainArray(channel.domain)) {
                         channel.domain = getNumericDomain(channel.domain);
@@ -670,8 +680,8 @@ export class GoslingTrackModel {
                 Array.isArray(c2.domain)
             ) {
                 if (c1.type === 'genomic' || c1.type === 'quantitative') {
-                    const min = d3.min([c1.domain[0] as number, c2.domain[0] as number]) as number;
-                    const max = d3.max([c1.domain[1] as number, c2.domain[1] as number]) as number;
+                    const min = d3min([c1.domain[0] as number, c2.domain[0] as number]) as number;
+                    const max = d3max([c1.domain[1] as number, c2.domain[1] as number]) as number;
                     c1.domain = c2.domain = [min, max];
                 } else if (c1.type === 'nominal') {
                     const range = Array.from(new Set([...c1.domain, ...c2.domain])) as string[];
@@ -714,20 +724,19 @@ export class GoslingTrackModel {
                         case 'size':
                         case 'opacity':
                         case 'strokeWidth':
-                            this.channelScales[channelKey] = d3
-                                .scaleLinear()
+                            this.channelScales[channelKey] = scaleLinear()
                                 .domain(domain as [number, number])
                                 .range(range as [number, number]);
                             break;
                         case 'color':
                         case 'stroke':
-                            let interpolate = d3.interpolateViridis;
+                            let interpolate = interpolateViridis;
                             if (Object.keys(PREDEFINED_COLOR_STR_MAP).includes(range as string)) {
                                 interpolate = PREDEFINED_COLOR_STR_MAP[range as string];
                             }
-                            this.channelScales[channelKey] = d3
-                                .scaleSequential(interpolate)
-                                .domain(domain as [number, number]);
+                            this.channelScales[channelKey] = scaleSequential(interpolate).domain(
+                                domain as [number, number]
+                            );
                             break;
                         default:
                         // console.warn('Not supported channel for calculating scales');
@@ -738,22 +747,18 @@ export class GoslingTrackModel {
                         case 'xe':
                         case 'y':
                         case 'row':
-                            this.channelScales[channelKey] = d3
-                                .scaleBand()
+                            this.channelScales[channelKey] = scaleBand()
                                 .domain(domain as string[])
                                 .range(range as [number, number]);
                             break;
                         case 'size':
-                            this.channelScales[channelKey] = d3
-                                .scaleOrdinal()
+                            this.channelScales[channelKey] = scaleOrdinal()
                                 .domain(domain as string[])
                                 .range(range as number[]);
                             break;
                         case 'color':
                         case 'stroke':
-                            this.channelScales[channelKey] = d3
-                                .scaleOrdinal(range as string[])
-                                .domain(domain as string[]);
+                            this.channelScales[channelKey] = scaleOrdinal(range as string[]).domain(domain as string[]);
                             break;
                         default:
                         // console.warn('Not supported channel for calculating scales');
