@@ -1,11 +1,12 @@
 import { GoslingSpec } from '../../../core/gosling.schema';
+import { EXAMPLE_DATASETS } from './datasets';
 
 export const SPEC_TO_SUPPORT: GoslingSpec = {
     // Color channel should be shared only when the data types are the same
     tracks: [
         {
             data: {
-                url: 'https://resgen.io/api/v1/tileset_info/?d=UvVPeLHuRDiYA3qwFlm7xQ',
+                url: EXAMPLE_DATASETS.multivec,
                 type: 'multivec',
                 row: 'sample',
                 column: 'position',
