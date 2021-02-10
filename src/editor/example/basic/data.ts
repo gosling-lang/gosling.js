@@ -4,7 +4,7 @@ export const EXAMPLE_DATA: GoslingSpec = {
         {
             data: {
                 type: 'bigwig',
-                url: 'https://aveit.s3.amazonaws.com/higlass/bigwig/example.chr1.10000-1160000.bw',
+                url: 'https://s3.amazonaws.com/gosling-lang.org/data/4DNFIMPI5A9N.bw',
                 column: 'position',
                 value: 'peak'
             },
