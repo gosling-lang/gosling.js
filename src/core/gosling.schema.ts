@@ -22,9 +22,6 @@ export type GoslingSpec = {
 };
 
 export type Assembly = 'hg38' | 'hg19' | 'hg18' | 'hg17' | 'hg16' | 'mm10' | 'mm9';
-// | 'mm8'
-// | 'mm7'
-// | 'mm6'
 
 /**
  * Arrangement of multiple tracks
