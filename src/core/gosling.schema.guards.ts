@@ -241,7 +241,7 @@ export function IsXAxis(_: Track) {
         _.overlay.forEach(t => {
             if (isFound) return;
 
-            if (IsChannelDeep(t.x) && t.x.axis && t.x.axis !== 'none') {
+            if (IsChannelDeep(t.x) && (t.x.axis === 'top' || t.x.axis === 'bottom')) {
                 isFound = true;
             }
         });

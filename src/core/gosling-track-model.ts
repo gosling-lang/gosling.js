@@ -122,10 +122,10 @@ export class GoslingTrackModel {
         const xOrY = this.getGenomicChannelKey();
         let isAxisShown = false;
         if (xOrY === 'x') {
-            isAxisShown = IsChannelDeep(spec.x) && spec.x.axis !== undefined;
+            isAxisShown = IsChannelDeep(spec.x) && spec.x.axis !== undefined && spec.x.axis !== 'none';
         }
         if (xOrY === 'y') {
-            isAxisShown = IsChannelDeep(spec.y) && spec.y.axis !== undefined;
+            isAxisShown = IsChannelDeep(spec.y) && spec.y.axis !== undefined && spec.y.axis !== 'none';
         }
         if (spec.layout !== 'circular') {
             if (xOrY && isAxisShown) {

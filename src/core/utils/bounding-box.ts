@@ -185,7 +185,11 @@ function traverseAndCollectTrackInfo(
                 layout: { x: 0, y: 0, w: 0, h: 0 } // Just put a dummy info here, this should be added after entire bounding box has been determined
             });
 
-            cumHeight += scaledHeight;
+            if (track.overlayOnPreviousTrack) {
+                // do not add a height
+            } else {
+                cumHeight += scaledHeight;
+            }
         });
     } else {
         // We did not reach a track definition, so continue traversing.

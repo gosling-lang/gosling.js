@@ -12,6 +12,31 @@ describe('Arrangement', () => {
         expect(info[0].layout).toEqual({ x: 0, y: 0, w: 12, h: 12 });
     });
 
+    it('1 View, 1 Track (N Overlaid Tracks)', () => {
+        const spec1 = {
+            tracks: [
+                { overlay: [], width: 10, height: 10 },
+                { overlay: [], width: 10, height: 10 }
+            ]
+        };
+        const spec2 = {
+            tracks: [
+                { overlay: [{}, {}, {}], width: 10, height: 10 },
+                { overlay: [], width: 10, height: 10 }
+            ]
+        };
+        const spec3 = {
+            tracks: [
+                { overlay: [], width: 10, height: 10 },
+                { overlay: [], width: 10, height: 10, overlayOnPreviousTrack: true },
+                { overlay: [], width: 10, height: 10, overlayOnPreviousTrack: true },
+                { overlay: [], width: 10, height: 10 }
+            ]
+        };
+        expect(getBoundingBox(getRelativeTrackInfo(spec1))).toEqual(getBoundingBox(getRelativeTrackInfo(spec2)));
+        expect(getBoundingBox(getRelativeTrackInfo(spec1))).toEqual(getBoundingBox(getRelativeTrackInfo(spec3)));
+    });
+
     it('1 View, N Tracks', () => {
         const spec = {
             tracks: [

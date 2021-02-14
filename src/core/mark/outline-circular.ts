@@ -27,7 +27,7 @@ export function drawCircularOutlines(HGC: any, trackInfo: any, tile: any, tm: Go
     /* render */
     const g = tile.graphics;
 
-    if (!(spec.layout === 'circular' && spec.mark === 'link')) {
+    if (spec.style?.outlineWidth && !(spec.layout === 'circular' && spec.mark === 'link')) {
         // circular link marks usually use entire inner space
         g.lineStyle(
             1,

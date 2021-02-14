@@ -38,6 +38,7 @@ export const EX_SPEC_CIRCULAR_OVERVIEW_LINEAR_DETAIL: GoslingSpec = {
                             color: { value: 'red' }
                         }
                     ],
+                    style: { outlineWidth: 0 },
                     width: 500,
                     height: 100
                 },

@@ -1,6 +1,8 @@
 import { GoslingSpec } from '../../core/gosling.schema';
 
 import { EX_SPEC_CIRCULAR_OVERVIEW_LINEAR_DETAIL } from './circular-overview-linear-detail-views';
+import { EX_SPEC_GIVE } from './give';
+import { EX_SPEC_CORCES_ET_AL } from './corces';
 
 // Real-world examples
 // import { CORCES_2020_NATURE_GENETICS } from './corces-2020-nature-genetics';
@@ -47,5 +49,13 @@ export const examples: ReadonlyArray<{
         name: 'Circular Overview + Linear Detail Views',
         spec: EX_SPEC_CIRCULAR_OVERVIEW_LINEAR_DETAIL,
         hidden: false
+    },
+    {
+        name: 'GIVE (Cao et al. 2018)',
+        spec: EX_SPEC_GIVE
+    },
+    {
+        name: 'Corces et al. 2020',
+        spec: EX_SPEC_CORCES_ET_AL
     }
 ].filter(d => !d.hidden);

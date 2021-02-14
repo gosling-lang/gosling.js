@@ -86,7 +86,7 @@ export function traverseToFixSpecDownstream(spec: GoslingSpec | View, parentDef?
         spec.tracks = spreadTracksByData(spec.tracks);
 
         const linkID = uuid.v4();
-        spec.tracks.forEach((track, i) => {
+        spec.tracks.forEach((track, i, array) => {
             // If size not defined, set default ones
             if (!track.width) track.width = DEFAULT_TRACK_WIDTH_LINEAR;
             if (!track.height) track.height = DEFAULT_TRACK_HEIGHT_LINEAR;
@@ -121,12 +121,24 @@ export function traverseToFixSpecDownstream(spec: GoslingSpec | View, parentDef?
                 if ((IsSingleTrack(track) || IsOverlaidTrack(track)) && IsChannelDeep(track.x) && !track.x.axis) {
                     track.x.axis = 'top';
                 } else if (IsOverlaidTrack(track)) {
+                    let isNone = false; // If there is at least one 'none' axis, should not render axis.
                     track.overlay.forEach(o => {
-                        if (IsChannelDeep(o.x) && !o.x.axis) {
+                        if (!isNone && IsChannelDeep(o.x) && !o.x.axis) {
                             o.x.axis = 'top';
+                        } else if (IsChannelDeep(o.x) && o.x.axis === 'none') {
+                            isNone = true;
                         }
                     });
                 }
+            }
+
+            if (track.overlayOnPreviousTrack && array[i - 1]) {
+                // Use the same size as the previous one
+                track.width = array[i - 1].width;
+                track.height = array[i - 1].height;
+
+                track.layout = array[i - 1].layout;
+                track.assembly = array[i - 1].assembly;
             }
         });
     } else {

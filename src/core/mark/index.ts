@@ -77,7 +77,7 @@ export function drawMark(HGC: any, trackInfo: any, tile: any, model: GoslingTrac
     }
 
     // DEBUG
-    drawChartOutlines(HGC, trackInfo, model);
+    // drawChartOutlines(HGC, trackInfo, model);
     //
 
     /* spec */
