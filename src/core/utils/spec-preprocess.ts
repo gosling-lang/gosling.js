@@ -9,6 +9,7 @@ import {
     IsOverlaidTrack,
     getArrangedViews
 } from '../gosling.schema.guards';
+import { DEFAULT_TRACK_HEIGHT_LINEAR, DEFAULT_TRACK_WIDTH_LINEAR } from '../layout/defaults';
 import { spreadTracksByData } from './overlay';
 
 /**
@@ -86,6 +87,10 @@ export function traverseToFixSpecDownstream(spec: GoslingSpec | View, parentDef?
 
         const linkID = uuid.v4();
         spec.tracks.forEach((track, i) => {
+            // If size not defined, set default ones
+            if (!track.width) track.width = DEFAULT_TRACK_WIDTH_LINEAR;
+            if (!track.height) track.height = DEFAULT_TRACK_HEIGHT_LINEAR;
+
             /**
              * Override options received from the parent
              */

@@ -5,9 +5,7 @@ import {
     DEFAULT_INNER_HOLE_PROP,
     DEFAULT_SUBTITLE_HEIGHT,
     DEFAULT_TITLE_HEIGHT,
-    DEFAULT_VIEW_SPACING,
-    DEFAULT_TRACK_HEIGHT_LINEAR,
-    DEFAULT_TRACK_WIDTH_LINEAR
+    DEFAULT_VIEW_SPACING
 } from '../layout/defaults';
 import { traverseTracksAndViews, traverseViewArrangements } from './spec-preprocess';
 
@@ -167,10 +165,6 @@ function traverseAndCollectTrackInfo(
         cumWidth = spec.tracks[0]?.width; //forceWidth ? forceWidth : spec.tracks[0]?.width;
 
         spec.tracks.forEach(track => {
-            // If size not defined, set default ones
-            if (!track.width) track.width = DEFAULT_TRACK_WIDTH_LINEAR;
-            if (!track.height) track.height = DEFAULT_TRACK_HEIGHT_LINEAR;
-
             let scaledHeight = track.height;
 
             if (getNumOfXAxes([track]) === 1) {
