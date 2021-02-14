@@ -1,6 +1,17 @@
 // import { GoslingSpec, Track } from '../gosling.schema';
 // import { DEFAULT_TRACK_HEIGHT_LINEAR, DEFAULT_TRACK_WIDTH_LINEAR, DEFAULT_TRACK_GAP } from '../layout/defaults';
 
+import { getRelativeTrackInfo } from './bounding-box';
+
+describe('Arrangement', () => {
+    it('One Track', () => {
+        const info = getRelativeTrackInfo({ tracks: [{ overlay: [], width: 10, height: 10 }] });
+        expect(info).toHaveLength(1);
+        expect(info[0].track).toEqual({ overlay: [], width: 10, height: 10 });
+        expect(info[0].boundingBox).toEqual({ x: 0, y: 0, width: 10, height: 10 });
+    });
+});
+
 // describe('Arrangement', () => {
 //     const width = 100,
 //         height = 300;

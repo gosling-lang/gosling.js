@@ -7,7 +7,6 @@ import SplitPane from 'react-split-pane';
 import { Datum, GoslingSpec } from '../core/gosling.schema';
 import { debounce, delay } from 'lodash';
 import { examples } from './example';
-import { replaceTemplate } from '../core/utils';
 import { HiGlassSpec } from '../core/higlass.schema';
 import GoslingSchema from '../../schema/gosling.schema.json';
 import { validateSpec, Validity } from '../core/utils/validate';
@@ -103,7 +102,7 @@ function Editor(props: any) {
         (run?: boolean) => {
             let editedGm;
             try {
-                editedGm = replaceTemplate(JSON.parse(stripJsonComments(code)));
+                editedGm = JSON.parse(stripJsonComments(code));
                 setLog(validateSpec(GoslingSchema, editedGm));
             } catch (e) {
                 const message = '✘ Cannnot parse the code.';

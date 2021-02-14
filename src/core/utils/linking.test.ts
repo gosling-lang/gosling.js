@@ -17,7 +17,9 @@ describe('Should get linking information correctly', () => {
                         mark: 'brush',
                         x: { linkingID: 'brush' }
                     }
-                ]
+                ],
+                width: 1000,
+                height: 100
             },
             {
                 width: 1000,

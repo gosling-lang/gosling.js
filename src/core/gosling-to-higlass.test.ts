@@ -1,14 +1,14 @@
 import { goslingToHiGlass } from './gosling-to-higlass';
 import { SingleTrack } from './gosling.schema';
 import { HiGlassModel } from './higlass-model';
-import { EXMAPLE_BASIC_MARKS } from '../editor/example/basic/basic-marks';
+import { ScalableCytoBand } from '../editor/example-new/semantic-zoom';
 
 describe('Should convert gosling spec to higlass view config.', () => {
     it('Should return a generated higlass view config correctly', () => {
         const model = new HiGlassModel();
         const higlass = goslingToHiGlass(
             model,
-            EXMAPLE_BASIC_MARKS.tracks[0],
+            ScalableCytoBand,
             {
                 width: 1000,
                 height: 100,

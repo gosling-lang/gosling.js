@@ -1,19 +1,3 @@
-import { GLYPH_LOCAL_PRESET_TYPES, GLYPH_PRESETS } from '../../editor/example/deprecated/index';
-import { GoslingSpec, Mark } from '../gosling.schema';
-import { IsSingleTrack, IsMarkDeep } from '../gosling.schema.guards';
-
-export function replaceTemplate(spec: GoslingSpec): GoslingSpec {
-    spec.tracks?.forEach(track => {
-        if (IsSingleTrack(track) && IsMarkDeep(track.mark)) {
-            const predefinedTemplate = track.mark.type;
-            if (GLYPH_LOCAL_PRESET_TYPES.includes(predefinedTemplate as any)) {
-                track.mark = GLYPH_PRESETS.find(d => d.name === predefinedTemplate)?.mark as Mark;
-            }
-        }
-    });
-    return spec;
-}
-
 export function validTilesetUrl(url: string) {
     if (!url.includes('tileset_info/?d=') || (!url.includes('https:') && !url.includes('http:'))) {
         return false;

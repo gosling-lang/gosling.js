@@ -1,26 +1,26 @@
 import { GoslingSpec, Track } from '../gosling.schema';
-import { fixSpecDownstream, overrideTemplates } from './spec-preprocess';
+import { traverseToFixSpecDownstream, overrideTemplates } from './spec-preprocess';
 
 describe('Spec Preprocess', () => {
-    it('superposeOnPreviousTrack', () => {
+    it('overlayOnPreviousTrack', () => {
         const spec: GoslingSpec = {
             layout: 'circular',
-            arrangement: { direction: 'horizontal' },
-            tracks: [{ data: { type: 'csv', url: '' }, mark: 'bar', superposeOnPreviousTrack: true }]
+            tracks: [
+                { data: { type: 'csv', url: '' }, mark: 'bar', overlayOnPreviousTrack: true, width: 100, height: 100 }
+            ]
         };
-        fixSpecDownstream(spec);
+        traverseToFixSpecDownstream(spec);
 
         // Should be fixed to `false` since the first track do not have a previoous track
-        expect(spec.tracks[0].superposeOnPreviousTrack).toEqual(false);
+        expect(spec.tracks[0].overlayOnPreviousTrack).toEqual(false);
     });
 
     it('circular layout', () => {
         const spec: GoslingSpec = {
             layout: 'circular',
-            arrangement: { direction: 'horizontal' },
             tracks: [{} as Track, { static: false } as Track]
         };
-        fixSpecDownstream(spec);
+        traverseToFixSpecDownstream(spec);
 
         expect(spec.tracks[0].layout).toEqual('circular');
 

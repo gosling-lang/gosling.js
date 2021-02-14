@@ -9,7 +9,7 @@ import {
     IsOverlaidTrack,
     getArrangedViews
 } from '../gosling.schema.guards';
-import { spreadTracksByData } from './superpose';
+import { spreadTracksByData } from './overlay';
 
 /**
  * Traverse individual tracks and call the callback function to read and/or update the track definition.

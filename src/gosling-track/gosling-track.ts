@@ -2,7 +2,7 @@ import { drawMark } from '../core/mark';
 import { GoslingTrackModel } from '../core/gosling-track-model';
 import { validateTrack } from '../core/utils/validate';
 import { shareScaleAcrossTracks } from '../core/utils/scales';
-import { resolveSuperposedTracks } from '../core/utils/superpose';
+import { resolveSuperposedTracks } from '../core/utils/overlay';
 import { SingleTrack, OverlaidTrack } from '../core/gosling.schema';
 import {
     IsDataDeepTileset,

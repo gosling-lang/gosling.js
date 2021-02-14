@@ -99,7 +99,7 @@ export function spreadTracksByData(tracks: Track[]): Track[] {
                 spread.push(spec);
             });
 
-            // !!! Order is important here because `spead` tracks will have `superposeOnPreviousTrack` flags, and they do not want to be superposed on top of non-related one.
+            // !!! Order is important here because `spead` tracks will have `overlayOnPreviousTrack` flags, and they do not want to be superposed on top of non-related one.
             return [original, ...spread];
         })
     );
