@@ -3,7 +3,7 @@ import { GoslingTrackModel } from '../core/gosling-track-model';
 import { validateTrack } from '../core/utils/validate';
 import { shareScaleAcrossTracks } from '../core/utils/scales';
 import { resolveSuperposedTracks } from '../core/utils/superpose';
-import { BasicSingleTrack, SuperposedTrack } from '../core/gosling.schema';
+import { SingleTrack, OverlaidTrack } from '../core/gosling.schema';
 import {
     IsDataDeepTileset,
     IsDataTransform,
@@ -23,7 +23,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
 
     // TODO: change the parent class to a more generic one (e.g., TiledPixiTrack)
     class GoslingTrackClass extends HGC.tracks.BarTrack {
-        private originalSpec: BasicSingleTrack | SuperposedTrack;
+        private originalSpec: SingleTrack | OverlaidTrack;
         private tooltips: Tooltip[];
         // TODO: add members that are used explicitly in the code
 

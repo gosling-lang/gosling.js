@@ -90,7 +90,7 @@ const IDEOGRAM: Track = {
         genomicFields: ['ISCN_start', 'ISCN_stop', 'Basepair_start', 'Basepair_stop'],
         quantitativeFields: ['Band', 'Density']
     },
-    superpose: [
+    overlay: [
         {
             mark: 'text',
             dataTransform: {

@@ -1,4 +1,4 @@
-import { GoslingSpec, SuperposedTrack, Track } from '../../../core/gosling.schema';
+import { GoslingSpec, OverlaidTrack, Track } from '../../../core/gosling.schema';
 import { EXAMPLE_DATASETS } from './datasets';
 import { EXAMPLE_SEMANTIC_ZOOMING_IDEOGRAM, EXMAPLE_SEMANTIC_ZOOM_SEQ } from './semantic-zoom';
 
@@ -79,7 +79,7 @@ const IDEOGRAM: Track = {
         genomicFields: ['ISCN_start', 'ISCN_stop', 'Basepair_start', 'Basepair_stop'],
         quantitativeFields: ['Band', 'Density']
     },
-    superpose: [
+    overlay: [
         {
             mark: 'text',
             dataTransform: {
@@ -150,7 +150,7 @@ export const EXAMPLE_LINK: Track = {
             { name: 'end', index: 2 }
         ]
     },
-    superpose: [
+    overlay: [
         {
             mark: 'link',
             x: {
@@ -182,7 +182,7 @@ export const EXAMPLE_BAND: Track = {
         chromosomeField: 'c2',
         genomicFields: ['s1', 'e1', 's2', 'e2']
     },
-    superpose: [
+    overlay: [
         {
             mark: 'link',
             x: {
@@ -232,8 +232,8 @@ export const EXAMPLE_CIRCOS: GoslingSpec = {
                 ...EXAMPLE_SEMANTIC_ZOOMING_IDEOGRAM.x,
                 domain: undefined
             },
-            superpose: [
-                ...(EXAMPLE_SEMANTIC_ZOOMING_IDEOGRAM as SuperposedTrack).superpose,
+            overlay: [
+                ...(EXAMPLE_SEMANTIC_ZOOMING_IDEOGRAM as OverlaidTrack).overlay,
                 {
                     mark: 'brush',
                     x: { linkingID: 'link-1' },

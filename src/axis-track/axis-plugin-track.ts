@@ -325,9 +325,7 @@ function AxisTrack(HGC: any, ...args: any[]): any {
                 yPadding = this.dimensions[1] - yPadding;
             }
 
-            // these two loops reuse existing text objects so that
-            // we're not constantly recreating texts that already
-            // exist
+            // these two loops reuse existing text objects so that we're not constantly recreating texts that already exist
             while (tickTexts.length < ticks.length) {
                 const newText = new HGC.libraries.PIXI.Text('', this.pixiTextConfig);
                 tickTexts.push(newText);
@@ -361,8 +359,7 @@ function AxisTrack(HGC: any, ...args: any[]): any {
                     tickTexts[i].x = x + xPadding;
                     tickTexts[i].y = this.dimensions[1] - yPadding;
 
-                    // store the position of the tick line so that it can
-                    // be used in the export function
+                    // store the position of the tick line so that it can be used in the export function
                     // TODO:
                     tickTexts[i].tickLine = [x - 1, this.dimensions[1], x - 1, this.dimensions[1] - tickHeight - 1];
 
@@ -408,7 +405,7 @@ function AxisTrack(HGC: any, ...args: any[]): any {
             const metric = HGC.libraries.PIXI.TextMetrics.measureText(textObj.text, txtStyle);
 
             // scale the width of text label so that its width is the same when converted into circular form
-            const tw = (metric.width / (2 * r * Math.PI)) * width;
+            const tw = ((metric.width / (2 * r * Math.PI)) * width * 360) / (endAngle - startAngle);
             let [minX, maxX] = [cx - tw / 2.0, cx + tw / 2.0];
 
             // make sure not to place the label on the origin
@@ -423,8 +420,9 @@ function AxisTrack(HGC: any, ...args: any[]): any {
             }
 
             const ropePoints: number[] = [];
+            const baseR = innerRadius + metric.height / 2.0 + 3;
             for (let i = maxX; i >= minX; i -= tw / 10.0) {
-                const p = cartesianToPolar(i, width, r, width / 2.0, height / 2.0, startAngle, endAngle);
+                const p = cartesianToPolar(i, width, baseR, width / 2.0, height / 2.0, startAngle, endAngle);
                 ropePoints.push(new HGC.libraries.PIXI.Point(p.x, p.y));
             }
 
@@ -539,12 +537,12 @@ function AxisTrack(HGC: any, ...args: any[]): any {
         }
 
         hideOverlaps(allTexts: any) {
-            let allBoxes = []; // store the bounding boxes of the text objects so we can
-            // calculate overlaps
+            let allBoxes = []; // store the bounding boxes of the text objects so we can calculate overlaps
             allBoxes = allTexts.map(({ text }: any) => {
                 text.updateTransform();
                 const b = text.getBounds();
-                const box = [b.x, b.y, b.x + b.width, b.y + b.height];
+                const m = 5;
+                const box = [b.x - m, b.y - m, b.x + b.width + m * 2, b.y + b.height + m * 2];
 
                 return box;
             });
@@ -552,12 +550,12 @@ function AxisTrack(HGC: any, ...args: any[]): any {
             boxIntersect(allBoxes, (i: number, j: number) => {
                 if (allTexts[i].importance > allTexts[j].importance) {
                     allTexts[j].text.visible = false;
-                    if (this.options.circular && allTexts[j].rope) {
+                    if (this.options.layout === 'circular' && allTexts[j].rope) {
                         this.pTicksCircular.removeChild(allTexts[j].rope);
                     }
                 } else {
                     allTexts[i].text.visible = false;
-                    if (this.options.circular && allTexts[i].rope) {
+                    if (this.options.layout === 'circular' && allTexts[i].rope) {
                         this.pTicksCircular.removeChild(allTexts[i].rope);
                     }
                 }

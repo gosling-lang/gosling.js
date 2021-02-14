@@ -21,7 +21,7 @@ export const EXAMPLE_SUPERPOSE: GoslingSpec = {
                 ],
                 valueFields: [{ index: 7, name: 'significance', type: 'nominal' }]
             },
-            superpose: [
+            overlay: [
                 {
                     mark: 'bar',
                     stroke: {
@@ -113,7 +113,7 @@ export const EXAMPLE_SUPERPOSE: GoslingSpec = {
                 value: 'peak',
                 categories: ['sample 1', 'sample 2', 'sample 3', 'sample 4']
             },
-            superpose: [
+            overlay: [
                 {
                     mark: 'line'
                 },
@@ -149,7 +149,7 @@ export const EXAMPLE_SUPERPOSE: GoslingSpec = {
                 domain: { chromosome: '1', interval: [1, 3000500] },
                 axis: 'top'
             },
-            superpose: [
+            overlay: [
                 { y: { field: 'peak', type: 'quantitative', domain: [0, 0.001] } },
                 { y: { field: 'peak', type: 'quantitative', domain: [0.001, 0.002] } },
                 { y: { field: 'peak', type: 'quantitative', domain: [0.002, 0.003] } }

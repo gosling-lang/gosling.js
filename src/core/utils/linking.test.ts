@@ -8,7 +8,7 @@ describe('Should get linking information correctly', () => {
             new HiGlassModel(),
             {
                 data: { type: 'csv', url: 'https://' },
-                superpose: [
+                overlay: [
                     {
                         mark: 'point',
                         x: { linkingID: 'regular' }

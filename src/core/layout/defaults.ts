@@ -12,7 +12,7 @@ export const DEFAULT_TRACK_HEIGHT_CIRCULAR = 400;
 export const DEFAULT_TRACK_WIDTH_CIRCULAR = 400;
 
 // gab between tracks
-export const DEFAULT_TRACK_GAP = 30;
+export const DEFAULT_TRACK_GAP = 20;
 
 // empty space inside the visualization for circular layouts
-export const INNER_CIRCLE_RADIUS = 150;
+export const DEFAULT_INNER_HOLE_PROP = 0.3;

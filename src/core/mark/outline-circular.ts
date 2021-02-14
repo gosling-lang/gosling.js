@@ -30,8 +30,8 @@ export function drawCircularOutlines(HGC: any, trackInfo: any, tile: any, tm: Go
     graphics.lineStyle(
         1,
         colorToHex(spec.style?.outline ?? '#DBDBDB'),
-        0, // 0.4, // alpha
-        0 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
+        0.3, // 0.4, // alpha
+        0.5 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
     );
     graphics.beginFill(colorToHex('white'), 0);
     graphics.moveTo(posStartInner.x, posStartInner.y);

@@ -1,4 +1,4 @@
-import { getGridInfo, Size, TrackInfo } from '../utils/bounding-box';
+import { getBoundingBox, Size, TrackInfo } from '../utils/bounding-box';
 import { goslingToHiGlass } from '../gosling-to-higlass';
 import { HiGlassModel } from '../higlass-model';
 import { HiGlassSpec } from '../higlass.schema';
@@ -65,5 +65,5 @@ export function renderHiGlass(
             });
     });
 
-    setHg(hgModel.spec(), getGridInfo(spec));
+    setHg(hgModel.spec(), getBoundingBox(trackInfos));
 }

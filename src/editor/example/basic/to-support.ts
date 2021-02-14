@@ -12,7 +12,7 @@ export const SPEC_TO_SUPPORT: GoslingSpec = {
                 value: 'peak',
                 categories: ['sample 1', 'sample 2', 'sample 3', 'sample 4']
             },
-            superpose: [
+            overlay: [
                 {
                     mark: 'line',
                     color: { field: 'sample', type: 'nominal' }

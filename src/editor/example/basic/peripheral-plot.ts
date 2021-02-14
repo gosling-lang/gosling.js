@@ -1,8 +1,8 @@
-import { BasicSingleTrack, GoslingSpec, SuperposedTrack } from '../../../core/gosling.schema';
+import { SingleTrack, GoslingSpec, OverlaidTrack } from '../../../core/gosling.schema';
 import { EXAMPLE_CYTOAND_HG38 } from '../cytoband-hg38';
 import { EXAMPLE_DATASETS } from './datasets';
 
-export const MULTIVEC_SPEC: Partial<BasicSingleTrack> = {
+export const MULTIVEC_SPEC: Partial<SingleTrack> = {
     data: {
         url: EXAMPLE_DATASETS.multivec,
         type: 'multivec',
@@ -28,8 +28,8 @@ export const EXAMPLE_PERIPHERAL_PLOT: GoslingSpec = {
         {
             title: 'Overview',
             ...EXAMPLE_CYTOAND_HG38.tracks[0],
-            superpose: [
-                ...(EXAMPLE_CYTOAND_HG38.tracks[0] as SuperposedTrack).superpose,
+            overlay: [
+                ...(EXAMPLE_CYTOAND_HG38.tracks[0] as OverlaidTrack).overlay,
                 { mark: 'brush', x: { linkingID: 'periphery-left' } },
                 { mark: 'brush', x: { linkingID: 'focus' }, color: { value: 'black' } },
                 { mark: 'brush', x: { linkingID: 'periphery-right' } }

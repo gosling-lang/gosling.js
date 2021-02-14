@@ -43,7 +43,7 @@ export const EXAMPLE_OF_EXPERIMENT: GoslingSpec = {
                 quantitativeFields: ['column5']
             },
             tooltip: [{ field: 'column4', type: 'nominal' }],
-            superpose: [
+            overlay: [
                 { mark: 'point', size: { value: 3 }, opacity: { value: 1 } },
                 { mark: 'bar', size: { value: 1 } }
             ],

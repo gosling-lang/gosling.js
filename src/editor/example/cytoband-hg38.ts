@@ -16,7 +16,7 @@ export const EXAMPLE_CYTOAND_HG38: GoslingSpec = {
                 chromosomeField: 'Chromosome',
                 genomicFields: ['chromStart', 'chromEnd']
             },
-            superpose: [
+            overlay: [
                 {
                     mark: 'text',
                     dataTransform: {

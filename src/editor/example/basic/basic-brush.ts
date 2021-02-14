@@ -9,7 +9,7 @@ export const EXMAPLE_BASIC_BRUSH = {
                 ...EXAMPLE_BASIC_AREA.x,
                 domain: { chromosome: '1' }
             },
-            superpose: [
+            overlay: [
                 {},
                 {
                     mark: 'brush',

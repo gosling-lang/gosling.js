@@ -1,4 +1,4 @@
-export const EXAMPLE_DATASETS = {
+export const GOSLING_PUBLIC_DATA = {
     multivec: 'https://server.gosling-lang.org/api/v1/tileset_info/?d=cistrome',
     fasta: 'https://server.gosling-lang.org/api/v1/tileset_info/?d=sequence',
     geneAnnotation: 'https://higlass.io/api/v1/tileset_info/?d=OHJakQICQD6gTD7skx4EWA',

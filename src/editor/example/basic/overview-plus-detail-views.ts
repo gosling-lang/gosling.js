@@ -1,4 +1,4 @@
-import { GoslingSpec, SuperposedTrack } from '../../../core/gosling.schema';
+import { GoslingSpec, OverlaidTrack } from '../../../core/gosling.schema';
 import { EXAMPLE_CYTOAND_HG38 } from '../cytoband-hg38';
 import { EXAMPLE_DATASETS } from './datasets';
 
@@ -15,12 +15,12 @@ export const EXAMPLE_OVERVIEW_DEATIL: GoslingSpec = {
             title: 'Overview',
             ...EXAMPLE_CYTOAND_HG38.tracks[0],
             x: {
-                ...(EXAMPLE_CYTOAND_HG38.tracks[0] as SuperposedTrack).x,
+                ...(EXAMPLE_CYTOAND_HG38.tracks[0] as OverlaidTrack).x,
                 domain: { chromosome: '1' },
                 linkingID: 'linking-overview'
             },
-            superpose: [
-                ...(EXAMPLE_CYTOAND_HG38.tracks[0] as SuperposedTrack).superpose,
+            overlay: [
+                ...(EXAMPLE_CYTOAND_HG38.tracks[0] as OverlaidTrack).overlay,
                 {
                     mark: 'brush',
                     x: { linkingID: 'linking-detail-1' },
@@ -54,7 +54,7 @@ export const EXAMPLE_OVERVIEW_DEATIL: GoslingSpec = {
                     { index: 13, name: 'end' }
                 ]
             },
-            superpose: [
+            overlay: [
                 {
                     dataTransform: { filter: [{ field: 'type', oneOf: ['exon'] }] },
                     mark: 'rect',
@@ -115,7 +115,7 @@ export const EXAMPLE_OVERVIEW_DEATIL: GoslingSpec = {
                     { index: 13, name: 'end' }
                 ]
             },
-            superpose: [
+            overlay: [
                 {
                     dataTransform: { filter: [{ field: 'type', oneOf: ['exon'] }] },
                     mark: 'rect',

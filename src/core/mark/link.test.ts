@@ -1,12 +1,12 @@
 import * as PIXI from 'pixi.js';
 import { GoslingTrackModel } from '../gosling-track-model';
-import { BasicSingleTrack } from '../gosling.schema';
+import { SingleTrack } from '../gosling.schema';
 import { drawLink } from './link';
 
 describe('Rendering link', () => {
     const g = new PIXI.Graphics();
     it('Linear Band', () => {
-        const t: BasicSingleTrack = {
+        const t: SingleTrack = {
             data: { type: 'csv', url: '' },
             mark: 'link',
             x: { field: 'x', type: 'genomic' },
@@ -25,7 +25,7 @@ describe('Rendering link', () => {
         drawLink(g, model);
     });
     it('Circular Band', () => {
-        const t: BasicSingleTrack = {
+        const t: SingleTrack = {
             layout: 'circular',
             data: { type: 'csv', url: '' },
             mark: 'link',
@@ -45,7 +45,7 @@ describe('Rendering link', () => {
         drawLink(g, model);
     });
     it('Linear line', () => {
-        const t: BasicSingleTrack = {
+        const t: SingleTrack = {
             layout: 'linear',
             data: { type: 'csv', url: '' },
             mark: 'link',
@@ -63,7 +63,7 @@ describe('Rendering link', () => {
         drawLink(g, model);
     });
     it('Circular line', () => {
-        const t: BasicSingleTrack = {
+        const t: SingleTrack = {
             layout: 'circular',
             data: { type: 'csv', url: '' },
             mark: 'link',

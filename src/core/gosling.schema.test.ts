@@ -1,4 +1,4 @@
-import { Channel, BasicSingleTrack } from './gosling.schema';
+import { Channel, SingleTrack } from './gosling.schema';
 import {
     IsChannelDeep,
     IsChannelValue,
@@ -6,7 +6,6 @@ import {
     getValueUsingChannel,
     IsStackedMark,
     IsStackedChannel,
-    getVisualizationType,
     IsDataDeepTileset
 } from './gosling.schema.guards';
 
@@ -33,7 +32,7 @@ describe('gosling schema should be checked correctly', () => {
                 x: { field: 'x', type: 'genomic' },
                 y: { field: 'y', type: 'quantitative' },
                 color: { field: 'y', type: 'nominal' }
-            } as BasicSingleTrack)
+            } as SingleTrack)
         ).toBe(true);
 
         expect(
@@ -42,7 +41,7 @@ describe('gosling schema should be checked correctly', () => {
                 x: { field: 'x', type: 'genomic' },
                 y: { field: 'y', type: 'quantitative' },
                 color: { field: 'y', type: 'nominal' }
-            } as BasicSingleTrack)
+            } as SingleTrack)
         ).toBe(true);
     });
 
@@ -53,7 +52,7 @@ describe('gosling schema should be checked correctly', () => {
                 x: { field: 'x', type: 'genomic' },
                 y: { field: 'y', type: 'quantitative' },
                 color: { field: 'y', type: 'quantitative' }
-            } as BasicSingleTrack)
+            } as SingleTrack)
         ).toBe(false);
 
         expect(
@@ -63,7 +62,7 @@ describe('gosling schema should be checked correctly', () => {
                 y: { field: 'y', type: 'quantitative' },
                 color: { field: 'y', type: 'nominal' },
                 row: { field: 'y', type: 'nominal' }
-            } as BasicSingleTrack)
+            } as SingleTrack)
         ).toBe(false);
 
         expect(
@@ -72,7 +71,7 @@ describe('gosling schema should be checked correctly', () => {
                 x: { field: 'x', type: 'genomic' },
                 y: { field: 'y', type: 'quantitative' },
                 color: { field: 'y', type: 'nominal' }
-            } as BasicSingleTrack)
+            } as SingleTrack)
         ).toBe(false);
     });
 
@@ -84,7 +83,7 @@ describe('gosling schema should be checked correctly', () => {
                     x: { field: 'x', type: 'genomic' },
                     y: { field: 'y', type: 'quantitative' },
                     color: { field: 'y', type: 'nominal' }
-                } as BasicSingleTrack,
+                } as SingleTrack,
                 'y'
             )
         ).toBe(true);
@@ -96,17 +95,9 @@ describe('gosling schema should be checked correctly', () => {
                     x: { field: 'x', type: 'genomic' },
                     y: { field: 'y', type: 'quantitative' },
                     color: { field: 'y', type: 'nominal' }
-                } as BasicSingleTrack,
+                } as SingleTrack,
                 'x'
             )
         ).toBe(false);
-    });
-
-    it('Visualization types should be detected correctly', () => {
-        expect(
-            getVisualizationType({
-                mark: 'line'
-            } as BasicSingleTrack)
-        ).toBe('line');
     });
 });

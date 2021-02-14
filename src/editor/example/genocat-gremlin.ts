@@ -28,7 +28,7 @@ export const GENOCAT_GREMLIN: GoslingSpec = {
                     { field: 'chr_2', oneOf: ['hs5'] }
                 ]
             },
-            superpose: [
+            overlay: [
                 {},
                 {
                     mark: 'brush',
@@ -65,7 +65,7 @@ export const GENOCAT_GREMLIN: GoslingSpec = {
                     { field: 'chr_2', oneOf: ['hs5', 'hs4', 'hs6'] }
                 ]
             },
-            superpose: [
+            overlay: [
                 {},
                 {
                     mark: 'brush',
@@ -101,7 +101,7 @@ export const GENOCAT_GREMLIN: GoslingSpec = {
                 chromosomeField: 'Chromosome',
                 genomicFields: ['chromStart', 'chromEnd']
             },
-            superpose: [
+            overlay: [
                 {
                     mark: 'rect',
                     dataTransform: {

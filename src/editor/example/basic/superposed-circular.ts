@@ -1,4 +1,4 @@
-import { BasicSingleTrack, GoslingSpec, SuperposedTrack, Track } from '../../../core/gosling.schema';
+import { SingleTrack, GoslingSpec, OverlaidTrack, Track } from '../../../core/gosling.schema';
 import { EXAMPLE_DATASETS } from './datasets';
 
 // refer to the following for supporting zooming and panning in circular layouts:
@@ -27,7 +27,7 @@ const commonMultivecSpec: Partial<Track> = {
         ]
     }
 };
-const CIRCOS_HEATMAP: BasicSingleTrack | SuperposedTrack = {
+const CIRCOS_HEATMAP: SingleTrack | OverlaidTrack = {
     ...commonMultivecSpec,
     mark: 'rect',
     x: {
@@ -44,9 +44,9 @@ const CIRCOS_HEATMAP: BasicSingleTrack | SuperposedTrack = {
     outerRadius,
     innerRadius,
     static: true
-} as BasicSingleTrack | SuperposedTrack;
+} as SingleTrack | OverlaidTrack;
 
-const CIRCOS_LINE: BasicSingleTrack | SuperposedTrack = {
+const CIRCOS_LINE: SingleTrack | OverlaidTrack = {
     ...commonMultivecSpec,
     mark: 'line',
     x: {
@@ -66,7 +66,7 @@ const CIRCOS_LINE: BasicSingleTrack | SuperposedTrack = {
     outerRadius,
     innerRadius,
     static: true
-} as BasicSingleTrack | SuperposedTrack;
+} as SingleTrack | OverlaidTrack;
 
 const IDEOGRAM_DETAIL: Track = {
     data: {
@@ -76,7 +76,7 @@ const IDEOGRAM_DETAIL: Track = {
         genomicFields: ['ISCN_start', 'ISCN_stop', 'Basepair_start', 'Basepair_stop'],
         quantitativeFields: ['Band', 'Density']
     },
-    superpose: [
+    overlay: [
         {
             mark: 'text',
             dataTransform: {
@@ -147,7 +147,7 @@ export const EXAMPLE_LINK: Track = {
             { name: 'end', index: 2 }
         ]
     },
-    superpose: [
+    overlay: [
         {
             mark: 'link',
             x: {
@@ -220,8 +220,8 @@ export const EXAMPLE_SUPERPOSED_CIRCULAR_TRACKS: GoslingSpec = {
             layout: 'linear',
             ...IDEOGRAM_DETAIL,
             x: { ...IDEOGRAM_DETAIL.x, axis: 'top', domain: undefined },
-            superpose: [
-                ...(IDEOGRAM_DETAIL as SuperposedTrack).superpose,
+            overlay: [
+                ...(IDEOGRAM_DETAIL as OverlaidTrack).overlay,
                 {
                     mark: 'brush',
                     x: { linkingID: 'link' },
@@ -296,7 +296,7 @@ export const EXAMPLE_SUPERPOSED_CIRCULAR_TRACKS: GoslingSpec = {
                 chromosomeField: 'c2',
                 genomicFields: ['s1', 'e1', 's2', 'e2']
             },
-            superpose: [
+            overlay: [
                 {
                     mark: 'rect',
                     x: {
@@ -336,7 +336,7 @@ export const EXAMPLE_SUPERPOSED_CIRCULAR_TRACKS: GoslingSpec = {
                 chromosomeField: 'c2',
                 genomicFields: ['s1', 'e1', 's2', 'e2']
             },
-            superpose: [
+            overlay: [
                 {
                     mark: 'link',
                     x: {

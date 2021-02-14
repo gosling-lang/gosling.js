@@ -1,14 +1,13 @@
-import { GoslingSpec, Track } from '../gosling.schema';
+import { ArrangedViews, CommonViewDef, GoslingSpec, Track, View } from '../gosling.schema';
+import { getArrangedViews, IsXAxis } from '../gosling.schema.guards';
+import { HIGLASS_AXIS_SIZE } from '../higlass-model';
 import {
+    DEFAULT_INNER_HOLE_PROP,
     DEFAULT_SUBTITLE_HEIGHT,
     DEFAULT_TITLE_HEIGHT,
-    DEFAULT_TRACK_GAP,
-    DEFAULT_TRACK_HEIGHT_LINEAR,
-    DEFAULT_TRACK_WIDTH_CIRCULAR,
-    DEFAULT_TRACK_WIDTH_LINEAR
+    DEFAULT_TRACK_GAP
 } from '../layout/defaults';
-import { resolveSuperposedTracks } from '../utils/superpose';
-import { arrayRepeat, insertItemToArray } from './array';
+import { traverseTracksAndViews, traverseViewArrangements } from './spec-preprocess';
 
 export interface Size {
     width: number;
@@ -50,76 +49,249 @@ export interface TrackInfo {
 }
 
 /**
- *
- * @param spec
+ * Return the size of entire visualization.
+ * @param trackInfos
  */
-export function getGridInfo(spec: GoslingSpec): GridInfo {
-    // total number of cells in the tabular layout
-    const numCells = spec.tracks
-        .filter(t => !t.superposeOnPreviousTrack)
-        .map(t => (typeof t.span === 'number' ? t.span : 1))
-        .reduce((a, b) => a + b, 0);
-    const wrap: number = spec.arrangement?.wrap ?? 999;
+export function getBoundingBox(trackInfos: TrackInfo[]) {
+    let width = 0;
+    let height = 0;
 
-    let numColumns = 0,
-        numRows = 0;
-    if (spec.arrangement?.direction === 'horizontal') {
-        numRows = Math.ceil(numCells / wrap);
-        numColumns = Math.min(wrap, numCells);
-    } else {
-        // by default, vertical
-        numColumns = Math.ceil(numCells / wrap);
-        numRows = Math.min(wrap, numCells);
-    }
-
-    // undefined | [number, number, ...] | number
-    const baseColumnSizes =
-        spec.arrangement?.columnSizes === undefined
-            ? spec.layout === 'circular'
-                ? [DEFAULT_TRACK_WIDTH_CIRCULAR]
-                : [DEFAULT_TRACK_WIDTH_LINEAR]
-            : typeof spec.arrangement?.columnSizes === 'number'
-            ? [spec.arrangement?.columnSizes]
-            : spec.arrangement?.columnSizes;
-    const baseRowSizes =
-        spec.arrangement?.rowSizes === undefined
-            ? spec.layout === 'circular'
-                ? [DEFAULT_TRACK_WIDTH_CIRCULAR]
-                : [DEFAULT_TRACK_HEIGHT_LINEAR]
-            : typeof spec.arrangement?.rowSizes === 'number'
-            ? [spec.arrangement?.rowSizes]
-            : spec.arrangement?.rowSizes;
-    const baseColumnGaps =
-        spec.arrangement?.columnGaps === undefined
-            ? [DEFAULT_TRACK_GAP]
-            : typeof spec.arrangement?.columnGaps === 'number'
-            ? [spec.arrangement?.columnGaps]
-            : spec.arrangement?.columnGaps;
-    const baseRowGaps =
-        spec.arrangement?.rowGaps === undefined
-            ? [DEFAULT_TRACK_GAP]
-            : typeof spec.arrangement?.rowGaps === 'number'
-            ? [spec.arrangement?.rowGaps]
-            : spec.arrangement?.rowGaps;
-
-    const columnSizes = arrayRepeat(baseColumnSizes, numColumns);
-    const columnGaps = arrayRepeat(baseColumnGaps, numColumns - 1);
-    let rowSizes = arrayRepeat(baseRowSizes, numRows);
-    let rowGaps = arrayRepeat(baseRowGaps, numRows - 1);
-
-    // consider title and subtitle if any
-    if (spec.title || spec.subtitle) {
-        const headerHeight = (spec.title ? DEFAULT_TITLE_HEIGHT : 0) + (spec.subtitle ? DEFAULT_SUBTITLE_HEIGHT : 0);
-        rowSizes = insertItemToArray(rowSizes, 0, headerHeight);
-        rowGaps = insertItemToArray(rowGaps, 0, 0);
-    }
-
-    const width = columnSizes.reduce((a, b) => a + b, 0) + columnGaps.reduce((a, b) => a + b, 0);
-    const height = rowSizes.reduce((a, b) => a + b, 0) + rowGaps.reduce((a, b) => a + b, 0);
-
-    return { width, height, columnSizes, rowSizes, columnGaps, rowGaps };
+    trackInfos.forEach(_ => {
+        const w = _.boundingBox.x + _.boundingBox.width;
+        const h = _.boundingBox.y + _.boundingBox.height;
+        if (height < h) {
+            height = h;
+        }
+        if (width < w) {
+            width = w;
+        }
+    });
+    return { width, height };
 }
 
+/**
+ * Collect information of individual tracks including their size/position and specs
+ * @param spec
+ */
+export function getRelativeTrackInfo(spec: GoslingSpec): TrackInfo[] {
+    let trackInfos: TrackInfo[] = [] as TrackInfo[];
+
+    // Collect track information including spec, bounding boxes, and RGL' `layout`.
+    traverseAndCollectTrackInfo(spec, trackInfos); // RGL parameter (`layout`) is not deteremined yet since we do not know the entire size of vis yet.
+
+    // Get the size of entire visualization.
+    const size = getBoundingBox(trackInfos);
+
+    // Titles
+    if (spec.title || spec.subtitle) {
+        // If title and/or subtitle presents, offset the y position by title/subtitle size
+        const titleHeight = (spec.title ? DEFAULT_TITLE_HEIGHT : 0) + (spec.subtitle ? DEFAULT_SUBTITLE_HEIGHT : 0);
+        const marginBottom = 4;
+
+        size.height += titleHeight + marginBottom;
+
+        // Offset all non-title tracks.
+        trackInfos.forEach(_ => {
+            _.boundingBox.y += titleHeight + marginBottom;
+        });
+
+        // Add a title track.
+        trackInfos = [
+            {
+                track: getTextTrack({ width: size.width, height: titleHeight }, spec.title, spec.subtitle),
+                boundingBox: { x: 0, y: 0, width: size.width, height: titleHeight },
+                layout: { x: 0, y: 0, w: 12, h: (titleHeight / size.height) * 12.0 }
+            },
+            ...trackInfos
+        ];
+    }
+
+    // Calculate `layout`s for React Grid Layout (RGL).
+    trackInfos.forEach(_ => {
+        _.layout.x = (_.boundingBox.x / size.width) * 12;
+        _.layout.y = (_.boundingBox.y / size.height) * 12;
+        _.layout.w = (_.boundingBox.width / size.width) * 12;
+        _.layout.h = (_.boundingBox.height / size.height) * 12;
+    });
+
+    return trackInfos;
+}
+
+/**
+ * Visit all tracks and views in the Gosling spec to collect information of individual tracks, including their size, position, and spec.
+ * @param spec
+ * @param output
+ * @param dx
+ * @param dy
+ * @param forceWidth
+ * @param forceHeight
+ * @param circularRootNotFound
+ */
+function traverseAndCollectTrackInfo(
+    spec: GoslingSpec | View,
+    output: TrackInfo[],
+    dx = 0,
+    dy = 0,
+    forceWidth: number | undefined = undefined,
+    forceHeight: number | undefined = undefined,
+    circularRootNotFound = true // A flag variable to find a root level of circular tracks/views
+) {
+    let cumWidth = 0;
+    let cumHeight = 0;
+
+    /* Parameters to determine if we need to combine all the children to show as a single circular visualization */
+    let allChildCircularLayout = true;
+    traverseTracksAndViews(spec, (tv: CommonViewDef) => {
+        if (tv.layout !== 'circular') {
+            allChildCircularLayout = false;
+        }
+    });
+
+    let noChildConcatArrangement = true; // if v/hconcat is being used by children, circular visualizations should be adjacently placed.
+    traverseViewArrangements(spec, (a: ArrangedViews) => {
+        if ('vconcatViews' in a || 'hconcatViews' in a) {
+            noChildConcatArrangement = false;
+        }
+    });
+
+    const isThisCircularRoot =
+        circularRootNotFound &&
+        allChildCircularLayout &&
+        noChildConcatArrangement &&
+        ('parallelViews' in spec || 'serialViews' in spec || 'tracks' in spec);
+
+    const numTracksBeforeInsert = output.length;
+
+    if ('tracks' in spec) {
+        const totalHeightByDef = spec.tracks.reduce((a, b) => a + b.height, 0);
+
+        // Reserve space for axes
+        const forceHeightMinusAxes = forceHeight
+            ? forceHeight - getNumOfXAxes(spec.tracks) * HIGLASS_AXIS_SIZE
+            : undefined;
+
+        // Use the firstly suggested `width` for this view.
+        cumWidth = forceWidth ? forceWidth : spec.tracks[0]?.width;
+
+        spec.tracks.forEach(track => {
+            let scaledHeight = forceHeightMinusAxes
+                ? (track.height / totalHeightByDef) * forceHeightMinusAxes
+                : track.height;
+
+            if (getNumOfXAxes([track]) === 1) {
+                scaledHeight += HIGLASS_AXIS_SIZE;
+            }
+
+            track.width = cumWidth;
+            track.height = scaledHeight;
+
+            output.push({
+                track,
+                boundingBox: {
+                    x: dx,
+                    y: dy + cumHeight,
+                    width: cumWidth,
+                    height: scaledHeight
+                },
+                layout: { x: 0, y: 0, w: 0, h: 0 } // Just put a dummy info here, this should be added after entire bounding box has been determined
+            });
+
+            cumHeight += scaledHeight;
+        });
+    } else {
+        // We did not reach a track definition, so continue traversing.
+        const spacing = spec.spacing ? spec.spacing : DEFAULT_TRACK_GAP;
+
+        // We first calculate position and size of each view and track by considering it as if it uses a linear layout
+        if ('parallelViews' in spec || 'vconcatViews' in spec) {
+            getArrangedViews(spec).forEach((v, i, array) => {
+                const viewBB = traverseAndCollectTrackInfo(
+                    v,
+                    output,
+                    dx,
+                    dy + cumHeight,
+                    cumWidth,
+                    undefined,
+                    !isThisCircularRoot && circularRootNotFound
+                );
+
+                if (i === 0) {
+                    cumWidth = viewBB.width;
+                }
+                if (i !== array.length - 1) {
+                    cumHeight += spacing;
+                }
+                cumHeight += viewBB.height;
+            });
+        } else if ('serialViews' in spec || 'hconcatViews' in spec) {
+            getArrangedViews(spec).forEach((v, i, array) => {
+                const viewBB = traverseAndCollectTrackInfo(
+                    v,
+                    output,
+                    dx + cumWidth,
+                    dy,
+                    undefined,
+                    cumHeight,
+                    !isThisCircularRoot && circularRootNotFound
+                );
+
+                if (i === 0) {
+                    cumHeight = viewBB.height;
+                }
+                if (i !== array.length - 1) {
+                    cumWidth += spacing;
+                }
+                cumWidth += viewBB.width;
+            });
+        }
+    }
+
+    // If this is a root view that uses a circular layout, use the posiiton and size of views/tracks to calculate circular-specific parameters, such as outer/inner radius and start/end angle
+    if (isThisCircularRoot) {
+        const cTracks = output.slice(numTracksBeforeInsert);
+
+        // const INNER_HOLE = (spec.centerHole !== undefined) ? spec.centerHole : DEFAULT_INNER_HOLE_PROP;
+        const TOTAL_RADIUS = cumWidth / 2.0; // (cumWidth + cumHeight) / 2.0 / 2.0;
+        const TOTAL_RING_SIZE = TOTAL_RADIUS * (1 - DEFAULT_INNER_HOLE_PROP);
+
+        // const numXAxes = getNumOfXAxes(cTracks.map(info => info.track));
+
+        cTracks.forEach((t, i) => {
+            t.track.layout = 'circular';
+
+            t.track.outerRadius = TOTAL_RADIUS - ((t.boundingBox.y - dy) / cumHeight) * TOTAL_RING_SIZE;
+            t.track.innerRadius =
+                TOTAL_RADIUS - ((t.boundingBox.y + t.boundingBox.height - dy) / cumHeight) * TOTAL_RING_SIZE;
+            t.track.startAngle = ((t.boundingBox.x - dx) / cumWidth) * 360;
+            t.track.endAngle = ((t.boundingBox.x + t.boundingBox.width - dx) / cumWidth) * 360;
+
+            t.boundingBox.x = dx;
+            t.boundingBox.y = dy;
+
+            // Circular tracks share the same size and position since technically these tracks are being overlaid on top of the others
+            t.boundingBox.height = t.track.height = t.boundingBox.width = t.track.width = TOTAL_RADIUS * 2;
+
+            if (i !== 0) {
+                t.track.overlayOnPreviousTrack = true;
+            }
+        });
+
+        cumHeight = TOTAL_RADIUS * 2;
+    }
+
+    return { x: dx, y: dy, width: cumWidth, height: cumHeight };
+}
+
+export function getNumOfXAxes(tracks: Track[]): number {
+    return tracks.filter(t => IsXAxis(t)).length;
+}
+
+/**
+ * Get a spec for a title track.
+ * @param size
+ * @param title
+ * @param subtitle
+ */
 const getTextTrack = (size: Size, title?: string, subtitle?: string) => {
     return JSON.parse(
         JSON.stringify({
@@ -131,108 +303,3 @@ const getTextTrack = (size: Size, title?: string, subtitle?: string) => {
         })
     ) as Track;
 };
-
-// TODO: handle overflow by the ill-defined spec
-/**
- * Determine how to arrange multiple tracks. This also assign `width`, `height`, `innerRadius`, and `outerRadius` of a track.
- * @param spec
- */
-export function getArrangement(spec: GoslingSpec): TrackInfo[] {
-    const { width: totalWidth, height: totalHeight, columnSizes, rowSizes, columnGaps, rowGaps } = getGridInfo(spec);
-
-    const numColumns = columnSizes.length;
-    const numRows = rowSizes.length;
-
-    let ci = 0;
-    let ri = 0;
-
-    const info: TrackInfo[] = [];
-
-    // consider title and subtitle if any
-    if (spec.title || spec.subtitle) {
-        const height = rowSizes[ri];
-        info.push({
-            track: getTextTrack({ width: totalWidth, height }, spec.title, spec.subtitle),
-            boundingBox: { x: 0, y: 0, width: totalWidth, height },
-            layout: {
-                x: 0,
-                y: 0,
-                w: 12.0,
-                h: (height / totalHeight) * 12.0
-            }
-        });
-        ri++;
-    }
-
-    spec.tracks.forEach((track, i) => {
-        const nextTrack = spec.tracks[i + 1];
-        const span = typeof track.span === 'number' ? track.span : 1;
-        const trackWidth = resolveSuperposedTracks(track)[0].width;
-
-        const x =
-            columnSizes.slice(0, ci).reduce((a, b) => a + b, 0) + columnGaps.slice(0, ci).reduce((a, b) => a + b, 0);
-        const y = rowSizes.slice(0, ri).reduce((a, b) => a + b, 0) + rowGaps.slice(0, ri).reduce((a, b) => a + b, 0);
-
-        let width = columnSizes[ci];
-        let height = rowSizes[ri];
-        if (spec.arrangement?.direction === 'horizontal' && span !== 1) {
-            width =
-                columnSizes.slice(ci, ci + span).reduce((a, b) => a + b, 0) +
-                columnGaps.slice(ci, ci + span).reduce((a, b) => a + b, 0);
-        } else if (spec.arrangement?.direction === 'vertical' && span !== 1) {
-            height =
-                rowSizes.slice(ri, ri + span).reduce((a, b) => a + b, 0) +
-                rowGaps.slice(ri, ri + span).reduce((a, b) => a + b, 0);
-        }
-        width = typeof trackWidth === 'number' ? Math.min(trackWidth, width) : width;
-        // height = ... // NOTICE: using the smaller height is not supported
-
-        // Assign actual size determined by the layout definition
-        track.width = width;
-        track.height = height;
-
-        // Assign default outerRadius and innerRadius
-        if (!track.outerRadius) {
-            track.outerRadius = Math.min(track.width, track.height) / 2.0 - 30;
-        }
-        if (!track.innerRadius) {
-            track.innerRadius = Math.max(track.outerRadius - 80, 0);
-        }
-
-        info.push({
-            track,
-            boundingBox: { x, y, width: width, height: height },
-            layout: {
-                x: (x / totalWidth) * 12.0,
-                y: (y / totalHeight) * 12.0,
-                w: (width / totalWidth) * 12.0,
-                h: (height / totalHeight) * 12.0
-            }
-        });
-
-        if (nextTrack?.superposeOnPreviousTrack) {
-            // do not count this track to calculate cumulative sizes and positions
-            return;
-        }
-
-        if (spec.arrangement?.direction === 'horizontal') {
-            ci += typeof track.span === 'number' ? track.span : 1;
-
-            if (ci >= numColumns && ri < numRows - 1) {
-                ci = 0;
-                ri++;
-            }
-        } else {
-            // by default, vertical direction
-            ri += typeof track.span === 'number' ? track.span : 1;
-
-            if (ri >= numRows) {
-                ri = 0;
-                ci++;
-            }
-        }
-    });
-
-    // console.log(info);
-    return info;
-}

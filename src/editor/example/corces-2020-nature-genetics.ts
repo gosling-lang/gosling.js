@@ -22,7 +22,7 @@ export const CORCES_2020_NATURE_GENETICS: GoslingSpec = {
                 genomicFields: ['ISCN_start', 'ISCN_stop', 'Basepair_start', 'Basepair_stop'],
                 quantitativeFields: ['Band', 'Density']
             },
-            superpose: [
+            overlay: [
                 {
                     mark: 'rect',
                     dataTransform: { filter: [{ field: 'Stain', oneOf: ['acen-1', 'acen-2'], not: true }] },
@@ -81,7 +81,7 @@ export const CORCES_2020_NATURE_GENETICS: GoslingSpec = {
                 value: 'peak'
             },
             title: 'Excitatory neurons',
-            superpose: [
+            overlay: [
                 {},
                 {
                     mark: 'brush',
@@ -105,7 +105,7 @@ export const CORCES_2020_NATURE_GENETICS: GoslingSpec = {
                 value: 'peak'
             },
             title: 'Inhibitory neurons',
-            superpose: [
+            overlay: [
                 {},
                 {
                     mark: 'brush',
@@ -129,7 +129,7 @@ export const CORCES_2020_NATURE_GENETICS: GoslingSpec = {
                 value: 'peak'
             },
             title: 'Dopaminergic neurons',
-            superpose: [
+            overlay: [
                 {},
                 {
                     mark: 'brush',
@@ -153,7 +153,7 @@ export const CORCES_2020_NATURE_GENETICS: GoslingSpec = {
                 value: 'peak'
             },
             title: 'Microglia',
-            superpose: [
+            overlay: [
                 {},
                 {
                     mark: 'brush',
@@ -177,7 +177,7 @@ export const CORCES_2020_NATURE_GENETICS: GoslingSpec = {
                 value: 'peak'
             },
             title: 'Oligodendrocytes',
-            superpose: [
+            overlay: [
                 {},
                 {
                     mark: 'brush',
@@ -201,7 +201,7 @@ export const CORCES_2020_NATURE_GENETICS: GoslingSpec = {
                 value: 'peak'
             },
             title: 'Astrocytes',
-            superpose: [
+            overlay: [
                 {},
                 {
                     mark: 'brush',
@@ -225,7 +225,7 @@ export const CORCES_2020_NATURE_GENETICS: GoslingSpec = {
                 value: 'peak'
             },
             title: 'OPCs',
-            superpose: [
+            overlay: [
                 {},
                 {
                     mark: 'brush',
@@ -251,7 +251,7 @@ export const CORCES_2020_NATURE_GENETICS: GoslingSpec = {
                     { name: 'end', index: 2 }
                 ]
             },
-            superpose: [
+            overlay: [
                 {},
                 {
                     mark: 'brush',
@@ -327,7 +327,7 @@ export const CORCES_2020_NATURE_GENETICS: GoslingSpec = {
                     { name: 'end', index: 2 }
                 ]
             },
-            superpose: [
+            overlay: [
                 {},
                 {
                     mark: 'brush',
@@ -405,7 +405,7 @@ export const CORCES_2020_NATURE_GENETICS: GoslingSpec = {
                     { index: 13, name: 'end' }
                 ]
             },
-            superpose: [
+            overlay: [
                 {
                     dataTransform: {
                         filter: [

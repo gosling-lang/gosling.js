@@ -1,12 +1,12 @@
 import * as PIXI from 'pixi.js';
 import { GoslingTrackModel } from '../gosling-track-model';
-import { BasicSingleTrack } from '../gosling.schema';
+import { SingleTrack } from '../gosling.schema';
 import { drawTriangle } from './triangle';
 
 describe('Rendering triangle', () => {
     const g = new PIXI.Graphics();
     it('Linear Triangle', () => {
-        const t: BasicSingleTrack = {
+        const t: SingleTrack = {
             data: { type: 'csv', url: '' },
             mark: 'triangle-l',
             x: { field: 'x', type: 'genomic' },
@@ -25,7 +25,7 @@ describe('Rendering triangle', () => {
     });
 
     it('Circular Triangle', () => {
-        const t: BasicSingleTrack = {
+        const t: SingleTrack = {
             layout: 'circular',
             data: { type: 'csv', url: '' },
             mark: 'triangle-l',

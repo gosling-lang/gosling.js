@@ -58,7 +58,7 @@ export const EXMAPLE_BASIC_LINKING: GoslingSpec = {
             strokeWidth: { value: 0.5 },
             width: 1000,
             height: 180,
-            superpose: [
+            overlay: [
                 {},
                 {
                     mark: 'brush',

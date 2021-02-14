@@ -75,6 +75,10 @@ export function drawMark(HGC: any, trackInfo: any, tile: any, model: GoslingTrac
         drawChartOutlines(HGC, trackInfo, model);
     }
 
+    // DEBUG
+    drawChartOutlines(HGC, trackInfo, model);
+    //
+
     /* spec */
     switch (model.spec().mark) {
         case 'point':

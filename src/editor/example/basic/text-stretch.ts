@@ -18,7 +18,7 @@ export const EXAMPLE_LOGO_LIKE: GoslingSpec = {
                 end: 'end',
                 bin: 16
             },
-            superpose: [
+            overlay: [
                 {
                     mark: 'bar',
                     y: { field: 'count', type: 'quantitative' }
@@ -70,7 +70,7 @@ export const EXAMPLE_LOGO_LIKE: GoslingSpec = {
                 end: 'end',
                 bin: 16
             },
-            superpose: [
+            overlay: [
                 {
                     mark: 'text',
                     y: { field: 'count', type: 'quantitative' },

@@ -40,7 +40,7 @@ export const EXMAPLE_BASIC_LINKING_CIRCULAR: GoslingSpec = {
             color: { field: 'sample', type: 'nominal' },
             stroke: { value: 'black' },
             strokeWidth: { value: 0.3 },
-            superpose: [
+            overlay: [
                 {},
                 {
                     mark: 'brush',

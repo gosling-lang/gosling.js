@@ -97,6 +97,7 @@ export function drawBar(trackInfo: any, tile: any, model: GoslingTrackModel) {
                 if (circular) {
                     const farR = trackOuterRadius - ((rowHeight - prevYEnd) / trackHeight) * trackRingSize;
                     const nearR = trackOuterRadius - ((rowHeight - y - prevYEnd) / trackHeight) * trackRingSize;
+
                     const sPos = cartesianToPolar(barStartX, trackWidth, nearR, cx, cy, startAngle, endAngle);
                     const startRad = valueToRadian(barStartX, trackWidth, startAngle, endAngle);
                     const endRad = valueToRadian(barStartX + barWidth, trackWidth, startAngle, endAngle);
@@ -156,6 +157,7 @@ export function drawBar(trackInfo: any, tile: any, model: GoslingTrackModel) {
                         ((rowPosition + rowHeight - barHeight - baselineY) / trackHeight) * trackRingSize;
                     const nearR =
                         trackOuterRadius - ((rowPosition + rowHeight - baselineY) / trackHeight) * trackRingSize;
+
                     const sPos = cartesianToPolar(barStartX, trackWidth, nearR, cx, cy, startAngle, endAngle);
                     const startRad = valueToRadian(barStartX, trackWidth, startAngle, endAngle);
                     const endRad = valueToRadian(barStartX + barWidth, trackWidth, startAngle, endAngle);

@@ -1,8 +1,8 @@
-import { BasicSingleTrack, GoslingSpec, SuperposedTrack, Track } from '../../../core/gosling.schema';
+import { SingleTrack, GoslingSpec, OverlaidTrack, Track } from '../../../core/gosling.schema';
 import { EXAMPLE_CYTOAND_HG38 } from '../cytoband-hg38';
 import { EXAMPLE_DATASETS } from './datasets';
 
-export const EXMAPLE_SEMANTIC_ZOOM_SEQ: BasicSingleTrack | SuperposedTrack = {
+export const EXMAPLE_SEMANTIC_ZOOM_SEQ: SingleTrack | OverlaidTrack = {
     data: {
         url: EXAMPLE_DATASETS.fasta,
         type: 'multivec',
@@ -13,7 +13,7 @@ export const EXMAPLE_SEMANTIC_ZOOM_SEQ: BasicSingleTrack | SuperposedTrack = {
         start: 'start',
         end: 'end'
     },
-    superpose: [
+    overlay: [
         {
             mark: 'bar',
             y: { field: 'count', type: 'quantitative' }
@@ -119,7 +119,7 @@ const EXAMPLE_SEMANTIC_ZOOMING_LINES: Track = {
     },
     y: { field: 'peak', type: 'quantitative' },
     color: { field: 'sample', type: 'nominal' },
-    superpose: [
+    overlay: [
         {
             visibility: [{ target: 'track', measure: 'height', threshold: 60, operation: 'lt' }]
         },
@@ -130,9 +130,9 @@ const EXAMPLE_SEMANTIC_ZOOMING_LINES: Track = {
     ]
 };
 
-export const EXAMPLE_SEMANTIC_ZOOMING_IDEOGRAM: BasicSingleTrack | SuperposedTrack = {
+export const EXAMPLE_SEMANTIC_ZOOMING_IDEOGRAM: SingleTrack | OverlaidTrack = {
     ...EXAMPLE_CYTOAND_HG38.tracks[0],
-    superpose: [
+    overlay: [
         {
             mark: 'rect',
             color: {
@@ -188,7 +188,7 @@ export const EXAMPLE_SEMANTIC_ZOOMING_IDEOGRAM: BasicSingleTrack | SuperposedTra
                 }
             ]
         },
-        ...(EXAMPLE_CYTOAND_HG38.tracks[0] as SuperposedTrack).superpose
+        ...(EXAMPLE_CYTOAND_HG38.tracks[0] as OverlaidTrack).overlay
     ],
     visibility: [
         {

@@ -29,7 +29,7 @@ export const GENOCAT_MIZBEE: GoslingSpec = {
                 ]
             },
             mark: 'rect',
-            superpose: [
+            overlay: [
                 {
                     x: { field: 'p1', type: 'genomic', axis: 'top', domain: { chromosome: '1' } },
                     xe: { field: 'p2', type: 'genomic' }
@@ -163,7 +163,7 @@ export const GENOCAT_MIZBEE: GoslingSpec = {
                 ]
             },
             mark: 'rect',
-            superpose: [
+            overlay: [
                 {
                     x: { field: 'p1', type: 'genomic' },
                     xe: { field: 'p2', type: 'genomic' }
@@ -260,7 +260,7 @@ export const GENOCAT_MIZBEE: GoslingSpec = {
                 sampleLength: 1000
             },
             mark: 'rect',
-            superpose: [
+            overlay: [
                 {
                     x: { field: 'p1', type: 'genomic' },
                     xe: { field: 'p2', type: 'genomic' }

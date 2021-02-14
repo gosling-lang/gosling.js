@@ -1,5 +1,5 @@
 import { goslingToHiGlass } from './gosling-to-higlass';
-import { BasicSingleTrack } from './gosling.schema';
+import { SingleTrack } from './gosling.schema';
 import { HiGlassModel } from './higlass-model';
 import { EXMAPLE_BASIC_MARKS } from '../editor/example/basic/basic-marks';
 
@@ -30,7 +30,7 @@ describe('Should convert gosling spec to higlass view config.', () => {
             model,
             {
                 // no spec
-            } as BasicSingleTrack,
+            } as SingleTrack,
             {
                 width: 1000,
                 height: 100,

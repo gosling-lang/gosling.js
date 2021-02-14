@@ -1,8 +1,8 @@
-import { BasicSingleTrack, GoslingSpec, SuperposedTrack, Track } from '../../../core/gosling.schema';
+import { SingleTrack, GoslingSpec, OverlaidTrack, Track } from '../../../core/gosling.schema';
 import { EXAMPLE_CYTOAND_HG38 } from '../cytoband-hg38';
 import { EXAMPLE_DATASETS } from './datasets';
 
-export const EXAMPLE_IDEOGRAM_TRACK: SuperposedTrack = {
+export const EXAMPLE_IDEOGRAM_TRACK: OverlaidTrack = {
     data: {
         url: 'https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/cytogenetic_band.csv',
         type: 'csv',
@@ -10,7 +10,7 @@ export const EXAMPLE_IDEOGRAM_TRACK: SuperposedTrack = {
         genomicFields: ['ISCN_start', 'ISCN_stop', 'Basepair_start', 'Basepair_stop'],
         quantitativeFields: ['Band', 'Density']
     },
-    superpose: [
+    overlay: [
         {
             mark: 'text',
             dataTransform: {
@@ -118,7 +118,7 @@ const ideogramTracks: Track[] = [];
         {
             ...EXAMPLE_CYTOAND_HG38.tracks[0],
             x: {
-                ...(EXAMPLE_CYTOAND_HG38.tracks[0] as BasicSingleTrack).x,
+                ...(EXAMPLE_CYTOAND_HG38.tracks[0] as SingleTrack).x,
                 domain: { chromosome: d.chr },
                 axis: undefined,
                 linkingID: `link-${i}`

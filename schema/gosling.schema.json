@@ -12,74 +12,21 @@
       ],
       "type": "string"
     },
-    "Arrangement": {
-      "additionalProperties": false,
-      "description": "Arrangement of multiple tracks",
-      "properties": {
-        "columnGaps": {
-          "anyOf": [
-            {
-              "type": "number"
-            },
-            {
-              "items": {
-                "type": "number"
-              },
-              "type": "array"
-            }
-          ]
+    "ArrangedViews": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/ParallelViews"
         },
-        "columnSizes": {
-          "anyOf": [
-            {
-              "type": "number"
-            },
-            {
-              "items": {
-                "type": "number"
-              },
-              "type": "array"
-            }
-          ]
+        {
+          "$ref": "#/definitions/SerialViews"
         },
-        "direction": {
-          "enum": [
-            "vertical",
-            "horizontal"
-          ],
-          "type": "string"
+        {
+          "$ref": "#/definitions/VConcatViews"
         },
-        "rowGaps": {
-          "anyOf": [
-            {
-              "type": "number"
-            },
-            {
-              "items": {
-                "type": "number"
-              },
-              "type": "array"
-            }
-          ]
-        },
-        "rowSizes": {
-          "anyOf": [
-            {
-              "type": "number"
-            },
-            {
-              "items": {
-                "type": "number"
-              },
-              "type": "array"
-            }
-          ]
-        },
-        "wrap": {
-          "type": "number"
+        {
+          "$ref": "#/definitions/HConcatViews"
         }
-      },
-      "type": "object"
+      ]
     },
     "Assembly": {
       "enum": [
@@ -237,176 +184,6 @@
         "url",
         "column",
         "value"
-      ],
-      "type": "object"
-    },
-    "BasicSingleTrack": {
-      "additionalProperties": false,
-      "description": "The baic form of a track definition",
-      "properties": {
-        "assembly": {
-          "$ref": "#/definitions/Assembly"
-        },
-        "chromSizes": {
-          "items": {
-            "items": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "number"
-              }
-            ],
-            "maxItems": 2,
-            "minItems": 2,
-            "type": "array"
-          },
-          "type": "array"
-        },
-        "color": {
-          "$ref": "#/definitions/Channel"
-        },
-        "column": {
-          "$ref": "#/definitions/Channel"
-        },
-        "data": {
-          "$ref": "#/definitions/DataDeep"
-        },
-        "dataTransform": {
-          "$ref": "#/definitions/DataTransform"
-        },
-        "description": {
-          "type": "string"
-        },
-        "endAngle": {
-          "type": "number"
-        },
-        "height": {
-          "type": "number"
-        },
-        "innerRadius": {
-          "type": "number"
-        },
-        "layout": {
-          "enum": [
-            "circular",
-            "linear"
-          ],
-          "type": "string"
-        },
-        "mark": {
-          "$ref": "#/definitions/Mark"
-        },
-        "opacity": {
-          "$ref": "#/definitions/Channel"
-        },
-        "outerRadius": {
-          "type": "number"
-        },
-        "overrideTemplate": {
-          "type": "boolean"
-        },
-        "row": {
-          "$ref": "#/definitions/Channel"
-        },
-        "size": {
-          "$ref": "#/definitions/Channel"
-        },
-        "span": {
-          "type": "number"
-        },
-        "stackY": {
-          "type": "boolean"
-        },
-        "startAngle": {
-          "type": "number"
-        },
-        "static": {
-          "type": "boolean"
-        },
-        "stretch": {
-          "type": "boolean"
-        },
-        "stroke": {
-          "$ref": "#/definitions/Channel"
-        },
-        "strokeWidth": {
-          "$ref": "#/definitions/Channel"
-        },
-        "style": {
-          "$ref": "#/definitions/TrackStyle"
-        },
-        "subtitle": {
-          "type": "string"
-        },
-        "superposeOnPreviousTrack": {
-          "type": "boolean"
-        },
-        "text": {
-          "$ref": "#/definitions/Channel"
-        },
-        "title": {
-          "type": "string"
-        },
-        "tooltip": {
-          "items": {
-            "additionalProperties": false,
-            "properties": {
-              "alt": {
-                "type": "string"
-              },
-              "field": {
-                "type": "string"
-              },
-              "type": {
-                "$ref": "#/definitions/FieldType"
-              }
-            },
-            "required": [
-              "field",
-              "type"
-            ],
-            "type": "object"
-          },
-          "type": "array"
-        },
-        "visibility": {
-          "items": {
-            "$ref": "#/definitions/VisibilityCondition"
-          },
-          "type": "array"
-        },
-        "width": {
-          "type": "number"
-        },
-        "x": {
-          "$ref": "#/definitions/Channel"
-        },
-        "x1": {
-          "$ref": "#/definitions/Channel"
-        },
-        "x1e": {
-          "$ref": "#/definitions/Channel"
-        },
-        "xe": {
-          "$ref": "#/definitions/Channel"
-        },
-        "y": {
-          "$ref": "#/definitions/Channel"
-        },
-        "y1": {
-          "$ref": "#/definitions/Channel"
-        },
-        "y1e": {
-          "$ref": "#/definitions/Channel"
-        },
-        "ye": {
-          "$ref": "#/definitions/Channel"
-        }
-      },
-      "required": [
-        "data",
-        "mark"
       ],
       "type": "object"
     },
@@ -596,8 +373,7 @@
         {
           "$ref": "#/definitions/VectorData"
         }
-      ],
-      "description": "Data specification"
+      ]
     },
     "DataTrack": {
       "additionalProperties": false,
@@ -606,27 +382,8 @@
         "assembly": {
           "$ref": "#/definitions/Assembly"
         },
-        "chromSizes": {
-          "items": {
-            "items": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "number"
-              }
-            ],
-            "maxItems": 2,
-            "minItems": 2,
-            "type": "array"
-          },
-          "type": "array"
-        },
         "data": {
           "$ref": "#/definitions/DataDeep"
-        },
-        "description": {
-          "type": "string"
         },
         "endAngle": {
           "type": "number"
@@ -638,17 +395,13 @@
           "type": "number"
         },
         "layout": {
-          "enum": [
-            "circular",
-            "linear"
-          ],
-          "type": "string"
+          "$ref": "#/definitions/Layout"
         },
         "outerRadius": {
           "type": "number"
         },
-        "span": {
-          "type": "number"
+        "overlayOnPreviousTrack": {
+          "type": "boolean"
         },
         "startAngle": {
           "type": "number"
@@ -659,9 +412,6 @@
         "subtitle": {
           "type": "string"
         },
-        "superposeOnPreviousTrack": {
-          "type": "boolean"
-        },
         "title": {
           "type": "string"
         },
@@ -670,7 +420,9 @@
         }
       },
       "required": [
-        "data"
+        "data",
+        "height",
+        "width"
       ],
       "type": "object"
     },
@@ -1141,65 +893,260 @@
       "type": "object"
     },
     "GoslingSpec": {
-      "additionalProperties": false,
-      "description": "Root-level specification",
-      "properties": {
-        "arrangement": {
-          "$ref": "#/definitions/Arrangement"
+      "anyOf": [
+        {
+          "additionalProperties": false,
+          "properties": {
+            "assembly": {
+              "$ref": "#/definitions/Assembly"
+            },
+            "centerHole": {
+              "type": "number"
+            },
+            "description": {
+              "type": "string"
+            },
+            "layout": {
+              "$ref": "#/definitions/Layout"
+            },
+            "static": {
+              "type": "boolean"
+            },
+            "subtitle": {
+              "type": "string"
+            },
+            "title": {
+              "type": "string"
+            },
+            "tracks": {
+              "items": {
+                "$ref": "#/definitions/Track"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "tracks"
+          ],
+          "type": "object"
         },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "assembly": {
+              "$ref": "#/definitions/Assembly"
+            },
+            "centerHole": {
+              "type": "number"
+            },
+            "description": {
+              "type": "string"
+            },
+            "layout": {
+              "$ref": "#/definitions/Layout"
+            },
+            "parallelViews": {
+              "items": {
+                "anyOf": [
+                  {
+                    "$ref": "#/definitions/View"
+                  },
+                  {
+                    "$ref": "#/definitions/ArrangedViews"
+                  }
+                ]
+              },
+              "type": "array"
+            },
+            "spacing": {
+              "type": "number"
+            },
+            "static": {
+              "type": "boolean"
+            },
+            "subtitle": {
+              "type": "string"
+            },
+            "title": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "parallelViews"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "assembly": {
+              "$ref": "#/definitions/Assembly"
+            },
+            "centerHole": {
+              "type": "number"
+            },
+            "description": {
+              "type": "string"
+            },
+            "layout": {
+              "$ref": "#/definitions/Layout"
+            },
+            "serialViews": {
+              "items": {
+                "anyOf": [
+                  {
+                    "$ref": "#/definitions/View"
+                  },
+                  {
+                    "$ref": "#/definitions/ArrangedViews"
+                  }
+                ]
+              },
+              "type": "array"
+            },
+            "spacing": {
+              "type": "number"
+            },
+            "static": {
+              "type": "boolean"
+            },
+            "subtitle": {
+              "type": "string"
+            },
+            "title": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "serialViews"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "assembly": {
+              "$ref": "#/definitions/Assembly"
+            },
+            "centerHole": {
+              "type": "number"
+            },
+            "description": {
+              "type": "string"
+            },
+            "layout": {
+              "$ref": "#/definitions/Layout"
+            },
+            "spacing": {
+              "type": "number"
+            },
+            "static": {
+              "type": "boolean"
+            },
+            "subtitle": {
+              "type": "string"
+            },
+            "title": {
+              "type": "string"
+            },
+            "vconcatViews": {
+              "items": {
+                "anyOf": [
+                  {
+                    "$ref": "#/definitions/View"
+                  },
+                  {
+                    "$ref": "#/definitions/ArrangedViews"
+                  }
+                ]
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "vconcatViews"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "assembly": {
+              "$ref": "#/definitions/Assembly"
+            },
+            "centerHole": {
+              "type": "number"
+            },
+            "description": {
+              "type": "string"
+            },
+            "hconcatViews": {
+              "items": {
+                "anyOf": [
+                  {
+                    "$ref": "#/definitions/View"
+                  },
+                  {
+                    "$ref": "#/definitions/ArrangedViews"
+                  }
+                ]
+              },
+              "type": "array"
+            },
+            "layout": {
+              "$ref": "#/definitions/Layout"
+            },
+            "spacing": {
+              "type": "number"
+            },
+            "static": {
+              "type": "boolean"
+            },
+            "subtitle": {
+              "type": "string"
+            },
+            "title": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "hconcatViews"
+          ],
+          "type": "object"
+        }
+      ]
+    },
+    "HConcatViews": {
+      "additionalProperties": false,
+      "properties": {
         "assembly": {
           "$ref": "#/definitions/Assembly"
         },
-        "chromSizes": {
+        "hconcatViews": {
           "items": {
-            "items": [
+            "anyOf": [
               {
-                "type": "string"
+                "$ref": "#/definitions/View"
               },
               {
-                "type": "number"
+                "$ref": "#/definitions/ArrangedViews"
               }
-            ],
-            "maxItems": 2,
-            "minItems": 2,
-            "type": "array"
+            ]
           },
           "type": "array"
         },
-        "description": {
-          "type": "string"
-        },
-        "height": {
-          "type": "number"
-        },
         "layout": {
-          "enum": [
-            "linear",
-            "circular"
-          ],
-          "type": "string"
+          "$ref": "#/definitions/Layout"
+        },
+        "spacing": {
+          "type": "number"
         },
         "static": {
           "type": "boolean"
-        },
-        "subtitle": {
-          "type": "string"
-        },
-        "title": {
-          "type": "string"
-        },
-        "tracks": {
-          "items": {
-            "$ref": "#/definitions/Track"
-          },
-          "type": "array"
-        },
-        "width": {
-          "type": "number"
         }
       },
       "required": [
-        "tracks"
+        "hconcatViews"
       ],
       "type": "object"
     },
@@ -1282,6 +1229,13 @@
       ],
       "type": "object"
     },
+    "Layout": {
+      "enum": [
+        "linear",
+        "circular"
+      ],
+      "type": "string"
+    },
     "LogicalOperation": {
       "enum": [
         "less-than",
@@ -1307,8 +1261,7 @@
         {
           "$ref": "#/definitions/MarkDeep"
         }
-      ],
-      "description": "Mark"
+      ]
     },
     "MarkBind": {
       "additionalProperties": false,
@@ -1347,8 +1300,7 @@
         {
           "$ref": "#/definitions/MarkWithStyle"
         }
-      ],
-      "description": "Glyph"
+      ]
     },
     "MarkGlyph": {
       "additionalProperties": false,
@@ -1542,130 +1494,12 @@
       ],
       "type": "object"
     },
-    "PREDEFINED_COLORS": {
-      "enum": [
-        "viridis",
-        "grey",
-        "spectral",
-        "warm",
-        "cividis",
-        "bupu",
-        "rdbu"
-      ],
-      "type": "string"
-    },
-    "Range": {
-      "anyOf": [
-        {
-          "items": {
-            "type": "string"
-          },
-          "type": "array"
-        },
-        {
-          "items": {
-            "type": "number"
-          },
-          "type": "array"
-        },
-        {
-          "$ref": "#/definitions/PREDEFINED_COLORS"
-        }
-      ]
-    },
-    "RangeFilter": {
-      "additionalProperties": false,
-      "properties": {
-        "field": {
-          "type": "string"
-        },
-        "inRange": {
-          "items": {
-            "type": "number"
-          },
-          "type": "array"
-        },
-        "not": {
-          "type": "boolean"
-        }
-      },
-      "required": [
-        "field",
-        "inRange"
-      ],
-      "type": "object"
-    },
-    "SingleTrack": {
-      "$ref": "#/definitions/BasicSingleTrack"
-    },
-    "SizeVisibilityCondition": {
-      "additionalProperties": false,
-      "properties": {
-        "conditionPadding": {
-          "type": "number"
-        },
-        "measure": {
-          "enum": [
-            "width",
-            "height"
-          ],
-          "type": "string"
-        },
-        "operation": {
-          "$ref": "#/definitions/LogicalOperation"
-        },
-        "target": {
-          "enum": [
-            "track",
-            "mark"
-          ],
-          "type": "string"
-        },
-        "threshold": {
-          "anyOf": [
-            {
-              "type": "number"
-            },
-            {
-              "const": "|xe-x|",
-              "type": "string"
-            }
-          ]
-        },
-        "transitionPadding": {
-          "type": "number"
-        }
-      },
-      "required": [
-        "measure",
-        "operation",
-        "target",
-        "threshold"
-      ],
-      "type": "object"
-    },
-    "SuperposedTrack": {
+    "OverlaidTrack": {
       "additionalProperties": false,
       "description": "Superposing multiple tracks.",
       "properties": {
         "assembly": {
           "$ref": "#/definitions/Assembly"
-        },
-        "chromSizes": {
-          "items": {
-            "items": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "number"
-              }
-            ],
-            "maxItems": 2,
-            "minItems": 2,
-            "type": "array"
-          },
-          "type": "array"
         },
         "color": {
           "$ref": "#/definitions/Channel"
@@ -1679,9 +1513,6 @@
         "dataTransform": {
           "$ref": "#/definitions/DataTransform"
         },
-        "description": {
-          "type": "string"
-        },
         "endAngle": {
           "type": "number"
         },
@@ -1692,11 +1523,7 @@
           "type": "number"
         },
         "layout": {
-          "enum": [
-            "circular",
-            "linear"
-          ],
-          "type": "string"
+          "$ref": "#/definitions/Layout"
         },
         "mark": {
           "$ref": "#/definitions/Mark"
@@ -1707,64 +1534,12 @@
         "outerRadius": {
           "type": "number"
         },
-        "overrideTemplate": {
-          "type": "boolean"
-        },
-        "row": {
-          "$ref": "#/definitions/Channel"
-        },
-        "size": {
-          "$ref": "#/definitions/Channel"
-        },
-        "span": {
-          "type": "number"
-        },
-        "stackY": {
-          "type": "boolean"
-        },
-        "startAngle": {
-          "type": "number"
-        },
-        "static": {
-          "type": "boolean"
-        },
-        "stretch": {
-          "type": "boolean"
-        },
-        "stroke": {
-          "$ref": "#/definitions/Channel"
-        },
-        "strokeWidth": {
-          "$ref": "#/definitions/Channel"
-        },
-        "style": {
-          "$ref": "#/definitions/TrackStyle"
-        },
-        "subtitle": {
-          "type": "string"
-        },
-        "superpose": {
+        "overlay": {
           "items": {
             "additionalProperties": false,
             "properties": {
               "assembly": {
                 "$ref": "#/definitions/Assembly"
-              },
-              "chromSizes": {
-                "items": {
-                  "items": [
-                    {
-                      "type": "string"
-                    },
-                    {
-                      "type": "number"
-                    }
-                  ],
-                  "maxItems": 2,
-                  "minItems": 2,
-                  "type": "array"
-                },
-                "type": "array"
               },
               "color": {
                 "$ref": "#/definitions/Channel"
@@ -1778,9 +1553,6 @@
               "dataTransform": {
                 "$ref": "#/definitions/DataTransform"
               },
-              "description": {
-                "type": "string"
-              },
               "endAngle": {
                 "type": "number"
               },
@@ -1791,11 +1563,7 @@
                 "type": "number"
               },
               "layout": {
-                "enum": [
-                  "circular",
-                  "linear"
-                ],
-                "type": "string"
+                "$ref": "#/definitions/Layout"
               },
               "mark": {
                 "$ref": "#/definitions/Mark"
@@ -1806,6 +1574,9 @@
               "outerRadius": {
                 "type": "number"
               },
+              "overlayOnPreviousTrack": {
+                "type": "boolean"
+              },
               "overrideTemplate": {
                 "type": "boolean"
               },
@@ -1814,9 +1585,6 @@
               },
               "size": {
                 "$ref": "#/definitions/Channel"
-              },
-              "span": {
-                "type": "number"
               },
               "stackY": {
                 "type": "boolean"
@@ -1841,9 +1609,6 @@
               },
               "subtitle": {
                 "type": "string"
-              },
-              "superposeOnPreviousTrack": {
-                "type": "boolean"
               },
               "text": {
                 "$ref": "#/definitions/Channel"
@@ -1911,8 +1676,41 @@
           },
           "type": "array"
         },
-        "superposeOnPreviousTrack": {
+        "overlayOnPreviousTrack": {
           "type": "boolean"
+        },
+        "overrideTemplate": {
+          "type": "boolean"
+        },
+        "row": {
+          "$ref": "#/definitions/Channel"
+        },
+        "size": {
+          "$ref": "#/definitions/Channel"
+        },
+        "stackY": {
+          "type": "boolean"
+        },
+        "startAngle": {
+          "type": "number"
+        },
+        "static": {
+          "type": "boolean"
+        },
+        "stretch": {
+          "type": "boolean"
+        },
+        "stroke": {
+          "$ref": "#/definitions/Channel"
+        },
+        "strokeWidth": {
+          "$ref": "#/definitions/Channel"
+        },
+        "style": {
+          "$ref": "#/definitions/TrackStyle"
+        },
+        "subtitle": {
+          "type": "string"
         },
         "text": {
           "$ref": "#/definitions/Channel"
@@ -1977,7 +1775,321 @@
         }
       },
       "required": [
-        "superpose"
+        "height",
+        "overlay",
+        "width"
+      ],
+      "type": "object"
+    },
+    "PREDEFINED_COLORS": {
+      "enum": [
+        "viridis",
+        "grey",
+        "spectral",
+        "warm",
+        "cividis",
+        "bupu",
+        "rdbu"
+      ],
+      "type": "string"
+    },
+    "ParallelViews": {
+      "additionalProperties": false,
+      "properties": {
+        "assembly": {
+          "$ref": "#/definitions/Assembly"
+        },
+        "layout": {
+          "$ref": "#/definitions/Layout"
+        },
+        "parallelViews": {
+          "items": {
+            "anyOf": [
+              {
+                "$ref": "#/definitions/View"
+              },
+              {
+                "$ref": "#/definitions/ArrangedViews"
+              }
+            ]
+          },
+          "type": "array"
+        },
+        "spacing": {
+          "type": "number"
+        },
+        "static": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "parallelViews"
+      ],
+      "type": "object"
+    },
+    "Range": {
+      "anyOf": [
+        {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        {
+          "items": {
+            "type": "number"
+          },
+          "type": "array"
+        },
+        {
+          "$ref": "#/definitions/PREDEFINED_COLORS"
+        }
+      ]
+    },
+    "RangeFilter": {
+      "additionalProperties": false,
+      "properties": {
+        "field": {
+          "type": "string"
+        },
+        "inRange": {
+          "items": {
+            "type": "number"
+          },
+          "type": "array"
+        },
+        "not": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "field",
+        "inRange"
+      ],
+      "type": "object"
+    },
+    "SerialViews": {
+      "additionalProperties": false,
+      "properties": {
+        "assembly": {
+          "$ref": "#/definitions/Assembly"
+        },
+        "layout": {
+          "$ref": "#/definitions/Layout"
+        },
+        "serialViews": {
+          "items": {
+            "anyOf": [
+              {
+                "$ref": "#/definitions/View"
+              },
+              {
+                "$ref": "#/definitions/ArrangedViews"
+              }
+            ]
+          },
+          "type": "array"
+        },
+        "spacing": {
+          "type": "number"
+        },
+        "static": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "serialViews"
+      ],
+      "type": "object"
+    },
+    "SingleTrack": {
+      "additionalProperties": false,
+      "properties": {
+        "assembly": {
+          "$ref": "#/definitions/Assembly"
+        },
+        "color": {
+          "$ref": "#/definitions/Channel"
+        },
+        "column": {
+          "$ref": "#/definitions/Channel"
+        },
+        "data": {
+          "$ref": "#/definitions/DataDeep"
+        },
+        "dataTransform": {
+          "$ref": "#/definitions/DataTransform"
+        },
+        "endAngle": {
+          "type": "number"
+        },
+        "height": {
+          "type": "number"
+        },
+        "innerRadius": {
+          "type": "number"
+        },
+        "layout": {
+          "$ref": "#/definitions/Layout"
+        },
+        "mark": {
+          "$ref": "#/definitions/Mark"
+        },
+        "opacity": {
+          "$ref": "#/definitions/Channel"
+        },
+        "outerRadius": {
+          "type": "number"
+        },
+        "overlayOnPreviousTrack": {
+          "type": "boolean"
+        },
+        "overrideTemplate": {
+          "type": "boolean"
+        },
+        "row": {
+          "$ref": "#/definitions/Channel"
+        },
+        "size": {
+          "$ref": "#/definitions/Channel"
+        },
+        "stackY": {
+          "type": "boolean"
+        },
+        "startAngle": {
+          "type": "number"
+        },
+        "static": {
+          "type": "boolean"
+        },
+        "stretch": {
+          "type": "boolean"
+        },
+        "stroke": {
+          "$ref": "#/definitions/Channel"
+        },
+        "strokeWidth": {
+          "$ref": "#/definitions/Channel"
+        },
+        "style": {
+          "$ref": "#/definitions/TrackStyle"
+        },
+        "subtitle": {
+          "type": "string"
+        },
+        "text": {
+          "$ref": "#/definitions/Channel"
+        },
+        "title": {
+          "type": "string"
+        },
+        "tooltip": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "alt": {
+                "type": "string"
+              },
+              "field": {
+                "type": "string"
+              },
+              "type": {
+                "$ref": "#/definitions/FieldType"
+              }
+            },
+            "required": [
+              "field",
+              "type"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "visibility": {
+          "items": {
+            "$ref": "#/definitions/VisibilityCondition"
+          },
+          "type": "array"
+        },
+        "width": {
+          "type": "number"
+        },
+        "x": {
+          "$ref": "#/definitions/Channel"
+        },
+        "x1": {
+          "$ref": "#/definitions/Channel"
+        },
+        "x1e": {
+          "$ref": "#/definitions/Channel"
+        },
+        "xe": {
+          "$ref": "#/definitions/Channel"
+        },
+        "y": {
+          "$ref": "#/definitions/Channel"
+        },
+        "y1": {
+          "$ref": "#/definitions/Channel"
+        },
+        "y1e": {
+          "$ref": "#/definitions/Channel"
+        },
+        "ye": {
+          "$ref": "#/definitions/Channel"
+        }
+      },
+      "required": [
+        "data",
+        "height",
+        "mark",
+        "width"
+      ],
+      "type": "object"
+    },
+    "SizeVisibilityCondition": {
+      "additionalProperties": false,
+      "properties": {
+        "conditionPadding": {
+          "type": "number"
+        },
+        "measure": {
+          "enum": [
+            "width",
+            "height"
+          ],
+          "type": "string"
+        },
+        "operation": {
+          "$ref": "#/definitions/LogicalOperation"
+        },
+        "target": {
+          "enum": [
+            "track",
+            "mark"
+          ],
+          "type": "string"
+        },
+        "threshold": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "const": "|xe-x|",
+              "type": "string"
+            }
+          ]
+        },
+        "transitionPadding": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "measure",
+        "operation",
+        "target",
+        "threshold"
       ],
       "type": "object"
     },
@@ -1987,7 +2099,7 @@
           "$ref": "#/definitions/SingleTrack"
         },
         {
-          "$ref": "#/definitions/SuperposedTrack"
+          "$ref": "#/definitions/OverlaidTrack"
         },
         {
           "$ref": "#/definitions/DataTrack"
@@ -2089,6 +2201,40 @@
       },
       "type": "object"
     },
+    "VConcatViews": {
+      "additionalProperties": false,
+      "properties": {
+        "assembly": {
+          "$ref": "#/definitions/Assembly"
+        },
+        "layout": {
+          "$ref": "#/definitions/Layout"
+        },
+        "spacing": {
+          "type": "number"
+        },
+        "static": {
+          "type": "boolean"
+        },
+        "vconcatViews": {
+          "items": {
+            "anyOf": [
+              {
+                "$ref": "#/definitions/View"
+              },
+              {
+                "$ref": "#/definitions/ArrangedViews"
+              }
+            ]
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "vconcatViews"
+      ],
+      "type": "object"
+    },
     "VectorData": {
       "additionalProperties": false,
       "properties": {
@@ -2120,6 +2266,30 @@
         "url",
         "column",
         "value"
+      ],
+      "type": "object"
+    },
+    "View": {
+      "additionalProperties": false,
+      "properties": {
+        "assembly": {
+          "$ref": "#/definitions/Assembly"
+        },
+        "layout": {
+          "$ref": "#/definitions/Layout"
+        },
+        "static": {
+          "type": "boolean"
+        },
+        "tracks": {
+          "items": {
+            "$ref": "#/definitions/Track"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "tracks"
       ],
       "type": "object"
     },

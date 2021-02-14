@@ -1,12 +1,4 @@
-import {
-    ChannelDeep,
-    PREDEFINED_COLORS,
-    ChannelTypes,
-    ChannelValue,
-    BasicSingleTrack,
-    SingleTrack,
-    Channel
-} from './gosling.schema';
+import { ChannelDeep, PREDEFINED_COLORS, ChannelTypes, ChannelValue, SingleTrack, Channel } from './gosling.schema';
 import { validateTrack, getGenomicChannelFromTrack, getGenomicChannelKeyFromTrack } from './utils/validate';
 import {
     ScaleLinear,
@@ -49,8 +41,8 @@ export type ScaleType =
 
 export class GoslingTrackModel {
     /* spec */
-    private specOriginal: BasicSingleTrack; // original spec of users
-    private specComplete: BasicSingleTrack; // processed spec, being used in visualizations
+    private specOriginal: SingleTrack; // original spec of users
+    private specComplete: SingleTrack; // processed spec, being used in visualizations
 
     /* high-level configuration */
     private isCircular: boolean;
@@ -100,11 +92,11 @@ export class GoslingTrackModel {
         // console.log('corrected track', this.spec());
     }
 
-    public originalSpec(): BasicSingleTrack {
+    public originalSpec(): SingleTrack {
         return this.specOriginal;
     }
 
-    public spec(): BasicSingleTrack {
+    public spec(): SingleTrack {
         return this.specComplete;
     }
 
@@ -119,7 +111,7 @@ export class GoslingTrackModel {
     /**
      * Fill the missing options with default values or with the values calculated based on the data.
      */
-    private generateCompleteSpec(spec: BasicSingleTrack) {
+    private generateCompleteSpec(spec: SingleTrack) {
         if (!spec.width || !spec.height) {
             // This shouldn't be reached.
             console.warn('Size of track is not determined yet.');
@@ -170,7 +162,7 @@ export class GoslingTrackModel {
      * TODO: This is experimental. For bar charts, for example, additional care should be taken to correctly flip the visual marks.
      * Flip the x or y scales when `flip` options are used.
      */
-    private flipRanges(spec: BasicSingleTrack) {
+    private flipRanges(spec: SingleTrack) {
         if (IsChannelDeep(spec.x) && spec.x.flip && Array.isArray(spec.x.range)) {
             spec.x.range = spec.x.range.reverse();
         }
@@ -449,7 +441,7 @@ export class GoslingTrackModel {
     /**
      * Set missing `range`, `domain`, and/or `value` of each channel by looking into data.
      */
-    public addScaleMaterials(spec: BasicSingleTrack) {
+    public addScaleMaterials(spec: SingleTrack) {
         const data = this.data();
 
         const genomicChannel = this.getGenomicChannel();

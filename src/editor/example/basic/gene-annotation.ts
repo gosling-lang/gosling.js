@@ -18,7 +18,7 @@ export const HIGLASS_GENE_ANNOTATION: Track = {
             { index: 13, name: 'end' }
         ]
     },
-    superpose: [
+    overlay: [
         {
             dataTransform: {
                 filter: [
@@ -168,7 +168,7 @@ export const EXAMPLE_GENE_ANNOTATION: GoslingSpec = {
                     { index: 13, name: 'end' }
                 ]
             },
-            superpose: [
+            overlay: [
                 {
                     dataTransform: {
                         filter: [{ field: 'type', oneOf: ['gene'] }]
@@ -281,7 +281,7 @@ export const EXAMPLE_GENE_ANNOTATION: GoslingSpec = {
                     { index: 13, name: 'end' }
                 ]
             },
-            superpose: [
+            overlay: [
                 {
                     dataTransform: {
                         filter: [{ field: 'type', oneOf: ['gene'] }]
@@ -409,7 +409,7 @@ export const EXAMPLE_GENE_ANNOTATION: GoslingSpec = {
                     { index: 13, name: 'end' }
                 ]
             },
-            superpose: [
+            overlay: [
                 {
                     dataTransform: {
                         filter: [{ field: 'type', oneOf: ['gene'] }]
@@ -528,7 +528,7 @@ export const EXAMPLE_GENE_ANNOTATION: GoslingSpec = {
                     { index: 13, name: 'end' }
                 ]
             },
-            superpose: [
+            overlay: [
                 {
                     dataTransform: {
                         filter: [{ field: 'type', oneOf: ['gene'] }]
@@ -611,7 +611,7 @@ export const EXAMPLE_GENE_ANNOTATION: GoslingSpec = {
                     { index: 13, name: 'end' }
                 ]
             },
-            superpose: [
+            overlay: [
                 {
                     dataTransform: {
                         filter: [{ field: 'type', oneOf: ['gene'] }]

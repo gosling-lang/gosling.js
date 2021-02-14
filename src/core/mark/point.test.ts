@@ -3,13 +3,13 @@ import { CHANNEL_DEFAULTS } from '../channel';
 import { GoslingTrackModel } from '../gosling-track-model';
 import { Track } from '../gosling.schema';
 import { HIGLASS_AXIS_SIZE } from '../higlass-model';
-import { BasicSingleTrack } from '../gosling.schema';
+import { SingleTrack } from '../gosling.schema';
 import { drawPoint } from './point';
 
 describe('Rendering Point', () => {
     const g = new PIXI.Graphics();
     it('Simple', () => {
-        const t: BasicSingleTrack = {
+        const t: SingleTrack = {
             data: { type: 'csv', url: '' },
             mark: 'point',
             x: { field: 'x', type: 'genomic' },

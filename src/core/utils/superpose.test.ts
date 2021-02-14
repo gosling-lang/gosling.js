@@ -1,4 +1,4 @@
-import { SuperposedTrack } from '../gosling.schema';
+import { OverlaidTrack } from '../gosling.schema';
 import { IsChannelDeep } from '../gosling.schema.guards';
 import { resolveSuperposedTracks, spreadTracksByData } from './superpose';
 
@@ -13,14 +13,14 @@ describe('Should handle superposition options correctly', () => {
     });
     it('Should resolve `superpose` options when the array length is one', () => {
         const tracks = resolveSuperposedTracks({
-            superpose: [{ mark: 'line' }]
+            overlay: [{ mark: 'line' }]
         });
         expect(tracks).toHaveLength(1);
         expect(tracks[0].mark).toBe('line');
     });
     it('Should resolve `superpose` options', () => {
         const tracks = resolveSuperposedTracks({
-            superpose: [{ mark: 'line' }, { mark: 'point' }]
+            overlay: [{ mark: 'line' }, { mark: 'point' }]
         });
         expect(tracks).toHaveLength(2);
         expect(tracks[0].mark).toBe('line');
@@ -28,7 +28,7 @@ describe('Should handle superposition options correctly', () => {
     });
     it('Should correct several options for consistency', () => {
         const tracks = resolveSuperposedTracks({
-            superpose: [{ x: { axis: 'top' } }, { x: { axis: 'bottom' } }]
+            overlay: [{ x: { axis: 'top' } }, { x: { axis: 'bottom' } }]
         });
         expect(IsChannelDeep(tracks[0].x) && tracks[0].x.axis === 'top').toBe(true);
         expect(IsChannelDeep(tracks[0].x) && IsChannelDeep(tracks[1].x) && tracks[0].x.axis === tracks[1].x.axis).toBe(
@@ -43,29 +43,29 @@ describe('Spread Tracks By Data', () => {
         expect(spread).toHaveLength(1);
     });
     it('superpose: []', () => {
-        const spread = spreadTracksByData([{ superpose: [] }]);
+        const spread = spreadTracksByData([{ overlay: [] }]);
         expect(spread).toHaveLength(1);
     });
     it('superpose: [{}]', () => {
-        const spread = spreadTracksByData([{ superpose: [{}] }]);
+        const spread = spreadTracksByData([{ overlay: [{}] }]);
         expect(spread).toHaveLength(1);
     });
     it('superpose: [{ data }]', () => {
-        const base = { superpose: [{ data: { type: 'csv', url: '' } }] } as SuperposedTrack;
+        const base = { overlay: [{ data: { type: 'csv', url: '' } }] } as OverlaidTrack;
         const spread = spreadTracksByData([base]);
         expect(spread).toHaveLength(1);
         expect(spread[0]).toEqual(base); // The length is zero, so no point to spread
     });
     it('superpose: [{}, { data }]', () => {
-        const spread = spreadTracksByData([{ superpose: [{}, { data: { type: 'csv', url: '' } }] }]);
+        const spread = spreadTracksByData([{ overlay: [{}, { data: { type: 'csv', url: '' } }] }]);
         expect(spread).toHaveLength(2);
         expect('data' in spread[1]).toBe(true); // Any superposed tracks w/ data/metadata will be spread
-        expect(spread[1].superposeOnPreviousTrack).toBe(true); // Any spread tracks will have `superposeOnPreviousTrack` flags
+        expect(spread[1].overlayOnPreviousTrack).toBe(true); // Any spread tracks will have `superposeOnPreviousTrack` flags
     });
     it('superpose: [{}, { data }, { data }]', () => {
         const spread = spreadTracksByData([
             {
-                superpose: [
+                overlay: [
                     {},
                     { data: { type: 'csv', url: '' } },
                     { data: { type: 'vector', url: '', column: 'c', value: 'p' } }
@@ -75,7 +75,7 @@ describe('Spread Tracks By Data', () => {
         expect(spread).toHaveLength(3);
         expect('data' in spread[1]).toBe(true);
         expect('data' in spread[2]).toBe(true);
-        expect(spread[1].superposeOnPreviousTrack).toBe(true); // Any spread tracks will have `superposeOnPreviousTrack` flags
-        expect(spread[2].superposeOnPreviousTrack).toBe(true); // Any spread tracks will have `superposeOnPreviousTrack` flags
+        expect(spread[1].overlayOnPreviousTrack).toBe(true); // Any spread tracks will have `superposeOnPreviousTrack` flags
+        expect(spread[2].overlayOnPreviousTrack).toBe(true); // Any spread tracks will have `superposeOnPreviousTrack` flags
     });
 });

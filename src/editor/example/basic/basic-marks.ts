@@ -1,4 +1,4 @@
-import { BasicSingleTrack, GoslingSpec, Track } from '../../../core/gosling.schema';
+import { SingleTrack, GoslingSpec, Track } from '../../../core/gosling.schema';
 import { EXAMPLE_DATASETS } from './datasets';
 
 export const EXAMPLE_HEATMAP: Track = {
@@ -21,7 +21,7 @@ export const EXAMPLE_HEATMAP: Track = {
     color: { field: 'peak', type: 'quantitative' }
 };
 
-export const EXAMPLE_BASIC_AREA: BasicSingleTrack = {
+export const EXAMPLE_BASIC_AREA: SingleTrack = {
     data: {
         url: EXAMPLE_DATASETS.multivec,
         type: 'multivec',

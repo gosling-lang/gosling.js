@@ -16,7 +16,7 @@ export const EXAMPLE_LINKS: GoslingSpec = {
                 chromosomeField: 'c2',
                 genomicFields: ['s1', 'e1', 's2', 'e2']
             },
-            superpose: [
+            overlay: [
                 {
                     mark: 'link',
                     x: {
@@ -55,7 +55,7 @@ export const EXAMPLE_LINKS: GoslingSpec = {
                     { name: 'end', index: 2 }
                 ]
             },
-            superpose: [
+            overlay: [
                 {
                     mark: 'link',
                     x: {

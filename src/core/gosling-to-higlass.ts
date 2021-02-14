@@ -82,7 +82,7 @@ export function goslingToHiGlass(
             };
         }
 
-        if (gmTrack.superposeOnPreviousTrack) {
+        if (gmTrack.overlayOnPreviousTrack) {
             hgModel.addTrackToCombined(hgTrack);
         } else {
             hgModel

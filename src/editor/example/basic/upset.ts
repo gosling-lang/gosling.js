@@ -26,7 +26,7 @@ export const EXAMPLE_UPSET: GoslingSpec = {
         {
             // title: 'Overview',
             ...JSON.parse(JSON.stringify(EXAMPLE_SEMANTIC_ZOOMING_IDEOGRAM).replace('/gray/g', '#3B3B3B')),
-            superpose: [
+            overlay: [
                 ...(JSON.parse(JSON.stringify(EXAMPLE_SEMANTIC_ZOOMING_IDEOGRAM).replace('/gray/g', '#3B3B3B')) as any)
                     .superpose,
                 {
@@ -40,7 +40,7 @@ export const EXAMPLE_UPSET: GoslingSpec = {
         {
             data: MULTIVEC_DATA,
             dataTransform: { filter: [{ field: 'peak', inRange: [0, 0], not: true }] },
-            superpose: [
+            overlay: [
                 { mark: 'bar' }
                 // { mark: 'text' }
             ],

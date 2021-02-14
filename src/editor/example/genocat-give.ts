@@ -27,7 +27,7 @@ export const GENOCAT_GIVE: GoslingSpec = {
                     { index: 13, name: 'end' }
                 ]
             },
-            superpose: [
+            overlay: [
                 {
                     dataTransform: {
                         filter: [
@@ -128,7 +128,7 @@ export const GENOCAT_GIVE: GoslingSpec = {
                 chromosomeField: 'Chromosome',
                 genomicFields: ['chromStart', 'chromEnd']
             },
-            superpose: [
+            overlay: [
                 {
                     mark: 'rect',
                     dataTransform: {
@@ -231,7 +231,7 @@ export const GENOCAT_GIVE: GoslingSpec = {
                 chromosomeField: 'Chromosome',
                 genomicFields: ['chromStart', 'chromEnd']
             },
-            superpose: [
+            overlay: [
                 {
                     mark: 'rect',
                     dataTransform: {
@@ -387,7 +387,7 @@ export const GENOCAT_GIVE: GoslingSpec = {
                     { index: 13, name: 'end' }
                 ]
             },
-            superpose: [
+            overlay: [
                 {
                     dataTransform: {
                         filter: [
