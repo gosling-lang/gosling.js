@@ -1,7 +1,7 @@
 import { OverlaidTrack } from '../../core/gosling.schema';
 import { GOSLING_PUBLIC_DATA } from './gosling-data';
 
-export const ScalableSequenceTrack: OverlaidTrack = {
+const ScalableSequenceTrack: OverlaidTrack = {
     data: {
         url: GOSLING_PUBLIC_DATA.fasta,
         type: 'multivec',
@@ -93,7 +93,7 @@ export const ScalableSequenceTrack: OverlaidTrack = {
     height: 80
 };
 
-export const ScalableCytoBand: OverlaidTrack = {
+const ScalableCytoBand: OverlaidTrack = {
     data: {
         url:
             'https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/UCSC.HG38.Human.CytoBandIdeogram.csv',
@@ -170,4 +170,9 @@ export const ScalableCytoBand: OverlaidTrack = {
     },
     width: 400,
     height: 25
+};
+
+export const EXAMPLE_TRACK_SEMANTIC_ZOOM = {
+    sequence: ScalableSequenceTrack,
+    cytoband: ScalableCytoBand
 };

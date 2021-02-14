@@ -5,7 +5,9 @@ import {
     DEFAULT_INNER_HOLE_PROP,
     DEFAULT_SUBTITLE_HEIGHT,
     DEFAULT_TITLE_HEIGHT,
-    DEFAULT_TRACK_GAP
+    DEFAULT_VIEW_SPACING,
+    DEFAULT_TRACK_HEIGHT_LINEAR,
+    DEFAULT_TRACK_WIDTH_LINEAR
 } from '../layout/defaults';
 import { traverseTracksAndViews, traverseViewArrangements } from './spec-preprocess';
 
@@ -132,8 +134,6 @@ function traverseAndCollectTrackInfo(
     output: TrackInfo[],
     dx = 0,
     dy = 0,
-    forceWidth: number | undefined = undefined,
-    forceHeight: number | undefined = undefined,
     circularRootNotFound = true // A flag variable to find a root level of circular tracks/views
 ) {
     let cumWidth = 0;
@@ -163,20 +163,15 @@ function traverseAndCollectTrackInfo(
     const numTracksBeforeInsert = output.length;
 
     if ('tracks' in spec) {
-        const totalHeightByDef = spec.tracks.reduce((a, b) => a + b.height, 0);
-
-        // Reserve space for axes
-        const forceHeightMinusAxes = forceHeight
-            ? forceHeight - getNumOfXAxes(spec.tracks) * HIGLASS_AXIS_SIZE
-            : undefined;
-
         // Use the firstly suggested `width` for this view.
-        cumWidth = forceWidth ? forceWidth : spec.tracks[0]?.width;
+        cumWidth = spec.tracks[0]?.width; //forceWidth ? forceWidth : spec.tracks[0]?.width;
 
         spec.tracks.forEach(track => {
-            let scaledHeight = forceHeightMinusAxes
-                ? (track.height / totalHeightByDef) * forceHeightMinusAxes
-                : track.height;
+            // If size not defined, set default ones
+            if (!track.width) track.width = DEFAULT_TRACK_WIDTH_LINEAR;
+            if (!track.height) track.height = DEFAULT_TRACK_HEIGHT_LINEAR;
+
+            let scaledHeight = track.height;
 
             if (getNumOfXAxes([track]) === 1) {
                 scaledHeight += HIGLASS_AXIS_SIZE;
@@ -200,22 +195,21 @@ function traverseAndCollectTrackInfo(
         });
     } else {
         // We did not reach a track definition, so continue traversing.
-        const spacing = spec.spacing ? spec.spacing : DEFAULT_TRACK_GAP;
+        const spacing = spec.spacing ? spec.spacing : DEFAULT_VIEW_SPACING;
 
         // We first calculate position and size of each view and track by considering it as if it uses a linear layout
         if ('parallelViews' in spec || 'vconcatViews' in spec) {
+            // const sizes = getSizeDefOfArrangedViews(spec);
             getArrangedViews(spec).forEach((v, i, array) => {
                 const viewBB = traverseAndCollectTrackInfo(
                     v,
                     output,
                     dx,
                     dy + cumHeight,
-                    cumWidth,
-                    undefined,
                     !isThisCircularRoot && circularRootNotFound
                 );
 
-                if (i === 0) {
+                if (cumWidth < viewBB.width) {
                     cumWidth = viewBB.width;
                 }
                 if (i !== array.length - 1) {
@@ -230,12 +224,10 @@ function traverseAndCollectTrackInfo(
                     output,
                     dx + cumWidth,
                     dy,
-                    undefined,
-                    cumHeight,
                     !isThisCircularRoot && circularRootNotFound
                 );
 
-                if (i === 0) {
+                if (cumHeight < viewBB.height) {
                     cumHeight = viewBB.height;
                 }
                 if (i !== array.length - 1) {

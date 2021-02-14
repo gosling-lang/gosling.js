@@ -69,6 +69,7 @@ export function drawMark(HGC: any, trackInfo: any, tile: any, model: GoslingTrac
     /* embellishment before rendering plots */
     drawBackground(HGC, trackInfo, tile, model); // TODO: this should be done only once for a track, not for each tile!
     if (CIRCULAR) {
+        drawCircularOutlines(HGC, trackInfo, tile, model);
         drawCircularGrid(HGC, trackInfo, tile, model);
     } else {
         drawGrid(HGC, trackInfo, tile, model);
@@ -117,7 +118,7 @@ export function drawMark(HGC: any, trackInfo: any, tile: any, model: GoslingTrac
 
     /* embellishment after rendering plots */
     if (CIRCULAR) {
-        drawCircularOutlines(HGC, trackInfo, tile, model);
+        // ...
     } else {
         drawYLegend(HGC, trackInfo, tile, model);
     }

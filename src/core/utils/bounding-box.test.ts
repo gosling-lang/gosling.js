@@ -1,172 +1,292 @@
-// import { GoslingSpec, Track } from '../gosling.schema';
-// import { DEFAULT_TRACK_HEIGHT_LINEAR, DEFAULT_TRACK_WIDTH_LINEAR, DEFAULT_TRACK_GAP } from '../layout/defaults';
-
-import { getRelativeTrackInfo } from './bounding-box';
+import { DEFAULT_VIEW_SPACING } from '../layout/defaults';
+import { getBoundingBox, getRelativeTrackInfo } from './bounding-box';
 
 describe('Arrangement', () => {
-    it('One Track', () => {
-        const info = getRelativeTrackInfo({ tracks: [{ overlay: [], width: 10, height: 10 }] });
+    it('1 View, 1 Track', () => {
+        const spec = { tracks: [{ overlay: [], width: 10, height: 10 }] };
+        const info = getRelativeTrackInfo(spec);
         expect(info).toHaveLength(1);
-        expect(info[0].track).toEqual({ overlay: [], width: 10, height: 10 });
+
+        expect(info[0].track).toEqual(spec.tracks[0]);
         expect(info[0].boundingBox).toEqual({ x: 0, y: 0, width: 10, height: 10 });
+        expect(info[0].layout).toEqual({ x: 0, y: 0, w: 12, h: 12 });
+    });
+
+    it('1 View, N Tracks', () => {
+        const spec = {
+            tracks: [
+                { overlay: [], width: 10, height: 10 },
+                { overlay: [], width: 10, height: 10 }
+            ]
+        };
+        const info = getRelativeTrackInfo(spec);
+        expect(info).toHaveLength(2);
+
+        expect(info[0].track).toEqual(spec.tracks[0]);
+        expect(info[0].boundingBox).toEqual({ x: 0, y: 0, width: 10, height: 10 });
+        expect(info[0].layout).toEqual({ x: 0, y: 0, w: 12, h: (10 / 20) * 12 });
+
+        expect(info[1].track).toEqual(spec.tracks[1]);
+        expect(info[1].boundingBox).toEqual({ x: 0, y: 10, width: 10, height: 10 });
+        expect(info[1].layout).toEqual({ x: 0, y: 6, w: 12, h: (10 / 20) * 12 });
+    });
+
+    it('Palallel Views', () => {
+        const spec = {
+            parallelViews: [
+                {
+                    tracks: [
+                        { overlay: [], width: 10, height: 10 },
+                        { overlay: [], width: 10, height: 10 }
+                    ]
+                },
+                {
+                    tracks: [
+                        { overlay: [], width: 10, height: 10 },
+                        { overlay: [], width: 10, height: 10 }
+                    ]
+                }
+            ]
+        };
+        const info = getRelativeTrackInfo(spec);
+        expect(info).toHaveLength(4);
+
+        const size = getBoundingBox(info);
+        expect(size).toEqual({ width: 10, height: 40 + DEFAULT_VIEW_SPACING });
+
+        expect(info[0].boundingBox).toEqual({ x: 0, y: 0, width: 10, height: 10 });
+        expect(info[1].boundingBox).toEqual({ x: 0, y: 10, width: 10, height: 10 });
+        expect(info[2].boundingBox).toEqual({ x: 0, y: 20 + DEFAULT_VIEW_SPACING, width: 10, height: 10 });
+        expect(info[3].boundingBox).toEqual({ x: 0, y: 30 + DEFAULT_VIEW_SPACING, width: 10, height: 10 });
+    });
+
+    it('Serial Views', () => {
+        const spec = {
+            serialViews: [
+                {
+                    tracks: [
+                        { overlay: [], width: 10, height: 10 },
+                        { overlay: [], width: 10, height: 10 }
+                    ]
+                },
+                {
+                    tracks: [
+                        { overlay: [], width: 10, height: 10 },
+                        { overlay: [], width: 10, height: 10 }
+                    ]
+                }
+            ]
+        };
+        const info = getRelativeTrackInfo(spec);
+        expect(info).toHaveLength(4);
+
+        const size = getBoundingBox(info);
+        expect(size).toEqual({ width: 20 + DEFAULT_VIEW_SPACING, height: 20 });
+
+        expect(info[0].boundingBox).toEqual({ x: 0, y: 0, width: 10, height: 10 });
+        expect(info[1].boundingBox).toEqual({ x: 0, y: 10, width: 10, height: 10 });
+        expect(info[2].boundingBox).toEqual({ x: 10 + DEFAULT_VIEW_SPACING, y: 0, width: 10, height: 10 });
+        expect(info[3].boundingBox).toEqual({ x: 10 + DEFAULT_VIEW_SPACING, y: 10, width: 10, height: 10 });
+    });
+
+    it('Parallel Views === VConcat Views in Linear Layout', () => {
+        const spec1 = {
+            parallelViews: [
+                {
+                    tracks: [
+                        { overlay: [], width: 10, height: 10 },
+                        { overlay: [], width: 10, height: 10 }
+                    ]
+                },
+                {
+                    tracks: [
+                        { overlay: [], width: 10, height: 10 },
+                        { overlay: [], width: 10, height: 10 }
+                    ]
+                }
+            ]
+        };
+        const spec2 = {
+            vconcatViews: [
+                {
+                    tracks: [
+                        { overlay: [], width: 10, height: 10 },
+                        { overlay: [], width: 10, height: 10 }
+                    ]
+                },
+                {
+                    tracks: [
+                        { overlay: [], width: 10, height: 10 },
+                        { overlay: [], width: 10, height: 10 }
+                    ]
+                }
+            ]
+        };
+        expect(getRelativeTrackInfo(spec1)).toEqual(getRelativeTrackInfo(spec2));
+    });
+
+    it('Serial Views === HConcat Views in Linear Layout', () => {
+        const spec1 = {
+            serialViews: [
+                {
+                    tracks: [
+                        { overlay: [], width: 10, height: 10 },
+                        { overlay: [], width: 10, height: 10 }
+                    ]
+                },
+                {
+                    tracks: [
+                        { overlay: [], width: 10, height: 10 },
+                        { overlay: [], width: 10, height: 10 }
+                    ]
+                }
+            ]
+        };
+        const spec2 = {
+            hconcatViews: [
+                {
+                    tracks: [
+                        { overlay: [], width: 10, height: 10 },
+                        { overlay: [], width: 10, height: 10 }
+                    ]
+                },
+                {
+                    tracks: [
+                        { overlay: [], width: 10, height: 10 },
+                        { overlay: [], width: 10, height: 10 }
+                    ]
+                }
+            ]
+        };
+        expect(getRelativeTrackInfo(spec1)).toEqual(getRelativeTrackInfo(spec2));
+    });
+
+    it('Complex Parallel Views in Linear Layout', () => {
+        {
+            const t = { overlay: [], width: 10, height: 10 };
+            const spec = {
+                parallelViews: [
+                    {
+                        parallelViews: [{ tracks: [t] }]
+                    },
+                    {
+                        parallelViews: [{ tracks: [t] }]
+                    }
+                ]
+            };
+            const info = getRelativeTrackInfo(spec);
+            expect(info).toHaveLength(2);
+
+            const size = getBoundingBox(info);
+            expect(size).toEqual({ width: 10, height: 20 + DEFAULT_VIEW_SPACING });
+
+            expect(info[0].boundingBox).toEqual({ x: 0, y: 0, width: 10, height: 10 });
+            expect(info[1].boundingBox).toEqual({ x: 0, y: 10 + DEFAULT_VIEW_SPACING, width: 10, height: 10 });
+        }
+    });
+
+    it('Complex Serial Views in Linear Layout', () => {
+        {
+            const t = { overlay: [], width: 10, height: 10 };
+            const spec = {
+                serialViews: [
+                    {
+                        serialViews: [{ tracks: [t] }]
+                    },
+                    {
+                        serialViews: [{ tracks: [t] }]
+                    }
+                ]
+            };
+            const info = getRelativeTrackInfo(spec);
+            expect(info).toHaveLength(2);
+
+            const size = getBoundingBox(info);
+            expect(size).toEqual({ width: 20 + DEFAULT_VIEW_SPACING, height: 10 });
+
+            expect(info[0].boundingBox).toEqual({ x: 0, y: 0, width: 10, height: 10 });
+            expect(info[1].boundingBox).toEqual({ x: 10 + DEFAULT_VIEW_SPACING, y: 0, width: 10, height: 10 });
+        }
+    });
+
+    it('Complex Views in Linear Layout', () => {
+        {
+            const t = { overlay: [], width: 10, height: 10 };
+            const spec1 = {
+                parallelViews: [
+                    { tracks: [t] },
+                    {
+                        serialViews: [{ tracks: [t] }]
+                    }
+                ]
+            };
+            const spec2 = {
+                parallelViews: [{ tracks: [t] }, { tracks: [t] }]
+            };
+            expect(getRelativeTrackInfo(spec1)).toEqual(getRelativeTrackInfo(spec2));
+        }
+        {
+            const t = { overlay: [], width: 10, height: 10 };
+            const spec1 = {
+                serialViews: [
+                    { tracks: [t] },
+                    {
+                        serialViews: [{ tracks: [t] }]
+                    }
+                ]
+            };
+            const spec2 = {
+                serialViews: [{ tracks: [t] }, { tracks: [t] }]
+            };
+            expect(getRelativeTrackInfo(spec1)).toEqual(getRelativeTrackInfo(spec2));
+        }
+        {
+            const t = { overlay: [], width: 10, height: 10 };
+            const spec = {
+                serialViews: [
+                    {
+                        parallelViews: [{ tracks: [t] }, { tracks: [t] }]
+                    },
+                    {
+                        serialViews: [{ tracks: [t] }]
+                    }
+                ]
+            };
+            const info = getRelativeTrackInfo(spec);
+            expect(info).toHaveLength(3);
+
+            const size = getBoundingBox(info);
+            expect(size).toEqual({ width: 20 + DEFAULT_VIEW_SPACING, height: 20 + DEFAULT_VIEW_SPACING });
+
+            expect(info[0].boundingBox).toEqual({ x: 0, y: 0, width: 10, height: 10 });
+            expect(info[1].boundingBox).toEqual({ x: 0, y: 10 + DEFAULT_VIEW_SPACING, width: 10, height: 10 });
+            expect(info[2].boundingBox).toEqual({ x: 10 + DEFAULT_VIEW_SPACING, y: 0, width: 10, height: 10 });
+        }
+    });
+
+    it('Uneven Size of Views', () => {
+        {
+            const t = { overlay: [], width: 10, height: 10 };
+            const t_2w = { overlay: [], width: 20, height: 10 };
+            const spec = {
+                serialViews: [
+                    {
+                        parallelViews: [{ tracks: [t] }, { tracks: [t_2w] }]
+                    },
+                    {
+                        serialViews: [{ tracks: [t] }]
+                    }
+                ]
+            };
+            const info = getRelativeTrackInfo(spec);
+            expect(info).toHaveLength(3);
+
+            const size = getBoundingBox(info);
+            expect(size).toEqual({ width: 30 + DEFAULT_VIEW_SPACING, height: 20 + DEFAULT_VIEW_SPACING });
+
+            expect(info[0].boundingBox).toEqual({ x: 0, y: 0, width: 10, height: 10 });
+            expect(info[1].boundingBox).toEqual({ x: 0, y: 10 + DEFAULT_VIEW_SPACING, width: 20, height: 10 });
+            expect(info[2].boundingBox).toEqual({ x: 20 + DEFAULT_VIEW_SPACING, y: 0, width: 10, height: 10 });
+        }
     });
 });
-
-// describe('Arrangement', () => {
-//     const width = 100,
-//         height = 300;
-//     const t: Track = {
-//         data: { url: 'dummy', type: 'csv' },
-//         mark: 'point'
-//     };
-
-//     it('single track', () => {
-//         const defaultTrack = getGridInfo({ tracks: [t] });
-//         expect(defaultTrack.width).toEqual(DEFAULT_TRACK_WIDTH_LINEAR);
-//         expect(defaultTrack.height).toEqual(DEFAULT_TRACK_HEIGHT_LINEAR);
-
-//         const vTrack = getGridInfo({
-//             layout: 'circular',
-//             arrangement: { direction: 'vertical', columnSizes: width, rowSizes: height },
-//             tracks: [t]
-//         });
-//         expect(vTrack.width).toEqual(width);
-//         expect(vTrack.height).toEqual(height);
-
-//         const hTrack = getGridInfo({
-//             layout: 'circular',
-//             arrangement: { direction: 'horizontal', columnSizes: width, rowSizes: height },
-//             tracks: [t]
-//         });
-//         expect(hTrack.width).toEqual(vTrack.width);
-//         expect(hTrack.height).toEqual(vTrack.height);
-
-//         const cTrack = getGridInfo({
-//             layout: 'circular',
-//             arrangement: { direction: 'horizontal', columnSizes: width, rowSizes: height },
-//             tracks: [t]
-//         });
-//         expect(cTrack.width).toEqual(vTrack.width);
-//         expect(cTrack.height).toEqual(vTrack.height);
-
-//         // check additional outputs
-//         expect(cTrack.rowSizes).toHaveLength(1);
-//         expect(cTrack.rowSizes[0]).toEqual(cTrack.height);
-
-//         /* track info*/
-//         const arrangement = getArrangement({ tracks: [t] });
-//         expect(arrangement).toHaveLength(1);
-
-//         // bounding box
-//         expect(arrangement[0].boundingBox.x).toEqual(0);
-//         expect(arrangement[0].boundingBox.y).toEqual(0);
-//         expect(arrangement[0].boundingBox.width).toEqual(DEFAULT_TRACK_WIDTH_LINEAR);
-//         expect(arrangement[0].boundingBox.height).toEqual(DEFAULT_TRACK_HEIGHT_LINEAR);
-
-//         // relative arrangements for `react-grid-layout`
-//         expect(arrangement[0].layout.x).toEqual(0);
-//         expect(arrangement[0].layout.y).toEqual(0);
-//         expect(arrangement[0].layout.w).toEqual(12);
-//         expect(arrangement[0].layout.h).toEqual(12);
-
-//         // size of tracks should be added or replaced
-//         expect(arrangement[0].track.width).toEqual(DEFAULT_TRACK_WIDTH_LINEAR);
-//         expect(arrangement[0].track.height).toEqual(DEFAULT_TRACK_HEIGHT_LINEAR);
-//     });
-
-//     describe('multiple tracks', () => {
-//         it('2x1', () => {
-//             const a = getArrangement({ tracks: [t, t] });
-//             expect(a).toHaveLength(2);
-
-//             // bounding box
-//             expect(a[1].boundingBox.x).toEqual(0);
-//             expect(a[1].boundingBox.y).toEqual(DEFAULT_TRACK_HEIGHT_LINEAR + DEFAULT_TRACK_GAP);
-
-//             // relative arrangements for `react-grid-layout`
-//             expect(a[1].layout.x).toEqual(0);
-//             expect(a[1].layout.y).toEqual(
-//                 ((DEFAULT_TRACK_HEIGHT_LINEAR + DEFAULT_TRACK_GAP) /
-//                     (DEFAULT_TRACK_HEIGHT_LINEAR * 2 + DEFAULT_TRACK_GAP)) *
-//                     12
-//             );
-//             expect(a[1].layout.w).toEqual(12);
-//             expect(a[1].layout.h).toEqual(
-//                 (DEFAULT_TRACK_HEIGHT_LINEAR / (DEFAULT_TRACK_HEIGHT_LINEAR * 2 + DEFAULT_TRACK_GAP)) * 12
-//             );
-//         });
-//         it('1x2', () => {
-//             const a = getArrangement({ layout: 'linear', arrangement: { direction: 'horizontal' }, tracks: [t, t] });
-//             expect(a).toHaveLength(2);
-
-//             // bounding box
-//             expect(a[1].boundingBox.y).toEqual(0);
-//             expect(a[1].boundingBox.x).toEqual(DEFAULT_TRACK_WIDTH_LINEAR + DEFAULT_TRACK_GAP);
-
-//             // relative arrangements for `react-grid-layout`
-//             expect(a[1].layout.y).toEqual(0);
-//             expect(a[1].layout.x).toEqual(
-//                 ((DEFAULT_TRACK_WIDTH_LINEAR + DEFAULT_TRACK_GAP) /
-//                     (DEFAULT_TRACK_WIDTH_LINEAR * 2 + DEFAULT_TRACK_GAP)) *
-//                     12
-//             );
-//             expect(a[1].layout.h).toEqual(12);
-//             expect(a[1].layout.w).toEqual(
-//                 (DEFAULT_TRACK_WIDTH_LINEAR / (DEFAULT_TRACK_WIDTH_LINEAR * 2 + DEFAULT_TRACK_GAP)) * 12
-//             );
-//         });
-//         it('2x2', () => {
-//             const a = getArrangement({
-//                 layout: 'linear',
-//                 arrangement: { direction: 'horizontal', wrap: 2 },
-//                 tracks: [t, t, t, t]
-//             });
-//             expect(a).toHaveLength(4);
-
-//             // bounding box
-//             expect(a[3].boundingBox.x).toEqual(DEFAULT_TRACK_WIDTH_LINEAR + DEFAULT_TRACK_GAP);
-//             expect(a[3].boundingBox.y).toEqual(DEFAULT_TRACK_HEIGHT_LINEAR + DEFAULT_TRACK_GAP);
-//         });
-//         it('3x1 w/ superpose', () => {
-//             const a = getArrangement({
-//                 layout: 'linear',
-//                 arrangement: { direction: 'horizontal', wrap: 2 },
-//                 tracks: [t, t, t, { ...t, superposeOnPreviousTrack: true }]
-//             });
-//             expect(a).toHaveLength(4);
-
-//             // bounding box
-//             expect(a[2].boundingBox).toEqual(a[3].boundingBox);
-//         });
-//         it('12x1 complex', () => {
-//             const rowSizes = [30, 44, 44, 44, 44, 44, 44, 44, 100, 100, 90, 100];
-//             const rowGaps = [40, 0, 0, 0, 0, 0, 0, 0, 0, 0, 40];
-//             const tracks = [t, t, t, t, t, t, t, t, t, t, t, t];
-//             const spec: GoslingSpec = {
-//                 layout: 'linear',
-//                 arrangement: {
-//                     direction: 'vertical',
-//                     columnSizes: [550],
-//                     rowSizes,
-//                     rowGaps
-//                 },
-//                 tracks // 12 tracks
-//             };
-
-//             const g = getGridInfo(spec);
-//             expect(g.height).toEqual(rowSizes.reduce((a, b) => a + b, 0) + rowGaps.reduce((a, b) => a + b, 0));
-
-//             const a = getArrangement(spec);
-//             expect(a).toHaveLength(tracks.length);
-
-//             // bounding box of the last one
-//             expect(a[tracks.length - 1].boundingBox.x).toEqual(0);
-//             expect(a[tracks.length - 1].boundingBox.y).toEqual(
-//                 rowSizes.reduce((a, b) => a + b, 0) + rowGaps.reduce((a, b) => a + b, 0) - 100 /* last track's height */
-//             );
-//             expect(a[tracks.length - 1].layout.y).toEqual(
-//                 (1 - 100 / (rowSizes.reduce((a, b) => a + b, 0) + rowGaps.reduce((a, b) => a + b, 0))) * 12
-//             );
-//         });
-//     });
-// });
