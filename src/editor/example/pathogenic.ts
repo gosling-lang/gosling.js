@@ -13,6 +13,7 @@ export const allDomains = [
 
 export const EX_SPEC_PATHOGENIC: GoslingSpec = {
     xDomain: { chromosome: '3', interval: [10140000, 10160000] },
+    centerHole: 0.1,
     parallelViews: [
         {
             spacing: 0,
@@ -76,9 +77,9 @@ export const EX_SPEC_PATHOGENIC: GoslingSpec = {
                                 ]
                             },
                             size: { value: 8 },
-                            stroke: { value: 'white' },
-                            opacity: { value: 0.6 },
-                            strokeWidth: { value: 2 },
+                            stroke: { value: 'black' },
+                            opacity: { value: 1 },
+                            strokeWidth: { value: 0.5 },
                             color: {
                                 field: 'significance',
                                 type: 'nominal',
@@ -131,9 +132,9 @@ export const EX_SPEC_PATHOGENIC: GoslingSpec = {
                                 domain: ['Benign', 'Benign/Likely_benign', 'Likely_benign', 'Uncertain_significance']
                             },
                             size: { value: 8 },
-                            stroke: { value: 'white' },
-                            opacity: { value: 0.6 },
-                            strokeWidth: { value: 2 },
+                            stroke: { value: 'black' },
+                            opacity: { value: 1 },
+                            strokeWidth: { value: 0.5 },
                             color: {
                                 field: 'significance',
                                 type: 'nominal',
@@ -227,7 +228,8 @@ export const EX_SPEC_PATHOGENIC: GoslingSpec = {
                                 field: 'end',
                                 type: 'genomic'
                             },
-                            color: { value: 'black' }
+                            color: { value: 'black' },
+                            style: { textFontSize: 20 }
                         },
                         {
                             dataTransform: { filter: [{ field: 'type', oneOf: ['exon'] }] },
