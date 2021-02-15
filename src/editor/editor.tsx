@@ -25,16 +25,46 @@ const LIMIT_CLIPBOARD_LEN = 4096;
 const EDITOR_HEADER_HEIGHT = 40;
 const VIEWCONFIG_HEADER_HEIGHT = 30;
 
-const getIconSVG = (d: ICON_INFO) => (
+const LogoSVG = (
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width={20} height={20}>
+        <rect style={{ fill: 'none' }} width="400" height="400" />
+        <circle cx="110.62" cy="129.64" r="41.69" />
+        <circle style={{ fill: '#fff' }} cx="124.14" cy="114.12" r="10.76" />
+        <circle cx="288.56" cy="129.64" r="41.69" />
+        <circle style={{ fill: '#fff' }} cx="302.07" cy="114.12" r="10.76" />
+        <path
+            style={{ fill: '#e18241' }}
+            d="M313.1,241.64l8.61-22.09a430.11,430.11,0,0,0-88-15.87L224,225.63A384.54,384.54,0,0,1,313.1,241.64Z"
+        />
+        <path
+            style={{ fill: '#e18241' }}
+            d="M208.63,260.53a299.77,299.77,0,0,1,90.56,16.79L308,254.79a371.68,371.68,0,0,0-90-15.47Z"
+        />
+        <path
+            style={{ fill: '#e18241' }}
+            d="M174.4,225.56l-9-22a431.34,431.34,0,0,0-88,15.43l8.9,22A385.08,385.08,0,0,1,174.4,225.56Z"
+        />
+        <path
+            style={{ fill: '#e18241' }}
+            d="M100.71,276.35a300.51,300.51,0,0,1,87.91-15.82L180,239.29a372.51,372.51,0,0,0-88.3,14.76Z"
+        />
+        <path
+            style={{ fill: '#e18241' }}
+            d="M106.52,290.71c27.53,13.92,59.05,21.34,92.05,21.34h0c33.68,0,65.83-7.72,93.75-22.2a291.31,291.31,0,0,0-186.33-.4Z"
+        />
+    </svg>
+);
+
+const getIconSVG = (d: ICON_INFO, w?: number, h?: number, f?: string) => (
     <svg
         key={stringify(d)}
         xmlns="http://www.w3.org/2000/svg"
-        width={d.width}
-        height={d.height}
+        width={w ?? d.width}
+        height={h ?? d.height}
         viewBox={d.viewBox}
         strokeWidth="2"
         stroke={d.stroke}
-        fill={d.fill}
+        fill={f ?? d.fill}
         strokeLinecap="round"
         strokeLinejoin="round"
     >
@@ -74,6 +104,9 @@ function Editor(props: any) {
     // whether to hide source code on the left
     const [isMaximizeVis, setIsMaximizeVis] = useState<boolean>((urlParams?.full as string) === 'true' || false);
 
+    // whether to show a find box
+    const [isFindCode, setIsFindCode] = useState<boolean | undefined>(undefined);
+
     // for using HiGlass JS API
     // const hgRef = useRef<any>();
 
@@ -100,18 +133,20 @@ function Editor(props: any) {
 
     const runSpecUpdateVis = useCallback(
         (run?: boolean) => {
-            let editedGm;
+            let editedGos;
+            let valid;
             try {
-                editedGm = JSON.parse(stripJsonComments(code));
-                setLog(validateSpec(GoslingSchema, editedGm));
+                editedGos = JSON.parse(stripJsonComments(code));
+                valid = validateSpec(GoslingSchema, editedGos);
+                setLog(valid);
             } catch (e) {
                 const message = '✘ Cannnot parse the code.';
                 console.warn(message);
                 setLog({ message, state: 'error' });
             }
-            if (!editedGm || (!autoRun && !run)) return;
+            if (!editedGos || valid?.state !== 'success' || (!autoRun && !run)) return;
 
-            setGoslingSpec(editedGm);
+            setGoslingSpec(editedGos);
         },
         [code, autoRun]
     );
@@ -124,9 +159,14 @@ function Editor(props: any) {
         const token = PubSub.subscribe('data-preview', (_: string, data: PreviewData) => {
             // Data with different `dataConfig` is shown separately in data preview.
             const id = `${data.dataConfig}`;
+
+            // if(previewData.find(d => d.id === id)) {
+            //     // We only get the initial data for each id
+            // } else {
             const newPreviewData = previewData.filter(d => d.id !== id);
             setPreviewData([...newPreviewData, { ...data, id }]);
             setDataLoading(true);
+            // }
         });
         return () => {
             PubSub.unsubscribe(token);
@@ -171,10 +211,12 @@ function Editor(props: any) {
         return info.slice(0, info.length - 2);
     }
 
+    // console.log('editor.render()');
     return (
         <>
             <div className="demo-navbar">
-                Gosling.js <code>Editor</code>
+                <span className="logo">{LogoSVG}</span>
+                Gosling.js Editor
                 {urlSpec ? <small> Displaying a custom spec contained in URL</small> : null}
                 <select
                     onChange={e => {
@@ -189,43 +231,6 @@ function Editor(props: any) {
                         </option>
                     ))}
                 </select>
-                <small style={{ marginLeft: '10px' }}>{' Auto Run'}</small>
-                {autoRun ? (
-                    <span
-                        title="Automatically update visualization upon editing spec"
-                        className="editor-button editor-nav-button"
-                        style={{
-                            marginLeft: 0,
-                            color: '#0072B2'
-                        }}
-                        onClick={() => setAutoRun(false)}
-                    >
-                        {getIconSVG(ICONS.TOGGLE_ON)}
-                    </span>
-                ) : (
-                    <span
-                        title="Pause updating visualization"
-                        className="editor-button editor-nav-button"
-                        style={{
-                            marginLeft: 0
-                        }}
-                        onClick={() => setAutoRun(true)}
-                    >
-                        {getIconSVG(ICONS.TOGGLE_OFF)}
-                    </span>
-                )}
-                <small style={{ marginLeft: '10px' }}>{' Run'}</small>
-                <span
-                    title="Run"
-                    className="editor-button editor-nav-button"
-                    style={{
-                        marginLeft: '0px',
-                        paddingTop: '10px'
-                    }}
-                    onClick={() => runSpecUpdateVis(true)}
-                >
-                    {getIconSVG(ICONS.PLAY)}
-                </span>
                 {demo.underDevelopment ? (
                     <span
                         style={{
@@ -249,196 +254,238 @@ function Editor(props: any) {
                     {'‌‌ ‌‌ ‌‌ ‌‌ ‌‌ ‌‌ ‌‌ ‌‌ '}
                 </span>
                 <input type="hidden" id="spec-url-exporter" />
-                <span
-                    title={
-                        code.length <= LIMIT_CLIPBOARD_LEN
-                            ? `Copy unique URL of current view to clipboard (limit: ${LIMIT_CLIPBOARD_LEN} characters)`
-                            : `The current code contains characters more than ${LIMIT_CLIPBOARD_LEN}`
-                    }
-                    className="editor-button"
-                    style={{
-                        display: 'inline-block',
-                        verticalAlign: 'middle',
-                        height: '100%',
-                        paddingTop: '9px',
-                        float: 'right',
-                        marginRight: '10px',
-                        color: code.length <= LIMIT_CLIPBOARD_LEN ? 'black' : 'lightgray',
-                        cursor: code.length <= LIMIT_CLIPBOARD_LEN ? 'pointer' : 'not-allowed'
-                    }}
-                    onClick={() => {
-                        if (code.length <= LIMIT_CLIPBOARD_LEN) {
-                            // copy the unique url to clipboard using `<input/>`
-                            const url = `https://gosling-lang.github.io/gosling.js/?full=${isMaximizeVis}&spec=${JSONCrush(
-                                code
-                            )}`;
-                            const element = document.getElementById('spec-url-exporter');
-                            (element as any).type = 'text';
-                            (element as any).value = url;
-                            (element as any).select();
-                            document.execCommand('copy');
-                            (element as any).type = 'hidden';
-                        }
-                    }}
-                >
-                    {getIconSVG(ICONS.LINK)}
-                </span>
             </div>
             {/* ------------------------ Main View ------------------------ */}
             <div className="editor">
-                <SplitPane
-                    className="split-pane-root"
-                    split="vertical"
-                    defaultSize={'40%'}
-                    size={isMaximizeVis ? '0px' : '40%'}
-                    minSize="0px"
-                >
-                    <SplitPane
-                        split="horizontal"
-                        defaultSize={`calc(100% - ${VIEWCONFIG_HEADER_HEIGHT}px)`}
-                        maxSize={window.innerHeight - EDITOR_HEADER_HEIGHT - VIEWCONFIG_HEADER_HEIGHT}
-                        onChange={(size: number) => {
-                            const secondSize = window.innerHeight - EDITOR_HEADER_HEIGHT - size;
-                            if (secondSize > VIEWCONFIG_HEADER_HEIGHT && !showVC) {
-                                setShowVC(true);
-                            } else if (secondSize <= VIEWCONFIG_HEADER_HEIGHT && showVC) {
-                                // hide the viewConfig view when no enough space assigned
-                                setShowVC(false);
+                <SplitPane className="side-panel-spliter" split="vertical" defaultSize="50px" allowResize={false}>
+                    <div className="side-panel">
+                        <span
+                            title="Automatically update visualization upon editing code"
+                            className="side-panel-button"
+                            onClick={() => setAutoRun(!autoRun)}
+                        >
+                            {autoRun ? getIconSVG(ICONS.TOGGLE_ON, 23, 23, '#E18343') : getIconSVG(ICONS.TOGGLE_OFF)}
+                            <br />
+                            AUTO
+                            <br />
+                            RUN
+                        </span>
+                        <span title="Run Code" className="side-panel-button" onClick={() => runSpecUpdateVis(true)}>
+                            {getIconSVG(ICONS.PLAY, 23, 23)}
+                            <br />
+                            RUN
+                        </span>
+                        <span
+                            title="Find"
+                            className="side-panel-button"
+                            onClick={() => {
+                                setIsFindCode(!isFindCode);
+                            }}
+                        >
+                            {getIconSVG(ICONS.FIND, 23, 23)}
+                            <br />
+                            FIND
+                        </span>
+                        <span
+                            title="Show or hide a code panel"
+                            className="side-panel-button"
+                            onClick={() => setIsMaximizeVis(!isMaximizeVis)}
+                        >
+                            {getIconSVG(ICONS.SPLIT, 23, 23)}
+                            <br />
+                            LAYOUT
+                        </span>
+                        <span
+                            title={
+                                code.length <= LIMIT_CLIPBOARD_LEN
+                                    ? `Copy unique URL of current view to clipboard (limit: ${LIMIT_CLIPBOARD_LEN} characters)`
+                                    : `The current code contains characters more than ${LIMIT_CLIPBOARD_LEN}`
                             }
-                        }}
-                    >
-                        {/* Gosling Editor */}
-                        <>
-                            <EditorPanel
-                                code={code}
-                                readOnly={false}
-                                onChange={debounce(code => {
-                                    setCode(code);
-                                }, 1500)}
-                            />
-                            <div className={`compile-message compile-message-${log.state}`}>{log.message}</div>
-                        </>
-                        {/* HiGlass View Config */}
-                        <SplitPane split="vertical" defaultSize="100%">
-                            <>
-                                <div className="editor-header">
-                                    <b>Compiled HiGlass ViewConfig</b> (Read Only)
-                                </div>
-                                <div style={{ height: '100%', visibility: showVC ? 'visible' : 'hidden' }}>
-                                    <EditorPanel code={stringify(hg)} readOnly={true} />
-                                </div>
-                            </>
-                            {/**
-                             * TODO: This is only for showing a scroll view for the higlass view config editor
-                             * Remove the below line and the nearest SplitPane after figuring out a better way
-                             * of showing the scroll view.
-                             */}
-                            <></>
-                        </SplitPane>
-                    </SplitPane>
+                            className={
+                                code.length <= LIMIT_CLIPBOARD_LEN
+                                    ? 'side-panel-button'
+                                    : 'side-panel-button side-panel-button-not-active'
+                            }
+                            onClick={() => {
+                                if (code.length <= LIMIT_CLIPBOARD_LEN) {
+                                    // copy the unique url to clipboard using `<input/>`
+                                    const url = `https://gosling-lang.github.io/gosling.js/?full=${isMaximizeVis}&spec=${JSONCrush(
+                                        code
+                                    )}`;
+                                    const element = document.getElementById('spec-url-exporter');
+                                    (element as any).type = 'text';
+                                    (element as any).value = url;
+                                    (element as any).select();
+                                    document.execCommand('copy');
+                                    (element as any).type = 'hidden';
+                                }
+                            }}
+                        >
+                            {getIconSVG(ICONS.LINK, 23, 23)}
+                            <br />
+                            SAVE
+                            <br />
+                            URL
+                        </span>
+                        <span
+                            title="Open GitHub repository"
+                            className="side-panel-button"
+                            onClick={() => window.open('https://github.com/gosling-lang/gosling.js', '_blank')}
+                        >
+                            {getIconSVG(ICONS.GITHUB, 23, 23)}
+                            <br />
+                            GITHUB
+                        </span>
+                        <span
+                            title="Open GitHub repository"
+                            className="side-panel-button"
+                            onClick={() => window.open('https://github.com/gosling-lang/gosling.js/wiki', '_blank')}
+                        >
+                            {getIconSVG(ICONS.DOCS, 23, 23)}
+                            <br />
+                            DOCS
+                        </span>
+                    </div>
                     <SplitPane
-                        split="horizontal"
-                        defaultSize={`calc(100% - ${VIEWCONFIG_HEADER_HEIGHT}px)`}
-                        maxSize={window.innerHeight - EDITOR_HEADER_HEIGHT - VIEWCONFIG_HEADER_HEIGHT}
+                        className="split-pane-root"
+                        split="vertical"
+                        defaultSize={'40%'}
+                        size={isMaximizeVis ? '0px' : '40%'}
+                        minSize="0px"
                     >
-                        <div className="preview-container">
-                            <gosling.GoslingComponent
-                                spec={goslingSpec}
-                                compiled={(g, h) => {
-                                    setHg(h);
-                                }}
-                            />
-                        </div>
-                        <SplitPane split="vertical" defaultSize="100%">
+                        <SplitPane
+                            split="horizontal"
+                            defaultSize={`calc(100% - ${VIEWCONFIG_HEADER_HEIGHT}px)`}
+                            maxSize={window.innerHeight - EDITOR_HEADER_HEIGHT - VIEWCONFIG_HEADER_HEIGHT}
+                            onChange={(size: number) => {
+                                const secondSize = window.innerHeight - EDITOR_HEADER_HEIGHT - size;
+                                if (secondSize > VIEWCONFIG_HEADER_HEIGHT && !showVC) {
+                                    setShowVC(true);
+                                } else if (secondSize <= VIEWCONFIG_HEADER_HEIGHT && showVC) {
+                                    // hide the viewConfig view when no enough space assigned
+                                    setShowVC(false);
+                                }
+                            }}
+                        >
+                            {/* Gosling Editor */}
                             <>
-                                <div className="editor-header">
-                                    <span
-                                        className={dataLoading ? 'data-preview-loading-icon' : 'data-preview-stop-icon'}
-                                    >
-                                        ●{' '}
-                                    </span>
-                                    <b>Data Preview</b> (~100 Rows, Data Before Transformation)
-                                </div>
-                                <div className="editor-data-preview-panel">
-                                    {previewData.length > selectedPreviewData &&
-                                    previewData[selectedPreviewData] &&
-                                    previewData[selectedPreviewData].data.length > 0 ? (
-                                        <>
-                                            <div className="editor-data-preview-tab">
-                                                {previewData.map((d: PreviewData, i: number) => (
-                                                    <button
-                                                        className={
-                                                            i === selectedPreviewData
-                                                                ? 'selected-tab'
-                                                                : 'unselected-tab'
-                                                        }
-                                                        key={JSON.stringify(d)}
-                                                        onClick={() => setSelectedPreviewData(i)}
-                                                    >
-                                                        {`${(JSON.parse(d.dataConfig).data
-                                                            .type as string).toUpperCase()} `}
-                                                        <small>{i}</small>
-                                                    </button>
-                                                ))}
-                                            </div>
-                                            <div className="editor-data-preview-tab-info">
-                                                {getDataPreviewInfo(previewData[selectedPreviewData].dataConfig)}
-                                            </div>
-                                            <div className="editor-data-preview-table">
-                                                <table>
-                                                    <tbody>
-                                                        <tr>
-                                                            {Object.keys(previewData[selectedPreviewData].data[0]).map(
-                                                                (field: string, i: number) => (
+                                <EditorPanel
+                                    code={code}
+                                    readOnly={false}
+                                    openFindBox={isFindCode}
+                                    onChange={debounce(code => {
+                                        setCode(code);
+                                    }, 1500)}
+                                />
+                                <div className={`compile-message compile-message-${log.state}`}>{log.message}</div>
+                            </>
+                            {/* HiGlass View Config */}
+                            <SplitPane split="vertical" defaultSize="100%">
+                                <>
+                                    <div className="editor-header">
+                                        <b>Compiled HiGlass ViewConfig</b> (Read Only)
+                                    </div>
+                                    <div style={{ height: '100%', visibility: showVC ? 'visible' : 'hidden' }}>
+                                        <EditorPanel code={stringify(hg)} readOnly={true} />
+                                    </div>
+                                </>
+                                {/**
+                                 * TODO: This is only for showing a scroll view for the higlass view config editor
+                                 * Remove the below line and the nearest SplitPane after figuring out a better way
+                                 * of showing the scroll view.
+                                 */}
+                                <></>
+                            </SplitPane>
+                        </SplitPane>
+                        <SplitPane
+                            split="horizontal"
+                            defaultSize={`calc(100% - ${VIEWCONFIG_HEADER_HEIGHT}px)`}
+                            maxSize={window.innerHeight - EDITOR_HEADER_HEIGHT - VIEWCONFIG_HEADER_HEIGHT}
+                        >
+                            <div className="preview-container">
+                                <gosling.GoslingComponent
+                                    spec={goslingSpec}
+                                    compiled={(g, h) => {
+                                        setHg(h);
+                                    }}
+                                />
+                            </div>
+                            <SplitPane split="vertical" defaultSize="100%">
+                                <>
+                                    <div className="editor-header">
+                                        <span
+                                            className={
+                                                dataLoading ? 'data-preview-loading-icon' : 'data-preview-stop-icon'
+                                            }
+                                        >
+                                            ●{' '}
+                                        </span>
+                                        <b>Data Preview</b> (~100 Rows, Data Before Transformation)
+                                    </div>
+                                    <div className="editor-data-preview-panel">
+                                        {previewData.length > selectedPreviewData &&
+                                        previewData[selectedPreviewData] &&
+                                        previewData[selectedPreviewData].data.length > 0 ? (
+                                            <>
+                                                <div className="editor-data-preview-tab">
+                                                    {previewData.map((d: PreviewData, i: number) => (
+                                                        <button
+                                                            className={
+                                                                i === selectedPreviewData
+                                                                    ? 'selected-tab'
+                                                                    : 'unselected-tab'
+                                                            }
+                                                            key={JSON.stringify(d)}
+                                                            onClick={() => setSelectedPreviewData(i)}
+                                                        >
+                                                            {`${(JSON.parse(d.dataConfig).data
+                                                                .type as string).toUpperCase()} `}
+                                                            <small>{i}</small>
+                                                        </button>
+                                                    ))}
+                                                </div>
+                                                <div className="editor-data-preview-tab-info">
+                                                    {getDataPreviewInfo(previewData[selectedPreviewData].dataConfig)}
+                                                </div>
+                                                <div className="editor-data-preview-table">
+                                                    <table>
+                                                        <tbody>
+                                                            <tr>
+                                                                {Object.keys(
+                                                                    previewData[selectedPreviewData].data[0]
+                                                                ).map((field: string, i: number) => (
                                                                     <th key={i}>{field}</th>
+                                                                ))}
+                                                            </tr>
+                                                            {previewData[selectedPreviewData].data.map(
+                                                                (row: Datum, i: number) => (
+                                                                    <tr key={i}>
+                                                                        {Object.keys(row).map(
+                                                                            (field: string, j: number) => (
+                                                                                <td key={j}>{row[field].toString()}</td>
+                                                                            )
+                                                                        )}
+                                                                    </tr>
                                                                 )
                                                             )}
-                                                        </tr>
-                                                        {previewData[selectedPreviewData].data.map(
-                                                            (row: Datum, i: number) => (
-                                                                <tr key={i}>
-                                                                    {Object.keys(row).map(
-                                                                        (field: string, j: number) => (
-                                                                            <td key={j}>{row[field].toString()}</td>
-                                                                        )
-                                                                    )}
-                                                                </tr>
-                                                            )
-                                                        )}
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </>
-                                    ) : null}
-                                </div>
-                            </>
-                            {/**
-                             * TODO: This is only for showing a scroll view for the higlass view config editor
-                             * Remove the below line and the nearest SplitPane after figuring out a better way
-                             * of showing the scroll view.
-                             */}
-                            <></>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </>
+                                        ) : null}
+                                    </div>
+                                </>
+                                {/**
+                                 * TODO: This is only for showing a scroll view for the higlass view config editor
+                                 * Remove the below line and the nearest SplitPane after figuring out a better way
+                                 * of showing the scroll view.
+                                 */}
+                                <></>
+                            </SplitPane>
                         </SplitPane>
                     </SplitPane>
                 </SplitPane>
             </div>
-            {/* ------------------------ Floating Buttons ------------------------ */}
-            <span
-                title={isMaximizeVis ? 'Show Gosling code' : 'Maximize a visualization panel'}
-                className="editor-button"
-                style={{
-                    position: 'fixed',
-                    right: '10px',
-                    top: `${EDITOR_HEADER_HEIGHT + 10}px`,
-                    color: 'black',
-                    cursor: 'pointer'
-                }}
-                onClick={() => {
-                    setIsMaximizeVis(!isMaximizeVis);
-                }}
-            >
-                {isMaximizeVis ? getIconSVG(ICONS.MAXIMIZE) : getIconSVG(ICONS.MINIMIZE)}
-            </span>
         </>
     );
 }
