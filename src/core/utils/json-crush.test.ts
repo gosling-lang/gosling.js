@@ -1,11 +1,11 @@
 // @ts-ignore
 import { JSONCrush, JSONUncrush } from './json-crush';
-import { EXAMPLE_CYTOAND_HG38 } from '../../editor/example/cytoband-hg38';
 import stringify from 'json-stringify-pretty-compact';
+import { EXAMPLE_TRACK_SEMANTIC_ZOOM } from '../../editor/example/semantic-zoom';
 
 describe('JSONCrush', () => {
     it('Should not loss information', () => {
-        const specStr = stringify(EXAMPLE_CYTOAND_HG38);
+        const specStr = stringify({ tracks: [{ ...EXAMPLE_TRACK_SEMANTIC_ZOOM.cytoband }] });
         expect(JSONUncrush(decodeURIComponent(JSONCrush(specStr)))).toEqual(specStr);
     });
 });

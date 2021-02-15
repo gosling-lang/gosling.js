@@ -1,10 +1,10 @@
-import { BasicSingleTrack, Datum } from '../gosling.schema';
+import { SingleTrack, Datum } from '../gosling.schema';
 import { getChannelKeysByAggregateFnc, getChannelKeysByType, IsChannelDeep } from '../gosling.schema.guards';
 
 /**
  * Experimental! Only support one category supported yet.
  */
-export function aggregateData(spec: BasicSingleTrack, data: Datum[]): Datum[] {
+export function aggregateData(spec: SingleTrack, data: Datum[]): Datum[] {
     if (getChannelKeysByAggregateFnc(spec).length === 0) {
         // we do not have aggregated fields
         return data;

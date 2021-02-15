@@ -1,8 +1,7 @@
-import { BasicSingleTrack, GoslingSpec, SuperposedTrack, Track } from '../../../core/gosling.schema';
-import { EXAMPLE_CYTOAND_HG38 } from '../cytoband-hg38';
-import { EXAMPLE_DATASETS } from './datasets';
+import { GoslingSpec, Track } from '../../core/gosling.schema';
+import { GOSLING_PUBLIC_DATA } from './gosling-data';
 
-export const EXAMPLE_IDEOGRAM_TRACK: SuperposedTrack = {
+export const CytoBands: Track = {
     data: {
         url: 'https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/cytogenetic_band.csv',
         type: 'csv',
@@ -10,7 +9,7 @@ export const EXAMPLE_IDEOGRAM_TRACK: SuperposedTrack = {
         genomicFields: ['ISCN_start', 'ISCN_stop', 'Basepair_start', 'Basepair_stop'],
         quantitativeFields: ['Band', 'Density']
     },
-    superpose: [
+    overlay: [
         {
             mark: 'text',
             dataTransform: {
@@ -65,24 +64,17 @@ export const EXAMPLE_IDEOGRAM_TRACK: SuperposedTrack = {
             color: { value: '#B40101' }
         }
     ],
-    x: { field: 'Basepair_start', type: 'genomic', domain: { chromosome: '1' }, axis: 'top' },
+    x: { field: 'Basepair_start', type: 'genomic' },
     xe: { field: 'Basepair_stop', type: 'genomic' },
-    visibility: [
-        {
-            operation: 'greater-than',
-            measure: 'width',
-            threshold: 3,
-            transitionPadding: 5,
-            target: 'mark'
-        }
-    ],
     stroke: { value: 'gray' },
-    strokeWidth: { value: 0.5 }
+    strokeWidth: { value: 0.5 },
+    width: 600,
+    height: 20
 };
 
-export const EXAMPLE_STACKED_AREA: Track = {
+const StackedPeaks: Track = {
     data: {
-        url: EXAMPLE_DATASETS.multivec,
+        url: GOSLING_PUBLIC_DATA.multivec,
         type: 'multivec',
         row: 'sample',
         column: 'position',
@@ -92,45 +84,53 @@ export const EXAMPLE_STACKED_AREA: Track = {
     mark: 'area',
     x: {
         field: 'position',
-        type: 'genomic',
-        domain: { chromosome: '1' },
-        axis: 'top'
+        type: 'genomic'
     },
     y: { field: 'peak', type: 'quantitative' },
-    color: { field: 'sample', type: 'nominal' }
+    color: { field: 'sample', type: 'nominal' },
+    width: 600,
+    height: 30
 };
 
-const ideogramTracks: Track[] = [];
-[
-    { chr: '1', width: 1000 },
-    { chr: '2', width: 970 },
-    { chr: '3', width: 850 },
-    { chr: '4', width: 830 },
-    { chr: '5', width: 820 },
-    { chr: '9', width: 730 }
-].map((d, i) => {
-    ideogramTracks.push(
-        {
-            ...EXAMPLE_STACKED_AREA,
-            x: { ...EXAMPLE_STACKED_AREA.x, domain: { chromosome: d.chr }, linkingID: `link-${i}` },
-            width: d.width
-        },
-        {
-            ...EXAMPLE_CYTOAND_HG38.tracks[0],
-            x: {
-                ...(EXAMPLE_CYTOAND_HG38.tracks[0] as BasicSingleTrack).x,
-                domain: { chromosome: d.chr },
-                axis: undefined,
-                linkingID: `link-${i}`
-            },
-            height: 24,
-            width: d.width
-        } as any
-    );
-});
-export const EXAMPLE_IDEOGRAM: GoslingSpec = {
+export const EX_SPEC_CYTOBANDS: GoslingSpec = {
     static: true,
     layout: 'linear',
-    arrangement: { direction: 'vertical', rowSizes: [60, 24], columnSizes: 1000, rowGaps: [0, 30] },
-    tracks: ideogramTracks
+    centerHole: 0.2,
+    parallelViews: [
+        {
+            xDomain: { chromosome: '1' },
+            tracks: [
+                { ...StackedPeaks, width: 1000 },
+                { ...CytoBands, width: 1000 }
+            ]
+        },
+        {
+            xDomain: { chromosome: '2' },
+            tracks: [
+                { ...StackedPeaks, width: 970 },
+                { ...CytoBands, width: 970 }
+            ]
+        },
+        {
+            xDomain: { chromosome: '3' },
+            tracks: [
+                { ...StackedPeaks, width: 850 },
+                { ...CytoBands, width: 850 }
+            ]
+        },
+        {
+            xDomain: { chromosome: '4' },
+            tracks: [
+                { ...StackedPeaks, width: 830 },
+                { ...CytoBands, width: 830 }
+            ]
+        },
+        {
+            xDomain: { chromosome: '5' },
+            tracks: [
+                { ...StackedPeaks, width: 820 },
+                { ...CytoBands, width: 820 }
+            ]
+        }
+    ]
 };

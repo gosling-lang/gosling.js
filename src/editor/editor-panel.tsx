@@ -3,14 +3,27 @@ import MonacoEditor from 'react-monaco-editor';
 import * as Monaco from 'monaco-editor/esm/vs/editor/editor.api';
 import ReactResizeDetector from 'react-resize-detector';
 
-function EditorPanel(props: { code: string; readOnly?: boolean; onChange?: (code: string) => void; hide?: boolean }) {
-    const { code: templateCode, readOnly } = props;
+function EditorPanel(props: {
+    code: string;
+    readOnly?: boolean;
+    openFindBox?: boolean;
+    onChange?: (code: string) => void;
+    hide?: boolean;
+}) {
+    const { code: templateCode, readOnly, openFindBox } = props;
     const editor = useRef<Monaco.editor.IStandaloneCodeEditor | null>(null);
     const [code, setCode] = useState(templateCode);
 
     useEffect(() => {
         setCode(templateCode);
     }, [templateCode]);
+
+    useEffect(() => {
+        if (editor.current && openFindBox !== undefined) {
+            // Monaco editor do not seem to provide a way to close the find box, so let's just open it
+            editor.current.getAction('actions.find').run();
+        }
+    }, [openFindBox]);
 
     function editorDidMount(monacoEditor: Monaco.editor.IStandaloneCodeEditor) {
         editor.current = monacoEditor;

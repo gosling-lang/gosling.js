@@ -3,7 +3,7 @@ import { HiGlassModel, HIGLASS_AXIS_SIZE } from './higlass-model';
 import { parseServerAndTilesetUidFromUrl } from './utils';
 import { Track, Domain } from './gosling.schema';
 import { BoundingBox, RelativePosition } from './utils/bounding-box';
-import { resolveSuperposedTracks } from './utils/superpose';
+import { resolveSuperposedTracks } from './utils/overlay';
 import { getGenomicChannelKeyFromTrack, getGenomicChannelFromTrack } from './utils/validate';
 import { IsDataDeep, IsChannelDeep, IsDataDeepTileset } from './gosling.schema.guards';
 import { DEFAULT_SUBTITLE_HEIGHT, DEFAULT_TITLE_HEIGHT } from './layout/defaults';
@@ -54,7 +54,8 @@ export function goslingToHiGlass(
                 mousePositionColor: '#B8BCC1',
                 /* Track title */
                 name: firstResolvedSpec.title,
-                labelPosition: firstResolvedSpec.title ? 'topLeft' : 'none',
+                // TODO: Support for circular layouts
+                labelPosition: firstResolvedSpec.layout !== 'circular' && firstResolvedSpec.title ? 'topLeft' : 'none',
                 fontSize: 12,
                 labelColor: 'black',
                 labelBackgroundColor: 'white',
@@ -82,7 +83,7 @@ export function goslingToHiGlass(
             };
         }
 
-        if (gmTrack.superposeOnPreviousTrack) {
+        if (gmTrack.overlayOnPreviousTrack) {
             hgModel.addTrackToCombined(hgTrack);
         } else {
             hgModel

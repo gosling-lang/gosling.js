@@ -1,7 +1,7 @@
 import Ajv from 'ajv';
-import { BasicSingleTrack, ChannelDeep, ChannelTypes, SuperposedTrack, Track } from '../gosling.schema';
+import { SingleTrack, ChannelDeep, ChannelTypes, OverlaidTrack, Track } from '../gosling.schema';
 import { IsChannelDeep } from '../gosling.schema.guards';
-import { resolveSuperposedTracks } from './superpose';
+import { resolveSuperposedTracks } from './overlay';
 import GoslingSchema from '../../../schema/gosling.schema.json';
 
 export interface Validity {
@@ -81,7 +81,7 @@ export function validateTrack(track: Track) {
  * Find an axis channel that is encoded with genomic coordinate.
  * `undefined` if not found.
  */
-export function getGenomicChannelFromTrack(track: BasicSingleTrack | SuperposedTrack): ChannelDeep | undefined {
+export function getGenomicChannelFromTrack(track: SingleTrack | OverlaidTrack): ChannelDeep | undefined {
     // we do not support using two genomic coordinates yet
     let genomicChannel: ChannelDeep | undefined = undefined;
     ['x', 'y', 'xe', 'ye', 'x1', 'y1', 'x1e', 'y1e'].reverse().forEach(channelType => {
@@ -98,7 +98,7 @@ export function getGenomicChannelFromTrack(track: BasicSingleTrack | SuperposedT
  * `undefined` if not found.
  */
 export function getGenomicChannelKeyFromTrack(
-    track: BasicSingleTrack | SuperposedTrack
+    track: SingleTrack | OverlaidTrack
 ): 'x' | 'xe' | 'y' | 'ye' | 'x1' | 'y1' | 'x1e' | 'y1e' | undefined {
     // we do not support using two genomic coordinates yet
     let genomicChannelKey: string | undefined = undefined;

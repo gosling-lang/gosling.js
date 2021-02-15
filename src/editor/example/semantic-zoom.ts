@@ -1,10 +1,9 @@
-import { BasicSingleTrack, GoslingSpec, SuperposedTrack, Track } from '../../../core/gosling.schema';
-import { EXAMPLE_CYTOAND_HG38 } from '../cytoband-hg38';
-import { EXAMPLE_DATASETS } from './datasets';
+import { GoslingSpec, OverlaidTrack } from '../../core/gosling.schema';
+import { GOSLING_PUBLIC_DATA } from './gosling-data';
 
-export const EXMAPLE_SEMANTIC_ZOOM_SEQ: BasicSingleTrack | SuperposedTrack = {
+const ScalableSequenceTrack: OverlaidTrack = {
     data: {
-        url: EXAMPLE_DATASETS.fasta,
+        url: GOSLING_PUBLIC_DATA.fasta,
         type: 'multivec',
         row: 'base',
         column: 'position',
@@ -13,7 +12,7 @@ export const EXMAPLE_SEMANTIC_ZOOM_SEQ: BasicSingleTrack | SuperposedTrack = {
         start: 'start',
         end: 'end'
     },
-    superpose: [
+    overlay: [
         {
             mark: 'bar',
             y: { field: 'count', type: 'quantitative' }
@@ -44,9 +43,7 @@ export const EXMAPLE_SEMANTIC_ZOOM_SEQ: BasicSingleTrack | SuperposedTrack = {
             mark: 'text',
             x: {
                 field: 'start',
-                type: 'genomic',
-                domain: { chromosome: '1', interval: [3000000, 3000010] },
-                axis: 'top'
+                type: 'genomic'
             },
             xe: {
                 field: 'end',
@@ -72,9 +69,7 @@ export const EXMAPLE_SEMANTIC_ZOOM_SEQ: BasicSingleTrack | SuperposedTrack = {
     ],
     x: {
         field: 'position',
-        type: 'genomic',
-        domain: { chromosome: '1', interval: [3000000, 3000010] },
-        axis: 'top'
+        type: 'genomic'
     },
     color: {
         field: 'base',
@@ -90,49 +85,20 @@ export const EXMAPLE_SEMANTIC_ZOOM_SEQ: BasicSingleTrack | SuperposedTrack = {
         textFontSize: 24,
         textStrokeWidth: 0,
         textFontWeight: 'bold'
-    }
+    },
+    width: 400,
+    height: 80
 };
 
-const EXAMPLE_SEMANTIC_ZOOMING_LINES: Track = {
+const ScalableCytoBand: OverlaidTrack = {
     data: {
-        url: EXAMPLE_DATASETS.multivec,
-        type: 'multivec',
-        row: 'sample',
-        column: 'position',
-        value: 'peak',
-        categories: [
-            'sample 1',
-            'sample 2',
-            'sample 3',
-            'sample 4'
-            // 'sample 11', 'sample 12', 'sample 13', 'sample 14',
-            // 'sample 21', 'sample 22', 'sample 23', 'sample 24',
-            // 'sample 31', 'sample 32', 'sample 33', 'sample 34',
-        ]
+        url:
+            'https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/UCSC.HG38.Human.CytoBandIdeogram.csv',
+        type: 'csv',
+        chromosomeField: 'Chromosome',
+        genomicFields: ['chromStart', 'chromEnd']
     },
-    mark: 'line',
-    x: {
-        field: 'position',
-        type: 'genomic',
-        domain: { chromosome: '1', interval: [1, 3000500] },
-        axis: 'top'
-    },
-    y: { field: 'peak', type: 'quantitative' },
-    color: { field: 'sample', type: 'nominal' },
-    superpose: [
-        {
-            visibility: [{ target: 'track', measure: 'height', threshold: 60, operation: 'lt' }]
-        },
-        {
-            row: { field: 'sample', type: 'nominal' },
-            visibility: [{ target: 'track', measure: 'height', threshold: 60, operation: 'gtet' }]
-        }
-    ]
-};
-
-export const EXAMPLE_SEMANTIC_ZOOMING_IDEOGRAM: BasicSingleTrack | SuperposedTrack = {
-    ...EXAMPLE_CYTOAND_HG38.tracks[0],
-    superpose: [
+    overlay: [
         {
             mark: 'rect',
             color: {
@@ -188,8 +154,69 @@ export const EXAMPLE_SEMANTIC_ZOOMING_IDEOGRAM: BasicSingleTrack | SuperposedTra
                 }
             ]
         },
-        ...(EXAMPLE_CYTOAND_HG38.tracks[0] as SuperposedTrack).superpose
+        {
+            mark: 'text',
+            dataTransform: {
+                filter: [{ field: 'Stain', oneOf: ['acen'], not: true }]
+            },
+            text: { field: 'Name', type: 'nominal' },
+            color: {
+                field: 'Stain',
+                type: 'nominal',
+                domain: ['gneg', 'gpos25', 'gpos50', 'gpos75', 'gpos100', 'gvar'],
+                range: ['black', 'black', 'black', 'black', 'white', 'black']
+            },
+            visibility: [
+                {
+                    operation: 'less-than',
+                    measure: 'width',
+                    threshold: '|xe-x|',
+                    transitionPadding: 10,
+                    target: 'mark'
+                }
+            ],
+            style: {
+                textStrokeWidth: 0
+            }
+        },
+        {
+            mark: 'rect',
+            dataTransform: {
+                filter: [{ field: 'Stain', oneOf: ['acen'], not: true }]
+            },
+            color: {
+                field: 'Stain',
+                type: 'nominal',
+                domain: ['gneg', 'gpos25', 'gpos50', 'gpos75', 'gpos100', 'gvar'],
+                range: ['white', '#D9D9D9', '#979797', '#636363', 'black', '#A0A0F2']
+            }
+        },
+        {
+            mark: 'triangle-r',
+            dataTransform: {
+                filter: [
+                    { field: 'Stain', oneOf: ['acen'] },
+                    { field: 'Name', include: 'q' }
+                ]
+            },
+            color: { value: '#B40101' }
+        },
+        {
+            mark: 'triangle-l',
+            dataTransform: {
+                filter: [
+                    { field: 'Stain', oneOf: ['acen'] },
+                    { field: 'Name', include: 'p' }
+                ]
+            },
+            color: { value: '#B40101' }
+        }
     ],
+    x: { field: 'chromStart', type: 'genomic' },
+    xe: { field: 'chromEnd', type: 'genomic' },
+    size: { value: 20 },
+    stroke: { value: 'gray' },
+    strokeWidth: { value: 0.5 },
     visibility: [
         {
             operation: 'greater-than',
@@ -198,21 +225,29 @@ export const EXAMPLE_SEMANTIC_ZOOMING_IDEOGRAM: BasicSingleTrack | SuperposedTra
             transitionPadding: 5,
             target: 'mark'
         }
-    ]
+    ],
+    style: {
+        outline: 'white'
+    },
+    width: 400,
+    height: 25
 };
 
-export const EXAMPLE_SEMANTIC_ZOOMING: GoslingSpec = {
-    layout: 'linear',
-    arrangement: {
-        direction: 'vertical',
-        columnSizes: 800,
-        rowSizes: [180, 60, 180, 100, 60]
-    },
-    tracks: [
-        EXMAPLE_SEMANTIC_ZOOM_SEQ,
-        EXAMPLE_SEMANTIC_ZOOMING_IDEOGRAM,
-        EXAMPLE_SEMANTIC_ZOOMING_LINES,
-        EXAMPLE_SEMANTIC_ZOOMING_LINES,
-        EXAMPLE_SEMANTIC_ZOOMING_LINES
+export const EXAMPLE_TRACK_SEMANTIC_ZOOM = {
+    sequence: ScalableSequenceTrack,
+    cytoband: ScalableCytoBand
+};
+
+export const EX_SPEC_SEMANTIC_ZOOM: GoslingSpec = {
+    vconcatViews: [
+        {
+            layout: 'linear',
+            xDomain: { chromosome: '1', interval: [3000000, 3000010] },
+            tracks: [{ ...EXAMPLE_TRACK_SEMANTIC_ZOOM.sequence, width: 600, height: 100 }]
+        },
+        {
+            layout: 'linear',
+            tracks: [{ ...EXAMPLE_TRACK_SEMANTIC_ZOOM.cytoband, width: 600, size: undefined }]
+        }
     ]
 };

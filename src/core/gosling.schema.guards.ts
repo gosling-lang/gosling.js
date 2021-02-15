@@ -11,10 +11,9 @@ import {
     TrackStyle,
     MarkType,
     MarkDeep,
-    MarkGlyph,
     Track,
-    BasicSingleTrack,
-    SuperposedTrack,
+    SingleTrack,
+    OverlaidTrack,
     ChannelBind,
     ChannelTypes,
     Channel,
@@ -28,7 +27,10 @@ import {
     MultivecData,
     VectorData,
     DataTrack,
-    BIGWIGData
+    BIGWIGData,
+    GoslingSpec,
+    ArrangedViews,
+    View
 } from './gosling.schema';
 import { SUPPORTED_CHANNELS } from './mark';
 import { isArray } from 'lodash';
@@ -58,11 +60,11 @@ export function IsDataTransform(_: DataTransform | ChannelDeep | ChannelValue): 
 
 export function IsDataTrack(_: Track): _ is DataTrack {
     // !!! Track might not contain `mark` when it is superposed one
-    return !IsSuperposedTrack(_) && 'data' in _ && !('mark' in _);
+    return !IsOverlaidTrack(_) && 'data' in _ && !('mark' in _);
 }
 
 export function IsTemplate(_: Track): boolean {
-    return !!('data' in _ && (!('mark' in _) || _.overrideTemplate) && !IsSuperposedTrack(_));
+    return !!('data' in _ && (!('mark' in _) || _.overrideTemplate) && !IsOverlaidTrack(_));
 }
 
 export function IsDataDeep(
@@ -108,16 +110,12 @@ export function IsMarkDeep(mark: any /* TODO */): mark is MarkDeep {
     return typeof mark === 'object';
 }
 
-export function IsGlyphMark(mark: any /* TODO */): mark is MarkGlyph {
-    return typeof mark === 'object' && mark.type === 'compositeMark';
+export function IsSingleTrack(track: Track): track is SingleTrack {
+    return !('overlay' in track);
 }
 
-export function IsSingleTrack(track: Track): track is BasicSingleTrack {
-    return !('superpose' in track);
-}
-
-export function IsSuperposedTrack(track: Track): track is SuperposedTrack {
-    return 'superpose' in track;
+export function IsOverlaidTrack(track: Track): track is OverlaidTrack {
+    return 'overlay' in track;
 }
 
 export function IsChannelValue(
@@ -163,7 +161,7 @@ export function IsDomainArray(domain?: Domain): domain is string[] | number[] {
 /**
  * Check whether visual marks can be stacked on top of each other.
  */
-export function IsStackedMark(track: BasicSingleTrack): boolean {
+export function IsStackedMark(track: SingleTrack): boolean {
     return (
         (track.mark === 'bar' || track.mark === 'area' || track.mark === 'text') &&
         IsChannelDeep(track.color) &&
@@ -179,7 +177,7 @@ export function IsStackedMark(track: BasicSingleTrack): boolean {
  * Check whether visual marks in this channel are stacked on top of each other.
  * For example, `area` marks with a `quantitative` `y` channel are being stacked.
  */
-export function IsStackedChannel(track: BasicSingleTrack, channelKey: keyof typeof ChannelTypes): boolean {
+export function IsStackedChannel(track: SingleTrack, channelKey: keyof typeof ChannelTypes): boolean {
     const channel = track[channelKey];
     return (
         IsStackedMark(track) &&
@@ -189,6 +187,14 @@ export function IsStackedChannel(track: BasicSingleTrack, channelKey: keyof type
         IsChannelDeep(channel) &&
         channel.type === 'quantitative'
     );
+}
+
+export function getArrangedViews(spec: GoslingSpec | ArrangedViews): (View | ArrangedViews)[] {
+    if ('parallelViews' in spec) return spec.parallelViews;
+    if ('serialViews' in spec) return spec.serialViews;
+    if ('vconcatViews' in spec) return spec.vconcatViews;
+    if ('hconcatViews' in spec) return spec.hconcatViews;
+    return [];
 }
 
 /**
@@ -202,7 +208,7 @@ export function getValueUsingChannel(datum: { [k: string]: string | number }, ch
     return undefined;
 }
 
-export function getChannelKeysByAggregateFnc(spec: BasicSingleTrack) {
+export function getChannelKeysByAggregateFnc(spec: SingleTrack) {
     const keys: (keyof typeof ChannelTypes)[] = [];
     SUPPORTED_CHANNELS.forEach(k => {
         const c = spec[k];
@@ -216,7 +222,7 @@ export function getChannelKeysByAggregateFnc(spec: BasicSingleTrack) {
 /**
  * Get channel keys by a field type.
  */
-export function getChannelKeysByType(spec: BasicSingleTrack, t: FieldType) {
+export function getChannelKeysByType(spec: SingleTrack, t: FieldType) {
     const keys: (keyof typeof ChannelTypes)[] = [];
     SUPPORTED_CHANNELS.forEach(k => {
         const c = spec[k];
@@ -227,21 +233,19 @@ export function getChannelKeysByType(spec: BasicSingleTrack, t: FieldType) {
     return keys;
 }
 
-export type VisualizationType = 'unknown' | 'composite' | 'bar' | 'line' | 'area' | 'point' | 'rect'; // ...
-export function getVisualizationType(track: BasicSingleTrack): VisualizationType {
-    if (IsGlyphMark(track)) {
-        return 'composite';
-    } else if (track.mark === 'bar') {
-        return 'bar';
-    } else if (track.mark === 'line') {
-        return 'line';
-    } else if (track.mark === 'area') {
-        return 'area';
-    } else if (track.mark === 'point') {
-        return 'point';
-    } else if (track.mark === 'rect') {
-        return 'rect';
-    } else {
-        return 'unknown';
+export function IsXAxis(_: Track) {
+    if ((IsSingleTrack(_) || IsOverlaidTrack(_)) && IsChannelDeep(_.x) && _.x.axis && _.x.axis !== 'none') {
+        return true;
+    } else if (IsOverlaidTrack(_)) {
+        let isFound = false;
+        _.overlay.forEach(t => {
+            if (isFound) return;
+
+            if (IsChannelDeep(t.x) && (t.x.axis === 'top' || t.x.axis === 'bottom')) {
+                isFound = true;
+            }
+        });
+        return isFound;
     }
+    return false;
 }

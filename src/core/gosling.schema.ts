@@ -1,48 +1,294 @@
-import { GLYPH_LOCAL_PRESET_TYPE, GLYPH_HIGLASS_PRESET_TYPE } from '../editor/example/deprecated/index';
+import { GLYPH_LOCAL_PRESET_TYPE, GLYPH_HIGLASS_PRESET_TYPE } from '../editor/example/glyph';
 
-/**
- * Root-level specification
- */
-export type GoslingSpec = {
-    assembly?: Assembly;
-    chromSizes?: [string, number][]; // TODO: not supported yet
+/* ----------------------------- ROOT SPEC ----------------------------- */
+export type GoslingSpec = (View | (ParallelViews | SerialViews | VConcatViews | HConcatViews)) & CommonRootDef;
 
+export interface CommonRootDef {
     title?: string;
     subtitle?: string;
-
-    static?: boolean;
     description?: string;
+}
 
-    layout?: 'linear' | 'circular';
-    arrangement?: Arrangement;
-    tracks: Track[];
+/* ----------------------------- VIEW ----------------------------- */
+export interface CommonViewDef {
+    spacing?: number;
+    static?: boolean;
+    assembly?: Assembly;
+    layout?: Layout;
+    centerHole?: number; // [0, 1], default: 0.3 (`DEFAULT_INNER_HOLE_PROP`) // TODO: Not supported yet
+    xDomain?: DomainInterval | DomainChrInterval | DomainChr; // TODO: Support `DomainGene`
+    xLinkID?: string;
+    // xAxis?: AxisPosition; // TODO:
+}
 
-    width?: number;
-    height?: number;
-};
+export type ArrangedViews = ParallelViews | SerialViews | VConcatViews | HConcatViews;
 
+export interface ParallelViews extends CommonViewDef {
+    parallelViews: (View | ArrangedViews)[];
+}
+
+export interface SerialViews extends CommonViewDef {
+    serialViews: (View | ArrangedViews)[];
+}
+
+export interface VConcatViews extends CommonViewDef {
+    vconcatViews: (View | ArrangedViews)[];
+}
+
+export interface HConcatViews extends CommonViewDef {
+    hconcatViews: (View | ArrangedViews)[];
+}
+
+export type Layout = 'linear' | 'circular';
 export type Assembly = 'hg38' | 'hg19' | 'hg18' | 'hg17' | 'hg16' | 'mm10' | 'mm9';
-// | 'mm8'
-// | 'mm7'
-// | 'mm6'
 
-/**
- * Arrangement of multiple tracks
+/*
+ * View is a group of tracks that share the same genomic axes and are linked each other by default.
  */
-export interface Arrangement {
-    direction?: 'vertical' | 'horizontal';
-    wrap?: number;
+export interface View extends CommonViewDef {
+    tracks: Track[];
+}
 
-    columnSizes?: number | number[];
-    rowSizes?: number | number[];
+/* ----------------------------- TRACK ----------------------------- */
+export type Track = SingleTrack | OverlaidTrack | DataTrack;
 
-    columnGaps?: number | number[];
-    rowGaps?: number | number[];
+export interface CommonRequiredTrackDef {
+    width: number;
+    height: number;
+}
+
+export interface CommonTrackDef extends CommonViewDef, CommonRequiredTrackDef {
+    title?: string;
+    subtitle?: string; // Being used only for a title track (i.e., 'text-track')
+
+    // Arrangement
+    overlayOnPreviousTrack?: boolean;
+
+    // Circular Layout
+    outerRadius?: number;
+    innerRadius?: number;
+    startAngle?: number; // [0, 360]
+    endAngle?: number; // [0, 360]
 }
 
 /**
- * Data specification
+ * Partial specification of `BasicSingleTrack` to use default visual encoding predefined by data type.
  */
+export interface DataTrack extends CommonTrackDef {
+    data: DataDeep;
+}
+
+/* ----------------------------- MARK ----------------------------- */
+export type Mark = MarkType | MarkDeep;
+
+export type MarkType =
+    | 'point'
+    | 'line'
+    | 'area'
+    | 'bar'
+    | 'rect'
+    | 'text'
+    | 'link'
+    | 'rule'
+    | 'triangle-l'
+    | 'triangle-r'
+    | 'triangle-d'
+    // experimental
+    | 'brush'
+    // TODO: perhaps need to make this invisible to users
+    // being used to show title/subtitle internally
+    | 'header';
+
+/* ----------------------------- TRACK ----------------------------- */
+export interface SingleTrack extends CommonTrackDef {
+    // Data
+    data: DataDeep;
+
+    // Data transformation
+    dataTransform?: DataTransform;
+
+    tooltip?: { field: string; type: FieldType; alt?: string }[];
+
+    // Mark
+    mark: Mark;
+
+    // Visual channels
+    x?: Channel; // We could have a special type of Channel for axes
+    y?: Channel;
+    xe?: Channel;
+    ye?: Channel;
+
+    x1?: Channel;
+    y1?: Channel;
+    x1e?: Channel;
+    y1e?: Channel;
+
+    row?: Channel;
+    column?: Channel;
+
+    color?: Channel;
+    size?: Channel;
+    text?: Channel;
+
+    stroke?: Channel;
+    strokeWidth?: Channel;
+    opacity?: Channel;
+
+    // Experimental
+    stackY?: boolean; // Eventually, will be added to y's `Channel` w/ gap
+
+    // Stretch the size to the given range? (e.g., [x, xe])
+    stretch?: boolean;
+
+    // Visibility
+    visibility?: VisibilityCondition[];
+
+    // Styling
+    style?: TrackStyle;
+
+    // Override a spec template that is defined for a given data type
+    overrideTemplate?: boolean;
+}
+
+/**
+ * Superposing multiple tracks.
+ */
+export type OverlaidTrack = Partial<SingleTrack> &
+    CommonRequiredTrackDef & {
+        overlay: Partial<SingleTrack>[];
+    };
+
+export interface TrackStyle {
+    background?: string;
+    backgroundOpacity?: number;
+    dashed?: [number, number];
+    linePattern?: { type: 'triangle-l' | 'triangle-r'; size: number };
+    curve?: 'top' | 'bottom' | 'left' | 'right';
+    align?: 'left' | 'right';
+    dy?: number;
+    outline?: string;
+    outlineWidth?: number;
+    circularLink?: boolean; // draw arc instead of bazier curve?
+    // below options could instead be used with channel options (e.g., size, stroke, strokeWidth)
+    textFontSize?: number;
+    textStroke?: string;
+    textStrokeWidth?: number;
+    textFontWeight?: 'bold' | 'normal';
+    //
+    stroke?: string; // deprecated
+    strokeWidth?: number; // deprecated
+}
+
+/* ----------------------------- SEMANTIC ZOOM ----------------------------- */
+export type VisibilityCondition = SizeVisibilityCondition | ZoomLevelVisibilityCondition;
+
+interface CommonVisibilityCondition {
+    operation: LogicalOperation;
+    conditionPadding?: number;
+    transitionPadding?: number;
+}
+
+export interface SizeVisibilityCondition extends CommonVisibilityCondition {
+    target: 'track' | 'mark';
+    measure: 'width' | 'height';
+    threshold: number | '|xe-x|';
+}
+
+export interface ZoomLevelVisibilityCondition extends CommonVisibilityCondition {
+    target: 'track' | 'mark';
+    measure: 'zoomLevel';
+    threshold: number;
+}
+
+export type LogicalOperation =
+    | 'less-than'
+    | 'lt'
+    | 'LT'
+    | 'greater-than'
+    | 'gt'
+    | 'GT'
+    | 'less-than-or-equal-to'
+    | 'ltet'
+    | 'LTET'
+    | 'greater-than-or-equal-to'
+    | 'gtet'
+    | 'GTET';
+
+/* ----------------------------- VISUAL CHANNEL ----------------------------- */
+export const ChannelTypes = {
+    // coordinates
+    x: 'x',
+    y: 'y',
+    xe: 'xe',
+    ye: 'ye',
+    // coordinates for link
+    x1: 'x1',
+    y1: 'y1',
+    x1e: 'x1e',
+    y1e: 'y1e',
+    // others
+    color: 'color',
+    row: 'row',
+    opacity: 'opacity',
+    stroke: 'stroke',
+    strokeWidth: 'strokeWidth',
+    size: 'size',
+    text: 'text'
+} as const;
+
+export type ChannelType = keyof typeof ChannelTypes | string;
+
+export type Channel = ChannelDeep | ChannelValue; // TODO: support null to allow removing spec when overriding
+
+export interface ChannelDeep {
+    field?: string;
+    type?: FieldType;
+    aggregate?: Aggregate;
+    domain?: Domain;
+    range?: Range;
+    axis?: AxisPosition;
+    legend?: boolean;
+    baseline?: string | number;
+    zeroBaseline?: boolean; // We could remove this and use the `baseline` option instead
+    mirrored?: boolean; // Show baseline on the top or right instead of bottom or left
+    grid?: boolean;
+    linkingID?: string;
+    flip?: boolean; // Flip a track vertically or horizontally?
+    stack?: boolean; // Experimental: We could use this option to stack visual marks, addressing the visual overlap (e.g., stacked bar).
+}
+
+export interface ChannelValue {
+    value: number | string;
+}
+
+export type AxisPosition = 'none' | 'top' | 'bottom' | 'left' | 'right';
+export type FieldType = 'genomic' | 'nominal' | 'quantitative';
+export type Domain = string[] | number[] | DomainInterval | DomainChrInterval | DomainChr | DomainGene;
+export type Range = string[] | number[] | PREDEFINED_COLORS;
+export type PREDEFINED_COLORS = 'viridis' | 'grey' | 'spectral' | 'warm' | 'cividis' | 'bupu' | 'rdbu';
+
+export interface DomainChr {
+    // For showing a certain chromosome
+    chromosome: string;
+}
+export interface DomainChrInterval {
+    // For showing a certain interval in a chromosome
+    chromosome: string;
+    interval: [number, number];
+}
+export interface DomainInterval {
+    // For showing a certain interval in intire chromosomes
+    interval: [number, number]; // This is consistent to HiGlass's initXDomain and initYDomain.
+}
+export interface DomainGene {
+    // For showing genes
+    // TODO: Not supported yet
+    gene: string | [string, string];
+}
+
+export type Aggregate = 'max' | 'min' | 'mean' | 'bin' | 'count';
+
+/* ----------------------------- DATA ----------------------------- */
 export type DataDeep = JSONData | CSVData | BIGWIGData | MultivecData | BEDData | VectorData;
 
 export interface JSONData {
@@ -149,293 +395,7 @@ export interface OneOfFilter {
     not?: boolean;
 }
 
-export type Track = SingleTrack | SuperposedTrack | DataTrack; // | SuperposedTrackTwoLevels; // we could support this in the future
-
-export type SingleTrack = BasicSingleTrack; // | CustomChannel; // we could support this in the future
-
-// TODO: how to exclude keys defined in the `BasicSingleTrack`?
-export type CustomChannel = {
-    [k: string]: Channel;
-} & {
-    [k in CHANNEL_KEYS]?: never;
-};
-
-export interface CommonTrackDef {
-    assembly?: Assembly;
-    chromSizes?: [string, number][]; // TODO: not supported yet
-    title?: string;
-    subtitle?: string;
-    description?: string;
-    static?: boolean;
-
-    // Layout
-    width?: number;
-    height?: number;
-    span?: number;
-    superposeOnPreviousTrack?: boolean;
-
-    // Circular Layout
-    layout?: 'circular' | 'linear';
-    outerRadius?: number;
-    innerRadius?: number;
-    startAngle?: number; // [0, 360]
-    endAngle?: number; // [0, 360]
-}
-
-/**
- * Partial specification of `BasicSingleTrack` to use default visual encoding predefined by data type.
- */
-export interface DataTrack extends CommonTrackDef {
-    data: DataDeep;
-}
-
-/**
- * The baic form of a track definition
- */
-export interface BasicSingleTrack extends CommonTrackDef {
-    // Data
-    data: DataDeep;
-
-    // Data transformation
-    dataTransform?: DataTransform;
-
-    tooltip?: { field: string; type: FieldType; alt?: string }[];
-
-    // Mark
-    mark: Mark;
-
-    // Visual channels
-    x?: Channel; // We could have a special type of Channel for axes
-    y?: Channel;
-    xe?: Channel;
-    ye?: Channel;
-
-    x1?: Channel;
-    y1?: Channel;
-    x1e?: Channel;
-    y1e?: Channel;
-
-    row?: Channel;
-    column?: Channel;
-
-    color?: Channel;
-    size?: Channel;
-    text?: Channel;
-
-    stroke?: Channel;
-    strokeWidth?: Channel;
-    opacity?: Channel;
-
-    // Experimental
-    stackY?: boolean; // Eventually, will be added to y's `Channel` w/ gap
-
-    // Stretch the size to the given range? (e.g., [x, xe])
-    stretch?: boolean;
-
-    // Visibility
-    visibility?: VisibilityCondition[];
-
-    // Styling
-    style?: TrackStyle;
-
-    // Override a spec template that is defined for a given data type
-    overrideTemplate?: boolean;
-}
-
-/**
- * Superposing multiple tracks.
- */
-export type SuperposedTrack = Partial<SingleTrack> & {
-    superpose: Partial<SingleTrack>[];
-};
-
-/**
- * Juxtaposing multiple tracks.
- */
-export type JuxtaposedTrack = Partial<SingleTrack> & {
-    juxtapose: Partial<SingleTrack>[];
-};
-
-// TODO: support this to be able to ues two level superposition
-export type SuperposedTrackTwoLevels = Partial<SingleTrack> & {
-    superpose: Partial<SuperposedTrack>[];
-};
-
-export interface TrackStyle {
-    background?: string;
-    backgroundOpacity?: number;
-    dashed?: [number, number];
-    linePattern?: { type: 'triangle-l' | 'triangle-r'; size: number };
-    curve?: 'top' | 'bottom' | 'left' | 'right';
-    align?: 'left' | 'right';
-    dy?: number;
-    outline?: string;
-    outlineWidth?: number;
-    circularLink?: boolean; // draw arc instead of bazier curve?
-    // below options could instead be used with channel options (e.g., size, stroke, strokeWidth)
-    textFontSize?: number;
-    textStroke?: string;
-    textStrokeWidth?: number;
-    textFontWeight?: 'bold' | 'normal';
-    //
-    stroke?: string; // deprecated
-    strokeWidth?: number; // deprecated
-}
-
-export type LogicalOperation =
-    | 'less-than'
-    | 'lt'
-    | 'LT'
-    | 'greater-than'
-    | 'gt'
-    | 'GT'
-    | 'less-than-or-equal-to'
-    | 'ltet'
-    | 'LTET'
-    | 'greater-than-or-equal-to'
-    | 'gtet'
-    | 'GTET';
-
-export type VisibilityCondition = SizeVisibilityCondition | ZoomLevelVisibilityCondition;
-
-interface CommonVisibilityCondition {
-    operation: LogicalOperation;
-    conditionPadding?: number;
-    transitionPadding?: number;
-}
-
-export interface SizeVisibilityCondition extends CommonVisibilityCondition {
-    target: 'track' | 'mark';
-    measure: 'width' | 'height';
-    threshold: number | '|xe-x|';
-}
-
-export interface ZoomLevelVisibilityCondition extends CommonVisibilityCondition {
-    target: 'track' | 'mark';
-    measure: 'zoomLevel';
-    threshold: number;
-}
-
-export const enum CHANNEL_KEYS {
-    x = 'x',
-    y = 'y',
-    xe = 'xe',
-    ye = 'ye',
-    x1 = 'x1',
-    y1 = 'y1',
-    x1e = 'x1e',
-    y1e = 'y1e',
-    color = 'color',
-    row = 'row',
-    opacity = 'opacity',
-    stroke = 'stroke',
-    strokeWidth = 'strokeWidth',
-    size = 'size',
-    text = 'text'
-}
-
-/**
- * Channel
- */
-export const ChannelTypes = {
-    // coordinates
-    x: 'x',
-    y: 'y',
-    xe: 'xe',
-    ye: 'ye',
-    // coordinates for link
-    x1: 'x1',
-    y1: 'y1',
-    x1e: 'x1e',
-    y1e: 'y1e',
-    // others
-    color: 'color',
-    row: 'row',
-    opacity: 'opacity',
-    stroke: 'stroke',
-    strokeWidth: 'strokeWidth',
-    size: 'size',
-    text: 'text'
-} as const;
-
-export type ChannelType = keyof typeof ChannelTypes | string;
-
-export type Channel = ChannelDeep | ChannelValue; // TODO: support null to allow removing spec when overriding
-
-export interface ChannelDeep {
-    field?: string;
-    type?: FieldType;
-    aggregate?: Aggregate;
-    domain?: Domain;
-    range?: Range;
-    axis?: AxisPosition;
-    legend?: boolean;
-    baseline?: string | number;
-    zeroBaseline?: boolean; // We could remove this and use the `baseline` option instead
-    mirrored?: boolean; // Show baseline on the top or right instead of bottom or left
-    grid?: boolean;
-    linkingID?: string;
-    flip?: boolean; // Flip a track vertically or horizontally?
-    stack?: boolean; // Experimental: We could use this option to stack visual marks, addressing the visual overlap (e.g., stacked bar).
-}
-export type AxisPosition = 'none' | 'top' | 'bottom' | 'left' | 'right';
-export type FieldType = 'genomic' | 'nominal' | 'quantitative';
-
-export interface ChannelValue {
-    value: number | string;
-}
-
-export type Domain = string[] | number[] | DomainInterval | DomainChrInterval | DomainChr | DomainGene;
-export type Range = string[] | number[] | PREDEFINED_COLORS;
-export type PREDEFINED_COLORS = 'viridis' | 'grey' | 'spectral' | 'warm' | 'cividis' | 'bupu' | 'rdbu';
-
-export interface DomainChr {
-    // For showing a certain chromosome
-    chromosome: string;
-}
-export interface DomainChrInterval {
-    // For showing a certain interval in a chromosome
-    chromosome: string;
-    interval: [number, number];
-}
-export interface DomainInterval {
-    // For showing a certain interval in intire chromosomes
-    interval: [number, number]; // This is consistent to HiGlass's initXDomain and initYDomain.
-}
-export interface DomainGene {
-    // For showing genes
-    // TODO: Not supported yet
-    gene: string | [string, string];
-}
-
-export type Aggregate = 'max' | 'min' | 'mean' | 'bin' | 'count';
-
-/**
- * Mark
- */
-export type Mark = MarkType | MarkDeep;
-
-export type MarkType =
-    | 'point'
-    | 'line'
-    | 'area'
-    | 'bar'
-    | 'rect'
-    | 'text'
-    | 'link'
-    | 'rule'
-    | 'triangle-l'
-    | 'triangle-r'
-    | 'triangle-d'
-    // experimental
-    | 'brush'
-    // TODO: perhaps need to make this invisible to users
-    // being used to show title/subtitle internally
-    | 'header';
-
-/**
- * Glyph
- */
+/* ----------------------------- GLYPH (deprecated, but to be supported again) ----------------------------- */
 export type MarkDeep = MarkGlyphPreset | MarkGlyph | MarkWithStyle;
 
 export interface MarkWithStyle {

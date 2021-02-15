@@ -51,9 +51,10 @@ export function drawBar(trackInfo: any, tile: any, model: GoslingTrackModel) {
     const baselineY = model.encodedValue('y', baselineValue) ?? 0;
 
     /* render */
+    const g = tile.graphics;
     if (IsStackedMark(spec)) {
         // TODO: many parts in this scope are identical to the below `else` statement, so encaptulate this?
-        const rowGraphics = tile.graphics; // new HGC.libraries.PIXI.Graphics(); // only one row for stacked marks
+        // const rowGraphics = tile.graphics; // new HGC.libraries.PIXI.Graphics(); // only one row for stacked marks
 
         const genomicChannel = model.getGenomicChannel();
         if (!genomicChannel || !genomicChannel.field) {
@@ -87,7 +88,7 @@ export function drawBar(trackInfo: any, tile: any, model: GoslingTrackModel) {
                     return;
                 }
 
-                rowGraphics.lineStyle(
+                g.lineStyle(
                     strokeWidth,
                     colorToHex(stroke),
                     actualOpacity,
@@ -97,18 +98,19 @@ export function drawBar(trackInfo: any, tile: any, model: GoslingTrackModel) {
                 if (circular) {
                     const farR = trackOuterRadius - ((rowHeight - prevYEnd) / trackHeight) * trackRingSize;
                     const nearR = trackOuterRadius - ((rowHeight - y - prevYEnd) / trackHeight) * trackRingSize;
+
                     const sPos = cartesianToPolar(barStartX, trackWidth, nearR, cx, cy, startAngle, endAngle);
                     const startRad = valueToRadian(barStartX, trackWidth, startAngle, endAngle);
                     const endRad = valueToRadian(barStartX + barWidth, trackWidth, startAngle, endAngle);
 
-                    rowGraphics.beginFill(colorToHex(color), actualOpacity);
-                    rowGraphics.moveTo(sPos.x, sPos.y);
-                    rowGraphics.arc(cx, cy, nearR, startRad, endRad, true);
-                    rowGraphics.arc(cx, cy, farR, endRad, startRad, false);
-                    rowGraphics.closePath();
+                    g.beginFill(colorToHex(color), actualOpacity);
+                    g.moveTo(sPos.x, sPos.y);
+                    g.arc(cx, cy, nearR, startRad, endRad, true);
+                    g.arc(cx, cy, farR, endRad, startRad, false);
+                    g.closePath();
                 } else {
-                    rowGraphics.beginFill(colorToHex(color), opacity);
-                    rowGraphics.drawRect(barStartX, rowHeight - y - prevYEnd, barWidth, y);
+                    g.beginFill(colorToHex(color), opacity);
+                    g.drawRect(barStartX, rowHeight - y - prevYEnd, barWidth, y);
                 }
 
                 prevYEnd += y;
@@ -117,7 +119,7 @@ export function drawBar(trackInfo: any, tile: any, model: GoslingTrackModel) {
     } else {
         rowCategories.forEach(rowCategory => {
             // we are separately drawing each row so that y scale can be more effectively shared across tiles without rerendering from the bottom
-            const rowGraphics = tile.graphics; //new HGC.libraries.PIXI.Graphics();
+            // const g = tile.graphics; //new HGC.libraries.PIXI.Graphics();
             const rowPosition = model.encodedValue('row', rowCategory);
 
             data.filter(
@@ -143,7 +145,7 @@ export function drawBar(trackInfo: any, tile: any, model: GoslingTrackModel) {
                     return;
                 }
 
-                rowGraphics.lineStyle(
+                g.lineStyle(
                     strokeWidth,
                     colorToHex(stroke),
                     actualOpacity,
@@ -156,23 +158,19 @@ export function drawBar(trackInfo: any, tile: any, model: GoslingTrackModel) {
                         ((rowPosition + rowHeight - barHeight - baselineY) / trackHeight) * trackRingSize;
                     const nearR =
                         trackOuterRadius - ((rowPosition + rowHeight - baselineY) / trackHeight) * trackRingSize;
+
                     const sPos = cartesianToPolar(barStartX, trackWidth, nearR, cx, cy, startAngle, endAngle);
                     const startRad = valueToRadian(barStartX, trackWidth, startAngle, endAngle);
                     const endRad = valueToRadian(barStartX + barWidth, trackWidth, startAngle, endAngle);
 
-                    rowGraphics.beginFill(colorToHex(color), actualOpacity);
-                    rowGraphics.moveTo(sPos.x, sPos.y);
-                    rowGraphics.arc(cx, cy, nearR, startRad, endRad, true);
-                    rowGraphics.arc(cx, cy, farR, endRad, startRad, false);
-                    rowGraphics.closePath();
+                    g.beginFill(colorToHex(color), actualOpacity);
+                    g.moveTo(sPos.x, sPos.y);
+                    g.arc(cx, cy, nearR, startRad, endRad, true);
+                    g.arc(cx, cy, farR, endRad, startRad, false);
+                    g.closePath();
                 } else {
-                    rowGraphics.beginFill(colorToHex(color), opacity);
-                    rowGraphics.drawRect(
-                        barStartX,
-                        rowPosition + rowHeight - barHeight - baselineY,
-                        barWidth,
-                        barHeight
-                    );
+                    g.beginFill(colorToHex(color), opacity);
+                    g.drawRect(barStartX, rowPosition + rowHeight - barHeight - baselineY, barWidth, barHeight);
                 }
             });
         });

@@ -1,33 +1,33 @@
-import { AxisPosition, BasicSingleTrack, SuperposedTrack, Track } from '../gosling.schema';
+import { AxisPosition, SingleTrack, OverlaidTrack, Track } from '../gosling.schema';
 import assign from 'lodash/assign';
-import { IsChannelDeep, IsDataTrack, IsSuperposedTrack } from '../gosling.schema.guards';
+import { IsChannelDeep, IsDataTrack, IsOverlaidTrack } from '../gosling.schema.guards';
 
 /**
  * Resolve superposed tracks into multiple track specifications.
  * Some options are corrected to ensure the resolved tracks use consistent visual properties, such as the existence of the axis for genomic coordinates.
  */
-export function resolveSuperposedTracks(track: Track): BasicSingleTrack[] {
+export function resolveSuperposedTracks(track: Track): SingleTrack[] {
     if (IsDataTrack(track)) {
         // no BasicSingleTrack to return
         return [];
     }
 
-    if (!IsSuperposedTrack(track)) {
+    if (!IsOverlaidTrack(track)) {
         // no `superpose` to resolve
         return [track];
     }
 
-    if (track.superpose.length === 0) {
+    if (track.overlay.length === 0) {
         // This makes sure not to return empty object
-        return [{ ...track, superpose: undefined } as BasicSingleTrack];
+        return [{ ...track, superpose: undefined } as SingleTrack];
     }
 
-    const base: BasicSingleTrack = JSON.parse(JSON.stringify(track));
-    delete (base as Partial<SuperposedTrack>).superpose; // remove `superpose` from the base spec
+    const base: SingleTrack = JSON.parse(JSON.stringify(track));
+    delete (base as Partial<OverlaidTrack>).overlay; // remove `superpose` from the base spec
 
-    const resolved: BasicSingleTrack[] = [];
-    track.superpose.forEach((subSpec, i) => {
-        const spec = assign(JSON.parse(JSON.stringify(base)), subSpec) as BasicSingleTrack;
+    const resolved: SingleTrack[] = [];
+    track.overlay.forEach((subSpec, i) => {
+        const spec = assign(JSON.parse(JSON.stringify(base)), subSpec) as SingleTrack;
         if (spec.title && i !== 0) {
             // !!! This part should be consistent to `spreadTracksByData` defined on the bottom of this file
             delete spec.title; // remove `title` for the rest of the superposed tracks
@@ -48,7 +48,7 @@ export function resolveSuperposedTracks(track: Track): BasicSingleTrack[] {
         return {
             ...d,
             x: { ...d.x, axis: xAxisPosition }
-        } as BasicSingleTrack;
+        } as SingleTrack;
     });
 
     // height
@@ -65,41 +65,41 @@ export function resolveSuperposedTracks(track: Track): BasicSingleTrack[] {
 export function spreadTracksByData(tracks: Track[]): Track[] {
     return ([] as Track[]).concat(
         ...tracks.map(t => {
-            if (IsDataTrack(t) || !IsSuperposedTrack(t) || t.superpose.length <= 1) {
+            if (IsDataTrack(t) || !IsOverlaidTrack(t) || t.overlay.length <= 1) {
                 // no superposed tracks to spread
                 return [t];
             }
 
-            if (t.superpose.filter(s => s.data).length === 0) {
+            if (t.overlay.filter(s => s.data).length === 0) {
                 // superposed tracks use the same data and metadata, so no point to spread.
                 return [t];
             }
 
-            const base: BasicSingleTrack = JSON.parse(JSON.stringify(t));
-            delete (base as Partial<SuperposedTrack>).superpose; // remove `superpose` from the base spec
+            const base: SingleTrack = JSON.parse(JSON.stringify(t));
+            delete (base as Partial<OverlaidTrack>).overlay; // remove `superpose` from the base spec
 
             const spread: Track[] = [];
-            const original: SuperposedTrack = JSON.parse(JSON.stringify(base));
-            original.superpose = [];
+            const original: OverlaidTrack = JSON.parse(JSON.stringify(base));
+            original.overlay = [];
 
             // TODO: This is a very naive apporach, and we can do better!
-            t.superpose.forEach((subSpec, i) => {
+            t.overlay.forEach((subSpec, i) => {
                 if (!subSpec.data) {
                     // Neither metadata nor data is used, so just put that into the original `superpose` option.
-                    original.superpose.push(subSpec);
+                    original.overlay.push(subSpec);
                     return;
                 }
 
-                const spec = assign(JSON.parse(JSON.stringify(base)), subSpec) as BasicSingleTrack;
+                const spec = assign(JSON.parse(JSON.stringify(base)), subSpec) as SingleTrack;
                 if (spec.title && i !== 0) {
                     // !!! This part should be consistent to `resolveSuperposedTracks` defined on the top of this file
                     delete spec.title; // remove `title` for the rest of the superposed tracks
                 }
-                spec.superposeOnPreviousTrack = true;
+                spec.overlayOnPreviousTrack = true;
                 spread.push(spec);
             });
 
-            // !!! Order is important here because `spead` tracks will have `superposeOnPreviousTrack` flags, and they do not want to be superposed on top of non-related one.
+            // !!! Order is important here because `spead` tracks will have `overlayOnPreviousTrack` flags, and they do not want to be superposed on top of non-related one.
             return [original, ...spread];
         })
     );

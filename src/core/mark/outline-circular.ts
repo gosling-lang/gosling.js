@@ -25,33 +25,36 @@ export function drawCircularOutlines(HGC: any, trackInfo: any, tile: any, tm: Go
     const endRad = valueToRadian(trackWidth, trackWidth, startAngle, endAngle);
 
     /* render */
-    const graphics = tile.graphics;
+    const g = tile.graphics;
 
-    graphics.lineStyle(
-        1,
-        colorToHex(spec.style?.outline ?? '#DBDBDB'),
-        0, // 0.4, // alpha
-        0 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
-    );
-    graphics.beginFill(colorToHex('white'), 0);
-    graphics.moveTo(posStartInner.x, posStartInner.y);
-    graphics.arc(cx, cy, trackInnerRadius, startRad, endRad, true);
-    graphics.arc(cx, cy, trackOuterRadius, endRad, startRad, false);
-    graphics.closePath();
+    if (spec.style?.outlineWidth !== 0 && !(spec.layout === 'circular' && spec.mark === 'link')) {
+        // circular link marks usually use entire inner space
+        g.lineStyle(
+            0.5,
+            colorToHex(spec.style?.outline ?? '#DBDBDB'),
+            0.1, // 0.4, // alpha
+            0.5 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
+        );
+        g.beginFill(colorToHex('lightgray'), 0.05);
+        g.moveTo(posStartInner.x, posStartInner.y);
+        g.arc(cx, cy, trackInnerRadius, startRad, endRad, true);
+        g.arc(cx, cy, trackOuterRadius, endRad, startRad, false);
+        g.closePath();
+    }
 
     if (IsChannelDeep(spec.x) && spec.x.axis === 'top') {
         // outer line
-        graphics.lineStyle(
+        g.lineStyle(
             0.5,
             colorToHex('black'),
             0, // 1, // alpha
             0.5 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
         );
-        graphics.beginFill(colorToHex('white'), 0);
-        graphics.moveTo(posStartInner.x, posStartInner.y);
-        graphics.arc(cx, cy, trackOuterRadius - 0.5, startRad, endRad, true);
-        graphics.arc(cx, cy, trackOuterRadius, endRad, startRad, false);
-        graphics.closePath();
+        g.beginFill(colorToHex('white'), 0);
+        g.moveTo(posStartInner.x, posStartInner.y);
+        g.arc(cx, cy, trackOuterRadius - 0.5, startRad, endRad, true);
+        g.arc(cx, cy, trackOuterRadius, endRad, startRad, false);
+        g.closePath();
     }
 
     // inner line
@@ -68,24 +71,24 @@ export function drawCircularOutlines(HGC: any, trackInfo: any, tile: any, tm: Go
     // graphics.closePath();
 
     // slice on the top
-    graphics.lineStyle(
+    g.lineStyle(
         0.5,
         colorToHex('black'),
         0, // alpha
         0.5 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
     );
-    graphics.beginFill(colorToHex('white'), 0);
-    graphics.moveTo(cx, cy);
-    graphics.arc(cx, cy, trackOuterRadius + 3, startRad, endRad, false);
-    graphics.closePath();
+    g.beginFill(colorToHex('white'), 0);
+    g.moveTo(cx, cy);
+    g.arc(cx, cy, trackOuterRadius + 3, startRad, endRad, false);
+    g.closePath();
 
     // center white hole
-    graphics.lineStyle(
+    g.lineStyle(
         1,
         colorToHex('#DBDBDB'),
         0, // alpha
         0 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
     );
-    graphics.beginFill(colorToHex('white'), 0);
-    graphics.drawCircle(cx, cy, trackInnerRadius - 1);
+    g.beginFill(colorToHex('white'), 0);
+    g.drawCircle(cx, cy, trackInnerRadius - 1);
 }
