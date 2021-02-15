@@ -1,7 +1,7 @@
 import { goslingToHiGlass } from './gosling-to-higlass';
 import { SingleTrack } from './gosling.schema';
 import { HiGlassModel } from './higlass-model';
-import { EXAMPLE_TRACK_SEMANTIC_ZOOM } from '../editor/example-new/semantic-zoom';
+import { EXAMPLE_TRACK_SEMANTIC_ZOOM } from '../editor/example/semantic-zoom';
 
 describe('Should convert gosling spec to higlass view config.', () => {
     it('Should return a generated higlass view config correctly', () => {

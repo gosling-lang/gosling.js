@@ -6,7 +6,7 @@ import stringify from 'json-stringify-pretty-compact';
 import SplitPane from 'react-split-pane';
 import { Datum, GoslingSpec } from '../core/gosling.schema';
 import { debounce } from 'lodash';
-import { examples } from './example-new';
+import { examples } from './example';
 import { HiGlassSpec } from '../core/higlass.schema';
 import GoslingSchema from '../../schema/gosling.schema.json';
 import { validateSpec, Validity } from '../core/utils/validate';

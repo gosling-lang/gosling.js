@@ -5,7 +5,6 @@ import { Assembly, AxisPosition, Domain } from './gosling.schema';
 import { getNumericDomain } from './utils/scales';
 import { RelativePosition } from './utils/bounding-box';
 import { validateSpec } from './utils/validate';
-import { SUPERPOSE_VIEWCONFIG } from '../editor/example/compiled-view-config/superpose-viewconfig';
 import { GET_CHROM_SIZES } from './utils/assembly';
 
 export const HIGLASS_AXIS_SIZE = 30;
@@ -261,49 +260,6 @@ export class HiGlassModel {
                 }
             ];
         }
-        return this;
-    }
-
-    /**
-     * DEBUGING PURPOSE FUNCTIONS
-     */
-    public _addDebugView() {
-        if (!this.hg.views) return this;
-        this.hg.views.push(SUPERPOSE_VIEWCONFIG);
-    }
-
-    public _addGeneAnnotationTrack() {
-        if (!this.hg.views) return this;
-        this.getLastView().tracks.bottom = [
-            {
-                type: 'horizontal-gene-annotations',
-                height: 90,
-                tilesetUid: 'OHJakQICQD6gTD7skx4EWA',
-                server: '//higlass.io/api/v1',
-                uid: 'OHJakQICQD6gTD7skx4EWA',
-                options: {
-                    name: 'Gene Annotations (hg19)',
-                    fontSize: 10,
-                    labelColor: 'black',
-                    labelBackgroundColor: '#ffffff',
-                    labelPosition: 'hidden',
-                    labelLeftMargin: 0,
-                    labelRightMargin: 0,
-                    labelTopMargin: 0,
-                    labelBottomMargin: 0,
-                    minHeight: 24,
-                    plusStrandColor: 'blue',
-                    minusStrandColor: 'red',
-                    trackBorderWidth: 0,
-                    trackBorderColor: 'black',
-                    showMousePosition: false,
-                    mousePositionColor: '#000000',
-                    geneAnnotationHeight: 16,
-                    geneLabelPosition: 'outside',
-                    geneStrandSpacing: 4
-                }
-            }
-        ];
         return this;
     }
 }

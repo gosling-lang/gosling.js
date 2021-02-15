@@ -1,6 +1,6 @@
 import { GoslingTrackModel } from '../../core/gosling-track-model';
 import { resolveSuperposedTracks } from '../../core/utils/overlay';
-import { EXAMPLE_TRACK_SEMANTIC_ZOOM } from '../example-new/semantic-zoom';
+import { EXAMPLE_TRACK_SEMANTIC_ZOOM } from './semantic-zoom';
 
 describe('Example specs should be valid', () => {
     it('Ideogram', () => {

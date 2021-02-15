@@ -1,25 +1,21 @@
-import { Mark } from '../../../core/gosling.schema';
-
-import { GLYPH_GENE_ANNOTATAION } from './gene-annotation';
-import { GLYPH_GENE_ANNOTATAION_V2 } from './gene-annotation-simple';
-import { GLYPH_CYTOGENETIC_BAND } from './glyph-cytogenetic-band';
+import { Mark } from '../../core/gosling.schema';
 
 export const GLYPH_PRESETS: {
     name: GLYPH_LOCAL_PRESET_TYPE;
     mark: Mark;
 }[] = [
-    {
-        name: 'gene-annotation',
-        mark: GLYPH_GENE_ANNOTATAION
-    },
-    {
-        name: 'gene-annotation-simple',
-        mark: GLYPH_GENE_ANNOTATAION_V2
-    },
-    {
-        name: 'cytogenetic-band',
-        mark: GLYPH_CYTOGENETIC_BAND
-    }
+    // {
+    //     name: 'gene-annotation',
+    //     mark: GLYPH_GENE_ANNOTATAION
+    // },
+    // {
+    //     name: 'gene-annotation-simple',
+    //     mark: GLYPH_GENE_ANNOTATAION_V2
+    // },
+    // {
+    //     name: 'cytogenetic-band',
+    //     mark: GLYPH_CYTOGENETIC_BAND
+    // }
 ];
 
 export type GLYPH_LOCAL_PRESET_TYPE = 'gene-annotation-simple' | 'gene-annotation' | 'cytogenetic-band';

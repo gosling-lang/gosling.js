@@ -1,7 +1,7 @@
 // @ts-ignore
 import { JSONCrush, JSONUncrush } from './json-crush';
 import stringify from 'json-stringify-pretty-compact';
-import { EXAMPLE_TRACK_SEMANTIC_ZOOM } from '../../editor/example-new/semantic-zoom';
+import { EXAMPLE_TRACK_SEMANTIC_ZOOM } from '../../editor/example/semantic-zoom';
 
 describe('JSONCrush', () => {
     it('Should not loss information', () => {

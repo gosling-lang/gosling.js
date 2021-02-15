@@ -1,4 +1,4 @@
-import { GLYPH_LOCAL_PRESET_TYPE, GLYPH_HIGLASS_PRESET_TYPE } from '../editor/example/deprecated/index';
+import { GLYPH_LOCAL_PRESET_TYPE, GLYPH_HIGLASS_PRESET_TYPE } from '../editor/example/glyph';
 
 /* ----------------------------- ROOT SPEC ----------------------------- */
 export type GoslingSpec = (View | (ParallelViews | SerialViews | VConcatViews | HConcatViews)) & CommonRootDef;
