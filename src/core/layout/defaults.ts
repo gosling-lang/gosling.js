@@ -16,3 +16,6 @@ export const DEFAULT_VIEW_SPACING = 20;
 
 // empty space inside the visualization for circular layouts
 export const DEFAULT_INNER_HOLE_PROP = 0.3;
+
+// default color when cannot parse
+export const DEFAULT_BACKUP_COLOR = 'gray';

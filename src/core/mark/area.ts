@@ -3,6 +3,7 @@ import { Channel, Datum } from '../gosling.schema';
 import { min as d3min, max as d3max, group } from 'd3-array';
 import { IsStackedMark, getValueUsingChannel } from '../gosling.schema.guards';
 import { cartesianToPolar } from '../utils/polar';
+import colorToHex from '../utils/color-to-hex';
 
 // TODO: fill the white gap betwee tiles.
 /**
@@ -11,9 +12,6 @@ import { cartesianToPolar } from '../utils/polar';
 export function drawArea(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackModel) {
     /* track spec */
     const spec = tm.spec();
-
-    /* helper */
-    const { colorToHex } = HGC.utils;
 
     /* data */
     const data = tm.data();

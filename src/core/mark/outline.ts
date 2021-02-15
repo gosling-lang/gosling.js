@@ -1,5 +1,6 @@
 import { GoslingTrackModel } from '../gosling-track-model';
 import { IsChannelDeep } from '../gosling.schema.guards';
+import colorToHex from '../utils/color-to-hex';
 
 export const TITLE_STYLE = {
     fontSize: '12px',
@@ -11,9 +12,6 @@ export const TITLE_STYLE = {
 };
 
 export function drawChartOutlines(HGC: any, trackInfo: any, tm: GoslingTrackModel) {
-    /* helper */
-    const { colorToHex } = HGC.utils;
-
     const g = trackInfo.pBorder; // use pBorder not to affected by zoomming
 
     // size and position

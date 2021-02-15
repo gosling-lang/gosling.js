@@ -2,13 +2,11 @@ import { GoslingTrackModel } from '../gosling-track-model';
 import { Channel } from '../gosling.schema';
 import { getValueUsingChannel } from '../gosling.schema.guards';
 import { cartesianToPolar, valueToRadian } from '../utils/polar';
+import colorToHex from '../utils/color-to-hex';
 
 export function drawRule(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackModel) {
     /* track spec */
     const spec = tm.spec();
-
-    /* helper */
-    const { colorToHex } = HGC.utils;
 
     /* data */
     const data = tm.data();
