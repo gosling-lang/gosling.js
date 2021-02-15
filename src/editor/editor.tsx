@@ -1,11 +1,11 @@
 import * as gosling from '../';
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useRef, useState, useEffect, useCallback } from 'react';
 import PubSub from 'pubsub-js';
 import EditorPanel from './editor-panel';
 import stringify from 'json-stringify-pretty-compact';
 import SplitPane from 'react-split-pane';
 import { Datum, GoslingSpec } from '../core/gosling.schema';
-import { debounce, delay } from 'lodash';
+import { debounce } from 'lodash';
 import { examples } from './example-new';
 import { HiGlassSpec } from '../core/higlass.schema';
 import GoslingSchema from '../../schema/gosling.schema.json';
@@ -88,15 +88,16 @@ function Editor(props: any) {
     const urlParams = qs.parse(props.location.search, { ignoreQueryPrefix: true });
     const urlSpec = urlParams?.spec ? JSONUncrush(urlParams.spec as string) : null;
 
+    const previewData = useRef<PreviewData[]>([]);
+    const [refreshData, setRefreshData] = useState<boolean>(false);
+
     const [demo, setDemo] = useState(examples[INIT_DEMO_INDEX]);
     const [hg, setHg] = useState<HiGlassSpec>();
     const [code, setCode] = useState(stringify(urlSpec ?? (examples[INIT_DEMO_INDEX].spec as GoslingSpec)));
     const [goslingSpec, setGoslingSpec] = useState<gosling.GoslingSpec>();
     const [log, setLog] = useState<Validity>({ message: '', state: 'success' });
     const [autoRun, setAutoRun] = useState(true);
-    const [previewData, setPreviewData] = useState<PreviewData[]>([]);
     const [selectedPreviewData, setSelectedPreviewData] = useState<number>(0);
-    const [dataLoading, setDataLoading] = useState<boolean>(false);
 
     // whether to show HiGlass' viewConfig on the left-bottom
     const [showVC, setShowVC] = useState<boolean>(false);
@@ -117,22 +118,11 @@ function Editor(props: any) {
      * Editor moode
      */
     useEffect(() => {
+        previewData.current = [];
         setSelectedPreviewData(0);
-        setPreviewData([]);
         setCode(urlSpec ?? stringify(demo.spec as GoslingSpec));
         setHg(undefined);
     }, [demo]);
-
-    /**
-     * Show animation of small loading icon for visual feedback.
-     */
-    useEffect(() => {
-        if (dataLoading) {
-            delay(() => {
-                setDataLoading(false);
-            }, 3500);
-        }
-    }, [dataLoading]);
 
     const runSpecUpdateVis = useCallback(
         (run?: boolean) => {
@@ -163,13 +153,8 @@ function Editor(props: any) {
             // Data with different `dataConfig` is shown separately in data preview.
             const id = `${data.dataConfig}`;
 
-            // if(previewData.find(d => d.id === id)) {
-            //     // We only get the initial data for each id
-            // } else {
-            const newPreviewData = previewData.filter(d => d.id !== id);
-            setPreviewData([...newPreviewData, { ...data, id }]);
-            setDataLoading(true);
-            // }
+            const newPreviewData = previewData.current.filter(d => d.id !== id);
+            previewData.current = [...newPreviewData, { ...data, id }];
         });
         return () => {
             PubSub.unsubscribe(token);
@@ -180,7 +165,7 @@ function Editor(props: any) {
      * Render visualization when edited
      */
     useEffect(() => {
-        setPreviewData([]);
+        previewData.current = [];
         setSelectedPreviewData(0);
         runSpecUpdateVis();
     }, [code, autoRun]);
@@ -424,22 +409,24 @@ function Editor(props: any) {
                                         style={{ cursor: 'pointer' }}
                                         onClick={() => setIsShowDataPreview(!isShowDataPreview)}
                                     >
-                                        <span
-                                            className={
-                                                dataLoading ? 'data-preview-loading-icon' : 'data-preview-stop-icon'
-                                            }
-                                        >
-                                            ●{' '}
-                                        </span>
                                         Data Preview (~100 Rows, Data Before Transformation)
                                     </div>
                                     <div className="editor-data-preview-panel">
-                                        {previewData.length > selectedPreviewData &&
-                                        previewData[selectedPreviewData] &&
-                                        previewData[selectedPreviewData].data.length > 0 ? (
+                                        <div
+                                            title="Refresh preview data"
+                                            className="data-preview-refresh-button"
+                                            onClick={() => setRefreshData(!refreshData)}
+                                        >
+                                            {getIconSVG(ICONS.REFRESH, 23, 23)}
+                                            <br />
+                                            {'REFRESH DATA'}
+                                        </div>
+                                        {previewData.current.length > selectedPreviewData &&
+                                        previewData.current[selectedPreviewData] &&
+                                        previewData.current[selectedPreviewData].data.length > 0 ? (
                                             <>
                                                 <div className="editor-data-preview-tab">
-                                                    {previewData.map((d: PreviewData, i: number) => (
+                                                    {previewData.current.map((d: PreviewData, i: number) => (
                                                         <button
                                                             className={
                                                                 i === selectedPreviewData
@@ -450,25 +437,27 @@ function Editor(props: any) {
                                                             onClick={() => setSelectedPreviewData(i)}
                                                         >
                                                             {`${(JSON.parse(d.dataConfig).data
-                                                                .type as string).toUpperCase()} `}
+                                                                .type as string).toLocaleLowerCase()} `}
                                                             <small>{i}</small>
                                                         </button>
                                                     ))}
                                                 </div>
                                                 <div className="editor-data-preview-tab-info">
-                                                    {getDataPreviewInfo(previewData[selectedPreviewData].dataConfig)}
+                                                    {getDataPreviewInfo(
+                                                        previewData.current[selectedPreviewData].dataConfig
+                                                    )}
                                                 </div>
                                                 <div className="editor-data-preview-table">
                                                     <table>
                                                         <tbody>
                                                             <tr>
                                                                 {Object.keys(
-                                                                    previewData[selectedPreviewData].data[0]
+                                                                    previewData.current[selectedPreviewData].data[0]
                                                                 ).map((field: string, i: number) => (
                                                                     <th key={i}>{field}</th>
                                                                 ))}
                                                             </tr>
-                                                            {previewData[selectedPreviewData].data.map(
+                                                            {previewData.current[selectedPreviewData].data.map(
                                                                 (row: Datum, i: number) => (
                                                                     <tr key={i}>
                                                                         {Object.keys(row).map(

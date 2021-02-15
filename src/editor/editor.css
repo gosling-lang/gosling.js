@@ -124,6 +124,18 @@
     height: 30px;
 }
 
+.data-preview-refresh-button {
+    padding: 10px;
+    font-size: 9px;
+    width: 100%;
+    display: block;
+    text-align: center;
+    cursor: pointer;
+    color: rgb(89, 89, 89);
+    background-color: #fafafa;
+    border-bottom: 1px solid lightgray;
+}
+
 .data-preview-loading-icon {
     color: rgb(12, 186, 12);
     animation-duration: 700ms;
@@ -146,7 +158,10 @@
 }
 
 .editor-data-preview-panel {
-    height: 100%;
+    /* padding: 30px; */
+    /* padding-top: 10px; */
+    width: calc(100%);
+    height: calc(100%);
     /* border: 1px solid #ccc; */
 }
 
