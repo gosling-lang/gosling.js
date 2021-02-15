@@ -27,15 +27,15 @@ export function drawCircularOutlines(HGC: any, trackInfo: any, tile: any, tm: Go
     /* render */
     const g = tile.graphics;
 
-    if (spec.style?.outlineWidth && !(spec.layout === 'circular' && spec.mark === 'link')) {
+    if (spec.style?.outlineWidth !== 0 && !(spec.layout === 'circular' && spec.mark === 'link')) {
         // circular link marks usually use entire inner space
         g.lineStyle(
-            1,
+            0.5,
             colorToHex(spec.style?.outline ?? '#DBDBDB'),
-            0.3, // 0.4, // alpha
+            0.1, // 0.4, // alpha
             0.5 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
         );
-        g.beginFill(colorToHex('white'), 0);
+        g.beginFill(colorToHex('lightgray'), 0.05);
         g.moveTo(posStartInner.x, posStartInner.y);
         g.arc(cx, cy, trackInnerRadius, startRad, endRad, true);
         g.arc(cx, cy, trackOuterRadius, endRad, startRad, false);

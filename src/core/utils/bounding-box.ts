@@ -139,7 +139,9 @@ function traverseAndCollectTrackInfo(
 
     /* Parameters to determine if we need to combine all the children to show as a single circular visualization */
     let allChildCircularLayout = true;
+    let traversedAtLeastOnce = false;
     traverseTracksAndViews(spec, (tv: CommonViewDef) => {
+        traversedAtLeastOnce = true;
         if (tv.layout !== 'circular') {
             allChildCircularLayout = false;
         }
@@ -155,24 +157,24 @@ function traverseAndCollectTrackInfo(
     const isThisCircularRoot =
         circularRootNotFound &&
         allChildCircularLayout &&
+        traversedAtLeastOnce &&
         noChildConcatArrangement &&
         ('parallelViews' in spec || 'serialViews' in spec || 'tracks' in spec);
 
     const numTracksBeforeInsert = output.length;
 
     if ('tracks' in spec) {
-        // Use the firstly suggested `width` for this view.
-        cumWidth = spec.tracks[0]?.width; //forceWidth ? forceWidth : spec.tracks[0]?.width;
+        // Use the largest `width` for this view.
+        cumWidth = Math.max(...spec.tracks.map(d => d.width)); //forceWidth ? forceWidth : spec.tracks[0]?.width;
 
-        spec.tracks.forEach(track => {
-            let scaledHeight = track.height;
+        spec.tracks.forEach((track, i, array) => {
+            // let scaledHeight = track.height;
 
             if (getNumOfXAxes([track]) === 1) {
-                scaledHeight += HIGLASS_AXIS_SIZE;
+                track.height += HIGLASS_AXIS_SIZE;
             }
 
             track.width = cumWidth;
-            track.height = scaledHeight;
 
             output.push({
                 track,
@@ -180,7 +182,7 @@ function traverseAndCollectTrackInfo(
                     x: dx,
                     y: dy + cumHeight,
                     width: cumWidth,
-                    height: scaledHeight
+                    height: track.height
                 },
                 layout: { x: 0, y: 0, w: 0, h: 0 } // Just put a dummy info here, this should be added after entire bounding box has been determined
             });
@@ -188,7 +190,10 @@ function traverseAndCollectTrackInfo(
             if (track.overlayOnPreviousTrack) {
                 // do not add a height
             } else {
-                cumHeight += scaledHeight;
+                cumHeight += track.height;
+                if (i !== array.length - 1) {
+                    cumHeight += spec.spacing ?? 0;
+                }
             }
         });
     } else {
@@ -240,9 +245,9 @@ function traverseAndCollectTrackInfo(
     if (isThisCircularRoot) {
         const cTracks = output.slice(numTracksBeforeInsert);
 
-        // const INNER_HOLE = (spec.centerHole !== undefined) ? spec.centerHole : DEFAULT_INNER_HOLE_PROP;
+        const INNER_HOLE = spec.centerHole !== undefined ? spec.centerHole : DEFAULT_INNER_HOLE_PROP;
         const TOTAL_RADIUS = cumWidth / 2.0; // (cumWidth + cumHeight) / 2.0 / 2.0;
-        const TOTAL_RING_SIZE = TOTAL_RADIUS * (1 - DEFAULT_INNER_HOLE_PROP);
+        const TOTAL_RING_SIZE = TOTAL_RADIUS * (1 - INNER_HOLE);
 
         // const numXAxes = getNumOfXAxes(cTracks.map(info => info.track));
 

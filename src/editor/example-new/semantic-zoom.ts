@@ -1,4 +1,4 @@
-import { OverlaidTrack } from '../../core/gosling.schema';
+import { GoslingSpec, OverlaidTrack } from '../../core/gosling.schema';
 import { GOSLING_PUBLIC_DATA } from './gosling-data';
 
 const ScalableSequenceTrack: OverlaidTrack = {
@@ -43,8 +43,7 @@ const ScalableSequenceTrack: OverlaidTrack = {
             mark: 'text',
             x: {
                 field: 'start',
-                type: 'genomic',
-                domain: { chromosome: '1', interval: [3000000, 3000010] }
+                type: 'genomic'
             },
             xe: {
                 field: 'end',
@@ -70,9 +69,7 @@ const ScalableSequenceTrack: OverlaidTrack = {
     ],
     x: {
         field: 'position',
-        type: 'genomic',
-        domain: { chromosome: '1', interval: [3000000, 3000010] },
-        axis: 'top'
+        type: 'genomic'
     },
     color: {
         field: 'base',
@@ -102,6 +99,61 @@ const ScalableCytoBand: OverlaidTrack = {
         genomicFields: ['chromStart', 'chromEnd']
     },
     overlay: [
+        {
+            mark: 'rect',
+            color: {
+                field: 'Chromosome',
+                type: 'nominal',
+                domain: [
+                    'chr1',
+                    'chr2',
+                    'chr3',
+                    'chr4',
+                    'chr5',
+                    'chr6',
+                    'chr7',
+                    'chr8',
+                    'chr9',
+                    'chr10',
+                    'chr11',
+                    'chr12',
+                    'chr13',
+                    'chr14',
+                    'chr15',
+                    'chr16',
+                    'chr17',
+                    'chr18',
+                    'chr19',
+                    'chr20',
+                    'chr21',
+                    'chr22',
+                    'chrX',
+                    'chrY'
+                ],
+                range: ['#F6F6F6', 'gray']
+            },
+            x: {
+                field: 'chromStart',
+                type: 'genomic',
+                aggregate: 'min'
+            },
+            xe: {
+                field: 'chromEnd',
+                aggregate: 'max',
+                type: 'genomic'
+            },
+            strokeWidth: { value: 2 },
+            stroke: { value: 'gray' },
+            visibility: [
+                {
+                    operation: 'greater-than',
+                    measure: 'zoomLevel',
+                    threshold: 100000000,
+                    target: 'mark',
+                    transitionPadding: 100000000
+                }
+            ]
+        },
         {
             mark: 'text',
             dataTransform: {
@@ -160,11 +212,20 @@ const ScalableCytoBand: OverlaidTrack = {
             color: { value: '#B40101' }
         }
     ],
-    x: { field: 'chromStart', type: 'genomic', domain: { chromosome: '1' } },
+    x: { field: 'chromStart', type: 'genomic' },
     xe: { field: 'chromEnd', type: 'genomic' },
     size: { value: 20 },
     stroke: { value: 'gray' },
     strokeWidth: { value: 0.5 },
+    visibility: [
+        {
+            operation: 'greater-than',
+            measure: 'width',
+            threshold: 3,
+            transitionPadding: 5,
+            target: 'mark'
+        }
+    ],
     style: {
         outline: 'white'
     },
@@ -175,4 +236,18 @@ const ScalableCytoBand: OverlaidTrack = {
 export const EXAMPLE_TRACK_SEMANTIC_ZOOM = {
     sequence: ScalableSequenceTrack,
     cytoband: ScalableCytoBand
+};
+
+export const EX_SPEC_SEMANTIC_ZOOM: GoslingSpec = {
+    vconcatViews: [
+        {
+            layout: 'linear',
+            xDomain: { chromosome: '1', interval: [3000000, 3000010] },
+            tracks: [{ ...EXAMPLE_TRACK_SEMANTIC_ZOOM.sequence, width: 600, height: 100 }]
+        },
+        {
+            layout: 'linear',
+            tracks: [{ ...EXAMPLE_TRACK_SEMANTIC_ZOOM.cytoband, width: 600, size: undefined }]
+        }
+    ]
 };

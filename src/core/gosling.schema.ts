@@ -7,36 +7,35 @@ export interface CommonRootDef {
     title?: string;
     subtitle?: string;
     description?: string;
-
-    centerHole?: number; // [0, 1], default: 0.3 (`DEFAULT_INNER_HOLE_PROP`)
 }
 
 /* ----------------------------- VIEW ----------------------------- */
 export interface CommonViewDef {
+    spacing?: number;
     static?: boolean;
     assembly?: Assembly;
     layout?: Layout;
+    centerHole?: number; // [0, 1], default: 0.3 (`DEFAULT_INNER_HOLE_PROP`) // TODO: Not supported yet
+    xDomain?: DomainInterval | DomainChrInterval | DomainChr; // TODO: Support `DomainGene`
+    xLinkID?: string;
+    // xAxis?: AxisPosition; // TODO:
 }
 
 export type ArrangedViews = ParallelViews | SerialViews | VConcatViews | HConcatViews;
 
-export interface CommonArrangementDef extends CommonViewDef {
-    spacing?: number;
-}
-
-export interface ParallelViews extends CommonArrangementDef {
+export interface ParallelViews extends CommonViewDef {
     parallelViews: (View | ArrangedViews)[];
 }
 
-export interface SerialViews extends CommonArrangementDef {
+export interface SerialViews extends CommonViewDef {
     serialViews: (View | ArrangedViews)[];
 }
 
-export interface VConcatViews extends CommonArrangementDef {
+export interface VConcatViews extends CommonViewDef {
     vconcatViews: (View | ArrangedViews)[];
 }
 
-export interface HConcatViews extends CommonArrangementDef {
+export interface HConcatViews extends CommonViewDef {
     hconcatViews: (View | ArrangedViews)[];
 }
 

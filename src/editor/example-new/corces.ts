@@ -1,12 +1,15 @@
 import { GoslingSpec } from '../../core/gosling.schema';
 
 export const EX_SPEC_CORCES_ET_AL: GoslingSpec = {
-    title: 'Corces et al. 2020.',
-    subtitle: 'Single-cell epigenomic analyses implicate candidate causal ...',
-    description:
-        'Corces et al. 2020. Single-cell epigenomic analyses implicate candidate causal variants at inherited risk loci for Alzheimer’s and Parkinson’s diseases. Nature Genetics, pp.1-11.',
-    parallelViews: [
+    title: 'Single-cell Epigenomic Analysis (Corces et al. 2020)',
+    static: true,
+    // subtitle: 'Single-cell epigenomic analyses implicate candidate causal ...',
+    // description:
+    //     'Corces et al. 2020. Single-cell epigenomic analyses implicate candidate causal variants at inherited risk loci for Alzheimer’s and Parkinson’s diseases. Nature Genetics, pp.1-11.',
+    vconcatViews: [
         {
+            xDomain: { chromosome: '3' },
+            centerHole: 0.9,
             tracks: [
                 {
                     title: 'chr3',
@@ -56,26 +59,143 @@ export const EX_SPEC_CORCES_ET_AL: GoslingSpec = {
                         },
                         {
                             mark: 'brush',
-                            x: {},
+                            x: { linkingID: 'detail' },
                             color: { value: 'red' },
                             opacity: { value: 1 },
                             strokeWidth: { value: 1 },
                             stroke: { value: 'red' }
                         }
                     ],
-                    x: { field: 'Basepair_start', type: 'genomic', domain: { chromosome: '3' }, axis: 'none' },
+                    x: { field: 'Basepair_start', type: 'genomic', axis: 'none' },
                     xe: { field: 'Basepair_stop', type: 'genomic' },
                     stroke: { value: 'black' },
                     strokeWidth: { value: 1 },
                     style: { outlineWidth: 0 },
                     width: 800,
-                    height: 20
+                    height: 25
                 }
             ]
         },
         {
-            layout: 'linear',
+            xDomain: { chromosome: '3', interval: [52168000, 52890000] },
+            xLinkID: 'detail',
             tracks: [
+                {
+                    data: {
+                        url: 'https://resgen.io/api/v1/tileset_info/?d=VLFaiSVjTjW6mkbjRjWREA',
+                        type: 'vector',
+                        column: 'position',
+                        value: 'peak'
+                    },
+                    title: 'Excitatory neurons',
+                    mark: 'bar',
+                    x: {
+                        field: 'position',
+                        type: 'genomic'
+                    },
+                    y: { field: 'peak', type: 'quantitative' },
+                    color: { value: '#F29B67' },
+                    style: { outline: '#20102F' },
+                    width: 800,
+                    height: 40
+                },
+                {
+                    data: {
+                        url: 'https://resgen.io/api/v1/tileset_info/?d=UtUGUu9rS3yQ7Ie-YtX32g',
+                        type: 'vector',
+                        column: 'position',
+                        value: 'peak'
+                    },
+                    title: 'Inhibitory neurons',
+                    overlay: [{ mark: 'bar' }],
+                    x: { field: 'position', type: 'genomic' },
+                    y: { field: 'peak', type: 'quantitative' },
+                    color: { value: '#3DC491' },
+                    style: { outline: '#20102F' },
+                    width: 800,
+                    height: 40
+                },
+                {
+                    data: {
+                        url: 'https://resgen.io/api/v1/tileset_info/?d=FBwldgSdQQWxh7R7-jemNA',
+                        type: 'vector',
+                        column: 'position',
+                        value: 'peak'
+                    },
+                    title: 'Dopaminergic neurons',
+                    overlay: [{ mark: 'bar' }],
+                    x: { field: 'position', type: 'genomic' },
+                    y: { field: 'peak', type: 'quantitative' },
+                    color: { value: '#565C8B' },
+                    style: { outline: '#20102F' },
+                    width: 800,
+                    height: 40
+                },
+                {
+                    data: {
+                        url: 'https://resgen.io/api/v1/tileset_info/?d=Zz3CBDSqQ3ySrOSe2yj1eg',
+                        type: 'vector',
+                        column: 'position',
+                        value: 'peak'
+                    },
+                    title: 'Microglia',
+                    overlay: [{ mark: 'bar' }],
+                    x: { field: 'position', type: 'genomic' },
+                    y: { field: 'peak', type: 'quantitative' },
+                    color: { value: '#77C0FA' },
+                    style: { outline: '#20102F' },
+                    width: 800,
+                    height: 40
+                },
+                {
+                    data: {
+                        type: 'vector',
+                        url: 'https://resgen.io/api/v1/tileset_info/?d=dc_SOjdCRgq_8PYf6W--7w',
+                        column: 'position',
+                        value: 'peak'
+                    },
+                    title: 'Oligodendrocytes',
+                    overlay: [{ mark: 'bar' }],
+                    x: { field: 'position', type: 'genomic' },
+                    y: { field: 'peak', type: 'quantitative' },
+                    color: { value: '#9B46E5' },
+                    style: { outline: '#20102F' },
+                    width: 800,
+                    height: 40
+                },
+                {
+                    data: {
+                        url: 'https://resgen.io/api/v1/tileset_info/?d=Nolbrk9kS3CE0jJL_7OW1g',
+                        type: 'vector',
+                        column: 'position',
+                        value: 'peak'
+                    },
+                    title: 'Astrocytes',
+                    overlay: [{ mark: 'bar' }],
+                    x: { field: 'position', type: 'genomic' },
+                    y: { field: 'peak', type: 'quantitative' },
+                    color: { value: '#D73636' },
+                    style: { outline: '#20102F' },
+                    width: 800,
+                    height: 40
+                },
+                {
+                    data: {
+                        url: 'https://resgen.io/api/v1/tileset_info/?d=UZLlJyRBScWdGQ7L1eNk_g',
+                        type: 'vector',
+                        column: 'position',
+                        value: 'peak'
+                    },
+                    title: 'OPCs',
+                    overlay: [{}],
+                    mark: 'bar',
+                    x: { field: 'position', type: 'genomic' },
+                    y: { field: 'peak', type: 'quantitative' },
+                    color: { value: '#E38ADC' },
+                    style: { outline: '#20102F' },
+                    width: 800,
+                    height: 40
+                },
                 {
                     title: 'Genes',
                     data: {
@@ -106,8 +226,7 @@ export const EX_SPEC_CORCES_ET_AL: GoslingSpec = {
                             text: { field: 'name', type: 'nominal' },
                             x: {
                                 field: 'start',
-                                type: 'genomic',
-                                domain: { chromosome: '3', interval: [52168000, 52890000] }
+                                type: 'genomic'
                             },
                             xe: { field: 'end', type: 'genomic' },
                             style: { textFontSize: 8, dy: -12 }
@@ -177,123 +296,6 @@ export const EX_SPEC_CORCES_ET_AL: GoslingSpec = {
                     width: 800,
                     height: 80
                 },
-                {
-                    data: {
-                        url: 'https://resgen.io/api/v1/tileset_info/?d=VLFaiSVjTjW6mkbjRjWREA',
-                        type: 'vector',
-                        column: 'position',
-                        value: 'peak'
-                    },
-                    title: 'Excitatory neurons',
-                    mark: 'bar',
-                    x: {
-                        field: 'position',
-                        type: 'genomic',
-                        domain: { chromosome: '3', interval: [52168000, 52890000] }
-                    },
-                    y: { field: 'peak', type: 'quantitative' },
-                    color: { value: '#F29B67' },
-                    style: { outline: '#20102F' },
-                    width: 800,
-                    height: 44
-                },
-                {
-                    data: {
-                        url: 'https://resgen.io/api/v1/tileset_info/?d=UtUGUu9rS3yQ7Ie-YtX32g',
-                        type: 'vector',
-                        column: 'position',
-                        value: 'peak'
-                    },
-                    title: 'Inhibitory neurons',
-                    overlay: [{ mark: 'bar' }],
-                    x: { field: 'position', type: 'genomic' },
-                    y: { field: 'peak', type: 'quantitative' },
-                    color: { value: '#3DC491' },
-                    style: { outline: '#20102F' },
-                    width: 800,
-                    height: 44
-                },
-                {
-                    data: {
-                        url: 'https://resgen.io/api/v1/tileset_info/?d=FBwldgSdQQWxh7R7-jemNA',
-                        type: 'vector',
-                        column: 'position',
-                        value: 'peak'
-                    },
-                    title: 'Dopaminergic neurons',
-                    overlay: [{ mark: 'bar' }],
-                    x: { field: 'position', type: 'genomic' },
-                    y: { field: 'peak', type: 'quantitative' },
-                    color: { value: '#565C8B' },
-                    style: { outline: '#20102F' },
-                    width: 800,
-                    height: 44
-                },
-                {
-                    data: {
-                        url: 'https://resgen.io/api/v1/tileset_info/?d=Zz3CBDSqQ3ySrOSe2yj1eg',
-                        type: 'vector',
-                        column: 'position',
-                        value: 'peak'
-                    },
-                    title: 'Microglia',
-                    overlay: [{ mark: 'bar' }],
-                    x: { field: 'position', type: 'genomic' },
-                    y: { field: 'peak', type: 'quantitative' },
-                    color: { value: '#77C0FA' },
-                    style: { outline: '#20102F' },
-                    width: 800,
-                    height: 44
-                },
-                {
-                    data: {
-                        type: 'vector',
-                        url: 'https://resgen.io/api/v1/tileset_info/?d=dc_SOjdCRgq_8PYf6W--7w',
-                        column: 'position',
-                        value: 'peak'
-                    },
-                    title: 'Oligodendrocytes',
-                    overlay: [{ mark: 'bar' }],
-                    x: { field: 'position', type: 'genomic' },
-                    y: { field: 'peak', type: 'quantitative' },
-                    color: { value: '#9B46E5' },
-                    style: { outline: '#20102F' },
-                    width: 800,
-                    height: 44
-                },
-                {
-                    data: {
-                        url: 'https://resgen.io/api/v1/tileset_info/?d=Nolbrk9kS3CE0jJL_7OW1g',
-                        type: 'vector',
-                        column: 'position',
-                        value: 'peak'
-                    },
-                    title: 'Astrocytes',
-                    overlay: [{ mark: 'bar' }],
-                    x: { field: 'position', type: 'genomic' },
-                    y: { field: 'peak', type: 'quantitative' },
-                    color: { value: '#D73636' },
-                    style: { outline: '#20102F' },
-                    width: 800,
-                    height: 44
-                },
-                {
-                    data: {
-                        url: 'https://resgen.io/api/v1/tileset_info/?d=UZLlJyRBScWdGQ7L1eNk_g',
-                        type: 'vector',
-                        column: 'position',
-                        value: 'peak'
-                    },
-                    title: 'OPCs',
-                    overlay: [{}],
-                    mark: 'bar',
-                    x: { field: 'position', type: 'genomic' },
-                    y: { field: 'peak', type: 'quantitative' },
-                    color: { value: '#E38ADC' },
-                    style: { outline: '#20102F' },
-                    width: 800,
-                    height: 44
-                },
                 // {
                 //     title: 'HiChIP (H3K27ac)',
                 //     data: {
@@ -324,7 +326,7 @@ export const EX_SPEC_CORCES_ET_AL: GoslingSpec = {
                 //     opacity: { value: 0.1 },
                 //     style: { outline: '#20102F', circularLink: false },
                 //     width: 800,
-                //     height: 44
+                //     height: 40
                 // },
                 // {
                 //     data: {
@@ -349,7 +351,7 @@ export const EX_SPEC_CORCES_ET_AL: GoslingSpec = {
                 //     style: { outline: '#20102F', circularLink: false },
                 //     overlayOnPreviousTrack: true,
                 //     width: 800,
-                //     height: 44
+                //     height: 40
                 // },
                 // {
                 //     data: {
@@ -374,10 +376,9 @@ export const EX_SPEC_CORCES_ET_AL: GoslingSpec = {
                 //     style: { outline: '#20102F', circularLink: false },
                 //     overlayOnPreviousTrack: true,
                 //     width: 800,
-                //     height: 44
+                //     height: 40
                 // },
                 {
-                    title: 'PLAC-seq (H3K4me3) Nott et al.',
                     data: {
                         url: 'https://resgen.io/api/v1/tileset_info/?d=EqSENQSXRL-EWYeBe-Y1rA',
                         type: 'bed',
@@ -387,16 +388,16 @@ export const EX_SPEC_CORCES_ET_AL: GoslingSpec = {
                         ]
                     },
                     mark: 'link',
-                    x: { field: 'start', type: 'genomic', domain: { chromosome: '3', interval: [52168000, 52890000] } },
+                    x: { field: 'start', type: 'genomic' },
                     xe: { field: 'end', type: 'genomic' },
                     y: { flip: true },
                     strokeWidth: { value: 1 },
                     color: { value: 'none' },
                     stroke: { value: '#F97E2A' },
-                    opacity: { value: 0.3 },
+                    opacity: { value: 0.1 },
                     style: { outline: '#20102F', circularLink: false },
                     width: 800,
-                    height: 64
+                    height: 60
                 },
                 {
                     data: {
@@ -414,13 +415,14 @@ export const EX_SPEC_CORCES_ET_AL: GoslingSpec = {
                     strokeWidth: { value: 1 },
                     color: { value: 'none' },
                     stroke: { value: '#50ADF9' },
-                    opacity: { value: 0.3 },
+                    opacity: { value: 0.1 },
                     style: { outline: '#20102F', circularLink: false },
                     overlayOnPreviousTrack: true,
                     width: 800,
-                    height: 64
+                    height: 60
                 },
                 {
+                    title: 'PLAC-seq (H3K4me3) Nott et al.',
                     data: {
                         url: 'https://resgen.io/api/v1/tileset_info/?d=JzccFAJUQEiz-0188xaWZg',
                         type: 'bed',
@@ -436,11 +438,11 @@ export const EX_SPEC_CORCES_ET_AL: GoslingSpec = {
                     strokeWidth: { value: 1 },
                     color: { value: 'none' },
                     stroke: { value: '#7B0EDC' },
-                    opacity: { value: 0.3 },
+                    opacity: { value: 0.1 },
                     style: { outline: '#20102F', circularLink: false },
                     overlayOnPreviousTrack: true,
                     width: 800,
-                    height: 64
+                    height: 60
                 }
                 // {
                 //     title: '(Artificial data)',

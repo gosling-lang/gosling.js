@@ -9,7 +9,7 @@ import {
     IsOverlaidTrack,
     getArrangedViews
 } from '../gosling.schema.guards';
-import { DEFAULT_TRACK_HEIGHT_LINEAR, DEFAULT_TRACK_WIDTH_LINEAR } from '../layout/defaults';
+import { DEFAULT_INNER_HOLE_PROP, DEFAULT_TRACK_HEIGHT_LINEAR, DEFAULT_TRACK_WIDTH_LINEAR } from '../layout/defaults';
 import { spreadTracksByData } from './overlay';
 
 /**
@@ -68,12 +68,19 @@ export function traverseToFixSpecDownstream(spec: GoslingSpec | View, parentDef?
         // For assembly and layout, we use the ones defiend by the parents if missing
         if (spec.assembly === undefined) spec.assembly = parentDef.assembly;
         if (spec.layout === undefined) spec.layout = parentDef.layout;
-        if (spec.static === undefined) spec.static = spec.layout === 'circular' ? true : false;
+        if (spec.static === undefined)
+            spec.static = spec.layout === 'circular' ? true : parentDef.static !== undefined ? parentDef.static : false;
+        if (spec.xDomain === undefined) spec.xDomain = parentDef.xDomain;
+        if (spec.xLinkID === undefined) spec.xLinkID = parentDef.xLinkID;
+        if (spec.centerHole === undefined) spec.centerHole = parentDef.centerHole;
     } else {
         // This means we are at the rool level, so assign default values if missing
         if (spec.assembly === undefined) spec.assembly = 'hg38';
         if (spec.layout === undefined) spec.layout = 'linear';
         if (spec.static === undefined) spec.static = spec.layout === 'circular' ? true : false;
+        if (spec.centerHole === undefined) spec.centerHole = DEFAULT_INNER_HOLE_PROP;
+        // Nothing to do when `xDomain` not suggested
+        // Nothing to do when `xLinkID` not suggested
     }
 
     if ('tracks' in spec) {
@@ -96,17 +103,36 @@ export function traverseToFixSpecDownstream(spec: GoslingSpec | View, parentDef?
              */
             if (!track.assembly) track.assembly = spec.assembly;
             if (!track.layout) track.layout = spec.layout;
-            if (track.static === undefined) track.static = track.layout === 'circular' ? true : false;
+            if (track.static === undefined)
+                track.static = track.layout === 'circular' ? true : spec.static !== undefined ? spec.static : false;
+
+            /**
+             * Add x-axis domain
+             */
+            if ((IsSingleTrack(track) || IsOverlaidTrack(track)) && IsChannelDeep(track.x) && !track.x.domain) {
+                track.x.domain = spec.xDomain;
+            } else if (IsOverlaidTrack(track)) {
+                track.overlay.forEach(o => {
+                    if (IsChannelDeep(o.x) && !o.x.domain) {
+                        o.x.domain = spec.xDomain;
+                    }
+                });
+            }
 
             /**
              * Link tracks in a single view
              */
             if ((IsSingleTrack(track) || IsOverlaidTrack(track)) && IsChannelDeep(track.x) && !track.x.linkingID) {
-                track.x.linkingID = linkID;
+                track.x.linkingID = spec.xLinkID ?? linkID;
             } else if (IsOverlaidTrack(track)) {
+                let isAdded = false;
                 track.overlay.forEach(o => {
+                    if (isAdded) return; // We want to add only once
+
                     if (IsChannelDeep(o.x) && !o.x.linkingID) {
-                        o.x.linkingID = linkID;
+                        // TODO: Is this safe?
+                        o.x.linkingID = spec.xLinkID ?? linkID;
+                        isAdded = true;
                     }
                 });
             }

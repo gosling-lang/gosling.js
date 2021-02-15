@@ -1,5 +1,41 @@
 import { GoslingSpec, Track } from '../gosling.schema';
+import { getBoundingBox, getRelativeTrackInfo } from './bounding-box';
 import { traverseToFixSpecDownstream, overrideTemplates } from './spec-preprocess';
+
+describe('Fix Spec Downstream', () => {
+    it('Empty Views', () => {
+        const info = getRelativeTrackInfo({
+            parallelViews: [
+                {
+                    tracks: []
+                }
+            ]
+        });
+        const size = getBoundingBox(info);
+        expect(!isNaN(+size.width) && isFinite(size.width)).toEqual(true);
+        expect(!isNaN(+size.height) && isFinite(size.height)).toEqual(true);
+    });
+    it('static', () => {
+        {
+            const spec: GoslingSpec = {
+                static: true,
+                parallelViews: [{ tracks: [{ overlay: [], width: 0, height: 0 }] }]
+            };
+            traverseToFixSpecDownstream(spec);
+            expect(spec.parallelViews[0].static).toEqual(true);
+            expect((spec.parallelViews[0] as any).tracks[0].static).toEqual(true);
+        }
+        {
+            const spec: GoslingSpec = {
+                layout: 'circular',
+                parallelViews: [{ layout: 'linear', tracks: [{ overlay: [], width: 0, height: 0 }] }]
+            };
+            traverseToFixSpecDownstream(spec);
+            expect(spec.parallelViews[0].static).toEqual(true);
+            expect((spec.parallelViews[0] as any).tracks[0].static).toEqual(true); // TODO:
+        }
+    });
+});
 
 describe('Spec Preprocess', () => {
     it('overlayOnPreviousTrack', () => {

@@ -382,6 +382,9 @@
         "assembly": {
           "$ref": "#/definitions/Assembly"
         },
+        "centerHole": {
+          "type": "number"
+        },
         "data": {
           "$ref": "#/definitions/DataDeep"
         },
@@ -403,6 +406,9 @@
         "overlayOnPreviousTrack": {
           "type": "boolean"
         },
+        "spacing": {
+          "type": "number"
+        },
         "startAngle": {
           "type": "number"
         },
@@ -417,6 +423,22 @@
         },
         "width": {
           "type": "number"
+        },
+        "xDomain": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/DomainInterval"
+            },
+            {
+              "$ref": "#/definitions/DomainChrInterval"
+            },
+            {
+              "$ref": "#/definitions/DomainChr"
+            }
+          ]
+        },
+        "xLinkID": {
+          "type": "string"
         }
       },
       "required": [
@@ -909,6 +931,9 @@
             "layout": {
               "$ref": "#/definitions/Layout"
             },
+            "spacing": {
+              "type": "number"
+            },
             "static": {
               "type": "boolean"
             },
@@ -923,6 +948,22 @@
                 "$ref": "#/definitions/Track"
               },
               "type": "array"
+            },
+            "xDomain": {
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/DomainInterval"
+                },
+                {
+                  "$ref": "#/definitions/DomainChrInterval"
+                },
+                {
+                  "$ref": "#/definitions/DomainChr"
+                }
+              ]
+            },
+            "xLinkID": {
+              "type": "string"
             }
           },
           "required": [
@@ -968,6 +1009,22 @@
               "type": "string"
             },
             "title": {
+              "type": "string"
+            },
+            "xDomain": {
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/DomainInterval"
+                },
+                {
+                  "$ref": "#/definitions/DomainChrInterval"
+                },
+                {
+                  "$ref": "#/definitions/DomainChr"
+                }
+              ]
+            },
+            "xLinkID": {
               "type": "string"
             }
           },
@@ -1015,6 +1072,22 @@
             },
             "title": {
               "type": "string"
+            },
+            "xDomain": {
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/DomainInterval"
+                },
+                {
+                  "$ref": "#/definitions/DomainChrInterval"
+                },
+                {
+                  "$ref": "#/definitions/DomainChr"
+                }
+              ]
+            },
+            "xLinkID": {
+              "type": "string"
             }
           },
           "required": [
@@ -1061,6 +1134,22 @@
                 ]
               },
               "type": "array"
+            },
+            "xDomain": {
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/DomainInterval"
+                },
+                {
+                  "$ref": "#/definitions/DomainChrInterval"
+                },
+                {
+                  "$ref": "#/definitions/DomainChr"
+                }
+              ]
+            },
+            "xLinkID": {
+              "type": "string"
             }
           },
           "required": [
@@ -1107,6 +1196,22 @@
             },
             "title": {
               "type": "string"
+            },
+            "xDomain": {
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/DomainInterval"
+                },
+                {
+                  "$ref": "#/definitions/DomainChrInterval"
+                },
+                {
+                  "$ref": "#/definitions/DomainChr"
+                }
+              ]
+            },
+            "xLinkID": {
+              "type": "string"
             }
           },
           "required": [
@@ -1121,6 +1226,9 @@
       "properties": {
         "assembly": {
           "$ref": "#/definitions/Assembly"
+        },
+        "centerHole": {
+          "type": "number"
         },
         "hconcatViews": {
           "items": {
@@ -1143,6 +1251,22 @@
         },
         "static": {
           "type": "boolean"
+        },
+        "xDomain": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/DomainInterval"
+            },
+            {
+              "$ref": "#/definitions/DomainChrInterval"
+            },
+            {
+              "$ref": "#/definitions/DomainChr"
+            }
+          ]
+        },
+        "xLinkID": {
+          "type": "string"
         }
       },
       "required": [
@@ -1501,6 +1625,9 @@
         "assembly": {
           "$ref": "#/definitions/Assembly"
         },
+        "centerHole": {
+          "type": "number"
+        },
         "color": {
           "$ref": "#/definitions/Channel"
         },
@@ -1540,6 +1667,9 @@
             "properties": {
               "assembly": {
                 "$ref": "#/definitions/Assembly"
+              },
+              "centerHole": {
+                "type": "number"
               },
               "color": {
                 "$ref": "#/definitions/Channel"
@@ -1585,6 +1715,9 @@
               },
               "size": {
                 "$ref": "#/definitions/Channel"
+              },
+              "spacing": {
+                "type": "number"
               },
               "stackY": {
                 "type": "boolean"
@@ -1656,6 +1789,22 @@
               "x1e": {
                 "$ref": "#/definitions/Channel"
               },
+              "xDomain": {
+                "anyOf": [
+                  {
+                    "$ref": "#/definitions/DomainInterval"
+                  },
+                  {
+                    "$ref": "#/definitions/DomainChrInterval"
+                  },
+                  {
+                    "$ref": "#/definitions/DomainChr"
+                  }
+                ]
+              },
+              "xLinkID": {
+                "type": "string"
+              },
               "xe": {
                 "$ref": "#/definitions/Channel"
               },
@@ -1687,6 +1836,9 @@
         },
         "size": {
           "$ref": "#/definitions/Channel"
+        },
+        "spacing": {
+          "type": "number"
         },
         "stackY": {
           "type": "boolean"
@@ -1758,6 +1910,22 @@
         "x1e": {
           "$ref": "#/definitions/Channel"
         },
+        "xDomain": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/DomainInterval"
+            },
+            {
+              "$ref": "#/definitions/DomainChrInterval"
+            },
+            {
+              "$ref": "#/definitions/DomainChr"
+            }
+          ]
+        },
+        "xLinkID": {
+          "type": "string"
+        },
         "xe": {
           "$ref": "#/definitions/Channel"
         },
@@ -1799,6 +1967,9 @@
         "assembly": {
           "$ref": "#/definitions/Assembly"
         },
+        "centerHole": {
+          "type": "number"
+        },
         "layout": {
           "$ref": "#/definitions/Layout"
         },
@@ -1820,6 +1991,22 @@
         },
         "static": {
           "type": "boolean"
+        },
+        "xDomain": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/DomainInterval"
+            },
+            {
+              "$ref": "#/definitions/DomainChrInterval"
+            },
+            {
+              "$ref": "#/definitions/DomainChr"
+            }
+          ]
+        },
+        "xLinkID": {
+          "type": "string"
         }
       },
       "required": [
@@ -1874,6 +2061,9 @@
         "assembly": {
           "$ref": "#/definitions/Assembly"
         },
+        "centerHole": {
+          "type": "number"
+        },
         "layout": {
           "$ref": "#/definitions/Layout"
         },
@@ -1895,6 +2085,22 @@
         },
         "static": {
           "type": "boolean"
+        },
+        "xDomain": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/DomainInterval"
+            },
+            {
+              "$ref": "#/definitions/DomainChrInterval"
+            },
+            {
+              "$ref": "#/definitions/DomainChr"
+            }
+          ]
+        },
+        "xLinkID": {
+          "type": "string"
         }
       },
       "required": [
@@ -1907,6 +2113,9 @@
       "properties": {
         "assembly": {
           "$ref": "#/definitions/Assembly"
+        },
+        "centerHole": {
+          "type": "number"
         },
         "color": {
           "$ref": "#/definitions/Channel"
@@ -1952,6 +2161,9 @@
         },
         "size": {
           "$ref": "#/definitions/Channel"
+        },
+        "spacing": {
+          "type": "number"
         },
         "stackY": {
           "type": "boolean"
@@ -2022,6 +2234,22 @@
         },
         "x1e": {
           "$ref": "#/definitions/Channel"
+        },
+        "xDomain": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/DomainInterval"
+            },
+            {
+              "$ref": "#/definitions/DomainChrInterval"
+            },
+            {
+              "$ref": "#/definitions/DomainChr"
+            }
+          ]
+        },
+        "xLinkID": {
+          "type": "string"
         },
         "xe": {
           "$ref": "#/definitions/Channel"
@@ -2207,6 +2435,9 @@
         "assembly": {
           "$ref": "#/definitions/Assembly"
         },
+        "centerHole": {
+          "type": "number"
+        },
         "layout": {
           "$ref": "#/definitions/Layout"
         },
@@ -2228,6 +2459,22 @@
             ]
           },
           "type": "array"
+        },
+        "xDomain": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/DomainInterval"
+            },
+            {
+              "$ref": "#/definitions/DomainChrInterval"
+            },
+            {
+              "$ref": "#/definitions/DomainChr"
+            }
+          ]
+        },
+        "xLinkID": {
+          "type": "string"
         }
       },
       "required": [
@@ -2275,8 +2522,14 @@
         "assembly": {
           "$ref": "#/definitions/Assembly"
         },
+        "centerHole": {
+          "type": "number"
+        },
         "layout": {
           "$ref": "#/definitions/Layout"
+        },
+        "spacing": {
+          "type": "number"
         },
         "static": {
           "type": "boolean"
@@ -2286,6 +2539,22 @@
             "$ref": "#/definitions/Track"
           },
           "type": "array"
+        },
+        "xDomain": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/DomainInterval"
+            },
+            {
+              "$ref": "#/definitions/DomainChrInterval"
+            },
+            {
+              "$ref": "#/definitions/DomainChr"
+            }
+          ]
+        },
+        "xLinkID": {
+          "type": "string"
         }
       },
       "required": [
