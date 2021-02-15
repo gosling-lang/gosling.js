@@ -23,7 +23,7 @@ const LIMIT_CLIPBOARD_LEN = 4096;
 
 // ! these should be updated upon change in css files
 const EDITOR_HEADER_HEIGHT = 40;
-const VIEWCONFIG_HEADER_HEIGHT = 30;
+const BOTTOM_PANEL_HEADER_HEIGHT = 30;
 
 const LogoSVG = (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width={20} height={20}>
@@ -103,6 +103,9 @@ function Editor(props: any) {
 
     // whether to hide source code on the left
     const [isMaximizeVis, setIsMaximizeVis] = useState<boolean>((urlParams?.full as string) === 'true' || false);
+
+    // whether to show data preview on the right-bottom
+    const [isShowDataPreview, setIsShowDataPreview] = useState<boolean>(false);
 
     // whether to show a find box
     const [isFindCode, setIsFindCode] = useState<boolean | undefined>(undefined);
@@ -296,6 +299,17 @@ function Editor(props: any) {
                             LAYOUT
                         </span>
                         <span
+                            title="Show or hide a data preview"
+                            className="side-panel-button"
+                            onClick={() => setIsShowDataPreview(!isShowDataPreview)}
+                        >
+                            {getIconSVG(ICONS.TABLE, 23, 23)}
+                            <br />
+                            DATA
+                            <br />
+                            PREVIEW
+                        </span>
+                        <span
                             title={
                                 code.length <= LIMIT_CLIPBOARD_LEN
                                     ? `Copy unique URL of current view to clipboard (limit: ${LIMIT_CLIPBOARD_LEN} characters)`
@@ -346,22 +360,16 @@ function Editor(props: any) {
                             DOCS
                         </span>
                     </div>
-                    <SplitPane
-                        className="split-pane-root"
-                        split="vertical"
-                        defaultSize={'40%'}
-                        size={isMaximizeVis ? '0px' : '40%'}
-                        minSize="0px"
-                    >
+                    <SplitPane split="vertical" defaultSize={'40%'} size={isMaximizeVis ? '0px' : '40%'} minSize="0px">
                         <SplitPane
                             split="horizontal"
-                            defaultSize={`calc(100% - ${VIEWCONFIG_HEADER_HEIGHT}px)`}
-                            maxSize={window.innerHeight - EDITOR_HEADER_HEIGHT - VIEWCONFIG_HEADER_HEIGHT}
+                            defaultSize={`calc(100% - ${BOTTOM_PANEL_HEADER_HEIGHT}px)`}
+                            maxSize={window.innerHeight - EDITOR_HEADER_HEIGHT - BOTTOM_PANEL_HEADER_HEIGHT}
                             onChange={(size: number) => {
                                 const secondSize = window.innerHeight - EDITOR_HEADER_HEIGHT - size;
-                                if (secondSize > VIEWCONFIG_HEADER_HEIGHT && !showVC) {
+                                if (secondSize > BOTTOM_PANEL_HEADER_HEIGHT && !showVC) {
                                     setShowVC(true);
-                                } else if (secondSize <= VIEWCONFIG_HEADER_HEIGHT && showVC) {
+                                } else if (secondSize <= BOTTOM_PANEL_HEADER_HEIGHT && showVC) {
                                     // hide the viewConfig view when no enough space assigned
                                     setShowVC(false);
                                 }
@@ -382,9 +390,7 @@ function Editor(props: any) {
                             {/* HiGlass View Config */}
                             <SplitPane split="vertical" defaultSize="100%">
                                 <>
-                                    <div className="editor-header">
-                                        <b>Compiled HiGlass ViewConfig</b> (Read Only)
-                                    </div>
+                                    <div className="editor-header">Compiled HiGlass ViewConfig (Read Only)</div>
                                     <div style={{ height: '100%', visibility: showVC ? 'visible' : 'hidden' }}>
                                         <EditorPanel code={stringify(hg)} readOnly={true} />
                                     </div>
@@ -399,8 +405,9 @@ function Editor(props: any) {
                         </SplitPane>
                         <SplitPane
                             split="horizontal"
-                            defaultSize={`calc(100% - ${VIEWCONFIG_HEADER_HEIGHT}px)`}
-                            maxSize={window.innerHeight - EDITOR_HEADER_HEIGHT - VIEWCONFIG_HEADER_HEIGHT}
+                            defaultSize={`calc(100% - ${BOTTOM_PANEL_HEADER_HEIGHT}px)`}
+                            size={isShowDataPreview ? '40%' : `calc(100% - ${BOTTOM_PANEL_HEADER_HEIGHT}px)`}
+                            maxSize={window.innerHeight - EDITOR_HEADER_HEIGHT - BOTTOM_PANEL_HEADER_HEIGHT}
                         >
                             <div className="preview-container">
                                 <gosling.GoslingComponent
@@ -412,7 +419,11 @@ function Editor(props: any) {
                             </div>
                             <SplitPane split="vertical" defaultSize="100%">
                                 <>
-                                    <div className="editor-header">
+                                    <div
+                                        className="editor-header"
+                                        style={{ cursor: 'pointer' }}
+                                        onClick={() => setIsShowDataPreview(!isShowDataPreview)}
+                                    >
                                         <span
                                             className={
                                                 dataLoading ? 'data-preview-loading-icon' : 'data-preview-stop-icon'
@@ -420,7 +431,7 @@ function Editor(props: any) {
                                         >
                                             ●{' '}
                                         </span>
-                                        <b>Data Preview</b> (~100 Rows, Data Before Transformation)
+                                        Data Preview (~100 Rows, Data Before Transformation)
                                     </div>
                                     <div className="editor-data-preview-panel">
                                         {previewData.length > selectedPreviewData &&

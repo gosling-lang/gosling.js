@@ -77,6 +77,10 @@
     color: #e18343;
 }
 
+.side-panel-spliter {
+    height: calc(100% - 40px) !important;
+}
+
 .side-panel-spliter .Resizer.disabled {
     cursor: default !important;
 }
@@ -85,7 +89,7 @@
     border: none;
     background-color: #fafafa;
     overflow-y: auto;
-    height: calc(100% - 40px);
+    height: 100%;
 }
 
 .side-panel .side-panel-button {
@@ -111,15 +115,11 @@
     cursor: not-allowed;
 }
 
-.split-pane-root {
-    height: calc(100% - 40px) !important;
-}
-
 .editor-header {
     width: 100%;
     padding: 4px;
     padding-left: 10px;
-    background: #f6f6f6;
+    background: #fafafa;
     border-bottom: 1px solid lightgray;
     height: 30px;
 }
@@ -141,7 +141,7 @@
         color: rgb(12, 186, 12);
     }
     to {
-        color: #f6f6f6;
+        color: #fafafa;
     }
 }
 
@@ -158,7 +158,7 @@
 }
 
 .editor-data-preview-tab .unselected-tab {
-    background-color: #f6f6f6;
+    background-color: #fafafa;
 }
 
 .editor-data-preview-tab {
@@ -167,7 +167,7 @@
     overflow-x: auto;
     white-space: nowrap;
     border-bottom: 0.25px solid #cccccc;
-    background-color: #f6f6f6;
+    background-color: #fafafa;
 }
 
 .editor-data-preview-tab button {
@@ -217,7 +217,7 @@ td {
 }
 
 .editor-data-preview-table tr:nth-child(even) {
-    background-color: #f6f6f6;
+    background-color: #fafafa;
 }
 
 .editor-data-preview-table tr:nth-child(odd) {
@@ -228,7 +228,7 @@ td {
     width: 100%;
     height: 100%;
     padding: 6px;
-    background: #f6f6f6;
+    background: #fafafa;
     overflow-y: auto;
 }
 
