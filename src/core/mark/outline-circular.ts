@@ -1,13 +1,11 @@
 import { GoslingTrackModel } from '../gosling-track-model';
 import { IsChannelDeep } from '../gosling.schema.guards';
 import { cartesianToPolar, valueToRadian } from '../utils/polar';
+import colorToHex from '../utils/color-to-hex';
 
 export function drawCircularOutlines(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackModel) {
     /* track spec */
     const spec = tm.spec();
-
-    /* helper */
-    const { colorToHex } = HGC.utils;
 
     /* track size */
     const [trackWidth, trackHeight] = trackInfo.dimensions;

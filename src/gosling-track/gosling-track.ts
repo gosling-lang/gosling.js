@@ -14,6 +14,7 @@ import {
 import { Tooltip } from '../gosling-tooltip';
 import { sampleSize } from 'lodash';
 import { scaleLinear } from 'd3-scale';
+import colorToHex from '../core/utils/color-to-hex';
 
 // For using libraries, refer to https://github.com/higlass/higlass/blob/f82c0a4f7b2ab1c145091166b0457638934b15f3/app/scripts/configs/available-for-plugins.js
 function GoslingTrack(HGC: any, ...args: any[]): any {
@@ -592,11 +593,11 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                 if (tooltip.markInfo.type === 'rect') {
                     this.mouseOverGraphics.lineStyle(
                         1,
-                        HGC.utils.colorToHex('black'),
+                        colorToHex('black'),
                         1, // alpha
                         1 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
                     );
-                    this.mouseOverGraphics.beginFill(HGC.utils.colorToHex('white'), 0);
+                    this.mouseOverGraphics.beginFill(colorToHex('white'), 0);
 
                     // Experimental
                     const showOutline = true;
@@ -621,7 +622,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                         this.mouseOverGraphics.lineTo(cx, th);
 
                         // center point
-                        this.mouseOverGraphics.beginFill(HGC.utils.colorToHex('black'), 1);
+                        this.mouseOverGraphics.beginFill(colorToHex('black'), 1);
                         this.mouseOverGraphics.drawCircle(cx, cy, 1);
                     }
                 }

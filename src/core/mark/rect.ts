@@ -4,13 +4,11 @@ import { Channel, Datum } from '../gosling.schema';
 import { getValueUsingChannel } from '../gosling.schema.guards';
 import { cartesianToPolar, valueToRadian } from '../utils/polar';
 import { PIXIVisualProperty } from '../visual-property.schema';
+import colorToHex from '../utils/color-to-hex';
 
 export function drawRect(HGC: any, trackInfo: any, tile: any, model: GoslingTrackModel) {
     /* track spec */
     const spec = model.spec();
-
-    /* helper */
-    const { colorToHex } = HGC.utils;
 
     /* data */
     const data = model.data();

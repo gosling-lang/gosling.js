@@ -1,6 +1,7 @@
 import { GoslingTrackModel } from '../gosling-track-model';
 import { IsChannelDeep } from '../gosling.schema.guards';
 import { cartesianToPolar } from '../utils/polar';
+import colorToHex from '../utils/color-to-hex';
 
 export function drawCircularGrid(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackModel) {
     /* track spec */
@@ -11,9 +12,6 @@ export function drawCircularGrid(HGC: any, trackInfo: any, tile: any, tm: Goslin
     }
 
     return; // TODO: we do not support this yet
-
-    /* helper */
-    const { colorToHex } = HGC.utils;
 
     /* track size */
     const trackWidth = trackInfo.dimensions[1];

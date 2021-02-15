@@ -1,5 +1,6 @@
 import { GoslingTrackModel } from '../gosling-track-model';
 import { IsChannelDeep } from '../gosling.schema.guards';
+import colorToHex from '../utils/color-to-hex';
 
 export function drawGrid(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackModel) {
     /* track spec */
@@ -8,9 +9,6 @@ export function drawGrid(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackMo
         // we do not need to draw grid
         return;
     }
-
-    /* helper */
-    const { colorToHex } = HGC.utils;
 
     /* track size */
     const trackHeight = trackInfo.dimensions[1];

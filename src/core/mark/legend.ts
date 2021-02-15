@@ -1,5 +1,6 @@
 import { GoslingTrackModel } from '../gosling-track-model';
 import { IsChannelDeep } from '../gosling.schema.guards';
+import colorToHex from '../utils/color-to-hex';
 
 export const LEGEND_LABEL_STYLE = {
     fontSize: '12px',
@@ -20,9 +21,6 @@ export function drawColorLegend(HGC: any, trackInfo: any, tile: any, tm: Gosling
         // we do not need to draw legend
         return;
     }
-
-    /* helper */
-    const { colorToHex } = HGC.utils;
 
     /* color separation */
     const colorCategories: string[] = (tm.getChannelDomainArray('color') as string[]) ?? ['___SINGLE_COLOR___'];
@@ -105,9 +103,6 @@ export function drawYLegend(HGC: any, trackInfo: any, tile: any, tm: GoslingTrac
         // we do not need to draw a legend
         return;
     }
-
-    /* helper */
-    const { colorToHex } = HGC.utils;
 
     /* track size */
     // const trackHeight = trackInfo.dimensions[1];

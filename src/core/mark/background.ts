@@ -1,10 +1,8 @@
 import { isUndefined } from 'lodash';
 import { GoslingTrackModel } from '../gosling-track-model';
+import colorToHex from '../utils/color-to-hex';
 
 export function drawBackground(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackModel) {
-    /* helper */
-    const { colorToHex } = HGC.utils;
-
     // size and position
     const [l, t] = trackInfo.position;
     const [w, h] = trackInfo.dimensions;
@@ -15,7 +13,7 @@ export function drawBackground(HGC: any, trackInfo: any, tile: any, tm: GoslingT
     if (tm.spec().style?.background) {
         g.clear();
 
-        const bg = tm.spec().style?.background;
+        const bg = tm.spec().style?.background ?? 'white';
         const alpha = isUndefined(tm.spec().style?.backgroundOpacity) ? 1 : tm.spec().style?.backgroundOpacity;
         // background
         g.lineStyle(
