@@ -111,6 +111,10 @@ function Editor(props: any) {
     // whether to show a find box
     const [isFindCode, setIsFindCode] = useState<boolean | undefined>(undefined);
 
+    // whether to use larger or smaller font
+    const [isFontZoomIn, setIsfontZoomIn] = useState<boolean | undefined>(undefined);
+    const [isFontZoomOut, setIsfontZoomOut] = useState<boolean | undefined>(undefined);
+
     // for using HiGlass JS API
     // const hgRef = useRef<any>();
 
@@ -275,6 +279,30 @@ function Editor(props: any) {
                             FIND
                         </span>
                         <span
+                            title="Use Larger Font"
+                            className="side-panel-button"
+                            onClick={() => {
+                                setIsfontZoomIn(!isFontZoomIn);
+                            }}
+                        >
+                            {getIconSVG(ICONS.TEXT, 23, 23)}
+                            +
+                            <br />
+                            LARGER
+                        </span>
+                        <span
+                            title="Use Larger Font"
+                            className="side-panel-button"
+                            onClick={() => {
+                                setIsfontZoomOut(!isFontZoomOut);
+                            }}
+                        >
+                            {getIconSVG(ICONS.TEXT, 15, 15)}
+                            -
+                            <br />
+                            SMALLER
+                        </span>
+                        <span
                             title="Show or hide a code panel"
                             className="side-panel-button"
                             onClick={() => setIsMaximizeVis(!isMaximizeVis)}
@@ -366,6 +394,8 @@ function Editor(props: any) {
                                     code={code}
                                     readOnly={false}
                                     openFindBox={isFindCode}
+                                    fontZoomIn={isFontZoomIn}
+                                    fontZoomOut={isFontZoomOut}
                                     onChange={debounce(code => {
                                         setCode(code);
                                     }, 1500)}

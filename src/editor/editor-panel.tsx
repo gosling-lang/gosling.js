@@ -7,10 +7,12 @@ function EditorPanel(props: {
     code: string;
     readOnly?: boolean;
     openFindBox?: boolean;
+    fontZoomIn?: boolean;
+    fontZoomOut?: boolean;
     onChange?: (code: string) => void;
     hide?: boolean;
 }) {
-    const { code: templateCode, readOnly, openFindBox } = props;
+    const { code: templateCode, readOnly, openFindBox, fontZoomIn, fontZoomOut } = props;
     const editor = useRef<Monaco.editor.IStandaloneCodeEditor | null>(null);
     const [code, setCode] = useState(templateCode);
 
@@ -24,6 +26,18 @@ function EditorPanel(props: {
             editor.current.getAction('actions.find').run();
         }
     }, [openFindBox]);
+
+    useEffect(() => {
+        if (editor.current && fontZoomIn !== undefined) {
+            editor.current.getAction('editor.action.fontZoomIn').run();
+        }
+    }, [fontZoomIn]);
+
+    useEffect(() => {
+        if (editor.current && fontZoomOut !== undefined) {
+            editor.current.getAction('editor.action.fontZoomOut').run();
+        }
+    }, [fontZoomOut]);
 
     function editorDidMount(monacoEditor: Monaco.editor.IStandaloneCodeEditor) {
         editor.current = monacoEditor;
