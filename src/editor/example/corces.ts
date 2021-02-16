@@ -11,7 +11,7 @@ export const EX_SPEC_CORCES_ET_AL: GoslingSpec = {
         {
             layout: 'linear',
             xDomain: { chromosome: '3' },
-            centerHole: 0.9,
+            centerRadius: 0.9,
             tracks: [
                 {
                     title: 'chr3',

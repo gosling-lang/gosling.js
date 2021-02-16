@@ -72,13 +72,13 @@ export function traverseToFixSpecDownstream(spec: GoslingSpec | View, parentDef?
             spec.static = spec.layout === 'circular' ? true : parentDef.static !== undefined ? parentDef.static : false;
         if (spec.xDomain === undefined) spec.xDomain = parentDef.xDomain;
         if (spec.xLinkID === undefined) spec.xLinkID = parentDef.xLinkID;
-        if (spec.centerHole === undefined) spec.centerHole = parentDef.centerHole;
+        if (spec.centerRadius === undefined) spec.centerRadius = parentDef.centerRadius;
     } else {
         // This means we are at the rool level, so assign default values if missing
         if (spec.assembly === undefined) spec.assembly = 'hg38';
         if (spec.layout === undefined) spec.layout = 'linear';
         if (spec.static === undefined) spec.static = spec.layout === 'circular' ? true : false;
-        if (spec.centerHole === undefined) spec.centerHole = DEFAULT_INNER_HOLE_PROP;
+        if (spec.centerRadius === undefined) spec.centerRadius = DEFAULT_INNER_HOLE_PROP;
         // Nothing to do when `xDomain` not suggested
         // Nothing to do when `xLinkID` not suggested
     }

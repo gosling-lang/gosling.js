@@ -15,7 +15,7 @@ export interface CommonViewDef {
     static?: boolean;
     assembly?: Assembly;
     layout?: Layout;
-    centerHole?: number; // [0, 1], default: 0.3 (`DEFAULT_INNER_HOLE_PROP`) // TODO: Not supported yet
+    centerRadius?: number; // [0, 1], default: 0.3 (`DEFAULT_INNER_HOLE_PROP`) // TODO: Not supported yet
     xDomain?: DomainInterval | DomainChrInterval | DomainChr; // TODO: Support `DomainGene`
     xLinkID?: string;
     // xAxis?: AxisPosition; // TODO:

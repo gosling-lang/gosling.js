@@ -382,7 +382,7 @@
         "assembly": {
           "$ref": "#/definitions/Assembly"
         },
-        "centerHole": {
+        "centerRadius": {
           "type": "number"
         },
         "data": {
@@ -922,7 +922,7 @@
             "assembly": {
               "$ref": "#/definitions/Assembly"
             },
-            "centerHole": {
+            "centerRadius": {
               "type": "number"
             },
             "description": {
@@ -977,7 +977,7 @@
             "assembly": {
               "$ref": "#/definitions/Assembly"
             },
-            "centerHole": {
+            "centerRadius": {
               "type": "number"
             },
             "description": {
@@ -1039,7 +1039,7 @@
             "assembly": {
               "$ref": "#/definitions/Assembly"
             },
-            "centerHole": {
+            "centerRadius": {
               "type": "number"
             },
             "description": {
@@ -1101,7 +1101,7 @@
             "assembly": {
               "$ref": "#/definitions/Assembly"
             },
-            "centerHole": {
+            "centerRadius": {
               "type": "number"
             },
             "description": {
@@ -1163,7 +1163,7 @@
             "assembly": {
               "$ref": "#/definitions/Assembly"
             },
-            "centerHole": {
+            "centerRadius": {
               "type": "number"
             },
             "description": {
@@ -1227,7 +1227,7 @@
         "assembly": {
           "$ref": "#/definitions/Assembly"
         },
-        "centerHole": {
+        "centerRadius": {
           "type": "number"
         },
         "hconcatViews": {
@@ -1625,7 +1625,7 @@
         "assembly": {
           "$ref": "#/definitions/Assembly"
         },
-        "centerHole": {
+        "centerRadius": {
           "type": "number"
         },
         "color": {
@@ -1668,7 +1668,7 @@
               "assembly": {
                 "$ref": "#/definitions/Assembly"
               },
-              "centerHole": {
+              "centerRadius": {
                 "type": "number"
               },
               "color": {
@@ -1967,7 +1967,7 @@
         "assembly": {
           "$ref": "#/definitions/Assembly"
         },
-        "centerHole": {
+        "centerRadius": {
           "type": "number"
         },
         "layout": {
@@ -2061,7 +2061,7 @@
         "assembly": {
           "$ref": "#/definitions/Assembly"
         },
-        "centerHole": {
+        "centerRadius": {
           "type": "number"
         },
         "layout": {
@@ -2114,7 +2114,7 @@
         "assembly": {
           "$ref": "#/definitions/Assembly"
         },
-        "centerHole": {
+        "centerRadius": {
           "type": "number"
         },
         "color": {
@@ -2435,7 +2435,7 @@
         "assembly": {
           "$ref": "#/definitions/Assembly"
         },
-        "centerHole": {
+        "centerRadius": {
           "type": "number"
         },
         "layout": {
@@ -2522,7 +2522,7 @@
         "assembly": {
           "$ref": "#/definitions/Assembly"
         },
-        "centerHole": {
+        "centerRadius": {
           "type": "number"
         },
         "layout": {

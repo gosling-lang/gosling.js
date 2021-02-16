@@ -245,7 +245,7 @@ function traverseAndCollectTrackInfo(
     if (isThisCircularRoot) {
         const cTracks = output.slice(numTracksBeforeInsert);
 
-        const INNER_HOLE = spec.centerHole !== undefined ? spec.centerHole : DEFAULT_INNER_HOLE_PROP;
+        const INNER_HOLE = spec.centerRadius !== undefined ? spec.centerRadius : DEFAULT_INNER_HOLE_PROP;
         const TOTAL_RADIUS = cumWidth / 2.0; // (cumWidth + cumHeight) / 2.0 / 2.0;
         const TOTAL_RING_SIZE = TOTAL_RADIUS * (1 - INNER_HOLE);
 

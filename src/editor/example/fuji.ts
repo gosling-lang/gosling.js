@@ -29,7 +29,7 @@ export const EX_SPEC_FUJI_PLOT: GoslingSpec = {
     subtitle: 'Kanai, M. et al., Nat. Genet. (2018)',
     static: true,
     layout: 'circular',
-    centerHole: 0.05,
+    centerRadius: 0.05,
     tracks: [
         {
             data: {

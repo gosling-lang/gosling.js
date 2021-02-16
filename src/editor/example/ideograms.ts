@@ -95,7 +95,7 @@ const StackedPeaks: Track = {
 export const EX_SPEC_CYTOBANDS: GoslingSpec = {
     static: true,
     layout: 'linear',
-    centerHole: 0.2,
+    centerRadius: 0.2,
     parallelViews: [
         {
             xDomain: { chromosome: '1' },
