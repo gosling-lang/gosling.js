@@ -35,6 +35,17 @@ describe('Fix Spec Downstream', () => {
             expect((spec.parallelViews[0] as any).tracks[0].static).toEqual(true); // TODO:
         }
     });
+    it('Layout in Tracks Should Be Removed', () => {
+        const spec: GoslingSpec = {
+            parallelViews: [
+                {
+                    tracks: [{ layout: 'circular', overlay: [], width: 0, height: 0 }]
+                }
+            ]
+        };
+        traverseToFixSpecDownstream(spec);
+        expect((spec.parallelViews[0] as any).tracks[0].layout).toEqual('linear');
+    });
 });
 
 describe('Spec Preprocess', () => {
