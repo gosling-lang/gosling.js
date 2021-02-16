@@ -98,6 +98,11 @@ export function traverseToFixSpecDownstream(spec: GoslingSpec | View, parentDef?
             if (!track.width) track.width = DEFAULT_TRACK_WIDTH_LINEAR;
             if (!track.height) track.height = DEFAULT_TRACK_HEIGHT_LINEAR;
 
+            /*
+             * Properties that shouldn't be suggested
+             */
+            if (track.layout) track.layout = undefined;
+
             /**
              * Override options received from the parent
              */
