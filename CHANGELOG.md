@@ -1,3 +1,22 @@
+## [0.0.25](https://github.com/gosling-lang/gosling.js/compare/v0.0.24...v0.0.25) (2021-02-17)
+
+
+### Bug Fixes
+
+* address a problem when importing a gosling.js package ([c07e3bd](https://github.com/gosling-lang/gosling.js/commit/c07e3bd9fa63778c015482a5f7e309125b28ba20))
+* do not crash editor when random color str is used ([#211](https://github.com/gosling-lang/gosling.js/issues/211)) ([c39873e](https://github.com/gosling-lang/gosling.js/commit/c39873e0380b00307a16f52dce7e628fe36aa5ef))
+* encode width of triangle same as its height by defualt ([#220](https://github.com/gosling-lang/gosling.js/issues/220)) ([5602e99](https://github.com/gosling-lang/gosling.js/commit/5602e99cabf1460c24f1077fbb93565a41368ffd))
+* remove track-level layout definition to prevent using different layouts for tracks in a same view ([#214](https://github.com/gosling-lang/gosling.js/issues/214)) ([be1eaf8](https://github.com/gosling-lang/gosling.js/commit/be1eaf8ddbab8c516ef822bb05f13d4f99036cbd))
+
+
+### Features
+
+* allow resizing font in editor ([#216](https://github.com/gosling-lang/gosling.js/issues/216)) ([f237e11](https://github.com/gosling-lang/gosling.js/commit/f237e11aaa03bfb78229359eb28e1018327ce1e1))
+* support BigWig ([#196](https://github.com/gosling-lang/gosling.js/issues/196)) ([48d5ff4](https://github.com/gosling-lang/gosling.js/commit/48d5ff434e66ba6d855ef08a5b6ac5bc9a1decc5))
+* use relative arrangement ([#198](https://github.com/gosling-lang/gosling.js/issues/198)) ([4888b81](https://github.com/gosling-lang/gosling.js/commit/4888b817eba8c72cc7e54fcdfb5fcc3226ec60dd))
+
+
+
 ## [0.0.24](https://github.com/gosling-lang/gosling.js/compare/v0.0.23...v0.0.24) (2021-02-08)
 
 
