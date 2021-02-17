@@ -53,7 +53,7 @@ export function drawTriangle(g: PIXI.Graphics, model: GoslingTrackModel) {
             const x = model.encodedPIXIProperty('x', d);
             const xe = model.encodedPIXIProperty('xe', d);
             const yValue = getValueUsingChannel(d, spec.y as Channel) as string | number;
-            const markWidth = model.encodedPIXIProperty('size', d) ?? xe - x;
+            const markWidth = model.encodedPIXIProperty('size', d) ?? (xe === undefined ? triHeight : xe - x);
 
             const y = model.encodedValue('y', yValue);
             const strokeWidth = model.encodedPIXIProperty('strokeWidth', d);
