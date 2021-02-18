@@ -55,9 +55,9 @@ export const EX_SPEC_PATHOGENIC: GoslingSpec = {
                         {
                             measure: 'zoomLevel',
                             target: 'mark',
-                            threshold: 500000,
+                            threshold: 100000,
                             operation: 'LT',
-                            transitionPadding: 500000
+                            transitionPadding: 100000
                         }
                     ]
                 },
@@ -164,9 +164,9 @@ export const EX_SPEC_PATHOGENIC: GoslingSpec = {
                 {
                     measure: 'zoomLevel',
                     target: 'mark',
-                    threshold: 1000000,
+                    threshold: 500000,
                     operation: 'GT',
-                    transitionPadding: 1000000
+                    transitionPadding: 500000
                 }
             ],
             overlayOnPreviousTrack: true,
