@@ -27,6 +27,8 @@ export function drawBar(trackInfo: any, tile: any, model: GoslingTrackModel) {
         tile.tileData.tilePos,
         tileSize
     );
+    const zoomLevel =
+        (model.getChannelScale('x') as any).invert(trackWidth) - (model.getChannelScale('x') as any).invert(0);
 
     /* circular parameters */
     const circular = spec.layout === 'circular';
@@ -77,10 +79,7 @@ export function drawBar(trackInfo: any, tile: any, model: GoslingTrackModel) {
                 const barWidth = model.encodedPIXIProperty('width', d, { tileUnitWidth });
                 const barStartX = model.encodedPIXIProperty('x-start', d, { markWidth: barWidth });
 
-                const alphaTransition = model.markVisibility(d, {
-                    width: barWidth,
-                    zoomLevel: trackInfo._xScale.invert(trackWidth) - trackInfo._xScale.invert(0)
-                });
+                const alphaTransition = model.markVisibility(d, { width: barWidth, zoomLevel });
                 const actualOpacity = Math.min(alphaTransition, opacity);
 
                 if (actualOpacity === 0 || barWidth <= 0 || y <= 0) {
@@ -109,7 +108,7 @@ export function drawBar(trackInfo: any, tile: any, model: GoslingTrackModel) {
                     g.arc(cx, cy, farR, endRad, startRad, false);
                     g.closePath();
                 } else {
-                    g.beginFill(colorToHex(color), opacity);
+                    g.beginFill(colorToHex(color), actualOpacity);
                     g.drawRect(barStartX, rowHeight - y - prevYEnd, barWidth, y);
                 }
 
@@ -137,7 +136,7 @@ export function drawBar(trackInfo: any, tile: any, model: GoslingTrackModel) {
                 const barStartX = model.encodedPIXIProperty('x-start', d, { markWidth: barWidth });
                 const barHeight = y - baselineY;
 
-                const alphaTransition = model.markVisibility(d, { width: barWidth });
+                const alphaTransition = model.markVisibility(d, { width: barWidth, zoomLevel });
                 const actualOpacity = Math.min(alphaTransition, opacity);
 
                 if (actualOpacity === 0 || barWidth === 0 || y === 0) {
@@ -169,7 +168,7 @@ export function drawBar(trackInfo: any, tile: any, model: GoslingTrackModel) {
                     g.arc(cx, cy, farR, endRad, startRad, false);
                     g.closePath();
                 } else {
-                    g.beginFill(colorToHex(color), opacity);
+                    g.beginFill(colorToHex(color), actualOpacity);
                     g.drawRect(barStartX, rowPosition + rowHeight - barHeight - baselineY, barWidth, barHeight);
                 }
             });
