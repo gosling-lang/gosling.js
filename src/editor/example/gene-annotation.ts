@@ -769,16 +769,19 @@ export const EX_TRACK_GENE_ANNOTATION = {
 export const EX_SPEC_GENE_ANNOTATION: GoslingSpec = {
     layout: 'linear',
     xDomain: { chromosome: '3', interval: [52168000, 52890000] },
-    hconcatViews: [
+    arrangement: 'horizontal',
+    views: [
         {
-            vconcatViews: [
+            arrangement: 'vertical',
+            views: [
                 { tracks: [EX_TRACK_GENE_ANNOTATION.higlass] },
                 { tracks: [EX_TRACK_GENE_ANNOTATION.corces] },
                 { tracks: [EX_TRACK_GENE_ANNOTATION.igv] }
             ]
         },
         {
-            vconcatViews: [
+            arrangement: 'vertical',
+            views: [
                 { tracks: [EX_TRACK_GENE_ANNOTATION.cyverse] },
                 { tracks: [EX_TRACK_GENE_ANNOTATION.gmgdb] },
                 { tracks: [EX_TRACK_GENE_ANNOTATION.g7] }

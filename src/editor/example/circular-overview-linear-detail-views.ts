@@ -2,7 +2,8 @@ import { GoslingSpec } from '../../core/gosling.schema';
 import { GOSLING_PUBLIC_DATA } from './gosling-data';
 
 export const EX_SPEC_CIRCULAR_OVERVIEW_LINEAR_DETAIL: GoslingSpec = {
-    vconcatViews: [
+    arrangement: 'vertical',
+    views: [
         {
             layout: 'circular',
             tracks: [
@@ -101,7 +102,8 @@ export const EX_SPEC_CIRCULAR_OVERVIEW_LINEAR_DETAIL: GoslingSpec = {
         },
         {
             spacing: 10,
-            hconcatViews: [
+            arrangement: 'horizontal',
+            views: [
                 {
                     tracks: [
                         {

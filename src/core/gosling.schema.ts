@@ -1,7 +1,7 @@
 import { GLYPH_LOCAL_PRESET_TYPE, GLYPH_HIGLASS_PRESET_TYPE } from '../editor/example/glyph';
 
 /* ----------------------------- ROOT SPEC ----------------------------- */
-export type GoslingSpec = (View | (ParallelViews | SerialViews | VConcatViews | HConcatViews)) & CommonRootDef;
+export type GoslingSpec = (View | ArrangedViews) & CommonRootDef;
 
 export interface CommonRootDef {
     title?: string;
@@ -10,37 +10,47 @@ export interface CommonRootDef {
 }
 
 /* ----------------------------- VIEW ----------------------------- */
+export type Layout = 'linear' | 'circular';
+export type Assembly = 'hg38' | 'hg19' | 'hg18' | 'hg17' | 'hg16' | 'mm10' | 'mm9';
+
 export interface CommonViewDef {
+    layout?: Layout;
+
     spacing?: number;
     static?: boolean;
+
     assembly?: Assembly;
-    layout?: Layout;
-    centerRadius?: number; // [0, 1], default: 0.3 (`DEFAULT_INNER_HOLE_PROP`) // TODO: Not supported yet
-    xDomain?: DomainInterval | DomainChrInterval | DomainChr; // TODO: Support `DomainGene`
+
+    xDomain?: DomainInterval | DomainChrInterval | DomainChr; // We can support `DomainGene` as well later.
     xLinkID?: string;
-    // xAxis?: AxisPosition; // TODO:
+    xAxis?: AxisPosition; // not supported currently
+
+    /**
+     * Proportion of the radius of the center white space.
+     */
+    centerRadius?: number; // [0, 1] (default: 0.3)
 }
+export type ArrangedViews = ParallalViews | SerialViews | HorizontalViews | VerticalViews;
 
-export type ArrangedViews = ParallelViews | SerialViews | VConcatViews | HConcatViews;
-
-export interface ParallelViews extends CommonViewDef {
-    parallelViews: (View | ArrangedViews)[];
+export interface ParallalViews extends CommonViewDef {
+    arrangement: 'parallel';
+    views: (View | ArrangedViews)[];
 }
 
 export interface SerialViews extends CommonViewDef {
-    serialViews: (View | ArrangedViews)[];
+    arrangement: 'serial';
+    views: (View | ArrangedViews)[];
 }
 
-export interface VConcatViews extends CommonViewDef {
-    vconcatViews: (View | ArrangedViews)[];
+export interface HorizontalViews extends CommonViewDef {
+    arrangement: 'horizontal';
+    views: (View | ArrangedViews)[];
 }
 
-export interface HConcatViews extends CommonViewDef {
-    hconcatViews: (View | ArrangedViews)[];
+export interface VerticalViews extends CommonViewDef {
+    arrangement: 'vertical';
+    views: (View | ArrangedViews)[];
 }
-
-export type Layout = 'linear' | 'circular';
-export type Assembly = 'hg38' | 'hg19' | 'hg18' | 'hg17' | 'hg16' | 'mm10' | 'mm9';
 
 /*
  * View is a group of tracks that share the same genomic axes and are linked each other by default.

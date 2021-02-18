@@ -5,7 +5,8 @@ import { traverseToFixSpecDownstream, overrideTemplates } from './spec-preproces
 describe('Fix Spec Downstream', () => {
     it('Empty Views', () => {
         const info = getRelativeTrackInfo({
-            parallelViews: [
+            arrangement: 'parallel',
+            views: [
                 {
                     tracks: []
                 }
@@ -19,32 +20,35 @@ describe('Fix Spec Downstream', () => {
         {
             const spec: GoslingSpec = {
                 static: true,
-                parallelViews: [{ tracks: [{ overlay: [], width: 0, height: 0 }] }]
+                arrangement: 'parallel',
+                views: [{ tracks: [{ overlay: [], width: 0, height: 0 }] }]
             };
             traverseToFixSpecDownstream(spec);
-            expect(spec.parallelViews[0].static).toEqual(true);
-            expect((spec.parallelViews[0] as any).tracks[0].static).toEqual(true);
+            expect(spec.views[0].static).toEqual(true);
+            expect((spec.views[0] as any).tracks[0].static).toEqual(true);
         }
         {
             const spec: GoslingSpec = {
                 layout: 'circular',
-                parallelViews: [{ layout: 'linear', tracks: [{ overlay: [], width: 0, height: 0 }] }]
+                arrangement: 'parallel',
+                views: [{ layout: 'linear', tracks: [{ overlay: [], width: 0, height: 0 }] }]
             };
             traverseToFixSpecDownstream(spec);
-            expect(spec.parallelViews[0].static).toEqual(true);
-            expect((spec.parallelViews[0] as any).tracks[0].static).toEqual(true); // TODO:
+            expect(spec.views[0].static).toEqual(true);
+            expect((spec.views[0] as any).tracks[0].static).toEqual(true); // TODO:
         }
     });
     it('Layout in Tracks Should Be Removed', () => {
         const spec: GoslingSpec = {
-            parallelViews: [
+            arrangement: 'parallel',
+            views: [
                 {
                     tracks: [{ layout: 'circular', overlay: [], width: 0, height: 0 }]
                 }
             ]
         };
         traverseToFixSpecDownstream(spec);
-        expect((spec.parallelViews[0] as any).tracks[0].layout).toEqual('linear');
+        expect((spec.views[0] as any).tracks[0].layout).toEqual('linear');
     });
 });
 

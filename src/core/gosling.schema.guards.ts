@@ -27,10 +27,7 @@ import {
     MultivecData,
     VectorData,
     DataTrack,
-    BIGWIGData,
-    GoslingSpec,
-    ArrangedViews,
-    View
+    BIGWIGData
 } from './gosling.schema';
 import { SUPPORTED_CHANNELS } from './mark';
 import { isArray } from 'lodash';
@@ -187,14 +184,6 @@ export function IsStackedChannel(track: SingleTrack, channelKey: keyof typeof Ch
         IsChannelDeep(channel) &&
         channel.type === 'quantitative'
     );
-}
-
-export function getArrangedViews(spec: GoslingSpec | ArrangedViews): (View | ArrangedViews)[] {
-    if ('parallelViews' in spec) return spec.parallelViews;
-    if ('serialViews' in spec) return spec.serialViews;
-    if ('vconcatViews' in spec) return spec.vconcatViews;
-    if ('hconcatViews' in spec) return spec.hconcatViews;
-    return [];
 }
 
 /**

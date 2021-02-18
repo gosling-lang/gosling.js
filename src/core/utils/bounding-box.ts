@@ -1,5 +1,5 @@
 import { ArrangedViews, CommonViewDef, GoslingSpec, Track, View } from '../gosling.schema';
-import { getArrangedViews, IsXAxis } from '../gosling.schema.guards';
+import { IsXAxis } from '../gosling.schema.guards';
 import { HIGLASS_AXIS_SIZE } from '../higlass-model';
 import {
     DEFAULT_INNER_HOLE_PROP,
@@ -149,7 +149,7 @@ function traverseAndCollectTrackInfo(
 
     let noChildConcatArrangement = true; // if v/hconcat is being used by children, circular visualizations should be adjacently placed.
     traverseViewArrangements(spec, (a: ArrangedViews) => {
-        if ('vconcatViews' in a || 'hconcatViews' in a) {
+        if (a.arrangement === 'vertical' || a.arrangement === 'horizontal') {
             noChildConcatArrangement = false;
         }
     });
@@ -159,7 +159,7 @@ function traverseAndCollectTrackInfo(
         allChildCircularLayout &&
         traversedAtLeastOnce &&
         noChildConcatArrangement &&
-        ('parallelViews' in spec || 'serialViews' in spec || 'tracks' in spec);
+        (spec.arrangement === 'parallel' || spec.arrangement === 'serial' || 'tracks' in spec);
 
     const numTracksBeforeInsert = output.length;
 
@@ -200,9 +200,9 @@ function traverseAndCollectTrackInfo(
         const spacing = spec.spacing ? spec.spacing : DEFAULT_VIEW_SPACING;
 
         // We first calculate position and size of each view and track by considering it as if it uses a linear layout
-        if ('parallelViews' in spec || 'vconcatViews' in spec) {
+        if (spec.arrangement === 'parallel' || spec.arrangement === 'vertical') {
             // const sizes = getSizeDefOfArrangedViews(spec);
-            getArrangedViews(spec).forEach((v, i, array) => {
+            spec.views.forEach((v, i, array) => {
                 const viewBB = traverseAndCollectTrackInfo(
                     v,
                     output,
@@ -219,8 +219,8 @@ function traverseAndCollectTrackInfo(
                 }
                 cumHeight += viewBB.height;
             });
-        } else if ('serialViews' in spec || 'hconcatViews' in spec) {
-            getArrangedViews(spec).forEach((v, i, array) => {
+        } else if (spec.arrangement === 'serial' || spec.arrangement === 'horizontal') {
+            spec.views.forEach((v, i, array) => {
                 const viewBB = traverseAndCollectTrackInfo(
                     v,
                     output,

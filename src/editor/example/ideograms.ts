@@ -96,7 +96,8 @@ export const EX_SPEC_CYTOBANDS: GoslingSpec = {
     static: true,
     layout: 'linear',
     centerRadius: 0.2,
-    parallelViews: [
+    arrangement: 'parallel',
+    views: [
         {
             xDomain: { chromosome: '1' },
             tracks: [
