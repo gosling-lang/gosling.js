@@ -44,7 +44,7 @@ export const EX_SPEC_PATHOGENIC: GoslingSpec = {
                         ],
                         baseline: 'Uncertain_significance',
                         // grid: true,
-                        range: [250, 25]
+                        range: [150, 20]
                     },
                     size: { value: 1 },
                     color: { value: 'lightgray' },
@@ -105,7 +105,7 @@ export const EX_SPEC_PATHOGENIC: GoslingSpec = {
             size: { value: 7 },
             opacity: { value: 0.8 },
             width: 700,
-            height: 250
+            height: 150
         },
         {
             data: {
@@ -144,7 +144,7 @@ export const EX_SPEC_PATHOGENIC: GoslingSpec = {
                 ]
             },
             // color: {field: 'significance', type: 'nominal'},
-            opacity: { field: 'count', type: 'quantitative' },
+            opacity: { field: 'count', type: 'quantitative', range: [0.05, 1] },
             color: {
                 field: 'significance',
                 type: 'nominal',
