@@ -59,19 +59,19 @@ export function resolveSuperposedTracks(track: Track): SingleTrack[] {
 
 // !!! For the rendering performance, we need to keep tracks in a single track by superposing them as much as we can so that same data will not be loaded duplicately.
 /**
- * Spread superposed tracks if they are assigned to different data/metadata.
+ * Spread overlaid tracks if they are assigned to different data/metadata.
  * This process is necessary since we are passing over each track to HiGlass, and if a single track is mapped to multiple datastes, HiGlass cannot handle that.
  */
 export function spreadTracksByData(tracks: Track[]): Track[] {
     return ([] as Track[]).concat(
         ...tracks.map(t => {
             if (IsDataTrack(t) || !IsOverlaidTrack(t) || t.overlay.length <= 1) {
-                // no superposed tracks to spread
+                // no overlaid tracks to spread
                 return [t];
             }
 
             if (t.overlay.filter(s => s.data).length === 0) {
-                // superposed tracks use the same data and metadata, so no point to spread.
+                // overlaid tracks use the same data and metadata, so no point to spread.
                 return [t];
             }
 
@@ -85,7 +85,7 @@ export function spreadTracksByData(tracks: Track[]): Track[] {
             // TODO: This is a very naive apporach, and we can do better!
             t.overlay.forEach((subSpec, i) => {
                 if (!subSpec.data) {
-                    // Neither metadata nor data is used, so just put that into the original `superpose` option.
+                    // Neither metadata nor data is used, so just put that into the original `overlay` option.
                     original.overlay.push(subSpec);
                     return;
                 }
