@@ -166,7 +166,6 @@ function traverseAndCollectTrackInfo(
     if ('tracks' in spec) {
         // Use the largest `width` for this view.
         cumWidth = Math.max(...spec.tracks.map(d => d.width)); //forceWidth ? forceWidth : spec.tracks[0]?.width;
-
         spec.tracks.forEach((track, i, array) => {
             // let scaledHeight = track.height;
 
@@ -187,7 +186,7 @@ function traverseAndCollectTrackInfo(
                 layout: { x: 0, y: 0, w: 0, h: 0 } // Just put a dummy info here, this should be added after entire bounding box has been determined
             });
 
-            if (track.overlayOnPreviousTrack) {
+            if (array[i + 1] && array[i + 1].overlayOnPreviousTrack) {
                 // do not add a height
             } else {
                 cumHeight += track.height;

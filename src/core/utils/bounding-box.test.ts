@@ -16,6 +16,17 @@ describe('Arrangement', () => {
         const spec1 = {
             tracks: [
                 { overlay: [], width: 10, height: 10 },
+                { overlay: [], width: 10, height: 10, overlayOnPreviousTrack: true }
+            ]
+        };
+        expect(getRelativeTrackInfo(spec1)).toHaveLength(2);
+        expect(getRelativeTrackInfo(spec1)[1].boundingBox.y).toEqual(0);
+    });
+
+    it('1 View, 2 Tracks (N Overlaid Tracks)', () => {
+        const spec1 = {
+            tracks: [
+                { overlay: [], width: 10, height: 10 },
                 { overlay: [], width: 10, height: 10 }
             ]
         };

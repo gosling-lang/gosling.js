@@ -20,6 +20,8 @@ export function drawPoint(g: PIXI.Graphics, model: GoslingTrackModel) {
     /* track size */
     const trackWidth = spec.width;
     const trackHeight = spec.height;
+    const zoomLevel =
+        (model.getChannelScale('x') as any).invert(trackWidth) - (model.getChannelScale('x') as any).invert(0);
 
     /* circular parameters */
     const circular = spec.layout === 'circular';
@@ -52,7 +54,10 @@ export function drawPoint(g: PIXI.Graphics, model: GoslingTrackModel) {
             const stroke = model.encodedPIXIProperty('stroke', d);
             const opacity = model.encodedPIXIProperty('opacity', d);
 
-            if (size <= 0.1 || opacity === 0 || cx + size < 0 || cx - size > trackWidth) {
+            const alphaTransition = model.markVisibility(d, { width: size, zoomLevel });
+            const actualOpacity = Math.min(alphaTransition, opacity);
+
+            if (size <= 0.1 || actualOpacity === 0 || cx + size < 0 || cx - size > trackWidth) {
                 // Don't draw invisible marks
                 return;
             }
@@ -61,7 +66,7 @@ export function drawPoint(g: PIXI.Graphics, model: GoslingTrackModel) {
             g.lineStyle(
                 strokeWidth,
                 colorToHex(stroke),
-                opacity, // alpha
+                actualOpacity, // alpha
                 1 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
             );
 
@@ -69,10 +74,10 @@ export function drawPoint(g: PIXI.Graphics, model: GoslingTrackModel) {
                 const r = trackOuterRadius - ((rowPosition + rowHeight - cy) / trackHeight) * trackRingSize;
                 const pos = cartesianToPolar(cx, trackWidth, r, tcx, tcy, startAngle, endAngle);
 
-                g.beginFill(colorToHex(color), opacity);
+                g.beginFill(colorToHex(color), actualOpacity);
                 g.drawCircle(pos.x, pos.y, size);
             } else {
-                g.beginFill(colorToHex(color), opacity);
+                g.beginFill(colorToHex(color), actualOpacity);
                 g.drawCircle(cx, rowPosition + rowHeight - cy, size);
             }
         });
