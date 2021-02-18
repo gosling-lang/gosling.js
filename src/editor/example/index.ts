@@ -39,7 +39,8 @@ export const examples: ReadonlyArray<{
     },
     {
         name: 'Pathogenic Lollipop Plot',
-        spec: EX_SPEC_PATHOGENIC
+        spec: EX_SPEC_PATHOGENIC,
+        forceShow: true
     },
     {
         name: 'GIVE (Cao et al. 2018)',
