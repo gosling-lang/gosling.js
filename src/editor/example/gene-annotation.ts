@@ -4,7 +4,7 @@ const width = 350;
 const height = 100;
 const data = {
     url: 'https://resgen.io/api/v1/tileset_info/?d=M9A9klpwTci5Vf4bHZ864g',
-    type: 'bed',
+    type: 'beddb',
     genomicFields: [
         { index: 1, name: 'start' },
         { index: 2, name: 'end' }

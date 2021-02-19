@@ -352,7 +352,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                         });
 
                         tile.tileData.tabularData = tabularData;
-                    } else if (resolved.data.type === 'bed') {
+                    } else if (resolved.data.type === 'beddb') {
                         const { genomicFields, exonIntervalFields, valueFields } = resolved.data;
 
                         tile.tileData.tabularData = [];

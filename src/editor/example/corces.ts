@@ -1,18 +1,19 @@
 import { GoslingSpec } from '../../core/gosling.schema';
 
 export const EX_SPEC_CORCES_ET_AL: GoslingSpec = {
-    title: 'Single-cell Epigenomic Analysis (Corces et al. 2020)',
+    title: 'Single-cell Epigenomic Analysis',
+    subtitle: 'Corces et al. 2020',
     static: true,
     // subtitle: 'Single-cell epigenomic analyses implicate candidate causal ...',
     // description:
     //     'Corces et al. 2020. Single-cell epigenomic analyses implicate candidate causal variants at inherited risk loci for Alzheimer’s and Parkinson’s diseases. Nature Genetics, pp.1-11.',
-    layout: 'circular',
+    layout: 'linear',
     arrangement: 'vertical',
     views: [
         {
             layout: 'linear',
             xDomain: { chromosome: '3' },
-            centerRadius: 0.9,
+            centerRadius: 0.8,
             tracks: [
                 {
                     title: 'chr3',
@@ -74,7 +75,7 @@ export const EX_SPEC_CORCES_ET_AL: GoslingSpec = {
                     stroke: { value: 'black' },
                     strokeWidth: { value: 1 },
                     style: { outlineWidth: 0 },
-                    width: 800,
+                    width: 400,
                     height: 25
                 }
             ]
@@ -99,7 +100,7 @@ export const EX_SPEC_CORCES_ET_AL: GoslingSpec = {
                     y: { field: 'peak', type: 'quantitative' },
                     color: { value: '#F29B67' },
                     style: { outline: '#20102F' },
-                    width: 800,
+                    width: 400,
                     height: 40
                 },
                 {
@@ -115,7 +116,7 @@ export const EX_SPEC_CORCES_ET_AL: GoslingSpec = {
                     y: { field: 'peak', type: 'quantitative' },
                     color: { value: '#3DC491' },
                     style: { outline: '#20102F' },
-                    width: 800,
+                    width: 400,
                     height: 40
                 },
                 {
@@ -131,7 +132,7 @@ export const EX_SPEC_CORCES_ET_AL: GoslingSpec = {
                     y: { field: 'peak', type: 'quantitative' },
                     color: { value: '#565C8B' },
                     style: { outline: '#20102F' },
-                    width: 800,
+                    width: 400,
                     height: 40
                 },
                 {
@@ -147,7 +148,7 @@ export const EX_SPEC_CORCES_ET_AL: GoslingSpec = {
                     y: { field: 'peak', type: 'quantitative' },
                     color: { value: '#77C0FA' },
                     style: { outline: '#20102F' },
-                    width: 800,
+                    width: 400,
                     height: 40
                 },
                 {
@@ -163,7 +164,7 @@ export const EX_SPEC_CORCES_ET_AL: GoslingSpec = {
                     y: { field: 'peak', type: 'quantitative' },
                     color: { value: '#9B46E5' },
                     style: { outline: '#20102F' },
-                    width: 800,
+                    width: 400,
                     height: 40
                 },
                 {
@@ -179,7 +180,7 @@ export const EX_SPEC_CORCES_ET_AL: GoslingSpec = {
                     y: { field: 'peak', type: 'quantitative' },
                     color: { value: '#D73636' },
                     style: { outline: '#20102F' },
-                    width: 800,
+                    width: 400,
                     height: 40
                 },
                 {
@@ -196,14 +197,14 @@ export const EX_SPEC_CORCES_ET_AL: GoslingSpec = {
                     y: { field: 'peak', type: 'quantitative' },
                     color: { value: '#E38ADC' },
                     style: { outline: '#20102F' },
-                    width: 800,
+                    width: 400,
                     height: 40
                 },
                 {
                     title: 'Genes',
                     data: {
                         url: 'https://resgen.io/api/v1/tileset_info/?d=M9A9klpwTci5Vf4bHZ864g',
-                        type: 'bed',
+                        type: 'beddb',
                         genomicFields: [
                             { index: 1, name: 'start' },
                             { index: 2, name: 'end' }
@@ -296,14 +297,14 @@ export const EX_SPEC_CORCES_ET_AL: GoslingSpec = {
                         }
                     ],
                     style: { outline: '#20102F' },
-                    width: 800,
+                    width: 400,
                     height: 80
                 },
                 // {
                 //     title: 'HiChIP (H3K27ac)',
                 //     data: {
                 //         url: 'https://resgen.io/api/v1/tileset_info/?d=fyY8k9PlS-mGLnBob05_Ow',
-                //         type: 'bed',
+                //         type: 'beddb',
                 //         genomicFields: [
                 //             { name: 'start', index: 1 },
                 //             { name: 'end', index: 2 }
@@ -328,13 +329,13 @@ export const EX_SPEC_CORCES_ET_AL: GoslingSpec = {
                 //     stroke: { value: 'gray' },
                 //     opacity: { value: 0.1 },
                 //     style: { outline: '#20102F', circularLink: false },
-                //     width: 800,
+                //     width: 400,
                 //     height: 40
                 // },
                 // {
                 //     data: {
                 //         url: 'https://resgen.io/api/v1/tileset_info/?d=fyY8k9PlS-mGLnBob05_Ow',
-                //         type: 'bed',
+                //         type: 'beddb',
                 //         genomicFields: [
                 //             { name: 'start', index: 1 },
                 //             { name: 'end', index: 2 }
@@ -353,13 +354,13 @@ export const EX_SPEC_CORCES_ET_AL: GoslingSpec = {
                 //     opacity: { value: 1 },
                 //     style: { outline: '#20102F', circularLink: false },
                 //     overlayOnPreviousTrack: true,
-                //     width: 800,
+                //     width: 400,
                 //     height: 40
                 // },
                 // {
                 //     data: {
                 //         url: 'https://resgen.io/api/v1/tileset_info/?d=fyY8k9PlS-mGLnBob05_Ow',
-                //         type: 'bed',
+                //         type: 'beddb',
                 //         genomicFields: [
                 //             { name: 'start', index: 1 },
                 //             { name: 'end', index: 2 }
@@ -378,13 +379,13 @@ export const EX_SPEC_CORCES_ET_AL: GoslingSpec = {
                 //     opacity: { value: 1 },
                 //     style: { outline: '#20102F', circularLink: false },
                 //     overlayOnPreviousTrack: true,
-                //     width: 800,
+                //     width: 400,
                 //     height: 40
                 // },
                 {
                     data: {
                         url: 'https://resgen.io/api/v1/tileset_info/?d=EqSENQSXRL-EWYeBe-Y1rA',
-                        type: 'bed',
+                        type: 'beddb',
                         genomicFields: [
                             { name: 'start', index: 1 },
                             { name: 'end', index: 2 }
@@ -399,13 +400,13 @@ export const EX_SPEC_CORCES_ET_AL: GoslingSpec = {
                     stroke: { value: '#F97E2A' },
                     opacity: { value: 0.1 },
                     style: { outline: '#20102F', circularLink: false },
-                    width: 800,
+                    width: 400,
                     height: 60
                 },
                 {
                     data: {
                         url: 'https://resgen.io/api/v1/tileset_info/?d=R4e7-rVfQPWTleJIJjLOEQ',
-                        type: 'bed',
+                        type: 'beddb',
                         genomicFields: [
                             { name: 'start', index: 1 },
                             { name: 'end', index: 2 }
@@ -421,14 +422,14 @@ export const EX_SPEC_CORCES_ET_AL: GoslingSpec = {
                     opacity: { value: 0.1 },
                     style: { outline: '#20102F', circularLink: false },
                     overlayOnPreviousTrack: true,
-                    width: 800,
+                    width: 400,
                     height: 60
                 },
                 {
                     title: 'PLAC-seq (H3K4me3) Nott et al.',
                     data: {
                         url: 'https://resgen.io/api/v1/tileset_info/?d=JzccFAJUQEiz-0188xaWZg',
-                        type: 'bed',
+                        type: 'beddb',
                         genomicFields: [
                             { name: 'start', index: 1 },
                             { name: 'end', index: 2 }
@@ -444,7 +445,7 @@ export const EX_SPEC_CORCES_ET_AL: GoslingSpec = {
                     opacity: { value: 0.1 },
                     style: { outline: '#20102F', circularLink: false },
                     overlayOnPreviousTrack: true,
-                    width: 800,
+                    width: 400,
                     height: 60
                 }
                 // {
