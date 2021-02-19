@@ -23,7 +23,7 @@ import {
     OneOfFilter,
     RangeFilter,
     IncludeFilter,
-    BEDData,
+    BEDDBData,
     MultivecData,
     VectorData,
     DataTrack,
@@ -127,8 +127,10 @@ export function IsChannelBind(
     return channel !== null && typeof channel === 'object' && 'bind' in channel;
 }
 
-export function IsDataDeepTileset(_: DataDeep | undefined): _ is BEDData | VectorData | MultivecData | BIGWIGData {
-    return _ !== undefined && (_.type === 'vector' || _.type === 'bed' || _.type === 'multivec' || _.type === 'bigwig');
+export function IsDataDeepTileset(_: DataDeep | undefined): _ is BEDDBData | VectorData | MultivecData | BIGWIGData {
+    return (
+        _ !== undefined && (_.type === 'vector' || _.type === 'beddb' || _.type === 'multivec' || _.type === 'bigwig')
+    );
 }
 
 export function IsChannelDeep(channel: ChannelDeep | ChannelValue | undefined): channel is ChannelDeep {

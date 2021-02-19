@@ -35,12 +35,6 @@ module.exports = (env, argv) => {
       ],
     },
     externals: {
-      "higlass": {
-        commonjs: "higlass",
-        commonjs2: "higlass",
-        amd: "higlass",
-        root: "HiGlass",
-      },
       "pixi.js": {
         commonjs: "pixi.js",
         commonjs2: "pixi.js",

@@ -34,7 +34,7 @@
       ],
       "type": "string"
     },
-    "BEDData": {
+    "BEDDBData": {
       "additionalProperties": false,
       "properties": {
         "exonIntervalFields": {
@@ -96,7 +96,7 @@
           "type": "array"
         },
         "type": {
-          "const": "bed",
+          "const": "beddb",
           "type": "string"
         },
         "url": {
@@ -352,7 +352,7 @@
           "$ref": "#/definitions/MultivecData"
         },
         {
-          "$ref": "#/definitions/BEDData"
+          "$ref": "#/definitions/BEDDBData"
         },
         {
           "$ref": "#/definitions/VectorData"

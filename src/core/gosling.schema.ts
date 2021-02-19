@@ -299,7 +299,7 @@ export interface DomainGene {
 export type Aggregate = 'max' | 'min' | 'mean' | 'bin' | 'count';
 
 /* ----------------------------- DATA ----------------------------- */
-export type DataDeep = JSONData | CSVData | BIGWIGData | MultivecData | BEDData | VectorData;
+export type DataDeep = JSONData | CSVData | BIGWIGData | MultivecData | BEDDBData | VectorData;
 
 export interface JSONData {
     type: 'json';
@@ -371,8 +371,8 @@ export interface VectorData {
     bin?: number; // Binning the genomic interval in tiles (unit size: 256)
 }
 
-export interface BEDData {
-    type: 'bed';
+export interface BEDDBData {
+    type: 'beddb';
     url: string;
     genomicFields: { index: number; name: string }[];
     valueFields?: { index: number; name: string; type: 'nominal' | 'quantitative' }[];
