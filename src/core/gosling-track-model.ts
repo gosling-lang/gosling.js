@@ -245,6 +245,11 @@ export class GoslingTrackModel {
             return undefined;
         }
 
+        if (typeof this.channelScales[channelKey] !== 'function') {
+            // Scale is undefined, so returning undefined.
+            return undefined;
+        }
+
         // The type of a channel scale is determined by a { channel type, field type } pair
         switch (channelKey) {
             case 'x':
@@ -705,6 +710,11 @@ export class GoslingTrackModel {
             } else if (IsChannelDeep(channel)) {
                 const domain = channel.domain;
                 const range = channel.range;
+
+                if (domain === undefined || range === undefined) {
+                    // we do not have sufficient info to generate scales
+                    return;
+                }
 
                 if (channel.type === 'quantitative' || channel.type === 'genomic') {
                     switch (channelKey) {

@@ -1,4 +1,5 @@
 import { GoslingSpec } from '../../core/gosling.schema';
+import { EX_TRACK_GENE_ANNOTATION } from './gene-annotation';
 import { GOSLING_PUBLIC_DATA } from './gosling-data';
 
 export const allDomains = [
@@ -17,6 +18,7 @@ export const EX_SPEC_PATHOGENIC: GoslingSpec = {
     layout: 'linear',
     spacing: 0,
     tracks: [
+        EX_TRACK_GENE_ANNOTATION.higlass,
         {
             data: {
                 url: GOSLING_PUBLIC_DATA.clinvar,
@@ -125,26 +127,27 @@ export const EX_SPEC_PATHOGENIC: GoslingSpec = {
                     // 'risk_factor',
                     // 'Conflicting_interpretations_of_pathogenicity'
                 ],
-                bin: 16
+                bin: 4
+                // bin: 16
             },
-            mark: 'rect',
+            mark: 'bar',
             x: { field: 'start', type: 'genomic' },
             xe: { field: 'end', type: 'genomic' },
-            row: {
-                field: 'significance',
-                type: 'nominal',
-                domain: [
-                    'Pathogenic',
-                    'Pathogenic/Likely_pathogenic',
-                    'Likely_pathogenic',
-                    'Uncertain_significance',
-                    'Likely_benign',
-                    'Benign/Likely_benign',
-                    'Benign'
-                ]
-            },
-            // color: {field: 'significance', type: 'nominal'},
-            opacity: { field: 'count', type: 'quantitative', range: [0.05, 1] },
+            y: { field: 'count', type: 'quantitative' },
+            // row: {
+            //     field: 'significance',
+            //     type: 'nominal',
+            //     domain: [
+            //         'Pathogenic',
+            //         'Pathogenic/Likely_pathogenic',
+            //         'Likely_pathogenic',
+            //         'Uncertain_significance',
+            //         'Likely_benign',
+            //         'Benign/Likely_benign',
+            //         'Benign'
+            //     ]
+            // },
+            // opacity: { field: 'count', type: 'quantitative', range: [0.05, 1] },
             color: {
                 field: 'significance',
                 type: 'nominal',
