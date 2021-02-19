@@ -7,11 +7,12 @@ export const EX_SPEC_CORCES_ET_AL: GoslingSpec = {
     // description:
     //     'Corces et al. 2020. Single-cell epigenomic analyses implicate candidate causal variants at inherited risk loci for Alzheimer’s and Parkinson’s diseases. Nature Genetics, pp.1-11.',
     layout: 'circular',
-    vconcatViews: [
+    arrangement: 'vertical',
+    views: [
         {
             layout: 'linear',
             xDomain: { chromosome: '3' },
-            centerHole: 0.9,
+            centerRadius: 0.9,
             tracks: [
                 {
                     title: 'chr3',

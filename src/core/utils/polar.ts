@@ -1,4 +1,4 @@
-export const RADIAN_GAP = 0.04;
+export const RADIAN_GAP = 0; //0.04;
 
 /**
  * Convert a value in a single-linear axis to a radian value. Anticlockwise, starts from 12 o'clock.

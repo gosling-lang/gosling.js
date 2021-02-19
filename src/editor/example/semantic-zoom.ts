@@ -239,7 +239,8 @@ export const EXAMPLE_TRACK_SEMANTIC_ZOOM = {
 };
 
 export const EX_SPEC_SEMANTIC_ZOOM: GoslingSpec = {
-    vconcatViews: [
+    arrangement: 'vertical',
+    views: [
         {
             layout: 'linear',
             xDomain: { chromosome: '1', interval: [3000000, 3000010] },

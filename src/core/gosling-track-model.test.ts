@@ -83,6 +83,30 @@ describe('default options should be added into the original spec', () => {
 });
 
 describe('Gosling track model should be properly generated with data', () => {
+    it('Ill-defined scales (e.g., row = quantitative) should not crash the compiler', () => {
+        const track: Track = {
+            ...MINIMAL_TRACK_SPEC,
+            row: { field: 'row', type: 'quantitative' },
+            size: { value: 1 },
+            stroke: { value: 'white' },
+            strokeWidth: { value: 0.5 },
+            opacity: { value: 1 },
+            height: 300
+        };
+        const model = new GoslingTrackModel(track, [{ row: 'a' }, { row: 'b' }, { row: 'a' }]);
+        const spec = model.spec();
+        const rowDomain = IsChannelDeep(spec.row) ? (spec.row.domain as string[]) : [];
+
+        // scale
+        expect(model.getChannelScale('row')).toBeUndefined();
+
+        // domain
+        expect(rowDomain).toBeUndefined();
+
+        // encoded value
+        expect(model.encodedValue('row', 'a')).toBeUndefined();
+    });
+
     it('Default values, such as domain, should be correctly generated based on the data', () => {
         const track: Track = {
             ...MINIMAL_TRACK_SPEC,

@@ -12,22 +12,6 @@
       ],
       "type": "string"
     },
-    "ArrangedViews": {
-      "anyOf": [
-        {
-          "$ref": "#/definitions/ParallelViews"
-        },
-        {
-          "$ref": "#/definitions/SerialViews"
-        },
-        {
-          "$ref": "#/definitions/VConcatViews"
-        },
-        {
-          "$ref": "#/definitions/HConcatViews"
-        }
-      ]
-    },
     "Assembly": {
       "enum": [
         "hg38",
@@ -382,7 +366,8 @@
         "assembly": {
           "$ref": "#/definitions/Assembly"
         },
-        "centerHole": {
+        "centerRadius": {
+          "description": "Proportion of the radius of the center white space.",
           "type": "number"
         },
         "data": {
@@ -423,6 +408,9 @@
         },
         "width": {
           "type": "number"
+        },
+        "xAxis": {
+          "$ref": "#/definitions/AxisPosition"
         },
         "xDomain": {
           "anyOf": [
@@ -922,7 +910,8 @@
             "assembly": {
               "$ref": "#/definitions/Assembly"
             },
-            "centerHole": {
+            "centerRadius": {
+              "description": "Proportion of the radius of the center white space.",
               "type": "number"
             },
             "description": {
@@ -949,6 +938,9 @@
               },
               "type": "array"
             },
+            "xAxis": {
+              "$ref": "#/definitions/AxisPosition"
+            },
             "xDomain": {
               "anyOf": [
                 {
@@ -972,307 +964,20 @@
           "type": "object"
         },
         {
-          "additionalProperties": false,
           "properties": {
-            "assembly": {
-              "$ref": "#/definitions/Assembly"
-            },
-            "centerHole": {
-              "type": "number"
-            },
             "description": {
               "type": "string"
-            },
-            "layout": {
-              "$ref": "#/definitions/Layout"
-            },
-            "parallelViews": {
-              "items": {
-                "anyOf": [
-                  {
-                    "$ref": "#/definitions/View"
-                  },
-                  {
-                    "$ref": "#/definitions/ArrangedViews"
-                  }
-                ]
-              },
-              "type": "array"
-            },
-            "spacing": {
-              "type": "number"
-            },
-            "static": {
-              "type": "boolean"
             },
             "subtitle": {
               "type": "string"
             },
             "title": {
               "type": "string"
-            },
-            "xDomain": {
-              "anyOf": [
-                {
-                  "$ref": "#/definitions/DomainInterval"
-                },
-                {
-                  "$ref": "#/definitions/DomainChrInterval"
-                },
-                {
-                  "$ref": "#/definitions/DomainChr"
-                }
-              ]
-            },
-            "xLinkID": {
-              "type": "string"
             }
           },
-          "required": [
-            "parallelViews"
-          ],
-          "type": "object"
-        },
-        {
-          "additionalProperties": false,
-          "properties": {
-            "assembly": {
-              "$ref": "#/definitions/Assembly"
-            },
-            "centerHole": {
-              "type": "number"
-            },
-            "description": {
-              "type": "string"
-            },
-            "layout": {
-              "$ref": "#/definitions/Layout"
-            },
-            "serialViews": {
-              "items": {
-                "anyOf": [
-                  {
-                    "$ref": "#/definitions/View"
-                  },
-                  {
-                    "$ref": "#/definitions/ArrangedViews"
-                  }
-                ]
-              },
-              "type": "array"
-            },
-            "spacing": {
-              "type": "number"
-            },
-            "static": {
-              "type": "boolean"
-            },
-            "subtitle": {
-              "type": "string"
-            },
-            "title": {
-              "type": "string"
-            },
-            "xDomain": {
-              "anyOf": [
-                {
-                  "$ref": "#/definitions/DomainInterval"
-                },
-                {
-                  "$ref": "#/definitions/DomainChrInterval"
-                },
-                {
-                  "$ref": "#/definitions/DomainChr"
-                }
-              ]
-            },
-            "xLinkID": {
-              "type": "string"
-            }
-          },
-          "required": [
-            "serialViews"
-          ],
-          "type": "object"
-        },
-        {
-          "additionalProperties": false,
-          "properties": {
-            "assembly": {
-              "$ref": "#/definitions/Assembly"
-            },
-            "centerHole": {
-              "type": "number"
-            },
-            "description": {
-              "type": "string"
-            },
-            "layout": {
-              "$ref": "#/definitions/Layout"
-            },
-            "spacing": {
-              "type": "number"
-            },
-            "static": {
-              "type": "boolean"
-            },
-            "subtitle": {
-              "type": "string"
-            },
-            "title": {
-              "type": "string"
-            },
-            "vconcatViews": {
-              "items": {
-                "anyOf": [
-                  {
-                    "$ref": "#/definitions/View"
-                  },
-                  {
-                    "$ref": "#/definitions/ArrangedViews"
-                  }
-                ]
-              },
-              "type": "array"
-            },
-            "xDomain": {
-              "anyOf": [
-                {
-                  "$ref": "#/definitions/DomainInterval"
-                },
-                {
-                  "$ref": "#/definitions/DomainChrInterval"
-                },
-                {
-                  "$ref": "#/definitions/DomainChr"
-                }
-              ]
-            },
-            "xLinkID": {
-              "type": "string"
-            }
-          },
-          "required": [
-            "vconcatViews"
-          ],
-          "type": "object"
-        },
-        {
-          "additionalProperties": false,
-          "properties": {
-            "assembly": {
-              "$ref": "#/definitions/Assembly"
-            },
-            "centerHole": {
-              "type": "number"
-            },
-            "description": {
-              "type": "string"
-            },
-            "hconcatViews": {
-              "items": {
-                "anyOf": [
-                  {
-                    "$ref": "#/definitions/View"
-                  },
-                  {
-                    "$ref": "#/definitions/ArrangedViews"
-                  }
-                ]
-              },
-              "type": "array"
-            },
-            "layout": {
-              "$ref": "#/definitions/Layout"
-            },
-            "spacing": {
-              "type": "number"
-            },
-            "static": {
-              "type": "boolean"
-            },
-            "subtitle": {
-              "type": "string"
-            },
-            "title": {
-              "type": "string"
-            },
-            "xDomain": {
-              "anyOf": [
-                {
-                  "$ref": "#/definitions/DomainInterval"
-                },
-                {
-                  "$ref": "#/definitions/DomainChrInterval"
-                },
-                {
-                  "$ref": "#/definitions/DomainChr"
-                }
-              ]
-            },
-            "xLinkID": {
-              "type": "string"
-            }
-          },
-          "required": [
-            "hconcatViews"
-          ],
           "type": "object"
         }
       ]
-    },
-    "HConcatViews": {
-      "additionalProperties": false,
-      "properties": {
-        "assembly": {
-          "$ref": "#/definitions/Assembly"
-        },
-        "centerHole": {
-          "type": "number"
-        },
-        "hconcatViews": {
-          "items": {
-            "anyOf": [
-              {
-                "$ref": "#/definitions/View"
-              },
-              {
-                "$ref": "#/definitions/ArrangedViews"
-              }
-            ]
-          },
-          "type": "array"
-        },
-        "layout": {
-          "$ref": "#/definitions/Layout"
-        },
-        "spacing": {
-          "type": "number"
-        },
-        "static": {
-          "type": "boolean"
-        },
-        "xDomain": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/DomainInterval"
-            },
-            {
-              "$ref": "#/definitions/DomainChrInterval"
-            },
-            {
-              "$ref": "#/definitions/DomainChr"
-            }
-          ]
-        },
-        "xLinkID": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "hconcatViews"
-      ],
-      "type": "object"
     },
     "IncludeFilter": {
       "additionalProperties": false,
@@ -1625,7 +1330,8 @@
         "assembly": {
           "$ref": "#/definitions/Assembly"
         },
-        "centerHole": {
+        "centerRadius": {
+          "description": "Proportion of the radius of the center white space.",
           "type": "number"
         },
         "color": {
@@ -1668,7 +1374,8 @@
               "assembly": {
                 "$ref": "#/definitions/Assembly"
               },
-              "centerHole": {
+              "centerRadius": {
+                "description": "Proportion of the radius of the center white space.",
                 "type": "number"
               },
               "color": {
@@ -1788,6 +1495,9 @@
               },
               "x1e": {
                 "$ref": "#/definitions/Channel"
+              },
+              "xAxis": {
+                "$ref": "#/definitions/AxisPosition"
               },
               "xDomain": {
                 "anyOf": [
@@ -1910,6 +1620,9 @@
         "x1e": {
           "$ref": "#/definitions/Channel"
         },
+        "xAxis": {
+          "$ref": "#/definitions/AxisPosition"
+        },
         "xDomain": {
           "anyOf": [
             {
@@ -1961,59 +1674,6 @@
       ],
       "type": "string"
     },
-    "ParallelViews": {
-      "additionalProperties": false,
-      "properties": {
-        "assembly": {
-          "$ref": "#/definitions/Assembly"
-        },
-        "centerHole": {
-          "type": "number"
-        },
-        "layout": {
-          "$ref": "#/definitions/Layout"
-        },
-        "parallelViews": {
-          "items": {
-            "anyOf": [
-              {
-                "$ref": "#/definitions/View"
-              },
-              {
-                "$ref": "#/definitions/ArrangedViews"
-              }
-            ]
-          },
-          "type": "array"
-        },
-        "spacing": {
-          "type": "number"
-        },
-        "static": {
-          "type": "boolean"
-        },
-        "xDomain": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/DomainInterval"
-            },
-            {
-              "$ref": "#/definitions/DomainChrInterval"
-            },
-            {
-              "$ref": "#/definitions/DomainChr"
-            }
-          ]
-        },
-        "xLinkID": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "parallelViews"
-      ],
-      "type": "object"
-    },
     "Range": {
       "anyOf": [
         {
@@ -2055,66 +1715,14 @@
       ],
       "type": "object"
     },
-    "SerialViews": {
-      "additionalProperties": false,
-      "properties": {
-        "assembly": {
-          "$ref": "#/definitions/Assembly"
-        },
-        "centerHole": {
-          "type": "number"
-        },
-        "layout": {
-          "$ref": "#/definitions/Layout"
-        },
-        "serialViews": {
-          "items": {
-            "anyOf": [
-              {
-                "$ref": "#/definitions/View"
-              },
-              {
-                "$ref": "#/definitions/ArrangedViews"
-              }
-            ]
-          },
-          "type": "array"
-        },
-        "spacing": {
-          "type": "number"
-        },
-        "static": {
-          "type": "boolean"
-        },
-        "xDomain": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/DomainInterval"
-            },
-            {
-              "$ref": "#/definitions/DomainChrInterval"
-            },
-            {
-              "$ref": "#/definitions/DomainChr"
-            }
-          ]
-        },
-        "xLinkID": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "serialViews"
-      ],
-      "type": "object"
-    },
     "SingleTrack": {
       "additionalProperties": false,
       "properties": {
         "assembly": {
           "$ref": "#/definitions/Assembly"
         },
-        "centerHole": {
+        "centerRadius": {
+          "description": "Proportion of the radius of the center white space.",
           "type": "number"
         },
         "color": {
@@ -2234,6 +1842,9 @@
         },
         "x1e": {
           "$ref": "#/definitions/Channel"
+        },
+        "xAxis": {
+          "$ref": "#/definitions/AxisPosition"
         },
         "xDomain": {
           "anyOf": [
@@ -2429,59 +2040,6 @@
       },
       "type": "object"
     },
-    "VConcatViews": {
-      "additionalProperties": false,
-      "properties": {
-        "assembly": {
-          "$ref": "#/definitions/Assembly"
-        },
-        "centerHole": {
-          "type": "number"
-        },
-        "layout": {
-          "$ref": "#/definitions/Layout"
-        },
-        "spacing": {
-          "type": "number"
-        },
-        "static": {
-          "type": "boolean"
-        },
-        "vconcatViews": {
-          "items": {
-            "anyOf": [
-              {
-                "$ref": "#/definitions/View"
-              },
-              {
-                "$ref": "#/definitions/ArrangedViews"
-              }
-            ]
-          },
-          "type": "array"
-        },
-        "xDomain": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/DomainInterval"
-            },
-            {
-              "$ref": "#/definitions/DomainChrInterval"
-            },
-            {
-              "$ref": "#/definitions/DomainChr"
-            }
-          ]
-        },
-        "xLinkID": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "vconcatViews"
-      ],
-      "type": "object"
-    },
     "VectorData": {
       "additionalProperties": false,
       "properties": {
@@ -2513,52 +2071,6 @@
         "url",
         "column",
         "value"
-      ],
-      "type": "object"
-    },
-    "View": {
-      "additionalProperties": false,
-      "properties": {
-        "assembly": {
-          "$ref": "#/definitions/Assembly"
-        },
-        "centerHole": {
-          "type": "number"
-        },
-        "layout": {
-          "$ref": "#/definitions/Layout"
-        },
-        "spacing": {
-          "type": "number"
-        },
-        "static": {
-          "type": "boolean"
-        },
-        "tracks": {
-          "items": {
-            "$ref": "#/definitions/Track"
-          },
-          "type": "array"
-        },
-        "xDomain": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/DomainInterval"
-            },
-            {
-              "$ref": "#/definitions/DomainChrInterval"
-            },
-            {
-              "$ref": "#/definitions/DomainChr"
-            }
-          ]
-        },
-        "xLinkID": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "tracks"
       ],
       "type": "object"
     },

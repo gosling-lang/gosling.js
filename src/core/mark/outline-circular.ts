@@ -28,10 +28,10 @@ export function drawCircularOutlines(HGC: any, trackInfo: any, tile: any, tm: Go
     if (spec.style?.outlineWidth !== 0 && !(spec.layout === 'circular' && spec.mark === 'link')) {
         // circular link marks usually use entire inner space
         g.lineStyle(
-            0.5,
+            spec.style?.outlineWidth ? spec.style?.outlineWidth / 2.5 : 0,
             colorToHex(spec.style?.outline ?? '#DBDBDB'),
-            0.1, // 0.4, // alpha
-            0.5 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
+            1, // 0.4, // alpha
+            1 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
         );
         g.beginFill(colorToHex('lightgray'), 0.05);
         g.moveTo(posStartInner.x, posStartInner.y);

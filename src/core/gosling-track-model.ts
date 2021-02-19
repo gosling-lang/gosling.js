@@ -245,6 +245,11 @@ export class GoslingTrackModel {
             return undefined;
         }
 
+        if (typeof this.channelScales[channelKey] !== 'function') {
+            // Scale is undefined, so returning undefined.
+            return undefined;
+        }
+
         // The type of a channel scale is determined by a { channel type, field type } pair
         switch (channelKey) {
             case 'x':
@@ -706,6 +711,11 @@ export class GoslingTrackModel {
                 const domain = channel.domain;
                 const range = channel.range;
 
+                if (domain === undefined || range === undefined) {
+                    // we do not have sufficient info to generate scales
+                    return;
+                }
+
                 if (channel.type === 'quantitative' || channel.type === 'genomic') {
                     switch (channelKey) {
                         case 'x':
@@ -731,6 +741,7 @@ export class GoslingTrackModel {
                             );
                             break;
                         default:
+                            break;
                         // console.warn('Not supported channel for calculating scales');
                     }
                 } else if (channel.type === 'nominal') {
@@ -753,6 +764,7 @@ export class GoslingTrackModel {
                             this.channelScales[channelKey] = scaleOrdinal(range as string[]).domain(domain as string[]);
                             break;
                         default:
+                            break;
                         // console.warn('Not supported channel for calculating scales');
                     }
                 }

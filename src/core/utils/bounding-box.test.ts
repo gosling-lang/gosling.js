@@ -1,3 +1,4 @@
+import { GoslingSpec } from '../gosling.schema';
 import { DEFAULT_VIEW_SPACING } from '../layout/defaults';
 import { getBoundingBox, getRelativeTrackInfo } from './bounding-box';
 
@@ -68,8 +69,9 @@ describe('Arrangement', () => {
     });
 
     it('Palallel Views', () => {
-        const spec = {
-            parallelViews: [
+        const spec: GoslingSpec = {
+            arrangement: 'parallel',
+            views: [
                 {
                     tracks: [
                         { overlay: [], width: 10, height: 10 },
@@ -97,8 +99,9 @@ describe('Arrangement', () => {
     });
 
     it('Serial Views', () => {
-        const spec = {
-            serialViews: [
+        const spec: GoslingSpec = {
+            arrangement: 'serial',
+            views: [
                 {
                     tracks: [
                         { overlay: [], width: 10, height: 10 },
@@ -126,8 +129,9 @@ describe('Arrangement', () => {
     });
 
     it('Parallel Views === VConcat Views in Linear Layout', () => {
-        const spec1 = {
-            parallelViews: [
+        const spec1: GoslingSpec = {
+            arrangement: 'parallel',
+            views: [
                 {
                     tracks: [
                         { overlay: [], width: 10, height: 10 },
@@ -142,8 +146,9 @@ describe('Arrangement', () => {
                 }
             ]
         };
-        const spec2 = {
-            vconcatViews: [
+        const spec2: GoslingSpec = {
+            arrangement: 'vertical',
+            views: [
                 {
                     tracks: [
                         { overlay: [], width: 10, height: 10 },
@@ -162,8 +167,9 @@ describe('Arrangement', () => {
     });
 
     it('Serial Views === HConcat Views in Linear Layout', () => {
-        const spec1 = {
-            serialViews: [
+        const spec1: GoslingSpec = {
+            arrangement: 'serial',
+            views: [
                 {
                     tracks: [
                         { overlay: [], width: 10, height: 10 },
@@ -178,8 +184,9 @@ describe('Arrangement', () => {
                 }
             ]
         };
-        const spec2 = {
-            hconcatViews: [
+        const spec2: GoslingSpec = {
+            arrangement: 'horizontal',
+            views: [
                 {
                     tracks: [
                         { overlay: [], width: 10, height: 10 },
@@ -200,13 +207,16 @@ describe('Arrangement', () => {
     it('Complex Parallel Views in Linear Layout', () => {
         {
             const t = { overlay: [], width: 10, height: 10 };
-            const spec = {
-                parallelViews: [
+            const spec: GoslingSpec = {
+                arrangement: 'parallel',
+                views: [
                     {
-                        parallelViews: [{ tracks: [t] }]
+                        arrangement: 'parallel',
+                        views: [{ tracks: [t] }]
                     },
                     {
-                        parallelViews: [{ tracks: [t] }]
+                        arrangement: 'parallel',
+                        views: [{ tracks: [t] }]
                     }
                 ]
             };
@@ -224,13 +234,16 @@ describe('Arrangement', () => {
     it('Complex Serial Views in Linear Layout', () => {
         {
             const t = { overlay: [], width: 10, height: 10 };
-            const spec = {
-                serialViews: [
+            const spec: GoslingSpec = {
+                arrangement: 'serial',
+                views: [
                     {
-                        serialViews: [{ tracks: [t] }]
+                        arrangement: 'serial',
+                        views: [{ tracks: [t] }]
                     },
                     {
-                        serialViews: [{ tracks: [t] }]
+                        arrangement: 'serial',
+                        views: [{ tracks: [t] }]
                     }
                 ]
             };
@@ -248,43 +261,52 @@ describe('Arrangement', () => {
     it('Complex Views in Linear Layout', () => {
         {
             const t = { overlay: [], width: 10, height: 10 };
-            const spec1 = {
-                parallelViews: [
+            const spec1: GoslingSpec = {
+                arrangement: 'parallel',
+                views: [
                     { tracks: [t] },
                     {
-                        serialViews: [{ tracks: [t] }]
+                        arrangement: 'serial',
+                        views: [{ tracks: [t] }]
                     }
                 ]
             };
-            const spec2 = {
-                parallelViews: [{ tracks: [t] }, { tracks: [t] }]
+            const spec2: GoslingSpec = {
+                arrangement: 'parallel',
+                views: [{ tracks: [t] }, { tracks: [t] }]
             };
             expect(getRelativeTrackInfo(spec1)).toEqual(getRelativeTrackInfo(spec2));
         }
         {
             const t = { overlay: [], width: 10, height: 10 };
-            const spec1 = {
-                serialViews: [
+            const spec1: GoslingSpec = {
+                arrangement: 'serial',
+                views: [
                     { tracks: [t] },
                     {
-                        serialViews: [{ tracks: [t] }]
+                        arrangement: 'serial',
+                        views: [{ tracks: [t] }]
                     }
                 ]
             };
-            const spec2 = {
-                serialViews: [{ tracks: [t] }, { tracks: [t] }]
+            const spec2: GoslingSpec = {
+                arrangement: 'serial',
+                views: [{ tracks: [t] }, { tracks: [t] }]
             };
             expect(getRelativeTrackInfo(spec1)).toEqual(getRelativeTrackInfo(spec2));
         }
         {
             const t = { overlay: [], width: 10, height: 10 };
-            const spec = {
-                serialViews: [
+            const spec: GoslingSpec = {
+                arrangement: 'serial',
+                views: [
                     {
-                        parallelViews: [{ tracks: [t] }, { tracks: [t] }]
+                        arrangement: 'parallel',
+                        views: [{ tracks: [t] }, { tracks: [t] }]
                     },
                     {
-                        serialViews: [{ tracks: [t] }]
+                        arrangement: 'serial',
+                        views: [{ tracks: [t] }]
                     }
                 ]
             };
@@ -304,13 +326,16 @@ describe('Arrangement', () => {
         {
             const t = { overlay: [], width: 10, height: 10 };
             const t_2w = { overlay: [], width: 20, height: 10 };
-            const spec = {
-                serialViews: [
+            const spec: GoslingSpec = {
+                arrangement: 'serial',
+                views: [
                     {
-                        parallelViews: [{ tracks: [t] }, { tracks: [t_2w] }]
+                        arrangement: 'parallel',
+                        views: [{ tracks: [t] }, { tracks: [t_2w] }]
                     },
                     {
-                        serialViews: [{ tracks: [t] }]
+                        arrangement: 'serial',
+                        views: [{ tracks: [t] }]
                     }
                 ]
             };

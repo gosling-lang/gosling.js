@@ -4,7 +4,8 @@ export const EX_SPEC_GIVE: GoslingSpec = {
     title: 'GIVE',
     subtitle: 'Reimplementation of GenoCAT examples',
     spacing: 60,
-    vconcatViews: [
+    arrangement: 'vertical',
+    views: [
         {
             layout: 'linear',
             tracks: [

@@ -1,15 +1,13 @@
 import assign from 'lodash/assign';
 import uuid from 'uuid';
 import { SingleTrack, GoslingSpec, View, Track, CommonViewDef, ArrangedViews } from '../gosling.schema';
+import { IsTemplate, IsDataDeepTileset, IsSingleTrack, IsChannelDeep, IsOverlaidTrack } from '../gosling.schema.guards';
 import {
-    IsTemplate,
-    IsDataDeepTileset,
-    IsSingleTrack,
-    IsChannelDeep,
-    IsOverlaidTrack,
-    getArrangedViews
-} from '../gosling.schema.guards';
-import { DEFAULT_INNER_HOLE_PROP, DEFAULT_TRACK_HEIGHT_LINEAR, DEFAULT_TRACK_WIDTH_LINEAR } from '../layout/defaults';
+    DEFAULT_INNER_HOLE_PROP,
+    DEFAULT_TRACK_HEIGHT_LINEAR,
+    DEFAULT_TRACK_WIDTH_LINEAR,
+    DEFAULT_VIEW_SPACING
+} from '../layout/defaults';
 import { spreadTracksByData } from './overlay';
 
 /**
@@ -21,7 +19,7 @@ export function traverseTracks(spec: GoslingSpec, callback: (t: Track, i: number
     if ('tracks' in spec) {
         spec.tracks.forEach((...args) => callback(...args));
     } else {
-        getArrangedViews(spec).forEach(view => traverseTracks(view, callback));
+        spec.views.forEach(view => traverseTracks(view, callback));
     }
 }
 
@@ -34,7 +32,7 @@ export function traverseTracksAndViews(spec: GoslingSpec, callback: (tv: CommonV
     if ('tracks' in spec) {
         spec.tracks.forEach(t => callback(t));
     } else {
-        getArrangedViews(spec).forEach(v => {
+        spec.views.forEach(v => {
             callback(v);
             traverseTracksAndViews(v, callback);
         });
@@ -51,7 +49,7 @@ export function traverseViewArrangements(spec: GoslingSpec, callback: (tv: Arran
         // No need to do anything
     } else {
         callback(spec);
-        getArrangedViews(spec).forEach(v => {
+        spec.views.forEach(v => {
             traverseViewArrangements(v, callback);
         });
     }
@@ -72,13 +70,15 @@ export function traverseToFixSpecDownstream(spec: GoslingSpec | View, parentDef?
             spec.static = spec.layout === 'circular' ? true : parentDef.static !== undefined ? parentDef.static : false;
         if (spec.xDomain === undefined) spec.xDomain = parentDef.xDomain;
         if (spec.xLinkID === undefined) spec.xLinkID = parentDef.xLinkID;
-        if (spec.centerHole === undefined) spec.centerHole = parentDef.centerHole;
+        if (spec.centerRadius === undefined) spec.centerRadius = parentDef.centerRadius;
+        if (spec.spacing === undefined && !('tracks' in spec)) spec.spacing = parentDef.spacing;
     } else {
         // This means we are at the rool level, so assign default values if missing
         if (spec.assembly === undefined) spec.assembly = 'hg38';
         if (spec.layout === undefined) spec.layout = 'linear';
         if (spec.static === undefined) spec.static = spec.layout === 'circular' ? true : false;
-        if (spec.centerHole === undefined) spec.centerHole = DEFAULT_INNER_HOLE_PROP;
+        if (spec.centerRadius === undefined) spec.centerRadius = DEFAULT_INNER_HOLE_PROP;
+        if (spec.spacing === undefined) spec.spacing = DEFAULT_VIEW_SPACING;
         // Nothing to do when `xDomain` not suggested
         // Nothing to do when `xLinkID` not suggested
     }
@@ -174,7 +174,7 @@ export function traverseToFixSpecDownstream(spec: GoslingSpec | View, parentDef?
         });
     } else {
         // we did not reach track definition, so continue traversing
-        getArrangedViews(spec).forEach(v => {
+        spec.views.forEach(v => {
             traverseToFixSpecDownstream(v, spec as CommonViewDef);
         });
     }
