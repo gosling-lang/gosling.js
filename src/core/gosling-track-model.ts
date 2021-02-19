@@ -741,6 +741,7 @@ export class GoslingTrackModel {
                             );
                             break;
                         default:
+                            break;
                         // console.warn('Not supported channel for calculating scales');
                     }
                 } else if (channel.type === 'nominal') {
@@ -763,6 +764,7 @@ export class GoslingTrackModel {
                             this.channelScales[channelKey] = scaleOrdinal(range as string[]).domain(domain as string[]);
                             break;
                         default:
+                            break;
                         // console.warn('Not supported channel for calculating scales');
                     }
                 }

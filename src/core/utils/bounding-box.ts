@@ -159,7 +159,7 @@ function traverseAndCollectTrackInfo(
         allChildCircularLayout &&
         traversedAtLeastOnce &&
         noChildConcatArrangement &&
-        (spec.arrangement === 'parallel' || spec.arrangement === 'serial' || 'tracks' in spec);
+        (('views' in spec && (spec.arrangement === 'parallel' || spec.arrangement === 'serial')) || 'tracks' in spec);
 
     const numTracksBeforeInsert = output.length;
 

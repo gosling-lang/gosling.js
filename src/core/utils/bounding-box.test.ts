@@ -185,7 +185,7 @@ describe('Arrangement', () => {
             ]
         };
         const spec2: GoslingSpec = {
-            arrangement: 'vertical',
+            arrangement: 'horizontal',
             views: [
                 {
                     tracks: [
