@@ -32,7 +32,8 @@ export const examples: ReadonlyArray<{
     },
     {
         name: 'Circular Overview + Linear Detail Views',
-        spec: EX_SPEC_CIRCULAR_OVERVIEW_LINEAR_DETAIL
+        spec: EX_SPEC_CIRCULAR_OVERVIEW_LINEAR_DETAIL,
+        forceShow: true
     },
     {
         name: 'Cyto Bands',
