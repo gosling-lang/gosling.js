@@ -191,17 +191,17 @@ function traverseAndCollectTrackInfo(
             } else {
                 cumHeight += track.height;
                 if (i !== array.length - 1) {
-                    cumHeight += spec.spacing ?? 0;
+                    cumHeight += spec.spacing !== undefined ? spec.spacing : 0;
                 }
             }
         });
     } else {
         // We did not reach a track definition, so continue traversing.
-        const spacing = spec.spacing ? spec.spacing : DEFAULT_VIEW_SPACING;
 
         // We first calculate position and size of each view and track by considering it as if it uses a linear layout
         if (spec.arrangement === 'parallel' || spec.arrangement === 'vertical') {
-            // const sizes = getSizeDefOfArrangedViews(spec);
+            const spacing = spec.spacing !== undefined ? spec.spacing : DEFAULT_VIEW_SPACING;
+
             spec.views.forEach((v, i, array) => {
                 const viewBB = traverseAndCollectTrackInfo(
                     v,
@@ -221,6 +221,11 @@ function traverseAndCollectTrackInfo(
             });
         } else if (spec.arrangement === 'serial' || spec.arrangement === 'horizontal') {
             spec.views.forEach((v, i, array) => {
+                const spacing = spec.spacing !== undefined ? spec.spacing : DEFAULT_VIEW_SPACING;
+
+                // If so, we do not want to put large between-gap.
+                // spacing *= (spec.arrangement === 'serial' && spec.layout === 'circular' ? 0.2 : 1);
+
                 const viewBB = traverseAndCollectTrackInfo(
                     v,
                     output,
@@ -244,8 +249,10 @@ function traverseAndCollectTrackInfo(
     if (isThisCircularRoot) {
         const cTracks = output.slice(numTracksBeforeInsert);
 
+        const SPACING = spec.spacing !== undefined ? spec.spacing : DEFAULT_VIEW_SPACING;
+        const PADDING = 10;
         const INNER_HOLE = spec.centerRadius !== undefined ? spec.centerRadius : DEFAULT_INNER_HOLE_PROP;
-        const TOTAL_RADIUS = cumWidth / 2.0; // (cumWidth + cumHeight) / 2.0 / 2.0;
+        const TOTAL_RADIUS = cumWidth / 2.0 + PADDING; // (cumWidth + cumHeight) / 2.0 / 2.0;
         const TOTAL_RING_SIZE = TOTAL_RADIUS * (1 - INNER_HOLE);
 
         // const numXAxes = getNumOfXAxes(cTracks.map(info => info.track));
@@ -253,11 +260,20 @@ function traverseAndCollectTrackInfo(
         cTracks.forEach((t, i) => {
             t.track.layout = 'circular';
 
-            t.track.outerRadius = TOTAL_RADIUS - ((t.boundingBox.y - dy) / cumHeight) * TOTAL_RING_SIZE;
+            t.track.outerRadius = TOTAL_RADIUS - PADDING - ((t.boundingBox.y - dy) / cumHeight) * TOTAL_RING_SIZE;
             t.track.innerRadius =
-                TOTAL_RADIUS - ((t.boundingBox.y + t.boundingBox.height - dy) / cumHeight) * TOTAL_RING_SIZE;
-            t.track.startAngle = ((t.boundingBox.x - dx) / cumWidth) * 360;
-            t.track.endAngle = ((t.boundingBox.x + t.boundingBox.width - dx) / cumWidth) * 360;
+                TOTAL_RADIUS - PADDING - ((t.boundingBox.y + t.boundingBox.height - dy) / cumHeight) * TOTAL_RING_SIZE;
+
+            // in circular layouts, we place spacing in the origin as well
+            const spacingAngle = (SPACING / cumWidth) * 360;
+
+            // !!! Multiplying by (cumWidth - SPACING) / cumWidth) to rescale to exclude SPACING
+            t.track.startAngle =
+                spacingAngle + ((((t.boundingBox.x - dx) / cumWidth) * (cumWidth - SPACING)) / cumWidth) * 360;
+            t.track.endAngle =
+                ((((t.boundingBox.x + t.boundingBox.width - dx) / cumWidth) * (cumWidth - SPACING)) / cumWidth) * 360;
+            // t.track.startAngle = ((t.boundingBox.x - dx) / cumWidth) * 360;
+            // t.track.endAngle = ((t.boundingBox.x + t.boundingBox.width - dx) / cumWidth) * 360;
 
             t.boundingBox.x = dx;
             t.boundingBox.y = dy;

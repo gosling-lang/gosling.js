@@ -1,4 +1,5 @@
 import { GoslingSpec } from '../../core/gosling.schema';
+import { EX_SPEC_LAYOUT_AND_ARRANGEMENT_1, EX_SPEC_LAYOUT_AND_ARRANGEMENT_2 } from './layout-and-arrangement';
 import { EX_SPEC_CIRCULAR_OVERVIEW_LINEAR_DETAIL } from './circular-overview-linear-detail-views';
 import { EX_SPEC_GENE_ANNOTATION } from './gene-annotation';
 import { EX_SPEC_SEMANTIC_ZOOM } from './semantic-zoom';
@@ -22,6 +23,14 @@ export const examples: ReadonlyArray<{
         hidden: true
     },
     {
+        name: 'Layouts and Arrangements 1',
+        spec: EX_SPEC_LAYOUT_AND_ARRANGEMENT_1
+    },
+    {
+        name: 'Layouts and Arrangements 2',
+        spec: EX_SPEC_LAYOUT_AND_ARRANGEMENT_2
+    },
+    {
         name: 'Circular Overview + Linear Detail Views',
         spec: EX_SPEC_CIRCULAR_OVERVIEW_LINEAR_DETAIL
     },
@@ -39,8 +48,7 @@ export const examples: ReadonlyArray<{
     },
     {
         name: 'Pathogenic Lollipop Plot',
-        spec: EX_SPEC_PATHOGENIC,
-        forceShow: true
+        spec: EX_SPEC_PATHOGENIC
     },
     {
         name: 'GIVE (Cao et al. 2018)',

@@ -2,7 +2,12 @@ import assign from 'lodash/assign';
 import uuid from 'uuid';
 import { SingleTrack, GoslingSpec, View, Track, CommonViewDef, ArrangedViews } from '../gosling.schema';
 import { IsTemplate, IsDataDeepTileset, IsSingleTrack, IsChannelDeep, IsOverlaidTrack } from '../gosling.schema.guards';
-import { DEFAULT_INNER_HOLE_PROP, DEFAULT_TRACK_HEIGHT_LINEAR, DEFAULT_TRACK_WIDTH_LINEAR } from '../layout/defaults';
+import {
+    DEFAULT_INNER_HOLE_PROP,
+    DEFAULT_TRACK_HEIGHT_LINEAR,
+    DEFAULT_TRACK_WIDTH_LINEAR,
+    DEFAULT_VIEW_SPACING
+} from '../layout/defaults';
 import { spreadTracksByData } from './overlay';
 
 /**
@@ -66,12 +71,14 @@ export function traverseToFixSpecDownstream(spec: GoslingSpec | View, parentDef?
         if (spec.xDomain === undefined) spec.xDomain = parentDef.xDomain;
         if (spec.xLinkID === undefined) spec.xLinkID = parentDef.xLinkID;
         if (spec.centerRadius === undefined) spec.centerRadius = parentDef.centerRadius;
+        if (spec.spacing === undefined && !('tracks' in spec)) spec.spacing = parentDef.spacing;
     } else {
         // This means we are at the rool level, so assign default values if missing
         if (spec.assembly === undefined) spec.assembly = 'hg38';
         if (spec.layout === undefined) spec.layout = 'linear';
         if (spec.static === undefined) spec.static = spec.layout === 'circular' ? true : false;
         if (spec.centerRadius === undefined) spec.centerRadius = DEFAULT_INNER_HOLE_PROP;
+        if (spec.spacing === undefined) spec.spacing = DEFAULT_VIEW_SPACING;
         // Nothing to do when `xDomain` not suggested
         // Nothing to do when `xLinkID` not suggested
     }
