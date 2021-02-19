@@ -160,12 +160,14 @@ export interface SingleTrack extends CommonTrackDef {
     overrideTemplate?: boolean;
 }
 
+// TODO: Check whether `Omit` is properly included in the generated `gosling.schema.json`
+// https://github.com/vega/ts-json-schema-generator/issues/101
 /**
  * Superposing multiple tracks.
  */
 export type OverlaidTrack = Partial<SingleTrack> &
     CommonRequiredTrackDef & {
-        overlay: Partial<SingleTrack>[];
+        overlay: Partial<Omit<SingleTrack, 'height' | 'width' | 'layout' | 'title' | 'subtitle'>>[];
     };
 
 export interface TrackStyle {

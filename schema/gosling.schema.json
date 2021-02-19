@@ -1393,14 +1393,8 @@
               "endAngle": {
                 "type": "number"
               },
-              "height": {
-                "type": "number"
-              },
               "innerRadius": {
                 "type": "number"
-              },
-              "layout": {
-                "$ref": "#/definitions/Layout"
               },
               "mark": {
                 "$ref": "#/definitions/Mark"
@@ -1447,14 +1441,8 @@
               "style": {
                 "$ref": "#/definitions/TrackStyle"
               },
-              "subtitle": {
-                "type": "string"
-              },
               "text": {
                 "$ref": "#/definitions/Channel"
-              },
-              "title": {
-                "type": "string"
               },
               "tooltip": {
                 "items": {
@@ -1483,9 +1471,6 @@
                   "$ref": "#/definitions/VisibilityCondition"
                 },
                 "type": "array"
-              },
-              "width": {
-                "type": "number"
               },
               "x": {
                 "$ref": "#/definitions/Channel"
