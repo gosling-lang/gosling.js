@@ -4,6 +4,7 @@ import PubSub from 'pubsub-js';
 import EditorPanel from './editor-panel';
 import stringify from 'json-stringify-pretty-compact';
 import SplitPane from 'react-split-pane';
+import ErrorBoundary from './errorBoundary';
 import { Datum, GoslingSpec } from '../core/gosling.schema';
 import { debounce } from 'lodash';
 import { examples } from './example';
@@ -418,101 +419,105 @@ function Editor(props: any) {
                                 <></>
                             </SplitPane>
                         </SplitPane>
-                        <SplitPane
-                            split="horizontal"
-                            defaultSize={`calc(100% - ${BOTTOM_PANEL_HEADER_HEIGHT}px)`}
-                            size={isShowDataPreview ? '40%' : `calc(100% - ${BOTTOM_PANEL_HEADER_HEIGHT}px)`}
-                            maxSize={window.innerHeight - EDITOR_HEADER_HEIGHT - BOTTOM_PANEL_HEADER_HEIGHT}
-                        >
-                            <div className="preview-container">
-                                <gosling.GoslingComponent
-                                    spec={goslingSpec}
-                                    compiled={(g, h) => {
-                                        setHg(h);
-                                    }}
-                                />
-                            </div>
-                            <SplitPane split="vertical" defaultSize="100%">
-                                <>
-                                    <div
-                                        className="editor-header"
-                                        style={{ cursor: 'pointer' }}
-                                        onClick={() => setIsShowDataPreview(!isShowDataPreview)}
-                                    >
-                                        Data Preview (~100 Rows, Data Before Transformation)
-                                    </div>
-                                    <div className="editor-data-preview-panel">
+                        <ErrorBoundary>
+                            <SplitPane
+                                split="horizontal"
+                                defaultSize={`calc(100% - ${BOTTOM_PANEL_HEADER_HEIGHT}px)`}
+                                size={isShowDataPreview ? '40%' : `calc(100% - ${BOTTOM_PANEL_HEADER_HEIGHT}px)`}
+                                maxSize={window.innerHeight - EDITOR_HEADER_HEIGHT - BOTTOM_PANEL_HEADER_HEIGHT}
+                            >
+                                <div className="preview-container">
+                                    <gosling.GoslingComponent
+                                        spec={goslingSpec}
+                                        compiled={(g, h) => {
+                                            setHg(h);
+                                        }}
+                                    />
+                                </div>
+                                <SplitPane split="vertical" defaultSize="100%">
+                                    <>
                                         <div
-                                            title="Refresh preview data"
-                                            className="data-preview-refresh-button"
-                                            onClick={() => setRefreshData(!refreshData)}
+                                            className="editor-header"
+                                            style={{ cursor: 'pointer' }}
+                                            onClick={() => setIsShowDataPreview(!isShowDataPreview)}
                                         >
-                                            {getIconSVG(ICONS.REFRESH, 23, 23)}
-                                            <br />
-                                            {'REFRESH DATA'}
+                                            Data Preview (~100 Rows, Data Before Transformation)
                                         </div>
-                                        {previewData.current.length > selectedPreviewData &&
-                                        previewData.current[selectedPreviewData] &&
-                                        previewData.current[selectedPreviewData].data.length > 0 ? (
-                                            <>
-                                                <div className="editor-data-preview-tab">
-                                                    {previewData.current.map((d: PreviewData, i: number) => (
-                                                        <button
-                                                            className={
-                                                                i === selectedPreviewData
-                                                                    ? 'selected-tab'
-                                                                    : 'unselected-tab'
-                                                            }
-                                                            key={JSON.stringify(d)}
-                                                            onClick={() => setSelectedPreviewData(i)}
-                                                        >
-                                                            {`${(JSON.parse(d.dataConfig).data
-                                                                .type as string).toLocaleLowerCase()} `}
-                                                            <small>{i}</small>
-                                                        </button>
-                                                    ))}
-                                                </div>
-                                                <div className="editor-data-preview-tab-info">
-                                                    {getDataPreviewInfo(
-                                                        previewData.current[selectedPreviewData].dataConfig
-                                                    )}
-                                                </div>
-                                                <div className="editor-data-preview-table">
-                                                    <table>
-                                                        <tbody>
-                                                            <tr>
-                                                                {Object.keys(
-                                                                    previewData.current[selectedPreviewData].data[0]
-                                                                ).map((field: string, i: number) => (
-                                                                    <th key={i}>{field}</th>
-                                                                ))}
-                                                            </tr>
-                                                            {previewData.current[selectedPreviewData].data.map(
-                                                                (row: Datum, i: number) => (
-                                                                    <tr key={i}>
-                                                                        {Object.keys(row).map(
-                                                                            (field: string, j: number) => (
-                                                                                <td key={j}>{row[field].toString()}</td>
-                                                                            )
-                                                                        )}
-                                                                    </tr>
-                                                                )
-                                                            )}
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                            </>
-                                        ) : null}
-                                    </div>
-                                </>
-                                {/**
-                                 * TODO: This is only for showing a scroll view for the higlass view config editor
-                                 * Remove the below line and the nearest SplitPane after figuring out a better way
-                                 * of showing the scroll view.
-                                 */}
-                                <></>
+                                        <div className="editor-data-preview-panel">
+                                            <div
+                                                title="Refresh preview data"
+                                                className="data-preview-refresh-button"
+                                                onClick={() => setRefreshData(!refreshData)}
+                                            >
+                                                {getIconSVG(ICONS.REFRESH, 23, 23)}
+                                                <br />
+                                                {'REFRESH DATA'}
+                                            </div>
+                                            {previewData.current.length > selectedPreviewData &&
+                                            previewData.current[selectedPreviewData] &&
+                                            previewData.current[selectedPreviewData].data.length > 0 ? (
+                                                <>
+                                                    <div className="editor-data-preview-tab">
+                                                        {previewData.current.map((d: PreviewData, i: number) => (
+                                                            <button
+                                                                className={
+                                                                    i === selectedPreviewData
+                                                                        ? 'selected-tab'
+                                                                        : 'unselected-tab'
+                                                                }
+                                                                key={JSON.stringify(d)}
+                                                                onClick={() => setSelectedPreviewData(i)}
+                                                            >
+                                                                {`${(JSON.parse(d.dataConfig).data
+                                                                    .type as string).toLocaleLowerCase()} `}
+                                                                <small>{i}</small>
+                                                            </button>
+                                                        ))}
+                                                    </div>
+                                                    <div className="editor-data-preview-tab-info">
+                                                        {getDataPreviewInfo(
+                                                            previewData.current[selectedPreviewData].dataConfig
+                                                        )}
+                                                    </div>
+                                                    <div className="editor-data-preview-table">
+                                                        <table>
+                                                            <tbody>
+                                                                <tr>
+                                                                    {Object.keys(
+                                                                        previewData.current[selectedPreviewData].data[0]
+                                                                    ).map((field: string, i: number) => (
+                                                                        <th key={i}>{field}</th>
+                                                                    ))}
+                                                                </tr>
+                                                                {previewData.current[selectedPreviewData].data.map(
+                                                                    (row: Datum, i: number) => (
+                                                                        <tr key={i}>
+                                                                            {Object.keys(row).map(
+                                                                                (field: string, j: number) => (
+                                                                                    <td key={j}>
+                                                                                        {row[field].toString()}
+                                                                                    </td>
+                                                                                )
+                                                                            )}
+                                                                        </tr>
+                                                                    )
+                                                                )}
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </>
+                                            ) : null}
+                                        </div>
+                                    </>
+                                    {/**
+                                     * TODO: This is only for showing a scroll view for the higlass view config editor
+                                     * Remove the below line and the nearest SplitPane after figuring out a better way
+                                     * of showing the scroll view.
+                                     */}
+                                    <></>
+                                </SplitPane>
                             </SplitPane>
-                        </SplitPane>
+                        </ErrorBoundary>
                     </SplitPane>
                 </SplitPane>
             </div>
