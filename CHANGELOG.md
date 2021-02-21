@@ -1,3 +1,16 @@
+# [0.1.0](https://github.com/gosling-lang/gosling.js/compare/v0.0.26...v0.1.0) (2021-02-20)
+
+
+
+## [0.0.26](https://github.com/gosling-lang/gosling.js/compare/v0.0.25...v0.0.26) (2021-02-19)
+
+
+### Bug Fixes
+
+* correctly calculate position of tracks considering overlayOnPreviousTrack ([#227](https://github.com/gosling-lang/gosling.js/issues/227)) ([e2e5b9a](https://github.com/gosling-lang/gosling.js/commit/e2e5b9a9d4befaf2241a6abe3ee7693cf0e469f3))
+
+
+
 ## [0.0.25](https://github.com/gosling-lang/gosling.js/compare/v0.0.24...v0.0.25) (2021-02-17)
 
 
