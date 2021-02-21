@@ -27,7 +27,7 @@ Using Gosling.js, users can easily create interactive and scalable genomic visua
   // A simple example
   "tracks": [{
       "data": {
-        "url": "data_url",
+        "url": "https://data-url.com",
         "type": "multivec",
         "row": "sample",
         "column": "position",
@@ -57,11 +57,9 @@ Using Gosling.js, users can easily create interactive and scalable genomic visua
 </div>
 
 ## Learn More About Gosling
-- [Gosling.js Website](https://gosling.js.org/)
+- [Gosling.js Editor and Online Examples](https://gosling.js.org/)
 - [Documentation](https://github.com/gosling-lang/gosling.js/wiki/Documentation)
-- [Online Examples](https://gosling.js.org/)
-- [Getting Started](https://github.com/gosling-lang/gosling.js/wiki/GettingStarted)
-- [Use Gosling.js in your React app](https://github.com/gosling-lang/gosling-react)
+- [Getting Started](https://github.com/gosling-lang/gosling.js/wiki/Getting-Started)
 - [Roadmap](https://github.com/gosling-lang/gosling.js/projects/1)
 
 ## Installation
@@ -85,6 +83,7 @@ Then you can open <http://localhost:8080/> in a web browser to play with the edi
 ## Team
 - Sehi L'Yi (<sehi_lyi@hms.harvard.edu>)
 - Qianwen Wang (<qianwen_wang@hms.harvard.edu>)
+- Fritz Lekschas (<lekschas@seas.harvard.edu>)
 - Nils Gehlenborg (<nils@hms.harvard.edu>)
 
 ## License
