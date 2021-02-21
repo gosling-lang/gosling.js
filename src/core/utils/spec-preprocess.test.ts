@@ -40,6 +40,27 @@ describe('Fix Spec Downstream', () => {
         }
     });
 
+    it('arrangement should be overriden', () => {
+        {
+            const spec: GoslingSpec = {
+                static: true,
+                arrangement: 'serial',
+                views: [{ views: [{ tracks: [{ overlay: [], width: 0, height: 0 }] }] }]
+            };
+            traverseToFixSpecDownstream(spec);
+            expect((spec.views[0] as any).arrangement).toEqual('serial');
+        }
+        {
+            const spec: GoslingSpec = {
+                static: true,
+                views: [{ views: [{ tracks: [{ overlay: [], width: 0, height: 0 }] }] }]
+            };
+            traverseToFixSpecDownstream(spec);
+            expect(spec.arrangement).toEqual('vertical'); // default one
+            expect((spec.views[0] as any).arrangement).toEqual('vertical'); // default one is overriden
+        }
+    });
+
     it('spacing should be overriden to views but not tracks', () => {
         {
             const spec: GoslingSpec = {
