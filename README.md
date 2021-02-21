@@ -1,10 +1,7 @@
+<!-- <p align="center"><img src="https://raw.githubusercontent.com/wiki/gosling-lang/gosling.js/images/logo.png" width="450" /></p> -->
+
 <div align="center">
-
-![Gosling Logo (2)@0 25x](https://user-images.githubusercontent.com/9922882/106369962-ddbba700-6323-11eb-9e47-f8b06ba24178.png)
-
-# Gosling.js
-
-**Grammar Of Scalable Linked Interactive Nucleotide Graphics**
+<h1>Gosling.js</h1>
 
 [![npm version](https://img.shields.io/npm/v/gosling.js.svg?style=flat-square)](https://www.npmjs.com/package/gosling.js)
 [![Build Status](https://img.shields.io/travis/sehilyi/geminid/master.svg?style=flat-square)](https://travis-ci.com/gosling-lang/gosling.js)
@@ -13,22 +10,86 @@
 
 </div>
 
+<p align="center"><img src="https://raw.githubusercontent.com/wiki/gosling-lang/gosling.js/images/cover.png" width="700"/></p>
+
+<br/>
+
+## Introduction
+
+Gosling is a declarative visualization grammar tailored for interactive genomic visualizations. 
+Using Gosling.js, users can easily create interactive and scalable genomic visualizations through writing a JSON configuration. 
+
+<div align="center">
+<table>
+<tr><td>  
+<pre>
+{
+  // A simple example
+  "tracks": [{
+      "data": {
+        "url": "data_url",
+        "type": "multivec",
+        "row": "sample",
+        "column": "position",
+        "value": "peak",
+        "categories": [
+          "sample 1", 
+          "sample 2", 
+          "sample 3", 
+          "sample 4"
+          ],
+        },
+        "mark": "area",
+        "overrideTemplate": true
+      }
+    }]
+}
+</pre>
+
+</td>
+<td align="center">
+<img src="https://raw.githubusercontent.com/wiki/gosling-lang/gosling.js/images/demo.gif"  width="400"/>
+
+<a href="https://gosling.js.org/">Try Online</a>
+</td>
+</tr>
+</table>
+</div>
+
+## Learn More About Gosling
+- [Gosling.js Website](https://gosling.js.org/)
+- [Documentation](https://github.com/gosling-lang/gosling.js/wiki/Documentation)
+- [Online Examples](https://gosling.js.org/)
+- [Getting Started](https://github.com/gosling-lang/gosling.js/wiki/GettingStarted)
+- [Use Gosling.js in your React app](https://github.com/gosling-lang/gosling-react)
+- [Roadmap](https://github.com/gosling-lang/gosling.js/projects/1)
+
 ## Installation
 ```
 npm install gosling.js
 ```
 
-## Developement
+## Run Editor Locally
 
-To install and open a Gosling.js online editor, run the following commands:
+The following commands install and run a Gosling.js editor locally in your computer (ensure you have installed [yarn](https://yarnpkg.com/getting-started/install)):
 
 ```sh
 yarn
 yarn start
 ```
+Then you can open <http://localhost:8080/> in a web browser to play with the editor.
 
-Run tests:
+## Contact
+- Open [Github Issues](https://github.com/gosling-lang/gosling.js/issues/) to ask questions or request features.
 
-```sh
-yarn test
-```
+## Team
+- Sehi L'Yi (<sehi_lyi@hms.harvard.edu>)
+- Qianwen Wang (<qianwen_wang@hms.harvard.edu>)
+- Nils Gehlenborg (<nils@hms.harvard.edu>)
+
+## License
+
+This project is licensed under the terms of the [MIT license](https://github.com/gosling-lang/gosling.js/blob/master/LICENSE.md).
+
+
+<!-- # Cite Gosling -->
