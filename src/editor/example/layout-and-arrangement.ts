@@ -1,5 +1,5 @@
 import { GoslingSpec } from '../..';
-import { View } from '../../core/gosling.schema';
+import { SingleView } from '../../core/gosling.schema';
 import { DEFAULT_VIEW_SPACING } from '../../core/layout/defaults';
 import { GOSLING_PUBLIC_DATA } from './gosling-data';
 
@@ -15,7 +15,7 @@ export const getSingleView: (
     height: number,
     numHSpacing: number,
     numVSpacing: number
-) => View = (color, width, height, numHSpacing, numVSpacing) => {
+) => SingleView = (color, width, height, numHSpacing, numVSpacing) => {
     return {
         tracks: Array(1).fill({
             data: {

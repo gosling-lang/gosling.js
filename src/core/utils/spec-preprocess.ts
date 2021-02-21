@@ -1,6 +1,6 @@
 import assign from 'lodash/assign';
 import uuid from 'uuid';
-import { SingleTrack, GoslingSpec, View, Track, CommonViewDef, ArrangedViews } from '../gosling.schema';
+import { SingleTrack, GoslingSpec, SingleView, Track, CommonViewDef, MultipleViews } from '../gosling.schema';
 import { IsTemplate, IsDataDeepTileset, IsSingleTrack, IsChannelDeep, IsOverlaidTrack } from '../gosling.schema.guards';
 import {
     DEFAULT_INNER_HOLE_PROP,
@@ -44,7 +44,7 @@ export function traverseTracksAndViews(spec: GoslingSpec, callback: (tv: CommonV
  * @param spec
  * @param callback
  */
-export function traverseViewArrangements(spec: GoslingSpec, callback: (tv: ArrangedViews) => void) {
+export function traverseViewArrangements(spec: GoslingSpec, callback: (tv: MultipleViews) => void) {
     if ('tracks' in spec) {
         // No need to do anything
     } else {
@@ -61,7 +61,7 @@ export function traverseViewArrangements(spec: GoslingSpec, callback: (tv: Arran
  * @param spec
  * @param callback
  */
-export function traverseToFixSpecDownstream(spec: GoslingSpec | View, parentDef?: CommonViewDef) {
+export function traverseToFixSpecDownstream(spec: GoslingSpec | SingleView, parentDef?: CommonViewDef) {
     if (parentDef) {
         // For assembly and layout, we use the ones defiend by the parents if missing
         if (spec.assembly === undefined) spec.assembly = parentDef.assembly;

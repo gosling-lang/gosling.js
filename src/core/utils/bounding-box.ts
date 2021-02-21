@@ -1,4 +1,4 @@
-import { ArrangedViews, CommonViewDef, GoslingSpec, Track, View } from '../gosling.schema';
+import { MultipleViews, CommonViewDef, GoslingSpec, Track, SingleView } from '../gosling.schema';
 import { IsXAxis } from '../gosling.schema.guards';
 import { HIGLASS_AXIS_SIZE } from '../higlass-model';
 import {
@@ -128,7 +128,7 @@ export function getRelativeTrackInfo(spec: GoslingSpec): TrackInfo[] {
  * @param circularRootNotFound
  */
 function traverseAndCollectTrackInfo(
-    spec: GoslingSpec | View,
+    spec: GoslingSpec | SingleView,
     output: TrackInfo[],
     dx = 0,
     dy = 0,
@@ -148,7 +148,7 @@ function traverseAndCollectTrackInfo(
     });
 
     let noChildConcatArrangement = true; // if v/hconcat is being used by children, circular visualizations should be adjacently placed.
-    traverseViewArrangements(spec, (a: ArrangedViews) => {
+    traverseViewArrangements(spec, (a: MultipleViews) => {
         if (a.arrangement === 'vertical' || a.arrangement === 'horizontal') {
             noChildConcatArrangement = false;
         }

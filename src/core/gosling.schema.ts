@@ -1,15 +1,35 @@
 import { GLYPH_LOCAL_PRESET_TYPE, GLYPH_HIGLASS_PRESET_TYPE } from '../editor/example/glyph';
 
 /* ----------------------------- ROOT SPEC ----------------------------- */
-export type GoslingSpec = (View | ArrangedViews) & CommonRootDef;
+export type GoslingSpec = RootSpecWithSingleView | RootSpecWithMultipleViews;
 
-export interface CommonRootDef {
+export interface RootSpecWithSingleView extends MultipleViews {
+    title?: string;
+    subtitle?: string;
+    description?: string;
+}
+
+export interface RootSpecWithMultipleViews extends SingleView {
     title?: string;
     subtitle?: string;
     description?: string;
 }
 
 /* ----------------------------- VIEW ----------------------------- */
+export type View = SingleView | MultipleViews;
+
+/*
+ * View is a group of tracks that share the same genomic axes and are linked each other by default.
+ */
+export interface SingleView extends CommonViewDef {
+    tracks: Track[];
+}
+
+export interface MultipleViews extends CommonViewDef {
+    arrangement?: 'parallel' | 'serial' | 'horizontal' | 'vertical';
+    views: Array<SingleView | MultipleViews>;
+}
+
 export type Layout = 'linear' | 'circular';
 export type Assembly = 'hg38' | 'hg19' | 'hg18' | 'hg17' | 'hg16' | 'mm10' | 'mm9';
 
@@ -29,34 +49,6 @@ export interface CommonViewDef {
      * Proportion of the radius of the center white space.
      */
     centerRadius?: number; // [0, 1] (default: 0.3)
-}
-export type ArrangedViews = ParallalViews | SerialViews | HorizontalViews | VerticalViews;
-
-export interface ParallalViews extends CommonViewDef {
-    arrangement: 'parallel';
-    views: (View | ArrangedViews)[];
-}
-
-export interface SerialViews extends CommonViewDef {
-    arrangement: 'serial';
-    views: (View | ArrangedViews)[];
-}
-
-export interface HorizontalViews extends CommonViewDef {
-    arrangement: 'horizontal';
-    views: (View | ArrangedViews)[];
-}
-
-export interface VerticalViews extends CommonViewDef {
-    arrangement: 'vertical';
-    views: (View | ArrangedViews)[];
-}
-
-/*
- * View is a group of tracks that share the same genomic axes and are linked each other by default.
- */
-export interface View extends CommonViewDef {
-    tracks: Track[];
 }
 
 /* ----------------------------- TRACK ----------------------------- */

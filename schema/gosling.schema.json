@@ -905,77 +905,10 @@
     "GoslingSpec": {
       "anyOf": [
         {
-          "additionalProperties": false,
-          "properties": {
-            "assembly": {
-              "$ref": "#/definitions/Assembly"
-            },
-            "centerRadius": {
-              "description": "Proportion of the radius of the center white space.",
-              "type": "number"
-            },
-            "description": {
-              "type": "string"
-            },
-            "layout": {
-              "$ref": "#/definitions/Layout"
-            },
-            "spacing": {
-              "type": "number"
-            },
-            "static": {
-              "type": "boolean"
-            },
-            "subtitle": {
-              "type": "string"
-            },
-            "title": {
-              "type": "string"
-            },
-            "tracks": {
-              "items": {
-                "$ref": "#/definitions/Track"
-              },
-              "type": "array"
-            },
-            "xAxis": {
-              "$ref": "#/definitions/AxisPosition"
-            },
-            "xDomain": {
-              "anyOf": [
-                {
-                  "$ref": "#/definitions/DomainInterval"
-                },
-                {
-                  "$ref": "#/definitions/DomainChrInterval"
-                },
-                {
-                  "$ref": "#/definitions/DomainChr"
-                }
-              ]
-            },
-            "xLinkID": {
-              "type": "string"
-            }
-          },
-          "required": [
-            "tracks"
-          ],
-          "type": "object"
+          "$ref": "#/definitions/RootSpecWithSingleView"
         },
         {
-          "properties": {
-            "description": {
-              "type": "string"
-            },
-            "subtitle": {
-              "type": "string"
-            },
-            "title": {
-              "type": "string"
-            }
-          },
-          "type": "object"
+          "$ref": "#/definitions/RootSpecWithMultipleViews"
         }
       ]
     },
@@ -1244,6 +1177,72 @@
       },
       "required": [
         "type"
+      ],
+      "type": "object"
+    },
+    "MultipleViews": {
+      "additionalProperties": false,
+      "properties": {
+        "arrangement": {
+          "enum": [
+            "parallel",
+            "serial",
+            "horizontal",
+            "vertical"
+          ],
+          "type": "string"
+        },
+        "assembly": {
+          "$ref": "#/definitions/Assembly"
+        },
+        "centerRadius": {
+          "description": "Proportion of the radius of the center white space.",
+          "type": "number"
+        },
+        "layout": {
+          "$ref": "#/definitions/Layout"
+        },
+        "spacing": {
+          "type": "number"
+        },
+        "static": {
+          "type": "boolean"
+        },
+        "views": {
+          "items": {
+            "anyOf": [
+              {
+                "$ref": "#/definitions/SingleView"
+              },
+              {
+                "$ref": "#/definitions/MultipleViews"
+              }
+            ]
+          },
+          "type": "array"
+        },
+        "xAxis": {
+          "$ref": "#/definitions/AxisPosition"
+        },
+        "xDomain": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/DomainInterval"
+            },
+            {
+              "$ref": "#/definitions/DomainChrInterval"
+            },
+            {
+              "$ref": "#/definitions/DomainChr"
+            }
+          ]
+        },
+        "xLinkID": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "views"
       ],
       "type": "object"
     },
@@ -1700,6 +1699,140 @@
       ],
       "type": "object"
     },
+    "RootSpecWithMultipleViews": {
+      "additionalProperties": false,
+      "properties": {
+        "assembly": {
+          "$ref": "#/definitions/Assembly"
+        },
+        "centerRadius": {
+          "description": "Proportion of the radius of the center white space.",
+          "type": "number"
+        },
+        "description": {
+          "type": "string"
+        },
+        "layout": {
+          "$ref": "#/definitions/Layout"
+        },
+        "spacing": {
+          "type": "number"
+        },
+        "static": {
+          "type": "boolean"
+        },
+        "subtitle": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "tracks": {
+          "items": {
+            "$ref": "#/definitions/Track"
+          },
+          "type": "array"
+        },
+        "xAxis": {
+          "$ref": "#/definitions/AxisPosition"
+        },
+        "xDomain": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/DomainInterval"
+            },
+            {
+              "$ref": "#/definitions/DomainChrInterval"
+            },
+            {
+              "$ref": "#/definitions/DomainChr"
+            }
+          ]
+        },
+        "xLinkID": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "tracks"
+      ],
+      "type": "object"
+    },
+    "RootSpecWithSingleView": {
+      "additionalProperties": false,
+      "properties": {
+        "arrangement": {
+          "enum": [
+            "parallel",
+            "serial",
+            "horizontal",
+            "vertical"
+          ],
+          "type": "string"
+        },
+        "assembly": {
+          "$ref": "#/definitions/Assembly"
+        },
+        "centerRadius": {
+          "description": "Proportion of the radius of the center white space.",
+          "type": "number"
+        },
+        "description": {
+          "type": "string"
+        },
+        "layout": {
+          "$ref": "#/definitions/Layout"
+        },
+        "spacing": {
+          "type": "number"
+        },
+        "static": {
+          "type": "boolean"
+        },
+        "subtitle": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "views": {
+          "items": {
+            "anyOf": [
+              {
+                "$ref": "#/definitions/SingleView"
+              },
+              {
+                "$ref": "#/definitions/MultipleViews"
+              }
+            ]
+          },
+          "type": "array"
+        },
+        "xAxis": {
+          "$ref": "#/definitions/AxisPosition"
+        },
+        "xDomain": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/DomainInterval"
+            },
+            {
+              "$ref": "#/definitions/DomainChrInterval"
+            },
+            {
+              "$ref": "#/definitions/DomainChr"
+            }
+          ]
+        },
+        "xLinkID": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "views"
+      ],
+      "type": "object"
+    },
     "SingleTrack": {
       "additionalProperties": false,
       "properties": {
@@ -1868,6 +2001,56 @@
         "height",
         "mark",
         "width"
+      ],
+      "type": "object"
+    },
+    "SingleView": {
+      "additionalProperties": false,
+      "properties": {
+        "assembly": {
+          "$ref": "#/definitions/Assembly"
+        },
+        "centerRadius": {
+          "description": "Proportion of the radius of the center white space.",
+          "type": "number"
+        },
+        "layout": {
+          "$ref": "#/definitions/Layout"
+        },
+        "spacing": {
+          "type": "number"
+        },
+        "static": {
+          "type": "boolean"
+        },
+        "tracks": {
+          "items": {
+            "$ref": "#/definitions/Track"
+          },
+          "type": "array"
+        },
+        "xAxis": {
+          "$ref": "#/definitions/AxisPosition"
+        },
+        "xDomain": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/DomainInterval"
+            },
+            {
+              "$ref": "#/definitions/DomainChrInterval"
+            },
+            {
+              "$ref": "#/definitions/DomainChr"
+            }
+          ]
+        },
+        "xLinkID": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "tracks"
       ],
       "type": "object"
     },
