@@ -61,7 +61,7 @@ export function traverseViewArrangements(spec: GoslingSpec, callback: (tv: Multi
  * @param spec
  * @param callback
  */
-export function traverseToFixSpecDownstream(spec: GoslingSpec | SingleView, parentDef?: CommonViewDef) {
+export function traverseToFixSpecDownstream(spec: GoslingSpec | SingleView, parentDef?: CommonViewDef | MultipleViews) {
     if (parentDef) {
         // For assembly and layout, we use the ones defiend by the parents if missing
         if (spec.assembly === undefined) spec.assembly = parentDef.assembly;
@@ -72,6 +72,8 @@ export function traverseToFixSpecDownstream(spec: GoslingSpec | SingleView, pare
         if (spec.xLinkID === undefined) spec.xLinkID = parentDef.xLinkID;
         if (spec.centerRadius === undefined) spec.centerRadius = parentDef.centerRadius;
         if (spec.spacing === undefined && !('tracks' in spec)) spec.spacing = parentDef.spacing;
+        if ('views' in spec && 'arrangement' in parentDef && spec.arrangement === undefined)
+            spec.arrangement = parentDef.arrangement;
     } else {
         // This means we are at the rool level, so assign default values if missing
         if (spec.assembly === undefined) spec.assembly = 'hg38';
@@ -79,6 +81,7 @@ export function traverseToFixSpecDownstream(spec: GoslingSpec | SingleView, pare
         if (spec.static === undefined) spec.static = spec.layout === 'circular' ? true : false;
         if (spec.centerRadius === undefined) spec.centerRadius = DEFAULT_INNER_HOLE_PROP;
         if (spec.spacing === undefined) spec.spacing = DEFAULT_VIEW_SPACING;
+        if ('views' in spec && spec.arrangement === undefined) spec.arrangement = 'vertical';
         // Nothing to do when `xDomain` not suggested
         // Nothing to do when `xLinkID` not suggested
     }
