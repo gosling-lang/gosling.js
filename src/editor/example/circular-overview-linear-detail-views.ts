@@ -170,4 +170,4 @@ export const EX_SPEC_CIRCULAR_OVERVIEW_LINEAR_DETAIL: GoslingSpec = {
             ]
         }
     ]
-} as GoslingSpec;
+};
