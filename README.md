@@ -38,7 +38,7 @@ Using Gosling.js, users can easily create interactive and scalable genomic visua
           "sample 3", 
           "sample 4"
           ],
-        ,
+        },
         "mark": "area",
         "overrideTemplate": true
       }
