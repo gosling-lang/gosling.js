@@ -21,12 +21,23 @@ export default class ErrorBoundary extends React.Component<Props, State> {
             // You can render any custom fallback UI
             return (
                 <div style={{ margin: '10px 40px' }}>
-                    <h1>Sorry, something went wrong. </h1>
-                    <h3>Please refresh your page to restart the editor.</h3>
-                    <h3>
-                        It would be great if you can report this in
-                        <a href="https://github.com/gosling-lang/gosling.js/issues/171"> our github issues</a>.
-                    </h3>
+                    <h3>Sorry, something went wrong. </h3>
+                    <li>
+                        <h4>Please refresh your page to restart the editor.</h4>
+                    </li>
+                    <li>
+                        <h4>
+                            Please help us fix this issue by submitting a{' '}
+                            <a
+                                href="https://github.com/gosling-lang/gosling.js/issues/new"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                GitHub issue
+                            </a>{' '}
+                            with the code on the left.
+                        </h4>
+                    </li>
                 </div>
             );
         }
