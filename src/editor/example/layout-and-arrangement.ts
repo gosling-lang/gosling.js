@@ -25,7 +25,7 @@ export const getSingleView: (
                 row: '_',
                 column: 'x',
                 categories: ['_'],
-                bin: 32
+                binSize: 32
             },
             mark: 'rect',
             x: { field: 'start', type: 'genomic', axis: 'none' },
