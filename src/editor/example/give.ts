@@ -82,7 +82,7 @@ export const EX_SPEC_GIVE: GoslingSpec = {
                         type: 'vector',
                         column: 'position',
                         value: 'peak',
-                        bin: 4
+                        binSize: 4
                     },
                     mark: 'bar',
                     x: { field: 'start', type: 'genomic' },
@@ -101,7 +101,7 @@ export const EX_SPEC_GIVE: GoslingSpec = {
                         type: 'vector',
                         column: 'position',
                         value: 'peak',
-                        bin: 4
+                        binSize: 4
                     },
                     mark: 'bar',
                     x: { field: 'start', type: 'genomic' },
@@ -120,7 +120,7 @@ export const EX_SPEC_GIVE: GoslingSpec = {
                         type: 'vector',
                         column: 'position',
                         value: 'peak',
-                        bin: 4
+                        binSize: 4
                     },
                     mark: 'bar',
                     x: { field: 'start', type: 'genomic' },
@@ -354,7 +354,7 @@ export const EX_SPEC_GIVE: GoslingSpec = {
                         type: 'vector',
                         column: 'position',
                         value: 'peak',
-                        bin: 4
+                        binSize: 4
                     },
                     mark: 'bar',
                     x: { field: 'start', type: 'genomic' },
@@ -373,7 +373,7 @@ export const EX_SPEC_GIVE: GoslingSpec = {
                         type: 'vector',
                         column: 'position',
                         value: 'peak',
-                        bin: 4
+                        binSize: 4
                     },
                     mark: 'bar',
                     x: { field: 'start', type: 'genomic' },
@@ -392,7 +392,7 @@ export const EX_SPEC_GIVE: GoslingSpec = {
                         type: 'vector',
                         column: 'position',
                         value: 'peak',
-                        bin: 4
+                        binSize: 4
                     },
                     mark: 'bar',
                     x: { field: 'start', type: 'genomic' },

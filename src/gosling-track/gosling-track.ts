@@ -204,7 +204,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                             return;
                         }
 
-                        const bin = resolved.data.bin ?? 1;
+                        const bin = resolved.data.binSize ?? 1;
                         const tileSize = this.tilesetInfo.tile_size;
 
                         const { tileX, tileWidth } = this.getTilePosAndDimensions(
@@ -278,7 +278,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                             return;
                         }
 
-                        const bin = resolved.data.bin ?? 1;
+                        const bin = resolved.data.binSize ?? 1;
                         const tileSize = this.tilesetInfo.tile_size;
 
                         const { tileX, tileWidth } = this.getTilePosAndDimensions(

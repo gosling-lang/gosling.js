@@ -15,7 +15,7 @@ export const EX_SPEC_CIRCULAR_OVERVIEW_LINEAR_DETAIL: GoslingSpec = {
                         column: 'position',
                         value: 'peak',
                         categories: ['sample 1', 'sample 2', 'sample 3', 'sample 4'],
-                        bin: 4
+                        binSize: 4
                     },
                     x: { field: 'start', type: 'genomic' },
                     xe: { field: 'end', type: 'genomic' },
@@ -30,12 +30,12 @@ export const EX_SPEC_CIRCULAR_OVERVIEW_LINEAR_DETAIL: GoslingSpec = {
                         },
                         {
                             mark: 'brush',
-                            x: { linkingID: 'detail-1' },
+                            x: { linkingId: 'detail-1' },
                             color: { value: 'blue' }
                         },
                         {
                             mark: 'brush',
-                            x: { linkingID: 'detail-2' },
+                            x: { linkingId: 'detail-2' },
                             color: { value: 'red' }
                         }
                     ],
@@ -114,10 +114,10 @@ export const EX_SPEC_CIRCULAR_OVERVIEW_LINEAR_DETAIL: GoslingSpec = {
                                 column: 'position',
                                 value: 'peak',
                                 categories: ['sample 1', 'sample 2', 'sample 3', 'sample 4'],
-                                bin: 4
+                                binSize: 4
                             },
                             mark: 'bar',
-                            x: { field: 'start', type: 'genomic', linkingID: 'detail-1', domain: { chromosome: '5' } },
+                            x: { field: 'start', type: 'genomic', linkingId: 'detail-1', domain: { chromosome: '5' } },
                             xe: { field: 'end', type: 'genomic' },
                             y: { field: 'peak', type: 'quantitative' },
                             row: { field: 'sample', type: 'nominal' },
@@ -143,14 +143,14 @@ export const EX_SPEC_CIRCULAR_OVERVIEW_LINEAR_DETAIL: GoslingSpec = {
                                 column: 'position',
                                 value: 'peak',
                                 categories: ['sample 1', 'sample 2', 'sample 3', 'sample 4'],
-                                bin: 4
+                                binSize: 4
                             },
                             mark: 'bar',
                             x: {
                                 field: 'start',
                                 type: 'genomic',
                                 domain: { chromosome: '16' },
-                                linkingID: 'detail-2'
+                                linkingId: 'detail-2'
                             },
                             xe: { field: 'end', type: 'genomic' },
                             y: { field: 'peak', type: 'quantitative' },

@@ -27,11 +27,11 @@ export function getLinkingInfo(hgModel: HiGlassModel) {
             SUPPORTED_CHANNELS.forEach(cKey => {
                 const channel = spec[cKey];
 
-                if (IsChannelDeep(channel) && channel.linkingID) {
+                if (IsChannelDeep(channel) && channel.linkingId) {
                     linkingInfo.push({
                         layout: spec.layout === 'circular' ? 'circular' : 'linear',
                         viewId,
-                        linkId: channel.linkingID,
+                        linkId: channel.linkingId,
                         isBrush: spec.mark === 'brush',
                         style: {
                             color: (spec as any).color?.value,
