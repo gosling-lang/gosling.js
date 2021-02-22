@@ -256,7 +256,7 @@ export interface ChannelDeep {
     zeroBaseline?: boolean; // We could remove this and use the `baseline` option instead
     mirrored?: boolean; // Show baseline on the top or right instead of bottom or left
     grid?: boolean;
-    linkingID?: string;
+    linkingId?: string;
     flip?: boolean; // Flip a track vertically or horizontally?
     stack?: boolean; // Experimental: We could use this option to stack visual marks, addressing the visual overlap (e.g., stacked bar).
 }
@@ -342,7 +342,7 @@ export interface MultivecData {
     categories?: string[];
     start?: string;
     end?: string;
-    bin?: number; // Binning the genomic interval in tiles (unit size: 256)
+    binSize?: number; // Binning the genomic interval in tiles (unit size: 256)
 }
 
 export interface BIGWIGData {
@@ -352,7 +352,7 @@ export interface BIGWIGData {
     value: string;
     start?: string;
     end?: string;
-    bin?: number; // Binning the genomic interval in tiles (unit size: 256)
+    binSize?: number; // Binning the genomic interval in tiles (unit size: 256)
 }
 
 export interface VectorData {
@@ -362,7 +362,7 @@ export interface VectorData {
     value: string;
     start?: string;
     end?: string;
-    bin?: number; // Binning the genomic interval in tiles (unit size: 256)
+    binSize?: number; // Binning the genomic interval in tiles (unit size: 256)
 }
 
 export interface BEDDBData {

@@ -140,7 +140,7 @@
     "BIGWIGData": {
       "additionalProperties": false,
       "properties": {
-        "bin": {
+        "binSize": {
           "type": "number"
         },
         "column": {
@@ -298,7 +298,7 @@
         "legend": {
           "type": "boolean"
         },
-        "linkingID": {
+        "linkingId": {
           "type": "string"
         },
         "mirrored": {
@@ -1249,7 +1249,7 @@
     "MultivecData": {
       "additionalProperties": false,
       "properties": {
-        "bin": {
+        "binSize": {
           "type": "number"
         },
         "categories": {
@@ -2211,7 +2211,7 @@
     "VectorData": {
       "additionalProperties": false,
       "properties": {
-        "bin": {
+        "binSize": {
           "type": "number"
         },
         "column": {

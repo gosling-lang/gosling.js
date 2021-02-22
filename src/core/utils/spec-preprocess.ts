@@ -130,16 +130,16 @@ export function traverseToFixSpecDownstream(spec: GoslingSpec | SingleView, pare
             /**
              * Link tracks in a single view
              */
-            if ((IsSingleTrack(track) || IsOverlaidTrack(track)) && IsChannelDeep(track.x) && !track.x.linkingID) {
-                track.x.linkingID = spec.xLinkID ?? linkID;
+            if ((IsSingleTrack(track) || IsOverlaidTrack(track)) && IsChannelDeep(track.x) && !track.x.linkingId) {
+                track.x.linkingId = spec.xLinkID ?? linkID;
             } else if (IsOverlaidTrack(track)) {
                 let isAdded = false;
                 track.overlay.forEach(o => {
                     if (isAdded) return; // We want to add only once
 
-                    if (IsChannelDeep(o.x) && !o.x.linkingID) {
+                    if (IsChannelDeep(o.x) && !o.x.linkingId) {
                         // TODO: Is this safe?
-                        o.x.linkingID = spec.xLinkID ?? linkID;
+                        o.x.linkingId = spec.xLinkID ?? linkID;
                         isAdded = true;
                     }
                 });

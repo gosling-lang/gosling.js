@@ -127,7 +127,7 @@ export const EX_SPEC_PATHOGENIC: GoslingSpec = {
                     // 'risk_factor',
                     // 'Conflicting_interpretations_of_pathogenicity'
                 ],
-                bin: 4
+                binSize: 4
                 // bin: 16
             },
             mark: 'bar',

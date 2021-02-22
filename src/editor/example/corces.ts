@@ -63,7 +63,7 @@ export const EX_SPEC_CORCES_ET_AL: GoslingSpec = {
                         },
                         {
                             mark: 'brush',
-                            x: { linkingID: 'detail' },
+                            x: { linkingId: 'detail' },
                             color: { value: 'red' },
                             opacity: { value: 1 },
                             strokeWidth: { value: 1 },
@@ -314,7 +314,7 @@ export const EX_SPEC_CORCES_ET_AL: GoslingSpec = {
                 //         {},
                 //         {
                 //             mark: 'brush',
-                //             x: { linkingID: 'l-h' },
+                //             x: { linkingId: 'l-h' },
                 //             color: { value: 'blue' },
                 //             opacity: { value: 0.2 },
                 //             strokeWidth: { value: 0 }
@@ -466,7 +466,7 @@ export const EX_SPEC_CORCES_ET_AL: GoslingSpec = {
                 //     x: {
                 //         field: 'start',
                 //         type: 'genomic',
-                //         linkingID: 'l-h',
+                //         linkingId: 'l-h',
                 //         domain: { chromosome: '3', interval: [52450000, 52465000] }
                 //     },
                 //     xe: { field: 'end', type: 'genomic' },
