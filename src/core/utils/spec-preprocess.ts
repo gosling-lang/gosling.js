@@ -166,6 +166,24 @@ export function traverseToFixSpecDownstream(spec: GoslingSpec | SingleView, pare
                 }
             }
 
+            /*
+             * Flip y scale if the last track uses `link` marks
+             */
+            if (i === array.length - 1 && i !== 0) {
+                if (IsSingleTrack(track) && track.mark === 'link' && track.flipY === undefined) {
+                    track.flipY = true;
+                } else if (IsOverlaidTrack(track)) {
+                    if (track.mark === 'link' && track.flipY === undefined) {
+                        track.flipY = true;
+                    }
+                    track.overlay.forEach(o => {
+                        if (o.mark === 'link' && o.flipY === undefined) {
+                            o.flipY = true;
+                        }
+                    });
+                }
+            }
+
             if (track.overlayOnPreviousTrack && array[i - 1]) {
                 // Use the same size as the previous one
                 track.width = array[i - 1].width;

@@ -170,17 +170,17 @@ export const EX_SPEC_SARS_COV_2: GoslingSpec = {
                         type: 'csv',
                         url:
                             'https://s3.amazonaws.com/gosling-lang.org/data/COVID/TRS-L-dependent_recombinationEvents_sorted.bed',
-                        genomicFields: ['Start1', 'End1', 'Start2', 'End2']
+                        genomicFields: ['Start1', 'Stop1', 'Start2', 'Stop2']
                     },
                     mark: 'link',
                     x: { field: 'Start1', type: 'genomic' },
-                    xe: { field: 'End1', type: 'genomic' },
+                    xe: { field: 'Stop1', type: 'genomic' },
                     x1: { field: 'Start2', type: 'genomic' },
-                    x1e: { field: 'End2', type: 'genomic' },
-                    flipY: true,
+                    x1e: { field: 'Stop2', type: 'genomic' },
                     stroke: { value: '#0072B2' },
+                    color: { value: '#0072B2' },
                     opacity: { value: 0.1 },
-                    style: { circularLink: true },
+                    // style: { circularLink: true },
                     width: 800,
                     height: 400
                 }

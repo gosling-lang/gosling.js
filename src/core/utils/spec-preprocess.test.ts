@@ -40,6 +40,53 @@ describe('Fix Spec Downstream', () => {
         }
     });
 
+    it('flipY if the last track (i !== 0) is using a `link` mark', () => {
+        {
+            const spec: GoslingSpec = {
+                static: true,
+                arrangement: 'parallel',
+                views: [{ tracks: [{ overlay: [], mark: 'link', width: 0, height: 0 }] }]
+            };
+            traverseToFixSpecDownstream(spec);
+            expect((spec.views[0] as any).tracks[0].flipY).toBeUndefined(); // must not flip if there is only one track
+        }
+        {
+            const spec: GoslingSpec = {
+                static: true,
+                arrangement: 'parallel',
+                views: [
+                    {
+                        tracks: [
+                            { overlay: [], width: 0, height: 0 },
+                            { overlay: [], mark: 'link', width: 0, height: 0 }
+                        ]
+                    }
+                ]
+            };
+            traverseToFixSpecDownstream(spec);
+            expect((spec.views[0] as any).tracks[0].flipY).toBeUndefined();
+            expect((spec.views[0] as any).tracks[1].flipY).toEqual(true);
+        }
+        {
+            const spec: GoslingSpec = {
+                static: true,
+                arrangement: 'parallel',
+                views: [
+                    {
+                        tracks: [
+                            { overlay: [], width: 0, height: 0 },
+                            { overlay: [{ mark: 'link' }], width: 0, height: 0 }
+                        ]
+                    }
+                ]
+            };
+            traverseToFixSpecDownstream(spec);
+            expect((spec.views[0] as any).tracks[0].flipY).toBeUndefined();
+            expect((spec.views[0] as any).tracks[1].flipY).toBeUndefined();
+            expect((spec.views[0] as any).tracks[1].overlay[0].flipY).toEqual(true);
+        }
+    });
+
     it('arrangement should be overriden', () => {
         {
             const spec: GoslingSpec = {
