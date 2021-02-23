@@ -2,6 +2,7 @@ import { dsvFormat as d3dsvFormat } from 'd3-dsv';
 import { GET_CHROM_SIZES } from '../core/utils/assembly';
 import fetch from 'cross-fetch'; // TODO: Can we remove this and make the test working
 import { sampleSize } from 'lodash';
+import { Assembly } from '../core/gosling.schema';
 
 /**
  * HiGlass data fetcher specific for Gosling which ultimately will accept any types of data other than CSV files.
@@ -19,7 +20,7 @@ function CSVDataFetcher(HGC: any, ...args: any): any {
         private dataPromise: Promise<any> | undefined;
         private chromSizes: any;
         private values: any;
-        private assembly: string;
+        private assembly: Assembly;
 
         constructor(params: any[]) {
             const [dataConfig] = params;
@@ -96,12 +97,18 @@ function CSVDataFetcher(HGC: any, ...args: any): any {
                                 const cField = d.chromosomeField;
                                 d.genomicFields.forEach((g: string) => {
                                     try {
-                                        const chr = chromosomePrefix
-                                            ? row[cField].replace(chromosomePrefix, 'chr')
-                                            : row[cField].includes('chr')
-                                            ? row[cField]
-                                            : `chr${row[cField]}`;
-                                        row[g] = GET_CHROM_SIZES(this.assembly).interval[chr][0] + +row[g];
+                                        if (this.assembly !== 'unknown') {
+                                            // This means we need to use the relative position considering the start position of individual chr.
+                                            const chr = chromosomePrefix
+                                                ? row[cField].replace(chromosomePrefix, 'chr')
+                                                : row[cField].includes('chr')
+                                                ? row[cField]
+                                                : `chr${row[cField]}`;
+                                            row[g] = GET_CHROM_SIZES(this.assembly).interval[chr][0] + +row[g];
+                                        } else {
+                                            // In this case, we use the genomic position as it is w/o adding the cumulative length of chr.
+                                            // So, nothing to do additionally.
+                                        }
                                     } catch (e) {
                                         // genomic position did not parse properly
                                         successfullyGotChrInfo = false;

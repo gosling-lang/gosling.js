@@ -197,7 +197,12 @@ export function drawText(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackMo
                 }
 
                 textGraphic.alpha = actualOpacity;
-                textGraphic.anchor.x = 0.5;
+                textGraphic.anchor.x =
+                    !spec.style?.textAnchor || spec.style?.textAnchor === 'middle'
+                        ? 0.5
+                        : spec.style.textAnchor === 'start'
+                        ? 0
+                        : 1;
                 textGraphic.anchor.y = 0.5;
 
                 if (circular) {

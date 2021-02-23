@@ -9,6 +9,7 @@ export const LEGEND_LABEL_STYLE = {
     fill: 'black',
     background: 'white',
     lineJoin: 'round'
+    // Other possible options:
     // stroke: '#ffffff',
     // strokeThickness: 2
 };
@@ -39,37 +40,78 @@ export function drawColorLegend(HGC: any, trackInfo: any, tile: any, tm: Gosling
 
     const recipe: { x: number; y: number; color: string }[] = [];
 
-    colorCategories.forEach(category => {
-        if (cumY > trackInfo.dimensions[1]) {
-            // We do not draw labels overflow
-            return;
-        }
+    if (spec.style?.inlineLegend) {
+        // Show legend in a single horizontal line
 
-        const color = tm.encodedValue('color', category);
+        // !! reversed to add the last category first from the right side
+        colorCategories
+            .map(d => d)
+            .reverse()
+            .forEach(category => {
+                if (maxWidth > trackInfo.dimensions[0]) {
+                    // We do not draw labels overflow
+                    return;
+                }
 
-        const textGraphic = new HGC.libraries.PIXI.Text(category, { ...LEGEND_LABEL_STYLE });
-        textGraphic.anchor.x = 1;
-        textGraphic.anchor.y = 0;
-        textGraphic.position.x = trackInfo.position[0] + trackInfo.dimensions[0] - paddingX;
-        textGraphic.position.y = trackInfo.position[1] + cumY;
+                const color = tm.encodedValue('color', category);
+                const textGraphic = new HGC.libraries.PIXI.Text(category, { ...LEGEND_LABEL_STYLE });
+                textGraphic.anchor.x = 1;
+                textGraphic.anchor.y = 0;
+                textGraphic.position.x = trackInfo.position[0] + trackInfo.dimensions[0] - maxWidth - paddingX;
+                textGraphic.position.y = trackInfo.position[1] + paddingY;
 
-        graphics.addChild(textGraphic);
+                graphics.addChild(textGraphic);
 
-        const textStyleObj = new HGC.libraries.PIXI.TextStyle(LEGEND_LABEL_STYLE);
-        const textMetrics = HGC.libraries.PIXI.TextMetrics.measureText(category, textStyleObj);
+                const textStyleObj = new HGC.libraries.PIXI.TextStyle(LEGEND_LABEL_STYLE);
+                const textMetrics = HGC.libraries.PIXI.TextMetrics.measureText(category, textStyleObj);
 
-        if (maxWidth < textMetrics.width + paddingX * 3) {
-            maxWidth = textMetrics.width + paddingX * 3;
-        }
+                if (cumY < textMetrics.height + paddingY * 3) {
+                    cumY = textMetrics.height + paddingY * 3;
+                }
 
-        recipe.push({
-            x: trackInfo.position[0] + trackInfo.dimensions[0] - textMetrics.width - paddingX * 2,
-            y: trackInfo.position[1] + cumY + textMetrics.height / 2.0,
-            color
+                recipe.push({
+                    x: trackInfo.position[0] + trackInfo.dimensions[0] - textMetrics.width - maxWidth - paddingX * 2,
+                    y: trackInfo.position[1] + paddingY + textMetrics.height / 2.0,
+                    color
+                });
+
+                maxWidth += textMetrics.width + paddingX * 3;
+            });
+    } else {
+        // Show legend vertically
+
+        colorCategories.forEach(category => {
+            if (cumY > trackInfo.dimensions[1]) {
+                // We do not draw labels overflow
+                return;
+            }
+
+            const color = tm.encodedValue('color', category);
+
+            const textGraphic = new HGC.libraries.PIXI.Text(category, { ...LEGEND_LABEL_STYLE });
+            textGraphic.anchor.x = 1;
+            textGraphic.anchor.y = 0;
+            textGraphic.position.x = trackInfo.position[0] + trackInfo.dimensions[0] - paddingX;
+            textGraphic.position.y = trackInfo.position[1] + cumY;
+
+            graphics.addChild(textGraphic);
+
+            const textStyleObj = new HGC.libraries.PIXI.TextStyle(LEGEND_LABEL_STYLE);
+            const textMetrics = HGC.libraries.PIXI.TextMetrics.measureText(category, textStyleObj);
+
+            if (maxWidth < textMetrics.width + paddingX * 3) {
+                maxWidth = textMetrics.width + paddingX * 3;
+            }
+
+            recipe.push({
+                x: trackInfo.position[0] + trackInfo.dimensions[0] - textMetrics.width - paddingX * 2,
+                y: trackInfo.position[1] + cumY + textMetrics.height / 2.0,
+                color
+            });
+
+            cumY += textMetrics.height + paddingY * 2;
         });
-
-        cumY += textMetrics.height + paddingY * 2;
-    });
+    }
 
     graphics.beginFill(colorToHex('white'), 0.7);
     graphics.lineStyle(

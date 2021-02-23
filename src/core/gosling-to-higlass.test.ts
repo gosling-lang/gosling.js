@@ -1,14 +1,14 @@
 import { goslingToHiGlass } from './gosling-to-higlass';
 import { SingleTrack } from './gosling.schema';
 import { HiGlassModel } from './higlass-model';
-import { EXAMPLE_TRACK_SEMANTIC_ZOOM } from '../editor/example/semantic-zoom';
+import { EX_TRACK_SEMANTIC_ZOOM } from '../editor/example/semantic-zoom';
 
 describe('Should convert gosling spec to higlass view config.', () => {
     it('Should return a generated higlass view config correctly', () => {
         const model = new HiGlassModel();
         const higlass = goslingToHiGlass(
             model,
-            EXAMPLE_TRACK_SEMANTIC_ZOOM.cytoband,
+            EX_TRACK_SEMANTIC_ZOOM.cytoband,
             {
                 width: 1000,
                 height: 100,

@@ -106,7 +106,7 @@ export const EX_SPEC_PATHOGENIC: GoslingSpec = {
             x: { field: 'start', type: 'genomic' },
             size: { value: 7 },
             opacity: { value: 0.8 },
-            width: 700,
+            width: 600,
             height: 150
         },
         {
