@@ -111,6 +111,8 @@ export class HiGlassModel {
             stroke?: string;
             opacity?: string;
             strokeWidth?: number;
+            startAngle?: number;
+            endAngle?: number;
             innerRadius?: number;
             outerRadius?: number;
         }
@@ -129,6 +131,8 @@ export class HiGlassModel {
                 projectionFillOpacity: style?.opacity ?? 0.3,
                 projectionStrokeOpacity: 0,
                 strokeWidth: style?.strokeWidth ?? 1,
+                startAngle: style?.startAngle,
+                endAngle: style?.endAngle,
                 innerRadius: style?.innerRadius,
                 outerRadius: style?.outerRadius
             }

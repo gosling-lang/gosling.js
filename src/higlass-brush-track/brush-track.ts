@@ -209,9 +209,12 @@ function BrushTrack(HGC: any, ...args: any[]): any {
                     return;
                 }
 
+                const scale = (this.options.endAngle - this.options.startAngle) / 360;
+                const offsetedS = s - (this.options.startAngle / 360) * Math.PI * 2;
+                const offsetedE = e - (this.options.startAngle / 360) * Math.PI * 2;
                 const xDomain = [
-                    this._xScale.invert(w - (w * e) / Math.PI / 2),
-                    this._xScale.invert(w - (w * s) / Math.PI / 2)
+                    this._xScale.invert(w - (w * offsetedE) / (Math.PI * 2 * scale)),
+                    this._xScale.invert(w - (w * offsetedS) / (Math.PI * 2 * scale))
                 ];
 
                 const yDomain = this.viewportYDomain;
@@ -241,8 +244,8 @@ function BrushTrack(HGC: any, ...args: any[]): any {
             const x1 = this._xScale(this.viewportXDomain[1]);
 
             const [w] = this.dimensions;
-            let e = valueToRadian(x0, w, 0, 360) + Math.PI / 2.0;
-            let s = valueToRadian(x1, w, 0, 360) + Math.PI / 2.0;
+            let e = valueToRadian(x0, w, this.options.startAngle, this.options.endAngle) + Math.PI / 2.0;
+            let s = valueToRadian(x1, w, this.options.startAngle, this.options.endAngle) + Math.PI / 2.0;
 
             [s, e] = this.cropExtent([s, e]);
 
@@ -310,6 +313,10 @@ BrushTrack.config = {
     orientation: '2d',
     thumbnail: new DOMParser().parseFromString(icon, 'text/xml').documentElement,
     availableOptions: [
+        'innerRadius',
+        'outerRadius',
+        'startAngle',
+        'endAngle',
         'axisPositionHorizontal',
         'projectionFillColor',
         'projectionStrokeColor',
@@ -318,6 +325,10 @@ BrushTrack.config = {
         'strokeWidth'
     ],
     defaultOptions: {
+        innerRadius: 100,
+        outerRadius: 200,
+        startAngle: 0,
+        endAngle: 360,
         axisPositionHorizontal: 'left',
         projectionFillColor: '#777',
         projectionStrokeColor: '#777',

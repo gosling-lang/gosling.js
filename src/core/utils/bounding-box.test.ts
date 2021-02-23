@@ -1,6 +1,7 @@
-import { GoslingSpec } from '../gosling.schema';
-import { DEFAULT_VIEW_SPACING } from '../layout/defaults';
+import { GoslingSpec, Track } from '../gosling.schema';
+import { DEFAULT_CIRCULAR_VIEW_PADDING, DEFAULT_VIEW_SPACING } from '../layout/defaults';
 import { getBoundingBox, getRelativeTrackInfo } from './bounding-box';
+import { traverseToFixSpecDownstream } from './spec-preprocess';
 
 describe('Arrangement', () => {
     it('1 View, 1 Track', () => {
@@ -255,6 +256,39 @@ describe('Arrangement', () => {
 
             expect(info[0].boundingBox).toEqual({ x: 0, y: 0, width: 10, height: 10 });
             expect(info[1].boundingBox).toEqual({ x: 10 + DEFAULT_VIEW_SPACING, y: 0, width: 10, height: 10 });
+        }
+    });
+
+    it('Remove Brush in Combined Circular Views', () => {
+        {
+            const t: Track = JSON.parse(
+                JSON.stringify({ overlay: [{ mark: 'brush', x: { linkingId: '_' } }], width: 10, height: 10 })
+            );
+            const spec: GoslingSpec = {
+                layout: 'circular',
+                arrangement: 'parallel',
+                views: [
+                    {
+                        tracks: [t]
+                    },
+                    {
+                        xLinkingId: '_',
+                        tracks: [t]
+                    }
+                ]
+            };
+            traverseToFixSpecDownstream(spec);
+            const info = getRelativeTrackInfo(spec);
+            expect(info).toHaveLength(2);
+
+            const size = getBoundingBox(info);
+            expect(size).toEqual({
+                width: 10 + DEFAULT_CIRCULAR_VIEW_PADDING * 2,
+                height: 10 + DEFAULT_CIRCULAR_VIEW_PADDING * 2
+            });
+
+            expect(info[0].boundingBox).toEqual(info[1].boundingBox);
+            expect((info[0].track as any).overlay).toHaveLength(0); // brush should be removed
         }
     });
 

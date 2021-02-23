@@ -4,6 +4,9 @@ import { IsChannelDeep, getValueUsingChannel } from '../gosling.schema.guards';
 import { cartesianToPolar, positionToRadian } from '../utils/polar';
 import colorToHex from '../utils/color-to-hex';
 
+// Bezier deprecated
+const DISABLE_BEZIER = true;
+
 export function drawLink(g: PIXI.Graphics, model: GoslingTrackModel) {
     /* track spec */
     const spec = model.spec();
@@ -46,8 +49,8 @@ export function drawLink(g: PIXI.Graphics, model: GoslingTrackModel) {
         ).forEach(d => {
             let x = model.encodedPIXIProperty('x', d);
             let xe = model.encodedPIXIProperty('xe', d);
-            let x1 = model.encodedPIXIProperty('x1', d);
-            let x1e = model.encodedPIXIProperty('x1e', d);
+            const x1 = model.encodedPIXIProperty('x1', d);
+            const x1e = model.encodedPIXIProperty('x1e', d);
             const stroke = model.encodedPIXIProperty('stroke', d);
             const color = model.encodedPIXIProperty('color', d);
             const opacity = model.encodedPIXIProperty('opacity', d);
@@ -56,9 +59,9 @@ export function drawLink(g: PIXI.Graphics, model: GoslingTrackModel) {
             const isBand =
                 xe !== undefined &&
                 x1e !== undefined &&
-                // This means the strokeWidth of a band is 1, so we just need to draw a line instead
-                x !== xe &&
-                x1 !== x1e;
+                // This means the strokeWidth of a band is too small, so we just need to draw a line instead
+                Math.abs(x - xe) > 0.1 &&
+                Math.abs(x1 - x1e) > 0.1;
 
             // Should we do this when building Gosling Model?
             if (!isBand && xe === undefined) {
@@ -70,9 +73,10 @@ export function drawLink(g: PIXI.Graphics, model: GoslingTrackModel) {
                 xe = x1 !== undefined ? x1 : x1e;
             }
 
-            if (!isBand && x === xe && x1 == x1e) {
+            if (!isBand && Math.abs(x - xe) <= 0.1 && Math.abs(x1 - x1e) <= 0.1) {
                 // Put the larger value on `xe` so that it can be used in line connection
-                xe = x1;
+                x = (x + xe) / 2.0;
+                xe = (x1 + x1e) / 2.0;
             }
 
             // stroke
@@ -90,25 +94,25 @@ export function drawLink(g: PIXI.Graphics, model: GoslingTrackModel) {
                 g.beginFill(color === 'none' ? colorToHex('white') : colorToHex(color), color === 'none' ? 0 : opacity);
 
                 // Sort values to safely draw bands
-                [x, xe, x1, x1e] = [x, xe, x1, x1e].sort((a, b) => a - b);
+                const [_x1, _x2, _x3, _x4] = [x, xe, x1, x1e].sort((a, b) => a - b);
 
-                if (x > trackWidth || x1e < 0 || Math.abs(x1e - x) < 0.5) {
+                if (_x1 > trackWidth || _x4 < 0 || Math.abs(_x4 - _x1) < 0.5) {
                     // Do not draw very small visual marks
                     return;
                 }
 
                 if (circular) {
-                    if (x < 0 || x1e > trackWidth) {
+                    if (_x1 < 0 || _x4 > trackWidth) {
                         // Do not show bands that are partly outside of the current domain
                         return;
                     }
 
                     // https://pixijs.download/dev/docs/PIXI.Graphics.html#bezierCurveTo
                     const r = trackOuterRadius - (rowPosition / trackHeight) * trackRingSize;
-                    const posX = cartesianToPolar(x, trackWidth, r, tcx, tcy, startAngle, endAngle);
-                    const posXE = cartesianToPolar(xe, trackWidth, r, tcx, tcy, startAngle, endAngle);
-                    const posX1 = cartesianToPolar(x1, trackWidth, r, tcx, tcy, startAngle, endAngle);
-                    const posX1E = cartesianToPolar(x1e, trackWidth, r, tcx, tcy, startAngle, endAngle);
+                    const posX = cartesianToPolar(_x1, trackWidth, r, tcx, tcy, startAngle, endAngle);
+                    const posXE = cartesianToPolar(_x2, trackWidth, r, tcx, tcy, startAngle, endAngle);
+                    const posX1 = cartesianToPolar(_x3, trackWidth, r, tcx, tcy, startAngle, endAngle);
+                    const posX1E = cartesianToPolar(_x4, trackWidth, r, tcx, tcy, startAngle, endAngle);
 
                     g.moveTo(posX.x, posX.y);
 
@@ -138,35 +142,40 @@ export function drawLink(g: PIXI.Graphics, model: GoslingTrackModel) {
                     g.endFill();
                 } else {
                     // Linear mark
-                    g.moveTo(x, baseY);
+                    g.moveTo(_x1, baseY);
 
-                    if (spec.style?.circularLink) {
-                        g.arc((x + x1e) / 2.0, baseY, (x1e - x) / 2.0, -Math.PI, 0, false);
-                        // g.lineTo(xe, botY);
-                        g.arc((xe + x1) / 2.0, baseY, (x1 - xe) / 2.0, 0, -Math.PI, true);
-                        // g.lineTo(x, botY);
+                    if (spec.style?.circularLink || DISABLE_BEZIER) {
+                        g.arc(
+                            (_x1 + _x4) / 2.0, // cx
+                            baseY, // cy
+                            (_x4 - _x1) / 2.0, // radius
+                            -Math.PI, // start angle
+                            Math.PI, // end angle
+                            false
+                        );
+                        g.arc((_x2 + _x3) / 2.0, baseY, (_x3 - _x2) / 2.0, Math.PI, -Math.PI, true);
                         g.closePath();
                     } else {
-                        g.lineTo(x1, rowPosition + rowHeight);
+                        g.lineTo(_x3, rowPosition + rowHeight);
                         g.bezierCurveTo(
-                            x1 + (xe - x1) / 3.0,
+                            _x3 + (_x2 - _x3) / 3.0,
                             // rowPosition + (x1 - x),
-                            rowPosition + rowHeight - (xe - x1) / 2.0, //Math.min(rowHeight - (x1 - x), (xe - x1) / 2.0),
-                            x1 + ((xe - x1) / 3.0) * 2,
+                            rowPosition + rowHeight - (_x2 - _x3) / 2.0, //Math.min(rowHeight - (x1 - x), (xe - x1) / 2.0),
+                            _x3 + ((_x2 - _x3) / 3.0) * 2,
                             // rowPosition + (x1 - x),
-                            rowPosition + rowHeight - (xe - x1) / 2.0, //Math.min(rowHeight - (x1 - x), (xe - x1) / 2.0),
-                            xe,
+                            rowPosition + rowHeight - (_x2 - _x3) / 2.0, //Math.min(rowHeight - (x1 - x), (xe - x1) / 2.0),
+                            _x2,
                             rowPosition + rowHeight
                         );
-                        g.lineTo(x1e, rowPosition + rowHeight);
+                        g.lineTo(_x4, rowPosition + rowHeight);
                         g.bezierCurveTo(
-                            x + ((x1e - x) / 3.0) * 2,
+                            _x1 + ((_x4 - _x1) / 3.0) * 2,
                             // rowPosition,
-                            rowPosition + rowHeight - (x1e - x) / 2.0, //Math.min(rowHeight, (x1e - x) / 2.0),
-                            x + (x1e - x) / 3.0,
+                            rowPosition + rowHeight - (_x4 - _x1) / 2.0, //Math.min(rowHeight, (x1e - x) / 2.0),
+                            _x1 + (_x4 - _x1) / 3.0,
                             // rowPosition,
-                            rowPosition + rowHeight - (x1e - x) / 2.0, //Math.min(rowHeight, (x1e - x) / 2.0),
-                            x,
+                            rowPosition + rowHeight - (_x4 - _x1) / 2.0, //Math.min(rowHeight, (x1e - x) / 2.0),
+                            _x1,
                             rowPosition + rowHeight
                         );
                         g.endFill();
@@ -200,7 +209,7 @@ export function drawLink(g: PIXI.Graphics, model: GoslingTrackModel) {
                 } else {
                     g.moveTo(x, baseY);
 
-                    if (spec.style?.circularLink) {
+                    if (spec.style?.circularLink || DISABLE_BEZIER) {
                         if (xe < 0 || x > trackWidth) {
                             // Q: Do we really need this?
                             return;

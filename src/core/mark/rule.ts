@@ -116,7 +116,7 @@ export function drawRule(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackMo
 
             if (linePattern && curved === undefined && !circular) {
                 const { type: pType, size: pSize } = linePattern;
-                let curPos = x;
+                let curPos = Math.max(x, 0); // saftly start from visible position
 
                 rowGraphics.lineStyle(0);
 
@@ -124,6 +124,7 @@ export function drawRule(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackMo
                 const PATTERN_GAP_SIZE = pSize * 2;
                 ///
 
+                let count = 0;
                 do {
                     const x0 = curPos;
                     const x1 = curPos + pSize;
@@ -137,7 +138,11 @@ export function drawRule(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackMo
                     );
                     rowGraphics.endFill();
                     curPos += pSize + PATTERN_GAP_SIZE;
-                } while (curPos < xe);
+
+                    count++;
+
+                    // saftly end before the visible position
+                } while (curPos < Math.min(xe, trackWidth) && count < 100);
             }
         });
     });

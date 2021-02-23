@@ -94,7 +94,6 @@ export const EX_SPEC_CIRCULAR_OVERVIEW_LINEAR_DETAIL: GoslingSpec = {
                     },
                     strokeWidth: { value: 0.8 },
                     opacity: { value: 0.15 },
-                    style: { circularLink: true },
                     width: 500,
                     height: 100
                 }
