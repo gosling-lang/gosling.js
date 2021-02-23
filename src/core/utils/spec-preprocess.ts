@@ -3,7 +3,7 @@ import uuid from 'uuid';
 import { SingleTrack, GoslingSpec, SingleView, Track, CommonViewDef, MultipleViews } from '../gosling.schema';
 import { IsTemplate, IsDataDeepTileset, IsSingleTrack, IsChannelDeep, IsOverlaidTrack } from '../gosling.schema.guards';
 import {
-    DEFAULT_INNER_HOLE_PROP,
+    DEFAULT_INNER_RADIUS_PROP,
     DEFAULT_TRACK_HEIGHT_LINEAR,
     DEFAULT_TRACK_WIDTH_LINEAR,
     DEFAULT_VIEW_SPACING
@@ -79,7 +79,7 @@ export function traverseToFixSpecDownstream(spec: GoslingSpec | SingleView, pare
         if (spec.assembly === undefined) spec.assembly = 'hg38';
         if (spec.layout === undefined) spec.layout = 'linear';
         if (spec.static === undefined) spec.static = spec.layout === 'circular' ? true : false;
-        if (spec.centerRadius === undefined) spec.centerRadius = DEFAULT_INNER_HOLE_PROP;
+        if (spec.centerRadius === undefined) spec.centerRadius = DEFAULT_INNER_RADIUS_PROP;
         if (spec.spacing === undefined) spec.spacing = DEFAULT_VIEW_SPACING;
         if ('views' in spec && spec.arrangement === undefined) spec.arrangement = 'vertical';
         // Nothing to do when `xDomain` not suggested

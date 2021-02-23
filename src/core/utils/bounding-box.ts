@@ -1,8 +1,9 @@
 import { MultipleViews, CommonViewDef, GoslingSpec, Track, SingleView } from '../gosling.schema';
-import { IsXAxis } from '../gosling.schema.guards';
+import { IsOverlaidTrack, IsXAxis } from '../gosling.schema.guards';
 import { HIGLASS_AXIS_SIZE } from '../higlass-model';
 import {
-    DEFAULT_INNER_HOLE_PROP,
+    DEFAULT_CIRCULAR_VIEW_PADDING,
+    DEFAULT_INNER_RADIUS_PROP,
     DEFAULT_SUBTITLE_HEIGHT,
     DEFAULT_TITLE_HEIGHT,
     DEFAULT_VIEW_SPACING
@@ -248,12 +249,16 @@ function traverseAndCollectTrackInfo(
     // If this is a root view that uses a circular layout, use the posiiton and size of views/tracks to calculate circular-specific parameters, such as outer/inner radius and start/end angle
     if (isThisCircularRoot) {
         const cTracks = output.slice(numTracksBeforeInsert);
+        const ifMultipleViews =
+            'views' in spec &&
+            (spec.arrangement === 'parallel' || spec.arrangement === 'serial') &&
+            spec.views.length > 1;
 
         const SPACING = spec.spacing !== undefined ? spec.spacing : DEFAULT_VIEW_SPACING;
-        const PADDING = 10;
-        const INNER_HOLE = spec.centerRadius !== undefined ? spec.centerRadius : DEFAULT_INNER_HOLE_PROP;
+        const PADDING = DEFAULT_CIRCULAR_VIEW_PADDING;
+        const INNER_RADIUS = spec.centerRadius !== undefined ? spec.centerRadius : DEFAULT_INNER_RADIUS_PROP;
         const TOTAL_RADIUS = cumWidth / 2.0 + PADDING; // (cumWidth + cumHeight) / 2.0 / 2.0;
-        const TOTAL_RING_SIZE = TOTAL_RADIUS * (1 - INNER_HOLE);
+        const TOTAL_RING_SIZE = TOTAL_RADIUS * (1 - INNER_RADIUS);
 
         // const numXAxes = getNumOfXAxes(cTracks.map(info => info.track));
 
@@ -283,6 +288,13 @@ function traverseAndCollectTrackInfo(
 
             if (i !== 0) {
                 t.track.overlayOnPreviousTrack = true;
+            }
+
+            // !!! As circular tracks are not well supported now when parallelized or serialized, we do not support brush for now.
+            if (ifMultipleViews) {
+                if (IsOverlaidTrack(t.track)) {
+                    t.track.overlay = t.track.overlay.filter(o => o.mark !== 'brush');
+                }
             }
         });
 

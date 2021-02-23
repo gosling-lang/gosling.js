@@ -210,10 +210,11 @@ function BrushTrack(HGC: any, ...args: any[]): any {
                 }
 
                 const scale = (this.options.endAngle - this.options.startAngle) / 360;
-                const xOffset = (w * this.options.startAngle) / 360;
+                const offsetedS = s - (this.options.startAngle / 360) * Math.PI * 2;
+                const offsetedE = e - (this.options.startAngle / 360) * Math.PI * 2;
                 const xDomain = [
-                    this._xScale.invert(w - (w * e) / (Math.PI * 2 * scale) + xOffset),
-                    this._xScale.invert(w - (w * s) / (Math.PI * 2 * scale) + xOffset)
+                    this._xScale.invert(w - (w * offsetedE) / (Math.PI * 2 * scale)),
+                    this._xScale.invert(w - (w * offsetedS) / (Math.PI * 2 * scale))
                 ];
 
                 const yDomain = this.viewportYDomain;
