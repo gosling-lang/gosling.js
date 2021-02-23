@@ -1,6 +1,7 @@
 import { GoslingSpec } from '../../core/gosling.schema';
 import { EX_SPEC_LAYOUT_AND_ARRANGEMENT_1, EX_SPEC_LAYOUT_AND_ARRANGEMENT_2 } from './layout-and-arrangement';
 import { EX_SPEC_CIRCULAR_OVERVIEW_LINEAR_DETAIL } from './circular-overview-linear-detail-views';
+import { EX_SPEC_SARS_COV_2 } from './sars-cov-2';
 import { EX_SPEC_GENE_ANNOTATION } from './gene-annotation';
 import { EX_SPEC_SEMANTIC_ZOOM } from './semantic-zoom';
 import { EX_SPEC_GIVE } from './give';
@@ -36,6 +37,10 @@ export const examples: ReadonlyArray<{
         forceShow: true
     },
     {
+        name: 'SARS-CoV-2',
+        spec: EX_SPEC_SARS_COV_2
+    },
+    {
         name: 'Cyto Bands',
         spec: EX_SPEC_CYTOBANDS
     },
@@ -49,7 +54,8 @@ export const examples: ReadonlyArray<{
     },
     {
         name: 'Pathogenic Lollipop Plot',
-        spec: EX_SPEC_PATHOGENIC
+        spec: EX_SPEC_PATHOGENIC,
+        hidden: true
     },
     {
         name: 'GIVE (Cao et al. 2018)',

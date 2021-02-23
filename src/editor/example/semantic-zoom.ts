@@ -1,5 +1,6 @@
 import { GoslingSpec, OverlaidTrack } from '../../core/gosling.schema';
 import { GOSLING_PUBLIC_DATA } from './gosling-data';
+import { EX_SPEC_PATHOGENIC } from './pathogenic';
 
 const ScalableSequenceTrack: OverlaidTrack = {
     data: {
@@ -17,27 +18,27 @@ const ScalableSequenceTrack: OverlaidTrack = {
             mark: 'bar',
             y: { field: 'count', type: 'quantitative' }
         },
-        {
-            mark: 'bar',
-            y: { field: 'count', type: 'quantitative' },
-            strokeWidth: { value: 1 },
-            stroke: { value: 'white' },
-            visibility: [
-                {
-                    operation: 'gtet',
-                    measure: 'width',
-                    threshold: 20,
-                    transitionPadding: 10,
-                    target: 'mark'
-                },
-                {
-                    operation: 'LT',
-                    measure: 'zoomLevel',
-                    threshold: 50,
-                    target: 'track'
-                }
-            ]
-        },
+        // {
+        //     mark: 'bar',
+        //     y: { field: 'count', type: 'quantitative' },
+        //     strokeWidth: { value: 1 },
+        //     stroke: { value: 'white' },
+        //     visibility: [
+        //         {
+        //             operation: 'gtet',
+        //             measure: 'width',
+        //             threshold: 20,
+        //             transitionPadding: 10,
+        //             target: 'mark'
+        //         },
+        //         {
+        //             operation: 'LT',
+        //             measure: 'zoomLevel',
+        //             threshold: 50,
+        //             target: 'track'
+        //         }
+        //     ]
+        // },
         {
             dataTransform: { filter: [{ field: 'count', oneOf: [0], not: true }] },
             mark: 'text',
@@ -61,7 +62,7 @@ const ScalableSequenceTrack: OverlaidTrack = {
                 {
                     operation: 'LT',
                     measure: 'zoomLevel',
-                    threshold: 50,
+                    threshold: 10,
                     target: 'track'
                 }
             ]
@@ -233,7 +234,7 @@ const ScalableCytoBand: OverlaidTrack = {
     height: 25
 };
 
-export const EXAMPLE_TRACK_SEMANTIC_ZOOM = {
+export const EX_TRACK_SEMANTIC_ZOOM = {
     sequence: ScalableSequenceTrack,
     cytoband: ScalableCytoBand
 };
@@ -244,11 +245,14 @@ export const EX_SPEC_SEMANTIC_ZOOM: GoslingSpec = {
         {
             layout: 'linear',
             xDomain: { chromosome: '1', interval: [3000000, 3000010] },
-            tracks: [{ ...EXAMPLE_TRACK_SEMANTIC_ZOOM.sequence, width: 600, height: 100 }]
+            tracks: [{ ...EX_TRACK_SEMANTIC_ZOOM.sequence, width: 600, height: 100 }]
         },
         {
             layout: 'linear',
-            tracks: [{ ...EXAMPLE_TRACK_SEMANTIC_ZOOM.cytoband, width: 600, size: undefined }]
+            tracks: [{ ...EX_TRACK_SEMANTIC_ZOOM.cytoband, width: 600, size: undefined }]
+        },
+        {
+            ...EX_SPEC_PATHOGENIC
         }
     ]
 };

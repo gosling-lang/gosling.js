@@ -31,7 +31,7 @@ export interface MultipleViews extends CommonViewDef {
 }
 
 export type Layout = 'linear' | 'circular';
-export type Assembly = 'hg38' | 'hg19' | 'hg18' | 'hg17' | 'hg16' | 'mm10' | 'mm9';
+export type Assembly = 'hg38' | 'hg19' | 'hg18' | 'hg17' | 'hg16' | 'mm10' | 'mm9' | 'unknown';
 
 export interface CommonViewDef {
     layout?: Layout;
@@ -42,7 +42,7 @@ export interface CommonViewDef {
     assembly?: Assembly;
 
     xDomain?: DomainInterval | DomainChrInterval | DomainChr; // We can support `DomainGene` as well later.
-    xLinkID?: string;
+    xLinkingId?: string;
     xAxis?: AxisPosition; // not supported currently
 
     /**
@@ -138,6 +138,7 @@ export interface SingleTrack extends CommonTrackDef {
 
     // Experimental
     stackY?: boolean; // Eventually, will be added to y's `Channel` w/ gap
+    flipY?: boolean;
 
     // Stretch the size to the given range? (e.g., [x, xe])
     stretch?: boolean;
@@ -173,11 +174,13 @@ export interface TrackStyle {
     outline?: string;
     outlineWidth?: number;
     circularLink?: boolean; // draw arc instead of bazier curve?
+    inlineLegend?: boolean; // show legend in a single horizontal line?
     // below options could instead be used with channel options (e.g., size, stroke, strokeWidth)
     textFontSize?: number;
     textStroke?: string;
     textStrokeWidth?: number;
     textFontWeight?: 'bold' | 'normal';
+    textAnchor?: 'start' | 'middle' | 'end';
     //
     stroke?: string; // deprecated
     strokeWidth?: number; // deprecated
@@ -295,6 +298,10 @@ export type Aggregate = 'max' | 'min' | 'mean' | 'bin' | 'count';
 /* ----------------------------- DATA ----------------------------- */
 export type DataDeep = JSONData | CSVData | BIGWIGData | MultivecData | BEDDBData | VectorData;
 
+export interface Datum {
+    [k: string]: number | string;
+}
+
 export interface JSONData {
     type: 'json';
     values: Datum[];
@@ -310,10 +317,6 @@ export interface JSONData {
     }[];
 }
 
-export interface Datum {
-    [k: string]: number | string;
-}
-
 export interface CSVData {
     type: 'csv';
     url: string;
@@ -322,11 +325,11 @@ export interface CSVData {
     chromosomeField?: string;
     genomicFields?: string[];
     sampleLength?: number; // This limit the total number of rows fetched (default: 1000)
-    // experimental
+
+    // !!! below is experimental
     headerNames?: string[];
     chromosomePrefix?: string;
     longToWideId?: string;
-    // !!! experimental
     genomicFieldsToConvert?: {
         chromosomeField: string;
         genomicFields: string[];

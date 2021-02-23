@@ -83,7 +83,7 @@ export function drawLink(g: PIXI.Graphics, model: GoslingTrackModel) {
                 0.5 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
             );
 
-            const flipY = IsChannelDeep(spec.y) && spec.y.flip;
+            const flipY = (IsChannelDeep(spec.y) && spec.y.flip) || spec.flipY;
             const baseY = rowPosition + (flipY ? 0 : rowHeight);
 
             if (isBand) {

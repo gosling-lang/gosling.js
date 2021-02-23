@@ -20,7 +20,8 @@
         "hg17",
         "hg16",
         "mm10",
-        "mm9"
+        "mm9",
+        "unknown"
       ],
       "type": "string"
     },
@@ -425,7 +426,7 @@
             }
           ]
         },
-        "xLinkID": {
+        "xLinkingId": {
           "type": "string"
         }
       },
@@ -1237,7 +1238,7 @@
             }
           ]
         },
-        "xLinkID": {
+        "xLinkingId": {
           "type": "string"
         }
       },
@@ -1348,6 +1349,9 @@
         "endAngle": {
           "type": "number"
         },
+        "flipY": {
+          "type": "boolean"
+        },
         "height": {
           "type": "number"
         },
@@ -1391,6 +1395,9 @@
               },
               "endAngle": {
                 "type": "number"
+              },
+              "flipY": {
+                "type": "boolean"
               },
               "innerRadius": {
                 "type": "number"
@@ -1496,7 +1503,7 @@
                   }
                 ]
               },
-              "xLinkID": {
+              "xLinkingId": {
                 "type": "string"
               },
               "xe": {
@@ -1620,7 +1627,7 @@
             }
           ]
         },
-        "xLinkID": {
+        "xLinkingId": {
           "type": "string"
         },
         "xe": {
@@ -1749,7 +1756,7 @@
             }
           ]
         },
-        "xLinkID": {
+        "xLinkingId": {
           "type": "string"
         }
       },
@@ -1824,7 +1831,7 @@
             }
           ]
         },
-        "xLinkID": {
+        "xLinkingId": {
           "type": "string"
         }
       },
@@ -1857,6 +1864,9 @@
         },
         "endAngle": {
           "type": "number"
+        },
+        "flipY": {
+          "type": "boolean"
         },
         "height": {
           "type": "number"
@@ -1977,7 +1987,7 @@
             }
           ]
         },
-        "xLinkID": {
+        "xLinkingId": {
           "type": "string"
         },
         "xe": {
@@ -2045,7 +2055,7 @@
             }
           ]
         },
-        "xLinkID": {
+        "xLinkingId": {
           "type": "string"
         }
       },
@@ -2157,6 +2167,9 @@
         "dy": {
           "type": "number"
         },
+        "inlineLegend": {
+          "type": "boolean"
+        },
         "linePattern": {
           "additionalProperties": false,
           "properties": {
@@ -2188,6 +2201,14 @@
         },
         "strokeWidth": {
           "type": "number"
+        },
+        "textAnchor": {
+          "enum": [
+            "start",
+            "middle",
+            "end"
+          ],
+          "type": "string"
         },
         "textFontSize": {
           "type": "number"
