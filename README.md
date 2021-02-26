@@ -79,7 +79,7 @@ The Gosling's key features compared to existing visualization libraries and gram
 npm install gosling.js
 ```
 
-## Run Editor Locally
+## Development
 
 The following commands install and run a Gosling.js editor locally in your computer (ensure you have installed [yarn](https://yarnpkg.com/getting-started/install)):
 
@@ -88,6 +88,20 @@ yarn
 yarn start
 ```
 Then you can open <http://localhost:8080/> in a web browser to play with the editor.
+
+We use [commitlint](https://github.com/conventional-changelog/commitlint#what-is-commitlint) to maintain commit messages in a consistent form and auto-update a [CHANGE.LOG](https://github.com/gosling-lang/gosling.js/blob/master/CHANGELOG.md) based on the messages.
+
+The allowed pattern of commit messages:
+```sh
+type(scope?): subject  #scope is optional; multiple scopes are supported (current delimiter options: "/", "\" and ",")
+```
+
+An example commit message:
+```sh
+git commit -m 'fix: correctly position views'
+```
+
+Find out more at [conventional-changelog/commitlint](https://github.com/conventional-changelog/commitlint#what-is-commitlint).
 
 ## Contact
 - Open [Github Issues](https://github.com/gosling-lang/gosling.js/issues/) to ask questions or request features.
