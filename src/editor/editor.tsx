@@ -1,5 +1,6 @@
 import * as gosling from '../';
 import React, { useRef, useState, useEffect, useCallback } from 'react';
+import ReactMarkdown from 'react-markdown';
 import PubSub from 'pubsub-js';
 import fetchJsonp from 'fetch-jsonp';
 import EditorPanel from './editor-panel';
@@ -26,6 +27,7 @@ const LIMIT_CLIPBOARD_LEN = 4096;
 // ! these should be updated upon change in css files
 const EDITOR_HEADER_HEIGHT = 40;
 const BOTTOM_PANEL_HEADER_HEIGHT = 30;
+const DESCRIPTION_PANEL_MIN_WIDTH = 20;
 
 const LogoSVG = (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width={20} height={20}>
@@ -109,9 +111,9 @@ const fetchSpecFromGist = async gist => {
         response.status === 200 ? response.text() : null
     );
 
-    return Promise.all([whenCode, whenText]).then(([code, text]) => ({
+    return Promise.all([whenCode, whenText]).then(([code, description]) => ({
         code,
-        text,
+        description,
         title: metadata.description
     }));
 };
@@ -144,6 +146,11 @@ function Editor(props: any) {
     const [autoRun, setAutoRun] = useState(true);
     const [selectedPreviewData, setSelectedPreviewData] = useState<number>(0);
     const [gistTitle, setGistTitle] = useState(null);
+    const [description, setDescription] = useState(null);
+
+    // This parameter only matter when a markdown description was loaded from
+    // a gist but the user wants to hide it
+    const [hideDescription, setHideDescription] = useState(false);
 
     // whether to show HiGlass' viewConfig on the left-bottom
     const [showVC, setShowVC] = useState<boolean>(false);
@@ -186,16 +193,18 @@ function Editor(props: any) {
         setReadOnly(true);
 
         fetchSpecFromGist(urlGist)
-            .then(({ code, title }) => {
+            .then(({ code, description, title }) => {
                 if (active) {
                     setCode(code);
                     setGistTitle(title);
+                    setDescription(description);
                     setReadOnly(false);
                 }
             })
             .catch(error => {
                 if (active) {
                     setCode(emptySpec(`Error: ${error}`));
+                    setDescription(null);
                     setGistTitle('Error loading gist! See code for details.');
                     setReadOnly(false);
                 }
@@ -281,6 +290,16 @@ function Editor(props: any) {
 
         return info.slice(0, info.length - 2);
     }
+
+    function openDescription() {
+        setHideDescription(false);
+    }
+
+    function closeDescription() {
+        setHideDescription(true);
+    }
+
+    const descriptionPanelMinWidth = description ? DESCRIPTION_PANEL_MIN_WIDTH : 0;
 
     // console.log('editor.render()');
     return (
@@ -457,139 +476,58 @@ function Editor(props: any) {
                             DOCS
                         </span>
                     </div>
-                    <SplitPane split="vertical" defaultSize={'40%'} size={isMaximizeVis ? '0px' : '40%'} minSize="0px">
+                    <SplitPane
+                        split="vertical"
+                        defaultSize="70%"
+                        size={
+                            isMaximizeVis || hideDescription || !description
+                                ? `calc(100% - ${descriptionPanelMinWidth}px)`
+                                : '70%'
+                        }
+                        minSize={0}
+                        maxSize={`calc(100% - ${descriptionPanelMinWidth}px)`}
+                        allowResize={description && !hideDescription}
+                    >
                         <SplitPane
-                            split="horizontal"
-                            defaultSize={`calc(100% - ${BOTTOM_PANEL_HEADER_HEIGHT}px)`}
-                            maxSize={window.innerHeight - EDITOR_HEADER_HEIGHT - BOTTOM_PANEL_HEADER_HEIGHT}
-                            onChange={(size: number) => {
-                                const secondSize = window.innerHeight - EDITOR_HEADER_HEIGHT - size;
-                                if (secondSize > BOTTOM_PANEL_HEADER_HEIGHT && !showVC) {
-                                    setShowVC(true);
-                                } else if (secondSize <= BOTTOM_PANEL_HEADER_HEIGHT && showVC) {
-                                    // hide the viewConfig view when no enough space assigned
-                                    setShowVC(false);
-                                }
-                            }}
+                            split="vertical"
+                            defaultSize={'40%'}
+                            size={isMaximizeVis ? '0px' : '40%'}
+                            minSize="0px"
                         >
-                            {/* Gosling Editor */}
-                            <>
-                                <EditorPanel
-                                    code={code}
-                                    readOnly={readOnly}
-                                    openFindBox={isFindCode}
-                                    fontZoomIn={isFontZoomIn}
-                                    fontZoomOut={isFontZoomOut}
-                                    onChange={debounce(code => {
-                                        setCode(code);
-                                    }, 1500)}
-                                />
-                                <div className={`compile-message compile-message-${log.state}`}>{log.message}</div>
-                            </>
-                            {/* HiGlass View Config */}
-                            <SplitPane split="vertical" defaultSize="100%">
-                                <>
-                                    <div className="editor-header">Compiled HiGlass ViewConfig (Read Only)</div>
-                                    <div style={{ height: '100%', visibility: showVC ? 'visible' : 'hidden' }}>
-                                        <EditorPanel code={stringify(hg)} readOnly={true} />
-                                    </div>
-                                </>
-                                {/**
-                                 * TODO: This is only for showing a scroll view for the higlass view config editor
-                                 * Remove the below line and the nearest SplitPane after figuring out a better way
-                                 * of showing the scroll view.
-                                 */}
-                                <></>
-                            </SplitPane>
-                        </SplitPane>
-                        <ErrorBoundary>
                             <SplitPane
                                 split="horizontal"
                                 defaultSize={`calc(100% - ${BOTTOM_PANEL_HEADER_HEIGHT}px)`}
-                                size={isShowDataPreview ? '40%' : `calc(100% - ${BOTTOM_PANEL_HEADER_HEIGHT}px)`}
                                 maxSize={window.innerHeight - EDITOR_HEADER_HEIGHT - BOTTOM_PANEL_HEADER_HEIGHT}
+                                onChange={(size: number) => {
+                                    const secondSize = window.innerHeight - EDITOR_HEADER_HEIGHT - size;
+                                    if (secondSize > BOTTOM_PANEL_HEADER_HEIGHT && !showVC) {
+                                        setShowVC(true);
+                                    } else if (secondSize <= BOTTOM_PANEL_HEADER_HEIGHT && showVC) {
+                                        // hide the viewConfig view when no enough space assigned
+                                        setShowVC(false);
+                                    }
+                                }}
                             >
-                                <div className="preview-container">
-                                    <gosling.GoslingComponent
-                                        spec={goslingSpec}
-                                        compiled={(g, h) => {
-                                            setHg(h);
-                                        }}
+                                {/* Gosling Editor */}
+                                <>
+                                    <EditorPanel
+                                        code={code}
+                                        readOnly={readOnly}
+                                        openFindBox={isFindCode}
+                                        fontZoomIn={isFontZoomIn}
+                                        fontZoomOut={isFontZoomOut}
+                                        onChange={debounce(code => {
+                                            setCode(code);
+                                        }, 1500)}
                                     />
-                                </div>
+                                    <div className={`compile-message compile-message-${log.state}`}>{log.message}</div>
+                                </>
+                                {/* HiGlass View Config */}
                                 <SplitPane split="vertical" defaultSize="100%">
                                     <>
-                                        <div
-                                            className="editor-header"
-                                            style={{ cursor: 'pointer' }}
-                                            onClick={() => setIsShowDataPreview(!isShowDataPreview)}
-                                        >
-                                            Data Preview (~100 Rows, Data Before Transformation)
-                                        </div>
-                                        <div className="editor-data-preview-panel">
-                                            <div
-                                                title="Refresh preview data"
-                                                className="data-preview-refresh-button"
-                                                onClick={() => setRefreshData(!refreshData)}
-                                            >
-                                                {getIconSVG(ICONS.REFRESH, 23, 23)}
-                                                <br />
-                                                {'REFRESH DATA'}
-                                            </div>
-                                            {previewData.current.length > selectedPreviewData &&
-                                            previewData.current[selectedPreviewData] &&
-                                            previewData.current[selectedPreviewData].data.length > 0 ? (
-                                                <>
-                                                    <div className="editor-data-preview-tab">
-                                                        {previewData.current.map((d: PreviewData, i: number) => (
-                                                            <button
-                                                                className={
-                                                                    i === selectedPreviewData
-                                                                        ? 'selected-tab'
-                                                                        : 'unselected-tab'
-                                                                }
-                                                                key={JSON.stringify(d)}
-                                                                onClick={() => setSelectedPreviewData(i)}
-                                                            >
-                                                                {`${(JSON.parse(d.dataConfig).data
-                                                                    .type as string).toLocaleLowerCase()} `}
-                                                                <small>{i}</small>
-                                                            </button>
-                                                        ))}
-                                                    </div>
-                                                    <div className="editor-data-preview-tab-info">
-                                                        {getDataPreviewInfo(
-                                                            previewData.current[selectedPreviewData].dataConfig
-                                                        )}
-                                                    </div>
-                                                    <div className="editor-data-preview-table">
-                                                        <table>
-                                                            <tbody>
-                                                                <tr>
-                                                                    {Object.keys(
-                                                                        previewData.current[selectedPreviewData].data[0]
-                                                                    ).map((field: string, i: number) => (
-                                                                        <th key={i}>{field}</th>
-                                                                    ))}
-                                                                </tr>
-                                                                {previewData.current[selectedPreviewData].data.map(
-                                                                    (row: Datum, i: number) => (
-                                                                        <tr key={i}>
-                                                                            {Object.keys(row).map(
-                                                                                (field: string, j: number) => (
-                                                                                    <td key={j}>
-                                                                                        {row[field].toString()}
-                                                                                    </td>
-                                                                                )
-                                                                            )}
-                                                                        </tr>
-                                                                    )
-                                                                )}
-                                                            </tbody>
-                                                        </table>
-                                                    </div>
-                                                </>
-                                            ) : null}
+                                        <div className="editor-header">Compiled HiGlass ViewConfig (Read Only)</div>
+                                        <div style={{ height: '100%', visibility: showVC ? 'visible' : 'hidden' }}>
+                                            <EditorPanel code={stringify(hg)} readOnly={true} />
                                         </div>
                                     </>
                                     {/**
@@ -600,7 +538,123 @@ function Editor(props: any) {
                                     <></>
                                 </SplitPane>
                             </SplitPane>
-                        </ErrorBoundary>
+                            <ErrorBoundary>
+                                <SplitPane
+                                    split="horizontal"
+                                    defaultSize={`calc(100% - ${BOTTOM_PANEL_HEADER_HEIGHT}px)`}
+                                    size={isShowDataPreview ? '40%' : `calc(100% - ${BOTTOM_PANEL_HEADER_HEIGHT}px)`}
+                                    maxSize={window.innerHeight - EDITOR_HEADER_HEIGHT - BOTTOM_PANEL_HEADER_HEIGHT}
+                                >
+                                    <div className="preview-container">
+                                        <gosling.GoslingComponent
+                                            spec={goslingSpec}
+                                            compiled={(g, h) => {
+                                                setHg(h);
+                                            }}
+                                        />
+                                    </div>
+                                    <SplitPane split="vertical" defaultSize="100%">
+                                        <>
+                                            <div
+                                                className="editor-header"
+                                                style={{ cursor: 'pointer' }}
+                                                onClick={() => setIsShowDataPreview(!isShowDataPreview)}
+                                            >
+                                                Data Preview (~100 Rows, Data Before Transformation)
+                                            </div>
+                                            <div className="editor-data-preview-panel">
+                                                <div
+                                                    title="Refresh preview data"
+                                                    className="data-preview-refresh-button"
+                                                    onClick={() => setRefreshData(!refreshData)}
+                                                >
+                                                    {getIconSVG(ICONS.REFRESH, 23, 23)}
+                                                    <br />
+                                                    {'REFRESH DATA'}
+                                                </div>
+                                                {previewData.current.length > selectedPreviewData &&
+                                                previewData.current[selectedPreviewData] &&
+                                                previewData.current[selectedPreviewData].data.length > 0 ? (
+                                                    <>
+                                                        <div className="editor-data-preview-tab">
+                                                            {previewData.current.map((d: PreviewData, i: number) => (
+                                                                <button
+                                                                    className={
+                                                                        i === selectedPreviewData
+                                                                            ? 'selected-tab'
+                                                                            : 'unselected-tab'
+                                                                    }
+                                                                    key={JSON.stringify(d)}
+                                                                    onClick={() => setSelectedPreviewData(i)}
+                                                                >
+                                                                    {`${(JSON.parse(d.dataConfig).data
+                                                                        .type as string).toLocaleLowerCase()} `}
+                                                                    <small>{i}</small>
+                                                                </button>
+                                                            ))}
+                                                        </div>
+                                                        <div className="editor-data-preview-tab-info">
+                                                            {getDataPreviewInfo(
+                                                                previewData.current[selectedPreviewData].dataConfig
+                                                            )}
+                                                        </div>
+                                                        <div className="editor-data-preview-table">
+                                                            <table>
+                                                                <tbody>
+                                                                    <tr>
+                                                                        {Object.keys(
+                                                                            previewData.current[selectedPreviewData]
+                                                                                .data[0]
+                                                                        ).map((field: string, i: number) => (
+                                                                            <th key={i}>{field}</th>
+                                                                        ))}
+                                                                    </tr>
+                                                                    {previewData.current[selectedPreviewData].data.map(
+                                                                        (row: Datum, i: number) => (
+                                                                            <tr key={i}>
+                                                                                {Object.keys(row).map(
+                                                                                    (field: string, j: number) => (
+                                                                                        <td key={j}>
+                                                                                            {row[field].toString()}
+                                                                                        </td>
+                                                                                    )
+                                                                                )}
+                                                                            </tr>
+                                                                        )
+                                                                    )}
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </>
+                                                ) : null}
+                                            </div>
+                                        </>
+                                        {/**
+                                         * TODO: This is only for showing a scroll view for the higlass view config editor
+                                         * Remove the below line and the nearest SplitPane after figuring out a better way
+                                         * of showing the scroll view.
+                                         */}
+                                        <></>
+                                    </SplitPane>
+                                </SplitPane>
+                            </ErrorBoundary>
+                        </SplitPane>
+                        <div className="description">
+                            {hideDescription ? (
+                                <div className="show-description-button" onClick={openDescription}>
+                                    <span>Show Description</span>
+                                </div>
+                            ) : (
+                                <div className="description-wrapper">
+                                    <header>
+                                        <button className="hide-description-button" onClick={closeDescription}>
+                                            Close
+                                        </button>
+                                    </header>
+                                    {description && <ReactMarkdown source={description} />}
+                                </div>
+                            )}
+                        </div>
                     </SplitPane>
                 </SplitPane>
             </div>

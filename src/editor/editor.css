@@ -337,6 +337,79 @@ td {
     font-weight: normal;
 }
 
+.description {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    overflow: auto;
+}
+
+.description-wrapper {
+    margin-left: 1px;
+    padding: 1em;
+    min-width: 20em;
+}
+
+.show-description-button {
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background-color: #eee;
+}
+
+.show-description-button:hover,
+.show-description-button:active,
+.show-description-button:focus {
+    background-color: #ddd;
+    cursor: pointer;
+}
+
+.show-description-button > span {
+    font-size: 9px;
+    color: rgb(89, 89, 89);
+    transform: rotate(90deg);
+    white-space: nowrap;
+    text-transform: uppercase;
+    -webkit-user-select: none; /* Chrome 49+ */
+    -moz-user-select: none; /* Firefox 43+ */
+    -ms-user-select: none; /* No support yet */
+    user-select: none; /* Likely future */
+}
+
+.show-description-button:hover > span,
+.show-description-button:active > span,
+.show-description-button:focus > span {
+    color: black;
+}
+
+.hide-description-button {
+    font-size: 9px;
+    color: rgb(89, 89, 89);
+    border: 1px solid #aaa;
+    border-radius: 3px;
+    background: white;
+    text-transform: uppercase;
+}
+
+.hide-description-button:hover,
+.hide-description-button:active,
+.hide-description-button:focus {
+    border: 1px solid #808080;
+    background: #eee;
+    color: black;
+}
+
 @keyframes rotation {
     from {
         transform: rotate(0deg);
