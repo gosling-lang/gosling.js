@@ -96,8 +96,8 @@ const fetchSpecFromGist = async gist => {
 
     if (!metadata) return Promise.reject(new Error('Gist not found'));
 
-    const dataFile = metadata.files.find(file => file.toLowerCase().startsWith('gosling'));
-    const textFile = metadata.files.find(file => file.toLowerCase().startsWith('readme'));
+    const dataFile = metadata.files.find(file => file.toLowerCase().startsWith('gosling.js'));
+    const textFile = metadata.files.find(file => file.toLowerCase().startsWith('readme.md'));
 
     if (!dataFile) return Promise.reject(new Error('Gist does not contain a Gosling spec.'));
 
