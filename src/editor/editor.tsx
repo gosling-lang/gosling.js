@@ -1,6 +1,7 @@
 import * as gosling from '../';
 import React, { useRef, useState, useEffect, useCallback } from 'react';
 import PubSub from 'pubsub-js';
+import fetchJsonp from 'fetch-jsonp';
 import EditorPanel from './editor-panel';
 import stringify from 'json-stringify-pretty-compact';
 import SplitPane from 'react-split-pane';
@@ -75,6 +76,46 @@ const getIconSVG = (d: ICON_INFO, w?: number, h?: number, f?: string) => (
     </svg>
 );
 
+const emptySpec = message =>
+    message
+        ? `{
+    // ${message}
+}`
+        : '{}';
+
+const fetchSpecFromGist = async gist => {
+    let metadata = null;
+    try {
+        // Don't ask me why but due to CORS we need to treat the JSON as JSONP
+        // which is not supported by the normal `fetch()` so we need `fetchJsonp()`
+        const response = await fetchJsonp(`https://gist.github.com/${gist}.json`);
+        metadata = await (response.ok ? response.json() : null);
+    } catch (error) {
+        return Promise.reject(new Error('Gist not found'));
+    }
+
+    if (!metadata) return Promise.reject(new Error('Gist not found'));
+
+    const dataFile = metadata.files.find(file => file.toLowerCase().startsWith('gosling'));
+    const textFile = metadata.files.find(file => file.toLowerCase().startsWith('readme'));
+
+    if (!dataFile) return Promise.reject(new Error('Gist does not contain a Gosling spec.'));
+
+    const whenCode = fetch(`https://gist.githubusercontent.com/${gist}/raw/${dataFile}`).then(response =>
+        response.status === 200 ? response.text() : null
+    );
+
+    const whenText = fetch(`https://gist.githubusercontent.com/${gist}/raw/${textFile}`).then(response =>
+        response.status === 200 ? response.text() : null
+    );
+
+    return Promise.all([whenCode, whenText]).then(([code, text]) => ({
+        code,
+        text,
+        title: metadata.description
+    }));
+};
+
 interface PreviewData {
     id: string;
     dataConfig: string;
@@ -88,20 +129,27 @@ function Editor(props: any) {
     // custom spec contained in the URL
     const urlParams = qs.parse(props.location.search, { ignoreQueryPrefix: true });
     const urlSpec = urlParams?.spec ? JSONUncrush(urlParams.spec as string) : null;
+    const urlGist = urlParams?.gist || null;
+
+    const defaultCode = urlGist ? emptySpec() : stringify(urlSpec ?? (examples[INIT_DEMO_INDEX].spec as GoslingSpec));
 
     const previewData = useRef<PreviewData[]>([]);
     const [refreshData, setRefreshData] = useState<boolean>(false);
 
     const [demo, setDemo] = useState(examples[INIT_DEMO_INDEX]);
     const [hg, setHg] = useState<HiGlassSpec>();
-    const [code, setCode] = useState(stringify(urlSpec ?? (examples[INIT_DEMO_INDEX].spec as GoslingSpec)));
+    const [code, setCode] = useState(defaultCode);
     const [goslingSpec, setGoslingSpec] = useState<gosling.GoslingSpec>();
     const [log, setLog] = useState<Validity>({ message: '', state: 'success' });
     const [autoRun, setAutoRun] = useState(true);
     const [selectedPreviewData, setSelectedPreviewData] = useState<number>(0);
+    const [gistTitle, setGistTitle] = useState(null);
 
     // whether to show HiGlass' viewConfig on the left-bottom
     const [showVC, setShowVC] = useState<boolean>(false);
+
+    // whether the code editor is read-only
+    const [readOnly, setReadOnly] = useState<boolean>(false);
 
     // whether to hide source code on the left
     const [isMaximizeVis, setIsMaximizeVis] = useState<boolean>((urlParams?.full as string) === 'true' || false);
@@ -120,7 +168,7 @@ function Editor(props: any) {
     // const hgRef = useRef<any>();
 
     /**
-     * Editor moode
+     * Editor mode
      */
     useEffect(() => {
         previewData.current = [];
@@ -128,6 +176,36 @@ function Editor(props: any) {
         setCode(urlSpec ?? stringify(demo.spec as GoslingSpec));
         setHg(undefined);
     }, [demo]);
+
+    useEffect(() => {
+        let active = true;
+
+        if (!urlGist) return undefined;
+
+        setCode('');
+        setReadOnly(true);
+
+        fetchSpecFromGist(urlGist)
+            .then(({ code, title }) => {
+                if (active) {
+                    setCode(code);
+                    setGistTitle(title);
+                    setReadOnly(false);
+                }
+            })
+            .catch(error => {
+                if (active) {
+                    setCode(emptySpec(`Error: ${error}`));
+                    setGistTitle('Error loading gist! See code for details.');
+                    setReadOnly(false);
+                }
+            });
+
+        return () => {
+            setReadOnly(false);
+            active = false;
+        };
+    }, [urlGist]);
 
     const runSpecUpdateVis = useCallback(
         (run?: boolean) => {
@@ -210,13 +288,18 @@ function Editor(props: any) {
             <div className="demo-navbar">
                 <span className="logo">{LogoSVG}</span>
                 Gosling.js Editor
-                {urlSpec ? <small> Displaying a custom spec contained in URL</small> : null}
+                {urlSpec && <small> Displaying a custom spec contained in URL</small>}
+                {gistTitle && (
+                    <span className="gist-title">
+                        : <em>{gistTitle}</em>
+                    </span>
+                )}
                 <select
                     onChange={e => {
                         setDemo(examples.find(d => d.name === e.target.value) as any);
                     }}
                     defaultValue={demo.name}
-                    hidden={urlSpec !== null}
+                    hidden={urlSpec !== null || urlGist !== null}
                 >
                     {examples.map(d => (
                         <option key={d.name} value={d.name}>
@@ -393,7 +476,7 @@ function Editor(props: any) {
                             <>
                                 <EditorPanel
                                     code={code}
-                                    readOnly={false}
+                                    readOnly={readOnly}
                                     openFindBox={isFindCode}
                                     fontZoomIn={isFontZoomIn}
                                     fontZoomOut={isFontZoomOut}

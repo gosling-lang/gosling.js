@@ -333,6 +333,10 @@ td {
     animation: rotation 10s infinite linear;
 }
 
+.gist-title {
+    font-weight: normal;
+}
+
 @keyframes rotation {
     from {
         transform: rotate(0deg);
