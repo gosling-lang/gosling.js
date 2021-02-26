@@ -89,16 +89,21 @@ yarn start
 ```
 Then you can open <http://localhost:8080/> in a web browser to play with the editor.
 
+#### Commitlint
+
 We use [commitlint](https://github.com/conventional-changelog/commitlint#what-is-commitlint) to maintain commit messages in a consistent form and auto-update a [CHANGE.LOG](https://github.com/gosling-lang/gosling.js/blob/master/CHANGELOG.md) based on the messages.
 
-The allowed pattern of commit messages:
+The allowed pattern of commit messages is:
 ```sh
 type(scope?): subject  #scope is optional; multiple scopes are supported (current delimiter options: "/", "\" and ",")
 ```
+where `type` can be either `build`, `ci`, `chore`, `docs`, `feat`, `fix`, `perf`, `refactor`, `revert`, `style`, or `test`.
 
-An example commit message:
+Example commit messages:
 ```sh
 git commit -m 'fix: correctly position views'
+git commit -m 'feat: add a data preview panel in editor'
+git commit -m 'docs: add details about commitlint in README.md'
 ```
 
 Find out more at [conventional-changelog/commitlint](https://github.com/conventional-changelog/commitlint#what-is-commitlint).
