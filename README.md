@@ -14,6 +14,8 @@
 
 <br/>
 
+> ⚠️ Please be aware that the grammar of Gosling.js may change to some extent before the first official release.
+
 ## Introduction
 
 Gosling is a declarative visualization grammar tailored for interactive genomic visualizations. 
