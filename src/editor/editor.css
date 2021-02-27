@@ -338,12 +338,28 @@ td {
 }
 
 .description {
+    z-index: 1;
     position: absolute;
-    top: 0;
+    top: 40px; /* Size of Site Header */
     right: 0;
     bottom: 0;
-    left: 0;
     overflow: auto;
+    height: calc(100% - 40px);
+    background: white;
+    border-left: 0.5px solid lightgray;
+}
+
+.description-resizer {
+    cursor: ew-resize;
+    left: 0;
+    height: 100%;
+    width: 3px;
+    background-color: white;
+    position: absolute;
+}
+
+.description-resizer:hover {
+    background-color: rgb(233, 233, 233);
 }
 
 .description-wrapper {
@@ -353,12 +369,7 @@ td {
 }
 
 .show-description-button {
-    position: absolute;
     z-index: 1;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -366,6 +377,8 @@ td {
     padding: 0;
     border: 0;
     background-color: #eee;
+    height: 100%;
+    width: 20px;
 }
 
 .show-description-button:hover,

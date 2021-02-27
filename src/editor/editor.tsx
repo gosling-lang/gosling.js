@@ -4,6 +4,9 @@ import ReactMarkdown from 'react-markdown';
 import PubSub from 'pubsub-js';
 import fetchJsonp from 'fetch-jsonp';
 import EditorPanel from './editor-panel';
+import { drag as d3Drag } from 'd3-drag';
+import { event as d3Event } from 'd3-selection';
+import { select as d3Select } from 'd3-selection';
 import stringify from 'json-stringify-pretty-compact';
 import SplitPane from 'react-split-pane';
 import ErrorBoundary from './errorBoundary';
@@ -78,15 +81,10 @@ const getIconSVG = (d: ICON_INFO, w?: number, h?: number, f?: string) => (
     </svg>
 );
 
-const emptySpec = message =>
-    message
-        ? `{
-    // ${message}
-}`
-        : '{}';
+const emptySpec = (message?: string) => (message !== undefined ? `{\n\t// ${message}\n}` : '{}');
 
-const fetchSpecFromGist = async gist => {
-    let metadata = null;
+const fetchSpecFromGist = async (gist: string) => {
+    let metadata: any = null;
     try {
         // Don't ask me why but due to CORS we need to treat the JSON as JSONP
         // which is not supported by the normal `fetch()` so we need `fetchJsonp()`
@@ -98,8 +96,8 @@ const fetchSpecFromGist = async gist => {
 
     if (!metadata) return Promise.reject(new Error('Gist not found'));
 
-    const dataFile = metadata.files.find(file => file.toLowerCase().startsWith('gosling.js'));
-    const textFile = metadata.files.find(file => file.toLowerCase().startsWith('readme.md'));
+    const dataFile = metadata.files.find((file: any) => file.toLowerCase().startsWith('gosling.js'));
+    const textFile = metadata.files.find((file: any) => file.toLowerCase().startsWith('readme.md'));
 
     if (!dataFile) return Promise.reject(new Error('Gist does not contain a Gosling spec.'));
 
@@ -131,7 +129,7 @@ function Editor(props: any) {
     // custom spec contained in the URL
     const urlParams = qs.parse(props.location.search, { ignoreQueryPrefix: true });
     const urlSpec = urlParams?.spec ? JSONUncrush(urlParams.spec as string) : null;
-    const urlGist = urlParams?.gist || null;
+    const urlGist = urlParams?.gist ?? null;
 
     const defaultCode = urlGist ? emptySpec() : stringify(urlSpec ?? (examples[INIT_DEMO_INDEX].spec as GoslingSpec));
 
@@ -145,12 +143,15 @@ function Editor(props: any) {
     const [log, setLog] = useState<Validity>({ message: '', state: 'success' });
     const [autoRun, setAutoRun] = useState(true);
     const [selectedPreviewData, setSelectedPreviewData] = useState<number>(0);
-    const [gistTitle, setGistTitle] = useState(null);
-    const [description, setDescription] = useState(null);
+    const [gistTitle, setGistTitle] = useState<string>();
+    const [description, setDescription] = useState<string | null>();
 
     // This parameter only matter when a markdown description was loaded from
     // a gist but the user wants to hide it
     const [hideDescription, setHideDescription] = useState(false);
+
+    // Determine the size of description panel
+    const [descPanelWidth, setDescPanelWidth] = useState(500);
 
     // whether to show HiGlass' viewConfig on the left-bottom
     const [showVC, setShowVC] = useState<boolean>(false);
@@ -159,7 +160,7 @@ function Editor(props: any) {
     const [readOnly, setReadOnly] = useState<boolean>(false);
 
     // whether to hide source code on the left
-    const [isMaximizeVis, setIsMaximizeVis] = useState<boolean>((urlParams?.full as string) === 'true' || false);
+    const [isHideCode, setIsHideCode] = useState<boolean>((urlParams?.full as string) === 'true' || false);
 
     // whether to show data preview on the right-bottom
     const [isShowDataPreview, setIsShowDataPreview] = useState<boolean>(false);
@@ -170,6 +171,12 @@ function Editor(props: any) {
     // whether to use larger or smaller font
     const [isFontZoomIn, setIsfontZoomIn] = useState<boolean | undefined>(undefined);
     const [isFontZoomOut, setIsfontZoomOut] = useState<boolean | undefined>(undefined);
+
+    // Resizer `div`
+    const descResizerRef = useRef<any>();
+
+    // Drag event for resizing description panel
+    const dragX = useRef<any>();
 
     // for using HiGlass JS API
     // const hgRef = useRef<any>();
@@ -187,14 +194,14 @@ function Editor(props: any) {
     useEffect(() => {
         let active = true;
 
-        if (!urlGist) return undefined;
+        if (!urlGist || typeof urlGist !== 'string') return undefined;
 
         setCode('');
         setReadOnly(true);
 
         fetchSpecFromGist(urlGist)
             .then(({ code, description, title }) => {
-                if (active) {
+                if (active && !!code) {
                     setCode(code);
                     setGistTitle(title);
                     setDescription(description);
@@ -203,8 +210,8 @@ function Editor(props: any) {
             })
             .catch(error => {
                 if (active) {
-                    setCode(emptySpec(`Error: ${error}`));
-                    setDescription(null);
+                    setCode(emptySpec(error));
+                    setDescription(undefined);
                     setGistTitle('Error loading gist! See code for details.');
                     setReadOnly(false);
                 }
@@ -291,6 +298,33 @@ function Editor(props: any) {
         return info.slice(0, info.length - 2);
     }
 
+    // Set up the d3-drag handler functions (started, ended, dragged).
+    const started = useCallback(() => {
+        dragX.current = d3Event.sourceEvent.clientX;
+    }, [dragX, descPanelWidth]);
+
+    const dragged = useCallback(() => {
+        const diff = d3Event.sourceEvent.clientX - dragX.current;
+        setDescPanelWidth(descPanelWidth - diff);
+    }, [dragX, descPanelWidth]);
+
+    const ended = useCallback(() => {
+        dragX.current = null;
+    }, [dragX, descPanelWidth]);
+
+    // Detect drag events for the resize element.
+    useEffect(() => {
+        const resizer = descResizerRef.current;
+
+        const drag = d3Drag().on('start', started).on('drag', dragged).on('end', ended);
+
+        d3Select(resizer).call(drag);
+
+        return () => {
+            d3Select(resizer).on('.drag', null);
+        };
+    }, [descResizerRef, started, dragged, ended]);
+
     function openDescription() {
         setHideDescription(false);
     }
@@ -298,8 +332,6 @@ function Editor(props: any) {
     function closeDescription() {
         setHideDescription(true);
     }
-
-    const descriptionPanelMinWidth = description ? DESCRIPTION_PANEL_MIN_WIDTH : 0;
 
     // console.log('editor.render()');
     return (
@@ -408,7 +440,7 @@ function Editor(props: any) {
                         <span
                             title="Show or hide a code panel"
                             className="side-panel-button"
-                            onClick={() => setIsMaximizeVis(!isMaximizeVis)}
+                            onClick={() => setIsHideCode(!isHideCode)}
                         >
                             {getIconSVG(ICONS.SPLIT, 23, 23)}
                             <br />
@@ -439,7 +471,7 @@ function Editor(props: any) {
                             onClick={() => {
                                 if (code.length <= LIMIT_CLIPBOARD_LEN) {
                                     // copy the unique url to clipboard using `<input/>`
-                                    const url = `https://gosling-lang.github.io/gosling.js/?full=${isMaximizeVis}&spec=${JSONCrush(
+                                    const url = `https://gosling-lang.github.io/gosling.js/?full=${isHideCode}&spec=${JSONCrush(
                                         code
                                     )}`;
                                     const element = document.getElementById('spec-url-exporter');
@@ -478,56 +510,142 @@ function Editor(props: any) {
                     </div>
                     <SplitPane
                         split="vertical"
-                        defaultSize="70%"
-                        size={
-                            isMaximizeVis || hideDescription || !description
-                                ? `calc(100% - ${descriptionPanelMinWidth}px)`
-                                : '70%'
-                        }
-                        minSize={0}
-                        maxSize={`calc(100% - ${descriptionPanelMinWidth}px)`}
-                        allowResize={description && !hideDescription}
+                        defaultSize={'calc(40%)'}
+                        size={isHideCode ? '0px' : 'calc(40%)'}
+                        minSize="0px"
                     >
                         <SplitPane
-                            split="vertical"
-                            defaultSize={'40%'}
-                            size={isMaximizeVis ? '0px' : '40%'}
-                            minSize="0px"
+                            split="horizontal"
+                            defaultSize={`calc(100% - ${BOTTOM_PANEL_HEADER_HEIGHT}px)`}
+                            maxSize={window.innerHeight - EDITOR_HEADER_HEIGHT - BOTTOM_PANEL_HEADER_HEIGHT}
+                            onChange={(size: number) => {
+                                const secondSize = window.innerHeight - EDITOR_HEADER_HEIGHT - size;
+                                if (secondSize > BOTTOM_PANEL_HEADER_HEIGHT && !showVC) {
+                                    setShowVC(true);
+                                } else if (secondSize <= BOTTOM_PANEL_HEADER_HEIGHT && showVC) {
+                                    // hide the viewConfig view when no enough space assigned
+                                    setShowVC(false);
+                                }
+                            }}
                         >
+                            {/* Gosling Editor */}
+                            <>
+                                <EditorPanel
+                                    code={code}
+                                    readOnly={readOnly}
+                                    openFindBox={isFindCode}
+                                    fontZoomIn={isFontZoomIn}
+                                    fontZoomOut={isFontZoomOut}
+                                    onChange={debounce(code => {
+                                        setCode(code);
+                                    }, 1500)}
+                                />
+                                <div className={`compile-message compile-message-${log.state}`}>{log.message}</div>
+                            </>
+                            {/* HiGlass View Config */}
+                            <SplitPane split="vertical" defaultSize="100%">
+                                <>
+                                    <div className="editor-header">Compiled HiGlass ViewConfig (Read Only)</div>
+                                    <div style={{ height: '100%', visibility: showVC ? 'visible' : 'hidden' }}>
+                                        <EditorPanel code={stringify(hg)} readOnly={true} />
+                                    </div>
+                                </>
+                                {/**
+                                 * TODO: This is only for showing a scroll view for the higlass view config editor
+                                 * Remove the below line and the nearest SplitPane after figuring out a better way
+                                 * of showing the scroll view.
+                                 */}
+                                <></>
+                            </SplitPane>
+                        </SplitPane>
+                        <ErrorBoundary>
                             <SplitPane
                                 split="horizontal"
                                 defaultSize={`calc(100% - ${BOTTOM_PANEL_HEADER_HEIGHT}px)`}
+                                size={isShowDataPreview ? '40%' : `calc(100% - ${BOTTOM_PANEL_HEADER_HEIGHT}px)`}
                                 maxSize={window.innerHeight - EDITOR_HEADER_HEIGHT - BOTTOM_PANEL_HEADER_HEIGHT}
-                                onChange={(size: number) => {
-                                    const secondSize = window.innerHeight - EDITOR_HEADER_HEIGHT - size;
-                                    if (secondSize > BOTTOM_PANEL_HEADER_HEIGHT && !showVC) {
-                                        setShowVC(true);
-                                    } else if (secondSize <= BOTTOM_PANEL_HEADER_HEIGHT && showVC) {
-                                        // hide the viewConfig view when no enough space assigned
-                                        setShowVC(false);
-                                    }
-                                }}
                             >
-                                {/* Gosling Editor */}
-                                <>
-                                    <EditorPanel
-                                        code={code}
-                                        readOnly={readOnly}
-                                        openFindBox={isFindCode}
-                                        fontZoomIn={isFontZoomIn}
-                                        fontZoomOut={isFontZoomOut}
-                                        onChange={debounce(code => {
-                                            setCode(code);
-                                        }, 1500)}
+                                <div className="preview-container">
+                                    <gosling.GoslingComponent
+                                        spec={goslingSpec}
+                                        compiled={(g, h) => {
+                                            setHg(h);
+                                        }}
                                     />
-                                    <div className={`compile-message compile-message-${log.state}`}>{log.message}</div>
-                                </>
-                                {/* HiGlass View Config */}
+                                </div>
                                 <SplitPane split="vertical" defaultSize="100%">
                                     <>
-                                        <div className="editor-header">Compiled HiGlass ViewConfig (Read Only)</div>
-                                        <div style={{ height: '100%', visibility: showVC ? 'visible' : 'hidden' }}>
-                                            <EditorPanel code={stringify(hg)} readOnly={true} />
+                                        <div
+                                            className="editor-header"
+                                            style={{ cursor: 'pointer' }}
+                                            onClick={() => setIsShowDataPreview(!isShowDataPreview)}
+                                        >
+                                            Data Preview (~100 Rows, Data Before Transformation)
+                                        </div>
+                                        <div className="editor-data-preview-panel">
+                                            <div
+                                                title="Refresh preview data"
+                                                className="data-preview-refresh-button"
+                                                onClick={() => setRefreshData(!refreshData)}
+                                            >
+                                                {getIconSVG(ICONS.REFRESH, 23, 23)}
+                                                <br />
+                                                {'REFRESH DATA'}
+                                            </div>
+                                            {previewData.current.length > selectedPreviewData &&
+                                            previewData.current[selectedPreviewData] &&
+                                            previewData.current[selectedPreviewData].data.length > 0 ? (
+                                                <>
+                                                    <div className="editor-data-preview-tab">
+                                                        {previewData.current.map((d: PreviewData, i: number) => (
+                                                            <button
+                                                                className={
+                                                                    i === selectedPreviewData
+                                                                        ? 'selected-tab'
+                                                                        : 'unselected-tab'
+                                                                }
+                                                                key={JSON.stringify(d)}
+                                                                onClick={() => setSelectedPreviewData(i)}
+                                                            >
+                                                                {`${(JSON.parse(d.dataConfig).data
+                                                                    .type as string).toLocaleLowerCase()} `}
+                                                                <small>{i}</small>
+                                                            </button>
+                                                        ))}
+                                                    </div>
+                                                    <div className="editor-data-preview-tab-info">
+                                                        {getDataPreviewInfo(
+                                                            previewData.current[selectedPreviewData].dataConfig
+                                                        )}
+                                                    </div>
+                                                    <div className="editor-data-preview-table">
+                                                        <table>
+                                                            <tbody>
+                                                                <tr>
+                                                                    {Object.keys(
+                                                                        previewData.current[selectedPreviewData].data[0]
+                                                                    ).map((field: string, i: number) => (
+                                                                        <th key={i}>{field}</th>
+                                                                    ))}
+                                                                </tr>
+                                                                {previewData.current[selectedPreviewData].data.map(
+                                                                    (row: Datum, i: number) => (
+                                                                        <tr key={i}>
+                                                                            {Object.keys(row).map(
+                                                                                (field: string, j: number) => (
+                                                                                    <td key={j}>
+                                                                                        {row[field].toString()}
+                                                                                    </td>
+                                                                                )
+                                                                            )}
+                                                                        </tr>
+                                                                    )
+                                                                )}
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </>
+                                            ) : null}
                                         </div>
                                     </>
                                     {/**
@@ -538,125 +656,32 @@ function Editor(props: any) {
                                     <></>
                                 </SplitPane>
                             </SplitPane>
-                            <ErrorBoundary>
-                                <SplitPane
-                                    split="horizontal"
-                                    defaultSize={`calc(100% - ${BOTTOM_PANEL_HEADER_HEIGHT}px)`}
-                                    size={isShowDataPreview ? '40%' : `calc(100% - ${BOTTOM_PANEL_HEADER_HEIGHT}px)`}
-                                    maxSize={window.innerHeight - EDITOR_HEADER_HEIGHT - BOTTOM_PANEL_HEADER_HEIGHT}
-                                >
-                                    <div className="preview-container">
-                                        <gosling.GoslingComponent
-                                            spec={goslingSpec}
-                                            compiled={(g, h) => {
-                                                setHg(h);
-                                            }}
-                                        />
-                                    </div>
-                                    <SplitPane split="vertical" defaultSize="100%">
-                                        <>
-                                            <div
-                                                className="editor-header"
-                                                style={{ cursor: 'pointer' }}
-                                                onClick={() => setIsShowDataPreview(!isShowDataPreview)}
-                                            >
-                                                Data Preview (~100 Rows, Data Before Transformation)
-                                            </div>
-                                            <div className="editor-data-preview-panel">
-                                                <div
-                                                    title="Refresh preview data"
-                                                    className="data-preview-refresh-button"
-                                                    onClick={() => setRefreshData(!refreshData)}
-                                                >
-                                                    {getIconSVG(ICONS.REFRESH, 23, 23)}
-                                                    <br />
-                                                    {'REFRESH DATA'}
-                                                </div>
-                                                {previewData.current.length > selectedPreviewData &&
-                                                previewData.current[selectedPreviewData] &&
-                                                previewData.current[selectedPreviewData].data.length > 0 ? (
-                                                    <>
-                                                        <div className="editor-data-preview-tab">
-                                                            {previewData.current.map((d: PreviewData, i: number) => (
-                                                                <button
-                                                                    className={
-                                                                        i === selectedPreviewData
-                                                                            ? 'selected-tab'
-                                                                            : 'unselected-tab'
-                                                                    }
-                                                                    key={JSON.stringify(d)}
-                                                                    onClick={() => setSelectedPreviewData(i)}
-                                                                >
-                                                                    {`${(JSON.parse(d.dataConfig).data
-                                                                        .type as string).toLocaleLowerCase()} `}
-                                                                    <small>{i}</small>
-                                                                </button>
-                                                            ))}
-                                                        </div>
-                                                        <div className="editor-data-preview-tab-info">
-                                                            {getDataPreviewInfo(
-                                                                previewData.current[selectedPreviewData].dataConfig
-                                                            )}
-                                                        </div>
-                                                        <div className="editor-data-preview-table">
-                                                            <table>
-                                                                <tbody>
-                                                                    <tr>
-                                                                        {Object.keys(
-                                                                            previewData.current[selectedPreviewData]
-                                                                                .data[0]
-                                                                        ).map((field: string, i: number) => (
-                                                                            <th key={i}>{field}</th>
-                                                                        ))}
-                                                                    </tr>
-                                                                    {previewData.current[selectedPreviewData].data.map(
-                                                                        (row: Datum, i: number) => (
-                                                                            <tr key={i}>
-                                                                                {Object.keys(row).map(
-                                                                                    (field: string, j: number) => (
-                                                                                        <td key={j}>
-                                                                                            {row[field].toString()}
-                                                                                        </td>
-                                                                                    )
-                                                                                )}
-                                                                            </tr>
-                                                                        )
-                                                                    )}
-                                                                </tbody>
-                                                            </table>
-                                                        </div>
-                                                    </>
-                                                ) : null}
-                                            </div>
-                                        </>
-                                        {/**
-                                         * TODO: This is only for showing a scroll view for the higlass view config editor
-                                         * Remove the below line and the nearest SplitPane after figuring out a better way
-                                         * of showing the scroll view.
-                                         */}
-                                        <></>
-                                    </SplitPane>
-                                </SplitPane>
-                            </ErrorBoundary>
-                        </SplitPane>
-                        <div className="description">
-                            {hideDescription ? (
-                                <div className="show-description-button" onClick={openDescription}>
-                                    <span>Show Description</span>
-                                </div>
-                            ) : (
-                                <div className="description-wrapper">
-                                    <header>
-                                        <button className="hide-description-button" onClick={closeDescription}>
-                                            Close
-                                        </button>
-                                    </header>
-                                    {description && <ReactMarkdown source={description} />}
-                                </div>
-                            )}
-                        </div>
+                        </ErrorBoundary>
                     </SplitPane>
                 </SplitPane>
+                {/* Description Panel from Gist */}
+                <div
+                    className="description"
+                    style={{ width: !description ? 0 : hideDescription ? DESCRIPTION_PANEL_MIN_WIDTH : descPanelWidth }}
+                >
+                    {hideDescription ? (
+                        <div className="show-description-button" onClick={openDescription}>
+                            <span>Show Description</span>
+                        </div>
+                    ) : (
+                        <>
+                            <div className="description-resizer" ref={descResizerRef} />
+                            <div className="description-wrapper">
+                                <header>
+                                    <button className="hide-description-button" onClick={closeDescription}>
+                                        Close
+                                    </button>
+                                </header>
+                                {description && <ReactMarkdown source={description} />}
+                            </div>
+                        </>
+                    )}
+                </div>
             </div>
         </>
     );

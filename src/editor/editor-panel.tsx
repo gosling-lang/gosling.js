@@ -2,6 +2,7 @@ import React, { useRef, useState, useEffect } from 'react'; // eslint-disable-li
 import MonacoEditor from 'react-monaco-editor';
 import * as Monaco from 'monaco-editor/esm/vs/editor/editor.api';
 import ReactResizeDetector from 'react-resize-detector';
+import { GoslingSchema } from '..';
 
 function EditorPanel(props: {
     code: string;
@@ -42,6 +43,9 @@ function EditorPanel(props: {
     function editorDidMount(monacoEditor: Monaco.editor.IStandaloneCodeEditor) {
         editor.current = monacoEditor;
         monacoEditor.focus();
+
+        // Workaround to make `actions.find` working with Monaco editor 0.22.0 (https://github.com/microsoft/monaco-editor/issues/2355)
+        monacoEditor.createContextKey('editorIsOpen', true);
     }
 
     function editorWillMount() {
@@ -65,12 +69,9 @@ function EditorPanel(props: {
             validate: true,
             schemas: [
                 {
-                    uri: 'GoslingSchema',
+                    uri: 'https://raw.githubusercontent.com/gosling-lang/gosling.js/master/schema/gosling.schema.json',
                     fileMatch: ['*'],
-                    schema: {
-                        $ref:
-                            'https://raw.githubusercontent.com/gosling-lang/gosling.js/master/schema/gosling.schema.json'
-                    }
+                    schema: GoslingSchema
                 }
             ]
         });
