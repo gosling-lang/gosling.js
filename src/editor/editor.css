@@ -349,13 +349,18 @@ td {
     border-left: 0.5px solid lightgray;
 }
 
+.description-resizer-disabled,
 .description-resizer {
     cursor: ew-resize;
     left: 0;
     height: 100%;
     width: 3px;
-    background-color: white;
+    background-color: transparent;
     position: absolute;
+}
+
+.description-resizer-disabled {
+    cursor: default;
 }
 
 .description-resizer:hover {

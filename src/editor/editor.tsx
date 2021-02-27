@@ -31,6 +31,7 @@ const LIMIT_CLIPBOARD_LEN = 4096;
 const EDITOR_HEADER_HEIGHT = 40;
 const BOTTOM_PANEL_HEADER_HEIGHT = 30;
 const DESCRIPTION_PANEL_MIN_WIDTH = 20;
+const DESCRIPTION_PANEL_DEFAULT_WIDTH = 500;
 
 const LogoSVG = (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width={20} height={20}>
@@ -151,7 +152,7 @@ function Editor(props: any) {
     const [hideDescription, setHideDescription] = useState(false);
 
     // Determine the size of description panel
-    const [descPanelWidth, setDescPanelWidth] = useState(500);
+    const [descPanelWidth, setDescPanelWidth] = useState(DESCRIPTION_PANEL_DEFAULT_WIDTH);
 
     // whether to show HiGlass' viewConfig on the left-bottom
     const [showVC, setShowVC] = useState<boolean>(false);
@@ -300,12 +301,17 @@ function Editor(props: any) {
 
     // Set up the d3-drag handler functions (started, ended, dragged).
     const started = useCallback(() => {
-        dragX.current = d3Event.sourceEvent.clientX;
+        if (!hideDescription) {
+            // Drag is enabled only when the description panel is visible
+            dragX.current = d3Event.sourceEvent.clientX;
+        }
     }, [dragX, descPanelWidth]);
 
     const dragged = useCallback(() => {
-        const diff = d3Event.sourceEvent.clientX - dragX.current;
-        setDescPanelWidth(descPanelWidth - diff);
+        if (dragX.current) {
+            const diff = d3Event.sourceEvent.clientX - dragX.current;
+            setDescPanelWidth(descPanelWidth - diff);
+        }
     }, [dragX, descPanelWidth]);
 
     const ended = useCallback(() => {
@@ -326,6 +332,7 @@ function Editor(props: any) {
     }, [descResizerRef, started, dragged, ended]);
 
     function openDescription() {
+        setDescPanelWidth(DESCRIPTION_PANEL_DEFAULT_WIDTH);
         setHideDescription(false);
     }
 
@@ -664,22 +671,23 @@ function Editor(props: any) {
                     className="description"
                     style={{ width: !description ? 0 : hideDescription ? DESCRIPTION_PANEL_MIN_WIDTH : descPanelWidth }}
                 >
+                    <div
+                        className={hideDescription ? 'description-resizer-disabled' : 'description-resizer'}
+                        ref={descResizerRef}
+                    />
                     {hideDescription ? (
                         <div className="show-description-button" onClick={openDescription}>
                             <span>Show Description</span>
                         </div>
                     ) : (
-                        <>
-                            <div className="description-resizer" ref={descResizerRef} />
-                            <div className="description-wrapper">
-                                <header>
-                                    <button className="hide-description-button" onClick={closeDescription}>
-                                        Close
-                                    </button>
-                                </header>
-                                {description && <ReactMarkdown source={description} />}
-                            </div>
-                        </>
+                        <div className="description-wrapper">
+                            <header>
+                                <button className="hide-description-button" onClick={closeDescription}>
+                                    Close
+                                </button>
+                            </header>
+                            {description && <ReactMarkdown source={description} />}
+                        </div>
                     )}
                 </div>
             </div>
