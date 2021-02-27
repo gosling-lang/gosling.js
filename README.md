@@ -14,6 +14,8 @@
 
 <br/>
 
+> ⚠️ Please be aware that the grammar of Gosling.js may change to some extent before the first official release.
+
 ## Introduction
 
 Gosling is a declarative visualization grammar tailored for interactive genomic visualizations. 
@@ -64,7 +66,7 @@ The Gosling's key features compared to existing visualization libraries and gram
 
 - **Encoding Scalability**: Gosling supports an advanced zooming technique, called [Semantic Zooming](https://infovis-wiki.net/wiki/Semantic_Zoom), which allows flexible and seamless visual exploration of large genome-mapped data. This allows you to dynamically switch between different visual encoding strategies that are appropriate for given zoom scale. <!--For example, you can show nucleotide bases of genomic sequence when zoomed in while show overall distribution of the bases using stacked bar chart when zoomed out.-->
 
-- **Expressiveness**: Since Gosling is designed based on the [taxonomy for genomic data visualization](https://onlinelibrary.wiley.com/doi/full/10.1111/cgf.13727), it supports genomic visualizations that cannot be easily created uisng general visaulization tools. For example, Gosling allows you to use a circular layout (i.e., displaying genomic coordinates in a polar system), in addition to a linear layout, and easily switch between the two.
+- **Expressiveness**: Since Gosling is designed based on the [taxonomy for genomic data visualization](https://onlinelibrary.wiley.com/doi/full/10.1111/cgf.13727), it supports genomic visualizations that cannot be easily created using general visualization tools. For example, Gosling allows you to use a circular layout (i.e., displaying genomic coordinates in a polar system), in addition to a linear layout, and easily switch between the two.
 
 - **Interactivity**: Gosling supports intuitive and effective user interactions, including zooming and panning and [brushing and linking](https://infovis-wiki.net/wiki/Linking_and_Brushing), that help you flexibly set up visualization reflecting your different visual analytics use cases.
 
@@ -79,7 +81,7 @@ The Gosling's key features compared to existing visualization libraries and gram
 npm install gosling.js
 ```
 
-## Run Editor Locally
+## Development
 
 The following commands install and run a Gosling.js editor locally in your computer (ensure you have installed [yarn](https://yarnpkg.com/getting-started/install)):
 
@@ -88,6 +90,25 @@ yarn
 yarn start
 ```
 Then you can open <http://localhost:8080/> in a web browser to play with the editor.
+
+#### Commitlint
+
+We use [commitlint](https://github.com/conventional-changelog/commitlint#what-is-commitlint) to maintain commit messages in a consistent form and auto-update a [CHANGE.LOG](https://github.com/gosling-lang/gosling.js/blob/master/CHANGELOG.md) based on the messages.
+
+The allowed pattern of commit messages is:
+```sh
+type(scope?): subject  #scope is optional; multiple scopes are supported (current delimiter options: "/", "\" and ",")
+```
+where `type` can be either `build`, `ci`, `chore`, `docs`, `feat`, `fix`, `perf`, `refactor`, `revert`, `style`, or `test`.
+
+Example commit messages:
+```sh
+git commit -m 'fix: correctly position views'
+git commit -m 'feat: add a data preview panel in editor'
+git commit -m 'docs: add details about commitlint in README.md'
+```
+
+Find out more at [conventional-changelog/commitlint](https://github.com/conventional-changelog/commitlint#what-is-commitlint).
 
 ## Contact
 - Open [Github Issues](https://github.com/gosling-lang/gosling.js/issues/) to ask questions or request features.
