@@ -1,7 +1,12 @@
 import * as gosling from '../';
 import React, { useRef, useState, useEffect, useCallback } from 'react';
+import ReactMarkdown from 'react-markdown';
 import PubSub from 'pubsub-js';
+import fetchJsonp from 'fetch-jsonp';
 import EditorPanel from './editor-panel';
+import { drag as d3Drag } from 'd3-drag';
+import { event as d3Event } from 'd3-selection';
+import { select as d3Select } from 'd3-selection';
 import stringify from 'json-stringify-pretty-compact';
 import SplitPane from 'react-split-pane';
 import ErrorBoundary from './errorBoundary';
@@ -25,6 +30,8 @@ const LIMIT_CLIPBOARD_LEN = 4096;
 // ! these should be updated upon change in css files
 const EDITOR_HEADER_HEIGHT = 40;
 const BOTTOM_PANEL_HEADER_HEIGHT = 30;
+const DESCRIPTION_PANEL_MIN_WIDTH = 20;
+const DESCRIPTION_PANEL_DEFAULT_WIDTH = 500;
 
 const LogoSVG = (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width={20} height={20}>
@@ -75,6 +82,41 @@ const getIconSVG = (d: ICON_INFO, w?: number, h?: number, f?: string) => (
     </svg>
 );
 
+const emptySpec = (message?: string) => (message !== undefined ? `{\n\t// ${message}\n}` : '{}');
+
+const fetchSpecFromGist = async (gist: string) => {
+    let metadata: any = null;
+    try {
+        // Don't ask me why but due to CORS we need to treat the JSON as JSONP
+        // which is not supported by the normal `fetch()` so we need `fetchJsonp()`
+        const response = await fetchJsonp(`https://gist.github.com/${gist}.json`);
+        metadata = await (response.ok ? response.json() : null);
+    } catch (error) {
+        return Promise.reject(new Error('Gist not found'));
+    }
+
+    if (!metadata) return Promise.reject(new Error('Gist not found'));
+
+    const dataFile = metadata.files.find((file: any) => file.toLowerCase().startsWith('gosling.js'));
+    const textFile = metadata.files.find((file: any) => file.toLowerCase().startsWith('readme.md'));
+
+    if (!dataFile) return Promise.reject(new Error('Gist does not contain a Gosling spec.'));
+
+    const whenCode = fetch(`https://gist.githubusercontent.com/${gist}/raw/${dataFile}`).then(response =>
+        response.status === 200 ? response.text() : null
+    );
+
+    const whenText = fetch(`https://gist.githubusercontent.com/${gist}/raw/${textFile}`).then(response =>
+        response.status === 200 ? response.text() : null
+    );
+
+    return Promise.all([whenCode, whenText]).then(([code, description]) => ({
+        code,
+        description,
+        title: metadata.description
+    }));
+};
+
 interface PreviewData {
     id: string;
     dataConfig: string;
@@ -88,23 +130,38 @@ function Editor(props: any) {
     // custom spec contained in the URL
     const urlParams = qs.parse(props.location.search, { ignoreQueryPrefix: true });
     const urlSpec = urlParams?.spec ? JSONUncrush(urlParams.spec as string) : null;
+    const urlGist = urlParams?.gist ?? null;
+
+    const defaultCode = urlGist ? emptySpec() : stringify(urlSpec ?? (examples[INIT_DEMO_INDEX].spec as GoslingSpec));
 
     const previewData = useRef<PreviewData[]>([]);
     const [refreshData, setRefreshData] = useState<boolean>(false);
 
     const [demo, setDemo] = useState(examples[INIT_DEMO_INDEX]);
     const [hg, setHg] = useState<HiGlassSpec>();
-    const [code, setCode] = useState(stringify(urlSpec ?? (examples[INIT_DEMO_INDEX].spec as GoslingSpec)));
+    const [code, setCode] = useState(defaultCode);
     const [goslingSpec, setGoslingSpec] = useState<gosling.GoslingSpec>();
     const [log, setLog] = useState<Validity>({ message: '', state: 'success' });
     const [autoRun, setAutoRun] = useState(true);
     const [selectedPreviewData, setSelectedPreviewData] = useState<number>(0);
+    const [gistTitle, setGistTitle] = useState<string>();
+    const [description, setDescription] = useState<string | null>();
+
+    // This parameter only matter when a markdown description was loaded from
+    // a gist but the user wants to hide it
+    const [hideDescription, setHideDescription] = useState(false);
+
+    // Determine the size of description panel
+    const [descPanelWidth, setDescPanelWidth] = useState(DESCRIPTION_PANEL_DEFAULT_WIDTH);
 
     // whether to show HiGlass' viewConfig on the left-bottom
     const [showVC, setShowVC] = useState<boolean>(false);
 
+    // whether the code editor is read-only
+    const [readOnly, setReadOnly] = useState<boolean>(false);
+
     // whether to hide source code on the left
-    const [isMaximizeVis, setIsMaximizeVis] = useState<boolean>((urlParams?.full as string) === 'true' || false);
+    const [isHideCode, setIsHideCode] = useState<boolean>((urlParams?.full as string) === 'true' || false);
 
     // whether to show data preview on the right-bottom
     const [isShowDataPreview, setIsShowDataPreview] = useState<boolean>(false);
@@ -116,11 +173,17 @@ function Editor(props: any) {
     const [isFontZoomIn, setIsfontZoomIn] = useState<boolean | undefined>(undefined);
     const [isFontZoomOut, setIsfontZoomOut] = useState<boolean | undefined>(undefined);
 
+    // Resizer `div`
+    const descResizerRef = useRef<any>();
+
+    // Drag event for resizing description panel
+    const dragX = useRef<any>();
+
     // for using HiGlass JS API
     // const hgRef = useRef<any>();
 
     /**
-     * Editor moode
+     * Editor mode
      */
     useEffect(() => {
         previewData.current = [];
@@ -128,6 +191,38 @@ function Editor(props: any) {
         setCode(urlSpec ?? stringify(demo.spec as GoslingSpec));
         setHg(undefined);
     }, [demo]);
+
+    useEffect(() => {
+        let active = true;
+
+        if (!urlGist || typeof urlGist !== 'string') return undefined;
+
+        setCode('');
+        setReadOnly(true);
+
+        fetchSpecFromGist(urlGist)
+            .then(({ code, description, title }) => {
+                if (active && !!code) {
+                    setCode(code);
+                    setGistTitle(title);
+                    setDescription(description);
+                    setReadOnly(false);
+                }
+            })
+            .catch(error => {
+                if (active) {
+                    setCode(emptySpec(error));
+                    setDescription(undefined);
+                    setGistTitle('Error loading gist! See code for details.');
+                    setReadOnly(false);
+                }
+            });
+
+        return () => {
+            setReadOnly(false);
+            active = false;
+        };
+    }, [urlGist]);
 
     const runSpecUpdateVis = useCallback(
         (run?: boolean) => {
@@ -204,19 +299,65 @@ function Editor(props: any) {
         return info.slice(0, info.length - 2);
     }
 
+    // Set up the d3-drag handler functions (started, ended, dragged).
+    const started = useCallback(() => {
+        if (!hideDescription) {
+            // Drag is enabled only when the description panel is visible
+            dragX.current = d3Event.sourceEvent.clientX;
+        }
+    }, [dragX, descPanelWidth]);
+
+    const dragged = useCallback(() => {
+        if (dragX.current) {
+            const diff = d3Event.sourceEvent.clientX - dragX.current;
+            setDescPanelWidth(descPanelWidth - diff);
+        }
+    }, [dragX, descPanelWidth]);
+
+    const ended = useCallback(() => {
+        dragX.current = null;
+    }, [dragX, descPanelWidth]);
+
+    // Detect drag events for the resize element.
+    useEffect(() => {
+        const resizer = descResizerRef.current;
+
+        const drag = d3Drag().on('start', started).on('drag', dragged).on('end', ended);
+
+        d3Select(resizer).call(drag);
+
+        return () => {
+            d3Select(resizer).on('.drag', null);
+        };
+    }, [descResizerRef, started, dragged, ended]);
+
+    function openDescription() {
+        setDescPanelWidth(DESCRIPTION_PANEL_DEFAULT_WIDTH);
+        setHideDescription(false);
+    }
+
+    function closeDescription() {
+        setHideDescription(true);
+    }
+
     // console.log('editor.render()');
     return (
         <>
             <div className="demo-navbar">
                 <span className="logo">{LogoSVG}</span>
                 Gosling.js Editor
-                {urlSpec ? <small> Displaying a custom spec contained in URL</small> : null}
+                {urlSpec && <small> Displaying a custom spec contained in URL</small>}
+                {gistTitle && (
+                    <span className="gist-title">
+                        : <em>{gistTitle}</em>
+                    </span>
+                )}
                 <select
                     onChange={e => {
                         setDemo(examples.find(d => d.name === e.target.value) as any);
                     }}
                     defaultValue={demo.name}
-                    hidden={urlSpec !== null}
+                    hidden={urlSpec !== null || urlGist !== null}
                 >
                     {examples.map(d => (
                         <option key={d.name} value={d.name}>
@@ -306,7 +447,7 @@ function Editor(props: any) {
                         <span
                             title="Show or hide a code panel"
                             className="side-panel-button"
-                            onClick={() => setIsMaximizeVis(!isMaximizeVis)}
+                            onClick={() => setIsHideCode(!isHideCode)}
                         >
                             {getIconSVG(ICONS.SPLIT, 23, 23)}
                             <br />
@@ -337,7 +478,7 @@ function Editor(props: any) {
                             onClick={() => {
                                 if (code.length <= LIMIT_CLIPBOARD_LEN) {
                                     // copy the unique url to clipboard using `<input/>`
-                                    const url = `https://gosling-lang.github.io/gosling.js/?full=${isMaximizeVis}&spec=${JSONCrush(
+                                    const url = `https://gosling-lang.github.io/gosling.js/?full=${isHideCode}&spec=${JSONCrush(
                                         code
                                     )}`;
                                     const element = document.getElementById('spec-url-exporter');
@@ -374,7 +515,12 @@ function Editor(props: any) {
                             DOCS
                         </span>
                     </div>
-                    <SplitPane split="vertical" defaultSize={'40%'} size={isMaximizeVis ? '0px' : '40%'} minSize="0px">
+                    <SplitPane
+                        split="vertical"
+                        defaultSize={'calc(40%)'}
+                        size={isHideCode ? '0px' : 'calc(40%)'}
+                        minSize="0px"
+                    >
                         <SplitPane
                             split="horizontal"
                             defaultSize={`calc(100% - ${BOTTOM_PANEL_HEADER_HEIGHT}px)`}
@@ -393,7 +539,7 @@ function Editor(props: any) {
                             <>
                                 <EditorPanel
                                     code={code}
-                                    readOnly={false}
+                                    readOnly={readOnly}
                                     openFindBox={isFindCode}
                                     fontZoomIn={isFontZoomIn}
                                     fontZoomOut={isFontZoomOut}
@@ -520,6 +666,30 @@ function Editor(props: any) {
                         </ErrorBoundary>
                     </SplitPane>
                 </SplitPane>
+                {/* Description Panel from Gist */}
+                <div
+                    className="description"
+                    style={{ width: !description ? 0 : hideDescription ? DESCRIPTION_PANEL_MIN_WIDTH : descPanelWidth }}
+                >
+                    <div
+                        className={hideDescription ? 'description-resizer-disabled' : 'description-resizer'}
+                        ref={descResizerRef}
+                    />
+                    {hideDescription ? (
+                        <div className="show-description-button" onClick={openDescription}>
+                            <span>Show Description</span>
+                        </div>
+                    ) : (
+                        <div className="description-wrapper">
+                            <header>
+                                <button className="hide-description-button" onClick={closeDescription}>
+                                    Close
+                                </button>
+                            </header>
+                            {description && <ReactMarkdown source={description} />}
+                        </div>
+                    )}
+                </div>
             </div>
         </>
     );

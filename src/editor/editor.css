@@ -333,6 +333,101 @@ td {
     animation: rotation 10s infinite linear;
 }
 
+.gist-title {
+    font-weight: normal;
+}
+
+.description {
+    z-index: 1;
+    position: absolute;
+    top: 40px; /* Size of Site Header */
+    right: 0;
+    bottom: 0;
+    overflow: auto;
+    height: calc(100% - 40px);
+    background: white;
+    border-left: 0.5px solid lightgray;
+}
+
+.description-resizer-disabled,
+.description-resizer {
+    cursor: ew-resize;
+    left: 0;
+    height: 100%;
+    width: 3px;
+    background-color: transparent;
+    position: absolute;
+}
+
+.description-resizer-disabled {
+    cursor: default;
+}
+
+.description-resizer:hover {
+    background-color: rgb(233, 233, 233);
+}
+
+.description-wrapper {
+    margin-left: 1px;
+    padding: 1em;
+    min-width: 20em;
+}
+
+.show-description-button {
+    z-index: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background-color: #eee;
+    height: 100%;
+    width: 20px;
+}
+
+.show-description-button:hover,
+.show-description-button:active,
+.show-description-button:focus {
+    background-color: #ddd;
+    cursor: pointer;
+}
+
+.show-description-button > span {
+    font-size: 9px;
+    color: rgb(89, 89, 89);
+    transform: rotate(90deg);
+    white-space: nowrap;
+    text-transform: uppercase;
+    -webkit-user-select: none; /* Chrome 49+ */
+    -moz-user-select: none; /* Firefox 43+ */
+    -ms-user-select: none; /* No support yet */
+    user-select: none; /* Likely future */
+}
+
+.show-description-button:hover > span,
+.show-description-button:active > span,
+.show-description-button:focus > span {
+    color: black;
+}
+
+.hide-description-button {
+    font-size: 9px;
+    color: rgb(89, 89, 89);
+    border: 1px solid #aaa;
+    border-radius: 3px;
+    background: white;
+    text-transform: uppercase;
+}
+
+.hide-description-button:hover,
+.hide-description-button:active,
+.hide-description-button:focus {
+    border: 1px solid #808080;
+    background: #eee;
+    color: black;
+}
+
 @keyframes rotation {
     from {
         transform: rotate(0deg);

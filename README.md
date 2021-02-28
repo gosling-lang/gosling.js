@@ -83,13 +83,15 @@ npm install gosling.js
 
 ## Development
 
-The following commands install and run a Gosling.js editor locally in your computer (ensure you have installed [yarn](https://yarnpkg.com/getting-started/install)):
+We exclusively support `yarn` (and do not support `npm`) to manage dependencies in stable and consistent ways, so ensure to install and use [Yarn](https://yarnpkg.com/getting-started/install).
+
+After cloning this repository, run the following commands to install all dependencies and run the Gosling.js editor locally. 
 
 ```sh
 yarn
 yarn start
 ```
-Then you can open <http://localhost:8080/> in a web browser to play with the editor.
+Then you can open <http://localhost:8080/> in a web browser to play with the editor:
 
 #### Commitlint
 
