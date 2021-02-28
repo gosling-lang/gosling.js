@@ -392,14 +392,16 @@ function Editor(props: any) {
                     {'‌‌ ‌‌ ‌‌ ‌‌ ‌‌ ‌‌ ‌‌ ‌‌ '}
                 </span>
                 <input type="hidden" id="spec-url-exporter" />
-                <span
-                    title="Open Textual Description"
-                    className="editor-nav-button gosling-color"
-                    style={{ position: 'absolute', right: 0 }}
-                    onClick={openDescription}
-                >
-                    {getIconSVG(ICONS.CHAT, 23, 23)}
-                </span>
+                {description ? (
+                    <span
+                        title="Open Textual Description"
+                        className="editor-nav-button gosling-color"
+                        style={{ position: 'absolute', right: 0 }}
+                        onClick={openDescription}
+                    >
+                        {getIconSVG(ICONS.CHAT, 23, 23)}
+                    </span>
+                ) : null}
             </div>
             {/* ------------------------ Main View ------------------------ */}
             <div className="editor">
