@@ -17,6 +17,10 @@
     margin-right: 5px;
 }
 
+.gosling-color {
+    color: #e18343 !important;
+}
+
 .editor-nav-button {
     display: inline-block;
     vertical-align: middle;
@@ -26,7 +30,6 @@
     padding-right: 8px;
     margin-left: 10px;
     cursor: pointer;
-    background: white;
     color: black;
 }
 

@@ -30,7 +30,6 @@ const LIMIT_CLIPBOARD_LEN = 4096;
 // ! these should be updated upon change in css files
 const EDITOR_HEADER_HEIGHT = 40;
 const BOTTOM_PANEL_HEADER_HEIGHT = 30;
-const DESCRIPTION_PANEL_MIN_WIDTH = 20;
 const DESCRIPTION_PANEL_DEFAULT_WIDTH = 500;
 
 const LogoSVG = (
@@ -393,6 +392,14 @@ function Editor(props: any) {
                     {'‌‌ ‌‌ ‌‌ ‌‌ ‌‌ ‌‌ ‌‌ ‌‌ '}
                 </span>
                 <input type="hidden" id="spec-url-exporter" />
+                <span
+                    title="Open Textual Description"
+                    className="editor-nav-button gosling-color"
+                    style={{ position: 'absolute', right: 0 }}
+                    onClick={openDescription}
+                >
+                    {getIconSVG(ICONS.CHAT, 23, 23)}
+                </span>
             </div>
             {/* ------------------------ Main View ------------------------ */}
             <div className="editor">
@@ -671,31 +678,25 @@ function Editor(props: any) {
                         </ErrorBoundary>
                     </SplitPane>
                 </SplitPane>
-                {/* Description Panel from Gist */}
+                {/* Description Panel */}
                 <div
-                    className={`description ${hideDescription ? '' : 'description-shadow'} ${
+                    className={`description ${hideDescription ? '' : 'description-shadow '}${
                         isDescResizing ? '' : 'description-transition'
                     }`}
-                    style={{ width: !description ? 0 : hideDescription ? DESCRIPTION_PANEL_MIN_WIDTH : descPanelWidth }}
+                    style={{ width: !description || hideDescription ? 0 : descPanelWidth }}
                 >
                     <div
                         className={hideDescription ? 'description-resizer-disabled' : 'description-resizer'}
                         ref={descResizerRef}
                     />
-                    {hideDescription ? (
-                        <div className="show-description-button" onClick={openDescription}>
-                            <span>Show Description</span>
-                        </div>
-                    ) : (
-                        <div className="description-wrapper">
-                            <header>
-                                <button className="hide-description-button" onClick={closeDescription}>
-                                    Close
-                                </button>
-                            </header>
-                            {description && <ReactMarkdown source={description} />}
-                        </div>
-                    )}
+                    <div className="description-wrapper">
+                        <header>
+                            <button className="hide-description-button" onClick={closeDescription}>
+                                Close
+                            </button>
+                        </header>
+                        {description && <ReactMarkdown source={description} />}
+                    </div>
                 </div>
             </div>
         </>
