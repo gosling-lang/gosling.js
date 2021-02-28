@@ -399,7 +399,7 @@ function Editor(props: any) {
                         style={{ position: 'absolute', right: 0 }}
                         onClick={openDescription}
                     >
-                        {getIconSVG(ICONS.CHAT, 23, 23)}
+                        {getIconSVG(ICONS.INFO_CIRCLE, 23, 23)}
                     </span>
                 ) : null}
             </div>
