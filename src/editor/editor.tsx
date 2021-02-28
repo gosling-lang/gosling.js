@@ -173,6 +173,9 @@ function Editor(props: any) {
     const [isFontZoomIn, setIsfontZoomIn] = useState<boolean | undefined>(undefined);
     const [isFontZoomOut, setIsfontZoomOut] = useState<boolean | undefined>(undefined);
 
+    // whether description panel is being dragged
+    const [isDescResizing, setIsDescResizing] = useState(false);
+
     // Resizer `div`
     const descResizerRef = useRef<any>();
 
@@ -304,6 +307,7 @@ function Editor(props: any) {
         if (!hideDescription) {
             // Drag is enabled only when the description panel is visible
             dragX.current = d3Event.sourceEvent.clientX;
+            setIsDescResizing(true);
         }
     }, [dragX, descPanelWidth]);
 
@@ -316,6 +320,7 @@ function Editor(props: any) {
 
     const ended = useCallback(() => {
         dragX.current = null;
+        setIsDescResizing(false);
     }, [dragX, descPanelWidth]);
 
     // Detect drag events for the resize element.
@@ -668,7 +673,9 @@ function Editor(props: any) {
                 </SplitPane>
                 {/* Description Panel from Gist */}
                 <div
-                    className="description"
+                    className={`description ${hideDescription ? '' : 'description-shadow'} ${
+                        isDescResizing ? '' : 'description-transition'
+                    }`}
                     style={{ width: !description ? 0 : hideDescription ? DESCRIPTION_PANEL_MIN_WIDTH : descPanelWidth }}
                 >
                     <div
