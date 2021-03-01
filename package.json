@@ -46,7 +46,7 @@
         "d3-shape": "^2.0.0",
         "file-loader": "^6.0.0",
         "generic-filehandle": "^2.0.3",
-        "higlass": "^1.11.6",
+        "higlass": "^1.11.7",
         "higlass-register": "^0.3.0",
         "higlass-text": "^0.1.1",
         "json-stringify-pretty-compact": "^2.0.0",
