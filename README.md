@@ -1,4 +1,4 @@
-<!-- <p align="center"><img src="https://raw.githubusercontent.com/wiki/gosling-lang/gosling.js/images/logo.png" width="450" /></p> -->
+<!-- <p align="center"><img src="https://raw.githubusercontent.com/wiki/gosling-lang/gosling.js/master/images/logo.png" width="450" /></p> -->
 
 <div align="center">
 <h1>Gosling.js</h1>
@@ -10,7 +10,7 @@
 
 </div>
 
-<p align="center"><img src="https://raw.githubusercontent.com/gosling-lang/gosling.js/img/cover.png" width="700"/></p>
+<p align="center"><img src="https://raw.githubusercontent.com/gosling-lang/gosling.js/master/img/cover.png" width="700"/></p>
 
 <br/>
 
@@ -50,7 +50,7 @@ Using Gosling.js, users can easily create interactive and scalable genomic visua
 
 </td>
 <td align="center">
-<img src="https://raw.githubusercontent.com/gosling-lang/gosling.js/img/demo.gif"  width="400"/>
+<img src="https://raw.githubusercontent.com/gosling-lang/gosling.js/master/img/demo.gif"  width="400"/>
 
 <a href="https://gosling.js.org/">Try Online</a>
 </td>
@@ -74,6 +74,7 @@ The Gosling's key features compared to existing visualization libraries and gram
 - [Gosling.js Editor and Online Examples](https://gosling.js.org/)
 - [Documentation](https://github.com/gosling-lang/gosling-docs)
 - [Getting Started](https://github.com/gosling-lang/gosling-docs/blob/master/Getting-Started.md)
+- [Tutorial](https://github.com/gosling-lang/gosling-docs/blob/master/tutorials/Tutorial.md)
 - [Roadmap](https://github.com/gosling-lang/gosling.js/projects/1)
 
 ## Installation
