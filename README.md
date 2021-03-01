@@ -10,7 +10,7 @@
 
 </div>
 
-<p align="center"><img src="https://raw.githubusercontent.com/wiki/gosling-lang/gosling.js/images/cover.png" width="700"/></p>
+<p align="center"><img src="https://raw.githubusercontent.com/gosling-lang/gosling.js/img/cover.png" width="700"/></p>
 
 <br/>
 
@@ -50,7 +50,7 @@ Using Gosling.js, users can easily create interactive and scalable genomic visua
 
 </td>
 <td align="center">
-<img src="https://raw.githubusercontent.com/wiki/gosling-lang/gosling.js/images/demo.gif"  width="400"/>
+<img src="https://raw.githubusercontent.com/gosling-lang/gosling.js/img/demo.gif"  width="400"/>
 
 <a href="https://gosling.js.org/">Try Online</a>
 </td>
@@ -72,8 +72,8 @@ The Gosling's key features compared to existing visualization libraries and gram
 
 ## Learn More About Gosling
 - [Gosling.js Editor and Online Examples](https://gosling.js.org/)
-- [Documentation](https://github.com/gosling-lang/gosling.js/wiki/Documentation)
-- [Getting Started](https://github.com/gosling-lang/gosling.js/wiki/Getting-Started)
+- [Documentation](https://github.com/gosling-lang/gosling-docs)
+- [Getting Started](https://github.com/gosling-lang/gosling-docs/blob/master/Getting-Started.md)
 - [Roadmap](https://github.com/gosling-lang/gosling.js/projects/1)
 
 ## Installation
