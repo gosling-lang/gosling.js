@@ -149,7 +149,7 @@ export const EX_SPEC_GIVE: GoslingSpec = {
                             }
                         },
                         {
-                            mark: 'triangle-r',
+                            mark: 'triangleRight',
                             dataTransform: {
                                 filter: [
                                     { field: 'Stain', oneOf: ['acen'] },
@@ -158,7 +158,7 @@ export const EX_SPEC_GIVE: GoslingSpec = {
                             }
                         },
                         {
-                            mark: 'triangle-l',
+                            mark: 'triangleLeft',
                             dataTransform: {
                                 filter: [
                                     { field: 'Stain', oneOf: ['acen'] },
@@ -259,7 +259,7 @@ export const EX_SPEC_GIVE: GoslingSpec = {
                             }
                         },
                         {
-                            mark: 'triangle-r',
+                            mark: 'triangleRight',
                             dataTransform: {
                                 filter: [
                                     { field: 'Stain', oneOf: ['acen'] },
@@ -268,7 +268,7 @@ export const EX_SPEC_GIVE: GoslingSpec = {
                             }
                         },
                         {
-                            mark: 'triangle-l',
+                            mark: 'triangleLeft',
                             dataTransform: {
                                 filter: [
                                     { field: 'Stain', oneOf: ['acen'] },

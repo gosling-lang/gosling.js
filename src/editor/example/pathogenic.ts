@@ -350,7 +350,7 @@ export const EX_SPEC_PATHOGENIC: GoslingSpec = {
         //                     { field: 'strand', oneOf: ['+'] }
         //                 ]
         //             },
-        //             mark: 'triangle-r',
+        //             mark: 'triangleRight',
         //             x: {
         //                 field: 'end',
         //                 type: 'genomic'
@@ -364,7 +364,7 @@ export const EX_SPEC_PATHOGENIC: GoslingSpec = {
         //                     { field: 'strand', oneOf: ['-'] }
         //                 ]
         //             },
-        //             mark: 'triangle-l',
+        //             mark: 'triangleLeft',
         //             x: {
         //                 field: 'start',
         //                 type: 'genomic'

@@ -1153,9 +1153,9 @@
         "text",
         "link",
         "rule",
-        "triangle-l",
-        "triangle-r",
-        "triangle-d",
+        "triangleLeft",
+        "triangleRight",
+        "triangleBottom",
         "brush",
         "header"
       ],
@@ -2178,8 +2178,8 @@
             },
             "type": {
               "enum": [
-                "triangle-l",
-                "triangle-r"
+                "triangleLeft",
+                "triangleRight"
               ],
               "type": "string"
             }

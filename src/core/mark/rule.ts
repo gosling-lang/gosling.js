@@ -134,7 +134,7 @@ export function drawRule(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackMo
 
                     rowGraphics.beginFill(colorToHex(color), opacity);
                     rowGraphics.drawPolygon(
-                        pType === 'triangle-l' ? [x1, y0, x0, ym, x1, y1, x1, y0] : [x0, y0, x1, ym, x0, y1, x0, y0]
+                        pType === 'triangleLeft' ? [x1, y0, x0, ym, x1, y1, x1, y0] : [x0, y0, x1, ym, x0, y1, x0, y0]
                     );
                     rowGraphics.endFill();
                     curPos += pSize + PATTERN_GAP_SIZE;

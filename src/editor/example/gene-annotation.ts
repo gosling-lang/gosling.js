@@ -31,7 +31,7 @@ const HiGlass: Track = {
                     { field: 'strand', oneOf: ['+'] }
                 ]
             },
-            mark: 'triangle-r',
+            mark: 'triangleRight',
             x: {
                 field: 'end',
                 type: 'genomic',
@@ -65,7 +65,7 @@ const HiGlass: Track = {
                     { field: 'strand', oneOf: ['-'] }
                 ]
             },
-            mark: 'triangle-l',
+            mark: 'triangleLeft',
             x: {
                 field: 'start',
                 type: 'genomic'
@@ -104,7 +104,7 @@ const HiGlass: Track = {
                 type: 'genomic'
             },
             style: {
-                linePattern: { type: 'triangle-r', size: 5 }
+                linePattern: { type: 'triangleRight', size: 5 }
             }
         },
         {
@@ -125,7 +125,7 @@ const HiGlass: Track = {
                 type: 'genomic'
             },
             style: {
-                linePattern: { type: 'triangle-l', size: 5 }
+                linePattern: { type: 'triangleLeft', size: 5 }
             }
         }
     ],
@@ -201,7 +201,7 @@ const IGV: Track = {
             color: { value: 'white' },
             opacity: { value: 0.6 },
             style: {
-                linePattern: { type: 'triangle-l', size: 10 }
+                linePattern: { type: 'triangleLeft', size: 10 }
             }
         },
         {
@@ -225,7 +225,7 @@ const IGV: Track = {
             color: { value: 'white' },
             opacity: { value: 0.6 },
             style: {
-                linePattern: { type: 'triangle-r', size: 10 }
+                linePattern: { type: 'triangleRight', size: 10 }
             }
         }
     ],
@@ -274,7 +274,7 @@ const CyverseQUBES: Track = {
                     { field: 'strand', oneOf: ['+'] }
                 ]
             },
-            mark: 'triangle-r',
+            mark: 'triangleRight',
             x: {
                 field: 'end',
                 type: 'genomic',
@@ -289,7 +289,7 @@ const CyverseQUBES: Track = {
                     { field: 'strand', oneOf: ['-'] }
                 ]
             },
-            mark: 'triangle-l',
+            mark: 'triangleLeft',
             x: {
                 field: 'start',
                 type: 'genomic',
@@ -392,7 +392,7 @@ const GmGDB: Track = {
                     { field: 'strand', oneOf: ['+'] }
                 ]
             },
-            mark: 'triangle-r',
+            mark: 'triangleRight',
             x: {
                 field: 'end',
                 type: 'genomic',
@@ -407,7 +407,7 @@ const GmGDB: Track = {
                     { field: 'strand', oneOf: ['-'] }
                 ]
             },
-            mark: 'triangle-l',
+            mark: 'triangleLeft',
             x: {
                 field: 'start',
                 type: 'genomic',

@@ -539,9 +539,9 @@ export class GoslingTrackModel {
                             if (spec.mark === 'line') value = 1;
                             else if (spec.mark === 'bar') value = undefined;
                             else if (spec.mark === 'rect') value = undefined;
-                            else if (spec.mark === 'triangle-r') value = undefined;
-                            else if (spec.mark === 'triangle-l') value = undefined;
-                            else if (spec.mark === 'triangle-d') value = undefined;
+                            else if (spec.mark === 'triangleRight') value = undefined;
+                            else if (spec.mark === 'triangleLeft') value = undefined;
+                            else if (spec.mark === 'triangleBottom') value = undefined;
                             // Points in this case are stretched from `x` to `xe`
                             else if (
                                 spec.stretch &&

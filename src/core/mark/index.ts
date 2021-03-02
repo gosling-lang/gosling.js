@@ -97,9 +97,9 @@ export function drawMark(HGC: any, trackInfo: any, tile: any, model: GoslingTrac
         case 'rect':
             drawRect(HGC, trackInfo, tile, model);
             break;
-        case 'triangle-l':
-        case 'triangle-r':
-        case 'triangle-d':
+        case 'triangleLeft':
+        case 'triangleRight':
+        case 'triangleBottom':
             drawTriangle(tile.graphics, model);
             break;
         case 'text':
