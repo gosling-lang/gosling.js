@@ -1,7 +1,7 @@
 import { GoslingSpec } from '../../';
 
 export const EX_SPEC_BASIC_SEMANTIC_ZOOM: GoslingSpec = {
-    title: 'Semantic Zoom',
+    title: 'Basic Idea of Semantic Zoom',
     subtitle:
         'Zoom in and out to see how different visual encoding (here, color) can be applied depending on the zoom level.',
     layout: 'linear',
