@@ -2,7 +2,6 @@ import { GoslingSpec } from '../../core/gosling.schema';
 
 export const EX_SPEC_GREMLIN: GoslingSpec = {
     title: "Gremlin (O'Brien et al. 2010)",
-    layout: 'circular',
     views: [
         {
             xLinkingId: 'view1',
