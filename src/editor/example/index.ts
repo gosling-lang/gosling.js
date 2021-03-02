@@ -1,7 +1,12 @@
 import { GoslingSpec } from '../../core/gosling.schema';
 import { EX_SPEC_LAYOUT_AND_ARRANGEMENT_1, EX_SPEC_LAYOUT_AND_ARRANGEMENT_2 } from './layout-and-arrangement';
+import { EX_SPEC_VISUAL_ENCODING } from './visual-encoding';
+import { EX_SPEC_LINKING } from './visual-linking';
+import { EX_SPEC_BASIC_SEMANTIC_ZOOM } from './basic-semantic-zoom';
 import { EX_SPEC_CIRCULAR_OVERVIEW_LINEAR_DETAIL } from './circular-overview-linear-detail-views';
 import { EX_SPEC_SARS_COV_2 } from './sars-cov-2';
+import { EX_SPEC_CIRCOS } from './circos';
+import { EX_SPEC_GREMLIN } from './gremlin';
 import { EX_SPEC_GENE_ANNOTATION } from './gene-annotation';
 import { EX_SPEC_SEMANTIC_ZOOM } from './semantic-zoom';
 import { EX_SPEC_GIVE } from './give';
@@ -24,17 +29,38 @@ export const examples: ReadonlyArray<{
         hidden: true
     },
     {
-        name: 'Layouts and Arrangements 1',
+        name: 'Basic Example: Visual Encoding',
+        spec: EX_SPEC_VISUAL_ENCODING,
+        forceShow: true
+    },
+    {
+        name: 'Basic Example: Visual Linking',
+        spec: EX_SPEC_LINKING
+    },
+    {
+        name: 'Basic Example: Layouts and Arrangements',
         spec: EX_SPEC_LAYOUT_AND_ARRANGEMENT_1
     },
     {
         name: 'Layouts and Arrangements 2',
-        spec: EX_SPEC_LAYOUT_AND_ARRANGEMENT_2
+        spec: EX_SPEC_LAYOUT_AND_ARRANGEMENT_2,
+        hidden: true
+    },
+    {
+        name: 'Basic Example: Semantic Zoom',
+        spec: EX_SPEC_BASIC_SEMANTIC_ZOOM
     },
     {
         name: 'Circular Overview + Linear Detail Views',
-        spec: EX_SPEC_CIRCULAR_OVERVIEW_LINEAR_DETAIL,
-        forceShow: true
+        spec: EX_SPEC_CIRCULAR_OVERVIEW_LINEAR_DETAIL
+    },
+    {
+        name: 'Circos',
+        spec: EX_SPEC_CIRCOS
+    },
+    {
+        name: "Gremlin (O'Brien et al. 2010)",
+        spec: EX_SPEC_GREMLIN
     },
     {
         name: 'SARS-CoV-2',
