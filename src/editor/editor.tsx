@@ -160,7 +160,7 @@ function Editor(props: any) {
     const [showVC, setShowVC] = useState<boolean>(false);
 
     // whether the code editor is read-only
-    const [readOnly, setReadOnly] = useState<boolean>(false);
+    const [readOnly, setReadOnly] = useState<boolean>(urlGist ? true : false);
 
     // whether to hide source code on the left
     const [isHideCode, setIsHideCode] = useState<boolean>(
@@ -204,24 +204,21 @@ function Editor(props: any) {
 
         if (!urlGist || typeof urlGist !== 'string') return undefined;
 
-        setCode('');
-        setReadOnly(true);
-
         fetchSpecFromGist(urlGist)
             .then(({ code, description, title }) => {
                 if (active && !!code) {
+                    setReadOnly(false);
                     setCode(code);
                     setGistTitle(title);
                     setDescription(description);
-                    setReadOnly(false);
                 }
             })
             .catch(error => {
                 if (active) {
+                    setReadOnly(false);
                     setCode(emptySpec(error));
                     setDescription(undefined);
                     setGistTitle('Error loading gist! See code for details.');
-                    setReadOnly(false);
                 }
             });
 
@@ -233,6 +230,11 @@ function Editor(props: any) {
 
     const runSpecUpdateVis = useCallback(
         (run?: boolean) => {
+            if (readOnly) {
+                // this means we do not have to compile. This is when we are in the middle of loading data from gist.
+                return;
+            }
+
             let editedGos;
             let valid;
             try {
@@ -248,7 +250,7 @@ function Editor(props: any) {
 
             setGoslingSpec(editedGos);
         },
-        [code, autoRun]
+        [code, autoRun, readOnly]
     );
 
     /**
@@ -362,6 +364,7 @@ function Editor(props: any) {
                     </span>
                 )}
                 <select
+                    style={{ maxWidth: IS_SMALL_SCREEN ? window.innerWidth - 180 : 'none' }}
                     onChange={e => {
                         setDemo(examples.find(d => d.name === e.target.value) as any);
                     }}
