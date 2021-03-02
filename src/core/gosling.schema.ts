@@ -92,9 +92,9 @@ export type MarkType =
     | 'text'
     | 'link'
     | 'rule'
-    | 'triangle-l'
-    | 'triangle-r'
-    | 'triangle-d'
+    | 'triangleLeft'
+    | 'triangleRight'
+    | 'triangleBottom'
     // experimental
     | 'brush'
     // TODO: perhaps need to make this invisible to users
@@ -167,7 +167,7 @@ export interface TrackStyle {
     background?: string;
     backgroundOpacity?: number;
     dashed?: [number, number];
-    linePattern?: { type: 'triangle-l' | 'triangle-r'; size: number };
+    linePattern?: { type: 'triangleLeft' | 'triangleRight'; size: number };
     curve?: 'top' | 'bottom' | 'left' | 'right';
     align?: 'left' | 'right';
     dy?: number;

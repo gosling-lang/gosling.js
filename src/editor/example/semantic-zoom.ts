@@ -193,7 +193,7 @@ const ScalableCytoBand: OverlaidTrack = {
             }
         },
         {
-            mark: 'triangle-r',
+            mark: 'triangleRight',
             dataTransform: {
                 filter: [
                     { field: 'Stain', oneOf: ['acen'] },
@@ -203,7 +203,7 @@ const ScalableCytoBand: OverlaidTrack = {
             color: { value: '#B40101' }
         },
         {
-            mark: 'triangle-l',
+            mark: 'triangleLeft',
             dataTransform: {
                 filter: [
                     { field: 'Stain', oneOf: ['acen'] },

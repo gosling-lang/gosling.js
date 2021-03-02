@@ -76,13 +76,13 @@ export function drawTriangle(g: PIXI.Graphics, model: GoslingTrackModel) {
                 }
 
                 let markToPoints: number[] = [];
-                if (spec.mark === 'triangle-l') {
+                if (spec.mark === 'triangleLeft') {
                     const p0 = cartesianToPolar(x1, trackWidth, r0, cx, cy, startAngle, endAngle);
                     const p1 = cartesianToPolar(x0, trackWidth, rm, cx, cy, startAngle, endAngle);
                     const p2 = cartesianToPolar(x1, trackWidth, r1, cx, cy, startAngle, endAngle);
                     const p3 = cartesianToPolar(x1, trackWidth, r0, cx, cy, startAngle, endAngle);
                     markToPoints = [p0.x, p0.y, p1.x, p1.y, p2.x, p2.y, p3.x, p3.y];
-                } else if (spec.mark === 'triangle-r') {
+                } else if (spec.mark === 'triangleRight') {
                     const p0 = cartesianToPolar(x0, trackWidth, r0, cx, cy, startAngle, endAngle);
                     const p1 = cartesianToPolar(x1, trackWidth, rm, cx, cy, startAngle, endAngle);
                     const p2 = cartesianToPolar(x0, trackWidth, r1, cx, cy, startAngle, endAngle);
@@ -120,9 +120,9 @@ export function drawTriangle(g: PIXI.Graphics, model: GoslingTrackModel) {
                 }
 
                 const markToPoints: number[] = ({
-                    'triangle-l': [x1, y0, x0, ym, x1, y1, x1, y0],
-                    'triangle-r': [x0, y0, x1, ym, x0, y1, x0, y0],
-                    'triangle-d': [x0, y0, x1, y0, xm, y1, x0, y0]
+                    triangleLeft: [x1, y0, x0, ym, x1, y1, x1, y0],
+                    triangleRight: [x0, y0, x1, ym, x0, y1, x0, y0],
+                    triangleBottom: [x0, y0, x1, y0, xm, y1, x0, y0]
                 } as any)[spec.mark as MarkType];
 
                 const alphaTransition = model.markVisibility(d, { width: x1 - x0, zoomLevel });

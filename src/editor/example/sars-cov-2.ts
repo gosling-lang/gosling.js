@@ -20,7 +20,7 @@ export const EX_TRACK_SARS_COV_2_GENES: Track = {
             color: { value: 'white' },
             opacity: { value: 0.6 },
             strokeWidth: { value: 0 },
-            style: { linePattern: { type: 'triangle-r', size: 10 } }
+            style: { linePattern: { type: 'triangleRight', size: 10 } }
         },
         {
             mark: 'text',

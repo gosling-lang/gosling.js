@@ -33,7 +33,7 @@ describe('Type Guard', () => {
                         size: { value: 20 }
                     },
                     {
-                        mark: 'triangle-r',
+                        mark: 'triangleRight',
                         dataTransform: {
                             filter: [{ field: 'Stain', oneOf: ['acen-1'] }]
                         },
@@ -41,7 +41,7 @@ describe('Type Guard', () => {
                         size: { value: 20 }
                     },
                     {
-                        mark: 'triangle-l',
+                        mark: 'triangleLeft',
                         dataTransform: {
                             filter: [{ field: 'Stain', oneOf: ['acen-2'] }]
                         },

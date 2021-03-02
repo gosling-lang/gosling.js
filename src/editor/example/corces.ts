@@ -46,7 +46,7 @@ export const EX_SPEC_CORCES_ET_AL: GoslingSpec = {
                             size: { value: 20 }
                         },
                         {
-                            mark: 'triangle-r',
+                            mark: 'triangleRight',
                             dataTransform: {
                                 filter: [{ field: 'Stain', oneOf: ['acen-1'] }]
                             },
@@ -54,7 +54,7 @@ export const EX_SPEC_CORCES_ET_AL: GoslingSpec = {
                             size: { value: 20 }
                         },
                         {
-                            mark: 'triangle-l',
+                            mark: 'triangleLeft',
                             dataTransform: {
                                 filter: [{ field: 'Stain', oneOf: ['acen-2'] }]
                             },

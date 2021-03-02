@@ -8,7 +8,7 @@ describe('Rendering triangle', () => {
     it('Linear Triangle', () => {
         const t: SingleTrack = {
             data: { type: 'csv', url: '' },
-            mark: 'triangle-l',
+            mark: 'triangleLeft',
             x: { field: 'x', type: 'genomic' },
             xe: { field: 'xe', type: 'genomic' },
             y: { field: 'y', type: 'quantitative' },
@@ -28,7 +28,7 @@ describe('Rendering triangle', () => {
         const t: SingleTrack = {
             layout: 'circular',
             data: { type: 'csv', url: '' },
-            mark: 'triangle-l',
+            mark: 'triangleLeft',
             x: { field: 'x', type: 'genomic' },
             xe: { field: 'xe', type: 'genomic' },
             y: { field: 'y', type: 'quantitative' },

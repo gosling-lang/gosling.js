@@ -65,7 +65,7 @@
     outline: none;
 }
 
-/* Drop down menu's triangle-down icon */
+/* Drop down menu's triangleBottomown icon */
 .demo-navbar .select:after {
     content: '';
     width: 0.8em;

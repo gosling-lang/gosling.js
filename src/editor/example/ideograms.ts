@@ -50,14 +50,14 @@ export const CytoBands: Track = {
             color: { value: '#A0A0F2' }
         },
         {
-            mark: 'triangle-r',
+            mark: 'triangleRight',
             dataTransform: {
                 filter: [{ field: 'Stain', oneOf: ['acen-1'] }]
             },
             color: { value: '#B40101' }
         },
         {
-            mark: 'triangle-l',
+            mark: 'triangleLeft',
             dataTransform: {
                 filter: [{ field: 'Stain', oneOf: ['acen-2'] }]
             },
