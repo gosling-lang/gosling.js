@@ -30,7 +30,6 @@ const LIMIT_CLIPBOARD_LEN = 4096;
 // ! these should be updated upon change in css files
 const EDITOR_HEADER_HEIGHT = 40;
 const BOTTOM_PANEL_HEADER_HEIGHT = 30;
-const DESCRIPTION_PANEL_DEFAULT_WIDTH = 500;
 
 const LogoSVG = (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width={20} height={20}>
@@ -83,6 +82,8 @@ const getIconSVG = (d: ICON_INFO, w?: number, h?: number, f?: string) => (
 
 const emptySpec = (message?: string) => (message !== undefined ? `{\n\t// ${message}\n}` : '{}');
 
+const getDescPanelDefultWidth = () => Math.min(500, window.innerWidth);
+
 const fetchSpecFromGist = async (gist: string) => {
     let metadata: any = null;
     try {
@@ -126,6 +127,9 @@ interface PreviewData {
  * React component for editing Gosling specs
  */
 function Editor(props: any) {
+    // Determines whether the screen is too small (e.g., mobile)
+    const IS_SMALL_SCREEN = window.innerWidth <= 500;
+
     // custom spec contained in the URL
     const urlParams = qs.parse(props.location.search, { ignoreQueryPrefix: true });
     const urlSpec = urlParams?.spec ? JSONUncrush(urlParams.spec as string) : null;
@@ -146,12 +150,11 @@ function Editor(props: any) {
     const [gistTitle, setGistTitle] = useState<string>();
     const [description, setDescription] = useState<string | null>();
 
-    // This parameter only matter when a markdown description was loaded from
-    // a gist but the user wants to hide it
-    const [hideDescription, setHideDescription] = useState(false);
+    // This parameter only matter when a markdown description was loaded from a gist but the user wants to hide it
+    const [hideDescription, setHideDescription] = useState<boolean>(IS_SMALL_SCREEN || false);
 
     // Determine the size of description panel
-    const [descPanelWidth, setDescPanelWidth] = useState(DESCRIPTION_PANEL_DEFAULT_WIDTH);
+    const [descPanelWidth, setDescPanelWidth] = useState(getDescPanelDefultWidth());
 
     // whether to show HiGlass' viewConfig on the left-bottom
     const [showVC, setShowVC] = useState<boolean>(false);
@@ -160,7 +163,9 @@ function Editor(props: any) {
     const [readOnly, setReadOnly] = useState<boolean>(false);
 
     // whether to hide source code on the left
-    const [isHideCode, setIsHideCode] = useState<boolean>((urlParams?.full as string) === 'true' || false);
+    const [isHideCode, setIsHideCode] = useState<boolean>(
+        IS_SMALL_SCREEN || (urlParams?.full as string) === 'true' || false
+    );
 
     // whether to show data preview on the right-bottom
     const [isShowDataPreview, setIsShowDataPreview] = useState<boolean>(false);
@@ -336,7 +341,7 @@ function Editor(props: any) {
     }, [descResizerRef, started, dragged, ended]);
 
     function openDescription() {
-        setDescPanelWidth(DESCRIPTION_PANEL_DEFAULT_WIDTH);
+        setDescPanelWidth(getDescPanelDefultWidth());
         setHideDescription(false);
     }
 
@@ -351,7 +356,7 @@ function Editor(props: any) {
                 <span className="logo">{LogoSVG}</span>
                 Gosling.js Editor
                 {urlSpec && <small> Displaying a custom spec contained in URL</small>}
-                {gistTitle && (
+                {gistTitle && !IS_SMALL_SCREEN && (
                     <span className="gist-title">
                         : <em>{gistTitle}</em>
                     </span>
@@ -393,12 +398,7 @@ function Editor(props: any) {
                 </span>
                 <input type="hidden" id="spec-url-exporter" />
                 {description ? (
-                    <span
-                        title="Open Textual Description"
-                        className="editor-nav-button gosling-color"
-                        style={{ position: 'absolute', right: 0 }}
-                        onClick={openDescription}
-                    >
+                    <span title="Open Textual Description" className="description-button" onClick={openDescription}>
                         {getIconSVG(ICONS.INFO_CIRCLE, 23, 23)}
                     </span>
                 ) : null}
