@@ -8,6 +8,27 @@ export type ICON_INFO = {
 };
 
 export const ICONS: { [k: string]: ICON_INFO } = {
+    UP_RIGHT: {
+        width: 20,
+        height: 20,
+        viewBox: '0 0 16 16',
+        path: [
+            'M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5z',
+            'M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0v-5z'
+        ],
+        stroke: 'none',
+        fill: 'currentColor'
+    },
+    ARCHIVE: {
+        width: 20,
+        height: 20,
+        viewBox: '0 0 16 16',
+        path: [
+            'M0 2a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1v7.5a2.5 2.5 0 0 1-2.5 2.5h-9A2.5 2.5 0 0 1 1 12.5V5a1 1 0 0 1-1-1V2zm2 3v7.5A1.5 1.5 0 0 0 3.5 14h9a1.5 1.5 0 0 0 1.5-1.5V5H2zm13-3H1v2h14V2zM5 7.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5z'
+        ],
+        stroke: 'none',
+        fill: 'currentColor'
+    },
     INFO_CIRCLE: {
         width: 20,
         height: 20,

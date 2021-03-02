@@ -354,6 +354,7 @@ td {
 
 .gist-title {
     font-weight: normal;
+    margin-left: 10px;
 }
 
 .description {
@@ -436,6 +437,10 @@ td {
 .show-description-button:active > span,
 .show-description-button:focus > span {
     color: black;
+}
+
+.description-github-button {
+    cursor: pointer;
 }
 
 .hide-description-button {

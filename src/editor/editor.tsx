@@ -1,6 +1,7 @@
 import * as gosling from '../';
 import React, { useRef, useState, useEffect, useCallback } from 'react';
 import ReactMarkdown from 'react-markdown';
+import gfm from 'remark-gfm';
 import PubSub from 'pubsub-js';
 import fetchJsonp from 'fetch-jsonp';
 import EditorPanel from './editor-panel';
@@ -359,9 +360,17 @@ function Editor(props: any) {
                 Gosling.js Editor
                 {urlSpec && <small> Displaying a custom spec contained in URL</small>}
                 {gistTitle && !IS_SMALL_SCREEN && (
-                    <span className="gist-title">
-                        : <em>{gistTitle}</em>
-                    </span>
+                    <>
+                        <span className="gist-title">{gistTitle}</span>
+                        <span
+                            title="Open GitHub Gist"
+                            style={{ marginLeft: 10 }}
+                            className="description-github-button"
+                            onClick={() => window.open(`https://gist.github.com/${urlGist}`, '_blank')}
+                        >
+                            {getIconSVG(ICONS.UP_RIGHT, 14, 14)}
+                        </span>
+                    </>
                 )}
                 <select
                     style={{ maxWidth: IS_SMALL_SCREEN ? window.innerWidth - 180 : 'none' }}
@@ -699,8 +708,17 @@ function Editor(props: any) {
                             <button className="hide-description-button" onClick={closeDescription}>
                                 Close
                             </button>
+                            <br />
+                            <br />
+                            <span
+                                title="Open GitHub Gist"
+                                className="description-github-button"
+                                onClick={() => window.open(`https://gist.github.com/${urlGist}`, '_blank')}
+                            >
+                                {getIconSVG(ICONS.UP_RIGHT, 14, 14)} Open GitHub Gist to see raw files.
+                            </span>
                         </header>
-                        {description && <ReactMarkdown source={description} />}
+                        {description && <ReactMarkdown plugins={[gfm]} source={description} />}
                     </div>
                 </div>
             </div>
