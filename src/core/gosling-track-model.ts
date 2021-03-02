@@ -639,7 +639,11 @@ export class GoslingTrackModel {
                                 break;
                             case 'color':
                             case 'stroke':
-                                range = CHANNEL_DEFAULTS.NOMINAL_COLOR;
+                                range =
+                                    Array.isArray(channel.domain) &&
+                                    channel.domain.length > CHANNEL_DEFAULTS.NOMINAL_COLOR.length
+                                        ? CHANNEL_DEFAULTS.NOMINAL_COLOR_EXTENDED
+                                        : CHANNEL_DEFAULTS.NOMINAL_COLOR;
                                 break;
                             case 'row':
                                 range = [0, spec.height];
