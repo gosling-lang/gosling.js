@@ -40,6 +40,8 @@ export const getSingleView: (
 };
 
 export const EX_SPEC_LAYOUT_AND_ARRANGEMENT_1: GoslingSpec = {
+    title: 'Layout and Arrangement',
+    subtitle: 'Try yourself with different arrangements and layouts',
     static: true,
     layout: 'linear',
     arrangement: 'parallel',
