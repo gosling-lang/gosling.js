@@ -1,6 +1,6 @@
 import { GoslingSpec } from '../../core/gosling.schema';
 import { EX_SPEC_LAYOUT_AND_ARRANGEMENT_1, EX_SPEC_LAYOUT_AND_ARRANGEMENT_2 } from './layout-and-arrangement';
-import { EX_SPEC_VISUAL_ENCODING } from './visual-encoding';
+import { EX_SPEC_VISUAL_ENCODING, EX_SPEC_VISUAL_ENCODING_CIRCULAR } from './visual-encoding';
 import { EX_SPEC_LINKING } from './visual-linking';
 import { EX_SPEC_BASIC_SEMANTIC_ZOOM } from './basic-semantic-zoom';
 import { EX_SPEC_CIRCULAR_OVERVIEW_LINEAR_DETAIL } from './circular-overview-linear-detail-views';
@@ -32,6 +32,10 @@ export const examples: ReadonlyArray<{
         name: 'Basic Example: Visual Encoding',
         spec: EX_SPEC_VISUAL_ENCODING,
         forceShow: true
+    },
+    {
+        name: 'Basic Example: Circular Visual Encoding',
+        spec: EX_SPEC_VISUAL_ENCODING_CIRCULAR
     },
     {
         name: 'Basic Example: Visual Linking',
