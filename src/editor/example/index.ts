@@ -55,6 +55,18 @@ export const examples: ReadonlyArray<{
         spec: EX_SPEC_CIRCULAR_OVERVIEW_LINEAR_DETAIL
     },
     {
+        name: 'Semantic Zoom',
+        spec: EX_SPEC_SEMANTIC_ZOOM
+    },
+    {
+        name: 'Cyto Bands',
+        spec: EX_SPEC_CYTOBANDS
+    },
+    {
+        name: 'Custom Gene Annotation',
+        spec: EX_SPEC_GENE_ANNOTATION
+    },
+    {
         name: 'Circos',
         spec: EX_SPEC_CIRCOS
     },
@@ -67,16 +79,8 @@ export const examples: ReadonlyArray<{
         spec: EX_SPEC_SARS_COV_2
     },
     {
-        name: 'Cyto Bands',
-        spec: EX_SPEC_CYTOBANDS
-    },
-    {
-        name: 'Custom Gene Annotation',
-        spec: EX_SPEC_GENE_ANNOTATION
-    },
-    {
-        name: 'Semantic Zoom',
-        spec: EX_SPEC_SEMANTIC_ZOOM
+        name: 'Corces et al. 2020',
+        spec: EX_SPEC_CORCES_ET_AL
     },
     {
         name: 'Pathogenic Lollipop Plot',
@@ -86,9 +90,5 @@ export const examples: ReadonlyArray<{
     {
         name: 'GIVE (Cao et al. 2018)',
         spec: EX_SPEC_GIVE
-    },
-    {
-        name: 'Corces et al. 2020',
-        spec: EX_SPEC_CORCES_ET_AL
     }
 ].filter(d => !d.hidden);
