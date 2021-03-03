@@ -66,8 +66,7 @@ export function traverseToFixSpecDownstream(spec: GoslingSpec | SingleView, pare
         // For assembly and layout, we use the ones defiend by the parents if missing
         if (spec.assembly === undefined) spec.assembly = parentDef.assembly;
         if (spec.layout === undefined) spec.layout = parentDef.layout;
-        if (spec.static === undefined)
-            spec.static = spec.layout === 'circular' ? true : parentDef.static !== undefined ? parentDef.static : false;
+        if (spec.static === undefined) spec.static = parentDef.static !== undefined ? parentDef.static : false;
         if (spec.xDomain === undefined) spec.xDomain = parentDef.xDomain;
         if (spec.xLinkingId === undefined) spec.xLinkingId = parentDef.xLinkingId;
         if (spec.centerRadius === undefined) spec.centerRadius = parentDef.centerRadius;
@@ -78,7 +77,7 @@ export function traverseToFixSpecDownstream(spec: GoslingSpec | SingleView, pare
         // This means we are at the rool level, so assign default values if missing
         if (spec.assembly === undefined) spec.assembly = 'hg38';
         if (spec.layout === undefined) spec.layout = 'linear';
-        if (spec.static === undefined) spec.static = spec.layout === 'circular' ? true : false;
+        if (spec.static === undefined) spec.static = false;
         if (spec.centerRadius === undefined) spec.centerRadius = DEFAULT_INNER_RADIUS_PROP;
         if (spec.spacing === undefined) spec.spacing = DEFAULT_VIEW_SPACING;
         if ('views' in spec && spec.arrangement === undefined) spec.arrangement = 'vertical';
@@ -111,8 +110,7 @@ export function traverseToFixSpecDownstream(spec: GoslingSpec | SingleView, pare
              */
             if (!track.assembly) track.assembly = spec.assembly;
             if (!track.layout) track.layout = spec.layout;
-            if (track.static === undefined)
-                track.static = track.layout === 'circular' ? true : spec.static !== undefined ? spec.static : false;
+            if (track.static === undefined) track.static = spec.static !== undefined ? spec.static : false;
 
             /**
              * Add x-axis domain
