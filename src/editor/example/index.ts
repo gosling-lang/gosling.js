@@ -47,7 +47,7 @@ export const examples: ReadonlyArray<{
         hidden: true
     },
     {
-        name: 'Basic Example: Semantic Zoom',
+        name: 'Basic Example: Basic Idea of Semantic Zoom',
         spec: EX_SPEC_BASIC_SEMANTIC_ZOOM
     },
     {
@@ -75,7 +75,7 @@ export const examples: ReadonlyArray<{
         spec: EX_SPEC_GENE_ANNOTATION
     },
     {
-        name: 'Advanced Zoom Technique',
+        name: 'Semantic Zoom',
         spec: EX_SPEC_SEMANTIC_ZOOM
     },
     {

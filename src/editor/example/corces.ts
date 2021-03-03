@@ -1,4 +1,5 @@
 import { GoslingSpec } from '../../core/gosling.schema';
+import { GOSLING_PUBLIC_DATA } from './gosling-data';
 
 export const EX_SPEC_CORCES_ET_AL: GoslingSpec = {
     title: 'Single-cell Epigenomic Analysis',
@@ -203,7 +204,7 @@ export const EX_SPEC_CORCES_ET_AL: GoslingSpec = {
                 {
                     title: 'Genes',
                     data: {
-                        url: 'https://resgen.io/api/v1/tileset_info/?d=M9A9klpwTci5Vf4bHZ864g',
+                        url: GOSLING_PUBLIC_DATA.geneAnnotation,
                         type: 'beddb',
                         genomicFields: [
                             { index: 1, name: 'start' },

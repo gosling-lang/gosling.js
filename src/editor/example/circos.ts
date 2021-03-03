@@ -1,4 +1,5 @@
 import { GoslingSpec } from '../../';
+import { GOSLING_PUBLIC_DATA } from './gosling-data';
 
 export const EX_SPEC_CIRCOS: GoslingSpec = {
     title: 'Circos',
@@ -24,7 +25,7 @@ export const EX_SPEC_CIRCOS: GoslingSpec = {
         },
         {
             data: {
-                url: 'https://resgen.io/api/v1/tileset_info/?d=UvVPeLHuRDiYA3qwFlm7xQ',
+                url: GOSLING_PUBLIC_DATA.multivec,
                 type: 'multivec',
                 row: 'sample',
                 column: 'position',

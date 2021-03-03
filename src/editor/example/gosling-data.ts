@@ -1,7 +1,7 @@
 export const GOSLING_PUBLIC_DATA = {
-    multivec: 'https://resgen.io/api/v1/tileset_info/?d=UvVPeLHuRDiYA3qwFlm7xQ',
-    fasta: 'https://resgen.io/api/v1/tileset_info/?d=WipsnEDMStahGPpRfH9adA',
-    geneAnnotation: 'https://higlass.io/api/v1/tileset_info/?d=OHJakQICQD6gTD7skx4EWA',
+    multivec: 'https://server.gosling-lang.org/api/v1/tileset_info/?d=cistrome-multivec',
+    fasta: 'https://server.gosling-lang.org/api/v1/tileset_info/?d=sequence-multivec',
+    geneAnnotation: 'https://server.gosling-lang.org/api/v1/tileset_info/?d=gene-annotation',
     interaction: 'https://resgen.io/api/v1/tileset_info/?d=JzccFAJUQEiz-0188xaWZg',
     clinvar: 'https://server.gosling-lang.org/api/v1/tileset_info/?d=clinvar-beddb',
     clinvardensity: 'https://server.gosling-lang.org/api/v1/tileset_info/?d=clinvar-multivec',
