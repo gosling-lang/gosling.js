@@ -1,6 +1,13 @@
-import { shareScaleAcrossTracks } from './scales';
+import { getNumericDomain, shareScaleAcrossTracks } from './scales';
 import { GoslingTrackModel } from '../gosling-track-model';
 import { IsChannelDeep } from '../gosling.schema.guards';
+
+describe('Genomic domain', () => {
+    it('With Chromosome', () => {
+        expect(getNumericDomain({ chromosome: '' })).toEqual(getNumericDomain({ chromosome: '1' }));
+        expect(getNumericDomain({ chromosome: '1' })).toEqual(getNumericDomain({ chromosome: 'chr1' }));
+    });
+});
 
 describe('Should use shared scales', () => {
     it('Quantitative and nominal values should be shared properly', () => {

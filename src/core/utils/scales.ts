@@ -15,6 +15,15 @@ import { GET_CHROM_SIZES } from './assembly';
  * For example, domain: { chromosome: '1', interval: [1, 300,000] } => domain: [1, 300,000]
  */
 export function getNumericDomain(domain: Domain, assembly?: Assembly) {
+    if ('chromosome' in domain) {
+        if (domain.chromosome.includes('chr')) {
+            domain.chromosome = domain.chromosome.replace('chr', '');
+        }
+        if (Object.keys(GET_CHROM_SIZES().interval).filter(k => k !== domain.chromosome).length === 0) {
+            // we did not find any, so use '1' by default
+            domain.chromosome = '1';
+        }
+    }
     if (IsDomainChr(domain)) {
         return [
             GET_CHROM_SIZES(assembly).interval[`chr${domain.chromosome}`][0] + 1,

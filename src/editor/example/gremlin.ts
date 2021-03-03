@@ -192,107 +192,108 @@ export const EX_SPEC_GREMLIN: GoslingSpec = {
                     height: 220
                 }
             ]
+        },
+        {
+            views: [
+                {
+                    tracks: [
+                        {
+                            title: 'Region of Interest',
+                            data: {
+                                url: 'https://raw.githubusercontent.com/vigsterkr/circos/master/data/5/segdup.txt',
+                                type: 'csv',
+                                headerNames: ['id', 'chr', 'p1', 'p2'],
+                                chromosomePrefix: 'hs',
+                                chromosomeField: 'chr',
+                                genomicFields: ['p1', 'p2'],
+                                separator: ' ',
+                                longToWideId: 'id',
+                                sampleLength: 1000
+                            },
+                            dataTransform: {
+                                filter: [
+                                    { field: 'chr', oneOf: ['hs5', 'hs4', 'hs6'] },
+                                    { field: 'chr_2', oneOf: ['hs5', 'hs4', 'hs6'] }
+                                ]
+                            },
+                            mark: 'link',
+                            x: {
+                                field: 'p1',
+                                type: 'genomic',
+                                linkingId: 'view2',
+                                axis: 'bottom',
+                                domain: { chromosome: '5', interval: [68000000, 71000000] }
+                            },
+                            xe: { field: 'p2', type: 'genomic' },
+                            row: {
+                                field: 'chr_2',
+                                type: 'nominal',
+                                domain: ['hs5', 'hs4', 'hs6', 'empty']
+                            },
+                            color: { value: 'none' },
+                            stroke: {
+                                field: 'chr_2',
+                                type: 'nominal',
+                                domain: ['hs5', 'hs4', 'hs6'],
+                                range: ['#62AAD7', '#D1A74F', '#6CB74C']
+                            },
+                            strokeWidth: { value: 6 },
+                            opacity: { value: 0.4 },
+                            style: {
+                                outline: 'lightgray',
+                                outlineWidth: 3,
+                                background: '#F8F8F8'
+                            },
+                            width: 800,
+                            height: 200
+                        }
+                    ]
+                },
+                {
+                    views: [
+                        {
+                            tracks: [
+                                {
+                                    title: 'Rearrangement View',
+                                    data: {
+                                        url:
+                                            'https://raw.githubusercontent.com/vigsterkr/circos/master/data/5/segdup.txt',
+                                        type: 'csv',
+                                        headerNames: ['id', 'chr', 'p1', 'p2'],
+                                        chromosomePrefix: 'hs',
+                                        chromosomeField: 'chr',
+                                        genomicFields: ['p1', 'p2'],
+                                        separator: ' ',
+                                        longToWideId: 'id',
+                                        sampleLength: 1000
+                                    },
+                                    dataTransform: {
+                                        filter: [{ field: 'chr', oneOf: ['hs5'] }]
+                                    },
+                                    mark: 'link',
+                                    x: {
+                                        field: 'p1',
+                                        type: 'genomic',
+                                        axis: 'bottom',
+                                        domain: {
+                                            chromosome: '5',
+                                            interval: [69276000, 69282000]
+                                        }
+                                    },
+                                    xe: { field: 'p2', type: 'genomic' },
+                                    color: { value: 'none' },
+                                    stroke: { value: '#62AAD7' },
+                                    strokeWidth: { value: 6 },
+                                    opacity: { value: 0.4 },
+                                    style: { outline: 'lightgray', outlineWidth: 3 },
+                                    width: 600,
+                                    height: 200
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
         }
-        //   {
-        //     "views": [
-        //       {
-        //         "tracks": [
-        //           {
-        //             "title": "Region of Interest",
-        //             "data": {
-        //               "url": "https://raw.githubusercontent.com/vigsterkr/circos/master/data/5/segdup.txt",
-        //               "type": "csv",
-        //               "headerNames": ["id", "chr", "p1", "p2"],
-        //               "chromosomePrefix": "hs",
-        //               "chromosomeField": "chr",
-        //               "genomicFields": ["p1", "p2"],
-        //               "separator": " ",
-        //               "longToWideId": "id",
-        //               "sampleLength": 1000
-        //             },
-        //             "dataTransform": {
-        //               "filter": [
-        //                 {"field": "chr", "oneOf": ["hs5", "hs4", "hs6"]},
-        //                 {"field": "chr_2", "oneOf": ["hs5", "hs4", "hs6"]}
-        //               ]
-        //             },
-        //             "mark": "link",
-        //             "x": {
-        //               "field": "p1",
-        //               "type": "genomic",
-        //               "linkingId": "view2",
-        //               "axis": "bottom",
-        //               "domain": {"chromosome": "5", "interval": [68000000, 71000000]}
-        //             },
-        //             "xe": {"field": "p2", "type": "genomic"},
-        //             "row": {
-        //               "field": "chr_2",
-        //               "type": "nominal",
-        //               "domain": ["hs5", "hs4", "hs6", "empty"]
-        //             },
-        //             "color": {"value": "none"},
-        //             "stroke": {
-        //               "field": "chr_2",
-        //               "type": "nominal",
-        //               "domain": ["hs5", "hs4", "hs6"],
-        //               "range": ["#62AAD7", "#D1A74F", "#6CB74C"]
-        //             },
-        //             "strokeWidth": {"value": 6},
-        //             "opacity": {"value": 0.4},
-        //             "style": {
-        //               "outline": "lightgray",
-        //               "outlineWidth": 3,
-        //               "background": "#F8F8F8"
-        //             },
-        //             "width": 800,
-        //             "height": 200
-        //           }
-        //         ]
-        //       },
-        //       {
-        //         "views": [
-        //           {
-        //             "tracks": [
-        //               {
-        //                 "title": "Rearrangement View",
-        //                 "data": {
-        //                   "url": "https://raw.githubusercontent.com/vigsterkr/circos/master/data/5/segdup.txt",
-        //                   "type": "csv",
-        //                   "headerNames": ["id", "chr", "p1", "p2"],
-        //                   "chromosomePrefix": "hs",
-        //                   "chromosomeField": "chr",
-        //                   "genomicFields": ["p1", "p2"],
-        //                   "separator": " ",
-        //                   "longToWideId": "id",
-        //                   "sampleLength": 1000
-        //                 },
-        //                 "dataTransform": {
-        //                   "filter": [{"field": "chr", "oneOf": ["hs5"]}]
-        //                 },
-        //                 "mark": "link",
-        //                 "x": {
-        //                   "field": "p1",
-        //                   "type": "genomic",
-        //                   "axis": "bottom",
-        //                   "domain": {
-        //                     "chromosome": "5",
-        //                     "interval": [69276000, 69282000]
-        //                   }
-        //                 },
-        //                 "xe": {"field": "p2", "type": "genomic"},
-        //                 "color": {"value": "none"},
-        //                 "stroke": {"value": "#62AAD7"},
-        //                 "strokeWidth": {"value": 6},
-        //                 "opacity": {"value": 0.4},
-        //                 "style": {"outline": "lightgray", "outlineWidth": 3},
-        //                 "width": 600,
-        //                 "height": 200
-        //               }
-        //             ]
-        //           }
-        //         ]
-        //       }
-        //     ]
-        //   }
     ]
 };

@@ -167,7 +167,11 @@ export function traverseToFixSpecDownstream(spec: GoslingSpec | SingleView, pare
             /*
              * Flip y scale if the last track uses `link` marks
              */
-            if (i === array.length - 1 && i !== 0) {
+            if (
+                (i === array.length - 1 && i !== 0) ||
+                // Are the rest of the tracks overlaid ones?
+                (array.slice(i + 1).filter(d => d.overlayOnPreviousTrack).length === array.length - i - 1 && i !== 0)
+            ) {
                 if (IsSingleTrack(track) && track.mark === 'link' && track.flipY === undefined) {
                     track.flipY = true;
                 } else if (IsOverlaidTrack(track)) {
