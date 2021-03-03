@@ -6,7 +6,7 @@ export const EX_SPEC_CIRCOS: GoslingSpec = {
     description: 'http://circos.ca/intro/genomic_data/',
     layout: 'circular',
     static: true,
-    spacing: 0,
+    spacing: 1,
     centerRadius: 0.3,
     tracks: [
         {
@@ -116,7 +116,11 @@ export const EX_SPEC_CIRCOS: GoslingSpec = {
             xe: { field: 'p1_2', type: 'genomic' },
             x1: { field: 'p2', type: 'genomic' },
             x1e: { field: 'P2_2', type: 'genomic' },
-            stroke: { field: 'chr_2', type: 'nominal' },
+            stroke: {
+                field: 'chr_2',
+                type: 'nominal',
+                range: ['#E79F00', '#029F73', '#0072B2', '#CB7AA7', '#D45E00', '#57B4E9', '#EFE441']
+            },
             strokeWidth: { value: 1.5 },
             opacity: { value: 0.4 },
             width: 700,
