@@ -35,8 +35,8 @@ describe('Fix Spec Downstream', () => {
                 views: [{ layout: 'linear', tracks: [{ overlay: [], width: 0, height: 0 }] }]
             };
             traverseToFixSpecDownstream(spec);
-            expect(spec.views[0].static).toEqual(true);
-            expect((spec.views[0] as any).tracks[0].static).toEqual(true); // TODO:
+            expect(spec.views[0].static).toEqual(false);
+            expect((spec.views[0] as any).tracks[0].static).toEqual(false);
         }
     });
 
