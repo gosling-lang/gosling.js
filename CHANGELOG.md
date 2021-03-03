@@ -1,3 +1,25 @@
+## [0.1.1](https://github.com/gosling-lang/gosling.js/compare/v0.1.0...v0.1.1) (2021-03-03)
+
+
+### Bug Fixes
+
+* arrangement is overriden from parents ([#248](https://github.com/gosling-lang/gosling.js/issues/248)) ([7c589d1](https://github.com/gosling-lang/gosling.js/commit/7c589d1c1ab0431c038be17e8be3dad98b212243))
+* close description and code panels in narrow screen ([#288](https://github.com/gosling-lang/gosling.js/issues/288)) ([ee88abb](https://github.com/gosling-lang/gosling.js/commit/ee88abb0977a11699751730cf8f3bf8f7588ead6))
+* correctly auto-generate gosling.schema.json ([#234](https://github.com/gosling-lang/gosling.js/issues/234)) ([d89c0d8](https://github.com/gosling-lang/gosling.js/commit/d89c0d83b303561d95840c7a97cfc30042b782b6))
+* show dropdown menu and disable screen zoom for proper pinch zoom in visualizations in mobile ([#289](https://github.com/gosling-lang/gosling.js/issues/289)) ([28f2047](https://github.com/gosling-lang/gosling.js/commit/28f2047faefafbdaf8ccdc2bca20e66b659e8843))
+
+
+### Features
+
+* add error boundary to avoid crash ([#247](https://github.com/gosling-lang/gosling.js/issues/247)) ([8a17d1b](https://github.com/gosling-lang/gosling.js/commit/8a17d1be0d78778f0c8bf935806b22e62d3937c6))
+* add gist link icons and support github flavored md ([#301](https://github.com/gosling-lang/gosling.js/issues/301)) ([cd74497](https://github.com/gosling-lang/gosling.js/commit/cd74497cbb1eeeae68537ff361886bcccb428cd4))
+* flip y axis if the last track in a view is using `link` marks ([#256](https://github.com/gosling-lang/gosling.js/issues/256)) ([a4fe34c](https://github.com/gosling-lang/gosling.js/commit/a4fe34c957eeff14f27e7bff08e39ea5dee3d60b))
+* loading specs from gist ([#263](https://github.com/gosling-lang/gosling.js/issues/263)) ([8a702f3](https://github.com/gosling-lang/gosling.js/commit/8a702f30cf6aa976c1bb6327ef91a47c87fb223e))
+* support an inline legend and 'unknown' type assembly ([#252](https://github.com/gosling-lang/gosling.js/issues/252)) ([2ed5ea7](https://github.com/gosling-lang/gosling.js/commit/2ed5ea728df59bde48e5e7f0b474344bc9de3391))
+* switch to use glasbey for many categories ([#302](https://github.com/gosling-lang/gosling.js/issues/302)) ([fb4382e](https://github.com/gosling-lang/gosling.js/commit/fb4382e749d0d0458a7205ca5a13c06b78d82443))
+
+
+
 # [0.1.0](https://github.com/gosling-lang/gosling.js/compare/v0.0.26...v0.1.0) (2021-02-20)
 
 
