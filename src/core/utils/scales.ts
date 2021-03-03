@@ -19,7 +19,7 @@ export function getNumericDomain(domain: Domain, assembly?: Assembly) {
         if (domain.chromosome.includes('chr')) {
             domain.chromosome = domain.chromosome.replace('chr', '');
         }
-        if (Object.keys(GET_CHROM_SIZES().interval).filter(k => k !== domain.chromosome).length === 0) {
+        if (!Object.keys(GET_CHROM_SIZES().interval).find(chr => chr === `chr${domain.chromosome}`)) {
             // we did not find any, so use '1' by default
             domain.chromosome = '1';
         }
