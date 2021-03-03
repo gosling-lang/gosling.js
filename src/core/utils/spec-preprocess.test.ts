@@ -35,8 +35,8 @@ describe('Fix Spec Downstream', () => {
                 views: [{ layout: 'linear', tracks: [{ overlay: [], width: 0, height: 0 }] }]
             };
             traverseToFixSpecDownstream(spec);
-            expect(spec.views[0].static).toEqual(true);
-            expect((spec.views[0] as any).tracks[0].static).toEqual(true); // TODO:
+            expect(spec.views[0].static).toEqual(false);
+            expect((spec.views[0] as any).tracks[0].static).toEqual(false);
         }
     });
 
@@ -163,8 +163,8 @@ describe('Spec Preprocess', () => {
 
         expect(spec.tracks[0].layout).toEqual('circular');
 
-        // By default, `static` option for circular tracks are `false` since we do not currently support proper zoom/pan interactions for circular ones.
-        expect(spec.tracks[0].static).toEqual(true);
+        // By default, `static` option is `false`.
+        expect(spec.tracks[0].static).toEqual(false);
 
         // The `static` option shouldn't be changed if it is defined by a user.
         expect(spec.tracks[1].static).toEqual(false);

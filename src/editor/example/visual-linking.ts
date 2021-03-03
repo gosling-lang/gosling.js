@@ -13,6 +13,7 @@ export const EX_SPEC_LINKING: GoslingSpec = {
             views: [
                 {
                     spacing: 5,
+                    static: true,
                     layout: 'circular',
                     xDomain: { chromosome: '1' },
                     tracks: [
