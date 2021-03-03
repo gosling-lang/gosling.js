@@ -1,9 +1,10 @@
 import { DataDeep, GoslingSpec, Track } from '../../core/gosling.schema';
+import { GOSLING_PUBLIC_DATA } from './gosling-data';
 
 const width = 350;
 const height = 100;
 const data = {
-    url: 'https://resgen.io/api/v1/tileset_info/?d=M9A9klpwTci5Vf4bHZ864g',
+    url: GOSLING_PUBLIC_DATA.geneAnnotation,
     type: 'beddb',
     genomicFields: [
         { index: 1, name: 'start' },

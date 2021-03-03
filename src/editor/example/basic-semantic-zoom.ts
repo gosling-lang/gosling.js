@@ -1,4 +1,5 @@
 import { GoslingSpec } from '../../';
+import { GOSLING_PUBLIC_DATA } from './gosling-data';
 
 export const EX_SPEC_BASIC_SEMANTIC_ZOOM: GoslingSpec = {
     title: 'Basic Idea of Semantic Zoom',
@@ -10,7 +11,7 @@ export const EX_SPEC_BASIC_SEMANTIC_ZOOM: GoslingSpec = {
         {
             data: {
                 type: 'multivec',
-                url: 'https://resgen.io/api/v1/tileset_info/?d=UvVPeLHuRDiYA3qwFlm7xQ',
+                url: GOSLING_PUBLIC_DATA.multivec,
                 value: 'y',
                 row: '_',
                 column: 'x',
