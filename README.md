@@ -10,7 +10,9 @@
 
 </div>
 
-<p align="center"><img src="https://raw.githubusercontent.com/gosling-lang/gosling.js/master/img/cover.png" width="700"/></p>
+<img width="1549" alt="teaser" src="https://user-images.githubusercontent.com/9922882/109852545-e05f3400-7c22-11eb-90f3-7371e4ddeb42.png">
+
+<!--<p align="center"><img src="https://raw.githubusercontent.com/gosling-lang/gosling.js/master/img/cover.png" width="700"/></p>-->
 
 <br/>
 
