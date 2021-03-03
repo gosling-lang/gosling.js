@@ -1,3 +1,12 @@
+# [0.7.0](https://github.com/gosling-lang/gosling.js/compare/v0.1.1...v0.7.0) (2021-03-03)
+
+
+### Bug Fixes
+
+* initially compile no-desc gist ([9a2d05d](https://github.com/gosling-lang/gosling.js/commit/9a2d05dd5cea092be10dc159bd16651ff27fccbe))
+
+
+
 ## [0.1.1](https://github.com/gosling-lang/gosling.js/compare/v0.1.0...v0.1.1) (2021-03-03)
 
 
