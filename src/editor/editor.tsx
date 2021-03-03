@@ -12,7 +12,7 @@ import stringify from 'json-stringify-pretty-compact';
 import SplitPane from 'react-split-pane';
 import ErrorBoundary from './errorBoundary';
 import { Datum, GoslingSpec } from '../core/gosling.schema';
-import { debounce } from 'lodash';
+import { debounce, isEqual } from 'lodash';
 import { examples } from './example';
 import { HiGlassSpec } from '../core/higlass.schema';
 import GoslingSchema from '../../schema/gosling.schema.json';
@@ -231,7 +231,7 @@ function Editor(props: any) {
 
     const runSpecUpdateVis = useCallback(
         (run?: boolean) => {
-            if (readOnly) {
+            if (isEqual(emptySpec(), code)) {
                 // this means we do not have to compile. This is when we are in the middle of loading data from gist.
                 return;
             }
