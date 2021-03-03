@@ -534,7 +534,7 @@ function Editor(props: any) {
                         <span
                             title="Open GitHub repository"
                             className="side-panel-button"
-                            onClick={() => window.open('https://github.com/gosling-lang/gosling.js/wiki', '_blank')}
+                            onClick={() => window.open('https://github.com/gosling-lang/gosling-docs', '_blank')}
                         >
                             {getIconSVG(ICONS.DOCS, 23, 23)}
                             <br />
