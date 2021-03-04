@@ -356,8 +356,10 @@ function Editor(props: any) {
     return (
         <>
             <div className="demo-navbar">
-                <span className="logo">{LogoSVG}</span>
-                Gosling.js Editor
+                <span style={{ cursor: 'pointer' }} onClick={() => window.open('https://gosling.js.org', '_blank')}>
+                    <span className="logo">{LogoSVG}</span>
+                    Gosling.js Editor
+                </span>
                 {urlSpec && <small> Displaying a custom spec contained in URL</small>}
                 {gistTitle && !IS_SMALL_SCREEN && (
                     <>
