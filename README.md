@@ -20,8 +20,7 @@
 
 ## Introduction
 
-Gosling is a declarative visualization grammar tailored for interactive genomic visualizations. 
-Using Gosling.js, users can easily create interactive and scalable genomic visualizations through writing a JSON configuration. 
+Gosling.js is a declarative grammar for interactive (epi)genomics visualization on the Web.
 
 <div align="center">
 <table>
@@ -64,16 +63,15 @@ Using Gosling.js, users can easily create interactive and scalable genomic visua
 
 The Gosling's key features compared to existing visualization libraries and grammars are as follows:
 
-- **Data Scalability**: As Gosling is built on [HiGlass](http://higlass.io/), the grammar allows you to handle and visualize large genome-mapped data (~3 billion base pairs) and quickly switch the scale of visualization from base-pair resolution to whole genome.
+- **Encoding/Data Scalability**: Gosling scales from whole genomes to single nucleotides via semantic zooming that updates visual encodings dynamically and by using the rendering and data access capabilities of [our HiGlass genomics visualization framework](http://higlass.io/).
 
-- **Encoding Scalability**: Gosling supports an advanced zooming technique, called [Semantic Zooming](https://infovis-wiki.net/wiki/Semantic_Zoom), which allows flexible and seamless visual exploration of large genome-mapped data. This allows you to dynamically switch between different visual encoding strategies that are appropriate for given zoom scale. <!--For example, you can show nucleotide bases of genomic sequence when zoomed in while show overall distribution of the bases using stacked bar chart when zoomed out.-->
+- **Expressiveness**: Gosling is designed to be expressive enoufh to generate pretty much any visualization of genome-mapped data, which we accomplished by basing the grammar on [our taxonomy of (epi)genomics data visualizations](https://onlinelibrary.wiley.com/doi/full/10.1111/cgf.13727).
 
-- **Expressiveness**: Since Gosling is designed based on the [taxonomy for genomic data visualization](https://onlinelibrary.wiley.com/doi/full/10.1111/cgf.13727), it supports genomic visualizations that cannot be easily created using general visualization tools. For example, Gosling allows you to use a circular layout (i.e., displaying genomic coordinates in a polar system), in addition to a linear layout, and easily switch between the two.
-
-- **Interactivity**: Gosling supports intuitive and effective user interactions, including zooming and panning and [brushing and linking](https://infovis-wiki.net/wiki/Linking_and_Brushing), that help you flexibly set up visualization reflecting your different visual analytics use cases.
+- **Interactivity**: Gosling has intuitive and effective user interactions built in, including zooming and panning and [brushing and linking](https://infovis-wiki.net/wiki/Linking_and_Brushing). This enables flexible visualizations that cover a wide range of visual analysis scenarios, like overview + detail views with brushes or comparative views.
 
 ## Learn More About Gosling
-- [Gosling.js Editor and Online Examples](https://gosling.js.org/)
+- [Gosling.js Editor](https://gosling.js.org/)
+- [Community Examples](https://github.com/gosling-lang/gosling-examples)
 - [Documentation](https://github.com/gosling-lang/gosling-docs)
 - [Getting Started](https://github.com/gosling-lang/gosling-docs/blob/master/Getting-Started.md)
 - [Tutorial](https://github.com/gosling-lang/gosling-docs/blob/master/tutorials/Tutorial.md)
