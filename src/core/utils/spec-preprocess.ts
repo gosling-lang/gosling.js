@@ -8,7 +8,7 @@ import {
     DEFAULT_TRACK_WIDTH_LINEAR,
     DEFAULT_VIEW_SPACING
 } from '../layout/defaults';
-import { spreadTracksByData } from './overlay';
+// import { spreadTracksByData } from './overlay';
 
 /**
  * Traverse individual tracks and call the callback function to read and/or update the track definition.
@@ -92,10 +92,16 @@ export function traverseToFixSpecDownstream(spec: GoslingSpec | SingleView, pare
          * Spread superposed tracks if they are assigned to different data/metadata.
          * This process is necessary since we are passing over each track to HiGlass, and if a track contain multiple datastes, HiGlass cannot handle that.
          */
-        spec.tracks = spreadTracksByData(spec.tracks);
+        // spec.tracks = spreadTracksByData(spec.tracks);
 
         const linkID = uuid.v4();
         spec.tracks.forEach((track, i, array) => {
+            if ('tracks' in track) {
+                // This means `track` is still a group of tracks, so continue traversing.
+                traverseToFixSpecDownstream(track, spec);
+                return;
+            }
+
             // If size not defined, set default ones
             if (!track.width) track.width = DEFAULT_TRACK_WIDTH_LINEAR;
             if (!track.height) track.height = DEFAULT_TRACK_HEIGHT_LINEAR;

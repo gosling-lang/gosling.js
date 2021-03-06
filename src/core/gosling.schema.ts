@@ -3,13 +3,13 @@ import { GLYPH_LOCAL_PRESET_TYPE, GLYPH_HIGLASS_PRESET_TYPE } from '../editor/ex
 /* ----------------------------- ROOT SPEC ----------------------------- */
 export type GoslingSpec = RootSpecWithSingleView | RootSpecWithMultipleViews;
 
-export interface RootSpecWithSingleView extends MultipleViews {
+export type RootSpecWithSingleView = SingleView & {
     title?: string;
     subtitle?: string;
     description?: string;
-}
+};
 
-export interface RootSpecWithMultipleViews extends SingleView {
+export interface RootSpecWithMultipleViews extends MultipleViews {
     title?: string;
     subtitle?: string;
     description?: string;
@@ -21,8 +21,19 @@ export type View = SingleView | MultipleViews;
 /*
  * View is a group of tracks that share the same genomic axes and are linked each other by default.
  */
-export interface SingleView extends CommonViewDef {
-    tracks: Track[];
+export type SingleView = OverlaidTracks | StackedTracks;
+
+export interface StackedTracks extends CommonViewDef {
+    alignment?: 'stack'; // ! Be aware that this is optional.
+    tracks: Array<Track | SingleView>;
+}
+
+export interface OverlaidTracks
+    extends CommonViewDef,
+        CommonRequiredTrackDef,
+        Partial<Omit<SingleTrack, 'width' | 'height'>> {
+    alignment: 'overlay';
+    tracks: Array<Track | SingleView>;
 }
 
 export interface MultipleViews extends CommonViewDef {
@@ -52,7 +63,7 @@ export interface CommonViewDef {
 }
 
 /* ----------------------------- TRACK ----------------------------- */
-export type Track = SingleTrack | OverlaidTrack | DataTrack;
+export type Track = SingleTrack | OverlaidTrack | DataTrack; // TODO: Remove OverlaidTrack
 
 export interface CommonRequiredTrackDef {
     width: number;
@@ -64,8 +75,9 @@ export interface CommonTrackDef extends CommonViewDef, CommonRequiredTrackDef {
     subtitle?: string; // Being used only for a title track (i.e., 'text-track')
 
     // Arrangement
-    overlayOnPreviousTrack?: boolean;
+    overlayOnPreviousTrack?: boolean; // TODO: Remove this.
 
+    // TODO: These are now handled only internally and need to be invisible to users.
     // Circular Layout
     outerRadius?: number;
     innerRadius?: number;
@@ -95,7 +107,6 @@ export type MarkType =
     | 'triangleLeft'
     | 'triangleRight'
     | 'triangleBottom'
-    // experimental
     | 'brush'
     // TODO: perhaps need to make this invisible to users
     // being used to show title/subtitle internally
