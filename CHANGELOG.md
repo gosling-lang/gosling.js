@@ -1,3 +1,17 @@
+## [0.7.1](https://github.com/gosling-lang/gosling.js/compare/v0.7.0...v0.7.1) (2021-03-06)
+
+
+### Bug Fixes
+
+* allow using track title in circular layouts ([#315](https://github.com/gosling-lang/gosling.js/issues/315)) ([0dd06a8](https://github.com/gosling-lang/gosling.js/commit/0dd06a8de7fd428eba1dd8fafd89ff9d75887bb6))
+
+
+### Features
+
+* **editor:** allow clicking on the title to open a new tab ([#312](https://github.com/gosling-lang/gosling.js/issues/312)) ([275d757](https://github.com/gosling-lang/gosling.js/commit/275d7572bc225fcfd3fedff4446c810d29adf649))
+
+
+
 # [0.7.0](https://github.com/gosling-lang/gosling.js/compare/v0.1.1...v0.7.0) (2021-03-03)
 
 
