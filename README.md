@@ -65,7 +65,7 @@ The Gosling's key features compared to existing visualization libraries and gram
 
 - **Encoding/Data Scalability**: Gosling scales from whole genomes to single nucleotides via semantic zooming that updates visual encodings dynamically and by using the rendering and data access capabilities of [our HiGlass genomics visualization framework](http://higlass.io/).
 
-- **Expressiveness**: Gosling is designed to be expressive enoufh to generate pretty much any visualization of genome-mapped data, which we accomplished by basing the grammar on [our taxonomy of (epi)genomics data visualizations](https://onlinelibrary.wiley.com/doi/full/10.1111/cgf.13727).
+- **Expressiveness**: Gosling is designed to be expressive enough to generate pretty much any visualization of genome-mapped data, which we accomplished by basing the grammar on [our taxonomy of (epi)genomics data visualizations](https://onlinelibrary.wiley.com/doi/full/10.1111/cgf.13727).
 
 - **Interactivity**: Gosling has intuitive and effective user interactions built in, including zooming and panning and [brushing and linking](https://infovis-wiki.net/wiki/Linking_and_Brushing). This enables flexible visualizations that cover a wide range of visual analysis scenarios, like overview + detail views with brushes or comparative views.
 
