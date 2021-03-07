@@ -54,8 +54,7 @@ export function goslingToHiGlass(
                 mousePositionColor: '#B8BCC1',
                 /* Track title */
                 name: firstResolvedSpec.title,
-                // TODO: Support for circular layouts
-                labelPosition: firstResolvedSpec.layout !== 'circular' && firstResolvedSpec.title ? 'topLeft' : 'none',
+                labelPosition: firstResolvedSpec.title ? 'topLeft' : 'none',
                 fontSize: 12,
                 labelColor: 'black',
                 labelBackgroundColor: 'white',
