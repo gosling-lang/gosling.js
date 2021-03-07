@@ -599,6 +599,25 @@
         }
       ]
     },
+    "GLYPH_HIGLASS_PRESET_TYPE": {
+      "enum": [
+        "gene-annotation-higlass",
+        "gosling-track-higlass",
+        "point-higlass",
+        "line-higlass",
+        "1d-heatmap-higlass",
+        "bar-higlass"
+      ],
+      "type": "string"
+    },
+    "GLYPH_LOCAL_PRESET_TYPE": {
+      "enum": [
+        "gene-annotation-simple",
+        "gene-annotation",
+        "cytogenetic-band"
+      ],
+      "type": "string"
+    },
     "GlyphElement": {
       "additionalProperties": false,
       "properties": {
@@ -1087,7 +1106,14 @@
           "type": "string"
         },
         "type": {
-          "type": "string"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/GLYPH_LOCAL_PRESET_TYPE"
+            },
+            {
+              "$ref": "#/definitions/GLYPH_HIGLASS_PRESET_TYPE"
+            }
+          ]
         }
       },
       "required": [

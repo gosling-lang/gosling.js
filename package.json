@@ -21,10 +21,14 @@
         "test": "jest src/",
         "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s -r 0",
         "format": "eslint src/ --fix && prettier 'src/**/*.css' --write",
-        "schema": "mkdir -p schema & ts-json-schema-generator -p src/index.ts -f tsconfig.json -t GoslingSpec --no-type-check --no-ref-encode > schema/gosling.schema.json",
-        "schema-2": "mkdir -p schema & typescript-json-schema src/index.ts GoslingSpec --include src > schema/gosling.schema.json",
+        "schema": "ts-json-schema-generator -p src/index.ts -f tsconfig.json -t GoslingSpec --no-type-check --no-ref-encode > schema/gosling.schema.json",
+        "schema-2": "typescript-json-schema src/index.ts GoslingSpec --include src > schema/gosling.schema.json",
         "predeploy": "yarn build-editor; echo \"gosling.js.org\" >> build/CNAME",
-        "deploy": "gh-pages -d build"
+        "deploy": "gh-pages -d build",
+        "postbump": "mkdir -p schema/history/$npm_package_version && cp schema/gosling.schema.json schema/history/$npm_package_version/gosling$npm_package_version.schema.json && cp src/core/gosling.schema.ts schema/history/$npm_package_version/gosling$npm_package_version.schema.ts",
+        "version-patch": "yarn version --patch & yarn postbump",
+        "version-minor": "yarn version --minor & yarn postbump",
+        "version-major": "yarn version --major & yarn postbump"
     },
     "peerDependencies": {
         "pixi.js": "^5.3.7",
