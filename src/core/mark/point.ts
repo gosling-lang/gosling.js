@@ -25,10 +25,10 @@ export function drawPoint(g: PIXI.Graphics, model: GoslingTrackModel) {
 
     /* circular parameters */
     const circular = spec.layout === 'circular';
-    const trackInnerRadius = spec.innerRadius ?? 220;
-    const trackOuterRadius = spec.outerRadius ?? 300;
-    const startAngle = spec.startAngle ?? 0;
-    const endAngle = spec.endAngle ?? 360;
+    const trackInnerRadius = spec._innerRadius ?? 220;
+    const trackOuterRadius = spec._outerRadius ?? 300;
+    const startAngle = spec._startAngle ?? 0;
+    const endAngle = spec._endAngle ?? 360;
     const trackRingSize = trackOuterRadius - trackInnerRadius;
     const tcx = trackWidth / 2.0;
     const tcy = trackHeight / 2.0;

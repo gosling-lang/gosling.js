@@ -24,16 +24,15 @@ export type View = SingleView | MultipleViews;
 export type SingleView = OverlaidTracks | StackedTracks;
 
 export interface StackedTracks extends CommonViewDef {
-    alignment?: 'stack'; // ! Be aware that this is optional.
-    tracks: Array<Track | SingleView>;
+    alignment?: 'stack';
+    tracks: Array<Track | OverlaidTracks>;
 }
 
-export interface OverlaidTracks
-    extends CommonViewDef,
-        CommonRequiredTrackDef,
-        Partial<Omit<SingleTrack, 'width' | 'height'>> {
+// TODO: `Omit` may not properly included in the generated `gosling.schema.json`
+// https://github.com/vega/ts-json-schema-generator/issues/101
+export interface OverlaidTracks extends CommonRequiredTrackDef, Partial<Omit<SingleTrack, 'width' | 'height'>> {
     alignment: 'overlay';
-    tracks: Array<Track | SingleView>;
+    tracks: Array<Track>;
 }
 
 export interface MultipleViews extends CommonViewDef {
@@ -63,7 +62,7 @@ export interface CommonViewDef {
 }
 
 /* ----------------------------- TRACK ----------------------------- */
-export type Track = SingleTrack | OverlaidTrack | DataTrack; // TODO: Remove OverlaidTrack
+export type Track = SingleTrack | DataTrack;
 
 export interface CommonRequiredTrackDef {
     width: number;
@@ -75,14 +74,14 @@ export interface CommonTrackDef extends CommonViewDef, CommonRequiredTrackDef {
     subtitle?: string; // Being used only for a title track (i.e., 'text-track')
 
     // Arrangement
-    overlayOnPreviousTrack?: boolean; // TODO: Remove this.
+    _overlayOnPreviousTrack?: boolean;
 
     // TODO: These are now handled only internally and need to be invisible to users.
     // Circular Layout
-    outerRadius?: number;
-    innerRadius?: number;
-    startAngle?: number; // [0, 360]
-    endAngle?: number; // [0, 360]
+    _outerRadius?: number;
+    _innerRadius?: number;
+    _startAngle?: number; // [0, 360]
+    _endAngle?: number; // [0, 360]
 }
 
 /**
@@ -163,16 +162,6 @@ export interface SingleTrack extends CommonTrackDef {
     // Override a spec template that is defined for a given data type
     overrideTemplate?: boolean;
 }
-
-// TODO: Check whether `Omit` is properly included in the generated `gosling.schema.json`
-// https://github.com/vega/ts-json-schema-generator/issues/101
-/**
- * Superposing multiple tracks.
- */
-export type OverlaidTrack = Partial<SingleTrack> &
-    CommonRequiredTrackDef & {
-        overlay: Partial<Omit<SingleTrack, 'height' | 'width' | 'layout' | 'title' | 'subtitle'>>[];
-    };
 
 export interface TrackStyle {
     background?: string;

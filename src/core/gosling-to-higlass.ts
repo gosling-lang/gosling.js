@@ -82,7 +82,7 @@ export function goslingToHiGlass(
             };
         }
 
-        if (gmTrack.overlayOnPreviousTrack) {
+        if (gmTrack._overlayOnPreviousTrack) {
             hgModel.addTrackToCombined(hgTrack);
         } else {
             hgModel
@@ -112,16 +112,16 @@ export function goslingToHiGlass(
                     layout: firstResolvedSpec.layout,
                     innerRadius:
                         channel.axis === 'top'
-                            ? (firstResolvedSpec.outerRadius as number) - HIGLASS_AXIS_SIZE
-                            : firstResolvedSpec.innerRadius,
+                            ? (firstResolvedSpec._outerRadius as number) - HIGLASS_AXIS_SIZE
+                            : firstResolvedSpec._innerRadius,
                     outerRadius:
                         channel.axis === 'top'
-                            ? firstResolvedSpec.outerRadius
-                            : (firstResolvedSpec.innerRadius as number) + HIGLASS_AXIS_SIZE,
+                            ? firstResolvedSpec._outerRadius
+                            : (firstResolvedSpec._innerRadius as number) + HIGLASS_AXIS_SIZE,
                     width: firstResolvedSpec.width,
                     height: firstResolvedSpec.height,
-                    startAngle: firstResolvedSpec.startAngle,
-                    endAngle: firstResolvedSpec.endAngle
+                    startAngle: firstResolvedSpec._startAngle,
+                    endAngle: firstResolvedSpec._endAngle
                 });
             }
         });

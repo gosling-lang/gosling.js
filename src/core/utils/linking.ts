@@ -38,10 +38,10 @@ export function getLinkingInfo(hgModel: HiGlassModel) {
                             stroke: (spec as any).stroke?.value,
                             strokeWidth: (spec as any).strokeWidth?.value,
                             opacity: (spec as any).opacity?.value,
-                            startAngle: spec.startAngle,
-                            endAngle: spec.endAngle,
-                            innerRadius: spec.innerRadius,
-                            outerRadius: spec.outerRadius
+                            startAngle: spec._startAngle,
+                            endAngle: spec._endAngle,
+                            innerRadius: spec._innerRadius,
+                            outerRadius: spec._outerRadius
                         }
                     });
                     return;

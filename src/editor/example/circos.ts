@@ -125,7 +125,7 @@ export const EX_SPEC_CIRCOS: GoslingSpec = {
             opacity: { value: 0.4 },
             width: 700,
             height: 300,
-            overlayOnPreviousTrack: true
+            _overlayOnPreviousTrack: true
         }
     ]
 };

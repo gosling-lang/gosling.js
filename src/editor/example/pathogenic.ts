@@ -172,7 +172,7 @@ export const EX_SPEC_PATHOGENIC: GoslingSpec = {
                     transitionPadding: 500000
                 }
             ],
-            overlayOnPreviousTrack: true,
+            _overlayOnPreviousTrack: true,
             width: 700,
             height: 0
         }

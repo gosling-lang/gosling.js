@@ -93,7 +93,7 @@ describe('Fix Spec Downstream', () => {
                     {
                         tracks: [
                             { overlay: [{ mark: 'link' }], width: 0, height: 0 },
-                            { overlay: [{ mark: 'link' }], width: 0, height: 0, overlayOnPreviousTrack: true }
+                            { overlay: [{ mark: 'link' }], width: 0, height: 0, _overlayOnPreviousTrack: true }
                         ]
                     }
                 ]
@@ -114,7 +114,7 @@ describe('Fix Spec Downstream', () => {
                         tracks: [
                             { overlay: [], width: 0, height: 0 },
                             { overlay: [{ mark: 'link' }], width: 0, height: 0 },
-                            { overlay: [{ mark: 'link' }], width: 0, height: 0, overlayOnPreviousTrack: true }
+                            { overlay: [{ mark: 'link' }], width: 0, height: 0, _overlayOnPreviousTrack: true }
                         ]
                     }
                 ]
@@ -135,8 +135,8 @@ describe('Fix Spec Downstream', () => {
                     {
                         tracks: [
                             { overlay: [], width: 0, height: 0 },
-                            { overlay: [{ mark: 'link' }], width: 0, height: 0, overlayOnPreviousTrack: true },
-                            { overlay: [{ mark: 'link' }], width: 0, height: 0, overlayOnPreviousTrack: true }
+                            { overlay: [{ mark: 'link' }], width: 0, height: 0, _overlayOnPreviousTrack: true },
+                            { overlay: [{ mark: 'link' }], width: 0, height: 0, _overlayOnPreviousTrack: true }
                         ]
                     }
                 ]
@@ -209,7 +209,7 @@ describe('Spec Preprocess', () => {
         const spec: GoslingSpec = {
             layout: 'circular',
             tracks: [
-                { data: { type: 'csv', url: '' }, mark: 'bar', overlayOnPreviousTrack: true, width: 100, height: 100 }
+                { data: { type: 'csv', url: '' }, mark: 'bar', _overlayOnPreviousTrack: true, width: 100, height: 100 }
             ]
         };
         traverseToFixSpecDownstream(spec);

@@ -1,21 +1,38 @@
 import assign from 'lodash/assign';
 import uuid from 'uuid';
-import { SingleTrack, GoslingSpec, SingleView, Track, CommonViewDef, MultipleViews } from '../gosling.schema';
-import { IsTemplate, IsDataDeepTileset, IsSingleTrack, IsChannelDeep, IsOverlaidTrack } from '../gosling.schema.guards';
+import {
+    SingleTrack,
+    GoslingSpec,
+    SingleView,
+    Track,
+    CommonViewDef,
+    MultipleViews,
+    OverlaidTracks
+} from '../gosling.schema';
+import {
+    IsTemplate,
+    IsDataDeepTileset,
+    // IsSingleTrack,
+    IsChannelDeep,
+    IsOverlaidTracks,
+    IsDataTrack
+} from '../gosling.schema.guards';
 import {
     DEFAULT_INNER_RADIUS_PROP,
     DEFAULT_TRACK_HEIGHT_LINEAR,
     DEFAULT_TRACK_WIDTH_LINEAR,
     DEFAULT_VIEW_SPACING
 } from '../layout/defaults';
-// import { spreadTracksByData } from './overlay';
 
 /**
  * Traverse individual tracks and call the callback function to read and/or update the track definition.
  * @param spec
  * @param callback
  */
-export function traverseTracks(spec: GoslingSpec, callback: (t: Track, i: number, ts: Track[]) => void) {
+export function traverseTracks(
+    spec: GoslingSpec,
+    callback: (t: Track | OverlaidTracks, i: number, ts: (Track | OverlaidTracks)[]) => void
+) {
     if ('tracks' in spec) {
         spec.tracks.forEach((...args) => callback(...args));
     } else {
@@ -55,7 +72,6 @@ export function traverseViewArrangements(spec: GoslingSpec, callback: (tv: Multi
     }
 }
 
-// TODO: Many parts are repeatedly used here. Lets' do this in a cleaner way.
 /**
  * Traverse views and tracks to use parents's properties if missing.
  * @param spec
@@ -63,7 +79,9 @@ export function traverseViewArrangements(spec: GoslingSpec, callback: (tv: Multi
  */
 export function traverseToFixSpecDownstream(spec: GoslingSpec | SingleView, parentDef?: CommonViewDef | MultipleViews) {
     if (parentDef) {
-        // For assembly and layout, we use the ones defiend by the parents if missing
+        /**
+         * Override props from parents.
+         */
         if (spec.assembly === undefined) spec.assembly = parentDef.assembly;
         if (spec.layout === undefined) spec.layout = parentDef.layout;
         if (spec.static === undefined) spec.static = parentDef.static !== undefined ? parentDef.static : false;
@@ -74,136 +92,105 @@ export function traverseToFixSpecDownstream(spec: GoslingSpec | SingleView, pare
         if ('views' in spec && 'arrangement' in parentDef && spec.arrangement === undefined)
             spec.arrangement = parentDef.arrangement;
     } else {
-        // This means we are at the rool level, so assign default values if missing
+        /**
+         * This means we are at the rool level, so assign default values if missing.
+         */
         if (spec.assembly === undefined) spec.assembly = 'hg38';
         if (spec.layout === undefined) spec.layout = 'linear';
         if (spec.static === undefined) spec.static = false;
         if (spec.centerRadius === undefined) spec.centerRadius = DEFAULT_INNER_RADIUS_PROP;
         if (spec.spacing === undefined) spec.spacing = DEFAULT_VIEW_SPACING;
         if ('views' in spec && spec.arrangement === undefined) spec.arrangement = 'vertical';
-        // Nothing to do when `xDomain` not suggested
-        // Nothing to do when `xLinkID` not suggested
+        // Nothing to do if `xDomain` undefined
+        // Nothing to do if `xLinkID` undefined
     }
 
     if ('tracks' in spec) {
-        // !!! TODO: (FOR THE RENDERING PERFORMANCE) We need to also combine overlaid tracks if they use identical data and metadata so tha we have to load the data only once.
-        // !!! This should be taken before fixing `overlayOnPreviousTrack` options.
-        /**
-         * Spread superposed tracks if they are assigned to different data/metadata.
-         * This process is necessary since we are passing over each track to HiGlass, and if a track contain multiple datastes, HiGlass cannot handle that.
-         */
-        // spec.tracks = spreadTracksByData(spec.tracks);
-
-        const linkID = uuid.v4();
+        const linkId = uuid.v4();
         spec.tracks.forEach((track, i, array) => {
-            if ('tracks' in track) {
-                // This means `track` is still a group of tracks, so continue traversing.
-                traverseToFixSpecDownstream(track, spec);
+            /**
+             * DataTrack
+             */
+            if (!IsOverlaidTracks(track) && IsDataTrack(track)) {
+                // This shouldn't be reached since all `DataTrack`s should have been changed to `SingleTrack`s before calling this function.
                 return;
             }
 
-            // If size not defined, set default ones
-            if (!track.width) track.width = DEFAULT_TRACK_WIDTH_LINEAR;
-            if (!track.height) track.height = DEFAULT_TRACK_HEIGHT_LINEAR;
-
-            /*
-             * Properties that shouldn't be suggested
-             */
-            if (track.layout) track.layout = undefined;
-
             /**
-             * Override options received from the parent
+             * Fill props using default values and parents' values.
              */
-            if (!track.assembly) track.assembly = spec.assembly;
-            if (!track.layout) track.layout = spec.layout;
-            if (track.static === undefined) track.static = spec.static !== undefined ? spec.static : false;
+            const fillProps = (t: SingleTrack, w = DEFAULT_TRACK_WIDTH_LINEAR, h = DEFAULT_TRACK_HEIGHT_LINEAR) => {
+                /**
+                 * If size is undefined, set default ones.
+                 */
+                if (!t.width) t.width = w;
+                if (!t.height) t.height = h;
 
-            /**
-             * Add x-axis domain
-             */
-            if ((IsSingleTrack(track) || IsOverlaidTrack(track)) && IsChannelDeep(track.x) && !track.x.domain) {
-                track.x.domain = spec.xDomain;
-            } else if (IsOverlaidTrack(track)) {
-                track.overlay.forEach(o => {
-                    if (IsChannelDeep(o.x) && !o.x.domain) {
-                        o.x.domain = spec.xDomain;
-                    }
-                });
-            }
-
-            /**
-             * Link tracks in a single view
-             */
-            if ((IsSingleTrack(track) || IsOverlaidTrack(track)) && IsChannelDeep(track.x) && !track.x.linkingId) {
-                track.x.linkingId = spec.xLinkingId ?? linkID;
-            } else if (IsOverlaidTrack(track)) {
-                let isAdded = false;
-                track.overlay.forEach(o => {
-                    if (isAdded) return; // We want to add only once
-
-                    if (IsChannelDeep(o.x) && !o.x.linkingId) {
-                        // TODO: Is this safe?
-                        o.x.linkingId = spec.xLinkingId ?? linkID;
-                        isAdded = true;
-                    }
-                });
-            }
-
-            if (i === 0) {
-                // There is no track to overlay on
-                track.overlayOnPreviousTrack = false;
+                /*
+                 * Properties that shouldn't be defined by users.
+                 */
+                if (t.layout) t.layout = undefined;
+                if (t._overlayOnPreviousTrack) t._overlayOnPreviousTrack = undefined;
 
                 /**
-                 * Add axis to the first track
+                 * Override options received from the parent.
                  */
-                if ((IsSingleTrack(track) || IsOverlaidTrack(track)) && IsChannelDeep(track.x) && !track.x.axis) {
-                    track.x.axis = 'top';
-                } else if (IsOverlaidTrack(track)) {
-                    let isNone = false; // If there is at least one 'none' axis, should not render axis.
-                    track.overlay.forEach(o => {
-                        if (!isNone && IsChannelDeep(o.x) && !o.x.axis) {
-                            o.x.axis = 'top';
-                        } else if (IsChannelDeep(o.x) && o.x.axis === 'none') {
-                            isNone = true;
-                        }
-                    });
+                if (!t.assembly) t.assembly = spec.assembly;
+                if (!t.layout) t.layout = spec.layout;
+                if (t.static === undefined) t.static = spec.static !== undefined ? spec.static : false;
+
+                /**
+                 * Add x-axis domain.
+                 */
+                if (IsChannelDeep(t.x) && !t.x.domain) {
+                    t.x.domain = spec.xDomain;
+                }
+
+                /**
+                 * Link tracks in a single view.
+                 */
+                if (IsChannelDeep(t.x) && !t.x.linkingId) {
+                    t.x.linkingId = spec.xLinkingId ?? linkId;
+                }
+            };
+            if (IsOverlaidTracks(track)) {
+                track.tracks.forEach(o => fillProps(o as SingleTrack, track.width, track.height));
+            } else {
+                fillProps(track);
+            }
+
+            /**
+             * Add axis to the first track if undefined.
+             */
+            if (i === 0) {
+                const setAxisPosition = (t: SingleTrack) => {
+                    if (IsChannelDeep(t.x) && !t.x.axis) {
+                        t.x.axis = 'top';
+                    }
+                };
+                if (IsOverlaidTracks(track)) {
+                    if (track.tracks.length > 0) {
+                        setAxisPosition(track.tracks[0] as SingleTrack);
+                    }
+                } else {
+                    setAxisPosition(track);
                 }
             }
 
             /*
              * Flip y scale if the last track uses `link` marks
              */
-            if (
-                // first track can never flipped by default
-                i !== 0 &&
-                // [0, ..., i] tracks should not overlaid as a single track
-                ((i === array.length - 1 && array.slice(0, i + 1).filter(d => d.overlayOnPreviousTrack).length < i) ||
-                    // Are the rest of the tracks overlaid as a single track?
-                    (i !== array.length - 1 &&
-                        array.slice(i + 1).filter(d => d.overlayOnPreviousTrack).length === array.length - i - 1 &&
-                        array.slice(0, i + 1).filter(d => d.overlayOnPreviousTrack).length < i))
-            ) {
-                if (IsSingleTrack(track) && track.mark === 'link' && track.flipY === undefined) {
-                    track.flipY = true;
-                } else if (IsOverlaidTrack(track)) {
-                    if (track.mark === 'link' && track.flipY === undefined) {
-                        track.flipY = true;
+            if (i === array.length - 1) {
+                const flipY = (t: SingleTrack) => {
+                    if (t.mark === 'link' && t.flipY === undefined) {
+                        t.flipY = true;
                     }
-                    track.overlay.forEach(o => {
-                        if (o.mark === 'link' && o.flipY === undefined) {
-                            o.flipY = true;
-                        }
-                    });
+                };
+                if (IsOverlaidTracks(track)) {
+                    track.tracks.forEach(o => flipY(o as SingleTrack));
+                } else {
+                    flipY(track);
                 }
-            }
-
-            if (track.overlayOnPreviousTrack && array[i - 1]) {
-                // Use the same size as the previous one
-                track.width = array[i - 1].width;
-                track.height = array[i - 1].height;
-
-                track.layout = array[i - 1].layout;
-                track.assembly = array[i - 1].assembly;
             }
         });
     } else {
@@ -282,25 +269,38 @@ export function getMultivecTemplate(
  * @param spec
  */
 export function overrideTemplates(spec: GoslingSpec) {
-    traverseTracks(spec, (t, i, ts) => {
-        if (!t.data || !IsDataDeepTileset(t.data)) {
+    traverseTracks(spec, (track, i, tracks) => {
+        if (!track.data || !IsDataDeepTileset(track.data)) {
             // if `data` is not specified, we can not provide a correct template.
             return;
         }
 
-        if (!IsTemplate(t)) {
-            // This is not partial specification that we need to use templates
-            return;
-        }
+        const setTemplates = (_t: Track, _i: number, _tracks: Track[]) => {
+            if (!IsTemplate(_t)) {
+                // This is not partial specification that we need to use templates
+                return;
+            }
 
-        switch (t.data.type) {
-            case 'vector':
-            case 'bigwig':
-                ts[i] = assign(getVectorTemplate(t.data.column, t.data.value), t);
-                break;
-            case 'multivec':
-                ts[i] = assign(getMultivecTemplate(t.data.row, t.data.column, t.data.value, t.data.categories), t);
-                break;
+            switch (_t.data.type) {
+                case 'vector':
+                case 'bigwig':
+                    _tracks[_i] = assign(getVectorTemplate(_t.data.column, _t.data.value), _t);
+                    break;
+                case 'multivec':
+                    _tracks[_i] = assign(
+                        getMultivecTemplate(_t.data.row, _t.data.column, _t.data.value, _t.data.categories),
+                        _t
+                    );
+                    break;
+            }
+        };
+
+        if (IsOverlaidTracks(track)) {
+            track.tracks.forEach((o, i, ots) => {
+                setTemplates(o, i, ots);
+            });
+        } else {
+            setTemplates(track, i, tracks as Track[]);
         }
     });
 }

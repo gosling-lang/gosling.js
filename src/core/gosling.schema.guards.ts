@@ -13,7 +13,7 @@ import {
     MarkDeep,
     Track,
     SingleTrack,
-    OverlaidTrack,
+    // OverlaidTrack,
     ChannelBind,
     ChannelTypes,
     Channel,
@@ -27,7 +27,9 @@ import {
     MultivecData,
     VectorData,
     DataTrack,
-    BIGWIGData
+    BIGWIGData,
+    // SingleView,
+    OverlaidTracks
 } from './gosling.schema';
 import { SUPPORTED_CHANNELS } from './mark';
 import { isArray } from 'lodash';
@@ -56,12 +58,11 @@ export function IsDataTransform(_: DataTransform | ChannelDeep | ChannelValue): 
 }
 
 export function IsDataTrack(_: Track): _ is DataTrack {
-    // !!! Track might not contain `mark` when it is superposed one
-    return !IsOverlaidTrack(_) && 'data' in _ && !('mark' in _);
+    return 'data' in _ && !('mark' in _);
 }
 
 export function IsTemplate(_: Track): boolean {
-    return !!('data' in _ && (!('mark' in _) || _.overrideTemplate) && !IsOverlaidTrack(_));
+    return !!('data' in _ && (!('mark' in _) || _.overrideTemplate));
 }
 
 export function IsDataDeep(
@@ -111,8 +112,8 @@ export function IsSingleTrack(track: Track): track is SingleTrack {
     return !('overlay' in track);
 }
 
-export function IsOverlaidTrack(track: Track): track is OverlaidTrack {
-    return 'overlay' in track;
+export function IsOverlaidTracks(track: Track | OverlaidTracks): track is OverlaidTracks {
+    return 'tracks' in track;
 }
 
 export function IsChannelValue(
@@ -224,19 +225,9 @@ export function getChannelKeysByType(spec: SingleTrack, t: FieldType) {
     return keys;
 }
 
-export function IsXAxis(_: Track) {
-    if ((IsSingleTrack(_) || IsOverlaidTrack(_)) && IsChannelDeep(_.x) && _.x.axis && _.x.axis !== 'none') {
-        return true;
-    } else if (IsOverlaidTrack(_)) {
-        let isFound = false;
-        _.overlay.forEach(t => {
-            if (isFound) return;
-
-            if (IsChannelDeep(t.x) && (t.x.axis === 'top' || t.x.axis === 'bottom')) {
-                isFound = true;
-            }
-        });
-        return isFound;
-    }
-    return false;
+/**
+ * Should the x axis be shown in the track?
+ */
+export function isXAxis(_: Track) {
+    return IsChannelDeep(_.x) && _.x.axis && _.x.axis !== 'none';
 }

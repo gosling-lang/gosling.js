@@ -364,6 +364,21 @@
       "additionalProperties": false,
       "description": "Partial specification of `BasicSingleTrack` to use default visual encoding predefined by data type.",
       "properties": {
+        "_endAngle": {
+          "type": "number"
+        },
+        "_innerRadius": {
+          "type": "number"
+        },
+        "_outerRadius": {
+          "type": "number"
+        },
+        "_overlayOnPreviousTrack": {
+          "type": "boolean"
+        },
+        "_startAngle": {
+          "type": "number"
+        },
         "assembly": {
           "$ref": "#/definitions/Assembly"
         },
@@ -374,28 +389,13 @@
         "data": {
           "$ref": "#/definitions/DataDeep"
         },
-        "endAngle": {
-          "type": "number"
-        },
         "height": {
-          "type": "number"
-        },
-        "innerRadius": {
           "type": "number"
         },
         "layout": {
           "$ref": "#/definitions/Layout"
         },
-        "outerRadius": {
-          "type": "number"
-        },
-        "overlayOnPreviousTrack": {
-          "type": "boolean"
-        },
         "spacing": {
-          "type": "number"
-        },
-        "startAngle": {
           "type": "number"
         },
         "static": {
@@ -1323,339 +1323,24 @@
       ],
       "type": "object"
     },
-    "OverlaidTrack": {
-      "additionalProperties": false,
-      "description": "Superposing multiple tracks.",
-      "properties": {
-        "assembly": {
-          "$ref": "#/definitions/Assembly"
-        },
-        "centerRadius": {
-          "description": "Proportion of the radius of the center white space.",
-          "type": "number"
-        },
-        "color": {
-          "$ref": "#/definitions/Channel"
-        },
-        "column": {
-          "$ref": "#/definitions/Channel"
-        },
-        "data": {
-          "$ref": "#/definitions/DataDeep"
-        },
-        "dataTransform": {
-          "$ref": "#/definitions/DataTransform"
-        },
-        "endAngle": {
-          "type": "number"
-        },
-        "flipY": {
-          "type": "boolean"
-        },
-        "height": {
-          "type": "number"
-        },
-        "innerRadius": {
-          "type": "number"
-        },
-        "layout": {
-          "$ref": "#/definitions/Layout"
-        },
-        "mark": {
-          "$ref": "#/definitions/Mark"
-        },
-        "opacity": {
-          "$ref": "#/definitions/Channel"
-        },
-        "outerRadius": {
-          "type": "number"
-        },
-        "overlay": {
-          "items": {
-            "additionalProperties": false,
-            "properties": {
-              "assembly": {
-                "$ref": "#/definitions/Assembly"
-              },
-              "centerRadius": {
-                "description": "Proportion of the radius of the center white space.",
-                "type": "number"
-              },
-              "color": {
-                "$ref": "#/definitions/Channel"
-              },
-              "column": {
-                "$ref": "#/definitions/Channel"
-              },
-              "data": {
-                "$ref": "#/definitions/DataDeep"
-              },
-              "dataTransform": {
-                "$ref": "#/definitions/DataTransform"
-              },
-              "endAngle": {
-                "type": "number"
-              },
-              "flipY": {
-                "type": "boolean"
-              },
-              "innerRadius": {
-                "type": "number"
-              },
-              "mark": {
-                "$ref": "#/definitions/Mark"
-              },
-              "opacity": {
-                "$ref": "#/definitions/Channel"
-              },
-              "outerRadius": {
-                "type": "number"
-              },
-              "overlayOnPreviousTrack": {
-                "type": "boolean"
-              },
-              "overrideTemplate": {
-                "type": "boolean"
-              },
-              "row": {
-                "$ref": "#/definitions/Channel"
-              },
-              "size": {
-                "$ref": "#/definitions/Channel"
-              },
-              "spacing": {
-                "type": "number"
-              },
-              "stackY": {
-                "type": "boolean"
-              },
-              "startAngle": {
-                "type": "number"
-              },
-              "static": {
-                "type": "boolean"
-              },
-              "stretch": {
-                "type": "boolean"
-              },
-              "stroke": {
-                "$ref": "#/definitions/Channel"
-              },
-              "strokeWidth": {
-                "$ref": "#/definitions/Channel"
-              },
-              "style": {
-                "$ref": "#/definitions/TrackStyle"
-              },
-              "text": {
-                "$ref": "#/definitions/Channel"
-              },
-              "tooltip": {
-                "items": {
-                  "additionalProperties": false,
-                  "properties": {
-                    "alt": {
-                      "type": "string"
-                    },
-                    "field": {
-                      "type": "string"
-                    },
-                    "type": {
-                      "$ref": "#/definitions/FieldType"
-                    }
-                  },
-                  "required": [
-                    "field",
-                    "type"
-                  ],
-                  "type": "object"
-                },
-                "type": "array"
-              },
-              "visibility": {
-                "items": {
-                  "$ref": "#/definitions/VisibilityCondition"
-                },
-                "type": "array"
-              },
-              "x": {
-                "$ref": "#/definitions/Channel"
-              },
-              "x1": {
-                "$ref": "#/definitions/Channel"
-              },
-              "x1e": {
-                "$ref": "#/definitions/Channel"
-              },
-              "xAxis": {
-                "$ref": "#/definitions/AxisPosition"
-              },
-              "xDomain": {
-                "anyOf": [
-                  {
-                    "$ref": "#/definitions/DomainInterval"
-                  },
-                  {
-                    "$ref": "#/definitions/DomainChrInterval"
-                  },
-                  {
-                    "$ref": "#/definitions/DomainChr"
-                  }
-                ]
-              },
-              "xLinkingId": {
-                "type": "string"
-              },
-              "xe": {
-                "$ref": "#/definitions/Channel"
-              },
-              "y": {
-                "$ref": "#/definitions/Channel"
-              },
-              "y1": {
-                "$ref": "#/definitions/Channel"
-              },
-              "y1e": {
-                "$ref": "#/definitions/Channel"
-              },
-              "ye": {
-                "$ref": "#/definitions/Channel"
-              }
-            },
-            "type": "object"
-          },
-          "type": "array"
-        },
-        "overlayOnPreviousTrack": {
-          "type": "boolean"
-        },
-        "overrideTemplate": {
-          "type": "boolean"
-        },
-        "row": {
-          "$ref": "#/definitions/Channel"
-        },
-        "size": {
-          "$ref": "#/definitions/Channel"
-        },
-        "spacing": {
-          "type": "number"
-        },
-        "stackY": {
-          "type": "boolean"
-        },
-        "startAngle": {
-          "type": "number"
-        },
-        "static": {
-          "type": "boolean"
-        },
-        "stretch": {
-          "type": "boolean"
-        },
-        "stroke": {
-          "$ref": "#/definitions/Channel"
-        },
-        "strokeWidth": {
-          "$ref": "#/definitions/Channel"
-        },
-        "style": {
-          "$ref": "#/definitions/TrackStyle"
-        },
-        "subtitle": {
-          "type": "string"
-        },
-        "text": {
-          "$ref": "#/definitions/Channel"
-        },
-        "title": {
-          "type": "string"
-        },
-        "tooltip": {
-          "items": {
-            "additionalProperties": false,
-            "properties": {
-              "alt": {
-                "type": "string"
-              },
-              "field": {
-                "type": "string"
-              },
-              "type": {
-                "$ref": "#/definitions/FieldType"
-              }
-            },
-            "required": [
-              "field",
-              "type"
-            ],
-            "type": "object"
-          },
-          "type": "array"
-        },
-        "visibility": {
-          "items": {
-            "$ref": "#/definitions/VisibilityCondition"
-          },
-          "type": "array"
-        },
-        "width": {
-          "type": "number"
-        },
-        "x": {
-          "$ref": "#/definitions/Channel"
-        },
-        "x1": {
-          "$ref": "#/definitions/Channel"
-        },
-        "x1e": {
-          "$ref": "#/definitions/Channel"
-        },
-        "xAxis": {
-          "$ref": "#/definitions/AxisPosition"
-        },
-        "xDomain": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/DomainInterval"
-            },
-            {
-              "$ref": "#/definitions/DomainChrInterval"
-            },
-            {
-              "$ref": "#/definitions/DomainChr"
-            }
-          ]
-        },
-        "xLinkingId": {
-          "type": "string"
-        },
-        "xe": {
-          "$ref": "#/definitions/Channel"
-        },
-        "y": {
-          "$ref": "#/definitions/Channel"
-        },
-        "y1": {
-          "$ref": "#/definitions/Channel"
-        },
-        "y1e": {
-          "$ref": "#/definitions/Channel"
-        },
-        "ye": {
-          "$ref": "#/definitions/Channel"
-        }
-      },
-      "required": [
-        "height",
-        "overlay",
-        "width"
-      ],
-      "type": "object"
-    },
     "OverlaidTracks": {
       "additionalProperties": false,
       "properties": {
+        "_endAngle": {
+          "type": "number"
+        },
+        "_innerRadius": {
+          "type": "number"
+        },
+        "_outerRadius": {
+          "type": "number"
+        },
+        "_overlayOnPreviousTrack": {
+          "type": "boolean"
+        },
+        "_startAngle": {
+          "type": "number"
+        },
         "alignment": {
           "const": "overlay",
           "type": "string"
@@ -1679,16 +1364,10 @@
         "dataTransform": {
           "$ref": "#/definitions/DataTransform"
         },
-        "endAngle": {
-          "type": "number"
-        },
         "flipY": {
           "type": "boolean"
         },
         "height": {
-          "type": "number"
-        },
-        "innerRadius": {
           "type": "number"
         },
         "layout": {
@@ -1699,12 +1378,6 @@
         },
         "opacity": {
           "$ref": "#/definitions/Channel"
-        },
-        "outerRadius": {
-          "type": "number"
-        },
-        "overlayOnPreviousTrack": {
-          "type": "boolean"
         },
         "overrideTemplate": {
           "type": "boolean"
@@ -1720,9 +1393,6 @@
         },
         "stackY": {
           "type": "boolean"
-        },
-        "startAngle": {
-          "type": "number"
         },
         "static": {
           "type": "boolean"
@@ -1772,14 +1442,7 @@
         },
         "tracks": {
           "items": {
-            "anyOf": [
-              {
-                "$ref": "#/definitions/Track"
-              },
-              {
-                "$ref": "#/definitions/SingleView"
-              }
-            ]
+            "$ref": "#/definitions/Track"
           },
           "type": "array"
         },
@@ -1977,6 +1640,21 @@
         {
           "additionalProperties": false,
           "properties": {
+            "_endAngle": {
+              "type": "number"
+            },
+            "_innerRadius": {
+              "type": "number"
+            },
+            "_outerRadius": {
+              "type": "number"
+            },
+            "_overlayOnPreviousTrack": {
+              "type": "boolean"
+            },
+            "_startAngle": {
+              "type": "number"
+            },
             "alignment": {
               "const": "overlay",
               "type": "string"
@@ -2003,16 +1681,10 @@
             "description": {
               "type": "string"
             },
-            "endAngle": {
-              "type": "number"
-            },
             "flipY": {
               "type": "boolean"
             },
             "height": {
-              "type": "number"
-            },
-            "innerRadius": {
               "type": "number"
             },
             "layout": {
@@ -2023,12 +1695,6 @@
             },
             "opacity": {
               "$ref": "#/definitions/Channel"
-            },
-            "outerRadius": {
-              "type": "number"
-            },
-            "overlayOnPreviousTrack": {
-              "type": "boolean"
             },
             "overrideTemplate": {
               "type": "boolean"
@@ -2044,9 +1710,6 @@
             },
             "stackY": {
               "type": "boolean"
-            },
-            "startAngle": {
-              "type": "number"
             },
             "static": {
               "type": "boolean"
@@ -2096,14 +1759,7 @@
             },
             "tracks": {
               "items": {
-                "anyOf": [
-                  {
-                    "$ref": "#/definitions/Track"
-                  },
-                  {
-                    "$ref": "#/definitions/SingleView"
-                  }
-                ]
+                "$ref": "#/definitions/Track"
               },
               "type": "array"
             },
@@ -2207,7 +1863,7 @@
                     "$ref": "#/definitions/Track"
                   },
                   {
-                    "$ref": "#/definitions/SingleView"
+                    "$ref": "#/definitions/OverlaidTracks"
                   }
                 ]
               },
@@ -2243,6 +1899,21 @@
     "SingleTrack": {
       "additionalProperties": false,
       "properties": {
+        "_endAngle": {
+          "type": "number"
+        },
+        "_innerRadius": {
+          "type": "number"
+        },
+        "_outerRadius": {
+          "type": "number"
+        },
+        "_overlayOnPreviousTrack": {
+          "type": "boolean"
+        },
+        "_startAngle": {
+          "type": "number"
+        },
         "assembly": {
           "$ref": "#/definitions/Assembly"
         },
@@ -2262,16 +1933,10 @@
         "dataTransform": {
           "$ref": "#/definitions/DataTransform"
         },
-        "endAngle": {
-          "type": "number"
-        },
         "flipY": {
           "type": "boolean"
         },
         "height": {
-          "type": "number"
-        },
-        "innerRadius": {
           "type": "number"
         },
         "layout": {
@@ -2282,12 +1947,6 @@
         },
         "opacity": {
           "$ref": "#/definitions/Channel"
-        },
-        "outerRadius": {
-          "type": "number"
-        },
-        "overlayOnPreviousTrack": {
-          "type": "boolean"
         },
         "overrideTemplate": {
           "type": "boolean"
@@ -2303,9 +1962,6 @@
         },
         "stackY": {
           "type": "boolean"
-        },
-        "startAngle": {
-          "type": "number"
         },
         "static": {
           "type": "boolean"
@@ -2500,7 +2156,7 @@
                 "$ref": "#/definitions/Track"
               },
               {
-                "$ref": "#/definitions/SingleView"
+                "$ref": "#/definitions/OverlaidTracks"
               }
             ]
           },
@@ -2535,9 +2191,6 @@
       "anyOf": [
         {
           "$ref": "#/definitions/SingleTrack"
-        },
-        {
-          "$ref": "#/definitions/OverlaidTrack"
         },
         {
           "$ref": "#/definitions/DataTrack"

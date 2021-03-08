@@ -234,7 +234,7 @@ export const EX_SPEC_GIVE: GoslingSpec = {
                     style: {
                         outlineWidth: 0
                     },
-                    overlayOnPreviousTrack: true,
+                    _overlayOnPreviousTrack: true,
                     width: 700,
                     height: 40
                 }
@@ -344,7 +344,7 @@ export const EX_SPEC_GIVE: GoslingSpec = {
                     style: {
                         outlineWidth: 0
                     },
-                    overlayOnPreviousTrack: true,
+                    _overlayOnPreviousTrack: true,
                     width: 700,
                     height: 40
                 },

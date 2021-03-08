@@ -11,10 +11,10 @@ export function drawCircularOutlines(HGC: any, trackInfo: any, tile: any, tm: Go
     const [trackWidth, trackHeight] = trackInfo.dimensions;
 
     /* circular parameters */
-    const trackInnerRadius = spec.innerRadius ?? 220; // TODO: should default values be filled already
-    const trackOuterRadius = spec.outerRadius ?? 300; // TODO: should be smaller than Math.min(width, height)
-    const startAngle = spec.startAngle ?? 0;
-    const endAngle = spec.endAngle ?? 360;
+    const trackInnerRadius = spec._innerRadius ?? 220; // TODO: should default values be filled already
+    const trackOuterRadius = spec._outerRadius ?? 300; // TODO: should be smaller than Math.min(width, height)
+    const startAngle = spec._startAngle ?? 0;
+    const endAngle = spec._endAngle ?? 360;
     const cx = trackWidth / 2.0;
     const cy = trackHeight / 2.0;
 

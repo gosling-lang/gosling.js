@@ -1,5 +1,5 @@
 import { MultipleViews, CommonViewDef, GoslingSpec, Track, SingleView } from '../gosling.schema';
-import { IsOverlaidTrack, IsXAxis } from '../gosling.schema.guards';
+import { IsOverlaidTracks, isXAxis } from '../gosling.schema.guards';
 import { HIGLASS_AXIS_SIZE } from '../higlass-model';
 import {
     DEFAULT_CIRCULAR_VIEW_PADDING,
@@ -265,17 +265,17 @@ function traverseAndCollectTrackInfo(
         cTracks.forEach((t, i) => {
             t.track.layout = 'circular';
 
-            t.track.outerRadius = TOTAL_RADIUS - PADDING - ((t.boundingBox.y - dy) / cumHeight) * TOTAL_RING_SIZE;
-            t.track.innerRadius =
+            t.track._outerRadius = TOTAL_RADIUS - PADDING - ((t.boundingBox.y - dy) / cumHeight) * TOTAL_RING_SIZE;
+            t.track._innerRadius =
                 TOTAL_RADIUS - PADDING - ((t.boundingBox.y + t.boundingBox.height - dy) / cumHeight) * TOTAL_RING_SIZE;
 
             // in circular layouts, we place spacing in the origin as well
             const spacingAngle = (SPACING / cumWidth) * 360;
 
             // !!! Multiplying by (cumWidth - SPACING) / cumWidth) to rescale to exclude SPACING
-            t.track.startAngle =
+            t.track._startAngle =
                 spacingAngle + ((((t.boundingBox.x - dx) / cumWidth) * (cumWidth - SPACING)) / cumWidth) * 360;
-            t.track.endAngle =
+            t.track._endAngle =
                 ((((t.boundingBox.x + t.boundingBox.width - dx) / cumWidth) * (cumWidth - SPACING)) / cumWidth) * 360;
             // t.track.startAngle = ((t.boundingBox.x - dx) / cumWidth) * 360;
             // t.track.endAngle = ((t.boundingBox.x + t.boundingBox.width - dx) / cumWidth) * 360;
@@ -287,12 +287,12 @@ function traverseAndCollectTrackInfo(
             t.boundingBox.height = t.track.height = t.boundingBox.width = t.track.width = TOTAL_RADIUS * 2;
 
             if (i !== 0) {
-                t.track.overlayOnPreviousTrack = true;
+                t.track._overlayOnPreviousTrack = true;
             }
 
             // !!! As circular tracks are not well supported now when parallelized or serialized, we do not support brush for now.
             if (ifMultipleViews) {
-                if (IsOverlaidTrack(t.track)) {
+                if (IsOverlaidTracks(t.track)) {
                     t.track.overlay = t.track.overlay.filter(o => o.mark !== 'brush');
                 }
             }
@@ -305,7 +305,7 @@ function traverseAndCollectTrackInfo(
 }
 
 export function getNumOfXAxes(tracks: Track[]): number {
-    return tracks.filter(t => IsXAxis(t)).length;
+    return tracks.filter(t => isXAxis(t)).length;
 }
 
 /**

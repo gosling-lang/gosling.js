@@ -1,9 +1,9 @@
-import { IsXAxis } from './gosling.schema.guards';
+import { isXAxis } from './gosling.schema.guards';
 
 describe('Type Guard', () => {
     it('IsAxis', () => {
         expect(
-            IsXAxis({
+            isXAxis({
                 title: 'chr3',
                 data: {
                     url: 'https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/cytogenetic_band.csv',
