@@ -413,6 +413,12 @@
         "xAxis": {
           "$ref": "#/definitions/AxisPosition"
         },
+        "xBrushingIds": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
         "xDomain": {
           "anyOf": [
             {
@@ -1225,6 +1231,12 @@
         "xAxis": {
           "$ref": "#/definitions/AxisPosition"
         },
+        "xBrushingIds": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
         "xDomain": {
           "anyOf": [
             {
@@ -1467,6 +1479,12 @@
         "xAxis": {
           "$ref": "#/definitions/AxisPosition"
         },
+        "xBrushingIds": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
         "xDomain": {
           "anyOf": [
             {
@@ -1612,6 +1630,12 @@
         },
         "xAxis": {
           "$ref": "#/definitions/AxisPosition"
+        },
+        "xBrushingIds": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
         },
         "xDomain": {
           "anyOf": [
@@ -1784,6 +1808,12 @@
             "xAxis": {
               "$ref": "#/definitions/AxisPosition"
             },
+            "xBrushingIds": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
             "xDomain": {
               "anyOf": [
                 {
@@ -1871,6 +1901,12 @@
             },
             "xAxis": {
               "$ref": "#/definitions/AxisPosition"
+            },
+            "xBrushingIds": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
             },
             "xDomain": {
               "anyOf": [
@@ -2030,6 +2066,12 @@
         "xAxis": {
           "$ref": "#/definitions/AxisPosition"
         },
+        "xBrushingIds": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
         "xDomain": {
           "anyOf": [
             {
@@ -2164,6 +2206,12 @@
         },
         "xAxis": {
           "$ref": "#/definitions/AxisPosition"
+        },
+        "xBrushingIds": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
         },
         "xDomain": {
           "anyOf": [

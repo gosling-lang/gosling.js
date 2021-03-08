@@ -1,4 +1,4 @@
-import { MultipleViews, CommonViewDef, GoslingSpec, Track, SingleView } from '../gosling.schema';
+import { MultipleViews, CommonViewDef, GoslingSpec, Track, SingleView, OverlaidTracks } from '../gosling.schema';
 import { IsOverlaidTracks, isXAxis } from '../gosling.schema.guards';
 import { HIGLASS_AXIS_SIZE } from '../higlass-model';
 import {
@@ -148,7 +148,8 @@ function traverseAndCollectTrackInfo(
         }
     });
 
-    let noChildConcatArrangement = true; // if v/hconcat is being used by children, circular visualizations should be adjacently placed.
+    // if a horizontal/vertical arrangement is being used by children, they should be placed separately.
+    let noChildConcatArrangement = true;
     traverseViewArrangements(spec, (a: MultipleViews) => {
         if (a.arrangement === 'vertical' || a.arrangement === 'horizontal') {
             noChildConcatArrangement = false;
@@ -166,34 +167,39 @@ function traverseAndCollectTrackInfo(
 
     if ('tracks' in spec) {
         // Use the largest `width` for this view.
-        cumWidth = Math.max(...spec.tracks.map(d => d.width)); //forceWidth ? forceWidth : spec.tracks[0]?.width;
+        cumWidth = Math.max(...spec.tracks.map((d: Track | OverlaidTracks) => d.width));
+
         spec.tracks.forEach((track, i, array) => {
-            // let scaledHeight = track.height;
-
-            if (getNumOfXAxes([track]) === 1) {
-                track.height += HIGLASS_AXIS_SIZE;
-            }
-
+            // Use shared `width` across tracks.
             track.width = cumWidth;
 
-            output.push({
-                track,
-                boundingBox: {
-                    x: dx,
-                    y: dy + cumHeight,
-                    width: cumWidth,
-                    height: track.height
-                },
-                layout: { x: 0, y: 0, w: 0, h: 0 } // Just put a dummy info here, this should be added after entire bounding box has been determined
-            });
-
-            if (array[i + 1] && array[i + 1].overlayOnPreviousTrack) {
-                // do not add a height
-            } else {
-                cumHeight += track.height;
-                if (i !== array.length - 1) {
-                    cumHeight += spec.spacing !== undefined ? spec.spacing : 0;
+            const addInfo = (t: Track) => {
+                output.push({
+                    track: t,
+                    boundingBox: {
+                        x: dx,
+                        y: dy + cumHeight,
+                        width: cumWidth,
+                        height: track.height
+                    },
+                    layout: { x: 0, y: 0, w: 0, h: 0 } // Just put a dummy info here, this should be added after entire bounding box has been determined
+                });
+            };
+            if (IsOverlaidTracks(track)) {
+                if (getNumOfXAxes(track.tracks) >= 1) {
+                    track.height += HIGLASS_AXIS_SIZE; // TODO: this should be donw in the spec-preprocess
                 }
+                track.tracks.forEach(t => addInfo(t));
+            } else {
+                if (getNumOfXAxes([track]) === 1) {
+                    track.height += HIGLASS_AXIS_SIZE;
+                }
+                addInfo(track);
+            }
+
+            cumHeight += track.height;
+            if (i !== array.length - 1) {
+                cumHeight += spec.spacing !== undefined ? spec.spacing : 0;
             }
         });
     } else {
@@ -287,6 +293,7 @@ function traverseAndCollectTrackInfo(
             t.boundingBox.height = t.track.height = t.boundingBox.width = t.track.width = TOTAL_RADIUS * 2;
 
             if (i !== 0) {
+                // Technically, we overlay tracks that is 'combined' as a single circular view.
                 t.track._overlayOnPreviousTrack = true;
             }
 

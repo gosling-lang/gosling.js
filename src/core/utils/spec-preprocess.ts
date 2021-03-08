@@ -72,6 +72,7 @@ export function traverseViewArrangements(spec: GoslingSpec, callback: (tv: Multi
     }
 }
 
+// TODO: Resolve overlaid tracks.
 /**
  * Traverse views and tracks to use parents's properties if missing.
  * @param spec
@@ -109,7 +110,7 @@ export function traverseToFixSpecDownstream(spec: GoslingSpec | SingleView, pare
         const linkId = uuid.v4();
         spec.tracks.forEach((track, i, array) => {
             /**
-             * DataTrack
+             * Is this DataTrack?
              */
             if (!IsOverlaidTracks(track) && IsDataTrack(track)) {
                 // This shouldn't be reached since all `DataTrack`s should have been changed to `SingleTrack`s before calling this function.
@@ -155,6 +156,9 @@ export function traverseToFixSpecDownstream(spec: GoslingSpec | SingleView, pare
             };
             if (IsOverlaidTracks(track)) {
                 track.tracks.forEach(o => fillProps(o as SingleTrack, track.width, track.height));
+
+                // Set a flag value `true` so that we know that these tracks should be stored in a single higlass track.
+                track.tracks.forEach((o, i) => (o._overlayOnPreviousTrack = i !== 0));
             } else {
                 fillProps(track);
             }

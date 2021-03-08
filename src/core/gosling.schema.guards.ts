@@ -13,7 +13,6 @@ import {
     MarkDeep,
     Track,
     SingleTrack,
-    // OverlaidTrack,
     ChannelBind,
     ChannelTypes,
     Channel,
@@ -28,7 +27,6 @@ import {
     VectorData,
     DataTrack,
     BIGWIGData,
-    // SingleView,
     OverlaidTracks
 } from './gosling.schema';
 import { SUPPORTED_CHANNELS } from './mark';
