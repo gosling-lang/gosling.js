@@ -34,6 +34,7 @@ export const EX_SPEC_PATHOGENIC: GoslingSpec = {
             tracks: [
                 {
                     mark: 'bar',
+                    x: { field: 'start', type: 'genomic' },
                     y: {
                         field: 'significance',
                         type: 'nominal',
@@ -66,6 +67,7 @@ export const EX_SPEC_PATHOGENIC: GoslingSpec = {
                 },
                 {
                     mark: 'point',
+                    x: { field: 'start', type: 'genomic' },
                     row: {
                         field: 'significance',
                         type: 'nominal',
@@ -79,6 +81,8 @@ export const EX_SPEC_PATHOGENIC: GoslingSpec = {
                             'Benign'
                         ]
                     },
+                    size: { value: 7 },
+                    opacity: { value: 0.8 },
                     visibility: [
                         {
                             measure: 'zoomLevel',
@@ -151,9 +155,6 @@ export const EX_SPEC_PATHOGENIC: GoslingSpec = {
                 ],
                 range: ['#CB3B8C', '#CB71A3', '#CB96B3', 'gray', '#029F73', '#5A9F8C', '#5A9F8C']
             },
-            x: { field: 'start', type: 'genomic' },
-            size: { value: 7 },
-            opacity: { value: 0.8 },
             width: 600,
             height: 150
         }
