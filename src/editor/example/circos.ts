@@ -9,7 +9,8 @@ export const EX_SPEC_CIRCOS: GoslingSpec = {
     spacing: 1,
     centerRadius: 0.3,
     alignment: 'stack',
-    xDomain: { chromosome: '2', interval: [47478000, 47484000] },
+    xDomain: { chromosome: '17', interval: [43080000, 43120000] },
+    // xDomain: { chromosome: '2', interval: [47478000, 47484000] },
     // xDomain: {chromosome: '3', interval: [37025000, 37027000]},
     tracks: [
         // {
@@ -73,11 +74,10 @@ export const EX_SPEC_CIRCOS: GoslingSpec = {
                 valueFields: [{ index: 7, name: 'significance', type: 'nominal' }]
             },
             dataTransform: {
-                filter: [],
                 stack: [
                     {
                         newField: 'r',
-                        boundingBox: { startField: 'start', endField: 'end', padding: 0 },
+                        boundingBox: { startField: 'start', endField: 'end', padding: 3.5 },
                         direction: 'orthogonal'
                     }
                 ]
@@ -89,7 +89,7 @@ export const EX_SPEC_CIRCOS: GoslingSpec = {
                 field: 'r',
                 type: 'nominal'
             },
-            size: { value: 7 },
+            size: { value: 3 },
             color: {
                 field: 'significance',
                 type: 'nominal',

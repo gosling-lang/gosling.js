@@ -54,7 +54,7 @@ export function drawRect(HGC: any, trackInfo: any, tile: any, model: GoslingTrac
         const rowPosition = model.encodedValue('row', rowCategory);
 
         /**
-         * !!! This will be deprecated and be supported as a DataTransform
+         * !!! This will be deprecated and be supported by a DataTransform
          */
 
         // factor to multiply size unless using constant value

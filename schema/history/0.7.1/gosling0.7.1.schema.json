@@ -3218,17 +3218,23 @@
       "additionalProperties": false,
       "properties": {
         "direction": {
-          "enum": [
-            "x",
-            "y"
-          ],
-          "type": "string"
+          "$ref": "#/definitions/StackDirection"
+        },
+        "padding": {
+          "type": "number"
         }
       },
       "required": [
         "direction"
       ],
       "type": "object"
+    },
+    "StackDirection": {
+      "enum": [
+        "parallel",
+        "orthogonal"
+      ],
+      "type": "string"
     },
     "StackTransform": {
       "additionalProperties": false,
@@ -3253,11 +3259,7 @@
           "type": "object"
         },
         "direction": {
-          "enum": [
-            "parallel",
-            "orthogonal"
-          ],
-          "type": "string"
+          "$ref": "#/definitions/StackDirection"
         },
         "newField": {
           "type": "string"

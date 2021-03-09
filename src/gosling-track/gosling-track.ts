@@ -442,7 +442,11 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                     resolved.dataTransform.stack?.forEach(stack => {
                         const { boundingBox, direction, newField } = stack;
                         const { startField, endField } = boundingBox;
-                        const padding = !boundingBox.padding ? 0 : boundingBox.padding;
+
+                        let padding = 0; // This is a pixel value.
+                        if (boundingBox.padding && this._xScale) {
+                            padding = Math.abs(this._xScale.invert(boundingBox.padding) - this._xScale.invert(0));
+                        }
 
                         // Check whether we have sufficient information.
                         const base = tile.tileData.tabularDataFiltered;
@@ -457,22 +461,38 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                         }
 
                         if (direction === 'orthogonal') {
-                            const boundingBoxes: { start: number; end: number }[] = [];
+                            const boundingBoxes: { start: number; end: number; row: number }[] = [];
 
-                            tile.tileData.tabularDataFiltered.forEach((d: Datum) => {
+                            base.sort(
+                                (a: Datum, b: Datum) => (a[startField] as number) - (b[startField] as number)
+                            ).forEach((d: Datum) => {
                                 const start = (d[startField] as number) - padding;
                                 const end = (d[endField] as number) + padding;
 
-                                d[newField] = `${
-                                    boundingBoxes.filter(
-                                        box =>
-                                            (box.start === start && end === box.end) ||
-                                            (box.start < start && start < box.end) ||
-                                            (box.start < end && end < box.end)
-                                    ).length
-                                }`;
+                                const overlapped = boundingBoxes.filter(
+                                    box =>
+                                        (box.start === start && end === box.end) ||
+                                        (box.start < start && start < box.end) ||
+                                        (box.start < end && end < box.end) ||
+                                        (start < box.start && box.end < end)
+                                );
 
-                                boundingBoxes.push({ start, end });
+                                // find the lowest non overlapped row
+                                const uniqueRows = [
+                                    ...Array.from(new Set(boundingBoxes.map(d => d.row))),
+                                    Math.max(...boundingBoxes.map(d => d.row)) + 1
+                                ];
+                                const overlappedRows = overlapped.map(d => d.row);
+                                const lowestNonOverlappedRow = Math.min(
+                                    ...uniqueRows.filter(d => overlappedRows.indexOf(d) === -1)
+                                );
+
+                                // starts from zero
+                                const row: number = overlapped.length === 0 ? 0 : lowestNonOverlappedRow;
+
+                                d[newField] = `${row}`;
+
+                                boundingBoxes.push({ start, end, row });
                             });
                         } else if (direction === 'parallel') {
                             // TODO:

@@ -162,9 +162,11 @@ export interface SingleTrack extends CommonTrackDef {
 }
 
 export interface Stack {
-    // we can add `type: StackType` if we provide diverse algorithms.
-    direction: 'x' | 'y'; // 'both' can be supported as well.
+    direction: StackDirection;
+    padding?: number; // A pixel value
 }
+
+export type StackDirection = 'parallel' | 'orthogonal'; // 'both' can be supported as well.
 
 // TODO: Check whether `Omit` is properly included in the generated `gosling.schema.json`
 // https://github.com/vega/ts-json-schema-generator/issues/101
@@ -394,7 +396,7 @@ export interface BEDDBData {
 /* ----------------------------- DATA TRANSFORM ----------------------------- */
 export interface DataTransform {
     filter?: FilterTransform[];
-    stack?: StackTransform[]; // Main purpose of this is internally usage.
+    stack?: StackTransform[]; // Mainly for internal usage. // We can call this 'dynamic' data transform.
 }
 
 export type FilterTransform = OneOfFilter | RangeFilter | IncludeFilter;
@@ -422,9 +424,9 @@ export interface StackTransform {
     boundingBox: {
         startField: string; // The name of a quantitative field that represents the start position
         endField: string; // The name of a quantitative field that represents the end position
-        padding?: number;
+        padding?: number; // TODO: this should be considered as a pixel value
     };
-    direction: 'parallel' | 'orthogonal';
+    direction: StackDirection;
     newField: string;
 }
 
