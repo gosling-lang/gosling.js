@@ -88,32 +88,26 @@ export const EX_SPEC_VISUAL_ENCODING: GoslingSpec = {
             ]
         },
         {
-            tracks: [
-                {
-                    data: {
-                        url: GOSLING_PUBLIC_DATA.multivec,
-                        type: 'multivec',
-                        row: 'sample',
-                        column: 'position',
-                        value: 'peak',
-                        categories: ['sample 1', 'sample 2', 'sample 3', 'sample 4']
-                    },
-                    overlay: [
-                        { mark: 'line' },
-                        { mark: 'point', size: { field: 'peak', type: 'quantitative', range: [0, 2] } }
-                    ],
-                    x: {
-                        field: 'position',
-                        type: 'genomic',
-                        axis: 'top'
-                    },
-                    y: { field: 'peak', type: 'quantitative' },
-                    row: { field: 'sample', type: 'nominal' },
-                    color: { field: 'sample', type: 'nominal', legend: true },
-                    width: 600,
-                    height: 130
-                }
-            ]
+            alignment: 'overlay',
+            data: {
+                url: GOSLING_PUBLIC_DATA.multivec,
+                type: 'multivec',
+                row: 'sample',
+                column: 'position',
+                value: 'peak',
+                categories: ['sample 1', 'sample 2', 'sample 3', 'sample 4']
+            },
+            x: {
+                field: 'position',
+                type: 'genomic',
+                axis: 'top'
+            },
+            y: { field: 'peak', type: 'quantitative' },
+            row: { field: 'sample', type: 'nominal' },
+            color: { field: 'sample', type: 'nominal', legend: true },
+            tracks: [{ mark: 'line' }, { mark: 'point', size: { field: 'peak', type: 'quantitative', range: [0, 2] } }],
+            width: 600,
+            height: 130
         },
         {
             tracks: [
@@ -205,29 +199,25 @@ export const EX_SPEC_VISUAL_ENCODING: GoslingSpec = {
                         chromosomeField: 'c2',
                         genomicFields: ['s1', 'e1', 's2', 'e2']
                     },
-                    overlay: [
-                        {
-                            mark: 'link',
-                            x: {
-                                field: 's1',
-                                type: 'genomic',
-                                domain: { chromosome: '1', interval: [103900000, 104100000] }
-                            },
-                            xe: {
-                                field: 'e1',
-                                type: 'genomic'
-                            },
-                            x1: {
-                                field: 's2',
-                                type: 'genomic',
-                                domain: { chromosome: '1' }
-                            },
-                            x1e: {
-                                field: 'e2',
-                                type: 'genomic'
-                            }
-                        }
-                    ],
+                    mark: 'link',
+                    x: {
+                        field: 's1',
+                        type: 'genomic',
+                        domain: { chromosome: '1', interval: [103900000, 104100000] }
+                    },
+                    xe: {
+                        field: 'e1',
+                        type: 'genomic'
+                    },
+                    x1: {
+                        field: 's2',
+                        type: 'genomic',
+                        domain: { chromosome: '1' }
+                    },
+                    x1e: {
+                        field: 'e2',
+                        type: 'genomic'
+                    },
                     color: { value: '#0072B2' }, //field: 's1', type: 'nominal' },
                     stroke: { value: 'black' },
                     strokeWidth: { value: 0.5 },
@@ -340,32 +330,29 @@ export const EX_SPEC_VISUAL_ENCODING_CIRCULAR: GoslingSpec = {
                 },
                 {
                     spacing: 2,
+                    alignment: 'overlay',
+                    data: {
+                        url: GOSLING_PUBLIC_DATA.multivec,
+                        type: 'multivec',
+                        row: 'sample',
+                        column: 'position',
+                        value: 'peak',
+                        categories: ['sample 1', 'sample 2', 'sample 3', 'sample 4']
+                    },
+                    x: {
+                        field: 'position',
+                        type: 'genomic',
+                        axis: 'top'
+                    },
+                    y: { field: 'peak', type: 'quantitative' },
+                    row: { field: 'sample', type: 'nominal' },
+                    color: { field: 'sample', type: 'nominal', legend: true },
                     tracks: [
-                        {
-                            data: {
-                                url: GOSLING_PUBLIC_DATA.multivec,
-                                type: 'multivec',
-                                row: 'sample',
-                                column: 'position',
-                                value: 'peak',
-                                categories: ['sample 1', 'sample 2', 'sample 3', 'sample 4']
-                            },
-                            overlay: [
-                                { mark: 'line' },
-                                { mark: 'point', size: { field: 'peak', type: 'quantitative', range: [0, 2] } }
-                            ],
-                            x: {
-                                field: 'position',
-                                type: 'genomic',
-                                axis: 'top'
-                            },
-                            y: { field: 'peak', type: 'quantitative' },
-                            row: { field: 'sample', type: 'nominal' },
-                            color: { field: 'sample', type: 'nominal', legend: true },
-                            width: 350,
-                            height: 130
-                        }
-                    ]
+                        { mark: 'line' },
+                        { mark: 'point', size: { field: 'peak', type: 'quantitative', range: [0, 2] } }
+                    ],
+                    width: 350,
+                    height: 130
                 }
             ]
         },
@@ -471,29 +458,25 @@ export const EX_SPEC_VISUAL_ENCODING_CIRCULAR: GoslingSpec = {
                                 chromosomeField: 'c2',
                                 genomicFields: ['s1', 'e1', 's2', 'e2']
                             },
-                            overlay: [
-                                {
-                                    mark: 'link',
-                                    x: {
-                                        field: 's1',
-                                        type: 'genomic',
-                                        domain: { chromosome: '1', interval: [103900000, 104100000] }
-                                    },
-                                    xe: {
-                                        field: 'e1',
-                                        type: 'genomic'
-                                    },
-                                    x1: {
-                                        field: 's2',
-                                        type: 'genomic',
-                                        domain: { chromosome: '1' }
-                                    },
-                                    x1e: {
-                                        field: 'e2',
-                                        type: 'genomic'
-                                    }
-                                }
-                            ],
+                            mark: 'link',
+                            x: {
+                                field: 's1',
+                                type: 'genomic',
+                                domain: { chromosome: '1', interval: [103900000, 104100000] }
+                            },
+                            xe: {
+                                field: 'e1',
+                                type: 'genomic'
+                            },
+                            x1: {
+                                field: 's2',
+                                type: 'genomic',
+                                domain: { chromosome: '1' }
+                            },
+                            x1e: {
+                                field: 'e2',
+                                type: 'genomic'
+                            },
                             color: { field: 's1', type: 'nominal' },
                             stroke: { value: 'black' },
                             strokeWidth: { value: 0.5 },

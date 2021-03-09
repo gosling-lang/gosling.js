@@ -1,6 +1,16 @@
 import assign from 'lodash/assign';
 import uuid from 'uuid';
-import { SingleTrack, GoslingSpec, SingleView, Track, CommonViewDef, MultipleViews } from '../gosling.schema';
+import {
+    SingleTrack,
+    GoslingSpec,
+    SingleView,
+    Track,
+    CommonViewDef,
+    MultipleViews,
+    FlatTracks,
+    OverlaidTracks,
+    StackedTracks
+} from '../gosling.schema';
 import { IsTemplate, IsDataDeepTileset, IsSingleTrack, IsChannelDeep, IsOverlaidTrack } from '../gosling.schema.guards';
 import {
     DEFAULT_INNER_RADIUS_PROP,
@@ -15,7 +25,10 @@ import { spreadTracksByData } from './overlay';
  * @param spec
  * @param callback
  */
-export function traverseTracks(spec: GoslingSpec, callback: (t: Track, i: number, ts: Track[]) => void) {
+export function traverseTracks(
+    spec: GoslingSpec,
+    callback: (t: Partial<Track>, i: number, ts: Partial<Track>[]) => void
+) {
     if ('tracks' in spec) {
         spec.tracks.forEach((...args) => callback(...args));
     } else {
@@ -55,7 +68,44 @@ export function traverseViewArrangements(spec: GoslingSpec, callback: (tv: Multi
     }
 }
 
-// TODO: Many parts are repeatedly used here. Lets' do this in a cleaner way.
+export function IsFlatTracks(_: SingleView): _ is FlatTracks {
+    return !('alignment' in _) && !_.tracks.find(d => (d as any).alignment === 'overlay' || 'tracks' in d);
+}
+export function IsOverlaidTracks(_: SingleView): _ is OverlaidTracks {
+    return 'alignment' in _ && _.alignment === 'overlay';
+}
+export function IsStackedTracks(_: SingleView): _ is StackedTracks {
+    return !IsFlatTracks(_) && !IsOverlaidTracks(_);
+}
+
+export function convertToFlatTracks(spec: SingleView): Track[] {
+    if (IsFlatTracks(spec)) {
+        // This is already `FlatTracks`
+        return spec.tracks;
+    }
+
+    const newTracks: Track[] = [];
+    if (IsStackedTracks(spec)) {
+        spec.tracks.map(track => {
+            if ('alignment' in track) {
+                // This is OverlaidTracks
+                newTracks.push({
+                    ...track,
+                    overlay: [...track.tracks],
+                    tracks: undefined,
+                    alignment: undefined
+                } as Track);
+            } else {
+                newTracks.push(track);
+            }
+        });
+    } else {
+        newTracks.push({ ...spec, overlay: [...spec.tracks], tracks: undefined, alignment: undefined } as Track);
+    }
+
+    return JSON.parse(JSON.stringify(newTracks));
+}
+
 /**
  * Traverse views and tracks to use parents's properties if missing.
  * @param spec
@@ -86,16 +136,18 @@ export function traverseToFixSpecDownstream(spec: GoslingSpec | SingleView, pare
     }
 
     if ('tracks' in spec) {
-        // !!! TODO: (FOR THE RENDERING PERFORMANCE) We need to also combine overlaid tracks if they use identical data and metadata so tha we have to load the data only once.
-        // !!! This should be taken before fixing `overlayOnPreviousTrack` options.
+        let tracks: Track[] = convertToFlatTracks(spec);
+
+        // !!! TODO: (FOR THE RENDERING PERFORMANCE) We need to also combine overlaid tracks if they use identical data spec so that we have to load the data only once.
+        // !!! Be aware that this should be taken before fixing `overlayOnPreviousTrack` options.
         /**
-         * Spread superposed tracks if they are assigned to different data/metadata.
+         * Spread superposed tracks if they are assigned to different data spec.
          * This process is necessary since we are passing over each track to HiGlass, and if a track contain multiple datastes, HiGlass cannot handle that.
          */
-        spec.tracks = spreadTracksByData(spec.tracks);
+        tracks = spreadTracksByData(tracks);
 
         const linkID = uuid.v4();
-        spec.tracks.forEach((track, i, array) => {
+        tracks.forEach((track, i, array) => {
             // If size not defined, set default ones
             if (!track.width) track.width = DEFAULT_TRACK_WIDTH_LINEAR;
             if (!track.height) track.height = DEFAULT_TRACK_HEIGHT_LINEAR;
@@ -200,6 +252,8 @@ export function traverseToFixSpecDownstream(spec: GoslingSpec | SingleView, pare
                 track.assembly = array[i - 1].assembly;
             }
         });
+
+        spec.tracks = tracks;
     } else {
         // we did not reach track definition, so continue traversing
         spec.views.forEach(v => {
@@ -279,6 +333,11 @@ export function overrideTemplates(spec: GoslingSpec) {
     traverseTracks(spec, (t, i, ts) => {
         if (!t.data || !IsDataDeepTileset(t.data)) {
             // if `data` is not specified, we can not provide a correct template.
+            return;
+        }
+
+        if ('alignment' in t) {
+            // This is an OverlaidTracks, so skip this.
             return;
         }
 

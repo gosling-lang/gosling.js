@@ -8,6 +8,7 @@ export const EX_SPEC_GREMLIN: GoslingSpec = {
             xDomain: { chromosome: '5', interval: [0, 80000000] },
             tracks: [
                 {
+                    alignment: 'overlay',
                     title: 'Chromosome 5',
                     data: {
                         url:
@@ -16,7 +17,7 @@ export const EX_SPEC_GREMLIN: GoslingSpec = {
                         chromosomeField: 'Chromosome',
                         genomicFields: ['chromStart', 'chromEnd']
                     },
-                    overlay: [
+                    tracks: [
                         {
                             mark: 'rect',
                             dataTransform: {
@@ -101,6 +102,7 @@ export const EX_SPEC_GREMLIN: GoslingSpec = {
                     height: 60
                 },
                 {
+                    alignment: 'overlay',
                     data: {
                         url: 'https://raw.githubusercontent.com/vigsterkr/circos/master/data/5/segdup.txt',
                         type: 'csv',
@@ -118,7 +120,7 @@ export const EX_SPEC_GREMLIN: GoslingSpec = {
                             { field: 'chr_2', oneOf: ['hs5', 'hs4', 'hs6'] }
                         ]
                     },
-                    overlay: [
+                    tracks: [
                         { mark: 'rect' },
                         {
                             mark: 'brush',
@@ -155,6 +157,7 @@ export const EX_SPEC_GREMLIN: GoslingSpec = {
                     height: 80
                 },
                 {
+                    alignment: 'overlay',
                     data: {
                         url: 'https://raw.githubusercontent.com/vigsterkr/circos/master/data/5/segdup.txt',
                         type: 'csv',
@@ -172,7 +175,7 @@ export const EX_SPEC_GREMLIN: GoslingSpec = {
                             { field: 'chr_2', oneOf: ['hs5'] }
                         ]
                     },
-                    overlay: [
+                    tracks: [
                         { mark: 'link' },
                         {
                             mark: 'brush',

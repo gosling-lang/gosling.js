@@ -1,4 +1,4 @@
-import { DataDeep, GoslingSpec, Track } from '../../core/gosling.schema';
+import { DataDeep, GoslingSpec, OverlaidTracks } from '../../core/gosling.schema';
 import { GOSLING_PUBLIC_DATA } from './gosling-data';
 
 const width = 350;
@@ -21,10 +21,11 @@ const data = {
 } as DataDeep;
 const domain = undefined; // { chromosome: '3', interval: [52168000, 52890000] };
 
-const HiGlass: Track = {
+const HiGlass: OverlaidTracks = {
+    alignment: 'overlay',
     title: 'HiGlass',
     data,
-    overlay: [
+    tracks: [
         {
             dataTransform: {
                 filter: [
@@ -146,10 +147,11 @@ const HiGlass: Track = {
     height
 };
 
-const IGV: Track = {
+const IGV: OverlaidTracks = {
+    alignment: 'overlay',
     title: 'IGV',
     data,
-    overlay: [
+    tracks: [
         {
             dataTransform: {
                 filter: [{ field: 'type', oneOf: ['gene'] }]
@@ -246,10 +248,11 @@ const IGV: Track = {
     height
 };
 
-const CyverseQUBES: Track = {
+const CyverseQUBES: OverlaidTracks = {
+    alignment: 'overlay',
     title: 'Cyverse-QUBES',
     data,
-    overlay: [
+    tracks: [
         {
             dataTransform: {
                 filter: [{ field: 'type', oneOf: ['gene'] }]
@@ -362,10 +365,11 @@ const CyverseQUBES: Track = {
     height
 };
 
-const GmGDB: Track = {
+const GmGDB: OverlaidTracks = {
+    alignment: 'overlay',
     title: 'GmGDV',
     data,
-    overlay: [
+    tracks: [
         {
             dataTransform: {
                 filter: [{ field: 'type', oneOf: ['gene'] }]
@@ -469,9 +473,10 @@ const GmGDB: Track = {
     height
 };
 
-const g6: Track = {
+const g6: OverlaidTracks = {
+    alignment: 'overlay',
     data,
-    overlay: [
+    tracks: [
         {
             dataTransform: {
                 filter: [{ field: 'type', oneOf: ['gene'] }]
@@ -538,9 +543,10 @@ const g6: Track = {
     width,
     height
 };
-const g7: Track = {
+const g7: OverlaidTracks = {
+    alignment: 'overlay',
     data,
-    overlay: [
+    tracks: [
         {
             dataTransform: {
                 filter: [{ field: 'type', oneOf: ['gene'] }]
@@ -619,10 +625,11 @@ const g7: Track = {
     height
 };
 
-const GIVE: Track = {
+const GIVE: OverlaidTracks = {
+    alignment: 'overlay',
     title: 'GIVE',
     data,
-    overlay: [
+    tracks: [
         {
             dataTransform: {
                 filter: [
@@ -670,10 +677,11 @@ const GIVE: Track = {
     height
 };
 
-const CorcesEtAl: Track = {
+const CorcesEtAl: OverlaidTracks = {
+    alignment: 'overlay',
     title: 'Corces et al.',
     data,
-    overlay: [
+    tracks: [
         {
             dataTransform: {
                 filter: [
@@ -774,19 +782,11 @@ export const EX_SPEC_GENE_ANNOTATION: GoslingSpec = {
     views: [
         {
             arrangement: 'vertical',
-            views: [
-                { tracks: [EX_TRACK_GENE_ANNOTATION.higlass] },
-                { tracks: [EX_TRACK_GENE_ANNOTATION.corces] },
-                { tracks: [EX_TRACK_GENE_ANNOTATION.igv] }
-            ]
+            views: [EX_TRACK_GENE_ANNOTATION.higlass, EX_TRACK_GENE_ANNOTATION.corces, EX_TRACK_GENE_ANNOTATION.igv]
         },
         {
             arrangement: 'vertical',
-            views: [
-                { tracks: [EX_TRACK_GENE_ANNOTATION.cyverse] },
-                { tracks: [EX_TRACK_GENE_ANNOTATION.gmgdb] },
-                { tracks: [EX_TRACK_GENE_ANNOTATION.g7] }
-            ]
+            views: [EX_TRACK_GENE_ANNOTATION.cyverse, EX_TRACK_GENE_ANNOTATION.gmgdb, EX_TRACK_GENE_ANNOTATION.g7]
         }
     ]
 };

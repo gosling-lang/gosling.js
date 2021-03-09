@@ -8,6 +8,7 @@ export const EX_SPEC_CIRCOS: GoslingSpec = {
     static: true,
     spacing: 1,
     centerRadius: 0.3,
+    alignment: 'stack',
     tracks: [
         {
             data: {
@@ -75,6 +76,7 @@ export const EX_SPEC_CIRCOS: GoslingSpec = {
             height: 30
         },
         {
+            alignment: 'overlay',
             data: {
                 url: 'https://raw.githubusercontent.com/vigsterkr/circos/master/data/5/segdup.txt',
                 type: 'csv',
@@ -85,47 +87,37 @@ export const EX_SPEC_CIRCOS: GoslingSpec = {
                 separator: ' ',
                 longToWideId: 'id'
             },
-            dataTransform: {
-                filter: [{ field: 'chr', oneOf: ['hs1'], not: true }]
-            },
-            mark: 'link',
-            x: { field: 'p1', type: 'genomic' },
-            xe: { field: 'p1_2', type: 'genomic' },
-            x1: { field: 'p2', type: 'genomic' },
-            x1e: { field: 'P2_2', type: 'genomic' },
-            stroke: { value: 'lightgray' },
-            strokeWidth: { value: 1 },
             opacity: { value: 0.4 },
+            tracks: [
+                {
+                    dataTransform: {
+                        filter: [{ field: 'chr', oneOf: ['hs1'], not: true }]
+                    },
+                    mark: 'link',
+                    x: { field: 'p1', type: 'genomic' },
+                    xe: { field: 'p1_2', type: 'genomic' },
+                    x1: { field: 'p2', type: 'genomic' },
+                    x1e: { field: 'P2_2', type: 'genomic' },
+                    stroke: { value: 'lightgray' },
+                    strokeWidth: { value: 1 }
+                },
+                {
+                    dataTransform: { filter: [{ field: 'chr', oneOf: ['hs1'] }] },
+                    mark: 'link',
+                    x: { field: 'p1', type: 'genomic' },
+                    xe: { field: 'p1_2', type: 'genomic' },
+                    x1: { field: 'p2', type: 'genomic' },
+                    x1e: { field: 'P2_2', type: 'genomic' },
+                    stroke: {
+                        field: 'chr_2',
+                        type: 'nominal',
+                        range: ['#E79F00', '#029F73', '#0072B2', '#CB7AA7', '#D45E00', '#57B4E9', '#EFE441']
+                    },
+                    strokeWidth: { value: 1.5 }
+                }
+            ],
             width: 700,
             height: 300
-        },
-        {
-            data: {
-                url: 'https://raw.githubusercontent.com/vigsterkr/circos/master/data/5/segdup.txt',
-                type: 'csv',
-                headerNames: ['id', 'chr', 'p1', 'p2'],
-                chromosomePrefix: 'hs',
-                chromosomeField: 'chr',
-                genomicFields: ['p1', 'p2'],
-                separator: ' ',
-                longToWideId: 'id'
-            },
-            dataTransform: { filter: [{ field: 'chr', oneOf: ['hs1'] }] },
-            mark: 'link',
-            x: { field: 'p1', type: 'genomic' },
-            xe: { field: 'p1_2', type: 'genomic' },
-            x1: { field: 'p2', type: 'genomic' },
-            x1e: { field: 'P2_2', type: 'genomic' },
-            stroke: {
-                field: 'chr_2',
-                type: 'nominal',
-                range: ['#E79F00', '#029F73', '#0072B2', '#CB7AA7', '#D45E00', '#57B4E9', '#EFE441']
-            },
-            strokeWidth: { value: 1.5 },
-            opacity: { value: 0.4 },
-            width: 700,
-            height: 300,
-            overlayOnPreviousTrack: true
         }
     ]
 };

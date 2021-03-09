@@ -71,12 +71,12 @@ export function spreadTracksByData(tracks: Track[]): Track[] {
             }
 
             if (t.overlay.filter(s => s.data).length === 0) {
-                // overlaid tracks use the same data and metadata, so no point to spread.
+                // overlaid tracks use the same data, so no point to spread.
                 return [t];
             }
 
             const base: SingleTrack = JSON.parse(JSON.stringify(t));
-            delete (base as Partial<OverlaidTrack>).overlay; // remove `superpose` from the base spec
+            delete (base as Partial<OverlaidTrack>).overlay; // remove `overlay` from the base spec
 
             const spread: Track[] = [];
             const original: OverlaidTrack = JSON.parse(JSON.stringify(base));
@@ -85,7 +85,7 @@ export function spreadTracksByData(tracks: Track[]): Track[] {
             // TODO: This is a very naive apporach, and we can do better!
             t.overlay.forEach((subSpec, i) => {
                 if (!subSpec.data) {
-                    // Neither metadata nor data is used, so just put that into the original `overlay` option.
+                    // No `data` is used, so just put that into the original `overlay` option.
                     original.overlay.push(subSpec);
                     return;
                 }
@@ -95,12 +95,13 @@ export function spreadTracksByData(tracks: Track[]): Track[] {
                     // !!! This part should be consistent to `resolveSuperposedTracks` defined on the top of this file
                     delete spec.title; // remove `title` for the rest of the superposed tracks
                 }
-                spec.overlayOnPreviousTrack = true;
                 spread.push(spec);
             });
 
-            // !!! Order is important here because `spead` tracks will have `overlayOnPreviousTrack` flags, and they do not want to be superposed on top of non-related one.
-            return [original, ...spread];
+            const output = original.overlay.length > 0 ? [original, ...spread] : spread;
+            return output.map((track, i) => {
+                return { ...track, overlayOnPreviousTrack: i !== 0 };
+            });
         })
     );
 }

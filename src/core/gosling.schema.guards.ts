@@ -60,7 +60,7 @@ export function IsDataTrack(_: Track): _ is DataTrack {
     return !IsOverlaidTrack(_) && 'data' in _ && !('mark' in _);
 }
 
-export function IsTemplate(_: Track): boolean {
+export function IsTemplate(_: Partial<Track>): boolean {
     return !!('data' in _ && (!('mark' in _) || _.overrideTemplate) && !IsOverlaidTrack(_));
 }
 
@@ -111,7 +111,7 @@ export function IsSingleTrack(track: Track): track is SingleTrack {
     return !('overlay' in track);
 }
 
-export function IsOverlaidTrack(track: Track): track is OverlaidTrack {
+export function IsOverlaidTrack(track: Partial<Track>): track is OverlaidTrack {
     return 'overlay' in track;
 }
 

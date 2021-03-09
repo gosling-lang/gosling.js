@@ -17,6 +17,7 @@ export const EX_SPEC_CORCES_ET_AL: GoslingSpec = {
             centerRadius: 0.8,
             tracks: [
                 {
+                    alignment: 'overlay',
                     title: 'chr3',
                     data: {
                         url:
@@ -26,7 +27,7 @@ export const EX_SPEC_CORCES_ET_AL: GoslingSpec = {
                         genomicFields: ['ISCN_start', 'ISCN_stop', 'Basepair_start', 'Basepair_stop'],
                         quantitativeFields: ['Band', 'Density']
                     },
-                    overlay: [
+                    tracks: [
                         {
                             mark: 'rect',
                             dataTransform: { filter: [{ field: 'Stain', oneOf: ['acen-1', 'acen-2'], not: true }] },
@@ -112,7 +113,7 @@ export const EX_SPEC_CORCES_ET_AL: GoslingSpec = {
                         value: 'peak'
                     },
                     title: 'Inhibitory neurons',
-                    overlay: [{ mark: 'bar' }],
+                    mark: 'bar',
                     x: { field: 'position', type: 'genomic' },
                     y: { field: 'peak', type: 'quantitative' },
                     color: { value: '#3DC491' },
@@ -128,7 +129,7 @@ export const EX_SPEC_CORCES_ET_AL: GoslingSpec = {
                         value: 'peak'
                     },
                     title: 'Dopaminergic neurons',
-                    overlay: [{ mark: 'bar' }],
+                    mark: 'bar',
                     x: { field: 'position', type: 'genomic' },
                     y: { field: 'peak', type: 'quantitative' },
                     color: { value: '#565C8B' },
@@ -144,7 +145,7 @@ export const EX_SPEC_CORCES_ET_AL: GoslingSpec = {
                         value: 'peak'
                     },
                     title: 'Microglia',
-                    overlay: [{ mark: 'bar' }],
+                    mark: 'bar',
                     x: { field: 'position', type: 'genomic' },
                     y: { field: 'peak', type: 'quantitative' },
                     color: { value: '#77C0FA' },
@@ -160,7 +161,7 @@ export const EX_SPEC_CORCES_ET_AL: GoslingSpec = {
                         value: 'peak'
                     },
                     title: 'Oligodendrocytes',
-                    overlay: [{ mark: 'bar' }],
+                    mark: 'bar',
                     x: { field: 'position', type: 'genomic' },
                     y: { field: 'peak', type: 'quantitative' },
                     color: { value: '#9B46E5' },
@@ -176,7 +177,7 @@ export const EX_SPEC_CORCES_ET_AL: GoslingSpec = {
                         value: 'peak'
                     },
                     title: 'Astrocytes',
-                    overlay: [{ mark: 'bar' }],
+                    mark: 'bar',
                     x: { field: 'position', type: 'genomic' },
                     y: { field: 'peak', type: 'quantitative' },
                     color: { value: '#D73636' },
@@ -192,7 +193,6 @@ export const EX_SPEC_CORCES_ET_AL: GoslingSpec = {
                         value: 'peak'
                     },
                     title: 'OPCs',
-                    overlay: [{}],
                     mark: 'bar',
                     x: { field: 'position', type: 'genomic' },
                     y: { field: 'peak', type: 'quantitative' },
@@ -202,6 +202,7 @@ export const EX_SPEC_CORCES_ET_AL: GoslingSpec = {
                     height: 40
                 },
                 {
+                    alignment: 'overlay',
                     title: 'Genes',
                     data: {
                         url: GOSLING_PUBLIC_DATA.geneAnnotation,
@@ -219,7 +220,7 @@ export const EX_SPEC_CORCES_ET_AL: GoslingSpec = {
                             { index: 13, name: 'end' }
                         ]
                     },
-                    overlay: [
+                    tracks: [
                         {
                             dataTransform: {
                                 filter: [

@@ -1,14 +1,15 @@
-import { GoslingSpec, MultivecData, Track } from '../../core/gosling.schema';
+import { GoslingSpec, MultivecData, OverlaidTracks } from '../../core/gosling.schema';
 import { EX_TRACK_SEMANTIC_ZOOM } from './semantic-zoom';
 
-export const EX_TRACK_SARS_COV_2_GENES: Track = {
+export const EX_TRACK_SARS_COV_2_GENES: OverlaidTracks = {
+    alignment: 'overlay',
     title: 'NC_045512.2 Genes',
     data: {
         type: 'csv',
         url: 'https://s3.amazonaws.com/gosling-lang.org/data/COVID/NC_045512.2-Genes.csv',
         genomicFields: ['Start', 'Stop']
     },
-    overlay: [
+    tracks: [
         {
             mark: 'rect',
             color: { value: '#0072B2' },
@@ -52,19 +53,15 @@ export const EX_SPEC_SARS_COV_2: GoslingSpec = {
     spacing: 50,
     views: [
         {
+            ...EX_TRACK_SARS_COV_2_GENES,
             static: true,
             layout: 'linear',
             xDomain: { interval: [1, 29903] },
             tracks: [
+                ...EX_TRACK_SARS_COV_2_GENES.tracks,
                 {
-                    ...EX_TRACK_SARS_COV_2_GENES,
-                    overlay: [
-                        ...EX_TRACK_SARS_COV_2_GENES.overlay,
-                        {
-                            mark: 'brush',
-                            x: { linkingId: 'detail' }
-                        }
-                    ]
+                    mark: 'brush',
+                    x: { linkingId: 'detail' }
                 }
             ]
         },
@@ -72,6 +69,7 @@ export const EX_SPEC_SARS_COV_2: GoslingSpec = {
             centerRadius: 0,
             xDomain: { interval: [1, 29903] },
             xLinkingId: 'detail',
+            alignment: 'stack',
             tracks: [
                 // {
                 //     title: 'Viral RNA Expression (nanopore)',
@@ -108,13 +106,14 @@ export const EX_SPEC_SARS_COV_2: GoslingSpec = {
                 //     width: 800, height: 30
                 // },
                 {
+                    alignment: 'overlay',
                     title: 'S Protein Annotation',
                     data: {
                         type: 'csv',
                         url: 'https://s3.amazonaws.com/gosling-lang.org/data/COVID/sars-cov-2_Sprot_annot_sorted.bed',
                         genomicFields: ['Start', 'Stop']
                     },
-                    overlay: [
+                    tracks: [
                         {
                             mark: 'rect',
                             color: {
@@ -181,7 +180,6 @@ export const EX_SPEC_SARS_COV_2: GoslingSpec = {
                     stroke: { value: '#0072B2' },
                     color: { value: '#0072B2' },
                     opacity: { value: 0.1 },
-                    // style: { circularLink: true },
                     width: 800,
                     height: 400
                 }

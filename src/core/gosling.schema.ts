@@ -3,13 +3,13 @@ import { GLYPH_LOCAL_PRESET_TYPE, GLYPH_HIGLASS_PRESET_TYPE } from '../editor/ex
 /* ----------------------------- ROOT SPEC ----------------------------- */
 export type GoslingSpec = RootSpecWithSingleView | RootSpecWithMultipleViews;
 
-export interface RootSpecWithSingleView extends MultipleViews {
+export type RootSpecWithSingleView = SingleView & {
     title?: string;
     subtitle?: string;
     description?: string;
-}
+};
 
-export interface RootSpecWithMultipleViews extends SingleView {
+export interface RootSpecWithMultipleViews extends MultipleViews {
     title?: string;
     subtitle?: string;
     description?: string;
@@ -18,11 +18,22 @@ export interface RootSpecWithMultipleViews extends SingleView {
 /* ----------------------------- VIEW ----------------------------- */
 export type View = SingleView | MultipleViews;
 
-/*
- * View is a group of tracks that share the same genomic axes and are linked each other by default.
- */
-export interface SingleView extends CommonViewDef {
+export type SingleView = OverlaidTracks | StackedTracks | FlatTracks;
+
+export interface FlatTracks extends CommonViewDef {
     tracks: Track[];
+}
+
+export interface StackedTracks extends CommonViewDef {
+    alignment?: 'stack';
+    tracks: (Track | OverlaidTracks)[];
+}
+
+export interface OverlaidTracks extends CommonViewDef, Partial<SingleTrack> {
+    alignment: 'overlay';
+    tracks: Partial<Track>[];
+    width: number;
+    height: number;
 }
 
 export interface MultipleViews extends CommonViewDef {
