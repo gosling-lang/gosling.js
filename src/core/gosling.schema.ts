@@ -15,22 +15,68 @@ export interface RootSpecWithMultipleViews extends MultipleViews {
     description?: string;
 }
 
+/* ----------------------------- PROCESSED SPEC (INTERNALLY USED) ----------------------------- */
+export type PrGoslingSpec = PrRootSpecWithSingleView | PrRootSpecWithMultipleViews;
+export type PrRootSpecWithSingleView = PrSingleView & {
+    title?: string;
+    subtitle?: string;
+    description?: string;
+};
+export interface PrRootSpecWithMultipleViews extends PrMultipleViews {
+    title?: string;
+    subtitle?: string;
+    description?: string;
+}
+export type PossiblePrTrack = SingleTrack | PrOverlaidTrack;
+export type PrView = PrSingleView | PrMultipleViews;
+export type PrSingleView = PrOverlaidTrack | PrStackedTracks;
+export interface PrStackedTracks extends CommonViewDef {
+    alignment?: 'stack';
+    tracks: Array<SingleTrack | PrOverlaidTrack>;
+    width: number;
+    height: number;
+}
+export interface PrOverlaidTrack extends CommonViewDef {
+    alignment: 'overlay';
+    tracks: Array<SingleTrack>;
+    width: number;
+    height: number;
+}
+export interface PrMultipleViews extends CommonViewDef {
+    arrangement?: 'parallel' | 'serial' | 'horizontal' | 'vertical';
+    views: Array<PrSingleView | PrMultipleViews>;
+}
+export type PrTrack = SingleTrack;
+
 /* ----------------------------- VIEW ----------------------------- */
 export type View = SingleView | MultipleViews;
 
 /*
  * View is a group of tracks that share the same genomic axes and are linked each other by default.
  */
-export type SingleView = OverlaidTracks | StackedTracks;
+export type SingleView = OverlaidTrack | StackedTracks;
+
+/**
+ * Possible types of a track that is contained in a `tracks` array.
+ */
+export type PossibleTrack = Track | OverlaidTrack | Partial<Track>;
 
 export interface StackedTracks extends CommonViewDef {
     alignment?: 'stack';
-    tracks: Array<Track | OverlaidTracks>;
+    tracks: Array<Track | OverlaidTrack>;
 }
 
 // TODO: `Omit` may not properly included in the generated `gosling.schema.json`
 // https://github.com/vega/ts-json-schema-generator/issues/101
-export interface OverlaidTracks extends CommonRequiredTrackDef, Partial<Omit<SingleTrack, 'width' | 'height'>> {
+export type OverlaidTrack = OverlaidTrackWithSharedDef | OverlaidTrackWithoutSharedDef;
+
+export interface OverlaidTrackWithSharedDef extends CommonViewDef {
+    alignment: 'overlay';
+    sharedTrackDefinition: Partial<Track>;
+    tracks: Array<Partial<Track>>;
+}
+
+export interface OverlaidTrackWithoutSharedDef extends CommonViewDef {
     alignment: 'overlay';
     tracks: Array<Track>;
 }
@@ -86,10 +132,10 @@ export interface CommonTrackDef extends CommonViewDef, CommonRequiredTrackDef {
 }
 
 /**
- * Partial specification of `BasicSingleTrack` to use default visual encoding predefined by data type.
+ * Partial specification of `SingleTrack` to use default visual encoding predefined by data type.
  */
 export interface DataTrack extends CommonTrackDef {
-    data: DataDeep;
+    data: VectorData | BIGWIGData | MultivecData;
 }
 
 /* ----------------------------- MARK ----------------------------- */

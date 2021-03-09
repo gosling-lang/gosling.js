@@ -1,6 +1,6 @@
 import { AxisPosition, SingleTrack, OverlaidTrack, Track } from '../gosling.schema';
 import assign from 'lodash/assign';
-import { IsChannelDeep, IsDataTrack, IsOverlaidTracks } from '../gosling.schema.guards';
+import { IsChannelDeep, IsDataTrack, IsOverlaidTrack } from '../gosling.schema.guards';
 
 /**
  * Resolve superposed tracks into multiple track specifications.
@@ -12,7 +12,7 @@ export function resolveSuperposedTracks(track: Track): SingleTrack[] {
         return [];
     }
 
-    if (!IsOverlaidTracks(track)) {
+    if (!IsOverlaidTrack(track)) {
         // no `superpose` to resolve
         return [track];
     }

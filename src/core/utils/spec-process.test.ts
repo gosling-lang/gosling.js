@@ -1,6 +1,6 @@
 import { GoslingSpec, Track } from '../gosling.schema';
 import { getBoundingBox, getRelativeTrackInfo } from './bounding-box';
-import { traverseToFixSpecDownstream, overrideTemplates } from './spec-preprocess';
+import { processSpec, overrideTemplates } from './spec-process';
 
 describe('Fix Spec Downstream', () => {
     it('Empty Views', () => {
@@ -24,7 +24,7 @@ describe('Fix Spec Downstream', () => {
                 arrangement: 'parallel',
                 views: [{ tracks: [{ overlay: [], width: 0, height: 0 }] }]
             };
-            traverseToFixSpecDownstream(spec);
+            processSpec(spec);
             expect(spec.views[0].static).toEqual(true);
             expect((spec.views[0] as any).tracks[0].static).toEqual(true);
         }
@@ -34,7 +34,7 @@ describe('Fix Spec Downstream', () => {
                 arrangement: 'parallel',
                 views: [{ layout: 'linear', tracks: [{ overlay: [], width: 0, height: 0 }] }]
             };
-            traverseToFixSpecDownstream(spec);
+            processSpec(spec);
             expect(spec.views[0].static).toEqual(false);
             expect((spec.views[0] as any).tracks[0].static).toEqual(false);
         }
@@ -47,7 +47,7 @@ describe('Fix Spec Downstream', () => {
                 arrangement: 'parallel',
                 views: [{ tracks: [{ overlay: [], mark: 'link', width: 0, height: 0 }] }]
             };
-            traverseToFixSpecDownstream(spec);
+            processSpec(spec);
             expect((spec.views[0] as any).tracks[0].flipY).toBeUndefined(); // must not flip if there is only one track
         }
         {
@@ -63,7 +63,7 @@ describe('Fix Spec Downstream', () => {
                     }
                 ]
             };
-            traverseToFixSpecDownstream(spec);
+            processSpec(spec);
             expect((spec.views[0] as any).tracks[0].flipY).toBeUndefined();
             expect((spec.views[0] as any).tracks[1].flipY).toEqual(true);
         }
@@ -80,7 +80,7 @@ describe('Fix Spec Downstream', () => {
                     }
                 ]
             };
-            traverseToFixSpecDownstream(spec);
+            processSpec(spec);
             expect((spec.views[0] as any).tracks[0].flipY).toBeUndefined();
             expect((spec.views[0] as any).tracks[1].flipY).toBeUndefined();
             expect((spec.views[0] as any).tracks[1].overlay[0].flipY).toEqual(true);
@@ -98,7 +98,7 @@ describe('Fix Spec Downstream', () => {
                     }
                 ]
             };
-            traverseToFixSpecDownstream(spec);
+            processSpec(spec);
             expect((spec.views[0] as any).tracks[0].flipY).toBeUndefined();
             expect((spec.views[0] as any).tracks[1].flipY).toBeUndefined();
             // only one track, so no flip on both
@@ -119,7 +119,7 @@ describe('Fix Spec Downstream', () => {
                     }
                 ]
             };
-            traverseToFixSpecDownstream(spec);
+            processSpec(spec);
             expect((spec.views[0] as any).tracks[0].flipY).toBeUndefined();
             expect((spec.views[0] as any).tracks[1].flipY).toBeUndefined();
             // only one track, so no flip on both
@@ -141,7 +141,7 @@ describe('Fix Spec Downstream', () => {
                     }
                 ]
             };
-            traverseToFixSpecDownstream(spec);
+            processSpec(spec);
             expect((spec.views[0] as any).tracks[0].flipY).toBeUndefined();
             expect((spec.views[0] as any).tracks[1].flipY).toBeUndefined();
             // only one track, so no flip on both
@@ -158,7 +158,7 @@ describe('Fix Spec Downstream', () => {
                 arrangement: 'serial',
                 views: [{ views: [{ tracks: [{ overlay: [], width: 0, height: 0 }] }] }]
             };
-            traverseToFixSpecDownstream(spec);
+            processSpec(spec);
             expect((spec.views[0] as any).arrangement).toEqual('serial');
         }
         {
@@ -166,7 +166,7 @@ describe('Fix Spec Downstream', () => {
                 static: true,
                 views: [{ views: [{ tracks: [{ overlay: [], width: 0, height: 0 }] }] }]
             };
-            traverseToFixSpecDownstream(spec);
+            processSpec(spec);
             expect(spec.arrangement).toEqual('vertical'); // default one
             expect((spec.views[0] as any).arrangement).toEqual('vertical'); // default one is overriden
         }
@@ -184,7 +184,7 @@ describe('Fix Spec Downstream', () => {
                     }
                 ]
             };
-            traverseToFixSpecDownstream(spec);
+            processSpec(spec);
             expect(spec.views[0].spacing).toEqual(24);
             expect((spec.views[0] as any).views[0].spacing).toBeUndefined();
         }
@@ -199,7 +199,7 @@ describe('Fix Spec Downstream', () => {
                 }
             ]
         };
-        traverseToFixSpecDownstream(spec);
+        processSpec(spec);
         expect((spec.views[0] as any).tracks[0].layout).toEqual('linear');
     });
 });
@@ -212,7 +212,7 @@ describe('Spec Preprocess', () => {
                 { data: { type: 'csv', url: '' }, mark: 'bar', _overlayOnPreviousTrack: true, width: 100, height: 100 }
             ]
         };
-        traverseToFixSpecDownstream(spec);
+        processSpec(spec);
 
         // Should be fixed to `false` since the first track do not have a previoous track
         expect(spec.tracks[0].overlayOnPreviousTrack).toEqual(false);
@@ -223,7 +223,7 @@ describe('Spec Preprocess', () => {
             layout: 'circular',
             tracks: [{} as Track, { static: false } as Track]
         };
-        traverseToFixSpecDownstream(spec);
+        processSpec(spec);
 
         expect(spec.tracks[0].layout).toEqual('circular');
 

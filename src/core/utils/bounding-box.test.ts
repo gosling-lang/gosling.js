@@ -1,7 +1,7 @@
 import { GoslingSpec, Track } from '../gosling.schema';
 import { DEFAULT_CIRCULAR_VIEW_PADDING, DEFAULT_VIEW_SPACING } from '../layout/defaults';
 import { getBoundingBox, getRelativeTrackInfo } from './bounding-box';
-import { traverseToFixSpecDownstream } from './spec-preprocess';
+import { processSpec } from './spec-process';
 
 describe('Arrangement', () => {
     it('1 View, 1 Track', () => {
@@ -9,7 +9,7 @@ describe('Arrangement', () => {
         const info = getRelativeTrackInfo(spec);
         expect(info).toHaveLength(1);
 
-        expect(info[0].track).toEqual(spec.tracks[0]);
+        expect(info[0].tracksOverlaid).toEqual(spec.tracks[0]);
         expect(info[0].boundingBox).toEqual({ x: 0, y: 0, width: 10, height: 10 });
         expect(info[0].layout).toEqual({ x: 0, y: 0, w: 12, h: 12 });
     });
@@ -60,11 +60,11 @@ describe('Arrangement', () => {
         const info = getRelativeTrackInfo(spec);
         expect(info).toHaveLength(2);
 
-        expect(info[0].track).toEqual(spec.tracks[0]);
+        expect(info[0].tracksOverlaid).toEqual(spec.tracks[0]);
         expect(info[0].boundingBox).toEqual({ x: 0, y: 0, width: 10, height: 10 });
         expect(info[0].layout).toEqual({ x: 0, y: 0, w: 12, h: (10 / 20) * 12 });
 
-        expect(info[1].track).toEqual(spec.tracks[1]);
+        expect(info[1].tracksOverlaid).toEqual(spec.tracks[1]);
         expect(info[1].boundingBox).toEqual({ x: 0, y: 10, width: 10, height: 10 });
         expect(info[1].layout).toEqual({ x: 0, y: 6, w: 12, h: (10 / 20) * 12 });
     });
@@ -277,7 +277,7 @@ describe('Arrangement', () => {
                     }
                 ]
             };
-            traverseToFixSpecDownstream(spec);
+            processSpec(spec);
             const info = getRelativeTrackInfo(spec);
             expect(info).toHaveLength(2);
 
@@ -288,7 +288,7 @@ describe('Arrangement', () => {
             });
 
             expect(info[0].boundingBox).toEqual(info[1].boundingBox);
-            expect((info[0].track as any).overlay).toHaveLength(0); // brush should be removed
+            expect((info[0].tracksOverlaid as any).overlay).toHaveLength(0); // brush should be removed
         }
     });
 

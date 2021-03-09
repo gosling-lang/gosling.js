@@ -20,7 +20,7 @@ export function renderHiGlass(
 
     /* Update the HiGlass model by iterating tracks */
     trackInfos.forEach(tb => {
-        const { track, boundingBox: bb, layout } = tb;
+        const { tracksOverlaid: track, boundingBox: bb, layout } = tb;
         goslingToHiGlass(hgModel, track, bb, layout);
     });
 

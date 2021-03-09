@@ -1,7 +1,7 @@
 import { Track as HiGlassTrack } from './higlass.schema';
 import { HiGlassModel, HIGLASS_AXIS_SIZE } from './higlass-model';
 import { parseServerAndTilesetUidFromUrl } from './utils';
-import { Track, Domain } from './gosling.schema';
+import { Domain, PrTrack } from './gosling.schema';
 import { BoundingBox, RelativePosition } from './utils/bounding-box';
 import { resolveSuperposedTracks } from './utils/overlay';
 import { getGenomicChannelKeyFromTrack, getGenomicChannelFromTrack } from './utils/validate';
@@ -13,7 +13,7 @@ import { DEFAULT_SUBTITLE_HEIGHT, DEFAULT_TITLE_HEIGHT } from './layout/defaults
  */
 export function goslingToHiGlass(
     hgModel: HiGlassModel,
-    gmTrack: Track,
+    gmTrack: PrTrack,
     bb: BoundingBox,
     layout: RelativePosition
 ): HiGlassModel {

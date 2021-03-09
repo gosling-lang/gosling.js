@@ -13,7 +13,8 @@ import { EX_SPEC_GIVE } from './give';
 import { EX_SPEC_CORCES_ET_AL } from './corces';
 import { EX_SPEC_PATHOGENIC } from './pathogenic';
 import { EX_SPEC_CYTOBANDS } from './ideograms';
-import { EX_SPEC_FUJI_PLOT } from './fuji';
+// import { EX_SPEC_FUJI_PLOT } from './fuji';
+import { GOSLING_PUBLIC_DATA } from './gosling-data';
 
 export const examples: ReadonlyArray<{
     name: string;
@@ -25,8 +26,39 @@ export const examples: ReadonlyArray<{
 }> = [
     {
         name: 'DEBUG',
-        spec: EX_SPEC_FUJI_PLOT,
-        hidden: true
+        spec: {
+            views: [
+                {
+                    alignment: 'overlay',
+                    tracks: [
+                        { mark: 'line' },
+                        { mark: 'point', size: { field: 'peak', type: 'quantitative', range: [0, 2] } }
+                    ],
+                    sharedTrackDefinition: {
+                        data: {
+                            url: GOSLING_PUBLIC_DATA.multivec,
+                            type: 'multivec',
+                            row: 'sample',
+                            column: 'position',
+                            value: 'peak',
+                            categories: ['sample 1', 'sample 2', 'sample 3', 'sample 4']
+                        },
+                        x: {
+                            field: 'position',
+                            type: 'genomic',
+                            axis: 'top'
+                        },
+                        y: { field: 'peak', type: 'quantitative' },
+                        row: { field: 'sample', type: 'nominal' },
+                        color: { field: 'sample', type: 'nominal', legend: true },
+                        width: 600,
+                        height: 130
+                    }
+                }
+            ]
+        } as GoslingSpec,
+        forceShow: true
+        // hidden: true
     },
     {
         name: 'Basic Example: Visual Encoding',

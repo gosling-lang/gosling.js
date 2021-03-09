@@ -27,7 +27,12 @@ import {
     VectorData,
     DataTrack,
     BIGWIGData,
-    OverlaidTracks
+    OverlaidTrack,
+    PossibleTrack,
+    PrOverlaidTrack,
+    PossiblePrTrack,
+    PrTrack,
+    OverlaidTrackWithSharedDef
 } from './gosling.schema';
 import { SUPPORTED_CHANNELS } from './mark';
 import { isArray } from 'lodash';
@@ -55,22 +60,15 @@ export function IsDataTransform(_: DataTransform | ChannelDeep | ChannelValue): 
     return 'filter' in _;
 }
 
-export function IsDataTrack(_: Track): _ is DataTrack {
-    return 'data' in _ && !('mark' in _);
+export function IsDataTrack(_: PossibleTrack): _ is DataTrack {
+    return !IsOverlaidTrack(_) && 'data' in _ && !('mark' in _);
 }
 
-export function IsTemplate(_: Track): boolean {
-    return !!('data' in _ && (!('mark' in _) || _.overrideTemplate));
+export function needTemplate(_: PossibleTrack): boolean {
+    return IsDataTrack(_) || ('overrideTemplate' in _ && !!_.overrideTemplate);
 }
 
-export function IsDataDeep(
-    data:
-        | DataDeep
-        | Datum[]
-        /* remove the two types below */
-        | ChannelDeep
-        | ChannelValue
-): data is DataDeep {
+export function IsDataDeep(data: DataDeep | Datum[]): data is DataDeep {
     return typeof data === 'object';
 }
 
@@ -110,8 +108,16 @@ export function IsSingleTrack(track: Track): track is SingleTrack {
     return !('overlay' in track);
 }
 
-export function IsOverlaidTracks(track: Track | OverlaidTracks): track is OverlaidTracks {
-    return 'tracks' in track;
+export function IsOverlaidTrack(track: PossibleTrack): track is OverlaidTrack {
+    return 'tracks' in track && 'alignment' in track && track.alignment === 'overlay';
+}
+
+export function IsOverlaidTrackWithSharedDef(track: PossibleTrack): track is OverlaidTrackWithSharedDef {
+    return IsOverlaidTrack(track) && 'sharedTrackDefinition' in track;
+}
+
+export function IsProcessedOverlaidTracks(track: PossiblePrTrack): track is PrOverlaidTrack {
+    return 'tracks' in track && 'alignment' in track && track.alignment === 'overlay';
 }
 
 export function IsChannelValue(
@@ -226,6 +232,6 @@ export function getChannelKeysByType(spec: SingleTrack, t: FieldType) {
 /**
  * Should the x axis be shown in the track?
  */
-export function isXAxis(_: Track) {
+export function isXAxis(_: PrTrack) {
     return IsChannelDeep(_.x) && _.x.axis && _.x.axis !== 'none';
 }

@@ -1,16 +1,15 @@
-import { GoslingSpec } from './gosling.schema';
+import { GoslingSpec, PrGoslingSpec } from './gosling.schema';
 import { compileLayout } from './layout/layout';
 import { HiGlassSpec } from './higlass.schema';
-import { traverseToFixSpecDownstream, overrideTemplates } from './utils/spec-preprocess';
+import { processSpec } from './utils/spec-process';
 import { Size } from './utils/bounding-box';
 
 export function compile(spec: GoslingSpec, setHg: (hg: HiGlassSpec, size: Size) => void) {
-    // Override default visual encoding (i.e., `DataTrack` => `BasicSingleTrack`)
-    overrideTemplates(spec);
-
-    // Fix track specs by looking into the root-level spec
-    traverseToFixSpecDownstream(spec);
+    // Process the spec to make it easier to be used in Gosling.js internally.
+    processSpec(spec);
 
     // Make HiGlass models for individual tracks
-    compileLayout(spec, setHg);
+    compileLayout(spec as PrGoslingSpec, setHg);
+
+    // console.log('processedSpec', spec);
 }
