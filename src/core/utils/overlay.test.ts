@@ -46,33 +46,33 @@ describe('Should handle superposition options correctly', () => {
 });
 
 describe('Spread Tracks By Data', () => {
-    it('No superpose property', () => {
+    it('No overlay property', () => {
         const spread = spreadTracksByData([{ mark: 'line', data: { type: 'csv', url: '' }, width: 100, height: 100 }]);
         expect(spread).toHaveLength(1);
     });
-    it('superpose: []', () => {
+    it('overlay: []', () => {
         const spread = spreadTracksByData([{ overlay: [], width: 100, height: 100 }]);
         expect(spread).toHaveLength(1);
     });
-    it('superpose: [{}]', () => {
+    it('overlay: [{}]', () => {
         const spread = spreadTracksByData([{ overlay: [{}], width: 100, height: 100 }]);
         expect(spread).toHaveLength(1);
     });
-    it('superpose: [{ data }]', () => {
+    it('overlay: [{ data }]', () => {
         const base = { overlay: [{ data: { type: 'csv', url: '' } }] } as OverlaidTrack;
         const spread = spreadTracksByData([base]);
         expect(spread).toHaveLength(1);
         expect(spread[0]).toEqual(base); // The length is zero, so no point to spread
     });
-    it('superpose: [{}, { data }]', () => {
+    it('overlay: [{}, { data }]', () => {
         const spread = spreadTracksByData([
             { overlay: [{}, { data: { type: 'csv', url: '' } }], width: 100, height: 100 }
         ]);
         expect(spread).toHaveLength(2);
-        expect('data' in spread[1]).toBe(true); // Any superposed tracks w/ data/metadata will be spread
-        expect(spread[1].overlayOnPreviousTrack).toBe(true); // Any spread tracks will have `superposeOnPreviousTrack` flags
+        expect('data' in spread[1]).toBe(true); // Any overlaid tracks w/ data will be spread
+        expect(spread[1].overlayOnPreviousTrack).toBe(true); // Any spread tracks will have `overlayOnPreviousTrack` flags
     });
-    it('superpose: [{}, { data }, { data }]', () => {
+    it('overlay: [{}, { data }, { data }]', () => {
         const spread = spreadTracksByData([
             {
                 overlay: [
@@ -87,7 +87,24 @@ describe('Spread Tracks By Data', () => {
         expect(spread).toHaveLength(3);
         expect('data' in spread[1]).toBe(true);
         expect('data' in spread[2]).toBe(true);
-        expect(spread[1].overlayOnPreviousTrack).toBe(true); // Any spread tracks will have `superposeOnPreviousTrack` flags
-        expect(spread[2].overlayOnPreviousTrack).toBe(true); // Any spread tracks will have `superposeOnPreviousTrack` flags
+        expect(spread[1].overlayOnPreviousTrack).toBe(true); // Any spread tracks will have `overlayOnPreviousTrack` flags
+        expect(spread[2].overlayOnPreviousTrack).toBe(true); // Any spread tracks will have `overlayOnPreviousTrack` flags
+    });
+    it('overlay: [{ data1 }, { data2 }]', () => {
+        const spread = spreadTracksByData([
+            {
+                overlay: [
+                    { data: { type: 'csv', url: '' } },
+                    { data: { type: 'vector', url: '', column: 'c', value: 'p' } }
+                ],
+                width: 100,
+                height: 100
+            }
+        ]);
+        expect(spread).toHaveLength(2);
+        expect('data' in spread[0]).toBe(true);
+        expect('data' in spread[1]).toBe(true);
+        expect(spread[0].overlayOnPreviousTrack).toBe(false);
+        expect(spread[1].overlayOnPreviousTrack).toBe(true);
     });
 });

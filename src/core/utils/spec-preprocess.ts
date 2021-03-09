@@ -1,17 +1,15 @@
 import assign from 'lodash/assign';
 import uuid from 'uuid';
+import { SingleTrack, GoslingSpec, SingleView, Track, CommonViewDef, MultipleViews } from '../gosling.schema';
 import {
-    SingleTrack,
-    GoslingSpec,
-    SingleView,
-    Track,
-    CommonViewDef,
-    MultipleViews,
-    FlatTracks,
-    OverlaidTracks,
-    StackedTracks
-} from '../gosling.schema';
-import { IsTemplate, IsDataDeepTileset, IsSingleTrack, IsChannelDeep, IsOverlaidTrack } from '../gosling.schema.guards';
+    IsTemplate,
+    IsDataDeepTileset,
+    IsSingleTrack,
+    IsChannelDeep,
+    IsOverlaidTrack,
+    IsFlatTracks,
+    IsStackedTracks
+} from '../gosling.schema.guards';
 import {
     DEFAULT_INNER_RADIUS_PROP,
     DEFAULT_TRACK_HEIGHT_LINEAR,
@@ -68,16 +66,10 @@ export function traverseViewArrangements(spec: GoslingSpec, callback: (tv: Multi
     }
 }
 
-export function IsFlatTracks(_: SingleView): _ is FlatTracks {
-    return !('alignment' in _) && !_.tracks.find(d => (d as any).alignment === 'overlay' || 'tracks' in d);
-}
-export function IsOverlaidTracks(_: SingleView): _ is OverlaidTracks {
-    return 'alignment' in _ && _.alignment === 'overlay';
-}
-export function IsStackedTracks(_: SingleView): _ is StackedTracks {
-    return !IsFlatTracks(_) && !IsOverlaidTracks(_);
-}
-
+/**
+ * This convert the nested track definitions into a flat array.
+ * @param spec
+ */
 export function convertToFlatTracks(spec: SingleView): Track[] {
     if (IsFlatTracks(spec)) {
         // This is already `FlatTracks`

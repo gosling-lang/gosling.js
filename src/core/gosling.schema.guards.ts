@@ -27,7 +27,11 @@ import {
     MultivecData,
     VectorData,
     DataTrack,
-    BIGWIGData
+    BIGWIGData,
+    SingleView,
+    FlatTracks,
+    OverlaidTracks,
+    StackedTracks
 } from './gosling.schema';
 import { SUPPORTED_CHANNELS } from './mark';
 import { isArray } from 'lodash';
@@ -53,6 +57,16 @@ export const PREDEFINED_COLOR_STR_MAP: { [k: string]: (t: number) => string } = 
 
 export function IsDataTransform(_: DataTransform | ChannelDeep | ChannelValue): _ is DataTransform {
     return 'filter' in _;
+}
+
+export function IsFlatTracks(_: SingleView): _ is FlatTracks {
+    return !('alignment' in _) && !_.tracks.find(d => (d as any).alignment === 'overlay' || 'tracks' in d);
+}
+export function IsOverlaidTracks(_: SingleView): _ is OverlaidTracks {
+    return 'alignment' in _ && _.alignment === 'overlay';
+}
+export function IsStackedTracks(_: SingleView): _ is StackedTracks {
+    return !IsFlatTracks(_) && !IsOverlaidTracks(_);
 }
 
 export function IsDataTrack(_: Track): _ is DataTrack {
