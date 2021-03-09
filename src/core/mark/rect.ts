@@ -53,6 +53,10 @@ export function drawRect(HGC: any, trackInfo: any, tile: any, model: GoslingTrac
     rowCategories.forEach(rowCategory => {
         const rowPosition = model.encodedValue('row', rowCategory);
 
+        /**
+         * !!! This will be deprecated and be supported as a DataTransform
+         */
+
         // factor to multiply size unless using constant value
         // sort by size and position
 

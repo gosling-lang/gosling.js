@@ -1,7 +1,6 @@
 import {
     ChannelDeep,
     ChannelValue,
-    DataTransform,
     DataDeep,
     Datum,
     DomainChr,
@@ -19,7 +18,7 @@ import {
     Channel,
     FieldType,
     Domain,
-    Filter,
+    FilterTransform,
     OneOfFilter,
     RangeFilter,
     IncludeFilter,
@@ -55,10 +54,6 @@ export const PREDEFINED_COLOR_STR_MAP: { [k: string]: (t: number) => string } = 
     rdbu: interpolateRdBu
 };
 
-export function IsDataTransform(_: DataTransform | ChannelDeep | ChannelValue): _ is DataTransform {
-    return 'filter' in _;
-}
-
 export function IsFlatTracks(_: SingleView): _ is FlatTracks {
     return !('alignment' in _) && !_.tracks.find(d => (d as any).alignment === 'overlay' || 'tracks' in d);
 }
@@ -78,14 +73,7 @@ export function IsTemplate(_: Partial<Track>): boolean {
     return !!('data' in _ && (!('mark' in _) || _.overrideTemplate) && !IsOverlaidTrack(_));
 }
 
-export function IsDataDeep(
-    data:
-        | DataDeep
-        | Datum[]
-        /* remove the two types below */
-        | ChannelDeep
-        | ChannelValue
-): data is DataDeep {
+export function IsDataDeep(data: DataDeep | Datum[]): data is DataDeep {
     return typeof data === 'object';
 }
 
@@ -151,15 +139,15 @@ export function IsChannelDeep(channel: ChannelDeep | ChannelValue | undefined): 
     return typeof channel === 'object' && !('value' in channel);
 }
 
-export function IsOneOfFilter(_: Filter): _ is OneOfFilter {
+export function IsOneOfFilter(_: FilterTransform): _ is OneOfFilter {
     return 'oneOf' in _;
 }
 
-export function IsRangeFilter(_: Filter): _ is RangeFilter {
+export function IsRangeFilter(_: FilterTransform): _ is RangeFilter {
     return 'inRange' in _;
 }
 
-export function IsIncludeFilter(_: Filter): _ is IncludeFilter {
+export function IsIncludeFilter(_: FilterTransform): _ is IncludeFilter {
     return 'include' in _;
 }
 

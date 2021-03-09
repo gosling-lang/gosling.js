@@ -3,14 +3,8 @@ import { GoslingTrackModel } from '../core/gosling-track-model';
 import { validateTrack } from '../core/utils/validate';
 import { shareScaleAcrossTracks } from '../core/utils/scales';
 import { resolveSuperposedTracks } from '../core/utils/overlay';
-import { SingleTrack, OverlaidTrack } from '../core/gosling.schema';
-import {
-    IsDataDeepTileset,
-    IsDataTransform,
-    IsIncludeFilter,
-    IsOneOfFilter,
-    IsRangeFilter
-} from '../core/gosling.schema.guards';
+import { SingleTrack, OverlaidTrack, Datum } from '../core/gosling.schema';
+import { IsDataDeepTileset, IsIncludeFilter, IsOneOfFilter, IsRangeFilter } from '../core/gosling.schema.guards';
 import { Tooltip } from '../gosling-tooltip';
 import { sampleSize } from 'lodash';
 import { scaleLinear } from 'd3-scale';
@@ -415,35 +409,73 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
 
                 tile.tileData.tabularDataFiltered = Array.from(tile.tileData.tabularData);
 
-                // Apply filters
-                if (resolved.dataTransform !== undefined && IsDataTransform(resolved.dataTransform)) {
-                    resolved.dataTransform.filter.forEach(filter => {
+                /*
+                 * Data Transformation
+                 */
+                if (resolved.dataTransform !== undefined) {
+                    // Data filters
+                    resolved.dataTransform.filter?.forEach(filter => {
                         const { field, not } = filter;
                         if (IsOneOfFilter(filter)) {
                             const { oneOf } = filter;
-                            tile.tileData.tabularDataFiltered = tile.tileData.tabularDataFiltered.filter(
-                                (d: { [k: string]: number | string }) => {
-                                    return not
-                                        ? (oneOf as any[]).indexOf(d[field]) === -1
-                                        : (oneOf as any[]).indexOf(d[field]) !== -1;
-                                }
-                            );
+                            tile.tileData.tabularDataFiltered = tile.tileData.tabularDataFiltered.filter((d: Datum) => {
+                                return not
+                                    ? (oneOf as any[]).indexOf(d[field]) === -1
+                                    : (oneOf as any[]).indexOf(d[field]) !== -1;
+                            });
                         } else if (IsRangeFilter(filter)) {
                             const { inRange } = filter;
-                            tile.tileData.tabularDataFiltered = tile.tileData.tabularDataFiltered.filter(
-                                (d: { [k: string]: number | string }) => {
-                                    return not
-                                        ? !(inRange[0] <= d[field] && d[field] <= inRange[1])
-                                        : inRange[0] <= d[field] && d[field] <= inRange[1];
-                                }
-                            );
+                            tile.tileData.tabularDataFiltered = tile.tileData.tabularDataFiltered.filter((d: Datum) => {
+                                return not
+                                    ? !(inRange[0] <= d[field] && d[field] <= inRange[1])
+                                    : inRange[0] <= d[field] && d[field] <= inRange[1];
+                            });
                         } else if (IsIncludeFilter(filter)) {
                             const { include } = filter;
-                            tile.tileData.tabularDataFiltered = tile.tileData.tabularDataFiltered.filter(
-                                (d: { [k: string]: number | string }) => {
-                                    return not ? `${d[field]}`.includes(include) : !`${d[field]}`.includes(include);
-                                }
-                            );
+                            tile.tileData.tabularDataFiltered = tile.tileData.tabularDataFiltered.filter((d: Datum) => {
+                                return not ? `${d[field]}`.includes(include) : !`${d[field]}`.includes(include);
+                            });
+                        }
+                    });
+
+                    // Stacking values
+                    resolved.dataTransform.stack?.forEach(stack => {
+                        const { boundingBox, direction, newField } = stack;
+                        const { startField, endField } = boundingBox;
+                        const padding = !boundingBox.padding ? 0 : boundingBox.padding;
+
+                        // Check whether we have sufficient information.
+                        const base = tile.tileData.tabularDataFiltered;
+                        if (base && base.length > 0) {
+                            if (
+                                !Object.keys(base[0]).find(d => d === startField) ||
+                                !Object.keys(base[0]).find(d => d === endField)
+                            ) {
+                                // We did not find the fields from the data, so exit here.
+                                return;
+                            }
+                        }
+
+                        if (direction === 'orthogonal') {
+                            const boundingBoxes: { start: number; end: number }[] = [];
+
+                            tile.tileData.tabularDataFiltered.forEach((d: Datum) => {
+                                const start = (d[startField] as number) - padding;
+                                const end = (d[endField] as number) + padding;
+
+                                d[newField] = `${
+                                    boundingBoxes.filter(
+                                        box =>
+                                            (box.start === start && end === box.end) ||
+                                            (box.start < start && start < box.end) ||
+                                            (box.start < end && end < box.end)
+                                    ).length
+                                }`;
+
+                                boundingBoxes.push({ start, end });
+                            });
+                        } else if (direction === 'parallel') {
+                            // TODO:
                         }
                     });
                 }

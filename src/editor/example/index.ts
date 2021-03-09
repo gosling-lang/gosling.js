@@ -30,8 +30,7 @@ export const examples: ReadonlyArray<{
     },
     {
         name: 'Basic Example: Visual Encoding',
-        spec: EX_SPEC_VISUAL_ENCODING,
-        forceShow: true
+        spec: EX_SPEC_VISUAL_ENCODING
     },
     {
         name: 'Basic Example: Circular Visual Encoding',
@@ -72,7 +71,8 @@ export const examples: ReadonlyArray<{
     },
     {
         name: 'Circos',
-        spec: EX_SPEC_CIRCOS
+        spec: EX_SPEC_CIRCOS,
+        forceShow: true
     },
     {
         name: "Gremlin (O'Brien et al. 2010)",

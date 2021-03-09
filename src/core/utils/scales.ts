@@ -97,5 +97,8 @@ export function shareScaleAcrossTracks(trackModels: GoslingTrackModel[], force?:
             model.setChannelDomain(channelKey, globalDomain[channelKey], force);
             model.generateScales();
         });
+
+        // update constant default values using the updated scales
+        model.updateChannelValue();
     });
 }

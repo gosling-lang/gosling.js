@@ -442,14 +442,17 @@
       "properties": {
         "filter": {
           "items": {
-            "$ref": "#/definitions/Filter"
+            "$ref": "#/definitions/FilterTransform"
+          },
+          "type": "array"
+        },
+        "stack": {
+          "items": {
+            "$ref": "#/definitions/StackTransform"
           },
           "type": "array"
         }
       },
-      "required": [
-        "filter"
-      ],
       "type": "object"
     },
     "Datum": {
@@ -586,7 +589,7 @@
       ],
       "type": "string"
     },
-    "Filter": {
+    "FilterTransform": {
       "anyOf": [
         {
           "$ref": "#/definitions/OneOfFilter"
@@ -1450,6 +1453,9 @@
               "spacing": {
                 "type": "number"
               },
+              "stack": {
+                "$ref": "#/definitions/Stack"
+              },
               "stackY": {
                 "type": "boolean"
               },
@@ -1564,6 +1570,9 @@
         },
         "spacing": {
           "type": "number"
+        },
+        "stack": {
+          "$ref": "#/definitions/Stack"
         },
         "stackY": {
           "type": "boolean"
@@ -1742,6 +1751,9 @@
         "spacing": {
           "type": "number"
         },
+        "stack": {
+          "$ref": "#/definitions/Stack"
+        },
         "stackY": {
           "type": "boolean"
         },
@@ -1897,6 +1909,9 @@
                     "spacing": {
                       "type": "number"
                     },
+                    "stack": {
+                      "$ref": "#/definitions/Stack"
+                    },
                     "stackY": {
                       "type": "boolean"
                     },
@@ -2011,6 +2026,9 @@
               },
               "spacing": {
                 "type": "number"
+              },
+              "stack": {
+                "$ref": "#/definitions/Stack"
               },
               "stackY": {
                 "type": "boolean"
@@ -2380,6 +2398,9 @@
             "spacing": {
               "type": "number"
             },
+            "stack": {
+              "$ref": "#/definitions/Stack"
+            },
             "stackY": {
               "type": "boolean"
             },
@@ -2535,6 +2556,9 @@
                         "spacing": {
                           "type": "number"
                         },
+                        "stack": {
+                          "$ref": "#/definitions/Stack"
+                        },
                         "stackY": {
                           "type": "boolean"
                         },
@@ -2649,6 +2673,9 @@
                   },
                   "spacing": {
                     "type": "number"
+                  },
+                  "stack": {
+                    "$ref": "#/definitions/Stack"
                   },
                   "stackY": {
                     "type": "boolean"
@@ -3012,6 +3039,9 @@
         "spacing": {
           "type": "number"
         },
+        "stack": {
+          "$ref": "#/definitions/Stack"
+        },
         "stackY": {
           "type": "boolean"
         },
@@ -3181,6 +3211,62 @@
         "operation",
         "target",
         "threshold"
+      ],
+      "type": "object"
+    },
+    "Stack": {
+      "additionalProperties": false,
+      "properties": {
+        "direction": {
+          "enum": [
+            "x",
+            "y"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "direction"
+      ],
+      "type": "object"
+    },
+    "StackTransform": {
+      "additionalProperties": false,
+      "properties": {
+        "boundingBox": {
+          "additionalProperties": false,
+          "properties": {
+            "endField": {
+              "type": "string"
+            },
+            "padding": {
+              "type": "number"
+            },
+            "startField": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "startField",
+            "endField"
+          ],
+          "type": "object"
+        },
+        "direction": {
+          "enum": [
+            "parallel",
+            "orthogonal"
+          ],
+          "type": "string"
+        },
+        "newField": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "boundingBox",
+        "direction",
+        "newField"
       ],
       "type": "object"
     },

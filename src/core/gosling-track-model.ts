@@ -214,6 +214,19 @@ export class GoslingTrackModel {
     }
 
     /**
+     * Update default constant values by looking up other channels' scales.
+     */
+    public updateChannelValue() {
+        if (this.originalSpec().y === undefined) {
+            const y = this.spec().y;
+            const rowCategories = this.getChannelDomainArray('row');
+            if (y && IsChannelValue(y) && rowCategories) {
+                y.value = (this.spec().height as number) / rowCategories.length / 2.0;
+            }
+        }
+    }
+
+    /**
      * Get the encoded value using the scales already constructed.
      */
     public encodedValue(channelKey: keyof typeof ChannelTypes, value?: number | string) {

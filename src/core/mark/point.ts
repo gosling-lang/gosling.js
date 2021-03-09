@@ -78,6 +78,7 @@ export function drawPoint(g: PIXI.Graphics, model: GoslingTrackModel) {
                 g.drawCircle(pos.x, pos.y, size);
             } else {
                 g.beginFill(colorToHex(color), actualOpacity);
+                // console.log(rowCategory, rowPosition, rowHeight, cy);
                 g.drawCircle(cx, rowPosition + rowHeight - cy, size);
             }
         });
