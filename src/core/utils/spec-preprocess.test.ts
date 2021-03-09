@@ -1,6 +1,6 @@
 import { GoslingSpec, Track } from '../gosling.schema';
 import { getBoundingBox, getRelativeTrackInfo } from './bounding-box';
-import { traverseToFixSpecDownstream, overrideTemplates } from './spec-preprocess';
+import { traverseToFixSpecDownstream, overrideTemplates, convertToFlatTracks } from './spec-preprocess';
 
 describe('Fix Spec Downstream', () => {
     it('Empty Views', () => {
@@ -248,5 +248,56 @@ describe('Spec Preprocess', () => {
         };
         overrideTemplates(spec);
         expect(spec.tracks[0]).toHaveProperty('mark');
+    });
+
+    it('Convert To FlatTracks', () => {
+        const dummySpec: Track = { data: { type: 'csv', url: '' }, mark: 'bar', width: 10, height: 10 };
+        {
+            const flat = convertToFlatTracks({
+                tracks: []
+            });
+            expect(flat).toHaveLength(0);
+        }
+        {
+            const flat = convertToFlatTracks({
+                tracks: [{ ...dummySpec, title: 'A' }]
+            });
+            expect(flat).toHaveLength(1);
+            expect(flat[0].title).toEqual('A');
+        }
+        {
+            const flat = convertToFlatTracks({
+                tracks: [
+                    { ...dummySpec, title: 'A' },
+                    { title: 'B', alignment: 'overlay', tracks: [{ ...dummySpec }], width: 10, height: 10 }
+                ]
+            });
+
+            expect(flat).toHaveLength(2);
+            expect(flat[0].title).toEqual('A');
+            expect(flat[1].title).toEqual('B');
+            expect('overlay' in flat[1]).toEqual(true);
+            expect('overlay' in flat[1] && flat[1].overlay.length === 1).toEqual(true);
+
+            const flat2 = convertToFlatTracks({
+                alignment: 'stack',
+                tracks: [
+                    { ...dummySpec, title: 'A' },
+                    { title: 'B', alignment: 'overlay', tracks: [{ ...dummySpec }], width: 10, height: 10 }
+                ]
+            });
+            expect(flat).toEqual(flat2);
+        }
+        {
+            const flat = convertToFlatTracks({
+                tracks: [
+                    { ...dummySpec, title: 'A' },
+                    { title: 'B', alignment: 'overlay', tracks: [{ ...dummySpec }], width: 10, height: 10 }
+                ]
+            });
+            // Should be consistent when called multiple times.
+            expect(flat).toEqual(convertToFlatTracks({ tracks: flat }));
+            expect(flat).toEqual(convertToFlatTracks({ tracks: convertToFlatTracks({ tracks: flat }) }));
+        }
     });
 });

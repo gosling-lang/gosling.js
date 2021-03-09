@@ -7,8 +7,10 @@ export const EX_SPEC_CIRCULAR_OVERVIEW_LINEAR_DETAIL: GoslingSpec = {
         {
             static: true,
             layout: 'circular',
+            alignment: 'stack',
             tracks: [
                 {
+                    alignment: 'overlay',
                     data: {
                         url: GOSLING_PUBLIC_DATA.multivec,
                         type: 'multivec',
@@ -25,7 +27,7 @@ export const EX_SPEC_CIRCULAR_OVERVIEW_LINEAR_DETAIL: GoslingSpec = {
                     color: { field: 'sample', type: 'nominal' },
                     stroke: { value: 'black' },
                     strokeWidth: { value: 0.3 },
-                    overlay: [
+                    tracks: [
                         {
                             mark: 'bar'
                         },

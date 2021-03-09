@@ -10,6 +10,7 @@ export const EX_SPEC_GIVE: GoslingSpec = {
             layout: 'linear',
             tracks: [
                 {
+                    alignment: 'overlay',
                     title: 'Genes',
                     data: {
                         url: 'https://resgen.io/api/v1/tileset_info/?d=M9A9klpwTci5Vf4bHZ864g',
@@ -27,7 +28,7 @@ export const EX_SPEC_GIVE: GoslingSpec = {
                             { index: 13, name: 'end' }
                         ]
                     },
-                    overlay: [
+                    tracks: [
                         {
                             dataTransform: {
                                 filter: [
@@ -134,6 +135,7 @@ export const EX_SPEC_GIVE: GoslingSpec = {
                     height: 40
                 },
                 {
+                    alignment: 'overlay',
                     data: {
                         url:
                             'https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/UCSC.HG38.Human.CytoBandIdeogram.csv',
@@ -141,7 +143,7 @@ export const EX_SPEC_GIVE: GoslingSpec = {
                         chromosomeField: 'Chromosome',
                         genomicFields: ['chromStart', 'chromEnd']
                     },
-                    overlay: [
+                    tracks: [
                         {
                             mark: 'rect',
                             dataTransform: {
@@ -244,6 +246,7 @@ export const EX_SPEC_GIVE: GoslingSpec = {
             layout: 'linear',
             tracks: [
                 {
+                    alignment: 'overlay',
                     data: {
                         url:
                             'https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/UCSC.HG38.Human.CytoBandIdeogram.csv',
@@ -251,7 +254,7 @@ export const EX_SPEC_GIVE: GoslingSpec = {
                         chromosomeField: 'Chromosome',
                         genomicFields: ['chromStart', 'chromEnd']
                     },
-                    overlay: [
+                    tracks: [
                         {
                             mark: 'rect',
                             dataTransform: {
@@ -406,6 +409,7 @@ export const EX_SPEC_GIVE: GoslingSpec = {
                     height: 40
                 },
                 {
+                    alignment: 'overlay',
                     title: 'Genes',
                     data: {
                         url: 'https://resgen.io/api/v1/tileset_info/?d=M9A9klpwTci5Vf4bHZ864g',
@@ -423,7 +427,7 @@ export const EX_SPEC_GIVE: GoslingSpec = {
                             { index: 13, name: 'end' }
                         ]
                     },
-                    overlay: [
+                    tracks: [
                         {
                             dataTransform: {
                                 filter: [

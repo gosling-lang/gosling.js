@@ -1,4 +1,4 @@
-import { IsXAxis } from './gosling.schema.guards';
+import { IsFlatTracks, IsOverlaidTracks, IsStackedTracks, IsXAxis } from './gosling.schema.guards';
 
 describe('Type Guard', () => {
     it('IsAxis', () => {
@@ -65,5 +65,24 @@ describe('Type Guard', () => {
                 height: 20
             })
         ).toEqual(false);
+    });
+
+    it('FlatTracks', () => {
+        expect(IsFlatTracks({ tracks: [] })).toBe(true);
+        expect(IsFlatTracks({ alignment: 'stack', tracks: [] })).toBe(false);
+        expect(IsFlatTracks({ tracks: [{ alignment: 'overlay', tracks: [], width: 10, height: 10 }] })).toBe(false);
+        expect(IsFlatTracks({ alignment: 'overlay', tracks: [], width: 10, height: 10 })).toBe(false);
+    });
+    it('StackedTracks', () => {
+        expect(IsStackedTracks({ alignment: 'stack', tracks: [] })).toBe(true);
+        expect(IsStackedTracks({ tracks: [{ alignment: 'overlay', tracks: [], width: 10, height: 10 }] })).toBe(true);
+        expect(IsStackedTracks({ tracks: [] })).toBe(false);
+        expect(IsStackedTracks({ alignment: 'overlay', tracks: [], width: 10, height: 10 })).toBe(false);
+    });
+    it('OverlaidTracks', () => {
+        expect(IsOverlaidTracks({ alignment: 'overlay', tracks: [], width: 10, height: 10 })).toBe(true);
+        expect(IsOverlaidTracks({ tracks: [{ alignment: 'overlay', tracks: [], width: 10, height: 10 }] })).toBe(false);
+        expect(IsOverlaidTracks({ tracks: [] })).toBe(false);
+        expect(IsOverlaidTracks({ alignment: 'stack', tracks: [] })).toBe(false);
     });
 });

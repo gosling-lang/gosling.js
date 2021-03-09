@@ -27,7 +27,11 @@ import {
     MultivecData,
     VectorData,
     DataTrack,
-    BIGWIGData
+    BIGWIGData,
+    SingleView,
+    FlatTracks,
+    OverlaidTracks,
+    StackedTracks
 } from './gosling.schema';
 import { SUPPORTED_CHANNELS } from './mark';
 import { isArray } from 'lodash';
@@ -55,12 +59,22 @@ export function IsDataTransform(_: DataTransform | ChannelDeep | ChannelValue): 
     return 'filter' in _;
 }
 
+export function IsFlatTracks(_: SingleView): _ is FlatTracks {
+    return !('alignment' in _) && !_.tracks.find(d => (d as any).alignment === 'overlay' || 'tracks' in d);
+}
+export function IsOverlaidTracks(_: SingleView): _ is OverlaidTracks {
+    return 'alignment' in _ && _.alignment === 'overlay';
+}
+export function IsStackedTracks(_: SingleView): _ is StackedTracks {
+    return !IsFlatTracks(_) && !IsOverlaidTracks(_);
+}
+
 export function IsDataTrack(_: Track): _ is DataTrack {
     // !!! Track might not contain `mark` when it is superposed one
     return !IsOverlaidTrack(_) && 'data' in _ && !('mark' in _);
 }
 
-export function IsTemplate(_: Track): boolean {
+export function IsTemplate(_: Partial<Track>): boolean {
     return !!('data' in _ && (!('mark' in _) || _.overrideTemplate) && !IsOverlaidTrack(_));
 }
 
@@ -111,7 +125,7 @@ export function IsSingleTrack(track: Track): track is SingleTrack {
     return !('overlay' in track);
 }
 
-export function IsOverlaidTrack(track: Track): track is OverlaidTrack {
+export function IsOverlaidTrack(track: Partial<Track>): track is OverlaidTrack {
     return 'overlay' in track;
 }
 

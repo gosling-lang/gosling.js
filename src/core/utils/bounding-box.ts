@@ -165,9 +165,11 @@ function traverseAndCollectTrackInfo(
     const numTracksBeforeInsert = output.length;
 
     if ('tracks' in spec) {
+        const tracks = spec.tracks as Track[];
+
         // Use the largest `width` for this view.
-        cumWidth = Math.max(...spec.tracks.map(d => d.width)); //forceWidth ? forceWidth : spec.tracks[0]?.width;
-        spec.tracks.forEach((track, i, array) => {
+        cumWidth = Math.max(...tracks.map(d => d.width)); //forceWidth ? forceWidth : spec.tracks[0]?.width;
+        tracks.forEach((track, i, array) => {
             // let scaledHeight = track.height;
 
             if (getNumOfXAxes([track]) === 1) {
