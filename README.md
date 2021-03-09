@@ -4,9 +4,11 @@
 <h1>Gosling.js</h1>
 
 [![npm version](https://img.shields.io/npm/v/gosling.js.svg?style=flat-square)](https://www.npmjs.com/package/gosling.js)
-[![Build Status](https://img.shields.io/travis/sehilyi/geminid/master.svg?style=flat-square)](https://travis-ci.com/gosling-lang/gosling.js)
+[![build status](https://img.shields.io/travis/sehilyi/geminid/master.svg?style=flat-square)](https://travis-ci.com/gosling-lang/gosling.js)
 [![codecov](https://img.shields.io/codecov/c/github/gosling-lang/gosling.js/master.svg?style=flat-square&?cacheSeconds=60)](https://codecov.io/gh/gosling-lang/gosling.js)
 [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
+[![online editor](https://img.shields.io/badge/demo-online_editor-E08243.svg?style=flat-square)](https://gosling.js.org/)
+[![docs](https://img.shields.io/badge/docs-📖-57B4E9.svg?style=flat-square)](https://github.com/gosling-lang/gosling-docs)
 
 </div>
 
