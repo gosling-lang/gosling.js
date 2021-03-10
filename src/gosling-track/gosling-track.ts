@@ -487,7 +487,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                                     ...uniqueRows.filter(d => overlappedRows.indexOf(d) === -1)
                                 );
 
-                                // starts from zero
+                                // row index starts from zero
                                 const row: number = overlapped.length === 0 ? 0 : lowestNonOverlappedRow;
 
                                 d[newField] = `${row}`;
@@ -495,7 +495,50 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                                 boundingBoxes.push({ start, end, row });
                             });
                         } else if (direction === 'parallel') {
-                            // TODO:
+                            const boundingBoxes: { start: number; end: number }[] = [];
+
+                            base.sort(
+                                (a: Datum, b: Datum) => (a[startField] as number) - (b[startField] as number)
+                            ).forEach((d: Datum) => {
+                                let start = (d[startField] as number) - padding;
+                                let end = (d[endField] as number) + padding;
+
+                                let overlapped = boundingBoxes.filter(
+                                    box =>
+                                        (box.start === start && end === box.end) ||
+                                        (box.start < start && start < box.end) ||
+                                        (box.start < end && end < box.end) ||
+                                        (start < box.start && box.end < end)
+                                );
+
+                                if (overlapped.length > 0) {
+                                    let trial = 0;
+                                    do {
+                                        overlapped = boundingBoxes.filter(
+                                            box =>
+                                                (box.start === start && end === box.end) ||
+                                                (box.start < start && start < box.end) ||
+                                                (box.start < end && end < box.end) ||
+                                                (start < box.start && box.end < end)
+                                        );
+                                        if (overlapped.length > 0) {
+                                            if (trial % 2 === 0) {
+                                                start += padding * trial;
+                                                end += padding * trial;
+                                            } else {
+                                                start -= padding * trial;
+                                                end -= padding * trial;
+                                            }
+                                        }
+                                        trial++;
+                                    } while (overlapped.length > 0 && trial < 100);
+                                }
+
+                                d[`${newField}Start`] = `${start}`;
+                                d[`${newField}Etart`] = `${end}`;
+
+                                boundingBoxes.push({ start, end });
+                            });
                         }
                     });
                 }

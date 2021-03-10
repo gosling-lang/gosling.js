@@ -1,6 +1,14 @@
 import assign from 'lodash/assign';
 import uuid from 'uuid';
-import { SingleTrack, GoslingSpec, SingleView, Track, CommonViewDef, MultipleViews } from '../gosling.schema';
+import {
+    SingleTrack,
+    GoslingSpec,
+    SingleView,
+    Track,
+    CommonViewDef,
+    MultipleViews,
+    StackTransform
+} from '../gosling.schema';
 import {
     IsTemplate,
     IsDataDeepTileset,
@@ -143,6 +151,46 @@ export function traverseToFixSpecDownstream(spec: GoslingSpec | SingleView, pare
             // If size not defined, set default ones
             if (!track.width) track.width = DEFAULT_TRACK_WIDTH_LINEAR;
             if (!track.height) track.height = DEFAULT_TRACK_HEIGHT_LINEAR;
+
+            /**
+             * Process a stack option.
+             */
+            if ('stack' in track) {
+                if (
+                    track.stack?.direction === 'orthogonal' &&
+                    track.row === undefined &&
+                    IsChannelDeep(track.x) &&
+                    track.x.field &&
+                    IsChannelDeep(track.xe) &&
+                    track.xe.field
+                    // Question: Should we consider mark types? (e.g., link might not be supported?)
+                ) {
+                    const newField = uuid.v4();
+                    const startField = track.x.field;
+                    const endField = track.xe.field;
+                    const padding = track.stack.padding;
+                    const stackTransform: StackTransform = {
+                        newField,
+                        boundingBox: { startField, endField, padding },
+                        direction: 'orthogonal'
+                    };
+
+                    // Add a data transform for stacking
+                    track.dataTransform = track.dataTransform
+                        ? {
+                              ...track.dataTransform,
+                              stack: track.dataTransform.stack
+                                  ? [...track.dataTransform.stack, stackTransform]
+                                  : [stackTransform]
+                          }
+                        : {
+                              stack: [stackTransform]
+                          };
+                    track.row = { field: newField, type: 'nominal' };
+                } else if (track.stack?.direction === 'parallel') {
+                    // ...
+                }
+            }
 
             /*
              * Properties that shouldn't be suggested
