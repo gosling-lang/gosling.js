@@ -531,11 +531,12 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                                             }
                                         }
                                         trial++;
-                                    } while (overlapped.length > 0 && trial < 100);
+                                        // TODO: do not go outside of a tile.
+                                    } while (overlapped.length > 0 && trial < 1000);
                                 }
 
-                                d[`${newField}Start`] = `${start}`;
-                                d[`${newField}Etart`] = `${end}`;
+                                d[`${newField}Start`] = `${start + padding}`;
+                                d[`${newField}Etart`] = `${end - padding}`;
 
                                 boundingBoxes.push({ start, end });
                             });

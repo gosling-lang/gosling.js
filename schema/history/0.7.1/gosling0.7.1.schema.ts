@@ -188,6 +188,7 @@ export interface TrackStyle {
     dy?: number;
     outline?: string;
     outlineWidth?: number;
+    verticalLink?: boolean; // Should bands be connected from the top to bottom?
     circularLink?: boolean; // !! Deprecated: draw arc instead of bazier curve?
     inlineLegend?: boolean; // show legend in a single horizontal line?
     // below options could instead be used with channel options (e.g., size, stroke, strokeWidth)

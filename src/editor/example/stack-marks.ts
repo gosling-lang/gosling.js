@@ -83,7 +83,8 @@ export const EX_SPEC_STACK: GoslingSpec = {
         {
             tracks: [
                 {
-                    title: 'Likely Benign',
+                    alignment: 'overlay',
+                    title: 'Likely Benign (Original)',
                     data: {
                         url: 'https://server.gosling-lang.org/api/v1/tileset_info/?d=clinvar-beddb',
                         type: 'beddb',
@@ -96,19 +97,25 @@ export const EX_SPEC_STACK: GoslingSpec = {
                     dataTransform: {
                         filter: [{ field: 'significance', oneOf: ['Likely_benign'] }]
                     },
-                    mark: 'point',
+                    tracks: [
+                        {
+                            mark: 'rect',
+                            color: { value: 'lightgray' },
+                            stroke: { value: 'lightgray' },
+                            strokeWidth: { value: 0.5 }
+                        },
+                        { mark: 'point', size: { value: 4 }, color: { value: '#029F73' } }
+                    ],
                     x: { field: 'start', type: 'genomic' },
                     xe: { field: 'end', type: 'genomic' },
-                    size: { value: 4 },
-                    color: { value: '#029F73' },
                     stroke: { value: 'black' },
                     strokeWidth: { value: 1 },
                     opacity: { value: 0.8 },
+                    style: { outlineWidth: 0 },
                     width: 700,
                     height: 60
                 },
                 {
-                    title: 'Likely Benign',
                     data: {
                         url: 'https://server.gosling-lang.org/api/v1/tileset_info/?d=clinvar-beddb',
                         type: 'beddb',
@@ -128,17 +135,57 @@ export const EX_SPEC_STACK: GoslingSpec = {
                             }
                         ]
                     },
-                    mark: 'point',
+                    mark: 'link',
+                    x: { field: 'start', type: 'genomic' },
+                    xe: { field: 'aStart', type: 'genomic' },
+                    // xe: { field: 'end', type: 'genomic' },
+                    // x1: { field: 'aStart', type: 'genomic' },
+                    // x1e: { field: 'aEnd', type: 'genomic' },
+                    color: { value: '#029F73' },
+                    stroke: { value: 'lightgrey' },
+                    strokeWidth: { value: 0.5 },
+                    opacity: { value: 0.8 },
+                    style: { verticalLink: true, outlineWidth: 0 },
+                    width: 700,
+                    height: 60
+                },
+                {
+                    alignment: 'overlay',
+                    title: 'Likely Benign (Stacked Horizontally)',
+                    data: {
+                        url: 'https://server.gosling-lang.org/api/v1/tileset_info/?d=clinvar-beddb',
+                        type: 'beddb',
+                        genomicFields: [
+                            { index: 1, name: 'start' },
+                            { index: 2, name: 'end' }
+                        ],
+                        valueFields: [{ index: 7, name: 'significance', type: 'nominal' }]
+                    },
+                    dataTransform: {
+                        filter: [{ field: 'significance', oneOf: ['Likely_benign'] }],
+                        stack: [
+                            {
+                                boundingBox: { startField: 'start', endField: 'end', padding: 5 },
+                                direction: 'parallel',
+                                newField: 'a'
+                            }
+                        ]
+                    },
+                    tracks: [
+                        {
+                            mark: 'rect',
+                            color: { value: 'lightgray' },
+                            stroke: { value: 'lightgray' },
+                            strokeWidth: { value: 0.5 }
+                        },
+                        { mark: 'point', size: { value: 4 }, color: { value: '#029F73' } }
+                    ],
                     x: { field: 'aStart', type: 'genomic' },
                     xe: { field: 'aEnd', type: 'genomic' },
-                    // stack: { direction: 'parallel', padding: 3.5 },
-                    // x: { field: 'start', type: 'genomic' },
-                    // xe: { field: 'end', type: 'genomic' },
-                    size: { value: 4 },
-                    color: { value: '#029F73' },
                     stroke: { value: 'black' },
                     strokeWidth: { value: 1 },
                     opacity: { value: 0.8 },
+                    style: { outlineWidth: 0 },
                     width: 700,
                     height: 60
                 }
