@@ -448,7 +448,7 @@
         },
         "stack": {
           "items": {
-            "$ref": "#/definitions/StackTransform"
+            "$ref": "#/definitions/DisplacementTransform"
           },
           "type": "array"
         }
@@ -463,6 +463,64 @@
         ]
       },
       "type": "object"
+    },
+    "Displacement": {
+      "additionalProperties": false,
+      "properties": {
+        "padding": {
+          "type": "number"
+        },
+        "type": {
+          "$ref": "#/definitions/DisplacementType"
+        }
+      },
+      "required": [
+        "type"
+      ],
+      "type": "object"
+    },
+    "DisplacementTransform": {
+      "additionalProperties": false,
+      "properties": {
+        "boundingBox": {
+          "additionalProperties": false,
+          "properties": {
+            "endField": {
+              "type": "string"
+            },
+            "padding": {
+              "type": "number"
+            },
+            "startField": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "startField",
+            "endField"
+          ],
+          "type": "object"
+        },
+        "newField": {
+          "type": "string"
+        },
+        "type": {
+          "$ref": "#/definitions/DisplacementType"
+        }
+      },
+      "required": [
+        "boundingBox",
+        "type",
+        "newField"
+      ],
+      "type": "object"
+    },
+    "DisplacementType": {
+      "enum": [
+        "pile",
+        "spread"
+      ],
+      "type": "string"
     },
     "Domain": {
       "anyOf": [
@@ -1373,6 +1431,9 @@
         "dataTransform": {
           "$ref": "#/definitions/DataTransform"
         },
+        "displacement": {
+          "$ref": "#/definitions/Displacement"
+        },
         "endAngle": {
           "type": "number"
         },
@@ -1420,6 +1481,9 @@
               "dataTransform": {
                 "$ref": "#/definitions/DataTransform"
               },
+              "displacement": {
+                "$ref": "#/definitions/Displacement"
+              },
               "endAngle": {
                 "type": "number"
               },
@@ -1452,9 +1516,6 @@
               },
               "spacing": {
                 "type": "number"
-              },
-              "stack": {
-                "$ref": "#/definitions/Stack"
               },
               "stackY": {
                 "type": "boolean"
@@ -1570,9 +1631,6 @@
         },
         "spacing": {
           "type": "number"
-        },
-        "stack": {
-          "$ref": "#/definitions/Stack"
         },
         "stackY": {
           "type": "boolean"
@@ -1712,6 +1770,9 @@
         "dataTransform": {
           "$ref": "#/definitions/DataTransform"
         },
+        "displacement": {
+          "$ref": "#/definitions/Displacement"
+        },
         "endAngle": {
           "type": "number"
         },
@@ -1750,9 +1811,6 @@
         },
         "spacing": {
           "type": "number"
-        },
-        "stack": {
-          "$ref": "#/definitions/Stack"
         },
         "stackY": {
           "type": "boolean"
@@ -1829,6 +1887,9 @@
               "dataTransform": {
                 "$ref": "#/definitions/DataTransform"
               },
+              "displacement": {
+                "$ref": "#/definitions/Displacement"
+              },
               "endAngle": {
                 "type": "number"
               },
@@ -1876,6 +1937,9 @@
                     "dataTransform": {
                       "$ref": "#/definitions/DataTransform"
                     },
+                    "displacement": {
+                      "$ref": "#/definitions/Displacement"
+                    },
                     "endAngle": {
                       "type": "number"
                     },
@@ -1908,9 +1972,6 @@
                     },
                     "spacing": {
                       "type": "number"
-                    },
-                    "stack": {
-                      "$ref": "#/definitions/Stack"
                     },
                     "stackY": {
                       "type": "boolean"
@@ -2026,9 +2087,6 @@
               },
               "spacing": {
                 "type": "number"
-              },
-              "stack": {
-                "$ref": "#/definitions/Stack"
               },
               "stackY": {
                 "type": "boolean"
@@ -2359,6 +2417,9 @@
             "description": {
               "type": "string"
             },
+            "displacement": {
+              "$ref": "#/definitions/Displacement"
+            },
             "endAngle": {
               "type": "number"
             },
@@ -2397,9 +2458,6 @@
             },
             "spacing": {
               "type": "number"
-            },
-            "stack": {
-              "$ref": "#/definitions/Stack"
             },
             "stackY": {
               "type": "boolean"
@@ -2476,6 +2534,9 @@
                   "dataTransform": {
                     "$ref": "#/definitions/DataTransform"
                   },
+                  "displacement": {
+                    "$ref": "#/definitions/Displacement"
+                  },
                   "endAngle": {
                     "type": "number"
                   },
@@ -2523,6 +2584,9 @@
                         "dataTransform": {
                           "$ref": "#/definitions/DataTransform"
                         },
+                        "displacement": {
+                          "$ref": "#/definitions/Displacement"
+                        },
                         "endAngle": {
                           "type": "number"
                         },
@@ -2555,9 +2619,6 @@
                         },
                         "spacing": {
                           "type": "number"
-                        },
-                        "stack": {
-                          "$ref": "#/definitions/Stack"
                         },
                         "stackY": {
                           "type": "boolean"
@@ -2673,9 +2734,6 @@
                   },
                   "spacing": {
                     "type": "number"
-                  },
-                  "stack": {
-                    "$ref": "#/definitions/Stack"
                   },
                   "stackY": {
                     "type": "boolean"
@@ -3000,6 +3058,9 @@
         "dataTransform": {
           "$ref": "#/definitions/DataTransform"
         },
+        "displacement": {
+          "$ref": "#/definitions/Displacement"
+        },
         "endAngle": {
           "type": "number"
         },
@@ -3038,9 +3099,6 @@
         },
         "spacing": {
           "type": "number"
-        },
-        "stack": {
-          "$ref": "#/definitions/Stack"
         },
         "stackY": {
           "type": "boolean"
@@ -3211,64 +3269,6 @@
         "operation",
         "target",
         "threshold"
-      ],
-      "type": "object"
-    },
-    "Stack": {
-      "additionalProperties": false,
-      "properties": {
-        "direction": {
-          "$ref": "#/definitions/StackDirection"
-        },
-        "padding": {
-          "type": "number"
-        }
-      },
-      "required": [
-        "direction"
-      ],
-      "type": "object"
-    },
-    "StackDirection": {
-      "enum": [
-        "parallel",
-        "orthogonal"
-      ],
-      "type": "string"
-    },
-    "StackTransform": {
-      "additionalProperties": false,
-      "properties": {
-        "boundingBox": {
-          "additionalProperties": false,
-          "properties": {
-            "endField": {
-              "type": "string"
-            },
-            "padding": {
-              "type": "number"
-            },
-            "startField": {
-              "type": "string"
-            }
-          },
-          "required": [
-            "startField",
-            "endField"
-          ],
-          "type": "object"
-        },
-        "direction": {
-          "$ref": "#/definitions/StackDirection"
-        },
-        "newField": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "boundingBox",
-        "direction",
-        "newField"
       ],
       "type": "object"
     },

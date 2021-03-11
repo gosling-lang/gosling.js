@@ -146,7 +146,7 @@ export interface SingleTrack extends CommonTrackDef {
     opacity?: Channel;
 
     // Resolving overlaps
-    stack?: Stack;
+    displacement?: Displacement;
 
     // Visibility
     visibility?: VisibilityCondition[];
@@ -161,12 +161,12 @@ export interface SingleTrack extends CommonTrackDef {
     overrideTemplate?: boolean; // Override a spec template that is defined for a given data type.
 }
 
-export interface Stack {
-    direction: StackDirection;
+export interface Displacement {
+    type: DisplacementType;
     padding?: number; // A pixel value
 }
 
-export type StackDirection = 'parallel' | 'orthogonal'; // 'both' can be supported as well.
+export type DisplacementType = 'pile' | 'spread';
 
 // TODO: Check whether `Omit` is properly included in the generated `gosling.schema.json`
 // https://github.com/vega/ts-json-schema-generator/issues/101
@@ -397,7 +397,7 @@ export interface BEDDBData {
 /* ----------------------------- DATA TRANSFORM ----------------------------- */
 export interface DataTransform {
     filter?: FilterTransform[];
-    stack?: StackTransform[]; // Mainly for internal usage. // We can call this 'dynamic' data transform.
+    stack?: DisplacementTransform[]; // Mainly for internal usage. // We can call this 'dynamic' data transform.
 }
 
 export type FilterTransform = OneOfFilter | RangeFilter | IncludeFilter;
@@ -420,14 +420,14 @@ export interface OneOfFilter {
     not?: boolean;
 }
 
-export interface StackTransform {
+export interface DisplacementTransform {
     // We could support different types of bounding boxes (e.g., using a center position and a size)
     boundingBox: {
         startField: string; // The name of a quantitative field that represents the start position
         endField: string; // The name of a quantitative field that represents the end position
         padding?: number; // TODO: this should be considered as a pixel value
     };
-    direction: StackDirection;
+    type: DisplacementType;
     newField: string;
 }
 

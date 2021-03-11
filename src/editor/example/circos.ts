@@ -46,7 +46,7 @@ export const EX_SPEC_CIRCOS: GoslingSpec = {
             mark: 'rect',
             x: { field: 'start', type: 'genomic' },
             xe: { field: 'end', type: 'genomic' },
-            stack: { direction: 'orthogonal' },
+            displacement: { type: 'pile' },
             color: { value: '#FF6205' },
             stroke: { value: 'white' },
             strokeWidth: { value: 1 },

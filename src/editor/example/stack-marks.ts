@@ -1,9 +1,9 @@
 import { GoslingSpec } from '../../';
 import { GOSLING_PUBLIC_DATA } from './gosling-data';
 
-export const EX_SPEC_STACK: GoslingSpec = {
+export const EX_SPEC_MARK_DISPLACEMENT: GoslingSpec = {
     title: 'Mark Stacking',
-    subtitle: 'Replace marks to address visual overlaps using `stack` options',
+    subtitle: 'Reposition marks to address visual overlaps using `displacement` options',
     spacing: 1,
     centerRadius: 0.8,
     xDomain: { chromosome: '17', interval: [43080000, 43120000] },
@@ -31,7 +31,7 @@ export const EX_SPEC_STACK: GoslingSpec = {
                     dataTransform: {
                         filter: [{ field: 'peak', inRange: [0, 0.001] }]
                     },
-                    stack: { direction: 'orthogonal' },
+                    displacement: { type: 'pile' },
                     mark: 'rect',
                     x: { field: 'start', type: 'genomic' },
                     xe: { field: 'end', type: 'genomic' },
@@ -55,7 +55,7 @@ export const EX_SPEC_STACK: GoslingSpec = {
                         ],
                         valueFields: [{ index: 7, name: 'significance', type: 'nominal' }]
                     },
-                    stack: { direction: 'orthogonal', padding: 3.5 },
+                    displacement: { type: 'pile', padding: 3.5 },
                     mark: 'point',
                     x: { field: 'start', type: 'genomic' },
                     xe: { field: 'end', type: 'genomic' },
@@ -81,6 +81,7 @@ export const EX_SPEC_STACK: GoslingSpec = {
             ]
         },
         {
+            xDomain: { chromosome: '2', interval: [126800000, 127700000] },
             tracks: [
                 {
                     alignment: 'overlay',
@@ -130,7 +131,7 @@ export const EX_SPEC_STACK: GoslingSpec = {
                         stack: [
                             {
                                 boundingBox: { startField: 'start', endField: 'end', padding: 5 },
-                                direction: 'parallel',
+                                type: 'spread',
                                 newField: 'a'
                             }
                         ]
@@ -166,7 +167,7 @@ export const EX_SPEC_STACK: GoslingSpec = {
                         stack: [
                             {
                                 boundingBox: { startField: 'start', endField: 'end', padding: 5 },
-                                direction: 'parallel',
+                                type: 'spread',
                                 newField: 'a'
                             }
                         ]

@@ -440,7 +440,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
 
                     // Stacking values
                     resolved.dataTransform.stack?.forEach(stack => {
-                        const { boundingBox, direction, newField } = stack;
+                        const { boundingBox, type, newField } = stack;
                         const { startField, endField } = boundingBox;
 
                         let padding = 0; // This is a pixel value.
@@ -460,7 +460,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                             }
                         }
 
-                        if (direction === 'orthogonal') {
+                        if (type === 'pile') {
                             const boundingBoxes: { start: number; end: number; row: number }[] = [];
 
                             base.sort(
@@ -494,7 +494,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
 
                                 boundingBoxes.push({ start, end, row });
                             });
-                        } else if (direction === 'parallel') {
+                        } else if (type === 'spread') {
                             const boundingBoxes: { start: number; end: number }[] = [];
 
                             base.sort(

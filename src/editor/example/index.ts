@@ -3,7 +3,7 @@ import { EX_SPEC_LAYOUT_AND_ARRANGEMENT_1, EX_SPEC_LAYOUT_AND_ARRANGEMENT_2 } fr
 import { EX_SPEC_VISUAL_ENCODING, EX_SPEC_VISUAL_ENCODING_CIRCULAR } from './visual-encoding';
 import { EX_SPEC_LINKING } from './visual-linking';
 import { EX_SPEC_BASIC_SEMANTIC_ZOOM } from './basic-semantic-zoom';
-import { EX_SPEC_STACK } from './stack-marks';
+import { EX_SPEC_MARK_DISPLACEMENT } from './stack-marks';
 import { EX_SPEC_CIRCULAR_OVERVIEW_LINEAR_DETAIL } from './circular-overview-linear-detail-views';
 import { EX_SPEC_SARS_COV_2 } from './sars-cov-2';
 import { EX_SPEC_CIRCOS } from './circos';
@@ -55,8 +55,8 @@ export const examples: ReadonlyArray<{
         spec: EX_SPEC_BASIC_SEMANTIC_ZOOM
     },
     {
-        name: 'Basic Example: Stacking Marks (Upcoming Feature)',
-        spec: EX_SPEC_STACK,
+        name: 'Basic Example: Mark Displacement',
+        spec: EX_SPEC_MARK_DISPLACEMENT,
         forceShow: true
     },
     {

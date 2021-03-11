@@ -7,7 +7,7 @@ import {
     Track,
     CommonViewDef,
     MultipleViews,
-    StackTransform
+    DisplacementTransform
 } from '../gosling.schema';
 import {
     IsTemplate,
@@ -155,9 +155,9 @@ export function traverseToFixSpecDownstream(spec: GoslingSpec | SingleView, pare
             /**
              * Process a stack option.
              */
-            if ('stack' in track) {
+            if ('displacement' in track) {
                 if (
-                    track.stack?.direction === 'orthogonal' &&
+                    track.displacement?.type === 'pile' &&
                     track.row === undefined &&
                     IsChannelDeep(track.x) &&
                     track.x.field &&
@@ -168,11 +168,11 @@ export function traverseToFixSpecDownstream(spec: GoslingSpec | SingleView, pare
                     const newField = uuid.v4();
                     const startField = track.x.field;
                     const endField = track.xe.field;
-                    const padding = track.stack.padding;
-                    const stackTransform: StackTransform = {
+                    const padding = track.displacement.padding;
+                    const stackTransform: DisplacementTransform = {
                         newField,
                         boundingBox: { startField, endField, padding },
-                        direction: 'orthogonal'
+                        type: 'pile'
                     };
 
                     // Add a data transform for stacking
@@ -187,7 +187,7 @@ export function traverseToFixSpecDownstream(spec: GoslingSpec | SingleView, pare
                               stack: [stackTransform]
                           };
                     track.row = { field: newField, type: 'nominal' };
-                } else if (track.stack?.direction === 'parallel') {
+                } else if (track.displacement?.type === 'spread') {
                     // ...
                 }
             }
