@@ -143,7 +143,12 @@ export function IsChannelBind(
 
 export function IsDataDeepTileset(_: DataDeep | undefined): _ is BEDDBData | VectorData | MultivecData | BIGWIGData {
     return (
-        _ !== undefined && (_.type === 'vector' || _.type === 'beddb' || _.type === 'multivec' || _.type === 'bigwig')
+        _ !== undefined &&
+        (_.type === 'vector' ||
+            _.type === 'beddb' ||
+            _.type === 'multivec' ||
+            _.type === 'bigwig' ||
+            _.type === 'matrix')
     );
 }
 

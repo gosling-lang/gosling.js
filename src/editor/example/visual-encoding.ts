@@ -13,6 +13,30 @@ export const EX_SPEC_VISUAL_ENCODING: GoslingSpec = {
             tracks: [
                 {
                     data: {
+                        url: GOSLING_PUBLIC_DATA.matrix,
+                        type: 'matrix'
+                    },
+                    mark: 'rect',
+                    // x: {
+                    //     field: 'start',
+                    //     type: 'genomic',
+                    //     axis: 'top'
+                    // },
+                    // xe: {
+                    //     field: 'end',
+                    //     type: 'genomic'
+                    // },
+                    // row: { field: 'sample', type: 'nominal', legend: true },
+                    // color: { field: 'peak', type: 'quantitative' },
+                    width: 600,
+                    height: 600
+                }
+            ]
+        },
+        {
+            tracks: [
+                {
+                    data: {
                         url: GOSLING_PUBLIC_DATA.multivec,
                         type: 'multivec',
                         row: 'sample',

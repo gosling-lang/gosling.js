@@ -189,6 +189,9 @@ export class HiGlassModel {
     }
 
     private setChromInfoPath(chromInfoPath: string | undefined) {
+        if (this.getLastView()) {
+            this.getLastView().chromInfoPath = chromInfoPath;
+        }
         this.hg.chromInfoPath = chromInfoPath;
         return this;
     }

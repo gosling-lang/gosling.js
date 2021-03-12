@@ -305,7 +305,7 @@ export interface DomainGene {
 export type Aggregate = 'max' | 'min' | 'mean' | 'bin' | 'count';
 
 /* ----------------------------- DATA ----------------------------- */
-export type DataDeep = JSONData | CSVData | BIGWIGData | MultivecData | BEDDBData | VectorData;
+export type DataDeep = JSONData | CSVData | BIGWIGData | MultivecData | BEDDBData | VectorData | MatrixData;
 
 export interface Datum {
     [k: string]: number | string;
@@ -385,6 +385,11 @@ export interface BEDDBData {
     // this is a somewhat arbitrary option for reading gene annotation datasets
     // should be multi-value fields (e.g., "1,2,3")
     exonIntervalFields?: [{ index: number; name: string }, { index: number; name: string }];
+}
+
+export interface MatrixData {
+    type: 'matrix';
+    url: string;
 }
 
 export interface DataTransform {

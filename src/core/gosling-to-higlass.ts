@@ -82,6 +82,11 @@ export function goslingToHiGlass(
             };
         }
 
+        if (gmTrack.data?.type === 'matrix') {
+            // Use HiGlass' heatmap track for matrix data
+            hgTrack.type = 'heatmap';
+        }
+
         if (gmTrack.overlayOnPreviousTrack) {
             hgModel.addTrackToCombined(hgTrack);
         } else {
