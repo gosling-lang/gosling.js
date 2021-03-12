@@ -201,14 +201,26 @@ export class HiGlassModel {
 
     public setMainTrack(track: Track) {
         if (!this.hg.views) return this;
-        this.getLastView().tracks.center = [
+        this.getLastView().tracks.right = [
             {
                 type: 'combined',
-                width: track.width,
-                height: (track as any).height, // TODO:
-                contents: [track]
+                height: track.width,
+                width: (track as any).height, // TODO:
+                contents: [
+                    {
+                        ...track,
+                        height: track.width,
+                        width: (track as any).height // TODO:
+                    }
+                ]
             }
         ];
+        // this.getLastView().tracks.center = [{
+        //     type: 'combined',
+        //     width: 0,
+        //     height: 0,
+        //     contents: []
+        // }]
         return this;
     }
 
@@ -232,7 +244,8 @@ export class HiGlassModel {
             endAngle?: number;
         }
     ) {
-        if (!this.hg.views) return this;
+        const test = true;
+        if (!this.hg.views || test) return this;
 
         const widthOrHeight = position === 'left' || position === 'right' ? 'width' : 'height';
         const axisTrackTemplate: Track = {
