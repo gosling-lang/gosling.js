@@ -3,14 +3,8 @@ import { GoslingTrackModel } from '../core/gosling-track-model';
 import { validateTrack } from '../core/utils/validate';
 import { shareScaleAcrossTracks } from '../core/utils/scales';
 import { resolveSuperposedTracks } from '../core/utils/overlay';
-import { SingleTrack, OverlaidTrack } from '../core/gosling.schema';
-import {
-    IsDataDeepTileset,
-    IsDataTransform,
-    IsIncludeFilter,
-    IsOneOfFilter,
-    IsRangeFilter
-} from '../core/gosling.schema.guards';
+import { SingleTrack, OverlaidTrack, Datum } from '../core/gosling.schema';
+import { IsDataDeepTileset, IsIncludeFilter, IsOneOfFilter, IsRangeFilter } from '../core/gosling.schema.guards';
 import { Tooltip } from '../gosling-tooltip';
 import { sampleSize } from 'lodash';
 import { scaleLinear } from 'd3-scale';
@@ -420,35 +414,137 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
 
                 tile.tileData.tabularDataFiltered = Array.from(tile.tileData.tabularData);
 
-                // Apply filters
-                if (resolved.dataTransform !== undefined && IsDataTransform(resolved.dataTransform)) {
-                    resolved.dataTransform.filter.forEach(filter => {
+                /*
+                 * Data Transformation
+                 */
+                if (resolved.dataTransform !== undefined) {
+                    // Data filters
+                    resolved.dataTransform.filter?.forEach(filter => {
                         const { field, not } = filter;
                         if (IsOneOfFilter(filter)) {
                             const { oneOf } = filter;
-                            tile.tileData.tabularDataFiltered = tile.tileData.tabularDataFiltered.filter(
-                                (d: { [k: string]: number | string }) => {
-                                    return not
-                                        ? (oneOf as any[]).indexOf(d[field]) === -1
-                                        : (oneOf as any[]).indexOf(d[field]) !== -1;
-                                }
-                            );
+                            tile.tileData.tabularDataFiltered = tile.tileData.tabularDataFiltered.filter((d: Datum) => {
+                                return not
+                                    ? (oneOf as any[]).indexOf(d[field]) === -1
+                                    : (oneOf as any[]).indexOf(d[field]) !== -1;
+                            });
                         } else if (IsRangeFilter(filter)) {
                             const { inRange } = filter;
-                            tile.tileData.tabularDataFiltered = tile.tileData.tabularDataFiltered.filter(
-                                (d: { [k: string]: number | string }) => {
-                                    return not
-                                        ? !(inRange[0] <= d[field] && d[field] <= inRange[1])
-                                        : inRange[0] <= d[field] && d[field] <= inRange[1];
-                                }
-                            );
+                            tile.tileData.tabularDataFiltered = tile.tileData.tabularDataFiltered.filter((d: Datum) => {
+                                return not
+                                    ? !(inRange[0] <= d[field] && d[field] <= inRange[1])
+                                    : inRange[0] <= d[field] && d[field] <= inRange[1];
+                            });
                         } else if (IsIncludeFilter(filter)) {
                             const { include } = filter;
-                            tile.tileData.tabularDataFiltered = tile.tileData.tabularDataFiltered.filter(
-                                (d: { [k: string]: number | string }) => {
-                                    return not ? `${d[field]}`.includes(include) : !`${d[field]}`.includes(include);
+                            tile.tileData.tabularDataFiltered = tile.tileData.tabularDataFiltered.filter((d: Datum) => {
+                                return not ? `${d[field]}`.includes(include) : !`${d[field]}`.includes(include);
+                            });
+                        }
+                    });
+
+                    // Stacking values
+                    resolved.dataTransform.stack?.forEach(stack => {
+                        const { boundingBox, type, newField } = stack;
+                        const { startField, endField } = boundingBox;
+
+                        let padding = 0; // This is a pixel value.
+                        if (boundingBox.padding && this._xScale) {
+                            padding = Math.abs(this._xScale.invert(boundingBox.padding) - this._xScale.invert(0));
+                        }
+
+                        // Check whether we have sufficient information.
+                        const base = tile.tileData.tabularDataFiltered;
+                        if (base && base.length > 0) {
+                            if (
+                                !Object.keys(base[0]).find(d => d === startField) ||
+                                !Object.keys(base[0]).find(d => d === endField)
+                            ) {
+                                // We did not find the fields from the data, so exit here.
+                                return;
+                            }
+                        }
+
+                        if (type === 'pile') {
+                            const boundingBoxes: { start: number; end: number; row: number }[] = [];
+
+                            base.sort(
+                                (a: Datum, b: Datum) => (a[startField] as number) - (b[startField] as number)
+                            ).forEach((d: Datum) => {
+                                const start = (d[startField] as number) - padding;
+                                const end = (d[endField] as number) + padding;
+
+                                const overlapped = boundingBoxes.filter(
+                                    box =>
+                                        (box.start === start && end === box.end) ||
+                                        (box.start < start && start < box.end) ||
+                                        (box.start < end && end < box.end) ||
+                                        (start < box.start && box.end < end)
+                                );
+
+                                // find the lowest non overlapped row
+                                const uniqueRows = [
+                                    ...Array.from(new Set(boundingBoxes.map(d => d.row))),
+                                    Math.max(...boundingBoxes.map(d => d.row)) + 1
+                                ];
+                                const overlappedRows = overlapped.map(d => d.row);
+                                const lowestNonOverlappedRow = Math.min(
+                                    ...uniqueRows.filter(d => overlappedRows.indexOf(d) === -1)
+                                );
+
+                                // row index starts from zero
+                                const row: number = overlapped.length === 0 ? 0 : lowestNonOverlappedRow;
+
+                                d[newField] = `${row}`;
+
+                                boundingBoxes.push({ start, end, row });
+                            });
+                        } else if (type === 'spread') {
+                            const boundingBoxes: { start: number; end: number }[] = [];
+
+                            base.sort(
+                                (a: Datum, b: Datum) => (a[startField] as number) - (b[startField] as number)
+                            ).forEach((d: Datum) => {
+                                let start = (d[startField] as number) - padding;
+                                let end = (d[endField] as number) + padding;
+
+                                let overlapped = boundingBoxes.filter(
+                                    box =>
+                                        (box.start === start && end === box.end) ||
+                                        (box.start < start && start < box.end) ||
+                                        (box.start < end && end < box.end) ||
+                                        (start < box.start && box.end < end)
+                                );
+
+                                if (overlapped.length > 0) {
+                                    let trial = 0;
+                                    do {
+                                        overlapped = boundingBoxes.filter(
+                                            box =>
+                                                (box.start === start && end === box.end) ||
+                                                (box.start < start && start < box.end) ||
+                                                (box.start < end && end < box.end) ||
+                                                (start < box.start && box.end < end)
+                                        );
+                                        if (overlapped.length > 0) {
+                                            if (trial % 2 === 0) {
+                                                start += padding * trial;
+                                                end += padding * trial;
+                                            } else {
+                                                start -= padding * trial;
+                                                end -= padding * trial;
+                                            }
+                                        }
+                                        trial++;
+                                        // TODO: do not go outside of a tile.
+                                    } while (overlapped.length > 0 && trial < 1000);
                                 }
-                            );
+
+                                d[`${newField}Start`] = `${start + padding}`;
+                                d[`${newField}Etart`] = `${end - padding}`;
+
+                                boundingBoxes.push({ start, end });
+                            });
                         }
                     });
                 }

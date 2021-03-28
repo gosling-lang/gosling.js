@@ -184,6 +184,13 @@ export function drawLink(g: PIXI.Graphics, model: GoslingTrackModel) {
             } else {
                 /* Line Connection */
 
+                // Experimental
+                if (spec.style?.verticalLink) {
+                    g.moveTo(xe, rowPosition + rowHeight);
+                    g.lineTo(x, rowPosition);
+                    return;
+                }
+
                 if (xe - x <= 0.1) {
                     // Do not draw very small links
                     return;

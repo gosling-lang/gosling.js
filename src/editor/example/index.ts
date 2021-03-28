@@ -4,6 +4,7 @@ import { EX_SPEC_VISUAL_ENCODING, EX_SPEC_VISUAL_ENCODING_CIRCULAR } from './vis
 import { EX_SPEC_MATRIX } from './matrix';
 import { EX_SPEC_LINKING } from './visual-linking';
 import { EX_SPEC_BASIC_SEMANTIC_ZOOM } from './basic-semantic-zoom';
+import { EX_SPEC_MARK_DISPLACEMENT } from './stack-marks';
 import { EX_SPEC_CIRCULAR_OVERVIEW_LINEAR_DETAIL } from './circular-overview-linear-detail-views';
 import { EX_SPEC_SARS_COV_2 } from './sars-cov-2';
 import { EX_SPEC_CIRCOS } from './circos';
@@ -54,6 +55,10 @@ export const examples: ReadonlyArray<{
     {
         name: 'Basic Example: Basic Idea of Semantic Zoom',
         spec: EX_SPEC_BASIC_SEMANTIC_ZOOM
+    },
+    {
+        name: 'Basic Example: Mark Displacement',
+        spec: EX_SPEC_MARK_DISPLACEMENT
     },
     {
         name: 'Circular Overview + Linear Detail Views',

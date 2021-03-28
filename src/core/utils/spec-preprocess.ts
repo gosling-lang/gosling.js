@@ -1,6 +1,14 @@
 import assign from 'lodash/assign';
 import uuid from 'uuid';
-import { SingleTrack, GoslingSpec, SingleView, Track, CommonViewDef, MultipleViews } from '../gosling.schema';
+import {
+    SingleTrack,
+    GoslingSpec,
+    SingleView,
+    Track,
+    CommonViewDef,
+    MultipleViews,
+    DisplacementTransform
+} from '../gosling.schema';
 import {
     IsTemplate,
     IsDataDeepTileset,
@@ -144,6 +152,46 @@ export function traverseToFixSpecDownstream(spec: GoslingSpec | SingleView, pare
             // If size not defined, set default ones
             if (!track.width) track.width = DEFAULT_TRACK_WIDTH_LINEAR;
             if (!track.height) track.height = DEFAULT_TRACK_HEIGHT_LINEAR;
+
+            /**
+             * Process a stack option.
+             */
+            if ('displacement' in track) {
+                if (
+                    track.displacement?.type === 'pile' &&
+                    track.row === undefined &&
+                    IsChannelDeep(track.x) &&
+                    track.x.field &&
+                    IsChannelDeep(track.xe) &&
+                    track.xe.field
+                    // Question: Should we consider mark types? (e.g., link might not be supported?)
+                ) {
+                    const newField = uuid.v4();
+                    const startField = track.x.field;
+                    const endField = track.xe.field;
+                    const padding = track.displacement.padding;
+                    const stackTransform: DisplacementTransform = {
+                        newField,
+                        boundingBox: { startField, endField, padding },
+                        type: 'pile'
+                    };
+
+                    // Add a data transform for stacking
+                    track.dataTransform = track.dataTransform
+                        ? {
+                              ...track.dataTransform,
+                              stack: track.dataTransform.stack
+                                  ? [...track.dataTransform.stack, stackTransform]
+                                  : [stackTransform]
+                          }
+                        : {
+                              stack: [stackTransform]
+                          };
+                    track.row = { field: newField, type: 'nominal' };
+                } else if (track.displacement?.type === 'spread') {
+                    // ...
+                }
+            }
 
             /*
              * Properties that shouldn't be suggested

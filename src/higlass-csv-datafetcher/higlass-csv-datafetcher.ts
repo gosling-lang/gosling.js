@@ -143,6 +143,7 @@ function CSVDataFetcher(HGC: any, ...args: any): any {
                         quantitativeFields?.forEach((q: string) => {
                             row[q] = +row[q];
                         });
+
                         return row;
                     });
                 })
