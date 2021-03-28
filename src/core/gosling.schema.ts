@@ -146,12 +146,8 @@ export interface SingleTrack extends CommonTrackDef {
     strokeWidth?: Channel;
     opacity?: Channel;
 
-    // Experimental
-    stackY?: boolean; // Eventually, will be added to y's `Channel` w/ gap
-    flipY?: boolean;
-
-    // Stretch the size to the given range? (e.g., [x, xe])
-    stretch?: boolean;
+    // Resolving overlaps
+    displacement?: Displacement;
 
     // Visibility
     visibility?: VisibilityCondition[];
@@ -159,9 +155,19 @@ export interface SingleTrack extends CommonTrackDef {
     // Styling
     style?: TrackStyle;
 
-    // Override a spec template that is defined for a given data type
-    overrideTemplate?: boolean;
+    // Experimental
+    stackY?: boolean; // Will be deprecated.
+    flipY?: boolean; // This is only supported for `link` marks.
+    stretch?: boolean; // Stretch the size to the given range? (e.g., [x, xe])
+    overrideTemplate?: boolean; // Override a spec template that is defined for a given data type.
 }
+
+export interface Displacement {
+    type: DisplacementType;
+    padding?: number; // A pixel value
+}
+
+export type DisplacementType = 'pile' | 'spread';
 
 // TODO: Check whether `Omit` is properly included in the generated `gosling.schema.json`
 // https://github.com/vega/ts-json-schema-generator/issues/101
@@ -183,6 +189,7 @@ export interface TrackStyle {
     dy?: number;
     outline?: string;
     outlineWidth?: number;
+    verticalLink?: boolean; // Should bands be connected from the top to bottom?
     circularLink?: boolean; // !! Deprecated: draw arc instead of bazier curve?
     inlineLegend?: boolean; // show legend in a single horizontal line?
     // below options could instead be used with channel options (e.g., size, stroke, strokeWidth)
@@ -388,16 +395,18 @@ export interface BEDDBData {
     exonIntervalFields?: [{ index: number; name: string }, { index: number; name: string }];
 }
 
+/* ----------------------------- DATA TRANSFORM ----------------------------- */
 export interface MatrixData {
     type: 'matrix';
     url: string;
 }
 
 export interface DataTransform {
-    filter: Filter[];
+    filter?: FilterTransform[];
+    stack?: DisplacementTransform[]; // Mainly for internal usage. // We can call this 'dynamic' data transform.
 }
 
-export type Filter = OneOfFilter | RangeFilter | IncludeFilter;
+export type FilterTransform = OneOfFilter | RangeFilter | IncludeFilter;
 
 export interface RangeFilter {
     field: string;
@@ -415,6 +424,17 @@ export interface OneOfFilter {
     field: string;
     oneOf: string[] | number[];
     not?: boolean;
+}
+
+export interface DisplacementTransform {
+    // We could support different types of bounding boxes (e.g., using a center position and a size)
+    boundingBox: {
+        startField: string; // The name of a quantitative field that represents the start position
+        endField: string; // The name of a quantitative field that represents the end position
+        padding?: number; // TODO: this should be considered as a pixel value
+    };
+    type: DisplacementType;
+    newField: string;
 }
 
 /* ----------------------------- GLYPH (deprecated, but to be supported again) ----------------------------- */

@@ -445,14 +445,17 @@
       "properties": {
         "filter": {
           "items": {
-            "$ref": "#/definitions/Filter"
+            "$ref": "#/definitions/FilterTransform"
+          },
+          "type": "array"
+        },
+        "stack": {
+          "items": {
+            "$ref": "#/definitions/DisplacementTransform"
           },
           "type": "array"
         }
       },
-      "required": [
-        "filter"
-      ],
       "type": "object"
     },
     "Datum": {
@@ -463,6 +466,64 @@
         ]
       },
       "type": "object"
+    },
+    "Displacement": {
+      "additionalProperties": false,
+      "properties": {
+        "padding": {
+          "type": "number"
+        },
+        "type": {
+          "$ref": "#/definitions/DisplacementType"
+        }
+      },
+      "required": [
+        "type"
+      ],
+      "type": "object"
+    },
+    "DisplacementTransform": {
+      "additionalProperties": false,
+      "properties": {
+        "boundingBox": {
+          "additionalProperties": false,
+          "properties": {
+            "endField": {
+              "type": "string"
+            },
+            "padding": {
+              "type": "number"
+            },
+            "startField": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "startField",
+            "endField"
+          ],
+          "type": "object"
+        },
+        "newField": {
+          "type": "string"
+        },
+        "type": {
+          "$ref": "#/definitions/DisplacementType"
+        }
+      },
+      "required": [
+        "boundingBox",
+        "type",
+        "newField"
+      ],
+      "type": "object"
+    },
+    "DisplacementType": {
+      "enum": [
+        "pile",
+        "spread"
+      ],
+      "type": "string"
     },
     "Domain": {
       "anyOf": [
@@ -589,7 +650,7 @@
       ],
       "type": "string"
     },
-    "Filter": {
+    "FilterTransform": {
       "anyOf": [
         {
           "$ref": "#/definitions/OneOfFilter"
@@ -1390,6 +1451,9 @@
         "dataTransform": {
           "$ref": "#/definitions/DataTransform"
         },
+        "displacement": {
+          "$ref": "#/definitions/Displacement"
+        },
         "endAngle": {
           "type": "number"
         },
@@ -1436,6 +1500,9 @@
               },
               "dataTransform": {
                 "$ref": "#/definitions/DataTransform"
+              },
+              "displacement": {
+                "$ref": "#/definitions/Displacement"
               },
               "endAngle": {
                 "type": "number"
@@ -1723,6 +1790,9 @@
         "dataTransform": {
           "$ref": "#/definitions/DataTransform"
         },
+        "displacement": {
+          "$ref": "#/definitions/Displacement"
+        },
         "endAngle": {
           "type": "number"
         },
@@ -1837,6 +1907,9 @@
               "dataTransform": {
                 "$ref": "#/definitions/DataTransform"
               },
+              "displacement": {
+                "$ref": "#/definitions/Displacement"
+              },
               "endAngle": {
                 "type": "number"
               },
@@ -1883,6 +1956,9 @@
                     },
                     "dataTransform": {
                       "$ref": "#/definitions/DataTransform"
+                    },
+                    "displacement": {
+                      "$ref": "#/definitions/Displacement"
                     },
                     "endAngle": {
                       "type": "number"
@@ -2361,6 +2437,9 @@
             "description": {
               "type": "string"
             },
+            "displacement": {
+              "$ref": "#/definitions/Displacement"
+            },
             "endAngle": {
               "type": "number"
             },
@@ -2475,6 +2554,9 @@
                   "dataTransform": {
                     "$ref": "#/definitions/DataTransform"
                   },
+                  "displacement": {
+                    "$ref": "#/definitions/Displacement"
+                  },
                   "endAngle": {
                     "type": "number"
                   },
@@ -2521,6 +2603,9 @@
                         },
                         "dataTransform": {
                           "$ref": "#/definitions/DataTransform"
+                        },
+                        "displacement": {
+                          "$ref": "#/definitions/Displacement"
                         },
                         "endAngle": {
                           "type": "number"
@@ -2993,6 +3078,9 @@
         "dataTransform": {
           "$ref": "#/definitions/DataTransform"
         },
+        "displacement": {
+          "$ref": "#/definitions/Displacement"
+        },
         "endAngle": {
           "type": "number"
         },
@@ -3380,6 +3468,9 @@
         },
         "textStrokeWidth": {
           "type": "number"
+        },
+        "verticalLink": {
+          "type": "boolean"
         }
       },
       "type": "object"
