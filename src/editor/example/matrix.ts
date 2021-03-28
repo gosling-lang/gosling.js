@@ -190,7 +190,7 @@ export const EX_SPEC_MATRIX: GoslingSpec = {
             ]
         },
         {
-            xDomain: { chromosome: '5', interval: [1000000, 30000000] },
+            xDomain: { chromosome: '5', interval: [0, 43000000] },
             xLinkingId: 'all',
             spacing: 0,
             views: [
@@ -217,6 +217,144 @@ export const EX_SPEC_MATRIX: GoslingSpec = {
                             height: 50
                         }
                     ]
+                },
+                {
+                    alignment: 'overlay',
+                    data: {
+                        url: GOSLING_PUBLIC_DATA.geneAnnotation,
+                        type: 'beddb',
+                        genomicFields: [
+                            { index: 1, name: 'start' },
+                            { index: 2, name: 'end' }
+                        ],
+                        valueFields: [
+                            { index: 5, name: 'strand', type: 'nominal' },
+                            { index: 3, name: 'name', type: 'nominal' }
+                        ],
+                        exonIntervalFields: [
+                            { index: 12, name: 'start' },
+                            { index: 13, name: 'end' }
+                        ]
+                    },
+                    tracks: [
+                        {
+                            dataTransform: {
+                                filter: [
+                                    { field: 'type', oneOf: ['gene'] },
+                                    { field: 'strand', oneOf: ['+'] }
+                                ]
+                            },
+                            mark: 'triangleRight',
+                            x: {
+                                field: 'end',
+                                type: 'genomic',
+                                axis: 'none'
+                            },
+                            size: { value: 15 }
+                        },
+                        {
+                            dataTransform: {
+                                filter: [{ field: 'type', oneOf: ['gene'] }]
+                            },
+                            mark: 'text',
+                            text: { field: 'name', type: 'nominal' },
+                            x: {
+                                field: 'start',
+                                type: 'genomic'
+                            },
+                            xe: {
+                                field: 'end',
+                                type: 'genomic'
+                            },
+                            style: {
+                                dy: -15
+                            }
+                        },
+                        {
+                            dataTransform: {
+                                filter: [
+                                    { field: 'type', oneOf: ['gene'] },
+                                    { field: 'strand', oneOf: ['-'] }
+                                ]
+                            },
+                            mark: 'triangleLeft',
+                            x: {
+                                field: 'start',
+                                type: 'genomic'
+                            },
+                            size: { value: 15 },
+                            style: { align: 'right' }
+                        },
+                        {
+                            dataTransform: { filter: [{ field: 'type', oneOf: ['exon'] }] },
+                            mark: 'rect',
+                            x: {
+                                field: 'start',
+                                type: 'genomic'
+                            },
+                            size: { value: 15 },
+                            xe: {
+                                field: 'end',
+                                type: 'genomic'
+                            }
+                        },
+                        {
+                            dataTransform: {
+                                filter: [
+                                    { field: 'type', oneOf: ['gene'] },
+                                    { field: 'strand', oneOf: ['+'] }
+                                ]
+                            },
+                            mark: 'rule',
+                            x: {
+                                field: 'start',
+                                type: 'genomic'
+                            },
+                            strokeWidth: { value: 3 },
+                            xe: {
+                                field: 'end',
+                                type: 'genomic'
+                            },
+                            style: {
+                                linePattern: { type: 'triangleRight', size: 5 }
+                            }
+                        },
+                        {
+                            dataTransform: {
+                                filter: [
+                                    { field: 'type', oneOf: ['gene'] },
+                                    { field: 'strand', oneOf: ['-'] }
+                                ]
+                            },
+                            mark: 'rule',
+                            x: {
+                                field: 'start',
+                                type: 'genomic'
+                            },
+                            strokeWidth: { value: 3 },
+                            xe: {
+                                field: 'end',
+                                type: 'genomic'
+                            },
+                            style: {
+                                linePattern: { type: 'triangleLeft', size: 5 }
+                            }
+                        }
+                    ],
+                    row: { field: 'strand', type: 'nominal', domain: ['+', '-'] },
+                    color: { field: 'strand', type: 'nominal', domain: ['+', '-'], range: ['#7585FF', '#FF8A85'] },
+                    visibility: [
+                        {
+                            operation: 'less-than',
+                            measure: 'width',
+                            threshold: '|xe-x|',
+                            transitionPadding: 10,
+                            target: 'mark'
+                        }
+                    ],
+                    opacity: { value: 0.8 },
+                    width: 570,
+                    height: 60
                 },
                 {
                     tracks: [
