@@ -183,6 +183,11 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                     return;
                 }
 
+                if (resolved.data.type === 'matrix') {
+                    // we do not draw matrix ourselves, higlass does.
+                    return;
+                }
+
                 if (!tile.tileData.tabularData) {
                     if (!IsDataDeepTileset(resolved.data)) {
                         console.warn('No data is specified');

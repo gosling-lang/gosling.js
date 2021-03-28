@@ -16,7 +16,8 @@ import {
     IsChannelDeep,
     IsOverlaidTrack,
     IsFlatTracks,
-    IsStackedTracks
+    IsStackedTracks,
+    Is2DTrack
 } from '../gosling.schema.guards';
 import {
     DEFAULT_INNER_RADIUS_PROP,
@@ -203,6 +204,14 @@ export function traverseToFixSpecDownstream(spec: GoslingSpec | SingleView, pare
             if (!track.assembly) track.assembly = spec.assembly;
             if (!track.layout) track.layout = spec.layout;
             if (track.static === undefined) track.static = spec.static !== undefined ? spec.static : false;
+
+            /**
+             * A track with 2D genomic coordinates is forced to use a linear layout
+             */
+            if (Is2DTrack(track)) {
+                // TODO: Add a test for this.
+                track.layout = 'linear';
+            }
 
             /**
              * Add x-axis domain

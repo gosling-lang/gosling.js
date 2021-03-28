@@ -50,6 +50,7 @@ export interface CommonViewDef {
 
     assembly?: Assembly;
 
+    // TODO: Change to domain?
     xDomain?: DomainInterval | DomainChrInterval | DomainChr; // We can support `DomainGene` as well later.
     xLinkingId?: string;
     xAxis?: AxisPosition; // not supported currently
@@ -312,7 +313,7 @@ export interface DomainGene {
 export type Aggregate = 'max' | 'min' | 'mean' | 'bin' | 'count';
 
 /* ----------------------------- DATA ----------------------------- */
-export type DataDeep = JSONData | CSVData | BIGWIGData | MultivecData | BEDDBData | VectorData;
+export type DataDeep = JSONData | CSVData | BIGWIGData | MultivecData | BEDDBData | VectorData | MatrixData;
 
 export interface Datum {
     [k: string]: number | string;
@@ -395,6 +396,11 @@ export interface BEDDBData {
 }
 
 /* ----------------------------- DATA TRANSFORM ----------------------------- */
+export interface MatrixData {
+    type: 'matrix';
+    url: string;
+}
+
 export interface DataTransform {
     filter?: FilterTransform[];
     stack?: DisplacementTransform[]; // Mainly for internal usage. // We can call this 'dynamic' data transform.
