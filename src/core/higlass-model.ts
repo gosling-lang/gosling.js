@@ -249,7 +249,7 @@ export class HiGlassModel {
                 tickColor: 'black',
                 tickFormat: type === 'narrower' ? 'si' : 'plain',
                 tickPositions: type === 'regular' ? 'even' : 'ends',
-                reverseOrientation: position === 'bottom' ? true : false
+                reverseOrientation: position === 'bottom' || position === 'right' ? true : false
             }
         };
         if (options.layout === 'circular') {

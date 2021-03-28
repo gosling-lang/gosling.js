@@ -129,6 +129,13 @@ export function IsOverlaidTrack(track: Partial<Track>): track is OverlaidTrack {
     return 'overlay' in track;
 }
 
+/**
+ * TODO: This should be more correctly determined, but we currently only support 2D tracks for matrix datasets.
+ */
+export function Is2DTrack(track: Track) {
+    return IsSingleTrack(track) && track.data.type === 'matrix';
+}
+
 export function IsChannelValue(
     channel: ChannelDeep | ChannelValue | ChannelBind | undefined | 'none'
 ): channel is ChannelValue {

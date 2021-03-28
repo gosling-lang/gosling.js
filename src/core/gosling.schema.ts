@@ -50,6 +50,7 @@ export interface CommonViewDef {
 
     assembly?: Assembly;
 
+    // TODO: Change to domain?
     xDomain?: DomainInterval | DomainChrInterval | DomainChr; // We can support `DomainGene` as well later.
     xLinkingId?: string;
     xAxis?: AxisPosition; // not supported currently
