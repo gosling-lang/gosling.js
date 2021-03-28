@@ -158,6 +158,7 @@ export interface ValueScaleLocks {
 
 // export type TrackType = 'heatmap' | 'combined' | 'viewport-projection-horizontal' | 'viewport-projection-vertical' | 'viewport-projection-center' | EnumTrackType;
 export type EnumTrackType =
+    | 'heatmap'
     | '2d-annotations'
     | '2d-chromosome-annotations'
     | '2d-chromosome-grid'

@@ -262,8 +262,7 @@ const CyverseQUBES: OverlaidTracks = {
             x: {
                 field: 'start',
                 type: 'genomic',
-                domain,
-                axis: 'top'
+                domain
             },
             xe: {
                 field: 'end',

@@ -189,6 +189,9 @@ export class HiGlassModel {
     }
 
     private setChromInfoPath(chromInfoPath: string | undefined) {
+        if (this.getLastView()) {
+            this.getLastView().chromInfoPath = chromInfoPath;
+        }
         this.hg.chromInfoPath = chromInfoPath;
         return this;
     }
@@ -259,7 +262,7 @@ export class HiGlassModel {
                 tickColor: 'black',
                 tickFormat: type === 'narrower' ? 'si' : 'plain',
                 tickPositions: type === 'regular' ? 'even' : 'ends',
-                reverseOrientation: position === 'bottom' ? true : false
+                reverseOrientation: position === 'bottom' || position === 'right' ? true : false
             }
         };
         if (options.layout === 'circular') {

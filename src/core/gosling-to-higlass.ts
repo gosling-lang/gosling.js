@@ -5,6 +5,7 @@ import { Track, Domain } from './gosling.schema';
 import { BoundingBox, RelativePosition } from './utils/bounding-box';
 import { resolveSuperposedTracks } from './utils/overlay';
 import { getGenomicChannelKeyFromTrack, getGenomicChannelFromTrack } from './utils/validate';
+import { viridisColorMap } from './utils/colors';
 import { IsDataDeep, IsChannelDeep, IsDataDeepTileset } from './gosling.schema.guards';
 import { DEFAULT_SUBTITLE_HEIGHT, DEFAULT_TITLE_HEIGHT } from './layout/defaults';
 
@@ -38,9 +39,9 @@ export function goslingToHiGlass(
         const genomicChannel = getGenomicChannelFromTrack(firstResolvedSpec);
         const genomicChannelKey = getGenomicChannelKeyFromTrack(firstResolvedSpec);
         const isXGenomic = genomicChannelKey === 'x' || genomicChannelKey === 'xe';
-        const isYGenomic = genomicChannelKey === 'y' || genomicChannelKey === 'ye';
+        // const isYGenomic = genomicChannelKey === 'y' || genomicChannelKey === 'ye';
         const xDomain = isXGenomic && IsChannelDeep(genomicChannel) ? (genomicChannel.domain as Domain) : undefined;
-        const yDomain = isYGenomic && IsChannelDeep(genomicChannel) ? (genomicChannel.domain as Domain) : undefined;
+        // const yDomain = isYGenomic && IsChannelDeep(genomicChannel) ? (genomicChannel.domain as Domain) : undefined;
 
         const hgTrack: HiGlassTrack = {
             type: 'gosling-track',
@@ -82,13 +83,23 @@ export function goslingToHiGlass(
             };
         }
 
+        const isMatrix = gmTrack.data?.type === 'matrix';
+        if (isMatrix) {
+            // Use HiGlass' heatmap track for matrix data
+            hgTrack.type = 'heatmap';
+            hgTrack.options.colorRange = viridisColorMap;
+            hgTrack.options.trackBorderWidth = 1;
+            hgTrack.options.trackBorderColor = 'black';
+            hgTrack.options.colorbarPosition = (firstResolvedSpec.color as any)?.legend ? 'topRight' : 'hidden';
+        }
+
         if (gmTrack.overlayOnPreviousTrack) {
             hgModel.addTrackToCombined(hgTrack);
         } else {
             hgModel
                 .setAssembly(assembly)
                 .addDefaultView()
-                .setDomain(xDomain, yDomain)
+                .setDomain(xDomain, xDomain)
                 .setMainTrack(hgTrack)
                 .addTrackSourceServers(server)
                 .setZoomFixed(firstResolvedSpec.static === true)
