@@ -9,6 +9,156 @@ export const EX_SPEC_MARK_DISPLACEMENT: GoslingSpec = {
     xDomain: { chromosome: '17', interval: [43080000, 43120000] },
     views: [
         {
+            xDomain: { chromosome: '3', interval: [131000000, 193000000] },
+            views: [
+                {
+                    tracks: [
+                        {
+                            alignment: 'overlay',
+                            data: {
+                                url: 'https://server.gosling-lang.org/api/v1/tileset_info/?d=gene-annotation',
+                                type: 'beddb',
+                                genomicFields: [
+                                    { index: 1, name: 'start' },
+                                    { index: 2, name: 'end' }
+                                ],
+                                valueFields: [
+                                    { index: 5, name: 'strand', type: 'nominal' },
+                                    { index: 3, name: 'name', type: 'nominal' }
+                                ],
+                                exonIntervalFields: [
+                                    { index: 12, name: 'start' },
+                                    { index: 13, name: 'end' }
+                                ]
+                            },
+                            tracks: [
+                                {
+                                    dataTransform: {
+                                        filter: [
+                                            { field: 'type', oneOf: ['gene'] },
+                                            { field: 'strand', oneOf: ['+'] }
+                                        ]
+                                    },
+                                    mark: 'triangleRight',
+                                    x: { field: 'end', type: 'genomic', axis: 'top' },
+                                    size: { value: 15 }
+                                },
+                                {
+                                    dataTransform: {
+                                        filter: [{ field: 'type', oneOf: ['gene'] }]
+                                    },
+                                    mark: 'text',
+                                    text: { field: 'name', type: 'nominal' },
+                                    x: { field: 'start', type: 'genomic' },
+                                    xe: { field: 'end', type: 'genomic' },
+                                    style: { dy: -15 }
+                                },
+                                {
+                                    dataTransform: {
+                                        filter: [
+                                            { field: 'type', oneOf: ['gene'] },
+                                            { field: 'strand', oneOf: ['-'] }
+                                        ]
+                                    },
+                                    mark: 'triangleLeft',
+                                    x: { field: 'start', type: 'genomic' },
+                                    size: { value: 15 },
+                                    style: { align: 'right' }
+                                },
+                                {
+                                    dataTransform: {
+                                        filter: [{ field: 'type', oneOf: ['exon'] }]
+                                    },
+                                    mark: 'rect',
+                                    x: { field: 'start', type: 'genomic' },
+                                    size: { value: 15 },
+                                    xe: { field: 'end', type: 'genomic' }
+                                },
+                                {
+                                    dataTransform: {
+                                        filter: [
+                                            { field: 'type', oneOf: ['gene'] },
+                                            { field: 'strand', oneOf: ['+'] }
+                                        ]
+                                    },
+                                    mark: 'rule',
+                                    x: { field: 'start', type: 'genomic' },
+                                    strokeWidth: { value: 3 },
+                                    xe: { field: 'end', type: 'genomic' },
+                                    style: { linePattern: { type: 'triangleRight', size: 5 } }
+                                },
+                                {
+                                    dataTransform: {
+                                        filter: [
+                                            { field: 'type', oneOf: ['gene'] },
+                                            { field: 'strand', oneOf: ['-'] }
+                                        ]
+                                    },
+                                    mark: 'rule',
+                                    x: { field: 'start', type: 'genomic' },
+                                    strokeWidth: { value: 3 },
+                                    xe: { field: 'end', type: 'genomic' },
+                                    style: { linePattern: { type: 'triangleLeft', size: 5 } }
+                                }
+                            ],
+                            row: { field: 'strand', type: 'nominal', domain: ['+', '-'] },
+                            color: {
+                                field: 'strand',
+                                type: 'nominal',
+                                domain: ['+', '-'],
+                                range: ['#7585FF', '#FF8A85']
+                            },
+                            opacity: { value: 0.8 },
+                            width: 350,
+                            height: 100
+                        },
+                        {
+                            data: {
+                                url: 'https://s3.amazonaws.com/gosling-lang.org/data/driver.df.scanb.complete.csv',
+                                type: 'csv',
+                                chromosomeField: 'Chr',
+                                genomicFields: ['ChrStart', 'ChrEnd']
+                            },
+                            alignment: 'overlay',
+                            tracks: [
+                                { mark: 'rect' },
+                                {
+                                    mark: 'text',
+                                    text: { field: 'Label', type: 'nominal' },
+                                    color: { value: 'white' },
+                                    visibility: [
+                                        {
+                                            measure: 'width',
+                                            threshold: '|xe-x|',
+                                            target: 'mark',
+                                            transitionPadding: 20,
+                                            operation: 'less-than-or-equal-to'
+                                        }
+                                    ]
+                                }
+                            ],
+                            x: { field: 'ChrStart', type: 'genomic' },
+                            xe: { field: 'ChrEnd', type: 'genomic' },
+                            displacement: {
+                                type: 'pile'
+                            },
+                            color: {
+                                field: 'Gene',
+                                type: 'nominal',
+                                legend: true,
+                                domain: ['CBLB', 'TERC', 'PIK3CA', 'SOX2', 'RB1', 'PDGFRA']
+                            },
+                            style: { textStrokeWidth: 0, textFontSize: 7 },
+                            stroke: { value: 'white' },
+                            strokeWidth: { value: 1 },
+                            width: 700,
+                            height: 400
+                        }
+                    ]
+                }
+            ]
+        },
+        {
             tracks: [
                 {
                     data: {
