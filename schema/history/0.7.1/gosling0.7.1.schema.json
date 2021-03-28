@@ -357,6 +357,9 @@
         },
         {
           "$ref": "#/definitions/VectorData"
+        },
+        {
+          "$ref": "#/definitions/MatrixData"
         }
       ]
     },
@@ -1202,6 +1205,23 @@
       },
       "required": [
         "type"
+      ],
+      "type": "object"
+    },
+    "MatrixData": {
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "matrix",
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "type",
+        "url"
       ],
       "type": "object"
     },
