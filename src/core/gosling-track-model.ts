@@ -716,15 +716,16 @@ export class GoslingTrackModel {
         //
 
         SUPPORTED_CHANNELS.forEach(channelKey => {
-            if (channelKey === 'text') {
-                return;
-            }
-
             const channel = spec[channelKey];
 
             if (IsChannelValue(channel)) {
                 this.channelScales[channelKey] = () => channel.value;
             } else if (IsChannelDeep(channel)) {
+                if (channelKey === 'text') {
+                    // We do not generate scales for 'text' marks.
+                    return;
+                }
+
                 const domain = channel.domain;
                 const range = channel.range;
 

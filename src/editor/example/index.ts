@@ -32,7 +32,8 @@ export const examples: ReadonlyArray<{
     },
     {
         name: 'Basic Example: Visual Encoding',
-        spec: EX_SPEC_VISUAL_ENCODING
+        spec: EX_SPEC_VISUAL_ENCODING,
+        forceShow: true
     },
     {
         name: 'Basic Example: Circular Visual Encoding',
@@ -58,7 +59,6 @@ export const examples: ReadonlyArray<{
     {
         name: 'Basic Example: Mark Displacement',
         spec: EX_SPEC_MARK_DISPLACEMENT
-        // forceShow: true
     },
     {
         name: 'Circular Overview + Linear Detail Views',
