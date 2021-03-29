@@ -155,7 +155,7 @@ export const EX_SPEC_PATHOGENIC: GoslingSpec = {
                 ],
                 range: ['#CB3B8C', '#CB71A3', '#CB96B3', 'gray', '#029F73', '#5A9F8C', '#5A9F8C']
             },
-            width: 600,
+            width: 800,
             height: 150
         }
     ]

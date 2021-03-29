@@ -227,17 +227,26 @@ export const EX_SPEC_SEMANTIC_ZOOM: GoslingSpec = {
             layout: 'linear',
             xDomain: { chromosome: '1', interval: [3000000, 3000010] },
             ...EX_TRACK_SEMANTIC_ZOOM.sequence,
-            width: 600,
+            width: 800,
             height: 100
         },
         {
             layout: 'linear',
             ...EX_TRACK_SEMANTIC_ZOOM.cytoband,
-            width: 600,
+            width: 800,
             size: undefined
         },
         {
-            ...EX_SPEC_PATHOGENIC
+            ...EX_SPEC_PATHOGENIC,
+            xDomain: { chromosome: '13', interval: [31500000, 33150000] }
+        },
+        {
+            ...EX_SPEC_PATHOGENIC,
+            xDomain: { chromosome: '13', interval: [32000000, 32700000] }
+        },
+        {
+            ...EX_SPEC_PATHOGENIC,
+            xDomain: { chromosome: '13', interval: [32314000, 32402500] }
         }
     ]
 };

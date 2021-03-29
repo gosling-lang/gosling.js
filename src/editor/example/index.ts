@@ -2,6 +2,7 @@ import { GoslingSpec } from '../../core/gosling.schema';
 import { EX_SPEC_LAYOUT_AND_ARRANGEMENT_1, EX_SPEC_LAYOUT_AND_ARRANGEMENT_2 } from './layout-and-arrangement';
 import { EX_SPEC_VISUAL_ENCODING, EX_SPEC_VISUAL_ENCODING_CIRCULAR } from './visual-encoding';
 import { EX_SPEC_MATRIX } from './matrix';
+import { EX_SPEC_MATRIX_HFFC6 } from './matrix-hffc6';
 import { EX_SPEC_LINKING } from './visual-linking';
 import { EX_SPEC_BASIC_SEMANTIC_ZOOM } from './basic-semantic-zoom';
 import { EX_SPEC_MARK_DISPLACEMENT } from './stack-marks';
@@ -32,8 +33,7 @@ export const examples: ReadonlyArray<{
     },
     {
         name: 'Basic Example: Visual Encoding',
-        spec: EX_SPEC_VISUAL_ENCODING,
-        forceShow: true
+        spec: EX_SPEC_VISUAL_ENCODING
     },
     {
         name: 'Basic Example: Circular Visual Encoding',
@@ -83,6 +83,10 @@ export const examples: ReadonlyArray<{
     {
         name: 'Circos',
         spec: EX_SPEC_CIRCOS
+    },
+    {
+        name: 'Comparison of Micro-C and Hi-C for HFFc6',
+        spec: EX_SPEC_MATRIX_HFFC6
     },
     {
         name: "Gremlin (O'Brien et al. 2010)",
