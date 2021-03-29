@@ -204,10 +204,10 @@ export class HiGlassModel {
 
     public setMainTrack(track: Track) {
         if (!this.hg.views) return this;
-        this.getLastView().tracks.center = [
+        this.getLastView().tracks.left = [
             {
                 type: 'combined',
-                width: track.width,
+                width: (track.width as any) - 1,
                 height: (track as any).height, // TODO:
                 contents: [track]
             }
@@ -217,7 +217,7 @@ export class HiGlassModel {
 
     public addTrackToCombined(track: Track) {
         if (!this.getLastVisView()) return this;
-        (this.getLastVisView() as any).tracks.center[0].contents.push(track);
+        (this.getLastVisView() as any).tracks.left[0].contents.push(track);
         return this;
     }
 

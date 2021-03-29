@@ -44,6 +44,7 @@ export type Assembly = 'hg38' | 'hg19' | 'hg18' | 'hg17' | 'hg16' | 'mm10' | 'mm
 
 export interface CommonViewDef {
     layout?: Layout;
+    orientation?: 'horizontal' | 'vertical';
 
     spacing?: number;
     static?: boolean;
