@@ -60,8 +60,8 @@ export function renderHiGlass(
             .filter(d => !d.isBrush)
             .filter(d => d.linkId === linkId)
             .forEach(d => {
-                hgModel.spec().zoomLocks.locksDict[linkId][d.viewId] = [124625310.5, 1547846991.5, 249250.621];
-                hgModel.spec().locationLocks.locksDict[linkId][d.viewId] = [124625310.5, 1547846991.5, 249250.621];
+                hgModel.spec().zoomLocks.locksDict[linkId][d.viewId] = [124625310.5, 124625310.5, 249250.621];
+                hgModel.spec().locationLocks.locksDict[linkId][d.viewId] = [124625310.5, 124625310.5, 249250.621];
             });
     });
 
