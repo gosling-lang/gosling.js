@@ -179,7 +179,13 @@ export class HiGlassModel {
     }
 
     public setLayout(layout: RelativePosition) {
-        this.getLastView().layout = layout;
+        // console.log(layout);
+        this.getLastView().layout = {
+            x: layout.y,
+            y: layout.x,
+            w: layout.h,
+            h: layout.w
+        };
         return this;
     }
 
@@ -204,26 +210,22 @@ export class HiGlassModel {
 
     public setMainTrack(track: Track) {
         if (!this.hg.views) return this;
-        this.getLastView().tracks.right = [
+        this.getLastView().tracks.left = [
             {
-                type: 'combined',
-                height: track.width,
-                width: (track as any).height, // TODO:
-                contents: [
-                    {
-                        ...track,
-                        height: track.width,
-                        width: (track as any).height // TODO:
-                    }
-                ]
+                ...track,
+                // type: 'combined',
+                width: track.width,
+                height: (track as any).height // TODO:
+                // contents: [track]
             }
         ];
-        // this.getLastView().tracks.center = [{
-        //     type: 'combined',
-        //     width: 0,
-        //     height: 0,
-        //     contents: []
-        // }]
+        // console.log({
+        //     ...track,
+        //     // type: 'combined',
+        //     width: track.width,
+        //     height: (track as any).height // TODO:
+        //     // contents: [track]
+        // });
         return this;
     }
 

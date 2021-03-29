@@ -522,10 +522,13 @@ export class GoslingTrackModel {
                     // `channel` here is either `x` or `y` because they only can ba stacked
                     switch (channelKey) {
                         case 'x':
-                            channel.range = [0, spec.width] as [number, number]; // TODO: not considering vertical direction tracks
+                            channel.range = [0, spec.orientation === 'vertical' ? rowHeight : spec.width] as [
+                                number,
+                                number
+                            ]; // TODO: not considering vertical direction tracks
                             break;
                         case 'y':
-                            channel.range = [0, rowHeight];
+                            channel.range = [0, spec.orientation === 'vertical' ? spec.width : rowHeight];
                             break;
                     }
                 }
@@ -542,10 +545,10 @@ export class GoslingTrackModel {
                     let value;
                     switch (channelKey) {
                         case 'x':
-                            value = (spec.width as number) / 2.0;
+                            value = (spec.orientation === 'vertical' ? rowHeight : (spec.width as number)) / 2.0;
                             break;
                         case 'y':
-                            value = rowHeight / 2.0;
+                            value = (spec.orientation === 'vertical' ? spec.width : rowHeight) / 2.0;
                             break;
                         case 'size':
                             // TODO: make as an object
@@ -609,10 +612,10 @@ export class GoslingTrackModel {
                             case 'xe':
                             case 'x1':
                             case 'x1e':
-                                range = [0, spec.width];
+                                range = [0, spec.orientation === 'vertical' ? rowHeight : spec.width];
                                 break;
                             case 'y':
-                                range = [0, rowHeight];
+                                range = [0, spec.orientation === 'vertical' ? spec.width : rowHeight];
                                 break;
                             case 'color':
                             case 'stroke':
@@ -645,10 +648,10 @@ export class GoslingTrackModel {
                         switch (channelKey) {
                             case 'x':
                             case 'xe':
-                                range = [0, spec.width];
+                                range = [0, spec.orientation === 'vertical' ? rowHeight : spec.width];
                                 break;
                             case 'y':
-                                range = [rowHeight, 0]; // reversed because the origin is on the top
+                                range = [spec.orientation === 'vertical' ? spec.width : rowHeight, 0]; // reversed because the origin is on the top
                                 break;
                             case 'color':
                             case 'stroke':
@@ -659,7 +662,7 @@ export class GoslingTrackModel {
                                         : CHANNEL_DEFAULTS.NOMINAL_COLOR;
                                 break;
                             case 'row':
-                                range = [0, spec.height];
+                                range = [0, spec.orientation === 'vertical' ? spec.width : spec.height];
                                 break;
                             case 'size':
                                 range = (channel.domain as number[]).map(() => startSize++);

@@ -83,7 +83,7 @@ export function drawMark(HGC: any, trackInfo: any, tile: any, model: GoslingTrac
     /* spec */
     switch (model.spec().mark) {
         case 'point':
-            drawPoint(tile.graphics, model);
+            drawPoint(HGC, trackInfo, tile, tile.graphics, model, trackInfo.dimensions[0], trackInfo.dimensions[1]);
             break;
         case 'bar':
             drawBar(trackInfo, tile, model);

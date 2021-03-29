@@ -43,6 +43,7 @@ export type Layout = 'linear' | 'circular';
 export type Assembly = 'hg38' | 'hg19' | 'hg18' | 'hg17' | 'hg16' | 'mm10' | 'mm9' | 'unknown';
 
 export interface CommonViewDef {
+    orientation?: 'horizontal' | 'vertical';
     layout?: Layout;
 
     spacing?: number;

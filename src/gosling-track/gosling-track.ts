@@ -17,7 +17,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
     }
 
     // TODO: change the parent class to a more generic one (e.g., TiledPixiTrack)
-    class GoslingTrackClass extends HGC.tracks.BarTrack {
+    class GoslingTrackClass extends HGC.tracks.HorizontalLine1DPixiTrack {
         private originalSpec: SingleTrack | OverlaidTrack;
         private tooltips: Tooltip[];
         // TODO: add members that are used explicitly in the code
@@ -98,6 +98,20 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             // ...
         }
 
+        zoomed(newXScale: any, newYScale: any) {
+            this.xScale(newXScale);
+            this.yScale(newYScale);
+
+            // console.log(newXScale.domain(), newXScale.range());
+            if (this.drawnAtScale) {
+                // scaleGraphics(this.arcsGraphics, newXScale, this.drawnAtScale);
+            }
+
+            // this.refreshTiles();
+            this.refreshTilesDebounced();
+            this.draw();
+        }
+
         // draws exactly one tile
         renderTile(tile: any) {
             tile.mouseOverData = null;
@@ -105,7 +119,14 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             tile.graphics.removeChildren();
             this.pBorder.clear();
             this.pBorder.removeChildren();
+            // console.log('domain', tile.drawnAtScale.domain(), 'range', tile.drawnAtScale.range());
             tile.drawnAtScale = this._xScale.copy(); // being used in `draw()` internally
+            // console.log('domain', this._xScale.domain(), 'range', this._xScale.range());
+            // console.log('domain', tile.drawnAtScale.domain(), 'range', tile.drawnAtScale.range());
+
+            // scaleLinear()
+            // .domain([...this.xScale().domain()])
+            // .range([...this.xScale().range()]);
 
             if (!tile.goslingModels) {
                 // we do not have a track model prepared to visualize
@@ -114,11 +135,11 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
 
             tile.goslingModels.forEach((tm: GoslingTrackModel) => {
                 // check visibility condition
-                const trackWidth = this.dimensions[1];
-                const zoomLevel = this._xScale.invert(trackWidth) - this._xScale.invert(0);
-                if (!tm.trackVisibility({ zoomLevel })) {
-                    return;
-                }
+                // const trackWidth = this.dimensions[1];
+                // const zoomLevel = this._xScale.invert(trackWidth) - this._xScale.invert(0);
+                // if (!tm.trackVisibility({ zoomLevel })) {
+                //     return;
+                // }
 
                 drawMark(HGC, this, tile, tm);
             });
@@ -580,6 +601,14 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             });
 
             return tile.goslingModels;
+        }
+
+        setPosition(newPosition: any) {
+            // console.log('setPosition()');
+            super.setPosition(newPosition);
+
+            this.pMain.position.y = this.position[1];
+            this.pMain.position.x = this.position[0];
         }
 
         // rerender all tiles every time track size is changed
