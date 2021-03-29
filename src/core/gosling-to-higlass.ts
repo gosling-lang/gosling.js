@@ -58,6 +58,7 @@ export function goslingToHiGlass(
                 labelPosition: firstResolvedSpec.title ? 'topLeft' : 'none',
                 fontSize: 12,
                 labelColor: 'black',
+                labelShowResolution: false,
                 labelBackgroundColor: 'white',
                 labelTextOpacity: 1,
                 labelLeftMargin: 1,
@@ -87,7 +88,10 @@ export function goslingToHiGlass(
         if (isMatrix) {
             // Use HiGlass' heatmap track for matrix data
             hgTrack.type = 'heatmap';
-            hgTrack.options.colorRange = viridisColorMap;
+            hgTrack.options.colorRange =
+                (gmTrack as any)?.color.range === 'warm'
+                    ? ['white', 'rgba(245,166,35,1.0)', 'rgba(208,2,27,1.0)', 'black']
+                    : viridisColorMap;
             hgTrack.options.trackBorderWidth = 1;
             hgTrack.options.trackBorderColor = 'black';
             hgTrack.options.colorbarPosition = (firstResolvedSpec.color as any)?.legend ? 'topRight' : 'hidden';

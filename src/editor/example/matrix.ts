@@ -366,7 +366,7 @@ export const EX_SPEC_MATRIX: GoslingSpec = {
                             mark: 'rect',
                             x: { field: 'position1', type: 'genomic', axis: 'none' },
                             y: { field: 'position2', type: 'genomic', axis: 'right' },
-                            color: { field: 'value', type: 'quantitative', legend: true },
+                            color: { field: 'value', type: 'quantitative' },
                             width: 600,
                             height: 600
                         }
