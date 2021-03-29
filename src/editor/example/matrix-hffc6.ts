@@ -185,8 +185,8 @@ export const EX_SPEC_MATRIX_HFFC6: GoslingSpec = {
                                     '#FFFFFF'
                                 ]
                             },
-                            strokeWidth: { value: 0.5 },
-                            style: { outline: 'gray' },
+                            // strokeWidth: {value: 0.5},
+                            // style: {outline: "gray"},
                             width: 570,
                             height: 40
                         }
@@ -372,8 +372,8 @@ export const EX_SPEC_MATRIX_HFFC6: GoslingSpec = {
                                     '#FFFFFF'
                                 ]
                             },
-                            strokeWidth: { value: 0.5 },
-                            style: { outline: 'gray' },
+                            // strokeWidth: {value: 0.5},
+                            // style: {outline: "gray"},
                             width: 570,
                             height: 40
                         }
