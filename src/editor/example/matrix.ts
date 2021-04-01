@@ -191,7 +191,7 @@ export const EX_SPEC_MATRIX: GoslingSpec = {
         },
         {
             xDomain: { chromosome: '5', interval: [0, 43000000] },
-            xLinkingId: 'all',
+            linkingId: 'all',
             spacing: 0,
             views: [
                 {

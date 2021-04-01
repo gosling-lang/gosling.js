@@ -125,7 +125,7 @@ export function traverseToFixSpecDownstream(spec: GoslingSpec | SingleView, pare
         if (spec.layout === undefined) spec.layout = parentDef.layout;
         if (spec.static === undefined) spec.static = parentDef.static !== undefined ? parentDef.static : false;
         if (spec.xDomain === undefined) spec.xDomain = parentDef.xDomain;
-        if (spec.xLinkingId === undefined) spec.xLinkingId = parentDef.xLinkingId;
+        if (spec.linkingId === undefined) spec.linkingId = parentDef.linkingId;
         if (spec.centerRadius === undefined) spec.centerRadius = parentDef.centerRadius;
         if (spec.spacing === undefined && !('tracks' in spec)) spec.spacing = parentDef.spacing;
         if ('views' in spec && 'arrangement' in parentDef && spec.arrangement === undefined)
@@ -236,7 +236,7 @@ export function traverseToFixSpecDownstream(spec: GoslingSpec | SingleView, pare
              * Link tracks in a single view
              */
             if ((IsSingleTrack(track) || IsOverlaidTrack(track)) && IsChannelDeep(track.x) && !track.x.linkingId) {
-                track.x.linkingId = spec.xLinkingId ?? linkID;
+                track.x.linkingId = spec.linkingId ?? linkID;
             } else if (IsOverlaidTrack(track)) {
                 let isAdded = false;
                 track.overlay.forEach(o => {
@@ -244,7 +244,7 @@ export function traverseToFixSpecDownstream(spec: GoslingSpec | SingleView, pare
 
                     if (IsChannelDeep(o.x) && !o.x.linkingId) {
                         // TODO: Is this safe?
-                        o.x.linkingId = spec.xLinkingId ?? linkID;
+                        o.x.linkingId = spec.linkingId ?? linkID;
                         isAdded = true;
                     }
                 });

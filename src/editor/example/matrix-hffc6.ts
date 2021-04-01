@@ -9,7 +9,7 @@ export const EX_SPEC_MATRIX_HFFC6: GoslingSpec = {
     views: [
         {
             spacing: 0,
-            xLinkingId: 'all',
+            linkingId: 'all',
             arrangement: 'vertical',
             views: [
                 {
@@ -197,7 +197,7 @@ export const EX_SPEC_MATRIX_HFFC6: GoslingSpec = {
         {
             arrangement: 'vertical',
             spacing: 0,
-            xLinkingId: 'all',
+            linkingId: 'all',
             views: [
                 {
                     tracks: [
