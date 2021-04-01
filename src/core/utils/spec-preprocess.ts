@@ -81,8 +81,10 @@ export function traverseViewArrangements(spec: GoslingSpec, callback: (tv: Multi
  */
 export function convertToFlatTracks(spec: SingleView): Track[] {
     if (IsFlatTracks(spec)) {
-        // This is already `FlatTracks`
-        return spec.tracks;
+        // This is already `FlatTracks`, so just override the view definition
+        const base = JSON.parse(JSON.stringify(spec));
+        delete (base as any).tracks;
+        return spec.tracks.map(track => assign(JSON.parse(JSON.stringify(base)), track) as SingleTrack);
     }
 
     const newTracks: Track[] = [];
@@ -97,7 +99,11 @@ export function convertToFlatTracks(spec: SingleView): Track[] {
                     alignment: undefined
                 } as Track);
             } else {
-                newTracks.push(track);
+                // Override track definitions from views
+                const base = JSON.parse(JSON.stringify(spec));
+                delete (base as any).tracks;
+                const newSpec = assign(JSON.parse(JSON.stringify(base)), track) as SingleTrack;
+                newTracks.push(newSpec);
             }
         });
     } else {

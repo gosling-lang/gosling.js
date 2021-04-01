@@ -42,12 +42,13 @@ Gosling.js is a declarative grammar for interactive (epi)genomics visualization 
           "sample 2", 
           "sample 3", 
           "sample 4"
-          ],
-        },
-        "mark": "area",
-        "overrideTemplate": true
-      }
-    }]
+        ]
+      },
+      "mark": "area",
+      "overrideTemplate": true,
+      "width": 400,
+      "height": 100
+  }]
 }
 </pre>
 
