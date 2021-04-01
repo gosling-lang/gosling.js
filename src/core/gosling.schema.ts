@@ -52,7 +52,7 @@ export interface CommonViewDef {
 
     // TODO: Change to domain?
     xDomain?: DomainInterval | DomainChrInterval | DomainChr; // We can support `DomainGene` as well later.
-    xLinkingId?: string;
+    linkingId?: string;
     xAxis?: AxisPosition; // not supported currently
 
     /**

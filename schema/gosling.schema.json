@@ -389,6 +389,9 @@
         "layout": {
           "$ref": "#/definitions/Layout"
         },
+        "linkingId": {
+          "type": "string"
+        },
         "outerRadius": {
           "type": "number"
         },
@@ -428,9 +431,6 @@
               "$ref": "#/definitions/DomainChr"
             }
           ]
-        },
-        "xLinkingId": {
-          "type": "string"
         }
       },
       "required": [
@@ -676,6 +676,9 @@
         "layout": {
           "$ref": "#/definitions/Layout"
         },
+        "linkingId": {
+          "type": "string"
+        },
         "spacing": {
           "type": "number"
         },
@@ -703,9 +706,6 @@
               "$ref": "#/definitions/DomainChr"
             }
           ]
-        },
-        "xLinkingId": {
-          "type": "string"
         }
       },
       "required": [
@@ -1308,6 +1308,9 @@
         "layout": {
           "$ref": "#/definitions/Layout"
         },
+        "linkingId": {
+          "type": "string"
+        },
         "spacing": {
           "type": "number"
         },
@@ -1342,9 +1345,6 @@
               "$ref": "#/definitions/DomainChr"
             }
           ]
-        },
-        "xLinkingId": {
-          "type": "string"
         }
       },
       "required": [
@@ -1469,6 +1469,9 @@
         "layout": {
           "$ref": "#/definitions/Layout"
         },
+        "linkingId": {
+          "type": "string"
+        },
         "mark": {
           "$ref": "#/definitions/Mark"
         },
@@ -1512,6 +1515,9 @@
               },
               "innerRadius": {
                 "type": "number"
+              },
+              "linkingId": {
+                "type": "string"
               },
               "mark": {
                 "$ref": "#/definitions/Mark"
@@ -1613,9 +1619,6 @@
                     "$ref": "#/definitions/DomainChr"
                   }
                 ]
-              },
-              "xLinkingId": {
-                "type": "string"
               },
               "xe": {
                 "$ref": "#/definitions/Channel"
@@ -1738,9 +1741,6 @@
             }
           ]
         },
-        "xLinkingId": {
-          "type": "string"
-        },
         "xe": {
           "$ref": "#/definitions/Channel"
         },
@@ -1807,6 +1807,9 @@
         },
         "layout": {
           "$ref": "#/definitions/Layout"
+        },
+        "linkingId": {
+          "type": "string"
         },
         "mark": {
           "$ref": "#/definitions/Mark"
@@ -1925,6 +1928,9 @@
               "layout": {
                 "$ref": "#/definitions/Layout"
               },
+              "linkingId": {
+                "type": "string"
+              },
               "mark": {
                 "$ref": "#/definitions/Mark"
               },
@@ -1968,6 +1974,9 @@
                     },
                     "innerRadius": {
                       "type": "number"
+                    },
+                    "linkingId": {
+                      "type": "string"
                     },
                     "mark": {
                       "$ref": "#/definitions/Mark"
@@ -2069,9 +2078,6 @@
                           "$ref": "#/definitions/DomainChr"
                         }
                       ]
-                    },
-                    "xLinkingId": {
-                      "type": "string"
                     },
                     "xe": {
                       "$ref": "#/definitions/Channel"
@@ -2194,9 +2200,6 @@
                   }
                 ]
               },
-              "xLinkingId": {
-                "type": "string"
-              },
               "xe": {
                 "$ref": "#/definitions/Channel"
               },
@@ -2250,9 +2253,6 @@
               "$ref": "#/definitions/DomainChr"
             }
           ]
-        },
-        "xLinkingId": {
-          "type": "string"
         },
         "xe": {
           "$ref": "#/definitions/Channel"
@@ -2356,6 +2356,9 @@
         "layout": {
           "$ref": "#/definitions/Layout"
         },
+        "linkingId": {
+          "type": "string"
+        },
         "spacing": {
           "type": "number"
         },
@@ -2396,9 +2399,6 @@
               "$ref": "#/definitions/DomainChr"
             }
           ]
-        },
-        "xLinkingId": {
-          "type": "string"
         }
       },
       "required": [
@@ -2454,6 +2454,9 @@
             },
             "layout": {
               "$ref": "#/definitions/Layout"
+            },
+            "linkingId": {
+              "type": "string"
             },
             "mark": {
               "$ref": "#/definitions/Mark"
@@ -2572,6 +2575,9 @@
                   "layout": {
                     "$ref": "#/definitions/Layout"
                   },
+                  "linkingId": {
+                    "type": "string"
+                  },
                   "mark": {
                     "$ref": "#/definitions/Mark"
                   },
@@ -2615,6 +2621,9 @@
                         },
                         "innerRadius": {
                           "type": "number"
+                        },
+                        "linkingId": {
+                          "type": "string"
                         },
                         "mark": {
                           "$ref": "#/definitions/Mark"
@@ -2716,9 +2725,6 @@
                               "$ref": "#/definitions/DomainChr"
                             }
                           ]
-                        },
-                        "xLinkingId": {
-                          "type": "string"
                         },
                         "xe": {
                           "$ref": "#/definitions/Channel"
@@ -2841,9 +2847,6 @@
                       }
                     ]
                   },
-                  "xLinkingId": {
-                    "type": "string"
-                  },
                   "xe": {
                     "$ref": "#/definitions/Channel"
                   },
@@ -2897,9 +2900,6 @@
                   "$ref": "#/definitions/DomainChr"
                 }
               ]
-            },
-            "xLinkingId": {
-              "type": "string"
             },
             "xe": {
               "$ref": "#/definitions/Channel"
@@ -2971,6 +2971,9 @@
             },
             "layout": {
               "$ref": "#/definitions/Layout"
+            },
+            "linkingId": {
+              "type": "string"
             },
             "mark": {
               "$ref": "#/definitions/Mark"
@@ -3091,6 +3094,9 @@
                       "layout": {
                         "$ref": "#/definitions/Layout"
                       },
+                      "linkingId": {
+                        "type": "string"
+                      },
                       "mark": {
                         "$ref": "#/definitions/Mark"
                       },
@@ -3134,6 +3140,9 @@
                             },
                             "innerRadius": {
                               "type": "number"
+                            },
+                            "linkingId": {
+                              "type": "string"
                             },
                             "mark": {
                               "$ref": "#/definitions/Mark"
@@ -3235,9 +3244,6 @@
                                   "$ref": "#/definitions/DomainChr"
                                 }
                               ]
-                            },
-                            "xLinkingId": {
-                              "type": "string"
                             },
                             "xe": {
                               "$ref": "#/definitions/Channel"
@@ -3360,9 +3366,6 @@
                           }
                         ]
                       },
-                      "xLinkingId": {
-                        "type": "string"
-                      },
                       "xe": {
                         "$ref": "#/definitions/Channel"
                       },
@@ -3422,9 +3425,6 @@
                 }
               ]
             },
-            "xLinkingId": {
-              "type": "string"
-            },
             "xe": {
               "$ref": "#/definitions/Channel"
             },
@@ -3462,6 +3462,9 @@
             "layout": {
               "$ref": "#/definitions/Layout"
             },
+            "linkingId": {
+              "type": "string"
+            },
             "spacing": {
               "type": "number"
             },
@@ -3495,9 +3498,6 @@
                   "$ref": "#/definitions/DomainChr"
                 }
               ]
-            },
-            "xLinkingId": {
-              "type": "string"
             }
           },
           "required": [
@@ -3546,6 +3546,9 @@
         },
         "layout": {
           "$ref": "#/definitions/Layout"
+        },
+        "linkingId": {
+          "type": "string"
         },
         "mark": {
           "$ref": "#/definitions/Mark"
@@ -3656,9 +3659,6 @@
               "$ref": "#/definitions/DomainChr"
             }
           ]
-        },
-        "xLinkingId": {
-          "type": "string"
         },
         "xe": {
           "$ref": "#/definitions/Channel"
@@ -3787,6 +3787,9 @@
         "layout": {
           "$ref": "#/definitions/Layout"
         },
+        "linkingId": {
+          "type": "string"
+        },
         "mark": {
           "$ref": "#/definitions/Mark"
         },
@@ -3906,6 +3909,9 @@
                   "layout": {
                     "$ref": "#/definitions/Layout"
                   },
+                  "linkingId": {
+                    "type": "string"
+                  },
                   "mark": {
                     "$ref": "#/definitions/Mark"
                   },
@@ -3949,6 +3955,9 @@
                         },
                         "innerRadius": {
                           "type": "number"
+                        },
+                        "linkingId": {
+                          "type": "string"
                         },
                         "mark": {
                           "$ref": "#/definitions/Mark"
@@ -4050,9 +4059,6 @@
                               "$ref": "#/definitions/DomainChr"
                             }
                           ]
-                        },
-                        "xLinkingId": {
-                          "type": "string"
                         },
                         "xe": {
                           "$ref": "#/definitions/Channel"
@@ -4175,9 +4181,6 @@
                       }
                     ]
                   },
-                  "xLinkingId": {
-                    "type": "string"
-                  },
                   "xe": {
                     "$ref": "#/definitions/Channel"
                   },
@@ -4236,9 +4239,6 @@
               "$ref": "#/definitions/DomainChr"
             }
           ]
-        },
-        "xLinkingId": {
-          "type": "string"
         },
         "xe": {
           "$ref": "#/definitions/Channel"
