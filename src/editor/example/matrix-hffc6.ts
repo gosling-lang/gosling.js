@@ -135,7 +135,7 @@ export const EX_SPEC_MATRIX_HFFC6: GoslingSpec = {
                         {
                             title: 'Epilogos (hg38)',
                             data: {
-                                url: 'https://higlass.io/api/v1/tileset_info/?d=WtBJUYawQzS9M2WVIIHnlA',
+                                url: GOSLING_PUBLIC_DATA.epilogos,
                                 type: 'multivec',
                                 row: 'category',
                                 column: 'position',
@@ -322,7 +322,7 @@ export const EX_SPEC_MATRIX_HFFC6: GoslingSpec = {
                         {
                             title: 'Epilogos (hg38)',
                             data: {
-                                url: 'https://higlass.io/api/v1/tileset_info/?d=WtBJUYawQzS9M2WVIIHnlA',
+                                url: GOSLING_PUBLIC_DATA.epilogos,
                                 type: 'multivec',
                                 row: 'category',
                                 column: 'position',

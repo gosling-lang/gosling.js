@@ -360,7 +360,7 @@ export const EX_SPEC_MATRIX: GoslingSpec = {
                     tracks: [
                         {
                             data: {
-                                url: GOSLING_PUBLIC_DATA.matrix2,
+                                url: GOSLING_PUBLIC_DATA.matrix,
                                 type: 'matrix'
                             },
                             mark: 'rect',

@@ -97,8 +97,9 @@ export const EX_SPEC_CORCES_ET_AL: GoslingSpec = {
             tracks: [
                 {
                     data: {
-                        url: 'https://resgen.io/api/v1/tileset_info/?d=VLFaiSVjTjW6mkbjRjWREA',
-                        type: 'vector',
+                        url:
+                            'https://s3.amazonaws.com/gosling-lang.org/data/ExcitatoryNeurons-insertions_bin100_RIPnorm.bw',
+                        type: 'bigwig',
                         column: 'position',
                         value: 'peak'
                     },
@@ -107,8 +108,9 @@ export const EX_SPEC_CORCES_ET_AL: GoslingSpec = {
                 },
                 {
                     data: {
-                        url: 'https://resgen.io/api/v1/tileset_info/?d=UtUGUu9rS3yQ7Ie-YtX32g',
-                        type: 'vector',
+                        url:
+                            'https://s3.amazonaws.com/gosling-lang.org/data/InhibitoryNeurons-insertions_bin100_RIPnorm.bw',
+                        type: 'bigwig',
                         column: 'position',
                         value: 'peak'
                     },
@@ -117,8 +119,9 @@ export const EX_SPEC_CORCES_ET_AL: GoslingSpec = {
                 },
                 {
                     data: {
-                        url: 'https://resgen.io/api/v1/tileset_info/?d=FBwldgSdQQWxh7R7-jemNA',
-                        type: 'vector',
+                        url:
+                            'https://s3.amazonaws.com/gosling-lang.org/data/DopaNeurons_Cluster10_AllFrags_projSUNI2_insertions_bin100_RIPnorm.bw',
+                        type: 'bigwig',
                         column: 'position',
                         value: 'peak'
                     },
@@ -128,8 +131,8 @@ export const EX_SPEC_CORCES_ET_AL: GoslingSpec = {
                 },
                 {
                     data: {
-                        url: 'https://resgen.io/api/v1/tileset_info/?d=Zz3CBDSqQ3ySrOSe2yj1eg',
-                        type: 'vector',
+                        url: 'https://s3.amazonaws.com/gosling-lang.org/data/Microglia-insertions_bin100_RIPnorm.bw',
+                        type: 'bigwig',
                         column: 'position',
                         value: 'peak'
                     },
@@ -138,8 +141,9 @@ export const EX_SPEC_CORCES_ET_AL: GoslingSpec = {
                 },
                 {
                     data: {
-                        type: 'vector',
-                        url: 'https://resgen.io/api/v1/tileset_info/?d=dc_SOjdCRgq_8PYf6W--7w',
+                        url:
+                            'https://s3.amazonaws.com/gosling-lang.org/data/Oligodendrocytes-insertions_bin100_RIPnorm.bw',
+                        type: 'bigwig',
                         column: 'position',
                         value: 'peak'
                     },
@@ -149,8 +153,8 @@ export const EX_SPEC_CORCES_ET_AL: GoslingSpec = {
                 },
                 {
                     data: {
-                        url: 'https://resgen.io/api/v1/tileset_info/?d=Nolbrk9kS3CE0jJL_7OW1g',
-                        type: 'vector',
+                        url: 'https://s3.amazonaws.com/gosling-lang.org/data/Astrocytes-insertions_bin100_RIPnorm.bw',
+                        type: 'bigwig',
                         column: 'position',
                         value: 'peak'
                     },
@@ -160,8 +164,8 @@ export const EX_SPEC_CORCES_ET_AL: GoslingSpec = {
                 },
                 {
                     data: {
-                        url: 'https://resgen.io/api/v1/tileset_info/?d=UZLlJyRBScWdGQ7L1eNk_g',
-                        type: 'vector',
+                        url: 'https://s3.amazonaws.com/gosling-lang.org/data/OPCs-insertions_bin100_RIPnorm.bw',
+                        type: 'bigwig',
                         column: 'position',
                         value: 'peak'
                     },
