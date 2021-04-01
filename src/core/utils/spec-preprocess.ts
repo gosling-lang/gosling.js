@@ -97,7 +97,10 @@ export function convertToFlatTracks(spec: SingleView): Track[] {
                     alignment: undefined
                 } as Track);
             } else {
-                newTracks.push(track);
+                const base = JSON.parse(JSON.stringify(spec));
+                delete (base as any).tracks;
+                const newSpec = assign(JSON.parse(JSON.stringify(base)), track) as SingleTrack;
+                newTracks.push(newSpec);
             }
         });
     } else {

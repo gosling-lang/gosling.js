@@ -22,9 +22,9 @@ export interface FlatTracks extends CommonViewDef {
     tracks: Track[];
 }
 
-export interface StackedTracks extends CommonViewDef {
+export interface StackedTracks extends CommonViewDef, Partial<SingleTrack> {
     alignment?: 'stack';
-    tracks: (Track | OverlaidTracks)[];
+    tracks: (Partial<Track> | OverlaidTracks)[];
 }
 
 export interface OverlaidTracks extends CommonViewDef, Partial<SingleTrack> {

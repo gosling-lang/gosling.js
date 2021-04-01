@@ -70,7 +70,7 @@ export function IsDataTrack(_: Track): _ is DataTrack {
 }
 
 export function IsTemplate(_: Partial<Track>): boolean {
-    return !!('data' in _ && (!('mark' in _) || _.overrideTemplate) && !IsOverlaidTrack(_));
+    return !!('data' in _ && 'overrideTemplate' in _ && _.overrideTemplate);
 }
 
 export function IsDataDeep(data: DataDeep | Datum[]): data is DataDeep {
