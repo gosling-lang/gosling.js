@@ -16,8 +16,8 @@ export const EX_SPEC_MATRIX_HFFC6: GoslingSpec = {
                     tracks: [
                         {
                             data: {
-                                url: 'https://resgen.io/api/v1/tileset_info/?d=WM8eKgR3RPG0jRdDTMWAHg',
-                                type: 'vector',
+                                url: 'https://s3.amazonaws.com/gosling-lang.org/data/HFFc6_H3K4me3.bigWig',
+                                type: 'bigwig',
                                 column: 'position',
                                 value: 'peak'
                             },
@@ -32,8 +32,8 @@ export const EX_SPEC_MATRIX_HFFC6: GoslingSpec = {
                         },
                         {
                             data: {
-                                url: 'https://resgen.io/api/v1/tileset_info/?d=YFasREHBTl-50_Cb3X_Wgw',
-                                type: 'vector',
+                                url: 'https://s3.amazonaws.com/gosling-lang.org/data/HFFc6_Atacseq.mRp.clN.bigWig',
+                                type: 'bigwig',
                                 column: 'position',
                                 value: 'peak'
                             },
@@ -51,8 +51,8 @@ export const EX_SPEC_MATRIX_HFFC6: GoslingSpec = {
                             tracks: [
                                 {
                                     data: {
-                                        url: 'https://resgen.io/api/v1/tileset_info/?d=LT6rIjDoQk-i3wSZWYgESQ',
-                                        type: 'vector',
+                                        url: 'https://s3.amazonaws.com/gosling-lang.org/data/HFFC6_CTCF.mRp.clN.bigWig',
+                                        type: 'bigwig',
                                         column: 'position',
                                         value: 'peak'
                                     },
@@ -63,7 +63,7 @@ export const EX_SPEC_MATRIX_HFFC6: GoslingSpec = {
                                 },
                                 {
                                     data: {
-                                        url: 'https://higlass.io/api/v1/tileset_info/?d=EkPGY0iFQx6Nq6vdF8CpWA',
+                                        url: GOSLING_PUBLIC_DATA.geneAnnotation,
                                         type: 'beddb',
                                         genomicFields: [
                                             { index: 1, name: 'start' },
@@ -86,7 +86,7 @@ export const EX_SPEC_MATRIX_HFFC6: GoslingSpec = {
                                 {
                                     title: 'HFFC6_CTCF',
                                     data: {
-                                        url: 'https://higlass.io/api/v1/tileset_info/?d=EkPGY0iFQx6Nq6vdF8CpWA',
+                                        url: GOSLING_PUBLIC_DATA.geneAnnotation,
                                         type: 'beddb',
                                         genomicFields: [
                                             { index: 1, name: 'start' },
@@ -135,7 +135,7 @@ export const EX_SPEC_MATRIX_HFFC6: GoslingSpec = {
                         {
                             title: 'Epilogos (hg38)',
                             data: {
-                                url: 'https://higlass.io/api/v1/tileset_info/?d=WtBJUYawQzS9M2WVIIHnlA',
+                                url: GOSLING_PUBLIC_DATA.epilogos,
                                 type: 'multivec',
                                 row: 'category',
                                 column: 'position',
@@ -203,8 +203,8 @@ export const EX_SPEC_MATRIX_HFFC6: GoslingSpec = {
                     tracks: [
                         {
                             data: {
-                                url: 'https://resgen.io/api/v1/tileset_info/?d=WM8eKgR3RPG0jRdDTMWAHg',
-                                type: 'vector',
+                                url: 'https://s3.amazonaws.com/gosling-lang.org/data/HFFc6_H3K4me3.bigWig',
+                                type: 'bigwig',
                                 column: 'position',
                                 value: 'peak'
                             },
@@ -219,8 +219,8 @@ export const EX_SPEC_MATRIX_HFFC6: GoslingSpec = {
                         },
                         {
                             data: {
-                                url: 'https://resgen.io/api/v1/tileset_info/?d=YFasREHBTl-50_Cb3X_Wgw',
-                                type: 'vector',
+                                url: 'https://s3.amazonaws.com/gosling-lang.org/data/HFFc6_Atacseq.mRp.clN.bigWig',
+                                type: 'bigwig',
                                 column: 'position',
                                 value: 'peak'
                             },
@@ -238,8 +238,8 @@ export const EX_SPEC_MATRIX_HFFC6: GoslingSpec = {
                             tracks: [
                                 {
                                     data: {
-                                        url: 'https://resgen.io/api/v1/tileset_info/?d=LT6rIjDoQk-i3wSZWYgESQ',
-                                        type: 'vector',
+                                        url: 'https://s3.amazonaws.com/gosling-lang.org/data/HFFC6_CTCF.mRp.clN.bigWig',
+                                        type: 'bigwig',
                                         column: 'position',
                                         value: 'peak'
                                     },
@@ -250,7 +250,7 @@ export const EX_SPEC_MATRIX_HFFC6: GoslingSpec = {
                                 },
                                 {
                                     data: {
-                                        url: 'https://higlass.io/api/v1/tileset_info/?d=EkPGY0iFQx6Nq6vdF8CpWA',
+                                        url: GOSLING_PUBLIC_DATA.geneAnnotation,
                                         type: 'beddb',
                                         genomicFields: [
                                             { index: 1, name: 'start' },
@@ -273,7 +273,7 @@ export const EX_SPEC_MATRIX_HFFC6: GoslingSpec = {
                                 {
                                     title: 'HFFC6_CTCF',
                                     data: {
-                                        url: 'https://higlass.io/api/v1/tileset_info/?d=EkPGY0iFQx6Nq6vdF8CpWA',
+                                        url: GOSLING_PUBLIC_DATA.geneAnnotation,
                                         type: 'beddb',
                                         genomicFields: [
                                             { index: 1, name: 'start' },
@@ -322,7 +322,7 @@ export const EX_SPEC_MATRIX_HFFC6: GoslingSpec = {
                         {
                             title: 'Epilogos (hg38)',
                             data: {
-                                url: 'https://higlass.io/api/v1/tileset_info/?d=WtBJUYawQzS9M2WVIIHnlA',
+                                url: GOSLING_PUBLIC_DATA.epilogos,
                                 type: 'multivec',
                                 row: 'category',
                                 column: 'position',
