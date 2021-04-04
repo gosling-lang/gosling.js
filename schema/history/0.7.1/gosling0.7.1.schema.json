@@ -389,6 +389,9 @@
         "layout": {
           "$ref": "#/definitions/Layout"
         },
+        "linkingId": {
+          "type": "string"
+        },
         "orientation": {
           "enum": [
             "horizontal",
@@ -435,9 +438,6 @@
               "$ref": "#/definitions/DomainChr"
             }
           ]
-        },
-        "xLinkingId": {
-          "type": "string"
         }
       },
       "required": [
@@ -683,6 +683,9 @@
         "layout": {
           "$ref": "#/definitions/Layout"
         },
+        "linkingId": {
+          "type": "string"
+        },
         "orientation": {
           "enum": [
             "horizontal",
@@ -717,9 +720,6 @@
               "$ref": "#/definitions/DomainChr"
             }
           ]
-        },
-        "xLinkingId": {
-          "type": "string"
         }
       },
       "required": [
@@ -1322,6 +1322,9 @@
         "layout": {
           "$ref": "#/definitions/Layout"
         },
+        "linkingId": {
+          "type": "string"
+        },
         "orientation": {
           "enum": [
             "horizontal",
@@ -1363,9 +1366,6 @@
               "$ref": "#/definitions/DomainChr"
             }
           ]
-        },
-        "xLinkingId": {
-          "type": "string"
         }
       },
       "required": [
@@ -1490,6 +1490,9 @@
         "layout": {
           "$ref": "#/definitions/Layout"
         },
+        "linkingId": {
+          "type": "string"
+        },
         "mark": {
           "$ref": "#/definitions/Mark"
         },
@@ -1540,6 +1543,9 @@
               },
               "innerRadius": {
                 "type": "number"
+              },
+              "linkingId": {
+                "type": "string"
               },
               "mark": {
                 "$ref": "#/definitions/Mark"
@@ -1648,9 +1654,6 @@
                     "$ref": "#/definitions/DomainChr"
                   }
                 ]
-              },
-              "xLinkingId": {
-                "type": "string"
               },
               "xe": {
                 "$ref": "#/definitions/Channel"
@@ -1773,9 +1776,6 @@
             }
           ]
         },
-        "xLinkingId": {
-          "type": "string"
-        },
         "xe": {
           "$ref": "#/definitions/Channel"
         },
@@ -1842,6 +1842,9 @@
         },
         "layout": {
           "$ref": "#/definitions/Layout"
+        },
+        "linkingId": {
+          "type": "string"
         },
         "mark": {
           "$ref": "#/definitions/Mark"
@@ -1967,6 +1970,9 @@
               "layout": {
                 "$ref": "#/definitions/Layout"
               },
+              "linkingId": {
+                "type": "string"
+              },
               "mark": {
                 "$ref": "#/definitions/Mark"
               },
@@ -2017,6 +2023,9 @@
                     },
                     "innerRadius": {
                       "type": "number"
+                    },
+                    "linkingId": {
+                      "type": "string"
                     },
                     "mark": {
                       "$ref": "#/definitions/Mark"
@@ -2125,9 +2134,6 @@
                           "$ref": "#/definitions/DomainChr"
                         }
                       ]
-                    },
-                    "xLinkingId": {
-                      "type": "string"
                     },
                     "xe": {
                       "$ref": "#/definitions/Channel"
@@ -2250,9 +2256,6 @@
                   }
                 ]
               },
-              "xLinkingId": {
-                "type": "string"
-              },
               "xe": {
                 "$ref": "#/definitions/Channel"
               },
@@ -2306,9 +2309,6 @@
               "$ref": "#/definitions/DomainChr"
             }
           ]
-        },
-        "xLinkingId": {
-          "type": "string"
         },
         "xe": {
           "$ref": "#/definitions/Channel"
@@ -2412,6 +2412,9 @@
         "layout": {
           "$ref": "#/definitions/Layout"
         },
+        "linkingId": {
+          "type": "string"
+        },
         "orientation": {
           "enum": [
             "horizontal",
@@ -2459,9 +2462,6 @@
               "$ref": "#/definitions/DomainChr"
             }
           ]
-        },
-        "xLinkingId": {
-          "type": "string"
         }
       },
       "required": [
@@ -2517,6 +2517,9 @@
             },
             "layout": {
               "$ref": "#/definitions/Layout"
+            },
+            "linkingId": {
+              "type": "string"
             },
             "mark": {
               "$ref": "#/definitions/Mark"
@@ -2642,6 +2645,9 @@
                   "layout": {
                     "$ref": "#/definitions/Layout"
                   },
+                  "linkingId": {
+                    "type": "string"
+                  },
                   "mark": {
                     "$ref": "#/definitions/Mark"
                   },
@@ -2692,6 +2698,9 @@
                         },
                         "innerRadius": {
                           "type": "number"
+                        },
+                        "linkingId": {
+                          "type": "string"
                         },
                         "mark": {
                           "$ref": "#/definitions/Mark"
@@ -2800,9 +2809,6 @@
                               "$ref": "#/definitions/DomainChr"
                             }
                           ]
-                        },
-                        "xLinkingId": {
-                          "type": "string"
                         },
                         "xe": {
                           "$ref": "#/definitions/Channel"
@@ -2925,9 +2931,6 @@
                       }
                     ]
                   },
-                  "xLinkingId": {
-                    "type": "string"
-                  },
                   "xe": {
                     "$ref": "#/definitions/Channel"
                   },
@@ -2982,9 +2985,6 @@
                 }
               ]
             },
-            "xLinkingId": {
-              "type": "string"
-            },
             "xe": {
               "$ref": "#/definitions/Channel"
             },
@@ -3023,11 +3023,47 @@
               "description": "Proportion of the radius of the center white space.",
               "type": "number"
             },
+            "color": {
+              "$ref": "#/definitions/Channel"
+            },
+            "column": {
+              "$ref": "#/definitions/Channel"
+            },
+            "data": {
+              "$ref": "#/definitions/DataDeep"
+            },
+            "dataTransform": {
+              "$ref": "#/definitions/DataTransform"
+            },
             "description": {
               "type": "string"
             },
+            "displacement": {
+              "$ref": "#/definitions/Displacement"
+            },
+            "endAngle": {
+              "type": "number"
+            },
+            "flipY": {
+              "type": "boolean"
+            },
+            "height": {
+              "type": "number"
+            },
+            "innerRadius": {
+              "type": "number"
+            },
             "layout": {
               "$ref": "#/definitions/Layout"
+            },
+            "linkingId": {
+              "type": "string"
+            },
+            "mark": {
+              "$ref": "#/definitions/Mark"
+            },
+            "opacity": {
+              "$ref": "#/definitions/Channel"
             },
             "orientation": {
               "enum": [
@@ -3036,23 +3072,422 @@
               ],
               "type": "string"
             },
+            "outerRadius": {
+              "type": "number"
+            },
+            "overlayOnPreviousTrack": {
+              "type": "boolean"
+            },
+            "overrideTemplate": {
+              "type": "boolean"
+            },
+            "row": {
+              "$ref": "#/definitions/Channel"
+            },
+            "size": {
+              "$ref": "#/definitions/Channel"
+            },
             "spacing": {
+              "type": "number"
+            },
+            "stackY": {
+              "type": "boolean"
+            },
+            "startAngle": {
               "type": "number"
             },
             "static": {
               "type": "boolean"
             },
+            "stretch": {
+              "type": "boolean"
+            },
+            "stroke": {
+              "$ref": "#/definitions/Channel"
+            },
+            "strokeWidth": {
+              "$ref": "#/definitions/Channel"
+            },
+            "style": {
+              "$ref": "#/definitions/TrackStyle"
+            },
             "subtitle": {
               "type": "string"
             },
+            "text": {
+              "$ref": "#/definitions/Channel"
+            },
             "title": {
               "type": "string"
+            },
+            "tooltip": {
+              "items": {
+                "additionalProperties": false,
+                "properties": {
+                  "alt": {
+                    "type": "string"
+                  },
+                  "field": {
+                    "type": "string"
+                  },
+                  "type": {
+                    "$ref": "#/definitions/FieldType"
+                  }
+                },
+                "required": [
+                  "field",
+                  "type"
+                ],
+                "type": "object"
+              },
+              "type": "array"
             },
             "tracks": {
               "items": {
                 "anyOf": [
                   {
-                    "$ref": "#/definitions/Track"
+                    "additionalProperties": false,
+                    "properties": {
+                      "assembly": {
+                        "$ref": "#/definitions/Assembly"
+                      },
+                      "centerRadius": {
+                        "description": "Proportion of the radius of the center white space.",
+                        "type": "number"
+                      },
+                      "color": {
+                        "$ref": "#/definitions/Channel"
+                      },
+                      "column": {
+                        "$ref": "#/definitions/Channel"
+                      },
+                      "data": {
+                        "$ref": "#/definitions/DataDeep"
+                      },
+                      "dataTransform": {
+                        "$ref": "#/definitions/DataTransform"
+                      },
+                      "displacement": {
+                        "$ref": "#/definitions/Displacement"
+                      },
+                      "endAngle": {
+                        "type": "number"
+                      },
+                      "flipY": {
+                        "type": "boolean"
+                      },
+                      "height": {
+                        "type": "number"
+                      },
+                      "innerRadius": {
+                        "type": "number"
+                      },
+                      "layout": {
+                        "$ref": "#/definitions/Layout"
+                      },
+                      "linkingId": {
+                        "type": "string"
+                      },
+                      "mark": {
+                        "$ref": "#/definitions/Mark"
+                      },
+                      "opacity": {
+                        "$ref": "#/definitions/Channel"
+                      },
+                      "orientation": {
+                        "enum": [
+                          "horizontal",
+                          "vertical"
+                        ],
+                        "type": "string"
+                      },
+                      "outerRadius": {
+                        "type": "number"
+                      },
+                      "overlay": {
+                        "items": {
+                          "additionalProperties": false,
+                          "properties": {
+                            "assembly": {
+                              "$ref": "#/definitions/Assembly"
+                            },
+                            "centerRadius": {
+                              "description": "Proportion of the radius of the center white space.",
+                              "type": "number"
+                            },
+                            "color": {
+                              "$ref": "#/definitions/Channel"
+                            },
+                            "column": {
+                              "$ref": "#/definitions/Channel"
+                            },
+                            "data": {
+                              "$ref": "#/definitions/DataDeep"
+                            },
+                            "dataTransform": {
+                              "$ref": "#/definitions/DataTransform"
+                            },
+                            "displacement": {
+                              "$ref": "#/definitions/Displacement"
+                            },
+                            "endAngle": {
+                              "type": "number"
+                            },
+                            "flipY": {
+                              "type": "boolean"
+                            },
+                            "innerRadius": {
+                              "type": "number"
+                            },
+                            "linkingId": {
+                              "type": "string"
+                            },
+                            "mark": {
+                              "$ref": "#/definitions/Mark"
+                            },
+                            "opacity": {
+                              "$ref": "#/definitions/Channel"
+                            },
+                            "orientation": {
+                              "enum": [
+                                "horizontal",
+                                "vertical"
+                              ],
+                              "type": "string"
+                            },
+                            "outerRadius": {
+                              "type": "number"
+                            },
+                            "overlayOnPreviousTrack": {
+                              "type": "boolean"
+                            },
+                            "overrideTemplate": {
+                              "type": "boolean"
+                            },
+                            "row": {
+                              "$ref": "#/definitions/Channel"
+                            },
+                            "size": {
+                              "$ref": "#/definitions/Channel"
+                            },
+                            "spacing": {
+                              "type": "number"
+                            },
+                            "stackY": {
+                              "type": "boolean"
+                            },
+                            "startAngle": {
+                              "type": "number"
+                            },
+                            "static": {
+                              "type": "boolean"
+                            },
+                            "stretch": {
+                              "type": "boolean"
+                            },
+                            "stroke": {
+                              "$ref": "#/definitions/Channel"
+                            },
+                            "strokeWidth": {
+                              "$ref": "#/definitions/Channel"
+                            },
+                            "style": {
+                              "$ref": "#/definitions/TrackStyle"
+                            },
+                            "text": {
+                              "$ref": "#/definitions/Channel"
+                            },
+                            "tooltip": {
+                              "items": {
+                                "additionalProperties": false,
+                                "properties": {
+                                  "alt": {
+                                    "type": "string"
+                                  },
+                                  "field": {
+                                    "type": "string"
+                                  },
+                                  "type": {
+                                    "$ref": "#/definitions/FieldType"
+                                  }
+                                },
+                                "required": [
+                                  "field",
+                                  "type"
+                                ],
+                                "type": "object"
+                              },
+                              "type": "array"
+                            },
+                            "visibility": {
+                              "items": {
+                                "$ref": "#/definitions/VisibilityCondition"
+                              },
+                              "type": "array"
+                            },
+                            "x": {
+                              "$ref": "#/definitions/Channel"
+                            },
+                            "x1": {
+                              "$ref": "#/definitions/Channel"
+                            },
+                            "x1e": {
+                              "$ref": "#/definitions/Channel"
+                            },
+                            "xAxis": {
+                              "$ref": "#/definitions/AxisPosition"
+                            },
+                            "xDomain": {
+                              "anyOf": [
+                                {
+                                  "$ref": "#/definitions/DomainInterval"
+                                },
+                                {
+                                  "$ref": "#/definitions/DomainChrInterval"
+                                },
+                                {
+                                  "$ref": "#/definitions/DomainChr"
+                                }
+                              ]
+                            },
+                            "xe": {
+                              "$ref": "#/definitions/Channel"
+                            },
+                            "y": {
+                              "$ref": "#/definitions/Channel"
+                            },
+                            "y1": {
+                              "$ref": "#/definitions/Channel"
+                            },
+                            "y1e": {
+                              "$ref": "#/definitions/Channel"
+                            },
+                            "ye": {
+                              "$ref": "#/definitions/Channel"
+                            }
+                          },
+                          "type": "object"
+                        },
+                        "type": "array"
+                      },
+                      "overlayOnPreviousTrack": {
+                        "type": "boolean"
+                      },
+                      "overrideTemplate": {
+                        "type": "boolean"
+                      },
+                      "row": {
+                        "$ref": "#/definitions/Channel"
+                      },
+                      "size": {
+                        "$ref": "#/definitions/Channel"
+                      },
+                      "spacing": {
+                        "type": "number"
+                      },
+                      "stackY": {
+                        "type": "boolean"
+                      },
+                      "startAngle": {
+                        "type": "number"
+                      },
+                      "static": {
+                        "type": "boolean"
+                      },
+                      "stretch": {
+                        "type": "boolean"
+                      },
+                      "stroke": {
+                        "$ref": "#/definitions/Channel"
+                      },
+                      "strokeWidth": {
+                        "$ref": "#/definitions/Channel"
+                      },
+                      "style": {
+                        "$ref": "#/definitions/TrackStyle"
+                      },
+                      "subtitle": {
+                        "type": "string"
+                      },
+                      "text": {
+                        "$ref": "#/definitions/Channel"
+                      },
+                      "title": {
+                        "type": "string"
+                      },
+                      "tooltip": {
+                        "items": {
+                          "additionalProperties": false,
+                          "properties": {
+                            "alt": {
+                              "type": "string"
+                            },
+                            "field": {
+                              "type": "string"
+                            },
+                            "type": {
+                              "$ref": "#/definitions/FieldType"
+                            }
+                          },
+                          "required": [
+                            "field",
+                            "type"
+                          ],
+                          "type": "object"
+                        },
+                        "type": "array"
+                      },
+                      "visibility": {
+                        "items": {
+                          "$ref": "#/definitions/VisibilityCondition"
+                        },
+                        "type": "array"
+                      },
+                      "width": {
+                        "type": "number"
+                      },
+                      "x": {
+                        "$ref": "#/definitions/Channel"
+                      },
+                      "x1": {
+                        "$ref": "#/definitions/Channel"
+                      },
+                      "x1e": {
+                        "$ref": "#/definitions/Channel"
+                      },
+                      "xAxis": {
+                        "$ref": "#/definitions/AxisPosition"
+                      },
+                      "xDomain": {
+                        "anyOf": [
+                          {
+                            "$ref": "#/definitions/DomainInterval"
+                          },
+                          {
+                            "$ref": "#/definitions/DomainChrInterval"
+                          },
+                          {
+                            "$ref": "#/definitions/DomainChr"
+                          }
+                        ]
+                      },
+                      "xe": {
+                        "$ref": "#/definitions/Channel"
+                      },
+                      "y": {
+                        "$ref": "#/definitions/Channel"
+                      },
+                      "y1": {
+                        "$ref": "#/definitions/Channel"
+                      },
+                      "y1e": {
+                        "$ref": "#/definitions/Channel"
+                      },
+                      "ye": {
+                        "$ref": "#/definitions/Channel"
+                      }
+                    },
+                    "type": "object"
                   },
                   {
                     "$ref": "#/definitions/OverlaidTracks"
@@ -3060,6 +3495,24 @@
                 ]
               },
               "type": "array"
+            },
+            "visibility": {
+              "items": {
+                "$ref": "#/definitions/VisibilityCondition"
+              },
+              "type": "array"
+            },
+            "width": {
+              "type": "number"
+            },
+            "x": {
+              "$ref": "#/definitions/Channel"
+            },
+            "x1": {
+              "$ref": "#/definitions/Channel"
+            },
+            "x1e": {
+              "$ref": "#/definitions/Channel"
             },
             "xAxis": {
               "$ref": "#/definitions/AxisPosition"
@@ -3077,8 +3530,20 @@
                 }
               ]
             },
-            "xLinkingId": {
-              "type": "string"
+            "xe": {
+              "$ref": "#/definitions/Channel"
+            },
+            "y": {
+              "$ref": "#/definitions/Channel"
+            },
+            "y1": {
+              "$ref": "#/definitions/Channel"
+            },
+            "y1e": {
+              "$ref": "#/definitions/Channel"
+            },
+            "ye": {
+              "$ref": "#/definitions/Channel"
             }
           },
           "required": [
@@ -3101,6 +3566,9 @@
             },
             "layout": {
               "$ref": "#/definitions/Layout"
+            },
+            "linkingId": {
+              "type": "string"
             },
             "orientation": {
               "enum": [
@@ -3142,9 +3610,6 @@
                   "$ref": "#/definitions/DomainChr"
                 }
               ]
-            },
-            "xLinkingId": {
-              "type": "string"
             }
           },
           "required": [
@@ -3193,6 +3658,9 @@
         },
         "layout": {
           "$ref": "#/definitions/Layout"
+        },
+        "linkingId": {
+          "type": "string"
         },
         "mark": {
           "$ref": "#/definitions/Mark"
@@ -3311,9 +3779,6 @@
             }
           ]
         },
-        "xLinkingId": {
-          "type": "string"
-        },
         "xe": {
           "$ref": "#/definitions/Channel"
         },
@@ -3411,8 +3876,44 @@
           "description": "Proportion of the radius of the center white space.",
           "type": "number"
         },
+        "color": {
+          "$ref": "#/definitions/Channel"
+        },
+        "column": {
+          "$ref": "#/definitions/Channel"
+        },
+        "data": {
+          "$ref": "#/definitions/DataDeep"
+        },
+        "dataTransform": {
+          "$ref": "#/definitions/DataTransform"
+        },
+        "displacement": {
+          "$ref": "#/definitions/Displacement"
+        },
+        "endAngle": {
+          "type": "number"
+        },
+        "flipY": {
+          "type": "boolean"
+        },
+        "height": {
+          "type": "number"
+        },
+        "innerRadius": {
+          "type": "number"
+        },
         "layout": {
           "$ref": "#/definitions/Layout"
+        },
+        "linkingId": {
+          "type": "string"
+        },
+        "mark": {
+          "$ref": "#/definitions/Mark"
+        },
+        "opacity": {
+          "$ref": "#/definitions/Channel"
         },
         "orientation": {
           "enum": [
@@ -3421,17 +3922,422 @@
           ],
           "type": "string"
         },
+        "outerRadius": {
+          "type": "number"
+        },
+        "overlayOnPreviousTrack": {
+          "type": "boolean"
+        },
+        "overrideTemplate": {
+          "type": "boolean"
+        },
+        "row": {
+          "$ref": "#/definitions/Channel"
+        },
+        "size": {
+          "$ref": "#/definitions/Channel"
+        },
         "spacing": {
+          "type": "number"
+        },
+        "stackY": {
+          "type": "boolean"
+        },
+        "startAngle": {
           "type": "number"
         },
         "static": {
           "type": "boolean"
         },
+        "stretch": {
+          "type": "boolean"
+        },
+        "stroke": {
+          "$ref": "#/definitions/Channel"
+        },
+        "strokeWidth": {
+          "$ref": "#/definitions/Channel"
+        },
+        "style": {
+          "$ref": "#/definitions/TrackStyle"
+        },
+        "subtitle": {
+          "type": "string"
+        },
+        "text": {
+          "$ref": "#/definitions/Channel"
+        },
+        "title": {
+          "type": "string"
+        },
+        "tooltip": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "alt": {
+                "type": "string"
+              },
+              "field": {
+                "type": "string"
+              },
+              "type": {
+                "$ref": "#/definitions/FieldType"
+              }
+            },
+            "required": [
+              "field",
+              "type"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        },
         "tracks": {
           "items": {
             "anyOf": [
               {
-                "$ref": "#/definitions/Track"
+                "additionalProperties": false,
+                "properties": {
+                  "assembly": {
+                    "$ref": "#/definitions/Assembly"
+                  },
+                  "centerRadius": {
+                    "description": "Proportion of the radius of the center white space.",
+                    "type": "number"
+                  },
+                  "color": {
+                    "$ref": "#/definitions/Channel"
+                  },
+                  "column": {
+                    "$ref": "#/definitions/Channel"
+                  },
+                  "data": {
+                    "$ref": "#/definitions/DataDeep"
+                  },
+                  "dataTransform": {
+                    "$ref": "#/definitions/DataTransform"
+                  },
+                  "displacement": {
+                    "$ref": "#/definitions/Displacement"
+                  },
+                  "endAngle": {
+                    "type": "number"
+                  },
+                  "flipY": {
+                    "type": "boolean"
+                  },
+                  "height": {
+                    "type": "number"
+                  },
+                  "innerRadius": {
+                    "type": "number"
+                  },
+                  "layout": {
+                    "$ref": "#/definitions/Layout"
+                  },
+                  "linkingId": {
+                    "type": "string"
+                  },
+                  "mark": {
+                    "$ref": "#/definitions/Mark"
+                  },
+                  "opacity": {
+                    "$ref": "#/definitions/Channel"
+                  },
+                  "orientation": {
+                    "enum": [
+                      "horizontal",
+                      "vertical"
+                    ],
+                    "type": "string"
+                  },
+                  "outerRadius": {
+                    "type": "number"
+                  },
+                  "overlay": {
+                    "items": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "assembly": {
+                          "$ref": "#/definitions/Assembly"
+                        },
+                        "centerRadius": {
+                          "description": "Proportion of the radius of the center white space.",
+                          "type": "number"
+                        },
+                        "color": {
+                          "$ref": "#/definitions/Channel"
+                        },
+                        "column": {
+                          "$ref": "#/definitions/Channel"
+                        },
+                        "data": {
+                          "$ref": "#/definitions/DataDeep"
+                        },
+                        "dataTransform": {
+                          "$ref": "#/definitions/DataTransform"
+                        },
+                        "displacement": {
+                          "$ref": "#/definitions/Displacement"
+                        },
+                        "endAngle": {
+                          "type": "number"
+                        },
+                        "flipY": {
+                          "type": "boolean"
+                        },
+                        "innerRadius": {
+                          "type": "number"
+                        },
+                        "linkingId": {
+                          "type": "string"
+                        },
+                        "mark": {
+                          "$ref": "#/definitions/Mark"
+                        },
+                        "opacity": {
+                          "$ref": "#/definitions/Channel"
+                        },
+                        "orientation": {
+                          "enum": [
+                            "horizontal",
+                            "vertical"
+                          ],
+                          "type": "string"
+                        },
+                        "outerRadius": {
+                          "type": "number"
+                        },
+                        "overlayOnPreviousTrack": {
+                          "type": "boolean"
+                        },
+                        "overrideTemplate": {
+                          "type": "boolean"
+                        },
+                        "row": {
+                          "$ref": "#/definitions/Channel"
+                        },
+                        "size": {
+                          "$ref": "#/definitions/Channel"
+                        },
+                        "spacing": {
+                          "type": "number"
+                        },
+                        "stackY": {
+                          "type": "boolean"
+                        },
+                        "startAngle": {
+                          "type": "number"
+                        },
+                        "static": {
+                          "type": "boolean"
+                        },
+                        "stretch": {
+                          "type": "boolean"
+                        },
+                        "stroke": {
+                          "$ref": "#/definitions/Channel"
+                        },
+                        "strokeWidth": {
+                          "$ref": "#/definitions/Channel"
+                        },
+                        "style": {
+                          "$ref": "#/definitions/TrackStyle"
+                        },
+                        "text": {
+                          "$ref": "#/definitions/Channel"
+                        },
+                        "tooltip": {
+                          "items": {
+                            "additionalProperties": false,
+                            "properties": {
+                              "alt": {
+                                "type": "string"
+                              },
+                              "field": {
+                                "type": "string"
+                              },
+                              "type": {
+                                "$ref": "#/definitions/FieldType"
+                              }
+                            },
+                            "required": [
+                              "field",
+                              "type"
+                            ],
+                            "type": "object"
+                          },
+                          "type": "array"
+                        },
+                        "visibility": {
+                          "items": {
+                            "$ref": "#/definitions/VisibilityCondition"
+                          },
+                          "type": "array"
+                        },
+                        "x": {
+                          "$ref": "#/definitions/Channel"
+                        },
+                        "x1": {
+                          "$ref": "#/definitions/Channel"
+                        },
+                        "x1e": {
+                          "$ref": "#/definitions/Channel"
+                        },
+                        "xAxis": {
+                          "$ref": "#/definitions/AxisPosition"
+                        },
+                        "xDomain": {
+                          "anyOf": [
+                            {
+                              "$ref": "#/definitions/DomainInterval"
+                            },
+                            {
+                              "$ref": "#/definitions/DomainChrInterval"
+                            },
+                            {
+                              "$ref": "#/definitions/DomainChr"
+                            }
+                          ]
+                        },
+                        "xe": {
+                          "$ref": "#/definitions/Channel"
+                        },
+                        "y": {
+                          "$ref": "#/definitions/Channel"
+                        },
+                        "y1": {
+                          "$ref": "#/definitions/Channel"
+                        },
+                        "y1e": {
+                          "$ref": "#/definitions/Channel"
+                        },
+                        "ye": {
+                          "$ref": "#/definitions/Channel"
+                        }
+                      },
+                      "type": "object"
+                    },
+                    "type": "array"
+                  },
+                  "overlayOnPreviousTrack": {
+                    "type": "boolean"
+                  },
+                  "overrideTemplate": {
+                    "type": "boolean"
+                  },
+                  "row": {
+                    "$ref": "#/definitions/Channel"
+                  },
+                  "size": {
+                    "$ref": "#/definitions/Channel"
+                  },
+                  "spacing": {
+                    "type": "number"
+                  },
+                  "stackY": {
+                    "type": "boolean"
+                  },
+                  "startAngle": {
+                    "type": "number"
+                  },
+                  "static": {
+                    "type": "boolean"
+                  },
+                  "stretch": {
+                    "type": "boolean"
+                  },
+                  "stroke": {
+                    "$ref": "#/definitions/Channel"
+                  },
+                  "strokeWidth": {
+                    "$ref": "#/definitions/Channel"
+                  },
+                  "style": {
+                    "$ref": "#/definitions/TrackStyle"
+                  },
+                  "subtitle": {
+                    "type": "string"
+                  },
+                  "text": {
+                    "$ref": "#/definitions/Channel"
+                  },
+                  "title": {
+                    "type": "string"
+                  },
+                  "tooltip": {
+                    "items": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "alt": {
+                          "type": "string"
+                        },
+                        "field": {
+                          "type": "string"
+                        },
+                        "type": {
+                          "$ref": "#/definitions/FieldType"
+                        }
+                      },
+                      "required": [
+                        "field",
+                        "type"
+                      ],
+                      "type": "object"
+                    },
+                    "type": "array"
+                  },
+                  "visibility": {
+                    "items": {
+                      "$ref": "#/definitions/VisibilityCondition"
+                    },
+                    "type": "array"
+                  },
+                  "width": {
+                    "type": "number"
+                  },
+                  "x": {
+                    "$ref": "#/definitions/Channel"
+                  },
+                  "x1": {
+                    "$ref": "#/definitions/Channel"
+                  },
+                  "x1e": {
+                    "$ref": "#/definitions/Channel"
+                  },
+                  "xAxis": {
+                    "$ref": "#/definitions/AxisPosition"
+                  },
+                  "xDomain": {
+                    "anyOf": [
+                      {
+                        "$ref": "#/definitions/DomainInterval"
+                      },
+                      {
+                        "$ref": "#/definitions/DomainChrInterval"
+                      },
+                      {
+                        "$ref": "#/definitions/DomainChr"
+                      }
+                    ]
+                  },
+                  "xe": {
+                    "$ref": "#/definitions/Channel"
+                  },
+                  "y": {
+                    "$ref": "#/definitions/Channel"
+                  },
+                  "y1": {
+                    "$ref": "#/definitions/Channel"
+                  },
+                  "y1e": {
+                    "$ref": "#/definitions/Channel"
+                  },
+                  "ye": {
+                    "$ref": "#/definitions/Channel"
+                  }
+                },
+                "type": "object"
               },
               {
                 "$ref": "#/definitions/OverlaidTracks"
@@ -3439,6 +4345,24 @@
             ]
           },
           "type": "array"
+        },
+        "visibility": {
+          "items": {
+            "$ref": "#/definitions/VisibilityCondition"
+          },
+          "type": "array"
+        },
+        "width": {
+          "type": "number"
+        },
+        "x": {
+          "$ref": "#/definitions/Channel"
+        },
+        "x1": {
+          "$ref": "#/definitions/Channel"
+        },
+        "x1e": {
+          "$ref": "#/definitions/Channel"
         },
         "xAxis": {
           "$ref": "#/definitions/AxisPosition"
@@ -3456,8 +4380,20 @@
             }
           ]
         },
-        "xLinkingId": {
-          "type": "string"
+        "xe": {
+          "$ref": "#/definitions/Channel"
+        },
+        "y": {
+          "$ref": "#/definitions/Channel"
+        },
+        "y1": {
+          "$ref": "#/definitions/Channel"
+        },
+        "y1e": {
+          "$ref": "#/definitions/Channel"
+        },
+        "ye": {
+          "$ref": "#/definitions/Channel"
         }
       },
       "required": [

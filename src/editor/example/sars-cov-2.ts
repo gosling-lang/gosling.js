@@ -68,7 +68,7 @@ export const EX_SPEC_SARS_COV_2: GoslingSpec = {
         {
             centerRadius: 0,
             xDomain: { interval: [1, 29903] },
-            xLinkingId: 'detail',
+            linkingId: 'detail',
             alignment: 'stack',
             tracks: [
                 // {

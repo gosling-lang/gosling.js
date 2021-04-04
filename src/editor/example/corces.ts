@@ -84,122 +84,94 @@ export const EX_SPEC_CORCES_ET_AL: GoslingSpec = {
         },
         {
             xDomain: { chromosome: '3', interval: [52168000, 52890000] },
-            xLinkingId: 'detail',
+            linkingId: 'detail',
+            mark: 'bar',
+            x: {
+                field: 'position',
+                type: 'genomic'
+            },
+            y: { field: 'peak', type: 'quantitative' },
+            style: { outline: '#20102F' },
+            width: 400,
+            height: 40,
             tracks: [
                 {
                     data: {
-                        url: 'https://resgen.io/api/v1/tileset_info/?d=VLFaiSVjTjW6mkbjRjWREA',
-                        type: 'vector',
+                        url:
+                            'https://s3.amazonaws.com/gosling-lang.org/data/ExcitatoryNeurons-insertions_bin100_RIPnorm.bw',
+                        type: 'bigwig',
                         column: 'position',
                         value: 'peak'
                     },
                     title: 'Excitatory neurons',
-                    mark: 'bar',
-                    x: {
-                        field: 'position',
-                        type: 'genomic'
-                    },
-                    y: { field: 'peak', type: 'quantitative' },
-                    color: { value: '#F29B67' },
-                    style: { outline: '#20102F' },
-                    width: 400,
-                    height: 40
+                    color: { value: '#F29B67' }
                 },
                 {
                     data: {
-                        url: 'https://resgen.io/api/v1/tileset_info/?d=UtUGUu9rS3yQ7Ie-YtX32g',
-                        type: 'vector',
+                        url:
+                            'https://s3.amazonaws.com/gosling-lang.org/data/InhibitoryNeurons-insertions_bin100_RIPnorm.bw',
+                        type: 'bigwig',
                         column: 'position',
                         value: 'peak'
                     },
                     title: 'Inhibitory neurons',
-                    mark: 'bar',
-                    x: { field: 'position', type: 'genomic' },
-                    y: { field: 'peak', type: 'quantitative' },
-                    color: { value: '#3DC491' },
-                    style: { outline: '#20102F' },
-                    width: 400,
-                    height: 40
+                    color: { value: '#3DC491' }
                 },
                 {
                     data: {
-                        url: 'https://resgen.io/api/v1/tileset_info/?d=FBwldgSdQQWxh7R7-jemNA',
-                        type: 'vector',
+                        url:
+                            'https://s3.amazonaws.com/gosling-lang.org/data/DopaNeurons_Cluster10_AllFrags_projSUNI2_insertions_bin100_RIPnorm.bw',
+                        type: 'bigwig',
                         column: 'position',
                         value: 'peak'
                     },
                     title: 'Dopaminergic neurons',
                     mark: 'bar',
-                    x: { field: 'position', type: 'genomic' },
-                    y: { field: 'peak', type: 'quantitative' },
-                    color: { value: '#565C8B' },
-                    style: { outline: '#20102F' },
-                    width: 400,
-                    height: 40
+                    color: { value: '#565C8B' }
                 },
                 {
                     data: {
-                        url: 'https://resgen.io/api/v1/tileset_info/?d=Zz3CBDSqQ3ySrOSe2yj1eg',
-                        type: 'vector',
+                        url: 'https://s3.amazonaws.com/gosling-lang.org/data/Microglia-insertions_bin100_RIPnorm.bw',
+                        type: 'bigwig',
                         column: 'position',
                         value: 'peak'
                     },
                     title: 'Microglia',
-                    mark: 'bar',
-                    x: { field: 'position', type: 'genomic' },
-                    y: { field: 'peak', type: 'quantitative' },
-                    color: { value: '#77C0FA' },
-                    style: { outline: '#20102F' },
-                    width: 400,
-                    height: 40
+                    color: { value: '#77C0FA' }
                 },
                 {
                     data: {
-                        type: 'vector',
-                        url: 'https://resgen.io/api/v1/tileset_info/?d=dc_SOjdCRgq_8PYf6W--7w',
+                        url:
+                            'https://s3.amazonaws.com/gosling-lang.org/data/Oligodendrocytes-insertions_bin100_RIPnorm.bw',
+                        type: 'bigwig',
                         column: 'position',
                         value: 'peak'
                     },
                     title: 'Oligodendrocytes',
                     mark: 'bar',
-                    x: { field: 'position', type: 'genomic' },
-                    y: { field: 'peak', type: 'quantitative' },
-                    color: { value: '#9B46E5' },
-                    style: { outline: '#20102F' },
-                    width: 400,
-                    height: 40
+                    color: { value: '#9B46E5' }
                 },
                 {
                     data: {
-                        url: 'https://resgen.io/api/v1/tileset_info/?d=Nolbrk9kS3CE0jJL_7OW1g',
-                        type: 'vector',
+                        url: 'https://s3.amazonaws.com/gosling-lang.org/data/Astrocytes-insertions_bin100_RIPnorm.bw',
+                        type: 'bigwig',
                         column: 'position',
                         value: 'peak'
                     },
                     title: 'Astrocytes',
                     mark: 'bar',
-                    x: { field: 'position', type: 'genomic' },
-                    y: { field: 'peak', type: 'quantitative' },
-                    color: { value: '#D73636' },
-                    style: { outline: '#20102F' },
-                    width: 400,
-                    height: 40
+                    color: { value: '#D73636' }
                 },
                 {
                     data: {
-                        url: 'https://resgen.io/api/v1/tileset_info/?d=UZLlJyRBScWdGQ7L1eNk_g',
-                        type: 'vector',
+                        url: 'https://s3.amazonaws.com/gosling-lang.org/data/OPCs-insertions_bin100_RIPnorm.bw',
+                        type: 'bigwig',
                         column: 'position',
                         value: 'peak'
                     },
                     title: 'OPCs',
                     mark: 'bar',
-                    x: { field: 'position', type: 'genomic' },
-                    y: { field: 'peak', type: 'quantitative' },
-                    color: { value: '#E38ADC' },
-                    style: { outline: '#20102F' },
-                    width: 400,
-                    height: 40
+                    color: { value: '#E38ADC' }
                 },
                 {
                     alignment: 'overlay',
@@ -386,7 +358,7 @@ export const EX_SPEC_CORCES_ET_AL: GoslingSpec = {
                 // },
                 {
                     data: {
-                        url: 'https://resgen.io/api/v1/tileset_info/?d=EqSENQSXRL-EWYeBe-Y1rA',
+                        url: 'https://server.gosling-lang.org/api/v1/tileset_info/?d=oligodendrocyte-plac-seq-bedpe',
                         type: 'beddb',
                         genomicFields: [
                             { name: 'start', index: 1 },
@@ -407,7 +379,7 @@ export const EX_SPEC_CORCES_ET_AL: GoslingSpec = {
                 },
                 {
                     data: {
-                        url: 'https://resgen.io/api/v1/tileset_info/?d=R4e7-rVfQPWTleJIJjLOEQ',
+                        url: 'https://server.gosling-lang.org/api/v1/tileset_info/?d=microglia-plac-seq-bedpe',
                         type: 'beddb',
                         genomicFields: [
                             { name: 'start', index: 1 },
@@ -430,7 +402,7 @@ export const EX_SPEC_CORCES_ET_AL: GoslingSpec = {
                 {
                     title: 'PLAC-seq (H3K4me3) Nott et al.',
                     data: {
-                        url: 'https://resgen.io/api/v1/tileset_info/?d=JzccFAJUQEiz-0188xaWZg',
+                        url: 'https://server.gosling-lang.org/api/v1/tileset_info/?d=neuron-plac-seq-bedpe',
                         type: 'beddb',
                         genomicFields: [
                             { name: 'start', index: 1 },

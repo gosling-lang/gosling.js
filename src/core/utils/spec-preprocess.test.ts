@@ -236,18 +236,32 @@ describe('Spec Preprocess', () => {
 
     it('override template (higlass-vector)', () => {
         const spec: GoslingSpec = {
-            tracks: [{ data: { type: 'vector', url: '', column: 'c', value: 'v' } } as Track]
+            tracks: [{ data: { type: 'vector', url: '', column: 'c', value: 'v' }, overrideTemplate: true } as Track]
         };
         overrideTemplates(spec);
         expect(spec.tracks[0]).toHaveProperty('mark');
     });
 
     it('override template (higlass-multivec)', () => {
-        const spec: GoslingSpec = {
-            tracks: [{ data: { type: 'multivec', url: '', row: 'r', column: 'c', value: 'v' } } as Track]
-        };
-        overrideTemplates(spec);
-        expect(spec.tracks[0]).toHaveProperty('mark');
+        {
+            const spec: GoslingSpec = {
+                tracks: [
+                    {
+                        data: { type: 'multivec', url: '', row: 'r', column: 'c', value: 'v' },
+                        overrideTemplate: true
+                    } as Track
+                ]
+            };
+            overrideTemplates(spec);
+            expect(spec.tracks[0]).toHaveProperty('mark');
+        }
+        {
+            const spec: GoslingSpec = {
+                tracks: [{ data: { type: 'multivec', url: '', row: 'r', column: 'c', value: 'v' } } as Track]
+            };
+            overrideTemplates(spec);
+            expect(spec.tracks[0]).not.toHaveProperty('mark'); // overrideTemplate is not set, so do not override templates
+        }
     });
 
     it('Convert To FlatTracks', () => {
@@ -278,15 +292,17 @@ describe('Spec Preprocess', () => {
             expect(flat[1].title).toEqual('B');
             expect('overlay' in flat[1]).toEqual(true);
             expect('overlay' in flat[1] && flat[1].overlay.length === 1).toEqual(true);
-
+        }
+        {
             const flat2 = convertToFlatTracks({
                 alignment: 'stack',
+                color: { value: 'red' }, // should be overriden
                 tracks: [
                     { ...dummySpec, title: 'A' },
                     { title: 'B', alignment: 'overlay', tracks: [{ ...dummySpec }], width: 10, height: 10 }
                 ]
             });
-            expect(flat).toEqual(flat2);
+            expect((flat2[0] as any).color).toEqual({ value: 'red' });
         }
         {
             const flat = convertToFlatTracks({

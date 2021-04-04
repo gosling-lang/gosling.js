@@ -191,7 +191,7 @@ export const EX_SPEC_MATRIX: GoslingSpec = {
         },
         {
             xDomain: { chromosome: '5', interval: [0, 43000000] },
-            xLinkingId: 'all',
+            linkingId: 'all',
             spacing: 0,
             views: [
                 {
@@ -360,13 +360,13 @@ export const EX_SPEC_MATRIX: GoslingSpec = {
                     tracks: [
                         {
                             data: {
-                                url: GOSLING_PUBLIC_DATA.matrix2,
+                                url: GOSLING_PUBLIC_DATA.matrix,
                                 type: 'matrix'
                             },
                             mark: 'rect',
                             x: { field: 'position1', type: 'genomic', axis: 'none' },
                             y: { field: 'position2', type: 'genomic', axis: 'right' },
-                            color: { field: 'value', type: 'quantitative', legend: true },
+                            color: { field: 'value', type: 'quantitative' },
                             width: 600,
                             height: 600
                         }

@@ -22,9 +22,9 @@ export interface FlatTracks extends CommonViewDef {
     tracks: Track[];
 }
 
-export interface StackedTracks extends CommonViewDef {
+export interface StackedTracks extends CommonViewDef, Partial<SingleTrack> {
     alignment?: 'stack';
-    tracks: (Track | OverlaidTracks)[];
+    tracks: (Partial<Track> | OverlaidTracks)[];
 }
 
 export interface OverlaidTracks extends CommonViewDef, Partial<SingleTrack> {
@@ -53,7 +53,7 @@ export interface CommonViewDef {
 
     // TODO: Change to domain?
     xDomain?: DomainInterval | DomainChrInterval | DomainChr; // We can support `DomainGene` as well later.
-    xLinkingId?: string;
+    linkingId?: string;
     xAxis?: AxisPosition; // not supported currently
 
     /**
