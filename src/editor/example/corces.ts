@@ -358,7 +358,7 @@ export const EX_SPEC_CORCES_ET_AL: GoslingSpec = {
                 // },
                 {
                     data: {
-                        url: 'https://resgen.io/api/v1/tileset_info/?d=EqSENQSXRL-EWYeBe-Y1rA',
+                        url: 'https://server.gosling-lang.org/api/v1/tileset_info/?d=oligodendrocyte-plac-seq-bedpe',
                         type: 'beddb',
                         genomicFields: [
                             { name: 'start', index: 1 },
@@ -379,7 +379,7 @@ export const EX_SPEC_CORCES_ET_AL: GoslingSpec = {
                 },
                 {
                     data: {
-                        url: 'https://resgen.io/api/v1/tileset_info/?d=R4e7-rVfQPWTleJIJjLOEQ',
+                        url: 'https://server.gosling-lang.org/api/v1/tileset_info/?d=microglia-plac-seq-bedpe',
                         type: 'beddb',
                         genomicFields: [
                             { name: 'start', index: 1 },
@@ -402,7 +402,7 @@ export const EX_SPEC_CORCES_ET_AL: GoslingSpec = {
                 {
                     title: 'PLAC-seq (H3K4me3) Nott et al.',
                     data: {
-                        url: 'https://resgen.io/api/v1/tileset_info/?d=JzccFAJUQEiz-0188xaWZg',
+                        url: 'https://server.gosling-lang.org/api/v1/tileset_info/?d=neuron-plac-seq-bedpe',
                         type: 'beddb',
                         genomicFields: [
                             { name: 'start', index: 1 },
