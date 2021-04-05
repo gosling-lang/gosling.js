@@ -125,9 +125,16 @@ Find out more at [conventional-changelog/commitlint](https://github.com/conventi
 - Fritz Lekschas (<lekschas@seas.harvard.edu>)
 - Nils Gehlenborg (<nils@hms.harvard.edu>)
 
+## Citation
+```bib
+@article{lyi2021gosling,
+  title={Gosling: A Grammar-based Toolkit for Scalable and Interactive Genomics Data Visualization},
+  author={Sehi L'Yi and Qianwen Wang and Fritz Lekschas and Nils Gehlenborg},
+  year={2021},
+  publisher={OSF Preprints}
+}
+```
+
 ## License
 
 This project is licensed under the terms of the [MIT license](https://github.com/gosling-lang/gosling.js/blob/master/LICENSE.md).
-
-
-<!-- # Cite Gosling -->
