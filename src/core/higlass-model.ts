@@ -158,7 +158,7 @@ export class HiGlassModel {
      * Get the last view that renders any visualization, so skiping empty tracks.
      */
     public getLastVisView() {
-        const vs = this.hg.views.filter(v => (v.tracks as any).center?.[0]?.type === 'combined');
+        const vs = this.hg.views.filter(v => (v.tracks as any)[this.getMainTrackPosition()]?.[0]?.type === 'combined');
         return vs[vs.length - 1];
     }
 

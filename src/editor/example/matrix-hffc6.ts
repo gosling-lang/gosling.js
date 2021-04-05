@@ -6,7 +6,106 @@ export const EX_SPEC_MATRIX_HFFC6: GoslingSpec = {
     subtitle: 'Comparison of Micro-C and Hi-C for HFFc6 Cells',
     arrangement: 'horizontal',
     xDomain: { chromosome: '7', interval: [77700000, 81000000] },
+    spacing: 0,
     views: [
+        {
+            orientation: 'vertical',
+            linkingId: 'all',
+            views: [
+                // {
+                //     tracks: [{
+                //         data: {
+                //             url: 'https://s3.amazonaws.com/gosling-lang.org/data/HFFc6_H3K4me3.bigWig',
+                //             type: 'bigwig',
+                //             column: 'position',
+                //             value: 'peak',
+                //             binSize: 8
+                //         },
+                //         title: 'HFFc6_H3K4me3',
+                //         mark: 'bar',
+                //         x: { field: 'start', type: 'genomic', axis: 'none' },
+                //         xe: { field: 'end', type: 'genomic', axis: 'none' },
+                //         y: { field: 'peak', type: 'quantitative' },
+                //         color: { value: 'darkgreen' },
+                //         style: { outline: 'white' },
+                //         height: 570,
+                //         width: 40
+                //     }]
+                // },
+                // {
+                //     tracks: [{
+                //         data: {
+                //             url: 'https://s3.amazonaws.com/gosling-lang.org/data/HFFc6_Atacseq.mRp.clN.bigWig',
+                //             type: 'bigwig',
+                //             column: 'position',
+                //             value: 'peak',
+                //             binSize: 8
+                //         },
+                //         title: 'HFFc6_ATAC',
+                //         mark: 'bar',
+                //         x: { field: 'start', type: 'genomic', axis: 'none' },
+                //         xe: { field: 'end', type: 'genomic', axis: 'none' },
+                //         y: { field: 'peak', type: 'quantitative' },
+                //         color: { value: '#E79F00' },
+                //         style: { outline: 'white' },
+                //         height: 570,
+                //         width: 40
+                //     }]
+                // },
+                {
+                    tracks: [
+                        {
+                            alignment: 'overlay',
+                            data: {
+                                url: GOSLING_PUBLIC_DATA.geneAnnotation,
+                                type: 'beddb',
+                                genomicFields: [
+                                    { index: 1, name: 'start' },
+                                    { index: 2, name: 'end' }
+                                ],
+                                valueFields: [
+                                    { index: 5, name: 'strand', type: 'nominal' },
+                                    { index: 3, name: 'name', type: 'nominal' }
+                                ]
+                            },
+                            x: { field: 'start', type: 'genomic', axis: 'none' },
+                            size: { value: 13 },
+                            stroke: { value: 'white' },
+                            strokeWidth: { value: 1 },
+                            row: { field: 'strand', type: 'nominal', domain: ['+', '-'] },
+                            tracks: [
+                                // {
+                                //     data: {
+                                //         url: 'https://s3.amazonaws.com/gosling-lang.org/data/HFFC6_CTCF.mRp.clN.bigWig',
+                                //         type: 'bigwig',
+                                //         column: 'position',
+                                //         value: 'peak'
+                                //     },
+                                //     mark: 'bar',
+                                //     x: { field: 'position', type: 'genomic', axis: 'none' },
+                                //     y: { field: 'peak', type: 'quantitative' },
+                                //     color: { value: '#0072B2' }
+                                // },
+                                {
+                                    title: 'Genes (hg38)',
+                                    dataTransform: { filter: [{ field: 'strand', oneOf: ['+'] }] },
+                                    mark: 'triangleRight',
+                                    color: { value: '#CB7AA7' }
+                                },
+                                {
+                                    dataTransform: { filter: [{ field: 'strand', oneOf: ['-'] }] },
+                                    mark: 'triangleLeft',
+                                    color: { value: '#029F73' }
+                                }
+                            ],
+                            style: { outline: 'white' },
+                            height: 570,
+                            width: 40
+                        }
+                    ]
+                }
+            ]
+        },
         {
             spacing: 0,
             linkingId: 'all',
@@ -15,18 +114,37 @@ export const EX_SPEC_MATRIX_HFFC6: GoslingSpec = {
                 {
                     tracks: [
                         {
+                            title: 'HFFc6_Micro-C',
+                            data: {
+                                url: GOSLING_PUBLIC_DATA.matrixMicroC,
+                                type: 'matrix'
+                            },
+                            mark: 'rect',
+                            x: { field: 'position1', type: 'genomic', axis: 'bottom' },
+                            y: { field: 'position2', type: 'genomic', axis: 'right' },
+                            color: { field: 'value', type: 'quantitative', range: 'warm' },
+                            width: 600,
+                            height: 570
+                        }
+                    ]
+                },
+                {
+                    tracks: [
+                        {
                             data: {
                                 url: 'https://s3.amazonaws.com/gosling-lang.org/data/HFFc6_H3K4me3.bigWig',
                                 type: 'bigwig',
                                 column: 'position',
-                                value: 'peak'
+                                value: 'peak',
+                                binSize: 8
                             },
                             title: 'HFFc6_H3K4me3',
                             mark: 'bar',
-                            x: { field: 'position', type: 'genomic', axis: 'none' },
+                            x: { field: 'start', type: 'genomic', axis: 'none' },
+                            xe: { field: 'end', type: 'genomic', axis: 'none' },
                             y: { field: 'peak', type: 'quantitative' },
                             color: { value: 'darkgreen' },
-                            style: { outline: 'gray' },
+                            style: { outline: 'white' },
                             width: 570,
                             height: 40
                         },
@@ -35,14 +153,16 @@ export const EX_SPEC_MATRIX_HFFC6: GoslingSpec = {
                                 url: 'https://s3.amazonaws.com/gosling-lang.org/data/HFFc6_Atacseq.mRp.clN.bigWig',
                                 type: 'bigwig',
                                 column: 'position',
-                                value: 'peak'
+                                value: 'peak',
+                                binSize: 8
                             },
                             title: 'HFFc6_ATAC',
                             mark: 'bar',
-                            x: { field: 'position', type: 'genomic' },
+                            x: { field: 'start', type: 'genomic' },
+                            xe: { field: 'end', type: 'genomic' },
                             y: { field: 'peak', type: 'quantitative' },
-                            color: { value: 'purple' },
-                            style: { outline: 'gray' },
+                            color: { value: '#E79F00' },
+                            style: { outline: 'white' },
                             width: 570,
                             height: 40
                         },
@@ -54,12 +174,14 @@ export const EX_SPEC_MATRIX_HFFC6: GoslingSpec = {
                                         url: 'https://s3.amazonaws.com/gosling-lang.org/data/HFFC6_CTCF.mRp.clN.bigWig',
                                         type: 'bigwig',
                                         column: 'position',
-                                        value: 'peak'
+                                        value: 'peak',
+                                        binSize: 8
                                     },
                                     mark: 'bar',
-                                    x: { field: 'position', type: 'genomic' },
+                                    x: { field: 'start', type: 'genomic' },
+                                    xe: { field: 'end', type: 'genomic' },
                                     y: { field: 'peak', type: 'quantitative' },
-                                    color: { value: 'blue' }
+                                    color: { value: '#0072B2' }
                                 },
                                 {
                                     data: {
@@ -77,11 +199,11 @@ export const EX_SPEC_MATRIX_HFFC6: GoslingSpec = {
                                     dataTransform: { filter: [{ field: 'strand', oneOf: ['+'] }] },
                                     mark: 'triangleRight',
                                     x: { field: 'start', type: 'genomic' },
-                                    size: { value: 10 },
+                                    size: { value: 13 },
                                     stroke: { value: 'white' },
                                     strokeWidth: { value: 1 },
                                     row: { field: 'strand', type: 'nominal', domain: ['+', '-'] },
-                                    color: { value: 'red' }
+                                    color: { value: '#CB7AA7' }
                                 },
                                 {
                                     title: 'HFFC6_CTCF',
@@ -102,31 +224,14 @@ export const EX_SPEC_MATRIX_HFFC6: GoslingSpec = {
                                     x: { field: 'start', type: 'genomic' },
                                     stroke: { value: 'white' },
                                     strokeWidth: { value: 1 },
-                                    size: { value: 10 },
+                                    size: { value: 13 },
                                     row: { field: 'strand', type: 'nominal', domain: ['+', '-'] },
-                                    color: { value: 'green' }
+                                    color: { value: '#029F73' }
                                 }
                             ],
-                            style: { outline: 'gray' },
+                            style: { outline: 'white' },
                             width: 570,
                             height: 40
-                        }
-                    ]
-                },
-                {
-                    tracks: [
-                        {
-                            title: 'HFFc6_Micro-C',
-                            data: {
-                                url: GOSLING_PUBLIC_DATA.matrixMicroC,
-                                type: 'matrix'
-                            },
-                            mark: 'rect',
-                            x: { field: 'position1', type: 'genomic', axis: 'top' },
-                            y: { field: 'position2', type: 'genomic', axis: 'right' },
-                            color: { field: 'value', type: 'quantitative', range: 'warm' },
-                            width: 600,
-                            height: 570
                         }
                     ]
                 },
@@ -186,7 +291,7 @@ export const EX_SPEC_MATRIX_HFFC6: GoslingSpec = {
                                 ]
                             },
                             // strokeWidth: {value: 0.5},
-                            // style: {outline: "gray"},
+                            style: { outline: 'white' },
                             width: 570,
                             height: 40
                         }
@@ -202,18 +307,37 @@ export const EX_SPEC_MATRIX_HFFC6: GoslingSpec = {
                 {
                     tracks: [
                         {
+                            title: 'HFFc6_Hi-C',
+                            data: {
+                                url: GOSLING_PUBLIC_DATA.matrixHiC,
+                                type: 'matrix'
+                            },
+                            mark: 'rect',
+                            x: { field: 'position1', type: 'genomic', axis: 'bottom' },
+                            y: { field: 'position2', type: 'genomic', axis: 'right' },
+                            color: { field: 'value', type: 'quantitative', range: 'warm' },
+                            width: 600,
+                            height: 570
+                        }
+                    ]
+                },
+                {
+                    tracks: [
+                        {
                             data: {
                                 url: 'https://s3.amazonaws.com/gosling-lang.org/data/HFFc6_H3K4me3.bigWig',
                                 type: 'bigwig',
                                 column: 'position',
-                                value: 'peak'
+                                value: 'peak',
+                                binSize: 8
                             },
                             title: 'HFFc6_H3K4me3',
                             mark: 'bar',
-                            x: { field: 'position', type: 'genomic', axis: 'none' },
+                            x: { field: 'start', type: 'genomic', axis: 'none' },
+                            xe: { field: 'end', type: 'genomic', axis: 'none' },
                             y: { field: 'peak', type: 'quantitative' },
                             color: { value: 'darkgreen' },
-                            style: { outline: 'gray' },
+                            style: { outline: 'white' },
                             width: 570,
                             height: 40
                         },
@@ -222,14 +346,16 @@ export const EX_SPEC_MATRIX_HFFC6: GoslingSpec = {
                                 url: 'https://s3.amazonaws.com/gosling-lang.org/data/HFFc6_Atacseq.mRp.clN.bigWig',
                                 type: 'bigwig',
                                 column: 'position',
-                                value: 'peak'
+                                value: 'peak',
+                                binSize: 8
                             },
                             title: 'HFFc6_ATAC',
                             mark: 'bar',
-                            x: { field: 'position', type: 'genomic' },
+                            x: { field: 'start', type: 'genomic' },
+                            xe: { field: 'end', type: 'genomic' },
                             y: { field: 'peak', type: 'quantitative' },
-                            color: { value: 'purple' },
-                            style: { outline: 'gray' },
+                            color: { value: '#E79F00' },
+                            style: { outline: 'white' },
                             width: 570,
                             height: 40
                         },
@@ -241,12 +367,14 @@ export const EX_SPEC_MATRIX_HFFC6: GoslingSpec = {
                                         url: 'https://s3.amazonaws.com/gosling-lang.org/data/HFFC6_CTCF.mRp.clN.bigWig',
                                         type: 'bigwig',
                                         column: 'position',
-                                        value: 'peak'
+                                        value: 'peak',
+                                        binSize: 8
                                     },
                                     mark: 'bar',
-                                    x: { field: 'position', type: 'genomic' },
+                                    x: { field: 'start', type: 'genomic' },
+                                    xe: { field: 'end', type: 'genomic' },
                                     y: { field: 'peak', type: 'quantitative' },
-                                    color: { value: 'blue' }
+                                    color: { value: '#0072B2' }
                                 },
                                 {
                                     data: {
@@ -264,11 +392,11 @@ export const EX_SPEC_MATRIX_HFFC6: GoslingSpec = {
                                     dataTransform: { filter: [{ field: 'strand', oneOf: ['+'] }] },
                                     mark: 'triangleRight',
                                     x: { field: 'start', type: 'genomic' },
-                                    size: { value: 10 },
+                                    size: { value: 13 },
                                     stroke: { value: 'white' },
                                     strokeWidth: { value: 1 },
                                     row: { field: 'strand', type: 'nominal', domain: ['+', '-'] },
-                                    color: { value: 'red' }
+                                    color: { value: '#CB7AA7' }
                                 },
                                 {
                                     title: 'HFFC6_CTCF',
@@ -287,33 +415,16 @@ export const EX_SPEC_MATRIX_HFFC6: GoslingSpec = {
                                     dataTransform: { filter: [{ field: 'strand', oneOf: ['-'] }] },
                                     mark: 'triangleLeft',
                                     x: { field: 'start', type: 'genomic' },
+                                    size: { value: 13 },
                                     stroke: { value: 'white' },
                                     strokeWidth: { value: 1 },
-                                    size: { value: 10 },
                                     row: { field: 'strand', type: 'nominal', domain: ['+', '-'] },
-                                    color: { value: 'green' }
+                                    color: { value: '#029F73' }
                                 }
                             ],
-                            style: { outline: 'gray' },
+                            style: { outline: 'white' },
                             width: 570,
                             height: 40
-                        }
-                    ]
-                },
-                {
-                    tracks: [
-                        {
-                            title: 'HFFc6_Hi-C',
-                            data: {
-                                url: GOSLING_PUBLIC_DATA.matrixHiC,
-                                type: 'matrix'
-                            },
-                            mark: 'rect',
-                            x: { field: 'position1', type: 'genomic', axis: 'top' },
-                            y: { field: 'position2', type: 'genomic', axis: 'right' },
-                            color: { field: 'value', type: 'quantitative', range: 'warm' },
-                            width: 600,
-                            height: 570
                         }
                     ]
                 },
@@ -373,7 +484,7 @@ export const EX_SPEC_MATRIX_HFFC6: GoslingSpec = {
                                 ]
                             },
                             // strokeWidth: {value: 0.5},
-                            // style: {outline: "gray"},
+                            style: { outline: 'white' },
                             width: 570,
                             height: 40
                         }

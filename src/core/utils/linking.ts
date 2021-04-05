@@ -17,7 +17,15 @@ export function getLinkingInfo(hgModel: HiGlassModel) {
 
     hgModel.spec().views.forEach(v => {
         const viewId = v.uid;
-        const spec = /* TODO: */ (v.tracks as any).center?.[0]?.contents?.[0]?.options?.spec;
+
+        // TODO: Better way to get view specifications?
+        // Get spec of a view
+        let spec = /* TODO: */ (v.tracks as any).center?.[0]?.contents?.[0]?.options?.spec;
+
+        if (!spec) {
+            // This means the orientation of this view is vertical, and spec might be positioned on the right
+            spec = /* TODO: */ (v.tracks as any).right?.[0]?.contents?.[0]?.options?.spec;
+        }
 
         if (!viewId || !spec) return;
 

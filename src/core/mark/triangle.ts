@@ -134,7 +134,7 @@ export function drawTriangle(g: PIXI.Graphics, model: GoslingTrackModel) {
                     colorToHex(stroke),
                     // too narrow triangle's stroke is becoming too sharp
                     x1 - x0 > 2 ? actualOpacity : 0, // alpha
-                    0 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
+                    0.5 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
                 );
 
                 g.beginFill(colorToHex(color), actualOpacity);
