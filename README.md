@@ -129,7 +129,7 @@ Find out more at [conventional-changelog/commitlint](https://github.com/conventi
 ```bib
 @article{lyi2021gosling,
   title={Gosling: A Grammar-based Toolkit for Scalable and Interactive Genomics Data Visualization},
-  author={L'Yi, Sehi and Wang, Qianwen and Lekschas, Fritz and Gehlenborg, Nils},
+  author={Sehi L'Yi and Qianwen Wang and Fritz Lekschas and Nils Gehlenborg},
   year={2021},
   publisher={OSF Preprints}
 }
