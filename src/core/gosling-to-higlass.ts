@@ -14,7 +14,7 @@ import { DEFAULT_SUBTITLE_HEIGHT, DEFAULT_TITLE_HEIGHT } from './layout/defaults
  */
 export function goslingToHiGlass(
     hgModel: HiGlassModel,
-    gmTrack: Track,
+    gosTrack: Track,
     bb: BoundingBox,
     layout: RelativePosition
 ): HiGlassModel {
@@ -22,7 +22,7 @@ export function goslingToHiGlass(
     // ...
 
     // we only look into the first resolved spec to get information, such as size of the track
-    const firstResolvedSpec = resolveSuperposedTracks(gmTrack)[0];
+    const firstResolvedSpec = resolveSuperposedTracks(gosTrack)[0];
 
     const assembly = firstResolvedSpec.assembly;
 
@@ -51,7 +51,7 @@ export function goslingToHiGlass(
             height: bb.height,
             options: {
                 /* Mouse hover position */
-                showMousePosition: firstResolvedSpec.layout === 'circular' ? false : true, // show mouse position only for linear tracks
+                showMousePosition: firstResolvedSpec.layout === 'circular' ? false : true, // show mouse position only for linear tracks // TODO: or vertical
                 mousePositionColor: '#B8BCC1',
                 /* Track title */
                 name: firstResolvedSpec.title,
@@ -67,29 +67,29 @@ export function goslingToHiGlass(
                 labelBottomMargin: 0,
                 /* Others */
                 backgroundColor: 'transparent', // in this way, we can superpose multiple tracks
-                spec: { ...gmTrack }
+                spec: { ...gosTrack }
             }
         };
 
         if (
-            gmTrack.data &&
-            IsDataDeep(gmTrack.data) &&
-            (gmTrack.data.type === 'csv' || gmTrack.data.type === 'json' || gmTrack.data.type === 'bigwig')
+            gosTrack.data &&
+            IsDataDeep(gosTrack.data) &&
+            (gosTrack.data.type === 'csv' || gosTrack.data.type === 'json' || gosTrack.data.type === 'bigwig')
         ) {
             // use gosling's custom data fetchers
             hgTrack.data = {
-                ...gmTrack.data,
+                ...gosTrack.data,
                 // Additionally, add assembly, otherwise, a default build is used
                 assembly
             };
         }
 
-        const isMatrix = gmTrack.data?.type === 'matrix';
+        const isMatrix = gosTrack.data?.type === 'matrix';
         if (isMatrix) {
             // Use HiGlass' heatmap track for matrix data
             hgTrack.type = 'heatmap';
             hgTrack.options.colorRange =
-                (gmTrack as any)?.color.range === 'warm'
+                (gosTrack as any)?.color.range === 'warm'
                     ? ['white', 'rgba(245,166,35,1.0)', 'rgba(208,2,27,1.0)', 'black']
                     : viridisColorMap;
             hgTrack.options.trackBorderWidth = 1;
@@ -97,13 +97,16 @@ export function goslingToHiGlass(
             hgTrack.options.colorbarPosition = (firstResolvedSpec.color as any)?.legend ? 'topRight' : 'hidden';
         }
 
-        if (gmTrack.overlayOnPreviousTrack) {
-            hgModel.addTrackToCombined(hgTrack);
+        if (gosTrack.overlayOnPreviousTrack) {
+            hgModel
+                .setViewOrientation(gosTrack.orientation) // TODO: Orientation should be assigned to 'individual' views
+                .addTrackToCombined(hgTrack);
         } else {
             hgModel
-                .setAssembly(assembly)
-                .addDefaultView()
-                .setDomain(xDomain, xDomain)
+                .setViewOrientation(gosTrack.orientation) // TODO: Orientation should be assigned to 'individual' views
+                .setAssembly(assembly) // TODO: Assembly should be assigned to 'individual' views
+                .addDefaultView(assembly)
+                .setDomain(xDomain, xDomain) // TODO:
                 .setMainTrack(hgTrack)
                 .addTrackSourceServers(server)
                 .setZoomFixed(firstResolvedSpec.static === true)

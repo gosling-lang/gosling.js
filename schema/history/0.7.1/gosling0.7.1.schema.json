@@ -392,6 +392,9 @@
         "linkingId": {
           "type": "string"
         },
+        "orientation": {
+          "$ref": "#/definitions/Orientation"
+        },
         "outerRadius": {
           "type": "number"
         },
@@ -678,6 +681,9 @@
         },
         "linkingId": {
           "type": "string"
+        },
+        "orientation": {
+          "$ref": "#/definitions/Orientation"
         },
         "spacing": {
           "type": "number"
@@ -1311,6 +1317,9 @@
         "linkingId": {
           "type": "string"
         },
+        "orientation": {
+          "$ref": "#/definitions/Orientation"
+        },
         "spacing": {
           "type": "number"
         },
@@ -1428,6 +1437,13 @@
       ],
       "type": "object"
     },
+    "Orientation": {
+      "enum": [
+        "horizontal",
+        "vertical"
+      ],
+      "type": "string"
+    },
     "OverlaidTrack": {
       "additionalProperties": false,
       "description": "Superposing multiple tracks.",
@@ -1478,6 +1494,9 @@
         "opacity": {
           "$ref": "#/definitions/Channel"
         },
+        "orientation": {
+          "$ref": "#/definitions/Orientation"
+        },
         "outerRadius": {
           "type": "number"
         },
@@ -1524,6 +1543,9 @@
               },
               "opacity": {
                 "$ref": "#/definitions/Channel"
+              },
+              "orientation": {
+                "$ref": "#/definitions/Orientation"
               },
               "outerRadius": {
                 "type": "number"
@@ -1817,6 +1839,9 @@
         "opacity": {
           "$ref": "#/definitions/Channel"
         },
+        "orientation": {
+          "$ref": "#/definitions/Orientation"
+        },
         "outerRadius": {
           "type": "number"
         },
@@ -1937,6 +1962,9 @@
               "opacity": {
                 "$ref": "#/definitions/Channel"
               },
+              "orientation": {
+                "$ref": "#/definitions/Orientation"
+              },
               "outerRadius": {
                 "type": "number"
               },
@@ -1983,6 +2011,9 @@
                     },
                     "opacity": {
                       "$ref": "#/definitions/Channel"
+                    },
+                    "orientation": {
+                      "$ref": "#/definitions/Orientation"
                     },
                     "outerRadius": {
                       "type": "number"
@@ -2359,6 +2390,9 @@
         "linkingId": {
           "type": "string"
         },
+        "orientation": {
+          "$ref": "#/definitions/Orientation"
+        },
         "spacing": {
           "type": "number"
         },
@@ -2463,6 +2497,9 @@
             },
             "opacity": {
               "$ref": "#/definitions/Channel"
+            },
+            "orientation": {
+              "$ref": "#/definitions/Orientation"
             },
             "outerRadius": {
               "type": "number"
@@ -2584,6 +2621,9 @@
                   "opacity": {
                     "$ref": "#/definitions/Channel"
                   },
+                  "orientation": {
+                    "$ref": "#/definitions/Orientation"
+                  },
                   "outerRadius": {
                     "type": "number"
                   },
@@ -2630,6 +2670,9 @@
                         },
                         "opacity": {
                           "$ref": "#/definitions/Channel"
+                        },
+                        "orientation": {
+                          "$ref": "#/definitions/Orientation"
                         },
                         "outerRadius": {
                           "type": "number"
@@ -2981,6 +3024,9 @@
             "opacity": {
               "$ref": "#/definitions/Channel"
             },
+            "orientation": {
+              "$ref": "#/definitions/Orientation"
+            },
             "outerRadius": {
               "type": "number"
             },
@@ -3103,6 +3149,9 @@
                       "opacity": {
                         "$ref": "#/definitions/Channel"
                       },
+                      "orientation": {
+                        "$ref": "#/definitions/Orientation"
+                      },
                       "outerRadius": {
                         "type": "number"
                       },
@@ -3149,6 +3198,9 @@
                             },
                             "opacity": {
                               "$ref": "#/definitions/Channel"
+                            },
+                            "orientation": {
+                              "$ref": "#/definitions/Orientation"
                             },
                             "outerRadius": {
                               "type": "number"
@@ -3465,6 +3517,9 @@
             "linkingId": {
               "type": "string"
             },
+            "orientation": {
+              "$ref": "#/definitions/Orientation"
+            },
             "spacing": {
               "type": "number"
             },
@@ -3555,6 +3610,9 @@
         },
         "opacity": {
           "$ref": "#/definitions/Channel"
+        },
+        "orientation": {
+          "$ref": "#/definitions/Orientation"
         },
         "outerRadius": {
           "type": "number"
@@ -3796,6 +3854,9 @@
         "opacity": {
           "$ref": "#/definitions/Channel"
         },
+        "orientation": {
+          "$ref": "#/definitions/Orientation"
+        },
         "outerRadius": {
           "type": "number"
         },
@@ -3918,6 +3979,9 @@
                   "opacity": {
                     "$ref": "#/definitions/Channel"
                   },
+                  "orientation": {
+                    "$ref": "#/definitions/Orientation"
+                  },
                   "outerRadius": {
                     "type": "number"
                   },
@@ -3964,6 +4028,9 @@
                         },
                         "opacity": {
                           "$ref": "#/definitions/Channel"
+                        },
+                        "orientation": {
+                          "$ref": "#/definitions/Orientation"
                         },
                         "outerRadius": {
                           "type": "number"

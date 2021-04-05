@@ -1,7 +1,7 @@
 import uuid from 'uuid';
 import { HiGlassSpec, Track } from './higlass.schema';
 import HiGlassSchema from './higlass.schema.json';
-import { Assembly, AxisPosition, Domain } from './gosling.schema';
+import { Assembly, AxisPosition, Domain, Orientation } from './gosling.schema';
 import { getNumericDomain } from './utils/scales';
 import { RelativePosition } from './utils/bounding-box';
 import { validateSpec } from './utils/validate';
@@ -34,6 +34,7 @@ const getViewTemplate = (assembly?: string) => {
  */
 export class HiGlassModel {
     private assembly?: Assembly;
+    private orientation?: Orientation;
     private hg: HiGlassSpec;
     constructor() {
         this.assembly = 'hg38';
@@ -57,6 +58,11 @@ export class HiGlassModel {
 
     public spec(): Readonly<HiGlassSpec> {
         return this.hg;
+    }
+
+    public setViewOrientation(orientation?: Orientation) {
+        this.orientation = orientation;
+        return this;
     }
 
     public addDefaultView(assembly?: string) {
@@ -144,11 +150,15 @@ export class HiGlassModel {
         return this.hg.views[this.hg.views.length - 1];
     }
 
+    public getMainTrackPosition() {
+        return this.orientation === 'vertical' ? 'right' : 'center';
+    }
+
     /**
      * Get the last view that renders any visualization, so skiping empty tracks.
      */
     public getLastVisView() {
-        const vs = this.hg.views.filter(v => (v.tracks as any).center?.[0]?.type === 'combined');
+        const vs = this.hg.views.filter(v => (v.tracks as any)[this.getMainTrackPosition()]?.[0]?.type === 'combined');
         return vs[vs.length - 1];
     }
 
@@ -164,8 +174,8 @@ export class HiGlassModel {
         if (xDomain) {
             this.getLastView().initialXDomain = getNumericDomain(xDomain, this.getAssembly());
         }
-        if (yDomain) {
-            this.getLastView().initialYDomain = getNumericDomain(yDomain, this.getAssembly());
+        if (yDomain && this.orientation !== 'vertical') {
+            this.getLastView().initialYDomain = getNumericDomain(yDomain, this.getAssembly()); // TODO:
         }
         return this;
     }
@@ -203,12 +213,13 @@ export class HiGlassModel {
     }
 
     public setMainTrack(track: Track) {
-        if (!this.hg.views) return this;
-        this.getLastView().tracks.center = [
+        if (!this.getLastView()) return this;
+        this.getLastView().tracks[this.getMainTrackPosition()] = [
             {
                 type: 'combined',
-                width: track.width,
-                height: (track as any).height, // TODO:
+                // HiGlass: Having the same width between combined track and child track looks to result in incorrect scales
+                width: (track.width as any) - 1,
+                height: (track as any).height,
                 contents: [track]
             }
         ];
@@ -217,7 +228,7 @@ export class HiGlassModel {
 
     public addTrackToCombined(track: Track) {
         if (!this.getLastVisView()) return this;
-        (this.getLastVisView() as any).tracks.center[0].contents.push(track);
+        (this.getLastVisView() as any).tracks[this.getMainTrackPosition()][0]?.contents.push(track);
         return this;
     }
 

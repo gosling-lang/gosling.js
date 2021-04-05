@@ -119,10 +119,12 @@ export function convertToFlatTracks(spec: SingleView): Track[] {
  * @param callback
  */
 export function traverseToFixSpecDownstream(spec: GoslingSpec | SingleView, parentDef?: CommonViewDef | MultipleViews) {
+    // TODO: Instead of overriding props individually, use lodash.assign()
     if (parentDef) {
         // For assembly and layout, we use the ones defiend by the parents if missing
         if (spec.assembly === undefined) spec.assembly = parentDef.assembly;
         if (spec.layout === undefined) spec.layout = parentDef.layout;
+        if (spec.orientation === undefined) spec.orientation = parentDef.orientation;
         if (spec.static === undefined) spec.static = parentDef.static !== undefined ? parentDef.static : false;
         if (spec.xDomain === undefined) spec.xDomain = parentDef.xDomain;
         if (spec.linkingId === undefined) spec.linkingId = parentDef.linkingId;
@@ -134,6 +136,7 @@ export function traverseToFixSpecDownstream(spec: GoslingSpec | SingleView, pare
         // This means we are at the rool level, so assign default values if missing
         if (spec.assembly === undefined) spec.assembly = 'hg38';
         if (spec.layout === undefined) spec.layout = 'linear';
+        if (spec.orientation === undefined) spec.orientation = 'horizontal';
         if (spec.static === undefined) spec.static = false;
         if (spec.centerRadius === undefined) spec.centerRadius = DEFAULT_INNER_RADIUS_PROP;
         if (spec.spacing === undefined) spec.spacing = DEFAULT_VIEW_SPACING;
@@ -209,7 +212,15 @@ export function traverseToFixSpecDownstream(spec: GoslingSpec | SingleView, pare
              */
             if (!track.assembly) track.assembly = spec.assembly;
             if (!track.layout) track.layout = spec.layout;
+            if (!track.orientation) track.orientation = spec.orientation;
             if (track.static === undefined) track.static = spec.static !== undefined ? spec.static : false;
+
+            /**
+             * Orientation is only supported in 1D linear layouts
+             */
+            if ((track.layout === 'circular' || Is2DTrack(track)) && track.orientation === 'vertical') {
+                track.orientation = 'horizontal';
+            }
 
             /**
              * A track with 2D genomic coordinates is forced to use a linear layout
@@ -258,7 +269,7 @@ export function traverseToFixSpecDownstream(spec: GoslingSpec | SingleView, pare
                  * Add axis to the first track
                  */
                 if ((IsSingleTrack(track) || IsOverlaidTrack(track)) && IsChannelDeep(track.x) && !track.x.axis) {
-                    track.x.axis = 'top';
+                    track.x.axis = track.orientation === 'vertical' ? 'left' : 'top';
                 } else if (IsOverlaidTrack(track)) {
                     let isNone = false; // If there is at least one 'none' axis, should not render axis.
                     track.overlay.forEach(o => {
