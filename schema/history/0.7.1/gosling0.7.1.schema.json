@@ -393,11 +393,7 @@
           "type": "string"
         },
         "orientation": {
-          "enum": [
-            "horizontal",
-            "vertical"
-          ],
-          "type": "string"
+          "$ref": "#/definitions/Orientation"
         },
         "outerRadius": {
           "type": "number"
@@ -687,11 +683,7 @@
           "type": "string"
         },
         "orientation": {
-          "enum": [
-            "horizontal",
-            "vertical"
-          ],
-          "type": "string"
+          "$ref": "#/definitions/Orientation"
         },
         "spacing": {
           "type": "number"
@@ -1326,11 +1318,7 @@
           "type": "string"
         },
         "orientation": {
-          "enum": [
-            "horizontal",
-            "vertical"
-          ],
-          "type": "string"
+          "$ref": "#/definitions/Orientation"
         },
         "spacing": {
           "type": "number"
@@ -1449,6 +1437,13 @@
       ],
       "type": "object"
     },
+    "Orientation": {
+      "enum": [
+        "horizontal",
+        "vertical"
+      ],
+      "type": "string"
+    },
     "OverlaidTrack": {
       "additionalProperties": false,
       "description": "Superposing multiple tracks.",
@@ -1500,11 +1495,7 @@
           "$ref": "#/definitions/Channel"
         },
         "orientation": {
-          "enum": [
-            "horizontal",
-            "vertical"
-          ],
-          "type": "string"
+          "$ref": "#/definitions/Orientation"
         },
         "outerRadius": {
           "type": "number"
@@ -1554,11 +1545,7 @@
                 "$ref": "#/definitions/Channel"
               },
               "orientation": {
-                "enum": [
-                  "horizontal",
-                  "vertical"
-                ],
-                "type": "string"
+                "$ref": "#/definitions/Orientation"
               },
               "outerRadius": {
                 "type": "number"
@@ -1853,11 +1840,7 @@
           "$ref": "#/definitions/Channel"
         },
         "orientation": {
-          "enum": [
-            "horizontal",
-            "vertical"
-          ],
-          "type": "string"
+          "$ref": "#/definitions/Orientation"
         },
         "outerRadius": {
           "type": "number"
@@ -1980,11 +1963,7 @@
                 "$ref": "#/definitions/Channel"
               },
               "orientation": {
-                "enum": [
-                  "horizontal",
-                  "vertical"
-                ],
-                "type": "string"
+                "$ref": "#/definitions/Orientation"
               },
               "outerRadius": {
                 "type": "number"
@@ -2034,11 +2013,7 @@
                       "$ref": "#/definitions/Channel"
                     },
                     "orientation": {
-                      "enum": [
-                        "horizontal",
-                        "vertical"
-                      ],
-                      "type": "string"
+                      "$ref": "#/definitions/Orientation"
                     },
                     "outerRadius": {
                       "type": "number"
@@ -2416,11 +2391,7 @@
           "type": "string"
         },
         "orientation": {
-          "enum": [
-            "horizontal",
-            "vertical"
-          ],
-          "type": "string"
+          "$ref": "#/definitions/Orientation"
         },
         "spacing": {
           "type": "number"
@@ -2528,11 +2499,7 @@
               "$ref": "#/definitions/Channel"
             },
             "orientation": {
-              "enum": [
-                "horizontal",
-                "vertical"
-              ],
-              "type": "string"
+              "$ref": "#/definitions/Orientation"
             },
             "outerRadius": {
               "type": "number"
@@ -2655,11 +2622,7 @@
                     "$ref": "#/definitions/Channel"
                   },
                   "orientation": {
-                    "enum": [
-                      "horizontal",
-                      "vertical"
-                    ],
-                    "type": "string"
+                    "$ref": "#/definitions/Orientation"
                   },
                   "outerRadius": {
                     "type": "number"
@@ -2709,11 +2672,7 @@
                           "$ref": "#/definitions/Channel"
                         },
                         "orientation": {
-                          "enum": [
-                            "horizontal",
-                            "vertical"
-                          ],
-                          "type": "string"
+                          "$ref": "#/definitions/Orientation"
                         },
                         "outerRadius": {
                           "type": "number"
@@ -3066,11 +3025,7 @@
               "$ref": "#/definitions/Channel"
             },
             "orientation": {
-              "enum": [
-                "horizontal",
-                "vertical"
-              ],
-              "type": "string"
+              "$ref": "#/definitions/Orientation"
             },
             "outerRadius": {
               "type": "number"
@@ -3195,11 +3150,7 @@
                         "$ref": "#/definitions/Channel"
                       },
                       "orientation": {
-                        "enum": [
-                          "horizontal",
-                          "vertical"
-                        ],
-                        "type": "string"
+                        "$ref": "#/definitions/Orientation"
                       },
                       "outerRadius": {
                         "type": "number"
@@ -3249,11 +3200,7 @@
                               "$ref": "#/definitions/Channel"
                             },
                             "orientation": {
-                              "enum": [
-                                "horizontal",
-                                "vertical"
-                              ],
-                              "type": "string"
+                              "$ref": "#/definitions/Orientation"
                             },
                             "outerRadius": {
                               "type": "number"
@@ -3571,11 +3518,7 @@
               "type": "string"
             },
             "orientation": {
-              "enum": [
-                "horizontal",
-                "vertical"
-              ],
-              "type": "string"
+              "$ref": "#/definitions/Orientation"
             },
             "spacing": {
               "type": "number"
@@ -3669,11 +3612,7 @@
           "$ref": "#/definitions/Channel"
         },
         "orientation": {
-          "enum": [
-            "horizontal",
-            "vertical"
-          ],
-          "type": "string"
+          "$ref": "#/definitions/Orientation"
         },
         "outerRadius": {
           "type": "number"
@@ -3916,11 +3855,7 @@
           "$ref": "#/definitions/Channel"
         },
         "orientation": {
-          "enum": [
-            "horizontal",
-            "vertical"
-          ],
-          "type": "string"
+          "$ref": "#/definitions/Orientation"
         },
         "outerRadius": {
           "type": "number"
@@ -4045,11 +3980,7 @@
                     "$ref": "#/definitions/Channel"
                   },
                   "orientation": {
-                    "enum": [
-                      "horizontal",
-                      "vertical"
-                    ],
-                    "type": "string"
+                    "$ref": "#/definitions/Orientation"
                   },
                   "outerRadius": {
                     "type": "number"
@@ -4099,11 +4030,7 @@
                           "$ref": "#/definitions/Channel"
                         },
                         "orientation": {
-                          "enum": [
-                            "horizontal",
-                            "vertical"
-                          ],
-                          "type": "string"
+                          "$ref": "#/definitions/Orientation"
                         },
                         "outerRadius": {
                           "type": "number"

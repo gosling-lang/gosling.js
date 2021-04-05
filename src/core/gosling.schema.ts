@@ -40,11 +40,12 @@ export interface MultipleViews extends CommonViewDef {
 }
 
 export type Layout = 'linear' | 'circular';
+export type Orientation = 'horizontal' | 'vertical';
 export type Assembly = 'hg38' | 'hg19' | 'hg18' | 'hg17' | 'hg16' | 'mm10' | 'mm9' | 'unknown';
 
 export interface CommonViewDef {
     layout?: Layout;
-    orientation?: 'horizontal' | 'vertical';
+    orientation?: Orientation;
 
     spacing?: number;
     static?: boolean;
@@ -52,7 +53,7 @@ export interface CommonViewDef {
     assembly?: Assembly;
 
     // TODO: Change to domain?
-    xDomain?: DomainInterval | DomainChrInterval | DomainChr; // We can support `DomainGene` as well later.
+    xDomain?: DomainInterval | DomainChrInterval | DomainChr;
     linkingId?: string;
     xAxis?: AxisPosition; // not supported currently
 
