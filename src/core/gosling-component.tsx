@@ -53,7 +53,8 @@ export function GoslingComponent(props: GoslingCompProps) {
                         padding: 60,
                         background: 'white',
                         width: size.width + 120,
-                        height: size.height + 120
+                        height: size.height + 120,
+                        textAlign: 'left'
                     }}
                 >
                     <div
