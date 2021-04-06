@@ -122,7 +122,7 @@ Find out more at [conventional-changelog/commitlint](https://github.com/conventi
 ## Team
 - Sehi L'Yi (<sehi_lyi@hms.harvard.edu>)
 - Qianwen Wang (<qianwen_wang@hms.harvard.edu>)
-- Fritz Lekschas (<lekschas@seas.harvard.edu>)
+- Fritz Lekschas ([@flekschas](https://twitter.com/flekschas) | [lekschas.de](https://lekschas.de))
 - Nils Gehlenborg (<nils@hms.harvard.edu>)
 
 ## Citation
