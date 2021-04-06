@@ -126,12 +126,17 @@ Find out more at [conventional-changelog/commitlint](https://github.com/conventi
 - Nils Gehlenborg (<nils@hms.harvard.edu>)
 
 ## Citation
+
+[L'Yi et al., 2021. “Gosling: A Grammar-based Toolkit for Scalable and Interactive Genomics Data Visualization.”](https://osf.io/6evmb)
+
 ```bib
 @article{lyi2021gosling,
   title={Gosling: A Grammar-based Toolkit for Scalable and Interactive Genomics Data Visualization},
   author={Sehi L'Yi and Qianwen Wang and Fritz Lekschas and Nils Gehlenborg},
   year={2021},
-  publisher={OSF Preprints}
+  publisher={OSF Preprints},
+  url={osf.io/6evmb},
+  doi={10.31219/osf.io/6evmb},
 }
 ```
 
