@@ -4,11 +4,12 @@ import { validateTrack } from '../core/utils/validate';
 import { shareScaleAcrossTracks } from '../core/utils/scales';
 import { resolveSuperposedTracks } from '../core/utils/overlay';
 import { SingleTrack, OverlaidTrack, Datum } from '../core/gosling.schema';
-import { IsDataDeepTileset, IsIncludeFilter, IsOneOfFilter, IsRangeFilter } from '../core/gosling.schema.guards';
+import { IsDataDeepTileset } from '../core/gosling.schema.guards';
 import { Tooltip } from '../gosling-tooltip';
 import { sampleSize } from 'lodash';
 import { scaleLinear } from 'd3-scale';
 import colorToHex from '../core/utils/color-to-hex';
+import { filterData } from '../core/utils/data-transform';
 
 // For using libraries, refer to https://github.com/higlass/higlass/blob/f82c0a4f7b2ab1c145091166b0457638934b15f3/app/scripts/configs/available-for-plugins.js
 function GoslingTrack(HGC: any, ...args: any[]): any {
@@ -418,32 +419,13 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                  * Data Transformation
                  */
                 if (resolved.dataTransform !== undefined) {
-                    // Data filters
-                    resolved.dataTransform.filter?.forEach(filter => {
-                        const { field, not } = filter;
-                        if (IsOneOfFilter(filter)) {
-                            const { oneOf } = filter;
-                            tile.tileData.tabularDataFiltered = tile.tileData.tabularDataFiltered.filter((d: Datum) => {
-                                return not
-                                    ? (oneOf as any[]).indexOf(d[field]) === -1
-                                    : (oneOf as any[]).indexOf(d[field]) !== -1;
-                            });
-                        } else if (IsRangeFilter(filter)) {
-                            const { inRange } = filter;
-                            tile.tileData.tabularDataFiltered = tile.tileData.tabularDataFiltered.filter((d: Datum) => {
-                                return not
-                                    ? !(inRange[0] <= d[field] && d[field] <= inRange[1])
-                                    : inRange[0] <= d[field] && d[field] <= inRange[1];
-                            });
-                        } else if (IsIncludeFilter(filter)) {
-                            const { include } = filter;
-                            tile.tileData.tabularDataFiltered = tile.tileData.tabularDataFiltered.filter((d: Datum) => {
-                                return not ? `${d[field]}`.includes(include) : !`${d[field]}`.includes(include);
-                            });
-                        }
-                    });
+                    // Apply filters
+                    tile.tileData.tabularDataFiltered = filterData(
+                        resolved.dataTransform.filter,
+                        tile.tileData.tabularDataFiltered
+                    );
 
-                    // Stacking values
+                    // Mark displacement
                     resolved.dataTransform.stack?.forEach(stack => {
                         const { boundingBox, type, newField } = stack;
                         const { startField, endField } = boundingBox;

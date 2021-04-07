@@ -80,7 +80,9 @@ export function goslingToHiGlass(
             hgTrack.data = {
                 ...gosTrack.data,
                 // Additionally, add assembly, otherwise, a default build is used
-                assembly
+                assembly,
+                // Add a data transformation spec so that the fetcher can properly sample datasets
+                filter: (gosTrack as any).dataTransform?.filter
             };
         }
 

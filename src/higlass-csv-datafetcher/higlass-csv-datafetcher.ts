@@ -2,7 +2,8 @@ import { dsvFormat as d3dsvFormat } from 'd3-dsv';
 import { GET_CHROM_SIZES } from '../core/utils/assembly';
 import fetch from 'cross-fetch'; // TODO: Can we remove this and make the test working
 import { sampleSize } from 'lodash';
-import { Assembly } from '../core/gosling.schema';
+import { Assembly, FilterTransform } from '../core/gosling.schema';
+import { filterData } from '../core/utils/data-transform';
 
 /**
  * HiGlass data fetcher specific for Gosling which ultimately will accept any types of data other than CSV files.
@@ -21,12 +22,14 @@ function CSVDataFetcher(HGC: any, ...args: any): any {
         private chromSizes: any;
         private values: any;
         private assembly: Assembly;
+        private filter: FilterTransform[] | undefined;
 
         constructor(params: any[]) {
             const [dataConfig] = params;
             this.dataConfig = dataConfig;
             this.tilesetInfoLoading = false;
             this.assembly = this.dataConfig.assembly;
+            this.filter = this.dataConfig.filter;
 
             if (!dataConfig.url) {
                 console.error('Please provide the `url` of the data');
@@ -248,7 +251,7 @@ function CSVDataFetcher(HGC: any, ...args: any): any {
                 const maxX = tsInfo.min_pos[0] + (x + 1) * tileWidth;
 
                 // filter the data so that visible data is sent to tracks
-                const tabularData = this.values.filter((d: any) => {
+                let tabularData = this.values.filter((d: any) => {
                     if (this.dataConfig.genomicFields) {
                         return this.dataConfig.genomicFields.find((g: any) => minX < d[g] && d[g] <= maxX);
                     } else {
@@ -259,6 +262,9 @@ function CSVDataFetcher(HGC: any, ...args: any): any {
                         return allGenomicFields.find((g: any) => minX < d[g] && d[g] <= maxX);
                     }
                 });
+
+                // filter data based on the `DataTransform` spec
+                tabularData = filterData(this.filter, tabularData);
 
                 const sizeLimit = this.dataConfig.sampleLength ?? 1000;
                 return {
