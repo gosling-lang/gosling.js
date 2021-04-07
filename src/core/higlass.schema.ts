@@ -1,7 +1,7 @@
 // HiGlass Specification Should be consistent to the following scheme:
 // https://github.com/higlass/higlass/blob/develop/app/schema.json (2ced037)
 
-import { Assembly } from './gosling.schema';
+import { Assembly, FilterTransform } from './gosling.schema';
 
 // The json schema is converted to TypeScript codes using:
 // https://github.com/quicktype/quicktype
@@ -111,6 +111,10 @@ export interface Data {
     // csv
     quantitativeFields?: string[];
     assembly?: Assembly;
+
+    // Option to filter datasets
+    // This has been added to filter data properly during fetching tiles
+    filter?: FilterTransform[];
 }
 
 export interface Overlay {
