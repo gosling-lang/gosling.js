@@ -1,3 +1,12 @@
+## [0.7.3](https://github.com/gosling-lang/gosling.js/compare/v0.7.2...v0.7.3) (2021-04-07)
+
+
+### Features
+
+* support tooltips in linear rect and point ([#337](https://github.com/gosling-lang/gosling.js/issues/337)) ([c8d64c1](https://github.com/gosling-lang/gosling.js/commit/c8d64c1e07d47288bde766f4a690287981847e0d))
+
+
+
 ## [0.7.2](https://github.com/gosling-lang/gosling.js/compare/v0.7.1...v0.7.2) (2021-04-07)
 
 
