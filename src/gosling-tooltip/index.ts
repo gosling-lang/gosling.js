@@ -10,6 +10,6 @@ export type Tooltip = {
         y: number;
         width: number;
         height: number;
-        type: 'rect'; // ...
+        type: 'rect' | 'point'; // ...
     };
 };

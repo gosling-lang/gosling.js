@@ -4,8 +4,9 @@ import { getValueUsingChannel } from '../gosling.schema.guards';
 import colorToHex from '../utils/color-to-hex';
 import { cartesianToPolar } from '../utils/polar';
 import { PIXIVisualProperty } from '../visual-property.schema';
+import { Tooltip, TOOLTIP_MOUSEOVER_MARGIN as G } from '../../gosling-tooltip';
 
-export function drawPoint(g: PIXI.Graphics, model: GoslingTrackModel) {
+export function drawPoint(trackInfo: any, g: PIXI.Graphics, model: GoslingTrackModel) {
     /* track spec */
     const spec = model.spec();
 
@@ -80,6 +81,16 @@ export function drawPoint(g: PIXI.Graphics, model: GoslingTrackModel) {
                 g.beginFill(colorToHex(color), actualOpacity);
                 // console.log(rowCategory, rowPosition, rowHeight, cy);
                 g.drawCircle(cx, rowPosition + rowHeight - cy, size);
+
+                /* Tooltip data */
+                const _cy = rowPosition + rowHeight - cy;
+                trackInfo.tooltips.push({
+                    datum: d,
+                    isMouseOver: (x: number, y: number) =>
+                        Math.sqrt(Math.abs(x - cx) * Math.abs(x - cx) + Math.abs(y - _cy) * Math.abs(y - _cy)) <
+                        size + G,
+                    markInfo: { x: cx, y: rowPosition + rowHeight - cy, width: size, height: size, type: 'point' }
+                } as Tooltip);
             }
         });
     });
