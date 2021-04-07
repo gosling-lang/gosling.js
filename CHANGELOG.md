@@ -1,3 +1,20 @@
+## [0.7.2](https://github.com/gosling-lang/gosling.js/compare/v0.7.1...v0.7.2) (2021-04-07)
+
+
+### Bug Fixes
+
+* text-align left to gosling component ([#332](https://github.com/gosling-lang/gosling.js/issues/332)) ([0e2247d](https://github.com/gosling-lang/gosling.js/commit/0e2247df99d8bd174d7050a14da801a367dcefcc))
+
+
+### Features
+
+* add mark displacement options ([#320](https://github.com/gosling-lang/gosling.js/issues/320)) ([8ead36b](https://github.com/gosling-lang/gosling.js/commit/8ead36b71dd4183d00f87dada5ee637e41a88d31))
+* examples with overriding view props in tracks ([#327](https://github.com/gosling-lang/gosling.js/issues/327)) ([3458712](https://github.com/gosling-lang/gosling.js/commit/345871269e10f10384f45606300c5940b9186e65))
+* support higlass matrix visualization ([#321](https://github.com/gosling-lang/gosling.js/issues/321)) ([1094142](https://github.com/gosling-lang/gosling.js/commit/10941428cac4d2db9071771079eb2ae2f020daa3))
+* vertical track ([#325](https://github.com/gosling-lang/gosling.js/issues/325)) ([f0b95f9](https://github.com/gosling-lang/gosling.js/commit/f0b95f91f94ecdc29a637229ed3dd4e55f538dd9))
+
+
+
 ## [0.7.1](https://github.com/gosling-lang/gosling.js/compare/v0.7.0...v0.7.1) (2021-03-06)
 
 
