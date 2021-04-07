@@ -670,10 +670,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
         }
 
         getMouseOverHtml(mouseX: number, mouseY: number) {
-            const isMouseOverPrepared = false;
-            if (!isMouseOverPrepared) {
-                return;
-            }
+            const isMouseOverPrepared = false; // TODO: We do not support this yet.
 
             if (!this.tilesetInfo || !this.tooltips) {
                 // Do not have enough information to show tooltips
@@ -691,7 +688,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
 
             if (tooltip) {
                 // render mouse over effect
-                if (tooltip.markInfo.type === 'rect') {
+                if (tooltip.markInfo.type === 'rect' && isMouseOverPrepared) {
                     this.mouseOverGraphics.lineStyle(
                         1,
                         colorToHex('black'),

@@ -74,7 +74,8 @@ export const examples: ReadonlyArray<{
     },
     {
         name: 'Matrix',
-        spec: EX_SPEC_MATRIX
+        spec: EX_SPEC_MATRIX,
+        hidden: true
     },
     {
         name: 'Custom Gene Annotation',
@@ -85,7 +86,7 @@ export const examples: ReadonlyArray<{
         spec: EX_SPEC_CIRCOS
     },
     {
-        name: 'Comparison of Micro-C and Hi-C for HFFc6',
+        name: 'Comparative Matrices (Micro-C vs. Hi-C)',
         spec: EX_SPEC_MATRIX_HFFC6
     },
     {
