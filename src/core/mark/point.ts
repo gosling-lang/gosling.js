@@ -83,14 +83,16 @@ export function drawPoint(trackInfo: any, g: PIXI.Graphics, model: GoslingTrackM
                 g.drawCircle(cx, rowPosition + rowHeight - cy, size);
 
                 /* Tooltip data */
-                const _cy = rowPosition + rowHeight - cy;
-                trackInfo.tooltips.push({
-                    datum: d,
-                    isMouseOver: (x: number, y: number) =>
-                        Math.sqrt(Math.abs(x - cx) * Math.abs(x - cx) + Math.abs(y - _cy) * Math.abs(y - _cy)) <
-                        size + G,
-                    markInfo: { x: cx, y: rowPosition + rowHeight - cy, width: size, height: size, type: 'point' }
-                } as Tooltip);
+                if (trackInfo?.tooltips) {
+                    const _cy = rowPosition + rowHeight - cy;
+                    trackInfo.tooltips.push({
+                        datum: d,
+                        isMouseOver: (x: number, y: number) =>
+                            Math.sqrt(Math.abs(x - cx) * Math.abs(x - cx) + Math.abs(y - _cy) * Math.abs(y - _cy)) <
+                            size + G,
+                        markInfo: { x: cx, y: rowPosition + rowHeight - cy, width: size, height: size, type: 'point' }
+                    } as Tooltip);
+                }
             }
         });
     });
