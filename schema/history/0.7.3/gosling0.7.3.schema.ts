@@ -403,8 +403,10 @@ export interface MatrixData {
     url: string;
 }
 
+// !!! Transformation is applied in the same order (i.e., filter, log, and then stack)
 export interface DataTransform {
     filter?: FilterTransform[];
+    log?: LogTransform[];
     stack?: DisplacementTransform[]; // Mainly for internal usage. // We can call this 'dynamic' data transform.
 }
 
@@ -426,6 +428,13 @@ export interface OneOfFilter {
     field: string;
     oneOf: string[] | number[];
     not?: boolean;
+}
+
+export type LogBase = number | 'e';
+export interface LogTransform {
+    field: string;
+    base?: LogBase; // If not specified, 10 is used
+    newField?: string; // If specified, store transformed values in a new field.
 }
 
 export interface DisplacementTransform {

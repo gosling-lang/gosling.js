@@ -9,31 +9,6 @@ export const EX_SPEC_VISUAL_ENCODING: GoslingSpec = {
     centerRadius: 0.8,
     xDomain: { chromosome: '1', interval: [1, 3000500] },
     views: [
-        // {
-        //     linkingId: 'detail',
-        //     mark: 'bar',
-        //     x: {
-        //         field: 'position',
-        //         type: 'genomic'
-        //     },
-        //     y: { field: 'peak', type: 'quantitative' },
-        //     style: { outline: '#20102F' },
-        //     width: 400,
-        //     height: 40,
-        //     tracks: [
-        //         {
-        //             data: {
-        //                 url:
-        //                     'https://resgen.io/api/v1/tileset_info/?d=Tt_OvGliQwmVFqKe1gMIow',
-        //                 type: 'vector',
-        //                 column: 'position',
-        //                 value: 'peak'
-        //             },
-        //             title: 'Excitatory neurons',
-        //             color: { value: '#F29B67' }
-        //         },
-        //     ]
-        // },
         {
             tracks: [
                 {
@@ -58,6 +33,10 @@ export const EX_SPEC_VISUAL_ENCODING: GoslingSpec = {
                     },
                     row: { field: 'sample', type: 'nominal', legend: true },
                     color: { field: 'peak', type: 'quantitative' },
+                    tooltip: [
+                        { field: 'peak', type: 'quantitative', alt: 'Value' },
+                        { field: 'sample', type: 'nominal', alt: 'Sample' }
+                    ],
                     width: 600,
                     height: 130
                 }

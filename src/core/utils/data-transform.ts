@@ -1,4 +1,4 @@
-import { SingleTrack, Datum, FilterTransform } from '../gosling.schema';
+import { SingleTrack, Datum, FilterTransform, DataTransform } from '../gosling.schema';
 import {
     getChannelKeysByAggregateFnc,
     getChannelKeysByType,
@@ -9,8 +9,7 @@ import {
 } from '../gosling.schema.guards';
 
 /**
- * Apply data transformation and return the transformed.
- * This currently only consider `filter` specs.
+ * Apply filter
  */
 export function filterData(spec: FilterTransform[] | undefined, data: Datum[]): Datum[] {
     let output: Datum[] = Array.from(data);
@@ -34,6 +33,27 @@ export function filterData(spec: FilterTransform[] | undefined, data: Datum[]): 
                 return not ? `${d[field]}`.includes(include) : !`${d[field]}`.includes(include);
             });
         }
+    });
+    return output;
+}
+
+/**
+ * Calculate new data, like log transformation.
+ */
+export function calculateData(spec: DataTransform | undefined, data: Datum[]): Datum[] {
+    let output: Datum[] = Array.from(data);
+    spec?.log?.forEach(log => {
+        const { field, base, newField } = log;
+        output = output.map(d => {
+            if (+d[field]) {
+                if (base === 'e') {
+                    d[newField ?? field] = Math.log(+d[field]);
+                } else {
+                    d[newField ?? field] = Math.log(+d[field]) / Math.log(base ?? 10);
+                }
+            }
+            return d;
+        });
     });
     return output;
 }
