@@ -452,6 +452,12 @@
           },
           "type": "array"
         },
+        "log": {
+          "items": {
+            "$ref": "#/definitions/LogTransform"
+          },
+          "type": "array"
+        },
         "stack": {
           "items": {
             "$ref": "#/definitions/DisplacementTransform"
@@ -1099,6 +1105,35 @@
         "circular"
       ],
       "type": "string"
+    },
+    "LogBase": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "const": "e",
+          "type": "string"
+        }
+      ]
+    },
+    "LogTransform": {
+      "additionalProperties": false,
+      "properties": {
+        "base": {
+          "$ref": "#/definitions/LogBase"
+        },
+        "field": {
+          "type": "string"
+        },
+        "newField": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "field"
+      ],
+      "type": "object"
     },
     "LogicalOperation": {
       "enum": [

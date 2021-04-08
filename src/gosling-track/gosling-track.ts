@@ -9,7 +9,7 @@ import { Tooltip } from '../gosling-tooltip';
 import { sampleSize } from 'lodash';
 import { scaleLinear } from 'd3-scale';
 import colorToHex from '../core/utils/color-to-hex';
-import { filterData } from '../core/utils/data-transform';
+import { calculateData, filterData } from '../core/utils/data-transform';
 
 // For using libraries, refer to https://github.com/higlass/higlass/blob/f82c0a4f7b2ab1c145091166b0457638934b15f3/app/scripts/configs/available-for-plugins.js
 function GoslingTrack(HGC: any, ...args: any[]): any {
@@ -419,9 +419,15 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                  * Data Transformation
                  */
                 if (resolved.dataTransform !== undefined) {
-                    // Apply filters
+                    // Filter
                     tile.tileData.tabularDataFiltered = filterData(
                         resolved.dataTransform.filter,
+                        tile.tileData.tabularDataFiltered
+                    );
+
+                    // Calculate
+                    tile.tileData.tabularDataFiltered = calculateData(
+                        resolved.dataTransform,
                         tile.tileData.tabularDataFiltered
                     );
 
@@ -713,7 +719,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                         .map(
                             (d: any) =>
                                 '<tr>' +
-                                `<td style='padding: 4px 8px'>${d.field}</td>` +
+                                `<td style='padding: 4px 8px'>${d.alt ?? d.field}</td>` +
                                 `<td style='padding: 4px 8px'><b>${tooltip.datum[d.field]}</b></td>` +
                                 '</tr>'
                         )
