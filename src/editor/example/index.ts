@@ -2,6 +2,7 @@ import { GoslingSpec } from '../../core/gosling.schema';
 import { EX_SPEC_LAYOUT_AND_ARRANGEMENT_1, EX_SPEC_LAYOUT_AND_ARRANGEMENT_2 } from './layout-and-arrangement';
 import { EX_SPEC_VISUAL_ENCODING, EX_SPEC_VISUAL_ENCODING_CIRCULAR } from './visual-encoding';
 import { EX_SPEC_MATRIX } from './matrix';
+import { EX_SPEC_CANCER_VARIANT } from './cancer-variant';
 import { EX_SPEC_MATRIX_HFFC6 } from './matrix-hffc6';
 import { EX_SPEC_LINKING } from './visual-linking';
 import { EX_SPEC_BASIC_SEMANTIC_ZOOM } from './basic-semantic-zoom';
@@ -69,7 +70,7 @@ export const examples: ReadonlyArray<{
         spec: EX_SPEC_SEMANTIC_ZOOM
     },
     {
-        name: 'Cyto Bands',
+        name: 'Ideograms',
         spec: EX_SPEC_CYTOBANDS
     },
     {
@@ -82,16 +83,12 @@ export const examples: ReadonlyArray<{
         spec: EX_SPEC_GENE_ANNOTATION
     },
     {
-        name: 'Circos',
-        spec: EX_SPEC_CIRCOS
-    },
-    {
         name: 'Comparative Matrices (Micro-C vs. Hi-C)',
         spec: EX_SPEC_MATRIX_HFFC6
     },
     {
-        name: "Gremlin (O'Brien et al. 2010)",
-        spec: EX_SPEC_GREMLIN
+        name: 'Circos',
+        spec: EX_SPEC_CIRCOS
     },
     {
         name: 'SARS-CoV-2',
@@ -107,7 +104,16 @@ export const examples: ReadonlyArray<{
         hidden: true
     },
     {
+        name: "Gremlin (O'Brien et al. 2010)",
+        spec: EX_SPEC_GREMLIN
+    },
+    {
         name: 'GIVE (Cao et al. 2018)',
         spec: EX_SPEC_GIVE
+    },
+    {
+        name: 'Breast Cancer Variant (Staaf et al. 2019)',
+        spec: EX_SPEC_CANCER_VARIANT,
+        underDevelopment: true
     }
 ].filter(d => !d.hidden);
