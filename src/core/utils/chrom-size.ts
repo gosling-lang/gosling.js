@@ -237,10 +237,4 @@ export type Chromosome =
     | 'chr22'
     | 'chrX'
     | 'chrY'
-    | 'chrM'
-    | 'x'
-    | 'y'
-    | 'm'
-    | 'chrx'
-    | 'chry'
-    | 'chrm';
+    | 'chrM';

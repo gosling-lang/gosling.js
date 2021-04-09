@@ -4,7 +4,7 @@ import { IsChannelDeep } from '../gosling.schema.guards';
 
 describe('Genomic domain', () => {
     it('With Chromosome', () => {
-        expect(getNumericDomain({ chromosome: '' })).toEqual(getNumericDomain({ chromosome: '1' }));
+        expect(getNumericDomain({ chromosome: '1' })).toEqual(getNumericDomain({ chromosome: '1' }));
         expect(getNumericDomain({ chromosome: '1' })).toEqual(getNumericDomain({ chromosome: 'chr1' }));
     });
 });

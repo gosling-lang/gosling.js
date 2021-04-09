@@ -1,4 +1,4 @@
-import { Chromosome } from "./utils/chrom-size"
+import { Chromosome } from './utils/chrom-size';
 
 /* ----------------------------- ROOT SPEC ----------------------------- */
 export type GoslingSpec = RootSpecWithSingleView | RootSpecWithMultipleViews;
