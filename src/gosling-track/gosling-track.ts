@@ -125,12 +125,66 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             });
         }
 
+        /**
+         * This function reorganize the tileset information so that it can be more conveniently managed afterwards.
+         */
+        reorganizeTileInfo() {
+            this.visibleAndFetchedTiles()?.forEach((t: any) => {
+                // tileData: this data we get is both an array and an object somehow...
+                if (t.tileData.tabularData) {
+                    t.tabularData = t.tileData.tabularData;
+                }
+            });
+        }
+
+        /**
+         * Combile multiple tiles into a single large tile.
+         * This is sometimes necessary, for example, when applying a displacement algorithm
+         */
+        combineAllTiles() {
+            // TODO:
+            const allowCombine = false;
+            if (!allowCombine) return;
+            if (this.originalSpec.dataTransform?.stack && this.visibleAndFetchedTiles()?.[0].tileData) {
+                const tiles = this.visibleAndFetchedTiles();
+
+                const keys = Object.keys({ ...tiles?.[0].tileData }).filter(d => !+d);
+
+                const OriTileDataObj = {} as any;
+                keys.forEach(k => {
+                    OriTileDataObj[k] = tiles?.[0].tileData[k];
+                });
+
+                const combinedTile = tiles?.[0];
+                tiles?.forEach((tile: any, i: number) => {
+                    // TODO: This is only supported for tabular datasets yet
+                    if (i !== 0 && combinedTile.tileData && tile.tileData) {
+                        combinedTile.tileData = [...combinedTile.tileData, ...tile.tileData];
+                        tile.skip = true;
+                    } else {
+                        tile.skip = false;
+                    }
+                });
+
+                keys.forEach(k => {
+                    combinedTile[k] = OriTileDataObj[k];
+                });
+                // this.tilesetInfo.tile_size *= tiles.length;
+                // console.log('combinedTile', combinedTile);
+            }
+        }
+
         preprocessAllTiles() {
             const gms: GoslingTrackModel[] = [];
+
+            // this.reorganizeTileInfo();
+
+            this.combineAllTiles();
+
             this.visibleAndFetchedTiles().forEach((tile: any) => {
                 // tile preprocessing is done only once per tile
                 const tileModels = this.preprocessTile(tile);
-                tileModels.forEach((m: GoslingTrackModel) => {
+                tileModels?.forEach((m: GoslingTrackModel) => {
                     gms.push(m);
                 });
             });
@@ -164,6 +218,11 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
          * Return the generated gosling track model.
          */
         preprocessTile(tile: any) {
+            if (tile.skip) {
+                tile.goslingModels = undefined;
+                return;
+            }
+
             if (tile.goslingModels && tile.goslingModels.length !== 0) {
                 // already have the gosling models constructed
                 return tile.goslingModels;
@@ -419,18 +478,6 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                  * Data Transformation
                  */
                 if (resolved.dataTransform !== undefined) {
-                    // Filter
-                    tile.tileData.tabularDataFiltered = filterData(
-                        resolved.dataTransform.filter,
-                        tile.tileData.tabularDataFiltered
-                    );
-
-                    // Calculate
-                    tile.tileData.tabularDataFiltered = calculateData(
-                        resolved.dataTransform,
-                        tile.tileData.tabularDataFiltered
-                    );
-
                     // Mark displacement
                     resolved.dataTransform.stack?.forEach(stack => {
                         const { boundingBox, type, newField } = stack;
@@ -535,6 +582,18 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                             });
                         }
                     });
+
+                    // Filter
+                    tile.tileData.tabularDataFiltered = filterData(
+                        resolved.dataTransform.filter,
+                        tile.tileData.tabularDataFiltered
+                    );
+
+                    // Calculate
+                    tile.tileData.tabularDataFiltered = calculateData(
+                        resolved.dataTransform,
+                        tile.tileData.tabularDataFiltered
+                    );
                 }
 
                 // Send data preview to the editor so that it can be shown to users.

@@ -12,6 +12,7 @@ import { EX_SPEC_SARS_COV_2 } from './sars-cov-2';
 import { EX_SPEC_CIRCOS } from './circos';
 import { EX_SPEC_GREMLIN } from './gremlin';
 import { EX_SPEC_GENE_ANNOTATION } from './gene-annotation';
+import { EX_SPEC_GENE_TRANSCRIPT } from './gene-transcript';
 import { EX_SPEC_SEMANTIC_ZOOM } from './semantic-zoom';
 import { EX_SPEC_GIVE } from './give';
 import { EX_SPEC_CORCES_ET_AL } from './corces';
@@ -115,5 +116,11 @@ export const examples: ReadonlyArray<{
         name: 'Breast Cancer Variant (Staaf et al. 2019)',
         spec: EX_SPEC_CANCER_VARIANT,
         underDevelopment: true
+    },
+    {
+        name: 'Gene Transcripts',
+        spec: EX_SPEC_GENE_TRANSCRIPT,
+        underDevelopment: true,
+        forceShow: true
     }
 ].filter(d => !d.hidden);

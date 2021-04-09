@@ -403,11 +403,11 @@ export interface MatrixData {
     url: string;
 }
 
-// !!! Transformation is applied in the same order (i.e., filter, log, and then stack)
+// !!! Transformation is applied in the same order (i.e., stack, filter, and then log)
 export interface DataTransform {
+    stack?: DisplacementTransform[]; // Mainly for internal usage. // We can call this 'dynamic' data transform.
     filter?: FilterTransform[];
     log?: LogTransform[];
-    stack?: DisplacementTransform[]; // Mainly for internal usage. // We can call this 'dynamic' data transform.
 }
 
 export type FilterTransform = OneOfFilter | RangeFilter | IncludeFilter;
