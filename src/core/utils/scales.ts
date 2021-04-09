@@ -9,6 +9,7 @@ import {
     IsChannelDeep
 } from '../gosling.schema.guards';
 import { GET_CHROM_SIZES } from './assembly';
+import { Chromosome } from './chrom-size';
 
 /**
  * Get a numeric domain based on a domain specification.
@@ -17,7 +18,7 @@ import { GET_CHROM_SIZES } from './assembly';
 export function getNumericDomain(domain: Domain, assembly?: Assembly) {
     if ('chromosome' in domain) {
         if (domain.chromosome.includes('chr')) {
-            domain.chromosome = domain.chromosome.replace('chr', '');
+            domain.chromosome = domain.chromosome.replace('chr', '') as Chromosome;
         }
         if (!Object.keys(GET_CHROM_SIZES().interval).find(chr => chr === `chr${domain.chromosome}`)) {
             // we did not find any, so use '1' by default

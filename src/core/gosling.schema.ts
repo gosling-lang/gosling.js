@@ -1,3 +1,5 @@
+import { Chromosome } from './utils/chrom-size';
+
 /* ----------------------------- ROOT SPEC ----------------------------- */
 export type GoslingSpec = RootSpecWithSingleView | RootSpecWithMultipleViews;
 
@@ -295,11 +297,11 @@ export type PREDEFINED_COLORS = 'viridis' | 'grey' | 'spectral' | 'warm' | 'civi
 
 export interface DomainChr {
     // For showing a certain chromosome
-    chromosome: string;
+    chromosome: Chromosome;
 }
 export interface DomainChrInterval {
     // For showing a certain interval in a chromosome
-    chromosome: string;
+    chromosome: Chromosome;
     interval: [number, number];
 }
 export interface DomainInterval {
