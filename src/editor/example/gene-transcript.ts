@@ -1,10 +1,11 @@
 import { GoslingSpec } from '../../core/gosling.schema';
+import { GOSLING_PUBLIC_DATA } from './gosling-data';
 
 export const EX_SPEC_GENE_TRANSCRIPT: GoslingSpec = {
     alignment: 'overlay',
     xDomain: { chromosome: '3', interval: [142500000, 143000000] },
     data: {
-        url: 'https://cgap-higlass.com/api/v1/tileset_info/?d=transcripts_hg38',
+        url: GOSLING_PUBLIC_DATA.transcript,
         type: 'beddb',
         genomicFields: [
             { index: 1, name: 'start' },

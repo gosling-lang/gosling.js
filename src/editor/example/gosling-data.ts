@@ -10,5 +10,6 @@ export const GOSLING_PUBLIC_DATA = {
     matrix: 'https://server.gosling-lang.org/api/v1/tileset_info/?d=leung2015-hg38',
     matrixMicroC: 'https://server.gosling-lang.org/api/v1/tileset_info/?d=hffc6-microc-hg38',
     matrixHiC: 'https://server.gosling-lang.org/api/v1/tileset_info/?d=hffc6-hic-hg38',
-    interaction: 'https://resgen.io/api/v1/tileset_info/?d=JzccFAJUQEiz-0188xaWZg'
+    interaction: 'https://resgen.io/api/v1/tileset_info/?d=JzccFAJUQEiz-0188xaWZg',
+    transcript: 'https://server.gosling-lang.org/api/v1/tileset_info/?d=transcript-hg38-beddb'
 };
