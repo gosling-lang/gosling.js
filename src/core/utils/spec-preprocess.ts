@@ -7,7 +7,7 @@ import {
     Track,
     CommonViewDef,
     MultipleViews,
-    DisplacementTransform
+    DisplaceTransform
 } from '../gosling.schema';
 import {
     IsTemplate,
@@ -179,7 +179,7 @@ export function traverseToFixSpecDownstream(spec: GoslingSpec | SingleView, pare
                     const startField = track.x.field;
                     const endField = track.xe.field;
                     const padding = track.displacement.padding;
-                    const stackTransform: DisplacementTransform = {
+                    const stackTransform: DisplaceTransform = {
                         newField,
                         boundingBox: { startField, endField, padding },
                         type: 'pile'
@@ -189,12 +189,12 @@ export function traverseToFixSpecDownstream(spec: GoslingSpec | SingleView, pare
                     track.dataTransform = track.dataTransform
                         ? {
                               ...track.dataTransform,
-                              stack: track.dataTransform.stack
-                                  ? [...track.dataTransform.stack, stackTransform]
+                              displace: track.dataTransform.displace
+                                  ? [...track.dataTransform.displace, stackTransform]
                                   : [stackTransform]
                           }
                         : {
-                              stack: [stackTransform]
+                              displace: [stackTransform]
                           };
                     track.row = { field: newField, type: 'nominal' };
                 } else if (track.displacement?.type === 'spread') {

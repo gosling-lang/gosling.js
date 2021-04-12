@@ -6,7 +6,7 @@ import { resolveSuperposedTracks } from '../core/utils/overlay';
 import { SingleTrack, OverlaidTrack, Datum } from '../core/gosling.schema';
 import { IsDataDeepTileset } from '../core/gosling.schema.guards';
 import { Tooltip } from '../gosling-tooltip';
-import { sampleSize } from 'lodash';
+import { sampleSize, uniqBy } from 'lodash';
 import { scaleLinear } from 'd3-scale';
 import colorToHex from '../core/utils/color-to-hex';
 import { calculateData, filterData } from '../core/utils/data-transform';
@@ -21,6 +21,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
     class GoslingTrackClass extends HGC.tracks.BarTrack {
         private originalSpec: SingleTrack | OverlaidTrack;
         private tooltips: Tooltip[];
+        private tileSize: number;
         // TODO: add members that are used explicitly in the code
 
         constructor(params: any[]) {
@@ -29,6 +30,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
 
             this.context = context;
             this.originalSpec = this.options.spec;
+            this.tileSize = this.tilesetInfo?.tile_size ?? 1024;
 
             const { valid, errorMessages } = validateTrack(this.originalSpec);
 
@@ -125,12 +127,93 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             });
         }
 
+        /**
+         * This function reorganize the tileset information so that it can be more conveniently managed afterwards.
+         */
+        reorganizeTileInfo() {
+            // console.log(this.visibleAndFetchedTiles(), this.tilesetInfo.tile_size);
+            const tiles = this.visibleAndFetchedTiles();
+
+            this.tileSize = this.tilesetInfo?.tile_size ?? 1024;
+
+            tiles.forEach((t: any) => {
+                // A new object to store all datasets
+                t.gos = {};
+
+                // ! `tileData` is an array-like object
+                const keys = Object.keys(t.tileData).filter(d => !+d && d !== '0'); // ignore array indexes
+
+                // Store objects first
+                keys.forEach(k => {
+                    t.gos[k] = t.tileData[k];
+                });
+
+                // Store raw data
+                t.gos.raw = Array.from(t.tileData);
+            });
+        }
+
+        /**
+         * Check whether tiles should be merged.
+         */
+        shouldMergeTiles() {
+            return (
+                this.originalSpec.dataTransform?.displace &&
+                this.visibleAndFetchedTiles()?.[0]?.tileData &&
+                // we do not need to combine tiles w/ multivec, vector, matrix
+                !this.visibleAndFetchedTiles()?.[0]?.tileData.dense
+            );
+        }
+
+        /**
+         * Combile multiple tiles into a single large tile.
+         * This is sometimes necessary, for example, when applying a displacement algorithm.
+         */
+        combineAllTiles() {
+            if (!this.shouldMergeTiles()) {
+                // This means we do not need to merge tiles
+                return;
+            }
+
+            const tiles = this.visibleAndFetchedTiles();
+
+            if (!tiles || tiles.length === 0) {
+                // Does not make sense to merge tiles
+                return;
+            }
+
+            // Increase the size of tiles by length
+            this.tileSize = (this.tilesetInfo?.tile_size ?? 1024) * tiles.length;
+
+            let newData: Datum[] = [];
+
+            tiles.forEach((t: any, i: number) => {
+                // Merge data
+                newData = [...newData, ...t.tileData];
+
+                // Flag to force using only one tile
+                t.mergedToAnotherTile = i !== 0;
+            });
+
+            tiles[0].gos.raw = newData;
+
+            // Remove duplicated if possible
+            if (tiles[0].gos.raw[0]?.uid) {
+                tiles[0].gos.raw = uniqBy(tiles[0].gos.raw, 'uid');
+            }
+        }
+
         preprocessAllTiles() {
             const gms: GoslingTrackModel[] = [];
+
+            this.reorganizeTileInfo();
+
+            this.combineAllTiles();
+
             this.visibleAndFetchedTiles().forEach((tile: any) => {
                 // tile preprocessing is done only once per tile
                 const tileModels = this.preprocessTile(tile);
-                tileModels.forEach((m: GoslingTrackModel) => {
+                tileModels?.forEach((m: GoslingTrackModel) => {
                     gms.push(m);
                 });
             });
@@ -164,6 +247,11 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
          * Return the generated gosling track model.
          */
         preprocessTile(tile: any) {
+            if (tile.mergedToAnotherTile) {
+                tile.goslingModels = [];
+                return;
+            }
+
             if (tile.goslingModels && tile.goslingModels.length !== 0) {
                 // already have the gosling models constructed
                 return tile.goslingModels;
@@ -179,7 +267,6 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
 
             resolveSuperposedTracks(spec).forEach(resolved => {
                 if (resolved.mark === 'brush') {
-                    // TODO:
                     // we do not draw rectangular brush ourselves, higlass does.
                     return;
                 }
@@ -189,7 +276,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                     return;
                 }
 
-                if (!tile.tileData.tabularData) {
+                if (!tile.gos.tabularData) {
                     if (!IsDataDeepTileset(resolved.data)) {
                         console.warn('No data is specified');
                         return;
@@ -205,15 +292,15 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                         }
 
                         const bin = resolved.data.binSize ?? 1;
-                        const tileSize = this.tilesetInfo.tile_size;
+                        const tileSize = this.tileSize;
 
                         const { tileX, tileWidth } = this.getTilePosAndDimensions(
-                            tile.tileData.zoomLevel,
-                            tile.tileData.tilePos,
+                            tile.gos.zoomLevel,
+                            tile.gos.tilePos,
                             tileSize
                         );
 
-                        const numericValues = tile.tileData.dense;
+                        const numericValues = tile.gos.dense;
                         const numOfGenomicPositions = tileSize;
                         const tileUnitSize = tileWidth / tileSize;
 
@@ -269,7 +356,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                             }
                         });
 
-                        tile.tileData.tabularData = tabularData;
+                        tile.gos.tabularData = tabularData;
                     } else if (resolved.data.type === 'multivec') {
                         if (!resolved.data.row || !resolved.data.column || !resolved.data.value) {
                             console.warn(
@@ -279,17 +366,17 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                         }
 
                         const bin = resolved.data.binSize ?? 1;
-                        const tileSize = this.tilesetInfo.tile_size;
+                        const tileSize = this.tileSize;
 
                         const { tileX, tileWidth } = this.getTilePosAndDimensions(
-                            tile.tileData.zoomLevel,
-                            tile.tileData.tilePos,
+                            tile.gos.zoomLevel,
+                            tile.gos.tilePos,
                             tileSize
                         );
 
-                        const numOfTotalCategories = tile.tileData.shape[0];
-                        const numericValues = tile.tileData.dense;
-                        const numOfGenomicPositions = tile.tileData.shape[1];
+                        const numOfTotalCategories = tile.gos.shape[0];
+                        const numericValues = tile.gos.dense;
+                        const numOfGenomicPositions = tile.gos.shape[1];
                         const tileUnitSize = tileWidth / tileSize;
 
                         const rowName = resolved.data.row;
@@ -351,12 +438,12 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                             });
                         });
 
-                        tile.tileData.tabularData = tabularData;
+                        tile.gos.tabularData = tabularData;
                     } else if (resolved.data.type === 'beddb') {
                         const { genomicFields, exonIntervalFields, valueFields } = resolved.data;
 
-                        tile.tileData.tabularData = [];
-                        tile.tileData.forEach((d: any) => {
+                        tile.gos.tabularData = [];
+                        tile.gos.raw.forEach((d: any) => {
                             const { chrOffset, fields } = d;
 
                             const datum: { [k: string]: number | string } = {};
@@ -369,7 +456,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                                 datum[v.name] = v.type === 'quantitative' ? +fields[v.index] : fields[v.index];
                             });
 
-                            tile.tileData.tabularData.push({
+                            tile.gos.tabularData.push({
                                 ...datum,
                                 type: 'gene' // this should be described in the spec
                             });
@@ -383,7 +470,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                                     const ee = exonEndStrs[i];
 
                                     // exon
-                                    tile.tileData.tabularData.push({
+                                    tile.gos.tabularData.push({
                                         ...datum,
                                         [exonStartField.name]: +es + chrOffset,
                                         [exonEndField.name]: +ee + chrOffset,
@@ -393,7 +480,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                                     // intron
                                     if (i + 1 < exonStartStrs.length) {
                                         const nextEs = exonStartStrs[i + 1];
-                                        tile.tileData.tabularData.push({
+                                        tile.gos.tabularData.push({
                                             ...datum,
                                             [exonStartField.name]: +ee + chrOffset,
                                             [exonEndField.name]: +nextEs + chrOffset,
@@ -404,36 +491,33 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                             }
                         });
                         /// DEBUG
-                        // console.log(tile.tileData.tabularData);
-                        // console.log(new Set(tile.tileData.tabularData.map((d: any) => d.significance)));
+                        // console.log(tile.gos.tabularData);
+                        // console.log(new Set(tile.gos.tabularData.map((d: any) => d.significance)));
                     }
                 }
 
                 /// DEBUG
-                // console.log(tile.tileData.tabularData);
+                // console.log(tile.gos.tabularData);
                 ///
 
-                tile.tileData.tabularDataFiltered = Array.from(tile.tileData.tabularData);
+                tile.gos.tabularDataFiltered = Array.from(tile.gos.tabularData);
 
                 /*
                  * Data Transformation
                  */
                 if (resolved.dataTransform !== undefined) {
                     // Filter
-                    tile.tileData.tabularDataFiltered = filterData(
+                    tile.gos.tabularDataFiltered = filterData(
                         resolved.dataTransform.filter,
-                        tile.tileData.tabularDataFiltered
+                        tile.gos.tabularDataFiltered
                     );
 
                     // Calculate
-                    tile.tileData.tabularDataFiltered = calculateData(
-                        resolved.dataTransform,
-                        tile.tileData.tabularDataFiltered
-                    );
+                    tile.gos.tabularDataFiltered = calculateData(resolved.dataTransform, tile.gos.tabularDataFiltered);
 
                     // Mark displacement
-                    resolved.dataTransform.stack?.forEach(stack => {
-                        const { boundingBox, type, newField } = stack;
+                    resolved.dataTransform.displace?.forEach(dis => {
+                        const { boundingBox, type, newField } = dis;
                         const { startField, endField } = boundingBox;
 
                         let padding = 0; // This is a pixel value.
@@ -442,7 +526,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                         }
 
                         // Check whether we have sufficient information.
-                        const base = tile.tileData.tabularDataFiltered;
+                        const base = tile.gos.tabularDataFiltered;
                         if (base && base.length > 0) {
                             if (
                                 !Object.keys(base[0]).find(d => d === startField) ||
@@ -454,6 +538,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                         }
 
                         if (type === 'pile') {
+                            const { maxRows } = dis;
                             const boundingBoxes: { start: number; end: number; row: number }[] = [];
 
                             base.sort(
@@ -465,8 +550,8 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                                 const overlapped = boundingBoxes.filter(
                                     box =>
                                         (box.start === start && end === box.end) ||
-                                        (box.start < start && start < box.end) ||
-                                        (box.start < end && end < box.end) ||
+                                        (box.start <= start && start < box.end) ||
+                                        (box.start < end && end <= box.end) ||
                                         (start < box.start && box.end < end)
                                 );
 
@@ -483,7 +568,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                                 // row index starts from zero
                                 const row: number = overlapped.length === 0 ? 0 : lowestNonOverlappedRow;
 
-                                d[newField] = `${row}`;
+                                d[newField] = `${maxRows && maxRows <= row ? maxRows - 1 : row}`;
 
                                 boundingBoxes.push({ start, end, row });
                             });
@@ -545,14 +630,14 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                     /*eslint-enable */
                     if (pubsub) {
                         const NUM_OF_ROWS_IN_PREVIEW = 100;
-                        const numOrRows = tile.tileData.tabularData.length;
+                        const numOrRows = tile.gos.tabularData.length;
                         pubsub.publish('data-preview', {
                             id: this.context.id,
                             dataConfig: JSON.stringify({ data: resolved.data }),
                             data:
                                 NUM_OF_ROWS_IN_PREVIEW > numOrRows
-                                    ? tile.tileData.tabularData
-                                    : sampleSize(tile.tileData.tabularData, NUM_OF_ROWS_IN_PREVIEW)
+                                    ? tile.gos.tabularData
+                                    : sampleSize(tile.gos.tabularData, NUM_OF_ROWS_IN_PREVIEW)
                             // ...
                         });
                     }
@@ -561,7 +646,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                 }
 
                 // Construct separate gosling models for individual tiles
-                const gm = new GoslingTrackModel(resolved, tile.tileData.tabularDataFiltered);
+                const gm = new GoslingTrackModel(resolved, tile.gos.tabularDataFiltered);
 
                 // Add a track model to the tile object
                 tile.goslingModels.push(gm);
@@ -585,20 +670,17 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             if (!this.tilesetInfo) return [null, null];
 
             const { tileX, tileWidth } = this.getTilePosAndDimensions(
-                tile.tileData.zoomLevel,
-                tile.tileData.tilePos,
-                this.tilesetInfo.bins_per_dimension || this.tilesetInfo.tile_size
+                tile.gos.zoomLevel,
+                tile.gos.tilePos,
+                this.tilesetInfo.bins_per_dimension || this.tilesetInfo?.tile_size
             );
 
             const tileXScale = scaleLinear()
-                .domain([0, this.tilesetInfo.tile_size || this.tilesetInfo.bins_per_dimension])
+                .domain([0, this.tilesetInfo?.tile_size || this.tilesetInfo?.bins_per_dimension])
                 .range([tileX, tileX + tileWidth]);
 
             const start = Math.max(0, Math.round(tileXScale.invert(this._xScale.invert(visible[0]))));
-            const end = Math.min(
-                tile.tileData.dense.length,
-                Math.round(tileXScale.invert(this._xScale.invert(visible[1])))
-            );
+            const end = Math.min(tile.gos.dense.length, Math.round(tileXScale.invert(this._xScale.invert(visible[1]))));
 
             return [start, end];
         }

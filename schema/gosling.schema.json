@@ -501,6 +501,12 @@
     "DataTransform": {
       "additionalProperties": false,
       "properties": {
+        "displace": {
+          "items": {
+            "$ref": "#/definitions/DisplaceTransform"
+          },
+          "type": "array"
+        },
         "filter": {
           "items": {
             "$ref": "#/definitions/FilterTransform"
@@ -510,12 +516,6 @@
         "log": {
           "items": {
             "$ref": "#/definitions/LogTransform"
-          },
-          "type": "array"
-        },
-        "stack": {
-          "items": {
-            "$ref": "#/definitions/DisplacementTransform"
           },
           "type": "array"
         }
@@ -531,22 +531,7 @@
       },
       "type": "object"
     },
-    "Displacement": {
-      "additionalProperties": false,
-      "properties": {
-        "padding": {
-          "type": "number"
-        },
-        "type": {
-          "$ref": "#/definitions/DisplacementType"
-        }
-      },
-      "required": [
-        "type"
-      ],
-      "type": "object"
-    },
-    "DisplacementTransform": {
+    "DisplaceTransform": {
       "additionalProperties": false,
       "properties": {
         "boundingBox": {
@@ -568,6 +553,9 @@
           ],
           "type": "object"
         },
+        "maxRows": {
+          "type": "number"
+        },
         "newField": {
           "type": "string"
         },
@@ -579,6 +567,21 @@
         "boundingBox",
         "type",
         "newField"
+      ],
+      "type": "object"
+    },
+    "Displacement": {
+      "additionalProperties": false,
+      "properties": {
+        "padding": {
+          "type": "number"
+        },
+        "type": {
+          "$ref": "#/definitions/DisplacementType"
+        }
+      },
+      "required": [
+        "type"
       ],
       "type": "object"
     },

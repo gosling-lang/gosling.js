@@ -1,12 +1,11 @@
 import { GoslingSpec } from '../../core/gosling.schema';
 import { EX_SPEC_LAYOUT_AND_ARRANGEMENT_1, EX_SPEC_LAYOUT_AND_ARRANGEMENT_2 } from './layout-and-arrangement';
 import { EX_SPEC_VISUAL_ENCODING, EX_SPEC_VISUAL_ENCODING_CIRCULAR } from './visual-encoding';
-import { EX_SPEC_MATRIX } from './matrix';
 import { EX_SPEC_CANCER_VARIANT } from './cancer-variant';
 import { EX_SPEC_MATRIX_HFFC6 } from './matrix-hffc6';
 import { EX_SPEC_LINKING } from './visual-linking';
 import { EX_SPEC_BASIC_SEMANTIC_ZOOM } from './basic-semantic-zoom';
-import { EX_SPEC_MARK_DISPLACEMENT } from './stack-marks';
+import { EX_SPEC_MARK_DISPLACEMENT } from './mark-displacement';
 import { EX_SPEC_CIRCULAR_OVERVIEW_LINEAR_DETAIL } from './circular-overview-linear-detail-views';
 import { EX_SPEC_SARS_COV_2 } from './sars-cov-2';
 import { EX_SPEC_CIRCOS } from './circos';
@@ -59,7 +58,8 @@ export const examples: ReadonlyArray<{
     },
     {
         name: 'Basic Example: Mark Displacement',
-        spec: EX_SPEC_MARK_DISPLACEMENT
+        spec: EX_SPEC_MARK_DISPLACEMENT,
+        forceShow: true
     },
     {
         name: 'Circular Overview + Linear Detail Views',
@@ -72,11 +72,6 @@ export const examples: ReadonlyArray<{
     {
         name: 'Ideograms',
         spec: EX_SPEC_CYTOBANDS
-    },
-    {
-        name: 'Matrix',
-        spec: EX_SPEC_MATRIX,
-        hidden: true
     },
     {
         name: 'Custom Gene Annotation',

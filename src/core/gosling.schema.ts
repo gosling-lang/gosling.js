@@ -169,6 +169,10 @@ export interface SingleTrack extends CommonTrackDef {
 export interface Displacement {
     type: DisplacementType;
     padding?: number; // A pixel value
+
+    // "pile" specific parameters (TODO: make this a separate interface)
+    // minRows?: number; // Specify at least how many rows should be generated (default: 0)
+    // maxRows?: number; // Specify maximum rows to be generated (default: `undefined` meaning no limit)
 }
 
 export type DisplacementType = 'pile' | 'spread';
@@ -405,11 +409,11 @@ export interface MatrixData {
     url: string;
 }
 
-// !!! Transformation is applied in the same order (i.e., filter, log, and then stack)
+// !!! Transformation is applied in the same order (i.e., stack, filter, and then log)
 export interface DataTransform {
     filter?: FilterTransform[];
     log?: LogTransform[];
-    stack?: DisplacementTransform[]; // Mainly for internal usage. // We can call this 'dynamic' data transform.
+    displace?: DisplaceTransform[]; // Mainly for internal usage. // We can call this 'dynamic' data transform.
 }
 
 export type FilterTransform = OneOfFilter | RangeFilter | IncludeFilter;
@@ -439,7 +443,7 @@ export interface LogTransform {
     newField?: string; // If specified, store transformed values in a new field.
 }
 
-export interface DisplacementTransform {
+export interface DisplaceTransform {
     // We could support different types of bounding boxes (e.g., using a center position and a size)
     boundingBox: {
         startField: string; // The name of a quantitative field that represents the start position
@@ -448,6 +452,9 @@ export interface DisplacementTransform {
     };
     type: DisplacementType;
     newField: string;
+
+    // "pile" specific parameters (TODO: make this a separate interface)
+    maxRows?: number; // Specify maximum rows to be generated (default: `undefined` meaning no limit)
 }
 
 /* ----------------------------- GLYPH (deprecated, but to be supported again) ----------------------------- */

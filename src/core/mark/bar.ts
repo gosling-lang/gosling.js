@@ -22,11 +22,7 @@ export function drawBar(trackInfo: any, tile: any, model: GoslingTrackModel) {
     const trackWidth = spec.width;
     const trackHeight = spec.height;
     const tileSize = trackInfo.tilesetInfo.tile_size;
-    const { tileX, tileWidth } = trackInfo.getTilePosAndDimensions(
-        tile.tileData.zoomLevel,
-        tile.tileData.tilePos,
-        tileSize
-    );
+    const { tileX, tileWidth } = trackInfo.getTilePosAndDimensions(tile.gos.zoomLevel, tile.gos.tilePos, tileSize);
     const zoomLevel =
         (model.getChannelScale('x') as any).invert(trackWidth) - (model.getChannelScale('x') as any).invert(0);
 

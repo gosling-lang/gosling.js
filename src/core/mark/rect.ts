@@ -17,11 +17,7 @@ export function drawRect(HGC: any, trackInfo: any, tile: any, model: GoslingTrac
     const trackWidth = trackInfo.dimensions[0];
     const trackHeight = trackInfo.dimensions[1];
     const tileSize = trackInfo.tilesetInfo.tile_size;
-    const { tileX, tileWidth } = trackInfo.getTilePosAndDimensions(
-        tile.tileData.zoomLevel,
-        tile.tileData.tilePos,
-        tileSize
-    );
+    const { tileX, tileWidth } = trackInfo.getTilePosAndDimensions(tile.gos.zoomLevel, tile.gos.tilePos, tileSize);
 
     /* circular parameters */
     const circular = spec.layout === 'circular';
