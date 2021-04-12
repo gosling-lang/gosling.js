@@ -169,7 +169,7 @@ export interface SingleTrack extends CommonTrackDef {
 export interface Displacement {
     type: DisplacementType;
     padding?: number; // A pixel value
-    
+
     // "pile" specific parameters (TODO: make this a separate interface)
     // minRows?: number; // Specify at least how many rows should be generated (default: 0)
     // maxRows?: number; // Specify maximum rows to be generated (default: `undefined` meaning no limit)

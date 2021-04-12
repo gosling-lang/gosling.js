@@ -21,6 +21,7 @@ export const EX_SPEC_GENE_TRANSCRIPT: GoslingSpec = {
         ],
         filter: [{ field: 'type', oneOf: ['gene'] }]
     },
+    title: 'hg38 | Transcript (Max. 15 Rows)',
     tracks: [
         {
             dataTransform: {
