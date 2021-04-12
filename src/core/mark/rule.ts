@@ -125,7 +125,7 @@ export function drawRule(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackMo
                 ///
 
                 let count = 0;
-                do {
+                while (curPos < Math.min(xe, trackWidth) && count < 100) {
                     const x0 = curPos;
                     const x1 = curPos + pSize;
                     const ym = rowPosition + rowHeight - y;
@@ -142,7 +142,7 @@ export function drawRule(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackMo
                     count++;
 
                     // saftly end before the visible position
-                } while (curPos < Math.min(xe, trackWidth) && count < 100);
+                }
             }
         });
     });

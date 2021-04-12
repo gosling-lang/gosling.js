@@ -158,7 +158,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
          */
         shouldMergeTiles() {
             return (
-                this.originalSpec.dataTransform?.stack &&
+                this.originalSpec.dataTransform?.displace &&
                 this.visibleAndFetchedTiles()?.[0]?.tileData &&
                 // we do not need to combine tiles w/ multivec, vector, matrix
                 !this.visibleAndFetchedTiles()?.[0]?.tileData.dense
@@ -506,9 +506,18 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                  * Data Transformation
                  */
                 if (resolved.dataTransform !== undefined) {
+                    // Filter
+                    tile.gos.tabularDataFiltered = filterData(
+                        resolved.dataTransform.filter,
+                        tile.gos.tabularDataFiltered
+                    );
+
+                    // Calculate
+                    tile.gos.tabularDataFiltered = calculateData(resolved.dataTransform, tile.gos.tabularDataFiltered);
+
                     // Mark displacement
-                    resolved.dataTransform.stack?.forEach(stack => {
-                        const { boundingBox, type, newField } = stack;
+                    resolved.dataTransform.displace?.forEach(dis => {
+                        const { boundingBox, type, newField } = dis;
                         const { startField, endField } = boundingBox;
 
                         let padding = 0; // This is a pixel value.
@@ -529,6 +538,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                         }
 
                         if (type === 'pile') {
+                            const { maxRows } = dis;
                             const boundingBoxes: { start: number; end: number; row: number }[] = [];
 
                             base.sort(
@@ -558,7 +568,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                                 // row index starts from zero
                                 const row: number = overlapped.length === 0 ? 0 : lowestNonOverlappedRow;
 
-                                d[newField] = `${row}`;
+                                d[newField] = `${maxRows && maxRows <= row ? maxRows - 1 : row}`;
 
                                 boundingBoxes.push({ start, end, row });
                             });
@@ -610,15 +620,6 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                             });
                         }
                     });
-
-                    // Filter
-                    tile.gos.tabularDataFiltered = filterData(
-                        resolved.dataTransform.filter,
-                        tile.gos.tabularDataFiltered
-                    );
-
-                    // Calculate
-                    tile.gos.tabularDataFiltered = calculateData(resolved.dataTransform, tile.gos.tabularDataFiltered);
                 }
 
                 // Send data preview to the editor so that it can be shown to users.

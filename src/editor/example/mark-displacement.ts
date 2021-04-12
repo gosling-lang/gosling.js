@@ -3,7 +3,7 @@ import { EX_SPEC_GENE_TRANSCRIPT } from './gene-transcript';
 import { GOSLING_PUBLIC_DATA } from './gosling-data';
 
 export const EX_SPEC_MARK_DISPLACEMENT: GoslingSpec = {
-    title: 'Mark Stacking',
+    title: 'Mark Displacement',
     subtitle: 'Reposition marks to address visual overlaps using `displacement` options',
     // static: true,
     spacing: 1,
@@ -41,7 +41,7 @@ export const EX_SPEC_MARK_DISPLACEMENT: GoslingSpec = {
                     },
                     dataTransform: {
                         filter: [{ field: 'significance', oneOf: ['Likely_benign'] }],
-                        stack: [
+                        displace: [
                             {
                                 boundingBox: { startField: 'start', endField: 'end', padding: 5 },
                                 type: 'spread',
@@ -87,7 +87,7 @@ export const EX_SPEC_MARK_DISPLACEMENT: GoslingSpec = {
                     },
                     dataTransform: {
                         filter: [{ field: 'significance', oneOf: ['Likely_benign'] }],
-                        stack: [
+                        displace: [
                             {
                                 boundingBox: { startField: 'start', endField: 'end', padding: 5 },
                                 type: 'spread',

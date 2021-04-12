@@ -2,7 +2,7 @@ import { GoslingSpec } from '../../core/gosling.schema';
 
 export const EX_SPEC_GENE_TRANSCRIPT: GoslingSpec = {
     alignment: 'overlay',
-    xDomain: { chromosome: '3', interval: [52168000, 52890000] },
+    xDomain: { chromosome: '3', interval: [142500000, 143000000] },
     data: {
         url: 'https://cgap-higlass.com/api/v1/tileset_info/?d=transcripts_hg38',
         type: 'beddb',
@@ -16,17 +16,20 @@ export const EX_SPEC_GENE_TRANSCRIPT: GoslingSpec = {
         ]
     },
     dataTransform: {
-        stack: [{ type: 'pile', boundingBox: { startField: 'start', endField: 'end' }, newField: 'row' }],
+        displace: [
+            { type: 'pile', boundingBox: { startField: 'start', endField: 'end' }, newField: 'row', maxRows: 15 }
+        ],
         filter: [{ field: 'type', oneOf: ['gene'] }]
     },
     tracks: [
         {
             dataTransform: {
-                stack: [
+                displace: [
                     {
                         type: 'pile',
                         boundingBox: { startField: 'start', endField: 'end' },
-                        newField: 'row'
+                        newField: 'row',
+                        maxRows: 15
                     }
                 ],
                 filter: [
@@ -45,11 +48,12 @@ export const EX_SPEC_GENE_TRANSCRIPT: GoslingSpec = {
         },
         {
             dataTransform: {
-                stack: [
+                displace: [
                     {
                         type: 'pile',
                         boundingBox: { startField: 'start', endField: 'end' },
-                        newField: 'row'
+                        newField: 'row',
+                        maxRows: 15
                     }
                 ],
                 filter: [{ field: 'type', oneOf: ['gene'] }]
@@ -70,11 +74,12 @@ export const EX_SPEC_GENE_TRANSCRIPT: GoslingSpec = {
         },
         {
             dataTransform: {
-                stack: [
+                displace: [
                     {
                         type: 'pile',
                         boundingBox: { startField: 'start', endField: 'end' },
-                        newField: 'row'
+                        newField: 'row',
+                        maxRows: 15
                     }
                 ],
                 filter: [
@@ -92,11 +97,12 @@ export const EX_SPEC_GENE_TRANSCRIPT: GoslingSpec = {
         },
         {
             dataTransform: {
-                stack: [
+                displace: [
                     {
                         type: 'pile',
                         boundingBox: { startField: 'start', endField: 'end' },
-                        newField: 'row'
+                        newField: 'row',
+                        maxRows: 15
                     }
                 ],
                 filter: [{ field: 'type', oneOf: ['exon'] }]
@@ -113,14 +119,18 @@ export const EX_SPEC_GENE_TRANSCRIPT: GoslingSpec = {
         },
         {
             dataTransform: {
-                stack: [
+                displace: [
                     {
                         type: 'pile',
                         boundingBox: { startField: 'start', endField: 'end' },
-                        newField: 'row'
+                        newField: 'row',
+                        maxRows: 15
                     }
                 ],
-                filter: [{ field: 'type', oneOf: ['gene'] }]
+                filter: [
+                    { field: 'type', oneOf: ['gene'] },
+                    { field: 'strand', oneOf: ['+'] }
+                ]
             },
             mark: 'rule',
             x: {
@@ -133,12 +143,41 @@ export const EX_SPEC_GENE_TRANSCRIPT: GoslingSpec = {
                 type: 'genomic'
             },
             style: {
-                // linePattern: { type: 'triangleRight', size: 5 }
+                linePattern: { type: 'triangleRight', size: 5 }
+            }
+        },
+        {
+            dataTransform: {
+                displace: [
+                    {
+                        type: 'pile',
+                        boundingBox: { startField: 'start', endField: 'end' },
+                        newField: 'row',
+                        maxRows: 15
+                    }
+                ],
+                filter: [
+                    { field: 'type', oneOf: ['gene'] },
+                    { field: 'strand', oneOf: ['-'] }
+                ]
+            },
+            mark: 'rule',
+            x: {
+                field: 'start',
+                type: 'genomic'
+            },
+            strokeWidth: { value: 3 },
+            xe: {
+                field: 'end',
+                type: 'genomic'
+            },
+            style: {
+                linePattern: { type: 'triangleRight', size: 5 }
             }
         }
     ],
     row: { field: 'row', type: 'nominal' },
-    color: { field: 'strand', type: 'nominal', domain: ['+', '-'], range: ['#7585FF', '#FF8A85'] },
+    color: { field: 'strand', type: 'nominal', domain: ['+', '-'], range: ['#0072B2', '#D45E00'] },
     visibility: [
         {
             operation: 'less-than',
@@ -149,6 +188,7 @@ export const EX_SPEC_GENE_TRANSCRIPT: GoslingSpec = {
         }
     ],
     opacity: { value: 0.8 },
+    style: { outline: 'black' },
     width: 700,
-    height: 400
+    height: 500
 };
