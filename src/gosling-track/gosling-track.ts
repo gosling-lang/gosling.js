@@ -30,7 +30,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
 
             this.context = context;
             this.originalSpec = this.options.spec;
-            this.tileSize = this.tilesetInfo?.tile_size ?? 256;
+            this.tileSize = this.tilesetInfo?.tile_size ?? 1024;
 
             const { valid, errorMessages } = validateTrack(this.originalSpec);
 
@@ -131,9 +131,10 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
          * This function reorganize the tileset information so that it can be more conveniently managed afterwards.
          */
         reorganizeTileInfo() {
+            // console.log(this.visibleAndFetchedTiles(), this.tilesetInfo.tile_size);
             const tiles = this.visibleAndFetchedTiles();
 
-            this.tileSize = this.tilesetInfo.tile_size ?? 256;
+            this.tileSize = this.tilesetInfo?.tile_size ?? 1024;
 
             tiles.forEach((t: any) => {
                 // A new object to store all datasets
@@ -149,9 +150,6 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
 
                 // Store raw data
                 t.gos.raw = Array.from(t.tileData);
-
-                // DEBUG
-                // console.log('reorganized', keys, t);
             });
         }
 
@@ -159,7 +157,12 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
          * Check whether tiles should be merged.
          */
         shouldMergeTiles() {
-            return this.originalSpec.dataTransform?.stack && this.visibleAndFetchedTiles()?.[0].tileData;
+            return (
+                this.originalSpec.dataTransform?.stack &&
+                this.visibleAndFetchedTiles()?.[0]?.tileData &&
+                // we do not need to combine tiles w/ multivec, vector, matrix
+                !this.visibleAndFetchedTiles()?.[0]?.tileData.dense
+            );
         }
 
         /**
@@ -180,7 +183,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             }
 
             // Increase the size of tiles by length
-            this.tileSize = (this.tilesetInfo.tile_size ?? 256) * tiles.length;
+            this.tileSize = (this.tilesetInfo?.tile_size ?? 1024) * tiles.length;
 
             let newData: Datum[] = [];
 
@@ -198,8 +201,6 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             if (tiles[0].gos.raw[0]?.uid) {
                 tiles[0].gos.raw = uniqBy(tiles[0].gos.raw, 'uid');
             }
-
-            // console.log('combinedTile', newData);
         }
 
         preprocessAllTiles() {
@@ -247,7 +248,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
          */
         preprocessTile(tile: any) {
             if (tile.mergedToAnotherTile) {
-                tile.goslingModels = undefined;
+                tile.goslingModels = [];
                 return;
             }
 
@@ -266,7 +267,6 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
 
             resolveSuperposedTracks(spec).forEach(resolved => {
                 if (resolved.mark === 'brush') {
-                    // TODO:
                     // we do not draw rectangular brush ourselves, higlass does.
                     return;
                 }
@@ -292,7 +292,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                         }
 
                         const bin = resolved.data.binSize ?? 1;
-                        const tileSize = this.tilesetInfo.tile_size;
+                        const tileSize = this.tileSize;
 
                         const { tileX, tileWidth } = this.getTilePosAndDimensions(
                             tile.gos.zoomLevel,
@@ -366,7 +366,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                         }
 
                         const bin = resolved.data.binSize ?? 1;
-                        const tileSize = this.tilesetInfo.tile_size;
+                        const tileSize = this.tileSize;
 
                         const { tileX, tileWidth } = this.getTilePosAndDimensions(
                             tile.gos.zoomLevel,
@@ -540,8 +540,8 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                                 const overlapped = boundingBoxes.filter(
                                     box =>
                                         (box.start === start && end === box.end) ||
-                                        (box.start < start && start < box.end) ||
-                                        (box.start < end && end < box.end) ||
+                                        (box.start <= start && start < box.end) ||
+                                        (box.start < end && end <= box.end) ||
                                         (start < box.start && box.end < end)
                                 );
 
@@ -671,11 +671,11 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             const { tileX, tileWidth } = this.getTilePosAndDimensions(
                 tile.gos.zoomLevel,
                 tile.gos.tilePos,
-                this.tilesetInfo.bins_per_dimension || this.tilesetInfo.tile_size
+                this.tilesetInfo.bins_per_dimension || this.tilesetInfo?.tile_size
             );
 
             const tileXScale = scaleLinear()
-                .domain([0, this.tilesetInfo.tile_size || this.tilesetInfo.bins_per_dimension])
+                .domain([0, this.tilesetInfo?.tile_size || this.tilesetInfo?.bins_per_dimension])
                 .range([tileX, tileX + tileWidth]);
 
             const start = Math.max(0, Math.round(tileXScale.invert(this._xScale.invert(visible[0]))));

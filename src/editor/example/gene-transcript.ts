@@ -16,7 +16,7 @@ export const EX_SPEC_GENE_TRANSCRIPT: GoslingSpec = {
         ]
     },
     dataTransform: {
-        stack: [{ type: 'pile', boundingBox: { startField: 'start', endField: 'end', padding: 15 }, newField: 'row' }],
+        stack: [{ type: 'pile', boundingBox: { startField: 'start', endField: 'end' }, newField: 'row' }],
         filter: [{ field: 'type', oneOf: ['gene'] }]
     },
     tracks: [
@@ -25,7 +25,7 @@ export const EX_SPEC_GENE_TRANSCRIPT: GoslingSpec = {
                 stack: [
                     {
                         type: 'pile',
-                        boundingBox: { startField: 'start', endField: 'end', padding: 15 },
+                        boundingBox: { startField: 'start', endField: 'end' },
                         newField: 'row'
                     }
                 ],
@@ -48,7 +48,7 @@ export const EX_SPEC_GENE_TRANSCRIPT: GoslingSpec = {
                 stack: [
                     {
                         type: 'pile',
-                        boundingBox: { startField: 'start', endField: 'end', padding: 15 },
+                        boundingBox: { startField: 'start', endField: 'end' },
                         newField: 'row'
                     }
                 ],
@@ -73,7 +73,7 @@ export const EX_SPEC_GENE_TRANSCRIPT: GoslingSpec = {
                 stack: [
                     {
                         type: 'pile',
-                        boundingBox: { startField: 'start', endField: 'end', padding: 15 },
+                        boundingBox: { startField: 'start', endField: 'end' },
                         newField: 'row'
                     }
                 ],
@@ -95,7 +95,7 @@ export const EX_SPEC_GENE_TRANSCRIPT: GoslingSpec = {
                 stack: [
                     {
                         type: 'pile',
-                        boundingBox: { startField: 'start', endField: 'end', padding: 15 },
+                        boundingBox: { startField: 'start', endField: 'end' },
                         newField: 'row'
                     }
                 ],
@@ -116,7 +116,7 @@ export const EX_SPEC_GENE_TRANSCRIPT: GoslingSpec = {
                 stack: [
                     {
                         type: 'pile',
-                        boundingBox: { startField: 'start', endField: 'end', padding: 15 },
+                        boundingBox: { startField: 'start', endField: 'end' },
                         newField: 'row'
                     }
                 ],
@@ -149,6 +149,6 @@ export const EX_SPEC_GENE_TRANSCRIPT: GoslingSpec = {
         }
     ],
     opacity: { value: 0.8 },
-    width: 800,
+    width: 700,
     height: 400
 };
