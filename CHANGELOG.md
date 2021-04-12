@@ -1,3 +1,15 @@
+## [0.7.4](https://github.com/gosling-lang/gosling.js/compare/v0.7.3...v0.7.4) (2021-04-12)
+
+
+### Features
+
+* consider filtering specs during fetching tilesets ([#339](https://github.com/gosling-lang/gosling.js/issues/339)) ([3b67a85](https://github.com/gosling-lang/gosling.js/commit/3b67a8551e162f77dc05ddbfa9fd6a38285d250c))
+* define type of `chromosome` in `domain` ([#348](https://github.com/gosling-lang/gosling.js/issues/348)) ([6ab6cf7](https://github.com/gosling-lang/gosling.js/commit/6ab6cf767785825ba46fe29fe1b25dadce4fe13c))
+* support log transformation ([#344](https://github.com/gosling-lang/gosling.js/issues/344)) ([b6155ce](https://github.com/gosling-lang/gosling.js/commit/b6155cea583417428f0a598a80616f89845298b2))
+* support piling up transcript annotations ([#346](https://github.com/gosling-lang/gosling.js/issues/346)) ([f61649b](https://github.com/gosling-lang/gosling.js/commit/f61649b9e5c999f9d2b3bd6720a52c71cb052a5f))
+
+
+
 ## [0.7.3](https://github.com/gosling-lang/gosling.js/compare/v0.7.2...v0.7.3) (2021-04-07)
 
 
