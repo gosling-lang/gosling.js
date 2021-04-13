@@ -135,7 +135,7 @@ export class HiGlassModel {
                 projectionFillColor: style?.color ?? '#777',
                 projectionStrokeColor: style?.stroke ?? '#777',
                 projectionFillOpacity: style?.opacity ?? 0.3,
-                projectionStrokeOpacity: 0,
+                projectionStrokeOpacity: style?.opacity ?? 0.3,
                 strokeWidth: style?.strokeWidth ?? 1,
                 startAngle: style?.startAngle,
                 endAngle: style?.endAngle,
