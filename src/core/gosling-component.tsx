@@ -38,7 +38,7 @@ export const GoslingComponent = forwardRef((props: GoslingCompProps, ref: any) =
 
         ref.current = {
             api: {
-                // TODO: Support assemblies
+                // TODO: Support assemblies (we can infer this from the spec)
                 zoomTo: (viewId: string, position: string) => {
                     // Accepted input: 'chr1' or 'chr1:1-1000'
                     if (!position.includes('chr')) {
