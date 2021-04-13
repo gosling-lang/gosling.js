@@ -1,3 +1,12 @@
+## [0.7.6](https://github.com/gosling-lang/gosling.js/compare/v0.7.5...v0.7.6) (2021-04-13)
+
+
+### Features
+
+* **api:** zoom to genomic position ([#356](https://github.com/gosling-lang/gosling.js/issues/356)) ([48f3311](https://github.com/gosling-lang/gosling.js/commit/48f331124fd92d4dd3f03b9c1d21ce4abe5eb1ce))
+
+
+
 ## [0.7.5](https://github.com/gosling-lang/gosling.js/compare/v0.7.4...v0.7.5) (2021-04-13)
 
 
