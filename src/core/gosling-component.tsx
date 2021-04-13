@@ -3,6 +3,8 @@
 import { HiGlassComponent } from 'higlass';
 import React, { useState, useEffect, useMemo, useRef, forwardRef } from 'react';
 import * as gosling from '..';
+import { View as HgView } from './higlass.schema';
+import { traverseViewsInViewConfig } from '../core/utils/view-config';
 
 /**
  * Register plugin tracks and data fetchers to HiGlass. This is necessary for the first time before using Gosling.
@@ -22,7 +24,7 @@ export const GoslingComponent = forwardRef((props: GoslingCompProps, ref: any) =
     const [size, setSize] = useState({ width: 200, height: 200 });
 
     // HiGlass API
-    const hgRef = useRef<any>(null); // TODO: any type
+    const hgRef = useRef<any>();
 
     // Just received a new Gosling spec.
     useEffect(() => {
@@ -35,12 +37,20 @@ export const GoslingComponent = forwardRef((props: GoslingCompProps, ref: any) =
 
         ref.current = {
             api: {
-                zoomToGene: (gene: string) => {
-                    console.warn(`hgRef.current.api.zoomToGene('viewId', '${gene}', 1000);`);
+                zoomToGene: (viewId: string, gene: string) => {
+                    hgRef?.current?.api?.zoomToGene(viewId, gene, 1000);
+                },
+                getViewIds: () => {
+                    if (!hs) return [];
+                    const ids: string[] = [];
+                    traverseViewsInViewConfig(hs, (view: HgView) => {
+                        if (view.uid) ids.push(view.uid);
+                    });
+                    return ids;
                 }
             }
         };
-    }, [ref]);
+    }, [ref, hgRef, hs]);
 
     useEffect(() => {
         if (gs) {

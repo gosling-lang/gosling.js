@@ -1,3 +1,4 @@
+import uuid from 'uuid';
 import { Track as HiGlassTrack } from './higlass.schema';
 import { HiGlassModel, HIGLASS_AXIS_SIZE } from './higlass-model';
 import { parseServerAndTilesetUidFromUrl } from './utils';
@@ -107,7 +108,7 @@ export function goslingToHiGlass(
             hgModel
                 .setViewOrientation(gosTrack.orientation) // TODO: Orientation should be assigned to 'individual' views
                 .setAssembly(assembly) // TODO: Assembly should be assigned to 'individual' views
-                .addDefaultView(assembly)
+                .addDefaultView(gosTrack.id ?? uuid.v1(), assembly)
                 .setDomain(xDomain, xDomain) // TODO:
                 .setMainTrack(hgTrack)
                 .addTrackSourceServers(server)
@@ -149,7 +150,7 @@ export function goslingToHiGlass(
         hgModel.validateSpec();
     } else if (firstResolvedSpec.mark === 'header') {
         // `text` tracks are used to show title and subtitle of the views
-        hgModel.addDefaultView().setLayout(layout);
+        hgModel.addDefaultView(gosTrack.id ?? uuid.v1()).setLayout(layout);
         if (typeof firstResolvedSpec.title === 'string') {
             hgModel.setTextTrack(bb.width, DEFAULT_TITLE_HEIGHT, firstResolvedSpec.title, 'black', 18, 'bold');
         }

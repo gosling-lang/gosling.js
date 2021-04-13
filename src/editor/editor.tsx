@@ -191,11 +191,6 @@ function Editor(props: any) {
     // const hgRef = useRef<any>();
     const gosRef = useRef<any>();
 
-    // TODO: Testing
-    useEffect(() => {
-        gosRef?.current?.api?.zoomToGene();
-    }, [gosRef.current]);
-
     /**
      * Editor mode
      */
