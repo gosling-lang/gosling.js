@@ -11,6 +11,12 @@ export const HIGLASS_AXIS_SIZE = 30;
 const getViewTemplate = (assembly?: string) => {
     return {
         genomePositionSearchBoxVisible: false,
+        genomePositionSearchBox: {
+            autocompleteServer: 'https://higlass.io/api/v1',
+            autocompleteId: 'P0PLbQMwTYGy-5uPIQid7A',
+            chromInfoServer: 'https://higlass.io/api/v1',
+            chromInfoId: assembly ?? 'hg38'
+        },
         layout: { w: 12, h: 12, x: 0, y: 0 },
         tracks: {
             top: [],
@@ -65,8 +71,8 @@ export class HiGlassModel {
         return this;
     }
 
-    public addDefaultView(assembly?: string) {
-        this.hg.views.push(JSON.parse(JSON.stringify({ ...getViewTemplate(assembly), uid: uuid.v1() })));
+    public addDefaultView(uid: string, assembly?: string) {
+        this.hg.views.push(JSON.parse(JSON.stringify({ ...getViewTemplate(assembly), uid })));
         return this;
     }
 

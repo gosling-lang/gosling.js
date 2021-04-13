@@ -438,6 +438,9 @@
         "height": {
           "type": "number"
         },
+        "id": {
+          "type": "string"
+        },
         "innerRadius": {
           "type": "number"
         },
@@ -1572,6 +1575,9 @@
         "height": {
           "type": "number"
         },
+        "id": {
+          "type": "string"
+        },
         "innerRadius": {
           "type": "number"
         },
@@ -1624,6 +1630,9 @@
               },
               "flipY": {
                 "type": "boolean"
+              },
+              "id": {
+                "type": "string"
               },
               "innerRadius": {
                 "type": "number"
@@ -1917,6 +1926,9 @@
         "height": {
           "type": "number"
         },
+        "id": {
+          "type": "string"
+        },
         "innerRadius": {
           "type": "number"
         },
@@ -2040,6 +2052,9 @@
               "height": {
                 "type": "number"
               },
+              "id": {
+                "type": "string"
+              },
               "innerRadius": {
                 "type": "number"
               },
@@ -2092,6 +2107,9 @@
                     },
                     "flipY": {
                       "type": "boolean"
+                    },
+                    "id": {
+                      "type": "string"
                     },
                     "innerRadius": {
                       "type": "number"
@@ -2576,6 +2594,9 @@
             "height": {
               "type": "number"
             },
+            "id": {
+              "type": "string"
+            },
             "innerRadius": {
               "type": "number"
             },
@@ -2699,6 +2720,9 @@
                   "height": {
                     "type": "number"
                   },
+                  "id": {
+                    "type": "string"
+                  },
                   "innerRadius": {
                     "type": "number"
                   },
@@ -2751,6 +2775,9 @@
                         },
                         "flipY": {
                           "type": "boolean"
+                        },
+                        "id": {
+                          "type": "string"
                         },
                         "innerRadius": {
                           "type": "number"
@@ -3102,6 +3129,9 @@
             "height": {
               "type": "number"
             },
+            "id": {
+              "type": "string"
+            },
             "innerRadius": {
               "type": "number"
             },
@@ -3227,6 +3257,9 @@
                       "height": {
                         "type": "number"
                       },
+                      "id": {
+                        "type": "string"
+                      },
                       "innerRadius": {
                         "type": "number"
                       },
@@ -3279,6 +3312,9 @@
                             },
                             "flipY": {
                               "type": "boolean"
+                            },
+                            "id": {
+                              "type": "string"
                             },
                             "innerRadius": {
                               "type": "number"
@@ -3689,6 +3725,9 @@
         "height": {
           "type": "number"
         },
+        "id": {
+          "type": "string"
+        },
         "innerRadius": {
           "type": "number"
         },
@@ -3932,6 +3971,9 @@
         "height": {
           "type": "number"
         },
+        "id": {
+          "type": "string"
+        },
         "innerRadius": {
           "type": "number"
         },
@@ -4057,6 +4099,9 @@
                   "height": {
                     "type": "number"
                   },
+                  "id": {
+                    "type": "string"
+                  },
                   "innerRadius": {
                     "type": "number"
                   },
@@ -4109,6 +4154,9 @@
                         },
                         "flipY": {
                           "type": "boolean"
+                        },
+                        "id": {
+                          "type": "string"
                         },
                         "innerRadius": {
                           "type": "number"

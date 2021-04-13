@@ -1,3 +1,4 @@
+import uuid from 'uuid';
 import { HiGlassModel } from './higlass-model';
 import { GET_CHROM_SIZES } from './utils/assembly';
 
@@ -9,7 +10,7 @@ describe('Should produce higlass model correctly', () => {
 
     it('Should set domain correctly', () => {
         const higlass = new HiGlassModel();
-        higlass.addDefaultView();
+        higlass.addDefaultView(uuid.v1());
         higlass.setDomain({ chromosome: '2' }, { chromosome: '2', interval: [100, 200] });
         expect(higlass.spec().views?.[0].initialXDomain).toEqual([
             GET_CHROM_SIZES().interval['chr2'][0] + 1,
@@ -21,7 +22,7 @@ describe('Should produce higlass model correctly', () => {
 
     it('Should add brush correctly', () => {
         const higlass = new HiGlassModel();
-        higlass.addDefaultView();
+        higlass.addDefaultView(uuid.v1());
         higlass.addBrush('linear', higlass.getLastView().uid ?? '', 'from');
         expect(JSON.stringify(higlass.spec())).toContain('viewport-projection-horizontal');
     });
