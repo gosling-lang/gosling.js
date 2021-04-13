@@ -502,28 +502,17 @@
       "type": "object"
     },
     "DataTransform": {
-      "additionalProperties": false,
-      "properties": {
-        "displace": {
-          "items": {
-            "$ref": "#/definitions/DisplaceTransform"
-          },
-          "type": "array"
+      "anyOf": [
+        {
+          "$ref": "#/definitions/FilterTransform"
         },
-        "filter": {
-          "items": {
-            "$ref": "#/definitions/FilterTransform"
-          },
-          "type": "array"
+        {
+          "$ref": "#/definitions/LogTransform"
         },
-        "log": {
-          "items": {
-            "$ref": "#/definitions/LogTransform"
-          },
-          "type": "array"
+        {
+          "$ref": "#/definitions/DisplaceTransform"
         }
-      },
-      "type": "object"
+      ]
     },
     "Datum": {
       "additionalProperties": {
@@ -559,16 +548,21 @@
         "maxRows": {
           "type": "number"
         },
+        "method": {
+          "$ref": "#/definitions/DisplacementType"
+        },
         "newField": {
           "type": "string"
         },
         "type": {
-          "$ref": "#/definitions/DisplacementType"
+          "const": "displace",
+          "type": "string"
         }
       },
       "required": [
-        "boundingBox",
         "type",
+        "boundingBox",
+        "method",
         "newField"
       ],
       "type": "object"
@@ -1092,9 +1086,14 @@
         },
         "not": {
           "type": "boolean"
+        },
+        "type": {
+          "const": "filter",
+          "type": "string"
         }
       },
       "required": [
+        "type",
         "field",
         "include"
       ],
@@ -1189,9 +1188,14 @@
         },
         "newField": {
           "type": "string"
+        },
+        "type": {
+          "const": "log",
+          "type": "string"
         }
       },
       "required": [
+        "type",
         "field"
       ],
       "type": "object"
@@ -1525,9 +1529,14 @@
               "type": "array"
             }
           ]
+        },
+        "type": {
+          "const": "filter",
+          "type": "string"
         }
       },
       "required": [
+        "type",
         "field",
         "oneOf"
       ],
@@ -1561,7 +1570,10 @@
           "$ref": "#/definitions/DataDeep"
         },
         "dataTransform": {
-          "$ref": "#/definitions/DataTransform"
+          "items": {
+            "$ref": "#/definitions/DataTransform"
+          },
+          "type": "array"
         },
         "displacement": {
           "$ref": "#/definitions/Displacement"
@@ -1620,7 +1632,10 @@
                 "$ref": "#/definitions/DataDeep"
               },
               "dataTransform": {
-                "$ref": "#/definitions/DataTransform"
+                "items": {
+                  "$ref": "#/definitions/DataTransform"
+                },
+                "type": "array"
               },
               "displacement": {
                 "$ref": "#/definitions/Displacement"
@@ -1912,7 +1927,10 @@
           "$ref": "#/definitions/DataDeep"
         },
         "dataTransform": {
-          "$ref": "#/definitions/DataTransform"
+          "items": {
+            "$ref": "#/definitions/DataTransform"
+          },
+          "type": "array"
         },
         "displacement": {
           "$ref": "#/definitions/Displacement"
@@ -2038,7 +2056,10 @@
                 "$ref": "#/definitions/DataDeep"
               },
               "dataTransform": {
-                "$ref": "#/definitions/DataTransform"
+                "items": {
+                  "$ref": "#/definitions/DataTransform"
+                },
+                "type": "array"
               },
               "displacement": {
                 "$ref": "#/definitions/Displacement"
@@ -2097,7 +2118,10 @@
                       "$ref": "#/definitions/DataDeep"
                     },
                     "dataTransform": {
-                      "$ref": "#/definitions/DataTransform"
+                      "items": {
+                        "$ref": "#/definitions/DataTransform"
+                      },
+                      "type": "array"
                     },
                     "displacement": {
                       "$ref": "#/definitions/Displacement"
@@ -2465,9 +2489,14 @@
         },
         "not": {
           "type": "boolean"
+        },
+        "type": {
+          "const": "filter",
+          "type": "string"
         }
       },
       "required": [
+        "type",
         "field",
         "inRange"
       ],
@@ -2577,7 +2606,10 @@
               "$ref": "#/definitions/DataDeep"
             },
             "dataTransform": {
-              "$ref": "#/definitions/DataTransform"
+              "items": {
+                "$ref": "#/definitions/DataTransform"
+              },
+              "type": "array"
             },
             "description": {
               "type": "string"
@@ -2706,7 +2738,10 @@
                     "$ref": "#/definitions/DataDeep"
                   },
                   "dataTransform": {
-                    "$ref": "#/definitions/DataTransform"
+                    "items": {
+                      "$ref": "#/definitions/DataTransform"
+                    },
+                    "type": "array"
                   },
                   "displacement": {
                     "$ref": "#/definitions/Displacement"
@@ -2765,7 +2800,10 @@
                           "$ref": "#/definitions/DataDeep"
                         },
                         "dataTransform": {
-                          "$ref": "#/definitions/DataTransform"
+                          "items": {
+                            "$ref": "#/definitions/DataTransform"
+                          },
+                          "type": "array"
                         },
                         "displacement": {
                           "$ref": "#/definitions/Displacement"
@@ -3112,7 +3150,10 @@
               "$ref": "#/definitions/DataDeep"
             },
             "dataTransform": {
-              "$ref": "#/definitions/DataTransform"
+              "items": {
+                "$ref": "#/definitions/DataTransform"
+              },
+              "type": "array"
             },
             "description": {
               "type": "string"
@@ -3243,7 +3284,10 @@
                         "$ref": "#/definitions/DataDeep"
                       },
                       "dataTransform": {
-                        "$ref": "#/definitions/DataTransform"
+                        "items": {
+                          "$ref": "#/definitions/DataTransform"
+                        },
+                        "type": "array"
                       },
                       "displacement": {
                         "$ref": "#/definitions/Displacement"
@@ -3302,7 +3346,10 @@
                               "$ref": "#/definitions/DataDeep"
                             },
                             "dataTransform": {
-                              "$ref": "#/definitions/DataTransform"
+                              "items": {
+                                "$ref": "#/definitions/DataTransform"
+                              },
+                              "type": "array"
                             },
                             "displacement": {
                               "$ref": "#/definitions/Displacement"
@@ -3711,7 +3758,10 @@
           "$ref": "#/definitions/DataDeep"
         },
         "dataTransform": {
-          "$ref": "#/definitions/DataTransform"
+          "items": {
+            "$ref": "#/definitions/DataTransform"
+          },
+          "type": "array"
         },
         "displacement": {
           "$ref": "#/definitions/Displacement"
@@ -3957,7 +4007,10 @@
           "$ref": "#/definitions/DataDeep"
         },
         "dataTransform": {
-          "$ref": "#/definitions/DataTransform"
+          "items": {
+            "$ref": "#/definitions/DataTransform"
+          },
+          "type": "array"
         },
         "displacement": {
           "$ref": "#/definitions/Displacement"
@@ -4085,7 +4138,10 @@
                     "$ref": "#/definitions/DataDeep"
                   },
                   "dataTransform": {
-                    "$ref": "#/definitions/DataTransform"
+                    "items": {
+                      "$ref": "#/definitions/DataTransform"
+                    },
+                    "type": "array"
                   },
                   "displacement": {
                     "$ref": "#/definitions/Displacement"
@@ -4144,7 +4200,10 @@
                           "$ref": "#/definitions/DataDeep"
                         },
                         "dataTransform": {
-                          "$ref": "#/definitions/DataTransform"
+                          "items": {
+                            "$ref": "#/definitions/DataTransform"
+                          },
+                          "type": "array"
                         },
                         "displacement": {
                           "$ref": "#/definitions/Displacement"

@@ -179,23 +179,18 @@ export function traverseToFixSpecDownstream(spec: GoslingSpec | SingleView, pare
                     const startField = track.x.field;
                     const endField = track.xe.field;
                     const padding = track.displacement.padding;
-                    const stackTransform: DisplaceTransform = {
+                    const displaceTransform: DisplaceTransform = {
+                        type: 'displace',
                         newField,
                         boundingBox: { startField, endField, padding },
-                        type: 'pile'
+                        method: 'pile'
                     };
 
                     // Add a data transform for stacking
-                    track.dataTransform = track.dataTransform
-                        ? {
-                              ...track.dataTransform,
-                              displace: track.dataTransform.displace
-                                  ? [...track.dataTransform.displace, stackTransform]
-                                  : [stackTransform]
-                          }
-                        : {
-                              displace: [stackTransform]
-                          };
+                    if (!track.dataTransform) {
+                        track.dataTransform = [];
+                    }
+                    track.dataTransform = [...track.dataTransform, displaceTransform];
                     track.row = { field: newField, type: 'nominal' };
                 } else if (track.displacement?.type === 'spread') {
                     // ...

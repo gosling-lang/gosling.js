@@ -27,12 +27,10 @@ const HiGlass: OverlaidTracks = {
     data,
     tracks: [
         {
-            dataTransform: {
-                filter: [
-                    { field: 'type', oneOf: ['gene'] },
-                    { field: 'strand', oneOf: ['+'] }
-                ]
-            },
+            dataTransform: [
+                { type: 'filter', field: 'type', oneOf: ['gene'] },
+                { type: 'filter', field: 'strand', oneOf: ['+'] }
+            ],
             mark: 'triangleRight',
             x: {
                 field: 'end',
@@ -43,9 +41,7 @@ const HiGlass: OverlaidTracks = {
             size: { value: 15 }
         },
         {
-            dataTransform: {
-                filter: [{ field: 'type', oneOf: ['gene'] }]
-            },
+            dataTransform: [{ type: 'filter', field: 'type', oneOf: ['gene'] }],
             mark: 'text',
             text: { field: 'name', type: 'nominal' },
             x: {
@@ -61,12 +57,10 @@ const HiGlass: OverlaidTracks = {
             }
         },
         {
-            dataTransform: {
-                filter: [
-                    { field: 'type', oneOf: ['gene'] },
-                    { field: 'strand', oneOf: ['-'] }
-                ]
-            },
+            dataTransform: [
+                { type: 'filter', field: 'type', oneOf: ['gene'] },
+                { type: 'filter', field: 'strand', oneOf: ['-'] }
+            ],
             mark: 'triangleLeft',
             x: {
                 field: 'start',
@@ -76,7 +70,7 @@ const HiGlass: OverlaidTracks = {
             style: { align: 'right' }
         },
         {
-            dataTransform: { filter: [{ field: 'type', oneOf: ['exon'] }] },
+            dataTransform: [{ type: 'filter', field: 'type', oneOf: ['exon'] }],
             mark: 'rect',
             x: {
                 field: 'start',
@@ -89,12 +83,10 @@ const HiGlass: OverlaidTracks = {
             }
         },
         {
-            dataTransform: {
-                filter: [
-                    { field: 'type', oneOf: ['gene'] },
-                    { field: 'strand', oneOf: ['+'] }
-                ]
-            },
+            dataTransform: [
+                { type: 'filter', field: 'type', oneOf: ['gene'] },
+                { type: 'filter', field: 'strand', oneOf: ['+'] }
+            ],
             mark: 'rule',
             x: {
                 field: 'start',
@@ -110,12 +102,10 @@ const HiGlass: OverlaidTracks = {
             }
         },
         {
-            dataTransform: {
-                filter: [
-                    { field: 'type', oneOf: ['gene'] },
-                    { field: 'strand', oneOf: ['-'] }
-                ]
-            },
+            dataTransform: [
+                { type: 'filter', field: 'type', oneOf: ['gene'] },
+                { type: 'filter', field: 'strand', oneOf: ['-'] }
+            ],
             mark: 'rule',
             x: {
                 field: 'start',
@@ -153,9 +143,7 @@ const IGV: OverlaidTracks = {
     data,
     tracks: [
         {
-            dataTransform: {
-                filter: [{ field: 'type', oneOf: ['gene'] }]
-            },
+            dataTransform: [{ type: 'filter', field: 'type', oneOf: ['gene'] }],
             mark: 'text',
             text: { field: 'name', type: 'nominal' },
             x: {
@@ -170,7 +158,7 @@ const IGV: OverlaidTracks = {
             }
         },
         {
-            dataTransform: { filter: [{ field: 'type', oneOf: ['gene'] }] },
+            dataTransform: [{ type: 'filter', field: 'type', oneOf: ['gene'] }],
             mark: 'rect',
             x: {
                 field: 'start',
@@ -184,12 +172,10 @@ const IGV: OverlaidTracks = {
             }
         },
         {
-            dataTransform: {
-                filter: [
-                    { field: 'type', oneOf: ['gene'] },
-                    { field: 'strand', oneOf: ['-'] }
-                ]
-            },
+            dataTransform: [
+                { type: 'filter', field: 'type', oneOf: ['gene'] },
+                { type: 'filter', field: 'strand', oneOf: ['-'] }
+            ],
             mark: 'rule',
             x: {
                 field: 'start',
@@ -208,12 +194,10 @@ const IGV: OverlaidTracks = {
             }
         },
         {
-            dataTransform: {
-                filter: [
-                    { field: 'type', oneOf: ['gene'] },
-                    { field: 'strand', oneOf: ['+'] }
-                ]
-            },
+            dataTransform: [
+                { type: 'filter', field: 'type', oneOf: ['gene'] },
+                { type: 'filter', field: 'strand', oneOf: ['+'] }
+            ],
             mark: 'rule',
             x: {
                 field: 'start',
@@ -254,9 +238,7 @@ const CyverseQUBES: OverlaidTracks = {
     data,
     tracks: [
         {
-            dataTransform: {
-                filter: [{ field: 'type', oneOf: ['gene'] }]
-            },
+            dataTransform: [{ type: 'filter', field: 'type', oneOf: ['gene'] }],
             mark: 'text',
             text: { field: 'name', type: 'nominal' },
             x: {
@@ -271,12 +253,10 @@ const CyverseQUBES: OverlaidTracks = {
             color: { value: 'black' }
         },
         {
-            dataTransform: {
-                filter: [
-                    { field: 'type', oneOf: ['gene'] },
-                    { field: 'strand', oneOf: ['+'] }
-                ]
-            },
+            dataTransform: [
+                { type: 'filter', field: 'type', oneOf: ['gene'] },
+                { type: 'filter', field: 'strand', oneOf: ['+'] }
+            ],
             mark: 'triangleRight',
             x: {
                 field: 'end',
@@ -286,12 +266,10 @@ const CyverseQUBES: OverlaidTracks = {
             color: { value: '#999999' }
         },
         {
-            dataTransform: {
-                filter: [
-                    { field: 'type', oneOf: ['gene'] },
-                    { field: 'strand', oneOf: ['-'] }
-                ]
-            },
+            dataTransform: [
+                { type: 'filter', field: 'type', oneOf: ['gene'] },
+                { type: 'filter', field: 'strand', oneOf: ['-'] }
+            ],
             mark: 'triangleLeft',
             x: {
                 field: 'start',
@@ -304,7 +282,7 @@ const CyverseQUBES: OverlaidTracks = {
             }
         },
         {
-            dataTransform: { filter: [{ field: 'type', oneOf: ['gene'] }] },
+            dataTransform: [{ type: 'filter', field: 'type', oneOf: ['gene'] }],
             mark: 'rect',
             x: {
                 field: 'start',
@@ -318,7 +296,7 @@ const CyverseQUBES: OverlaidTracks = {
             color: { value: 'lightgray' }
         },
         {
-            dataTransform: { filter: [{ field: 'type', oneOf: ['gene'] }] },
+            dataTransform: [{ type: 'filter', field: 'type', oneOf: ['gene'] }],
             mark: 'rule',
             x: {
                 field: 'start',
@@ -333,7 +311,7 @@ const CyverseQUBES: OverlaidTracks = {
             color: { value: 'gray' }
         },
         {
-            dataTransform: { filter: [{ field: 'type', oneOf: ['exon'] }] },
+            dataTransform: [{ type: 'filter', field: 'type', oneOf: ['exon'] }],
             mark: 'rect',
             x: {
                 field: 'start',
@@ -370,9 +348,7 @@ const GmGDB: OverlaidTracks = {
     data,
     tracks: [
         {
-            dataTransform: {
-                filter: [{ field: 'type', oneOf: ['gene'] }]
-            },
+            dataTransform: [{ type: 'filter', field: 'type', oneOf: ['gene'] }],
             mark: 'text',
             text: { field: 'name', type: 'nominal' },
             x: {
@@ -390,12 +366,10 @@ const GmGDB: OverlaidTracks = {
             }
         },
         {
-            dataTransform: {
-                filter: [
-                    { field: 'type', oneOf: ['gene'] },
-                    { field: 'strand', oneOf: ['+'] }
-                ]
-            },
+            dataTransform: [
+                { type: 'filter', field: 'type', oneOf: ['gene'] },
+                { type: 'filter', field: 'strand', oneOf: ['+'] }
+            ],
             mark: 'triangleRight',
             x: {
                 field: 'end',
@@ -405,12 +379,10 @@ const GmGDB: OverlaidTracks = {
             size: { value: 15 }
         },
         {
-            dataTransform: {
-                filter: [
-                    { field: 'type', oneOf: ['gene'] },
-                    { field: 'strand', oneOf: ['-'] }
-                ]
-            },
+            dataTransform: [
+                { type: 'filter', field: 'type', oneOf: ['gene'] },
+                { type: 'filter', field: 'strand', oneOf: ['-'] }
+            ],
             mark: 'triangleLeft',
             x: {
                 field: 'start',
@@ -423,7 +395,7 @@ const GmGDB: OverlaidTracks = {
             }
         },
         {
-            dataTransform: { filter: [{ field: 'type', oneOf: ['exon'] }] },
+            dataTransform: [{ type: 'filter', field: 'type', oneOf: ['exon'] }],
             mark: 'rect',
             x: {
                 field: 'start',
@@ -437,7 +409,7 @@ const GmGDB: OverlaidTracks = {
             }
         },
         {
-            dataTransform: { filter: [{ field: 'type', oneOf: ['gene'] }] },
+            dataTransform: [{ type: 'filter', field: 'type', oneOf: ['gene'] }],
             mark: 'rule',
             x: {
                 field: 'start',
@@ -477,9 +449,7 @@ const g6: OverlaidTracks = {
     data,
     tracks: [
         {
-            dataTransform: {
-                filter: [{ field: 'type', oneOf: ['gene'] }]
-            },
+            dataTransform: [{ type: 'filter', field: 'type', oneOf: ['gene'] }],
             mark: 'text',
             text: { field: 'name', type: 'nominal' },
             x: {
@@ -497,7 +467,7 @@ const g6: OverlaidTracks = {
             }
         },
         {
-            dataTransform: { filter: [{ field: 'type', oneOf: ['exon'] }] },
+            dataTransform: [{ type: 'filter', field: 'type', oneOf: ['exon'] }],
             mark: 'rect',
             x: {
                 field: 'start',
@@ -511,7 +481,7 @@ const g6: OverlaidTracks = {
             }
         },
         {
-            dataTransform: { filter: [{ field: 'type', oneOf: ['intron'] }] },
+            dataTransform: [{ type: 'filter', field: 'type', oneOf: ['intron'] }],
             mark: 'rule',
             x: {
                 field: 'start',
@@ -547,9 +517,7 @@ const g7: OverlaidTracks = {
     data,
     tracks: [
         {
-            dataTransform: {
-                filter: [{ field: 'type', oneOf: ['gene'] }]
-            },
+            dataTransform: [{ type: 'filter', field: 'type', oneOf: ['gene'] }],
             mark: 'text',
             text: { field: 'name', type: 'nominal' },
             x: {
@@ -565,7 +533,7 @@ const g7: OverlaidTracks = {
             }
         },
         {
-            dataTransform: { filter: [{ field: 'type', oneOf: ['gene'] }] },
+            dataTransform: [{ type: 'filter', field: 'type', oneOf: ['gene'] }],
             mark: 'rect',
             x: {
                 field: 'start',
@@ -579,7 +547,7 @@ const g7: OverlaidTracks = {
             color: { value: '#666666' }
         },
         {
-            dataTransform: { filter: [{ field: 'type', oneOf: ['exon'] }] },
+            dataTransform: [{ type: 'filter', field: 'type', oneOf: ['exon'] }],
             mark: 'rect',
             x: {
                 field: 'start',
@@ -593,7 +561,7 @@ const g7: OverlaidTracks = {
             color: { value: '#FF6666' }
         },
         {
-            dataTransform: { filter: [{ field: 'type', oneOf: ['intron'] }] },
+            dataTransform: [{ type: 'filter', field: 'type', oneOf: ['intron'] }],
             mark: 'rect',
             x: {
                 field: 'start',
@@ -630,12 +598,10 @@ const GIVE: OverlaidTracks = {
     data,
     tracks: [
         {
-            dataTransform: {
-                filter: [
-                    { field: 'type', oneOf: ['gene'] },
-                    { field: 'strand', oneOf: ['+'] }
-                ]
-            },
+            dataTransform: [
+                { type: 'filter', field: 'type', oneOf: ['gene'] },
+                { type: 'filter', field: 'strand', oneOf: ['+'] }
+            ],
             mark: 'rect',
             x: {
                 field: 'end',
@@ -645,25 +611,23 @@ const GIVE: OverlaidTracks = {
             size: { value: 7 }
         },
         {
-            dataTransform: {
-                filter: [
-                    { field: 'type', oneOf: ['gene'] },
-                    { field: 'strand', oneOf: ['-'] }
-                ]
-            },
+            dataTransform: [
+                { type: 'filter', field: 'type', oneOf: ['gene'] },
+                { type: 'filter', field: 'strand', oneOf: ['-'] }
+            ],
             mark: 'rect',
             x: { field: 'start', type: 'genomic' },
             size: { value: 7 }
         },
         {
-            dataTransform: { filter: [{ field: 'type', oneOf: ['exon'] }] },
+            dataTransform: [{ type: 'filter', field: 'type', oneOf: ['exon'] }],
             mark: 'rect',
             x: { field: 'start', type: 'genomic' },
             xe: { field: 'end', type: 'genomic' },
             size: { value: 14 }
         },
         {
-            dataTransform: { filter: [{ field: 'type', oneOf: ['gene'] }] },
+            dataTransform: [{ type: 'filter', field: 'type', oneOf: ['gene'] }],
             mark: 'rule',
             x: { field: 'start', type: 'genomic' },
             xe: { field: 'end', type: 'genomic' },
@@ -682,12 +646,10 @@ const CorcesEtAl: OverlaidTracks = {
     data,
     tracks: [
         {
-            dataTransform: {
-                filter: [
-                    { field: 'type', oneOf: ['gene'] },
-                    { field: 'strand', oneOf: ['+'] }
-                ]
-            },
+            dataTransform: [
+                { type: 'filter', field: 'type', oneOf: ['gene'] },
+                { type: 'filter', field: 'strand', oneOf: ['+'] }
+            ],
             mark: 'text',
             text: { field: 'name', type: 'nominal' },
             x: {
@@ -699,12 +661,10 @@ const CorcesEtAl: OverlaidTracks = {
             style: { textFontSize: 8, dy: -12 }
         },
         {
-            dataTransform: {
-                filter: [
-                    { field: 'type', oneOf: ['gene'] },
-                    { field: 'strand', oneOf: ['-'] }
-                ]
-            },
+            dataTransform: [
+                { type: 'filter', field: 'type', oneOf: ['gene'] },
+                { type: 'filter', field: 'strand', oneOf: ['-'] }
+            ],
             mark: 'text',
             text: { field: 'name', type: 'nominal' },
             x: { field: 'start', type: 'genomic' },
@@ -712,36 +672,32 @@ const CorcesEtAl: OverlaidTracks = {
             style: { textFontSize: 8, dy: 10 }
         },
         {
-            dataTransform: {
-                filter: [
-                    { field: 'type', oneOf: ['gene'] },
-                    { field: 'strand', oneOf: ['+'] }
-                ]
-            },
+            dataTransform: [
+                { type: 'filter', field: 'type', oneOf: ['gene'] },
+                { type: 'filter', field: 'strand', oneOf: ['+'] }
+            ],
             mark: 'rect',
             x: { field: 'end', type: 'genomic' },
             size: { value: 7 }
         },
         {
-            dataTransform: {
-                filter: [
-                    { field: 'type', oneOf: ['gene'] },
-                    { field: 'strand', oneOf: ['-'] }
-                ]
-            },
+            dataTransform: [
+                { type: 'filter', field: 'type', oneOf: ['gene'] },
+                { type: 'filter', field: 'strand', oneOf: ['-'] }
+            ],
             mark: 'rect',
             x: { field: 'start', type: 'genomic' },
             size: { value: 7 }
         },
         {
-            dataTransform: { filter: [{ field: 'type', oneOf: ['exon'] }] },
+            dataTransform: [{ type: 'filter', field: 'type', oneOf: ['exon'] }],
             mark: 'rect',
             x: { field: 'start', type: 'genomic' },
             xe: { field: 'end', type: 'genomic' },
             size: { value: 14 }
         },
         {
-            dataTransform: { filter: [{ field: 'type', oneOf: ['gene'] }] },
+            dataTransform: [{ type: 'filter', field: 'type', oneOf: ['gene'] }],
             mark: 'rule',
             x: { field: 'start', type: 'genomic' },
             xe: { field: 'end', type: 'genomic' },

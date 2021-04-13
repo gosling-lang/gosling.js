@@ -122,7 +122,7 @@ export interface SingleTrack extends CommonTrackDef {
     data: DataDeep;
 
     // Data transformation
-    dataTransform?: DataTransform;
+    dataTransform?: DataTransform[];
 
     tooltip?: { field: string; type: FieldType; alt?: string }[];
 
@@ -410,28 +410,26 @@ export interface MatrixData {
     url: string;
 }
 
-// !!! Transformation is applied in the same order (i.e., stack, filter, and then log)
-export interface DataTransform {
-    filter?: FilterTransform[];
-    log?: LogTransform[];
-    displace?: DisplaceTransform[]; // Mainly for internal usage. // We can call this 'dynamic' data transform.
-}
+export type DataTransform = FilterTransform | LogTransform | DisplaceTransform;
 
 export type FilterTransform = OneOfFilter | RangeFilter | IncludeFilter;
 
 export interface RangeFilter {
+    type: 'filter';
     field: string;
     inRange: number[];
     not?: boolean;
 }
 
 export interface IncludeFilter {
+    type: 'filter';
     field: string;
     include: string;
     not?: boolean;
 }
 
 export interface OneOfFilter {
+    type: 'filter';
     field: string;
     oneOf: string[] | number[];
     not?: boolean;
@@ -439,19 +437,21 @@ export interface OneOfFilter {
 
 export type LogBase = number | 'e';
 export interface LogTransform {
+    type: 'log';
     field: string;
     base?: LogBase; // If not specified, 10 is used
     newField?: string; // If specified, store transformed values in a new field.
 }
 
 export interface DisplaceTransform {
+    type: 'displace';
     // We could support different types of bounding boxes (e.g., using a center position and a size)
     boundingBox: {
         startField: string; // The name of a quantitative field that represents the start position
         endField: string; // The name of a quantitative field that represents the end position
         padding?: number; // TODO: this should be considered as a pixel value
     };
-    type: DisplacementType;
+    method: DisplacementType;
     newField: string;
 
     // "pile" specific parameters (TODO: make this a separate interface)

@@ -39,16 +39,15 @@ export const EX_SPEC_MARK_DISPLACEMENT: GoslingSpec = {
                             // { type: 'nominal', index: 13, name: '13' },
                         ]
                     },
-                    dataTransform: {
-                        filter: [{ field: 'significance', oneOf: ['Likely_benign'] }],
-                        displace: [
-                            {
-                                boundingBox: { startField: 'start', endField: 'end', padding: 5 },
-                                type: 'spread',
-                                newField: 'a'
-                            }
-                        ]
-                    },
+                    dataTransform: [
+                        { type: 'filter', field: 'significance', oneOf: ['Likely_benign'] },
+                        {
+                            type: 'displace',
+                            boundingBox: { startField: 'start', endField: 'end', padding: 5 },
+                            method: 'spread',
+                            newField: 'a'
+                        }
+                    ],
                     tracks: [
                         { mark: 'point', size: { value: 4 }, color: { value: '#029F73' } },
                         {
@@ -85,16 +84,15 @@ export const EX_SPEC_MARK_DISPLACEMENT: GoslingSpec = {
                         ],
                         valueFields: [{ index: 7, name: 'significance', type: 'nominal' }]
                     },
-                    dataTransform: {
-                        filter: [{ field: 'significance', oneOf: ['Likely_benign'] }],
-                        displace: [
-                            {
-                                boundingBox: { startField: 'start', endField: 'end', padding: 5 },
-                                type: 'spread',
-                                newField: 'a'
-                            }
-                        ]
-                    },
+                    dataTransform: [
+                        { type: 'filter', field: 'significance', oneOf: ['Likely_benign'] },
+                        {
+                            type: 'displace',
+                            boundingBox: { startField: 'start', endField: 'end', padding: 5 },
+                            method: 'spread',
+                            newField: 'a'
+                        }
+                    ],
                     mark: 'link',
                     xe: { field: 'start', type: 'genomic' },
                     x: { field: 'aStart', type: 'genomic' },
@@ -122,9 +120,7 @@ export const EX_SPEC_MARK_DISPLACEMENT: GoslingSpec = {
                                 ],
                                 valueFields: [{ index: 7, name: 'significance', type: 'nominal' }]
                             },
-                            dataTransform: {
-                                filter: [{ field: 'significance', oneOf: ['Likely_benign'] }]
-                            },
+                            dataTransform: [{ type: 'filter', field: 'significance', oneOf: ['Likely_benign'] }],
                             mark: 'rect',
                             color: { value: 'lightgray' },
                             stroke: { value: 'lightgray' },
@@ -168,12 +164,10 @@ export const EX_SPEC_MARK_DISPLACEMENT: GoslingSpec = {
                                 }
                             ],
                             opacity: { value: 0.8 },
-                            dataTransform: {
-                                filter: [
-                                    { field: 'type', oneOf: ['gene'] },
-                                    { field: 'strand', oneOf: ['+'] }
-                                ]
-                            },
+                            dataTransform: [
+                                { type: 'filter', field: 'type', oneOf: ['gene'] },
+                                { type: 'filter', field: 'strand', oneOf: ['+'] }
+                            ],
                             mark: 'triangleRight',
                             x: {
                                 field: 'end',
@@ -217,9 +211,7 @@ export const EX_SPEC_MARK_DISPLACEMENT: GoslingSpec = {
                                 }
                             ],
                             opacity: { value: 0.8 },
-                            dataTransform: {
-                                filter: [{ field: 'type', oneOf: ['gene'] }]
-                            },
+                            dataTransform: [{ type: 'filter', field: 'type', oneOf: ['gene'] }],
                             mark: 'text',
                             text: { field: 'name', type: 'nominal' },
                             x: {
@@ -252,7 +244,6 @@ export const EX_SPEC_MARK_DISPLACEMENT: GoslingSpec = {
                                     { index: 13, name: 'end' }
                                 ]
                             },
-
                             row: { field: 'strand', type: 'nominal', domain: ['+', '-'] },
                             color: {
                                 field: 'strand',
@@ -270,12 +261,10 @@ export const EX_SPEC_MARK_DISPLACEMENT: GoslingSpec = {
                                 }
                             ],
                             opacity: { value: 0.8 },
-                            dataTransform: {
-                                filter: [
-                                    { field: 'type', oneOf: ['gene'] },
-                                    { field: 'strand', oneOf: ['-'] }
-                                ]
-                            },
+                            dataTransform: [
+                                { type: 'filter', field: 'type', oneOf: ['gene'] },
+                                { type: 'filter', field: 'strand', oneOf: ['-'] }
+                            ],
                             mark: 'triangleLeft',
                             x: {
                                 field: 'start',
@@ -319,7 +308,7 @@ export const EX_SPEC_MARK_DISPLACEMENT: GoslingSpec = {
                                 }
                             ],
                             opacity: { value: 0.8 },
-                            dataTransform: { filter: [{ field: 'type', oneOf: ['exon'] }] },
+                            dataTransform: [{ type: 'filter', field: 'type', oneOf: ['exon'] }],
                             mark: 'rect',
                             x: {
                                 field: 'start',
@@ -366,12 +355,10 @@ export const EX_SPEC_MARK_DISPLACEMENT: GoslingSpec = {
                                 }
                             ],
                             opacity: { value: 0.8 },
-                            dataTransform: {
-                                filter: [
-                                    { field: 'type', oneOf: ['gene'] },
-                                    { field: 'strand', oneOf: ['+'] }
-                                ]
-                            },
+                            dataTransform: [
+                                { type: 'filter', field: 'type', oneOf: ['gene'] },
+                                { type: 'filter', field: 'strand', oneOf: ['+'] }
+                            ],
                             mark: 'rule',
                             x: {
                                 field: 'start',
@@ -422,12 +409,10 @@ export const EX_SPEC_MARK_DISPLACEMENT: GoslingSpec = {
                                 }
                             ],
                             opacity: { value: 0.8 },
-                            dataTransform: {
-                                filter: [
-                                    { field: 'type', oneOf: ['gene'] },
-                                    { field: 'strand', oneOf: ['-'] }
-                                ]
-                            },
+                            dataTransform: [
+                                { type: 'filter', field: 'type', oneOf: ['gene'] },
+                                { type: 'filter', field: 'strand', oneOf: ['-'] }
+                            ],
                             mark: 'rule',
                             x: {
                                 field: 'start',

@@ -15,7 +15,7 @@ describe('Type Guard', () => {
                 overlay: [
                     {
                         mark: 'rect',
-                        dataTransform: { filter: [{ field: 'Stain', oneOf: ['acen-1', 'acen-2'], not: true }] },
+                        dataTransform: [{ type: 'filter', field: 'Stain', oneOf: ['acen-1', 'acen-2'], not: true }],
                         color: {
                             field: 'Density',
                             type: 'nominal',
@@ -26,25 +26,19 @@ describe('Type Guard', () => {
                     },
                     {
                         mark: 'rect',
-                        dataTransform: {
-                            filter: [{ field: 'Stain', oneOf: ['gvar'] }]
-                        },
+                        dataTransform: [{ type: 'filter', field: 'Stain', oneOf: ['gvar'] }],
                         color: { value: '#A0A0F2' },
                         size: { value: 20 }
                     },
                     {
                         mark: 'triangleRight',
-                        dataTransform: {
-                            filter: [{ field: 'Stain', oneOf: ['acen-1'] }]
-                        },
+                        dataTransform: [{ type: 'filter', field: 'Stain', oneOf: ['acen-1'] }],
                         color: { value: '#B40101' },
                         size: { value: 20 }
                     },
                     {
                         mark: 'triangleLeft',
-                        dataTransform: {
-                            filter: [{ field: 'Stain', oneOf: ['acen-2'] }]
-                        },
+                        dataTransform: [{ type: 'filter', field: 'Stain', oneOf: ['acen-2'] }],
                         color: { value: '#B40101' },
                         size: { value: 20 }
                     },

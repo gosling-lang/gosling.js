@@ -42,7 +42,7 @@ export const EX_SPEC_CIRCOS: GoslingSpec = {
                     'sample 8'
                 ]
             },
-            dataTransform: { filter: [{ field: 'peak', inRange: [0, 0.001] }] },
+            dataTransform: [{ type: 'filter', field: 'peak', inRange: [0, 0.001] }],
             mark: 'rect',
             x: { field: 'start', type: 'genomic' },
             xe: { field: 'end', type: 'genomic' },
@@ -90,9 +90,14 @@ export const EX_SPEC_CIRCOS: GoslingSpec = {
             opacity: { value: 0.4 },
             tracks: [
                 {
-                    dataTransform: {
-                        filter: [{ field: 'chr', oneOf: ['hs1'], not: true }]
-                    },
+                    dataTransform: [
+                        {
+                            type: 'filter',
+                            field: 'chr',
+                            oneOf: ['hs1'],
+                            not: true
+                        }
+                    ],
                     mark: 'link',
                     x: { field: 'p1', type: 'genomic' },
                     xe: { field: 'p1_2', type: 'genomic' },
@@ -102,7 +107,7 @@ export const EX_SPEC_CIRCOS: GoslingSpec = {
                     strokeWidth: { value: 1 }
                 },
                 {
-                    dataTransform: { filter: [{ field: 'chr', oneOf: ['hs1'] }] },
+                    dataTransform: [{ type: 'filter', field: 'chr', oneOf: ['hs1'] }],
                     mark: 'link',
                     x: { field: 'p1', type: 'genomic' },
                     xe: { field: 'p1_2', type: 'genomic' },

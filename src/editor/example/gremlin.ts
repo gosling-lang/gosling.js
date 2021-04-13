@@ -20,9 +20,7 @@ export const EX_SPEC_GREMLIN: GoslingSpec = {
                     tracks: [
                         {
                             mark: 'rect',
-                            dataTransform: {
-                                filter: [{ field: 'Stain', oneOf: ['acen'], not: true }]
-                            },
+                            dataTransform: [{ type: 'filter', field: 'Stain', oneOf: ['acen'], not: true }],
                             color: {
                                 field: 'Stain',
                                 type: 'nominal',
@@ -33,17 +31,13 @@ export const EX_SPEC_GREMLIN: GoslingSpec = {
                         },
                         {
                             mark: 'rect',
-                            dataTransform: {
-                                filter: [{ field: 'Stain', oneOf: ['acen'] }]
-                            },
+                            dataTransform: [{ type: 'filter', field: 'Stain', oneOf: ['acen'] }],
                             size: { value: 10 },
                             color: { value: '#B74780' }
                         },
                         {
                             mark: 'text',
-                            dataTransform: {
-                                filter: [{ field: 'Stain', oneOf: ['gpos25', 'gpos50', 'gpos100'] }]
-                            },
+                            dataTransform: [{ type: 'filter', field: 'Stain', oneOf: ['gpos25', 'gpos50', 'gpos100'] }],
                             text: { field: 'Name', type: 'nominal' },
                             visibility: [
                                 {
@@ -63,9 +57,7 @@ export const EX_SPEC_GREMLIN: GoslingSpec = {
                         },
                         {
                             mark: 'text',
-                            dataTransform: {
-                                filter: [{ field: 'Stain', oneOf: ['gneg', 'gpos75', 'gvar'] }]
-                            },
+                            dataTransform: [{ type: 'filter', field: 'Stain', oneOf: ['gneg', 'gpos75', 'gvar'] }],
                             text: { field: 'Name', type: 'nominal' },
                             visibility: [
                                 {
@@ -114,12 +106,10 @@ export const EX_SPEC_GREMLIN: GoslingSpec = {
                         longToWideId: 'id',
                         sampleLength: 2000
                     },
-                    dataTransform: {
-                        filter: [
-                            { field: 'chr', oneOf: ['hs5', 'hs4', 'hs6'] },
-                            { field: 'chr_2', oneOf: ['hs5', 'hs4', 'hs6'] }
-                        ]
-                    },
+                    dataTransform: [
+                        { type: 'filter', field: 'chr', oneOf: ['hs5', 'hs4', 'hs6'] },
+                        { type: 'filter', field: 'chr_2', oneOf: ['hs5', 'hs4', 'hs6'] }
+                    ],
                     tracks: [
                         { mark: 'rect' },
                         {
@@ -169,12 +159,10 @@ export const EX_SPEC_GREMLIN: GoslingSpec = {
                         longToWideId: 'id',
                         sampleLength: 1000
                     },
-                    dataTransform: {
-                        filter: [
-                            { field: 'chr', oneOf: ['hs5'] },
-                            { field: 'chr_2', oneOf: ['hs5'] }
-                        ]
-                    },
+                    dataTransform: [
+                        { type: 'filter', field: 'chr', oneOf: ['hs5'] },
+                        { type: 'filter', field: 'chr_2', oneOf: ['hs5'] }
+                    ],
                     tracks: [
                         { mark: 'link' },
                         {
@@ -213,12 +201,10 @@ export const EX_SPEC_GREMLIN: GoslingSpec = {
                                 longToWideId: 'id',
                                 sampleLength: 1000
                             },
-                            dataTransform: {
-                                filter: [
-                                    { field: 'chr', oneOf: ['hs5', 'hs4', 'hs6'] },
-                                    { field: 'chr_2', oneOf: ['hs5', 'hs4', 'hs6'] }
-                                ]
-                            },
+                            dataTransform: [
+                                { type: 'filter', field: 'chr', oneOf: ['hs5', 'hs4', 'hs6'] },
+                                { type: 'filter', field: 'chr_2', oneOf: ['hs5', 'hs4', 'hs6'] }
+                            ],
                             mark: 'link',
                             x: {
                                 field: 'p1',
@@ -270,9 +256,7 @@ export const EX_SPEC_GREMLIN: GoslingSpec = {
                                         longToWideId: 'id',
                                         sampleLength: 1000
                                     },
-                                    dataTransform: {
-                                        filter: [{ field: 'chr', oneOf: ['hs5'] }]
-                                    },
+                                    dataTransform: [{ type: 'filter', field: 'chr', oneOf: ['hs5'] }],
                                     mark: 'link',
                                     x: {
                                         field: 'p1',

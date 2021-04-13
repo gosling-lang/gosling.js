@@ -30,7 +30,7 @@ export const EX_SPEC_CORCES_ET_AL: GoslingSpec = {
                     tracks: [
                         {
                             mark: 'rect',
-                            dataTransform: { filter: [{ field: 'Stain', oneOf: ['acen-1', 'acen-2'], not: true }] },
+                            dataTransform: [{ type: 'filter', field: 'Stain', oneOf: ['acen-1', 'acen-2'], not: true }],
                             color: {
                                 field: 'Density',
                                 type: 'nominal',
@@ -41,25 +41,19 @@ export const EX_SPEC_CORCES_ET_AL: GoslingSpec = {
                         },
                         {
                             mark: 'rect',
-                            dataTransform: {
-                                filter: [{ field: 'Stain', oneOf: ['gvar'] }]
-                            },
+                            dataTransform: [{ type: 'filter', field: 'Stain', oneOf: ['gvar'] }],
                             color: { value: '#A0A0F2' },
                             size: { value: 20 }
                         },
                         {
                             mark: 'triangleRight',
-                            dataTransform: {
-                                filter: [{ field: 'Stain', oneOf: ['acen-1'] }]
-                            },
+                            dataTransform: [{ type: 'filter', field: 'Stain', oneOf: ['acen-1'] }],
                             color: { value: '#B40101' },
                             size: { value: 20 }
                         },
                         {
                             mark: 'triangleLeft',
-                            dataTransform: {
-                                filter: [{ field: 'Stain', oneOf: ['acen-2'] }]
-                            },
+                            dataTransform: [{ type: 'filter', field: 'Stain', oneOf: ['acen-2'] }],
                             color: { value: '#B40101' },
                             size: { value: 20 }
                         },
@@ -194,12 +188,10 @@ export const EX_SPEC_CORCES_ET_AL: GoslingSpec = {
                     },
                     tracks: [
                         {
-                            dataTransform: {
-                                filter: [
-                                    { field: 'type', oneOf: ['gene'] },
-                                    { field: 'strand', oneOf: ['+'] }
-                                ]
-                            },
+                            dataTransform: [
+                                { type: 'filter', field: 'type', oneOf: ['gene'] },
+                                { type: 'filter', field: 'strand', oneOf: ['+'] }
+                            ],
                             mark: 'text',
                             text: { field: 'name', type: 'nominal' },
                             x: {
@@ -210,12 +202,10 @@ export const EX_SPEC_CORCES_ET_AL: GoslingSpec = {
                             style: { textFontSize: 8, dy: -12 }
                         },
                         {
-                            dataTransform: {
-                                filter: [
-                                    { field: 'type', oneOf: ['gene'] },
-                                    { field: 'strand', oneOf: ['-'] }
-                                ]
-                            },
+                            dataTransform: [
+                                { type: 'filter', field: 'type', oneOf: ['gene'] },
+                                { type: 'filter', field: 'strand', oneOf: ['-'] }
+                            ],
                             mark: 'text',
                             text: { field: 'name', type: 'nominal' },
                             x: { field: 'start', type: 'genomic' },
@@ -223,36 +213,32 @@ export const EX_SPEC_CORCES_ET_AL: GoslingSpec = {
                             style: { textFontSize: 8, dy: 10 }
                         },
                         {
-                            dataTransform: {
-                                filter: [
-                                    { field: 'type', oneOf: ['gene'] },
-                                    { field: 'strand', oneOf: ['+'] }
-                                ]
-                            },
+                            dataTransform: [
+                                { type: 'filter', field: 'type', oneOf: ['gene'] },
+                                { type: 'filter', field: 'strand', oneOf: ['+'] }
+                            ],
                             mark: 'rect',
                             x: { field: 'end', type: 'genomic' },
                             size: { value: 7 }
                         },
                         {
-                            dataTransform: {
-                                filter: [
-                                    { field: 'type', oneOf: ['gene'] },
-                                    { field: 'strand', oneOf: ['-'] }
-                                ]
-                            },
+                            dataTransform: [
+                                { type: 'filter', field: 'type', oneOf: ['gene'] },
+                                { type: 'filter', field: 'strand', oneOf: ['-'] }
+                            ],
                             mark: 'rect',
                             x: { field: 'start', type: 'genomic' },
                             size: { value: 7 }
                         },
                         {
-                            dataTransform: { filter: [{ field: 'type', oneOf: ['exon'] }] },
+                            dataTransform: [{ type: 'filter', field: 'type', oneOf: ['exon'] }],
                             mark: 'rect',
                             x: { field: 'start', type: 'genomic' },
                             xe: { field: 'end', type: 'genomic' },
                             size: { value: 14 }
                         },
                         {
-                            dataTransform: { filter: [{ field: 'type', oneOf: ['gene'] }] },
+                            dataTransform: [{ type: 'filter', field: 'type', oneOf: ['gene'] }],
                             mark: 'rule',
                             x: { field: 'start', type: 'genomic' },
                             xe: { field: 'end', type: 'genomic' },

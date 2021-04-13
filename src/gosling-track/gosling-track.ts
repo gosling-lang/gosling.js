@@ -158,7 +158,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
          */
         shouldMergeTiles() {
             return (
-                this.originalSpec.dataTransform?.displace &&
+                this.originalSpec.dataTransform?.find(t => t.type === 'displace') &&
                 this.visibleAndFetchedTiles()?.[0]?.tileData &&
                 // we do not need to combine tiles w/ multivec, vector, matrix
                 !this.visibleAndFetchedTiles()?.[0]?.tileData.dense
@@ -505,119 +505,121 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                 /*
                  * Data Transformation
                  */
-                if (resolved.dataTransform !== undefined) {
-                    // Filter
-                    tile.gos.tabularDataFiltered = filterData(
-                        resolved.dataTransform.filter,
-                        tile.gos.tabularDataFiltered
-                    );
+                if (resolved.dataTransform) {
+                    resolved.dataTransform.forEach(t => {
+                        switch (t.type) {
+                            case 'filter':
+                                tile.gos.tabularDataFiltered = filterData(t, tile.gos.tabularDataFiltered);
+                                break;
+                            case 'log':
+                                tile.gos.tabularDataFiltered = calculateData(t, tile.gos.tabularDataFiltered);
+                                break;
+                            case 'displace':
+                                const { boundingBox, method, newField } = t;
+                                const { startField, endField } = boundingBox;
 
-                    // Calculate
-                    tile.gos.tabularDataFiltered = calculateData(resolved.dataTransform, tile.gos.tabularDataFiltered);
+                                let padding = 0; // This is a pixel value.
+                                if (boundingBox.padding && this._xScale) {
+                                    padding = Math.abs(
+                                        this._xScale.invert(boundingBox.padding) - this._xScale.invert(0)
+                                    );
+                                }
 
-                    // Mark displacement
-                    resolved.dataTransform.displace?.forEach(dis => {
-                        const { boundingBox, type, newField } = dis;
-                        const { startField, endField } = boundingBox;
+                                // Check whether we have sufficient information.
+                                const base = tile.gos.tabularDataFiltered;
+                                if (base && base.length > 0) {
+                                    if (
+                                        !Object.keys(base[0]).find(d => d === startField) ||
+                                        !Object.keys(base[0]).find(d => d === endField)
+                                    ) {
+                                        // We did not find the fields from the data, so exit here.
+                                        return;
+                                    }
+                                }
 
-                        let padding = 0; // This is a pixel value.
-                        if (boundingBox.padding && this._xScale) {
-                            padding = Math.abs(this._xScale.invert(boundingBox.padding) - this._xScale.invert(0));
-                        }
+                                if (method === 'pile') {
+                                    const { maxRows } = t;
+                                    const boundingBoxes: { start: number; end: number; row: number }[] = [];
 
-                        // Check whether we have sufficient information.
-                        const base = tile.gos.tabularDataFiltered;
-                        if (base && base.length > 0) {
-                            if (
-                                !Object.keys(base[0]).find(d => d === startField) ||
-                                !Object.keys(base[0]).find(d => d === endField)
-                            ) {
-                                // We did not find the fields from the data, so exit here.
-                                return;
-                            }
-                        }
+                                    base.sort(
+                                        (a: Datum, b: Datum) => (a[startField] as number) - (b[startField] as number)
+                                    ).forEach((d: Datum) => {
+                                        const start = (d[startField] as number) - padding;
+                                        const end = (d[endField] as number) + padding;
 
-                        if (type === 'pile') {
-                            const { maxRows } = dis;
-                            const boundingBoxes: { start: number; end: number; row: number }[] = [];
+                                        const overlapped = boundingBoxes.filter(
+                                            box =>
+                                                (box.start === start && end === box.end) ||
+                                                (box.start <= start && start < box.end) ||
+                                                (box.start < end && end <= box.end) ||
+                                                (start < box.start && box.end < end)
+                                        );
 
-                            base.sort(
-                                (a: Datum, b: Datum) => (a[startField] as number) - (b[startField] as number)
-                            ).forEach((d: Datum) => {
-                                const start = (d[startField] as number) - padding;
-                                const end = (d[endField] as number) + padding;
+                                        // find the lowest non overlapped row
+                                        const uniqueRows = [
+                                            ...Array.from(new Set(boundingBoxes.map(d => d.row))),
+                                            Math.max(...boundingBoxes.map(d => d.row)) + 1
+                                        ];
+                                        const overlappedRows = overlapped.map(d => d.row);
+                                        const lowestNonOverlappedRow = Math.min(
+                                            ...uniqueRows.filter(d => overlappedRows.indexOf(d) === -1)
+                                        );
 
-                                const overlapped = boundingBoxes.filter(
-                                    box =>
-                                        (box.start === start && end === box.end) ||
-                                        (box.start <= start && start < box.end) ||
-                                        (box.start < end && end <= box.end) ||
-                                        (start < box.start && box.end < end)
-                                );
+                                        // row index starts from zero
+                                        const row: number = overlapped.length === 0 ? 0 : lowestNonOverlappedRow;
 
-                                // find the lowest non overlapped row
-                                const uniqueRows = [
-                                    ...Array.from(new Set(boundingBoxes.map(d => d.row))),
-                                    Math.max(...boundingBoxes.map(d => d.row)) + 1
-                                ];
-                                const overlappedRows = overlapped.map(d => d.row);
-                                const lowestNonOverlappedRow = Math.min(
-                                    ...uniqueRows.filter(d => overlappedRows.indexOf(d) === -1)
-                                );
+                                        d[newField] = `${maxRows && maxRows <= row ? maxRows - 1 : row}`;
 
-                                // row index starts from zero
-                                const row: number = overlapped.length === 0 ? 0 : lowestNonOverlappedRow;
+                                        boundingBoxes.push({ start, end, row });
+                                    });
+                                } else if (method === 'spread') {
+                                    const boundingBoxes: { start: number; end: number }[] = [];
 
-                                d[newField] = `${maxRows && maxRows <= row ? maxRows - 1 : row}`;
+                                    base.sort(
+                                        (a: Datum, b: Datum) => (a[startField] as number) - (b[startField] as number)
+                                    ).forEach((d: Datum) => {
+                                        let start = (d[startField] as number) - padding;
+                                        let end = (d[endField] as number) + padding;
 
-                                boundingBoxes.push({ start, end, row });
-                            });
-                        } else if (type === 'spread') {
-                            const boundingBoxes: { start: number; end: number }[] = [];
-
-                            base.sort(
-                                (a: Datum, b: Datum) => (a[startField] as number) - (b[startField] as number)
-                            ).forEach((d: Datum) => {
-                                let start = (d[startField] as number) - padding;
-                                let end = (d[endField] as number) + padding;
-
-                                let overlapped = boundingBoxes.filter(
-                                    box =>
-                                        (box.start === start && end === box.end) ||
-                                        (box.start < start && start < box.end) ||
-                                        (box.start < end && end < box.end) ||
-                                        (start < box.start && box.end < end)
-                                );
-
-                                if (overlapped.length > 0) {
-                                    let trial = 0;
-                                    do {
-                                        overlapped = boundingBoxes.filter(
+                                        let overlapped = boundingBoxes.filter(
                                             box =>
                                                 (box.start === start && end === box.end) ||
                                                 (box.start < start && start < box.end) ||
                                                 (box.start < end && end < box.end) ||
                                                 (start < box.start && box.end < end)
                                         );
+
                                         if (overlapped.length > 0) {
-                                            if (trial % 2 === 0) {
-                                                start += padding * trial;
-                                                end += padding * trial;
-                                            } else {
-                                                start -= padding * trial;
-                                                end -= padding * trial;
-                                            }
+                                            let trial = 0;
+                                            do {
+                                                overlapped = boundingBoxes.filter(
+                                                    box =>
+                                                        (box.start === start && end === box.end) ||
+                                                        (box.start < start && start < box.end) ||
+                                                        (box.start < end && end < box.end) ||
+                                                        (start < box.start && box.end < end)
+                                                );
+                                                if (overlapped.length > 0) {
+                                                    if (trial % 2 === 0) {
+                                                        start += padding * trial;
+                                                        end += padding * trial;
+                                                    } else {
+                                                        start -= padding * trial;
+                                                        end -= padding * trial;
+                                                    }
+                                                }
+                                                trial++;
+                                                // TODO: do not go outside of a tile.
+                                            } while (overlapped.length > 0 && trial < 1000);
                                         }
-                                        trial++;
-                                        // TODO: do not go outside of a tile.
-                                    } while (overlapped.length > 0 && trial < 1000);
+
+                                        d[`${newField}Start`] = `${start + padding}`;
+                                        d[`${newField}Etart`] = `${end - padding}`;
+
+                                        boundingBoxes.push({ start, end });
+                                    });
                                 }
-
-                                d[`${newField}Start`] = `${start + padding}`;
-                                d[`${newField}Etart`] = `${end - padding}`;
-
-                                boundingBoxes.push({ start, end });
-                            });
+                                break;
                         }
                     });
                 }

@@ -1,4 +1,4 @@
-import { SingleTrack, Datum, FilterTransform, DataTransform } from '../gosling.schema';
+import { SingleTrack, Datum, FilterTransform, LogTransform } from '../gosling.schema';
 import {
     getChannelKeysByAggregateFnc,
     getChannelKeysByType,
@@ -11,49 +11,47 @@ import {
 /**
  * Apply filter
  */
-export function filterData(spec: FilterTransform[] | undefined, data: Datum[]): Datum[] {
+export function filterData(filter: FilterTransform, data: Datum[]): Datum[] {
+    const { field, not } = filter;
+
     let output: Datum[] = Array.from(data);
-    spec?.forEach(filter => {
-        const { field, not } = filter;
-        if (IsOneOfFilter(filter)) {
-            const { oneOf } = filter;
-            output = output.filter((d: Datum) => {
-                return not ? (oneOf as any[]).indexOf(d[field]) === -1 : (oneOf as any[]).indexOf(d[field]) !== -1;
-            });
-        } else if (IsRangeFilter(filter)) {
-            const { inRange } = filter;
-            output = output.filter((d: Datum) => {
-                return not
-                    ? !(inRange[0] <= d[field] && d[field] <= inRange[1])
-                    : inRange[0] <= d[field] && d[field] <= inRange[1];
-            });
-        } else if (IsIncludeFilter(filter)) {
-            const { include } = filter;
-            output = output.filter((d: Datum) => {
-                return not ? `${d[field]}`.includes(include) : !`${d[field]}`.includes(include);
-            });
-        }
-    });
+    if (IsOneOfFilter(filter)) {
+        const { oneOf } = filter;
+        output = output.filter((d: Datum) => {
+            return not ? (oneOf as any[]).indexOf(d[field]) === -1 : (oneOf as any[]).indexOf(d[field]) !== -1;
+        });
+    } else if (IsRangeFilter(filter)) {
+        const { inRange } = filter;
+        output = output.filter((d: Datum) => {
+            return not
+                ? !(inRange[0] <= d[field] && d[field] <= inRange[1])
+                : inRange[0] <= d[field] && d[field] <= inRange[1];
+        });
+    } else if (IsIncludeFilter(filter)) {
+        const { include } = filter;
+        output = output.filter((d: Datum) => {
+            return not ? `${d[field]}`.includes(include) : !`${d[field]}`.includes(include);
+        });
+    }
     return output;
 }
 
 /**
  * Calculate new data, like log transformation.
  */
-export function calculateData(spec: DataTransform | undefined, data: Datum[]): Datum[] {
+export function calculateData(log: LogTransform, data: Datum[]): Datum[] {
+    const { field, base, newField } = log;
+
     let output: Datum[] = Array.from(data);
-    spec?.log?.forEach(log => {
-        const { field, base, newField } = log;
-        output = output.map(d => {
-            if (+d[field]) {
-                if (base === 'e') {
-                    d[newField ?? field] = Math.log(+d[field]);
-                } else {
-                    d[newField ?? field] = Math.log(+d[field]) / Math.log(base ?? 10);
-                }
+    output = output.map(d => {
+        if (+d[field]) {
+            if (base === 'e') {
+                d[newField ?? field] = Math.log(+d[field]);
+            } else {
+                d[newField ?? field] = Math.log(+d[field]) / Math.log(base ?? 10);
             }
-            return d;
-        });
+        }
+        return d;
     });
     return output;
 }

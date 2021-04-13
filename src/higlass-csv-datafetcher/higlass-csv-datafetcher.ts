@@ -264,7 +264,9 @@ function CSVDataFetcher(HGC: any, ...args: any): any {
                 });
 
                 // filter data based on the `DataTransform` spec
-                tabularData = filterData(this.filter, tabularData);
+                this.filter?.forEach(f => {
+                    tabularData = filterData(f, tabularData);
+                });
 
                 const sizeLimit = this.dataConfig.sampleLength ?? 1000;
                 return {
