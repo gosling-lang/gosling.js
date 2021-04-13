@@ -2,24 +2,19 @@ import { filterData, calculateData, aggregateData } from './data-transform';
 
 describe('Data Transformation', () => {
     it('Filter', () => {
-        const filtered = filterData(
-            [
-                { field: 'c', oneOf: ['a'] },
-                { field: 'q', inRange: [1, 3.5] }
-            ],
-            [
-                { c: 'a', q: 1 },
-                { c: 'a', q: 3 },
-                { c: 'b', q: 4 }
-            ]
-        );
+        let filtered = filterData({ type: 'filter', field: 'c', oneOf: ['a'] }, [
+            { c: 'a', q: 1 },
+            { c: 'a', q: 3 },
+            { c: 'b', q: 4 }
+        ]);
+        filtered = filterData({ type: 'filter', field: 'q', inRange: [1, 3.5] }, filtered);
         expect(filtered).toHaveLength(2);
         expect(filtered.filter(d => d['c'] === 'b')).toHaveLength(0);
         expect(filtered.filter(d => d['q'] === 4)).toHaveLength(0);
     });
     it('Log', () => {
         {
-            const log = calculateData({ log: [{ field: 'q', base: 2 }] }, [
+            const log = calculateData({ type: 'log', field: 'q', base: 2 }, [
                 { c: 'a', q: 1 },
                 { c: 'a', q: 3 },
                 { c: 'b', q: 4 }
@@ -28,18 +23,12 @@ describe('Data Transformation', () => {
             expect(log.filter(d => d['c'] === 'b')[0]['q']).toBeCloseTo(Math.log2(4), 10);
         }
         {
-            const log = calculateData(
-                {
-                    log: [
-                        { field: 'q' } // default: 10
-                    ]
-                },
-                [
-                    { c: 'a', q: 1 },
-                    { c: 'a', q: 3 },
-                    { c: 'b', q: 4 }
-                ]
-            );
+            // default base is 10
+            const log = calculateData({ type: 'log', field: 'q' }, [
+                { c: 'a', q: 1 },
+                { c: 'a', q: 3 },
+                { c: 'b', q: 4 }
+            ]);
             expect(log).toHaveLength(3);
             expect(log.filter(d => d['c'] === 'b')[0]['q']).toBeCloseTo(Math.log10(4), 10);
         }
