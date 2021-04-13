@@ -189,6 +189,12 @@ function Editor(props: any) {
 
     // for using HiGlass JS API
     // const hgRef = useRef<any>();
+    const gosRef = useRef<any>();
+
+    // TODO: Testing
+    useEffect(() => {
+        gosRef?.current?.api?.zoomToGene();
+    }, [gosRef.current]);
 
     /**
      * Editor mode
@@ -602,6 +608,7 @@ function Editor(props: any) {
                             >
                                 <div className="preview-container">
                                     <gosling.GoslingComponent
+                                        ref={gosRef}
                                         spec={goslingSpec}
                                         compiled={(g, h) => {
                                             setHg(h);

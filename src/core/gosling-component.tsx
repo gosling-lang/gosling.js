@@ -1,6 +1,7 @@
+/* eslint-disable react/prop-types */
 // @ts-ignore
 import { HiGlassComponent } from 'higlass';
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef, forwardRef } from 'react';
 import * as gosling from '..';
 
 /**
@@ -13,16 +14,33 @@ interface GoslingCompProps {
     compiled?: (goslingSpec: gosling.GoslingSpec, higlassSpec: gosling.HiGlassSpec) => void;
 }
 
-export function GoslingComponent(props: GoslingCompProps) {
+// TODO: specify types other than "any"
+export const GoslingComponent = forwardRef((props: GoslingCompProps, ref: any) => {
     // Gosling and HiGlass specs
     const [gs, setGs] = useState<gosling.GoslingSpec | undefined>(props.spec);
     const [hs, setHs] = useState<gosling.HiGlassSpec>();
     const [size, setSize] = useState({ width: 200, height: 200 });
 
+    // HiGlass API
+    const hgRef = useRef<any>(null); // TODO: any type
+
     // Just received a new Gosling spec.
     useEffect(() => {
         setGs(props.spec);
     }, [props.spec]);
+
+    // HiGlassMeta APIs that can be called outside the library.
+    useEffect(() => {
+        if (!ref) return;
+
+        ref.current = {
+            api: {
+                zoomToGene: (gene: string) => {
+                    console.warn(`hgRef.current.api.zoomToGene('viewId', '${gene}', 1000);`);
+                }
+            }
+        };
+    }, [ref]);
 
     useEffect(() => {
         if (gs) {
@@ -70,7 +88,7 @@ export function GoslingComponent(props: GoslingCompProps) {
                         }}
                     >
                         <HiGlassComponent
-                            // ref={hgRef}
+                            ref={hgRef}
                             options={{
                                 bounded: true,
                                 containerPaddingX: 0,
@@ -95,4 +113,4 @@ export function GoslingComponent(props: GoslingCompProps) {
     }, [hs, size]);
 
     return higlassComponent;
-}
+});
