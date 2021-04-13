@@ -5,6 +5,7 @@ import React, { useState, useEffect, useMemo, useRef, forwardRef } from 'react';
 import * as gosling from '..';
 import { View as HgView } from './higlass.schema';
 import { traverseViewsInViewConfig } from '../core/utils/view-config';
+import { GET_CHROM_SIZES } from './utils/assembly';
 
 /**
  * Register plugin tracks and data fetchers to HiGlass. This is necessary for the first time before using Gosling.
@@ -37,6 +38,27 @@ export const GoslingComponent = forwardRef((props: GoslingCompProps, ref: any) =
 
         ref.current = {
             api: {
+                // TODO: Support assemblies
+                zoomTo: (viewId: string, position: string) => {
+                    if (!position.includes('chr') || !position.includes('-')) {
+                        console.warn('Genomic interval you entered is not in a correct form.');
+                        return;
+                    }
+                    // example: 'chr1:1-1000'
+                    const [chr, interval] = position.split(':');
+                    const chrStart = GET_CHROM_SIZES().interval?.[chr]?.[0];
+
+                    if (!chr || !interval || typeof chrStart === undefined) {
+                        console.warn('Chromosome name is not valid', chr);
+                        return;
+                    }
+
+                    const [s, e] = interval.split('-');
+                    const start = +s + chrStart;
+                    const end = +e + chrStart;
+
+                    hgRef?.current?.api?.zoomTo(viewId, start, end, start, end, 1000);
+                },
                 zoomToGene: (viewId: string, gene: string) => {
                     hgRef?.current?.api?.zoomToGene(viewId, gene, 1000);
                 },
