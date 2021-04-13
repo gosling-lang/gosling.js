@@ -13,9 +13,7 @@ export const CytoBands: OverlaidTracks = {
     tracks: [
         {
             mark: 'text',
-            dataTransform: {
-                filter: [{ field: 'Stain', oneOf: ['acen-1', 'acen-2'], not: true }]
-            },
+            dataTransform: [{ type: 'filter', field: 'Stain', oneOf: ['acen-1', 'acen-2'], not: true }],
             text: { field: 'Band', type: 'nominal' },
             color: { value: 'black' },
             visibility: [
@@ -33,9 +31,7 @@ export const CytoBands: OverlaidTracks = {
         },
         {
             mark: 'rect',
-            dataTransform: {
-                filter: [{ field: 'Stain', oneOf: ['acen-1', 'acen-2'], not: true }]
-            },
+            dataTransform: [{ type: 'filter', field: 'Stain', oneOf: ['acen-1', 'acen-2'], not: true }],
             color: {
                 field: 'Density',
                 type: 'nominal',
@@ -45,23 +41,17 @@ export const CytoBands: OverlaidTracks = {
         },
         {
             mark: 'rect',
-            dataTransform: {
-                filter: [{ field: 'Stain', oneOf: ['gvar'] }]
-            },
+            dataTransform: [{ type: 'filter', field: 'Stain', oneOf: ['gvar'] }],
             color: { value: '#A0A0F2' }
         },
         {
             mark: 'triangleRight',
-            dataTransform: {
-                filter: [{ field: 'Stain', oneOf: ['acen-1'] }]
-            },
+            dataTransform: [{ type: 'filter', field: 'Stain', oneOf: ['acen-1'] }],
             color: { value: '#B40101' }
         },
         {
             mark: 'triangleLeft',
-            dataTransform: {
-                filter: [{ field: 'Stain', oneOf: ['acen-2'] }]
-            },
+            dataTransform: [{ type: 'filter', field: 'Stain', oneOf: ['acen-2'] }],
             color: { value: '#B40101' }
         }
     ],

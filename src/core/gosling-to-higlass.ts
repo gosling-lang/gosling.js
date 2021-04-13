@@ -2,7 +2,7 @@ import uuid from 'uuid';
 import { Track as HiGlassTrack } from './higlass.schema';
 import { HiGlassModel, HIGLASS_AXIS_SIZE } from './higlass-model';
 import { parseServerAndTilesetUidFromUrl } from './utils';
-import { Track, Domain } from './gosling.schema';
+import { Track, Domain, DataTransform } from './gosling.schema';
 import { BoundingBox, RelativePosition } from './utils/bounding-box';
 import { resolveSuperposedTracks } from './utils/overlay';
 import { getGenomicChannelKeyFromTrack, getGenomicChannelFromTrack } from './utils/validate';
@@ -83,7 +83,7 @@ export function goslingToHiGlass(
                 // Additionally, add assembly, otherwise, a default build is used
                 assembly,
                 // Add a data transformation spec so that the fetcher can properly sample datasets
-                filter: (gosTrack as any).dataTransform?.filter
+                filter: (gosTrack as any).dataTransform?.filter((f: DataTransform) => f.type === 'filter')
             };
         }
 

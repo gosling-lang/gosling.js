@@ -106,9 +106,7 @@ export const EX_SPEC_MATRIX: GoslingSpec = {
                         },
                         {
                             mark: 'text',
-                            dataTransform: {
-                                filter: [{ field: 'Stain', oneOf: ['acen'], not: true }]
-                            },
+                            dataTransform: [{ type: 'filter', field: 'Stain', oneOf: ['acen'], not: true }],
                             text: { field: 'Name', type: 'nominal' },
                             color: {
                                 field: 'Stain',
@@ -131,9 +129,7 @@ export const EX_SPEC_MATRIX: GoslingSpec = {
                         },
                         {
                             mark: 'rect',
-                            dataTransform: {
-                                filter: [{ field: 'Stain', oneOf: ['acen'], not: true }]
-                            },
+                            dataTransform: [{ type: 'filter', field: 'Stain', oneOf: ['acen'], not: true }],
                             color: {
                                 field: 'Stain',
                                 type: 'nominal',
@@ -143,22 +139,18 @@ export const EX_SPEC_MATRIX: GoslingSpec = {
                         },
                         {
                             mark: 'triangleRight',
-                            dataTransform: {
-                                filter: [
-                                    { field: 'Stain', oneOf: ['acen'] },
-                                    { field: 'Name', include: 'q' }
-                                ]
-                            },
+                            dataTransform: [
+                                { type: 'filter', field: 'Stain', oneOf: ['acen'] },
+                                { type: 'filter', field: 'Name', include: 'q' }
+                            ],
                             color: { value: '#B40101' }
                         },
                         {
                             mark: 'triangleLeft',
-                            dataTransform: {
-                                filter: [
-                                    { field: 'Stain', oneOf: ['acen'] },
-                                    { field: 'Name', include: 'p' }
-                                ]
-                            },
+                            dataTransform: [
+                                { type: 'filter', field: 'Stain', oneOf: ['acen'] },
+                                { type: 'filter', field: 'Name', include: 'p' }
+                            ],
                             color: { value: '#B40101' }
                         },
                         {
@@ -238,12 +230,10 @@ export const EX_SPEC_MATRIX: GoslingSpec = {
                     },
                     tracks: [
                         {
-                            dataTransform: {
-                                filter: [
-                                    { field: 'type', oneOf: ['gene'] },
-                                    { field: 'strand', oneOf: ['+'] }
-                                ]
-                            },
+                            dataTransform: [
+                                { type: 'filter', field: 'type', oneOf: ['gene'] },
+                                { type: 'filter', field: 'strand', oneOf: ['+'] }
+                            ],
                             mark: 'triangleRight',
                             x: {
                                 field: 'end',
@@ -253,9 +243,7 @@ export const EX_SPEC_MATRIX: GoslingSpec = {
                             size: { value: 15 }
                         },
                         {
-                            dataTransform: {
-                                filter: [{ field: 'type', oneOf: ['gene'] }]
-                            },
+                            dataTransform: [{ type: 'filter', field: 'type', oneOf: ['gene'] }],
                             mark: 'text',
                             text: { field: 'name', type: 'nominal' },
                             x: {
@@ -271,12 +259,10 @@ export const EX_SPEC_MATRIX: GoslingSpec = {
                             }
                         },
                         {
-                            dataTransform: {
-                                filter: [
-                                    { field: 'type', oneOf: ['gene'] },
-                                    { field: 'strand', oneOf: ['-'] }
-                                ]
-                            },
+                            dataTransform: [
+                                { type: 'filter', field: 'type', oneOf: ['gene'] },
+                                { type: 'filter', field: 'strand', oneOf: ['-'] }
+                            ],
                             mark: 'triangleLeft',
                             x: {
                                 field: 'start',
@@ -286,7 +272,7 @@ export const EX_SPEC_MATRIX: GoslingSpec = {
                             style: { align: 'right' }
                         },
                         {
-                            dataTransform: { filter: [{ field: 'type', oneOf: ['exon'] }] },
+                            dataTransform: [{ type: 'filter', field: 'type', oneOf: ['exon'] }],
                             mark: 'rect',
                             x: {
                                 field: 'start',
@@ -299,12 +285,10 @@ export const EX_SPEC_MATRIX: GoslingSpec = {
                             }
                         },
                         {
-                            dataTransform: {
-                                filter: [
-                                    { field: 'type', oneOf: ['gene'] },
-                                    { field: 'strand', oneOf: ['+'] }
-                                ]
-                            },
+                            dataTransform: [
+                                { type: 'filter', field: 'type', oneOf: ['gene'] },
+                                { type: 'filter', field: 'strand', oneOf: ['+'] }
+                            ],
                             mark: 'rule',
                             x: {
                                 field: 'start',
@@ -320,12 +304,10 @@ export const EX_SPEC_MATRIX: GoslingSpec = {
                             }
                         },
                         {
-                            dataTransform: {
-                                filter: [
-                                    { field: 'type', oneOf: ['gene'] },
-                                    { field: 'strand', oneOf: ['-'] }
-                                ]
-                            },
+                            dataTransform: [
+                                { type: 'filter', field: 'type', oneOf: ['gene'] },
+                                { type: 'filter', field: 'strand', oneOf: ['-'] }
+                            ],
                             mark: 'rule',
                             x: {
                                 field: 'start',

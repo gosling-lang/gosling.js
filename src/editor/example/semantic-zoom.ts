@@ -20,7 +20,7 @@ const ScalableSequenceTrack: OverlaidTracks = {
             y: { field: 'count', type: 'quantitative' }
         },
         {
-            dataTransform: { filter: [{ field: 'count', oneOf: [0], not: true }] },
+            dataTransform: [{ type: 'filter', field: 'count', oneOf: [0], not: true }],
             mark: 'text',
             x: {
                 field: 'start',
@@ -138,9 +138,7 @@ const ScalableCytoBand: OverlaidTracks = {
         },
         {
             mark: 'text',
-            dataTransform: {
-                filter: [{ field: 'Stain', oneOf: ['acen'], not: true }]
-            },
+            dataTransform: [{ type: 'filter', field: 'Stain', oneOf: ['acen'], not: true }],
             text: { field: 'Name', type: 'nominal' },
             color: {
                 field: 'Stain',
@@ -163,9 +161,7 @@ const ScalableCytoBand: OverlaidTracks = {
         },
         {
             mark: 'rect',
-            dataTransform: {
-                filter: [{ field: 'Stain', oneOf: ['acen'], not: true }]
-            },
+            dataTransform: [{ type: 'filter', field: 'Stain', oneOf: ['acen'], not: true }],
             color: {
                 field: 'Stain',
                 type: 'nominal',
@@ -175,22 +171,18 @@ const ScalableCytoBand: OverlaidTracks = {
         },
         {
             mark: 'triangleRight',
-            dataTransform: {
-                filter: [
-                    { field: 'Stain', oneOf: ['acen'] },
-                    { field: 'Name', include: 'q' }
-                ]
-            },
+            dataTransform: [
+                { type: 'filter', field: 'Stain', oneOf: ['acen'] },
+                { type: 'filter', field: 'Name', include: 'q' }
+            ],
             color: { value: '#B40101' }
         },
         {
             mark: 'triangleLeft',
-            dataTransform: {
-                filter: [
-                    { field: 'Stain', oneOf: ['acen'] },
-                    { field: 'Name', include: 'p' }
-                ]
-            },
+            dataTransform: [
+                { type: 'filter', field: 'Stain', oneOf: ['acen'] },
+                { type: 'filter', field: 'Name', include: 'p' }
+            ],
             color: { value: '#B40101' }
         }
     ],

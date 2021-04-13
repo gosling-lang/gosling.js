@@ -16,29 +16,31 @@ export const EX_SPEC_GENE_TRANSCRIPT: GoslingSpec = {
             { index: 3, name: 'name', type: 'nominal' }
         ]
     },
-    dataTransform: {
-        displace: [
-            { type: 'pile', boundingBox: { startField: 'start', endField: 'end' }, newField: 'row', maxRows: 15 }
-        ],
-        filter: [{ field: 'type', oneOf: ['gene'] }]
-    },
+    dataTransform: [
+        { type: 'filter', field: 'type', oneOf: ['gene'] },
+        {
+            type: 'displace',
+            method: 'pile',
+            boundingBox: { startField: 'start', endField: 'end' },
+            newField: 'row',
+            maxRows: 15
+        }
+    ],
     title: 'hg38 | Transcript (Max. 15 Rows)',
     tracks: [
         {
-            dataTransform: {
-                displace: [
-                    {
-                        type: 'pile',
-                        boundingBox: { startField: 'start', endField: 'end' },
-                        newField: 'row',
-                        maxRows: 15
-                    }
-                ],
-                filter: [
-                    { field: 'type', oneOf: ['gene'] },
-                    { field: 'strand', oneOf: ['+'] }
-                ]
-            },
+            dataTransform: [
+                {
+                    type: 'displace',
+                    method: 'pile',
+                    boundingBox: { startField: 'start', endField: 'end' },
+                    newField: 'row',
+                    maxRows: 15
+                },
+
+                { type: 'filter', field: 'type', oneOf: ['gene'] },
+                { type: 'filter', field: 'strand', oneOf: ['+'] }
+            ],
             mark: 'triangleRight',
             x: {
                 field: 'end',
@@ -49,17 +51,16 @@ export const EX_SPEC_GENE_TRANSCRIPT: GoslingSpec = {
             size: { value: 15 }
         },
         {
-            dataTransform: {
-                displace: [
-                    {
-                        type: 'pile',
-                        boundingBox: { startField: 'start', endField: 'end' },
-                        newField: 'row',
-                        maxRows: 15
-                    }
-                ],
-                filter: [{ field: 'type', oneOf: ['gene'] }]
-            },
+            dataTransform: [
+                {
+                    type: 'displace',
+                    method: 'pile',
+                    boundingBox: { startField: 'start', endField: 'end' },
+                    newField: 'row',
+                    maxRows: 15
+                },
+                { type: 'filter', field: 'type', oneOf: ['gene'] }
+            ],
             mark: 'text',
             text: { field: 'name', type: 'nominal' },
             x: {
@@ -75,20 +76,17 @@ export const EX_SPEC_GENE_TRANSCRIPT: GoslingSpec = {
             }
         },
         {
-            dataTransform: {
-                displace: [
-                    {
-                        type: 'pile',
-                        boundingBox: { startField: 'start', endField: 'end' },
-                        newField: 'row',
-                        maxRows: 15
-                    }
-                ],
-                filter: [
-                    { field: 'type', oneOf: ['gene'] },
-                    { field: 'strand', oneOf: ['-'] }
-                ]
-            },
+            dataTransform: [
+                {
+                    type: 'displace',
+                    method: 'pile',
+                    boundingBox: { startField: 'start', endField: 'end' },
+                    newField: 'row',
+                    maxRows: 15
+                },
+                { type: 'filter', field: 'type', oneOf: ['gene'] },
+                { type: 'filter', field: 'strand', oneOf: ['-'] }
+            ],
             mark: 'triangleLeft',
             x: {
                 field: 'start',
@@ -98,17 +96,16 @@ export const EX_SPEC_GENE_TRANSCRIPT: GoslingSpec = {
             style: { align: 'right' }
         },
         {
-            dataTransform: {
-                displace: [
-                    {
-                        type: 'pile',
-                        boundingBox: { startField: 'start', endField: 'end' },
-                        newField: 'row',
-                        maxRows: 15
-                    }
-                ],
-                filter: [{ field: 'type', oneOf: ['exon'] }]
-            },
+            dataTransform: [
+                {
+                    type: 'displace',
+                    method: 'pile',
+                    boundingBox: { startField: 'start', endField: 'end' },
+                    newField: 'row',
+                    maxRows: 15
+                },
+                { type: 'filter', field: 'type', oneOf: ['exon'] }
+            ],
             mark: 'rect',
             x: {
                 field: 'start',
@@ -120,20 +117,17 @@ export const EX_SPEC_GENE_TRANSCRIPT: GoslingSpec = {
             }
         },
         {
-            dataTransform: {
-                displace: [
-                    {
-                        type: 'pile',
-                        boundingBox: { startField: 'start', endField: 'end' },
-                        newField: 'row',
-                        maxRows: 15
-                    }
-                ],
-                filter: [
-                    { field: 'type', oneOf: ['gene'] },
-                    { field: 'strand', oneOf: ['+'] }
-                ]
-            },
+            dataTransform: [
+                {
+                    type: 'displace',
+                    method: 'pile',
+                    boundingBox: { startField: 'start', endField: 'end' },
+                    newField: 'row',
+                    maxRows: 15
+                },
+                { type: 'filter', field: 'type', oneOf: ['gene'] },
+                { type: 'filter', field: 'strand', oneOf: ['+'] }
+            ],
             mark: 'rule',
             x: {
                 field: 'start',
@@ -149,20 +143,17 @@ export const EX_SPEC_GENE_TRANSCRIPT: GoslingSpec = {
             }
         },
         {
-            dataTransform: {
-                displace: [
-                    {
-                        type: 'pile',
-                        boundingBox: { startField: 'start', endField: 'end' },
-                        newField: 'row',
-                        maxRows: 15
-                    }
-                ],
-                filter: [
-                    { field: 'type', oneOf: ['gene'] },
-                    { field: 'strand', oneOf: ['-'] }
-                ]
-            },
+            dataTransform: [
+                {
+                    type: 'displace',
+                    method: 'pile',
+                    boundingBox: { startField: 'start', endField: 'end' },
+                    newField: 'row',
+                    maxRows: 15
+                },
+                { type: 'filter', field: 'type', oneOf: ['gene'] },
+                { type: 'filter', field: 'strand', oneOf: ['-'] }
+            ],
             mark: 'rule',
             x: {
                 field: 'start',

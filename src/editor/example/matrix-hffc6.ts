@@ -88,12 +88,12 @@ export const EX_SPEC_MATRIX_HFFC6: GoslingSpec = {
                                 // },
                                 {
                                     title: 'Genes (hg38)',
-                                    dataTransform: { filter: [{ field: 'strand', oneOf: ['+'] }] },
+                                    dataTransform: [{ type: 'filter', field: 'strand', oneOf: ['+'] }],
                                     mark: 'triangleRight',
                                     color: { value: '#CB7AA7' }
                                 },
                                 {
-                                    dataTransform: { filter: [{ field: 'strand', oneOf: ['-'] }] },
+                                    dataTransform: [{ type: 'filter', field: 'strand', oneOf: ['-'] }],
                                     mark: 'triangleLeft',
                                     color: { value: '#029F73' }
                                 }
@@ -196,7 +196,7 @@ export const EX_SPEC_MATRIX_HFFC6: GoslingSpec = {
                                             { index: 3, name: 'name', type: 'nominal' }
                                         ]
                                     },
-                                    dataTransform: { filter: [{ field: 'strand', oneOf: ['+'] }] },
+                                    dataTransform: [{ type: 'filter', field: 'strand', oneOf: ['+'] }],
                                     mark: 'triangleRight',
                                     x: { field: 'start', type: 'genomic' },
                                     size: { value: 13 },
@@ -219,7 +219,7 @@ export const EX_SPEC_MATRIX_HFFC6: GoslingSpec = {
                                             { index: 3, name: 'name', type: 'nominal' }
                                         ]
                                     },
-                                    dataTransform: { filter: [{ field: 'strand', oneOf: ['-'] }] },
+                                    dataTransform: [{ type: 'filter', field: 'strand', oneOf: ['-'] }],
                                     mark: 'triangleLeft',
                                     x: { field: 'start', type: 'genomic' },
                                     stroke: { value: 'white' },
@@ -264,7 +264,7 @@ export const EX_SPEC_MATRIX_HFFC6: GoslingSpec = {
                                 ],
                                 binSize: 8
                             },
-                            dataTransform: { filter: [{ field: 'value', inRange: [0, 999999] }] },
+                            dataTransform: [{ type: 'filter', field: 'value', inRange: [0, 999999] }],
                             mark: 'bar',
                             x: { field: 'start', type: 'genomic', axis: 'none' },
                             xe: { field: 'end', type: 'genomic' },
@@ -389,7 +389,7 @@ export const EX_SPEC_MATRIX_HFFC6: GoslingSpec = {
                                             { index: 3, name: 'name', type: 'nominal' }
                                         ]
                                     },
-                                    dataTransform: { filter: [{ field: 'strand', oneOf: ['+'] }] },
+                                    dataTransform: [{ type: 'filter', field: 'strand', oneOf: ['+'] }],
                                     mark: 'triangleRight',
                                     x: { field: 'start', type: 'genomic' },
                                     size: { value: 13 },
@@ -412,7 +412,7 @@ export const EX_SPEC_MATRIX_HFFC6: GoslingSpec = {
                                             { index: 3, name: 'name', type: 'nominal' }
                                         ]
                                     },
-                                    dataTransform: { filter: [{ field: 'strand', oneOf: ['-'] }] },
+                                    dataTransform: [{ type: 'filter', field: 'strand', oneOf: ['-'] }],
                                     mark: 'triangleLeft',
                                     x: { field: 'start', type: 'genomic' },
                                     size: { value: 13 },
@@ -457,7 +457,7 @@ export const EX_SPEC_MATRIX_HFFC6: GoslingSpec = {
                                 ],
                                 binSize: 8
                             },
-                            dataTransform: { filter: [{ field: 'value', inRange: [0, 999999] }] },
+                            dataTransform: [{ type: 'filter', field: 'value', inRange: [0, 999999] }],
                             mark: 'bar',
                             x: { field: 'start', type: 'genomic', axis: 'none' },
                             xe: { field: 'end', type: 'genomic' },
