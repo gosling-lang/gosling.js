@@ -1,3 +1,14 @@
+## [0.7.5](https://github.com/gosling-lang/gosling.js/compare/v0.7.4...v0.7.5) (2021-04-13)
+
+
+### Features
+
+* data transform as ordered array ([#355](https://github.com/gosling-lang/gosling.js/issues/355)) ([38ed0e4](https://github.com/gosling-lang/gosling.js/commit/38ed0e4fde5cfeba7a41ca6ab6bb59ad2a6559d5))
+* **api:** zoom to gene ([#353](https://github.com/gosling-lang/gosling.js/issues/353)) ([3021b82](https://github.com/gosling-lang/gosling.js/commit/3021b82350d524fcfa3b55105fae06cd3cebd8c7))
+* enable customizing stroke of brush ([#352](https://github.com/gosling-lang/gosling.js/issues/352)) ([b713b94](https://github.com/gosling-lang/gosling.js/commit/b713b948351bec90b21c57cae96f869b4955f708))
+
+
+
 ## [0.7.4](https://github.com/gosling-lang/gosling.js/compare/v0.7.3...v0.7.4) (2021-04-12)
 
 
