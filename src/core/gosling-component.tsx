@@ -40,20 +40,21 @@ export const GoslingComponent = forwardRef((props: GoslingCompProps, ref: any) =
             api: {
                 // TODO: Support assemblies
                 zoomTo: (viewId: string, position: string) => {
-                    if (!position.includes('chr') || !position.includes('-')) {
+                    // Accepted input: 'chr1' or 'chr1:1-1000'
+                    if (!position.includes('chr')) {
                         console.warn('Genomic interval you entered is not in a correct form.');
                         return;
                     }
-                    // example: 'chr1:1-1000'
-                    const [chr, interval] = position.split(':');
+
+                    const chr = position.split(':')[0];
                     const chrStart = GET_CHROM_SIZES().interval?.[chr]?.[0];
 
-                    if (!chr || !interval || typeof chrStart === undefined) {
+                    if (!chr || typeof chrStart === undefined) {
                         console.warn('Chromosome name is not valid', chr);
                         return;
                     }
 
-                    const [s, e] = interval.split('-');
+                    const [s, e] = position.split(':')[1]?.split('-') ?? [0, GET_CHROM_SIZES().size[chr]];
                     const start = +s + chrStart;
                     const end = +e + chrStart;
 
