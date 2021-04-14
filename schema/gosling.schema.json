@@ -2542,6 +2542,9 @@
         "subtitle": {
           "type": "string"
         },
+        "theme": {
+          "$ref": "#/definitions/Theme"
+        },
         "title": {
           "type": "string"
         },
@@ -2691,6 +2694,9 @@
             },
             "text": {
               "$ref": "#/definitions/Channel"
+            },
+            "theme": {
+              "$ref": "#/definitions/Theme"
             },
             "title": {
               "type": "string"
@@ -3236,6 +3242,9 @@
             "text": {
               "$ref": "#/definitions/Channel"
             },
+            "theme": {
+              "$ref": "#/definitions/Theme"
+            },
             "title": {
               "type": "string"
             },
@@ -3704,6 +3713,9 @@
             },
             "subtitle": {
               "type": "string"
+            },
+            "theme": {
+              "$ref": "#/definitions/Theme"
             },
             "title": {
               "type": "string"
@@ -4527,6 +4539,13 @@
         "tracks"
       ],
       "type": "object"
+    },
+    "Theme": {
+      "enum": [
+        "light",
+        "dark"
+      ],
+      "type": "string"
     },
     "Track": {
       "anyOf": [

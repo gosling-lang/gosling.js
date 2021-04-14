@@ -21,7 +21,7 @@ export function renderHiGlass(
     /* Update the HiGlass model by iterating tracks */
     trackInfos.forEach(tb => {
         const { track, boundingBox: bb, layout } = tb;
-        goslingToHiGlass(hgModel, track, bb, layout);
+        goslingToHiGlass(hgModel, track, bb, layout, spec.theme);
     });
 
     /* Add linking information to the HiGlass model */
@@ -36,7 +36,8 @@ export function renderHiGlass(
                 info.layout,
                 info.viewId,
                 linkingInfos.find(d => !d.isBrush && d.linkId === info.linkId)?.viewId,
-                info.style
+                info.style,
+                spec.theme
             );
         });
 

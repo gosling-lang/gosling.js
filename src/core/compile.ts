@@ -8,6 +8,9 @@ export function compile(spec: GoslingSpec, setHg: (hg: HiGlassSpec, size: Size) 
     // Override default visual encoding (i.e., `DataTrack` => `BasicSingleTrack`)
     overrideTemplates(spec);
 
+    // Use default theme if not specified
+    if (!spec.theme) spec.theme = 'light';
+
     // Fix track specs by looking into the root-level spec
     traverseToFixSpecDownstream(spec);
 

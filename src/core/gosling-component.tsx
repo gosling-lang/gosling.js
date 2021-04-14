@@ -15,6 +15,7 @@ gosling.init();
 interface GoslingCompProps {
     spec?: gosling.GoslingSpec;
     compiled?: (goslingSpec: gosling.GoslingSpec, higlassSpec: gosling.HiGlassSpec) => void;
+    padding?: number;
 }
 
 // TODO: specify types other than "any"
@@ -23,6 +24,9 @@ export const GoslingComponent = forwardRef((props: GoslingCompProps, ref: any) =
     const [gs, setGs] = useState<gosling.GoslingSpec | undefined>(props.spec);
     const [hs, setHs] = useState<gosling.HiGlassSpec>();
     const [size, setSize] = useState({ width: 200, height: 200 });
+
+    // Styling
+    const padding = typeof props.padding !== 'undefined' ? props.padding : 60;
 
     // HiGlass API
     const hgRef = useRef<any>();
@@ -101,10 +105,10 @@ export const GoslingComponent = forwardRef((props: GoslingCompProps, ref: any) =
                 <div
                     style={{
                         position: 'relative',
-                        padding: 60,
-                        background: 'white',
-                        width: size.width + 120,
-                        height: size.height + 120,
+                        padding,
+                        background: gs?.theme === 'dark' ? 'black' : 'white',
+                        width: size.width + padding * 2,
+                        height: size.height + padding * 2,
                         textAlign: 'left'
                     }}
                 >
@@ -113,7 +117,7 @@ export const GoslingComponent = forwardRef((props: GoslingCompProps, ref: any) =
                         style={{
                             position: 'relative',
                             display: 'block',
-                            background: 'white',
+                            background: gs?.theme === 'dark' ? 'black' : 'white',
                             margin: 0,
                             padding: 0, // non-zero padding acts unexpectedly w/ HiGlassComponent
                             width: size.width,
@@ -135,6 +139,7 @@ export const GoslingComponent = forwardRef((props: GoslingCompProps, ref: any) =
                                 viewPaddingLeft: 0,
                                 viewPaddingRight: 0,
                                 sizeMode: 'bounded',
+                                theme: gs?.theme,
                                 rangeSelectionOnAlt: true // this allows switching between `selection` and `zoom&pan` mode
                             }}
                             viewConfig={hs}
