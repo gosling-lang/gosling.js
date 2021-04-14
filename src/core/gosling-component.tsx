@@ -39,7 +39,7 @@ export const GoslingComponent = forwardRef((props: GoslingCompProps, ref: any) =
         ref.current = {
             api: {
                 // TODO: Support assemblies (we can infer this from the spec)
-                zoomTo: (viewId: string, position: string) => {
+                zoomTo: (viewId: string, position: string, duration = 1000) => {
                     // Accepted input: 'chr1' or 'chr1:1-1000'
                     if (!position.includes('chr')) {
                         console.warn('Genomic interval you entered is not in a correct form.');
@@ -58,10 +58,10 @@ export const GoslingComponent = forwardRef((props: GoslingCompProps, ref: any) =
                     const start = +s + chrStart;
                     const end = +e + chrStart;
 
-                    hgRef?.current?.api?.zoomTo(viewId, start, end, start, end, 1000);
+                    hgRef?.current?.api?.zoomTo(viewId, start, end, start, end, duration);
                 },
-                zoomToGene: (viewId: string, gene: string) => {
-                    hgRef?.current?.api?.zoomToGene(viewId, gene, 1000);
+                zoomToGene: (viewId: string, gene: string, duration = 1000) => {
+                    hgRef?.current?.api?.zoomToGene(viewId, gene, duration);
                 },
                 getViewIds: () => {
                     if (!hs) return [];
