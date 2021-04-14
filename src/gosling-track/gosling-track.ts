@@ -123,7 +123,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                     return;
                 }
 
-                drawMark(HGC, this, tile, tm);
+                drawMark(HGC, this, tile, tm, this.options.theme);
             });
         }
 
@@ -839,6 +839,7 @@ GoslingTrack.config = {
         'backgroundColor',
         'barBorder',
         'sortLargestOnTop',
+        'theme',
         'axisPositionHorizontal' // TODO: support this
     ],
     defaultOptions: {
@@ -850,7 +851,8 @@ GoslingTrack.config = {
         backgroundColor: 'white',
         barBorder: false,
         sortLargestOnTop: true,
-        axisPositionHorizontal: 'left'
+        axisPositionHorizontal: 'left',
+        theme: 'light'
     }
 };
 

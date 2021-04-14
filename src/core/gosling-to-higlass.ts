@@ -2,13 +2,14 @@ import uuid from 'uuid';
 import { Track as HiGlassTrack } from './higlass.schema';
 import { HiGlassModel, HIGLASS_AXIS_SIZE } from './higlass-model';
 import { parseServerAndTilesetUidFromUrl } from './utils';
-import { Track, Domain, DataTransform } from './gosling.schema';
+import { Track, Domain, DataTransform, Theme } from './gosling.schema';
 import { BoundingBox, RelativePosition } from './utils/bounding-box';
 import { resolveSuperposedTracks } from './utils/overlay';
 import { getGenomicChannelKeyFromTrack, getGenomicChannelFromTrack } from './utils/validate';
 import { viridisColorMap } from './utils/colors';
 import { IsDataDeep, IsChannelDeep, IsDataDeepTileset } from './gosling.schema.guards';
 import { DEFAULT_SUBTITLE_HEIGHT, DEFAULT_TITLE_HEIGHT } from './layout/defaults';
+import { getThemeColors } from './utils/theme';
 
 /**
  * Convert a gosling track into a HiGlass view and add it into a higlass model.
@@ -17,7 +18,8 @@ export function goslingToHiGlass(
     hgModel: HiGlassModel,
     gosTrack: Track,
     bb: BoundingBox,
-    layout: RelativePosition
+    layout: RelativePosition,
+    theme: Theme = 'light'
 ): HiGlassModel {
     // TODO: check whether there are multiple track.data across superposed tracks
     // ...
@@ -58,7 +60,7 @@ export function goslingToHiGlass(
                 name: firstResolvedSpec.title,
                 labelPosition: firstResolvedSpec.title ? 'topLeft' : 'none',
                 fontSize: 12,
-                labelColor: 'black',
+                labelColor: getThemeColors(theme).main,
                 labelShowResolution: false,
                 labelBackgroundColor: 'white',
                 labelTextOpacity: 1,
@@ -66,9 +68,13 @@ export function goslingToHiGlass(
                 labelTopMargin: 1,
                 labelRightMargin: 0,
                 labelBottomMargin: 0,
+                // TODO: Use this eventually
+                // trackBorderWidth: firstResolvedSpec.style?.outlineWidth ?? 3,
+                // trackBorderColor: firstResolvedSpec.style?.outline ?? '#DBDBDB',
                 /* Others */
                 backgroundColor: 'transparent', // in this way, we can superpose multiple tracks
-                spec: { ...gosTrack }
+                spec: { ...gosTrack },
+                theme
             }
         };
 
@@ -142,7 +148,8 @@ export function goslingToHiGlass(
                     width: firstResolvedSpec.width,
                     height: firstResolvedSpec.height,
                     startAngle: firstResolvedSpec.startAngle,
-                    endAngle: firstResolvedSpec.endAngle
+                    endAngle: firstResolvedSpec.endAngle,
+                    theme
                 });
             }
         });
@@ -152,10 +159,24 @@ export function goslingToHiGlass(
         // `text` tracks are used to show title and subtitle of the views
         hgModel.addDefaultView(gosTrack.id ?? uuid.v1()).setLayout(layout);
         if (typeof firstResolvedSpec.title === 'string') {
-            hgModel.setTextTrack(bb.width, DEFAULT_TITLE_HEIGHT, firstResolvedSpec.title, 'black', 18, 'bold');
+            hgModel.setTextTrack(
+                bb.width,
+                DEFAULT_TITLE_HEIGHT,
+                firstResolvedSpec.title,
+                getThemeColors(theme).main,
+                18,
+                'bold'
+            );
         }
         if (typeof firstResolvedSpec.subtitle === 'string') {
-            hgModel.setTextTrack(bb.width, DEFAULT_SUBTITLE_HEIGHT, firstResolvedSpec.subtitle, 'gray', 14, 'normal');
+            hgModel.setTextTrack(
+                bb.width,
+                DEFAULT_SUBTITLE_HEIGHT,
+                firstResolvedSpec.subtitle,
+                getThemeColors(theme).sub,
+                14,
+                'normal'
+            );
         }
     }
     return hgModel;

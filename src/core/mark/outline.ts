@@ -1,6 +1,8 @@
 import { GoslingTrackModel } from '../gosling-track-model';
+import { Theme } from '../gosling.schema';
 import { IsChannelDeep } from '../gosling.schema.guards';
 import colorToHex from '../utils/color-to-hex';
+import { getThemeColors } from '../utils/theme';
 
 export const TITLE_STYLE = {
     fontSize: '12px',
@@ -11,7 +13,7 @@ export const TITLE_STYLE = {
     lineJoin: 'round'
 };
 
-export function drawChartOutlines(HGC: any, trackInfo: any, tm: GoslingTrackModel) {
+export function drawChartOutlines(HGC: any, trackInfo: any, tm: GoslingTrackModel, theme: Theme = 'light') {
     const g = trackInfo.pBorder; // use pBorder not to affected by zoomming
 
     // size and position
@@ -49,7 +51,7 @@ export function drawChartOutlines(HGC: any, trackInfo: any, tm: GoslingTrackMode
     g.lineStyle(
         tm.spec().style?.outlineWidth ?? 1,
         // TODO: outline not working
-        colorToHex(tm.spec().style?.outline ?? '#DBDBDB'),
+        colorToHex(tm.spec().style?.outline ?? getThemeColors(theme).sub),
         1, // alpha
         0.5 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
     );
@@ -61,7 +63,7 @@ export function drawChartOutlines(HGC: any, trackInfo: any, tm: GoslingTrackMode
 
     g.lineStyle(
         1,
-        colorToHex('black'),
+        colorToHex(getThemeColors(theme).main),
         1, // alpha
         0.5 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
     );

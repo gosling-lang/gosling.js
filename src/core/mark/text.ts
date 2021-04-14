@@ -12,7 +12,7 @@ export const TEXT_STYLE_GLOBAL = {
     background: 'white',
     lineJoin: 'round',
     stroke: '#ffffff',
-    strokeThickness: 2
+    strokeThickness: 0
 };
 
 export function drawText(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackModel) {

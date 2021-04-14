@@ -605,6 +605,7 @@ function Editor(props: any) {
                                     <gosling.GoslingComponent
                                         ref={gosRef}
                                         spec={goslingSpec}
+                                        padding={60}
                                         compiled={(g, h) => {
                                             setHg(h);
                                         }}

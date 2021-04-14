@@ -2,6 +2,7 @@ import { GoslingSpec } from '../../core/gosling.schema';
 import { GOSLING_PUBLIC_DATA } from './gosling-data';
 
 export const EX_SPEC_VISUAL_ENCODING: GoslingSpec = {
+    theme: 'dark', // beta support
     title: 'Visual Encoding',
     subtitle: 'Gosling provides diverse visual encoding methods',
     layout: 'linear',

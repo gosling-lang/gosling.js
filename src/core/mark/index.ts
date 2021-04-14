@@ -4,7 +4,7 @@ import { drawLine } from './line';
 import { drawBar } from './bar';
 import { drawArea } from './area';
 import { drawRect } from './rect';
-import { ChannelTypes } from '../gosling.schema';
+import { ChannelTypes, Theme } from '../gosling.schema';
 import { drawTriangle } from './triangle';
 import { drawText } from './text';
 import { drawRule } from './rule';
@@ -45,7 +45,7 @@ export const RESOLUTION = 4;
 /**
  * Draw a track based on the track specification in a Gosling grammar.
  */
-export function drawMark(HGC: any, trackInfo: any, tile: any, model: GoslingTrackModel) {
+export function drawMark(HGC: any, trackInfo: any, tile: any, model: GoslingTrackModel, theme: Theme = 'light') {
     if (!HGC || !trackInfo || !tile) {
         // We did not receive parameters correctly.
         return;
@@ -73,7 +73,7 @@ export function drawMark(HGC: any, trackInfo: any, tile: any, model: GoslingTrac
         drawCircularGrid(HGC, trackInfo, tile, model);
     } else {
         drawGrid(HGC, trackInfo, tile, model);
-        drawChartOutlines(HGC, trackInfo, model);
+        drawChartOutlines(HGC, trackInfo, model, theme);
     }
 
     // DEBUG

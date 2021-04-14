@@ -1,11 +1,12 @@
 import uuid from 'uuid';
 import { HiGlassSpec, Track } from './higlass.schema';
 import HiGlassSchema from './higlass.schema.json';
-import { Assembly, AxisPosition, Domain, Orientation } from './gosling.schema';
+import { Assembly, AxisPosition, Domain, Orientation, Theme } from './gosling.schema';
 import { getNumericDomain } from './utils/scales';
 import { RelativePosition } from './utils/bounding-box';
 import { validateSpec } from './utils/validate';
 import { GET_CHROM_SIZES } from './utils/assembly';
+import { getThemeColors } from './utils/theme';
 
 export const HIGLASS_AXIS_SIZE = 30;
 const getViewTemplate = (assembly?: string) => {
@@ -100,7 +101,7 @@ export class HiGlassModel {
                 width,
                 height,
                 options: {
-                    backgroundColor: 'white',
+                    backgroundColor: 'transparent',
                     textColor,
                     fontSize,
                     fontWeight,
@@ -127,7 +128,8 @@ export class HiGlassModel {
             endAngle?: number;
             innerRadius?: number;
             outerRadius?: number;
-        }
+        },
+        theme: Theme = 'light'
     ) {
         if (!fromViewUid) return;
 
@@ -138,8 +140,8 @@ export class HiGlassModel {
             uid: uuid.v4(),
             fromViewUid,
             options: {
-                projectionFillColor: style?.color ?? '#777',
-                projectionStrokeColor: style?.stroke ?? '#777',
+                projectionFillColor: style?.color ?? getThemeColors(theme).sub,
+                projectionStrokeColor: style?.stroke ?? getThemeColors(theme).main,
                 projectionFillOpacity: style?.opacity ?? 0.3,
                 projectionStrokeOpacity: style?.opacity ?? 0.3,
                 strokeWidth: style?.strokeWidth ?? 1,
@@ -250,6 +252,7 @@ export class HiGlassModel {
             height?: number;
             startAngle?: number;
             endAngle?: number;
+            theme?: Theme;
         }
     ) {
         if (!this.hg.views) return this;
@@ -262,8 +265,9 @@ export class HiGlassModel {
             options: {
                 ...options,
                 assembly: this.getAssembly(),
-                color: 'black',
-                tickColor: 'black',
+                stroke: 'transparent', // text outline
+                color: getThemeColors(options.theme).main,
+                tickColor: getThemeColors(options.theme).main,
                 tickFormat: type === 'narrower' ? 'si' : 'plain',
                 tickPositions: type === 'regular' ? 'even' : 'ends',
                 reverseOrientation: position === 'bottom' || position === 'right' ? true : false
