@@ -32,8 +32,8 @@ const LIMIT_CLIPBOARD_LEN = 4096;
 const EDITOR_HEADER_HEIGHT = 40;
 const BOTTOM_PANEL_HEADER_HEIGHT = 30;
 
-const LogoSVG = (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width={20} height={20}>
+const LogoSVG = (width: number, height: number) => (
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width={width} height={height}>
         <rect style={{ fill: 'none' }} width="400" height="400" />
         <circle cx="110.62" cy="129.64" r="41.69" />
         <circle style={{ fill: '#fff' }} cx="124.14" cy="114.12" r="10.76" />
@@ -180,6 +180,9 @@ function Editor(props: any) {
 
     // whether description panel is being dragged
     const [isDescResizing, setIsDescResizing] = useState(false);
+
+    // whether to show "about" information
+    const [isShowAbout, setIsShowAbout] = useState(false);
 
     // Resizer `div`
     const descResizerRef = useRef<any>();
@@ -358,7 +361,7 @@ function Editor(props: any) {
         <>
             <div className="demo-navbar">
                 <span style={{ cursor: 'pointer' }} onClick={() => window.open('https://gosling.js.org', '_blank')}>
-                    <span className="logo">{LogoSVG}</span>
+                    <span className="logo">{LogoSVG(20, 20)}</span>
                     Gosling.js Editor
                 </span>
                 {urlSpec && <small> Displaying a custom spec contained in URL</small>}
@@ -535,13 +538,18 @@ function Editor(props: any) {
                             GITHUB
                         </span>
                         <span
-                            title="Open GitHub repository"
+                            title="Open Docs"
                             className="side-panel-button"
                             onClick={() => window.open('https://github.com/gosling-lang/gosling-docs', '_blank')}
                         >
                             {getIconSVG(ICONS.DOCS, 23, 23)}
                             <br />
                             DOCS
+                        </span>
+                        <span title="About" className="side-panel-button" onClick={() => setIsShowAbout(!isShowAbout)}>
+                            {getIconSVG(ICONS.INFO_RECT_FILLED, 23, 23)}
+                            <br />
+                            ABOUT
                         </span>
                     </div>
                     <SplitPane
@@ -725,6 +733,78 @@ function Editor(props: any) {
                         </header>
                         {description && <ReactMarkdown plugins={[gfm]} source={description} />}
                     </div>
+                </div>
+                {/* About Modal View */}
+                <div
+                    className={isShowAbout ? 'about-modal-container' : 'about-modal-container-hidden'}
+                    onClick={() => setIsShowAbout(false)}
+                ></div>
+                <div className={isShowAbout ? 'about-modal' : 'about-modal-container-hidden'}>
+                    <span
+                        className="about-model-close-button"
+                        onClick={() => {
+                            setIsShowAbout(false);
+                        }}
+                    >
+                        {getIconSVG(ICONS.CLOSE, 30, 30)}
+                    </span>
+                    <div>
+                        <span className="logo">{LogoSVG(80, 80)}</span>
+                    </div>
+                    <h3>Gosling.js Editor</h3>
+                    {`Gosling.js v${gosling.version}`}
+                    <br />
+                    <br />
+                    <a
+                        href="https://github.com/gosling-lang/gosling.js/blob/master/CHANGELOG.md"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        Change Log
+                    </a>
+                    <br />
+                    <br />
+                    <a
+                        href="https://github.com/gosling-lang/gosling.js/blob/master/LICENSE.md"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        MIT License
+                    </a>
+                    <br />
+                    <br />
+                    <h4>Team</h4>
+                    <span>
+                        Sehi L&apos;Yi (
+                        <a href="https://twitter.com/sehi_lyi" target="_blank" rel="noopener noreferrer">
+                            @sehi_lyi
+                        </a>
+                        )
+                        <br />
+                        Qianwen Wang (
+                        <a href="https://twitter.com/WangQianwenToo" target="_blank" rel="noopener noreferrer">
+                            @WangQianwenToo
+                        </a>
+                        )
+                        <br />
+                        Fritz Lekschas (
+                        <a href="https://twitter.com/flekschas" target="_blank" rel="noopener noreferrer">
+                            @flekschas
+                        </a>
+                        )
+                        <br />
+                        Nils Gehlenborg (
+                        <a href="https://twitter.com/gehlenborg" target="_blank" rel="noopener noreferrer">
+                            @gehlenborg
+                        </a>
+                        )
+                    </span>
+                    <br />
+                    <br />
+                    <a href="http://gehlenborglab.org/" target="_blank" rel="noopener noreferrer">
+                        Gehlenborg Lab
+                    </a>
+                    , Harvard Medical School
                 </div>
             </div>
         </>
