@@ -468,6 +468,9 @@
         "static": {
           "type": "boolean"
         },
+        "style": {
+          "$ref": "#/definitions/TrackStyle"
+        },
         "subtitle": {
           "type": "string"
         },
@@ -751,6 +754,9 @@
         },
         "static": {
           "type": "boolean"
+        },
+        "style": {
+          "$ref": "#/definitions/TrackStyle"
         },
         "tracks": {
           "items": {
@@ -1425,6 +1431,9 @@
         },
         "static": {
           "type": "boolean"
+        },
+        "style": {
+          "$ref": "#/definitions/TrackStyle"
         },
         "views": {
           "items": {
@@ -2538,6 +2547,9 @@
         },
         "static": {
           "type": "boolean"
+        },
+        "style": {
+          "$ref": "#/definitions/TrackStyle"
         },
         "subtitle": {
           "type": "string"
@@ -3710,6 +3722,9 @@
             },
             "static": {
               "type": "boolean"
+            },
+            "style": {
+              "$ref": "#/definitions/TrackStyle"
             },
             "subtitle": {
               "type": "string"

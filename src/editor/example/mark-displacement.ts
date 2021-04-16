@@ -70,7 +70,7 @@ export const EX_SPEC_MARK_DISPLACEMENT: GoslingSpec = {
                     stroke: { value: 'black' },
                     strokeWidth: { value: 1 },
                     opacity: { value: 0.8 },
-                    style: { outlineWidth: 0, inlineLegend: true },
+                    style: { inlineLegend: true },
                     width: 700,
                     height: 60
                 },
@@ -103,7 +103,7 @@ export const EX_SPEC_MARK_DISPLACEMENT: GoslingSpec = {
                     stroke: { value: 'lightgrey' },
                     strokeWidth: { value: 0.5 },
                     opacity: { value: 0.8 },
-                    style: { verticalLink: true, outlineWidth: 0 },
+                    style: { verticalLink: true },
                     width: 700,
                     height: 60
                 },
@@ -127,8 +127,7 @@ export const EX_SPEC_MARK_DISPLACEMENT: GoslingSpec = {
                             strokeWidth: { value: 0.5 },
                             x: { field: 'start', type: 'genomic' },
                             xe: { field: 'end', type: 'genomic' },
-                            opacity: { value: 0.8 },
-                            style: { outlineWidth: 0 }
+                            opacity: { value: 0.8 }
                         },
                         {
                             data: {
@@ -222,10 +221,7 @@ export const EX_SPEC_MARK_DISPLACEMENT: GoslingSpec = {
                                 field: 'end',
                                 type: 'genomic'
                             },
-                            style: {
-                                dy: -15,
-                                outlineWidth: 0
-                            }
+                            style: { dy: -15 }
                         },
                         {
                             data: {
@@ -271,7 +267,7 @@ export const EX_SPEC_MARK_DISPLACEMENT: GoslingSpec = {
                                 type: 'genomic'
                             },
                             size: { value: 15 },
-                            style: { align: 'right', outlineWidth: 0 }
+                            style: { align: 'right' }
                         },
                         {
                             data: {
@@ -370,8 +366,7 @@ export const EX_SPEC_MARK_DISPLACEMENT: GoslingSpec = {
                                 type: 'genomic'
                             },
                             style: {
-                                linePattern: { type: 'triangleRight', size: 5 },
-                                outlineWidth: 0
+                                linePattern: { type: 'triangleRight', size: 5 }
                             }
                         },
                         {
@@ -424,14 +419,10 @@ export const EX_SPEC_MARK_DISPLACEMENT: GoslingSpec = {
                                 type: 'genomic'
                             },
                             style: {
-                                linePattern: { type: 'triangleLeft', size: 5 },
-                                outlineWidth: 0
+                                linePattern: { type: 'triangleLeft', size: 5 }
                             }
                         }
                     ],
-                    style: {
-                        outlineWidth: 0
-                    },
                     width: 700,
                     height: 100
                 }
@@ -474,5 +465,6 @@ export const EX_SPEC_MARK_DISPLACEMENT: GoslingSpec = {
                 }
             ]
         }
-    ]
+    ],
+    style: { outlineWidth: 0 }
 };

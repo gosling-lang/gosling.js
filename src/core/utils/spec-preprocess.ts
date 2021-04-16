@@ -26,6 +26,7 @@ import {
     DEFAULT_VIEW_SPACING
 } from '../layout/defaults';
 import { spreadTracksByData } from './overlay';
+import { getStyleOverridden } from '../utils/style';
 
 /**
  * Traverse individual tracks and call the callback function to read and/or update the track definition.
@@ -132,6 +133,7 @@ export function traverseToFixSpecDownstream(spec: GoslingSpec | SingleView, pare
         if (spec.spacing === undefined && !('tracks' in spec)) spec.spacing = parentDef.spacing;
         if ('views' in spec && 'arrangement' in parentDef && spec.arrangement === undefined)
             spec.arrangement = parentDef.arrangement;
+        spec.style = getStyleOverridden(parentDef.style, spec.style); // override styles deeply
     } else {
         // This means we are at the rool level, so assign default values if missing
         if (spec.assembly === undefined) spec.assembly = 'hg38';
@@ -209,6 +211,14 @@ export function traverseToFixSpecDownstream(spec: GoslingSpec | SingleView, pare
             if (!track.layout) track.layout = spec.layout;
             if (!track.orientation) track.orientation = spec.orientation;
             if (track.static === undefined) track.static = spec.static !== undefined ? spec.static : false;
+
+            // Override styles
+            track.style = getStyleOverridden(spec.style, track.style);
+            if (IsOverlaidTrack(track)) {
+                track.overlay.forEach(o => {
+                    o.style = getStyleOverridden(track.style, o.style);
+                });
+            }
 
             /**
              * Orientation is only supported in 1D linear layouts

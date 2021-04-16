@@ -69,7 +69,6 @@ export const EX_SPEC_GIVE: GoslingSpec = {
                     ],
                     row: { field: 'strand', type: 'nominal', domain: ['+', '-'] },
                     color: { value: '#4050B4' },
-                    style: { outlineWidth: 0 },
                     width: 700,
                     height: 50
                 },
@@ -88,7 +87,6 @@ export const EX_SPEC_GIVE: GoslingSpec = {
                     color: { value: '#8A96D5' },
                     stroke: { value: '#3C4DB4' },
                     strokeWidth: { value: 0.5 },
-                    style: { outlineWidth: 0 },
                     width: 700,
                     height: 40
                 },
@@ -107,7 +105,6 @@ export const EX_SPEC_GIVE: GoslingSpec = {
                     color: { value: '#8A96D5' },
                     stroke: { value: '#3C4DB4' },
                     strokeWidth: { value: 0.5 },
-                    style: { outlineWidth: 0 },
                     width: 700,
                     height: 40
                 },
@@ -126,7 +123,6 @@ export const EX_SPEC_GIVE: GoslingSpec = {
                     color: { value: '#8A96D5' },
                     stroke: { value: '#3C4DB4' },
                     strokeWidth: { value: 0.5 },
-                    style: { outlineWidth: 0 },
                     width: 700,
                     height: 40
                 },
@@ -169,9 +165,6 @@ export const EX_SPEC_GIVE: GoslingSpec = {
                     size: { value: 14 },
                     stroke: { value: 'black' },
                     strokeWidth: { value: 0.5 },
-                    style: {
-                        outlineWidth: 0
-                    },
                     width: 700,
                     height: 40
                 },
@@ -223,9 +216,6 @@ export const EX_SPEC_GIVE: GoslingSpec = {
                     },
                     opacity: { value: 0.5 },
                     size: { value: 14 },
-                    style: {
-                        outlineWidth: 0
-                    },
                     overlayOnPreviousTrack: true,
                     width: 700,
                     height: 40
@@ -274,9 +264,6 @@ export const EX_SPEC_GIVE: GoslingSpec = {
                     size: { value: 14 },
                     stroke: { value: 'black' },
                     strokeWidth: { value: 0.5 },
-                    style: {
-                        outlineWidth: 0
-                    },
                     width: 700,
                     height: 40
                 },
@@ -328,9 +315,6 @@ export const EX_SPEC_GIVE: GoslingSpec = {
                     },
                     opacity: { value: 0.5 },
                     size: { value: 14 },
-                    style: {
-                        outlineWidth: 0
-                    },
                     overlayOnPreviousTrack: true,
                     width: 700,
                     height: 40
@@ -350,7 +334,6 @@ export const EX_SPEC_GIVE: GoslingSpec = {
                     color: { value: '#8A96D5' },
                     stroke: { value: '#3C4DB4' },
                     strokeWidth: { value: 0.5 },
-                    style: { outlineWidth: 0 },
                     width: 700,
                     height: 40
                 },
@@ -369,7 +352,6 @@ export const EX_SPEC_GIVE: GoslingSpec = {
                     color: { value: '#8A96D5' },
                     stroke: { value: '#3C4DB4' },
                     strokeWidth: { value: 0.5 },
-                    style: { outlineWidth: 0 },
                     width: 700,
                     height: 40
                 },
@@ -388,7 +370,6 @@ export const EX_SPEC_GIVE: GoslingSpec = {
                     color: { value: '#8A96D5' },
                     stroke: { value: '#3C4DB4' },
                     strokeWidth: { value: 0.5 },
-                    style: { outlineWidth: 0 },
                     width: 700,
                     height: 40
                 },
@@ -452,11 +433,11 @@ export const EX_SPEC_GIVE: GoslingSpec = {
                     ],
                     row: { field: 'strand', type: 'nominal', domain: ['+', '-'] },
                     color: { value: '#4050B4' },
-                    style: { outlineWidth: 0 },
                     width: 700,
                     height: 50
                 }
             ]
         }
-    ]
+    ],
+    style: { outlineWidth: 0 }
 };

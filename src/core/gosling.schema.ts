@@ -67,6 +67,9 @@ export interface CommonViewDef {
      * Proportion of the radius of the center white space.
      */
     centerRadius?: number; // [0, 1] (default: 0.3)
+
+    // Overriden by children
+    style?: TrackStyle;
 }
 
 /* ----------------------------- TRACK ----------------------------- */
@@ -160,9 +163,6 @@ export interface SingleTrack extends CommonTrackDef {
 
     // Visibility
     visibility?: VisibilityCondition[];
-
-    // Styling
-    style?: TrackStyle;
 
     // Experimental
     stackY?: boolean; // Will be deprecated.

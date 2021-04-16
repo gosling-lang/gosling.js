@@ -1,4 +1,4 @@
-import { GoslingSpec, Track } from '../gosling.schema';
+import { GoslingSpec, SingleView, Track } from '../gosling.schema';
 import { getBoundingBox, getRelativeTrackInfo } from './bounding-box';
 import { traverseToFixSpecDownstream, overrideTemplates, convertToFlatTracks } from './spec-preprocess';
 
@@ -15,6 +15,27 @@ describe('Fix Spec Downstream', () => {
         const size = getBoundingBox(info);
         expect(!isNaN(+size.width) && isFinite(size.width)).toEqual(true);
         expect(!isNaN(+size.height) && isFinite(size.height)).toEqual(true);
+    });
+
+    it('style', () => {
+        {
+            const spec: GoslingSpec = {
+                style: { outline: 'red' },
+                views: [{ tracks: [{ overlay: [], width: 0, height: 0 }] }]
+            };
+            traverseToFixSpecDownstream(spec);
+            expect((spec.views[0] as SingleView).style?.outline).toEqual('red');
+            expect((spec.views[0] as SingleView).tracks[0].style?.outline).toEqual('red');
+        }
+        {
+            const spec: GoslingSpec = {
+                style: { outline: 'red' },
+                views: [{ tracks: [{ overlay: [], width: 0, height: 0, style: { outline: 'green' } }] }]
+            };
+            traverseToFixSpecDownstream(spec);
+            expect((spec.views[0] as SingleView).style?.outline).toEqual('red');
+            expect((spec.views[0] as SingleView).tracks[0].style?.outline).toEqual('green');
+        }
     });
 
     it('static', () => {

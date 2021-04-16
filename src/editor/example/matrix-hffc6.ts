@@ -27,7 +27,7 @@ export const EX_SPEC_MATRIX_HFFC6: GoslingSpec = {
                 //         xe: { field: 'end', type: 'genomic', axis: 'none' },
                 //         y: { field: 'peak', type: 'quantitative' },
                 //         color: { value: 'darkgreen' },
-                //         style: { outline: 'white' },
+                //
                 //         height: 570,
                 //         width: 40
                 //     }]
@@ -47,7 +47,7 @@ export const EX_SPEC_MATRIX_HFFC6: GoslingSpec = {
                 //         xe: { field: 'end', type: 'genomic', axis: 'none' },
                 //         y: { field: 'peak', type: 'quantitative' },
                 //         color: { value: '#E79F00' },
-                //         style: { outline: 'white' },
+                //
                 //         height: 570,
                 //         width: 40
                 //     }]
@@ -98,7 +98,6 @@ export const EX_SPEC_MATRIX_HFFC6: GoslingSpec = {
                                     color: { value: '#029F73' }
                                 }
                             ],
-                            style: { outline: 'white' },
                             height: 570,
                             width: 40
                         }
@@ -144,7 +143,6 @@ export const EX_SPEC_MATRIX_HFFC6: GoslingSpec = {
                             xe: { field: 'end', type: 'genomic', axis: 'none' },
                             y: { field: 'peak', type: 'quantitative' },
                             color: { value: 'darkgreen' },
-                            style: { outline: 'white' },
                             width: 570,
                             height: 40
                         },
@@ -162,7 +160,6 @@ export const EX_SPEC_MATRIX_HFFC6: GoslingSpec = {
                             xe: { field: 'end', type: 'genomic' },
                             y: { field: 'peak', type: 'quantitative' },
                             color: { value: '#E79F00' },
-                            style: { outline: 'white' },
                             width: 570,
                             height: 40
                         },
@@ -229,7 +226,6 @@ export const EX_SPEC_MATRIX_HFFC6: GoslingSpec = {
                                     color: { value: '#029F73' }
                                 }
                             ],
-                            style: { outline: 'white' },
                             width: 570,
                             height: 40
                         }
@@ -291,7 +287,6 @@ export const EX_SPEC_MATRIX_HFFC6: GoslingSpec = {
                                 ]
                             },
                             // strokeWidth: {value: 0.5},
-                            style: { outline: 'white' },
                             width: 570,
                             height: 40
                         }
@@ -337,7 +332,6 @@ export const EX_SPEC_MATRIX_HFFC6: GoslingSpec = {
                             xe: { field: 'end', type: 'genomic', axis: 'none' },
                             y: { field: 'peak', type: 'quantitative' },
                             color: { value: 'darkgreen' },
-                            style: { outline: 'white' },
                             width: 570,
                             height: 40
                         },
@@ -355,7 +349,6 @@ export const EX_SPEC_MATRIX_HFFC6: GoslingSpec = {
                             xe: { field: 'end', type: 'genomic' },
                             y: { field: 'peak', type: 'quantitative' },
                             color: { value: '#E79F00' },
-                            style: { outline: 'white' },
                             width: 570,
                             height: 40
                         },
@@ -422,7 +415,6 @@ export const EX_SPEC_MATRIX_HFFC6: GoslingSpec = {
                                     color: { value: '#029F73' }
                                 }
                             ],
-                            style: { outline: 'white' },
                             width: 570,
                             height: 40
                         }
@@ -484,7 +476,6 @@ export const EX_SPEC_MATRIX_HFFC6: GoslingSpec = {
                                 ]
                             },
                             // strokeWidth: {value: 0.5},
-                            style: { outline: 'white' },
                             width: 570,
                             height: 40
                         }
@@ -492,5 +483,6 @@ export const EX_SPEC_MATRIX_HFFC6: GoslingSpec = {
                 }
             ]
         }
-    ]
+    ],
+    style: { outlineWidth: 0 }
 };
