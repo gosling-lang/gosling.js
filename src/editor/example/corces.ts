@@ -186,6 +186,7 @@ export const EX_SPEC_CORCES_ET_AL: GoslingSpec = {
                             { index: 13, name: 'end' }
                         ]
                     },
+                    style: { outline: '#20102F' },
                     tracks: [
                         {
                             dataTransform: [
@@ -256,7 +257,6 @@ export const EX_SPEC_CORCES_ET_AL: GoslingSpec = {
                             target: 'mark'
                         }
                     ],
-                    style: { outline: '#20102F' },
                     width: 400,
                     height: 80
                 },
@@ -359,7 +359,6 @@ export const EX_SPEC_CORCES_ET_AL: GoslingSpec = {
                     color: { value: 'none' },
                     stroke: { value: '#F97E2A' },
                     opacity: { value: 0.1 },
-                    style: { outline: '#20102F' },
                     width: 400,
                     height: 60
                 },
@@ -380,7 +379,6 @@ export const EX_SPEC_CORCES_ET_AL: GoslingSpec = {
                     color: { value: 'none' },
                     stroke: { value: '#50ADF9' },
                     opacity: { value: 0.1 },
-                    style: { outline: '#20102F' },
                     overlayOnPreviousTrack: true,
                     width: 400,
                     height: 60
@@ -403,7 +401,6 @@ export const EX_SPEC_CORCES_ET_AL: GoslingSpec = {
                     color: { value: 'none' },
                     stroke: { value: '#7B0EDC' },
                     opacity: { value: 0.1 },
-                    style: { outline: '#20102F' },
                     overlayOnPreviousTrack: true,
                     width: 400,
                     height: 60

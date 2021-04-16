@@ -125,8 +125,7 @@ export const EX_SPEC_CIRCULAR_OVERVIEW_LINEAR_DETAIL: GoslingSpec = {
                             stroke: { value: 'black' },
                             strokeWidth: { value: 0.3 },
                             style: {
-                                background: 'blue',
-                                backgroundOpacity: 0.1
+                                background: 'blue'
                             },
                             width: 245,
                             height: 150
@@ -159,15 +158,15 @@ export const EX_SPEC_CIRCULAR_OVERVIEW_LINEAR_DETAIL: GoslingSpec = {
                             stroke: { value: 'black' },
                             strokeWidth: { value: 0.3 },
                             style: {
-                                background: 'red',
-                                backgroundOpacity: 0.1
+                                background: 'red'
                             },
                             width: 245,
                             height: 150
                         }
                     ]
                 }
-            ]
+            ],
+            style: { backgroundOpacity: 0.1 }
         }
     ]
 };

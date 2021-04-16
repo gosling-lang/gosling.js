@@ -505,6 +505,7 @@ export const EX_SPEC_DARK_THEME: GoslingSpec = {
     centerRadius: 0,
     static: true,
     xDomain: { chromosome: '1', interval: [1, 3000500] },
+    style: { outlineWidth: 0 },
     views: [
         {
             arrangement: 'horizontal',
@@ -585,8 +586,7 @@ export const EX_SPEC_DARK_THEME: GoslingSpec = {
                                     ],
                                     mark: 'triangleRight',
                                     x: { field: 'end', type: 'genomic' },
-                                    size: { value: 15 },
-                                    style: { outlineWidth: 0 }
+                                    size: { value: 15 }
                                 },
                                 {
                                     dataTransform: [{ type: 'filter', field: 'type', oneOf: ['gene'] }],
@@ -594,7 +594,7 @@ export const EX_SPEC_DARK_THEME: GoslingSpec = {
                                     text: { field: 'name', type: 'nominal' },
                                     x: { field: 'start', type: 'genomic' },
                                     xe: { field: 'end', type: 'genomic' },
-                                    style: { dy: -15, outlineWidth: 0 }
+                                    style: { dy: -15 }
                                 },
                                 {
                                     dataTransform: [
@@ -604,15 +604,14 @@ export const EX_SPEC_DARK_THEME: GoslingSpec = {
                                     mark: 'triangleLeft',
                                     x: { field: 'start', type: 'genomic' },
                                     size: { value: 15 },
-                                    style: { align: 'right', outlineWidth: 0 }
+                                    style: { align: 'right' }
                                 },
                                 {
                                     dataTransform: [{ type: 'filter', field: 'type', oneOf: ['exon'] }],
                                     mark: 'rect',
                                     x: { field: 'start', type: 'genomic' },
                                     size: { value: 15 },
-                                    xe: { field: 'end', type: 'genomic' },
-                                    style: { outlineWidth: 0 }
+                                    xe: { field: 'end', type: 'genomic' }
                                 },
                                 {
                                     dataTransform: [
@@ -654,7 +653,6 @@ export const EX_SPEC_DARK_THEME: GoslingSpec = {
                                 }
                             ],
                             opacity: { value: 0.8 },
-                            style: { outlineWidth: 0 },
                             width: 350,
                             height: 100
                         },
