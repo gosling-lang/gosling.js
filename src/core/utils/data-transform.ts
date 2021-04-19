@@ -1,4 +1,5 @@
-import { SingleTrack, Datum, FilterTransform, LogTransform } from '../gosling.schema';
+import { assign } from 'lodash';
+import { SingleTrack, Datum, FilterTransform, LogTransform, ExonSplitTransform, Assembly } from '../gosling.schema';
 import {
     getChannelKeysByAggregateFnc,
     getChannelKeysByType,
@@ -7,6 +8,7 @@ import {
     IsOneOfFilter,
     IsRangeFilter
 } from '../gosling.schema.guards';
+import { GET_CHROM_SIZES } from './assembly';
 
 /**
  * Apply filter
@@ -53,6 +55,39 @@ export function calculateData(log: LogTransform, data: Datum[]): Datum[] {
         }
         return d;
     });
+    return output;
+}
+
+export function splitExon(split: ExonSplitTransform, data: Datum[], assembly: Assembly = 'hg38'): Datum[] {
+    const { separator, fields, flag } = split;
+    let output: Datum[] = Array.from(data);
+    output = output
+        .map((d: Datum) => {
+            const newRows: Datum[] = [];
+
+            fields.forEach(f => {
+                const { field, type, newField, chrField } = f;
+                const splitted = d[field].toString().split(separator);
+
+                splitted.forEach((s, i) => {
+                    let newValue: string | number = s;
+                    if (type === 'genomic') {
+                        newValue = GET_CHROM_SIZES(assembly).interval[d[chrField]][0] + +s;
+                    }
+                    if (!newRows[i]) {
+                        // No row exist, so create one.
+                        newRows[i] = assign(JSON.parse(JSON.stringify(d)), {
+                            [newField]: newValue,
+                            [flag.field]: flag.value
+                        });
+                    } else {
+                        newRows[i][newField] = newValue;
+                    }
+                });
+            });
+            return [d, ...newRows];
+        })
+        .reduce((a, b) => a.concat(b), []);
     return output;
 }
 

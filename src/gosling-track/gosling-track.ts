@@ -9,7 +9,7 @@ import { Tooltip } from '../gosling-tooltip';
 import { sampleSize, uniqBy } from 'lodash';
 import { scaleLinear } from 'd3-scale';
 import colorToHex from '../core/utils/color-to-hex';
-import { calculateData, filterData } from '../core/utils/data-transform';
+import { calculateData, filterData, splitExon } from '../core/utils/data-transform';
 
 // For using libraries, refer to https://github.com/higlass/higlass/blob/f82c0a4f7b2ab1c145091166b0457638934b15f3/app/scripts/configs/available-for-plugins.js
 function GoslingTrack(HGC: any, ...args: any[]): any {
@@ -501,7 +501,6 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                 ///
 
                 tile.gos.tabularDataFiltered = Array.from(tile.gos.tabularData);
-
                 /*
                  * Data Transformation
                  */
@@ -513,6 +512,13 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                                 break;
                             case 'log':
                                 tile.gos.tabularDataFiltered = calculateData(t, tile.gos.tabularDataFiltered);
+                                break;
+                            case 'exonSplit':
+                                tile.gos.tabularDataFiltered = splitExon(
+                                    t,
+                                    tile.gos.tabularDataFiltered,
+                                    resolved.assembly
+                                );
                                 break;
                             case 'displace':
                                 const { boundingBox, method, newField } = t;
@@ -632,14 +638,14 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                     /*eslint-enable */
                     if (pubsub) {
                         const NUM_OF_ROWS_IN_PREVIEW = 100;
-                        const numOrRows = tile.gos.tabularData.length;
+                        const numOrRows = tile.gos.tabularDataFiltered.length;
                         pubsub.publish('data-preview', {
                             id: this.context.id,
                             dataConfig: JSON.stringify({ data: resolved.data }),
                             data:
                                 NUM_OF_ROWS_IN_PREVIEW > numOrRows
-                                    ? tile.gos.tabularData
-                                    : sampleSize(tile.gos.tabularData, NUM_OF_ROWS_IN_PREVIEW)
+                                    ? tile.gos.tabularDataFiltered
+                                    : sampleSize(tile.gos.tabularDataFiltered, NUM_OF_ROWS_IN_PREVIEW)
                             // ...
                         });
                     }
