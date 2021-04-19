@@ -465,8 +465,8 @@ export interface DisplaceTransform {
 export interface ExonSplitTransform {
     type: 'exonSplit';
     separator: string;
-    flag: {field: string; value: number | string };
-    fields: { field: string, type: FieldType, newField: string, chrField: string }[];
+    flag: { field: string; value: number | string };
+    fields: { field: string; type: FieldType; newField: string; chrField: string }[];
 }
 
 /* ----------------------------- GLYPH (deprecated, but to be supported again) ----------------------------- */
