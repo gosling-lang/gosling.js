@@ -1,3 +1,16 @@
+## [0.7.7](https://github.com/gosling-lang/gosling.js/compare/v0.7.6...v0.7.7) (2021-04-19)
+
+
+### Features
+
+* add 'about' model view ([#347](https://github.com/gosling-lang/gosling.js/issues/347)) ([53cb362](https://github.com/gosling-lang/gosling.js/commit/53cb3625ca79b7364bec756cd149797825d3ef0c))
+* add exon split transformation ([#364](https://github.com/gosling-lang/gosling.js/issues/364)) ([1413494](https://github.com/gosling-lang/gosling.js/commit/141349482645d3357442abc1c8fbfbd04ab727dd))
+* allow defining track styles in the upper level ([#363](https://github.com/gosling-lang/gosling.js/issues/363)) ([d00b871](https://github.com/gosling-lang/gosling.js/commit/d00b87191a8e7e0000dfe03ea9f8fcf7b6abb8af))
+* support a dark theme ([#359](https://github.com/gosling-lang/gosling.js/issues/359)) ([2248fc4](https://github.com/gosling-lang/gosling.js/commit/2248fc493dc39c9420bb903c0c09c8dab793e82d))
+* **api:** allow specifying transition duration in zoom ([#358](https://github.com/gosling-lang/gosling.js/issues/358)) ([78db378](https://github.com/gosling-lang/gosling.js/commit/78db378e95784c49013af8fb03abadc9a7bd76d3))
+
+
+
 ## [0.7.6](https://github.com/gosling-lang/gosling.js/compare/v0.7.5...v0.7.6) (2021-04-13)
 
 
