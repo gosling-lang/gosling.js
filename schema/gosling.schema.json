@@ -514,6 +514,9 @@
         },
         {
           "$ref": "#/definitions/DisplaceTransform"
+        },
+        {
+          "$ref": "#/definitions/ExonSplitTransform"
         }
       ]
     },
@@ -706,6 +709,71 @@
       },
       "required": [
         "interval"
+      ],
+      "type": "object"
+    },
+    "ExonSplitTransform": {
+      "additionalProperties": false,
+      "properties": {
+        "fields": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "chrField": {
+                "type": "string"
+              },
+              "field": {
+                "type": "string"
+              },
+              "newField": {
+                "type": "string"
+              },
+              "type": {
+                "$ref": "#/definitions/FieldType"
+              }
+            },
+            "required": [
+              "field",
+              "type",
+              "newField",
+              "chrField"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "flag": {
+          "additionalProperties": false,
+          "properties": {
+            "field": {
+              "type": "string"
+            },
+            "value": {
+              "type": [
+                "number",
+                "string"
+              ]
+            }
+          },
+          "required": [
+            "field",
+            "value"
+          ],
+          "type": "object"
+        },
+        "separator": {
+          "type": "string"
+        },
+        "type": {
+          "const": "exonSplit",
+          "type": "string"
+        }
+      },
+      "required": [
+        "type",
+        "separator",
+        "flag",
+        "fields"
       ],
       "type": "object"
     },

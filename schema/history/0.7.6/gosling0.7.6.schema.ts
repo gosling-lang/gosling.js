@@ -414,7 +414,7 @@ export interface MatrixData {
     url: string;
 }
 
-export type DataTransform = FilterTransform | LogTransform | DisplaceTransform;
+export type DataTransform = FilterTransform | LogTransform | DisplaceTransform | ExonSplitTransform;
 
 export type FilterTransform = OneOfFilter | RangeFilter | IncludeFilter;
 
@@ -460,6 +460,13 @@ export interface DisplaceTransform {
 
     // "pile" specific parameters (TODO: make this a separate interface)
     maxRows?: number; // Specify maximum rows to be generated (default: `undefined` meaning no limit)
+}
+
+export interface ExonSplitTransform {
+    type: 'exonSplit';
+    separator: string;
+    flag: {field: string; value: number | string };
+    fields: { field: string, type: FieldType, newField: string, chrField: string }[];
 }
 
 /* ----------------------------- GLYPH (deprecated, but to be supported again) ----------------------------- */

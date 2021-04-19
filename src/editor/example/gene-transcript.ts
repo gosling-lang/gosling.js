@@ -12,8 +12,11 @@ export const EX_SPEC_GENE_TRANSCRIPT: GoslingSpec = {
             { index: 2, name: 'end' }
         ],
         valueFields: [
+            { index: 0, name: 'chr', type: 'nominal' },
             { index: 5, name: 'strand', type: 'nominal' },
-            { index: 3, name: 'name', type: 'nominal' }
+            { index: 3, name: 'name', type: 'nominal' },
+            { index: 9, name: 'exon_start', type: 'nominal' },
+            { index: 10, name: 'exon_end', type: 'nominal' }
         ]
     },
     dataTransform: [
@@ -37,7 +40,6 @@ export const EX_SPEC_GENE_TRANSCRIPT: GoslingSpec = {
                     newField: 'row',
                     maxRows: 15
                 },
-
                 { type: 'filter', field: 'type', oneOf: ['gene'] },
                 { type: 'filter', field: 'strand', oneOf: ['+'] }
             ],
@@ -104,9 +106,19 @@ export const EX_SPEC_GENE_TRANSCRIPT: GoslingSpec = {
                     newField: 'row',
                     maxRows: 15
                 },
+                {
+                    type: 'exonSplit',
+                    separator: ',',
+                    flag: { field: 'type', value: 'exon' },
+                    fields: [
+                        { field: 'exon_start', type: 'genomic', newField: 'start', chrField: 'chr' },
+                        { field: 'exon_end', type: 'genomic', newField: 'end', chrField: 'chr' }
+                    ]
+                },
                 { type: 'filter', field: 'type', oneOf: ['exon'] }
             ],
             mark: 'rect',
+            size: { value: 10 },
             x: {
                 field: 'start',
                 type: 'genomic'

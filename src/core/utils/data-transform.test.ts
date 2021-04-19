@@ -1,4 +1,4 @@
-import { filterData, calculateData, aggregateData } from './data-transform';
+import { filterData, calculateData, aggregateData, splitExon } from './data-transform';
 
 describe('Data Transformation', () => {
     it('Filter', () => {
@@ -21,6 +21,36 @@ describe('Data Transformation', () => {
             ]);
             expect(log).toHaveLength(3);
             expect(log.filter(d => d['c'] === 'b')[0]['q']).toBeCloseTo(Math.log2(4), 10);
+        }
+        {
+            // default base is 10
+            const log = calculateData({ type: 'log', field: 'q' }, [
+                { c: 'a', q: 1 },
+                { c: 'a', q: 3 },
+                { c: 'b', q: 4 }
+            ]);
+            expect(log).toHaveLength(3);
+            expect(log.filter(d => d['c'] === 'b')[0]['q']).toBeCloseTo(Math.log10(4), 10);
+        }
+    });
+    it('Exon Split', () => {
+        {
+            const exon = splitExon(
+                {
+                    type: 'exonSplit',
+                    separator: ',',
+                    flag: { field: 'type', value: 'exon' },
+                    fields: [
+                        { field: 'es', type: 'genomic', newField: 'es', chrField: 'c' },
+                        { field: 'ee', type: 'genomic', newField: 'ee', chrField: 'c' }
+                    ]
+                },
+                [{ c: 'chr3', es: '1,2,3', ee: '2,3,4' }],
+                'hg38'
+            );
+            expect(exon).toHaveLength(4);
+            expect(exon[0]).toEqual({ c: 'chr3', es: '1,2,3', ee: '2,3,4' });
+            expect(exon.filter(d => d['type'] === 'exon')).toHaveLength(3);
         }
         {
             // default base is 10

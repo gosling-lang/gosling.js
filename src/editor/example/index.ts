@@ -58,7 +58,8 @@ export const examples: ReadonlyArray<{
     },
     {
         name: 'Basic Example: Mark Displacement',
-        spec: EX_SPEC_MARK_DISPLACEMENT
+        spec: EX_SPEC_MARK_DISPLACEMENT,
+        forceShow: true
     },
     {
         name: 'Circular Overview + Linear Detail Views',
