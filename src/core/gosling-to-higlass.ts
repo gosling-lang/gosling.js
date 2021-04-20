@@ -9,7 +9,7 @@ import { getGenomicChannelKeyFromTrack, getGenomicChannelFromTrack } from './uti
 import { viridisColorMap } from './utils/colors';
 import { IsDataDeep, IsChannelDeep, IsDataDeepTileset } from './gosling.schema.guards';
 import { DEFAULT_SUBTITLE_HEIGHT, DEFAULT_TITLE_HEIGHT } from './layout/defaults';
-import { getThemeColors } from './utils/theme';
+import { getTheme } from './utils/theme';
 
 /**
  * Convert a gosling track into a HiGlass view and add it into a higlass model.
@@ -60,7 +60,7 @@ export function goslingToHiGlass(
                 name: firstResolvedSpec.title,
                 labelPosition: firstResolvedSpec.title ? 'topLeft' : 'none',
                 fontSize: 12,
-                labelColor: getThemeColors(theme).main,
+                labelColor: getTheme(theme).axisColor,
                 labelShowResolution: false,
                 labelBackgroundColor: 'white',
                 labelTextOpacity: 1,
@@ -163,7 +163,7 @@ export function goslingToHiGlass(
                 bb.width,
                 DEFAULT_TITLE_HEIGHT,
                 firstResolvedSpec.title,
-                getThemeColors(theme).main,
+                getTheme(theme).titleColor,
                 18,
                 'bold'
             );
@@ -173,7 +173,7 @@ export function goslingToHiGlass(
                 bb.width,
                 DEFAULT_SUBTITLE_HEIGHT,
                 firstResolvedSpec.subtitle,
-                getThemeColors(theme).sub,
+                getTheme(theme).subtitleColor,
                 14,
                 'normal'
             );

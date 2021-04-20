@@ -497,7 +497,12 @@ export const EX_SPEC_VISUAL_ENCODING_CIRCULAR: GoslingSpec = {
 };
 
 export const EX_SPEC_DARK_THEME: GoslingSpec = {
-    theme: 'dark',
+    theme: {
+        base: 'dark',
+        nominalColors: ['white', 'gray'],
+        markColor: 'gray',
+        markStrokeColor: 'black'
+    },
     title: 'Dark Theme (Beta)',
     subtitle: 'Gosling allows to easily change the color theme using a `theme` property',
     layout: 'circular',
@@ -505,7 +510,6 @@ export const EX_SPEC_DARK_THEME: GoslingSpec = {
     centerRadius: 0,
     static: true,
     xDomain: { chromosome: '1', interval: [1, 3000500] },
-    style: { outlineWidth: 0 },
     views: [
         {
             arrangement: 'horizontal',
@@ -682,5 +686,6 @@ export const EX_SPEC_DARK_THEME: GoslingSpec = {
                 }
             ]
         }
-    ]
+    ],
+    style: { outlineWidth: 0 }
 };

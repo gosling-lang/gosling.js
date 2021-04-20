@@ -6,6 +6,7 @@ import * as gosling from '..';
 import { View as HgView } from './higlass.schema';
 import { traverseViewsInViewConfig } from '../core/utils/view-config';
 import { GET_CHROM_SIZES } from './utils/assembly';
+import { getTheme } from './utils/theme';
 
 /**
  * Register plugin tracks and data fetchers to HiGlass. This is necessary for the first time before using Gosling.
@@ -106,7 +107,7 @@ export const GoslingComponent = forwardRef((props: GoslingCompProps, ref: any) =
                     style={{
                         position: 'relative',
                         padding,
-                        background: gs?.theme === 'dark' ? 'black' : 'white',
+                        background: getTheme(gs?.theme).backgroundColor,
                         width: size.width + padding * 2,
                         height: size.height + padding * 2,
                         textAlign: 'left'
@@ -117,7 +118,7 @@ export const GoslingComponent = forwardRef((props: GoslingCompProps, ref: any) =
                         style={{
                             position: 'relative',
                             display: 'block',
-                            background: gs?.theme === 'dark' ? 'black' : 'white',
+                            background: getTheme(gs?.theme).backgroundColor,
                             margin: 0,
                             padding: 0, // non-zero padding acts unexpectedly w/ HiGlassComponent
                             width: size.width,
@@ -139,7 +140,7 @@ export const GoslingComponent = forwardRef((props: GoslingCompProps, ref: any) =
                                 viewPaddingLeft: 0,
                                 viewPaddingRight: 0,
                                 sizeMode: 'bounded',
-                                theme: gs?.theme,
+                                // theme: gs?.theme, // TODO: do we need this?
                                 rangeSelectionOnAlt: true // this allows switching between `selection` and `zoom&pan` mode
                             }}
                             viewConfig={hs}

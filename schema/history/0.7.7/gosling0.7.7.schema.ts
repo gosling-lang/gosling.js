@@ -3,8 +3,6 @@ import { Chromosome } from './utils/chrom-size';
 /* ----------------------------- ROOT SPEC ----------------------------- */
 export type GoslingSpec = RootSpecWithSingleView | RootSpecWithMultipleViews;
 
-export type Theme = 'light' | 'dark';
-
 export type RootSpecWithSingleView = SingleView & {
     title?: string;
     subtitle?: string;
@@ -17,6 +15,52 @@ export interface RootSpecWithMultipleViews extends MultipleViews {
     subtitle?: string;
     description?: string;
     theme?: Theme;
+}
+
+/* ----------------------------- THEME ----------------------------- */
+export type Theme = ThemeType | ThemeDeep;
+export type ThemeType = 'light' | 'dark';
+export enum Themes {
+    light = 'light',
+    dark = 'dark'
+}
+
+// TODO: combine with `TrackStyle`
+// TODO: encapsulate each level, e.g., track: { /* TrackLevelTheme */ }
+export interface ThemeDeep {
+    base: ThemeType;
+
+    /* Root level */
+    backgroundColor?: string; // background color of react component
+    titleColor?: string; // color of title
+    subtitleColor?: string; // color of subtitle
+
+    /* Track level */
+    trackOutlineColor?: string; // color of track outline
+    trackOutlineWidth?: number; // stroke width of track outline
+    axisColor?: string; // color of axis ticks and labels
+
+    /* Encoding level */
+    markColor?: string; // default color of marks
+    nominalColors?: string[]; // colors for nominal values
+    useExtendedNominalColors?: boolean;
+    nominalColorsExtended?: string[]; // colors for nominal values when too many categories
+    markStrokeColor?: string; // stroke color of marks
+    markStrokeWidth?: number; // stroke width of marks
+    markOpacity?: number; // opacity of marks
+    // TODO: quantitative colors
+
+    /* Mark-specific Encoding Level */
+    pointSize?: number; // size of points
+    pointSizeRangeQuantitative?: [number, number];
+    lineSize?: number; // line width
+    brushColor?: string; // fill color of brush
+    brushStrokeColor?: string; // stroke color of brush
+    brushStrokeWidth?: number; // stroke width of brush
+    ruleStrokeWidth?: number;
+    linkStrokeWidth?: number;
+
+    // ...
 }
 
 /* ----------------------------- VIEW ----------------------------- */

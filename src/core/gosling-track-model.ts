@@ -1,4 +1,12 @@
-import { ChannelDeep, PREDEFINED_COLORS, ChannelTypes, ChannelValue, SingleTrack, Channel } from './gosling.schema';
+import {
+    ChannelDeep,
+    PREDEFINED_COLORS,
+    ChannelTypes,
+    ChannelValue,
+    SingleTrack,
+    Channel,
+    Theme
+} from './gosling.schema';
 import { validateTrack, getGenomicChannelFromTrack, getGenomicChannelKeyFromTrack } from './utils/validate';
 import {
     ScaleLinear,
@@ -31,6 +39,7 @@ import {
     PREDEFINED_COLOR_STR_MAP
 } from './gosling.schema.guards';
 import { CHANNEL_DEFAULTS } from './channel';
+import { getTheme } from './utils/theme';
 
 export type ScaleType =
     | ScaleLinear<any, any>
@@ -40,12 +49,11 @@ export type ScaleType =
     | (() => string | number); // constant value
 
 export class GoslingTrackModel {
+    private theme: Theme;
+
     /* spec */
     private specOriginal: SingleTrack; // original spec of users
     private specComplete: SingleTrack; // processed spec, being used in visualizations
-
-    /* high-level configuration */
-    private isCircular: boolean;
 
     /* data */
     private dataOriginal: { [k: string]: number | string }[];
@@ -56,15 +64,14 @@ export class GoslingTrackModel {
         [channel: string]: ScaleType;
     };
 
-    constructor(spec: SingleTrack, data: { [k: string]: number | string }[], isCircular?: boolean) {
+    constructor(spec: SingleTrack, data: { [k: string]: number | string }[], theme: Theme = 'light') {
+        this.theme = theme;
+
         this.dataOriginal = JSON.parse(JSON.stringify(data));
         this.dataAggregated = JSON.parse(JSON.stringify(data));
 
         this.specOriginal = JSON.parse(JSON.stringify(spec));
         this.specComplete = JSON.parse(JSON.stringify(spec));
-
-        // EXPERIMENTAL
-        this.isCircular = !!isCircular || this.specOriginal.layout === 'circular';
 
         this.channelScales = {};
 
@@ -98,10 +105,6 @@ export class GoslingTrackModel {
 
     public spec(): SingleTrack {
         return this.specComplete;
-    }
-
-    public circular(): boolean {
-        return this.isCircular;
     }
 
     public data(): { [k: string]: number | string }[] {
@@ -556,7 +559,7 @@ export class GoslingTrackModel {
                             break;
                         case 'size':
                             // TODO: make as an object
-                            if (spec.mark === 'line') value = 1;
+                            if (spec.mark === 'line') value = getTheme(this.theme).lineSize;
                             else if (spec.mark === 'bar') value = undefined;
                             else if (spec.mark === 'rect') value = undefined;
                             else if (spec.mark === 'triangleRight') value = undefined;
@@ -570,24 +573,24 @@ export class GoslingTrackModel {
                                 IsChannelDeep(spec.xe)
                             )
                                 value = undefined;
-                            else value = CHANNEL_DEFAULTS.SIZE;
+                            else value = getTheme(this.theme).pointSize;
                             break;
                         case 'color':
-                            value = CHANNEL_DEFAULTS.NOMINAL_COLOR[0];
+                            value = getTheme(this.theme).markColor;
                             break;
                         case 'row':
                             value = 0;
                             break;
                         case 'stroke':
-                            value = 'black';
+                            value = getTheme(this.theme).markStrokeColor;
                             break;
                         case 'strokeWidth':
-                            if (spec.mark === 'rule') value = 1;
-                            else if (spec.mark === 'link') value = 1;
-                            else value = 0;
+                            if (spec.mark === 'rule') value = getTheme(this.theme).ruleStrokeWidth;
+                            else if (spec.mark === 'link') value = getTheme(this.theme).linkStrokeWidth;
+                            else value = getTheme(this.theme).markStrokeWidth;
                             break;
                         case 'opacity':
-                            value = 1;
+                            value = getTheme(this.theme).markOpacity;
                             break;
                         case 'text':
                             value = '';
@@ -626,7 +629,7 @@ export class GoslingTrackModel {
                                 range = CHANNEL_DEFAULTS.QUANTITATIVE_COLOR as PREDEFINED_COLORS;
                                 break;
                             case 'size':
-                                range = CHANNEL_DEFAULTS.SIZE_RANGE;
+                                range = getTheme(this.theme).pointSizeRangeQuantitative;
                                 break;
                             case 'strokeWidth':
                                 range = [1, 3];
@@ -661,9 +664,10 @@ export class GoslingTrackModel {
                             case 'stroke':
                                 range =
                                     Array.isArray(channel.domain) &&
-                                    channel.domain.length > CHANNEL_DEFAULTS.NOMINAL_COLOR.length
-                                        ? CHANNEL_DEFAULTS.NOMINAL_COLOR_EXTENDED
-                                        : CHANNEL_DEFAULTS.NOMINAL_COLOR;
+                                    channel.domain.length > getTheme(this.theme).nominalColors.length &&
+                                    getTheme(this.theme).useExtendedNominalColors
+                                        ? getTheme(this.theme).nominalColorsExtended
+                                        : getTheme(this.theme).nominalColors;
                                 break;
                             case 'row':
                                 range = [0, spec.height];

@@ -654,7 +654,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                 }
 
                 // Construct separate gosling models for individual tiles
-                const gm = new GoslingTrackModel(resolved, tile.gos.tabularDataFiltered);
+                const gm = new GoslingTrackModel(resolved, tile.gos.tabularDataFiltered, this.options.theme);
 
                 // Add a track model to the tile object
                 tile.goslingModels.push(gm);
