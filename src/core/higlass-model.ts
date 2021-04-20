@@ -6,7 +6,7 @@ import { getNumericDomain } from './utils/scales';
 import { RelativePosition } from './utils/bounding-box';
 import { validateSpec } from './utils/validate';
 import { GET_CHROM_SIZES } from './utils/assembly';
-import { getThemeColors } from './utils/theme';
+import { getTheme } from './utils/theme';
 
 export const HIGLASS_AXIS_SIZE = 30;
 const getViewTemplate = (assembly?: string) => {
@@ -140,11 +140,11 @@ export class HiGlassModel {
             uid: uuid.v4(),
             fromViewUid,
             options: {
-                projectionFillColor: style?.color ?? getThemeColors(theme).sub,
-                projectionStrokeColor: style?.stroke ?? getThemeColors(theme).main,
+                projectionFillColor: style?.color ?? getTheme(theme).brushColor,
+                projectionStrokeColor: style?.stroke ?? getTheme(theme).brushStrokeColor,
                 projectionFillOpacity: style?.opacity ?? 0.3,
                 projectionStrokeOpacity: style?.opacity ?? 0.3,
-                strokeWidth: style?.strokeWidth ?? 1,
+                strokeWidth: style?.strokeWidth ?? getTheme(theme).brushStrokeWidth,
                 startAngle: style?.startAngle,
                 endAngle: style?.endAngle,
                 innerRadius: style?.innerRadius,
@@ -266,8 +266,8 @@ export class HiGlassModel {
                 ...options,
                 assembly: this.getAssembly(),
                 stroke: 'transparent', // text outline
-                color: getThemeColors(options.theme).main,
-                tickColor: getThemeColors(options.theme).main,
+                color: getTheme(options.theme).axisColor,
+                tickColor: getTheme(options.theme).axisColor,
                 tickFormat: type === 'narrower' ? 'si' : 'plain',
                 tickPositions: type === 'regular' ? 'even' : 'ends',
                 reverseOrientation: position === 'bottom' || position === 'right' ? true : false
