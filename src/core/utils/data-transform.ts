@@ -1,5 +1,14 @@
 import { assign } from 'lodash';
-import { SingleTrack, Datum, FilterTransform, LogTransform, ExonSplitTransform, Assembly } from '../gosling.schema';
+import {
+    SingleTrack,
+    Datum,
+    FilterTransform,
+    LogTransform,
+    ExonSplitTransform,
+    Assembly,
+    StrConcatTransform,
+    StrReplaceTransform
+} from '../gosling.schema';
 import {
     getChannelKeysByAggregateFnc,
     getChannelKeysByType,
@@ -35,6 +44,36 @@ export function filterData(filter: FilterTransform, data: Datum[]): Datum[] {
             return not ? `${d[field]}`.includes(include) : !`${d[field]}`.includes(include);
         });
     }
+    return output;
+}
+
+/**
+ * Calculate new data, like log transformation.
+ */
+export function concatString(concat: StrConcatTransform, data: Datum[]): Datum[] {
+    const { fields, separator, newField } = concat;
+
+    let output: Datum[] = Array.from(data);
+    output = output.map(d => {
+        const strs = fields.map(f => d[f]);
+        d[newField] = strs.join(separator);
+        return d;
+    });
+    return output;
+}
+
+export function replaceString(_: StrReplaceTransform, data: Datum[]): Datum[] {
+    const { field, replace, newField } = _;
+
+    let output: Datum[] = Array.from(data);
+    output = output.map(d => {
+        d[newField] = d[field]; // copy original string
+        replace.forEach(r => {
+            const { from, to } = r;
+            d[newField] = d[newField].toString().replaceAll(from, to);
+        });
+        return d;
+    });
     return output;
 }
 

@@ -9,7 +9,7 @@ import { Tooltip } from '../gosling-tooltip';
 import { sampleSize, uniqBy } from 'lodash';
 import { scaleLinear } from 'd3-scale';
 import colorToHex from '../core/utils/color-to-hex';
-import { calculateData, filterData, splitExon } from '../core/utils/data-transform';
+import { calculateData, concatString, filterData, replaceString, splitExon } from '../core/utils/data-transform';
 
 // For using libraries, refer to https://github.com/higlass/higlass/blob/f82c0a4f7b2ab1c145091166b0457638934b15f3/app/scripts/configs/available-for-plugins.js
 function GoslingTrack(HGC: any, ...args: any[]): any {
@@ -509,6 +509,12 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                         switch (t.type) {
                             case 'filter':
                                 tile.gos.tabularDataFiltered = filterData(t, tile.gos.tabularDataFiltered);
+                                break;
+                            case 'concat':
+                                tile.gos.tabularDataFiltered = concatString(t, tile.gos.tabularDataFiltered);
+                                break;
+                            case 'replace':
+                                tile.gos.tabularDataFiltered = replaceString(t, tile.gos.tabularDataFiltered);
                                 break;
                             case 'log':
                                 tile.gos.tabularDataFiltered = calculateData(t, tile.gos.tabularDataFiltered);

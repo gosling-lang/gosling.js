@@ -510,6 +510,12 @@
           "$ref": "#/definitions/FilterTransform"
         },
         {
+          "$ref": "#/definitions/StrConcatTransform"
+        },
+        {
+          "$ref": "#/definitions/StrReplaceTransform"
+        },
+        {
           "$ref": "#/definitions/LogTransform"
         },
         {
@@ -4620,6 +4626,75 @@
       },
       "required": [
         "tracks"
+      ],
+      "type": "object"
+    },
+    "StrConcatTransform": {
+      "additionalProperties": false,
+      "properties": {
+        "fields": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "newField": {
+          "type": "string"
+        },
+        "separator": {
+          "type": "string"
+        },
+        "type": {
+          "const": "concat",
+          "type": "string"
+        }
+      },
+      "required": [
+        "type",
+        "fields",
+        "newField",
+        "separator"
+      ],
+      "type": "object"
+    },
+    "StrReplaceTransform": {
+      "additionalProperties": false,
+      "properties": {
+        "field": {
+          "type": "string"
+        },
+        "newField": {
+          "type": "string"
+        },
+        "replace": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "from": {
+                "type": "string"
+              },
+              "to": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "from",
+              "to"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "type": {
+          "const": "replace",
+          "type": "string"
+        }
+      },
+      "required": [
+        "type",
+        "field",
+        "newField",
+        "replace"
       ],
       "type": "object"
     },
