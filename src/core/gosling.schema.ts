@@ -458,7 +458,13 @@ export interface MatrixData {
     url: string;
 }
 
-export type DataTransform = FilterTransform | LogTransform | DisplaceTransform | ExonSplitTransform;
+export type DataTransform =
+    | FilterTransform
+    | StrConcatTransform
+    | StrReplaceTransform
+    | LogTransform
+    | DisplaceTransform
+    | ExonSplitTransform;
 
 export type FilterTransform = OneOfFilter | RangeFilter | IncludeFilter;
 
@@ -489,6 +495,20 @@ export interface LogTransform {
     field: string;
     base?: LogBase; // If not specified, 10 is used
     newField?: string; // If specified, store transformed values in a new field.
+}
+
+export interface StrConcatTransform {
+    type: 'concat';
+    fields: string[];
+    newField: string;
+    separator: string;
+}
+
+export interface StrReplaceTransform {
+    type: 'replace';
+    field: string;
+    newField: string;
+    replace: { from: string; to: string }[];
 }
 
 export interface DisplaceTransform {
