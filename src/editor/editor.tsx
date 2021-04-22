@@ -135,14 +135,16 @@ function Editor(props: any) {
     const urlParams = qs.parse(props.location.search, { ignoreQueryPrefix: true });
     const urlSpec = urlParams?.spec ? JSONUncrush(urlParams.spec as string) : null;
     const urlGist = urlParams?.gist ?? null;
-    const urlExampleIndex = urlParams?.example ? examples.map(d => d.id).indexOf(urlParams.example as string) : null;
+    const urlExampleIndex = urlParams?.example
+        ? examples.map(d => d.id).indexOf(urlParams.example as string)
+        : INIT_DEMO_INDEX;
 
     const defaultCode = urlGist ? emptySpec() : stringify(urlSpec ?? (examples[INIT_DEMO_INDEX].spec as GoslingSpec));
 
     const previewData = useRef<PreviewData[]>([]);
     const [refreshData, setRefreshData] = useState<boolean>(false);
 
-    const [demo, setDemo] = useState(examples[urlExampleIndex ?? INIT_DEMO_INDEX]);
+    const [demo, setDemo] = useState(examples[urlExampleIndex === -1 ? INIT_DEMO_INDEX : urlExampleIndex]);
     const [hg, setHg] = useState<HiGlassSpec>();
     const [code, setCode] = useState(defaultCode);
     const [goslingSpec, setGoslingSpec] = useState<gosling.GoslingSpec>();
