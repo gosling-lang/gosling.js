@@ -135,13 +135,16 @@ function Editor(props: any) {
     const urlParams = qs.parse(props.location.search, { ignoreQueryPrefix: true });
     const urlSpec = urlParams?.spec ? JSONUncrush(urlParams.spec as string) : null;
     const urlGist = urlParams?.gist ?? null;
+    const urlExampleIndex = urlParams?.example
+        ? examples.map(d => d.id).indexOf(urlParams.example as string)
+        : INIT_DEMO_INDEX;
 
     const defaultCode = urlGist ? emptySpec() : stringify(urlSpec ?? (examples[INIT_DEMO_INDEX].spec as GoslingSpec));
 
     const previewData = useRef<PreviewData[]>([]);
     const [refreshData, setRefreshData] = useState<boolean>(false);
 
-    const [demo, setDemo] = useState(examples[INIT_DEMO_INDEX]);
+    const [demo, setDemo] = useState(examples[urlExampleIndex === -1 ? INIT_DEMO_INDEX : urlExampleIndex]);
     const [hg, setHg] = useState<HiGlassSpec>();
     const [code, setCode] = useState(defaultCode);
     const [goslingSpec, setGoslingSpec] = useState<gosling.GoslingSpec>();
@@ -381,13 +384,13 @@ function Editor(props: any) {
                 <select
                     style={{ maxWidth: IS_SMALL_SCREEN ? window.innerWidth - 180 : 'none' }}
                     onChange={e => {
-                        setDemo(examples.find(d => d.name === e.target.value) as any);
+                        setDemo(examples.find(d => d.id === e.target.value) as any);
                     }}
-                    defaultValue={demo.name}
+                    defaultValue={demo.id}
                     hidden={urlSpec !== null || urlGist !== null}
                 >
                     {examples.map(d => (
-                        <option key={d.name} value={d.name}>
+                        <option key={d.id} value={d.id}>
                             {d.name + (d.underDevelopment ? ' (under development)' : '')}
                         </option>
                     ))}
