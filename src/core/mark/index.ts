@@ -4,7 +4,7 @@ import { drawLine } from './line';
 import { drawBar } from './bar';
 import { drawArea } from './area';
 import { drawRect } from './rect';
-import { ChannelTypes, Theme } from '../gosling.schema';
+import { ChannelTypes } from '../gosling.schema';
 import { drawTriangle } from './triangle';
 import { drawText } from './text';
 import { drawRule } from './rule';
@@ -15,6 +15,7 @@ import { drawColorLegend, drawYLegend } from './legend';
 import { drawCircularGrid } from './grid-circular';
 import { drawCircularOutlines } from './outline-circular';
 import { drawBackground } from './background';
+import { Theme } from '../utils/theme';
 
 /**
  * Visual channels currently supported for visual encoding.
@@ -120,7 +121,7 @@ export function drawMark(HGC: any, trackInfo: any, tile: any, model: GoslingTrac
     if (CIRCULAR) {
         // ...
     } else {
-        drawYLegend(HGC, trackInfo, tile, model);
+        drawYLegend(HGC, trackInfo, tile, model, theme);
     }
-    drawColorLegend(HGC, trackInfo, tile, model);
+    drawColorLegend(HGC, trackInfo, tile, model, theme);
 }

@@ -35,6 +35,21 @@
       ],
       "type": "string"
     },
+    "AxisStyle": {
+      "additionalProperties": false,
+      "properties": {
+        "baselineColor": {
+          "type": "string"
+        },
+        "labelColor": {
+          "type": "string"
+        },
+        "tickColor": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
     "BEDDBData": {
       "additionalProperties": false,
       "properties": {
@@ -469,7 +484,7 @@
           "type": "boolean"
         },
         "style": {
-          "$ref": "#/definitions/TrackStyle"
+          "$ref": "#/definitions/Style"
         },
         "subtitle": {
           "type": "string"
@@ -830,7 +845,7 @@
           "type": "boolean"
         },
         "style": {
-          "$ref": "#/definitions/TrackStyle"
+          "$ref": "#/definitions/Style"
         },
         "tracks": {
           "items": {
@@ -997,7 +1012,7 @@
           ]
         },
         "style": {
-          "$ref": "#/definitions/MarkStyle"
+          "$ref": "#/definitions/MarkStyleInGlyph"
         },
         "text": {
           "anyOf": [
@@ -1399,6 +1414,46 @@
     "MarkStyle": {
       "additionalProperties": false,
       "properties": {
+        "color": {
+          "type": "string"
+        },
+        "nominalColorRange": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "opacity": {
+          "type": "number"
+        },
+        "quantitativeSizeRange": {
+          "items": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "maxItems": 2,
+          "minItems": 2,
+          "type": "array"
+        },
+        "size": {
+          "type": "number"
+        },
+        "stroke": {
+          "type": "string"
+        },
+        "strokeWidth": {
+          "type": "number"
+        }
+      },
+      "type": "object"
+    },
+    "MarkStyleInGlyph": {
+      "additionalProperties": false,
+      "properties": {
         "background": {
           "type": "string"
         },
@@ -1507,7 +1562,7 @@
           "type": "boolean"
         },
         "style": {
-          "$ref": "#/definitions/TrackStyle"
+          "$ref": "#/definitions/Style"
         },
         "views": {
           "items": {
@@ -1784,7 +1839,7 @@
                 "$ref": "#/definitions/Channel"
               },
               "style": {
-                "$ref": "#/definitions/TrackStyle"
+                "$ref": "#/definitions/Style"
               },
               "text": {
                 "$ref": "#/definitions/Channel"
@@ -1896,7 +1951,7 @@
           "$ref": "#/definitions/Channel"
         },
         "style": {
-          "$ref": "#/definitions/TrackStyle"
+          "$ref": "#/definitions/Style"
         },
         "subtitle": {
           "type": "string"
@@ -2085,7 +2140,7 @@
           "$ref": "#/definitions/Channel"
         },
         "style": {
-          "$ref": "#/definitions/TrackStyle"
+          "$ref": "#/definitions/Style"
         },
         "subtitle": {
           "type": "string"
@@ -2270,7 +2325,7 @@
                       "$ref": "#/definitions/Channel"
                     },
                     "style": {
-                      "$ref": "#/definitions/TrackStyle"
+                      "$ref": "#/definitions/Style"
                     },
                     "text": {
                       "$ref": "#/definitions/Channel"
@@ -2382,7 +2437,7 @@
                 "$ref": "#/definitions/Channel"
               },
               "style": {
-                "$ref": "#/definitions/TrackStyle"
+                "$ref": "#/definitions/Style"
               },
               "subtitle": {
                 "type": "string"
@@ -2623,7 +2678,7 @@
           "type": "boolean"
         },
         "style": {
-          "$ref": "#/definitions/TrackStyle"
+          "$ref": "#/definitions/Style"
         },
         "subtitle": {
           "type": "string"
@@ -2773,7 +2828,7 @@
               "$ref": "#/definitions/Channel"
             },
             "style": {
-              "$ref": "#/definitions/TrackStyle"
+              "$ref": "#/definitions/Style"
             },
             "subtitle": {
               "type": "string"
@@ -2961,7 +3016,7 @@
                           "$ref": "#/definitions/Channel"
                         },
                         "style": {
-                          "$ref": "#/definitions/TrackStyle"
+                          "$ref": "#/definitions/Style"
                         },
                         "text": {
                           "$ref": "#/definitions/Channel"
@@ -3073,7 +3128,7 @@
                     "$ref": "#/definitions/Channel"
                   },
                   "style": {
-                    "$ref": "#/definitions/TrackStyle"
+                    "$ref": "#/definitions/Style"
                   },
                   "subtitle": {
                     "type": "string"
@@ -3320,7 +3375,7 @@
               "$ref": "#/definitions/Channel"
             },
             "style": {
-              "$ref": "#/definitions/TrackStyle"
+              "$ref": "#/definitions/Style"
             },
             "subtitle": {
               "type": "string"
@@ -3510,7 +3565,7 @@
                               "$ref": "#/definitions/Channel"
                             },
                             "style": {
-                              "$ref": "#/definitions/TrackStyle"
+                              "$ref": "#/definitions/Style"
                             },
                             "text": {
                               "$ref": "#/definitions/Channel"
@@ -3622,7 +3677,7 @@
                         "$ref": "#/definitions/Channel"
                       },
                       "style": {
-                        "$ref": "#/definitions/TrackStyle"
+                        "$ref": "#/definitions/Style"
                       },
                       "subtitle": {
                         "type": "string"
@@ -3798,7 +3853,7 @@
               "type": "boolean"
             },
             "style": {
-              "$ref": "#/definitions/TrackStyle"
+              "$ref": "#/definitions/Style"
             },
             "subtitle": {
               "type": "string"
@@ -3838,6 +3893,21 @@
           "type": "object"
         }
       ]
+    },
+    "RootStyle": {
+      "additionalProperties": false,
+      "properties": {
+        "background": {
+          "type": "string"
+        },
+        "subtitleColor": {
+          "type": "string"
+        },
+        "titleColor": {
+          "type": "string"
+        }
+      },
+      "type": "object"
     },
     "SingleTrack": {
       "additionalProperties": false,
@@ -3934,7 +4004,7 @@
           "$ref": "#/definitions/Channel"
         },
         "style": {
-          "$ref": "#/definitions/TrackStyle"
+          "$ref": "#/definitions/Style"
         },
         "subtitle": {
           "type": "string"
@@ -4183,7 +4253,7 @@
           "$ref": "#/definitions/Channel"
         },
         "style": {
-          "$ref": "#/definitions/TrackStyle"
+          "$ref": "#/definitions/Style"
         },
         "subtitle": {
           "type": "string"
@@ -4370,7 +4440,7 @@
                           "$ref": "#/definitions/Channel"
                         },
                         "style": {
-                          "$ref": "#/definitions/TrackStyle"
+                          "$ref": "#/definitions/Style"
                         },
                         "text": {
                           "$ref": "#/definitions/Channel"
@@ -4482,7 +4552,7 @@
                     "$ref": "#/definitions/Channel"
                   },
                   "style": {
-                    "$ref": "#/definitions/TrackStyle"
+                    "$ref": "#/definitions/Style"
                   },
                   "subtitle": {
                     "type": "string"
@@ -4698,128 +4768,7 @@
       ],
       "type": "object"
     },
-    "Theme": {
-      "anyOf": [
-        {
-          "$ref": "#/definitions/ThemeType"
-        },
-        {
-          "$ref": "#/definitions/ThemeDeep"
-        }
-      ]
-    },
-    "ThemeDeep": {
-      "additionalProperties": false,
-      "properties": {
-        "axisColor": {
-          "type": "string"
-        },
-        "backgroundColor": {
-          "type": "string"
-        },
-        "base": {
-          "$ref": "#/definitions/ThemeType"
-        },
-        "brushColor": {
-          "type": "string"
-        },
-        "brushStrokeColor": {
-          "type": "string"
-        },
-        "brushStrokeWidth": {
-          "type": "number"
-        },
-        "lineSize": {
-          "type": "number"
-        },
-        "linkStrokeWidth": {
-          "type": "number"
-        },
-        "markColor": {
-          "type": "string"
-        },
-        "markOpacity": {
-          "type": "number"
-        },
-        "markStrokeColor": {
-          "type": "string"
-        },
-        "markStrokeWidth": {
-          "type": "number"
-        },
-        "nominalColors": {
-          "items": {
-            "type": "string"
-          },
-          "type": "array"
-        },
-        "nominalColorsExtended": {
-          "items": {
-            "type": "string"
-          },
-          "type": "array"
-        },
-        "pointSize": {
-          "type": "number"
-        },
-        "pointSizeRangeQuantitative": {
-          "items": [
-            {
-              "type": "number"
-            },
-            {
-              "type": "number"
-            }
-          ],
-          "maxItems": 2,
-          "minItems": 2,
-          "type": "array"
-        },
-        "ruleStrokeWidth": {
-          "type": "number"
-        },
-        "subtitleColor": {
-          "type": "string"
-        },
-        "titleColor": {
-          "type": "string"
-        },
-        "trackOutlineColor": {
-          "type": "string"
-        },
-        "trackOutlineWidth": {
-          "type": "number"
-        },
-        "useExtendedNominalColors": {
-          "type": "boolean"
-        }
-      },
-      "required": [
-        "base"
-      ],
-      "type": "object"
-    },
-    "ThemeType": {
-      "enum": [
-        "light",
-        "dark"
-      ],
-      "type": "string"
-    },
-    "Track": {
-      "anyOf": [
-        {
-          "$ref": "#/definitions/SingleTrack"
-        },
-        {
-          "$ref": "#/definitions/OverlaidTrack"
-        },
-        {
-          "$ref": "#/definitions/DataTrack"
-        }
-      ]
-    },
-    "TrackStyle": {
+    "Style": {
       "additionalProperties": false,
       "properties": {
         "align": {
@@ -4892,12 +4841,6 @@
         "outlineWidth": {
           "type": "number"
         },
-        "stroke": {
-          "type": "string"
-        },
-        "strokeWidth": {
-          "type": "number"
-        },
         "textAnchor": {
           "enum": [
             "start",
@@ -4924,6 +4867,166 @@
         },
         "verticalLink": {
           "type": "boolean"
+        }
+      },
+      "type": "object"
+    },
+    "Theme": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/ThemeType"
+        },
+        {
+          "$ref": "#/definitions/ThemeDeep"
+        }
+      ]
+    },
+    "ThemeDeep": {
+      "additionalProperties": false,
+      "properties": {
+        "area": {
+          "$ref": "#/definitions/MarkStyle"
+        },
+        "axis": {
+          "$ref": "#/definitions/AxisStyle"
+        },
+        "bar": {
+          "$ref": "#/definitions/MarkStyle"
+        },
+        "base": {
+          "$ref": "#/definitions/ThemeType"
+        },
+        "brush": {
+          "$ref": "#/definitions/MarkStyle"
+        },
+        "line": {
+          "$ref": "#/definitions/MarkStyle"
+        },
+        "link": {
+          "$ref": "#/definitions/MarkStyle"
+        },
+        "markCommon": {
+          "$ref": "#/definitions/MarkStyle"
+        },
+        "point": {
+          "$ref": "#/definitions/MarkStyle"
+        },
+        "rect": {
+          "$ref": "#/definitions/MarkStyle"
+        },
+        "root": {
+          "$ref": "#/definitions/RootStyle"
+        },
+        "rule": {
+          "$ref": "#/definitions/MarkStyle"
+        },
+        "text": {
+          "additionalProperties": false,
+          "properties": {
+            "color": {
+              "type": "string"
+            },
+            "nominalColorRange": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "opacity": {
+              "type": "number"
+            },
+            "quantitativeSizeRange": {
+              "items": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                }
+              ],
+              "maxItems": 2,
+              "minItems": 2,
+              "type": "array"
+            },
+            "size": {
+              "type": "number"
+            },
+            "stroke": {
+              "type": "string"
+            },
+            "strokeWidth": {
+              "type": "number"
+            },
+            "textAnchor": {
+              "enum": [
+                "start",
+                "middle",
+                "end"
+              ],
+              "type": "string"
+            },
+            "textFontWeight": {
+              "enum": [
+                "bold",
+                "normal"
+              ],
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "track": {
+          "$ref": "#/definitions/TrackStyle"
+        },
+        "triangle": {
+          "$ref": "#/definitions/MarkStyle"
+        }
+      },
+      "required": [
+        "base"
+      ],
+      "type": "object"
+    },
+    "ThemeType": {
+      "enum": [
+        "light",
+        "dark"
+      ],
+      "type": "string"
+    },
+    "Track": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/SingleTrack"
+        },
+        {
+          "$ref": "#/definitions/OverlaidTrack"
+        },
+        {
+          "$ref": "#/definitions/DataTrack"
+        }
+      ]
+    },
+    "TrackStyle": {
+      "additionalProperties": false,
+      "properties": {
+        "legendBackground": {
+          "type": "string"
+        },
+        "legendLabelColor": {
+          "type": "string"
+        },
+        "outline": {
+          "type": "string"
+        },
+        "outlineWidth": {
+          "type": "number"
+        },
+        "titleBackground": {
+          "type": "string"
+        },
+        "titleColor": {
+          "type": "string"
         }
       },
       "type": "object"

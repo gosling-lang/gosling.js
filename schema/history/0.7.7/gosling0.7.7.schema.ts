@@ -1,4 +1,5 @@
 import { Chromosome } from './utils/chrom-size';
+import { Theme } from './utils/theme'
 
 /* ----------------------------- ROOT SPEC ----------------------------- */
 export type GoslingSpec = RootSpecWithSingleView | RootSpecWithMultipleViews;
@@ -15,52 +16,6 @@ export interface RootSpecWithMultipleViews extends MultipleViews {
     subtitle?: string;
     description?: string;
     theme?: Theme;
-}
-
-/* ----------------------------- THEME ----------------------------- */
-export type Theme = ThemeType | ThemeDeep;
-export type ThemeType = 'light' | 'dark';
-export enum Themes {
-    light = 'light',
-    dark = 'dark'
-}
-
-// TODO: combine with `TrackStyle`
-// TODO: encapsulate each level, e.g., track: { /* TrackLevelTheme */ }
-export interface ThemeDeep {
-    base: ThemeType;
-
-    /* Root level */
-    backgroundColor?: string; // background color of react component
-    titleColor?: string; // color of title
-    subtitleColor?: string; // color of subtitle
-
-    /* Track level */
-    trackOutlineColor?: string; // color of track outline
-    trackOutlineWidth?: number; // stroke width of track outline
-    axisColor?: string; // color of axis ticks and labels
-
-    /* Encoding level */
-    markColor?: string; // default color of marks
-    nominalColors?: string[]; // colors for nominal values
-    useExtendedNominalColors?: boolean;
-    nominalColorsExtended?: string[]; // colors for nominal values when too many categories
-    markStrokeColor?: string; // stroke color of marks
-    markStrokeWidth?: number; // stroke width of marks
-    markOpacity?: number; // opacity of marks
-    // TODO: quantitative colors
-
-    /* Mark-specific Encoding Level */
-    pointSize?: number; // size of points
-    pointSizeRangeQuantitative?: [number, number];
-    lineSize?: number; // line width
-    brushColor?: string; // fill color of brush
-    brushStrokeColor?: string; // stroke color of brush
-    brushStrokeWidth?: number; // stroke width of brush
-    ruleStrokeWidth?: number;
-    linkStrokeWidth?: number;
-
-    // ...
 }
 
 /* ----------------------------- VIEW ----------------------------- */
@@ -113,7 +68,7 @@ export interface CommonViewDef {
     centerRadius?: number; // [0, 1] (default: 0.3)
 
     // Overriden by children
-    style?: TrackStyle;
+    style?: Style;
 }
 
 /* ----------------------------- TRACK ----------------------------- */
@@ -236,16 +191,19 @@ export type OverlaidTrack = Partial<SingleTrack> &
         overlay: Partial<Omit<SingleTrack, 'height' | 'width' | 'layout' | 'title' | 'subtitle'>>[];
     };
 
-export interface TrackStyle {
+export interface Style {
+    // Top-level Styles
     background?: string;
     backgroundOpacity?: number;
-    dashed?: [number, number];
-    linePattern?: { type: 'triangleLeft' | 'triangleRight'; size: number };
-    curve?: 'top' | 'bottom' | 'left' | 'right';
-    align?: 'left' | 'right';
-    dy?: number;
     outline?: string;
     outlineWidth?: number;
+
+    // Mark-level styles
+    dashed?: [number, number];
+    linePattern?: { type: 'triangleLeft' | 'triangleRight'; size: number };
+    curve?: 'top' | 'bottom' | 'left' | 'right'; // for genomic range rules
+    align?: 'left' | 'right'; // currently, only supported for triangles
+    dy?: number; // currently, only used for text marks
     verticalLink?: boolean; // Should bands be connected from the top to bottom?
     circularLink?: boolean; // !! Deprecated: draw arc instead of bazier curve?
     inlineLegend?: boolean; // show legend in a single horizontal line?
@@ -255,9 +213,6 @@ export interface TrackStyle {
     textStrokeWidth?: number;
     textFontWeight?: 'bold' | 'normal';
     textAnchor?: 'start' | 'middle' | 'end';
-    //
-    stroke?: string; // deprecated
-    strokeWidth?: number; // deprecated
 }
 
 /* ----------------------------- SEMANTIC ZOOM ----------------------------- */
@@ -579,10 +534,10 @@ export interface GlyphElement {
     opacity?: ChannelBind | ChannelValue | 'none';
     text?: ChannelBind | ChannelValue | 'none';
     background?: ChannelBind | ChannelValue | 'none';
-    style?: MarkStyle;
+    style?: MarkStyleInGlyph;
 }
 
-export interface MarkStyle {
+export interface MarkStyleInGlyph {
     dashed?: string;
     dy?: number;
     stroke?: string;

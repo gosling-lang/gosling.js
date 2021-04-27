@@ -1,21 +1,20 @@
-import { getTheme } from './theme';
-import { ThemeDeep } from '../gosling.schema';
+import { ThemeDeep, getTheme } from './theme';
 
 describe('Theme', () => {
     it('Defualt Themes', () => {
         expect(getTheme().base).toEqual('light');
-        expect(getTheme().titleColor).toEqual('black');
+        expect(getTheme().root.titleColor).toEqual('black');
     });
     it('Predefined Themes', () => {
         expect(getTheme('dark').base).toEqual('dark');
-        expect(getTheme('dark').titleColor).toEqual('white');
+        expect(getTheme('dark').root.titleColor).toEqual('white');
     });
     it('Overriding Themes', () => {
         const custom: ThemeDeep = {
             base: 'dark',
-            titleColor: 'yellow'
+            root: { titleColor: 'yellow' }
         };
-        expect(getTheme('dark').titleColor).not.toEqual(getTheme(custom).titleColor);
-        expect(getTheme(custom).titleColor).toEqual('yellow');
+        expect(getTheme('dark').root.titleColor).not.toEqual(getTheme(custom).root.titleColor);
+        expect(getTheme(custom).root.titleColor).toEqual('yellow');
     });
 });

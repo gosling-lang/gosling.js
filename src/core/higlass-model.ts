@@ -140,11 +140,11 @@ export class HiGlassModel {
             uid: uuid.v4(),
             fromViewUid,
             options: {
-                projectionFillColor: style?.color ?? getTheme(theme).brushColor,
-                projectionStrokeColor: style?.stroke ?? getTheme(theme).brushStrokeColor,
+                projectionFillColor: style?.color ?? getTheme(theme).brush.color,
+                projectionStrokeColor: style?.stroke ?? getTheme(theme).brush.stroke,
                 projectionFillOpacity: style?.opacity ?? 0.3,
                 projectionStrokeOpacity: style?.opacity ?? 0.3,
-                strokeWidth: style?.strokeWidth ?? getTheme(theme).brushStrokeWidth,
+                strokeWidth: style?.strokeWidth ?? getTheme(theme).brush.strokeWidth,
                 startAngle: style?.startAngle,
                 endAngle: style?.endAngle,
                 innerRadius: style?.innerRadius,
@@ -266,8 +266,8 @@ export class HiGlassModel {
                 ...options,
                 assembly: this.getAssembly(),
                 stroke: 'transparent', // text outline
-                color: getTheme(options.theme).axisColor,
-                tickColor: getTheme(options.theme).axisColor,
+                color: getTheme(options.theme).axis.labelColor,
+                tickColor: getTheme(options.theme).axis.tickColor,
                 tickFormat: type === 'narrower' ? 'si' : 'plain',
                 tickPositions: type === 'regular' ? 'even' : 'ends',
                 reverseOrientation: position === 'bottom' || position === 'right' ? true : false
