@@ -14,6 +14,7 @@ export interface ThemeDeep {
 
     root?: RootStyle;
     track?: TrackStyle;
+    legend?: LegendStyle;
     axis?: AxisStyle;
 
     // Mark-Specific Styles
@@ -39,6 +40,7 @@ export interface CompleteThemeDeep {
 
     root: Required<RootStyle>;
     track: Required<TrackStyle>;
+    legend: Required<LegendStyle>;
     axis: Required<AxisStyle>;
 
     // Mark-Specific
@@ -70,8 +72,14 @@ export interface TrackStyle {
     titleBackground?: string;
     outline?: string;
     outlineWidth?: number;
-    legendLabelColor?: string;
-    legendBackground?: string;
+    // ...
+}
+
+export interface LegendStyle {
+    labelColor?: string;
+    background?: string;
+    backgroundOpacity?: number;
+    backgroundStroke?: string;
     // ...
 }
 
@@ -98,7 +106,14 @@ export function getTheme(theme: Theme = 'light'): Required<CompleteThemeDeep> {
     if (theme === 'dark' || theme === 'light') {
         return THEMES[theme];
     } else {
-        return assign(JSON.parse(JSON.stringify(THEMES[theme.base])), JSON.parse(JSON.stringify(theme)));
+        // Iterate all keys to override from base
+        const base = JSON.parse(JSON.stringify(THEMES[theme.base]));
+        Object.keys(base).forEach(k => {
+            if ((theme as any)[k]) {
+                base[k] = assign(JSON.parse(JSON.stringify(base[k])), JSON.parse(JSON.stringify((theme as any)[k])));
+            }
+        });
+        return base;
     }
 }
 
@@ -129,9 +144,14 @@ export const THEMES: { [key in Themes]: Required<CompleteThemeDeep> } = {
             titleColor: 'black',
             titleBackground: 'white',
             outline: 'gray',
-            outlineWidth: 1,
-            legendBackground: 'white',
-            legendLabelColor: 'black'
+            outlineWidth: 1
+        },
+
+        legend: {
+            background: 'white',
+            backgroundOpacity: 0.7,
+            labelColor: 'black',
+            backgroundStroke: '#DBDBDB'
         },
 
         axis: {
@@ -178,6 +198,7 @@ export const THEMES: { [key in Themes]: Required<CompleteThemeDeep> } = {
         brush: {
             ...LightThemeMarkCommonStyle,
             color: 'gray',
+            opacity: 0.3,
             stroke: 'black',
             strokeWidth: 1
         }
@@ -195,9 +216,14 @@ export const THEMES: { [key in Themes]: Required<CompleteThemeDeep> } = {
             titleColor: 'white',
             titleBackground: 'black',
             outline: 'lightgray',
-            outlineWidth: 1,
-            legendBackground: 'black',
-            legendLabelColor: 'white'
+            outlineWidth: 1
+        },
+
+        legend: {
+            background: 'black',
+            backgroundOpacity: 0.7,
+            labelColor: 'white',
+            backgroundStroke: '#DBDBDB'
         },
 
         axis: {
@@ -244,6 +270,7 @@ export const THEMES: { [key in Themes]: Required<CompleteThemeDeep> } = {
         brush: {
             ...DarkThemeMarkCommonStyle,
             color: 'lightgray',
+            opacity: 0.3,
             stroke: 'white',
             strokeWidth: 1
         }

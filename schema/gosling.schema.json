@@ -1261,6 +1261,24 @@
       ],
       "type": "string"
     },
+    "LegendStyle": {
+      "additionalProperties": false,
+      "properties": {
+        "background": {
+          "type": "string"
+        },
+        "backgroundOpacity": {
+          "type": "number"
+        },
+        "backgroundStroke": {
+          "type": "string"
+        },
+        "labelColor": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
     "LogBase": {
       "anyOf": [
         {
@@ -4899,6 +4917,9 @@
         "brush": {
           "$ref": "#/definitions/MarkStyle"
         },
+        "legend": {
+          "$ref": "#/definitions/LegendStyle"
+        },
         "line": {
           "$ref": "#/definitions/MarkStyle"
         },
@@ -5010,12 +5031,6 @@
     "TrackStyle": {
       "additionalProperties": false,
       "properties": {
-        "legendBackground": {
-          "type": "string"
-        },
-        "legendLabelColor": {
-          "type": "string"
-        },
         "outline": {
           "type": "string"
         },
