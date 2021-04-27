@@ -84,7 +84,7 @@ export const EX_SPEC_CORCES_ET_AL: GoslingSpec = {
                 field: 'position',
                 type: 'genomic'
             },
-            y: { field: 'peak', type: 'quantitative' },
+            y: { field: 'peak', type: 'quantitative', axis: 'right' },
             style: { outline: '#20102F' },
             width: 400,
             height: 40,
