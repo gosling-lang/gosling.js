@@ -1,12 +1,12 @@
 import uuid from 'uuid';
 import { HiGlassSpec, Track } from './higlass.schema';
 import HiGlassSchema from './higlass.schema.json';
-import { Assembly, AxisPosition, Domain, Orientation, Theme } from './gosling.schema';
+import { Assembly, AxisPosition, Domain, Orientation } from './gosling.schema';
 import { getNumericDomain } from './utils/scales';
 import { RelativePosition } from './utils/bounding-box';
 import { validateSpec } from './utils/validate';
 import { GET_CHROM_SIZES } from './utils/assembly';
-import { getTheme } from './utils/theme';
+import { getTheme, Theme } from './utils/theme';
 
 export const HIGLASS_AXIS_SIZE = 30;
 const getViewTemplate = (assembly?: string) => {

@@ -1,12 +1,4 @@
-import {
-    ChannelDeep,
-    PREDEFINED_COLORS,
-    ChannelTypes,
-    ChannelValue,
-    SingleTrack,
-    Channel,
-    Theme
-} from './gosling.schema';
+import { ChannelDeep, PREDEFINED_COLORS, ChannelTypes, ChannelValue, SingleTrack, Channel } from './gosling.schema';
 import { validateTrack, getGenomicChannelFromTrack, getGenomicChannelKeyFromTrack } from './utils/validate';
 import {
     ScaleLinear,
@@ -39,7 +31,7 @@ import {
     PREDEFINED_COLOR_STR_MAP
 } from './gosling.schema.guards';
 import { CHANNEL_DEFAULTS } from './channel';
-import { getTheme } from './utils/theme';
+import { getTheme, Theme } from './utils/theme';
 
 export type ScaleType =
     | ScaleLinear<any, any>

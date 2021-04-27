@@ -1,5 +1,5 @@
 import { Chromosome } from './utils/chrom-size';
-import { Theme } from './utils/theme'
+import { Theme } from './utils/theme';
 
 /* ----------------------------- ROOT SPEC ----------------------------- */
 export type GoslingSpec = RootSpecWithSingleView | RootSpecWithMultipleViews;
