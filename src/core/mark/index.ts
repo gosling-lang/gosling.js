@@ -12,7 +12,7 @@ import { drawLink } from './link';
 import { drawGrid } from './grid';
 import { drawChartOutlines } from './outline';
 import { drawColorLegend, drawRowLegend } from './legend';
-import { drawYAxis } from './axis';
+import { drawCircularYAxis, drawLinearYAxis } from './axis';
 import { drawCircularGrid } from './grid-circular';
 import { drawCircularOutlines } from './outline-circular';
 import { drawBackground } from './background';
@@ -47,14 +47,7 @@ export const RESOLUTION = 4;
 /**
  * Draw a track based on the track specification in a Gosling grammar.
  */
-export function drawMark(
-    HGC: any,
-    trackInfo: any,
-    tile: any,
-    model: GoslingTrackModel,
-    theme: Theme = 'light',
-    isLast: boolean
-) {
+export function drawMark(HGC: any, trackInfo: any, tile: any, model: GoslingTrackModel, theme: Theme = 'light') {
     if (!HGC || !trackInfo || !tile) {
         // We did not receive parameters correctly.
         return;
@@ -127,13 +120,10 @@ export function drawMark(
 
     /* embellishment after rendering plots */
     if (CIRCULAR) {
-        // ...
+        drawCircularYAxis(HGC, trackInfo, tile, model, theme);
     } else {
+        drawLinearYAxis(HGC, trackInfo, tile, model, theme);
         drawRowLegend(HGC, trackInfo, tile, model, theme);
-        if (isLast) {
-            // Need to render Y-Axis only once
-            drawYAxis(HGC, trackInfo, tile, model, theme);
-        }
     }
     drawColorLegend(HGC, trackInfo, tile, model, theme);
 }

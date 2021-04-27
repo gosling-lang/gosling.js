@@ -497,14 +497,14 @@ export const EX_SPEC_VISUAL_ENCODING_CIRCULAR: GoslingSpec = {
 };
 
 export const EX_SPEC_DARK_THEME: GoslingSpec = {
-    theme: {
-        base: 'dark',
-        markCommon: {
-            color: 'gray',
-            nominalColorRange: ['white', 'gray'],
-            stroke: 'black'
-        }
-    },
+    // theme: {
+    //     base: 'dark',
+    //     markCommon: {
+    //         color: 'gray',
+    //         nominalColorRange: ['white', 'gray'],
+    //         stroke: 'black'
+    //     }
+    // },
     title: 'Dark Theme (Beta)',
     subtitle: 'Gosling allows to easily change the color theme using a `theme` property',
     layout: 'circular',

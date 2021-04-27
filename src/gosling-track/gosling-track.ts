@@ -116,7 +116,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             }
 
             // A single tile contains one or multiple gosling visualizations that are overlaid
-            tile.goslingModels.forEach((tm: GoslingTrackModel, index: number) => {
+            tile.goslingModels.forEach((tm: GoslingTrackModel) => {
                 // check visibility condition
                 const trackWidth = this.dimensions[1];
                 const zoomLevel = this._xScale.invert(trackWidth) - this._xScale.invert(0);
@@ -124,7 +124,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                     return;
                 }
 
-                drawMark(HGC, this, tile, tm, this.options.theme, index === tile.goslingModels.length - 1);
+                drawMark(HGC, this, tile, tm, this.options.theme);
             });
         }
 

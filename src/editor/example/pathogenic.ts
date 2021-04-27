@@ -114,7 +114,7 @@ export const EX_SPEC_PATHOGENIC: GoslingSpec = {
                     mark: 'bar',
                     x: { field: 'start', type: 'genomic' },
                     xe: { field: 'end', type: 'genomic' },
-                    y: { field: 'count', type: 'quantitative' },
+                    y: { field: 'count', type: 'quantitative', axis: 'none' },
                     color: {
                         field: 'significance',
                         type: 'nominal',
