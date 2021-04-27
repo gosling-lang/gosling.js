@@ -1,12 +1,4 @@
-import {
-    ChannelDeep,
-    PREDEFINED_COLORS,
-    ChannelTypes,
-    ChannelValue,
-    SingleTrack,
-    Channel,
-    Theme
-} from './gosling.schema';
+import { ChannelDeep, PREDEFINED_COLORS, ChannelTypes, ChannelValue, SingleTrack, Channel } from './gosling.schema';
 import { validateTrack, getGenomicChannelFromTrack, getGenomicChannelKeyFromTrack } from './utils/validate';
 import {
     ScaleLinear,
@@ -39,7 +31,7 @@ import {
     PREDEFINED_COLOR_STR_MAP
 } from './gosling.schema.guards';
 import { CHANNEL_DEFAULTS } from './channel';
-import { getTheme } from './utils/theme';
+import { getTheme, Theme } from './utils/theme';
 
 export type ScaleType =
     | ScaleLinear<any, any>
@@ -559,7 +551,7 @@ export class GoslingTrackModel {
                             break;
                         case 'size':
                             // TODO: make as an object
-                            if (spec.mark === 'line') value = getTheme(this.theme).lineSize;
+                            if (spec.mark === 'line') value = getTheme(this.theme).line.size;
                             else if (spec.mark === 'bar') value = undefined;
                             else if (spec.mark === 'rect') value = undefined;
                             else if (spec.mark === 'triangleRight') value = undefined;
@@ -573,24 +565,24 @@ export class GoslingTrackModel {
                                 IsChannelDeep(spec.xe)
                             )
                                 value = undefined;
-                            else value = getTheme(this.theme).pointSize;
+                            else value = getTheme(this.theme).point.size;
                             break;
                         case 'color':
-                            value = getTheme(this.theme).markColor;
+                            value = getTheme(this.theme).markCommon.color;
                             break;
                         case 'row':
                             value = 0;
                             break;
                         case 'stroke':
-                            value = getTheme(this.theme).markStrokeColor;
+                            value = getTheme(this.theme).markCommon.stroke;
                             break;
                         case 'strokeWidth':
-                            if (spec.mark === 'rule') value = getTheme(this.theme).ruleStrokeWidth;
-                            else if (spec.mark === 'link') value = getTheme(this.theme).linkStrokeWidth;
-                            else value = getTheme(this.theme).markStrokeWidth;
+                            if (spec.mark === 'rule') value = getTheme(this.theme).rule.strokeWidth;
+                            else if (spec.mark === 'link') value = getTheme(this.theme).link.strokeWidth;
+                            else value = getTheme(this.theme).markCommon.strokeWidth;
                             break;
                         case 'opacity':
-                            value = getTheme(this.theme).markOpacity;
+                            value = getTheme(this.theme).markCommon.opacity;
                             break;
                         case 'text':
                             value = '';
@@ -629,7 +621,7 @@ export class GoslingTrackModel {
                                 range = CHANNEL_DEFAULTS.QUANTITATIVE_COLOR as PREDEFINED_COLORS;
                                 break;
                             case 'size':
-                                range = getTheme(this.theme).pointSizeRangeQuantitative;
+                                range = getTheme(this.theme).markCommon.quantitativeSizeRange;
                                 break;
                             case 'strokeWidth':
                                 range = [1, 3];
@@ -662,12 +654,7 @@ export class GoslingTrackModel {
                                 break;
                             case 'color':
                             case 'stroke':
-                                range =
-                                    Array.isArray(channel.domain) &&
-                                    channel.domain.length > getTheme(this.theme).nominalColors.length &&
-                                    getTheme(this.theme).useExtendedNominalColors
-                                        ? getTheme(this.theme).nominalColorsExtended
-                                        : getTheme(this.theme).nominalColors;
+                                range = getTheme(this.theme).markCommon.nominalColorRange;
                                 break;
                             case 'row':
                                 range = [0, spec.height];

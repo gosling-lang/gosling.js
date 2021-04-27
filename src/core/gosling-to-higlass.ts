@@ -2,14 +2,14 @@ import uuid from 'uuid';
 import { Track as HiGlassTrack } from './higlass.schema';
 import { HiGlassModel, HIGLASS_AXIS_SIZE } from './higlass-model';
 import { parseServerAndTilesetUidFromUrl } from './utils';
-import { Track, Domain, DataTransform, Theme } from './gosling.schema';
+import { Track, Domain, DataTransform } from './gosling.schema';
 import { BoundingBox, RelativePosition } from './utils/bounding-box';
 import { resolveSuperposedTracks } from './utils/overlay';
 import { getGenomicChannelKeyFromTrack, getGenomicChannelFromTrack } from './utils/validate';
 import { viridisColorMap } from './utils/colors';
 import { IsDataDeep, IsChannelDeep, IsDataDeepTileset } from './gosling.schema.guards';
 import { DEFAULT_SUBTITLE_HEIGHT, DEFAULT_TITLE_HEIGHT } from './layout/defaults';
-import { getTheme } from './utils/theme';
+import { getTheme, Theme } from './utils/theme';
 
 /**
  * Convert a gosling track into a HiGlass view and add it into a higlass model.
@@ -58,11 +58,11 @@ export function goslingToHiGlass(
                 mousePositionColor: '#B8BCC1',
                 /* Track title */
                 name: firstResolvedSpec.title,
-                labelPosition: firstResolvedSpec.title ? 'topLeft' : 'none',
                 fontSize: 12,
-                labelColor: getTheme(theme).axisColor,
+                labelPosition: firstResolvedSpec.title ? 'topLeft' : 'none',
                 labelShowResolution: false,
-                labelBackgroundColor: 'white',
+                labelColor: getTheme(theme).track.titleColor,
+                labelBackgroundColor: getTheme(theme).track.titleBackground,
                 labelTextOpacity: 1,
                 labelLeftMargin: 1,
                 labelTopMargin: 1,
@@ -163,7 +163,7 @@ export function goslingToHiGlass(
                 bb.width,
                 DEFAULT_TITLE_HEIGHT,
                 firstResolvedSpec.title,
-                getTheme(theme).titleColor,
+                getTheme(theme).root.titleColor,
                 18,
                 'bold'
             );
@@ -173,7 +173,7 @@ export function goslingToHiGlass(
                 bb.width,
                 DEFAULT_SUBTITLE_HEIGHT,
                 firstResolvedSpec.subtitle,
-                getTheme(theme).subtitleColor,
+                getTheme(theme).root.subtitleColor,
                 14,
                 'normal'
             );

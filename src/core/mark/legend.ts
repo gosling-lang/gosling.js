@@ -1,20 +1,23 @@
 import { GoslingTrackModel } from '../gosling-track-model';
 import { IsChannelDeep } from '../gosling.schema.guards';
 import colorToHex from '../utils/color-to-hex';
+import { getTheme, Theme } from '../utils/theme';
 
-export const LEGEND_LABEL_STYLE = {
-    fontSize: '12px',
-    fontFamily: 'Arial',
-    fontWeight: 'normal',
-    fill: 'black',
-    background: 'white',
-    lineJoin: 'round'
-    // Other possible options:
-    // stroke: '#ffffff',
-    // strokeThickness: 2
+export const getLegendTextStyle = (fill = 'black') => {
+    return {
+        fontSize: '12px',
+        fontFamily: 'Arial',
+        fontWeight: 'normal',
+        fill,
+        background: 'white',
+        lineJoin: 'round'
+        // Other possible options:
+        // stroke: '#ffffff',
+        // strokeThickness: 2
+    };
 };
 
-export function drawColorLegend(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackModel) {
+export function drawColorLegend(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackModel, theme: Theme = 'light') {
     /* track spec */
     const spec = tm.spec();
     if (!IsChannelDeep(spec.color) || spec.color.type !== 'nominal' || !spec.color.legend) {
@@ -54,7 +57,10 @@ export function drawColorLegend(HGC: any, trackInfo: any, tile: any, tm: Gosling
                 }
 
                 const color = tm.encodedValue('color', category);
-                const textGraphic = new HGC.libraries.PIXI.Text(category, { ...LEGEND_LABEL_STYLE });
+                const textGraphic = new HGC.libraries.PIXI.Text(
+                    category,
+                    getLegendTextStyle(getTheme(theme).legend.labelColor)
+                );
                 textGraphic.anchor.x = 1;
                 textGraphic.anchor.y = 0;
                 textGraphic.position.x = trackInfo.position[0] + trackInfo.dimensions[0] - maxWidth - paddingX;
@@ -62,7 +68,9 @@ export function drawColorLegend(HGC: any, trackInfo: any, tile: any, tm: Gosling
 
                 graphics.addChild(textGraphic);
 
-                const textStyleObj = new HGC.libraries.PIXI.TextStyle(LEGEND_LABEL_STYLE);
+                const textStyleObj = new HGC.libraries.PIXI.TextStyle(
+                    getLegendTextStyle(getTheme(theme).legend.labelColor)
+                );
                 const textMetrics = HGC.libraries.PIXI.TextMetrics.measureText(category, textStyleObj);
 
                 if (cumY < textMetrics.height + paddingY * 3) {
@@ -88,7 +96,10 @@ export function drawColorLegend(HGC: any, trackInfo: any, tile: any, tm: Gosling
 
             const color = tm.encodedValue('color', category);
 
-            const textGraphic = new HGC.libraries.PIXI.Text(category, { ...LEGEND_LABEL_STYLE });
+            const textGraphic = new HGC.libraries.PIXI.Text(
+                category,
+                getLegendTextStyle(getTheme(theme).legend.labelColor)
+            );
             textGraphic.anchor.x = 1;
             textGraphic.anchor.y = 0;
             textGraphic.position.x = trackInfo.position[0] + trackInfo.dimensions[0] - paddingX;
@@ -96,7 +107,9 @@ export function drawColorLegend(HGC: any, trackInfo: any, tile: any, tm: Gosling
 
             graphics.addChild(textGraphic);
 
-            const textStyleObj = new HGC.libraries.PIXI.TextStyle(LEGEND_LABEL_STYLE);
+            const textStyleObj = new HGC.libraries.PIXI.TextStyle(
+                getLegendTextStyle(getTheme(theme).legend.labelColor)
+            );
             const textMetrics = HGC.libraries.PIXI.TextMetrics.measureText(category, textStyleObj);
 
             if (maxWidth < textMetrics.width + paddingX * 3) {
@@ -113,27 +126,33 @@ export function drawColorLegend(HGC: any, trackInfo: any, tile: any, tm: Gosling
         });
     }
 
-    graphics.beginFill(colorToHex('white'), 0.7);
+    graphics.beginFill(colorToHex(getTheme(theme).legend.background), getTheme(theme).legend.backgroundOpacity);
     graphics.lineStyle(
         1,
-        colorToHex('#DBDBDB'),
-        0.7, // alpha
+        colorToHex(getTheme(theme).legend.backgroundStroke),
+        1, // alpha
         0 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
     );
     graphics.drawRect(
-        trackInfo.position[0] + trackInfo.dimensions[0] - maxWidth,
+        trackInfo.position[0] + trackInfo.dimensions[0] - maxWidth - 1,
         trackInfo.position[1] + 1,
         maxWidth,
         cumY - paddingY
     );
 
     recipe.forEach(r => {
+        graphics.lineStyle(
+            1,
+            colorToHex('black'),
+            0, // alpha
+            0 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
+        );
         graphics.beginFill(colorToHex(r.color), 1);
         graphics.drawCircle(r.x, r.y, 4);
     });
 }
 
-export function drawYLegend(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackModel) {
+export function drawYLegend(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackModel, theme: Theme = 'light') {
     /* track spec */
     const spec = tm.spec();
     if (
@@ -166,7 +185,10 @@ export function drawYLegend(HGC: any, trackInfo: any, tile: any, tm: GoslingTrac
     rowCategories.forEach(category => {
         const rowPosition = tm.encodedValue('row', category);
 
-        const textGraphic = new HGC.libraries.PIXI.Text(category, { ...LEGEND_LABEL_STYLE });
+        const textGraphic = new HGC.libraries.PIXI.Text(
+            category,
+            getLegendTextStyle(getTheme(theme).legend.labelColor)
+        );
         textGraphic.anchor.x = 0;
         textGraphic.anchor.y = 0;
         textGraphic.position.x = trackInfo.position[0] + paddingX;
@@ -174,13 +196,13 @@ export function drawYLegend(HGC: any, trackInfo: any, tile: any, tm: GoslingTrac
 
         graphics.addChild(textGraphic);
 
-        const textStyleObj = new HGC.libraries.PIXI.TextStyle(LEGEND_LABEL_STYLE);
+        const textStyleObj = new HGC.libraries.PIXI.TextStyle(getLegendTextStyle(getTheme(theme).legend.labelColor));
         const textMetrics = HGC.libraries.PIXI.TextMetrics.measureText(category, textStyleObj);
 
-        graphics.beginFill(colorToHex('white'), 0.7);
+        graphics.beginFill(colorToHex(getTheme(theme).legend.background), getTheme(theme).legend.backgroundOpacity);
         graphics.lineStyle(
             1,
-            colorToHex('#DBDBDB'),
+            colorToHex(getTheme(theme).legend.backgroundStroke),
             0, // alpha
             0 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
         );

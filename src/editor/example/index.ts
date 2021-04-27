@@ -16,6 +16,7 @@ import { EX_SPEC_GIVE } from './give';
 import { EX_SPEC_CORCES_ET_AL } from './corces';
 import { EX_SPEC_PATHOGENIC } from './pathogenic';
 import { EX_SPEC_CYTOBANDS } from './ideograms';
+import { EX_SPEC_CUSTOM_THEME } from './theme';
 import { EX_SPEC_FUJI_PLOT } from './fuji';
 
 export const examples: ReadonlyArray<{
@@ -128,13 +129,18 @@ export const examples: ReadonlyArray<{
     {
         name: 'Breast Cancer Variant (Staaf et al. 2019)',
         id: 'CANCER_VARIANT',
-        spec: EX_SPEC_CANCER_VARIANT,
-        underDevelopment: true
+        spec: EX_SPEC_CANCER_VARIANT
     },
     {
         name: 'Dark Theme (Beta)',
         id: 'DARK_THEME',
         spec: EX_SPEC_DARK_THEME,
+        underDevelopment: true
+    },
+    {
+        name: 'Custom Theme (Beta)',
+        id: 'CUSTOM_THEME',
+        spec: EX_SPEC_CUSTOM_THEME,
         underDevelopment: true
     }
 ].filter(d => !d.hidden);

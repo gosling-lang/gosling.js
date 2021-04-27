@@ -107,7 +107,7 @@ export const GoslingComponent = forwardRef((props: GoslingCompProps, ref: any) =
                     style={{
                         position: 'relative',
                         padding,
-                        background: getTheme(gs?.theme).backgroundColor,
+                        background: getTheme(gs?.theme).root.background,
                         width: size.width + padding * 2,
                         height: size.height + padding * 2,
                         textAlign: 'left'
@@ -118,7 +118,7 @@ export const GoslingComponent = forwardRef((props: GoslingCompProps, ref: any) =
                         style={{
                             position: 'relative',
                             display: 'block',
-                            background: getTheme(gs?.theme).backgroundColor,
+                            background: getTheme(gs?.theme).root.background,
                             margin: 0,
                             padding: 0, // non-zero padding acts unexpectedly w/ HiGlassComponent
                             width: size.width,

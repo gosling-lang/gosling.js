@@ -7,7 +7,7 @@ import {
     DomainInterval,
     DomainChrInterval,
     DomainGene,
-    TrackStyle,
+    Style,
     MarkType,
     MarkDeep,
     Track,
@@ -97,7 +97,7 @@ export function IsDomainGene(domain: Domain): domain is DomainGene {
     return 'gene' in domain;
 }
 
-export function IsTrackStyle(track: TrackStyle | undefined): track is TrackStyle {
+export function IsTrackStyle(track: Style | undefined): track is Style {
     return track !== undefined;
 }
 

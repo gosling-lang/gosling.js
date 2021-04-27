@@ -1,8 +1,7 @@
 import { GoslingTrackModel } from '../gosling-track-model';
-import { Theme } from '../gosling.schema';
 import { IsChannelDeep } from '../gosling.schema.guards';
 import colorToHex from '../utils/color-to-hex';
-import { getTheme } from '../utils/theme';
+import { Theme, getTheme } from '../utils/theme';
 
 export const TITLE_STYLE = {
     fontSize: '12px',
@@ -51,7 +50,7 @@ export function drawChartOutlines(HGC: any, trackInfo: any, tm: GoslingTrackMode
     g.lineStyle(
         tm.spec().style?.outlineWidth ?? 1,
         // TODO: outline not working
-        colorToHex(tm.spec().style?.outline ?? getTheme(theme).trackOutlineColor),
+        colorToHex(tm.spec().style?.outline ?? getTheme(theme).track.outline),
         1, // alpha
         0.5 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
     );
@@ -63,7 +62,7 @@ export function drawChartOutlines(HGC: any, trackInfo: any, tm: GoslingTrackMode
 
     g.lineStyle(
         1,
-        colorToHex(getTheme(theme).axisColor),
+        colorToHex(getTheme(theme).axis.baselineColor),
         1, // alpha
         0.5 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
     );
