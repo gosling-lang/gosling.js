@@ -70,12 +70,9 @@ The Gosling's key features compared to existing visualization libraries and gram
 
 ## Learn More About Gosling
 
--   [Home Page](https://gosling-lang.github.io/gosling-website/)
+-   [Documentation](https://gosling-lang.github.io/gosling-website/)
 -   [Gosling.js Editor](https://gosling.js.org/)
--   [Examples](https://gosling-lang.github.io/gosling-website/examples/)
 -   [Community Examples](https://github.com/gosling-lang/gosling-examples)
--   [Documentation](https://gosling-lang.github.io/gosling-website/docs/)
--   [Tutorials](https://gosling-lang.github.io/gosling-website/tutorials/)
 -   [Roadmap](https://github.com/gosling-lang/gosling.js/projects/1)
 
 ## Installation
