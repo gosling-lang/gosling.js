@@ -67,8 +67,9 @@ export function drawLinearYAxis(HGC: any, trackInfo: any, tile: any, gos: Goslin
     const graphics = trackInfo.pBorder;
 
     rowCategories.forEach((category, i) => {
-        if (i !== 0) {
+        if (rowCategories.length > 1 ? i !== 1 : i !== 0) {
             // Let's draw only one y-axis since the scale is shared anyway.
+            // Draw the second y-axis if exist, so that track title is not occluded by the y-axis.
             return;
         }
 
@@ -182,8 +183,9 @@ export function drawCircularYAxis(HGC: any, trackInfo: any, tile: any, gos: Gosl
     const graphics = tile.graphics; // We do not use `pBorder` as in linear layouts.
 
     rowCategories.forEach((category, i) => {
-        if (i !== 0) {
+        if (rowCategories.length > 1 ? i !== 1 : i !== 0) {
             // Let's draw only one y-axis since the scale is shared anyway.
+            // Draw the second y-axis if exist, so that track title is not occluded by the y-axis.
             return;
         }
 
