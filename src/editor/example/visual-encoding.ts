@@ -2,7 +2,6 @@ import { GoslingSpec } from '../../core/gosling.schema';
 import { GOSLING_PUBLIC_DATA } from './gosling-data';
 
 export const EX_SPEC_VISUAL_ENCODING: GoslingSpec = {
-    // theme: 'dark', // beta support
     title: 'Visual Encoding',
     subtitle: 'Gosling provides diverse visual encoding methods',
     layout: 'linear',
@@ -497,14 +496,14 @@ export const EX_SPEC_VISUAL_ENCODING_CIRCULAR: GoslingSpec = {
 };
 
 export const EX_SPEC_DARK_THEME: GoslingSpec = {
-    // theme: {
-    //     base: 'dark',
-    //     markCommon: {
-    //         color: 'gray',
-    //         nominalColorRange: ['white', 'gray'],
-    //         stroke: 'black'
-    //     }
-    // },
+    theme: {
+        base: 'dark',
+        markCommon: {
+            color: 'gray',
+            nominalColorRange: ['white', 'gray'],
+            stroke: 'black'
+        }
+    },
     title: 'Dark Theme (Beta)',
     subtitle: 'Gosling allows to easily change the color theme using a `theme` property',
     layout: 'circular',
@@ -530,7 +529,7 @@ export const EX_SPEC_DARK_THEME: GoslingSpec = {
                             },
                             mark: 'bar',
                             x: { field: 'position', type: 'genomic', axis: 'top' },
-                            y: { field: 'peak', type: 'quantitative' },
+                            y: { field: 'peak', type: 'quantitative', axis: 'left' },
                             color: { field: 'sample', type: 'nominal', legend: true },
                             width: 550,
                             height: 230
