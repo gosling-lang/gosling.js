@@ -17,7 +17,7 @@ const ScalableSequenceTrack: OverlaidTracks = {
     tracks: [
         {
             mark: 'bar',
-            y: { field: 'count', type: 'quantitative' }
+            y: { field: 'count', type: 'quantitative', axis: 'none' }
         },
         {
             dataTransform: [{ type: 'filter', field: 'count', oneOf: [0], not: true }],

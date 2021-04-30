@@ -28,7 +28,8 @@ import {
     IsShallowMark,
     IsStackedChannel,
     IsDomainArray,
-    PREDEFINED_COLOR_STR_MAP
+    PREDEFINED_COLOR_STR_MAP,
+    IsRangeArray
 } from './gosling.schema.guards';
 import { CHANNEL_DEFAULTS } from './channel';
 import { getTheme, Theme } from './utils/theme';
@@ -808,12 +809,33 @@ export class GoslingTrackModel {
     }
 
     /**
+     * Return whether to show y-axis.
+     */
+    public isShowYAxis(): boolean {
+        const spec = this.spec();
+        const yDomain = this.getChannelDomainArray('y');
+        const yRange = this.getChannelRangeArray('y');
+        return (
+            IsChannelDeep(spec.y) && spec.y.axis !== 'none' && spec.y.type === 'quantitative' && !!yDomain && !!yRange
+        );
+    }
+
+    /**
      * Return the domain of a visual channel.
      * `undefined` if we do not have domain in array.
      */
     public getChannelDomainArray(channelKey: keyof typeof ChannelTypes): string[] | number[] | undefined {
         const c = this.spec()[channelKey];
         return IsChannelDeep(c) && IsDomainArray(c.domain) ? c.domain : undefined;
+    }
+
+    /**
+     * Return the range of a visual channel.
+     * `undefined` if we do not have domain in array.
+     */
+    public getChannelRangeArray(channelKey: keyof typeof ChannelTypes): string[] | number[] | undefined {
+        const c = this.spec()[channelKey];
+        return IsChannelDeep(c) && IsRangeArray(c.range) ? c.range : undefined;
     }
 
     /**

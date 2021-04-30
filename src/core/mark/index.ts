@@ -11,7 +11,8 @@ import { drawRule } from './rule';
 import { drawLink } from './link';
 import { drawGrid } from './grid';
 import { drawChartOutlines } from './outline';
-import { drawColorLegend, drawYLegend } from './legend';
+import { drawColorLegend, drawRowLegend } from './legend';
+import { drawCircularYAxis, drawLinearYAxis } from './axis';
 import { drawCircularGrid } from './grid-circular';
 import { drawCircularOutlines } from './outline-circular';
 import { drawBackground } from './background';
@@ -119,9 +120,10 @@ export function drawMark(HGC: any, trackInfo: any, tile: any, model: GoslingTrac
 
     /* embellishment after rendering plots */
     if (CIRCULAR) {
-        // ...
+        drawCircularYAxis(HGC, trackInfo, tile, model, theme);
     } else {
-        drawYLegend(HGC, trackInfo, tile, model, theme);
+        drawLinearYAxis(HGC, trackInfo, tile, model, theme);
+        drawRowLegend(HGC, trackInfo, tile, model, theme);
     }
     drawColorLegend(HGC, trackInfo, tile, model, theme);
 }

@@ -130,6 +130,11 @@ describe('Gosling track model should be properly generated with data', () => {
         const rowDomain = IsChannelDeep(spec.row) ? (spec.row.domain as string[]) : [];
         const yDomain = IsChannelDeep(spec.y) ? (spec.y.domain as number[]) : [];
 
+        // model properties
+        expect(model.getChannelDomainArray('color')).toHaveLength(3);
+        expect(model.getChannelRangeArray('color')).not.toBeUndefined();
+        expect(model.isShowYAxis()).toBe(true);
+
         // domain
         expect(colorDomain).not.toBeUndefined();
         expect(colorDomain[0]).toBe(1);

@@ -152,7 +152,7 @@ export function drawColorLegend(HGC: any, trackInfo: any, tile: any, tm: Gosling
     });
 }
 
-export function drawYLegend(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackModel, theme: Theme = 'light') {
+export function drawRowLegend(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackModel, theme: Theme = 'light') {
     /* track spec */
     const spec = tm.spec();
     if (

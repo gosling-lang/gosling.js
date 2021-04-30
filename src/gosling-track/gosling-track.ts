@@ -115,6 +115,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                 return;
             }
 
+            // A single tile contains one or multiple gosling visualizations that are overlaid
             tile.goslingModels.forEach((tm: GoslingTrackModel) => {
                 // check visibility condition
                 const trackWidth = this.dimensions[1];

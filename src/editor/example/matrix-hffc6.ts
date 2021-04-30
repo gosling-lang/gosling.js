@@ -141,7 +141,7 @@ export const EX_SPEC_MATRIX_HFFC6: GoslingSpec = {
                             mark: 'bar',
                             x: { field: 'start', type: 'genomic', axis: 'none' },
                             xe: { field: 'end', type: 'genomic', axis: 'none' },
-                            y: { field: 'peak', type: 'quantitative' },
+                            y: { field: 'peak', type: 'quantitative', axis: 'right' },
                             color: { value: 'darkgreen' },
                             width: 570,
                             height: 40
@@ -158,7 +158,7 @@ export const EX_SPEC_MATRIX_HFFC6: GoslingSpec = {
                             mark: 'bar',
                             x: { field: 'start', type: 'genomic' },
                             xe: { field: 'end', type: 'genomic' },
-                            y: { field: 'peak', type: 'quantitative' },
+                            y: { field: 'peak', type: 'quantitative', axis: 'right' },
                             color: { value: '#E79F00' },
                             width: 570,
                             height: 40
@@ -177,7 +177,7 @@ export const EX_SPEC_MATRIX_HFFC6: GoslingSpec = {
                                     mark: 'bar',
                                     x: { field: 'start', type: 'genomic' },
                                     xe: { field: 'end', type: 'genomic' },
-                                    y: { field: 'peak', type: 'quantitative' },
+                                    y: { field: 'peak', type: 'quantitative', axis: 'right' },
                                     color: { value: '#0072B2' }
                                 },
                                 {
@@ -264,7 +264,7 @@ export const EX_SPEC_MATRIX_HFFC6: GoslingSpec = {
                             mark: 'bar',
                             x: { field: 'start', type: 'genomic', axis: 'none' },
                             xe: { field: 'end', type: 'genomic' },
-                            y: { field: 'value', type: 'quantitative' },
+                            y: { field: 'value', type: 'quantitative', axis: 'right' },
                             color: {
                                 field: 'category',
                                 type: 'nominal',
@@ -330,7 +330,7 @@ export const EX_SPEC_MATRIX_HFFC6: GoslingSpec = {
                             mark: 'bar',
                             x: { field: 'start', type: 'genomic', axis: 'none' },
                             xe: { field: 'end', type: 'genomic', axis: 'none' },
-                            y: { field: 'peak', type: 'quantitative' },
+                            y: { field: 'peak', type: 'quantitative', axis: 'right' },
                             color: { value: 'darkgreen' },
                             width: 570,
                             height: 40
@@ -347,7 +347,7 @@ export const EX_SPEC_MATRIX_HFFC6: GoslingSpec = {
                             mark: 'bar',
                             x: { field: 'start', type: 'genomic' },
                             xe: { field: 'end', type: 'genomic' },
-                            y: { field: 'peak', type: 'quantitative' },
+                            y: { field: 'peak', type: 'quantitative', axis: 'right' },
                             color: { value: '#E79F00' },
                             width: 570,
                             height: 40
@@ -366,7 +366,7 @@ export const EX_SPEC_MATRIX_HFFC6: GoslingSpec = {
                                     mark: 'bar',
                                     x: { field: 'start', type: 'genomic' },
                                     xe: { field: 'end', type: 'genomic' },
-                                    y: { field: 'peak', type: 'quantitative' },
+                                    y: { field: 'peak', type: 'quantitative', axis: 'right' },
                                     color: { value: '#0072B2' }
                                 },
                                 {
@@ -453,7 +453,7 @@ export const EX_SPEC_MATRIX_HFFC6: GoslingSpec = {
                             mark: 'bar',
                             x: { field: 'start', type: 'genomic', axis: 'none' },
                             xe: { field: 'end', type: 'genomic' },
-                            y: { field: 'value', type: 'quantitative' },
+                            y: { field: 'value', type: 'quantitative', axis: 'right' },
                             color: {
                                 field: 'category',
                                 type: 'nominal',
