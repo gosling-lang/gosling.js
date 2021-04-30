@@ -66,12 +66,12 @@ export function drawLinearYAxis(HGC: any, trackInfo: any, tile: any, gos: Goslin
     /* render */
     const graphics = trackInfo.pBorder;
 
-    rowCategories.forEach((category, i) => {
-        if (rowCategories.length > 1 ? i !== 1 : i !== 0) {
-            // Let's draw only one y-axis since the scale is shared anyway.
-            // Draw the second y-axis if exist, so that track title is not occluded by the y-axis.
-            return;
-        }
+    rowCategories.forEach(category => {
+        // if (rowCategories.length > 1 ? i !== 1 : i !== 0) {
+        //     // Let's draw only one y-axis since the scale is shared anyway.
+        //     // Draw the second y-axis if exist, so that track title is not occluded by the y-axis.
+        //     return;
+        // }
 
         const rowPosition = gos.encodedValue('row', category);
         const dx = isLeft ? tx : tx + tw;
@@ -182,12 +182,12 @@ export function drawCircularYAxis(HGC: any, trackInfo: any, tile: any, gos: Gosl
     /* render */
     const graphics = tile.graphics; // We do not use `pBorder` as in linear layouts.
 
-    rowCategories.forEach((category, i) => {
-        if (rowCategories.length > 1 ? i !== 1 : i !== 0) {
-            // Let's draw only one y-axis since the scale is shared anyway.
-            // Draw the second y-axis if exist, so that track title is not occluded by the y-axis.
-            return;
-        }
+    rowCategories.forEach(category => {
+        // if (rowCategories.length > 1 ? i !== 1 : i !== 0) {
+        //     // Let's draw only one y-axis since the scale is shared anyway.
+        //     // Draw the second y-axis if exist, so that track title is not occluded by the y-axis.
+        //     return;
+        // }
 
         const rowPosition = gos.encodedValue('row', category);
 
@@ -232,7 +232,7 @@ export function drawCircularYAxis(HGC: any, trackInfo: any, tile: any, gos: Gosl
             const y = yScale(t);
 
             // The current position, i.e., radius, of this tick
-            const currentR = trackOuterRadius - ((rowPosition + y) / th) * trackRingSize;
+            const currentR = trackOuterRadius - ((rowPosition + rowHeight - y) / th) * trackRingSize;
 
             // Ticks are drawn in anti-clockwise direction
             const scaledStartX = isLeft ? 0 : tw - SCALED_TICK_SIZE(currentR);
@@ -283,7 +283,7 @@ export function drawCircularYAxis(HGC: any, trackInfo: any, tile: any, gos: Gosl
             const y = yScale(t);
 
             // The current position, i.e., radius, of this label
-            const currentR = trackOuterRadius - ((rowPosition + y) / th) * trackRingSize;
+            const currentR = trackOuterRadius - ((rowPosition + rowHeight - y) / th) * trackRingSize;
 
             // The position of a tick in the polar system
             const pos = cartesianToPolar(SCALED_TICK_SIZE(currentR) * 2, tw, currentR, cx, cy, startAngle, endAngle);
