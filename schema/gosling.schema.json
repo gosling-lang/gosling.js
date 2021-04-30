@@ -50,6 +50,23 @@
       },
       "type": "object"
     },
+    "BAMData": {
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "bam",
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "type",
+        "url"
+      ],
+      "type": "object"
+    },
     "BEDDBData": {
       "additionalProperties": false,
       "properties": {
@@ -430,6 +447,9 @@
         },
         {
           "$ref": "#/definitions/MatrixData"
+        },
+        {
+          "$ref": "#/definitions/BAMData"
         }
       ]
     },

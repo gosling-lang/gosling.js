@@ -16,6 +16,7 @@ import { EX_SPEC_GIVE } from './give';
 import { EX_SPEC_CORCES_ET_AL } from './corces';
 import { EX_SPEC_PATHOGENIC } from './pathogenic';
 import { EX_SPEC_CYTOBANDS } from './ideograms';
+import { EX_SPEC_PILEUP } from './pileup';
 import { EX_SPEC_CUSTOM_THEME } from './theme';
 import { EX_SPEC_FUJI_PLOT } from './fuji';
 
@@ -71,12 +72,18 @@ export const examples: ReadonlyArray<{
         spec: EX_SPEC_MARK_DISPLACEMENT
     },
     {
-        name: 'Circular Overview + Linear Detail Views',
+        name: 'Basic Example: Circular Overview + Linear Detail Views',
         id: 'CIRCULAR_OVERVIEW_LINEAR_DETAIL',
         spec: EX_SPEC_CIRCULAR_OVERVIEW_LINEAR_DETAIL
     },
     {
-        name: 'Semantic Zoom',
+        name: 'Pileup Tracks (BAM File)',
+        spec: EX_SPEC_PILEUP,
+        id: 'BAM_PILEUP',
+        forceShow: true
+    },
+    {
+        name: 'Semantic Zoom Examples',
         id: 'SEMANTIC_ZOOM',
         spec: EX_SPEC_SEMANTIC_ZOOM
     },

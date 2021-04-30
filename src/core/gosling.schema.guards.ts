@@ -30,7 +30,8 @@ import {
     SingleView,
     FlatTracks,
     OverlaidTracks,
-    StackedTracks
+    StackedTracks,
+    BAMData
 } from './gosling.schema';
 import { SUPPORTED_CHANNELS } from './mark';
 import { isArray } from 'lodash';
@@ -136,14 +137,17 @@ export function IsChannelBind(
     return channel !== null && typeof channel === 'object' && 'bind' in channel;
 }
 
-export function IsDataDeepTileset(_: DataDeep | undefined): _ is BEDDBData | VectorData | MultivecData | BIGWIGData {
+export function IsDataDeepTileset(
+    _: DataDeep | undefined
+): _ is BEDDBData | VectorData | MultivecData | BIGWIGData | BAMData {
     return (
         _ !== undefined &&
         (_.type === 'vector' ||
             _.type === 'beddb' ||
             _.type === 'multivec' ||
             _.type === 'bigwig' ||
-            _.type === 'matrix')
+            _.type === 'matrix' ||
+            _.type === 'bam')
     );
 }
 

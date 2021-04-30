@@ -81,12 +81,15 @@ export function goslingToHiGlass(
         if (
             gosTrack.data &&
             IsDataDeep(gosTrack.data) &&
-            (gosTrack.data.type === 'csv' || gosTrack.data.type === 'json' || gosTrack.data.type === 'bigwig')
+            (gosTrack.data.type === 'csv' ||
+                gosTrack.data.type === 'json' ||
+                gosTrack.data.type === 'bigwig' ||
+                gosTrack.data.type === 'bam')
         ) {
             // use gosling's custom data fetchers
             hgTrack.data = {
                 ...gosTrack.data,
-                // Additionally, add assembly, otherwise, a default build is used
+                // Additionally, add assembly, otherwise, a default genome build is used
                 assembly,
                 // Add a data transformation spec so that the fetcher can properly sample datasets
                 filter: (gosTrack as any).dataTransform?.filter((f: DataTransform) => f.type === 'filter')

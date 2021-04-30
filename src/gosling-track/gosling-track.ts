@@ -1,15 +1,16 @@
+import { sampleSize, uniqBy } from 'lodash';
+import { scaleLinear } from 'd3-scale';
 import { drawMark } from '../core/mark';
 import { GoslingTrackModel } from '../core/gosling-track-model';
 import { validateTrack } from '../core/utils/validate';
 import { shareScaleAcrossTracks } from '../core/utils/scales';
 import { resolveSuperposedTracks } from '../core/utils/overlay';
 import { SingleTrack, OverlaidTrack, Datum } from '../core/gosling.schema';
-import { IsDataDeepTileset } from '../core/gosling.schema.guards';
+// import { IsDataDeepTileset } from '../core/gosling.schema.guards';
 import { Tooltip } from '../gosling-tooltip';
-import { sampleSize, uniqBy } from 'lodash';
-import { scaleLinear } from 'd3-scale';
 import colorToHex from '../core/utils/color-to-hex';
 import { calculateData, concatString, filterData, replaceString, splitExon } from '../core/utils/data-transform';
+import { getTabularData } from './data-abstraction';
 
 // For using libraries, refer to https://github.com/higlass/higlass/blob/f82c0a4f7b2ab1c145091166b0457638934b15f3/app/scripts/configs/available-for-plugins.js
 function GoslingTrack(HGC: any, ...args: any[]): any {
@@ -241,7 +242,6 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             */
         }
 
-        // TODO: Encapsulate this function
         /**
          * Construct tabular data from a higlass tileset and a gosling track model.
          * Return the generated gosling track model.
@@ -260,9 +260,6 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             // Single tile can contain multiple gosling models if multiple tracks are superposed.
             tile.goslingModels = [];
 
-            // TODO: IMPORTANT: semantic zooming could be ultimately considered as superposing multiple tracks, and
-            // its visibility is determined by certain user-defined condition.
-
             const spec = JSON.parse(JSON.stringify(this.originalSpec));
 
             resolveSuperposedTracks(spec).forEach(resolved => {
@@ -277,228 +274,20 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                 }
 
                 if (!tile.gos.tabularData) {
-                    if (!IsDataDeepTileset(resolved.data)) {
-                        console.warn('No data is specified');
-                        return;
-                    }
+                    // If the data is not already stored in a tabular form, convert them.
+                    const { tileX, tileWidth } = this.getTilePosAndDimensions(
+                        tile.gos.zoomLevel,
+                        tile.gos.tilePos,
+                        this.tileSize
+                    );
 
-                    // TODO: encapsulation this conversion part
-                    if (resolved.data.type === 'vector' || resolved.data.type === 'bigwig') {
-                        if (!resolved.data.column || !resolved.data.value) {
-                            console.warn(
-                                'Proper data configuration is not provided. Please specify the name of data fields.'
-                            );
-                            return;
-                        }
-
-                        const bin = resolved.data.binSize ?? 1;
-                        const tileSize = this.tileSize;
-
-                        const { tileX, tileWidth } = this.getTilePosAndDimensions(
-                            tile.gos.zoomLevel,
-                            tile.gos.tilePos,
-                            tileSize
-                        );
-
-                        const numericValues = tile.gos.dense;
-                        const numOfGenomicPositions = tileSize;
-                        const tileUnitSize = tileWidth / tileSize;
-
-                        const valueName = resolved.data.value;
-                        const columnName = resolved.data.column;
-                        const startName = resolved.data.start ?? 'start';
-                        const endName = resolved.data.end ?? 'end';
-
-                        const tabularData: { [k: string]: number | string }[] = [];
-
-                        // convert data to a visualization-friendly format
-                        let cumVal = 0;
-                        let binStart = Number.MIN_SAFE_INTEGER;
-                        let binEnd = Number.MAX_SAFE_INTEGER;
-                        Array.from(Array(numOfGenomicPositions).keys()).forEach((g: number, j: number) => {
-                            // add individual rows
-                            if (bin === 1) {
-                                tabularData.push({
-                                    [valueName]: numericValues[j] / tileUnitSize,
-                                    [columnName]: tileX + (j + 0.5) * tileUnitSize,
-                                    [startName]: tileX + j * tileUnitSize,
-                                    [endName]: tileX + (j + 1) * tileUnitSize
-                                });
-                            } else {
-                                // EXPERIMENTAL: bin the data considering the `bin` options
-                                if (j % bin === 0) {
-                                    // Start storing information for this bin
-                                    cumVal = numericValues[j];
-                                    binStart = j;
-                                    binEnd = j + bin;
-                                } else if (j % bin === bin - 1) {
-                                    // Add a row using the cumulative value
-                                    tabularData.push({
-                                        [valueName]: cumVal / bin / tileUnitSize,
-                                        [columnName]: tileX + (binStart + bin / 2.0) * tileUnitSize,
-                                        [startName]: tileX + binStart * tileUnitSize,
-                                        [endName]: tileX + binEnd * tileUnitSize
-                                    });
-                                } else if (j === numOfGenomicPositions - 1) {
-                                    // Manage the remainders. Just add them as a single row.
-                                    const smallBin = numOfGenomicPositions % bin;
-                                    const correctedBinEnd = binStart + smallBin;
-                                    tabularData.push({
-                                        [valueName]: cumVal / smallBin / tileUnitSize,
-                                        [columnName]: tileX + (binStart + smallBin / 2.0) * tileUnitSize,
-                                        [startName]: tileX + binStart * tileUnitSize,
-                                        [endName]: tileX + correctedBinEnd * tileUnitSize
-                                    });
-                                } else {
-                                    // Add a current value
-                                    cumVal += numericValues[j];
-                                }
-                            }
-                        });
-
-                        tile.gos.tabularData = tabularData;
-                    } else if (resolved.data.type === 'multivec') {
-                        if (!resolved.data.row || !resolved.data.column || !resolved.data.value) {
-                            console.warn(
-                                'Proper data configuration is not provided. Please specify the name of data fields.'
-                            );
-                            return;
-                        }
-
-                        const bin = resolved.data.binSize ?? 1;
-                        const tileSize = this.tileSize;
-
-                        const { tileX, tileWidth } = this.getTilePosAndDimensions(
-                            tile.gos.zoomLevel,
-                            tile.gos.tilePos,
-                            tileSize
-                        );
-
-                        const numOfTotalCategories = tile.gos.shape[0];
-                        const numericValues = tile.gos.dense;
-                        const numOfGenomicPositions = tile.gos.shape[1];
-                        const tileUnitSize = tileWidth / tileSize;
-
-                        const rowName = resolved.data.row;
-                        const valueName = resolved.data.value;
-                        const columnName = resolved.data.column;
-                        const startName = resolved.data.start ?? 'start';
-                        const endName = resolved.data.end ?? 'end';
-                        const categories: any = resolved.data.categories ?? [...Array(numOfTotalCategories).keys()]; // TODO:
-
-                        const tabularData: { [k: string]: number | string }[] = [];
-
-                        // convert data to a visualization-friendly format
-                        categories.forEach((c: string, i: number) => {
-                            let cumVal = 0;
-                            let binStart = Number.MIN_SAFE_INTEGER;
-                            let binEnd = Number.MAX_SAFE_INTEGER;
-                            Array.from(Array(numOfGenomicPositions).keys()).forEach((g: number, j: number) => {
-                                // add individual rows
-                                if (bin === 1) {
-                                    tabularData.push({
-                                        [rowName]: c,
-                                        [valueName]: numericValues[numOfGenomicPositions * i + j] / tileUnitSize,
-                                        [columnName]: tileX + (j + 0.5) * tileUnitSize,
-                                        [startName]: tileX + j * tileUnitSize,
-                                        [endName]: tileX + (j + 1) * tileUnitSize
-                                    });
-                                } else {
-                                    // EXPERIMENTAL: bin the data considering the `bin` options
-                                    if (j % bin === 0) {
-                                        // Start storing information for this bin
-                                        cumVal = numericValues[numOfGenomicPositions * i + j];
-                                        binStart = j;
-                                        binEnd = j + bin;
-                                    } else if (j % bin === bin - 1) {
-                                        // Add a row using the cumulative value
-                                        tabularData.push({
-                                            [rowName]: c,
-                                            [valueName]: cumVal / bin / tileUnitSize,
-                                            [columnName]: tileX + (binStart + bin / 2.0) * tileUnitSize,
-                                            [startName]: tileX + binStart * tileUnitSize,
-                                            [endName]: tileX + binEnd * tileUnitSize
-                                        });
-                                    } else if (j === numOfGenomicPositions - 1) {
-                                        // Manage the remainders. Just add them as a single row.
-                                        const smallBin = numOfGenomicPositions % bin;
-                                        const correctedBinEnd = binStart + smallBin;
-                                        tabularData.push({
-                                            [rowName]: c,
-                                            [valueName]: cumVal / smallBin / tileUnitSize,
-                                            [columnName]: tileX + (binStart + smallBin / 2.0) * tileUnitSize,
-                                            [startName]: tileX + binStart * tileUnitSize,
-                                            [endName]: tileX + correctedBinEnd * tileUnitSize
-                                        });
-                                    } else {
-                                        // Add a current value
-                                        cumVal += numericValues[numOfGenomicPositions * i + j];
-                                    }
-                                }
-                            });
-                        });
-
-                        tile.gos.tabularData = tabularData;
-                    } else if (resolved.data.type === 'beddb') {
-                        const { genomicFields, exonIntervalFields, valueFields } = resolved.data;
-
-                        tile.gos.tabularData = [];
-                        tile.gos.raw.forEach((d: any) => {
-                            const { chrOffset, fields } = d;
-
-                            const datum: { [k: string]: number | string } = {};
-                            genomicFields.forEach(g => {
-                                datum[g.name] = +fields[g.index] + chrOffset;
-                            });
-
-                            // values
-                            valueFields?.forEach(v => {
-                                datum[v.name] = v.type === 'quantitative' ? +fields[v.index] : fields[v.index];
-                            });
-
-                            tile.gos.tabularData.push({
-                                ...datum,
-                                type: 'gene' // this should be described in the spec
-                            });
-
-                            if (exonIntervalFields) {
-                                const [exonStartField, exonEndField] = exonIntervalFields;
-                                const exonStartStrs = (fields[exonStartField.index] as string).split(',');
-                                const exonEndStrs = (fields[exonEndField.index] as string).split(',');
-
-                                exonStartStrs.forEach((es, i) => {
-                                    const ee = exonEndStrs[i];
-
-                                    // exon
-                                    tile.gos.tabularData.push({
-                                        ...datum,
-                                        [exonStartField.name]: +es + chrOffset,
-                                        [exonEndField.name]: +ee + chrOffset,
-                                        type: 'exon'
-                                    });
-
-                                    // intron
-                                    if (i + 1 < exonStartStrs.length) {
-                                        const nextEs = exonStartStrs[i + 1];
-                                        tile.gos.tabularData.push({
-                                            ...datum,
-                                            [exonStartField.name]: +ee + chrOffset,
-                                            [exonEndField.name]: +nextEs + chrOffset,
-                                            type: 'intron'
-                                        });
-                                    }
-                                });
-                            }
-                        });
-                        /// DEBUG
-                        // console.log(tile.gos.tabularData);
-                        // console.log(new Set(tile.gos.tabularData.map((d: any) => d.significance)));
-                    }
+                    tile.gos.tabularData = getTabularData(resolved, {
+                        ...tile.gos,
+                        tileX,
+                        tileWidth,
+                        tileSize: this.tileSize
+                    });
                 }
-
-                /// DEBUG
-                // console.log(tile.gos.tabularData);
-                ///
 
                 tile.gos.tabularDataFiltered = Array.from(tile.gos.tabularData);
                 /*
@@ -700,8 +489,9 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
         }
 
         drawTile(tile: any) {
+            // prevent BarTracks draw method from having an effect
             this.renderTile(tile);
-        } // prevent BarTracks draw method from having an effect
+        }
 
         /**
          * Returns the minimum in the visible area (not visible tiles)

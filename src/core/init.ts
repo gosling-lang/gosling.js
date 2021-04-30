@@ -7,6 +7,7 @@ import { BrushTrack } from '../higlass-brush-track';
 import { CSVDataFetcher } from '../higlass-csv-datafetcher/index';
 import { RawDataFetcher } from '../higlass-raw-datafetcher/index';
 import { BBIDataFetcher } from '../higlass-bw-datafetcher/index';
+import { BAMDataFetcher } from '../higlass-bam-datafetcher';
 import { GoslingTrack } from '../gosling-track/index';
 
 /**
@@ -40,7 +41,9 @@ export function init() {
         config: TextTrack.config
     });
 
-    // TODO:
+    /**
+     * Register a brush plugin track to HiGlassComponent
+     */
     higlassRegister({
         name: 'BrushTrack',
         track: BrushTrack,
@@ -53,4 +56,5 @@ export function init() {
     higlassRegister({ dataFetcher: CSVDataFetcher, config: CSVDataFetcher.config }, { pluginType: 'dataFetcher' });
     higlassRegister({ dataFetcher: RawDataFetcher, config: RawDataFetcher.config }, { pluginType: 'dataFetcher' });
     higlassRegister({ dataFetcher: BBIDataFetcher, config: BBIDataFetcher.config }, { pluginType: 'dataFetcher' });
+    higlassRegister({ dataFetcher: BAMDataFetcher, config: BAMDataFetcher.config }, { pluginType: 'dataFetcher' });
 }
