@@ -32,7 +32,7 @@ export const EX_SPEC_VISUAL_ENCODING: GoslingSpec = {
                         type: 'genomic'
                     },
                     row: { field: 'sample', type: 'nominal', legend: true },
-                    color: { field: 'peak', type: 'quantitative' },
+                    color: { field: 'peak', type: 'quantitative', legend: true },
                     tooltip: [
                         { field: 'peak', type: 'quantitative', alt: 'Value' },
                         { field: 'sample', type: 'nominal', alt: 'Sample' }
@@ -270,7 +270,7 @@ export const EX_SPEC_VISUAL_ENCODING_CIRCULAR: GoslingSpec = {
                                 type: 'genomic'
                             },
                             row: { field: 'sample', type: 'nominal', legend: true },
-                            color: { field: 'peak', type: 'quantitative' },
+                            color: { field: 'peak', type: 'quantitative', legend: true },
                             width: 350,
                             height: 130
                         }
