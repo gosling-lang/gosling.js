@@ -6,7 +6,7 @@ import { Assembly } from '../core/gosling.schema';
 import { spawn, BlobWorker } from 'threads';
 // @ts-ignore
 import MyWorkerWeb from 'raw-loader!./bam-datafetcher-worker.js';
-import * as tileFunctions from './bam-datafetcher.worker'
+import * as tileFunctions from './bam-datafetcher.worker';
 
 function BAMDataFetcher(HGC: any, ...args: any): any {
     if (!new.target) {
@@ -38,18 +38,17 @@ function BAMDataFetcher(HGC: any, ...args: any): any {
             console.log('HRE BAM ARE');
 
             this.initPromise = this.worker.then((tileFunctions: any) => {
-            
-                if(dataConfig.url && !dataConfig.bamUrl){
-                    dataConfig["bamUrl"] = dataConfig.url;
+                if (dataConfig.url && !dataConfig.bamUrl) {
+                    dataConfig['bamUrl'] = dataConfig.url;
                 }
-                if(!dataConfig.baiUrl){
-                    dataConfig["baiUrl"] = dataConfig["bamUrl"]+".bai";
+                if (!dataConfig.baiUrl) {
+                    dataConfig['baiUrl'] = `${dataConfig['bamUrl']}.bai`;
                 }
-            
+
                 return tileFunctions
                     .init(this.uid, dataConfig.bamUrl, dataConfig.baiUrl, dataConfig.chromSizesUrl)
                     .then(() => this.worker);
-                });
+            });
         }
 
         generateTilesetInfo(callback?: any) {
