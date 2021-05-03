@@ -121,9 +121,10 @@ export function drawColorLegendQuantitative(
             .ticks(tickCount + 1)
             .filter(v => colorDomain[0] <= v && v <= colorDomain[1]);
     }
+    const TICK_STROKE_SIZE = 1;
     graphics.lineStyle(
-        1,
-        colorToHex(getTheme(theme).axis.tickColor),
+        TICK_STROKE_SIZE,
+        colorToHex(getTheme(theme).legend.tickColor),
         1, // alpha
         0.5 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
     );
@@ -132,11 +133,11 @@ export function drawColorLegendQuantitative(
     ticks.forEach(value => {
         let y = legendY + colorBarDim.top + colorBarDim.height - ((value - startValue) / extent) * colorBarDim.height;
 
-        // Prevent ticks from going outside of the color bar by the stroke size of ticks
+        // Prevent ticks from exceeding outside of a color bar by the stroke size of ticks
         if (y === legendY + colorBarDim.top) {
-            y += 1;
+            y += TICK_STROKE_SIZE / 2.0;
         } else if (y === legendY + colorBarDim.top + colorBarDim.height) {
-            y -= 0.5;
+            y -= TICK_STROKE_SIZE / 2.0;
         }
 
         // ticks
@@ -152,19 +153,6 @@ export function drawColorLegendQuantitative(
 
         graphics.addChild(textGraphic);
     });
-
-    // ticks.forEach(t => {
-    //     const y = colorScale(t);
-    //     tickEnd = isLeft ? dx + TICK_SIZE * 2 : dx - TICK_SIZE * 2;
-
-    //     const textGraphic = new HGC.libraries.PIXI.Text(t, getAxisTextStyle(getTheme(theme).legend.labelColor));
-    //     textGraphic.anchor.x = isLeft ? 0 : 1;
-    //     textGraphic.anchor.y = y === 0 ? 0.9 : 0.5;
-    //     textGraphic.position.x = tickEnd;
-    //     textGraphic.position.y = dy + rowHeight - y;
-
-    //     graphics.addChild(textGraphic);
-    // });
 }
 
 export function drawColorLegendCategories(
