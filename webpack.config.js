@@ -31,7 +31,11 @@ module.exports = (env, argv) => {
               loader: 'ts-loader',
           }],
           exclude: /node_modules/,
-        }
+        },
+        {
+          test: /\.worker\.js$/,
+          use: { loader: 'worker-loader' }
+      }
       ],
     },
     externals: {

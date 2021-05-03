@@ -3,6 +3,10 @@
  * https://github.com/higlass/higlass-pileup
  */
 import { Assembly } from '../core/gosling.schema';
+import { spawn, BlobWorker } from 'threads';
+// @ts-ignore
+import MyWorkerWeb from 'raw-loader!./bam-datafetcher-worker.js';
+import * as tileFunctions from './bam-datafetcher.worker'
 
 function BAMDataFetcher(HGC: any, ...args: any): any {
     if (!new.target) {
@@ -11,18 +15,41 @@ function BAMDataFetcher(HGC: any, ...args: any): any {
 
     class BAMDataFetcherClass {
         // @ts-ignore
-        private dataConfig: GeminiDataConfig;
+        private dataConfig: any;
         // @ts-ignore
         private tilesetInfoLoading: boolean;
         private dataPromise: Promise<any> | undefined;
         private chromSizes: any;
         private values: any;
         private assembly: Assembly;
+        private initPromise: any;
+        private worker: any;
+        private uid: string;
 
         constructor(params: any[]) {
+            // const worker = spawn(BlobWorker.fromText(MyWorkerWeb));
+            const worker = tileFunctions;
+
+            const [dataConfig] = params;
+            this.dataConfig = dataConfig;
+            this.uid = HGC.libraries.slugid.nice();
             this.assembly = 'hg38';
             console.warn(params);
-            // console.log('HRE BAM ARE');
+            console.log('HRE BAM ARE');
+
+            this.initPromise = this.worker.then((tileFunctions: any) => {
+            
+                if(dataConfig.url && !dataConfig.bamUrl){
+                    dataConfig["bamUrl"] = dataConfig.url;
+                }
+                if(!dataConfig.baiUrl){
+                    dataConfig["baiUrl"] = dataConfig["bamUrl"]+".bai";
+                }
+            
+                return tileFunctions
+                    .init(this.uid, dataConfig.bamUrl, dataConfig.baiUrl, dataConfig.chromSizesUrl)
+                    .then(() => this.worker);
+                });
         }
 
         generateTilesetInfo(callback?: any) {
@@ -38,7 +65,7 @@ function BAMDataFetcher(HGC: any, ...args: any): any {
                 max_pos: [totalLength]
             };
 
-            // console.log('HRE BAM ARE, generateTilesetInfo');
+            console.log('HRE BAM ARE, generateTilesetInfo');
             if (callback) {
                 callback(retVal);
             }
@@ -47,7 +74,7 @@ function BAMDataFetcher(HGC: any, ...args: any): any {
         }
 
         tilesetInfo(callback?: any) {
-            // console.log('HRE BAM ARE, tilesetInfo');
+            console.log('HRE BAM ARE, tilesetInfo');
             if (!this.dataPromise) {
                 // data promise is not prepared yet
                 return;
@@ -64,7 +91,7 @@ function BAMDataFetcher(HGC: any, ...args: any): any {
         }
 
         fetchTilesDebounced(receivedTiles: any, tileIds: any) {
-            // console.log('HRE BAM ARE, fetchTilesDebounced');
+            console.log('HRE BAM ARE, fetchTilesDebounced');
             const tiles: { [k: string]: any } = {};
 
             const validTileIds: any[] = [];
@@ -97,7 +124,7 @@ function BAMDataFetcher(HGC: any, ...args: any): any {
         }
 
         tile(z: any, x: any) {
-            // console.log('HRE BAM ARE, tile');
+            console.log('HRE BAM ARE, tile');
             return this.tilesetInfo()?.then((tsInfo: any) => {
                 const tileWidth = +tsInfo.max_width / 2 ** +z;
 
