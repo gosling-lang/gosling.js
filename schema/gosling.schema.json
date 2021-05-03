@@ -3921,6 +3921,9 @@
         "background": {
           "type": "string"
         },
+        "mousePositionColor": {
+          "type": "string"
+        },
         "subtitleColor": {
           "type": "string"
         },
