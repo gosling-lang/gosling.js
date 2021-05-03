@@ -65,6 +65,7 @@ export interface RootStyle {
     background?: string;
     titleColor?: string;
     subtitleColor?: string;
+    mousePositionColor?: string;
 }
 
 export interface TrackStyle {
@@ -138,13 +139,14 @@ export const THEMES: { [key in Themes]: Required<CompleteThemeDeep> } = {
         root: {
             background: 'white',
             titleColor: 'black',
-            subtitleColor: 'gray'
+            subtitleColor: 'gray',
+            mousePositionColor: '#000000'
         },
 
         track: {
             titleColor: 'black',
             titleBackground: 'white',
-            outline: 'gray',
+            outline: 'black',
             outlineWidth: 1
         },
 
@@ -211,13 +213,14 @@ export const THEMES: { [key in Themes]: Required<CompleteThemeDeep> } = {
         root: {
             background: 'black',
             titleColor: 'white',
-            subtitleColor: 'lightgray'
+            subtitleColor: 'lightgray',
+            mousePositionColor: '#FFFFFF'
         },
 
         track: {
             titleColor: 'white',
             titleBackground: 'black',
-            outline: 'lightgray',
+            outline: 'white',
             outlineWidth: 1
         },
 
