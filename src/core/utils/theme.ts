@@ -111,7 +111,7 @@ export function getTheme(theme: Theme = 'light'): Required<CompleteThemeDeep> {
         // Iterate all keys to override from base
         const base = JSON.parse(JSON.stringify(THEMES[theme.base]));
         Object.keys(base).forEach(k => {
-            if ((theme as any)[k]) {
+            if ((theme as any)[k] && k !== 'base') {
                 base[k] = assign(JSON.parse(JSON.stringify(base[k])), JSON.parse(JSON.stringify((theme as any)[k])));
             }
         });

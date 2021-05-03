@@ -121,7 +121,7 @@ export function drawLinearYAxis(HGC: any, trackInfo: any, tile: any, gos: Goslin
             const y = yScale(t);
             tickEnd = isLeft ? dx + TICK_SIZE * 2 : dx - TICK_SIZE * 2;
 
-            const textGraphic = new HGC.libraries.PIXI.Text(t, getAxisTextStyle(getTheme(theme).legend.labelColor));
+            const textGraphic = new HGC.libraries.PIXI.Text(t, getAxisTextStyle(getTheme(theme).axis.labelColor));
             textGraphic.anchor.x = isLeft ? 0 : 1;
             textGraphic.anchor.y = y === 0 ? 0.9 : 0.5;
             textGraphic.position.x = tickEnd;
@@ -289,7 +289,7 @@ export function drawCircularYAxis(HGC: any, trackInfo: any, tile: any, gos: Gosl
             const pos = cartesianToPolar(SCALED_TICK_SIZE(currentR) * 2, tw, currentR, cx, cy, startAngle, endAngle);
 
             // ! Maybe combine this part with `axis-plugin-track.ts`
-            const textGraphic = new HGC.libraries.PIXI.Text(t, getAxisTextStyle(getTheme(theme).legend.labelColor));
+            const textGraphic = new HGC.libraries.PIXI.Text(t, getAxisTextStyle(getTheme(theme).axis.labelColor));
             textGraphic.anchor.x = isLeft ? 1 : 0;
             textGraphic.anchor.y = 0.5;
             textGraphic.position.x = pos.x;

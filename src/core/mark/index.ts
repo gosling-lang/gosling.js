@@ -74,7 +74,7 @@ export function drawMark(HGC: any, trackInfo: any, tile: any, model: GoslingTrac
         drawCircularOutlines(HGC, trackInfo, tile, model);
         drawCircularGrid(HGC, trackInfo, tile, model);
     } else {
-        drawGrid(HGC, trackInfo, tile, model);
+        drawGrid(HGC, trackInfo, tile, model, theme);
         drawChartOutlines(HGC, trackInfo, model, theme);
     }
 

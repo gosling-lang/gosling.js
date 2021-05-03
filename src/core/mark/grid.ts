@@ -40,6 +40,13 @@ export function drawGrid(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackMo
     /* render */
     const graphics = trackInfo.pBackground;
 
+    graphics.lineStyle(
+        1,
+        colorToHex(getTheme(theme).axis.gridColor),
+        1, // alpha
+        0.5 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
+    );
+
     rowCategories.forEach(rowCategory => {
         const rowPosition = tm.encodedValue('row', rowCategory);
 
@@ -51,13 +58,6 @@ export function drawGrid(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackMo
             // Sometimes, ticks() gives a single value, so use a larger tickCount.
             ticks = (scale as ScaleLinear<any, any>).ticks(tickCount + 1).filter(v => domain[0] <= v && v <= domain[1]);
         }
-
-        graphics.lineStyle(
-            1,
-            colorToHex(getTheme(theme).axis.gridColor),
-            1, // alpha
-            0.5 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
-        );
 
         if (tm.spec().layout === 'linear') {
             ticks.forEach(value => {
