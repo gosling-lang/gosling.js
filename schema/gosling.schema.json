@@ -1275,6 +1275,9 @@
         },
         "labelColor": {
           "type": "string"
+        },
+        "tickColor": {
+          "type": "string"
         }
       },
       "type": "object"

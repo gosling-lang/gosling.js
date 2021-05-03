@@ -80,6 +80,7 @@ export interface LegendStyle {
     background?: string;
     backgroundOpacity?: number;
     backgroundStroke?: string;
+    tickColor?: string;
     // ...
 }
 
@@ -151,7 +152,8 @@ export const THEMES: { [key in Themes]: Required<CompleteThemeDeep> } = {
             background: 'white',
             backgroundOpacity: 0.7,
             labelColor: 'black',
-            backgroundStroke: '#DBDBDB'
+            backgroundStroke: '#DBDBDB',
+            tickColor: 'black'
         },
 
         axis: {
@@ -223,7 +225,8 @@ export const THEMES: { [key in Themes]: Required<CompleteThemeDeep> } = {
             background: 'black',
             backgroundOpacity: 0.7,
             labelColor: 'white',
-            backgroundStroke: '#DBDBDB'
+            backgroundStroke: '#DBDBDB',
+            tickColor: 'white'
         },
 
         axis: {
