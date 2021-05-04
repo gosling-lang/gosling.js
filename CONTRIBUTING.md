@@ -50,4 +50,4 @@ git commit -m 'docs: add details about commitlint in README.md'
 To learn more about the commitlint, please visit [conventional-changelog/commitlint](https://github.com/conventional-changelog/commitlint#what-is-commitlint).
 
 ## Opening Pull Requests
-We use the [commitlint](#commitlint) for the title of PR. When your PR is accepted and merged into the master branch, the title of the PR will be recorded as a single commit message which will then added as a single itme in [CHANGELOG.md](/CHANGELOG.md).
+We use the [commitlint](#commitlint) for the title of PR. When your PR is accepted and merged into the master branch, the title of the PR will be recorded as a single commit message which will then added as a single item in [CHANGELOG.md](/CHANGELOG.md).
