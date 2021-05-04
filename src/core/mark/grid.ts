@@ -42,6 +42,11 @@ export function drawRowGrid(trackInfo: any, tm: GoslingTrackModel, theme: Theme 
 
     const rowHeight = trackHeight / rowCategories.length;
 
+    if ((circular && trackRingSize <= 20) || (!circular && rowHeight <= 20)) {
+        // Height is too narrow to draw axis
+        return;
+    }
+
     /* render */
     const graphics = trackInfo.pBackground;
 
@@ -123,6 +128,11 @@ export function drawYGridQuantitative(trackInfo: any, tm: GoslingTrackModel, the
         return;
     }
 
+    if ((circular && (rowHeight / trackHeight) * trackRingSize <= 20) || (!circular && rowHeight <= 20)) {
+        // Height is too narrow to draw axis
+        return;
+    }
+
     /* render */
     const graphics = trackInfo.pBackground;
     const strokeWidth = getTheme(theme).axis.gridStrokeWidth;
@@ -130,7 +140,7 @@ export function drawYGridQuantitative(trackInfo: any, tm: GoslingTrackModel, the
     rowCategories.forEach(rowCategory => {
         const rowPosition = tm.encodedValue('row', rowCategory);
 
-        const assignedHeight = circular ? trackRingSize : rowHeight;
+        const assignedHeight = circular ? (rowHeight / trackHeight) * trackRingSize : rowHeight;
         const tickCount = Math.max(Math.ceil(assignedHeight / 40), 1);
 
         let ticks = (scale as ScaleLinear<any, any>).ticks(tickCount).filter(v => domain[0] <= v && v <= domain[1]);
@@ -154,8 +164,8 @@ export function drawYGridQuantitative(trackInfo: any, tm: GoslingTrackModel, the
             });
         } else {
             ticks.forEach(value => {
-                const y = rowPosition + rowHeight - scale(value);
-                const midR = trackOuterRadius - ((rowPosition + y) / trackHeight) * trackRingSize;
+                const y = scale(value);
+                const midR = trackOuterRadius - ((rowPosition + rowHeight - y) / trackHeight) * trackRingSize;
                 const farR = midR + strokeWidth / 2.0;
                 const nearR = midR - strokeWidth / 2.0;
 
