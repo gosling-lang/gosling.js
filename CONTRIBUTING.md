@@ -25,7 +25,7 @@ yarn schema
 
 This will create the `gosling.schema.json` file based on the `gosling.schema.ts`. The reason for updating the `*.json` file is that the Online Editor only compiles the gosling spec only if the specification is valid depending of the `gosling.schema.json`. Therefore, if you edit the grammar and do not update the `gosling.schema.json` file, the Online Editor will not compile the spec, showing an empty view.
 
-`gosling.schema.json` is locally updated everytime when you `commit` changes, so you do not have to run `yarn schema` by yourselves before the `commit`.
+`gosling.schema.json` is updated everytime when you `commit` changes, so you do not have to run `yarn schema` by yourselves before the `commit`.
 
 ## Commit Messages
 
