@@ -31,7 +31,8 @@ import {
     FlatTracks,
     OverlaidTracks,
     StackedTracks,
-    BAMData
+    BAMData,
+    Range
 } from './gosling.schema';
 import { SUPPORTED_CHANNELS } from './mark';
 import { isArray } from 'lodash';
@@ -172,6 +173,13 @@ export function IsIncludeFilter(_: FilterTransform): _ is IncludeFilter {
  */
 export function IsDomainArray(domain?: Domain): domain is string[] | number[] {
     return isArray(domain);
+}
+
+/**
+ * Check whether range is in array shape.
+ */
+export function IsRangeArray(range?: Range): range is string[] | number[] {
+    return isArray(range);
 }
 
 // TODO: perhaps, combine this with `isStackedChannel`

@@ -148,6 +148,7 @@ export const examples: ReadonlyArray<{
         name: 'Custom Theme (Beta)',
         id: 'CUSTOM_THEME',
         spec: EX_SPEC_CUSTOM_THEME,
-        underDevelopment: true
+        underDevelopment: true,
+        hidden: true
     }
 ].filter(d => !d.hidden);

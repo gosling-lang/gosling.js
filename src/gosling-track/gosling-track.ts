@@ -104,9 +104,13 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
 
         // draws exactly one tile
         renderTile(tile: any) {
+            // Refer to the following already supported graphics:
+            // https://github.com/higlass/higlass/blob/54f5aae61d3474f9e868621228270f0c90ef9343/app/scripts/PixiTrack.js#L115
             tile.mouseOverData = null;
             tile.graphics.clear();
             tile.graphics.removeChildren();
+            this.pBackground.clear();
+            this.pBackground.removeChildren();
             this.pBorder.clear();
             this.pBorder.removeChildren();
             tile.drawnAtScale = this._xScale.copy(); // being used in `draw()` internally
@@ -116,6 +120,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                 return;
             }
 
+            // A single tile contains one or multiple gosling visualizations that are overlaid
             tile.goslingModels.forEach((tm: GoslingTrackModel) => {
                 // check visibility condition
                 const trackWidth = this.dimensions[1];

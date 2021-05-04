@@ -65,6 +65,7 @@ export interface RootStyle {
     background?: string;
     titleColor?: string;
     subtitleColor?: string;
+    mousePositionColor?: string;
 }
 
 export interface TrackStyle {
@@ -80,6 +81,7 @@ export interface LegendStyle {
     background?: string;
     backgroundOpacity?: number;
     backgroundStroke?: string;
+    tickColor?: string;
     // ...
 }
 
@@ -87,6 +89,8 @@ export interface AxisStyle {
     tickColor?: string;
     labelColor?: string;
     baselineColor?: string;
+    gridColor?: string;
+    gridStrokeWidth?: number;
     // ...
 }
 
@@ -109,7 +113,7 @@ export function getTheme(theme: Theme = 'light'): Required<CompleteThemeDeep> {
         // Iterate all keys to override from base
         const base = JSON.parse(JSON.stringify(THEMES[theme.base]));
         Object.keys(base).forEach(k => {
-            if ((theme as any)[k]) {
+            if ((theme as any)[k] && k !== 'base') {
                 base[k] = assign(JSON.parse(JSON.stringify(base[k])), JSON.parse(JSON.stringify((theme as any)[k])));
             }
         });
@@ -137,13 +141,14 @@ export const THEMES: { [key in Themes]: Required<CompleteThemeDeep> } = {
         root: {
             background: 'white',
             titleColor: 'black',
-            subtitleColor: 'gray'
+            subtitleColor: 'gray',
+            mousePositionColor: '#000000'
         },
 
         track: {
             titleColor: 'black',
             titleBackground: 'white',
-            outline: 'gray',
+            outline: 'black',
             outlineWidth: 1
         },
 
@@ -151,13 +156,16 @@ export const THEMES: { [key in Themes]: Required<CompleteThemeDeep> } = {
             background: 'white',
             backgroundOpacity: 0.7,
             labelColor: 'black',
-            backgroundStroke: '#DBDBDB'
+            backgroundStroke: '#DBDBDB',
+            tickColor: 'black'
         },
 
         axis: {
             tickColor: 'black',
             labelColor: 'black',
-            baselineColor: 'black'
+            baselineColor: 'black',
+            gridColor: '#E3E3E3',
+            gridStrokeWidth: 1
         },
 
         markCommon: {
@@ -209,13 +217,14 @@ export const THEMES: { [key in Themes]: Required<CompleteThemeDeep> } = {
         root: {
             background: 'black',
             titleColor: 'white',
-            subtitleColor: 'lightgray'
+            subtitleColor: 'lightgray',
+            mousePositionColor: '#FFFFFF'
         },
 
         track: {
             titleColor: 'white',
             titleBackground: 'black',
-            outline: 'lightgray',
+            outline: 'white',
             outlineWidth: 1
         },
 
@@ -223,13 +232,16 @@ export const THEMES: { [key in Themes]: Required<CompleteThemeDeep> } = {
             background: 'black',
             backgroundOpacity: 0.7,
             labelColor: 'white',
-            backgroundStroke: '#DBDBDB'
+            backgroundStroke: '#DBDBDB',
+            tickColor: 'white'
         },
 
         axis: {
             tickColor: 'white',
             labelColor: 'white',
-            baselineColor: 'white'
+            baselineColor: 'white',
+            gridColor: 'gray',
+            gridStrokeWidth: 1
         },
 
         markCommon: {

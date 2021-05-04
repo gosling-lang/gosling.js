@@ -55,7 +55,7 @@ export function goslingToHiGlass(
             options: {
                 /* Mouse hover position */
                 showMousePosition: firstResolvedSpec.layout === 'circular' ? false : true, // show mouse position only for linear tracks // TODO: or vertical
-                mousePositionColor: '#B8BCC1',
+                mousePositionColor: getTheme(theme).root.mousePositionColor,
                 /* Track title */
                 name: firstResolvedSpec.title,
                 fontSize: 12,

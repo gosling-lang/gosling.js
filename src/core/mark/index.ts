@@ -11,8 +11,8 @@ import { drawRule } from './rule';
 import { drawLink } from './link';
 import { drawGrid } from './grid';
 import { drawChartOutlines } from './outline';
-import { drawColorLegend, drawYLegend } from './legend';
-import { drawCircularGrid } from './grid-circular';
+import { drawColorLegend, drawRowLegend } from './legend';
+import { drawCircularYAxis, drawLinearYAxis } from './axis';
 import { drawCircularOutlines } from './outline-circular';
 import { drawBackground } from './background';
 import { Theme } from '../utils/theme';
@@ -67,15 +67,14 @@ export function drawMark(HGC: any, trackInfo: any, tile: any, model: GoslingTrac
         // }
     });
 
-    /* embellishment before rendering plots */
-    drawBackground(HGC, trackInfo, tile, model); // TODO: this should be done only once for a track, not for each tile!
+    /* Embellishment before rendering plots */
+    drawBackground(HGC, trackInfo, tile, model);
     if (CIRCULAR) {
         drawCircularOutlines(HGC, trackInfo, tile, model);
-        drawCircularGrid(HGC, trackInfo, tile, model);
     } else {
-        drawGrid(HGC, trackInfo, tile, model);
         drawChartOutlines(HGC, trackInfo, model, theme);
     }
+    drawGrid(trackInfo, model, theme);
 
     // DEBUG
     // drawChartOutlines(HGC, trackInfo, model);
@@ -119,9 +118,10 @@ export function drawMark(HGC: any, trackInfo: any, tile: any, model: GoslingTrac
 
     /* embellishment after rendering plots */
     if (CIRCULAR) {
-        // ...
+        drawCircularYAxis(HGC, trackInfo, tile, model, theme);
     } else {
-        drawYLegend(HGC, trackInfo, tile, model, theme);
+        drawLinearYAxis(HGC, trackInfo, tile, model, theme);
+        drawRowLegend(HGC, trackInfo, tile, model, theme);
     }
     drawColorLegend(HGC, trackInfo, tile, model, theme);
 }

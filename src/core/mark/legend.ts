@@ -2,6 +2,8 @@ import { GoslingTrackModel } from '../gosling-track-model';
 import { IsChannelDeep } from '../gosling.schema.guards';
 import colorToHex from '../utils/color-to-hex';
 import { getTheme, Theme } from '../utils/theme';
+import { Dimension } from '../utils/position';
+import { ScaleLinear } from 'd3-scale';
 
 export const getLegendTextStyle = (fill = 'black') => {
     return {
@@ -18,11 +20,152 @@ export const getLegendTextStyle = (fill = 'black') => {
 };
 
 export function drawColorLegend(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackModel, theme: Theme = 'light') {
+    const spec = tm.spec();
+
+    if (!IsChannelDeep(spec.color) || !spec.color.legend) {
+        // This means we do not need to draw a legend
+        return;
+    }
+
+    switch (spec.color.type) {
+        case 'nominal':
+            drawColorLegendCategories(HGC, trackInfo, tile, tm, theme);
+            break;
+        case 'quantitative':
+            drawColorLegendQuantitative(HGC, trackInfo, tile, tm, theme);
+            break;
+    }
+}
+
+export function drawColorLegendQuantitative(
+    HGC: any,
+    trackInfo: any,
+    tile: any,
+    tm: GoslingTrackModel,
+    theme: Theme = 'light'
+) {
+    const spec = tm.spec();
+
+    if (!IsChannelDeep(spec.color) || spec.color.type !== 'quantitative' || !spec.color.legend) {
+        // This means we do not need to draw legend
+        return;
+    }
+
+    /* track size */
+    const [trackX, trackY] = trackInfo.position;
+    const [trackWidth] = trackInfo.dimensions;
+
+    /* Visual Parameters */
+    const legendWidth = 80;
+    const legendHeight = 110;
+    const colorBarDim: Dimension = {
+        top: 10,
+        left: 55,
+        width: 20,
+        height: 90
+    };
+    const legendX = trackX + trackWidth - legendWidth - 1;
+    const legendY = trackY + 1;
+
+    /* Legend Components */
+    const colorScale = tm.getChannelScale('color');
+    const colorDomain = tm.getChannelDomainArray('color');
+
+    if (!colorScale || !colorDomain) {
+        // We do not have enough information for creating a color legend
+        return;
+    }
+
+    /* render */
+    const graphics = trackInfo.pBorder; // use pBorder not to be affected by zoomming
+
+    // Background
+    graphics.beginFill(colorToHex(getTheme(theme).legend.background), getTheme(theme).legend.backgroundOpacity);
+    graphics.lineStyle(
+        1,
+        colorToHex(getTheme(theme).legend.backgroundStroke),
+        1, // alpha
+        0 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
+    );
+    graphics.drawRect(legendX, legendY, legendWidth, legendHeight);
+
+    // Color bar
+    const [startValue, endValue] = colorDomain as [number, number];
+    const extent = endValue - startValue;
+    [...Array(colorBarDim.height).keys()].forEach(y => {
+        // For each pixel, draw a small rectangle with different color
+        const value = ((colorBarDim.height - y) / colorBarDim.height) * extent + startValue;
+
+        graphics.beginFill(
+            colorToHex(colorScale(value)),
+            1 // alpha
+        );
+        graphics.lineStyle(
+            1,
+            colorToHex(getTheme(theme).legend.backgroundStroke),
+            0, // alpha
+            0.5 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
+        );
+        graphics.drawRect(legendX + colorBarDim.left, legendY + colorBarDim.top + y, colorBarDim.width, 1);
+    });
+
+    // Ticks & labels
+    const tickCount = Math.max(Math.ceil(colorBarDim.height / 40), 1);
+    let ticks = (colorScale as ScaleLinear<any, any>)
+        .ticks(tickCount)
+        .filter(v => colorDomain[0] <= v && v <= colorDomain[1]);
+
+    if (ticks.length === 1) {
+        // Sometimes, ticks() gives a single value, so use a larger tickCount.
+        ticks = (colorScale as ScaleLinear<any, any>)
+            .ticks(tickCount + 1)
+            .filter(v => colorDomain[0] <= v && v <= colorDomain[1]);
+    }
+    const TICK_STROKE_SIZE = 1;
+    graphics.lineStyle(
+        TICK_STROKE_SIZE,
+        colorToHex(getTheme(theme).legend.tickColor),
+        1, // alpha
+        0.5 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
+    );
+
+    const tickEnd = legendX + colorBarDim.left;
+    ticks.forEach(value => {
+        let y = legendY + colorBarDim.top + colorBarDim.height - ((value - startValue) / extent) * colorBarDim.height;
+
+        // Prevent ticks from exceeding outside of a color bar by the stroke size of ticks
+        if (y === legendY + colorBarDim.top) {
+            y += TICK_STROKE_SIZE / 2.0;
+        } else if (y === legendY + colorBarDim.top + colorBarDim.height) {
+            y -= TICK_STROKE_SIZE / 2.0;
+        }
+
+        // ticks
+        graphics.moveTo(tickEnd - 3, y);
+        graphics.lineTo(tickEnd, y);
+
+        // labels
+        const textGraphic = new HGC.libraries.PIXI.Text(value, getLegendTextStyle(getTheme(theme).legend.labelColor));
+        textGraphic.anchor.x = 1;
+        textGraphic.anchor.y = 0.5;
+        textGraphic.position.x = tickEnd - 6;
+        textGraphic.position.y = y;
+
+        graphics.addChild(textGraphic);
+    });
+}
+
+export function drawColorLegendCategories(
+    HGC: any,
+    trackInfo: any,
+    tile: any,
+    tm: GoslingTrackModel,
+    theme: Theme = 'light'
+) {
     /* track spec */
     const spec = tm.spec();
     if (!IsChannelDeep(spec.color) || spec.color.type !== 'nominal' || !spec.color.legend) {
-        // TODO: only support categorical color
-        // we do not need to draw legend
+        // This means we do not need to draw legend
         return;
     }
 
@@ -34,7 +177,7 @@ export function drawColorLegend(HGC: any, trackInfo: any, tile: any, tm: Gosling
     }
 
     /* render */
-    const graphics = trackInfo.pBorder; // use pBorder not to affected by zoomming
+    const graphics = trackInfo.pBorder; // use pBorder not to be affected by zoomming
 
     const paddingX = 10;
     const paddingY = 4;
@@ -152,7 +295,7 @@ export function drawColorLegend(HGC: any, trackInfo: any, tile: any, tm: Gosling
     });
 }
 
-export function drawYLegend(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackModel, theme: Theme = 'light') {
+export function drawRowLegend(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackModel, theme: Theme = 'light') {
     /* track spec */
     const spec = tm.spec();
     if (

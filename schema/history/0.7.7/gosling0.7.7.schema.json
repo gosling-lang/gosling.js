@@ -41,6 +41,12 @@
         "baselineColor": {
           "type": "string"
         },
+        "gridColor": {
+          "type": "string"
+        },
+        "gridStrokeWidth": {
+          "type": "number"
+        },
         "labelColor": {
           "type": "string"
         },
@@ -1294,6 +1300,9 @@
           "type": "string"
         },
         "labelColor": {
+          "type": "string"
+        },
+        "tickColor": {
           "type": "string"
         }
       },
@@ -3936,6 +3945,9 @@
       "additionalProperties": false,
       "properties": {
         "background": {
+          "type": "string"
+        },
+        "mousePositionColor": {
           "type": "string"
         },
         "subtitleColor": {
