@@ -1,7 +1,7 @@
 # Contributing
 **We welcome and greatly appreciate your contribution to this project!**
 
-While contribution guidelines are loosely defined, we recommend to read the following contents to make your the contribution process more efficient.
+While contribution guidelines are loosely defined, we recommend to read the following contents to make your contribution process more efficient.
 
 ## Getting Started
 
