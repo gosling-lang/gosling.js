@@ -89,6 +89,7 @@ export interface AxisStyle {
     labelColor?: string;
     baselineColor?: string;
     gridColor?: string;
+    gridStrokeWidth?: number;
     // ...
 }
 
@@ -161,7 +162,8 @@ export const THEMES: { [key in Themes]: Required<CompleteThemeDeep> } = {
             tickColor: 'black',
             labelColor: 'black',
             baselineColor: 'black',
-            gridColor: '#E3E3E3'
+            gridColor: '#E3E3E3',
+            gridStrokeWidth: 1
         },
 
         markCommon: {
@@ -235,7 +237,8 @@ export const THEMES: { [key in Themes]: Required<CompleteThemeDeep> } = {
             tickColor: 'white',
             labelColor: 'white',
             baselineColor: 'white',
-            gridColor: '#E3E3E3'
+            gridColor: 'gray',
+            gridStrokeWidth: 1
         },
 
         markCommon: {

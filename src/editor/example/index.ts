@@ -135,7 +135,8 @@ export const examples: ReadonlyArray<{
         name: 'Dark Theme (Beta)',
         id: 'DARK_THEME',
         spec: EX_SPEC_DARK_THEME,
-        underDevelopment: true
+        underDevelopment: true,
+        forceShow: true
     },
     {
         name: 'Custom Theme (Beta)',
