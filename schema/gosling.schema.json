@@ -41,6 +41,12 @@
         "baselineColor": {
           "type": "string"
         },
+        "gridColor": {
+          "type": "string"
+        },
+        "gridStrokeWidth": {
+          "type": "number"
+        },
         "labelColor": {
           "type": "string"
         },

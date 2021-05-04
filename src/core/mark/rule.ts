@@ -75,7 +75,7 @@ export function drawRule(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackMo
 
                 const midR = trackOuterRadius - ((rowPosition + y) / trackHeight) * trackRingSize;
                 const farR = midR + strokeWidth / 2.0;
-                const nearR = midR - strokeWidth + 2.0;
+                const nearR = midR - strokeWidth / 2.0;
 
                 const sPos = cartesianToPolar(x, trackWidth, nearR, cx, cy, startAngle, endAngle);
                 const startRad = valueToRadian(x, trackWidth, startAngle, endAngle);

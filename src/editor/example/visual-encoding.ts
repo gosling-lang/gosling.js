@@ -325,7 +325,7 @@ export const EX_SPEC_VISUAL_ENCODING_CIRCULAR: GoslingSpec = {
                                 type: 'genomic',
                                 axis: 'top'
                             },
-                            y: { field: 'peak', type: 'quantitative' },
+                            y: { field: 'peak', type: 'quantitative', grid: true },
                             color: { field: 'sample', type: 'nominal', legend: true },
                             width: 350,
                             height: 130
@@ -409,7 +409,7 @@ export const EX_SPEC_VISUAL_ENCODING_CIRCULAR: GoslingSpec = {
                                 type: 'genomic',
                                 axis: 'top'
                             },
-                            y: { field: 'peak', type: 'quantitative' },
+                            y: { field: 'peak', type: 'quantitative', grid: true },
                             size: { field: 'peak', type: 'quantitative' },
                             color: { field: 'sample', type: 'nominal', legend: true },
                             opacity: { value: 0.5 },
@@ -529,7 +529,7 @@ export const EX_SPEC_DARK_THEME: GoslingSpec = {
                             },
                             mark: 'bar',
                             x: { field: 'position', type: 'genomic', axis: 'top' },
-                            y: { field: 'peak', type: 'quantitative', axis: 'left' },
+                            y: { field: 'peak', type: 'quantitative', axis: 'left', grid: true },
                             color: { field: 'sample', type: 'nominal', legend: true },
                             width: 550,
                             height: 230
@@ -641,7 +641,7 @@ export const EX_SPEC_DARK_THEME: GoslingSpec = {
                                     style: { linePattern: { type: 'triangleLeft', size: 5 } }
                                 }
                             ],
-                            row: { field: 'strand', type: 'nominal', domain: ['+', '-'] },
+                            row: { field: 'strand', type: 'nominal', domain: ['+', '-'], grid: true },
                             color: {
                                 field: 'strand',
                                 type: 'nominal',

@@ -89,6 +89,8 @@ export interface AxisStyle {
     tickColor?: string;
     labelColor?: string;
     baselineColor?: string;
+    gridColor?: string;
+    gridStrokeWidth?: number;
     // ...
 }
 
@@ -111,7 +113,7 @@ export function getTheme(theme: Theme = 'light'): Required<CompleteThemeDeep> {
         // Iterate all keys to override from base
         const base = JSON.parse(JSON.stringify(THEMES[theme.base]));
         Object.keys(base).forEach(k => {
-            if ((theme as any)[k]) {
+            if ((theme as any)[k] && k !== 'base') {
                 base[k] = assign(JSON.parse(JSON.stringify(base[k])), JSON.parse(JSON.stringify((theme as any)[k])));
             }
         });
@@ -161,7 +163,9 @@ export const THEMES: { [key in Themes]: Required<CompleteThemeDeep> } = {
         axis: {
             tickColor: 'black',
             labelColor: 'black',
-            baselineColor: 'black'
+            baselineColor: 'black',
+            gridColor: '#E3E3E3',
+            gridStrokeWidth: 1
         },
 
         markCommon: {
@@ -235,7 +239,9 @@ export const THEMES: { [key in Themes]: Required<CompleteThemeDeep> } = {
         axis: {
             tickColor: 'white',
             labelColor: 'white',
-            baselineColor: 'white'
+            baselineColor: 'white',
+            gridColor: 'gray',
+            gridStrokeWidth: 1
         },
 
         markCommon: {
