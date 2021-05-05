@@ -6,13 +6,15 @@ import { validateTrack } from '../core/utils/validate';
 import { shareScaleAcrossTracks } from '../core/utils/scales';
 import { resolveSuperposedTracks } from '../core/utils/overlay';
 import { SingleTrack, OverlaidTrack, Datum } from '../core/gosling.schema';
-// import { IsDataDeepTileset } from '../core/gosling.schema.guards';
 import { Tooltip } from '../gosling-tooltip';
 import colorToHex from '../core/utils/color-to-hex';
 import { calculateData, concatString, filterData, replaceString, splitExon } from '../core/utils/data-transform';
 import { getTabularData } from './data-abstraction';
+import { BAMDataFetcher } from '../data-fetcher/bam'
+import { spawn, Worker } from 'threads';
 
 // For using libraries, refer to https://github.com/higlass/higlass/blob/f82c0a4f7b2ab1c145091166b0457638934b15f3/app/scripts/configs/available-for-plugins.js
+// `getTilePosAndDimensions()` definition: https://github.com/higlass/higlass/blob/1e1146409c7d7c7014505dd80d5af3e9357c77b6/app/scripts/Tiled1DPixiTrack.js#L133
 function GoslingTrack(HGC: any, ...args: any[]): any {
     if (!new.target) {
         throw new Error('Uncaught TypeError: Class constructor cannot be invoked without "new"');
@@ -23,12 +25,22 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
         private originalSpec: SingleTrack | OverlaidTrack;
         private tooltips: Tooltip[];
         private tileSize: number;
+        private worker: any;
+        private prevRows: any[];
         // TODO: add members that are used explicitly in the code
 
         constructor(params: any[]) {
             const [context, options] = params;
-            super(context, options);
 
+            const worker = spawn(new Worker('../data-fetcher/bam/bam-worker'));
+            
+            context.dataFetcher = new BAMDataFetcher(HGC, context.dataConfig, worker);
+
+            super(context, options);
+            
+            this.worker = worker;
+            context.dataFetcher.track = this;
+            this.prevRows = [];
             this.context = context;
             this.originalSpec = this.options.spec;
             this.tileSize = this.tilesetInfo?.tile_size ?? 1024;
@@ -58,7 +70,24 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             this.textsBeingUsed = 0;
 
             // preprocess all tiles at once so that we can share the value scales
-            this.preprocessAllTiles();
+            // this.preprocessAllTiles();
+
+            this.worker.then((tileFunctions: any) => {
+                tileFunctions
+                  .renderSegments(
+                    this.dataFetcher.uid,
+                    Object.values(this.fetchedTiles).map((x: any) => x.remoteId),
+                    this._xScale.domain(),
+                    this._xScale.range(),
+                    this.position,
+                    this.dimensions,
+                    this.prevRows,
+                    this.options,
+                  )
+                  .then((toRender: any) => {
+                      console.log('toRender', toRender)
+                  });
+            });
 
             this.renderTile(tile);
         }
@@ -67,6 +96,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
          * Rerender tiles using the new options, including the change of positions and zoom levels
          */
         rerender(newOptions: any) {
+            console.log(this.worker)
             super.rerender(newOptions);
 
             this.options = newOptions;
@@ -74,8 +104,26 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             this.tooltips = [];
             this.svgData = [];
             this.textsBeingUsed = 0;
+            
+            // this.updateTile();
 
-            this.updateTile();
+            this.worker.then((tileFunctions: any) => {
+                tileFunctions
+                  .renderSegments(
+                    this.dataFetcher.uid,
+                    Object.values(this.fetchedTiles).map((x: any) => x.remoteId),
+                    this._xScale.domain(),
+                    this._xScale.range(),
+                    this.position,
+                    this.dimensions,
+                    this.prevRows,
+                    this.options,
+                  )
+                  .then((toRender: any) => {
+                      console.log('toRender', toRender)
+                  });
+            });
+
 
             this.draw(); // TODO: any effect?
         }
@@ -89,13 +137,75 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             super.draw();
         }
 
+        getTilePosAndDimensions (
+            zoomLevel: any,
+            tilePos: any,
+            binsPerTileIn: any,
+            tilesetInfo: any,
+          ) {
+            /**
+             * Get the tile's position in its coordinate system.
+             *
+             * TODO: Replace this function with one imported from
+             * HGC.utils.trackUtils
+             */
+            const xTilePos = tilePos[0];
+            const yTilePos = tilePos[1];
+          
+            if (tilesetInfo.resolutions) {
+              // the default bins per tile which should
+              // not be used because the right value should be in the tileset info
+          
+              const binsPerTile = binsPerTileIn;
+          
+              const sortedResolutions = tilesetInfo.resolutions
+                .map((x: any) => +x)
+                .sort((a: number, b: number) => b - a);
+          
+              const chosenResolution = sortedResolutions[zoomLevel];
+          
+              const tileWidth = chosenResolution * binsPerTile;
+              const tileHeight = tileWidth;
+          
+              const tileX = chosenResolution * binsPerTile * tilePos[0];
+              const tileY = chosenResolution * binsPerTile * tilePos[1];
+          
+              return {
+                tileX,
+                tileY,
+                tileWidth,
+                tileHeight,
+              };
+            }
+          
+            // max_width should be substitutable with 2 ** tilesetInfo.max_zoom
+            const totalWidth = tilesetInfo.max_width;
+            const totalHeight = tilesetInfo.max_width;
+          
+            const minX = tilesetInfo.min_pos[0];
+            const minY = tilesetInfo.min_pos[1];
+          
+            const tileWidth = totalWidth / 2 ** zoomLevel;
+            const tileHeight = totalHeight / 2 ** zoomLevel;
+          
+            const tileX = minX + xTilePos * tileWidth;
+            const tileY = minY + yTilePos * tileHeight;
+          
+            return {
+              tileX,
+              tileY,
+              tileWidth,
+              tileHeight,
+            };
+          };
+          
         updateTile() {
             // preprocess all tiles at once so that we can share the value scales
-            this.preprocessAllTiles();
+            // this.preprocessAllTiles();
 
-            this.visibleAndFetchedTiles().forEach((tile: any) => {
-                this.renderTile(tile);
-            });
+            // this.visibleAndFetchedTiles().forEach((tile: any) => {
+                // this.renderTile(tile);
+            // });
 
             // TODO: Should rerender tile only when neccesary for performance
             // e.g., changing color scale
@@ -133,11 +243,48 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             });
         }
 
+        calculateVisibleTiles() {
+            const tiles = HGC.utils.trackUtils.calculate1DVisibleTiles(
+              this.tilesetInfo,
+              this._xScale,
+            );
+      
+            for (const tile of tiles) {
+              const { tileX, tileWidth } = this.getTilePosAndDimensions(
+                tile[0],
+                [tile[1]],
+                this.tilesetInfo.tile_size,
+                this.tilesetInfo,
+              );
+      
+              const DEFAULT_MAX_TILE_WIDTH = 2e5;
+      
+              if (
+                tileWidth >
+                (this.tilesetInfo.max_tile_width || DEFAULT_MAX_TILE_WIDTH)
+              ) {
+                this.errorTextText = 'Zoom in to see details';
+                this.drawError();
+                this.animate();
+                return;
+              }
+      
+              this.errorTextText = null;
+              this.pBorder.clear();
+              this.drawError();
+              this.animate();
+            }
+            // const { tileX, tileWidth } = getTilePosAndDimensions(
+            //   this.calculateZoomLevel(),
+            // )
+      
+            this.setVisibleTiles(tiles);
+          }
+
         /**
          * This function reorganize the tileset information so that it can be more conveniently managed afterwards.
          */
         reorganizeTileInfo() {
-            // console.log(this.visibleAndFetchedTiles(), this.tilesetInfo.tile_size);
             const tiles = this.visibleAndFetchedTiles();
 
             this.tileSize = this.tilesetInfo?.tile_size ?? 1024;
@@ -278,21 +425,21 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                     return;
                 }
 
-                if (!tile.gos.tabularData) {
-                    // If the data is not already stored in a tabular form, convert them.
-                    const { tileX, tileWidth } = this.getTilePosAndDimensions(
-                        tile.gos.zoomLevel,
-                        tile.gos.tilePos,
-                        this.tileSize
-                    );
+                // if (!tile.gos.tabularData) {
+                //     // If the data is not already stored in a tabular form, convert them.
+                //     const { tileX, tileWidth } = this.getTilePosAndDimensions(
+                //         tile.gos.zoomLevel,
+                //         tile.gos.tilePos,
+                //         this.tileSize
+                //     );
 
-                    tile.gos.tabularData = getTabularData(resolved, {
-                        ...tile.gos,
-                        tileX,
-                        tileWidth,
-                        tileSize: this.tileSize
-                    });
-                }
+                //     tile.gos.tabularData = getTabularData(resolved, {
+                //         ...tile.gos,
+                //         tileX,
+                //         tileWidth,
+                //         tileSize: this.tileSize
+                //     });
+                // }
 
                 tile.gos.tabularDataFiltered = Array.from(tile.gos.tabularData);
                 /*
@@ -473,24 +620,24 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
         }
 
         getIndicesOfVisibleDataInTile(tile: any) {
-            const visible = this._xScale.range();
+            // const visible = this._xScale.range();
 
-            if (!this.tilesetInfo) return [null, null];
+            // if (!this.tilesetInfo) return [null, null];
 
-            const { tileX, tileWidth } = this.getTilePosAndDimensions(
-                tile.gos.zoomLevel,
-                tile.gos.tilePos,
-                this.tilesetInfo.bins_per_dimension || this.tilesetInfo?.tile_size
-            );
+            // const { tileX, tileWidth } = this.getTilePosAndDimensions(
+            //     tile.gos.zoomLevel,
+            //     tile.gos.tilePos,
+            //     this.tilesetInfo.bins_per_dimension || this.tilesetInfo?.tile_size
+            // );
 
-            const tileXScale = scaleLinear()
-                .domain([0, this.tilesetInfo?.tile_size || this.tilesetInfo?.bins_per_dimension])
-                .range([tileX, tileX + tileWidth]);
+            // const tileXScale = scaleLinear()
+            //     .domain([0, this.tilesetInfo?.tile_size || this.tilesetInfo?.bins_per_dimension])
+            //     .range([tileX, tileX + tileWidth]);
 
-            const start = Math.max(0, Math.round(tileXScale.invert(this._xScale.invert(visible[0]))));
-            const end = Math.min(tile.gos.dense.length, Math.round(tileXScale.invert(this._xScale.invert(visible[1]))));
+            // const start = Math.max(0, Math.round(tileXScale.invert(this._xScale.invert(visible[0]))));
+            // const end = Math.min(tile.gos.dense.length, Math.round(tileXScale.invert(this._xScale.invert(visible[1]))));
 
-            return [start, end];
+            // return [start, end];
         }
 
         drawTile(tile: any) {

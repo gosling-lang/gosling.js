@@ -1,4 +1,4 @@
-import { GET_CHROM_SIZES } from '../core/utils/assembly';
+import { GET_CHROM_SIZES } from '../../core/utils/assembly';
 import { sampleSize } from 'lodash';
 
 /**

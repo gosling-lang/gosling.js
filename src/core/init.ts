@@ -2,12 +2,12 @@
 import { default as higlassRegister } from 'higlass-register';
 // @ts-ignore
 import { TextTrack } from 'higlass-text';
-import { AxisTrack } from '../axis-track';
-import { BrushTrack } from '../higlass-brush-track';
-import { CSVDataFetcher } from '../higlass-csv-datafetcher/index';
-import { RawDataFetcher } from '../higlass-raw-datafetcher/index';
-import { BBIDataFetcher } from '../higlass-bw-datafetcher/index';
-import { BAMDataFetcher } from '../higlass-bam-datafetcher';
+import { AxisTrack } from '../gosling-genomic-axis';
+import { BrushTrack } from '../gosling-brush';
+import { CSVDataFetcher } from '../data-fetcher/csv/index';
+import { RawDataFetcher } from '../data-fetcher/json/index';
+import { BBIDataFetcher } from '../data-fetcher/bigwig/index';
+import { BAMDataFetcher } from '../data-fetcher/bam/index';
 import { GoslingTrack } from '../gosling-track/index';
 
 /**
@@ -56,5 +56,5 @@ export function init() {
     higlassRegister({ dataFetcher: CSVDataFetcher, config: CSVDataFetcher.config }, { pluginType: 'dataFetcher' });
     higlassRegister({ dataFetcher: RawDataFetcher, config: RawDataFetcher.config }, { pluginType: 'dataFetcher' });
     higlassRegister({ dataFetcher: BBIDataFetcher, config: BBIDataFetcher.config }, { pluginType: 'dataFetcher' });
-    higlassRegister({ dataFetcher: BAMDataFetcher, config: BAMDataFetcher.config }, { pluginType: 'dataFetcher' });
+    // higlassRegister({ dataFetcher: BAMDataFetcher, config: BAMDataFetcher.config }, { pluginType: 'dataFetcher' });
 }

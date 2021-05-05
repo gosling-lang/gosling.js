@@ -6,14 +6,16 @@ export const EX_SPEC_PILEUP: GoslingSpec = {
     static: false,
     layout: 'linear',
     centerRadius: 0.05,
+    xDomain: { chromosome: '1', interval: [137750, 138450] },
     tracks: [
         {
             data: {
                 type: 'bam',
-                url: 'https://s3.amazonaws.com/gosling-lang.org/data/example_higlass.bam'
+                // url: 'https://s3.amazonaws.com/gosling-lang.org/data/example_higlass.bam'
+                url: 'https://aveit.s3.amazonaws.com/higlass/bam/example_higlass.bam'
             },
             mark: 'point',
-            // x: { field: 'BP', type: 'genomic' },
+            x: { field: 'BP', type: 'genomic' },
             // y: { field: 'TRAIT', type: 'nominal' },
             // row: { field: 'CATEGORY', type: 'nominal', domain: colorDomain },
             // color: { field: 'CATEGORY', type: 'nominal', domain: colorDomain, range: colorRange },
