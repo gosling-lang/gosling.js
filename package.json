@@ -59,8 +59,6 @@
     },
     "devDependencies": {
         "@babel/core": "^7.11.1",
-        "@babel/preset-env": "^7.11.0",
-        "@babel/preset-react": "^7.10.4",
         "@commitlint/cli": "^11.0.0",
         "@commitlint/config-conventional": "^11.0.0",
         "@testing-library/jest-dom": "^5.11.3",
@@ -114,6 +112,7 @@
         "remark-gfm": "^1.0.0",
         "strip-json-comments": "^3.1.1",
         "style-loader": "^1.2.1",
+        "threads-plugin": "^1.4.0",
         "ts-jest": "^26.2.0",
         "ts-json-schema-generator": "^0.75.0",
         "ts-loader": "^8.0.2",

@@ -3,10 +3,7 @@
  * https://github.com/higlass/higlass-pileup
  */
 import { Assembly } from '../core/gosling.schema';
-import { spawn, BlobWorker } from 'threads';
-// @ts-ignore
-import MyWorkerWeb from 'raw-loader!./bam-datafetcher-worker.js';
-import * as tileFunctions from './bam-datafetcher.worker';
+import { spawn, Worker } from 'threads';
 
 function BAMDataFetcher(HGC: any, ...args: any): any {
     if (!new.target) {
@@ -27,9 +24,13 @@ function BAMDataFetcher(HGC: any, ...args: any): any {
         private uid: string;
 
         constructor(params: any[]) {
-            // const worker = spawn(BlobWorker.fromText(MyWorkerWeb));
-            const worker = tileFunctions;
+            const worker = spawn(new Worker('./bam-worker'));
 
+            worker.then(fn => {
+                fn.add(1, 2).then(d => console.log(d));
+            });
+            
+            console.log(document.documentURI);
             const [dataConfig] = params;
             this.dataConfig = dataConfig;
             this.uid = HGC.libraries.slugid.nice();
@@ -37,18 +38,18 @@ function BAMDataFetcher(HGC: any, ...args: any): any {
             console.warn(params);
             console.log('HRE BAM ARE');
 
-            this.initPromise = this.worker.then((tileFunctions: any) => {
-                if (dataConfig.url && !dataConfig.bamUrl) {
-                    dataConfig['bamUrl'] = dataConfig.url;
-                }
-                if (!dataConfig.baiUrl) {
-                    dataConfig['baiUrl'] = `${dataConfig['bamUrl']}.bai`;
-                }
+            // this.initPromise = this.worker.then((tileFunctions: any) => {
+            //     if (dataConfig.url && !dataConfig.bamUrl) {
+            //         dataConfig['bamUrl'] = dataConfig.url;
+            //     }
+            //     if (!dataConfig.baiUrl) {
+            //         dataConfig['baiUrl'] = `${dataConfig['bamUrl']}.bai`;
+            //     }
 
-                return tileFunctions
-                    .init(this.uid, dataConfig.bamUrl, dataConfig.baiUrl, dataConfig.chromSizesUrl)
-                    .then(() => this.worker);
-            });
+            //     return tileFunctions
+            //         .init(this.uid, dataConfig.bamUrl, dataConfig.baiUrl, dataConfig.chromSizesUrl)
+            //         .then(() => this.worker);
+            // });
         }
 
         generateTilesetInfo(callback?: any) {
@@ -81,12 +82,12 @@ function BAMDataFetcher(HGC: any, ...args: any): any {
 
             this.tilesetInfoLoading = true;
 
-            return this.dataPromise
-                .then(() => this.generateTilesetInfo(callback))
-                .catch(err => {
-                    this.tilesetInfoLoading = false;
-                    console.error('[Gosling Data Fetcher] Error parsing data:', err);
-                });
+            // return this.dataPromise
+            //     .then(() => this.generateTilesetInfo(callback))
+            //     .catch(err => {
+            //         this.tilesetInfoLoading = false;
+            //         console.error('[Gosling Data Fetcher] Error parsing data:', err);
+            //     });
         }
 
         fetchTilesDebounced(receivedTiles: any, tileIds: any) {
@@ -110,54 +111,54 @@ function BAMDataFetcher(HGC: any, ...args: any): any {
                 tilePromises.push(this.tile(z, x));
             }
 
-            Promise.all(tilePromises).then(values => {
-                values.forEach((value, i) => {
-                    const validTileId = validTileIds[i];
-                    tiles[validTileId] = value;
-                    tiles[validTileId].tilePositionId = validTileId;
-                });
-                receivedTiles(tiles);
-            });
+            // Promise.all(tilePromises).then(values => {
+            //     values.forEach((value, i) => {
+            //         const validTileId = validTileIds[i];
+            //         tiles[validTileId] = value;
+            //         tiles[validTileId].tilePositionId = validTileId;
+            //     });
+            //     receivedTiles(tiles);
+            // });
 
             return tiles;
         }
 
         tile(z: any, x: any) {
             console.log('HRE BAM ARE, tile');
-            return this.tilesetInfo()?.then((tsInfo: any) => {
-                const tileWidth = +tsInfo.max_width / 2 ** +z;
+            // return this.tilesetInfo()?.then((tsInfo: any) => {
+            //     const tileWidth = +tsInfo.max_width / 2 ** +z;
 
-                // get the bounds of the tile
-                const minX = tsInfo.min_pos[0] + x * tileWidth;
-                const maxX = tsInfo.min_pos[0] + (x + 1) * tileWidth;
+            //     // get the bounds of the tile
+            //     const minX = tsInfo.min_pos[0] + x * tileWidth;
+            //     const maxX = tsInfo.min_pos[0] + (x + 1) * tileWidth;
 
-                // filter the data so that visible data is sent to tracks
-                const tabularData = this.values.filter((d: any) => {
-                    if (this.dataConfig.genomicFields) {
-                        return this.dataConfig.genomicFields.find((g: any) => minX < d[g] && d[g] <= maxX);
-                    } else {
-                        const allGenomicFields: string[] = [];
-                        this.dataConfig.genomicFieldsToConvert.forEach((d: any) =>
-                            allGenomicFields.push(...d.genomicFields)
-                        );
-                        return allGenomicFields.find((g: any) => minX < d[g] && d[g] <= maxX);
-                    }
-                });
+            //     // filter the data so that visible data is sent to tracks
+            //     const tabularData = this.values.filter((d: any) => {
+            //         if (this.dataConfig.genomicFields) {
+            //             return this.dataConfig.genomicFields.find((g: any) => minX < d[g] && d[g] <= maxX);
+            //         } else {
+            //             const allGenomicFields: string[] = [];
+            //             this.dataConfig.genomicFieldsToConvert.forEach((d: any) =>
+            //                 allGenomicFields.push(...d.genomicFields)
+            //             );
+            //             return allGenomicFields.find((g: any) => minX < d[g] && d[g] <= maxX);
+            //         }
+            //     });
 
-                // filter data based on the `DataTransform` spec
-                // this.filter?.forEach(f => {
-                //     tabularData = filterData(f, tabularData);
-                // });
+            //     // filter data based on the `DataTransform` spec
+            //     // this.filter?.forEach(f => {
+            //     //     tabularData = filterData(f, tabularData);
+            //     // });
 
-                // const sizeLimit = this.dataConfig.sampleLength ?? 1000;
-                return {
-                    // sample the data to make it managable for visualization components
-                    tabularData: tabularData, //[], //tabularData.length > sizeLimit ? sampleSize(tabularData, sizeLimit) : tabularData,
-                    server: null,
-                    tilePos: [x],
-                    zoomLevel: z
-                };
-            });
+            //     // const sizeLimit = this.dataConfig.sampleLength ?? 1000;
+            //     return {
+            //         // sample the data to make it managable for visualization components
+            //         tabularData: tabularData, //[], //tabularData.length > sizeLimit ? sampleSize(tabularData, sizeLimit) : tabularData,
+            //         server: null,
+            //         tilePos: [x],
+            //         zoomLevel: z
+            //     };
+            // });
         }
     }
 

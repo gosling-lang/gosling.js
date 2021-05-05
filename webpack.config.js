@@ -1,5 +1,6 @@
 const path = require("path");
 const webpack = require("webpack");
+const ThreadsPlugin = require('threads-plugin');
 
 module.exports = (env, argv) => {
   const config = {
@@ -31,11 +32,7 @@ module.exports = (env, argv) => {
               loader: 'ts-loader',
           }],
           exclude: /node_modules/,
-        },
-        {
-          test: /\.worker\.js$/,
-          use: { loader: 'worker-loader' }
-      }
+        }
       ],
     },
     externals: {
@@ -59,6 +56,7 @@ module.exports = (env, argv) => {
       },
     },
     plugins: [
+      new ThreadsPlugin(),
       new webpack.DefinePlugin({
         'process.env': {
           NODE_ENV: JSON.stringify('production')
