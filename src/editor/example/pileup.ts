@@ -14,8 +14,13 @@ export const EX_SPEC_PILEUP: GoslingSpec = {
                 // url: 'https://s3.amazonaws.com/gosling-lang.org/data/example_higlass.bam'
                 url: 'https://aveit.s3.amazonaws.com/higlass/bam/example_higlass.bam'
             },
-            mark: 'point',
-            x: { field: 'BP', type: 'genomic' },
+            mark: 'rect',
+            x: { field: 'from', type: 'genomic' },
+            xe: { field: 'to', type: 'genomic' },
+            // opacity: { value: 0.1 },
+            displacement: {
+                type: 'pile',
+            },
             // y: { field: 'TRAIT', type: 'nominal' },
             // row: { field: 'CATEGORY', type: 'nominal', domain: colorDomain },
             // color: { field: 'CATEGORY', type: 'nominal', domain: colorDomain, range: colorRange },

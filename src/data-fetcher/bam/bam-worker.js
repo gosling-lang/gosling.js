@@ -776,9 +776,35 @@ let allPositions = new Float32Array(allPositionsLength);
 let allColors = new Float32Array(allColorsLength);
 let allIndexes = new Int32Array(allIndexesLength);
 
+function currTime() {
+    const d = new Date();
+    return d.getTime();
+  }
+
+const getTabularData = (uid, tileIds) => {
+    const allSegments = {};
+    for (const tileId of tileIds) {
+        const tileValue = tileValues.get(`${uid}.${tileId}`);
+
+        if (tileValue.error) {
+            throw new Error(tileValue.error);
+        }
+
+        for (const segment of tileValue) {
+            allSegments[segment.id] = segment;
+        }
+    }
+
+    const t1 = currTime();
+    const segmentList = Object.values(allSegments);
+    const buffer = Buffer.from(JSON.stringify(segmentList)).buffer
+    const t2 = currTime();
+    // console.log('renderSegments time:', t2 - t1, 'ms');
+    return Transfer(buffer, [buffer]);
+}
+
 const renderSegments = (uid, tileIds, domain, scaleRange, position, dimensions, prevRows, trackOptions) => {
-    console.log(uid, tileIds, domain, scaleRange, position, dimensions, prevRows, trackOptions);
-    //const t1 = currTime();
+    const t1 = currTime();
     const allSegments = {};
     let allReadCounts = {};
     let coverageSamplingDistance;
@@ -1094,6 +1120,7 @@ const tileFunctions = {
     tilesetInfo,
     fetchTilesDebounced,
     tile,
+    getTabularData,
     renderSegments
 };
 

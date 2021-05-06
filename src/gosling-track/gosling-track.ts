@@ -13,6 +13,8 @@ import { getTabularData } from './data-abstraction';
 import { BAMDataFetcher } from '../data-fetcher/bam'
 import { spawn, Worker } from 'threads';
 
+const BINS_PER_TILE = 1024;
+
 // For using libraries, refer to https://github.com/higlass/higlass/blob/f82c0a4f7b2ab1c145091166b0457638934b15f3/app/scripts/configs/available-for-plugins.js
 // `getTilePosAndDimensions()` definition: https://github.com/higlass/higlass/blob/1e1146409c7d7c7014505dd80d5af3e9357c77b6/app/scripts/Tiled1DPixiTrack.js#L133
 function GoslingTrack(HGC: any, ...args: any[]): any {
@@ -32,9 +34,12 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
         constructor(params: any[]) {
             const [context, options] = params;
 
-            const worker = spawn(new Worker('../data-fetcher/bam/bam-worker'));
-            
-            context.dataFetcher = new BAMDataFetcher(HGC, context.dataConfig, worker);
+            // Check whether to load a worker.
+            let worker;
+            if((options.spec as SingleTrack | OverlaidTrack).data?.type === 'bam') {
+                worker = spawn(new Worker('../data-fetcher/bam/bam-worker'));
+                context.dataFetcher = new BAMDataFetcher(HGC, context.dataConfig, worker);
+            }
 
             super(context, options);
             
@@ -72,23 +77,6 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             // preprocess all tiles at once so that we can share the value scales
             // this.preprocessAllTiles();
 
-            this.worker.then((tileFunctions: any) => {
-                tileFunctions
-                  .renderSegments(
-                    this.dataFetcher.uid,
-                    Object.values(this.fetchedTiles).map((x: any) => x.remoteId),
-                    this._xScale.domain(),
-                    this._xScale.range(),
-                    this.position,
-                    this.dimensions,
-                    this.prevRows,
-                    this.options,
-                  )
-                  .then((toRender: any) => {
-                      console.log('toRender', toRender)
-                  });
-            });
-
             this.renderTile(tile);
         }
 
@@ -105,25 +93,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             this.svgData = [];
             this.textsBeingUsed = 0;
             
-            // this.updateTile();
-
-            this.worker.then((tileFunctions: any) => {
-                tileFunctions
-                  .renderSegments(
-                    this.dataFetcher.uid,
-                    Object.values(this.fetchedTiles).map((x: any) => x.remoteId),
-                    this._xScale.domain(),
-                    this._xScale.range(),
-                    this.position,
-                    this.dimensions,
-                    this.prevRows,
-                    this.options,
-                  )
-                  .then((toRender: any) => {
-                      console.log('toRender', toRender)
-                  });
-            });
-
+            this.updateTile();
 
             this.draw(); // TODO: any effect?
         }
@@ -136,70 +106,39 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
 
             super.draw();
         }
-
-        getTilePosAndDimensions (
-            zoomLevel: any,
-            tilePos: any,
-            binsPerTileIn: any,
-            tilesetInfo: any,
-          ) {
-            /**
-             * Get the tile's position in its coordinate system.
-             *
-             * TODO: Replace this function with one imported from
-             * HGC.utils.trackUtils
-             */
-            const xTilePos = tilePos[0];
-            const yTilePos = tilePos[1];
-          
-            if (tilesetInfo.resolutions) {
-              // the default bins per tile which should
-              // not be used because the right value should be in the tileset info
-          
-              const binsPerTile = binsPerTileIn;
-          
-              const sortedResolutions = tilesetInfo.resolutions
-                .map((x: any) => +x)
-                .sort((a: number, b: number) => b - a);
-          
-              const chosenResolution = sortedResolutions[zoomLevel];
-          
-              const tileWidth = chosenResolution * binsPerTile;
-              const tileHeight = tileWidth;
-          
-              const tileX = chosenResolution * binsPerTile * tilePos[0];
-              const tileY = chosenResolution * binsPerTile * tilePos[1];
-          
-              return {
-                tileX,
-                tileY,
-                tileWidth,
-                tileHeight,
-              };
-            }
-          
-            // max_width should be substitutable with 2 ** tilesetInfo.max_zoom
-            const totalWidth = tilesetInfo.max_width;
-            const totalHeight = tilesetInfo.max_width;
-          
-            const minX = tilesetInfo.min_pos[0];
-            const minY = tilesetInfo.min_pos[1];
-          
-            const tileWidth = totalWidth / 2 ** zoomLevel;
-            const tileHeight = totalHeight / 2 ** zoomLevel;
-          
-            const tileX = minX + xTilePos * tileWidth;
-            const tileY = minY + yTilePos * tileHeight;
-          
-            return {
-              tileX,
-              tileY,
-              tileWidth,
-              tileHeight,
-            };
-          };
-          
+  
+        
         updateTile() {
+            this.worker.then((tileFunctions: any) => {
+                tileFunctions
+                    .getTabularData(this.dataFetcher.uid, Object.values(this.fetchedTiles).map((x: any) => x.remoteId))
+                    .then((toRender: any) => {                      
+                        this.animate();
+                        const tiles = this.visibleAndFetchedTiles();
+                        // console.log(tiles);
+
+                        const tabularData = JSON.parse(Buffer.from(toRender).toString());
+                        if(tiles?.[0]) {
+                            const tile = tiles[0];
+                            tile.tileData.tabularData = tabularData;
+                            const [refTile] = HGC.utils.trackUtils.calculate1DVisibleTiles(
+                                this.tilesetInfo,
+                                this._xScale,
+                              );
+                            tile.tileData.zoomLevel = refTile[0];
+                            tile.tileData.tilePos = [refTile[1]];
+                        }
+                        // console.log('toRender', tabularData);
+                        this.preprocessAllTiles();
+
+                        this.visibleAndFetchedTiles().forEach((tile: any) => {
+                this.renderTile(tile);
+            });
+                    });
+                    this.draw();
+            this.animate();
+            });
+
             // preprocess all tiles at once so that we can share the value scales
             // this.preprocessAllTiles();
 
@@ -212,7 +151,9 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             // ...
         }
 
-        // draws exactly one tile
+        /*
+         * Draws exactly one tile
+         */
         renderTile(tile: any) {
             // Refer to the following already supported graphics:
             // https://github.com/higlass/higlass/blob/54f5aae61d3474f9e868621228270f0c90ef9343/app/scripts/PixiTrack.js#L115
@@ -226,7 +167,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             tile.drawnAtScale = this._xScale.copy(); // being used in `draw()` internally
 
             if (!tile.goslingModels) {
-                // we do not have a track model prepared to visualize
+                // We do not have a track model prepared to visualize
                 return;
             }
 
@@ -243,7 +184,23 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             });
         }
 
+        /**
+         * Return the set of ids of all tiles which are both visible and fetched.
+         */
+        visibleAndFetchedIds() {
+            return Object.keys(this.fetchedTiles).filter((x) => this.visibleTileIds.has(x));
+        }
+
+        visibleAndFetchedTiles() {
+            return this.visibleAndFetchedIds().map((x: any) => this.fetchedTiles[x]);
+        }
+
         calculateVisibleTiles() {
+            if(this.originalSpec.data?.type !== 'bam') {
+                super.calculateVisibleTiles();
+                return;
+            }
+
             const tiles = HGC.utils.trackUtils.calculate1DVisibleTiles(
               this.tilesetInfo,
               this._xScale,
@@ -253,8 +210,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
               const { tileX, tileWidth } = this.getTilePosAndDimensions(
                 tile[0],
                 [tile[1]],
-                this.tilesetInfo.tile_size,
-                this.tilesetInfo,
+                this.tilesetInfo.tile_size
               );
       
               const DEFAULT_MAX_TILE_WIDTH = 2e5;
@@ -279,7 +235,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             // )
       
             this.setVisibleTiles(tiles);
-          }
+        }
 
         /**
          * This function reorganize the tileset information so that it can be more conveniently managed afterwards.
@@ -309,29 +265,29 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
         /**
          * Check whether tiles should be merged.
          */
-        shouldMergeTiles() {
+        shouldCombineTiles() {
             return (
                 this.originalSpec.dataTransform?.find(t => t.type === 'displace') &&
                 this.visibleAndFetchedTiles()?.[0]?.tileData &&
                 // we do not need to combine tiles w/ multivec, vector, matrix
                 !this.visibleAndFetchedTiles()?.[0]?.tileData.dense
-            );
+            ) || this.originalSpec.data?.type === 'bam' // BAM data fetcher already combines the datasets;
         }
 
         /**
          * Combile multiple tiles into a single large tile.
          * This is sometimes necessary, for example, when applying a displacement algorithm.
          */
-        combineAllTiles() {
-            if (!this.shouldMergeTiles()) {
-                // This means we do not need to merge tiles
+        combineAllTilesIfNeeded() {
+            if (!this.shouldCombineTiles()) {
+                // This means we do not need to combine tiles
                 return;
             }
 
             const tiles = this.visibleAndFetchedTiles();
 
             if (!tiles || tiles.length === 0) {
-                // Does not make sense to merge tiles
+                // Does not make sense to combine tiles
                 return;
             }
 
@@ -341,7 +297,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             let newData: Datum[] = [];
 
             tiles.forEach((t: any, i: number) => {
-                // Merge data
+                // Combine data
                 newData = [...newData, ...t.tileData];
 
                 // Flag to force using only one tile
@@ -361,7 +317,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
 
             this.reorganizeTileInfo();
 
-            this.combineAllTiles();
+            this.combineAllTilesIfNeeded();
 
             this.visibleAndFetchedTiles().forEach((tile: any) => {
                 // tile preprocessing is done only once per tile
@@ -399,6 +355,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
          * Return the generated gosling track model.
          */
         preprocessTile(tile: any) {
+            console.log('preprocessTile', tile);
             if (tile.mergedToAnotherTile) {
                 tile.goslingModels = [];
                 return;
@@ -424,22 +381,22 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                     // we do not draw matrix ourselves, higlass does.
                     return;
                 }
+                console.log(tile)
+                if (!tile.gos.tabularData) {
+                    // If the data is not already stored in a tabular form, convert them.
+                    const { tileX, tileWidth } = this.getTilePosAndDimensions(
+                        tile.gos.zoomLevel,
+                        tile.gos.tilePos,
+                        this.tileSize
+                    );
 
-                // if (!tile.gos.tabularData) {
-                //     // If the data is not already stored in a tabular form, convert them.
-                //     const { tileX, tileWidth } = this.getTilePosAndDimensions(
-                //         tile.gos.zoomLevel,
-                //         tile.gos.tilePos,
-                //         this.tileSize
-                //     );
-
-                //     tile.gos.tabularData = getTabularData(resolved, {
-                //         ...tile.gos,
-                //         tileX,
-                //         tileWidth,
-                //         tileSize: this.tileSize
-                //     });
-                // }
+                    tile.gos.tabularData = getTabularData(resolved, {
+                        ...tile.gos,
+                        tileX,
+                        tileWidth,
+                        tileSize: this.tileSize
+                    });
+                }
 
                 tile.gos.tabularDataFiltered = Array.from(tile.gos.tabularData);
                 /*

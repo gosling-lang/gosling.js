@@ -7,7 +7,6 @@ import { BrushTrack } from '../gosling-brush';
 import { CSVDataFetcher } from '../data-fetcher/csv/index';
 import { RawDataFetcher } from '../data-fetcher/json/index';
 import { BBIDataFetcher } from '../data-fetcher/bigwig/index';
-import { BAMDataFetcher } from '../data-fetcher/bam/index';
 import { GoslingTrack } from '../gosling-track/index';
 
 /**
@@ -56,5 +55,4 @@ export function init() {
     higlassRegister({ dataFetcher: CSVDataFetcher, config: CSVDataFetcher.config }, { pluginType: 'dataFetcher' });
     higlassRegister({ dataFetcher: RawDataFetcher, config: RawDataFetcher.config }, { pluginType: 'dataFetcher' });
     higlassRegister({ dataFetcher: BBIDataFetcher, config: BBIDataFetcher.config }, { pluginType: 'dataFetcher' });
-    // higlassRegister({ dataFetcher: BAMDataFetcher, config: BAMDataFetcher.config }, { pluginType: 'dataFetcher' });
 }
