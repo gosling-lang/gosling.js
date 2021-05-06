@@ -218,7 +218,7 @@ export function getTabularData(
             }
         });
     } else if (spec.data.type === 'bam') {
-        //
+        // TODO: Do we need this?
     }
 
     /// DEBUG

@@ -10,7 +10,7 @@ import { Tooltip } from '../gosling-tooltip';
 import colorToHex from '../core/utils/color-to-hex';
 import { calculateData, concatString, filterData, replaceString, splitExon } from '../core/utils/data-transform';
 import { getTabularData } from './data-abstraction';
-import { BAMDataFetcher } from '../data-fetcher/bam'
+import { BAMDataFetcher } from '../data-fetcher/bam';
 import { spawn, Worker } from 'threads';
 
 const BINS_PER_TILE = 1024;
@@ -35,15 +35,15 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             const [context, options] = params;
 
             // Check whether to load a worker.
-            let worker;
-            if((options.spec as SingleTrack | OverlaidTrack).data?.type === 'bam') {
-                worker = spawn(new Worker('../data-fetcher/bam/bam-worker'));
-                context.dataFetcher = new BAMDataFetcher(HGC, context.dataConfig, worker);
+            let bamWorker;
+            if ((options.spec as SingleTrack | OverlaidTrack).data?.type === 'bam') {
+                bamWorker = spawn(new Worker('../data-fetcher/bam/bam-worker'));
+                context.dataFetcher = new BAMDataFetcher(HGC, context.dataConfig, bamWorker);
             }
 
             super(context, options);
-            
-            this.worker = worker;
+
+            this.worker = bamWorker;
             context.dataFetcher.track = this;
             this.prevRows = [];
             this.context = context;
@@ -74,8 +74,10 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             this.svgData = [];
             this.textsBeingUsed = 0;
 
+            if (this.isUpdateTileAsync()) return;
+
             // preprocess all tiles at once so that we can share the value scales
-            // this.preprocessAllTiles();
+            this.preprocessAllTiles();
 
             this.renderTile(tile);
         }
@@ -84,7 +86,6 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
          * Rerender tiles using the new options, including the change of positions and zoom levels
          */
         rerender(newOptions: any) {
-            console.log(this.worker)
             super.rerender(newOptions);
 
             this.options = newOptions;
@@ -92,7 +93,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             this.tooltips = [];
             this.svgData = [];
             this.textsBeingUsed = 0;
-            
+
             this.updateTile();
 
             this.draw(); // TODO: any effect?
@@ -106,45 +107,55 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
 
             super.draw();
         }
-  
-        
+
+        isUpdateTileAsync() {
+            return this.originalSpec.data?.type === 'bam';
+        }
+
         updateTile() {
-            this.worker.then((tileFunctions: any) => {
-                tileFunctions
-                    .getTabularData(this.dataFetcher.uid, Object.values(this.fetchedTiles).map((x: any) => x.remoteId))
-                    .then((toRender: any) => {                      
-                        this.animate();
-                        const tiles = this.visibleAndFetchedTiles();
-                        // console.log(tiles);
+            if (this.isUpdateTileAsync()) {
+                this.worker.then((tileFunctions: any) => {
+                    tileFunctions
+                        .getTabularData(
+                            this.dataFetcher.uid,
+                            Object.values(this.fetchedTiles).map((x: any) => x.remoteId)
+                        )
+                        .then((toRender: any) => {
+                            this.animate(); // This function force to redraw, which is often used with async functions.
 
-                        const tabularData = JSON.parse(Buffer.from(toRender).toString());
-                        if(tiles?.[0]) {
-                            const tile = tiles[0];
-                            tile.tileData.tabularData = tabularData;
-                            const [refTile] = HGC.utils.trackUtils.calculate1DVisibleTiles(
-                                this.tilesetInfo,
-                                this._xScale,
-                              );
-                            tile.tileData.zoomLevel = refTile[0];
-                            tile.tileData.tilePos = [refTile[1]];
-                        }
-                        // console.log('toRender', tabularData);
-                        this.preprocessAllTiles();
+                            const tiles = this.visibleAndFetchedTiles();
+                            // console.log(tiles);
 
-                        this.visibleAndFetchedTiles().forEach((tile: any) => {
-                this.renderTile(tile);
-            });
-                    });
+                            const tabularData = JSON.parse(Buffer.from(toRender).toString());
+                            if (tiles?.[0]) {
+                                const tile = tiles[0];
+                                tile.tileData.tabularData = tabularData;
+                                const [refTile] = HGC.utils.trackUtils.calculate1DVisibleTiles(
+                                    this.tilesetInfo,
+                                    this._xScale
+                                );
+                                tile.tileData.zoomLevel = refTile[0];
+                                tile.tileData.tilePos = [refTile[1]];
+                            }
+                            // console.log('toRender', tabularData);
+                            this.preprocessAllTiles();
+
+                            this.visibleAndFetchedTiles().forEach((tile: any) => {
+                                this.renderTile(tile);
+                            });
+                        });
                     this.draw();
-            this.animate();
-            });
+                    this.animate();
+                });
+                return;
+            }
 
             // preprocess all tiles at once so that we can share the value scales
-            // this.preprocessAllTiles();
+            this.preprocessAllTiles();
 
-            // this.visibleAndFetchedTiles().forEach((tile: any) => {
-                // this.renderTile(tile);
-            // });
+            this.visibleAndFetchedTiles().forEach((tile: any) => {
+                this.renderTile(tile);
+            });
 
             // TODO: Should rerender tile only when neccesary for performance
             // e.g., changing color scale
@@ -188,7 +199,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
          * Return the set of ids of all tiles which are both visible and fetched.
          */
         visibleAndFetchedIds() {
-            return Object.keys(this.fetchedTiles).filter((x) => this.visibleTileIds.has(x));
+            return Object.keys(this.fetchedTiles).filter(x => this.visibleTileIds.has(x));
         }
 
         visibleAndFetchedTiles() {
@@ -196,44 +207,35 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
         }
 
         calculateVisibleTiles() {
-            if(this.originalSpec.data?.type !== 'bam') {
+            if (this.originalSpec.data?.type !== 'bam') {
                 super.calculateVisibleTiles();
                 return;
             }
 
-            const tiles = HGC.utils.trackUtils.calculate1DVisibleTiles(
-              this.tilesetInfo,
-              this._xScale,
-            );
-      
+            const tiles = HGC.utils.trackUtils.calculate1DVisibleTiles(this.tilesetInfo, this._xScale);
+
             for (const tile of tiles) {
-              const { tileX, tileWidth } = this.getTilePosAndDimensions(
-                tile[0],
-                [tile[1]],
-                this.tilesetInfo.tile_size
-              );
-      
-              const DEFAULT_MAX_TILE_WIDTH = 2e5;
-      
-              if (
-                tileWidth >
-                (this.tilesetInfo.max_tile_width || DEFAULT_MAX_TILE_WIDTH)
-              ) {
-                this.errorTextText = 'Zoom in to see details';
+                const { tileX, tileWidth } = this.getTilePosAndDimensions(
+                    tile[0],
+                    [tile[1]],
+                    this.tilesetInfo.tile_size
+                );
+
+                const DEFAULT_MAX_TILE_WIDTH = 2e5;
+
+                if (tileWidth > (this.tilesetInfo.max_tile_width || DEFAULT_MAX_TILE_WIDTH)) {
+                    this.errorTextText = 'Zoom in to see details';
+                    this.drawError();
+                    this.animate();
+                    return;
+                }
+
+                this.errorTextText = null;
+                this.pBorder.clear();
                 this.drawError();
                 this.animate();
-                return;
-              }
-      
-              this.errorTextText = null;
-              this.pBorder.clear();
-              this.drawError();
-              this.animate();
             }
-            // const { tileX, tileWidth } = getTilePosAndDimensions(
-            //   this.calculateZoomLevel(),
-            // )
-      
+
             this.setVisibleTiles(tiles);
         }
 
@@ -267,11 +269,12 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
          */
         shouldCombineTiles() {
             return (
-                this.originalSpec.dataTransform?.find(t => t.type === 'displace') &&
-                this.visibleAndFetchedTiles()?.[0]?.tileData &&
-                // we do not need to combine tiles w/ multivec, vector, matrix
-                !this.visibleAndFetchedTiles()?.[0]?.tileData.dense
-            ) || this.originalSpec.data?.type === 'bam' // BAM data fetcher already combines the datasets;
+                (this.originalSpec.dataTransform?.find(t => t.type === 'displace') &&
+                    this.visibleAndFetchedTiles()?.[0]?.tileData &&
+                    // we do not need to combine tiles w/ multivec, vector, matrix
+                    !this.visibleAndFetchedTiles()?.[0]?.tileData.dense) ||
+                this.originalSpec.data?.type === 'bam'
+            ); // BAM data fetcher already combines the datasets;
         }
 
         /**
@@ -355,7 +358,6 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
          * Return the generated gosling track model.
          */
         preprocessTile(tile: any) {
-            console.log('preprocessTile', tile);
             if (tile.mergedToAnotherTile) {
                 tile.goslingModels = [];
                 return;
@@ -381,7 +383,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                     // we do not draw matrix ourselves, higlass does.
                     return;
                 }
-                console.log(tile)
+                // console.log(tile);
                 if (!tile.gos.tabularData) {
                     // If the data is not already stored in a tabular form, convert them.
                     const { tileX, tileWidth } = this.getTilePosAndDimensions(
@@ -425,6 +427,11 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                                 );
                                 break;
                             case 'displace':
+                                function currTime() {
+                                    const d = new Date();
+                                    return d.getTime();
+                                }
+                                const t1 = currTime();
                                 const { boundingBox, method, newField } = t;
                                 const { startField, endField } = boundingBox;
 
@@ -448,40 +455,75 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                                 }
 
                                 if (method === 'pile') {
-                                    const { maxRows } = t;
-                                    const boundingBoxes: { start: number; end: number; row: number }[] = [];
+                                    const oldAlgorithm = false;
 
-                                    base.sort(
-                                        (a: Datum, b: Datum) => (a[startField] as number) - (b[startField] as number)
-                                    ).forEach((d: Datum) => {
-                                        const start = (d[startField] as number) - padding;
-                                        const end = (d[endField] as number) + padding;
+                                    if(oldAlgorithm) {
+                                        const { maxRows } = t;
+                                        const boundingBoxes: { start: number; end: number; row: number }[] = [];
 
-                                        const overlapped = boundingBoxes.filter(
-                                            box =>
-                                                (box.start === start && end === box.end) ||
-                                                (box.start <= start && start < box.end) ||
-                                                (box.start < end && end <= box.end) ||
-                                                (start < box.start && box.end < end)
-                                        );
+                                        base.sort(
+                                            (a: Datum, b: Datum) => (a[startField] as number) - (b[startField] as number)
+                                        ).forEach((d: Datum) => {
+                                            const start = (d[startField] as number) - padding;
+                                            const end = (d[endField] as number) + padding;
 
-                                        // find the lowest non overlapped row
-                                        const uniqueRows = [
-                                            ...Array.from(new Set(boundingBoxes.map(d => d.row))),
-                                            Math.max(...boundingBoxes.map(d => d.row)) + 1
-                                        ];
-                                        const overlappedRows = overlapped.map(d => d.row);
-                                        const lowestNonOverlappedRow = Math.min(
-                                            ...uniqueRows.filter(d => overlappedRows.indexOf(d) === -1)
-                                        );
+                                            const overlapped = boundingBoxes.filter(
+                                                box =>
+                                                    (box.start === start && end === box.end) ||
+                                                    (box.start <= start && start < box.end) ||
+                                                    (box.start < end && end <= box.end) ||
+                                                    (start < box.start && box.end < end)
+                                            );
 
-                                        // row index starts from zero
-                                        const row: number = overlapped.length === 0 ? 0 : lowestNonOverlappedRow;
+                                            // find the lowest non overlapped row
+                                            const uniqueRows = [
+                                                ...Array.from(new Set(boundingBoxes.map(d => d.row))),
+                                                Math.max(...boundingBoxes.map(d => d.row)) + 1
+                                            ];
+                                            const overlappedRows = overlapped.map(d => d.row);
+                                            const lowestNonOverlappedRow = Math.min(
+                                                ...uniqueRows.filter(d => overlappedRows.indexOf(d) === -1)
+                                            );
 
-                                        d[newField] = `${maxRows && maxRows <= row ? maxRows - 1 : row}`;
+                                            // row index starts from zero
+                                            const row: number = overlapped.length === 0 ? 0 : lowestNonOverlappedRow;
 
-                                        boundingBoxes.push({ start, end, row });
-                                    });
+                                            d[newField] = `${maxRows && maxRows <= row ? maxRows - 1 : row}`;
+
+                                            boundingBoxes.push({ start, end, row });
+                                        });
+                                    } else {
+                                        const { maxRows } = t;
+                                        const occupiedSpaceInRows: { start: number; end: number }[] = [];
+
+                                        base.sort(
+                                            (a: Datum, b: Datum) => (a[startField] as number) - (b[startField] as number)
+                                        ).forEach((d: Datum) => {
+                                            const start = (d[startField] as number) - padding;
+                                            const end = (d[endField] as number) + padding;
+
+                                            // Find a row to place this segment
+                                            let rowIndex = occupiedSpaceInRows.findIndex(d => {
+                                                // Find a space and update the occupancy info.
+                                                if(end < d.start) {
+                                                    d.start = start;
+                                                    return true;
+                                                } else if(d.end < start) {
+                                                    d.end = end;
+                                                    return true;
+                                                }
+                                                return false;
+                                            });
+
+                                            if(rowIndex === -1) {
+                                                // We did not find sufficient space from the existing rows, so add a new row.
+                                                occupiedSpaceInRows.push({ start, end });
+                                                rowIndex = occupiedSpaceInRows.length - 1;
+                                            }
+
+                                            d[newField] = `${maxRows && maxRows <= rowIndex ? maxRows - 1 : rowIndex}`;
+                                        });
+                                    }
                                 } else if (method === 'spread') {
                                     const boundingBoxes: { start: number; end: number }[] = [];
 
@@ -529,6 +571,8 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                                         boundingBoxes.push({ start, end });
                                     });
                                 }
+                                const t2 = currTime();
+                                console.log('Piling time:', t2 - t1, 'ms');
                                 break;
                         }
                     });
@@ -577,24 +621,24 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
         }
 
         getIndicesOfVisibleDataInTile(tile: any) {
-            // const visible = this._xScale.range();
+            const visible = this._xScale.range();
 
-            // if (!this.tilesetInfo) return [null, null];
+            if (!this.tilesetInfo) return [null, null];
 
-            // const { tileX, tileWidth } = this.getTilePosAndDimensions(
-            //     tile.gos.zoomLevel,
-            //     tile.gos.tilePos,
-            //     this.tilesetInfo.bins_per_dimension || this.tilesetInfo?.tile_size
-            // );
+            const { tileX, tileWidth } = this.getTilePosAndDimensions(
+                tile.gos.zoomLevel,
+                tile.gos.tilePos,
+                this.tilesetInfo.bins_per_dimension || this.tilesetInfo?.tile_size
+            );
 
-            // const tileXScale = scaleLinear()
-            //     .domain([0, this.tilesetInfo?.tile_size || this.tilesetInfo?.bins_per_dimension])
-            //     .range([tileX, tileX + tileWidth]);
+            const tileXScale = scaleLinear()
+                .domain([0, this.tilesetInfo?.tile_size || this.tilesetInfo?.bins_per_dimension])
+                .range([tileX, tileX + tileWidth]);
 
-            // const start = Math.max(0, Math.round(tileXScale.invert(this._xScale.invert(visible[0]))));
-            // const end = Math.min(tile.gos.dense.length, Math.round(tileXScale.invert(this._xScale.invert(visible[1]))));
+            const start = Math.max(0, Math.round(tileXScale.invert(this._xScale.invert(visible[0]))));
+            const end = Math.min(tile.gos.dense.length, Math.round(tileXScale.invert(this._xScale.invert(visible[1]))));
 
-            // return [start, end];
+            return [start, end];
         }
 
         drawTile(tile: any) {

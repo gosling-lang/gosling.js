@@ -19,17 +19,17 @@ export const EX_SPEC_PILEUP: GoslingSpec = {
             xe: { field: 'to', type: 'genomic' },
             // opacity: { value: 0.1 },
             displacement: {
-                type: 'pile',
+                type: 'pile'
             },
             // y: { field: 'TRAIT', type: 'nominal' },
             // row: { field: 'CATEGORY', type: 'nominal', domain: colorDomain },
             // color: { field: 'CATEGORY', type: 'nominal', domain: colorDomain, range: colorRange },
             // size: { value: 3 },
-            // stroke: { value: 'black' },
-            // strokeWidth: { value: 0.5 },
+            stroke: { value: 'black' },
+            strokeWidth: { value: 0.5 },
             style: { outlineWidth: 0.5 },
-            width: 550,
-            height: 200
+            width: 750,
+            height: 400
         }
     ]
 };

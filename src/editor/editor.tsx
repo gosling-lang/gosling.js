@@ -685,7 +685,7 @@ function Editor(props: any) {
                                                                             {Object.keys(row).map(
                                                                                 (field: string, j: number) => (
                                                                                     <td key={j}>
-                                                                                        {row[field].toString()}
+                                                                                        {row[field]?.toString()}
                                                                                     </td>
                                                                                 )
                                                                             )}

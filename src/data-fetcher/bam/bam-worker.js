@@ -412,7 +412,7 @@ const init = (uid, bamUrl, baiUrl, chromSizesUrl) => {
     // TODO: Example URL
     // chromSizesUrl = `https://s3.amazonaws.com/gosling-lang.org/data/${'hg18'}.chrom.sizes`;
     chromSizesUrl = 'https://aveit.s3.amazonaws.com/higlass/data/sequence/hg38.mod.chrom.sizes';
-    
+
     if (!bamFiles[bamUrl]) {
         bamFiles[bamUrl] = new BamFile({
             bamUrl,
@@ -426,12 +426,13 @@ const init = (uid, bamUrl, baiUrl, chromSizesUrl) => {
     if (chromSizesUrl) {
         // if no chromsizes are passed in, we'll retrieve them
         // from the BAM file
-        chromSizes[chromSizesUrl] = chromSizes[chromSizesUrl] || 
+        chromSizes[chromSizesUrl] =
+            chromSizes[chromSizesUrl] ||
             new Promise(resolve => {
                 ChromosomeInfo(chromSizesUrl, resolve);
             });
     }
-    
+
     dataConfs[uid] = {
         bamUrl,
         chromSizesUrl
@@ -779,7 +780,7 @@ let allIndexes = new Int32Array(allIndexesLength);
 function currTime() {
     const d = new Date();
     return d.getTime();
-  }
+}
 
 const getTabularData = (uid, tileIds) => {
     const allSegments = {};
@@ -797,11 +798,11 @@ const getTabularData = (uid, tileIds) => {
 
     const t1 = currTime();
     const segmentList = Object.values(allSegments);
-    const buffer = Buffer.from(JSON.stringify(segmentList)).buffer
+    const buffer = Buffer.from(JSON.stringify(segmentList)).buffer;
     const t2 = currTime();
     // console.log('renderSegments time:', t2 - t1, 'ms');
     return Transfer(buffer, [buffer]);
-}
+};
 
 const renderSegments = (uid, tileIds, domain, scaleRange, position, dimensions, prevRows, trackOptions) => {
     const t1 = currTime();
@@ -836,7 +837,7 @@ const renderSegments = (uid, tileIds, domain, scaleRange, position, dimensions, 
     }
     let grouped = null;
 
-    // group by some attribute or don't
+    // group by some attribute or don't, e.g., strand
     if (groupBy) {
         let groupByOption = trackOptions && trackOptions.groupBy;
         groupByOption = groupByOption ? groupByOption : null;

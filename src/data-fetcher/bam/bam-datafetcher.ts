@@ -26,7 +26,7 @@ class BAMDataFetcher {
         this.assembly = 'hg38';
         this.fetchTimeout = null;
         this.toFetch = new Set();
-        
+
         this.initPromise = this.worker.then((tileFunctions: any) => {
             if (dataConfig.url && !dataConfig.bamUrl) {
                 dataConfig['bamUrl'] = dataConfig.url;
@@ -43,8 +43,8 @@ class BAMDataFetcher {
     }
 
     /*
-        * Collect Tileset Information, such as tile size and genomic positions
-        */
+     * Collect Tileset Information, such as tile size and genomic positions
+     */
     tilesetInfo(callback?: any) {
         this.worker.then((tileFunctions: any) => {
             tileFunctions.tilesetInfo(this.uid).then(callback);
