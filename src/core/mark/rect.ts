@@ -44,8 +44,23 @@ export function drawRect(HGC: any, trackInfo: any, tile: any, model: GoslingTrac
     const yCategories = (model.getChannelDomainArray('y') as string[]) ?? ['___SINGLE_Y_POSITION___'];
     const cellHeight = rowHeight / yCategories.length;
 
+    const textures: { [color: number]: PIXI.Texture }= {};
+    const getTexture = (color: number) => {
+        if(textures[color]) {
+            return textures[color];
+        } else {
+            const g = new PIXI.Graphics();
+            g.beginFill(color);
+            g.drawRect(0, 0, 1, 1);
+            g.endFill();
+            textures[color] = HGC.services.pixiRenderer.generateTexture(g);
+            return 
+        }
+    }
+
     /* render */
     const g = tile.graphics;
+    const entireG = new PIXI.Graphics();
     rowCategories.forEach(rowCategory => {
         const rowPosition = model.encodedValue('row', rowCategory);
 
@@ -153,12 +168,12 @@ export function drawRect(HGC: any, trackInfo: any, tile: any, model: GoslingTrac
             const { xs, xe, y, absoluteHeight, ys, ye, color, stroke, strokeWidth, opacity, datum } = prop;
 
             // stroke
-            g.lineStyle(
-                strokeWidth,
-                colorToHex(stroke),
-                opacity, // alpha
-                0.5 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
-            );
+            // g.lineStyle(
+            //     strokeWidth,
+            //     colorToHex(stroke),
+            //     opacity, // alpha
+            //     0.5 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
+            // );
 
             if (circular) {
                 if (xe < 0 || trackWidth < xs) {
@@ -186,8 +201,24 @@ export function drawRect(HGC: any, trackInfo: any, tile: any, model: GoslingTrac
                 g.arc(cx, cy, farR, endRad, startRad, false);
                 g.closePath();
             } else {
-                g.beginFill(colorToHex(color === 'none' ? 'white' : color), color === 'none' ? 0 : opacity);
-                g.drawRect(xs, rowPosition + ys / yScaleFactor, xe - xs, (ye - ys) / yScaleFactor);
+                // Think of using geometry instead:
+                // https://github.com/higlass/higlass-pileup/blob/8538a34c6d884c28455d6178377ee1ea2c2c90ae/src/PileupTrack.js#L379
+
+                const colorHex = colorToHex(color === 'none' ? 'white' : color);
+                const s = new PIXI.Sprite(getTexture(colorHex));
+
+                //Change the sprite's position
+                s.x = xs;
+                s.y = rowPosition + ys / yScaleFactor;
+                
+                s.width = xe - xs; 
+                s.height = (ye - ys) / yScaleFactor;
+
+                g.addChild(s);
+                // entireG.addChild(s);
+
+                // g.beginFill(colorToHex(color === 'none' ? 'white' : color), color === 'none' ? 0 : opacity);
+                // g.drawRect(xs, rowPosition + ys / yScaleFactor, xe - xs, (ye - ys) / yScaleFactor);
 
                 /* SVG data */
                 trackInfo.svgData.push({ type: 'rect', xs, xe, ys, ye, color, stroke, opacity });
@@ -202,6 +233,15 @@ export function drawRect(HGC: any, trackInfo: any, tile: any, model: GoslingTrac
             }
         });
     });
+
+    // const entireSprite = new PIXI.Sprite(HGC.services.pixiRenderer.generateTexture(entireG));
+    // entireSprite.x = tileX;
+    // entireSprite.y = 0;
+    // entireSprite.height = trackHeight;
+    // entireSprite.width = tileWidth;
+    //  g.addChild(entireSprite);
+    // entireSprite
+    console.log('trackInfo.tooltips.length', trackInfo.tooltips.length);
 }
 
 export function rectProperty(

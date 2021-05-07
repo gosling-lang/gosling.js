@@ -493,6 +493,8 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                                             boundingBoxes.push({ start, end, row });
                                         });
                                     } else {
+                                        // This piling algorithm is based on 
+                                        // https://github.com/higlass/higlass-pileup/blob/8538a34c6d884c28455d6178377ee1ea2c2c90ae/src/bam-fetcher-worker.js#L626
                                         const { maxRows } = t;
                                         const occupiedSpaceInRows: { start: number; end: number }[] = [];
 
