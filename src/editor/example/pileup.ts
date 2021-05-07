@@ -7,6 +7,7 @@ export const EX_SPEC_PILEUP: GoslingSpec = {
     layout: 'linear',
     centerRadius: 0.05,
     xDomain: { chromosome: '1', interval: [137750, 138450] },
+    // xDomain: { chromosome: '1', interval: [0, 200000] },
     tracks: [
         {
             data: {
@@ -28,8 +29,8 @@ export const EX_SPEC_PILEUP: GoslingSpec = {
             stroke: { value: 'black' },
             strokeWidth: { value: 0.5 },
             style: { outlineWidth: 0.5 },
-            width: 750,
-            height: 400
+            width: 1050,
+            height: 1050
         }
     ]
 };

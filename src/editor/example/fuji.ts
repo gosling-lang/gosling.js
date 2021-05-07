@@ -60,7 +60,7 @@ export const EX_SPEC_FUJI_PLOT: GoslingSpec = {
                 separator: '\t'
             },
             mark: 'rect',
-            stackY: true,
+            // stackY: true,
             x: { field: 'BP', type: 'genomic' },
             size: { value: 12 },
             color: { field: 'CATEGORY', type: 'nominal', domain: colorDomain, range: colorRange, legend: true },

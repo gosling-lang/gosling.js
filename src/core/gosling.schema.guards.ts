@@ -220,7 +220,7 @@ export function IsStackedChannel(track: SingleTrack, channelKey: keyof typeof Ch
  */
 export function getValueUsingChannel(datum: { [k: string]: string | number }, channel: Channel) {
     if (IsChannelDeep(channel) && channel.field) {
-        return datum[channel.field];
+        return datum[channel?.field];
     }
     return undefined;
 }

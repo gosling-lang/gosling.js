@@ -117,11 +117,10 @@ export function drawBar(trackInfo: any, tile: any, model: GoslingTrackModel) {
             // const g = tile.graphics; //new HGC.libraries.PIXI.Graphics();
             const rowPosition = model.encodedValue('row', rowCategory);
 
-            data.filter(
-                d =>
-                    !getValueUsingChannel(d, spec.row as Channel) ||
-                    (getValueUsingChannel(d, spec.row as Channel) as string) === rowCategory
-            ).forEach(d => {
+            data.filter(d => {
+                const rowValue = getValueUsingChannel(d, spec.row as Channel);
+                return !rowValue || rowValue === rowCategory;
+            }).forEach(d => {
                 const color = model.encodedPIXIProperty('color', d);
                 const stroke = model.encodedPIXIProperty('stroke', d);
                 const strokeWidth = model.encodedPIXIProperty('strokeWidth', d);

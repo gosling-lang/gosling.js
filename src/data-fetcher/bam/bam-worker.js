@@ -1022,15 +1022,16 @@ const renderSegments = (uid, tileIds, domain, scaleRange, position, dimensions, 
                 xLeft = from;
                 xRight = to;
 
-                if (segment.strand === '+' && trackOptions.plusStrandColor) {
-                    addRect(xLeft, yTop, xRight - xLeft, height, PILEUP_COLOR_IXS.PLUS_STRAND);
-                } else if (segment.strand === '-' && trackOptions.minusStrandColor) {
-                    addRect(xLeft, yTop, xRight - xLeft, height, PILEUP_COLOR_IXS.MINUS_STRAND);
-                } else {
-                    addRect(xLeft, yTop, xRight - xLeft, height, PILEUP_COLOR_IXS.BG);
-                }
+                // if (segment.strand === '+' && trackOptions.plusStrandColor) {
+                //     addRect(xLeft, yTop, xRight - xLeft, height, PILEUP_COLOR_IXS.PLUS_STRAND);
+                // } else if (segment.strand === '-' && trackOptions.minusStrandColor) {
+                //     addRect(xLeft, yTop, xRight - xLeft, height, PILEUP_COLOR_IXS.MINUS_STRAND);
+                // } else {
+                addRect(xLeft, yTop, xRight - xLeft, height, PILEUP_COLOR_IXS.BG);
+                // }
 
                 for (const substitution of segment.substitutions) {
+                    return;
                     xLeft = xScale(segment.from + substitution.pos);
                     const width = Math.max(1, xScale(substitution.length) - xScale(0));
                     const insertionWidth = Math.max(1, xScale(0.1) - xScale(0));
@@ -1096,6 +1097,7 @@ const renderSegments = (uid, tileIds, domain, scaleRange, position, dimensions, 
     }
 
     const positionsBuffer = allPositions.slice(0, currPosition).buffer;
+    console.log(allPositions);
     const colorsBuffer = allColors.slice(0, currColor).buffer;
     const ixBuffer = allIndexes.slice(0, currIdx).buffer;
 

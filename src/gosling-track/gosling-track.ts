@@ -1,4 +1,4 @@
-import { sampleSize, uniqBy } from 'lodash';
+import { debounce, sampleSize, uniqBy } from 'lodash';
 import { scaleLinear } from 'd3-scale';
 import { drawMark } from '../core/mark';
 import { GoslingTrackModel } from '../core/gosling-track-model';
@@ -12,8 +12,44 @@ import { calculateData, concatString, filterData, replaceString, splitExon } fro
 import { getTabularData } from './data-abstraction';
 import { BAMDataFetcher } from '../data-fetcher/bam';
 import { spawn, Worker } from 'threads';
+import Logging from '../core/utils/log';
 
 const BINS_PER_TILE = 1024;
+export const PILEUP_COLORS = {
+    BG: [0.89, 0.89, 0.89, 1], // gray for the read background
+    BG2: [0.85, 0.85, 0.85, 1], // used as alternating color in the read counter band
+    BG_MUTED: [0.92, 0.92, 0.92, 1], // covergae background, when it is not exact
+    A: [0, 0, 1, 1], // blue for A
+    C: [1, 0, 0, 1], // red for c
+    G: [0, 1, 0, 1], // green for g
+    T: [1, 1, 0, 1], // yellow for T
+    S: [0, 0, 0, 0.5], // darker grey for soft clipping
+    H: [0, 0, 0, 0.5], // darker grey for hard clipping
+    X: [0, 0, 0, 0.7], // black for unknown
+    I: [1, 0, 1, 0.5], // purple for insertions
+    D: [1, 0.5, 0.5, 0.5], // pink-ish for deletions
+    N: [1, 1, 1, 1],
+    BLACK: [0, 0, 0, 1],
+    BLACK_05: [0, 0, 0, 0.5],
+    PLUS_STRAND: [0.75, 0.75, 1, 1],
+    MINUS_STRAND: [1, 0.75, 0.75, 1]
+};
+const createColorTexture = (PIXI: any, colors: any) => {
+    const colorTexRes = Math.max(2, Math.ceil(Math.sqrt(colors.length)));
+    const rgba = new Float32Array(colorTexRes ** 2 * 4);
+    colors.forEach((color: any, i: any) => {
+        // eslint-disable-next-line prefer-destructuring
+        rgba[i * 4] = color[0]; // r
+        // eslint-disable-next-line prefer-destructuring
+        rgba[i * 4 + 1] = color[1]; // g
+        // eslint-disable-next-line prefer-destructuring
+        rgba[i * 4 + 2] = color[2]; // b
+        // eslint-disable-next-line prefer-destructuring
+        rgba[i * 4 + 3] = color[3]; // a
+    });
+
+    return [PIXI.Texture.fromBuffer(rgba, colorTexRes, colorTexRes), colorTexRes];
+};
 
 // For using libraries, refer to https://github.com/higlass/higlass/blob/f82c0a4f7b2ab1c145091166b0457638934b15f3/app/scripts/configs/available-for-plugins.js
 // `getTilePosAndDimensions()` definition: https://github.com/higlass/higlass/blob/1e1146409c7d7c7014505dd80d5af3e9357c77b6/app/scripts/Tiled1DPixiTrack.js#L133
@@ -50,6 +86,36 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             this.originalSpec = this.options.spec;
             this.tileSize = this.tilesetInfo?.tile_size ?? 1024;
 
+            this.valueScaleTransform = HGC.libraries.d3Zoom.zoomIdentity;
+
+            // we scale the entire view up until a certain point
+            // at which point we redraw everything to get rid of
+            // artifacts
+            // this.drawnAtScale keeps track of the scale at which
+            // we last rendered everything
+            this.drawnAtScale = HGC.libraries.d3Scale.scaleLinear();
+            this.prevRows = [];
+            this.coverage = {};
+            // The bp distance for which the samples are chosen for the coverage.
+            this.coverageSamplingDistance = 1;
+
+            // graphics for highliting reads under the cursor
+            this.mouseOverGraphics = new HGC.libraries.PIXI.Graphics();
+            this.loadingText = new HGC.libraries.PIXI.Text('Loading', {
+                fontSize: '12px',
+                fontFamily: 'Arial',
+                fill: 'grey'
+            });
+
+            this.loadingText.x = 100;
+            this.loadingText.y = 100;
+
+            this.loadingText.anchor.x = 0;
+            this.loadingText.anchor.y = 0;
+
+            this.fetching = new Set();
+            this.rendering = new Set();
+
             const { valid, errorMessages } = validateTrack(this.originalSpec);
 
             if (!valid) {
@@ -67,6 +133,67 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             this.textsBeingUsed = 0; // this variable is being used to improve the performance of text rendering
 
             HGC.libraries.PIXI.GRAPHICS_CURVES.adaptive = false; // This improve the arc/link rendering performance
+        }
+
+        setUpShaderAndTextures() {
+            const colorDict = PILEUP_COLORS;
+
+            if (this.options && this.options.colorScale) {
+                [
+                    colorDict.A,
+                    colorDict.T,
+                    colorDict.G,
+                    colorDict.C,
+                    colorDict.N,
+                    colorDict.X
+                ] = this.options.colorScale.map((x: any) => this.colorToArray(x));
+            }
+
+            if (this.options && this.options.plusStrandColor) {
+                colorDict.PLUS_STRAND = this.colorToArray(this.options.plusStrandColor);
+            }
+
+            if (this.options && this.options.minusStrandColor) {
+                colorDict.MINUS_STRAND = this.colorToArray(this.options.minusStrandColor);
+            }
+
+            const colors = Object.values(colorDict);
+
+            const [colorMapTex, colorMapTexRes] = createColorTexture(HGC.libraries.PIXI, colors);
+            const uniforms = new HGC.libraries.PIXI.UniformGroup({
+                uColorMapTex: colorMapTex,
+                uColorMapTexRes: colorMapTexRes
+            });
+            this.shader = HGC.libraries.PIXI.Shader.from(
+                `
+          attribute vec2 position;
+          attribute float aColorIdx;
+          uniform mat3 projectionMatrix;
+          uniform mat3 translationMatrix;
+          uniform sampler2D uColorMapTex;
+          uniform float uColorMapTexRes;
+          varying vec4 vColor;
+          void main(void)
+          {
+              // Half a texel (i.e., pixel in texture coordinates)
+              float eps = 0.5 / uColorMapTexRes;
+              float colorRowIndex = floor((aColorIdx + eps) / uColorMapTexRes);
+              vec2 colorTexIndex = vec2(
+                (aColorIdx / uColorMapTexRes) - colorRowIndex + eps,
+                (colorRowIndex / uColorMapTexRes) + eps
+              );
+              vColor = texture2D(uColorMapTex, colorTexIndex);
+              gl_Position = vec4((projectionMatrix * translationMatrix * vec3(position, 1.0)).xy, 0.0, 1.0);
+          }
+      `,
+                `
+      varying vec4 vColor;
+          void main(void) {
+              gl_FragColor = vColor;
+          }
+      `,
+                uniforms
+            );
         }
 
         initTile(tile: any) {
@@ -113,6 +240,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
         }
 
         updateTile() {
+            this.setUpShaderAndTextures();
             if (this.isUpdateTileAsync()) {
                 this.worker.then((tileFunctions: any) => {
                     tileFunctions
@@ -120,11 +248,110 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                             this.dataFetcher.uid,
                             Object.values(this.fetchedTiles).map((x: any) => x.remoteId)
                         )
+                        // .renderSegments(
+                        //     this.dataFetcher.uid,
+                        //     Object.values(this.fetchedTiles).map((x: any) => x.remoteId),
+                        //     this._xScale.domain(),
+                        //     this._xScale.range(),
+                        //     this.position,
+                        //     this.dimensions,
+                        //     this.prevRows,
+                        //     this.options,
+                        //   )
+                        //   .then((toRender: any) => {
+                        //     // this.loadingText.visible = false;
+                        //     // fetchedTileKeys.forEach((x) => {
+                        //     //   this.rendering.delete(x);
+                        //     // });
+                        //     // this.updateLoadingText();
+
+                        //     this.errorTextText = null;
+                        //     this.pBorder.clear();
+                        //     this.drawError();
+                        //     this.animate();
+
+                        //     this.positions = new Float32Array(toRender.positionsBuffer);
+                        //     this.colors = new Float32Array(toRender.colorsBuffer);
+                        //     this.ixs = new Int32Array(toRender.ixBuffer);
+
+                        //     console.log('this.positions', this.positions, this.colors, this.ixs);
+
+                        //     const newGraphics = new HGC.libraries.PIXI.Graphics();
+
+                        //     this.prevRows = toRender.rows;
+                        //     this.coverage = toRender.coverage;
+                        //     this.coverageSamplingDistance = toRender.coverageSamplingDistance;
+
+                        //     const geometry = new HGC.libraries.PIXI.Geometry().addAttribute(
+                        //       'position',
+                        //       this.positions,
+                        //       2,
+                        //     ); // x,y
+                        //     geometry.addAttribute('aColorIdx', this.colors, 1);
+                        //     geometry.addIndex(this.ixs);
+
+                        //     if (this.positions.length) {
+                        //       const state = new HGC.libraries.PIXI.State();
+                        //       const mesh = new HGC.libraries.PIXI.Mesh(
+                        //         geometry,
+                        //         this.shader,
+                        //         state,
+                        //       );
+
+                        //       newGraphics.addChild(mesh);
+                        //     }
+
+                        //     this.pMain.x = this.position[0];
+
+                        //     if (this.segmentGraphics) {
+                        //       this.pMain.removeChild(this.segmentGraphics);
+                        //     }
+
+                        //     this.pMain.addChild(newGraphics);
+                        //     this.segmentGraphics = newGraphics;
+
+                        //     // remove and add again to place on top
+                        //     // this.pMain.removeChild(this.mouseOverGraphics);
+                        //     // this.pMain.addChild(this.mouseOverGraphics);
+
+                        //     this.yScaleBands = {};
+                        //     // for (let key in this.prevRows) {
+                        //     //   this.yScaleBands[key] = HGC.libraries.d3Scale
+                        //     //     .scaleBand()
+                        //     //     .domain(
+                        //     //       HGC.libraries.d3Array.range(
+                        //     //         0,
+                        //     //         this.prevRows[key].rows.length,
+                        //     //       ),
+                        //     //     )
+                        //     //     .range([this.prevRows[key].start, this.prevRows[key].end])
+                        //     //     .paddingInner(0.2);
+                        //     // }
+
+                        //     this.drawnAtScale = HGC.libraries.d3Scale
+                        //       .scaleLinear()
+                        //       .domain(toRender.xScaleDomain)
+                        //       .range(toRender.xScaleRange);
+
+                        //     this.scaleScalableGraphics(
+                        //       this.segmentGraphics,
+                        //       this._xScale,
+                        //       this.drawnAtScale,
+                        //     );
+
+                        //     // if somebody zoomed vertically, we want to readjust so that
+                        //     // they're still zoomed in vertically
+                        //     this.segmentGraphics.scale.y = this.valueScaleTransform.k;
+                        //     this.segmentGraphics.position.y = this.valueScaleTransform.y;
+
+                        //     this.draw();
+                        //     this.animate();
+                        //   });
                         .then((toRender: any) => {
-                            this.animate(); // This function force to redraw, which is often used with async functions.
+                            // this.animate(); // This function force to redraw, which is often used with async functions.
 
                             const tiles = this.visibleAndFetchedTiles();
-                            // console.log(tiles);
+                            console.log(tiles);
 
                             const tabularData = JSON.parse(Buffer.from(toRender).toString());
                             if (tiles?.[0]) {
@@ -143,9 +370,10 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                             this.visibleAndFetchedTiles().forEach((tile: any) => {
                                 this.renderTile(tile);
                             });
+
+                            this.draw();
+                            this.animate();
                         });
-                    this.draw();
-                    this.animate();
                 });
                 return;
             }
@@ -171,16 +399,20 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             tile.mouseOverData = null;
             tile.graphics.clear();
             tile.graphics.removeChildren();
-            this.pBackground.clear();
-            this.pBackground.removeChildren();
-            this.pBorder.clear();
-            this.pBorder.removeChildren();
             tile.drawnAtScale = this._xScale.copy(); // being used in `draw()` internally
+
+            // this.pMain.clear();
+            // this.pMain.removeChildren();
 
             if (!tile.goslingModels) {
                 // We do not have a track model prepared to visualize
                 return;
             }
+
+            this.pBackground.clear();
+            this.pBackground.removeChildren();
+            this.pBorder.clear();
+            this.pBorder.removeChildren();
 
             // A single tile contains one or multiple gosling visualizations that are overlaid
             tile.goslingModels.forEach((tm: GoslingTrackModel) => {
@@ -191,8 +423,36 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                     return;
                 }
 
+                Logging.recordTime('drawMark');
                 drawMark(HGC, this, tile, tm, this.options.theme);
+                Logging.printTime('drawMark');
             });
+        }
+
+        scaleScalableGraphics(graphics: any, xScale: any, drawnAtScale: any) {
+            const tileK =
+                (drawnAtScale.domain()[1] - drawnAtScale.domain()[0]) / (xScale.domain()[1] - xScale.domain()[0]);
+            const newRange = xScale.domain().map(drawnAtScale);
+
+            const posOffset = newRange[0];
+            graphics.scale.x = tileK;
+            graphics.position.x = -posOffset * tileK;
+        }
+
+        /**
+         * Called when location or zoom level has been changed by click-and-drag interaction
+         * For brushing, refer to https://github.com/higlass/higlass/blob/caf230b5ee41168ea491572618612ac0cc804e5a/app/scripts/HeatmapTiledPixiTrack.js#L1493
+         * @param newXScale
+         * @param newYScale
+         */
+        zoomed(newXScale: any, newYScale: any) {
+            super.zoomed(newXScale, newYScale);
+
+            if (this.segmentGraphics) {
+                this.scaleScalableGraphics(this.segmentGraphics, newXScale, this.drawnAtScale);
+            }
+
+            this.animate();
         }
 
         /**
@@ -457,12 +717,13 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                                 if (method === 'pile') {
                                     const oldAlgorithm = false;
 
-                                    if(oldAlgorithm) {
+                                    if (oldAlgorithm) {
                                         const { maxRows } = t;
                                         const boundingBoxes: { start: number; end: number; row: number }[] = [];
 
                                         base.sort(
-                                            (a: Datum, b: Datum) => (a[startField] as number) - (b[startField] as number)
+                                            (a: Datum, b: Datum) =>
+                                                (a[startField] as number) - (b[startField] as number)
                                         ).forEach((d: Datum) => {
                                             const start = (d[startField] as number) - padding;
                                             const end = (d[endField] as number) + padding;
@@ -493,13 +754,14 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                                             boundingBoxes.push({ start, end, row });
                                         });
                                     } else {
-                                        // This piling algorithm is based on 
+                                        // This piling algorithm is based on
                                         // https://github.com/higlass/higlass-pileup/blob/8538a34c6d884c28455d6178377ee1ea2c2c90ae/src/bam-fetcher-worker.js#L626
                                         const { maxRows } = t;
                                         const occupiedSpaceInRows: { start: number; end: number }[] = [];
 
                                         base.sort(
-                                            (a: Datum, b: Datum) => (a[startField] as number) - (b[startField] as number)
+                                            (a: Datum, b: Datum) =>
+                                                (a[startField] as number) - (b[startField] as number)
                                         ).forEach((d: Datum) => {
                                             const start = (d[startField] as number) - padding;
                                             const end = (d[endField] as number) + padding;
@@ -507,17 +769,17 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                                             // Find a row to place this segment
                                             let rowIndex = occupiedSpaceInRows.findIndex(d => {
                                                 // Find a space and update the occupancy info.
-                                                if(end < d.start) {
+                                                if (end < d.start) {
                                                     d.start = start;
                                                     return true;
-                                                } else if(d.end < start) {
+                                                } else if (d.end < start) {
                                                     d.end = end;
                                                     return true;
                                                 }
                                                 return false;
                                             });
 
-                                            if(rowIndex === -1) {
+                                            if (rowIndex === -1) {
                                                 // We did not find sufficient space from the existing rows, so add a new row.
                                                 occupiedSpaceInRows.push({ start, end });
                                                 rowIndex = occupiedSpaceInRows.length - 1;

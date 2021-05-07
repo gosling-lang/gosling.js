@@ -164,7 +164,6 @@ export interface SingleTrack extends CommonTrackDef {
     visibility?: VisibilityCondition[];
 
     // Experimental
-    stackY?: boolean; // Will be deprecated.
     flipY?: boolean; // This is only supported for `link` marks.
     stretch?: boolean; // Stretch the size to the given range? (e.g., [x, xe])
     overrideTemplate?: boolean; // Override a spec template that is defined for a given data type.
