@@ -218,25 +218,25 @@ export function drawRect(HGC: any, trackInfo: any, tile: any, model: GoslingTrac
             // Stroke
             {
                 // LT
-                positions.push(xs-1, rowPosition + ys-1);
+                positions.push(xs - 1, rowPosition + ys - 1);
                 const LTI = positions.length / 2.0 - 1;
 
                 // RT
-                positions.push(xe+1, rowPosition + ys-1);
+                positions.push(xe + 1, rowPosition + ys - 1);
                 const RTI = positions.length / 2.0 - 1;
 
                 // LB
-                positions.push(xs-1, rowPosition + ye+1);
+                positions.push(xs - 1, rowPosition + ye + 1);
                 const LBI = positions.length / 2.0 - 1;
 
                 // RB
-                positions.push(xe+1, rowPosition + ye+1);
+                positions.push(xe + 1, rowPosition + ye + 1);
                 const RBI = positions.length / 2.0 - 1;
 
                 ixs.push(LTI, RTI, LBI, LBI, RBI, RTI);
                 colorIdx.push(5, 5, 5, 5);
             }
-            
+
             // LT
             positions.push(xs, rowPosition + ys);
             const LTI = positions.length / 2.0 - 1;
@@ -286,9 +286,9 @@ export function drawRect(HGC: any, trackInfo: any, tile: any, model: GoslingTrac
         }
     });
     // });
-    
+
     setUpShaderAndTextures(trackInfo, HGC);
-    
+
     trackInfo.errorTextText = null;
     trackInfo.pBorder.clear();
     trackInfo.drawError();
@@ -355,7 +355,7 @@ export function drawRect(HGC: any, trackInfo: any, tile: any, model: GoslingTrac
     // trackInfo.segmentGraphics.scale.y = trackInfo.valueScaleTransform.k;
     // trackInfo.segmentGraphics.position.y = trackInfo.valueScaleTransform.y;
 
-    console.log('Total # of Rect', trackInfo.tooltips.length);
+    // console.log('Total # of Rect', trackInfo.tooltips.length);
 }
 
 export function rectProperty(

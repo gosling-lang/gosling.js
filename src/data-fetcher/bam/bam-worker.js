@@ -1,7 +1,7 @@
 import { text } from 'd3-request';
 import { bisector, range } from 'd3-array';
 import { tsvParseRows } from 'd3-dsv';
-import { scaleLinear, scaleBand } from 'd3-scale';
+import { scaleLinear, scaleBand, scaleOrdinal } from 'd3-scale';
 import { expose, Transfer } from 'threads/worker';
 import { BamFile } from '@gmod/bam';
 import LRU from 'lru-cache';
@@ -1097,7 +1097,7 @@ const renderSegments = (uid, tileIds, domain, scaleRange, position, dimensions, 
     }
 
     const positionsBuffer = allPositions.slice(0, currPosition).buffer;
-    console.log(allPositions);
+    // console.log(allPositions);
     const colorsBuffer = allColors.slice(0, currColor).buffer;
     const ixBuffer = allIndexes.slice(0, currIdx).buffer;
 
@@ -1118,13 +1118,311 @@ const renderSegments = (uid, tileIds, domain, scaleRange, position, dimensions, 
     return Transfer(objData, [objData.positionsBuffer, colorsBuffer, ixBuffer]);
 };
 
+function getValueUsingChannel(datum, channel) {
+    if (channel && channel.field) {
+        return datum[channel.field];
+    }
+    return undefined;
+}
+
+function visualPropertyByChannel(spec, channelKey, datum) {
+    const value = datum !== undefined ? getValueUsingChannel(datum, spec[channelKey]) : undefined; // Is this safe enough?
+    return encodedValue(spec, channelKey, value);
+}
+
+function IsChannelDeep(channel) {
+    return typeof channel === 'object' && !('value' in channel);
+}
+
+function IsChannelValue(channel) {
+    return channel !== null && typeof channel === 'object' && 'value' in channel;
+}
+
+function encodedValue(spec, channelKey, value) {
+    if (channelKey === 'text' && value !== undefined) {
+        return `${+value ? ~~value : value}`;
+        // TODO: Better formatting?
+        // return `${+value ? (+value - ~~value) > 0 ? (+value).toExponential(1) : ~~value : value}`;
+    }
+
+    const channel = spec[channelKey];
+    const channelFieldType = IsChannelDeep(channel) ? channel.type : IsChannelValue(channel) ? 'constant' : undefined;
+
+    if (!channelFieldType) {
+        // Shouldn't be reached. Channel should be either encoded with data or a constant value.
+        return undefined;
+    }
+
+    if (channelFieldType === 'constant') {
+        // Just return the constant value.
+        return channel.value;
+    }
+
+    if (value === undefined) {
+        // Value is undefined, so returning undefined.
+        return undefined;
+    }
+
+    // if (typeof this.channelScales[channelKey] !== 'function') {
+    //     // Scale is undefined, so returning undefined.
+    //     return undefined;
+    // }
+
+    // The type of a channel scale is determined by a { channel type, field type } pair
+    switch (channelKey) {
+        case 'x':
+        case 'y':
+        case 'x1':
+        case 'y1':
+        case 'xe':
+        case 'ye':
+        case 'x1e':
+            if (channelFieldType === 'quantitative' || channelFieldType === 'genomic') {
+                return scaleLinear().domain(channel.domain).range(channel.range)(value);
+            }
+            if (channelFieldType === 'nominal') {
+                return scaleBand().domain(channel.domain).range(channel.range)(value);
+            }
+            break;
+        case 'color':
+        case 'stroke':
+            if (channelFieldType === 'quantitative') {
+                return scaleLinear().domain(channel.domain).range(channel.range)(value);
+            }
+            if (channelFieldType === 'nominal') {
+                return scaleOrdinal().domain(channel.domain).range(channel.range)(value);
+            }
+            /* genomic is not supported */
+            break;
+        case 'size':
+            if (channelFieldType === 'quantitative') {
+                return scaleLinear().domain(channel.domain).range(channel.range)(value);
+            }
+            if (channelFieldType === 'nominal') {
+                return scaleOrdinal().domain(channel.domain).range(channel.range)(value);
+            }
+            /* genomic is not supported */
+            break;
+        case 'row':
+            /* quantitative is not supported */
+            if (channelFieldType === 'nominal') {
+                return scaleBand().domain(channel.domain).range(channel.range)(value);
+            }
+            /* genomic is not supported */
+            break;
+        case 'strokeWidth':
+        case 'opacity':
+            if (channelFieldType === 'quantitative') {
+                return scaleLinear().domain(channel.domain).range(channel.range)(value);
+            }
+            /* nominal is not supported */
+            /* genomic is not supported */
+            break;
+        default:
+            console.warn(`${channelKey} is not supported for encoding values, so returning a undefined value`);
+            return undefined;
+    }
+}
+
+/**
+ * Retrieve an encoded visual property of a visual mark.
+ */
+function encodedPIXIProperty(spec, propertyKey, datum, additionalInfo) {
+    const mark = spec.mark;
+
+    // if (!IsShallowMark(mark)) {
+    //     // we do not consider deep marks, yet
+    //     return undefined;
+    // }
+
+    // common visual properties, not specific to visual marks
+    if (
+        ['text', 'color', 'row', 'stroke', 'opacity', 'strokeWidth', 'x', 'y', 'xe', 'x1', 'x1e', 'size'].includes(
+            propertyKey
+        )
+    ) {
+        return visualPropertyByChannel(spec, propertyKey, datum);
+    }
+
+    switch (mark) {
+        case 'bar':
+        // return barProperty(this, propertyKey, datum, additionalInfo);
+        case 'point':
+        case 'text':
+            // return pointProperty(this, propertyKey, datum);
+            return undefined;
+        case 'rect':
+            return rectProperty(spec, propertyKey, datum, additionalInfo);
+        default:
+            // Mark type that is not supported yet
+            return undefined;
+    }
+}
+function rectProperty(spec, propertyKey, datum, additionalInfo) {
+    switch (propertyKey) {
+        case 'width':
+            const width =
+                // (1) size
+                visualPropertyByChannel(spec, 'xe', datum)
+                    ? visualPropertyByChannel(spec, 'xe', datum) - visualPropertyByChannel(spec, 'x', datum)
+                    : additionalInfo.markWidth; // (2) unit mark height
+            return width === 0 ? 0.1 : width; // TODO: not sure if this is necessary for all cases. Perhaps, we can have an option.
+        case 'height':
+            return (
+                // (1) size
+                visualPropertyByChannel(spec, 'size', datum) || additionalInfo.markHeight
+                // (2) unit mark height
+            );
+        default:
+            return undefined;
+    }
+}
+
+function getChannelDomainArray(spec, channelKey) {
+    const c = spec[channelKey];
+    return c && c.domain ? c.domain : undefined;
+}
+const rectProperties = (spec, data, trackWidth, trackHeight, tileSize, xDomain, xRange, tileX, tileWidth) => {
+    /* track spec */
+    // const spec = model.spec();
+
+    /* data */
+    // const data = model.data();
+
+    /* track size */
+    // const trackWidth = trackInfo.dimensions[0];
+    // const trackHeight = trackInfo.dimensions[1];
+    // const tileSize = trackInfo.tilesetInfo.tile_size;
+
+    /* circular parameters */
+    const circular = spec.layout === 'circular';
+
+    if(spec.x) {
+        spec.x.domain = xDomain;
+        spec.x.range = xRange;
+    }
+    if(spec.xe) {
+        spec.xe.domain = xDomain;
+        spec.xe.range = xRange;
+    }
+
+    /* genomic scale */
+    // const xScale = trackInfo._xScale;
+    const xScale = scaleLinear().domain(xDomain).range(xRange);
+    const tileUnitWidth = xScale(tileX + tileWidth / tileSize) - xScale(tileX);
+
+    /* row separation */
+    const rowCategories = getChannelDomainArray(spec, 'row') || ['___SINGLE_ROW___'];
+    const rowHeight = trackHeight / rowCategories.length;
+
+    // TODO: what if quantitative Y field is used?
+    const yCategories = getChannelDomainArray(spec, 'y') || ['___SINGLE_Y_POSITION___'];
+    const cellHeight = rowHeight / yCategories.length;
+
+    const visualProperties = [];
+    const positions = [];
+    const ixs = [];
+    const colorIdx = [];
+
+    /* Properties */
+    data.forEach(d => {
+        const rowPosition = encodedPIXIProperty(spec, 'row', d);
+        const x = encodedPIXIProperty(spec, 'x', d);
+        const color = encodedPIXIProperty(spec, 'color', d);
+        const stroke = encodedPIXIProperty(spec, 'stroke', d);
+        const strokeWidth = encodedPIXIProperty(spec, 'strokeWidth', d);
+        const opacity = encodedPIXIProperty(spec, 'opacity', d);
+        const rectWidth = encodedPIXIProperty(spec, 'width', d, { markWidth: tileUnitWidth });
+        const rectHeight = encodedPIXIProperty(spec, 'height', d, { markHeight: cellHeight });
+        let y = encodedPIXIProperty(spec, 'y', d) - rectHeight / 2.0; // It is top posiiton now
+
+        const alphaTransition = 1;
+        // model.markVisibility(d, {
+        //     width: rectWidth,
+        //     zoomLevel: xScale.invert(trackWidth) - xScale.invert(0)
+        // });
+        const actualOpacity = Math.min(alphaTransition, opacity);
+
+        if (actualOpacity === 0 || rectHeight === 0 || rectWidth <= 0.0001) {
+            // No need to draw invisible objects
+            // return;
+        }
+
+        const xs = x;
+        const xe = x + rectWidth;
+        const ys = rowPosition + y;
+        const ye = ys + rectHeight;
+        y = y + rectHeight / 2.0;
+
+        if (circular) {
+            // .. do not support this yet
+        } else {
+            /* SVG data */
+            // Stroke
+            {
+                // LT
+                positions.push(xs, ys);
+                const LTI = positions.length / 2.0 - 1;
+
+                // RT
+                positions.push(xe, ys);
+                const RTI = positions.length / 2.0 - 1;
+
+                // LB
+                positions.push(xs, ye);
+                const LBI = positions.length / 2.0 - 1;
+
+                // RB
+                positions.push(xe, ye);
+                const RBI = positions.length / 2.0 - 1;
+
+                ixs.push(LTI, RTI, LBI, LBI, RBI, RTI);
+                colorIdx.push(14, 14, 14, 14);
+            }
+
+            // LT
+            positions.push(xs+1, ys+1);
+            const LTI = positions.length / 2.0 - 1;
+
+            // RT
+            positions.push(xe-1, ys+1);
+            const RTI = positions.length / 2.0 - 1;
+
+            // LB
+            positions.push(xs+1, ye-1);
+            const LBI = positions.length / 2.0 - 1;
+
+            // RB
+            positions.push(xe-1, ye-1);
+            const RBI = positions.length / 2.0 - 1;
+
+            ixs.push(LTI, RTI, LBI, LBI, RBI, RTI);
+            colorIdx.push(0, 0, 0, 0);
+
+            // visualProperties.push({ xs, xe, ys, ye, color, stroke, strokeWidth, opacity });
+        }
+    });
+    // const buffer = Buffer.from(JSON.stringify(visualProperties)).buffer;
+    // return Transfer(buffer, [buffer]);
+
+    const posB = Buffer.from(JSON.stringify(positions)).buffer;
+    const ixsB = Buffer.from(JSON.stringify(ixs)).buffer;
+    const colorIdxB = Buffer.from(JSON.stringify(colorIdx)).buffer;
+    const objData = { posB, ixsB, colorIdxB };
+
+    const buffer = Buffer.from(JSON.stringify({ positions, ixs, colorIdx })).buffer;
+    return Transfer(buffer, [buffer]);
+    // return Transfer(objData, [posB, ixsB, colorIdxB]);
+};
+
 const tileFunctions = {
     init,
     tilesetInfo,
     fetchTilesDebounced,
     tile,
     getTabularData,
-    renderSegments
+    renderSegments,
+    rectProperties
 };
 
 expose(tileFunctions);

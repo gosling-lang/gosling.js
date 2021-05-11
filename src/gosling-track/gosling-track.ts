@@ -135,6 +135,368 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             HGC.libraries.PIXI.GRAPHICS_CURVES.adaptive = false; // This improve the arc/link rendering performance
         }
 
+        /* 
+         * ==============================================================================================
+         * RENDERING CYCLE ==============================================================================
+         * ==============================================================================================
+         */
+
+        /*
+         * Rerender all tiles every time track size is changed.
+         * (https://github.com/higlass/higlass/blob/54f5aae61d3474f9e868621228270f0c90ef9343/app/scripts/PixiTrack.js#L186).
+         */
+        setDimensions(newDimensions: any) {
+            console.log('setDimensions()');
+
+            this.oldDimensions = this.dimensions;
+            super.setDimensions(newDimensions); // This function simply updates `this._xScale` and `this._yScale`
+
+            // const visibleAndFetched = this.visibleAndFetchedTiles();
+            // visibleAndFetched.map((tile: any) => this.initTile(tile));
+        }
+
+        /**
+         * Record new position.
+         */
+        setPosition(newPosition: any) {
+            console.log('setPosition()');
+            
+            super.setPosition(newPosition); // This function simply changes `this.position`
+
+            [this.pMain.position.x, this.pMain.position.y] = this.position;
+            // [this.pMouseOver.position.x, this.pMouseOver.position.y] = this.position;
+
+            // [this.loadingText.x, this.loadingText.y] = newPosition;
+        }
+
+        /**
+         * A function to redraw this track. Typically called when an asynchronous event occurs (i.e. tiles loaded)
+         * (https://github.com/higlass/higlass/blob/54f5aae61d3474f9e868621228270f0c90ef9343/app/scripts/TiledPixiTrack.js#L71)
+         */
+        forceDraw() {
+            // console.log('forceDraw()');
+
+            this.animate(); 
+        }
+
+        /**
+         * Called when location or zoom level has been changed by click-and-drag interaction
+         * (https://github.com/higlass/higlass/blob/54f5aae61d3474f9e868621228270f0c90ef9343/app/scripts/HorizontalLine1DPixiTrack.js#L215)
+         * For brushing, refer to https://github.com/higlass/higlass/blob/caf230b5ee41168ea491572618612ac0cc804e5a/app/scripts/HeatmapTiledPixiTrack.js#L1493
+         */
+        zoomed(newXScale: any, newYScale: any) {
+            // console.log('zoomed()');
+
+            super.zoomed(newXScale, newYScale); // This function updates `this._xScale` and `this._yScale` and call this.draw();
+            this.xScale(newXScale);
+            this.yScale(newYScale);
+            // this.refreshTilesDebounced(); // this.refreshTiles();
+
+            if (this.segmentGraphics) {
+                // console.log("zoomed.scaleScalableGraphics");
+                this.scaleScalableGraphics(this.segmentGraphics, newXScale, this.drawnAtScale);
+            }
+
+            this.draw();
+            this.forceDraw();
+        }
+
+        /*
+         * Initialize variables upon receiving tiles. Called from `receivedTiles()`. Nextly called function is `updateTile()`.
+         * (https://github.com/higlass/higlass/blob/f82c0a4f7b2ab1c145091166b0457638934b15f3/app/scripts/TiledPixiTrack.js#L518)
+         */
+        initTile(tile: any) {
+            console.log('initTile()');
+
+            this.tooltips = [];
+            this.svgData = [];
+            this.textsBeingUsed = 0;
+
+            
+
+            // if (this.isUpdateTileAsync()) return;
+
+            // preprocess all tiles at once so that we can share the value scales
+            // this.preprocessAllTiles();
+
+            // this.renderTile(tile);
+        }
+
+        /*
+         * Compute something about a tile before rendering it. Nextly called function is `drawTile()`.
+         * (https://github.com/higlass/higlass/blob/f82c0a4f7b2ab1c145091166b0457638934b15f3/app/scripts/TiledPixiTrack.js#L532)
+         */
+        updateTile() {
+            // console.log('updateTile()');
+            this.setUpShaderAndTextures();
+            if (this.isUpdateTileAsync()) {
+                if(false) {
+                    this.worker.then((tileFunctions: any) => {
+                        const DOMAIN = this._xScale.domain();
+                        const RANGE = this._xScale.range();
+                        tileFunctions
+                            .renderSegments(
+                                this.dataFetcher.uid,
+                                Object.values(this.fetchedTiles).map((x: any) => x.remoteId),
+                                this._xScale.domain(),
+                                this._xScale.range(),
+                                this.position,
+                                this.dimensions,
+                                this.prevRows,
+                                this.options
+                            )
+                            .then((toRender: any) => {
+                                // this.loadingText.visible = false;
+                                // fetchedTileKeys.forEach((x) => {
+                                //   this.rendering.delete(x);
+                                // });
+                                // this.updateLoadingText();
+    
+                                this.errorTextText = null;
+                                this.pBorder.clear();
+                                this.drawError();
+                                this.forceDraw();
+    
+                                this.positions = new Float32Array(toRender.positionsBuffer);
+                                this.colors = new Float32Array(toRender.colorsBuffer);
+                                this.ixs = new Int32Array(toRender.ixBuffer);
+    
+                                console.log('this.positions', this.positions, this.colors, this.ixs);
+    
+                                const newGraphics = new HGC.libraries.PIXI.Graphics();
+    
+                                // this.prevRows = toRender.rows;
+                                // this.coverage = toRender.coverage;
+                                // this.coverageSamplingDistance = toRender.coverageSamplingDistance;
+    
+                                const geometry = new HGC.libraries.PIXI.Geometry().addAttribute(
+                                    'position',
+                                    this.positions,
+                                    2
+                                ); // x,y
+                                geometry.addAttribute('aColorIdx', this.colors, 1);
+                                geometry.addIndex(this.ixs);
+    
+                                if (this.positions.length) {
+                                    const state = new HGC.libraries.PIXI.State();
+                                    const mesh = new HGC.libraries.PIXI.Mesh(geometry, this.shader, state);
+    
+                                    newGraphics.addChild(mesh);
+                                }
+    
+                                this.pMain.x = this.position[0];
+    
+                                if (this.segmentGraphics) {
+                                    this.pMain.removeChild(this.segmentGraphics);
+                                }
+    
+                                this.pMain.addChild(newGraphics);
+                                this.segmentGraphics = newGraphics;
+    
+                                // remove and add again to place on top
+                                // this.pMain.removeChild(this.mouseOverGraphics);
+                                // this.pMain.addChild(this.mouseOverGraphics);
+    
+                                this.yScaleBands = {};
+                                // for (let key in this.prevRows) {
+                                //   this.yScaleBands[key] = HGC.libraries.d3Scale
+                                //     .scaleBand()
+                                //     .domain(
+                                //       HGC.libraries.d3Array.range(
+                                //         0,
+                                //         this.prevRows[key].rows.length,
+                                //       ),
+                                //     )
+                                //     .range([this.prevRows[key].start, this.prevRows[key].end])
+                                //     .paddingInner(0.2);
+                                // }
+    
+                                this.drawnAtScale = HGC.libraries.d3Scale
+                                    .scaleLinear()
+                                    .domain(toRender.xScaleDomain)
+                                    .range(toRender.xScaleRange);
+    
+                                    console.log('diff', this._xScale.copy().range(), RANGE, toRender.xScaleRange);
+                                this.scaleScalableGraphics(this.segmentGraphics, this._xScale, this.drawnAtScale);
+    
+                                // if somebody zoomed vertically, we want to readjust so that
+                                // they're still zoomed in vertically
+                                this.segmentGraphics.scale.y = this.valueScaleTransform.k;
+                                this.segmentGraphics.position.y = this.valueScaleTransform.y;
+    
+                                // this.draw();
+                                this.forceDraw();
+                            });
+                        });
+                } else {
+                const DOMAIN = this._xScale.domain();
+                const RANGE = this._xScale.range();
+                console.log('before', DOMAIN);
+                this.worker.then((tileFunctions: any) => {
+                    tileFunctions
+                      .getTabularData(
+                        this.dataFetcher.uid,
+                        Object.values(this.fetchedTiles).map((x: any) => x.remoteId)
+                    )
+                    .then((toRender: any) => {
+                        // this.forceDraw(); // This function force to redraw, which is often used with async functions.
+
+                        const tiles = this.visibleAndFetchedTiles();
+                        // console.log(tiles);
+
+                        const tabularData = JSON.parse(Buffer.from(toRender).toString());
+                        if (tiles?.[0]) {
+                            const tile = tiles[0];
+                            tile.tileData.tabularData = tabularData;
+                            const [refTile] = HGC.utils.trackUtils.calculate1DVisibleTiles(
+                                this.tilesetInfo,
+                                this._xScale
+                            );
+                            tile.tileData.zoomLevel = refTile[0];
+                            tile.tileData.tilePos = [refTile[1]];
+                        }
+                        // console.log('toRender', tabularData);
+                        this.preprocessAllTiles();
+
+                        // console.log('tiles', this.visibleAndFetchedTiles());
+                        this.visibleAndFetchedTiles().forEach((tile: any) => {
+                            this.renderTile(tile, DOMAIN, RANGE);
+                        });
+                        
+                        // this.draw();
+                        // this.forceDraw();
+                    });
+                });
+                }
+                return;
+            }
+
+            // preprocess all tiles at once so that we can share the value scales
+            this.preprocessAllTiles();
+
+            this.visibleAndFetchedTiles().forEach((tile: any) => {
+                this.renderTile(tile);
+            });
+
+            // TODO: Should rerender tile only when neccesary for performance
+            // e.g., changing color scale
+            // ...
+        }
+
+        /**
+         * (https://github.com/higlass/higlass/blob/54f5aae61d3474f9e868621228270f0c90ef9343/app/scripts/TiledPixiTrack.js#L727)
+         */
+         draw() {
+            // console.log('draw()');
+
+            this.tooltips = [];
+            this.svgData = [];
+            this.textsBeingUsed = 0;
+            this.mouseOverGraphics?.clear(); // remove mouse over effects
+
+            // this.pMain.clear();
+            // this.pMain.removeChildren();
+            // this.pBackground.clear();
+            // this.pBackground.removeChildren();
+            // this.pBorder.clear();
+            // this.pBorder.removeChildren();
+
+            // preprocess all tiles at once so that we can share the value scales
+            // if (this.isUpdateTileAsync()) return;
+            // this.preprocessAllTiles();
+
+            // super.draw(); // This function calls `drawTile` on each tile.
+        }
+        
+        /**
+         * This function is called from `super.draw()`.
+         */
+        drawTile(tile: any) {
+            // console.log('drawTile()');
+            // prevent BarTracks draw method from having an effect
+            // this.renderTile(tile);
+        }
+        
+        /**
+         * Rerender tiles using the new options, including the change of positions and zoom levels.
+         * (https://github.com/higlass/higlass/blob/54f5aae61d3474f9e868621228270f0c90ef9343/app/scripts/HorizontalLine1DPixiTrack.js#L75)
+         */
+        rerender(newOptions: any) {
+            // console.log('rerender()');
+
+            super.rerender(newOptions); // This calls `renderTile`
+
+            this.options = newOptions;
+
+            this.tooltips = [];
+            this.svgData = [];
+            this.textsBeingUsed = 0;
+
+            this.updateTile();
+
+            // this.draw();
+        }
+
+        isUpdateTileAsync() {
+            return this.originalSpec.data?.type === 'bam';
+        }
+
+        /*
+         * Draws exactly one tile
+         */
+        renderTile(tile: any, domain: any, range: any) {
+            // Refer to the following already supported graphics:
+            // https://github.com/higlass/higlass/blob/54f5aae61d3474f9e868621228270f0c90ef9343/app/scripts/PixiTrack.js#L115
+            tile.mouseOverData = null;
+            // tile.graphics.clear();
+            // tile.graphics.removeChildren();
+            tile.drawnAtScale = this._xScale.copy(); // being used in `draw()` internally
+
+            if (!tile.goslingModels) {
+                // We do not have a track model prepared to visualize
+                return;
+            }
+
+            // console.log('renderTile()');
+
+            // A single tile contains one or multiple gosling visualizations that are overlaid
+            tile.goslingModels.forEach((tm: GoslingTrackModel) => {
+                // check visibility condition
+                const trackWidth = this.dimensions[1];
+                const zoomLevel = this._xScale.invert(trackWidth) - this._xScale.invert(0);
+                if (!tm.trackVisibility({ zoomLevel })) {
+                    return;
+                }
+
+                // Logging.recordTime('drawMark');
+                drawMark(HGC, this, tile, tm, this.options.theme, domain, range);
+                // Logging.printTime('drawMark');
+            });
+        }
+
+        scaleScalableGraphics(graphics: any, xScale: any, drawnAtScale: any) {
+            const tileK =
+                (drawnAtScale.domain()[1] - drawnAtScale.domain()[0]) / (xScale.domain()[1] - xScale.domain()[0]);
+            const newRange = xScale.domain().map(drawnAtScale);
+
+            const posOffset = newRange[0];
+            graphics.scale.x = tileK;
+            graphics.position.x = -posOffset * tileK;
+
+            console.log('graphics.scale.x', graphics.scale.x, 'graphics.position.x', graphics.position.x, 'posOffset', posOffset);
+        }
+
+        /**
+         * Return the set of ids of all tiles which are both visible and fetched.
+         */
+        visibleAndFetchedIds() {
+            return Object.keys(this.fetchedTiles).filter(x => this.visibleTileIds.has(x));
+        }
+
+        visibleAndFetchedTiles() {
+            return this.visibleAndFetchedIds().map((x: any) => this.fetchedTiles[x]);
+        }
+
         setUpShaderAndTextures() {
             const colorDict = PILEUP_COLORS;
 
@@ -195,277 +557,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                 uniforms
             );
         }
-
-        initTile(tile: any) {
-            this.tooltips = [];
-            this.svgData = [];
-            this.textsBeingUsed = 0;
-
-            if (this.isUpdateTileAsync()) return;
-
-            // preprocess all tiles at once so that we can share the value scales
-            this.preprocessAllTiles();
-
-            this.renderTile(tile);
-        }
-
-        /**
-         * Rerender tiles using the new options, including the change of positions and zoom levels
-         */
-        rerender(newOptions: any) {
-            super.rerender(newOptions);
-
-            this.options = newOptions;
-
-            this.tooltips = [];
-            this.svgData = [];
-            this.textsBeingUsed = 0;
-
-            this.updateTile();
-
-            this.draw(); // TODO: any effect?
-        }
-
-        draw() {
-            this.tooltips = [];
-            this.svgData = [];
-            this.textsBeingUsed = 0;
-            this.mouseOverGraphics?.clear(); // remove mouse over effects
-
-            super.draw();
-        }
-
-        isUpdateTileAsync() {
-            return this.originalSpec.data?.type === 'bam';
-        }
-
-        updateTile() {
-            this.setUpShaderAndTextures();
-            if (this.isUpdateTileAsync()) {
-                this.worker.then((tileFunctions: any) => {
-                    tileFunctions
-                        .getTabularData(
-                            this.dataFetcher.uid,
-                            Object.values(this.fetchedTiles).map((x: any) => x.remoteId)
-                        )
-                        // .renderSegments(
-                        //     this.dataFetcher.uid,
-                        //     Object.values(this.fetchedTiles).map((x: any) => x.remoteId),
-                        //     this._xScale.domain(),
-                        //     this._xScale.range(),
-                        //     this.position,
-                        //     this.dimensions,
-                        //     this.prevRows,
-                        //     this.options,
-                        //   )
-                        //   .then((toRender: any) => {
-                        //     // this.loadingText.visible = false;
-                        //     // fetchedTileKeys.forEach((x) => {
-                        //     //   this.rendering.delete(x);
-                        //     // });
-                        //     // this.updateLoadingText();
-
-                        //     this.errorTextText = null;
-                        //     this.pBorder.clear();
-                        //     this.drawError();
-                        //     this.animate();
-
-                        //     this.positions = new Float32Array(toRender.positionsBuffer);
-                        //     this.colors = new Float32Array(toRender.colorsBuffer);
-                        //     this.ixs = new Int32Array(toRender.ixBuffer);
-
-                        //     console.log('this.positions', this.positions, this.colors, this.ixs);
-
-                        //     const newGraphics = new HGC.libraries.PIXI.Graphics();
-
-                        //     this.prevRows = toRender.rows;
-                        //     this.coverage = toRender.coverage;
-                        //     this.coverageSamplingDistance = toRender.coverageSamplingDistance;
-
-                        //     const geometry = new HGC.libraries.PIXI.Geometry().addAttribute(
-                        //       'position',
-                        //       this.positions,
-                        //       2,
-                        //     ); // x,y
-                        //     geometry.addAttribute('aColorIdx', this.colors, 1);
-                        //     geometry.addIndex(this.ixs);
-
-                        //     if (this.positions.length) {
-                        //       const state = new HGC.libraries.PIXI.State();
-                        //       const mesh = new HGC.libraries.PIXI.Mesh(
-                        //         geometry,
-                        //         this.shader,
-                        //         state,
-                        //       );
-
-                        //       newGraphics.addChild(mesh);
-                        //     }
-
-                        //     this.pMain.x = this.position[0];
-
-                        //     if (this.segmentGraphics) {
-                        //       this.pMain.removeChild(this.segmentGraphics);
-                        //     }
-
-                        //     this.pMain.addChild(newGraphics);
-                        //     this.segmentGraphics = newGraphics;
-
-                        //     // remove and add again to place on top
-                        //     // this.pMain.removeChild(this.mouseOverGraphics);
-                        //     // this.pMain.addChild(this.mouseOverGraphics);
-
-                        //     this.yScaleBands = {};
-                        //     // for (let key in this.prevRows) {
-                        //     //   this.yScaleBands[key] = HGC.libraries.d3Scale
-                        //     //     .scaleBand()
-                        //     //     .domain(
-                        //     //       HGC.libraries.d3Array.range(
-                        //     //         0,
-                        //     //         this.prevRows[key].rows.length,
-                        //     //       ),
-                        //     //     )
-                        //     //     .range([this.prevRows[key].start, this.prevRows[key].end])
-                        //     //     .paddingInner(0.2);
-                        //     // }
-
-                        //     this.drawnAtScale = HGC.libraries.d3Scale
-                        //       .scaleLinear()
-                        //       .domain(toRender.xScaleDomain)
-                        //       .range(toRender.xScaleRange);
-
-                        //     this.scaleScalableGraphics(
-                        //       this.segmentGraphics,
-                        //       this._xScale,
-                        //       this.drawnAtScale,
-                        //     );
-
-                        //     // if somebody zoomed vertically, we want to readjust so that
-                        //     // they're still zoomed in vertically
-                        //     this.segmentGraphics.scale.y = this.valueScaleTransform.k;
-                        //     this.segmentGraphics.position.y = this.valueScaleTransform.y;
-
-                        //     this.draw();
-                        //     this.animate();
-                        //   });
-                        .then((toRender: any) => {
-                            // this.animate(); // This function force to redraw, which is often used with async functions.
-
-                            const tiles = this.visibleAndFetchedTiles();
-                            console.log(tiles);
-
-                            const tabularData = JSON.parse(Buffer.from(toRender).toString());
-                            if (tiles?.[0]) {
-                                const tile = tiles[0];
-                                tile.tileData.tabularData = tabularData;
-                                const [refTile] = HGC.utils.trackUtils.calculate1DVisibleTiles(
-                                    this.tilesetInfo,
-                                    this._xScale
-                                );
-                                tile.tileData.zoomLevel = refTile[0];
-                                tile.tileData.tilePos = [refTile[1]];
-                            }
-                            // console.log('toRender', tabularData);
-                            this.preprocessAllTiles();
-
-                            this.visibleAndFetchedTiles().forEach((tile: any) => {
-                                this.renderTile(tile);
-                            });
-
-                            this.draw();
-                            this.animate();
-                        });
-                });
-                return;
-            }
-
-            // preprocess all tiles at once so that we can share the value scales
-            this.preprocessAllTiles();
-
-            this.visibleAndFetchedTiles().forEach((tile: any) => {
-                this.renderTile(tile);
-            });
-
-            // TODO: Should rerender tile only when neccesary for performance
-            // e.g., changing color scale
-            // ...
-        }
-
-        /*
-         * Draws exactly one tile
-         */
-        renderTile(tile: any) {
-            // Refer to the following already supported graphics:
-            // https://github.com/higlass/higlass/blob/54f5aae61d3474f9e868621228270f0c90ef9343/app/scripts/PixiTrack.js#L115
-            tile.mouseOverData = null;
-            tile.graphics.clear();
-            tile.graphics.removeChildren();
-            tile.drawnAtScale = this._xScale.copy(); // being used in `draw()` internally
-
-            // this.pMain.clear();
-            // this.pMain.removeChildren();
-
-            if (!tile.goslingModels) {
-                // We do not have a track model prepared to visualize
-                return;
-            }
-
-            this.pBackground.clear();
-            this.pBackground.removeChildren();
-            this.pBorder.clear();
-            this.pBorder.removeChildren();
-
-            // A single tile contains one or multiple gosling visualizations that are overlaid
-            tile.goslingModels.forEach((tm: GoslingTrackModel) => {
-                // check visibility condition
-                const trackWidth = this.dimensions[1];
-                const zoomLevel = this._xScale.invert(trackWidth) - this._xScale.invert(0);
-                if (!tm.trackVisibility({ zoomLevel })) {
-                    return;
-                }
-
-                Logging.recordTime('drawMark');
-                drawMark(HGC, this, tile, tm, this.options.theme);
-                Logging.printTime('drawMark');
-            });
-        }
-
-        scaleScalableGraphics(graphics: any, xScale: any, drawnAtScale: any) {
-            const tileK =
-                (drawnAtScale.domain()[1] - drawnAtScale.domain()[0]) / (xScale.domain()[1] - xScale.domain()[0]);
-            const newRange = xScale.domain().map(drawnAtScale);
-
-            const posOffset = newRange[0];
-            graphics.scale.x = tileK;
-            graphics.position.x = -posOffset * tileK;
-        }
-
-        /**
-         * Called when location or zoom level has been changed by click-and-drag interaction
-         * For brushing, refer to https://github.com/higlass/higlass/blob/caf230b5ee41168ea491572618612ac0cc804e5a/app/scripts/HeatmapTiledPixiTrack.js#L1493
-         * @param newXScale
-         * @param newYScale
-         */
-        zoomed(newXScale: any, newYScale: any) {
-            super.zoomed(newXScale, newYScale);
-
-            if (this.segmentGraphics) {
-                this.scaleScalableGraphics(this.segmentGraphics, newXScale, this.drawnAtScale);
-            }
-
-            this.animate();
-        }
-
-        /**
-         * Return the set of ids of all tiles which are both visible and fetched.
-         */
-        visibleAndFetchedIds() {
-            return Object.keys(this.fetchedTiles).filter(x => this.visibleTileIds.has(x));
-        }
-
-        visibleAndFetchedTiles() {
-            return this.visibleAndFetchedIds().map((x: any) => this.fetchedTiles[x]);
-        }
-
+        
         calculateVisibleTiles() {
             if (this.originalSpec.data?.type !== 'bam') {
                 super.calculateVisibleTiles();
@@ -486,14 +578,14 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                 if (tileWidth > (this.tilesetInfo.max_tile_width || DEFAULT_MAX_TILE_WIDTH)) {
                     this.errorTextText = 'Zoom in to see details';
                     this.drawError();
-                    this.animate();
+                    this.forceDraw();
                     return;
                 }
 
                 this.errorTextText = null;
                 this.pBorder.clear();
                 this.drawError();
-                this.animate();
+                this.forceDraw();
             }
 
             this.setVisibleTiles(tiles);
@@ -836,7 +928,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                                     });
                                 }
                                 const t2 = currTime();
-                                console.log('Piling time:', t2 - t1, 'ms');
+                                // console.log('Piling time:', t2 - t1, 'ms');
                                 break;
                         }
                     });
@@ -875,15 +967,6 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             return tile.goslingModels;
         }
 
-        // rerender all tiles every time track size is changed
-        setDimensions(newDimensions: any) {
-            this.oldDimensions = this.dimensions;
-            super.setDimensions(newDimensions);
-
-            const visibleAndFetched = this.visibleAndFetchedTiles();
-            visibleAndFetched.map((tile: any) => this.initTile(tile));
-        }
-
         getIndicesOfVisibleDataInTile(tile: any) {
             const visible = this._xScale.range();
 
@@ -903,11 +986,6 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             const end = Math.min(tile.gos.dense.length, Math.round(tileXScale.invert(this._xScale.invert(visible[1]))));
 
             return [start, end];
-        }
-
-        drawTile(tile: any) {
-            // prevent BarTracks draw method from having an effect
-            this.renderTile(tile);
         }
 
         /**
