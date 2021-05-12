@@ -107,32 +107,40 @@ export function calculateData(log: LogTransform, data: Datum[]): Datum[] {
  export function aggregateCoverage(_: CoverageTransform, data: Datum[], scale: ScaleLinear<any, any>): Datum[] {
     Logging.recordTime('aggregateCoverage');
 
-    const { startField, endField, newField } = _;
+    const { startField, endField, newField, groupField } = _;
 
-    const coverage: { [p: string]: number } = {};
+    const coverage: { [group: string]: { [position: string]: number }} = {};
     
     // Calculate coverage by one pixel.
     const binSize = 1;
     data.forEach(d => {
         const curStart = scale(d[startField] as number);
         const curEnd = scale(d[endField] as number);
-        
+        const group = groupField ? d[groupField] : '__NO_GROUP__';
+
         const adjustedStart = Math.floor(curStart);
         for(let i = adjustedStart; i < curEnd; i += binSize) {
-            if(!coverage[i]) {
-                coverage[i] = 0;
+            if(!coverage[group]) {
+                coverage[group] = {};
             }
-            coverage[i]++;
+            if(!coverage[group][i]) {
+                coverage[group][i] = 0;
+            }
+            coverage[group][i]++;
         }
     });
 
-    const output = Object.entries(coverage).map(entry => {
-        const [key, value] = entry;
-        return {
-            [startField]: scale.invert(+key),
-            [endField]: scale.invert(+key + binSize),
-            [newField ?? 'coverage']: value
-        }
+    const output = Object.entries(coverage).flatMap(group => {
+        const [groupName, coverageRecords] = group;
+        return Object.entries(coverageRecords).map(entry => {
+            const [key, value] = entry;
+            return {
+                [startField]: scale.invert(+key),
+                [endField]: scale.invert(+key + binSize),
+                [newField ?? 'coverage']: value,
+                [groupField ?? 'group']: groupName
+            }
+        });
     });
     
     // console.log(coverage);
@@ -144,7 +152,7 @@ export function displace(t: DisplaceTransform, data: Datum[], scale: ScaleLinear
     Logging.recordTime('displace()');
 
     const { boundingBox, method, newField } = t;
-    const { startField, endField } = boundingBox;
+    const { startField, endField, groupField } = boundingBox;
 
     let padding = 0; // This is a pixel value.
     if (boundingBox.padding && scale) {
@@ -208,17 +216,25 @@ export function displace(t: DisplaceTransform, data: Datum[], scale: ScaleLinear
             // This piling algorithm is based on
             // https://github.com/higlass/higlass-pileup/blob/8538a34c6d884c28455d6178377ee1ea2c2c90ae/src/bam-fetcher-worker.js#L626
             const { maxRows } = t;
-            const occupiedSpaceInRows: { start: number; end: number }[] = [];
+            const occupiedSpaceInRows: { [group: string]: { start: number; end: number }[]} = {};
 
-            base.sort(
+            const sorted = base.sort(
                 (a: Datum, b: Datum) =>
                     (a[startField] as number) - (b[startField] as number)
-            ).forEach((d: Datum) => {
+            )
+                        
+            sorted.forEach((d: Datum) => {
                 const start = (d[startField] as number) - padding;
                 const end = (d[endField] as number) + padding;
 
+                // Create object if none
+                const group = groupField ? d[groupField] : '__NO_GROUP__';
+                if(!occupiedSpaceInRows[group]) {
+                    occupiedSpaceInRows[group] = [];
+                }
+
                 // Find a row to place this segment
-                let rowIndex = occupiedSpaceInRows.findIndex(d => {
+                let rowIndex = occupiedSpaceInRows[group].findIndex(d => {
                     // Find a space and update the occupancy info.
                     if (end < d.start) {
                         d.start = start;
@@ -232,8 +248,8 @@ export function displace(t: DisplaceTransform, data: Datum[], scale: ScaleLinear
 
                 if (rowIndex === -1) {
                     // We did not find sufficient space from the existing rows, so add a new row.
-                    occupiedSpaceInRows.push({ start, end });
-                    rowIndex = occupiedSpaceInRows.length - 1;
+                    occupiedSpaceInRows[group].push({ start, end });
+                    rowIndex = occupiedSpaceInRows[group].length - 1;
                 }
 
                 d[newField] = `${maxRows && maxRows <= rowIndex ? maxRows - 1 : rowIndex}`;

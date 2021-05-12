@@ -14,7 +14,8 @@ import { getTabularData } from './data-abstraction';
 import { BAMDataFetcher } from '../data-fetcher/bam';
 import { spawn, Worker } from 'threads';
 
-const PRINT_RENDERING_CYCLE = true;
+// Set `true` to print in what order each function is called
+const PRINT_RENDERING_CYCLE = false;
 
 function usePrereleaseRendering(spec: SingleTrack | OverlaidTrack) {
     return spec.prerelease?.testUsingNewRectRenderingForBAM && spec.data?.type === 'bam';
@@ -134,13 +135,19 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
         zoomed(newXScale: any, newYScale: any) {
             if(PRINT_RENDERING_CYCLE) console.warn('zoomed()');
 
-            super.zoomed(newXScale, newYScale); // This function updates `this._xScale` and `this._yScale` and call this.draw();
+            // super.zoomed(newXScale, newYScale); // This function updates `this._xScale` and `this._yScale` and call this.draw();
+            this.xScale(newXScale);
+            this.yScale(newYScale);
+
+            this.refreshTiles();
 
             if (this.scalableGraphics) {
                 this.scaleScalableGraphics(this.scalableGraphics, newXScale, this.drawnAtScale);
             }
 
-            this.draw();
+            if(!usePrereleaseRendering(this.originalSpec)) {
+                this.draw();
+            }
             this.forceDraw();
         }
 

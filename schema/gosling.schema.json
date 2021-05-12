@@ -438,6 +438,9 @@
         "endField": {
           "type": "string"
         },
+        "groupField": {
+          "type": "string"
+        },
         "newField": {
           "type": "string"
         },
@@ -620,6 +623,9 @@
           "additionalProperties": false,
           "properties": {
             "endField": {
+              "type": "string"
+            },
+            "groupField": {
               "type": "string"
             },
             "padding": {

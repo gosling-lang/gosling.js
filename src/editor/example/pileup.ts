@@ -18,12 +18,12 @@ export const EX_SPEC_PILEUP: GoslingSpec = {
                 // url: 'https://s3.amazonaws.com/gosling-lang.org/data/example_higlass.bam'
                 url: 'https://aveit.s3.amazonaws.com/higlass/bam/example_higlass.bam'
             },
-            dataTransform: [{ type: 'coverage', startField: 'from', endField: 'to' }],
+            dataTransform: [{ type: 'coverage', startField: 'from', endField: 'to', groupField: 'strand'}],
             mark: 'bar',
             x: { field: 'from', type: 'genomic' },
             xe: { field: 'to', type: 'genomic' },
             y: { field: 'coverage', type: 'quantitative' },
-            // color: { field: 'coverage', type: 'quantitative' },
+            color: { field: 'strand', type: 'nominal', domain: ['+', '-'], range: ['steelblue', 'salmon'] },
             width: 650,
             height: 80
         },
@@ -35,19 +35,20 @@ export const EX_SPEC_PILEUP: GoslingSpec = {
                 // url: 'https://s3.amazonaws.com/gosling-lang.org/data/example_higlass.bam'
                 url: 'https://aveit.s3.amazonaws.com/higlass/bam/example_higlass.bam'
             },
+            dataTransform: [
+                { type: 'displace', method: 'pile', boundingBox: {startField: 'from', endField: 'to', groupField: 'strand' }, newField: 'pileup-row' }
+            ],
             mark: 'rect',
             x: { field: 'from', type: 'genomic' },
             xe: { field: 'to', type: 'genomic' },
-            // opacity: { value: 0.1 },
-            displacement: {
-                type: 'pile'
-            },
-            // y: { field: 'TRAIT', type: 'nominal' },
-            // row: { field: 'CATEGORY', type: 'nominal', domain: colorDomain },
-            color: { field: 'strand', type: 'nominal', range: ['steelblue', 'salmon'] },
-            // size: { value: 3 },
+            // displacement: {
+            //     type: 'pile'
+            // },
+            y: { field: 'pileup-row', type: 'nominal', "flip": true },
+            row: { field: 'strand', type: 'nominal', domain: ['+', '-'] },
+            color: { field: 'strand', type: 'nominal', domain: ['+', '-'], range: ['steelblue', 'salmon'] },
             stroke: { value: 'black' },
-            strokeWidth: { value: 0.5 },
+            strokeWidth: { value: 0.01 },
             style: { outlineWidth: 0.5 },
             width: 650,
             height: 450

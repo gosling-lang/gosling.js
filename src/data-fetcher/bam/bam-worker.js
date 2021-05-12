@@ -1,4 +1,5 @@
 import { text } from 'd3-request';
+import { group } from 'd3-array';
 import { bisector, range } from 'd3-array';
 import { tsvParseRows } from 'd3-dsv';
 import { color } from 'd3-color';
@@ -1455,6 +1456,22 @@ const rectProperties = (spec, data, trackWidth, trackHeight, tileSize, xDomain, 
     return Transfer(buffer, [buffer]);
 };
 
+function getGenomicChannel(spec) {
+    return getGenomicChannelFromTrack(spec);
+}
+
+function getGenomicChannelFromTrack(track) {
+    // we do not support using two genomic coordinates yet
+    let genomicChannel = undefined;
+    ['x', 'y', 'xe', 'ye', 'x1', 'y1', 'x1e', 'y1e'].reverse().forEach(channelType => {
+        const channel = track[channelType];
+        if (IsChannelDeep(channel) && channel.type === 'genomic') {
+            genomicChannel = channel;
+        }
+    });
+    return genomicChannel;
+}
+
 function IsStackedMark(track) {
     return (
         (track.mark === 'bar' || track.mark === 'area' || track.mark === 'text') &&
@@ -1530,7 +1547,7 @@ const barProperties = (spec, data, trackWidth, trackHeight, tileSize, xDomain, x
         // TODO: many parts in this scope are identical to the below `else` statement, so encaptulate this?
         // const rowGraphics = tile.graphics; // new HGC.libraries.PIXI.Graphics(); // only one row for stacked marks
 
-        const genomicChannel = getGenomicChannel();
+        const genomicChannel = getGenomicChannel(spec);
         if (!genomicChannel || !genomicChannel.field) {
             console.warn('Genomic field is not provided in the specification');
             return;
@@ -1546,7 +1563,7 @@ const barProperties = (spec, data, trackWidth, trackHeight, tileSize, xDomain, x
                 const stroke = encodedPIXIProperty(spec, 'stroke', d);
                 const strokeWidth = encodedPIXIProperty(spec, 'strokeWidth', d);
                 const opacity = encodedPIXIProperty(spec, 'opacity', d);
-                const y = encodedPIXIProperty(spec, 'y', d);
+                let y = encodedPIXIProperty(spec, 'y', d);
 
                 const barWidth = encodedPIXIProperty(spec, 'width', d, { tileUnitWidth });
                 const barStartX = encodedPIXIProperty(spec, 'x-start', d, { markWidth: barWidth });
@@ -1563,14 +1580,14 @@ const barProperties = (spec, data, trackWidth, trackHeight, tileSize, xDomain, x
                 const xe = barStartX + barWidth;
                 const ys = rowHeight - y - prevYEnd;
                 const ye = rowHeight - prevYEnd;
-                y = (ye + ys) / 2.0;
+                // y = (ye + ys) / 2.0;
 
-                g.lineStyle(
-                    strokeWidth,
-                    colorToHex(stroke),
-                    actualOpacity,
-                    0 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
-                );
+                // g.lineStyle(
+                //     strokeWidth,
+                //     colorToHex(stroke),
+                //     actualOpacity,
+                //     0 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
+                // );
 
                 if (circular) {
                     // do not support yet

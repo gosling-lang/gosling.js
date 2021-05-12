@@ -481,6 +481,7 @@ export interface DisplaceTransform {
         startField: string; // The name of a quantitative field that represents the start position
         endField: string; // The name of a quantitative field that represents the end position
         padding?: number; // TODO: this should be considered as a pixel value
+        groupField?: string; // The name of a nominal field to group rows by in prior to piling-up
     };
     method: DisplacementType;
     newField: string;
@@ -504,6 +505,7 @@ export interface CoverageTransform {
     startField: string;
     endField: string;
     newField?: string;
+    groupField?: string; // The name of a nominal field to group rows by in prior to piling-up
 }
 
 /* ----------------------------- GLYPH (deprecated, but to be supported again) ----------------------------- */
