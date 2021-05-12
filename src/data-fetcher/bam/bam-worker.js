@@ -1,10 +1,22 @@
 import { text } from 'd3-request';
 import { bisector, range } from 'd3-array';
 import { tsvParseRows } from 'd3-dsv';
-import { scaleLinear, scaleBand, scaleOrdinal } from 'd3-scale';
+import { color } from 'd3-color';
+import { scaleLinear, scaleBand, scaleOrdinal, scaleSequential } from 'd3-scale';
+import { interpolateViridis } from 'd3-scale-chromatic';
 import { expose, Transfer } from 'threads/worker';
 import { BamFile } from '@gmod/bam';
 import LRU from 'lru-cache';
+
+export function colorToRGBA(colorStr, opacity = 1) {
+    let c = color(colorStr);
+
+    if (!c) {
+        c = color('gray');
+    }
+
+    return [c.rgb().r / 255.0, c.rgb().g / 255.0, c.rgb().b / 255.0, opacity];
+}
 
 export const PILEUP_COLORS = {
     BG: [0.89, 0.89, 0.89, 1], // gray for the read background
@@ -1187,7 +1199,8 @@ function encodedValue(spec, channelKey, value) {
         case 'color':
         case 'stroke':
             if (channelFieldType === 'quantitative') {
-                return scaleLinear().domain(channel.domain).range(channel.range)(value);
+                let interpolate = interpolateViridis;
+                return scaleSequential(interpolate).domain(channel.domain)(value);
             }
             if (channelFieldType === 'nominal') {
                 return scaleOrdinal().domain(channel.domain).range(channel.range)(value);
@@ -1246,7 +1259,7 @@ function encodedPIXIProperty(spec, propertyKey, datum, additionalInfo) {
 
     switch (mark) {
         case 'bar':
-        // return barProperty(this, propertyKey, datum, additionalInfo);
+            return barProperty(spec, propertyKey, datum, additionalInfo);
         case 'point':
         case 'text':
             // return pointProperty(this, propertyKey, datum);
@@ -1258,6 +1271,7 @@ function encodedPIXIProperty(spec, propertyKey, datum, additionalInfo) {
             return undefined;
     }
 }
+
 function rectProperty(spec, propertyKey, datum, additionalInfo) {
     switch (propertyKey) {
         case 'width':
@@ -1278,10 +1292,29 @@ function rectProperty(spec, propertyKey, datum, additionalInfo) {
     }
 }
 
+export function barProperty(spec, propertyKey, datum, additionalInfo) {
+    const x = visualPropertyByChannel(spec, 'x', datum);
+    const xe = visualPropertyByChannel(spec, 'xe', datum);
+    const size = visualPropertyByChannel(spec, 'size', datum);
+    switch (propertyKey) {
+        case 'width':
+            return size || (xe ? xe - x : additionalInfo.tileUnitWidth);
+        case 'x-start':
+            if (!additionalInfo.markWidth) {
+                // `markWidth` is required
+                return undefined;
+            }
+            return xe ? (x + xe - additionalInfo.markWidth) / 2.0 : x - additionalInfo.markWidth / 2.0;
+        default:
+            return undefined;
+    }
+}
+
 function getChannelDomainArray(spec, channelKey) {
     const c = spec[channelKey];
     return c && c.domain ? c.domain : undefined;
 }
+
 const rectProperties = (spec, data, trackWidth, trackHeight, tileSize, xDomain, xRange, tileX, tileWidth) => {
     /* track spec */
     // const spec = model.spec();
@@ -1297,17 +1330,16 @@ const rectProperties = (spec, data, trackWidth, trackHeight, tileSize, xDomain, 
     /* circular parameters */
     const circular = spec.layout === 'circular';
 
-    if(spec.x) {
+    if (spec.x) {
         spec.x.domain = xDomain;
         spec.x.range = xRange;
     }
-    if(spec.xe) {
+    if (spec.xe) {
         spec.xe.domain = xDomain;
         spec.xe.range = xRange;
     }
 
     /* genomic scale */
-    // const xScale = trackInfo._xScale;
     const xScale = scaleLinear().domain(xDomain).range(xRange);
     const tileUnitWidth = xScale(tileX + tileWidth / tileSize) - xScale(tileX);
 
@@ -1323,6 +1355,7 @@ const rectProperties = (spec, data, trackWidth, trackHeight, tileSize, xDomain, 
     const positions = [];
     const ixs = [];
     const colorIdx = [];
+    const colorRGBAs = []; // [[1, 0, 0, 1], ...]
 
     /* Properties */
     data.forEach(d => {
@@ -1355,11 +1388,17 @@ const rectProperties = (spec, data, trackWidth, trackHeight, tileSize, xDomain, 
         y = y + rectHeight / 2.0;
 
         if (circular) {
-            // .. do not support this yet
+            // Do not support circular layouts yet
         } else {
-            /* SVG data */
             // Stroke
-            {
+            if (strokeWidth !== 0) {
+                const rgba = colorToRGBA(stroke, actualOpacity);
+                let cidx = colorRGBAs.map(d => d.join()).indexOf(rgba.join());
+                if (cidx === -1) {
+                    colorRGBAs.push(rgba);
+                    cidx = colorRGBAs.length - 1;
+                }
+
                 // LT
                 positions.push(xs, ys);
                 const LTI = positions.length / 2.0 - 1;
@@ -1377,27 +1416,34 @@ const rectProperties = (spec, data, trackWidth, trackHeight, tileSize, xDomain, 
                 const RBI = positions.length / 2.0 - 1;
 
                 ixs.push(LTI, RTI, LBI, LBI, RBI, RTI);
-                colorIdx.push(14, 14, 14, 14);
+                colorIdx.push(cidx, cidx, cidx, cidx);
+            }
+
+            const rgba = colorToRGBA(color, actualOpacity);
+            let cidx = colorRGBAs.map(d => d.join()).indexOf(rgba.join());
+            if (cidx === -1) {
+                colorRGBAs.push(rgba);
+                cidx = colorRGBAs.length - 1;
             }
 
             // LT
-            positions.push(xs+1, ys+1);
+            positions.push(xs + strokeWidth, ys + strokeWidth);
             const LTI = positions.length / 2.0 - 1;
 
             // RT
-            positions.push(xe-1, ys+1);
+            positions.push(xe - strokeWidth, ys + strokeWidth);
             const RTI = positions.length / 2.0 - 1;
 
             // LB
-            positions.push(xs+1, ye-1);
+            positions.push(xs + strokeWidth, ye - strokeWidth);
             const LBI = positions.length / 2.0 - 1;
 
             // RB
-            positions.push(xe-1, ye-1);
+            positions.push(xe - strokeWidth, ye - strokeWidth);
             const RBI = positions.length / 2.0 - 1;
 
             ixs.push(LTI, RTI, LBI, LBI, RBI, RTI);
-            colorIdx.push(0, 0, 0, 0);
+            colorIdx.push(cidx, cidx, cidx, cidx);
 
             // visualProperties.push({ xs, xe, ys, ye, color, stroke, strokeWidth, opacity });
         }
@@ -1405,15 +1451,305 @@ const rectProperties = (spec, data, trackWidth, trackHeight, tileSize, xDomain, 
     // const buffer = Buffer.from(JSON.stringify(visualProperties)).buffer;
     // return Transfer(buffer, [buffer]);
 
-    const posB = Buffer.from(JSON.stringify(positions)).buffer;
-    const ixsB = Buffer.from(JSON.stringify(ixs)).buffer;
-    const colorIdxB = Buffer.from(JSON.stringify(colorIdx)).buffer;
-    const objData = { posB, ixsB, colorIdxB };
-
-    const buffer = Buffer.from(JSON.stringify({ positions, ixs, colorIdx })).buffer;
+    const buffer = Buffer.from(JSON.stringify({ positions, ixs, colorIdx, colorRGBAs })).buffer;
     return Transfer(buffer, [buffer]);
-    // return Transfer(objData, [posB, ixsB, colorIdxB]);
 };
+
+function IsStackedMark(track) {
+    return (
+        (track.mark === 'bar' || track.mark === 'area' || track.mark === 'text') &&
+        IsChannelDeep(track.color) &&
+        track.color.type === 'nominal' &&
+        (!track.row || IsChannelValue(track.row)) &&
+        // TODO: determine whether to use stacked bar for nominal fields or not
+        IsChannelDeep(track.y) &&
+        track.y.type === 'quantitative'
+    );
+}
+
+const barProperties = (spec, data, trackWidth, trackHeight, tileSize, xDomain, xRange, tileX, tileWidth) => {
+    /* track spec */
+    // const spec = model.spec();
+
+    // if (!spec.width || !spec.height) {
+    //     console.warn('Size of a track is not properly determined, so visual mark cannot be rendered');
+    //     return;
+    // }
+
+    if (spec.x) {
+        spec.x.domain = xDomain;
+        spec.x.range = xRange;
+    }
+    if (spec.xe) {
+        spec.xe.domain = xDomain;
+        spec.xe.range = xRange;
+    }
+
+    /* data */
+    // const data = model.data();
+
+    /* track size */
+    // const trackWidth = spec.width;
+    // const trackHeight = spec.height;
+    // const tileSize = trackInfo.tilesetInfo.tile_size;
+    // const { tileX, tileWidth } = trackInfo.getTilePosAndDimensions(tile.gos.zoomLevel, tile.gos.tilePos, tileSize);
+    const xScale = scaleLinear().domain(xDomain).range(xRange);
+    const zoomLevel = xScale.invert(trackWidth) - xScale.invert(0);
+
+    /* circular parameters */
+    const circular = spec.layout === 'circular';
+    const trackInnerRadius = spec.innerRadius || 220;
+    const trackOuterRadius = spec.outerRadius || 300; // TODO: should be smaller than Math.min(width, height)
+    const startAngle = spec.startAngle || 0;
+    const endAngle = spec.endAngle || 360;
+    const trackRingSize = trackOuterRadius - trackInnerRadius;
+    const cx = trackWidth / 2.0;
+    const cy = trackHeight / 2.0;
+
+    /* genomic scale */
+    // const xScale = model.getChannelScale('x');
+    const tileUnitWidth = xScale(tileX + tileWidth / tileSize) - xScale(tileX);
+
+    /* row separation */
+    const rowCategories = getChannelDomainArray(spec, 'row') || ['___SINGLE_ROW___'];
+    const rowHeight = trackHeight / rowCategories.length;
+
+    /* baseline */
+    const baselineValue = IsChannelDeep(spec.y) ? spec.y.baseline : undefined;
+    const baselineY = encodedValue(spec, 'y', baselineValue) || 0;
+
+    const visualProperties = [];
+    const positions = [];
+    const ixs = [];
+    const colorIdx = [];
+    const colorRGBAs = []; // [[1, 0, 0, 1], ...]
+
+    /* render */
+    const g = tile.graphics;
+    if (IsStackedMark(spec)) {
+        // TODO: many parts in this scope are identical to the below `else` statement, so encaptulate this?
+        // const rowGraphics = tile.graphics; // new HGC.libraries.PIXI.Graphics(); // only one row for stacked marks
+
+        const genomicChannel = getGenomicChannel();
+        if (!genomicChannel || !genomicChannel.field) {
+            console.warn('Genomic field is not provided in the specification');
+            return;
+        }
+        const pivotedData = group(data, d => d[genomicChannel.field]);
+        const xKeys = [...pivotedData.keys()];
+
+        // TODO: users may want to align rows by values
+        xKeys.forEach(k => {
+            let prevYEnd = 0;
+            pivotedData.get(k).forEach(d => {
+                const color = encodedPIXIProperty(spec, 'color', d);
+                const stroke = encodedPIXIProperty(spec, 'stroke', d);
+                const strokeWidth = encodedPIXIProperty(spec, 'strokeWidth', d);
+                const opacity = encodedPIXIProperty(spec, 'opacity', d);
+                const y = encodedPIXIProperty(spec, 'y', d);
+
+                const barWidth = encodedPIXIProperty(spec, 'width', d, { tileUnitWidth });
+                const barStartX = encodedPIXIProperty(spec, 'x-start', d, { markWidth: barWidth });
+
+                const alphaTransition = 1; //model.markVisibility(d, { width: barWidth, zoomLevel });
+                const actualOpacity = Math.min(alphaTransition, opacity);
+
+                if (actualOpacity === 0 || barWidth <= 0 || y <= 0) {
+                    // do not draw invisible marks
+                    // return;
+                }
+
+                const xs = barStartX;
+                const xe = barStartX + barWidth;
+                const ys = rowHeight - y - prevYEnd;
+                const ye = rowHeight - prevYEnd;
+                y = (ye + ys) / 2.0;
+
+                g.lineStyle(
+                    strokeWidth,
+                    colorToHex(stroke),
+                    actualOpacity,
+                    0 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
+                );
+
+                if (circular) {
+                    // do not support yet
+                } else {
+                    // g.beginFill(colorToHex(color), actualOpacity);
+                    // g.drawRect(barStartX, rowHeight - y - prevYEnd, barWidth, y);
+
+                    // Stroke
+                    if (strokeWidth !== 0) {
+                        const rgba = colorToRGBA(stroke, actualOpacity);
+                        let cidx = colorRGBAs.map(d => d.join()).indexOf(rgba.join());
+                        if (cidx === -1) {
+                            colorRGBAs.push(rgba);
+                            cidx = colorRGBAs.length - 1;
+                        }
+
+                        // LT
+                        positions.push(xs, ys);
+                        const LTI = positions.length / 2.0 - 1;
+
+                        // RT
+                        positions.push(xe, ys);
+                        const RTI = positions.length / 2.0 - 1;
+
+                        // LB
+                        positions.push(xs, ye);
+                        const LBI = positions.length / 2.0 - 1;
+
+                        // RB
+                        positions.push(xe, ye);
+                        const RBI = positions.length / 2.0 - 1;
+
+                        ixs.push(LTI, RTI, LBI, LBI, RBI, RTI);
+                        colorIdx.push(cidx, cidx, cidx, cidx);
+                    }
+
+                    const rgba = colorToRGBA(color, actualOpacity);
+                    let cidx = colorRGBAs.map(d => d.join()).indexOf(rgba.join());
+                    if (cidx === -1) {
+                        colorRGBAs.push(rgba);
+                        cidx = colorRGBAs.length - 1;
+                    }
+
+                    // LT
+                    positions.push(xs + strokeWidth, ys + strokeWidth);
+                    const LTI = positions.length / 2.0 - 1;
+
+                    // RT
+                    positions.push(xe - strokeWidth, ys + strokeWidth);
+                    const RTI = positions.length / 2.0 - 1;
+
+                    // LB
+                    positions.push(xs + strokeWidth, ye - strokeWidth);
+                    const LBI = positions.length / 2.0 - 1;
+
+                    // RB
+                    positions.push(xe - strokeWidth, ye - strokeWidth);
+                    const RBI = positions.length / 2.0 - 1;
+
+                    ixs.push(LTI, RTI, LBI, LBI, RBI, RTI);
+                    colorIdx.push(cidx, cidx, cidx, cidx);
+                }
+
+                prevYEnd += y;
+            });
+        });
+    } else {
+        data.forEach(d => {
+            const rowPosition = encodedPIXIProperty(spec, 'row');
+            const color = encodedPIXIProperty(spec, 'color', d);
+            const stroke = encodedPIXIProperty(spec, 'stroke', d);
+            const strokeWidth = encodedPIXIProperty(spec, 'strokeWidth', d);
+            const opacity = encodedPIXIProperty(spec, 'opacity');
+            let y = encodedPIXIProperty(spec, 'y', d); // TODO: we could even retrieve a actual y position of bars
+
+            const barWidth = encodedPIXIProperty(spec, 'width', d, { tileUnitWidth });
+            const barStartX = encodedPIXIProperty(spec, 'x-start', d, { markWidth: barWidth });
+            const barHeight = y - baselineY;
+
+            const alphaTransition = 1; //model.markVisibility(d, { width: barWidth, zoomLevel });
+            const actualOpacity = Math.min(alphaTransition, opacity);
+
+            if (actualOpacity === 0 || barWidth === 0 || y === 0) {
+                // do not draw invisible marks
+                // return;
+            }
+
+            const xs = barStartX;
+            const xe = barStartX + barWidth;
+            const ys = rowPosition + rowHeight - barHeight - baselineY;
+            const ye = rowPosition + rowHeight - baselineY;
+            y = (ye + ys) / 2.0;
+
+            // g.lineStyle(
+            //     strokeWidth,
+            //     colorToHex(stroke),
+            //     actualOpacity,
+            //     0 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
+            // );
+
+            if (circular) {
+                // do not support yet
+            } else {
+                // g.beginFill(colorToHex(color), actualOpacity);
+                // g.drawRect(barStartX, rowPosition + rowHeight - barHeight - baselineY, barWidth, barHeight);
+                
+                // Stroke
+                if (strokeWidth !== 0) {
+                    const rgba = colorToRGBA(stroke, actualOpacity);
+                    let cidx = colorRGBAs.map(d => d.join()).indexOf(rgba.join());
+                    if (cidx === -1) {
+                        colorRGBAs.push(rgba);
+                        cidx = colorRGBAs.length - 1;
+                    }
+
+                    // LT
+                    positions.push(xs, ys);
+                    const LTI = positions.length / 2.0 - 1;
+
+                    // RT
+                    positions.push(xe, ys);
+                    const RTI = positions.length / 2.0 - 1;
+
+                    // LB
+                    positions.push(xs, ye);
+                    const LBI = positions.length / 2.0 - 1;
+
+                    // RB
+                    positions.push(xe, ye);
+                    const RBI = positions.length / 2.0 - 1;
+
+                    ixs.push(LTI, RTI, LBI, LBI, RBI, RTI);
+                    colorIdx.push(cidx, cidx, cidx, cidx);
+                }
+
+                const rgba = colorToRGBA(color, actualOpacity);
+                let cidx = colorRGBAs.map(d => d.join()).indexOf(rgba.join());
+                if (cidx === -1) {
+                    colorRGBAs.push(rgba);
+                    cidx = colorRGBAs.length - 1;
+                }
+
+                // console.log(xs + strokeWidth);
+                // LT
+                positions.push(xs + strokeWidth, ys + strokeWidth);
+                const LTI = positions.length / 2.0 - 1;
+
+                // RT
+                positions.push(xe - strokeWidth, ys + strokeWidth);
+                const RTI = positions.length / 2.0 - 1;
+
+                // LB
+                positions.push(xs + strokeWidth, ye - strokeWidth);
+                const LBI = positions.length / 2.0 - 1;
+
+                // RB
+                positions.push(xe - strokeWidth, ye - strokeWidth);
+                const RBI = positions.length / 2.0 - 1;
+
+                ixs.push(LTI, RTI, LBI, LBI, RBI, RTI);
+                colorIdx.push(cidx, cidx, cidx, cidx);
+            }
+        });
+    }
+    // const buffer = Buffer.from(JSON.stringify(visualProperties)).buffer;
+    // return Transfer(buffer, [buffer]);
+    // console.log(positions, ixs, colorIdx, colorRGBAs);
+
+    const buffer = Buffer.from(JSON.stringify({ positions, ixs, colorIdx, colorRGBAs })).buffer;
+    return Transfer(buffer, [buffer]);
+}
+
+const visualProperties =(spec, data, trackWidth, trackHeight, tileSize, xDomain, xRange, tileX, tileWidth) => {
+    if(spec.mark === 'rect') {
+        return rectProperties(spec, data, trackWidth, trackHeight, tileSize, xDomain, xRange, tileX, tileWidth);
+    } else if(spec.mark === 'bar') {
+        return barProperties(spec, data, trackWidth, trackHeight, tileSize, xDomain, xRange, tileX, tileWidth);
+    }
+}
 
 const tileFunctions = {
     init,
@@ -1422,7 +1758,7 @@ const tileFunctions = {
     tile,
     getTabularData,
     renderSegments,
-    rectProperties
+    visualProperties
 };
 
 expose(tileFunctions);

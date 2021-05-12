@@ -463,6 +463,9 @@
       "additionalProperties": false,
       "description": "Partial specification of `BasicSingleTrack` to use default visual encoding predefined by data type.",
       "properties": {
+        "_useScalableRendering": {
+          "type": "boolean"
+        },
         "assembly": {
           "$ref": "#/definitions/Assembly"
         },
@@ -1738,6 +1741,9 @@
       "additionalProperties": false,
       "description": "Superposing multiple tracks.",
       "properties": {
+        "_useScalableRendering": {
+          "type": "boolean"
+        },
         "assembly": {
           "$ref": "#/definitions/Assembly"
         },
@@ -1800,6 +1806,9 @@
           "items": {
             "additionalProperties": false,
             "properties": {
+              "_useScalableRendering": {
+                "type": "boolean"
+              },
               "assembly": {
                 "$ref": "#/definitions/Assembly"
               },
@@ -1866,9 +1875,6 @@
               },
               "spacing": {
                 "type": "number"
-              },
-              "stackY": {
-                "type": "boolean"
               },
               "startAngle": {
                 "type": "number"
@@ -1979,9 +1985,6 @@
         "spacing": {
           "type": "number"
         },
-        "stackY": {
-          "type": "boolean"
-        },
         "startAngle": {
           "type": "number"
         },
@@ -2091,6 +2094,9 @@
     "OverlaidTracks": {
       "additionalProperties": false,
       "properties": {
+        "_useScalableRendering": {
+          "type": "boolean"
+        },
         "alignment": {
           "const": "overlay",
           "type": "string"
@@ -2168,9 +2174,6 @@
         "spacing": {
           "type": "number"
         },
-        "stackY": {
-          "type": "boolean"
-        },
         "startAngle": {
           "type": "number"
         },
@@ -2224,6 +2227,9 @@
           "items": {
             "additionalProperties": false,
             "properties": {
+              "_useScalableRendering": {
+                "type": "boolean"
+              },
               "assembly": {
                 "$ref": "#/definitions/Assembly"
               },
@@ -2286,6 +2292,9 @@
                 "items": {
                   "additionalProperties": false,
                   "properties": {
+                    "_useScalableRendering": {
+                      "type": "boolean"
+                    },
                     "assembly": {
                       "$ref": "#/definitions/Assembly"
                     },
@@ -2352,9 +2361,6 @@
                     },
                     "spacing": {
                       "type": "number"
-                    },
-                    "stackY": {
-                      "type": "boolean"
                     },
                     "startAngle": {
                       "type": "number"
@@ -2464,9 +2470,6 @@
               },
               "spacing": {
                 "type": "number"
-              },
-              "stackY": {
-                "type": "boolean"
               },
               "startAngle": {
                 "type": "number"
@@ -2776,6 +2779,9 @@
         {
           "additionalProperties": false,
           "properties": {
+            "_useScalableRendering": {
+              "type": "boolean"
+            },
             "alignment": {
               "const": "overlay",
               "type": "string"
@@ -2856,9 +2862,6 @@
             "spacing": {
               "type": "number"
             },
-            "stackY": {
-              "type": "boolean"
-            },
             "startAngle": {
               "type": "number"
             },
@@ -2915,6 +2918,9 @@
               "items": {
                 "additionalProperties": false,
                 "properties": {
+                  "_useScalableRendering": {
+                    "type": "boolean"
+                  },
                   "assembly": {
                     "$ref": "#/definitions/Assembly"
                   },
@@ -2977,6 +2983,9 @@
                     "items": {
                       "additionalProperties": false,
                       "properties": {
+                        "_useScalableRendering": {
+                          "type": "boolean"
+                        },
                         "assembly": {
                           "$ref": "#/definitions/Assembly"
                         },
@@ -3043,9 +3052,6 @@
                         },
                         "spacing": {
                           "type": "number"
-                        },
-                        "stackY": {
-                          "type": "boolean"
                         },
                         "startAngle": {
                           "type": "number"
@@ -3155,9 +3161,6 @@
                   },
                   "spacing": {
                     "type": "number"
-                  },
-                  "stackY": {
-                    "type": "boolean"
                   },
                   "startAngle": {
                     "type": "number"
@@ -3323,6 +3326,9 @@
         {
           "additionalProperties": false,
           "properties": {
+            "_useScalableRendering": {
+              "type": "boolean"
+            },
             "alignment": {
               "const": "stack",
               "type": "string"
@@ -3403,9 +3409,6 @@
             "spacing": {
               "type": "number"
             },
-            "stackY": {
-              "type": "boolean"
-            },
             "startAngle": {
               "type": "number"
             },
@@ -3464,6 +3467,9 @@
                   {
                     "additionalProperties": false,
                     "properties": {
+                      "_useScalableRendering": {
+                        "type": "boolean"
+                      },
                       "assembly": {
                         "$ref": "#/definitions/Assembly"
                       },
@@ -3526,6 +3532,9 @@
                         "items": {
                           "additionalProperties": false,
                           "properties": {
+                            "_useScalableRendering": {
+                              "type": "boolean"
+                            },
                             "assembly": {
                               "$ref": "#/definitions/Assembly"
                             },
@@ -3592,9 +3601,6 @@
                             },
                             "spacing": {
                               "type": "number"
-                            },
-                            "stackY": {
-                              "type": "boolean"
                             },
                             "startAngle": {
                               "type": "number"
@@ -3704,9 +3710,6 @@
                       },
                       "spacing": {
                         "type": "number"
-                      },
-                      "stackY": {
-                        "type": "boolean"
                       },
                       "startAngle": {
                         "type": "number"
@@ -3962,6 +3965,9 @@
     "SingleTrack": {
       "additionalProperties": false,
       "properties": {
+        "_useScalableRendering": {
+          "type": "boolean"
+        },
         "assembly": {
           "$ref": "#/definitions/Assembly"
         },
@@ -4034,9 +4040,6 @@
         },
         "spacing": {
           "type": "number"
-        },
-        "stackY": {
-          "type": "boolean"
         },
         "startAngle": {
           "type": "number"
@@ -4207,6 +4210,9 @@
     "StackedTracks": {
       "additionalProperties": false,
       "properties": {
+        "_useScalableRendering": {
+          "type": "boolean"
+        },
         "alignment": {
           "const": "stack",
           "type": "string"
@@ -4284,9 +4290,6 @@
         "spacing": {
           "type": "number"
         },
-        "stackY": {
-          "type": "boolean"
-        },
         "startAngle": {
           "type": "number"
         },
@@ -4342,6 +4345,9 @@
               {
                 "additionalProperties": false,
                 "properties": {
+                  "_useScalableRendering": {
+                    "type": "boolean"
+                  },
                   "assembly": {
                     "$ref": "#/definitions/Assembly"
                   },
@@ -4404,6 +4410,9 @@
                     "items": {
                       "additionalProperties": false,
                       "properties": {
+                        "_useScalableRendering": {
+                          "type": "boolean"
+                        },
                         "assembly": {
                           "$ref": "#/definitions/Assembly"
                         },
@@ -4470,9 +4479,6 @@
                         },
                         "spacing": {
                           "type": "number"
-                        },
-                        "stackY": {
-                          "type": "boolean"
                         },
                         "startAngle": {
                           "type": "number"
@@ -4582,9 +4588,6 @@
                   },
                   "spacing": {
                     "type": "number"
-                  },
-                  "stackY": {
-                    "type": "boolean"
                   },
                   "startAngle": {
                     "type": "number"

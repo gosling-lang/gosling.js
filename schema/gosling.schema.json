@@ -431,6 +431,31 @@
       ],
       "type": "string"
     },
+    "CoverageTransform": {
+      "additionalProperties": false,
+      "description": "Aggregate rows and calculate coverage",
+      "properties": {
+        "endField": {
+          "type": "string"
+        },
+        "newField": {
+          "type": "string"
+        },
+        "startField": {
+          "type": "string"
+        },
+        "type": {
+          "const": "coverage",
+          "type": "string"
+        }
+      },
+      "required": [
+        "type",
+        "startField",
+        "endField"
+      ],
+      "type": "object"
+    },
     "DataDeep": {
       "anyOf": [
         {
@@ -500,6 +525,15 @@
         "overlayOnPreviousTrack": {
           "type": "boolean"
         },
+        "prerelease": {
+          "additionalProperties": false,
+          "properties": {
+            "testUsingNewRectRenderingForBAM": {
+              "type": "boolean"
+            }
+          },
+          "type": "object"
+        },
         "spacing": {
           "type": "number"
         },
@@ -564,6 +598,9 @@
         },
         {
           "$ref": "#/definitions/ExonSplitTransform"
+        },
+        {
+          "$ref": "#/definitions/CoverageTransform"
         }
       ]
     },
@@ -1858,6 +1895,15 @@
               "overrideTemplate": {
                 "type": "boolean"
               },
+              "prerelease": {
+                "additionalProperties": false,
+                "properties": {
+                  "testUsingNewRectRenderingForBAM": {
+                    "type": "boolean"
+                  }
+                },
+                "type": "object"
+              },
               "row": {
                 "$ref": "#/definitions/Channel"
               },
@@ -1966,6 +2012,15 @@
         },
         "overrideTemplate": {
           "type": "boolean"
+        },
+        "prerelease": {
+          "additionalProperties": false,
+          "properties": {
+            "testUsingNewRectRenderingForBAM": {
+              "type": "boolean"
+            }
+          },
+          "type": "object"
         },
         "row": {
           "$ref": "#/definitions/Channel"
@@ -2153,6 +2208,15 @@
         "overrideTemplate": {
           "type": "boolean"
         },
+        "prerelease": {
+          "additionalProperties": false,
+          "properties": {
+            "testUsingNewRectRenderingForBAM": {
+              "type": "boolean"
+            }
+          },
+          "type": "object"
+        },
         "row": {
           "$ref": "#/definitions/Channel"
         },
@@ -2335,6 +2399,15 @@
                     "overrideTemplate": {
                       "type": "boolean"
                     },
+                    "prerelease": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "testUsingNewRectRenderingForBAM": {
+                          "type": "boolean"
+                        }
+                      },
+                      "type": "object"
+                    },
                     "row": {
                       "$ref": "#/definitions/Channel"
                     },
@@ -2443,6 +2516,15 @@
               },
               "overrideTemplate": {
                 "type": "boolean"
+              },
+              "prerelease": {
+                "additionalProperties": false,
+                "properties": {
+                  "testUsingNewRectRenderingForBAM": {
+                    "type": "boolean"
+                  }
+                },
+                "type": "object"
               },
               "row": {
                 "$ref": "#/definitions/Channel"
@@ -2832,6 +2914,15 @@
             "overrideTemplate": {
               "type": "boolean"
             },
+            "prerelease": {
+              "additionalProperties": false,
+              "properties": {
+                "testUsingNewRectRenderingForBAM": {
+                  "type": "boolean"
+                }
+              },
+              "type": "object"
+            },
             "row": {
               "$ref": "#/definitions/Channel"
             },
@@ -3017,6 +3108,15 @@
                         "overrideTemplate": {
                           "type": "boolean"
                         },
+                        "prerelease": {
+                          "additionalProperties": false,
+                          "properties": {
+                            "testUsingNewRectRenderingForBAM": {
+                              "type": "boolean"
+                            }
+                          },
+                          "type": "object"
+                        },
                         "row": {
                           "$ref": "#/definitions/Channel"
                         },
@@ -3125,6 +3225,15 @@
                   },
                   "overrideTemplate": {
                     "type": "boolean"
+                  },
+                  "prerelease": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "testUsingNewRectRenderingForBAM": {
+                        "type": "boolean"
+                      }
+                    },
+                    "type": "object"
                   },
                   "row": {
                     "$ref": "#/definitions/Channel"
@@ -3370,6 +3479,15 @@
             "overrideTemplate": {
               "type": "boolean"
             },
+            "prerelease": {
+              "additionalProperties": false,
+              "properties": {
+                "testUsingNewRectRenderingForBAM": {
+                  "type": "boolean"
+                }
+              },
+              "type": "object"
+            },
             "row": {
               "$ref": "#/definitions/Channel"
             },
@@ -3557,6 +3675,15 @@
                             "overrideTemplate": {
                               "type": "boolean"
                             },
+                            "prerelease": {
+                              "additionalProperties": false,
+                              "properties": {
+                                "testUsingNewRectRenderingForBAM": {
+                                  "type": "boolean"
+                                }
+                              },
+                              "type": "object"
+                            },
                             "row": {
                               "$ref": "#/definitions/Channel"
                             },
@@ -3665,6 +3792,15 @@
                       },
                       "overrideTemplate": {
                         "type": "boolean"
+                      },
+                      "prerelease": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "testUsingNewRectRenderingForBAM": {
+                            "type": "boolean"
+                          }
+                        },
+                        "type": "object"
                       },
                       "row": {
                         "$ref": "#/definitions/Channel"
@@ -3993,6 +4129,15 @@
         "overrideTemplate": {
           "type": "boolean"
         },
+        "prerelease": {
+          "additionalProperties": false,
+          "properties": {
+            "testUsingNewRectRenderingForBAM": {
+              "type": "boolean"
+            }
+          },
+          "type": "object"
+        },
         "row": {
           "$ref": "#/definitions/Channel"
         },
@@ -4239,6 +4384,15 @@
         "overrideTemplate": {
           "type": "boolean"
         },
+        "prerelease": {
+          "additionalProperties": false,
+          "properties": {
+            "testUsingNewRectRenderingForBAM": {
+              "type": "boolean"
+            }
+          },
+          "type": "object"
+        },
         "row": {
           "$ref": "#/definitions/Channel"
         },
@@ -4423,6 +4577,15 @@
                         "overrideTemplate": {
                           "type": "boolean"
                         },
+                        "prerelease": {
+                          "additionalProperties": false,
+                          "properties": {
+                            "testUsingNewRectRenderingForBAM": {
+                              "type": "boolean"
+                            }
+                          },
+                          "type": "object"
+                        },
                         "row": {
                           "$ref": "#/definitions/Channel"
                         },
@@ -4531,6 +4694,15 @@
                   },
                   "overrideTemplate": {
                     "type": "boolean"
+                  },
+                  "prerelease": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "testUsingNewRectRenderingForBAM": {
+                        "type": "boolean"
+                      }
+                    },
+                    "type": "object"
                   },
                   "row": {
                     "$ref": "#/definitions/Channel"

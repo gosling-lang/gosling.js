@@ -16,9 +16,6 @@ import { drawCircularYAxis, drawLinearYAxis } from './axis';
 import { drawCircularOutlines } from './outline-circular';
 import { drawBackground } from './background';
 import { Theme } from '../utils/theme';
-import colorToHex from '../utils/color-to-hex';
-import { scaleLinear } from 'd3-scale';
-import Logging from '../utils/log'
 
 /**
  * Visual channels currently supported for visual encoding.
@@ -49,8 +46,7 @@ export const RESOLUTION = 4;
 /**
  * Draw a track based on the track specification in a Gosling grammar.
  */
-export function drawMark(HGC: any, trackInfo: any, tile: any, model: GoslingTrackModel, theme: Theme = 'light', domain: any, range: any) {
-    // console.log('drawMark()');
+export function drawMark(HGC: any, trackInfo: any, tile: any, model: GoslingTrackModel, theme: Theme = 'light') {
     if (!HGC || !trackInfo || !tile) {
         // We did not receive parameters correctly.
         return;
@@ -67,25 +63,18 @@ export function drawMark(HGC: any, trackInfo: any, tile: any, model: GoslingTrac
     ['x', 'x1', 'x1e', 'xe'].forEach((d: any) => {
         // const c = tm.spec()[d as keyof typeof ChannelTypes];
         // if(IsChannelDeep(c) && c.type === 'genomic') {
-        model.setChannelScale(
-            d, 
-            // trackInfo._xScale
-            HGC.libraries.d3Scale
-                .scaleLinear()
-                .domain(domain)
-                .range(range)
-        );
+        model.setChannelScale(d, trackInfo._xScale);
         // }
     });
 
     /* Embellishment before rendering plots */
-    // drawBackground(HGC, trackInfo, tile, model);
-    // if (CIRCULAR) {
-    //     drawCircularOutlines(HGC, trackInfo, tile, model);
-    // } else {
-    //     drawChartOutlines(HGC, trackInfo, model, theme);
-    // }
-    // drawGrid(trackInfo, model, theme);
+    drawBackground(HGC, trackInfo, tile, model);
+    if (CIRCULAR) {
+        drawCircularOutlines(HGC, trackInfo, tile, model);
+    } else {
+        drawChartOutlines(HGC, trackInfo, model, theme);
+    }
+    drawGrid(trackInfo, model, theme);
 
     // DEBUG
     // drawChartOutlines(HGC, trackInfo, model);
@@ -106,142 +95,11 @@ export function drawMark(HGC: any, trackInfo: any, tile: any, model: GoslingTrac
             drawArea(HGC, trackInfo, tile, model);
             break;
         case 'rect':
-            if (model.spec().layout === 'circular') {
-                drawRect(HGC, trackInfo, tile, model);
-            } else {
-                const tileSize = trackInfo.tilesetInfo.tile_size;
-                const { tileX, tileWidth } = trackInfo.getTilePosAndDimensions(
-                    tile.gos.zoomLevel,
-                    tile.gos.tilePos,
-                    tileSize
-                );
-                const [trackWidth, trackHeight] = trackInfo.dimensions;
-                const xDomain = domain;
-                const xRange = range;
-                // const xDomain = trackInfo._xScale.domain();
-                // const xRange = trackInfo._xScale.range();
-
-                // trackInfo.setUpShaderAndTextures();
-                // Logging.recordTime('worker');
-                trackInfo.worker.then((tileFunctions: any) => {
-                    // Logging.printTime('worker');
-                    tileFunctions
-                        .rectProperties(
-                            model.spec(),
-                            model.data(),
-                            trackWidth,
-                            trackHeight,
-                            tileSize,
-                            xDomain,
-                            xRange,
-                            tileX,
-                            tileWidth
-                        )
-                        .then((props: any) => {
-                            // Logging.printTime('worker');
-                            const textures: { [color: number]: PIXI.Texture } = {};
-                            const getTexture = (color: number) => {
-                                if (textures[color]) {
-                                    return textures[color];
-                                } else {
-                                    const g = new PIXI.Graphics();
-                                    g.beginFill(color);
-                                    g.drawRect(0, 0, 1, 1);
-                                    g.endFill();
-                                    textures[color] = HGC.services.pixiRenderer.generateTexture(g);
-                                    return;
-                                }
-                            };
-                            const tabularData = JSON.parse(Buffer.from(props).toString());
-                            const g = new HGC.libraries.PIXI.Graphics();
-                            // console.log(tabularData.slice(0, 1));
-                            // trackInfo.errorTextText = null;
-                            trackInfo.pBorder.clear();
-                            // trackInfo.drawError();
-                            trackInfo.forceDraw();
-
-                            // trackInfo.setUpShaderAndTextures(trackInfo, HGC);
-
-                            const positions = new Float32Array(tabularData.positions);
-                            const colors = new Float32Array(tabularData.colorIdx);
-                            const ixs = new Int32Array(tabularData.ixs);
-
-                            console.log('this.positions', positions, colors, ixs);
-
-                            const newGraphics = new HGC.libraries.PIXI.Graphics();
-                            
-                            const geometry = new HGC.libraries.PIXI.Geometry().addAttribute(
-                                'position',
-                                positions,
-                                2
-                            ); // x,y
-                            geometry.addAttribute('aColorIdx', colors, 1);
-                            geometry.addIndex(ixs);
-
-                            if (positions.length) {
-                                const state = new HGC.libraries.PIXI.State();
-                                const mesh = new HGC.libraries.PIXI.Mesh(geometry, trackInfo.shader, state);
-
-                                newGraphics.addChild(mesh);
-                            }
-                            trackInfo.pMain.x = trackInfo.position[0];
-
-                            // console.log('trackInfo.pMain.x', trackInfo.pMain.x);
-
-                            if (trackInfo.segmentGraphics) {
-                                trackInfo.pMain.removeChild(trackInfo.segmentGraphics);
-                            }
-
-                            trackInfo.pMain.addChild(newGraphics);
-                            trackInfo.segmentGraphics = newGraphics;
-
-                            trackInfo.drawnAtScale = HGC.libraries.d3Scale
-                            .scaleLinear().domain(xDomain).range(xRange);
-                            console.log('diff', trackInfo._xScale.range(), xRange);
-
-                            // console.log('render.scaleScalableGraphics');
-                            trackInfo.scaleScalableGraphics(
-                                trackInfo.segmentGraphics,
-                                trackInfo._xScale,
-                                trackInfo.drawnAtScale
-                            );
-
-                            // trackInfo.segmentGraphics.scale.y = trackInfo.valueScaleTransform.k;
-                            // trackInfo.segmentGraphics.position.y = trackInfo.valueScaleTransform.y;
-
-                            // trackInfo.draw();
-                            trackInfo.forceDraw();
-
-                            // tabularData.forEach((d: any) => {
-                            // const colorHex = colorToHex(d.color === 'none' ? 'white' : d.color);
-                            // const s = new PIXI.Sprite(getTexture(colorHex));
-
-                            // const s = new PIXI.Graphics();
-                            // s.beginFill(colorToHex(d.color === 'none' ? 'white' : d.color), d.color === 'none' ? 0 : d.opacity);
-                            // s.drawRect(d.xs, d.ys, d.xe - d.xs, (d.ye - d.ys));
-                            //Change the sprite's position
-                            // s.x = d.xs;
-                            // s.y = d.ys;
-
-                            // s.width = d.xe - d.xs;
-                            // s.height = (d.ye - d.ys);
-
-                            // g.addChild(s);
-                            // });
-                            // tile.graphics.clear();
-                            // tile.graphics.removeChildren();
-                            // tile.graphics.addChild(g);
-
-                            // const entireSprite = new PIXI.Sprite(HGC.services.pixiRenderer.generateTexture(g, PIXI.SCALE_MODES.LINEAR, 14));
-                            // tile.graphics.addChild(entireSprite);
-
-                            // entireSprite.x = tileX;
-                            // entireSprite.y = 0;
-                            // entireSprite.height = trackHeight;
-                            // entireSprite.width = tileWidth;
-                        });
-                });
+            if (model.spec().layout !== 'circular' && model.spec().prerelease?.testUsingNewRectRenderingForBAM) {
+                // In this case, we use different method for the rendering.
+                break;
             }
+            drawRect(HGC, trackInfo, tile, model);
             break;
         case 'triangleLeft':
         case 'triangleRight':
@@ -263,11 +121,11 @@ export function drawMark(HGC: any, trackInfo: any, tile: any, model: GoslingTrac
     }
 
     /* embellishment after rendering plots */
-    // if (CIRCULAR) {
-    //     drawCircularYAxis(HGC, trackInfo, tile, model, theme);
-    // } else {
-    //     drawLinearYAxis(HGC, trackInfo, tile, model, theme);
-    //     drawRowLegend(HGC, trackInfo, tile, model, theme);
-    // }
-    // drawColorLegend(HGC, trackInfo, tile, model, theme);
+    if (CIRCULAR) {
+        drawCircularYAxis(HGC, trackInfo, tile, model, theme);
+    } else {
+        drawLinearYAxis(HGC, trackInfo, tile, model, theme);
+        drawRowLegend(HGC, trackInfo, tile, model, theme);
+    }
+    drawColorLegend(HGC, trackInfo, tile, model, theme);
 }

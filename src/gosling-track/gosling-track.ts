@@ -3,68 +3,37 @@ import { scaleLinear } from 'd3-scale';
 import { drawMark } from '../core/mark';
 import { GoslingTrackModel } from '../core/gosling-track-model';
 import { validateTrack } from '../core/utils/validate';
+import { drawScaleMark, setUpShaderAndTextures } from '../core/utils/scalable-rendering';
 import { shareScaleAcrossTracks } from '../core/utils/scales';
 import { resolveSuperposedTracks } from '../core/utils/overlay';
 import { SingleTrack, OverlaidTrack, Datum } from '../core/gosling.schema';
 import { Tooltip } from '../gosling-tooltip';
 import colorToHex from '../core/utils/color-to-hex';
-import { calculateData, concatString, filterData, replaceString, splitExon } from '../core/utils/data-transform';
+import { aggregateCoverage, calculateData, concatString, displace, filterData, replaceString, splitExon } from '../core/utils/data-transform';
 import { getTabularData } from './data-abstraction';
 import { BAMDataFetcher } from '../data-fetcher/bam';
 import { spawn, Worker } from 'threads';
-import Logging from '../core/utils/log';
 
-const BINS_PER_TILE = 1024;
-export const PILEUP_COLORS = {
-    BG: [0.89, 0.89, 0.89, 1], // gray for the read background
-    BG2: [0.85, 0.85, 0.85, 1], // used as alternating color in the read counter band
-    BG_MUTED: [0.92, 0.92, 0.92, 1], // covergae background, when it is not exact
-    A: [0, 0, 1, 1], // blue for A
-    C: [1, 0, 0, 1], // red for c
-    G: [0, 1, 0, 1], // green for g
-    T: [1, 1, 0, 1], // yellow for T
-    S: [0, 0, 0, 0.5], // darker grey for soft clipping
-    H: [0, 0, 0, 0.5], // darker grey for hard clipping
-    X: [0, 0, 0, 0.7], // black for unknown
-    I: [1, 0, 1, 0.5], // purple for insertions
-    D: [1, 0.5, 0.5, 0.5], // pink-ish for deletions
-    N: [1, 1, 1, 1],
-    BLACK: [0, 0, 0, 1],
-    BLACK_05: [0, 0, 0, 0.5],
-    PLUS_STRAND: [0.75, 0.75, 1, 1],
-    MINUS_STRAND: [1, 0.75, 0.75, 1]
-};
-const createColorTexture = (PIXI: any, colors: any) => {
-    const colorTexRes = Math.max(2, Math.ceil(Math.sqrt(colors.length)));
-    const rgba = new Float32Array(colorTexRes ** 2 * 4);
-    colors.forEach((color: any, i: any) => {
-        // eslint-disable-next-line prefer-destructuring
-        rgba[i * 4] = color[0]; // r
-        // eslint-disable-next-line prefer-destructuring
-        rgba[i * 4 + 1] = color[1]; // g
-        // eslint-disable-next-line prefer-destructuring
-        rgba[i * 4 + 2] = color[2]; // b
-        // eslint-disable-next-line prefer-destructuring
-        rgba[i * 4 + 3] = color[3]; // a
-    });
+const PRINT_RENDERING_CYCLE = true;
 
-    return [PIXI.Texture.fromBuffer(rgba, colorTexRes, colorTexRes), colorTexRes];
-};
+function usePrereleaseRendering(spec: SingleTrack | OverlaidTrack) {
+    return spec.prerelease?.testUsingNewRectRenderingForBAM && spec.data?.type === 'bam';
+}
 
 // For using libraries, refer to https://github.com/higlass/higlass/blob/f82c0a4f7b2ab1c145091166b0457638934b15f3/app/scripts/configs/available-for-plugins.js
 // `getTilePosAndDimensions()` definition: https://github.com/higlass/higlass/blob/1e1146409c7d7c7014505dd80d5af3e9357c77b6/app/scripts/Tiled1DPixiTrack.js#L133
+// Refer to the following already supported graphics:
+// https://github.com/higlass/higlass/blob/54f5aae61d3474f9e868621228270f0c90ef9343/app/scripts/PixiTrack.js#L115
 function GoslingTrack(HGC: any, ...args: any[]): any {
     if (!new.target) {
         throw new Error('Uncaught TypeError: Class constructor cannot be invoked without "new"');
     }
 
-    // TODO: change the parent class to a more generic one (e.g., TiledPixiTrack)
     class GoslingTrackClass extends HGC.tracks.BarTrack {
         private originalSpec: SingleTrack | OverlaidTrack;
         private tooltips: Tooltip[];
         private tileSize: number;
         private worker: any;
-        private prevRows: any[];
         // TODO: add members that are used explicitly in the code
 
         constructor(params: any[]) {
@@ -72,7 +41,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
 
             // Check whether to load a worker.
             let bamWorker;
-            if ((options.spec as SingleTrack | OverlaidTrack).data?.type === 'bam') {
+            if (usePrereleaseRendering(options.spec)) {
                 bamWorker = spawn(new Worker('../data-fetcher/bam/bam-worker'));
                 context.dataFetcher = new BAMDataFetcher(HGC, context.dataConfig, bamWorker);
             }
@@ -81,40 +50,26 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
 
             this.worker = bamWorker;
             context.dataFetcher.track = this;
-            this.prevRows = [];
             this.context = context;
             this.originalSpec = this.options.spec;
             this.tileSize = this.tilesetInfo?.tile_size ?? 1024;
 
-            this.valueScaleTransform = HGC.libraries.d3Zoom.zoomIdentity;
-
-            // we scale the entire view up until a certain point
-            // at which point we redraw everything to get rid of
-            // artifacts
-            // this.drawnAtScale keeps track of the scale at which
-            // we last rendered everything
+            // This is being used to keep track of xScale for entire view (i.e., no tiling concept used)
             this.drawnAtScale = HGC.libraries.d3Scale.scaleLinear();
-            this.prevRows = [];
-            this.coverage = {};
-            // The bp distance for which the samples are chosen for the coverage.
-            this.coverageSamplingDistance = 1;
 
-            // graphics for highliting reads under the cursor
-            this.mouseOverGraphics = new HGC.libraries.PIXI.Graphics();
             this.loadingText = new HGC.libraries.PIXI.Text('Loading', {
-                fontSize: '12px',
+                fontSize: '14px',
                 fontFamily: 'Arial',
-                fill: 'grey'
+                fill: 'black'
             });
 
-            this.loadingText.x = 100;
-            this.loadingText.y = 100;
+            this.loadingText.x = 0;
+            this.loadingText.y = 0;
 
             this.loadingText.anchor.x = 0;
             this.loadingText.anchor.y = 0;
 
-            this.fetching = new Set();
-            this.rendering = new Set();
+            this.pLabel.addChild(this.loadingText);
 
             const { valid, errorMessages } = validateTrack(this.originalSpec);
 
@@ -124,6 +79,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
 
             this.extent = { min: Number.MAX_SAFE_INTEGER, max: Number.MIN_SAFE_INTEGER };
 
+            // Graphics for highlighting visual elements under the cursor
             this.mouseOverGraphics = new HGC.libraries.PIXI.Graphics();
             this.pMain.addChild(this.mouseOverGraphics);
 
@@ -135,9 +91,9 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             HGC.libraries.PIXI.GRAPHICS_CURVES.adaptive = false; // This improve the arc/link rendering performance
         }
 
-        /* 
+        /*
          * ==============================================================================================
-         * RENDERING CYCLE ==============================================================================
+         * ======================================= RENDERING CYCLE ======================================
          * ==============================================================================================
          */
 
@@ -146,8 +102,6 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
          * (https://github.com/higlass/higlass/blob/54f5aae61d3474f9e868621228270f0c90ef9343/app/scripts/PixiTrack.js#L186).
          */
         setDimensions(newDimensions: any) {
-            console.log('setDimensions()');
-
             this.oldDimensions = this.dimensions;
             super.setDimensions(newDimensions); // This function simply updates `this._xScale` and `this._yScale`
 
@@ -159,14 +113,9 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
          * Record new position.
          */
         setPosition(newPosition: any) {
-            console.log('setPosition()');
-            
             super.setPosition(newPosition); // This function simply changes `this.position`
 
             [this.pMain.position.x, this.pMain.position.y] = this.position;
-            // [this.pMouseOver.position.x, this.pMouseOver.position.y] = this.position;
-
-            // [this.loadingText.x, this.loadingText.y] = newPosition;
         }
 
         /**
@@ -174,9 +123,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
          * (https://github.com/higlass/higlass/blob/54f5aae61d3474f9e868621228270f0c90ef9343/app/scripts/TiledPixiTrack.js#L71)
          */
         forceDraw() {
-            // console.log('forceDraw()');
-
-            this.animate(); 
+            this.animate();
         }
 
         /**
@@ -185,16 +132,12 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
          * For brushing, refer to https://github.com/higlass/higlass/blob/caf230b5ee41168ea491572618612ac0cc804e5a/app/scripts/HeatmapTiledPixiTrack.js#L1493
          */
         zoomed(newXScale: any, newYScale: any) {
-            // console.log('zoomed()');
+            if(PRINT_RENDERING_CYCLE) console.warn('zoomed()');
 
             super.zoomed(newXScale, newYScale); // This function updates `this._xScale` and `this._yScale` and call this.draw();
-            this.xScale(newXScale);
-            this.yScale(newYScale);
-            // this.refreshTilesDebounced(); // this.refreshTiles();
 
-            if (this.segmentGraphics) {
-                // console.log("zoomed.scaleScalableGraphics");
-                this.scaleScalableGraphics(this.segmentGraphics, newXScale, this.drawnAtScale);
+            if (this.scalableGraphics) {
+                this.scaleScalableGraphics(this.scalableGraphics, newXScale, this.drawnAtScale);
             }
 
             this.draw();
@@ -206,143 +149,30 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
          * (https://github.com/higlass/higlass/blob/f82c0a4f7b2ab1c145091166b0457638934b15f3/app/scripts/TiledPixiTrack.js#L518)
          */
         initTile(tile: any) {
-            console.log('initTile()');
+            if(PRINT_RENDERING_CYCLE) console.warn('initTile(tile)');
 
             this.tooltips = [];
             this.svgData = [];
             this.textsBeingUsed = 0;
-
-            
-
-            // if (this.isUpdateTileAsync()) return;
-
-            // preprocess all tiles at once so that we can share the value scales
-            // this.preprocessAllTiles();
-
-            // this.renderTile(tile);
         }
 
-        /*
-         * Compute something about a tile before rendering it. Nextly called function is `drawTile()`.
-         * (https://github.com/higlass/higlass/blob/f82c0a4f7b2ab1c145091166b0457638934b15f3/app/scripts/TiledPixiTrack.js#L532)
+        /**
+         * This is currently for testing the new way of rendering visual elements.
          */
-        updateTile() {
-            // console.log('updateTile()');
-            this.setUpShaderAndTextures();
-            if (this.isUpdateTileAsync()) {
-                if(false) {
-                    this.worker.then((tileFunctions: any) => {
-                        const DOMAIN = this._xScale.domain();
-                        const RANGE = this._xScale.range();
-                        tileFunctions
-                            .renderSegments(
-                                this.dataFetcher.uid,
-                                Object.values(this.fetchedTiles).map((x: any) => x.remoteId),
-                                this._xScale.domain(),
-                                this._xScale.range(),
-                                this.position,
-                                this.dimensions,
-                                this.prevRows,
-                                this.options
-                            )
-                            .then((toRender: any) => {
-                                // this.loadingText.visible = false;
-                                // fetchedTileKeys.forEach((x) => {
-                                //   this.rendering.delete(x);
-                                // });
-                                // this.updateLoadingText();
-    
-                                this.errorTextText = null;
-                                this.pBorder.clear();
-                                this.drawError();
-                                this.forceDraw();
-    
-                                this.positions = new Float32Array(toRender.positionsBuffer);
-                                this.colors = new Float32Array(toRender.colorsBuffer);
-                                this.ixs = new Int32Array(toRender.ixBuffer);
-    
-                                console.log('this.positions', this.positions, this.colors, this.ixs);
-    
-                                const newGraphics = new HGC.libraries.PIXI.Graphics();
-    
-                                // this.prevRows = toRender.rows;
-                                // this.coverage = toRender.coverage;
-                                // this.coverageSamplingDistance = toRender.coverageSamplingDistance;
-    
-                                const geometry = new HGC.libraries.PIXI.Geometry().addAttribute(
-                                    'position',
-                                    this.positions,
-                                    2
-                                ); // x,y
-                                geometry.addAttribute('aColorIdx', this.colors, 1);
-                                geometry.addIndex(this.ixs);
-    
-                                if (this.positions.length) {
-                                    const state = new HGC.libraries.PIXI.State();
-                                    const mesh = new HGC.libraries.PIXI.Mesh(geometry, this.shader, state);
-    
-                                    newGraphics.addChild(mesh);
-                                }
-    
-                                this.pMain.x = this.position[0];
-    
-                                if (this.segmentGraphics) {
-                                    this.pMain.removeChild(this.segmentGraphics);
-                                }
-    
-                                this.pMain.addChild(newGraphics);
-                                this.segmentGraphics = newGraphics;
-    
-                                // remove and add again to place on top
-                                // this.pMain.removeChild(this.mouseOverGraphics);
-                                // this.pMain.addChild(this.mouseOverGraphics);
-    
-                                this.yScaleBands = {};
-                                // for (let key in this.prevRows) {
-                                //   this.yScaleBands[key] = HGC.libraries.d3Scale
-                                //     .scaleBand()
-                                //     .domain(
-                                //       HGC.libraries.d3Array.range(
-                                //         0,
-                                //         this.prevRows[key].rows.length,
-                                //       ),
-                                //     )
-                                //     .range([this.prevRows[key].start, this.prevRows[key].end])
-                                //     .paddingInner(0.2);
-                                // }
-    
-                                this.drawnAtScale = HGC.libraries.d3Scale
-                                    .scaleLinear()
-                                    .domain(toRender.xScaleDomain)
-                                    .range(toRender.xScaleRange);
-    
-                                    console.log('diff', this._xScale.copy().range(), RANGE, toRender.xScaleRange);
-                                this.scaleScalableGraphics(this.segmentGraphics, this._xScale, this.drawnAtScale);
-    
-                                // if somebody zoomed vertically, we want to readjust so that
-                                // they're still zoomed in vertically
-                                this.segmentGraphics.scale.y = this.valueScaleTransform.k;
-                                this.segmentGraphics.position.y = this.valueScaleTransform.y;
-    
-                                // this.draw();
-                                this.forceDraw();
-                            });
-                        });
-                } else {
-                const DOMAIN = this._xScale.domain();
-                const RANGE = this._xScale.range();
-                console.log('before', DOMAIN);
-                this.worker.then((tileFunctions: any) => {
-                    tileFunctions
-                      .getTabularData(
+        updateTileAsync(callback: () => void) {
+            this.xDomain = this._xScale.domain();
+            this.xRange = this._xScale.range();
+
+            this.labelText.text = ' Loading...';
+
+            this.worker.then((tileFunctions: any) => {
+                tileFunctions
+                    .getTabularData(
                         this.dataFetcher.uid,
                         Object.values(this.fetchedTiles).map((x: any) => x.remoteId)
                     )
                     .then((toRender: any) => {
-                        // this.forceDraw(); // This function force to redraw, which is often used with async functions.
-
                         const tiles = this.visibleAndFetchedTiles();
-                        // console.log(tiles);
 
                         const tabularData = JSON.parse(Buffer.from(toRender).toString());
                         if (tiles?.[0]) {
@@ -355,44 +185,24 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                             tile.tileData.zoomLevel = refTile[0];
                             tile.tileData.tilePos = [refTile[1]];
                         }
-                        // console.log('toRender', tabularData);
-                        this.preprocessAllTiles();
+                        callback();
 
-                        // console.log('tiles', this.visibleAndFetchedTiles());
-                        this.visibleAndFetchedTiles().forEach((tile: any) => {
-                            this.renderTile(tile, DOMAIN, RANGE);
-                        });
-                        
-                        // this.draw();
-                        // this.forceDraw();
+                        this.labelText.text = this.originalSpec.title ?? '';
                     });
-                });
-                }
-                return;
-            }
-
-            // preprocess all tiles at once so that we can share the value scales
-            this.preprocessAllTiles();
-
-            this.visibleAndFetchedTiles().forEach((tile: any) => {
-                this.renderTile(tile);
             });
-
-            // TODO: Should rerender tile only when neccesary for performance
-            // e.g., changing color scale
-            // ...
         }
 
         /**
+         * ?
          * (https://github.com/higlass/higlass/blob/54f5aae61d3474f9e868621228270f0c90ef9343/app/scripts/TiledPixiTrack.js#L727)
          */
-         draw() {
-            // console.log('draw()');
+        draw() {
+            if(PRINT_RENDERING_CYCLE) console.warn('draw()');
 
             this.tooltips = [];
             this.svgData = [];
             this.textsBeingUsed = 0;
-            this.mouseOverGraphics?.clear(); // remove mouse over effects
+            this.mouseOverGraphics?.clear();
 
             // this.pMain.clear();
             // this.pMain.removeChildren();
@@ -401,63 +211,70 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             // this.pBorder.clear();
             // this.pBorder.removeChildren();
 
-            // preprocess all tiles at once so that we can share the value scales
-            // if (this.isUpdateTileAsync()) return;
-            // this.preprocessAllTiles();
+            // This function calls `drawTile` on each tile.
+            // super.draw();
 
-            // super.draw(); // This function calls `drawTile` on each tile.
+            this.renderAllTiles();
         }
-        
+
+        /*
+         * Compute something about a tile before rendering it. Nextly called function is `drawTile()`.
+         * (https://github.com/higlass/higlass/blob/f82c0a4f7b2ab1c145091166b0457638934b15f3/app/scripts/TiledPixiTrack.js#L532)
+         */
+        updateTile() {
+            if(PRINT_RENDERING_CYCLE) console.warn('updateTile()');
+        }
+
+        // TODO: Not sure why there are both `drawTile` and `renderTile` and what the differences are.
         /**
          * This function is called from `super.draw()`.
          */
         drawTile(tile: any) {
-            // console.log('drawTile()');
-            // prevent BarTracks draw method from having an effect
-            // this.renderTile(tile);
+            if(PRINT_RENDERING_CYCLE) console.warn('drawTile(tile)');
         }
-        
-        /**
-         * Rerender tiles using the new options, including the change of positions and zoom levels.
-         * (https://github.com/higlass/higlass/blob/54f5aae61d3474f9e868621228270f0c90ef9343/app/scripts/HorizontalLine1DPixiTrack.js#L75)
+
+        /*
+         * Render all tiles. Not an overriden function, i.e., newly defined in this class.
          */
-        rerender(newOptions: any) {
-            // console.log('rerender()');
+        renderAllTiles() {
+            if (usePrereleaseRendering(this.originalSpec)) {
+                this.updateTileAsync(() => {
+                    // preprocess all tiles at once so that we can share the value scales
+                    this.preprocessAllTiles();
 
-            super.rerender(newOptions); // This calls `renderTile`
+                    this.visibleAndFetchedTiles().forEach((tile: any) => {
+                        this.renderTile(tile);
+                    });
+                });
+                return;
+            }
 
-            this.options = newOptions;
+            this.pBorder.clear();
+            this.pBorder.removeChildren();
 
-            this.tooltips = [];
-            this.svgData = [];
-            this.textsBeingUsed = 0;
+            // preprocess all tiles at once so that we can share the value scales
+            this.preprocessAllTiles();
 
-            this.updateTile();
-
-            // this.draw();
-        }
-
-        isUpdateTileAsync() {
-            return this.originalSpec.data?.type === 'bam';
+            this.visibleAndFetchedTiles().forEach((tile: any) => {
+                this.renderTile(tile);
+            });
         }
 
         /*
          * Draws exactly one tile
          */
-        renderTile(tile: any, domain: any, range: any) {
-            // Refer to the following already supported graphics:
-            // https://github.com/higlass/higlass/blob/54f5aae61d3474f9e868621228270f0c90ef9343/app/scripts/PixiTrack.js#L115
-            tile.mouseOverData = null;
-            // tile.graphics.clear();
-            // tile.graphics.removeChildren();
-            tile.drawnAtScale = this._xScale.copy(); // being used in `draw()` internally
+        renderTile(tile: any) {
+            if(PRINT_RENDERING_CYCLE) console.warn('renderTile()');
+
+            // tile.mouseOverData = null;
+            tile.graphics.clear();
+            tile.graphics.removeChildren();
+            tile.drawnAtScale = this._xScale.copy(); // being used in `super.draw()`
 
             if (!tile.goslingModels) {
                 // We do not have a track model prepared to visualize
                 return;
             }
-
-            // console.log('renderTile()');
 
             // A single tile contains one or multiple gosling visualizations that are overlaid
             tile.goslingModels.forEach((tm: GoslingTrackModel) => {
@@ -468,22 +285,47 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                     return;
                 }
 
-                // Logging.recordTime('drawMark');
-                drawMark(HGC, this, tile, tm, this.options.theme, domain, range);
-                // Logging.printTime('drawMark');
+                // This is for testing the upcoming rendering methods
+                if (usePrereleaseRendering(this.originalSpec)) {
+                    // Use worker.
+                    drawScaleMark(HGC, this, tile, tm, this.options.theme);
+                    return;
+                }
+
+                drawMark(HGC, this, tile, tm, this.options.theme);
             });
         }
 
+        /**
+         * Rerender tiles using the new options, including the change of positions and zoom levels.
+         * (https://github.com/higlass/higlass/blob/54f5aae61d3474f9e868621228270f0c90ef9343/app/scripts/HorizontalLine1DPixiTrack.js#L75)
+         */
+        rerender(newOptions: any) {
+            if(PRINT_RENDERING_CYCLE) console.warn('rerender(options)');
+            // super.rerender(newOptions); // This calls `renderTile()` on every tiles
+
+            this.options = newOptions;
+
+            this.tooltips = [];
+            this.svgData = [];
+            this.textsBeingUsed = 0;
+
+            this.renderAllTiles();
+        }
+
+        /**
+         * Stretch out the scaleble graphics to have proper effect upon zoom and pan.
+         */
         scaleScalableGraphics(graphics: any, xScale: any, drawnAtScale: any) {
-            const tileK =
-                (drawnAtScale.domain()[1] - drawnAtScale.domain()[0]) / (xScale.domain()[1] - xScale.domain()[0]);
+            const drawnAtScaleExtent = drawnAtScale.domain()[1] - drawnAtScale.domain()[0];
+            const xScaleExtent = xScale.domain()[1] - xScale.domain()[0];
+
+            const tileK = drawnAtScaleExtent / xScaleExtent;
             const newRange = xScale.domain().map(drawnAtScale);
 
             const posOffset = newRange[0];
             graphics.scale.x = tileK;
             graphics.position.x = -posOffset * tileK;
-
-            console.log('graphics.scale.x', graphics.scale.x, 'graphics.position.x', graphics.position.x, 'posOffset', posOffset);
         }
 
         /**
@@ -497,69 +339,9 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             return this.visibleAndFetchedIds().map((x: any) => this.fetchedTiles[x]);
         }
 
-        setUpShaderAndTextures() {
-            const colorDict = PILEUP_COLORS;
-
-            if (this.options && this.options.colorScale) {
-                [
-                    colorDict.A,
-                    colorDict.T,
-                    colorDict.G,
-                    colorDict.C,
-                    colorDict.N,
-                    colorDict.X
-                ] = this.options.colorScale.map((x: any) => this.colorToArray(x));
-            }
-
-            if (this.options && this.options.plusStrandColor) {
-                colorDict.PLUS_STRAND = this.colorToArray(this.options.plusStrandColor);
-            }
-
-            if (this.options && this.options.minusStrandColor) {
-                colorDict.MINUS_STRAND = this.colorToArray(this.options.minusStrandColor);
-            }
-
-            const colors = Object.values(colorDict);
-
-            const [colorMapTex, colorMapTexRes] = createColorTexture(HGC.libraries.PIXI, colors);
-            const uniforms = new HGC.libraries.PIXI.UniformGroup({
-                uColorMapTex: colorMapTex,
-                uColorMapTexRes: colorMapTexRes
-            });
-            this.shader = HGC.libraries.PIXI.Shader.from(
-                `
-          attribute vec2 position;
-          attribute float aColorIdx;
-          uniform mat3 projectionMatrix;
-          uniform mat3 translationMatrix;
-          uniform sampler2D uColorMapTex;
-          uniform float uColorMapTexRes;
-          varying vec4 vColor;
-          void main(void)
-          {
-              // Half a texel (i.e., pixel in texture coordinates)
-              float eps = 0.5 / uColorMapTexRes;
-              float colorRowIndex = floor((aColorIdx + eps) / uColorMapTexRes);
-              vec2 colorTexIndex = vec2(
-                (aColorIdx / uColorMapTexRes) - colorRowIndex + eps,
-                (colorRowIndex / uColorMapTexRes) + eps
-              );
-              vColor = texture2D(uColorMapTex, colorTexIndex);
-              gl_Position = vec4((projectionMatrix * translationMatrix * vec3(position, 1.0)).xy, 0.0, 1.0);
-          }
-      `,
-                `
-      varying vec4 vColor;
-          void main(void) {
-              gl_FragColor = vColor;
-          }
-      `,
-                uniforms
-            );
-        }
-        
         calculateVisibleTiles() {
             if (this.originalSpec.data?.type !== 'bam') {
+                // This is the common way of calculating visible tiles.
                 super.calculateVisibleTiles();
                 return;
             }
@@ -567,11 +349,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             const tiles = HGC.utils.trackUtils.calculate1DVisibleTiles(this.tilesetInfo, this._xScale);
 
             for (const tile of tiles) {
-                const { tileX, tileWidth } = this.getTilePosAndDimensions(
-                    tile[0],
-                    [tile[1]],
-                    this.tilesetInfo.tile_size
-                );
+                const { tileWidth } = this.getTilePosAndDimensions(tile[0], [tile[1]], this.tilesetInfo.tile_size);
 
                 const DEFAULT_MAX_TILE_WIDTH = 2e5;
 
@@ -778,157 +556,11 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                                     resolved.assembly
                                 );
                                 break;
+                            case 'coverage':
+                                tile.gos.tabularDataFiltered = aggregateCoverage(t, tile.gos.tabularDataFiltered, this._xScale.copy());
+                                break;
                             case 'displace':
-                                function currTime() {
-                                    const d = new Date();
-                                    return d.getTime();
-                                }
-                                const t1 = currTime();
-                                const { boundingBox, method, newField } = t;
-                                const { startField, endField } = boundingBox;
-
-                                let padding = 0; // This is a pixel value.
-                                if (boundingBox.padding && this._xScale) {
-                                    padding = Math.abs(
-                                        this._xScale.invert(boundingBox.padding) - this._xScale.invert(0)
-                                    );
-                                }
-
-                                // Check whether we have sufficient information.
-                                const base = tile.gos.tabularDataFiltered;
-                                if (base && base.length > 0) {
-                                    if (
-                                        !Object.keys(base[0]).find(d => d === startField) ||
-                                        !Object.keys(base[0]).find(d => d === endField)
-                                    ) {
-                                        // We did not find the fields from the data, so exit here.
-                                        return;
-                                    }
-                                }
-
-                                if (method === 'pile') {
-                                    const oldAlgorithm = false;
-
-                                    if (oldAlgorithm) {
-                                        const { maxRows } = t;
-                                        const boundingBoxes: { start: number; end: number; row: number }[] = [];
-
-                                        base.sort(
-                                            (a: Datum, b: Datum) =>
-                                                (a[startField] as number) - (b[startField] as number)
-                                        ).forEach((d: Datum) => {
-                                            const start = (d[startField] as number) - padding;
-                                            const end = (d[endField] as number) + padding;
-
-                                            const overlapped = boundingBoxes.filter(
-                                                box =>
-                                                    (box.start === start && end === box.end) ||
-                                                    (box.start <= start && start < box.end) ||
-                                                    (box.start < end && end <= box.end) ||
-                                                    (start < box.start && box.end < end)
-                                            );
-
-                                            // find the lowest non overlapped row
-                                            const uniqueRows = [
-                                                ...Array.from(new Set(boundingBoxes.map(d => d.row))),
-                                                Math.max(...boundingBoxes.map(d => d.row)) + 1
-                                            ];
-                                            const overlappedRows = overlapped.map(d => d.row);
-                                            const lowestNonOverlappedRow = Math.min(
-                                                ...uniqueRows.filter(d => overlappedRows.indexOf(d) === -1)
-                                            );
-
-                                            // row index starts from zero
-                                            const row: number = overlapped.length === 0 ? 0 : lowestNonOverlappedRow;
-
-                                            d[newField] = `${maxRows && maxRows <= row ? maxRows - 1 : row}`;
-
-                                            boundingBoxes.push({ start, end, row });
-                                        });
-                                    } else {
-                                        // This piling algorithm is based on
-                                        // https://github.com/higlass/higlass-pileup/blob/8538a34c6d884c28455d6178377ee1ea2c2c90ae/src/bam-fetcher-worker.js#L626
-                                        const { maxRows } = t;
-                                        const occupiedSpaceInRows: { start: number; end: number }[] = [];
-
-                                        base.sort(
-                                            (a: Datum, b: Datum) =>
-                                                (a[startField] as number) - (b[startField] as number)
-                                        ).forEach((d: Datum) => {
-                                            const start = (d[startField] as number) - padding;
-                                            const end = (d[endField] as number) + padding;
-
-                                            // Find a row to place this segment
-                                            let rowIndex = occupiedSpaceInRows.findIndex(d => {
-                                                // Find a space and update the occupancy info.
-                                                if (end < d.start) {
-                                                    d.start = start;
-                                                    return true;
-                                                } else if (d.end < start) {
-                                                    d.end = end;
-                                                    return true;
-                                                }
-                                                return false;
-                                            });
-
-                                            if (rowIndex === -1) {
-                                                // We did not find sufficient space from the existing rows, so add a new row.
-                                                occupiedSpaceInRows.push({ start, end });
-                                                rowIndex = occupiedSpaceInRows.length - 1;
-                                            }
-
-                                            d[newField] = `${maxRows && maxRows <= rowIndex ? maxRows - 1 : rowIndex}`;
-                                        });
-                                    }
-                                } else if (method === 'spread') {
-                                    const boundingBoxes: { start: number; end: number }[] = [];
-
-                                    base.sort(
-                                        (a: Datum, b: Datum) => (a[startField] as number) - (b[startField] as number)
-                                    ).forEach((d: Datum) => {
-                                        let start = (d[startField] as number) - padding;
-                                        let end = (d[endField] as number) + padding;
-
-                                        let overlapped = boundingBoxes.filter(
-                                            box =>
-                                                (box.start === start && end === box.end) ||
-                                                (box.start < start && start < box.end) ||
-                                                (box.start < end && end < box.end) ||
-                                                (start < box.start && box.end < end)
-                                        );
-
-                                        if (overlapped.length > 0) {
-                                            let trial = 0;
-                                            do {
-                                                overlapped = boundingBoxes.filter(
-                                                    box =>
-                                                        (box.start === start && end === box.end) ||
-                                                        (box.start < start && start < box.end) ||
-                                                        (box.start < end && end < box.end) ||
-                                                        (start < box.start && box.end < end)
-                                                );
-                                                if (overlapped.length > 0) {
-                                                    if (trial % 2 === 0) {
-                                                        start += padding * trial;
-                                                        end += padding * trial;
-                                                    } else {
-                                                        start -= padding * trial;
-                                                        end -= padding * trial;
-                                                    }
-                                                }
-                                                trial++;
-                                                // TODO: do not go outside of a tile.
-                                            } while (overlapped.length > 0 && trial < 1000);
-                                        }
-
-                                        d[`${newField}Start`] = `${start + padding}`;
-                                        d[`${newField}Etart`] = `${end - padding}`;
-
-                                        boundingBoxes.push({ start, end });
-                                    });
-                                }
-                                const t2 = currTime();
-                                // console.log('Piling time:', t2 - t1, 'ms');
+                                tile.gos.tabularDataFiltered = displace(t, tile.gos.tabularDataFiltered, this._xScale.copy());
                                 break;
                         }
                     });

@@ -92,6 +92,9 @@ export interface CommonTrackDef extends CommonViewDef, CommonRequiredTrackDef {
     innerRadius?: number;
     startAngle?: number; // [0, 360]
     endAngle?: number; // [0, 360]
+
+    // To test upcoming feature.
+    prerelease?: { testUsingNewRectRenderingForBAM?: boolean; }
 }
 
 /**
@@ -423,7 +426,8 @@ export type DataTransform =
     | StrReplaceTransform
     | LogTransform
     | DisplaceTransform
-    | ExonSplitTransform;
+    | ExonSplitTransform
+    | CoverageTransform
 
 export type FilterTransform = OneOfFilter | RangeFilter | IncludeFilter;
 
@@ -490,6 +494,16 @@ export interface ExonSplitTransform {
     separator: string;
     flag: { field: string; value: number | string };
     fields: { field: string; type: FieldType; newField: string; chrField: string }[];
+}
+
+/**
+ * Aggregate rows and calculate coverage
+ */
+export interface CoverageTransform {
+    type: 'coverage';
+    startField: string;
+    endField: string;
+    newField?: string;
 }
 
 /* ----------------------------- GLYPH (deprecated, but to be supported again) ----------------------------- */

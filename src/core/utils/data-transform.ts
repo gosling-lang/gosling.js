@@ -1,4 +1,5 @@
-import { assign } from 'lodash';
+import { ScaleLinear } from 'd3-scale'
+import { assign, range } from 'lodash';
 import {
     SingleTrack,
     Datum,
@@ -7,7 +8,9 @@ import {
     ExonSplitTransform,
     Assembly,
     StrConcatTransform,
-    StrReplaceTransform
+    StrReplaceTransform,
+    CoverageTransform,
+    DisplaceTransform
 } from '../gosling.schema';
 import {
     getChannelKeysByAggregateFnc,
@@ -18,6 +21,7 @@ import {
     IsRangeFilter
 } from '../gosling.schema.guards';
 import { GET_CHROM_SIZES } from './assembly';
+import Logging from './log'
 
 /**
  * Apply filter
@@ -95,6 +99,196 @@ export function calculateData(log: LogTransform, data: Datum[]): Datum[] {
         return d;
     });
     return output;
+}
+
+/**
+ * Aggregate data rows and calculate coverage of reads.
+ */
+ export function aggregateCoverage(_: CoverageTransform, data: Datum[], scale: ScaleLinear<any, any>): Datum[] {
+    Logging.recordTime('aggregateCoverage');
+
+    const { startField, endField, newField } = _;
+
+    const coverage: { [p: string]: number } = {};
+    
+    // Calculate coverage by one pixel.
+    const binSize = 1;
+    data.forEach(d => {
+        const curStart = scale(d[startField] as number);
+        const curEnd = scale(d[endField] as number);
+        
+        const adjustedStart = Math.floor(curStart);
+        for(let i = adjustedStart; i < curEnd; i += binSize) {
+            if(!coverage[i]) {
+                coverage[i] = 0;
+            }
+            coverage[i]++;
+        }
+    });
+
+    const output = Object.entries(coverage).map(entry => {
+        const [key, value] = entry;
+        return {
+            [startField]: scale.invert(+key),
+            [endField]: scale.invert(+key + binSize),
+            [newField ?? 'coverage']: value
+        }
+    });
+    
+    // console.log(coverage);
+    Logging.printTime('aggregateCoverage');
+    return output;
+}
+
+export function displace(t: DisplaceTransform, data: Datum[], scale: ScaleLinear<any, any>): Datum[] {
+    Logging.recordTime('displace()');
+
+    const { boundingBox, method, newField } = t;
+    const { startField, endField } = boundingBox;
+
+    let padding = 0; // This is a pixel value.
+    if (boundingBox.padding && scale) {
+        padding = Math.abs(
+            scale.invert(boundingBox.padding) - scale.invert(0)
+        );
+    }
+
+    // Check whether we have sufficient information.
+    const base = Array.from(data);
+    if (base && base.length > 0) {
+        if (
+            !Object.keys(base[0]).find(d => d === startField) ||
+            !Object.keys(base[0]).find(d => d === endField)
+        ) {
+            // We did not find the fields from the data, so exit here.
+            return base;
+        }
+    }
+
+    if (method === 'pile') {
+        const oldAlgorithm = false;
+
+        if (oldAlgorithm) {
+            const { maxRows } = t;
+            const boundingBoxes: { start: number; end: number; row: number }[] = [];
+
+            base.sort(
+                (a: Datum, b: Datum) =>
+                    (a[startField] as number) - (b[startField] as number)
+            ).forEach((d: Datum) => {
+                const start = (d[startField] as number) - padding;
+                const end = (d[endField] as number) + padding;
+
+                const overlapped = boundingBoxes.filter(
+                    box =>
+                        (box.start === start && end === box.end) ||
+                        (box.start <= start && start < box.end) ||
+                        (box.start < end && end <= box.end) ||
+                        (start < box.start && box.end < end)
+                );
+
+                // find the lowest non overlapped row
+                const uniqueRows = [
+                    ...Array.from(new Set(boundingBoxes.map(d => d.row))),
+                    Math.max(...boundingBoxes.map(d => d.row)) + 1
+                ];
+                const overlappedRows = overlapped.map(d => d.row);
+                const lowestNonOverlappedRow = Math.min(
+                    ...uniqueRows.filter(d => overlappedRows.indexOf(d) === -1)
+                );
+
+                // row index starts from zero
+                const row: number = overlapped.length === 0 ? 0 : lowestNonOverlappedRow;
+
+                d[newField] = `${maxRows && maxRows <= row ? maxRows - 1 : row}`;
+
+                boundingBoxes.push({ start, end, row });
+            });
+        } else {
+            // This piling algorithm is based on
+            // https://github.com/higlass/higlass-pileup/blob/8538a34c6d884c28455d6178377ee1ea2c2c90ae/src/bam-fetcher-worker.js#L626
+            const { maxRows } = t;
+            const occupiedSpaceInRows: { start: number; end: number }[] = [];
+
+            base.sort(
+                (a: Datum, b: Datum) =>
+                    (a[startField] as number) - (b[startField] as number)
+            ).forEach((d: Datum) => {
+                const start = (d[startField] as number) - padding;
+                const end = (d[endField] as number) + padding;
+
+                // Find a row to place this segment
+                let rowIndex = occupiedSpaceInRows.findIndex(d => {
+                    // Find a space and update the occupancy info.
+                    if (end < d.start) {
+                        d.start = start;
+                        return true;
+                    } else if (d.end < start) {
+                        d.end = end;
+                        return true;
+                    }
+                    return false;
+                });
+
+                if (rowIndex === -1) {
+                    // We did not find sufficient space from the existing rows, so add a new row.
+                    occupiedSpaceInRows.push({ start, end });
+                    rowIndex = occupiedSpaceInRows.length - 1;
+                }
+
+                d[newField] = `${maxRows && maxRows <= rowIndex ? maxRows - 1 : rowIndex}`;
+            });
+        }
+    } else if (method === 'spread') {
+        const boundingBoxes: { start: number; end: number }[] = [];
+
+        base.sort(
+            (a: Datum, b: Datum) => (a[startField] as number) - (b[startField] as number)
+        ).forEach((d: Datum) => {
+            let start = (d[startField] as number) - padding;
+            let end = (d[endField] as number) + padding;
+
+            let overlapped = boundingBoxes.filter(
+                box =>
+                    (box.start === start && end === box.end) ||
+                    (box.start < start && start < box.end) ||
+                    (box.start < end && end < box.end) ||
+                    (start < box.start && box.end < end)
+            );
+
+            if (overlapped.length > 0) {
+                let trial = 0;
+                do {
+                    overlapped = boundingBoxes.filter(
+                        box =>
+                            (box.start === start && end === box.end) ||
+                            (box.start < start && start < box.end) ||
+                            (box.start < end && end < box.end) ||
+                            (start < box.start && box.end < end)
+                    );
+                    if (overlapped.length > 0) {
+                        if (trial % 2 === 0) {
+                            start += padding * trial;
+                            end += padding * trial;
+                        } else {
+                            start -= padding * trial;
+                            end -= padding * trial;
+                        }
+                    }
+                    trial++;
+                    // TODO: do not go outside of a tile.
+                } while (overlapped.length > 0 && trial < 1000);
+            }
+
+            d[`${newField}Start`] = `${start + padding}`;
+            d[`${newField}Etart`] = `${end - padding}`;
+
+            boundingBoxes.push({ start, end });
+        });
+    }
+    
+    Logging.printTime('displace()');
+    return base;
 }
 
 export function splitExon(split: ExonSplitTransform, data: Datum[], assembly: Assembly = 'hg38'): Datum[] {
