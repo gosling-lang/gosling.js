@@ -343,8 +343,17 @@
         "mirrored": {
           "type": "boolean"
         },
+        "padding": {
+          "type": "number"
+        },
         "range": {
           "$ref": "#/definitions/Range"
+        },
+        "sort": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
         },
         "stack": {
           "type": "boolean"
@@ -604,6 +613,9 @@
         },
         {
           "$ref": "#/definitions/CoverageTransform"
+        },
+        {
+          "$ref": "#/definitions/JSONParseTransform"
         }
       ]
     },
@@ -627,6 +639,9 @@
             },
             "groupField": {
               "type": "string"
+            },
+            "isPaddingBP": {
+              "type": "boolean"
             },
             "padding": {
               "type": "number"
@@ -1320,6 +1335,36 @@
       "required": [
         "type",
         "values"
+      ],
+      "type": "object"
+    },
+    "JSONParseTransform": {
+      "additionalProperties": false,
+      "description": "Parse JSON Object Array and append vertically",
+      "properties": {
+        "baseGenomicField": {
+          "type": "string"
+        },
+        "field": {
+          "type": "string"
+        },
+        "genomicField": {
+          "type": "string"
+        },
+        "genomicLengthField": {
+          "type": "string"
+        },
+        "type": {
+          "const": "subjson",
+          "type": "string"
+        }
+      },
+      "required": [
+        "type",
+        "field",
+        "baseGenomicField",
+        "genomicField",
+        "genomicLengthField"
       ],
       "type": "object"
     },

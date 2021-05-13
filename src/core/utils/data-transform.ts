@@ -10,7 +10,8 @@ import {
     StrConcatTransform,
     StrReplaceTransform,
     CoverageTransform,
-    DisplaceTransform
+    DisplaceTransform,
+    JSONParseTransform
 } from '../gosling.schema';
 import {
     getChannelKeysByAggregateFnc,
@@ -155,10 +156,12 @@ export function displace(t: DisplaceTransform, data: Datum[], scale: ScaleLinear
     const { startField, endField, groupField } = boundingBox;
 
     let padding = 0; // This is a pixel value.
-    if (boundingBox.padding && scale) {
+    if (boundingBox.padding && scale && !boundingBox.isPaddingBP) {
         padding = Math.abs(
             scale.invert(boundingBox.padding) - scale.invert(0)
         );
+    } else if(boundingBox.padding && boundingBox.isPaddingBP) {
+        padding = boundingBox.padding;
     }
 
     // Check whether we have sufficient information.
@@ -334,6 +337,34 @@ export function splitExon(split: ExonSplitTransform, data: Datum[], assembly: As
                     }
                 });
             });
+            return [d, ...newRows];
+        })
+        .reduce((a, b) => a.concat(b), []);
+    return output;
+}
+
+// TODO: Get this data from the fetcher as a default with a flag variable.
+export function parseSubJSON(_: JSONParseTransform, data: Datum[]): Datum[] {
+    const { field, genomicField, baseGenomicField, genomicLengthField } = _;
+    let output: Datum[] = Array.from(data);
+    output = output
+        .map((d: Datum) => {
+            let newRows: Datum[] = JSON.parse(d[field] as string);
+
+            newRows = newRows.map(row => {
+                if(row[genomicField] && d[baseGenomicField]) {
+                    row[genomicField + '_start'] = +row[genomicField] + +d[baseGenomicField];
+                    row[genomicField + '_end'] = +row[genomicField] + +d[baseGenomicField] + +row[genomicLengthField];
+                }
+
+                return assign(JSON.parse(JSON.stringify(d)), {
+                    ...row,
+                    [genomicField + '_start']: row[genomicField + '_start'],
+                    [genomicField + '_end']: row[genomicField + '_end'],
+                    type: 'sub'
+                });
+            });
+
             return [d, ...newRows];
         })
         .reduce((a, b) => a.concat(b), []);

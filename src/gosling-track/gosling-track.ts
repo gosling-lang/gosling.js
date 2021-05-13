@@ -3,13 +3,13 @@ import { scaleLinear } from 'd3-scale';
 import { drawMark } from '../core/mark';
 import { GoslingTrackModel } from '../core/gosling-track-model';
 import { validateTrack } from '../core/utils/validate';
-import { drawScaleMark, setUpShaderAndTextures } from '../core/utils/scalable-rendering';
+import { drawScaleMark } from '../core/utils/scalable-rendering';
 import { shareScaleAcrossTracks } from '../core/utils/scales';
 import { resolveSuperposedTracks } from '../core/utils/overlay';
 import { SingleTrack, OverlaidTrack, Datum } from '../core/gosling.schema';
 import { Tooltip } from '../gosling-tooltip';
 import colorToHex from '../core/utils/color-to-hex';
-import { aggregateCoverage, calculateData, concatString, displace, filterData, replaceString, splitExon } from '../core/utils/data-transform';
+import { aggregateCoverage, calculateData, concatString, displace, filterData, parseSubJSON, replaceString, splitExon } from '../core/utils/data-transform';
 import { getTabularData } from './data-abstraction';
 import { BAMDataFetcher } from '../data-fetcher/bam';
 import { spawn, Worker } from 'threads';
@@ -57,6 +57,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
 
             // This is being used to keep track of xScale for entire view (i.e., no tiling concept used)
             this.drawnAtScale = HGC.libraries.d3Scale.scaleLinear();
+            this.scalableGraphics = [];
 
             this.loadingText = new HGC.libraries.PIXI.Text('Loading', {
                 fontSize: '14px',
@@ -273,15 +274,20 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
         renderTile(tile: any) {
             if(PRINT_RENDERING_CYCLE) console.warn('renderTile()');
 
-            // tile.mouseOverData = null;
-            tile.graphics.clear();
-            tile.graphics.removeChildren();
             tile.drawnAtScale = this._xScale.copy(); // being used in `super.draw()`
 
             if (!tile.goslingModels) {
                 // We do not have a track model prepared to visualize
                 return;
             }
+
+            // tile.mouseOverData = null;
+            tile.graphics.clear();
+            tile.graphics.removeChildren();
+
+            // TODO: make this not blink
+            this.pMain.removeChildren();
+            this.scalableGraphics = [];
 
             // A single tile contains one or multiple gosling visualizations that are overlaid
             tile.goslingModels.forEach((tm: GoslingTrackModel) => {
@@ -331,8 +337,10 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             const newRange = xScale.domain().map(drawnAtScale);
 
             const posOffset = newRange[0];
-            graphics.scale.x = tileK;
-            graphics.position.x = -posOffset * tileK;
+            graphics.forEach((g: any) => {
+                g.scale.x = tileK;
+                g.position.x = -posOffset * tileK;
+            });
         }
 
         /**
@@ -565,6 +573,9 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                                 break;
                             case 'coverage':
                                 tile.gos.tabularDataFiltered = aggregateCoverage(t, tile.gos.tabularDataFiltered, this._xScale.copy());
+                                break;
+                            case 'subjson':
+                                tile.gos.tabularDataFiltered = parseSubJSON(t, tile.gos.tabularDataFiltered);
                                 break;
                             case 'displace':
                                 tile.gos.tabularDataFiltered = displace(t, tile.gos.tabularDataFiltered, this._xScale.copy());

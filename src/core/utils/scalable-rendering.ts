@@ -124,12 +124,13 @@ export function drawScaleMark(HGC: any, trackInfo: any, tile: any, model: Goslin
                 }
                 trackInfo.pMain.x = trackInfo.position[0];
 
-                if (trackInfo.scalableGraphics) {
-                    trackInfo.pMain.removeChild(trackInfo.scalableGraphics);
-                }
+                // if (trackInfo.scalableGraphics) {
+                    // trackInfo.pMain.removeChild(trackInfo.scalableGraphics);
+                // }
 
                 trackInfo.pMain.addChild(newGraphics);
-                trackInfo.scalableGraphics = newGraphics;
+                // trackInfo.scalableGraphics = newGraphics;
+                trackInfo.scalableGraphics.push(newGraphics);
 
                 trackInfo.drawnAtScale = HGC.libraries.d3Scale.scaleLinear().domain(xDomain).range(xRange);
 

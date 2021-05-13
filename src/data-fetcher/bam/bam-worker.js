@@ -805,7 +805,10 @@ const getTabularData = (uid, tileIds) => {
         }
 
         for (const segment of tileValue) {
-            allSegments[segment.id] = segment;
+            allSegments[segment.id] = {
+                ...segment,
+                substitutions: JSON.stringify(segment.substitutions)
+            };
         }
     }
 
@@ -1361,6 +1364,7 @@ const rectProperties = (spec, data, trackWidth, trackHeight, tileSize, xDomain, 
     /* Properties */
     data.forEach(d => {
         const rowPosition = encodedPIXIProperty(spec, 'row', d);
+        const rowPadding = spec.row.padding || 0;
         const x = encodedPIXIProperty(spec, 'x', d);
         const color = encodedPIXIProperty(spec, 'color', d);
         const stroke = encodedPIXIProperty(spec, 'stroke', d);
@@ -1384,8 +1388,8 @@ const rectProperties = (spec, data, trackWidth, trackHeight, tileSize, xDomain, 
 
         const xs = x;
         const xe = x + rectWidth;
-        const ys = rowPosition + y;
-        const ye = ys + rectHeight;
+        const ys = rowPosition + y + rowPadding;
+        const ye = ys + rectHeight - rowPadding;
         y = y + rectHeight / 2.0;
 
         if (circular) {
