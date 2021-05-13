@@ -1,3 +1,4 @@
+import uuid from 'uuid';
 import { debounce, sampleSize, uniqBy } from 'lodash';
 import { scaleLinear } from 'd3-scale';
 import { drawMark } from '../core/mark';
@@ -52,12 +53,23 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             this.worker = bamWorker;
             context.dataFetcher.track = this;
             this.context = context;
+
             this.originalSpec = this.options.spec;
+
+            // Temp. Add ids to each overalid tracks that will be rendered independently
+            if('overlay' in this.originalSpec) {
+                this.originalSpec.overlay = this.originalSpec.overlay.map(o => {
+                    return {...o, _renderingId: uuid.v1()}
+                });
+            } else {
+                this.originalSpec._renderingId = uuid.v1();
+            }
+
             this.tileSize = this.tilesetInfo?.tile_size ?? 1024;
 
             // This is being used to keep track of xScale for entire view (i.e., no tiling concept used)
             this.drawnAtScale = HGC.libraries.d3Scale.scaleLinear();
-            this.scalableGraphics = [];
+            this.scalableGraphics = {};
 
             this.loadingText = new HGC.libraries.PIXI.Text('Loading', {
                 fontSize: '14px',
@@ -143,7 +155,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             this.refreshTiles();
 
             if (this.scalableGraphics) {
-                this.scaleScalableGraphics(this.scalableGraphics, newXScale, this.drawnAtScale);
+                this.scaleScalableGraphics(Object.values(this.scalableGraphics), newXScale, this.drawnAtScale);
             }
 
             if(!usePrereleaseRendering(this.originalSpec)) {
@@ -286,8 +298,8 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             tile.graphics.removeChildren();
 
             // TODO: make this not blink
-            this.pMain.removeChildren();
-            this.scalableGraphics = [];
+            // this.pMain.removeChildren();
+            // this.scalableGraphics = [];
 
             // A single tile contains one or multiple gosling visualizations that are overlaid
             tile.goslingModels.forEach((tm: GoslingTrackModel) => {
@@ -329,7 +341,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
         /**
          * Stretch out the scaleble graphics to have proper effect upon zoom and pan.
          */
-        scaleScalableGraphics(graphics: any, xScale: any, drawnAtScale: any) {
+        scaleScalableGraphics(graphics: PIXI.Graphics[], xScale: any, drawnAtScale: any) {
             const drawnAtScaleExtent = drawnAtScale.domain()[1] - drawnAtScale.domain()[0];
             const xScaleExtent = xScale.domain()[1] - xScale.domain()[0];
 
@@ -337,7 +349,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             const newRange = xScale.domain().map(drawnAtScale);
 
             const posOffset = newRange[0];
-            graphics.forEach((g: any) => {
+            graphics.forEach(g => {
                 g.scale.x = tileK;
                 g.position.x = -posOffset * tileK;
             });

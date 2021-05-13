@@ -1,3 +1,4 @@
+import uuid from 'uuid';
 import { ChannelDeep, PREDEFINED_COLORS, ChannelTypes, ChannelValue, SingleTrack, Channel } from './gosling.schema';
 import { validateTrack, getGenomicChannelFromTrack, getGenomicChannelKeyFromTrack } from './utils/validate';
 import {
@@ -42,6 +43,8 @@ export type ScaleType =
     | (() => string | number); // constant value
 
 export class GoslingTrackModel {
+    private id: string;
+
     private theme: Theme;
 
     /* spec */
@@ -58,6 +61,8 @@ export class GoslingTrackModel {
     };
 
     constructor(spec: SingleTrack, data: { [k: string]: number | string }[], theme: Theme = 'light') {
+        this.id = uuid.v1();
+
         this.theme = theme;
 
         this.dataOriginal = JSON.parse(JSON.stringify(data));
@@ -92,6 +97,14 @@ export class GoslingTrackModel {
         // console.log('corrected track', this.spec());
     }
 
+    public getId(): string {
+        return this.id;
+    }
+
+    public getRenderingId(): string {
+        return this.spec()._renderingId ?? this.getId();
+    }
+    
     public originalSpec(): SingleTrack {
         return this.specOriginal;
     }

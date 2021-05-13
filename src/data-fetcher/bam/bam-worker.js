@@ -1390,7 +1390,7 @@ const rectProperties = (spec, data, trackWidth, trackHeight, tileSize, xDomain, 
         const xe = x + rectWidth;
         const ys = rowPosition + y + rowPadding;
         const ye = ys + rectHeight - rowPadding;
-        y = y + rectHeight / 2.0;
+        // y = y + rectHeight / 2.0;
 
         if (circular) {
             // Do not support circular layouts yet

@@ -93,6 +93,9 @@ export interface CommonTrackDef extends CommonViewDef, CommonRequiredTrackDef {
     startAngle?: number; // [0, 360]
     endAngle?: number; // [0, 360]
 
+    // Internally used properties for rendering
+    _renderingId?: string;
+
     // To test upcoming feature.
     prerelease?: { testUsingNewRectRenderingForBAM?: boolean; }
 }

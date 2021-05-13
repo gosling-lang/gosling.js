@@ -30,13 +30,15 @@ export const EX_SPEC_PILEUP: GoslingSpec = {
             },
             dataTransform: [
                 // { type: 'subjson', field: 'substitutions', genomicField: 'pos', baseGenomicField: 'from', genomicLengthField: 'length'},  
-                { type: 'coverage', startField: 'from', endField: 'to', groupField: 'variant'}
+                { type: 'coverage', startField: 'from', endField: 'to' }
             ],
             mark: 'bar',
             x: { field: 'from', type: 'genomic' },
             xe: { field: 'to', type: 'genomic' },
             y: { field: 'coverage', type: 'quantitative' },
             color: {value: 'lightgray'},
+            stroke: {value: 'gray'},
+            // strokeWidth: {value: 0.3},
             // color: { field: 'variant', type: 'nominal', domain: ['undefined', 'A', 'T', 'G', 'C', 'S', 'H', 'X', 'I', 'D'], range: ['lightgray', 'red', 'red', 'red'] },
             width: 650,
             height: 80
@@ -58,6 +60,8 @@ export const EX_SPEC_PILEUP: GoslingSpec = {
                     ],
                     x: { field: 'from', type: 'genomic' },
                     xe: { field: 'to', type: 'genomic' },
+                    stroke: { value: 'gray' },
+                    // strokeWidth: { value: 0.5 },
                 },
                 {
                     dataTransform: [
@@ -76,10 +80,8 @@ export const EX_SPEC_PILEUP: GoslingSpec = {
             y: { field: 'pileup-row', type: 'nominal', "flip": true}, // , sort: ['+', '-']
             row: { field: 'strand', type: 'nominal', domain: ['+', '-'], padding: 1 },
             color: { field: 'strand', type: 'nominal', domain: ['+', '-'], range: ["#97A8B2", "#D4C6BA"] },
-            stroke: { value: 'black' },
-            // strokeWidth: { value: 0.01 },
             style: { outlineWidth: 0.5 },
-            width: 650,
+            width: 1250,
             height: 650
         }
     ]

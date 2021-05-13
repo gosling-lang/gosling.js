@@ -124,17 +124,19 @@ export function drawScaleMark(HGC: any, trackInfo: any, tile: any, model: Goslin
                 }
                 trackInfo.pMain.x = trackInfo.position[0];
 
-                // if (trackInfo.scalableGraphics) {
-                    // trackInfo.pMain.removeChild(trackInfo.scalableGraphics);
-                // }
+                const oldGraphics = trackInfo.scalableGraphics[model.getRenderingId()];
+                if (oldGraphics) {
+                    (trackInfo.pMain as PIXI.Graphics).removeChild(oldGraphics);
+                }
 
                 trackInfo.pMain.addChild(newGraphics);
-                // trackInfo.scalableGraphics = newGraphics;
-                trackInfo.scalableGraphics.push(newGraphics);
 
+                // Store graphics so that we can remove properly
+                trackInfo.scalableGraphics[model.getRenderingId()] = newGraphics;
+                
                 trackInfo.drawnAtScale = HGC.libraries.d3Scale.scaleLinear().domain(xDomain).range(xRange);
 
-                trackInfo.scaleScalableGraphics(trackInfo.scalableGraphics, trackInfo._xScale, trackInfo.drawnAtScale);
+                trackInfo.scaleScalableGraphics([newGraphics], trackInfo._xScale, trackInfo.drawnAtScale);
 
                 trackInfo.forceDraw();
 
