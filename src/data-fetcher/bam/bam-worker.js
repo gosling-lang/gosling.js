@@ -626,11 +626,8 @@ const getTabularData = (uid, tileIds) => {
         }
     }
 
-    const t1 = currTime();
     const segmentList = Object.values(allSegments);
     const buffer = Buffer.from(JSON.stringify(segmentList)).buffer;
-    const t2 = currTime();
-    // console.log('renderSegments time:', t2 - t1, 'ms');
     return Transfer(buffer, [buffer]);
 };
 
