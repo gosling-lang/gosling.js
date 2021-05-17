@@ -70,6 +70,14 @@ export function drawRect(HGC: any, trackInfo: any, tile: any, model: GoslingTrac
         y = y + rectHeight / 2.0;
         const absoluteHeight = model.visualPropertyByChannel('size', d) ?? undefined; // TODO: this is making it complicated, way to simplify this?
 
+        // stroke
+        g.lineStyle(
+            strokeWidth,
+            colorToHex(stroke),
+            opacity, // alpha
+            0.5 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
+        );
+
         if (circular) {
             if (xe < 0 || trackWidth < xs) {
                 // do not draw overflewed visual marks

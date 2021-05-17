@@ -1,5 +1,5 @@
 import uuid from 'uuid';
-import { debounce, sampleSize, uniqBy } from 'lodash';
+import { sampleSize, uniqBy } from 'lodash';
 import { scaleLinear } from 'd3-scale';
 import { drawMark } from '../core/mark';
 import { GoslingTrackModel } from '../core/gosling-track-model';
@@ -10,13 +10,22 @@ import { resolveSuperposedTracks } from '../core/utils/overlay';
 import { SingleTrack, OverlaidTrack, Datum } from '../core/gosling.schema';
 import { Tooltip } from '../gosling-tooltip';
 import colorToHex from '../core/utils/color-to-hex';
-import { aggregateCoverage, calculateData, concatString, displace, filterData, parseSubJSON, replaceString, splitExon } from '../core/utils/data-transform';
+import {
+    aggregateCoverage,
+    calculateData,
+    concatString,
+    displace,
+    filterData,
+    parseSubJSON,
+    replaceString,
+    splitExon
+} from '../core/utils/data-transform';
 import { getTabularData } from './data-abstraction';
 import { BAMDataFetcher } from '../data-fetcher/bam';
 import { spawn, Worker } from 'threads';
 
 // Set `true` to print in what order each function is called
-export const PRINT_RENDERING_CYCLE = true;
+export const PRINT_RENDERING_CYCLE = false;
 
 function usePrereleaseRendering(spec: SingleTrack | OverlaidTrack) {
     return spec.prerelease?.testUsingNewRectRenderingForBAM && spec.data?.type === 'bam';
@@ -57,9 +66,9 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             this.originalSpec = this.options.spec;
 
             // Temp. Add ids to each overalid tracks that will be rendered independently
-            if('overlay' in this.originalSpec) {
+            if ('overlay' in this.originalSpec) {
                 this.originalSpec.overlay = this.originalSpec.overlay.map(o => {
-                    return {...o, _renderingId: uuid.v1()}
+                    return { ...o, _renderingId: uuid.v1() };
                 });
             } else {
                 this.originalSpec._renderingId = uuid.v1();
@@ -111,8 +120,8 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
          * ?
          * (https://github.com/higlass/higlass/blob/54f5aae61d3474f9e868621228270f0c90ef9343/app/scripts/TiledPixiTrack.js#L727)
          */
-         draw() {
-            if(PRINT_RENDERING_CYCLE) console.warn('draw()');
+        draw() {
+            if (PRINT_RENDERING_CYCLE) console.warn('draw()');
 
             this.tooltips = [];
             this.svgData = [];
@@ -135,7 +144,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
 
                 // This function calls `drawTile` on each tile.
                 super.draw();
-            }
+            };
 
             if (usePrereleaseRendering(this.originalSpec)) {
                 this.updateTileAsync(processTilesAndDraw);
@@ -149,18 +158,18 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
          * (Refer to https://github.com/higlass/higlass/blob/54f5aae61d3474f9e868621228270f0c90ef9343/app/scripts/HorizontalLine1DPixiTrack.js#L50)
          */
         initTile(tile: any) {
-            if(PRINT_RENDERING_CYCLE) console.warn('initTile(tile)');
+            if (PRINT_RENDERING_CYCLE) console.warn('initTile(tile)');
             super.initTile(tile); // This calls `drawTile()`
         }
 
-        updateTile(/* tile: any */) { } // Never mind about this function for the simplicity.
-        renderTile(/* tile: any */) { } // Never mind about this function for the simplicity.
-        
+        updateTile(/* tile: any */) {} // Never mind about this function for the simplicity.
+        renderTile(/* tile: any */) {} // Never mind about this function for the simplicity.
+
         /**
          * Display a tile upon receiving a new one or when explicitly called by a developer, e.g., calling `this.draw()`
          */
         drawTile(tile: any) {
-            if(PRINT_RENDERING_CYCLE) console.warn('drawTile(tile)');
+            if (PRINT_RENDERING_CYCLE) console.warn('drawTile(tile)');
 
             tile.drawnAtScale = this._xScale.copy(); // being used in `super.draw()`
 
@@ -189,20 +198,20 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                 // This is for testing the upcoming rendering methods
                 if (usePrereleaseRendering(this.originalSpec)) {
                     // Use worker.
-                    drawScaleMark(HGC, this, tile, tm, this.options.theme);
+                    drawScaleMark(HGC, this, tile, tm);
                     return;
                 }
 
                 drawMark(HGC, this, tile, tm, this.options.theme);
             });
         }
-        
+
         /**
          * Rerender tiles using the manually changed options.
          * (Refer to https://github.com/higlass/higlass/blob/54f5aae61d3474f9e868621228270f0c90ef9343/app/scripts/HorizontalLine1DPixiTrack.js#L75)
          */
-         rerender(newOptions: any) {
-            if(PRINT_RENDERING_CYCLE) console.warn('rerender(options)');
+        rerender(newOptions: any) {
+            if (PRINT_RENDERING_CYCLE) console.warn('rerender(options)');
             // super.rerender(newOptions); // This calls `renderTile()` on every tiles
 
             this.options = newOptions;
@@ -219,7 +228,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
          * (Refer to https://github.com/higlass/higlass/blob/54f5aae61d3474f9e868621228270f0c90ef9343/app/scripts/PixiTrack.js#L186).
          */
         setDimensions(newDimensions: any) {
-            if(PRINT_RENDERING_CYCLE) console.warn('setDimensions()');
+            if (PRINT_RENDERING_CYCLE) console.warn('setDimensions()');
 
             this.oldDimensions = this.dimensions;
             super.setDimensions(newDimensions); // This simply updates `this._xScale` and `this._yScale`
@@ -251,7 +260,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
          * For brushing, refer to https://github.com/higlass/higlass/blob/caf230b5ee41168ea491572618612ac0cc804e5a/app/scripts/HeatmapTiledPixiTrack.js#L1493
          */
         zoomed(newXScale: any, newYScale: any) {
-            if(PRINT_RENDERING_CYCLE) console.warn('zoomed()');
+            if (PRINT_RENDERING_CYCLE) console.warn('zoomed()');
 
             // super.zoomed(newXScale, newYScale); // This function updates `this._xScale` and `this._yScale` and call this.draw();
             this.xScale(newXScale);
@@ -263,7 +272,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                 this.scaleScalableGraphics(Object.values(this.scalableGraphics), newXScale, this.drawnAtScale);
             }
 
-            if(!usePrereleaseRendering(this.originalSpec)) {
+            if (!usePrereleaseRendering(this.originalSpec)) {
                 this.draw();
             }
             this.forceDraw();
@@ -554,13 +563,21 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                                 );
                                 break;
                             case 'coverage':
-                                tile.gos.tabularDataFiltered = aggregateCoverage(t, tile.gos.tabularDataFiltered, this._xScale.copy());
+                                tile.gos.tabularDataFiltered = aggregateCoverage(
+                                    t,
+                                    tile.gos.tabularDataFiltered,
+                                    this._xScale.copy()
+                                );
                                 break;
                             case 'subjson':
                                 tile.gos.tabularDataFiltered = parseSubJSON(t, tile.gos.tabularDataFiltered);
                                 break;
                             case 'displace':
-                                tile.gos.tabularDataFiltered = displace(t, tile.gos.tabularDataFiltered, this._xScale.copy());
+                                tile.gos.tabularDataFiltered = displace(
+                                    t,
+                                    tile.gos.tabularDataFiltered,
+                                    this._xScale.copy()
+                                );
                                 break;
                         }
                     });

@@ -104,7 +104,7 @@ export class GoslingTrackModel {
     public getRenderingId(): string {
         return this.spec()._renderingId ?? this.getId();
     }
-    
+
     public originalSpec(): SingleTrack {
         return this.specOriginal;
     }

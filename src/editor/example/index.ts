@@ -77,12 +77,6 @@ export const examples: ReadonlyArray<{
         spec: EX_SPEC_CIRCULAR_OVERVIEW_LINEAR_DETAIL
     },
     {
-        name: 'Pileup Tracks (BAM File)',
-        spec: EX_SPEC_PILEUP,
-        id: 'BAM_PILEUP',
-        // forceShow: true
-    },
-    {
         name: 'Semantic Zoom Examples',
         id: 'SEMANTIC_ZOOM',
         spec: EX_SPEC_SEMANTIC_ZOOM
@@ -142,6 +136,12 @@ export const examples: ReadonlyArray<{
         name: 'Dark Theme (Beta)',
         id: 'DARK_THEME',
         spec: EX_SPEC_DARK_THEME,
+        underDevelopment: true
+    },
+    {
+        name: 'BAM file pileup tracks',
+        id: 'BAM_PILEUP',
+        spec: EX_SPEC_PILEUP,
         underDevelopment: true
     },
     {

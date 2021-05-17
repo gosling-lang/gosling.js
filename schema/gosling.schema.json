@@ -500,6 +500,9 @@
       "additionalProperties": false,
       "description": "Partial specification of `BasicSingleTrack` to use default visual encoding predefined by data type.",
       "properties": {
+        "_renderingId": {
+          "type": "string"
+        },
         "assembly": {
           "$ref": "#/definitions/Assembly"
         },
@@ -1826,6 +1829,9 @@
       "additionalProperties": false,
       "description": "Superposing multiple tracks.",
       "properties": {
+        "_renderingId": {
+          "type": "string"
+        },
         "assembly": {
           "$ref": "#/definitions/Assembly"
         },
@@ -1888,6 +1894,9 @@
           "items": {
             "additionalProperties": false,
             "properties": {
+              "_renderingId": {
+                "type": "string"
+              },
               "assembly": {
                 "$ref": "#/definitions/Assembly"
               },
@@ -2191,6 +2200,9 @@
     "OverlaidTracks": {
       "additionalProperties": false,
       "properties": {
+        "_renderingId": {
+          "type": "string"
+        },
         "alignment": {
           "const": "overlay",
           "type": "string"
@@ -2330,6 +2342,9 @@
           "items": {
             "additionalProperties": false,
             "properties": {
+              "_renderingId": {
+                "type": "string"
+              },
               "assembly": {
                 "$ref": "#/definitions/Assembly"
               },
@@ -2392,6 +2407,9 @@
                 "items": {
                   "additionalProperties": false,
                   "properties": {
+                    "_renderingId": {
+                      "type": "string"
+                    },
                     "assembly": {
                       "$ref": "#/definitions/Assembly"
                     },
@@ -2894,6 +2912,9 @@
         {
           "additionalProperties": false,
           "properties": {
+            "_renderingId": {
+              "type": "string"
+            },
             "alignment": {
               "const": "overlay",
               "type": "string"
@@ -3039,6 +3060,9 @@
               "items": {
                 "additionalProperties": false,
                 "properties": {
+                  "_renderingId": {
+                    "type": "string"
+                  },
                   "assembly": {
                     "$ref": "#/definitions/Assembly"
                   },
@@ -3101,6 +3125,9 @@
                     "items": {
                       "additionalProperties": false,
                       "properties": {
+                        "_renderingId": {
+                          "type": "string"
+                        },
                         "assembly": {
                           "$ref": "#/definitions/Assembly"
                         },
@@ -3459,6 +3486,9 @@
         {
           "additionalProperties": false,
           "properties": {
+            "_renderingId": {
+              "type": "string"
+            },
             "alignment": {
               "const": "stack",
               "type": "string"
@@ -3606,6 +3636,9 @@
                   {
                     "additionalProperties": false,
                     "properties": {
+                      "_renderingId": {
+                        "type": "string"
+                      },
                       "assembly": {
                         "$ref": "#/definitions/Assembly"
                       },
@@ -3668,6 +3701,9 @@
                         "items": {
                           "additionalProperties": false,
                           "properties": {
+                            "_renderingId": {
+                              "type": "string"
+                            },
                             "assembly": {
                               "$ref": "#/definitions/Assembly"
                             },
@@ -4116,6 +4152,9 @@
     "SingleTrack": {
       "additionalProperties": false,
       "properties": {
+        "_renderingId": {
+          "type": "string"
+        },
         "assembly": {
           "$ref": "#/definitions/Assembly"
         },
@@ -4367,6 +4406,9 @@
     "StackedTracks": {
       "additionalProperties": false,
       "properties": {
+        "_renderingId": {
+          "type": "string"
+        },
         "alignment": {
           "const": "stack",
           "type": "string"
@@ -4508,6 +4550,9 @@
               {
                 "additionalProperties": false,
                 "properties": {
+                  "_renderingId": {
+                    "type": "string"
+                  },
                   "assembly": {
                     "$ref": "#/definitions/Assembly"
                   },
@@ -4570,6 +4615,9 @@
                     "items": {
                       "additionalProperties": false,
                       "properties": {
+                        "_renderingId": {
+                          "type": "string"
+                        },
                         "assembly": {
                           "$ref": "#/definitions/Assembly"
                         },

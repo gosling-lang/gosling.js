@@ -1,6 +1,4 @@
 import { GoslingTrackModel } from '../gosling-track-model';
-import Logging from './log'
-import { Theme } from './theme';
 
 export const PILEUP_COLORS = {
     BG: [0.89, 0.89, 0.89, 1], // gray for the read background
@@ -77,7 +75,7 @@ varying vec4 vColor;
     );
 }
 
-export function drawScaleMark(HGC: any, trackInfo: any, tile: any, model: GoslingTrackModel, theme: Theme = 'light') {
+export function drawScaleMark(HGC: any, trackInfo: any, tile: any, model: GoslingTrackModel) {
     trackInfo.labelText.text = ' Rendering...';
 
     const tileSize = trackInfo.tilesetInfo.tile_size;
@@ -136,7 +134,7 @@ export function drawScaleMark(HGC: any, trackInfo: any, tile: any, model: Goslin
 
                 // Store graphics so that we can remove properly
                 trackInfo.scalableGraphics[model.getRenderingId()] = newGraphics;
-                
+
                 trackInfo.drawnAtScale = HGC.libraries.d3Scale.scaleLinear().domain(xDomain).range(xRange);
 
                 trackInfo.scaleScalableGraphics([newGraphics], trackInfo._xScale, trackInfo.drawnAtScale);

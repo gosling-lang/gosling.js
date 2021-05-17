@@ -1,5 +1,5 @@
-import { ScaleLinear } from 'd3-scale'
-import { assign, range } from 'lodash';
+import { ScaleLinear } from 'd3-scale';
+import { assign } from 'lodash';
 import {
     SingleTrack,
     Datum,
@@ -22,7 +22,7 @@ import {
     IsRangeFilter
 } from '../gosling.schema.guards';
 import { GET_CHROM_SIZES } from './assembly';
-import Logging from './log'
+import Logging from './log';
 
 /**
  * Apply filter
@@ -105,13 +105,13 @@ export function calculateData(log: LogTransform, data: Datum[]): Datum[] {
 /**
  * Aggregate data rows and calculate coverage of reads.
  */
- export function aggregateCoverage(_: CoverageTransform, data: Datum[], scale: ScaleLinear<any, any>): Datum[] {
+export function aggregateCoverage(_: CoverageTransform, data: Datum[], scale: ScaleLinear<any, any>): Datum[] {
     Logging.recordTime('aggregateCoverage');
 
     const { startField, endField, newField, groupField } = _;
 
-    const coverage: { [group: string]: { [position: string]: number }} = {};
-    
+    const coverage: { [group: string]: { [position: string]: number } } = {};
+
     // Calculate coverage by one pixel.
     const binSize = 1;
     data.forEach(d => {
@@ -120,11 +120,11 @@ export function calculateData(log: LogTransform, data: Datum[]): Datum[] {
         const group = groupField ? d[groupField] : '__NO_GROUP__';
 
         const adjustedStart = Math.floor(curStart);
-        for(let i = adjustedStart; i < curEnd; i += binSize) {
-            if(!coverage[group]) {
+        for (let i = adjustedStart; i < curEnd; i += binSize) {
+            if (!coverage[group]) {
                 coverage[group] = {};
             }
-            if(!coverage[group][i]) {
+            if (!coverage[group][i]) {
                 coverage[group][i] = 0;
             }
             coverage[group][i]++;
@@ -140,10 +140,10 @@ export function calculateData(log: LogTransform, data: Datum[]): Datum[] {
                 [endField]: scale.invert(+key + binSize),
                 [newField ?? 'coverage']: value,
                 [groupField ?? 'group']: groupName
-            }
+            };
         });
     });
-    
+
     // console.log(coverage);
     Logging.printTime('aggregateCoverage');
     return output;
@@ -157,20 +157,15 @@ export function displace(t: DisplaceTransform, data: Datum[], scale: ScaleLinear
 
     let padding = 0; // This is a pixel value.
     if (boundingBox.padding && scale && !boundingBox.isPaddingBP) {
-        padding = Math.abs(
-            scale.invert(boundingBox.padding) - scale.invert(0)
-        );
-    } else if(boundingBox.padding && boundingBox.isPaddingBP) {
+        padding = Math.abs(scale.invert(boundingBox.padding) - scale.invert(0));
+    } else if (boundingBox.padding && boundingBox.isPaddingBP) {
         padding = boundingBox.padding;
     }
 
     // Check whether we have sufficient information.
     const base = Array.from(data);
     if (base && base.length > 0) {
-        if (
-            !Object.keys(base[0]).find(d => d === startField) ||
-            !Object.keys(base[0]).find(d => d === endField)
-        ) {
+        if (!Object.keys(base[0]).find(d => d === startField) || !Object.keys(base[0]).find(d => d === endField)) {
             // We did not find the fields from the data, so exit here.
             return base;
         }
@@ -184,56 +179,52 @@ export function displace(t: DisplaceTransform, data: Datum[], scale: ScaleLinear
             const { maxRows } = t;
             const boundingBoxes: { start: number; end: number; row: number }[] = [];
 
-            base.sort(
-                (a: Datum, b: Datum) =>
-                    (a[startField] as number) - (b[startField] as number)
-            ).forEach((d: Datum) => {
-                const start = (d[startField] as number) - padding;
-                const end = (d[endField] as number) + padding;
+            base.sort((a: Datum, b: Datum) => (a[startField] as number) - (b[startField] as number)).forEach(
+                (d: Datum) => {
+                    const start = (d[startField] as number) - padding;
+                    const end = (d[endField] as number) + padding;
 
-                const overlapped = boundingBoxes.filter(
-                    box =>
-                        (box.start === start && end === box.end) ||
-                        (box.start <= start && start < box.end) ||
-                        (box.start < end && end <= box.end) ||
-                        (start < box.start && box.end < end)
-                );
+                    const overlapped = boundingBoxes.filter(
+                        box =>
+                            (box.start === start && end === box.end) ||
+                            (box.start <= start && start < box.end) ||
+                            (box.start < end && end <= box.end) ||
+                            (start < box.start && box.end < end)
+                    );
 
-                // find the lowest non overlapped row
-                const uniqueRows = [
-                    ...Array.from(new Set(boundingBoxes.map(d => d.row))),
-                    Math.max(...boundingBoxes.map(d => d.row)) + 1
-                ];
-                const overlappedRows = overlapped.map(d => d.row);
-                const lowestNonOverlappedRow = Math.min(
-                    ...uniqueRows.filter(d => overlappedRows.indexOf(d) === -1)
-                );
+                    // find the lowest non overlapped row
+                    const uniqueRows = [
+                        ...Array.from(new Set(boundingBoxes.map(d => d.row))),
+                        Math.max(...boundingBoxes.map(d => d.row)) + 1
+                    ];
+                    const overlappedRows = overlapped.map(d => d.row);
+                    const lowestNonOverlappedRow = Math.min(
+                        ...uniqueRows.filter(d => overlappedRows.indexOf(d) === -1)
+                    );
 
-                // row index starts from zero
-                const row: number = overlapped.length === 0 ? 0 : lowestNonOverlappedRow;
+                    // row index starts from zero
+                    const row: number = overlapped.length === 0 ? 0 : lowestNonOverlappedRow;
 
-                d[newField] = `${maxRows && maxRows <= row ? maxRows - 1 : row}`;
+                    d[newField] = `${maxRows && maxRows <= row ? maxRows - 1 : row}`;
 
-                boundingBoxes.push({ start, end, row });
-            });
+                    boundingBoxes.push({ start, end, row });
+                }
+            );
         } else {
             // This piling algorithm is heavily based on
             // https://github.com/higlass/higlass-pileup/blob/8538a34c6d884c28455d6178377ee1ea2c2c90ae/src/bam-fetcher-worker.js#L626
             const { maxRows } = t;
-            const occupiedSpaceInRows: { [group: string]: { start: number; end: number }[]} = {};
+            const occupiedSpaceInRows: { [group: string]: { start: number; end: number }[] } = {};
 
-            const sorted = base.sort(
-                (a: Datum, b: Datum) =>
-                    (a[startField] as number) - (b[startField] as number)
-            )
-                        
+            const sorted = base.sort((a: Datum, b: Datum) => (a[startField] as number) - (b[startField] as number));
+
             sorted.forEach((d: Datum) => {
                 const start = (d[startField] as number) - padding;
                 const end = (d[endField] as number) + padding;
 
                 // Create object if none
                 const group = groupField ? d[groupField] : '__NO_GROUP__';
-                if(!occupiedSpaceInRows[group]) {
+                if (!occupiedSpaceInRows[group]) {
                     occupiedSpaceInRows[group] = [];
                 }
 
@@ -262,9 +253,7 @@ export function displace(t: DisplaceTransform, data: Datum[], scale: ScaleLinear
     } else if (method === 'spread') {
         const boundingBoxes: { start: number; end: number }[] = [];
 
-        base.sort(
-            (a: Datum, b: Datum) => (a[startField] as number) - (b[startField] as number)
-        ).forEach((d: Datum) => {
+        base.sort((a: Datum, b: Datum) => (a[startField] as number) - (b[startField] as number)).forEach((d: Datum) => {
             let start = (d[startField] as number) - padding;
             let end = (d[endField] as number) + padding;
 
@@ -306,7 +295,7 @@ export function displace(t: DisplaceTransform, data: Datum[], scale: ScaleLinear
             boundingBoxes.push({ start, end });
         });
     }
-    
+
     Logging.printTime('displace()');
     return base;
 }
@@ -353,15 +342,15 @@ export function parseSubJSON(_: JSONParseTransform, data: Datum[]): Datum[] {
             let newRows: Datum[] = JSON.parse(d[field] as string);
 
             newRows = newRows.map(row => {
-                if(row[genomicField] && d[baseGenomicField]) {
-                    row[genomicField + '_start'] = +row[genomicField] + +d[baseGenomicField];
-                    row[genomicField + '_end'] = +row[genomicField] + +d[baseGenomicField] + +row[genomicLengthField];
+                if (row[genomicField] && d[baseGenomicField]) {
+                    row[`${genomicField}_start`] = +row[genomicField] + +d[baseGenomicField];
+                    row[`${genomicField}_end`] = +row[genomicField] + +d[baseGenomicField] + +row[genomicLengthField];
                 }
 
                 return assign(JSON.parse(JSON.stringify(d)), {
                     ...row,
-                    [genomicField + '_start']: row[genomicField + '_start'],
-                    [genomicField + '_end']: row[genomicField + '_end'],
+                    [`${genomicField}_start`]: row[`${genomicField}_start`],
+                    [`${genomicField}_end`]: row[`${genomicField}_end`],
                     type: 'sub'
                 });
             });

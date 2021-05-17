@@ -97,7 +97,7 @@ export interface CommonTrackDef extends CommonViewDef, CommonRequiredTrackDef {
     _renderingId?: string;
 
     // To test upcoming feature.
-    prerelease?: { testUsingNewRectRenderingForBAM?: boolean; }
+    prerelease?: { testUsingNewRectRenderingForBAM?: boolean };
 }
 
 /**
@@ -433,7 +433,7 @@ export type DataTransform =
     | DisplaceTransform
     | ExonSplitTransform
     | CoverageTransform
-    | JSONParseTransform
+    | JSONParseTransform;
 
 export type FilterTransform = OneOfFilter | RangeFilter | IncludeFilter;
 
