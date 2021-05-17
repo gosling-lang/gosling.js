@@ -1,5 +1,4 @@
 import { GoslingSpec } from '../../';
-import { GOSLING_PUBLIC_DATA } from './gosling-data';
 
 export const EX_SPEC_CIRCOS: GoslingSpec = {
     title: 'Circos',
@@ -24,35 +23,35 @@ export const EX_SPEC_CIRCOS: GoslingSpec = {
             width: 700,
             height: 60
         },
-        {
-            data: {
-                url: GOSLING_PUBLIC_DATA.multivec,
-                type: 'multivec',
-                row: 'sample',
-                column: 'position',
-                value: 'peak',
-                categories: [
-                    'sample 1',
-                    'sample 2',
-                    'sample 3',
-                    'sample 4',
-                    'sample 5',
-                    'sample 6',
-                    'sample 7',
-                    'sample 8'
-                ]
-            },
-            dataTransform: [{ type: 'filter', field: 'peak', inRange: [0, 0.001] }],
-            mark: 'rect',
-            x: { field: 'start', type: 'genomic' },
-            xe: { field: 'end', type: 'genomic' },
-            displacement: { type: 'pile' },
-            color: { value: '#FF6205' },
-            stroke: { value: 'white' },
-            strokeWidth: { value: 1 },
-            width: 700,
-            height: 40
-        },
+        // {
+        //     data: {
+        //         url: GOSLING_PUBLIC_DATA.multivec,
+        //         type: 'multivec',
+        //         row: 'sample',
+        //         column: 'position',
+        //         value: 'peak',
+        //         categories: [
+        //             'sample 1',
+        //             'sample 2',
+        //             'sample 3',
+        //             'sample 4',
+        //             'sample 5',
+        //             'sample 6',
+        //             'sample 7',
+        //             'sample 8'
+        //         ]
+        //     },
+        //     dataTransform: [{ type: 'filter', field: 'peak', inRange: [0, 0.001] }],
+        //     mark: 'rect',
+        //     x: { field: 'start', type: 'genomic' },
+        //     xe: { field: 'end', type: 'genomic' },
+        //     displacement: { type: 'pile' },
+        //     color: { value: '#FF6205' },
+        //     stroke: { value: 'white' },
+        //     strokeWidth: { value: 1 },
+        //     width: 700,
+        //     height: 40
+        // },
         {
             data: {
                 url:
