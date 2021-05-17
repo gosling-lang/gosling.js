@@ -41,7 +41,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
         constructor(params: any[]) {
             const [context, options] = params;
 
-            // Check whether to load a worker.
+            // Check whether to load a worker
             let bamWorker;
             if (usePrereleaseRendering(options.spec)) {
                 bamWorker = spawn(new Worker('../data-fetcher/bam/bam-worker'));
@@ -67,7 +67,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
 
             this.tileSize = this.tilesetInfo?.tile_size ?? 1024;
 
-            // This is being used to keep track of xScale for entire view (i.e., no tiling concept used)
+            // This tracks the xScale of an entire view, which is used when no tiling concepts are used
             this.drawnAtScale = HGC.libraries.d3Scale.scaleLinear();
             this.scalableGraphics = {};
 
@@ -102,14 +102,10 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             this.textGraphics = [];
             this.textsBeingUsed = 0; // this variable is being used to improve the performance of text rendering
 
-            HGC.libraries.PIXI.GRAPHICS_CURVES.adaptive = false; // This improve the arc/link rendering performance
+            HGC.libraries.PIXI.GRAPHICS_CURVES.adaptive = false; // This improves the arc/link rendering performance
         }
 
-        /*
-         * ==============================================================================================
-         * ======================================= RENDERING CYCLE ======================================
-         * ==============================================================================================
-         */
+        /* ----------------------------------- RENDERING CYCLE ----------------------------------- */
 
         /*
          * Rerender all tiles every time track size is changed.

@@ -20,29 +20,29 @@ export const EX_SPEC_PILEUP: GoslingSpec = {
             width: 800,
             height: 40
         },
-        {
-            title: 'Coverage',
-            prerelease: {testUsingNewRectRenderingForBAM: true},
-            data: {
-                type: 'bam',
-                // url: 'https://s3.amazonaws.com/gosling-lang.org/data/example_higlass.bam'
-                url: 'https://aveit.s3.amazonaws.com/higlass/bam/example_higlass.bam'
-            },
-            dataTransform: [
-                // { type: 'subjson', field: 'substitutions', genomicField: 'pos', baseGenomicField: 'from', genomicLengthField: 'length'},  
-                { type: 'coverage', startField: 'from', endField: 'to' }
-            ],
-            mark: 'bar',
-            x: { field: 'from', type: 'genomic' },
-            xe: { field: 'to', type: 'genomic' },
-            y: { field: 'coverage', type: 'quantitative' },
-            color: {value: 'lightgray'},
-            stroke: {value: 'gray'},
-            // strokeWidth: {value: 0.3},
-            // color: { field: 'variant', type: 'nominal', domain: ['undefined', 'A', 'T', 'G', 'C', 'S', 'H', 'X', 'I', 'D'], range: ['lightgray', 'red', 'red', 'red'] },
-            width: 650,
-            height: 80
-        },
+        // {
+        //     title: 'Coverage',
+        //     prerelease: {testUsingNewRectRenderingForBAM: true},
+        //     data: {
+        //         type: 'bam',
+        //         // url: 'https://s3.amazonaws.com/gosling-lang.org/data/example_higlass.bam'
+        //         url: 'https://aveit.s3.amazonaws.com/higlass/bam/example_higlass.bam'
+        //     },
+        //     dataTransform: [
+        //         // { type: 'subjson', field: 'substitutions', genomicField: 'pos', baseGenomicField: 'from', genomicLengthField: 'length'},  
+        //         { type: 'coverage', startField: 'from', endField: 'to' }
+        //     ],
+        //     mark: 'bar',
+        //     x: { field: 'from', type: 'genomic' },
+        //     xe: { field: 'to', type: 'genomic' },
+        //     y: { field: 'coverage', type: 'quantitative' },
+        //     color: {value: 'lightgray'},
+        //     stroke: {value: 'gray'},
+        //     // strokeWidth: {value: 0.3},
+        //     // color: { field: 'variant', type: 'nominal', domain: ['undefined', 'A', 'T', 'G', 'C', 'S', 'H', 'X', 'I', 'D'], range: ['lightgray', 'red', 'red', 'red'] },
+        //     width: 650,
+        //     height: 80
+        // },
         {
             alignment: 'overlay',
             title: 'Reads',

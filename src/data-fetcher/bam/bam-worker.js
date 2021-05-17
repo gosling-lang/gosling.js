@@ -8,6 +8,7 @@ import { interpolateViridis } from 'd3-scale-chromatic';
 import { expose, Transfer } from 'threads/worker';
 import { BamFile } from '@gmod/bam';
 import LRU from 'lru-cache';
+import Logging from '../../core/utils/log';
 
 export function colorToRGBA(colorStr, opacity = 1) {
     let c = color(colorStr);
@@ -1141,9 +1142,9 @@ function getValueUsingChannel(datum, channel) {
     return undefined;
 }
 
-function visualPropertyByChannel(spec, channelKey, datum) {
+function visualPropertyByChannel(spec, scales, channelKey, datum) {
     const value = datum !== undefined ? getValueUsingChannel(datum, spec[channelKey]) : undefined; // Is this safe enough?
-    return encodedValue(spec, channelKey, value);
+    return encodedValue(spec, scales, channelKey, value);
 }
 
 function IsChannelDeep(channel) {
@@ -1154,7 +1155,107 @@ function IsChannelValue(channel) {
     return channel !== null && typeof channel === 'object' && 'value' in channel;
 }
 
-function encodedValue(spec, channelKey, value) {
+const SUPPORTED_CHANNELS = [
+    'x',
+    'xe',
+    'x1',
+    'x1e',
+
+    'y',
+    'ye',
+    'y1',
+    'y1e',
+
+    'color',
+    'size',
+    'row',
+    'stroke',
+    'strokeWidth',
+    'opacity',
+    'text'
+    // ...
+];
+
+function generateScales(spec) {
+    const channelScales = {};
+    // const spec = this.spec();
+
+    /// DEBUG
+    // console.log(spec);
+    //
+
+    SUPPORTED_CHANNELS.forEach(channelKey => {
+        const channel = spec[channelKey];
+
+        if (IsChannelValue(channel)) {
+            channelScales[channelKey] = () => channel.value;
+        } else if (IsChannelDeep(channel)) {
+            if (channelKey === 'text') {
+                // We do not generate scales for 'text' marks.
+                return;
+            }
+
+            const domain = channel.domain;
+            const range = channel.range;
+
+            if (domain === undefined || range === undefined) {
+                // we do not have sufficient info to generate scales
+                return;
+            }
+
+            if (channel.type === 'quantitative' || channel.type === 'genomic') {
+                switch (channelKey) {
+                    case 'x':
+                    case 'x1':
+                    case 'xe':
+                    case 'x1e':
+                    case 'y':
+                    case 'size':
+                    case 'opacity':
+                    case 'strokeWidth':
+                        channelScales[channelKey] = scaleLinear()
+                            .domain(domain)
+                            .range(range);
+                        break;
+                    case 'color':
+                    case 'stroke':
+                        let interpolate = interpolateViridis;
+                        channelScales[channelKey] = scaleSequential(interpolate).domain(channel.domain);
+                        break;
+                    default:
+                        break;
+                    // console.warn('Not supported channel for calculating scales');
+                }
+            } else if (channel.type === 'nominal') {
+                switch (channelKey) {
+                    case 'x':
+                    case 'xe':
+                    case 'y':
+                    case 'row':
+                        channelScales[channelKey] = scaleBand()
+                            .domain(domain)
+                            .range(range);
+                        break;
+                    case 'size':
+                        channelScales[channelKey] = scaleOrdinal()
+                            .domain(domain)
+                            .range(range);
+                        break;
+                    case 'color':
+                    case 'stroke':
+                        channelScales[channelKey] = scaleOrdinal(range).domain(domain);
+                        break;
+                    default:
+                        break;
+                    // console.warn('Not supported channel for calculating scales');
+                }
+            }
+        }
+    });
+    return channelScales;
+}
+
+function encodedValue(spec, scales, channelKey, value) {
     if (channelKey === 'text' && value !== undefined) {
         return `${+value ? ~~value : value}`;
         // TODO: Better formatting?
@@ -1179,7 +1280,7 @@ function encodedValue(spec, channelKey, value) {
         return undefined;
     }
 
-    // if (typeof this.channelScales[channelKey] !== 'function') {
+    // if (typeof channelScales[channelKey] !== 'function') {
     //     // Scale is undefined, so returning undefined.
     //     return undefined;
     // }
@@ -1193,44 +1294,51 @@ function encodedValue(spec, channelKey, value) {
         case 'xe':
         case 'ye':
         case 'x1e':
-            if (channelFieldType === 'quantitative' || channelFieldType === 'genomic') {
-                return scaleLinear().domain(channel.domain).range(channel.range)(value);
-            }
-            if (channelFieldType === 'nominal') {
-                return scaleBand().domain(channel.domain).range(channel.range)(value);
-            }
+            return scales[channelKey](value);
+            // if (channelFieldType === 'quantitative' || channelFieldType === 'genomic') {
+            //     return scaleLinear().domain(channel.domain).range(channel.range)(value);
+            // }
+            // if (channelFieldType === 'nominal') {
+            //     return scaleBand().domain(channel.domain).range(channel.range)(value);
+            // }
             break;
         case 'color':
         case 'stroke':
             if (channelFieldType === 'quantitative') {
-                let interpolate = interpolateViridis;
-                return scaleSequential(interpolate).domain(channel.domain)(value);
+                // let interpolate = interpolateViridis;
+                // return scaleSequential(interpolate).domain(channel.domain)(value);
+                return scales[channelKey](value);
             }
             if (channelFieldType === 'nominal') {
-                return scaleOrdinal().domain(channel.domain).range(channel.range)(value);
+                // return scaleOrdinal().domain(channel.domain).range(channel.range)(value);
+                return scales[channelKey](value);
             }
             /* genomic is not supported */
             break;
         case 'size':
             if (channelFieldType === 'quantitative') {
-                return scaleLinear().domain(channel.domain).range(channel.range)(value);
+                // return scaleLinear().domain(channel.domain).range(channel.range)(value);
+                return scales[channelKey](value);
             }
             if (channelFieldType === 'nominal') {
-                return scaleOrdinal().domain(channel.domain).range(channel.range)(value);
+                // return scaleOrdinal().domain(channel.domain).range(channel.range)(value);
+                return scales[channelKey](value);
             }
             /* genomic is not supported */
             break;
         case 'row':
             /* quantitative is not supported */
             if (channelFieldType === 'nominal') {
-                return scaleBand().domain(channel.domain).range(channel.range)(value);
+                // return scaleBand().domain(channel.domain).range(channel.range)(value);
+                return scales[channelKey](value);
             }
             /* genomic is not supported */
             break;
         case 'strokeWidth':
         case 'opacity':
             if (channelFieldType === 'quantitative') {
-                return scaleLinear().domain(channel.domain).range(channel.range)(value);
+                // return scaleLinear().domain(channel.domain).range(channel.range)(value);
+                return scales[channelKey](value);
             }
             /* nominal is not supported */
             /* genomic is not supported */
@@ -1244,7 +1352,7 @@ function encodedValue(spec, channelKey, value) {
 /**
  * Retrieve an encoded visual property of a visual mark.
  */
-function encodedPIXIProperty(spec, propertyKey, datum, additionalInfo) {
+function encodedPIXIProperty(spec, scales, propertyKey, datum, additionalInfo) {
     const mark = spec.mark;
 
     // if (!IsShallowMark(mark)) {
@@ -1258,37 +1366,37 @@ function encodedPIXIProperty(spec, propertyKey, datum, additionalInfo) {
             propertyKey
         )
     ) {
-        return visualPropertyByChannel(spec, propertyKey, datum);
+        return visualPropertyByChannel(spec, scales, propertyKey, datum);
     }
 
     switch (mark) {
         case 'bar':
-            return barProperty(spec, propertyKey, datum, additionalInfo);
+            return barProperty(spec, scales, propertyKey, datum, additionalInfo);
         case 'point':
         case 'text':
             // return pointProperty(this, propertyKey, datum);
             return undefined;
         case 'rect':
-            return rectProperty(spec, propertyKey, datum, additionalInfo);
+            return rectProperty(spec, scales, propertyKey, datum, additionalInfo);
         default:
             // Mark type that is not supported yet
             return undefined;
     }
 }
 
-function rectProperty(spec, propertyKey, datum, additionalInfo) {
+function rectProperty(spec, scales, propertyKey, datum, additionalInfo) {
     switch (propertyKey) {
         case 'width':
             const width =
                 // (1) size
-                visualPropertyByChannel(spec, 'xe', datum)
-                    ? visualPropertyByChannel(spec, 'xe', datum) - visualPropertyByChannel(spec, 'x', datum)
+                visualPropertyByChannel(spec, scales, 'xe', datum)
+                    ? visualPropertyByChannel(spec, scales, 'xe', datum) - visualPropertyByChannel(spec, scales, 'x', datum)
                     : additionalInfo.markWidth; // (2) unit mark height
             return width === 0 ? 0.1 : width; // TODO: not sure if this is necessary for all cases. Perhaps, we can have an option.
         case 'height':
             return (
                 // (1) size
-                visualPropertyByChannel(spec, 'size', datum) || additionalInfo.markHeight
+                visualPropertyByChannel(spec, scales, 'size', datum) || additionalInfo.markHeight
                 // (2) unit mark height
             );
         default:
@@ -1296,10 +1404,10 @@ function rectProperty(spec, propertyKey, datum, additionalInfo) {
     }
 }
 
-export function barProperty(spec, propertyKey, datum, additionalInfo) {
-    const x = visualPropertyByChannel(spec, 'x', datum);
-    const xe = visualPropertyByChannel(spec, 'xe', datum);
-    const size = visualPropertyByChannel(spec, 'size', datum);
+export function barProperty(spec, scales, propertyKey, datum, additionalInfo) {
+    const x = visualPropertyByChannel(spec, scales, 'x', datum);
+    const xe = visualPropertyByChannel(spec, scales, 'xe', datum);
+    const size = visualPropertyByChannel(spec, scales, 'size', datum);
     switch (propertyKey) {
         case 'width':
             return size || (xe ? xe - x : additionalInfo.tileUnitWidth);
@@ -1343,6 +1451,9 @@ const rectProperties = (spec, data, trackWidth, trackHeight, tileSize, xDomain, 
         spec.xe.range = xRange;
     }
 
+    const scales = generateScales(spec);
+    // console.log(scales['x'].domain())
+    
     /* genomic scale */
     const xScale = scaleLinear().domain(xDomain).range(xRange);
     const tileUnitWidth = xScale(tileX + tileWidth / tileSize) - xScale(tileX);
@@ -1363,16 +1474,16 @@ const rectProperties = (spec, data, trackWidth, trackHeight, tileSize, xDomain, 
 
     /* Properties */
     data.forEach(d => {
-        const rowPosition = encodedPIXIProperty(spec, 'row', d);
+        const rowPosition = encodedPIXIProperty(spec, scales, 'row', d);
         const rowPadding = spec.row.padding || 0;
-        const x = encodedPIXIProperty(spec, 'x', d);
-        const color = encodedPIXIProperty(spec, 'color', d);
-        const stroke = encodedPIXIProperty(spec, 'stroke', d);
-        const strokeWidth = encodedPIXIProperty(spec, 'strokeWidth', d);
-        const opacity = encodedPIXIProperty(spec, 'opacity', d);
-        const rectWidth = encodedPIXIProperty(spec, 'width', d, { markWidth: tileUnitWidth });
-        const rectHeight = encodedPIXIProperty(spec, 'height', d, { markHeight: cellHeight });
-        let y = encodedPIXIProperty(spec, 'y', d) - rectHeight / 2.0; // It is top posiiton now
+        const x = encodedPIXIProperty(spec, scales, 'x', d);
+        const color = encodedPIXIProperty(spec, scales, 'color', d);
+        const stroke = encodedPIXIProperty(spec, scales, 'stroke', d);
+        const strokeWidth = encodedPIXIProperty(spec, scales, 'strokeWidth', d);
+        const opacity = encodedPIXIProperty(spec, scales, 'opacity', d);
+        const rectWidth = encodedPIXIProperty(spec, scales, 'width', d, { markWidth: tileUnitWidth });
+        const rectHeight = encodedPIXIProperty(spec, scales, 'height', d, { markHeight: cellHeight });
+        let y = encodedPIXIProperty(spec, scales, 'y', d) - rectHeight / 2.0; // It is top posiiton now
 
         const alphaTransition = 1;
         // model.markVisibility(d, {
@@ -1505,7 +1616,7 @@ const barProperties = (spec, data, trackWidth, trackHeight, tileSize, xDomain, x
         spec.xe.domain = xDomain;
         spec.xe.range = xRange;
     }
-
+    const scales = generateScales(spec);
     /* data */
     // const data = model.data();
 
@@ -1537,7 +1648,7 @@ const barProperties = (spec, data, trackWidth, trackHeight, tileSize, xDomain, x
 
     /* baseline */
     const baselineValue = IsChannelDeep(spec.y) ? spec.y.baseline : undefined;
-    const baselineY = encodedValue(spec, 'y', baselineValue) || 0;
+    const baselineY = encodedValue(spec, scales, 'y', baselineValue) || 0;
 
     const visualProperties = [];
     const positions = [];
@@ -1563,14 +1674,14 @@ const barProperties = (spec, data, trackWidth, trackHeight, tileSize, xDomain, x
         xKeys.forEach(k => {
             let prevYEnd = 0;
             pivotedData.get(k).forEach(d => {
-                const color = encodedPIXIProperty(spec, 'color', d);
-                const stroke = encodedPIXIProperty(spec, 'stroke', d);
-                const strokeWidth = encodedPIXIProperty(spec, 'strokeWidth', d);
-                const opacity = encodedPIXIProperty(spec, 'opacity', d);
-                let y = encodedPIXIProperty(spec, 'y', d);
+                const color = encodedPIXIProperty(spec, scales, 'color', d);
+                const stroke = encodedPIXIProperty(spec, scales, 'stroke', d);
+                const strokeWidth = encodedPIXIProperty(spec, scales, 'strokeWidth', d);
+                const opacity = encodedPIXIProperty(spec, scales, 'opacity', d);
+                let y = encodedPIXIProperty(spec, scales, 'y', d);
 
-                const barWidth = encodedPIXIProperty(spec, 'width', d, { tileUnitWidth });
-                const barStartX = encodedPIXIProperty(spec, 'x-start', d, { markWidth: barWidth });
+                const barWidth = encodedPIXIProperty(spec, scales, 'width', d, { tileUnitWidth });
+                const barStartX = encodedPIXIProperty(spec, scales, 'x-start', d, { markWidth: barWidth });
 
                 const alphaTransition = 1; //model.markVisibility(d, { width: barWidth, zoomLevel });
                 const actualOpacity = Math.min(alphaTransition, opacity);
@@ -1660,15 +1771,15 @@ const barProperties = (spec, data, trackWidth, trackHeight, tileSize, xDomain, x
         });
     } else {
         data.forEach(d => {
-            const rowPosition = encodedPIXIProperty(spec, 'row');
-            const color = encodedPIXIProperty(spec, 'color', d);
-            const stroke = encodedPIXIProperty(spec, 'stroke', d);
-            const strokeWidth = encodedPIXIProperty(spec, 'strokeWidth', d);
-            const opacity = encodedPIXIProperty(spec, 'opacity');
-            let y = encodedPIXIProperty(spec, 'y', d); // TODO: we could even retrieve a actual y position of bars
+            const rowPosition = encodedPIXIProperty(spec, scales, 'row');
+            const color = encodedPIXIProperty(spec, scales, 'color', d);
+            const stroke = encodedPIXIProperty(spec, scales, 'stroke', d);
+            const strokeWidth = encodedPIXIProperty(spec, scales, 'strokeWidth', d);
+            const opacity = encodedPIXIProperty(spec, scales, 'opacity');
+            let y = encodedPIXIProperty(spec, scales, 'y', d); // TODO: we could even retrieve a actual y position of bars
 
-            const barWidth = encodedPIXIProperty(spec, 'width', d, { tileUnitWidth });
-            const barStartX = encodedPIXIProperty(spec, 'x-start', d, { markWidth: barWidth });
+            const barWidth = encodedPIXIProperty(spec, scales, 'width', d, { tileUnitWidth });
+            const barStartX = encodedPIXIProperty(spec, scales, 'x-start', d, { markWidth: barWidth });
             const barHeight = y - baselineY;
 
             const alphaTransition = 1; //model.markVisibility(d, { width: barWidth, zoomLevel });
