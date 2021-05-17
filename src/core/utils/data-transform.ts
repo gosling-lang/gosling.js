@@ -180,6 +180,7 @@ export function displace(t: DisplaceTransform, data: Datum[], scale: ScaleLinear
         const oldAlgorithm = false;
 
         if (oldAlgorithm) {
+            // This will be deprecated soon.
             const { maxRows } = t;
             const boundingBoxes: { start: number; end: number; row: number }[] = [];
 
@@ -216,7 +217,7 @@ export function displace(t: DisplaceTransform, data: Datum[], scale: ScaleLinear
                 boundingBoxes.push({ start, end, row });
             });
         } else {
-            // This piling algorithm is based on
+            // This piling algorithm is heavily based on
             // https://github.com/higlass/higlass-pileup/blob/8538a34c6d884c28455d6178377ee1ea2c2c90ae/src/bam-fetcher-worker.js#L626
             const { maxRows } = t;
             const occupiedSpaceInRows: { [group: string]: { start: number; end: number }[]} = {};

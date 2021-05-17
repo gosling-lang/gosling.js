@@ -1,4 +1,5 @@
 import { GoslingTrackModel } from '../gosling-track-model';
+import Logging from './log'
 import { Theme } from './theme';
 
 export const PILEUP_COLORS = {
@@ -101,7 +102,9 @@ export function drawScaleMark(HGC: any, trackInfo: any, tile: any, model: Goslin
             .then((props: any) => {
                 trackInfo.forceDraw();
 
+                // Logging.recordTime('json.parse');
                 const tabularData = JSON.parse(Buffer.from(props).toString());
+                // Logging.printTime('json.parse');
 
                 const positions = new Float32Array(tabularData.positions);
                 const colors = new Float32Array(tabularData.colorIdx);

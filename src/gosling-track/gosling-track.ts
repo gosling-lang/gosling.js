@@ -16,7 +16,7 @@ import { BAMDataFetcher } from '../data-fetcher/bam';
 import { spawn, Worker } from 'threads';
 
 // Set `true` to print in what order each function is called
-const PRINT_RENDERING_CYCLE = false;
+export const PRINT_RENDERING_CYCLE = true;
 
 function usePrereleaseRendering(spec: SingleTrack | OverlaidTrack) {
     return spec.prerelease?.testUsingNewRectRenderingForBAM && spec.data?.type === 'bam';
@@ -107,13 +107,122 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
 
         /* ----------------------------------- RENDERING CYCLE ----------------------------------- */
 
+        /**
+         * ?
+         * (https://github.com/higlass/higlass/blob/54f5aae61d3474f9e868621228270f0c90ef9343/app/scripts/TiledPixiTrack.js#L727)
+         */
+         draw() {
+            if(PRINT_RENDERING_CYCLE) console.warn('draw()');
+
+            this.tooltips = [];
+            this.svgData = [];
+            this.textsBeingUsed = 0;
+            this.mouseOverGraphics?.clear();
+
+            // this.pMain.clear();
+            // this.pMain.removeChildren();
+            // this.pBackground.clear();
+            // this.pBackground.removeChildren();
+            // this.pBorder.clear();
+            // this.pBorder.removeChildren();
+
+            this.pBorder.clear();
+            this.pBorder.removeChildren();
+
+            const processTilesAndDraw = () => {
+                // Preprocess all tiles at once so that we can share scales across tiles.
+                this.preprocessAllTiles();
+
+                // This function calls `drawTile` on each tile.
+                super.draw();
+            }
+
+            if (usePrereleaseRendering(this.originalSpec)) {
+                this.updateTileAsync(processTilesAndDraw);
+            } else {
+                processTilesAndDraw();
+            }
+        }
+
         /*
-         * Rerender all tiles every time track size is changed.
-         * (https://github.com/higlass/higlass/blob/54f5aae61d3474f9e868621228270f0c90ef9343/app/scripts/PixiTrack.js#L186).
+         * Do whatever is necessary before rendering a new tile. This function is called from `receivedTiles()`.
+         * (Refer to https://github.com/higlass/higlass/blob/54f5aae61d3474f9e868621228270f0c90ef9343/app/scripts/HorizontalLine1DPixiTrack.js#L50)
+         */
+        initTile(tile: any) {
+            if(PRINT_RENDERING_CYCLE) console.warn('initTile(tile)');
+            super.initTile(tile); // This calls `drawTile()`
+        }
+
+        updateTile(/* tile: any */) { } // Never mind about this function for the simplicity.
+        renderTile(/* tile: any */) { } // Never mind about this function for the simplicity.
+        
+        /**
+         * Display a tile upon receiving a new one or when explicitly called by a developer, e.g., calling `this.draw()`
+         */
+        drawTile(tile: any) {
+            if(PRINT_RENDERING_CYCLE) console.warn('drawTile(tile)');
+
+            tile.drawnAtScale = this._xScale.copy(); // being used in `super.draw()`
+
+            if (!tile.goslingModels) {
+                // We do not have a track model prepared to visualize
+                return;
+            }
+
+            tile.graphics.clear();
+            tile.graphics.removeChildren();
+
+            // This is only to render axis only once.
+            // TODO: Instead of rendering and removing for every tiles, render pBorder only once
+            this.pBorder.clear();
+            this.pBorder.removeChildren();
+
+            // A single tile contains one or multiple gosling visualizations that are overlaid
+            tile.goslingModels.forEach((tm: GoslingTrackModel) => {
+                // check visibility condition
+                const trackWidth = this.dimensions[1];
+                const zoomLevel = this._xScale.invert(trackWidth) - this._xScale.invert(0);
+                if (!tm.trackVisibility({ zoomLevel })) {
+                    return;
+                }
+
+                // This is for testing the upcoming rendering methods
+                if (usePrereleaseRendering(this.originalSpec)) {
+                    // Use worker.
+                    drawScaleMark(HGC, this, tile, tm, this.options.theme);
+                    return;
+                }
+
+                drawMark(HGC, this, tile, tm, this.options.theme);
+            });
+        }
+        
+        /**
+         * Rerender tiles using the manually changed options.
+         * (Refer to https://github.com/higlass/higlass/blob/54f5aae61d3474f9e868621228270f0c90ef9343/app/scripts/HorizontalLine1DPixiTrack.js#L75)
+         */
+         rerender(newOptions: any) {
+            if(PRINT_RENDERING_CYCLE) console.warn('rerender(options)');
+            // super.rerender(newOptions); // This calls `renderTile()` on every tiles
+
+            this.options = newOptions;
+
+            this.tooltips = [];
+            this.svgData = [];
+            this.textsBeingUsed = 0;
+
+            this.draw();
+        }
+
+        /*
+         * Rerender all tiles when track size is changed.
+         * (Refer to https://github.com/higlass/higlass/blob/54f5aae61d3474f9e868621228270f0c90ef9343/app/scripts/PixiTrack.js#L186).
          */
         setDimensions(newDimensions: any) {
+            if(PRINT_RENDERING_CYCLE) console.warn('setDimensions()');
+
             this.oldDimensions = this.dimensions;
-            super.setDimensions(newDimensions); // This function simply updates `this._xScale` and `this._yScale`
+            super.setDimensions(newDimensions); // This simply updates `this._xScale` and `this._yScale`
 
             // const visibleAndFetched = this.visibleAndFetchedTiles();
             // visibleAndFetched.map((tile: any) => this.initTile(tile));
@@ -123,14 +232,14 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
          * Record new position.
          */
         setPosition(newPosition: any) {
-            super.setPosition(newPosition); // This function simply changes `this.position`
+            super.setPosition(newPosition); // This simply changes `this.position`
 
             [this.pMain.position.x, this.pMain.position.y] = this.position;
         }
 
         /**
          * A function to redraw this track. Typically called when an asynchronous event occurs (i.e. tiles loaded)
-         * (https://github.com/higlass/higlass/blob/54f5aae61d3474f9e868621228270f0c90ef9343/app/scripts/TiledPixiTrack.js#L71)
+         * (Refer to https://github.com/higlass/higlass/blob/54f5aae61d3474f9e868621228270f0c90ef9343/app/scripts/TiledPixiTrack.js#L71)
          */
         forceDraw() {
             this.animate();
@@ -158,18 +267,6 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                 this.draw();
             }
             this.forceDraw();
-        }
-
-        /*
-         * Initialize variables upon receiving tiles. Called from `receivedTiles()`. Nextly called function is `updateTile()`.
-         * (https://github.com/higlass/higlass/blob/f82c0a4f7b2ab1c145091166b0457638934b15f3/app/scripts/TiledPixiTrack.js#L518)
-         */
-        initTile(tile: any) {
-            if(PRINT_RENDERING_CYCLE) console.warn('initTile(tile)');
-
-            this.tooltips = [];
-            this.svgData = [];
-            this.textsBeingUsed = 0;
         }
 
         /**
@@ -209,132 +306,6 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
         }
 
         /**
-         * ?
-         * (https://github.com/higlass/higlass/blob/54f5aae61d3474f9e868621228270f0c90ef9343/app/scripts/TiledPixiTrack.js#L727)
-         */
-        draw() {
-            if(PRINT_RENDERING_CYCLE) console.warn('draw()');
-
-            this.tooltips = [];
-            this.svgData = [];
-            this.textsBeingUsed = 0;
-            this.mouseOverGraphics?.clear();
-
-            // this.pMain.clear();
-            // this.pMain.removeChildren();
-            // this.pBackground.clear();
-            // this.pBackground.removeChildren();
-            // this.pBorder.clear();
-            // this.pBorder.removeChildren();
-
-            // This function calls `drawTile` on each tile.
-            // super.draw();
-
-            this.renderAllTiles();
-        }
-
-        /*
-         * Compute something about a tile before rendering it. Nextly called function is `drawTile()`.
-         * (https://github.com/higlass/higlass/blob/f82c0a4f7b2ab1c145091166b0457638934b15f3/app/scripts/TiledPixiTrack.js#L532)
-         */
-        updateTile() {
-            if(PRINT_RENDERING_CYCLE) console.warn('updateTile()');
-        }
-
-        // TODO: Not sure why there are both `drawTile` and `renderTile` and what the differences are.
-        /**
-         * This function is called from `super.draw()`.
-         */
-        drawTile(tile: any) {
-            if(PRINT_RENDERING_CYCLE) console.warn('drawTile(tile)');
-        }
-
-        /*
-         * Render all tiles. Not an overriden function, i.e., newly defined in this class.
-         */
-        renderAllTiles() {
-            if (usePrereleaseRendering(this.originalSpec)) {
-                this.updateTileAsync(() => {
-                    // preprocess all tiles at once so that we can share the value scales
-                    this.preprocessAllTiles();
-
-                    this.visibleAndFetchedTiles().forEach((tile: any) => {
-                        this.renderTile(tile);
-                    });
-                });
-                return;
-            }
-
-            this.pBorder.clear();
-            this.pBorder.removeChildren();
-
-            // preprocess all tiles at once so that we can share the value scales
-            this.preprocessAllTiles();
-
-            this.visibleAndFetchedTiles().forEach((tile: any) => {
-                this.renderTile(tile);
-            });
-        }
-
-        /*
-         * Draws exactly one tile
-         */
-        renderTile(tile: any) {
-            if(PRINT_RENDERING_CYCLE) console.warn('renderTile()');
-
-            tile.drawnAtScale = this._xScale.copy(); // being used in `super.draw()`
-
-            if (!tile.goslingModels) {
-                // We do not have a track model prepared to visualize
-                return;
-            }
-
-            // tile.mouseOverData = null;
-            tile.graphics.clear();
-            tile.graphics.removeChildren();
-
-            // TODO: make this not blink
-            // this.pMain.removeChildren();
-            // this.scalableGraphics = [];
-
-            // A single tile contains one or multiple gosling visualizations that are overlaid
-            tile.goslingModels.forEach((tm: GoslingTrackModel) => {
-                // check visibility condition
-                const trackWidth = this.dimensions[1];
-                const zoomLevel = this._xScale.invert(trackWidth) - this._xScale.invert(0);
-                if (!tm.trackVisibility({ zoomLevel })) {
-                    return;
-                }
-
-                // This is for testing the upcoming rendering methods
-                if (usePrereleaseRendering(this.originalSpec)) {
-                    // Use worker.
-                    drawScaleMark(HGC, this, tile, tm, this.options.theme);
-                    return;
-                }
-
-                drawMark(HGC, this, tile, tm, this.options.theme);
-            });
-        }
-
-        /**
-         * Rerender tiles using the new options, including the change of positions and zoom levels.
-         * (https://github.com/higlass/higlass/blob/54f5aae61d3474f9e868621228270f0c90ef9343/app/scripts/HorizontalLine1DPixiTrack.js#L75)
-         */
-        rerender(newOptions: any) {
-            if(PRINT_RENDERING_CYCLE) console.warn('rerender(options)');
-            // super.rerender(newOptions); // This calls `renderTile()` on every tiles
-
-            this.options = newOptions;
-
-            this.tooltips = [];
-            this.svgData = [];
-            this.textsBeingUsed = 0;
-
-            this.renderAllTiles();
-        }
-
-        /**
          * Stretch out the scaleble graphics to have proper effect upon zoom and pan.
          */
         scaleScalableGraphics(graphics: PIXI.Graphics[], xScale: any, drawnAtScale: any) {
@@ -358,12 +329,15 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             return Object.keys(this.fetchedTiles).filter(x => this.visibleTileIds.has(x));
         }
 
+        /**
+         * Return the set of all tiles which are both visible and fetched.
+         */
         visibleAndFetchedTiles() {
             return this.visibleAndFetchedIds().map((x: any) => this.fetchedTiles[x]);
         }
 
         calculateVisibleTiles() {
-            if (this.originalSpec.data?.type !== 'bam') {
+            if (!usePrereleaseRendering(this.originalSpec)) {
                 // This is the common way of calculating visible tiles.
                 super.calculateVisibleTiles();
                 return;

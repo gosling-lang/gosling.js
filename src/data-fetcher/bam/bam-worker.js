@@ -1256,6 +1256,8 @@ function generateScales(spec) {
 }
 
 function encodedValue(spec, scales, channelKey, value) {
+    // return scales[channelKey] && typeof scales[channelKey] === 'function' ? scales[channelKey](value) : undefined;
+
     if (channelKey === 'text' && value !== undefined) {
         return `${+value ? ~~value : value}`;
         // TODO: Better formatting?
@@ -1294,13 +1296,14 @@ function encodedValue(spec, scales, channelKey, value) {
         case 'xe':
         case 'ye':
         case 'x1e':
-            return scales[channelKey](value);
-            // if (channelFieldType === 'quantitative' || channelFieldType === 'genomic') {
-            //     return scaleLinear().domain(channel.domain).range(channel.range)(value);
-            // }
-            // if (channelFieldType === 'nominal') {
-            //     return scaleBand().domain(channel.domain).range(channel.range)(value);
-            // }
+            if (channelFieldType === 'quantitative' || channelFieldType === 'genomic') {
+                // return scaleLinear().domain(channel.domain).range(channel.range)(value);
+                return scales[channelKey](value);
+            }
+            if (channelFieldType === 'nominal') {
+                // return scaleBand().domain(channel.domain).range(channel.range)(value);
+                return scales[channelKey](value);
+            }
             break;
         case 'color':
         case 'stroke':
@@ -1452,7 +1455,6 @@ const rectProperties = (spec, data, trackWidth, trackHeight, tileSize, xDomain, 
     }
 
     const scales = generateScales(spec);
-    // console.log(scales['x'].domain())
     
     /* genomic scale */
     const xScale = scaleLinear().domain(xDomain).range(xRange);
@@ -1876,11 +1878,17 @@ const barProperties = (spec, data, trackWidth, trackHeight, tileSize, xDomain, x
 }
 
 const visualProperties =(spec, data, trackWidth, trackHeight, tileSize, xDomain, xRange, tileX, tileWidth) => {
+    Logging.recordTime('visualProperties');
+
+    let result;
     if(spec.mark === 'rect') {
-        return rectProperties(spec, data, trackWidth, trackHeight, tileSize, xDomain, xRange, tileX, tileWidth);
+        result = rectProperties(spec, data, trackWidth, trackHeight, tileSize, xDomain, xRange, tileX, tileWidth);
     } else if(spec.mark === 'bar') {
-        return barProperties(spec, data, trackWidth, trackHeight, tileSize, xDomain, xRange, tileX, tileWidth);
+        result = barProperties(spec, data, trackWidth, trackHeight, tileSize, xDomain, xRange, tileX, tileWidth);
     }
+    
+    Logging.printTime('visualProperties');
+    return result;
 }
 
 const tileFunctions = {

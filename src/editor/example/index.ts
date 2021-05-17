@@ -80,7 +80,7 @@ export const examples: ReadonlyArray<{
         name: 'Pileup Tracks (BAM File)',
         spec: EX_SPEC_PILEUP,
         id: 'BAM_PILEUP',
-        forceShow: true
+        // forceShow: true
     },
     {
         name: 'Semantic Zoom Examples',
