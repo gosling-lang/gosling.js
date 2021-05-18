@@ -92,6 +92,12 @@ export interface CommonTrackDef extends CommonViewDef, CommonRequiredTrackDef {
     innerRadius?: number;
     startAngle?: number; // [0, 360]
     endAngle?: number; // [0, 360]
+
+    // Internally used properties for rendering
+    _renderingId?: string;
+
+    // To test upcoming feature.
+    prerelease?: { testUsingNewRectRenderingForBAM?: boolean };
 }
 
 /**
@@ -164,7 +170,6 @@ export interface SingleTrack extends CommonTrackDef {
     visibility?: VisibilityCondition[];
 
     // Experimental
-    stackY?: boolean; // Will be deprecated.
     flipY?: boolean; // This is only supported for `link` marks.
     stretch?: boolean; // Stretch the size to the given range? (e.g., [x, xe])
     overrideTemplate?: boolean; // Override a spec template that is defined for a given data type.
@@ -291,6 +296,8 @@ export interface ChannelDeep {
     linkingId?: string;
     flip?: boolean; // Flip a track vertically or horizontally?
     stack?: boolean; // Experimental: We could use this option to stack visual marks, addressing the visual overlap (e.g., stacked bar).
+    padding?: number; // Experimental: Used in `row` and `column` for vertical and horizontal padding.
+    sort?: string[]; // Experimental: Fix order by categories (e.g., stacked bars).
 }
 
 export interface ChannelValue {
@@ -325,7 +332,7 @@ export interface DomainGene {
 export type Aggregate = 'max' | 'min' | 'mean' | 'bin' | 'count';
 
 /* ----------------------------- DATA ----------------------------- */
-export type DataDeep = JSONData | CSVData | BIGWIGData | MultivecData | BEDDBData | VectorData | MatrixData;
+export type DataDeep = JSONData | CSVData | BIGWIGData | MultivecData | BEDDBData | VectorData | MatrixData | BAMData;
 
 export interface Datum {
     [k: string]: number | string;
@@ -407,6 +414,11 @@ export interface BEDDBData {
     exonIntervalFields?: [{ index: number; name: string }, { index: number; name: string }];
 }
 
+export interface BAMData {
+    type: 'bam';
+    url: string;
+}
+
 /* ----------------------------- DATA TRANSFORM ----------------------------- */
 export interface MatrixData {
     type: 'matrix';
@@ -419,7 +431,9 @@ export type DataTransform =
     | StrReplaceTransform
     | LogTransform
     | DisplaceTransform
-    | ExonSplitTransform;
+    | ExonSplitTransform
+    | CoverageTransform
+    | JSONParseTransform;
 
 export type FilterTransform = OneOfFilter | RangeFilter | IncludeFilter;
 
@@ -472,7 +486,9 @@ export interface DisplaceTransform {
     boundingBox: {
         startField: string; // The name of a quantitative field that represents the start position
         endField: string; // The name of a quantitative field that represents the end position
-        padding?: number; // TODO: this should be considered as a pixel value
+        padding?: number; // The padding around visual lements. Either px or bp
+        isPaddingBP?: boolean; // whether to consider `padding` as the bp length.
+        groupField?: string; // The name of a nominal field to group rows by in prior to piling-up
     };
     method: DisplacementType;
     newField: string;
@@ -486,6 +502,28 @@ export interface ExonSplitTransform {
     separator: string;
     flag: { field: string; value: number | string };
     fields: { field: string; type: FieldType; newField: string; chrField: string }[];
+}
+
+/**
+ * Aggregate rows and calculate coverage
+ */
+export interface CoverageTransform {
+    type: 'coverage';
+    startField: string;
+    endField: string;
+    newField?: string;
+    groupField?: string; // The name of a nominal field to group rows by in prior to piling-up
+}
+
+/**
+ * Parse JSON Object Array and append vertically
+ */
+export interface JSONParseTransform {
+    type: 'subjson';
+    field: string; // The field that contains the JSON object array
+    baseGenomicField: string; // Base genomic position when parsing relative position
+    genomicField: string; // Relative genomic position to parse
+    genomicLengthField: string; // Length of genomic interval
 }
 
 /* ----------------------------- GLYPH (deprecated, but to be supported again) ----------------------------- */

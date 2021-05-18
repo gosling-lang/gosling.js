@@ -95,6 +95,10 @@ export function drawMark(HGC: any, trackInfo: any, tile: any, model: GoslingTrac
             drawArea(HGC, trackInfo, tile, model);
             break;
         case 'rect':
+            if (model.spec().layout !== 'circular' && model.spec().prerelease?.testUsingNewRectRenderingForBAM) {
+                // In this case, we use different method for the rendering.
+                break;
+            }
             drawRect(HGC, trackInfo, tile, model);
             break;
         case 'triangleLeft':

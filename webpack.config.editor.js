@@ -2,6 +2,7 @@ const path = require("path");
 const webpack = require("webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MonacoWebpackPlugin = require("monaco-editor-webpack-plugin");
+const ThreadsPlugin = require('threads-plugin');
 const PeerDepsExternalsPlugin = require("peer-deps-externals-webpack-plugin");
 
 module.exports = (env, argv) => {
@@ -53,6 +54,7 @@ module.exports = (env, argv) => {
       ],
     },
     plugins: [
+      new ThreadsPlugin(),
       new HtmlWebpackPlugin({
         filename: 'index.html',
         template: './public/index.html',

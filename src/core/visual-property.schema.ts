@@ -1,6 +1,7 @@
 export type PIXIVisualProperty =
     /* common visual properties */
     | 'color' // color of visual marks to fill
+    | 'row' // row position of visual marks
     | 'stroke' // stroke color of visual marks
     | 'strokeWidth' // stroke width of visual marks
     | 'opacity' // transparent level of visual marks

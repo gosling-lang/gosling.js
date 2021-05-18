@@ -31,7 +31,6 @@
             fetch("https://api.ipify.org").then((response) => response.text()).then((ip) => {
             const clientIDSource = ip + ";" + window.location.host + ";" + navigator.userAgent + ";" + navigator.language + ";" + validityInterval;
             const clientIDHashed = cyrb53(clientIDSource).toString(16);
-            console.log(clientIDHashed);
 
             ga('create', 'UA-96954979-3', {
                 'storage': 'none',

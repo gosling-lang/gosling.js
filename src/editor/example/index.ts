@@ -16,7 +16,7 @@ import { EX_SPEC_GIVE } from './give';
 import { EX_SPEC_CORCES_ET_AL } from './corces';
 import { EX_SPEC_PATHOGENIC } from './pathogenic';
 import { EX_SPEC_CYTOBANDS } from './ideograms';
-import { EX_SPEC_CUSTOM_THEME } from './theme';
+import { EX_SPEC_PILEUP } from './pileup';
 import { EX_SPEC_FUJI_PLOT } from './fuji';
 
 export const examples: ReadonlyArray<{
@@ -71,12 +71,12 @@ export const examples: ReadonlyArray<{
         spec: EX_SPEC_MARK_DISPLACEMENT
     },
     {
-        name: 'Circular Overview + Linear Detail Views',
+        name: 'Basic Example: Circular Overview + Linear Detail Views',
         id: 'CIRCULAR_OVERVIEW_LINEAR_DETAIL',
         spec: EX_SPEC_CIRCULAR_OVERVIEW_LINEAR_DETAIL
     },
     {
-        name: 'Semantic Zoom',
+        name: 'Semantic Zoom Examples',
         id: 'SEMANTIC_ZOOM',
         spec: EX_SPEC_SEMANTIC_ZOOM
     },
@@ -132,16 +132,15 @@ export const examples: ReadonlyArray<{
         spec: EX_SPEC_CANCER_VARIANT
     },
     {
+        name: 'BAM file pileup tracks',
+        id: 'BAM_PILEUP',
+        spec: EX_SPEC_PILEUP,
+        underDevelopment: true
+    },
+    {
         name: 'Dark Theme (Beta)',
         id: 'DARK_THEME',
         spec: EX_SPEC_DARK_THEME,
         underDevelopment: true
-    },
-    {
-        name: 'Custom Theme (Beta)',
-        id: 'CUSTOM_THEME',
-        spec: EX_SPEC_CUSTOM_THEME,
-        underDevelopment: true,
-        hidden: true
     }
 ].filter(d => !d.hidden);
