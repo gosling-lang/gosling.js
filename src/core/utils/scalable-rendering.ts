@@ -1,3 +1,4 @@
+import * as PIXI from 'pixi.js';
 import { GoslingTrackModel } from '../gosling-track-model';
 
 export const PILEUP_COLORS = {

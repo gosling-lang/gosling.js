@@ -1,3 +1,4 @@
+import * as PIXI from 'pixi.js';
 import { GoslingTrackModel } from '../gosling-track-model';
 import { Channel } from '../gosling.schema';
 import { IsChannelDeep, getValueUsingChannel } from '../gosling.schema.guards';
