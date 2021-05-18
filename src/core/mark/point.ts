@@ -1,3 +1,4 @@
+import * as PIXI from 'pixi.js';
 import { GoslingTrackModel } from '../gosling-track-model';
 import { Channel } from '../gosling.schema';
 import { getValueUsingChannel } from '../gosling.schema.guards';
