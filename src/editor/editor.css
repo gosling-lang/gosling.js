@@ -21,6 +21,16 @@
     color: #e18343 !important;
 }
 
+.dark {
+    background: #1e1e1e !important;
+    color: white !important;
+    border-color: #383838 !important;
+}
+
+.dark .side-panel-button {
+    color: lightgray !important;
+}
+
 .description-button {
     position: fixed;
     right: 0;
