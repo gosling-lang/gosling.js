@@ -84,7 +84,7 @@ export const EX_SPEC_VISUAL_ENCODING: GoslingSpec = {
                         type: 'genomic',
                         axis: 'top'
                     },
-                    y: { field: 'peak', type: 'quantitative' },
+                    y: { field: 'peak', type: 'quantitative', grid: true },
                     color: { field: 'sample', type: 'nominal', legend: true },
                     width: 600,
                     height: 130
@@ -157,7 +157,7 @@ export const EX_SPEC_VISUAL_ENCODING: GoslingSpec = {
                         type: 'genomic',
                         axis: 'top'
                     },
-                    y: { field: 'peak', type: 'quantitative' },
+                    y: { field: 'peak', type: 'quantitative', grid: true },
                     size: { field: 'peak', type: 'quantitative' },
                     color: { field: 'sample', type: 'nominal', legend: true },
                     opacity: { value: 0.5 },

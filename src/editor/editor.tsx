@@ -514,6 +514,17 @@ function Editor(props: any) {
                             PREVIEW
                         </span>
                         <span
+                            title="Save PNG file"
+                            className="side-panel-button"
+                            onClick={() => {
+                                gosRef.current.api.exportPNG();
+                            }}
+                        >
+                            {getIconSVG(ICONS.IMAGE, 23, 23)}
+                            <br />
+                            PNG
+                        </span>
+                        <span
                             title={
                                 code.length <= LIMIT_CLIPBOARD_LEN
                                     ? `Copy unique URL of current view to clipboard (limit: ${LIMIT_CLIPBOARD_LEN} characters)`
