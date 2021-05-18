@@ -22,6 +22,7 @@ import * as qs from 'qs';
 import { JSONCrush, JSONUncrush } from '../core/utils/json-crush';
 import './editor.css';
 import { ICONS, ICON_INFO } from './icon';
+import { getTheme } from '../core/utils/theme';
 
 const INIT_DEMO_INDEX = examples.findIndex(d => d.forceShow) !== -1 ? examples.findIndex(d => d.forceShow) : 0;
 
@@ -187,6 +188,9 @@ function Editor(props: any) {
     // whether to show "about" information
     const [isShowAbout, setIsShowAbout] = useState(false);
 
+    // Editor theme
+    const [theme, setTheme] = useState<'light' | 'dark'>('light');
+
     // Resizer `div`
     const descResizerRef = useRef<any>();
 
@@ -260,6 +264,16 @@ function Editor(props: any) {
         },
         [code, autoRun, readOnly]
     );
+
+    /**
+     * Update theme of the editor based on the theme of Gosling visualizations
+     */
+    useEffect(() => {
+        const gosTheme = getTheme(goslingSpec?.theme);
+        if (gosTheme.base !== theme) {
+            setTheme(gosTheme.base);
+        }
+    }, [goslingSpec]);
 
     /**
      * Subscribe preview data that is being processed in the Gosling tracks.
@@ -362,7 +376,7 @@ function Editor(props: any) {
     // console.log('editor.render()');
     return (
         <>
-            <div className="demo-navbar">
+            <div className={`demo-navbar ${theme === 'dark' ? 'dark' : ''}`}>
                 <span style={{ cursor: 'pointer' }} onClick={() => window.open('https://gosling.js.org', '_blank')}>
                     <span className="logo">{LogoSVG(20, 20)}</span>
                     Gosling.js Editor
@@ -425,9 +439,9 @@ function Editor(props: any) {
                 ) : null}
             </div>
             {/* ------------------------ Main View ------------------------ */}
-            <div className="editor">
+            <div className={`editor ${theme === 'dark' ? 'dark' : ''}`}>
                 <SplitPane className="side-panel-spliter" split="vertical" defaultSize="50px" allowResize={false}>
-                    <div className="side-panel">
+                    <div className={`side-panel ${theme === 'dark' ? 'dark' : ''}`}>
                         <span
                             title="Automatically update visualization upon editing code"
                             className="side-panel-button"
@@ -588,15 +602,22 @@ function Editor(props: any) {
                                     onChange={debounce(code => {
                                         setCode(code);
                                     }, 1500)}
+                                    isDarkTheme={theme === 'dark'}
                                 />
                                 <div className={`compile-message compile-message-${log.state}`}>{log.message}</div>
                             </>
                             {/* HiGlass View Config */}
                             <SplitPane split="vertical" defaultSize="100%">
                                 <>
-                                    <div className="editor-header">Compiled HiGlass ViewConfig (Read Only)</div>
+                                    <div className={`editor-header ${theme === 'dark' ? 'dark' : ''}`}>
+                                        Compiled HiGlass ViewConfig (Read Only)
+                                    </div>
                                     <div style={{ height: '100%', visibility: showVC ? 'visible' : 'hidden' }}>
-                                        <EditorPanel code={stringify(hg)} readOnly={true} />
+                                        <EditorPanel
+                                            code={stringify(hg)}
+                                            readOnly={true}
+                                            isDarkTheme={theme === 'dark'}
+                                        />
                                     </div>
                                 </>
                                 {/**
@@ -614,7 +635,7 @@ function Editor(props: any) {
                                 size={isShowDataPreview ? '40%' : `calc(100% - ${BOTTOM_PANEL_HEADER_HEIGHT}px)`}
                                 maxSize={window.innerHeight - EDITOR_HEADER_HEIGHT - BOTTOM_PANEL_HEADER_HEIGHT}
                             >
-                                <div className="preview-container">
+                                <div className={`preview-container ${theme === 'dark' ? 'dark' : ''}`}>
                                     <gosling.GoslingComponent
                                         ref={gosRef}
                                         spec={goslingSpec}
@@ -627,7 +648,7 @@ function Editor(props: any) {
                                 <SplitPane split="vertical" defaultSize="100%">
                                     <>
                                         <div
-                                            className="editor-header"
+                                            className={`editor-header ${theme === 'dark' ? 'dark' : ''}`}
                                             style={{ cursor: 'pointer' }}
                                             onClick={() => setIsShowDataPreview(!isShowDataPreview)}
                                         >
@@ -714,7 +735,7 @@ function Editor(props: any) {
                 <div
                     className={`description ${hideDescription ? '' : 'description-shadow '}${
                         isDescResizing ? '' : 'description-transition'
-                    }`}
+                    } ${theme === 'dark' ? 'dark' : ''}`}
                     style={{ width: !description || hideDescription ? 0 : descPanelWidth }}
                 >
                     <div
