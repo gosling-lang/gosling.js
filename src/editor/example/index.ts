@@ -17,7 +17,6 @@ import { EX_SPEC_CORCES_ET_AL } from './corces';
 import { EX_SPEC_PATHOGENIC } from './pathogenic';
 import { EX_SPEC_CYTOBANDS } from './ideograms';
 import { EX_SPEC_PILEUP } from './pileup';
-import { EX_SPEC_CUSTOM_THEME } from './theme';
 import { EX_SPEC_FUJI_PLOT } from './fuji';
 
 export const examples: ReadonlyArray<{
@@ -133,22 +132,15 @@ export const examples: ReadonlyArray<{
         spec: EX_SPEC_CANCER_VARIANT
     },
     {
-        name: 'Dark Theme (Beta)',
-        id: 'DARK_THEME',
-        spec: EX_SPEC_DARK_THEME,
-        underDevelopment: true
-    },
-    {
         name: 'BAM file pileup tracks',
         id: 'BAM_PILEUP',
         spec: EX_SPEC_PILEUP,
         underDevelopment: true
     },
     {
-        name: 'Custom Theme (Beta)',
-        id: 'CUSTOM_THEME',
-        spec: EX_SPEC_CUSTOM_THEME,
-        underDevelopment: true,
-        hidden: true
+        name: 'Dark Theme (Beta)',
+        id: 'DARK_THEME',
+        spec: EX_SPEC_DARK_THEME,
+        underDevelopment: true
     }
 ].filter(d => !d.hidden);

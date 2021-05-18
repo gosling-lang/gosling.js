@@ -197,7 +197,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
 
                 // This is for testing the upcoming rendering methods
                 if (usePrereleaseRendering(this.originalSpec)) {
-                    // Use worker.
+                    // Use worker to create visual properties
                     drawScaleMark(HGC, this, tile, tm);
                     return;
                 }
@@ -212,6 +212,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
          */
         rerender(newOptions: any) {
             if (PRINT_RENDERING_CYCLE) console.warn('rerender(options)');
+            // !! We only call draw for the simplicity
             // super.rerender(newOptions); // This calls `renderTile()` on every tiles
 
             this.options = newOptions;

@@ -111,13 +111,14 @@ export function drawRect(HGC: any, trackInfo: any, tile: any, model: GoslingTrac
             trackInfo.svgData.push({ type: 'rect', xs, xe, ys, ye, color, stroke, opacity });
 
             /* Tooltip data */
-            // TODO: Store only if needed
-            trackInfo.tooltips.push({
-                datum: d,
-                isMouseOver: (x: number, y: number) =>
-                    xs - G < x && x < xe + G && rowPosition + ys - G < y && y < rowPosition + ye + G,
-                markInfo: { x: xs, y: ys + rowPosition, width: xe - xs, height: ye - ys, type: 'rect' }
-            } as Tooltip);
+            if (spec.tooltip) {
+                trackInfo.tooltips.push({
+                    datum: d,
+                    isMouseOver: (x: number, y: number) =>
+                        xs - G < x && x < xe + G && rowPosition + ys - G < y && y < rowPosition + ye + G,
+                    markInfo: { x: xs, y: ys + rowPosition, width: xe - xs, height: ye - ys, type: 'rect' }
+                } as Tooltip);
+            }
         }
     });
 }

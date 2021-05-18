@@ -2,8 +2,8 @@ import { GoslingSpec } from '../../core/gosling.schema';
 import { EX_TRACK_SEMANTIC_ZOOM } from './semantic-zoom';
 
 export const EX_SPEC_PILEUP: GoslingSpec = {
-    title: 'BAM Data',
-    subtitle: 'BAM Data',
+    title: 'Pileup Track Using BAM Data',
+    subtitle: '',
     static: false,
     layout: 'linear',
     centerRadius: 0.05,
