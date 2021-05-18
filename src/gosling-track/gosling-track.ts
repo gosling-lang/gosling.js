@@ -130,11 +130,9 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
 
             // this.pMain.clear();
             // this.pMain.removeChildren();
-            // this.pBackground.clear();
-            // this.pBackground.removeChildren();
-            // this.pBorder.clear();
-            // this.pBorder.removeChildren();
 
+            this.pBackground.clear();
+            this.pBackground.removeChildren();
             this.pBorder.clear();
             this.pBorder.removeChildren();
 
@@ -183,6 +181,8 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
 
             // This is only to render axis only once.
             // TODO: Instead of rendering and removing for every tiles, render pBorder only once
+            this.pBackground.clear();
+            this.pBackground.removeChildren();
             this.pBorder.clear();
             this.pBorder.removeChildren();
 
