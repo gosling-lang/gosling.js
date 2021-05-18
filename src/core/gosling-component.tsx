@@ -75,6 +75,41 @@ export const GoslingComponent = forwardRef((props: GoslingCompProps, ref: any) =
                         if (view.uid) ids.push(view.uid);
                     });
                     return ids;
+                },
+                exportPNG: (transparentBackground?: boolean) => {
+                    // https://www.html5gamedevs.com/topic/46564-how-to-save-a-scene-as-an-image/
+                    // https://github.com/higlass/higlass/pull/663/files
+                    const canvas = (hgRef.current.pixiRenderer as PIXI.Renderer).plugins.extract.canvas(
+                        hgRef.current.pixiRoot
+                    ); // container
+
+                    // Add background for given theme in the gosling spec
+                    // Otherwise, it is transparent
+                    // Also, scale canvas to make the image high resolution
+                    const canvasWithBg = document.createElement('canvas') as HTMLCanvasElement;
+                    const scaleFactor = 4;
+                    canvasWithBg.width = canvas.width * scaleFactor;
+                    canvasWithBg.height = canvas.height * scaleFactor;
+
+                    const ctx = canvasWithBg.getContext('2d')!;
+                    if (!transparentBackground) {
+                        ctx.fillStyle = getTheme(gs?.theme).root.background;
+                        ctx.fillRect(0, 0, canvasWithBg.width, canvasWithBg.height);
+                    }
+                    ctx.drawImage(canvas, 0, 0, canvasWithBg.width, canvasWithBg.height);
+                    ctx.scale(scaleFactor, scaleFactor);
+
+                    canvasWithBg.toBlob((blob: any) => {
+                        const a = document.createElement('a');
+
+                        document.body.append(a);
+
+                        a.download = 'gosling-view';
+                        a.href = URL.createObjectURL(blob);
+
+                        a.click();
+                        a.remove();
+                    }, 'image/png');
                 }
             }
         };
