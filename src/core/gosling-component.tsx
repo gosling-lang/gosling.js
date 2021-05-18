@@ -1,4 +1,5 @@
 /* eslint-disable react/prop-types */
+import * as PIXI from 'pixi.js';
 // @ts-ignore
 import { HiGlassComponent } from 'higlass';
 import React, { useState, useEffect, useMemo, useRef, forwardRef } from 'react';
@@ -77,27 +78,29 @@ export const GoslingComponent = forwardRef((props: GoslingCompProps, ref: any) =
                     return ids;
                 },
                 exportPNG: (transparentBackground?: boolean) => {
-                    // https://www.html5gamedevs.com/topic/46564-how-to-save-a-scene-as-an-image/
-                    // https://github.com/higlass/higlass/pull/663/files
-                    const canvas = (hgRef.current.pixiRenderer as PIXI.Renderer).plugins.extract.canvas(
-                        hgRef.current.pixiRoot
-                    ); // container
+                    const renderer = hgRef.current.pixiRenderer;
+                    const renderTexture = PIXI.RenderTexture.create({
+                        width: renderer.width / 2,
+                        height: renderer.height / 2,
+                        resolution: 4
+                    });
 
-                    // Add background for given theme in the gosling spec
+                    renderer.render(hgRef.current.pixiStage, renderTexture);
+
+                    const canvas = renderer.plugins.extract.canvas(renderTexture);
+
+                    // Set background color for the given theme in the gosling spec
                     // Otherwise, it is transparent
-                    // Also, scale canvas to make the image high resolution
                     const canvasWithBg = document.createElement('canvas') as HTMLCanvasElement;
-                    const scaleFactor = 4;
-                    canvasWithBg.width = canvas.width * scaleFactor;
-                    canvasWithBg.height = canvas.height * scaleFactor;
+                    canvasWithBg.width = canvas.width;
+                    canvasWithBg.height = canvas.height;
 
                     const ctx = canvasWithBg.getContext('2d')!;
                     if (!transparentBackground) {
                         ctx.fillStyle = getTheme(gs?.theme).root.background;
                         ctx.fillRect(0, 0, canvasWithBg.width, canvasWithBg.height);
                     }
-                    ctx.drawImage(canvas, 0, 0, canvasWithBg.width, canvasWithBg.height);
-                    ctx.scale(scaleFactor, scaleFactor);
+                    ctx.drawImage(canvas, 0, 0);
 
                     canvasWithBg.toBlob((blob: any) => {
                         const a = document.createElement('a');

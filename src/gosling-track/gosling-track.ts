@@ -1,3 +1,4 @@
+import * as PIXI from 'pixi.js';
 import uuid from 'uuid';
 import { sampleSize, uniqBy } from 'lodash';
 import { scaleLinear } from 'd3-scale';
