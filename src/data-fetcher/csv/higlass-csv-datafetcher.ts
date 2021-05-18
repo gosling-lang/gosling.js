@@ -1,9 +1,9 @@
 import { dsvFormat as d3dsvFormat } from 'd3-dsv';
-import { GET_CHROM_SIZES } from '../core/utils/assembly';
+import { GET_CHROM_SIZES } from '../../core/utils/assembly';
 import fetch from 'cross-fetch'; // TODO: Can we remove this and make the test working
 import { sampleSize } from 'lodash';
-import { Assembly, FilterTransform } from '../core/gosling.schema';
-import { filterData } from '../core/utils/data-transform';
+import { Assembly, FilterTransform } from '../../core/gosling.schema';
+import { filterData } from '../../core/utils/data-transform';
 
 /**
  * HiGlass data fetcher specific for Gosling which ultimately will accept any types of data other than CSV files.

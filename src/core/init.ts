@@ -2,11 +2,11 @@
 import { default as higlassRegister } from 'higlass-register';
 // @ts-ignore
 import { TextTrack } from 'higlass-text';
-import { AxisTrack } from '../axis-track';
-import { BrushTrack } from '../higlass-brush-track';
-import { CSVDataFetcher } from '../higlass-csv-datafetcher/index';
-import { RawDataFetcher } from '../higlass-raw-datafetcher/index';
-import { BBIDataFetcher } from '../higlass-bw-datafetcher/index';
+import { AxisTrack } from '../gosling-genomic-axis';
+import { BrushTrack } from '../gosling-brush';
+import { CSVDataFetcher } from '../data-fetcher/csv/index';
+import { RawDataFetcher } from '../data-fetcher/json/index';
+import { BBIDataFetcher } from '../data-fetcher/bigwig/index';
 import { GoslingTrack } from '../gosling-track/index';
 
 /**
@@ -40,7 +40,9 @@ export function init() {
         config: TextTrack.config
     });
 
-    // TODO:
+    /**
+     * Register a brush plugin track to HiGlassComponent
+     */
     higlassRegister({
         name: 'BrushTrack',
         track: BrushTrack,

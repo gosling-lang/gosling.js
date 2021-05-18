@@ -498,6 +498,7 @@ export const EX_SPEC_VISUAL_ENCODING_CIRCULAR: GoslingSpec = {
 export const EX_SPEC_DARK_THEME: GoslingSpec = {
     theme: {
         base: 'dark',
+        axis: { gridColor: '#333', baselineColor: 'transparent', tickColor: 'transparent' },
         markCommon: {
             color: 'gray',
             nominalColorRange: ['white', 'gray'],
@@ -534,37 +535,37 @@ export const EX_SPEC_DARK_THEME: GoslingSpec = {
                             width: 550,
                             height: 230
                         },
-                        {
-                            data: {
-                                url: 'https://server.gosling-lang.org/api/v1/tileset_info/?d=cistrome-multivec',
-                                type: 'multivec',
-                                row: 'sample',
-                                column: 'position',
-                                value: 'peak',
-                                categories: [
-                                    'sample 1',
-                                    'sample 2',
-                                    'sample 3',
-                                    'sample 4',
-                                    'sample 5',
-                                    'sample 6',
-                                    'sample 7',
-                                    'sample 8'
-                                ],
-                                binSize: 4
-                            },
-                            dataTransform: [{ type: 'filter', field: 'peak', inRange: [0, 0.001] }],
-                            mark: 'rect',
-                            x: { field: 'start', type: 'genomic' },
-                            xe: { field: 'end', type: 'genomic' },
-                            displacement: { type: 'pile' },
-                            color: { value: 'gray' },
-                            stroke: { value: 'black' },
-                            opacity: { value: 0.8 },
-                            strokeWidth: { value: 1 },
-                            width: 550,
-                            height: 80
-                        },
+                        // {
+                        //     data: {
+                        //         url: 'https://server.gosling-lang.org/api/v1/tileset_info/?d=cistrome-multivec',
+                        //         type: 'multivec',
+                        //         row: 'sample',
+                        //         column: 'position',
+                        //         value: 'peak',
+                        //         categories: [
+                        //             'sample 1',
+                        //             'sample 2',
+                        //             'sample 3',
+                        //             'sample 4',
+                        //             'sample 5',
+                        //             'sample 6',
+                        //             'sample 7',
+                        //             'sample 8'
+                        //         ],
+                        //         binSize: 4
+                        //     },
+                        //     dataTransform: [{ type: 'filter', field: 'peak', inRange: [0, 0.001] }],
+                        //     mark: 'rect',
+                        //     x: { field: 'start', type: 'genomic' },
+                        //     xe: { field: 'end', type: 'genomic' },
+                        //     displacement: { type: 'pile' },
+                        //     color: { value: 'gray' },
+                        //     stroke: { value: 'black' },
+                        //     opacity: { value: 0.8 },
+                        //     strokeWidth: { value: 1 },
+                        //     width: 550,
+                        //     height: 80
+                        // },
                         {
                             alignment: 'overlay',
                             data: {

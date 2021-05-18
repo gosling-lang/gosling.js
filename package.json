@@ -32,6 +32,7 @@
         "react-dom": "16.13.1"
     },
     "dependencies": {
+        "@gmod/bam": "^1.1.6",
         "@gmod/bbi": "^1.0.30",
         "@types/d3": "^5.7.2",
         "@types/lodash": "^4.14.151",
@@ -51,12 +52,13 @@
         "higlass-text": "^0.1.1",
         "json-stringify-pretty-compact": "^2.0.0",
         "lodash": "^4.17.15",
-        "mixwith": "^0.1.1"
+        "mixwith": "^0.1.1",
+        "raw-loader": "^4.0.2",
+        "threads": "^1.6.4",
+        "worker-loader": "^3.0.8"
     },
     "devDependencies": {
         "@babel/core": "^7.11.1",
-        "@babel/preset-env": "^7.11.0",
-        "@babel/preset-react": "^7.10.4",
         "@commitlint/cli": "^11.0.0",
         "@commitlint/config-conventional": "^11.0.0",
         "@testing-library/jest-dom": "^5.11.3",
@@ -110,6 +112,7 @@
         "remark-gfm": "^1.0.0",
         "strip-json-comments": "^3.1.1",
         "style-loader": "^1.2.1",
+        "threads-plugin": "^1.4.0",
         "ts-jest": "^26.2.0",
         "ts-json-schema-generator": "^0.75.0",
         "ts-loader": "^8.0.2",

@@ -31,6 +31,7 @@ import {
     FlatTracks,
     OverlaidTracks,
     StackedTracks,
+    BAMData,
     Range
 } from './gosling.schema';
 import { SUPPORTED_CHANNELS } from './mark';
@@ -137,14 +138,17 @@ export function IsChannelBind(
     return channel !== null && typeof channel === 'object' && 'bind' in channel;
 }
 
-export function IsDataDeepTileset(_: DataDeep | undefined): _ is BEDDBData | VectorData | MultivecData | BIGWIGData {
+export function IsDataDeepTileset(
+    _: DataDeep | undefined
+): _ is BEDDBData | VectorData | MultivecData | BIGWIGData | BAMData {
     return (
         _ !== undefined &&
         (_.type === 'vector' ||
             _.type === 'beddb' ||
             _.type === 'multivec' ||
             _.type === 'bigwig' ||
-            _.type === 'matrix')
+            _.type === 'matrix' ||
+            _.type === 'bam')
     );
 }
 
@@ -216,7 +220,7 @@ export function IsStackedChannel(track: SingleTrack, channelKey: keyof typeof Ch
  */
 export function getValueUsingChannel(datum: { [k: string]: string | number }, channel: Channel) {
     if (IsChannelDeep(channel) && channel.field) {
-        return datum[channel.field];
+        return datum[channel?.field];
     }
     return undefined;
 }

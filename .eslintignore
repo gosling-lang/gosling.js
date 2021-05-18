@@ -5,3 +5,5 @@ dist
 # Use the file as it is
 # JSONCrush by Frank Force [MIT] https://github.com/KilledByAPixel/JSONCrush
 json-crush.ts
+
+*worker.js

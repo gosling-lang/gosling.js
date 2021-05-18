@@ -5,7 +5,7 @@
  */
 import { BigWig } from '@gmod/bbi';
 import { RemoteFile } from 'generic-filehandle';
-import { GET_CHROM_SIZES } from '../core/utils/assembly';
+import { GET_CHROM_SIZES } from '../../core/utils/assembly';
 
 function BBIDataFetcher(HGC, ...args) {
     if (!new.target) {

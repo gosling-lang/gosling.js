@@ -56,6 +56,23 @@
       },
       "type": "object"
     },
+    "BAMData": {
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "bam",
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "type",
+        "url"
+      ],
+      "type": "object"
+    },
     "BEDDBData": {
       "additionalProperties": false,
       "properties": {
@@ -326,8 +343,17 @@
         "mirrored": {
           "type": "boolean"
         },
+        "padding": {
+          "type": "number"
+        },
         "range": {
           "$ref": "#/definitions/Range"
+        },
+        "sort": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
         },
         "stack": {
           "type": "boolean"
@@ -414,6 +440,34 @@
       ],
       "type": "string"
     },
+    "CoverageTransform": {
+      "additionalProperties": false,
+      "description": "Aggregate rows and calculate coverage",
+      "properties": {
+        "endField": {
+          "type": "string"
+        },
+        "groupField": {
+          "type": "string"
+        },
+        "newField": {
+          "type": "string"
+        },
+        "startField": {
+          "type": "string"
+        },
+        "type": {
+          "const": "coverage",
+          "type": "string"
+        }
+      },
+      "required": [
+        "type",
+        "startField",
+        "endField"
+      ],
+      "type": "object"
+    },
     "DataDeep": {
       "anyOf": [
         {
@@ -436,6 +490,9 @@
         },
         {
           "$ref": "#/definitions/MatrixData"
+        },
+        {
+          "$ref": "#/definitions/BAMData"
         }
       ]
     },
@@ -443,6 +500,9 @@
       "additionalProperties": false,
       "description": "Partial specification of `BasicSingleTrack` to use default visual encoding predefined by data type.",
       "properties": {
+        "_renderingId": {
+          "type": "string"
+        },
         "assembly": {
           "$ref": "#/definitions/Assembly"
         },
@@ -479,6 +539,15 @@
         },
         "overlayOnPreviousTrack": {
           "type": "boolean"
+        },
+        "prerelease": {
+          "additionalProperties": false,
+          "properties": {
+            "testUsingNewRectRenderingForBAM": {
+              "type": "boolean"
+            }
+          },
+          "type": "object"
         },
         "spacing": {
           "type": "number"
@@ -544,6 +613,12 @@
         },
         {
           "$ref": "#/definitions/ExonSplitTransform"
+        },
+        {
+          "$ref": "#/definitions/CoverageTransform"
+        },
+        {
+          "$ref": "#/definitions/JSONParseTransform"
         }
       ]
     },
@@ -564,6 +639,12 @@
           "properties": {
             "endField": {
               "type": "string"
+            },
+            "groupField": {
+              "type": "string"
+            },
+            "isPaddingBP": {
+              "type": "boolean"
             },
             "padding": {
               "type": "number"
@@ -1260,6 +1341,36 @@
       ],
       "type": "object"
     },
+    "JSONParseTransform": {
+      "additionalProperties": false,
+      "description": "Parse JSON Object Array and append vertically",
+      "properties": {
+        "baseGenomicField": {
+          "type": "string"
+        },
+        "field": {
+          "type": "string"
+        },
+        "genomicField": {
+          "type": "string"
+        },
+        "genomicLengthField": {
+          "type": "string"
+        },
+        "type": {
+          "const": "subjson",
+          "type": "string"
+        }
+      },
+      "required": [
+        "type",
+        "field",
+        "baseGenomicField",
+        "genomicField",
+        "genomicLengthField"
+      ],
+      "type": "object"
+    },
     "Layout": {
       "enum": [
         "linear",
@@ -1718,6 +1829,9 @@
       "additionalProperties": false,
       "description": "Superposing multiple tracks.",
       "properties": {
+        "_renderingId": {
+          "type": "string"
+        },
         "assembly": {
           "$ref": "#/definitions/Assembly"
         },
@@ -1780,6 +1894,9 @@
           "items": {
             "additionalProperties": false,
             "properties": {
+              "_renderingId": {
+                "type": "string"
+              },
               "assembly": {
                 "$ref": "#/definitions/Assembly"
               },
@@ -1838,6 +1955,15 @@
               "overrideTemplate": {
                 "type": "boolean"
               },
+              "prerelease": {
+                "additionalProperties": false,
+                "properties": {
+                  "testUsingNewRectRenderingForBAM": {
+                    "type": "boolean"
+                  }
+                },
+                "type": "object"
+              },
               "row": {
                 "$ref": "#/definitions/Channel"
               },
@@ -1846,9 +1972,6 @@
               },
               "spacing": {
                 "type": "number"
-              },
-              "stackY": {
-                "type": "boolean"
               },
               "startAngle": {
                 "type": "number"
@@ -1950,6 +2073,15 @@
         "overrideTemplate": {
           "type": "boolean"
         },
+        "prerelease": {
+          "additionalProperties": false,
+          "properties": {
+            "testUsingNewRectRenderingForBAM": {
+              "type": "boolean"
+            }
+          },
+          "type": "object"
+        },
         "row": {
           "$ref": "#/definitions/Channel"
         },
@@ -1958,9 +2090,6 @@
         },
         "spacing": {
           "type": "number"
-        },
-        "stackY": {
-          "type": "boolean"
         },
         "startAngle": {
           "type": "number"
@@ -2071,6 +2200,9 @@
     "OverlaidTracks": {
       "additionalProperties": false,
       "properties": {
+        "_renderingId": {
+          "type": "string"
+        },
         "alignment": {
           "const": "overlay",
           "type": "string"
@@ -2139,6 +2271,15 @@
         "overrideTemplate": {
           "type": "boolean"
         },
+        "prerelease": {
+          "additionalProperties": false,
+          "properties": {
+            "testUsingNewRectRenderingForBAM": {
+              "type": "boolean"
+            }
+          },
+          "type": "object"
+        },
         "row": {
           "$ref": "#/definitions/Channel"
         },
@@ -2147,9 +2288,6 @@
         },
         "spacing": {
           "type": "number"
-        },
-        "stackY": {
-          "type": "boolean"
         },
         "startAngle": {
           "type": "number"
@@ -2204,6 +2342,9 @@
           "items": {
             "additionalProperties": false,
             "properties": {
+              "_renderingId": {
+                "type": "string"
+              },
               "assembly": {
                 "$ref": "#/definitions/Assembly"
               },
@@ -2266,6 +2407,9 @@
                 "items": {
                   "additionalProperties": false,
                   "properties": {
+                    "_renderingId": {
+                      "type": "string"
+                    },
                     "assembly": {
                       "$ref": "#/definitions/Assembly"
                     },
@@ -2324,6 +2468,15 @@
                     "overrideTemplate": {
                       "type": "boolean"
                     },
+                    "prerelease": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "testUsingNewRectRenderingForBAM": {
+                          "type": "boolean"
+                        }
+                      },
+                      "type": "object"
+                    },
                     "row": {
                       "$ref": "#/definitions/Channel"
                     },
@@ -2332,9 +2485,6 @@
                     },
                     "spacing": {
                       "type": "number"
-                    },
-                    "stackY": {
-                      "type": "boolean"
                     },
                     "startAngle": {
                       "type": "number"
@@ -2436,6 +2586,15 @@
               "overrideTemplate": {
                 "type": "boolean"
               },
+              "prerelease": {
+                "additionalProperties": false,
+                "properties": {
+                  "testUsingNewRectRenderingForBAM": {
+                    "type": "boolean"
+                  }
+                },
+                "type": "object"
+              },
               "row": {
                 "$ref": "#/definitions/Channel"
               },
@@ -2444,9 +2603,6 @@
               },
               "spacing": {
                 "type": "number"
-              },
-              "stackY": {
-                "type": "boolean"
               },
               "startAngle": {
                 "type": "number"
@@ -2756,6 +2912,9 @@
         {
           "additionalProperties": false,
           "properties": {
+            "_renderingId": {
+              "type": "string"
+            },
             "alignment": {
               "const": "overlay",
               "type": "string"
@@ -2827,6 +2986,15 @@
             "overrideTemplate": {
               "type": "boolean"
             },
+            "prerelease": {
+              "additionalProperties": false,
+              "properties": {
+                "testUsingNewRectRenderingForBAM": {
+                  "type": "boolean"
+                }
+              },
+              "type": "object"
+            },
             "row": {
               "$ref": "#/definitions/Channel"
             },
@@ -2835,9 +3003,6 @@
             },
             "spacing": {
               "type": "number"
-            },
-            "stackY": {
-              "type": "boolean"
             },
             "startAngle": {
               "type": "number"
@@ -2895,6 +3060,9 @@
               "items": {
                 "additionalProperties": false,
                 "properties": {
+                  "_renderingId": {
+                    "type": "string"
+                  },
                   "assembly": {
                     "$ref": "#/definitions/Assembly"
                   },
@@ -2957,6 +3125,9 @@
                     "items": {
                       "additionalProperties": false,
                       "properties": {
+                        "_renderingId": {
+                          "type": "string"
+                        },
                         "assembly": {
                           "$ref": "#/definitions/Assembly"
                         },
@@ -3015,6 +3186,15 @@
                         "overrideTemplate": {
                           "type": "boolean"
                         },
+                        "prerelease": {
+                          "additionalProperties": false,
+                          "properties": {
+                            "testUsingNewRectRenderingForBAM": {
+                              "type": "boolean"
+                            }
+                          },
+                          "type": "object"
+                        },
                         "row": {
                           "$ref": "#/definitions/Channel"
                         },
@@ -3023,9 +3203,6 @@
                         },
                         "spacing": {
                           "type": "number"
-                        },
-                        "stackY": {
-                          "type": "boolean"
                         },
                         "startAngle": {
                           "type": "number"
@@ -3127,6 +3304,15 @@
                   "overrideTemplate": {
                     "type": "boolean"
                   },
+                  "prerelease": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "testUsingNewRectRenderingForBAM": {
+                        "type": "boolean"
+                      }
+                    },
+                    "type": "object"
+                  },
                   "row": {
                     "$ref": "#/definitions/Channel"
                   },
@@ -3135,9 +3321,6 @@
                   },
                   "spacing": {
                     "type": "number"
-                  },
-                  "stackY": {
-                    "type": "boolean"
                   },
                   "startAngle": {
                     "type": "number"
@@ -3303,6 +3486,9 @@
         {
           "additionalProperties": false,
           "properties": {
+            "_renderingId": {
+              "type": "string"
+            },
             "alignment": {
               "const": "stack",
               "type": "string"
@@ -3374,6 +3560,15 @@
             "overrideTemplate": {
               "type": "boolean"
             },
+            "prerelease": {
+              "additionalProperties": false,
+              "properties": {
+                "testUsingNewRectRenderingForBAM": {
+                  "type": "boolean"
+                }
+              },
+              "type": "object"
+            },
             "row": {
               "$ref": "#/definitions/Channel"
             },
@@ -3382,9 +3577,6 @@
             },
             "spacing": {
               "type": "number"
-            },
-            "stackY": {
-              "type": "boolean"
             },
             "startAngle": {
               "type": "number"
@@ -3444,6 +3636,9 @@
                   {
                     "additionalProperties": false,
                     "properties": {
+                      "_renderingId": {
+                        "type": "string"
+                      },
                       "assembly": {
                         "$ref": "#/definitions/Assembly"
                       },
@@ -3506,6 +3701,9 @@
                         "items": {
                           "additionalProperties": false,
                           "properties": {
+                            "_renderingId": {
+                              "type": "string"
+                            },
                             "assembly": {
                               "$ref": "#/definitions/Assembly"
                             },
@@ -3564,6 +3762,15 @@
                             "overrideTemplate": {
                               "type": "boolean"
                             },
+                            "prerelease": {
+                              "additionalProperties": false,
+                              "properties": {
+                                "testUsingNewRectRenderingForBAM": {
+                                  "type": "boolean"
+                                }
+                              },
+                              "type": "object"
+                            },
                             "row": {
                               "$ref": "#/definitions/Channel"
                             },
@@ -3572,9 +3779,6 @@
                             },
                             "spacing": {
                               "type": "number"
-                            },
-                            "stackY": {
-                              "type": "boolean"
                             },
                             "startAngle": {
                               "type": "number"
@@ -3676,6 +3880,15 @@
                       "overrideTemplate": {
                         "type": "boolean"
                       },
+                      "prerelease": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "testUsingNewRectRenderingForBAM": {
+                            "type": "boolean"
+                          }
+                        },
+                        "type": "object"
+                      },
                       "row": {
                         "$ref": "#/definitions/Channel"
                       },
@@ -3684,9 +3897,6 @@
                       },
                       "spacing": {
                         "type": "number"
-                      },
-                      "stackY": {
-                        "type": "boolean"
                       },
                       "startAngle": {
                         "type": "number"
@@ -3942,6 +4152,9 @@
     "SingleTrack": {
       "additionalProperties": false,
       "properties": {
+        "_renderingId": {
+          "type": "string"
+        },
         "assembly": {
           "$ref": "#/definitions/Assembly"
         },
@@ -4006,6 +4219,15 @@
         "overrideTemplate": {
           "type": "boolean"
         },
+        "prerelease": {
+          "additionalProperties": false,
+          "properties": {
+            "testUsingNewRectRenderingForBAM": {
+              "type": "boolean"
+            }
+          },
+          "type": "object"
+        },
         "row": {
           "$ref": "#/definitions/Channel"
         },
@@ -4014,9 +4236,6 @@
         },
         "spacing": {
           "type": "number"
-        },
-        "stackY": {
-          "type": "boolean"
         },
         "startAngle": {
           "type": "number"
@@ -4187,6 +4406,9 @@
     "StackedTracks": {
       "additionalProperties": false,
       "properties": {
+        "_renderingId": {
+          "type": "string"
+        },
         "alignment": {
           "const": "stack",
           "type": "string"
@@ -4255,6 +4477,15 @@
         "overrideTemplate": {
           "type": "boolean"
         },
+        "prerelease": {
+          "additionalProperties": false,
+          "properties": {
+            "testUsingNewRectRenderingForBAM": {
+              "type": "boolean"
+            }
+          },
+          "type": "object"
+        },
         "row": {
           "$ref": "#/definitions/Channel"
         },
@@ -4263,9 +4494,6 @@
         },
         "spacing": {
           "type": "number"
-        },
-        "stackY": {
-          "type": "boolean"
         },
         "startAngle": {
           "type": "number"
@@ -4322,6 +4550,9 @@
               {
                 "additionalProperties": false,
                 "properties": {
+                  "_renderingId": {
+                    "type": "string"
+                  },
                   "assembly": {
                     "$ref": "#/definitions/Assembly"
                   },
@@ -4384,6 +4615,9 @@
                     "items": {
                       "additionalProperties": false,
                       "properties": {
+                        "_renderingId": {
+                          "type": "string"
+                        },
                         "assembly": {
                           "$ref": "#/definitions/Assembly"
                         },
@@ -4442,6 +4676,15 @@
                         "overrideTemplate": {
                           "type": "boolean"
                         },
+                        "prerelease": {
+                          "additionalProperties": false,
+                          "properties": {
+                            "testUsingNewRectRenderingForBAM": {
+                              "type": "boolean"
+                            }
+                          },
+                          "type": "object"
+                        },
                         "row": {
                           "$ref": "#/definitions/Channel"
                         },
@@ -4450,9 +4693,6 @@
                         },
                         "spacing": {
                           "type": "number"
-                        },
-                        "stackY": {
-                          "type": "boolean"
                         },
                         "startAngle": {
                           "type": "number"
@@ -4554,6 +4794,15 @@
                   "overrideTemplate": {
                     "type": "boolean"
                   },
+                  "prerelease": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "testUsingNewRectRenderingForBAM": {
+                        "type": "boolean"
+                      }
+                    },
+                    "type": "object"
+                  },
                   "row": {
                     "$ref": "#/definitions/Channel"
                   },
@@ -4562,9 +4811,6 @@
                   },
                   "spacing": {
                     "type": "number"
-                  },
-                  "stackY": {
-                    "type": "boolean"
                   },
                   "startAngle": {
                     "type": "number"
