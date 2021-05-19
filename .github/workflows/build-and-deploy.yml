@@ -26,6 +26,8 @@ jobs:
       env:
         NODE_OPTIONS: '--max_old_space_size=4096'
     - run: yarn build-editor
+      env:
+        NODE_OPTIONS: '--max_old_space_size=4096'
     - uses: codecov/codecov-action@v1
       with:
         fail_ci_if_error: true
