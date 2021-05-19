@@ -1,5 +1,6 @@
 /* eslint-disable react/prop-types */
 import * as PIXI from 'pixi.js';
+import { jsPDF } from 'jspdf';
 // @ts-ignore
 import { HiGlassComponent } from 'higlass';
 import React, { useState, useEffect, useMemo, useRef, forwardRef } from 'react';
@@ -107,12 +108,48 @@ export const GoslingComponent = forwardRef((props: GoslingCompProps, ref: any) =
 
                         document.body.append(a);
 
-                        a.download = 'gosling-view';
+                        a.download = 'gosling-visualization';
                         a.href = URL.createObjectURL(blob);
 
                         a.click();
                         a.remove();
                     }, 'image/png');
+                },
+                exportPDF: (transparentBackground?: boolean) => {
+                    const resolution = 4;
+                    const renderer = hgRef.current.pixiRenderer;
+                    const renderTexture = PIXI.RenderTexture.create({
+                        width: renderer.width / 2,
+                        height: renderer.height / 2,
+                        resolution
+                    });
+
+                    renderer.render(hgRef.current.pixiStage, renderTexture);
+
+                    const canvas = renderer.plugins.extract.canvas(renderTexture);
+
+                    // Set background color for the given theme in the gosling spec
+                    // Otherwise, it is transparent
+                    const canvasWithBg = document.createElement('canvas') as HTMLCanvasElement;
+                    canvasWithBg.width = canvas.width;
+                    canvasWithBg.height = canvas.height;
+
+                    const ctx = canvasWithBg.getContext('2d')!;
+                    if (!transparentBackground) {
+                        ctx.fillStyle = getTheme(gs?.theme).root.background;
+                        ctx.fillRect(0, 0, canvasWithBg.width, canvasWithBg.height);
+                    }
+                    ctx.drawImage(canvas, 0, 0);
+
+                    const imgData = canvasWithBg.toDataURL('image/jpeg', 1);
+
+                    const pdf = new jsPDF({
+                        orientation: 'p',
+                        unit: 'pt',
+                        format: [canvasWithBg.width, canvasWithBg.height]
+                    });
+                    pdf.addImage(imgData, 'JPEG', 0, 0, canvasWithBg.width, canvasWithBg.height);
+                    pdf.save('gosling-visualization.pdf');
                 }
             }
         };
