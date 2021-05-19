@@ -23,6 +23,8 @@ jobs:
         node-version: ${{ matrix.node-version }}
     - run: yarn install
     - run: yarn test
+      env:
+        NODE_OPTIONS: '--max_old_space_size=4096'
     - run: yarn build-editor
     - uses: codecov/codecov-action@v1
       with:
