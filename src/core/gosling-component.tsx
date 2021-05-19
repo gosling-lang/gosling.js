@@ -144,11 +144,11 @@ export const GoslingComponent = forwardRef((props: GoslingCompProps, ref: any) =
                     const imgData = canvasWithBg.toDataURL('image/jpeg', 1);
 
                     const pdf = new jsPDF({
-                        orientation: 'p',
+                        orientation: canvas.width < canvas.height ? 'p' : 'l',
                         unit: 'pt',
-                        format: [canvasWithBg.width, canvasWithBg.height]
+                        format: [canvas.width, canvas.height]
                     });
-                    pdf.addImage(imgData, 'JPEG', 0, 0, canvasWithBg.width, canvasWithBg.height);
+                    pdf.addImage(imgData, 'JPEG', 0, 0, canvas.width, canvas.height);
                     pdf.save('gosling-visualization.pdf');
                 }
             }
