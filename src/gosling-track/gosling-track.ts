@@ -2,6 +2,7 @@ import * as PIXI from 'pixi.js';
 import uuid from 'uuid';
 import { sampleSize, uniqBy } from 'lodash';
 import { scaleLinear } from 'd3-scale';
+import { format } from 'd3-format';
 import { drawMark } from '../core/mark';
 import { GoslingTrackModel } from '../core/gosling-track-model';
 import { validateTrack } from '../core/utils/validate';
@@ -9,7 +10,7 @@ import { drawScaleMark } from '../core/utils/scalable-rendering';
 import { shareScaleAcrossTracks } from '../core/utils/scales';
 import { resolveSuperposedTracks } from '../core/utils/overlay';
 import { SingleTrack, OverlaidTrack, Datum } from '../core/gosling.schema';
-import { Tooltip } from '../gosling-tooltip';
+import { TooltipData } from '../gosling-tooltip';
 import colorToHex from '../core/utils/color-to-hex';
 import {
     aggregateCoverage,
@@ -24,6 +25,7 @@ import {
 import { getTabularData } from './data-abstraction';
 import { BAMDataFetcher } from '../data-fetcher/bam';
 import { spawn, Worker } from 'threads';
+import { getRelativeGenomicPosition } from '../core/utils/assembly';
 
 // Set `true` to print in what order each function is called
 export const PRINT_RENDERING_CYCLE = false;
@@ -43,7 +45,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
 
     class GoslingTrackClass extends HGC.tracks.BarTrack {
         private originalSpec: SingleTrack | OverlaidTrack;
-        private tooltips: Tooltip[];
+        private tooltips: TooltipData[];
         private tileSize: number;
         private worker: any;
         // TODO: add members that are used explicitly in the code
@@ -704,7 +706,9 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
 
             // TODO: Get tooltip information prepared during the mark rendering, and use the info here to show tooltips.
 
-            const tooltip: Tooltip | undefined = this.tooltips.find((d: Tooltip) => d.isMouseOver(mouseX, mouseY));
+            const tooltip: TooltipData | undefined = this.tooltips.find((d: TooltipData) =>
+                d.isMouseOver(mouseX, mouseY)
+            );
 
             if (tooltip) {
                 // render mouse over effect
@@ -745,16 +749,26 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                     }
                 }
 
+                // Display a tooltip
                 if (this.originalSpec.tooltip) {
-                    // render a tooltip
                     const content = (this.originalSpec.tooltip as any)
-                        .map(
-                            (d: any) =>
+                        .map((d: any) => {
+                            const rawValue = tooltip.datum[d.field];
+                            let value = rawValue;
+                            if (d.type === 'quantitative' && d.format) {
+                                value = format(d.format)(+rawValue);
+                            } else if (d.type === 'genomic') {
+                                // e.g., chr1:204133
+                                value = getRelativeGenomicPosition(+rawValue);
+                            }
+
+                            return (
                                 '<tr>' +
                                 `<td style='padding: 4px 8px'>${d.alt ?? d.field}</td>` +
-                                `<td style='padding: 4px 8px'><b>${tooltip.datum[d.field]}</b></td>` +
+                                `<td style='padding: 4px 8px'><b>${value}</b></td>` +
                                 '</tr>'
-                        )
+                            );
+                        })
                         .join('');
                     return `<table style='text-align: left; margin-top: 12px'>${content}</table>`;
                 }

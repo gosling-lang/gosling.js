@@ -34,7 +34,9 @@ export const EX_SPEC_VISUAL_ENCODING: GoslingSpec = {
                     row: { field: 'sample', type: 'nominal', legend: true },
                     color: { field: 'peak', type: 'quantitative', legend: true },
                     tooltip: [
-                        { field: 'peak', type: 'quantitative', alt: 'Value' },
+                        { field: 'start', type: 'genomic', alt: 'Start Position' },
+                        { field: 'end', type: 'genomic', alt: 'End Position' },
+                        { field: 'peak', type: 'quantitative', alt: 'Value', format: '.2' },
                         { field: 'sample', type: 'nominal', alt: 'Sample' }
                     ],
                     width: 600,
@@ -62,6 +64,11 @@ export const EX_SPEC_VISUAL_ENCODING: GoslingSpec = {
                     y: { field: 'peak', type: 'quantitative' },
                     row: { field: 'sample', type: 'nominal' },
                     color: { field: 'sample', type: 'nominal', legend: true },
+                    tooltip: [
+                        { field: 'position', type: 'genomic', alt: 'Position' },
+                        { field: 'peak', type: 'quantitative', alt: 'Value', format: '.2' },
+                        { field: 'sample', type: 'nominal', alt: 'Sample' }
+                    ],
                     width: 600,
                     height: 130
                 }
@@ -86,6 +93,11 @@ export const EX_SPEC_VISUAL_ENCODING: GoslingSpec = {
                     },
                     y: { field: 'peak', type: 'quantitative', grid: true },
                     color: { field: 'sample', type: 'nominal', legend: true },
+                    tooltip: [
+                        { field: 'position', type: 'genomic', alt: 'Position' },
+                        { field: 'peak', type: 'quantitative', alt: 'Value', format: '.2' },
+                        { field: 'sample', type: 'nominal', alt: 'Sample' }
+                    ],
                     width: 600,
                     height: 130
                 }
@@ -110,6 +122,11 @@ export const EX_SPEC_VISUAL_ENCODING: GoslingSpec = {
             row: { field: 'sample', type: 'nominal' },
             color: { field: 'sample', type: 'nominal', legend: true },
             tracks: [{ mark: 'line' }, { mark: 'point', size: { field: 'peak', type: 'quantitative', range: [0, 2] } }],
+            tooltip: [
+                { field: 'position', type: 'genomic', alt: 'Position' },
+                { field: 'peak', type: 'quantitative', alt: 'Value', format: '.2' },
+                { field: 'sample', type: 'nominal', alt: 'Sample' }
+            ],
             width: 600,
             height: 130
         },
@@ -135,6 +152,11 @@ export const EX_SPEC_VISUAL_ENCODING: GoslingSpec = {
                     size: { field: 'peak', type: 'quantitative' },
                     color: { field: 'sample', type: 'nominal', legend: true },
                     opacity: { value: 0.5 },
+                    tooltip: [
+                        { field: 'position', type: 'genomic', alt: 'Position' },
+                        { field: 'peak', type: 'quantitative', alt: 'Value', format: '.2' },
+                        { field: 'sample', type: 'nominal', alt: 'Sample' }
+                    ],
                     width: 600,
                     height: 130
                 }
@@ -161,6 +183,11 @@ export const EX_SPEC_VISUAL_ENCODING: GoslingSpec = {
                     size: { field: 'peak', type: 'quantitative' },
                     color: { field: 'sample', type: 'nominal', legend: true },
                     opacity: { value: 0.5 },
+                    tooltip: [
+                        { field: 'position', type: 'genomic', alt: 'Position' },
+                        { field: 'peak', type: 'quantitative', alt: 'Value', format: '.2' },
+                        { field: 'sample', type: 'nominal', alt: 'Sample' }
+                    ],
                     width: 600,
                     height: 130
                 }
@@ -188,6 +215,11 @@ export const EX_SPEC_VISUAL_ENCODING: GoslingSpec = {
                     color: { field: 'sample', type: 'nominal', legend: true },
                     stroke: { value: 'white' },
                     strokeWidth: { value: 0.5 },
+                    tooltip: [
+                        { field: 'position', type: 'genomic', alt: 'Position' },
+                        { field: 'peak', type: 'quantitative', alt: 'Value', format: '.2' },
+                        { field: 'sample', type: 'nominal', alt: 'Sample' }
+                    ],
                     width: 600,
                     height: 130
                 }
@@ -226,6 +258,10 @@ export const EX_SPEC_VISUAL_ENCODING: GoslingSpec = {
                     stroke: { value: 'black' },
                     strokeWidth: { value: 0.5 },
                     opacity: { value: 0.2 },
+                    tooltip: [
+                        { field: 's1', type: 'genomic' },
+                        { field: 'e2', type: 'genomic' }
+                    ],
                     width: 600,
                     height: 130
                 }

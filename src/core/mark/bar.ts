@@ -5,6 +5,7 @@ import { PIXIVisualProperty } from '../visual-property.schema';
 import { IsChannelDeep, IsStackedMark, getValueUsingChannel } from '../gosling.schema.guards';
 import { cartesianToPolar, valueToRadian } from '../utils/polar';
 import colorToHex from '../utils/color-to-hex';
+import { TooltipData, TOOLTIP_MOUSEOVER_MARGIN as G } from '../../gosling-tooltip';
 
 export function drawBar(trackInfo: any, tile: any, model: GoslingTrackModel) {
     /* track spec */
@@ -73,7 +74,9 @@ export function drawBar(trackInfo: any, tile: any, model: GoslingTrackModel) {
                 const y = model.encodedPIXIProperty('y', d);
 
                 const barWidth = model.encodedPIXIProperty('width', d, { tileUnitWidth });
-                const barStartX = model.encodedPIXIProperty('x-start', d, { markWidth: barWidth });
+
+                const xs = model.encodedPIXIProperty('x-start', d, { markWidth: barWidth });
+                const xe = xs + barWidth;
 
                 const alphaTransition = model.markVisibility(d, { width: barWidth, zoomLevel });
                 const actualOpacity = Math.min(alphaTransition, opacity);
@@ -94,9 +97,9 @@ export function drawBar(trackInfo: any, tile: any, model: GoslingTrackModel) {
                     const farR = trackOuterRadius - ((rowHeight - prevYEnd) / trackHeight) * trackRingSize;
                     const nearR = trackOuterRadius - ((rowHeight - y - prevYEnd) / trackHeight) * trackRingSize;
 
-                    const sPos = cartesianToPolar(barStartX, trackWidth, nearR, cx, cy, startAngle, endAngle);
-                    const startRad = valueToRadian(barStartX, trackWidth, startAngle, endAngle);
-                    const endRad = valueToRadian(barStartX + barWidth, trackWidth, startAngle, endAngle);
+                    const sPos = cartesianToPolar(xs, trackWidth, nearR, cx, cy, startAngle, endAngle);
+                    const startRad = valueToRadian(xs, trackWidth, startAngle, endAngle);
+                    const endRad = valueToRadian(xs + barWidth, trackWidth, startAngle, endAngle);
 
                     g.beginFill(colorToHex(color), actualOpacity);
                     g.moveTo(sPos.x, sPos.y);
@@ -104,8 +107,21 @@ export function drawBar(trackInfo: any, tile: any, model: GoslingTrackModel) {
                     g.arc(cx, cy, farR, endRad, startRad, false);
                     g.closePath();
                 } else {
+                    const ys = rowHeight - y - prevYEnd;
+                    const barHeight = y;
+
                     g.beginFill(colorToHex(color), actualOpacity);
-                    g.drawRect(barStartX, rowHeight - y - prevYEnd, barWidth, y);
+                    g.drawRect(xs, rowHeight - y - prevYEnd, barWidth, y);
+
+                    /* Tooltip data */
+                    if (spec.tooltip) {
+                        trackInfo.tooltips.push({
+                            datum: d,
+                            isMouseOver: (x: number, y: number) =>
+                                xs - G < x && x < xe + G && ys - G < y && y < ys + barHeight + G,
+                            markInfo: { x: xs, y: ys, width: barWidth, height: barHeight, type: 'bar' }
+                        } as TooltipData);
+                    }
                 }
 
                 prevYEnd += y;
@@ -128,8 +144,10 @@ export function drawBar(trackInfo: any, tile: any, model: GoslingTrackModel) {
                 const y = model.encodedPIXIProperty('y', d); // TODO: we could even retrieve a actual y position of bars
 
                 const barWidth = model.encodedPIXIProperty('width', d, { tileUnitWidth });
-                const barStartX = model.encodedPIXIProperty('x-start', d, { markWidth: barWidth });
+                const xs = model.encodedPIXIProperty('x-start', d, { markWidth: barWidth });
                 const barHeight = y - baselineY;
+                const ys = rowPosition + rowHeight - barHeight - baselineY;
+                const xe = xs + barWidth;
 
                 const alphaTransition = model.markVisibility(d, { width: barWidth, zoomLevel });
                 const actualOpacity = Math.min(alphaTransition, opacity);
@@ -153,9 +171,9 @@ export function drawBar(trackInfo: any, tile: any, model: GoslingTrackModel) {
                     const nearR =
                         trackOuterRadius - ((rowPosition + rowHeight - baselineY) / trackHeight) * trackRingSize;
 
-                    const sPos = cartesianToPolar(barStartX, trackWidth, nearR, cx, cy, startAngle, endAngle);
-                    const startRad = valueToRadian(barStartX, trackWidth, startAngle, endAngle);
-                    const endRad = valueToRadian(barStartX + barWidth, trackWidth, startAngle, endAngle);
+                    const sPos = cartesianToPolar(xs, trackWidth, nearR, cx, cy, startAngle, endAngle);
+                    const startRad = valueToRadian(xs, trackWidth, startAngle, endAngle);
+                    const endRad = valueToRadian(xs + barWidth, trackWidth, startAngle, endAngle);
 
                     g.beginFill(colorToHex(color), actualOpacity);
                     g.moveTo(sPos.x, sPos.y);
@@ -164,7 +182,17 @@ export function drawBar(trackInfo: any, tile: any, model: GoslingTrackModel) {
                     g.closePath();
                 } else {
                     g.beginFill(colorToHex(color), actualOpacity);
-                    g.drawRect(barStartX, rowPosition + rowHeight - barHeight - baselineY, barWidth, barHeight);
+                    g.drawRect(xs, rowPosition + rowHeight - barHeight - baselineY, barWidth, barHeight);
+
+                    /* Tooltip data */
+                    if (spec.tooltip) {
+                        trackInfo.tooltips.push({
+                            datum: d,
+                            isMouseOver: (x: number, y: number) =>
+                                xs - G < x && x < xe + G && ys - G < y && y < ys + barHeight + G,
+                            markInfo: { x: xs, y: ys, width: barWidth, height: barHeight, type: 'bar' }
+                        } as TooltipData);
+                    }
                 }
             });
         });

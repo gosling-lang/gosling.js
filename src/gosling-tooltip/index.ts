@@ -2,7 +2,7 @@ import { Datum } from '../core/gosling.schema';
 
 export const TOOLTIP_MOUSEOVER_MARGIN = 1;
 
-export type Tooltip = {
+export type TooltipData = {
     datum: Datum;
     isMouseOver: (x: number, y: number) => boolean;
     markInfo: {
@@ -10,6 +10,6 @@ export type Tooltip = {
         y: number;
         width: number;
         height: number;
-        type: 'rect' | 'point'; // ...
+        type: 'bar' | 'rect' | 'point' | 'line' | 'area'; // ...
     };
 };

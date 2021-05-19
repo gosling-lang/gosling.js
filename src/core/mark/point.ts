@@ -5,7 +5,7 @@ import { getValueUsingChannel } from '../gosling.schema.guards';
 import colorToHex from '../utils/color-to-hex';
 import { cartesianToPolar } from '../utils/polar';
 import { PIXIVisualProperty } from '../visual-property.schema';
-import { Tooltip, TOOLTIP_MOUSEOVER_MARGIN as G } from '../../gosling-tooltip';
+import { TooltipData, TOOLTIP_MOUSEOVER_MARGIN as G } from '../../gosling-tooltip';
 
 export function drawPoint(trackInfo: any, g: PIXI.Graphics, model: GoslingTrackModel) {
     /* track spec */
@@ -85,14 +85,14 @@ export function drawPoint(trackInfo: any, g: PIXI.Graphics, model: GoslingTrackM
 
                 /* Tooltip data */
                 if (trackInfo?.tooltips) {
-                    const _cy = rowPosition + rowHeight - cy;
+                    const gcy = rowPosition + rowHeight - cy;
                     trackInfo.tooltips.push({
                         datum: d,
                         isMouseOver: (x: number, y: number) =>
-                            Math.sqrt(Math.abs(x - cx) * Math.abs(x - cx) + Math.abs(y - _cy) * Math.abs(y - _cy)) <
+                            Math.sqrt(Math.abs(x - cx) * Math.abs(x - cx) + Math.abs(y - gcy) * Math.abs(y - gcy)) <
                             size + G,
                         markInfo: { x: cx, y: rowPosition + rowHeight - cy, width: size, height: size, type: 'point' }
-                    } as Tooltip);
+                    } as TooltipData);
                 }
             }
         });
