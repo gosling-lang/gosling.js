@@ -1,3 +1,20 @@
+## [0.8.1](https://github.com/gosling-lang/gosling.js/compare/v0.8.0...v0.8.1) (2021-05-19)
+
+
+### Bug Fixes
+
+* properly refresh grids upon zoom ([#381](https://github.com/gosling-lang/gosling.js/issues/381)) ([7cc61c3](https://github.com/gosling-lang/gosling.js/commit/7cc61c3782758475e75a919ede4d6499fdc7169e))
+
+
+### Features
+
+* **api:** export pdf file ([#385](https://github.com/gosling-lang/gosling.js/issues/385)) ([42c1d99](https://github.com/gosling-lang/gosling.js/commit/42c1d99ad463bff145613ef2759c3e7e131dda85))
+* **api:** export png file ([#382](https://github.com/gosling-lang/gosling.js/issues/382)) ([5799c96](https://github.com/gosling-lang/gosling.js/commit/5799c96cf1a1c666508c579e8dab665382523361))
+* **editor:** change editor theme depending on the theme of gosling spec ([#380](https://github.com/gosling-lang/gosling.js/issues/380)) ([fa9f921](https://github.com/gosling-lang/gosling.js/commit/fa9f921c24a735ec6cad14a1750a3acb8d9a13b2))
+* Support bam files ([#374](https://github.com/gosling-lang/gosling.js/issues/374)) ([7adbddf](https://github.com/gosling-lang/gosling.js/commit/7adbddf68c84a78361d294cd9ff89d2758046c33))
+
+
+
 # [0.8.0](https://github.com/gosling-lang/gosling.js/compare/v0.7.7...v0.8.0) (2021-05-04)
 
 
