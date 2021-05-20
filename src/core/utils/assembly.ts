@@ -1,3 +1,4 @@
+import { format } from 'd3-format';
 import {
     CHROM_SIZE_HG16,
     CHROM_SIZE_HG17,
@@ -13,6 +14,24 @@ export interface ChromSize {
     interval: { [chr: string]: [number, number] };
     total: number;
     path: string;
+}
+
+/**
+ * Get relative chromosome position (e.g., `100` => `chr:100`)
+ */
+export function getRelativeGenomicPosition(absPos: number, assembly?: string): string {
+    const chrAndRange = Object.entries(GET_CHROM_SIZES(assembly).interval).find(d => {
+        const [, [start, end]] = d;
+        return start <= absPos && absPos < end;
+    });
+
+    if (!chrAndRange) {
+        // The number is out of range
+        return `${absPos}`;
+    }
+
+    const pos = format(',')(absPos - chrAndRange[1][0]);
+    return `${chrAndRange[0]}:${pos}`;
 }
 
 /**

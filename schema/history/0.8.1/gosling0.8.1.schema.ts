@@ -136,7 +136,7 @@ export interface SingleTrack extends CommonTrackDef {
     // Data transformation
     dataTransform?: DataTransform[];
 
-    tooltip?: { field: string; type: FieldType; alt?: string }[];
+    tooltip?: Tooltip[];
 
     // Mark
     mark: Mark;
@@ -173,6 +173,13 @@ export interface SingleTrack extends CommonTrackDef {
     flipY?: boolean; // This is only supported for `link` marks.
     stretch?: boolean; // Stretch the size to the given range? (e.g., [x, xe])
     overrideTemplate?: boolean; // Override a spec template that is defined for a given data type.
+}
+
+export interface Tooltip {
+    field: string;
+    type: FieldType;
+    alt?: string;
+    format?: string;
 }
 
 export interface Displacement {

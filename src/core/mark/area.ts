@@ -1,3 +1,4 @@
+import { TooltipData, TOOLTIP_MOUSEOVER_MARGIN as G } from '../../gosling-tooltip';
 import { GoslingTrackModel } from '../gosling-track-model';
 import { Channel, Datum } from '../gosling.schema';
 import { min as d3min, max as d3max, group } from 'd3-array';
@@ -29,8 +30,8 @@ export function drawArea(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackMo
     const startAngle = spec.startAngle ?? 0;
     const endAngle = spec.endAngle ?? 360;
     const trackRingSize = trackOuterRadius - trackInnerRadius;
-    const cx = trackWidth / 2.0;
-    const cy = trackHeight / 2.0;
+    const trackCenterX = trackWidth / 2.0;
+    const trackCenterY = trackHeight / 2.0;
 
     /* genomic scale */
     const xScale = tm.getChannelScale('x');
@@ -86,14 +87,22 @@ export function drawArea(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackMo
                     ?.forEach(d => {
                         const xValue = +genomicPosCategory;
 
-                        const x = xScale(xValue);
-                        const y = d3max([tm.encodedPIXIProperty('y', d), 0]); // make should not to overflow
+                        const cx = xScale(xValue);
+                        const cy = d3max([tm.encodedPIXIProperty('y', d), 0]); // make should not to overflow
 
                         if (circular) {
                             if (i === 0) {
                                 // start position of the polygon
                                 const r = trackOuterRadius - (rowHeight / trackHeight) * trackRingSize;
-                                const pos = cartesianToPolar(x, trackWidth, r, cx, cy, startAngle, endAngle);
+                                const pos = cartesianToPolar(
+                                    cx,
+                                    trackWidth,
+                                    r,
+                                    trackCenterX,
+                                    trackCenterY,
+                                    startAngle,
+                                    endAngle
+                                );
                                 areaPointsTop.push([pos.x, pos.y]);
                                 areaPointsBottom.push([pos.x, pos.y]);
                             }
@@ -104,45 +113,81 @@ export function drawArea(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackMo
 
                             const rTop =
                                 trackOuterRadius -
-                                ((rowHeight - y - prevYEndByGPos[genomicPosCategory]) / trackHeight) * trackRingSize;
-                            const posTop = cartesianToPolar(x, trackWidth, rTop, cx, cy, startAngle, endAngle);
+                                ((rowHeight - cy - prevYEndByGPos[genomicPosCategory]) / trackHeight) * trackRingSize;
+                            const posTop = cartesianToPolar(
+                                cx,
+                                trackWidth,
+                                rTop,
+                                trackCenterX,
+                                trackCenterY,
+                                startAngle,
+                                endAngle
+                            );
                             areaPointsTop.push([posTop.x, posTop.y]);
 
                             const rBot =
                                 trackOuterRadius -
                                 ((rowHeight - prevYEndByGPos[genomicPosCategory]) / trackHeight) * trackRingSize;
-                            const posBot = cartesianToPolar(x, trackWidth, rBot, cx, cy, startAngle, endAngle);
+                            const posBot = cartesianToPolar(
+                                cx,
+                                trackWidth,
+                                rBot,
+                                trackCenterX,
+                                trackCenterY,
+                                startAngle,
+                                endAngle
+                            );
                             areaPointsBottom.push([posBot.x, posBot.y]);
 
                             if (i === array.length - 1) {
                                 // end position of the polygon
                                 const r = trackOuterRadius - (rowHeight / trackHeight) * trackRingSize;
-                                const pos = cartesianToPolar(x, trackWidth, r, cx, cy, startAngle, endAngle);
+                                const pos = cartesianToPolar(
+                                    cx,
+                                    trackWidth,
+                                    r,
+                                    trackCenterX,
+                                    trackCenterY,
+                                    startAngle,
+                                    endAngle
+                                );
                                 areaPointsTop.push([pos.x, pos.y]);
                                 areaPointsBottom.push([pos.x, pos.y]);
                             }
                         } else {
                             if (i === 0) {
                                 // start position of the polygon
-                                areaPointsTop.push([x, rowHeight]); // TODO: confirm if this is correct
-                                areaPointsBottom.push([x, rowHeight]);
+                                areaPointsTop.push([cx, rowHeight]); // TODO: confirm if this is correct
+                                areaPointsBottom.push([cx, rowHeight]);
                             }
 
                             if (typeof prevYEndByGPos[genomicPosCategory] === 'undefined') {
                                 prevYEndByGPos[genomicPosCategory] = 0;
                             }
 
-                            areaPointsTop.push([x, rowHeight - y - prevYEndByGPos[genomicPosCategory]]);
-                            areaPointsBottom.push([x, rowHeight - prevYEndByGPos[genomicPosCategory]]);
+                            areaPointsTop.push([cx, rowHeight - cy - prevYEndByGPos[genomicPosCategory]]);
+                            areaPointsBottom.push([cx, rowHeight - prevYEndByGPos[genomicPosCategory]]);
 
                             if (i === array.length - 1) {
                                 // end position of the polygon
-                                areaPointsTop.push([x, rowHeight]);
-                                areaPointsBottom.push([x, rowHeight]);
+                                areaPointsTop.push([cx, rowHeight]);
+                                areaPointsBottom.push([cx, rowHeight]);
+                            }
+
+                            /* Tooltip data */
+                            if (spec.tooltip) {
+                                const ys = rowHeight - cy - prevYEndByGPos[genomicPosCategory];
+                                const ye = rowHeight - prevYEndByGPos[genomicPosCategory];
+                                trackInfo.tooltips.push({
+                                    datum: d,
+                                    isMouseOver: (x: number, y: number) =>
+                                        cx - G < x && x < cx + G && ys - G < y && y < ye + G,
+                                    markInfo: { x: cx, y: ys, width: G, height: cy, type: 'area' }
+                                } as TooltipData);
                             }
                         }
 
-                        prevYEndByGPos[genomicPosCategory] += y;
+                        prevYEndByGPos[genomicPosCategory] += cy;
                     });
             });
             const color = tm.encodedValue('color', colorCategory);
@@ -185,17 +230,17 @@ export function drawArea(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackMo
                     .forEach((d, i, array) => {
                         // TODO: this should be included in the `encodedValue` functions
                         // make should not to overflow when using use-defined `domain`
-                        const y = d3min([d3max([tm.encodedPIXIProperty('y', d), 0]), rowHeight]);
-                        const x = tm.encodedPIXIProperty('x', d);
+                        const cy = d3min([d3max([tm.encodedPIXIProperty('y', d), 0]), rowHeight]);
+                        const cx = tm.encodedPIXIProperty('x', d);
 
                         if (circular) {
                             // we need to prepare the points for drawing baseline
                             const baselinePos = cartesianToPolar(
-                                x,
+                                cx,
                                 trackWidth,
                                 baselineR,
-                                cx,
-                                cy,
+                                trackCenterX,
+                                trackCenterY,
                                 startAngle,
                                 endAngle
                             );
@@ -206,31 +251,60 @@ export function drawArea(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackMo
                                 areaPoints.push(baselinePos.x, baselinePos.y);
                             }
 
-                            const r = trackOuterRadius - ((rowPosition + rowHeight - y) / trackHeight) * trackRingSize;
-                            const pos = cartesianToPolar(x, trackWidth, r, cx, cy, startAngle, endAngle);
+                            const r = trackOuterRadius - ((rowPosition + rowHeight - cy) / trackHeight) * trackRingSize;
+                            const pos = cartesianToPolar(
+                                cx,
+                                trackWidth,
+                                r,
+                                trackCenterX,
+                                trackCenterY,
+                                startAngle,
+                                endAngle
+                            );
                             areaPoints.push(pos.x, pos.y);
 
                             if (i === array.length - 1) {
                                 // close the polygon with a point at the start
                                 const startR =
                                     trackOuterRadius - ((rowPosition + rowHeight) / trackHeight) * trackRingSize;
-                                const curPos = cartesianToPolar(x, trackWidth, startR, cx, cy, startAngle, endAngle);
+                                const curPos = cartesianToPolar(
+                                    cx,
+                                    trackWidth,
+                                    startR,
+                                    trackCenterX,
+                                    trackCenterY,
+                                    startAngle,
+                                    endAngle
+                                );
 
                                 areaPoints.push(curPos.x, curPos.y);
                             }
                         } else {
                             if (i === 0) {
                                 // start position of the polygon
-                                areaPoints.push(x, rowPosition + rowHeight);
+                                areaPoints.push(cx, rowPosition + rowHeight);
                             }
 
-                            areaPoints.push(x, rowPosition + rowHeight - y);
+                            areaPoints.push(cx, rowPosition + rowHeight - cy);
 
                             if (i === array.length - 1) {
                                 // close the polygon with a point at the start
                                 const startX = xScale(tileX);
-                                areaPoints.push(x, rowPosition + rowHeight);
+                                areaPoints.push(cx, rowPosition + rowHeight);
                                 areaPoints.push(startX, rowPosition + rowHeight);
+                            }
+
+                            /* Tooltip data */
+                            if (spec.tooltip) {
+                                trackInfo.tooltips.push({
+                                    datum: d,
+                                    isMouseOver: (x: number, y: number) =>
+                                        cx - G < x &&
+                                        x < cx + G &&
+                                        rowPosition - G < y &&
+                                        y < rowPosition + rowHeight + G,
+                                    markInfo: { x: cx, y: cy, width: G, height: cy, type: 'area' }
+                                } as TooltipData);
                             }
                         }
                     });

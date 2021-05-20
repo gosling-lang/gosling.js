@@ -4,8 +4,9 @@ import { Channel } from '../gosling.schema';
 import { getValueUsingChannel } from '../gosling.schema.guards';
 import colorToHex from '../utils/color-to-hex';
 import { cartesianToPolar } from '../utils/polar';
+import { TooltipData, TOOLTIP_MOUSEOVER_MARGIN as G } from '../../gosling-tooltip';
 
-export function drawLine(g: PIXI.Graphics, tm: GoslingTrackModel) {
+export function drawLine(g: PIXI.Graphics, tm: GoslingTrackModel, tooltips: TooltipData[]) {
     /* track spec */
     const spec = tm.spec();
 
@@ -28,8 +29,8 @@ export function drawLine(g: PIXI.Graphics, tm: GoslingTrackModel) {
     const startAngle = spec.startAngle ?? 0;
     const endAngle = spec.endAngle ?? 360;
     const trackRingSize = trackOuterRadius - trackInnerRadius;
-    const cx = trackWidth / 2.0;
-    const cy = trackHeight / 2.0;
+    const trackCenterX = trackWidth / 2.0;
+    const trackCenterY = trackHeight / 2.0;
 
     /* row separation */
     const rowCategories = (tm.getChannelDomainArray('row') as string[]) ?? ['___SINGLE_ROW___'];
@@ -58,7 +59,7 @@ export function drawLine(g: PIXI.Graphics, tm: GoslingTrackModel) {
                         (getValueUsingChannel(d2, spec.x as Channel) as number)
                 )
                 .forEach((d, i) => {
-                    const x = tm.encodedPIXIProperty('x', d);
+                    const cx = tm.encodedPIXIProperty('x', d);
                     const y = tm.encodedPIXIProperty('y', d);
                     const size = tm.encodedPIXIProperty('size', d);
                     const color = tm.encodedPIXIProperty('color', d); // should be identical for a single line
@@ -73,7 +74,15 @@ export function drawLine(g: PIXI.Graphics, tm: GoslingTrackModel) {
 
                     if (circular) {
                         const r = trackOuterRadius - ((rowPosition + rowHeight - y) / trackHeight) * trackRingSize;
-                        const pos = cartesianToPolar(x, trackWidth, r, cx, cy, startAngle, endAngle);
+                        const pos = cartesianToPolar(
+                            cx,
+                            trackWidth,
+                            r,
+                            trackCenterX,
+                            trackCenterY,
+                            startAngle,
+                            endAngle
+                        );
 
                         if (i === 0) {
                             g.moveTo(pos.x, pos.y);
@@ -82,9 +91,19 @@ export function drawLine(g: PIXI.Graphics, tm: GoslingTrackModel) {
                         }
                     } else {
                         if (i === 0) {
-                            g.moveTo(x, rowPosition + rowHeight - y);
+                            g.moveTo(cx, rowPosition + rowHeight - y);
                         } else {
-                            g.lineTo(x, rowPosition + rowHeight - y);
+                            g.lineTo(cx, rowPosition + rowHeight - y);
+                        }
+
+                        /* Tooltip data */
+                        if (spec.tooltip) {
+                            tooltips.push({
+                                datum: d,
+                                isMouseOver: (x: number, y: number) =>
+                                    cx - G < x && x < cx + G && rowPosition - G < y && y < rowPosition + rowHeight + G,
+                                markInfo: { x: cx, y, width: G, height: y, type: 'line' }
+                            } as TooltipData);
                         }
                     }
                 });

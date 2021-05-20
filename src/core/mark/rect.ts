@@ -1,4 +1,4 @@
-import { Tooltip, TOOLTIP_MOUSEOVER_MARGIN as G } from '../../gosling-tooltip';
+import { TooltipData, TOOLTIP_MOUSEOVER_MARGIN as G } from '../../gosling-tooltip';
 import { GoslingTrackModel } from '../gosling-track-model';
 import { cartesianToPolar, valueToRadian } from '../utils/polar';
 import { PIXIVisualProperty } from '../visual-property.schema';
@@ -108,7 +108,8 @@ export function drawRect(HGC: any, trackInfo: any, tile: any, model: GoslingTrac
             g.drawRect(xs, rowPosition + ys, xe - xs, ye - ys);
 
             /* SVG data */
-            trackInfo.svgData.push({ type: 'rect', xs, xe, ys, ye, color, stroke, opacity });
+            // We do not currently plan to support SVG elements.
+            // trackInfo.svgData.push({ type: 'rect', xs, xe, ys, ye, color, stroke, opacity });
 
             /* Tooltip data */
             if (spec.tooltip) {
@@ -117,7 +118,7 @@ export function drawRect(HGC: any, trackInfo: any, tile: any, model: GoslingTrac
                     isMouseOver: (x: number, y: number) =>
                         xs - G < x && x < xe + G && rowPosition + ys - G < y && y < rowPosition + ye + G,
                     markInfo: { x: xs, y: ys + rowPosition, width: xe - xs, height: ye - ys, type: 'rect' }
-                } as Tooltip);
+                } as TooltipData);
             }
         }
     });

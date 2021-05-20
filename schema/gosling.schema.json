@@ -1996,23 +1996,7 @@
               },
               "tooltip": {
                 "items": {
-                  "additionalProperties": false,
-                  "properties": {
-                    "alt": {
-                      "type": "string"
-                    },
-                    "field": {
-                      "type": "string"
-                    },
-                    "type": {
-                      "$ref": "#/definitions/FieldType"
-                    }
-                  },
-                  "required": [
-                    "field",
-                    "type"
-                  ],
-                  "type": "object"
+                  "$ref": "#/definitions/Tooltip"
                 },
                 "type": "array"
               },
@@ -2120,23 +2104,7 @@
         },
         "tooltip": {
           "items": {
-            "additionalProperties": false,
-            "properties": {
-              "alt": {
-                "type": "string"
-              },
-              "field": {
-                "type": "string"
-              },
-              "type": {
-                "$ref": "#/definitions/FieldType"
-              }
-            },
-            "required": [
-              "field",
-              "type"
-            ],
-            "type": "object"
+            "$ref": "#/definitions/Tooltip"
           },
           "type": "array"
         },
@@ -2318,23 +2286,7 @@
         },
         "tooltip": {
           "items": {
-            "additionalProperties": false,
-            "properties": {
-              "alt": {
-                "type": "string"
-              },
-              "field": {
-                "type": "string"
-              },
-              "type": {
-                "$ref": "#/definitions/FieldType"
-              }
-            },
-            "required": [
-              "field",
-              "type"
-            ],
-            "type": "object"
+            "$ref": "#/definitions/Tooltip"
           },
           "type": "array"
         },
@@ -2509,23 +2461,7 @@
                     },
                     "tooltip": {
                       "items": {
-                        "additionalProperties": false,
-                        "properties": {
-                          "alt": {
-                            "type": "string"
-                          },
-                          "field": {
-                            "type": "string"
-                          },
-                          "type": {
-                            "$ref": "#/definitions/FieldType"
-                          }
-                        },
-                        "required": [
-                          "field",
-                          "type"
-                        ],
-                        "type": "object"
+                        "$ref": "#/definitions/Tooltip"
                       },
                       "type": "array"
                     },
@@ -2633,23 +2569,7 @@
               },
               "tooltip": {
                 "items": {
-                  "additionalProperties": false,
-                  "properties": {
-                    "alt": {
-                      "type": "string"
-                    },
-                    "field": {
-                      "type": "string"
-                    },
-                    "type": {
-                      "$ref": "#/definitions/FieldType"
-                    }
-                  },
-                  "required": [
-                    "field",
-                    "type"
-                  ],
-                  "type": "object"
+                  "$ref": "#/definitions/Tooltip"
                 },
                 "type": "array"
               },
@@ -3036,23 +2956,7 @@
             },
             "tooltip": {
               "items": {
-                "additionalProperties": false,
-                "properties": {
-                  "alt": {
-                    "type": "string"
-                  },
-                  "field": {
-                    "type": "string"
-                  },
-                  "type": {
-                    "$ref": "#/definitions/FieldType"
-                  }
-                },
-                "required": [
-                  "field",
-                  "type"
-                ],
-                "type": "object"
+                "$ref": "#/definitions/Tooltip"
               },
               "type": "array"
             },
@@ -3227,23 +3131,7 @@
                         },
                         "tooltip": {
                           "items": {
-                            "additionalProperties": false,
-                            "properties": {
-                              "alt": {
-                                "type": "string"
-                              },
-                              "field": {
-                                "type": "string"
-                              },
-                              "type": {
-                                "$ref": "#/definitions/FieldType"
-                              }
-                            },
-                            "required": [
-                              "field",
-                              "type"
-                            ],
-                            "type": "object"
+                            "$ref": "#/definitions/Tooltip"
                           },
                           "type": "array"
                         },
@@ -3351,23 +3239,7 @@
                   },
                   "tooltip": {
                     "items": {
-                      "additionalProperties": false,
-                      "properties": {
-                        "alt": {
-                          "type": "string"
-                        },
-                        "field": {
-                          "type": "string"
-                        },
-                        "type": {
-                          "$ref": "#/definitions/FieldType"
-                        }
-                      },
-                      "required": [
-                        "field",
-                        "type"
-                      ],
-                      "type": "object"
+                      "$ref": "#/definitions/Tooltip"
                     },
                     "type": "array"
                   },
@@ -3610,23 +3482,7 @@
             },
             "tooltip": {
               "items": {
-                "additionalProperties": false,
-                "properties": {
-                  "alt": {
-                    "type": "string"
-                  },
-                  "field": {
-                    "type": "string"
-                  },
-                  "type": {
-                    "$ref": "#/definitions/FieldType"
-                  }
-                },
-                "required": [
-                  "field",
-                  "type"
-                ],
-                "type": "object"
+                "$ref": "#/definitions/Tooltip"
               },
               "type": "array"
             },
@@ -3803,23 +3659,7 @@
                             },
                             "tooltip": {
                               "items": {
-                                "additionalProperties": false,
-                                "properties": {
-                                  "alt": {
-                                    "type": "string"
-                                  },
-                                  "field": {
-                                    "type": "string"
-                                  },
-                                  "type": {
-                                    "$ref": "#/definitions/FieldType"
-                                  }
-                                },
-                                "required": [
-                                  "field",
-                                  "type"
-                                ],
-                                "type": "object"
+                                "$ref": "#/definitions/Tooltip"
                               },
                               "type": "array"
                             },
@@ -3927,23 +3767,7 @@
                       },
                       "tooltip": {
                         "items": {
-                          "additionalProperties": false,
-                          "properties": {
-                            "alt": {
-                              "type": "string"
-                            },
-                            "field": {
-                              "type": "string"
-                            },
-                            "type": {
-                              "$ref": "#/definitions/FieldType"
-                            }
-                          },
-                          "required": [
-                            "field",
-                            "type"
-                          ],
-                          "type": "object"
+                          "$ref": "#/definitions/Tooltip"
                         },
                         "type": "array"
                       },
@@ -4266,23 +4090,7 @@
         },
         "tooltip": {
           "items": {
-            "additionalProperties": false,
-            "properties": {
-              "alt": {
-                "type": "string"
-              },
-              "field": {
-                "type": "string"
-              },
-              "type": {
-                "$ref": "#/definitions/FieldType"
-              }
-            },
-            "required": [
-              "field",
-              "type"
-            ],
-            "type": "object"
+            "$ref": "#/definitions/Tooltip"
           },
           "type": "array"
         },
@@ -4524,23 +4332,7 @@
         },
         "tooltip": {
           "items": {
-            "additionalProperties": false,
-            "properties": {
-              "alt": {
-                "type": "string"
-              },
-              "field": {
-                "type": "string"
-              },
-              "type": {
-                "$ref": "#/definitions/FieldType"
-              }
-            },
-            "required": [
-              "field",
-              "type"
-            ],
-            "type": "object"
+            "$ref": "#/definitions/Tooltip"
           },
           "type": "array"
         },
@@ -4717,23 +4509,7 @@
                         },
                         "tooltip": {
                           "items": {
-                            "additionalProperties": false,
-                            "properties": {
-                              "alt": {
-                                "type": "string"
-                              },
-                              "field": {
-                                "type": "string"
-                              },
-                              "type": {
-                                "$ref": "#/definitions/FieldType"
-                              }
-                            },
-                            "required": [
-                              "field",
-                              "type"
-                            ],
-                            "type": "object"
+                            "$ref": "#/definitions/Tooltip"
                           },
                           "type": "array"
                         },
@@ -4841,23 +4617,7 @@
                   },
                   "tooltip": {
                     "items": {
-                      "additionalProperties": false,
-                      "properties": {
-                        "alt": {
-                          "type": "string"
-                        },
-                        "field": {
-                          "type": "string"
-                        },
-                        "type": {
-                          "$ref": "#/definitions/FieldType"
-                        }
-                      },
-                      "required": [
-                        "field",
-                        "type"
-                      ],
-                      "type": "object"
+                      "$ref": "#/definitions/Tooltip"
                     },
                     "type": "array"
                   },
@@ -5272,6 +5032,28 @@
         "dark"
       ],
       "type": "string"
+    },
+    "Tooltip": {
+      "additionalProperties": false,
+      "properties": {
+        "alt": {
+          "type": "string"
+        },
+        "field": {
+          "type": "string"
+        },
+        "format": {
+          "type": "string"
+        },
+        "type": {
+          "$ref": "#/definitions/FieldType"
+        }
+      },
+      "required": [
+        "field",
+        "type"
+      ],
+      "type": "object"
     },
     "Track": {
       "anyOf": [
