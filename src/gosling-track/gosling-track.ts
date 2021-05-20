@@ -1,4 +1,5 @@
 import * as PIXI from 'pixi.js';
+import PubSub from 'pubsub-js';
 import uuid from 'uuid';
 import { sampleSize, uniqBy } from 'lodash';
 import { scaleLinear } from 'd3-scale';
@@ -709,6 +710,14 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             const tooltip: TooltipData | undefined = this.tooltips.find((d: TooltipData) =>
                 d.isMouseOver(mouseX, mouseY)
             );
+
+            // Experimental: publish mouseover events
+            if (tooltip) {
+                PubSub.publish('mouseover', {
+                    data: { ...tooltip.datum },
+                    genomicPosition: getRelativeGenomicPosition(Math.floor(this._xScale.invert(mouseX)))
+                });
+            }
 
             if (tooltip) {
                 // render mouse over effect
