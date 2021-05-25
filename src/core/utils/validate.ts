@@ -17,16 +17,19 @@ export function validateGoslingSpec(spec: any): Validity {
 /**
  *
  */
-export function validateSpec(schema: any, spec: any): Validity {
+export function validateSpec(schema: any, spec: any, silence = false): Validity {
     const validate = new Ajv({ extendRefs: true }).compile(schema);
     const valid = validate(spec);
 
     let message = '';
     let details = '';
 
-    if (validate.errors || !spec.tracks) {
+    if (validate.errors) {
         details = JSON.stringify(validate.errors, null, 2);
-        console.warn(details);
+
+        if (!silence) {
+            console.warn(details);
+        }
 
         message = '⚠️ Some properties are incorrectly used.';
     }

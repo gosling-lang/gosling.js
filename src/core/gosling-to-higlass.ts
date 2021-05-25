@@ -157,7 +157,7 @@ export function goslingToHiGlass(
             }
         });
 
-        hgModel.validateSpec();
+        hgModel.validateSpec(true);
     } else if (firstResolvedSpec.mark === 'header') {
         // `text` tracks are used to show title and subtitle of the views
         hgModel.addDefaultView(gosTrack.id ?? uuid.v1()).setLayout(layout);

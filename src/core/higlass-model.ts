@@ -174,8 +174,8 @@ export class HiGlassModel {
         return this.hg.views.find(d => d.uid === viewId);
     }
 
-    public validateSpec() {
-        return validateSpec(HiGlassSchema, this.spec()).state === 'success';
+    public validateSpec(silence = false) {
+        return validateSpec(HiGlassSchema, this.spec(), silence).state === 'success';
     }
 
     public setDomain(xDomain: Domain | undefined, yDomain: Domain | undefined) {

@@ -56,8 +56,12 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             // Check whether to load a worker
             let bamWorker;
             if (usePrereleaseRendering(options.spec)) {
-                bamWorker = spawn(new Worker('../data-fetcher/bam/bam-worker'));
-                context.dataFetcher = new BAMDataFetcher(HGC, context.dataConfig, bamWorker);
+                try {
+                    bamWorker = spawn(new Worker('../data-fetcher/bam/bam-worker'));
+                    context.dataFetcher = new BAMDataFetcher(HGC, context.dataConfig, bamWorker);
+                } catch (e) {
+                    console.warn('Error loading worker', e);
+                }
             }
 
             super(context, options);
@@ -160,7 +164,10 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
          */
         initTile(tile: any) {
             if (PRINT_RENDERING_CYCLE) console.warn('initTile(tile)');
-            super.initTile(tile); // This calls `drawTile()`
+            // super.initTile(tile); // This calls `drawTile()`
+
+            // Since `super.initTile(tile)` prints warning, we call `drawTile` ourselves without calling `super.initTile(tile)`.
+            this.drawTile(tile);
         }
 
         updateTile(/* tile: any */) {} // Never mind about this function for the simplicity.
