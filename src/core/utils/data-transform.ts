@@ -106,7 +106,7 @@ export function calculateData(log: LogTransform, data: Datum[]): Datum[] {
  * Aggregate data rows and calculate coverage of reads.
  */
 export function aggregateCoverage(_: CoverageTransform, data: Datum[], scale: ScaleLinear<any, any>): Datum[] {
-    Logging.recordTime('aggregateCoverage');
+    // Logging.recordTime('aggregateCoverage');
 
     const { startField, endField, newField, groupField } = _;
 

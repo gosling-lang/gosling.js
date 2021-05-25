@@ -56,8 +56,12 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             // Check whether to load a worker
             let bamWorker;
             if (usePrereleaseRendering(options.spec)) {
-                bamWorker = spawn(new Worker('../data-fetcher/bam/bam-worker'));
-                context.dataFetcher = new BAMDataFetcher(HGC, context.dataConfig, bamWorker);
+                try {
+                    bamWorker = spawn(new Worker('../data-fetcher/bam/bam-worker'));
+                    context.dataFetcher = new BAMDataFetcher(HGC, context.dataConfig, bamWorker);
+                } catch (e) {
+                    console.warn('Error loading worker', e);
+                }
             }
 
             super(context, options);
