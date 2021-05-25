@@ -1,3 +1,17 @@
+## [0.8.2](https://github.com/gosling-lang/gosling.js/compare/v0.8.1...v0.8.2) (2021-05-25)
+
+
+### Bug Fixes
+
+* reduce log warning messages ([#392](https://github.com/gosling-lang/gosling.js/issues/392)) ([4a14d7a](https://github.com/gosling-lang/gosling.js/commit/4a14d7a3ce6941cbf19afbb83704f95d58bdd035))
+
+
+### Features
+
+* support tooltips for most marks in linear, relative genomic position, formatting ([#387](https://github.com/gosling-lang/gosling.js/issues/387)) ([824faba](https://github.com/gosling-lang/gosling.js/commit/824faba97e606fe506e2af749d19b11bd9b785e0))
+
+
+
 ## [0.8.1](https://github.com/gosling-lang/gosling.js/compare/v0.8.0...v0.8.1) (2021-05-19)
 
 
