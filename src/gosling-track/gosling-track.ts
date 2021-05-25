@@ -121,7 +121,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
         /* ----------------------------------- RENDERING CYCLE ----------------------------------- */
 
         /**
-         * ?
+         * Draw all tiles from the bottom.
          * (https://github.com/higlass/higlass/blob/54f5aae61d3474f9e868621228270f0c90ef9343/app/scripts/TiledPixiTrack.js#L727)
          */
         draw() {

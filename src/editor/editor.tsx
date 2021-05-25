@@ -204,8 +204,9 @@ function Editor(props: any) {
     // publish event listeners to Gosling.js
     useEffect(() => {
         if (gosRef.current) {
-            gosRef.current.api.on('mouseover', (/* _: CommonEventData */) => {
-                // console.log('mouseover', _.genomicPosition);
+            // Experimental
+            gosRef.current.api.on('mouseover', (/*_: CommonEventData*/) => {
+                // console.log('mouseover', _);
             });
         }
     }, [gosRef.current]);
