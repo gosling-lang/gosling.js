@@ -150,7 +150,7 @@ export function aggregateCoverage(_: CoverageTransform, data: Datum[], scale: Sc
 }
 
 export function displace(t: DisplaceTransform, data: Datum[], scale: ScaleLinear<any, any>): Datum[] {
-    Logging.recordTime('displace()');
+    // Logging.recordTime('displace()');
 
     const { boundingBox, method, newField } = t;
     const { startField, endField, groupField } = boundingBox;
@@ -296,7 +296,7 @@ export function displace(t: DisplaceTransform, data: Datum[], scale: ScaleLinear
         });
     }
 
-    Logging.printTime('displace()');
+    // Logging.printTime('displace()');
     return base;
 }
 
