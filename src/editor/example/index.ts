@@ -18,6 +18,7 @@ import { EX_SPEC_PATHOGENIC } from './pathogenic';
 import { EX_SPEC_CYTOBANDS } from './ideograms';
 import { EX_SPEC_PILEUP } from './pileup';
 import { EX_SPEC_FUJI_PLOT } from './fuji';
+import { EX_SPEC_BAND } from './vertical-band';
 
 export const examples: ReadonlyArray<{
     name: string;
@@ -43,6 +44,11 @@ export const examples: ReadonlyArray<{
         name: 'Basic Example: Circular Visual Encoding',
         id: 'VISUAL_ENCODING_CIRCULAR',
         spec: EX_SPEC_VISUAL_ENCODING_CIRCULAR
+    },
+    {
+        name: 'Basic Example: Band Connection',
+        id: 'BAND',
+        spec: EX_SPEC_BAND
     },
     {
         name: 'Basic Example: Visual Linking',
