@@ -143,6 +143,18 @@ export function drawLink(g: PIXI.Graphics, model: GoslingTrackModel) {
                     g.endFill();
                 } else {
                     // Linear mark
+
+                    // Experimental
+                    if (spec.style?.verticalLink) {
+                        g.moveTo(_x1, rowPosition);
+                        g.lineTo(_x2, rowPosition);
+                        g.lineTo(_x4, rowPosition + rowHeight);
+                        g.lineTo(_x3, rowPosition + rowHeight);
+                        g.lineTo(_x1, rowPosition);
+                        g.closePath();
+                        return;
+                    }
+
                     g.moveTo(_x1, baseY);
 
                     if (spec.style?.circularLink || DISABLE_BEZIER) {
