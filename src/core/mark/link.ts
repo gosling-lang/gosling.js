@@ -94,8 +94,15 @@ export function drawLink(g: PIXI.Graphics, model: GoslingTrackModel) {
             if (isBand) {
                 g.beginFill(color === 'none' ? colorToHex('white') : colorToHex(color), color === 'none' ? 0 : opacity);
 
+                let [_x1, _x2, _x3, _x4] = [x, xe, x1, x1e];
+
                 // Sort values to safely draw bands
-                const [_x1, _x2, _x3, _x4] = [x, xe, x1, x1e].sort((a, b) => a - b);
+                if (spec.style?.verticalLink) {
+                    [_x1, _x2] = [_x1, _x2].sort((a, b) => a - b);
+                    [_x3, _x4] = [_x3, _x4].sort((a, b) => a - b);
+                } else {
+                    [_x1, _x2, _x3, _x4] = [_x1, _x2, _x3, _x4].sort((a, b) => a - b);
+                }
 
                 if (_x1 > trackWidth || _x4 < 0 || Math.abs(_x4 - _x1) < 0.5) {
                     // Do not draw very small visual marks
