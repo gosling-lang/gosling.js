@@ -201,6 +201,16 @@ function Editor(props: any) {
     // const hgRef = useRef<any>();
     const gosRef = useRef<any>();
 
+    // publish event listeners to Gosling.js
+    useEffect(() => {
+        if (gosRef.current) {
+            // Experimental
+            gosRef.current.api.on('mouseover', (/*_: CommonEventData*/) => {
+                // console.log('mouseover', _);
+            });
+        }
+    }, [gosRef.current]);
+
     /**
      * Editor mode
      */

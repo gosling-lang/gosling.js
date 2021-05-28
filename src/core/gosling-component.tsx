@@ -9,6 +9,7 @@ import { View as HgView } from './higlass.schema';
 import { traverseViewsInViewConfig } from '../core/utils/view-config';
 import { GET_CHROM_SIZES } from './utils/assembly';
 import { getTheme } from './utils/theme';
+import { CommonEventData, EVENT_TYPE, MouseHoverCallback, UserDefinedEvents } from './api';
 
 /**
  * Register plugin tracks and data fetchers to HiGlass. This is necessary for the first time before using Gosling.
@@ -34,6 +35,23 @@ export const GoslingComponent = forwardRef((props: GoslingCompProps, ref: any) =
     // HiGlass API
     const hgRef = useRef<any>();
 
+    // Gosling.js API
+    const userDefinedEvents = useRef<UserDefinedEvents>({});
+
+    /**
+     * Subscribe APIs from Gosling.js tracks.
+     */
+
+    // mouseover
+    useEffect(() => {
+        const token = PubSub.subscribe('mouseover', (id: string, data: CommonEventData) => {
+            userDefinedEvents.current.mouseover?.(data);
+        });
+        return () => {
+            PubSub.unsubscribe(token);
+        };
+    });
+
     // Just received a new Gosling spec.
     useEffect(() => {
         setGs(props.spec);
@@ -45,6 +63,9 @@ export const GoslingComponent = forwardRef((props: GoslingCompProps, ref: any) =
 
         ref.current = {
             api: {
+                on: (type: EVENT_TYPE, callback: MouseHoverCallback) => {
+                    userDefinedEvents.current[type] = callback;
+                },
                 // TODO: Support assemblies (we can infer this from the spec)
                 zoomTo: (viewId: string, position: string, duration = 1000) => {
                     // Accepted input: 'chr1' or 'chr1:1-1000'
