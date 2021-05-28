@@ -1,3 +1,13 @@
+## [0.8.3](https://github.com/gosling-lang/gosling.js/compare/v0.8.2...v0.8.3) (2021-05-28)
+
+
+### Features
+
+* **api:** support mouseover event listener ([#388](https://github.com/gosling-lang/gosling.js/issues/388)) ([e56e32c](https://github.com/gosling-lang/gosling.js/commit/e56e32cdbbcf3a68bb9ecebc45f2ff39d4833c94))
+* allow vertical band connection w/o independent scales yet ([#394](https://github.com/gosling-lang/gosling.js/issues/394)) ([5591e2d](https://github.com/gosling-lang/gosling.js/commit/5591e2d7ba6339c4a5eb7cc6a4e105a3c633c8f0))
+
+
+
 ## [0.8.2](https://github.com/gosling-lang/gosling.js/compare/v0.8.1...v0.8.2) (2021-05-25)
 
 
