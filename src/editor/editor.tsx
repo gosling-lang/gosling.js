@@ -589,9 +589,7 @@ function Editor(props: any) {
                         <span
                             title="Open Docs"
                             className="side-panel-button"
-                            onClick={() =>
-                                window.open('https://gosling-lang.github.io/gosling-website/docs/', '_blank')
-                            }
+                            onClick={() => window.open('http://gosling-lang.org/docs/', '_blank')}
                         >
                             {getIconSVG(ICONS.DOCS, 23, 23)}
                             <br />
