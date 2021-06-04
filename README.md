@@ -1,13 +1,13 @@
 # Gosling.js
 
-[![npm version](https://img.shields.io/npm/v/gosling.js.svg?style=flat-square)](https://www.npmjs.com/package/gosling.js) [![build status](https://img.shields.io/travis/sehilyi/geminid/master.svg?style=flat-square)](https://travis-ci.com/gosling-lang/gosling.js) [![codecov](https://img.shields.io/codecov/c/github/gosling-lang/gosling.js/master.svg?style=flat-square&?cacheSeconds=60)](https://codecov.io/gh/gosling-lang/gosling.js) [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier) [![online editor](https://img.shields.io/badge/demo-online_editor-E08243.svg?style=flat-square)](https://gosling.js.org/) [![docs](https://img.shields.io/badge/docs-📖-57B4E9.svg?style=flat-square)](https://gosling-lang.github.io/gosling-website/docs/)
+[![npm version](https://img.shields.io/npm/v/gosling.js.svg?style=flat-square)](https://www.npmjs.com/package/gosling.js) [![build status](https://img.shields.io/travis/sehilyi/geminid/master.svg?style=flat-square)](https://travis-ci.com/gosling-lang/gosling.js) [![codecov](https://img.shields.io/codecov/c/github/gosling-lang/gosling.js/master.svg?style=flat-square&?cacheSeconds=60)](https://codecov.io/gh/gosling-lang/gosling.js) [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier) [![online editor](https://img.shields.io/badge/demo-online_editor-E08243.svg?style=flat-square)](https://gosling.js.org/) [![docs](https://img.shields.io/badge/docs-📖-57B4E9.svg?style=flat-square)](http://gosling-lang.org/docs/)
 
 **Gosling.js is a declarative grammar for interactive (epi)genomics visualization on the Web.**
 
 <img width="1549" alt="teaser" src="https://user-images.githubusercontent.com/9922882/109852545-e05f3400-7c22-11eb-90f3-7371e4ddeb42.png">
 
 > ⚠️ Please be aware that the grammar of Gosling.js may change to some extent before the first official release.
- 
+
 ## Why Gosling?
 
 The Gosling's key features compared to existing visualization libraries and grammars are as follows:
@@ -20,11 +20,12 @@ The Gosling's key features compared to existing visualization libraries and gram
 
 ## Learn More About Gosling
 
--   [Documentation](https://gosling-lang.github.io/gosling-website/)
+-   [Documentation](http://gosling-lang.org/)
 -   [Gosling.js Editor](https://gosling.js.org/)
 -   [Roadmap](https://github.com/gosling-lang/gosling.js/projects/1)
 
 ## Contributing to Gosling.js
+
 We welcome and greatly appreciate your contribution to this project! Please read [CONTRIBUTING.md](/CONTRIBUTING.md) to find guidelines.
 
 ## Contact
