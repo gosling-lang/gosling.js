@@ -1,6 +1,6 @@
-import { AxisPosition, SingleTrack, OverlaidTrack, Track } from '../gosling.schema';
+import { AxisPosition, SingleTrack, OverlaidTrack, Track, ChannelDeep } from '../gosling.schema';
 import assign from 'lodash/assign';
-import { IsChannelDeep, IsDataTrack, IsOverlaidTrack } from '../gosling.schema.guards';
+import { IsChannelDeep, IsDataTrack, IsOverlaidTrack, IsSingleTrack } from '../gosling.schema.guards';
 
 /**
  * Resolve superposed tracks into multiple track specifications.
@@ -100,7 +100,18 @@ export function spreadTracksByData(tracks: Track[]): Track[] {
 
             const output = original.overlay.length > 0 ? [original, ...spread] : spread;
             return output.map((track, i) => {
-                return { ...track, overlayOnPreviousTrack: i !== 0 };
+                const overlayOnPreviousTrack = i !== 0;
+
+                // Y axis should be positioned on the right or hidden if multiple tracks are overlaid to prevent visual occlussion.
+                // Refer to this issue: https://github.com/gosling-lang/gosling.js/issues/400
+                const y =
+                    IsSingleTrack(track) && IsChannelDeep(track.y) && overlayOnPreviousTrack
+                        ? ({ ...track.y, axis: i === 1 ? 'right' : 'none' } as ChannelDeep)
+                        : IsSingleTrack(track)
+                        ? track.y
+                        : undefined;
+
+                return { ...track, overlayOnPreviousTrack, y };
             });
         })
     );
