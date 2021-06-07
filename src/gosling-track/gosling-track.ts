@@ -4,7 +4,7 @@ import uuid from 'uuid';
 import { sampleSize, uniqBy } from 'lodash';
 import { scaleLinear } from 'd3-scale';
 import { format } from 'd3-format';
-import { drawMark } from '../core/mark';
+import { drawMark, drawPostEmbellishment, drawPreEmbellishment } from '../core/mark';
 import { GoslingTrackModel } from '../core/gosling-track-model';
 import { validateTrack } from '../core/utils/validate';
 import { drawScaleMark } from '../core/utils/scalable-rendering';
@@ -39,6 +39,13 @@ function usePrereleaseRendering(spec: SingleTrack | OverlaidTrack) {
 // `getTilePosAndDimensions()` definition: https://github.com/higlass/higlass/blob/1e1146409c7d7c7014505dd80d5af3e9357c77b6/app/scripts/Tiled1DPixiTrack.js#L133
 // Refer to the following already supported graphics:
 // https://github.com/higlass/higlass/blob/54f5aae61d3474f9e868621228270f0c90ef9343/app/scripts/PixiTrack.js#L115
+
+/**
+ * Each GoslingTrack draws either a track of multiple tracks with SAME DATA that are overlaid.
+ * @param HGC
+ * @param args
+ * @returns
+ */
 function GoslingTrack(HGC: any, ...args: any[]): any {
     if (!new.target) {
         throw new Error('Uncaught TypeError: Class constructor cannot be invoked without "new"');
@@ -197,7 +204,22 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             this.pBorder.clear();
             this.pBorder.removeChildren();
 
-            // A single tile contains one or multiple gosling visualizations that are overlaid
+            /* Embellishment before rendering marks */
+            if (tile.goslingModels && tile.goslingModels[0]) {
+                const tm = tile.goslingModels[0];
+
+                // check visibility condition
+                const trackWidth = this.dimensions[1];
+                const zoomLevel = this._xScale.invert(trackWidth) - this._xScale.invert(0);
+                if (!tm.trackVisibility({ zoomLevel })) {
+                    return;
+                }
+
+                drawPreEmbellishment(HGC, this, tile, tm, this.options.theme);
+            }
+
+            /* Mark */
+            // A single tile contains one track or multiple tracks overlaid
             tile.goslingModels.forEach((tm: GoslingTrackModel) => {
                 // check visibility condition
                 const trackWidth = this.dimensions[1];
@@ -213,8 +235,22 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                     return;
                 }
 
-                drawMark(HGC, this, tile, tm, this.options.theme);
+                drawMark(HGC, this, tile, tm);
             });
+
+            /* Embellishment after rendering marks */
+            if (tile.goslingModels && tile.goslingModels[0]) {
+                const tm = tile.goslingModels[0];
+
+                // check visibility condition
+                const trackWidth = this.dimensions[1];
+                const zoomLevel = this._xScale.invert(trackWidth) - this._xScale.invert(0);
+                if (!tm.trackVisibility({ zoomLevel })) {
+                    return;
+                }
+
+                drawPostEmbellishment(HGC, this, tile, tm, this.options.theme);
+            }
         }
 
         /**

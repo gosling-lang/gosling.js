@@ -611,8 +611,8 @@ export class GoslingTrackModel {
                     if (channel.domain === undefined) {
                         const min = channel.zeroBaseline
                             ? 0
-                            : (d3min(data.map(d => d[channel.field as string]) as number[]) as number) ?? 0;
-                        const max = (d3max(data.map(d => d[channel.field as string]) as number[]) as number) ?? 0;
+                            : (d3min(data.map(d => +d[channel.field as string]) as number[]) as number) ?? 0;
+                        const max = (d3max(data.map(d => +d[channel.field as string]) as number[]) as number) ?? 0;
                         channel.domain = [min, max]; // TODO: what if data ranges in negative values
                     } else if (channel.type === 'genomic' && !IsDomainArray(channel.domain)) {
                         channel.domain = getNumericDomain(channel.domain);

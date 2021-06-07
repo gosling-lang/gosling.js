@@ -41,9 +41,6 @@ export function getNumericDomain(domain: Domain, assembly?: Assembly) {
     }
 }
 
-// TODO: this could be based on the spec (e.g., shareX: [track1, track2, ...])
-// TODO: we do not consider sharing `genomic` scales yet
-// TODO: we consider data-driven values and not constant values yet (e.g., color: { value: 'red' })
 // TODO: IMPORTANT: when panning the tiles, the extent only becomes larger
 /**
  * Use a shared scale (i.e., `domain`) across multiple gosling tracks.

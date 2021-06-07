@@ -107,4 +107,27 @@ describe('Spread Tracks By Data', () => {
         expect(spread[0].overlayOnPreviousTrack).toBe(false);
         expect(spread[1].overlayOnPreviousTrack).toBe(true);
     });
+    it('Axis Position of overlay: [{ data1 }, { data2 }]', () => {
+        const spread = spreadTracksByData([
+            {
+                overlay: [
+                    { data: { type: 'csv', url: '' }, y: { field: 'y', type: 'quantitative' } },
+                    {
+                        data: { type: 'vector', url: '', column: 'c', value: 'p' },
+                        y: { field: 'y', type: 'quantitative' }
+                    },
+                    { data: { type: 'csv', url: '2' }, y: { field: 'y', type: 'quantitative' } }
+                ],
+                width: 100,
+                height: 100
+            }
+        ]);
+        expect(spread).toHaveLength(3);
+        expect('data' in spread[0]).toBe(true);
+        expect('data' in spread[1]).toBe(true);
+        expect(spread[0].overlayOnPreviousTrack).toBe(false);
+        expect(spread[1].overlayOnPreviousTrack).toBe(true);
+        expect((spread[1] as any).y.axis).toBe('right'); // position axis on the right to prevent visual occlusion
+        expect((spread[2] as any).y.axis).toBe('none'); // hide axis
+    });
 });
