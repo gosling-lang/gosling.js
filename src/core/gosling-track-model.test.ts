@@ -117,18 +117,19 @@ describe('Gosling track model should be properly generated with data', () => {
             size: { value: 1 },
             stroke: { value: 'white' },
             strokeWidth: { value: 0.5 },
-            opacity: { value: 1 },
+            opacity: { field: 'yStr', type: 'quantitative' },
             height: 300
         };
         const model = new GoslingTrackModel(track, [
-            { color: 1, row: 'a', y: 5 },
-            { color: 2, row: 'b', y: 7 },
-            { color: 3, row: 'a', y: 10 }
+            { color: 1, row: 'a', y: 5, yStr: '5' },
+            { color: 2, row: 'b', y: 7, yStr: '7' },
+            { color: 3, row: 'a', y: 10, yStr: '10' }
         ]);
         const spec = model.spec();
         const colorDomain = IsChannelDeep(spec.color) ? (spec.color.domain as string[]) : [];
         const rowDomain = IsChannelDeep(spec.row) ? (spec.row.domain as string[]) : [];
         const yDomain = IsChannelDeep(spec.y) ? (spec.y.domain as number[]) : [];
+        const opacityDomain = IsChannelDeep(spec.opacity) ? (spec.opacity.domain as number[]) : [];
 
         // model properties
         expect(model.getChannelDomainArray('color')).toHaveLength(3);
@@ -146,6 +147,7 @@ describe('Gosling track model should be properly generated with data', () => {
         expect(rowDomain[1]).toBe('b');
         expect(yDomain[0]).toBe(0); // zeroBaseline
         expect(yDomain[1]).toBe(10);
+        expect(yDomain[1]).toEqual(opacityDomain[1]); // Values mapped to size is strings, but they should be parse to numeric values.
 
         // encoded value
         expect(model.encodedValue('y', 0)).toBe(0);

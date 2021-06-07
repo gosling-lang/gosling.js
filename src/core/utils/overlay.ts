@@ -105,7 +105,7 @@ export function spreadTracksByData(tracks: Track[]): Track[] {
                 // Y axis should be positioned on the right or hidden if multiple tracks are overlaid to prevent visual occlussion.
                 // Refer to this issue: https://github.com/gosling-lang/gosling.js/issues/400
                 const y =
-                    IsSingleTrack(track) && IsChannelDeep(track.y) && overlayOnPreviousTrack
+                    IsSingleTrack(track) && IsChannelDeep(track.y) && !track.y.axis && overlayOnPreviousTrack
                         ? ({ ...track.y, axis: i === 1 ? 'right' : 'none' } as ChannelDeep)
                         : IsSingleTrack(track)
                         ? track.y
