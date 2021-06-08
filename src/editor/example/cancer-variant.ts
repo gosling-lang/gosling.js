@@ -227,6 +227,7 @@ export const EX_SPEC_CANCER_VARIANT_PROTOTYPE: GoslingSpec = {
                     spacing: 0,
                     tracks: [
                         {
+                            title: 'Zoom View',
                             data: {
                                 url: 'https://s3.amazonaws.com/gosling-lang.org/data/cancer/rearrangement.PD35930a.csv',
                                 type: 'csv',
@@ -286,19 +287,21 @@ export const EX_SPEC_CANCER_VARIANT_PROTOTYPE: GoslingSpec = {
                             opacity: { value: 0.3 },
                             width: 700,
                             height: 30
-                        }
+                        },
                     ]
                 }
             ]
         },
         {
             arrangement: 'horizontal',
+            spacing: 90,
             views: [
                 {
-                    xDomain: { chromosome: '1', interval: [10000000, 11000000] },
+                    xDomain: { chromosome: '1', interval: [10000000, 15000000] },
                     linkingId: 'detail-1',
                     tracks: [
                         {
+                            title: 'Detail View 1',
                             data: {
                                 url:
                                     'https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/UCSC.HG38.Human.CytoBandIdeogram.csv',
@@ -313,19 +316,20 @@ export const EX_SPEC_CANCER_VARIANT_PROTOTYPE: GoslingSpec = {
                                 domain: ['gneg', 'gpos25', 'gpos50', 'gpos75', 'gpos100', 'gvar', 'acen'],
                                 range: ['#C0C0C0', '#808080', '#404040', 'black', 'black', 'black', '#B74780']
                             },
-                            x: { field: 'chromStart', type: 'genomic', axis: 'bottom' },
+                            x: { field: 'chromStart', type: 'genomic' },
                             xe: { field: 'chromEnd', type: 'genomic' },
                             opacity: { value: 0.3 },
-                            width: 600,
-                            height: 30
+                            width: 630,
+                            height: 100
                         }
                     ]
                 },
                 {
-                    xDomain: { chromosome: '1', interval: [30000000, 31000000] },
+                    xDomain: { chromosome: '1', interval: [180000000, 185000000] },
                     linkingId: 'detail-2',
                     tracks: [
                         {
+                            title: 'Detail View 2',
                             data: {
                                 url:
                                     'https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/UCSC.HG38.Human.CytoBandIdeogram.csv',
@@ -340,11 +344,11 @@ export const EX_SPEC_CANCER_VARIANT_PROTOTYPE: GoslingSpec = {
                                 domain: ['gneg', 'gpos25', 'gpos50', 'gpos75', 'gpos100', 'gvar', 'acen'],
                                 range: ['#C0C0C0', '#808080', '#404040', 'black', 'black', 'black', '#B74780']
                             },
-                            x: { field: 'chromStart', type: 'genomic', axis: 'bottom' },
+                            x: { field: 'chromStart', type: 'genomic' },
                             xe: { field: 'chromEnd', type: 'genomic' },
                             opacity: { value: 0.3 },
-                            width: 600,
-                            height: 30
+                            width: 630,
+                            height: 100
                         }
                     ]
                 }
