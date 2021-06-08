@@ -1,7 +1,7 @@
 import { GoslingSpec } from '../../core/gosling.schema';
 import { EX_SPEC_LAYOUT_AND_ARRANGEMENT_1, EX_SPEC_LAYOUT_AND_ARRANGEMENT_2 } from './layout-and-arrangement';
 import { EX_SPEC_DARK_THEME, EX_SPEC_VISUAL_ENCODING, EX_SPEC_VISUAL_ENCODING_CIRCULAR } from './visual-encoding';
-import { EX_SPEC_CANCER_VARIANT } from './cancer-variant';
+import { EX_SPEC_CANCER_VARIANT_PROTOTYPE } from './cancer-variant';
 import { EX_SPEC_MATRIX_HFFC6 } from './matrix-hffc6';
 import { EX_SPEC_LINKING } from './visual-linking';
 import { EX_SPEC_BASIC_SEMANTIC_ZOOM } from './basic-semantic-zoom';
@@ -135,7 +135,9 @@ export const examples: ReadonlyArray<{
     {
         name: 'Breast Cancer Variant (Staaf et al. 2019)',
         id: 'CANCER_VARIANT',
-        spec: EX_SPEC_CANCER_VARIANT
+        spec: EX_SPEC_CANCER_VARIANT_PROTOTYPE,
+        underDevelopment: true,
+        forceShow: true
     },
     {
         name: 'BAM file pileup tracks',
