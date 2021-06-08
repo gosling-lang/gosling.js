@@ -325,8 +325,8 @@ export const EX_SPEC_CANCER_VARIANT_PROTOTYPE: GoslingSpec = {
                     ]
                 },
                 {
-                    xDomain: { chromosome: '1', interval: [180000000, 185000000] },
                     linkingId: 'detail-2',
+                    xDomain: { chromosome: '1', interval: [180000000, 185000000] },
                     tracks: [
                         {
                             title: 'Detail View 2',
