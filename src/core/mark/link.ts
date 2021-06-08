@@ -164,7 +164,7 @@ export function drawLink(g: PIXI.Graphics, model: GoslingTrackModel) {
 
                     g.moveTo(_x1, baseY);
 
-                    if (spec.style?.circularLink || DISABLE_BEZIER) {
+                    if (spec.style?.bazierLink || DISABLE_BEZIER) {
                         g.arc(
                             (_x1 + _x4) / 2.0, // cx
                             baseY, // cy
@@ -236,14 +236,7 @@ export function drawLink(g: PIXI.Graphics, model: GoslingTrackModel) {
                 } else {
                     g.moveTo(x, baseY);
 
-                    if (spec.style?.circularLink || DISABLE_BEZIER) {
-                        if (xe < 0 || x > trackWidth) {
-                            // Q: Do we really need this?
-                            return;
-                        }
-                        g.arc(midX, baseY, (xe - x) / 2.0, -Math.PI, Math.PI);
-                        g.closePath();
-                    } else {
+                    if (spec.style?.bazierLink) {
                         g.bezierCurveTo(
                             x + (xe - x) / 3.0,
                             baseY + Math.min(rowHeight, (xe - x) / 2.0) * (flipY ? 1 : -1),
@@ -252,6 +245,13 @@ export function drawLink(g: PIXI.Graphics, model: GoslingTrackModel) {
                             xe,
                             baseY
                         );
+                    } else {
+                        if (xe < 0 || x > trackWidth) {
+                            // Q: Do we really need this?
+                            return;
+                        }
+                        g.arc(midX, baseY, (xe - x) / 2.0, -Math.PI, Math.PI);
+                        g.closePath();
                     }
                 }
             }

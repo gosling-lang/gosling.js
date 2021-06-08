@@ -217,6 +217,7 @@ export interface Style {
     align?: 'left' | 'right'; // currently, only supported for triangles
     dy?: number; // currently, only used for text marks
     verticalLink?: boolean; // Should bands be connected from the top to bottom?
+    bazierLink?: boolean; // use bazier curves instead
     circularLink?: boolean; // !! Deprecated: draw arc instead of bazier curve?
     inlineLegend?: boolean; // show legend in a single horizontal line?
     // below options could instead be used with channel options (e.g., size, stroke, strokeWidth)

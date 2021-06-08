@@ -143,17 +143,16 @@ export const EX_SPEC_CANCER_VARIANT_PROTOTYPE: GoslingSpec = {
     centerRadius: 0.6,
     assembly: 'hg19',
     spacing: 40,
-    static: true,
     views: [
         {
-            arrangement: 'horizontal',
+            arrangement: 'vertical',
             views: [
                 {
                     layout: 'circular',
                     spacing: 1,
                     tracks: [
                         {
-                            title: 'Overview',
+                            title: 'Patient Overview (PD35930a)',
                             alignment: 'overlay',
                             data: {
                                 url:
@@ -184,6 +183,82 @@ export const EX_SPEC_CANCER_VARIANT_PROTOTYPE: GoslingSpec = {
                             height: 40
                         },
                         {
+                            alignment: 'overlay',
+                            data: {
+                                url: 'https://s3.amazonaws.com/gosling-lang.org/data/cancer/cnv.PD35930a.csv',
+                                headerNames: [
+                                    'id',
+                                    'chr',
+                                    'start',
+                                    'end',
+                                    'total_cn_normal',
+                                    'minor_cp_normal',
+                                    'total_cn_tumor',
+                                    'minor_cn_tumor'
+                                ],
+                                type: 'csv',
+                                chromosomeField: 'chr',
+                                genomicFields: ['start', 'end']
+                            },
+                            dataTransform: [{ type: 'filter', field: 'minor_cn_tumor', oneOf: ['0'] }],
+                            tracks: [
+                                { mark: 'rect' },
+                                {
+                                    mark: 'brush',
+                                    x: { linkingId: 'mid-scale' },
+                                    strokeWidth: { value: 0 }
+                                }
+                            ],
+                            x: { field: 'start', type: 'genomic' },
+                            xe: { field: 'end', type: 'genomic' },
+                            color: { value: '#FD7E85' },
+                            stroke: { value: 'lightgray' },
+                            strokeWidth: { value: 0.3 },
+                            width: 620,
+                            height: 20
+                        },
+                        {
+                            alignment: 'overlay',
+                            data: {
+                                url: 'https://s3.amazonaws.com/gosling-lang.org/data/cancer/cnv.PD35930a.csv',
+                                headerNames: [
+                                    'id',
+                                    'chr',
+                                    'start',
+                                    'end',
+                                    'total_cn_normal',
+                                    'minor_cp_normal',
+                                    'total_cn_tumor',
+                                    'minor_cn_tumor'
+                                ],
+                                type: 'csv',
+                                chromosomeField: 'chr',
+                                genomicFields: ['start', 'end']
+                            },
+                            dataTransform: [
+                                {
+                                    type: 'filter',
+                                    field: 'total_cn_tumor',
+                                    inRange: [5, 1000]
+                                }
+                            ],
+                            tracks: [
+                                { mark: 'rect' },
+                                {
+                                    mark: 'brush',
+                                    x: { linkingId: 'mid-scale' },
+                                    strokeWidth: { value: 0 }
+                                }
+                            ],
+                            x: { field: 'start', type: 'genomic' },
+                            xe: { field: 'end', type: 'genomic' },
+                            color: { value: '#DFFBBF' },
+                            stroke: { value: 'lightgray' },
+                            strokeWidth: { value: 0.3 },
+                            width: 500,
+                            height: 20
+                        },
+                        {
                             data: {
                                 url: 'https://s3.amazonaws.com/gosling-lang.org/data/cancer/rearrangement.PD35930a.csv',
                                 type: 'csv',
@@ -204,7 +279,7 @@ export const EX_SPEC_CANCER_VARIANT_PROTOTYPE: GoslingSpec = {
                             color: {
                                 field: 'svclass',
                                 type: 'nominal',
-                                legend: false,
+                                legend: true,
                                 domain: ['translocation', 'delection', 'tandem-duplication', 'inversion']
                             },
                             stroke: {
@@ -227,7 +302,8 @@ export const EX_SPEC_CANCER_VARIANT_PROTOTYPE: GoslingSpec = {
                     spacing: 0,
                     tracks: [
                         {
-                            title: 'Zoom View',
+                            title: 'Genomic Feature',
+                            alignment: 'overlay',
                             data: {
                                 url: 'https://s3.amazonaws.com/gosling-lang.org/data/cancer/rearrangement.PD35930a.csv',
                                 type: 'csv',
@@ -242,7 +318,21 @@ export const EX_SPEC_CANCER_VARIANT_PROTOTYPE: GoslingSpec = {
                                     }
                                 ]
                             },
-                            mark: 'link',
+                            tracks: [
+                                { mark: 'link' },
+                                {
+                                    mark: 'brush',
+                                    x: { linkingId: 'detail-1' },
+                                    strokeWidth: { value: 0 },
+                                    color: { value: 'gray' }
+                                },
+                                {
+                                    mark: 'brush',
+                                    x: { linkingId: 'detail-2' },
+                                    strokeWidth: { value: 0 },
+                                    color: { value: 'gray' }
+                                }
+                            ],
                             x: { field: 'start1', type: 'genomic', axis: 'none' },
                             xe: { field: 'end2', type: 'genomic' },
                             color: {
@@ -256,11 +346,109 @@ export const EX_SPEC_CANCER_VARIANT_PROTOTYPE: GoslingSpec = {
                                 type: 'nominal',
                                 domain: ['translocation', 'delection', 'tandem-duplication', 'inversion']
                             },
-                            style: { outline: 'lightgray', inlineLegend: true },
-                            strokeWidth: { value: 1.5 },
-                            opacity: { value: 0.5 },
-                            width: 800,
-                            height: 450
+                            style: {
+                                outline: 'lightgray',
+                                inlineLegend: true,
+                                bazierLink: true
+                            },
+                            strokeWidth: { value: 2.5 },
+                            opacity: { value: 0.3 },
+                            width: 400,
+                            height: 250
+                        },
+                        {
+                            title: 'LOH',
+                            alignment: 'overlay',
+                            data: {
+                                url: 'https://s3.amazonaws.com/gosling-lang.org/data/cancer/cnv.PD35930a.csv',
+                                headerNames: [
+                                    'id',
+                                    'chr',
+                                    'start',
+                                    'end',
+                                    'total_cn_normal',
+                                    'minor_cp_normal',
+                                    'total_cn_tumor',
+                                    'minor_cn_tumor'
+                                ],
+                                type: 'csv',
+                                chromosomeField: 'chr',
+                                genomicFields: ['start', 'end']
+                            },
+                            dataTransform: [{ type: 'filter', field: 'minor_cn_tumor', oneOf: ['0'] }],
+                            tracks: [
+                                { mark: 'rect' },
+                                {
+                                    mark: 'brush',
+                                    x: { linkingId: 'detail-1' },
+                                    strokeWidth: { value: 0 },
+                                    color: { value: 'gray' }
+                                },
+                                {
+                                    mark: 'brush',
+                                    x: { linkingId: 'detail-2' },
+                                    strokeWidth: { value: 0 },
+                                    color: { value: 'gray' }
+                                }
+                            ],
+                            x: { field: 'start', type: 'genomic' },
+                            xe: { field: 'end', type: 'genomic' },
+                            color: { value: '#FD7E85' },
+                            stroke: { value: 'lightgray' },
+                            strokeWidth: { value: 0.3 },
+                            style: { outline: 'lightgray' },
+                            width: 620,
+                            height: 20
+                        },
+                        {
+                            title: 'Gain',
+                            alignment: 'overlay',
+                            data: {
+                                url: 'https://s3.amazonaws.com/gosling-lang.org/data/cancer/cnv.PD35930a.csv',
+                                headerNames: [
+                                    'id',
+                                    'chr',
+                                    'start',
+                                    'end',
+                                    'total_cn_normal',
+                                    'minor_cp_normal',
+                                    'total_cn_tumor',
+                                    'minor_cn_tumor'
+                                ],
+                                type: 'csv',
+                                chromosomeField: 'chr',
+                                genomicFields: ['start', 'end']
+                            },
+                            dataTransform: [
+                                {
+                                    type: 'filter',
+                                    field: 'total_cn_tumor',
+                                    inRange: [5, 1000]
+                                }
+                            ],
+                            tracks: [
+                                { mark: 'rect' },
+                                {
+                                    mark: 'brush',
+                                    x: { linkingId: 'detail-1' },
+                                    strokeWidth: { value: 0 },
+                                    color: { value: 'gray' }
+                                },
+                                {
+                                    mark: 'brush',
+                                    x: { linkingId: 'detail-2' },
+                                    strokeWidth: { value: 0 },
+                                    color: { value: 'gray' }
+                                }
+                            ],
+                            x: { field: 'start', type: 'genomic' },
+                            xe: { field: 'end', type: 'genomic' },
+                            color: { value: '#DFFBBF' },
+                            stroke: { value: 'lightgray' },
+                            strokeWidth: { value: 0.3 },
+                            style: { outline: 'lightgray' },
+                            width: 500,
+                            height: 20
                         },
                         {
                             alignment: 'overlay',
@@ -273,8 +461,18 @@ export const EX_SPEC_CANCER_VARIANT_PROTOTYPE: GoslingSpec = {
                             },
                             tracks: [
                                 { mark: 'rect' },
-                                { mark: 'brush', x: { linkingId: 'detail-1' }, strokeWidth: {value: 0}, color: {value: 'blue'} },
-                                { mark: 'brush', x: { linkingId: 'detail-2' }, strokeWidth: {value: 0}, color: {value: 'red'} },
+                                {
+                                    mark: 'brush',
+                                    x: { linkingId: 'detail-1' },
+                                    strokeWidth: { value: 0 },
+                                    color: { value: 'gray' }
+                                },
+                                {
+                                    mark: 'brush',
+                                    x: { linkingId: 'detail-2' },
+                                    strokeWidth: { value: 0 },
+                                    color: { value: 'gray' }
+                                }
                             ],
                             color: {
                                 field: 'Stain',
@@ -285,9 +483,9 @@ export const EX_SPEC_CANCER_VARIANT_PROTOTYPE: GoslingSpec = {
                             x: { field: 'chromStart', type: 'genomic', axis: 'bottom' },
                             xe: { field: 'chromEnd', type: 'genomic' },
                             opacity: { value: 0.3 },
-                            width: 700,
-                            height: 30
-                        },
+                            width: 1000,
+                            height: 20
+                        }
                     ]
                 }
             ]
@@ -297,11 +495,11 @@ export const EX_SPEC_CANCER_VARIANT_PROTOTYPE: GoslingSpec = {
             spacing: 90,
             views: [
                 {
-                    xDomain: { chromosome: '1', interval: [10000000, 15000000] },
+                    xDomain: { chromosome: '1', interval: [100000000, 110000000] },
                     linkingId: 'detail-1',
                     tracks: [
                         {
-                            title: 'Detail View 1',
+                            title: 'Reads Detail View 1 (To Be Added)',
                             data: {
                                 url:
                                     'https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/UCSC.HG38.Human.CytoBandIdeogram.csv',
@@ -319,17 +517,17 @@ export const EX_SPEC_CANCER_VARIANT_PROTOTYPE: GoslingSpec = {
                             x: { field: 'chromStart', type: 'genomic' },
                             xe: { field: 'chromEnd', type: 'genomic' },
                             opacity: { value: 0.3 },
-                            width: 630,
+                            width: 452,
                             height: 100
                         }
                     ]
                 },
                 {
                     linkingId: 'detail-2',
-                    xDomain: { chromosome: '1', interval: [180000000, 185000000] },
+                    xDomain: { chromosome: '1', interval: [240000000, 250000000] },
                     tracks: [
                         {
-                            title: 'Detail View 2',
+                            title: 'Reads Detail View 2 (To Be Added)',
                             data: {
                                 url:
                                     'https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/UCSC.HG38.Human.CytoBandIdeogram.csv',
@@ -347,7 +545,7 @@ export const EX_SPEC_CANCER_VARIANT_PROTOTYPE: GoslingSpec = {
                             x: { field: 'chromStart', type: 'genomic' },
                             xe: { field: 'chromEnd', type: 'genomic' },
                             opacity: { value: 0.3 },
-                            width: 630,
+                            width: 452,
                             height: 100
                         }
                     ]
