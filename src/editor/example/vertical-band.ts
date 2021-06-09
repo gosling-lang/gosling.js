@@ -42,7 +42,7 @@ export const EX_SPEC_BAND: GoslingSpec = {
             strokeWidth: { value: 0.8 },
             opacity: { value: 0.15 },
             color: { value: '#85B348' },
-            style: { verticalLink: true, outlineWidth: 0 },
+            style: { outlineWidth: 0 },
             width: 500,
             height: 100
         },
@@ -83,7 +83,7 @@ export const EX_SPEC_BAND: GoslingSpec = {
             strokeWidth: { value: 0.8 },
             opacity: { value: 0.15 },
             color: { value: '#85B348' },
-            style: { verticalLink: true, outlineWidth: 0 },
+            style: { outlineWidth: 0 },
             width: 500,
             height: 100
         },
@@ -124,7 +124,7 @@ export const EX_SPEC_BAND: GoslingSpec = {
             strokeWidth: { value: 0.8 },
             opacity: { value: 0.15 },
             color: { value: '#85B348' },
-            style: { verticalLink: true, outlineWidth: 0 },
+            style: { outlineWidth: 0 },
             width: 500,
             height: 100
         },
