@@ -4904,9 +4904,6 @@
         },
         "textStrokeWidth": {
           "type": "number"
-        },
-        "verticalLink": {
-          "type": "boolean"
         }
       },
       "type": "object"
