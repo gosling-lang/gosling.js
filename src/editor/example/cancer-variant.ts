@@ -553,8 +553,8 @@ export const EX_SPEC_CANCER_VARIANT_PROTOTYPE: GoslingSpec = {
                             color: {
                                 field: 'strand',
                                 type: 'nominal',
-                                domain: ['+', '-']
-                                //   range: [plusColor, minusColor],
+                                domain: ['+', '-'],
+                                range: ['gray', 'gray']
                             },
                             visibility: [
                                 {
