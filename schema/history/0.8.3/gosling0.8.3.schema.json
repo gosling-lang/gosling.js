@@ -1619,6 +1619,7 @@
         "rect",
         "text",
         "link",
+        "between-link",
         "rule",
         "triangleLeft",
         "triangleRight",

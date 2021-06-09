@@ -118,6 +118,7 @@ export type MarkType =
     | 'rect'
     | 'text'
     | 'link'
+    | 'between-link'
     | 'rule'
     | 'triangleLeft'
     | 'triangleRight'

@@ -152,7 +152,7 @@ export function drawLink(g: PIXI.Graphics, model: GoslingTrackModel) {
                     // Linear mark
 
                     // Experimental
-                    if (spec.style?.verticalLink) {
+                    if (spec.mark === 'between-link') {
                         g.moveTo(_x1, rowPosition);
                         g.lineTo(_x2, rowPosition);
                         g.lineTo(_x4, rowPosition + rowHeight);
