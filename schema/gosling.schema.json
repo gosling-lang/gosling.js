@@ -4820,6 +4820,9 @@
         "backgroundOpacity": {
           "type": "number"
         },
+        "bazierLink": {
+          "type": "boolean"
+        },
         "circularLink": {
           "type": "boolean"
         },
