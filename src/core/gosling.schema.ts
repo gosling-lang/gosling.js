@@ -118,6 +118,7 @@ export type MarkType =
     | 'rect'
     | 'text'
     | 'link'
+    | 'between-link'
     | 'rule'
     | 'triangleLeft'
     | 'triangleRight'
@@ -216,7 +217,6 @@ export interface Style {
     curve?: 'top' | 'bottom' | 'left' | 'right'; // for genomic range rules
     align?: 'left' | 'right'; // currently, only supported for triangles
     dy?: number; // currently, only used for text marks
-    verticalLink?: boolean; // Should bands be connected from the top to bottom?
     bazierLink?: boolean; // use bazier curves instead
     circularLink?: boolean; // !! Deprecated: draw arc instead of bazier curve?
     inlineLegend?: boolean; // show legend in a single horizontal line?

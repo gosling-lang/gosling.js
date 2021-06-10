@@ -33,7 +33,7 @@ export const EX_SPEC_BAND: GoslingSpec = {
                 chromosomeField: 'c2',
                 genomicFields: ['s1', 'e1', 's2', 'e2']
             },
-            mark: 'link',
+            mark: 'between-link',
             x: { field: 's1', type: 'genomic' },
             xe: { field: 'e1', type: 'genomic' },
             x1: { field: 's2', type: 'genomic' },
@@ -42,7 +42,7 @@ export const EX_SPEC_BAND: GoslingSpec = {
             strokeWidth: { value: 0.8 },
             opacity: { value: 0.15 },
             color: { value: '#85B348' },
-            style: { verticalLink: true, outlineWidth: 0 },
+            style: { outlineWidth: 0 },
             width: 500,
             height: 100
         },
@@ -74,7 +74,7 @@ export const EX_SPEC_BAND: GoslingSpec = {
                 chromosomeField: 'c2',
                 genomicFields: ['s1', 'e1', 's2', 'e2']
             },
-            mark: 'link',
+            mark: 'between-link',
             x1: { field: 's1', type: 'genomic' },
             x1e: { field: 'e1', type: 'genomic' },
             x: { field: 's2', type: 'genomic' },
@@ -83,7 +83,7 @@ export const EX_SPEC_BAND: GoslingSpec = {
             strokeWidth: { value: 0.8 },
             opacity: { value: 0.15 },
             color: { value: '#85B348' },
-            style: { verticalLink: true, outlineWidth: 0 },
+            style: { outlineWidth: 0 },
             width: 500,
             height: 100
         },
@@ -115,7 +115,7 @@ export const EX_SPEC_BAND: GoslingSpec = {
                 chromosomeField: 'c2',
                 genomicFields: ['s1', 'e1', 's2', 'e2']
             },
-            mark: 'link',
+            mark: 'between-link',
             x: { field: 's1', type: 'genomic' },
             xe: { field: 'e1', type: 'genomic' },
             x1: { field: 's2', type: 'genomic' },
@@ -124,7 +124,7 @@ export const EX_SPEC_BAND: GoslingSpec = {
             strokeWidth: { value: 0.8 },
             opacity: { value: 0.15 },
             color: { value: '#85B348' },
-            style: { verticalLink: true, outlineWidth: 0 },
+            style: { outlineWidth: 0 },
             width: 500,
             height: 100
         },

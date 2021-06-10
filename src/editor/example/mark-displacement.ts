@@ -93,7 +93,7 @@ export const EX_SPEC_MARK_DISPLACEMENT: GoslingSpec = {
                             newField: 'a'
                         }
                     ],
-                    mark: 'link',
+                    mark: 'between-link',
                     xe: { field: 'start', type: 'genomic' },
                     x: { field: 'aStart', type: 'genomic' },
                     // xe: { field: 'end', type: 'genomic' },
@@ -103,7 +103,6 @@ export const EX_SPEC_MARK_DISPLACEMENT: GoslingSpec = {
                     stroke: { value: 'lightgrey' },
                     strokeWidth: { value: 0.5 },
                     opacity: { value: 0.8 },
-                    style: { verticalLink: true },
                     width: 700,
                     height: 60
                 },

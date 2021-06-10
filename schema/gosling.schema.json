@@ -1619,6 +1619,7 @@
         "rect",
         "text",
         "link",
+        "between-link",
         "rule",
         "triangleLeft",
         "triangleRight",
@@ -4903,9 +4904,6 @@
         },
         "textStrokeWidth": {
           "type": "number"
-        },
-        "verticalLink": {
-          "type": "boolean"
         }
       },
       "type": "object"
