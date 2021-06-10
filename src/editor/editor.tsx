@@ -386,7 +386,19 @@ function Editor(props: any) {
     // console.log('editor.render()');
     return (
         <>
-            <div className={`demo-navbar ${theme === 'dark' ? 'dark' : ''}`}>
+            <div
+                className={`demo-navbar ${theme === 'dark' ? 'dark' : ''}`}
+                onClick={() => {
+                    if (!gosRef.current) return;
+
+                    // To test APIs, uncomment the following code.
+                    // ! Be aware that the first view is for the title/subtitle track. So navigation API does not work.
+                    // const id = gosRef.current.api.getViewIds()?.[1]; //'view-1';
+                    // if(id) {
+                    //     gosRef.current.api.zoomToExtent(id);
+                    // }
+                }}
+            >
                 <span style={{ cursor: 'pointer' }} onClick={() => window.open('https://gosling.js.org', '_blank')}>
                     <span className="logo">{LogoSVG(20, 20)}</span>
                     Gosling.js Editor
@@ -430,17 +442,6 @@ function Editor(props: any) {
                         🚧 This example is under development 🚧
                     </span>
                 ) : null}
-                <span
-                    style={{ color: 'white', cursor: 'default', userSelect: 'none' }}
-                    onClick={() => {
-                        // if (hgRef.current) {
-                        //     console.warn('Exporting SVG', hgRef.current.api.exportAsSvg());
-                        //     // TODO: save as a html file
-                        // }
-                    }}
-                >
-                    {'‌‌ ‌‌ ‌‌ ‌‌ ‌‌ ‌‌ ‌‌ ‌‌ '}
-                </span>
                 <input type="hidden" id="spec-url-exporter" />
                 {description ? (
                     <span title="Open Textual Description" className="description-button" onClick={openDescription}>

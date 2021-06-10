@@ -88,6 +88,11 @@ export const GoslingComponent = forwardRef((props: GoslingCompProps, ref: any) =
 
                     hgRef?.current?.api?.zoomTo(viewId, start, end, start, end, duration);
                 },
+                // TODO: Support assemblies (we can infer this from the spec)
+                zoomToExtent: (viewId: string, duration = 1000) => {
+                    const [start, end] = [0, GET_CHROM_SIZES().total];
+                    hgRef?.current?.api?.zoomTo(viewId, start, end, start, end, duration);
+                },
                 zoomToGene: (viewId: string, gene: string, duration = 1000) => {
                     hgRef?.current?.api?.zoomToGene(viewId, gene, duration);
                 },
