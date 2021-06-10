@@ -10,6 +10,7 @@ export const EX_SPEC_VISUAL_ENCODING: GoslingSpec = {
     xDomain: { chromosome: '1', interval: [1, 3000500] },
     views: [
         {
+            id: 'view-1',
             tracks: [
                 {
                     data: {
