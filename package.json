@@ -27,7 +27,7 @@
         "deploy": "gh-pages -d build"
     },
     "peerDependencies": {
-        "pixi.js": "^5.3.7",
+        "pixi.js": "^6.0.4",
         "react": "16.13.1",
         "react-dom": "16.13.1"
     },
