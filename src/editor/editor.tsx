@@ -201,6 +201,12 @@ function Editor(props: any) {
     // const hgRef = useRef<any>();
     const gosRef = useRef<any>();
 
+    const debounceCodeEdit = useRef(
+        debounce((code: string) => {
+            setCode(code);
+        }, 1500)
+    );
+
     // publish event listeners to Gosling.js
     useEffect(() => {
         if (gosRef.current) {
@@ -630,9 +636,7 @@ function Editor(props: any) {
                                     openFindBox={isFindCode}
                                     fontZoomIn={isFontZoomIn}
                                     fontZoomOut={isFontZoomOut}
-                                    onChange={debounce(code => {
-                                        setCode(code);
-                                    }, 1500)}
+                                    onChange={debounceCodeEdit.current}
                                     isDarkTheme={theme === 'dark'}
                                 />
                                 <div className={`compile-message compile-message-${log.state}`}>{log.message}</div>
