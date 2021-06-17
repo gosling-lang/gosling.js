@@ -11,10 +11,9 @@ import { EX_SPEC_SARS_COV_2 } from './sars-cov-2';
 import { EX_SPEC_CIRCOS } from './circos';
 import { EX_SPEC_GREMLIN } from './gremlin';
 import { EX_SPEC_GENE_ANNOTATION } from './gene-annotation';
-import { EX_SPEC_SEMANTIC_ZOOM } from './semantic-zoom';
+import { EX_SPEC_CLINVAR_LOLLIPOP, EX_SPEC_SEQUENCE_TRACK } from './semantic-zoom';
 import { EX_SPEC_GIVE } from './give';
 import { EX_SPEC_CORCES_ET_AL } from './corces';
-import { EX_SPEC_PATHOGENIC } from './pathogenic';
 import { EX_SPEC_CYTOBANDS } from './ideograms';
 import { EX_SPEC_PILEUP } from './pileup';
 import { EX_SPEC_FUJI_PLOT } from './fuji';
@@ -58,7 +57,8 @@ export const examples: ReadonlyArray<{
     {
         name: 'Basic Example: Layouts and Arrangements',
         id: 'LAYOUT_AND_ARRANGEMENT_1',
-        spec: EX_SPEC_LAYOUT_AND_ARRANGEMENT_1
+        spec: EX_SPEC_LAYOUT_AND_ARRANGEMENT_1,
+        hidden: true
     },
     {
         name: 'Layouts and Arrangements 2',
@@ -69,7 +69,8 @@ export const examples: ReadonlyArray<{
     {
         name: 'Basic Example: Basic Idea of Semantic Zoom',
         id: 'BASIC_SEMANTIC_ZOOM',
-        spec: EX_SPEC_BASIC_SEMANTIC_ZOOM
+        spec: EX_SPEC_BASIC_SEMANTIC_ZOOM,
+        hidden: true
     },
     {
         name: 'Basic Example: Mark Displacement',
@@ -82,9 +83,14 @@ export const examples: ReadonlyArray<{
         spec: EX_SPEC_CIRCULAR_OVERVIEW_LINEAR_DETAIL
     },
     {
-        name: 'Semantic Zoom Examples',
+        name: 'Scalable Sequence Track',
+        id: 'SEQUENCE',
+        spec: EX_SPEC_SEQUENCE_TRACK
+    },
+    {
+        name: 'Clinvar Lollipop Plot',
         id: 'SEMANTIC_ZOOM',
-        spec: EX_SPEC_SEMANTIC_ZOOM
+        spec: EX_SPEC_CLINVAR_LOLLIPOP
     },
     {
         name: 'Ideograms',
@@ -117,20 +123,16 @@ export const examples: ReadonlyArray<{
         spec: EX_SPEC_CORCES_ET_AL
     },
     {
-        name: 'Pathogenic Lollipop Plot',
-        id: 'PATHOGENIC',
-        spec: EX_SPEC_PATHOGENIC,
-        hidden: true
-    },
-    {
         name: "Gremlin (O'Brien et al. 2010)",
         id: 'GREMLIN',
-        spec: EX_SPEC_GREMLIN
+        spec: EX_SPEC_GREMLIN,
+        underDevelopment: true
     },
     {
         name: 'GIVE (Cao et al. 2018)',
         id: 'GIVE',
-        spec: EX_SPEC_GIVE
+        spec: EX_SPEC_GIVE,
+        underDevelopment: true
     },
     {
         name: 'Breast Cancer Variant (Staaf et al. 2019)',
