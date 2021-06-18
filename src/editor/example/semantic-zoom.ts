@@ -242,3 +242,34 @@ export const EX_SPEC_SEMANTIC_ZOOM: GoslingSpec = {
         }
     ]
 };
+
+export const EX_SPEC_SEQUENCE_TRACK: GoslingSpec = {
+    arrangement: 'vertical',
+    views: [
+        {
+            layout: 'linear',
+            xDomain: { chromosome: '1', interval: [3000000, 3000010] },
+            ...EX_TRACK_SEMANTIC_ZOOM.sequence,
+            width: 800,
+            height: 100
+        }
+    ]
+};
+
+export const EX_SPEC_CLINVAR_LOLLIPOP: GoslingSpec = {
+    arrangement: 'vertical',
+    views: [
+        {
+            ...EX_SPEC_PATHOGENIC,
+            xDomain: { chromosome: '13', interval: [31500000, 33150000] }
+        },
+        {
+            ...EX_SPEC_PATHOGENIC,
+            xDomain: { chromosome: '13', interval: [32000000, 32700000] }
+        },
+        {
+            ...EX_SPEC_PATHOGENIC,
+            xDomain: { chromosome: '13', interval: [32314000, 32402500] }
+        }
+    ]
+};
