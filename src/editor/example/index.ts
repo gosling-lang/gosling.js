@@ -2,7 +2,7 @@ import { GoslingSpec } from '../../core/gosling.schema';
 import { EX_SPEC_LAYOUT_AND_ARRANGEMENT_1, EX_SPEC_LAYOUT_AND_ARRANGEMENT_2 } from './layout-and-arrangement';
 import { EX_SPEC_DARK_THEME, EX_SPEC_VISUAL_ENCODING, EX_SPEC_VISUAL_ENCODING_CIRCULAR } from './visual-encoding';
 import { EX_SPEC_CANCER_VARIANT_PROTOTYPE } from './cancer-variant';
-import { EX_SPEC_MATRIX_HFFC6 } from './matrix-hffc6';
+import { EX_SPEC_MATRIX_HFFC6, EX_SPEC_ROTATED_MATRIX } from './matrix-hffc6';
 import { EX_SPEC_LINKING } from './visual-linking';
 import { EX_SPEC_BASIC_SEMANTIC_ZOOM } from './basic-semantic-zoom';
 import { EX_SPEC_MARK_DISPLACEMENT } from './mark-displacement';
@@ -100,6 +100,12 @@ export const examples: ReadonlyArray<{
         name: 'Comparative Matrices (Micro-C vs. Hi-C)',
         id: 'MATRIX_HFFC6',
         spec: EX_SPEC_MATRIX_HFFC6
+    },
+    {
+        name: 'Rotated Matrix (Hi-C)',
+        id: 'ROTATED_MATRIX',
+        spec: EX_SPEC_ROTATED_MATRIX,
+        forceShow: true
     },
     {
         name: 'Circos',

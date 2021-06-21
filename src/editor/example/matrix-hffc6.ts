@@ -1,4 +1,4 @@
-import { GoslingSpec } from '../../core/gosling.schema';
+import { GoslingSpec, Track } from '../../core/gosling.schema';
 import { GOSLING_PUBLIC_DATA } from './gosling-data';
 
 export const EX_SPEC_MATRIX_HFFC6: GoslingSpec = {
@@ -485,4 +485,82 @@ export const EX_SPEC_MATRIX_HFFC6: GoslingSpec = {
         }
     ],
     style: { outlineWidth: 0 }
+};
+
+export const EX_SPEC_ROTATED_MATRIX: GoslingSpec = {
+    title: 'Rotated Matrix Visualization',
+    subtitle: 'Hi-C for HFFc6 Cells',
+    arrangement: 'vertical',
+    xDomain: { chromosome: '7', interval: [77700000, 81000000] },
+    spacing: 0,
+    style: { outlineWidth: 1 },
+    views: [
+        {
+            tracks: [
+                {
+                    title: 'HFFc6 Hi-C',
+                    data: {
+                        url: GOSLING_PUBLIC_DATA.matrixHiC,
+                        type: 'matrix'
+                    },
+                    mark: 'rect',
+                    x: { field: 'position1', type: 'genomic' },
+                    color: { field: 'value', type: 'quantitative', range: 'warm' },
+                    width: 600,
+                    height: 100
+                },
+                {
+                    alignment: 'overlay',
+                    tracks: [
+                        {
+                            data: {
+                                url: GOSLING_PUBLIC_DATA.geneAnnotation,
+                                type: 'beddb',
+                                genomicFields: [
+                                    { index: 1, name: 'start' },
+                                    { index: 2, name: 'end' }
+                                ],
+                                valueFields: [
+                                    { index: 5, name: 'strand', type: 'nominal' },
+                                    { index: 3, name: 'name', type: 'nominal' }
+                                ]
+                            },
+                            dataTransform: [{ type: 'filter', field: 'strand', oneOf: ['+'] }],
+                            mark: 'triangleRight',
+                            x: { field: 'start', type: 'genomic' },
+                            size: { value: 13 },
+                            stroke: { value: 'white' },
+                            strokeWidth: { value: 1 },
+                            row: { field: 'strand', type: 'nominal', domain: ['+', '-'] },
+                            color: { value: '#CB7AA7' }
+                        },
+                        {
+                            data: {
+                                url: GOSLING_PUBLIC_DATA.geneAnnotation,
+                                type: 'beddb',
+                                genomicFields: [
+                                    { index: 1, name: 'start' },
+                                    { index: 2, name: 'end' }
+                                ],
+                                valueFields: [
+                                    { index: 5, name: 'strand', type: 'nominal' },
+                                    { index: 3, name: 'name', type: 'nominal' }
+                                ]
+                            },
+                            dataTransform: [{ type: 'filter', field: 'strand', oneOf: ['-'] }],
+                            mark: 'triangleLeft',
+                            x: { field: 'start', type: 'genomic' },
+                            stroke: { value: 'white' },
+                            strokeWidth: { value: 1 },
+                            size: { value: 13 },
+                            row: { field: 'strand', type: 'nominal', domain: ['+', '-'] },
+                            color: { value: '#029F73' }
+                        }
+                    ],
+                    width: 570,
+                    height: 40
+                }
+            ].slice(0, 1) as Track[]
+        }
+    ]
 };

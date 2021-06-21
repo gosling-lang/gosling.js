@@ -427,12 +427,12 @@ export interface BAMData {
     url: string;
 }
 
-/* ----------------------------- DATA TRANSFORM ----------------------------- */
 export interface MatrixData {
     type: 'matrix';
     url: string;
 }
 
+/* ----------------------------- DATA TRANSFORM ----------------------------- */
 export type DataTransform =
     | FilterTransform
     | StrConcatTransform

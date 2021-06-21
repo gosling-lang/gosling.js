@@ -32,7 +32,8 @@ import {
     OverlaidTracks,
     StackedTracks,
     BAMData,
-    Range
+    Range,
+    MatrixData
 } from './gosling.schema';
 import { SUPPORTED_CHANNELS } from './mark';
 import { isArray } from 'lodash';
@@ -123,7 +124,35 @@ export function IsOverlaidTrack(track: Partial<Track>): track is OverlaidTrack {
  * TODO: This should be more correctly determined, but we currently only support 2D tracks for matrix datasets.
  */
 export function Is2DTrack(track: Track) {
-    return IsSingleTrack(track) && track.data?.type === 'matrix';
+    if (!IsSingleTrack(track)) {
+        return false;
+    }
+    const xChannel = track.x;
+    const yChannel = track.y;
+    return (
+        track.data?.type === 'matrix' &&
+        IsChannelDeep(xChannel) &&
+        IsChannelDeep(yChannel) &&
+        xChannel.type === 'genomic' &&
+        yChannel.type === 'genomic'
+    );
+}
+
+// TODO: To support overlaid tracks in rotated matrix tracks, this function should be updated as this only accepts single tracks.
+export function IsRotatedMatrixTrack(track: Track) {
+    if (!IsSingleTrack(track)) {
+        return false;
+    }
+    const xChannel = track.x;
+    const yChannel = track.y;
+    return (
+        track.data?.type === 'matrix' &&
+        IsChannelDeep(xChannel) &&
+        xChannel.type === 'genomic' &&
+        (
+            !IsChannelDeep(yChannel) || yChannel.type !== 'genomic'
+        )
+    );
 }
 
 export function IsChannelValue(
@@ -140,7 +169,7 @@ export function IsChannelBind(
 
 export function IsDataDeepTileset(
     _: DataDeep | undefined
-): _ is BEDDBData | VectorData | MultivecData | BIGWIGData | BAMData {
+): _ is BEDDBData | VectorData | MultivecData | BIGWIGData | BAMData | MatrixData {
     return (
         _ !== undefined &&
         (_.type === 'vector' ||

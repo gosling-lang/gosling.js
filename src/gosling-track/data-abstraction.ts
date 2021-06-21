@@ -11,7 +11,9 @@ export function getTabularData(
         raw?: Datum[];
         shape?: [number, number];
         tileX: number;
+        tileY?: number; // Used for 2D tracks
         tileWidth: number;
+        tileHeight?: number; // Used for 2D tracks
         tileSize: number;
     }
 ) {
@@ -162,6 +164,49 @@ export function getTabularData(
                 }
             });
         });
+    } else if (spec.data.type === 'matrix') {
+        if (!data.dense) {
+            // we did not get sufficient data.
+            return;
+        }
+
+        const binSize = Math.sqrt(data.dense.length);
+        
+        if(binSize !== 256) {
+            console.warn('Bin size of the matrix dataset is not 256');
+        }
+
+        const numericValues = data.dense;
+        
+        // data.dense.forEach((value, i) => {
+        //     const 
+        // });
+
+        // // calculate the tile's position in bins
+        // const tileXStartBin = Math.floor(data.tileX / data.tileRes);
+        // const tileXEndBin = Math.floor((data.tileX + data.tileWidth) / data.tileRes);
+        // const tileYStartBin = Math.floor(data.tileY / data.tileRes);
+        // const tileYEndBin = Math.floor((data.tileY + data.tileHeight) / data.tileRes);
+
+        // // calculate which part of this tile is present in the current window
+        // let tileSliceXStart = Math.max(leftXBin, tileXStartBin) - tileXStartBin;
+        // let tileSliceYStart = Math.max(leftYBin, tileYStartBin) - tileYStartBin;
+        // const tileSliceXEnd =
+        //     Math.min(leftXBin + binWidth, tileXEndBin) - tileXStartBin;
+        // const tileSliceYEnd =
+        //     Math.min(leftYBin + binHeight, tileYEndBin) - tileYStartBin;
+
+        // // where in the output array will the portion of this tile which is in the visible window be placed?
+        // const tileXOffset = Math.max(tileXStartBin - leftXBin, 0);
+        // const tileYOffset = Math.max(tileYStartBin - leftYBin, 0);
+        // const tileSliceWidth = tileSliceXEnd - tileSliceXStart;
+        // const tileSliceHeight = tileSliceYEnd - tileSliceYStart;
+
+        // // the region is outside of this tile
+        // if (tileSliceWidth < 0 || tileSliceHeight < 0) {
+        //     return;
+        // }
+
     } else if (spec.data.type === 'beddb') {
         if (!data.raw) {
             // we did not get sufficient data.

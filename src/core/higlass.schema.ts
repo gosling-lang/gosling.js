@@ -92,6 +92,7 @@ export interface EnumTrack {
     server?: string;
     tilesetUid?: string;
     chromInfoPath?: string;
+    filetype?: string; // Added manually
     data?: Data;
     fromViewUid?: null | string;
     width?: number;
@@ -183,6 +184,7 @@ export type EnumTrackType =
     | 'horizontal-chromosome-labels'
     | 'horizontal-divergent-bar'
     | 'horizontal-gene-annotations'
+    | 'linear-heatmap'
     | 'horizontal-heatmap'
     | 'horizontal-line'
     | 'horizontal-multivec'

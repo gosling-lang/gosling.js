@@ -7,7 +7,7 @@ import { BoundingBox, RelativePosition } from './utils/bounding-box';
 import { resolveSuperposedTracks } from './utils/overlay';
 import { getGenomicChannelKeyFromTrack, getGenomicChannelFromTrack } from './utils/validate';
 import { viridisColorMap } from './utils/colors';
-import { IsDataDeep, IsChannelDeep, IsDataDeepTileset } from './gosling.schema.guards';
+import { IsDataDeep, IsChannelDeep, IsDataDeepTileset, Is2DTrack } from './gosling.schema.guards';
 import { DEFAULT_SUBTITLE_HEIGHT, DEFAULT_TITLE_HEIGHT } from './layout/defaults';
 import { getTheme, Theme } from './utils/theme';
 
@@ -96,7 +96,7 @@ export function goslingToHiGlass(
             };
         }
 
-        const isMatrix = gosTrack.data?.type === 'matrix';
+        const isMatrix = Is2DTrack(gosTrack);
         if (isMatrix) {
             // Use HiGlass' heatmap track for matrix data
             hgTrack.type = 'heatmap';
@@ -107,6 +107,12 @@ export function goslingToHiGlass(
             hgTrack.options.trackBorderWidth = 1;
             hgTrack.options.trackBorderColor = 'black';
             hgTrack.options.colorbarPosition = (firstResolvedSpec.color as any)?.legend ? 'topRight' : 'hidden';
+        }
+
+        // TODO: Experimental
+        if (gosTrack.data?.type === 'matrix') {
+            hgTrack.filetype = 'cooler';
+            // hgTrack.type = 'linear-heatmap';
         }
 
         if (gosTrack.overlayOnPreviousTrack) {
