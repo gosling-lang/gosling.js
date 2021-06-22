@@ -702,7 +702,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                 return;
             }
 
-            if (tile.goslingModels && tile.goslingModels.length !== 0) {
+            if (tile.goslingModels && tile.goslingModels.length !== 0 && this.originalSpec.data?.type !== 'matrix') {
                 // already have the gosling models constructed
                 return tile.goslingModels;
             }

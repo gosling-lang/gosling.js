@@ -315,7 +315,7 @@ export function rotateMatrix(
             d[`x_rotated`] = (+d[genomicField1] + +d[genomicField2]) / 2.0;
             d[`y_rotated`] = Math.abs(+d[genomicField1] - +d[genomicField2]) / 2.0;
 
-            output.push(d);
+            // output.push(d);
 
             // if(scale.invert(0) <= d[`x_rotated`] && d[`x_rotated`] <= scale.invert(trackWidth)) {
             //     // For the performance issue, we only store the data rows that are visible in the current view.
