@@ -21,6 +21,7 @@ import {
     filterData,
     parseSubJSON,
     replaceString,
+    rotateMatrix,
     splitExon
 } from '../core/utils/data-transform';
 import { getTabularData } from './data-abstraction';
@@ -210,7 +211,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                 const tm = tile.goslingModels[0];
 
                 // check visibility condition
-                const trackWidth = this.dimensions[1];
+                const trackWidth = this.dimensions[0];
                 const zoomLevel = this._xScale.invert(trackWidth) - this._xScale.invert(0);
                 if (!tm.trackVisibility({ zoomLevel })) {
                     return;
@@ -223,7 +224,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             // A single tile contains one track or multiple tracks overlaid
             tile.goslingModels.forEach((tm: GoslingTrackModel) => {
                 // check visibility condition
-                const trackWidth = this.dimensions[1];
+                const trackWidth = this.dimensions[0];
                 const zoomLevel = this._xScale.invert(trackWidth) - this._xScale.invert(0);
                 if (!tm.trackVisibility({ zoomLevel })) {
                     return;
@@ -773,6 +774,15 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                                     tile.gos.tabularDataFiltered,
                                     resolved.assembly
                                 );
+                                break;
+                            case 'rotateMatrix':
+                                tile.gos.tabularDataFiltered = rotateMatrix(
+                                    t,
+                                    tile.gos.tabularDataFiltered,
+                                    this._xScale.copy(),
+                                    this.dimensions[0]
+                                );
+                                console.log(tile.gos.tabularDataFiltered);
                                 break;
                             case 'coverage':
                                 tile.gos.tabularDataFiltered = aggregateCoverage(

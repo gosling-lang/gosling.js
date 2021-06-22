@@ -112,6 +112,7 @@ export function goslingToHiGlass(
         // TODO: Experimental
         if (gosTrack.data?.type === 'matrix') {
             hgTrack.filetype = 'cooler';
+            // ! To let HiGlass draw the linear heatmap, uncomment the following line.
             // hgTrack.type = 'linear-heatmap';
         }
 

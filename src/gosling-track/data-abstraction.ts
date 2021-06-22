@@ -1,5 +1,6 @@
 import { Datum, SingleTrack } from '../core/gosling.schema';
 import { IsDataDeepTileset } from '../core/gosling.schema.guards';
+import Logging from '../core/utils/log'
 
 /**
  * Convert genomic data formats to common tabular formats for given tile.
@@ -165,22 +166,49 @@ export function getTabularData(
             });
         });
     } else if (spec.data.type === 'matrix') {
-        if (!data.dense) {
+        if (!data.dense || typeof data.tileY === 'undefined' || typeof data.tileHeight === 'undefined') {
             // we did not get sufficient data.
             return;
         }
 
+        console.log(data);
         const binSize = Math.sqrt(data.dense.length);
         
         if(binSize !== 256) {
-            console.warn('Bin size of the matrix dataset is not 256');
+            console.warn('The bin size of the matrix tilesets is not 256');
         }
 
+        const { tileX, tileY } = data;
+        const tileSize = 256;
         const numericValues = data.dense;
+        const tileXUnitSize = data.tileWidth / tileSize;
+        const tileYUnitSize = data.tileHeight / tileSize;
         
-        // data.dense.forEach((value, i) => {
-        //     const 
-        // });
+        console.log(tileXUnitSize, tileYUnitSize, tileSize, data.tileWidth);
+
+        Logging.recordTime('matrix-processing');
+
+        numericValues.forEach((value, i) => {
+            const xIndex = i % binSize;
+            const yIndex = Math.floor(i / binSize);
+
+            console.log(xIndex, yIndex, value);
+
+            // add individual rows
+            tabularData.push({
+                value,
+                x: tileX + (xIndex + 0.5) * tileXUnitSize,
+                xs: tileX + xIndex * tileXUnitSize,
+                xe: tileX + (xIndex + 1) * tileXUnitSize,
+                y: tileY + (yIndex + 0.5) * tileYUnitSize,
+                ys: tileY + yIndex * tileYUnitSize,
+                ye: tileY + (yIndex + 1) * tileYUnitSize
+            });
+        });
+
+        Logging.printTime('matrix-processing');
+
+        console.log(tabularData);
 
         // // calculate the tile's position in bins
         // const tileXStartBin = Math.floor(data.tileX / data.tileRes);

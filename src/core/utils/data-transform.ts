@@ -11,7 +11,8 @@ import {
     StrReplaceTransform,
     CoverageTransform,
     DisplaceTransform,
-    JSONParseTransform
+    JSONParseTransform,
+    RotateMatrixTransform
 } from '../gosling.schema';
 import {
     getChannelKeysByAggregateFnc,
@@ -298,6 +299,38 @@ export function displace(t: DisplaceTransform, data: Datum[], scale: ScaleLinear
 
     // Logging.printTime('displace()');
     return base;
+}
+
+export function rotateMatrix(rotate: RotateMatrixTransform, data: Datum[], scale: ScaleLinear<any, any>, trackWidth: number): Datum[] {
+    const { genomicField1, genomicField2 } = rotate;
+    let output: Datum[] = [];
+
+    Array.from(data).forEach(d => {
+        if(d[genomicField1] && d[genomicField2]) {
+            d[`x_rotated`] = (+d[genomicField1] + +d[genomicField2]) / 2.0;
+            d[`y_rotated`] = Math.abs(+d[genomicField1] - +d[genomicField2]) / 2.0;
+
+            output.push(d);
+
+            // if(scale.invert(0) <= d[`x_rotated`] && d[`x_rotated`] <= scale.invert(trackWidth)) {
+            //     // For the performance issue, we only store the data rows that are visible in the current view.
+            //     output.push(d);
+            // }
+
+            // if(d[`y_rotated`] <= 5000) {
+                // For the performance issue, we only store the data rows that are visible in the current view.
+                // output.push(d);
+            // }
+
+            // TESSTING
+            // if(scale.invert(0) <= d.x && d.x <= scale.invert(trackWidth)) {
+            //     // For the performance issue, we only store the data rows that are visible in the current view.
+            //     output.push(d);
+            // }
+        }
+    });
+    console.log('scale.invert(0)', scale.invert(0), 'scale.invert(trackWidth)', scale.invert(trackWidth));
+    return output;
 }
 
 export function splitExon(split: ExonSplitTransform, data: Datum[], assembly: Assembly = 'hg38'): Datum[] {

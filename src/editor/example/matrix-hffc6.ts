@@ -491,7 +491,9 @@ export const EX_SPEC_ROTATED_MATRIX: GoslingSpec = {
     title: 'Rotated Matrix Visualization',
     subtitle: 'Hi-C for HFFc6 Cells',
     arrangement: 'vertical',
-    xDomain: { chromosome: '7', interval: [77700000, 81000000] },
+    xDomain: { chromosome: '1', interval: [1, 10000] },
+    // xDomain: { chromosome: '1', interval: [1000000, 1010000] },
+    // xDomain: { chromosome: '7', interval: [77700000, 81000000] },
     spacing: 0,
     style: { outlineWidth: 1 },
     views: [
@@ -503,9 +505,13 @@ export const EX_SPEC_ROTATED_MATRIX: GoslingSpec = {
                         url: GOSLING_PUBLIC_DATA.matrixHiC,
                         type: 'matrix'
                     },
-                    mark: 'rect',
-                    x: { field: 'position1', type: 'genomic' },
-                    color: { field: 'value', type: 'quantitative', range: 'warm' },
+                    dataTransform: [
+                        { type: 'rotateMatrix', genomicField1: 'x', genomicField2: 'y' }
+                    ],
+                    mark: 'point',
+                    x: { field: 'x_rotated', type: 'genomic' },
+                    y: { field: 'y_rotated', type: 'quantitative' },
+                    color: { field: 'value', type: 'quantitative', legend: true },
                     width: 600,
                     height: 100
                 },

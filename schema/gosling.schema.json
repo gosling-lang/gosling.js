@@ -615,6 +615,9 @@
           "$ref": "#/definitions/ExonSplitTransform"
         },
         {
+          "$ref": "#/definitions/RotateMatrixTransform"
+        },
+        {
           "$ref": "#/definitions/CoverageTransform"
         },
         {
@@ -3972,6 +3975,27 @@
           "type": "string"
         }
       },
+      "type": "object"
+    },
+    "RotateMatrixTransform": {
+      "additionalProperties": false,
+      "properties": {
+        "genomicField1": {
+          "type": "string"
+        },
+        "genomicField2": {
+          "type": "string"
+        },
+        "type": {
+          "const": "rotateMatrix",
+          "type": "string"
+        }
+      },
+      "required": [
+        "type",
+        "genomicField1",
+        "genomicField2"
+      ],
       "type": "object"
     },
     "SingleTrack": {
