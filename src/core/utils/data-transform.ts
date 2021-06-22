@@ -301,12 +301,17 @@ export function displace(t: DisplaceTransform, data: Datum[], scale: ScaleLinear
     return base;
 }
 
-export function rotateMatrix(rotate: RotateMatrixTransform, data: Datum[], scale: ScaleLinear<any, any>, trackWidth: number): Datum[] {
+export function rotateMatrix(
+    rotate: RotateMatrixTransform,
+    data: Datum[],
+    scale: ScaleLinear<any, any>,
+    trackWidth: number
+): Datum[] {
     const { genomicField1, genomicField2 } = rotate;
-    let output: Datum[] = [];
+    const output: Datum[] = [];
 
     Array.from(data).forEach(d => {
-        if(d[genomicField1] && d[genomicField2]) {
+        if (d[genomicField1] && d[genomicField2]) {
             d[`x_rotated`] = (+d[genomicField1] + +d[genomicField2]) / 2.0;
             d[`y_rotated`] = Math.abs(+d[genomicField1] - +d[genomicField2]) / 2.0;
 
@@ -318,8 +323,8 @@ export function rotateMatrix(rotate: RotateMatrixTransform, data: Datum[], scale
             // }
 
             // if(d[`y_rotated`] <= 5000) {
-                // For the performance issue, we only store the data rows that are visible in the current view.
-                // output.push(d);
+            // For the performance issue, we only store the data rows that are visible in the current view.
+            // output.push(d);
             // }
 
             // TESSTING

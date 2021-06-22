@@ -396,7 +396,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
         }
 
         calculateZoomLevel() {
-            if(IsRotatedMatrixTrack(this.originalSpec)) {
+            if (IsRotatedMatrixTrack(this.originalSpec)) {
                 // For the rotated matrix, we need special treatment for calculating zoom level.
                 return this.calculateZoomLevelForRotatedMatrix();
             } else {
@@ -451,12 +451,12 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
         }
 
         calculateVisibleTiles() {
-            if(IsRotatedMatrixTrack(this.originalSpec)) {
+            if (IsRotatedMatrixTrack(this.originalSpec)) {
                 // We need special treatment for calculating visible tiles.
                 this.calculateVisibleTilesForRotatedMatrix();
                 return;
             }
-            
+
             if (!usePrereleaseRendering(this.originalSpec)) {
                 // This is the common way of calculating visible tiles.
                 super.calculateVisibleTiles();

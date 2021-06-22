@@ -1,6 +1,6 @@
 import { Datum, SingleTrack } from '../core/gosling.schema';
 import { IsDataDeepTileset } from '../core/gosling.schema.guards';
-import Logging from '../core/utils/log'
+import Logging from '../core/utils/log';
 
 /**
  * Convert genomic data formats to common tabular formats for given tile.
@@ -173,8 +173,8 @@ export function getTabularData(
 
         console.log(data);
         const binSize = Math.sqrt(data.dense.length);
-        
-        if(binSize !== 256) {
+
+        if (binSize !== 256) {
             console.warn('The bin size of the matrix tilesets is not 256');
         }
 
@@ -183,7 +183,7 @@ export function getTabularData(
         const numericValues = data.dense;
         const tileXUnitSize = data.tileWidth / tileSize;
         const tileYUnitSize = data.tileHeight / tileSize;
-        
+
         console.log(tileXUnitSize, tileYUnitSize, tileSize, data.tileWidth);
 
         Logging.recordTime('matrix-processing');
@@ -234,7 +234,6 @@ export function getTabularData(
         // if (tileSliceWidth < 0 || tileSliceHeight < 0) {
         //     return;
         // }
-
     } else if (spec.data.type === 'beddb') {
         if (!data.raw) {
             // we did not get sufficient data.

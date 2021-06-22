@@ -149,9 +149,7 @@ export function IsRotatedMatrixTrack(track: Track) {
         track.data?.type === 'matrix' &&
         IsChannelDeep(xChannel) &&
         xChannel.type === 'genomic' &&
-        (
-            !IsChannelDeep(yChannel) || yChannel.type !== 'genomic'
-        )
+        (!IsChannelDeep(yChannel) || yChannel.type !== 'genomic')
     );
 }
 

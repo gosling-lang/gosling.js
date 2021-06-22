@@ -505,9 +505,7 @@ export const EX_SPEC_ROTATED_MATRIX: GoslingSpec = {
                         url: GOSLING_PUBLIC_DATA.matrixHiC,
                         type: 'matrix'
                     },
-                    dataTransform: [
-                        { type: 'rotateMatrix', genomicField1: 'x', genomicField2: 'y' }
-                    ],
+                    dataTransform: [{ type: 'rotateMatrix', genomicField1: 'x', genomicField2: 'y' }],
                     mark: 'point',
                     x: { field: 'x_rotated', type: 'genomic' },
                     y: { field: 'y_rotated', type: 'quantitative' },
