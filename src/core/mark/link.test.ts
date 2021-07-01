@@ -8,7 +8,7 @@ describe('Rendering link', () => {
     it('Linear Band', () => {
         const t: SingleTrack = {
             data: { type: 'csv', url: '' },
-            mark: 'link',
+            mark: 'withinLink',
             x: { field: 'x', type: 'genomic' },
             xe: { field: 'xe', type: 'genomic' },
             x1: { field: 'x1', type: 'genomic' },
@@ -28,7 +28,7 @@ describe('Rendering link', () => {
         const t: SingleTrack = {
             layout: 'circular',
             data: { type: 'csv', url: '' },
-            mark: 'link',
+            mark: 'withinLink',
             x: { field: 'x', type: 'genomic' },
             xe: { field: 'xe', type: 'genomic' },
             x1: { field: 'x1', type: 'genomic' },
@@ -48,7 +48,7 @@ describe('Rendering link', () => {
         const t: SingleTrack = {
             layout: 'linear',
             data: { type: 'csv', url: '' },
-            mark: 'link',
+            mark: 'withinLink',
             x: { field: 'x', type: 'genomic' },
             xe: { field: 'xe', type: 'genomic' },
             width: 100,
@@ -66,7 +66,7 @@ describe('Rendering link', () => {
         const t: SingleTrack = {
             layout: 'circular',
             data: { type: 'csv', url: '' },
-            mark: 'link',
+            mark: 'withinLink',
             x: { field: 'x', type: 'genomic' },
             xe: { field: 'xe', type: 'genomic' },
             width: 100,

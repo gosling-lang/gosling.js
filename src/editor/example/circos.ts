@@ -97,7 +97,7 @@ export const EX_SPEC_CIRCOS: GoslingSpec = {
                             not: true
                         }
                     ],
-                    mark: 'link',
+                    mark: 'withinLink',
                     x: { field: 'p1', type: 'genomic' },
                     xe: { field: 'p1_2', type: 'genomic' },
                     x1: { field: 'p2', type: 'genomic' },
@@ -107,7 +107,7 @@ export const EX_SPEC_CIRCOS: GoslingSpec = {
                 },
                 {
                     dataTransform: [{ type: 'filter', field: 'chr', oneOf: ['hs1'] }],
-                    mark: 'link',
+                    mark: 'withinLink',
                     x: { field: 'p1', type: 'genomic' },
                     xe: { field: 'p1_2', type: 'genomic' },
                     x1: { field: 'p2', type: 'genomic' },

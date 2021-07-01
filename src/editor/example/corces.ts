@@ -280,7 +280,7 @@ export const EX_SPEC_CORCES_ET_AL: GoslingSpec = {
                 //             strokeWidth: { value: 0 }
                 //         }
                 //     ],
-                //     mark: 'link',
+                //     mark: 'withinLink',
                 //     x: { field: 'start', type: 'genomic',  },
                 //     xe: { field: 'end', type: 'genomic' },
                 //     y: { flip: true },
@@ -304,7 +304,7 @@ export const EX_SPEC_CORCES_ET_AL: GoslingSpec = {
                 //     dataTransform: {
                 //         filter: [{ field: 'start', inRange: [492449994 + 52450000, 492449994 + 52460000] }]
                 //     },
-                //     mark: 'link',
+                //     mark: 'withinLink',
                 //     x: { field: 'start', type: 'genomic',  },
                 //     xe: { field: 'end', type: 'genomic' },
                 //     y: { flip: true },
@@ -329,7 +329,7 @@ export const EX_SPEC_CORCES_ET_AL: GoslingSpec = {
                 //     dataTransform: {
                 //         filter: [{ field: 'end', inRange: [492449994 + 52450000, 492449994 + 52460000] }]
                 //     },
-                //     mark: 'link',
+                //     mark: 'withinLink',
                 //     x: { field: 'start', type: 'genomic',  },
                 //     xe: { field: 'end', type: 'genomic' },
                 //     y: { flip: true },
@@ -351,7 +351,7 @@ export const EX_SPEC_CORCES_ET_AL: GoslingSpec = {
                             { name: 'end', index: 2 }
                         ]
                     },
-                    mark: 'link',
+                    mark: 'withinLink',
                     x: { field: 'start', type: 'genomic' },
                     xe: { field: 'end', type: 'genomic' },
                     y: { flip: true },
@@ -371,7 +371,7 @@ export const EX_SPEC_CORCES_ET_AL: GoslingSpec = {
                             { name: 'end', index: 2 }
                         ]
                     },
-                    mark: 'link',
+                    mark: 'withinLink',
                     x: { field: 'start', type: 'genomic' },
                     xe: { field: 'end', type: 'genomic' },
                     y: { flip: true },
@@ -393,7 +393,7 @@ export const EX_SPEC_CORCES_ET_AL: GoslingSpec = {
                             { name: 'end', index: 2 }
                         ]
                     },
-                    mark: 'link',
+                    mark: 'withinLink',
                     x: { field: 'start', type: 'genomic' },
                     xe: { field: 'end', type: 'genomic' },
                     y: { flip: true },

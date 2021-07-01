@@ -172,7 +172,7 @@ export const EX_SPEC_SARS_COV_2: GoslingSpec = {
                         genomicFields: ['Start1', 'Stop1', 'Start2', 'Stop2'],
                         sampleLength: 100
                     },
-                    mark: 'link',
+                    mark: 'withinLink',
                     x: { field: 'Start1', type: 'genomic' },
                     xe: { field: 'Stop1', type: 'genomic' },
                     x1: { field: 'Start2', type: 'genomic' },

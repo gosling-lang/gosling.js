@@ -94,7 +94,7 @@ export function view(sample: string): GoslingSpec {
                         { chromosomeField: 'chr2', genomicFields: ['start2', 'end2'] }
                     ]
                 },
-                mark: 'link',
+                mark: 'withinLink',
                 x: { field: 'start1', type: 'genomic' },
                 xe: { field: 'end2', type: 'genomic' },
                 color: {
@@ -273,7 +273,7 @@ export const EX_SPEC_CANCER_VARIANT_PROTOTYPE: GoslingSpec = {
                                     }
                                 ]
                             },
-                            mark: 'link',
+                            mark: 'withinLink',
                             x: { field: 'start1', type: 'genomic' },
                             xe: { field: 'end2', type: 'genomic' },
                             color: {
@@ -319,7 +319,7 @@ export const EX_SPEC_CANCER_VARIANT_PROTOTYPE: GoslingSpec = {
                                 ]
                             },
                             tracks: [
-                                { mark: 'link' },
+                                { mark: 'withinLink' },
                                 {
                                     mark: 'brush',
                                     x: { linkingId: 'detail-1' },

@@ -61,12 +61,12 @@ describe('Fix Spec Downstream', () => {
         }
     });
 
-    it('flipY if the last track (i !== 0) is using a `link` mark', () => {
+    it('flipY if the last track (i !== 0) is using a `withinLink` mark', () => {
         {
             const spec: GoslingSpec = {
                 static: true,
                 arrangement: 'parallel',
-                views: [{ tracks: [{ overlay: [], mark: 'link', width: 0, height: 0 }] }]
+                views: [{ tracks: [{ overlay: [], mark: 'withinLink', width: 0, height: 0 }] }]
             };
             traverseToFixSpecDownstream(spec);
             expect((spec.views[0] as any).tracks[0].flipY).toBeUndefined(); // must not flip if there is only one track
@@ -79,7 +79,7 @@ describe('Fix Spec Downstream', () => {
                     {
                         tracks: [
                             { overlay: [], width: 0, height: 0 },
-                            { overlay: [], mark: 'link', width: 0, height: 0 }
+                            { overlay: [], mark: 'withinLink', width: 0, height: 0 }
                         ]
                     }
                 ]
@@ -96,7 +96,7 @@ describe('Fix Spec Downstream', () => {
                     {
                         tracks: [
                             { overlay: [], width: 0, height: 0 },
-                            { overlay: [{ mark: 'link' }], width: 0, height: 0 }
+                            { overlay: [{ mark: 'withinLink' }], width: 0, height: 0 }
                         ]
                     }
                 ]
@@ -113,8 +113,8 @@ describe('Fix Spec Downstream', () => {
                 views: [
                     {
                         tracks: [
-                            { overlay: [{ mark: 'link' }], width: 0, height: 0 },
-                            { overlay: [{ mark: 'link' }], width: 0, height: 0, overlayOnPreviousTrack: true }
+                            { overlay: [{ mark: 'withinLink' }], width: 0, height: 0 },
+                            { overlay: [{ mark: 'withinLink' }], width: 0, height: 0, overlayOnPreviousTrack: true }
                         ]
                     }
                 ]
@@ -134,8 +134,8 @@ describe('Fix Spec Downstream', () => {
                     {
                         tracks: [
                             { overlay: [], width: 0, height: 0 },
-                            { overlay: [{ mark: 'link' }], width: 0, height: 0 },
-                            { overlay: [{ mark: 'link' }], width: 0, height: 0, overlayOnPreviousTrack: true }
+                            { overlay: [{ mark: 'withinLink' }], width: 0, height: 0 },
+                            { overlay: [{ mark: 'withinLink' }], width: 0, height: 0, overlayOnPreviousTrack: true }
                         ]
                     }
                 ]
@@ -156,8 +156,8 @@ describe('Fix Spec Downstream', () => {
                     {
                         tracks: [
                             { overlay: [], width: 0, height: 0 },
-                            { overlay: [{ mark: 'link' }], width: 0, height: 0, overlayOnPreviousTrack: true },
-                            { overlay: [{ mark: 'link' }], width: 0, height: 0, overlayOnPreviousTrack: true }
+                            { overlay: [{ mark: 'withinLink' }], width: 0, height: 0, overlayOnPreviousTrack: true },
+                            { overlay: [{ mark: 'withinLink' }], width: 0, height: 0, overlayOnPreviousTrack: true }
                         ]
                     }
                 ]

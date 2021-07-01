@@ -97,7 +97,7 @@ export function drawLink(g: PIXI.Graphics, model: GoslingTrackModel) {
                 let [_x1, _x2, _x3, _x4] = [x, xe, x1, x1e];
 
                 // Sort values to safely draw bands
-                if (spec.mark === 'between-link') {
+                if (spec.mark === 'betweenLink') {
                     [_x1, _x2] = [_x1, _x2].sort((a, b) => a - b);
                     [_x3, _x4] = [_x3, _x4].sort((a, b) => a - b);
                 } else {
@@ -152,7 +152,7 @@ export function drawLink(g: PIXI.Graphics, model: GoslingTrackModel) {
                     // Linear mark
 
                     // Experimental
-                    if (spec.mark === 'between-link') {
+                    if (spec.mark === 'betweenLink') {
                         g.moveTo(_x1, rowPosition);
                         g.lineTo(_x2, rowPosition);
                         g.lineTo(_x4, rowPosition + rowHeight);
@@ -205,7 +205,7 @@ export function drawLink(g: PIXI.Graphics, model: GoslingTrackModel) {
                 /* Line Connection */
 
                 // Experimental
-                if (spec.mark === 'between-link') {
+                if (spec.mark === 'betweenLink') {
                     g.moveTo(xe, rowPosition + rowHeight);
                     g.lineTo(x, rowPosition);
                     return;
