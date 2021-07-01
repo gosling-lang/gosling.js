@@ -77,7 +77,7 @@ export const EX_SPEC_CIRCULAR_OVERVIEW_LINEAR_DETAIL: GoslingSpec = {
                         { type: 'filter', field: 'chr1', oneOf: ['1', '16', '14', '9', '6', '5', '3'] },
                         { type: 'filter', field: 'chr2', oneOf: ['1', '16', '14', '9', '6', '5', '3'] }
                     ],
-                    mark: 'link',
+                    mark: 'withinLink',
                     x: { field: 'p1s', type: 'genomic' },
                     xe: { field: 'p1e', type: 'genomic' },
                     x1: { field: 'p2s', type: 'genomic' },

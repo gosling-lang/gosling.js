@@ -101,8 +101,8 @@ export function drawMark(HGC: any, trackInfo: any, tile: any, model: GoslingTrac
         case 'rule':
             drawRule(HGC, trackInfo, tile, model);
             break;
-        case 'link':
-        case 'between-link':
+        case 'betweenLink':
+        case 'withinLink':
             drawLink(tile.graphics, model);
             break;
         default:

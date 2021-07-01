@@ -300,14 +300,14 @@ export function traverseToFixSpecDownstream(spec: GoslingSpec | SingleView, pare
                         array.slice(i + 1).filter(d => d.overlayOnPreviousTrack).length === array.length - i - 1 &&
                         array.slice(0, i + 1).filter(d => d.overlayOnPreviousTrack).length < i))
             ) {
-                if (IsSingleTrack(track) && track.mark === 'link' && track.flipY === undefined) {
+                if (IsSingleTrack(track) && track.mark === 'withinLink' && track.flipY === undefined) {
                     track.flipY = true;
                 } else if (IsOverlaidTrack(track)) {
-                    if (track.mark === 'link' && track.flipY === undefined) {
+                    if (track.mark === 'withinLink' && track.flipY === undefined) {
                         track.flipY = true;
                     }
                     track.overlay.forEach(o => {
-                        if (o.mark === 'link' && o.flipY === undefined) {
+                        if (o.mark === 'withinLink' && o.flipY === undefined) {
                             o.flipY = true;
                         }
                     });

@@ -93,7 +93,7 @@ export const EX_SPEC_MARK_DISPLACEMENT: GoslingSpec = {
                             newField: 'a'
                         }
                     ],
-                    mark: 'between-link',
+                    mark: 'betweenLink',
                     xe: { field: 'start', type: 'genomic' },
                     x: { field: 'aStart', type: 'genomic' },
                     // xe: { field: 'end', type: 'genomic' },

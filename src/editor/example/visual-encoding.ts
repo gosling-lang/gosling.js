@@ -236,7 +236,7 @@ export const EX_SPEC_VISUAL_ENCODING: GoslingSpec = {
                         chromosomeField: 'c2',
                         genomicFields: ['s1', 'e1', 's2', 'e2']
                     },
-                    mark: 'link',
+                    mark: 'withinLink',
                     x: {
                         field: 's1',
                         type: 'genomic',
@@ -495,7 +495,7 @@ export const EX_SPEC_VISUAL_ENCODING_CIRCULAR: GoslingSpec = {
                                 chromosomeField: 'c2',
                                 genomicFields: ['s1', 'e1', 's2', 'e2']
                             },
-                            mark: 'link',
+                            mark: 'withinLink',
                             x: {
                                 field: 's1',
                                 type: 'genomic',
@@ -707,7 +707,7 @@ export const EX_SPEC_DARK_THEME: GoslingSpec = {
                                 longToWideId: 'id'
                             },
                             opacity: { value: 0.4 },
-                            mark: 'link',
+                            mark: 'withinLink',
                             x: { field: 'p1', type: 'genomic' },
                             xe: { field: 'p1_2', type: 'genomic' },
                             x1: { field: 'p2', type: 'genomic' },

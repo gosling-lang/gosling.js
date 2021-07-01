@@ -164,7 +164,7 @@ export const EX_SPEC_GREMLIN: GoslingSpec = {
                         { type: 'filter', field: 'chr_2', oneOf: ['hs5'] }
                     ],
                     tracks: [
-                        { mark: 'link' },
+                        { mark: 'withinLink' },
                         {
                             mark: 'brush',
                             x: { linkingId: 'view2' },
@@ -205,7 +205,7 @@ export const EX_SPEC_GREMLIN: GoslingSpec = {
                                 { type: 'filter', field: 'chr', oneOf: ['hs5', 'hs4', 'hs6'] },
                                 { type: 'filter', field: 'chr_2', oneOf: ['hs5', 'hs4', 'hs6'] }
                             ],
-                            mark: 'link',
+                            mark: 'withinLink',
                             x: {
                                 field: 'p1',
                                 type: 'genomic',
@@ -257,7 +257,7 @@ export const EX_SPEC_GREMLIN: GoslingSpec = {
                                         sampleLength: 1000
                                     },
                                     dataTransform: [{ type: 'filter', field: 'chr', oneOf: ['hs5'] }],
-                                    mark: 'link',
+                                    mark: 'withinLink',
                                     x: {
                                         field: 'p1',
                                         type: 'genomic',
