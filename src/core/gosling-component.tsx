@@ -37,7 +37,7 @@ export const GoslingComponent = forwardRef((props: GoslingCompProps, ref: any) =
 
     // div `id` and `className` for detailed customization
     const wrapperDivId = typeof props.id !== 'undefined' ? props.id : uuid.v4();
-    const wrapperDivClassName = typeof props.className !== 'undefined' ? props.className : 'gosling-component';
+    const wrapperDivClassName = typeof props.className !== 'undefined' ? props.className : '';
 
     // HiGlass API
     const hgRef = useRef<any>();
@@ -213,7 +213,7 @@ export const GoslingComponent = forwardRef((props: GoslingCompProps, ref: any) =
             <>
                 <div
                     id={wrapperDivId}
-                    className={wrapperDivClassName}
+                    className={`gosling-component ${wrapperDivClassName}`}
                     style={{
                         position: 'relative',
                         padding,
@@ -225,6 +225,7 @@ export const GoslingComponent = forwardRef((props: GoslingCompProps, ref: any) =
                 >
                     <div
                         key={JSON.stringify(hs)}
+                        className='higlass-wrapper'
                         style={{
                             position: 'relative',
                             display: 'block',
