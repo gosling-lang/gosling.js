@@ -1,3 +1,21 @@
+## [0.8.4](https://github.com/gosling-lang/gosling.js/compare/v0.8.3...v0.8.4) (2021-07-02)
+
+
+### Bug Fixes
+
+* remove improper loading message in track ([#418](https://github.com/gosling-lang/gosling.js/issues/418)) ([62bf073](https://github.com/gosling-lang/gosling.js/commit/62bf073d6a67bca03ddb5687b9ef4c51f99d3ea2))
+* **editor:** address hiccups in editor ([#411](https://github.com/gosling-lang/gosling.js/issues/411)) ([3025533](https://github.com/gosling-lang/gosling.js/commit/30255337e4eb0a6601319068a8be141edd19b861))
+* convert to numbers when quantitative fields are strings ([#402](https://github.com/gosling-lang/gosling.js/issues/402)) ([95212bd](https://github.com/gosling-lang/gosling.js/commit/95212bd42fc8cccf26517ea1da24d35ed7706e8d))
+
+
+### Features
+
+* rename link marks to betweenLink and withinLink ([#416](https://github.com/gosling-lang/gosling.js/issues/416)) ([8e7556c](https://github.com/gosling-lang/gosling.js/commit/8e7556cfbfd674ec21e7783df8e37513d0cad7ec))
+* **api:** zoom to extent ([#408](https://github.com/gosling-lang/gosling.js/issues/408)) ([0b3c71f](https://github.com/gosling-lang/gosling.js/commit/0b3c71ff3ab99ee7b5cb445c704c2fe35145be99))
+* add a between-link mark ([#405](https://github.com/gosling-lang/gosling.js/issues/405)) ([c7a76e2](https://github.com/gosling-lang/gosling.js/commit/c7a76e22df9e7755242a764c70400c6beeb9cdb8))
+
+
+
 ## [0.8.3](https://github.com/gosling-lang/gosling.js/compare/v0.8.2...v0.8.3) (2021-05-28)
 
 
