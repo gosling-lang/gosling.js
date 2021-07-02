@@ -95,19 +95,19 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             this.drawnAtScale = HGC.libraries.d3Scale.scaleLinear();
             this.scalableGraphics = {};
 
-            this.loadingText = new HGC.libraries.PIXI.Text('Loading', {
-                fontSize: '14px',
-                fontFamily: 'Arial',
-                fill: 'black'
-            });
+            // this.loadingText = new HGC.libraries.PIXI.Text('Loading', {
+            //     fontSize: '14px',
+            //     fontFamily: 'Arial',
+            //     fill: 'black'
+            // });
 
-            this.loadingText.x = 0;
-            this.loadingText.y = 0;
+            // this.loadingText.x = 0;
+            // this.loadingText.y = 0;
 
-            this.loadingText.anchor.x = 0;
-            this.loadingText.anchor.y = 0;
+            // this.loadingText.anchor.x = 0;
+            // this.loadingText.anchor.y = 0;
 
-            this.pLabel.addChild(this.loadingText);
+            // this.pLabel.addChild(this.loadingText);
 
             const { valid, errorMessages } = validateTrack(this.originalSpec);
 
