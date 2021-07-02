@@ -10,6 +10,7 @@ import { traverseViewsInViewConfig } from '../core/utils/view-config';
 import { GET_CHROM_SIZES } from './utils/assembly';
 import { getTheme } from './utils/theme';
 import { CommonEventData, EVENT_TYPE, MouseHoverCallback, UserDefinedEvents } from './api';
+import uuid from 'uuid';
 
 /**
  * Register plugin tracks and data fetchers to HiGlass. This is necessary for the first time before using Gosling.
@@ -20,6 +21,8 @@ interface GoslingCompProps {
     spec?: gosling.GoslingSpec;
     compiled?: (goslingSpec: gosling.GoslingSpec, higlassSpec: gosling.HiGlassSpec) => void;
     padding?: number;
+    id?: string;
+    className?: string;
 }
 
 // TODO: specify types other than "any"
@@ -31,6 +34,10 @@ export const GoslingComponent = forwardRef((props: GoslingCompProps, ref: any) =
 
     // Styling
     const padding = typeof props.padding !== 'undefined' ? props.padding : 60;
+
+    // div `id` and `className` for detailed customization
+    const wrapperDivId = typeof props.id !== 'undefined' ? props.id : uuid.v4();
+    const wrapperDivClassName = typeof props.className !== 'undefined' ? props.className : '';
 
     // HiGlass API
     const hgRef = useRef<any>();
@@ -205,6 +212,8 @@ export const GoslingComponent = forwardRef((props: GoslingCompProps, ref: any) =
         return hs && size ? (
             <>
                 <div
+                    id={wrapperDivId}
+                    className={`gosling-component ${wrapperDivClassName}`}
                     style={{
                         position: 'relative',
                         padding,
@@ -216,6 +225,7 @@ export const GoslingComponent = forwardRef((props: GoslingCompProps, ref: any) =
                 >
                     <div
                         key={JSON.stringify(hs)}
+                        className='higlass-wrapper'
                         style={{
                             position: 'relative',
                             display: 'block',
