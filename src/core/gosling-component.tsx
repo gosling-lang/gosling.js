@@ -21,6 +21,8 @@ interface GoslingCompProps {
     spec?: gosling.GoslingSpec;
     compiled?: (goslingSpec: gosling.GoslingSpec, higlassSpec: gosling.HiGlassSpec) => void;
     padding?: number;
+    margin?: number;
+    border?: string;
     id?: string;
     className?: string;
 }
@@ -34,6 +36,8 @@ export const GoslingComponent = forwardRef((props: GoslingCompProps, ref: any) =
 
     // Styling
     const padding = typeof props.padding !== 'undefined' ? props.padding : 60;
+    const margin = typeof props.margin !== 'undefined' ? props.margin : 0;
+    const border = typeof props.border !== 'undefined' ? props.border : 'none';
 
     // div `id` and `className` for detailed customization
     const wrapperDivId = typeof props.id !== 'undefined' ? props.id : uuid.v4();
@@ -217,6 +221,8 @@ export const GoslingComponent = forwardRef((props: GoslingCompProps, ref: any) =
                     style={{
                         position: 'relative',
                         padding,
+                        margin,
+                        border,
                         background: getTheme(gs?.theme).root.background,
                         width: size.width + padding * 2,
                         height: size.height + padding * 2,
@@ -225,7 +231,7 @@ export const GoslingComponent = forwardRef((props: GoslingCompProps, ref: any) =
                 >
                     <div
                         key={JSON.stringify(hs)}
-                        className='higlass-wrapper'
+                        className="higlass-wrapper"
                         style={{
                             position: 'relative',
                             display: 'block',
