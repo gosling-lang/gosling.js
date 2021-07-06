@@ -10,6 +10,7 @@
 
 ### Features
 
+* add margin and border as props of GoslingComponent ([aa681ec](https://github.com/gosling-lang/gosling.js/commit/aa681ecf92e08157532b07e3ee3048cb0dc6b8f1))
 * allow specifying `id` and `className` in `GoslingComponent` ([#419](https://github.com/gosling-lang/gosling.js/issues/419)) ([30d45a3](https://github.com/gosling-lang/gosling.js/commit/30d45a31b057ee5884b55a14224417dddaee96a4))
 * rename link marks to betweenLink and withinLink ([#416](https://github.com/gosling-lang/gosling.js/issues/416)) ([8e7556c](https://github.com/gosling-lang/gosling.js/commit/8e7556cfbfd674ec21e7783df8e37513d0cad7ec))
 * **api:** zoom to extent ([#408](https://github.com/gosling-lang/gosling.js/issues/408)) ([0b3c71f](https://github.com/gosling-lang/gosling.js/commit/0b3c71ff3ab99ee7b5cb445c704c2fe35145be99))

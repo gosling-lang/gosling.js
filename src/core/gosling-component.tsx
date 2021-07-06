@@ -21,7 +21,7 @@ interface GoslingCompProps {
     spec?: gosling.GoslingSpec;
     compiled?: (goslingSpec: gosling.GoslingSpec, higlassSpec: gosling.HiGlassSpec) => void;
     padding?: number;
-    margin?: number;
+    margin?: number | string;
     border?: string;
     id?: string;
     className?: string;
