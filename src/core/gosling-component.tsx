@@ -225,7 +225,7 @@ export const GoslingComponent = forwardRef((props: GoslingCompProps, ref: any) =
                 >
                     <div
                         key={JSON.stringify(hs)}
-                        className='higlass-wrapper'
+                        className="higlass-wrapper"
                         style={{
                             position: 'relative',
                             display: 'block',

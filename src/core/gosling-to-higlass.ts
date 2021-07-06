@@ -109,21 +109,15 @@ export function goslingToHiGlass(
             hgTrack.options.colorbarPosition = (firstResolvedSpec.color as any)?.legend ? 'topRight' : 'hidden';
         }
 
-        if (gosTrack.overlayOnPreviousTrack) {
-            hgModel
-                .setViewOrientation(gosTrack.orientation) // TODO: Orientation should be assigned to 'individual' views
-                .addTrackToCombined(hgTrack);
-        } else {
-            hgModel
-                .setViewOrientation(gosTrack.orientation) // TODO: Orientation should be assigned to 'individual' views
-                .setAssembly(assembly) // TODO: Assembly should be assigned to 'individual' views
-                .addDefaultView(gosTrack.id ?? uuid.v1(), assembly)
-                .setDomain(xDomain, xDomain) // TODO:
-                .setMainTrack(hgTrack)
-                .addTrackSourceServers(server)
-                .setZoomFixed(firstResolvedSpec.static === true)
-                .setLayout(layout);
-        }
+        hgModel
+            .setViewOrientation(gosTrack.orientation) // TODO: Orientation should be assigned to 'individual' views
+            .setAssembly(assembly) // TODO: Assembly should be assigned to 'individual' views
+            .addDefaultView(gosTrack.id ?? uuid.v1(), assembly)
+            .setDomain(xDomain, xDomain) // TODO:
+            .setMainTrack(hgTrack)
+            .addTrackSourceServers(server)
+            .setZoomFixed(firstResolvedSpec.static === true)
+            .setLayout(layout);
 
         // check whether to show axis
         ['x', 'y'].forEach(c => {

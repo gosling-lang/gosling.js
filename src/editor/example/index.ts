@@ -95,7 +95,8 @@ export const examples: ReadonlyArray<{
     {
         name: 'Ideograms',
         id: 'CYTOBANDS',
-        spec: EX_SPEC_CYTOBANDS
+        spec: EX_SPEC_CYTOBANDS,
+        forceShow: true
     },
     {
         name: 'Custom Gene Annotation',
