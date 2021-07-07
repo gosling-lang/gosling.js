@@ -675,6 +675,10 @@ function Editor(props: any) {
                                         ref={gosRef}
                                         spec={goslingSpec}
                                         padding={60}
+                                        margin={0}
+                                        border={'none'}
+                                        id={'goslig-component-root'}
+                                        className={'goslig-component'}
                                         compiled={(g, h) => {
                                             setHg(h);
                                         }}
