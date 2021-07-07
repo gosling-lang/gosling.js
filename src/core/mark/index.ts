@@ -16,6 +16,7 @@ import { drawCircularYAxis, drawLinearYAxis } from './axis';
 import { drawCircularOutlines } from './outline-circular';
 import { drawBackground } from './background';
 import { Theme } from '../utils/theme';
+import { Is2DTrack } from '../gosling.schema.guards';
 
 /**
  * Visual channels currently supported for visual encoding.
@@ -64,6 +65,16 @@ export function drawMark(HGC: any, trackInfo: any, tile: any, model: GoslingTrac
         model.setChannelScale(d, trackInfo._xScale);
         // }
     });
+
+    if (Is2DTrack(model.spec())) {
+        // Since small numbers are positioned on the top in the y axis, we reverse the domain, making it consistent to regular y scale.
+        const yScale = trackInfo._yScale.copy();
+        yScale.range([yScale.range()[1], yScale.range()[0]]);
+
+        ['y', 'y1', 'y1e', 'ye'].forEach((d: any) => {
+            model.setChannelScale(d, yScale);
+        });
+    }
 
     // DEBUG
     // drawChartOutlines(HGC, trackInfo, model);

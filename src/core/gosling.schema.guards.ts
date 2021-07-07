@@ -120,10 +120,16 @@ export function IsOverlaidTrack(track: Partial<Track>): track is OverlaidTrack {
 }
 
 /**
- * TODO: This should be more correctly determined, but we currently only support 2D tracks for matrix datasets.
+ * Is this 2D track that uses two genomic axes?
  */
 export function Is2DTrack(track: Track) {
-    return IsSingleTrack(track) && track.data?.type === 'matrix';
+    return (
+        IsSingleTrack(track) &&
+        IsChannelDeep(track['x']) &&
+        track['x'].type === 'genomic' &&
+        IsChannelDeep(track['y']) &&
+        track['y'].type === 'genomic'
+    );
 }
 
 export function IsChannelValue(

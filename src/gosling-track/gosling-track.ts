@@ -27,10 +27,12 @@ import { getTabularData } from './data-abstraction';
 import { BAMDataFetcher } from '../data-fetcher/bam';
 import { spawn, Worker } from 'threads';
 import { getRelativeGenomicPosition } from '../core/utils/assembly';
+import { Is2DTrack } from '../core/gosling.schema.guards';
 
 // Set `true` to print in what order each function is called
 export const PRINT_RENDERING_CYCLE = false;
 
+// Experimental function to test with prerelease rendering
 function usePrereleaseRendering(spec: SingleTrack | OverlaidTrack) {
     return spec.prerelease?.testUsingNewRectRenderingForBAM && spec.data?.type === 'bam';
 }
@@ -50,6 +52,9 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
     if (!new.target) {
         throw new Error('Uncaught TypeError: Class constructor cannot be invoked without "new"');
     }
+
+    // Services
+    const { tileProxy } = HGC.services;
 
     class GoslingTrackClass extends HGC.tracks.BarTrack {
         private originalSpec: SingleTrack | OverlaidTrack;
@@ -172,8 +177,8 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
          */
         initTile(tile: any) {
             if (PRINT_RENDERING_CYCLE) console.warn('initTile(tile)');
-            // super.initTile(tile); // This calls `drawTile()`
 
+            // super.initTile(tile); // This calls `drawTile()`
             // Since `super.initTile(tile)` prints warning, we call `drawTile` ourselves without calling `super.initTile(tile)`.
             this.drawTile(tile);
         }
@@ -394,33 +399,150 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
         }
 
         calculateVisibleTiles() {
-            if (!usePrereleaseRendering(this.originalSpec)) {
-                // This is the common way of calculating visible tiles.
-                super.calculateVisibleTiles();
-                return;
-            }
+            if (usePrereleaseRendering(this.originalSpec)) {
+                const tiles = HGC.utils.trackUtils.calculate1DVisibleTiles(this.tilesetInfo, this._xScale);
 
-            const tiles = HGC.utils.trackUtils.calculate1DVisibleTiles(this.tilesetInfo, this._xScale);
+                for (const tile of tiles) {
+                    const { tileWidth } = this.getTilePosAndDimensions(tile[0], [tile[1]], this.tilesetInfo.tile_size);
 
-            for (const tile of tiles) {
-                const { tileWidth } = this.getTilePosAndDimensions(tile[0], [tile[1]], this.tilesetInfo.tile_size);
+                    const DEFAULT_MAX_TILE_WIDTH = 2e5;
 
-                const DEFAULT_MAX_TILE_WIDTH = 2e5;
+                    if (tileWidth > (this.tilesetInfo.max_tile_width || DEFAULT_MAX_TILE_WIDTH)) {
+                        this.errorTextText = 'Zoom in to see details';
+                        this.drawError();
+                        this.forceDraw();
+                        return;
+                    }
 
-                if (tileWidth > (this.tilesetInfo.max_tile_width || DEFAULT_MAX_TILE_WIDTH)) {
-                    this.errorTextText = 'Zoom in to see details';
+                    this.errorTextText = null;
+                    this.pBorder.clear();
                     this.drawError();
                     this.forceDraw();
+                }
+
+                this.setVisibleTiles(tiles);
+            } else {
+                if (!this.tilesetInfo) {
+                    // if we don't know anything about this dataset, no point in trying to get tiles
                     return;
                 }
 
-                this.errorTextText = null;
-                this.pBorder.clear();
-                this.drawError();
-                this.forceDraw();
-            }
+                // calculate the zoom level given the scales and the data bounds
+                this.zoomLevel = this.calculateZoomLevel();
 
-            this.setVisibleTiles(tiles);
+                if (this.tilesetInfo.resolutions) {
+                    const sortedResolutions = this.tilesetInfo.resolutions
+                        .map((x: number) => +x)
+                        .sort((a: number, b: number) => b - a);
+
+                    this.xTiles = tileProxy.calculateTilesFromResolution(
+                        sortedResolutions[this.zoomLevel],
+                        this._xScale,
+                        this.tilesetInfo.min_pos[0],
+                        this.tilesetInfo.max_pos[0]
+                    );
+
+                    if (Is2DTrack(this.originalSpec)) {
+                        // it makes sense only when the y-axis is being used for a genomic field
+                        tileProxy.calculateTilesFromResolution(
+                            sortedResolutions[this.zoomLevel],
+                            this._yScale,
+                            this.tilesetInfo.min_pos[0],
+                            this.tilesetInfo.max_pos[0]
+                        );
+                    }
+
+                    const tiles = this.tilesToId(this.xTiles, this.yTiles, this.zoomLevel);
+                    this.setVisibleTiles(tiles);
+                } else {
+                    this.xTiles = tileProxy.calculateTiles(
+                        this.zoomLevel,
+                        this.relevantScale(),
+                        this.tilesetInfo.min_pos[0],
+                        this.tilesetInfo.max_pos[0],
+                        this.tilesetInfo.max_zoom,
+                        this.tilesetInfo.max_width
+                    );
+
+                    if (Is2DTrack(this.originalSpec)) {
+                        // it makes sense only when the y-axis is being used for a genomic field
+                        this.yTiles = tileProxy.calculateTiles(
+                            this.zoomLevel,
+                            this._yScale,
+                            this.tilesetInfo.min_pos[1],
+                            this.tilesetInfo.max_pos[1],
+                            this.tilesetInfo.max_zoom,
+                            this.tilesetInfo.max_width1 || this.tilesetInfo.max_width
+                        );
+                    }
+
+                    const tiles = this.tilesToId(this.xTiles, this.yTiles, this.zoomLevel);
+                    this.setVisibleTiles(tiles);
+                }
+            }
+        }
+
+        /**
+         * Get the tile's position in its coordinate system.
+         */
+        getTilePosAndDimensions(zoomLevel: number, tilePos: any, binsPerTileIn: any) {
+            const binsPerTile = binsPerTileIn || this.tilesetInfo.bins_per_dimension || 256;
+
+            if (this.tilesetInfo.resolutions) {
+                const sortedResolutions = this.tilesetInfo.resolutions
+                    .map((x: number) => +x)
+                    .sort((a: number, b: number) => b - a);
+
+                const chosenResolution = sortedResolutions[zoomLevel];
+
+                const tileWidth = chosenResolution * binsPerTile;
+                const tileHeight = tileWidth;
+
+                const tileX = chosenResolution * binsPerTile * tilePos[0];
+                const tileY = chosenResolution * binsPerTile * tilePos[1];
+
+                return {
+                    tileX,
+                    tileY,
+                    tileWidth,
+                    tileHeight
+                };
+            } else {
+                const xTilePos = tilePos[0];
+                const yTilePos = tilePos[1];
+
+                const minX = this.tilesetInfo.min_pos[0];
+
+                const minY = this.options.reverseYAxis ? -this.tilesetInfo.max_pos[1] : this.tilesetInfo.min_pos[1];
+
+                const tileWidth = this.tilesetInfo.max_width / 2 ** zoomLevel;
+                const tileHeight = this.tilesetInfo.max_width / 2 ** zoomLevel;
+
+                const tileX = minX + xTilePos * tileWidth;
+                const tileY = minY + yTilePos * tileHeight;
+
+                return {
+                    tileX,
+                    tileY,
+                    tileWidth,
+                    tileHeight
+                };
+            }
+        }
+
+        /**
+         * Convert tile positions to tile IDs
+         */
+        tilesToId(xTiles: any[], yTiles: any[], zoomLevel: any) {
+            if (xTiles && !yTiles) {
+                // this means only the `x` axis is being used
+                return xTiles.map(x => [zoomLevel, x]);
+            } else {
+                // this means both `x` and `y` axes are being used together
+                const tiles: any = [];
+                xTiles.forEach(x => yTiles.forEach(y => tiles.push([zoomLevel, x, y])));
+                return tiles;
+            }
         }
 
         /**
@@ -839,7 +961,7 @@ GoslingTrack.config = {
     type: 'gosling-track',
     datatype: ['multivec', 'epilogos'],
     local: false,
-    orientation: '1d-horizontal',
+    orientation: '2d',
     thumbnail: new DOMParser().parseFromString(icon, 'text/xml').documentElement,
     availableOptions: [
         'labelPosition',
