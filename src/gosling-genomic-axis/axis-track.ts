@@ -42,7 +42,7 @@ function AxisTrack(HGC: any, ...args: any[]): any {
             this.isShowGlobalMousePosition = isShowGlobalMousePosition;
 
             this.textFontSize = 12;
-            this.textFontFamily = 'Arial';
+            this.textFontFamily = 'sans-serif'; //'Arial';
             this.textFontColor = '#808080';
             this.textStrokeColor = '#ffffff';
             this.pixiTextConfig = {

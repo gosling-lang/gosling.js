@@ -57,8 +57,13 @@ function BrushTrack(HGC: any, ...args: any[]): any {
                 .attr('d', this.brush)
                 .attr('fill', this.options.projectionFillColor)
                 .attr('stroke', this.options.projectionStrokeColor)
-                .attr('fill-opacity', this.options.projectionFillOpacity)
-                .attr('stroke-opacity', this.options.projectionStrokeOpacity)
+                // Let's hide left and right resizer
+                .attr('fill-opacity', (d: CircularBrushData) =>
+                    d.type === 'brush' ? this.options.projectionFillOpacity : 0
+                )
+                .attr('stroke-opacity', (d: CircularBrushData) =>
+                    d.type === 'brush' ? this.options.projectionStrokeOpacity : 0
+                )
                 .attr('stroke-width', this.options.strokeWidth)
                 .style('pointer-events', 'all')
                 .style('cursor', (d: CircularBrushData) => d.cursor)
@@ -77,8 +82,8 @@ function BrushTrack(HGC: any, ...args: any[]): any {
             return [
                 {
                     type: 'brush',
-                    startAngle: extent[0] + this.RR,
-                    endAngle: extent[1] - this.RR,
+                    startAngle: extent[0],
+                    endAngle: extent[1],
                     cursor: 'grab'
                 },
                 {

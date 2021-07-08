@@ -4849,11 +4849,20 @@
           "minItems": 2,
           "type": "array"
         },
+        "dx": {
+          "type": "number"
+        },
         "dy": {
           "type": "number"
         },
+        "enableSmoothPath": {
+          "type": "boolean"
+        },
         "inlineLegend": {
           "type": "boolean"
+        },
+        "legendTitle": {
+          "type": "string"
         },
         "linePattern": {
           "additionalProperties": false,

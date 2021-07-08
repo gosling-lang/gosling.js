@@ -6,7 +6,7 @@ import { cartesianToPolar } from '../utils/polar';
 
 export const TEXT_STYLE_GLOBAL = {
     fontSize: '12px',
-    fontFamily: 'Arial',
+    fontFamily: 'sans-serif', // 'Arial',
     fontWeight: 'normal',
     fill: 'black',
     background: 'white',
@@ -50,6 +50,7 @@ export function drawText(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackMo
     const textStyleObj = new HGC.libraries.PIXI.TextStyle(localTextStyle);
 
     /* styles */
+    const dx = spec.style?.dx ?? 0;
     const dy = spec.style?.dy ?? 0;
 
     /* render */
@@ -75,9 +76,9 @@ export function drawText(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackMo
             pivotedData.get(k)?.forEach(d => {
                 const text = tm.encodedPIXIProperty('text', d);
                 const color = tm.encodedPIXIProperty('color', d);
-                const x = tm.encodedPIXIProperty('x', d);
-                const xe = tm.encodedPIXIProperty('xe', d);
-                const cx = tm.encodedPIXIProperty('x-center', d);
+                const x = tm.encodedPIXIProperty('x', d) + dx;
+                const xe = tm.encodedPIXIProperty('xe', d) + dx;
+                const cx = tm.encodedPIXIProperty('x-center', d) + dx;
                 const y = tm.encodedPIXIProperty('y', d) + dy;
                 const opacity = tm.encodedPIXIProperty('opacity', d);
 
@@ -152,7 +153,7 @@ export function drawText(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackMo
             ).forEach(d => {
                 const text = tm.encodedPIXIProperty('text', d);
                 const color = tm.encodedPIXIProperty('color', d);
-                const cx = tm.encodedPIXIProperty('x-center', d);
+                const cx = tm.encodedPIXIProperty('x-center', d) + dx;
                 const y = tm.encodedPIXIProperty('y', d) + dy;
                 const opacity = tm.encodedPIXIProperty('opacity', d);
 

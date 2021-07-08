@@ -14,7 +14,7 @@ const TICK_SIZE = 6;
 export const getAxisTextStyle = (fill = 'black') => {
     return {
         fontSize: '10px',
-        fontFamily: 'Arial',
+        fontFamily: 'sans-serif', // 'Arial',
         fontWeight: 'normal',
         fill,
         background: 'white',

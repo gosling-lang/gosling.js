@@ -61,15 +61,17 @@ export function drawTriangle(g: PIXI.Graphics, model: GoslingTrackModel, trackWi
             if (circular) {
                 let x0 = x ? x : xe - markWidth;
                 let x1 = xe ? xe : x + markWidth;
-                // let xm = x0 + (x1 - x0) / 2.0;
+                
                 const rm = trackOuterRadius - ((rowPosition + rowHeight - y) / trackHeight) * trackRingSize;
+                let xm = (x0 + x1) / 2.0;
+
                 const r0 = rm - triHeight / 2.0;
                 const r1 = rm + triHeight / 2.0;
 
                 if (spec.style?.align === 'right' && !xe) {
                     x0 -= markWidth;
                     x1 -= markWidth;
-                    // xm -= markWidth;
+                    xm -= markWidth;
                 }
 
                 let markToPoints: number[] = [];
@@ -84,6 +86,14 @@ export function drawTriangle(g: PIXI.Graphics, model: GoslingTrackModel, trackWi
                     const p1 = cartesianToPolar(x1, trackWidth, rm, cx, cy, startAngle, endAngle);
                     const p2 = cartesianToPolar(x0, trackWidth, r1, cx, cy, startAngle, endAngle);
                     const p3 = cartesianToPolar(x0, trackWidth, r0, cx, cy, startAngle, endAngle);
+                    markToPoints = [p0.x, p0.y, p1.x, p1.y, p2.x, p2.y, p3.x, p3.y];
+                } else if (spec.mark === 'triangleBottom') {
+                    x0 = xm - markWidth / 2.0;
+                    x1 = xm + markWidth / 2.0;
+                    const p0 = cartesianToPolar(x0, trackWidth, r1, cx, cy, startAngle, endAngle);
+                    const p1 = cartesianToPolar(x1, trackWidth, r1, cx, cy, startAngle, endAngle);
+                    const p2 = cartesianToPolar(xm, trackWidth, r0, cx, cy, startAngle, endAngle);
+                    const p3 = cartesianToPolar(x0, trackWidth, r1, cx, cy, startAngle, endAngle);
                     markToPoints = [p0.x, p0.y, p1.x, p1.y, p2.x, p2.y, p3.x, p3.y];
                 }
 

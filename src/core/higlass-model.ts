@@ -105,7 +105,7 @@ export class HiGlassModel {
                     textColor,
                     fontSize,
                     fontWeight,
-                    fontFamily: 'Arial',
+                    fontFamily: 'sans-serif', // 'Arial',
                     offsetY: 0, // offset from the top of the track
                     align: 'left',
                     text
