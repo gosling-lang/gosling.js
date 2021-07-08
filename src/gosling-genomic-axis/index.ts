@@ -1,3 +1,3 @@
-import AxisTrack from './axis-plugin-track';
+import AxisTrack from './axis-track';
 
 export { AxisTrack };

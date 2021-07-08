@@ -5,11 +5,11 @@ import { getTheme, Theme } from '../utils/theme';
 import { Dimension } from '../utils/position';
 import { ScaleLinear } from 'd3-scale';
 
-export const getLegendTextStyle = (fill = 'black') => {
+export const getLegendTextStyle = (fill = 'black', fontWeight = 'normal') => {
     return {
         fontSize: '12px',
-        fontFamily: 'Arial',
-        fontWeight: 'normal',
+        fontFamily: 'sans-serif', // 'Arial',
+        fontWeight,
         fill,
         background: 'white',
         lineJoin: 'round'
@@ -84,7 +84,7 @@ export function drawColorLegendQuantitative(
     graphics.lineStyle(
         1,
         colorToHex(getTheme(theme).legend.backgroundStroke),
-        1, // alpha
+        getTheme(theme).legend.backgroundOpacity, // alpha
         0 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
     );
     graphics.drawRect(legendX, legendY, legendWidth, legendHeight);
@@ -231,6 +231,26 @@ export function drawColorLegendCategories(
     } else {
         // Show legend vertically
 
+        if (spec.style?.legendTitle) {
+            const textGraphic = new HGC.libraries.PIXI.Text(
+                spec.style?.legendTitle,
+                getLegendTextStyle(getTheme(theme).legend.labelColor, 'bold')
+            );
+            textGraphic.anchor.x = 1;
+            textGraphic.anchor.y = 0;
+            textGraphic.position.x = trackInfo.position[0] + trackInfo.dimensions[0] - paddingX;
+            textGraphic.position.y = trackInfo.position[1] + cumY;
+
+            const textStyleObj = new HGC.libraries.PIXI.TextStyle(
+                getLegendTextStyle(getTheme(theme).legend.labelColor, 'bold')
+            );
+            const textMetrics = HGC.libraries.PIXI.TextMetrics.measureText(spec.style?.legendTitle, textStyleObj);
+
+            graphics.addChild(textGraphic);
+
+            cumY += textMetrics.height + paddingY * 2;
+        }
+
         colorCategories.forEach(category => {
             if (cumY > trackInfo.dimensions[1]) {
                 // We do not draw labels overflow
@@ -273,7 +293,7 @@ export function drawColorLegendCategories(
     graphics.lineStyle(
         1,
         colorToHex(getTheme(theme).legend.backgroundStroke),
-        1, // alpha
+        getTheme(theme).legend.backgroundOpacity, // alpha
         0 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
     );
     graphics.drawRect(

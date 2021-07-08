@@ -126,7 +126,12 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             this.textGraphics = [];
             this.textsBeingUsed = 0; // this variable is being used to improve the performance of text rendering
 
-            HGC.libraries.PIXI.GRAPHICS_CURVES.adaptive = false; // This improves the arc/link rendering performance
+            // This improves the arc/link rendering performance
+            HGC.libraries.PIXI.GRAPHICS_CURVES.adaptive = this.originalSpec.style?.enableSmoothPath ?? false;
+            if (HGC.libraries.PIXI.GRAPHICS_CURVES.adaptive) {
+                HGC.libraries.PIXI.GRAPHICS_CURVES.maxLength = 1;
+                HGC.libraries.PIXI.GRAPHICS_CURVES.maxSegments = 2048 * 10;
+            }
         }
 
         /* ----------------------------------- RENDERING CYCLE ----------------------------------- */

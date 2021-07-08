@@ -141,10 +141,10 @@ export function drawPreEmbellishment(
         // }
     });
 
-    drawBackground(HGC, trackInfo, tile, model);
     if (CIRCULAR) {
         drawCircularOutlines(HGC, trackInfo, tile, model);
     } else {
+        drawBackground(HGC, trackInfo, tile, model);
         drawChartOutlines(HGC, trackInfo, model, theme);
     }
     drawGrid(trackInfo, model, theme);
