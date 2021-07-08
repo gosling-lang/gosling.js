@@ -155,7 +155,9 @@ const IGV: OverlaidTracks = {
             xe: {
                 field: 'end',
                 type: 'genomic'
-            }
+            },
+            color: { value: 'black' },
+            style: { textStroke: 'white', textStrokeWidth: 3 }
         },
         {
             dataTransform: [{ type: 'filter', field: 'type', oneOf: ['gene'] }],

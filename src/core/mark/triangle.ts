@@ -5,7 +5,7 @@ import { getValueUsingChannel } from '../gosling.schema.guards';
 import colorToHex from '../utils/color-to-hex';
 import { cartesianToPolar } from '../utils/polar';
 
-export function drawTriangle(g: PIXI.Graphics, model: GoslingTrackModel) {
+export function drawTriangle(g: PIXI.Graphics, model: GoslingTrackModel, trackWidth: number, trackHeight: number) {
     /* track spec */
     const spec = model.spec();
 
@@ -18,8 +18,6 @@ export function drawTriangle(g: PIXI.Graphics, model: GoslingTrackModel) {
     const data = model.data();
 
     /* track size */
-    const trackWidth = spec.width;
-    const trackHeight = spec.height;
     const zoomLevel =
         (model.getChannelScale('x') as any).invert(trackWidth) - (model.getChannelScale('x') as any).invert(0);
 
@@ -53,10 +51,8 @@ export function drawTriangle(g: PIXI.Graphics, model: GoslingTrackModel) {
         ).forEach(d => {
             const x = model.encodedPIXIProperty('x', d);
             const xe = model.encodedPIXIProperty('xe', d);
-            const yValue = getValueUsingChannel(d, spec.y as Channel) as string | number;
             const markWidth = model.encodedPIXIProperty('size', d) ?? (xe === undefined ? triHeight : xe - x);
-
-            const y = model.encodedValue('y', yValue);
+            const y = model.encodedPIXIProperty('y', d);
             const strokeWidth = model.encodedPIXIProperty('strokeWidth', d);
             const stroke = model.encodedPIXIProperty('stroke', d);
             const color = model.encodedPIXIProperty('color', d);
@@ -66,7 +62,7 @@ export function drawTriangle(g: PIXI.Graphics, model: GoslingTrackModel) {
                 let x0 = x ? x : xe - markWidth;
                 let x1 = xe ? xe : x + markWidth;
                 // let xm = x0 + (x1 - x0) / 2.0;
-                const rm = trackOuterRadius - ((rowPosition + y) / trackHeight) * trackRingSize;
+                const rm = trackOuterRadius - ((rowPosition + rowHeight - y) / trackHeight) * trackRingSize;
                 const r0 = rm - triHeight / 2.0;
                 const r1 = rm + triHeight / 2.0;
 
@@ -110,9 +106,9 @@ export function drawTriangle(g: PIXI.Graphics, model: GoslingTrackModel) {
                 let x0 = x ? x : xe - markWidth;
                 let x1 = xe ? xe : x + markWidth;
                 let xm = x0 + (x1 - x0) / 2.0;
-                const ym = rowPosition + y;
-                const y0 = rowPosition + y - triHeight / 2.0;
-                const y1 = rowPosition + y + triHeight / 2.0;
+                const ym = rowPosition + rowHeight - y;
+                const y0 = rowPosition + rowHeight - y - triHeight / 2.0;
+                const y1 = rowPosition + rowHeight - y + triHeight / 2.0;
 
                 if (spec.style?.align === 'right' && !xe) {
                     x0 -= markWidth;

@@ -242,7 +242,7 @@ export function drawText(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackMo
                     rowGraphics.addChild(rope);
                 } else {
                     textGraphic.position.x = cx;
-                    textGraphic.position.y = rowPosition + y;
+                    textGraphic.position.y = rowPosition + rowHeight - y;
                     rowGraphics.addChild(textGraphic);
                 }
             });

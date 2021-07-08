@@ -251,7 +251,7 @@ function CSVDataFetcher(HGC: any, ...args: any): any {
                 const minX = tsInfo.min_pos[0] + x * tileWidth;
                 const maxX = tsInfo.min_pos[0] + (x + 1) * tileWidth;
 
-                // filter the data so that visible data is sent to tracks
+                // filter the data so that only the visible data is sent to tracks
                 let tabularData = this.values.filter((d: any) => {
                     if (this.dataConfig.genomicFields) {
                         return this.dataConfig.genomicFields.find((g: any) => minX < d[g] && d[g] <= maxX);

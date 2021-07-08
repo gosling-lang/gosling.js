@@ -76,6 +76,10 @@ export function drawMark(HGC: any, trackInfo: any, tile: any, model: GoslingTrac
         });
     }
 
+    // Size of a track
+    const trackWidth = trackInfo.dimensions[0];
+    const trackHeight = trackInfo.dimensions[1];
+
     // DEBUG
     // drawChartOutlines(HGC, trackInfo, model);
     //
@@ -104,7 +108,7 @@ export function drawMark(HGC: any, trackInfo: any, tile: any, model: GoslingTrac
         case 'triangleLeft':
         case 'triangleRight':
         case 'triangleBottom':
-            drawTriangle(tile.graphics, model);
+            drawTriangle(tile.graphics, model, trackWidth, trackHeight);
             break;
         case 'text':
             drawText(HGC, trackInfo, tile, model);

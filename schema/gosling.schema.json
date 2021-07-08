@@ -4875,6 +4875,14 @@
           ],
           "type": "object"
         },
+        "linkConnectionType": {
+          "enum": [
+            "straight",
+            "curve",
+            "corner"
+          ],
+          "type": "string"
+        },
         "outline": {
           "type": "string"
         },

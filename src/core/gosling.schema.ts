@@ -226,6 +226,7 @@ export interface Style {
     textStrokeWidth?: number;
     textFontWeight?: 'bold' | 'normal';
     textAnchor?: 'start' | 'middle' | 'end';
+    linkConnectionType?: 'straight' | 'curve' | 'corner';
 }
 
 /* ----------------------------- SEMANTIC ZOOM ----------------------------- */

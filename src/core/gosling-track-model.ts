@@ -592,7 +592,8 @@ export class GoslingTrackModel {
                             break;
                         case 'strokeWidth':
                             if (spec.mark === 'rule') value = getTheme(this.theme).rule.strokeWidth;
-                            else if (spec.mark === 'withinLink') value = getTheme(this.theme).link.strokeWidth;
+                            else if (spec.mark === 'withinLink' || spec.mark === 'betweenLink')
+                                value = getTheme(this.theme).link.strokeWidth;
                             else value = getTheme(this.theme).markCommon.strokeWidth;
                             break;
                         case 'opacity':

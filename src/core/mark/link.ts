@@ -1,7 +1,7 @@
 import * as PIXI from 'pixi.js';
 import { GoslingTrackModel } from '../gosling-track-model';
 import { Channel } from '../gosling.schema';
-import { IsChannelDeep, getValueUsingChannel } from '../gosling.schema.guards';
+import { IsChannelDeep, getValueUsingChannel, Is2DTrack } from '../gosling.schema.guards';
 import { cartesianToPolar, positionToRadian } from '../utils/polar';
 import colorToHex from '../utils/color-to-hex';
 
@@ -49,6 +49,7 @@ export function drawLink(g: PIXI.Graphics, model: GoslingTrackModel) {
                 (getValueUsingChannel(d, spec.row as Channel) as string) === rowCategory
         ).forEach(d => {
             let x = model.encodedPIXIProperty('x', d);
+            const y = model.encodedPIXIProperty('y', d);
             let xe = model.encodedPIXIProperty('xe', d);
             const x1 = model.encodedPIXIProperty('x1', d);
             const x1e = model.encodedPIXIProperty('x1e', d);
@@ -65,7 +66,7 @@ export function drawLink(g: PIXI.Graphics, model: GoslingTrackModel) {
                 Math.abs(x1 - x1e) > 0.1;
 
             // Should we do this when building Gosling Model?
-            if (!isBand && xe === undefined) {
+            if (!isBand && xe === undefined && !Is2DTrack(spec)) {
                 // We need to use a valid number to draw lines, so lets find alternative one.
                 if (x1 === undefined && x1e === undefined) {
                     // We do not have a valid ones.
@@ -205,6 +206,28 @@ export function drawLink(g: PIXI.Graphics, model: GoslingTrackModel) {
                 /* Line Connection */
 
                 // Experimental
+                if (Is2DTrack(spec) && spec.mark === 'betweenLink') {
+                    if (spec.style?.linkConnectionType === 'corner') {
+                        g.moveTo(x, 0);
+                        g.lineTo(x, rowPosition + rowHeight - y);
+                        g.lineTo(0, rowPosition + rowHeight - y);
+                    } else if (spec.style?.linkConnectionType === 'curve') {
+                        g.moveTo(x, 0);
+                        g.bezierCurveTo(
+                            (x / 5.0) * 4,
+                            (rowPosition + rowHeight - y) / 2.0,
+                            x / 2.0,
+                            ((rowPosition + rowHeight - y) / 5.0) * 4,
+                            0,
+                            rowPosition + rowHeight - y
+                        );
+                    } else {
+                        g.moveTo(x, 0);
+                        g.lineTo(0, rowPosition + rowHeight - y);
+                    }
+
+                    return;
+                }
                 if (spec.mark === 'betweenLink') {
                     g.moveTo(xe, rowPosition + rowHeight);
                     g.lineTo(x, rowPosition);

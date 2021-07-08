@@ -50,7 +50,7 @@ export function drawRect(HGC: any, trackInfo: any, tile: any, model: GoslingTrac
         const opacity = model.encodedPIXIProperty('opacity', d);
         const rectWidth = model.encodedPIXIProperty('width', d, { markWidth: tileUnitWidth });
         const rectHeight = model.encodedPIXIProperty('height', d, { markHeight: cellHeight });
-        let y = model.encodedPIXIProperty('y', d) - rectHeight / 2.0; // It is top posiiton now
+        const y = model.encodedPIXIProperty('y', d);
 
         const alphaTransition = model.markVisibility(d, {
             width: rectWidth,
@@ -65,9 +65,9 @@ export function drawRect(HGC: any, trackInfo: any, tile: any, model: GoslingTrac
 
         const xs = x;
         const xe = x + rectWidth;
-        const ys = y;
-        const ye = y + rectHeight;
-        y = y + rectHeight / 2.0;
+        // const ys = y - rectHeight / 2.0;
+        // const ye = y + rectHeight / 2.0;
+        // y = y + rectHeight / 2.0;
         const absoluteHeight = model.visualPropertyByChannel('size', d) ?? undefined; // TODO: this is making it complicated, way to simplify this?
 
         // stroke
@@ -85,11 +85,13 @@ export function drawRect(HGC: any, trackInfo: any, tile: any, model: GoslingTrac
             }
 
             // TODO: Does a `row` channel affect here?
-            let farR = trackOuterRadius - ((rowPosition + ys) / trackHeight) * trackRingSize;
-            let nearR = trackOuterRadius - ((rowPosition + ye) / trackHeight) * trackRingSize;
+            let farR =
+                trackOuterRadius - ((rowPosition + rowHeight - y - rectHeight / 2.0) / trackHeight) * trackRingSize;
+            let nearR =
+                trackOuterRadius - ((rowPosition + rowHeight - y + rectHeight / 2.0) / trackHeight) * trackRingSize;
 
             if (absoluteHeight) {
-                const midR = trackOuterRadius - ((rowPosition + y) / trackHeight) * trackRingSize;
+                const midR = trackOuterRadius - ((rowPosition + rowHeight - y) / trackHeight) * trackRingSize;
                 farR = midR - absoluteHeight / 2.0;
                 nearR = midR + absoluteHeight / 2.0;
             }
@@ -105,7 +107,7 @@ export function drawRect(HGC: any, trackInfo: any, tile: any, model: GoslingTrac
             g.closePath();
         } else {
             g.beginFill(colorToHex(color === 'none' ? 'white' : color), color === 'none' ? 0 : opacity);
-            g.drawRect(xs, rowPosition + ys, xe - xs, ye - ys);
+            g.drawRect(xs, rowPosition + rowHeight - y - rectHeight / 2.0, xe - xs, rectHeight);
 
             /* SVG data */
             // We do not currently plan to support SVG elements.
@@ -116,8 +118,17 @@ export function drawRect(HGC: any, trackInfo: any, tile: any, model: GoslingTrac
                 trackInfo.tooltips.push({
                     datum: d,
                     isMouseOver: (x: number, y: number) =>
-                        xs - G < x && x < xe + G && rowPosition + ys - G < y && y < rowPosition + ye + G,
-                    markInfo: { x: xs, y: ys + rowPosition, width: xe - xs, height: ye - ys, type: 'rect' }
+                        xs - G < x &&
+                        x < xe + G &&
+                        rowPosition + rowHeight - y - rectHeight / 2.0 - G < y &&
+                        y < rowPosition + rowHeight - y + rectHeight / 2.0 + G,
+                    markInfo: {
+                        x: xs,
+                        y: rowPosition + rowHeight - y - rectHeight / 2.0,
+                        width: xe - xs,
+                        height: rectHeight,
+                        type: 'rect'
+                    }
                 } as TooltipData);
             }
         }

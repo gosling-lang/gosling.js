@@ -36,7 +36,7 @@ export function drawRule(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackMo
     /* render */
     rowCategories.forEach(rowCategory => {
         // we are separately drawing each row so that y scale can be more effectively shared across tiles without rerendering from the bottom
-        const rowGraphics = tile.graphics;
+        const g = tile.graphics;
         const rowPosition = tm.encodedValue('row', rowCategory);
 
         data.filter(
@@ -51,7 +51,7 @@ export function drawRule(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackMo
             const strokeWidth = tm.encodedPIXIProperty('strokeWidth', d);
             const opacity = tm.encodedPIXIProperty('opacity', d);
 
-            rowGraphics.lineStyle(
+            g.lineStyle(
                 strokeWidth,
                 colorToHex(color),
                 opacity, // alpha
@@ -66,7 +66,7 @@ export function drawRule(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackMo
                 }
 
                 // Actually, we are drawing arcs instead of lines, so lets remove stroke.
-                rowGraphics.lineStyle(
+                g.lineStyle(
                     strokeWidth,
                     colorToHex(color),
                     0, // alpha
@@ -81,25 +81,25 @@ export function drawRule(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackMo
                 const startRad = valueToRadian(x, trackWidth, startAngle, endAngle);
                 const endRad = valueToRadian(xe, trackWidth, startAngle, endAngle);
 
-                rowGraphics.beginFill(colorToHex(color), opacity);
-                rowGraphics.moveTo(sPos.x, sPos.y);
-                rowGraphics.arc(cx, cy, nearR, startRad, endRad, true);
-                rowGraphics.arc(cx, cy, farR, endRad, startRad, false);
-                rowGraphics.closePath();
+                g.beginFill(colorToHex(color), opacity);
+                g.moveTo(sPos.x, sPos.y);
+                g.arc(cx, cy, nearR, startRad, endRad, true);
+                g.arc(cx, cy, farR, endRad, startRad, false);
+                g.closePath();
             } else if (dashed) {
                 const [dashSize, gapSize] = dashed;
                 let curPos = x;
 
                 do {
-                    rowGraphics.moveTo(curPos, rowPosition + rowHeight - y);
-                    rowGraphics.lineTo(curPos + dashSize, rowPosition + rowHeight - y);
+                    g.moveTo(curPos, rowPosition + rowHeight - y);
+                    g.lineTo(curPos + dashSize, rowPosition + rowHeight - y);
                     curPos += dashSize + gapSize;
                 } while (curPos < xe);
             } else {
                 /* regular horizontal lines */
                 if (curved === undefined) {
-                    rowGraphics.moveTo(x, rowPosition + rowHeight - y);
-                    rowGraphics.lineTo(xe, rowPosition + rowHeight - y);
+                    g.moveTo(x, rowPosition + rowHeight - y);
+                    g.lineTo(xe, rowPosition + rowHeight - y);
                 } else if (curved === 'top') {
                     // TODO: to default value
                     const CURVE_HEIGHT = 2;
@@ -107,10 +107,10 @@ export function drawRule(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackMo
 
                     const xm = x + (xe - x) / 2.0;
 
-                    rowGraphics.moveTo(x, rowPosition + rowHeight - y + CURVE_HEIGHT / 2.0);
-                    rowGraphics.lineTo(xm, rowPosition + rowHeight - y - CURVE_HEIGHT / 2.0);
-                    rowGraphics.moveTo(xm, rowPosition + rowHeight - y - CURVE_HEIGHT / 2.0);
-                    rowGraphics.lineTo(xe, rowPosition + rowHeight - y + CURVE_HEIGHT / 2.0);
+                    g.moveTo(x, rowPosition + rowHeight - y + CURVE_HEIGHT / 2.0);
+                    g.lineTo(xm, rowPosition + rowHeight - y - CURVE_HEIGHT / 2.0);
+                    g.moveTo(xm, rowPosition + rowHeight - y - CURVE_HEIGHT / 2.0);
+                    g.lineTo(xe, rowPosition + rowHeight - y + CURVE_HEIGHT / 2.0);
                 }
             }
 
@@ -118,7 +118,7 @@ export function drawRule(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackMo
                 const { type: pType, size: pSize } = linePattern;
                 let curPos = Math.max(x, 0); // saftly start from visible position
 
-                rowGraphics.lineStyle(0);
+                g.lineStyle(0);
 
                 // TODO: to default value
                 const PATTERN_GAP_SIZE = pSize * 2;
@@ -132,11 +132,11 @@ export function drawRule(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackMo
                     const y0 = ym - pSize / 2.0;
                     const y1 = ym + pSize / 2.0;
 
-                    rowGraphics.beginFill(colorToHex(color), opacity);
-                    rowGraphics.drawPolygon(
+                    g.beginFill(colorToHex(color), opacity);
+                    g.drawPolygon(
                         pType === 'triangleLeft' ? [x1, y0, x0, ym, x1, y1, x1, y0] : [x0, y0, x1, ym, x0, y1, x0, y0]
                     );
-                    rowGraphics.endFill();
+                    g.endFill();
                     curPos += pSize + PATTERN_GAP_SIZE;
 
                     count++;

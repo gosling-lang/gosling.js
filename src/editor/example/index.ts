@@ -16,7 +16,7 @@ import { EX_SPEC_GIVE } from './give';
 import { EX_SPEC_CORCES_ET_AL } from './corces';
 import { EX_SPEC_CYTOBANDS } from './ideograms';
 import { EX_SPEC_PILEUP } from './pileup';
-import { EX_SPEC_FUJI_PLOT } from './fuji';
+import { EX_SPEC_DEBUG } from './debug';
 import { EX_SPEC_BAND } from './vertical-band';
 
 export const examples: ReadonlyArray<{
@@ -30,9 +30,9 @@ export const examples: ReadonlyArray<{
 }> = [
     {
         name: 'DEBUG',
-        spec: EX_SPEC_FUJI_PLOT,
-        id: 'FUJI_PLOT',
-        hidden: true
+        spec: EX_SPEC_DEBUG,
+        id: 'DEBUG'
+        // hidden: true
     },
     {
         name: 'Basic Example: Visual Encoding',
