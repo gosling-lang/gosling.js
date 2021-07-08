@@ -11,10 +11,11 @@
 ### Features
 
 * add `margin` and `border` as props of GoslingComponent ([#420](https://github.com/gosling-lang/gosling.js/issues/420)) ([4df2b2e](https://github.com/gosling-lang/gosling.js/commit/4df2b2e00445a786833ce4a3d79bf1a07837c79c))
+* add a between-link mark ([#405](https://github.com/gosling-lang/gosling.js/issues/405)) ([c7a76e2](https://github.com/gosling-lang/gosling.js/commit/c7a76e22df9e7755242a764c70400c6beeb9cdb8))
 * allow specifying `id` and `className` in `GoslingComponent` ([#419](https://github.com/gosling-lang/gosling.js/issues/419)) ([30d45a3](https://github.com/gosling-lang/gosling.js/commit/30d45a31b057ee5884b55a14224417dddaee96a4))
+* background of circular tracks, legend titles, and better brush style ([#429](https://github.com/gosling-lang/gosling.js/issues/429)) ([e469efe](https://github.com/gosling-lang/gosling.js/commit/e469efe67c520d10a36c31863a5dab73f3ca2ab9))
 * rename link marks to betweenLink and withinLink ([#416](https://github.com/gosling-lang/gosling.js/issues/416)) ([8e7556c](https://github.com/gosling-lang/gosling.js/commit/8e7556cfbfd674ec21e7783df8e37513d0cad7ec))
 * **api:** zoom to extent ([#408](https://github.com/gosling-lang/gosling.js/issues/408)) ([0b3c71f](https://github.com/gosling-lang/gosling.js/commit/0b3c71ff3ab99ee7b5cb445c704c2fe35145be99))
-* add a between-link mark ([#405](https://github.com/gosling-lang/gosling.js/issues/405)) ([c7a76e2](https://github.com/gosling-lang/gosling.js/commit/c7a76e22df9e7755242a764c70400c6beeb9cdb8))
 
 
 

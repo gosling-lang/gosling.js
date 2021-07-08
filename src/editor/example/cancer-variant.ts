@@ -482,9 +482,24 @@ export const EX_SPEC_CANCER_VARIANT_PROTOTYPE: GoslingSpec = {
                                     }
                                 ]
                             },
-                            mark: 'withinLink',
-                            x: { field: 'start1', type: 'genomic' },
-                            xe: { field: 'end2', type: 'genomic' },
+                            alignment: 'overlay',
+                            tracks: [
+                                {
+                                    mark: 'withinLink',
+                                    x: { field: 'start1', type: 'genomic' },
+                                    xe: { field: 'end2', type: 'genomic' }
+                                },
+                                {
+                                    mark: 'point',
+                                    x: { field: 'start1', type: 'genomic' },
+                                    y: { value: 400 }
+                                },
+                                {
+                                    mark: 'point',
+                                    x: { field: 'end2', type: 'genomic' },
+                                    y: { value: 400 }
+                                }
+                            ],
                             color: {
                                 field: 'svclass',
                                 type: 'nominal',
@@ -500,6 +515,7 @@ export const EX_SPEC_CANCER_VARIANT_PROTOTYPE: GoslingSpec = {
                             },
                             strokeWidth: { value: 1 },
                             opacity: { value: 0.6 },
+                            size: { value: 4 },
                             style: { legendTitle: 'SV Class', bazierLink: true },
                             width: 800,
                             height: 400
