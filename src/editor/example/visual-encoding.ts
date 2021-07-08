@@ -10,62 +10,6 @@ export const EX_SPEC_VISUAL_ENCODING: GoslingSpec = {
     xDomain: { chromosome: '1', interval: [1, 3000500] },
     views: [
         {
-            tracks: [
-                {
-                    data: {
-                        url:
-                            'https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/circos-segdup-edited.txt',
-                        type: 'csv',
-                        chromosomeField: 'c2',
-                        genomicFields: ['s1', 'e1', 's2', 'e2']
-                    },
-                    mark: 'point',
-                    x: {
-                        field: 's1',
-                        type: 'genomic',
-                        axis: 'top'
-                    },
-                    y: {
-                        field: 's2',
-                        type: 'genomic',
-                        axis: 'left'
-                    },
-                    // color: { field: 's1', type: 'nominal' },
-                    // stroke: { value: 'black' },
-                    color: { value: '#3275B4' },
-                    size: { value: 12 },
-                    // strokeWidth: { value: 0.5 },
-                    opacity: { value: 0.6 },
-                    width: 600,
-                    height: 600
-                }
-            ]
-        },
-        // {
-        //     tracks: [
-        //         {
-        //             data: {
-        //                 url: 'https://raw.githubusercontent.com/vigsterkr/circos/master/data/5/segdup.txt',
-        //                 type: 'csv',
-        //                 headerNames: ['id', 'chr', 'p1', 'p2'],
-        //                 chromosomePrefix: 'hs',
-        //                 chromosomeField: 'chr',
-        //                 genomicFields: ['p1', 'p2'],
-        //                 separator: ' ',
-        //                 longToWideId: 'id',
-        //                 sampleLength: 1000
-        //             },
-        //             mark: 'point',
-        //             y: { field: 'p1', type: 'genomic', axis: 'left' },
-        //             x: { field: 'p2', type: 'genomic', axis: 'top' },
-        //             size: { value: 6 },
-        //             opacity: { value: 0.4 },
-        //             width: 500,
-        //             height: 500
-        //         }
-        //     ]
-        // },
-        {
             id: 'view-1',
             tracks: [
                 {
@@ -320,7 +264,7 @@ export const EX_SPEC_VISUAL_ENCODING: GoslingSpec = {
                 }
             ]
         }
-    ].slice(0, 1)
+    ]
 };
 
 export const EX_SPEC_VISUAL_ENCODING_CIRCULAR: GoslingSpec = {
