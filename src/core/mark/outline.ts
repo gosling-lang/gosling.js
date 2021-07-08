@@ -5,7 +5,7 @@ import { Theme, getTheme } from '../utils/theme';
 
 export const TITLE_STYLE = {
     fontSize: '12px',
-    fontFamily: 'Arial',
+    fontFamily: 'sans-serif', // 'Arial',
     fontWeight: 'normal',
     fill: 'black',
     background: 'white',

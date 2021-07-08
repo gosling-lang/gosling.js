@@ -210,16 +210,19 @@ export interface Style {
     backgroundOpacity?: number;
     outline?: string;
     outlineWidth?: number;
+    enableSmoothPath?: boolean;
 
     // Mark-level styles
     dashed?: [number, number];
     linePattern?: { type: 'triangleLeft' | 'triangleRight'; size: number };
     curve?: 'top' | 'bottom' | 'left' | 'right'; // for genomic range rules
     align?: 'left' | 'right'; // currently, only supported for triangles
+    dx?: number; // currently, only used for text marks
     dy?: number; // currently, only used for text marks
     bazierLink?: boolean; // use bazier curves instead
     circularLink?: boolean; // !! Deprecated: draw arc instead of bazier curve?
     inlineLegend?: boolean; // show legend in a single horizontal line?
+    legendTitle?: string; // if defined, show legend title on the top or left
     // below options could instead be used with channel options (e.g., size, stroke, strokeWidth)
     textFontSize?: number;
     textStroke?: string;
