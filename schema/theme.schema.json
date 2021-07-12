@@ -222,10 +222,6 @@
       "type": "object"
     },
     "ThemeType": {
-      "enum": [
-        "light",
-        "dark"
-      ],
       "type": "string"
     },
     "TrackStyle": {

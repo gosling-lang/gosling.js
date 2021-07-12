@@ -6,7 +6,7 @@ import { getNumericDomain } from './utils/scales';
 import { RelativePosition } from './utils/bounding-box';
 import { validateSpec } from './utils/validate';
 import { GET_CHROM_SIZES } from './utils/assembly';
-import { getTheme, Theme } from './utils/theme';
+import { CompleteThemeDeep } from './utils/theme';
 
 export const HIGLASS_AXIS_SIZE = 30;
 const getViewTemplate = (assembly?: string) => {
@@ -118,6 +118,7 @@ export class HiGlassModel {
     public addBrush(
         layout: 'circular' | 'linear',
         viewId: string,
+        theme: Required<CompleteThemeDeep>,
         fromViewUid?: string,
         style?: {
             color?: string;
@@ -128,8 +129,7 @@ export class HiGlassModel {
             endAngle?: number;
             innerRadius?: number;
             outerRadius?: number;
-        },
-        theme: Theme = 'light'
+        }
     ) {
         if (!fromViewUid) return;
 
@@ -140,11 +140,11 @@ export class HiGlassModel {
             uid: uuid.v4(),
             fromViewUid,
             options: {
-                projectionFillColor: style?.color ?? getTheme(theme).brush.color,
-                projectionStrokeColor: style?.stroke ?? getTheme(theme).brush.stroke,
-                projectionFillOpacity: style?.opacity ?? getTheme(theme).brush.opacity,
-                projectionStrokeOpacity: style?.opacity ?? getTheme(theme).brush.opacity,
-                strokeWidth: style?.strokeWidth ?? getTheme(theme).brush.strokeWidth,
+                projectionFillColor: style?.color ?? theme.brush.color,
+                projectionStrokeColor: style?.stroke ?? theme.brush.stroke,
+                projectionFillOpacity: style?.opacity ?? theme.brush.opacity,
+                projectionStrokeOpacity: style?.opacity ?? theme.brush.opacity,
+                strokeWidth: style?.strokeWidth ?? theme.brush.strokeWidth,
                 startAngle: style?.startAngle,
                 endAngle: style?.endAngle,
                 innerRadius: style?.innerRadius,
@@ -252,7 +252,7 @@ export class HiGlassModel {
             height?: number;
             startAngle?: number;
             endAngle?: number;
-            theme?: Theme;
+            theme: Required<CompleteThemeDeep>;
         }
     ) {
         if (!this.hg.views) return this;
@@ -266,8 +266,8 @@ export class HiGlassModel {
                 ...options,
                 assembly: this.getAssembly(),
                 stroke: 'transparent', // text outline
-                color: getTheme(options.theme).axis.labelColor,
-                tickColor: getTheme(options.theme).axis.tickColor,
+                color: options.theme.axis.labelColor,
+                tickColor: options.theme.axis.tickColor,
                 tickFormat: type === 'narrower' ? 'si' : 'plain',
                 tickPositions: type === 'regular' ? 'even' : 'ends',
                 reverseOrientation: position === 'bottom' || position === 'right' ? true : false

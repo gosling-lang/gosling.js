@@ -48,6 +48,7 @@
         "d3-shape": "^2.0.0",
         "file-loader": "^6.0.0",
         "generic-filehandle": "^2.0.3",
+        "gosling-theme": "^0.0.6",
         "higlass": "^1.11.7",
         "higlass-register": "^0.3.0",
         "higlass-text": "^0.1.1",

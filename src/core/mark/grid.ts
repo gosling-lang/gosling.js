@@ -3,14 +3,14 @@ import { GoslingTrackModel } from '../gosling-track-model';
 import { IsChannelDeep } from '../gosling.schema.guards';
 import colorToHex from '../utils/color-to-hex';
 import { cartesianToPolar, valueToRadian } from '../utils/polar';
-import { getTheme, Theme } from '../utils/theme';
+import { CompleteThemeDeep } from '../utils/theme';
 
-export function drawGrid(trackInfo: any, tm: GoslingTrackModel, theme: Theme = 'light') {
+export function drawGrid(trackInfo: any, tm: GoslingTrackModel, theme: Required<CompleteThemeDeep>) {
     drawYGridQuantitative(trackInfo, tm, theme);
     drawRowGrid(trackInfo, tm, theme);
 }
 
-export function drawRowGrid(trackInfo: any, tm: GoslingTrackModel, theme: Theme = 'light') {
+export function drawRowGrid(trackInfo: any, tm: GoslingTrackModel, theme: Required<CompleteThemeDeep>) {
     const spec = tm.spec();
 
     if (!IsChannelDeep(spec.row) || spec.row.grid !== true) {
@@ -50,14 +50,14 @@ export function drawRowGrid(trackInfo: any, tm: GoslingTrackModel, theme: Theme 
     /* render */
     const graphics = trackInfo.pBackground;
 
-    const strokeWidth = getTheme(theme).axis.gridStrokeWidth;
+    const strokeWidth = theme.axis.gridStrokeWidth;
     rowCategories.forEach(rowCategory => {
         const rowPosition = tm.encodedValue('row', rowCategory);
 
         if (!circular) {
             graphics.lineStyle(
                 strokeWidth,
-                colorToHex(getTheme(theme).axis.gridColor),
+                colorToHex(theme.axis.gridColor),
                 1, // alpha
                 0.5 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
             );
@@ -82,7 +82,7 @@ export function drawRowGrid(trackInfo: any, tm: GoslingTrackModel, theme: Theme 
                 0.5 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
             );
 
-            graphics.beginFill(colorToHex(getTheme(theme).axis.gridColor), 1);
+            graphics.beginFill(colorToHex(theme.axis.gridColor), 1);
             graphics.moveTo(trackX + sPos.x, trackY + sPos.y);
             graphics.arc(trackX + cx, trackY + cy, nearR, startRad, endRad, true);
             graphics.arc(trackX + cx, trackY + cy, farR, endRad, startRad, false);
@@ -91,7 +91,7 @@ export function drawRowGrid(trackInfo: any, tm: GoslingTrackModel, theme: Theme 
     });
 }
 
-export function drawYGridQuantitative(trackInfo: any, tm: GoslingTrackModel, theme: Theme = 'light') {
+export function drawYGridQuantitative(trackInfo: any, tm: GoslingTrackModel, theme: Required<CompleteThemeDeep>) {
     const spec = tm.spec();
 
     if (!IsChannelDeep(spec.y) || spec.y.grid !== true) {
@@ -135,7 +135,7 @@ export function drawYGridQuantitative(trackInfo: any, tm: GoslingTrackModel, the
 
     /* render */
     const graphics = trackInfo.pBackground;
-    const strokeWidth = getTheme(theme).axis.gridStrokeWidth;
+    const strokeWidth = theme.axis.gridStrokeWidth;
 
     rowCategories.forEach(rowCategory => {
         const rowPosition = tm.encodedValue('row', rowCategory);
@@ -153,7 +153,7 @@ export function drawYGridQuantitative(trackInfo: any, tm: GoslingTrackModel, the
         if (!circular) {
             graphics.lineStyle(
                 strokeWidth,
-                colorToHex(getTheme(theme).axis.gridColor),
+                colorToHex(theme.axis.gridColor),
                 1, // alpha
                 0.5 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
             );
@@ -181,7 +181,7 @@ export function drawYGridQuantitative(trackInfo: any, tm: GoslingTrackModel, the
                     0.5 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
                 );
 
-                graphics.beginFill(colorToHex(getTheme(theme).axis.gridColor), 1);
+                graphics.beginFill(colorToHex(theme.axis.gridColor), 1);
                 graphics.moveTo(trackX + sPos.x, trackY + sPos.y);
                 graphics.arc(trackX + cx, trackY + cy, nearR, startRad, endRad, true);
                 graphics.arc(trackX + cx, trackY + cy, farR, endRad, startRad, false);

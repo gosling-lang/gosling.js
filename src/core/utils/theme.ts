@@ -1,9 +1,11 @@
+// @ts-ignore
+import * as goslingTheme from 'gosling-theme';
 import { assign } from 'lodash';
 import { CHANNEL_DEFAULTS } from '../channel';
 
 /* ----------------------------- THEME ----------------------------- */
 export type Theme = ThemeType | ThemeDeep;
-export type ThemeType = 'light' | 'dark';
+export type ThemeType = 'light' | 'dark' | string;
 export enum Themes {
     light = 'light',
     dark = 'dark'
@@ -106,13 +108,25 @@ export interface MarkStyle {
     // ...
 }
 
+// TODO: Instead of calling this function everytime, create a JSON object and use it throughout the project.
 export function getTheme(theme: Theme = 'light'): Required<CompleteThemeDeep> {
-    // TODO: import goslingTheme and check first whether theme is defined by goslingTheme
-    if (theme === 'dark' || theme === 'light') {
-        return THEMES[theme];
+    if (typeof theme === 'string') {
+        if (Object.keys(goslingTheme.Themes).indexOf(theme)) {
+            return goslingTheme.getTheme(theme);
+        } else if (theme === 'dark' || theme === 'light') {
+            return THEMES[theme];
+        } else {
+            return THEMES['light'];
+        }
     } else {
         // Iterate all keys to override from base
-        const base = JSON.parse(JSON.stringify(THEMES[theme.base]));
+        let base = JSON.parse(JSON.stringify(THEMES['light']));
+        if (Object.keys(goslingTheme.Themes).indexOf(theme.base)) {
+            base = goslingTheme.getTheme(theme.base);
+        } else if (theme.base === 'light' || theme.base === 'dark') {
+            base = JSON.parse(JSON.stringify(THEMES[theme.base]));
+        }
+        // Override defaults from `base`
         Object.keys(base).forEach(k => {
             if ((theme as any)[k] && k !== 'base') {
                 base[k] = assign(JSON.parse(JSON.stringify(base[k])), JSON.parse(JSON.stringify((theme as any)[k])));

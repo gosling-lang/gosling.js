@@ -8,7 +8,7 @@ import * as gosling from '..';
 import { View as HgView } from './higlass.schema';
 import { traverseViewsInViewConfig } from '../core/utils/view-config';
 import { GET_CHROM_SIZES } from './utils/assembly';
-import { getTheme, Theme } from './utils/theme';
+import { CompleteThemeDeep, getTheme, Theme } from './utils/theme';
 import { CommonEventData, EVENT_TYPE, MouseHoverCallback, UserDefinedEvents } from './api';
 import uuid from 'uuid';
 
@@ -36,7 +36,7 @@ export const GoslingComponent = forwardRef((props: GoslingCompProps, ref: any) =
     const [size, setSize] = useState({ width: 200, height: 200 });
 
     // Styling
-    const theme: Theme = typeof props.theme !== 'undefined' ? props.theme : 'light';
+    const theme: Required<CompleteThemeDeep> = getTheme(typeof props.theme !== 'undefined' ? props.theme : 'light');
     const padding = typeof props.padding !== 'undefined' ? props.padding : 60;
     const margin = typeof props.margin !== 'undefined' ? props.margin : 0;
     const border = typeof props.border !== 'undefined' ? props.border : 'none';
@@ -137,7 +137,7 @@ export const GoslingComponent = forwardRef((props: GoslingCompProps, ref: any) =
 
                     const ctx = canvasWithBg.getContext('2d')!;
                     if (!transparentBackground) {
-                        ctx.fillStyle = getTheme(theme).root.background;
+                        ctx.fillStyle = theme.root.background;
                         ctx.fillRect(0, 0, canvasWithBg.width, canvasWithBg.height);
                     }
                     ctx.drawImage(canvas, 0, 0);
@@ -175,7 +175,7 @@ export const GoslingComponent = forwardRef((props: GoslingCompProps, ref: any) =
 
                     const ctx = canvasWithBg.getContext('2d')!;
                     if (!transparentBackground) {
-                        ctx.fillStyle = getTheme(theme).root.background;
+                        ctx.fillStyle = theme.root.background;
                         ctx.fillRect(0, 0, canvasWithBg.width, canvasWithBg.height);
                     }
                     ctx.drawImage(canvas, 0, 0);
@@ -203,14 +203,18 @@ export const GoslingComponent = forwardRef((props: GoslingCompProps, ref: any) =
                 return;
             }
 
-            gosling.compile(gs, (newHs: gosling.HiGlassSpec, newSize: { width: number; height: number }) => {
-                if (props.compiled) {
-                    // If a callback function is provided, return compiled information.
-                    props.compiled(gs, newHs);
-                }
-                setHs(newHs);
-                setSize(newSize);
-            });
+            gosling.compile(
+                gs,
+                (newHs: gosling.HiGlassSpec, newSize: { width: number; height: number }) => {
+                    if (props.compiled) {
+                        // If a callback function is provided, return compiled information.
+                        props.compiled(gs, newHs);
+                    }
+                    setHs(newHs);
+                    setSize(newSize);
+                },
+                theme
+            );
         }
     }, [gs]);
 
@@ -225,7 +229,7 @@ export const GoslingComponent = forwardRef((props: GoslingCompProps, ref: any) =
                         padding,
                         margin,
                         border,
-                        background: getTheme(theme).root.background,
+                        background: theme.root.background,
                         width: size.width + padding * 2,
                         height: size.height + padding * 2,
                         textAlign: 'left'
@@ -237,7 +241,7 @@ export const GoslingComponent = forwardRef((props: GoslingCompProps, ref: any) =
                         style={{
                             position: 'relative',
                             display: 'block',
-                            background: getTheme(theme).root.background,
+                            background: theme.root.background,
                             margin: 0,
                             padding: 0, // non-zero padding acts unexpectedly w/ HiGlassComponent
                             width: size.width,
@@ -259,7 +263,6 @@ export const GoslingComponent = forwardRef((props: GoslingCompProps, ref: any) =
                                 viewPaddingLeft: 0,
                                 viewPaddingRight: 0,
                                 sizeMode: 'bounded',
-                                // theme: gs?.theme, // TODO: do we need this?
                                 rangeSelectionOnAlt: true // this allows switching between `selection` and `zoom&pan` mode
                             }}
                             viewConfig={hs}
