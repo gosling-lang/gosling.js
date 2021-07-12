@@ -107,6 +107,7 @@ export interface MarkStyle {
 }
 
 export function getTheme(theme: Theme = 'light'): Required<CompleteThemeDeep> {
+    // TODO: import goslingTheme and check first whether theme is defined by goslingTheme
     if (theme === 'dark' || theme === 'light') {
         return THEMES[theme];
     } else {

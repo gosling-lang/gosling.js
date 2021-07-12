@@ -3,6 +3,7 @@ import GoslingSchema from '../schema/gosling.schema.json';
 
 export type { GoslingSpec } from './core/gosling.schema';
 export type { HiGlassSpec } from './core/higlass.schema';
+export type { Theme } from './core/utils/theme';
 export { GoslingSchema };
 
 export const name = pkg.name;

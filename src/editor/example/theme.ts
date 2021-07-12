@@ -2,26 +2,26 @@ import { GoslingSpec } from '../../core/gosling.schema';
 import { GOSLING_PUBLIC_DATA } from './gosling-data';
 
 export const EX_SPEC_CUSTOM_THEME: GoslingSpec = {
-    theme: {
-        base: 'light',
-        track: {
-            outline: 'black'
-        },
-        markCommon: {
-            color: 'black'
-        },
-        brush: {
-            color: 'red',
-            opacity: 1,
-            strokeWidth: 1,
-            stroke: 'red'
-        },
-        legend: {
-            background: '#2E4863',
-            backgroundOpacity: 1,
-            labelColor: 'white'
-        }
-    },
+    // theme: {
+    //     base: 'light',
+    //     track: {
+    //         outline: 'black'
+    //     },
+    //     markCommon: {
+    //         color: 'black'
+    //     },
+    //     brush: {
+    //         color: 'red',
+    //         opacity: 1,
+    //         strokeWidth: 1,
+    //         stroke: 'red'
+    //     },
+    //     legend: {
+    //         background: '#2E4863',
+    //         backgroundOpacity: 1,
+    //         labelColor: 'white'
+    //     }
+    // },
     title: 'Custom Theme',
     subtitle: 'Customize the style of Gosling visualizations',
     layout: 'linear',
