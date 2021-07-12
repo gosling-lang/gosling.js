@@ -1,4 +1,13 @@
 ## [0.8.4](https://github.com/gosling-lang/gosling.js/compare/v0.8.3...v0.8.4) (2021-07-19)
+## [0.8.7](https://github.com/gosling-lang/gosling.js/compare/v0.8.6...v0.8.7) (2021-07-12)
+
+
+### Features
+
+* support more parameters in embed() function ([#435](https://github.com/gosling-lang/gosling.js/issues/435)) ([805fd3d](https://github.com/gosling-lang/gosling.js/commit/805fd3d6158fe9f26cf2612a4dda98849982014a))
+
+
+
 ## [0.8.6](https://github.com/gosling-lang/gosling.js/compare/v0.8.5...v0.8.6) (2021-07-12)
 
 
