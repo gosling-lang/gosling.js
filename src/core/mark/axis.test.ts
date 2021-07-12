@@ -1,6 +1,7 @@
 import * as PIXI from 'pixi.js';
 import { GoslingTrackModel } from '../gosling-track-model';
 import { SingleTrack } from '../gosling.schema';
+import { getTheme } from '../utils/theme';
 import { drawLinearYAxis } from './axis';
 
 describe('Y Axis', () => {
@@ -19,7 +20,7 @@ describe('Y Axis', () => {
             { x: 11, y: 22 },
             { x: 111, y: 222 }
         ];
-        const model = new GoslingTrackModel(t, d);
+        const model = new GoslingTrackModel(t, d, getTheme());
         drawLinearYAxis(
             {
                 libraries: {
@@ -34,7 +35,8 @@ describe('Y Axis', () => {
                 pBorder: g
             },
             null,
-            model
+            model,
+            getTheme()
         );
     });
 
@@ -57,7 +59,7 @@ describe('Y Axis', () => {
             { x: 11, y: 22 },
             { x: 111, y: 222 }
         ];
-        const model = new GoslingTrackModel(t, d);
+        const model = new GoslingTrackModel(t, d, getTheme());
         drawLinearYAxis(
             {
                 libraries: {
@@ -72,7 +74,8 @@ describe('Y Axis', () => {
                 pBorder: g
             },
             null,
-            model
+            model,
+            getTheme()
         );
     });
 });

@@ -1,5 +1,4 @@
 import { Chromosome } from './utils/chrom-size';
-import { Theme } from './utils/theme';
 
 /* ----------------------------- ROOT SPEC ----------------------------- */
 export type GoslingSpec = RootSpecWithSingleView | RootSpecWithMultipleViews;
@@ -8,14 +7,12 @@ export type RootSpecWithSingleView = SingleView & {
     title?: string;
     subtitle?: string;
     description?: string;
-    theme?: Theme;
 };
 
 export interface RootSpecWithMultipleViews extends MultipleViews {
     title?: string;
     subtitle?: string;
     description?: string;
-    theme?: Theme;
 }
 
 /* ----------------------------- VIEW ----------------------------- */

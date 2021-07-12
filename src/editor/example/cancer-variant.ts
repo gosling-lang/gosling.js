@@ -3,7 +3,7 @@ import { GoslingSpec } from '../..';
 export const EX_SPEC_CANCER_VARIANT_PROTOTYPE: GoslingSpec = {
     title: 'Breast Cancer Variant (Staaf et al. 2019)',
     subtitle: 'Genetic characteristics of RAD51C- and PALB2-altered TNBCs',
-    theme: { base: 'light', legend: { backgroundOpacity: 0, backgroundStroke: 'white' } },
+    // theme: { base: 'light', legend: { backgroundOpacity: 0, backgroundStroke: 'white' } },
     layout: 'linear',
     arrangement: 'vertical',
     centerRadius: 0.5,
