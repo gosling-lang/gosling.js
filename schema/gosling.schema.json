@@ -35,27 +35,6 @@
       ],
       "type": "string"
     },
-    "AxisStyle": {
-      "additionalProperties": false,
-      "properties": {
-        "baselineColor": {
-          "type": "string"
-        },
-        "gridColor": {
-          "type": "string"
-        },
-        "gridStrokeWidth": {
-          "type": "number"
-        },
-        "labelColor": {
-          "type": "string"
-        },
-        "tickColor": {
-          "type": "string"
-        }
-      },
-      "type": "object"
-    },
     "BAMData": {
       "additionalProperties": false,
       "properties": {
@@ -1378,27 +1357,6 @@
       ],
       "type": "string"
     },
-    "LegendStyle": {
-      "additionalProperties": false,
-      "properties": {
-        "background": {
-          "type": "string"
-        },
-        "backgroundOpacity": {
-          "type": "number"
-        },
-        "backgroundStroke": {
-          "type": "string"
-        },
-        "labelColor": {
-          "type": "string"
-        },
-        "tickColor": {
-          "type": "string"
-        }
-      },
-      "type": "object"
-    },
     "LogBase": {
       "anyOf": [
         {
@@ -1547,46 +1505,6 @@
         "type",
         "server"
       ],
-      "type": "object"
-    },
-    "MarkStyle": {
-      "additionalProperties": false,
-      "properties": {
-        "color": {
-          "type": "string"
-        },
-        "nominalColorRange": {
-          "items": {
-            "type": "string"
-          },
-          "type": "array"
-        },
-        "opacity": {
-          "type": "number"
-        },
-        "quantitativeSizeRange": {
-          "items": [
-            {
-              "type": "number"
-            },
-            {
-              "type": "number"
-            }
-          ],
-          "maxItems": 2,
-          "minItems": 2,
-          "type": "array"
-        },
-        "size": {
-          "type": "number"
-        },
-        "stroke": {
-          "type": "string"
-        },
-        "strokeWidth": {
-          "type": "number"
-        }
-      },
       "type": "object"
     },
     "MarkStyleInGlyph": {
@@ -2787,9 +2705,6 @@
         "subtitle": {
           "type": "string"
         },
-        "theme": {
-          "$ref": "#/definitions/Theme"
-        },
         "title": {
           "type": "string"
         },
@@ -2948,9 +2863,6 @@
             },
             "text": {
               "$ref": "#/definitions/Channel"
-            },
-            "theme": {
-              "$ref": "#/definitions/Theme"
             },
             "title": {
               "type": "string"
@@ -3475,9 +3387,6 @@
             "text": {
               "$ref": "#/definitions/Channel"
             },
-            "theme": {
-              "$ref": "#/definitions/Theme"
-            },
             "title": {
               "type": "string"
             },
@@ -3920,9 +3829,6 @@
             "subtitle": {
               "type": "string"
             },
-            "theme": {
-              "$ref": "#/definitions/Theme"
-            },
             "title": {
               "type": "string"
             },
@@ -3955,24 +3861,6 @@
           "type": "object"
         }
       ]
-    },
-    "RootStyle": {
-      "additionalProperties": false,
-      "properties": {
-        "background": {
-          "type": "string"
-        },
-        "mousePositionColor": {
-          "type": "string"
-        },
-        "subtitleColor": {
-          "type": "string"
-        },
-        "titleColor": {
-          "type": "string"
-        }
-      },
-      "type": "object"
     },
     "SingleTrack": {
       "additionalProperties": false,
@@ -4925,132 +4813,6 @@
       },
       "type": "object"
     },
-    "Theme": {
-      "anyOf": [
-        {
-          "$ref": "#/definitions/ThemeType"
-        },
-        {
-          "$ref": "#/definitions/ThemeDeep"
-        }
-      ]
-    },
-    "ThemeDeep": {
-      "additionalProperties": false,
-      "properties": {
-        "area": {
-          "$ref": "#/definitions/MarkStyle"
-        },
-        "axis": {
-          "$ref": "#/definitions/AxisStyle"
-        },
-        "bar": {
-          "$ref": "#/definitions/MarkStyle"
-        },
-        "base": {
-          "$ref": "#/definitions/ThemeType"
-        },
-        "brush": {
-          "$ref": "#/definitions/MarkStyle"
-        },
-        "legend": {
-          "$ref": "#/definitions/LegendStyle"
-        },
-        "line": {
-          "$ref": "#/definitions/MarkStyle"
-        },
-        "link": {
-          "$ref": "#/definitions/MarkStyle"
-        },
-        "markCommon": {
-          "$ref": "#/definitions/MarkStyle"
-        },
-        "point": {
-          "$ref": "#/definitions/MarkStyle"
-        },
-        "rect": {
-          "$ref": "#/definitions/MarkStyle"
-        },
-        "root": {
-          "$ref": "#/definitions/RootStyle"
-        },
-        "rule": {
-          "$ref": "#/definitions/MarkStyle"
-        },
-        "text": {
-          "additionalProperties": false,
-          "properties": {
-            "color": {
-              "type": "string"
-            },
-            "nominalColorRange": {
-              "items": {
-                "type": "string"
-              },
-              "type": "array"
-            },
-            "opacity": {
-              "type": "number"
-            },
-            "quantitativeSizeRange": {
-              "items": [
-                {
-                  "type": "number"
-                },
-                {
-                  "type": "number"
-                }
-              ],
-              "maxItems": 2,
-              "minItems": 2,
-              "type": "array"
-            },
-            "size": {
-              "type": "number"
-            },
-            "stroke": {
-              "type": "string"
-            },
-            "strokeWidth": {
-              "type": "number"
-            },
-            "textAnchor": {
-              "enum": [
-                "start",
-                "middle",
-                "end"
-              ],
-              "type": "string"
-            },
-            "textFontWeight": {
-              "enum": [
-                "bold",
-                "normal"
-              ],
-              "type": "string"
-            }
-          },
-          "type": "object"
-        },
-        "track": {
-          "$ref": "#/definitions/TrackStyle"
-        },
-        "triangle": {
-          "$ref": "#/definitions/MarkStyle"
-        }
-      },
-      "required": [
-        "base"
-      ],
-      "type": "object"
-    },
-    "ThemeType": {
-      "enum": [
-        "light",
-        "dark"
-      ],
-      "type": "string"
-    },
     "Tooltip": {
       "additionalProperties": false,
       "properties": {
@@ -5085,24 +4847,6 @@
           "$ref": "#/definitions/DataTrack"
         }
       ]
-    },
-    "TrackStyle": {
-      "additionalProperties": false,
-      "properties": {
-        "outline": {
-          "type": "string"
-        },
-        "outlineWidth": {
-          "type": "number"
-        },
-        "titleBackground": {
-          "type": "string"
-        },
-        "titleColor": {
-          "type": "string"
-        }
-      },
-      "type": "object"
     },
     "VectorData": {
       "additionalProperties": false,

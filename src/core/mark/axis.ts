@@ -1,7 +1,7 @@
 import { GoslingTrackModel } from '../gosling-track-model';
 import { IsChannelDeep } from '../gosling.schema.guards';
 import colorToHex from '../utils/color-to-hex';
-import { getTheme, Theme } from '../utils/theme';
+import { CompleteThemeDeep } from '../utils/theme';
 import { scaleLinear } from 'd3-scale';
 import { cartesianToPolar, valueToRadian } from '../utils/polar';
 
@@ -27,7 +27,13 @@ export const getAxisTextStyle = (fill = 'black') => {
 /**
  * Draw linear scale Y axis
  */
-export function drawLinearYAxis(HGC: any, trackInfo: any, tile: any, gos: GoslingTrackModel, theme: Theme = 'light') {
+export function drawLinearYAxis(
+    HGC: any,
+    trackInfo: any,
+    tile: any,
+    gos: GoslingTrackModel,
+    theme: Required<CompleteThemeDeep>
+) {
     const spec = gos.spec();
     const CIRCULAR = spec.layout === 'circular';
     const yDomain = gos.getChannelDomainArray('y');
@@ -80,7 +86,7 @@ export function drawLinearYAxis(HGC: any, trackInfo: any, tile: any, gos: Goslin
         /* Axis Baseline */
         graphics.lineStyle(
             1,
-            colorToHex(getTheme(theme).axis.baselineColor),
+            colorToHex(theme.axis.baselineColor),
             1, // alpha
             0.5 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
         );
@@ -98,7 +104,7 @@ export function drawLinearYAxis(HGC: any, trackInfo: any, tile: any, gos: Goslin
 
         graphics.lineStyle(
             1,
-            colorToHex(getTheme(theme).axis.tickColor),
+            colorToHex(theme.axis.tickColor),
             1, // alpha
             0.5 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
         );
@@ -121,7 +127,7 @@ export function drawLinearYAxis(HGC: any, trackInfo: any, tile: any, gos: Goslin
             const y = yScale(t);
             tickEnd = isLeft ? dx + TICK_SIZE * 2 : dx - TICK_SIZE * 2;
 
-            const textGraphic = new HGC.libraries.PIXI.Text(t, getAxisTextStyle(getTheme(theme).axis.labelColor));
+            const textGraphic = new HGC.libraries.PIXI.Text(t, getAxisTextStyle(theme.axis.labelColor));
             textGraphic.anchor.x = isLeft ? 0 : 1;
             textGraphic.anchor.y = y === 0 ? 0.9 : 0.5;
             textGraphic.position.x = tickEnd;
@@ -135,7 +141,13 @@ export function drawLinearYAxis(HGC: any, trackInfo: any, tile: any, gos: Goslin
 /**
  * Draw linear scale Y axis
  */
-export function drawCircularYAxis(HGC: any, trackInfo: any, tile: any, gos: GoslingTrackModel, theme: Theme = 'light') {
+export function drawCircularYAxis(
+    HGC: any,
+    trackInfo: any,
+    tile: any,
+    gos: GoslingTrackModel,
+    theme: Required<CompleteThemeDeep>
+) {
     const spec = gos.spec();
     const CIRCULAR = spec.layout === 'circular';
     const yDomain = gos.getChannelDomainArray('y');
@@ -199,7 +211,7 @@ export function drawCircularYAxis(HGC: any, trackInfo: any, tile: any, gos: Gosl
 
         graphics.lineStyle(
             1,
-            colorToHex(getTheme(theme).axis.baselineColor),
+            colorToHex(theme.axis.baselineColor),
             1, // alpha
             0.5 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
         );
@@ -224,7 +236,7 @@ export function drawCircularYAxis(HGC: any, trackInfo: any, tile: any, gos: Gosl
         // Render ticks
         graphics.lineStyle(
             1,
-            colorToHex(getTheme(theme).axis.tickColor),
+            colorToHex(theme.axis.tickColor),
             1, // alpha
             0.5 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
         );
@@ -289,7 +301,7 @@ export function drawCircularYAxis(HGC: any, trackInfo: any, tile: any, gos: Gosl
             const pos = cartesianToPolar(SCALED_TICK_SIZE(currentR) * 2, tw, currentR, cx, cy, startAngle, endAngle);
 
             // ! Maybe combine this part with `axis-plugin-track.ts`
-            const textGraphic = new HGC.libraries.PIXI.Text(t, getAxisTextStyle(getTheme(theme).axis.labelColor));
+            const textGraphic = new HGC.libraries.PIXI.Text(t, getAxisTextStyle(theme.axis.labelColor));
             textGraphic.anchor.x = isLeft ? 1 : 0;
             textGraphic.anchor.y = 0.5;
             textGraphic.position.x = pos.x;

@@ -4,11 +4,13 @@ import { HiGlassModel } from '../higlass-model';
 import { HiGlassSpec } from '../higlass.schema';
 import { getLinkingInfo } from '../utils/linking';
 import { GoslingSpec } from '../gosling.schema';
+import { CompleteThemeDeep } from '../utils/theme';
 
 export function renderHiGlass(
     spec: GoslingSpec,
     trackInfos: TrackInfo[],
-    setHg: (hg: HiGlassSpec, size: Size) => void
+    setHg: (hg: HiGlassSpec, size: Size) => void,
+    theme: CompleteThemeDeep
 ) {
     if (trackInfos.length === 0) {
         // no tracks to render
@@ -21,7 +23,7 @@ export function renderHiGlass(
     /* Update the HiGlass model by iterating tracks */
     trackInfos.forEach(tb => {
         const { track, boundingBox: bb, layout } = tb;
-        goslingToHiGlass(hgModel, track, bb, layout, spec.theme);
+        goslingToHiGlass(hgModel, track, bb, layout, theme);
     });
 
     /* Add linking information to the HiGlass model */
@@ -35,9 +37,9 @@ export function renderHiGlass(
             hgModel.addBrush(
                 info.layout,
                 info.viewId,
+                theme,
                 linkingInfos.find(d => !d.isBrush && d.linkId === info.linkId)?.viewId,
-                info.style,
-                spec.theme
+                info.style
             );
         });
 

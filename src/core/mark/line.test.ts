@@ -1,6 +1,7 @@
 import * as PIXI from 'pixi.js';
 import { GoslingTrackModel } from '../gosling-track-model';
 import { SingleTrack } from '../gosling.schema';
+import { getTheme } from '../utils/theme';
 import { drawLine } from './line';
 
 describe('Rendering Point', () => {
@@ -19,7 +20,7 @@ describe('Rendering Point', () => {
             { x: 11, y: 22 },
             { x: 111, y: 222 }
         ];
-        const model = new GoslingTrackModel(t, d);
+        const model = new GoslingTrackModel(t, d, getTheme());
         drawLine(g, model, []);
     });
 });

@@ -1,6 +1,7 @@
 import * as PIXI from 'pixi.js';
 import { GoslingTrackModel } from '../gosling-track-model';
 import { SingleTrack } from '../gosling.schema';
+import { getTheme } from '../utils/theme';
 import { drawGrid } from './grid';
 
 describe('Grid', () => {
@@ -24,8 +25,8 @@ describe('Grid', () => {
             { x: 11, y: 22 },
             { x: 111, y: 222 }
         ];
-        const model = new GoslingTrackModel(t, d);
-        drawGrid(HGC, model);
+        const model = new GoslingTrackModel(t, d, getTheme());
+        drawGrid(HGC, model, getTheme());
     });
 
     it('Linear Row Grid', () => {
@@ -42,8 +43,8 @@ describe('Grid', () => {
             { x: 11, y: '22' },
             { x: 111, y: '222' }
         ];
-        const model = new GoslingTrackModel(t, d);
-        drawGrid(HGC, model);
+        const model = new GoslingTrackModel(t, d, getTheme());
+        drawGrid(HGC, model, getTheme());
     });
 
     it('Circular Y Grid', () => {
@@ -65,8 +66,8 @@ describe('Grid', () => {
             { x: 11, y: 22 },
             { x: 111, y: 222 }
         ];
-        const model = new GoslingTrackModel(t, d);
-        drawGrid(HGC, model);
+        const model = new GoslingTrackModel(t, d, getTheme());
+        drawGrid(HGC, model, getTheme());
     });
 
     it('Circular Row Grid', () => {
@@ -88,7 +89,7 @@ describe('Grid', () => {
             { x: 11, y: '22' },
             { x: 111, y: '222' }
         ];
-        const model = new GoslingTrackModel(t, d);
-        drawGrid(HGC, model);
+        const model = new GoslingTrackModel(t, d, getTheme());
+        drawGrid(HGC, model, getTheme());
     });
 });

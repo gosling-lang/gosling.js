@@ -1,7 +1,7 @@
 import { GoslingTrackModel } from '../gosling-track-model';
 import { IsChannelDeep } from '../gosling.schema.guards';
 import colorToHex from '../utils/color-to-hex';
-import { getTheme, Theme } from '../utils/theme';
+import { CompleteThemeDeep } from '../utils/theme';
 import { Dimension } from '../utils/position';
 import { ScaleLinear } from 'd3-scale';
 
@@ -19,7 +19,13 @@ export const getLegendTextStyle = (fill = 'black', fontWeight = 'normal') => {
     };
 };
 
-export function drawColorLegend(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackModel, theme: Theme = 'light') {
+export function drawColorLegend(
+    HGC: any,
+    trackInfo: any,
+    tile: any,
+    tm: GoslingTrackModel,
+    theme: Required<CompleteThemeDeep>
+) {
     const spec = tm.spec();
 
     if (!IsChannelDeep(spec.color) || !spec.color.legend) {
@@ -42,7 +48,7 @@ export function drawColorLegendQuantitative(
     trackInfo: any,
     tile: any,
     tm: GoslingTrackModel,
-    theme: Theme = 'light'
+    theme: Required<CompleteThemeDeep>
 ) {
     const spec = tm.spec();
 
@@ -80,11 +86,11 @@ export function drawColorLegendQuantitative(
     const graphics = trackInfo.pBorder; // use pBorder not to be affected by zoomming
 
     // Background
-    graphics.beginFill(colorToHex(getTheme(theme).legend.background), getTheme(theme).legend.backgroundOpacity);
+    graphics.beginFill(colorToHex(theme.legend.background), theme.legend.backgroundOpacity);
     graphics.lineStyle(
         1,
-        colorToHex(getTheme(theme).legend.backgroundStroke),
-        getTheme(theme).legend.backgroundOpacity, // alpha
+        colorToHex(theme.legend.backgroundStroke),
+        theme.legend.backgroundOpacity, // alpha
         0 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
     );
     graphics.drawRect(legendX, legendY, legendWidth, legendHeight);
@@ -102,7 +108,7 @@ export function drawColorLegendQuantitative(
         );
         graphics.lineStyle(
             1,
-            colorToHex(getTheme(theme).legend.backgroundStroke),
+            colorToHex(theme.legend.backgroundStroke),
             0, // alpha
             0.5 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
         );
@@ -124,7 +130,7 @@ export function drawColorLegendQuantitative(
     const TICK_STROKE_SIZE = 1;
     graphics.lineStyle(
         TICK_STROKE_SIZE,
-        colorToHex(getTheme(theme).legend.tickColor),
+        colorToHex(theme.legend.tickColor),
         1, // alpha
         0.5 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
     );
@@ -145,7 +151,7 @@ export function drawColorLegendQuantitative(
         graphics.lineTo(tickEnd, y);
 
         // labels
-        const textGraphic = new HGC.libraries.PIXI.Text(value, getLegendTextStyle(getTheme(theme).legend.labelColor));
+        const textGraphic = new HGC.libraries.PIXI.Text(value, getLegendTextStyle(theme.legend.labelColor));
         textGraphic.anchor.x = 1;
         textGraphic.anchor.y = 0.5;
         textGraphic.position.x = tickEnd - 6;
@@ -160,7 +166,7 @@ export function drawColorLegendCategories(
     trackInfo: any,
     tile: any,
     tm: GoslingTrackModel,
-    theme: Theme = 'light'
+    theme: Required<CompleteThemeDeep>
 ) {
     /* track spec */
     const spec = tm.spec();
@@ -200,10 +206,7 @@ export function drawColorLegendCategories(
                 }
 
                 const color = tm.encodedValue('color', category);
-                const textGraphic = new HGC.libraries.PIXI.Text(
-                    category,
-                    getLegendTextStyle(getTheme(theme).legend.labelColor)
-                );
+                const textGraphic = new HGC.libraries.PIXI.Text(category, getLegendTextStyle(theme.legend.labelColor));
                 textGraphic.anchor.x = 1;
                 textGraphic.anchor.y = 0;
                 textGraphic.position.x = trackInfo.position[0] + trackInfo.dimensions[0] - maxWidth - paddingX;
@@ -211,9 +214,7 @@ export function drawColorLegendCategories(
 
                 graphics.addChild(textGraphic);
 
-                const textStyleObj = new HGC.libraries.PIXI.TextStyle(
-                    getLegendTextStyle(getTheme(theme).legend.labelColor)
-                );
+                const textStyleObj = new HGC.libraries.PIXI.TextStyle(getLegendTextStyle(theme.legend.labelColor));
                 const textMetrics = HGC.libraries.PIXI.TextMetrics.measureText(category, textStyleObj);
 
                 if (cumY < textMetrics.height + paddingY * 3) {
@@ -234,16 +235,14 @@ export function drawColorLegendCategories(
         if (spec.style?.legendTitle) {
             const textGraphic = new HGC.libraries.PIXI.Text(
                 spec.style?.legendTitle,
-                getLegendTextStyle(getTheme(theme).legend.labelColor, 'bold')
+                getLegendTextStyle(theme.legend.labelColor, 'bold')
             );
             textGraphic.anchor.x = 1;
             textGraphic.anchor.y = 0;
             textGraphic.position.x = trackInfo.position[0] + trackInfo.dimensions[0] - paddingX;
             textGraphic.position.y = trackInfo.position[1] + cumY;
 
-            const textStyleObj = new HGC.libraries.PIXI.TextStyle(
-                getLegendTextStyle(getTheme(theme).legend.labelColor, 'bold')
-            );
+            const textStyleObj = new HGC.libraries.PIXI.TextStyle(getLegendTextStyle(theme.legend.labelColor, 'bold'));
             const textMetrics = HGC.libraries.PIXI.TextMetrics.measureText(spec.style?.legendTitle, textStyleObj);
 
             graphics.addChild(textGraphic);
@@ -259,10 +258,7 @@ export function drawColorLegendCategories(
 
             const color = tm.encodedValue('color', category);
 
-            const textGraphic = new HGC.libraries.PIXI.Text(
-                category,
-                getLegendTextStyle(getTheme(theme).legend.labelColor)
-            );
+            const textGraphic = new HGC.libraries.PIXI.Text(category, getLegendTextStyle(theme.legend.labelColor));
             textGraphic.anchor.x = 1;
             textGraphic.anchor.y = 0;
             textGraphic.position.x = trackInfo.position[0] + trackInfo.dimensions[0] - paddingX;
@@ -270,9 +266,7 @@ export function drawColorLegendCategories(
 
             graphics.addChild(textGraphic);
 
-            const textStyleObj = new HGC.libraries.PIXI.TextStyle(
-                getLegendTextStyle(getTheme(theme).legend.labelColor)
-            );
+            const textStyleObj = new HGC.libraries.PIXI.TextStyle(getLegendTextStyle(theme.legend.labelColor));
             const textMetrics = HGC.libraries.PIXI.TextMetrics.measureText(category, textStyleObj);
 
             if (maxWidth < textMetrics.width + paddingX * 3) {
@@ -289,11 +283,11 @@ export function drawColorLegendCategories(
         });
     }
 
-    graphics.beginFill(colorToHex(getTheme(theme).legend.background), getTheme(theme).legend.backgroundOpacity);
+    graphics.beginFill(colorToHex(theme.legend.background), theme.legend.backgroundOpacity);
     graphics.lineStyle(
         1,
-        colorToHex(getTheme(theme).legend.backgroundStroke),
-        getTheme(theme).legend.backgroundOpacity, // alpha
+        colorToHex(theme.legend.backgroundStroke),
+        theme.legend.backgroundOpacity, // alpha
         0 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
     );
     graphics.drawRect(
@@ -315,7 +309,13 @@ export function drawColorLegendCategories(
     });
 }
 
-export function drawRowLegend(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackModel, theme: Theme = 'light') {
+export function drawRowLegend(
+    HGC: any,
+    trackInfo: any,
+    tile: any,
+    tm: GoslingTrackModel,
+    theme: Required<CompleteThemeDeep>
+) {
     /* track spec */
     const spec = tm.spec();
     if (
@@ -348,10 +348,7 @@ export function drawRowLegend(HGC: any, trackInfo: any, tile: any, tm: GoslingTr
     rowCategories.forEach(category => {
         const rowPosition = tm.encodedValue('row', category);
 
-        const textGraphic = new HGC.libraries.PIXI.Text(
-            category,
-            getLegendTextStyle(getTheme(theme).legend.labelColor)
-        );
+        const textGraphic = new HGC.libraries.PIXI.Text(category, getLegendTextStyle(theme.legend.labelColor));
         textGraphic.anchor.x = 0;
         textGraphic.anchor.y = 0;
         textGraphic.position.x = trackInfo.position[0] + paddingX;
@@ -359,13 +356,13 @@ export function drawRowLegend(HGC: any, trackInfo: any, tile: any, tm: GoslingTr
 
         graphics.addChild(textGraphic);
 
-        const textStyleObj = new HGC.libraries.PIXI.TextStyle(getLegendTextStyle(getTheme(theme).legend.labelColor));
+        const textStyleObj = new HGC.libraries.PIXI.TextStyle(getLegendTextStyle(theme.legend.labelColor));
         const textMetrics = HGC.libraries.PIXI.TextMetrics.measureText(category, textStyleObj);
 
-        graphics.beginFill(colorToHex(getTheme(theme).legend.background), getTheme(theme).legend.backgroundOpacity);
+        graphics.beginFill(colorToHex(theme.legend.background), theme.legend.backgroundOpacity);
         graphics.lineStyle(
             1,
-            colorToHex(getTheme(theme).legend.backgroundStroke),
+            colorToHex(theme.legend.backgroundStroke),
             0, // alpha
             0 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
         );

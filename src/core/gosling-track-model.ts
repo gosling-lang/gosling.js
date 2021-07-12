@@ -33,7 +33,7 @@ import {
     IsRangeArray
 } from './gosling.schema.guards';
 import { CHANNEL_DEFAULTS } from './channel';
-import { getTheme, Theme } from './utils/theme';
+import { CompleteThemeDeep } from './utils/theme';
 
 export type ScaleType =
     | ScaleLinear<any, any>
@@ -45,7 +45,7 @@ export type ScaleType =
 export class GoslingTrackModel {
     private id: string;
 
-    private theme: Theme;
+    private theme: Required<CompleteThemeDeep>;
 
     /* spec */
     private specOriginal: SingleTrack; // original spec of users
@@ -60,7 +60,7 @@ export class GoslingTrackModel {
         [channel: string]: ScaleType;
     };
 
-    constructor(spec: SingleTrack, data: { [k: string]: number | string }[], theme: Theme = 'light') {
+    constructor(spec: SingleTrack, data: { [k: string]: number | string }[], theme: Required<CompleteThemeDeep>) {
         this.id = uuid.v1();
 
         this.theme = theme;
@@ -565,7 +565,7 @@ export class GoslingTrackModel {
                             break;
                         case 'size':
                             // TODO: make as an object
-                            if (spec.mark === 'line') value = getTheme(this.theme).line.size;
+                            if (spec.mark === 'line') value = this.theme.line.size;
                             else if (spec.mark === 'bar') value = undefined;
                             else if (spec.mark === 'rect') value = undefined;
                             else if (spec.mark === 'triangleRight') value = undefined;
@@ -579,25 +579,24 @@ export class GoslingTrackModel {
                                 IsChannelDeep(spec.xe)
                             )
                                 value = undefined;
-                            else value = getTheme(this.theme).point.size;
+                            else value = this.theme.point.size;
                             break;
                         case 'color':
-                            value = getTheme(this.theme).markCommon.color;
+                            value = this.theme.markCommon.color;
                             break;
                         case 'row':
                             value = 0;
                             break;
                         case 'stroke':
-                            value = getTheme(this.theme).markCommon.stroke;
+                            value = this.theme.markCommon.stroke;
                             break;
                         case 'strokeWidth':
-                            if (spec.mark === 'rule') value = getTheme(this.theme).rule.strokeWidth;
-                            else if (spec.mark === 'withinLink' || spec.mark === 'betweenLink')
-                                value = getTheme(this.theme).link.strokeWidth;
-                            else value = getTheme(this.theme).markCommon.strokeWidth;
+                            if (spec.mark === 'rule') value = this.theme.rule.strokeWidth;
+                            else if (spec.mark === 'withinLink' || spec.mark === 'betweenLink') value = this.theme.link.strokeWidth;
+                            else value = this.theme.markCommon.strokeWidth;
                             break;
                         case 'opacity':
-                            value = getTheme(this.theme).markCommon.opacity;
+                            value = this.theme.markCommon.opacity;
                             break;
                         case 'text':
                             value = '';
@@ -636,7 +635,7 @@ export class GoslingTrackModel {
                                 range = CHANNEL_DEFAULTS.QUANTITATIVE_COLOR as PREDEFINED_COLORS;
                                 break;
                             case 'size':
-                                range = getTheme(this.theme).markCommon.quantitativeSizeRange;
+                                range = this.theme.markCommon.quantitativeSizeRange;
                                 break;
                             case 'strokeWidth':
                                 range = [1, 3];
@@ -669,7 +668,7 @@ export class GoslingTrackModel {
                                 break;
                             case 'color':
                             case 'stroke':
-                                range = getTheme(this.theme).markCommon.nominalColorRange;
+                                range = this.theme.markCommon.nominalColorRange;
                                 break;
                             case 'row':
                                 range = [0, spec.height];

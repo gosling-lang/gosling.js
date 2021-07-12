@@ -22,7 +22,6 @@ import * as qs from 'qs';
 import { JSONCrush, JSONUncrush } from '../core/utils/json-crush';
 import './editor.css';
 import { ICONS, ICON_INFO } from './icon';
-import { getTheme } from '../core/utils/theme';
 
 const INIT_DEMO_INDEX = examples.findIndex(d => d.forceShow) !== -1 ? examples.findIndex(d => d.forceShow) : 0;
 
@@ -189,7 +188,7 @@ function Editor(props: any) {
     const [isShowAbout, setIsShowAbout] = useState(false);
 
     // Editor theme
-    const [theme, setTheme] = useState<'light' | 'dark'>('light');
+    const [theme] = useState<'light' | 'dark'>('light');
 
     // Resizer `div`
     const descResizerRef = useRef<any>();
@@ -284,12 +283,12 @@ function Editor(props: any) {
     /**
      * Update theme of the editor based on the theme of Gosling visualizations
      */
-    useEffect(() => {
-        const gosTheme = getTheme(goslingSpec?.theme);
-        if (gosTheme.base !== theme) {
-            setTheme(gosTheme.base);
-        }
-    }, [goslingSpec]);
+    // useEffect(() => {
+    //     const gosTheme = getTheme(goslingSpec?.theme);
+    //     if (gosTheme.base !== theme) {
+    //         setTheme(gosTheme.base);
+    //     }
+    // }, [goslingSpec]);
 
     /**
      * Subscribe preview data that is being processed in the Gosling tracks.
@@ -674,6 +673,7 @@ function Editor(props: any) {
                                     <gosling.GoslingComponent
                                         ref={gosRef}
                                         spec={goslingSpec}
+                                        theme={'light'}
                                         padding={60}
                                         margin={0}
                                         border={'none'}

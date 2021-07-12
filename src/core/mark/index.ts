@@ -15,8 +15,8 @@ import { drawColorLegend, drawRowLegend } from './legend';
 import { drawCircularYAxis, drawLinearYAxis } from './axis';
 import { drawCircularOutlines } from './outline-circular';
 import { drawBackground } from './background';
-import { Theme } from '../utils/theme';
 import { Is2DTrack } from '../gosling.schema.guards';
+import { CompleteThemeDeep } from '../utils/theme';
 
 /**
  * Visual channels currently supported for visual encoding.
@@ -134,7 +134,7 @@ export function drawPreEmbellishment(
     trackInfo: any,
     tile: any,
     model: GoslingTrackModel,
-    theme: Theme = 'light'
+    theme: Required<CompleteThemeDeep>
 ) {
     if (!HGC || !trackInfo || !tile) {
         // We did not receive parameters correctly.
@@ -173,7 +173,7 @@ export function drawPostEmbellishment(
     trackInfo: any,
     tile: any,
     model: GoslingTrackModel,
-    theme: Theme = 'light'
+    theme: Required<CompleteThemeDeep>
 ) {
     if (!HGC || !trackInfo || !tile) {
         // We did not receive parameters correctly.

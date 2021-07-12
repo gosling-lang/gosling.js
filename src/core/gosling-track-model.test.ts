@@ -2,6 +2,7 @@ import { GoslingTrackModel } from './gosling-track-model';
 import { Track } from './gosling.schema';
 import isEqual from 'lodash/isEqual';
 import { IsChannelDeep, IsChannelValue } from './gosling.schema.guards';
+import { getTheme } from './utils/theme';
 
 const MINIMAL_TRACK_SPEC: Track = {
     data: { url: '', type: 'csv' },
@@ -13,7 +14,7 @@ const MINIMAL_TRACK_SPEC: Track = {
 
 describe('gosling track model should properly validate the original spec', () => {
     it('minimal spec with on genomic coordiate should be valid', () => {
-        const model = new GoslingTrackModel(MINIMAL_TRACK_SPEC, []);
+        const model = new GoslingTrackModel(MINIMAL_TRACK_SPEC, [], getTheme());
         expect(model.validateSpec().valid).toBe(true);
     });
 
@@ -22,7 +23,7 @@ describe('gosling track model should properly validate the original spec', () =>
             ...MINIMAL_TRACK_SPEC,
             row: { field: 'x', type: 'quantitative' }
         };
-        const model = new GoslingTrackModel(track, []);
+        const model = new GoslingTrackModel(track, [], getTheme());
         expect(model.validateSpec().valid).toBe(false);
     });
 
@@ -33,10 +34,10 @@ describe('gosling track model should properly validate the original spec', () =>
             width: 300,
             height: 300
         };
-        const model = new GoslingTrackModel(track, []);
+        const model = new GoslingTrackModel(track, [], getTheme());
         expect(model.validateSpec().valid).toBe(false);
 
-        const model2 = new GoslingTrackModel({ ...track, x: { field: 'x', type: 'genomic' } }, []);
+        const model2 = new GoslingTrackModel({ ...track, x: { field: 'x', type: 'genomic' } }, [], getTheme());
         expect(model2.validateSpec().valid).toBe(true);
     });
 
@@ -45,25 +46,25 @@ describe('gosling track model should properly validate the original spec', () =>
             ...MINIMAL_TRACK_SPEC,
             color: { field: 'f', type: 'genomic' }
         };
-        const model = new GoslingTrackModel(track, []);
+        const model = new GoslingTrackModel(track, [], getTheme());
         expect(model.validateSpec().valid).toBe(false);
 
         if (IsChannelDeep(track.color)) {
             track.color.type = 'nominal';
         }
-        const model2 = new GoslingTrackModel(track, []);
+        const model2 = new GoslingTrackModel(track, [], getTheme());
         expect(model2.validateSpec().valid).toBe(true);
     });
 });
 
 describe('default options should be added into the original spec', () => {
     it('original spec should be the same after making a gosling model', () => {
-        const model = new GoslingTrackModel(MINIMAL_TRACK_SPEC, []);
+        const model = new GoslingTrackModel(MINIMAL_TRACK_SPEC, [], getTheme());
         expect(isEqual(model.originalSpec(), MINIMAL_TRACK_SPEC)).toEqual(true);
     });
 
     it('default opacity should be added if it is missing in the spec', () => {
-        const model = new GoslingTrackModel(MINIMAL_TRACK_SPEC, []);
+        const model = new GoslingTrackModel(MINIMAL_TRACK_SPEC, [], getTheme());
         const spec = model.spec();
         expect(spec.opacity).not.toBeUndefined();
         expect(IsChannelValue(spec.opacity) ? spec.opacity.value : undefined).toBe(1);
@@ -74,7 +75,7 @@ describe('default options should be added into the original spec', () => {
             ...MINIMAL_TRACK_SPEC,
             color: { field: 'f', type: 'quantitative' }
         };
-        const model = new GoslingTrackModel(track, []);
+        const model = new GoslingTrackModel(track, [], getTheme());
         const spec = model.spec();
         const range = IsChannelDeep(spec.color) ? spec.color.range : [];
         expect(range).not.toBeUndefined();
@@ -93,7 +94,7 @@ describe('Gosling track model should be properly generated with data', () => {
             opacity: { value: 1 },
             height: 300
         };
-        const model = new GoslingTrackModel(track, [{ row: 'a' }, { row: 'b' }, { row: 'a' }]);
+        const model = new GoslingTrackModel(track, [{ row: 'a' }, { row: 'b' }, { row: 'a' }], getTheme());
         const spec = model.spec();
         const rowDomain = IsChannelDeep(spec.row) ? (spec.row.domain as string[]) : [];
 
@@ -120,11 +121,15 @@ describe('Gosling track model should be properly generated with data', () => {
             opacity: { field: 'yStr', type: 'quantitative' },
             height: 300
         };
-        const model = new GoslingTrackModel(track, [
-            { color: 1, row: 'a', y: 5, yStr: '5' },
-            { color: 2, row: 'b', y: 7, yStr: '7' },
-            { color: 3, row: 'a', y: 10, yStr: '10' }
-        ]);
+        const model = new GoslingTrackModel(
+            track,
+            [
+                { color: 1, row: 'a', y: 5, yStr: '5' },
+                { color: 2, row: 'b', y: 7, yStr: '7' },
+                { color: 3, row: 'a', y: 10, yStr: '10' }
+            ],
+            getTheme()
+        );
         const spec = model.spec();
         const colorDomain = IsChannelDeep(spec.color) ? (spec.color.domain as string[]) : [];
         const rowDomain = IsChannelDeep(spec.row) ? (spec.row.domain as string[]) : [];
@@ -163,7 +168,7 @@ describe('Gosling track model should be properly generated with data', () => {
             ...MINIMAL_TRACK_SPEC,
             y: { field: 'y', type: 'quantitative' }
         };
-        const model = new GoslingTrackModel(track, []);
+        const model = new GoslingTrackModel(track, [], getTheme());
         const spec = model.spec();
         const yDomain = IsChannelDeep(spec.y) ? (spec.y.domain as number[]) : [];
 
@@ -194,7 +199,7 @@ describe('Visual marks should be correctly encoded with data', () => {
             width: size.width,
             height: size.height
         };
-        const model = new GoslingTrackModel(track, data);
+        const model = new GoslingTrackModel(track, data, getTheme());
 
         // y channel not encoded, hence middle of the height
         expect(model.encodedValue('y', 0)).toBe(size.height / 2.0 / nSize);
@@ -226,7 +231,7 @@ describe('Visual marks should be correctly encoded with data', () => {
             width: size.width,
             height: size.height
         };
-        const model2 = new GoslingTrackModel(track2, data);
+        const model2 = new GoslingTrackModel(track2, data, getTheme());
 
         // y is encoded with quantitative values, hence linear scale values with zero baseline
         expect(model2.encodedValue('y', 0)).toBe(0);

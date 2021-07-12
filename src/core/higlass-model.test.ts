@@ -1,6 +1,7 @@
 import uuid from 'uuid';
 import { HiGlassModel } from './higlass-model';
 import { GET_CHROM_SIZES } from './utils/assembly';
+import { getTheme } from './utils/theme';
 
 describe('Should produce higlass model correctly', () => {
     it('Should set default values correctly', () => {
@@ -23,7 +24,7 @@ describe('Should produce higlass model correctly', () => {
     it('Should add brush correctly', () => {
         const higlass = new HiGlassModel();
         higlass.addDefaultView(uuid.v1());
-        higlass.addBrush('linear', higlass.getLastView().uid ?? '', 'from');
+        higlass.addBrush('linear', higlass.getLastView().uid ?? '', getTheme(), 'from');
         expect(JSON.stringify(higlass.spec())).toContain('viewport-projection-horizontal');
     });
 
