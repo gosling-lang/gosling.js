@@ -1,4 +1,13 @@
 ## [0.8.4](https://github.com/gosling-lang/gosling.js/compare/v0.8.3...v0.8.4) (2021-07-19)
+## [0.8.6](https://github.com/gosling-lang/gosling.js/compare/v0.8.5...v0.8.6) (2021-07-12)
+
+
+### Features
+
+* separating `theme` from the main grammar ([#434](https://github.com/gosling-lang/gosling.js/issues/434)) ([bda3a77](https://github.com/gosling-lang/gosling.js/commit/bda3a77ab1d052146344dac949d8b634cce1e5cb))
+
+
+
 ## [0.8.5](https://github.com/gosling-lang/gosling.js/compare/v0.8.3...v0.8.5) (2021-07-09)
 
 
