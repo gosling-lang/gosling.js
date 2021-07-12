@@ -1,6 +1,7 @@
 import * as PIXI from 'pixi.js';
 import { GoslingTrackModel } from '../gosling-track-model';
 import { SingleTrack } from '../gosling.schema';
+import { getTheme } from '../utils/theme';
 import { drawTriangle } from './triangle';
 
 describe('Rendering triangle', () => {
@@ -20,7 +21,7 @@ describe('Rendering triangle', () => {
             { x: 11, xe: 11, y: 22 },
             { x: 111, xe: 111, y: 222 }
         ];
-        const model = new GoslingTrackModel(t, d);
+        const model = new GoslingTrackModel(t, d, getTheme());
         drawTriangle(g, model);
     });
 
@@ -40,7 +41,7 @@ describe('Rendering triangle', () => {
             { x: 11, xe: 11, y: 22 },
             { x: 111, xe: 111, y: 222 }
         ];
-        const model = new GoslingTrackModel(t, d);
+        const model = new GoslingTrackModel(t, d, getTheme());
         drawTriangle(g, model);
     });
 });

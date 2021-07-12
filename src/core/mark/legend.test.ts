@@ -1,6 +1,7 @@
 import * as PIXI from 'pixi.js';
 import { GoslingTrackModel } from '../gosling-track-model';
 import { SingleTrack } from '../gosling.schema';
+import { getTheme } from '../utils/theme';
 import { drawColorLegend } from './legend';
 
 describe('Color Legend', () => {
@@ -19,7 +20,7 @@ describe('Color Legend', () => {
             { x: 11, y: 22 },
             { x: 111, y: 222 }
         ];
-        const model = new GoslingTrackModel(t, d);
+        const model = new GoslingTrackModel(t, d, getTheme());
         drawColorLegend(
             {
                 libraries: {
@@ -36,7 +37,8 @@ describe('Color Legend', () => {
                 pBorder: g
             },
             null,
-            model
+            model,
+            getTheme()
         );
     });
 
@@ -59,7 +61,7 @@ describe('Color Legend', () => {
             { x: 11, v: '22' },
             { x: 111, v: '222' }
         ];
-        const model = new GoslingTrackModel(t, d);
+        const model = new GoslingTrackModel(t, d, getTheme());
         drawColorLegend(
             {
                 libraries: {
@@ -76,7 +78,8 @@ describe('Color Legend', () => {
                 pBorder: g
             },
             null,
-            model
+            model,
+            getTheme()
         );
     });
 });

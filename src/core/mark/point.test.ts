@@ -5,6 +5,7 @@ import { Track } from '../gosling.schema';
 import { HIGLASS_AXIS_SIZE } from '../higlass-model';
 import { SingleTrack } from '../gosling.schema';
 import { drawPoint } from './point';
+import { getTheme } from '../utils/theme';
 
 describe('Rendering Point', () => {
     const g = new PIXI.Graphics();
@@ -22,7 +23,7 @@ describe('Rendering Point', () => {
             { x: 11, y: 22 },
             { x: 111, y: 222 }
         ];
-        const model = new GoslingTrackModel(t, d);
+        const model = new GoslingTrackModel(t, d, getTheme());
         drawPoint(null, g, model);
     });
 });
@@ -47,7 +48,7 @@ describe('Point marks should correctly encode visual channels', () => {
 
     it('x --> G', () => {
         const track: Track = { ...baseTrack, x: { field: 'G', type: 'genomic' } };
-        const model = new GoslingTrackModel(track, data);
+        const model = new GoslingTrackModel(track, data, getTheme());
 
         const cx = model.encodedPIXIProperty('x-center', data[1]);
         const cy = model.encodedPIXIProperty('y-center', data[1]);
@@ -64,7 +65,7 @@ describe('Point marks should correctly encode visual channels', () => {
                 x: { field: 'G', type: 'genomic' },
                 y: { field: 'Q', type: 'quantitative' }
             };
-            const model = new GoslingTrackModel(track, data);
+            const model = new GoslingTrackModel(track, data, getTheme());
 
             const cx = model.encodedPIXIProperty('x-center', data[1]);
             const cy = model.encodedPIXIProperty('y-center', data[1]);
@@ -80,7 +81,7 @@ describe('Point marks should correctly encode visual channels', () => {
                 x: { field: 'G', type: 'genomic', axis: 'top' },
                 y: { field: 'Q', type: 'quantitative' }
             };
-            const model = new GoslingTrackModel(track, data);
+            const model = new GoslingTrackModel(track, data, getTheme());
 
             const cx = model.encodedPIXIProperty('x-center', data[1]);
             const cy = model.encodedPIXIProperty('y-center', data[1]);
@@ -98,7 +99,7 @@ describe('Point marks should correctly encode visual channels', () => {
             xe: { field: 'G2', type: 'genomic' },
             y: { field: 'Q', type: 'quantitative' }
         };
-        const model = new GoslingTrackModel(track, data);
+        const model = new GoslingTrackModel(track, data, getTheme());
 
         const cx = model.encodedPIXIProperty('x-center', data[1]);
         const cy = model.encodedPIXIProperty('y-center', data[1]);
@@ -116,7 +117,7 @@ describe('Point marks should correctly encode visual channels', () => {
             y: { field: 'Q', type: 'quantitative' },
             row: { field: 'N', type: 'nominal' }
         };
-        const model = new GoslingTrackModel(track, data);
+        const model = new GoslingTrackModel(track, data, getTheme());
 
         const cx = model.encodedPIXIProperty('x-center', data[1]);
         const cy = model.encodedPIXIProperty('y-center', data[1]);
@@ -137,7 +138,7 @@ describe('Point marks should correctly encode visual channels', () => {
             size: { field: 'Q', type: 'quantitative' },
             row: { field: 'N', type: 'nominal' }
         };
-        const model = new GoslingTrackModel(track, data);
+        const model = new GoslingTrackModel(track, data, getTheme());
 
         const cx = model.encodedPIXIProperty('x-center', data[1]);
         const cy = model.encodedPIXIProperty('y-center', data[1]);

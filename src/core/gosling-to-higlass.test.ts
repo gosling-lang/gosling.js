@@ -3,6 +3,7 @@ import { SingleTrack } from './gosling.schema';
 import { HiGlassModel } from './higlass-model';
 import { EX_TRACK_SEMANTIC_ZOOM } from '../editor/example/semantic-zoom';
 import { convertToFlatTracks } from './utils/spec-preprocess';
+import { getTheme } from './utils/theme';
 
 describe('Should convert gosling spec to higlass view config.', () => {
     it('Should return a generated higlass view config correctly', () => {
@@ -21,7 +22,8 @@ describe('Should convert gosling spec to higlass view config.', () => {
                 y: 0,
                 w: 12,
                 h: 12
-            }
+            },
+            getTheme()
         ).spec();
         expect(Object.keys(higlass)).not.toHaveLength(0);
     });
@@ -43,7 +45,8 @@ describe('Should convert gosling spec to higlass view config.', () => {
                 y: 0,
                 w: 12,
                 h: 12
-            }
+            },
+            getTheme()
         ).spec();
         expect(higlass.views).toHaveLength(0);
     });

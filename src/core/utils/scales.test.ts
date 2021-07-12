@@ -1,6 +1,7 @@
 import { getNumericDomain, shareScaleAcrossTracks } from './scales';
 import { GoslingTrackModel } from '../gosling-track-model';
 import { IsChannelDeep } from '../gosling.schema.guards';
+import { getTheme } from './theme';
 
 describe('Genomic domain', () => {
     it('With Chromosome', () => {
@@ -21,7 +22,8 @@ describe('Should use shared scales', () => {
                 width: 300,
                 height: 300
             },
-            []
+            [],
+            getTheme()
         );
         const forceShare = true;
         shareScaleAcrossTracks(
@@ -37,7 +39,8 @@ describe('Should use shared scales', () => {
                         width: 300,
                         height: 300
                     },
-                    []
+                    [],
+                    getTheme()
                 ),
                 new GoslingTrackModel(
                     {
@@ -49,7 +52,8 @@ describe('Should use shared scales', () => {
                         width: 300,
                         height: 300
                     },
-                    []
+                    [],
+                    getTheme()
                 )
             ],
             forceShare
@@ -73,7 +77,8 @@ describe('Should use shared scales', () => {
                 width: 300,
                 height: 300
             },
-            []
+            [],
+            getTheme()
         );
         const forceShare = false;
         shareScaleAcrossTracks(
@@ -89,7 +94,8 @@ describe('Should use shared scales', () => {
                         width: 300,
                         height: 300
                     },
-                    []
+                    [],
+                    getTheme()
                 ),
                 new GoslingTrackModel(
                     {
@@ -101,7 +107,8 @@ describe('Should use shared scales', () => {
                         width: 300,
                         height: 300
                     },
-                    []
+                    [],
+                    getTheme()
                 )
             ],
             forceShare
