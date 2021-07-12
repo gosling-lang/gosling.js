@@ -1,10 +1,12 @@
 import pkg from '../package.json';
 import GoslingSchema from '../schema/gosling.schema.json';
+import ThemeSchema from '../schema/theme.schema.json';
 
 export type { GoslingSpec } from './core/gosling.schema';
 export type { HiGlassSpec } from './core/higlass.schema';
 export type { Theme } from './core/utils/theme';
 export { GoslingSchema };
+export { ThemeSchema };
 
 export const name = pkg.name;
 export const version = pkg.version;
