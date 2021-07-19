@@ -2,8 +2,9 @@ export const DEFAULT_VISUAL_PROPERTIES = {
     opacity: 1
 };
 
-export const DEFAULT_TITLE_HEIGHT = 20;
-export const DEFAULT_SUBTITLE_HEIGHT = 20;
+export const DEFAULT_TITLE_HEIGHT = 20; // deprecated
+export const DEFAULT_SUBTITLE_HEIGHT = 20; // deprecated
+export const DEWFAULT_TITLE_PADDING_ON_TOP_AND_BOTTOM = 6;
 
 // default track size
 export const DEFAULT_TRACK_HEIGHT_LINEAR = 180;

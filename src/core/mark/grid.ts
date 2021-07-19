@@ -62,8 +62,9 @@ export function drawRowGrid(trackInfo: any, tm: GoslingTrackModel, theme: Requir
                 0.5 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
             );
 
-            graphics.moveTo(trackX, trackY + rowPosition + rowHeight / 2.0);
-            graphics.lineTo(trackX + trackWidth, trackY + rowPosition + rowHeight / 2.0);
+            const y = trackY + rowPosition + rowHeight / 2.0;
+            graphics.moveTo(trackX, y);
+            graphics.lineTo(trackX + trackWidth, y);
         } else {
             const y = rowPosition + rowHeight / 2.0;
             const midR = trackOuterRadius - (y / trackHeight) * trackRingSize;
@@ -159,8 +160,17 @@ export function drawYGridQuantitative(trackInfo: any, tm: GoslingTrackModel, the
             );
             ticks.forEach(value => {
                 const y = trackY + rowPosition + rowHeight - scale(value);
-                graphics.moveTo(startX, y);
-                graphics.lineTo(endX, y);
+                if (theme.axis.gridStrokeType === 'solid') {
+                    graphics.moveTo(startX, y);
+                    graphics.lineTo(endX, y);
+                } else if (theme.axis.gridStrokeType === 'dashed') {
+                    const [line, gap] = theme.axis.gridStrokeDash ?? [1, 1];
+                    // eslint-disable-next-line
+                    for (let i = startX; i < endX; i += line + gap) {
+                        graphics.moveTo(i, y);
+                        graphics.lineTo(i + line, y);
+                    }
+                }
             });
         } else {
             ticks.forEach(value => {

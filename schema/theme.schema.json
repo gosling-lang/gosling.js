@@ -11,10 +11,44 @@
         "gridColor": {
           "type": "string"
         },
+        "gridStrokeDash": {
+          "items": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "maxItems": 2,
+          "minItems": 2,
+          "type": "array"
+        },
+        "gridStrokeType": {
+          "enum": [
+            "solid",
+            "dashed"
+          ],
+          "type": "string"
+        },
         "gridStrokeWidth": {
           "type": "number"
         },
         "labelColor": {
+          "type": "string"
+        },
+        "labelFontFamily": {
+          "type": "string"
+        },
+        "labelFontSize": {
+          "type": "number"
+        },
+        "labelFontWeight": {
+          "enum": [
+            "bold",
+            "normal",
+            "light"
+          ],
           "type": "string"
         },
         "tickColor": {
@@ -36,6 +70,27 @@
           "type": "string"
         },
         "labelColor": {
+          "type": "string"
+        },
+        "labelFontFamily": {
+          "type": "string"
+        },
+        "labelFontSize": {
+          "type": "number"
+        },
+        "labelFontWeight": {
+          "enum": [
+            "bold",
+            "normal",
+            "light"
+          ],
+          "type": "string"
+        },
+        "position": {
+          "enum": [
+            "top",
+            "right"
+          ],
           "type": "string"
         },
         "tickColor": {
@@ -93,10 +148,60 @@
         "mousePositionColor": {
           "type": "string"
         },
+        "subtitleAlign": {
+          "enum": [
+            "left",
+            "middle",
+            "right"
+          ],
+          "type": "string"
+        },
+        "subtitleBackgroundColor": {
+          "type": "string"
+        },
         "subtitleColor": {
           "type": "string"
         },
+        "subtitleFontFamily": {
+          "type": "string"
+        },
+        "subtitleFontSize": {
+          "type": "number"
+        },
+        "subtitleFontWeight": {
+          "enum": [
+            "bold",
+            "normal",
+            "light"
+          ],
+          "type": "string"
+        },
+        "titleAlign": {
+          "enum": [
+            "left",
+            "middle",
+            "right"
+          ],
+          "type": "string"
+        },
+        "titleBackgroundColor": {
+          "type": "string"
+        },
         "titleColor": {
+          "type": "string"
+        },
+        "titleFontFamily": {
+          "type": "string"
+        },
+        "titleFontSize": {
+          "type": "number"
+        },
+        "titleFontWeight": {
+          "enum": [
+            "bold",
+            "normal",
+            "light"
+          ],
           "type": "string"
         }
       },
@@ -227,17 +332,34 @@
     "TrackStyle": {
       "additionalProperties": false,
       "properties": {
+        "alternatingBackground": {
+          "type": "string"
+        },
+        "background": {
+          "type": "string"
+        },
         "outline": {
           "type": "string"
         },
         "outlineWidth": {
           "type": "number"
         },
+        "titleAlign": {
+          "enum": [
+            "left",
+            "middle",
+            "right"
+          ],
+          "type": "string"
+        },
         "titleBackground": {
           "type": "string"
         },
         "titleColor": {
           "type": "string"
+        },
+        "titleFontSize": {
+          "type": "number"
         }
       },
       "type": "object"

@@ -8,7 +8,7 @@ import { resolveSuperposedTracks } from './utils/overlay';
 import { getGenomicChannelKeyFromTrack, getGenomicChannelFromTrack } from './utils/validate';
 import { viridisColorMap } from './utils/colors';
 import { IsDataDeep, IsChannelDeep, IsDataDeepTileset } from './gosling.schema.guards';
-import { DEFAULT_SUBTITLE_HEIGHT, DEFAULT_TITLE_HEIGHT } from './layout/defaults';
+import { DEWFAULT_TITLE_PADDING_ON_TOP_AND_BOTTOM } from './layout/defaults';
 import { CompleteThemeDeep } from './utils/theme';
 
 /**
@@ -58,8 +58,12 @@ export function goslingToHiGlass(
                 mousePositionColor: theme.root.mousePositionColor,
                 /* Track title */
                 name: firstResolvedSpec.title,
-                fontSize: 12,
-                labelPosition: firstResolvedSpec.title ? 'topLeft' : 'none',
+                fontSize: theme.track.titleFontSize,
+                labelPosition: firstResolvedSpec.title
+                    ? theme.track.titleAlign === 'left'
+                        ? 'topLeft'
+                        : 'topRight'
+                    : 'none',
                 labelShowResolution: false,
                 labelColor: theme.track.titleColor,
                 labelBackgroundColor: theme.track.titleBackground,
@@ -164,21 +168,27 @@ export function goslingToHiGlass(
         if (typeof firstResolvedSpec.title === 'string') {
             hgModel.setTextTrack(
                 bb.width,
-                DEFAULT_TITLE_HEIGHT,
+                theme.root.titleFontSize + DEWFAULT_TITLE_PADDING_ON_TOP_AND_BOTTOM,
                 firstResolvedSpec.title,
                 theme.root.titleColor,
-                18,
-                'bold'
+                theme.root.titleFontSize ?? 18,
+                theme.root.titleFontWeight,
+                theme.root.titleAlign,
+                theme.root.titleBackgroundColor,
+                theme.root.titleFontFamily
             );
         }
         if (typeof firstResolvedSpec.subtitle === 'string') {
             hgModel.setTextTrack(
                 bb.width,
-                DEFAULT_SUBTITLE_HEIGHT,
+                theme.root.subtitleFontSize + DEWFAULT_TITLE_PADDING_ON_TOP_AND_BOTTOM,
                 firstResolvedSpec.subtitle,
                 theme.root.subtitleColor,
-                14,
-                'normal'
+                theme.root.subtitleFontSize ?? 14,
+                theme.root.subtitleFontWeight,
+                theme.root.subtitleAlign,
+                theme.root.subtitleBackgroundColor,
+                theme.root.subtitleFontFamily
             );
         }
     }
