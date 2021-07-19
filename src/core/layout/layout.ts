@@ -10,7 +10,7 @@ export function compileLayout(
     theme: CompleteThemeDeep
 ) {
     // Generate arrangement data
-    const trackInfo = getRelativeTrackInfo(spec);
+    const trackInfo = getRelativeTrackInfo(spec, theme);
 
     // Render HiGlass tracks
     renderHiGlass(spec, trackInfo, setHg, theme);

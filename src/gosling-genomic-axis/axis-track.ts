@@ -7,6 +7,7 @@ import { scaleLinear } from 'd3-scale';
 import { format, precisionPrefix, formatPrefix } from 'd3-format';
 import { GET_CHROM_SIZES } from '../core/utils/assembly';
 import { cartesianToPolar } from '../core/utils/polar';
+import { getTextStyle } from '../core/utils/text-style';
 
 const TICK_WIDTH = 200;
 const TICK_HEIGHT = 6;
@@ -43,16 +44,17 @@ function AxisTrack(HGC: any, ...args: any[]): any {
 
             this.textFontSize = 12;
             this.textFontFamily = 'sans-serif'; //'Arial';
+            this.textFontWeight = 'normal';
             this.textFontColor = '#808080';
             this.textStrokeColor = '#ffffff';
-            this.pixiTextConfig = {
-                fontSize: +this.options.fontSize ? `${+this.options.fontSize}px` : `${this.textFontSize}px`,
-                fontFamily: this.textFontFamily,
-                fill: this.options.color || this.textFontColor,
-                lineJoin: 'round',
+            this.pixiTextConfig = getTextStyle({
+                size: +this.options.fontSize || this.textFontSize,
+                fontFamily: this.options.fontFamily || this.textFontFamily,
+                fontWeight: this.options.fontWeight || this.textFontWeight,
+                color: this.options.color || this.textFontColor,
                 stroke: this.options.stroke || this.textStrokeColor,
                 strokeThickness: 2
-            };
+            });
             this.stroke = colorToHex(this.pixiTextConfig.stroke);
 
             // text objects to use if the tick style is "bounds", meaning

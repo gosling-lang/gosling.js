@@ -4,20 +4,7 @@ import colorToHex from '../utils/color-to-hex';
 import { CompleteThemeDeep } from '../utils/theme';
 import { Dimension } from '../utils/position';
 import { ScaleLinear } from 'd3-scale';
-
-export const getLegendTextStyle = (fill = 'black', fontWeight = 'normal') => {
-    return {
-        fontSize: '12px',
-        fontFamily: 'sans-serif', // 'Arial',
-        fontWeight,
-        fill,
-        background: 'white',
-        lineJoin: 'round'
-        // Other possible options:
-        // stroke: '#ffffff',
-        // strokeThickness: 2
-    };
-};
+import { getTextStyle } from '../utils/text-style';
 
 export function drawColorLegend(
     HGC: any,
@@ -135,6 +122,14 @@ export function drawColorLegendQuantitative(
         0.5 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
     );
 
+    // label text style
+    const labelTextStyle = getTextStyle({
+        color: theme.legend.labelColor,
+        size: theme.legend.labelFontSize,
+        fontWeight: theme.legend.labelFontWeight,
+        fontFamily: theme.legend.labelFontFamily
+    });
+
     const tickEnd = legendX + colorBarDim.left;
     ticks.forEach(value => {
         let y = legendY + colorBarDim.top + colorBarDim.height - ((value - startValue) / extent) * colorBarDim.height;
@@ -151,7 +146,7 @@ export function drawColorLegendQuantitative(
         graphics.lineTo(tickEnd, y);
 
         // labels
-        const textGraphic = new HGC.libraries.PIXI.Text(value, getLegendTextStyle(theme.legend.labelColor));
+        const textGraphic = new HGC.libraries.PIXI.Text(value, labelTextStyle);
         textGraphic.anchor.x = 1;
         textGraphic.anchor.y = 0.5;
         textGraphic.position.x = tickEnd - 6;
@@ -192,6 +187,14 @@ export function drawColorLegendCategories(
 
     const recipe: { x: number; y: number; color: string }[] = [];
 
+    // label text style
+    const labelTextStyle = getTextStyle({
+        color: theme.legend.labelColor,
+        size: theme.legend.labelFontSize,
+        fontWeight: theme.legend.labelFontWeight,
+        fontFamily: theme.legend.labelFontFamily
+    });
+
     if (spec.style?.inlineLegend) {
         // Show legend in a single horizontal line
 
@@ -206,7 +209,7 @@ export function drawColorLegendCategories(
                 }
 
                 const color = tm.encodedValue('color', category);
-                const textGraphic = new HGC.libraries.PIXI.Text(category, getLegendTextStyle(theme.legend.labelColor));
+                const textGraphic = new HGC.libraries.PIXI.Text(category, labelTextStyle);
                 textGraphic.anchor.x = 1;
                 textGraphic.anchor.y = 0;
                 textGraphic.position.x = trackInfo.position[0] + trackInfo.dimensions[0] - maxWidth - paddingX;
@@ -214,7 +217,7 @@ export function drawColorLegendCategories(
 
                 graphics.addChild(textGraphic);
 
-                const textStyleObj = new HGC.libraries.PIXI.TextStyle(getLegendTextStyle(theme.legend.labelColor));
+                const textStyleObj = new HGC.libraries.PIXI.TextStyle(labelTextStyle);
                 const textMetrics = HGC.libraries.PIXI.TextMetrics.measureText(category, textStyleObj);
 
                 if (cumY < textMetrics.height + paddingY * 3) {
@@ -233,16 +236,16 @@ export function drawColorLegendCategories(
         // Show legend vertically
 
         if (spec.style?.legendTitle) {
-            const textGraphic = new HGC.libraries.PIXI.Text(
-                spec.style?.legendTitle,
-                getLegendTextStyle(theme.legend.labelColor, 'bold')
-            );
+            const textGraphic = new HGC.libraries.PIXI.Text(spec.style?.legendTitle, {
+                ...labelTextStyle,
+                fontWeight: 'bold'
+            });
             textGraphic.anchor.x = 1;
             textGraphic.anchor.y = 0;
             textGraphic.position.x = trackInfo.position[0] + trackInfo.dimensions[0] - paddingX;
             textGraphic.position.y = trackInfo.position[1] + cumY;
 
-            const textStyleObj = new HGC.libraries.PIXI.TextStyle(getLegendTextStyle(theme.legend.labelColor, 'bold'));
+            const textStyleObj = new HGC.libraries.PIXI.TextStyle({ ...labelTextStyle, fontWeight: 'bold' });
             const textMetrics = HGC.libraries.PIXI.TextMetrics.measureText(spec.style?.legendTitle, textStyleObj);
 
             graphics.addChild(textGraphic);
@@ -258,7 +261,7 @@ export function drawColorLegendCategories(
 
             const color = tm.encodedValue('color', category);
 
-            const textGraphic = new HGC.libraries.PIXI.Text(category, getLegendTextStyle(theme.legend.labelColor));
+            const textGraphic = new HGC.libraries.PIXI.Text(category, labelTextStyle);
             textGraphic.anchor.x = 1;
             textGraphic.anchor.y = 0;
             textGraphic.position.x = trackInfo.position[0] + trackInfo.dimensions[0] - paddingX;
@@ -266,7 +269,7 @@ export function drawColorLegendCategories(
 
             graphics.addChild(textGraphic);
 
-            const textStyleObj = new HGC.libraries.PIXI.TextStyle(getLegendTextStyle(theme.legend.labelColor));
+            const textStyleObj = new HGC.libraries.PIXI.TextStyle(labelTextStyle);
             const textMetrics = HGC.libraries.PIXI.TextMetrics.measureText(category, textStyleObj);
 
             if (maxWidth < textMetrics.width + paddingX * 3) {
@@ -345,10 +348,18 @@ export function drawRowLegend(
     const paddingX = 4;
     const paddingY = 2;
 
+    // label text style
+    const labelTextStyle = getTextStyle({
+        color: theme.legend.labelColor,
+        size: theme.legend.labelFontSize,
+        fontWeight: theme.legend.labelFontWeight,
+        fontFamily: theme.legend.labelFontFamily
+    });
+
     rowCategories.forEach(category => {
         const rowPosition = tm.encodedValue('row', category);
 
-        const textGraphic = new HGC.libraries.PIXI.Text(category, getLegendTextStyle(theme.legend.labelColor));
+        const textGraphic = new HGC.libraries.PIXI.Text(category, labelTextStyle);
         textGraphic.anchor.x = 0;
         textGraphic.anchor.y = 0;
         textGraphic.position.x = trackInfo.position[0] + paddingX;
@@ -356,7 +367,7 @@ export function drawRowLegend(
 
         graphics.addChild(textGraphic);
 
-        const textStyleObj = new HGC.libraries.PIXI.TextStyle(getLegendTextStyle(theme.legend.labelColor));
+        const textStyleObj = new HGC.libraries.PIXI.TextStyle(labelTextStyle);
         const textMetrics = HGC.libraries.PIXI.TextMetrics.measureText(category, textStyleObj);
 
         graphics.beginFill(colorToHex(theme.legend.background), theme.legend.backgroundOpacity);

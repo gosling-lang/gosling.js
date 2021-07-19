@@ -93,7 +93,10 @@ export class HiGlassModel {
         text: string,
         textColor = 'black',
         fontSize = 14,
-        fontWeight = 'normal'
+        fontWeight = 'normal',
+        align = 'left',
+        backgroundColor = 'transparent',
+        fontFamily = 'Arial'
     ) {
         if (this.getLastView()) {
             this.getLastView().tracks.top?.push({
@@ -101,13 +104,13 @@ export class HiGlassModel {
                 width,
                 height,
                 options: {
-                    backgroundColor: 'transparent',
+                    backgroundColor,
                     textColor,
                     fontSize,
                     fontWeight,
-                    fontFamily: 'sans-serif', // 'Arial',
+                    fontFamily,
                     offsetY: 0, // offset from the top of the track
-                    align: 'left',
+                    align,
                     text
                 }
             });
@@ -267,6 +270,9 @@ export class HiGlassModel {
                 assembly: this.getAssembly(),
                 stroke: 'transparent', // text outline
                 color: options.theme.axis.labelColor,
+                fontSize: options.theme.axis.labelFontSize,
+                fontFamily: options.theme.axis.labelFontFamily,
+                fontWeight: options.theme.axis.labelFontWeight,
                 tickColor: options.theme.axis.tickColor,
                 tickFormat: type === 'narrower' ? 'si' : 'plain',
                 tickPositions: type === 'regular' ? 'even' : 'ends',

@@ -66,33 +66,56 @@ export interface CompleteThemeDeep {
 export interface RootStyle {
     background?: string;
     titleColor?: string;
+    titleFontSize?: number;
+    titleFontFamily?: string;
+    titleAlign?: 'left' | 'middle' | 'right';
+    titleFontWeight?: 'bold' | 'normal' | 'light';
+    titleBackgroundColor?: string;
     subtitleColor?: string;
+    subtitleFontSize?: number;
+    subtitleFontFamily?: string;
+    subtitleAlign?: 'left' | 'middle' | 'right';
+    subtitleFontWeight?: 'bold' | 'normal' | 'light';
+    subtitleBackgroundColor?: string;
     mousePositionColor?: string;
 }
 
 export interface TrackStyle {
+    background?: string;
+    alternatingBackground?: string; // used to fill all even rows
     titleColor?: string;
     titleBackground?: string;
+    titleFontSize?: number;
+    titleAlign?: 'left' | 'middle' | 'right';
     outline?: string;
     outlineWidth?: number;
     // ...
 }
 
 export interface LegendStyle {
+    position?: 'top' | 'right'; // TODO: support bottom and left, and even all corners (e.g., top-left, bottom-right, etc)
+    tickColor?: string;
     labelColor?: string;
+    labelFontSize?: number;
+    labelFontWeight?: 'bold' | 'normal' | 'light';
+    labelFontFamily?: string;
     background?: string;
     backgroundOpacity?: number;
     backgroundStroke?: string;
-    tickColor?: string;
     // ...
 }
 
 export interface AxisStyle {
     tickColor?: string;
     labelColor?: string;
+    labelFontSize?: number;
+    labelFontWeight?: 'bold' | 'normal' | 'light';
+    labelFontFamily?: string;
     baselineColor?: string;
     gridColor?: string;
     gridStrokeWidth?: number;
+    gridStrokeType?: 'solid' | 'dashed';
+    gridStrokeDash?: [number, number];
     // ...
 }
 
@@ -156,21 +179,39 @@ export const THEMES: { [key in Themes]: Required<CompleteThemeDeep> } = {
         root: {
             background: 'white',
             titleColor: 'black',
+            titleBackgroundColor: 'transparent',
+            titleFontSize: 18,
+            titleFontFamily: 'Arial',
+            titleAlign: 'left',
+            titleFontWeight: 'bold',
             subtitleColor: 'gray',
+            subtitleBackgroundColor: 'transparent',
+            subtitleFontSize: 16,
+            subtitleFontFamily: 'Arial',
+            subtitleFontWeight: 'normal',
+            subtitleAlign: 'left',
             mousePositionColor: '#000000'
         },
 
         track: {
+            background: 'transparent',
+            alternatingBackground: 'transparent',
             titleColor: 'black',
             titleBackground: 'white',
+            titleFontSize: 24,
+            titleAlign: 'left',
             outline: 'black',
             outlineWidth: 1
         },
 
         legend: {
+            position: 'top',
             background: 'white',
             backgroundOpacity: 0.7,
             labelColor: 'black',
+            labelFontSize: 12,
+            labelFontWeight: 'normal',
+            labelFontFamily: 'Arial',
             backgroundStroke: '#DBDBDB',
             tickColor: 'black'
         },
@@ -178,9 +219,14 @@ export const THEMES: { [key in Themes]: Required<CompleteThemeDeep> } = {
         axis: {
             tickColor: 'black',
             labelColor: 'black',
+            labelFontSize: 12,
+            labelFontWeight: 'normal',
+            labelFontFamily: 'Arial',
             baselineColor: 'black',
             gridColor: '#E3E3E3',
-            gridStrokeWidth: 1
+            gridStrokeWidth: 1,
+            gridStrokeType: 'solid',
+            gridStrokeDash: [4, 4]
         },
 
         markCommon: {
@@ -232,21 +278,39 @@ export const THEMES: { [key in Themes]: Required<CompleteThemeDeep> } = {
         root: {
             background: 'black',
             titleColor: 'white',
+            titleBackgroundColor: 'transparent',
+            titleFontSize: 18,
+            titleFontFamily: 'Arial',
+            titleAlign: 'middle',
+            titleFontWeight: 'bold',
             subtitleColor: 'lightgray',
+            subtitleBackgroundColor: 'transparent',
+            subtitleFontSize: 16,
+            subtitleFontFamily: 'Arial',
+            subtitleAlign: 'middle',
+            subtitleFontWeight: 'normal',
             mousePositionColor: '#FFFFFF'
         },
 
         track: {
+            background: 'transparent',
+            alternatingBackground: 'transparent',
             titleColor: 'white',
             titleBackground: 'black',
+            titleFontSize: 18,
+            titleAlign: 'left',
             outline: 'white',
             outlineWidth: 1
         },
 
         legend: {
+            position: 'right',
             background: 'black',
             backgroundOpacity: 0.7,
             labelColor: 'white',
+            labelFontSize: 12,
+            labelFontWeight: 'normal',
+            labelFontFamily: 'Arial',
             backgroundStroke: '#DBDBDB',
             tickColor: 'white'
         },
@@ -254,9 +318,14 @@ export const THEMES: { [key in Themes]: Required<CompleteThemeDeep> } = {
         axis: {
             tickColor: 'white',
             labelColor: 'white',
+            labelFontSize: 10,
+            labelFontWeight: 'normal',
+            labelFontFamily: 'Arial',
             baselineColor: 'white',
             gridColor: 'gray',
-            gridStrokeWidth: 1
+            gridStrokeWidth: 1,
+            gridStrokeType: 'solid',
+            gridStrokeDash: [4, 4]
         },
 
         markCommon: {
