@@ -1,4 +1,4 @@
-## [0.8.4](https://github.com/gosling-lang/gosling.js/compare/v0.8.3...v0.8.4) (2021-07-08)
+## [0.8.4](https://github.com/gosling-lang/gosling.js/compare/v0.8.3...v0.8.4) (2021-07-19)
 
 
 ### Bug Fixes
