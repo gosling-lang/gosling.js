@@ -2,8 +2,15 @@ import { GoslingTrackModel } from '../gosling-track-model';
 import { IsChannelDeep } from '../gosling.schema.guards';
 import { cartesianToPolar, valueToRadian } from '../utils/polar';
 import colorToHex from '../utils/color-to-hex';
+import { CompleteThemeDeep } from '../utils/theme';
 
-export function drawCircularOutlines(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackModel) {
+export function drawCircularOutlines(
+    HGC: any,
+    trackInfo: any,
+    tile: any,
+    tm: GoslingTrackModel,
+    theme: Required<CompleteThemeDeep>
+) {
     /* track spec */
     const spec = tm.spec();
 
@@ -33,7 +40,10 @@ export function drawCircularOutlines(HGC: any, trackInfo: any, tile: any, tm: Go
             1, // 0.4, // alpha
             1 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
         );
-        g.beginFill(colorToHex(tm.spec().style?.background ?? 'lightgray'), tm.spec().style?.backgroundOpacity ?? 0.05);
+        g.beginFill(
+            colorToHex(tm.spec().style?.background ?? theme.track.background),
+            tm.spec().style?.backgroundOpacity ?? (theme.track.background === 'transparent' ? 0 : 1)
+        );
         g.moveTo(posStartInner.x, posStartInner.y);
         g.arc(cx, cy, trackInnerRadius, startRad, endRad, true);
         g.arc(cx, cy, trackOuterRadius, endRad, startRad, false);

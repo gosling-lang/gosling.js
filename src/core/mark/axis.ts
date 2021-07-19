@@ -4,25 +4,10 @@ import colorToHex from '../utils/color-to-hex';
 import { CompleteThemeDeep } from '../utils/theme';
 import { scaleLinear } from 'd3-scale';
 import { cartesianToPolar, valueToRadian } from '../utils/polar';
+import { getTextStyle } from '../utils/text-style';
 
 const EXTENT_TICK_SIZE = 8;
 const TICK_SIZE = 6;
-
-/**
- * Axis text styles
- */
-export const getAxisTextStyle = (fill = 'black') => {
-    return {
-        fontSize: '10px',
-        fontFamily: 'sans-serif', // 'Arial',
-        fontWeight: 'normal',
-        fill,
-        background: 'white',
-        lineJoin: 'round'
-        // stroke: '#ffffff',
-        // strokeThickness: 2
-    };
-};
 
 /**
  * Draw linear scale Y axis
@@ -122,12 +107,19 @@ export function drawLinearYAxis(
         graphics.moveTo(dx, dy + rowHeight);
         graphics.lineTo(tickEnd, dy + rowHeight);
 
+        const styleConfig = getTextStyle({
+            color: theme.axis.labelColor,
+            size: theme.axis.labelFontSize,
+            fontFamily: theme.axis.labelFontFamily,
+            fontWeight: theme.axis.labelFontWeight
+        });
+
         /* Labels */
         ticks.forEach(t => {
             const y = yScale(t);
             tickEnd = isLeft ? dx + TICK_SIZE * 2 : dx - TICK_SIZE * 2;
 
-            const textGraphic = new HGC.libraries.PIXI.Text(t, getAxisTextStyle(theme.axis.labelColor));
+            const textGraphic = new HGC.libraries.PIXI.Text(t, styleConfig);
             textGraphic.anchor.x = isLeft ? 0 : 1;
             textGraphic.anchor.y = y === 0 ? 0.9 : 0.5;
             textGraphic.position.x = tickEnd;
@@ -300,15 +292,20 @@ export function drawCircularYAxis(
             // The position of a tick in the polar system
             const pos = cartesianToPolar(SCALED_TICK_SIZE(currentR) * 2, tw, currentR, cx, cy, startAngle, endAngle);
 
-            // ! Maybe combine this part with `axis-plugin-track.ts`
-            const textGraphic = new HGC.libraries.PIXI.Text(t, getAxisTextStyle(theme.axis.labelColor));
+            const styleConfig = getTextStyle({
+                color: theme.axis.labelColor,
+                size: theme.axis.labelFontSize,
+                fontFamily: theme.axis.labelFontFamily,
+                fontWeight: theme.axis.labelFontWeight
+            });
+            const textGraphic = new HGC.libraries.PIXI.Text(t, styleConfig);
             textGraphic.anchor.x = isLeft ? 1 : 0;
             textGraphic.anchor.y = 0.5;
             textGraphic.position.x = pos.x;
             textGraphic.position.y = pos.y;
 
             textGraphic.resolution = 4;
-            const txtStyle = new HGC.libraries.PIXI.TextStyle(getAxisTextStyle());
+            const txtStyle = new HGC.libraries.PIXI.TextStyle(styleConfig);
             const metric = HGC.libraries.PIXI.TextMetrics.measureText(textGraphic.text, txtStyle);
 
             // Scale the width of text label so that its width is the same when converted into circular form

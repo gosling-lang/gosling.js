@@ -4,6 +4,7 @@ import { group } from 'd3-array';
 import { getValueUsingChannel, IsStackedMark } from '../gosling.schema.guards';
 import { cartesianToPolar } from '../utils/polar';
 
+// Merge with the one in the `utils/text-style.ts`
 export const TEXT_STYLE_GLOBAL = {
     fontSize: '12px',
     fontFamily: 'sans-serif', // 'Arial',

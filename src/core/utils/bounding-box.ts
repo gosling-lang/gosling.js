@@ -4,11 +4,11 @@ import { HIGLASS_AXIS_SIZE } from '../higlass-model';
 import {
     DEFAULT_CIRCULAR_VIEW_PADDING,
     DEFAULT_INNER_RADIUS_PROP,
-    DEFAULT_SUBTITLE_HEIGHT,
-    DEFAULT_TITLE_HEIGHT,
-    DEFAULT_VIEW_SPACING
+    DEFAULT_VIEW_SPACING,
+    DEWFAULT_TITLE_PADDING_ON_TOP_AND_BOTTOM
 } from '../layout/defaults';
 import { traverseTracksAndViews, traverseViewArrangements } from './spec-preprocess';
+import { CompleteThemeDeep } from './theme';
 
 export interface Size {
     width: number;
@@ -74,7 +74,7 @@ export function getBoundingBox(trackInfos: TrackInfo[]) {
  * Collect information of individual tracks including their size/position and specs
  * @param spec
  */
-export function getRelativeTrackInfo(spec: GoslingSpec): TrackInfo[] {
+export function getRelativeTrackInfo(spec: GoslingSpec, theme: CompleteThemeDeep): TrackInfo[] {
     let trackInfos: TrackInfo[] = [] as TrackInfo[];
 
     // Collect track information including spec, bounding boxes, and RGL' `layout`.
@@ -86,7 +86,9 @@ export function getRelativeTrackInfo(spec: GoslingSpec): TrackInfo[] {
     // Titles
     if (spec.title || spec.subtitle) {
         // If title and/or subtitle presents, offset the y position by title/subtitle size
-        const titleHeight = (spec.title ? DEFAULT_TITLE_HEIGHT : 0) + (spec.subtitle ? DEFAULT_SUBTITLE_HEIGHT : 0);
+        const titleHeight =
+            (spec.title ? theme.root.titleFontSize + DEWFAULT_TITLE_PADDING_ON_TOP_AND_BOTTOM : 0) +
+            (spec.subtitle ? theme.root.subtitleFontSize + DEWFAULT_TITLE_PADDING_ON_TOP_AND_BOTTOM : 0);
         const marginBottom = 4;
 
         size.height += titleHeight + marginBottom;
