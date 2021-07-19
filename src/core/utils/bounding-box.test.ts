@@ -2,11 +2,12 @@ import { GoslingSpec, Track } from '../gosling.schema';
 import { DEFAULT_CIRCULAR_VIEW_PADDING, DEFAULT_VIEW_SPACING } from '../layout/defaults';
 import { getBoundingBox, getRelativeTrackInfo } from './bounding-box';
 import { traverseToFixSpecDownstream } from './spec-preprocess';
+import { getTheme } from './theme';
 
 describe('Arrangement', () => {
     it('1 View, 1 Track', () => {
         const spec = { tracks: [{ overlay: [], width: 10, height: 10 }] };
-        const info = getRelativeTrackInfo(spec);
+        const info = getRelativeTrackInfo(spec, getTheme());
         expect(info).toHaveLength(1);
 
         expect(info[0].track).toEqual(spec.tracks[0]);
@@ -21,8 +22,8 @@ describe('Arrangement', () => {
                 { overlay: [], width: 10, height: 10, overlayOnPreviousTrack: true }
             ]
         };
-        expect(getRelativeTrackInfo(spec1)).toHaveLength(2);
-        expect(getRelativeTrackInfo(spec1)[1].boundingBox.y).toEqual(0);
+        expect(getRelativeTrackInfo(spec1, getTheme())).toHaveLength(2);
+        expect(getRelativeTrackInfo(spec1, getTheme())[1].boundingBox.y).toEqual(0);
     });
 
     it('1 View, 2 Tracks (N Overlaid Tracks)', () => {
@@ -46,8 +47,12 @@ describe('Arrangement', () => {
                 { overlay: [], width: 10, height: 10 }
             ]
         };
-        expect(getBoundingBox(getRelativeTrackInfo(spec1))).toEqual(getBoundingBox(getRelativeTrackInfo(spec2)));
-        expect(getBoundingBox(getRelativeTrackInfo(spec1))).toEqual(getBoundingBox(getRelativeTrackInfo(spec3)));
+        expect(getBoundingBox(getRelativeTrackInfo(spec1, getTheme()))).toEqual(
+            getBoundingBox(getRelativeTrackInfo(spec2, getTheme()))
+        );
+        expect(getBoundingBox(getRelativeTrackInfo(spec1, getTheme()))).toEqual(
+            getBoundingBox(getRelativeTrackInfo(spec3, getTheme()))
+        );
     });
 
     it('1 View, N Tracks', () => {
@@ -57,7 +62,7 @@ describe('Arrangement', () => {
                 { overlay: [], width: 10, height: 10 }
             ]
         };
-        const info = getRelativeTrackInfo(spec);
+        const info = getRelativeTrackInfo(spec, getTheme());
         expect(info).toHaveLength(2);
 
         expect(info[0].track).toEqual(spec.tracks[0]);
@@ -87,7 +92,7 @@ describe('Arrangement', () => {
                 }
             ]
         };
-        const info = getRelativeTrackInfo(spec);
+        const info = getRelativeTrackInfo(spec, getTheme());
         expect(info).toHaveLength(4);
 
         const size = getBoundingBox(info);
@@ -117,7 +122,7 @@ describe('Arrangement', () => {
                 }
             ]
         };
-        const info = getRelativeTrackInfo(spec);
+        const info = getRelativeTrackInfo(spec, getTheme());
         expect(info).toHaveLength(4);
 
         const size = getBoundingBox(info);
@@ -164,7 +169,7 @@ describe('Arrangement', () => {
                 }
             ]
         };
-        expect(getRelativeTrackInfo(spec1)).toEqual(getRelativeTrackInfo(spec2));
+        expect(getRelativeTrackInfo(spec1, getTheme())).toEqual(getRelativeTrackInfo(spec2, getTheme()));
     });
 
     it('Serial Views === HConcat Views in Linear Layout', () => {
@@ -202,7 +207,7 @@ describe('Arrangement', () => {
                 }
             ]
         };
-        expect(getRelativeTrackInfo(spec1)).toEqual(getRelativeTrackInfo(spec2));
+        expect(getRelativeTrackInfo(spec1, getTheme())).toEqual(getRelativeTrackInfo(spec2, getTheme()));
     });
 
     it('Complex Parallel Views in Linear Layout', () => {
@@ -221,7 +226,7 @@ describe('Arrangement', () => {
                     }
                 ]
             };
-            const info = getRelativeTrackInfo(spec);
+            const info = getRelativeTrackInfo(spec, getTheme());
             expect(info).toHaveLength(2);
 
             const size = getBoundingBox(info);
@@ -248,7 +253,7 @@ describe('Arrangement', () => {
                     }
                 ]
             };
-            const info = getRelativeTrackInfo(spec);
+            const info = getRelativeTrackInfo(spec, getTheme());
             expect(info).toHaveLength(2);
 
             const size = getBoundingBox(info);
@@ -278,7 +283,7 @@ describe('Arrangement', () => {
                 ]
             };
             traverseToFixSpecDownstream(spec);
-            const info = getRelativeTrackInfo(spec);
+            const info = getRelativeTrackInfo(spec, getTheme());
             expect(info).toHaveLength(2);
 
             const size = getBoundingBox(info);
@@ -309,7 +314,7 @@ describe('Arrangement', () => {
                 arrangement: 'parallel',
                 views: [{ tracks: [t] }, { tracks: [t] }]
             };
-            expect(getRelativeTrackInfo(spec1)).toEqual(getRelativeTrackInfo(spec2));
+            expect(getRelativeTrackInfo(spec1, getTheme())).toEqual(getRelativeTrackInfo(spec2, getTheme()));
         }
         {
             const t = { overlay: [], width: 10, height: 10 };
@@ -327,7 +332,7 @@ describe('Arrangement', () => {
                 arrangement: 'serial',
                 views: [{ tracks: [t] }, { tracks: [t] }]
             };
-            expect(getRelativeTrackInfo(spec1)).toEqual(getRelativeTrackInfo(spec2));
+            expect(getRelativeTrackInfo(spec1, getTheme())).toEqual(getRelativeTrackInfo(spec2, getTheme()));
         }
         {
             const t = { overlay: [], width: 10, height: 10 };
@@ -344,7 +349,7 @@ describe('Arrangement', () => {
                     }
                 ]
             };
-            const info = getRelativeTrackInfo(spec);
+            const info = getRelativeTrackInfo(spec, getTheme());
             expect(info).toHaveLength(3);
 
             const size = getBoundingBox(info);
@@ -373,7 +378,7 @@ describe('Arrangement', () => {
                     }
                 ]
             };
-            const info = getRelativeTrackInfo(spec);
+            const info = getRelativeTrackInfo(spec, getTheme());
             expect(info).toHaveLength(3);
 
             const size = getBoundingBox(info);

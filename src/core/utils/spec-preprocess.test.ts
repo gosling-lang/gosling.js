@@ -1,17 +1,21 @@
 import { GoslingSpec, SingleView, Track } from '../gosling.schema';
 import { getBoundingBox, getRelativeTrackInfo } from './bounding-box';
 import { traverseToFixSpecDownstream, overrideTemplates, convertToFlatTracks } from './spec-preprocess';
+import { getTheme } from './theme';
 
 describe('Fix Spec Downstream', () => {
     it('Empty Views', () => {
-        const info = getRelativeTrackInfo({
-            arrangement: 'parallel',
-            views: [
-                {
-                    tracks: []
-                }
-            ]
-        });
+        const info = getRelativeTrackInfo(
+            {
+                arrangement: 'parallel',
+                views: [
+                    {
+                        tracks: []
+                    }
+                ]
+            },
+            getTheme()
+        );
         const size = getBoundingBox(info);
         expect(!isNaN(+size.width) && isFinite(size.width)).toEqual(true);
         expect(!isNaN(+size.height) && isFinite(size.height)).toEqual(true);
