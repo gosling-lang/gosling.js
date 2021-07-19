@@ -1,3 +1,12 @@
+## [0.8.8](https://github.com/gosling-lang/gosling.js/compare/v0.8.7...v0.8.8) (2021-07-19)
+
+
+### Features
+
+* add more theme components like dashed grid, font styles, background colors ([#436](https://github.com/gosling-lang/gosling.js/issues/436)) ([1881e7d](https://github.com/gosling-lang/gosling.js/commit/1881e7df4607e64c2458689ee7f3bc40600a8dd5))
+
+
+
 ## [0.8.7](https://github.com/gosling-lang/gosling.js/compare/v0.8.6...v0.8.7) (2021-07-12)
 
 
