@@ -1,3 +1,12 @@
+## [0.8.9](https://github.com/gosling-lang/gosling.js/compare/v0.8.8...v0.8.9) (2021-07-20)
+
+
+### Bug Fixes
+
+* safely use default values when theme in undefined ([#437](https://github.com/gosling-lang/gosling.js/issues/437)) ([67d124b](https://github.com/gosling-lang/gosling.js/commit/67d124bada1d338c19f49a31f925dd4e212fcc44))
+
+
+
 ## [0.8.8](https://github.com/gosling-lang/gosling.js/compare/v0.8.7...v0.8.8) (2021-07-19)
 
 
