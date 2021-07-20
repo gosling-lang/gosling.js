@@ -87,8 +87,8 @@ export function getRelativeTrackInfo(spec: GoslingSpec, theme: CompleteThemeDeep
     if (spec.title || spec.subtitle) {
         // If title and/or subtitle presents, offset the y position by title/subtitle size
         const titleHeight =
-            (spec.title ? theme.root.titleFontSize + DEWFAULT_TITLE_PADDING_ON_TOP_AND_BOTTOM : 0) +
-            (spec.subtitle ? theme.root.subtitleFontSize + DEWFAULT_TITLE_PADDING_ON_TOP_AND_BOTTOM : 0);
+            (spec.title ? (theme.root.titleFontSize ?? 18) + DEWFAULT_TITLE_PADDING_ON_TOP_AND_BOTTOM : 0) +
+            (spec.subtitle ? (theme.root.subtitleFontSize ?? 14) + DEWFAULT_TITLE_PADDING_ON_TOP_AND_BOTTOM : 0);
         const marginBottom = 4;
 
         size.height += titleHeight + marginBottom;
