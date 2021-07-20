@@ -18,7 +18,7 @@ export function drawBackground(
     // refer to https://github.com/higlass/higlass/blob/f82c0a4f7b2ab1c145091166b0457638934b15f3/app/scripts/PixiTrack.js#L129
     const g = trackInfo.pBackground;
 
-    if (tm.spec().style?.background || theme.track.background !== 'transparent') {
+    if (tm.spec().style?.background || (theme.track.background && theme.track.background !== 'transparent')) {
         g.clear();
 
         const bg = tm.spec().style?.background ?? theme.track.background;
@@ -34,7 +34,7 @@ export function drawBackground(
         g.drawRect(l, t, w, h);
     }
 
-    if (theme.track.alternatingBackground !== 'transparent') {
+    if (theme.track.alternatingBackground && theme.track.alternatingBackground !== 'transparent') {
         const spec = tm.spec();
 
         if (!IsChannelDeep(spec.row) || spec.row.type !== 'nominal') {

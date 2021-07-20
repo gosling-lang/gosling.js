@@ -10,6 +10,7 @@ import { viridisColorMap } from './utils/colors';
 import { IsDataDeep, IsChannelDeep, IsDataDeepTileset } from './gosling.schema.guards';
 import { DEWFAULT_TITLE_PADDING_ON_TOP_AND_BOTTOM } from './layout/defaults';
 import { CompleteThemeDeep } from './utils/theme';
+import { DEFAULT_TEXT_STYLE } from './utils/text-style';
 
 /**
  * Convert a gosling track into a HiGlass view and add it into a higlass model.
@@ -168,27 +169,28 @@ export function goslingToHiGlass(
         if (typeof firstResolvedSpec.title === 'string') {
             hgModel.setTextTrack(
                 bb.width,
-                theme.root.titleFontSize + DEWFAULT_TITLE_PADDING_ON_TOP_AND_BOTTOM,
+                (theme.root.titleFontSize ?? 18) + DEWFAULT_TITLE_PADDING_ON_TOP_AND_BOTTOM,
                 firstResolvedSpec.title,
                 theme.root.titleColor,
                 theme.root.titleFontSize ?? 18,
                 theme.root.titleFontWeight,
                 theme.root.titleAlign,
                 theme.root.titleBackgroundColor,
-                theme.root.titleFontFamily
+                theme.root.titleFontFamily ?? DEFAULT_TEXT_STYLE.fontFamily
             );
         }
         if (typeof firstResolvedSpec.subtitle === 'string') {
             hgModel.setTextTrack(
                 bb.width,
-                theme.root.subtitleFontSize + DEWFAULT_TITLE_PADDING_ON_TOP_AND_BOTTOM,
+                // TODO: better way to safely get the value when undefined?
+                (theme.root.subtitleFontSize ?? 14) + DEWFAULT_TITLE_PADDING_ON_TOP_AND_BOTTOM,
                 firstResolvedSpec.subtitle,
                 theme.root.subtitleColor,
                 theme.root.subtitleFontSize ?? 14,
                 theme.root.subtitleFontWeight,
                 theme.root.subtitleAlign,
                 theme.root.subtitleBackgroundColor,
-                theme.root.subtitleFontFamily
+                theme.root.subtitleFontFamily ?? DEFAULT_TEXT_STYLE.fontFamily
             );
         }
     }

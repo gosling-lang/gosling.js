@@ -42,7 +42,8 @@ export function drawCircularOutlines(
         );
         g.beginFill(
             colorToHex(tm.spec().style?.background ?? theme.track.background),
-            tm.spec().style?.backgroundOpacity ?? (theme.track.background === 'transparent' ? 0 : 1)
+            tm.spec().style?.backgroundOpacity ??
+                (!theme.track.background || theme.track.background === 'transparent' ? 0 : 1)
         );
         g.moveTo(posStartInner.x, posStartInner.y);
         g.arc(cx, cy, trackInnerRadius, startRad, endRad, true);
