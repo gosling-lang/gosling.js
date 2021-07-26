@@ -1,6 +1,5 @@
-## [0.8.4](https://github.com/gosling-lang/gosling.js/compare/v0.8.3...v0.8.4) (2021-07-19)
+## [0.8.12](https://github.com/gosling-lang/gosling.js/compare/v0.8.10...v0.8.12) (2021-07-26)
 ## [0.8.11](https://github.com/gosling-lang/gosling.js/compare/v0.8.10...v0.8.11) (2021-07-26)
-
 
 
 ## [0.8.10](https://github.com/gosling-lang/gosling.js/compare/v0.8.9...v0.8.10) (2021-07-26)
