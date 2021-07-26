@@ -1,3 +1,13 @@
+## [0.8.10](https://github.com/gosling-lang/gosling.js/compare/v0.8.9...v0.8.10) (2021-07-26)
+
+
+### Bug Fixes
+
+* draw circular background on the back, not in front of some tiles ([#441](https://github.com/gosling-lang/gosling.js/issues/441)) ([b12f19d](https://github.com/gosling-lang/gosling.js/commit/b12f19d71f6f7874042b84aed3ab8831ebc77c9a))
+* ensure the entire height a multiple of 8 ([#442](https://github.com/gosling-lang/gosling.js/issues/442)) ([91f0dae](https://github.com/gosling-lang/gosling.js/commit/91f0dae784811fc82cac7997f64b3e8b96e49e63))
+
+
+
 ## [0.8.9](https://github.com/gosling-lang/gosling.js/compare/v0.8.8...v0.8.9) (2021-07-20)
 
 
