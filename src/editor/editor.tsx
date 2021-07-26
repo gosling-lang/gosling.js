@@ -188,7 +188,7 @@ function Editor(props: any) {
     const [isShowAbout, setIsShowAbout] = useState(false);
 
     // Editor theme
-    const [theme] = useState<'light' | 'dark'>('light');
+    const [theme] = useState<string>('light'); // not used
 
     // Resizer `div`
     const descResizerRef = useRef<any>();
