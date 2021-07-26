@@ -15,6 +15,7 @@ export function drawCircularOutlines(
     const spec = tm.spec();
 
     /* track size */
+    const [l, t] = trackInfo.position;
     const [trackWidth, trackHeight] = trackInfo.dimensions;
 
     /* circular parameters */
@@ -22,15 +23,15 @@ export function drawCircularOutlines(
     const trackOuterRadius = spec.outerRadius ?? 300; // TODO: should be smaller than Math.min(width, height)
     const startAngle = spec.startAngle ?? 0;
     const endAngle = spec.endAngle ?? 360;
-    const cx = trackWidth / 2.0;
-    const cy = trackHeight / 2.0;
+    const cx = l + trackWidth / 2.0;
+    const cy = t + trackHeight / 2.0;
 
     const posStartInner = cartesianToPolar(0, trackWidth, trackInnerRadius, cx, cy, startAngle, endAngle);
     const startRad = valueToRadian(0, trackWidth, startAngle, endAngle);
     const endRad = valueToRadian(trackWidth, trackWidth, startAngle, endAngle);
 
     /* render */
-    const g = tile.graphics;
+    const g = trackInfo.pBackground;
 
     if (!(spec.layout === 'circular' && spec.mark === 'withinLink')) {
         // circular link marks usually use entire inner space
