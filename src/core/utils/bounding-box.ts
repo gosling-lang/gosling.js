@@ -70,7 +70,7 @@ export function getBoundingBox(trackInfos: TrackInfo[]) {
 
     // TODO: it should be multiples of `8` (refer to `pixelPreciseMarginPadding`)
     if (height % 8 !== 0) {
-        height += height % 8;
+        height += 8 - (height % 8);
     }
 
     return { width, height };
