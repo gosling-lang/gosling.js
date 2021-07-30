@@ -84,10 +84,6 @@ export function drawMark(HGC: any, trackInfo: any, tile: any, model: GoslingTrac
             drawArea(HGC, trackInfo, tile, model);
             break;
         case 'rect':
-            if (model.spec().layout !== 'circular' && model.spec().prerelease?.testUsingNewRectRenderingForBAM) {
-                // In this case, we use different method for the rendering.
-                break;
-            }
             drawRect(HGC, trackInfo, tile, model);
             break;
         case 'triangleLeft':
@@ -130,6 +126,13 @@ export function drawPreEmbellishment(
         // We do not draw brush. Instead, higlass do.
         return;
     }
+
+    // This is only to render embellishments only once.
+    // TODO: Instead of rendering and removing for every tiles, render pBorder only once
+    trackInfo.pBackground.clear();
+    trackInfo.pBackground.removeChildren();
+    trackInfo.pBorder.clear();
+    trackInfo.pBorder.removeChildren();
 
     const CIRCULAR = model.spec().layout === 'circular';
 
