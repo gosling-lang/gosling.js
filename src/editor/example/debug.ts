@@ -1,4 +1,4 @@
-import { Range, Domain, GoslingSpec } from '../../core/gosling.schema';
+import { Range, Domain, GoslingSpec, TemplateTrack } from '../../core/gosling.schema';
 
 const colorDomain: Domain = [
     'Metabolic',
@@ -24,13 +24,25 @@ const colorRange: Range = [
     '#CE72BB'
 ];
 
-export const EX_SPEC_FUJI_PLOT: GoslingSpec = {
-    title: 'Fuji Plot',
-    subtitle: 'Kanai, M. et al., Nat. Genet. (2018)',
-    static: true,
-    layout: 'circular',
-    centerRadius: 0.05,
+export const geneTemplate: TemplateTrack = {
+    template: 'gene',
+    data: {
+        type: 'csv',
+        url: 'https://raw.githubusercontent.com/mkanai/fujiplot/master/input_example/input.txt',
+        chromosomeField: 'CHR',
+        genomicFields: ['BP'],
+        separator: '\t'
+    },
+    width: 800,
+    height: 300
+}
+
+export const EX_SPEC_DEBUG: GoslingSpec = {
+    title: 'Chart Templates',
+    subtitle: 'Using chart templates in Gosling.js helps you more easily create visualizations!',
+    spacing: 0,
     tracks: [
+        geneTemplate,
         {
             data: {
                 type: 'csv',
@@ -47,26 +59,8 @@ export const EX_SPEC_FUJI_PLOT: GoslingSpec = {
             size: { value: 3 },
             stroke: { value: 'black' },
             strokeWidth: { value: 0.5 },
-            style: { outlineWidth: 0.5 },
-            width: 550,
-            height: 200
-        },
-        {
-            data: {
-                type: 'csv',
-                url: 'https://raw.githubusercontent.com/mkanai/fujiplot/master/input_example/input.txt',
-                chromosomeField: 'CHR',
-                genomicFields: ['BP'],
-                separator: '\t'
-            },
-            mark: 'rect',
-            // stackY: true,
-            x: { field: 'BP', type: 'genomic' },
-            size: { value: 12 },
-            color: { field: 'CATEGORY', type: 'nominal', domain: colorDomain, range: colorRange, legend: true },
-            style: { outlineWidth: 0.5 },
-            width: 550,
-            height: 30
+            width: 800,
+            height: 300
         }
     ]
 };

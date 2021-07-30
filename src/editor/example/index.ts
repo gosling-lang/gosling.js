@@ -8,7 +8,7 @@ import { EX_SPEC_BASIC_SEMANTIC_ZOOM } from './basic-semantic-zoom';
 import { EX_SPEC_MARK_DISPLACEMENT } from './mark-displacement';
 import { EX_SPEC_CIRCULAR_OVERVIEW_LINEAR_DETAIL } from './circular-overview-linear-detail-views';
 import { EX_SPEC_SARS_COV_2 } from './sars-cov-2';
-import { EX_SPEC_CIRCOS } from './circos';
+import { EX_SPEC_CIRCOS, EX_SPEC_CIRCULR_RANGE } from './circos';
 import { EX_SPEC_GREMLIN } from './gremlin';
 import { EX_SPEC_GENE_ANNOTATION } from './gene-annotation';
 import { EX_SPEC_CLINVAR_LOLLIPOP, EX_SPEC_SEQUENCE_TRACK } from './semantic-zoom';
@@ -16,8 +16,8 @@ import { EX_SPEC_GIVE } from './give';
 import { EX_SPEC_CORCES_ET_AL } from './corces';
 import { EX_SPEC_CYTOBANDS } from './ideograms';
 import { EX_SPEC_PILEUP } from './pileup';
-import { EX_SPEC_FUJI_PLOT } from './fuji';
 import { EX_SPEC_BAND } from './vertical-band';
+import { EX_SPEC_DEBUG } from './debug';
 
 export const examples: ReadonlyArray<{
     name: string;
@@ -30,9 +30,9 @@ export const examples: ReadonlyArray<{
 }> = [
     {
         name: 'DEBUG',
-        spec: EX_SPEC_FUJI_PLOT,
-        id: 'FUJI_PLOT',
-        hidden: true
+        spec: EX_SPEC_DEBUG,
+        id: 'DEBUG',
+        hidden: false
     },
     {
         name: 'Basic Example: Visual Encoding',
@@ -111,6 +111,12 @@ export const examples: ReadonlyArray<{
         name: 'Circos',
         id: 'CIRCOS',
         spec: EX_SPEC_CIRCOS
+    },
+    {
+        name: 'Circular Range (Inspired By Weather Radials)',
+        id: 'Circular Range',
+        spec: EX_SPEC_CIRCULR_RANGE,
+        hidden: true
     },
     {
         name: 'SARS-CoV-2',

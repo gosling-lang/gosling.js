@@ -69,7 +69,7 @@ export interface CommonViewDef {
 }
 
 /* ----------------------------- TRACK ----------------------------- */
-export type Track = SingleTrack | OverlaidTrack | DataTrack;
+export type Track = SingleTrack | OverlaidTrack | DataTrack | TemplateTrack;
 
 export interface CommonRequiredTrackDef {
     width: number;
@@ -534,13 +534,96 @@ export interface JSONParseTransform {
     genomicLengthField: string; // Length of genomic interval
 }
 
-/* ----------------------------- GLYPH (deprecated, but to be supported again) ----------------------------- */
-export type MarkDeep = MarkGlyphPreset | MarkGlyph | MarkWithStyle;
+/* ----------------------------- Templates ----------------------------- */
 
-export interface MarkWithStyle {
-    type: MarkType;
-    curvature?: 'straight' | 'stepwise' | 'curved';
+/**
+ * Template specification that will be internally converted into `SingleTrack` for rendering
+ */
+export interface TemplateTrack extends CommonRequiredTrackDef {
+    // Name of the template
+    template: string;
+    
+    // Data specification is identical to `SingleTrack`
+    data: DataDeep;
+
+    // ! TODO: Is there a way to make this not nested while preserving the other specific properties like data and template?
+    // https://basarat.gitbook.io/typescript/type-system/index-signatures#excluding-certain-properties-from-the-index-signature
+    // https://stackoverflow.com/questions/51465182/how-to-remove-index-signature-using-mapped-types
+    // Custom channels (e.g., geneHeight, strandColor, ...)
+    encoding?: {
+        [k : string]: Channel;
+    }
 }
+
+export interface TemplateDef {
+    name: string;
+    customChannels: CustomChannelDef[];
+    mapping: MappingDefinition[];
+}
+
+export type MappingDefinition = CommonRequiredTrackDef & Partial<Omit<TemplateTrackForMapping, 'data' | 'height' | 'width' | 'layout' | 'title' | 'subtitle'>>;
+
+export interface CustomChannelDef {
+    channel: string;
+    type: FieldType | 'value';
+    required?: boolean;
+}
+
+export type ChannelWithBase = Channel & {
+    base?: string;
+}
+
+/**
+ * Based on `SingleTrack` but the differeces are only the type of channels 
+ * which additionally have `base` properties to override properties from a template spec
+ * and remove of certain properties (e.g., `data`)
+ */
+export interface TemplateTrackForMapping extends CommonTrackDef {
+    // Data transformation
+    dataTransform?: DataTransform[];
+
+    tooltip?: Tooltip[];
+
+    // Mark
+    mark: Mark;
+
+    // Visual channels
+    x?: ChannelWithBase; // We could have a special type of Channel for axes
+    y?: ChannelWithBase;
+    xe?: ChannelWithBase;
+    ye?: ChannelWithBase;
+
+    x1?: ChannelWithBase;
+    y1?: ChannelWithBase;
+    x1e?: ChannelWithBase;
+    y1e?: ChannelWithBase;
+
+    row?: ChannelWithBase;
+    column?: ChannelWithBase;
+
+    color?: ChannelWithBase;
+    size?: ChannelWithBase;
+    text?: ChannelWithBase;
+
+    stroke?: ChannelWithBase;
+    strokeWidth?: ChannelWithBase;
+    opacity?: ChannelWithBase;
+
+    // Resolving overlaps
+    displacement?: Displacement;
+
+    // Visibility
+    visibility?: VisibilityCondition[];
+
+    // !! TODO: Remove these?
+    // Experimental
+    flipY?: boolean; // This is only supported for `link` marks.
+    stretch?: boolean; // Stretch the size to the given range? (e.g., [x, xe])
+    overrideTemplate?: boolean; // Override a spec template that is defined for a given data type.
+}
+
+/* ----------------------- Below is deprecated ----------------------- */
+export type MarkDeep = MarkGlyphPreset | MarkGlyph;
 
 export interface MarkGlyphPreset {
     type: string; //GLYPH_LOCAL_PRESET_TYPE | GLYPH_HIGLASS_PRESET_TYPE;

@@ -1451,9 +1451,6 @@
         },
         {
           "$ref": "#/definitions/MarkGlyph"
-        },
-        {
-          "$ref": "#/definitions/MarkWithStyle"
         }
       ]
     },
@@ -1546,26 +1543,6 @@
         "header"
       ],
       "type": "string"
-    },
-    "MarkWithStyle": {
-      "additionalProperties": false,
-      "properties": {
-        "curvature": {
-          "enum": [
-            "straight",
-            "stepwise",
-            "curved"
-          ],
-          "type": "string"
-        },
-        "type": {
-          "$ref": "#/definitions/MarkType"
-        }
-      },
-      "required": [
-        "type"
-      ],
-      "type": "object"
     },
     "MatrixData": {
       "additionalProperties": false,
@@ -2241,6 +2218,12 @@
               "displacement": {
                 "$ref": "#/definitions/Displacement"
               },
+              "encoding": {
+                "additionalProperties": {
+                  "$ref": "#/definitions/Channel"
+                },
+                "type": "object"
+              },
               "endAngle": {
                 "type": "number"
               },
@@ -2478,6 +2461,9 @@
                 "$ref": "#/definitions/Style"
               },
               "subtitle": {
+                "type": "string"
+              },
+              "template": {
                 "type": "string"
               },
               "text": {
@@ -2905,6 +2891,12 @@
                   "displacement": {
                     "$ref": "#/definitions/Displacement"
                   },
+                  "encoding": {
+                    "additionalProperties": {
+                      "$ref": "#/definitions/Channel"
+                    },
+                    "type": "object"
+                  },
                   "endAngle": {
                     "type": "number"
                   },
@@ -3142,6 +3134,9 @@
                     "$ref": "#/definitions/Style"
                   },
                   "subtitle": {
+                    "type": "string"
+                  },
+                  "template": {
                     "type": "string"
                   },
                   "text": {
@@ -3430,6 +3425,12 @@
                       "displacement": {
                         "$ref": "#/definitions/Displacement"
                       },
+                      "encoding": {
+                        "additionalProperties": {
+                          "$ref": "#/definitions/Channel"
+                        },
+                        "type": "object"
+                      },
                       "endAngle": {
                         "type": "number"
                       },
@@ -3667,6 +3668,9 @@
                         "$ref": "#/definitions/Style"
                       },
                       "subtitle": {
+                        "type": "string"
+                      },
+                      "template": {
                         "type": "string"
                       },
                       "text": {
@@ -4259,6 +4263,12 @@
                   "displacement": {
                     "$ref": "#/definitions/Displacement"
                   },
+                  "encoding": {
+                    "additionalProperties": {
+                      "$ref": "#/definitions/Channel"
+                    },
+                    "type": "object"
+                  },
                   "endAngle": {
                     "type": "number"
                   },
@@ -4496,6 +4506,9 @@
                     "$ref": "#/definitions/Style"
                   },
                   "subtitle": {
+                    "type": "string"
+                  },
+                  "template": {
                     "type": "string"
                   },
                   "text": {
@@ -4805,6 +4818,37 @@
       },
       "type": "object"
     },
+    "TemplateTrack": {
+      "additionalProperties": false,
+      "description": "Template specification that will be internally converted into `SingleTrack` for rendering",
+      "properties": {
+        "data": {
+          "$ref": "#/definitions/DataDeep"
+        },
+        "encoding": {
+          "additionalProperties": {
+            "$ref": "#/definitions/Channel"
+          },
+          "type": "object"
+        },
+        "height": {
+          "type": "number"
+        },
+        "template": {
+          "type": "string"
+        },
+        "width": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "data",
+        "height",
+        "template",
+        "width"
+      ],
+      "type": "object"
+    },
     "Tooltip": {
       "additionalProperties": false,
       "properties": {
@@ -4837,6 +4881,9 @@
         },
         {
           "$ref": "#/definitions/DataTrack"
+        },
+        {
+          "$ref": "#/definitions/TemplateTrack"
         }
       ]
     },
