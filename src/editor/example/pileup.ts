@@ -11,14 +11,8 @@ export const EX_SPEC_PILEUP: GoslingSpec = {
     spacing: 0.01,
     tracks: [
         {
-            ...EX_TRACK_SEMANTIC_ZOOM.sequence,
-            style: { inlineLegend: true, textStrokeWidth: 0, outline: 'white' },
-            width: 800,
-            height: 40
-        },
-        {
             title: 'Coverage',
-            prerelease: { testUsingNewRectRenderingForBAM: true },
+            // prerelease: { testUsingNewRectRenderingForBAM: true },
             data: {
                 type: 'bam',
                 // url: 'https://s3.amazonaws.com/gosling-lang.org/data/example_higlass.bam'
@@ -28,16 +22,22 @@ export const EX_SPEC_PILEUP: GoslingSpec = {
             mark: 'bar',
             x: { field: 'from', type: 'genomic' },
             xe: { field: 'to', type: 'genomic' },
-            y: { field: 'coverage', type: 'quantitative' },
+            y: { field: 'coverage', type: 'quantitative', axis: 'right', grid: true },
             color: { value: 'lightgray' },
             stroke: { value: 'gray' },
             width: 650,
             height: 80
         },
         {
+            ...EX_TRACK_SEMANTIC_ZOOM.sequence,
+            style: { inlineLegend: true, textStrokeWidth: 0, outline: 'white' },
+            width: 800,
+            height: 40
+        },
+        {
             alignment: 'overlay',
             title: 'Reads',
-            prerelease: { testUsingNewRectRenderingForBAM: true },
+            // prerelease: { testUsingNewRectRenderingForBAM: true },
             data: {
                 type: 'bam',
                 // url: 'https://s3.amazonaws.com/gosling-lang.org/data/example_higlass.bam'
@@ -62,8 +62,8 @@ export const EX_SPEC_PILEUP: GoslingSpec = {
                     ],
                     x: { field: 'from', type: 'genomic' },
                     xe: { field: 'to', type: 'genomic' },
-                    stroke: { value: 'gray' }
-                    // strokeWidth: { value: 0.5 },
+                    stroke: { value: 'gray' },
+                    strokeWidth: { value: 0.5 }
                 },
                 {
                     dataTransform: [

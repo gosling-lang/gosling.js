@@ -144,7 +144,8 @@ export const examples: ReadonlyArray<{
         name: 'BAM file pileup tracks',
         id: 'BAM_PILEUP',
         spec: EX_SPEC_PILEUP,
-        underDevelopment: true
+        underDevelopment: true,
+        forceShow: true
     }
     // {
     //     name: 'Dark Theme (Beta)',
