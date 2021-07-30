@@ -1,13 +1,12 @@
 import * as PIXI from 'pixi.js';
 import PubSub from 'pubsub-js';
 import uuid from 'uuid';
-import { sampleSize, uniqBy } from 'lodash';
+import { isEqual, sampleSize, uniqBy } from 'lodash';
 import { scaleLinear } from 'd3-scale';
 import { format } from 'd3-format';
 import { drawMark, drawPostEmbellishment, drawPreEmbellishment } from '../core/mark';
 import { GoslingTrackModel } from '../core/gosling-track-model';
 import { validateTrack } from '../core/utils/validate';
-import { drawScaleMark } from '../core/utils/scalable-rendering';
 import { shareScaleAcrossTracks } from '../core/utils/scales';
 import { resolveSuperposedTracks } from '../core/utils/overlay';
 import { SingleTrack, OverlaidTrack, Datum } from '../core/gosling.schema';
@@ -32,7 +31,7 @@ import { getRelativeGenomicPosition } from '../core/utils/assembly';
 export const PRINT_RENDERING_CYCLE = false;
 
 function usePrereleaseRendering(spec: SingleTrack | OverlaidTrack) {
-    return spec.prerelease?.testUsingNewRectRenderingForBAM && spec.data?.type === 'bam';
+    return spec.data?.type === 'bam'; // spec.prerelease?.testUsingNewRectRenderingForBAM &&
 }
 
 // For using libraries, refer to https://github.com/higlass/higlass/blob/f82c0a4f7b2ab1c145091166b0457638934b15f3/app/scripts/configs/available-for-plugins.js
@@ -121,6 +120,17 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             this.mouseOverGraphics = new HGC.libraries.PIXI.Graphics();
             this.pMain.addChild(this.mouseOverGraphics);
 
+            // Custom error label
+            // this.errorText = new HGC.libraries.PIXI.Text('', {
+            //     fontSize: '16px',
+            //     fontFamily: 'Arial',
+            //     fill: 'black',
+            //     fontWeight: 'bold',
+            // });
+            // this.errorText.anchor.x = 0.5;
+            // this.errorText.anchor.y = 0.5;
+            // this.pLabel.addChild(this.errorText);
+
             this.tooltips = [];
             this.svgData = [];
             this.textGraphics = [];
@@ -151,10 +161,10 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             // this.pMain.clear();
             // this.pMain.removeChildren();
 
-            this.pBackground.clear();
-            this.pBackground.removeChildren();
-            this.pBorder.clear();
-            this.pBorder.removeChildren();
+            // this.pBackground.clear();
+            // this.pBackground.removeChildren();
+            // this.pBorder.clear();
+            // this.pBorder.removeChildren();
 
             const processTilesAndDraw = () => {
                 // Preprocess all tiles at once so that we can share scales across tiles.
@@ -162,9 +172,15 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
 
                 // This function calls `drawTile` on each tile.
                 super.draw();
+
+                // Record tiles so that we ignore loading same tiles again
+                this.prevVisibleAndFetchedTiles = this.visibleAndFetchedTiles();
             };
 
-            if (usePrereleaseRendering(this.originalSpec)) {
+            if (
+                usePrereleaseRendering(this.originalSpec) &&
+                !isEqual(this.visibleAndFetchedTiles(), this.prevVisibleAndFetchedTiles)
+            ) {
                 this.updateTileAsync(processTilesAndDraw);
             } else {
                 processTilesAndDraw();
@@ -202,13 +218,6 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             tile.graphics.clear();
             tile.graphics.removeChildren();
 
-            // This is only to render axis only once.
-            // TODO: Instead of rendering and removing for every tiles, render pBorder only once
-            this.pBackground.clear();
-            this.pBackground.removeChildren();
-            this.pBorder.clear();
-            this.pBorder.removeChildren();
-
             /* Embellishment before rendering marks */
             if (tile.goslingModels && tile.goslingModels[0]) {
                 const tm = tile.goslingModels[0];
@@ -234,11 +243,11 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                 }
 
                 // This is for testing the upcoming rendering methods
-                if (usePrereleaseRendering(this.originalSpec)) {
-                    // Use worker to create visual properties
-                    drawScaleMark(HGC, this, tile, tm);
-                    return;
-                }
+                // if (usePrereleaseRendering(this.originalSpec)) {
+                //     // Use worker to create visual properties
+                //     drawScaleMark(HGC, this, tile, tm);
+                //     return;
+                // }
 
                 drawMark(HGC, this, tile, tm);
             });
@@ -256,6 +265,8 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
 
                 drawPostEmbellishment(HGC, this, tile, tm, this.options.theme);
             }
+
+            this.forceDraw();
         }
 
         /**
@@ -274,6 +285,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             this.textsBeingUsed = 0;
 
             this.draw();
+            this.forceDraw();
         }
 
         /*
@@ -321,13 +333,13 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
 
             this.refreshTiles();
 
-            if (this.scalableGraphics) {
-                this.scaleScalableGraphics(Object.values(this.scalableGraphics), newXScale, this.drawnAtScale);
-            }
+            // if (this.scalableGraphics) {
+            // this.scaleScalableGraphics(Object.values(this.scalableGraphics), newXScale, this.drawnAtScale);
+            // }
 
-            if (!usePrereleaseRendering(this.originalSpec)) {
-                this.draw();
-            }
+            // if (!usePrereleaseRendering(this.originalSpec)) {
+            this.draw();
+            // }
             this.forceDraw();
         }
 
@@ -410,23 +422,45 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             for (const tile of tiles) {
                 const { tileWidth } = this.getTilePosAndDimensions(tile[0], [tile[1]], this.tilesetInfo.tile_size);
 
-                const DEFAULT_MAX_TILE_WIDTH = 2e5;
+                const DEFAULT_MAX_TILE_WIDTH = 2e4; // base pairs
 
                 if (tileWidth > (this.tilesetInfo.max_tile_width || DEFAULT_MAX_TILE_WIDTH)) {
-                    this.errorTextText = 'Zoom in to see details';
-                    this.drawError();
+                    // this.errorTextText = 'Zoom In To See Details...';
+                    // this.drawError();
                     this.forceDraw();
                     return;
                 }
 
-                this.errorTextText = null;
-                this.pBorder.clear();
-                this.drawError();
+                // this.errorTextText = null;
+                // this.pBorder.clear();
+                // this.drawError();
                 this.forceDraw();
             }
 
             this.setVisibleTiles(tiles);
         }
+
+        // Custom error message
+        // drawError() {
+        //     this.errorText.x = this.position[0] + this.dimensions[0] / 2;
+        //     this.errorText.y = this.position[1] + this.dimensions[1] / 2;
+
+        //     this.errorText.text = this.errorTextText;
+
+        //     if (this.errorTextText && this.errorTextText.length) {
+        //       // draw a red border around the track to bring attention to its error
+        //       const g = this.pBorder;
+        //       g.clear();
+        //       g.lineStyle(1, colorToHex('black'), 1);
+        //       g.beginFill(colorToHex('black'), 0.2);
+        //       g.drawRect(
+        //             this.position[0],
+        //             this.position[1],
+        //             this.dimensions[0],
+        //             this.dimensions[1],
+        //         );
+        //     }
+        // }
 
         /**
          * This function reorganize the tileset information so that it can be more conveniently managed afterwards.

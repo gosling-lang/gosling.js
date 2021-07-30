@@ -194,7 +194,7 @@ export const GoslingComponent = forwardRef((props: GoslingCompProps, ref: any) =
                 }
             }
         };
-    }, [ref, hgRef, hs]);
+    }, [ref, hgRef, hs, theme]);
 
     useEffect(() => {
         if (gs) {
@@ -218,7 +218,7 @@ export const GoslingComponent = forwardRef((props: GoslingCompProps, ref: any) =
                 theme
             );
         }
-    }, [gs]);
+    }, [gs, theme]);
 
     const higlassComponent = useMemo(() => {
         return hs && size ? (
@@ -274,7 +274,7 @@ export const GoslingComponent = forwardRef((props: GoslingCompProps, ref: any) =
                 </div>
             </>
         ) : null;
-    }, [hs, size]);
+    }, [hs, size, theme]);
 
     return higlassComponent;
 });
