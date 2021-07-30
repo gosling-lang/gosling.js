@@ -138,14 +138,14 @@ export const examples: ReadonlyArray<{
         name: 'Breast Cancer Variant (Staaf et al. 2019)',
         id: 'CANCER_VARIANT',
         spec: EX_SPEC_CANCER_VARIANT_PROTOTYPE,
-        underDevelopment: true
+        underDevelopment: true,
+        forceShow: true
     },
     {
         name: 'BAM file pileup tracks',
         id: 'BAM_PILEUP',
         spec: EX_SPEC_PILEUP,
-        underDevelopment: true,
-        forceShow: true
+        underDevelopment: true
     }
     // {
     //     name: 'Dark Theme (Beta)',
