@@ -52,6 +52,10 @@ export interface CommonViewDef {
     spacing?: number;
     static?: boolean;
 
+    // offsets
+    xOffset?: number;
+    yOffset?: number;
+
     assembly?: Assembly;
 
     // TODO: Change to domain?

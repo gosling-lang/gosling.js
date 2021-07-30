@@ -22,6 +22,8 @@ import * as qs from 'qs';
 import { JSONCrush, JSONUncrush } from '../core/utils/json-crush';
 import './editor.css';
 import { ICONS, ICON_INFO } from './icon';
+// @ts-ignore
+import { Themes } from 'gosling-theme';
 
 const INIT_DEMO_INDEX = examples.findIndex(d => d.forceShow) !== -1 ? examples.findIndex(d => d.forceShow) : 0;
 
@@ -145,6 +147,7 @@ function Editor(props: any) {
     const [refreshData, setRefreshData] = useState<boolean>(false);
 
     const [demo, setDemo] = useState(examples[urlExampleIndex === -1 ? INIT_DEMO_INDEX : urlExampleIndex]);
+    const [theme, setTheme] = useState('light');
     const [hg, setHg] = useState<HiGlassSpec>();
     const [code, setCode] = useState(defaultCode);
     const [goslingSpec, setGoslingSpec] = useState<gosling.GoslingSpec>();
@@ -153,6 +156,7 @@ function Editor(props: any) {
     const [selectedPreviewData, setSelectedPreviewData] = useState<number>(0);
     const [gistTitle, setGistTitle] = useState<string>();
     const [description, setDescription] = useState<string | null>();
+    const [expertMode, setExpertMode] = useState(false);
 
     // This parameter only matter when a markdown description was loaded from a gist but the user wants to hide it
     const [hideDescription, setHideDescription] = useState<boolean>(IS_SMALL_SCREEN || false);
@@ -186,9 +190,6 @@ function Editor(props: any) {
 
     // whether to show "about" information
     const [isShowAbout, setIsShowAbout] = useState(false);
-
-    // Editor theme
-    const [theme] = useState<string>('light'); // not used
 
     // Resizer `div`
     const descResizerRef = useRef<any>();
@@ -314,7 +315,7 @@ function Editor(props: any) {
         previewData.current = [];
         setSelectedPreviewData(0);
         runSpecUpdateVis();
-    }, [code, autoRun]);
+    }, [code, autoRun, theme]);
 
     // Uncommnet below to use HiGlass APIs
     // useEffect(() => {
@@ -436,6 +437,23 @@ function Editor(props: any) {
                         </option>
                     ))}
                 </select>
+                {expertMode ? (
+                    <select
+                        style={{ maxWidth: IS_SMALL_SCREEN ? window.innerWidth - 180 : 'none' }}
+                        onChange={e => {
+                            if (Object.keys(Themes).indexOf(e.target.value) !== -1) {
+                                setTheme(e.target.value);
+                            }
+                        }}
+                        defaultValue={theme}
+                    >
+                        {Object.keys(Themes).map((d: string) => (
+                            <option key={d} value={d}>
+                                {d}
+                            </option>
+                        ))}
+                    </select>
+                ) : null}
                 {demo.underDevelopment ? (
                     <span
                         style={{
@@ -584,6 +602,17 @@ function Editor(props: any) {
                             URL
                         </span>
                         <span
+                            title="Expert mode that turns on additional features, such as theme selection"
+                            className="side-panel-button"
+                            onClick={() => setExpertMode(!expertMode)}
+                        >
+                            {expertMode ? getIconSVG(ICONS.TOGGLE_ON, 23, 23, '#E18343') : getIconSVG(ICONS.TOGGLE_OFF)}
+                            <br />
+                            EXPERT
+                            <br />
+                            MODE
+                        </span>
+                        <span
                             title="Open GitHub repository"
                             className="side-panel-button"
                             onClick={() => window.open('https://github.com/gosling-lang/gosling.js', '_blank')}
@@ -673,7 +702,7 @@ function Editor(props: any) {
                                     <gosling.GoslingComponent
                                         ref={gosRef}
                                         spec={goslingSpec}
-                                        theme={'light'}
+                                        theme={theme}
                                         padding={60}
                                         margin={0}
                                         border={'none'}

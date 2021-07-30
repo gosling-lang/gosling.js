@@ -564,6 +564,12 @@
               "$ref": "#/definitions/DomainChr"
             }
           ]
+        },
+        "xOffset": {
+          "type": "number"
+        },
+        "yOffset": {
+          "type": "number"
         }
       },
       "required": [
@@ -934,6 +940,12 @@
               "$ref": "#/definitions/DomainChr"
             }
           ]
+        },
+        "xOffset": {
+          "type": "number"
+        },
+        "yOffset": {
+          "type": "number"
         }
       },
       "required": [
@@ -1649,6 +1661,12 @@
               "$ref": "#/definitions/DomainChr"
             }
           ]
+        },
+        "xOffset": {
+          "type": "number"
+        },
+        "yOffset": {
+          "type": "number"
         }
       },
       "required": [
@@ -1950,6 +1968,9 @@
                   }
                 ]
               },
+              "xOffset": {
+                "type": "number"
+              },
               "xe": {
                 "$ref": "#/definitions/Channel"
               },
@@ -1961,6 +1982,9 @@
               },
               "y1e": {
                 "$ref": "#/definitions/Channel"
+              },
+              "yOffset": {
+                "type": "number"
               },
               "ye": {
                 "$ref": "#/definitions/Channel"
@@ -2061,6 +2085,9 @@
             }
           ]
         },
+        "xOffset": {
+          "type": "number"
+        },
         "xe": {
           "$ref": "#/definitions/Channel"
         },
@@ -2072,6 +2099,9 @@
         },
         "y1e": {
           "$ref": "#/definitions/Channel"
+        },
+        "yOffset": {
+          "type": "number"
         },
         "ye": {
           "$ref": "#/definitions/Channel"
@@ -2415,6 +2445,9 @@
                         }
                       ]
                     },
+                    "xOffset": {
+                      "type": "number"
+                    },
                     "xe": {
                       "$ref": "#/definitions/Channel"
                     },
@@ -2426,6 +2459,9 @@
                     },
                     "y1e": {
                       "$ref": "#/definitions/Channel"
+                    },
+                    "yOffset": {
+                      "type": "number"
                     },
                     "ye": {
                       "$ref": "#/definitions/Channel"
@@ -2526,6 +2562,9 @@
                   }
                 ]
               },
+              "xOffset": {
+                "type": "number"
+              },
               "xe": {
                 "$ref": "#/definitions/Channel"
               },
@@ -2537,6 +2576,9 @@
               },
               "y1e": {
                 "$ref": "#/definitions/Channel"
+              },
+              "yOffset": {
+                "type": "number"
               },
               "ye": {
                 "$ref": "#/definitions/Channel"
@@ -2580,6 +2622,9 @@
             }
           ]
         },
+        "xOffset": {
+          "type": "number"
+        },
         "xe": {
           "$ref": "#/definitions/Channel"
         },
@@ -2591,6 +2636,9 @@
         },
         "y1e": {
           "$ref": "#/definitions/Channel"
+        },
+        "yOffset": {
+          "type": "number"
         },
         "ye": {
           "$ref": "#/definitions/Channel"
@@ -2736,6 +2784,12 @@
               "$ref": "#/definitions/DomainChr"
             }
           ]
+        },
+        "xOffset": {
+          "type": "number"
+        },
+        "yOffset": {
+          "type": "number"
         }
       },
       "required": [
@@ -3079,6 +3133,9 @@
                             }
                           ]
                         },
+                        "xOffset": {
+                          "type": "number"
+                        },
                         "xe": {
                           "$ref": "#/definitions/Channel"
                         },
@@ -3090,6 +3147,9 @@
                         },
                         "y1e": {
                           "$ref": "#/definitions/Channel"
+                        },
+                        "yOffset": {
+                          "type": "number"
                         },
                         "ye": {
                           "$ref": "#/definitions/Channel"
@@ -3190,6 +3250,9 @@
                       }
                     ]
                   },
+                  "xOffset": {
+                    "type": "number"
+                  },
                   "xe": {
                     "$ref": "#/definitions/Channel"
                   },
@@ -3201,6 +3264,9 @@
                   },
                   "y1e": {
                     "$ref": "#/definitions/Channel"
+                  },
+                  "yOffset": {
+                    "type": "number"
                   },
                   "ye": {
                     "$ref": "#/definitions/Channel"
@@ -3244,6 +3310,9 @@
                 }
               ]
             },
+            "xOffset": {
+              "type": "number"
+            },
             "xe": {
               "$ref": "#/definitions/Channel"
             },
@@ -3255,6 +3324,9 @@
             },
             "y1e": {
               "$ref": "#/definitions/Channel"
+            },
+            "yOffset": {
+              "type": "number"
             },
             "ye": {
               "$ref": "#/definitions/Channel"
@@ -3604,6 +3676,9 @@
                                 }
                               ]
                             },
+                            "xOffset": {
+                              "type": "number"
+                            },
                             "xe": {
                               "$ref": "#/definitions/Channel"
                             },
@@ -3615,6 +3690,9 @@
                             },
                             "y1e": {
                               "$ref": "#/definitions/Channel"
+                            },
+                            "yOffset": {
+                              "type": "number"
                             },
                             "ye": {
                               "$ref": "#/definitions/Channel"
@@ -3715,6 +3793,9 @@
                           }
                         ]
                       },
+                      "xOffset": {
+                        "type": "number"
+                      },
                       "xe": {
                         "$ref": "#/definitions/Channel"
                       },
@@ -3726,6 +3807,9 @@
                       },
                       "y1e": {
                         "$ref": "#/definitions/Channel"
+                      },
+                      "yOffset": {
+                        "type": "number"
                       },
                       "ye": {
                         "$ref": "#/definitions/Channel"
@@ -3774,6 +3858,9 @@
                 }
               ]
             },
+            "xOffset": {
+              "type": "number"
+            },
             "xe": {
               "$ref": "#/definitions/Channel"
             },
@@ -3785,6 +3872,9 @@
             },
             "y1e": {
               "$ref": "#/definitions/Channel"
+            },
+            "yOffset": {
+              "type": "number"
             },
             "ye": {
               "$ref": "#/definitions/Channel"
@@ -3853,6 +3943,12 @@
                   "$ref": "#/definitions/DomainChr"
                 }
               ]
+            },
+            "xOffset": {
+              "type": "number"
+            },
+            "yOffset": {
+              "type": "number"
             }
           },
           "required": [
@@ -4017,6 +4113,9 @@
             }
           ]
         },
+        "xOffset": {
+          "type": "number"
+        },
         "xe": {
           "$ref": "#/definitions/Channel"
         },
@@ -4028,6 +4127,9 @@
         },
         "y1e": {
           "$ref": "#/definitions/Channel"
+        },
+        "yOffset": {
+          "type": "number"
         },
         "ye": {
           "$ref": "#/definitions/Channel"
@@ -4433,6 +4535,9 @@
                             }
                           ]
                         },
+                        "xOffset": {
+                          "type": "number"
+                        },
                         "xe": {
                           "$ref": "#/definitions/Channel"
                         },
@@ -4444,6 +4549,9 @@
                         },
                         "y1e": {
                           "$ref": "#/definitions/Channel"
+                        },
+                        "yOffset": {
+                          "type": "number"
                         },
                         "ye": {
                           "$ref": "#/definitions/Channel"
@@ -4544,6 +4652,9 @@
                       }
                     ]
                   },
+                  "xOffset": {
+                    "type": "number"
+                  },
                   "xe": {
                     "$ref": "#/definitions/Channel"
                   },
@@ -4555,6 +4666,9 @@
                   },
                   "y1e": {
                     "$ref": "#/definitions/Channel"
+                  },
+                  "yOffset": {
+                    "type": "number"
                   },
                   "ye": {
                     "$ref": "#/definitions/Channel"
@@ -4603,6 +4717,9 @@
             }
           ]
         },
+        "xOffset": {
+          "type": "number"
+        },
         "xe": {
           "$ref": "#/definitions/Channel"
         },
@@ -4614,6 +4731,9 @@
         },
         "y1e": {
           "$ref": "#/definitions/Channel"
+        },
+        "yOffset": {
+          "type": "number"
         },
         "ye": {
           "$ref": "#/definitions/Channel"
