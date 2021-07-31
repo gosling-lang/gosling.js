@@ -479,6 +479,9 @@
       "additionalProperties": false,
       "description": "Partial specification of `BasicSingleTrack` to use default visual encoding predefined by data type.",
       "properties": {
+        "_invalidTrack": {
+          "type": "boolean"
+        },
         "_renderingId": {
           "type": "string"
         },
@@ -1743,6 +1746,9 @@
       "additionalProperties": false,
       "description": "Superposing multiple tracks.",
       "properties": {
+        "_invalidTrack": {
+          "type": "boolean"
+        },
         "_renderingId": {
           "type": "string"
         },
@@ -1808,6 +1814,9 @@
           "items": {
             "additionalProperties": false,
             "properties": {
+              "_invalidTrack": {
+                "type": "boolean"
+              },
               "_renderingId": {
                 "type": "string"
               },
@@ -2094,6 +2103,9 @@
     "OverlaidTracks": {
       "additionalProperties": false,
       "properties": {
+        "_invalidTrack": {
+          "type": "boolean"
+        },
         "_renderingId": {
           "type": "string"
         },
@@ -2220,6 +2232,9 @@
           "items": {
             "additionalProperties": false,
             "properties": {
+              "_invalidTrack": {
+                "type": "boolean"
+              },
               "_renderingId": {
                 "type": "string"
               },
@@ -2291,6 +2306,9 @@
                 "items": {
                   "additionalProperties": false,
                   "properties": {
+                    "_invalidTrack": {
+                      "type": "boolean"
+                    },
                     "_renderingId": {
                       "type": "string"
                     },
@@ -2788,6 +2806,9 @@
         {
           "additionalProperties": false,
           "properties": {
+            "_invalidTrack": {
+              "type": "boolean"
+            },
             "_renderingId": {
               "type": "string"
             },
@@ -2917,6 +2938,9 @@
               "items": {
                 "additionalProperties": false,
                 "properties": {
+                  "_invalidTrack": {
+                    "type": "boolean"
+                  },
                   "_renderingId": {
                     "type": "string"
                   },
@@ -2988,6 +3012,9 @@
                     "items": {
                       "additionalProperties": false,
                       "properties": {
+                        "_invalidTrack": {
+                          "type": "boolean"
+                        },
                         "_renderingId": {
                           "type": "string"
                         },
@@ -3338,6 +3365,9 @@
         {
           "additionalProperties": false,
           "properties": {
+            "_invalidTrack": {
+              "type": "boolean"
+            },
             "_renderingId": {
               "type": "string"
             },
@@ -3469,6 +3499,9 @@
                   {
                     "additionalProperties": false,
                     "properties": {
+                      "_invalidTrack": {
+                        "type": "boolean"
+                      },
                       "_renderingId": {
                         "type": "string"
                       },
@@ -3540,6 +3573,9 @@
                         "items": {
                           "additionalProperties": false,
                           "properties": {
+                            "_invalidTrack": {
+                              "type": "boolean"
+                            },
                             "_renderingId": {
                               "type": "string"
                             },
@@ -3965,6 +4001,9 @@
     "SingleTrack": {
       "additionalProperties": false,
       "properties": {
+        "_invalidTrack": {
+          "type": "boolean"
+        },
         "_renderingId": {
           "type": "string"
         },
@@ -4209,6 +4248,9 @@
     "StackedTracks": {
       "additionalProperties": false,
       "properties": {
+        "_invalidTrack": {
+          "type": "boolean"
+        },
         "_renderingId": {
           "type": "string"
         },
@@ -4337,6 +4379,9 @@
               {
                 "additionalProperties": false,
                 "properties": {
+                  "_invalidTrack": {
+                    "type": "boolean"
+                  },
                   "_renderingId": {
                     "type": "string"
                   },
@@ -4408,6 +4453,9 @@
                     "items": {
                       "additionalProperties": false,
                       "properties": {
+                        "_invalidTrack": {
+                          "type": "boolean"
+                        },
                         "_renderingId": {
                           "type": "string"
                         },
@@ -4942,6 +4990,19 @@
       "additionalProperties": false,
       "description": "Template specification that will be internally converted into `SingleTrack` for rendering",
       "properties": {
+        "_invalidTrack": {
+          "type": "boolean"
+        },
+        "_renderingId": {
+          "type": "string"
+        },
+        "assembly": {
+          "$ref": "#/definitions/Assembly"
+        },
+        "centerRadius": {
+          "description": "Proportion of the radius of the center white space.",
+          "type": "number"
+        },
         "data": {
           "$ref": "#/definitions/DataDeep"
         },
@@ -4951,13 +5012,86 @@
           },
           "type": "object"
         },
+        "endAngle": {
+          "type": "number"
+        },
         "height": {
           "type": "number"
+        },
+        "id": {
+          "type": "string"
+        },
+        "innerRadius": {
+          "type": "number"
+        },
+        "layout": {
+          "$ref": "#/definitions/Layout"
+        },
+        "linkingId": {
+          "type": "string"
+        },
+        "orientation": {
+          "$ref": "#/definitions/Orientation"
+        },
+        "outerRadius": {
+          "type": "number"
+        },
+        "overlayOnPreviousTrack": {
+          "type": "boolean"
+        },
+        "prerelease": {
+          "additionalProperties": false,
+          "properties": {
+            "testUsingNewRectRenderingForBAM": {
+              "type": "boolean"
+            }
+          },
+          "type": "object"
+        },
+        "spacing": {
+          "type": "number"
+        },
+        "startAngle": {
+          "type": "number"
+        },
+        "static": {
+          "type": "boolean"
+        },
+        "style": {
+          "$ref": "#/definitions/Style"
+        },
+        "subtitle": {
+          "type": "string"
         },
         "template": {
           "type": "string"
         },
+        "title": {
+          "type": "string"
+        },
         "width": {
+          "type": "number"
+        },
+        "xAxis": {
+          "$ref": "#/definitions/AxisPosition"
+        },
+        "xDomain": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/DomainInterval"
+            },
+            {
+              "$ref": "#/definitions/DomainChrInterval"
+            },
+            {
+              "$ref": "#/definitions/DomainChr"
+            }
+          ]
+        },
+        "xOffset": {
+          "type": "number"
+        },
+        "yOffset": {
           "type": "number"
         }
       },

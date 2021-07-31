@@ -73,7 +73,7 @@ export interface CommonViewDef {
 }
 
 /* ----------------------------- TRACK ----------------------------- */
-export type Track = SingleTrack | OverlaidTrack | DataTrack;
+export type Track = SingleTrack | OverlaidTrack | DataTrack | TemplateTrack;
 
 export interface CommonRequiredTrackDef {
     width: number;
@@ -94,8 +94,9 @@ export interface CommonTrackDef extends CommonViewDef, CommonRequiredTrackDef {
     startAngle?: number; // [0, 360]
     endAngle?: number; // [0, 360]
 
-    // Internally used properties for rendering
+    // Internally used properties
     _renderingId?: string;
+    _invalidTrack?: boolean; // flag to ignore rendering certain tracks if they have problems // !!! TODO: add tests
 
     // To test upcoming feature.
     prerelease?: { testUsingNewRectRenderingForBAM?: boolean };
@@ -144,7 +145,7 @@ export interface SingleTrack extends CommonTrackDef {
     mark: Mark;
 
     // Visual channels
-    x?: Channel; // We could have a special type of Channel for axes
+    x?: Channel;
     y?: Channel;
     xe?: Channel;
     ye?: Channel;
@@ -538,13 +539,104 @@ export interface JSONParseTransform {
     genomicLengthField: string; // Length of genomic interval
 }
 
-/* ----------------------------- GLYPH (deprecated, but to be supported again) ----------------------------- */
-export type MarkDeep = MarkGlyphPreset | MarkGlyph | MarkWithStyle;
+/* ----------------------------- Templates ----------------------------- */
 
-export interface MarkWithStyle {
-    type: MarkType;
-    curvature?: 'straight' | 'stepwise' | 'curved';
+/**
+ * Template specification that will be internally converted into `SingleTrack` for rendering
+ */
+export interface TemplateTrack extends CommonRequiredTrackDef, CommonTrackDef {
+    // Template name (e.g., 'gene')
+    template: string;
+
+    // Data specification that is identical to the one in `SingleTrack`
+    data: DataDeep;
+
+    // ! TODO: Is there a way to make this not nested while preserving the other specific properties like `data` and `template`?
+    // https://basarat.gitbook.io/typescript/type-system/index-signatures#excluding-certain-properties-from-the-index-signature
+    // https://stackoverflow.com/questions/51465182/how-to-remove-index-signature-using-mapped-types
+    encoding?: {
+        // Custom channels (e.g., geneHeight, strandColor, ...)
+        [k: string]: Channel;
+    };
 }
+
+/**
+ * Definition of Track Templates
+ */
+export interface TemplateTrackDef {
+    name: string;
+    customChannels: CustomChannelDef[];
+    mapping: TemplateTrackMappingDef[];
+}
+
+/**
+ * Definition of custom channels used in a track template.
+ */
+export interface CustomChannelDef {
+    channel: string;
+    type: FieldType | 'value';
+    required?: boolean;
+}
+
+/**
+ * This is based on `SingleTrack` but the differeces are only the type of channels
+ * which additionally have `base` properties to override properties from a template spec
+ * and remove of certain properties (e.g., `data`)
+ */
+export type TemplateTrackMappingDef = Omit<
+    CommonRequiredTrackDef & CommonTrackDef,
+    'data' | 'height' | 'width' | 'layout' | 'title' | 'subtitle'
+> & {
+    // Data transformation
+    dataTransform?: DataTransform[];
+
+    tooltip?: Tooltip[];
+
+    // Mark
+    mark: Mark;
+
+    // Visual channels
+    x?: ChannelWithBase;
+    y?: ChannelWithBase;
+    xe?: ChannelWithBase;
+    ye?: ChannelWithBase;
+
+    x1?: ChannelWithBase;
+    y1?: ChannelWithBase;
+    x1e?: ChannelWithBase;
+    y1e?: ChannelWithBase;
+
+    row?: ChannelWithBase;
+    column?: ChannelWithBase;
+
+    color?: ChannelWithBase;
+    size?: ChannelWithBase;
+    text?: ChannelWithBase;
+
+    stroke?: ChannelWithBase;
+    strokeWidth?: ChannelWithBase;
+    opacity?: ChannelWithBase;
+
+    // Resolving overlaps
+    displacement?: Displacement;
+
+    // Visibility
+    visibility?: VisibilityCondition[];
+
+    // !! TODO: Remove these?
+    // Experimental
+    flipY?: boolean; // This is only supported for `link` marks.
+    stretch?: boolean; // Stretch the size to the given range? (e.g., [x, xe])
+    overrideTemplate?: boolean; // Override a spec template that is defined for a given data type.
+};
+
+// The main difference is that this allows to specify a `base` property
+export type ChannelWithBase = Channel & {
+    base?: string;
+};
+
+/* ----------------------- Below is deprecated ----------------------- */
+export type MarkDeep = MarkGlyphPreset | MarkGlyph;
 
 export interface MarkGlyphPreset {
     type: string; //GLYPH_LOCAL_PRESET_TYPE | GLYPH_HIGLASS_PRESET_TYPE;

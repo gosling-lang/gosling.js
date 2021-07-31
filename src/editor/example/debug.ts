@@ -24,8 +24,8 @@ const colorRange: Range = [
     '#CE72BB'
 ];
 
-export const geneTemplate: TemplateTrack = {
-    template: 'gene',
+export const templateSpec: TemplateTrack = {
+    template: 'empty',
     data: {
         type: 'csv',
         url: 'https://raw.githubusercontent.com/mkanai/fujiplot/master/input_example/input.txt',
@@ -35,14 +35,14 @@ export const geneTemplate: TemplateTrack = {
     },
     width: 800,
     height: 300
-}
+};
 
 export const EX_SPEC_DEBUG: GoslingSpec = {
     title: 'Chart Templates',
     subtitle: 'Using chart templates in Gosling.js helps you more easily create visualizations!',
     spacing: 0,
     tracks: [
-        geneTemplate,
+        templateSpec,
         {
             data: {
                 type: 'csv',

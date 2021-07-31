@@ -94,8 +94,9 @@ export interface CommonTrackDef extends CommonViewDef, CommonRequiredTrackDef {
     startAngle?: number; // [0, 360]
     endAngle?: number; // [0, 360]
 
-    // Internally used properties for rendering
+    // Internally used properties
     _renderingId?: string;
+    _invalidTrack?: boolean; // flag to ignore rendering certain tracks if they have problems // !!! TODO: add tests
 
     // To test upcoming feature.
     prerelease?: { testUsingNewRectRenderingForBAM?: boolean };
@@ -144,7 +145,7 @@ export interface SingleTrack extends CommonTrackDef {
     mark: Mark;
 
     // Visual channels
-    x?: Channel; // We could have a special type of Channel for axes
+    x?: Channel;
     y?: Channel;
     xe?: Channel;
     ye?: Channel;
@@ -543,46 +544,49 @@ export interface JSONParseTransform {
 /**
  * Template specification that will be internally converted into `SingleTrack` for rendering
  */
-export interface TemplateTrack extends CommonRequiredTrackDef {
-    // Name of the template
+export interface TemplateTrack extends CommonRequiredTrackDef, CommonTrackDef {
+    // Template name (e.g., 'gene')
     template: string;
-    
-    // Data specification is identical to `SingleTrack`
+
+    // Data specification that is identical to the one in `SingleTrack`
     data: DataDeep;
 
-    // ! TODO: Is there a way to make this not nested while preserving the other specific properties like data and template?
+    // ! TODO: Is there a way to make this not nested while preserving the other specific properties like `data` and `template`?
     // https://basarat.gitbook.io/typescript/type-system/index-signatures#excluding-certain-properties-from-the-index-signature
     // https://stackoverflow.com/questions/51465182/how-to-remove-index-signature-using-mapped-types
-    // Custom channels (e.g., geneHeight, strandColor, ...)
     encoding?: {
-        [k : string]: Channel;
-    }
+        // Custom channels (e.g., geneHeight, strandColor, ...)
+        [k: string]: Channel;
+    };
 }
 
-export interface TemplateDef {
+/**
+ * Definition of Track Templates
+ */
+export interface TemplateTrackDef {
     name: string;
     customChannels: CustomChannelDef[];
-    mapping: MappingDefinition[];
+    mapping: TemplateTrackMappingDef[];
 }
 
-export type MappingDefinition = CommonRequiredTrackDef & Partial<Omit<TemplateTrackForMapping, 'data' | 'height' | 'width' | 'layout' | 'title' | 'subtitle'>>;
-
+/**
+ * Definition of custom channels used in a track template.
+ */
 export interface CustomChannelDef {
     channel: string;
     type: FieldType | 'value';
     required?: boolean;
 }
 
-export type ChannelWithBase = Channel & {
-    base?: string;
-}
-
 /**
- * Based on `SingleTrack` but the differeces are only the type of channels 
+ * This is based on `SingleTrack` but the differeces are only the type of channels
  * which additionally have `base` properties to override properties from a template spec
  * and remove of certain properties (e.g., `data`)
  */
-export interface TemplateTrackForMapping extends CommonTrackDef {
+export type TemplateTrackMappingDef = Omit<
+    CommonRequiredTrackDef & CommonTrackDef,
+    'data' | 'height' | 'width' | 'layout' | 'title' | 'subtitle'
+> & {
     // Data transformation
     dataTransform?: DataTransform[];
 
@@ -592,7 +596,7 @@ export interface TemplateTrackForMapping extends CommonTrackDef {
     mark: Mark;
 
     // Visual channels
-    x?: ChannelWithBase; // We could have a special type of Channel for axes
+    x?: ChannelWithBase;
     y?: ChannelWithBase;
     xe?: ChannelWithBase;
     ye?: ChannelWithBase;
@@ -624,7 +628,12 @@ export interface TemplateTrackForMapping extends CommonTrackDef {
     flipY?: boolean; // This is only supported for `link` marks.
     stretch?: boolean; // Stretch the size to the given range? (e.g., [x, xe])
     overrideTemplate?: boolean; // Override a spec template that is defined for a given data type.
-}
+};
+
+// The main difference is that this allows to specify a `base` property
+export type ChannelWithBase = Channel & {
+    base?: string;
+};
 
 /* ----------------------- Below is deprecated ----------------------- */
 export type MarkDeep = MarkGlyphPreset | MarkGlyph;

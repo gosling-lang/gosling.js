@@ -2,8 +2,9 @@ import pkg from '../package.json';
 import GoslingSchema from '../schema/gosling.schema.json';
 import ThemeSchema from '../schema/theme.schema.json';
 
-export type { GoslingSpec, TemplateDef } from './core/gosling.schema';
+export type { GoslingSpec, TemplateTrackDef } from './core/gosling.schema';
 export type { HiGlassSpec } from './core/higlass.schema';
+export { GoslingTemplates } from './core/utils/template';
 export type { Theme } from './core/utils/theme';
 export { GoslingSchema };
 export { ThemeSchema };

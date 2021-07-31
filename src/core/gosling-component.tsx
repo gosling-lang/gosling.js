@@ -11,7 +11,8 @@ import { GET_CHROM_SIZES } from './utils/assembly';
 import { CompleteThemeDeep, getTheme, Theme } from './utils/theme';
 import { CommonEventData, EVENT_TYPE, MouseHoverCallback, UserDefinedEvents } from './api';
 import uuid from 'uuid';
-import { TemplateDef } from './gosling.schema'
+import { TemplateTrackDef } from './gosling.schema';
+import { GoslingTemplates } from '..';
 
 /**
  * Register plugin tracks and data fetchers to HiGlass. This is necessary for the first time before using Gosling.
@@ -27,7 +28,7 @@ interface GoslingCompProps {
     id?: string;
     className?: string;
     theme?: Theme;
-    templates?: TemplateDef[]; // TODO:
+    templates?: TemplateTrackDef[];
 }
 
 // TODO: specify types other than "any"
@@ -215,6 +216,7 @@ export const GoslingComponent = forwardRef((props: GoslingCompProps, ref: any) =
                     setHs(newHs);
                     setSize(newSize);
                 },
+                [...GoslingTemplates], // TODO: allow user definitions
                 theme
             );
         }
