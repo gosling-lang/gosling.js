@@ -565,7 +565,7 @@ export interface TemplateTrack extends CommonRequiredTrackDef, CommonTrackDef {
  */
 export interface TemplateTrackDef {
     name: string;
-    customChannels: CustomChannelDef[];
+    channels: CustomChannelDef[];
     mapping: TemplateTrackMappingDef[];
 }
 
@@ -573,10 +573,13 @@ export interface TemplateTrackDef {
  * Definition of custom channels used in a track template.
  */
 export interface CustomChannelDef {
-    channel: string;
+    name: string;
     type: FieldType | 'value';
     required?: boolean;
 }
+
+// TODO: LogTransform already has `base`
+export type DataTransformWithBase = Partial<DataTransform> & { base?: string };
 
 /**
  * This is based on `SingleTrack` but the differeces are only the type of channels
@@ -588,7 +591,7 @@ export type TemplateTrackMappingDef = Omit<
     'data' | 'height' | 'width' | 'layout' | 'title' | 'subtitle'
 > & {
     // Data transformation
-    dataTransform?: DataTransform[];
+    dataTransform?: DataTransformWithBase[];
 
     tooltip?: Tooltip[];
 

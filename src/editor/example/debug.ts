@@ -1,4 +1,5 @@
-import { Range, Domain, GoslingSpec, TemplateTrack } from '../../core/gosling.schema';
+import { Range, Domain, GoslingSpec } from '../../core/gosling.schema';
+import { GOSLING_PUBLIC_DATA } from './gosling-data';
 
 const colorDomain: Domain = [
     'Metabolic',
@@ -24,25 +25,40 @@ const colorRange: Range = [
     '#CE72BB'
 ];
 
-export const templateSpec: TemplateTrack = {
-    template: 'empty',
-    data: {
-        type: 'csv',
-        url: 'https://raw.githubusercontent.com/mkanai/fujiplot/master/input_example/input.txt',
-        chromosomeField: 'CHR',
-        genomicFields: ['BP'],
-        separator: '\t'
-    },
-    width: 800,
-    height: 300
-};
-
 export const EX_SPEC_DEBUG: GoslingSpec = {
     title: 'Chart Templates',
     subtitle: 'Using chart templates in Gosling.js helps you more easily create visualizations!',
     spacing: 0,
     tracks: [
-        templateSpec,
+        {
+            template: 'gene',
+            data: {
+                url: GOSLING_PUBLIC_DATA.geneAnnotation,
+                type: 'beddb',
+                genomicFields: [
+                    { index: 1, name: 'start' },
+                    { index: 2, name: 'end' }
+                ],
+                valueFields: [
+                    { index: 5, name: 'strand', type: 'nominal' },
+                    { index: 3, name: 'name', type: 'nominal' }
+                ],
+                exonIntervalFields: [
+                    { index: 12, name: 'start' },
+                    { index: 13, name: 'end' }
+                ]
+            },
+            encoding: {
+                startPosition: { field: 'start' },
+                endPosition: { field: 'end' },
+                strandColor: { field: 'strand' },
+                geneHeight: { value: 30 },
+                geneLabel: { field: 'name' },
+                type: { field: 'type' }
+            },
+            width: 800,
+            height: 300
+        },
         {
             data: {
                 type: 'csv',
