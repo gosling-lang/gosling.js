@@ -48,10 +48,9 @@ export const EX_SPEC_GREMLIN: GoslingSpec = {
                                     target: 'mark'
                                 }
                             ],
+                            size: { value: 6 },
                             style: {
                                 dy: 16,
-                                textFontSize: 6,
-                                textStrokeWidth: 0,
                                 outline: 'white'
                             }
                         },
@@ -68,10 +67,9 @@ export const EX_SPEC_GREMLIN: GoslingSpec = {
                                     target: 'mark'
                                 }
                             ],
+                            size: { value: 6 },
                             style: {
                                 dy: -16,
-                                textFontSize: 6,
-                                textStrokeWidth: 0,
                                 outline: 'white'
                             }
                         },

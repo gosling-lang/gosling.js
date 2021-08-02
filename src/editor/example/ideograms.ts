@@ -24,10 +24,7 @@ export const CytoBands: OverlaidTracks = {
                     transitionPadding: 10,
                     target: 'mark'
                 }
-            ],
-            style: {
-                textStrokeWidth: 0
-            }
+            ]
         },
         {
             mark: 'rect',

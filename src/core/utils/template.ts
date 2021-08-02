@@ -21,35 +21,19 @@ export const GoslingTemplates: TemplateTrackDef[] = [
         channels: [
             { name: 'startPosition', type: 'genomic', required: true },
             { name: 'endPosition', type: 'genomic', required: true },
-            { name: 'strandColor', type: 'nominal', required: true }, // TODO: how to redefine bound colors?
+            { name: 'strandColor', type: 'nominal', required: true },
+            { name: 'strandRow', type: 'nominal', required: true },
+            { name: 'opacity', type: 'value', required: false },
             { name: 'geneHeight', type: 'value', required: false },
-            { name: 'geneLabel', type: 'nominal', required: true }, // TODO: can this be false and not show if undefined?
+            { name: 'geneLabel', type: 'nominal', required: true },
+            { name: 'geneLabelColor', type: 'nominal', required: true },
+            { name: 'geneLabelFontSize', type: 'value', required: false },
+            { name: 'geneLabelStroke', type: 'value', required: false },
+            { name: 'geneLabelStrokeThickness', type: 'value', required: false },
+            { name: 'geneLabelOpacity', type: 'value', required: false },
             { name: 'type', type: 'nominal', required: true } // either 'gene' or 'exon'
         ],
         mapping: [
-            {
-                dataTransform: [{ type: 'filter', base: 'type', oneOf: ['gene'] }],
-                mark: 'text',
-                text: { base: 'geneLabel', type: 'nominal' }, // TODO: add dy here
-                x: { base: 'startPosition', type: 'genomic' },
-                xe: { base: 'endPosition', type: 'genomic' },
-                row: { base: 'strandColor', type: 'nominal', domain: ['+', '-'] },
-                color: { base: 'strandColor', type: 'nominal', domain: ['+', '-'], range: ['blue', 'red'] },
-                opacity: { value: 0.4 },
-                // stroke: { value: 'white' },
-                // strokeWidth: { value: 2 },
-                style: { textStrokeWidth: 2, textStroke: 'white' },
-                // style: { dy: -30 }, // TODO: how to redefine style from the users' side?
-                visibility: [
-                    {
-                        operation: 'less-than',
-                        measure: 'width',
-                        threshold: '|xe-x|',
-                        transitionPadding: 10,
-                        target: 'mark'
-                    }
-                ]
-            },
             {
                 dataTransform: [
                     { type: 'filter', base: 'type', oneOf: ['gene'] },
@@ -58,9 +42,9 @@ export const GoslingTemplates: TemplateTrackDef[] = [
                 mark: 'triangleLeft',
                 x: { base: 'startPosition', type: 'genomic' },
                 size: { base: 'geneHeight', value: 12 },
-                row: { base: 'strandColor', type: 'nominal', domain: ['+', '-'] },
+                row: { base: 'strandRow', type: 'nominal', domain: ['+', '-'] },
                 color: { base: 'strandColor', type: 'nominal', domain: ['+', '-'], range: ['blue', 'red'] },
-                opacity: { value: 0.4 },
+                opacity: { base: 'opacity', value: 0.4 },
                 style: { align: 'right' }
             },
             {
@@ -71,9 +55,9 @@ export const GoslingTemplates: TemplateTrackDef[] = [
                 mark: 'triangleRight',
                 x: { base: 'endPosition', type: 'genomic' },
                 size: { base: 'geneHeight', value: 12 },
-                row: { base: 'strandColor', type: 'nominal', domain: ['+', '-'] },
+                row: { base: 'strandRow', type: 'nominal', domain: ['+', '-'] },
                 color: { base: 'strandColor', type: 'nominal', domain: ['+', '-'], range: ['blue', 'red'] },
-                opacity: { value: 0.4 },
+                opacity: { base: 'opacity', value: 0.4 },
                 style: { align: 'left' }
             },
             {
@@ -82,9 +66,9 @@ export const GoslingTemplates: TemplateTrackDef[] = [
                 x: { base: 'startPosition', type: 'genomic' },
                 xe: { base: 'endPosition', type: 'genomic' },
                 size: { base: 'geneHeight', value: 12 },
-                row: { base: 'strandColor', type: 'nominal', domain: ['+', '-'] },
+                row: { base: 'strandRow', type: 'nominal', domain: ['+', '-'] },
                 color: { base: 'strandColor', type: 'nominal', domain: ['+', '-'], range: ['blue', 'red'] },
-                opacity: { value: 0.4 }
+                opacity: { base: 'opacity', value: 0.4 }
             },
             {
                 dataTransform: [
@@ -94,9 +78,9 @@ export const GoslingTemplates: TemplateTrackDef[] = [
                 mark: 'rect',
                 x: { base: 'startPosition', type: 'genomic' },
                 xe: { base: 'endPosition', type: 'genomic' },
-                row: { base: 'strandColor', type: 'nominal', domain: ['+', '-'] },
+                row: { base: 'strandRow', type: 'nominal', domain: ['+', '-'] },
                 color: { base: 'strandColor', type: 'nominal', domain: ['+', '-'], range: ['blue', 'red'] },
-                opacity: { value: 0.4 },
+                opacity: { base: 'opacity', value: 0.4 },
                 size: { value: 3 }
                 // style: {
                 //     linePattern: { type: 'triangleRight', size: 5 }
@@ -110,13 +94,36 @@ export const GoslingTemplates: TemplateTrackDef[] = [
                 mark: 'rect',
                 x: { base: 'startPosition', type: 'genomic' },
                 xe: { base: 'endPosition', type: 'genomic' },
-                row: { base: 'strandColor', type: 'nominal', domain: ['+', '-'] },
+                row: { base: 'strandRow', type: 'nominal', domain: ['+', '-'] },
                 color: { base: 'strandColor', type: 'nominal', domain: ['+', '-'], range: ['blue', 'red'] },
-                opacity: { value: 0.4 },
+                opacity: { base: 'opacity', value: 0.4 },
                 size: { value: 3 }
                 // style: {
                 //     linePattern: { type: 'triangleLeft', size: 5 }
                 // }
+            },
+            {
+                dataTransform: [{ type: 'filter', base: 'type', oneOf: ['gene'] }],
+                mark: 'text',
+                text: { base: 'geneLabel', type: 'nominal' }, // TODO: add dy here
+                x: { base: 'startPosition', type: 'genomic' },
+                xe: { base: 'endPosition', type: 'genomic' },
+                row: { base: 'strandRow', type: 'nominal', domain: ['+', '-'] },
+                color: { base: 'geneLabelColor', type: 'nominal', domain: ['+', '-'], range: ['blue', 'red'] },
+                opacity: { base: 'opacity', value: 1 },
+                size: { base: 'geneLabelFontSize', value: 18 },
+                stroke: { base: 'geneLabelStroke', value: 'white' },
+                strokeWidth: { base: 'geneLabelStrokeThickness', value: 2 },
+                // TODO: how to redefine style from the users' side? (e.g., dy: -30)
+                visibility: [
+                    {
+                        operation: 'less-than',
+                        measure: 'width',
+                        threshold: '|xe-x|',
+                        transitionPadding: 10,
+                        target: 'mark'
+                    }
+                ]
             }
         ]
     }
@@ -202,7 +209,7 @@ export function replaceTrackTemplates(spec: GoslingSpec, templates: TemplateTrac
                     .filter(k => k !== 'mark')
                     .forEach(channelKey => {
                         // Iterate all channels
-                        const channelMap = (singleTrackMappingDef as any)[channelKey];
+                        const channelMap = JSON.parse(JSON.stringify((singleTrackMappingDef as any)[channelKey]));
                         if ('base' in channelMap) {
                             delete channelMap.base;
                         }
@@ -213,7 +220,7 @@ export function replaceTrackTemplates(spec: GoslingSpec, templates: TemplateTrac
                     .filter(k => k !== 'mark')
                     .forEach(channelKey => {
                         // Iterate all channels
-                        const channelMap = (singleTrackMappingDef as any)[channelKey];
+                        const channelMap = JSON.parse(JSON.stringify((singleTrackMappingDef as any)[channelKey]));
                         if ('base' in channelMap) {
                             const baseChannelName = channelMap.base;
                             if (baseChannelName in encodingSpec) {

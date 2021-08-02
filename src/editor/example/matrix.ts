@@ -122,10 +122,7 @@ export const EX_SPEC_MATRIX: GoslingSpec = {
                                     transitionPadding: 10,
                                     target: 'mark'
                                 }
-                            ],
-                            style: {
-                                textStrokeWidth: 0
-                            }
+                            ]
                         },
                         {
                             mark: 'rect',

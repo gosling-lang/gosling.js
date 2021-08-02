@@ -148,7 +148,7 @@ export function EX_SPEC_VIEW_PILEUP(
             {
                 title: 'Sequence',
                 ...EX_TRACK_SEMANTIC_ZOOM.sequence,
-                style: { inlineLegend: true, textStrokeWidth: 0, outline: 'white' },
+                style: { inlineLegend: true, outline: 'white' },
                 width,
                 height: 40
             },

@@ -29,6 +29,7 @@ export const EX_SPEC_DEBUG: GoslingSpec = {
     title: 'Chart Templates',
     subtitle: 'Using chart templates in Gosling.js helps you more easily create visualizations!',
     spacing: 0,
+    xDomain: { chromosome: '3', interval: [52168000, 52890000] },
     tracks: [
         {
             template: 'gene',
@@ -51,9 +52,16 @@ export const EX_SPEC_DEBUG: GoslingSpec = {
             encoding: {
                 startPosition: { field: 'start' },
                 endPosition: { field: 'end' },
-                strandColor: { field: 'strand' },
+                strandColor: { field: 'strand', range: ['gray'] },
+                strandRow: { field: 'strand' },
+                opacity: { value: 0.4 },
                 geneHeight: { value: 30 },
                 geneLabel: { field: 'name' },
+                geneLabelFontSize: { value: 30 },
+                geneLabelColor: { field: 'strand', range: ['gray'] },
+                geneLabelStroke: { value: 'white' },
+                geneLabelStrokeThickness: { value: 4 },
+                geneLabelOpacity: { value: 1 },
                 type: { field: 'type' }
             },
             width: 800,
