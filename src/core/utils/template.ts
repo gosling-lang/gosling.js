@@ -126,6 +126,94 @@ export const GoslingTemplates: TemplateTrackDef[] = [
                 ]
             }
         ]
+    },
+    {
+        name: 'ideogram',
+        channels: [
+            { name: 'startPosition', type: 'genomic', required: true },
+            { name: 'endPosition', type: 'genomic', required: true },
+            { name: 'chrHeight', type: 'value', required: false }, // https://eweitz.github.io/ideogram/
+            { name: 'name', type: 'nominal', required: true },
+            { name: 'stainBackgroundColor', type: 'nominal', required: true },
+            { name: 'stainLabelColor', type: 'nominal', required: true },
+            { name: 'stainStroke', type: 'value', required: false },
+            { name: 'stainStrokeWidth', type: 'value', required: false }
+        ],
+        mapping: [
+            {
+                mark: 'rect',
+                dataTransform: [{ type: 'filter', base: 'stainBackgroundColor', oneOf: ['acen'], not: true }],
+                color: {
+                    base: 'stainBackgroundColor',
+                    type: 'nominal',
+                    domain: ['gneg', 'gpos25', 'gpos50', 'gpos75', 'gpos100', 'gvar', 'acen'],
+                    range: ['white', 'lightgray', 'gray', 'gray', 'black', '#7B9CC8', '#DC4542']
+                },
+                size: { base: 'chrHeight', value: 18 },
+                x: { base: 'startPosition', type: 'genomic' },
+                xe: { base: 'endPosition', type: 'genomic' },
+                stroke: { base: 'stainStroke', value: 'gray' },
+                strokeWidth: { base: 'stainStrokeWidth', value: 0.3 }
+            },
+            {
+                mark: 'triangleRight',
+                dataTransform: [
+                    { type: 'filter', base: 'stainBackgroundColor', oneOf: ['acen'] },
+                    { type: 'filter', base: 'name', include: 'q' }
+                ],
+                color: {
+                    base: 'stainBackgroundColor',
+                    type: 'nominal',
+                    domain: ['gneg', 'gpos25', 'gpos50', 'gpos75', 'gpos100', 'gvar', 'acen'],
+                    range: ['white', 'lightgray', 'gray', 'gray', 'black', '#7B9CC8', '#DC4542']
+                },
+                size: { base: 'chrHeight', value: 18 },
+                x: { base: 'startPosition', type: 'genomic' },
+                xe: { base: 'endPosition', type: 'genomic' },
+                stroke: { base: 'stainStroke', value: 'gray' },
+                strokeWidth: { base: 'stainStrokeWidth', value: 0.3 }
+            },
+            {
+                mark: 'triangleLeft',
+                dataTransform: [
+                    { type: 'filter', base: 'stainBackgroundColor', oneOf: ['acen'] },
+                    { type: 'filter', base: 'name', include: 'p' }
+                ],
+                color: {
+                    base: 'stainBackgroundColor',
+                    type: 'nominal',
+                    domain: ['gneg', 'gpos25', 'gpos50', 'gpos75', 'gpos100', 'gvar', 'acen'],
+                    range: ['white', 'lightgray', 'gray', 'gray', 'black', '#7B9CC8', '#DC4542']
+                },
+                size: { base: 'chrHeight', value: 18 },
+                x: { base: 'startPosition', type: 'genomic' },
+                xe: { base: 'endPosition', type: 'genomic' },
+                stroke: { base: 'stainStroke', value: 'gray' },
+                strokeWidth: { base: 'stainStrokeWidth', value: 0.3 }
+            },
+            {
+                mark: 'text',
+                dataTransform: [{ type: 'filter', base: 'stainLabelColor', oneOf: ['acen'], not: true }],
+                color: {
+                    base: 'stainLabelColor',
+                    type: 'nominal',
+                    domain: ['gneg', 'gpos25', 'gpos50', 'gpos75', 'gpos100', 'gvar'],
+                    range: ['black', 'black', 'black', 'black', 'white', 'black']
+                },
+                text: { base: 'name', type: 'nominal' },
+                x: { base: 'startPosition', type: 'genomic' },
+                xe: { base: 'endPosition', type: 'genomic' },
+                visibility: [
+                    {
+                        operation: 'less-than',
+                        measure: 'width',
+                        threshold: '|xe-x|',
+                        transitionPadding: 10,
+                        target: 'mark'
+                    }
+                ]
+            }
+        ]
     }
 ];
 
@@ -167,7 +255,12 @@ export function replaceTrackTemplates(spec: GoslingSpec, templates: TemplateTrac
         }
 
         /* conversion */
+        const viewBase = JSON.parse(JSON.stringify(t));
+        if ('encoding' in viewBase) {
+            delete viewBase.encoding;
+        }
         const convertedView: OverlaidTracks = {
+            ...viewBase,
             alignment: 'overlay',
             tracks: [],
             width: t.width ?? 100,

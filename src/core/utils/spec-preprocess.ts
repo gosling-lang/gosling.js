@@ -278,20 +278,24 @@ export function traverseToFixSpecDownstream(spec: GoslingSpec | SingleView, pare
             if (i === 0) {
                 // There is no track to overlay on
                 track.overlayOnPreviousTrack = false;
+            }
 
+            // This means this track is positioned on top of a view
+            if (i === 0 || tracks.slice(0, i).filter(d => !d.overlayOnPreviousTrack).length === 1) {
                 /**
-                 * Add axis to the first track
+                 * Add axis to the first track, i.e., the track on the top
                  */
                 if ((IsSingleTrack(track) || IsOverlaidTrack(track)) && IsChannelDeep(track.x) && !track.x.axis) {
                     track.x.axis = track.orientation === 'vertical' ? 'left' : 'top';
                 } else if (IsOverlaidTrack(track)) {
-                    let isNone = false; // If there is at least one 'none' axis, should not render axis.
+                    // let isNone = false; // If there is at least one 'none' axis, should not render axis.
                     track.overlay.forEach(o => {
-                        if (!isNone && IsChannelDeep(o.x) && !o.x.axis) {
+                        if (IsChannelDeep(o.x) && !o.x.axis) {
                             o.x.axis = 'top';
-                        } else if (IsChannelDeep(o.x) && o.x.axis === 'none') {
-                            isNone = true;
                         }
+                        //  else if (IsChannelDeep(o.x) && o.x.axis === 'none') {
+                        //     isNone = true;
+                        // }
                     });
                 }
             }
