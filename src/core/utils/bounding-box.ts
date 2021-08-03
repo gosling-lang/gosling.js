@@ -52,8 +52,10 @@ export interface TrackInfo {
 /**
  * Return the size of entire visualization.
  * @param trackInfos
+ * @param ensureMultiplesOf8 this is to ensure that the height is the multiple of `8` (refer to `pixelPreciseMarginPadding`). This can be used right before rendering visualization using HiGlass.
+ * https://github.com/higlass/higlass/blob/54f5aae61d3474f9e868621228270f0c90ef9343/app/scripts/HiGlassComponent.js#L2066
  */
-export function getBoundingBox(trackInfos: TrackInfo[]) {
+export function getBoundingBox(trackInfos: TrackInfo[], ensureMultiplesOf8 = false) {
     let width = 0;
     let height = 0;
 
@@ -68,12 +70,24 @@ export function getBoundingBox(trackInfos: TrackInfo[]) {
         }
     });
 
-    // TODO: it should be multiples of `8` (refer to `pixelPreciseMarginPadding`)
-    if (height % 8 !== 0) {
+    // !! TODO: allow non-multiples of 8
+    if (ensureMultiplesOf8 && height % 8 !== 0) {
         height += 8 - (height % 8);
     }
 
     return { width, height };
+}
+
+export function ensureHeightMultiplesOf8(trackInfos: TrackInfo[]) {
+    const size = getBoundingBox(trackInfos, true);
+
+    // Calculate `layout`s for React Grid Layout (RGL).
+    trackInfos.forEach(_ => {
+        _.layout.x = (_.boundingBox.x / size.width) * 12;
+        _.layout.y = (_.boundingBox.y / size.height) * 12;
+        _.layout.w = (_.boundingBox.width / size.width) * 12;
+        _.layout.h = (_.boundingBox.height / size.height) * 12;
+    });
 }
 
 /**
@@ -99,6 +113,9 @@ export function getRelativeTrackInfo(spec: GoslingSpec, theme: CompleteThemeDeep
 
         size.height += titleHeight + marginBottom;
 
+        // !! The total height should be multiples of 8. Refer to `getBoundingBox()`
+        size.height = size.height + (8 - (size.height % 8));
+
         // Offset all non-title tracks.
         trackInfos.forEach(_ => {
             _.boundingBox.y += titleHeight + marginBottom;
@@ -113,15 +130,20 @@ export function getRelativeTrackInfo(spec: GoslingSpec, theme: CompleteThemeDeep
             },
             ...trackInfos
         ];
+    } else {
+        // !! The total height should be multiples of 8. Refer to `getBoundingBox()`
+        size.height = size.height + (8 - (size.height % 8));
     }
 
     // Calculate `layout`s for React Grid Layout (RGL).
     trackInfos.forEach(_ => {
-        _.layout.x = (_.boundingBox.x / size.width) * 12;
-        _.layout.y = (_.boundingBox.y / size.height) * 12;
-        _.layout.w = (_.boundingBox.width / size.width) * 12;
-        _.layout.h = (_.boundingBox.height / size.height) * 12;
+        _.layout.x = _.boundingBox.x; // / size.width) * 12;
+        _.layout.y = _.boundingBox.y; // / size.height) * 12 * 64;
+        _.layout.w = _.boundingBox.width; // / size.width) * 12;
+        _.layout.h = _.boundingBox.height; // / size.height) * 12 * 64;
     });
+
+    // console.log(trackInfos);
 
     return trackInfos;
 }
@@ -310,6 +332,8 @@ function traverseAndCollectTrackInfo(
 
         cumHeight = TOTAL_RADIUS * 2;
     }
+
+    // cumHeight = (cumHeight + (8 - cumHeight % 8));
 
     return { x: dx, y: dy, width: cumWidth, height: cumHeight };
 }

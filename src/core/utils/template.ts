@@ -214,6 +214,51 @@ export const GoslingTemplates: TemplateTrackDef[] = [
                 ]
             }
         ]
+    },
+    {
+        name: 'sequence',
+        channels: [
+            { name: 'startPosition', type: 'genomic', required: true },
+            { name: 'endPosition', type: 'genomic', required: true },
+            { name: 'barLength', type: 'quantitative', required: true },
+            { name: 'baseBackground', type: 'nominal', required: true },
+            { name: 'baseLabelColor', type: 'nominal', required: true },
+            { name: 'baseLabelFontSize', type: 'value', required: false }
+        ],
+        mapping: [
+            {
+                mark: 'bar',
+                // x: { base: 'position', type: 'genomic' },
+                x: { base: 'startPosition', type: 'genomic' },
+                xe: { base: 'endPosition', type: 'genomic' },
+                y: { base: 'barLength', type: 'quantitative', axis: 'none' },
+                color: { base: 'baseBackground', type: 'nominal', domain: ['A', 'T', 'G', 'C'] }
+            },
+            {
+                dataTransform: [{ type: 'filter', base: 'barLength', oneOf: [0], not: true }],
+                mark: 'text',
+                x: { base: 'startPosition', type: 'genomic' },
+                xe: { base: 'endPosition', type: 'genomic' },
+                color: { base: 'baseLabelColor', type: 'nominal', domain: ['A', 'T', 'G', 'C'], range: ['white'] },
+                text: { base: 'baseBackground', type: 'nominal' },
+                size: { base: 'baseLabelFontSize', value: 18 },
+                visibility: [
+                    {
+                        operation: 'less-than',
+                        measure: 'width',
+                        threshold: '|xe-x|',
+                        transitionPadding: 30,
+                        target: 'mark'
+                    },
+                    {
+                        operation: 'LT',
+                        measure: 'zoomLevel',
+                        threshold: 10,
+                        target: 'track'
+                    }
+                ]
+            }
+        ]
     }
 ];
 

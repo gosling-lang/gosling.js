@@ -17,6 +17,7 @@ import { EX_SPEC_CORCES_ET_AL } from './corces';
 import { EX_SPEC_CYTOBANDS } from './ideograms';
 import { EX_SPEC_PILEUP } from './pileup';
 import { EX_SPEC_BAND } from './vertical-band';
+import { EX_SPEC_TEMPLATE } from './track-template';
 import { EX_SPEC_DEBUG } from './debug';
 
 export const examples: ReadonlyArray<{
@@ -32,7 +33,7 @@ export const examples: ReadonlyArray<{
         name: 'DEBUG',
         spec: EX_SPEC_DEBUG,
         id: 'DEBUG',
-        hidden: false
+        hidden: true
     },
     {
         name: 'Basic Example: Visual Encoding',
@@ -151,11 +152,12 @@ export const examples: ReadonlyArray<{
         id: 'BAM_PILEUP',
         spec: EX_SPEC_PILEUP,
         underDevelopment: true
+    },
+    {
+        name: 'Track Template',
+        id: 'TEMPLATE',
+        spec: EX_SPEC_TEMPLATE,
+        underDevelopment: true,
+        forceShow: true
     }
-    // {
-    //     name: 'Dark Theme (Beta)',
-    //     id: 'DARK_THEME',
-    //     spec: EX_SPEC_DARK_THEME,
-    //     underDevelopment: true
-    // }
 ].filter(d => !d.hidden);

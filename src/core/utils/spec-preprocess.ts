@@ -281,7 +281,12 @@ export function traverseToFixSpecDownstream(spec: GoslingSpec | SingleView, pare
             }
 
             // This means this track is positioned on top of a view
-            if (i === 0 || tracks.slice(0, i).filter(d => !d.overlayOnPreviousTrack).length === 1) {
+            if (
+                i === 0 ||
+                (i !== 0 &&
+                    tracks.slice(0, i).filter(d => !d.overlayOnPreviousTrack).length === 1 &&
+                    track.overlayOnPreviousTrack === true)
+            ) {
                 /**
                  * Add axis to the first track, i.e., the track on the top
                  */
