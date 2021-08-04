@@ -43,8 +43,7 @@ export const examples: ReadonlyArray<{
     {
         name: 'Basic Example: Circular Visual Encoding',
         id: 'VISUAL_ENCODING_CIRCULAR',
-        spec: EX_SPEC_VISUAL_ENCODING_CIRCULAR,
-        forceShow: true
+        spec: EX_SPEC_VISUAL_ENCODING_CIRCULAR
     },
     {
         name: 'Basic Example: Band Connection',

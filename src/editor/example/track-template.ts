@@ -13,24 +13,24 @@ export const EX_SPEC_TEMPLATE: GoslingSpec = {
         {
             xDomain: { chromosome: '3', interval: [52168000, 52890000] },
             tracks: [
-                {
-                    data: {
-                        url: 'https://server.gosling-lang.org/api/v1/tileset_info/?d=cistrome-multivec',
-                        type: 'multivec',
-                        row: 'sample',
-                        column: 'position',
-                        value: 'peak',
-                        categories: ['sample 1', 'sample 2', 'sample 3', 'sample 4']
-                    },
-                    mark: 'point',
-                    x: { field: 'position', type: 'genomic' },
-                    y: { field: 'peak', type: 'quantitative', grid: true },
-                    size: { field: 'peak', type: 'quantitative' },
-                    color: { field: 'sample', type: 'nominal', legend: true },
-                    opacity: { value: 0.5 },
-                    width: 600,
-                    height: 330
-                },
+                // {
+                //     data: {
+                //         url: 'https://server.gosling-lang.org/api/v1/tileset_info/?d=cistrome-multivec',
+                //         type: 'multivec',
+                //         row: 'sample',
+                //         column: 'position',
+                //         value: 'peak',
+                //         categories: ['sample 1', 'sample 2', 'sample 3', 'sample 4']
+                //     },
+                //     mark: 'point',
+                //     x: { field: 'position', type: 'genomic' },
+                //     y: { field: 'peak', type: 'quantitative', grid: true },
+                //     size: { field: 'peak', type: 'quantitative' },
+                //     color: { field: 'sample', type: 'nominal', legend: true },
+                //     opacity: { value: 0.5 },
+                //     width: 600,
+                //     height: 330
+                // },
                 {
                     template: 'gene',
                     data: {
