@@ -30,6 +30,7 @@ const ScalableSequenceTrack: OverlaidTracks = {
                 field: 'end',
                 type: 'genomic'
             },
+            size: { value: 24 },
             color: { value: 'white' },
             visibility: [
                 {
@@ -62,7 +63,6 @@ const ScalableSequenceTrack: OverlaidTracks = {
         field: 'base',
         type: 'nominal'
     },
-    size: { value: 24 },
     style: {
         textFontWeight: 'bold'
     },

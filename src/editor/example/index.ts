@@ -43,7 +43,8 @@ export const examples: ReadonlyArray<{
     {
         name: 'Basic Example: Circular Visual Encoding',
         id: 'VISUAL_ENCODING_CIRCULAR',
-        spec: EX_SPEC_VISUAL_ENCODING_CIRCULAR
+        spec: EX_SPEC_VISUAL_ENCODING_CIRCULAR,
+        forceShow: true
     },
     {
         name: 'Basic Example: Band Connection',
@@ -84,12 +85,12 @@ export const examples: ReadonlyArray<{
         spec: EX_SPEC_CIRCULAR_OVERVIEW_LINEAR_DETAIL
     },
     {
-        name: 'Scalable Sequence Track',
+        name: 'Multi-Scale Sequence Track',
         id: 'SEQUENCE',
         spec: EX_SPEC_SEQUENCE_TRACK
     },
     {
-        name: 'Clinvar Lollipop Plot',
+        name: 'Multi-Scale Clinvar Lollipop Plot',
         id: 'SEMANTIC_ZOOM',
         spec: EX_SPEC_CLINVAR_LOLLIPOP
     },
@@ -157,7 +158,6 @@ export const examples: ReadonlyArray<{
         name: 'Track Template',
         id: 'TEMPLATE',
         spec: EX_SPEC_TEMPLATE,
-        underDevelopment: true,
-        forceShow: true
+        underDevelopment: true
     }
 ].filter(d => !d.hidden);

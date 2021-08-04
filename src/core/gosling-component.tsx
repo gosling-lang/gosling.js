@@ -256,7 +256,7 @@ export const GoslingComponent = forwardRef((props: GoslingCompProps, ref: any) =
                             ref={hgRef}
                             options={{
                                 bounded: true,
-                                pixelPreciseMarginPadding: false,
+                                pixelPreciseMarginPadding: true, // this uses `rowHeight: 1` in react-grid-layout
                                 containerPaddingX: 0,
                                 containerPaddingY: 0,
                                 viewMarginTop: 0,

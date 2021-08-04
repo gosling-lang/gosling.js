@@ -52,10 +52,8 @@ export interface TrackInfo {
 /**
  * Return the size of entire visualization.
  * @param trackInfos
- * @param ensureMultiplesOf8 this is to ensure that the height is the multiple of `8` (refer to `pixelPreciseMarginPadding`). This can be used right before rendering visualization using HiGlass.
- * https://github.com/higlass/higlass/blob/54f5aae61d3474f9e868621228270f0c90ef9343/app/scripts/HiGlassComponent.js#L2066
  */
-export function getBoundingBox(trackInfos: TrackInfo[], ensureMultiplesOf8 = false) {
+export function getBoundingBox(trackInfos: TrackInfo[]) {
     let width = 0;
     let height = 0;
 
@@ -70,24 +68,7 @@ export function getBoundingBox(trackInfos: TrackInfo[], ensureMultiplesOf8 = fal
         }
     });
 
-    // !! TODO: allow non-multiples of 8
-    if (ensureMultiplesOf8 && height % 8 !== 0) {
-        height += 8 - (height % 8);
-    }
-
     return { width, height };
-}
-
-export function ensureHeightMultiplesOf8(trackInfos: TrackInfo[]) {
-    const size = getBoundingBox(trackInfos, true);
-
-    // Calculate `layout`s for React Grid Layout (RGL).
-    trackInfos.forEach(_ => {
-        _.layout.x = (_.boundingBox.x / size.width) * 12;
-        _.layout.y = (_.boundingBox.y / size.height) * 12;
-        _.layout.w = (_.boundingBox.width / size.width) * 12;
-        _.layout.h = (_.boundingBox.height / size.height) * 12;
-    });
 }
 
 /**
@@ -137,10 +118,11 @@ export function getRelativeTrackInfo(spec: GoslingSpec, theme: CompleteThemeDeep
 
     // Calculate `layout`s for React Grid Layout (RGL).
     trackInfos.forEach(_ => {
-        _.layout.x = _.boundingBox.x; // / size.width) * 12;
-        _.layout.y = _.boundingBox.y; // / size.height) * 12 * 64;
-        _.layout.w = _.boundingBox.width; // / size.width) * 12;
-        _.layout.h = _.boundingBox.height; // / size.height) * 12 * 64;
+        _.layout.x = (_.boundingBox.x / size.width) * 12;
+        _.layout.w = (_.boundingBox.width / size.width) * 12;
+        // Because we set `pixelPreciseMarginPadding` `true`, we use actual values for `y` and `height`
+        _.layout.y = _.boundingBox.y;
+        _.layout.h = _.boundingBox.height;
     });
 
     // console.log(trackInfos);
@@ -333,7 +315,8 @@ function traverseAndCollectTrackInfo(
         cumHeight = TOTAL_RADIUS * 2;
     }
 
-    // cumHeight = (cumHeight + (8 - cumHeight % 8));
+    // DEBUG
+    // console.log(output);
 
     return { x: dx, y: dy, width: cumWidth, height: cumHeight };
 }

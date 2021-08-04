@@ -20,12 +20,6 @@ export function renderHiGlass(
     // HiGlass model
     const hgModel = new HiGlassModel();
 
-    // !! TODO: Can we remove this by allowing any number values?
-    // if(getBoundingBox(trackInfos).height % 8 !== 0) {
-    //     // We need to ensure that the height is the multiple of `8` (refer to `pixelPreciseMarginPadding`).
-    //     ensureHeightMultiplesOf8(trackInfos);
-    // }
-
     /* Update the HiGlass model by iterating tracks */
     trackInfos.forEach(tb => {
         const { track, boundingBox: bb, layout } = tb;
@@ -74,5 +68,5 @@ export function renderHiGlass(
             });
     });
 
-    setHg(hgModel.spec(), getBoundingBox(trackInfos, true));
+    setHg(hgModel.spec(), getBoundingBox(trackInfos));
 }
