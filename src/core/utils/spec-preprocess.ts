@@ -10,7 +10,7 @@ import {
     DisplaceTransform
 } from '../gosling.schema';
 import {
-    IsTemplate,
+    IsDataTemplate,
     IsDataDeepTileset,
     IsSingleTrack,
     IsChannelDeep,
@@ -85,30 +85,39 @@ export function convertToFlatTracks(spec: SingleView): Track[] {
         // This is already `FlatTracks`, so just override the view definition
         const base = JSON.parse(JSON.stringify(spec));
         delete (base as any).tracks;
-        return spec.tracks.map(track => assign(JSON.parse(JSON.stringify(base)), track) as SingleTrack);
+        return spec.tracks
+            .filter(track => !track._invalidTrack)
+            .map(track => assign(JSON.parse(JSON.stringify(base)), track) as SingleTrack);
     }
 
     const newTracks: Track[] = [];
     if (IsStackedTracks(spec)) {
-        spec.tracks.map(track => {
-            if ('alignment' in track) {
-                // This is OverlaidTracks
-                newTracks.push({
-                    ...track,
-                    overlay: [...track.tracks],
-                    tracks: undefined,
-                    alignment: undefined
-                } as Track);
-            } else {
-                // Override track definitions from views
-                const base = JSON.parse(JSON.stringify(spec));
-                delete (base as any).tracks;
-                const newSpec = assign(JSON.parse(JSON.stringify(base)), track) as SingleTrack;
-                newTracks.push(newSpec);
-            }
-        });
+        spec.tracks
+            .filter(track => !track._invalidTrack)
+            .map(track => {
+                if ('alignment' in track) {
+                    // This is OverlaidTracks
+                    newTracks.push({
+                        ...track,
+                        overlay: [...track.tracks],
+                        tracks: undefined,
+                        alignment: undefined
+                    } as Track);
+                } else {
+                    // Override track definitions from views
+                    const base = JSON.parse(JSON.stringify(spec));
+                    delete (base as any).tracks;
+                    const newSpec = assign(JSON.parse(JSON.stringify(base)), track) as SingleTrack;
+                    newTracks.push(newSpec);
+                }
+            });
     } else {
-        newTracks.push({ ...spec, overlay: [...spec.tracks], tracks: undefined, alignment: undefined } as Track);
+        newTracks.push({
+            ...spec,
+            overlay: [...spec.tracks.filter(track => !track._invalidTrack)],
+            tracks: undefined,
+            alignment: undefined
+        } as Track);
     }
 
     return JSON.parse(JSON.stringify(newTracks));
@@ -269,20 +278,29 @@ export function traverseToFixSpecDownstream(spec: GoslingSpec | SingleView, pare
             if (i === 0) {
                 // There is no track to overlay on
                 track.overlayOnPreviousTrack = false;
+            }
 
+            // This means this track is positioned on top of a view
+            if (
+                i === 0 ||
+                (i !== 0 &&
+                    tracks.slice(0, i).filter(d => !d.overlayOnPreviousTrack).length === 1 &&
+                    track.overlayOnPreviousTrack === true)
+            ) {
                 /**
-                 * Add axis to the first track
+                 * Add axis to the first track, i.e., the track on the top
                  */
                 if ((IsSingleTrack(track) || IsOverlaidTrack(track)) && IsChannelDeep(track.x) && !track.x.axis) {
                     track.x.axis = track.orientation === 'vertical' ? 'left' : 'top';
                 } else if (IsOverlaidTrack(track)) {
-                    let isNone = false; // If there is at least one 'none' axis, should not render axis.
+                    // let isNone = false; // If there is at least one 'none' axis, should not render axis.
                     track.overlay.forEach(o => {
-                        if (!isNone && IsChannelDeep(o.x) && !o.x.axis) {
+                        if (IsChannelDeep(o.x) && !o.x.axis) {
                             o.x.axis = 'top';
-                        } else if (IsChannelDeep(o.x) && o.x.axis === 'none') {
-                            isNone = true;
                         }
+                        //  else if (IsChannelDeep(o.x) && o.x.axis === 'none') {
+                        //     isNone = true;
+                        // }
                     });
                 }
             }
@@ -400,7 +418,7 @@ export function getMultivecTemplate(
  * Override default visual encoding in each track for given data type.
  * @param spec
  */
-export function overrideTemplates(spec: GoslingSpec) {
+export function overrideDataTemplates(spec: GoslingSpec) {
     traverseTracks(spec, (t, i, ts) => {
         if (!t.data || !IsDataDeepTileset(t.data)) {
             // if `data` is not specified, we can not provide a correct template.
@@ -412,7 +430,7 @@ export function overrideTemplates(spec: GoslingSpec) {
             return;
         }
 
-        if (!IsTemplate(t)) {
+        if (!IsDataTemplate(t)) {
             // This is not partial specification that we need to use templates
             return;
         }

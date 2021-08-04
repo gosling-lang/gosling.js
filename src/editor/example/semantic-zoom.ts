@@ -30,6 +30,7 @@ const ScalableSequenceTrack: OverlaidTracks = {
                 field: 'end',
                 type: 'genomic'
             },
+            size: { value: 24 },
             color: { value: 'white' },
             visibility: [
                 {
@@ -63,8 +64,6 @@ const ScalableSequenceTrack: OverlaidTracks = {
         type: 'nominal'
     },
     style: {
-        textFontSize: 24,
-        textStrokeWidth: 0,
         textFontWeight: 'bold'
     },
     width: 400,
@@ -154,10 +153,7 @@ const ScalableCytoBand: OverlaidTracks = {
                     transitionPadding: 10,
                     target: 'mark'
                 }
-            ],
-            style: {
-                textStrokeWidth: 0
-            }
+            ]
         },
         {
             mark: 'rect',

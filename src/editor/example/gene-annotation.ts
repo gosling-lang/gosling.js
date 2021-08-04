@@ -658,6 +658,7 @@ const CorcesEtAl: OverlaidTracks = {
                 domain
             },
             xe: { field: 'end', type: 'genomic' },
+            size: { value: 8 },
             style: { textFontSize: 8, dy: -12 }
         },
         {
@@ -669,6 +670,7 @@ const CorcesEtAl: OverlaidTracks = {
             text: { field: 'name', type: 'nominal' },
             x: { field: 'start', type: 'genomic' },
             xe: { field: 'end', type: 'genomic' },
+            size: { value: 8 },
             style: { textFontSize: 8, dy: 10 }
         },
         {

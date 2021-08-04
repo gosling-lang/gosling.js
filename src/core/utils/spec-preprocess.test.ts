@@ -1,6 +1,6 @@
 import { GoslingSpec, SingleView, Track } from '../gosling.schema';
 import { getBoundingBox, getRelativeTrackInfo } from './bounding-box';
-import { traverseToFixSpecDownstream, overrideTemplates, convertToFlatTracks } from './spec-preprocess';
+import { traverseToFixSpecDownstream, overrideDataTemplates, convertToFlatTracks } from './spec-preprocess';
 import { getTheme } from './theme';
 
 describe('Fix Spec Downstream', () => {
@@ -263,7 +263,7 @@ describe('Spec Preprocess', () => {
         const spec: GoslingSpec = {
             tracks: [{ data: { type: 'vector', url: '', column: 'c', value: 'v' }, overrideTemplate: true } as Track]
         };
-        overrideTemplates(spec);
+        overrideDataTemplates(spec);
         expect(spec.tracks[0]).toHaveProperty('mark');
     });
 
@@ -277,14 +277,14 @@ describe('Spec Preprocess', () => {
                     } as Track
                 ]
             };
-            overrideTemplates(spec);
+            overrideDataTemplates(spec);
             expect(spec.tracks[0]).toHaveProperty('mark');
         }
         {
             const spec: GoslingSpec = {
                 tracks: [{ data: { type: 'multivec', url: '', row: 'r', column: 'c', value: 'v' } } as Track]
             };
-            overrideTemplates(spec);
+            overrideDataTemplates(spec);
             expect(spec.tracks[0]).not.toHaveProperty('mark'); // overrideTemplate is not set, so do not override templates
         }
     });

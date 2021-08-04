@@ -68,11 +68,6 @@ export function getBoundingBox(trackInfos: TrackInfo[]) {
         }
     });
 
-    // TODO: it should be multiples of `8` (refer to `pixelPreciseMarginPadding`)
-    if (height % 8 !== 0) {
-        height += 8 - (height % 8);
-    }
-
     return { width, height };
 }
 
@@ -99,6 +94,9 @@ export function getRelativeTrackInfo(spec: GoslingSpec, theme: CompleteThemeDeep
 
         size.height += titleHeight + marginBottom;
 
+        // !! The total height should be multiples of 8. Refer to `getBoundingBox()`
+        size.height = size.height + (8 - (size.height % 8));
+
         // Offset all non-title tracks.
         trackInfos.forEach(_ => {
             _.boundingBox.y += titleHeight + marginBottom;
@@ -113,15 +111,21 @@ export function getRelativeTrackInfo(spec: GoslingSpec, theme: CompleteThemeDeep
             },
             ...trackInfos
         ];
+    } else {
+        // !! The total height should be multiples of 8. Refer to `getBoundingBox()`
+        size.height = size.height + (8 - (size.height % 8));
     }
 
     // Calculate `layout`s for React Grid Layout (RGL).
     trackInfos.forEach(_ => {
         _.layout.x = (_.boundingBox.x / size.width) * 12;
-        _.layout.y = (_.boundingBox.y / size.height) * 12;
         _.layout.w = (_.boundingBox.width / size.width) * 12;
-        _.layout.h = (_.boundingBox.height / size.height) * 12;
+        // Because we set `pixelPreciseMarginPadding` `true`, we use actual values for `y` and `height`
+        _.layout.y = _.boundingBox.y;
+        _.layout.h = _.boundingBox.height;
     });
+
+    // console.log(trackInfos);
 
     return trackInfos;
 }
@@ -310,6 +314,9 @@ function traverseAndCollectTrackInfo(
 
         cumHeight = TOTAL_RADIUS * 2;
     }
+
+    // DEBUG
+    // console.log(output);
 
     return { x: dx, y: dy, width: cumWidth, height: cumHeight };
 }

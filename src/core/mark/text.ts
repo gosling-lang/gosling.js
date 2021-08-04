@@ -40,16 +40,6 @@ export function drawText(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackMo
     const rowCategories = (tm.getChannelDomainArray('row') as string[]) ?? ['___SINGLE_ROW___'];
     const rowHeight = trackHeight / rowCategories.length;
 
-    /* text styles */
-    const localTextStyle = {
-        ...TEXT_STYLE_GLOBAL,
-        fontSize: spec.style?.textFontSize ? `${spec.style?.textFontSize}px` : TEXT_STYLE_GLOBAL.fontSize,
-        stroke: spec.style?.textStroke ?? TEXT_STYLE_GLOBAL.stroke,
-        strokeThickness: spec.style?.textStrokeWidth ?? TEXT_STYLE_GLOBAL.strokeThickness,
-        fontWeight: spec.style?.textFontWeight ?? TEXT_STYLE_GLOBAL.fontWeight
-    };
-    const textStyleObj = new HGC.libraries.PIXI.TextStyle(localTextStyle);
-
     /* styles */
     const dx = spec.style?.dx ?? 0;
     const dy = spec.style?.dy ?? 0;
@@ -81,6 +71,9 @@ export function drawText(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackMo
                 const xe = tm.encodedPIXIProperty('xe', d) + dx;
                 const cx = tm.encodedPIXIProperty('x-center', d) + dx;
                 const y = tm.encodedPIXIProperty('y', d) + dy;
+                const size = tm.encodedPIXIProperty('size', d);
+                const stroke = tm.encodedPIXIProperty('stroke', d);
+                const strokeWidth = tm.encodedPIXIProperty('strokeWidth', d);
                 const opacity = tm.encodedPIXIProperty('opacity', d);
 
                 if (cx < 0 || cx > trackWidth) {
@@ -92,6 +85,18 @@ export function drawText(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackMo
                     // prevent from drawing too many text elements for the performance
                     return;
                 }
+
+                /* text styles */
+                const localTextStyle = {
+                    ...TEXT_STYLE_GLOBAL,
+                    fontSize:
+                        size ??
+                        (spec.style?.textFontSize ? `${spec.style?.textFontSize}px` : TEXT_STYLE_GLOBAL.fontSize),
+                    stroke: stroke ?? spec.style?.textStroke ?? TEXT_STYLE_GLOBAL.stroke,
+                    strokeThickness: strokeWidth ?? spec.style?.textStrokeWidth ?? TEXT_STYLE_GLOBAL.strokeThickness,
+                    fontWeight: spec.style?.textFontWeight ?? TEXT_STYLE_GLOBAL.fontWeight
+                };
+                const textStyleObj = new HGC.libraries.PIXI.TextStyle(localTextStyle);
 
                 let textGraphic;
                 if (trackInfo.textGraphics.length > trackInfo.textsBeingUsed) {
@@ -156,6 +161,9 @@ export function drawText(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackMo
                 const color = tm.encodedPIXIProperty('color', d);
                 const cx = tm.encodedPIXIProperty('x-center', d) + dx;
                 const y = tm.encodedPIXIProperty('y', d) + dy;
+                const size = tm.encodedPIXIProperty('size', d);
+                const stroke = tm.encodedPIXIProperty('stroke', d);
+                const strokeWidth = tm.encodedPIXIProperty('strokeWidth', d);
                 const opacity = tm.encodedPIXIProperty('opacity', d);
 
                 if (cx < 0 || cx > trackWidth) {
@@ -167,6 +175,18 @@ export function drawText(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackMo
                     // prevent from drawing too many text elements for the performance
                     return;
                 }
+
+                /* text styles */
+                const localTextStyle = {
+                    ...TEXT_STYLE_GLOBAL,
+                    fontSize:
+                        size ??
+                        (spec.style?.textFontSize ? `${spec.style?.textFontSize}px` : TEXT_STYLE_GLOBAL.fontSize),
+                    stroke: stroke ?? spec.style?.textStroke ?? TEXT_STYLE_GLOBAL.stroke,
+                    strokeThickness: strokeWidth ?? spec.style?.textStrokeWidth ?? TEXT_STYLE_GLOBAL.strokeThickness,
+                    fontWeight: spec.style?.textFontWeight ?? TEXT_STYLE_GLOBAL.fontWeight
+                };
+                const textStyleObj = new HGC.libraries.PIXI.TextStyle(localTextStyle);
 
                 let textGraphic;
                 if (trackInfo.textGraphics.length > trackInfo.textsBeingUsed) {
@@ -244,7 +264,7 @@ export function drawText(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackMo
                     rowGraphics.addChild(rope);
                 } else {
                     textGraphic.position.x = cx;
-                    textGraphic.position.y = rowPosition + y;
+                    textGraphic.position.y = rowPosition + rowHeight - y;
                     rowGraphics.addChild(textGraphic);
                 }
             });

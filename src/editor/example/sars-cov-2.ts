@@ -27,7 +27,7 @@ export const EX_TRACK_SARS_COV_2_GENES: OverlaidTracks = {
             mark: 'text',
             text: { field: 'Gene symbol', type: 'nominal' },
             color: { value: 'black' },
-            style: { textStrokeWidth: 3 },
+            strokeWidth: { value: 3 },
             visibility: [
                 {
                     target: 'mark',
@@ -133,7 +133,8 @@ export const EX_SPEC_SARS_COV_2: GoslingSpec = {
                             mark: 'text',
                             text: { field: 'Protein', type: 'nominal' },
                             color: { value: '#333' },
-                            style: { textStrokeWidth: 3, textAnchor: 'end' }
+                            strokeWidth: { value: 3 },
+                            style: { textAnchor: 'end' }
                         }
                     ],
                     x: { field: 'Start', type: 'genomic' },
@@ -159,7 +160,7 @@ export const EX_SPEC_SARS_COV_2: GoslingSpec = {
                         ...(EX_TRACK_SEMANTIC_ZOOM.sequence.data as MultivecData),
                         url: 'https://server.gosling-lang.org/api/v1/tileset_info/?d=NC_045512_2-multivec'
                     },
-                    style: { inlineLegend: true, textStrokeWidth: 0 },
+                    style: { inlineLegend: true },
                     width: 800,
                     height: 40
                 },
