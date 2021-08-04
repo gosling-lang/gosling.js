@@ -1,0 +1,1477 @@
+{
+  "$ref": "#/definitions/TemplateTrackDef",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "Aggregate": {
+      "enum": [
+        "max",
+        "min",
+        "mean",
+        "bin",
+        "count"
+      ],
+      "type": "string"
+    },
+    "Assembly": {
+      "enum": [
+        "hg38",
+        "hg19",
+        "hg18",
+        "hg17",
+        "hg16",
+        "mm10",
+        "mm9",
+        "unknown"
+      ],
+      "type": "string"
+    },
+    "AxisPosition": {
+      "enum": [
+        "none",
+        "top",
+        "bottom",
+        "left",
+        "right"
+      ],
+      "type": "string"
+    },
+    "ChannelBind": {
+      "additionalProperties": false,
+      "properties": {
+        "aggregate": {
+          "$ref": "#/definitions/Aggregate"
+        },
+        "bind": {
+          "$ref": "#/definitions/ChannelType"
+        }
+      },
+      "required": [
+        "bind"
+      ],
+      "type": "object"
+    },
+    "ChannelType": {
+      "type": "string"
+    },
+    "ChannelValue": {
+      "additionalProperties": false,
+      "properties": {
+        "value": {
+          "type": [
+            "number",
+            "string"
+          ]
+        }
+      },
+      "required": [
+        "value"
+      ],
+      "type": "object"
+    },
+    "ChannelWithBase": {
+      "anyOf": [
+        {
+          "additionalProperties": false,
+          "properties": {
+            "aggregate": {
+              "$ref": "#/definitions/Aggregate"
+            },
+            "axis": {
+              "$ref": "#/definitions/AxisPosition"
+            },
+            "base": {
+              "type": "string"
+            },
+            "baseline": {
+              "type": [
+                "string",
+                "number"
+              ]
+            },
+            "domain": {
+              "$ref": "#/definitions/Domain"
+            },
+            "field": {
+              "type": "string"
+            },
+            "flip": {
+              "type": "boolean"
+            },
+            "grid": {
+              "type": "boolean"
+            },
+            "legend": {
+              "type": "boolean"
+            },
+            "linkingId": {
+              "type": "string"
+            },
+            "mirrored": {
+              "type": "boolean"
+            },
+            "padding": {
+              "type": "number"
+            },
+            "range": {
+              "$ref": "#/definitions/Range"
+            },
+            "sort": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "stack": {
+              "type": "boolean"
+            },
+            "type": {
+              "$ref": "#/definitions/FieldType"
+            },
+            "zeroBaseline": {
+              "type": "boolean"
+            }
+          },
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "base": {
+              "type": "string"
+            },
+            "value": {
+              "type": [
+                "number",
+                "string"
+              ]
+            }
+          },
+          "required": [
+            "value"
+          ],
+          "type": "object"
+        }
+      ]
+    },
+    "Chromosome": {
+      "enum": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9",
+        "10",
+        "11",
+        "12",
+        "13",
+        "14",
+        "15",
+        "16",
+        "17",
+        "18",
+        "19",
+        "20",
+        "21",
+        "22",
+        "X",
+        "Y",
+        "M",
+        "chr1",
+        "chr2",
+        "chr3",
+        "chr4",
+        "chr5",
+        "chr6",
+        "chr7",
+        "chr8",
+        "chr9",
+        "chr10",
+        "chr11",
+        "chr12",
+        "chr13",
+        "chr14",
+        "chr15",
+        "chr16",
+        "chr17",
+        "chr18",
+        "chr19",
+        "chr20",
+        "chr21",
+        "chr22",
+        "chrX",
+        "chrY",
+        "chrM"
+      ],
+      "type": "string"
+    },
+    "CustomChannelDef": {
+      "additionalProperties": false,
+      "description": "Definition of custom channels used in a track template.",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "required": {
+          "type": "boolean"
+        },
+        "type": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/FieldType"
+            },
+            {
+              "const": "value",
+              "type": "string"
+            }
+          ]
+        }
+      },
+      "required": [
+        "name",
+        "type"
+      ],
+      "type": "object"
+    },
+    "DataTransformWithBase": {
+      "additionalProperties": false,
+      "properties": {
+        "base": {
+          "$ref": "#/definitions/LogBase"
+        },
+        "baseGenomicField": {
+          "type": "string"
+        },
+        "boundingBox": {
+          "additionalProperties": false,
+          "properties": {
+            "endField": {
+              "type": "string"
+            },
+            "groupField": {
+              "type": "string"
+            },
+            "isPaddingBP": {
+              "type": "boolean"
+            },
+            "padding": {
+              "type": "number"
+            },
+            "startField": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "startField",
+            "endField"
+          ],
+          "type": "object"
+        },
+        "endField": {
+          "type": "string"
+        },
+        "field": {
+          "type": "string"
+        },
+        "fields": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "items": {
+                "additionalProperties": false,
+                "properties": {
+                  "chrField": {
+                    "type": "string"
+                  },
+                  "field": {
+                    "type": "string"
+                  },
+                  "newField": {
+                    "type": "string"
+                  },
+                  "type": {
+                    "$ref": "#/definitions/FieldType"
+                  }
+                },
+                "required": [
+                  "field",
+                  "type",
+                  "newField",
+                  "chrField"
+                ],
+                "type": "object"
+              },
+              "type": "array"
+            }
+          ]
+        },
+        "flag": {
+          "additionalProperties": false,
+          "properties": {
+            "field": {
+              "type": "string"
+            },
+            "value": {
+              "type": [
+                "number",
+                "string"
+              ]
+            }
+          },
+          "required": [
+            "field",
+            "value"
+          ],
+          "type": "object"
+        },
+        "genomicField": {
+          "type": "string"
+        },
+        "genomicLengthField": {
+          "type": "string"
+        },
+        "groupField": {
+          "type": "string"
+        },
+        "inRange": {
+          "items": {
+            "type": "number"
+          },
+          "type": "array"
+        },
+        "include": {
+          "type": "string"
+        },
+        "maxRows": {
+          "type": "number"
+        },
+        "method": {
+          "$ref": "#/definitions/DisplacementType"
+        },
+        "newField": {
+          "type": "string"
+        },
+        "not": {
+          "type": "boolean"
+        },
+        "oneOf": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "items": {
+                "type": "number"
+              },
+              "type": "array"
+            }
+          ]
+        },
+        "replace": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "from": {
+                "type": "string"
+              },
+              "to": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "from",
+              "to"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "separator": {
+          "type": "string"
+        },
+        "startField": {
+          "type": "string"
+        },
+        "type": {
+          "enum": [
+            "filter",
+            "concat",
+            "replace",
+            "log",
+            "displace",
+            "exonSplit",
+            "coverage",
+            "subjson"
+          ],
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "Displacement": {
+      "additionalProperties": false,
+      "properties": {
+        "padding": {
+          "type": "number"
+        },
+        "type": {
+          "$ref": "#/definitions/DisplacementType"
+        }
+      },
+      "required": [
+        "type"
+      ],
+      "type": "object"
+    },
+    "DisplacementType": {
+      "enum": [
+        "pile",
+        "spread"
+      ],
+      "type": "string"
+    },
+    "Domain": {
+      "anyOf": [
+        {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        {
+          "items": {
+            "type": "number"
+          },
+          "type": "array"
+        },
+        {
+          "$ref": "#/definitions/DomainInterval"
+        },
+        {
+          "$ref": "#/definitions/DomainChrInterval"
+        },
+        {
+          "$ref": "#/definitions/DomainChr"
+        },
+        {
+          "$ref": "#/definitions/DomainGene"
+        }
+      ]
+    },
+    "DomainChr": {
+      "additionalProperties": false,
+      "properties": {
+        "chromosome": {
+          "$ref": "#/definitions/Chromosome"
+        }
+      },
+      "required": [
+        "chromosome"
+      ],
+      "type": "object"
+    },
+    "DomainChrInterval": {
+      "additionalProperties": false,
+      "properties": {
+        "chromosome": {
+          "$ref": "#/definitions/Chromosome"
+        },
+        "interval": {
+          "items": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "maxItems": 2,
+          "minItems": 2,
+          "type": "array"
+        }
+      },
+      "required": [
+        "chromosome",
+        "interval"
+      ],
+      "type": "object"
+    },
+    "DomainGene": {
+      "additionalProperties": false,
+      "properties": {
+        "gene": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "items": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "string"
+                }
+              ],
+              "maxItems": 2,
+              "minItems": 2,
+              "type": "array"
+            }
+          ]
+        }
+      },
+      "required": [
+        "gene"
+      ],
+      "type": "object"
+    },
+    "DomainInterval": {
+      "additionalProperties": false,
+      "properties": {
+        "interval": {
+          "items": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "maxItems": 2,
+          "minItems": 2,
+          "type": "array"
+        }
+      },
+      "required": [
+        "interval"
+      ],
+      "type": "object"
+    },
+    "FieldType": {
+      "enum": [
+        "genomic",
+        "nominal",
+        "quantitative"
+      ],
+      "type": "string"
+    },
+    "GlyphElement": {
+      "additionalProperties": false,
+      "properties": {
+        "background": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/ChannelBind"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            },
+            {
+              "const": "none",
+              "type": "string"
+            }
+          ]
+        },
+        "color": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/ChannelBind"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            },
+            {
+              "const": "none",
+              "type": "string"
+            }
+          ]
+        },
+        "description": {
+          "type": "string"
+        },
+        "mark": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/MarkType"
+            },
+            {
+              "$ref": "#/definitions/MarkBind"
+            }
+          ]
+        },
+        "opacity": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/ChannelBind"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            },
+            {
+              "const": "none",
+              "type": "string"
+            }
+          ]
+        },
+        "row": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/ChannelBind"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            },
+            {
+              "const": "none",
+              "type": "string"
+            }
+          ]
+        },
+        "select": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "channel": {
+                "$ref": "#/definitions/ChannelType"
+              },
+              "oneOf": {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              }
+            },
+            "required": [
+              "channel",
+              "oneOf"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "size": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/ChannelBind"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            },
+            {
+              "const": "none",
+              "type": "string"
+            }
+          ]
+        },
+        "stroke": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/ChannelBind"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            },
+            {
+              "const": "none",
+              "type": "string"
+            }
+          ]
+        },
+        "strokeWidth": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/ChannelBind"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            },
+            {
+              "const": "none",
+              "type": "string"
+            }
+          ]
+        },
+        "style": {
+          "$ref": "#/definitions/MarkStyleInGlyph"
+        },
+        "text": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/ChannelBind"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            },
+            {
+              "const": "none",
+              "type": "string"
+            }
+          ]
+        },
+        "w": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/ChannelBind"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            },
+            {
+              "const": "none",
+              "type": "string"
+            }
+          ]
+        },
+        "x": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/ChannelBind"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            },
+            {
+              "const": "none",
+              "type": "string"
+            }
+          ]
+        },
+        "x1": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/ChannelBind"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            },
+            {
+              "const": "none",
+              "type": "string"
+            }
+          ]
+        },
+        "x1e": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/ChannelBind"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            },
+            {
+              "const": "none",
+              "type": "string"
+            }
+          ]
+        },
+        "xe": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/ChannelBind"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            },
+            {
+              "const": "none",
+              "type": "string"
+            }
+          ]
+        },
+        "y": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/ChannelBind"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            },
+            {
+              "const": "none",
+              "type": "string"
+            }
+          ]
+        },
+        "y1": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/ChannelBind"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            },
+            {
+              "const": "none",
+              "type": "string"
+            }
+          ]
+        },
+        "y1e": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/ChannelBind"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            },
+            {
+              "const": "none",
+              "type": "string"
+            }
+          ]
+        },
+        "ye": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/ChannelBind"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            },
+            {
+              "const": "none",
+              "type": "string"
+            }
+          ]
+        }
+      },
+      "required": [
+        "mark"
+      ],
+      "type": "object"
+    },
+    "LogBase": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "const": "e",
+          "type": "string"
+        }
+      ]
+    },
+    "LogicalOperation": {
+      "enum": [
+        "less-than",
+        "lt",
+        "LT",
+        "greater-than",
+        "gt",
+        "GT",
+        "less-than-or-equal-to",
+        "ltet",
+        "LTET",
+        "greater-than-or-equal-to",
+        "gtet",
+        "GTET"
+      ],
+      "type": "string"
+    },
+    "Mark": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/MarkType"
+        },
+        {
+          "$ref": "#/definitions/MarkDeep"
+        }
+      ]
+    },
+    "MarkBind": {
+      "additionalProperties": false,
+      "properties": {
+        "bind": {
+          "type": "string"
+        },
+        "domain": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "range": {
+          "items": {
+            "$ref": "#/definitions/MarkType"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "bind",
+        "domain",
+        "range"
+      ],
+      "type": "object"
+    },
+    "MarkDeep": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/MarkGlyphPreset"
+        },
+        {
+          "$ref": "#/definitions/MarkGlyph"
+        }
+      ]
+    },
+    "MarkGlyph": {
+      "additionalProperties": false,
+      "properties": {
+        "elements": {
+          "items": {
+            "$ref": "#/definitions/GlyphElement"
+          },
+          "type": "array"
+        },
+        "name": {
+          "type": "string"
+        },
+        "referenceColumn": {
+          "type": "string"
+        },
+        "requiredChannels": {
+          "items": {
+            "$ref": "#/definitions/ChannelType"
+          },
+          "type": "array"
+        },
+        "type": {
+          "const": "compositeMark",
+          "type": "string"
+        }
+      },
+      "required": [
+        "type",
+        "name",
+        "requiredChannels",
+        "elements"
+      ],
+      "type": "object"
+    },
+    "MarkGlyphPreset": {
+      "additionalProperties": false,
+      "properties": {
+        "server": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "type",
+        "server"
+      ],
+      "type": "object"
+    },
+    "MarkStyleInGlyph": {
+      "additionalProperties": false,
+      "properties": {
+        "background": {
+          "type": "string"
+        },
+        "dashed": {
+          "type": "string"
+        },
+        "dy": {
+          "type": "number"
+        },
+        "stroke": {
+          "type": "string"
+        },
+        "strokeWidth": {
+          "type": "number"
+        }
+      },
+      "type": "object"
+    },
+    "MarkType": {
+      "enum": [
+        "point",
+        "line",
+        "area",
+        "bar",
+        "rect",
+        "text",
+        "withinLink",
+        "betweenLink",
+        "rule",
+        "triangleLeft",
+        "triangleRight",
+        "triangleBottom",
+        "brush",
+        "header"
+      ],
+      "type": "string"
+    },
+    "Orientation": {
+      "enum": [
+        "horizontal",
+        "vertical"
+      ],
+      "type": "string"
+    },
+    "PREDEFINED_COLORS": {
+      "enum": [
+        "viridis",
+        "grey",
+        "spectral",
+        "warm",
+        "cividis",
+        "bupu",
+        "rdbu"
+      ],
+      "type": "string"
+    },
+    "Range": {
+      "anyOf": [
+        {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        {
+          "items": {
+            "type": "number"
+          },
+          "type": "array"
+        },
+        {
+          "$ref": "#/definitions/PREDEFINED_COLORS"
+        }
+      ]
+    },
+    "SizeVisibilityCondition": {
+      "additionalProperties": false,
+      "properties": {
+        "conditionPadding": {
+          "type": "number"
+        },
+        "measure": {
+          "enum": [
+            "width",
+            "height"
+          ],
+          "type": "string"
+        },
+        "operation": {
+          "$ref": "#/definitions/LogicalOperation"
+        },
+        "target": {
+          "enum": [
+            "track",
+            "mark"
+          ],
+          "type": "string"
+        },
+        "threshold": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "const": "|xe-x|",
+              "type": "string"
+            }
+          ]
+        },
+        "transitionPadding": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "measure",
+        "operation",
+        "target",
+        "threshold"
+      ],
+      "type": "object"
+    },
+    "Style": {
+      "additionalProperties": false,
+      "properties": {
+        "align": {
+          "enum": [
+            "left",
+            "right"
+          ],
+          "type": "string"
+        },
+        "background": {
+          "type": "string"
+        },
+        "backgroundOpacity": {
+          "type": "number"
+        },
+        "bazierLink": {
+          "type": "boolean"
+        },
+        "circularLink": {
+          "type": "boolean"
+        },
+        "curve": {
+          "enum": [
+            "top",
+            "bottom",
+            "left",
+            "right"
+          ],
+          "type": "string"
+        },
+        "dashed": {
+          "items": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "maxItems": 2,
+          "minItems": 2,
+          "type": "array"
+        },
+        "dx": {
+          "type": "number"
+        },
+        "dy": {
+          "type": "number"
+        },
+        "enableSmoothPath": {
+          "type": "boolean"
+        },
+        "inlineLegend": {
+          "type": "boolean"
+        },
+        "legendTitle": {
+          "type": "string"
+        },
+        "linePattern": {
+          "additionalProperties": false,
+          "properties": {
+            "size": {
+              "type": "number"
+            },
+            "type": {
+              "enum": [
+                "triangleLeft",
+                "triangleRight"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "type",
+            "size"
+          ],
+          "type": "object"
+        },
+        "outline": {
+          "type": "string"
+        },
+        "outlineWidth": {
+          "type": "number"
+        },
+        "textAnchor": {
+          "enum": [
+            "start",
+            "middle",
+            "end"
+          ],
+          "type": "string"
+        },
+        "textFontSize": {
+          "type": "number"
+        },
+        "textFontWeight": {
+          "enum": [
+            "bold",
+            "normal"
+          ],
+          "type": "string"
+        },
+        "textStroke": {
+          "type": "string"
+        },
+        "textStrokeWidth": {
+          "type": "number"
+        }
+      },
+      "type": "object"
+    },
+    "TemplateTrackDef": {
+      "additionalProperties": false,
+      "description": "Definition of Track Templates",
+      "properties": {
+        "channels": {
+          "items": {
+            "$ref": "#/definitions/CustomChannelDef"
+          },
+          "type": "array"
+        },
+        "mapping": {
+          "items": {
+            "$ref": "#/definitions/TemplateTrackMappingDef"
+          },
+          "type": "array"
+        },
+        "name": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "channels",
+        "mapping"
+      ],
+      "type": "object"
+    },
+    "TemplateTrackMappingDef": {
+      "additionalProperties": false,
+      "description": "This is based on `SingleTrack` but the differeces are only the type of channels which additionally have `base` properties to override properties from a template spec and remove of certain properties (e.g., `data`)",
+      "properties": {
+        "_invalidTrack": {
+          "type": "boolean"
+        },
+        "_renderingId": {
+          "type": "string"
+        },
+        "assembly": {
+          "$ref": "#/definitions/Assembly"
+        },
+        "centerRadius": {
+          "description": "Proportion of the radius of the center white space.",
+          "type": "number"
+        },
+        "color": {
+          "$ref": "#/definitions/ChannelWithBase"
+        },
+        "column": {
+          "$ref": "#/definitions/ChannelWithBase"
+        },
+        "dataTransform": {
+          "items": {
+            "$ref": "#/definitions/DataTransformWithBase"
+          },
+          "type": "array"
+        },
+        "displacement": {
+          "$ref": "#/definitions/Displacement"
+        },
+        "endAngle": {
+          "type": "number"
+        },
+        "flipY": {
+          "type": "boolean"
+        },
+        "id": {
+          "type": "string"
+        },
+        "innerRadius": {
+          "type": "number"
+        },
+        "linkingId": {
+          "type": "string"
+        },
+        "mark": {
+          "$ref": "#/definitions/Mark"
+        },
+        "opacity": {
+          "$ref": "#/definitions/ChannelWithBase"
+        },
+        "orientation": {
+          "$ref": "#/definitions/Orientation"
+        },
+        "outerRadius": {
+          "type": "number"
+        },
+        "overlayOnPreviousTrack": {
+          "type": "boolean"
+        },
+        "overrideTemplate": {
+          "type": "boolean"
+        },
+        "prerelease": {
+          "additionalProperties": false,
+          "properties": {
+            "testUsingNewRectRenderingForBAM": {
+              "type": "boolean"
+            }
+          },
+          "type": "object"
+        },
+        "row": {
+          "$ref": "#/definitions/ChannelWithBase"
+        },
+        "size": {
+          "$ref": "#/definitions/ChannelWithBase"
+        },
+        "spacing": {
+          "type": "number"
+        },
+        "startAngle": {
+          "type": "number"
+        },
+        "static": {
+          "type": "boolean"
+        },
+        "stretch": {
+          "type": "boolean"
+        },
+        "stroke": {
+          "$ref": "#/definitions/ChannelWithBase"
+        },
+        "strokeWidth": {
+          "$ref": "#/definitions/ChannelWithBase"
+        },
+        "style": {
+          "$ref": "#/definitions/Style"
+        },
+        "text": {
+          "$ref": "#/definitions/ChannelWithBase"
+        },
+        "tooltip": {
+          "items": {
+            "$ref": "#/definitions/Tooltip"
+          },
+          "type": "array"
+        },
+        "visibility": {
+          "items": {
+            "$ref": "#/definitions/VisibilityCondition"
+          },
+          "type": "array"
+        },
+        "x": {
+          "$ref": "#/definitions/ChannelWithBase"
+        },
+        "x1": {
+          "$ref": "#/definitions/ChannelWithBase"
+        },
+        "x1e": {
+          "$ref": "#/definitions/ChannelWithBase"
+        },
+        "xAxis": {
+          "$ref": "#/definitions/AxisPosition"
+        },
+        "xDomain": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/DomainInterval"
+            },
+            {
+              "$ref": "#/definitions/DomainChrInterval"
+            },
+            {
+              "$ref": "#/definitions/DomainChr"
+            }
+          ]
+        },
+        "xOffset": {
+          "type": "number"
+        },
+        "xe": {
+          "$ref": "#/definitions/ChannelWithBase"
+        },
+        "y": {
+          "$ref": "#/definitions/ChannelWithBase"
+        },
+        "y1": {
+          "$ref": "#/definitions/ChannelWithBase"
+        },
+        "y1e": {
+          "$ref": "#/definitions/ChannelWithBase"
+        },
+        "yOffset": {
+          "type": "number"
+        },
+        "ye": {
+          "$ref": "#/definitions/ChannelWithBase"
+        }
+      },
+      "required": [
+        "mark"
+      ],
+      "type": "object"
+    },
+    "Tooltip": {
+      "additionalProperties": false,
+      "properties": {
+        "alt": {
+          "type": "string"
+        },
+        "field": {
+          "type": "string"
+        },
+        "format": {
+          "type": "string"
+        },
+        "type": {
+          "$ref": "#/definitions/FieldType"
+        }
+      },
+      "required": [
+        "field",
+        "type"
+      ],
+      "type": "object"
+    },
+    "VisibilityCondition": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/SizeVisibilityCondition"
+        },
+        {
+          "$ref": "#/definitions/ZoomLevelVisibilityCondition"
+        }
+      ]
+    },
+    "ZoomLevelVisibilityCondition": {
+      "additionalProperties": false,
+      "properties": {
+        "conditionPadding": {
+          "type": "number"
+        },
+        "measure": {
+          "const": "zoomLevel",
+          "type": "string"
+        },
+        "operation": {
+          "$ref": "#/definitions/LogicalOperation"
+        },
+        "target": {
+          "enum": [
+            "track",
+            "mark"
+          ],
+          "type": "string"
+        },
+        "threshold": {
+          "type": "number"
+        },
+        "transitionPadding": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "measure",
+        "operation",
+        "target",
+        "threshold"
+      ],
+      "type": "object"
+    }
+  }
+}

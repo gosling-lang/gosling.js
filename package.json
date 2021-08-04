@@ -22,8 +22,9 @@
         "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s -r 0",
         "format": "eslint src/ --fix && prettier 'src/**/*.css' --write",
         "schema": "ts-json-schema-generator -p src/index.ts -f tsconfig.json -t GoslingSpec --no-type-check --no-ref-encode > schema/gosling.schema.json",
+        "schema-theme": "ts-json-schema-generator -p src/index.ts -f tsconfig.json -t Theme --no-type-check --no-ref-encode > schema/theme.schema.json",
+        "schema-template": "ts-json-schema-generator -p src/index.ts -f tsconfig.json -t TemplateTrackDef --no-type-check --no-ref-encode > schema/template.schema.json",
         "schema-versioning": "mkdir -p schema/history/$npm_package_version && cp schema/gosling.schema.json schema/history/$npm_package_version/gosling$npm_package_version.schema.json && cp src/core/gosling.schema.ts schema/history/$npm_package_version/gosling$npm_package_version.schema.ts",
-        "theme-schema": "ts-json-schema-generator -p src/index.ts -f tsconfig.json -t Theme --no-type-check --no-ref-encode > schema/theme.schema.json",
         "predeploy": "yarn build-editor; echo \"gosling.js.org\" >> build/CNAME",
         "deploy": "gh-pages -d build"
     },
@@ -167,7 +168,7 @@
     },
     "husky": {
         "hooks": {
-            "pre-commit": "yarn changelog && yarn schema && yarn schema-versioning && yarn theme-schema && yarn format && git add .",
+            "pre-commit": "yarn changelog && yarn schema && yarn schema-theme && yarn schema-template && yarn format && git add .",
             "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
         }
     }
