@@ -398,10 +398,20 @@ function Editor(props: any) {
                     if (!gosRef.current) return;
 
                     // To test APIs, uncomment the following code.
-                    // ! Be aware that the first view is for the title/subtitle track. So navigation API does not work.
+                    // // ! Be aware that the first view is for the title/subtitle track. So navigation API does not work.
                     // const id = gosRef.current.api.getViewIds()?.[1]; //'view-1';
                     // if(id) {
                     //     gosRef.current.api.zoomToExtent(id);
+                    // }
+                    //
+                    // // Static visualization rendered in canvas
+                    // const { canvas } = gosRef.current.api.getCanvas({
+                    //     resolution: 1,
+                    //     transparentBackground: true,
+                    // });
+                    // const testDiv = document.getElementById('preview-container');
+                    // if(canvas && testDiv) {
+                    //     testDiv.appendChild(canvas);
                     // }
                 }}
             >
@@ -698,7 +708,10 @@ function Editor(props: any) {
                                 size={isShowDataPreview ? '40%' : `calc(100% - ${BOTTOM_PANEL_HEADER_HEIGHT}px)`}
                                 maxSize={window.innerHeight - EDITOR_HEADER_HEIGHT - BOTTOM_PANEL_HEADER_HEIGHT}
                             >
-                                <div className={`preview-container ${theme === 'dark' ? 'dark' : ''}`}>
+                                <div
+                                    id="preview-container"
+                                    className={`preview-container ${theme === 'dark' ? 'dark' : ''}`}
+                                >
                                     <gosling.GoslingComponent
                                         ref={gosRef}
                                         spec={goslingSpec}

@@ -120,6 +120,41 @@ export const GoslingComponent = forwardRef((props: GoslingCompProps, ref: any) =
                     });
                     return ids;
                 },
+                getCanvas: (options: { resolution: number; transparentBackground: boolean }) => {
+                    const resolution = options?.resolution ?? 4;
+                    const transparentBackground = options?.transparentBackground ?? false;
+
+                    const renderer = hgRef.current.pixiRenderer;
+                    const renderTexture = PIXI.RenderTexture.create({
+                        width: renderer.width / 2,
+                        height: renderer.height / 2,
+                        resolution
+                    });
+
+                    renderer.render(hgRef.current.pixiStage, renderTexture);
+
+                    const canvas = renderer.plugins.extract.canvas(renderTexture);
+
+                    // Set background color for the given theme in the gosling spec
+                    // Otherwise, it is transparent
+                    const canvasWithBg = document.createElement('canvas') as HTMLCanvasElement;
+                    canvasWithBg.width = canvas.width;
+                    canvasWithBg.height = canvas.height;
+
+                    const ctx = canvasWithBg.getContext('2d')!;
+                    if (!transparentBackground) {
+                        ctx.fillStyle = theme.root.background;
+                        ctx.fillRect(0, 0, canvasWithBg.width, canvasWithBg.height);
+                    }
+                    ctx.drawImage(canvas, 0, 0);
+
+                    return {
+                        canvas: canvasWithBg,
+                        resolution,
+                        canvasWidth: canvas.width,
+                        canvasHeight: canvas.height
+                    };
+                },
                 exportPNG: (transparentBackground?: boolean) => {
                     const renderer = hgRef.current.pixiRenderer;
                     const renderTexture = PIXI.RenderTexture.create({
