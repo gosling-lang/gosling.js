@@ -716,6 +716,8 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
 
             const spec = JSON.parse(JSON.stringify(this.originalSpec));
 
+            // const [trackWidth, trackHeight] = this.dimensions; // actual size of a track
+
             resolveSuperposedTracks(spec).forEach(resolved => {
                 if (resolved.mark === 'brush') {
                     // we do not draw rectangular brush ourselves, higlass does.
@@ -812,6 +814,11 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                 } catch (e) {
                     // ..
                 }
+
+                // Replace width and height information with the actual values
+                // TODO: we don't need this?
+                // resolved.width = trackWidth;
+                // resolved.height = trackHeight;
 
                 // Construct separate gosling models for individual tiles
                 const gm = new GoslingTrackModel(resolved, tile.gos.tabularDataFiltered, this.options.theme);

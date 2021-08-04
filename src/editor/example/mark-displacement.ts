@@ -49,26 +49,30 @@ export const EX_SPEC_MARK_DISPLACEMENT: GoslingSpec = {
                         }
                     ],
                     tracks: [
-                        { mark: 'point', size: { value: 4 }, color: { value: '#029F73' } },
+                        {
+                            mark: 'point',
+                            size: { value: 4 },
+                            color: { value: '#029F73' },
+                            stroke: { value: 'black' },
+                            strokeWidth: { value: 1 }
+                        },
                         {
                             mark: 'text',
                             color: { field: '3', type: 'nominal', domain: ['A', 'T', 'G', 'C'], legend: true },
                             text: { field: '3', type: 'nominal' },
-                            y: { value: 40 }
+                            y: { value: 48 }
                         },
                         {
                             mark: 'text',
                             color: { field: '4', type: 'nominal', domain: ['A', 'T', 'G', 'C'] },
                             text: { field: '4', type: 'nominal' },
-                            y: { value: 10 }
+                            y: { value: 18 }
                         },
-                        { mark: 'text', color: { value: 'gray' }, text: { value: '↓' }, y: { value: 25 } }
+                        { mark: 'text', color: { value: 'gray' }, text: { value: '↓' }, y: { value: 33 } }
                     ],
                     x: { field: 'aStart', type: 'genomic' },
                     xe: { field: 'aEnd', type: 'genomic' },
                     y: { value: 5 },
-                    stroke: { value: 'black' },
-                    strokeWidth: { value: 1 },
                     opacity: { value: 0.8 },
                     style: { inlineLegend: true },
                     width: 700,

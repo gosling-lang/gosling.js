@@ -61,10 +61,9 @@ export function drawTriangle(g: PIXI.Graphics, model: GoslingTrackModel, trackWi
             if (circular) {
                 let x0 = x ? x : xe - markWidth;
                 let x1 = xe ? xe : x + markWidth;
-                
-                const rm = trackOuterRadius - ((rowPosition + rowHeight - y) / trackHeight) * trackRingSize;
                 let xm = (x0 + x1) / 2.0;
 
+                const rm = trackOuterRadius - ((rowPosition + rowHeight - y) / trackHeight) * trackRingSize;
                 const r0 = rm - triHeight / 2.0;
                 const r1 = rm + triHeight / 2.0;
 

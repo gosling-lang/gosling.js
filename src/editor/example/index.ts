@@ -8,7 +8,7 @@ import { EX_SPEC_BASIC_SEMANTIC_ZOOM } from './basic-semantic-zoom';
 import { EX_SPEC_MARK_DISPLACEMENT } from './mark-displacement';
 import { EX_SPEC_CIRCULAR_OVERVIEW_LINEAR_DETAIL } from './circular-overview-linear-detail-views';
 import { EX_SPEC_SARS_COV_2 } from './sars-cov-2';
-import { EX_SPEC_CIRCOS } from './circos';
+import { EX_SPEC_CIRCOS, EX_SPEC_CIRCULR_RANGE } from './circos';
 import { EX_SPEC_GREMLIN } from './gremlin';
 import { EX_SPEC_GENE_ANNOTATION } from './gene-annotation';
 import { EX_SPEC_CLINVAR_LOLLIPOP, EX_SPEC_SEQUENCE_TRACK } from './semantic-zoom';
@@ -16,8 +16,9 @@ import { EX_SPEC_GIVE } from './give';
 import { EX_SPEC_CORCES_ET_AL } from './corces';
 import { EX_SPEC_CYTOBANDS } from './ideograms';
 import { EX_SPEC_PILEUP } from './pileup';
-import { EX_SPEC_DEBUG } from './debug';
 import { EX_SPEC_BAND } from './vertical-band';
+import { EX_SPEC_TEMPLATE } from './track-template';
+import { EX_SPEC_DEBUG } from './debug';
 
 export const examples: ReadonlyArray<{
     name: string;
@@ -31,7 +32,7 @@ export const examples: ReadonlyArray<{
     {
         name: 'DEBUG',
         spec: EX_SPEC_DEBUG,
-        id: 'DEBUG'
+        id: 'DEBUG',
         // hidden: true
     },
     {
@@ -83,12 +84,12 @@ export const examples: ReadonlyArray<{
         spec: EX_SPEC_CIRCULAR_OVERVIEW_LINEAR_DETAIL
     },
     {
-        name: 'Scalable Sequence Track',
+        name: 'Multi-Scale Sequence Track',
         id: 'SEQUENCE',
         spec: EX_SPEC_SEQUENCE_TRACK
     },
     {
-        name: 'Clinvar Lollipop Plot',
+        name: 'Multi-Scale Clinvar Lollipop Plot',
         id: 'SEMANTIC_ZOOM',
         spec: EX_SPEC_CLINVAR_LOLLIPOP
     },
@@ -111,6 +112,12 @@ export const examples: ReadonlyArray<{
         name: 'Circos',
         id: 'CIRCOS',
         spec: EX_SPEC_CIRCOS
+    },
+    {
+        name: 'Circular Range (Inspired By Weather Radials)',
+        id: 'Circular Range',
+        spec: EX_SPEC_CIRCULR_RANGE,
+        hidden: true
     },
     {
         name: 'SARS-CoV-2',
@@ -145,11 +152,11 @@ export const examples: ReadonlyArray<{
         id: 'BAM_PILEUP',
         spec: EX_SPEC_PILEUP,
         underDevelopment: true
+    },
+    {
+        name: 'Track Template',
+        id: 'TEMPLATE',
+        spec: EX_SPEC_TEMPLATE,
+        underDevelopment: true
     }
-    // {
-    //     name: 'Dark Theme (Beta)',
-    //     id: 'DARK_THEME',
-    //     spec: EX_SPEC_DARK_THEME,
-    //     underDevelopment: true
-    // }
 ].filter(d => !d.hidden);

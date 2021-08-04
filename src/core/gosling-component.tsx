@@ -11,6 +11,8 @@ import { GET_CHROM_SIZES } from './utils/assembly';
 import { CompleteThemeDeep, getTheme, Theme } from './utils/theme';
 import { CommonEventData, EVENT_TYPE, MouseHoverCallback, UserDefinedEvents } from './api';
 import uuid from 'uuid';
+import { TemplateTrackDef } from './gosling.schema';
+import { GoslingTemplates } from '..';
 
 /**
  * Register plugin tracks and data fetchers to HiGlass. This is necessary for the first time before using Gosling.
@@ -26,6 +28,7 @@ interface GoslingCompProps {
     id?: string;
     className?: string;
     theme?: Theme;
+    templates?: TemplateTrackDef[];
 }
 
 // TODO: specify types other than "any"
@@ -213,6 +216,7 @@ export const GoslingComponent = forwardRef((props: GoslingCompProps, ref: any) =
                     setHs(newHs);
                     setSize(newSize);
                 },
+                [...GoslingTemplates], // TODO: allow user definitions
                 theme
             );
         }
@@ -252,7 +256,7 @@ export const GoslingComponent = forwardRef((props: GoslingCompProps, ref: any) =
                             ref={hgRef}
                             options={{
                                 bounded: true,
-                                pixelPreciseMarginPadding: false,
+                                pixelPreciseMarginPadding: true, // this uses `rowHeight: 1` in react-grid-layout
                                 containerPaddingX: 0,
                                 containerPaddingY: 0,
                                 viewMarginTop: 0,

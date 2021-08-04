@@ -32,7 +32,8 @@ import {
     OverlaidTracks,
     StackedTracks,
     BAMData,
-    Range
+    Range,
+    TemplateTrack
 } from './gosling.schema';
 import { SUPPORTED_CHANNELS } from './mark';
 import { isArray } from 'lodash';
@@ -71,7 +72,7 @@ export function IsDataTrack(_: Track): _ is DataTrack {
     return !IsOverlaidTrack(_) && 'data' in _ && !('mark' in _);
 }
 
-export function IsTemplate(_: Partial<Track>): boolean {
+export function IsDataTemplate(_: Partial<Track>): boolean {
     return !!('data' in _ && 'overrideTemplate' in _ && _.overrideTemplate);
 }
 
@@ -117,6 +118,10 @@ export function IsSingleTrack(track: Track): track is SingleTrack {
 
 export function IsOverlaidTrack(track: Partial<Track>): track is OverlaidTrack {
     return 'overlay' in track;
+}
+
+export function IsTemplateTrack(track: Partial<Track>): track is TemplateTrack {
+    return 'template' in track;
 }
 
 /**

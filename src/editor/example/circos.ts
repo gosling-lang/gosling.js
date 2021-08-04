@@ -1,5 +1,31 @@
 import { GoslingSpec } from '../../';
 
+export const EX_SPEC_CIRCULR_RANGE: GoslingSpec = {
+    // title: 'Circos',
+    // description: 'http://circos.ca/intro/genomic_data/',
+    layout: 'circular',
+    static: true,
+    spacing: 1,
+    centerRadius: 0.3,
+    alignment: 'stack',
+    tracks: [
+        {
+            data: {
+                type: 'vector',
+                url: 'https://resgen.io/api/v1/tileset_info/?d=VLFaiSVjTjW6mkbjRjWREA',
+                column: 'position',
+                value: 'peak'
+            },
+            mark: 'bar',
+            x: { field: 'position', type: 'genomic', axis: 'top' },
+            y: { field: 'peak', type: 'quantitative' },
+            color: { value: '#EEEDA1' },
+            width: 700,
+            height: 60
+        }
+    ]
+};
+
 export const EX_SPEC_CIRCOS: GoslingSpec = {
     title: 'Circos',
     description: 'http://circos.ca/intro/genomic_data/',

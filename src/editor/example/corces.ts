@@ -199,6 +199,7 @@ export const EX_SPEC_CORCES_ET_AL: GoslingSpec = {
                                 field: 'start',
                                 type: 'genomic'
                             },
+                            size: { value: 8 },
                             xe: { field: 'end', type: 'genomic' },
                             style: { textFontSize: 8, dy: -12 }
                         },
@@ -211,6 +212,7 @@ export const EX_SPEC_CORCES_ET_AL: GoslingSpec = {
                             text: { field: 'name', type: 'nominal' },
                             x: { field: 'start', type: 'genomic' },
                             xe: { field: 'end', type: 'genomic' },
+                            size: { value: 8 },
                             style: { textFontSize: 8, dy: 10 }
                         },
                         {
@@ -435,7 +437,7 @@ export const EX_SPEC_CORCES_ET_AL: GoslingSpec = {
                 //     },
                 //     text: { field: 'base', type: 'nominal' },
                 //     stretch: true,
-                //     style: { outline: '#20102F', textStrokeWidth: 0 }
+                //     style: { outline: '#20102F' }
                 // }
             ]
         }

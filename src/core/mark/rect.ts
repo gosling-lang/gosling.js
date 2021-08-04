@@ -12,8 +12,7 @@ export function drawRect(HGC: any, trackInfo: any, tile: any, model: GoslingTrac
     const data = model.data();
 
     /* track size */
-    const trackWidth = trackInfo.dimensions[0];
-    const trackHeight = trackInfo.dimensions[1];
+    const [trackWidth, trackHeight] = trackInfo.dimensions;
     const tileSize = trackInfo.tilesetInfo.tile_size;
     const { tileX, tileWidth } = trackInfo.getTilePosAndDimensions(tile.gos.zoomLevel, tile.gos.tilePos, tileSize);
 
@@ -65,9 +64,6 @@ export function drawRect(HGC: any, trackInfo: any, tile: any, model: GoslingTrac
 
         const xs = x;
         const xe = x + rectWidth;
-        // const ys = y - rectHeight / 2.0;
-        // const ye = y + rectHeight / 2.0;
-        // y = y + rectHeight / 2.0;
         const absoluteHeight = model.visualPropertyByChannel('size', d) ?? undefined; // TODO: this is making it complicated, way to simplify this?
 
         // stroke
@@ -117,11 +113,11 @@ export function drawRect(HGC: any, trackInfo: any, tile: any, model: GoslingTrac
             if (spec.tooltip) {
                 trackInfo.tooltips.push({
                     datum: d,
-                    isMouseOver: (x: number, y: number) =>
-                        xs - G < x &&
-                        x < xe + G &&
-                        rowPosition + rowHeight - y - rectHeight / 2.0 - G < y &&
-                        y < rowPosition + rowHeight - y + rectHeight / 2.0 + G,
+                    isMouseOver: (mouseX: number, mouseY: number) =>
+                        xs - G < mouseX &&
+                        mouseX < xe + G &&
+                        rowPosition + rowHeight - y - rectHeight / 2.0 - G < mouseY &&
+                        mouseY < rowPosition + rowHeight - y + rectHeight / 2.0 + G,
                     markInfo: {
                         x: xs,
                         y: rowPosition + rowHeight - y - rectHeight / 2.0,

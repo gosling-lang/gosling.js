@@ -579,6 +579,7 @@ export class GoslingTrackModel {
                                 IsChannelDeep(spec.xe)
                             )
                                 value = undefined;
+                            else if (spec.mark === 'text') value = 12;
                             else value = this.theme.point.size;
                             break;
                         case 'color':
@@ -588,11 +589,14 @@ export class GoslingTrackModel {
                             value = 0;
                             break;
                         case 'stroke':
-                            value = this.theme.markCommon.stroke;
+                            // !! TODO: These should be based on themes
+                            if (spec.mark === 'text') value = this.theme.text.stroke;
+                            else value = this.theme.markCommon.stroke;
                             break;
                         case 'strokeWidth':
                             if (spec.mark === 'rule') value = this.theme.rule.strokeWidth;
                             else if (spec.mark === 'withinLink' || spec.mark === 'betweenLink') value = this.theme.link.strokeWidth;
+                            else if (spec.mark === 'text') value = this.theme.text.strokeWidth;
                             else value = this.theme.markCommon.strokeWidth;
                             break;
                         case 'opacity':
