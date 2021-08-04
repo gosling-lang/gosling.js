@@ -12,7 +12,7 @@ describe('Arrangement', () => {
 
         expect(info[0].track).toEqual(spec.tracks[0]);
         expect(info[0].boundingBox).toEqual({ x: 0, y: 0, width: 40, height: 40 });
-        expect(info[0].layout).toEqual({ x: 0, y: 0, w: 12, h: 12 });
+        expect(info[0].layout).toEqual({ x: 0, y: 0, w: 12, h: 40 });
     });
 
     it('1 View, 1 Track (N Overlaid Tracks)', () => {
@@ -67,11 +67,11 @@ describe('Arrangement', () => {
 
         expect(info[0].track).toEqual(spec.tracks[0]);
         expect(info[0].boundingBox).toEqual({ x: 0, y: 0, width: 10, height: 10 });
-        expect(info[0].layout).toEqual({ x: 0, y: 0, w: 12, h: (10 / 24) * 12 });
+        expect(info[0].layout).toEqual({ x: 0, y: 0, w: 12, h: 10 });
 
         expect(info[1].track).toEqual(spec.tracks[1]);
         expect(info[1].boundingBox).toEqual({ x: 0, y: 10, width: 10, height: 10 });
-        expect(info[1].layout).toEqual({ x: 0, y: 5, w: 12, h: (10 / 24) * 12 });
+        expect(info[1].layout).toEqual({ x: 0, y: 10, w: 12, h: 10 });
     });
 
     it('Palallel Views', () => {
@@ -96,7 +96,7 @@ describe('Arrangement', () => {
         expect(info).toHaveLength(4);
 
         const size = getBoundingBox(info);
-        expect(size).toEqual({ width: 10, height: 40 + DEFAULT_VIEW_SPACING + 4 });
+        expect(size).toEqual({ width: 10, height: 40 + DEFAULT_VIEW_SPACING });
 
         expect(info[0].boundingBox).toEqual({ x: 0, y: 0, width: 10, height: 10 });
         expect(info[1].boundingBox).toEqual({ x: 0, y: 10, width: 10, height: 10 });
@@ -126,7 +126,7 @@ describe('Arrangement', () => {
         expect(info).toHaveLength(4);
 
         const size = getBoundingBox(info);
-        expect(size).toEqual({ width: 20 + DEFAULT_VIEW_SPACING, height: 20 + 4 });
+        expect(size).toEqual({ width: 20 + DEFAULT_VIEW_SPACING, height: 20 });
 
         expect(info[0].boundingBox).toEqual({ x: 0, y: 0, width: 10, height: 10 });
         expect(info[1].boundingBox).toEqual({ x: 0, y: 10, width: 10, height: 10 });
@@ -257,7 +257,7 @@ describe('Arrangement', () => {
             expect(info).toHaveLength(2);
 
             const size = getBoundingBox(info);
-            expect(size).toEqual({ width: 20 + DEFAULT_VIEW_SPACING, height: 10 + 6 });
+            expect(size).toEqual({ width: 20 + DEFAULT_VIEW_SPACING, height: 10 });
 
             expect(info[0].boundingBox).toEqual({ x: 0, y: 0, width: 10, height: 10 });
             expect(info[1].boundingBox).toEqual({ x: 10 + DEFAULT_VIEW_SPACING, y: 0, width: 10, height: 10 });
@@ -289,7 +289,7 @@ describe('Arrangement', () => {
             const size = getBoundingBox(info);
             expect(size).toEqual({
                 width: 10 + DEFAULT_CIRCULAR_VIEW_PADDING * 2,
-                height: 10 + DEFAULT_CIRCULAR_VIEW_PADDING * 2 + 2
+                height: 10 + DEFAULT_CIRCULAR_VIEW_PADDING * 2
             });
 
             expect(info[0].boundingBox).toEqual(info[1].boundingBox);

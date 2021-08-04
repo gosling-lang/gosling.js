@@ -22,7 +22,7 @@ describe('Rendering triangle', () => {
             { x: 111, xe: 111, y: 222 }
         ];
         const model = new GoslingTrackModel(t, d, getTheme());
-        drawTriangle(g, model);
+        drawTriangle(g, { dimensions: [100, 100] }, model);
     });
 
     it('Circular Triangle', () => {
@@ -42,6 +42,6 @@ describe('Rendering triangle', () => {
             { x: 111, xe: 111, y: 222 }
         ];
         const model = new GoslingTrackModel(t, d, getTheme());
-        drawTriangle(g, model);
+        drawTriangle(g, { dimensions: [100, 100] }, model);
     });
 });
