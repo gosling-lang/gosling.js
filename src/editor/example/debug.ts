@@ -1,75 +1,233 @@
 import { GoslingSpec } from '../../core/gosling.schema';
-import { GOSLING_PUBLIC_DATA } from './gosling-data';
 
 export const EX_SPEC_DEBUG: GoslingSpec = {
-    title: 'Track Template In Gosling.js',
-    subtitle: 'Gosling.js enables track templates! This allows to create complex visualization more easily.',
-    spacing: 0,
-    // layout: 'circular', // TODO: support this!
+    title: 'Between-Connectivity In 2D Tracks',
+    subtitle: 'Between-link examples with three types, i.e., straight, corner, and curve',
+    xDomain: { interval: [0, 1000000000] },
     views: [
         {
-            xDomain: { chromosome: '3', interval: [52168000, 52890000] },
-            tracks: [
+            arrangement: 'horizontal',
+            views: [
                 {
-                    template: 'gene',
-                    data: {
-                        url: GOSLING_PUBLIC_DATA.geneAnnotation,
-                        type: 'beddb',
-                        genomicFields: [
-                            { index: 1, name: 'start' },
-                            { index: 2, name: 'end' }
-                        ],
-                        valueFields: [
-                            { index: 5, name: 'strand', type: 'nominal' },
-                            { index: 3, name: 'name', type: 'nominal' }
-                        ],
-                        exonIntervalFields: [
-                            { index: 12, name: 'start' },
-                            { index: 13, name: 'end' }
-                        ]
-                    },
-                    encoding: {
-                        startPosition: { field: 'start' },
-                        endPosition: { field: 'end' },
-                        strandColor: { field: 'strand', range: ['gray'] },
-                        strandRow: { field: 'strand' },
-                        opacity: { value: 0.4 },
-                        geneHeight: { value: 30 },
-                        geneLabel: { field: 'name' },
-                        geneLabelFontSize: { value: 30 },
-                        geneLabelColor: { field: 'strand', range: ['gray'] },
-                        geneLabelStroke: { value: 'white' },
-                        geneLabelStrokeThickness: { value: 4 },
-                        geneLabelOpacity: { value: 1 },
-                        type: { field: 'type' }
-                    },
-                    width: 800,
-                    height: 300
+                    tracks: [
+                        {
+                            title: 'Straight Connection',
+                            alignment: 'overlay',
+                            data: {
+                                url:
+                                    'https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/circos-segdup-edited.txt',
+                                type: 'csv',
+                                chromosomeField: 'c2',
+                                genomicFields: ['s1', 'e1', 's2', 'e2']
+                            },
+                            style: { linkConnectionType: 'straight' },
+                            tracks: [
+                                {
+                                    mark: 'betweenLink',
+                                    x: { field: 's1', type: 'genomic', axis: 'top' },
+                                    y: { field: 's2', type: 'genomic', axis: 'left' }
+                                },
+                                {
+                                    mark: 'betweenLink',
+                                    y: { field: 's1', type: 'genomic', axis: 'top' },
+                                    x: { field: 's2', type: 'genomic', axis: 'left' }
+                                }
+                            ],
+                            color: { value: '#3275B4' },
+                            size: { value: 2 },
+                            stroke: { value: '#3275B4' },
+                            opacity: { value: 0.2 },
+                            width: 500,
+                            height: 500
+                        }
+                    ]
+                },
+                {
+                    tracks: [
+                        {
+                            title: 'Cornered Connection',
+                            alignment: 'overlay',
+                            data: {
+                                url:
+                                    'https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/circos-segdup-edited.txt',
+                                type: 'csv',
+                                chromosomeField: 'c2',
+                                genomicFields: ['s1', 'e1', 's2', 'e2']
+                            },
+                            style: { linkConnectionType: 'corner' },
+                            tracks: [
+                                {
+                                    mark: 'betweenLink',
+                                    x: { field: 's1', type: 'genomic', axis: 'top' },
+                                    y: { field: 's2', type: 'genomic', axis: 'left' }
+                                },
+                                {
+                                    mark: 'betweenLink',
+                                    y: { field: 's1', type: 'genomic', axis: 'top' },
+                                    x: { field: 's2', type: 'genomic', axis: 'left' }
+                                },
+                                {
+                                    mark: 'point',
+                                    x: { field: 's1', type: 'genomic', axis: 'top' },
+                                    y: { field: 's2', type: 'genomic', axis: 'left' },
+                                    opacity: { value: 1 }
+                                },
+                                {
+                                    mark: 'point',
+                                    y: { field: 's1', type: 'genomic', axis: 'top' },
+                                    x: { field: 's2', type: 'genomic', axis: 'left' },
+                                    opacity: { value: 1 }
+                                }
+                            ],
+                            color: { value: 'black' },
+                            size: { value: 1 },
+                            stroke: { value: '#3275B4' },
+                            opacity: { value: 0.2 },
+                            width: 500,
+                            height: 500
+                        }
+                    ]
                 }
             ]
         },
         {
-            xDomain: { chromosome: '1' },
             tracks: [
                 {
-                    template: 'ideogram',
+                    title: 'Curved Connection',
+                    alignment: 'overlay',
                     data: {
                         url:
-                            'https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/UCSC.HG38.Human.CytoBandIdeogram.csv',
+                            'https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/circos-segdup-edited.txt',
                         type: 'csv',
-                        chromosomeField: 'Chromosome',
-                        genomicFields: ['chromStart', 'chromEnd']
+                        chromosomeField: 'c2',
+                        genomicFields: ['s1', 'e1', 's2', 'e2']
                     },
-                    encoding: {
-                        startPosition: { field: 'chromStart' },
-                        endPosition: { field: 'chromEnd' },
-                        stainBackgroundColor: { field: 'Stain' },
-                        stainLabelColor: { field: 'Stain' },
-                        name: { field: 'Name' },
-                        stainStroke: { value: 'black' }
-                    },
-                    width: 800,
-                    height: 100
+                    style: { linkConnectionType: 'curve' },
+                    tracks: [
+                        {
+                            mark: 'betweenLink',
+                            x: { field: 's1', type: 'genomic', axis: 'top' },
+                            y: { field: 's2', type: 'genomic', axis: 'left' }
+                        },
+                        {
+                            mark: 'betweenLink',
+                            y: { field: 's1', type: 'genomic', axis: 'top' },
+                            x: { field: 's2', type: 'genomic', axis: 'left' }
+                        }
+                    ],
+                    color: { value: 'black' },
+                    size: { value: 1 },
+                    stroke: { value: '#3275B4' },
+                    opacity: { value: 0.2 },
+                    width: 500,
+                    height: 500
+                }
+            ]
+        },
+        {
+            linkingId: '-',
+            arrangement: 'horizontal',
+            views: [
+                {
+                    orientation: 'vertical',
+                    tracks: [
+                        {
+                            alignment: 'overlay',
+                            data: {
+                                url:
+                                    'https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/circos-segdup-edited.txt',
+                                type: 'csv',
+                                chromosomeField: 'c2',
+                                genomicFields: ['s1', 'e1', 's2', 'e2']
+                            },
+                            style: { linkConnectionType: 'corner', outlineWidth: 0 },
+                            tracks: [
+                                {
+                                    mark: 'withinLink',
+                                    x: { field: 's1', type: 'genomic', axis: 'bottom' },
+                                    xe: { field: 's2', type: 'genomic' }
+                                }
+                            ],
+                            flipY: true,
+                            color: { value: '#3275B4' },
+                            size: { value: 2 },
+                            stroke: { value: 'gray' },
+                            opacity: { value: 0.2 },
+                            width: 100,
+                            height: 500
+                        }
+                    ]
+                },
+                {
+                    tracks: [
+                        {
+                            title: 'Curved Connection',
+                            alignment: 'overlay',
+                            data: {
+                                url:
+                                    'https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/circos-segdup-edited.txt',
+                                type: 'csv',
+                                chromosomeField: 'c2',
+                                genomicFields: ['s1', 'e1', 's2', 'e2']
+                            },
+                            style: { linkConnectionType: 'corner' },
+                            tracks: [
+                                {
+                                    mark: 'betweenLink',
+                                    x: { field: 's1', type: 'genomic', axis: 'none' },
+                                    y: { field: 's2', type: 'genomic', axis: 'none' }
+                                },
+                                {
+                                    mark: 'betweenLink',
+                                    y: { field: 's1', type: 'genomic', axis: 'top' },
+                                    x: { field: 's2', type: 'genomic' }
+                                },
+                                {
+                                    mark: 'point',
+                                    x: { field: 's1', type: 'genomic' },
+                                    y: { field: 's2', type: 'genomic' },
+                                    opacity: { value: 1 }
+                                },
+                                {
+                                    mark: 'point',
+                                    y: { field: 's1', type: 'genomic' },
+                                    x: { field: 's2', type: 'genomic' },
+                                    opacity: { value: 1 }
+                                }
+                            ],
+                            color: { value: '#3275B4' },
+                            size: { value: 1 },
+                            stroke: { value: 'gray' },
+                            opacity: { value: 0.2 },
+                            width: 500,
+                            height: 500
+                        },
+                        {
+                            alignment: 'overlay',
+                            data: {
+                                url:
+                                    'https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/circos-segdup-edited.txt',
+                                type: 'csv',
+                                chromosomeField: 'c2',
+                                genomicFields: ['s1', 'e1', 's2', 'e2']
+                            },
+                            style: { linkConnectionType: 'corner', outlineWidth: 0 },
+                            tracks: [
+                                {
+                                    mark: 'withinLink',
+                                    x: { field: 's1', type: 'genomic', axis: 'bottom' },
+                                    xe: { field: 's2', type: 'genomic' }
+                                }
+                            ],
+                            flipY: true,
+                            color: { value: '#3275B4' },
+                            size: { value: 2 },
+                            stroke: { value: 'gray' },
+                            opacity: { value: 0.2 },
+                            width: 500,
+                            height: 100
+                        }
+                    ]
                 }
             ]
         }

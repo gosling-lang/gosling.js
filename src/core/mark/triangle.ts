@@ -5,7 +5,7 @@ import { getValueUsingChannel } from '../gosling.schema.guards';
 import colorToHex from '../utils/color-to-hex';
 import { cartesianToPolar } from '../utils/polar';
 
-export function drawTriangle(g: PIXI.Graphics, trackInfo: any, model: GoslingTrackModel) {
+export function drawTriangle(g: PIXI.Graphics, model: GoslingTrackModel, trackWidth: number, trackHeight: number) {
     /* track spec */
     const spec = model.spec();
 
@@ -18,7 +18,6 @@ export function drawTriangle(g: PIXI.Graphics, trackInfo: any, model: GoslingTra
     const data = model.data();
 
     /* track size */
-    const [trackWidth, trackHeight] = trackInfo.dimensions;
     const zoomLevel =
         (model.getChannelScale('x') as any).invert(trackWidth) - (model.getChannelScale('x') as any).invert(0);
 

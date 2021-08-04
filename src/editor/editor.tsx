@@ -10,7 +10,7 @@ import { event as d3Event } from 'd3-selection';
 import { select as d3Select } from 'd3-selection';
 import stringify from 'json-stringify-pretty-compact';
 import SplitPane from 'react-split-pane';
-import ErrorBoundary from './errorBoundary';
+import ErrorBoundary from './error-boundary';
 import { Datum, GoslingSpec } from '../core/gosling.schema';
 import { debounce, isEqual } from 'lodash';
 import { examples } from './example';
