@@ -216,7 +216,7 @@ export function EX_SPEC_VIEW_PILEUP(
                         }
                     }
                 ],
-                y: { field: 'pileup-row', type: 'nominal', flip: true },
+                y: { field: 'pileup-row', type: 'nominal', flip: false },
                 row: { field: 'strand', type: 'nominal', domain: ['+', '-'], padding: 1 },
                 color: {
                     field: 'strand',

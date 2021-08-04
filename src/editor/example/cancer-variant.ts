@@ -251,6 +251,7 @@ export const EX_SPEC_CANCER_VARIANT_PROTOTYPE: GoslingSpec = {
                                             not: true
                                         }
                                     ],
+                                    size: { value: 12 },
                                     color: {
                                         field: 'Stain',
                                         type: 'nominal',
