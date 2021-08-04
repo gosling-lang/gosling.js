@@ -221,8 +221,8 @@ function traverseAndCollectTrackInfo(
                 const viewBB = traverseAndCollectTrackInfo(
                     v,
                     output,
-                    dx,
-                    dy + cumHeight,
+                    dx + (v.xOffset ?? 0),
+                    dy + (v.yOffset ?? 0) + cumHeight,
                     !isThisCircularRoot && circularRootNotFound
                 );
 
@@ -244,8 +244,8 @@ function traverseAndCollectTrackInfo(
                 const viewBB = traverseAndCollectTrackInfo(
                     v,
                     output,
-                    dx + cumWidth,
-                    dy,
+                    dx + (v.xOffset ?? 0) + cumWidth,
+                    dy + (v.yOffset ?? 0),
                     !isThisCircularRoot && circularRootNotFound
                 );
 

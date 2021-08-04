@@ -221,5 +221,6 @@ export type EnumTrackType =
     | 'viewport-projection-vertical'
     // custom tracks
     | 'gosling-track'
+    | 'gosling-2d-track'
     | 'axis-track'
     | 'text';

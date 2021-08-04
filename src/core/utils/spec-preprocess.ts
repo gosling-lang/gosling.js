@@ -140,6 +140,8 @@ export function traverseToFixSpecDownstream(spec: GoslingSpec | SingleView, pare
         if (spec.linkingId === undefined) spec.linkingId = parentDef.linkingId;
         if (spec.centerRadius === undefined) spec.centerRadius = parentDef.centerRadius;
         if (spec.spacing === undefined && !('tracks' in spec)) spec.spacing = parentDef.spacing;
+        if (spec.xOffset === undefined) spec.xOffset = parentDef.xOffset;
+        if (spec.yOffset === undefined) spec.yOffset = parentDef.yOffset;
         if ('views' in spec && 'arrangement' in parentDef && spec.arrangement === undefined)
             spec.arrangement = parentDef.arrangement;
         spec.style = getStyleOverridden(parentDef.style, spec.style); // override styles deeply
@@ -152,6 +154,8 @@ export function traverseToFixSpecDownstream(spec: GoslingSpec | SingleView, pare
         if (spec.centerRadius === undefined) spec.centerRadius = DEFAULT_INNER_RADIUS_PROP;
         if (spec.spacing === undefined) spec.spacing = DEFAULT_VIEW_SPACING;
         if ('views' in spec && spec.arrangement === undefined) spec.arrangement = 'vertical';
+        if (spec.xOffset === undefined) spec.xOffset = 0;
+        if (spec.yOffset === undefined) spec.yOffset = 0;
         // Nothing to do when `xDomain` not suggested
         // Nothing to do when `xLinkID` not suggested
     }

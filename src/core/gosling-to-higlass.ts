@@ -7,7 +7,7 @@ import { BoundingBox, RelativePosition } from './utils/bounding-box';
 import { resolveSuperposedTracks } from './utils/overlay';
 import { getGenomicChannelKeyFromTrack, getGenomicChannelFromTrack } from './utils/validate';
 import { viridisColorMap } from './utils/colors';
-import { IsDataDeep, IsChannelDeep, IsDataDeepTileset } from './gosling.schema.guards';
+import { IsDataDeep, IsChannelDeep, IsDataDeepTileset, Is2DTrack } from './gosling.schema.guards';
 import { DEWFAULT_TITLE_PADDING_ON_TOP_AND_BOTTOM } from './layout/defaults';
 import { CompleteThemeDeep } from './utils/theme';
 import { DEFAULT_TEXT_STYLE } from './utils/text-style';
@@ -48,7 +48,7 @@ export function goslingToHiGlass(
         // const yDomain = isYGenomic && IsChannelDeep(genomicChannel) ? (genomicChannel.domain as Domain) : undefined;
 
         const hgTrack: HiGlassTrack = {
-            type: 'gosling-track',
+            type: Is2DTrack(firstResolvedSpec) ? 'gosling-2d-track' : 'gosling-track',
             server,
             tilesetUid,
             width: bb.width,

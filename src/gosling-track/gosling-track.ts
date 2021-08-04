@@ -993,17 +993,41 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
     return new GoslingTrackClass(args);
 }
 
-// TODO: Change the icon
-const icon =
-    '<svg version="1.0" xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" viewBox="0 0 5640 5420" preserveAspectRatio="xMidYMid meet"> <g id="layer101" fill="#000000" stroke="none"> <path d="M0 2710 l0 -2710 2820 0 2820 0 0 2710 0 2710 -2820 0 -2820 0 0 -2710z"/> </g> <g id="layer102" fill="#750075" stroke="none"> <path d="M200 4480 l0 -740 630 0 630 0 0 740 0 740 -630 0 -630 0 0 -740z"/> <path d="M1660 4420 l0 -800 570 0 570 0 0 800 0 800 -570 0 -570 0 0 -800z"/> <path d="M3000 3450 l0 -1770 570 0 570 0 0 1770 0 1770 -570 0 -570 0 0 -1770z"/> <path d="M4340 2710 l0 -2510 560 0 560 0 0 2510 0 2510 -560 0 -560 0 0 -2510z"/> <path d="M200 1870 l0 -1670 630 0 630 0 0 1670 0 1670 -630 0 -630 0 0 -1670z"/> <path d="M1660 1810 l0 -1610 570 0 570 0 0 1610 0 1610 -570 0 -570 0 0 -1610z"/> <path d="M3000 840 l0 -640 570 0 570 0 0 640 0 640 -570 0 -570 0 0 -640z"/> </g> <g id="layer103" fill="#ffff04" stroke="none"> <path d="M200 4480 l0 -740 630 0 630 0 0 740 0 740 -630 0 -630 0 0 -740z"/> <path d="M1660 4420 l0 -800 570 0 570 0 0 800 0 800 -570 0 -570 0 0 -800z"/> <path d="M3000 3450 l0 -1770 570 0 570 0 0 1770 0 1770 -570 0 -570 0 0 -1770z"/> </g> </svg>';
+const goslingIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width={30} height={30}>
+    <rect style={{ fill: 'none' }} width="400" height="400" />
+    <circle cx="110.62" cy="129.64" r="41.69" />
+    <circle style={{ fill: '#fff' }} cx="124.14" cy="114.12" r="10.76" />
+    <circle cx="288.56" cy="129.64" r="41.69" />
+    <circle style={{ fill: '#fff' }} cx="302.07" cy="114.12" r="10.76" />
+    <path
+        style={{ fill: '#e18241' }}
+        d="M313.1,241.64l8.61-22.09a430.11,430.11,0,0,0-88-15.87L224,225.63A384.54,384.54,0,0,1,313.1,241.64Z"
+    />
+    <path
+        style={{ fill: '#e18241' }}
+        d="M208.63,260.53a299.77,299.77,0,0,1,90.56,16.79L308,254.79a371.68,371.68,0,0,0-90-15.47Z"
+    />
+    <path
+        style={{ fill: '#e18241' }}
+        d="M174.4,225.56l-9-22a431.34,431.34,0,0,0-88,15.43l8.9,22A385.08,385.08,0,0,1,174.4,225.56Z"
+    />
+    <path
+        style={{ fill: '#e18241' }}
+        d="M100.71,276.35a300.51,300.51,0,0,1,87.91-15.82L180,239.29a372.51,372.51,0,0,0-88.3,14.76Z"
+    />
+    <path
+        style={{ fill: '#e18241' }}
+        d="M106.52,290.71c27.53,13.92,59.05,21.34,92.05,21.34h0c33.68,0,65.83-7.72,93.75-22.2a291.31,291.31,0,0,0-186.33-.4Z"
+    />
+</svg>`;
 
-// default
 GoslingTrack.config = {
     type: 'gosling-track',
     datatype: ['multivec', 'epilogos'],
+    rotatable: true,
     local: false,
-    orientation: '2d',
-    thumbnail: new DOMParser().parseFromString(icon, 'text/xml').documentElement,
+    orientation: '1d-horizontal',
+    thumbnail: new DOMParser().parseFromString(goslingIcon, 'text/xml').documentElement,
     availableOptions: [
         'labelPosition',
         'labelColor',

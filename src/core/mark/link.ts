@@ -207,11 +207,7 @@ export function drawLink(g: PIXI.Graphics, model: GoslingTrackModel) {
 
                 // Experimental
                 if (Is2DTrack(spec) && spec.mark === 'betweenLink') {
-                    if (spec.style?.linkConnectionType === 'corner') {
-                        g.moveTo(x, 0);
-                        g.lineTo(x, rowPosition + rowHeight - y);
-                        g.lineTo(0, rowPosition + rowHeight - y);
-                    } else if (spec.style?.linkConnectionType === 'curve') {
+                    if (spec.style?.linkConnectionType === 'curve') {
                         g.moveTo(x, 0);
                         g.bezierCurveTo(
                             (x / 5.0) * 4,
@@ -221,8 +217,13 @@ export function drawLink(g: PIXI.Graphics, model: GoslingTrackModel) {
                             0,
                             rowPosition + rowHeight - y
                         );
-                    } else {
+                    } else if (spec.style?.linkConnectionType === 'straight') {
                         g.moveTo(x, 0);
+                        g.lineTo(0, rowPosition + rowHeight - y);
+                    } else {
+                        // spec.style?.linkConnectionType === 'corner'
+                        g.moveTo(x, 0);
+                        g.lineTo(x, rowPosition + rowHeight - y);
                         g.lineTo(0, rowPosition + rowHeight - y);
                     }
                     return;
