@@ -130,19 +130,46 @@ export function goslingToHiGlass(
                 .setLayout(layout);
         }
 
+        // determine the compactness type of an axis considering the size of a track
+        const getAxisNarrowType = (
+            c: 'x' | 'y',
+            orientation: 'horizontal' | 'vertical' = 'horizontal',
+            width: number,
+            height: number
+        ) => {
+            const narrowSizeThreshold = 400;
+            const narrowerSizeThreshold = 200;
+
+            if (orientation === 'horizontal') {
+                if ((c === 'x' && width <= narrowerSizeThreshold) || (c === 'y' && height <= narrowerSizeThreshold)) {
+                    return 'narrower';
+                } else if (
+                    (c === 'x' && width <= narrowSizeThreshold) ||
+                    (c === 'y' && height <= narrowSizeThreshold)
+                ) {
+                    return 'narrow';
+                } else {
+                    return 'regular';
+                }
+            } else {
+                if ((c === 'x' && height <= narrowerSizeThreshold) || (c === 'y' && width <= narrowerSizeThreshold)) {
+                    return 'narrower';
+                } else if (
+                    (c === 'x' && height <= narrowSizeThreshold) ||
+                    (c === 'y' && width <= narrowSizeThreshold)
+                ) {
+                    return 'narrow';
+                } else {
+                    return 'regular';
+                }
+            }
+        };
+
         // check whether to show axis
         ['x', 'y'].forEach(c => {
             const channel = (firstResolvedSpec as any)[c];
             if (IsChannelDeep(channel) && channel.axis && channel.axis !== 'none' && channel.type === 'genomic') {
-                const narrowSize = 400;
-                const narrowerSize = 200;
-                const narrowType =
-                    // show two labels at the end in a `si` format when the track is too narrow
-                    (c === 'x' && bb.width <= narrowerSize) || (c === 'y' && bb.height <= narrowerSize)
-                        ? 'narrower'
-                        : (c === 'x' && bb.width <= narrowSize) || (c === 'y' && bb.height <= narrowSize)
-                        ? 'narrow'
-                        : 'regular';
+                const narrowType = getAxisNarrowType(c as any, gosTrack.orientation, bb.width, bb.height);
                 hgModel.setAxisTrack(channel.axis, narrowType, {
                     layout: firstResolvedSpec.layout,
                     innerRadius:

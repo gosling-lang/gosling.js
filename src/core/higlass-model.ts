@@ -229,7 +229,7 @@ export class HiGlassModel {
             {
                 type: 'combined',
                 // HiGlass: Having the same width between combined track and child track looks to result in incorrect scales
-                width: (track.width as any) - 1,
+                width: (track as any).width - 1,
                 height: (track as any).height,
                 contents: [track]
             }
@@ -286,11 +286,13 @@ export class HiGlassModel {
                 options: { ...axisTrackTemplate.options, layout: 'circular' }
             });
         } else {
-            // linear axis: position an axis track on the top, left, bottom, or right
-            this.getLastView().tracks[position]?.push({
-                ...axisTrackTemplate,
-                [widthOrHeight]: HIGLASS_AXIS_SIZE
-            });
+            // linear axis: place an axis track on the top, left, bottom, or right
+            this.getLastView().tracks[position] = [
+                {
+                    ...axisTrackTemplate,
+                    [widthOrHeight]: HIGLASS_AXIS_SIZE
+                }
+            ];
         }
         return this;
     }

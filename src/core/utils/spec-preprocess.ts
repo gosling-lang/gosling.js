@@ -284,7 +284,7 @@ export function traverseToFixSpecDownstream(spec: GoslingSpec | SingleView, pare
                 track.overlayOnPreviousTrack = false;
             }
 
-            // This means this track is positioned on top of a view
+            // This means this track is positioned on the top of a view
             if (
                 i === 0 ||
                 (i !== 0 &&
@@ -292,10 +292,13 @@ export function traverseToFixSpecDownstream(spec: GoslingSpec | SingleView, pare
                     track.overlayOnPreviousTrack === true)
             ) {
                 /**
-                 * Add axis to the first track, i.e., the track on the top
+                 * Add axis to the first track, i.e., the track on the top, if undefined
                  */
                 if ((IsSingleTrack(track) || IsOverlaidTrack(track)) && IsChannelDeep(track.x) && !track.x.axis) {
-                    track.x.axis = track.orientation === 'vertical' ? 'left' : 'top';
+                    // TODO: for now, do not show axis since axis has some issues currently.
+                    if (track.orientation === 'vertical') track.x.axis = 'none';
+
+                    track.x.axis = 'top';
                 } else if (IsOverlaidTrack(track)) {
                     // let isNone = false; // If there is at least one 'none' axis, should not render axis.
                     track.overlay.forEach(o => {
