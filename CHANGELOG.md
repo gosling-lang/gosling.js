@@ -1,3 +1,13 @@
+## [0.8.13](https://github.com/gosling-lang/gosling.js/compare/v0.8.12...v0.8.13) (2021-08-05)
+
+
+### Features
+
+* expressive BAM rendering ([#446](https://github.com/gosling-lang/gosling.js/issues/446)) ([90c758b](https://github.com/gosling-lang/gosling.js/commit/90c758b5131170ba2f7b35799460a4dc4f9969ea))
+* support templates, enable precise and correct track/view sizing and triangle positioning ([#445](https://github.com/gosling-lang/gosling.js/issues/445)) ([aef4657](https://github.com/gosling-lang/gosling.js/commit/aef46571559ef373ce42eb718f56b43948fb1c8d)), closes [#446](https://github.com/gosling-lang/gosling.js/issues/446)
+
+
+
 ## [0.8.12](https://github.com/gosling-lang/gosling.js/compare/v0.8.10...v0.8.12) (2021-07-26)
 
 
