@@ -287,12 +287,10 @@ export class HiGlassModel {
             });
         } else {
             // linear axis: position an axis track on the top, left, bottom, or right
-            this.getLastView().tracks[position] = [
-                {
-                    ...axisTrackTemplate,
-                    [widthOrHeight]: HIGLASS_AXIS_SIZE
-                }
-            ];
+            this.getLastView().tracks[position]?.push({
+                ...axisTrackTemplate,
+                [widthOrHeight]: HIGLASS_AXIS_SIZE
+            });
         }
         return this;
     }

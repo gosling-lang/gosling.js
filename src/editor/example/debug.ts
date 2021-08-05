@@ -4,6 +4,7 @@ export const EX_SPEC_DEBUG: GoslingSpec = {
     title: 'Between-Connectivity In 2D Tracks',
     subtitle: 'Between-link examples with three types, i.e., straight, corner, and curve',
     xDomain: { interval: [0, 1000000000] },
+    style: { outlineWidth: 0.5 },
     views: [
         {
             linkingId: '-',
@@ -24,7 +25,7 @@ export const EX_SPEC_DEBUG: GoslingSpec = {
                                 chromosomeField: 'c2',
                                 genomicFields: ['s1', 'e1', 's2', 'e2']
                             },
-                            style: { linkConnectionType: 'corner', outlineWidth: 0.5 },
+                            style: { linkConnectionType: 'corner' },
                             tracks: [
                                 {
                                     mark: 'withinLink',
@@ -53,7 +54,7 @@ export const EX_SPEC_DEBUG: GoslingSpec = {
                                 chromosomeField: 'c2',
                                 genomicFields: ['s1', 'e1', 's2', 'e2']
                             },
-                            style: { linkConnectionType: 'corner', outlineWidth: 0.5 },
+                            style: { linkConnectionType: 'corner' },
                             tracks: [
                                 {
                                     mark: 'withinLink',
