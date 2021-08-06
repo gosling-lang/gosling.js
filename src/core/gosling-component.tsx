@@ -255,7 +255,7 @@ export const GoslingComponent = forwardRef((props: GoslingCompProps, ref: any) =
                         <HiGlassComponent
                             ref={hgRef}
                             options={{
-                                bounded: true,
+                                // bounded: true, // deprecated
                                 pixelPreciseMarginPadding: true, // this uses `rowHeight: 1` in react-grid-layout
                                 containerPaddingX: 0,
                                 containerPaddingY: 0,

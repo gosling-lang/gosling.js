@@ -7,6 +7,8 @@ import { RelativePosition } from './utils/bounding-box';
 import { validateSpec } from './utils/validate';
 import { GET_CHROM_SIZES } from './utils/assembly';
 import { CompleteThemeDeep } from './utils/theme';
+import exampleHg from './example/hg-view-config-1';
+import { insertItemToArray } from './utils/array';
 
 export const HIGLASS_AXIS_SIZE = 30;
 const getViewTemplate = (assembly?: string) => {
@@ -162,7 +164,7 @@ export class HiGlassModel {
     }
 
     public getMainTrackPosition() {
-        return this.orientation === 'vertical' ? 'right' : 'center';
+        return this.orientation === 'vertical' ? 'left' : 'center';
     }
 
     /**
@@ -185,8 +187,8 @@ export class HiGlassModel {
         if (xDomain) {
             this.getLastView().initialXDomain = getNumericDomain(xDomain, this.getAssembly());
         }
-        if (yDomain && this.orientation !== 'vertical') {
-            this.getLastView().initialYDomain = getNumericDomain(yDomain, this.getAssembly()); // TODO:
+        if (yDomain) {
+            this.getLastView().initialYDomain = getNumericDomain(yDomain, this.getAssembly());
         }
         return this;
     }
@@ -228,8 +230,10 @@ export class HiGlassModel {
         this.getLastView().tracks[this.getMainTrackPosition()] = [
             {
                 type: 'combined',
-                // HiGlass: Having the same width between combined track and child track looks to result in incorrect scales
-                width: (track as any).width - 1,
+                // Okay, this is hacky, but works well in our case. Let's address this issue though in the HiGlass (i.e., handle cases when there is no center tracks).
+                // Details: Unless it is linked with other views, we make the width of a center track zero. In this way, we can properly show the vertical tracks (https://github.com/higlass/higlass/pull/1041)
+                // However, if we want to link with another view, we need to make the width of a center track non-zero.
+                width: (track as any).width - (track.options?.spec?.x?.linkingId === undefined ? 0 : 1), // TODO: should be more smart than this..
                 height: (track as any).height,
                 contents: [track]
             }
@@ -287,13 +291,20 @@ export class HiGlassModel {
             });
         } else {
             // linear axis: place an axis track on the top, left, bottom, or right
-            this.getLastView().tracks[position] = [
-                {
-                    ...axisTrackTemplate,
-                    [widthOrHeight]: HIGLASS_AXIS_SIZE
-                }
-            ];
+            const axisTrack = { ...axisTrackTemplate, [widthOrHeight]: HIGLASS_AXIS_SIZE };
+            if (position === 'left') {
+                // In vertical tracks, the main track has been already inserted into `left`, so put axis on the first index to show it on the left.
+                this.getLastView().tracks.left = insertItemToArray(this.getLastView().tracks.left, 0, axisTrack);
+            } else if (position === 'right') {
+                this.getLastView().tracks.left.push(axisTrack);
+            } else {
+                this.getLastView().tracks[position].push(axisTrack);
+            }
         }
         return this;
+    }
+
+    public setExampleHiglassViewConfig() {
+        this.hg = exampleHg as any;
     }
 }

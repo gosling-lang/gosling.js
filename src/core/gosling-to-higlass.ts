@@ -7,7 +7,7 @@ import { BoundingBox, RelativePosition } from './utils/bounding-box';
 import { resolveSuperposedTracks } from './utils/overlay';
 import { getGenomicChannelKeyFromTrack, getGenomicChannelFromTrack } from './utils/validate';
 import { viridisColorMap } from './utils/colors';
-import { IsDataDeep, IsChannelDeep, IsDataDeepTileset, Is2DTrack } from './gosling.schema.guards';
+import { IsDataDeep, IsChannelDeep, IsDataDeepTileset, Is2DTrack, IsXAxis } from './gosling.schema.guards';
 import { DEWFAULT_TITLE_PADDING_ON_TOP_AND_BOTTOM } from './layout/defaults';
 import { CompleteThemeDeep } from './utils/theme';
 import { DEFAULT_TEXT_STYLE } from './utils/text-style';
@@ -39,20 +39,33 @@ export function goslingToHiGlass(
             tilesetUid = parsed.tilesetUid;
         }
 
-        // Is this track horizontal or vertical?
         const genomicChannel = getGenomicChannelFromTrack(firstResolvedSpec);
         const genomicChannelKey = getGenomicChannelKeyFromTrack(firstResolvedSpec);
         const isXGenomic = genomicChannelKey === 'x' || genomicChannelKey === 'xe';
-        // const isYGenomic = genomicChannelKey === 'y' || genomicChannelKey === 'ye';
         const xDomain = isXGenomic && IsChannelDeep(genomicChannel) ? (genomicChannel.domain as Domain) : undefined;
-        // const yDomain = isYGenomic && IsChannelDeep(genomicChannel) ? (genomicChannel.domain as Domain) : undefined;
+        const yDomain =
+            Is2DTrack(firstResolvedSpec) && IsChannelDeep(firstResolvedSpec.y)
+                ? (firstResolvedSpec.y.domain as Domain)
+                : undefined;
 
         const hgTrack: HiGlassTrack = {
             type: Is2DTrack(firstResolvedSpec) ? 'gosling-2d-track' : 'gosling-track',
             server,
             tilesetUid,
-            width: bb.width,
-            height: bb.height,
+            width:
+                bb.width -
+                (firstResolvedSpec.layout !== 'circular' &&
+                firstResolvedSpec.orientation === 'vertical' &&
+                IsXAxis(firstResolvedSpec)
+                    ? HIGLASS_AXIS_SIZE
+                    : 0),
+            height:
+                bb.height -
+                (firstResolvedSpec.layout !== 'circular' &&
+                firstResolvedSpec.orientation === 'horizontal' &&
+                IsXAxis(firstResolvedSpec)
+                    ? HIGLASS_AXIS_SIZE
+                    : 0),
             options: {
                 /* Mouse hover position */
                 showMousePosition: firstResolvedSpec.layout === 'circular' ? false : true, // show mouse position only for linear tracks // TODO: or vertical
@@ -123,7 +136,7 @@ export function goslingToHiGlass(
                 .setViewOrientation(gosTrack.orientation) // TODO: Orientation should be assigned to 'individual' views
                 .setAssembly(assembly) // TODO: Assembly should be assigned to 'individual' views
                 .addDefaultView(gosTrack.id ?? uuid.v1(), assembly)
-                .setDomain(xDomain, xDomain) // TODO:
+                .setDomain(xDomain, Is2DTrack(firstResolvedSpec) ? yDomain : xDomain) // gosTrack.orientation === 'vertical' ? [] :
                 .setMainTrack(hgTrack)
                 .addTrackSourceServers(server)
                 .setZoomFixed(firstResolvedSpec.static === true)
@@ -221,5 +234,9 @@ export function goslingToHiGlass(
             );
         }
     }
+
+    // Uncomment the following code to test with specific HiGlass viewConfig
+    // hgModel.setExampleHiglassViewConfig();
+
     return hgModel;
 }

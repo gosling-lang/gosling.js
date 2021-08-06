@@ -54,6 +54,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
 
     // Services
     const { tileProxy } = HGC.services;
+    const { showMousePosition } = HGC.utils;
 
     class GoslingTrackClass extends HGC.tracks.BarTrack {
         private originalSpec: SingleTrack | OverlaidTrack;
@@ -124,6 +125,23 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             // Graphics for highlighting visual elements under the cursor
             this.mouseOverGraphics = new HGC.libraries.PIXI.Graphics();
             this.pMain.addChild(this.mouseOverGraphics);
+
+            // Remove a mouse graphic if created by a parent, and draw ourselves
+            // https://github.com/higlass/higlass/blob/38f0c4415f0595c3b9d685a754d6661dc9612f7c/app/scripts/utils/show-mouse-position.js#L28
+            // this.getIsFlipped = () => { return this.originalSpec.orientation === 'vertical' };
+            this.flipText = this.originalSpec.orientation === 'vertical';
+
+            if (this.hideMousePosition) {
+                this.hideMousePosition();
+                this.hideMousePosition = undefined;
+            }
+            if (this.options?.showMousePosition && !this.hideMousePosition) {
+                this.hideMousePosition = showMousePosition(
+                    this,
+                    Is2DTrack(resolveSuperposedTracks(this.originalSpec)[0]),
+                    this.isShowGlobalMousePosition()
+                );
+            }
 
             // Custom error label
             // this.errorText = new HGC.libraries.PIXI.Text('', {
@@ -290,6 +308,20 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             this.svgData = [];
             this.textsBeingUsed = 0;
 
+            // this.flipText = this.originalSpec.orientation === 'vertical';
+
+            // if (this.hideMousePosition) {
+            //     this.hideMousePosition();
+            //     this.hideMousePosition = undefined;
+            // }
+            // if (this.options?.showMousePosition && !this.hideMousePosition) {
+            //     this.hideMousePosition = showMousePosition(
+            //       this,
+            //       Is2DTrack(resolveSuperposedTracks(this.originalSpec)[0]),
+            //       this.isShowGlobalMousePosition(),
+            //     );
+            // }
+
             this.draw();
             this.forceDraw();
         }
@@ -454,7 +486,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                         this.tilesetInfo.max_pos[0]
                     );
 
-                    if (Is2DTrack(this.originalSpec)) {
+                    if (Is2DTrack(resolveSuperposedTracks(this.originalSpec)[0])) {
                         // it makes sense only when the y-axis is being used for a genomic field
                         tileProxy.calculateTilesFromResolution(
                             sortedResolutions[this.zoomLevel],
@@ -476,7 +508,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                         this.tilesetInfo.max_width
                     );
 
-                    if (Is2DTrack(this.originalSpec)) {
+                    if (Is2DTrack(resolveSuperposedTracks(this.originalSpec)[0])) {
                         // it makes sense only when the y-axis is being used for a genomic field
                         this.yTiles = tileProxy.calculateTiles(
                             this.zoomLevel,
@@ -671,6 +703,8 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             });
 
             shareScaleAcrossTracks(gms);
+
+            // console.log('processed gosling model', gms);
 
             // IMPORTANT: If no genomic fields specified, no point to use multiple tiles, i.e., we need to draw a track only once with the data combined.
             /*

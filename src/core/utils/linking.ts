@@ -23,8 +23,12 @@ export function getLinkingInfo(hgModel: HiGlassModel) {
         let spec = /* TODO: */ (v.tracks as any).center?.[0]?.contents?.[0]?.options?.spec;
 
         if (!spec) {
-            // This means the orientation of this view is vertical, and spec might be positioned on the right
-            spec = /* TODO: */ (v.tracks as any).right?.[0]?.contents?.[0]?.options?.spec;
+            // This means the orientation of this view is vertical, and spec might be positioned on the left
+            spec = /* TODO: */ (v.tracks as any).left?.[0]?.contents?.[0]?.options?.spec;
+            if (!spec) {
+                // in case the first one is the axis track
+                spec = /* TODO: */ (v.tracks as any).left?.[1]?.contents?.[0]?.options?.spec;
+            }
         }
 
         if (!viewId || !spec) return;

@@ -45,13 +45,13 @@ export interface GenomePositionSearchBox {
 }
 
 export interface Tracks {
-    top?: Track[];
-    left?: Track[];
-    center?: Track[];
-    right?: Track[];
-    bottom?: Track[];
-    gallery?: Track[];
-    whole?: Track[];
+    top: Track[];
+    left: Track[];
+    center: Track[];
+    right: Track[];
+    bottom: Track[];
+    gallery: Track[];
+    whole: Track[];
 }
 export type Track = HeatmapTrack | CombinedTrack | IndependentViewportProjectionTrack | EnumTrack;
 export interface HeatmapTrack {

@@ -144,11 +144,12 @@ export class GoslingTrackModel {
             isAxisShown = IsChannelDeep(spec.y) && spec.y.axis !== undefined && spec.y.axis !== 'none';
         }
         if (spec.layout !== 'circular') {
-            if (xOrY && isAxisShown) {
+            if (IsChannelDeep(spec.x) && spec.x.axis !== undefined && spec.x.axis !== 'none') {
                 // for linear layouts, prepare a horizontal or vertical space for the axis
-                const widthOrHeight = xOrY === 'x' ? 'height' : 'width';
-                spec[widthOrHeight] = ((spec[widthOrHeight] as number) - HIGLASS_AXIS_SIZE) as number;
+                // we already switched the width and height in vertical tracks, so use `height`
+                spec.height -= HIGLASS_AXIS_SIZE;
             }
+            // TODO: consider 2D
         } else {
             // for circular layouts, prepare a space in radius for the axis
             if (xOrY === 'x' && isAxisShown && IsChannelDeep(spec.x) && spec.x.axis === 'top') {
