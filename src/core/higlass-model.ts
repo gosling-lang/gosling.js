@@ -194,6 +194,35 @@ export class HiGlassModel {
     }
 
     /**
+     * This is a hacky function that adjust x domain to properly show vertical tracks.
+     *
+     * In HiGlass, the range of vertical tracks is affected by a center track. For example, if a center track is small, the vertical tracks become small as well.
+     * Currently, the actual size of center track for vertical gosling tracks is `1px`. So, we re-scale the x domain so that gosling's vertical tracks properly use the entire height of a view.
+     * @param orientation
+     * @param width
+     * @returns
+     */
+    public adjustDomain(orientation: Orientation = 'horizontal', width: number, height: number) {
+        if (orientation !== 'vertical') {
+            return this;
+        }
+
+        const domain = this.getLastView().initialXDomain;
+        if (!domain) {
+            return this;
+        }
+
+        const [start, end] = domain;
+        const size = end - start;
+        const center = (start + end) / 2.0;
+        this.getLastView().initialXDomain = [
+            center - (size / width / 2 / height) * width,
+            center + (size / width / 2 / height) * width
+        ];
+        return this;
+    }
+
+    /**
      * Allow a zoom interaction?
      */
     public setZoomFixed(zoomFixed: boolean) {
@@ -230,10 +259,9 @@ export class HiGlassModel {
         this.getLastView().tracks[this.getMainTrackPosition()] = [
             {
                 type: 'combined',
-                // Okay, this is hacky, but works well in our case. Let's address this issue though in the HiGlass (i.e., handle cases when there is no center tracks).
-                // Details: Unless it is linked with other views, we make the width of a center track zero. In this way, we can properly show the vertical tracks (https://github.com/higlass/higlass/pull/1041)
-                // However, if we want to link with another view, we need to make the width of a center track non-zero.
-                width: (track as any).width - (track.options?.spec?.x?.linkingId === undefined ? 0 : 1), // TODO: should be more smart than this..
+                // !! Hacky, but it is important to subtract 1px. Currently, HiGlass does not well handle a case where a center track is zero width (e.g., linking between views that contain zero-width center tracks).
+                // https://github.com/higlass/higlass/pull/1041
+                width: (track as any).width - 1,
                 height: (track as any).height,
                 contents: [track]
             }

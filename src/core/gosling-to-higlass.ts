@@ -47,25 +47,26 @@ export function goslingToHiGlass(
             Is2DTrack(firstResolvedSpec) && IsChannelDeep(firstResolvedSpec.y)
                 ? (firstResolvedSpec.y.domain as Domain)
                 : undefined;
-
+        const width =
+            bb.width -
+            (firstResolvedSpec.layout !== 'circular' &&
+            firstResolvedSpec.orientation === 'vertical' &&
+            IsXAxis(firstResolvedSpec)
+                ? HIGLASS_AXIS_SIZE
+                : 0);
+        const height =
+            bb.height -
+            (firstResolvedSpec.layout !== 'circular' &&
+            firstResolvedSpec.orientation === 'horizontal' &&
+            IsXAxis(firstResolvedSpec)
+                ? HIGLASS_AXIS_SIZE
+                : 0);
         const hgTrack: HiGlassTrack = {
             type: Is2DTrack(firstResolvedSpec) ? 'gosling-2d-track' : 'gosling-track',
             server,
             tilesetUid,
-            width:
-                bb.width -
-                (firstResolvedSpec.layout !== 'circular' &&
-                firstResolvedSpec.orientation === 'vertical' &&
-                IsXAxis(firstResolvedSpec)
-                    ? HIGLASS_AXIS_SIZE
-                    : 0),
-            height:
-                bb.height -
-                (firstResolvedSpec.layout !== 'circular' &&
-                firstResolvedSpec.orientation === 'horizontal' &&
-                IsXAxis(firstResolvedSpec)
-                    ? HIGLASS_AXIS_SIZE
-                    : 0),
+            width,
+            height,
             options: {
                 /* Mouse hover position */
                 showMousePosition: firstResolvedSpec.layout === 'circular' ? false : true, // show mouse position only for linear tracks // TODO: or vertical
@@ -136,7 +137,8 @@ export function goslingToHiGlass(
                 .setViewOrientation(gosTrack.orientation) // TODO: Orientation should be assigned to 'individual' views
                 .setAssembly(assembly) // TODO: Assembly should be assigned to 'individual' views
                 .addDefaultView(gosTrack.id ?? uuid.v1(), assembly)
-                .setDomain(xDomain, Is2DTrack(firstResolvedSpec) ? yDomain : xDomain) // gosTrack.orientation === 'vertical' ? [] :
+                .setDomain(xDomain, Is2DTrack(firstResolvedSpec) ? yDomain : xDomain)
+                .adjustDomain(gosTrack.orientation, width, height)
                 .setMainTrack(hgTrack)
                 .addTrackSourceServers(server)
                 .setZoomFixed(firstResolvedSpec.static === true)
