@@ -22,7 +22,7 @@ import {
     IsRangeFilter
 } from '../gosling.schema.guards';
 import { GET_CHROM_SIZES } from './assembly';
-import Logging from './log';
+// import Logging from './log';
 
 /**
  * Apply filter
@@ -145,7 +145,7 @@ export function aggregateCoverage(_: CoverageTransform, data: Datum[], scale: Sc
     });
 
     // console.log(coverage);
-    Logging.printTime('aggregateCoverage');
+    // Logging.printTime('aggregateCoverage');
     return output;
 }
 
