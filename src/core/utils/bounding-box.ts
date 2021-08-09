@@ -179,8 +179,38 @@ function traverseAndCollectTrackInfo(
     if ('tracks' in spec) {
         const tracks = spec.tracks as Track[];
 
-        if (spec.orientation === 'horizontal') {
-            // Use the largest `width` for this view.
+        if (spec.orientation === 'vertical') {
+            // This is a vertical view, so use the largest `height` of the tracks for this view.
+            cumHeight = Math.max(...tracks.map(d => d.height));
+            tracks.forEach((track, i, array) => {
+                if (getNumOfXAxes([track]) === 1) {
+                    track.width += HIGLASS_AXIS_SIZE;
+                }
+
+                track.height = cumHeight;
+
+                output.push({
+                    track,
+                    boundingBox: {
+                        x: dx + cumWidth,
+                        y: dy,
+                        width: track.width,
+                        height: cumHeight
+                    },
+                    layout: { x: 0, y: 0, w: 0, h: 0 } // Just put a dummy info here, this should be added after entire bounding box has been determined
+                });
+
+                if (array[i + 1] && array[i + 1].overlayOnPreviousTrack) {
+                    // do not add a height
+                } else {
+                    cumWidth += track.width;
+                    if (i !== array.length - 1) {
+                        cumWidth += spec.spacing !== undefined ? spec.spacing : 0;
+                    }
+                }
+            });
+        } else {
+            // This is a horizontal view, so use the largest `width` for this view.
             cumWidth = Math.max(...tracks.map(d => d.width)); //forceWidth ? forceWidth : spec.tracks[0]?.width;
             tracks.forEach((track, i, array) => {
                 // let scaledHeight = track.height;
@@ -208,36 +238,6 @@ function traverseAndCollectTrackInfo(
                     cumHeight += track.height;
                     if (i !== array.length - 1) {
                         cumHeight += spec.spacing !== undefined ? spec.spacing : 0;
-                    }
-                }
-            });
-        } else {
-            // This is a vertical view, so use the largest `height` of the tracks for this view.
-            cumHeight = Math.max(...tracks.map(d => d.height));
-            tracks.forEach((track, i, array) => {
-                if (getNumOfXAxes([track]) === 1) {
-                    track.width += HIGLASS_AXIS_SIZE;
-                }
-
-                track.height = cumHeight;
-
-                output.push({
-                    track,
-                    boundingBox: {
-                        x: dx + cumWidth,
-                        y: dy,
-                        width: track.width,
-                        height: cumHeight
-                    },
-                    layout: { x: 0, y: 0, w: 0, h: 0 } // Just put a dummy info here, this should be added after entire bounding box has been determined
-                });
-
-                if (array[i + 1] && array[i + 1].overlayOnPreviousTrack) {
-                    // do not add a height
-                } else {
-                    cumWidth += track.width;
-                    if (i !== array.length - 1) {
-                        cumWidth += spec.spacing !== undefined ? spec.spacing : 0;
                     }
                 }
             });

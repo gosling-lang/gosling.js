@@ -106,8 +106,7 @@ export const examples: ReadonlyArray<{
     {
         name: 'Comparative Matrices (Micro-C vs. Hi-C)',
         id: 'MATRIX_HFFC6',
-        spec: EX_SPEC_MATRIX_HFFC6,
-        forceShow: true
+        spec: EX_SPEC_MATRIX_HFFC6
     },
     {
         name: 'Circos',
