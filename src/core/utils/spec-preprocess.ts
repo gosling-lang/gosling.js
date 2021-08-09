@@ -295,21 +295,72 @@ export function traverseToFixSpecDownstream(spec: GoslingSpec | SingleView, pare
                  * Add axis to the first track, i.e., the track on the top, if undefined
                  */
                 if ((IsSingleTrack(track) || IsOverlaidTrack(track)) && IsChannelDeep(track.x) && !track.x.axis) {
-                    // TODO: for now, do not show axis since axis has some issues currently.
-                    if (track.orientation === 'vertical') track.x.axis = 'none';
-
-                    track.x.axis = 'top';
+                    if (track.orientation === 'vertical') {
+                        track.x.axis = 'left';
+                    } else {
+                        track.x.axis = 'top';
+                    }
                 } else if (IsOverlaidTrack(track)) {
                     // let isNone = false; // If there is at least one 'none' axis, should not render axis.
                     track.overlay.forEach(o => {
                         if (IsChannelDeep(o.x) && !o.x.axis) {
-                            o.x.axis = 'top';
+                            if (track.orientation === 'vertical') {
+                                o.x.axis = 'left';
+                            } else {
+                                o.x.axis = 'top';
+                            }
                         }
                         //  else if (IsChannelDeep(o.x) && o.x.axis === 'none') {
                         //     isNone = true;
                         // }
                     });
                 }
+            }
+
+            /*
+             * Change axis positions considering the orientation.
+             */
+            if (
+                (IsSingleTrack(track) || IsOverlaidTrack(track)) &&
+                IsChannelDeep(track.x) &&
+                track.x.axis &&
+                track.x.axis !== 'none'
+            ) {
+                if (track.orientation === 'vertical') {
+                    if (track.x.axis === 'top') {
+                        track.x.axis = 'left';
+                    } else if (track.x.axis === 'bottom') {
+                        track.x.axis = 'right';
+                    }
+                } else {
+                    if (track.x.axis === 'left') {
+                        track.x.axis = 'top';
+                    } else if (track.x.axis === 'right') {
+                        track.x.axis = 'bottom';
+                    }
+                }
+            } else if (IsOverlaidTrack(track)) {
+                // let isNone = false; // If there is at least one 'none' axis, should not render axis.
+                track.overlay.forEach(o => {
+                    if (IsChannelDeep(o.x) && o.x.axis && o.x.axis !== 'none') {
+                        if (track.orientation === 'vertical') {
+                            if (o.x.axis === 'top') {
+                                o.x.axis = 'left';
+                            } else if (o.x.axis === 'bottom') {
+                                o.x.axis = 'right';
+                            }
+                        } else {
+                            if (o.x.axis === 'left') {
+                                o.x.axis = 'top';
+                            } else if (o.x.axis === 'right') {
+                                o.x.axis = 'bottom';
+                            }
+                        }
+                    }
+                    //  else if (IsChannelDeep(o.x) && o.x.axis === 'none') {
+                    //     isNone = true;
+                    // }
+                });
             }
 
             /*

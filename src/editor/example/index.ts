@@ -32,8 +32,8 @@ export const examples: ReadonlyArray<{
     {
         name: 'DEBUG',
         spec: EX_SPEC_DEBUG,
-        id: 'DEBUG'
-        // hidden: true
+        id: 'DEBUG',
+        hidden: true
     },
     {
         name: 'Basic Example: Visual Encoding',

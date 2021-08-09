@@ -19,7 +19,7 @@ export const EX_SPEC_CANCER_VARIANT_PROTOTYPE: GoslingSpec = {
             arrangement: 'vertical',
             views: [
                 {
-                    xOffset: 400,
+                    xOffset: 190,
                     layout: 'circular',
                     spacing: 1,
                     tracks: [
