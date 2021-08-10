@@ -156,31 +156,9 @@ export const GoslingComponent = forwardRef((props: GoslingCompProps, ref: any) =
                     };
                 },
                 exportPNG: (transparentBackground?: boolean) => {
-                    const renderer = hgRef.current.pixiRenderer;
-                    const renderTexture = PIXI.RenderTexture.create({
-                        width: renderer.width / 2,
-                        height: renderer.height / 2,
-                        resolution: 4
-                    });
+                    const { canvas } = ref.current.api.getCanvas({ resolution: 4, transparentBackground });
 
-                    renderer.render(hgRef.current.pixiStage, renderTexture);
-
-                    const canvas = renderer.plugins.extract.canvas(renderTexture);
-
-                    // Set background color for the given theme in the gosling spec
-                    // Otherwise, it is transparent
-                    const canvasWithBg = document.createElement('canvas') as HTMLCanvasElement;
-                    canvasWithBg.width = canvas.width;
-                    canvasWithBg.height = canvas.height;
-
-                    const ctx = canvasWithBg.getContext('2d')!;
-                    if (!transparentBackground) {
-                        ctx.fillStyle = theme.root.background;
-                        ctx.fillRect(0, 0, canvasWithBg.width, canvasWithBg.height);
-                    }
-                    ctx.drawImage(canvas, 0, 0);
-
-                    canvasWithBg.toBlob((blob: any) => {
+                    canvas.toBlob((blob: any) => {
                         const a = document.createElement('a');
 
                         document.body.append(a);
@@ -193,32 +171,9 @@ export const GoslingComponent = forwardRef((props: GoslingCompProps, ref: any) =
                     }, 'image/png');
                 },
                 exportPDF: (transparentBackground?: boolean) => {
-                    const resolution = 4;
-                    const renderer = hgRef.current.pixiRenderer;
-                    const renderTexture = PIXI.RenderTexture.create({
-                        width: renderer.width / 2,
-                        height: renderer.height / 2,
-                        resolution
-                    });
+                    const { canvas } = ref.current.api.getCanvas({ resolution: 4, transparentBackground });
 
-                    renderer.render(hgRef.current.pixiStage, renderTexture);
-
-                    const canvas = renderer.plugins.extract.canvas(renderTexture);
-
-                    // Set background color for the given theme in the gosling spec
-                    // Otherwise, it is transparent
-                    const canvasWithBg = document.createElement('canvas') as HTMLCanvasElement;
-                    canvasWithBg.width = canvas.width;
-                    canvasWithBg.height = canvas.height;
-
-                    const ctx = canvasWithBg.getContext('2d')!;
-                    if (!transparentBackground) {
-                        ctx.fillStyle = theme.root.background;
-                        ctx.fillRect(0, 0, canvasWithBg.width, canvasWithBg.height);
-                    }
-                    ctx.drawImage(canvas, 0, 0);
-
-                    const imgData = canvasWithBg.toDataURL('image/jpeg', 1);
+                    const imgData = canvas.toDataURL('image/jpeg', 1);
 
                     const pdf = new jsPDF({
                         orientation: canvas.width < canvas.height ? 'p' : 'l',
