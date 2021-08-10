@@ -50,7 +50,6 @@ interface GoslingCompProps {
     templates?: TemplateTrackDef[];
 }
 
-// TODO: specify types other than "any"
 export const GoslingComponent = forwardRef<{ api: GoslingComponentApi }, GoslingCompProps>((props, ref) => {
     // Gosling and HiGlass specs
     const [gs, setGs] = useState<gosling.GoslingSpec | undefined>(props.spec);
