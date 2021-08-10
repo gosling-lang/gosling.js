@@ -4,7 +4,7 @@ import { Theme } from '..';
 import { GoslingComponent, GoslingComponentApi } from './gosling-component';
 import { GoslingSpec } from './gosling.schema';
 
-const MAX_TRIES = 1000;
+const MAX_TRIES = 120;
 
 /**
  * Embed a Gosling component to a given HTMLElement.
