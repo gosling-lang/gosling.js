@@ -22,7 +22,7 @@ export function embed(
         className?: string;
         theme?: Theme;
     }
-) {
+): Promise<GoslingComponentApi> {
     const ref = React.createRef<{ api: GoslingComponentApi }>();
     return new Promise((resolve, reject) => {
         ReactDOM.render(React.createElement(GoslingComponent, { ref, spec, ...options }), element, () => {
