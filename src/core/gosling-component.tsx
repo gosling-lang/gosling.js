@@ -120,45 +120,10 @@ export const GoslingComponent = forwardRef((props: GoslingCompProps, ref: any) =
                     });
                     return ids;
                 },
-                exportPNG: (transparentBackground?: boolean) => {
-                    const renderer = hgRef.current.pixiRenderer;
-                    const renderTexture = PIXI.RenderTexture.create({
-                        width: renderer.width / 2,
-                        height: renderer.height / 2,
-                        resolution: 4
-                    });
+                getCanvas: (options: { resolution: number; transparentBackground: boolean }) => {
+                    const resolution = options?.resolution ?? 4;
+                    const transparentBackground = options?.transparentBackground ?? false;
 
-                    renderer.render(hgRef.current.pixiStage, renderTexture);
-
-                    const canvas = renderer.plugins.extract.canvas(renderTexture);
-
-                    // Set background color for the given theme in the gosling spec
-                    // Otherwise, it is transparent
-                    const canvasWithBg = document.createElement('canvas') as HTMLCanvasElement;
-                    canvasWithBg.width = canvas.width;
-                    canvasWithBg.height = canvas.height;
-
-                    const ctx = canvasWithBg.getContext('2d')!;
-                    if (!transparentBackground) {
-                        ctx.fillStyle = theme.root.background;
-                        ctx.fillRect(0, 0, canvasWithBg.width, canvasWithBg.height);
-                    }
-                    ctx.drawImage(canvas, 0, 0);
-
-                    canvasWithBg.toBlob((blob: any) => {
-                        const a = document.createElement('a');
-
-                        document.body.append(a);
-
-                        a.download = 'gosling-visualization';
-                        a.href = URL.createObjectURL(blob);
-
-                        a.click();
-                        a.remove();
-                    }, 'image/png');
-                },
-                exportPDF: (transparentBackground?: boolean) => {
-                    const resolution = 4;
                     const renderer = hgRef.current.pixiRenderer;
                     const renderTexture = PIXI.RenderTexture.create({
                         width: renderer.width / 2,
@@ -183,7 +148,32 @@ export const GoslingComponent = forwardRef((props: GoslingCompProps, ref: any) =
                     }
                     ctx.drawImage(canvas, 0, 0);
 
-                    const imgData = canvasWithBg.toDataURL('image/jpeg', 1);
+                    return {
+                        canvas: canvasWithBg,
+                        resolution,
+                        canvasWidth: canvas.width,
+                        canvasHeight: canvas.height
+                    };
+                },
+                exportPNG: (transparentBackground?: boolean) => {
+                    const { canvas } = ref.current.api.getCanvas({ resolution: 4, transparentBackground });
+
+                    canvas.toBlob((blob: any) => {
+                        const a = document.createElement('a');
+
+                        document.body.append(a);
+
+                        a.download = 'gosling-visualization';
+                        a.href = URL.createObjectURL(blob);
+
+                        a.click();
+                        a.remove();
+                    }, 'image/png');
+                },
+                exportPDF: (transparentBackground?: boolean) => {
+                    const { canvas } = ref.current.api.getCanvas({ resolution: 4, transparentBackground });
+
+                    const imgData = canvas.toDataURL('image/jpeg', 1);
 
                     const pdf = new jsPDF({
                         orientation: canvas.width < canvas.height ? 'p' : 'l',
