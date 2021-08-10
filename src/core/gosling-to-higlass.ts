@@ -7,7 +7,7 @@ import { BoundingBox, RelativePosition } from './utils/bounding-box';
 import { resolveSuperposedTracks } from './utils/overlay';
 import { getGenomicChannelKeyFromTrack, getGenomicChannelFromTrack } from './utils/validate';
 import { viridisColorMap } from './utils/colors';
-import { IsDataDeep, IsChannelDeep, IsDataDeepTileset } from './gosling.schema.guards';
+import { IsDataDeep, IsChannelDeep, IsDataDeepTileset, Is2DTrack, IsXAxis } from './gosling.schema.guards';
 import { DEWFAULT_TITLE_PADDING_ON_TOP_AND_BOTTOM } from './layout/defaults';
 import { CompleteThemeDeep } from './utils/theme';
 import { DEFAULT_TEXT_STYLE } from './utils/text-style';
@@ -39,20 +39,34 @@ export function goslingToHiGlass(
             tilesetUid = parsed.tilesetUid;
         }
 
-        // Is this track horizontal or vertical?
         const genomicChannel = getGenomicChannelFromTrack(firstResolvedSpec);
         const genomicChannelKey = getGenomicChannelKeyFromTrack(firstResolvedSpec);
         const isXGenomic = genomicChannelKey === 'x' || genomicChannelKey === 'xe';
-        // const isYGenomic = genomicChannelKey === 'y' || genomicChannelKey === 'ye';
         const xDomain = isXGenomic && IsChannelDeep(genomicChannel) ? (genomicChannel.domain as Domain) : undefined;
-        // const yDomain = isYGenomic && IsChannelDeep(genomicChannel) ? (genomicChannel.domain as Domain) : undefined;
-
+        const yDomain =
+            Is2DTrack(firstResolvedSpec) && IsChannelDeep(firstResolvedSpec.y)
+                ? (firstResolvedSpec.y.domain as Domain)
+                : undefined;
+        const width =
+            bb.width -
+            (firstResolvedSpec.layout !== 'circular' &&
+            firstResolvedSpec.orientation === 'vertical' &&
+            IsXAxis(firstResolvedSpec)
+                ? HIGLASS_AXIS_SIZE
+                : 0);
+        const height =
+            bb.height -
+            (firstResolvedSpec.layout !== 'circular' &&
+            firstResolvedSpec.orientation === 'horizontal' &&
+            IsXAxis(firstResolvedSpec)
+                ? HIGLASS_AXIS_SIZE
+                : 0);
         const hgTrack: HiGlassTrack = {
-            type: 'gosling-track',
+            type: Is2DTrack(firstResolvedSpec) ? 'gosling-2d-track' : 'gosling-track',
             server,
             tilesetUid,
-            width: bb.width,
-            height: bb.height,
+            width,
+            height,
             options: {
                 /* Mouse hover position */
                 showMousePosition: firstResolvedSpec.layout === 'circular' ? false : true, // show mouse position only for linear tracks // TODO: or vertical
@@ -123,26 +137,54 @@ export function goslingToHiGlass(
                 .setViewOrientation(gosTrack.orientation) // TODO: Orientation should be assigned to 'individual' views
                 .setAssembly(assembly) // TODO: Assembly should be assigned to 'individual' views
                 .addDefaultView(gosTrack.id ?? uuid.v1(), assembly)
-                .setDomain(xDomain, xDomain) // TODO:
+                .setDomain(xDomain, Is2DTrack(firstResolvedSpec) ? yDomain : xDomain)
+                .adjustDomain(gosTrack.orientation, width, height)
                 .setMainTrack(hgTrack)
                 .addTrackSourceServers(server)
                 .setZoomFixed(firstResolvedSpec.static === true)
                 .setLayout(layout);
         }
 
+        // determine the compactness type of an axis considering the size of a track
+        const getAxisNarrowType = (
+            c: 'x' | 'y',
+            orientation: 'horizontal' | 'vertical' = 'horizontal',
+            width: number,
+            height: number
+        ) => {
+            const narrowSizeThreshold = 400;
+            const narrowerSizeThreshold = 200;
+
+            if (orientation === 'horizontal') {
+                if ((c === 'x' && width <= narrowerSizeThreshold) || (c === 'y' && height <= narrowerSizeThreshold)) {
+                    return 'narrower';
+                } else if (
+                    (c === 'x' && width <= narrowSizeThreshold) ||
+                    (c === 'y' && height <= narrowSizeThreshold)
+                ) {
+                    return 'narrow';
+                } else {
+                    return 'regular';
+                }
+            } else {
+                if ((c === 'x' && height <= narrowerSizeThreshold) || (c === 'y' && width <= narrowerSizeThreshold)) {
+                    return 'narrower';
+                } else if (
+                    (c === 'x' && height <= narrowSizeThreshold) ||
+                    (c === 'y' && width <= narrowSizeThreshold)
+                ) {
+                    return 'narrow';
+                } else {
+                    return 'regular';
+                }
+            }
+        };
+
         // check whether to show axis
         ['x', 'y'].forEach(c => {
             const channel = (firstResolvedSpec as any)[c];
             if (IsChannelDeep(channel) && channel.axis && channel.axis !== 'none' && channel.type === 'genomic') {
-                const narrowSize = 400;
-                const narrowerSize = 200;
-                const narrowType =
-                    // show two labels at the end in a `si` format when the track is too narrow
-                    (c === 'x' && bb.width <= narrowerSize) || (c === 'y' && bb.height <= narrowerSize)
-                        ? 'narrower'
-                        : (c === 'x' && bb.width <= narrowSize) || (c === 'y' && bb.height <= narrowSize)
-                        ? 'narrow'
-                        : 'regular';
+                const narrowType = getAxisNarrowType(c as any, gosTrack.orientation, bb.width, bb.height);
                 hgModel.setAxisTrack(channel.axis, narrowType, {
                     layout: firstResolvedSpec.layout,
                     innerRadius:
@@ -194,5 +236,9 @@ export function goslingToHiGlass(
             );
         }
     }
+
+    // Uncomment the following code to test with specific HiGlass viewConfig
+    // hgModel.setExampleHiglassViewConfig();
+
     return hgModel;
 }

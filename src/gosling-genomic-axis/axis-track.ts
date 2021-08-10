@@ -208,6 +208,11 @@ function AxisTrack(HGC: any, ...args: any[]): any {
         }
 
         formatTick(pos: number) {
+            if (isNaN(pos)) {
+                // the value is not proper, so early return
+                return 'null';
+            }
+
             const domain = this._xScale.domain();
 
             const viewWidth = domain[1] - domain[0];
@@ -273,8 +278,15 @@ function AxisTrack(HGC: any, ...args: any[]): any {
 
             this.rightBoundTick.anchor.x = 1;
 
-            // line is offset by one because it's right on the edge of the
-            // visible region and we want to get the full width
+            if (this.flipText) {
+                // this means this track is displayed vertically, so update the anchor and scale of labels to make them readable!
+                this.leftBoundTick.scale.x = -1;
+                this.leftBoundTick.anchor.x = 1;
+                this.rightBoundTick.scale.x = -1;
+                this.rightBoundTick.anchor.x = 0;
+            }
+
+            // line is offset by one because it's right on the edge of the visible region and we want to get the full width
             this.leftBoundTick.tickLine = [1, this.dimensions[1], 1, this.dimensions[1] - this.tickHeight];
             this.rightBoundTick.tickLine = [
                 this.dimensions[0] - 1,
@@ -571,6 +583,13 @@ function AxisTrack(HGC: any, ...args: any[]): any {
         }
 
         zoomed(newXScale: any, newYScale: any) {
+            const domainValues = [...newXScale.domain(), ...newYScale.domain()];
+            if (domainValues.filter(d => isNaN(d)).length !== 0) {
+                // we received an invalid scale somehow
+                // console.warn('');
+                return;
+            }
+
             this.xScale(newXScale);
             this.yScale(newYScale);
 

@@ -7,6 +7,8 @@ import { RelativePosition } from './utils/bounding-box';
 import { validateSpec } from './utils/validate';
 import { GET_CHROM_SIZES } from './utils/assembly';
 import { CompleteThemeDeep } from './utils/theme';
+import exampleHg from './example/hg-view-config-1';
+import { insertItemToArray } from './utils/array';
 
 export const HIGLASS_AXIS_SIZE = 30;
 const getViewTemplate = (assembly?: string) => {
@@ -162,7 +164,7 @@ export class HiGlassModel {
     }
 
     public getMainTrackPosition() {
-        return this.orientation === 'vertical' ? 'right' : 'center';
+        return this.orientation === 'vertical' ? 'left' : 'center';
     }
 
     /**
@@ -185,9 +187,38 @@ export class HiGlassModel {
         if (xDomain) {
             this.getLastView().initialXDomain = getNumericDomain(xDomain, this.getAssembly());
         }
-        if (yDomain && this.orientation !== 'vertical') {
-            this.getLastView().initialYDomain = getNumericDomain(yDomain, this.getAssembly()); // TODO:
+        if (yDomain) {
+            this.getLastView().initialYDomain = getNumericDomain(yDomain, this.getAssembly());
         }
+        return this;
+    }
+
+    /**
+     * This is a hacky function that adjust x domain to properly show vertical tracks.
+     *
+     * In HiGlass, the range of vertical tracks is affected by a center track. For example, if a center track is small, the vertical tracks become small as well.
+     * Currently, the actual size of center track for vertical gosling tracks is `1px`. So, we re-scale the x domain so that gosling's vertical tracks properly use the entire height of a view.
+     * @param orientation
+     * @param width
+     * @returns
+     */
+    public adjustDomain(orientation: Orientation = 'horizontal', width: number, height: number) {
+        if (orientation !== 'vertical') {
+            return this;
+        }
+
+        const domain = this.getLastView().initialXDomain;
+        if (!domain) {
+            return this;
+        }
+
+        const [start, end] = domain;
+        const size = end - start;
+        const center = (start + end) / 2.0;
+        this.getLastView().initialXDomain = [
+            center - (size / width / 2 / height) * width,
+            center + (size / width / 2 / height) * width
+        ];
         return this;
     }
 
@@ -228,8 +259,9 @@ export class HiGlassModel {
         this.getLastView().tracks[this.getMainTrackPosition()] = [
             {
                 type: 'combined',
-                // HiGlass: Having the same width between combined track and child track looks to result in incorrect scales
-                width: (track.width as any) - 1,
+                // !! Hacky, but it is important to subtract 1px. Currently, HiGlass does not well handle a case where a center track is zero width (e.g., linking between views that contain zero-width center tracks).
+                // https://github.com/higlass/higlass/pull/1041
+                width: (track as any).width - 1,
                 height: (track as any).height,
                 contents: [track]
             }
@@ -286,14 +318,34 @@ export class HiGlassModel {
                 options: { ...axisTrackTemplate.options, layout: 'circular' }
             });
         } else {
-            // linear axis: position an axis track on the top, left, bottom, or right
-            this.getLastView().tracks[position] = [
-                {
-                    ...axisTrackTemplate,
-                    [widthOrHeight]: HIGLASS_AXIS_SIZE
+            // linear axis: place an axis track on the top, left, bottom, or right
+            const axisTrack = { ...axisTrackTemplate, [widthOrHeight]: HIGLASS_AXIS_SIZE };
+
+            if (position === 'left') {
+                // In vertical tracks, the main track has been already inserted into `left`, so put axis on the first index to show it on the left.
+                if (this.getLastView().tracks.left.filter(d => d.type === 'axis-track').length !== 0) {
+                    // we already have an axis
+                    return this;
                 }
-            ];
+                this.getLastView().tracks.left = insertItemToArray(this.getLastView().tracks.left, 0, axisTrack);
+            } else if (position === 'right') {
+                if (this.getLastView().tracks.left.filter(d => d.type === 'axis-track').length !== 0) {
+                    // we already have an axis
+                    return this;
+                }
+                this.getLastView().tracks.left.push(axisTrack);
+            } else {
+                if (this.getLastView().tracks[position].filter(d => d.type === 'axis-track').length !== 0) {
+                    // we already have an axis
+                    return this;
+                }
+                this.getLastView().tracks[position].push(axisTrack);
+            }
         }
         return this;
+    }
+
+    public setExampleHiglassViewConfig() {
+        this.hg = exampleHg as any;
     }
 }

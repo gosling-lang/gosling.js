@@ -10,7 +10,7 @@ import { event as d3Event } from 'd3-selection';
 import { select as d3Select } from 'd3-selection';
 import stringify from 'json-stringify-pretty-compact';
 import SplitPane from 'react-split-pane';
-import ErrorBoundary from './errorBoundary';
+import ErrorBoundary from './error-boundary';
 import { Datum, GoslingSpec } from '../core/gosling.schema';
 import { debounce, isEqual } from 'lodash';
 import { examples } from './example';
@@ -34,7 +34,7 @@ const LIMIT_CLIPBOARD_LEN = 4096;
 const EDITOR_HEADER_HEIGHT = 40;
 const BOTTOM_PANEL_HEADER_HEIGHT = 30;
 
-const LogoSVG = (width: number, height: number) => (
+export const GoslingLogoSVG = (width: number, height: number) => (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width={width} height={height}>
         <rect style={{ fill: 'none' }} width="400" height="400" />
         <circle cx="110.62" cy="129.64" r="41.69" />
@@ -406,7 +406,7 @@ function Editor(props: any) {
                 }}
             >
                 <span style={{ cursor: 'pointer' }} onClick={() => window.open('https://gosling.js.org', '_blank')}>
-                    <span className="logo">{LogoSVG(20, 20)}</span>
+                    <span className="logo">{GoslingLogoSVG(20, 20)}</span>
                     Gosling.js Editor
                 </span>
                 {urlSpec && <small> Displaying a custom spec contained in URL</small>}
@@ -843,7 +843,7 @@ function Editor(props: any) {
                         {getIconSVG(ICONS.CLOSE, 30, 30)}
                     </span>
                     <div>
-                        <span className="logo">{LogoSVG(80, 80)}</span>
+                        <span className="logo">{GoslingLogoSVG(80, 80)}</span>
                     </div>
                     <h3>Gosling.js Editor</h3>
                     {`Gosling.js v${gosling.version}`}

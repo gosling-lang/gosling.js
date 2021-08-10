@@ -14,12 +14,25 @@ import { GoslingTrack } from '../gosling-track/index';
  */
 export function init() {
     /**
-     * Register a Gosling plugin track to HiGlassComponent
+     * Register a linear Gosling.js track to HiGlassComponent
      */
     higlassRegister({
         name: 'GoslingTrack',
         track: GoslingTrack,
         config: GoslingTrack.config
+    });
+
+    /**
+     * Register a 2D Gosling.js track to HiGlassComponent
+     */
+    higlassRegister({
+        name: 'Gosling2DTrack',
+        track: GoslingTrack,
+        config: {
+            ...GoslingTrack.config,
+            type: 'gosling-2d-track',
+            orientation: '2d'
+        }
     });
 
     /**

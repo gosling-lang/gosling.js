@@ -179,37 +179,69 @@ function traverseAndCollectTrackInfo(
     if ('tracks' in spec) {
         const tracks = spec.tracks as Track[];
 
-        // Use the largest `width` for this view.
-        cumWidth = Math.max(...tracks.map(d => d.width)); //forceWidth ? forceWidth : spec.tracks[0]?.width;
-        tracks.forEach((track, i, array) => {
-            // let scaledHeight = track.height;
-
-            if (getNumOfXAxes([track]) === 1) {
-                track.height += HIGLASS_AXIS_SIZE;
-            }
-
-            track.width = cumWidth;
-
-            output.push({
-                track,
-                boundingBox: {
-                    x: dx,
-                    y: dy + cumHeight,
-                    width: cumWidth,
-                    height: track.height
-                },
-                layout: { x: 0, y: 0, w: 0, h: 0 } // Just put a dummy info here, this should be added after entire bounding box has been determined
-            });
-
-            if (array[i + 1] && array[i + 1].overlayOnPreviousTrack) {
-                // do not add a height
-            } else {
-                cumHeight += track.height;
-                if (i !== array.length - 1) {
-                    cumHeight += spec.spacing !== undefined ? spec.spacing : 0;
+        if (spec.orientation === 'vertical') {
+            // This is a vertical view, so use the largest `height` of the tracks for this view.
+            cumHeight = Math.max(...tracks.map(d => d.height));
+            tracks.forEach((track, i, array) => {
+                if (getNumOfXAxes([track]) === 1) {
+                    track.width += HIGLASS_AXIS_SIZE;
                 }
-            }
-        });
+
+                track.height = cumHeight;
+
+                output.push({
+                    track,
+                    boundingBox: {
+                        x: dx + cumWidth,
+                        y: dy,
+                        width: track.width,
+                        height: cumHeight
+                    },
+                    layout: { x: 0, y: 0, w: 0, h: 0 } // Just put a dummy info here, this should be added after entire bounding box has been determined
+                });
+
+                if (array[i + 1] && array[i + 1].overlayOnPreviousTrack) {
+                    // do not add a height
+                } else {
+                    cumWidth += track.width;
+                    if (i !== array.length - 1) {
+                        cumWidth += spec.spacing !== undefined ? spec.spacing : 0;
+                    }
+                }
+            });
+        } else {
+            // This is a horizontal view, so use the largest `width` for this view.
+            cumWidth = Math.max(...tracks.map(d => d.width)); //forceWidth ? forceWidth : spec.tracks[0]?.width;
+            tracks.forEach((track, i, array) => {
+                // let scaledHeight = track.height;
+
+                if (getNumOfXAxes([track]) === 1) {
+                    track.height += HIGLASS_AXIS_SIZE;
+                }
+
+                track.width = cumWidth;
+
+                output.push({
+                    track,
+                    boundingBox: {
+                        x: dx,
+                        y: dy + cumHeight,
+                        width: cumWidth,
+                        height: track.height
+                    },
+                    layout: { x: 0, y: 0, w: 0, h: 0 } // Just put a dummy info here, this should be added after entire bounding box has been determined
+                });
+
+                if (array[i + 1] && array[i + 1].overlayOnPreviousTrack) {
+                    // do not add a height
+                } else {
+                    cumHeight += track.height;
+                    if (i !== array.length - 1) {
+                        cumHeight += spec.spacing !== undefined ? spec.spacing : 0;
+                    }
+                }
+            });
+        }
     } else {
         // We did not reach a track definition, so continue traversing.
 
@@ -221,18 +253,18 @@ function traverseAndCollectTrackInfo(
                 const viewBB = traverseAndCollectTrackInfo(
                     v,
                     output,
-                    dx,
-                    dy + cumHeight,
+                    dx + (v.xOffset ?? 0),
+                    dy + (v.yOffset ?? 0) + cumHeight,
                     !isThisCircularRoot && circularRootNotFound
                 );
 
-                if (cumWidth < viewBB.width) {
-                    cumWidth = viewBB.width;
+                if (cumWidth < (v.xOffset ?? 0) + viewBB.width) {
+                    cumWidth = (v.xOffset ?? 0) + viewBB.width;
                 }
                 if (i !== array.length - 1) {
                     cumHeight += spacing;
                 }
-                cumHeight += viewBB.height;
+                cumHeight += (v.yOffset ?? 0) + viewBB.height;
             });
         } else if (spec.arrangement === 'serial' || spec.arrangement === 'horizontal') {
             spec.views.forEach((v, i, array) => {
@@ -244,18 +276,18 @@ function traverseAndCollectTrackInfo(
                 const viewBB = traverseAndCollectTrackInfo(
                     v,
                     output,
-                    dx + cumWidth,
-                    dy,
+                    dx + (v.xOffset ?? 0) + cumWidth,
+                    dy + (v.yOffset ?? 0),
                     !isThisCircularRoot && circularRootNotFound
                 );
 
-                if (cumHeight < viewBB.height) {
-                    cumHeight = viewBB.height;
+                if (cumHeight < (v.xOffset ?? 0) + viewBB.height) {
+                    cumHeight = (v.xOffset ?? 0) + viewBB.height;
                 }
                 if (i !== array.length - 1) {
                     cumWidth += spacing;
                 }
-                cumWidth += viewBB.width;
+                cumWidth += (v.xOffset ?? 0) + viewBB.width;
             });
         }
     }
@@ -294,8 +326,8 @@ function traverseAndCollectTrackInfo(
             // t.track.startAngle = ((t.boundingBox.x - dx) / cumWidth) * 360;
             // t.track.endAngle = ((t.boundingBox.x + t.boundingBox.width - dx) / cumWidth) * 360;
 
-            t.boundingBox.x = dx;
-            t.boundingBox.y = dy;
+            t.boundingBox.x = dx + (t.track.xOffset ?? 0);
+            t.boundingBox.y = dy + (t.track.yOffset ?? 0);
 
             // Circular tracks share the same size and position since technically these tracks are being overlaid on top of the others
             t.boundingBox.height = t.track.height = t.boundingBox.width = t.track.width = TOTAL_RADIUS * 2;

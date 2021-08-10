@@ -27,6 +27,7 @@ export const EX_TRACK_SARS_COV_2_GENES: OverlaidTracks = {
             mark: 'text',
             text: { field: 'Gene symbol', type: 'nominal' },
             color: { value: 'black' },
+            stroke: { value: 'white' },
             strokeWidth: { value: 3 },
             visibility: [
                 {
@@ -133,6 +134,7 @@ export const EX_SPEC_SARS_COV_2: GoslingSpec = {
                             mark: 'text',
                             text: { field: 'Protein', type: 'nominal' },
                             color: { value: '#333' },
+                            stroke: { value: 'white' },
                             strokeWidth: { value: 3 },
                             style: { textAnchor: 'end' }
                         }

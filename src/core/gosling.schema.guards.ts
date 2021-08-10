@@ -125,10 +125,16 @@ export function IsTemplateTrack(track: Partial<Track>): track is TemplateTrack {
 }
 
 /**
- * TODO: This should be more correctly determined, but we currently only support 2D tracks for matrix datasets.
+ * Is this 2D track, i.e., two genomic axes?
  */
 export function Is2DTrack(track: Track) {
-    return IsSingleTrack(track) && track.data?.type === 'matrix';
+    return (
+        IsSingleTrack(track) &&
+        IsChannelDeep(track['x']) &&
+        track['x'].type === 'genomic' &&
+        IsChannelDeep(track['y']) &&
+        track['y'].type === 'genomic'
+    );
 }
 
 export function IsChannelValue(
@@ -263,7 +269,7 @@ export function IsXAxis(_: Track) {
         _.overlay.forEach(t => {
             if (isFound) return;
 
-            if (IsChannelDeep(t.x) && (t.x.axis === 'top' || t.x.axis === 'bottom')) {
+            if (IsChannelDeep(t.x) && t.x.axis && t.x.axis !== 'none') {
                 isFound = true;
             }
         });

@@ -45,13 +45,13 @@ export interface GenomePositionSearchBox {
 }
 
 export interface Tracks {
-    top?: Track[];
-    left?: Track[];
-    center?: Track[];
-    right?: Track[];
-    bottom?: Track[];
-    gallery?: Track[];
-    whole?: Track[];
+    top: Track[];
+    left: Track[];
+    center: Track[];
+    right: Track[];
+    bottom: Track[];
+    gallery: Track[];
+    whole: Track[];
 }
 export type Track = HeatmapTrack | CombinedTrack | IndependentViewportProjectionTrack | EnumTrack;
 export interface HeatmapTrack {
@@ -221,5 +221,6 @@ export type EnumTrackType =
     | 'viewport-projection-vertical'
     // custom tracks
     | 'gosling-track'
+    | 'gosling-2d-track'
     | 'axis-track'
     | 'text';
