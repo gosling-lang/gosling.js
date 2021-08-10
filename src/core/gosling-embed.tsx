@@ -1,8 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Theme } from '..';
-import { GoslingComponent } from './gosling-component';
+import { GoslingComponent, GoslingComponentApi } from './gosling-component';
 import { GoslingSpec } from './gosling.schema';
+
+const MAX_TRIES = 1000;
 
 /**
  * Embed a Gosling component to a given HTMLElement.
@@ -21,18 +23,20 @@ export function embed(
         theme?: Theme;
     }
 ) {
-    // const ref = React.createRef();
-    ReactDOM.render(
-        <GoslingComponent
-            spec={spec}
-            padding={options?.padding}
-            margin={options?.margin}
-            border={options?.border}
-            id={options?.id}
-            className={options?.className}
-            theme={options?.theme}
-        />,
-        element
-    );
-    // return ref.current;
+    const ref = React.createRef<{ api: GoslingComponentApi }>();
+    return new Promise((resolve, reject) => {
+        ReactDOM.render(React.createElement(GoslingComponent, { ref, spec, ...options }), element, () => {
+            let tries = 0;
+            const poll = setInterval(() => {
+                if (ref?.current?.api) {
+                    resolve(ref.current.api);
+                    clearInterval(poll);
+                }
+                if (tries === MAX_TRIES) {
+                    reject(new Error('Could not resolve GoslingComponentAPI.'));
+                }
+                tries++;
+            }, 500);
+        });
+    });
 }
