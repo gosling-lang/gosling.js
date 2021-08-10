@@ -19,6 +19,25 @@ import { GoslingTemplates } from '..';
  */
 gosling.init();
 
+export interface GoslingComponentApi {
+    on: (type: EVENT_TYPE, callback: MouseHoverCallback) => void;
+    zoomTo: (viewId: string, position: string, duration?: number) => void;
+    zoomToExtent: (viewId: string, duration?: number) => void;
+    zoomToGene: (viewId: string, gene: string, duration?: number) => void;
+    getViewIds: () => string[];
+    exportPNG: (transparentBackground?: boolean) => void;
+    exportPDF: (transparentBackground?: boolean) => void;
+    getCanvas: (options?: {
+        resolution?: number;
+        transparentBackground?: boolean;
+    }) => {
+        canvas: HTMLCanvasElement;
+        canvasWidth: number;
+        canvasHeight: number;
+        resolution: number;
+    };
+}
+
 interface GoslingCompProps {
     spec?: gosling.GoslingSpec;
     compiled?: (goslingSpec: gosling.GoslingSpec, higlassSpec: gosling.HiGlassSpec) => void;
@@ -31,8 +50,7 @@ interface GoslingCompProps {
     templates?: TemplateTrackDef[];
 }
 
-// TODO: specify types other than "any"
-export const GoslingComponent = forwardRef((props: GoslingCompProps, ref: any) => {
+export const GoslingComponent = forwardRef<{ api: GoslingComponentApi }, GoslingCompProps>((props, ref) => {
     // Gosling and HiGlass specs
     const [gs, setGs] = useState<gosling.GoslingSpec | undefined>(props.spec);
     const [hs, setHs] = useState<gosling.HiGlassSpec>();
@@ -75,15 +93,16 @@ export const GoslingComponent = forwardRef((props: GoslingCompProps, ref: any) =
 
     // HiGlassMeta APIs that can be called outside the library.
     useEffect(() => {
-        if (!ref) return;
+        // Must be React.MutableRefObj<T>
+        if (!ref || !('current' in ref)) return;
 
         ref.current = {
             api: {
-                on: (type: EVENT_TYPE, callback: MouseHoverCallback) => {
+                on: (type, callback) => {
                     userDefinedEvents.current[type] = callback;
                 },
                 // TODO: Support assemblies (we can infer this from the spec)
-                zoomTo: (viewId: string, position: string, duration = 1000) => {
+                zoomTo: (viewId, position, duration = 1000) => {
                     // Accepted input: 'chr1' or 'chr1:1-1000'
                     if (!position.includes('chr')) {
                         console.warn('Genomic interval you entered is not in a correct form.');
@@ -105,7 +124,7 @@ export const GoslingComponent = forwardRef((props: GoslingCompProps, ref: any) =
                     hgRef?.current?.api?.zoomTo(viewId, start, end, start, end, duration);
                 },
                 // TODO: Support assemblies (we can infer this from the spec)
-                zoomToExtent: (viewId: string, duration = 1000) => {
+                zoomToExtent: (viewId, duration = 1000) => {
                     const [start, end] = [0, GET_CHROM_SIZES().total];
                     hgRef?.current?.api?.zoomTo(viewId, start, end, start, end, duration);
                 },
@@ -120,7 +139,7 @@ export const GoslingComponent = forwardRef((props: GoslingCompProps, ref: any) =
                     });
                     return ids;
                 },
-                getCanvas: (options: { resolution: number; transparentBackground: boolean }) => {
+                getCanvas: options => {
                     const resolution = options?.resolution ?? 4;
                     const transparentBackground = options?.transparentBackground ?? false;
 
@@ -156,7 +175,7 @@ export const GoslingComponent = forwardRef((props: GoslingCompProps, ref: any) =
                     };
                 },
                 exportPNG: (transparentBackground?: boolean) => {
-                    const { canvas } = ref.current.api.getCanvas({ resolution: 4, transparentBackground });
+                    const { canvas } = ref.current!.api.getCanvas({ resolution: 4, transparentBackground });
 
                     canvas.toBlob((blob: any) => {
                         const a = document.createElement('a');
@@ -171,7 +190,7 @@ export const GoslingComponent = forwardRef((props: GoslingCompProps, ref: any) =
                     }, 'image/png');
                 },
                 exportPDF: (transparentBackground?: boolean) => {
-                    const { canvas } = ref.current.api.getCanvas({ resolution: 4, transparentBackground });
+                    const { canvas } = ref.current!.api.getCanvas({ resolution: 4, transparentBackground });
 
                     const imgData = canvas.toDataURL('image/jpeg', 1);
 
