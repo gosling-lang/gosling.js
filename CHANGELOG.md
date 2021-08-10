@@ -1,3 +1,13 @@
+# [0.9.0](https://github.com/gosling-lang/gosling.js/compare/v0.8.13...v0.9.0) (2021-08-10)
+
+
+### Features
+
+* **api:** getCanvas() ([#452](https://github.com/gosling-lang/gosling.js/issues/452)) ([68637db](https://github.com/gosling-lang/gosling.js/commit/68637db32263597e054b7940c0223b5254170804))
+* support vertical tracks ([#451](https://github.com/gosling-lang/gosling.js/issues/451)) ([3b502c5](https://github.com/gosling-lang/gosling.js/commit/3b502c54a1660258efbdb361b1def76a19209014))
+
+
+
 ## [0.8.13](https://github.com/gosling-lang/gosling.js/compare/v0.8.12...v0.8.13) (2021-08-05)
 
 
