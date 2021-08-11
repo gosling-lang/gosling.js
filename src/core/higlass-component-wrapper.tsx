@@ -43,7 +43,7 @@ export const HiGlassComponentWrapper = forwardRef<HiGlassApi | undefined, HiGlas
 
         // Styling
         const { padding = 60, margin = 0, border = 'none', background } = props.options || {};
-
+        const viewConfig = props.viewConfig || {};
         return (
             <>
                 <div
@@ -61,7 +61,7 @@ export const HiGlassComponentWrapper = forwardRef<HiGlassApi | undefined, HiGlas
                     }}
                 >
                     <div
-                        key={JSON.stringify(props.viewConfig)}
+                        key={JSON.stringify(viewConfig)}
                         className="higlass-wrapper"
                         style={{
                             position: 'relative',
@@ -91,7 +91,7 @@ export const HiGlassComponentWrapper = forwardRef<HiGlassApi | undefined, HiGlas
                                 sizeMode: 'bounded',
                                 rangeSelectionOnAlt: true // this allows switching between `selection` and `zoom&pan` mode
                             }}
-                            viewConfig={props.viewConfig}
+                            viewConfig={viewConfig}
                         />
                     </div>
                 </div>

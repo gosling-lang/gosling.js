@@ -53,7 +53,6 @@ export const GoslingComponent = forwardRef<{ api: GoslingApi } | undefined, Gosl
                 console.warn('Gosling spec is not valid. Please refer to the console message.');
                 return;
             }
-
             gosling.compile(
                 gs,
                 (newHs: gosling.HiGlassSpec, newSize: { width: number; height: number }) => {
