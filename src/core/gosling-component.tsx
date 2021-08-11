@@ -21,18 +21,13 @@ interface GoslingCompProps {
 
 export const GoslingComponent = forwardRef<{ api: GoslingApi }, GoslingCompProps>((props, ref) => {
     // Gosling and HiGlass specs
-    const [gs, setGs] = useState<gosling.GoslingSpec | undefined>(props.spec);
     const [hs, setHs] = useState<gosling.HiGlassSpec>();
     const [size, setSize] = useState({ width: 200, height: 200 });
-    const theme = getTheme(props.theme || 'light');
 
     // HiGlass API
     const hgRef = useRef<HiGlassApi>();
 
-    // Just received a new Gosling spec.
-    useEffect(() => {
-        setGs(props.spec);
-    }, [props.spec]);
+    const theme = getTheme(props.theme || 'light');
 
     // HiGlassMeta APIs that can be called outside the library.
     useEffect(() => {
@@ -46,8 +41,8 @@ export const GoslingComponent = forwardRef<{ api: GoslingApi }, GoslingCompProps
     }, [ref, hgRef, hs, theme]);
 
     useEffect(() => {
-        if (gs) {
-            const valid = gosling.validateGoslingSpec(gs);
+        if (props.spec) {
+            const valid = gosling.validateGoslingSpec(props.spec);
 
             if (valid.state === 'error') {
                 console.warn('Gosling spec is not valid. Please refer to the console message.');
@@ -55,10 +50,10 @@ export const GoslingComponent = forwardRef<{ api: GoslingApi }, GoslingCompProps
             }
 
             gosling.compile(
-                gs,
+                props.spec,
                 (newHs, newSize) => {
                     // If a callback function is provided, return compiled information.
-                    props.compiled?.(gs, newHs);
+                    props.compiled?.(props.spec!, newHs);
                     setHs(newHs);
                     setSize(newSize);
                 },
@@ -66,7 +61,7 @@ export const GoslingComponent = forwardRef<{ api: GoslingApi }, GoslingCompProps
                 theme
             );
         }
-    }, [gs, theme]);
+    }, [props.spec, theme]);
 
     const higlassComponent = useMemo(
         () => (
