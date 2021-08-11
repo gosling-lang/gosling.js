@@ -5,7 +5,7 @@ import uuid from 'uuid';
 
 import * as gosling from '..';
 // @ts-ignore
-import { HiGlassComponent } from 'higlass.js';
+import { HiGlassComponent } from 'higlass';
 import { HiGlassSpec } from './higlass.schema';
 
 /**
