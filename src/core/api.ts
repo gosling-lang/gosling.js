@@ -54,7 +54,7 @@ export function createApi(
         // Safely get higlass API
         if ('api' in hgRef) return hgRef;
         if (hgRef.current) return hgRef.current;
-        throw new Error('Higlass ref not initalized');
+        throw new Error('HiGlass ref not initalized');
     };
     const getCanvas: GoslingApi['getCanvas'] = options => {
         const hg = getHg();
@@ -98,7 +98,7 @@ export function createApi(
                 case 'mouseover':
                     return PubSub.subscribe(type, callback);
                 default: {
-                    console.warn('Subsriber not recognized.');
+                    console.error(`Event type not supported, got ${JSON.stringify(type)}.`);
                 }
             }
         },
