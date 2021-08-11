@@ -8,7 +8,7 @@ import { validateGoslingSpec } from './utils/validate';
 import { compile } from './compile';
 import { getTheme, Theme } from './utils/theme';
 import { GoslingTemplates } from './utils/template';
-import { Api, createApi } from './api';
+import { GoslingApi, createApi } from './api';
 
 import { HiGlassApi, HiGlassComponentWrapper, HiGlassComponentWrapperProps } from './higlass-component-wrapper';
 
@@ -44,7 +44,7 @@ const launchHiglass = (
  * @param spec
  */
 export function embed(element: HTMLElement, spec: GoslingSpec, opts: GoslingEmbedOptions = {}) {
-    return new Promise<Api>((resolve, reject) => {
+    return new Promise<GoslingApi>((resolve, reject) => {
         const valid = validateGoslingSpec(spec);
 
         if (valid.state === 'error') {

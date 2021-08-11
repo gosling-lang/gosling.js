@@ -6,31 +6,38 @@ import { GET_CHROM_SIZES } from './utils/assembly';
 import { CompleteThemeDeep } from './utils/theme';
 import { traverseViewsInViewConfig } from './utils/view-config';
 
-export type EVENT_TYPE = 'mouseover';
-
 export type CommonEventData = {
     data: Datum;
     genomicPosition: string;
 };
 
-export type MouseHoverCallback = (data: CommonEventData) => any;
+// Utility type for building strongly typed PubSub API.
+//
+// Add named events using a string union for `EventName`
+//
+// - Two different events ('mouseover' & 'my-event') with the same payload
+//
+// PubSubEvent<'mouseover' | 'my-event', { same: 'payload' }>
+type PubSubEvent<EventName extends string, Payload> = {
+    [Key in EventName]: Payload;
+};
 
-export interface UserDefinedEvents {
-    mouseover?: MouseHoverCallback;
-}
+// New `PubSubEvent`s should be added to the `EventMap`...
+type EventMap = PubSubEvent<'mouseover', CommonEventData>;
+// & PubSubEvent<'my-event', { hello: 'world' }> & PubSubEvent<'foo', "bar">;
 
 export interface GoslingApi {
-    on: (type: EVENT_TYPE, callback: MouseHoverCallback) => void;
-    zoomTo: (viewId: string, position: string, duration?: number) => void;
-    zoomToExtent: (viewId: string, duration?: number) => void;
-    zoomToGene: (viewId: string, gene: string, duration?: number) => void;
-    getViewIds: () => string[];
-    exportPNG: (transparentBackground?: boolean) => void;
-    exportPDF: (transparentBackground?: boolean) => void;
-    getCanvas: (options?: {
+    on<EventName extends keyof EventMap>(type: EventName, callback: (payload: EventMap[EventName]) => void): void;
+    zoomTo(viewId: string, position: string, duration?: number): void;
+    zoomToExtent(viewId: string, duration?: number): void;
+    zoomToGene(viewId: string, gene: string, duration?: number): void;
+    getViewIds(): string[];
+    exportPNG(transparentBackground?: boolean): void;
+    exportPDF(transparentBackground?: boolean): void;
+    getCanvas(options?: {
         resolution?: number;
         transparentBackground?: boolean;
-    }) => {
+    }): {
         canvas: HTMLCanvasElement;
         canvasWidth: number;
         canvasHeight: number;
