@@ -6,15 +6,16 @@ import { HiGlassSpec } from './higlass.schema';
 
 import { validateGoslingSpec } from './utils/validate';
 import { compile } from './compile';
-import { getTheme } from './utils/theme';
+import { getTheme, Theme } from './utils/theme';
 import { GoslingTemplates } from './utils/template';
 import { Api, createApi } from './api';
 
 import { HiGlassApi, HiGlassComponentWrapper, HiGlassComponentWrapperProps } from './higlass-component-wrapper';
 
-type EmbedOptions = HiGlassComponentWrapperProps['options'] & {
+export type GoslingEmbedOptions = Omit<HiGlassComponentWrapperProps['options'], 'background'> & {
     id?: string;
     className?: string;
+    theme?: Theme;
 };
 
 // https://github.com/higlass/higlass/blob/0299ae1229fb57e0ca8da31dff58003c3e5bf1cf/app/scripts/hglib.js#L37A
@@ -22,12 +23,18 @@ const launchHiglass = (
     element: HTMLElement,
     viewConfig: HiGlassSpec,
     size: { width: number; height: number },
-    opts: EmbedOptions = {}
+    opts: GoslingEmbedOptions & { background: string }
 ) => {
     const ref = React.createRef<HiGlassApi>();
-    const { id, className, ...options } = opts;
-    const props = { ref, viewConfig, size, id, className, options };
-    ReactDOM.render(React.createElement(HiGlassComponentWrapper, props), element);
+    const component = React.createElement(HiGlassComponentWrapper, {
+        ref,
+        viewConfig,
+        size,
+        id: opts.id,
+        className: opts.className,
+        options: opts
+    });
+    ReactDOM.render(component, element);
     return ref.current!;
 };
 
@@ -36,14 +43,17 @@ const launchHiglass = (
  * @param element
  * @param spec
  */
-export function embed(element: HTMLElement, spec: GoslingSpec, options: EmbedOptions = {}) {
+export function embed(element: HTMLElement, spec: GoslingSpec, opts: GoslingEmbedOptions = {}) {
     return new Promise<Api>((resolve, reject) => {
         const valid = validateGoslingSpec(spec);
 
         if (valid.state === 'error') {
             reject(new Error('Gosling spec is not valid. Please refer to the console message.'));
         }
-        const theme = getTheme(options.theme || 'light');
+
+        const theme = getTheme(opts.theme || 'light');
+        const options = { ...opts, background: theme.root.background };
+
         compile(
             spec,
             (hsSpec, size) => {

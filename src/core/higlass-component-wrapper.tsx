@@ -7,7 +7,6 @@ import * as gosling from '..';
 // @ts-ignore
 import { HiGlassComponent } from 'higlass.js';
 import { HiGlassSpec } from './higlass.schema';
-import { Theme, getTheme } from './utils/theme';
 
 /**
  * Register plugin tracks and data fetchers to HiGlass. This is necessary for the first time before using Gosling.
@@ -28,7 +27,7 @@ export interface HiGlassComponentWrapperProps {
         padding?: number;
         margin?: number | string;
         border?: string;
-        theme?: Theme;
+        background?: string;
     };
     id?: string;
     className?: string;
@@ -43,8 +42,7 @@ export const HiGlassComponentWrapper = forwardRef<HiGlassApi | undefined, HiGlas
         }, [props.id]);
 
         // Styling
-        const { padding = 60, margin = 0, border = 'none' } = props.options || {};
-        const theme = getTheme(props.options.theme || 'light');
+        const { padding = 60, margin = 0, border = 'none', background } = props.options || {};
 
         return (
             <>
@@ -56,7 +54,7 @@ export const HiGlassComponentWrapper = forwardRef<HiGlassApi | undefined, HiGlas
                         padding: padding,
                         margin: margin,
                         border: border,
-                        background: theme.root.background,
+                        background: background,
                         width: props.size.width + padding * 2,
                         height: props.size.height + padding * 2,
                         textAlign: 'left'
@@ -68,7 +66,7 @@ export const HiGlassComponentWrapper = forwardRef<HiGlassApi | undefined, HiGlas
                         style={{
                             position: 'relative',
                             display: 'block',
-                            background: theme.root.background,
+                            background: background,
                             margin: 0,
                             padding: 0, // non-zero padding acts unexpectedly w/ HiGlassComponent
                             width: props.size.width,

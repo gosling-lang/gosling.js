@@ -82,7 +82,7 @@ export const GoslingComponent = forwardRef<{ api: Api } | undefined, GoslingComp
                     padding: props.padding,
                     border: props.border,
                     margin: props.margin,
-                    theme: theme
+                    background: theme.root.background
                 }}
             />
         ),
