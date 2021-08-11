@@ -9,10 +9,14 @@ import { RawDataFetcher } from '../data-fetcher/json/index';
 import { BBIDataFetcher } from '../data-fetcher/bigwig/index';
 import { GoslingTrack } from '../gosling-track/index';
 
+let once = false;
+
 /**
  * Register plugin tracks and data fetchers to HiGlass. This is necessary for the first time before using Gosling.js.
  */
 export function init() {
+    if (once) return;
+
     /**
      * Register a linear Gosling.js track to HiGlassComponent
      */
@@ -68,4 +72,6 @@ export function init() {
     higlassRegister({ dataFetcher: CSVDataFetcher, config: CSVDataFetcher.config }, { pluginType: 'dataFetcher' });
     higlassRegister({ dataFetcher: RawDataFetcher, config: RawDataFetcher.config }, { pluginType: 'dataFetcher' });
     higlassRegister({ dataFetcher: BBIDataFetcher, config: BBIDataFetcher.config }, { pluginType: 'dataFetcher' });
+
+    once = true;
 }
