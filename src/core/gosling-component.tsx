@@ -19,7 +19,7 @@ interface GoslingCompProps {
     templates?: TemplateTrackDef[];
 }
 
-export const GoslingComponent = forwardRef<{ api: GoslingApi } | undefined, GoslingCompProps>((props, ref) => {
+export const GoslingComponent = forwardRef<{ api: GoslingApi }, GoslingCompProps>((props, ref) => {
     // Gosling and HiGlass specs
     const [gs, setGs] = useState<gosling.GoslingSpec | undefined>(props.spec);
     const [hs, setHs] = useState<gosling.HiGlassSpec>();
@@ -53,13 +53,12 @@ export const GoslingComponent = forwardRef<{ api: GoslingApi } | undefined, Gosl
                 console.warn('Gosling spec is not valid. Please refer to the console message.');
                 return;
             }
+
             gosling.compile(
                 gs,
-                (newHs: gosling.HiGlassSpec, newSize: { width: number; height: number }) => {
-                    if (props.compiled) {
-                        // If a callback function is provided, return compiled information.
-                        props.compiled(gs, newHs);
-                    }
+                (newHs, newSize) => {
+                    // If a callback function is provided, return compiled information.
+                    props.compiled?.(gs, newHs);
                     setHs(newHs);
                     setSize(newSize);
                 },
