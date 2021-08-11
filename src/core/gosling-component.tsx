@@ -3,7 +3,7 @@ import { HiGlassApi, HiGlassComponentWrapper } from './higlass-component-wrapper
 import React, { useState, useEffect, useMemo, useRef, forwardRef } from 'react';
 import * as gosling from '..';
 import { getTheme, Theme } from './utils/theme';
-import { createApi, Api } from './api';
+import { createApi, GoslingApi } from './api';
 import { TemplateTrackDef } from './gosling.schema';
 import { GoslingTemplates } from '..';
 
@@ -19,7 +19,7 @@ interface GoslingCompProps {
     templates?: TemplateTrackDef[];
 }
 
-export const GoslingComponent = forwardRef<{ api: Api } | undefined, GoslingCompProps>((props, ref) => {
+export const GoslingComponent = forwardRef<{ api: GoslingApi } | undefined, GoslingCompProps>((props, ref) => {
     // Gosling and HiGlass specs
     const [gs, setGs] = useState<gosling.GoslingSpec | undefined>(props.spec);
     const [hs, setHs] = useState<gosling.HiGlassSpec>();

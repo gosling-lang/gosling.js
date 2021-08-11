@@ -19,7 +19,7 @@ export interface UserDefinedEvents {
     mouseover?: MouseHoverCallback;
 }
 
-export interface Api {
+export interface GoslingApi {
     on: (type: EVENT_TYPE, callback: MouseHoverCallback) => void;
     zoomTo: (viewId: string, position: string, duration?: number) => void;
     zoomToExtent: (viewId: string, duration?: number) => void;
@@ -42,14 +42,14 @@ export function createApi(
     hgRef: React.RefObject<HiGlassApi | undefined> | HiGlassApi,
     hgSpec: HiGlassSpec | undefined,
     theme: Required<CompleteThemeDeep>
-): Api {
+): GoslingApi {
     const getHg = () => {
         // Safely get higlass API
         if ('api' in hgRef) return hgRef;
         if (hgRef.current) return hgRef.current;
         throw new Error('Higlass ref not initalized');
     };
-    const getCanvas: Api['getCanvas'] = options => {
+    const getCanvas: GoslingApi['getCanvas'] = options => {
         const hg = getHg();
         const resolution = options?.resolution ?? 4;
         const transparentBackground = options?.transparentBackground ?? false;
