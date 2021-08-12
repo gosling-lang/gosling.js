@@ -2794,6 +2794,9 @@
               "xLinkingId": {
                 "type": "string"
               },
+              "xLinkingId": {
+                "type": "string"
+              },
               "xOffset": {
                 "type": "number"
               },

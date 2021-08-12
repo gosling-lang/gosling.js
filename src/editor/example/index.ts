@@ -99,6 +99,13 @@ export const examples: ReadonlyArray<{
         underDevelopment: true
     },
     {
+        name: 'Basic Example: Vertical Band Connection w/ Independent Axes',
+        id: 'VERTICAL_BAND',
+        spec: EX_SPEC_VERTICAL_BAND,
+        forceShow: true,
+        underDevelopment: true
+    },
+    {
         name: 'Multi-Scale Sequence Track',
         id: 'SEQUENCE',
         spec: EX_SPEC_SEQUENCE_TRACK
