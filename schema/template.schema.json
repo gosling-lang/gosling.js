@@ -1290,9 +1290,6 @@
         "innerRadius": {
           "type": "number"
         },
-        "linkingId": {
-          "type": "string"
-        },
         "mark": {
           "$ref": "#/definitions/Mark"
         },
@@ -1387,6 +1384,9 @@
             }
           ]
         },
+        "xLinkingId": {
+          "type": "string"
+        },
         "xOffset": {
           "type": "number"
         },
@@ -1401,6 +1401,22 @@
         },
         "y1e": {
           "$ref": "#/definitions/ChannelWithBase"
+        },
+        "yDomain": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/DomainInterval"
+            },
+            {
+              "$ref": "#/definitions/DomainChrInterval"
+            },
+            {
+              "$ref": "#/definitions/DomainChr"
+            }
+          ]
+        },
+        "yLinkingId": {
+          "type": "string"
         },
         "yOffset": {
           "type": "number"

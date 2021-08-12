@@ -60,9 +60,12 @@ export interface CommonViewDef {
 
     assembly?: Assembly;
 
-    // TODO: Change to domain?
     xDomain?: DomainInterval | DomainChrInterval | DomainChr;
-    linkingId?: string;
+    yDomain?: DomainInterval | DomainChrInterval | DomainChr;
+
+    xLinkingId?: string;
+    yLinkingId?: string;
+
     xAxis?: AxisPosition; // not supported currently
 
     /**

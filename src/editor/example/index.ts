@@ -16,7 +16,7 @@ import { EX_SPEC_GIVE } from './give';
 import { EX_SPEC_CORCES_ET_AL } from './corces';
 import { EX_SPEC_CYTOBANDS } from './ideograms';
 import { EX_SPEC_PILEUP } from './pileup';
-import { EX_SPEC_BAND } from './vertical-band';
+import { EX_SPEC_BAND, EX_SPEC_VERTICAL_BAND } from './vertical-band';
 import { EX_SPEC_TEMPLATE } from './track-template';
 import { EX_SPEC_DEBUG } from './debug';
 
@@ -82,6 +82,13 @@ export const examples: ReadonlyArray<{
         name: 'Basic Example: Circular Overview + Linear Detail Views',
         id: 'CIRCULAR_OVERVIEW_LINEAR_DETAIL',
         spec: EX_SPEC_CIRCULAR_OVERVIEW_LINEAR_DETAIL
+    },
+    {
+        name: 'Basic Example: Vertical Band Connection w/ Independent Axes',
+        id: 'VERTICAL_BAND',
+        spec: EX_SPEC_VERTICAL_BAND,
+        forceShow: true,
+        underDevelopment: true
     },
     {
         name: 'Multi-Scale Sequence Track',
