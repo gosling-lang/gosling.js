@@ -38,7 +38,8 @@ export const examples: ReadonlyArray<{
     {
         name: 'Basic Example: Visual Encoding',
         id: 'VISUAL_ENCODING',
-        spec: EX_SPEC_VISUAL_ENCODING
+        spec: EX_SPEC_VISUAL_ENCODING,
+        forceShow: true
     },
     {
         name: 'Basic Example: Circular Visual Encoding',
