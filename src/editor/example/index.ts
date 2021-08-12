@@ -16,7 +16,7 @@ import { EX_SPEC_GIVE } from './give';
 import { EX_SPEC_CORCES_ET_AL } from './corces';
 import { EX_SPEC_CYTOBANDS } from './ideograms';
 import { EX_SPEC_PILEUP } from './pileup';
-import { EX_SPEC_BAND, EX_SPEC_VERTICAL_BAND } from './vertical-band';
+import { EX_SPEC_BAND } from './vertical-band';
 import { EX_SPEC_TEMPLATE } from './track-template';
 import { EX_SPEC_DEBUG } from './debug';
 
@@ -38,7 +38,8 @@ export const examples: ReadonlyArray<{
     {
         name: 'Basic Example: Visual Encoding',
         id: 'VISUAL_ENCODING',
-        spec: EX_SPEC_VISUAL_ENCODING
+        spec: EX_SPEC_VISUAL_ENCODING,
+        forceShow: true
     },
     {
         name: 'Basic Example: Circular Visual Encoding',
@@ -83,13 +84,13 @@ export const examples: ReadonlyArray<{
         id: 'CIRCULAR_OVERVIEW_LINEAR_DETAIL',
         spec: EX_SPEC_CIRCULAR_OVERVIEW_LINEAR_DETAIL
     },
-    {
-        name: 'Basic Example: Vertical Band Connection w/ Independent Axes',
-        id: 'VERTICAL_BAND',
-        spec: EX_SPEC_VERTICAL_BAND,
-        forceShow: true,
-        underDevelopment: true
-    },
+    // {
+    //     name: 'Basic Example: Vertical Band Connection w/ Independent Axes',
+    //     id: 'VERTICAL_BAND',
+    //     spec: EX_SPEC_VERTICAL_BAND,
+    //     forceShow: true,
+    //     underDevelopment: true
+    // },
     {
         name: 'Multi-Scale Sequence Track',
         id: 'SEQUENCE',
@@ -146,7 +147,8 @@ export const examples: ReadonlyArray<{
         name: 'GIVE (Cao et al. 2018)',
         id: 'GIVE',
         spec: EX_SPEC_GIVE,
-        underDevelopment: true
+        underDevelopment: true,
+        forceShow: true
     },
     {
         name: 'Breast Cancer Variant (Staaf et al. 2019)',

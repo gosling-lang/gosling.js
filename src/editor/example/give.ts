@@ -3,10 +3,11 @@ import { GoslingSpec } from '../../core/gosling.schema';
 export const EX_SPEC_GIVE: GoslingSpec = {
     title: 'GIVE',
     subtitle: 'Reimplementation of GenoCAT examples',
-    spacing: 60,
+    // "spacing": 60,
     arrangement: 'vertical',
     views: [
         {
+            xLinkingId: 'top',
             layout: 'linear',
             tracks: [
                 {
@@ -138,7 +139,14 @@ export const EX_SPEC_GIVE: GoslingSpec = {
                     tracks: [
                         {
                             mark: 'rect',
-                            dataTransform: [{ type: 'filter', field: 'Stain', oneOf: ['acen'], not: true }]
+                            dataTransform: [
+                                {
+                                    type: 'filter',
+                                    field: 'Stain',
+                                    oneOf: ['acen'],
+                                    not: true
+                                }
+                            ]
                         },
                         {
                             mark: 'triangleRight',
@@ -166,7 +174,7 @@ export const EX_SPEC_GIVE: GoslingSpec = {
                     stroke: { value: 'black' },
                     strokeWidth: { value: 0.5 },
                     width: 700,
-                    height: 40
+                    height: 14
                 },
                 {
                     data: {
@@ -178,7 +186,6 @@ export const EX_SPEC_GIVE: GoslingSpec = {
                         genomicFields: ['p1', 'p2'],
                         separator: ' ',
                         longToWideId: 'id'
-                        //sampleLength: 5000
                     },
                     dataTransform: [{ type: 'filter', field: 'chr', oneOf: ['hs17'] }],
                     mark: 'rect',
@@ -218,11 +225,72 @@ export const EX_SPEC_GIVE: GoslingSpec = {
                     size: { value: 14 },
                     overlayOnPreviousTrack: true,
                     width: 700,
-                    height: 40
+                    height: 14
                 }
             ]
         },
         {
+            layout: 'linear',
+            tracks: [
+                {
+                    data: {
+                        url: 'https://raw.githubusercontent.com/vigsterkr/circos/master/data/5/segdup.txt',
+                        type: 'csv',
+                        headerNames: ['id', 'chr', 'p1', 'p2'],
+                        chromosomePrefix: 'hs',
+                        chromosomeField: 'chr',
+                        genomicFields: ['p1', 'p2'],
+                        separator: ' ',
+                        longToWideId: 'id'
+                    },
+                    mark: 'betweenLink',
+                    x: {
+                        field: 'p1',
+                        type: 'genomic',
+                        axis: 'none',
+                        linkingId: 'top'
+                    },
+                    xe: { field: 'p2', type: 'genomic' },
+                    x1: { field: 'p1_2', type: 'genomic', linkingId: 'bottom' },
+                    x1e: { field: 'p2_2', type: 'genomic' },
+                    stroke: {
+                        field: 'chr',
+                        type: 'nominal',
+                        domain: [
+                            'chr1',
+                            'chr2',
+                            'chr3',
+                            'chr4',
+                            'chr5',
+                            'chr6',
+                            'chr7',
+                            'chr8',
+                            'chr9',
+                            'chr10',
+                            'chr11',
+                            'chr12',
+                            'chr13',
+                            'chr14',
+                            'chr15',
+                            'chr16',
+                            'chr17',
+                            'chr18',
+                            'chr19',
+                            'chr20',
+                            'chr21',
+                            'chr22',
+                            'chrX',
+                            'chrY'
+                        ]
+                    },
+                    opacity: { value: 0.5 },
+                    width: 700,
+                    height: 100
+                }
+            ]
+        },
+        {
+            xLinkingId: 'bottom',
             layout: 'linear',
             tracks: [
                 {
@@ -237,7 +305,14 @@ export const EX_SPEC_GIVE: GoslingSpec = {
                     tracks: [
                         {
                             mark: 'rect',
-                            dataTransform: [{ type: 'filter', field: 'Stain', oneOf: ['acen'], not: true }]
+                            dataTransform: [
+                                {
+                                    type: 'filter',
+                                    field: 'Stain',
+                                    oneOf: ['acen'],
+                                    not: true
+                                }
+                            ]
                         },
                         {
                             mark: 'triangleRight',
@@ -254,18 +329,14 @@ export const EX_SPEC_GIVE: GoslingSpec = {
                             ]
                         }
                     ],
-                    x: {
-                        field: 'chromStart',
-                        type: 'genomic',
-                        axis: 'none'
-                    },
+                    x: { field: 'chromStart', type: 'genomic' },
                     xe: { field: 'chromEnd', type: 'genomic' },
                     color: { value: 'white' },
                     size: { value: 14 },
                     stroke: { value: 'black' },
                     strokeWidth: { value: 0.5 },
                     width: 700,
-                    height: 40
+                    height: 14
                 },
                 {
                     data: {
@@ -277,7 +348,6 @@ export const EX_SPEC_GIVE: GoslingSpec = {
                         genomicFields: ['p1', 'p2'],
                         separator: ' ',
                         longToWideId: 'id'
-                        //sampleLength: 5000
                     },
                     dataTransform: [{ type: 'filter', field: 'chr_2', oneOf: ['hs1'] }],
                     mark: 'rect',
@@ -317,7 +387,7 @@ export const EX_SPEC_GIVE: GoslingSpec = {
                     size: { value: 14 },
                     overlayOnPreviousTrack: true,
                     width: 700,
-                    height: 40
+                    height: 14
                 },
                 {
                     data: {
@@ -402,7 +472,10 @@ export const EX_SPEC_GIVE: GoslingSpec = {
                             x: {
                                 field: 'end',
                                 type: 'genomic',
-                                domain: { chromosome: '1', interval: [109000000, 112000000] },
+                                domain: {
+                                    chromosome: '1',
+                                    interval: [109000000, 112000000]
+                                },
                                 axis: 'bottom'
                             },
                             size: { value: 7 }

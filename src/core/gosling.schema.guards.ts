@@ -128,12 +128,20 @@ export function IsTemplateTrack(track: Partial<Track>): track is TemplateTrack {
  * Is this 2D track, i.e., two genomic axes?
  */
 export function Is2DTrack(track: Track) {
+    // TODO: For the readability, use if-else statements.
     return (
         IsSingleTrack(track) &&
-        IsChannelDeep(track['x']) &&
-        track['x'].type === 'genomic' &&
-        IsChannelDeep(track['y']) &&
-        track['y'].type === 'genomic'
+        ((IsChannelDeep(track['x']) &&
+            track['x'].type === 'genomic' &&
+            IsChannelDeep(track['y']) &&
+            track['y'].type === 'genomic') ||
+            (IsChannelDeep(track['x']) &&
+                track['x'].type === 'genomic' &&
+                IsChannelDeep(track['x1']) &&
+                track['x1'].type === 'genomic' &&
+                track['x'].linkingId &&
+                track['x1'].linkingId &&
+                track['x'].linkingId !== track['x1'].linkingId))
     );
 }
 

@@ -64,7 +64,8 @@ export interface CommonViewDef {
     yDomain?: DomainInterval | DomainChrInterval | DomainChr;
 
     xLinkingId?: string;
-    yLinkingId?: string;
+    x1LinkingId?: string; // TODO:
+    yLinkingId?: string; // TODO:
 
     xAxis?: AxisPosition; // not supported currently
 
