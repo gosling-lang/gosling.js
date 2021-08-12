@@ -18,13 +18,16 @@ export type GoslingEmbedOptions = Omit<HiGlassComponentWrapperProps['options'], 
     theme?: Theme;
 };
 
+const MAX_TRIES = 20;
+const INTERVAL = 200; // ms
+
 // https://github.com/higlass/higlass/blob/0299ae1229fb57e0ca8da31dff58003c3e5bf1cf/app/scripts/hglib.js#L37A
 const launchHiglass = (
     element: HTMLElement,
     viewConfig: HiGlassSpec,
     size: { width: number; height: number },
     opts: GoslingEmbedOptions & { background: string }
-) => {
+): Promise<HiGlassApi> => {
     const ref = React.createRef<HiGlassApi>();
     const component = React.createElement(HiGlassComponentWrapper, {
         ref,
@@ -35,7 +38,25 @@ const launchHiglass = (
         options: opts
     });
     ReactDOM.render(component, element);
-    return ref.current!;
+
+    // For some reason our wrapper component fails to initialize the provided `ref`
+    // immediately like `hglib.launch()`. This is a work-around to poll `ref`
+    // until it is initialized by our wrapper. We return a promise for the API once
+    // it is defined or raise an error.
+    // https://github.com/gosling-lang/gosling.js/pull/456#discussion_r687861694
+    return new Promise((resolve, reject) => {
+        let tries = 0;
+        const poll = setInterval(() => {
+            if (ref && ref.current) {
+                clearInterval(poll);
+                resolve(ref.current);
+            }
+            if (tries >= MAX_TRIES) {
+                reject(new Error('Failed to initialize HiGlassApi.'));
+            }
+            tries++;
+        }, INTERVAL);
+    });
 };
 
 /**
@@ -56,8 +77,8 @@ export function embed(element: HTMLElement, spec: GoslingSpec, opts: GoslingEmbe
 
         compile(
             spec,
-            (hsSpec, size) => {
-                const hg = launchHiglass(element, hsSpec, size, options);
+            async (hsSpec, size) => {
+                const hg = await launchHiglass(element, hsSpec, size, options);
                 const api = createApi(hg, hsSpec, theme);
                 resolve(api);
             },
