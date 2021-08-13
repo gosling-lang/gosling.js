@@ -2345,12 +2345,9 @@
         "x1": {
           "$ref": "#/definitions/Channel"
         },
-<<<<<<< HEAD
         "x1LinkingId": {
           "type": "string"
         },
-=======
->>>>>>> c5c9be5 (feat: add explicit PartialTrack def to schema (#466))
         "x1e": {
           "$ref": "#/definitions/Channel"
         },
@@ -2370,12 +2367,9 @@
             }
           ]
         },
-<<<<<<< HEAD
         "xLinkingId": {
           "type": "string"
         },
-=======
->>>>>>> c5c9be5 (feat: add explicit PartialTrack def to schema (#466))
         "xOffset": {
           "type": "number"
         },
@@ -2391,7 +2385,6 @@
         "y1e": {
           "$ref": "#/definitions/Channel"
         },
-<<<<<<< HEAD
         "yDomain": {
           "anyOf": [
             {
@@ -2408,8 +2401,6 @@
         "yLinkingId": {
           "type": "string"
         },
-=======
->>>>>>> c5c9be5 (feat: add explicit PartialTrack def to schema (#466))
         "yOffset": {
           "type": "number"
         },
@@ -2495,12 +2486,6 @@
         "layout": {
           "$ref": "#/definitions/Layout"
         },
-<<<<<<< HEAD
-=======
-        "linkingId": {
-          "type": "string"
-        },
->>>>>>> c5c9be5 (feat: add explicit PartialTrack def to schema (#466))
         "mark": {
           "$ref": "#/definitions/Mark"
         },
@@ -2709,6 +2694,9 @@
                     "x1": {
                       "$ref": "#/definitions/Channel"
                     },
+                    "x1LinkingId": {
+                      "type": "string"
+                    },
                     "x1e": {
                       "$ref": "#/definitions/Channel"
                     },
@@ -2837,6 +2825,7 @@
               "x1": {
                 "$ref": "#/definitions/Channel"
               },
+<<<<<<< HEAD
 <<<<<<< HEAD
               "x1LinkingId": {
                 "type": "string"
@@ -2981,6 +2970,11 @@
               },
 =======
 >>>>>>> c5c9be5 (feat: add explicit PartialTrack def to schema (#466))
+=======
+              "x1LinkingId": {
+                "type": "string"
+              },
+>>>>>>> a901e8d (chore: adjust scales)
               "x1e": {
                 "$ref": "#/definitions/Channel"
               },
@@ -3663,6 +3657,9 @@
                         "x1": {
                           "$ref": "#/definitions/Channel"
                         },
+                        "x1LinkingId": {
+                          "type": "string"
+                        },
                         "x1e": {
                           "$ref": "#/definitions/Channel"
                         },
@@ -3801,6 +3798,9 @@
                   },
                   "x1": {
                     "$ref": "#/definitions/Channel"
+                  },
+                  "x1LinkingId": {
+                    "type": "string"
                   },
                   "x1e": {
                     "$ref": "#/definitions/Channel"
@@ -4279,6 +4279,9 @@
                             "x1": {
                               "$ref": "#/definitions/Channel"
                             },
+                            "x1LinkingId": {
+                              "type": "string"
+                            },
                             "x1e": {
                               "$ref": "#/definitions/Channel"
                             },
@@ -4417,6 +4420,9 @@
                       },
                       "x1": {
                         "$ref": "#/definitions/Channel"
+                      },
+                      "x1LinkingId": {
+                        "type": "string"
                       },
                       "x1e": {
                         "$ref": "#/definitions/Channel"
@@ -5252,6 +5258,9 @@
                         "x1": {
                           "$ref": "#/definitions/Channel"
                         },
+                        "x1LinkingId": {
+                          "type": "string"
+                        },
                         "x1e": {
                           "$ref": "#/definitions/Channel"
                         },
@@ -5390,6 +5399,9 @@
                   },
                   "x1": {
                     "$ref": "#/definitions/Channel"
+                  },
+                  "x1LinkingId": {
+                    "type": "string"
                   },
                   "x1e": {
                     "$ref": "#/definitions/Channel"
