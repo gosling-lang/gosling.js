@@ -27,7 +27,11 @@ type EventMap = PubSubEvent<'mouseover', CommonEventData>;
 // & PubSubEvent<'my-event', { hello: 'world' }> & PubSubEvent<'foo', "bar">;
 
 export interface GoslingApi {
-    on<EventName extends keyof EventMap>(type: EventName, callback: (payload: EventMap[EventName]) => void): void;
+    subscribe<EventName extends keyof EventMap>(
+        type: EventName,
+        callback: (payload: EventMap[EventName]) => void
+    ): void;
+    unsubscribe(tokenOrFunction: string | ((...args: unknown[]) => unknown)): void;
     zoomTo(viewId: string, position: string, duration?: number): void;
     zoomToExtent(viewId: string, duration?: number): void;
     zoomToGene(viewId: string, gene: string, duration?: number): void;
@@ -93,7 +97,7 @@ export function createApi(
         };
     };
     return {
-        on: (type, callback) => {
+        subscribe: (type, callback) => {
             switch (type) {
                 case 'mouseover':
                     return PubSub.subscribe(type, callback);
@@ -102,6 +106,7 @@ export function createApi(
                 }
             }
         },
+        unsubscribe: tokenOrFunction => PubSub.unsubscribe(tokenOrFunction),
         // TODO: Support assemblies (we can infer this from the spec)
         zoomTo: (viewId, position, duration = 1000) => {
             // Accepted input: 'chr1' or 'chr1:1-1000'

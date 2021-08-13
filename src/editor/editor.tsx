@@ -211,7 +211,7 @@ function Editor(props: any) {
     useEffect(() => {
         if (gosRef.current) {
             // Experimental
-            gosRef.current.api.on('mouseover', (/*_: CommonEventData*/) => {
+            gosRef.current.api.subscribe('mouseover', (/*_: CommonEventData*/) => {
                 // console.log('mouseover', _);
             });
         }
