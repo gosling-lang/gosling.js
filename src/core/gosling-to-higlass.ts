@@ -70,7 +70,11 @@ export function goslingToHiGlass(
             height,
             options: {
                 /* Mouse hover position */
-                showMousePosition: firstResolvedSpec.layout === 'circular' ? false : theme.root.showMousePosition, // show mouse position only for linear tracks // TODO: or vertical
+                showMousePosition:
+                    firstResolvedSpec.layout === 'circular' ||
+                    (Is2DTrack(firstResolvedSpec) && firstResolvedSpec.mark === 'betweenLink')
+                        ? false
+                        : theme.root.showMousePosition, // show mouse position only for linear tracks // TODO: or vertical
                 mousePositionColor: theme.root.mousePositionColor,
                 /* Track title */
                 name: firstResolvedSpec.layout === 'linear' ? firstResolvedSpec.title : ' ',

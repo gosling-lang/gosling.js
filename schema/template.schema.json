@@ -1365,6 +1365,9 @@
         "x1": {
           "$ref": "#/definitions/ChannelWithBase"
         },
+        "x1LinkingId": {
+          "type": "string"
+        },
         "x1e": {
           "$ref": "#/definitions/ChannelWithBase"
         },

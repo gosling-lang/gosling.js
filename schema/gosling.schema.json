@@ -553,6 +553,9 @@
         "width": {
           "type": "number"
         },
+        "x1LinkingId": {
+          "type": "string"
+        },
         "xAxis": {
           "$ref": "#/definitions/AxisPosition"
         },
@@ -944,6 +947,9 @@
             "$ref": "#/definitions/Track"
           },
           "type": "array"
+        },
+        "x1LinkingId": {
+          "type": "string"
         },
         "xAxis": {
           "$ref": "#/definitions/AxisPosition"
@@ -1659,6 +1665,9 @@
           },
           "type": "array"
         },
+        "x1LinkingId": {
+          "type": "string"
+        },
         "xAxis": {
           "$ref": "#/definitions/AxisPosition"
         },
@@ -1981,6 +1990,9 @@
               "x1": {
                 "$ref": "#/definitions/Channel"
               },
+              "x1LinkingId": {
+                "type": "string"
+              },
               "x1e": {
                 "$ref": "#/definitions/Channel"
               },
@@ -2116,6 +2128,9 @@
         },
         "x1": {
           "$ref": "#/definitions/Channel"
+        },
+        "x1LinkingId": {
+          "type": "string"
         },
         "x1e": {
           "$ref": "#/definitions/Channel"
@@ -2589,6 +2604,9 @@
               "x1": {
                 "$ref": "#/definitions/Channel"
               },
+              "x1LinkingId": {
+                "type": "string"
+              },
               "x1e": {
                 "$ref": "#/definitions/Channel"
               },
@@ -2727,6 +2745,9 @@
         },
         "x1": {
           "$ref": "#/definitions/Channel"
+        },
+        "x1LinkingId": {
+          "type": "string"
         },
         "x1e": {
           "$ref": "#/definitions/Channel"
@@ -2891,6 +2912,9 @@
             ]
           },
           "type": "array"
+        },
+        "x1LinkingId": {
+          "type": "string"
         },
         "xAxis": {
           "$ref": "#/definitions/AxisPosition"
@@ -3089,6 +3113,9 @@
             },
             "x1": {
               "$ref": "#/definitions/Channel"
+            },
+            "x1LinkingId": {
+              "type": "string"
             },
             "x1e": {
               "$ref": "#/definitions/Channel"
@@ -3314,6 +3341,9 @@
             "x1": {
               "$ref": "#/definitions/Channel"
             },
+            "x1LinkingId": {
+              "type": "string"
+            },
             "x1e": {
               "$ref": "#/definitions/Channel"
             },
@@ -3418,6 +3448,9 @@
                 "$ref": "#/definitions/Track"
               },
               "type": "array"
+            },
+            "x1LinkingId": {
+              "type": "string"
             },
             "xAxis": {
               "$ref": "#/definitions/AxisPosition"
@@ -3603,6 +3636,9 @@
         },
         "x1": {
           "$ref": "#/definitions/Channel"
+        },
+        "x1LinkingId": {
+          "type": "string"
         },
         "x1e": {
           "$ref": "#/definitions/Channel"
@@ -3883,6 +3919,9 @@
         },
         "x1": {
           "$ref": "#/definitions/Channel"
+        },
+        "x1LinkingId": {
+          "type": "string"
         },
         "x1e": {
           "$ref": "#/definitions/Channel"
@@ -4220,6 +4259,9 @@
         },
         "width": {
           "type": "number"
+        },
+        "x1LinkingId": {
+          "type": "string"
         },
         "xAxis": {
           "$ref": "#/definitions/AxisPosition"

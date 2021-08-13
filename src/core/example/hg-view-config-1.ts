@@ -1,1719 +1,1688 @@
 const example = {
-    "compactLayout": false,
-    "trackSourceServers": [],
-    "views": [
-      {
-        "genomePositionSearchBoxVisible": false,
-        "genomePositionSearchBox": {
-          "autocompleteServer": "https://higlass.io/api/v1",
-          "autocompleteId": "P0PLbQMwTYGy-5uPIQid7A",
-          "chromInfoServer": "https://higlass.io/api/v1",
-          "chromInfoId": "hg38"
-        },
-        "layout": {"x": 0, "y": 50, "w": 12, "h": 44},
-        "tracks": {
-          "top": [
-            {
-              "uid": "dbed29d0-fc48-11eb-b136-51c77f658267",
-              "type": "axis-track",
-              "chromInfoPath": "https://s3.amazonaws.com/gosling-lang.org/data/hg38.chrom.sizes",
-              "options": {
-                "layout": "linear",
-                "innerRadius": null,
-                "width": 700,
-                "height": 44,
-                "theme": {
-                  "base": "light",
-                  "root": {
-                    "background": "white",
-                    "titleColor": "black",
-                    "titleBackgroundColor": "transparent",
-                    "titleFontSize": 18,
-                    "titleFontFamily": "Arial",
-                    "titleAlign": "left",
-                    "titleFontWeight": "bold",
-                    "subtitleColor": "gray",
-                    "subtitleBackgroundColor": "transparent",
-                    "subtitleFontSize": 16,
-                    "subtitleFontFamily": "Arial",
-                    "subtitleFontWeight": "normal",
-                    "subtitleAlign": "left",
-                    "mousePositionColor": "#000000"
-                  },
-                  "track": {
-                    "background": "transparent",
-                    "alternatingBackground": "transparent",
-                    "titleColor": "black",
-                    "titleBackground": "white",
-                    "titleFontSize": 24,
-                    "titleAlign": "left",
-                    "outline": "black",
-                    "outlineWidth": 1
-                  },
-                  "legend": {
-                    "position": "top",
-                    "background": "white",
-                    "backgroundOpacity": 0.7,
-                    "labelColor": "black",
-                    "labelFontSize": 12,
-                    "labelFontWeight": "normal",
-                    "labelFontFamily": "Arial",
-                    "backgroundStroke": "#DBDBDB",
-                    "tickColor": "black"
-                  },
-                  "axis": {
-                    "tickColor": "black",
-                    "labelColor": "black",
-                    "labelFontSize": 12,
-                    "labelFontWeight": "normal",
-                    "labelFontFamily": "Arial",
-                    "baselineColor": "black",
-                    "gridColor": "#E3E3E3",
-                    "gridStrokeWidth": 1,
-                    "gridStrokeType": "solid",
-                    "gridStrokeDash": [4, 4]
-                  },
-                  "markCommon": {
-                    "color": "#E79F00",
-                    "size": 1,
-                    "stroke": "black",
-                    "strokeWidth": 0,
-                    "opacity": 1,
-                    "nominalColorRange": [
-                      "#E79F00",
-                      "#029F73",
-                      "#0072B2",
-                      "#CB7AA7",
-                      "#D45E00",
-                      "#57B4E9",
-                      "#EFE441"
-                    ],
-                    "quantitativeSizeRange": [2, 6]
-                  },
-                  "point": {
-                    "color": "#E79F00",
-                    "size": 3,
-                    "stroke": "black",
-                    "strokeWidth": 0,
-                    "opacity": 1,
-                    "nominalColorRange": [
-                      "#E79F00",
-                      "#029F73",
-                      "#0072B2",
-                      "#CB7AA7",
-                      "#D45E00",
-                      "#57B4E9",
-                      "#EFE441"
-                    ],
-                    "quantitativeSizeRange": [2, 6]
-                  },
-                  "rect": {
-                    "color": "#E79F00",
-                    "size": 1,
-                    "stroke": "black",
-                    "strokeWidth": 0,
-                    "opacity": 1,
-                    "nominalColorRange": [
-                      "#E79F00",
-                      "#029F73",
-                      "#0072B2",
-                      "#CB7AA7",
-                      "#D45E00",
-                      "#57B4E9",
-                      "#EFE441"
-                    ],
-                    "quantitativeSizeRange": [2, 6]
-                  },
-                  "triangle": {
-                    "color": "#E79F00",
-                    "size": 1,
-                    "stroke": "black",
-                    "strokeWidth": 0,
-                    "opacity": 1,
-                    "nominalColorRange": [
-                      "#E79F00",
-                      "#029F73",
-                      "#0072B2",
-                      "#CB7AA7",
-                      "#D45E00",
-                      "#57B4E9",
-                      "#EFE441"
-                    ],
-                    "quantitativeSizeRange": [2, 6]
-                  },
-                  "area": {
-                    "color": "#E79F00",
-                    "size": 1,
-                    "stroke": "black",
-                    "strokeWidth": 0,
-                    "opacity": 1,
-                    "nominalColorRange": [
-                      "#E79F00",
-                      "#029F73",
-                      "#0072B2",
-                      "#CB7AA7",
-                      "#D45E00",
-                      "#57B4E9",
-                      "#EFE441"
-                    ],
-                    "quantitativeSizeRange": [2, 6]
-                  },
-                  "line": {
-                    "color": "#E79F00",
-                    "size": 1,
-                    "stroke": "black",
-                    "strokeWidth": 0,
-                    "opacity": 1,
-                    "nominalColorRange": [
-                      "#E79F00",
-                      "#029F73",
-                      "#0072B2",
-                      "#CB7AA7",
-                      "#D45E00",
-                      "#57B4E9",
-                      "#EFE441"
-                    ],
-                    "quantitativeSizeRange": [2, 6]
-                  },
-                  "bar": {
-                    "color": "#E79F00",
-                    "size": 1,
-                    "stroke": "black",
-                    "strokeWidth": 0,
-                    "opacity": 1,
-                    "nominalColorRange": [
-                      "#E79F00",
-                      "#029F73",
-                      "#0072B2",
-                      "#CB7AA7",
-                      "#D45E00",
-                      "#57B4E9",
-                      "#EFE441"
-                    ],
-                    "quantitativeSizeRange": [2, 6]
-                  },
-                  "rule": {
-                    "color": "#E79F00",
-                    "size": 1,
-                    "stroke": "black",
-                    "strokeWidth": 1,
-                    "opacity": 1,
-                    "nominalColorRange": [
-                      "#E79F00",
-                      "#029F73",
-                      "#0072B2",
-                      "#CB7AA7",
-                      "#D45E00",
-                      "#57B4E9",
-                      "#EFE441"
-                    ],
-                    "quantitativeSizeRange": [2, 6]
-                  },
-                  "link": {
-                    "color": "#E79F00",
-                    "size": 1,
-                    "stroke": "black",
-                    "strokeWidth": 1,
-                    "opacity": 1,
-                    "nominalColorRange": [
-                      "#E79F00",
-                      "#029F73",
-                      "#0072B2",
-                      "#CB7AA7",
-                      "#D45E00",
-                      "#57B4E9",
-                      "#EFE441"
-                    ],
-                    "quantitativeSizeRange": [2, 6]
-                  },
-                  "text": {
-                    "color": "#E79F00",
-                    "size": 1,
-                    "stroke": "black",
-                    "strokeWidth": 0,
-                    "opacity": 1,
-                    "nominalColorRange": [
-                      "#E79F00",
-                      "#029F73",
-                      "#0072B2",
-                      "#CB7AA7",
-                      "#D45E00",
-                      "#57B4E9",
-                      "#EFE441"
-                    ],
-                    "quantitativeSizeRange": [2, 6],
-                    "textAnchor": "middle",
-                    "textFontWeight": "normal"
-                  },
-                  "brush": {
-                    "color": "gray",
-                    "size": 1,
-                    "stroke": "black",
-                    "strokeWidth": 1,
-                    "opacity": 0.3,
-                    "nominalColorRange": [
-                      "#E79F00",
-                      "#029F73",
-                      "#0072B2",
-                      "#CB7AA7",
-                      "#D45E00",
-                      "#57B4E9",
-                      "#EFE441"
-                    ],
-                    "quantitativeSizeRange": [2, 6]
-                  }
-                },
-                "assembly": "hg38",
-                "stroke": "transparent",
-                "color": "black",
-                "fontSize": 12,
-                "fontFamily": "Arial",
-                "fontWeight": "normal",
-                "tickColor": "black",
-                "tickFormat": "plain",
-                "tickPositions": "even",
-                "reverseOrientation": false
-              },
-              "height": 30
-            }
-          ],
-          "left": [],
-          "center": [
-            {
-              "type": "combined",
-              "width": 699,
-              "height": 14,
-              "contents": [
-                {
-                  "type": "gosling-track",
-                  "width": 700,
-                  "height": 14,
-                  "options": {
-                    "showMousePosition": true,
-                    "mousePositionColor": "#000000",
-                    "fontSize": 24,
-                    "labelPosition": "none",
-                    "labelShowResolution": false,
-                    "labelColor": "black",
-                    "labelBackgroundColor": "white",
-                    "labelTextOpacity": 1,
-                    "labelLeftMargin": 1,
-                    "labelTopMargin": 1,
-                    "labelRightMargin": 0,
-                    "labelBottomMargin": 0,
-                    "backgroundColor": "transparent",
-                    "spec": {
-                      "data": {
-                        "url": "https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/UCSC.HG38.Human.CytoBandIdeogram.csv",
-                        "type": "csv",
-                        "chromosomeField": "Chromosome",
-                        "genomicFields": ["chromStart", "chromEnd"]
-                      },
-                      "x": {
-                        "field": "chromStart",
-                        "type": "genomic",
-                        "domain": {
-                          "chromosome": "17",
-                          "interval": [20000000, 50000000]
-                        },
-                        "linkingId": "top",
-                        "axis": "top"
-                      },
-                      "xe": {"field": "chromEnd", "type": "genomic"},
-                      "color": {"value": "white"},
-                      "size": {"value": 14},
-                      "stroke": {"value": "black"},
-                      "strokeWidth": {"value": 0.5},
-                      "width": 700,
-                      "height": 44,
-                      "overlay": [
-                        {
-                          "mark": "rect",
-                          "dataTransform": [
-                            {
-                              "type": "filter",
-                              "field": "Stain",
-                              "oneOf": ["acen"],
-                              "not": true
-                            }
-                          ],
-                          "style": {"outlineWidth": 0}
-                        },
-                        {
-                          "mark": "triangleRight",
-                          "dataTransform": [
-                            {
-                              "type": "filter",
-                              "field": "Stain",
-                              "oneOf": ["acen"]
+    compactLayout: false,
+    trackSourceServers: [],
+    views: [
+        {
+            genomePositionSearchBoxVisible: false,
+            genomePositionSearchBox: {
+                autocompleteServer: 'https://higlass.io/api/v1',
+                autocompleteId: 'P0PLbQMwTYGy-5uPIQid7A',
+                chromInfoServer: 'https://higlass.io/api/v1',
+                chromInfoId: 'hg38'
+            },
+            layout: { x: 0, y: 50, w: 12, h: 44 },
+            tracks: {
+                top: [
+                    {
+                        uid: 'dbed29d0-fc48-11eb-b136-51c77f658267',
+                        type: 'axis-track',
+                        chromInfoPath: 'https://s3.amazonaws.com/gosling-lang.org/data/hg38.chrom.sizes',
+                        options: {
+                            layout: 'linear',
+                            innerRadius: null,
+                            width: 400,
+                            height: 44,
+                            theme: {
+                                base: 'light',
+                                root: {
+                                    background: 'white',
+                                    titleColor: 'black',
+                                    titleBackgroundColor: 'transparent',
+                                    titleFontSize: 18,
+                                    titleFontFamily: 'Arial',
+                                    titleAlign: 'left',
+                                    titleFontWeight: 'bold',
+                                    subtitleColor: 'gray',
+                                    subtitleBackgroundColor: 'transparent',
+                                    subtitleFontSize: 16,
+                                    subtitleFontFamily: 'Arial',
+                                    subtitleFontWeight: 'normal',
+                                    subtitleAlign: 'left',
+                                    mousePositionColor: '#000000'
+                                },
+                                track: {
+                                    background: 'transparent',
+                                    alternatingBackground: 'transparent',
+                                    titleColor: 'black',
+                                    titleBackground: 'white',
+                                    titleFontSize: 24,
+                                    titleAlign: 'left',
+                                    outline: 'black',
+                                    outlineWidth: 1
+                                },
+                                legend: {
+                                    position: 'top',
+                                    background: 'white',
+                                    backgroundOpacity: 0.7,
+                                    labelColor: 'black',
+                                    labelFontSize: 12,
+                                    labelFontWeight: 'normal',
+                                    labelFontFamily: 'Arial',
+                                    backgroundStroke: '#DBDBDB',
+                                    tickColor: 'black'
+                                },
+                                axis: {
+                                    tickColor: 'black',
+                                    labelColor: 'black',
+                                    labelFontSize: 12,
+                                    labelFontWeight: 'normal',
+                                    labelFontFamily: 'Arial',
+                                    baselineColor: 'black',
+                                    gridColor: '#E3E3E3',
+                                    gridStrokeWidth: 1,
+                                    gridStrokeType: 'solid',
+                                    gridStrokeDash: [4, 4]
+                                },
+                                markCommon: {
+                                    color: '#E79F00',
+                                    size: 1,
+                                    stroke: 'black',
+                                    strokeWidth: 0,
+                                    opacity: 1,
+                                    nominalColorRange: [
+                                        '#E79F00',
+                                        '#029F73',
+                                        '#0072B2',
+                                        '#CB7AA7',
+                                        '#D45E00',
+                                        '#57B4E9',
+                                        '#EFE441'
+                                    ],
+                                    quantitativeSizeRange: [2, 6]
+                                },
+                                point: {
+                                    color: '#E79F00',
+                                    size: 3,
+                                    stroke: 'black',
+                                    strokeWidth: 0,
+                                    opacity: 1,
+                                    nominalColorRange: [
+                                        '#E79F00',
+                                        '#029F73',
+                                        '#0072B2',
+                                        '#CB7AA7',
+                                        '#D45E00',
+                                        '#57B4E9',
+                                        '#EFE441'
+                                    ],
+                                    quantitativeSizeRange: [2, 6]
+                                },
+                                rect: {
+                                    color: '#E79F00',
+                                    size: 1,
+                                    stroke: 'black',
+                                    strokeWidth: 0,
+                                    opacity: 1,
+                                    nominalColorRange: [
+                                        '#E79F00',
+                                        '#029F73',
+                                        '#0072B2',
+                                        '#CB7AA7',
+                                        '#D45E00',
+                                        '#57B4E9',
+                                        '#EFE441'
+                                    ],
+                                    quantitativeSizeRange: [2, 6]
+                                },
+                                triangle: {
+                                    color: '#E79F00',
+                                    size: 1,
+                                    stroke: 'black',
+                                    strokeWidth: 0,
+                                    opacity: 1,
+                                    nominalColorRange: [
+                                        '#E79F00',
+                                        '#029F73',
+                                        '#0072B2',
+                                        '#CB7AA7',
+                                        '#D45E00',
+                                        '#57B4E9',
+                                        '#EFE441'
+                                    ],
+                                    quantitativeSizeRange: [2, 6]
+                                },
+                                area: {
+                                    color: '#E79F00',
+                                    size: 1,
+                                    stroke: 'black',
+                                    strokeWidth: 0,
+                                    opacity: 1,
+                                    nominalColorRange: [
+                                        '#E79F00',
+                                        '#029F73',
+                                        '#0072B2',
+                                        '#CB7AA7',
+                                        '#D45E00',
+                                        '#57B4E9',
+                                        '#EFE441'
+                                    ],
+                                    quantitativeSizeRange: [2, 6]
+                                },
+                                line: {
+                                    color: '#E79F00',
+                                    size: 1,
+                                    stroke: 'black',
+                                    strokeWidth: 0,
+                                    opacity: 1,
+                                    nominalColorRange: [
+                                        '#E79F00',
+                                        '#029F73',
+                                        '#0072B2',
+                                        '#CB7AA7',
+                                        '#D45E00',
+                                        '#57B4E9',
+                                        '#EFE441'
+                                    ],
+                                    quantitativeSizeRange: [2, 6]
+                                },
+                                bar: {
+                                    color: '#E79F00',
+                                    size: 1,
+                                    stroke: 'black',
+                                    strokeWidth: 0,
+                                    opacity: 1,
+                                    nominalColorRange: [
+                                        '#E79F00',
+                                        '#029F73',
+                                        '#0072B2',
+                                        '#CB7AA7',
+                                        '#D45E00',
+                                        '#57B4E9',
+                                        '#EFE441'
+                                    ],
+                                    quantitativeSizeRange: [2, 6]
+                                },
+                                rule: {
+                                    color: '#E79F00',
+                                    size: 1,
+                                    stroke: 'black',
+                                    strokeWidth: 1,
+                                    opacity: 1,
+                                    nominalColorRange: [
+                                        '#E79F00',
+                                        '#029F73',
+                                        '#0072B2',
+                                        '#CB7AA7',
+                                        '#D45E00',
+                                        '#57B4E9',
+                                        '#EFE441'
+                                    ],
+                                    quantitativeSizeRange: [2, 6]
+                                },
+                                link: {
+                                    color: '#E79F00',
+                                    size: 1,
+                                    stroke: 'black',
+                                    strokeWidth: 1,
+                                    opacity: 1,
+                                    nominalColorRange: [
+                                        '#E79F00',
+                                        '#029F73',
+                                        '#0072B2',
+                                        '#CB7AA7',
+                                        '#D45E00',
+                                        '#57B4E9',
+                                        '#EFE441'
+                                    ],
+                                    quantitativeSizeRange: [2, 6]
+                                },
+                                text: {
+                                    color: '#E79F00',
+                                    size: 1,
+                                    stroke: 'black',
+                                    strokeWidth: 0,
+                                    opacity: 1,
+                                    nominalColorRange: [
+                                        '#E79F00',
+                                        '#029F73',
+                                        '#0072B2',
+                                        '#CB7AA7',
+                                        '#D45E00',
+                                        '#57B4E9',
+                                        '#EFE441'
+                                    ],
+                                    quantitativeSizeRange: [2, 6],
+                                    textAnchor: 'middle',
+                                    textFontWeight: 'normal'
+                                },
+                                brush: {
+                                    color: 'gray',
+                                    size: 1,
+                                    stroke: 'black',
+                                    strokeWidth: 1,
+                                    opacity: 0.3,
+                                    nominalColorRange: [
+                                        '#E79F00',
+                                        '#029F73',
+                                        '#0072B2',
+                                        '#CB7AA7',
+                                        '#D45E00',
+                                        '#57B4E9',
+                                        '#EFE441'
+                                    ],
+                                    quantitativeSizeRange: [2, 6]
+                                }
                             },
-                            {"type": "filter", "field": "Name", "include": "q"}
-                          ],
-                          "style": {"outlineWidth": 0}
+                            assembly: 'hg38',
+                            stroke: 'transparent',
+                            color: 'black',
+                            fontSize: 12,
+                            fontFamily: 'Arial',
+                            fontWeight: 'normal',
+                            tickColor: 'black',
+                            tickFormat: 'plain',
+                            tickPositions: 'even',
+                            reverseOrientation: false
                         },
-                        {
-                          "mark": "triangleLeft",
-                          "dataTransform": [
-                            {
-                              "type": "filter",
-                              "field": "Stain",
-                              "oneOf": ["acen"]
-                            },
-                            {"type": "filter", "field": "Name", "include": "p"}
-                          ],
-                          "style": {"outlineWidth": 0}
-                        }
-                      ],
-                      "assembly": "hg38",
-                      "layout": "linear",
-                      "orientation": "horizontal",
-                      "static": false,
-                      "style": {"outlineWidth": 0},
-                      "overlayOnPreviousTrack": false
-                    },
-                    "theme": {
-                      "base": "light",
-                      "root": {
-                        "background": "white",
-                        "titleColor": "black",
-                        "titleBackgroundColor": "transparent",
-                        "titleFontSize": 18,
-                        "titleFontFamily": "Arial",
-                        "titleAlign": "left",
-                        "titleFontWeight": "bold",
-                        "subtitleColor": "gray",
-                        "subtitleBackgroundColor": "transparent",
-                        "subtitleFontSize": 16,
-                        "subtitleFontFamily": "Arial",
-                        "subtitleFontWeight": "normal",
-                        "subtitleAlign": "left",
-                        "mousePositionColor": "#000000"
-                      },
-                      "track": {
-                        "background": "transparent",
-                        "alternatingBackground": "transparent",
-                        "titleColor": "black",
-                        "titleBackground": "white",
-                        "titleFontSize": 24,
-                        "titleAlign": "left",
-                        "outline": "black",
-                        "outlineWidth": 1
-                      },
-                      "legend": {
-                        "position": "top",
-                        "background": "white",
-                        "backgroundOpacity": 0.7,
-                        "labelColor": "black",
-                        "labelFontSize": 12,
-                        "labelFontWeight": "normal",
-                        "labelFontFamily": "Arial",
-                        "backgroundStroke": "#DBDBDB",
-                        "tickColor": "black"
-                      },
-                      "axis": {
-                        "tickColor": "black",
-                        "labelColor": "black",
-                        "labelFontSize": 12,
-                        "labelFontWeight": "normal",
-                        "labelFontFamily": "Arial",
-                        "baselineColor": "black",
-                        "gridColor": "#E3E3E3",
-                        "gridStrokeWidth": 1,
-                        "gridStrokeType": "solid",
-                        "gridStrokeDash": [4, 4]
-                      },
-                      "markCommon": {
-                        "color": "#E79F00",
-                        "size": 1,
-                        "stroke": "black",
-                        "strokeWidth": 0,
-                        "opacity": 1,
-                        "nominalColorRange": [
-                          "#E79F00",
-                          "#029F73",
-                          "#0072B2",
-                          "#CB7AA7",
-                          "#D45E00",
-                          "#57B4E9",
-                          "#EFE441"
-                        ],
-                        "quantitativeSizeRange": [2, 6]
-                      },
-                      "point": {
-                        "color": "#E79F00",
-                        "size": 3,
-                        "stroke": "black",
-                        "strokeWidth": 0,
-                        "opacity": 1,
-                        "nominalColorRange": [
-                          "#E79F00",
-                          "#029F73",
-                          "#0072B2",
-                          "#CB7AA7",
-                          "#D45E00",
-                          "#57B4E9",
-                          "#EFE441"
-                        ],
-                        "quantitativeSizeRange": [2, 6]
-                      },
-                      "rect": {
-                        "color": "#E79F00",
-                        "size": 1,
-                        "stroke": "black",
-                        "strokeWidth": 0,
-                        "opacity": 1,
-                        "nominalColorRange": [
-                          "#E79F00",
-                          "#029F73",
-                          "#0072B2",
-                          "#CB7AA7",
-                          "#D45E00",
-                          "#57B4E9",
-                          "#EFE441"
-                        ],
-                        "quantitativeSizeRange": [2, 6]
-                      },
-                      "triangle": {
-                        "color": "#E79F00",
-                        "size": 1,
-                        "stroke": "black",
-                        "strokeWidth": 0,
-                        "opacity": 1,
-                        "nominalColorRange": [
-                          "#E79F00",
-                          "#029F73",
-                          "#0072B2",
-                          "#CB7AA7",
-                          "#D45E00",
-                          "#57B4E9",
-                          "#EFE441"
-                        ],
-                        "quantitativeSizeRange": [2, 6]
-                      },
-                      "area": {
-                        "color": "#E79F00",
-                        "size": 1,
-                        "stroke": "black",
-                        "strokeWidth": 0,
-                        "opacity": 1,
-                        "nominalColorRange": [
-                          "#E79F00",
-                          "#029F73",
-                          "#0072B2",
-                          "#CB7AA7",
-                          "#D45E00",
-                          "#57B4E9",
-                          "#EFE441"
-                        ],
-                        "quantitativeSizeRange": [2, 6]
-                      },
-                      "line": {
-                        "color": "#E79F00",
-                        "size": 1,
-                        "stroke": "black",
-                        "strokeWidth": 0,
-                        "opacity": 1,
-                        "nominalColorRange": [
-                          "#E79F00",
-                          "#029F73",
-                          "#0072B2",
-                          "#CB7AA7",
-                          "#D45E00",
-                          "#57B4E9",
-                          "#EFE441"
-                        ],
-                        "quantitativeSizeRange": [2, 6]
-                      },
-                      "bar": {
-                        "color": "#E79F00",
-                        "size": 1,
-                        "stroke": "black",
-                        "strokeWidth": 0,
-                        "opacity": 1,
-                        "nominalColorRange": [
-                          "#E79F00",
-                          "#029F73",
-                          "#0072B2",
-                          "#CB7AA7",
-                          "#D45E00",
-                          "#57B4E9",
-                          "#EFE441"
-                        ],
-                        "quantitativeSizeRange": [2, 6]
-                      },
-                      "rule": {
-                        "color": "#E79F00",
-                        "size": 1,
-                        "stroke": "black",
-                        "strokeWidth": 1,
-                        "opacity": 1,
-                        "nominalColorRange": [
-                          "#E79F00",
-                          "#029F73",
-                          "#0072B2",
-                          "#CB7AA7",
-                          "#D45E00",
-                          "#57B4E9",
-                          "#EFE441"
-                        ],
-                        "quantitativeSizeRange": [2, 6]
-                      },
-                      "link": {
-                        "color": "#E79F00",
-                        "size": 1,
-                        "stroke": "black",
-                        "strokeWidth": 1,
-                        "opacity": 1,
-                        "nominalColorRange": [
-                          "#E79F00",
-                          "#029F73",
-                          "#0072B2",
-                          "#CB7AA7",
-                          "#D45E00",
-                          "#57B4E9",
-                          "#EFE441"
-                        ],
-                        "quantitativeSizeRange": [2, 6]
-                      },
-                      "text": {
-                        "color": "#E79F00",
-                        "size": 1,
-                        "stroke": "black",
-                        "strokeWidth": 0,
-                        "opacity": 1,
-                        "nominalColorRange": [
-                          "#E79F00",
-                          "#029F73",
-                          "#0072B2",
-                          "#CB7AA7",
-                          "#D45E00",
-                          "#57B4E9",
-                          "#EFE441"
-                        ],
-                        "quantitativeSizeRange": [2, 6],
-                        "textAnchor": "middle",
-                        "textFontWeight": "normal"
-                      },
-                      "brush": {
-                        "color": "gray",
-                        "size": 1,
-                        "stroke": "black",
-                        "strokeWidth": 1,
-                        "opacity": 0.3,
-                        "nominalColorRange": [
-                          "#E79F00",
-                          "#029F73",
-                          "#0072B2",
-                          "#CB7AA7",
-                          "#D45E00",
-                          "#57B4E9",
-                          "#EFE441"
-                        ],
-                        "quantitativeSizeRange": [2, 6]
-                      }
+                        height: 30
                     }
-                  },
-                  "data": {
-                    "url": "https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/UCSC.HG38.Human.CytoBandIdeogram.csv",
-                    "type": "csv",
-                    "chromosomeField": "Chromosome",
-                    "genomicFields": ["chromStart", "chromEnd"],
-                    "assembly": "hg38"
-                  }
-                }
-              ]
-            }
-          ],
-          "right": [],
-          "bottom": [],
-          "gallery": [],
-          "whole": []
-        },
-        "initialXDomain": [2510780562, 2540780562],
-        "initialYDomain": [2510780562, 2540780562],
-        "zoomFixed": false,
-        "zoomLimits": [1, null],
-        "uid": "view-1",
-        "chromInfoPath": "https://s3.amazonaws.com/gosling-lang.org/data/hg38.chrom.sizes"
-      },
-      {
-        "genomePositionSearchBoxVisible": false,
-        "genomePositionSearchBox": {
-          "autocompleteServer": "https://higlass.io/api/v1",
-          "autocompleteId": "P0PLbQMwTYGy-5uPIQid7A",
-          "chromInfoServer": "https://higlass.io/api/v1",
-          "chromInfoId": "hg38"
-        },
-        "layout": {"x": 0, "y": 104, "w": 12, "h": 400},
-        "tracks": {
-          "top": [],
-          "left": [],
-          "center": [
-            {
-              "type": "combined",
-              "width": 699,
-              "height": 400,
-              "contents": [
-                {
-                  "type": "gosling-2d-track",
-                  "width": 700,
-                  "height": 400,
-                  "options": {
-                    "showMousePosition": true,
-                    "mousePositionColor": "#000000",
-                    "fontSize": 24,
-                    "labelPosition": "none",
-                    "labelShowResolution": false,
-                    "labelColor": "black",
-                    "labelBackgroundColor": "white",
-                    "labelTextOpacity": 1,
-                    "labelLeftMargin": 1,
-                    "labelTopMargin": 1,
-                    "labelRightMargin": 0,
-                    "labelBottomMargin": 0,
-                    "backgroundColor": "transparent",
-                    "spec": {
-                      "layout": "linear",
-                      "xDomain": {"chromosome": "1"},
-                      "assembly": "hg38",
-                      "orientation": "horizontal",
-                      "static": false,
-                      "centerRadius": 0.3,
-                      "xOffset": 0,
-                      "yOffset": 0,
-                      "style": {"outlineWidth": 0},
-                      "data": {
-                        "url": "https://raw.githubusercontent.com/vigsterkr/circos/master/data/5/segdup.txt",
-                        "type": "csv",
-                        "headerNames": ["id", "chr", "p1", "p2"],
-                        "chromosomePrefix": "hs",
-                        "chromosomeField": "chr",
-                        "genomicFields": ["p1", "p2"],
-                        "separator": " ",
-                        "longToWideId": "id"
-                      },
-                      "mark": "betweenLink",
-                      "x": {
-                        "field": "p1",
-                        "type": "genomic",
-                        "axis": "none",
-                        "linkingId": "top",
-                        "domain": {"chromosome": "1"}
-                      },
-                      "xe": {"field": "p2", "type": "genomic"},
-                      "x1": {
-                        "field": "p1_2",
-                        "type": "genomic",
-                        "linkingId": "bottom"
-                      },
-                      "x1e": {"field": "p2_2", "type": "genomic"},
-                      "stroke": {
-                        "field": "chr",
-                        "type": "nominal",
-                        "domain": [
-                          "chr1",
-                          "chr2",
-                          "chr3",
-                          "chr4",
-                          "chr5",
-                          "chr6",
-                          "chr7",
-                          "chr8",
-                          "chr9",
-                          "chr10",
-                          "chr11",
-                          "chr12",
-                          "chr13",
-                          "chr14",
-                          "chr15",
-                          "chr16",
-                          "chr17",
-                          "chr18",
-                          "chr19",
-                          "chr20",
-                          "chr21",
-                          "chr22",
-                          "chrX",
-                          "chrY"
+                ],
+                left: [],
+                center: [
+                    {
+                        type: 'combined',
+                        width: 399,
+                        height: 14,
+                        contents: [
+                            {
+                                type: 'gosling-track',
+                                width: 400,
+                                height: 14,
+                                options: {
+                                    showMousePosition: true,
+                                    mousePositionColor: '#000000',
+                                    fontSize: 24,
+                                    labelPosition: 'none',
+                                    labelShowResolution: false,
+                                    labelColor: 'black',
+                                    labelBackgroundColor: 'white',
+                                    labelTextOpacity: 1,
+                                    labelLeftMargin: 1,
+                                    labelTopMargin: 1,
+                                    labelRightMargin: 0,
+                                    labelBottomMargin: 0,
+                                    backgroundColor: 'transparent',
+                                    spec: {
+                                        data: {
+                                            url:
+                                                'https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/UCSC.HG38.Human.CytoBandIdeogram.csv',
+                                            type: 'csv',
+                                            chromosomeField: 'Chromosome',
+                                            genomicFields: ['chromStart', 'chromEnd']
+                                        },
+                                        x: {
+                                            field: 'chromStart',
+                                            type: 'genomic',
+                                            domain: {
+                                                chromosome: '17',
+                                                interval: [20000000, 50000000]
+                                            },
+                                            linkingId: 'top',
+                                            axis: 'top'
+                                        },
+                                        xe: { field: 'chromEnd', type: 'genomic' },
+                                        color: { value: 'white' },
+                                        size: { value: 14 },
+                                        stroke: { value: 'black' },
+                                        strokeWidth: { value: 0.5 },
+                                        width: 400,
+                                        height: 44,
+                                        overlay: [
+                                            {
+                                                mark: 'rect',
+                                                dataTransform: [
+                                                    {
+                                                        type: 'filter',
+                                                        field: 'Stain',
+                                                        oneOf: ['acen'],
+                                                        not: true
+                                                    }
+                                                ],
+                                                style: { outlineWidth: 0 }
+                                            },
+                                            {
+                                                mark: 'triangleRight',
+                                                dataTransform: [
+                                                    {
+                                                        type: 'filter',
+                                                        field: 'Stain',
+                                                        oneOf: ['acen']
+                                                    },
+                                                    { type: 'filter', field: 'Name', include: 'q' }
+                                                ],
+                                                style: { outlineWidth: 0 }
+                                            },
+                                            {
+                                                mark: 'triangleLeft',
+                                                dataTransform: [
+                                                    {
+                                                        type: 'filter',
+                                                        field: 'Stain',
+                                                        oneOf: ['acen']
+                                                    },
+                                                    { type: 'filter', field: 'Name', include: 'p' }
+                                                ],
+                                                style: { outlineWidth: 0 }
+                                            }
+                                        ],
+                                        assembly: 'hg38',
+                                        layout: 'linear',
+                                        orientation: 'horizontal',
+                                        static: false,
+                                        style: { outlineWidth: 0 },
+                                        overlayOnPreviousTrack: false
+                                    },
+                                    theme: {
+                                        base: 'light',
+                                        root: {
+                                            background: 'white',
+                                            titleColor: 'black',
+                                            titleBackgroundColor: 'transparent',
+                                            titleFontSize: 18,
+                                            titleFontFamily: 'Arial',
+                                            titleAlign: 'left',
+                                            titleFontWeight: 'bold',
+                                            subtitleColor: 'gray',
+                                            subtitleBackgroundColor: 'transparent',
+                                            subtitleFontSize: 16,
+                                            subtitleFontFamily: 'Arial',
+                                            subtitleFontWeight: 'normal',
+                                            subtitleAlign: 'left',
+                                            mousePositionColor: '#000000'
+                                        },
+                                        track: {
+                                            background: 'transparent',
+                                            alternatingBackground: 'transparent',
+                                            titleColor: 'black',
+                                            titleBackground: 'white',
+                                            titleFontSize: 24,
+                                            titleAlign: 'left',
+                                            outline: 'black',
+                                            outlineWidth: 1
+                                        },
+                                        legend: {
+                                            position: 'top',
+                                            background: 'white',
+                                            backgroundOpacity: 0.7,
+                                            labelColor: 'black',
+                                            labelFontSize: 12,
+                                            labelFontWeight: 'normal',
+                                            labelFontFamily: 'Arial',
+                                            backgroundStroke: '#DBDBDB',
+                                            tickColor: 'black'
+                                        },
+                                        axis: {
+                                            tickColor: 'black',
+                                            labelColor: 'black',
+                                            labelFontSize: 12,
+                                            labelFontWeight: 'normal',
+                                            labelFontFamily: 'Arial',
+                                            baselineColor: 'black',
+                                            gridColor: '#E3E3E3',
+                                            gridStrokeWidth: 1,
+                                            gridStrokeType: 'solid',
+                                            gridStrokeDash: [4, 4]
+                                        },
+                                        markCommon: {
+                                            color: '#E79F00',
+                                            size: 1,
+                                            stroke: 'black',
+                                            strokeWidth: 0,
+                                            opacity: 1,
+                                            nominalColorRange: [
+                                                '#E79F00',
+                                                '#029F73',
+                                                '#0072B2',
+                                                '#CB7AA7',
+                                                '#D45E00',
+                                                '#57B4E9',
+                                                '#EFE441'
+                                            ],
+                                            quantitativeSizeRange: [2, 6]
+                                        },
+                                        point: {
+                                            color: '#E79F00',
+                                            size: 3,
+                                            stroke: 'black',
+                                            strokeWidth: 0,
+                                            opacity: 1,
+                                            nominalColorRange: [
+                                                '#E79F00',
+                                                '#029F73',
+                                                '#0072B2',
+                                                '#CB7AA7',
+                                                '#D45E00',
+                                                '#57B4E9',
+                                                '#EFE441'
+                                            ],
+                                            quantitativeSizeRange: [2, 6]
+                                        },
+                                        rect: {
+                                            color: '#E79F00',
+                                            size: 1,
+                                            stroke: 'black',
+                                            strokeWidth: 0,
+                                            opacity: 1,
+                                            nominalColorRange: [
+                                                '#E79F00',
+                                                '#029F73',
+                                                '#0072B2',
+                                                '#CB7AA7',
+                                                '#D45E00',
+                                                '#57B4E9',
+                                                '#EFE441'
+                                            ],
+                                            quantitativeSizeRange: [2, 6]
+                                        },
+                                        triangle: {
+                                            color: '#E79F00',
+                                            size: 1,
+                                            stroke: 'black',
+                                            strokeWidth: 0,
+                                            opacity: 1,
+                                            nominalColorRange: [
+                                                '#E79F00',
+                                                '#029F73',
+                                                '#0072B2',
+                                                '#CB7AA7',
+                                                '#D45E00',
+                                                '#57B4E9',
+                                                '#EFE441'
+                                            ],
+                                            quantitativeSizeRange: [2, 6]
+                                        },
+                                        area: {
+                                            color: '#E79F00',
+                                            size: 1,
+                                            stroke: 'black',
+                                            strokeWidth: 0,
+                                            opacity: 1,
+                                            nominalColorRange: [
+                                                '#E79F00',
+                                                '#029F73',
+                                                '#0072B2',
+                                                '#CB7AA7',
+                                                '#D45E00',
+                                                '#57B4E9',
+                                                '#EFE441'
+                                            ],
+                                            quantitativeSizeRange: [2, 6]
+                                        },
+                                        line: {
+                                            color: '#E79F00',
+                                            size: 1,
+                                            stroke: 'black',
+                                            strokeWidth: 0,
+                                            opacity: 1,
+                                            nominalColorRange: [
+                                                '#E79F00',
+                                                '#029F73',
+                                                '#0072B2',
+                                                '#CB7AA7',
+                                                '#D45E00',
+                                                '#57B4E9',
+                                                '#EFE441'
+                                            ],
+                                            quantitativeSizeRange: [2, 6]
+                                        },
+                                        bar: {
+                                            color: '#E79F00',
+                                            size: 1,
+                                            stroke: 'black',
+                                            strokeWidth: 0,
+                                            opacity: 1,
+                                            nominalColorRange: [
+                                                '#E79F00',
+                                                '#029F73',
+                                                '#0072B2',
+                                                '#CB7AA7',
+                                                '#D45E00',
+                                                '#57B4E9',
+                                                '#EFE441'
+                                            ],
+                                            quantitativeSizeRange: [2, 6]
+                                        },
+                                        rule: {
+                                            color: '#E79F00',
+                                            size: 1,
+                                            stroke: 'black',
+                                            strokeWidth: 1,
+                                            opacity: 1,
+                                            nominalColorRange: [
+                                                '#E79F00',
+                                                '#029F73',
+                                                '#0072B2',
+                                                '#CB7AA7',
+                                                '#D45E00',
+                                                '#57B4E9',
+                                                '#EFE441'
+                                            ],
+                                            quantitativeSizeRange: [2, 6]
+                                        },
+                                        link: {
+                                            color: '#E79F00',
+                                            size: 1,
+                                            stroke: 'black',
+                                            strokeWidth: 1,
+                                            opacity: 1,
+                                            nominalColorRange: [
+                                                '#E79F00',
+                                                '#029F73',
+                                                '#0072B2',
+                                                '#CB7AA7',
+                                                '#D45E00',
+                                                '#57B4E9',
+                                                '#EFE441'
+                                            ],
+                                            quantitativeSizeRange: [2, 6]
+                                        },
+                                        text: {
+                                            color: '#E79F00',
+                                            size: 1,
+                                            stroke: 'black',
+                                            strokeWidth: 0,
+                                            opacity: 1,
+                                            nominalColorRange: [
+                                                '#E79F00',
+                                                '#029F73',
+                                                '#0072B2',
+                                                '#CB7AA7',
+                                                '#D45E00',
+                                                '#57B4E9',
+                                                '#EFE441'
+                                            ],
+                                            quantitativeSizeRange: [2, 6],
+                                            textAnchor: 'middle',
+                                            textFontWeight: 'normal'
+                                        },
+                                        brush: {
+                                            color: 'gray',
+                                            size: 1,
+                                            stroke: 'black',
+                                            strokeWidth: 1,
+                                            opacity: 0.3,
+                                            nominalColorRange: [
+                                                '#E79F00',
+                                                '#029F73',
+                                                '#0072B2',
+                                                '#CB7AA7',
+                                                '#D45E00',
+                                                '#57B4E9',
+                                                '#EFE441'
+                                            ],
+                                            quantitativeSizeRange: [2, 6]
+                                        }
+                                    }
+                                },
+                                data: {
+                                    url:
+                                        'https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/UCSC.HG38.Human.CytoBandIdeogram.csv',
+                                    type: 'csv',
+                                    chromosomeField: 'Chromosome',
+                                    genomicFields: ['chromStart', 'chromEnd'],
+                                    assembly: 'hg38'
+                                }
+                            }
                         ]
-                      },
-                      "opacity": {"value": 0.5},
-                      "width": 700,
-                      "height": 400,
-                      "overlayOnPreviousTrack": false
-                    },
-                    "theme": {
-                      "base": "light",
-                      "root": {
-                        "background": "white",
-                        "titleColor": "black",
-                        "titleBackgroundColor": "transparent",
-                        "titleFontSize": 18,
-                        "titleFontFamily": "Arial",
-                        "titleAlign": "left",
-                        "titleFontWeight": "bold",
-                        "subtitleColor": "gray",
-                        "subtitleBackgroundColor": "transparent",
-                        "subtitleFontSize": 16,
-                        "subtitleFontFamily": "Arial",
-                        "subtitleFontWeight": "normal",
-                        "subtitleAlign": "left",
-                        "mousePositionColor": "#000000"
-                      },
-                      "track": {
-                        "background": "transparent",
-                        "alternatingBackground": "transparent",
-                        "titleColor": "black",
-                        "titleBackground": "white",
-                        "titleFontSize": 24,
-                        "titleAlign": "left",
-                        "outline": "black",
-                        "outlineWidth": 1
-                      },
-                      "legend": {
-                        "position": "top",
-                        "background": "white",
-                        "backgroundOpacity": 0.7,
-                        "labelColor": "black",
-                        "labelFontSize": 12,
-                        "labelFontWeight": "normal",
-                        "labelFontFamily": "Arial",
-                        "backgroundStroke": "#DBDBDB",
-                        "tickColor": "black"
-                      },
-                      "axis": {
-                        "tickColor": "black",
-                        "labelColor": "black",
-                        "labelFontSize": 12,
-                        "labelFontWeight": "normal",
-                        "labelFontFamily": "Arial",
-                        "baselineColor": "black",
-                        "gridColor": "#E3E3E3",
-                        "gridStrokeWidth": 1,
-                        "gridStrokeType": "solid",
-                        "gridStrokeDash": [4, 4]
-                      },
-                      "markCommon": {
-                        "color": "#E79F00",
-                        "size": 1,
-                        "stroke": "black",
-                        "strokeWidth": 0,
-                        "opacity": 1,
-                        "nominalColorRange": [
-                          "#E79F00",
-                          "#029F73",
-                          "#0072B2",
-                          "#CB7AA7",
-                          "#D45E00",
-                          "#57B4E9",
-                          "#EFE441"
-                        ],
-                        "quantitativeSizeRange": [2, 6]
-                      },
-                      "point": {
-                        "color": "#E79F00",
-                        "size": 3,
-                        "stroke": "black",
-                        "strokeWidth": 0,
-                        "opacity": 1,
-                        "nominalColorRange": [
-                          "#E79F00",
-                          "#029F73",
-                          "#0072B2",
-                          "#CB7AA7",
-                          "#D45E00",
-                          "#57B4E9",
-                          "#EFE441"
-                        ],
-                        "quantitativeSizeRange": [2, 6]
-                      },
-                      "rect": {
-                        "color": "#E79F00",
-                        "size": 1,
-                        "stroke": "black",
-                        "strokeWidth": 0,
-                        "opacity": 1,
-                        "nominalColorRange": [
-                          "#E79F00",
-                          "#029F73",
-                          "#0072B2",
-                          "#CB7AA7",
-                          "#D45E00",
-                          "#57B4E9",
-                          "#EFE441"
-                        ],
-                        "quantitativeSizeRange": [2, 6]
-                      },
-                      "triangle": {
-                        "color": "#E79F00",
-                        "size": 1,
-                        "stroke": "black",
-                        "strokeWidth": 0,
-                        "opacity": 1,
-                        "nominalColorRange": [
-                          "#E79F00",
-                          "#029F73",
-                          "#0072B2",
-                          "#CB7AA7",
-                          "#D45E00",
-                          "#57B4E9",
-                          "#EFE441"
-                        ],
-                        "quantitativeSizeRange": [2, 6]
-                      },
-                      "area": {
-                        "color": "#E79F00",
-                        "size": 1,
-                        "stroke": "black",
-                        "strokeWidth": 0,
-                        "opacity": 1,
-                        "nominalColorRange": [
-                          "#E79F00",
-                          "#029F73",
-                          "#0072B2",
-                          "#CB7AA7",
-                          "#D45E00",
-                          "#57B4E9",
-                          "#EFE441"
-                        ],
-                        "quantitativeSizeRange": [2, 6]
-                      },
-                      "line": {
-                        "color": "#E79F00",
-                        "size": 1,
-                        "stroke": "black",
-                        "strokeWidth": 0,
-                        "opacity": 1,
-                        "nominalColorRange": [
-                          "#E79F00",
-                          "#029F73",
-                          "#0072B2",
-                          "#CB7AA7",
-                          "#D45E00",
-                          "#57B4E9",
-                          "#EFE441"
-                        ],
-                        "quantitativeSizeRange": [2, 6]
-                      },
-                      "bar": {
-                        "color": "#E79F00",
-                        "size": 1,
-                        "stroke": "black",
-                        "strokeWidth": 0,
-                        "opacity": 1,
-                        "nominalColorRange": [
-                          "#E79F00",
-                          "#029F73",
-                          "#0072B2",
-                          "#CB7AA7",
-                          "#D45E00",
-                          "#57B4E9",
-                          "#EFE441"
-                        ],
-                        "quantitativeSizeRange": [2, 6]
-                      },
-                      "rule": {
-                        "color": "#E79F00",
-                        "size": 1,
-                        "stroke": "black",
-                        "strokeWidth": 1,
-                        "opacity": 1,
-                        "nominalColorRange": [
-                          "#E79F00",
-                          "#029F73",
-                          "#0072B2",
-                          "#CB7AA7",
-                          "#D45E00",
-                          "#57B4E9",
-                          "#EFE441"
-                        ],
-                        "quantitativeSizeRange": [2, 6]
-                      },
-                      "link": {
-                        "color": "#E79F00",
-                        "size": 1,
-                        "stroke": "black",
-                        "strokeWidth": 1,
-                        "opacity": 1,
-                        "nominalColorRange": [
-                          "#E79F00",
-                          "#029F73",
-                          "#0072B2",
-                          "#CB7AA7",
-                          "#D45E00",
-                          "#57B4E9",
-                          "#EFE441"
-                        ],
-                        "quantitativeSizeRange": [2, 6]
-                      },
-                      "text": {
-                        "color": "#E79F00",
-                        "size": 1,
-                        "stroke": "black",
-                        "strokeWidth": 0,
-                        "opacity": 1,
-                        "nominalColorRange": [
-                          "#E79F00",
-                          "#029F73",
-                          "#0072B2",
-                          "#CB7AA7",
-                          "#D45E00",
-                          "#57B4E9",
-                          "#EFE441"
-                        ],
-                        "quantitativeSizeRange": [2, 6],
-                        "textAnchor": "middle",
-                        "textFontWeight": "normal"
-                      },
-                      "brush": {
-                        "color": "gray",
-                        "size": 1,
-                        "stroke": "black",
-                        "strokeWidth": 1,
-                        "opacity": 0.3,
-                        "nominalColorRange": [
-                          "#E79F00",
-                          "#029F73",
-                          "#0072B2",
-                          "#CB7AA7",
-                          "#D45E00",
-                          "#57B4E9",
-                          "#EFE441"
-                        ],
-                        "quantitativeSizeRange": [2, 6]
-                      }
                     }
-                  },
-                  "data": {
-                    "url": "https://raw.githubusercontent.com/vigsterkr/circos/master/data/5/segdup.txt",
-                    "type": "csv",
-                    "headerNames": ["id", "chr", "p1", "p2"],
-                    "chromosomePrefix": "hs",
-                    "chromosomeField": "chr",
-                    "genomicFields": ["p1", "p2"],
-                    "separator": " ",
-                    "longToWideId": "id",
-                    "assembly": "hg38"
-                  }
-                }
-              ]
-            }
-          ],
-          "right": [],
-          "bottom": [],
-          "gallery": [],
-          "whole": []
+                ],
+                right: [],
+                bottom: [],
+                gallery: [],
+                whole: []
+            },
+            initialXDomain: [2510780562, 2540780562],
+            initialYDomain: [2510780562, 2540780562],
+            zoomFixed: false,
+            zoomLimits: [1, null],
+            uid: 'view-1',
+            chromInfoPath: 'https://s3.amazonaws.com/gosling-lang.org/data/hg38.chrom.sizes'
         },
-        "initialXDomain": [1, 248956422],
-        "initialYDomain": [0, 3088269832],
-        "zoomFixed": false,
-        "zoomLimits": [1, null],
-        "uid": "view-2",
-        "chromInfoPath": "https://s3.amazonaws.com/gosling-lang.org/data/hg38.chrom.sizes"
-      },
-      {
-        "genomePositionSearchBoxVisible": false,
-        "genomePositionSearchBox": {
-          "autocompleteServer": "https://higlass.io/api/v1",
-          "autocompleteId": "P0PLbQMwTYGy-5uPIQid7A",
-          "chromInfoServer": "https://higlass.io/api/v1",
-          "chromInfoId": "hg38"
-        },
-        "layout": {"x": 0, "y": 514, "w": 12, "h": 44},
-        "tracks": {
-          "top": [],
-          "left": [],
-          "center": [
-            {
-              "type": "combined",
-              "width": 699,
-              "height": 14,
-              "contents": [
-                {
-                  "type": "gosling-track",
-                  "width": 700,
-                  "height": 14,
-                  "options": {
-                    "showMousePosition": true,
-                    "mousePositionColor": "#000000",
-                    "fontSize": 24,
-                    "labelPosition": "none",
-                    "labelShowResolution": false,
-                    "labelColor": "black",
-                    "labelBackgroundColor": "white",
-                    "labelTextOpacity": 1,
-                    "labelLeftMargin": 1,
-                    "labelTopMargin": 1,
-                    "labelRightMargin": 0,
-                    "labelBottomMargin": 0,
-                    "backgroundColor": "transparent",
-                    "spec": {
-                      "data": {
-                        "url": "https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/UCSC.HG38.Human.CytoBandIdeogram.csv",
-                        "type": "csv",
-                        "chromosomeField": "Chromosome",
-                        "genomicFields": ["chromStart", "chromEnd"]
-                      },
-                      "x": {
-                        "field": "chromStart",
-                        "type": "genomic",
-                        "axis": "bottom",
-                        "domain": {"chromosome": "3"},
-                        "linkingId": "bottom"
-                      },
-                      "xe": {"field": "chromEnd", "type": "genomic"},
-                      "color": {"value": "white"},
-                      "size": {"value": 14},
-                      "stroke": {"value": "black"},
-                      "strokeWidth": {"value": 0.5},
-                      "width": 700,
-                      "height": 44,
-                      "overlay": [
-                        {
-                          "mark": "rect",
-                          "dataTransform": [
+        {
+            genomePositionSearchBoxVisible: false,
+            genomePositionSearchBox: {
+                autocompleteServer: 'https://higlass.io/api/v1',
+                autocompleteId: 'P0PLbQMwTYGy-5uPIQid7A',
+                chromInfoServer: 'https://higlass.io/api/v1',
+                chromInfoId: 'hg38'
+            },
+            layout: { x: 0, y: 104, w: 12, h: 400 },
+            tracks: {
+                top: [],
+                left: [],
+                center: [
+                    {
+                        type: 'combined',
+                        width: 399,
+                        height: 400,
+                        contents: [
                             {
-                              "type": "filter",
-                              "field": "Stain",
-                              "oneOf": ["acen"],
-                              "not": true
+                                type: 'gosling-2d-track',
+                                width: 400,
+                                height: 400,
+                                options: {
+                                    showMousePosition: true,
+                                    mousePositionColor: '#000000',
+                                    fontSize: 24,
+                                    labelPosition: 'none',
+                                    labelShowResolution: false,
+                                    labelColor: 'black',
+                                    labelBackgroundColor: 'white',
+                                    labelTextOpacity: 1,
+                                    labelLeftMargin: 1,
+                                    labelTopMargin: 1,
+                                    labelRightMargin: 0,
+                                    labelBottomMargin: 0,
+                                    backgroundColor: 'transparent',
+                                    spec: {
+                                        layout: 'linear',
+                                        xDomain: { chromosome: '1' },
+                                        assembly: 'hg38',
+                                        orientation: 'horizontal',
+                                        static: false,
+                                        centerRadius: 0.3,
+                                        xOffset: 0,
+                                        yOffset: 0,
+                                        style: { outlineWidth: 0 },
+                                        data: {
+                                            url:
+                                                'https://raw.githubusercontent.com/vigsterkr/circos/master/data/5/segdup.txt',
+                                            type: 'csv',
+                                            headerNames: ['id', 'chr', 'p1', 'p2'],
+                                            chromosomePrefix: 'hs',
+                                            chromosomeField: 'chr',
+                                            genomicFields: ['p1', 'p2'],
+                                            separator: ' ',
+                                            longToWideId: 'id'
+                                        },
+                                        mark: 'betweenLink',
+                                        x: {
+                                            field: 'p1',
+                                            type: 'genomic',
+                                            axis: 'none',
+                                            linkingId: 'top',
+                                            domain: { chromosome: '1' }
+                                        },
+                                        xe: { field: 'p2', type: 'genomic' },
+                                        x1: {
+                                            field: 'p1_2',
+                                            type: 'genomic',
+                                            linkingId: 'bottom'
+                                        },
+                                        x1e: { field: 'p2_2', type: 'genomic' },
+                                        stroke: {
+                                            field: 'chr',
+                                            type: 'nominal',
+                                            domain: [
+                                                'chr1',
+                                                'chr2',
+                                                'chr3',
+                                                'chr4',
+                                                'chr5',
+                                                'chr6',
+                                                'chr7',
+                                                'chr8',
+                                                'chr9',
+                                                'chr10',
+                                                'chr11',
+                                                'chr12',
+                                                'chr13',
+                                                'chr14',
+                                                'chr15',
+                                                'chr16',
+                                                'chr17',
+                                                'chr18',
+                                                'chr19',
+                                                'chr20',
+                                                'chr21',
+                                                'chr22',
+                                                'chrX',
+                                                'chrY'
+                                            ]
+                                        },
+                                        opacity: { value: 0.5 },
+                                        width: 400,
+                                        height: 400,
+                                        overlayOnPreviousTrack: false
+                                    },
+                                    theme: {
+                                        base: 'light',
+                                        root: {
+                                            background: 'white',
+                                            titleColor: 'black',
+                                            titleBackgroundColor: 'transparent',
+                                            titleFontSize: 18,
+                                            titleFontFamily: 'Arial',
+                                            titleAlign: 'left',
+                                            titleFontWeight: 'bold',
+                                            subtitleColor: 'gray',
+                                            subtitleBackgroundColor: 'transparent',
+                                            subtitleFontSize: 16,
+                                            subtitleFontFamily: 'Arial',
+                                            subtitleFontWeight: 'normal',
+                                            subtitleAlign: 'left',
+                                            mousePositionColor: '#000000'
+                                        },
+                                        track: {
+                                            background: 'transparent',
+                                            alternatingBackground: 'transparent',
+                                            titleColor: 'black',
+                                            titleBackground: 'white',
+                                            titleFontSize: 24,
+                                            titleAlign: 'left',
+                                            outline: 'black',
+                                            outlineWidth: 1
+                                        },
+                                        legend: {
+                                            position: 'top',
+                                            background: 'white',
+                                            backgroundOpacity: 0.7,
+                                            labelColor: 'black',
+                                            labelFontSize: 12,
+                                            labelFontWeight: 'normal',
+                                            labelFontFamily: 'Arial',
+                                            backgroundStroke: '#DBDBDB',
+                                            tickColor: 'black'
+                                        },
+                                        axis: {
+                                            tickColor: 'black',
+                                            labelColor: 'black',
+                                            labelFontSize: 12,
+                                            labelFontWeight: 'normal',
+                                            labelFontFamily: 'Arial',
+                                            baselineColor: 'black',
+                                            gridColor: '#E3E3E3',
+                                            gridStrokeWidth: 1,
+                                            gridStrokeType: 'solid',
+                                            gridStrokeDash: [4, 4]
+                                        },
+                                        markCommon: {
+                                            color: '#E79F00',
+                                            size: 1,
+                                            stroke: 'black',
+                                            strokeWidth: 0,
+                                            opacity: 1,
+                                            nominalColorRange: [
+                                                '#E79F00',
+                                                '#029F73',
+                                                '#0072B2',
+                                                '#CB7AA7',
+                                                '#D45E00',
+                                                '#57B4E9',
+                                                '#EFE441'
+                                            ],
+                                            quantitativeSizeRange: [2, 6]
+                                        },
+                                        point: {
+                                            color: '#E79F00',
+                                            size: 3,
+                                            stroke: 'black',
+                                            strokeWidth: 0,
+                                            opacity: 1,
+                                            nominalColorRange: [
+                                                '#E79F00',
+                                                '#029F73',
+                                                '#0072B2',
+                                                '#CB7AA7',
+                                                '#D45E00',
+                                                '#57B4E9',
+                                                '#EFE441'
+                                            ],
+                                            quantitativeSizeRange: [2, 6]
+                                        },
+                                        rect: {
+                                            color: '#E79F00',
+                                            size: 1,
+                                            stroke: 'black',
+                                            strokeWidth: 0,
+                                            opacity: 1,
+                                            nominalColorRange: [
+                                                '#E79F00',
+                                                '#029F73',
+                                                '#0072B2',
+                                                '#CB7AA7',
+                                                '#D45E00',
+                                                '#57B4E9',
+                                                '#EFE441'
+                                            ],
+                                            quantitativeSizeRange: [2, 6]
+                                        },
+                                        triangle: {
+                                            color: '#E79F00',
+                                            size: 1,
+                                            stroke: 'black',
+                                            strokeWidth: 0,
+                                            opacity: 1,
+                                            nominalColorRange: [
+                                                '#E79F00',
+                                                '#029F73',
+                                                '#0072B2',
+                                                '#CB7AA7',
+                                                '#D45E00',
+                                                '#57B4E9',
+                                                '#EFE441'
+                                            ],
+                                            quantitativeSizeRange: [2, 6]
+                                        },
+                                        area: {
+                                            color: '#E79F00',
+                                            size: 1,
+                                            stroke: 'black',
+                                            strokeWidth: 0,
+                                            opacity: 1,
+                                            nominalColorRange: [
+                                                '#E79F00',
+                                                '#029F73',
+                                                '#0072B2',
+                                                '#CB7AA7',
+                                                '#D45E00',
+                                                '#57B4E9',
+                                                '#EFE441'
+                                            ],
+                                            quantitativeSizeRange: [2, 6]
+                                        },
+                                        line: {
+                                            color: '#E79F00',
+                                            size: 1,
+                                            stroke: 'black',
+                                            strokeWidth: 0,
+                                            opacity: 1,
+                                            nominalColorRange: [
+                                                '#E79F00',
+                                                '#029F73',
+                                                '#0072B2',
+                                                '#CB7AA7',
+                                                '#D45E00',
+                                                '#57B4E9',
+                                                '#EFE441'
+                                            ],
+                                            quantitativeSizeRange: [2, 6]
+                                        },
+                                        bar: {
+                                            color: '#E79F00',
+                                            size: 1,
+                                            stroke: 'black',
+                                            strokeWidth: 0,
+                                            opacity: 1,
+                                            nominalColorRange: [
+                                                '#E79F00',
+                                                '#029F73',
+                                                '#0072B2',
+                                                '#CB7AA7',
+                                                '#D45E00',
+                                                '#57B4E9',
+                                                '#EFE441'
+                                            ],
+                                            quantitativeSizeRange: [2, 6]
+                                        },
+                                        rule: {
+                                            color: '#E79F00',
+                                            size: 1,
+                                            stroke: 'black',
+                                            strokeWidth: 1,
+                                            opacity: 1,
+                                            nominalColorRange: [
+                                                '#E79F00',
+                                                '#029F73',
+                                                '#0072B2',
+                                                '#CB7AA7',
+                                                '#D45E00',
+                                                '#57B4E9',
+                                                '#EFE441'
+                                            ],
+                                            quantitativeSizeRange: [2, 6]
+                                        },
+                                        link: {
+                                            color: '#E79F00',
+                                            size: 1,
+                                            stroke: 'black',
+                                            strokeWidth: 1,
+                                            opacity: 1,
+                                            nominalColorRange: [
+                                                '#E79F00',
+                                                '#029F73',
+                                                '#0072B2',
+                                                '#CB7AA7',
+                                                '#D45E00',
+                                                '#57B4E9',
+                                                '#EFE441'
+                                            ],
+                                            quantitativeSizeRange: [2, 6]
+                                        },
+                                        text: {
+                                            color: '#E79F00',
+                                            size: 1,
+                                            stroke: 'black',
+                                            strokeWidth: 0,
+                                            opacity: 1,
+                                            nominalColorRange: [
+                                                '#E79F00',
+                                                '#029F73',
+                                                '#0072B2',
+                                                '#CB7AA7',
+                                                '#D45E00',
+                                                '#57B4E9',
+                                                '#EFE441'
+                                            ],
+                                            quantitativeSizeRange: [2, 6],
+                                            textAnchor: 'middle',
+                                            textFontWeight: 'normal'
+                                        },
+                                        brush: {
+                                            color: 'gray',
+                                            size: 1,
+                                            stroke: 'black',
+                                            strokeWidth: 1,
+                                            opacity: 0.3,
+                                            nominalColorRange: [
+                                                '#E79F00',
+                                                '#029F73',
+                                                '#0072B2',
+                                                '#CB7AA7',
+                                                '#D45E00',
+                                                '#57B4E9',
+                                                '#EFE441'
+                                            ],
+                                            quantitativeSizeRange: [2, 6]
+                                        }
+                                    }
+                                },
+                                data: {
+                                    url: 'https://raw.githubusercontent.com/vigsterkr/circos/master/data/5/segdup.txt',
+                                    type: 'csv',
+                                    headerNames: ['id', 'chr', 'p1', 'p2'],
+                                    chromosomePrefix: 'hs',
+                                    chromosomeField: 'chr',
+                                    genomicFields: ['p1', 'p2'],
+                                    separator: ' ',
+                                    longToWideId: 'id',
+                                    assembly: 'hg38'
+                                }
                             }
-                          ],
-                          "style": {"outlineWidth": 0}
-                        },
-                        {
-                          "mark": "triangleRight",
-                          "dataTransform": [
-                            {
-                              "type": "filter",
-                              "field": "Stain",
-                              "oneOf": ["acen"]
-                            },
-                            {"type": "filter", "field": "Name", "include": "q"}
-                          ],
-                          "style": {"outlineWidth": 0}
-                        },
-                        {
-                          "mark": "triangleLeft",
-                          "dataTransform": [
-                            {
-                              "type": "filter",
-                              "field": "Stain",
-                              "oneOf": ["acen"]
-                            },
-                            {"type": "filter", "field": "Name", "include": "p"}
-                          ],
-                          "style": {"outlineWidth": 0}
-                        }
-                      ],
-                      "assembly": "hg38",
-                      "layout": "linear",
-                      "orientation": "horizontal",
-                      "static": false,
-                      "style": {"outlineWidth": 0},
-                      "overlayOnPreviousTrack": false
-                    },
-                    "theme": {
-                      "base": "light",
-                      "root": {
-                        "background": "white",
-                        "titleColor": "black",
-                        "titleBackgroundColor": "transparent",
-                        "titleFontSize": 18,
-                        "titleFontFamily": "Arial",
-                        "titleAlign": "left",
-                        "titleFontWeight": "bold",
-                        "subtitleColor": "gray",
-                        "subtitleBackgroundColor": "transparent",
-                        "subtitleFontSize": 16,
-                        "subtitleFontFamily": "Arial",
-                        "subtitleFontWeight": "normal",
-                        "subtitleAlign": "left",
-                        "mousePositionColor": "#000000"
-                      },
-                      "track": {
-                        "background": "transparent",
-                        "alternatingBackground": "transparent",
-                        "titleColor": "black",
-                        "titleBackground": "white",
-                        "titleFontSize": 24,
-                        "titleAlign": "left",
-                        "outline": "black",
-                        "outlineWidth": 1
-                      },
-                      "legend": {
-                        "position": "top",
-                        "background": "white",
-                        "backgroundOpacity": 0.7,
-                        "labelColor": "black",
-                        "labelFontSize": 12,
-                        "labelFontWeight": "normal",
-                        "labelFontFamily": "Arial",
-                        "backgroundStroke": "#DBDBDB",
-                        "tickColor": "black"
-                      },
-                      "axis": {
-                        "tickColor": "black",
-                        "labelColor": "black",
-                        "labelFontSize": 12,
-                        "labelFontWeight": "normal",
-                        "labelFontFamily": "Arial",
-                        "baselineColor": "black",
-                        "gridColor": "#E3E3E3",
-                        "gridStrokeWidth": 1,
-                        "gridStrokeType": "solid",
-                        "gridStrokeDash": [4, 4]
-                      },
-                      "markCommon": {
-                        "color": "#E79F00",
-                        "size": 1,
-                        "stroke": "black",
-                        "strokeWidth": 0,
-                        "opacity": 1,
-                        "nominalColorRange": [
-                          "#E79F00",
-                          "#029F73",
-                          "#0072B2",
-                          "#CB7AA7",
-                          "#D45E00",
-                          "#57B4E9",
-                          "#EFE441"
-                        ],
-                        "quantitativeSizeRange": [2, 6]
-                      },
-                      "point": {
-                        "color": "#E79F00",
-                        "size": 3,
-                        "stroke": "black",
-                        "strokeWidth": 0,
-                        "opacity": 1,
-                        "nominalColorRange": [
-                          "#E79F00",
-                          "#029F73",
-                          "#0072B2",
-                          "#CB7AA7",
-                          "#D45E00",
-                          "#57B4E9",
-                          "#EFE441"
-                        ],
-                        "quantitativeSizeRange": [2, 6]
-                      },
-                      "rect": {
-                        "color": "#E79F00",
-                        "size": 1,
-                        "stroke": "black",
-                        "strokeWidth": 0,
-                        "opacity": 1,
-                        "nominalColorRange": [
-                          "#E79F00",
-                          "#029F73",
-                          "#0072B2",
-                          "#CB7AA7",
-                          "#D45E00",
-                          "#57B4E9",
-                          "#EFE441"
-                        ],
-                        "quantitativeSizeRange": [2, 6]
-                      },
-                      "triangle": {
-                        "color": "#E79F00",
-                        "size": 1,
-                        "stroke": "black",
-                        "strokeWidth": 0,
-                        "opacity": 1,
-                        "nominalColorRange": [
-                          "#E79F00",
-                          "#029F73",
-                          "#0072B2",
-                          "#CB7AA7",
-                          "#D45E00",
-                          "#57B4E9",
-                          "#EFE441"
-                        ],
-                        "quantitativeSizeRange": [2, 6]
-                      },
-                      "area": {
-                        "color": "#E79F00",
-                        "size": 1,
-                        "stroke": "black",
-                        "strokeWidth": 0,
-                        "opacity": 1,
-                        "nominalColorRange": [
-                          "#E79F00",
-                          "#029F73",
-                          "#0072B2",
-                          "#CB7AA7",
-                          "#D45E00",
-                          "#57B4E9",
-                          "#EFE441"
-                        ],
-                        "quantitativeSizeRange": [2, 6]
-                      },
-                      "line": {
-                        "color": "#E79F00",
-                        "size": 1,
-                        "stroke": "black",
-                        "strokeWidth": 0,
-                        "opacity": 1,
-                        "nominalColorRange": [
-                          "#E79F00",
-                          "#029F73",
-                          "#0072B2",
-                          "#CB7AA7",
-                          "#D45E00",
-                          "#57B4E9",
-                          "#EFE441"
-                        ],
-                        "quantitativeSizeRange": [2, 6]
-                      },
-                      "bar": {
-                        "color": "#E79F00",
-                        "size": 1,
-                        "stroke": "black",
-                        "strokeWidth": 0,
-                        "opacity": 1,
-                        "nominalColorRange": [
-                          "#E79F00",
-                          "#029F73",
-                          "#0072B2",
-                          "#CB7AA7",
-                          "#D45E00",
-                          "#57B4E9",
-                          "#EFE441"
-                        ],
-                        "quantitativeSizeRange": [2, 6]
-                      },
-                      "rule": {
-                        "color": "#E79F00",
-                        "size": 1,
-                        "stroke": "black",
-                        "strokeWidth": 1,
-                        "opacity": 1,
-                        "nominalColorRange": [
-                          "#E79F00",
-                          "#029F73",
-                          "#0072B2",
-                          "#CB7AA7",
-                          "#D45E00",
-                          "#57B4E9",
-                          "#EFE441"
-                        ],
-                        "quantitativeSizeRange": [2, 6]
-                      },
-                      "link": {
-                        "color": "#E79F00",
-                        "size": 1,
-                        "stroke": "black",
-                        "strokeWidth": 1,
-                        "opacity": 1,
-                        "nominalColorRange": [
-                          "#E79F00",
-                          "#029F73",
-                          "#0072B2",
-                          "#CB7AA7",
-                          "#D45E00",
-                          "#57B4E9",
-                          "#EFE441"
-                        ],
-                        "quantitativeSizeRange": [2, 6]
-                      },
-                      "text": {
-                        "color": "#E79F00",
-                        "size": 1,
-                        "stroke": "black",
-                        "strokeWidth": 0,
-                        "opacity": 1,
-                        "nominalColorRange": [
-                          "#E79F00",
-                          "#029F73",
-                          "#0072B2",
-                          "#CB7AA7",
-                          "#D45E00",
-                          "#57B4E9",
-                          "#EFE441"
-                        ],
-                        "quantitativeSizeRange": [2, 6],
-                        "textAnchor": "middle",
-                        "textFontWeight": "normal"
-                      },
-                      "brush": {
-                        "color": "gray",
-                        "size": 1,
-                        "stroke": "black",
-                        "strokeWidth": 1,
-                        "opacity": 0.3,
-                        "nominalColorRange": [
-                          "#E79F00",
-                          "#029F73",
-                          "#0072B2",
-                          "#CB7AA7",
-                          "#D45E00",
-                          "#57B4E9",
-                          "#EFE441"
-                        ],
-                        "quantitativeSizeRange": [2, 6]
-                      }
+                        ]
                     }
-                  },
-                  "data": {
-                    "url": "https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/UCSC.HG38.Human.CytoBandIdeogram.csv",
-                    "type": "csv",
-                    "chromosomeField": "Chromosome",
-                    "genomicFields": ["chromStart", "chromEnd"],
-                    "assembly": "hg38"
-                  }
-                }
-              ]
-            }
-          ],
-          "right": [],
-          "bottom": [
-            {
-              "uid": "dbf196a0-fc48-11eb-b136-51c77f658267",
-              "type": "axis-track",
-              "chromInfoPath": "https://s3.amazonaws.com/gosling-lang.org/data/hg38.chrom.sizes",
-              "options": {
-                "layout": "linear",
-                "outerRadius": null,
-                "width": 700,
-                "height": 44,
-                "theme": {
-                  "base": "light",
-                  "root": {
-                    "background": "white",
-                    "titleColor": "black",
-                    "titleBackgroundColor": "transparent",
-                    "titleFontSize": 18,
-                    "titleFontFamily": "Arial",
-                    "titleAlign": "left",
-                    "titleFontWeight": "bold",
-                    "subtitleColor": "gray",
-                    "subtitleBackgroundColor": "transparent",
-                    "subtitleFontSize": 16,
-                    "subtitleFontFamily": "Arial",
-                    "subtitleFontWeight": "normal",
-                    "subtitleAlign": "left",
-                    "mousePositionColor": "#000000"
-                  },
-                  "track": {
-                    "background": "transparent",
-                    "alternatingBackground": "transparent",
-                    "titleColor": "black",
-                    "titleBackground": "white",
-                    "titleFontSize": 24,
-                    "titleAlign": "left",
-                    "outline": "black",
-                    "outlineWidth": 1
-                  },
-                  "legend": {
-                    "position": "top",
-                    "background": "white",
-                    "backgroundOpacity": 0.7,
-                    "labelColor": "black",
-                    "labelFontSize": 12,
-                    "labelFontWeight": "normal",
-                    "labelFontFamily": "Arial",
-                    "backgroundStroke": "#DBDBDB",
-                    "tickColor": "black"
-                  },
-                  "axis": {
-                    "tickColor": "black",
-                    "labelColor": "black",
-                    "labelFontSize": 12,
-                    "labelFontWeight": "normal",
-                    "labelFontFamily": "Arial",
-                    "baselineColor": "black",
-                    "gridColor": "#E3E3E3",
-                    "gridStrokeWidth": 1,
-                    "gridStrokeType": "solid",
-                    "gridStrokeDash": [4, 4]
-                  },
-                  "markCommon": {
-                    "color": "#E79F00",
-                    "size": 1,
-                    "stroke": "black",
-                    "strokeWidth": 0,
-                    "opacity": 1,
-                    "nominalColorRange": [
-                      "#E79F00",
-                      "#029F73",
-                      "#0072B2",
-                      "#CB7AA7",
-                      "#D45E00",
-                      "#57B4E9",
-                      "#EFE441"
-                    ],
-                    "quantitativeSizeRange": [2, 6]
-                  },
-                  "point": {
-                    "color": "#E79F00",
-                    "size": 3,
-                    "stroke": "black",
-                    "strokeWidth": 0,
-                    "opacity": 1,
-                    "nominalColorRange": [
-                      "#E79F00",
-                      "#029F73",
-                      "#0072B2",
-                      "#CB7AA7",
-                      "#D45E00",
-                      "#57B4E9",
-                      "#EFE441"
-                    ],
-                    "quantitativeSizeRange": [2, 6]
-                  },
-                  "rect": {
-                    "color": "#E79F00",
-                    "size": 1,
-                    "stroke": "black",
-                    "strokeWidth": 0,
-                    "opacity": 1,
-                    "nominalColorRange": [
-                      "#E79F00",
-                      "#029F73",
-                      "#0072B2",
-                      "#CB7AA7",
-                      "#D45E00",
-                      "#57B4E9",
-                      "#EFE441"
-                    ],
-                    "quantitativeSizeRange": [2, 6]
-                  },
-                  "triangle": {
-                    "color": "#E79F00",
-                    "size": 1,
-                    "stroke": "black",
-                    "strokeWidth": 0,
-                    "opacity": 1,
-                    "nominalColorRange": [
-                      "#E79F00",
-                      "#029F73",
-                      "#0072B2",
-                      "#CB7AA7",
-                      "#D45E00",
-                      "#57B4E9",
-                      "#EFE441"
-                    ],
-                    "quantitativeSizeRange": [2, 6]
-                  },
-                  "area": {
-                    "color": "#E79F00",
-                    "size": 1,
-                    "stroke": "black",
-                    "strokeWidth": 0,
-                    "opacity": 1,
-                    "nominalColorRange": [
-                      "#E79F00",
-                      "#029F73",
-                      "#0072B2",
-                      "#CB7AA7",
-                      "#D45E00",
-                      "#57B4E9",
-                      "#EFE441"
-                    ],
-                    "quantitativeSizeRange": [2, 6]
-                  },
-                  "line": {
-                    "color": "#E79F00",
-                    "size": 1,
-                    "stroke": "black",
-                    "strokeWidth": 0,
-                    "opacity": 1,
-                    "nominalColorRange": [
-                      "#E79F00",
-                      "#029F73",
-                      "#0072B2",
-                      "#CB7AA7",
-                      "#D45E00",
-                      "#57B4E9",
-                      "#EFE441"
-                    ],
-                    "quantitativeSizeRange": [2, 6]
-                  },
-                  "bar": {
-                    "color": "#E79F00",
-                    "size": 1,
-                    "stroke": "black",
-                    "strokeWidth": 0,
-                    "opacity": 1,
-                    "nominalColorRange": [
-                      "#E79F00",
-                      "#029F73",
-                      "#0072B2",
-                      "#CB7AA7",
-                      "#D45E00",
-                      "#57B4E9",
-                      "#EFE441"
-                    ],
-                    "quantitativeSizeRange": [2, 6]
-                  },
-                  "rule": {
-                    "color": "#E79F00",
-                    "size": 1,
-                    "stroke": "black",
-                    "strokeWidth": 1,
-                    "opacity": 1,
-                    "nominalColorRange": [
-                      "#E79F00",
-                      "#029F73",
-                      "#0072B2",
-                      "#CB7AA7",
-                      "#D45E00",
-                      "#57B4E9",
-                      "#EFE441"
-                    ],
-                    "quantitativeSizeRange": [2, 6]
-                  },
-                  "link": {
-                    "color": "#E79F00",
-                    "size": 1,
-                    "stroke": "black",
-                    "strokeWidth": 1,
-                    "opacity": 1,
-                    "nominalColorRange": [
-                      "#E79F00",
-                      "#029F73",
-                      "#0072B2",
-                      "#CB7AA7",
-                      "#D45E00",
-                      "#57B4E9",
-                      "#EFE441"
-                    ],
-                    "quantitativeSizeRange": [2, 6]
-                  },
-                  "text": {
-                    "color": "#E79F00",
-                    "size": 1,
-                    "stroke": "black",
-                    "strokeWidth": 0,
-                    "opacity": 1,
-                    "nominalColorRange": [
-                      "#E79F00",
-                      "#029F73",
-                      "#0072B2",
-                      "#CB7AA7",
-                      "#D45E00",
-                      "#57B4E9",
-                      "#EFE441"
-                    ],
-                    "quantitativeSizeRange": [2, 6],
-                    "textAnchor": "middle",
-                    "textFontWeight": "normal"
-                  },
-                  "brush": {
-                    "color": "gray",
-                    "size": 1,
-                    "stroke": "black",
-                    "strokeWidth": 1,
-                    "opacity": 0.3,
-                    "nominalColorRange": [
-                      "#E79F00",
-                      "#029F73",
-                      "#0072B2",
-                      "#CB7AA7",
-                      "#D45E00",
-                      "#57B4E9",
-                      "#EFE441"
-                    ],
-                    "quantitativeSizeRange": [2, 6]
-                  }
-                },
-                "assembly": "hg38",
-                "stroke": "transparent",
-                "color": "black",
-                "fontSize": 12,
-                "fontFamily": "Arial",
-                "fontWeight": "normal",
-                "tickColor": "black",
-                "tickFormat": "plain",
-                "tickPositions": "even",
-                "reverseOrientation": true
-              },
-              "height": 30
-            }
-          ],
-          "gallery": [],
-          "whole": []
+                ],
+                right: [],
+                bottom: [],
+                gallery: [],
+                whole: []
+            },
+            initialXDomain: [1, 248956422],
+            initialYDomain: [0, 3088269832],
+            zoomFixed: false,
+            zoomLimits: [1, null],
+            uid: 'view-2',
+            chromInfoPath: 'https://s3.amazonaws.com/gosling-lang.org/data/hg38.chrom.sizes'
         },
-        "initialXDomain": [491149952, 689445510],
-        "initialYDomain": [491149952, 689445510],
-        "zoomFixed": false,
-        "zoomLimits": [1, null],
-        "uid": "view-3"
-      }
+        {
+            genomePositionSearchBoxVisible: false,
+            genomePositionSearchBox: {
+                autocompleteServer: 'https://higlass.io/api/v1',
+                autocompleteId: 'P0PLbQMwTYGy-5uPIQid7A',
+                chromInfoServer: 'https://higlass.io/api/v1',
+                chromInfoId: 'hg38'
+            },
+            layout: { x: 0, y: 514, w: 12, h: 44 },
+            tracks: {
+                top: [],
+                left: [],
+                center: [
+                    {
+                        type: 'combined',
+                        width: 399,
+                        height: 14,
+                        contents: [
+                            {
+                                type: 'gosling-track',
+                                width: 400,
+                                height: 14,
+                                options: {
+                                    showMousePosition: true,
+                                    mousePositionColor: '#000000',
+                                    fontSize: 24,
+                                    labelPosition: 'none',
+                                    labelShowResolution: false,
+                                    labelColor: 'black',
+                                    labelBackgroundColor: 'white',
+                                    labelTextOpacity: 1,
+                                    labelLeftMargin: 1,
+                                    labelTopMargin: 1,
+                                    labelRightMargin: 0,
+                                    labelBottomMargin: 0,
+                                    backgroundColor: 'transparent',
+                                    spec: {
+                                        data: {
+                                            url:
+                                                'https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/UCSC.HG38.Human.CytoBandIdeogram.csv',
+                                            type: 'csv',
+                                            chromosomeField: 'Chromosome',
+                                            genomicFields: ['chromStart', 'chromEnd']
+                                        },
+                                        x: {
+                                            field: 'chromStart',
+                                            type: 'genomic',
+                                            axis: 'bottom',
+                                            domain: { chromosome: '3' },
+                                            linkingId: 'bottom'
+                                        },
+                                        xe: { field: 'chromEnd', type: 'genomic' },
+                                        color: { value: 'white' },
+                                        size: { value: 14 },
+                                        stroke: { value: 'black' },
+                                        strokeWidth: { value: 0.5 },
+                                        width: 400,
+                                        height: 44,
+                                        overlay: [
+                                            {
+                                                mark: 'rect',
+                                                dataTransform: [
+                                                    {
+                                                        type: 'filter',
+                                                        field: 'Stain',
+                                                        oneOf: ['acen'],
+                                                        not: true
+                                                    }
+                                                ],
+                                                style: { outlineWidth: 0 }
+                                            },
+                                            {
+                                                mark: 'triangleRight',
+                                                dataTransform: [
+                                                    {
+                                                        type: 'filter',
+                                                        field: 'Stain',
+                                                        oneOf: ['acen']
+                                                    },
+                                                    { type: 'filter', field: 'Name', include: 'q' }
+                                                ],
+                                                style: { outlineWidth: 0 }
+                                            },
+                                            {
+                                                mark: 'triangleLeft',
+                                                dataTransform: [
+                                                    {
+                                                        type: 'filter',
+                                                        field: 'Stain',
+                                                        oneOf: ['acen']
+                                                    },
+                                                    { type: 'filter', field: 'Name', include: 'p' }
+                                                ],
+                                                style: { outlineWidth: 0 }
+                                            }
+                                        ],
+                                        assembly: 'hg38',
+                                        layout: 'linear',
+                                        orientation: 'horizontal',
+                                        static: false,
+                                        style: { outlineWidth: 0 },
+                                        overlayOnPreviousTrack: false
+                                    },
+                                    theme: {
+                                        base: 'light',
+                                        root: {
+                                            background: 'white',
+                                            titleColor: 'black',
+                                            titleBackgroundColor: 'transparent',
+                                            titleFontSize: 18,
+                                            titleFontFamily: 'Arial',
+                                            titleAlign: 'left',
+                                            titleFontWeight: 'bold',
+                                            subtitleColor: 'gray',
+                                            subtitleBackgroundColor: 'transparent',
+                                            subtitleFontSize: 16,
+                                            subtitleFontFamily: 'Arial',
+                                            subtitleFontWeight: 'normal',
+                                            subtitleAlign: 'left',
+                                            mousePositionColor: '#000000'
+                                        },
+                                        track: {
+                                            background: 'transparent',
+                                            alternatingBackground: 'transparent',
+                                            titleColor: 'black',
+                                            titleBackground: 'white',
+                                            titleFontSize: 24,
+                                            titleAlign: 'left',
+                                            outline: 'black',
+                                            outlineWidth: 1
+                                        },
+                                        legend: {
+                                            position: 'top',
+                                            background: 'white',
+                                            backgroundOpacity: 0.7,
+                                            labelColor: 'black',
+                                            labelFontSize: 12,
+                                            labelFontWeight: 'normal',
+                                            labelFontFamily: 'Arial',
+                                            backgroundStroke: '#DBDBDB',
+                                            tickColor: 'black'
+                                        },
+                                        axis: {
+                                            tickColor: 'black',
+                                            labelColor: 'black',
+                                            labelFontSize: 12,
+                                            labelFontWeight: 'normal',
+                                            labelFontFamily: 'Arial',
+                                            baselineColor: 'black',
+                                            gridColor: '#E3E3E3',
+                                            gridStrokeWidth: 1,
+                                            gridStrokeType: 'solid',
+                                            gridStrokeDash: [4, 4]
+                                        },
+                                        markCommon: {
+                                            color: '#E79F00',
+                                            size: 1,
+                                            stroke: 'black',
+                                            strokeWidth: 0,
+                                            opacity: 1,
+                                            nominalColorRange: [
+                                                '#E79F00',
+                                                '#029F73',
+                                                '#0072B2',
+                                                '#CB7AA7',
+                                                '#D45E00',
+                                                '#57B4E9',
+                                                '#EFE441'
+                                            ],
+                                            quantitativeSizeRange: [2, 6]
+                                        },
+                                        point: {
+                                            color: '#E79F00',
+                                            size: 3,
+                                            stroke: 'black',
+                                            strokeWidth: 0,
+                                            opacity: 1,
+                                            nominalColorRange: [
+                                                '#E79F00',
+                                                '#029F73',
+                                                '#0072B2',
+                                                '#CB7AA7',
+                                                '#D45E00',
+                                                '#57B4E9',
+                                                '#EFE441'
+                                            ],
+                                            quantitativeSizeRange: [2, 6]
+                                        },
+                                        rect: {
+                                            color: '#E79F00',
+                                            size: 1,
+                                            stroke: 'black',
+                                            strokeWidth: 0,
+                                            opacity: 1,
+                                            nominalColorRange: [
+                                                '#E79F00',
+                                                '#029F73',
+                                                '#0072B2',
+                                                '#CB7AA7',
+                                                '#D45E00',
+                                                '#57B4E9',
+                                                '#EFE441'
+                                            ],
+                                            quantitativeSizeRange: [2, 6]
+                                        },
+                                        triangle: {
+                                            color: '#E79F00',
+                                            size: 1,
+                                            stroke: 'black',
+                                            strokeWidth: 0,
+                                            opacity: 1,
+                                            nominalColorRange: [
+                                                '#E79F00',
+                                                '#029F73',
+                                                '#0072B2',
+                                                '#CB7AA7',
+                                                '#D45E00',
+                                                '#57B4E9',
+                                                '#EFE441'
+                                            ],
+                                            quantitativeSizeRange: [2, 6]
+                                        },
+                                        area: {
+                                            color: '#E79F00',
+                                            size: 1,
+                                            stroke: 'black',
+                                            strokeWidth: 0,
+                                            opacity: 1,
+                                            nominalColorRange: [
+                                                '#E79F00',
+                                                '#029F73',
+                                                '#0072B2',
+                                                '#CB7AA7',
+                                                '#D45E00',
+                                                '#57B4E9',
+                                                '#EFE441'
+                                            ],
+                                            quantitativeSizeRange: [2, 6]
+                                        },
+                                        line: {
+                                            color: '#E79F00',
+                                            size: 1,
+                                            stroke: 'black',
+                                            strokeWidth: 0,
+                                            opacity: 1,
+                                            nominalColorRange: [
+                                                '#E79F00',
+                                                '#029F73',
+                                                '#0072B2',
+                                                '#CB7AA7',
+                                                '#D45E00',
+                                                '#57B4E9',
+                                                '#EFE441'
+                                            ],
+                                            quantitativeSizeRange: [2, 6]
+                                        },
+                                        bar: {
+                                            color: '#E79F00',
+                                            size: 1,
+                                            stroke: 'black',
+                                            strokeWidth: 0,
+                                            opacity: 1,
+                                            nominalColorRange: [
+                                                '#E79F00',
+                                                '#029F73',
+                                                '#0072B2',
+                                                '#CB7AA7',
+                                                '#D45E00',
+                                                '#57B4E9',
+                                                '#EFE441'
+                                            ],
+                                            quantitativeSizeRange: [2, 6]
+                                        },
+                                        rule: {
+                                            color: '#E79F00',
+                                            size: 1,
+                                            stroke: 'black',
+                                            strokeWidth: 1,
+                                            opacity: 1,
+                                            nominalColorRange: [
+                                                '#E79F00',
+                                                '#029F73',
+                                                '#0072B2',
+                                                '#CB7AA7',
+                                                '#D45E00',
+                                                '#57B4E9',
+                                                '#EFE441'
+                                            ],
+                                            quantitativeSizeRange: [2, 6]
+                                        },
+                                        link: {
+                                            color: '#E79F00',
+                                            size: 1,
+                                            stroke: 'black',
+                                            strokeWidth: 1,
+                                            opacity: 1,
+                                            nominalColorRange: [
+                                                '#E79F00',
+                                                '#029F73',
+                                                '#0072B2',
+                                                '#CB7AA7',
+                                                '#D45E00',
+                                                '#57B4E9',
+                                                '#EFE441'
+                                            ],
+                                            quantitativeSizeRange: [2, 6]
+                                        },
+                                        text: {
+                                            color: '#E79F00',
+                                            size: 1,
+                                            stroke: 'black',
+                                            strokeWidth: 0,
+                                            opacity: 1,
+                                            nominalColorRange: [
+                                                '#E79F00',
+                                                '#029F73',
+                                                '#0072B2',
+                                                '#CB7AA7',
+                                                '#D45E00',
+                                                '#57B4E9',
+                                                '#EFE441'
+                                            ],
+                                            quantitativeSizeRange: [2, 6],
+                                            textAnchor: 'middle',
+                                            textFontWeight: 'normal'
+                                        },
+                                        brush: {
+                                            color: 'gray',
+                                            size: 1,
+                                            stroke: 'black',
+                                            strokeWidth: 1,
+                                            opacity: 0.3,
+                                            nominalColorRange: [
+                                                '#E79F00',
+                                                '#029F73',
+                                                '#0072B2',
+                                                '#CB7AA7',
+                                                '#D45E00',
+                                                '#57B4E9',
+                                                '#EFE441'
+                                            ],
+                                            quantitativeSizeRange: [2, 6]
+                                        }
+                                    }
+                                },
+                                data: {
+                                    url:
+                                        'https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/UCSC.HG38.Human.CytoBandIdeogram.csv',
+                                    type: 'csv',
+                                    chromosomeField: 'Chromosome',
+                                    genomicFields: ['chromStart', 'chromEnd'],
+                                    assembly: 'hg38'
+                                }
+                            }
+                        ]
+                    }
+                ],
+                right: [],
+                bottom: [
+                    {
+                        uid: 'dbf196a0-fc48-11eb-b136-51c77f658267',
+                        type: 'axis-track',
+                        chromInfoPath: 'https://s3.amazonaws.com/gosling-lang.org/data/hg38.chrom.sizes',
+                        options: {
+                            layout: 'linear',
+                            outerRadius: null,
+                            width: 400,
+                            height: 44,
+                            theme: {
+                                base: 'light',
+                                root: {
+                                    background: 'white',
+                                    titleColor: 'black',
+                                    titleBackgroundColor: 'transparent',
+                                    titleFontSize: 18,
+                                    titleFontFamily: 'Arial',
+                                    titleAlign: 'left',
+                                    titleFontWeight: 'bold',
+                                    subtitleColor: 'gray',
+                                    subtitleBackgroundColor: 'transparent',
+                                    subtitleFontSize: 16,
+                                    subtitleFontFamily: 'Arial',
+                                    subtitleFontWeight: 'normal',
+                                    subtitleAlign: 'left',
+                                    mousePositionColor: '#000000'
+                                },
+                                track: {
+                                    background: 'transparent',
+                                    alternatingBackground: 'transparent',
+                                    titleColor: 'black',
+                                    titleBackground: 'white',
+                                    titleFontSize: 24,
+                                    titleAlign: 'left',
+                                    outline: 'black',
+                                    outlineWidth: 1
+                                },
+                                legend: {
+                                    position: 'top',
+                                    background: 'white',
+                                    backgroundOpacity: 0.7,
+                                    labelColor: 'black',
+                                    labelFontSize: 12,
+                                    labelFontWeight: 'normal',
+                                    labelFontFamily: 'Arial',
+                                    backgroundStroke: '#DBDBDB',
+                                    tickColor: 'black'
+                                },
+                                axis: {
+                                    tickColor: 'black',
+                                    labelColor: 'black',
+                                    labelFontSize: 12,
+                                    labelFontWeight: 'normal',
+                                    labelFontFamily: 'Arial',
+                                    baselineColor: 'black',
+                                    gridColor: '#E3E3E3',
+                                    gridStrokeWidth: 1,
+                                    gridStrokeType: 'solid',
+                                    gridStrokeDash: [4, 4]
+                                },
+                                markCommon: {
+                                    color: '#E79F00',
+                                    size: 1,
+                                    stroke: 'black',
+                                    strokeWidth: 0,
+                                    opacity: 1,
+                                    nominalColorRange: [
+                                        '#E79F00',
+                                        '#029F73',
+                                        '#0072B2',
+                                        '#CB7AA7',
+                                        '#D45E00',
+                                        '#57B4E9',
+                                        '#EFE441'
+                                    ],
+                                    quantitativeSizeRange: [2, 6]
+                                },
+                                point: {
+                                    color: '#E79F00',
+                                    size: 3,
+                                    stroke: 'black',
+                                    strokeWidth: 0,
+                                    opacity: 1,
+                                    nominalColorRange: [
+                                        '#E79F00',
+                                        '#029F73',
+                                        '#0072B2',
+                                        '#CB7AA7',
+                                        '#D45E00',
+                                        '#57B4E9',
+                                        '#EFE441'
+                                    ],
+                                    quantitativeSizeRange: [2, 6]
+                                },
+                                rect: {
+                                    color: '#E79F00',
+                                    size: 1,
+                                    stroke: 'black',
+                                    strokeWidth: 0,
+                                    opacity: 1,
+                                    nominalColorRange: [
+                                        '#E79F00',
+                                        '#029F73',
+                                        '#0072B2',
+                                        '#CB7AA7',
+                                        '#D45E00',
+                                        '#57B4E9',
+                                        '#EFE441'
+                                    ],
+                                    quantitativeSizeRange: [2, 6]
+                                },
+                                triangle: {
+                                    color: '#E79F00',
+                                    size: 1,
+                                    stroke: 'black',
+                                    strokeWidth: 0,
+                                    opacity: 1,
+                                    nominalColorRange: [
+                                        '#E79F00',
+                                        '#029F73',
+                                        '#0072B2',
+                                        '#CB7AA7',
+                                        '#D45E00',
+                                        '#57B4E9',
+                                        '#EFE441'
+                                    ],
+                                    quantitativeSizeRange: [2, 6]
+                                },
+                                area: {
+                                    color: '#E79F00',
+                                    size: 1,
+                                    stroke: 'black',
+                                    strokeWidth: 0,
+                                    opacity: 1,
+                                    nominalColorRange: [
+                                        '#E79F00',
+                                        '#029F73',
+                                        '#0072B2',
+                                        '#CB7AA7',
+                                        '#D45E00',
+                                        '#57B4E9',
+                                        '#EFE441'
+                                    ],
+                                    quantitativeSizeRange: [2, 6]
+                                },
+                                line: {
+                                    color: '#E79F00',
+                                    size: 1,
+                                    stroke: 'black',
+                                    strokeWidth: 0,
+                                    opacity: 1,
+                                    nominalColorRange: [
+                                        '#E79F00',
+                                        '#029F73',
+                                        '#0072B2',
+                                        '#CB7AA7',
+                                        '#D45E00',
+                                        '#57B4E9',
+                                        '#EFE441'
+                                    ],
+                                    quantitativeSizeRange: [2, 6]
+                                },
+                                bar: {
+                                    color: '#E79F00',
+                                    size: 1,
+                                    stroke: 'black',
+                                    strokeWidth: 0,
+                                    opacity: 1,
+                                    nominalColorRange: [
+                                        '#E79F00',
+                                        '#029F73',
+                                        '#0072B2',
+                                        '#CB7AA7',
+                                        '#D45E00',
+                                        '#57B4E9',
+                                        '#EFE441'
+                                    ],
+                                    quantitativeSizeRange: [2, 6]
+                                },
+                                rule: {
+                                    color: '#E79F00',
+                                    size: 1,
+                                    stroke: 'black',
+                                    strokeWidth: 1,
+                                    opacity: 1,
+                                    nominalColorRange: [
+                                        '#E79F00',
+                                        '#029F73',
+                                        '#0072B2',
+                                        '#CB7AA7',
+                                        '#D45E00',
+                                        '#57B4E9',
+                                        '#EFE441'
+                                    ],
+                                    quantitativeSizeRange: [2, 6]
+                                },
+                                link: {
+                                    color: '#E79F00',
+                                    size: 1,
+                                    stroke: 'black',
+                                    strokeWidth: 1,
+                                    opacity: 1,
+                                    nominalColorRange: [
+                                        '#E79F00',
+                                        '#029F73',
+                                        '#0072B2',
+                                        '#CB7AA7',
+                                        '#D45E00',
+                                        '#57B4E9',
+                                        '#EFE441'
+                                    ],
+                                    quantitativeSizeRange: [2, 6]
+                                },
+                                text: {
+                                    color: '#E79F00',
+                                    size: 1,
+                                    stroke: 'black',
+                                    strokeWidth: 0,
+                                    opacity: 1,
+                                    nominalColorRange: [
+                                        '#E79F00',
+                                        '#029F73',
+                                        '#0072B2',
+                                        '#CB7AA7',
+                                        '#D45E00',
+                                        '#57B4E9',
+                                        '#EFE441'
+                                    ],
+                                    quantitativeSizeRange: [2, 6],
+                                    textAnchor: 'middle',
+                                    textFontWeight: 'normal'
+                                },
+                                brush: {
+                                    color: 'gray',
+                                    size: 1,
+                                    stroke: 'black',
+                                    strokeWidth: 1,
+                                    opacity: 0.3,
+                                    nominalColorRange: [
+                                        '#E79F00',
+                                        '#029F73',
+                                        '#0072B2',
+                                        '#CB7AA7',
+                                        '#D45E00',
+                                        '#57B4E9',
+                                        '#EFE441'
+                                    ],
+                                    quantitativeSizeRange: [2, 6]
+                                }
+                            },
+                            assembly: 'hg38',
+                            stroke: 'transparent',
+                            color: 'black',
+                            fontSize: 12,
+                            fontFamily: 'Arial',
+                            fontWeight: 'normal',
+                            tickColor: 'black',
+                            tickFormat: 'plain',
+                            tickPositions: 'even',
+                            reverseOrientation: true
+                        },
+                        height: 30
+                    }
+                ],
+                gallery: [],
+                whole: []
+            },
+            initialXDomain: [491149952, 689445510],
+            initialYDomain: [491149952, 689445510],
+            zoomFixed: false,
+            zoomLimits: [1, null],
+            uid: 'view-3'
+        }
     ],
-    "zoomLocks": {
-      "locksByViewUid": {
-        "view-1": "top",
-        // "view-2": "bottom",
-        "view-3": "bottom"
-      },
-      "locksDict": {
-        "top": {
-          "uid": "top",
-          "view-1": [
-            124625310.5,
-            124625310.5,
-            249250.621
-          ],
-          "view-3": [
-            124625310.5,
-            124625310.5,
-            249250.621
-          ]
+    zoomLocks: {
+        locksByViewUid: {
+            'view-1': 'all',
+            'view-2': 'all',
+            'view-3': 'all'
         },
-        "bottom": {
-          "uid": "bottom",
-          "view-1": [
-            124625310.5,
-            124625310.5,
-            249250.621
-          ],
-          "view-3": [
-            124625310.5,
-            124625310.5,
-            249250.621
-          ]
+        locksDict: {
+            all: {
+                uid: 'all',
+                'view-1': [124625310.5, 124625310.5, 249250.621],
+                'view-2': [124625310.5, 124625310.5, 249250.621],
+                'view-3': [124625310.5, 124625310.5, 249250.621]
+            }
         }
-      }
     },
-    "locationLocks": {
-      "locksByViewUid": {
-        "view-1": { "x": { "lock": "top", "axis": "x" } },
-        "view-2": { "x": { "lock": "bottom", "axis": "x" }, "x": { "lock": "top", "axis": "y" } },
-        "view-3": { "y": { "lock": "bottom", "axis": "x" } },
-      },
-      "locksDict": {
-        "top": {
-          "uid": "top",
-          "view-1": [
-            124625310.5,
-            124625310.5,
-            249250.621
-          ],
-          "view-2": [
-            124625310.5,
-            124625310.5,
-            249250.621
-          ]
+    locationLocks: {
+        locksByViewUid: {
+            'view-1': { x: { lock: 'top', axis: 'x' } },
+            'view-2': { x: { lock: 'top', axis: 'x' }, y: { lock: 'bottom', axis: 'x' } },
+            'view-3': { x: { lock: 'bottom', axis: 'y' } }
         },
-        "bottom": {
-          "uid": "bottom",
-          "view-2": [
-            124625310.5,
-            124625310.5,
-            249250.621
-          ],
-          "view-3": [
-            124625310.5,
-            124625310.5,
-            249250.621
-          ]
+        locksDict: {
+            top: {
+                uid: 'top',
+                'view-1': [124625310.5, 124625310.5, 249250.621],
+                'view-2': [124625310.5, 124625310.5, 249250.621]
+            },
+            bottom: {
+                uid: 'bottom',
+                'view-2': [124625310.5, 124625310.5, 249250.621],
+                'view-3': [124625310.5, 124625310.5, 249250.621]
+            }
         }
-      }
     },
-    "editable": false,
-    "chromInfoPath": "https://s3.amazonaws.com/gosling-lang.org/data/hg38.chrom.sizes"
-  };
+    editable: false,
+    chromInfoPath: 'https://s3.amazonaws.com/gosling-lang.org/data/hg38.chrom.sizes'
+};
 
 export default example;

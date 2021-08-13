@@ -347,6 +347,7 @@ export class HiGlassModel {
     }
 
     public setExampleHiglassViewConfig() {
+        console.warn('Be aware that you are replacing the compiled HiGlass view config with an example one.');
         this.hg = exampleHg as any;
     }
 }

@@ -9,7 +9,7 @@ export const EX_SPEC_GIVE: GoslingSpec = {
         {
             xLinkingId: 'top',
             layout: 'linear',
-            xDomain: { chromosome: '1'},
+            xDomain: { chromosome: '1' },
             tracks: [
                 // {
                 //     alignment: 'overlay',
@@ -176,7 +176,7 @@ export const EX_SPEC_GIVE: GoslingSpec = {
                     strokeWidth: { value: 0.5 },
                     width: 700,
                     height: 14
-                },
+                }
                 // {
                 //     data: {
                 //         url: 'https://raw.githubusercontent.com/vigsterkr/circos/master/data/5/segdup.txt',
@@ -232,7 +232,7 @@ export const EX_SPEC_GIVE: GoslingSpec = {
         },
         {
             layout: 'linear',
-            xDomain: { chromosome: '1'},
+            xDomain: { chromosome: '1' },
             tracks: [
                 {
                     data: {
@@ -294,7 +294,7 @@ export const EX_SPEC_GIVE: GoslingSpec = {
         {
             xLinkingId: 'bottom',
             layout: 'linear',
-            xDomain: { chromosome: '3'},
+            xDomain: { chromosome: '3' },
             tracks: [
                 {
                     alignment: 'overlay',
@@ -340,7 +340,7 @@ export const EX_SPEC_GIVE: GoslingSpec = {
                     strokeWidth: { value: 0.5 },
                     width: 700,
                     height: 14
-                },
+                }
                 // {
                 //     data: {
                 //         url: 'https://raw.githubusercontent.com/vigsterkr/circos/master/data/5/segdup.txt',
