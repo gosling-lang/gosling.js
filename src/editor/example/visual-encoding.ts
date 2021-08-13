@@ -41,7 +41,7 @@ export const EX_SPEC_VISUAL_ENCODING: GoslingSpec = {
                         { field: 'sample', type: 'nominal', alt: 'Sample' }
                     ],
                     width: 600,
-                    height: 130
+                    height: 40
                 }
             ]
         },
