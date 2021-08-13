@@ -239,8 +239,5 @@ export function goslingToHiGlass(
         }
     }
 
-    // Uncomment the following code to test with specific HiGlass viewConfig
-    // hgModel.setExampleHiglassViewConfig();
-
     return hgModel;
 }

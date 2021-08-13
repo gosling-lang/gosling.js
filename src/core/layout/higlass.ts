@@ -68,5 +68,8 @@ export function renderHiGlass(
             });
     });
 
+    // !! Uncomment the following code to test with specific HiGlass viewConfig
+    hgModel.setExampleHiglassViewConfig();
+
     setHg(hgModel.spec(), getBoundingBox(trackInfos));
 }
