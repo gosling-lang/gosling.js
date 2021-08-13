@@ -561,7 +561,7 @@ function Editor(props: any) {
                             title="Save PNG file"
                             className="side-panel-button"
                             onClick={() => {
-                                gosRef.current.api.exportPNG();
+                                gosRef.current.api.exportPng();
                             }}
                         >
                             {getIconSVG(ICONS.IMAGE, 23, 23)}
@@ -572,7 +572,7 @@ function Editor(props: any) {
                             title="Save PDF file"
                             className="side-panel-button"
                             onClick={() => {
-                                gosRef.current.api.exportPDF();
+                                gosRef.current.api.exportPdf();
                             }}
                         >
                             {getIconSVG(ICONS.PDF, 23, 23)}
