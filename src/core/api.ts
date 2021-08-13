@@ -32,8 +32,8 @@ export interface GoslingApi {
     zoomToExtent(viewId: string, duration?: number): void;
     zoomToGene(viewId: string, gene: string, duration?: number): void;
     getViewIds(): string[];
-    exportPNG(transparentBackground?: boolean): void;
-    exportPDF(transparentBackground?: boolean): void;
+    exportPng(transparentBackground?: boolean): void;
+    exportPdf(transparentBackground?: boolean): void;
     getCanvas(options?: {
         resolution?: number;
         transparentBackground?: boolean;
@@ -98,7 +98,8 @@ export function createApi(
                 case 'mouseover':
                     return PubSub.subscribe(type, callback);
                 default: {
-                    console.error(`Event type not supported, got ${JSON.stringify(type)}.`);
+                    console.error(`Event type not recognized, got ${JSON.stringify(type)}.`);
+                    return undefined;
                 }
             }
         },
@@ -141,7 +142,7 @@ export function createApi(
             return ids;
         },
         getCanvas: getCanvas,
-        exportPNG: transparentBackground => {
+        exportPng: transparentBackground => {
             const { canvas } = getCanvas({ resolution: 4, transparentBackground });
             canvas.toBlob(blob => {
                 const a = document.createElement('a');
@@ -152,7 +153,7 @@ export function createApi(
                 a.remove();
             }, 'image/png');
         },
-        exportPDF: async transparentBackground => {
+        exportPdf: async transparentBackground => {
             const { jsPDF } = await import('jspdf');
             const { canvas } = getCanvas({ resolution: 4, transparentBackground });
             const imgData = canvas.toDataURL('image/jpeg', 1);
