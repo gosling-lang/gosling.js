@@ -1,3 +1,13 @@
+## [0.9.1](https://github.com/gosling-lang/gosling.js/compare/v0.9.0...v0.9.1) (2021-08-14)
+
+
+### Features
+
+* enable showing track titles in circular layouts ([#464](https://github.com/gosling-lang/gosling.js/issues/464)) ([e223377](https://github.com/gosling-lang/gosling.js/commit/e2233778a22bf37ac1ca85fdc7d77e538a1651a7))
+* responsive quantitative color legend for compact tracks ([#462](https://github.com/gosling-lang/gosling.js/issues/462)) ([9d56cbe](https://github.com/gosling-lang/gosling.js/commit/9d56cbe242b3c1ef0e0ec726436b935fc7bd0fe7))
+
+
+
 # [0.9.0](https://github.com/gosling-lang/gosling.js/compare/v0.8.13...v0.9.0) (2021-08-10)
 
 
