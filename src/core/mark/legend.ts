@@ -46,16 +46,16 @@ export function drawColorLegendQuantitative(
 
     /* track size */
     const [trackX, trackY] = trackInfo.position;
-    const [trackWidth] = trackInfo.dimensions;
+    const [trackWidth, trackHeight] = trackInfo.dimensions;
 
     /* Visual Parameters */
     const legendWidth = 80;
-    const legendHeight = 110;
+    const legendHeight = trackHeight - 2 > 110 ? 110 : Math.max(trackHeight - 2, 40 - 2);
     const colorBarDim: Dimension = {
         top: 10,
         left: 55,
         width: 20,
-        height: 90
+        height: legendHeight - 20
     };
     const legendX = trackX + trackWidth - legendWidth - 1;
     const legendY = trackY + 1;
