@@ -44,7 +44,7 @@ export const EX_SPEC_CIRCOS: GoslingSpec = {
             },
             mark: 'bar',
             x: { field: 'position', type: 'genomic', axis: 'top' },
-            y: { field: 'peak', type: 'quantitative' },
+            y: { field: 'peak', type: 'quantitative', axis: 'right' },
             color: { value: '#EEEDA1' },
             width: 700,
             height: 60
