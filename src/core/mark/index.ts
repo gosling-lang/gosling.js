@@ -10,6 +10,7 @@ import { drawText } from './text';
 import { drawRule } from './rule';
 import { drawLink } from './link';
 import { drawGrid } from './grid';
+import { drawCircularTitle } from './title';
 import { drawChartOutlines } from './outline';
 import { drawColorLegend, drawRowLegend } from './legend';
 import { drawCircularYAxis, drawLinearYAxis } from './axis';
@@ -201,6 +202,7 @@ export function drawPostEmbellishment(
 
     if (CIRCULAR) {
         drawCircularYAxis(HGC, trackInfo, tile, model, theme);
+        drawCircularTitle(HGC, trackInfo, tile, model, theme);
     } else {
         drawLinearYAxis(HGC, trackInfo, tile, model, theme);
         drawRowLegend(HGC, trackInfo, tile, model, theme);

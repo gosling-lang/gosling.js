@@ -59,6 +59,7 @@ export const EX_SPEC_CANCER_VARIANT_PROTOTYPE: GoslingSpec = {
                             height: 100
                         },
                         {
+                            title: 'Putative Driver',
                             alignment: 'overlay',
                             data: {
                                 url: 'https://s3.amazonaws.com/gosling-lang.org/data/SV/driver.df.scanb.complete.csv',
@@ -81,6 +82,7 @@ export const EX_SPEC_CANCER_VARIANT_PROTOTYPE: GoslingSpec = {
                             height: 40
                         },
                         {
+                            title: 'LOH',
                             style: { background: 'lightgray', backgroundOpacity: 0.2 },
                             alignment: 'overlay',
                             data: {
@@ -117,6 +119,7 @@ export const EX_SPEC_CANCER_VARIANT_PROTOTYPE: GoslingSpec = {
                             height: 40
                         },
                         {
+                            title: 'Gain',
                             style: { background: 'lightgray', backgroundOpacity: 0.2 },
                             alignment: 'overlay',
                             data: {
@@ -157,6 +160,7 @@ export const EX_SPEC_CANCER_VARIANT_PROTOTYPE: GoslingSpec = {
                             height: 40
                         },
                         {
+                            title: 'Structural Variant',
                             data: {
                                 url: 'https://s3.amazonaws.com/gosling-lang.org/data/cancer/rearrangement.PD35930a.csv',
                                 type: 'csv',
