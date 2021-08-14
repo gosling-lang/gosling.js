@@ -103,7 +103,7 @@ export function drawColorLegendQuantitative(
     });
 
     // Ticks & labels
-    const tickCount = Math.max(Math.ceil(colorBarDim.height / 40), 1);
+    const tickCount = Math.max(Math.ceil(colorBarDim.height / 30), 2);
     let ticks = (colorScale as ScaleLinear<any, any>)
         .ticks(tickCount)
         .filter(v => colorDomain[0] <= v && v <= colorDomain[1]);
