@@ -74,6 +74,7 @@ export function goslingToHiGlass(
                 /* Track title */
                 name: firstResolvedSpec.layout === 'linear' ? firstResolvedSpec.title : ' ',
                 fontSize: theme.track.titleFontSize,
+                labelTextFontSize: theme.track.titleFontSize,
                 labelPosition: firstResolvedSpec.title
                     ? theme.track.titleAlign === 'left'
                         ? 'topLeft'
@@ -82,6 +83,7 @@ export function goslingToHiGlass(
                 labelShowResolution: false,
                 labelColor: theme.track.titleColor,
                 labelBackgroundColor: theme.track.titleBackground,
+                labelBackgroundOpacity: 0.5, // TODO: Support `theme.track.titleBackgroundOpacity`
                 labelTextOpacity: 1,
                 labelLeftMargin: 1,
                 labelTopMargin: 1,
