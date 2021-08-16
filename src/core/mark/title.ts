@@ -47,7 +47,7 @@ export function drawCircularTitle(
     /* Title label */
     const styleConfig = getTextStyle({
         color: theme.track.titleColor,
-        size: theme.axis.labelFontSize, // `theme.track.titleFontSize` seems to use much larger fonts
+        size: 12, // `theme.track.titleFontSize` seems to use much larger fonts
         fontFamily: theme.axis.labelFontFamily, // TODO: support
         fontWeight: theme.axis.labelFontWeight // TODO: support
     });
