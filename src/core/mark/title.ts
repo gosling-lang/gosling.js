@@ -47,7 +47,7 @@ export function drawCircularTitle(
     /* Title label */
     const styleConfig = getTextStyle({
         color: theme.track.titleColor,
-        size: theme.axis.labelFontSize, // `theme.track.titleFontSize` seems to use much larger fonts
+        size: 12, // `theme.track.titleFontSize` seems to use much larger fonts
         fontFamily: theme.axis.labelFontFamily, // TODO: support
         fontWeight: theme.axis.labelFontWeight // TODO: support
     });
@@ -78,7 +78,7 @@ export function drawCircularTitle(
     const endRad = valueToRadian(scaledEndX + padding, tw, startAngle, endAngle);
 
     g.lineStyle(1, colorToHex('red'), 0, 0.5);
-    g.beginFill(colorToHex(theme.track.titleBackground), 0.8); // override the opacity
+    g.beginFill(colorToHex(theme.track.titleBackground), 0.5); // TODO: support `theme.track.titleBackgroundOpacity`
     g.moveTo(pos.x, pos.y);
     g.arc(cx, cy, titleR - metric.height, startRad, endRad, true);
     g.arc(cx, cy, titleR, endRad, startRad, false);
