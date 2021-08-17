@@ -24,14 +24,16 @@ export interface FlatTracks extends CommonViewDef {
     tracks: Track[];
 }
 
+export type PartialTrack = Partial<Track>;
+
 export interface StackedTracks extends CommonViewDef, Partial<SingleTrack> {
     alignment?: 'stack';
-    tracks: (Partial<Track> | OverlaidTracks)[];
+    tracks: (PartialTrack | OverlaidTracks)[];
 }
 
 export interface OverlaidTracks extends CommonViewDef, Partial<SingleTrack> {
     alignment: 'overlay';
-    tracks: Partial<Track>[];
+    tracks: PartialTrack[];
     width: number;
     height: number;
 }
