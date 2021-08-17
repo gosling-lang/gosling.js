@@ -1,3 +1,12 @@
+## [0.9.2](https://github.com/gosling-lang/gosling.js/compare/v0.9.1...v0.9.2) (2021-08-17)
+
+
+### Features
+
+* add explicit PartialTrack def to schema ([#466](https://github.com/gosling-lang/gosling.js/issues/466)) ([c5c9be5](https://github.com/gosling-lang/gosling.js/commit/c5c9be599a5fdd9d375495f6e5d71ffdc364bbab))
+
+
+
 ## [0.9.1](https://github.com/gosling-lang/gosling.js/compare/v0.9.0...v0.9.1) (2021-08-14)
 
 
