@@ -2491,7 +2491,10 @@
                 "type": "boolean"
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> c5c9be5 (feat: add explicit PartialTrack def to schema (#466))
 =======
 >>>>>>> c5c9be5 (feat: add explicit PartialTrack def to schema (#466))
               },
@@ -2613,6 +2616,7 @@
               "x1": {
                 "$ref": "#/definitions/Channel"
               },
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -2766,6 +2770,8 @@
 >>>>>>> a901e8d (chore: adjust scales)
 =======
 >>>>>>> 9a3cd64 (chore: rebase)
+=======
+>>>>>>> c5c9be5 (feat: add explicit PartialTrack def to schema (#466))
               "x1e": {
                 "$ref": "#/definitions/Channel"
               },
