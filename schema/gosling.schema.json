@@ -2551,12 +2551,17 @@
                 "type": "number"
               },
 <<<<<<< HEAD
+<<<<<<< HEAD
               "linkingId": {
                 "type": "string"
 =======
               "layout": {
                 "$ref": "#/definitions/Layout"
 >>>>>>> a6be28e (feat: add yDomain)
+=======
+              "linkingId": {
+                "type": "string"
+>>>>>>> 7f02cd3 (feat: add explicit PartialTrack def to schema (#466))
               },
               "mark": {
                 "$ref": "#/definitions/Mark"
@@ -2570,6 +2575,7 @@
               "outerRadius": {
                 "type": "number"
               },
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
               "overlay": {
@@ -2762,6 +2768,8 @@
                 "type": "array"
               },
 >>>>>>> a6be28e (feat: add yDomain)
+=======
+>>>>>>> 7f02cd3 (feat: add explicit PartialTrack def to schema (#466))
               "overlayOnPreviousTrack": {
                 "type": "boolean"
               },
@@ -3464,6 +3472,7 @@
             "tracks": {
               "items": {
 <<<<<<< HEAD
+<<<<<<< HEAD
                 "$ref": "#/definitions/PartialTrack"
 =======
                 "additionalProperties": false,
@@ -3864,6 +3873,9 @@
                 },
                 "type": "object"
 >>>>>>> a6be28e (feat: add yDomain)
+=======
+                "$ref": "#/definitions/PartialTrack"
+>>>>>>> 7f02cd3 (feat: add explicit PartialTrack def to schema (#466))
               },
               "type": "array"
             },
@@ -4085,6 +4097,7 @@
               "items": {
                 "anyOf": [
                   {
+<<<<<<< HEAD
 <<<<<<< HEAD
                     "$ref": "#/definitions/PartialTrack"
 =======
@@ -4486,6 +4499,9 @@
                     },
                     "type": "object"
 >>>>>>> a6be28e (feat: add yDomain)
+=======
+                    "$ref": "#/definitions/PartialTrack"
+>>>>>>> 7f02cd3 (feat: add explicit PartialTrack def to schema (#466))
                   },
                   {
                     "$ref": "#/definitions/OverlaidTracks"
@@ -5065,6 +5081,7 @@
             "anyOf": [
               {
 <<<<<<< HEAD
+<<<<<<< HEAD
                 "$ref": "#/definitions/PartialTrack"
 =======
                 "additionalProperties": false,
@@ -5465,6 +5482,9 @@
                 },
                 "type": "object"
 >>>>>>> a6be28e (feat: add yDomain)
+=======
+                "$ref": "#/definitions/PartialTrack"
+>>>>>>> 7f02cd3 (feat: add explicit PartialTrack def to schema (#466))
               },
               {
                 "$ref": "#/definitions/OverlaidTracks"
