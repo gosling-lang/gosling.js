@@ -47,11 +47,7 @@ export function drawCircularTitle(
     /* Title label */
     const styleConfig = getTextStyle({
         color: theme.track.titleColor,
-<<<<<<< HEAD
         size: 12, // `theme.track.titleFontSize` seems to use much larger fonts
-=======
-        size: theme.axis.labelFontSize, // `theme.track.titleFontSize` seems to use much larger fonts
->>>>>>> 4bbc4f9 (feat: enable showing track titles in circular layouts (#464))
         fontFamily: theme.axis.labelFontFamily, // TODO: support
         fontWeight: theme.axis.labelFontWeight // TODO: support
     });

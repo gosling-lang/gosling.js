@@ -78,10 +78,6 @@ export function goslingToHiGlass(
                 mousePositionColor: theme.root.mousePositionColor,
                 /* Track title */
                 name: firstResolvedSpec.layout === 'linear' ? firstResolvedSpec.title : ' ',
-<<<<<<< HEAD
-=======
-                fontSize: theme.track.titleFontSize,
->>>>>>> 4bbc4f9 (feat: enable showing track titles in circular layouts (#464))
                 labelPosition: firstResolvedSpec.title
                     ? theme.track.titleAlign === 'left'
                         ? 'topLeft'
