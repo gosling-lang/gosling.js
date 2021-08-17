@@ -2345,9 +2345,12 @@
         "x1": {
           "$ref": "#/definitions/Channel"
         },
+<<<<<<< HEAD
         "x1LinkingId": {
           "type": "string"
         },
+=======
+>>>>>>> c5c9be5 (feat: add explicit PartialTrack def to schema (#466))
         "x1e": {
           "$ref": "#/definitions/Channel"
         },
@@ -2367,9 +2370,12 @@
             }
           ]
         },
+<<<<<<< HEAD
         "xLinkingId": {
           "type": "string"
         },
+=======
+>>>>>>> c5c9be5 (feat: add explicit PartialTrack def to schema (#466))
         "xOffset": {
           "type": "number"
         },
@@ -2385,6 +2391,7 @@
         "y1e": {
           "$ref": "#/definitions/Channel"
         },
+<<<<<<< HEAD
         "yDomain": {
           "anyOf": [
             {
@@ -2401,6 +2408,8 @@
         "yLinkingId": {
           "type": "string"
         },
+=======
+>>>>>>> c5c9be5 (feat: add explicit PartialTrack def to schema (#466))
         "yOffset": {
           "type": "number"
         },
@@ -2486,6 +2495,12 @@
         "layout": {
           "$ref": "#/definitions/Layout"
         },
+<<<<<<< HEAD
+=======
+        "linkingId": {
+          "type": "string"
+        },
+>>>>>>> c5c9be5 (feat: add explicit PartialTrack def to schema (#466))
         "mark": {
           "$ref": "#/definitions/Mark"
         },
@@ -2505,7 +2520,10 @@
               "_invalidTrack": {
                 "type": "boolean"
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> c5c9be5 (feat: add explicit PartialTrack def to schema (#466))
               },
               "_renderingId": {
                 "type": "string"
@@ -2625,6 +2643,7 @@
               "x1": {
                 "$ref": "#/definitions/Channel"
               },
+<<<<<<< HEAD
               "x1LinkingId": {
                 "type": "string"
               },
@@ -2766,6 +2785,8 @@
               "x1LinkingId": {
                 "type": "string"
               },
+=======
+>>>>>>> c5c9be5 (feat: add explicit PartialTrack def to schema (#466))
               "x1e": {
                 "$ref": "#/definitions/Channel"
               },
