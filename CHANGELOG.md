@@ -1,3 +1,12 @@
+## [0.9.3](https://github.com/gosling-lang/gosling.js/compare/v0.9.2...v0.9.3) (2021-08-18)
+
+
+### Features
+
+* inline bam worker to the bundle ([#467](https://github.com/gosling-lang/gosling.js/issues/467)) ([95d4f1f](https://github.com/gosling-lang/gosling.js/commit/95d4f1fb97249835952c42807d2904594d1fa88b))
+
+
+
 ## [0.9.2](https://github.com/gosling-lang/gosling.js/compare/v0.9.1...v0.9.2) (2021-08-17)
 
 
