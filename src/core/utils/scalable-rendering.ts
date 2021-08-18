@@ -1,6 +1,3 @@
-import * as PIXI from 'pixi.js';
-import { GoslingTrackModel } from '../gosling-track-model';
-
 export const PILEUP_COLORS = {
     BG: [0.89, 0.89, 0.89, 1], // gray for the read background
     BG2: [0.85, 0.85, 0.85, 1], // used as alternating color in the read counter band
@@ -74,75 +71,4 @@ varying vec4 vColor;
 `,
         uniforms
     );
-}
-
-export function drawScaleMark(HGC: any, trackInfo: any, tile: any, model: GoslingTrackModel) {
-    trackInfo.labelText.text = ' Rendering...';
-
-    const tileSize = trackInfo.tilesetInfo.tile_size;
-    const { tileX, tileWidth } = trackInfo.getTilePosAndDimensions(tile.gos.zoomLevel, tile.gos.tilePos, tileSize);
-    const [trackWidth, trackHeight] = trackInfo.dimensions;
-    const xDomain = trackInfo.xDomain;
-    const xRange = trackInfo.xRange;
-
-    trackInfo.worker.then((tileFunctions: any) => {
-        tileFunctions
-            .visualProperties(
-                model.spec(),
-                model.data(),
-                trackWidth,
-                trackHeight,
-                tileSize,
-                xDomain,
-                xRange,
-                tileX,
-                tileWidth
-            )
-            .then((props: any) => {
-                trackInfo.forceDraw();
-
-                // Logging.recordTime('json.parse');
-                const tabularData = JSON.parse(Buffer.from(props).toString());
-                // Logging.printTime('json.parse');
-
-                const positions = new Float32Array(tabularData.positions);
-                const colors = new Float32Array(tabularData.colorIdx);
-                const ixs = new Int32Array(tabularData.ixs);
-                const colorRGBAs = tabularData.colorRGBAs;
-
-                trackInfo.shader = setUpShaderAndTextures(HGC, colorRGBAs);
-
-                const newGraphics = new HGC.libraries.PIXI.Graphics();
-
-                const geometry = new HGC.libraries.PIXI.Geometry().addAttribute('position', positions, 2); // x,y
-                geometry.addAttribute('aColorIdx', colors, 1);
-                geometry.addIndex(ixs);
-
-                if (positions.length) {
-                    const state = new HGC.libraries.PIXI.State();
-                    const mesh = new HGC.libraries.PIXI.Mesh(geometry, trackInfo.shader, state);
-
-                    newGraphics.addChild(mesh);
-                }
-                trackInfo.pMain.x = trackInfo.position[0];
-
-                const oldGraphics = trackInfo.scalableGraphics[model.getRenderingId()];
-                if (oldGraphics) {
-                    (trackInfo.pMain as PIXI.Graphics).removeChild(oldGraphics);
-                }
-
-                trackInfo.pMain.addChild(newGraphics);
-
-                // Store graphics so that we can remove properly
-                trackInfo.scalableGraphics[model.getRenderingId()] = newGraphics;
-
-                trackInfo.drawnAtScale = HGC.libraries.d3Scale.scaleLinear().domain(xDomain).range(xRange);
-
-                trackInfo.scaleScalableGraphics([newGraphics], trackInfo._xScale, trackInfo.drawnAtScale);
-
-                trackInfo.forceDraw();
-
-                trackInfo.labelText.text = trackInfo.originalSpec.title ?? '';
-            });
-    });
 }

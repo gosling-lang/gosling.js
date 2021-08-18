@@ -14,10 +14,11 @@
         "dist"
     ],
     "scripts": {
-        "start": "webpack-dev-server --mode development --config webpack.config.editor.js",
-        "build": "rm -rf build/*; rm -rf dist/*; webpack --mode production --config webpack.config.js",
-        "build-log": "rm -rf build/*; rm -rf dist/*; yarn build --display-error-details",
-        "build-editor": "webpack --mode production --config webpack.config.editor.js",
+        "start": "yarn build-worker && webpack-dev-server --mode development --config webpack.config.editor.js",
+        "build": "rm -rf build/* && rm -rf dist/* && yarn build-worker && webpack --mode production --config webpack.config.js",
+        "build-log": "rm -rf build/* && rm -rf dist/* && yarn build --display-error-details",
+        "build-editor": "yarn build-worker && webpack --mode production --config webpack.config.editor.js",
+        "build-worker": "webpack --mode production --config webpack.config.worker.js",
         "test": "jest src/",
         "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s -r 0",
         "format": "eslint src/ --fix && prettier 'src/**/*.css' --write",
@@ -58,7 +59,6 @@
         "lodash": "^4.17.15",
         "mixwith": "^0.1.1",
         "pubsub-js": "^1.9.3",
-        "raw-loader": "^4.0.2",
         "react-grid-layout": "^1.2.5",
         "threads": "^1.6.4",
         "worker-loader": "^3.0.8"
@@ -100,12 +100,14 @@
         "husky": "^4.2.5",
         "jest": "^26.4.0",
         "jest-canvas-mock": "^2.3.0",
+        "jest-raw-loader": "^1.0.1",
         "monaco-editor-webpack-plugin": "^3.0.0",
         "peer-deps-externals-webpack-plugin": "^1.0.4",
         "pixi.js": "^6.0.4",
         "postcss-loader": "^3.0.0",
         "prettier": "^2.0.5",
         "qs": "^6.9.4",
+        "raw-loader": "^4.0.2",
         "react": "16.13.1",
         "react-dom": "16.13.1",
         "react-markdown": "^5.0.3",
@@ -141,6 +143,9 @@
         ]
     },
     "jest": {
+        "moduleNameMapper": {
+            "raw-loader!*": "jest-raw-loader"
+        },
         "setupFiles": [
             "jest-canvas-mock"
         ],
