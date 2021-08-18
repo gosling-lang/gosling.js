@@ -72,7 +72,7 @@ module.exports = (env, argv) => {
         colors: true,
       },
       overlay: {
-        warnings: true,
+        warnings: false, // threads.js complains about "No instantiations of threads.js workers found."
         errors: true,
       },
       hot: true,
