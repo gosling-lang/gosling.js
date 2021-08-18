@@ -28,7 +28,6 @@ import { getRelativeGenomicPosition } from '../core/utils/assembly';
 import { Is2DTrack } from '../core/gosling.schema.guards';
 import { spawn, BlobWorker } from 'threads';
 
-// @ts-ignore
 import BamWorkerBlob from 'raw-loader!../../dist/worker.js';
 
 // Set `true` to print in what order each function is called
