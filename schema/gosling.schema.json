@@ -2345,6 +2345,9 @@
         "x1": {
           "$ref": "#/definitions/Channel"
         },
+        "x1LinkingId": {
+          "type": "string"
+        },
         "x1e": {
           "$ref": "#/definitions/Channel"
         },
@@ -2364,6 +2367,9 @@
             }
           ]
         },
+        "xLinkingId": {
+          "type": "string"
+        },
         "xOffset": {
           "type": "number"
         },
@@ -2378,6 +2384,22 @@
         },
         "y1e": {
           "$ref": "#/definitions/Channel"
+        },
+        "yDomain": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/DomainInterval"
+            },
+            {
+              "$ref": "#/definitions/DomainChrInterval"
+            },
+            {
+              "$ref": "#/definitions/DomainChr"
+            }
+          ]
+        },
+        "yLinkingId": {
+          "type": "string"
         },
         "yOffset": {
           "type": "number"
@@ -2464,9 +2486,6 @@
         "layout": {
           "$ref": "#/definitions/Layout"
         },
-        "linkingId": {
-          "type": "string"
-        },
         "mark": {
           "$ref": "#/definitions/Mark"
         },
@@ -2525,9 +2544,6 @@
               },
               "innerRadius": {
                 "type": "number"
-              },
-              "linkingId": {
-                "type": "string"
               },
               "mark": {
                 "$ref": "#/definitions/Mark"
