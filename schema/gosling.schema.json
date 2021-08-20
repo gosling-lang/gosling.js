@@ -2504,165 +2504,6 @@
             "properties": {
               "_invalidTrack": {
                 "type": "boolean"
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-=======
->>>>>>> c5c9be5 (feat: add explicit PartialTrack def to schema (#466))
-=======
->>>>>>> c5c9be5 (feat: add explicit PartialTrack def to schema (#466))
-              },
-              "_renderingId": {
-                "type": "string"
-              },
-              "assembly": {
-                "$ref": "#/definitions/Assembly"
-              },
-              "centerRadius": {
-                "description": "Proportion of the radius of the center white space.",
-                "type": "number"
-              },
-              "color": {
-                "$ref": "#/definitions/Channel"
-              },
-              "column": {
-                "$ref": "#/definitions/Channel"
-              },
-              "data": {
-                "$ref": "#/definitions/DataDeep"
-              },
-              "dataTransform": {
-                "items": {
-                  "$ref": "#/definitions/DataTransform"
-                },
-                "type": "array"
-              },
-              "displacement": {
-                "$ref": "#/definitions/Displacement"
-              },
-              "endAngle": {
-                "type": "number"
-              },
-              "flipY": {
-                "type": "boolean"
-              },
-              "id": {
-                "type": "string"
-              },
-              "innerRadius": {
-                "type": "number"
-              },
-              "linkingId": {
-                "type": "string"
-              },
-              "mark": {
-                "$ref": "#/definitions/Mark"
-              },
-              "opacity": {
-                "$ref": "#/definitions/Channel"
-              },
-              "orientation": {
-                "$ref": "#/definitions/Orientation"
-              },
-              "outerRadius": {
-                "type": "number"
-              },
-              "overlayOnPreviousTrack": {
-                "type": "boolean"
-              },
-              "overrideTemplate": {
-                "type": "boolean"
-              },
-              "prerelease": {
-                "additionalProperties": false,
-                "properties": {
-                  "testUsingNewRectRenderingForBAM": {
-                    "type": "boolean"
-                  }
-                },
-                "type": "object"
-              },
-              "row": {
-                "$ref": "#/definitions/Channel"
-              },
-              "size": {
-                "$ref": "#/definitions/Channel"
-              },
-              "spacing": {
-                "type": "number"
-              },
-              "startAngle": {
-                "type": "number"
-              },
-              "static": {
-                "type": "boolean"
-              },
-              "stretch": {
-                "type": "boolean"
-              },
-              "stroke": {
-                "$ref": "#/definitions/Channel"
-              },
-              "strokeWidth": {
-                "$ref": "#/definitions/Channel"
-              },
-              "style": {
-                "$ref": "#/definitions/Style"
-              },
-              "text": {
-                "$ref": "#/definitions/Channel"
-              },
-              "tooltip": {
-                "items": {
-                  "$ref": "#/definitions/Tooltip"
-                },
-                "type": "array"
-              },
-              "visibility": {
-                "items": {
-                  "$ref": "#/definitions/VisibilityCondition"
-                },
-                "type": "array"
-              },
-              "x": {
-                "$ref": "#/definitions/Channel"
-              },
-              "x1": {
-                "$ref": "#/definitions/Channel"
-              },
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 944b106 (chore: adjust scales)
-              "x1LinkingId": {
-                "type": "string"
-              },
-              "x1e": {
-                "$ref": "#/definitions/Channel"
-              },
-              "xAxis": {
-                "$ref": "#/definitions/AxisPosition"
-              },
-              "xDomain": {
-                "anyOf": [
-                  {
-                    "$ref": "#/definitions/DomainInterval"
-                  },
-                  {
-                    "$ref": "#/definitions/DomainChrInterval"
-                  },
-                  {
-                    "$ref": "#/definitions/DomainChr"
-                  }
-                ]
->>>>>>> 7f02cd3 (feat: add explicit PartialTrack def to schema (#466))
-=======
->>>>>>> a5dd569 (chore: rebase)
               },
               "_renderingId": {
                 "type": "string"
@@ -2782,20 +2623,6 @@
               "x1LinkingId": {
                 "type": "string"
               },
-<<<<<<< HEAD
-=======
->>>>>>> c5c9be5 (feat: add explicit PartialTrack def to schema (#466))
-=======
-              "x1LinkingId": {
-                "type": "string"
-              },
->>>>>>> a901e8d (chore: adjust scales)
-=======
->>>>>>> 9a3cd64 (chore: rebase)
-=======
->>>>>>> c5c9be5 (feat: add explicit PartialTrack def to schema (#466))
-=======
->>>>>>> a5dd569 (chore: rebase)
               "x1e": {
                 "$ref": "#/definitions/Channel"
               },
@@ -2814,9 +2641,6 @@
                     "$ref": "#/definitions/DomainChr"
                   }
                 ]
-              },
-              "xLinkingId": {
-                "type": "string"
               },
               "xLinkingId": {
                 "type": "string"

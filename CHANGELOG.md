@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ## [0.9.7](https://github.com/gosling-lang/gosling.js/compare/v0.9.6...v0.9.7) (2021-08-28)
 
 
@@ -21,6 +22,9 @@
 
 
 
+=======
+<<<<<<< HEAD
+>>>>>>> 5928968 (chore: update schema)
 ## [0.9.5](https://github.com/gosling-lang/gosling.js/compare/v0.9.4...v0.9.5) (2021-08-27)
 
 
@@ -52,30 +56,28 @@
 ## [0.9.3](https://github.com/gosling-lang/gosling.js/compare/v0.9.2...v0.9.3) (2021-08-18)
 ## [0.9.3](https://github.com/gosling-lang/gosling.js/compare/v0.9.0...v0.9.3) (2021-08-20)
 ## [0.9.3](https://github.com/gosling-lang/gosling.js/compare/v0.9.2...v0.9.3) (2021-08-18)
+=======
+## [0.9.3](https://github.com/gosling-lang/gosling.js/compare/v0.9.0...v0.9.3) (2021-08-20)
+>>>>>>> 3bf2f2c (chore: update schema)
 
 
 ### Features
 
-* inline bam worker to the bundle ([#467](https://github.com/gosling-lang/gosling.js/issues/467)) ([95d4f1f](https://github.com/gosling-lang/gosling.js/commit/95d4f1fb97249835952c42807d2904594d1fa88b))
-
-
-
-## [0.9.2](https://github.com/gosling-lang/gosling.js/compare/v0.9.1...v0.9.2) (2021-08-17)
-
-
-### Features
-
-* add explicit PartialTrack def to schema ([#466](https://github.com/gosling-lang/gosling.js/issues/466)) ([c5c9be5](https://github.com/gosling-lang/gosling.js/commit/c5c9be599a5fdd9d375495f6e5d71ffdc364bbab))
-
-
-
-## [0.9.1](https://github.com/gosling-lang/gosling.js/compare/v0.9.0...v0.9.1) (2021-08-14)
-
-
-### Features
-
-* enable showing track titles in circular layouts ([#464](https://github.com/gosling-lang/gosling.js/issues/464)) ([e223377](https://github.com/gosling-lang/gosling.js/commit/e2233778a22bf37ac1ca85fdc7d77e538a1651a7))
-* responsive quantitative color legend for compact tracks ([#462](https://github.com/gosling-lang/gosling.js/issues/462)) ([9d56cbe](https://github.com/gosling-lang/gosling.js/commit/9d56cbe242b3c1ef0e0ec726436b935fc7bd0fe7))
+* add explicit PartialTrack def to schema ([#466](https://github.com/gosling-lang/gosling.js/issues/466)) ([e8cb45f](https://github.com/gosling-lang/gosling.js/commit/e8cb45fe21f34bc044465de0a33771b2d1dbdc54))
+* add explicit PartialTrack def to schema ([#466](https://github.com/gosling-lang/gosling.js/issues/466)) ([ab2d5b0](https://github.com/gosling-lang/gosling.js/commit/ab2d5b03a7bcfd7d9716ea71f055f899e1217b69))
+* add explicit PartialTrack def to schema ([#466](https://github.com/gosling-lang/gosling.js/issues/466)) ([20a2a67](https://github.com/gosling-lang/gosling.js/commit/20a2a678ddf86c2978449cf0769ea466d6157abd))
+* add explicit PartialTrack def to schema ([#466](https://github.com/gosling-lang/gosling.js/issues/466)) ([91cdf3c](https://github.com/gosling-lang/gosling.js/commit/91cdf3ce1a9bb50c5a195b6a08c1d55b96b4dfee))
+* add explicit PartialTrack def to schema ([#466](https://github.com/gosling-lang/gosling.js/issues/466)) ([7f02cd3](https://github.com/gosling-lang/gosling.js/commit/7f02cd3efb8bf3f6840a44f603c9e05d13a77c5a))
+* add yDomain ([a60ccef](https://github.com/gosling-lang/gosling.js/commit/a60ccef666efb5b7d349b03b2b0c448c4929c8c1))
+* add yDomain ([7c07fed](https://github.com/gosling-lang/gosling.js/commit/7c07fed6aa237c6d7fb16181b01cda5dce975241))
+* add yDomain ([a6be28e](https://github.com/gosling-lang/gosling.js/commit/a6be28eb4b3ca8e63ab240e1c4de7695dd9e87ea))
+* enable showing track titles in circular layouts ([#464](https://github.com/gosling-lang/gosling.js/issues/464)) ([e751a62](https://github.com/gosling-lang/gosling.js/commit/e751a624520465f6460628fef4dfe21db183d38c))
+* enable showing track titles in circular layouts ([#464](https://github.com/gosling-lang/gosling.js/issues/464)) ([56cc4db](https://github.com/gosling-lang/gosling.js/commit/56cc4db37f5c5913dfaac524eee485e4bf31af27))
+* enable showing track titles in circular layouts ([#464](https://github.com/gosling-lang/gosling.js/issues/464)) ([9812232](https://github.com/gosling-lang/gosling.js/commit/98122323b688ba8b5b930c1e846f5821ec42e717))
+* enable showing track titles in circular layouts ([#464](https://github.com/gosling-lang/gosling.js/issues/464)) ([9a66dbd](https://github.com/gosling-lang/gosling.js/commit/9a66dbd7ef1f96a906e9af105832b5441cd0cda2))
+* enable showing track titles in circular layouts ([#464](https://github.com/gosling-lang/gosling.js/issues/464)) ([4bbc4f9](https://github.com/gosling-lang/gosling.js/commit/4bbc4f983f81c93a30b0efba673e436a88b6228d))
+* inline bam worker to the bundle ([#467](https://github.com/gosling-lang/gosling.js/issues/467)) ([1a21ff1](https://github.com/gosling-lang/gosling.js/commit/1a21ff1357f24524f4423f17c44f218d9d422341))
+* responsive quantitative color legend for compact tracks ([#462](https://github.com/gosling-lang/gosling.js/issues/462)) ([40c3edf](https://github.com/gosling-lang/gosling.js/commit/40c3edf8e572f0e18b4fca7dc7b1dfc8afb1daaf))
 
 
 
