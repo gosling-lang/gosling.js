@@ -51,15 +51,31 @@
 
 ## [0.9.3](https://github.com/gosling-lang/gosling.js/compare/v0.9.2...v0.9.3) (2021-08-18)
 ## [0.9.3](https://github.com/gosling-lang/gosling.js/compare/v0.9.0...v0.9.3) (2021-08-20)
+## [0.9.3](https://github.com/gosling-lang/gosling.js/compare/v0.9.2...v0.9.3) (2021-08-18)
 
 
 ### Features
 
-* add explicit PartialTrack def to schema ([#466](https://github.com/gosling-lang/gosling.js/issues/466)) ([7f02cd3](https://github.com/gosling-lang/gosling.js/commit/7f02cd3efb8bf3f6840a44f603c9e05d13a77c5a))
-* add yDomain ([a6be28e](https://github.com/gosling-lang/gosling.js/commit/a6be28eb4b3ca8e63ab240e1c4de7695dd9e87ea))
-* enable showing track titles in circular layouts ([#464](https://github.com/gosling-lang/gosling.js/issues/464)) ([4bbc4f9](https://github.com/gosling-lang/gosling.js/commit/4bbc4f983f81c93a30b0efba673e436a88b6228d))
-* inline bam worker to the bundle ([#467](https://github.com/gosling-lang/gosling.js/issues/467)) ([1a21ff1](https://github.com/gosling-lang/gosling.js/commit/1a21ff1357f24524f4423f17c44f218d9d422341))
-* responsive quantitative color legend for compact tracks ([#462](https://github.com/gosling-lang/gosling.js/issues/462)) ([40c3edf](https://github.com/gosling-lang/gosling.js/commit/40c3edf8e572f0e18b4fca7dc7b1dfc8afb1daaf))
+* inline bam worker to the bundle ([#467](https://github.com/gosling-lang/gosling.js/issues/467)) ([95d4f1f](https://github.com/gosling-lang/gosling.js/commit/95d4f1fb97249835952c42807d2904594d1fa88b))
+
+
+
+## [0.9.2](https://github.com/gosling-lang/gosling.js/compare/v0.9.1...v0.9.2) (2021-08-17)
+
+
+### Features
+
+* add explicit PartialTrack def to schema ([#466](https://github.com/gosling-lang/gosling.js/issues/466)) ([c5c9be5](https://github.com/gosling-lang/gosling.js/commit/c5c9be599a5fdd9d375495f6e5d71ffdc364bbab))
+
+
+
+## [0.9.1](https://github.com/gosling-lang/gosling.js/compare/v0.9.0...v0.9.1) (2021-08-14)
+
+
+### Features
+
+* enable showing track titles in circular layouts ([#464](https://github.com/gosling-lang/gosling.js/issues/464)) ([e223377](https://github.com/gosling-lang/gosling.js/commit/e2233778a22bf37ac1ca85fdc7d77e538a1651a7))
+* responsive quantitative color legend for compact tracks ([#462](https://github.com/gosling-lang/gosling.js/issues/462)) ([9d56cbe](https://github.com/gosling-lang/gosling.js/commit/9d56cbe242b3c1ef0e0ec726436b935fc7bd0fe7))
 
 
 

@@ -2507,6 +2507,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 =======
 >>>>>>> c5c9be5 (feat: add explicit PartialTrack def to schema (#466))
@@ -2660,6 +2661,8 @@
                   }
                 ]
 >>>>>>> 7f02cd3 (feat: add explicit PartialTrack def to schema (#466))
+=======
+>>>>>>> a5dd569 (chore: rebase)
               },
               "_renderingId": {
                 "type": "string"
@@ -2779,6 +2782,7 @@
               "x1LinkingId": {
                 "type": "string"
               },
+<<<<<<< HEAD
 =======
 >>>>>>> c5c9be5 (feat: add explicit PartialTrack def to schema (#466))
 =======
@@ -2790,6 +2794,8 @@
 >>>>>>> 9a3cd64 (chore: rebase)
 =======
 >>>>>>> c5c9be5 (feat: add explicit PartialTrack def to schema (#466))
+=======
+>>>>>>> a5dd569 (chore: rebase)
               "x1e": {
                 "$ref": "#/definitions/Channel"
               },

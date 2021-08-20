@@ -78,11 +78,7 @@ export function drawCircularTitle(
     const endRad = valueToRadian(scaledEndX + padding, tw, startAngle, endAngle);
 
     g.lineStyle(1, colorToHex('red'), 0, 0.5);
-<<<<<<< HEAD
     g.beginFill(colorToHex(theme.track.titleBackground), 0.5); // TODO: support `theme.track.titleBackgroundOpacity`
-=======
-    g.beginFill(colorToHex(theme.track.titleBackground), 0.8); // override the opacity
->>>>>>> 4bbc4f9 (feat: enable showing track titles in circular layouts (#464))
     g.moveTo(pos.x, pos.y);
     g.arc(cx, cy, titleR - metric.height, startRad, endRad, true);
     g.arc(cx, cy, titleR, endRad, startRad, false);
