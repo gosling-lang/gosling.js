@@ -779,6 +779,8 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                 }
 
                 tile.gos.tabularDataFiltered = Array.from(tile.gos.tabularData);
+
+                // !! TODO: why are we transforming data multiple times for each track?
                 /*
                  * Data Transformation
                  */

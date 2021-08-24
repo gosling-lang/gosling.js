@@ -120,7 +120,6 @@ export function isIdenticalDataTransformSpec(specs: (DataTransform[] | undefined
     return isIdentical;
 }
 
-// !!! For the rendering performance, we need to keep tracks in a single track by superposing them as much as we can so that same data will not be loaded duplicately.
 /**
  * Spread overlaid tracks if they are assigned to different data/metadata.
  * This process is necessary since we are passing over each track to HiGlass, and if a single track is mapped to multiple datastes, HiGlass cannot handle that.
@@ -133,8 +132,8 @@ export function spreadTracksByData(tracks: Track[]): Track[] {
                 return [t];
             }
 
-            if (t.overlay.filter(s => s.data).length === 0) {
-                // overlaid tracks use the same data from the parent, so no point to spread.
+            if (t.overlay.filter(s => s.data).length === 0 && t.overlay.filter(s => s.dataTransform).length === 0) {
+                // overlaid tracks use the same data/dataTransform from the parent, so no point to spread.
                 return [t];
             }
 
@@ -153,10 +152,21 @@ export function spreadTracksByData(tracks: Track[]): Track[] {
             const original: OverlaidTrack = JSON.parse(JSON.stringify(base));
             original.overlay = [];
 
-            // TODO: This is a very naive apporach, and we can do better!
             t.overlay.forEach((subSpec, i) => {
-                if (!subSpec.data) {
-                    // No `data` is used, so just put that into the original `overlay` option.
+                if (!t.data) {
+                    t.data = subSpec.data;
+                }
+                if (!t.dataTransform) {
+                    t.dataTransform = subSpec.dataTransform;
+                }
+
+                // Determine if this `subSpec` should belong to the parent or become  a separate track
+                if (
+                    (!t.data || !subSpec.data || isIdenticalDataSpec([t.data, subSpec.data])) &&
+                    (!t.dataTransform ||
+                        !subSpec.dataTransform ||
+                        isIdenticalDataTransformSpec([t.dataTransform, subSpec.dataTransform]))
+                ) {
                     original.overlay.push(subSpec);
                     return;
                 }

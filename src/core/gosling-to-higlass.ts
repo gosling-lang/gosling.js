@@ -98,29 +98,29 @@ export function goslingToHiGlass(
         };
 
         if (
-            gosTrack.data &&
-            IsDataDeep(gosTrack.data) &&
-            (gosTrack.data.type === 'csv' ||
-                gosTrack.data.type === 'json' ||
-                gosTrack.data.type === 'bigwig' ||
-                gosTrack.data.type === 'bam')
+            firstResolvedSpec.data &&
+            IsDataDeep(firstResolvedSpec.data) &&
+            (firstResolvedSpec.data.type === 'csv' ||
+                firstResolvedSpec.data.type === 'json' ||
+                firstResolvedSpec.data.type === 'bigwig' ||
+                firstResolvedSpec.data.type === 'bam')
         ) {
             // use gosling's custom data fetchers
             hgTrack.data = {
-                ...gosTrack.data,
+                ...firstResolvedSpec.data,
                 // Additionally, add assembly, otherwise, a default genome build is used
                 assembly,
                 // Add a data transformation spec so that the fetcher can properly sample datasets
-                filter: (gosTrack as any).dataTransform?.filter((f: DataTransform) => f.type === 'filter')
+                filter: (firstResolvedSpec as any).dataTransform?.filter((f: DataTransform) => f.type === 'filter')
             };
         }
 
-        const isMatrix = gosTrack.data?.type === 'matrix';
+        const isMatrix = firstResolvedSpec.data?.type === 'matrix';
         if (isMatrix) {
             // Use HiGlass' heatmap track for matrix data
             hgTrack.type = 'heatmap';
             hgTrack.options.colorRange =
-                (gosTrack as any)?.color.range === 'warm'
+                (firstResolvedSpec as any)?.color.range === 'warm'
                     ? ['white', 'rgba(245,166,35,1.0)', 'rgba(208,2,27,1.0)', 'black']
                     : viridisColorMap;
             hgTrack.options.trackBorderWidth = 1;
@@ -128,17 +128,17 @@ export function goslingToHiGlass(
             hgTrack.options.colorbarPosition = (firstResolvedSpec.color as any)?.legend ? 'topRight' : 'hidden';
         }
 
-        if (gosTrack.overlayOnPreviousTrack) {
+        if (firstResolvedSpec.overlayOnPreviousTrack) {
             hgModel
-                .setViewOrientation(gosTrack.orientation) // TODO: Orientation should be assigned to 'individual' views
+                .setViewOrientation(firstResolvedSpec.orientation) // TODO: Orientation should be assigned to 'individual' views
                 .addTrackToCombined(hgTrack);
         } else {
             hgModel
-                .setViewOrientation(gosTrack.orientation) // TODO: Orientation should be assigned to 'individual' views
+                .setViewOrientation(firstResolvedSpec.orientation) // TODO: Orientation should be assigned to 'individual' views
                 .setAssembly(assembly) // TODO: Assembly should be assigned to 'individual' views
-                .addDefaultView(gosTrack.id ?? uuid.v1(), assembly)
+                .addDefaultView(firstResolvedSpec.id ?? uuid.v1(), assembly)
                 .setDomain(xDomain, Is2DTrack(firstResolvedSpec) ? yDomain : xDomain)
-                .adjustDomain(gosTrack.orientation, width, height)
+                .adjustDomain(firstResolvedSpec.orientation, width, height)
                 .setMainTrack(hgTrack)
                 .addTrackSourceServers(server)
                 .setZoomFixed(firstResolvedSpec.static === true)
