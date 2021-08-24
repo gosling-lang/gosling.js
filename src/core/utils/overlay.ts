@@ -1,4 +1,12 @@
-import { AxisPosition, SingleTrack, OverlaidTrack, Track, ChannelDeep } from '../gosling.schema';
+import {
+    AxisPosition,
+    SingleTrack,
+    OverlaidTrack,
+    Track,
+    ChannelDeep,
+    DataDeep,
+    DataTransform
+} from '../gosling.schema';
 import assign from 'lodash/assign';
 import { IsChannelDeep, IsDataTrack, IsOverlaidTrack, IsSingleTrack } from '../gosling.schema.guards';
 
@@ -57,13 +65,68 @@ export function resolveSuperposedTracks(track: Track): SingleTrack[] {
     return corrected;
 }
 
+export function isIdenticalDataSpec(specs: (DataDeep | undefined)[]): boolean {
+    if (specs.length === 0) {
+        return false;
+    }
+
+    const definedSpecs = specs.filter(d => d) as DataDeep[];
+
+    if (definedSpecs.length !== specs.length) {
+        return false;
+    }
+
+    // Iterate keys to check if these are identical
+    const keys = Object.keys(definedSpecs[0]).sort();
+    let isIdentical = true;
+    keys.forEach(k => {
+        const uniqueProperties = Array.from(new Set(definedSpecs.map(d => JSON.stringify((d as any)[k]))));
+        if (uniqueProperties.length !== 1) {
+            isIdentical = false;
+            return;
+        }
+    });
+    return isIdentical;
+}
+
+export function isIdenticalDataTransformSpec(specs: (DataTransform[] | undefined)[]): boolean {
+    if (specs.length === 0) {
+        return false;
+    }
+
+    const definedSpecs = specs.filter(d => d) as DataTransform[][];
+
+    if (definedSpecs.length !== specs.length) {
+        return false;
+    }
+
+    if (Array.from(new Set(definedSpecs.map(d => d.length))).length !== 1) {
+        // the length is different, so return early
+        return false;
+    }
+
+    // Iterate keys to check if these are identical
+    let isIdentical = true;
+    definedSpecs[0].forEach((dt, i) => {
+        const keys = Object.keys(dt).sort();
+        keys.forEach(k => {
+            const uniqueProperties = Array.from(new Set(definedSpecs.map(d => JSON.stringify((d[i] as any)[k]))));
+            if (uniqueProperties.length !== 1) {
+                isIdentical = false;
+                return;
+            }
+        });
+    });
+    return isIdentical;
+}
+
 // !!! For the rendering performance, we need to keep tracks in a single track by superposing them as much as we can so that same data will not be loaded duplicately.
 /**
  * Spread overlaid tracks if they are assigned to different data/metadata.
  * This process is necessary since we are passing over each track to HiGlass, and if a single track is mapped to multiple datastes, HiGlass cannot handle that.
  */
 export function spreadTracksByData(tracks: Track[]): Track[] {
-    return ([] as Track[]).concat(
+    const newTracks = ([] as Track[]).concat(
         ...tracks.map(t => {
             if (IsDataTrack(t) || !IsOverlaidTrack(t) || t.overlay.length <= 1) {
                 // no overlaid tracks to spread
@@ -71,7 +134,15 @@ export function spreadTracksByData(tracks: Track[]): Track[] {
             }
 
             if (t.overlay.filter(s => s.data).length === 0) {
-                // overlaid tracks use the same data, so no point to spread.
+                // overlaid tracks use the same data from the parent, so no point to spread.
+                return [t];
+            }
+
+            if (
+                isIdenticalDataSpec(t.overlay.map(s => s.data)) &&
+                isIdenticalDataTransformSpec(t.overlay.map(s => s.dataTransform))
+            ) {
+                // individual overlaid tracks define the same data, so no point to spread.
                 return [t];
             }
 
@@ -115,4 +186,6 @@ export function spreadTracksByData(tracks: Track[]): Track[] {
             });
         })
     );
+
+    return newTracks;
 }
