@@ -152,7 +152,7 @@ export interface GenericLocks {
 }
 
 export interface LocksByViewUid {
-    [k: string]: string;
+    [k: string]: any; // string | { [k: string]: { lock: string, axis: string } };
 }
 
 export interface ValueScaleLocks {

@@ -393,6 +393,7 @@ export interface CSVData {
     genomicFieldsToConvert?: {
         chromosomeField: string;
         genomicFields: string[];
+        assembly?: Assembly;
     }[];
 }
 

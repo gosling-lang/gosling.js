@@ -20,7 +20,7 @@ const example = {
                         options: {
                             layout: 'linear',
                             innerRadius: null,
-                            width: 400,
+                            width: 1000,
                             height: 44,
                             theme: {
                                 base: 'light',
@@ -286,7 +286,7 @@ const example = {
                         contents: [
                             {
                                 type: 'gosling-track',
-                                width: 400,
+                                width: 1000,
                                 height: 14,
                                 options: {
                                     showMousePosition: true,
@@ -313,10 +313,10 @@ const example = {
                                         x: {
                                             field: 'chromStart',
                                             type: 'genomic',
-                                            domain: {
-                                                chromosome: '17',
-                                                interval: [20000000, 50000000]
-                                            },
+                                            // domain: {
+                                            //     chromosome: '17',
+                                            //     interval: [20000000, 50000000]
+                                            // },
                                             linkingId: 'top',
                                             axis: 'top'
                                         },
@@ -325,7 +325,7 @@ const example = {
                                         size: { value: 14 },
                                         stroke: { value: 'black' },
                                         strokeWidth: { value: 0.5 },
-                                        width: 400,
+                                        width: 1000,
                                         height: 44,
                                         overlay: [
                                             {
@@ -631,8 +631,8 @@ const example = {
                 gallery: [],
                 whole: []
             },
-            initialXDomain: [2510780562, 2540780562],
-            initialYDomain: [2510780562, 2540780562],
+            initialXDomain: [0, 3088269832],
+            initialYDomain: [0, 3088269832],
             zoomFixed: false,
             zoomLimits: [1, null],
             uid: 'view-1',
@@ -653,13 +653,30 @@ const example = {
                 center: [
                     {
                         type: 'combined',
-                        width: 399,
-                        height: 400,
+                        width: 999,
+                        height: 430,
                         contents: [
                             {
                                 type: 'gosling-2d-track',
-                                width: 400,
-                                height: 400,
+                                width: 1000,
+                                height: 430,
+                                data: {
+                                    url:
+                                        'https://s3.amazonaws.com/gosling-lang.org/data/ideogram.js/homo_sapiens-mus_musculus-synteny-v73-adjusted.tsv',
+                                    type: 'csv',
+                                    genomicFieldsToConvert: [
+                                        {
+                                            chromosomeField: 'Chromosome_spec1',
+                                            genomicFields: ['Start_spec1', 'End_spec1']
+                                        },
+                                        {
+                                            chromosomeField: 'Chromosome_spec2',
+                                            genomicFields: ['Start_spec2', 'End_spec2']
+                                        }
+                                    ],
+                                    separator: '\t',
+                                    assembly: 'hg38'
+                                },
                                 options: {
                                     showMousePosition: true,
                                     mousePositionColor: '#000000',
@@ -676,7 +693,7 @@ const example = {
                                     backgroundColor: 'transparent',
                                     spec: {
                                         layout: 'linear',
-                                        xDomain: { chromosome: '1' },
+                                        // xDomain: { chromosome: '1' },
                                         assembly: 'hg38',
                                         orientation: 'horizontal',
                                         static: false,
@@ -686,32 +703,39 @@ const example = {
                                         style: { outlineWidth: 0 },
                                         data: {
                                             url:
-                                                'https://raw.githubusercontent.com/vigsterkr/circos/master/data/5/segdup.txt',
+                                                'https://s3.amazonaws.com/gosling-lang.org/data/ideogram.js/homo_sapiens-mus_musculus-synteny-v73-adjusted.tsv',
                                             type: 'csv',
-                                            headerNames: ['id', 'chr', 'p1', 'p2'],
-                                            chromosomePrefix: 'hs',
-                                            chromosomeField: 'chr',
-                                            genomicFields: ['p1', 'p2'],
-                                            separator: ' ',
-                                            longToWideId: 'id'
+                                            genomicFieldsToConvert: [
+                                                {
+                                                    chromosomeField: 'Chromosome_spec1',
+                                                    genomicFields: ['Start_spec1', 'End_spec1']
+                                                },
+                                                {
+                                                    chromosomeField: 'Chromosome_spec2',
+                                                    genomicFields: ['Start_spec2', 'End_spec2']
+                                                }
+                                            ],
+                                            separator: '\t',
+                                            assembly: 'hg38'
                                         },
                                         mark: 'betweenLink',
                                         x: {
-                                            field: 'p1',
+                                            field: 'Start_spec1',
                                             type: 'genomic',
                                             axis: 'none',
-                                            linkingId: 'top',
-                                            domain: { chromosome: '1' }
+                                            linkingId: 'top'
+                                            // domain: { chromosome: '1' }
                                         },
-                                        xe: { field: 'p2', type: 'genomic' },
+                                        xe: { field: 'End_spec1', type: 'genomic' },
                                         x1: {
-                                            field: 'p1_2',
+                                            field: 'Start_spec2',
                                             type: 'genomic',
                                             linkingId: 'bottom'
                                         },
-                                        x1e: { field: 'p2_2', type: 'genomic' },
-                                        stroke: {
-                                            field: 'chr',
+                                        x1e: { field: 'End_spec2', type: 'genomic' },
+                                        strokeWidth: { value: 0 },
+                                        color: {
+                                            field: 'Chromosome_spec1',
                                             type: 'nominal',
                                             domain: [
                                                 'chr1',
@@ -741,8 +765,8 @@ const example = {
                                             ]
                                         },
                                         opacity: { value: 0.5 },
-                                        width: 400,
-                                        height: 400,
+                                        width: 1000,
+                                        height: 430,
                                         overlayOnPreviousTrack: false
                                     },
                                     theme: {
@@ -986,17 +1010,6 @@ const example = {
                                             quantitativeSizeRange: [2, 6]
                                         }
                                     }
-                                },
-                                data: {
-                                    url: 'https://raw.githubusercontent.com/vigsterkr/circos/master/data/5/segdup.txt',
-                                    type: 'csv',
-                                    headerNames: ['id', 'chr', 'p1', 'p2'],
-                                    chromosomePrefix: 'hs',
-                                    chromosomeField: 'chr',
-                                    genomicFields: ['p1', 'p2'],
-                                    separator: ' ',
-                                    longToWideId: 'id',
-                                    assembly: 'hg38'
                                 }
                             }
                         ]
@@ -1007,7 +1020,7 @@ const example = {
                 gallery: [],
                 whole: []
             },
-            initialXDomain: [1, 248956422],
+            initialXDomain: [1, 3088269832],
             initialYDomain: [0, 3088269832],
             zoomFixed: false,
             zoomLimits: [1, null],
@@ -1029,12 +1042,12 @@ const example = {
                 center: [
                     {
                         type: 'combined',
-                        width: 399,
+                        width: 999,
                         height: 14,
                         contents: [
                             {
                                 type: 'gosling-track',
-                                width: 400,
+                                width: 1000,
                                 height: 14,
                                 options: {
                                     showMousePosition: true,
@@ -1062,7 +1075,7 @@ const example = {
                                             field: 'chromStart',
                                             type: 'genomic',
                                             axis: 'bottom',
-                                            domain: { chromosome: '3' },
+                                            // domain: { chromosome: '3' },
                                             linkingId: 'bottom'
                                         },
                                         xe: { field: 'chromEnd', type: 'genomic' },
@@ -1070,7 +1083,7 @@ const example = {
                                         size: { value: 14 },
                                         stroke: { value: 'black' },
                                         strokeWidth: { value: 0.5 },
-                                        width: 400,
+                                        width: 1000,
                                         height: 44,
                                         overlay: [
                                             {
@@ -1640,8 +1653,8 @@ const example = {
                 gallery: [],
                 whole: []
             },
-            initialXDomain: [491149952, 689445510],
-            initialYDomain: [491149952, 689445510],
+            initialXDomain: [0, 3088269832],
+            initialYDomain: [0, 3088269832],
             zoomFixed: false,
             zoomLimits: [1, null],
             uid: 'view-3'

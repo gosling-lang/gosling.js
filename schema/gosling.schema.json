@@ -212,6 +212,9 @@
           "items": {
             "additionalProperties": false,
             "properties": {
+              "assembly": {
+                "$ref": "#/definitions/Assembly"
+              },
               "chromosomeField": {
                 "type": "string"
               },

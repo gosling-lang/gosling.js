@@ -147,7 +147,11 @@ export function goslingToHiGlass(
                 .adjustDomain(firstResolvedSpec.orientation, width, height)
                 .setMainTrack(hgTrack)
                 .addTrackSourceServers(server)
-                .setZoomFixed(firstResolvedSpec.static === true)
+                .setZoomFixed(
+                    Is2DTrack(firstResolvedSpec) && firstResolvedSpec.mark === 'betweenLink'
+                        ? true
+                        : firstResolvedSpec.static === true
+                )
                 .setLayout(layout);
         }
 

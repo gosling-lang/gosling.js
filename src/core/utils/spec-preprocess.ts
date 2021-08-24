@@ -17,7 +17,8 @@ import {
     IsOverlaidTrack,
     IsFlatTracks,
     IsStackedTracks,
-    Is2DTrack
+    Is2DTrack,
+    IsConnectorView
 } from '../gosling.schema.guards';
 import {
     DEFAULT_INNER_RADIUS_PROP,
@@ -244,7 +245,7 @@ export function traverseToFixSpecDownstream(spec: GoslingSpec | SingleView, pare
             /**
              * A track with 2D genomic coordinates is forced to use a linear layout
              */
-            if (Is2DTrack(track)) {
+            if (Is2DTrack(track) && !IsConnectorView(track)) {
                 // TODO: Add a test for this.
                 track.layout = 'linear';
             }

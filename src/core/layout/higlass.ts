@@ -13,14 +13,12 @@ export function renderHiGlass(
     theme: CompleteThemeDeep
 ) {
     if (trackInfos.length === 0) {
-        // no tracks to render
+        // no tracks to render, so no point to render HiGlass.
         return;
     }
 
-    // HiGlass model
+    /* Generate/update the HiGlass model by iterating tracks */
     const hgModel = new HiGlassModel();
-
-    /* Update the HiGlass model by iterating tracks */
     trackInfos.forEach(tb => {
         const { track, boundingBox: bb, layout } = tb;
         goslingToHiGlass(hgModel, track, bb, layout, theme);
@@ -29,8 +27,7 @@ export function renderHiGlass(
     /* Add linking information to the HiGlass model */
     const linkingInfos = getLinkingInfo(hgModel);
 
-    // Brushing
-    // (between a view with `brush` and a view having the same linking name)
+    /* Linking between a brush and a view */
     linkingInfos
         .filter(d => d.isBrush)
         .forEach(info => {
@@ -43,33 +40,60 @@ export function renderHiGlass(
             );
         });
 
-    // location/zoom lock information
-    // fill `locksByViewUid`
+    /*
+     * Linking zoom levels between views
+     */
+
+    // Set `locksByViewUid`
     linkingInfos
         .filter(d => !d.isBrush)
         .forEach(d => {
-            hgModel.spec().zoomLocks.locksByViewUid[d.viewId] = d.linkId;
-            hgModel.spec().locationLocks.locksByViewUid[d.viewId] = d.linkId;
+            hgModel.spec().zoomLocks.locksByViewUid[d.viewId] = d.zoomLinkingId;
         });
 
-    // fill `locksDict`
-    const uniqueLinkIds = Array.from(new Set(linkingInfos.map(d => d.linkId)));
+    // Set `locksDict`
+    const uniqueZoomLinkIds = Array.from(new Set(linkingInfos.map(d => d.zoomLinkingId)));
+    uniqueZoomLinkIds.forEach(zoomLinkingId => {
+        hgModel.spec().zoomLocks.locksDict[zoomLinkingId] = { uid: zoomLinkingId };
+        linkingInfos
+            .filter(d => !d.isBrush)
+            .filter(d => d.zoomLinkingId === zoomLinkingId)
+            .forEach(d => {
+                hgModel.spec().zoomLocks.locksDict[zoomLinkingId][d.viewId] = [124625310.5, 124625310.5, 249250.621];
+            });
+    });
 
-    uniqueLinkIds.forEach(linkId => {
-        hgModel.spec().zoomLocks.locksDict[linkId] = { uid: linkId };
+    /*
+     * Linking locations between views
+     */
+
+    // Set `locksByViewUid`
+    linkingInfos
+        .filter(d => !d.isBrush)
+        .forEach(d => {
+            if (!hgModel.spec().locationLocks.locksByViewUid[d.viewId]) {
+                hgModel.spec().locationLocks.locksByViewUid[d.viewId] = {};
+            }
+            hgModel.spec().locationLocks.locksByViewUid[d.viewId][d.channel === 'x' ? 'x' : 'y'] = {
+                lock: d.linkId,
+                axis: d.viewId === 'view-3' ? 'y' : 'x'
+            };
+        });
+
+    // Set `locksDict`
+    const uniqueLocationLinkIds = Array.from(new Set(linkingInfos.map(d => d.linkId)));
+    uniqueLocationLinkIds.forEach(linkId => {
         hgModel.spec().locationLocks.locksDict[linkId] = { uid: linkId };
-
         linkingInfos
             .filter(d => !d.isBrush)
             .filter(d => d.linkId === linkId)
             .forEach(d => {
-                hgModel.spec().zoomLocks.locksDict[linkId][d.viewId] = [124625310.5, 124625310.5, 249250.621];
                 hgModel.spec().locationLocks.locksDict[linkId][d.viewId] = [124625310.5, 124625310.5, 249250.621];
             });
     });
 
     // !! Uncomment the following code to test with specific HiGlass viewConfig
-    hgModel.setExampleHiglassViewConfig();
+    // hgModel.setExampleHiglassViewConfig();
 
     setHg(hgModel.spec(), getBoundingBox(trackInfos));
 }

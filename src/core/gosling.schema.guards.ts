@@ -145,6 +145,24 @@ export function Is2DTrack(track: Track) {
     );
 }
 
+/**
+ * Is this a between link view with two independent axes?
+ * TODO: should we include orthorgonal view that use both x and y for genomics fields?
+ */
+export function IsConnectorView(track: Track) {
+    return (
+        IsSingleTrack(track) &&
+        track.mark === 'betweenLink' &&
+        IsChannelDeep(track['x']) &&
+        track['x'].type === 'genomic' &&
+        IsChannelDeep(track['x1']) &&
+        track['x1'].type === 'genomic' &&
+        track['x'].linkingId &&
+        track['x1'].linkingId &&
+        track['x'].linkingId !== track['x1'].linkingId
+    );
+}
+
 export function IsChannelValue(
     channel: ChannelDeep | ChannelValue | ChannelBind | undefined | 'none'
 ): channel is ChannelValue {
