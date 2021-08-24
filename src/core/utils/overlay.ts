@@ -125,7 +125,7 @@ export function isIdenticalDataTransformSpec(specs: (DataTransform[] | undefined
  * This process is necessary since we are passing over each track to HiGlass, and if a single track is mapped to multiple datastes, HiGlass cannot handle that.
  */
 export function spreadTracksByData(tracks: Track[]): Track[] {
-    const newTracks = ([] as Track[]).concat(
+    return ([] as Track[]).concat(
         ...tracks.map(t => {
             if (IsDataTrack(t) || !IsOverlaidTrack(t) || t.overlay.length <= 1) {
                 // no overlaid tracks to spread
@@ -153,6 +153,7 @@ export function spreadTracksByData(tracks: Track[]): Track[] {
             original.overlay = [];
 
             t.overlay.forEach((subSpec, i) => {
+                // If data specs are undefined, put the first spec to the parent
                 if (!t.data) {
                     t.data = subSpec.data;
                 }
@@ -160,7 +161,7 @@ export function spreadTracksByData(tracks: Track[]): Track[] {
                     t.dataTransform = subSpec.dataTransform;
                 }
 
-                // Determine if this `subSpec` should belong to the parent or become  a separate track
+                // Determine if this `subSpec` should be added to `overlay` or become a separate track
                 if (
                     (!t.data || !subSpec.data || isIdenticalDataSpec([t.data, subSpec.data])) &&
                     (!t.dataTransform ||
@@ -196,6 +197,4 @@ export function spreadTracksByData(tracks: Track[]): Track[] {
             });
         })
     );
-
-    return newTracks;
 }
