@@ -411,6 +411,10 @@ td {
     min-width: 20em;
 }
 
+.description-wrapper > header {
+    margin-bottom: 10px;
+}
+
 .show-description-button {
     z-index: 1;
     display: flex;
