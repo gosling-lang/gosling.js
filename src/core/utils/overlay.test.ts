@@ -68,9 +68,8 @@ describe('Spread Tracks By Data', () => {
         const spread = spreadTracksByData([
             { overlay: [{}, { data: { type: 'csv', url: '' } }], width: 100, height: 100 }
         ]);
-        expect(spread).toHaveLength(2);
-        expect('data' in spread[1]).toBe(true); // Any overlaid tracks w/ data will be spread
-        expect(spread[1].overlayOnPreviousTrack).toBe(true); // Any spread tracks will have `overlayOnPreviousTrack` flags
+        expect(spread).toHaveLength(1); // There is only one unique data/dataTransform specification, so should not spread.
+        expect('data' in spread[0]).toBe(true); // Since there is not data spec in the parent, it should be borrowed from a child.
     });
     it('overlay: [{}, { data }, { data }]', () => {
         const spread = spreadTracksByData([
@@ -84,11 +83,10 @@ describe('Spread Tracks By Data', () => {
                 height: 100
             }
         ]);
-        expect(spread).toHaveLength(3);
+        expect(spread).toHaveLength(2); // first and second will be stored in a single track
+        expect('data' in spread[0]).toBe(true);
         expect('data' in spread[1]).toBe(true);
-        expect('data' in spread[2]).toBe(true);
         expect(spread[1].overlayOnPreviousTrack).toBe(true); // Any spread tracks will have `overlayOnPreviousTrack` flags
-        expect(spread[2].overlayOnPreviousTrack).toBe(true); // Any spread tracks will have `overlayOnPreviousTrack` flags
     });
     it('overlay: [{ data1 }, { data2 }]', () => {
         const spread = spreadTracksByData([
@@ -127,6 +125,7 @@ describe('Spread Tracks By Data', () => {
         expect('data' in spread[1]).toBe(true);
         expect(spread[0].overlayOnPreviousTrack).toBe(false);
         expect(spread[1].overlayOnPreviousTrack).toBe(true);
+        expect(spread[2].overlayOnPreviousTrack).toBe(true);
         expect((spread[1] as any).y.axis).toBe('right'); // position axis on the right to prevent visual occlusion
         expect((spread[2] as any).y.axis).toBe('none'); // hide axis
     });

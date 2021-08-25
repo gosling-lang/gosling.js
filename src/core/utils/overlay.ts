@@ -34,9 +34,9 @@ export function resolveSuperposedTracks(track: Track): SingleTrack[] {
     delete (base as Partial<OverlaidTrack>).overlay; // remove `superpose` from the base spec
 
     const resolved: SingleTrack[] = [];
-    track.overlay.forEach((subSpec, i) => {
+    track.overlay.forEach((subSpec, i, arr) => {
         const spec = assign(JSON.parse(JSON.stringify(base)), subSpec) as SingleTrack;
-        if (spec.title && i !== 0) {
+        if (spec.title && i !== arr.length - 1) {
             // !!! This part should be consistent to `spreadTracksByData` defined on the bottom of this file
             delete spec.title; // remove `title` for the rest of the superposed tracks
         }
@@ -63,6 +63,85 @@ export function resolveSuperposedTracks(track: Track): SingleTrack[] {
     // ...
 
     return corrected;
+}
+
+/**
+ * Spread overlaid tracks if they are assigned to different data/metadata.
+ * This process is necessary since we are passing over each track to HiGlass, and if a single track is mapped to multiple datastes, HiGlass cannot handle that.
+ */
+export function spreadTracksByData(tracks: Track[]): Track[] {
+    return ([] as Track[]).concat(
+        ...tracks.map(t => {
+            if (IsDataTrack(t) || !IsOverlaidTrack(t) || t.overlay.length <= 1) {
+                // no overlaid tracks to spread
+                return [t];
+            }
+
+            if (t.overlay.filter(s => s.data).length === 0 && t.overlay.filter(s => s.dataTransform).length === 0) {
+                // overlaid tracks use the parent's data/dataTransform specs as it w/o re-specification, so no point to spread.
+                return [t];
+            }
+
+            if (
+                isIdenticalDataSpec([t.data, ...t.overlay.map(s => s.data)]) &&
+                isIdenticalDataTransformSpec([t.dataTransform, ...t.overlay.map(s => s.dataTransform)])
+            ) {
+                // individual overlaid tracks define the same data, so no point to spread.
+                return [t];
+            }
+
+            const base: SingleTrack = JSON.parse(JSON.stringify(t));
+            delete (base as Partial<OverlaidTrack>).overlay; // remove `overlay` from the base spec
+
+            const spread: Track[] = [];
+            const original: OverlaidTrack = JSON.parse(JSON.stringify(base));
+            original.overlay = [];
+
+            t.overlay.forEach((subSpec, i, arr) => {
+                // If data specs are undefined, put the first spec to the parent
+                if (!original.data) {
+                    original.data = subSpec.data;
+                }
+                if (!original.dataTransform) {
+                    original.dataTransform = subSpec.dataTransform;
+                }
+
+                // Determine if this `subSpec` should be added to `overlay` or become a separate track
+                if (
+                    (!original.data || !subSpec.data || isIdenticalDataSpec([original.data, subSpec.data])) &&
+                    (!original.dataTransform ||
+                        !subSpec.dataTransform ||
+                        isIdenticalDataTransformSpec([original.dataTransform, subSpec.dataTransform]))
+                ) {
+                    original.overlay.push(subSpec);
+                    return;
+                }
+
+                const spec = assign(JSON.parse(JSON.stringify(base)), subSpec) as SingleTrack;
+                if (spec.title && i !== arr.length - 1) {
+                    // !!! This part should be consistent to `resolveSuperposedTracks` defined on the top of this file
+                    delete spec.title; // remove `title` for the rest of the superposed tracks
+                }
+                spread.push(spec);
+            });
+
+            const output = original.overlay.length > 0 ? [original, ...spread] : spread;
+            return output.map((track, i) => {
+                const overlayOnPreviousTrack = i !== 0;
+
+                // Y axis should be positioned on the right or hidden if multiple tracks are overlaid to prevent visual occlussion.
+                // Refer to this issue: https://github.com/gosling-lang/gosling.js/issues/400
+                const y =
+                    IsSingleTrack(track) && IsChannelDeep(track.y) && !track.y.axis && overlayOnPreviousTrack
+                        ? ({ ...track.y, axis: i === 1 ? 'right' : 'none' } as ChannelDeep)
+                        : IsSingleTrack(track)
+                        ? track.y
+                        : undefined;
+
+                return { ...track, overlayOnPreviousTrack, y };
+            });
+        })
+    );
 }
 
 export function isIdenticalDataSpec(specs: (DataDeep | undefined)[]): boolean {
@@ -118,83 +197,4 @@ export function isIdenticalDataTransformSpec(specs: (DataTransform[] | undefined
         });
     });
     return isIdentical;
-}
-
-/**
- * Spread overlaid tracks if they are assigned to different data/metadata.
- * This process is necessary since we are passing over each track to HiGlass, and if a single track is mapped to multiple datastes, HiGlass cannot handle that.
- */
-export function spreadTracksByData(tracks: Track[]): Track[] {
-    return ([] as Track[]).concat(
-        ...tracks.map(t => {
-            if (IsDataTrack(t) || !IsOverlaidTrack(t) || t.overlay.length <= 1) {
-                // no overlaid tracks to spread
-                return [t];
-            }
-
-            if (t.overlay.filter(s => s.data).length === 0 && t.overlay.filter(s => s.dataTransform).length === 0) {
-                // overlaid tracks use the same data/dataTransform from the parent, so no point to spread.
-                return [t];
-            }
-
-            if (
-                isIdenticalDataSpec(t.overlay.map(s => s.data)) &&
-                isIdenticalDataTransformSpec(t.overlay.map(s => s.dataTransform))
-            ) {
-                // individual overlaid tracks define the same data, so no point to spread.
-                return [t];
-            }
-
-            const base: SingleTrack = JSON.parse(JSON.stringify(t));
-            delete (base as Partial<OverlaidTrack>).overlay; // remove `overlay` from the base spec
-
-            const spread: Track[] = [];
-            const original: OverlaidTrack = JSON.parse(JSON.stringify(base));
-            original.overlay = [];
-
-            t.overlay.forEach((subSpec, i) => {
-                // If data specs are undefined, put the first spec to the parent
-                if (!t.data) {
-                    t.data = subSpec.data;
-                }
-                if (!t.dataTransform) {
-                    t.dataTransform = subSpec.dataTransform;
-                }
-
-                // Determine if this `subSpec` should be added to `overlay` or become a separate track
-                if (
-                    (!t.data || !subSpec.data || isIdenticalDataSpec([t.data, subSpec.data])) &&
-                    (!t.dataTransform ||
-                        !subSpec.dataTransform ||
-                        isIdenticalDataTransformSpec([t.dataTransform, subSpec.dataTransform]))
-                ) {
-                    original.overlay.push(subSpec);
-                    return;
-                }
-
-                const spec = assign(JSON.parse(JSON.stringify(base)), subSpec) as SingleTrack;
-                if (spec.title && i !== 0) {
-                    // !!! This part should be consistent to `resolveSuperposedTracks` defined on the top of this file
-                    delete spec.title; // remove `title` for the rest of the superposed tracks
-                }
-                spread.push(spec);
-            });
-
-            const output = original.overlay.length > 0 ? [original, ...spread] : spread;
-            return output.map((track, i) => {
-                const overlayOnPreviousTrack = i !== 0;
-
-                // Y axis should be positioned on the right or hidden if multiple tracks are overlaid to prevent visual occlussion.
-                // Refer to this issue: https://github.com/gosling-lang/gosling.js/issues/400
-                const y =
-                    IsSingleTrack(track) && IsChannelDeep(track.y) && !track.y.axis && overlayOnPreviousTrack
-                        ? ({ ...track.y, axis: i === 1 ? 'right' : 'none' } as ChannelDeep)
-                        : IsSingleTrack(track)
-                        ? track.y
-                        : undefined;
-
-                return { ...track, overlayOnPreviousTrack, y };
-            });
-        })
-    );
 }

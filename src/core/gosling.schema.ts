@@ -205,6 +205,7 @@ export type DisplacementType = 'pile' | 'spread';
  */
 export type OverlaidTrack = Partial<SingleTrack> &
     CommonRequiredTrackDef & {
+        // This is a property internally used when compiling
         overlay: Partial<Omit<SingleTrack, 'height' | 'width' | 'layout' | 'title' | 'subtitle'>>[];
     };
 
