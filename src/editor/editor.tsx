@@ -223,7 +223,7 @@ function Editor(props: any) {
     useEffect(() => {
         previewData.current = [];
         setSelectedPreviewData(0);
-        setCode(urlSpec ?? stringify(demo.spec as GoslingSpec));
+        setCode(urlSpec ?? (urlGist ? emptySpec() : stringify(demo.spec as GoslingSpec)));
         setHg(undefined);
     }, [demo]);
 
