@@ -163,7 +163,6 @@ export function traverseToFixSpecDownstream(spec: GoslingSpec | SingleView, pare
     if ('tracks' in spec) {
         let tracks: Track[] = convertToFlatTracks(spec);
 
-        // !!! TODO: (FOR THE RENDERING PERFORMANCE) We need to also combine overlaid tracks if they use identical data spec so that we have to load the data only once.
         // !!! Be aware that this should be taken before fixing `overlayOnPreviousTrack` options.
         /**
          * Spread superposed tracks if they are assigned to different data spec.

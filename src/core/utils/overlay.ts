@@ -1,4 +1,12 @@
-import { AxisPosition, SingleTrack, OverlaidTrack, Track, ChannelDeep } from '../gosling.schema';
+import {
+    AxisPosition,
+    SingleTrack,
+    OverlaidTrack,
+    Track,
+    ChannelDeep,
+    DataDeep,
+    DataTransform
+} from '../gosling.schema';
 import assign from 'lodash/assign';
 import { IsChannelDeep, IsDataTrack, IsOverlaidTrack, IsSingleTrack } from '../gosling.schema.guards';
 
@@ -29,8 +37,7 @@ export function resolveSuperposedTracks(track: Track): SingleTrack[] {
     track.overlay.forEach((subSpec, i) => {
         const spec = assign(JSON.parse(JSON.stringify(base)), subSpec) as SingleTrack;
         if (spec.title && i !== 0) {
-            // !!! This part should be consistent to `spreadTracksByData` defined on the bottom of this file
-            delete spec.title; // remove `title` for the rest of the superposed tracks
+            delete spec.title;
         }
         resolved.push(spec);
     });
@@ -57,7 +64,6 @@ export function resolveSuperposedTracks(track: Track): SingleTrack[] {
     return corrected;
 }
 
-// !!! For the rendering performance, we need to keep tracks in a single track by superposing them as much as we can so that same data will not be loaded duplicately.
 /**
  * Spread overlaid tracks if they are assigned to different data/metadata.
  * This process is necessary since we are passing over each track to HiGlass, and if a single track is mapped to multiple datastes, HiGlass cannot handle that.
@@ -70,8 +76,16 @@ export function spreadTracksByData(tracks: Track[]): Track[] {
                 return [t];
             }
 
-            if (t.overlay.filter(s => s.data).length === 0) {
-                // overlaid tracks use the same data, so no point to spread.
+            if (t.overlay.filter(s => s.data).length === 0 && t.overlay.filter(s => s.dataTransform).length === 0) {
+                // overlaid tracks use the parent's data/dataTransform specs as it w/o re-specification, so no point to spread.
+                return [t];
+            }
+
+            if (
+                isIdenticalDataSpec([t.data, ...t.overlay.map(s => s.data)]) &&
+                isIdenticalDataTransformSpec([t.dataTransform, ...t.overlay.map(s => s.dataTransform)])
+            ) {
+                // individual overlaid tracks define the same data, so no point to spread.
                 return [t];
             }
 
@@ -82,24 +96,31 @@ export function spreadTracksByData(tracks: Track[]): Track[] {
             const original: OverlaidTrack = JSON.parse(JSON.stringify(base));
             original.overlay = [];
 
-            // TODO: This is a very naive apporach, and we can do better!
-            t.overlay.forEach((subSpec, i) => {
-                if (!subSpec.data) {
-                    // No `data` is used, so just put that into the original `overlay` option.
+            t.overlay.forEach(subSpec => {
+                // If data specs are undefined, put the first spec to the parent
+                if (!original.data) {
+                    original.data = subSpec.data;
+                }
+                if (!original.dataTransform) {
+                    original.dataTransform = subSpec.dataTransform;
+                }
+
+                // Determine if this `subSpec` should be added to `overlay` or become a separate track
+                if (
+                    (!subSpec.data || isIdenticalDataSpec([original.data, subSpec.data])) &&
+                    (!subSpec.dataTransform ||
+                        isIdenticalDataTransformSpec([original.dataTransform, subSpec.dataTransform]))
+                ) {
                     original.overlay.push(subSpec);
                     return;
                 }
 
                 const spec = assign(JSON.parse(JSON.stringify(base)), subSpec) as SingleTrack;
-                if (spec.title && i !== 0) {
-                    // !!! This part should be consistent to `resolveSuperposedTracks` defined on the top of this file
-                    delete spec.title; // remove `title` for the rest of the superposed tracks
-                }
                 spread.push(spec);
             });
 
             const output = original.overlay.length > 0 ? [original, ...spread] : spread;
-            return output.map((track, i) => {
+            return output.map((track, i, arr) => {
                 const overlayOnPreviousTrack = i !== 0;
 
                 // Y axis should be positioned on the right or hidden if multiple tracks are overlaid to prevent visual occlussion.
@@ -111,8 +132,66 @@ export function spreadTracksByData(tracks: Track[]): Track[] {
                         ? track.y
                         : undefined;
 
+                if (track.title && i !== arr.length - 1 && arr.length !== 1) {
+                    delete track.title; // remove `title` except the last one
+                }
                 return { ...track, overlayOnPreviousTrack, y };
             });
         })
     );
+}
+
+export function isIdenticalDataSpec(specs: (DataDeep | undefined)[]): boolean {
+    if (specs.length === 0) {
+        return false;
+    }
+
+    const definedSpecs = specs.filter(d => d) as DataDeep[];
+
+    if (definedSpecs.length !== specs.length) {
+        return false;
+    }
+
+    // Iterate keys to check if these are identical
+    const keys = Object.keys(definedSpecs[0]).sort();
+    let isIdentical = true;
+    keys.forEach(k => {
+        const uniqueProperties = Array.from(new Set(definedSpecs.map(d => JSON.stringify((d as any)[k]))));
+        if (uniqueProperties.length !== 1) {
+            isIdentical = false;
+            return;
+        }
+    });
+    return isIdentical;
+}
+
+export function isIdenticalDataTransformSpec(specs: (DataTransform[] | undefined)[]): boolean {
+    if (specs.length === 0) {
+        return false;
+    }
+
+    const definedSpecs = specs.filter(d => d) as DataTransform[][];
+
+    if (definedSpecs.length !== specs.length) {
+        return false;
+    }
+
+    if (Array.from(new Set(definedSpecs.map(d => d.length))).length !== 1) {
+        // the length is different, so return early
+        return false;
+    }
+
+    // Iterate keys to check if these are identical
+    let isIdentical = true;
+    definedSpecs[0].forEach((dt, i) => {
+        const keys = Object.keys(dt).sort();
+        keys.forEach(k => {
+            const uniqueProperties = Array.from(new Set(definedSpecs.map(d => JSON.stringify((d[i] as any)[k]))));
+            if (uniqueProperties.length !== 1) {
+                isIdentical = false;
+                return;
+            }
+        });
+    });
+    return isIdentical;
 }
