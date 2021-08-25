@@ -169,16 +169,23 @@ function BrushTrack(HGC: any, ...args: any[]): any {
             };
 
             const drag = (d: CircularBrushData) => {
+                const [x, y] = this.position;
                 const [w, h] = this.dimensions;
                 const endEvent = HGC.libraries.d3Selection.event.sourceEvent;
+
+                // adjust the position
+                const startX = this.startEvent.layerX - x;
+                const startY = this.startEvent.layerY - y;
+                const endX = endEvent.layerX - x;
+                const endY = endEvent.layerY - y;
 
                 // calculate the radian difference from the drag event
                 // rotate the origin +90 degree so that it is positioned on the 12 O'clock
                 const radDiff =
                     // radian of the start position
-                    Math.atan2(this.startEvent.layerX - w / 2.0, this.startEvent.layerY - h / 2.0) -
+                    Math.atan2(startX - w / 2.0, startY - h / 2.0) -
                     // radian of the current position
-                    Math.atan2(endEvent.layerX - w / 2.0, endEvent.layerY - h / 2.0);
+                    Math.atan2(endX - w / 2.0, endY - h / 2.0);
 
                 // previous extent of brush
                 let [s, e] = this.prevExtent;
