@@ -1,12 +1,4 @@
-import {
-    AxisPosition,
-    SingleTrack,
-    OverlaidTrack,
-    Track,
-    ChannelDeep,
-    DataDeep,
-    DataTransform
-} from '../gosling.schema';
+import { AxisPosition, SingleTrack, OverlaidTrack, Track, ChannelDeep, DataDeep } from '../gosling.schema';
 import assign from 'lodash/assign';
 import { IsChannelDeep, IsDataTrack, IsOverlaidTrack, IsSingleTrack } from '../gosling.schema.guards';
 
@@ -76,15 +68,12 @@ export function spreadTracksByData(tracks: Track[]): Track[] {
                 return [t];
             }
 
-            if (t.overlay.filter(s => s.data).length === 0 && t.overlay.filter(s => s.dataTransform).length === 0) {
-                // overlaid tracks use the parent's data/dataTransform specs as it w/o re-specification, so no point to spread.
+            if (t.overlay.filter(s => s.data).length === 0) {
+                // overlaid tracks use the parent's data specs as it w/o re-specification, so no point to spread.
                 return [t];
             }
 
-            if (
-                isIdenticalDataSpec([t.data, ...t.overlay.map(s => s.data)]) &&
-                isIdenticalDataTransformSpec([t.dataTransform, ...t.overlay.map(s => s.dataTransform)])
-            ) {
+            if (isIdenticalDataSpec([t.data, ...t.overlay.map(s => s.data)])) {
                 // individual overlaid tracks define the same data, so no point to spread.
                 return [t];
             }
@@ -101,16 +90,9 @@ export function spreadTracksByData(tracks: Track[]): Track[] {
                 if (!original.data) {
                     original.data = subSpec.data;
                 }
-                if (!original.dataTransform) {
-                    original.dataTransform = subSpec.dataTransform;
-                }
 
                 // Determine if this `subSpec` should be added to `overlay` or become a separate track
-                if (
-                    (!subSpec.data || isIdenticalDataSpec([original.data, subSpec.data])) &&
-                    (!subSpec.dataTransform ||
-                        isIdenticalDataTransformSpec([original.dataTransform, subSpec.dataTransform]))
-                ) {
+                if (!subSpec.data || isIdenticalDataSpec([original.data, subSpec.data])) {
                     original.overlay.push(subSpec);
                     return;
                 }
@@ -161,37 +143,6 @@ export function isIdenticalDataSpec(specs: (DataDeep | undefined)[]): boolean {
             isIdentical = false;
             return;
         }
-    });
-    return isIdentical;
-}
-
-export function isIdenticalDataTransformSpec(specs: (DataTransform[] | undefined)[]): boolean {
-    if (specs.length === 0) {
-        return false;
-    }
-
-    const definedSpecs = specs.filter(d => d) as DataTransform[][];
-
-    if (definedSpecs.length !== specs.length) {
-        return false;
-    }
-
-    if (Array.from(new Set(definedSpecs.map(d => d.length))).length !== 1) {
-        // the length is different, so return early
-        return false;
-    }
-
-    // Iterate keys to check if these are identical
-    let isIdentical = true;
-    definedSpecs[0].forEach((dt, i) => {
-        const keys = Object.keys(dt).sort();
-        keys.forEach(k => {
-            const uniqueProperties = Array.from(new Set(definedSpecs.map(d => JSON.stringify((d[i] as any)[k]))));
-            if (uniqueProperties.length !== 1) {
-                isIdentical = false;
-                return;
-            }
-        });
     });
     return isIdentical;
 }
