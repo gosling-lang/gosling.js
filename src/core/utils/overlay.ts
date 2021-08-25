@@ -34,11 +34,10 @@ export function resolveSuperposedTracks(track: Track): SingleTrack[] {
     delete (base as Partial<OverlaidTrack>).overlay; // remove `superpose` from the base spec
 
     const resolved: SingleTrack[] = [];
-    track.overlay.forEach((subSpec, i, arr) => {
+    track.overlay.forEach((subSpec, i) => {
         const spec = assign(JSON.parse(JSON.stringify(base)), subSpec) as SingleTrack;
-        if (spec.title && i !== arr.length - 1) {
-            // !!! This part should be consistent to `spreadTracksByData` defined on the bottom of this file
-            delete spec.title; // remove `title` for the rest of the superposed tracks
+        if (spec.title && i !== 0) {
+            delete spec.title;
         }
         resolved.push(spec);
     });
@@ -97,7 +96,7 @@ export function spreadTracksByData(tracks: Track[]): Track[] {
             const original: OverlaidTrack = JSON.parse(JSON.stringify(base));
             original.overlay = [];
 
-            t.overlay.forEach((subSpec, i, arr) => {
+            t.overlay.forEach(subSpec => {
                 // If data specs are undefined, put the first spec to the parent
                 if (!original.data) {
                     original.data = subSpec.data;
@@ -108,9 +107,8 @@ export function spreadTracksByData(tracks: Track[]): Track[] {
 
                 // Determine if this `subSpec` should be added to `overlay` or become a separate track
                 if (
-                    (!original.data || !subSpec.data || isIdenticalDataSpec([original.data, subSpec.data])) &&
-                    (!original.dataTransform ||
-                        !subSpec.dataTransform ||
+                    (!subSpec.data || isIdenticalDataSpec([original.data, subSpec.data])) &&
+                    (!subSpec.dataTransform ||
                         isIdenticalDataTransformSpec([original.dataTransform, subSpec.dataTransform]))
                 ) {
                     original.overlay.push(subSpec);
@@ -118,15 +116,11 @@ export function spreadTracksByData(tracks: Track[]): Track[] {
                 }
 
                 const spec = assign(JSON.parse(JSON.stringify(base)), subSpec) as SingleTrack;
-                if (spec.title && i !== arr.length - 1) {
-                    // !!! This part should be consistent to `resolveSuperposedTracks` defined on the top of this file
-                    delete spec.title; // remove `title` for the rest of the superposed tracks
-                }
                 spread.push(spec);
             });
 
             const output = original.overlay.length > 0 ? [original, ...spread] : spread;
-            return output.map((track, i) => {
+            return output.map((track, i, arr) => {
                 const overlayOnPreviousTrack = i !== 0;
 
                 // Y axis should be positioned on the right or hidden if multiple tracks are overlaid to prevent visual occlussion.
@@ -138,6 +132,9 @@ export function spreadTracksByData(tracks: Track[]): Track[] {
                         ? track.y
                         : undefined;
 
+                if (track.title && i !== arr.length - 1 && arr.length !== 1) {
+                    delete track.title; // remove `title` except the last one
+                }
                 return { ...track, overlayOnPreviousTrack, y };
             });
         })

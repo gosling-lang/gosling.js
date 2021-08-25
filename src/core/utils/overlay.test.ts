@@ -43,6 +43,17 @@ describe('Should handle superposition options correctly', () => {
             true
         );
     });
+    it('Should delete title except the last one in overlaid tracks', () => {
+        const tracks = resolveSuperposedTracks({
+            title: 'title',
+            overlay: [{ x: { axis: 'top' } }, { x: { axis: 'bottom' } }],
+            width: 100,
+            height: 100
+        });
+        expect(tracks).toHaveLength(2);
+        expect(tracks[0].title).toBeDefined();
+        expect(tracks[1].title).toBeUndefined();
+    });
 });
 
 describe('Spread Tracks By Data', () => {
@@ -128,5 +139,49 @@ describe('Spread Tracks By Data', () => {
         expect(spread[2].overlayOnPreviousTrack).toBe(true);
         expect((spread[1] as any).y.axis).toBe('right'); // position axis on the right to prevent visual occlusion
         expect((spread[2] as any).y.axis).toBe('none'); // hide axis
+    });
+    it('title of overlay: [{ data1 }]', () => {
+        const spread = spreadTracksByData([
+            {
+                title: 'title',
+                overlay: [{ data: { type: 'vector', url: '', column: 'c', value: 'p' } }],
+                width: 100,
+                height: 100
+            }
+        ]);
+        expect(spread).toHaveLength(1);
+        expect('title' in spread[0]).toBe(true);
+    });
+    it('title of overlay: [{ data1 }, { data1 }]', () => {
+        const spread = spreadTracksByData([
+            {
+                title: 'title',
+                overlay: [
+                    { data: { type: 'vector', url: '', column: 'c', value: 'p' } },
+                    { data: { type: 'vector', url: '', column: 'c', value: 'p' } }
+                ],
+                width: 100,
+                height: 100
+            }
+        ]);
+        expect(spread).toHaveLength(1);
+        expect('title' in spread[0]).toBe(true);
+    });
+
+    it('title of overlay: [{ data1 }, { data2 }]', () => {
+        const spread = spreadTracksByData([
+            {
+                title: 'title',
+                overlay: [
+                    { data: { type: 'csv', url: '' } },
+                    { data: { type: 'vector', url: '', column: 'c', value: 'p' } }
+                ],
+                width: 100,
+                height: 100
+            }
+        ]);
+        expect(spread).toHaveLength(2);
+        expect('title' in spread[0]).toBe(false);
+        expect('title' in spread[1]).toBe(true);
     });
 });
