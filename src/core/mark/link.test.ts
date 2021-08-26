@@ -6,6 +6,7 @@ import { drawLink } from './link';
 
 describe('Rendering link', () => {
     const g = new PIXI.Graphics();
+    const trackInfo = { tooltips: [] };
     it('Linear Band', () => {
         const t: SingleTrack = {
             data: { type: 'csv', url: '' },
@@ -23,7 +24,7 @@ describe('Rendering link', () => {
             { x: 111, x1: 222, xe: 333, x1e: 444 }
         ];
         const model = new GoslingTrackModel(t, d, getTheme());
-        drawLink(g, { tooltips: [] }, model);
+        drawLink(g, trackInfo, model);
     });
     it('Circular Band', () => {
         const t: SingleTrack = {
@@ -43,7 +44,7 @@ describe('Rendering link', () => {
             { x: 111, x1: 222, xe: 333, x1e: 444 }
         ];
         const model = new GoslingTrackModel(t, d, getTheme());
-        drawLink(g, model);
+        drawLink(g, trackInfo, model);
     });
     it('Linear line', () => {
         const t: SingleTrack = {
@@ -61,7 +62,7 @@ describe('Rendering link', () => {
             { x: 111, x1: 222, xe: 333, x1e: 444 }
         ];
         const model = new GoslingTrackModel(t, d, getTheme());
-        drawLink(g, model);
+        drawLink(g, trackInfo, model);
     });
     it('Circular line', () => {
         const t: SingleTrack = {
@@ -79,6 +80,6 @@ describe('Rendering link', () => {
             { x: 111, x1: 222, xe: 333, x1e: 444 }
         ];
         const model = new GoslingTrackModel(t, d, getTheme());
-        drawLink(g, model);
+        drawLink(g, trackInfo, model);
     });
 });
