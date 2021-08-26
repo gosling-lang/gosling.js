@@ -33,7 +33,7 @@ class BAMDataFetcher {
             }
 
             if (!dataConfig.baiUrl) {
-                dataConfig['baiUrl'] = `${dataConfig['bamUrl']}.bai`;
+                dataConfig['baiUrl'] = dataConfig.indexUrl ?? `${dataConfig['bamUrl']}.bai`;
             }
 
             return tileFunctions
