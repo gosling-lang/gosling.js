@@ -274,7 +274,7 @@ export function drawLink(g: PIXI.Graphics, trackInfo: any, model: GoslingTrackMo
                         const y4 = baseY;
                         g.bezierCurveTo(x2, y2, x3, y3, x4, y4);
                         const bezier = new Bezier(x1, y1, x2, y2, x3, y3, x4, y4);
-                        const points = bezier.getLUT(100);
+                        const points = bezier.getLUT(1000);
 
                         /* click event data */
                         if (spec.tooltip) {

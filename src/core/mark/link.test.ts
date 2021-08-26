@@ -23,7 +23,7 @@ describe('Rendering link', () => {
             { x: 111, x1: 222, xe: 333, x1e: 444 }
         ];
         const model = new GoslingTrackModel(t, d, getTheme());
-        drawLink(g, model);
+        drawLink(g, null, model);
     });
     it('Circular Band', () => {
         const t: SingleTrack = {

@@ -167,6 +167,10 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                 HGC.libraries.PIXI.GRAPHICS_CURVES.maxLength = 1;
                 HGC.libraries.PIXI.GRAPHICS_CURVES.maxSegments = 2048 * 10;
             }
+
+            // PubSub.subscribe('gosling.click', (type: string, data: any) => {
+            //     console.log(data);
+            // });
         }
 
         /* ----------------------------------- RENDERING CYCLE ----------------------------------- */
