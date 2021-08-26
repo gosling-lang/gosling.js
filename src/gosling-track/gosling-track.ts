@@ -131,8 +131,11 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
 
             // Enable click event
             this.pMask.interactive = true;
+            this.pMask.mousedown = (e: InteractionEvent) =>
+                this.onMouseDown(e.data.getLocalPosition(this.pMain).x, e.data.getLocalPosition(this.pMain).y);
             this.pMask.mouseup = (e: InteractionEvent) =>
                 this.onClick(e.data.getLocalPosition(this.pMain).x, e.data.getLocalPosition(this.pMain).y);
+            this.pMask.mousemove = () => this.onMouseOut();
 
             // Remove a mouse graphic if created by a parent, and draw ourselves
             // https://github.com/higlass/higlass/blob/38f0c4415f0595c3b9d685a754d6661dc9612f7c/app/scripts/utils/show-mouse-position.js#L28
@@ -173,10 +176,6 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                 HGC.libraries.PIXI.GRAPHICS_CURVES.maxLength = 1;
                 HGC.libraries.PIXI.GRAPHICS_CURVES.maxSegments = 2048 * 10;
             }
-
-            // PubSub.subscribe('gosling.click', (type: string, data: any) => {
-            //     console.log(data);
-            // });
         }
 
         /* ----------------------------------- RENDERING CYCLE ----------------------------------- */
@@ -908,9 +907,24 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
 
         exportSVG() {} // We do not support SVG export
 
+        onMouseOut() {
+            document.body.style.cursor = 'default';
+        }
+
+        onMouseDown(mouseX: number, mouseY: number) {
+            // Record these so that we do not triger click event when dragged.
+            this.mouseDownX = mouseX;
+            this.mouseDownY = mouseY;
+        }
+
         onClick(mouseX: number, mouseY: number) {
             if (!this.tilesetInfo || !this.tooltips) {
                 // Do not have enough information to show tooltips
+                return;
+            }
+
+            if (Math.sqrt((this.mouseDownX - mouseX) ** 2 + (this.mouseDownY - mouseY) ** 2) > 1) {
+                // Move distance is relatively long, so this might be a drag
                 return;
             }
 
@@ -945,7 +959,13 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                 d.isMouseOver(mouseX, mouseY)
             );
 
-            // Experimental: publish mouseover events
+            // https://developer.mozilla.org/en-US/docs/Web/CSS/cursor
+            if (tooltip) {
+                document.body.style.cursor = 'pointer';
+            } else {
+                document.body.style.cursor = 'default';
+            }
+
             if (tooltip) {
                 PubSub.publish('mouseover', {
                     data: { ...tooltip.datum },
