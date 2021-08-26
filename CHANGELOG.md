@@ -1,3 +1,22 @@
+## [0.9.4](https://github.com/gosling-lang/gosling.js/compare/v0.9.3...v0.9.4) (2021-08-26)
+
+
+### Bug Fixes
+
+* accurately fetch data when `data` and/or `dataTransform` is defined in individual tracks that are overlaid ([#470](https://github.com/gosling-lang/gosling.js/issues/470)) ([e647386](https://github.com/gosling-lang/gosling.js/commit/e647386c01a92201dd3a4a2e34ce0da6610bf751))
+* brushes work correctly regardless of the position of its parent track ([#474](https://github.com/gosling-lang/gosling.js/issues/474)) ([3c4af0f](https://github.com/gosling-lang/gosling.js/commit/3c4af0fe3f456f509f450fa16f18b9e93ec824c7))
+* **editor:** do not show default demo before loading gist spec ([#472](https://github.com/gosling-lang/gosling.js/issues/472)) ([04335ae](https://github.com/gosling-lang/gosling.js/commit/04335aef388e3a83197ff58269d2b33d5b71e414))
+
+
+### Features
+
+* allow click events; add padding for zoomTo APIs ([#477](https://github.com/gosling-lang/gosling.js/issues/477)) ([ffca961](https://github.com/gosling-lang/gosling.js/commit/ffca961caf11e03094180f9e5deca29711f23233))
+* bai file url is required ([#480](https://github.com/gosling-lang/gosling.js/issues/480)) ([0e601be](https://github.com/gosling-lang/gosling.js/commit/0e601befd272fd1b103912548cb2203c647bcdd4))
+* capture mouse hover event on arcs ([#476](https://github.com/gosling-lang/gosling.js/issues/476)) ([47fffbe](https://github.com/gosling-lang/gosling.js/commit/47fffbe61d496a24b770de8ec9e6b5a50e2d9cd0))
+* change cursor style upon mouse hover on marks ([#478](https://github.com/gosling-lang/gosling.js/issues/478)) ([ac9c0b5](https://github.com/gosling-lang/gosling.js/commit/ac9c0b55bed54b1410edcfc62d1d95b31d750c89))
+
+
+
 ## [0.9.3](https://github.com/gosling-lang/gosling.js/compare/v0.9.2...v0.9.3) (2021-08-18)
 
 
