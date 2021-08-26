@@ -23,7 +23,7 @@ type PubSubEvent<EventName extends string, Payload> = {
 };
 
 // New `PubSubEvent`s should be added to the `EventMap`...
-type EventMap = PubSubEvent<'mouseover', CommonEventData>;
+type EventMap = PubSubEvent<'mouseover' | 'click', CommonEventData>;
 // & PubSubEvent<'my-event', { hello: 'world' }> & PubSubEvent<'foo', "bar">;
 
 export interface GoslingApi {
@@ -100,6 +100,8 @@ export function createApi(
         subscribe: (type, callback) => {
             switch (type) {
                 case 'mouseover':
+                    return PubSub.subscribe(type, callback);
+                case 'click':
                     return PubSub.subscribe(type, callback);
                 default: {
                     console.error(`Event type not recognized, got ${JSON.stringify(type)}.`);

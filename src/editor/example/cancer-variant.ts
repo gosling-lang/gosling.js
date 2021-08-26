@@ -530,9 +530,9 @@ export const EX_SPEC_CANCER_VARIANT_PROTOTYPE: GoslingSpec = {
                             color: {
                                 field: 'svclass',
                                 type: 'nominal',
-                                legend: true,
                                 domain: ['tandem-duplication', 'translocation', 'delection', 'inversion'],
-                                range: ['#569C4D', '#4C75A2', '#DA5456', '#EA8A2A']
+                                range: ['#569C4D', '#4C75A2', '#DA5456', '#EA8A2A'],
+                                legend: true
                             },
                             stroke: {
                                 field: 'svclass',
@@ -543,6 +543,11 @@ export const EX_SPEC_CANCER_VARIANT_PROTOTYPE: GoslingSpec = {
                             strokeWidth: { value: 1 },
                             opacity: { value: 0.6 },
                             size: { value: 4 },
+                            tooltip: [
+                                { field: 'start1', type: 'genomic' },
+                                { field: 'end2', type: 'genomic' },
+                                { field: 'svclass', type: 'nominal' }
+                            ],
                             style: { legendTitle: 'SV Class', bazierLink: true },
                             width: 1000,
                             height: 200

@@ -4,11 +4,13 @@ import { Channel } from '../gosling.schema';
 import { IsChannelDeep, getValueUsingChannel, Is2DTrack } from '../gosling.schema.guards';
 import { cartesianToPolar, positionToRadian } from '../utils/polar';
 import colorToHex from '../utils/color-to-hex';
+import { Bezier } from 'bezier-js';
+import { TooltipData } from '../../gosling-tooltip';
 
 // Bezier deprecated
 const DISABLE_BEZIER = true;
 
-export function drawLink(g: PIXI.Graphics, model: GoslingTrackModel) {
+export function drawLink(g: PIXI.Graphics, trackInfo: any, model: GoslingTrackModel) {
     /* track spec */
     const spec = model.spec();
 
@@ -262,14 +264,28 @@ export function drawLink(g: PIXI.Graphics, model: GoslingTrackModel) {
                     g.moveTo(x, baseY);
 
                     if (spec.style?.bazierLink) {
-                        g.bezierCurveTo(
-                            x + (xe - x) / 3.0,
-                            baseY + Math.min(rowHeight, (xe - x) / 2.0) * (flipY ? 1 : -1),
-                            x + ((xe - x) / 3.0) * 2,
-                            baseY + Math.min(rowHeight, (xe - x) / 2.0) * (flipY ? 1 : -1),
-                            xe,
-                            baseY
-                        );
+                        const x1 = x;
+                        const y1 = baseY;
+                        const x2 = x + (xe - x) / 3.0;
+                        const y2 = baseY + Math.min(rowHeight, (xe - x) / 2.0) * (flipY ? 1 : -1);
+                        const x3 = x + ((xe - x) / 3.0) * 2;
+                        const y3 = baseY + Math.min(rowHeight, (xe - x) / 2.0) * (flipY ? 1 : -1);
+                        const x4 = xe;
+                        const y4 = baseY;
+                        g.bezierCurveTo(x2, y2, x3, y3, x4, y4);
+                        const bezier = new Bezier(x1, y1, x2, y2, x3, y3, x4, y4);
+                        const points = bezier.getLUT(1000);
+
+                        /* click event data */
+                        if (spec.tooltip) {
+                            trackInfo.tooltips.push({
+                                datum: d,
+                                isMouseOver: (mouseX: number, mouseY: number) =>
+                                    points.findIndex(d => Math.sqrt((d.x - mouseX) ** 2 + (d.y - mouseY) ** 2) < 5) !==
+                                    -1,
+                                markInfo: {}
+                            } as TooltipData);
+                        }
                     } else {
                         if (xe < 0 || x > trackWidth) {
                             // Q: Do we really need this?

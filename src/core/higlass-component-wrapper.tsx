@@ -62,6 +62,7 @@ export const HiGlassComponentWrapper = forwardRef<HiGlassApi | undefined, HiGlas
                 >
                     <div
                         key={JSON.stringify(viewConfig)}
+                        id="higlass-wrapper"
                         className="higlass-wrapper"
                         style={{
                             position: 'relative',
@@ -72,6 +73,12 @@ export const HiGlassComponentWrapper = forwardRef<HiGlassApi | undefined, HiGlas
                             width: props.size.width,
                             height: props.size.height
                         }}
+                        // onClick={(e) => {
+                        //     PubSub.publish('gosling.click', {
+                        //         mouseX: e.pageX - (document.getElementById('higlass-wrapper')?.offsetLeft ?? 0),
+                        //         mouseY: e.pageY - (document.getElementById('higlass-wrapper')?.offsetTop ?? 0)
+                        //     });
+                        // }}
                     >
                         <HiGlassComponent
                             ref={ref}
