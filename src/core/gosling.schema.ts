@@ -434,6 +434,7 @@ export interface BEDDBData {
 export interface BAMData {
     type: 'bam';
     url: string;
+    indexUrl: string;
 }
 
 /* ----------------------------- DATA TRANSFORM ----------------------------- */
