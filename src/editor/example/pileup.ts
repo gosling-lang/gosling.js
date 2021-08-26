@@ -2,6 +2,7 @@ import { Domain, DomainGene, GoslingSpec, View } from '../../core/gosling.schema
 import { EX_TRACK_SEMANTIC_ZOOM } from './semantic-zoom';
 
 export function EX_SPEC_VIEW_PILEUP(
+    id: string,
     width: number,
     height: number,
     xDomain: Exclude<Domain, string[] | number[] | DomainGene>,
@@ -15,6 +16,7 @@ export function EX_SPEC_VIEW_PILEUP(
         spacing: 0.01,
         tracks: [
             {
+                id,
                 title: 'Coverage',
                 // prerelease: { testUsingNewRectRenderingForBAM: true },
                 data: {
@@ -235,5 +237,5 @@ export function EX_SPEC_VIEW_PILEUP(
 export const EX_SPEC_PILEUP: GoslingSpec = {
     title: 'Pileup Track Using BAM Data',
     subtitle: '',
-    ...EX_SPEC_VIEW_PILEUP(1250, 600, { chromosome: '1', interval: [136750, 139450] })
+    ...EX_SPEC_VIEW_PILEUP('bam', 1250, 600, { chromosome: '1', interval: [136750, 139450] })
 };
