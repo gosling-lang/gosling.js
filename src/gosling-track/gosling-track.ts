@@ -29,6 +29,7 @@ import { Is2DTrack } from '../core/gosling.schema.guards';
 import { spawn, BlobWorker } from 'threads';
 
 import BamWorkerBlob from 'raw-loader!../../dist/worker.js';
+import { InteractionEvent } from 'pixi.js';
 
 // Set `true` to print in what order each function is called
 export const PRINT_RENDERING_CYCLE = false;
@@ -127,6 +128,11 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             // Graphics for highlighting visual elements under the cursor
             this.mouseOverGraphics = new HGC.libraries.PIXI.Graphics();
             this.pMain.addChild(this.mouseOverGraphics);
+
+            // Enable click event
+            this.pMask.interactive = true;
+            this.pMask.mouseup = (e: InteractionEvent) =>
+                this.onClick(e.data.getLocalPosition(this.pMain).x, e.data.getLocalPosition(this.pMain).y);
 
             // Remove a mouse graphic if created by a parent, and draw ourselves
             // https://github.com/higlass/higlass/blob/38f0c4415f0595c3b9d685a754d6661dc9612f7c/app/scripts/utils/show-mouse-position.js#L28
@@ -900,44 +906,24 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
          */
         maxVisibleValue() {}
 
-        exportSVG() {
-            let track = null;
-            let base = null;
+        exportSVG() {} // We do not support SVG export
 
-            [base, track] = super.superSVG();
+        onClick(mouseX: number, mouseY: number) {
+            if (!this.tilesetInfo || !this.tooltips) {
+                // Do not have enough information to show tooltips
+                return;
+            }
 
-            base.setAttribute('class', 'exported-arcs-track');
-            const output = document.createElement('g');
-
-            track.appendChild(output);
-
-            output.setAttribute(
-                'transform',
-                `translate(${this.pMain.position.x},${this.pMain.position.y}) scale(${this.pMain.scale.x},${this.pMain.scale.y})`
+            const tooltip: TooltipData | undefined = this.tooltips.find((d: TooltipData) =>
+                d.isMouseOver(mouseX, mouseY)
             );
 
-            this.svgData?.forEach((d: any /* TODO: define type */) => {
-                switch (d.type) {
-                    case 'rect':
-                        const { xs, xe, ys, ye, color, stroke, opacity } = d;
-                        const g = document.createElement('rect');
-                        g.setAttribute('fill', color);
-                        g.setAttribute('stroke', stroke);
-
-                        g.setAttribute('x', xs);
-                        g.setAttribute('y', ys);
-                        g.setAttribute('width', `${xe - xs}`);
-                        g.setAttribute('height', `${ye - ys}`);
-                        g.setAttribute('opacity', opacity);
-
-                        output.appendChild(g);
-                        break;
-                    default:
-                        break;
-                }
-            });
-
-            return [base, track];
+            if (tooltip) {
+                PubSub.publish('click', {
+                    data: { ...tooltip.datum },
+                    genomicPosition: getRelativeGenomicPosition(Math.floor(this._xScale.invert(mouseX)))
+                });
+            }
         }
 
         getMouseOverHtml(mouseX: number, mouseY: number) {

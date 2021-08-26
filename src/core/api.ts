@@ -111,7 +111,7 @@ export function createApi(
         },
         unsubscribe: tokenOrFunction => PubSub.unsubscribe(tokenOrFunction),
         // TODO: Support assemblies (we can infer this from the spec)
-        zoomTo: (viewId, position, duration = 1000) => {
+        zoomTo: (viewId, position, padding = 0, duration = 1000) => {
             // Accepted input: 'chr1' or 'chr1:1-1000'
             if (!position.includes('chr')) {
                 console.warn('Genomic interval you entered is not in a correct form.');
@@ -127,8 +127,8 @@ export function createApi(
             }
 
             const [s, e] = position.split(':')[1]?.split('-') ?? [0, GET_CHROM_SIZES().size[chr]];
-            const start = +s + chrStart;
-            const end = +e + chrStart;
+            const start = +s + chrStart - padding;
+            const end = +e + chrStart + padding;
 
             getHg().api.zoomTo(viewId, start, end, start, end, duration);
         },
@@ -137,8 +137,8 @@ export function createApi(
             const [start, end] = [0, GET_CHROM_SIZES().total];
             getHg().api.zoomTo(viewId, start, end, start, end, duration);
         },
-        zoomToGene: (viewId, gene, duration = 1000) => {
-            getHg().api.zoomToGene(viewId, gene, duration);
+        zoomToGene: (viewId, gene, padding = 0, duration = 1000) => {
+            getHg().api.zoomToGene(viewId, gene, padding, duration);
         },
         getViewIds: () => {
             if (!hgSpec) return [];

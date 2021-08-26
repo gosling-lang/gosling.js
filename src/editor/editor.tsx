@@ -209,12 +209,19 @@ function Editor(props: any) {
 
     // publish event listeners to Gosling.js
     useEffect(() => {
-        if (gosRef.current) {
-            // Experimental
-            gosRef.current.api.subscribe('mouseover', (/*_: CommonEventData*/) => {
-                // console.log('mouseover', _);
-            });
-        }
+        // if (gosRef.current) {
+        //     gosRef.current.api.subscribe('mouseover', (/*_: CommonEventData*/) => {
+        //         // console.log('mouseover', _);
+        //     });
+        //     gosRef.current.api.subscribe('click', (type: string, data: CommonEventData) => {
+        //         gosRef.current.api.zoomTo('bam-1', `chr${data.data.chr1}:${data.data.start1}-${data.data.end1}`, 2000);
+        //         gosRef.current.api.zoomTo('bam-2', `chr${data.data.chr2}:${data.data.start2}-${data.data.end2}`, 2000);
+        //         console.log('click', data.data);
+        //     });
+        // }
+        // return () => {
+        //     gosRef.current.api.unsubscribe('click');
+        // }
     }, [gosRef.current]);
 
     /**
