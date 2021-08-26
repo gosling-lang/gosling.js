@@ -2979,6 +2979,11 @@
   dependencies:
     "@babel/types" "^7.3.0"
 
+"@types/bezier-js@^4.1.0":
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/@types/bezier-js/-/bezier-js-4.1.0.tgz#e1b023cc0a6e53492d0249a0711a3e73d1dfc8fe"
+  integrity sha512-ElU16s8E6Pr6magp8ihwH1O8pbUJASbMND/qgUc9RsLmP3lMLHiDMRXdjtaObwW5GPtOVYOsXDUIhTIluT+yaw==
+
 "@types/d3-array@*":
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/@types/d3-array/-/d3-array-2.0.0.tgz#a0d63a296a2d8435a9ec59393dcac746c6174a96"
@@ -5064,6 +5069,11 @@ better-assert@~1.0.0:
   integrity sha1-QIZrnhueC1W0gYlDEeaPr/rrxSI=
   dependencies:
     callsite "1.0.0"
+
+bezier-js@^4.1.1:
+  version "4.1.1"
+  resolved "https://registry.yarnpkg.com/bezier-js/-/bezier-js-4.1.1.tgz#414df656833104e86765c0fa5e31439fb3e83a34"
+  integrity sha512-oVOS6SSFFFlfnZdzC+lsfvhs/RRcbxJ47U04M4s5QIBaJmr3YWmTIL3qmrOK9uW+nUUcl9Jccmo/xpTrG+bBoQ==
 
 bfj@^6.1.1:
   version "6.1.2"

@@ -543,6 +543,11 @@ export const EX_SPEC_CANCER_VARIANT_PROTOTYPE: GoslingSpec = {
                             strokeWidth: { value: 1 },
                             opacity: { value: 0.6 },
                             size: { value: 4 },
+                            tooltip: [
+                                { field: 'start1', type: 'genomic' },
+                                { field: 'end1', type: 'genomic' },
+                                { field: 'svclass', type: 'nominal' }
+                            ],
                             style: { legendTitle: 'SV Class', bazierLink: true },
                             width: 1000,
                             height: 200

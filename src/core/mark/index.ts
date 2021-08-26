@@ -116,7 +116,7 @@ export function drawMark(HGC: any, trackInfo: any, tile: any, model: GoslingTrac
             break;
         case 'betweenLink':
         case 'withinLink':
-            drawLink(tile.graphics, model);
+            drawLink(tile.graphics, trackInfo, model);
             break;
         default:
             console.warn('Unsupported mark type');
