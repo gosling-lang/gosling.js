@@ -1,5 +1,6 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 ## [0.9.7](https://github.com/gosling-lang/gosling.js/compare/v0.9.6...v0.9.7) (2021-08-28)
 
 
@@ -29,6 +30,8 @@
 =======
 <<<<<<< HEAD
 >>>>>>> a2c0082 (chore: update schema)
+=======
+>>>>>>> bacefc6 (chore: code clean after conflict resolve)
 ## [0.9.5](https://github.com/gosling-lang/gosling.js/compare/v0.9.4...v0.9.5) (2021-08-27)
 
 
@@ -58,14 +61,6 @@
 
 
 ## [0.9.3](https://github.com/gosling-lang/gosling.js/compare/v0.9.2...v0.9.3) (2021-08-18)
-## [0.9.3](https://github.com/gosling-lang/gosling.js/compare/v0.9.0...v0.9.3) (2021-08-20)
-## [0.9.3](https://github.com/gosling-lang/gosling.js/compare/v0.9.2...v0.9.3) (2021-08-18)
-=======
-## [0.9.3](https://github.com/gosling-lang/gosling.js/compare/v0.9.0...v0.9.3) (2021-08-20)
->>>>>>> 3bf2f2c (chore: update schema)
-=======
-## [0.9.3](https://github.com/gosling-lang/gosling.js/compare/v0.9.2...v0.9.3) (2021-08-18)
->>>>>>> 8ab7ee9 (chore: update schema)
 
 
 ### Features
