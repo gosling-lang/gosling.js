@@ -7,43 +7,6 @@ import { expose, Transfer } from 'threads/worker';
 import { BamFile } from '@gmod/bam';
 import LRU from 'lru-cache';
 
-export function colorToRGBA(colorStr, opacity = 1) {
-    let c = color(colorStr);
-
-    if (!c) {
-        c = color('gray');
-    }
-
-    return [c.rgb().r / 255.0, c.rgb().g / 255.0, c.rgb().b / 255.0, opacity];
-}
-
-export const PILEUP_COLORS = {
-    BG: [0.89, 0.89, 0.89, 1], // gray for the read background
-    BG2: [0.85, 0.85, 0.85, 1], // used as alternating color in the read counter band
-    BG_MUTED: [0.92, 0.92, 0.92, 1], // covergae background, when it is not exact
-    A: [0, 0, 1, 1], // blue for A
-    C: [1, 0, 0, 1], // red for c
-    G: [0, 1, 0, 1], // green for g
-    T: [1, 1, 0, 1], // yellow for T
-    S: [0, 0, 0, 0.5], // darker grey for soft clipping
-    H: [0, 0, 0, 0.5], // darker grey for hard clipping
-    X: [0, 0, 0, 0.7], // black for unknown
-    I: [1, 0, 1, 0.5], // purple for insertions
-    D: [1, 0.5, 0.5, 0.5], // pink-ish for deletions
-    N: [1, 1, 1, 1],
-    BLACK: [0, 0, 0, 1],
-    BLACK_05: [0, 0, 0, 0.5],
-    PLUS_STRAND: [0.75, 0.75, 1, 1],
-    MINUS_STRAND: [1, 0.75, 0.75, 1]
-};
-
-export const PILEUP_COLOR_IXS = {};
-Object.keys(PILEUP_COLORS).map((x, i) => {
-    PILEUP_COLOR_IXS[x] = i;
-
-    return null;
-});
-
 export const cigarTypeToText = type => {
     if (type === 'D') {
         return 'Deletion';
@@ -56,7 +19,6 @@ export const cigarTypeToText = type => {
     } else if (type === 'N') {
         return 'Skipped region';
     }
-
     return type;
 };
 
@@ -418,34 +380,21 @@ const tilesetInfos = {};
 const dataConfs = {};
 
 const init = (uid, bamUrl, baiUrl, chromSizesUrl) => {
-    // TODO: Example URL
-    // chromSizesUrl = `https://s3.amazonaws.com/gosling-lang.org/data/${'hg18'}.chrom.sizes`;
-    chromSizesUrl = 'https://aveit.s3.amazonaws.com/higlass/data/sequence/hg38.mod.chrom.sizes';
+    // TODO: Support different URLs
+    // chromSizesUrl = chromSizesUrl || `https://s3.amazonaws.com/gosling-lang.org/data/hg19.chrom.sizes`;
 
     if (!bamFiles[bamUrl]) {
-        bamFiles[bamUrl] = new BamFile({
-            bamUrl,
-            baiUrl
-        });
+        // We do not yet have this file cached.
+        bamFiles[bamUrl] = new BamFile({ bamUrl, baiUrl });
 
-        // we have to fetch the header before we can fetch data
+        // We have to fetch the header before we can fetch data
         bamHeaders[bamUrl] = bamFiles[bamUrl].getHeader();
     }
 
-    if (chromSizesUrl) {
-        // if no chromsizes are passed in, we'll retrieve them
-        // from the BAM file
-        chromSizes[chromSizesUrl] =
-            chromSizes[chromSizesUrl] ||
-            new Promise(resolve => {
-                ChromosomeInfo(chromSizesUrl, resolve);
-            });
-    }
+    // if no chromsizes are passed in, we'll retrieve them from the BAM file
+    chromSizes[chromSizesUrl] = chromSizes[chromSizesUrl] || new Promise(resolve => { ChromosomeInfo(chromSizesUrl, resolve) });
 
-    dataConfs[uid] = {
-        bamUrl,
-        chromSizesUrl
-    };
+    dataConfs[uid] = { bamUrl, chromSizesUrl };
 };
 
 const tilesetInfo = uid => {
@@ -457,23 +406,20 @@ const tilesetInfo = uid => {
         let chromInfo = null;
 
         if (values.length > 1) {
-            // we've passed in a chromInfo file
+            // This means we received a chromInfo file
             chromInfo = values[1];
         } else {
-            // no chromInfo provided so we have to take it from the bam file index
+            // No chromInfo provided so we have to take it from the bam file index
             const chroms = [];
             for (const { refName, length } of bamFiles[bamUrl].indexToChr) {
-                chroms.push([refName, length]);
+                chroms.push([refName, length]); // refName is the chromosome name
             }
-
             chroms.sort(natcmp);
-
             chromInfo = parseChromsizesRows(chroms);
         }
-
         chromInfos[chromSizesUrl] = chromInfo;
 
-        const retVal = {
+        tilesetInfos[uid] = {
             tile_size: TILE_SIZE,
             bins_per_dimension: TILE_SIZE,
             max_zoom: Math.ceil(Math.log(chromInfo.totalLength / TILE_SIZE) / Math.log(2)),
@@ -482,9 +428,7 @@ const tilesetInfo = uid => {
             max_pos: [chromInfo.totalLength]
         };
 
-        tilesetInfos[uid] = retVal;
-
-        return retVal;
+        return tilesetInfos[uid];
     });
 };
 
@@ -493,8 +437,8 @@ const tile = async (uid, z, x) => {
     const { bamUrl, chromSizesUrl } = dataConfs[uid];
     const bamFile = bamFiles[bamUrl];
 
-    return tilesetInfo(uid).then(tsInfo => {
-        const tileWidth = +tsInfo.max_width / 2 ** +z;
+    return tilesetInfo(uid).then(tilesetInfo => {
+        const tileWidth = +tilesetInfo.max_width / 2 ** +z;
         const recordPromises = [];
 
         if (tileWidth > MAX_TILE_WIDTH) {
@@ -503,8 +447,8 @@ const tile = async (uid, z, x) => {
         }
 
         // get the bounds of the tile
-        let minX = tsInfo.min_pos[0] + x * tileWidth;
-        const maxX = tsInfo.min_pos[0] + (x + 1) * tileWidth;
+        let minX = tilesetInfo.min_pos[0] + x * tileWidth;
+        const maxX = tilesetInfo.min_pos[0] + (x + 1) * tileWidth;
 
         const chromInfo = chromInfos[chromSizesUrl];
 
