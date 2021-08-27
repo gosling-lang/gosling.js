@@ -60,7 +60,6 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
     const { showMousePosition } = HGC.utils;
 
     class GoslingTrackClass extends HGC.tracks.BarTrack {
-        private originalSpec: SingleTrack | OverlaidTrack;
         private tooltips: TooltipData[];
         private tileSize: number;
         private worker: any;
@@ -86,15 +85,13 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             context.dataFetcher.track = this;
             this.context = context;
 
-            this.originalSpec = this.options.spec;
-
             // Temp. Add ids to each overalid tracks that will be rendered independently
-            if ('overlay' in this.originalSpec) {
-                this.originalSpec.overlay = this.originalSpec.overlay.map(o => {
+            if ('overlay' in this.options.spec) {
+                this.options.spec.overlay = (this.options.spec as OverlaidTrack).overlay.map(o => {
                     return { ...o, _renderingId: uuid.v1() };
                 });
             } else {
-                this.originalSpec._renderingId = uuid.v1();
+                this.options.spec._renderingId = uuid.v1();
             }
 
             this.tileSize = this.tilesetInfo?.tile_size ?? 1024;
@@ -117,10 +114,10 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
 
             // this.pLabel.addChild(this.loadingText);
 
-            const { valid, errorMessages } = validateTrack(this.originalSpec);
+            const { valid, errorMessages } = validateTrack(this.options.spec);
 
             if (!valid) {
-                console.warn('The specification of the following track is invalid', errorMessages, this.originalSpec);
+                console.warn('The specification of the following track is invalid', errorMessages, this.options.spec);
             }
 
             this.extent = { min: Number.MAX_SAFE_INTEGER, max: Number.MIN_SAFE_INTEGER };
@@ -140,7 +137,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             // Remove a mouse graphic if created by a parent, and draw ourselves
             // https://github.com/higlass/higlass/blob/38f0c4415f0595c3b9d685a754d6661dc9612f7c/app/scripts/utils/show-mouse-position.js#L28
             // this.getIsFlipped = () => { return this.originalSpec.orientation === 'vertical' };
-            this.flipText = this.originalSpec.orientation === 'vertical';
+            this.flipText = this.options.spec.orientation === 'vertical';
 
             if (this.hideMousePosition) {
                 this.hideMousePosition();
@@ -149,7 +146,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             if (this.options?.showMousePosition && !this.hideMousePosition) {
                 this.hideMousePosition = showMousePosition(
                     this,
-                    Is2DTrack(resolveSuperposedTracks(this.originalSpec)[0]),
+                    Is2DTrack(resolveSuperposedTracks(this.options.spec)[0]),
                     this.isShowGlobalMousePosition()
                 );
             }
@@ -171,7 +168,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             this.textsBeingUsed = 0; // this variable is being used to improve the performance of text rendering
 
             // This improves the arc/link rendering performance
-            HGC.libraries.PIXI.GRAPHICS_CURVES.adaptive = this.originalSpec.style?.enableSmoothPath ?? false;
+            HGC.libraries.PIXI.GRAPHICS_CURVES.adaptive = this.options.spec.style?.enableSmoothPath ?? false;
             if (HGC.libraries.PIXI.GRAPHICS_CURVES.adaptive) {
                 HGC.libraries.PIXI.GRAPHICS_CURVES.maxLength = 1;
                 HGC.libraries.PIXI.GRAPHICS_CURVES.maxSegments = 2048 * 10;
@@ -212,7 +209,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             };
 
             if (
-                usePrereleaseRendering(this.originalSpec) &&
+                usePrereleaseRendering(this.options.spec) &&
                 !isEqual(this.visibleAndFetchedTiles(), this.prevVisibleAndFetchedTiles)
             ) {
                 this.updateTileAsync(processTilesAndDraw);
@@ -423,7 +420,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                         }
                         callback();
 
-                        this.labelText.text = this.originalSpec.title ?? '';
+                        this.labelText.text = this.options.spec.title ?? '';
                     });
             });
         }
@@ -459,8 +456,9 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             return this.visibleAndFetchedIds().map((x: any) => this.fetchedTiles[x]);
         }
 
+        // !! This is called in the constructor, `super(context, options)`. So be aware not to use variables that is not prepared.
         calculateVisibleTiles() {
-            if (usePrereleaseRendering(this.originalSpec)) {
+            if (usePrereleaseRendering(this.options.spec)) {
                 const tiles = HGC.utils.trackUtils.calculate1DVisibleTiles(this.tilesetInfo, this._xScale);
 
                 for (const tile of tiles) {
@@ -497,7 +495,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                         this.tilesetInfo.max_pos[0]
                     );
 
-                    if (Is2DTrack(resolveSuperposedTracks(this.originalSpec)[0])) {
+                    if (Is2DTrack(resolveSuperposedTracks(this.options.spec)[0])) {
                         // it makes sense only when the y-axis is being used for a genomic field
                         tileProxy.calculateTilesFromResolution(
                             sortedResolutions[this.zoomLevel],
@@ -519,7 +517,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                         this.tilesetInfo.max_width
                     );
 
-                    if (Is2DTrack(resolveSuperposedTracks(this.originalSpec)[0])) {
+                    if (Is2DTrack(resolveSuperposedTracks(this.options.spec)[0])) {
                         // it makes sense only when the y-axis is being used for a genomic field
                         this.yTiles = tileProxy.calculateTiles(
                             this.zoomLevel,
@@ -652,11 +650,11 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
          */
         shouldCombineTiles() {
             return (
-                (this.originalSpec.dataTransform?.find(t => t.type === 'displace') &&
+                ((this.options.spec as SingleTrack | OverlaidTrack).dataTransform?.find(t => t.type === 'displace') &&
                     this.visibleAndFetchedTiles()?.[0]?.tileData &&
                     // we do not need to combine tiles w/ multivec, vector, matrix
                     !this.visibleAndFetchedTiles()?.[0]?.tileData.dense) ||
-                this.originalSpec.data?.type === 'bam'
+                this.options.spec.data?.type === 'bam'
             ); // BAM data fetcher already combines the datasets;
         }
 
@@ -756,7 +754,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             // Single tile can contain multiple gosling models if multiple tracks are superposed.
             tile.goslingModels = [];
 
-            const spec = JSON.parse(JSON.stringify(this.originalSpec));
+            const spec = JSON.parse(JSON.stringify(this.options.spec));
 
             // const [trackWidth, trackHeight] = this.dimensions; // actual size of a track
 
@@ -1013,8 +1011,8 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                 }
 
                 // Display a tooltip
-                if (this.originalSpec.tooltip) {
-                    const content = (this.originalSpec.tooltip as any)
+                if (this.options.spec.tooltip) {
+                    const content = (this.options.spec.tooltip as any)
                         .map((d: any) => {
                             const rawValue = tooltip.datum[d.field];
                             let value = rawValue;
