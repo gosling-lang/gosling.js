@@ -22,8 +22,8 @@ export function EX_SPEC_VIEW_PILEUP(
                 data: {
                     type: 'bam',
                     // url: 'https://s3.amazonaws.com/gosling-lang.org/data/example_higlass.bam'
-                    url: 'http://localhost:8081/PCAWG.00e7f3bd-5c87-40c2-aeb6-4e4ca4a8e720.bam',
-                    indexUrl: 'http://localhost:8081/PCAWG.00e7f3bd-5c87-40c2-aeb6-4e4ca4a8e720.bam.bai'
+                    url: 'https://aveit.s3.amazonaws.com/higlass/bam/example_higlass.bam',
+                    indexUrl: 'https://aveit.s3.amazonaws.com/higlass/bam/example_higlass.bam.bai'
                 },
                 dataTransform: [{ type: 'coverage', startField: 'from', endField: 'to' }],
                 mark: 'bar',
