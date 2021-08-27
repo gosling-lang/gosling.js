@@ -114,10 +114,10 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
 
             // this.pLabel.addChild(this.loadingText);
 
-            const { valid, errorMessages } = validateTrack(this.originalSpec);
+            const { valid, errorMessages } = validateTrack(this.options.spec);
 
             if (!valid) {
-                console.warn('The specification of the following track is invalid', errorMessages, this.originalSpec);
+                console.warn('The specification of the following track is invalid', errorMessages, this.options.spec);
             }
 
             this.extent = { min: Number.MAX_SAFE_INTEGER, max: Number.MIN_SAFE_INTEGER };
