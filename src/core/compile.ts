@@ -12,15 +12,18 @@ export function compile(
     templates: TemplateTrackDef[],
     theme: Required<CompleteThemeDeep>
 ) {
+    // Make sure to keep the original spec as is
+    const _spec = JSON.parse(JSON.stringify(spec));
+
     // Override default visual encoding (i.e., `DataTrack` => `BasicSingleTrack`)
-    overrideDataTemplates(spec);
+    overrideDataTemplates(_spec);
 
     // Replace track templates with raw gosling specs (i.e., `TemplateTrack` => `SingleTrack | OverlaidTrack`)
-    replaceTrackTemplates(spec, templates);
+    replaceTrackTemplates(_spec, templates);
 
     // Fix track specs by looking into the root-level spec
-    traverseToFixSpecDownstream(spec);
+    traverseToFixSpecDownstream(_spec);
 
     // Make HiGlass models for individual tracks
-    compileLayout(spec, setHg, theme);
+    compileLayout(_spec, setHg, theme);
 }
