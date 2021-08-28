@@ -1,6 +1,3 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
 ## [0.9.7](https://github.com/gosling-lang/gosling.js/compare/v0.9.6...v0.9.7) (2021-08-28)
 
 
@@ -24,14 +21,6 @@
 
 
 
-=======
-<<<<<<< HEAD
->>>>>>> 5928968 (chore: update schema)
-=======
-<<<<<<< HEAD
->>>>>>> a2c0082 (chore: update schema)
-=======
->>>>>>> bacefc6 (chore: code clean after conflict resolve)
 ## [0.9.5](https://github.com/gosling-lang/gosling.js/compare/v0.9.4...v0.9.5) (2021-08-27)
 
 
