@@ -1,3 +1,17 @@
+## [0.9.6](https://github.com/gosling-lang/gosling.js/compare/v0.9.5...v0.9.6) (2021-08-28)
+
+
+### Bug Fixes
+
+* get chr sizes directly from bam files ([#483](https://github.com/gosling-lang/gosling.js/issues/483)) ([f4a2482](https://github.com/gosling-lang/gosling.js/commit/f4a248258711281ac5c6f3aa9db0c565e7d3dec0))
+
+
+### Features
+
+* reactive rendering ([#484](https://github.com/gosling-lang/gosling.js/issues/484)) ([abc2851](https://github.com/gosling-lang/gosling.js/commit/abc2851f835e14a8c2ddf2d7986065b542691f7c))
+
+
+
 ## [0.9.5](https://github.com/gosling-lang/gosling.js/compare/v0.9.4...v0.9.5) (2021-08-27)
 
 
