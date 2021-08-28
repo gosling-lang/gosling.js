@@ -86,7 +86,7 @@ export interface CommonTrackDef extends CommonViewDef, CommonRequiredTrackDef {
     // !! TODO: we can check if the same id is used multiple times.
     // !! TODO: this should be track-specific and not defined in views.
     id?: string; // Assigned to `uid` in a HiGlass view config, used for API and caching.
-    
+
     title?: string; // Shows textual label on the left-top corner of a track
     subtitle?: string; // Being used only for a title track (i.e., 'text-track')
 
