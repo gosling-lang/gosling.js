@@ -54,12 +54,12 @@ export const GoslingComponent = forwardRef<{ api: GoslingApi }, GoslingCompProps
                     // If a callback function is provided, return compiled information.
                     props.compiled?.(props.spec!, newHs);
                     setSize(newSize); // change the wrapper's size
-                    if (!initViewConfig) {
-                        setInitViewConfig(newHs);
-                    } else {
-                        // This allows reactive rendering if track ids are used
-                        hgRef.current?.api.setViewConfig(newHs);
-                    }
+                    // if (!initViewConfig) {
+                    setInitViewConfig(newHs);
+                    // } else {
+                    // This allows reactive rendering if track ids are used
+                    // hgRef.current?.api.setViewConfig(newHs);
+                    // }
                 },
                 [...GoslingTemplates], // TODO: allow user definitions
                 theme
