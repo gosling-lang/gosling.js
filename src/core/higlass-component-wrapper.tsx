@@ -48,3 +48,5 @@ export const HiGlassComponentWrapper = forwardRef<HiGlassApi | undefined, HiGlas
         );
     }
 );
+
+HiGlassComponentWrapper.displayName = 'HiGlassComponentWrapper';

@@ -79,6 +79,7 @@ export const EX_SPEC_VISUAL_ENCODING: GoslingSpec = {
         {
             tracks: [
                 {
+                    id: 'track-3',
                     data: {
                         url: GOSLING_PUBLIC_DATA.multivec,
                         type: 'multivec',
@@ -106,6 +107,7 @@ export const EX_SPEC_VISUAL_ENCODING: GoslingSpec = {
             ]
         },
         {
+            id: 'track-4',
             alignment: 'overlay',
             data: {
                 url: GOSLING_PUBLIC_DATA.multivec,
@@ -135,6 +137,7 @@ export const EX_SPEC_VISUAL_ENCODING: GoslingSpec = {
         {
             tracks: [
                 {
+                    id: 'track-5',
                     data: {
                         url: GOSLING_PUBLIC_DATA.multivec,
                         type: 'multivec',
@@ -167,6 +170,7 @@ export const EX_SPEC_VISUAL_ENCODING: GoslingSpec = {
         {
             tracks: [
                 {
+                    id: 'track-6',
                     data: {
                         url: GOSLING_PUBLIC_DATA.multivec,
                         type: 'multivec',
@@ -198,6 +202,7 @@ export const EX_SPEC_VISUAL_ENCODING: GoslingSpec = {
         {
             tracks: [
                 {
+                    id: 'track-7',
                     data: {
                         url: GOSLING_PUBLIC_DATA.multivec,
                         type: 'multivec',
@@ -230,6 +235,7 @@ export const EX_SPEC_VISUAL_ENCODING: GoslingSpec = {
         {
             tracks: [
                 {
+                    id: 'track-8',
                     data: {
                         url:
                             'https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/circos-segdup-edited.txt',
