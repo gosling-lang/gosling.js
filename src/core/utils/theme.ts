@@ -1,5 +1,5 @@
 // @ts-ignore
-import * as goslingTheme from 'gosling-theme';
+import * as gt from 'gosling-theme';
 import { assign } from 'lodash';
 import { CHANNEL_DEFAULTS } from '../channel';
 
@@ -134,8 +134,8 @@ export interface MarkStyle {
 // TODO: Instead of calling this function everytime, create a JSON object and use it throughout the project.
 export function getTheme(theme: Theme = 'light'): Required<CompleteThemeDeep> {
     if (typeof theme === 'string') {
-        if (Object.keys(goslingTheme.Themes).indexOf(theme)) {
-            return goslingTheme.getTheme(theme);
+        if (gt.IsThereTheme(theme)) {
+            return gt.getTheme(theme);
         } else if (theme === 'dark' || theme === 'light') {
             return THEMES[theme];
         } else {
@@ -143,19 +143,22 @@ export function getTheme(theme: Theme = 'light'): Required<CompleteThemeDeep> {
         }
     } else {
         // Iterate all keys to override from base
-        let base = JSON.parse(JSON.stringify(THEMES['light']));
-        if (Object.keys(goslingTheme.Themes).indexOf(theme.base)) {
-            base = goslingTheme.getTheme(theme.base);
+        let baseSpec = JSON.parse(JSON.stringify(THEMES['light']));
+        if (gt.IsThereTheme(theme.base)) {
+            baseSpec = gt.getTheme(theme.base);
         } else if (theme.base === 'light' || theme.base === 'dark') {
-            base = JSON.parse(JSON.stringify(THEMES[theme.base]));
+            baseSpec = JSON.parse(JSON.stringify(THEMES[theme.base]));
         }
         // Override defaults from `base`
-        Object.keys(base).forEach(k => {
+        Object.keys(baseSpec).forEach(k => {
             if ((theme as any)[k] && k !== 'base') {
-                base[k] = assign(JSON.parse(JSON.stringify(base[k])), JSON.parse(JSON.stringify((theme as any)[k])));
+                baseSpec[k] = assign(
+                    JSON.parse(JSON.stringify(baseSpec[k])),
+                    JSON.parse(JSON.stringify((theme as any)[k]))
+                );
             }
         });
-        return base;
+        return baseSpec;
     }
 }
 
