@@ -17,10 +17,13 @@ interface GoslingCompProps {
     className?: string;
     theme?: Theme;
     templates?: TemplateTrackDef[];
+    experimental?: {
+        reactive?: boolean;
+    };
 }
 
 export const GoslingComponent = forwardRef<{ api: GoslingApi }, GoslingCompProps>((props, ref) => {
-    const [initViewConfig, setInitViewConfig] = useState<gosling.HiGlassSpec>();
+    const [viewConfig, setViewConfig] = useState<gosling.HiGlassSpec>();
     const [size, setSize] = useState({ width: 200, height: 200 });
 
     // HiGlass API
@@ -31,13 +34,13 @@ export const GoslingComponent = forwardRef<{ api: GoslingApi }, GoslingCompProps
     // Gosling APIs
     useEffect(() => {
         if (!ref) return;
-        const api = createApi(hgRef, initViewConfig, theme);
+        const api = createApi(hgRef, viewConfig, theme);
         if (typeof ref == 'function') {
             ref({ api });
         } else {
             ref.current = { api };
         }
-    }, [ref, hgRef, initViewConfig, theme]);
+    }, [ref, hgRef, viewConfig, theme]);
 
     useEffect(() => {
         if (props.spec) {
@@ -53,13 +56,19 @@ export const GoslingComponent = forwardRef<{ api: GoslingApi }, GoslingCompProps
                 (newHs, newSize) => {
                     // If a callback function is provided, return compiled information.
                     props.compiled?.(props.spec!, newHs);
-                    setSize(newSize); // change the wrapper's size
-                    // if (!initViewConfig) {
-                    setInitViewConfig(newHs);
-                    // } else {
-                    // This allows reactive rendering if track ids are used
-                    // hgRef.current?.api.setViewConfig(newHs);
-                    // }
+
+                    // Change the size of wrapper `<div/>` elements
+                    setSize(newSize);
+
+                    // Update the compiled view config
+                    const isMountedOnce = typeof viewConfig !== 'undefined';
+                    if (props.experimental?.reactive && isMountedOnce) {
+                        // Use API to update visualization.
+                        hgRef.current?.api.setViewConfig(newHs);
+                    } else {
+                        // Mount `HiGlassComponent` using this view config.
+                        setViewConfig(newHs);
+                    }
                 },
                 [...GoslingTemplates], // TODO: allow user definitions
                 theme
@@ -72,7 +81,7 @@ export const GoslingComponent = forwardRef<{ api: GoslingApi }, GoslingCompProps
         () => (
             <HiGlassComponentWrapper
                 ref={hgRef}
-                viewConfig={initViewConfig}
+                viewConfig={viewConfig}
                 size={size}
                 id={props.id}
                 className={props.className}
@@ -84,7 +93,7 @@ export const GoslingComponent = forwardRef<{ api: GoslingApi }, GoslingCompProps
                 }}
             />
         ),
-        [initViewConfig, size, theme]
+        [viewConfig, size, theme]
     );
 
     return higlassComponent;
