@@ -330,6 +330,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             //     );
             // }
 
+            this.preprocessAllTiles(true);
             this.draw();
             this.forceDraw();
         }
@@ -696,7 +697,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             }
         }
 
-        preprocessAllTiles() {
+        preprocessAllTiles(force = false) {
             const gms: GoslingTrackModel[] = [];
 
             this.reorganizeTileInfo();
@@ -704,6 +705,9 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             this.combineAllTilesIfNeeded();
 
             this.visibleAndFetchedTiles().forEach((tile: any) => {
+                if (force) {
+                    tile.goslingModels = [];
+                }
                 // tile preprocessing is done only once per tile
                 const tileModels = this.preprocessTile(tile);
                 tileModels?.forEach((m: GoslingTrackModel) => {
