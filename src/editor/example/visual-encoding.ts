@@ -10,9 +10,9 @@ export const EX_SPEC_VISUAL_ENCODING: GoslingSpec = {
     xDomain: { chromosome: '1', interval: [1, 3000500] },
     views: [
         {
-            id: 'view-1',
             tracks: [
                 {
+                    id: 'track-1',
                     data: {
                         url: GOSLING_PUBLIC_DATA.multivec,
                         type: 'multivec',
@@ -48,6 +48,7 @@ export const EX_SPEC_VISUAL_ENCODING: GoslingSpec = {
         {
             tracks: [
                 {
+                    id: 'track-2',
                     data: {
                         url: GOSLING_PUBLIC_DATA.multivec,
                         type: 'multivec',

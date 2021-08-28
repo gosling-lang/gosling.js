@@ -259,7 +259,7 @@ export class HiGlassModel {
         this.getLastView().tracks[this.getMainTrackPosition()] = [
             {
                 type: 'combined',
-                uid: `${this.getMainTrackPosition()}-${track.uid}`,
+                uid: `${track.uid}-${this.getMainTrackPosition()}-combined`,
                 // !! Hacky, but it is important to subtract 1px. Currently, HiGlass does not well handle a case where a center track is zero width (e.g., linking between views that contain zero-width center tracks).
                 // https://github.com/higlass/higlass/pull/1041
                 width: (track as any).width - 1,
