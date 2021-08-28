@@ -54,8 +54,14 @@ export const GoslingComponent = forwardRef<{ api: GoslingApi }, GoslingCompProps
                 (newHs, newSize) => {
                     // If a callback function is provided, return compiled information.
                     props.compiled?.(props.spec!, newHs);
-                    setHs(newHs);
-                    setSize(newSize);
+                    if (!hs) {
+                        setHs(newHs);
+                        setSize(newSize);
+                    } else {
+                        // we want to update only the changed parts of the visualizations
+                        hgRef.current?.api.setViewConfig(newHs);
+                        setSize(newSize);
+                    }
                 },
                 [...GoslingTemplates], // TODO: allow user definitions
                 theme
@@ -79,8 +85,51 @@ export const GoslingComponent = forwardRef<{ api: GoslingApi }, GoslingCompProps
                 }}
             />
         ),
-        [hs, size, theme]
+        [hs, theme]
     );
 
-    return higlassComponent;
+    const higlassComponetWrapper = useMemo(
+        () => (
+            <div
+                // id={wrapperDivId}
+                // className={`gosling-component ${props.className || ''}`}
+                style={{
+                    position: 'relative',
+                    // padding: props.padding,
+                    // margin: margin,
+                    // border: border,
+                    // background: background,
+                    width: size.width,
+                    height: size.height,
+                    textAlign: 'left'
+                }}
+            >
+                <div
+                    // key={JSON.stringify(viewConfig)}
+                    id="higlass-wrapper"
+                    className="higlass-wrapper"
+                    style={{
+                        position: 'relative',
+                        display: 'block',
+                        // background: background,
+                        margin: 0,
+                        padding: 0, // non-zero padding acts unexpectedly w/ HiGlassComponent
+                        width: size.width,
+                        height: size.height
+                    }}
+                    // onClick={(e) => {
+                    //     PubSub.publish('gosling.click', {
+                    //         mouseX: e.pageX - (document.getElementById('higlass-wrapper')?.offsetLeft ?? 0),
+                    //         mouseY: e.pageY - (document.getElementById('higlass-wrapper')?.offsetTop ?? 0)
+                    //     });
+                    // }}
+                >
+                    {higlassComponent}
+                </div>
+            </div>
+        ),
+        [higlassComponent, size]
+    );
+
+    return higlassComponetWrapper;
 });

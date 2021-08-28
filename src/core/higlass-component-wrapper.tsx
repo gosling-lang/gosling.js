@@ -1,7 +1,6 @@
 /* eslint-disable react/prop-types */
 import * as PIXI from 'pixi.js';
-import React, { useEffect, useState, forwardRef } from 'react';
-import uuid from 'uuid';
+import React, { forwardRef } from 'react';
 
 import * as gosling from '..';
 // @ts-ignore
@@ -36,72 +35,36 @@ export interface HiGlassComponentWrapperProps {
 export const HiGlassComponentWrapper = forwardRef<HiGlassApi | undefined, HiGlassComponentWrapperProps>(
     (props, ref) => {
         // div `id` and `className` for detailed customization
-        const [wrapperDivId, setWrapperDivId] = useState(props.id ?? uuid.v4());
-        useEffect(() => {
-            setWrapperDivId(props.id ?? uuid.v4());
-        }, [props.id]);
+        // const [wrapperDivId, setWrapperDivId] = useState(props.id ?? uuid.v4());
+        // useEffect(() => {
+        //     setWrapperDivId(props.id ?? uuid.v4());
+        // }, [props.id]);
 
         // Styling
-        const { padding = 60, margin = 0, border = 'none', background } = props.options || {};
+        // const { padding = 60, margin = 0, border = 'none', background } = props.options || {};
         const viewConfig = props.viewConfig || {};
         return (
             <>
-                <div
-                    id={wrapperDivId}
-                    className={`gosling-component ${props.className || ''}`}
-                    style={{
-                        position: 'relative',
-                        padding: padding,
-                        margin: margin,
-                        border: border,
-                        background: background,
-                        width: props.size.width + padding * 2,
-                        height: props.size.height + padding * 2,
-                        textAlign: 'left'
+                <HiGlassComponent
+                    ref={ref}
+                    options={{
+                        // bounded: true, // deprecated
+                        pixelPreciseMarginPadding: true, // this uses `rowHeight: 1` in react-grid-layout
+                        containerPaddingX: 0,
+                        containerPaddingY: 0,
+                        viewMarginTop: 0,
+                        viewMarginBottom: 0,
+                        viewMarginLeft: 0,
+                        viewMarginRight: 0,
+                        viewPaddingTop: 0,
+                        viewPaddingBottom: 0,
+                        viewPaddingLeft: 0,
+                        viewPaddingRight: 0,
+                        sizeMode: 'bounded',
+                        rangeSelectionOnAlt: true // this allows switching between `selection` and `zoom&pan` mode
                     }}
-                >
-                    <div
-                        key={JSON.stringify(viewConfig)}
-                        id="higlass-wrapper"
-                        className="higlass-wrapper"
-                        style={{
-                            position: 'relative',
-                            display: 'block',
-                            background: background,
-                            margin: 0,
-                            padding: 0, // non-zero padding acts unexpectedly w/ HiGlassComponent
-                            width: props.size.width,
-                            height: props.size.height
-                        }}
-                        // onClick={(e) => {
-                        //     PubSub.publish('gosling.click', {
-                        //         mouseX: e.pageX - (document.getElementById('higlass-wrapper')?.offsetLeft ?? 0),
-                        //         mouseY: e.pageY - (document.getElementById('higlass-wrapper')?.offsetTop ?? 0)
-                        //     });
-                        // }}
-                    >
-                        <HiGlassComponent
-                            ref={ref}
-                            options={{
-                                // bounded: true, // deprecated
-                                pixelPreciseMarginPadding: true, // this uses `rowHeight: 1` in react-grid-layout
-                                containerPaddingX: 0,
-                                containerPaddingY: 0,
-                                viewMarginTop: 0,
-                                viewMarginBottom: 0,
-                                viewMarginLeft: 0,
-                                viewMarginRight: 0,
-                                viewPaddingTop: 0,
-                                viewPaddingBottom: 0,
-                                viewPaddingLeft: 0,
-                                viewPaddingRight: 0,
-                                sizeMode: 'bounded',
-                                rangeSelectionOnAlt: true // this allows switching between `selection` and `zoom&pan` mode
-                            }}
-                            viewConfig={viewConfig}
-                        />
-                    </div>
-                </div>
+                    viewConfig={viewConfig}
+                />
             </>
         );
     }

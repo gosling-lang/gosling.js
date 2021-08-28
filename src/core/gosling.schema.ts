@@ -83,7 +83,8 @@ export interface CommonRequiredTrackDef {
 }
 
 export interface CommonTrackDef extends CommonViewDef, CommonRequiredTrackDef {
-    id?: string; // Assigned to `uid` in a HiGlass view config, used for API
+    // !! TODO: this should be track-specific
+    id?: string; // Assigned to `uid` in a HiGlass view config, used for API and caching.
     title?: string; // Shows textual label on the left-top corner of a track
     subtitle?: string; // Being used only for a title track (i.e., 'text-track')
 
