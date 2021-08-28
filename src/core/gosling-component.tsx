@@ -1,6 +1,5 @@
 /* eslint-disable react/prop-types */
 import { HiGlassApi, HiGlassComponentWrapper } from './higlass-component-wrapper';
-import uuid from 'uuid';
 import React, { useState, useEffect, useMemo, useRef, forwardRef } from 'react';
 import * as gosling from '..';
 import { getTheme, Theme } from './utils/theme';
@@ -21,7 +20,7 @@ interface GoslingCompProps {
 }
 
 export const GoslingComponent = forwardRef<{ api: GoslingApi }, GoslingCompProps>((props, ref) => {
-    const [initHs, setInitHs] = useState<gosling.HiGlassSpec>();
+    const [initViewConfig, setInitViewConfig] = useState<gosling.HiGlassSpec>();
     const [size, setSize] = useState({ width: 200, height: 200 });
 
     // HiGlass API
@@ -32,13 +31,13 @@ export const GoslingComponent = forwardRef<{ api: GoslingApi }, GoslingCompProps
     // Gosling APIs
     useEffect(() => {
         if (!ref) return;
-        const api = createApi(hgRef, initHs, theme);
+        const api = createApi(hgRef, initViewConfig, theme);
         if (typeof ref == 'function') {
             ref({ api });
         } else {
             ref.current = { api };
         }
-    }, [ref, hgRef, initHs, theme]);
+    }, [ref, hgRef, initViewConfig, theme]);
 
     useEffect(() => {
         if (props.spec) {
@@ -55,8 +54,8 @@ export const GoslingComponent = forwardRef<{ api: GoslingApi }, GoslingCompProps
                     // If a callback function is provided, return compiled information.
                     props.compiled?.(props.spec!, newHs);
                     setSize(newSize); // change the wrapper's size
-                    if (!initHs) {
-                        setInitHs(newHs);
+                    if (!initViewConfig) {
+                        setInitViewConfig(newHs);
                     } else {
                         // This allows reactive rendering if track ids are used
                         hgRef.current?.api.setViewConfig(newHs);
@@ -70,55 +69,23 @@ export const GoslingComponent = forwardRef<{ api: GoslingApi }, GoslingCompProps
 
     // HiGlass component should be mounted only once
     const higlassComponent = useMemo(
-        () => (initHs ? <HiGlassComponentWrapper ref={hgRef} viewConfig={initHs} /> : null),
-        [initHs]
-    );
-
-    // This determines the size, padding, and margin of the visualization
-    const higlassComponetWrapper = useMemo(
         () => (
-            <div
-                id={props.id ?? uuid.v4()}
-                className={`gosling-component ${props.className || ''}`}
-                style={{
-                    position: 'relative',
-                    padding: props.padding ?? 60,
-                    margin: props.margin ?? 0,
-                    border: props.border ?? 'none',
-                    background: theme.root.background,
-                    width: size.width + (props.padding ?? 60) * 2,
-                    height: size.height + (props.padding ?? 60) * 2,
-                    textAlign: 'left'
+            <HiGlassComponentWrapper
+                ref={hgRef}
+                viewConfig={initViewConfig}
+                size={size}
+                id={props.id}
+                className={props.className}
+                options={{
+                    padding: props.padding,
+                    border: props.border,
+                    margin: props.margin,
+                    background: theme.root.background
                 }}
-            >
-                <div
-                    id="higlass-wrapper"
-                    className="higlass-wrapper"
-                    style={{
-                        position: 'relative',
-                        display: 'block',
-                        background: theme.root.background,
-                        margin: 0,
-                        padding: 0, // non-zero padding acts unexpectedly w/ HiGlassComponent
-                        width: size.width,
-                        height: size.height
-                    }}
-                >
-                    {higlassComponent}
-                </div>
-            </div>
+            />
         ),
-        [
-            higlassComponent,
-            size,
-            props.id,
-            props.className,
-            props.padding,
-            props.margin,
-            props.border,
-            theme.root.background
-        ]
+        [initViewConfig, size, theme]
     );
 
-    return higlassComponetWrapper;
+    return higlassComponent;
 });
