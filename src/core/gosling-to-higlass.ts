@@ -62,7 +62,7 @@ export function goslingToHiGlass(
                 ? HIGLASS_AXIS_SIZE
                 : 0);
         const hgTrack: HiGlassTrack = {
-            uid: firstResolvedSpec.id, // This is being used to cache the visualization
+            uid: firstResolvedSpec.id ?? uuid.v4(), // This is being used to cache the visualization
             type: Is2DTrack(firstResolvedSpec) ? 'gosling-2d-track' : 'gosling-track',
             server,
             tilesetUid,
