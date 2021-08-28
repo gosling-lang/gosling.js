@@ -1,3 +1,12 @@
+## [0.9.7](https://github.com/gosling-lang/gosling.js/compare/v0.9.6...v0.9.7) (2021-08-28)
+
+
+### Bug Fixes
+
+* handle embed and use the previous component structure ([#486](https://github.com/gosling-lang/gosling.js/issues/486)) ([143b916](https://github.com/gosling-lang/gosling.js/commit/143b91601a964b381039e649f262b16c0fa48fb7))
+
+
+
 ## [0.9.6](https://github.com/gosling-lang/gosling.js/compare/v0.9.5...v0.9.6) (2021-08-28)
 
 
