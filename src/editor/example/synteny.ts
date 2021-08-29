@@ -26,10 +26,14 @@ export const EX_SPEC_ALIGNMENT: GoslingSpec = {
                     encoding: {
                         startPosition: { field: 'chromStart' },
                         endPosition: { field: 'chromEnd' },
-                        stainBackgroundColor: { field: 'Stain' },
+                        stainBackgroundColor: {
+                            field: 'Stain',
+                            range: ['#E3E3E3', 'lightgray', 'gray', 'gray', 'black', '#7B9CC8', '#DC4542']
+                        },
                         stainLabelColor: { field: 'Stain' },
                         name: { field: 'Name' },
-                        stainStroke: { value: 'black' }
+                        stainStroke: { value: 'black' },
+                        stainStrokeWidth: { value: 0 } // Let's not use strokes for a while
                     },
                     width: 1000,
                     height: 20
@@ -150,10 +154,14 @@ export const EX_SPEC_ALIGNMENT: GoslingSpec = {
                     encoding: {
                         startPosition: { field: 'chromStart', axis: 'bottom' },
                         endPosition: { field: 'chromEnd' },
-                        stainBackgroundColor: { field: 'Stain' },
+                        stainBackgroundColor: {
+                            field: 'Stain',
+                            range: ['#E3E3E3', 'lightgray', 'gray', 'gray', 'black', '#7B9CC8', '#DC4542']
+                        },
                         stainLabelColor: { field: 'Stain' },
                         name: { field: 'Name' },
-                        stainStroke: { value: 'black' }
+                        stainStroke: { value: 'black' },
+                        stainStrokeWidth: { value: 0 } // Let's not use strokes for a while
                     },
                     width: 1000,
                     height: 20
