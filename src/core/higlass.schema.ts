@@ -12,6 +12,7 @@ export interface HiGlassSpec {
     viewEditable?: boolean;
     tracksEditable?: boolean;
     compactLayout?: boolean;
+    allowOverlap?: boolean;
     trackSourceServers?: string[];
     exportViewUrl?: string;
     chromInfoPath?: string;

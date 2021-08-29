@@ -49,6 +49,7 @@ export class HiGlassModel {
         this.assembly = 'hg38';
         this.hg = {
             compactLayout: false,
+            allowOverlap: true,
             trackSourceServers: [],
             views: [],
             zoomLocks: {

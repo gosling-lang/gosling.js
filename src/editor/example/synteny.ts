@@ -7,7 +7,7 @@ export const EX_SPEC_ALIGNMENT: GoslingSpec = {
     layout: 'circular',
     spacing: 0,
     style: { outlineWidth: 0 },
-    xDomain: { interval: [0, 500000000] },
+    // xDomain: { interval: [0, 500000000] },
     views: [
         {
             xLinkingId: 'top',
