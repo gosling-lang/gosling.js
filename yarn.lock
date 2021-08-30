@@ -9975,10 +9975,10 @@ good-listener@^1.2.2:
   dependencies:
     delegate "^3.1.2"
 
-gosling-theme@0.0.8:
-  version "0.0.8"
-  resolved "https://registry.yarnpkg.com/gosling-theme/-/gosling-theme-0.0.8.tgz#f66b9651b4a2359f536b90e21274d9d33b22bc87"
-  integrity sha512-5cpi9nFyzCjA21dfKaU6npiIAAl8lTjYlvpqhHbLmsZgm2WQkCuYUQeovzBUlvSQCfWhqryfV21tx+IFCB5Tug==
+gosling-theme@0.0.9:
+  version "0.0.9"
+  resolved "https://registry.yarnpkg.com/gosling-theme/-/gosling-theme-0.0.9.tgz#211f6f3076ca29041c19b91f6494813e2fe5cab6"
+  integrity sha512-7CPVrmPCFFE08rk+tM6AxoT5agKALrBYpwU/bdeAxxXnA2Jwoenso8MOA+bYbmblpQ3WGQDlhcCyUi3I1jG3Aw==
 
 graceful-fs@^4.0.0, graceful-fs@^4.1.11, graceful-fs@^4.1.15, graceful-fs@^4.1.2, graceful-fs@^4.1.4, graceful-fs@^4.1.6, graceful-fs@^4.2.0, graceful-fs@^4.2.2:
   version "4.2.4"
