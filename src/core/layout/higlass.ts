@@ -35,6 +35,7 @@ export function renderHiGlass(
                 info.layout,
                 info.viewId,
                 theme,
+                // TODO: perhaps need some changes
                 linkingInfos.find(d => !d.isBrush && d.linkId === info.linkId)?.viewId,
                 info.style
             );
@@ -76,9 +77,31 @@ export function renderHiGlass(
             }
             hgModel.spec().locationLocks.locksByViewUid[d.viewId][d.channel === 'x' ? 'x' : 'y'] = {
                 lock: d.linkId,
-                axis: d.viewId === 'view-3' ? 'y' : 'x'
+                axis: 'to-be-set' // source axis
             };
         });
+
+    // set source `axis`
+    const { locksByViewUid } = hgModel.spec().locationLocks;
+    Object.keys(locksByViewUid).forEach(targetId => {
+        Object.keys(locksByViewUid[targetId]).forEach(targetChannel => {
+            const linkingId = locksByViewUid[targetId][targetChannel].lock;
+            // Find a view that has the identical linkingId
+            Object.keys(locksByViewUid)
+                .filter(id => targetId !== id)
+                .forEach(sourceId => {
+                    Object.keys(locksByViewUid[sourceId]).forEach(sourceChannel => {
+                        if (locksByViewUid[sourceId][sourceChannel].lock === linkingId) {
+                            locksByViewUid[targetId][targetChannel].axis = sourceChannel;
+                            locksByViewUid[sourceId][sourceChannel].axis = targetChannel;
+                        }
+                    });
+                });
+        });
+    });
+
+    // Remove locks that do not have proper axis
+    // ...
 
     // Set `locksDict`
     const uniqueLocationLinkIds = Array.from(new Set(linkingInfos.map(d => d.linkId)));

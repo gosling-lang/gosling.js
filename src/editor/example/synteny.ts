@@ -4,7 +4,7 @@ export const EX_SPEC_ALIGNMENT: GoslingSpec = {
     title: 'Genome Alignment',
     subtitle: 'Reimplementation of Genome Alignment Example in Ideogram.js',
     arrangement: 'parallel',
-    layout: 'circular',
+    // layout: 'circular',
     spacing: 0,
     style: { outlineWidth: 0 },
     // xDomain: { interval: [0, 500000000] },
