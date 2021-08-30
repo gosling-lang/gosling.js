@@ -148,6 +148,9 @@
         "mousePositionColor": {
           "type": "string"
         },
+        "showMousePosition": {
+          "type": "boolean"
+        },
         "subtitleAlign": {
           "enum": [
             "left",

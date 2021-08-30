@@ -77,6 +77,7 @@ export interface RootStyle {
     subtitleAlign?: 'left' | 'middle' | 'right';
     subtitleFontWeight?: 'bold' | 'normal' | 'light';
     subtitleBackgroundColor?: string;
+    showMousePosition?: boolean;
     mousePositionColor?: string;
 }
 
@@ -134,7 +135,7 @@ export interface MarkStyle {
 // TODO: Instead of calling this function everytime, create a JSON object and use it throughout the project.
 export function getTheme(theme: Theme = 'light'): Required<CompleteThemeDeep> {
     if (typeof theme === 'string') {
-        if (gt.IsThereTheme(theme)) {
+        if (gt.isThereTheme(theme)) {
             return gt.getTheme(theme);
         } else if (theme === 'dark' || theme === 'light') {
             return THEMES[theme];
@@ -144,7 +145,7 @@ export function getTheme(theme: Theme = 'light'): Required<CompleteThemeDeep> {
     } else {
         // Iterate all keys to override from base
         let baseSpec = JSON.parse(JSON.stringify(THEMES['light']));
-        if (gt.IsThereTheme(theme.base)) {
+        if (gt.isThereTheme(theme.base)) {
             baseSpec = gt.getTheme(theme.base);
         } else if (theme.base === 'light' || theme.base === 'dark') {
             baseSpec = JSON.parse(JSON.stringify(THEMES[theme.base]));
@@ -193,6 +194,7 @@ export const THEMES: { [key in Themes]: Required<CompleteThemeDeep> } = {
             subtitleFontFamily: 'Arial',
             subtitleFontWeight: 'normal',
             subtitleAlign: 'left',
+            showMousePosition: true,
             mousePositionColor: '#000000'
         },
 
@@ -292,6 +294,7 @@ export const THEMES: { [key in Themes]: Required<CompleteThemeDeep> } = {
             subtitleFontFamily: 'Arial',
             subtitleAlign: 'middle',
             subtitleFontWeight: 'normal',
+            showMousePosition: true,
             mousePositionColor: '#FFFFFF'
         },
 
