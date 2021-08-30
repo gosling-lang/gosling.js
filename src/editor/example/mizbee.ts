@@ -1,8 +1,8 @@
 import { GoslingSpec } from '../../core/gosling.schema';
 
-export const EX_SPEC_ALIGNMENT: GoslingSpec = {
-    title: 'Genome Alignment',
-    subtitle: 'Reimplementation of Genome Alignment Example in Ideogram.js',
+export const EX_SPEC_MIZBEE: GoslingSpec = {
+    title: 'MizBee',
+    subtitle: 'Reimplementation of MizBee, A Multiscale Synteny Browser',
     arrangement: 'parallel',
     // layout: 'circular',
     spacing: 0,

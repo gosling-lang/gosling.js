@@ -20,6 +20,8 @@ import { EX_SPEC_BAND } from './vertical-band';
 import { EX_SPEC_TEMPLATE } from './track-template';
 import { EX_SPEC_ALIGNMENT } from './synteny';
 import { EX_SPEC_DEBUG } from './debug';
+import { EX_SPEC_MIZBEE } from './mizbee';
+import { Theme } from '../../core/utils/theme';
 
 export const examples: ReadonlyArray<{
     name: string;
@@ -29,6 +31,7 @@ export const examples: ReadonlyArray<{
     underDevelopment?: boolean;
     hidden?: boolean;
     forceShow?: boolean;
+    theme?: Theme;
 }> = [
     {
         name: 'DEBUG',
@@ -88,8 +91,8 @@ export const examples: ReadonlyArray<{
         name: 'Basic Example: Vertical Band Connection w/ Independent Axes',
         id: 'GENOME_ALIGNMENT',
         spec: EX_SPEC_ALIGNMENT,
-        forceShow: true,
-        underDevelopment: true
+        underDevelopment: true,
+        theme: { base: 'light', axis: { baselineColor: 'white' } }
     },
     {
         name: 'Multi-Scale Sequence Track',
@@ -142,6 +145,13 @@ export const examples: ReadonlyArray<{
         id: 'GREMLIN',
         spec: EX_SPEC_GREMLIN,
         underDevelopment: true
+    },
+    {
+        name: 'MizBee',
+        id: 'MIZBEE',
+        spec: EX_SPEC_MIZBEE,
+        underDevelopment: true,
+        theme: { base: 'light', root: { background: '#AEAEAE' } } as Theme
     },
     {
         name: 'GIVE (Cao et al. 2018)',
