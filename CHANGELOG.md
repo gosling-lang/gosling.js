@@ -1,3 +1,19 @@
+## [0.9.8](https://github.com/gosling-lang/gosling.js/compare/v0.9.7...v0.9.8) (2021-08-30)
+
+
+### Bug Fixes
+
+* app crash on overriding themes ([#490](https://github.com/gosling-lang/gosling.js/issues/490)) ([8d9cd9e](https://github.com/gosling-lang/gosling.js/commit/8d9cd9ea56fdfa573a7c23075219590e88d54a15))
+* do not touch original spec when compiling ([#489](https://github.com/gosling-lang/gosling.js/issues/489)) ([22a0f31](https://github.com/gosling-lang/gosling.js/commit/22a0f3195859003e0a4bf924a41457ffbf6fd2b9)), closes [#488](https://github.com/gosling-lang/gosling.js/issues/488)
+
+
+### Features
+
+* add reactive rendering as an experimental option ([#488](https://github.com/gosling-lang/gosling.js/issues/488)) ([aeb2269](https://github.com/gosling-lang/gosling.js/commit/aeb22693f3e8365965cb2b8e88e5b3b57bcc4e9f))
+* include mouse position visibility to the theme ([#491](https://github.com/gosling-lang/gosling.js/issues/491)) ([5d30675](https://github.com/gosling-lang/gosling.js/commit/5d30675a1b26e4da1e503e5b7cfa7d1138f0d529))
+
+
+
 ## [0.9.7](https://github.com/gosling-lang/gosling.js/compare/v0.9.6...v0.9.7) (2021-08-28)
 
 
