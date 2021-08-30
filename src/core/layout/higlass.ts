@@ -1,3 +1,4 @@
+import uuid from 'uuid';
 import { getBoundingBox, Size, TrackInfo } from '../utils/bounding-box';
 import { goslingToHiGlass } from '../gosling-to-higlass';
 import { HiGlassModel } from '../higlass-model';
@@ -69,6 +70,7 @@ export function renderHiGlass(
      */
 
     // Set `locksByViewUid`
+    const AXIS_NOT_SET = `axis-not-set-${uuid.v4()}`;
     linkingInfos
         .filter(d => !d.isBrush)
         .forEach(d => {
@@ -77,7 +79,7 @@ export function renderHiGlass(
             }
             hgModel.spec().locationLocks.locksByViewUid[d.viewId][d.channel === 'x' ? 'x' : 'y'] = {
                 lock: d.linkId,
-                axis: 'to-be-set' // source axis
+                axis: AXIS_NOT_SET // source axis that should be set in the following codes
             };
         });
 
@@ -85,13 +87,13 @@ export function renderHiGlass(
     const { locksByViewUid } = hgModel.spec().locationLocks;
     Object.keys(locksByViewUid).forEach(targetId => {
         Object.keys(locksByViewUid[targetId]).forEach(targetChannel => {
-            const linkingId = locksByViewUid[targetId][targetChannel].lock;
-            // Find a view that has the identical linkingId
+            const lockId = locksByViewUid[targetId][targetChannel].lock;
+            // Find a view that has the identical lock id
             Object.keys(locksByViewUid)
                 .filter(id => targetId !== id)
                 .forEach(sourceId => {
                     Object.keys(locksByViewUid[sourceId]).forEach(sourceChannel => {
-                        if (locksByViewUid[sourceId][sourceChannel].lock === linkingId) {
+                        if (locksByViewUid[sourceId][sourceChannel].lock === lockId) {
                             locksByViewUid[targetId][targetChannel].axis = sourceChannel;
                             locksByViewUid[sourceId][sourceChannel].axis = targetChannel;
                         }
@@ -100,8 +102,20 @@ export function renderHiGlass(
         });
     });
 
-    // Remove locks that do not have proper axis
-    // ...
+    // Remove locks that do not have proper source axis
+    Object.keys(locksByViewUid).forEach(viewId => {
+        Object.keys(locksByViewUid[viewId]).forEach(channel => {
+            if (locksByViewUid[viewId][channel].axis === AXIS_NOT_SET) {
+                console.warn(`${channel} axis of a view (${viewId}) does not have a target axis to link with.`);
+                delete locksByViewUid[viewId][channel];
+            }
+        });
+        if (Object.keys(locksByViewUid[viewId]).length === 0) {
+            // we removed all channels, so remove their parent as well
+            console.warn(`A view (${viewId}) does not have a target view to link with.`);
+            delete locksByViewUid[viewId];
+        }
+    });
 
     // Set `locksDict`
     const uniqueLocationLinkIds = Array.from(new Set(linkingInfos.map(d => d.linkId)));
