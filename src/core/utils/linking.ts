@@ -47,7 +47,7 @@ export function getLinkingInfo(hgModel: HiGlassModel) {
                 const channel = spec[cKey];
                 const isBrush = spec.mark === 'brush';
 
-                if (IsChannelDeep(channel) && channel.linkingId && channel.type === 'genomic') {
+                if (IsChannelDeep(channel) && channel.linkingId) {
                     linkingInfo.push({
                         layout: spec.layout === 'circular' ? 'circular' : 'linear',
                         orientation: spec.orientation ?? 'horizontal',
