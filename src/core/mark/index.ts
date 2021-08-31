@@ -81,13 +81,20 @@ export function drawMark(HGC: any, trackInfo: any, tile: any, model: GoslingTrac
             const yDomainCenter = yDomainMin + yDomainSize / 2.0;
             const newYDOmainSize = yDomainSize * factor;
 
+            const useDefinedXRange = (model.spec() as any)?.[d]?.range;
             const adjustedYScale = trackInfo._yScale
                 .copy()
                 .domain([yDomainCenter - newYDOmainSize / 2.0, yDomainCenter + newYDOmainSize / 2.0])
-                .range(xRange);
+                .range(useDefinedXRange ?? xRange);
             model.setChannelScale(d, adjustedYScale);
         } else {
-            model.setChannelScale(d, trackInfo._xScale);
+            const range = (model.spec() as any)?.[d]?.range; // model.getChannelRangeArray(d);
+            const updatedScale = trackInfo._xScale.copy();
+            if (range) {
+                // If specified, use it!
+                updatedScale.range(range);
+            }
+            model.setChannelScale(d, updatedScale);
         }
         // }
     });

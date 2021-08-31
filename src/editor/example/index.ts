@@ -151,7 +151,11 @@ export const examples: ReadonlyArray<{
         id: 'MIZBEE',
         spec: EX_SPEC_MIZBEE,
         underDevelopment: true,
-        theme: { base: 'light', root: { background: '#AEAEAE' } } as Theme
+        theme: {
+            base: 'light',
+            root: { background: '#E5E5E5', showMousePosition: false },
+            axis: { baselineColor: '#B4B4B4', tickColor: '#E5E5E5' }
+        } as Theme
     },
     {
         name: 'GIVE (Cao et al. 2018)',
