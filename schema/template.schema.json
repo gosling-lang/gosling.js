@@ -1253,6 +1253,9 @@
         "_invalidTrack": {
           "type": "boolean"
         },
+        "_parentViewId": {
+          "type": "string"
+        },
         "_renderingId": {
           "type": "string"
         },

@@ -106,6 +106,7 @@ export interface CommonTrackDef extends CommonViewDef, CommonRequiredTrackDef {
     // Internally used properties
     _renderingId?: string;
     _invalidTrack?: boolean; // flag to ignore rendering certain tracks if they have problems // !!! TODO: add tests
+    _parentViewId?: string;
 
     // To test upcoming feature.
     prerelease?: { testUsingNewRectRenderingForBAM?: boolean };

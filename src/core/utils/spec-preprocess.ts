@@ -174,10 +174,14 @@ export function traverseToFixSpecDownstream(spec: GoslingSpec | SingleView, pare
         tracks = spreadTracksByData(tracks);
 
         const linkID = uuid.v4();
+        const parentViewId = uuid.v4();
         tracks.forEach((track, i, array) => {
             // If size not defined, set default ones
             if (!track.width) track.width = DEFAULT_TRACK_WIDTH_LINEAR;
             if (!track.height) track.height = DEFAULT_TRACK_HEIGHT_LINEAR;
+
+            // Set the parent view ID so that we can use this information when linking views
+            track._parentViewId = parentViewId;
 
             /**
              * Process a stack option.

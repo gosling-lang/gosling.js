@@ -88,9 +88,13 @@ export function renderHiGlass(
     Object.keys(locksByViewUid).forEach(targetId => {
         Object.keys(locksByViewUid[targetId]).forEach(targetChannel => {
             const lockId = locksByViewUid[targetId][targetChannel].lock;
-            // Find a view that has the identical lock id
+            // Find a track of a view that has the identical lock id and belongs to another view
             Object.keys(locksByViewUid)
-                .filter(id => targetId !== id)
+                .filter(
+                    id =>
+                        targetId !==
+                        id /* && linkingInfos.find(d => d.viewId === targetId)?.parentViewId !== linkingInfos.find(d => d.viewId === id)?.parentViewId */
+                )
                 .forEach(sourceId => {
                     Object.keys(locksByViewUid[sourceId]).forEach(sourceChannel => {
                         if (locksByViewUid[sourceId][sourceChannel].lock === lockId) {

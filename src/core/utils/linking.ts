@@ -1,3 +1,4 @@
+import uuid from 'uuid';
 import { Orientation } from '../gosling.schema';
 import { IsChannelDeep } from '../gosling.schema.guards';
 import { HiGlassModel } from '../higlass-model';
@@ -12,6 +13,7 @@ export function getLinkingInfo(hgModel: HiGlassModel) {
         orientation: Orientation;
         channel: 'x' | 'x1' | 'y';
         viewId: string;
+        parentViewId: string;
         linkId: string;
         zoomLinkingId: string;
         isBrush: boolean;
@@ -53,6 +55,7 @@ export function getLinkingInfo(hgModel: HiGlassModel) {
                         orientation: spec.orientation ?? 'horizontal',
                         channel: cKey,
                         viewId,
+                        parentViewId: spec._parentViewId ?? uuid.v4(),
                         linkId: channel.linkingId,
                         zoomLinkingId: '', // This will be added very soon below
                         isBrush,

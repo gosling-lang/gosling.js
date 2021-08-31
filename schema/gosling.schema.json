@@ -489,6 +489,9 @@
         "_invalidTrack": {
           "type": "boolean"
         },
+        "_parentViewId": {
+          "type": "string"
+        },
         "_renderingId": {
           "type": "string"
         },
@@ -1813,6 +1816,9 @@
         "_invalidTrack": {
           "type": "boolean"
         },
+        "_parentViewId": {
+          "type": "string"
+        },
         "_renderingId": {
           "type": "string"
         },
@@ -1877,6 +1883,9 @@
             "properties": {
               "_invalidTrack": {
                 "type": "boolean"
+              },
+              "_parentViewId": {
+                "type": "string"
               },
               "_renderingId": {
                 "type": "string"
@@ -2208,6 +2217,9 @@
         "_invalidTrack": {
           "type": "boolean"
         },
+        "_parentViewId": {
+          "type": "string"
+        },
         "_renderingId": {
           "type": "string"
         },
@@ -2437,6 +2449,9 @@
         "_invalidTrack": {
           "type": "boolean"
         },
+        "_parentViewId": {
+          "type": "string"
+        },
         "_renderingId": {
           "type": "string"
         },
@@ -2507,6 +2522,9 @@
             "properties": {
               "_invalidTrack": {
                 "type": "boolean"
+              },
+              "_parentViewId": {
+                "type": "string"
               },
               "_renderingId": {
                 "type": "string"
@@ -2990,6 +3008,9 @@
             "_invalidTrack": {
               "type": "boolean"
             },
+            "_parentViewId": {
+              "type": "string"
+            },
             "_renderingId": {
               "type": "string"
             },
@@ -3209,6 +3230,9 @@
           "properties": {
             "_invalidTrack": {
               "type": "boolean"
+            },
+            "_parentViewId": {
+              "type": "string"
             },
             "_renderingId": {
               "type": "string"
@@ -3526,6 +3550,9 @@
         "_invalidTrack": {
           "type": "boolean"
         },
+        "_parentViewId": {
+          "type": "string"
+        },
         "_renderingId": {
           "type": "string"
         },
@@ -3791,6 +3818,9 @@
       "properties": {
         "_invalidTrack": {
           "type": "boolean"
+        },
+        "_parentViewId": {
+          "type": "string"
         },
         "_renderingId": {
           "type": "string"
@@ -4202,6 +4232,9 @@
       "properties": {
         "_invalidTrack": {
           "type": "boolean"
+        },
+        "_parentViewId": {
+          "type": "string"
         },
         "_renderingId": {
           "type": "string"
