@@ -1,4 +1,5 @@
 import { defineConfig } from "vite";
+import reactRefresh from '@vitejs/plugin-react-refresh'
 import * as esbuild from "esbuild";
 import { resolve } from "path";
 
@@ -42,5 +43,8 @@ export default defineConfig({
     "process.platform": "undefined",
     "process.env.THREADS_WORKER_INIT_TIMEOUT": "undefined",
   },
-  plugins: [bundleWebWorker()],
+  plugins: [
+      bundleWebWorker(),
+      reactRefresh(),
+  ],
 });
