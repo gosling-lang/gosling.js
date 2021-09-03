@@ -5,6 +5,12 @@ const pkg = require('./package.json');
 const skipExt = new Set(['@gmod/bam', '@gmod/bbi', 'generic-filehandle']);
 
 /**
+ * Esbuild plugin. Bundles TS/JS entrypoint as an independent module, and inlines
+ * the code as a base64-encoded data URL.
+ *
+ * import src from 'js-asset:../path/to/module';
+ * let worker = new Worker(src);
+ *
  * @param {Pick<import('esbuild').BuildOptions, 'minify' | 'format' | 'plugins'>}
  * @return {import('esbuild').Plugin}
  */
@@ -50,23 +56,37 @@ const onRebuild = (error, result) => {
 };
 
 /** @type {import('esbuild').BuildOptions} */
-const baseConfig = {
+const base = {
     entryPoints: ['./src/index.ts'],
-    format: 'esm',
     bundle: true,
     inject: ['./src/alias/buffer-shim.js'],
     plugins: [inlineJsAsset()]
 };
 
+/** @type {import('esbuild').BuildOptions} */
 const esm = {
-    ...baseConfig,
+    ...base,
     outfile: pkg.module,
+    format: 'esm',
     target: 'es2018',
-    external: [...Object.keys(pkg.dependencies), ...Object.keys(pkg.peerDependencies)].filter(dep => !skipExt.has(dep)),
+    external: [
+        ...Object.keys(pkg.dependencies),
+        ...Object.keys(pkg.peerDependencies),
+    ].filter(dep => !skipExt.has(dep)),
     banner: { js: 'var global = globalThis' }
 };
 
-const banner = `\
+/** @type {import('esbuild').BuildOptions} */
+const umd = {
+    ...base,
+    outfile: pkg.main,
+    format: 'cjs',
+    external: ['react', 'react-dom', 'pixi.js', 'higlass'],
+    // esbuild doesn't support UMD format directy. The banner/footer
+    // wraps the commonjs output as a UMD module. The function signature is copied
+    // from what is generated from rollup. If the external UMD dependencies change
+    // (or the name of the gosling global) this needs changing.
+    banner: { js: `\
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('pixi.js'), require('react'), require('higlass'), require('react-dom')) :
   typeof define === 'function' && define.amd ? define(['exports', 'pixi.js', 'react', 'higlass', 'react-dom'], factory) :
@@ -76,20 +96,11 @@ const banner = `\
 var __mods = { 'pixi.js': pixi_js, 'react': React, 'react-dom': ReactDOM, 'higlass': higlass };
 var require = name => __mods[name];
 var global = globalThis;
-`;
-
-const footer = '\n})));';
-
-const umd = {
-    ...baseConfig,
-    outfile: pkg.main,
-    format: 'cjs',
-    external: ['react', 'react-dom', 'pixi.js', 'higlass'],
-    banner: { js: banner },
-    footer: { js: footer }
+`
+    },
+    footer: { js:  '\n})));' }
 };
 
-/** @type {import('esbuild').BuildOptions} */
 const build = () => {
     const format = process.argv[2];
     let config;
