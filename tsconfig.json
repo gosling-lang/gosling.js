@@ -26,15 +26,15 @@
       "zlib": ["./src/alias/zlib.ts"],
       "vm": ["./src/alias/vm.ts"],
       "@gmod/bgzf-filehandle": ["./src/alias/bgzf-filehandle.ts"],
-	  "gosling.js": ["./src/index.ts"],
-	  "@gosling.schema": ["./src/core/gosling.schema.ts"],
-	  "@higlass.schema": ["./src/core/higlass.schema.ts"]
+      "gosling.js": ["./src/index.ts"],
+      "@gosling.schema": ["./src/core/gosling.schema.ts"],
+      "@higlass.schema": ["./src/core/higlass.schema.ts"]
     },
     "baseUrl": "."
   },
   "files": [
     "src/index.ts",
-	"editor/index.tsx"
+    "editor/index.tsx"
   ],
   "include": ["src", "src/**/*.d.ts"],
   "exclude": [
