@@ -15,11 +15,12 @@
         "dist"
     ],
     "scripts": {
-        "start": "concurrently --kill-others 'node build --esm --watch' 'webpack-dev-server --mode development'",
+        "start": "concurrently --kill-others 'node build --esm --watch' 'vite'",
         "build": "rm -rf dist && yarn build-umd && yarn build-esm",
         "build-umd": "node build --umd",
         "build-esm": "node build --esm",
-        "build-editor": "rm -rf build && yarn build-esm && webpack --mode production",
+        "build-editor": "rm -rf build && yarn build-esm && vite build",
+        "preview": "vite preview",
         "test": "jest editor/ src/",
         "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s -r 0",
         "format": "eslint src/ editor/ --fix && prettier 'editor/**/*.css' --write",
@@ -108,7 +109,6 @@
         "jest-raw-loader": "^1.0.1",
         "jsoncrush": "^1.1.6",
         "pixi.js": "^6.0.4",
-        "postcss-loader": "^3.0.0",
         "prettier": "^2.0.5",
         "qs": "^6.9.4",
         "react": "16.13.1",
@@ -123,7 +123,6 @@
         "ts-jest": "^26.2.0",
         "ts-json-schema-generator": "^0.75.0",
         "typescript": "~4.1.2",
-        "unminified-webpack-plugin": "^2.0.0",
         "vite": "^2.5.3"
     },
     "browserslist": {
