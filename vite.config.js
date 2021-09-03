@@ -1,3 +1,4 @@
+import { defineConfig } from "vite";
 import * as esbuild from "esbuild";
 import { resolve } from "path";
 
@@ -33,7 +34,8 @@ const bundleWebWorker = () => {
   }
 };
 
-export default {
+export default defineConfig({
+  build: { outDir: 'build' },
   resolve: {
     alias: {
       "gosling.js": resolve(__dirname, "./dist/gosling.es.js"),
@@ -46,4 +48,4 @@ export default {
     "process.env.THREADS_WORKER_INIT_TIMEOUT": "undefined",
   },
   plugins: [bundleWebWorker()],
-};
+});
