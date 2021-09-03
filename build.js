@@ -60,7 +60,8 @@ const base = {
     entryPoints: ['./src/index.ts'],
     bundle: true,
     inject: ['./src/alias/buffer-shim.js'],
-    plugins: [inlineJsAsset()]
+    plugins: [inlineJsAsset()],
+    sourcemap: true,
 };
 
 /** @type {import('esbuild').BuildOptions} */
