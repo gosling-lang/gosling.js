@@ -79,11 +79,12 @@ const banner = `\
   (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.gosling = {}, global.PIXI, global.React, global.hglib, global.ReactDOM));
 }(this, (function (exports, pixi_js, React, higlass, ReactDOM) { 'use strict';
 
-const __mods = { 'pixi.js': pixi_js, 'react': React, 'ReactDOM': ReactDOM, 'higlass': higlass };
-const require = name => __mods[name];
+var __mods = { 'pixi.js': pixi_js, 'react': React, 'react-dom': ReactDOM, 'higlass': higlass };
+var require = name => __mods[name];
+var global = globalThis;
 `;
 
-const footer = "\n}))";
+const footer = "\n})));";
 
 const umd = {
   ...baseConfig,
