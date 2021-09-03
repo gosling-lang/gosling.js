@@ -15,10 +15,10 @@
         "dist"
     ],
     "scripts": {
-        "start": "concurrently --kill-others 'node build --watch dist/gosling.es.js' 'webpack-dev-server --mode development'",
+        "start": "concurrently --kill-others 'node build --esm --watch' 'webpack-dev-server --mode development'",
         "build": "rm -rf dist && yarn build-umd && yarn build-esm",
-        "build-umd": "node build | rollup -f umd -g 'react:React,react-dom:ReactDOM,pixi.js:PIXI,higlass:hglib' -n gosling -o dist/gosling.js",
-        "build-esm": "node build | rollup -f esm -o dist/gosling.es.js",
+        "build-umd": "node build --umd",
+        "build-esm": "node build --esm",
         "build-editor": "yarn build-esm && webpack --mode production",
         "test": "jest src/",
         "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s -r 0",
@@ -46,6 +46,7 @@
         "@types/uuid": "^8.3.0",
         "bezier-js": "^4.1.1",
         "box-intersect": "^1.0.2",
+        "buffer": "^6.0.3",
         "d3-array": "^2.5.1",
         "d3-color": "^2.0.0",
         "d3-dsv": "^2.0.0",
@@ -85,7 +86,6 @@
         "@typescript-eslint/parser": "^4.8.1",
         "ajv": "^6.12.2",
         "babel-jest": "^26.3.0",
-        "buffer": "^6.0.3",
         "canvas": "^2.6.1",
         "concurrently": "^6.2.1",
         "conventional-changelog-cli": "^2.1.1",
@@ -154,7 +154,7 @@
     },
     "jest": {
         "moduleNameMapper": {
-            "raw-loader!*": "jest-raw-loader"
+            "js-asset:*": "jest-raw-loader"
         },
         "setupFiles": [
             "jest-canvas-mock"

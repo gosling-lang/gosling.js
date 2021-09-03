@@ -1,13 +1,15 @@
 const esbuild = require("esbuild");
 const { resolve } = require("path");
-const pkg = require('./package.json');
+const pkg = require("./package.json");
+
+const skipExt = new Set(["@gmod/bam", "@gmod/bbi", "generic-filehandle"]);
 
 /**
  * @param {Pick<import('esbuild').BuildOptions, 'minify' | 'format' | 'plugins'>}
  * @return {import('esbuild').Plugin}
  */
-const PluginInlineWorker = (opt = {}) => {
-  const namespace = "inline-worker";
+const inlineJsAsset = (opt = {}) => {
+  const namespace = "js-asset";
   const prefix = `${namespace}:`;
   return {
     name: namespace,
@@ -46,36 +48,48 @@ const PluginInlineWorker = (opt = {}) => {
   };
 };
 
-
-const notExternal = new Set(["@gmod/bam", "@gmod/bbi", "generic-filehandle"]);
-const external = ["react", "react-dom", "pixi.js", "higlass"]
-	.concat(Object.keys(pkg.dependencies))
-	.filter(dep => !notExternal.has(dep));
-
-/** @type {import('esbuild').BuildOptions} */
-const config = {
-  entryPoints: ['./src/index.ts'],
-  format: "esm",
-  external: external,
-  bundle: true,
-  target: 'es2018',
-  inject: ['./src/alias/buffer-shim.js'],
-  plugins: [PluginInlineWorker()],
-  banner: { js: 'var global = globalThis;' },
+const onRebuild = (error, result) => {
+  if (error) console.error("watch build failed:", error);
+  else console.log("watch build succeeded:", result);
 };
 
-let cursor = 2;
-if (process.argv[cursor] === "--watch") {
-  config.watch = {
-    onRebuild(error, result) {
-      if (error) console.error("watch build failed:", error);
-      else console.log("watch build succeeded:", result);
-    },
-  }, cursor++;
-}
+/** @type {import('esbuild').BuildOptions} */
+const baseConfig = {
+  entryPoints: ["./src/index.ts"],
+  format: "esm",
+  bundle: true,
+  inject: ["./src/alias/buffer-shim.js"],
+  plugins: [inlineJsAsset()],
+};
 
-if (process.argv[cursor]) {
-  config.outfile = process.argv[cursor];
-}
+const esm = {
+  ...baseConfig,
+  outfile: pkg.module,
+  target: "es2018",
+  external: [
+    ...Object.keys(pkg.dependencies),
+    ...Object.keys(pkg.peerDependencies),
+  ].filter((dep) => !skipExt.has(dep)),
+};
 
-esbuild.build(config);
+const umd = {
+  ...baseConfig,
+  outfile: pkg.main,
+  external: ["react", "react-dom", "pixi.js", "higlass"],
+};
+
+/** @type {import('esbuild').BuildOptions} */
+const build = () => {
+  const format = process.argv[2];
+  let config;
+  if (format === "--esm") config = esm;
+  if (format === "--umd") config = umd;
+  if (!config) {
+    console.log("node build --umd/--esm [--watch]");
+    process.exit(1);
+  }
+  if (process.argv[3] === "--watch") config.watch = { onRebuild };
+  return esbuild.build(config);
+};
+
+build();
