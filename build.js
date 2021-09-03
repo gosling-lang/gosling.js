@@ -72,10 +72,26 @@ const esm = {
   ].filter((dep) => !skipExt.has(dep)),
 };
 
+const banner = `\
+(function (global, factory) {
+  typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('pixi.js'), require('react'), require('higlass'), require('react-dom')) :
+  typeof define === 'function' && define.amd ? define(['exports', 'pixi.js', 'react', 'higlass', 'react-dom'], factory) :
+  (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.gosling = {}, global.PIXI, global.React, global.hglib, global.ReactDOM));
+}(this, (function (exports, pixi_js, React, higlass, ReactDOM) { 'use strict';
+
+const __mods = { 'pixi.js': pixi_js, 'react': React, 'ReactDOM': ReactDOM, 'higlass': higlass };
+const require = name => __mods[name];
+`;
+
+const footer = "\n}))";
+
 const umd = {
   ...baseConfig,
   outfile: pkg.main,
+  format: "cjs",
   external: ["react", "react-dom", "pixi.js", "higlass"],
+  banner: { js: banner },
+  footer: { js: footer },
 };
 
 /** @type {import('esbuild').BuildOptions} */

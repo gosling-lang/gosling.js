@@ -126,8 +126,6 @@
         "react-scripts": "3.4.1",
         "react-split-pane": "^0.1.91",
         "remark-gfm": "^1.0.0",
-        "rollup": "^2.56.3",
-        "rollup-plugin-terser": "^7.0.2",
         "strip-json-comments": "^3.1.1",
         "style-loader": "^1.2.1",
         "ts-jest": "^26.2.0",
