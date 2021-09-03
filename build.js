@@ -82,6 +82,7 @@ const umd = {
     ...base,
     outfile: pkg.main,
     format: 'cjs',
+    minify: true,
     external: ['react', 'react-dom', 'pixi.js', 'higlass'],
     // esbuild doesn't support UMD format directy. The banner/footer
     // wraps the commonjs output as a UMD module. The function signature is copied
