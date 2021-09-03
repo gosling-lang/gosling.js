@@ -3,7 +3,9 @@
 import { Buffer } from 'buffer';
 import { unzlibSync } from 'fflate';
 const zlib = {
-  inflateSync: (src: Uint8Array) => Buffer.from(unzlibSync(src)),
-  gunzip: () => { throw Error("zlib.gunzip not Implemented.") },
+    inflateSync: (src: Uint8Array) => Buffer.from(unzlibSync(src)),
+    gunzip: () => {
+        throw Error('zlib.gunzip not Implemented.');
+    }
 };
 export default zlib;

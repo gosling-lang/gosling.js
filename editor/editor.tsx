@@ -22,7 +22,7 @@ import { ICONS, ICON_INFO } from './icon';
 import { Themes } from 'gosling-theme';
 
 import type { HiGlassSpec } from '@higlass.schema';
-import type { Datum } from '@gosling.schema'
+import type { Datum } from '@gosling.schema';
 
 const INIT_DEMO_INDEX = examples.findIndex(d => d.forceShow) !== -1 ? examples.findIndex(d => d.forceShow) : 0;
 
@@ -140,7 +140,9 @@ function Editor(props: any) {
         ? examples.map(d => d.id).indexOf(urlParams.example as string)
         : INIT_DEMO_INDEX;
 
-    const defaultCode = urlGist ? emptySpec() : stringify(urlSpec ?? (examples[INIT_DEMO_INDEX].spec as gosling.GoslingSpec));
+    const defaultCode = urlGist
+        ? emptySpec()
+        : stringify(urlSpec ?? (examples[INIT_DEMO_INDEX].spec as gosling.GoslingSpec));
 
     const previewData = useRef<PreviewData[]>([]);
     const [refreshData, setRefreshData] = useState<boolean>(false);
