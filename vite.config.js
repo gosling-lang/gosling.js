@@ -3,13 +3,8 @@ import * as esbuild from "esbuild";
 import { resolve } from "path";
 
 /**
- * Vite plugin. Bundles code in `src/loaders/tiff/lib/decoder.worker.ts`
- * into a single file during _development only_. WebWorker modules are only
- * stable in chromium browsers, so this is a work-around to allow us to
- * develop in other browsers.
- *
+ * Bundles vite worker modules during development into single scripts.
  * see: https://github.com/hms-dbmi/viv/pull/469#issuecomment-877276110
- *
  * @returns {import('vite').Plugin}
  */
 const bundleWebWorker = () => {
