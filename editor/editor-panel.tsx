@@ -4,6 +4,15 @@ import * as Monaco from 'monaco-editor/esm/vs/editor/editor.api';
 import ReactResizeDetector from 'react-resize-detector';
 import { GoslingSchema } from 'gosling.js';
 
+import 'monaco-editor/esm/vs/language/json/monaco.contribution';
+import jsonWorker from 'monaco-editor/esm/vs/language/json/json.worker?worker';
+// @ts-ignore
+self.MonacoEnvironment = {
+    getWorker() {
+        return jsonWorker();
+    }
+};
+
 function EditorPanel(props: {
     code: string;
     readOnly?: boolean;
