@@ -410,14 +410,16 @@ function Editor(props: any) {
                     const id = gosRef.current.api.getViewIds()?.[0]; //'view-1';
                     if (id) {
                         // gosRef.current.api.zoomToExtent(id);
-                        const duration = 1000;
-                        if (clickCnt.current === 0) gosRef.current.api.zoomTo(id, 'chr8', 300000, duration);
+                        const duration = 1500;
+                        if (clickCnt.current >= 3) clickCnt.current = -1;
+
+                        if (clickCnt.current === -1) gosRef.current.api.zoomToExtent(id, duration);
+                        else if (clickCnt.current === 0) gosRef.current.api.zoomTo(id, 'chr8', 250000, duration);
                         // if(clickCnt.current === 1) gosRef.current.api.zoomToGene(id, 'MYC', 10);
                         else if (clickCnt.current === 1)
                             gosRef.current.api.zoomTo(id, 'chr8:127734727-127742774', 0, duration);
                         else if (clickCnt.current === 2)
-                            gosRef.current.api.zoomTo(id, 'chr8:127739751-127739761', 0, duration);
-                        else clickCnt.current = 0;
+                            gosRef.current.api.zoomTo(id, 'chr8:127738651-127738661', 0, duration);
                         clickCnt.current++;
                     }
                     //

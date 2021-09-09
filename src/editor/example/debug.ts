@@ -28,8 +28,8 @@ const ideogramVisibility = [
     }
 ];
 const ideogramCommon = {
-    x: { field: 'chromStart', type: 'genomic' },
-    xe: { field: 'chromEnd', type: 'genomic' },
+    x: { field: 'chromStart', type: 'genomic', axis: 'bottom' },
+    xe: { field: 'chromEnd', type: 'genomic', axis: 'bottom' },
     size: { value: 20 },
     stroke: { value: 'black' },
     strokeWidth: { value: 1 }
@@ -119,12 +119,14 @@ export const EX_SPEC_DEBUG: GoslingSpec = {
                             x: {
                                 field: 'chromStart',
                                 type: 'genomic',
-                                aggregate: 'min'
+                                aggregate: 'min',
+                                axis: 'bottom'
                             },
                             xe: {
                                 field: 'chromEnd',
                                 aggregate: 'max',
-                                type: 'genomic'
+                                type: 'genomic',
+                                axis: 'bottom'
                             },
                             stroke: { value: 'white' },
                             strokeWidth: { value: 3 },
@@ -227,7 +229,8 @@ export const EX_SPEC_DEBUG: GoslingSpec = {
                             mark: 'triangleRight',
                             x: {
                                 field: 'end',
-                                type: 'genomic'
+                                type: 'genomic',
+                                axis: 'bottom'
                             },
                             ...geneCommon,
                             visibility: geneVisibility
@@ -241,7 +244,8 @@ export const EX_SPEC_DEBUG: GoslingSpec = {
                             mark: 'triangleLeft',
                             x: {
                                 field: 'start',
-                                type: 'genomic'
+                                type: 'genomic',
+                                axis: 'bottom'
                             },
                             ...geneCommon,
                             style: { align: 'right' },
@@ -253,7 +257,8 @@ export const EX_SPEC_DEBUG: GoslingSpec = {
                             mark: 'rect',
                             x: {
                                 field: 'start',
-                                type: 'genomic'
+                                type: 'genomic',
+                                axis: 'bottom'
                             },
                             xe: {
                                 field: 'end',
@@ -268,7 +273,8 @@ export const EX_SPEC_DEBUG: GoslingSpec = {
                             mark: 'rule',
                             x: {
                                 field: 'start',
-                                type: 'genomic'
+                                type: 'genomic',
+                                axis: 'bottom'
                             },
                             strokeWidth: { value: 3 },
                             xe: {
@@ -285,7 +291,8 @@ export const EX_SPEC_DEBUG: GoslingSpec = {
                             text: { field: 'name', type: 'nominal' },
                             x: {
                                 field: 'start',
-                                type: 'genomic'
+                                type: 'genomic',
+                                axis: 'bottom'
                             },
                             xe: {
                                 field: 'end',
@@ -323,7 +330,8 @@ export const EX_SPEC_DEBUG: GoslingSpec = {
                             y: { field: 'count', type: 'quantitative', axis: 'none' },
                             x: {
                                 field: 'position',
-                                type: 'genomic'
+                                type: 'genomic',
+                                axis: 'bottom'
                             },
                             color: {
                                 field: 'base',
@@ -356,7 +364,8 @@ export const EX_SPEC_DEBUG: GoslingSpec = {
                             mark: 'text',
                             x: {
                                 field: 'start',
-                                type: 'genomic'
+                                type: 'genomic',
+                                axis: 'bottom'
                             },
                             xe: {
                                 field: 'end',
