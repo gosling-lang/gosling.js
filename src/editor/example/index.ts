@@ -161,8 +161,7 @@ export const examples: ReadonlyArray<{
         name: 'GIVE (Cao et al. 2018)',
         id: 'GIVE',
         spec: EX_SPEC_GIVE,
-        underDevelopment: true,
-        forceShow: true
+        underDevelopment: true
     },
     {
         name: 'Breast Cancer Variant (Staaf et al. 2019)',

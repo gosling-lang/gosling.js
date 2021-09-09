@@ -93,6 +93,7 @@ export const EX_SPEC_MIZBEE: GoslingSpec = {
                     alignment: 'overlay',
                     tracks: [
                         {
+                            title: 'mm10',
                             assembly: 'mm10',
                             data,
                             mark: 'rect',
@@ -180,6 +181,7 @@ export const EX_SPEC_MIZBEE: GoslingSpec = {
                             // xDomain: { chromosome: '1' },
                             tracks: [
                                 {
+                                    title: 'mm10',
                                     data,
                                     dataTransform: [{ type: 'filter', field: 'Chromosome_spec1', oneOf: ['chr1'] }],
                                     mark: 'rect',
@@ -197,7 +199,7 @@ export const EX_SPEC_MIZBEE: GoslingSpec = {
                                         range: chrColorRange
                                     },
                                     opacity: { value: opacity },
-                                    width: 400,
+                                    width: 100,
                                     height: 20
                                 }
                             ]
@@ -207,6 +209,7 @@ export const EX_SPEC_MIZBEE: GoslingSpec = {
                             alignment: 'overlay',
                             tracks: [
                                 {
+                                    title: 'hg38',
                                     data: {
                                         url:
                                             'https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/UCSC.HG38.Human.CytoBandIdeogram.csv',
@@ -281,7 +284,7 @@ export const EX_SPEC_MIZBEE: GoslingSpec = {
                                     opacity: { value: opacity }
                                 }
                             ],
-                            width: 400,
+                            width: 700,
                             height: 20
                         }
                     ]
@@ -298,16 +301,16 @@ export const EX_SPEC_MIZBEE: GoslingSpec = {
                                 axis: 'none',
                                 linkingId: 'top',
                                 // domain: { chromosome: '1' },
-                                range: [0, 400]
+                                range: [0, 100]
                             },
-                            xe: { field: 'End_spec1', type: 'genomic', range: [0, 400] },
+                            xe: { field: 'End_spec1', type: 'genomic', range: [0, 100] },
                             x1: {
                                 field: 'Start_spec2',
                                 type: 'genomic',
                                 linkingId: 'bottom',
-                                range: [410, 810]
+                                range: [110, 810]
                             },
-                            x1e: { field: 'End_spec2', type: 'genomic', range: [410, 810] },
+                            x1e: { field: 'End_spec2', type: 'genomic', range: [110, 810] },
                             strokeWidth: { value: 0 },
                             color: {
                                 field: 'Chromosome_spec2',
