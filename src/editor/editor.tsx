@@ -417,7 +417,7 @@ function Editor(props: any) {
                         else if (clickCnt.current === 0) gosRef.current.api.zoomTo(id, 'chr8', 250000, duration);
                         // if(clickCnt.current === 1) gosRef.current.api.zoomToGene(id, 'MYC', 10);
                         else if (clickCnt.current === 1)
-                            gosRef.current.api.zoomTo(id, 'chr8:127734727-127742774', 0, duration);
+                            gosRef.current.api.zoomTo(id, 'chr8:127736060-127741550', 0, duration);
                         else if (clickCnt.current === 2)
                             gosRef.current.api.zoomTo(id, 'chr8:127738651-127738661', 0, duration);
                         clickCnt.current++;
@@ -580,7 +580,7 @@ function Editor(props: any) {
                             title="Save PNG file"
                             className="side-panel-button"
                             onClick={() => {
-                                gosRef.current.api.exportPng();
+                                gosRef.current.api.exportPng(true);
                             }}
                         >
                             {getIconSVG(ICONS.IMAGE, 23, 23)}
