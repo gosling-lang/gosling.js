@@ -397,6 +397,7 @@ function Editor(props: any) {
     }
 
     // console.log('editor.render()');
+    const clickCnt = useRef(0);
     return (
         <>
             <div
@@ -406,10 +407,18 @@ function Editor(props: any) {
 
                     // To test APIs, uncomment the following code.
                     // // ! Be aware that the first view is for the title/subtitle track. So navigation API does not work.
-                    // const id = gosRef.current.api.getViewIds()?.[1]; //'view-1';
-                    // if(id) {
-                    //     gosRef.current.api.zoomToExtent(id);
-                    // }
+                    const id = gosRef.current.api.getViewIds()?.[0]; //'view-1';
+                    if (id) {
+                        // gosRef.current.api.zoomToExtent(id);
+                        const duration = 1000;
+                        if (clickCnt.current === 0) gosRef.current.api.zoomTo(id, 'chr8', 300000, duration);
+                        // if(clickCnt.current === 1) gosRef.current.api.zoomToGene(id, 'MYC', 10);
+                        if (clickCnt.current === 1)
+                            gosRef.current.api.zoomTo(id, 'chr8:127734727-127742774', 0, duration);
+                        if (clickCnt.current === 2)
+                            gosRef.current.api.zoomTo(id, 'chr8:127739751-127739761', 0, duration);
+                        clickCnt.current++;
+                    }
                     //
                     // // Static visualization rendered in canvas
                     // const { canvas } = gosRef.current.api.getCanvas({
@@ -722,7 +731,19 @@ function Editor(props: any) {
                                     <gosling.GoslingComponent
                                         ref={gosRef}
                                         spec={goslingSpec}
-                                        theme={theme}
+                                        theme={{
+                                            base: 'light',
+                                            track: {
+                                                outline: 'white',
+                                                outlineWidth: 0
+                                            },
+                                            axis: {
+                                                labelFontFamily: 'Roboto Condensed',
+                                                // labelFontWeight: 'bold',
+                                                labelFontSize: 16,
+                                                baselineColor: 'white'
+                                            }
+                                        }}
                                         padding={60}
                                         margin={0}
                                         border={'none'}

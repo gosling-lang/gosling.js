@@ -150,7 +150,7 @@ export function createApi(
         },
         getCanvas: getCanvas,
         exportPng: transparentBackground => {
-            const { canvas } = getCanvas({ resolution: 4, transparentBackground });
+            const { canvas } = getCanvas({ resolution: 16, transparentBackground });
             canvas.toBlob(blob => {
                 const a = document.createElement('a');
                 document.body.append(a);

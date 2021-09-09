@@ -555,7 +555,7 @@ function AxisTrack(HGC: any, ...args: any[]): any {
             allBoxes = allTexts.map(({ text }: any) => {
                 text.updateTransform();
                 const b = text.getBounds();
-                const m = 5;
+                const m = 0;
                 const box = [b.x - m, b.y - m, b.x + b.width + m * 2, b.y + b.height + m * 2];
 
                 return box;
