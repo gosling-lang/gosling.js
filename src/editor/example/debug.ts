@@ -69,7 +69,7 @@ const geneCommon = {
 };
 
 export const EX_SPEC_DEBUG: GoslingSpec = {
-    xDomain: { chromosome: '8', interval: [127734727, 127742774] },
+    // xDomain: { chromosome: '8', interval: [127734727, 127742774] },
     views: [
         {
             tracks: [

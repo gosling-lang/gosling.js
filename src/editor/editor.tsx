@@ -413,10 +413,11 @@ function Editor(props: any) {
                         const duration = 1000;
                         if (clickCnt.current === 0) gosRef.current.api.zoomTo(id, 'chr8', 300000, duration);
                         // if(clickCnt.current === 1) gosRef.current.api.zoomToGene(id, 'MYC', 10);
-                        if (clickCnt.current === 1)
+                        else if (clickCnt.current === 1)
                             gosRef.current.api.zoomTo(id, 'chr8:127734727-127742774', 0, duration);
-                        if (clickCnt.current === 2)
+                        else if (clickCnt.current === 2)
                             gosRef.current.api.zoomTo(id, 'chr8:127739751-127739761', 0, duration);
+                        else clickCnt.current = 0;
                         clickCnt.current++;
                     }
                     //
