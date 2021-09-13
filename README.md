@@ -34,10 +34,11 @@ We welcome and greatly appreciate your contribution to this project! Please read
 
 ## Team
 
--   Sehi L'Yi (<sehi_lyi@hms.harvard.edu>)
--   Qianwen Wang (<qianwen_wang@hms.harvard.edu>)
+-   Sehi L'Yi ([@sehi_lyi](https://twitter.com/sehi_lyi) | <sehi_lyi@hms.harvard.edu>)
+-   Qianwen Wang ([@WangQianwenToo](https://twitter.com/WangQianwenToo) | <qianwen_wang@hms.harvard.edu>)
 -   Fritz Lekschas ([@flekschas](https://twitter.com/flekschas) | [lekschas.de](https://lekschas.de))
--   Nils Gehlenborg (<nils@hms.harvard.edu>)
+-   Trevor Manz ([@trevmanz](https://twitter.com/trevmanz) | <trevor_manz@g.harvard.edu>)
+-   Nils Gehlenborg ([@ngehlenborg](https://twitter.com/ngehlenborg) | <nils@hms.harvard.edu>)
 
 ## Citation
 
