@@ -368,34 +368,22 @@ export interface JSONData {
      */
     type: 'json';
 
-    /**
-     * values in the form of JSON
-     */
+    /** values in the form of JSON */
     values: Datum[];
 
-    /**
-     * specify the name of quantitative data fields
-     */
+    /** specify the name of quantitative data fields */
     quantitativeFields?: string[];
 
-    /**
-     * specify the name of chromosome data fields
-     */
+    /** specify the name of chromosome data fields */
     chromosomeField?: string;
 
-    /**
-     * specify the name of genomic data fields
-     */
+    /** specify the name of genomic data fields */
     genomicFields?: string[];
 
-    /**
-     * specify the number of rows loaded from the url. default=1000
-     */
+    /** specify the number of rows loaded from the url. default=1000 */
     sampleLength?: number;
 
-    /**
-     * experimental
-     */
+    /** experimental */
     genomicFieldsToConvert?: {
         chromosomeField: string;
         genomicFields: string[];
@@ -596,17 +584,26 @@ export interface BEDDBData {
     exonIntervalFields?: [{ index: number; name: string }, { index: number; name: string }];
 }
 
+/**
+ * Binary Alignment Map (BAM) is the comprehensive raw data of genome sequencing;
+ * it consists of the lossless, compressed binary representation of the Sequence Alignment Map-files.
+ */
 export interface BAMData {
     type: 'bam';
+
+    /** URL link to the BAM data file */
     url: string;
+
+    /** URL link to the index file of the BAM file */
     indexUrl: string;
 }
 
-/* ----------------------------- DATA TRANSFORM ----------------------------- */
 export interface MatrixData {
     type: 'matrix';
     url: string;
 }
+
+/* ----------------------------- DATA TRANSFORM ----------------------------- */
 
 export type DataTransform =
     | FilterTransform
