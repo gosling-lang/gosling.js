@@ -37,8 +37,10 @@
     },
     "BAMData": {
       "additionalProperties": false,
+      "description": "Binary Alignment Map (BAM) is the comprehensive raw data of genome sequencing; it consists of the lossless, compressed binary representation of the Sequence Alignment Map-files.",
       "properties": {
         "indexUrl": {
+          "description": "URL link to the index file of the BAM file",
           "type": "string"
         },
         "type": {
@@ -46,6 +48,7 @@
           "type": "string"
         },
         "url": {
+          "description": "URL link to the BAM data file",
           "type": "string"
         }
       },
