@@ -154,6 +154,7 @@ export const EX_SPEC_CIRCOS: GoslingSpec = {
 };
 
 export const EX_SPEC_CIRCOS_BETWEEN_LINK: GoslingSpec = {
+    title: 'Between Links in Circular Layouts with Parallel Arrangements',
     layout: 'circular',
     static: true,
     spacing: 0.01,
