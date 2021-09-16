@@ -248,6 +248,8 @@
 
 .editor-data-preview-table table {
     width: 100%;
+    border-spacing: 0;
+    border-collapse: collapse;
 }
 
 .editor-data-preview-table th,
@@ -459,6 +461,7 @@ td {
 }
 
 .hide-description-button {
+    cursor: pointer;
     font-size: 9px;
     color: rgb(89, 89, 89);
     border: 1px solid #aaa;
