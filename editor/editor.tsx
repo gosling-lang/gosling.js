@@ -307,7 +307,6 @@ function Editor(props: any) {
         const token = PubSub.subscribe('data-preview', (_: string, data: PreviewData) => {
             // Data with different `dataConfig` is shown separately in data preview.
             const id = `${data.dataConfig}`;
-
             const newPreviewData = previewData.current.filter(d => d.id !== id);
             previewData.current = [...newPreviewData, { ...data, id }];
         });
@@ -423,7 +422,10 @@ function Editor(props: any) {
                     // }
                 }}
             >
-                <span style={{ cursor: 'pointer' }} onClick={() => window.open('https://gosling.js.org', '_blank')}>
+                <span
+                    style={{ cursor: 'pointer', lineHeight: '40px' }}
+                    onClick={() => window.open('https://gosling.js.org', '_blank')}
+                >
                     <span className="logo">{GoslingLogoSVG(20, 20)}</span>
                     Gosling.js Editor
                 </span>
