@@ -1,4 +1,5 @@
 import { GoslingSpec } from '../../';
+import { GOSLING_PUBLIC_DATA } from './gosling-data';
 
 export const EX_SPEC_CIRCULR_RANGE: GoslingSpec = {
     // title: 'Circos',
@@ -148,6 +149,121 @@ export const EX_SPEC_CIRCOS: GoslingSpec = {
             ],
             width: 700,
             height: 300
+        }
+    ]
+};
+
+export const EX_SPEC_CIRCOS_BETWEEN_LINK: GoslingSpec = {
+    layout: 'circular',
+    static: true,
+    spacing: 0.01,
+    centerRadius: 0.3,
+    alignment: 'stack',
+    tracks: [
+        {
+            data: {
+                url: GOSLING_PUBLIC_DATA.multivec,
+                type: 'multivec',
+                row: 'sample',
+                column: 'position',
+                value: 'peak',
+                categories: ['sample 1'],
+                binSize: 1
+            },
+            mark: 'bar',
+            x: { field: 'start', type: 'genomic', axis: 'top' },
+            xe: { field: 'end', type: 'genomic', axis: 'top' },
+            y: { field: 'peak', type: 'quantitative', axis: 'right' },
+            color: { value: 'lightgray' },
+            width: 700,
+            height: 60
+        },
+        {
+            data: {
+                url:
+                    'https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/UCSC.HG38.Human.CytoBandIdeogram.csv',
+                type: 'csv',
+                chromosomeField: 'Chromosome',
+                genomicFields: ['chromStart', 'chromEnd']
+            },
+            mark: 'rect',
+            color: {
+                field: 'Stain',
+                type: 'nominal',
+                domain: ['gneg', 'gpos25', 'gpos50', 'gpos75', 'gpos100', 'gvar', 'acen'],
+                range: ['white', '#D9D9D9', '#979797', '#636363', 'black', '#F0F0F0', '#8D8D8D']
+            },
+            x: { field: 'chromStart', type: 'genomic' },
+            xe: { field: 'chromEnd', type: 'genomic' },
+            stroke: { value: 'black' },
+            strokeWidth: { value: 0.5 },
+            width: 700,
+            height: 30
+        },
+        {
+            alignment: 'overlay',
+            data: {
+                url: 'https://raw.githubusercontent.com/vigsterkr/circos/master/data/5/segdup.txt',
+                type: 'csv',
+                headerNames: ['id', 'chr', 'p1', 'p2'],
+                chromosomePrefix: 'hs',
+                chromosomeField: 'chr',
+                genomicFields: ['p1', 'p2'],
+                separator: ' ',
+                longToWideId: 'id',
+                sampleLength: 5000
+            },
+            opacity: { value: 0.1 },
+            tracks: [
+                {
+                    dataTransform: [
+                        {
+                            type: 'filter',
+                            field: 'chr',
+                            oneOf: ['hs1'],
+                            not: true
+                        }
+                    ],
+                    mark: 'betweenLink',
+                    x: { field: 'p2_2', type: 'genomic' },
+                    xe: { field: 'p1', type: 'genomic' },
+                    stroke: { value: 'lightgray' },
+                    strokeWidth: { value: 1 }
+                },
+                {
+                    dataTransform: [{ type: 'filter', field: 'chr', oneOf: ['hs1'] }],
+                    mark: 'betweenLink',
+                    x: { field: 'p2_2', type: 'genomic' },
+                    xe: { field: 'p1', type: 'genomic' },
+                    stroke: { value: 'black' },
+                    // stroke: { field: 'chr_2', type: 'nominal' },
+                    strokeWidth: { value: 1 }
+                }
+            ],
+            width: 1000,
+            height: 300
+        },
+        {
+            data: {
+                url:
+                    'https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/UCSC.HG38.Human.CytoBandIdeogram.csv',
+                type: 'csv',
+                chromosomeField: 'Chromosome',
+                genomicFields: ['chromStart', 'chromEnd']
+            },
+            mark: 'rect',
+            color: {
+                field: 'Stain',
+                type: 'nominal',
+                domain: ['gneg', 'gpos25', 'gpos50', 'gpos75', 'gpos100', 'gvar', 'acen'],
+                range: ['white', '#D9D9D9', '#979797', '#636363', 'black', '#F0F0F0', '#8D8D8D']
+            },
+            x: { field: 'chromStart', type: 'genomic' },
+            xe: { field: 'chromEnd', type: 'genomic' },
+            stroke: { value: 'black' },
+            strokeWidth: { value: 0.5 },
+            width: 700,
+            height: 30
         }
     ]
 };

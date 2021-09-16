@@ -231,6 +231,46 @@ export function drawLink(g: PIXI.Graphics, trackInfo: any, model: GoslingTrackMo
                     return;
                 }
 
+                if (spec.mark === 'betweenLink' && circular) {
+                    /* Original lines */
+                    // const r = trackOuterRadius - (rowPosition / trackHeight) * trackRingSize;
+                    // const posX = cartesianToPolar(x, trackWidth, r, tcx, tcy, startAngle, endAngle);
+                    // const posXE = cartesianToPolar(xe, trackWidth, trackInnerRadius, tcx, tcy, startAngle, endAngle);
+                    // g.lineStyle(
+                    //     1,
+                    //     colorToHex('red'),
+                    //     1, // alpha
+                    //     0.5 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
+                    // );
+                    // g.moveTo(posX.x, posX.y);
+                    // g.lineTo(posXE.x, posXE.y);
+
+                    // https://www.tessellationtech.io/tutorial-circular-sankey/
+                    let prevX, prevY;
+                    for (let t = 0; t <= 1; t += 0.02) {
+                        const logodds = (t: number) => Math.log(t / (1 - t));
+                        const movingRadius = (t: number) =>
+                            trackOuterRadius - (1 / (1 + Math.exp(logodds(t)))) * trackRingSize + 3;
+                        const getRadian = (t: number, s: number, e: number) => ((e - s) * t + s) / trackWidth;
+                        const _x = tcx + movingRadius(t) * Math.cos(-getRadian(t, x, xe) * 2 * Math.PI - Math.PI / 2.0);
+                        const _y = tcy + movingRadius(t) * Math.sin(-getRadian(t, x, xe) * 2 * Math.PI - Math.PI / 2.0);
+                        if (prevX && prevY) {
+                            g.lineStyle(
+                                model.encodedValue('strokeWidth'),
+                                colorToHex(stroke),
+                                opacity, // alpha
+                                0.5 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
+                            );
+                            g.moveTo(prevX, prevY);
+                            g.lineTo(_x, _y);
+                        }
+                        prevX = _x;
+                        prevY = _y;
+                    }
+
+                    return;
+                }
+
                 // Experimental
                 if (spec.mark === 'betweenLink') {
                     g.moveTo(xe, rowPosition + rowHeight);
