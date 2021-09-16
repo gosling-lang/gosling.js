@@ -8,7 +8,7 @@ import { EX_SPEC_BASIC_SEMANTIC_ZOOM } from './basic-semantic-zoom';
 import { EX_SPEC_MARK_DISPLACEMENT } from './mark-displacement';
 import { EX_SPEC_CIRCULAR_OVERVIEW_LINEAR_DETAIL } from './circular-overview-linear-detail-views';
 import { EX_SPEC_SARS_COV_2 } from './sars-cov-2';
-import { EX_SPEC_CIRCOS, EX_SPEC_CIRCULR_RANGE } from './circos';
+import { EX_SPEC_CIRCOS, EX_SPEC_CIRCOS_BETWEEN_LINK, EX_SPEC_CIRCULR_RANGE } from './circos';
 import { EX_SPEC_GREMLIN } from './gremlin';
 import { EX_SPEC_GENE_ANNOTATION } from './gene-annotation';
 import { EX_SPEC_CLINVAR_LOLLIPOP, EX_SPEC_SEQUENCE_TRACK } from './semantic-zoom';
@@ -128,6 +128,12 @@ export const examples: ReadonlyArray<{
         name: 'Corces et al. 2020',
         id: 'CORCES_ET_AL',
         spec: EX_SPEC_CORCES_ET_AL
+    },
+    {
+        name: 'Circular Between Bands',
+        id: 'CIRCULAR_BETWEEN_BANDS',
+        spec: EX_SPEC_CIRCOS_BETWEEN_LINK,
+        underDevelopment: true
     },
     {
         name: "Gremlin (O'Brien et al. 2010)",
