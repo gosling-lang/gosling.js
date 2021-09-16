@@ -1,15 +1,17 @@
 import React, { useRef, useState, useEffect } from 'react'; // eslint-disable-line no-unused-vars
 import MonacoEditor from 'react-monaco-editor';
-import * as Monaco from 'monaco-editor/esm/vs/editor/editor.api';
+import * as Monaco from 'monaco-editor';
 import ReactResizeDetector from 'react-resize-detector';
 import { GoslingSchema } from 'gosling.js';
 
-import 'monaco-editor/esm/vs/language/json/monaco.contribution';
-import jsonWorker from 'monaco-editor/esm/vs/language/json/json.worker?worker';
 // @ts-ignore
+import jsonWorker from 'monaco-editor/esm/vs/language/json/json.worker?worker';
+
+// @ts-ignore
+// https://github.com/Microsoft/monaco-editor/blob/main/docs/integrate-esm.md#using-vite
 self.MonacoEnvironment = {
     getWorker() {
-        return jsonWorker();
+        return new jsonWorker();
     }
 };
 
