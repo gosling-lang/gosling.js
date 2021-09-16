@@ -840,14 +840,10 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
 
                 // Send data preview to the editor so that it can be shown to users.
                 try {
-                    // !!! This shouldn't be called while using npm gosling.js package.
-                    /*eslint-disable */
-                    const pubsub = require('pubsub-js');
-                    /*eslint-enable */
-                    if (pubsub) {
+                    if (PubSub) {
                         const NUM_OF_ROWS_IN_PREVIEW = 100;
                         const numOrRows = tile.gos.tabularDataFiltered.length;
-                        pubsub.publish('data-preview', {
+                        PubSub.publish('data-preview', {
                             id: this.context.id,
                             dataConfig: JSON.stringify({ data: resolved.data }),
                             data:

@@ -10,11 +10,13 @@
 
 .logo {
     display: inline-block;
-    vertical-align: middle;
     height: 100%;
-    padding-top: 8px;
     margin-left: 7px;
     margin-right: 5px;
+}
+
+.logo svg {
+    vertical-align: middle;
 }
 
 .gosling-color {
@@ -149,7 +151,6 @@
     padding-left: 10px;
     background: #fafafa;
     border-bottom: 1px solid lightgray;
-    height: 30px;
     overflow-x: auto;
 }
 
@@ -247,6 +248,8 @@
 
 .editor-data-preview-table table {
     width: 100%;
+    border-spacing: 0;
+    border-collapse: collapse;
 }
 
 .editor-data-preview-table th,
@@ -458,6 +461,7 @@ td {
 }
 
 .hide-description-button {
+    cursor: pointer;
     font-size: 9px;
     color: rgb(89, 89, 89);
     border: 1px solid #aaa;
