@@ -4,6 +4,8 @@ declare module 'js-asset:*' {
 }
 
 declare module '*?worker' {
-    const workerFactory: () => Worker;
-    export default workerFactory;
+    const workerConstructor: {
+        new (): Worker;
+    };
+    export default workerConstructor;
 }
