@@ -39,7 +39,7 @@ const inlineJsAsset = (opt = {}) => {
                     bundle: true,
                     write: false,
                     format: opt.format || 'iife',
-                    minify: opt.minify ?? true,
+                    minify: opt.minify ? opt.minify : true,
                     target: build.initialOptions.target,
                     inject: build.initialOptions.inject,
                     plugins: [
