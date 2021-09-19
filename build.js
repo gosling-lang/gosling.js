@@ -3,6 +3,10 @@ const { resolve } = require('path');
 const pkg = require('./package.json');
 
 const skipExt = new Set(['@gmod/bam', '@gmod/bbi', 'generic-filehandle']);
+const external = [
+    ...Object.keys(pkg.dependencies),
+    ...Object.keys(pkg.peerDependencies),
+].filter((dep) => !skipExt.has(dep));
 
 /**
  * Esbuild plugin. Bundles TS/JS entrypoint as an independent module, and inlines
@@ -11,7 +15,7 @@ const skipExt = new Set(['@gmod/bam', '@gmod/bbi', 'generic-filehandle']);
  * import src from 'js-asset:../path/to/module';
  * let worker = new Worker(src);
  *
- * @param {Pick<import('esbuild').BuildOptions, 'minify' | 'format' | 'plugins'>}
+ * @param {Pick<import('esbuild').BuildOptions, 'minify' | 'format' | 'plugins'>} opt
  * @return {import('esbuild').Plugin}
  */
 const inlineJsAsset = (opt = {}) => {
@@ -20,21 +24,28 @@ const inlineJsAsset = (opt = {}) => {
     return {
         name: namespace,
         setup(build) {
-            build.onResolve({ filter: new RegExp(`^${prefix}`) }, args => {
+            build.onResolve({ filter: new RegExp(`^${prefix}`) }, (args) => {
                 return {
-                    path: resolve(args.resolveDir, args.path.slice(prefix.length)),
-                    namespace
+                    path: resolve(
+                        args.resolveDir,
+                        args.path.slice(prefix.length),
+                    ),
+                    namespace,
                 };
             });
-            build.onLoad({ filter: /.*/, namespace }, async args => {
+            build.onLoad({ filter: /.*/, namespace }, async (args) => {
                 const { outputFiles } = await esbuild.build({
                     entryPoints: [args.path],
                     bundle: true,
                     write: false,
                     format: opt.format || 'iife',
-                    minify: opt.minify || true,
+                    minify: opt.minify ?? true,
                     target: build.initialOptions.target,
-                    plugins: [...(build.initialOptions.plugins || []), ...(opt.plugins || [])]
+                    inject: build.initialOptions.inject,
+                    plugins: [
+                        ...(build.initialOptions.plugins || []),
+                        ...(opt.plugins || []),
+                    ],
                 });
                 if (outputFiles.length !== 1) {
                     throw new Error('Too many files built for worker bundle.');
@@ -43,10 +54,11 @@ const inlineJsAsset = (opt = {}) => {
                 const base64 = Buffer.from(contents).toString('base64');
                 return {
                     loader: 'js',
-                    contents: `export default "data:application/javascript;base64,${base64}";`
+                    contents:
+                        `export default "data:application/javascript;base64,${base64}";`,
                 };
             });
-        }
+        },
     };
 };
 
@@ -60,7 +72,7 @@ const base = {
     entryPoints: ['./src/index.ts'],
     bundle: true,
     inject: ['./src/alias/buffer-shim.js'],
-    plugins: [inlineJsAsset()],
+    plugins: [inlineJsAsset({ minify: true })],
     sourcemap: true,
 };
 
@@ -70,11 +82,8 @@ const esm = {
     outfile: pkg.module,
     format: 'esm',
     target: 'es2018',
-    external: [
-        ...Object.keys(pkg.dependencies),
-        ...Object.keys(pkg.peerDependencies),
-    ].filter(dep => !skipExt.has(dep)),
-    banner: { js: 'var global = globalThis' }
+    external: external,
+    banner: { js: 'var global = globalThis' },
 };
 
 /** @type {import('esbuild').BuildOptions} */
@@ -88,7 +97,8 @@ const umd = {
     // wraps the commonjs output as a UMD module. The function signature is copied
     // from what is generated from rollup. If the external UMD dependencies change
     // (or the name of the gosling global) this needs changing.
-    banner: { js: `\
+    banner: {
+        js: `\
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('pixi.js'), require('react'), require('higlass'), require('react-dom')) :
   typeof define === 'function' && define.amd ? define(['exports', 'pixi.js', 'react', 'higlass', 'react-dom'], factory) :
@@ -98,9 +108,9 @@ const umd = {
 var __mods = { 'pixi.js': pixi_js, 'react': React, 'react-dom': ReactDOM, 'higlass': higlass };
 var require = name => __mods[name];
 var global = globalThis;
-`
+`,
     },
-    footer: { js:  '\n})));' }
+    footer: { js: '\n})));' },
 };
 
 const build = () => {
