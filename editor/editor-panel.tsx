@@ -1,5 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react'; // eslint-disable-line no-unused-vars
 import MonacoEditor from 'react-monaco-editor';
+
 import ReactResizeDetector from 'react-resize-detector';
 import { GoslingSchema } from 'gosling.js';
 import * as Monaco from './monaco';
