@@ -33,7 +33,16 @@ const bundleWebWorker = () => {
 
 export default defineConfig({
   build: {
-    outDir: 'build'
+    outDir: 'build',
+    minify: false,
+    target: 'es2018',
+    lib: {
+      entry: resolve(__dirname, 'src/index.ts'),
+      formats: ['es'],
+    },
+    rollupOptions: {
+      external: [/^[^.\/]|^\.[^.\/]|^\.\.[^\/]/],
+    }
   },
   resolve: {
     alias: {

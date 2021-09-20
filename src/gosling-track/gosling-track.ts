@@ -28,7 +28,7 @@ import { getRelativeGenomicPosition } from '../core/utils/assembly';
 import { Is2DTrack } from '../core/gosling.schema.guards';
 import { spawn } from 'threads';
 
-import BamWorker from '../data-fetcher/bam/bam-worker.js?worker';
+import BamWorker from '../data-fetcher/bam/bam-worker.js?worker&inline';
 import { InteractionEvent } from 'pixi.js';
 
 // Set `true` to print in what order each function is called
