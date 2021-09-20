@@ -17,9 +17,10 @@ const bundleWebWorker = () => {
         // just use esbuild to bundle the worker dependencies
         const bundle = await esbuild.build({
           entryPoints: [id],
+          inject: ['./src/alias/buffer-shim.js'],
           format: 'esm',
           bundle: true,
-          write: false
+          write: false,
         });
         if (bundle.outputFiles.length !== 1) {
           throw new Error('Worker must be a single module.');
@@ -31,12 +32,15 @@ const bundleWebWorker = () => {
 };
 
 export default defineConfig({
-  build: { outDir: 'build' },
+  build: {
+    outDir: 'build'
+  },
   resolve: {
     alias: {
-      "gosling.js": resolve(__dirname, "./dist/gosling.es.js"),
+      "gosling.js": resolve(__dirname, "./src/index.ts"),
       "@gosling.schema": resolve(__dirname, "./src/core/gosling.schema"),
       "@higlass.schema": resolve(__dirname, "./src/core/higlass.schema"),
+      "zlib": resolve(__dirname, "./src/alias/zlib.ts"),
     },
   },
   define: {

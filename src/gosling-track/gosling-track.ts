@@ -26,9 +26,9 @@ import { getTabularData } from './data-abstraction';
 import { BAMDataFetcher } from '../data-fetcher/bam';
 import { getRelativeGenomicPosition } from '../core/utils/assembly';
 import { Is2DTrack } from '../core/gosling.schema.guards';
-import { spawn, Worker } from 'threads';
+import { spawn } from 'threads';
 
-import bamWorkerSrc from 'js-asset:../data-fetcher/bam/bam-worker.js';
+import BamWorker from '../data-fetcher/bam/bam-worker.js?worker';
 import { InteractionEvent } from 'pixi.js';
 
 // Set `true` to print in what order each function is called
@@ -72,7 +72,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             let bamWorker;
             if (usePrereleaseRendering(options.spec)) {
                 try {
-                    bamWorker = spawn(new Worker(bamWorkerSrc));
+                    bamWorker = spawn(new BamWorker());
                     context.dataFetcher = new BAMDataFetcher(HGC, context.dataConfig, bamWorker);
                 } catch (e) {
                     console.warn('Error loading worker', e);
