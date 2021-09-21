@@ -22,7 +22,10 @@ interface GoslingCompProps {
     };
 }
 
-export const GoslingComponent = forwardRef<{ api: GoslingApi }, GoslingCompProps>((props, ref) => {
+export const GoslingComponent = forwardRef<
+    { api: GoslingApi; hgRef: React.RefObject<HiGlassApi | undefined> | HiGlassApi },
+    GoslingCompProps
+>((props, ref) => {
     const [viewConfig, setViewConfig] = useState<gosling.HiGlassSpec>();
     const [size, setSize] = useState({ width: 200, height: 200 });
 
@@ -36,9 +39,9 @@ export const GoslingComponent = forwardRef<{ api: GoslingApi }, GoslingCompProps
         if (!ref) return;
         const api = createApi(hgRef, viewConfig, theme);
         if (typeof ref == 'function') {
-            ref({ api });
+            ref({ hgRef, api });
         } else {
-            ref.current = { api };
+            ref.current = { hgRef, api };
         }
     }, [ref, hgRef, viewConfig, theme]);
 
