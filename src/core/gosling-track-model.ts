@@ -451,9 +451,21 @@ export class GoslingTrackModel {
 
         // common visual properties, not specific to visual marks
         if (
-            ['text', 'color', 'row', 'stroke', 'opacity', 'strokeWidth', 'x', 'y', 'xe', 'x1', 'x1e', 'size'].includes(
-                propertyKey
-            )
+            [
+                'text',
+                'color',
+                'row',
+                'stroke',
+                'opacity',
+                'strokeWidth',
+                'x',
+                'y',
+                'xe',
+                'x1',
+                'x1e',
+                'ye',
+                'size'
+            ].includes(propertyKey)
         ) {
             return this.visualPropertyByChannel(propertyKey as any, datum);
         }

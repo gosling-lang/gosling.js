@@ -10,6 +10,7 @@ export type PIXIVisualProperty =
     | 'x1' // naive x1 value encoded
     | 'x1e' // naive x1e value encoded
     | 'y' // naive y value encoded
+    | 'ye' // naive ye value encoded
     | 'size' // size of visual marks, such as radius of points
     | 'text' // text annotations
     /* mark-specific visual properties */

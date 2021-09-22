@@ -46,7 +46,7 @@ export function drawBar(trackInfo: any, tile: any, model: GoslingTrackModel) {
 
     /* baseline */
     const baselineValue = IsChannelDeep(spec.y) ? spec.y?.baseline : undefined;
-    const baselineY = model.encodedValue('y', baselineValue) ?? 0;
+    const staticBaseY = model.encodedValue('y', baselineValue) ?? 0;
 
     /* render */
     const g = tile.graphics;
@@ -128,8 +128,6 @@ export function drawBar(trackInfo: any, tile: any, model: GoslingTrackModel) {
         });
     } else {
         rowCategories.forEach(rowCategory => {
-            // we are separately drawing each row so that y scale can be more effectively shared across tiles without rerendering from the bottom
-            // const g = tile.graphics; //new HGC.libraries.PIXI.Graphics();
             const rowPosition = model.encodedValue('row', rowCategory);
 
             data.filter(d => {
@@ -140,12 +138,18 @@ export function drawBar(trackInfo: any, tile: any, model: GoslingTrackModel) {
                 const stroke = model.encodedPIXIProperty('stroke', d);
                 const strokeWidth = model.encodedPIXIProperty('strokeWidth', d);
                 const opacity = model.encodedPIXIProperty('opacity');
-                const y = model.encodedPIXIProperty('y', d); // TODO: we could even retrieve a actual y position of bars
+                let y = model.encodedPIXIProperty('y', d);
+                let ye = model.encodedPIXIProperty('ye', d);
+
+                if (typeof ye !== 'undefined') {
+                    // make sure `y` is encoded with a larger value
+                    [y, ye] = [y, ye].sort().reverse();
+                }
 
                 const barWidth = model.encodedPIXIProperty('width', d, { tileUnitWidth });
                 const xs = model.encodedPIXIProperty('x-start', d, { markWidth: barWidth });
-                const barHeight = y - baselineY;
-                const ys = rowPosition + rowHeight - barHeight - baselineY;
+                const barHeight = y - (typeof ye !== 'undefined' ? ye : staticBaseY);
+                const ys = rowPosition + rowHeight - barHeight - staticBaseY;
                 const xe = xs + barWidth;
 
                 const alphaTransition = model.markVisibility(d, { width: barWidth, zoomLevel });
@@ -166,9 +170,9 @@ export function drawBar(trackInfo: any, tile: any, model: GoslingTrackModel) {
                 if (circular) {
                     const farR =
                         trackOuterRadius -
-                        ((rowPosition + rowHeight - barHeight - baselineY) / trackHeight) * trackRingSize;
+                        ((rowPosition + rowHeight - barHeight - staticBaseY) / trackHeight) * trackRingSize;
                     const nearR =
-                        trackOuterRadius - ((rowPosition + rowHeight - baselineY) / trackHeight) * trackRingSize;
+                        trackOuterRadius - ((rowPosition + rowHeight - staticBaseY) / trackHeight) * trackRingSize;
 
                     const sPos = cartesianToPolar(xs, trackWidth, nearR, cx, cy, startAngle, endAngle);
                     const startRad = valueToRadian(xs, trackWidth, startAngle, endAngle);
@@ -181,7 +185,7 @@ export function drawBar(trackInfo: any, tile: any, model: GoslingTrackModel) {
                     g.closePath();
                 } else {
                     g.beginFill(colorToHex(color), actualOpacity);
-                    g.drawRect(xs, rowPosition + rowHeight - barHeight - baselineY, barWidth, barHeight);
+                    g.drawRect(xs, rowPosition + rowHeight - barHeight - staticBaseY, barWidth, barHeight);
 
                     /* Tooltip data */
                     if (spec.tooltip) {
