@@ -62,12 +62,11 @@
         "higlass-text": "^0.1.1",
         "json-stringify-pretty-compact": "^2.0.0",
         "jspdf": "^2.3.1",
-        "lodash": "^4.17.15",
+        "lodash-es": "^4.17.21",
         "mixwith": "^0.1.1",
         "pubsub-js": "^1.9.3",
         "react-grid-layout": "^1.2.5",
-        "threads": "^1.6.4",
-        "worker-loader": "^3.0.8"
+        "threads": "^1.6.4"
     },
     "devDependencies": {
         "@babel/core": "^7.11.1",
@@ -77,6 +76,7 @@
         "@testing-library/react": "^10.4.8",
         "@testing-library/user-event": "^12.1.1",
         "@types/jest": "^26.0.10",
+        "@types/lodash-es": "^4.17.5",
         "@types/pubsub-js": "^1.8.2",
         "@types/qs": "^6.9.5",
         "@types/react": "^16.9.46",
@@ -109,6 +109,7 @@
         "jest-canvas-mock": "^2.3.0",
         "jest-raw-loader": "^1.0.1",
         "jsoncrush": "^1.1.6",
+        "lodash": "^4.17.21",
         "pixi.js": "^6.0.4",
         "prettier": "^2.0.5",
         "qs": "^6.9.4",
@@ -140,7 +141,8 @@
     },
     "jest": {
         "moduleNameMapper": {
-            "js-asset:*": "jest-raw-loader"
+            "js-asset:*": "jest-raw-loader",
+            "^lodash-es$": "lodash"
         },
         "setupFiles": [
             "jest-canvas-mock"

@@ -1,7 +1,7 @@
 import * as PIXI from 'pixi.js';
 import PubSub from 'pubsub-js';
 import uuid from 'uuid';
-import { isEqual, sampleSize, uniqBy } from 'lodash';
+import { isEqual, sampleSize, uniqBy } from 'lodash-es';
 import { scaleLinear } from 'd3-scale';
 import { format } from 'd3-format';
 import { drawMark, drawPostEmbellishment, drawPreEmbellishment } from '../core/mark';
