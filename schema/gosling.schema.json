@@ -528,11 +528,6 @@
         },
         "prerelease": {
           "additionalProperties": false,
-          "properties": {
-            "testUsingNewRectRenderingForBAM": {
-              "type": "boolean"
-            }
-          },
           "type": "object"
         },
         "spacing": {
@@ -577,6 +572,19 @@
         },
         "yOffset": {
           "type": "number"
+        },
+        "zoomLimits": {
+          "items": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "maxItems": 2,
+          "minItems": 2,
+          "type": "array"
         }
       },
       "required": [
@@ -953,6 +961,19 @@
         },
         "yOffset": {
           "type": "number"
+        },
+        "zoomLimits": {
+          "items": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "maxItems": 2,
+          "minItems": 2,
+          "type": "array"
         }
       },
       "required": [
@@ -1651,6 +1672,19 @@
         },
         "yOffset": {
           "type": "number"
+        },
+        "zoomLimits": {
+          "items": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "maxItems": 2,
+          "minItems": 2,
+          "type": "array"
         }
       },
       "required": [
@@ -1884,11 +1918,6 @@
               },
               "prerelease": {
                 "additionalProperties": false,
-                "properties": {
-                  "testUsingNewRectRenderingForBAM": {
-                    "type": "boolean"
-                  }
-                },
                 "type": "object"
               },
               "row": {
@@ -1978,6 +2007,19 @@
               },
               "ye": {
                 "$ref": "#/definitions/Channel"
+              },
+              "zoomLimits": {
+                "items": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "number"
+                  }
+                ],
+                "maxItems": 2,
+                "minItems": 2,
+                "type": "array"
               }
             },
             "type": "object"
@@ -1992,11 +2034,6 @@
         },
         "prerelease": {
           "additionalProperties": false,
-          "properties": {
-            "testUsingNewRectRenderingForBAM": {
-              "type": "boolean"
-            }
-          },
           "type": "object"
         },
         "row": {
@@ -2095,6 +2132,19 @@
         },
         "ye": {
           "$ref": "#/definitions/Channel"
+        },
+        "zoomLimits": {
+          "items": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "maxItems": 2,
+          "minItems": 2,
+          "type": "array"
         }
       },
       "required": [
@@ -2183,11 +2233,6 @@
         },
         "prerelease": {
           "additionalProperties": false,
-          "properties": {
-            "testUsingNewRectRenderingForBAM": {
-              "type": "boolean"
-            }
-          },
           "type": "object"
         },
         "row": {
@@ -2292,6 +2337,19 @@
         },
         "ye": {
           "$ref": "#/definitions/Channel"
+        },
+        "zoomLimits": {
+          "items": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "maxItems": 2,
+          "minItems": 2,
+          "type": "array"
         }
       },
       "required": [
@@ -2457,11 +2515,6 @@
               },
               "prerelease": {
                 "additionalProperties": false,
-                "properties": {
-                  "testUsingNewRectRenderingForBAM": {
-                    "type": "boolean"
-                  }
-                },
                 "type": "object"
               },
               "row": {
@@ -2551,6 +2604,19 @@
               },
               "ye": {
                 "$ref": "#/definitions/Channel"
+              },
+              "zoomLimits": {
+                "items": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "number"
+                  }
+                ],
+                "maxItems": 2,
+                "minItems": 2,
+                "type": "array"
               }
             },
             "type": "object"
@@ -2565,11 +2631,6 @@
         },
         "prerelease": {
           "additionalProperties": false,
-          "properties": {
-            "testUsingNewRectRenderingForBAM": {
-              "type": "boolean"
-            }
-          },
           "type": "object"
         },
         "row": {
@@ -2671,6 +2732,19 @@
         },
         "ye": {
           "$ref": "#/definitions/Channel"
+        },
+        "zoomLimits": {
+          "items": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "maxItems": 2,
+          "minItems": 2,
+          "type": "array"
         }
       },
       "type": "object"
@@ -2801,6 +2875,19 @@
         },
         "yOffset": {
           "type": "number"
+        },
+        "zoomLimits": {
+          "items": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "maxItems": 2,
+          "minItems": 2,
+          "type": "array"
         }
       },
       "required": [
@@ -2892,11 +2979,6 @@
             },
             "prerelease": {
               "additionalProperties": false,
-              "properties": {
-                "testUsingNewRectRenderingForBAM": {
-                  "type": "boolean"
-                }
-              },
               "type": "object"
             },
             "row": {
@@ -3001,6 +3083,19 @@
             },
             "ye": {
               "$ref": "#/definitions/Channel"
+            },
+            "zoomLimits": {
+              "items": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                }
+              ],
+              "maxItems": 2,
+              "minItems": 2,
+              "type": "array"
             }
           },
           "required": [
@@ -3093,11 +3188,6 @@
             },
             "prerelease": {
               "additionalProperties": false,
-              "properties": {
-                "testUsingNewRectRenderingForBAM": {
-                  "type": "boolean"
-                }
-              },
               "type": "object"
             },
             "row": {
@@ -3209,6 +3299,19 @@
             },
             "ye": {
               "$ref": "#/definitions/Channel"
+            },
+            "zoomLimits": {
+              "items": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                }
+              ],
+              "maxItems": 2,
+              "minItems": 2,
+              "type": "array"
             }
           },
           "required": [
@@ -3280,6 +3383,19 @@
             },
             "yOffset": {
               "type": "number"
+            },
+            "zoomLimits": {
+              "items": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                }
+              ],
+              "maxItems": 2,
+              "minItems": 2,
+              "type": "array"
             }
           },
           "required": [
@@ -3364,11 +3480,6 @@
         },
         "prerelease": {
           "additionalProperties": false,
-          "properties": {
-            "testUsingNewRectRenderingForBAM": {
-              "type": "boolean"
-            }
-          },
           "type": "object"
         },
         "row": {
@@ -3467,6 +3578,19 @@
         },
         "ye": {
           "$ref": "#/definitions/Channel"
+        },
+        "zoomLimits": {
+          "items": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "maxItems": 2,
+          "minItems": 2,
+          "type": "array"
         }
       },
       "required": [
@@ -3615,11 +3739,6 @@
         },
         "prerelease": {
           "additionalProperties": false,
-          "properties": {
-            "testUsingNewRectRenderingForBAM": {
-              "type": "boolean"
-            }
-          },
           "type": "object"
         },
         "row": {
@@ -3731,6 +3850,19 @@
         },
         "ye": {
           "$ref": "#/definitions/Channel"
+        },
+        "zoomLimits": {
+          "items": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "maxItems": 2,
+          "minItems": 2,
+          "type": "array"
         }
       },
       "required": [
@@ -3982,11 +4114,6 @@
         },
         "prerelease": {
           "additionalProperties": false,
-          "properties": {
-            "testUsingNewRectRenderingForBAM": {
-              "type": "boolean"
-            }
-          },
           "type": "object"
         },
         "spacing": {
@@ -4034,6 +4161,19 @@
         },
         "yOffset": {
           "type": "number"
+        },
+        "zoomLimits": {
+          "items": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "maxItems": 2,
+          "minItems": 2,
+          "type": "array"
         }
       },
       "required": [

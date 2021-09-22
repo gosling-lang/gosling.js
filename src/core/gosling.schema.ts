@@ -53,6 +53,7 @@ export interface CommonViewDef {
 
     spacing?: number;
     static?: boolean;
+    zoomLimits?: [number, number];
 
     // offsets
     xOffset?: number;
@@ -104,7 +105,9 @@ export interface CommonTrackDef extends CommonViewDef, CommonRequiredTrackDef {
     _invalidTrack?: boolean; // flag to ignore rendering certain tracks if they have problems // !!! TODO: add tests
 
     // To test upcoming feature.
-    prerelease?: { testUsingNewRectRenderingForBAM?: boolean };
+    prerelease?: {
+        // ...
+    };
 }
 
 /**

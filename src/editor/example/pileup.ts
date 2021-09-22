@@ -18,7 +18,6 @@ export function EX_SPEC_VIEW_PILEUP(
             {
                 id,
                 title: 'Coverage',
-                // prerelease: { testUsingNewRectRenderingForBAM: true },
                 data: {
                     type: 'bam',
                     // url: 'https://s3.amazonaws.com/gosling-lang.org/data/example_higlass.bam'
@@ -158,7 +157,6 @@ export function EX_SPEC_VIEW_PILEUP(
             {
                 alignment: 'overlay',
                 title: 'Reads',
-                // prerelease: { testUsingNewRectRenderingForBAM: true },
                 data: {
                     type: 'bam',
                     // url: 'https://s3.amazonaws.com/gosling-lang.org/data/example_higlass.bam'
