@@ -23,8 +23,7 @@ export function drawLink(g: PIXI.Graphics, trackInfo: any, model: GoslingTrackMo
     const data = model.data();
 
     /* track size */
-    const trackWidth = spec.width;
-    const trackHeight = spec.height;
+    const [trackWidth, trackHeight] = trackInfo.dimensions;
 
     /* circular parameters */
     const circular = spec.layout === 'circular';
