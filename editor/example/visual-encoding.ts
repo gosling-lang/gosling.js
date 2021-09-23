@@ -1,4 +1,4 @@
-import type { GoslingSpec } from 'gosling.js';
+import type { GoslingSpec } from '@gosling.schema';
 import { GOSLING_PUBLIC_DATA } from './gosling-data';
 
 export const EX_SPEC_VISUAL_ENCODING: GoslingSpec = {
@@ -236,6 +236,47 @@ export const EX_SPEC_VISUAL_ENCODING: GoslingSpec = {
             tracks: [
                 {
                     id: 'track-8',
+                    data: {
+                        url: GOSLING_PUBLIC_DATA.multivec,
+                        type: 'multivec',
+                        row: 'sample',
+                        column: 'position',
+                        value: 'peak',
+                        categories: ['sample 1', 'sample 2', 'sample 3', 'sample 4'],
+                        binSize: 4
+                    },
+                    mark: 'bar',
+                    x: {
+                        field: 'start',
+                        type: 'genomic',
+                        axis: 'top'
+                    },
+                    xe: {
+                        field: 'end',
+                        type: 'genomic',
+                        axis: 'top'
+                    },
+                    y: { field: 'peak_min', type: 'quantitative' },
+                    ye: { field: 'peak_max', type: 'quantitative' },
+                    row: { field: 'sample', type: 'nominal' },
+                    color: { field: 'sample', type: 'nominal', legend: true },
+                    stroke: { value: 'black' },
+                    strokeWidth: { value: 0.2 },
+                    tooltip: [
+                        { field: 'position', type: 'genomic', alt: 'Position' },
+                        { field: 'peak_min', type: 'quantitative', alt: 'min(Value)', format: '.2' },
+                        { field: 'peak_max', type: 'quantitative', alt: 'max(Value)', format: '.2' },
+                        { field: 'sample', type: 'nominal', alt: 'Sample' }
+                    ],
+                    width: 600,
+                    height: 130
+                }
+            ]
+        },
+        {
+            tracks: [
+                {
+                    id: 'track-9',
                     data: {
                         url: 'https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/circos-segdup-edited.txt',
                         type: 'csv',
@@ -527,6 +568,46 @@ export const EX_SPEC_VISUAL_ENCODING_CIRCULAR: GoslingSpec = {
                             height: 130
                         }
                     ]
+                }
+            ]
+        },
+        {
+            tracks: [
+                {
+                    data: {
+                        url: GOSLING_PUBLIC_DATA.multivec,
+                        type: 'multivec',
+                        row: 'sample',
+                        column: 'position',
+                        value: 'peak',
+                        categories: ['sample 1', 'sample 2'],
+                        binSize: 4
+                    },
+                    mark: 'bar',
+                    x: {
+                        field: 'start',
+                        type: 'genomic',
+                        axis: 'top'
+                    },
+                    xe: {
+                        field: 'end',
+                        type: 'genomic',
+                        axis: 'top'
+                    },
+                    y: { field: 'peak_min', type: 'quantitative' },
+                    ye: { field: 'peak_max', type: 'quantitative' },
+                    row: { field: 'sample', type: 'nominal' },
+                    color: { field: 'sample', type: 'nominal', legend: true },
+                    stroke: { value: 'black' },
+                    strokeWidth: { value: 0.2 },
+                    tooltip: [
+                        { field: 'position', type: 'genomic', alt: 'Position' },
+                        { field: 'peak_min', type: 'quantitative', alt: 'min(Value)', format: '.2' },
+                        { field: 'peak_max', type: 'quantitative', alt: 'max(Value)', format: '.2' },
+                        { field: 'sample', type: 'nominal', alt: 'Sample' }
+                    ],
+                    width: 350,
+                    height: 130
                 }
             ]
         }

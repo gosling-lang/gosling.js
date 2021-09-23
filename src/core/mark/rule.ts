@@ -50,10 +50,16 @@ export function drawRule(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackMo
             const strokeWidth = tm.encodedPIXIProperty('strokeWidth', d);
             const opacity = tm.encodedPIXIProperty('opacity', d);
 
+            const alphaTransition = tm.markVisibility(d, {
+                width: xe - x,
+                zoomLevel: trackInfo._xScale.invert(trackWidth) - trackInfo._xScale.invert(0)
+            });
+            const actualOpacity = Math.min(alphaTransition, opacity);
+
             g.lineStyle(
                 strokeWidth,
                 colorToHex(color),
-                opacity, // alpha
+                actualOpacity, // alpha
                 0.5 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
             );
 
@@ -80,7 +86,7 @@ export function drawRule(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackMo
                 const startRad = valueToRadian(x, trackWidth, startAngle, endAngle);
                 const endRad = valueToRadian(xe, trackWidth, startAngle, endAngle);
 
-                g.beginFill(colorToHex(color), opacity);
+                g.beginFill(colorToHex(color), actualOpacity);
                 g.moveTo(sPos.x, sPos.y);
                 g.arc(cx, cy, nearR, startRad, endRad, true);
                 g.arc(cx, cy, farR, endRad, startRad, false);
@@ -131,7 +137,7 @@ export function drawRule(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackMo
                     const y0 = ym - pSize / 2.0;
                     const y1 = ym + pSize / 2.0;
 
-                    g.beginFill(colorToHex(color), opacity);
+                    g.beginFill(colorToHex(color), actualOpacity);
                     g.drawPolygon(
                         pType === 'triangleLeft' ? [x1, y0, x0, ym, x1, y1, x1, y0] : [x0, y0, x1, ym, x0, y1, x0, y0]
                     );

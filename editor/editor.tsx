@@ -443,20 +443,21 @@ function Editor(props: any) {
                         </span>
                     </>
                 )}
-                <select
-                    style={{ maxWidth: IS_SMALL_SCREEN ? window.innerWidth - 180 : 'none' }}
-                    onChange={e => {
-                        setDemo(examples.find(d => d.id === e.target.value) as any);
-                    }}
-                    defaultValue={demo.id}
-                    hidden={urlSpec !== null || urlGist !== null}
-                >
-                    {examples.map(d => (
-                        <option key={d.id} value={d.id}>
-                            {d.name + (d.underDevelopment ? ' (under development)' : '')}
-                        </option>
-                    ))}
-                </select>
+                <span className="demo-dropdown" hidden={urlSpec !== null || urlGist !== null}>
+                    <select
+                        style={{ maxWidth: IS_SMALL_SCREEN ? window.innerWidth - 180 : 'none' }}
+                        onChange={e => {
+                            setDemo(examples.find(d => d.id === e.target.value) as any);
+                        }}
+                        defaultValue={demo.id}
+                    >
+                        {examples.map(d => (
+                            <option key={d.id} value={d.id}>
+                                {d.name + (d.underDevelopment ? ' (under development)' : '')}
+                            </option>
+                        ))}
+                    </select>
+                </span>
                 {expertMode ? (
                     <select
                         style={{ maxWidth: IS_SMALL_SCREEN ? window.innerWidth - 180 : 'none' }}

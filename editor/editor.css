@@ -68,6 +68,7 @@
     border-radius: 6px;
     border: none;
     background-color: rgb(237, 237, 237);
+    cursor: pointer;
 
     /* Remove Safari's gradient */
     -webkit-appearance: none;
@@ -78,12 +79,13 @@
 }
 
 /* Drop down menu's triangle-down icon */
-.demo-navbar .select:after {
-    content: '';
-    width: 0.8em;
-    height: 0.5em;
-    background-color: lightgray;
-    clip-path: polygon(100% 0%, 0 0%, 50% 100%);
+.demo-dropdown:after {
+    content: '▼';
+    right: 14px;
+    font-size: 10px;
+    position: relative;
+    top: -1px;
+    color: #878787;
 }
 
 .editor {

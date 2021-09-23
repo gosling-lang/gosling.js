@@ -73,7 +73,7 @@ export function drawRect(HGC: any, trackInfo: any, tile: any, model: GoslingTrac
         g.lineStyle(
             strokeWidth,
             colorToHex(stroke),
-            opacity, // alpha
+            actualOpacity, // alpha
             0.5 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
         );
 
@@ -105,12 +105,12 @@ export function drawRect(HGC: any, trackInfo: any, tile: any, model: GoslingTrac
             g.arc(cx, cy, farR, endRad, startRad, false);
             g.closePath();
         } else {
-            g.beginFill(colorToHex(color === 'none' ? 'white' : color), color === 'none' ? 0 : opacity);
+            g.beginFill(colorToHex(color === 'none' ? 'white' : color), color === 'none' ? 0 : actualOpacity);
             g.drawRect(xs, rowPosition + rowHeight - y - rectHeight / 2.0, xe - xs, rectHeight);
 
             /* SVG data */
             // We do not currently plan to support SVG elements.
-            // trackInfo.svgData.push({ type: 'rect', xs, xe, ys, ye, color, stroke, opacity });
+            // trackInfo.svgData.push({ type: 'rect', xs, xe, ys, ye, color, stroke, actualOpacity });
 
             /* Tooltip data */
             if (spec.tooltip) {
