@@ -35,6 +35,10 @@ const alias = {
     'gosling.js': path.resolve(__dirname, './src/index.ts'),
     '@gosling.schema': path.resolve(__dirname, './src/core/gosling.schema'),
     '@higlass.schema': path.resolve(__dirname, './src/core/higlass.schema'),
+    'lodash': 'lodash-es',
+    '@gmod/bgzf-filehandle': path.resolve(__dirname, './src/alias/bgzf-filehandle.ts'),
+    'zlib': path.resolve(__dirname, './src/alias/zlib.ts'),
+    'vm': path.resolve(__dirname, './src/alias/vm.ts'),
 };
 
 const libEsm = defineConfig({
