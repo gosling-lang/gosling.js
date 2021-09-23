@@ -15,7 +15,7 @@
         "dist"
     ],
     "scripts": {
-        "start": "concurrently --kill-others 'node build --esm --watch' 'vite'",
+        "start": "vite",
         "build": "rm -rf dist && yarn build-umd && yarn build-esm",
         "build-umd": "node build --umd",
         "build-esm": "node build --esm",
@@ -55,7 +55,7 @@
         "d3-scale-chromatic": "^2.0.0",
         "d3-shape": "^2.0.0",
         "fflate": "^0.7.1",
-        "generic-filehandle": "^2.0.3",
+        "generic-filehandle": "^2.2.0",
         "gosling-theme": "^0.0.10",
         "higlass": "^1.11.7",
         "higlass-register": "^0.3.0",
