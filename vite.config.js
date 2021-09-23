@@ -41,38 +41,19 @@ const alias = {
     'vm': path.resolve(__dirname, './src/alias/vm.ts'),
 };
 
-const libEsm = defineConfig({
-    build: {
-        outDir: 'dist',
-        minify: true,
-        target: 'es2018',
-        emptyOutDir: false,
-        lib: {
-            entry: path.resolve(__dirname, 'src/index.ts'),
-            formats: ['esm'],
-        },
-        rollupOptions: {
-            external: [/^[^.\/]|^\.[^.\/]|^\.\.[^\/]/],
-        },
-    },
-    resolve: { alias },
-});
-
-const libUmd = defineConfig({
+const esm = defineConfig({
     build: {
         outDir: 'dist',
         minify: false,
         target: 'es2018',
-        emptyOutDir: false,
+		sourcemap: true,
         lib: {
             entry: path.resolve(__dirname, 'src/index.ts'),
-            formats: ['umd'],
-            name: 'gosling',
+            formats: ['es'],
+            fileName: 'gosling',
         },
         rollupOptions: {
-			output: { name: 'gosling' },
-            inlineDynamicImports: true,
-            external: ['react', 'react-dom', 'pixi.js', 'higlass'],
+            external: [/^[^.\/]|^\.[^.\/]|^\.\.[^\/]/],
         },
     },
     resolve: { alias },
@@ -92,7 +73,6 @@ const editorConfig = defineConfig({
 });
 
 export default ({ command, mode }) => {
-    if (command === 'build' && mode === 'lib-umd') return libUmd;
-    if (command === 'build' && mode === 'lib-esm') return libEsm;
+    if (command === 'build' && mode === 'lib') return esm;
     return editorConfig;
 };

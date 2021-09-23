@@ -89,7 +89,6 @@
         "ajv": "^6.12.2",
         "babel-jest": "^26.3.0",
         "canvas": "^2.6.1",
-        "concurrently": "^6.2.1",
         "conventional-changelog-cli": "^2.1.1",
         "cross-fetch": "^3.0.6",
         "d3-drag": "^1",
