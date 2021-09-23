@@ -138,7 +138,7 @@
     },
     "jest": {
         "moduleNameMapper": {
-            "js-asset:*": "jest-raw-loader",
+            "inline$": "jest-raw-loader",
             "^lodash-es$": "lodash"
         },
         "setupFiles": [
