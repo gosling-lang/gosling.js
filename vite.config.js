@@ -56,7 +56,7 @@ const esm = defineConfig({
         outDir: 'dist',
         minify: false,
         target: 'es2018',
-		sourcemap: true,
+        sourcemap: true,
         lib: {
             entry: path.resolve(__dirname, 'src/index.ts'),
             formats: ['es'],
@@ -71,6 +71,7 @@ const editorConfig = defineConfig({
     build: { outDir: 'build' },
     resolve: { alias },
     define: {
+        'global': 'globalThis',
         'process.platform': 'undefined',
         'process.env.THREADS_WORKER_INIT_TIMEOUT': 'undefined',
     },
