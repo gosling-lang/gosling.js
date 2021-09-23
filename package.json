@@ -16,10 +16,8 @@
     ],
     "scripts": {
         "start": "vite",
-        "build": "rm -rf dist && yarn build-umd && yarn build-esm",
-        "build-umd": "node build --umd",
-        "build-esm": "node build --esm",
-        "build-editor": "rm -rf build && yarn build-esm && vite build",
+        "build": "vite build --mode lib && node build-umd",
+        "build-editor": "vite build",
         "preview": "vite preview",
         "test": "jest editor/ src/",
         "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s -r 0",
