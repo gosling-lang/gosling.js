@@ -14,7 +14,7 @@ yarn
 yarn start
 ```
 
-Then, you can open http://localhost:8080/ in a web browser to test the online editor.
+Then, you can open http://localhost:3000/ in a web browser to test the online editor.
 
 ## Editing Grammar
 You may want to edit the grammar (e.g., rename properties) and test the updated grammar in the Online Editor. The Gosling's grammar is defined using TypeScript in a single file, [/src/core/gosling.schema.ts](/src/core/gosling.schema.ts). You can update this file to edit grammar. However, to test with Online Editor, you need to update [/src/core/gosling.schema.json](/src/core/gosling.schema.json) by running the following command:
