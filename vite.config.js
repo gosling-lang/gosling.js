@@ -3,6 +3,8 @@ import reactRefresh from '@vitejs/plugin-react-refresh';
 import * as esbuild from 'esbuild';
 import path from 'path';
 
+import pkg from './package.json';
+
 /**
  * Bundles vite worker modules during development into single scripts.
  * see: https://github.com/hms-dbmi/viv/pull/469#issuecomment-877276110
@@ -41,6 +43,14 @@ const alias = {
     'vm': path.resolve(__dirname, './src/alias/vm.ts'),
 };
 
+
+
+const skipExt = new Set(['@gmod/bbi']);
+const external = [
+    ...Object.keys(pkg.dependencies),
+    ...Object.keys(pkg.peerDependencies),
+].filter((dep) => !skipExt.has(dep));
+
 const esm = defineConfig({
     build: {
         outDir: 'dist',
@@ -52,9 +62,7 @@ const esm = defineConfig({
             formats: ['es'],
             fileName: 'gosling',
         },
-        rollupOptions: {
-            external: [/^[^.\/]|^\.[^.\/]|^\.\.[^\/]/],
-        },
+        rollupOptions: { external },
     },
     resolve: { alias },
 });
