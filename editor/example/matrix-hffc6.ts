@@ -149,8 +149,7 @@ export const EX_SPEC_MATRIX_HFFC6: GoslingSpec = {
                                 },
                                 {
                                     data: {
-                                        url:
-                                            'https://s3.amazonaws.com/gosling-lang.org/data/HFFc6_Atacseq.mRp.clN.bigWig',
+                                        url: 'https://s3.amazonaws.com/gosling-lang.org/data/HFFc6_Atacseq.mRp.clN.bigWig',
                                         type: 'bigwig',
                                         column: 'position',
                                         value: 'peak',
@@ -170,8 +169,7 @@ export const EX_SPEC_MATRIX_HFFC6: GoslingSpec = {
                                     tracks: [
                                         {
                                             data: {
-                                                url:
-                                                    'https://s3.amazonaws.com/gosling-lang.org/data/HFFC6_CTCF.mRp.clN.bigWig',
+                                                url: 'https://s3.amazonaws.com/gosling-lang.org/data/HFFC6_CTCF.mRp.clN.bigWig',
                                                 type: 'bigwig',
                                                 column: 'position',
                                                 value: 'peak',
@@ -341,8 +339,7 @@ export const EX_SPEC_MATRIX_HFFC6: GoslingSpec = {
                                 },
                                 {
                                     data: {
-                                        url:
-                                            'https://s3.amazonaws.com/gosling-lang.org/data/HFFc6_Atacseq.mRp.clN.bigWig',
+                                        url: 'https://s3.amazonaws.com/gosling-lang.org/data/HFFc6_Atacseq.mRp.clN.bigWig',
                                         type: 'bigwig',
                                         column: 'position',
                                         value: 'peak',
@@ -362,8 +359,7 @@ export const EX_SPEC_MATRIX_HFFC6: GoslingSpec = {
                                     tracks: [
                                         {
                                             data: {
-                                                url:
-                                                    'https://s3.amazonaws.com/gosling-lang.org/data/HFFC6_CTCF.mRp.clN.bigWig',
+                                                url: 'https://s3.amazonaws.com/gosling-lang.org/data/HFFC6_CTCF.mRp.clN.bigWig',
                                                 type: 'bigwig',
                                                 column: 'position',
                                                 value: 'peak',

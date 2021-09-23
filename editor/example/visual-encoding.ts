@@ -237,8 +237,7 @@ export const EX_SPEC_VISUAL_ENCODING: GoslingSpec = {
                 {
                     id: 'track-8',
                     data: {
-                        url:
-                            'https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/circos-segdup-edited.txt',
+                        url: 'https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/circos-segdup-edited.txt',
                         type: 'csv',
                         chromosomeField: 'c2',
                         genomicFields: ['s1', 'e1', 's2', 'e2']
@@ -496,8 +495,7 @@ export const EX_SPEC_VISUAL_ENCODING_CIRCULAR: GoslingSpec = {
                     tracks: [
                         {
                             data: {
-                                url:
-                                    'https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/circos-segdup-edited.txt',
+                                url: 'https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/circos-segdup-edited.txt',
                                 type: 'csv',
                                 chromosomeField: 'c2',
                                 genomicFields: ['s1', 'e1', 's2', 'e2']
