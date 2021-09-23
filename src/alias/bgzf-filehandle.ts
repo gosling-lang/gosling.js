@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Buffer } from 'buffer/';
 import { Z_SYNC_FLUSH, Inflate } from 'pako';
 
