@@ -5,14 +5,8 @@ import { unzlibSync } from 'fflate';
 
 // https://github.com/vitejs/vite/blob/b9e837a2aa2c1a7a8f93d4b19df9f72fd3c6fb09/packages/vite/src/node/plugins/resolve.ts#L285-L291
 // Just polyfills zlib.inflateSync for the browser.
-export default new Proxy(
-    {},
-    {
-        get(key) {
-            if (key === 'inflateSync') return (src: Uint8Array) => Buffer.from(unzlibSync(src));
-            throw new Error(
-                'Module "zlib" has been externalized for browser compatibility and cannot be accessed in client code.'
-            );
-        }
-    }
-);
+export function inflateSync(src: Uint8Array) {
+    return Buffer.from(unzlibSync(src));
+}
+
+export default { inflateSync };
