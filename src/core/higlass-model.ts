@@ -1,7 +1,7 @@
 import uuid from 'uuid';
 import { HiGlassSpec, Track } from './higlass.schema';
 import HiGlassSchema from './higlass.schema.json';
-import { Assembly, AxisPosition, Domain, Orientation } from './gosling.schema';
+import { Assembly, AxisPosition, Domain, Orientation, ZoomLimits } from './gosling.schema';
 import { getNumericDomain } from './utils/scales';
 import { RelativePosition } from './utils/bounding-box';
 import { validateSpec } from './utils/validate';
@@ -32,8 +32,7 @@ const getViewTemplate = (assembly?: string) => {
         },
         initialXDomain: [0, GET_CHROM_SIZES(assembly).total],
         initialYDomain: [0, GET_CHROM_SIZES(assembly).total],
-        zoomFixed: false,
-        zoomLimits: [1, null]
+        zoomFixed: false
     };
 };
 
@@ -227,6 +226,14 @@ export class HiGlassModel {
      */
     public setZoomFixed(zoomFixed: boolean) {
         this.getLastView().zoomFixed = zoomFixed;
+        return this;
+    }
+
+    /**
+     * Set limits of zoom levels in base pairs.
+     */
+    public setZoomLimits(zoomLimits: ZoomLimits) {
+        this.getLastView().zoomLimits = zoomLimits;
         return this;
     }
 

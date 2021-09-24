@@ -574,17 +574,7 @@
           "type": "number"
         },
         "zoomLimits": {
-          "items": [
-            {
-              "type": "number"
-            },
-            {
-              "type": "number"
-            }
-          ],
-          "maxItems": 2,
-          "minItems": 2,
-          "type": "array"
+          "$ref": "#/definitions/ZoomLimits"
         }
       },
       "required": [
@@ -963,17 +953,7 @@
           "type": "number"
         },
         "zoomLimits": {
-          "items": [
-            {
-              "type": "number"
-            },
-            {
-              "type": "number"
-            }
-          ],
-          "maxItems": 2,
-          "minItems": 2,
-          "type": "array"
+          "$ref": "#/definitions/ZoomLimits"
         }
       },
       "required": [
@@ -1674,17 +1654,7 @@
           "type": "number"
         },
         "zoomLimits": {
-          "items": [
-            {
-              "type": "number"
-            },
-            {
-              "type": "number"
-            }
-          ],
-          "maxItems": 2,
-          "minItems": 2,
-          "type": "array"
+          "$ref": "#/definitions/ZoomLimits"
         }
       },
       "required": [
@@ -2009,17 +1979,7 @@
                 "$ref": "#/definitions/Channel"
               },
               "zoomLimits": {
-                "items": [
-                  {
-                    "type": "number"
-                  },
-                  {
-                    "type": "number"
-                  }
-                ],
-                "maxItems": 2,
-                "minItems": 2,
-                "type": "array"
+                "$ref": "#/definitions/ZoomLimits"
               }
             },
             "type": "object"
@@ -2134,17 +2094,7 @@
           "$ref": "#/definitions/Channel"
         },
         "zoomLimits": {
-          "items": [
-            {
-              "type": "number"
-            },
-            {
-              "type": "number"
-            }
-          ],
-          "maxItems": 2,
-          "minItems": 2,
-          "type": "array"
+          "$ref": "#/definitions/ZoomLimits"
         }
       },
       "required": [
@@ -2339,17 +2289,7 @@
           "$ref": "#/definitions/Channel"
         },
         "zoomLimits": {
-          "items": [
-            {
-              "type": "number"
-            },
-            {
-              "type": "number"
-            }
-          ],
-          "maxItems": 2,
-          "minItems": 2,
-          "type": "array"
+          "$ref": "#/definitions/ZoomLimits"
         }
       },
       "required": [
@@ -2606,17 +2546,7 @@
                 "$ref": "#/definitions/Channel"
               },
               "zoomLimits": {
-                "items": [
-                  {
-                    "type": "number"
-                  },
-                  {
-                    "type": "number"
-                  }
-                ],
-                "maxItems": 2,
-                "minItems": 2,
-                "type": "array"
+                "$ref": "#/definitions/ZoomLimits"
               }
             },
             "type": "object"
@@ -2734,17 +2664,7 @@
           "$ref": "#/definitions/Channel"
         },
         "zoomLimits": {
-          "items": [
-            {
-              "type": "number"
-            },
-            {
-              "type": "number"
-            }
-          ],
-          "maxItems": 2,
-          "minItems": 2,
-          "type": "array"
+          "$ref": "#/definitions/ZoomLimits"
         }
       },
       "type": "object"
@@ -2877,17 +2797,7 @@
           "type": "number"
         },
         "zoomLimits": {
-          "items": [
-            {
-              "type": "number"
-            },
-            {
-              "type": "number"
-            }
-          ],
-          "maxItems": 2,
-          "minItems": 2,
-          "type": "array"
+          "$ref": "#/definitions/ZoomLimits"
         }
       },
       "required": [
@@ -3085,17 +2995,7 @@
               "$ref": "#/definitions/Channel"
             },
             "zoomLimits": {
-              "items": [
-                {
-                  "type": "number"
-                },
-                {
-                  "type": "number"
-                }
-              ],
-              "maxItems": 2,
-              "minItems": 2,
-              "type": "array"
+              "$ref": "#/definitions/ZoomLimits"
             }
           },
           "required": [
@@ -3301,17 +3201,7 @@
               "$ref": "#/definitions/Channel"
             },
             "zoomLimits": {
-              "items": [
-                {
-                  "type": "number"
-                },
-                {
-                  "type": "number"
-                }
-              ],
-              "maxItems": 2,
-              "minItems": 2,
-              "type": "array"
+              "$ref": "#/definitions/ZoomLimits"
             }
           },
           "required": [
@@ -3385,17 +3275,7 @@
               "type": "number"
             },
             "zoomLimits": {
-              "items": [
-                {
-                  "type": "number"
-                },
-                {
-                  "type": "number"
-                }
-              ],
-              "maxItems": 2,
-              "minItems": 2,
-              "type": "array"
+              "$ref": "#/definitions/ZoomLimits"
             }
           },
           "required": [
@@ -3580,17 +3460,7 @@
           "$ref": "#/definitions/Channel"
         },
         "zoomLimits": {
-          "items": [
-            {
-              "type": "number"
-            },
-            {
-              "type": "number"
-            }
-          ],
-          "maxItems": 2,
-          "minItems": 2,
-          "type": "array"
+          "$ref": "#/definitions/ZoomLimits"
         }
       },
       "required": [
@@ -3852,17 +3722,7 @@
           "$ref": "#/definitions/Channel"
         },
         "zoomLimits": {
-          "items": [
-            {
-              "type": "number"
-            },
-            {
-              "type": "number"
-            }
-          ],
-          "maxItems": 2,
-          "minItems": 2,
-          "type": "array"
+          "$ref": "#/definitions/ZoomLimits"
         }
       },
       "required": [
@@ -4163,17 +4023,7 @@
           "type": "number"
         },
         "zoomLimits": {
-          "items": [
-            {
-              "type": "number"
-            },
-            {
-              "type": "number"
-            }
-          ],
-          "maxItems": 2,
-          "minItems": 2,
-          "type": "array"
+          "$ref": "#/definitions/ZoomLimits"
         }
       },
       "required": [
@@ -4300,6 +4150,25 @@
         "threshold"
       ],
       "type": "object"
+    },
+    "ZoomLimits": {
+      "items": [
+        {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        {
+          "type": [
+            "number",
+            "null"
+          ]
+        }
+      ],
+      "maxItems": 2,
+      "minItems": 2,
+      "type": "array"
     }
   }
 }

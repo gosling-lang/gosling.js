@@ -1404,17 +1404,7 @@
           "$ref": "#/definitions/ChannelWithBase"
         },
         "zoomLimits": {
-          "items": [
-            {
-              "type": "number"
-            },
-            {
-              "type": "number"
-            }
-          ],
-          "maxItems": 2,
-          "minItems": 2,
-          "type": "array"
+          "$ref": "#/definitions/ZoomLimits"
         }
       },
       "required": [
@@ -1488,6 +1478,25 @@
         "threshold"
       ],
       "type": "object"
+    },
+    "ZoomLimits": {
+      "items": [
+        {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        {
+          "type": [
+            "number",
+            "null"
+          ]
+        }
+      ],
+      "maxItems": 2,
+      "minItems": 2,
+      "type": "array"
     }
   }
 }
