@@ -19,7 +19,7 @@
         "./embed": "./dist/embed/index.js"
     },
     "scripts": {
-        "start": "vite",
+        "start": "vite --mode editor",
         "build": "run-p build-types build-lib",
         "build-lib": "vite build --mode lib && node scripts/build-umd && node scripts/build-embed",
         "build-types": "tsc --emitDeclarationOnly",

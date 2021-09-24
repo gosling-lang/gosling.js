@@ -10,27 +10,41 @@ import pkg from './package.json';
  * see: https://github.com/hms-dbmi/viv/pull/469#issuecomment-877276110
  * @returns {import('vite').Plugin}
  */
-const bundleWebWorker = () => {
-    return {
-        name: 'bundle-web-worker',
-        apply: 'serve', // plugin only applied with dev-server
-        async transform(_, id) {
-            if (/\?worker_file$/.test(id)) {
-                // just use esbuild to bundle the worker dependencies
-                const bundle = await esbuild.build({
-                    entryPoints: [id],
-                    inject: ['./src/alias/buffer-shim.js'],
-                    format: 'esm',
-                    bundle: true,
-                    write: false,
-                });
-                if (bundle.outputFiles.length !== 1) {
-                    throw new Error('Worker must be a single module.');
-                }
-                return bundle.outputFiles[0].text;
+const bundleWebWorker = {
+    name: 'bundle-web-worker',
+    apply: 'serve', // plugin only applied with dev-server
+    async transform(_, id) {
+        if (/\?worker_file$/.test(id)) {
+            // just use esbuild to bundle the worker dependencies
+            const bundle = await esbuild.build({
+                entryPoints: [id],
+                inject: ['./src/alias/buffer-shim.js'],
+                format: 'esm',
+                bundle: true,
+                write: false,
+            });
+            if (bundle.outputFiles.length !== 1) {
+                throw new Error('Worker must be a single module.');
             }
-        },
-    };
+            return bundle.outputFiles[0].text;
+        }
+    },
+};
+
+/**
+ * Transforms /node_modules/.vite/* to include an alias for global.
+ * Only enabled during development.
+ *
+ * @type {import('vite').Plugin}
+ */
+const injectGlobal = {
+    name: 'inject-global',
+    apply: 'serve', // only runs during
+    transform(code, id) {
+        if (/node_modules/.test(id)) {
+            return 'const global = globalThis;\n' + code;
+        }
+    },
 };
 
 const alias = {
@@ -40,8 +54,6 @@ const alias = {
     'lodash': 'lodash-es',
     'zlib': path.resolve(__dirname, './src/alias/zlib.ts'),
 };
-
-
 
 const skipExt = new Set(['@gmod/bbi']);
 const external = [
@@ -66,28 +78,21 @@ const esm = defineConfig({
 });
 
 const editorConfig = defineConfig({
-    build: { outDir: 'build' },
+    build: {
+        outDir: 'build',
+    },
     resolve: { alias },
     define: {
         'process.platform': 'undefined',
         'process.env.THREADS_WORKER_INIT_TIMEOUT': 'undefined',
     },
-    plugins: [
-        bundleWebWorker(),
-        // reactRefresh(),
-        {
-          name: 'inject-global',
-          apply: 'serve',
-          transform(code, id) {
-            if (/node_modules/.test(id)) {
-              return 'const global = globalThis;\n' + code;
-            }
-          }
-        }
-    ],
+    plugins: [bundleWebWorker, injectGlobal],
 });
 
 export default ({ command, mode }) => {
     if (command === 'build' && mode === 'lib') return esm;
+    if (mode === 'editor') {
+        editorConfig.plugins.push(reactRefresh());
+    }
     return editorConfig;
 };
