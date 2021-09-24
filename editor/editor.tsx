@@ -604,9 +604,8 @@ function Editor(props: any) {
                             onClick={() => {
                                 if (code.length <= LIMIT_CLIPBOARD_LEN) {
                                     // copy the unique url to clipboard using `<input/>`
-                                    const url = `https://gosling-lang.github.io/gosling.js/?full=${isHideCode}&spec=${JSONCrush.crush(
-                                        code
-                                    )}`;
+                                    const crushedSpec = encodeURIComponent(JSONCrush.crush(code));
+                                    const url = `https://gosling-lang.github.io/gosling.js/?full=${isHideCode}&spec=${crushedSpec}`;
                                     const element = document.getElementById('spec-url-exporter');
                                     (element as any).type = 'text';
                                     (element as any).value = url;
