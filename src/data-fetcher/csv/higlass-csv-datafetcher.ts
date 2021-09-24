@@ -1,7 +1,6 @@
 import { dsvFormat as d3dsvFormat } from 'd3-dsv';
 import { GET_CHROM_SIZES } from '../../core/utils/assembly';
-import fetch from 'cross-fetch'; // TODO: Can we remove this and make the test working
-import { sampleSize } from 'lodash';
+import { sampleSize } from 'lodash-es';
 import { Assembly, FilterTransform } from '../../core/gosling.schema';
 import { filterData } from '../../core/utils/data-transform';
 

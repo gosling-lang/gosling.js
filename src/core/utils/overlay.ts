@@ -1,5 +1,5 @@
 import { AxisPosition, SingleTrack, OverlaidTrack, Track, ChannelDeep, DataDeep } from '../gosling.schema';
-import assign from 'lodash/assign';
+import { assign } from 'lodash-es';
 import { IsChannelDeep, IsDataTrack, IsOverlaidTrack, IsSingleTrack } from '../gosling.schema.guards';
 
 /**

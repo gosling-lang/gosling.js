@@ -1,5 +1,5 @@
 import { ScaleLinear } from 'd3-scale';
-import { assign } from 'lodash';
+import { assign } from 'lodash-es';
 import {
     SingleTrack,
     Datum,
