@@ -38,10 +38,7 @@ export interface GoslingApi {
     getViewIds(): string[];
     exportPng(transparentBackground?: boolean): void;
     exportPdf(transparentBackground?: boolean): void;
-    getCanvas(options?: {
-        resolution?: number;
-        transparentBackground?: boolean;
-    }): {
+    getCanvas(options?: { resolution?: number; transparentBackground?: boolean }): {
         canvas: HTMLCanvasElement;
         canvasWidth: number;
         canvasHeight: number;

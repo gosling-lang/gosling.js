@@ -1,7 +1,7 @@
 import * as PIXI from 'pixi.js';
 import PubSub from 'pubsub-js';
 import uuid from 'uuid';
-import { isEqual, sampleSize, uniqBy } from 'lodash';
+import { isEqual, sampleSize, uniqBy } from 'lodash-es';
 import { scaleLinear } from 'd3-scale';
 import { format } from 'd3-format';
 import { drawMark, drawPostEmbellishment, drawPreEmbellishment } from '../core/mark';
@@ -26,9 +26,9 @@ import { getTabularData } from './data-abstraction';
 import { BAMDataFetcher } from '../data-fetcher/bam';
 import { getRelativeGenomicPosition } from '../core/utils/assembly';
 import { Is2DTrack } from '../core/gosling.schema.guards';
-import { spawn, BlobWorker } from 'threads';
+import { spawn } from 'threads';
 
-import BamWorkerBlob from 'raw-loader!../../dist/worker.js';
+import BamWorker from '../data-fetcher/bam/bam-worker.js?worker&inline';
 import { InteractionEvent } from 'pixi.js';
 
 // Set `true` to print in what order each function is called
@@ -72,7 +72,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             let bamWorker;
             if (usePrereleaseRendering(options.spec)) {
                 try {
-                    bamWorker = spawn(BlobWorker.fromText(BamWorkerBlob));
+                    bamWorker = spawn(new BamWorker());
                     context.dataFetcher = new BAMDataFetcher(HGC, context.dataConfig, bamWorker);
                 } catch (e) {
                     console.warn('Error loading worker', e);
@@ -840,14 +840,10 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
 
                 // Send data preview to the editor so that it can be shown to users.
                 try {
-                    // !!! This shouldn't be called while using npm gosling.js package.
-                    /*eslint-disable */
-                    const pubsub = require('pubsub-js');
-                    /*eslint-enable */
-                    if (pubsub) {
+                    if (PubSub) {
                         const NUM_OF_ROWS_IN_PREVIEW = 100;
                         const numOrRows = tile.gos.tabularDataFiltered.length;
-                        pubsub.publish('data-preview', {
+                        PubSub.publish('data-preview', {
                             id: this.context.id,
                             dataConfig: JSON.stringify({ data: resolved.data }),
                             data:

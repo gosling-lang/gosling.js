@@ -1,4 +1,4 @@
-import { isUndefined } from 'lodash';
+import { isUndefined } from 'lodash-es';
 import { GoslingTrackModel } from '../gosling-track-model';
 import { IsChannelDeep } from '../gosling.schema.guards';
 import colorToHex from '../utils/color-to-hex';
