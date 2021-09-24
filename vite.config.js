@@ -71,7 +71,6 @@ const editorConfig = defineConfig({
     build: { outDir: 'build' },
     resolve: { alias },
     define: {
-        'global': 'globalThis',
         'process.platform': 'undefined',
         'process.env.THREADS_WORKER_INIT_TIMEOUT': 'undefined',
     },
