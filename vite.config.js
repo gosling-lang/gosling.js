@@ -96,5 +96,5 @@ export default ({ command, mode }) => {
     if (mode === 'editor') {
         dev.plugins.push(reactRefresh());
     }
-    return dev;
+	return dev;
 };
