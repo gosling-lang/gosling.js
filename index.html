@@ -52,8 +52,6 @@
           // import. Since Vite relies on ESM, these references aren't resolved
           // and we get runtime errors. We could use something like `@rollup/plugin-inject`
           // but this breaks sourcemaps at the moment.
-
-          var global = globalThis;
           var Buffer = globalThis.buffer.Buffer; // referenced in many dependencies
         </script>
         <script type="module" src="/editor/index.tsx"></script>

@@ -1,4 +1,4 @@
-import uuid from 'uuid';
+import * as uuid from 'uuid';
 import { ChannelDeep, PREDEFINED_COLORS, ChannelTypes, ChannelValue, SingleTrack, Channel } from './gosling.schema';
 import { validateTrack, getGenomicChannelFromTrack, getGenomicChannelKeyFromTrack } from './utils/validate';
 import {
