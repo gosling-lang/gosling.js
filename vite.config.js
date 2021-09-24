@@ -74,7 +74,16 @@ const editorConfig = defineConfig({
     },
     plugins: [
         bundleWebWorker(),
-        reactRefresh(),
+        // reactRefresh(),
+        {
+          name: 'inject-global',
+          apply: 'serve',
+          transform(code, id) {
+            if (/node_modules/.test(id)) {
+              return 'const global = globalThis;\n' + code;
+            }
+          }
+        }
     ],
 });
 
