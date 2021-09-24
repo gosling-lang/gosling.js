@@ -36,7 +36,7 @@ export const PRINT_RENDERING_CYCLE = false;
 
 // Experimental function to test with prerelease rendering
 function usePrereleaseRendering(spec: SingleTrack | OverlaidTrack) {
-    return spec.data?.type === 'bam'; // spec.prerelease?.testUsingNewRectRenderingForBAM &&
+    return spec.data?.type === 'bam';
 }
 
 // For using libraries, refer to https://github.com/higlass/higlass/blob/f82c0a4f7b2ab1c145091166b0457638934b15f3/app/scripts/configs/available-for-plugins.js

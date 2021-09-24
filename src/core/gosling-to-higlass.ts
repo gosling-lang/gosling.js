@@ -144,6 +144,7 @@ export function goslingToHiGlass(
                 .setMainTrack(hgTrack)
                 .addTrackSourceServers(server)
                 .setZoomFixed(firstResolvedSpec.static === true)
+                .setZoomLimits(firstResolvedSpec.zoomLimits ?? [1, null])
                 .setLayout(layout);
         }
 

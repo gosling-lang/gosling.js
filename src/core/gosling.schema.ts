@@ -46,6 +46,7 @@ export interface MultipleViews extends CommonViewDef {
 export type Layout = 'linear' | 'circular';
 export type Orientation = 'horizontal' | 'vertical';
 export type Assembly = 'hg38' | 'hg19' | 'hg18' | 'hg17' | 'hg16' | 'mm10' | 'mm9' | 'unknown';
+export type ZoomLimits = [number | null, number | null];
 
 export interface CommonViewDef {
     layout?: Layout;
@@ -53,6 +54,7 @@ export interface CommonViewDef {
 
     spacing?: number;
     static?: boolean;
+    zoomLimits?: ZoomLimits; // limits of zoom levels. default: [1, null]
 
     // offsets
     xOffset?: number;
@@ -104,7 +106,9 @@ export interface CommonTrackDef extends CommonViewDef, CommonRequiredTrackDef {
     _invalidTrack?: boolean; // flag to ignore rendering certain tracks if they have problems // !!! TODO: add tests
 
     // To test upcoming feature.
-    prerelease?: { testUsingNewRectRenderingForBAM?: boolean };
+    prerelease?: {
+        // ...
+    };
 }
 
 /**

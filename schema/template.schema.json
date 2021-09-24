@@ -1313,11 +1313,6 @@
         },
         "prerelease": {
           "additionalProperties": false,
-          "properties": {
-            "testUsingNewRectRenderingForBAM": {
-              "type": "boolean"
-            }
-          },
           "type": "object"
         },
         "row": {
@@ -1407,6 +1402,9 @@
         },
         "ye": {
           "$ref": "#/definitions/ChannelWithBase"
+        },
+        "zoomLimits": {
+          "$ref": "#/definitions/ZoomLimits"
         }
       },
       "required": [
@@ -1480,6 +1478,25 @@
         "threshold"
       ],
       "type": "object"
+    },
+    "ZoomLimits": {
+      "items": [
+        {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        {
+          "type": [
+            "number",
+            "null"
+          ]
+        }
+      ],
+      "maxItems": 2,
+      "minItems": 2,
+      "type": "array"
     }
   }
 }

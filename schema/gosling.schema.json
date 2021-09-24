@@ -528,11 +528,6 @@
         },
         "prerelease": {
           "additionalProperties": false,
-          "properties": {
-            "testUsingNewRectRenderingForBAM": {
-              "type": "boolean"
-            }
-          },
           "type": "object"
         },
         "spacing": {
@@ -577,6 +572,9 @@
         },
         "yOffset": {
           "type": "number"
+        },
+        "zoomLimits": {
+          "$ref": "#/definitions/ZoomLimits"
         }
       },
       "required": [
@@ -953,6 +951,9 @@
         },
         "yOffset": {
           "type": "number"
+        },
+        "zoomLimits": {
+          "$ref": "#/definitions/ZoomLimits"
         }
       },
       "required": [
@@ -1651,6 +1652,9 @@
         },
         "yOffset": {
           "type": "number"
+        },
+        "zoomLimits": {
+          "$ref": "#/definitions/ZoomLimits"
         }
       },
       "required": [
@@ -1884,11 +1888,6 @@
               },
               "prerelease": {
                 "additionalProperties": false,
-                "properties": {
-                  "testUsingNewRectRenderingForBAM": {
-                    "type": "boolean"
-                  }
-                },
                 "type": "object"
               },
               "row": {
@@ -1978,6 +1977,9 @@
               },
               "ye": {
                 "$ref": "#/definitions/Channel"
+              },
+              "zoomLimits": {
+                "$ref": "#/definitions/ZoomLimits"
               }
             },
             "type": "object"
@@ -1992,11 +1994,6 @@
         },
         "prerelease": {
           "additionalProperties": false,
-          "properties": {
-            "testUsingNewRectRenderingForBAM": {
-              "type": "boolean"
-            }
-          },
           "type": "object"
         },
         "row": {
@@ -2095,6 +2092,9 @@
         },
         "ye": {
           "$ref": "#/definitions/Channel"
+        },
+        "zoomLimits": {
+          "$ref": "#/definitions/ZoomLimits"
         }
       },
       "required": [
@@ -2183,11 +2183,6 @@
         },
         "prerelease": {
           "additionalProperties": false,
-          "properties": {
-            "testUsingNewRectRenderingForBAM": {
-              "type": "boolean"
-            }
-          },
           "type": "object"
         },
         "row": {
@@ -2292,6 +2287,9 @@
         },
         "ye": {
           "$ref": "#/definitions/Channel"
+        },
+        "zoomLimits": {
+          "$ref": "#/definitions/ZoomLimits"
         }
       },
       "required": [
@@ -2457,11 +2455,6 @@
               },
               "prerelease": {
                 "additionalProperties": false,
-                "properties": {
-                  "testUsingNewRectRenderingForBAM": {
-                    "type": "boolean"
-                  }
-                },
                 "type": "object"
               },
               "row": {
@@ -2551,6 +2544,9 @@
               },
               "ye": {
                 "$ref": "#/definitions/Channel"
+              },
+              "zoomLimits": {
+                "$ref": "#/definitions/ZoomLimits"
               }
             },
             "type": "object"
@@ -2565,11 +2561,6 @@
         },
         "prerelease": {
           "additionalProperties": false,
-          "properties": {
-            "testUsingNewRectRenderingForBAM": {
-              "type": "boolean"
-            }
-          },
           "type": "object"
         },
         "row": {
@@ -2671,6 +2662,9 @@
         },
         "ye": {
           "$ref": "#/definitions/Channel"
+        },
+        "zoomLimits": {
+          "$ref": "#/definitions/ZoomLimits"
         }
       },
       "type": "object"
@@ -2801,6 +2795,9 @@
         },
         "yOffset": {
           "type": "number"
+        },
+        "zoomLimits": {
+          "$ref": "#/definitions/ZoomLimits"
         }
       },
       "required": [
@@ -2892,11 +2889,6 @@
             },
             "prerelease": {
               "additionalProperties": false,
-              "properties": {
-                "testUsingNewRectRenderingForBAM": {
-                  "type": "boolean"
-                }
-              },
               "type": "object"
             },
             "row": {
@@ -3001,6 +2993,9 @@
             },
             "ye": {
               "$ref": "#/definitions/Channel"
+            },
+            "zoomLimits": {
+              "$ref": "#/definitions/ZoomLimits"
             }
           },
           "required": [
@@ -3093,11 +3088,6 @@
             },
             "prerelease": {
               "additionalProperties": false,
-              "properties": {
-                "testUsingNewRectRenderingForBAM": {
-                  "type": "boolean"
-                }
-              },
               "type": "object"
             },
             "row": {
@@ -3209,6 +3199,9 @@
             },
             "ye": {
               "$ref": "#/definitions/Channel"
+            },
+            "zoomLimits": {
+              "$ref": "#/definitions/ZoomLimits"
             }
           },
           "required": [
@@ -3280,6 +3273,9 @@
             },
             "yOffset": {
               "type": "number"
+            },
+            "zoomLimits": {
+              "$ref": "#/definitions/ZoomLimits"
             }
           },
           "required": [
@@ -3364,11 +3360,6 @@
         },
         "prerelease": {
           "additionalProperties": false,
-          "properties": {
-            "testUsingNewRectRenderingForBAM": {
-              "type": "boolean"
-            }
-          },
           "type": "object"
         },
         "row": {
@@ -3467,6 +3458,9 @@
         },
         "ye": {
           "$ref": "#/definitions/Channel"
+        },
+        "zoomLimits": {
+          "$ref": "#/definitions/ZoomLimits"
         }
       },
       "required": [
@@ -3615,11 +3609,6 @@
         },
         "prerelease": {
           "additionalProperties": false,
-          "properties": {
-            "testUsingNewRectRenderingForBAM": {
-              "type": "boolean"
-            }
-          },
           "type": "object"
         },
         "row": {
@@ -3731,6 +3720,9 @@
         },
         "ye": {
           "$ref": "#/definitions/Channel"
+        },
+        "zoomLimits": {
+          "$ref": "#/definitions/ZoomLimits"
         }
       },
       "required": [
@@ -3982,11 +3974,6 @@
         },
         "prerelease": {
           "additionalProperties": false,
-          "properties": {
-            "testUsingNewRectRenderingForBAM": {
-              "type": "boolean"
-            }
-          },
           "type": "object"
         },
         "spacing": {
@@ -4034,6 +4021,9 @@
         },
         "yOffset": {
           "type": "number"
+        },
+        "zoomLimits": {
+          "$ref": "#/definitions/ZoomLimits"
         }
       },
       "required": [
@@ -4160,6 +4150,25 @@
         "threshold"
       ],
       "type": "object"
+    },
+    "ZoomLimits": {
+      "items": [
+        {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        {
+          "type": [
+            "number",
+            "null"
+          ]
+        }
+      ],
+      "maxItems": 2,
+      "minItems": 2,
+      "type": "array"
     }
   }
 }
