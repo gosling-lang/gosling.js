@@ -1,8 +1,7 @@
 // This plugin track is based on higlass/HorizontalChromosomeLabels
 // https://github.com/higlass/higlass/blob/83dc4fddb33582ef3c26b608c04a81e8f33c7f5f/app/scripts/HorizontalChromosomeLabels.js
 
-// @ts-ignore
-import boxIntersect from 'box-intersect';
+import RBush from 'rbush';
 import { scaleLinear } from 'd3-scale';
 import { format, precisionPrefix, formatPrefix } from 'd3-format';
 import { GET_CHROM_SIZES } from '../core/utils/assembly';
@@ -551,17 +550,23 @@ function AxisTrack(HGC: any, ...args: any[]): any {
         }
 
         hideOverlaps(allTexts: any) {
-            let allBoxes = []; // store the bounding boxes of the text objects so we can calculate overlaps
-            allBoxes = allTexts.map(({ text }: any) => {
+            const tree = new RBush<{ minX: number; minY: number; maxX: number; maxY: number }>();
+
+            // store the bounding boxes of the text objects so we can calculate overlaps
+            allTexts.forEach(({ text }: any) => {
                 text.updateTransform();
                 const b = text.getBounds();
                 const m = 5;
-                const box = [b.x - m, b.y - m, b.x + b.width + m * 2, b.y + b.height + m * 2];
-
-                return box;
+                tree.insert({
+                    minX: b.x - m,
+                    minY: b.y - m,
+                    maxX: b.x + b.width + m * 2,
+                    maxY: b.y + b.height + m * 2
+                });
             });
 
-            boxIntersect(allBoxes, (i: number, j: number) => {
+            // TODO: possible to reimplement with rbush?
+            (i: number, j: number) => {
                 if (allTexts[i].importance > allTexts[j].importance) {
                     allTexts[j].text.visible = false;
                     if (this.options.layout === 'circular' && allTexts[j].rope) {
@@ -573,7 +578,7 @@ function AxisTrack(HGC: any, ...args: any[]): any {
                         this.pTicksCircular.removeChild(allTexts[i].rope);
                     }
                 }
-            });
+            };
         }
 
         setPosition(newPosition: [number, number]) {

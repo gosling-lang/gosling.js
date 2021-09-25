@@ -17,7 +17,6 @@ esbuild.build({
     define: {
         'process.platform': 'undefined',
         'process.env.THREADS_WORKER_INIT_TIMEOUT': 'undefined',
-        'global': 'globalThis',
     },
     // esbuild doesn't support UMD format directy. The banner/footer
     // wraps the commonjs output as a UMD module. The function signature is copied

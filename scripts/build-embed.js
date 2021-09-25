@@ -35,7 +35,6 @@ esbuild.build({
         path.resolve(__dirname, '../src/alias/buffer-shim.js'),
     ],
     define: {
-        'global': 'globalThis',
         'process.env.NODE_ENV': JSON.stringify(env),
     },
     plugins: [
