@@ -60,7 +60,7 @@ const alias = {
     'uuid': path.resolve(__dirname, './node_modules/uuid/dist/esm-browser/index.js'),
 };
 
-const skipExt = new Set(['@gmod/bbi']);
+const skipExt = new Set(['@gmod/bbi', 'uuid']);
 const external = [
     ...Object.keys(pkg.dependencies),
     ...Object.keys(pkg.peerDependencies),

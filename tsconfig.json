@@ -26,8 +26,7 @@
       "@gosling.schema": ["./src/core/gosling.schema.ts"],
       "@higlass.schema": ["./src/core/higlass.schema.ts"],
       "lodash": ["lodash-es"],
-      "zlib": ["./src/alias/zlib.ts"],
-	  "uuid": ["./node_modules/uuid/dist/esm-browser/index.js"]
+      "zlib": ["./src/alias/zlib.ts"]
     },
     "baseUrl": "."
   },
