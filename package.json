@@ -20,6 +20,7 @@
     },
     "scripts": {
         "start": "vite --mode editor",
+        "start-embed": "vite",
         "build": "run-p build-types build-lib",
         "build-lib": "vite build --mode lib && node scripts/build-umd && node scripts/build-embed",
         "build-types": "tsc --emitDeclarationOnly",

@@ -32,8 +32,12 @@ const bundleWebWorker = {
 };
 
 /**
- * Transforms /node_modules/.vite/* to include an alias for global.
+ * Transforms /node_modules/.vite/*.js to include an alias for global.
  * Only enabled during development.
+ *
+ * TODO: This plugin is a hack during development because some node_modules
+ * contain references to `global`. If we migrate towards more browser-compatible
+ * dependencies this can be removed. https://github.com/gosling-lang/gosling.js/pull/527
  *
  * @type {import('vite').Plugin}
  */
@@ -41,7 +45,7 @@ const injectGlobal = {
     name: 'inject-global',
     apply: 'serve', // only runs during
     transform(code, id) {
-        if (/node_modules/.test(id)) {
+        if (/node_modules\/.vite\/(.*).js*/.test(id)) {
             return 'const global = globalThis;\n' + code;
         }
     },
@@ -77,10 +81,8 @@ const esm = defineConfig({
     resolve: { alias },
 });
 
-const editorConfig = defineConfig({
-    build: {
-        outDir: 'build',
-    },
+const dev = defineConfig({
+    build: { outDir: 'build' },
     resolve: { alias },
     define: {
         'process.platform': 'undefined',
@@ -92,7 +94,7 @@ const editorConfig = defineConfig({
 export default ({ command, mode }) => {
     if (command === 'build' && mode === 'lib') return esm;
     if (mode === 'editor') {
-        editorConfig.plugins.push(reactRefresh());
+        dev.plugins.push(reactRefresh());
     }
-    return editorConfig;
+    return dev;
 };
