@@ -302,25 +302,7 @@
           "$ref": "#/definitions/X"
         },
         {
-          "$ref": "#/definitions/XE"
-        },
-        {
-          "$ref": "#/definitions/X1"
-        },
-        {
-          "$ref": "#/definitions/X1E"
-        },
-        {
           "$ref": "#/definitions/Y"
-        },
-        {
-          "$ref": "#/definitions/YE"
-        },
-        {
-          "$ref": "#/definitions/Y1"
-        },
-        {
-          "$ref": "#/definitions/Y1E"
         },
         {
           "$ref": "#/definitions/Row"
@@ -478,6 +460,28 @@
         }
       },
 >>>>>>> 46e7cec (feat: define explicit channel types, like x, y, and color)
+      "type": "object"
+    },
+    "Column": {
+      "additionalProperties": false,
+      "properties": {
+        "domain": {
+          "$ref": "#/definitions/ValueExtent"
+        },
+        "field": {
+          "type": "string"
+        },
+        "range": {
+          "$ref": "#/definitions/ValueExtent"
+        },
+        "type": {
+          "enum": [
+            "quantitative",
+            "nominal"
+          ],
+          "type": "string"
+        }
+      },
       "type": "object"
     },
     "CoverageTransform": {
@@ -1878,10 +1882,24 @@
           "type": "number"
         },
         "color": {
-          "$ref": "#/definitions/Channel"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Color"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
         },
         "column": {
-          "$ref": "#/definitions/Channel"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Column"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
         },
         "data": {
           "$ref": "#/definitions/DataDeep"
@@ -1920,7 +1938,14 @@
           "$ref": "#/definitions/Mark"
         },
         "opacity": {
-          "$ref": "#/definitions/Channel"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Opacity"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
         },
         "orientation": {
           "$ref": "#/definitions/Orientation"
@@ -1946,10 +1971,24 @@
                 "type": "number"
               },
               "color": {
-                "$ref": "#/definitions/Channel"
+                "anyOf": [
+                  {
+                    "$ref": "#/definitions/Color"
+                  },
+                  {
+                    "$ref": "#/definitions/ChannelValue"
+                  }
+                ]
               },
               "column": {
-                "$ref": "#/definitions/Channel"
+                "anyOf": [
+                  {
+                    "$ref": "#/definitions/Column"
+                  },
+                  {
+                    "$ref": "#/definitions/ChannelValue"
+                  }
+                ]
               },
               "data": {
                 "$ref": "#/definitions/DataDeep"
@@ -1982,7 +2021,14 @@
                 "$ref": "#/definitions/Mark"
               },
               "opacity": {
-                "$ref": "#/definitions/Channel"
+                "anyOf": [
+                  {
+                    "$ref": "#/definitions/Opacity"
+                  },
+                  {
+                    "$ref": "#/definitions/ChannelValue"
+                  }
+                ]
               },
               "orientation": {
                 "$ref": "#/definitions/Orientation"
@@ -2001,10 +2047,24 @@
                 "type": "object"
               },
               "row": {
-                "$ref": "#/definitions/Channel"
+                "anyOf": [
+                  {
+                    "$ref": "#/definitions/Row"
+                  },
+                  {
+                    "$ref": "#/definitions/ChannelValue"
+                  }
+                ]
               },
               "size": {
-                "$ref": "#/definitions/Channel"
+                "anyOf": [
+                  {
+                    "$ref": "#/definitions/Size"
+                  },
+                  {
+                    "$ref": "#/definitions/ChannelValue"
+                  }
+                ]
               },
               "spacing": {
                 "type": "number"
@@ -2019,16 +2079,37 @@
                 "type": "boolean"
               },
               "stroke": {
-                "$ref": "#/definitions/Channel"
+                "anyOf": [
+                  {
+                    "$ref": "#/definitions/Stroke"
+                  },
+                  {
+                    "$ref": "#/definitions/ChannelValue"
+                  }
+                ]
               },
               "strokeWidth": {
-                "$ref": "#/definitions/Channel"
+                "anyOf": [
+                  {
+                    "$ref": "#/definitions/StrokeWidth"
+                  },
+                  {
+                    "$ref": "#/definitions/ChannelValue"
+                  }
+                ]
               },
               "style": {
                 "$ref": "#/definitions/Style"
               },
               "text": {
-                "$ref": "#/definitions/Channel"
+                "anyOf": [
+                  {
+                    "$ref": "#/definitions/Text"
+                  },
+                  {
+                    "$ref": "#/definitions/ChannelValue"
+                  }
+                ]
               },
               "tooltip": {
                 "items": {
@@ -2043,13 +2124,34 @@
                 "type": "array"
               },
               "x": {
-                "$ref": "#/definitions/Channel"
+                "anyOf": [
+                  {
+                    "$ref": "#/definitions/X"
+                  },
+                  {
+                    "$ref": "#/definitions/ChannelValue"
+                  }
+                ]
               },
               "x1": {
-                "$ref": "#/definitions/Channel"
+                "anyOf": [
+                  {
+                    "$ref": "#/definitions/X"
+                  },
+                  {
+                    "$ref": "#/definitions/ChannelValue"
+                  }
+                ]
               },
               "x1e": {
-                "$ref": "#/definitions/Channel"
+                "anyOf": [
+                  {
+                    "$ref": "#/definitions/X"
+                  },
+                  {
+                    "$ref": "#/definitions/ChannelValue"
+                  }
+                ]
               },
               "xAxis": {
                 "$ref": "#/definitions/AxisPosition"
@@ -2071,22 +2173,57 @@
                 "type": "number"
               },
               "xe": {
-                "$ref": "#/definitions/Channel"
+                "anyOf": [
+                  {
+                    "$ref": "#/definitions/X"
+                  },
+                  {
+                    "$ref": "#/definitions/ChannelValue"
+                  }
+                ]
               },
               "y": {
-                "$ref": "#/definitions/Channel"
+                "anyOf": [
+                  {
+                    "$ref": "#/definitions/Y"
+                  },
+                  {
+                    "$ref": "#/definitions/ChannelValue"
+                  }
+                ]
               },
               "y1": {
-                "$ref": "#/definitions/Channel"
+                "anyOf": [
+                  {
+                    "$ref": "#/definitions/Y"
+                  },
+                  {
+                    "$ref": "#/definitions/ChannelValue"
+                  }
+                ]
               },
               "y1e": {
-                "$ref": "#/definitions/Channel"
+                "anyOf": [
+                  {
+                    "$ref": "#/definitions/Y"
+                  },
+                  {
+                    "$ref": "#/definitions/ChannelValue"
+                  }
+                ]
               },
               "yOffset": {
                 "type": "number"
               },
               "ye": {
-                "$ref": "#/definitions/Channel"
+                "anyOf": [
+                  {
+                    "$ref": "#/definitions/Y"
+                  },
+                  {
+                    "$ref": "#/definitions/ChannelValue"
+                  }
+                ]
               },
               "zoomLimits": {
                 "$ref": "#/definitions/ZoomLimits"
@@ -2107,10 +2244,24 @@
           "type": "object"
         },
         "row": {
-          "$ref": "#/definitions/Channel"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Row"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
         },
         "size": {
-          "$ref": "#/definitions/Channel"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Size"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
         },
         "spacing": {
           "type": "number"
@@ -2125,10 +2276,24 @@
           "type": "boolean"
         },
         "stroke": {
-          "$ref": "#/definitions/Channel"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Stroke"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
         },
         "strokeWidth": {
-          "$ref": "#/definitions/Channel"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/StrokeWidth"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
         },
         "style": {
           "$ref": "#/definitions/Style"
@@ -2137,7 +2302,14 @@
           "type": "string"
         },
         "text": {
-          "$ref": "#/definitions/Channel"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Text"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
         },
         "title": {
           "type": "string"
@@ -2158,13 +2330,34 @@
           "type": "number"
         },
         "x": {
-          "$ref": "#/definitions/Channel"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/X"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
         },
         "x1": {
-          "$ref": "#/definitions/Channel"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/X"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
         },
         "x1e": {
-          "$ref": "#/definitions/Channel"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/X"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
         },
         "xAxis": {
           "$ref": "#/definitions/AxisPosition"
@@ -2186,22 +2379,57 @@
           "type": "number"
         },
         "xe": {
-          "$ref": "#/definitions/Channel"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/X"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
         },
         "y": {
-          "$ref": "#/definitions/Channel"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Y"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
         },
         "y1": {
-          "$ref": "#/definitions/Channel"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Y"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
         },
         "y1e": {
-          "$ref": "#/definitions/Channel"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Y"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
         },
         "yOffset": {
           "type": "number"
         },
         "ye": {
-          "$ref": "#/definitions/Channel"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Y"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
         },
         "zoomLimits": {
           "$ref": "#/definitions/ZoomLimits"
@@ -2235,10 +2463,24 @@
           "type": "number"
         },
         "color": {
-          "$ref": "#/definitions/Channel"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Color"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
         },
         "column": {
-          "$ref": "#/definitions/Channel"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Column"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
         },
         "data": {
           "$ref": "#/definitions/DataDeep"
@@ -2277,7 +2519,14 @@
           "$ref": "#/definitions/Mark"
         },
         "opacity": {
-          "$ref": "#/definitions/Channel"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Opacity"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
         },
         "orientation": {
           "$ref": "#/definitions/Orientation"
@@ -2296,10 +2545,24 @@
           "type": "object"
         },
         "row": {
-          "$ref": "#/definitions/Channel"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Row"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
         },
         "size": {
-          "$ref": "#/definitions/Channel"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Size"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
         },
         "spacing": {
           "type": "number"
@@ -2314,10 +2577,24 @@
           "type": "boolean"
         },
         "stroke": {
-          "$ref": "#/definitions/Channel"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Stroke"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
         },
         "strokeWidth": {
-          "$ref": "#/definitions/Channel"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/StrokeWidth"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
         },
         "style": {
           "$ref": "#/definitions/Style"
@@ -2326,7 +2603,14 @@
           "type": "string"
         },
         "text": {
-          "$ref": "#/definitions/Channel"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Text"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
         },
         "title": {
           "type": "string"
@@ -2353,13 +2637,34 @@
           "type": "number"
         },
         "x": {
-          "$ref": "#/definitions/Channel"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/X"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
         },
         "x1": {
-          "$ref": "#/definitions/Channel"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/X"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
         },
         "x1e": {
-          "$ref": "#/definitions/Channel"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/X"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
         },
         "xAxis": {
           "$ref": "#/definitions/AxisPosition"
@@ -2381,22 +2686,57 @@
           "type": "number"
         },
         "xe": {
-          "$ref": "#/definitions/Channel"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/X"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
         },
         "y": {
-          "$ref": "#/definitions/Channel"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Y"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
         },
         "y1": {
-          "$ref": "#/definitions/Channel"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Y"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
         },
         "y1e": {
-          "$ref": "#/definitions/Channel"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Y"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
         },
         "yOffset": {
           "type": "number"
         },
         "ye": {
-          "$ref": "#/definitions/Channel"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Y"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
         },
         "zoomLimits": {
           "$ref": "#/definitions/ZoomLimits"
@@ -2439,10 +2779,24 @@
           "type": "number"
         },
         "color": {
-          "$ref": "#/definitions/Channel"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Color"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
         },
         "column": {
-          "$ref": "#/definitions/Channel"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Column"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
         },
         "data": {
           "$ref": "#/definitions/DataDeep"
@@ -2487,7 +2841,14 @@
           "$ref": "#/definitions/Mark"
         },
         "opacity": {
-          "$ref": "#/definitions/Channel"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Opacity"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
         },
         "orientation": {
           "$ref": "#/definitions/Orientation"
@@ -2513,10 +2874,24 @@
                 "type": "number"
               },
               "color": {
-                "$ref": "#/definitions/Channel"
+                "anyOf": [
+                  {
+                    "$ref": "#/definitions/Color"
+                  },
+                  {
+                    "$ref": "#/definitions/ChannelValue"
+                  }
+                ]
               },
               "column": {
-                "$ref": "#/definitions/Channel"
+                "anyOf": [
+                  {
+                    "$ref": "#/definitions/Column"
+                  },
+                  {
+                    "$ref": "#/definitions/ChannelValue"
+                  }
+                ]
               },
               "data": {
                 "$ref": "#/definitions/DataDeep"
@@ -2549,7 +2924,14 @@
                 "$ref": "#/definitions/Mark"
               },
               "opacity": {
-                "$ref": "#/definitions/Channel"
+                "anyOf": [
+                  {
+                    "$ref": "#/definitions/Opacity"
+                  },
+                  {
+                    "$ref": "#/definitions/ChannelValue"
+                  }
+                ]
               },
               "orientation": {
                 "$ref": "#/definitions/Orientation"
@@ -2568,10 +2950,24 @@
                 "type": "object"
               },
               "row": {
-                "$ref": "#/definitions/Channel"
+                "anyOf": [
+                  {
+                    "$ref": "#/definitions/Row"
+                  },
+                  {
+                    "$ref": "#/definitions/ChannelValue"
+                  }
+                ]
               },
               "size": {
-                "$ref": "#/definitions/Channel"
+                "anyOf": [
+                  {
+                    "$ref": "#/definitions/Size"
+                  },
+                  {
+                    "$ref": "#/definitions/ChannelValue"
+                  }
+                ]
               },
               "spacing": {
                 "type": "number"
@@ -2586,16 +2982,37 @@
                 "type": "boolean"
               },
               "stroke": {
-                "$ref": "#/definitions/Channel"
+                "anyOf": [
+                  {
+                    "$ref": "#/definitions/Stroke"
+                  },
+                  {
+                    "$ref": "#/definitions/ChannelValue"
+                  }
+                ]
               },
               "strokeWidth": {
-                "$ref": "#/definitions/Channel"
+                "anyOf": [
+                  {
+                    "$ref": "#/definitions/StrokeWidth"
+                  },
+                  {
+                    "$ref": "#/definitions/ChannelValue"
+                  }
+                ]
               },
               "style": {
                 "$ref": "#/definitions/Style"
               },
               "text": {
-                "$ref": "#/definitions/Channel"
+                "anyOf": [
+                  {
+                    "$ref": "#/definitions/Text"
+                  },
+                  {
+                    "$ref": "#/definitions/ChannelValue"
+                  }
+                ]
               },
               "tooltip": {
                 "items": {
@@ -2610,13 +3027,34 @@
                 "type": "array"
               },
               "x": {
-                "$ref": "#/definitions/Channel"
+                "anyOf": [
+                  {
+                    "$ref": "#/definitions/X"
+                  },
+                  {
+                    "$ref": "#/definitions/ChannelValue"
+                  }
+                ]
               },
               "x1": {
-                "$ref": "#/definitions/Channel"
+                "anyOf": [
+                  {
+                    "$ref": "#/definitions/X"
+                  },
+                  {
+                    "$ref": "#/definitions/ChannelValue"
+                  }
+                ]
               },
               "x1e": {
-                "$ref": "#/definitions/Channel"
+                "anyOf": [
+                  {
+                    "$ref": "#/definitions/X"
+                  },
+                  {
+                    "$ref": "#/definitions/ChannelValue"
+                  }
+                ]
               },
               "xAxis": {
                 "$ref": "#/definitions/AxisPosition"
@@ -2638,22 +3076,57 @@
                 "type": "number"
               },
               "xe": {
-                "$ref": "#/definitions/Channel"
+                "anyOf": [
+                  {
+                    "$ref": "#/definitions/X"
+                  },
+                  {
+                    "$ref": "#/definitions/ChannelValue"
+                  }
+                ]
               },
               "y": {
-                "$ref": "#/definitions/Channel"
+                "anyOf": [
+                  {
+                    "$ref": "#/definitions/Y"
+                  },
+                  {
+                    "$ref": "#/definitions/ChannelValue"
+                  }
+                ]
               },
               "y1": {
-                "$ref": "#/definitions/Channel"
+                "anyOf": [
+                  {
+                    "$ref": "#/definitions/Y"
+                  },
+                  {
+                    "$ref": "#/definitions/ChannelValue"
+                  }
+                ]
               },
               "y1e": {
-                "$ref": "#/definitions/Channel"
+                "anyOf": [
+                  {
+                    "$ref": "#/definitions/Y"
+                  },
+                  {
+                    "$ref": "#/definitions/ChannelValue"
+                  }
+                ]
               },
               "yOffset": {
                 "type": "number"
               },
               "ye": {
-                "$ref": "#/definitions/Channel"
+                "anyOf": [
+                  {
+                    "$ref": "#/definitions/Y"
+                  },
+                  {
+                    "$ref": "#/definitions/ChannelValue"
+                  }
+                ]
               },
               "zoomLimits": {
                 "$ref": "#/definitions/ZoomLimits"
@@ -2674,10 +3147,24 @@
           "type": "object"
         },
         "row": {
-          "$ref": "#/definitions/Channel"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Row"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
         },
         "size": {
-          "$ref": "#/definitions/Channel"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Size"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
         },
         "spacing": {
           "type": "number"
@@ -2692,10 +3179,24 @@
           "type": "boolean"
         },
         "stroke": {
-          "$ref": "#/definitions/Channel"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Stroke"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
         },
         "strokeWidth": {
-          "$ref": "#/definitions/Channel"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/StrokeWidth"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
         },
         "style": {
           "$ref": "#/definitions/Style"
@@ -2707,7 +3208,14 @@
           "type": "string"
         },
         "text": {
-          "$ref": "#/definitions/Channel"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Text"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
         },
         "title": {
           "type": "string"
@@ -2728,13 +3236,34 @@
           "type": "number"
         },
         "x": {
-          "$ref": "#/definitions/Channel"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/X"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
         },
         "x1": {
-          "$ref": "#/definitions/Channel"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/X"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
         },
         "x1e": {
-          "$ref": "#/definitions/Channel"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/X"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
         },
         "xAxis": {
           "$ref": "#/definitions/AxisPosition"
@@ -2756,22 +3285,57 @@
           "type": "number"
         },
         "xe": {
-          "$ref": "#/definitions/Channel"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/X"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
         },
         "y": {
-          "$ref": "#/definitions/Channel"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Y"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
         },
         "y1": {
-          "$ref": "#/definitions/Channel"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Y"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
         },
         "y1e": {
-          "$ref": "#/definitions/Channel"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Y"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
         },
         "yOffset": {
           "type": "number"
         },
         "ye": {
-          "$ref": "#/definitions/Channel"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Y"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
         },
         "zoomLimits": {
           "$ref": "#/definitions/ZoomLimits"
@@ -2929,10 +3493,24 @@
               "type": "number"
             },
             "color": {
-              "$ref": "#/definitions/Channel"
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/Color"
+                },
+                {
+                  "$ref": "#/definitions/ChannelValue"
+                }
+              ]
             },
             "column": {
-              "$ref": "#/definitions/Channel"
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/Column"
+                },
+                {
+                  "$ref": "#/definitions/ChannelValue"
+                }
+              ]
             },
             "data": {
               "$ref": "#/definitions/DataDeep"
@@ -2974,7 +3552,14 @@
               "$ref": "#/definitions/Mark"
             },
             "opacity": {
-              "$ref": "#/definitions/Channel"
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/Opacity"
+                },
+                {
+                  "$ref": "#/definitions/ChannelValue"
+                }
+              ]
             },
             "orientation": {
               "$ref": "#/definitions/Orientation"
@@ -2993,10 +3578,24 @@
               "type": "object"
             },
             "row": {
-              "$ref": "#/definitions/Channel"
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/Row"
+                },
+                {
+                  "$ref": "#/definitions/ChannelValue"
+                }
+              ]
             },
             "size": {
-              "$ref": "#/definitions/Channel"
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/Size"
+                },
+                {
+                  "$ref": "#/definitions/ChannelValue"
+                }
+              ]
             },
             "spacing": {
               "type": "number"
@@ -3011,10 +3610,24 @@
               "type": "boolean"
             },
             "stroke": {
-              "$ref": "#/definitions/Channel"
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/Stroke"
+                },
+                {
+                  "$ref": "#/definitions/ChannelValue"
+                }
+              ]
             },
             "strokeWidth": {
-              "$ref": "#/definitions/Channel"
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/StrokeWidth"
+                },
+                {
+                  "$ref": "#/definitions/ChannelValue"
+                }
+              ]
             },
             "style": {
               "$ref": "#/definitions/Style"
@@ -3023,7 +3636,14 @@
               "type": "string"
             },
             "text": {
-              "$ref": "#/definitions/Channel"
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/Text"
+                },
+                {
+                  "$ref": "#/definitions/ChannelValue"
+                }
+              ]
             },
             "title": {
               "type": "string"
@@ -3050,13 +3670,34 @@
               "type": "number"
             },
             "x": {
-              "$ref": "#/definitions/Channel"
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/X"
+                },
+                {
+                  "$ref": "#/definitions/ChannelValue"
+                }
+              ]
             },
             "x1": {
-              "$ref": "#/definitions/Channel"
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/X"
+                },
+                {
+                  "$ref": "#/definitions/ChannelValue"
+                }
+              ]
             },
             "x1e": {
-              "$ref": "#/definitions/Channel"
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/X"
+                },
+                {
+                  "$ref": "#/definitions/ChannelValue"
+                }
+              ]
             },
             "xAxis": {
               "$ref": "#/definitions/AxisPosition"
@@ -3078,22 +3719,57 @@
               "type": "number"
             },
             "xe": {
-              "$ref": "#/definitions/Channel"
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/X"
+                },
+                {
+                  "$ref": "#/definitions/ChannelValue"
+                }
+              ]
             },
             "y": {
-              "$ref": "#/definitions/Channel"
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/Y"
+                },
+                {
+                  "$ref": "#/definitions/ChannelValue"
+                }
+              ]
             },
             "y1": {
-              "$ref": "#/definitions/Channel"
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/Y"
+                },
+                {
+                  "$ref": "#/definitions/ChannelValue"
+                }
+              ]
             },
             "y1e": {
-              "$ref": "#/definitions/Channel"
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/Y"
+                },
+                {
+                  "$ref": "#/definitions/ChannelValue"
+                }
+              ]
             },
             "yOffset": {
               "type": "number"
             },
             "ye": {
-              "$ref": "#/definitions/Channel"
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/Y"
+                },
+                {
+                  "$ref": "#/definitions/ChannelValue"
+                }
+              ]
             },
             "zoomLimits": {
               "$ref": "#/definitions/ZoomLimits"
@@ -3128,10 +3804,24 @@
               "type": "number"
             },
             "color": {
-              "$ref": "#/definitions/Channel"
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/Color"
+                },
+                {
+                  "$ref": "#/definitions/ChannelValue"
+                }
+              ]
             },
             "column": {
-              "$ref": "#/definitions/Channel"
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/Column"
+                },
+                {
+                  "$ref": "#/definitions/ChannelValue"
+                }
+              ]
             },
             "data": {
               "$ref": "#/definitions/DataDeep"
@@ -3173,7 +3863,14 @@
               "$ref": "#/definitions/Mark"
             },
             "opacity": {
-              "$ref": "#/definitions/Channel"
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/Opacity"
+                },
+                {
+                  "$ref": "#/definitions/ChannelValue"
+                }
+              ]
             },
             "orientation": {
               "$ref": "#/definitions/Orientation"
@@ -3192,10 +3889,24 @@
               "type": "object"
             },
             "row": {
-              "$ref": "#/definitions/Channel"
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/Row"
+                },
+                {
+                  "$ref": "#/definitions/ChannelValue"
+                }
+              ]
             },
             "size": {
-              "$ref": "#/definitions/Channel"
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/Size"
+                },
+                {
+                  "$ref": "#/definitions/ChannelValue"
+                }
+              ]
             },
             "spacing": {
               "type": "number"
@@ -3210,10 +3921,24 @@
               "type": "boolean"
             },
             "stroke": {
-              "$ref": "#/definitions/Channel"
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/Stroke"
+                },
+                {
+                  "$ref": "#/definitions/ChannelValue"
+                }
+              ]
             },
             "strokeWidth": {
-              "$ref": "#/definitions/Channel"
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/StrokeWidth"
+                },
+                {
+                  "$ref": "#/definitions/ChannelValue"
+                }
+              ]
             },
             "style": {
               "$ref": "#/definitions/Style"
@@ -3222,7 +3947,14 @@
               "type": "string"
             },
             "text": {
-              "$ref": "#/definitions/Channel"
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/Text"
+                },
+                {
+                  "$ref": "#/definitions/ChannelValue"
+                }
+              ]
             },
             "title": {
               "type": "string"
@@ -3256,13 +3988,34 @@
               "type": "number"
             },
             "x": {
-              "$ref": "#/definitions/Channel"
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/X"
+                },
+                {
+                  "$ref": "#/definitions/ChannelValue"
+                }
+              ]
             },
             "x1": {
-              "$ref": "#/definitions/Channel"
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/X"
+                },
+                {
+                  "$ref": "#/definitions/ChannelValue"
+                }
+              ]
             },
             "x1e": {
-              "$ref": "#/definitions/Channel"
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/X"
+                },
+                {
+                  "$ref": "#/definitions/ChannelValue"
+                }
+              ]
             },
             "xAxis": {
               "$ref": "#/definitions/AxisPosition"
@@ -3284,22 +4037,57 @@
               "type": "number"
             },
             "xe": {
-              "$ref": "#/definitions/Channel"
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/X"
+                },
+                {
+                  "$ref": "#/definitions/ChannelValue"
+                }
+              ]
             },
             "y": {
-              "$ref": "#/definitions/Channel"
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/Y"
+                },
+                {
+                  "$ref": "#/definitions/ChannelValue"
+                }
+              ]
             },
             "y1": {
-              "$ref": "#/definitions/Channel"
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/Y"
+                },
+                {
+                  "$ref": "#/definitions/ChannelValue"
+                }
+              ]
             },
             "y1e": {
-              "$ref": "#/definitions/Channel"
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/Y"
+                },
+                {
+                  "$ref": "#/definitions/ChannelValue"
+                }
+              ]
             },
             "yOffset": {
               "type": "number"
             },
             "ye": {
-              "$ref": "#/definitions/Channel"
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/Y"
+                },
+                {
+                  "$ref": "#/definitions/ChannelValue"
+                }
+              ]
             },
             "zoomLimits": {
               "$ref": "#/definitions/ZoomLimits"
@@ -3431,10 +4219,24 @@
           "type": "number"
         },
         "color": {
-          "$ref": "#/definitions/Channel"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Color"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
         },
         "column": {
-          "$ref": "#/definitions/Channel"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Column"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
         },
         "data": {
           "$ref": "#/definitions/DataDeep"
@@ -3473,7 +4275,14 @@
           "$ref": "#/definitions/Mark"
         },
         "opacity": {
-          "$ref": "#/definitions/Channel"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Opacity"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
         },
         "orientation": {
           "$ref": "#/definitions/Orientation"
@@ -3492,10 +4301,24 @@
           "type": "object"
         },
         "row": {
-          "$ref": "#/definitions/Channel"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Row"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
         },
         "size": {
-          "$ref": "#/definitions/Channel"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Size"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
         },
         "spacing": {
           "type": "number"
@@ -3510,10 +4333,24 @@
           "type": "boolean"
         },
         "stroke": {
-          "$ref": "#/definitions/Channel"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Stroke"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
         },
         "strokeWidth": {
-          "$ref": "#/definitions/Channel"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/StrokeWidth"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
         },
         "style": {
           "$ref": "#/definitions/Style"
@@ -3522,7 +4359,14 @@
           "type": "string"
         },
         "text": {
-          "$ref": "#/definitions/Channel"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Text"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
         },
         "title": {
           "type": "string"
@@ -3543,13 +4387,34 @@
           "type": "number"
         },
         "x": {
-          "$ref": "#/definitions/Channel"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/X"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
         },
         "x1": {
-          "$ref": "#/definitions/Channel"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/X"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
         },
         "x1e": {
-          "$ref": "#/definitions/Channel"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/X"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
         },
         "xAxis": {
           "$ref": "#/definitions/AxisPosition"
@@ -3571,22 +4436,57 @@
           "type": "number"
         },
         "xe": {
-          "$ref": "#/definitions/Channel"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/X"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
         },
         "y": {
-          "$ref": "#/definitions/Channel"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Y"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
         },
         "y1": {
-          "$ref": "#/definitions/Channel"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Y"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
         },
         "y1e": {
-          "$ref": "#/definitions/Channel"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Y"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
         },
         "yOffset": {
           "type": "number"
         },
         "ye": {
-          "$ref": "#/definitions/Channel"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Y"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
         },
         "zoomLimits": {
           "$ref": "#/definitions/ZoomLimits"
@@ -3714,10 +4614,24 @@
           "type": "number"
         },
         "color": {
-          "$ref": "#/definitions/Channel"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Color"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
         },
         "column": {
-          "$ref": "#/definitions/Channel"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Column"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
         },
         "data": {
           "$ref": "#/definitions/DataDeep"
@@ -3756,7 +4670,14 @@
           "$ref": "#/definitions/Mark"
         },
         "opacity": {
-          "$ref": "#/definitions/Channel"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Opacity"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
         },
         "orientation": {
           "$ref": "#/definitions/Orientation"
@@ -3775,10 +4696,24 @@
           "type": "object"
         },
         "row": {
-          "$ref": "#/definitions/Channel"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Row"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
         },
         "size": {
-          "$ref": "#/definitions/Channel"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Size"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
         },
         "spacing": {
           "type": "number"
@@ -3793,10 +4728,24 @@
           "type": "boolean"
         },
         "stroke": {
-          "$ref": "#/definitions/Channel"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Stroke"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
         },
         "strokeWidth": {
-          "$ref": "#/definitions/Channel"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/StrokeWidth"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
         },
         "style": {
           "$ref": "#/definitions/Style"
@@ -3805,7 +4754,14 @@
           "type": "string"
         },
         "text": {
-          "$ref": "#/definitions/Channel"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Text"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
         },
         "title": {
           "type": "string"
@@ -3839,13 +4795,34 @@
           "type": "number"
         },
         "x": {
-          "$ref": "#/definitions/Channel"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/X"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
         },
         "x1": {
-          "$ref": "#/definitions/Channel"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/X"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
         },
         "x1e": {
-          "$ref": "#/definitions/Channel"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/X"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
         },
         "xAxis": {
           "$ref": "#/definitions/AxisPosition"
@@ -3867,22 +4844,57 @@
           "type": "number"
         },
         "xe": {
-          "$ref": "#/definitions/Channel"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/X"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
         },
         "y": {
-          "$ref": "#/definitions/Channel"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Y"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
         },
         "y1": {
-          "$ref": "#/definitions/Channel"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Y"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
         },
         "y1e": {
-          "$ref": "#/definitions/Channel"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Y"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
         },
         "yOffset": {
           "type": "number"
         },
         "ye": {
-          "$ref": "#/definitions/Channel"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Y"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
         },
         "zoomLimits": {
           "$ref": "#/definitions/ZoomLimits"
@@ -4405,19 +5417,7 @@
           "type": "string"
         }
       },
-      "required": [
-        "type"
-      ],
       "type": "object"
-    },
-    "X1": {
-      "$ref": "#/definitions/X"
-    },
-    "X1E": {
-      "$ref": "#/definitions/X"
-    },
-    "XE": {
-      "$ref": "#/definitions/X"
     },
     "Y": {
       "additionalProperties": false,
@@ -4473,15 +5473,6 @@
         }
       },
       "type": "object"
-    },
-    "Y1": {
-      "$ref": "#/definitions/Y"
-    },
-    "Y1E": {
-      "$ref": "#/definitions/Y"
-    },
-    "YE": {
-      "$ref": "#/definitions/Y"
     },
     "ZoomLevelVisibilityCondition": {
       "additionalProperties": false,
