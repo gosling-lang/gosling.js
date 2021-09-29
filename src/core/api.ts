@@ -29,7 +29,7 @@ type EventMap = PubSubEvent<'mouseover' | 'click', CommonEventData>;
 export interface GoslingApi {
     subscribe<EventName extends keyof EventMap>(
         type: EventName,
-        callback: (payload: EventMap[EventName]) => void
+        callback: (message: string, payload: EventMap[EventName]) => void
     ): void;
     unsubscribe(tokenOrFunction: string | ((...args: unknown[]) => unknown)): void;
     zoomTo(viewId: string, position: string, padding?: number, duration?: number): void;
