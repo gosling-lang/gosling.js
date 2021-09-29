@@ -161,8 +161,7 @@ function AxisTrack(HGC: any, ...args: any[]): any {
 
                 const text = new HGC.libraries.PIXI.Text(chromName, this.pixiTextConfig);
 
-                // give each string a random hash so that some get hidden
-                // when there's overlaps
+                // give each string a random hash so that some get hidden when there's overlaps
                 text.hashValue = Math.random();
 
                 this.pTicks.addChild(text);
@@ -368,7 +367,7 @@ function AxisTrack(HGC: any, ...args: any[]): any {
                 if (this.flipText) tickTexts[i].scale.x = -1;
 
                 const chrText = this.options.assembly === 'unknown' ? '' : `${cumPos.chr}: `;
-                tickTexts[i].text = ticks[i] === 0 ? `${chrText}: 1` : `${chrText}: ${this.formatTick(ticks[i])}`;
+                tickTexts[i].text = ticks[i] === 0 ? `${chrText}1` : `${chrText}${this.formatTick(ticks[i])}`;
 
                 const x = this._xScale(cumPos.pos + ticks[i]);
 
