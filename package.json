@@ -14,10 +14,15 @@
     "files": [
         "dist"
     ],
+    "exports": {
+        ".": "./dist/gosling.es.js",
+        "./embed": "./dist/embed/index.js"
+    },
     "scripts": {
-        "start": "vite",
+        "start": "vite --mode editor",
+        "start-embed": "vite",
         "build": "run-p build-types build-lib",
-        "build-lib": "vite build --mode lib && node build-umd",
+        "build-lib": "vite build --mode lib && node scripts/build-umd && node scripts/build-embed",
         "build-types": "tsc --emitDeclarationOnly",
         "build-editor": "vite build",
         "preview": "vite preview",

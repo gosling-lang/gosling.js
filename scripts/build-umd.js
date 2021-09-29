@@ -1,15 +1,18 @@
 const esbuild = require('esbuild');
-const pkg = require('./package.json');
+const path = require('path');
+const pkg = require('../package.json');
 
 esbuild.build({
-    entryPoints: ['./dist/gosling.es.js'],
-    target: 'esnext',
+    entryPoints: [path.resolve(__dirname, '../dist/gosling.es.js')],
+    target: 'es2018',
     outfile: pkg.main,
     bundle: true,
     format: 'cjs',
     minify: false,
     sourcemap: true,
-    inject: ['./src/alias/buffer-shim.js'],
+    inject: [
+        path.resolve(__dirname, '../src/alias/buffer-shim.js'),
+    ],
     external: ['react', 'react-dom', 'pixi.js', 'higlass'],
     define: {
         'process.platform': 'undefined',
