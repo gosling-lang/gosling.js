@@ -5206,8 +5206,20 @@
     "Text": {
       "additionalProperties": false,
       "properties": {
+        "domain": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
         "field": {
           "type": "string"
+        },
+        "range": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
         },
         "type": {
           "enum": [

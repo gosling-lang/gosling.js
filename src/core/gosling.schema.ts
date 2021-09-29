@@ -394,6 +394,8 @@ export interface Opacity extends ChannelDeepCommon {
 
 export interface Text extends ChannelDeepCommon {
     type?: 'quantitative' | 'nominal';
+    domain?: string[];
+    range?: string[];
 }
 
 export type ChannelDeep = X | Y | Row | Color | Size | Stroke | StrokeWidth | Opacity | Text;
