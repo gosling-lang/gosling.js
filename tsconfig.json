@@ -25,7 +25,6 @@
       "gosling.js": ["./src/index.ts"],
       "@gosling.schema": ["./src/core/gosling.schema.ts"],
       "@higlass.schema": ["./src/core/higlass.schema.ts"],
-      "lodash": ["lodash-es"],
       "zlib": ["./src/alias/zlib.ts"]
     },
     "baseUrl": "."

@@ -35,7 +35,6 @@ const alias = {
     'gosling.js': path.resolve(__dirname, './src/index.ts'),
     '@gosling.schema': path.resolve(__dirname, './src/core/gosling.schema'),
     '@higlass.schema': path.resolve(__dirname, './src/core/higlass.schema'),
-    'lodash': 'lodash-es',
     'zlib': path.resolve(__dirname, './src/alias/zlib.ts'),
     'uuid': path.resolve(__dirname, './node_modules/uuid/dist/esm-browser/index.js'),
 };
