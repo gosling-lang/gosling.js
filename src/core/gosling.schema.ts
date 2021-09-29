@@ -154,26 +154,26 @@ export interface SingleTrack extends CommonTrackDef {
     mark: Mark;
 
     // Visual channels
-    x?: Channel;
-    y?: Channel;
-    xe?: Channel;
-    ye?: Channel;
+    x?: X | ChannelValue;
+    y?: Y | ChannelValue;
+    xe?: X | ChannelValue;
+    ye?: Y | ChannelValue;
 
-    x1?: Channel;
-    y1?: Channel;
-    x1e?: Channel;
-    y1e?: Channel;
+    x1?: X | ChannelValue;
+    y1?: Y | ChannelValue;
+    x1e?: X | ChannelValue;
+    y1e?: Y | ChannelValue;
 
-    row?: Channel;
-    column?: Channel;
+    row?: Row | ChannelValue;
+    column?: Column | ChannelValue;
 
-    color?: Channel;
-    size?: Channel;
-    text?: Channel;
+    color?: Color | ChannelValue;
+    size?: Size | ChannelValue;
+    text?: Text | ChannelValue;
 
-    stroke?: Channel;
-    strokeWidth?: Channel;
-    opacity?: Channel;
+    stroke?: Stroke | ChannelValue;
+    strokeWidth?: StrokeWidth | ChannelValue;
+    opacity?: Opacity | ChannelValue;
 
     // Resolving overlaps
     displacement?: Displacement;
@@ -310,7 +310,7 @@ export interface ChannelDeepCommon {
 }
 
 export interface X extends ChannelDeepCommon {
-    type: 'genomic';
+    type?: 'genomic';
     domain?: GenomicDomain;
     range?: ValueExtent;
     axis?: AxisPosition;
@@ -342,6 +342,12 @@ export interface Row extends ChannelDeepCommon {
     range?: ValueExtent;
     legend?: boolean;
     padding?: number; // Experimental: Used in `row` and `column` for vertical and horizontal padding.
+}
+
+export interface Column extends ChannelDeepCommon {
+    type?: 'quantitative' | 'nominal';
+    domain?: ValueExtent;
+    range?: ValueExtent;
 }
 
 export interface Color extends ChannelDeepCommon {
@@ -390,29 +396,7 @@ export interface Text extends ChannelDeepCommon {
     type?: 'quantitative' | 'nominal';
 }
 
-export type XE = X;
-export type X1 = X;
-export type X1E = X;
-export type YE = Y;
-export type Y1 = Y;
-export type Y1E = Y;
-
-export type ChannelDeep =
-    | X
-    | XE
-    | X1
-    | X1E
-    | Y
-    | YE
-    | Y1
-    | Y1E
-    | Row
-    | Color
-    | Size
-    | Stroke
-    | StrokeWidth
-    | Opacity
-    | Text;
+export type ChannelDeep = X | Y | Row | Color | Size | Stroke | StrokeWidth | Opacity | Text;
 
 export interface ChannelValue {
     value: number | string;
