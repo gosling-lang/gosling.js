@@ -297,64 +297,53 @@
       "type": "object"
     },
     "ChannelDeep": {
-      "additionalProperties": false,
-      "properties": {
-        "aggregate": {
-          "$ref": "#/definitions/Aggregate"
+      "anyOf": [
+        {
+          "$ref": "#/definitions/X"
         },
-        "axis": {
-          "$ref": "#/definitions/AxisPosition"
+        {
+          "$ref": "#/definitions/XE"
         },
-        "baseline": {
-          "type": [
-            "string",
-            "number"
-          ]
+        {
+          "$ref": "#/definitions/X1"
         },
-        "domain": {
-          "$ref": "#/definitions/Domain"
+        {
+          "$ref": "#/definitions/X1E"
         },
-        "field": {
-          "type": "string"
+        {
+          "$ref": "#/definitions/Y"
         },
-        "flip": {
-          "type": "boolean"
+        {
+          "$ref": "#/definitions/YE"
         },
-        "grid": {
-          "type": "boolean"
+        {
+          "$ref": "#/definitions/Y1"
         },
-        "legend": {
-          "type": "boolean"
+        {
+          "$ref": "#/definitions/Y1E"
         },
-        "linkingId": {
-          "type": "string"
+        {
+          "$ref": "#/definitions/Row"
         },
-        "mirrored": {
-          "type": "boolean"
+        {
+          "$ref": "#/definitions/Color"
         },
-        "padding": {
-          "type": "number"
+        {
+          "$ref": "#/definitions/Size"
         },
-        "range": {
-          "$ref": "#/definitions/Range"
+        {
+          "$ref": "#/definitions/Stroke"
         },
-        "sort": {
-          "items": {
-            "type": "string"
-          },
-          "type": "array"
+        {
+          "$ref": "#/definitions/StrokeWidth"
         },
-        "stack": {
-          "type": "boolean"
+        {
+          "$ref": "#/definitions/Opacity"
         },
-        "type": {
-          "$ref": "#/definitions/FieldType"
-        },
-        "zeroBaseline": {
-          "type": "boolean"
+        {
+          "$ref": "#/definitions/Text"
         }
-      },
-      "type": "object"
+      ]
     },
     "ChannelType": {
       "type": "string"
@@ -429,6 +418,7 @@
       ],
       "type": "string"
     },
+<<<<<<< HEAD
     "CombineMatesTransform": {
       "additionalProperties": false,
       "description": "By looking up ids, combine mates (a pair of reads) into a single row, performing long-to-wide operation. Result data have `{field}` and `{field}_2` names.",
@@ -454,6 +444,40 @@
         "type",
         "idField"
       ],
+=======
+    "Color": {
+      "additionalProperties": false,
+      "properties": {
+        "baseline": {
+          "type": [
+            "string",
+            "number"
+          ]
+        },
+        "domain": {
+          "$ref": "#/definitions/ValueExtent"
+        },
+        "field": {
+          "type": "string"
+        },
+        "legend": {
+          "type": "boolean"
+        },
+        "range": {
+          "$ref": "#/definitions/Range"
+        },
+        "type": {
+          "enum": [
+            "quantitative",
+            "nominal"
+          ],
+          "type": "string"
+        },
+        "zeroBaseline": {
+          "type": "boolean"
+        }
+      },
+>>>>>>> 46e7cec (feat: define explicit channel types, like x, y, and color)
       "type": "object"
     },
     "CoverageTransform": {
@@ -732,34 +756,6 @@
       ],
       "type": "string"
     },
-    "Domain": {
-      "anyOf": [
-        {
-          "items": {
-            "type": "string"
-          },
-          "type": "array"
-        },
-        {
-          "items": {
-            "type": "number"
-          },
-          "type": "array"
-        },
-        {
-          "$ref": "#/definitions/DomainInterval"
-        },
-        {
-          "$ref": "#/definitions/DomainChrInterval"
-        },
-        {
-          "$ref": "#/definitions/DomainChr"
-        },
-        {
-          "$ref": "#/definitions/DomainGene"
-        }
-      ]
-    },
     "DomainChr": {
       "additionalProperties": false,
       "properties": {
@@ -1000,6 +996,7 @@
       ],
       "type": "object"
     },
+<<<<<<< HEAD
     "GenomicLengthTransform": {
       "additionalProperties": false,
       "description": "Calculate genomic length using two genomic fields",
@@ -1025,6 +1022,23 @@
         "newField"
       ],
       "type": "object"
+=======
+    "GenomicDomain": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/DomainInterval"
+        },
+        {
+          "$ref": "#/definitions/DomainChrInterval"
+        },
+        {
+          "$ref": "#/definitions/DomainChr"
+        },
+        {
+          "$ref": "#/definitions/DomainGene"
+        }
+      ]
+>>>>>>> 46e7cec (feat: define explicit channel types, like x, y, and color)
     },
     "GlyphElement": {
       "additionalProperties": false,
@@ -1806,6 +1820,37 @@
         "field",
         "oneOf"
       ],
+      "type": "object"
+    },
+    "Opacity": {
+      "additionalProperties": false,
+      "properties": {
+        "baseline": {
+          "type": [
+            "string",
+            "number"
+          ]
+        },
+        "domain": {
+          "$ref": "#/definitions/ValueExtent"
+        },
+        "field": {
+          "type": "string"
+        },
+        "range": {
+          "$ref": "#/definitions/ValueExtent"
+        },
+        "type": {
+          "enum": [
+            "quantitative",
+            "nominal"
+          ],
+          "type": "string"
+        },
+        "zeroBaseline": {
+          "type": "boolean"
+        }
+      },
       "type": "object"
     },
     "Orientation": {
@@ -2737,16 +2782,7 @@
     "Range": {
       "anyOf": [
         {
-          "items": {
-            "type": "string"
-          },
-          "type": "array"
-        },
-        {
-          "items": {
-            "type": "number"
-          },
-          "type": "array"
+          "$ref": "#/definitions/ValueExtent"
         },
         {
           "$ref": "#/definitions/PREDEFINED_COLORS"
@@ -3350,6 +3386,34 @@
         }
       ]
     },
+    "Row": {
+      "additionalProperties": false,
+      "properties": {
+        "domain": {
+          "$ref": "#/definitions/ValueExtent"
+        },
+        "field": {
+          "type": "string"
+        },
+        "legend": {
+          "type": "boolean"
+        },
+        "padding": {
+          "type": "number"
+        },
+        "range": {
+          "$ref": "#/definitions/ValueExtent"
+        },
+        "type": {
+          "enum": [
+            "quantitative",
+            "nominal"
+          ],
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
     "SingleTrack": {
       "additionalProperties": false,
       "properties": {
@@ -3548,6 +3612,40 @@
           "$ref": "#/definitions/FlatTracks"
         }
       ]
+    },
+    "Size": {
+      "additionalProperties": false,
+      "properties": {
+        "baseline": {
+          "type": [
+            "string",
+            "number"
+          ]
+        },
+        "domain": {
+          "$ref": "#/definitions/ValueExtent"
+        },
+        "field": {
+          "type": "string"
+        },
+        "legend": {
+          "type": "boolean"
+        },
+        "range": {
+          "$ref": "#/definitions/ValueExtent"
+        },
+        "type": {
+          "enum": [
+            "quantitative",
+            "nominal"
+          ],
+          "type": "string"
+        },
+        "zeroBaseline": {
+          "type": "boolean"
+        }
+      },
+      "type": "object"
     },
     "SizeVisibilityCondition": {
       "additionalProperties": false,
@@ -3864,6 +3962,68 @@
       ],
       "type": "object"
     },
+    "Stroke": {
+      "additionalProperties": false,
+      "properties": {
+        "baseline": {
+          "type": [
+            "string",
+            "number"
+          ]
+        },
+        "domain": {
+          "$ref": "#/definitions/ValueExtent"
+        },
+        "field": {
+          "type": "string"
+        },
+        "range": {
+          "$ref": "#/definitions/Range"
+        },
+        "type": {
+          "enum": [
+            "quantitative",
+            "nominal"
+          ],
+          "type": "string"
+        },
+        "zeroBaseline": {
+          "type": "boolean"
+        }
+      },
+      "type": "object"
+    },
+    "StrokeWidth": {
+      "additionalProperties": false,
+      "properties": {
+        "baseline": {
+          "type": [
+            "string",
+            "number"
+          ]
+        },
+        "domain": {
+          "$ref": "#/definitions/ValueExtent"
+        },
+        "field": {
+          "type": "string"
+        },
+        "range": {
+          "$ref": "#/definitions/ValueExtent"
+        },
+        "type": {
+          "enum": [
+            "quantitative",
+            "nominal"
+          ],
+          "type": "string"
+        },
+        "zeroBaseline": {
+          "type": "boolean"
+        }
+      },
+      "type": "object"
+    },
     "Style": {
       "additionalProperties": false,
       "properties": {
@@ -4099,6 +4259,22 @@
       ],
       "type": "object"
     },
+    "Text": {
+      "additionalProperties": false,
+      "properties": {
+        "field": {
+          "type": "string"
+        },
+        "type": {
+          "enum": [
+            "quantitative",
+            "nominal"
+          ],
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
     "Tooltip": {
       "additionalProperties": false,
       "properties": {
@@ -4134,6 +4310,22 @@
         },
         {
           "$ref": "#/definitions/TemplateTrack"
+        }
+      ]
+    },
+    "ValueExtent": {
+      "anyOf": [
+        {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        {
+          "items": {
+            "type": "number"
+          },
+          "type": "array"
         }
       ]
     },
@@ -4180,6 +4372,116 @@
           "$ref": "#/definitions/ZoomLevelVisibilityCondition"
         }
       ]
+    },
+    "X": {
+      "additionalProperties": false,
+      "properties": {
+        "aggregate": {
+          "$ref": "#/definitions/Aggregate"
+        },
+        "axis": {
+          "$ref": "#/definitions/AxisPosition"
+        },
+        "domain": {
+          "$ref": "#/definitions/GenomicDomain"
+        },
+        "field": {
+          "type": "string"
+        },
+        "grid": {
+          "type": "boolean"
+        },
+        "legend": {
+          "type": "boolean"
+        },
+        "linkingId": {
+          "type": "string"
+        },
+        "range": {
+          "$ref": "#/definitions/ValueExtent"
+        },
+        "type": {
+          "const": "genomic",
+          "type": "string"
+        }
+      },
+      "required": [
+        "type"
+      ],
+      "type": "object"
+    },
+    "X1": {
+      "$ref": "#/definitions/X"
+    },
+    "X1E": {
+      "$ref": "#/definitions/X"
+    },
+    "XE": {
+      "$ref": "#/definitions/X"
+    },
+    "Y": {
+      "additionalProperties": false,
+      "properties": {
+        "aggregate": {
+          "$ref": "#/definitions/Aggregate"
+        },
+        "axis": {
+          "$ref": "#/definitions/AxisPosition"
+        },
+        "baseline": {
+          "type": [
+            "string",
+            "number"
+          ]
+        },
+        "domain": {
+          "$ref": "#/definitions/ValueExtent"
+        },
+        "field": {
+          "type": "string"
+        },
+        "flip": {
+          "type": "boolean"
+        },
+        "grid": {
+          "type": "boolean"
+        },
+        "legend": {
+          "type": "boolean"
+        },
+        "linkingId": {
+          "type": "string"
+        },
+        "mirrored": {
+          "type": "boolean"
+        },
+        "padding": {
+          "type": "number"
+        },
+        "range": {
+          "$ref": "#/definitions/ValueExtent"
+        },
+        "type": {
+          "enum": [
+            "quantitative",
+            "nominal"
+          ],
+          "type": "string"
+        },
+        "zeroBaseline": {
+          "type": "boolean"
+        }
+      },
+      "type": "object"
+    },
+    "Y1": {
+      "$ref": "#/definitions/Y"
+    },
+    "Y1E": {
+      "$ref": "#/definitions/Y"
+    },
+    "YE": {
+      "$ref": "#/definitions/Y"
     },
     "ZoomLevelVisibilityCondition": {
       "additionalProperties": false,
