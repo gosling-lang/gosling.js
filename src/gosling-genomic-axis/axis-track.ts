@@ -171,8 +171,7 @@ function AxisTrack(HGC: any, ...args: any[]): any {
 
                 const text = new HGC.libraries.PIXI.Text(chromName, this.pixiTextConfig);
 
-                // give each string a random hash so that some get hidden
-                // when there's overlaps
+                // give each string a random hash so that some get hidden when there's overlaps
                 text.hashValue = Math.random();
 
                 this.pTicks.addChild(text);
@@ -276,11 +275,17 @@ function AxisTrack(HGC: any, ...args: any[]): any {
             this.leftBoundTick.y = this.options.reverseOrientation
                 ? lineYEnd + this.tickTextSeparation
                 : lineYEnd - this.tickTextSeparation;
-            this.leftBoundTick.text = `${x1[0]}: ${this.formatTick(x1[1])}`;
+            this.leftBoundTick.text =
+                this.options.assembly === 'unknown'
+                    ? `${this.formatTick(x1[1])}`
+                    : `${x1[0]}: ${this.formatTick(x1[1])}`;
             this.leftBoundTick.anchor.y = this.options.reverseOrientation ? 0 : 1;
 
             this.rightBoundTick.x = this.dimensions[0];
-            this.rightBoundTick.text = `${x2[0]}: ${this.formatTick(x2[1])}`;
+            this.rightBoundTick.text =
+                this.options.assembly === 'unknown'
+                    ? `${this.formatTick(x2[1])}`
+                    : `${x2[0]}: ${this.formatTick(x2[1])}`;
             this.rightBoundTick.y = this.options.reverseOrientation
                 ? lineYEnd + this.tickTextSeparation
                 : lineYEnd - this.tickTextSeparation;
@@ -371,7 +376,8 @@ function AxisTrack(HGC: any, ...args: any[]): any {
 
                 if (this.flipText) tickTexts[i].scale.x = -1;
 
-                tickTexts[i].text = ticks[i] === 0 ? `${cumPos.chr}: 1` : `${cumPos.chr}: ${this.formatTick(ticks[i])}`;
+                const chrText = this.options.assembly === 'unknown' ? '' : `${cumPos.chr}: `;
+                tickTexts[i].text = ticks[i] === 0 ? `${chrText}1` : `${chrText}${this.formatTick(ticks[i])}`;
 
                 const x = this._xScale(cumPos.pos + ticks[i]);
 
