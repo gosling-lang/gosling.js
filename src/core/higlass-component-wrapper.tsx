@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import * as PIXI from 'pixi.js';
 import React, { useEffect, useState, forwardRef, useMemo } from 'react';
-import uuid from 'uuid';
+import * as uuid from 'uuid';
 
 import * as gosling from '..';
 // @ts-ignore

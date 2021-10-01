@@ -11,7 +11,7 @@ import { select as d3Select } from 'd3-selection';
 import stringify from 'json-stringify-pretty-compact';
 import SplitPane from 'react-split-pane';
 import ErrorBoundary from './error-boundary';
-import { debounce, isEqual } from 'lodash';
+import { debounce, isEqual } from 'lodash-es';
 import { examples } from './example';
 import stripJsonComments from 'strip-json-comments';
 import * as qs from 'qs';

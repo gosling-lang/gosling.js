@@ -1,4 +1,4 @@
-import uuid from 'uuid';
+import * as uuid from 'uuid';
 import { HiGlassSpec, Track } from './higlass.schema';
 import HiGlassSchema from './higlass.schema.json';
 import { Assembly, AxisPosition, Domain, Orientation, ZoomLimits } from './gosling.schema';

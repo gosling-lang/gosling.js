@@ -31,35 +31,15 @@ const bundleWebWorker = {
     },
 };
 
-/**
- * Transforms /node_modules/.vite/*.js to include an alias for global.
- * Only enabled during development.
- *
- * TODO: This plugin is a hack during development because some node_modules
- * contain references to `global`. If we migrate towards more browser-compatible
- * dependencies this can be removed. https://github.com/gosling-lang/gosling.js/pull/527
- *
- * @type {import('vite').Plugin}
- */
-const injectGlobal = {
-    name: 'inject-global',
-    apply: 'serve', // only runs during
-    transform(code, id) {
-        if (/node_modules\/.vite\/(.*).js*/.test(id)) {
-            return 'const global = globalThis;\n' + code;
-        }
-    },
-};
-
 const alias = {
     'gosling.js': path.resolve(__dirname, './src/index.ts'),
     '@gosling.schema': path.resolve(__dirname, './src/core/gosling.schema'),
     '@higlass.schema': path.resolve(__dirname, './src/core/higlass.schema'),
-    'lodash': 'lodash-es',
     'zlib': path.resolve(__dirname, './src/alias/zlib.ts'),
+    'uuid': path.resolve(__dirname, './node_modules/uuid/dist/esm-browser/index.js'),
 };
 
-const skipExt = new Set(['@gmod/bbi']);
+const skipExt = new Set(['@gmod/bbi', 'uuid']);
 const external = [
     ...Object.keys(pkg.dependencies),
     ...Object.keys(pkg.peerDependencies),
@@ -88,7 +68,7 @@ const dev = defineConfig({
         'process.platform': 'undefined',
         'process.env.THREADS_WORKER_INIT_TIMEOUT': 'undefined',
     },
-    plugins: [bundleWebWorker, injectGlobal],
+    plugins: [bundleWebWorker],
 });
 
 export default ({ command, mode }) => {
@@ -96,5 +76,5 @@ export default ({ command, mode }) => {
     if (mode === 'editor') {
         dev.plugins.push(reactRefresh());
     }
-    return dev;
+	return dev;
 };

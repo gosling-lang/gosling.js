@@ -1,5 +1,5 @@
 import { arc as d3arc } from 'd3-shape';
-import uuid from 'uuid';
+import * as uuid from 'uuid';
 import { RADIAN_GAP, valueToRadian } from '../core/utils/polar';
 
 type CircularBrushData = {
