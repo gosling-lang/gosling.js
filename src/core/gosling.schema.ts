@@ -337,7 +337,7 @@ export interface Y extends ChannelDeepCommon {
 }
 
 export interface Row extends ChannelDeepCommon {
-    type?: 'quantitative' | 'nominal';
+    type?: 'nominal';
     domain?: ValueExtent;
     range?: ValueExtent;
     legend?: boolean;
@@ -346,7 +346,7 @@ export interface Row extends ChannelDeepCommon {
 }
 
 export interface Column extends ChannelDeepCommon {
-    type?: 'quantitative' | 'nominal';
+    type?: 'nominal';
     domain?: ValueExtent;
     range?: ValueExtent;
 }

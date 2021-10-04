@@ -475,10 +475,7 @@
           "$ref": "#/definitions/ValueExtent"
         },
         "type": {
-          "enum": [
-            "quantitative",
-            "nominal"
-          ],
+          "const": "nominal",
           "type": "string"
         }
       },
@@ -4196,10 +4193,7 @@
           "$ref": "#/definitions/ValueExtent"
         },
         "type": {
-          "enum": [
-            "quantitative",
-            "nominal"
-          ],
+          "const": "nominal",
           "type": "string"
         }
       },
