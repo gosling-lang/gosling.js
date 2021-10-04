@@ -25,7 +25,9 @@ import { aggregateData } from './utils/data-transform';
 import {
     IsChannelDeep,
     IsChannelValue,
+    IsMultiFieldChannel,
     getValueUsingChannel,
+    getChannelField,
     IsShallowMark,
     IsStackedChannel,
     IsDomainArray,
@@ -184,7 +186,7 @@ export class GoslingTrackModel {
      * Find an axis channel that is encoded with genomic coordinate and return the key (e.g., 'x').
      * `undefined` if not found.
      */
-    public getGenomicChannelKey(): 'x' | 'xe' | 'y' | 'ye' | 'x1' | 'x1e' | 'y1' | 'y1e' | undefined {
+    public getGenomicChannelKey(): 'x' | 'y' | undefined {
         return getGenomicChannelKeyFromTrack(this.spec());
     }
     /**
@@ -276,11 +278,6 @@ export class GoslingTrackModel {
         switch (channelKey) {
             case 'x':
             case 'y':
-            case 'x1':
-            case 'y1':
-            case 'xe':
-            case 'ye':
-            case 'x1e':
                 if (channelFieldType === 'quantitative' || channelFieldType === 'genomic') {
                     return (this.channelScales[channelKey] as ScaleLinear<any, any>)(value as number);
                 }
@@ -419,10 +416,15 @@ export class GoslingTrackModel {
     }
 
     /**
-     *
+     * Get visual property (e.g., actual color or position of a mark in the screen).
      */
-    public visualPropertyByChannel(channelKey: keyof typeof ChannelTypes, datum?: { [k: string]: string | number }) {
-        const value = datum !== undefined ? getValueUsingChannel(datum, this.spec()[channelKey] as Channel) : undefined; // Is this safe enough?
+    public visualPropertyByChannel(
+        channelKey: keyof typeof ChannelTypes,
+        datum?: { [k: string]: string | number },
+        fieldKey?: 'field' | 'startField' | 'endField' | 'startField2' | 'endField2'
+    ) {
+        const value =
+            datum !== undefined ? getValueUsingChannel(datum, this.spec()[channelKey] as Channel, fieldKey) : undefined;
         return this.encodedValue(channelKey, value);
     }
 
@@ -442,23 +444,7 @@ export class GoslingTrackModel {
         }
 
         // common visual properties, not specific to visual marks
-        if (
-            [
-                'text',
-                'color',
-                'row',
-                'stroke',
-                'opacity',
-                'strokeWidth',
-                'x',
-                'y',
-                'xe',
-                'x1',
-                'x1e',
-                'ye',
-                'size'
-            ].includes(propertyKey)
-        ) {
+        if (['text', 'color', 'row', 'stroke', 'opacity', 'strokeWidth', 'x', 'y', 'size'].includes(propertyKey)) {
             return this.visualPropertyByChannel(propertyKey as any, datum);
         }
 
@@ -484,7 +470,7 @@ export class GoslingTrackModel {
         const data = this.data();
 
         const genomicChannel = this.getGenomicChannel();
-        if (!genomicChannel || !genomicChannel.field) {
+        if (!genomicChannel || !('field' in genomicChannel || 'startField' in genomicChannel)) {
             console.warn('Genomic field is not provided in the specification');
             // EXPERIMENTAL: we are removing this rule in our spec.
             return;
@@ -500,11 +486,11 @@ export class GoslingTrackModel {
 
         SUPPORTED_CHANNELS.forEach(channelKey => {
             const channel = spec[channelKey];
-
-            if (IsStackedChannel(spec, channelKey) && IsChannelDeep(channel)) {
+            const field = getChannelField(channel);
+            if (IsStackedChannel(spec, channelKey) && IsChannelDeep(channel) && field) {
                 // we need to group data before calculating scales because marks are going to be stacked
                 // (spec as any /* TODO: select more accurately */).x
-                const pivotedData = group(data, d => d[genomicChannel.field as string]);
+                const pivotedData = group(data, d => d[field]);
                 const xKeys = [...pivotedData.keys()];
 
                 if (!channel.domain) {
@@ -515,19 +501,13 @@ export class GoslingTrackModel {
                             : d3min(
                                   xKeys.map(d =>
                                       d3sum(
-                                          (pivotedData.get(d) as any).map((_d: any) =>
-                                              channel.field ? _d[channel.field] : undefined
-                                          )
+                                          (pivotedData.get(d) as any).map((_d: any) => (field ? _d[field] : undefined))
                                       )
                                   ) as number[]
                               );
                     const max = d3max(
                         xKeys.map(d =>
-                            d3sum(
-                                (pivotedData.get(d) as any).map((_d: any) =>
-                                    channel.field ? _d[channel.field] : undefined
-                                )
-                            )
+                            d3sum((pivotedData.get(d) as any).map((_d: any) => (field ? _d[field] : undefined)))
                         ) as number[]
                     );
                     channel.domain = [min, max] as [number, number]; // TODO: what if data ranges in negative values
@@ -578,12 +558,7 @@ export class GoslingTrackModel {
                             else if (spec.mark === 'triangleLeft') value = undefined;
                             else if (spec.mark === 'triangleBottom') value = undefined;
                             // Points in this case are stretched from `x` to `xe`
-                            else if (
-                                spec.stretch &&
-                                spec.mark === 'point' &&
-                                IsChannelDeep(spec.x) &&
-                                IsChannelDeep(spec.xe)
-                            )
+                            else if (spec.stretch && spec.mark === 'point' && IsMultiFieldChannel(spec.x))
                                 value = undefined;
                             else if (spec.mark === 'text') value = 12;
                             else value = this.theme.point.size;
@@ -619,12 +594,12 @@ export class GoslingTrackModel {
                         spec[channelKey] = { value } as ChannelValue;
                     }
                 } else if (IsChannelDeep(channel) && (channel.type === 'quantitative' || channel.type === 'genomic')) {
-                    if (channel.domain === undefined) {
+                    if (channel.domain === undefined && field) {
                         const min =
                             'zeroBaseline' in channel && channel.zeroBaseline
                                 ? 0
-                                : (d3min(data.map(d => +d[channel.field as string]) as number[]) as number) ?? 0;
-                        const max = (d3max(data.map(d => +d[channel.field as string]) as number[]) as number) ?? 0;
+                                : (d3min(data.map(d => +d[field]) as number[]) as number) ?? 0;
+                        const max = (d3max(data.map(d => +d[field]) as number[]) as number) ?? 0;
                         channel.domain = [min, max]; // TODO: what if data ranges in negative values
                     } else if (channel.type === 'genomic' && !IsDomainArray(channel.domain)) {
                         channel.domain = getNumericDomain(channel.domain);
@@ -634,13 +609,9 @@ export class GoslingTrackModel {
                         let range;
                         switch (channelKey) {
                             case 'x':
-                            case 'xe':
-                            case 'x1':
-                            case 'x1e':
                                 range = [0, spec.width];
                                 break;
                             case 'y':
-                            case 'ye':
                                 range = [0, rowHeight];
                                 break;
                             case 'color':
@@ -664,20 +635,18 @@ export class GoslingTrackModel {
                             channel.range = range as PREDEFINED_COLORS | number[];
                         }
                     }
-                } else if (IsChannelDeep(channel) && channel.type === 'nominal') {
+                } else if (IsChannelDeep(channel) && channel.type === 'nominal' && field) {
                     if (channel.domain === undefined) {
-                        channel.domain = Array.from(new Set(data.map(d => d[channel.field as string]))) as string[];
+                        channel.domain = Array.from(new Set(data.map(d => d[field]))) as string[];
                     }
                     if (!channel.range) {
                         let startSize = 2;
                         let range;
                         switch (channelKey) {
                             case 'x':
-                            case 'xe':
                                 range = [0, spec.width];
                                 break;
                             case 'y':
-                            case 'ye':
                                 range = [rowHeight, 0]; // reversed because the origin is on the top
                                 break;
                             case 'color':
@@ -698,34 +667,6 @@ export class GoslingTrackModel {
                             channel.range = range as number[] | string[];
                         }
                     }
-                }
-            }
-        });
-
-        /* Merge domains of neighbor channels (e.g., x and xe) */
-        [
-            ['x', 'xe'],
-            ['y', 'ye']
-        ].forEach(pair => {
-            const [k1, k2] = pair as [keyof typeof ChannelTypes, keyof typeof ChannelTypes];
-            const c1 = spec[k1],
-                c2 = spec[k2];
-            if (
-                IsChannelDeep(c1) &&
-                IsChannelDeep(c2) &&
-                c1.type === c2.type &&
-                c1.domain &&
-                c2.domain &&
-                Array.isArray(c1.domain) &&
-                Array.isArray(c2.domain)
-            ) {
-                if (c1.type === 'genomic' || c1.type === 'quantitative') {
-                    const min = d3min([c1.domain[0] as number, c2.domain[0] as number]) as number;
-                    const max = d3max([c1.domain[1] as number, c2.domain[1] as number]) as number;
-                    c1.domain = c2.domain = [min, max];
-                } else if (c1.type === 'nominal') {
-                    const range = Array.from(new Set([...c1.domain, ...c2.domain])) as string[];
-                    c1.range = c2.range = range;
                 }
             }
         });
@@ -763,11 +704,7 @@ export class GoslingTrackModel {
                 if (channel.type === 'quantitative' || channel.type === 'genomic') {
                     switch (channelKey) {
                         case 'x':
-                        case 'x1':
-                        case 'xe':
-                        case 'x1e':
                         case 'y':
-                        case 'ye':
                         case 'size':
                         case 'opacity':
                         case 'strokeWidth':
@@ -792,9 +729,7 @@ export class GoslingTrackModel {
                 } else if (channel.type === 'nominal') {
                     switch (channelKey) {
                         case 'x':
-                        case 'xe':
                         case 'y':
-                        case 'ye':
                         case 'row':
                             this.channelScales[channelKey] = scaleBand()
                                 .domain(domain as string[])

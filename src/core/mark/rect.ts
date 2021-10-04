@@ -147,8 +147,8 @@ export function rectProperty(
         case 'width':
             const width =
                 // (1) size
-                gm.visualPropertyByChannel('xe', datum)
-                    ? gm.visualPropertyByChannel('xe', datum) - gm.visualPropertyByChannel('x', datum)
+                gm.visualPropertyByChannel('x', datum, 'endField')
+                    ? gm.visualPropertyByChannel('x', datum, 'endField') - gm.visualPropertyByChannel('x', datum)
                     : // (2) unit mark height
                       additionalInfo?.markWidth;
             return width === 0 ? 0.1 : width; // TODO: not sure if this is necessary for all cases. Perhaps, we can have an option.

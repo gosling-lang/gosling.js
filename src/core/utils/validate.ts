@@ -78,7 +78,7 @@ export function validateTrack(track: Track) {
 export function getGenomicChannelFromTrack(track: SingleTrack | OverlaidTrack): ChannelDeep | undefined {
     // we do not support using two genomic coordinates yet
     let genomicChannel: ChannelDeep | undefined = undefined;
-    ['x', 'y', 'xe', 'ye', 'x1', 'y1', 'x1e', 'y1e'].reverse().forEach(channelType => {
+    ['x', 'y'].reverse().forEach(channelType => {
         const channel = track[channelType as keyof typeof ChannelTypes];
         if (IsChannelDeep(channel) && channel.type === 'genomic') {
             genomicChannel = channel;
@@ -91,12 +91,10 @@ export function getGenomicChannelFromTrack(track: SingleTrack | OverlaidTrack): 
  * Find an axis channel that is encoded with genomic coordinate and return 'x' or 'y'.
  * `undefined` if not found.
  */
-export function getGenomicChannelKeyFromTrack(
-    track: SingleTrack | OverlaidTrack
-): 'x' | 'xe' | 'y' | 'ye' | 'x1' | 'y1' | 'x1e' | 'y1e' | undefined {
+export function getGenomicChannelKeyFromTrack(track: SingleTrack | OverlaidTrack): 'x' | 'y' | undefined {
     // we do not support using two genomic coordinates yet
     let genomicChannelKey: string | undefined = undefined;
-    ['x', 'xe', 'y', 'ye', 'x1', 'y1', 'x1e', 'y1e'].reverse().forEach(channelKey => {
+    ['x', 'y'].reverse().forEach(channelKey => {
         const channel = track[channelKey as keyof typeof ChannelTypes];
         if (IsChannelDeep(channel) && channel.type === 'genomic') {
             genomicChannelKey = channelKey;

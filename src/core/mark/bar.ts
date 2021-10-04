@@ -217,7 +217,7 @@ export function barProperty(
     }
 ) {
     const x = gm.visualPropertyByChannel('x', datum);
-    const xe = gm.visualPropertyByChannel('xe', datum);
+    const xe = gm.visualPropertyByChannel('x', datum, 'endField');
     const size = gm.visualPropertyByChannel('size', datum);
     switch (propertyKey) {
         case 'width':

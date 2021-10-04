@@ -119,7 +119,7 @@ export interface DataTrack extends CommonTrackDef {
 }
 
 /* ----------------------------- MARK ----------------------------- */
-export type Mark = MarkType | MarkDeep;
+export type Mark = MarkType;
 
 export type MarkType =
     | 'point'
@@ -156,13 +156,6 @@ export interface SingleTrack extends CommonTrackDef {
     // Visual channels
     x?: X | ChannelValue;
     y?: Y | ChannelValue;
-    xe?: X | ChannelValue;
-    ye?: Y | ChannelValue;
-
-    x1?: X | ChannelValue;
-    y1?: Y | ChannelValue;
-    x1e?: X | ChannelValue;
-    y1e?: Y | ChannelValue;
 
     row?: Row | ChannelValue;
     column?: Column | ChannelValue;
@@ -281,17 +274,8 @@ export type LogicalOperation =
 
 /* ----------------------------- VISUAL CHANNEL ----------------------------- */
 export const ChannelTypes = {
-    // coordinates
     x: 'x',
     y: 'y',
-    xe: 'xe',
-    ye: 'ye',
-    // coordinates for link
-    x1: 'x1',
-    y1: 'y1',
-    x1e: 'x1e',
-    y1e: 'y1e',
-    // others
     color: 'color',
     row: 'row',
     opacity: 'opacity',
@@ -305,12 +289,11 @@ export type ChannelType = keyof typeof ChannelTypes | string;
 
 export type Channel = ChannelDeep | ChannelValue; // TODO: support null to allow removing spec when overriding
 
-export interface ChannelDeepCommon {
-    field?: string;
-}
+export type X = XSingleField | XMultipleFields;
 
-export interface X extends ChannelDeepCommon {
+export interface XSingleField {
     type?: 'genomic';
+    field?: string;
     domain?: GenomicDomain;
     range?: ValueExtent;
     axis?: AxisPosition;
@@ -320,8 +303,18 @@ export interface X extends ChannelDeepCommon {
     aggregate?: Aggregate;
 }
 
-export interface Y extends ChannelDeepCommon {
+export interface XMultipleFields extends Omit<XSingleField, 'field'> {
+    startField: string;
+    endField: string;
+    startField2?: string;
+    endField2?: string;
+}
+
+export type Y = YSingleField | YMultipleFields;
+
+export interface YSingleField {
     type?: 'quantitative' | 'nominal' | 'genomic';
+    field?: string;
     domain?: ValueExtent;
     range?: ValueExtent;
     axis?: AxisPosition;
@@ -336,8 +329,16 @@ export interface Y extends ChannelDeepCommon {
     padding?: number; // Experimental: Used in `row` and `column` for vertical and horizontal padding.
 }
 
-export interface Row extends ChannelDeepCommon {
+export interface YMultipleFields extends Omit<YSingleField, 'field'> {
+    startField: string;
+    endField: string;
+    startField2?: string;
+    endField2?: string;
+}
+
+export interface Row {
     type?: 'nominal';
+    field?: string;
     domain?: ValueExtent;
     range?: ValueExtent;
     legend?: boolean;
@@ -345,14 +346,16 @@ export interface Row extends ChannelDeepCommon {
     grid?: boolean;
 }
 
-export interface Column extends ChannelDeepCommon {
+export interface Column {
     type?: 'nominal';
+    field?: string;
     domain?: ValueExtent;
     range?: ValueExtent;
 }
 
-export interface Color extends ChannelDeepCommon {
+export interface Color {
     type?: 'quantitative' | 'nominal';
+    field?: string;
     domain?: ValueExtent;
     range?: Range;
     legend?: boolean;
@@ -360,8 +363,9 @@ export interface Color extends ChannelDeepCommon {
     zeroBaseline?: boolean; // We could remove this and use the `baseline` option instead
 }
 
-export interface Size extends ChannelDeepCommon {
+export interface Size {
     type?: 'quantitative' | 'nominal';
+    field?: string;
     domain?: ValueExtent;
     range?: ValueExtent;
     legend?: boolean; // TODO: Support this
@@ -369,32 +373,36 @@ export interface Size extends ChannelDeepCommon {
     zeroBaseline?: boolean; // We could remove this and use the `baseline` option instead
 }
 
-export interface Stroke extends ChannelDeepCommon {
+export interface Stroke {
     type?: 'quantitative' | 'nominal';
+    field?: string;
     domain?: ValueExtent;
     range?: Range;
     baseline?: string | number;
     zeroBaseline?: boolean; // We could remove this and use the `baseline` option instead
 }
 
-export interface StrokeWidth extends ChannelDeepCommon {
+export interface StrokeWidth {
     type?: 'quantitative' | 'nominal';
+    field?: string;
     domain?: ValueExtent;
     range?: ValueExtent;
     baseline?: string | number;
     zeroBaseline?: boolean; // We could remove this and use the `baseline` option instead
 }
 
-export interface Opacity extends ChannelDeepCommon {
+export interface Opacity {
     type?: 'quantitative' | 'nominal';
+    field?: string;
     domain?: ValueExtent;
     range?: ValueExtent;
     baseline?: string | number;
     zeroBaseline?: boolean; // We could remove this and use the `baseline` option instead
 }
 
-export interface Text extends ChannelDeepCommon {
+export interface Text {
     type?: 'quantitative' | 'nominal';
+    field?: string;
     domain?: string[];
     range?: string[];
 }
@@ -692,13 +700,6 @@ export type TemplateTrackMappingDef = Omit<
     // Visual channels
     x?: ChannelWithBase;
     y?: ChannelWithBase;
-    xe?: ChannelWithBase;
-    ye?: ChannelWithBase;
-
-    x1?: ChannelWithBase;
-    y1?: ChannelWithBase;
-    x1e?: ChannelWithBase;
-    y1e?: ChannelWithBase;
 
     row?: ChannelWithBase;
     column?: ChannelWithBase;
@@ -728,71 +729,3 @@ export type TemplateTrackMappingDef = Omit<
 export type ChannelWithBase = Channel & {
     base?: string;
 };
-
-/* ----------------------- Below is deprecated ----------------------- */
-export type MarkDeep = MarkGlyphPreset | MarkGlyph;
-
-export interface MarkGlyphPreset {
-    type: string; //GLYPH_LOCAL_PRESET_TYPE | GLYPH_HIGLASS_PRESET_TYPE;
-    server: string; // TODO: Not supported yet
-}
-
-export interface MarkGlyph {
-    type: 'compositeMark';
-    name: string;
-    referenceColumn?: string; // reference column for selecting data tuples for each glyph
-    requiredChannels: ChannelType[]; // channels that must be assigned // TODO: What about optional channels?
-    elements: GlyphElement[];
-}
-
-export interface GlyphElement {
-    // primitives
-    description?: string;
-    select?: { channel: ChannelType; oneOf: string[] }[];
-    mark: MarkType | MarkBind;
-    // coordinates
-    x?: ChannelBind | ChannelValue | 'none';
-    y?: ChannelBind | ChannelValue | 'none';
-    xe?: ChannelBind | ChannelValue | 'none';
-    ye?: ChannelBind | ChannelValue | 'none';
-    // coordinates for link
-    x1?: ChannelBind | ChannelValue | 'none';
-    y1?: ChannelBind | ChannelValue | 'none';
-    x1e?: ChannelBind | ChannelValue | 'none';
-    y1e?: ChannelBind | ChannelValue | 'none';
-    // others
-    stroke?: ChannelBind | ChannelValue | 'none';
-    strokeWidth?: ChannelBind | ChannelValue | 'none';
-    row?: ChannelBind | ChannelValue | 'none';
-    color?: ChannelBind | ChannelValue | 'none';
-    size?: ChannelBind | ChannelValue | 'none';
-    w?: ChannelBind | ChannelValue | 'none';
-    opacity?: ChannelBind | ChannelValue | 'none';
-    text?: ChannelBind | ChannelValue | 'none';
-    background?: ChannelBind | ChannelValue | 'none';
-    style?: MarkStyleInGlyph;
-}
-
-export interface MarkStyleInGlyph {
-    dashed?: string;
-    dy?: number;
-    stroke?: string;
-    strokeWidth?: number;
-    background?: string;
-}
-
-export interface MarkBind {
-    bind: string;
-    domain: string[];
-    range: MarkType[];
-}
-
-export interface ChannelBind {
-    bind: ChannelType;
-    aggregate?: Aggregate;
-}
-
-export interface AnyGlyphChannels {
-    // Allow defining any kinds of chennels for binding data in Glyph
-    [key: string]: ChannelBind | ChannelValue;
-}

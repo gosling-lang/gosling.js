@@ -1,6 +1,8 @@
 import {
     ChannelDeep,
     ChannelValue,
+    XMultipleFields,
+    YMultipleFields,
     DataDeep,
     Datum,
     DomainChr,
@@ -167,6 +169,12 @@ export function IsChannelDeep(channel: ChannelDeep | ChannelValue | undefined): 
     return typeof channel === 'object' && !('value' in channel);
 }
 
+export function IsMultiFieldChannel(
+    channel: ChannelDeep | ChannelValue | undefined
+): channel is XMultipleFields | YMultipleFields {
+    return typeof channel === 'object' && 'startField' in channel && 'endField' in channel;
+}
+
 export function IsOneOfFilter(_: FilterTransform): _ is OneOfFilter {
     return 'oneOf' in _;
 }
@@ -206,7 +214,7 @@ export function IsStackedMark(track: SingleTrack): boolean {
         // TODO: determine whether to use stacked bar for nominal fields or not
         IsChannelDeep(track.y) &&
         track.y.type === 'quantitative' &&
-        !IsChannelDeep(track.ye)
+        !IsMultiFieldChannel(track)
     );
 }
 
@@ -230,10 +238,36 @@ export function IsStackedChannel(track: SingleTrack, channelKey: keyof typeof Ch
  * Retreive value using a `channel`.
  * `undefined` if unable to retreive the value.
  */
-export function getValueUsingChannel(datum: { [k: string]: string | number }, channel: Channel) {
-    if (IsChannelDeep(channel) && channel.field) {
-        return datum[channel?.field];
+export function getValueUsingChannel(
+    datum: { [k: string]: string | number },
+    channel: Channel,
+    fieldKey?: 'field' | 'startField' | 'endField' | 'startField2' | 'endField2'
+) {
+    const field = getChannelField(channel, fieldKey);
+    if (IsChannelDeep(channel) && field) {
+        return datum[field];
     }
+    return undefined;
+}
+
+/**
+ * Get a field name from a channel. If there are multiple fields (e.g., start and end fields), get the first one
+ * unless `channelKey` is defined. Return `undefined` if a channel does not have any fields specified.
+ */
+export function getChannelField(
+    channel: Channel | undefined,
+    fieldKey?: 'field' | 'startField' | 'endField' | 'startField2' | 'endField2'
+) {
+    if (IsMultiFieldChannel(channel)) {
+        // This means a chennel is either X or Y and contains multiple fields (e.g., start and end fields).
+        return channel[!fieldKey || fieldKey === 'field' ? 'startField' : fieldKey];
+    } else if (channel && 'field' in channel) {
+        // This means a channel contains a single field
+        if (!fieldKey || fieldKey === 'field') {
+            return channel.field;
+        }
+    }
+    // Otherwise, just return `undefined`
     return undefined;
 }
 

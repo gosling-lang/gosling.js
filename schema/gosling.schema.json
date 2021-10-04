@@ -275,21 +275,6 @@
         }
       ]
     },
-    "ChannelBind": {
-      "additionalProperties": false,
-      "properties": {
-        "aggregate": {
-          "$ref": "#/definitions/Aggregate"
-        },
-        "bind": {
-          "$ref": "#/definitions/ChannelType"
-        }
-      },
-      "required": [
-        "bind"
-      ],
-      "type": "object"
-    },
     "ChannelDeep": {
       "anyOf": [
         {
@@ -320,9 +305,6 @@
           "$ref": "#/definitions/Text"
         }
       ]
-    },
-    "ChannelType": {
-      "type": "string"
     },
     "ChannelValue": {
       "additionalProperties": false,
@@ -973,291 +955,6 @@
         }
       ]
     },
-    "GlyphElement": {
-      "additionalProperties": false,
-      "properties": {
-        "background": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/ChannelBind"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            },
-            {
-              "const": "none",
-              "type": "string"
-            }
-          ]
-        },
-        "color": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/ChannelBind"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            },
-            {
-              "const": "none",
-              "type": "string"
-            }
-          ]
-        },
-        "description": {
-          "type": "string"
-        },
-        "mark": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/MarkType"
-            },
-            {
-              "$ref": "#/definitions/MarkBind"
-            }
-          ]
-        },
-        "opacity": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/ChannelBind"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            },
-            {
-              "const": "none",
-              "type": "string"
-            }
-          ]
-        },
-        "row": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/ChannelBind"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            },
-            {
-              "const": "none",
-              "type": "string"
-            }
-          ]
-        },
-        "select": {
-          "items": {
-            "additionalProperties": false,
-            "properties": {
-              "channel": {
-                "$ref": "#/definitions/ChannelType"
-              },
-              "oneOf": {
-                "items": {
-                  "type": "string"
-                },
-                "type": "array"
-              }
-            },
-            "required": [
-              "channel",
-              "oneOf"
-            ],
-            "type": "object"
-          },
-          "type": "array"
-        },
-        "size": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/ChannelBind"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            },
-            {
-              "const": "none",
-              "type": "string"
-            }
-          ]
-        },
-        "stroke": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/ChannelBind"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            },
-            {
-              "const": "none",
-              "type": "string"
-            }
-          ]
-        },
-        "strokeWidth": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/ChannelBind"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            },
-            {
-              "const": "none",
-              "type": "string"
-            }
-          ]
-        },
-        "style": {
-          "$ref": "#/definitions/MarkStyleInGlyph"
-        },
-        "text": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/ChannelBind"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            },
-            {
-              "const": "none",
-              "type": "string"
-            }
-          ]
-        },
-        "w": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/ChannelBind"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            },
-            {
-              "const": "none",
-              "type": "string"
-            }
-          ]
-        },
-        "x": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/ChannelBind"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            },
-            {
-              "const": "none",
-              "type": "string"
-            }
-          ]
-        },
-        "x1": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/ChannelBind"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            },
-            {
-              "const": "none",
-              "type": "string"
-            }
-          ]
-        },
-        "x1e": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/ChannelBind"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            },
-            {
-              "const": "none",
-              "type": "string"
-            }
-          ]
-        },
-        "xe": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/ChannelBind"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            },
-            {
-              "const": "none",
-              "type": "string"
-            }
-          ]
-        },
-        "y": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/ChannelBind"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            },
-            {
-              "const": "none",
-              "type": "string"
-            }
-          ]
-        },
-        "y1": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/ChannelBind"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            },
-            {
-              "const": "none",
-              "type": "string"
-            }
-          ]
-        },
-        "y1e": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/ChannelBind"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            },
-            {
-              "const": "none",
-              "type": "string"
-            }
-          ]
-        },
-        "ye": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/ChannelBind"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            },
-            {
-              "const": "none",
-              "type": "string"
-            }
-          ]
-        }
-      },
-      "required": [
-        "mark"
-      ],
-      "type": "object"
-    },
     "GoslingSpec": {
       "anyOf": [
         {
@@ -1441,121 +1138,7 @@
       "type": "string"
     },
     "Mark": {
-      "anyOf": [
-        {
-          "$ref": "#/definitions/MarkType"
-        },
-        {
-          "$ref": "#/definitions/MarkDeep"
-        }
-      ]
-    },
-    "MarkBind": {
-      "additionalProperties": false,
-      "properties": {
-        "bind": {
-          "type": "string"
-        },
-        "domain": {
-          "items": {
-            "type": "string"
-          },
-          "type": "array"
-        },
-        "range": {
-          "items": {
-            "$ref": "#/definitions/MarkType"
-          },
-          "type": "array"
-        }
-      },
-      "required": [
-        "bind",
-        "domain",
-        "range"
-      ],
-      "type": "object"
-    },
-    "MarkDeep": {
-      "anyOf": [
-        {
-          "$ref": "#/definitions/MarkGlyphPreset"
-        },
-        {
-          "$ref": "#/definitions/MarkGlyph"
-        }
-      ]
-    },
-    "MarkGlyph": {
-      "additionalProperties": false,
-      "properties": {
-        "elements": {
-          "items": {
-            "$ref": "#/definitions/GlyphElement"
-          },
-          "type": "array"
-        },
-        "name": {
-          "type": "string"
-        },
-        "referenceColumn": {
-          "type": "string"
-        },
-        "requiredChannels": {
-          "items": {
-            "$ref": "#/definitions/ChannelType"
-          },
-          "type": "array"
-        },
-        "type": {
-          "const": "compositeMark",
-          "type": "string"
-        }
-      },
-      "required": [
-        "type",
-        "name",
-        "requiredChannels",
-        "elements"
-      ],
-      "type": "object"
-    },
-    "MarkGlyphPreset": {
-      "additionalProperties": false,
-      "properties": {
-        "server": {
-          "type": "string"
-        },
-        "type": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "type",
-        "server"
-      ],
-      "type": "object"
-    },
-    "MarkStyleInGlyph": {
-      "additionalProperties": false,
-      "properties": {
-        "background": {
-          "type": "string"
-        },
-        "dashed": {
-          "type": "string"
-        },
-        "dy": {
-          "type": "number"
-        },
-        "stroke": {
-          "type": "string"
-        },
-        "strokeWidth": {
-          "type": "number"
-        }
-      },
-      "type": "object"
+      "$ref": "#/definitions/MarkType"
     },
     "MarkType": {
       "enum": [
@@ -2062,26 +1645,6 @@
                   }
                 ]
               },
-              "x1": {
-                "anyOf": [
-                  {
-                    "$ref": "#/definitions/X"
-                  },
-                  {
-                    "$ref": "#/definitions/ChannelValue"
-                  }
-                ]
-              },
-              "x1e": {
-                "anyOf": [
-                  {
-                    "$ref": "#/definitions/X"
-                  },
-                  {
-                    "$ref": "#/definitions/ChannelValue"
-                  }
-                ]
-              },
               "xAxis": {
                 "$ref": "#/definitions/AxisPosition"
               },
@@ -2101,37 +1664,7 @@
               "xOffset": {
                 "type": "number"
               },
-              "xe": {
-                "anyOf": [
-                  {
-                    "$ref": "#/definitions/X"
-                  },
-                  {
-                    "$ref": "#/definitions/ChannelValue"
-                  }
-                ]
-              },
               "y": {
-                "anyOf": [
-                  {
-                    "$ref": "#/definitions/Y"
-                  },
-                  {
-                    "$ref": "#/definitions/ChannelValue"
-                  }
-                ]
-              },
-              "y1": {
-                "anyOf": [
-                  {
-                    "$ref": "#/definitions/Y"
-                  },
-                  {
-                    "$ref": "#/definitions/ChannelValue"
-                  }
-                ]
-              },
-              "y1e": {
                 "anyOf": [
                   {
                     "$ref": "#/definitions/Y"
@@ -2143,16 +1676,6 @@
               },
               "yOffset": {
                 "type": "number"
-              },
-              "ye": {
-                "anyOf": [
-                  {
-                    "$ref": "#/definitions/Y"
-                  },
-                  {
-                    "$ref": "#/definitions/ChannelValue"
-                  }
-                ]
               },
               "zoomLimits": {
                 "$ref": "#/definitions/ZoomLimits"
@@ -2268,26 +1791,6 @@
             }
           ]
         },
-        "x1": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/X"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
-        "x1e": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/X"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
         "xAxis": {
           "$ref": "#/definitions/AxisPosition"
         },
@@ -2307,37 +1810,7 @@
         "xOffset": {
           "type": "number"
         },
-        "xe": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/X"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
         "y": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/Y"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
-        "y1": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/Y"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
-        "y1e": {
           "anyOf": [
             {
               "$ref": "#/definitions/Y"
@@ -2349,16 +1822,6 @@
         },
         "yOffset": {
           "type": "number"
-        },
-        "ye": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/Y"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
         },
         "zoomLimits": {
           "$ref": "#/definitions/ZoomLimits"
@@ -2575,26 +2038,6 @@
             }
           ]
         },
-        "x1": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/X"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
-        "x1e": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/X"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
         "xAxis": {
           "$ref": "#/definitions/AxisPosition"
         },
@@ -2614,37 +2057,7 @@
         "xOffset": {
           "type": "number"
         },
-        "xe": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/X"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
         "y": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/Y"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
-        "y1": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/Y"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
-        "y1e": {
           "anyOf": [
             {
               "$ref": "#/definitions/Y"
@@ -2656,16 +2069,6 @@
         },
         "yOffset": {
           "type": "number"
-        },
-        "ye": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/Y"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
         },
         "zoomLimits": {
           "$ref": "#/definitions/ZoomLimits"
@@ -2965,26 +2368,6 @@
                   }
                 ]
               },
-              "x1": {
-                "anyOf": [
-                  {
-                    "$ref": "#/definitions/X"
-                  },
-                  {
-                    "$ref": "#/definitions/ChannelValue"
-                  }
-                ]
-              },
-              "x1e": {
-                "anyOf": [
-                  {
-                    "$ref": "#/definitions/X"
-                  },
-                  {
-                    "$ref": "#/definitions/ChannelValue"
-                  }
-                ]
-              },
               "xAxis": {
                 "$ref": "#/definitions/AxisPosition"
               },
@@ -3004,37 +2387,7 @@
               "xOffset": {
                 "type": "number"
               },
-              "xe": {
-                "anyOf": [
-                  {
-                    "$ref": "#/definitions/X"
-                  },
-                  {
-                    "$ref": "#/definitions/ChannelValue"
-                  }
-                ]
-              },
               "y": {
-                "anyOf": [
-                  {
-                    "$ref": "#/definitions/Y"
-                  },
-                  {
-                    "$ref": "#/definitions/ChannelValue"
-                  }
-                ]
-              },
-              "y1": {
-                "anyOf": [
-                  {
-                    "$ref": "#/definitions/Y"
-                  },
-                  {
-                    "$ref": "#/definitions/ChannelValue"
-                  }
-                ]
-              },
-              "y1e": {
                 "anyOf": [
                   {
                     "$ref": "#/definitions/Y"
@@ -3046,16 +2399,6 @@
               },
               "yOffset": {
                 "type": "number"
-              },
-              "ye": {
-                "anyOf": [
-                  {
-                    "$ref": "#/definitions/Y"
-                  },
-                  {
-                    "$ref": "#/definitions/ChannelValue"
-                  }
-                ]
               },
               "zoomLimits": {
                 "$ref": "#/definitions/ZoomLimits"
@@ -3174,26 +2517,6 @@
             }
           ]
         },
-        "x1": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/X"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
-        "x1e": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/X"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
         "xAxis": {
           "$ref": "#/definitions/AxisPosition"
         },
@@ -3213,37 +2536,7 @@
         "xOffset": {
           "type": "number"
         },
-        "xe": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/X"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
         "y": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/Y"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
-        "y1": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/Y"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
-        "y1e": {
           "anyOf": [
             {
               "$ref": "#/definitions/Y"
@@ -3255,16 +2548,6 @@
         },
         "yOffset": {
           "type": "number"
-        },
-        "ye": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/Y"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
         },
         "zoomLimits": {
           "$ref": "#/definitions/ZoomLimits"
@@ -3608,26 +2891,6 @@
                 }
               ]
             },
-            "x1": {
-              "anyOf": [
-                {
-                  "$ref": "#/definitions/X"
-                },
-                {
-                  "$ref": "#/definitions/ChannelValue"
-                }
-              ]
-            },
-            "x1e": {
-              "anyOf": [
-                {
-                  "$ref": "#/definitions/X"
-                },
-                {
-                  "$ref": "#/definitions/ChannelValue"
-                }
-              ]
-            },
             "xAxis": {
               "$ref": "#/definitions/AxisPosition"
             },
@@ -3647,37 +2910,7 @@
             "xOffset": {
               "type": "number"
             },
-            "xe": {
-              "anyOf": [
-                {
-                  "$ref": "#/definitions/X"
-                },
-                {
-                  "$ref": "#/definitions/ChannelValue"
-                }
-              ]
-            },
             "y": {
-              "anyOf": [
-                {
-                  "$ref": "#/definitions/Y"
-                },
-                {
-                  "$ref": "#/definitions/ChannelValue"
-                }
-              ]
-            },
-            "y1": {
-              "anyOf": [
-                {
-                  "$ref": "#/definitions/Y"
-                },
-                {
-                  "$ref": "#/definitions/ChannelValue"
-                }
-              ]
-            },
-            "y1e": {
               "anyOf": [
                 {
                   "$ref": "#/definitions/Y"
@@ -3689,16 +2922,6 @@
             },
             "yOffset": {
               "type": "number"
-            },
-            "ye": {
-              "anyOf": [
-                {
-                  "$ref": "#/definitions/Y"
-                },
-                {
-                  "$ref": "#/definitions/ChannelValue"
-                }
-              ]
             },
             "zoomLimits": {
               "$ref": "#/definitions/ZoomLimits"
@@ -3926,26 +3149,6 @@
                 }
               ]
             },
-            "x1": {
-              "anyOf": [
-                {
-                  "$ref": "#/definitions/X"
-                },
-                {
-                  "$ref": "#/definitions/ChannelValue"
-                }
-              ]
-            },
-            "x1e": {
-              "anyOf": [
-                {
-                  "$ref": "#/definitions/X"
-                },
-                {
-                  "$ref": "#/definitions/ChannelValue"
-                }
-              ]
-            },
             "xAxis": {
               "$ref": "#/definitions/AxisPosition"
             },
@@ -3965,37 +3168,7 @@
             "xOffset": {
               "type": "number"
             },
-            "xe": {
-              "anyOf": [
-                {
-                  "$ref": "#/definitions/X"
-                },
-                {
-                  "$ref": "#/definitions/ChannelValue"
-                }
-              ]
-            },
             "y": {
-              "anyOf": [
-                {
-                  "$ref": "#/definitions/Y"
-                },
-                {
-                  "$ref": "#/definitions/ChannelValue"
-                }
-              ]
-            },
-            "y1": {
-              "anyOf": [
-                {
-                  "$ref": "#/definitions/Y"
-                },
-                {
-                  "$ref": "#/definitions/ChannelValue"
-                }
-              ]
-            },
-            "y1e": {
               "anyOf": [
                 {
                   "$ref": "#/definitions/Y"
@@ -4007,16 +3180,6 @@
             },
             "yOffset": {
               "type": "number"
-            },
-            "ye": {
-              "anyOf": [
-                {
-                  "$ref": "#/definitions/Y"
-                },
-                {
-                  "$ref": "#/definitions/ChannelValue"
-                }
-              ]
             },
             "zoomLimits": {
               "$ref": "#/definitions/ZoomLimits"
@@ -4325,26 +3488,6 @@
             }
           ]
         },
-        "x1": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/X"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
-        "x1e": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/X"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
         "xAxis": {
           "$ref": "#/definitions/AxisPosition"
         },
@@ -4364,37 +3507,7 @@
         "xOffset": {
           "type": "number"
         },
-        "xe": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/X"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
         "y": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/Y"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
-        "y1": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/Y"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
-        "y1e": {
           "anyOf": [
             {
               "$ref": "#/definitions/Y"
@@ -4406,16 +3519,6 @@
         },
         "yOffset": {
           "type": "number"
-        },
-        "ye": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/Y"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
         },
         "zoomLimits": {
           "$ref": "#/definitions/ZoomLimits"
@@ -4733,26 +3836,6 @@
             }
           ]
         },
-        "x1": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/X"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
-        "x1e": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/X"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
         "xAxis": {
           "$ref": "#/definitions/AxisPosition"
         },
@@ -4772,37 +3855,7 @@
         "xOffset": {
           "type": "number"
         },
-        "xe": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/X"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
         "y": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/Y"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
-        "y1": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/Y"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
-        "y1e": {
           "anyOf": [
             {
               "$ref": "#/definitions/Y"
@@ -4814,16 +3867,6 @@
         },
         "yOffset": {
           "type": "number"
-        },
-        "ye": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/Y"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
         },
         "zoomLimits": {
           "$ref": "#/definitions/ZoomLimits"
@@ -5327,6 +4370,63 @@
       ]
     },
     "X": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/XSingleField"
+        },
+        {
+          "$ref": "#/definitions/XMultipleFields"
+        }
+      ]
+    },
+    "XMultipleFields": {
+      "additionalProperties": false,
+      "properties": {
+        "aggregate": {
+          "$ref": "#/definitions/Aggregate"
+        },
+        "axis": {
+          "$ref": "#/definitions/AxisPosition"
+        },
+        "domain": {
+          "$ref": "#/definitions/GenomicDomain"
+        },
+        "endField": {
+          "type": "string"
+        },
+        "endField2": {
+          "type": "string"
+        },
+        "grid": {
+          "type": "boolean"
+        },
+        "legend": {
+          "type": "boolean"
+        },
+        "linkingId": {
+          "type": "string"
+        },
+        "range": {
+          "$ref": "#/definitions/ValueExtent"
+        },
+        "startField": {
+          "type": "string"
+        },
+        "startField2": {
+          "type": "string"
+        },
+        "type": {
+          "const": "genomic",
+          "type": "string"
+        }
+      },
+      "required": [
+        "startField",
+        "endField"
+      ],
+      "type": "object"
+    },
+    "XSingleField": {
       "additionalProperties": false,
       "properties": {
         "aggregate": {
@@ -5361,6 +4461,85 @@
       "type": "object"
     },
     "Y": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/YSingleField"
+        },
+        {
+          "$ref": "#/definitions/YMultipleFields"
+        }
+      ]
+    },
+    "YMultipleFields": {
+      "additionalProperties": false,
+      "properties": {
+        "aggregate": {
+          "$ref": "#/definitions/Aggregate"
+        },
+        "axis": {
+          "$ref": "#/definitions/AxisPosition"
+        },
+        "baseline": {
+          "type": [
+            "string",
+            "number"
+          ]
+        },
+        "domain": {
+          "$ref": "#/definitions/ValueExtent"
+        },
+        "endField": {
+          "type": "string"
+        },
+        "endField2": {
+          "type": "string"
+        },
+        "flip": {
+          "type": "boolean"
+        },
+        "grid": {
+          "type": "boolean"
+        },
+        "legend": {
+          "type": "boolean"
+        },
+        "linkingId": {
+          "type": "string"
+        },
+        "mirrored": {
+          "type": "boolean"
+        },
+        "padding": {
+          "type": "number"
+        },
+        "range": {
+          "$ref": "#/definitions/ValueExtent"
+        },
+        "startField": {
+          "type": "string"
+        },
+        "startField2": {
+          "type": "string"
+        },
+        "type": {
+          "enum": [
+            "quantitative",
+            "nominal",
+            "genomic"
+          ],
+          "type": "string"
+        },
+        "zeroBaseline": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "startField",
+        "endField"
+      ],
+      "type": "object"
+    },
+    "YSingleField": {
       "additionalProperties": false,
       "properties": {
         "aggregate": {
