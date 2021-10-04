@@ -40,21 +40,6 @@ describe('gosling track model should properly validate the original spec', () =>
         const model2 = new GoslingTrackModel({ ...track, x: { field: 'x', type: 'genomic' } }, [], getTheme());
         expect(model2.validateSpec().valid).toBe(true);
     });
-
-    it('genomic coordinate cannot be encoded with a color channel', () => {
-        const track: Track = {
-            ...MINIMAL_TRACK_SPEC,
-            color: { field: 'f', type: 'genomic' }
-        };
-        const model = new GoslingTrackModel(track, [], getTheme());
-        expect(model.validateSpec().valid).toBe(false);
-
-        if (IsChannelDeep(track.color)) {
-            track.color.type = 'nominal';
-        }
-        const model2 = new GoslingTrackModel(track, [], getTheme());
-        expect(model2.validateSpec().valid).toBe(true);
-    });
 });
 
 describe('default options should be added into the original spec', () => {
