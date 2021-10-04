@@ -15,7 +15,7 @@ export function EX_SPEC_VIEW_PILEUP(
         xDomain: xDomain,
         spacing: 0.01,
         tracks: [
-          {
+            {
                 alignment: 'overlay',
                 title: 'Reads',
                 data: {
@@ -61,7 +61,7 @@ export function EX_SPEC_VIEW_PILEUP(
                             {
                                 type: 'filter',
                                 field: 'name',
-                                oneOf: ['SRR4435251::::1369431'],
+                                oneOf: ['SRR4435251::::1369431']
                             }
                         ],
                         x: { field: 'from', type: 'genomic' },

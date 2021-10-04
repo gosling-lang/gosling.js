@@ -15,7 +15,7 @@ export const EX_SPEC_CANCER_VARIANT_PROTOTYPE: GoslingSpec = {
         enableSmoothPath: false
     },
     views: [
-       {
+        {
             arrangement: 'horizontal',
             spacing: 100,
             views: [
