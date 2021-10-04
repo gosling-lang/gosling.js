@@ -351,7 +351,8 @@ export function parseSubJSON(_: JSONParseTransform, data: Datum[]): Datum[] {
                     ...row,
                     [`${genomicField}_start`]: row[`${genomicField}_start`],
                     [`${genomicField}_end`]: row[`${genomicField}_end`],
-                    type: 'sub'
+                    type: row.type ?? row.variant ?? null,
+                    isParsedRow: 'yes'
                 });
             });
 

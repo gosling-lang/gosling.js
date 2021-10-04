@@ -346,7 +346,10 @@ const bamRecordToJson = (bamRecord, chrName, chrOffset) => {
     const seq = bamRecord.get('seq');
 
     const segment = {
+        // if two segments have the same name but different id, they are paired reads.
+        // https://github.com/GMOD/bam-js/blob/7a57d24b6aef08a1366cca86ba5092254c7a7f56/src/bamFile.ts#L386
         id: bamRecord._id,
+        name: bamRecord.get('name'), 
         from: +bamRecord.data.start + 1 + chrOffset,
         to: +bamRecord.data.end + 1 + chrOffset,
         md: bamRecord.get('MD'),
@@ -381,8 +384,8 @@ const dataConfs = {};
 
 const init = (uid, bamUrl, baiUrl, chromSizesUrl) => {
     // TODO: Support different URLs
-    chromSizesUrl = chromSizesUrl || `https://s3.amazonaws.com/gosling-lang.org/data/hg19.chrom.sizes`;
-
+    // chromSizesUrl = chromSizesUrl || `https://s3.amazonaws.com/gosling-lang.org/data/hg19.chrom.sizes`;
+    
     if (!bamFiles[bamUrl]) {
         // We do not yet have this file cached.
         bamFiles[bamUrl] = new BamFile({ bamUrl, baiUrl });
