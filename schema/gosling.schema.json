@@ -4183,6 +4183,9 @@
         "field": {
           "type": "string"
         },
+        "grid": {
+          "type": "boolean"
+        },
         "legend": {
           "type": "boolean"
         },
@@ -5476,7 +5479,8 @@
         "type": {
           "enum": [
             "quantitative",
-            "nominal"
+            "nominal",
+            "genomic"
           ],
           "type": "string"
         },

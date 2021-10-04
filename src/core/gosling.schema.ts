@@ -321,7 +321,7 @@ export interface X extends ChannelDeepCommon {
 }
 
 export interface Y extends ChannelDeepCommon {
-    type?: 'quantitative' | 'nominal';
+    type?: 'quantitative' | 'nominal' | 'genomic';
     domain?: ValueExtent;
     range?: ValueExtent;
     axis?: AxisPosition;
@@ -342,6 +342,7 @@ export interface Row extends ChannelDeepCommon {
     range?: ValueExtent;
     legend?: boolean;
     padding?: number; // Experimental: Used in `row` and `column` for vertical and horizontal padding.
+    grid?: boolean;
 }
 
 export interface Column extends ChannelDeepCommon {

@@ -55,10 +55,6 @@ export function validateTrack(track: Track) {
             valid = false;
         }
         const color = spec.color;
-        if (IsChannelDeep(color) && color.type === 'genomic') {
-            errorMessages.push('genomic type cannot be used for a color channel');
-            valid = false;
-        }
         const row = spec.row;
         if (IsChannelDeep(row) && row.type !== 'nominal') {
             errorMessages.push(`${row.type} type cannot be used for a row channel`);
