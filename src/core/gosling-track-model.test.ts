@@ -163,10 +163,9 @@ describe('Visual marks should be correctly encoded with data', () => {
         expect(model.encodedValue('row', 'b')).toBe((size.height / nSize) * 1);
         expect(model.encodedValue('row', 'missing')).toBeUndefined();
 
-        // size is encoded with quantitative values, so linear scale values without zero baseline
-        expect(model.encodedValue('size', 1)).toBe(1);
+        // size is encoded with quantitative values, so linear scale values with zero baseline
+        expect(model.encodedValue('size', 0)).toBe(1);
         expect(model.encodedValue('size', 3)).toBe(3);
-        expect(model.encodedValue('size', 4)).toBe(4);
         expect(model.encodedValue('size', 'missing')).toBeUndefined();
 
         // text just returns the value, currently
