@@ -235,6 +235,20 @@ function Editor(props: any) {
         setHg(undefined);
     }, [demo]);
 
+    /**
+     * Convert relative CSV data URLs to absolute URLs.
+     * (e.g., './example.csv' => 'https://gist.githubusercontent.com/{urlGist}/raw/example.csv')
+     */
+    function resolveRelativeCsvUrls(spec: string) {
+        const newSpec = JSON.parse(spec);
+        gosling.traverseTracksAndViews(newSpec as gosling.GoslingSpec, (tv: any) => {
+            if (tv.data && tv.data.type === 'csv' && tv.data.url.indexOf('./') === 0) {
+                tv.data.url = tv.data.url.replace('./', `https://gist.githubusercontent.com/${urlGist}/raw/`);
+            }
+        });
+        return stringify(newSpec);
+    }
+
     useEffect(() => {
         let active = true;
 
@@ -244,7 +258,7 @@ function Editor(props: any) {
             .then(({ code, description, title }) => {
                 if (active && !!code) {
                     setReadOnly(false);
-                    setCode(code);
+                    setCode(resolveRelativeCsvUrls(code));
                     setGistTitle(title);
                     setDescription(description);
                 }

@@ -3,8 +3,11 @@ import * as uuid from 'uuid';
 import {
     SingleTrack,
     GoslingSpec,
+    View,
     SingleView,
     Track,
+    PartialTrack,
+    CommonTrackDef,
     CommonViewDef,
     MultipleViews,
     DisplaceTransform
@@ -34,12 +37,15 @@ import { getStyleOverridden } from '../utils/style';
  * @param callback
  */
 export function traverseTracks(
-    spec: GoslingSpec,
+    spec: GoslingSpec | View | PartialTrack,
     callback: (t: Partial<Track>, i: number, ts: Partial<Track>[]) => void
 ) {
     if ('tracks' in spec) {
-        spec.tracks.forEach((...args) => callback(...args));
-    } else {
+        spec.tracks.forEach((t, i, ts) => {
+            callback(t, i, ts);
+            traverseTracks(t, callback);
+        });
+    } else if ('views' in spec) {
         spec.views.forEach(view => traverseTracks(view, callback));
     }
 }
@@ -49,10 +55,16 @@ export function traverseTracks(
  * @param spec
  * @param callback
  */
-export function traverseTracksAndViews(spec: GoslingSpec, callback: (tv: CommonViewDef) => void) {
+export function traverseTracksAndViews(
+    spec: GoslingSpec | View | PartialTrack,
+    callback: (tv: CommonViewDef | CommonTrackDef) => void
+) {
     if ('tracks' in spec) {
-        spec.tracks.forEach(t => callback(t));
-    } else {
+        spec.tracks.forEach(t => {
+            callback(t);
+            traverseTracksAndViews(t, callback);
+        });
+    } else if ('views' in spec) {
         spec.views.forEach(v => {
             callback(v);
             traverseTracksAndViews(v, callback);

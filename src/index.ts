@@ -14,3 +14,6 @@ export { compile } from './core/compile';
 export { validateGoslingSpec } from './core/utils/validate';
 export { GoslingComponent } from './core/gosling-component';
 export { embed } from './core/gosling-embed';
+
+// Utils
+export { traverseTracksAndViews, traverseViewArrangements } from './core/utils/spec-preprocess';
