@@ -14,6 +14,7 @@ import {
     IsDataDeepTileset,
     IsSingleTrack,
     IsChannelDeep,
+    IsMultiFieldChannel,
     IsOverlaidTrack,
     IsFlatTracks,
     IsStackedTracks,
@@ -185,15 +186,12 @@ export function traverseToFixSpecDownstream(spec: GoslingSpec | SingleView, pare
                 if (
                     track.displacement?.type === 'pile' &&
                     track.row === undefined &&
-                    IsChannelDeep(track.x) &&
-                    track.x.field &&
-                    IsChannelDeep(track.xe) &&
-                    track.xe.field
+                    IsMultiFieldChannel(track.x)
                     // Question: Should we consider mark types? (e.g., link might not be supported?)
                 ) {
                     const newField = uuid.v4();
-                    const startField = track.x.field;
-                    const endField = track.xe.field;
+                    const startField = track.x.startField;
+                    const endField = track.x.endField;
                     const padding = track.displacement.padding;
                     const displaceTransform: DisplaceTransform = {
                         type: 'displace',
