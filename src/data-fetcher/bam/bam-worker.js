@@ -382,7 +382,7 @@ const tilesetInfos = {};
 // indexed by uuid
 const dataConfs = {};
 
-const init = (uid, { bamUrl, baiUrl, chromSizesUrl, loadMates }) => {
+const init = (uid, { bamUrl, baiUrl, chromSizesUrl, loadMates, maxInsertSize }) => {
     // TODO: Support different URLs
     // chromSizesUrl = chromSizesUrl || `https://s3.amazonaws.com/gosling-lang.org/data/hg19.chrom.sizes`;
     
@@ -397,7 +397,7 @@ const init = (uid, { bamUrl, baiUrl, chromSizesUrl, loadMates }) => {
     // if no chromsizes are passed in, we'll retrieve them from the BAM file
     chromSizes[chromSizesUrl] = chromSizes[chromSizesUrl] || new Promise(resolve => { ChromosomeInfo(chromSizesUrl, resolve) });
 
-    dataConfs[uid] = { bamUrl, chromSizesUrl, loadMates };
+    dataConfs[uid] = { bamUrl, chromSizesUrl, loadMates, maxInsertSize };
 };
 
 const tilesetInfo = uid => {
@@ -437,7 +437,7 @@ const tilesetInfo = uid => {
 
 const tile = async (uid, z, x) => {
     const MAX_TILE_WIDTH = 200000;
-    const { bamUrl, chromSizesUrl, loadMates } = dataConfs[uid];
+    const { bamUrl, chromSizesUrl, loadMates, maxInsertSize } = dataConfs[uid];
     const bamFile = bamFiles[bamUrl];
 
     return tilesetInfo(uid).then(tilesetInfo => {
@@ -459,7 +459,8 @@ const tile = async (uid, z, x) => {
 
         const opt = {
             viewAsPairs: typeof loadMates === 'undefined' ? false : loadMates,
-            pairAcrossChr: typeof loadMates === 'undefined' ? false : loadMates
+            pairAcrossChr: typeof loadMates === 'undefined' ? false : loadMates,
+            maxInsertSize: maxInsertSize ?? 50000
         }
 
         for (let i = 0; i < cumPositions.length; i++) {

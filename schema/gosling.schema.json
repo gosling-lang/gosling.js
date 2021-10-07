@@ -44,6 +44,9 @@
         "loadMates": {
           "type": "boolean"
         },
+        "maxInsertSize": {
+          "type": "number"
+        },
         "type": {
           "const": "bam",
           "type": "string"
@@ -428,7 +431,7 @@
     },
     "CombineMatesTransform": {
       "additionalProperties": false,
-      "description": "By looking up ids, combine mates (a pair of reads) into a single row, performing long-to-wide operation. Result data have `{field}_1` and `{field}_2` names.",
+      "description": "By looking up ids, combine mates (a pair of reads) into a single row, performing long-to-wide operation. Result data have `{field}` and `{field}_2` names.",
       "properties": {
         "idField": {
           "type": "string"

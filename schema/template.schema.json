@@ -341,6 +341,9 @@
         "groupField": {
           "type": "string"
         },
+        "idField": {
+          "type": "string"
+        },
         "inRange": {
           "items": {
             "type": "number"
@@ -412,6 +415,7 @@
             "displace",
             "exonSplit",
             "coverage",
+            "combineMates",
             "subjson"
           ],
           "type": "string"

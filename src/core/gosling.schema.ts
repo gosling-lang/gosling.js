@@ -443,6 +443,7 @@ export interface BAMData {
     url: string;
     indexUrl: string;
     loadMates?: boolean; // load mates as well?
+    maxInsertSize?: number; // default 50,000bp, only applied for across-chr, JBrowse https://github.com/GMOD/bam-js#async-getrecordsforrangerefname-start-end-opts
 }
 
 /* ----------------------------- DATA TRANSFORM ----------------------------- */
