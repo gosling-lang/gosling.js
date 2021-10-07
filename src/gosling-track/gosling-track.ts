@@ -19,6 +19,7 @@ import {
     displace,
     filterData,
     combineMates,
+    calculateGenomicLength,
     parseSubJSON,
     replaceString,
     splitExon
@@ -816,6 +817,9 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                                     tile.gos.tabularDataFiltered,
                                     resolved.assembly
                                 );
+                                break;
+                            case 'genomicLength':
+                                tile.gos.tabularDataFiltered = calculateGenomicLength(t, tile.gos.tabularDataFiltered);
                                 break;
                             case 'coverage':
                                 tile.gos.tabularDataFiltered = aggregateCoverage(

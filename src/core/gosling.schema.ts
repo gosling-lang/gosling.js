@@ -459,6 +459,7 @@ export type DataTransform =
     | LogTransform
     | DisplaceTransform
     | ExonSplitTransform
+    | GenomicLengthTransform
     | CoverageTransform
     | CombineMatesTransform
     | JSONParseTransform;
@@ -533,6 +534,16 @@ export interface ExonSplitTransform {
 }
 
 /**
+ * Calculate genomic length using two genomic fields
+ */
+export interface GenomicLengthTransform {
+    type: 'genomicLength',
+    startField: string;
+    endField: string;
+    newField: string;
+}
+
+/**
  * Aggregate rows and calculate coverage
  */
 export interface CoverageTransform {
@@ -550,6 +561,9 @@ export interface CoverageTransform {
 export interface CombineMatesTransform {
     type: 'combineMates';
     idField: string;
+    isLongField?: string; // is this pair long reads, exceeding max insert size? default, `is_long`
+    maxInsertSize?: number; // thresold to determine long reads, default 360
+    maintainDuplicates?: boolean; // do not want to remove duplicated row? If true, the original reads will be contained in `{field}`
 }
 
 /**

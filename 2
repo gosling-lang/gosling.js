@@ -171,8 +171,6 @@ export function aggregateCoverage(_: CoverageTransform, data: Datum[], scale: Sc
 
 export function combineMates(t: CombineMatesTransform, data: Datum[]) {
     const { idField, maintainDuplicates } = t;
-    const isLongField = t.isLongField ?? 'is_long';
-    const maxInsertSize = t.maxInsertSize ?? 360;
     const copyData: { data: Datum; added: boolean }[] = data.map(d => {
         return { data: d, added: false };
     });
@@ -208,9 +206,6 @@ export function combineMates(t: CombineMatesTransform, data: Datum[]) {
             const [f, s] = maintainDuplicates ? [d, mate] : [d, mate].sort((a, b) => +a.data.from - +b.data.from);
             newRow[`${k}`] = f.data[k];
             newRow[`${k}_2`] = s.data[k];
-
-            const [left, right] = [d, mate].sort((a, b) => +a.data.from - +b.data.from); 
-            newRow[isLongField] = Math.abs(+left.data.to - +right.data.from) >= maxInsertSize ? 'true' : 'false'; 
         });
         output.push(newRow);
         

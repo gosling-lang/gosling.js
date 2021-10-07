@@ -24,19 +24,25 @@ export function EX_SPEC_VIEW_PILEUP(
                     url: 'https://aveit.s3.amazonaws.com/higlass/bam/example_higlass.bam',
                     indexUrl: 'https://aveit.s3.amazonaws.com/higlass/bam/example_higlass.bam.bai',
                     loadMates: true,
-                    maxInsertSize: 100
+                   // maxInsertSize: 100
                 },
                 dataTransform: [
                     {
                         type: 'combineMates',
-                        idField: 'name'
+                        idField: 'name',
+                        maintainDuplicates: true
                     },
+                   // {
+                   //     type: 'filter',
+                   //     field: 'is_long',
+                   //     oneOf: ['true'],
+                   // },
                     {
                         type: 'displace',
                         method: 'pile',
                         boundingBox: {
                             startField: 'from',
-                            endField: 'to_2',
+                            endField: 'to',
                             padding: 5,
                             isPaddingBP: true
                         },
@@ -46,25 +52,24 @@ export function EX_SPEC_VIEW_PILEUP(
                 ],
                 mark: 'rect',
                 tracks: [
-                    {
-                        // pair connection
-                        x: { field: 'to', type: 'genomic' },
-                        xe: { field: 'from_2', type: 'genomic' },
-                        size: { value: 2 },
-                        color: { value: 'black' }
-                    },
+                   // {
+                   //     // pair connection
+                   //     x: { field: 'to', type: 'genomic' },
+                   //     xe: { field: 'from_2', type: 'genomic' },
+                   //     size: { value: 2 },
+                   //     color: { value: 'black' }
+                   // },
                     {
                         // first read
                         x: { field: 'from', type: 'genomic' },
                         xe: { field: 'to', type: 'genomic' },
-                        color: { value: 'red' }
                     },
-                    {
-                        // second mate
-                        x: { field: 'from_2', type: 'genomic' },
-                        xe: { field: 'to_2', type: 'genomic' },
-                        color: { value: 'blue' }
-                    }
+                   // {
+                   //     // second mate
+                   //     x: { field: 'from_2', type: 'genomic' },
+                   //     xe: { field: 'to_2', type: 'genomic' },
+                   //     color: { value: 'blue' }
+                   // }
 
                     // {
                     //     dataTransform: [
@@ -99,7 +104,7 @@ export function EX_SPEC_VIEW_PILEUP(
                 row: { field: 'pileup-row', type: 'nominal', flip: false },
                 stroke: { value: 'white' },
                 strokeWidth: { value: 1 },
-                color: { value: 'lightgray' },
+                color: { field: 'is_long', type: 'nominal', domain: ['true', 'false'], range: ['red', 'lightgray'] },
                 style: { outlineWidth: 0.5 },
                 width,
                 height

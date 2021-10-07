@@ -436,6 +436,9 @@
         "idField": {
           "type": "string"
         },
+        "maintainDuplicates": {
+          "type": "boolean"
+        },
         "type": {
           "const": "combineMates",
           "type": "string"
@@ -627,6 +630,9 @@
         },
         {
           "$ref": "#/definitions/ExonSplitTransform"
+        },
+        {
+          "$ref": "#/definitions/GenomicLengthTransform"
         },
         {
           "$ref": "#/definitions/CoverageTransform"
@@ -985,6 +991,32 @@
       },
       "required": [
         "tracks"
+      ],
+      "type": "object"
+    },
+    "GenomicLengthTransform": {
+      "additionalProperties": false,
+      "description": "Calculate genomic length using two genomic fields",
+      "properties": {
+        "endField": {
+          "type": "string"
+        },
+        "newField": {
+          "type": "string"
+        },
+        "startField": {
+          "type": "string"
+        },
+        "type": {
+          "const": "genomicLength",
+          "type": "string"
+        }
+      },
+      "required": [
+        "type",
+        "startField",
+        "endField",
+        "newField"
       ],
       "type": "object"
     },
