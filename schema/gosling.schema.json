@@ -41,6 +41,9 @@
         "indexUrl": {
           "type": "string"
         },
+        "loadMates": {
+          "type": "boolean"
+        },
         "type": {
           "const": "bam",
           "type": "string"
@@ -423,6 +426,24 @@
       ],
       "type": "string"
     },
+    "CombineMatesTransform": {
+      "additionalProperties": false,
+      "description": "By looking up ids, combine mates (a pair of reads) into a single row, performing long-to-wide operation. Result data have `{field}_1` and `{field}_2` names.",
+      "properties": {
+        "idField": {
+          "type": "string"
+        },
+        "type": {
+          "const": "combineMates",
+          "type": "string"
+        }
+      },
+      "required": [
+        "type",
+        "idField"
+      ],
+      "type": "object"
+    },
     "CoverageTransform": {
       "additionalProperties": false,
       "description": "Aggregate rows and calculate coverage",
@@ -606,6 +627,9 @@
         },
         {
           "$ref": "#/definitions/CoverageTransform"
+        },
+        {
+          "$ref": "#/definitions/CombineMatesTransform"
         },
         {
           "$ref": "#/definitions/JSONParseTransform"

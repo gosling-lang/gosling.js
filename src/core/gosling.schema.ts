@@ -442,6 +442,7 @@ export interface BAMData {
     type: 'bam';
     url: string;
     indexUrl: string;
+    loadMates?: boolean; // load mates as well?
 }
 
 /* ----------------------------- DATA TRANSFORM ----------------------------- */
@@ -458,6 +459,7 @@ export type DataTransform =
     | DisplaceTransform
     | ExonSplitTransform
     | CoverageTransform
+    | CombineMatesTransform
     | JSONParseTransform;
 
 export type FilterTransform = OneOfFilter | RangeFilter | IncludeFilter;
@@ -538,6 +540,15 @@ export interface CoverageTransform {
     endField: string;
     newField?: string;
     groupField?: string; // The name of a nominal field to group rows by in prior to piling-up
+}
+
+/**
+ * By looking up ids, combine mates (a pair of reads) into a single row, performing long-to-wide operation.
+ * Result data have `{field}` and `{field}_2` names.
+ */
+export interface CombineMatesTransform {
+    type: 'combineMates';
+    idField: string;
 }
 
 /**

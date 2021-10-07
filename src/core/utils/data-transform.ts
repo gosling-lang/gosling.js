@@ -10,6 +10,7 @@ import {
     StrConcatTransform,
     StrReplaceTransform,
     CoverageTransform,
+    CombineMatesTransform,
     DisplaceTransform,
     JSONParseTransform
 } from '../gosling.schema';
@@ -146,6 +147,50 @@ export function aggregateCoverage(_: CoverageTransform, data: Datum[], scale: Sc
 
     // console.log(coverage);
     // Logging.printTime('aggregateCoverage');
+    return output;
+}
+
+export function combineMates(t: CombineMatesTransform, data: Datum[]) {
+    const { idField } = t;
+    const copyData: { data: Datum; added: boolean }[] = data.map(d => {
+        return { data: d, added: false };
+    });
+    const output: Datum[] = [];
+    copyData.forEach((d, i) => {
+        if (d.added) {
+            // this row is added already, so just skip
+            return;
+        }
+        if (i === copyData.length - 1) {
+            // no additional reads to search for
+            return;
+        }
+
+        if (!d.data[idField]) {
+            // id does not exist
+            console.warn(`[CombineMates] The id field (${idField}) does not exist.`);
+            return;
+        }
+
+        const id = d.data[idField];
+        const rest = copyData.slice(i + 1, copyData.length);
+        const mateIndex = rest.findIndex(r => r.data[idField] === id);
+        if (mateIndex === -1) {
+            // no mate found. this read will not be included to the result data.
+            return;
+        }
+        const mate = copyData[mateIndex];
+        const newRow: Datum = {};
+        Object.keys(d.data).forEach(k => {
+            // assuming that keys are the same for mates
+            const [f, s] = [d, mate].sort((a, b) => +a.data.from - +b.data.from); // left mate should be the first one
+            newRow[`${k}`] = f.data[k];
+            newRow[`${k}_2`] = s.data[k];
+        });
+        output.push(newRow);
+
+        mate.added = true; // set a flag so that we can skip this later
+    });
     return output;
 }
 

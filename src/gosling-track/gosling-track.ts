@@ -18,6 +18,7 @@ import {
     concatString,
     displace,
     filterData,
+    combineMates,
     parseSubJSON,
     replaceString,
     splitExon
@@ -791,9 +792,8 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
 
                 tile.gos.tabularDataFiltered = Array.from(tile.gos.tabularData);
 
-                // !! TODO: why are we transforming data multiple times for each track?
                 /*
-                 * Data Transformation
+                 * Data Transformation applied to each of the overlaid tracks.
                  */
                 if (resolved.dataTransform) {
                     resolved.dataTransform.forEach(t => {
@@ -824,6 +824,9 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                                     this._xScale.copy()
                                 );
                                 break;
+                            case 'combineMates':
+                                tile.gos.tabularDataFiltered = combineMates(t, tile.gos.tabularDataFiltered);
+                                break;
                             case 'subjson':
                                 tile.gos.tabularDataFiltered = parseSubJSON(t, tile.gos.tabularDataFiltered);
                                 break;
@@ -838,7 +841,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                     });
                 }
 
-                console.log(tile.gos.tabularDataFiltered);
+                console.log(tile.gos.tabularDataFiltered.filter((d: any) => d.chrName === 'chr1'));
                 // Send data preview to the editor so that it can be shown to users.
                 try {
                     if (PubSub) {

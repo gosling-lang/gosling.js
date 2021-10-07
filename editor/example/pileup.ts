@@ -22,56 +22,82 @@ export function EX_SPEC_VIEW_PILEUP(
                     type: 'bam',
                     // url: 'https://s3.amazonaws.com/gosling-lang.org/data/example_higlass.bam'
                     url: 'https://aveit.s3.amazonaws.com/higlass/bam/example_higlass.bam',
-                    indexUrl: 'https://aveit.s3.amazonaws.com/higlass/bam/example_higlass.bam.bai'
+                    indexUrl: 'https://aveit.s3.amazonaws.com/higlass/bam/example_higlass.bam.bai',
+                    loadMates: true
                 },
+                dataTransform: [
+                    {
+                        type: 'combineMates',
+                        idField: 'name'
+                    },
+                    {
+                        type: 'displace',
+                        method: 'pile',
+                        boundingBox: {
+                            startField: 'from',
+                            endField: 'to_2',
+                            padding: 5,
+                            isPaddingBP: true
+                        },
+                        newField: 'pileup-row'
+                        // maxRows: 30
+                    }
+                ],
                 mark: 'rect',
                 tracks: [
                     {
-                        dataTransform: [
-                            {
-                                type: 'displace',
-                                method: 'pile',
-                                boundingBox: {
-                                    startField: 'from',
-                                    endField: 'to',
-                                    padding: 5,
-                                    isPaddingBP: true
-                                },
-                                newField: 'pileup-row'
-                            }
-                        ],
-                        x: { field: 'from', type: 'genomic' },
-                        xe: { field: 'to', type: 'genomic' },
-                        stroke: { value: 'white' },
-                        strokeWidth: { value: 0.5 }
+                        // pair connection
+                        x: { field: 'to', type: 'genomic' },
+                        xe: { field: 'from_2', type: 'genomic' },
+                        size: { value: 2 },
+                        color: { value: 'black' }
                     },
                     {
-                        dataTransform: [
-                            {
-                                type: 'displace',
-                                method: 'pile',
-                                boundingBox: {
-                                    startField: 'from',
-                                    endField: 'to',
-                                    padding: 5,
-                                    isPaddingBP: true
-                                },
-                                newField: 'pileup-row'
-                            },
-                            {
-                                type: 'filter',
-                                field: 'name',
-                                oneOf: ['SRR4435251::::1369431']
-                            }
-                        ],
+                        // first read
                         x: { field: 'from', type: 'genomic' },
                         xe: { field: 'to', type: 'genomic' },
-                        stroke: { value: 'white' },
-                        strokeWidth: { value: 0.5 },
                         color: { value: 'red' }
+                    },
+                    {
+                        // second mate
+                        x: { field: 'from_2', type: 'genomic' },
+                        xe: { field: 'to_2', type: 'genomic' },
+                        color: { value: 'blue' }
                     }
+
+                    // {
+                    //     dataTransform: [
+                    //         {
+                    //             type: 'combineMates',
+                    //             idField: 'name'
+                    //         },
+                    //         {
+                    //             type: 'displace',
+                    //             method: 'pile',
+                    //             boundingBox: {
+                    //                 startField: 'from',
+                    //                 endField: 'to',
+                    //                 padding: 5,
+                    //                 isPaddingBP: true
+                    //             },
+                    //             newField: 'pileup-row'
+                    //         },
+                    //         {
+                    //             type: 'filter',
+                    //             field: 'name',
+                    //             oneOf: ['SRR4435251::::1369431']
+                    //         }
+                    //     ],
+                    //     x: { field: 'from', type: 'genomic' },
+                    //     xe: { field: 'to', type: 'genomic' },
+                    //     stroke: { value: 'white' },
+                    //     strokeWidth: { value: 0.5 },
+                    //     color: { value: 'red' }
+                    // }
                 ],
-                y: { field: 'pileup-row', type: 'nominal', flip: false },
+                row: { field: 'pileup-row', type: 'nominal', flip: false },
+                stroke: { value: 'white' },
+                strokeWidth: { value: 1 },
                 color: { value: 'lightgray' },
                 style: { outlineWidth: 0.5 },
                 width,
@@ -84,5 +110,5 @@ export function EX_SPEC_VIEW_PILEUP(
 export const EX_SPEC_PILEUP: GoslingSpec = {
     title: 'Pileup Track Using BAM Data',
     subtitle: '',
-    ...EX_SPEC_VIEW_PILEUP('bam', 1250, 600, { chromosome: '1', interval: [136750, 139450] })
+    ...EX_SPEC_VIEW_PILEUP('bam', 1250, 1000, { chromosome: '1', interval: [136750, 139450] })
 };

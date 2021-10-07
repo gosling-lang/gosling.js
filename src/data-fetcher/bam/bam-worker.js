@@ -382,7 +382,7 @@ const tilesetInfos = {};
 // indexed by uuid
 const dataConfs = {};
 
-const init = (uid, bamUrl, baiUrl, chromSizesUrl) => {
+const init = (uid, { bamUrl, baiUrl, chromSizesUrl, loadMates }) => {
     // TODO: Support different URLs
     // chromSizesUrl = chromSizesUrl || `https://s3.amazonaws.com/gosling-lang.org/data/hg19.chrom.sizes`;
     
@@ -397,7 +397,7 @@ const init = (uid, bamUrl, baiUrl, chromSizesUrl) => {
     // if no chromsizes are passed in, we'll retrieve them from the BAM file
     chromSizes[chromSizesUrl] = chromSizes[chromSizesUrl] || new Promise(resolve => { ChromosomeInfo(chromSizesUrl, resolve) });
 
-    dataConfs[uid] = { bamUrl, chromSizesUrl };
+    dataConfs[uid] = { bamUrl, chromSizesUrl, loadMates };
 };
 
 const tilesetInfo = uid => {
@@ -437,7 +437,7 @@ const tilesetInfo = uid => {
 
 const tile = async (uid, z, x) => {
     const MAX_TILE_WIDTH = 200000;
-    const { bamUrl, chromSizesUrl } = dataConfs[uid];
+    const { bamUrl, chromSizesUrl, loadMates } = dataConfs[uid];
     const bamFile = bamFiles[bamUrl];
 
     return tilesetInfo(uid).then(tilesetInfo => {
@@ -457,6 +457,11 @@ const tile = async (uid, z, x) => {
 
         const { chromLengths, cumPositions } = chromInfo;
 
+        const opt = {
+            viewAsPairs: typeof loadMates === 'undefined' ? false : loadMates,
+            pairAcrossChr: typeof loadMates === 'undefined' ? false : loadMates
+        }
+
         for (let i = 0; i < cumPositions.length; i++) {
             const chromName = cumPositions[i].chr;
             const chromStart = cumPositions[i].pos;
@@ -472,7 +477,12 @@ const tile = async (uid, z, x) => {
                     // fetch from the start until the end of the chromosome
                     recordPromises.push(
                         bamFile
-                            .getRecordsForRange(chromName, minX - chromStart, chromEnd - chromStart)
+                            .getRecordsForRange(
+                                chromName, 
+                                minX - chromStart, 
+                                chromEnd - chromStart,
+                                opt
+                            )
                             .then(records => {
                                 const mappedRecords = records.map(rec =>
                                     bamRecordToJson(rec, chromName, cumPositions[i].pos)
@@ -492,10 +502,7 @@ const tile = async (uid, z, x) => {
                     // the end of the region is within this chromosome
                     recordPromises.push(
                         bamFile
-                            .getRecordsForRange(chromName, startPos, endPos, {
-                                // viewAsPairs: true,
-                                // maxInsertSize: 2000,
-                            })
+                            .getRecordsForRange(chromName, startPos, endPos, opt)
                             .then(records => {
                                 const mappedRecords = records.map(rec =>
                                     bamRecordToJson(rec, chromName, cumPositions[i].pos)
