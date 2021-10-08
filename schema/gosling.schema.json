@@ -41,6 +41,12 @@
         "indexUrl": {
           "type": "string"
         },
+        "loadMates": {
+          "type": "boolean"
+        },
+        "maxInsertSize": {
+          "type": "number"
+        },
         "type": {
           "const": "bam",
           "type": "string"
@@ -423,6 +429,33 @@
       ],
       "type": "string"
     },
+    "CombineMatesTransform": {
+      "additionalProperties": false,
+      "description": "By looking up ids, combine mates (a pair of reads) into a single row, performing long-to-wide operation. Result data have `{field}` and `{field}_2` names.",
+      "properties": {
+        "idField": {
+          "type": "string"
+        },
+        "isLongField": {
+          "type": "string"
+        },
+        "maintainDuplicates": {
+          "type": "boolean"
+        },
+        "maxInsertSize": {
+          "type": "number"
+        },
+        "type": {
+          "const": "combineMates",
+          "type": "string"
+        }
+      },
+      "required": [
+        "type",
+        "idField"
+      ],
+      "type": "object"
+    },
     "CoverageTransform": {
       "additionalProperties": false,
       "description": "Aggregate rows and calculate coverage",
@@ -605,7 +638,13 @@
           "$ref": "#/definitions/ExonSplitTransform"
         },
         {
+          "$ref": "#/definitions/GenomicLengthTransform"
+        },
+        {
           "$ref": "#/definitions/CoverageTransform"
+        },
+        {
+          "$ref": "#/definitions/CombineMatesTransform"
         },
         {
           "$ref": "#/definitions/JSONParseTransform"
@@ -958,6 +997,32 @@
       },
       "required": [
         "tracks"
+      ],
+      "type": "object"
+    },
+    "GenomicLengthTransform": {
+      "additionalProperties": false,
+      "description": "Calculate genomic length using two genomic fields",
+      "properties": {
+        "endField": {
+          "type": "string"
+        },
+        "newField": {
+          "type": "string"
+        },
+        "startField": {
+          "type": "string"
+        },
+        "type": {
+          "const": "genomicLength",
+          "type": "string"
+        }
+      },
+      "required": [
+        "type",
+        "startField",
+        "endField",
+        "newField"
       ],
       "type": "object"
     },

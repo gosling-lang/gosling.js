@@ -18,6 +18,8 @@ import {
     concatString,
     displace,
     filterData,
+    combineMates,
+    calculateGenomicLength,
     parseSubJSON,
     replaceString,
     splitExon
@@ -791,9 +793,8 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
 
                 tile.gos.tabularDataFiltered = Array.from(tile.gos.tabularData);
 
-                // !! TODO: why are we transforming data multiple times for each track?
                 /*
-                 * Data Transformation
+                 * Data Transformation applied to each of the overlaid tracks.
                  */
                 if (resolved.dataTransform) {
                     resolved.dataTransform.forEach(t => {
@@ -817,12 +818,18 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                                     resolved.assembly
                                 );
                                 break;
+                            case 'genomicLength':
+                                tile.gos.tabularDataFiltered = calculateGenomicLength(t, tile.gos.tabularDataFiltered);
+                                break;
                             case 'coverage':
                                 tile.gos.tabularDataFiltered = aggregateCoverage(
                                     t,
                                     tile.gos.tabularDataFiltered,
                                     this._xScale.copy()
                                 );
+                                break;
+                            case 'combineMates':
+                                tile.gos.tabularDataFiltered = combineMates(t, tile.gos.tabularDataFiltered);
                                 break;
                             case 'subjson':
                                 tile.gos.tabularDataFiltered = parseSubJSON(t, tile.gos.tabularDataFiltered);

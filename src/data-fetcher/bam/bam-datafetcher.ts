@@ -36,9 +36,7 @@ class BAMDataFetcher {
                 dataConfig['baiUrl'] = dataConfig.indexUrl ?? `${dataConfig['bamUrl']}.bai`;
             }
 
-            return tileFunctions
-                .init(this.uid, dataConfig.bamUrl, dataConfig.baiUrl, dataConfig.chromSizesUrl)
-                .then(() => this.worker);
+            return tileFunctions.init(this.uid, dataConfig).then(() => this.worker);
         });
     }
 

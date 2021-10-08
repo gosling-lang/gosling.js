@@ -341,6 +341,9 @@
         "groupField": {
           "type": "string"
         },
+        "idField": {
+          "type": "string"
+        },
         "inRange": {
           "items": {
             "type": "number"
@@ -349,6 +352,15 @@
         },
         "include": {
           "type": "string"
+        },
+        "isLongField": {
+          "type": "string"
+        },
+        "maintainDuplicates": {
+          "type": "boolean"
+        },
+        "maxInsertSize": {
+          "type": "number"
         },
         "maxRows": {
           "type": "number"
@@ -411,7 +423,9 @@
             "log",
             "displace",
             "exonSplit",
+            "genomicLength",
             "coverage",
+            "combineMates",
             "subjson"
           ],
           "type": "string"

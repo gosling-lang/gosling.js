@@ -9,7 +9,9 @@ import {
     Assembly,
     StrConcatTransform,
     StrReplaceTransform,
+    GenomicLengthTransform,
     CoverageTransform,
+    CombineMatesTransform,
     DisplaceTransform,
     JSONParseTransform
 } from '../gosling.schema';
@@ -103,6 +105,25 @@ export function calculateData(log: LogTransform, data: Datum[]): Datum[] {
 }
 
 /**
+ * Calculate genomic length using two genomic fields.
+ */
+export function calculateGenomicLength(_: GenomicLengthTransform, data: Datum[]): Datum[] {
+    const { startField, endField, newField } = _;
+    const output = Array.from(data);
+    output.forEach(d => {
+        const s = d[startField];
+        const e = d[endField];
+        if (!s || !e) {
+            // such field does not exist, so skip this row
+            // console.warn(`[Genomic Length] startField or endField (${s} or ${e}) does not exist.`);
+            return;
+        }
+        d[newField] = Math.abs(+e - +s);
+    });
+    return output;
+}
+
+/**
  * Aggregate data rows and calculate coverage of reads.
  */
 export function aggregateCoverage(_: CoverageTransform, data: Datum[], scale: ScaleLinear<any, any>): Datum[] {
@@ -146,6 +167,58 @@ export function aggregateCoverage(_: CoverageTransform, data: Datum[], scale: Sc
 
     // console.log(coverage);
     // Logging.printTime('aggregateCoverage');
+    return output;
+}
+
+export function combineMates(t: CombineMatesTransform, data: Datum[]) {
+    const { idField, maintainDuplicates } = t;
+    const isLongField = t.isLongField ?? 'is_long';
+    const maxInsertSize = t.maxInsertSize ?? 360;
+    const copyData: { data: Datum; added: boolean }[] = data.map(d => {
+        return { data: d, added: false };
+    });
+    const output: Datum[] = [];
+    copyData.forEach((d, i) => {
+        if (d.added) {
+            // this row is added already, so just skip
+            return;
+        }
+        if (i === copyData.length - 1) {
+            // no additional reads to search for
+            return;
+        }
+
+        if (!d.data[idField]) {
+            // id does not exist
+            console.warn(`[CombineMates] The id field (${idField}) does not exist.`);
+            return;
+        }
+
+        const id = d.data[idField];
+        const rest = copyData.slice(maintainDuplicates ? 0 : i + 1, copyData.length).filter((_, j) => i !== j);
+        const mateIndex = rest.findIndex(r => r.data[idField] === id);
+        if (mateIndex === -1) {
+            // no mate found. this read will not be included to the result data.
+            return;
+        }
+        const mate = copyData[mateIndex];
+        const newRow: Datum = {};
+        // assuming that keys are the same for mates
+        Object.keys(d.data).forEach(k => {
+            // if not maintaining duplicated rows, left mate should be stored in the first field
+            const [f, s] = maintainDuplicates ? [d, mate] : [d, mate].sort((a, b) => +a.data.from - +b.data.from);
+            newRow[`${k}`] = f.data[k];
+            newRow[`${k}_2`] = s.data[k];
+
+            const [left, right] = [d, mate].sort((a, b) => +a.data.from - +b.data.from);
+            newRow[isLongField] = Math.abs(+left.data.to - +right.data.from) >= maxInsertSize ? 'true' : 'false';
+        });
+        output.push(newRow);
+
+        if (!maintainDuplicates) {
+            mate.added = true; // set a flag so that we can skip this later
+        }
+    });
     return output;
 }
 
@@ -351,7 +424,8 @@ export function parseSubJSON(_: JSONParseTransform, data: Datum[]): Datum[] {
                     ...row,
                     [`${genomicField}_start`]: row[`${genomicField}_start`],
                     [`${genomicField}_end`]: row[`${genomicField}_end`],
-                    type: 'sub'
+                    type: row.type ?? row.variant ?? null,
+                    isParsedRow: 'yes'
                 });
             });
 
