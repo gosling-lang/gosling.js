@@ -19,7 +19,7 @@ const bundleWebWorker = {
             const bundle = await esbuild.build({
                 entryPoints: [id],
                 inject: ['./src/alias/buffer-shim.js'],
-                format: 'esm',
+                format: 'iife',
                 bundle: true,
                 write: false,
             });
@@ -27,6 +27,29 @@ const bundleWebWorker = {
                 throw new Error('Worker must be a single module.');
             }
             return bundle.outputFiles[0].text;
+        }
+    },
+};
+
+// We can't inject a global `Buffer` polyfill for the worker entrypoint using vite alone,
+// so we reuse the `bundle-web-worker` plugin to inject the buffer shim during production.
+const manualInlineWorker = {
+    apply: 'build',
+    async transform(code, id) {
+        if (id.endsWith('bam-worker.js?worker&inline')) {
+            const bundle = await bundleWebWorker.transform(code, id + '?worker_file');
+            const base64 = Buffer.from(bundle).toString('base64');
+            // https://github.com/vitejs/vite/blob/72cb33e947e7aa72d27ed0c5eacb2457d523dfbf/packages/vite/src/node/plugins/worker.ts#L78-L87
+            return `const encodedJs = "${base64}";
+const blob = typeof window !== "undefined" && window.Blob && new Blob([atob(encodedJs)], { type: "text/javascript;charset=utf-8" });
+export default function() {
+  const objURL = blob && (window.URL || window.webkitURL).createObjectURL(blob);
+  try {
+    return objURL ? new Worker(objURL) : new Worker("data:application/javascript;base64," + encodedJs, {type: "module"});
+  } finally {
+    objURL && (window.URL || window.webkitURL).revokeObjectURL(objURL);
+  }
+}`;
         }
     },
 };
@@ -59,6 +82,7 @@ const esm = defineConfig({
         rollupOptions: { external },
     },
     resolve: { alias },
+    plugins: [manualInlineWorker],
 });
 
 const dev = defineConfig({
@@ -68,7 +92,7 @@ const dev = defineConfig({
         'process.platform': 'undefined',
         'process.env.THREADS_WORKER_INIT_TIMEOUT': 'undefined',
     },
-    plugins: [bundleWebWorker],
+    plugins: [bundleWebWorker, manualInlineWorker],
 });
 
 export default ({ command, mode }) => {
@@ -76,5 +100,5 @@ export default ({ command, mode }) => {
     if (mode === 'editor') {
         dev.plugins.push(reactRefresh());
     }
-	return dev;
+    return dev;
 };
