@@ -845,7 +845,6 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                     });
                 }
 
-                console.log(tile.gos.tabularDataFiltered.filter((d: any) => d.chrName === 'chr1'));
                 // Send data preview to the editor so that it can be shown to users.
                 try {
                     if (PubSub) {

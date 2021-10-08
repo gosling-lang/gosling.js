@@ -436,8 +436,14 @@
         "idField": {
           "type": "string"
         },
+        "isLongField": {
+          "type": "string"
+        },
         "maintainDuplicates": {
           "type": "boolean"
+        },
+        "maxInsertSize": {
+          "type": "number"
         },
         "type": {
           "const": "combineMates",

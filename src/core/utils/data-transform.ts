@@ -9,7 +9,8 @@ import {
     Assembly,
     StrConcatTransform,
     StrReplaceTransform,
- GenomicLengthTransform,   CoverageTransform,
+    GenomicLengthTransform,
+    CoverageTransform,
     CombineMatesTransform,
     DisplaceTransform,
     JSONParseTransform
@@ -112,7 +113,7 @@ export function calculateGenomicLength(_: GenomicLengthTransform, data: Datum[])
     output.forEach(d => {
         const s = d[startField];
         const e = d[endField];
-        if(!s || !e) {
+        if (!s || !e) {
             // such field does not exist, so skip this row
             // console.warn(`[Genomic Length] startField or endField (${s} or ${e}) does not exist.`);
             return;
@@ -209,12 +210,12 @@ export function combineMates(t: CombineMatesTransform, data: Datum[]) {
             newRow[`${k}`] = f.data[k];
             newRow[`${k}_2`] = s.data[k];
 
-            const [left, right] = [d, mate].sort((a, b) => +a.data.from - +b.data.from); 
-            newRow[isLongField] = Math.abs(+left.data.to - +right.data.from) >= maxInsertSize ? 'true' : 'false'; 
+            const [left, right] = [d, mate].sort((a, b) => +a.data.from - +b.data.from);
+            newRow[isLongField] = Math.abs(+left.data.to - +right.data.from) >= maxInsertSize ? 'true' : 'false';
         });
         output.push(newRow);
-        
-        if(!maintainDuplicates) {
+
+        if (!maintainDuplicates) {
             mate.added = true; // set a flag so that we can skip this later
         }
     });

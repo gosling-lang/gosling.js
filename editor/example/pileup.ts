@@ -1,12 +1,12 @@
 import type { Domain, DomainGene, GoslingSpec, View } from '@gosling.schema';
-import { EX_TRACK_SEMANTIC_ZOOM } from './semantic-zoom';
+// import { EX_TRACK_SEMANTIC_ZOOM } from './semantic-zoom';
 
 export function EX_SPEC_VIEW_PILEUP(
     id: string,
     width: number,
     height: number,
-    xDomain: Exclude<Domain, string[] | number[] | DomainGene>,
-    strandColor?: [number, number]
+    xDomain: Exclude<Domain, string[] | number[] | DomainGene>
+    //  strandColor?: [number, number]
 ): View {
     return {
         static: false,
@@ -23,8 +23,8 @@ export function EX_SPEC_VIEW_PILEUP(
                     // url: 'https://s3.amazonaws.com/gosling-lang.org/data/example_higlass.bam'
                     url: 'https://aveit.s3.amazonaws.com/higlass/bam/example_higlass.bam',
                     indexUrl: 'https://aveit.s3.amazonaws.com/higlass/bam/example_higlass.bam.bai',
-                    loadMates: true,
-                   // maxInsertSize: 100
+                    loadMates: true
+                    // maxInsertSize: 100
                 },
                 dataTransform: [
                     {
@@ -32,11 +32,11 @@ export function EX_SPEC_VIEW_PILEUP(
                         idField: 'name',
                         maintainDuplicates: true
                     },
-                   // {
-                   //     type: 'filter',
-                   //     field: 'is_long',
-                   //     oneOf: ['true'],
-                   // },
+                    // {
+                    //     type: 'filter',
+                    //     field: 'is_long',
+                    //     oneOf: ['true'],
+                    // },
                     {
                         type: 'displace',
                         method: 'pile',
@@ -52,24 +52,24 @@ export function EX_SPEC_VIEW_PILEUP(
                 ],
                 mark: 'rect',
                 tracks: [
-                   // {
-                   //     // pair connection
-                   //     x: { field: 'to', type: 'genomic' },
-                   //     xe: { field: 'from_2', type: 'genomic' },
-                   //     size: { value: 2 },
-                   //     color: { value: 'black' }
-                   // },
+                    // {
+                    //     // pair connection
+                    //     x: { field: 'to', type: 'genomic' },
+                    //     xe: { field: 'from_2', type: 'genomic' },
+                    //     size: { value: 2 },
+                    //     color: { value: 'black' }
+                    // },
                     {
                         // first read
                         x: { field: 'from', type: 'genomic' },
-                        xe: { field: 'to', type: 'genomic' },
-                    },
-                   // {
-                   //     // second mate
-                   //     x: { field: 'from_2', type: 'genomic' },
-                   //     xe: { field: 'to_2', type: 'genomic' },
-                   //     color: { value: 'blue' }
-                   // }
+                        xe: { field: 'to', type: 'genomic' }
+                    }
+                    // {
+                    //     // second mate
+                    //     x: { field: 'from_2', type: 'genomic' },
+                    //     xe: { field: 'to_2', type: 'genomic' },
+                    //     color: { value: 'blue' }
+                    // }
 
                     // {
                     //     dataTransform: [

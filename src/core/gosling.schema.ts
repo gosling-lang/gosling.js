@@ -537,7 +537,7 @@ export interface ExonSplitTransform {
  * Calculate genomic length using two genomic fields
  */
 export interface GenomicLengthTransform {
-    type: 'genomicLength',
+    type: 'genomicLength';
     startField: string;
     endField: string;
     newField: string;
