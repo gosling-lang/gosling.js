@@ -456,6 +456,7 @@
           "type": "string"
         },
         "groupField": {
+          "description": "The name of a nominal field to group rows by in prior to piling-up",
           "type": "string"
         },
         "newField": {
@@ -655,18 +656,23 @@
           "additionalProperties": false,
           "properties": {
             "endField": {
+              "description": "The name of a quantitative field that represents the end position",
               "type": "string"
             },
             "groupField": {
+              "description": "The name of a nominal field to group rows by in prior to piling-up",
               "type": "string"
             },
             "isPaddingBP": {
+              "description": "whether to consider `padding` as the bp length",
               "type": "boolean"
             },
             "padding": {
+              "description": "The padding around visual lements. Either px or bp",
               "type": "number"
             },
             "startField": {
+              "description": "The name of a quantitative field that represents the start position",
               "type": "string"
             }
           },
@@ -677,6 +683,7 @@
           "type": "object"
         },
         "maxRows": {
+          "description": "Specify maximum rows to be generated (default has no limit)",
           "type": "number"
         },
         "method": {
@@ -1377,15 +1384,19 @@
       "description": "Parse JSON Object Array and append vertically",
       "properties": {
         "baseGenomicField": {
+          "description": "Base genomic position when parsing relative position",
           "type": "string"
         },
         "field": {
+          "description": "The field that contains the JSON object array",
           "type": "string"
         },
         "genomicField": {
+          "description": "Relative genomic position to parse",
           "type": "string"
         },
         "genomicLengthField": {
+          "description": "Length of genomic interval",
           "type": "string"
         },
         "type": {
@@ -1424,12 +1435,14 @@
       "additionalProperties": false,
       "properties": {
         "base": {
-          "$ref": "#/definitions/LogBase"
+          "$ref": "#/definitions/LogBase",
+          "description": "If not specified, 10 is used"
         },
         "field": {
           "type": "string"
         },
         "newField": {
+          "description": "If specified, store transformed values in a new field.",
           "type": "string"
         },
         "type": {
@@ -3853,6 +3866,7 @@
       "additionalProperties": false,
       "properties": {
         "align": {
+          "description": "Specify the alignment (either `\"left\"` or `\"right\"`) of marks. This property is currently only supported for `triangle` marks.",
           "enum": [
             "left",
             "right"
@@ -3866,12 +3880,15 @@
           "type": "number"
         },
         "bazierLink": {
+          "description": "Specify whether to use bazier curves for the `link` marks.",
           "type": "boolean"
         },
         "circularLink": {
+          "description": "Deprecated: draw arc instead of bazier curve?",
           "type": "boolean"
         },
         "curve": {
+          "description": "Specify the curve of `rule` marks. One of `\"top\"`, `\"bottom\"`, `\"left\"`, `\"right\"`.",
           "enum": [
             "top",
             "bottom",
@@ -3881,6 +3898,7 @@
           "type": "string"
         },
         "dashed": {
+          "description": "Specify the pattern of dashes and gaps for `rule` marks.",
           "items": [
             {
               "type": "number"
@@ -3894,22 +3912,28 @@
           "type": "array"
         },
         "dx": {
+          "description": "Offset the position of marks in x direction. This property is currently only supported for `text` marks",
           "type": "number"
         },
         "dy": {
+          "description": "Offset the position of marks in y direction. This property is currently only supported for `text` marks.",
           "type": "number"
         },
         "enableSmoothPath": {
+          "description": "Whether to enable smooth paths when drawing curves.\n\n__Default__: false",
           "type": "boolean"
         },
         "inlineLegend": {
+          "description": "Specify whether to show legend in a single horizontal line?",
           "type": "boolean"
         },
         "legendTitle": {
+          "description": "If defined, show legend title on the top or left",
           "type": "string"
         },
         "linePattern": {
           "additionalProperties": false,
+          "description": "Specify the pattern of dashes and gaps for `rule` marks.",
           "properties": {
             "size": {
               "type": "number"
@@ -3929,6 +3953,7 @@
           "type": "object"
         },
         "linkConnectionType": {
+          "description": "specify the connetion type of `betweenLink` marks, one of `\"straight\"`, `\"curve\"`, `\"corner\"`.\n\n__Default__: `\"corner\"`",
           "enum": [
             "straight",
             "curve",
@@ -3943,6 +3968,7 @@
           "type": "number"
         },
         "textAnchor": {
+          "description": "Specify the alignment of `text` marks to a given point, one of `\"start\"`, `\"middle\"`, `\"end\"`",
           "enum": [
             "start",
             "middle",
@@ -3951,9 +3977,11 @@
           "type": "string"
         },
         "textFontSize": {
+          "description": "Specify the font size of `text` marks. Can also be specified using the `size` channel option of `text` marks.",
           "type": "number"
         },
         "textFontWeight": {
+          "description": "Specify the font weight (either `\"bold\"` or `\"normal\"` ) of `text` marks",
           "enum": [
             "bold",
             "normal"
@@ -3961,9 +3989,11 @@
           "type": "string"
         },
         "textStroke": {
+          "description": "specify the stroke of `text` marks. Can also be specified using the `stroke` channel option of `text` marks.",
           "type": "string"
         },
         "textStrokeWidth": {
+          "description": "Specify the stroke width of `text` marks. Can also be specified using the `strokeWidth` channel option of `text` marks.",
           "type": "number"
         }
       },

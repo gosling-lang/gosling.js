@@ -218,25 +218,84 @@ export interface Style {
     backgroundOpacity?: number;
     outline?: string;
     outlineWidth?: number;
+    /**
+     * Whether to enable smooth paths when drawing curves.
+     *
+     * __Default__: false
+     */
     enableSmoothPath?: boolean;
 
     // Mark-level styles
+    /**
+     * Specify the pattern of dashes and gaps for `rule` marks.
+     */
     dashed?: [number, number];
+    /**
+     * Specify the pattern of dashes and gaps for `rule` marks.
+     */
     linePattern?: { type: 'triangleLeft' | 'triangleRight'; size: number };
-    curve?: 'top' | 'bottom' | 'left' | 'right'; // for genomic range rules
-    align?: 'left' | 'right'; // currently, only supported for triangles
-    dx?: number; // currently, only used for text marks
-    dy?: number; // currently, only used for text marks
-    bazierLink?: boolean; // use bazier curves instead
-    circularLink?: boolean; // !! Deprecated: draw arc instead of bazier curve?
-    inlineLegend?: boolean; // show legend in a single horizontal line?
-    legendTitle?: string; // if defined, show legend title on the top or left
+    /**
+     * Specify the curve of `rule` marks. One of `"top"`, `"bottom"`, `"left"`, `"right"`.
+     */
+    curve?: 'top' | 'bottom' | 'left' | 'right';
+    /**
+     * Specify the alignment (either `"left"` or `"right"`) of marks.
+     * This property is currently only supported for `triangle` marks.
+     */
+    align?: 'left' | 'right';
+    /**
+     * Offset the position of marks in x direction.
+     * This property is currently only supported for `text` marks
+     */
+    dx?: number;
+    /**
+     * Offset the position of marks in y direction.
+     * This property is currently only supported for `text` marks.
+     */
+    dy?: number;
+    /**
+     *  Specify whether to use bazier curves for the `link` marks.
+     */
+    bazierLink?: boolean;
+    /**
+     * Deprecated: draw arc instead of bazier curve?
+     */
+    circularLink?: boolean;
+    /**
+     * Specify whether to show legend in a single horizontal line?
+     */
+    inlineLegend?: boolean;
+    /**
+     * If defined, show legend title on the top or left
+     */
+    legendTitle?: string;
+
     // below options could instead be used with channel options (e.g., size, stroke, strokeWidth)
+    /**
+     * Specify the font size of `text` marks.
+     * Can also be specified using the `size` channel option of `text` marks.
+     */
     textFontSize?: number;
+    /**
+     * specify the stroke of `text` marks.
+     * Can also be specified using the `stroke` channel option of `text` marks.
+     */
     textStroke?: string;
+    /**
+     * Specify the stroke width of `text` marks.
+     * Can also be specified using the `strokeWidth` channel option of `text` marks.
+     */
     textStrokeWidth?: number;
+    /** Specify the font weight (either `"bold"` or `"normal"` ) of `text` marks */
     textFontWeight?: 'bold' | 'normal';
+    /** Specify the alignment of `text` marks to a given point,
+     * one of `"start"`, `"middle"`, `"end"`
+     */
     textAnchor?: 'start' | 'middle' | 'end';
+    /** specify the connetion type of `betweenLink` marks, one of `"straight"`, `"curve"`, `"corner"`.
+     *
+     * __Default__: `"corner"`
+     */
     linkConnectionType?: 'straight' | 'curve' | 'corner';
 }
 
@@ -642,8 +701,10 @@ export type LogBase = number | 'e';
 export interface LogTransform {
     type: 'log';
     field: string;
-    base?: LogBase; // If not specified, 10 is used
-    newField?: string; // If specified, store transformed values in a new field.
+    /** If not specified, 10 is used */
+    base?: LogBase;
+    /** If specified, store transformed values in a new field. */
+    newField?: string;
 }
 
 export interface StrConcatTransform {
@@ -664,16 +725,25 @@ export interface DisplaceTransform {
     type: 'displace';
     // We could support different types of bounding boxes (e.g., using a center position and a size)
     boundingBox: {
-        startField: string; // The name of a quantitative field that represents the start position
-        endField: string; // The name of a quantitative field that represents the end position
-        padding?: number; // The padding around visual lements. Either px or bp
-        isPaddingBP?: boolean; // whether to consider `padding` as the bp length.
-        groupField?: string; // The name of a nominal field to group rows by in prior to piling-up
+        /** The name of a quantitative field that represents the start position */
+        startField: string;
+
+        /** The name of a quantitative field that represents the end position */
+        endField: string;
+
+        /** The padding around visual lements. Either px or bp */
+        padding?: number;
+
+        /** whether to consider `padding` as the bp length */
+        isPaddingBP?: boolean;
+
+        /** The name of a nominal field to group rows by in prior to piling-up */
+        groupField?: string;
     };
     method: DisplacementType;
     newField: string;
 
-    // "pile" specific parameters (TODO: make this a separate interface)
+    /** Specify maximum rows to be generated (default has no limit) */
     maxRows?: number; // Specify maximum rows to be generated (default: `undefined` meaning no limit)
 }
 
@@ -692,7 +762,8 @@ export interface CoverageTransform {
     startField: string;
     endField: string;
     newField?: string;
-    groupField?: string; // The name of a nominal field to group rows by in prior to piling-up
+    /** The name of a nominal field to group rows by in prior to piling-up */
+    groupField?: string;
 }
 
 /**
@@ -700,10 +771,14 @@ export interface CoverageTransform {
  */
 export interface JSONParseTransform {
     type: 'subjson';
-    field: string; // The field that contains the JSON object array
-    baseGenomicField: string; // Base genomic position when parsing relative position
-    genomicField: string; // Relative genomic position to parse
-    genomicLengthField: string; // Length of genomic interval
+    /** The field that contains the JSON object array */
+    field: string;
+    /** Base genomic position when parsing relative position */
+    baseGenomicField: string;
+    /** Relative genomic position to parse */
+    genomicField: string;
+    /** Length of genomic interval */
+    genomicLengthField: string;
 }
 
 /* ----------------------------- Templates ----------------------------- */
