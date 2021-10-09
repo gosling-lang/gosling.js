@@ -303,20 +303,65 @@ export interface Style {
 export type VisibilityCondition = SizeVisibilityCondition | ZoomLevelVisibilityCondition;
 
 interface CommonVisibilityCondition {
+    /**
+     * Specify the logical operation to conduct between `threshold` and the `measure` of `target`.
+     * Support
+     *
+     * - greater than : "greater-than", "gt", "GT"
+     *
+     * - less than : "less-than", "lt", "LT"
+     *
+     * - greater than or equal to : "greater-than-or-equal-to", "gtet", "GTET"
+     *
+     * - less than or equal to : "less-than-or-equal-to", "ltet", "LTET"
+     */
     operation: LogicalOperation;
+    /**
+     * Specify the buffer size (in pixel) of width or height when calculating the visibility.
+     *
+     * __Default__: 0
+     */
     conditionPadding?: number;
+    /**
+     * Specify the buffer size (in pixel) of width or height for smooth transition.
+     *
+     * __Default__: 0
+     */
     transitionPadding?: number;
 }
 
 export interface SizeVisibilityCondition extends CommonVisibilityCondition {
+    /**
+     * Target specifies the object (either `"track"` or `"mark"`) that you want to compare with the threshold.
+     */
     target: 'track' | 'mark';
+    /**
+     * Specify which aspect of the `target` will be compared to the `threshold`.
+     * Either `"width"` or `"height"`.
+     */
     measure: 'width' | 'height';
+    /**
+     * Specify the threshold as one of:
+     *
+     * - A number representing a fixed threshold in the unit of pixels;
+     *
+     * - `"|xe-x|"`, using the distance between `xe` and `x` as threshold
+     */
     threshold: number | '|xe-x|';
 }
 
 export interface ZoomLevelVisibilityCondition extends CommonVisibilityCondition {
+    /**
+     * Target specifies the object (either `"track"` or `"mark"`) that you want to compare with the threshold.
+     */
     target: 'track' | 'mark';
+    /**
+     * Specify which aspect of the `target` will be compared to the `threshold`.
+     */
     measure: 'zoomLevel';
+    /**
+     * Set a threshold in the unit of base pairs (bp)
+     */
     threshold: number;
 }
 

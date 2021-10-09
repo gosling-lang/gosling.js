@@ -3549,9 +3549,11 @@
       "additionalProperties": false,
       "properties": {
         "conditionPadding": {
+          "description": "Specify the buffer size (in pixel) of width or height when calculating the visibility.\n\n__Default__: 0",
           "type": "number"
         },
         "measure": {
+          "description": "Specify which aspect of the `target` will be compared to the `threshold`. Either `\"width\"` or `\"height\"`.",
           "enum": [
             "width",
             "height"
@@ -3559,9 +3561,11 @@
           "type": "string"
         },
         "operation": {
-          "$ref": "#/definitions/LogicalOperation"
+          "$ref": "#/definitions/LogicalOperation",
+          "description": "Specify the logical operation to conduct between `threshold` and the `measure` of `target`. Support\n\n- greater than : \"greater-than\", \"gt\", \"GT\"\n\n- less than : \"less-than\", \"lt\", \"LT\"\n\n- greater than or equal to : \"greater-than-or-equal-to\", \"gtet\", \"GTET\"\n\n- less than or equal to : \"less-than-or-equal-to\", \"ltet\", \"LTET\""
         },
         "target": {
+          "description": "Target specifies the object (either `\"track\"` or `\"mark\"`) that you want to compare with the threshold.",
           "enum": [
             "track",
             "mark"
@@ -3577,9 +3581,11 @@
               "const": "|xe-x|",
               "type": "string"
             }
-          ]
+          ],
+          "description": "Specify the threshold as one of:\n\n- A number representing a fixed threshold in the unit of pixels;\n\n- `\"|xe-x|\"`, using the distance between `xe` and `x` as threshold"
         },
         "transitionPadding": {
+          "description": "Specify the buffer size (in pixel) of width or height for smooth transition.\n\n__Default__: 0",
           "type": "number"
         }
       },
@@ -4209,16 +4215,20 @@
       "additionalProperties": false,
       "properties": {
         "conditionPadding": {
+          "description": "Specify the buffer size (in pixel) of width or height when calculating the visibility.\n\n__Default__: 0",
           "type": "number"
         },
         "measure": {
           "const": "zoomLevel",
+          "description": "Specify which aspect of the `target` will be compared to the `threshold`.",
           "type": "string"
         },
         "operation": {
-          "$ref": "#/definitions/LogicalOperation"
+          "$ref": "#/definitions/LogicalOperation",
+          "description": "Specify the logical operation to conduct between `threshold` and the `measure` of `target`. Support\n\n- greater than : \"greater-than\", \"gt\", \"GT\"\n\n- less than : \"less-than\", \"lt\", \"LT\"\n\n- greater than or equal to : \"greater-than-or-equal-to\", \"gtet\", \"GTET\"\n\n- less than or equal to : \"less-than-or-equal-to\", \"ltet\", \"LTET\""
         },
         "target": {
+          "description": "Target specifies the object (either `\"track\"` or `\"mark\"`) that you want to compare with the threshold.",
           "enum": [
             "track",
             "mark"
@@ -4226,9 +4236,11 @@
           "type": "string"
         },
         "threshold": {
+          "description": "Set a threshold in the unit of base pairs (bp)",
           "type": "number"
         },
         "transitionPadding": {
+          "description": "Specify the buffer size (in pixel) of width or height for smooth transition.\n\n__Default__: 0",
           "type": "number"
         }
       },
