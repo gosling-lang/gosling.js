@@ -39,7 +39,12 @@ export interface OverlaidTracks extends CommonViewDef, Partial<SingleTrack> {
 }
 
 export interface MultipleViews extends CommonViewDef {
+    /**
+     * Specify how multive views are arranged.
+     * One of `"parallel"`,  `"serial"`, `"horizontal"`, `"vertical"`.
+     */
     arrangement?: 'parallel' | 'serial' | 'horizontal' | 'vertical';
+    /** An array of view specifications */
     views: Array<SingleView | MultipleViews>;
 }
 
@@ -48,29 +53,50 @@ export type Orientation = 'horizontal' | 'vertical';
 export type Assembly = 'hg38' | 'hg19' | 'hg18' | 'hg17' | 'hg16' | 'mm10' | 'mm9' | 'unknown';
 
 export interface CommonViewDef {
+    /** specify the layout type of all tracks, either `"linear"` or `"circular"` */
     layout?: Layout;
+    /** either `"horizontal"` or `"vertical"` */
     orientation?: Orientation;
 
+    /**
+     * - if `{"layout": "linear"}`, specify the space between tracks in pixels;
+     *
+     * - if `{"layout": "circular"}`, specify the space between tracks in percentage ranging from 0 to 100.
+     */
     spacing?: number;
+    /** whether to disable [Zooming and Panning](http://gosling-lang.org/docs/user-interaction#zooming-and-panning),
+     * __Default:__ false.
+     */
     static?: boolean;
 
     // offsets
+    /** specify the x offset of views in the unit of pixels */
     xOffset?: number;
+    /** specify the y offset of views in the unit of pixels */
     yOffset?: number;
 
+    /** currently support "hg38", "hg19", "hg18", "hg17", "hg16", "mm10", "mm9" */
     assembly?: Assembly;
 
     // TODO: Change to domain?
     xDomain?: DomainInterval | DomainChrInterval | DomainChr;
+    /**specify an ID for [linking multiple views](http://gosling-lang.org/docs/user-interaction#linking-views) */
     linkingId?: string;
+    /** not supported  */
     xAxis?: AxisPosition; // not supported currently
 
     /**
      * Proportion of the radius of the center white space.
+     *
+     * __Default:__ 0.3
+     * @Range [0, 1]
      */
     centerRadius?: number; // [0, 1] (default: 0.3)
 
-    // Overriden by children
+    /**
+     * Define the style of multive views.
+     * Will be overriden by the style of children elements.
+     */
     style?: Style;
 }
 
@@ -78,7 +104,9 @@ export interface CommonViewDef {
 export type Track = SingleTrack | OverlaidTrack | DataTrack | TemplateTrack;
 
 export interface CommonRequiredTrackDef {
+    /** specify the track width in pixels */
     width: number;
+    /** specify the track height in pixels */
     height: number;
 }
 
@@ -87,23 +115,39 @@ export interface CommonTrackDef extends CommonViewDef, CommonRequiredTrackDef {
     // !! TODO: this should be track-specific and not defined in views.
     id?: string; // Assigned to `uid` in a HiGlass view config, used for API and caching.
 
-    title?: string; // Shows textual label on the left-top corner of a track
+    /** If defined, will show the textual label on the left-top corner of a track */
+    title?: string;
     subtitle?: string; // Being used only for a title track (i.e., 'text-track')
 
     // Arrangement
     overlayOnPreviousTrack?: boolean;
 
     // Circular Layout
+    /**
+     * Specify the outer radius of tracks when `{"layout": "circular"}`
+     */
     outerRadius?: number;
+    /**
+     * Specify the inner radius of tracks when (`{"layout": "circular"}`).
+     */
     innerRadius?: number;
+    /**
+     * Specify the start angle (in the range of [0, 360]) of circular tracks (`{"layout": "circular"}`).
+     */
     startAngle?: number; // [0, 360]
+    /**
+     * Specify the end angle (in the range of [0, 360]) of circular tracks (`{"layout": "circular"}`).
+     */
     endAngle?: number; // [0, 360]
 
     // Internally used properties
+    /** internal */
     _renderingId?: string;
+    /** internal */
     _invalidTrack?: boolean; // flag to ignore rendering certain tracks if they have problems // !!! TODO: add tests
 
     // To test upcoming feature.
+    /** internal */
     prerelease?: { testUsingNewRectRenderingForBAM?: boolean };
 }
 
@@ -304,7 +348,7 @@ export type VisibilityCondition = SizeVisibilityCondition | ZoomLevelVisibilityC
 
 interface CommonVisibilityCondition {
     /**
-     * Specify the logical operation to conduct between `threshold` and the `measure` of `target`.
+     * A string that pecifies the logical operation to conduct between `threshold` and the `measure` of `target`.
      * Support
      *
      * - greater than : "greater-than", "gt", "GT"
@@ -484,7 +528,10 @@ export interface JSONData {
     /** specify the name of genomic data fields */
     genomicFields?: string[];
 
-    /** specify the number of rows loaded from the url. default=1000 */
+    /** specify the number of rows loaded from the url.
+     *
+     * __Default:__1000
+     */
     sampleLength?: number;
 
     /** experimental */
@@ -507,7 +554,7 @@ export interface CSVData {
     url: string;
 
     /**
-     * specify file separator, default=','
+     * specify file separator, __Default:__ ','
      */
     separator?: string;
 
@@ -527,7 +574,9 @@ export interface CSVData {
     genomicFields?: string[];
 
     /**
-     * specify the number of rows loaded from the url. default=1000
+     * specify the number of rows loaded from the url.
+     *
+     * _Default:__ 1000
      */
     sampleLength?: number; // This limit the total number of rows fetched (default: 1000)
 

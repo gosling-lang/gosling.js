@@ -1081,7 +1081,7 @@
         },
         "operation": {
           "$ref": "#/definitions/LogicalOperation",
-          "description": "Specify the logical operation to conduct between `threshold` and the `measure` of `target`. Support\n\n- greater than : \"greater-than\", \"gt\", \"GT\"\n\n- less than : \"less-than\", \"lt\", \"LT\"\n\n- greater than or equal to : \"greater-than-or-equal-to\", \"gtet\", \"GTET\"\n\n- less than or equal to : \"less-than-or-equal-to\", \"ltet\", \"LTET\""
+          "description": "A string that pecifies the logical operation to conduct between `threshold` and the `measure` of `target`. Support\n\n- greater than : \"greater-than\", \"gt\", \"GT\"\n\n- less than : \"less-than\", \"lt\", \"LT\"\n\n- greater than or equal to : \"greater-than-or-equal-to\", \"gtet\", \"GTET\"\n\n- less than or equal to : \"less-than-or-equal-to\", \"ltet\", \"LTET\""
         },
         "target": {
           "description": "Target specifies the object (either `\"track\"` or `\"mark\"`) that you want to compare with the threshold.",
@@ -1285,16 +1285,19 @@
       "description": "This is based on `SingleTrack` but the differeces are only the type of channels which additionally have `base` properties to override properties from a template spec and remove of certain properties (e.g., `data`)",
       "properties": {
         "_invalidTrack": {
+          "description": "internal",
           "type": "boolean"
         },
         "_renderingId": {
+          "description": "internal",
           "type": "string"
         },
         "assembly": {
-          "$ref": "#/definitions/Assembly"
+          "$ref": "#/definitions/Assembly",
+          "description": "currently support \"hg38\", \"hg19\", \"hg18\", \"hg17\", \"hg16\", \"mm10\", \"mm9\""
         },
         "centerRadius": {
-          "description": "Proportion of the radius of the center white space.",
+          "description": "Proportion of the radius of the center white space.\n\n__Default:__ 0.3",
           "type": "number"
         },
         "color": {
@@ -1313,6 +1316,7 @@
           "$ref": "#/definitions/Displacement"
         },
         "endAngle": {
+          "description": "Specify the end angle (in the range of [0, 360]) of circular tracks (`{\"layout\": \"circular\"}`).",
           "type": "number"
         },
         "flipY": {
@@ -1322,9 +1326,11 @@
           "type": "string"
         },
         "innerRadius": {
+          "description": "Specify the inner radius of tracks when (`{\"layout\": \"circular\"}`).",
           "type": "number"
         },
         "linkingId": {
+          "description": "specify an ID for [linking multiple views](http://gosling-lang.org/docs/user-interaction#linking-views)",
           "type": "string"
         },
         "mark": {
@@ -1334,9 +1340,11 @@
           "$ref": "#/definitions/ChannelWithBase"
         },
         "orientation": {
-          "$ref": "#/definitions/Orientation"
+          "$ref": "#/definitions/Orientation",
+          "description": "either `\"horizontal\"` or `\"vertical\"`"
         },
         "outerRadius": {
+          "description": "Specify the outer radius of tracks when `{\"layout\": \"circular\"}`",
           "type": "number"
         },
         "overlayOnPreviousTrack": {
@@ -1347,6 +1355,7 @@
         },
         "prerelease": {
           "additionalProperties": false,
+          "description": "internal",
           "properties": {
             "testUsingNewRectRenderingForBAM": {
               "type": "boolean"
@@ -1361,12 +1370,15 @@
           "$ref": "#/definitions/ChannelWithBase"
         },
         "spacing": {
+          "description": "- if `{\"layout\": \"linear\"}`, specify the space between tracks in pixels;\n\n- if `{\"layout\": \"circular\"}`, specify the space between tracks in percentage ranging from 0 to 100.",
           "type": "number"
         },
         "startAngle": {
+          "description": "Specify the start angle (in the range of [0, 360]) of circular tracks (`{\"layout\": \"circular\"}`).",
           "type": "number"
         },
         "static": {
+          "description": "whether to disable [Zooming and Panning](http://gosling-lang.org/docs/user-interaction#zooming-and-panning), __Default:__ false.",
           "type": "boolean"
         },
         "stretch": {
@@ -1379,7 +1391,8 @@
           "$ref": "#/definitions/ChannelWithBase"
         },
         "style": {
-          "$ref": "#/definitions/Style"
+          "$ref": "#/definitions/Style",
+          "description": "Define the style of multive views. Will be overriden by the style of children elements."
         },
         "text": {
           "$ref": "#/definitions/ChannelWithBase"
@@ -1406,7 +1419,8 @@
           "$ref": "#/definitions/ChannelWithBase"
         },
         "xAxis": {
-          "$ref": "#/definitions/AxisPosition"
+          "$ref": "#/definitions/AxisPosition",
+          "description": "not supported"
         },
         "xDomain": {
           "anyOf": [
@@ -1422,6 +1436,7 @@
           ]
         },
         "xOffset": {
+          "description": "specify the x offset of views in the unit of pixels",
           "type": "number"
         },
         "xe": {
@@ -1437,6 +1452,7 @@
           "$ref": "#/definitions/ChannelWithBase"
         },
         "yOffset": {
+          "description": "specify the y offset of views in the unit of pixels",
           "type": "number"
         },
         "ye": {
@@ -1494,7 +1510,7 @@
         },
         "operation": {
           "$ref": "#/definitions/LogicalOperation",
-          "description": "Specify the logical operation to conduct between `threshold` and the `measure` of `target`. Support\n\n- greater than : \"greater-than\", \"gt\", \"GT\"\n\n- less than : \"less-than\", \"lt\", \"LT\"\n\n- greater than or equal to : \"greater-than-or-equal-to\", \"gtet\", \"GTET\"\n\n- less than or equal to : \"less-than-or-equal-to\", \"ltet\", \"LTET\""
+          "description": "A string that pecifies the logical operation to conduct between `threshold` and the `measure` of `target`. Support\n\n- greater than : \"greater-than\", \"gt\", \"GT\"\n\n- less than : \"less-than\", \"lt\", \"LT\"\n\n- greater than or equal to : \"greater-than-or-equal-to\", \"gtet\", \"GTET\"\n\n- less than or equal to : \"less-than-or-equal-to\", \"ltet\", \"LTET\""
         },
         "target": {
           "description": "Target specifies the object (either `\"track\"` or `\"mark\"`) that you want to compare with the threshold.",
