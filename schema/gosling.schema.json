@@ -896,6 +896,7 @@
         },
         "flag": {
           "additionalProperties": false,
+          "description": "`{ field: string; value: number | string }`",
           "properties": {
             "field": {
               "type": "string"
