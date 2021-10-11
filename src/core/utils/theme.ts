@@ -1,6 +1,6 @@
 // @ts-ignore
 import * as gt from 'gosling-theme';
-import { assign } from 'lodash';
+import { assign } from 'lodash-es';
 import { CHANNEL_DEFAULTS } from '../channel';
 
 /* ----------------------------- THEME ----------------------------- */

@@ -1,7 +1,7 @@
 import * as PIXI from 'pixi.js';
 import PubSub from 'pubsub-js';
-import uuid from 'uuid';
-import { isEqual, sampleSize, uniqBy } from 'lodash';
+import * as uuid from 'uuid';
+import { isEqual, sampleSize, uniqBy } from 'lodash-es';
 import { scaleLinear } from 'd3-scale';
 import { format } from 'd3-format';
 import { drawMark, drawPostEmbellishment, drawPreEmbellishment } from '../core/mark';
@@ -18,6 +18,8 @@ import {
     concatString,
     displace,
     filterData,
+    combineMates,
+    calculateGenomicLength,
     parseSubJSON,
     replaceString,
     splitExon
@@ -26,9 +28,9 @@ import { getTabularData } from './data-abstraction';
 import { BAMDataFetcher } from '../data-fetcher/bam';
 import { getRelativeGenomicPosition } from '../core/utils/assembly';
 import { Is2DTrack } from '../core/gosling.schema.guards';
-import { spawn, BlobWorker } from 'threads';
+import { spawn } from 'threads';
 
-import BamWorkerBlob from 'raw-loader!../../dist/worker.js';
+import BamWorker from '../data-fetcher/bam/bam-worker.js?worker&inline';
 import { InteractionEvent } from 'pixi.js';
 
 // Set `true` to print in what order each function is called
@@ -36,7 +38,7 @@ export const PRINT_RENDERING_CYCLE = false;
 
 // Experimental function to test with prerelease rendering
 function usePrereleaseRendering(spec: SingleTrack | OverlaidTrack) {
-    return spec.data?.type === 'bam'; // spec.prerelease?.testUsingNewRectRenderingForBAM &&
+    return spec.data?.type === 'bam';
 }
 
 // For using libraries, refer to https://github.com/higlass/higlass/blob/f82c0a4f7b2ab1c145091166b0457638934b15f3/app/scripts/configs/available-for-plugins.js
@@ -72,7 +74,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             let bamWorker;
             if (usePrereleaseRendering(options.spec)) {
                 try {
-                    bamWorker = spawn(BlobWorker.fromText(BamWorkerBlob));
+                    bamWorker = spawn(new BamWorker());
                     context.dataFetcher = new BAMDataFetcher(HGC, context.dataConfig, bamWorker);
                 } catch (e) {
                     console.warn('Error loading worker', e);
@@ -791,9 +793,8 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
 
                 tile.gos.tabularDataFiltered = Array.from(tile.gos.tabularData);
 
-                // !! TODO: why are we transforming data multiple times for each track?
                 /*
-                 * Data Transformation
+                 * Data Transformation applied to each of the overlaid tracks.
                  */
                 if (resolved.dataTransform) {
                     resolved.dataTransform.forEach(t => {
@@ -817,12 +818,18 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                                     resolved.assembly
                                 );
                                 break;
+                            case 'genomicLength':
+                                tile.gos.tabularDataFiltered = calculateGenomicLength(t, tile.gos.tabularDataFiltered);
+                                break;
                             case 'coverage':
                                 tile.gos.tabularDataFiltered = aggregateCoverage(
                                     t,
                                     tile.gos.tabularDataFiltered,
                                     this._xScale.copy()
                                 );
+                                break;
+                            case 'combineMates':
+                                tile.gos.tabularDataFiltered = combineMates(t, tile.gos.tabularDataFiltered);
                                 break;
                             case 'subjson':
                                 tile.gos.tabularDataFiltered = parseSubJSON(t, tile.gos.tabularDataFiltered);
@@ -840,14 +847,10 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
 
                 // Send data preview to the editor so that it can be shown to users.
                 try {
-                    // !!! This shouldn't be called while using npm gosling.js package.
-                    /*eslint-disable */
-                    const pubsub = require('pubsub-js');
-                    /*eslint-enable */
-                    if (pubsub) {
+                    if (PubSub) {
                         const NUM_OF_ROWS_IN_PREVIEW = 100;
                         const numOrRows = tile.gos.tabularDataFiltered.length;
-                        pubsub.publish('data-preview', {
+                        PubSub.publish('data-preview', {
                             id: this.context.id,
                             dataConfig: JSON.stringify({ data: resolved.data }),
                             data:

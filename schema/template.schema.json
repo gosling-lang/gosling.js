@@ -351,6 +351,9 @@
           "description": "The name of a nominal field to group rows by in prior to piling-up",
           "type": "string"
         },
+        "idField": {
+          "type": "string"
+        },
         "inRange": {
           "items": {
             "type": "number"
@@ -359,6 +362,15 @@
         },
         "include": {
           "type": "string"
+        },
+        "isLongField": {
+          "type": "string"
+        },
+        "maintainDuplicates": {
+          "type": "boolean"
+        },
+        "maxInsertSize": {
+          "type": "number"
         },
         "maxRows": {
           "description": "Specify maximum rows to be generated (default has no limit)",
@@ -423,7 +435,9 @@
             "log",
             "displace",
             "exonSplit",
+            "genomicLength",
             "coverage",
+            "combineMates",
             "subjson"
           ],
           "type": "string"
@@ -1357,11 +1371,6 @@
         "prerelease": {
           "additionalProperties": false,
           "description": "internal",
-          "properties": {
-            "testUsingNewRectRenderingForBAM": {
-              "type": "boolean"
-            }
-          },
           "type": "object"
         },
         "row": {
@@ -1458,6 +1467,9 @@
         },
         "ye": {
           "$ref": "#/definitions/ChannelWithBase"
+        },
+        "zoomLimits": {
+          "$ref": "#/definitions/ZoomLimits"
         }
       },
       "required": [
@@ -1537,6 +1549,25 @@
         "threshold"
       ],
       "type": "object"
+    },
+    "ZoomLimits": {
+      "items": [
+        {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        {
+          "type": [
+            "number",
+            "null"
+          ]
+        }
+      ],
+      "maxItems": 2,
+      "minItems": 2,
+      "type": "array"
     }
   }
 }

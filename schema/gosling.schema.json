@@ -43,6 +43,12 @@
           "description": "URL link to the index file of the BAM file",
           "type": "string"
         },
+        "loadMates": {
+          "type": "boolean"
+        },
+        "maxInsertSize": {
+          "type": "number"
+        },
         "type": {
           "const": "bam",
           "type": "string"
@@ -448,6 +454,33 @@
       ],
       "type": "string"
     },
+    "CombineMatesTransform": {
+      "additionalProperties": false,
+      "description": "By looking up ids, combine mates (a pair of reads) into a single row, performing long-to-wide operation. Result data have `{field}` and `{field}_2` names.",
+      "properties": {
+        "idField": {
+          "type": "string"
+        },
+        "isLongField": {
+          "type": "string"
+        },
+        "maintainDuplicates": {
+          "type": "boolean"
+        },
+        "maxInsertSize": {
+          "type": "number"
+        },
+        "type": {
+          "const": "combineMates",
+          "type": "string"
+        }
+      },
+      "required": [
+        "type",
+        "idField"
+      ],
+      "type": "object"
+    },
     "CoverageTransform": {
       "additionalProperties": false,
       "description": "Aggregate rows and calculate coverage",
@@ -565,11 +598,6 @@
         "prerelease": {
           "additionalProperties": false,
           "description": "internal",
-          "properties": {
-            "testUsingNewRectRenderingForBAM": {
-              "type": "boolean"
-            }
-          },
           "type": "object"
         },
         "spacing": {
@@ -623,6 +651,9 @@
         "yOffset": {
           "description": "specify the y offset of views in the unit of pixels",
           "type": "number"
+        },
+        "zoomLimits": {
+          "$ref": "#/definitions/ZoomLimits"
         }
       },
       "required": [
@@ -653,7 +684,13 @@
           "$ref": "#/definitions/ExonSplitTransform"
         },
         {
+          "$ref": "#/definitions/GenomicLengthTransform"
+        },
+        {
           "$ref": "#/definitions/CoverageTransform"
+        },
+        {
+          "$ref": "#/definitions/CombineMatesTransform"
         },
         {
           "$ref": "#/definitions/JSONParseTransform"
@@ -1017,10 +1054,39 @@
         "yOffset": {
           "description": "specify the y offset of views in the unit of pixels",
           "type": "number"
+        },
+        "zoomLimits": {
+          "$ref": "#/definitions/ZoomLimits"
         }
       },
       "required": [
         "tracks"
+      ],
+      "type": "object"
+    },
+    "GenomicLengthTransform": {
+      "additionalProperties": false,
+      "description": "Calculate genomic length using two genomic fields",
+      "properties": {
+        "endField": {
+          "type": "string"
+        },
+        "newField": {
+          "type": "string"
+        },
+        "startField": {
+          "type": "string"
+        },
+        "type": {
+          "const": "genomicLength",
+          "type": "string"
+        }
+      },
+      "required": [
+        "type",
+        "startField",
+        "endField",
+        "newField"
       ],
       "type": "object"
     },
@@ -1741,6 +1807,9 @@
         "yOffset": {
           "description": "specify the y offset of views in the unit of pixels",
           "type": "number"
+        },
+        "zoomLimits": {
+          "$ref": "#/definitions/ZoomLimits"
         }
       },
       "required": [
@@ -2002,11 +2071,6 @@
               "prerelease": {
                 "additionalProperties": false,
                 "description": "internal",
-                "properties": {
-                  "testUsingNewRectRenderingForBAM": {
-                    "type": "boolean"
-                  }
-                },
                 "type": "object"
               },
               "row": {
@@ -2103,6 +2167,9 @@
               },
               "ye": {
                 "$ref": "#/definitions/Channel"
+              },
+              "zoomLimits": {
+                "$ref": "#/definitions/ZoomLimits"
               }
             },
             "type": "object"
@@ -2118,11 +2185,6 @@
         "prerelease": {
           "additionalProperties": false,
           "description": "internal",
-          "properties": {
-            "testUsingNewRectRenderingForBAM": {
-              "type": "boolean"
-            }
-          },
           "type": "object"
         },
         "row": {
@@ -2230,6 +2292,9 @@
         },
         "ye": {
           "$ref": "#/definitions/Channel"
+        },
+        "zoomLimits": {
+          "$ref": "#/definitions/ZoomLimits"
         }
       },
       "required": [
@@ -2329,11 +2394,6 @@
         "prerelease": {
           "additionalProperties": false,
           "description": "internal",
-          "properties": {
-            "testUsingNewRectRenderingForBAM": {
-              "type": "boolean"
-            }
-          },
           "type": "object"
         },
         "row": {
@@ -2447,6 +2507,9 @@
         },
         "ye": {
           "$ref": "#/definitions/Channel"
+        },
+        "zoomLimits": {
+          "$ref": "#/definitions/ZoomLimits"
         }
       },
       "required": [
@@ -2631,11 +2694,6 @@
               "prerelease": {
                 "additionalProperties": false,
                 "description": "internal",
-                "properties": {
-                  "testUsingNewRectRenderingForBAM": {
-                    "type": "boolean"
-                  }
-                },
                 "type": "object"
               },
               "row": {
@@ -2732,6 +2790,9 @@
               },
               "ye": {
                 "$ref": "#/definitions/Channel"
+              },
+              "zoomLimits": {
+                "$ref": "#/definitions/ZoomLimits"
               }
             },
             "type": "object"
@@ -2747,11 +2808,6 @@
         "prerelease": {
           "additionalProperties": false,
           "description": "internal",
-          "properties": {
-            "testUsingNewRectRenderingForBAM": {
-              "type": "boolean"
-            }
-          },
           "type": "object"
         },
         "row": {
@@ -2862,6 +2918,9 @@
         },
         "ye": {
           "$ref": "#/definitions/Channel"
+        },
+        "zoomLimits": {
+          "$ref": "#/definitions/ZoomLimits"
         }
       },
       "type": "object"
@@ -3004,6 +3063,9 @@
         "yOffset": {
           "description": "specify the y offset of views in the unit of pixels",
           "type": "number"
+        },
+        "zoomLimits": {
+          "$ref": "#/definitions/ZoomLimits"
         }
       },
       "required": [
@@ -3106,11 +3168,6 @@
             "prerelease": {
               "additionalProperties": false,
               "description": "internal",
-              "properties": {
-                "testUsingNewRectRenderingForBAM": {
-                  "type": "boolean"
-                }
-              },
               "type": "object"
             },
             "row": {
@@ -3224,6 +3281,9 @@
             },
             "ye": {
               "$ref": "#/definitions/Channel"
+            },
+            "zoomLimits": {
+              "$ref": "#/definitions/ZoomLimits"
             }
           },
           "required": [
@@ -3327,11 +3387,6 @@
             "prerelease": {
               "additionalProperties": false,
               "description": "internal",
-              "properties": {
-                "testUsingNewRectRenderingForBAM": {
-                  "type": "boolean"
-                }
-              },
               "type": "object"
             },
             "row": {
@@ -3452,6 +3507,9 @@
             },
             "ye": {
               "$ref": "#/definitions/Channel"
+            },
+            "zoomLimits": {
+              "$ref": "#/definitions/ZoomLimits"
             }
           },
           "required": [
@@ -3533,6 +3591,9 @@
             "yOffset": {
               "description": "specify the y offset of views in the unit of pixels",
               "type": "number"
+            },
+            "zoomLimits": {
+              "$ref": "#/definitions/ZoomLimits"
             }
           },
           "required": [
@@ -3628,11 +3689,6 @@
         "prerelease": {
           "additionalProperties": false,
           "description": "internal",
-          "properties": {
-            "testUsingNewRectRenderingForBAM": {
-              "type": "boolean"
-            }
-          },
           "type": "object"
         },
         "row": {
@@ -3740,6 +3796,9 @@
         },
         "ye": {
           "$ref": "#/definitions/Channel"
+        },
+        "zoomLimits": {
+          "$ref": "#/definitions/ZoomLimits"
         }
       },
       "required": [
@@ -3905,11 +3964,6 @@
         "prerelease": {
           "additionalProperties": false,
           "description": "internal",
-          "properties": {
-            "testUsingNewRectRenderingForBAM": {
-              "type": "boolean"
-            }
-          },
           "type": "object"
         },
         "row": {
@@ -4030,6 +4084,9 @@
         },
         "ye": {
           "$ref": "#/definitions/Channel"
+        },
+        "zoomLimits": {
+          "$ref": "#/definitions/ZoomLimits"
         }
       },
       "required": [
@@ -4309,11 +4366,6 @@
         "prerelease": {
           "additionalProperties": false,
           "description": "internal",
-          "properties": {
-            "testUsingNewRectRenderingForBAM": {
-              "type": "boolean"
-            }
-          },
           "type": "object"
         },
         "spacing": {
@@ -4370,6 +4422,9 @@
         "yOffset": {
           "description": "specify the y offset of views in the unit of pixels",
           "type": "number"
+        },
+        "zoomLimits": {
+          "$ref": "#/definitions/ZoomLimits"
         }
       },
       "required": [
@@ -4509,6 +4564,25 @@
         "threshold"
       ],
       "type": "object"
+    },
+    "ZoomLimits": {
+      "items": [
+        {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        {
+          "type": [
+            "number",
+            "null"
+          ]
+        }
+      ],
+      "maxItems": 2,
+      "minItems": 2,
+      "type": "array"
     }
   }
 }

@@ -24,7 +24,7 @@ describe('Rendering Point', () => {
             { x: 111, y: 222 }
         ];
         const model = new GoslingTrackModel(t, d, getTheme());
-        drawPoint(null, g, model);
+        drawPoint({ dimensions: [100, 100] }, g, model);
     });
 });
 

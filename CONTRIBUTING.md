@@ -14,7 +14,31 @@ yarn
 yarn start
 ```
 
-Then, you can open http://localhost:8080/ in a web browser to test the online editor.
+Then, you can open http://localhost:3000/ in a web browser to test the online editor.
+
+## Editing `gosling.js/embed`
+
+This repo also contains the source code for `gosling.js/embed`, an ES Module intended to be
+used in [Observable notebooks](https://observablehq.com). You can start the development server
+via:
+
+```sh
+yarn start-embed
+```
+
+and open a new Observable notebook with a cell containing,
+
+```javascript
+embed = {
+    const mod = await import("http://localhost:3000/embed/index.ts");
+    return mod.embed;
+}
+```
+
+You are now able to edit the contents of `src/` and the chages should be reflected
+in the notebook. You may fork [this notebook](https://observablehq.com/@manzt/gosling-api)
+to get started.
+
 
 ## Editing Grammar
 You may want to edit the grammar (e.g., rename properties) and test the updated grammar in the Online Editor. The Gosling's grammar is defined using TypeScript in a single file, [/src/core/gosling.schema.ts](/src/core/gosling.schema.ts). You can update this file to edit grammar. However, to test with Online Editor, you need to update [/src/core/gosling.schema.json](/src/core/gosling.schema.json) by running the following command:

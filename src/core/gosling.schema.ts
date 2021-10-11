@@ -51,6 +51,7 @@ export interface MultipleViews extends CommonViewDef {
 export type Layout = 'linear' | 'circular';
 export type Orientation = 'horizontal' | 'vertical';
 export type Assembly = 'hg38' | 'hg19' | 'hg18' | 'hg17' | 'hg16' | 'mm10' | 'mm9' | 'unknown';
+export type ZoomLimits = [number | null, number | null];
 
 export interface CommonViewDef {
     /** specify the layout type of all tracks, either `"linear"` or `"circular"` */
@@ -68,6 +69,7 @@ export interface CommonViewDef {
      * __Default:__ false.
      */
     static?: boolean;
+    zoomLimits?: ZoomLimits; // limits of zoom levels. default: [1, null]
 
     // offsets
     /** specify the x offset of views in the unit of pixels */
@@ -148,7 +150,9 @@ export interface CommonTrackDef extends CommonViewDef, CommonRequiredTrackDef {
 
     // To test upcoming feature.
     /** internal */
-    prerelease?: { testUsingNewRectRenderingForBAM?: boolean };
+    prerelease?: {
+        // ...
+    };
 }
 
 /**
@@ -750,6 +754,8 @@ export interface BAMData {
 
     /** URL link to the index file of the BAM file */
     indexUrl: string;
+    loadMates?: boolean; // load mates as well?
+    maxInsertSize?: number; // default 50,000bp, only applied for across-chr, JBrowse https://github.com/GMOD/bam-js#async-getrecordsforrangerefname-start-end-opts
 }
 
 export interface MatrixData {
@@ -766,7 +772,9 @@ export type DataTransform =
     | LogTransform
     | DisplaceTransform
     | ExonSplitTransform
+    | GenomicLengthTransform
     | CoverageTransform
+    | CombineMatesTransform
     | JSONParseTransform;
 
 export type FilterTransform = OneOfFilter | RangeFilter | IncludeFilter;
@@ -851,6 +859,16 @@ export interface ExonSplitTransform {
 }
 
 /**
+ * Calculate genomic length using two genomic fields
+ */
+export interface GenomicLengthTransform {
+    type: 'genomicLength';
+    startField: string;
+    endField: string;
+    newField: string;
+}
+
+/**
  * Aggregate rows and calculate coverage
  */
 export interface CoverageTransform {
@@ -860,6 +878,18 @@ export interface CoverageTransform {
     newField?: string;
     /** The name of a nominal field to group rows by in prior to piling-up */
     groupField?: string;
+}
+
+/**
+ * By looking up ids, combine mates (a pair of reads) into a single row, performing long-to-wide operation.
+ * Result data have `{field}` and `{field}_2` names.
+ */
+export interface CombineMatesTransform {
+    type: 'combineMates';
+    idField: string;
+    isLongField?: string; // is this pair long reads, exceeding max insert size? default, `is_long`
+    maxInsertSize?: number; // thresold to determine long reads, default 360
+    maintainDuplicates?: boolean; // do not want to remove duplicated row? If true, the original reads will be contained in `{field}`
 }
 
 /**

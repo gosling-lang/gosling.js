@@ -13,7 +13,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [ 10.x, 12.x, 14.x ]
+        node-version: [ 12.x, 14.x ]
 
     steps:
     - uses: actions/checkout@v2
@@ -32,6 +32,17 @@ jobs:
       with:
         fail_ci_if_error: true
   
+  typecheck:
+    name: Type-check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 12
+      - run: yarn install
+      - run: yarn build-types
+
   deploy:
     name: Deploy editor
 

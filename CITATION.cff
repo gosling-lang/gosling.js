@@ -1,0 +1,20 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+- family-names: "L'Yi"
+  given-names: "Sehi"
+  orcid: "https://orcid.org/0000-0001-7720-2848"
+- family-names: "Wang"
+  given-names: "Qianwen"
+  orcid: "https://orcid.org/0000-0003-1728-4102"
+- family-names: "Lekschas"
+  given-names: "Fritz"
+  orcid: "https://orcid.org/0000-0001-8432-4835"
+- family-names: "Gehlenborg"
+  given-names: "Nils"
+  orcid: "https://orcid.org/0000-0003-0327-8297"
+title: "Gosling: A Grammar-based Toolkit forScalable and Interactive Genomics Data Visualization"
+journal: "IEEE Transactions on Visualization and Computer Graphics"
+doi: 10.1109/TVCG.2021.3114876
+date-released: 2021-10-24
+url: "https://github.com/gosling-lang/gosling.js"

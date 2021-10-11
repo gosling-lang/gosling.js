@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import * as PIXI from 'pixi.js';
 import React, { useEffect, useState, forwardRef, useMemo } from 'react';
-import uuid from 'uuid';
+import * as uuid from 'uuid';
 
 import * as gosling from '..';
 // @ts-ignore
@@ -80,8 +80,8 @@ export const HiGlassComponentWrapper = forwardRef<HiGlassApi | undefined, HiGlas
                         margin: margin,
                         border: border,
                         background: background,
-                        width: props.size.width + padding * 2,
-                        height: props.size.height + padding * 2,
+                        width: props.size.width,
+                        height: props.size.height,
                         textAlign: 'left'
                     }}
                 >

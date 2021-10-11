@@ -1,4 +1,4 @@
-import uuid from 'uuid';
+import * as uuid from 'uuid';
 import { ChannelDeep, PREDEFINED_COLORS, ChannelTypes, ChannelValue, SingleTrack, Channel } from './gosling.schema';
 import { validateTrack, getGenomicChannelFromTrack, getGenomicChannelKeyFromTrack } from './utils/validate';
 import {
@@ -451,9 +451,21 @@ export class GoslingTrackModel {
 
         // common visual properties, not specific to visual marks
         if (
-            ['text', 'color', 'row', 'stroke', 'opacity', 'strokeWidth', 'x', 'y', 'xe', 'x1', 'x1e', 'size'].includes(
-                propertyKey
-            )
+            [
+                'text',
+                'color',
+                'row',
+                'stroke',
+                'opacity',
+                'strokeWidth',
+                'x',
+                'y',
+                'xe',
+                'x1',
+                'x1e',
+                'ye',
+                'size'
+            ].includes(propertyKey)
         ) {
             return this.visualPropertyByChannel(propertyKey as any, datum);
         }
@@ -634,6 +646,7 @@ export class GoslingTrackModel {
                                 range = [0, spec.width];
                                 break;
                             case 'y':
+                            case 'ye':
                                 range = [0, rowHeight];
                                 break;
                             case 'color':
@@ -670,6 +683,7 @@ export class GoslingTrackModel {
                                 range = [0, spec.width];
                                 break;
                             case 'y':
+                            case 'ye':
                                 range = [rowHeight, 0]; // reversed because the origin is on the top
                                 break;
                             case 'color':
@@ -759,6 +773,7 @@ export class GoslingTrackModel {
                         case 'xe':
                         case 'x1e':
                         case 'y':
+                        case 'ye':
                         case 'size':
                         case 'opacity':
                         case 'strokeWidth':
@@ -785,6 +800,7 @@ export class GoslingTrackModel {
                         case 'x':
                         case 'xe':
                         case 'y':
+                        case 'ye':
                         case 'row':
                             this.channelScales[channelKey] = scaleBand()
                                 .domain(domain as string[])

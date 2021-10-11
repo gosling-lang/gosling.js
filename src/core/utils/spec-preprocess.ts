@@ -1,5 +1,5 @@
-import assign from 'lodash/assign';
-import uuid from 'uuid';
+import { assign } from 'lodash-es';
+import * as uuid from 'uuid';
 import {
     SingleTrack,
     GoslingSpec,
@@ -136,6 +136,7 @@ export function traverseToFixSpecDownstream(spec: GoslingSpec | SingleView, pare
         if (spec.layout === undefined) spec.layout = parentDef.layout;
         if (spec.orientation === undefined) spec.orientation = parentDef.orientation;
         if (spec.static === undefined) spec.static = parentDef.static !== undefined ? parentDef.static : false;
+        if (spec.zoomLimits === undefined) spec.zoomLimits = parentDef.zoomLimits;
         if (spec.xDomain === undefined) spec.xDomain = parentDef.xDomain;
         if (spec.linkingId === undefined) spec.linkingId = parentDef.linkingId;
         if (spec.centerRadius === undefined) spec.centerRadius = parentDef.centerRadius;
@@ -151,6 +152,7 @@ export function traverseToFixSpecDownstream(spec: GoslingSpec | SingleView, pare
         if (spec.layout === undefined) spec.layout = 'linear';
         if (spec.orientation === undefined) spec.orientation = 'horizontal';
         if (spec.static === undefined) spec.static = false;
+        if (spec.zoomLimits === undefined) spec.zoomLimits = [1, null];
         if (spec.centerRadius === undefined) spec.centerRadius = DEFAULT_INNER_RADIUS_PROP;
         if (spec.spacing === undefined) spec.spacing = DEFAULT_VIEW_SPACING;
         if ('views' in spec && spec.arrangement === undefined) spec.arrangement = 'vertical';
@@ -215,6 +217,7 @@ export function traverseToFixSpecDownstream(spec: GoslingSpec | SingleView, pare
              * Properties that shouldn't be suggested
              */
             if (track.layout) track.layout = undefined;
+            if (track.zoomLimits) track.zoomLimits = undefined;
 
             /**
              * Override options received from the parent
@@ -223,6 +226,7 @@ export function traverseToFixSpecDownstream(spec: GoslingSpec | SingleView, pare
             if (!track.layout) track.layout = spec.layout;
             if (!track.orientation) track.orientation = spec.orientation;
             if (track.static === undefined) track.static = spec.static !== undefined ? spec.static : false;
+            if (!track.zoomLimits) track.zoomLimits = spec.zoomLimits;
 
             // Override styles
             track.style = getStyleOverridden(spec.style, track.style);
