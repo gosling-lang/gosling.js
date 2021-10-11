@@ -834,7 +834,7 @@ export interface DisplaceTransform {
         /** The name of a nominal field to group rows by in prior to piling-up */
         groupField?: string;
     };
-    //** A string that specifies the type of diseplancement, one of `"pile"` and `"spread"`  */
+    /** A string that specifies the type of diseplancement, one of `"pile"` and `"spread"`  */
     method: DisplacementType;
     newField: string;
 
@@ -845,7 +845,6 @@ export interface DisplaceTransform {
 export interface ExonSplitTransform {
     type: 'exonSplit';
     separator: string;
-    /** `{ field: string; value: number | string }` */
     flag: { field: string; value: number | string };
     fields: { field: string; type: FieldType; newField: string; chrField: string }[];
 }
