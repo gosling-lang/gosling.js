@@ -1393,7 +1393,7 @@
         },
         "style": {
           "$ref": "#/definitions/Style",
-          "description": "Define the style of multive views. Will be overriden by the style of children elements."
+          "description": "Define the [style](http://gosling-lang.org/docs/visual-channel#style-related-properties) of multive views. Will be overriden by the style of children elements (e.g., view, track)."
         },
         "text": {
           "$ref": "#/definitions/ChannelWithBase"

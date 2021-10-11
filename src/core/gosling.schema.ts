@@ -94,8 +94,8 @@ export interface CommonViewDef {
     centerRadius?: number; // [0, 1] (default: 0.3)
 
     /**
-     * Define the style of multive views.
-     * Will be overriden by the style of children elements.
+     * Define the [style](http://gosling-lang.org/docs/visual-channel#style-related-properties) of multive views.
+     * Will be overriden by the style of children elements (e.g., view, track).
      */
     style?: Style;
 }
@@ -502,6 +502,7 @@ export type Aggregate = 'max' | 'min' | 'mean' | 'bin' | 'count';
 /* ----------------------------- DATA ----------------------------- */
 export type DataDeep = JSONData | CSVData | BIGWIGData | MultivecData | BEDDBData | VectorData | MatrixData | BAMData;
 
+/** values in the form of JSON */
 export interface Datum {
     [k: string]: number | string;
 }
