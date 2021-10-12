@@ -141,7 +141,9 @@ export type MarkType =
     | 'header';
 
 /* ----------------------------- TRACK ----------------------------- */
-export interface SingleTrack extends CommonTrackDef {
+type SingleTrack = SingleTrackBase & Encoding;
+
+interface SingleTrackBase extends CommonTrackDef {
     // Data
     data: DataDeep;
 
@@ -153,7 +155,19 @@ export interface SingleTrack extends CommonTrackDef {
     // Mark
     mark: Mark;
 
-    // Visual channels
+    // Resolving overlaps
+    displacement?: Displacement;
+
+    // Visibility
+    visibility?: VisibilityCondition[];
+
+    // Experimental
+    flipY?: boolean; // This is only supported for `link` marks.
+    stretch?: boolean; // Stretch the size to the given range? (e.g., [x, xe])
+    overrideTemplate?: boolean; // Override a spec template that is defined for a given data type.
+}
+
+export interface Encoding {
     x?: X | ChannelValue;
     y?: Y | ChannelValue;
     xe?: X | ChannelValue;
@@ -174,17 +188,6 @@ export interface SingleTrack extends CommonTrackDef {
     stroke?: Stroke | ChannelValue;
     strokeWidth?: StrokeWidth | ChannelValue;
     opacity?: Opacity | ChannelValue;
-
-    // Resolving overlaps
-    displacement?: Displacement;
-
-    // Visibility
-    visibility?: VisibilityCondition[];
-
-    // Experimental
-    flipY?: boolean; // This is only supported for `link` marks.
-    stretch?: boolean; // Stretch the size to the given range? (e.g., [x, xe])
-    overrideTemplate?: boolean; // Override a spec template that is defined for a given data type.
 }
 
 export interface Tooltip {

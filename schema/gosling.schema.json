@@ -4199,304 +4199,6 @@
       },
       "type": "object"
     },
-    "SingleTrack": {
-      "additionalProperties": false,
-      "properties": {
-        "_invalidTrack": {
-          "type": "boolean"
-        },
-        "_renderingId": {
-          "type": "string"
-        },
-        "assembly": {
-          "$ref": "#/definitions/Assembly"
-        },
-        "centerRadius": {
-          "description": "Proportion of the radius of the center white space.",
-          "type": "number"
-        },
-        "color": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/Color"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
-        "column": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/Column"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
-        "data": {
-          "$ref": "#/definitions/DataDeep"
-        },
-        "dataTransform": {
-          "items": {
-            "$ref": "#/definitions/DataTransform"
-          },
-          "type": "array"
-        },
-        "displacement": {
-          "$ref": "#/definitions/Displacement"
-        },
-        "endAngle": {
-          "type": "number"
-        },
-        "flipY": {
-          "type": "boolean"
-        },
-        "height": {
-          "type": "number"
-        },
-        "id": {
-          "type": "string"
-        },
-        "innerRadius": {
-          "type": "number"
-        },
-        "layout": {
-          "$ref": "#/definitions/Layout"
-        },
-        "linkingId": {
-          "type": "string"
-        },
-        "mark": {
-          "$ref": "#/definitions/Mark"
-        },
-        "opacity": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/Opacity"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
-        "orientation": {
-          "$ref": "#/definitions/Orientation"
-        },
-        "outerRadius": {
-          "type": "number"
-        },
-        "overlayOnPreviousTrack": {
-          "type": "boolean"
-        },
-        "overrideTemplate": {
-          "type": "boolean"
-        },
-        "prerelease": {
-          "additionalProperties": false,
-          "type": "object"
-        },
-        "row": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/Row"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
-        "size": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/Size"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
-        "spacing": {
-          "type": "number"
-        },
-        "startAngle": {
-          "type": "number"
-        },
-        "static": {
-          "type": "boolean"
-        },
-        "stretch": {
-          "type": "boolean"
-        },
-        "stroke": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/Stroke"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
-        "strokeWidth": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/StrokeWidth"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
-        "style": {
-          "$ref": "#/definitions/Style"
-        },
-        "subtitle": {
-          "type": "string"
-        },
-        "text": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/Text"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
-        "title": {
-          "type": "string"
-        },
-        "tooltip": {
-          "items": {
-            "$ref": "#/definitions/Tooltip"
-          },
-          "type": "array"
-        },
-        "visibility": {
-          "items": {
-            "$ref": "#/definitions/VisibilityCondition"
-          },
-          "type": "array"
-        },
-        "width": {
-          "type": "number"
-        },
-        "x": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/X"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
-        "x1": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/X"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
-        "x1e": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/X"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
-        "xAxis": {
-          "$ref": "#/definitions/AxisPosition"
-        },
-        "xDomain": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/DomainInterval"
-            },
-            {
-              "$ref": "#/definitions/DomainChrInterval"
-            },
-            {
-              "$ref": "#/definitions/DomainChr"
-            }
-          ]
-        },
-        "xOffset": {
-          "type": "number"
-        },
-        "xe": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/X"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
-        "y": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/Y"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
-        "y1": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/Y"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
-        "y1e": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/Y"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
-        "yOffset": {
-          "type": "number"
-        },
-        "ye": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/Y"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
-        "zoomLimits": {
-          "$ref": "#/definitions/ZoomLimits"
-        }
-      },
-      "required": [
-        "data",
-        "height",
-        "mark",
-        "width"
-      ],
-      "type": "object"
-    },
     "SingleView": {
       "anyOf": [
         {
@@ -5321,7 +5023,302 @@
     "Track": {
       "anyOf": [
         {
-          "$ref": "#/definitions/SingleTrack"
+          "additionalProperties": false,
+          "properties": {
+            "_invalidTrack": {
+              "type": "boolean"
+            },
+            "_renderingId": {
+              "type": "string"
+            },
+            "assembly": {
+              "$ref": "#/definitions/Assembly"
+            },
+            "centerRadius": {
+              "description": "Proportion of the radius of the center white space.",
+              "type": "number"
+            },
+            "color": {
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/Color"
+                },
+                {
+                  "$ref": "#/definitions/ChannelValue"
+                }
+              ]
+            },
+            "column": {
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/Column"
+                },
+                {
+                  "$ref": "#/definitions/ChannelValue"
+                }
+              ]
+            },
+            "data": {
+              "$ref": "#/definitions/DataDeep"
+            },
+            "dataTransform": {
+              "items": {
+                "$ref": "#/definitions/DataTransform"
+              },
+              "type": "array"
+            },
+            "displacement": {
+              "$ref": "#/definitions/Displacement"
+            },
+            "endAngle": {
+              "type": "number"
+            },
+            "flipY": {
+              "type": "boolean"
+            },
+            "height": {
+              "type": "number"
+            },
+            "id": {
+              "type": "string"
+            },
+            "innerRadius": {
+              "type": "number"
+            },
+            "layout": {
+              "$ref": "#/definitions/Layout"
+            },
+            "linkingId": {
+              "type": "string"
+            },
+            "mark": {
+              "$ref": "#/definitions/Mark"
+            },
+            "opacity": {
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/Opacity"
+                },
+                {
+                  "$ref": "#/definitions/ChannelValue"
+                }
+              ]
+            },
+            "orientation": {
+              "$ref": "#/definitions/Orientation"
+            },
+            "outerRadius": {
+              "type": "number"
+            },
+            "overlayOnPreviousTrack": {
+              "type": "boolean"
+            },
+            "overrideTemplate": {
+              "type": "boolean"
+            },
+            "prerelease": {
+              "additionalProperties": false,
+              "type": "object"
+            },
+            "row": {
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/Row"
+                },
+                {
+                  "$ref": "#/definitions/ChannelValue"
+                }
+              ]
+            },
+            "size": {
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/Size"
+                },
+                {
+                  "$ref": "#/definitions/ChannelValue"
+                }
+              ]
+            },
+            "spacing": {
+              "type": "number"
+            },
+            "startAngle": {
+              "type": "number"
+            },
+            "static": {
+              "type": "boolean"
+            },
+            "stretch": {
+              "type": "boolean"
+            },
+            "stroke": {
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/Stroke"
+                },
+                {
+                  "$ref": "#/definitions/ChannelValue"
+                }
+              ]
+            },
+            "strokeWidth": {
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/StrokeWidth"
+                },
+                {
+                  "$ref": "#/definitions/ChannelValue"
+                }
+              ]
+            },
+            "style": {
+              "$ref": "#/definitions/Style"
+            },
+            "subtitle": {
+              "type": "string"
+            },
+            "text": {
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/Text"
+                },
+                {
+                  "$ref": "#/definitions/ChannelValue"
+                }
+              ]
+            },
+            "title": {
+              "type": "string"
+            },
+            "tooltip": {
+              "items": {
+                "$ref": "#/definitions/Tooltip"
+              },
+              "type": "array"
+            },
+            "visibility": {
+              "items": {
+                "$ref": "#/definitions/VisibilityCondition"
+              },
+              "type": "array"
+            },
+            "width": {
+              "type": "number"
+            },
+            "x": {
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/X"
+                },
+                {
+                  "$ref": "#/definitions/ChannelValue"
+                }
+              ]
+            },
+            "x1": {
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/X"
+                },
+                {
+                  "$ref": "#/definitions/ChannelValue"
+                }
+              ]
+            },
+            "x1e": {
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/X"
+                },
+                {
+                  "$ref": "#/definitions/ChannelValue"
+                }
+              ]
+            },
+            "xAxis": {
+              "$ref": "#/definitions/AxisPosition"
+            },
+            "xDomain": {
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/DomainInterval"
+                },
+                {
+                  "$ref": "#/definitions/DomainChrInterval"
+                },
+                {
+                  "$ref": "#/definitions/DomainChr"
+                }
+              ]
+            },
+            "xOffset": {
+              "type": "number"
+            },
+            "xe": {
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/X"
+                },
+                {
+                  "$ref": "#/definitions/ChannelValue"
+                }
+              ]
+            },
+            "y": {
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/Y"
+                },
+                {
+                  "$ref": "#/definitions/ChannelValue"
+                }
+              ]
+            },
+            "y1": {
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/Y"
+                },
+                {
+                  "$ref": "#/definitions/ChannelValue"
+                }
+              ]
+            },
+            "y1e": {
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/Y"
+                },
+                {
+                  "$ref": "#/definitions/ChannelValue"
+                }
+              ]
+            },
+            "yOffset": {
+              "type": "number"
+            },
+            "ye": {
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/Y"
+                },
+                {
+                  "$ref": "#/definitions/ChannelValue"
+                }
+              ]
+            },
+            "zoomLimits": {
+              "$ref": "#/definitions/ZoomLimits"
+            }
+          },
+          "required": [
+            "data",
+            "height",
+            "mark",
+            "width"
+          ],
+          "type": "object"
         },
         {
           "$ref": "#/definitions/OverlaidTrack"
