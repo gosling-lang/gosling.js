@@ -79,7 +79,7 @@ export interface CommonViewDef {
 
     /**
      * A string that specifies the genome builds to use.
-     * Currently support "hg38", "hg19", "hg18", "hg17", "hg16", "mm10", "mm9", and "unknown".
+     * Currently support `"hg38"`, `"hg19"`, `"hg18"`, `"hg17"`, `"hg16"`, `"mm10"`, `"mm9"`, and `"unknown"`.
      *
      * __Note:__: with `"unknown"` assembly, genomic axes do not show chrN: in labels.
      */
