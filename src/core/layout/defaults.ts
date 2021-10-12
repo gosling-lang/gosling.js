@@ -22,4 +22,4 @@ export const DEFAULT_INNER_RADIUS_PROP = 0.3;
 export const DEFAULT_CIRCULAR_VIEW_PADDING = 0; // TODO: this is not properly considered in determining the arrangement of views
 
 // default color when cannot parse
-export const DEFAULT_BACKUP_COLOR = 'gray';
+export const DEFAULT_BACKUP_COLOR = 'lightgray';

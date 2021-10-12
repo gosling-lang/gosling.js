@@ -4,31 +4,7 @@ import { GOSLING_PUBLIC_DATA } from './gosling-data';
 export const EX_SPEC_NATIVE_MATRIX: GoslingSpec = {
     views: [
         {
-            tracks: [
-                {
-                    data: {
-                        url: 'https://s3.amazonaws.com/gosling-lang.org/data/HFFc6_H3K4me3.bigWig',
-                        type: 'bigwig',
-                        column: 'position',
-                        value: 'peak',
-                        binSize: 8
-                    },
-                    title: 'HFFc6_H3K4me3',
-                    mark: 'bar',
-                    x: { field: 'start', type: 'genomic', axis: 'top' },
-                    xe: { field: 'end', type: 'genomic' },
-                    y: {
-                        field: 'peak',
-                        type: 'quantitative',
-                        axis: 'none'
-                    },
-                    color: { value: 'darkgreen' },
-                    width: 570,
-                    height: 40
-                }
-            ]
-        },
-        {
+            xDomain: { chromosome: '1', interval: [4900000, 5200000] },
             tracks: [
                 {
                     data: {
