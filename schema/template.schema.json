@@ -71,64 +71,9 @@
     "ChannelWithBase": {
       "anyOf": [
         {
-          "additionalProperties": false,
           "properties": {
-            "aggregate": {
-              "$ref": "#/definitions/Aggregate"
-            },
-            "axis": {
-              "$ref": "#/definitions/AxisPosition"
-            },
             "base": {
               "type": "string"
-            },
-            "baseline": {
-              "type": [
-                "string",
-                "number"
-              ]
-            },
-            "domain": {
-              "$ref": "#/definitions/Domain"
-            },
-            "field": {
-              "type": "string"
-            },
-            "flip": {
-              "type": "boolean"
-            },
-            "grid": {
-              "type": "boolean"
-            },
-            "legend": {
-              "type": "boolean"
-            },
-            "linkingId": {
-              "type": "string"
-            },
-            "mirrored": {
-              "type": "boolean"
-            },
-            "padding": {
-              "type": "number"
-            },
-            "range": {
-              "$ref": "#/definitions/Range"
-            },
-            "sort": {
-              "items": {
-                "type": "string"
-              },
-              "type": "array"
-            },
-            "stack": {
-              "type": "boolean"
-            },
-            "type": {
-              "$ref": "#/definitions/FieldType"
-            },
-            "zeroBaseline": {
-              "type": "boolean"
             }
           },
           "type": "object"
@@ -455,34 +400,6 @@
       ],
       "type": "string"
     },
-    "Domain": {
-      "anyOf": [
-        {
-          "items": {
-            "type": "string"
-          },
-          "type": "array"
-        },
-        {
-          "items": {
-            "type": "number"
-          },
-          "type": "array"
-        },
-        {
-          "$ref": "#/definitions/DomainInterval"
-        },
-        {
-          "$ref": "#/definitions/DomainChrInterval"
-        },
-        {
-          "$ref": "#/definitions/DomainChr"
-        },
-        {
-          "$ref": "#/definitions/DomainGene"
-        }
-      ]
-    },
     "DomainChr": {
       "additionalProperties": false,
       "properties": {
@@ -518,35 +435,6 @@
       "required": [
         "chromosome",
         "interval"
-      ],
-      "type": "object"
-    },
-    "DomainGene": {
-      "additionalProperties": false,
-      "properties": {
-        "gene": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "items": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "string"
-                }
-              ],
-              "maxItems": 2,
-              "minItems": 2,
-              "type": "array"
-            }
-          ]
-        }
-      },
-      "required": [
-        "gene"
       ],
       "type": "object"
     },
@@ -1035,37 +923,6 @@
         "vertical"
       ],
       "type": "string"
-    },
-    "PREDEFINED_COLORS": {
-      "enum": [
-        "viridis",
-        "grey",
-        "spectral",
-        "warm",
-        "cividis",
-        "bupu",
-        "rdbu"
-      ],
-      "type": "string"
-    },
-    "Range": {
-      "anyOf": [
-        {
-          "items": {
-            "type": "string"
-          },
-          "type": "array"
-        },
-        {
-          "items": {
-            "type": "number"
-          },
-          "type": "array"
-        },
-        {
-          "$ref": "#/definitions/PREDEFINED_COLORS"
-        }
-      ]
     },
     "SizeVisibilityCondition": {
       "additionalProperties": false,

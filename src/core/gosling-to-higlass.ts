@@ -186,7 +186,13 @@ export function goslingToHiGlass(
         // check whether to show axis
         ['x', 'y'].forEach(c => {
             const channel = (firstResolvedSpec as any)[c];
-            if (IsChannelDeep(channel) && channel.axis && channel.axis !== 'none' && channel.type === 'genomic') {
+            if (
+                IsChannelDeep(channel) &&
+                'axis' in channel &&
+                channel.axis &&
+                channel.axis !== 'none' &&
+                channel.type === 'genomic'
+            ) {
                 const narrowType = getAxisNarrowType(c as any, gosTrack.orientation, bb.width, bb.height);
                 hgModel.setAxisTrack(channel.axis, narrowType, {
                     layout: firstResolvedSpec.layout,

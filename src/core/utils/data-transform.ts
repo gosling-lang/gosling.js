@@ -483,15 +483,15 @@ export function aggregateData(spec: SingleTrack, data: Datum[]): Datum[] {
                 return;
             }
 
-            const { field: qField, aggregate } = qFieldSpec;
-            if (!qField || !aggregate) {
+            const { field: qField } = qFieldSpec;
+            if (!qField || !('aggregate' in qFieldSpec)) {
                 // this shouldn't be reached
                 failed = true;
                 return;
             }
 
             datum[qField] =
-                aggregate === 'max'
+                qFieldSpec.aggregate === 'max'
                     ? Math.max(...data.filter(d => d[nField] === c).map(d => +d[qField]))
                     : Math.min(...data.filter(d => d[nField] === c).map(d => +d[qField]));
         });

@@ -130,10 +130,10 @@ export function IsTemplateTrack(track: Partial<Track>): track is TemplateTrack {
 export function Is2DTrack(track: Track) {
     return (
         IsSingleTrack(track) &&
-        IsChannelDeep(track['x']) &&
-        track['x'].type === 'genomic' &&
-        IsChannelDeep(track['y']) &&
-        track['y'].type === 'genomic'
+        IsChannelDeep(track.x) &&
+        track.x.type === 'genomic' &&
+        IsChannelDeep(track.y) &&
+        track.y.type === 'genomic'
     );
 }
 
