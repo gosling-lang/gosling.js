@@ -211,30 +211,53 @@ export function getTabularData(
         const { tileX, tileY } = data;
         const numericValues = data.dense;
         // TODO: somehow, 1024 works
-        const tileXUnitSize = data.tileWidth / 1024; // / tileSize / 4;
+        const tileXUnitSize = data.tileWidth / 1024; // tileSize / 4;
         const tileYUnitSize = data.tileHeight / 1024; // tileSize / 4;
 
         // console.log(tileXUnitSize, tileYUnitSize, tileSize, data.tileWidth);
 
-        numericValues.forEach((value, i) => {
-            const xIndex = i % tileSize;
-            const yIndex = Math.floor(i / tileSize);
+        // For the rendering performance, we aggregate 16 cells into one.
+        const binSize = 16; // assuming that # of cells can be divided by binSize
+        for (let i = 0; i < numericValues.length / binSize; i++) {
+            const binLen = Math.sqrt(binSize);
+            const xIndex = (i * binLen) % tileSize;
+            const yIndex = Math.floor((i * binLen) / tileSize) * binLen;
 
-            // add individual rows
-            tabularData.push({
-                value,
-                x: tileX + (xIndex + 0.5) * tileXUnitSize,
-                xs: tileX + xIndex * tileXUnitSize,
-                xe: tileX + (xIndex + 1) * tileXUnitSize,
-                y: tileY + (yIndex + 0.5) * tileYUnitSize,
-                ys: tileY + yIndex * tileYUnitSize,
-                ye: tileY + (yIndex + 1) * tileYUnitSize
-            });
-        });
+            // Being xIndex and yIndex the top-let origin, aggregate 4 x 4 cells
+            let value = 0;
+            for (let c = 0; c < binLen; c++) {
+                for (let r = 0; r < binLen; r++) {
+                    value += numericValues[(yIndex + r) * tileSize + (xIndex + c)];
+                }
+            }
+
+            value /= binSize;
+            const xs = tileX + xIndex * tileXUnitSize;
+            const xe = tileX + (xIndex + binLen) * tileXUnitSize;
+            const ys = tileY + yIndex * tileYUnitSize;
+            const ye = tileY + (yIndex + binLen) * tileYUnitSize;
+            const x = (xs + xe) / 2.0;
+            const y = (ys + ye) / 2.0;
+            tabularData.push({ value, x, xs, xe, y, ys, ye });
+        }
+        //numericValues.forEach((value, i) => {
+        //    const xIndex = i % tileSize;
+        //    const yIndex = Math.floor(i / tileSize);
+
+        //    // add individual rows
+        //    tabularData.push({
+        //        value,
+        //        x: tileX + (xIndex + 0.5) * tileXUnitSize,
+        //        xs: tileX + xIndex * tileXUnitSize,
+        //        xe: tileX + (xIndex + 1) * tileXUnitSize,
+        //        y: tileY + (yIndex + 0.5) * tileYUnitSize,
+        //        ys: tileY + yIndex * tileYUnitSize,
+        //        ye: tileY + (yIndex + 1) * tileYUnitSize
+        //    });
+        //});
 
         // console.log(tabularData.slice(0, 1024))
-        // TODO: 1/9 works for rendering. my first target would be merging 9 cells into one
-        tabularData.splice(tabularData.length / 9.0, (tabularData.length / 9.0) * 8);
+        // tabularData.splice(tabularData.length / 16.0, (tabularData.length / 16.0) * 15);
     } else if (spec.data.type === 'beddb') {
         if (!data.raw) {
             // we did not get sufficient data.
