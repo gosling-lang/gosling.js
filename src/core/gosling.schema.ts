@@ -77,7 +77,12 @@ export interface CommonViewDef {
     /** specify the y offset of views in the unit of pixels */
     yOffset?: number;
 
-    /** currently support "hg38", "hg19", "hg18", "hg17", "hg16", "mm10", "mm9" */
+    /**
+     * A string that specifies the genome builds to use.
+     * Currently support "hg38", "hg19", "hg18", "hg17", "hg16", "mm10", "mm9", and "unknown".
+     *
+     * __Note:__: with `"unknown"` assembly, genomic axes do not show chrN: in labels.
+     */
     assembly?: Assembly;
 
     // TODO: Change to domain?

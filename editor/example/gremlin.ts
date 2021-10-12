@@ -11,7 +11,8 @@ export const EX_SPEC_GREMLIN: GoslingSpec = {
                     alignment: 'overlay',
                     title: 'Chromosome 5',
                     data: {
-                        url: 'https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/UCSC.HG38.Human.CytoBandIdeogram.csv',
+                        url:
+                            'https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/UCSC.HG38.Human.CytoBandIdeogram.csv',
                         type: 'csv',
                         chromosomeField: 'Chromosome',
                         genomicFields: ['chromStart', 'chromEnd']
@@ -242,7 +243,8 @@ export const EX_SPEC_GREMLIN: GoslingSpec = {
                                 {
                                     title: 'Rearrangement View',
                                     data: {
-                                        url: 'https://raw.githubusercontent.com/vigsterkr/circos/master/data/5/segdup.txt',
+                                        url:
+                                            'https://raw.githubusercontent.com/vigsterkr/circos/master/data/5/segdup.txt',
                                         type: 'csv',
                                         headerNames: ['id', 'chr', 'p1', 'p2'],
                                         chromosomePrefix: 'hs',
