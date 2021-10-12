@@ -1,6 +1,55 @@
 import type { GoslingSpec } from 'gosling.js';
 import { GOSLING_PUBLIC_DATA } from './gosling-data';
 
+export const EX_SPEC_NATIVE_MATRIX: GoslingSpec = {
+    views: [
+        {
+            tracks: [
+                {
+                    data: {
+                        url: 'https://s3.amazonaws.com/gosling-lang.org/data/HFFc6_H3K4me3.bigWig',
+                        type: 'bigwig',
+                        column: 'position',
+                        value: 'peak'
+                        // "binSize": 8
+                    },
+                    title: 'HFFc6_H3K4me3',
+                    mark: 'bar',
+                    x: { field: 'start', type: 'genomic', axis: 'top' },
+                    xe: { field: 'end', type: 'genomic' },
+                    y: {
+                        field: 'peak',
+                        type: 'quantitative',
+                        axis: 'none'
+                    },
+                    color: { value: 'darkgreen' },
+                    width: 570,
+                    height: 40
+                }
+            ]
+        },
+        {
+            tracks: [
+                {
+                    data: {
+                        url: GOSLING_PUBLIC_DATA.matrix,
+                        type: 'matrix'
+                    },
+                    mark: 'point',
+                    x: { field: 'x', type: 'genomic', axis: 'top' },
+                    // xe: { field: 'xe', type: 'genomic', axis: 'top' },
+                    y: { field: 'y', type: 'genomic', axis: 'right' }, // TODO: axis position
+                    // ye: { field: 'ye', type: 'genomic', axis: 'right' }, // TODO: axis position
+                    color: { field: 'value', type: 'quantitative' },
+                    size: { value: 1 },
+                    width: 600,
+                    height: 600
+                }
+            ]
+        }
+    ]
+};
+
 export const EX_SPEC_MATRIX: GoslingSpec = {
     title: 'Matrix Visualization',
     subtitle: 'Matrix Heatmap for Hi-C Data',

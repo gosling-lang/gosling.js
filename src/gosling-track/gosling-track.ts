@@ -257,7 +257,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                 const tm = tile.goslingModels[0];
 
                 // check visibility condition
-                const trackWidth = this.dimensions[1];
+                const trackWidth = this.dimensions[0];
                 const zoomLevel = this._xScale.invert(trackWidth) - this._xScale.invert(0);
                 if (!tm.trackVisibility({ zoomLevel })) {
                     return;
@@ -270,7 +270,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             // A single tile contains one track or multiple tracks overlaid
             tile.goslingModels.forEach((tm: GoslingTrackModel) => {
                 // check visibility condition
-                const trackWidth = this.dimensions[1];
+                const trackWidth = this.dimensions[0];
                 const zoomLevel = this._xScale.invert(trackWidth) - this._xScale.invert(0);
                 if (!tm.trackVisibility({ zoomLevel })) {
                     return;
@@ -500,7 +500,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
 
                     if (Is2DTrack(resolveSuperposedTracks(this.options.spec)[0])) {
                         // it makes sense only when the y-axis is being used for a genomic field
-                        tileProxy.calculateTilesFromResolution(
+                        this.yTiles = tileProxy.calculateTilesFromResolution(
                             sortedResolutions[this.zoomLevel],
                             this._yScale,
                             this.tilesetInfo.min_pos[0],
@@ -521,7 +521,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                     );
 
                     if (Is2DTrack(resolveSuperposedTracks(this.options.spec)[0])) {
-                        // it makes sense only when the y-axis is being used for a genomic field
+                        // This makes sense only when the y-axis is being used for a genomic field
                         this.yTiles = tileProxy.calculateTiles(
                             this.zoomLevel,
                             this._yScale,
@@ -551,11 +551,14 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
 
                 const chosenResolution = sortedResolutions[zoomLevel];
 
+                const [xTilePos, yTilePos] = tilePos;
+
                 const tileWidth = chosenResolution * binsPerTile;
                 const tileHeight = tileWidth;
 
-                const tileX = chosenResolution * binsPerTile * tilePos[0];
-                const tileY = chosenResolution * binsPerTile * tilePos[1];
+                // TODO: `binsPerTile` is 1024, but somehow 256 works. So, 4 is additionally divided as workaround.
+                const tileX = (tileWidth * xTilePos) / 4;
+                const tileY = (tileHeight * yTilePos) / 4;
 
                 return {
                     tileX,
@@ -564,11 +567,9 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                     tileHeight
                 };
             } else {
-                const xTilePos = tilePos[0];
-                const yTilePos = tilePos[1];
+                const [xTilePos, yTilePos] = tilePos;
 
                 const minX = this.tilesetInfo.min_pos[0];
-
                 const minY = this.options.reverseYAxis ? -this.tilesetInfo.max_pos[1] : this.tilesetInfo.min_pos[1];
 
                 const tileWidth = this.tilesetInfo.max_width / 2 ** zoomLevel;
@@ -770,14 +771,10 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                     return;
                 }
 
-                if (resolved.data.type === 'matrix') {
-                    // we do not draw matrix ourselves, higlass does.
-                    return;
-                }
                 // console.log(tile);
                 if (!tile.gos.tabularData) {
                     // If the data is not already stored in a tabular form, convert them.
-                    const { tileX, tileWidth } = this.getTilePosAndDimensions(
+                    const { tileX, tileY, tileWidth, tileHeight } = this.getTilePosAndDimensions(
                         tile.gos.zoomLevel,
                         tile.gos.tilePos,
                         this.tileSize
@@ -786,7 +783,9 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                     tile.gos.tabularData = getTabularData(resolved, {
                         ...tile.gos,
                         tileX,
+                        tileY,
                         tileWidth,
+                        tileHeight,
                         tileSize: this.tileSize
                     });
                 }

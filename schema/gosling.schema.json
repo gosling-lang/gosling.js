@@ -1632,11 +1632,29 @@
     "MatrixData": {
       "additionalProperties": false,
       "properties": {
+        "binSize": {
+          "type": "number"
+        },
+        "column": {
+          "type": "string"
+        },
+        "end": {
+          "type": "string"
+        },
+        "row": {
+          "type": "string"
+        },
+        "start": {
+          "type": "string"
+        },
         "type": {
           "const": "matrix",
           "type": "string"
         },
         "url": {
+          "type": "string"
+        },
+        "value": {
           "type": "string"
         }
       },

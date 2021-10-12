@@ -408,6 +408,17 @@ export interface MultivecData {
     binSize?: number; // Binning the genomic interval in tiles (unit size: 256)
 }
 
+export interface MatrixData {
+    type: 'matrix';
+    url: string;
+    column?: string;
+    row?: string;
+    value?: string;
+    start?: string;
+    end?: string;
+    binSize?: number; // Binning the genomic interval in tiles (unit size: 256)
+}
+
 export interface BIGWIGData {
     type: 'bigwig';
     url: string;
@@ -447,10 +458,6 @@ export interface BAMData {
 }
 
 /* ----------------------------- DATA TRANSFORM ----------------------------- */
-export interface MatrixData {
-    type: 'matrix';
-    url: string;
-}
 
 export type DataTransform =
     | FilterTransform

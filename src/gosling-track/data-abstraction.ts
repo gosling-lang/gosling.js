@@ -11,7 +11,9 @@ export function getTabularData(
         raw?: Datum[];
         shape?: [number, number];
         tileX: number;
+        tileY?: number; // Used for `matrix`
         tileWidth: number;
+        tileHeight?: number; // Used for `matrix`
         tileSize: number;
     }
 ) {
@@ -103,6 +105,7 @@ export function getTabularData(
                 }
             }
         });
+        // console.log(tabularData);
     } else if (spec.data.type === 'multivec') {
         if (!spec.data.row || !spec.data.column || !spec.data.value) {
             console.warn('Proper data configuration is not provided. Please specify the name of data fields.');
@@ -193,6 +196,45 @@ export function getTabularData(
                 }
             });
         });
+    } else if (spec.data.type === 'matrix') {
+        if (!data.dense || typeof data.tileY === 'undefined' || typeof data.tileHeight === 'undefined') {
+            // we do not have sufficient data.
+            return;
+        }
+
+        // width and height of the tile
+        const tileSize = Math.sqrt(data.dense.length);
+        if (tileSize !== 256) {
+            console.warn('The bin size of the matrix tilesets is not 256');
+        }
+        // console.log(data);
+        const { tileX, tileY } = data;
+        const numericValues = data.dense;
+        // TODO: somehow, 1024 works
+        const tileXUnitSize = data.tileWidth / 1024; // / tileSize / 4;
+        const tileYUnitSize = data.tileHeight / 1024; // tileSize / 4;
+
+        // console.log(tileXUnitSize, tileYUnitSize, tileSize, data.tileWidth);
+
+        numericValues.forEach((value, i) => {
+            const xIndex = i % tileSize;
+            const yIndex = Math.floor(i / tileSize);
+
+            // add individual rows
+            tabularData.push({
+                value,
+                x: tileX + (xIndex + 0.5) * tileXUnitSize,
+                xs: tileX + xIndex * tileXUnitSize,
+                xe: tileX + (xIndex + 1) * tileXUnitSize,
+                y: tileY + (yIndex + 0.5) * tileYUnitSize,
+                ys: tileY + yIndex * tileYUnitSize,
+                ye: tileY + (yIndex + 1) * tileYUnitSize
+            });
+        });
+
+        // console.log(tabularData.slice(0, 1024))
+        // TODO: 1/9 works for rendering. my first target would be merging 9 cells into one
+        tabularData.splice(tabularData.length / 9.0, (tabularData.length / 9.0) * 8);
     } else if (spec.data.type === 'beddb') {
         if (!data.raw) {
             // we did not get sufficient data.
@@ -249,7 +291,7 @@ export function getTabularData(
             }
         });
     } else if (spec.data.type === 'bam') {
-        // TODO: Do we need this?
+        // BAM file is loaded by worker, so no need to do anything here
     }
 
     /// DEBUG

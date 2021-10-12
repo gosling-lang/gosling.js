@@ -32,6 +32,7 @@ import {
     OverlaidTracks,
     StackedTracks,
     BAMData,
+    MatrixData,
     Range,
     TemplateTrack
 } from './gosling.schema';
@@ -151,7 +152,7 @@ export function IsChannelBind(
 
 export function IsDataDeepTileset(
     _: DataDeep | undefined
-): _ is BEDDBData | VectorData | MultivecData | BIGWIGData | BAMData {
+): _ is BEDDBData | VectorData | MultivecData | BIGWIGData | BAMData | MatrixData {
     return (
         _ !== undefined &&
         (_.type === 'vector' ||
