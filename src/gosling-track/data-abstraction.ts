@@ -240,24 +240,6 @@ export function getTabularData(
             const y = (ys + ye) / 2.0;
             tabularData.push({ value, x, xs, xe, y, ys, ye });
         }
-        //numericValues.forEach((value, i) => {
-        //    const xIndex = i % tileSize;
-        //    const yIndex = Math.floor(i / tileSize);
-
-        //    // add individual rows
-        //    tabularData.push({
-        //        value,
-        //        x: tileX + (xIndex + 0.5) * tileXUnitSize,
-        //        xs: tileX + xIndex * tileXUnitSize,
-        //        xe: tileX + (xIndex + 1) * tileXUnitSize,
-        //        y: tileY + (yIndex + 0.5) * tileYUnitSize,
-        //        ys: tileY + yIndex * tileYUnitSize,
-        //        ye: tileY + (yIndex + 1) * tileYUnitSize
-        //    });
-        //});
-
-        // console.log(tabularData.slice(0, 1024))
-        // tabularData.splice(tabularData.length / 16.0, (tabularData.length / 16.0) * 15);
     } else if (spec.data.type === 'beddb') {
         if (!data.raw) {
             // we did not get sufficient data.

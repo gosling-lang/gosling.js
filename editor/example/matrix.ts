@@ -10,8 +10,8 @@ export const EX_SPEC_NATIVE_MATRIX: GoslingSpec = {
                         url: 'https://s3.amazonaws.com/gosling-lang.org/data/HFFc6_H3K4me3.bigWig',
                         type: 'bigwig',
                         column: 'position',
-                        value: 'peak'
-                        // "binSize": 8
+                        value: 'peak',
+                        binSize: 8
                     },
                     title: 'HFFc6_H3K4me3',
                     mark: 'bar',
@@ -35,13 +35,12 @@ export const EX_SPEC_NATIVE_MATRIX: GoslingSpec = {
                         url: GOSLING_PUBLIC_DATA.matrix,
                         type: 'matrix'
                     },
-                    mark: 'point',
-                    x: { field: 'x', type: 'genomic', axis: 'top' },
-                    // xe: { field: 'xe', type: 'genomic', axis: 'top' },
-                    y: { field: 'y', type: 'genomic', axis: 'right' }, // TODO: axis position
-                    // ye: { field: 'ye', type: 'genomic', axis: 'right' }, // TODO: axis position
-                    color: { field: 'value', type: 'quantitative' },
-                    size: { value: 1 },
+                    mark: 'bar',
+                    x: { field: 'xs', type: 'genomic', axis: 'top' },
+                    xe: { field: 'xe', type: 'genomic' },
+                    y: { field: 'ys', type: 'genomic', axis: 'right' }, // TODO: axis position
+                    ye: { field: 'ye', type: 'genomic' }, // TODO: axis position
+                    color: { field: 'value', type: 'quantitative', legend: true },
                     width: 600,
                     height: 600
                 }
