@@ -1389,12 +1389,15 @@
       "additionalProperties": false,
       "properties": {
         "field": {
+          "description": "a filter is applied based on the values of the specified data field",
           "type": "string"
         },
         "include": {
+          "description": "check whether the value includes a substring",
           "type": "string"
         },
         "not": {
+          "description": "when `{\"not\": true}`, apply a NOT logical operation to the filter.\n\n__Default:__ false",
           "type": "boolean"
         },
         "type": {
@@ -1403,9 +1406,9 @@
         }
       },
       "required": [
-        "type",
         "field",
-        "include"
+        "include",
+        "type"
       ],
       "type": "object"
     },
@@ -1874,9 +1877,11 @@
       "additionalProperties": false,
       "properties": {
         "field": {
+          "description": "a filter is applied based on the values of the specified data field",
           "type": "string"
         },
         "not": {
+          "description": "when `{\"not\": true}`, apply a NOT logical operation to the filter.\n\n__Default:__ false",
           "type": "boolean"
         },
         "oneOf": {
@@ -1893,7 +1898,8 @@
               },
               "type": "array"
             }
-          ]
+          ],
+          "description": "check whether the value is an element in the provided list"
         },
         "type": {
           "const": "filter",
@@ -1901,9 +1907,9 @@
         }
       },
       "required": [
-        "type",
         "field",
-        "oneOf"
+        "oneOf",
+        "type"
       ],
       "type": "object"
     },
@@ -2948,15 +2954,18 @@
       "additionalProperties": false,
       "properties": {
         "field": {
+          "description": "a filter is applied based on the values of the specified data field",
           "type": "string"
         },
         "inRange": {
+          "description": "check whether the value is in a number range",
           "items": {
             "type": "number"
           },
           "type": "array"
         },
         "not": {
+          "description": "when `{\"not\": true}`, apply a NOT logical operation to the filter.\n\n__Default:__ false",
           "type": "boolean"
         },
         "type": {
@@ -2965,9 +2974,9 @@
         }
       },
       "required": [
-        "type",
         "field",
-        "inRange"
+        "inRange",
+        "type"
       ],
       "type": "object"
     },

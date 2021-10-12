@@ -281,6 +281,7 @@
           "type": "string"
         },
         "field": {
+          "description": "a filter is applied based on the values of the specified data field",
           "type": "string"
         },
         "fields": {
@@ -355,12 +356,14 @@
           "type": "string"
         },
         "inRange": {
+          "description": "check whether the value is in a number range",
           "items": {
             "type": "number"
           },
           "type": "array"
         },
         "include": {
+          "description": "check whether the value includes a substring",
           "type": "string"
         },
         "isLongField": {
@@ -384,6 +387,7 @@
           "type": "string"
         },
         "not": {
+          "description": "when `{\"not\": true}`, apply a NOT logical operation to the filter.\n\n__Default:__ false",
           "type": "boolean"
         },
         "oneOf": {
@@ -400,7 +404,8 @@
               },
               "type": "array"
             }
-          ]
+          ],
+          "description": "check whether the value is an element in the provided list"
         },
         "replace": {
           "items": {

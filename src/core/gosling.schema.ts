@@ -784,25 +784,30 @@ export type DataTransform =
 
 export type FilterTransform = OneOfFilter | RangeFilter | IncludeFilter;
 
-export interface RangeFilter {
+interface CommonFilterTransform {
     type: 'filter';
+    /** a filter is applied based on the values of the specified data field */
     field: string;
+    /**
+     * when `{"not": true}`, apply a NOT logical operation to the filter.
+     *
+     * __Default:__ false */
+    not?: boolean;
+}
+
+export interface RangeFilter extends CommonFilterTransform {
+    /** check whether the value is in a number range */
     inRange: number[];
-    not?: boolean;
 }
 
-export interface IncludeFilter {
-    type: 'filter';
-    field: string;
+export interface IncludeFilter extends CommonFilterTransform {
+    /** check whether the value includes a substring */
     include: string;
-    not?: boolean;
 }
 
-export interface OneOfFilter {
-    type: 'filter';
-    field: string;
+export interface OneOfFilter extends CommonFilterTransform {
+    /** check whether the value is an element in the provided list */
     oneOf: string[] | number[];
-    not?: boolean;
 }
 
 export type LogBase = number | 'e';
