@@ -141,7 +141,7 @@ export type MarkType =
     | 'header';
 
 /* ----------------------------- TRACK ----------------------------- */
-type SingleTrack = SingleTrackBase & Encoding;
+export type SingleTrack = SingleTrackBase & Encoding;
 
 interface SingleTrackBase extends CommonTrackDef {
     // Data
