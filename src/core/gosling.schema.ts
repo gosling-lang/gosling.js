@@ -40,7 +40,7 @@ export interface OverlaidTracks extends CommonViewDef, Partial<SingleTrack> {
 
 export interface MultipleViews extends CommonViewDef {
     /**
-     * Specify how multive views are arranged.
+     * Specify how multiple views are arranged.
      * One of `"parallel"`,  `"serial"`, `"horizontal"`, `"vertical"`.
      */
     arrangement?: 'parallel' | 'serial' | 'horizontal' | 'vertical';
@@ -71,7 +71,6 @@ export interface CommonViewDef {
     static?: boolean;
     zoomLimits?: ZoomLimits; // limits of zoom levels. default: [1, null]
 
-    // offsets
     /** specify the x offset of views in the unit of pixels */
     xOffset?: number;
     /** specify the y offset of views in the unit of pixels */
@@ -586,7 +585,7 @@ export interface CSVData {
     /**
      * specify the number of rows loaded from the url.
      *
-     * _Default:__ 1000
+     * __Default:__ `1000`
      */
     sampleLength?: number; // This limit the total number of rows fetched (default: 1000)
 
@@ -858,7 +857,7 @@ export interface DisplaceTransform {
     newField: string;
 
     /** Specify maximum rows to be generated (default has no limit) */
-    maxRows?: number; // Specify maximum rows to be generated (default: `undefined` meaning no limit)
+    maxRows?: number;
 }
 
 export interface ExonSplitTransform {
