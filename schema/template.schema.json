@@ -186,25 +186,25 @@
       "properties": {
         "base": {
           "$ref": "#/definitions/LogBase",
-          "description": "If not specified, 10 is used"
+          "description": "If not specified, 10 is used."
         },
         "baseGenomicField": {
-          "description": "Base genomic position when parsing relative position",
+          "description": "Base genomic position when parsing relative position.",
           "type": "string"
         },
         "boundingBox": {
           "additionalProperties": false,
           "properties": {
             "endField": {
-              "description": "The name of a quantitative field that represents the end position",
+              "description": "The name of a quantitative field that represents the end position.",
               "type": "string"
             },
             "groupField": {
-              "description": "The name of a nominal field to group rows by in prior to piling-up",
+              "description": "The name of a nominal field to group rows by in prior to piling-up.",
               "type": "string"
             },
             "isPaddingBP": {
-              "description": "whether to consider `padding` as the bp length",
+              "description": "Whether to consider `padding` as the bp length.",
               "type": "boolean"
             },
             "padding": {
@@ -212,7 +212,7 @@
               "type": "number"
             },
             "startField": {
-              "description": "The name of a quantitative field that represents the start position",
+              "description": "The name of a quantitative field that represents the start position.",
               "type": "string"
             }
           },
@@ -226,7 +226,7 @@
           "type": "string"
         },
         "field": {
-          "description": "a filter is applied based on the values of the specified data field",
+          "description": "A filter is applied based on the values of the specified data field",
           "type": "string"
         },
         "fields": {
@@ -286,11 +286,11 @@
           "type": "object"
         },
         "genomicField": {
-          "description": "Relative genomic position to parse",
+          "description": "Relative genomic position to parse.",
           "type": "string"
         },
         "genomicLengthField": {
-          "description": "Length of genomic interval",
+          "description": "Length of genomic interval.",
           "type": "string"
         },
         "groupField": {
@@ -301,14 +301,14 @@
           "type": "string"
         },
         "inRange": {
-          "description": "check whether the value is in a number range",
+          "description": "Check whether the value is in a number range.",
           "items": {
             "type": "number"
           },
           "type": "array"
         },
         "include": {
-          "description": "check whether the value includes a substring",
+          "description": "Check whether the value includes a substring.",
           "type": "string"
         },
         "isLongField": {
@@ -321,12 +321,12 @@
           "type": "number"
         },
         "maxRows": {
-          "description": "Specify maximum rows to be generated (default has no limit)",
+          "description": "Specify maximum rows to be generated (default has no limit).",
           "type": "number"
         },
         "method": {
           "$ref": "#/definitions/DisplacementType",
-          "description": "A string that specifies the type of diseplancement, one of `\"pile\"` and `\"spread\"`"
+          "description": "A string that specifies the type of diseplancement, one of `\"pile\"` and `\"spread\"`."
         },
         "newField": {
           "type": "string"
@@ -350,7 +350,7 @@
               "type": "array"
             }
           ],
-          "description": "check whether the value is an element in the provided list"
+          "description": "Check whether the value is an element in the provided list."
         },
         "replace": {
           "items": {
@@ -1084,7 +1084,7 @@
           "type": "object"
         },
         "linkConnectionType": {
-          "description": "specify the connetion type of `betweenLink` marks, one of `\"straight\"`, `\"curve\"`, `\"corner\"`.\n\n__Default__: `\"corner\"`",
+          "description": "Specify the connetion type of `betweenLink` marks, one of `\"straight\"`, `\"curve\"`, `\"corner\"`.\n\n__Default__: `\"corner\"`",
           "enum": [
             "straight",
             "curve",
@@ -1112,7 +1112,7 @@
           "type": "number"
         },
         "textFontWeight": {
-          "description": "Specify the font weight (either `\"bold\"` or `\"normal\"` ) of `text` marks",
+          "description": "Specify the font weight (either `\"bold\"` or `\"normal\"` ) of `text` marks.",
           "enum": [
             "bold",
             "normal"
@@ -1120,7 +1120,7 @@
           "type": "string"
         },
         "textStroke": {
-          "description": "specify the stroke of `text` marks. Can also be specified using the `stroke` channel option of `text` marks.",
+          "description": "Specify the stroke of `text` marks. Can also be specified using the `stroke` channel option of `text` marks.",
           "type": "string"
         },
         "textStrokeWidth": {
@@ -1132,7 +1132,7 @@
     },
     "TemplateTrackDef": {
       "additionalProperties": false,
-      "description": "Definition of Track Templates",
+      "description": "Definition of Track Templates.",
       "properties": {
         "channels": {
           "items": {
@@ -1207,7 +1207,7 @@
           "type": "number"
         },
         "linkingId": {
-          "description": "specify an ID for [linking multiple views](http://gosling-lang.org/docs/user-interaction#linking-views)",
+          "description": "Specify an ID for [linking multiple views](http://gosling-lang.org/docs/user-interaction#linking-views)",
           "type": "string"
         },
         "mark": {
@@ -1218,10 +1218,10 @@
         },
         "orientation": {
           "$ref": "#/definitions/Orientation",
-          "description": "either `\"horizontal\"` or `\"vertical\"`"
+          "description": "Specify the orientation."
         },
         "outerRadius": {
-          "description": "Specify the outer radius of tracks when `{\"layout\": \"circular\"}`",
+          "description": "Specify the outer radius of tracks when `{\"layout\": \"circular\"}`.",
           "type": "number"
         },
         "overlayOnPreviousTrack": {
@@ -1242,7 +1242,7 @@
           "$ref": "#/definitions/ChannelWithBase"
         },
         "spacing": {
-          "description": "- if `{\"layout\": \"linear\"}`, specify the space between tracks in pixels;\n\n- if `{\"layout\": \"circular\"}`, specify the space between tracks in percentage ranging from 0 to 100.",
+          "description": "- If `{\"layout\": \"linear\"}`, specify the space between tracks in pixels;\n\n- If `{\"layout\": \"circular\"}`, specify the space between tracks in percentage ranging from 0 to 100.",
           "type": "number"
         },
         "startAngle": {
@@ -1250,7 +1250,7 @@
           "type": "number"
         },
         "static": {
-          "description": "whether to disable [Zooming and Panning](http://gosling-lang.org/docs/user-interaction#zooming-and-panning), __Default:__ false.",
+          "description": "Whether to disable [Zooming and Panning](http://gosling-lang.org/docs/user-interaction#zooming-and-panning), __Default:__ `false`.",
           "type": "boolean"
         },
         "stretch": {
@@ -1308,7 +1308,7 @@
           ]
         },
         "xOffset": {
-          "description": "specify the x offset of views in the unit of pixels",
+          "description": "Specify the x offset of views in the unit of pixels",
           "type": "number"
         },
         "xe": {
@@ -1324,7 +1324,7 @@
           "$ref": "#/definitions/ChannelWithBase"
         },
         "yOffset": {
-          "description": "specify the y offset of views in the unit of pixels",
+          "description": "Specify the y offset of views in the unit of pixels",
           "type": "number"
         },
         "ye": {

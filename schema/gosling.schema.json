@@ -110,7 +110,7 @@
           "type": "array"
         },
         "genomicFields": {
-          "description": "specify the name of genomic data fields",
+          "description": "Specify the name of genomic data fields.",
           "items": {
             "additionalProperties": false,
             "properties": {
@@ -134,11 +134,11 @@
           "type": "string"
         },
         "url": {
-          "description": "specify the URL address of the data file",
+          "description": "Specify the URL address of the data file.",
           "type": "string"
         },
         "valueFields": {
-          "description": "specify the column indexes, field names, and field types",
+          "description": "Specify the column indexes, field names, and field types.",
           "items": {
             "additionalProperties": false,
             "properties": {
@@ -177,19 +177,19 @@
       "additionalProperties": false,
       "properties": {
         "binSize": {
-          "description": "Binning the genomic interval in tiles (unit size: 256)",
+          "description": "Binning the genomic interval in tiles (unit size: 256).",
           "type": "number"
         },
         "column": {
-          "description": "assign a field name of the middle position of genomic intervals",
+          "description": "Assign a field name of the middle position of genomic intervals.",
           "type": "string"
         },
         "end": {
-          "description": "assign a field name of the end position of genomic intervals",
+          "description": "Assign a field name of the end position of genomic intervals.",
           "type": "string"
         },
         "start": {
-          "description": "assign a field name of the start position of genomic intervals",
+          "description": "Assign a field name of the start position of genomic intervals.",
           "type": "string"
         },
         "type": {
@@ -197,11 +197,11 @@
           "type": "string"
         },
         "url": {
-          "description": "specify the URL address of the data file",
+          "description": "Specify the URL address of the data file.",
           "type": "string"
         },
         "value": {
-          "description": "assign a field name of quantitative values",
+          "description": "Assign a field name of quantitative values.",
           "type": "string"
         }
       },
@@ -218,7 +218,7 @@
       "description": "Any small enough tabular data files, such as tsv, csv, BED, BEDPE, and GFF, can be loaded using \"csv\" data specification.",
       "properties": {
         "chromosomeField": {
-          "description": "specify the name of chromosome data fields",
+          "description": "Specify the name of chromosome data fields.",
           "type": "string"
         },
         "chromosomePrefix": {
@@ -226,7 +226,7 @@
           "type": "string"
         },
         "genomicFields": {
-          "description": "specify the name of genomic data fields",
+          "description": "Specify the name of genomic data fields.",
           "items": {
             "type": "string"
           },
@@ -256,7 +256,7 @@
           "type": "array"
         },
         "headerNames": {
-          "description": "specify the names of data fields if a CSV file is headerless",
+          "description": "Specify the names of data fields if a CSV file is headerless.",
           "items": {
             "type": "string"
           },
@@ -267,18 +267,18 @@
           "type": "string"
         },
         "quantitativeFields": {
-          "description": "specify the name of quantitative data fields",
+          "description": "Specify the name of quantitative data fields.",
           "items": {
             "type": "string"
           },
           "type": "array"
         },
         "sampleLength": {
-          "description": "specify the number of rows loaded from the url.\n\n__Default:__ `1000`",
+          "description": "Specify the number of rows loaded from the URL.\n\n__Default:__ `1000`",
           "type": "number"
         },
         "separator": {
-          "description": "specify file separator, __Default:__ ','",
+          "description": "Specify file separator, __Default:__ ','",
           "type": "string"
         },
         "type": {
@@ -286,7 +286,7 @@
           "type": "string"
         },
         "url": {
-          "description": "specify the URL address of the data file",
+          "description": "Specify the URL address of the data file.",
           "type": "string"
         }
       },
@@ -590,7 +590,7 @@
           "type": "number"
         },
         "height": {
-          "description": "specify the track height in pixels",
+          "description": "Specify the track height in pixels.",
           "type": "number"
         },
         "id": {
@@ -602,18 +602,18 @@
         },
         "layout": {
           "$ref": "#/definitions/Layout",
-          "description": "specify the layout type of all tracks, either `\"linear\"` or `\"circular\"`"
+          "description": "Specify the layout type of all tracks, either `\"linear\"` or `\"circular\"`."
         },
         "linkingId": {
-          "description": "specify an ID for [linking multiple views](http://gosling-lang.org/docs/user-interaction#linking-views)",
+          "description": "Specify an ID for [linking multiple views](http://gosling-lang.org/docs/user-interaction#linking-views)",
           "type": "string"
         },
         "orientation": {
           "$ref": "#/definitions/Orientation",
-          "description": "either `\"horizontal\"` or `\"vertical\"`"
+          "description": "Specify the orientation."
         },
         "outerRadius": {
-          "description": "Specify the outer radius of tracks when `{\"layout\": \"circular\"}`",
+          "description": "Specify the outer radius of tracks when `{\"layout\": \"circular\"}`.",
           "type": "number"
         },
         "overlayOnPreviousTrack": {
@@ -625,7 +625,7 @@
           "type": "object"
         },
         "spacing": {
-          "description": "- if `{\"layout\": \"linear\"}`, specify the space between tracks in pixels;\n\n- if `{\"layout\": \"circular\"}`, specify the space between tracks in percentage ranging from 0 to 100.",
+          "description": "- If `{\"layout\": \"linear\"}`, specify the space between tracks in pixels;\n\n- If `{\"layout\": \"circular\"}`, specify the space between tracks in percentage ranging from 0 to 100.",
           "type": "number"
         },
         "startAngle": {
@@ -633,7 +633,7 @@
           "type": "number"
         },
         "static": {
-          "description": "whether to disable [Zooming and Panning](http://gosling-lang.org/docs/user-interaction#zooming-and-panning), __Default:__ false.",
+          "description": "Whether to disable [Zooming and Panning](http://gosling-lang.org/docs/user-interaction#zooming-and-panning), __Default:__ `false`.",
           "type": "boolean"
         },
         "style": {
@@ -644,11 +644,11 @@
           "type": "string"
         },
         "title": {
-          "description": "If defined, will show the textual label on the left-top corner of a track",
+          "description": "If defined, will show the textual label on the left-top corner of a track.",
           "type": "string"
         },
         "width": {
-          "description": "specify the track width in pixels",
+          "description": "Specify the track width in pixels.",
           "type": "number"
         },
         "xAxis": {
@@ -669,11 +669,11 @@
           ]
         },
         "xOffset": {
-          "description": "specify the x offset of views in the unit of pixels",
+          "description": "Specify the x offset of views in the unit of pixels",
           "type": "number"
         },
         "yOffset": {
-          "description": "specify the y offset of views in the unit of pixels",
+          "description": "Specify the y offset of views in the unit of pixels",
           "type": "number"
         },
         "zoomLimits": {
@@ -728,7 +728,7 @@
           "string"
         ]
       },
-      "description": "values in the form of JSON",
+      "description": "Values in the form of JSON.",
       "type": "object"
     },
     "DisplaceTransform": {
@@ -738,15 +738,15 @@
           "additionalProperties": false,
           "properties": {
             "endField": {
-              "description": "The name of a quantitative field that represents the end position",
+              "description": "The name of a quantitative field that represents the end position.",
               "type": "string"
             },
             "groupField": {
-              "description": "The name of a nominal field to group rows by in prior to piling-up",
+              "description": "The name of a nominal field to group rows by in prior to piling-up.",
               "type": "string"
             },
             "isPaddingBP": {
-              "description": "whether to consider `padding` as the bp length",
+              "description": "Whether to consider `padding` as the bp length.",
               "type": "boolean"
             },
             "padding": {
@@ -754,7 +754,7 @@
               "type": "number"
             },
             "startField": {
-              "description": "The name of a quantitative field that represents the start position",
+              "description": "The name of a quantitative field that represents the start position.",
               "type": "string"
             }
           },
@@ -765,12 +765,12 @@
           "type": "object"
         },
         "maxRows": {
-          "description": "Specify maximum rows to be generated (default has no limit)",
+          "description": "Specify maximum rows to be generated (default has no limit).",
           "type": "number"
         },
         "method": {
           "$ref": "#/definitions/DisplacementType",
-          "description": "A string that specifies the type of diseplancement, one of `\"pile\"` and `\"spread\"`"
+          "description": "A string that specifies the type of diseplancement, one of `\"pile\"` and `\"spread\"`."
         },
         "newField": {
           "type": "string"
@@ -998,22 +998,22 @@
         },
         "layout": {
           "$ref": "#/definitions/Layout",
-          "description": "specify the layout type of all tracks, either `\"linear\"` or `\"circular\"`"
+          "description": "Specify the layout type of all tracks, either `\"linear\"` or `\"circular\"`."
         },
         "linkingId": {
-          "description": "specify an ID for [linking multiple views](http://gosling-lang.org/docs/user-interaction#linking-views)",
+          "description": "Specify an ID for [linking multiple views](http://gosling-lang.org/docs/user-interaction#linking-views)",
           "type": "string"
         },
         "orientation": {
           "$ref": "#/definitions/Orientation",
-          "description": "either `\"horizontal\"` or `\"vertical\"`"
+          "description": "Specify the orientation."
         },
         "spacing": {
-          "description": "- if `{\"layout\": \"linear\"}`, specify the space between tracks in pixels;\n\n- if `{\"layout\": \"circular\"}`, specify the space between tracks in percentage ranging from 0 to 100.",
+          "description": "- If `{\"layout\": \"linear\"}`, specify the space between tracks in pixels;\n\n- If `{\"layout\": \"circular\"}`, specify the space between tracks in percentage ranging from 0 to 100.",
           "type": "number"
         },
         "static": {
-          "description": "whether to disable [Zooming and Panning](http://gosling-lang.org/docs/user-interaction#zooming-and-panning), __Default:__ false.",
+          "description": "Whether to disable [Zooming and Panning](http://gosling-lang.org/docs/user-interaction#zooming-and-panning), __Default:__ `false`.",
           "type": "boolean"
         },
         "style": {
@@ -1044,11 +1044,11 @@
           ]
         },
         "xOffset": {
-          "description": "specify the x offset of views in the unit of pixels",
+          "description": "Specify the x offset of views in the unit of pixels",
           "type": "number"
         },
         "yOffset": {
-          "description": "specify the y offset of views in the unit of pixels",
+          "description": "Specify the y offset of views in the unit of pixels",
           "type": "number"
         },
         "zoomLimits": {
@@ -1401,11 +1401,11 @@
       "additionalProperties": false,
       "properties": {
         "field": {
-          "description": "a filter is applied based on the values of the specified data field",
+          "description": "A filter is applied based on the values of the specified data field",
           "type": "string"
         },
         "include": {
-          "description": "check whether the value includes a substring",
+          "description": "Check whether the value includes a substring.",
           "type": "string"
         },
         "not": {
@@ -1429,11 +1429,11 @@
       "description": "The JSON data format allows users to include data directly in the Gosling's JSON specification.",
       "properties": {
         "chromosomeField": {
-          "description": "specify the name of chromosome data fields",
+          "description": "Specify the name of chromosome data fields.",
           "type": "string"
         },
         "genomicFields": {
-          "description": "specify the name of genomic data fields",
+          "description": "Specify the name of genomic data fields.",
           "items": {
             "type": "string"
           },
@@ -1463,23 +1463,23 @@
           "type": "array"
         },
         "quantitativeFields": {
-          "description": "specify the name of quantitative data fields",
+          "description": "Specify the name of quantitative data fields.",
           "items": {
             "type": "string"
           },
           "type": "array"
         },
         "sampleLength": {
-          "description": "specify the number of rows loaded from the url.\n\n__Default:__1000",
+          "description": "Specify the number of rows loaded from the URL.\n\n__Default:__ 1000",
           "type": "number"
         },
         "type": {
           "const": "json",
-          "description": "define data type",
+          "description": "Define data type.",
           "type": "string"
         },
         "values": {
-          "description": "values in the form of JSON",
+          "description": "Values in the form of JSON.",
           "items": {
             "$ref": "#/definitions/Datum"
           },
@@ -1497,19 +1497,19 @@
       "description": "Parse JSON Object Array and append vertically",
       "properties": {
         "baseGenomicField": {
-          "description": "Base genomic position when parsing relative position",
+          "description": "Base genomic position when parsing relative position.",
           "type": "string"
         },
         "field": {
-          "description": "The field that contains the JSON object array",
+          "description": "The field that contains the JSON object array.",
           "type": "string"
         },
         "genomicField": {
-          "description": "Relative genomic position to parse",
+          "description": "Relative genomic position to parse.",
           "type": "string"
         },
         "genomicLengthField": {
-          "description": "Length of genomic interval",
+          "description": "Length of genomic interval.",
           "type": "string"
         },
         "type": {
@@ -1549,7 +1549,7 @@
       "properties": {
         "base": {
           "$ref": "#/definitions/LogBase",
-          "description": "If not specified, 10 is used"
+          "description": "If not specified, 10 is used."
         },
         "field": {
           "type": "string"
@@ -1762,22 +1762,22 @@
         },
         "layout": {
           "$ref": "#/definitions/Layout",
-          "description": "specify the layout type of all tracks, either `\"linear\"` or `\"circular\"`"
+          "description": "Specify the layout type of all tracks, either `\"linear\"` or `\"circular\"`."
         },
         "linkingId": {
-          "description": "specify an ID for [linking multiple views](http://gosling-lang.org/docs/user-interaction#linking-views)",
+          "description": "Specify an ID for [linking multiple views](http://gosling-lang.org/docs/user-interaction#linking-views)",
           "type": "string"
         },
         "orientation": {
           "$ref": "#/definitions/Orientation",
-          "description": "either `\"horizontal\"` or `\"vertical\"`"
+          "description": "Specify the orientation."
         },
         "spacing": {
-          "description": "- if `{\"layout\": \"linear\"}`, specify the space between tracks in pixels;\n\n- if `{\"layout\": \"circular\"}`, specify the space between tracks in percentage ranging from 0 to 100.",
+          "description": "- If `{\"layout\": \"linear\"}`, specify the space between tracks in pixels;\n\n- If `{\"layout\": \"circular\"}`, specify the space between tracks in percentage ranging from 0 to 100.",
           "type": "number"
         },
         "static": {
-          "description": "whether to disable [Zooming and Panning](http://gosling-lang.org/docs/user-interaction#zooming-and-panning), __Default:__ false.",
+          "description": "Whether to disable [Zooming and Panning](http://gosling-lang.org/docs/user-interaction#zooming-and-panning), __Default:__ `false`.",
           "type": "boolean"
         },
         "style": {
@@ -1816,11 +1816,11 @@
           ]
         },
         "xOffset": {
-          "description": "specify the x offset of views in the unit of pixels",
+          "description": "Specify the x offset of views in the unit of pixels",
           "type": "number"
         },
         "yOffset": {
-          "description": "specify the y offset of views in the unit of pixels",
+          "description": "Specify the y offset of views in the unit of pixels",
           "type": "number"
         },
         "zoomLimits": {
@@ -1837,30 +1837,30 @@
       "description": "Two-dimensional quantitative values, one axis for genomic coordinate and the other for different samples, can be converted into HiGlass' `\"multivec\"` data. For example, multiple BigWig files can be converted into a single multivec file. You can also convert sequence data (FASTA) into this format where rows will be different nucleotide bases (e.g., A, T, G, C) and quantitative values represent the frequency. Find out more about this format at [HiGlass Docs](https://docs.higlass.io/data_preparation.html#multivec-files).",
       "properties": {
         "binSize": {
-          "description": "Binning the genomic interval in tiles (unit size: 256)",
+          "description": "Binning the genomic interval in tiles (unit size: 256).",
           "type": "number"
         },
         "categories": {
-          "description": "assign names of individual samples",
+          "description": "assign names of individual samples.",
           "items": {
             "type": "string"
           },
           "type": "array"
         },
         "column": {
-          "description": "assign a field name of the middle position of genomic intervals",
+          "description": "Assign a field name of the middle position of genomic intervals.",
           "type": "string"
         },
         "end": {
-          "description": "assign a field name of the end position of genomic intervals",
+          "description": "Assign a field name of the end position of genomic intervals.",
           "type": "string"
         },
         "row": {
-          "description": "assign a field name of samples",
+          "description": "Assign a field name of samples.",
           "type": "string"
         },
         "start": {
-          "description": "assign a field name of the start position of genomic intervals",
+          "description": "Assign a field name of the start position of genomic intervals.",
           "type": "string"
         },
         "type": {
@@ -1868,11 +1868,11 @@
           "type": "string"
         },
         "url": {
-          "description": "specify the URL address of the data file",
+          "description": "Specify the URL address of the data file.",
           "type": "string"
         },
         "value": {
-          "description": "assign a field name of quantitative values",
+          "description": "Assign a field name of quantitative values.",
           "type": "string"
         }
       },
@@ -1889,7 +1889,7 @@
       "additionalProperties": false,
       "properties": {
         "field": {
-          "description": "a filter is applied based on the values of the specified data field",
+          "description": "A filter is applied based on the values of the specified data field",
           "type": "string"
         },
         "not": {
@@ -1911,7 +1911,7 @@
               "type": "array"
             }
           ],
-          "description": "check whether the value is an element in the provided list"
+          "description": "Check whether the value is an element in the provided list."
         },
         "type": {
           "const": "filter",
@@ -2023,7 +2023,7 @@
           "type": "boolean"
         },
         "height": {
-          "description": "specify the track height in pixels",
+          "description": "Specify the track height in pixels.",
           "type": "number"
         },
         "id": {
@@ -2035,10 +2035,10 @@
         },
         "layout": {
           "$ref": "#/definitions/Layout",
-          "description": "specify the layout type of all tracks, either `\"linear\"` or `\"circular\"`"
+          "description": "Specify the layout type of all tracks, either `\"linear\"` or `\"circular\"`."
         },
         "linkingId": {
-          "description": "specify an ID for [linking multiple views](http://gosling-lang.org/docs/user-interaction#linking-views)",
+          "description": "Specify an ID for [linking multiple views](http://gosling-lang.org/docs/user-interaction#linking-views)",
           "type": "string"
         },
         "mark": {
@@ -2056,10 +2056,10 @@
         },
         "orientation": {
           "$ref": "#/definitions/Orientation",
-          "description": "either `\"horizontal\"` or `\"vertical\"`"
+          "description": "Specify the orientation."
         },
         "outerRadius": {
-          "description": "Specify the outer radius of tracks when `{\"layout\": \"circular\"}`",
+          "description": "Specify the outer radius of tracks when `{\"layout\": \"circular\"}`.",
           "type": "number"
         },
         "overlay": {
@@ -2129,7 +2129,7 @@
                 "type": "number"
               },
               "linkingId": {
-                "description": "specify an ID for [linking multiple views](http://gosling-lang.org/docs/user-interaction#linking-views)",
+                "description": "Specify an ID for [linking multiple views](http://gosling-lang.org/docs/user-interaction#linking-views)",
                 "type": "string"
               },
               "mark": {
@@ -2147,10 +2147,10 @@
               },
               "orientation": {
                 "$ref": "#/definitions/Orientation",
-                "description": "either `\"horizontal\"` or `\"vertical\"`"
+                "description": "Specify the orientation."
               },
               "outerRadius": {
-                "description": "Specify the outer radius of tracks when `{\"layout\": \"circular\"}`",
+                "description": "Specify the outer radius of tracks when `{\"layout\": \"circular\"}`.",
                 "type": "number"
               },
               "overlayOnPreviousTrack": {
@@ -2185,7 +2185,7 @@
                 ]
               },
               "spacing": {
-                "description": "- if `{\"layout\": \"linear\"}`, specify the space between tracks in pixels;\n\n- if `{\"layout\": \"circular\"}`, specify the space between tracks in percentage ranging from 0 to 100.",
+                "description": "- If `{\"layout\": \"linear\"}`, specify the space between tracks in pixels;\n\n- If `{\"layout\": \"circular\"}`, specify the space between tracks in percentage ranging from 0 to 100.",
                 "type": "number"
               },
               "startAngle": {
@@ -2193,7 +2193,7 @@
                 "type": "number"
               },
               "static": {
-                "description": "whether to disable [Zooming and Panning](http://gosling-lang.org/docs/user-interaction#zooming-and-panning), __Default:__ false.",
+                "description": "Whether to disable [Zooming and Panning](http://gosling-lang.org/docs/user-interaction#zooming-and-panning), __Default:__ `false`.",
                 "type": "boolean"
               },
               "stretch": {
@@ -2293,7 +2293,7 @@
                 ]
               },
               "xOffset": {
-                "description": "specify the x offset of views in the unit of pixels",
+                "description": "Specify the x offset of views in the unit of pixels",
                 "type": "number"
               },
               "xe": {
@@ -2337,7 +2337,7 @@
                 ]
               },
               "yOffset": {
-                "description": "specify the y offset of views in the unit of pixels",
+                "description": "Specify the y offset of views in the unit of pixels",
                 "type": "number"
               },
               "ye": {
@@ -2390,7 +2390,7 @@
           ]
         },
         "spacing": {
-          "description": "- if `{\"layout\": \"linear\"}`, specify the space between tracks in pixels;\n\n- if `{\"layout\": \"circular\"}`, specify the space between tracks in percentage ranging from 0 to 100.",
+          "description": "- If `{\"layout\": \"linear\"}`, specify the space between tracks in pixels;\n\n- If `{\"layout\": \"circular\"}`, specify the space between tracks in percentage ranging from 0 to 100.",
           "type": "number"
         },
         "startAngle": {
@@ -2398,7 +2398,7 @@
           "type": "number"
         },
         "static": {
-          "description": "whether to disable [Zooming and Panning](http://gosling-lang.org/docs/user-interaction#zooming-and-panning), __Default:__ false.",
+          "description": "Whether to disable [Zooming and Panning](http://gosling-lang.org/docs/user-interaction#zooming-and-panning), __Default:__ `false`.",
           "type": "boolean"
         },
         "stretch": {
@@ -2442,7 +2442,7 @@
           ]
         },
         "title": {
-          "description": "If defined, will show the textual label on the left-top corner of a track",
+          "description": "If defined, will show the textual label on the left-top corner of a track.",
           "type": "string"
         },
         "tooltip": {
@@ -2458,7 +2458,7 @@
           "type": "array"
         },
         "width": {
-          "description": "specify the track width in pixels",
+          "description": "Specify the track width in pixels.",
           "type": "number"
         },
         "x": {
@@ -2509,7 +2509,7 @@
           ]
         },
         "xOffset": {
-          "description": "specify the x offset of views in the unit of pixels",
+          "description": "Specify the x offset of views in the unit of pixels",
           "type": "number"
         },
         "xe": {
@@ -2553,7 +2553,7 @@
           ]
         },
         "yOffset": {
-          "description": "specify the y offset of views in the unit of pixels",
+          "description": "Specify the y offset of views in the unit of pixels",
           "type": "number"
         },
         "ye": {
@@ -2640,7 +2640,7 @@
           "type": "boolean"
         },
         "height": {
-          "description": "specify the track height in pixels",
+          "description": "Specify the track height in pixels.",
           "type": "number"
         },
         "id": {
@@ -2652,10 +2652,10 @@
         },
         "layout": {
           "$ref": "#/definitions/Layout",
-          "description": "specify the layout type of all tracks, either `\"linear\"` or `\"circular\"`"
+          "description": "Specify the layout type of all tracks, either `\"linear\"` or `\"circular\"`."
         },
         "linkingId": {
-          "description": "specify an ID for [linking multiple views](http://gosling-lang.org/docs/user-interaction#linking-views)",
+          "description": "Specify an ID for [linking multiple views](http://gosling-lang.org/docs/user-interaction#linking-views)",
           "type": "string"
         },
         "mark": {
@@ -2673,10 +2673,10 @@
         },
         "orientation": {
           "$ref": "#/definitions/Orientation",
-          "description": "either `\"horizontal\"` or `\"vertical\"`"
+          "description": "Specify the orientation."
         },
         "outerRadius": {
-          "description": "Specify the outer radius of tracks when `{\"layout\": \"circular\"}`",
+          "description": "Specify the outer radius of tracks when `{\"layout\": \"circular\"}`.",
           "type": "number"
         },
         "overlayOnPreviousTrack": {
@@ -2711,7 +2711,7 @@
           ]
         },
         "spacing": {
-          "description": "- if `{\"layout\": \"linear\"}`, specify the space between tracks in pixels;\n\n- if `{\"layout\": \"circular\"}`, specify the space between tracks in percentage ranging from 0 to 100.",
+          "description": "- If `{\"layout\": \"linear\"}`, specify the space between tracks in pixels;\n\n- If `{\"layout\": \"circular\"}`, specify the space between tracks in percentage ranging from 0 to 100.",
           "type": "number"
         },
         "startAngle": {
@@ -2719,7 +2719,7 @@
           "type": "number"
         },
         "static": {
-          "description": "whether to disable [Zooming and Panning](http://gosling-lang.org/docs/user-interaction#zooming-and-panning), __Default:__ false.",
+          "description": "Whether to disable [Zooming and Panning](http://gosling-lang.org/docs/user-interaction#zooming-and-panning), __Default:__ `false`.",
           "type": "boolean"
         },
         "stretch": {
@@ -2763,7 +2763,7 @@
           ]
         },
         "title": {
-          "description": "If defined, will show the textual label on the left-top corner of a track",
+          "description": "If defined, will show the textual label on the left-top corner of a track.",
           "type": "string"
         },
         "tooltip": {
@@ -2785,7 +2785,7 @@
           "type": "array"
         },
         "width": {
-          "description": "specify the track width in pixels",
+          "description": "Specify the track width in pixels.",
           "type": "number"
         },
         "x": {
@@ -2836,7 +2836,7 @@
           ]
         },
         "xOffset": {
-          "description": "specify the x offset of views in the unit of pixels",
+          "description": "Specify the x offset of views in the unit of pixels",
           "type": "number"
         },
         "xe": {
@@ -2880,7 +2880,7 @@
           ]
         },
         "yOffset": {
-          "description": "specify the y offset of views in the unit of pixels",
+          "description": "Specify the y offset of views in the unit of pixels",
           "type": "number"
         },
         "ye": {
@@ -2982,7 +2982,7 @@
           "type": "boolean"
         },
         "height": {
-          "description": "specify the track height in pixels",
+          "description": "Specify the track height in pixels.",
           "type": "number"
         },
         "id": {
@@ -2994,10 +2994,10 @@
         },
         "layout": {
           "$ref": "#/definitions/Layout",
-          "description": "specify the layout type of all tracks, either `\"linear\"` or `\"circular\"`"
+          "description": "Specify the layout type of all tracks, either `\"linear\"` or `\"circular\"`."
         },
         "linkingId": {
-          "description": "specify an ID for [linking multiple views](http://gosling-lang.org/docs/user-interaction#linking-views)",
+          "description": "Specify an ID for [linking multiple views](http://gosling-lang.org/docs/user-interaction#linking-views)",
           "type": "string"
         },
         "mark": {
@@ -3015,10 +3015,10 @@
         },
         "orientation": {
           "$ref": "#/definitions/Orientation",
-          "description": "either `\"horizontal\"` or `\"vertical\"`"
+          "description": "Specify the orientation."
         },
         "outerRadius": {
-          "description": "Specify the outer radius of tracks when `{\"layout\": \"circular\"}`",
+          "description": "Specify the outer radius of tracks when `{\"layout\": \"circular\"}`.",
           "type": "number"
         },
         "overlay": {
@@ -3088,7 +3088,7 @@
                 "type": "number"
               },
               "linkingId": {
-                "description": "specify an ID for [linking multiple views](http://gosling-lang.org/docs/user-interaction#linking-views)",
+                "description": "Specify an ID for [linking multiple views](http://gosling-lang.org/docs/user-interaction#linking-views)",
                 "type": "string"
               },
               "mark": {
@@ -3106,10 +3106,10 @@
               },
               "orientation": {
                 "$ref": "#/definitions/Orientation",
-                "description": "either `\"horizontal\"` or `\"vertical\"`"
+                "description": "Specify the orientation."
               },
               "outerRadius": {
-                "description": "Specify the outer radius of tracks when `{\"layout\": \"circular\"}`",
+                "description": "Specify the outer radius of tracks when `{\"layout\": \"circular\"}`.",
                 "type": "number"
               },
               "overlayOnPreviousTrack": {
@@ -3144,7 +3144,7 @@
                 ]
               },
               "spacing": {
-                "description": "- if `{\"layout\": \"linear\"}`, specify the space between tracks in pixels;\n\n- if `{\"layout\": \"circular\"}`, specify the space between tracks in percentage ranging from 0 to 100.",
+                "description": "- If `{\"layout\": \"linear\"}`, specify the space between tracks in pixels;\n\n- If `{\"layout\": \"circular\"}`, specify the space between tracks in percentage ranging from 0 to 100.",
                 "type": "number"
               },
               "startAngle": {
@@ -3152,7 +3152,7 @@
                 "type": "number"
               },
               "static": {
-                "description": "whether to disable [Zooming and Panning](http://gosling-lang.org/docs/user-interaction#zooming-and-panning), __Default:__ false.",
+                "description": "Whether to disable [Zooming and Panning](http://gosling-lang.org/docs/user-interaction#zooming-and-panning), __Default:__ `false`.",
                 "type": "boolean"
               },
               "stretch": {
@@ -3252,7 +3252,7 @@
                 ]
               },
               "xOffset": {
-                "description": "specify the x offset of views in the unit of pixels",
+                "description": "Specify the x offset of views in the unit of pixels",
                 "type": "number"
               },
               "xe": {
@@ -3296,7 +3296,7 @@
                 ]
               },
               "yOffset": {
-                "description": "specify the y offset of views in the unit of pixels",
+                "description": "Specify the y offset of views in the unit of pixels",
                 "type": "number"
               },
               "ye": {
@@ -3349,7 +3349,7 @@
           ]
         },
         "spacing": {
-          "description": "- if `{\"layout\": \"linear\"}`, specify the space between tracks in pixels;\n\n- if `{\"layout\": \"circular\"}`, specify the space between tracks in percentage ranging from 0 to 100.",
+          "description": "- If `{\"layout\": \"linear\"}`, specify the space between tracks in pixels;\n\n- If `{\"layout\": \"circular\"}`, specify the space between tracks in percentage ranging from 0 to 100.",
           "type": "number"
         },
         "startAngle": {
@@ -3357,7 +3357,7 @@
           "type": "number"
         },
         "static": {
-          "description": "whether to disable [Zooming and Panning](http://gosling-lang.org/docs/user-interaction#zooming-and-panning), __Default:__ false.",
+          "description": "Whether to disable [Zooming and Panning](http://gosling-lang.org/docs/user-interaction#zooming-and-panning), __Default:__ `false`.",
           "type": "boolean"
         },
         "stretch": {
@@ -3404,7 +3404,7 @@
           ]
         },
         "title": {
-          "description": "If defined, will show the textual label on the left-top corner of a track",
+          "description": "If defined, will show the textual label on the left-top corner of a track.",
           "type": "string"
         },
         "tooltip": {
@@ -3420,7 +3420,7 @@
           "type": "array"
         },
         "width": {
-          "description": "specify the track width in pixels",
+          "description": "Specify the track width in pixels.",
           "type": "number"
         },
         "x": {
@@ -3471,7 +3471,7 @@
           ]
         },
         "xOffset": {
-          "description": "specify the x offset of views in the unit of pixels",
+          "description": "Specify the x offset of views in the unit of pixels",
           "type": "number"
         },
         "xe": {
@@ -3515,7 +3515,7 @@
           ]
         },
         "yOffset": {
-          "description": "specify the y offset of views in the unit of pixels",
+          "description": "Specify the y offset of views in the unit of pixels",
           "type": "number"
         },
         "ye": {
@@ -3548,11 +3548,11 @@
       "additionalProperties": false,
       "properties": {
         "field": {
-          "description": "a filter is applied based on the values of the specified data field",
+          "description": "A filter is applied based on the values of the specified data field",
           "type": "string"
         },
         "inRange": {
-          "description": "check whether the value is in a number range",
+          "description": "Check whether the value is in a number range.",
           "items": {
             "type": "number"
           },
@@ -3600,22 +3600,22 @@
         },
         "layout": {
           "$ref": "#/definitions/Layout",
-          "description": "specify the layout type of all tracks, either `\"linear\"` or `\"circular\"`"
+          "description": "Specify the layout type of all tracks, either `\"linear\"` or `\"circular\"`."
         },
         "linkingId": {
-          "description": "specify an ID for [linking multiple views](http://gosling-lang.org/docs/user-interaction#linking-views)",
+          "description": "Specify an ID for [linking multiple views](http://gosling-lang.org/docs/user-interaction#linking-views)",
           "type": "string"
         },
         "orientation": {
           "$ref": "#/definitions/Orientation",
-          "description": "either `\"horizontal\"` or `\"vertical\"`"
+          "description": "Specify the orientation."
         },
         "spacing": {
-          "description": "- if `{\"layout\": \"linear\"}`, specify the space between tracks in pixels;\n\n- if `{\"layout\": \"circular\"}`, specify the space between tracks in percentage ranging from 0 to 100.",
+          "description": "- If `{\"layout\": \"linear\"}`, specify the space between tracks in pixels;\n\n- If `{\"layout\": \"circular\"}`, specify the space between tracks in percentage ranging from 0 to 100.",
           "type": "number"
         },
         "static": {
-          "description": "whether to disable [Zooming and Panning](http://gosling-lang.org/docs/user-interaction#zooming-and-panning), __Default:__ false.",
+          "description": "Whether to disable [Zooming and Panning](http://gosling-lang.org/docs/user-interaction#zooming-and-panning), __Default:__ `false`.",
           "type": "boolean"
         },
         "style": {
@@ -3660,11 +3660,11 @@
           ]
         },
         "xOffset": {
-          "description": "specify the x offset of views in the unit of pixels",
+          "description": "Specify the x offset of views in the unit of pixels",
           "type": "number"
         },
         "yOffset": {
-          "description": "specify the y offset of views in the unit of pixels",
+          "description": "Specify the y offset of views in the unit of pixels",
           "type": "number"
         },
         "zoomLimits": {
@@ -3744,7 +3744,7 @@
               "type": "boolean"
             },
             "height": {
-              "description": "specify the track height in pixels",
+              "description": "Specify the track height in pixels.",
               "type": "number"
             },
             "id": {
@@ -3756,10 +3756,10 @@
             },
             "layout": {
               "$ref": "#/definitions/Layout",
-              "description": "specify the layout type of all tracks, either `\"linear\"` or `\"circular\"`"
+              "description": "Specify the layout type of all tracks, either `\"linear\"` or `\"circular\"`."
             },
             "linkingId": {
-              "description": "specify an ID for [linking multiple views](http://gosling-lang.org/docs/user-interaction#linking-views)",
+              "description": "Specify an ID for [linking multiple views](http://gosling-lang.org/docs/user-interaction#linking-views)",
               "type": "string"
             },
             "mark": {
@@ -3777,10 +3777,10 @@
             },
             "orientation": {
               "$ref": "#/definitions/Orientation",
-              "description": "either `\"horizontal\"` or `\"vertical\"`"
+              "description": "Specify the orientation."
             },
             "outerRadius": {
-              "description": "Specify the outer radius of tracks when `{\"layout\": \"circular\"}`",
+              "description": "Specify the outer radius of tracks when `{\"layout\": \"circular\"}`.",
               "type": "number"
             },
             "overlayOnPreviousTrack": {
@@ -3815,7 +3815,7 @@
               ]
             },
             "spacing": {
-              "description": "- if `{\"layout\": \"linear\"}`, specify the space between tracks in pixels;\n\n- if `{\"layout\": \"circular\"}`, specify the space between tracks in percentage ranging from 0 to 100.",
+              "description": "- If `{\"layout\": \"linear\"}`, specify the space between tracks in pixels;\n\n- If `{\"layout\": \"circular\"}`, specify the space between tracks in percentage ranging from 0 to 100.",
               "type": "number"
             },
             "startAngle": {
@@ -3823,7 +3823,7 @@
               "type": "number"
             },
             "static": {
-              "description": "whether to disable [Zooming and Panning](http://gosling-lang.org/docs/user-interaction#zooming-and-panning), __Default:__ false.",
+              "description": "Whether to disable [Zooming and Panning](http://gosling-lang.org/docs/user-interaction#zooming-and-panning), __Default:__ `false`.",
               "type": "boolean"
             },
             "stretch": {
@@ -3867,7 +3867,7 @@
               ]
             },
             "title": {
-              "description": "If defined, will show the textual label on the left-top corner of a track",
+              "description": "If defined, will show the textual label on the left-top corner of a track.",
               "type": "string"
             },
             "tooltip": {
@@ -3889,7 +3889,7 @@
               "type": "array"
             },
             "width": {
-              "description": "specify the track width in pixels",
+              "description": "Specify the track width in pixels.",
               "type": "number"
             },
             "x": {
@@ -3940,7 +3940,7 @@
               ]
             },
             "xOffset": {
-              "description": "specify the x offset of views in the unit of pixels",
+              "description": "Specify the x offset of views in the unit of pixels",
               "type": "number"
             },
             "xe": {
@@ -3984,7 +3984,7 @@
               ]
             },
             "yOffset": {
-              "description": "specify the y offset of views in the unit of pixels",
+              "description": "Specify the y offset of views in the unit of pixels",
               "type": "number"
             },
             "ye": {
@@ -4075,7 +4075,7 @@
               "type": "boolean"
             },
             "height": {
-              "description": "specify the track height in pixels",
+              "description": "Specify the track height in pixels.",
               "type": "number"
             },
             "id": {
@@ -4087,10 +4087,10 @@
             },
             "layout": {
               "$ref": "#/definitions/Layout",
-              "description": "specify the layout type of all tracks, either `\"linear\"` or `\"circular\"`"
+              "description": "Specify the layout type of all tracks, either `\"linear\"` or `\"circular\"`."
             },
             "linkingId": {
-              "description": "specify an ID for [linking multiple views](http://gosling-lang.org/docs/user-interaction#linking-views)",
+              "description": "Specify an ID for [linking multiple views](http://gosling-lang.org/docs/user-interaction#linking-views)",
               "type": "string"
             },
             "mark": {
@@ -4108,10 +4108,10 @@
             },
             "orientation": {
               "$ref": "#/definitions/Orientation",
-              "description": "either `\"horizontal\"` or `\"vertical\"`"
+              "description": "Specify the orientation."
             },
             "outerRadius": {
-              "description": "Specify the outer radius of tracks when `{\"layout\": \"circular\"}`",
+              "description": "Specify the outer radius of tracks when `{\"layout\": \"circular\"}`.",
               "type": "number"
             },
             "overlayOnPreviousTrack": {
@@ -4146,7 +4146,7 @@
               ]
             },
             "spacing": {
-              "description": "- if `{\"layout\": \"linear\"}`, specify the space between tracks in pixels;\n\n- if `{\"layout\": \"circular\"}`, specify the space between tracks in percentage ranging from 0 to 100.",
+              "description": "- If `{\"layout\": \"linear\"}`, specify the space between tracks in pixels;\n\n- If `{\"layout\": \"circular\"}`, specify the space between tracks in percentage ranging from 0 to 100.",
               "type": "number"
             },
             "startAngle": {
@@ -4154,7 +4154,7 @@
               "type": "number"
             },
             "static": {
-              "description": "whether to disable [Zooming and Panning](http://gosling-lang.org/docs/user-interaction#zooming-and-panning), __Default:__ false.",
+              "description": "Whether to disable [Zooming and Panning](http://gosling-lang.org/docs/user-interaction#zooming-and-panning), __Default:__ `false`.",
               "type": "boolean"
             },
             "stretch": {
@@ -4198,7 +4198,7 @@
               ]
             },
             "title": {
-              "description": "If defined, will show the textual label on the left-top corner of a track",
+              "description": "If defined, will show the textual label on the left-top corner of a track.",
               "type": "string"
             },
             "tooltip": {
@@ -4227,7 +4227,7 @@
               "type": "array"
             },
             "width": {
-              "description": "specify the track width in pixels",
+              "description": "Specify the track width in pixels.",
               "type": "number"
             },
             "x": {
@@ -4278,7 +4278,7 @@
               ]
             },
             "xOffset": {
-              "description": "specify the x offset of views in the unit of pixels",
+              "description": "Specify the x offset of views in the unit of pixels",
               "type": "number"
             },
             "xe": {
@@ -4322,7 +4322,7 @@
               ]
             },
             "yOffset": {
-              "description": "specify the y offset of views in the unit of pixels",
+              "description": "Specify the y offset of views in the unit of pixels",
               "type": "number"
             },
             "ye": {
@@ -4360,22 +4360,22 @@
             },
             "layout": {
               "$ref": "#/definitions/Layout",
-              "description": "specify the layout type of all tracks, either `\"linear\"` or `\"circular\"`"
+              "description": "Specify the layout type of all tracks, either `\"linear\"` or `\"circular\"`."
             },
             "linkingId": {
-              "description": "specify an ID for [linking multiple views](http://gosling-lang.org/docs/user-interaction#linking-views)",
+              "description": "Specify an ID for [linking multiple views](http://gosling-lang.org/docs/user-interaction#linking-views)",
               "type": "string"
             },
             "orientation": {
               "$ref": "#/definitions/Orientation",
-              "description": "either `\"horizontal\"` or `\"vertical\"`"
+              "description": "Specify the orientation."
             },
             "spacing": {
-              "description": "- if `{\"layout\": \"linear\"}`, specify the space between tracks in pixels;\n\n- if `{\"layout\": \"circular\"}`, specify the space between tracks in percentage ranging from 0 to 100.",
+              "description": "- If `{\"layout\": \"linear\"}`, specify the space between tracks in pixels;\n\n- If `{\"layout\": \"circular\"}`, specify the space between tracks in percentage ranging from 0 to 100.",
               "type": "number"
             },
             "static": {
-              "description": "whether to disable [Zooming and Panning](http://gosling-lang.org/docs/user-interaction#zooming-and-panning), __Default:__ false.",
+              "description": "Whether to disable [Zooming and Panning](http://gosling-lang.org/docs/user-interaction#zooming-and-panning), __Default:__ `false`.",
               "type": "boolean"
             },
             "style": {
@@ -4412,11 +4412,11 @@
               ]
             },
             "xOffset": {
-              "description": "specify the x offset of views in the unit of pixels",
+              "description": "Specify the x offset of views in the unit of pixels",
               "type": "number"
             },
             "yOffset": {
-              "description": "specify the y offset of views in the unit of pixels",
+              "description": "Specify the y offset of views in the unit of pixels",
               "type": "number"
             },
             "zoomLimits": {
@@ -4517,7 +4517,7 @@
           "type": "boolean"
         },
         "height": {
-          "description": "specify the track height in pixels",
+          "description": "Specify the track height in pixels.",
           "type": "number"
         },
         "id": {
@@ -4529,10 +4529,10 @@
         },
         "layout": {
           "$ref": "#/definitions/Layout",
-          "description": "specify the layout type of all tracks, either `\"linear\"` or `\"circular\"`"
+          "description": "Specify the layout type of all tracks, either `\"linear\"` or `\"circular\"`."
         },
         "linkingId": {
-          "description": "specify an ID for [linking multiple views](http://gosling-lang.org/docs/user-interaction#linking-views)",
+          "description": "Specify an ID for [linking multiple views](http://gosling-lang.org/docs/user-interaction#linking-views)",
           "type": "string"
         },
         "mark": {
@@ -4550,10 +4550,10 @@
         },
         "orientation": {
           "$ref": "#/definitions/Orientation",
-          "description": "either `\"horizontal\"` or `\"vertical\"`"
+          "description": "Specify the orientation."
         },
         "outerRadius": {
-          "description": "Specify the outer radius of tracks when `{\"layout\": \"circular\"}`",
+          "description": "Specify the outer radius of tracks when `{\"layout\": \"circular\"}`.",
           "type": "number"
         },
         "overlayOnPreviousTrack": {
@@ -4588,7 +4588,7 @@
           ]
         },
         "spacing": {
-          "description": "- if `{\"layout\": \"linear\"}`, specify the space between tracks in pixels;\n\n- if `{\"layout\": \"circular\"}`, specify the space between tracks in percentage ranging from 0 to 100.",
+          "description": "- If `{\"layout\": \"linear\"}`, specify the space between tracks in pixels;\n\n- If `{\"layout\": \"circular\"}`, specify the space between tracks in percentage ranging from 0 to 100.",
           "type": "number"
         },
         "startAngle": {
@@ -4596,7 +4596,7 @@
           "type": "number"
         },
         "static": {
-          "description": "whether to disable [Zooming and Panning](http://gosling-lang.org/docs/user-interaction#zooming-and-panning), __Default:__ false.",
+          "description": "Whether to disable [Zooming and Panning](http://gosling-lang.org/docs/user-interaction#zooming-and-panning), __Default:__ `false`.",
           "type": "boolean"
         },
         "stretch": {
@@ -4640,7 +4640,7 @@
           ]
         },
         "title": {
-          "description": "If defined, will show the textual label on the left-top corner of a track",
+          "description": "If defined, will show the textual label on the left-top corner of a track.",
           "type": "string"
         },
         "tooltip": {
@@ -4656,7 +4656,7 @@
           "type": "array"
         },
         "width": {
-          "description": "specify the track width in pixels",
+          "description": "Specify the track width in pixels.",
           "type": "number"
         },
         "x": {
@@ -4707,7 +4707,7 @@
           ]
         },
         "xOffset": {
-          "description": "specify the x offset of views in the unit of pixels",
+          "description": "Specify the x offset of views in the unit of pixels",
           "type": "number"
         },
         "xe": {
@@ -4751,7 +4751,7 @@
           ]
         },
         "yOffset": {
-          "description": "specify the y offset of views in the unit of pixels",
+          "description": "Specify the y offset of views in the unit of pixels",
           "type": "number"
         },
         "ye": {
@@ -4938,7 +4938,7 @@
           "type": "boolean"
         },
         "height": {
-          "description": "specify the track height in pixels",
+          "description": "Specify the track height in pixels.",
           "type": "number"
         },
         "id": {
@@ -4950,10 +4950,10 @@
         },
         "layout": {
           "$ref": "#/definitions/Layout",
-          "description": "specify the layout type of all tracks, either `\"linear\"` or `\"circular\"`"
+          "description": "Specify the layout type of all tracks, either `\"linear\"` or `\"circular\"`."
         },
         "linkingId": {
-          "description": "specify an ID for [linking multiple views](http://gosling-lang.org/docs/user-interaction#linking-views)",
+          "description": "Specify an ID for [linking multiple views](http://gosling-lang.org/docs/user-interaction#linking-views)",
           "type": "string"
         },
         "mark": {
@@ -4971,10 +4971,10 @@
         },
         "orientation": {
           "$ref": "#/definitions/Orientation",
-          "description": "either `\"horizontal\"` or `\"vertical\"`"
+          "description": "Specify the orientation."
         },
         "outerRadius": {
-          "description": "Specify the outer radius of tracks when `{\"layout\": \"circular\"}`",
+          "description": "Specify the outer radius of tracks when `{\"layout\": \"circular\"}`.",
           "type": "number"
         },
         "overlayOnPreviousTrack": {
@@ -5009,7 +5009,7 @@
           ]
         },
         "spacing": {
-          "description": "- if `{\"layout\": \"linear\"}`, specify the space between tracks in pixels;\n\n- if `{\"layout\": \"circular\"}`, specify the space between tracks in percentage ranging from 0 to 100.",
+          "description": "- If `{\"layout\": \"linear\"}`, specify the space between tracks in pixels;\n\n- If `{\"layout\": \"circular\"}`, specify the space between tracks in percentage ranging from 0 to 100.",
           "type": "number"
         },
         "startAngle": {
@@ -5017,7 +5017,7 @@
           "type": "number"
         },
         "static": {
-          "description": "whether to disable [Zooming and Panning](http://gosling-lang.org/docs/user-interaction#zooming-and-panning), __Default:__ false.",
+          "description": "Whether to disable [Zooming and Panning](http://gosling-lang.org/docs/user-interaction#zooming-and-panning), __Default:__ `false`.",
           "type": "boolean"
         },
         "stretch": {
@@ -5061,7 +5061,7 @@
           ]
         },
         "title": {
-          "description": "If defined, will show the textual label on the left-top corner of a track",
+          "description": "If defined, will show the textual label on the left-top corner of a track.",
           "type": "string"
         },
         "tooltip": {
@@ -5090,7 +5090,7 @@
           "type": "array"
         },
         "width": {
-          "description": "specify the track width in pixels",
+          "description": "Specify the track width in pixels.",
           "type": "number"
         },
         "x": {
@@ -5141,7 +5141,7 @@
           ]
         },
         "xOffset": {
-          "description": "specify the x offset of views in the unit of pixels",
+          "description": "Specify the x offset of views in the unit of pixels",
           "type": "number"
         },
         "xe": {
@@ -5185,7 +5185,7 @@
           ]
         },
         "yOffset": {
-          "description": "specify the y offset of views in the unit of pixels",
+          "description": "Specify the y offset of views in the unit of pixels",
           "type": "number"
         },
         "ye": {
@@ -5429,7 +5429,7 @@
           "type": "object"
         },
         "linkConnectionType": {
-          "description": "specify the connetion type of `betweenLink` marks, one of `\"straight\"`, `\"curve\"`, `\"corner\"`.\n\n__Default__: `\"corner\"`",
+          "description": "Specify the connetion type of `betweenLink` marks, one of `\"straight\"`, `\"curve\"`, `\"corner\"`.\n\n__Default__: `\"corner\"`",
           "enum": [
             "straight",
             "curve",
@@ -5457,7 +5457,7 @@
           "type": "number"
         },
         "textFontWeight": {
-          "description": "Specify the font weight (either `\"bold\"` or `\"normal\"` ) of `text` marks",
+          "description": "Specify the font weight (either `\"bold\"` or `\"normal\"` ) of `text` marks.",
           "enum": [
             "bold",
             "normal"
@@ -5465,7 +5465,7 @@
           "type": "string"
         },
         "textStroke": {
-          "description": "specify the stroke of `text` marks. Can also be specified using the `stroke` channel option of `text` marks.",
+          "description": "Specify the stroke of `text` marks. Can also be specified using the `stroke` channel option of `text` marks.",
           "type": "string"
         },
         "textStrokeWidth": {
@@ -5477,7 +5477,7 @@
     },
     "TemplateTrack": {
       "additionalProperties": false,
-      "description": "Template specification that will be internally converted into `SingleTrack` for rendering",
+      "description": "Template specification that will be internally converted into `SingleTrack` for rendering.",
       "properties": {
         "_invalidTrack": {
           "description": "internal",
@@ -5509,7 +5509,7 @@
           "type": "number"
         },
         "height": {
-          "description": "specify the track height in pixels",
+          "description": "Specify the track height in pixels.",
           "type": "number"
         },
         "id": {
@@ -5521,18 +5521,18 @@
         },
         "layout": {
           "$ref": "#/definitions/Layout",
-          "description": "specify the layout type of all tracks, either `\"linear\"` or `\"circular\"`"
+          "description": "Specify the layout type of all tracks, either `\"linear\"` or `\"circular\"`."
         },
         "linkingId": {
-          "description": "specify an ID for [linking multiple views](http://gosling-lang.org/docs/user-interaction#linking-views)",
+          "description": "Specify an ID for [linking multiple views](http://gosling-lang.org/docs/user-interaction#linking-views)",
           "type": "string"
         },
         "orientation": {
           "$ref": "#/definitions/Orientation",
-          "description": "either `\"horizontal\"` or `\"vertical\"`"
+          "description": "Specify the orientation."
         },
         "outerRadius": {
-          "description": "Specify the outer radius of tracks when `{\"layout\": \"circular\"}`",
+          "description": "Specify the outer radius of tracks when `{\"layout\": \"circular\"}`.",
           "type": "number"
         },
         "overlayOnPreviousTrack": {
@@ -5544,7 +5544,7 @@
           "type": "object"
         },
         "spacing": {
-          "description": "- if `{\"layout\": \"linear\"}`, specify the space between tracks in pixels;\n\n- if `{\"layout\": \"circular\"}`, specify the space between tracks in percentage ranging from 0 to 100.",
+          "description": "- If `{\"layout\": \"linear\"}`, specify the space between tracks in pixels;\n\n- If `{\"layout\": \"circular\"}`, specify the space between tracks in percentage ranging from 0 to 100.",
           "type": "number"
         },
         "startAngle": {
@@ -5552,7 +5552,7 @@
           "type": "number"
         },
         "static": {
-          "description": "whether to disable [Zooming and Panning](http://gosling-lang.org/docs/user-interaction#zooming-and-panning), __Default:__ false.",
+          "description": "Whether to disable [Zooming and Panning](http://gosling-lang.org/docs/user-interaction#zooming-and-panning), __Default:__ `false`.",
           "type": "boolean"
         },
         "style": {
@@ -5566,11 +5566,11 @@
           "type": "string"
         },
         "title": {
-          "description": "If defined, will show the textual label on the left-top corner of a track",
+          "description": "If defined, will show the textual label on the left-top corner of a track.",
           "type": "string"
         },
         "width": {
-          "description": "specify the track width in pixels",
+          "description": "Specify the track width in pixels.",
           "type": "number"
         },
         "xAxis": {
@@ -5591,11 +5591,11 @@
           ]
         },
         "xOffset": {
-          "description": "specify the x offset of views in the unit of pixels",
+          "description": "Specify the x offset of views in the unit of pixels",
           "type": "number"
         },
         "yOffset": {
-          "description": "specify the y offset of views in the unit of pixels",
+          "description": "Specify the y offset of views in the unit of pixels",
           "type": "number"
         },
         "zoomLimits": {
@@ -5697,19 +5697,19 @@
       "description": "One-dimensional quantitative values along genomic position (e.g., bigwig) can be converted into HiGlass' `\"vector\"` format data. Find out more about this format at [HiGlass Docs](https://docs.higlass.io/data_preparation.html#bigwig-files).",
       "properties": {
         "binSize": {
-          "description": "Binning the genomic interval in tiles (unit size: 256)",
+          "description": "Binning the genomic interval in tiles (unit size: 256).",
           "type": "number"
         },
         "column": {
-          "description": "assign a field name of the middle position of genomic intervals",
+          "description": "Assign a field name of the middle position of genomic intervals.",
           "type": "string"
         },
         "end": {
-          "description": "assign a field name of the end position of genomic intervals",
+          "description": "Assign a field name of the end position of genomic intervals.",
           "type": "string"
         },
         "start": {
-          "description": "assign a field name of the start position of genomic intervals",
+          "description": "Assign a field name of the start position of genomic intervals.",
           "type": "string"
         },
         "type": {
@@ -5717,11 +5717,11 @@
           "type": "string"
         },
         "url": {
-          "description": "specify the URL address of the data file",
+          "description": "Specify the URL address of the data file.",
           "type": "string"
         },
         "value": {
-          "description": "assign a field name of quantitative values",
+          "description": "Assign a field name of quantitative values.",
           "type": "string"
         }
       },

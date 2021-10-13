@@ -54,26 +54,26 @@ export type Assembly = 'hg38' | 'hg19' | 'hg18' | 'hg17' | 'hg16' | 'mm10' | 'mm
 export type ZoomLimits = [number | null, number | null];
 
 export interface CommonViewDef {
-    /** specify the layout type of all tracks, either `"linear"` or `"circular"` */
+    /** Specify the layout type of all tracks, either `"linear"` or `"circular"`. */
     layout?: Layout;
-    /** either `"horizontal"` or `"vertical"` */
+    /** Specify the orientation. */
     orientation?: Orientation;
 
     /**
-     * - if `{"layout": "linear"}`, specify the space between tracks in pixels;
+     * - If `{"layout": "linear"}`, specify the space between tracks in pixels;
      *
-     * - if `{"layout": "circular"}`, specify the space between tracks in percentage ranging from 0 to 100.
+     * - If `{"layout": "circular"}`, specify the space between tracks in percentage ranging from 0 to 100.
      */
     spacing?: number;
-    /** whether to disable [Zooming and Panning](http://gosling-lang.org/docs/user-interaction#zooming-and-panning),
-     * __Default:__ false.
+    /** Whether to disable [Zooming and Panning](http://gosling-lang.org/docs/user-interaction#zooming-and-panning),
+     * __Default:__ `false`.
      */
     static?: boolean;
     zoomLimits?: ZoomLimits; // limits of zoom levels. default: [1, null]
 
-    /** specify the x offset of views in the unit of pixels */
+    /** Specify the x offset of views in the unit of pixels */
     xOffset?: number;
-    /** specify the y offset of views in the unit of pixels */
+    /** Specify the y offset of views in the unit of pixels */
     yOffset?: number;
 
     /**
@@ -86,7 +86,7 @@ export interface CommonViewDef {
 
     // TODO: Change to domain?
     xDomain?: DomainInterval | DomainChrInterval | DomainChr;
-    /**specify an ID for [linking multiple views](http://gosling-lang.org/docs/user-interaction#linking-views) */
+    /** Specify an ID for [linking multiple views](http://gosling-lang.org/docs/user-interaction#linking-views) */
     linkingId?: string;
     /** not supported  */
     xAxis?: AxisPosition; // not supported currently
@@ -110,9 +110,9 @@ export interface CommonViewDef {
 export type Track = SingleTrack | OverlaidTrack | DataTrack | TemplateTrack;
 
 export interface CommonRequiredTrackDef {
-    /** specify the track width in pixels */
+    /** Specify the track width in pixels. */
     width: number;
-    /** specify the track height in pixels */
+    /** Specify the track height in pixels. */
     height: number;
 }
 
@@ -121,7 +121,7 @@ export interface CommonTrackDef extends CommonViewDef, CommonRequiredTrackDef {
     // !! TODO: this should be track-specific and not defined in views.
     id?: string; // Assigned to `uid` in a HiGlass view config, used for API and caching.
 
-    /** If defined, will show the textual label on the left-top corner of a track */
+    /** If defined, will show the textual label on the left-top corner of a track. */
     title?: string;
     subtitle?: string; // Being used only for a title track (i.e., 'text-track')
 
@@ -130,7 +130,7 @@ export interface CommonTrackDef extends CommonViewDef, CommonRequiredTrackDef {
 
     // Circular Layout
     /**
-     * Specify the outer radius of tracks when `{"layout": "circular"}`
+     * Specify the outer radius of tracks when `{"layout": "circular"}`.
      */
     outerRadius?: number;
     /**
@@ -332,7 +332,7 @@ export interface Style {
      */
     textFontSize?: number;
     /**
-     * specify the stroke of `text` marks.
+     * Specify the stroke of `text` marks.
      * Can also be specified using the `stroke` channel option of `text` marks.
      */
     textStroke?: string;
@@ -341,13 +341,13 @@ export interface Style {
      * Can also be specified using the `strokeWidth` channel option of `text` marks.
      */
     textStrokeWidth?: number;
-    /** Specify the font weight (either `"bold"` or `"normal"` ) of `text` marks */
+    /** Specify the font weight (either `"bold"` or `"normal"` ) of `text` marks. */
     textFontWeight?: 'bold' | 'normal';
     /** Specify the alignment of `text` marks to a given point,
      * one of `"start"`, `"middle"`, `"end"`
      */
     textAnchor?: 'start' | 'middle' | 'end';
-    /** specify the connetion type of `betweenLink` marks, one of `"straight"`, `"curve"`, `"corner"`.
+    /** Specify the connetion type of `betweenLink` marks, one of `"straight"`, `"curve"`, `"corner"`.
      *
      * __Default__: `"corner"`
      */
@@ -592,7 +592,7 @@ export type Aggregate = 'max' | 'min' | 'mean' | 'bin' | 'count';
 /* ----------------------------- DATA ----------------------------- */
 export type DataDeep = JSONData | CSVData | BIGWIGData | MultivecData | BEDDBData | VectorData | MatrixData | BAMData;
 
-/** values in the form of JSON */
+/** Values in the form of JSON. */
 export interface Datum {
     [k: string]: number | string;
 }
@@ -603,25 +603,25 @@ export interface Datum {
 
 export interface JSONData {
     /**
-     * define data type
+     * Define data type.
      */
     type: 'json';
 
-    /** values in the form of JSON */
+    /** Values in the form of JSON. */
     values: Datum[];
 
-    /** specify the name of quantitative data fields */
+    /** Specify the name of quantitative data fields. */
     quantitativeFields?: string[];
 
-    /** specify the name of chromosome data fields */
+    /** Specify the name of chromosome data fields. */
     chromosomeField?: string;
 
-    /** specify the name of genomic data fields */
+    /** Specify the name of genomic data fields. */
     genomicFields?: string[];
 
-    /** specify the number of rows loaded from the url.
+    /** Specify the number of rows loaded from the URL.
      *
-     * __Default:__1000
+     * __Default:__ 1000
      */
     sampleLength?: number;
 
@@ -640,39 +640,39 @@ export interface CSVData {
     type: 'csv';
 
     /**
-     * specify the URL address of the data file
+     * Specify the URL address of the data file.
      */
     url: string;
 
     /**
-     * specify file separator, __Default:__ ','
+     * Specify file separator, __Default:__ ','
      */
     separator?: string;
 
     /**
-     * specify the name of quantitative data fields
+     * Specify the name of quantitative data fields.
      */
     quantitativeFields?: string[];
 
     /**
-     * specify the name of chromosome data fields
+     * Specify the name of chromosome data fields.
      */
     chromosomeField?: string;
 
     /**
-     * specify the name of genomic data fields
+     * Specify the name of genomic data fields.
      */
     genomicFields?: string[];
 
     /**
-     * specify the number of rows loaded from the url.
+     * Specify the number of rows loaded from the URL.
      *
      * __Default:__ `1000`
      */
     sampleLength?: number; // This limit the total number of rows fetched (default: 1000)
 
     /**
-     * specify the names of data fields if a CSV file is headerless
+     * Specify the names of data fields if a CSV file is headerless.
      */
     headerNames?: string[];
 
@@ -706,42 +706,42 @@ export interface MultivecData {
     type: 'multivec';
 
     /**
-     * specify the URL address of the data file
+     * Specify the URL address of the data file.
      */
     url: string;
 
     /**
-     * assign a field name of the middle position of genomic intervals
+     * Assign a field name of the middle position of genomic intervals.
      */
     column: string;
 
     /**
-     * assign a field name of samples
+     * Assign a field name of samples.
      */
     row: string;
 
     /**
-     * assign a field name of quantitative values
+     * Assign a field name of quantitative values.
      */
     value: string;
 
     /**
-     *  assign names of individual samples
+     *  assign names of individual samples.
      */
     categories?: string[];
 
     /**
-     * assign a field name of the start position of genomic intervals
+     * Assign a field name of the start position of genomic intervals.
      */
     start?: string;
 
     /**
-     * assign a field name of the end position of genomic intervals
+     * Assign a field name of the end position of genomic intervals.
      */
     end?: string;
 
     /**
-     * Binning the genomic interval in tiles (unit size: 256)
+     * Binning the genomic interval in tiles (unit size: 256).
      */
     binSize?: number;
 }
@@ -750,31 +750,31 @@ export interface BIGWIGData {
     type: 'bigwig';
 
     /**
-     * specify the URL address of the data file
+     * Specify the URL address of the data file.
      */
     url: string;
 
     /**
-     * assign a field name of the middle position of genomic intervals
+     * Assign a field name of the middle position of genomic intervals.
      */
     column: string;
 
     /**
-     * assign a field name of quantitative values
+     * Assign a field name of quantitative values.
      */
     value: string;
     /**
-     * assign a field name of the start position of genomic intervals
+     * Assign a field name of the start position of genomic intervals.
      */
     start?: string;
 
     /**
-     * assign a field name of the end position of genomic intervals
+     * Assign a field name of the end position of genomic intervals.
      */
     end?: string;
 
     /**
-     * Binning the genomic interval in tiles (unit size: 256)
+     * Binning the genomic interval in tiles (unit size: 256).
      */
     binSize?: number;
 }
@@ -787,23 +787,23 @@ export interface BIGWIGData {
 export interface VectorData {
     type: 'vector';
     /**
-     * specify the URL address of the data file
+     * Specify the URL address of the data file.
      */
     url: string;
 
-    /** assign a field name of the middle position of genomic intervals */
+    /** Assign a field name of the middle position of genomic intervals. */
     column: string;
 
-    /** assign a field name of quantitative values */
+    /** Assign a field name of quantitative values. */
     value: string;
 
-    /** assign a field name of the start position of genomic intervals */
+    /** Assign a field name of the start position of genomic intervals. */
     start?: string;
 
-    /** assign a field name of the end position of genomic intervals */
+    /** Assign a field name of the end position of genomic intervals. */
     end?: string;
 
-    /** Binning the genomic interval in tiles (unit size: 256) */
+    /** Binning the genomic interval in tiles (unit size: 256). */
     binSize?: number;
 }
 
@@ -813,13 +813,13 @@ export interface VectorData {
  */
 export interface BEDDBData {
     type: 'beddb';
-    /**specify the URL address of the data file*/
+    /** Specify the URL address of the data file. */
     url: string;
 
-    /**specify the name of genomic data fields */
+    /** Specify the name of genomic data fields. */
     genomicFields: { index: number; name: string }[];
 
-    /**specify the column indexes, field names, and field types */
+    /** Specify the column indexes, field names, and field types. */
     valueFields?: { index: number; name: string; type: 'nominal' | 'quantitative' }[];
 
     // this is a somewhat arbitrary option for reading gene annotation datasets
@@ -867,7 +867,7 @@ export type FilterTransform = OneOfFilter | RangeFilter | IncludeFilter;
 
 interface CommonFilterTransform {
     type: 'filter';
-    /** a filter is applied based on the values of the specified data field */
+    /** A filter is applied based on the values of the specified data field */
     field: string;
     /**
      * when `{"not": true}`, apply a NOT logical operation to the filter.
@@ -877,17 +877,17 @@ interface CommonFilterTransform {
 }
 
 export interface RangeFilter extends CommonFilterTransform {
-    /** check whether the value is in a number range */
+    /** Check whether the value is in a number range. */
     inRange: number[];
 }
 
 export interface IncludeFilter extends CommonFilterTransform {
-    /** check whether the value includes a substring */
+    /** Check whether the value includes a substring. */
     include: string;
 }
 
 export interface OneOfFilter extends CommonFilterTransform {
-    /** check whether the value is an element in the provided list */
+    /** Check whether the value is an element in the provided list. */
     oneOf: string[] | number[];
 }
 
@@ -895,7 +895,7 @@ export type LogBase = number | 'e';
 export interface LogTransform {
     type: 'log';
     field: string;
-    /** If not specified, 10 is used */
+    /** If not specified, 10 is used. */
     base?: LogBase;
     /** If specified, store transformed values in a new field. */
     newField?: string;
@@ -919,26 +919,26 @@ export interface DisplaceTransform {
     type: 'displace';
     // We could support different types of bounding boxes (e.g., using a center position and a size)
     boundingBox: {
-        /** The name of a quantitative field that represents the start position */
+        /** The name of a quantitative field that represents the start position. */
         startField: string;
 
-        /** The name of a quantitative field that represents the end position */
+        /** The name of a quantitative field that represents the end position. */
         endField: string;
 
         /** The padding around visual lements. Either px or bp */
         padding?: number;
 
-        /** whether to consider `padding` as the bp length */
+        /** Whether to consider `padding` as the bp length. */
         isPaddingBP?: boolean;
 
-        /** The name of a nominal field to group rows by in prior to piling-up */
+        /** The name of a nominal field to group rows by in prior to piling-up. */
         groupField?: string;
     };
-    /** A string that specifies the type of diseplancement, one of `"pile"` and `"spread"`  */
+    /** A string that specifies the type of diseplancement, one of `"pile"` and `"spread"`.  */
     method: DisplacementType;
     newField: string;
 
-    /** Specify maximum rows to be generated (default has no limit) */
+    /** Specify maximum rows to be generated (default has no limit). */
     maxRows?: number;
 }
 
@@ -988,20 +988,20 @@ export interface CombineMatesTransform {
  */
 export interface JSONParseTransform {
     type: 'subjson';
-    /** The field that contains the JSON object array */
+    /** The field that contains the JSON object array. */
     field: string;
-    /** Base genomic position when parsing relative position */
+    /** Base genomic position when parsing relative position. */
     baseGenomicField: string;
-    /** Relative genomic position to parse */
+    /** Relative genomic position to parse. */
     genomicField: string;
-    /** Length of genomic interval */
+    /** Length of genomic interval. */
     genomicLengthField: string;
 }
 
 /* ----------------------------- Templates ----------------------------- */
 
 /**
- * Template specification that will be internally converted into `SingleTrack` for rendering
+ * Template specification that will be internally converted into `SingleTrack` for rendering.
  */
 export interface TemplateTrack extends CommonRequiredTrackDef, CommonTrackDef {
     // Template name (e.g., 'gene')
@@ -1020,7 +1020,7 @@ export interface TemplateTrack extends CommonRequiredTrackDef, CommonTrackDef {
 }
 
 /**
- * Definition of Track Templates
+ * Definition of Track Templates.
  */
 export interface TemplateTrackDef {
     name: string;
