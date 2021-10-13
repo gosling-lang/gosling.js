@@ -41,7 +41,6 @@ export interface OverlaidTracks extends CommonViewDef, Partial<SingleTrack> {
 export interface MultipleViews extends CommonViewDef {
     /**
      * Specify how multiple views are arranged.
-     * One of `"parallel"`,  `"serial"`, `"horizontal"`, `"vertical"`.
      */
     arrangement?: 'parallel' | 'serial' | 'horizontal' | 'vertical';
     /** An array of view specifications */
@@ -54,7 +53,7 @@ export type Assembly = 'hg38' | 'hg19' | 'hg18' | 'hg17' | 'hg16' | 'mm10' | 'mm
 export type ZoomLimits = [number | null, number | null];
 
 export interface CommonViewDef {
-    /** Specify the layout type of all tracks, either `"linear"` or `"circular"`. */
+    /** Specify the layout type of all tracks. */
     layout?: Layout;
     /** Specify the orientation. */
     orientation?: Orientation;
@@ -290,11 +289,11 @@ export interface Style {
      */
     linePattern?: { type: 'triangleLeft' | 'triangleRight'; size: number };
     /**
-     * Specify the curve of `rule` marks. One of `"top"`, `"bottom"`, `"left"`, `"right"`.
+     * Specify the curve of `rule` marks.
      */
     curve?: 'top' | 'bottom' | 'left' | 'right';
     /**
-     * Specify the alignment (either `"left"` or `"right"`) of marks.
+     * Specify the alignment of marks.
      * This property is currently only supported for `triangle` marks.
      */
     align?: 'left' | 'right';
@@ -341,13 +340,12 @@ export interface Style {
      * Can also be specified using the `strokeWidth` channel option of `text` marks.
      */
     textStrokeWidth?: number;
-    /** Specify the font weight (either `"bold"` or `"normal"` ) of `text` marks. */
+    /** Specify the font weight of `text` marks. */
     textFontWeight?: 'bold' | 'normal';
-    /** Specify the alignment of `text` marks to a given point,
-     * one of `"start"`, `"middle"`, `"end"`
+    /** Specify the alignment of `text` marks to a given point.
      */
     textAnchor?: 'start' | 'middle' | 'end';
-    /** Specify the connetion type of `betweenLink` marks, one of `"straight"`, `"curve"`, `"corner"`.
+    /** Specify the connetion type of `betweenLink` marks.
      *
      * __Default__: `"corner"`
      */
@@ -387,12 +385,11 @@ interface CommonVisibilityCondition {
 
 export interface SizeVisibilityCondition extends CommonVisibilityCondition {
     /**
-     * Target specifies the object (either `"track"` or `"mark"`) that you want to compare with the threshold.
+     * Target specifies the object that you want to compare with the threshold.
      */
     target: 'track' | 'mark';
     /**
      * Specify which aspect of the `target` will be compared to the `threshold`.
-     * Either `"width"` or `"height"`.
      */
     measure: 'width' | 'height';
     /**
@@ -407,7 +404,7 @@ export interface SizeVisibilityCondition extends CommonVisibilityCondition {
 
 export interface ZoomLevelVisibilityCondition extends CommonVisibilityCondition {
     /**
-     * Target specifies the object (either `"track"` or `"mark"`) that you want to compare with the threshold.
+     * Target specifies the object that you want to compare with the threshold.
      */
     target: 'track' | 'mark';
     /**
@@ -934,7 +931,7 @@ export interface DisplaceTransform {
         /** The name of a nominal field to group rows by in prior to piling-up. */
         groupField?: string;
     };
-    /** A string that specifies the type of diseplancement, one of `"pile"` and `"spread"`.  */
+    /** A string that specifies the type of diseplancement.  */
     method: DisplacementType;
     newField: string;
 

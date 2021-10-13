@@ -326,7 +326,7 @@
         },
         "method": {
           "$ref": "#/definitions/DisplacementType",
-          "description": "A string that specifies the type of diseplancement, one of `\"pile\"` and `\"spread\"`."
+          "description": "A string that specifies the type of diseplancement."
         },
         "newField": {
           "type": "string"
@@ -949,7 +949,7 @@
           "type": "number"
         },
         "measure": {
-          "description": "Specify which aspect of the `target` will be compared to the `threshold`. Either `\"width\"` or `\"height\"`.",
+          "description": "Specify which aspect of the `target` will be compared to the `threshold`.",
           "enum": [
             "width",
             "height"
@@ -961,7 +961,7 @@
           "description": "A string that pecifies the logical operation to conduct between `threshold` and the `measure` of `target`. Support\n\n- greater than : \"greater-than\", \"gt\", \"GT\"\n\n- less than : \"less-than\", \"lt\", \"LT\"\n\n- greater than or equal to : \"greater-than-or-equal-to\", \"gtet\", \"GTET\"\n\n- less than or equal to : \"less-than-or-equal-to\", \"ltet\", \"LTET\""
         },
         "target": {
-          "description": "Target specifies the object (either `\"track\"` or `\"mark\"`) that you want to compare with the threshold.",
+          "description": "Target specifies the object that you want to compare with the threshold.",
           "enum": [
             "track",
             "mark"
@@ -997,7 +997,7 @@
       "additionalProperties": false,
       "properties": {
         "align": {
-          "description": "Specify the alignment (either `\"left\"` or `\"right\"`) of marks. This property is currently only supported for `triangle` marks.",
+          "description": "Specify the alignment of marks. This property is currently only supported for `triangle` marks.",
           "enum": [
             "left",
             "right"
@@ -1019,7 +1019,7 @@
           "type": "boolean"
         },
         "curve": {
-          "description": "Specify the curve of `rule` marks. One of `\"top\"`, `\"bottom\"`, `\"left\"`, `\"right\"`.",
+          "description": "Specify the curve of `rule` marks.",
           "enum": [
             "top",
             "bottom",
@@ -1084,7 +1084,7 @@
           "type": "object"
         },
         "linkConnectionType": {
-          "description": "Specify the connetion type of `betweenLink` marks, one of `\"straight\"`, `\"curve\"`, `\"corner\"`.\n\n__Default__: `\"corner\"`",
+          "description": "Specify the connetion type of `betweenLink` marks.\n\n__Default__: `\"corner\"`",
           "enum": [
             "straight",
             "curve",
@@ -1099,7 +1099,7 @@
           "type": "number"
         },
         "textAnchor": {
-          "description": "Specify the alignment of `text` marks to a given point, one of `\"start\"`, `\"middle\"`, `\"end\"`",
+          "description": "Specify the alignment of `text` marks to a given point.",
           "enum": [
             "start",
             "middle",
@@ -1112,7 +1112,7 @@
           "type": "number"
         },
         "textFontWeight": {
-          "description": "Specify the font weight (either `\"bold\"` or `\"normal\"` ) of `text` marks.",
+          "description": "Specify the font weight of `text` marks.",
           "enum": [
             "bold",
             "normal"
@@ -1388,7 +1388,7 @@
           "description": "A string that pecifies the logical operation to conduct between `threshold` and the `measure` of `target`. Support\n\n- greater than : \"greater-than\", \"gt\", \"GT\"\n\n- less than : \"less-than\", \"lt\", \"LT\"\n\n- greater than or equal to : \"greater-than-or-equal-to\", \"gtet\", \"GTET\"\n\n- less than or equal to : \"less-than-or-equal-to\", \"ltet\", \"LTET\""
         },
         "target": {
-          "description": "Target specifies the object (either `\"track\"` or `\"mark\"`) that you want to compare with the threshold.",
+          "description": "Target specifies the object that you want to compare with the threshold.",
           "enum": [
             "track",
             "mark"
