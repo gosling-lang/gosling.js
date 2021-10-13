@@ -347,7 +347,7 @@ export interface Style {
     textAnchor?: 'start' | 'middle' | 'end';
     /** Specify the connetion type of `betweenLink` marks.
      *
-     * __Default__: `"corner"`
+     * __Default__: "corner"
      */
     linkConnectionType?: 'straight' | 'curve' | 'corner';
 }

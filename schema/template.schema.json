@@ -1084,7 +1084,7 @@
           "type": "object"
         },
         "linkConnectionType": {
-          "description": "Specify the connetion type of `betweenLink` marks.\n\n__Default__: `\"corner\"`",
+          "description": "Specify the connetion type of `betweenLink` marks.\n\n__Default__: \"corner\"",
           "enum": [
             "straight",
             "curve",
