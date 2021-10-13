@@ -134,6 +134,7 @@ export type MarkType =
     | 'triangleLeft'
     | 'triangleRight'
     | 'triangleBottom'
+    | 'diamond'
     // experimental
     | 'brush'
     // TODO: perhaps need to make this invisible to users
@@ -469,7 +470,8 @@ export type DataTransform =
     | GenomicLengthTransform
     | CoverageTransform
     | CombineMatesTransform
-    | JSONParseTransform;
+    | JSONParseTransform
+    | MatrixRotateTransform;
 
 export type FilterTransform = OneOfFilter | RangeFilter | IncludeFilter;
 
@@ -582,6 +584,34 @@ export interface JSONParseTransform {
     baseGenomicField: string; // Base genomic position when parsing relative position
     genomicField: string; // Relative genomic position to parse
     genomicLengthField: string; // Length of genomic interval
+}
+
+/**
+ * Rotate Matrix by 45 deg, anti-clockwise. Four genomic fields that represent the start and end positions along two genomic axes
+ * are converted to four positions, two x positions and two y positions.
+ */
+export interface MatrixRotateTransform {
+    type: 'rotateMatrix';
+
+    /**
+     * Data field that represents the start position of the first genomic axis.
+     */
+    startField1: string;
+
+    /**
+     * Data field that represents the end position of the first genomic axis.
+     */
+    endField1: string;
+
+    /**
+     * Data field that represents the start position of the second genomic axis.
+     */
+    startField2: string;
+
+    /**
+     * Data field that represents the end position of the second genomic axis.
+     */
+    endField2: string;
 }
 
 /* ----------------------------- Templates ----------------------------- */

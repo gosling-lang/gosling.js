@@ -648,6 +648,9 @@
         },
         {
           "$ref": "#/definitions/JSONParseTransform"
+        },
+        {
+          "$ref": "#/definitions/MatrixRotateTransform"
         }
       ]
     },
@@ -1624,6 +1627,7 @@
         "triangleLeft",
         "triangleRight",
         "triangleBottom",
+        "diamond",
         "brush",
         "header"
       ],
@@ -1661,6 +1665,40 @@
       "required": [
         "type",
         "url"
+      ],
+      "type": "object"
+    },
+    "MatrixRotateTransform": {
+      "additionalProperties": false,
+      "description": "Rotate Matrix by 45 deg, anti-clockwise. Four genomic fields that represent the start and end positions along two genomic axes are converted to four positions, two x positions and two y positions.",
+      "properties": {
+        "endField1": {
+          "description": "Data field that represents the end position of the first genomic axis.",
+          "type": "string"
+        },
+        "endField2": {
+          "description": "Data field that represents the end position of the second genomic axis.",
+          "type": "string"
+        },
+        "startField1": {
+          "description": "Data field that represents the start position of the first genomic axis.",
+          "type": "string"
+        },
+        "startField2": {
+          "description": "Data field that represents the start position of the second genomic axis.",
+          "type": "string"
+        },
+        "type": {
+          "const": "rotateMatrix",
+          "type": "string"
+        }
+      },
+      "required": [
+        "type",
+        "startField1",
+        "endField1",
+        "startField2",
+        "endField2"
       ],
       "type": "object"
     },

@@ -22,12 +22,13 @@ import {
     calculateGenomicLength,
     parseSubJSON,
     replaceString,
-    splitExon
+    splitExon,
+    rotateMatrix
 } from '../core/utils/data-transform';
 import { getTabularData } from './data-abstraction';
 import { BAMDataFetcher } from '../data-fetcher/bam';
 import { getRelativeGenomicPosition } from '../core/utils/assembly';
-import { Is2DTrack } from '../core/gosling.schema.guards';
+import { Is2DTrack, Is1DMatrix } from '../core/gosling.schema.guards';
 import { spawn } from 'threads';
 
 import BamWorker from '../data-fetcher/bam/bam-worker.js?worker&inline';
@@ -459,6 +460,61 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             return this.visibleAndFetchedIds().map((x: any) => this.fetchedTiles[x]);
         }
 
+        calculateZoomLevel() {
+            if (Is1DMatrix(this.options.spec)) {
+                // For the rotated matrix, we need a special treatment for calculating the zoom level.
+                return this.calculateZoomLevelFor1DMatrix();
+            } else {
+                return super.calculateZoomLevel();
+            }
+        }
+
+        calculateZoomLevelFor1DMatrix() {
+            let zoomLevel = null;
+
+            if (this.tilesetInfo.resolutions) {
+                const zoomIndexX = HGC.services.tileProxy.calculateZoomLevelFromResolutions(
+                    this.tilesetInfo.resolutions,
+                    this._xScale,
+                    this.tilesetInfo.min_pos[0],
+                    this.tilesetInfo.max_pos[0]
+                );
+
+                const zoomIndexY = HGC.services.tileProxy.calculateZoomLevelFromResolutions(
+                    this.tilesetInfo.resolutions,
+                    this._xScale,
+                    this.tilesetInfo.min_pos[1],
+                    this.tilesetInfo.max_pos[1]
+                );
+
+                zoomLevel = Math.min(zoomIndexX, zoomIndexY);
+            } else {
+                const xZoomLevel = HGC.services.tileProxy.calculateZoomLevel(
+                    this._xScale,
+                    this.tilesetInfo.min_pos[0],
+                    this.tilesetInfo.max_pos[0]
+                );
+
+                const yZoomLevel = HGC.services.tileProxy.calculateZoomLevel(
+                    this._xScale,
+                    this.tilesetInfo.min_pos[1],
+                    this.tilesetInfo.max_pos[1]
+                );
+
+                zoomLevel = Math.max(xZoomLevel, yZoomLevel);
+                zoomLevel = Math.min(zoomLevel, this.maxZoom);
+            }
+
+            if (this.options && this.options.maxZoom) {
+                if (this.options.maxZoom >= 0) {
+                    zoomLevel = Math.min(this.options.maxZoom, zoomLevel);
+                } else {
+                    console.error('Invalid maxZoom on track:', this);
+                }
+            }
+            return zoomLevel;
+        }
+
         // !! This is called in the constructor, `super(context, options)`. So be aware not to use variables that is not prepared.
         calculateVisibleTiles() {
             if (usePrereleaseRendering(this.options.spec)) {
@@ -474,6 +530,96 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                         return;
                     }
                     this.forceDraw();
+                }
+
+                this.setVisibleTiles(tiles);
+            } else if (Is1DMatrix(this.options.spec)) {
+                // if we don't know anything about this dataset, no point
+                // in trying to get tiles
+                if (!this.tilesetInfo) {
+                    return;
+                }
+
+                this.zoomLevel = this.calculateZoomLevel();
+
+                // this.zoomLevel = 0;
+                const expandedXScale = this._xScale.copy();
+
+                // we need to expand the domain of the X-scale because we are showing diagonal tiles.
+                // to make sure the view is covered up the entire height, we need to expand by
+                // viewHeight * sqrt(2)
+                // on each side
+                expandedXScale.domain([
+                    this._xScale.invert(this._xScale.range()[0] - this.dimensions[1] * Math.sqrt(2)),
+                    this._xScale.invert(this._xScale.range()[1] + this.dimensions[1] * Math.sqrt(2))
+                ]);
+
+                if (this.tilesetInfo.resolutions) {
+                    const sortedResolutions = this.tilesetInfo.resolutions
+                        .map((x: any) => +x)
+                        .sort((a: any, b: any) => b - a);
+
+                    this.xTiles = HGC.services.tileProxy.calculateTilesFromResolution(
+                        sortedResolutions[this.zoomLevel],
+                        expandedXScale,
+                        this.tilesetInfo.min_pos[0],
+                        this.tilesetInfo.max_pos[0]
+                    );
+                    this.yTiles = HGC.services.tileProxy.calculateTilesFromResolution(
+                        sortedResolutions[this.zoomLevel],
+                        expandedXScale,
+                        this.tilesetInfo.min_pos[0],
+                        this.tilesetInfo.max_pos[0]
+                    );
+                } else {
+                    this.xTiles = HGC.services.tileProxy.calculateTiles(
+                        this.zoomLevel,
+                        expandedXScale,
+                        this.tilesetInfo.min_pos[0],
+                        this.tilesetInfo.max_pos[0],
+                        this.tilesetInfo.max_zoom,
+                        this.tilesetInfo.max_width
+                    );
+
+                    this.yTiles = HGC.services.tileProxy.calculateTiles(
+                        this.zoomLevel,
+                        expandedXScale,
+                        this.tilesetInfo.min_pos[0],
+                        this.tilesetInfo.max_pos[0],
+                        this.tilesetInfo.max_zoom,
+                        this.tilesetInfo.max_width
+                    );
+                }
+
+                const rows = this.xTiles;
+                const cols = this.yTiles;
+                const zoomLevel = this.zoomLevel;
+
+                const maxWidth = this.tilesetInfo.max_width;
+                const tileWidth = maxWidth / 2 ** zoomLevel;
+
+                // if we're mirroring tiles, then we only need tiles along the diagonal
+                const tiles = [];
+
+                // calculate the ids of the tiles that should be visible
+                for (let i = 0; i < rows.length; i++) {
+                    for (let j = i; j < cols.length; j++) {
+                        // the length between the bottom of the track and the bottom corner of the tile
+                        // draw it out to understand better!
+                        const tileBottomPosition =
+                            ((j - i - 2) * (this._xScale(tileWidth) - this._xScale(0)) * Math.sqrt(2)) / 2;
+
+                        if (tileBottomPosition > this.dimensions[1]) {
+                            // this tile won't be visible so we don't need to fetch it
+                            continue;
+                        }
+
+                        const newTile: any = [zoomLevel, rows[i], cols[j]];
+                        newTile.mirrored = false;
+                        newTile.dataTransform = this.options.dataTransform ? this.options.dataTransform : 'default';
+
+                        tiles.push(newTile);
+                    }
                 }
 
                 this.setVisibleTiles(tiles);
@@ -809,6 +955,9 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                                 break;
                             case 'log':
                                 tile.gos.tabularDataFiltered = calculateData(t, tile.gos.tabularDataFiltered);
+                                break;
+                            case 'rotateMatrix':
+                                tile.gos.tabularDataFiltered = rotateMatrix(t, tile.gos.tabularDataFiltered);
                                 break;
                             case 'exonSplit':
                                 tile.gos.tabularDataFiltered = splitExon(

@@ -66,6 +66,39 @@ export const EX_SPEC_NATIVE_MATRIX: GoslingSpec = {
     ]
 };
 
+export const EX_SPEC_1D_MATRIX: GoslingSpec = {
+    views: [
+        {
+            xDomain: { chromosome: '1', interval: [4900000, 5200000] },
+            tracks: [
+                {
+                    data: {
+                        url: GOSLING_PUBLIC_DATA.matrix,
+                        type: 'matrix'
+                    },
+                    dataTransform: [
+                        {
+                            type: 'rotateMatrix',
+                            startField1: 'xs',
+                            endField1: 'xe',
+                            startField2: 'ys',
+                            endField2: 'ye'
+                        }
+                    ],
+                    mark: 'point',
+                    x: { field: 'xs', type: 'genomic', axis: 'top' },
+                    xe: { field: 'xe', type: 'genomic' },
+                    y: { field: 'ys', type: 'quantitative', axis: 'none' }, // TODO: axis position
+                    ye: { field: 'ye', type: 'quantitative', axis: 'none' }, // TODO: axis position
+                    color: { field: 'value', type: 'quantitative', legend: true },
+                    width: 600,
+                    height: 200
+                }
+            ]
+        }
+    ]
+};
+
 export const EX_SPEC_MATRIX: GoslingSpec = {
     title: 'Matrix Visualization',
     subtitle: 'Matrix Heatmap for Hi-C Data',

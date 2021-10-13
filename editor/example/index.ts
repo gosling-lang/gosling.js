@@ -3,7 +3,7 @@ import { EX_SPEC_LAYOUT_AND_ARRANGEMENT_1, EX_SPEC_LAYOUT_AND_ARRANGEMENT_2 } fr
 import { EX_SPEC_VISUAL_ENCODING, EX_SPEC_VISUAL_ENCODING_CIRCULAR } from './visual-encoding';
 import { EX_SPEC_CANCER_VARIANT_PROTOTYPE } from './cancer-variant';
 import { EX_SPEC_MATRIX_HFFC6 } from './matrix-hffc6';
-import { EX_SPEC_NATIVE_MATRIX } from './matrix';
+import { EX_SPEC_NATIVE_MATRIX, EX_SPEC_1D_MATRIX } from './matrix';
 import { EX_SPEC_LINKING } from './visual-linking';
 import { EX_SPEC_BASIC_SEMANTIC_ZOOM } from './basic-semantic-zoom';
 import { EX_SPEC_MARK_DISPLACEMENT } from './mark-displacement';
@@ -107,7 +107,12 @@ export const examples: ReadonlyArray<{
     {
         name: 'Simple Matrix',
         id: 'MATRIX',
-        spec: EX_SPEC_NATIVE_MATRIX,
+        spec: EX_SPEC_NATIVE_MATRIX
+    },
+    {
+        name: 'Rotated Matrix',
+        id: '1D_MATRIX',
+        spec: EX_SPEC_1D_MATRIX,
         forceShow: true
     },
     {

@@ -138,6 +138,17 @@ export function Is2DTrack(track: Track) {
     );
 }
 
+/**
+ * Check whether this track renders a rotated matrix.
+ * TODO: To support overlaid tracks in rotated matrix tracks, this function should be updated as this only accepts single tracks.
+ */
+export function Is1DMatrix(track: Track) {
+    if (!IsSingleTrack(track)) {
+        return false;
+    }
+    return track.data?.type === 'matrix' && track.dataTransform?.filter(d => d.type === 'rotateMatrix').length !== 0;
+}
+
 export function IsChannelValue(
     channel: ChannelDeep | ChannelValue | ChannelBind | undefined | 'none'
 ): channel is ChannelValue {

@@ -13,7 +13,8 @@ import {
     CoverageTransform,
     CombineMatesTransform,
     DisplaceTransform,
-    JSONParseTransform
+    JSONParseTransform,
+    MatrixRotateTransform
 } from '../gosling.schema';
 import {
     getChannelKeysByAggregateFnc,
@@ -101,6 +102,43 @@ export function calculateData(log: LogTransform, data: Datum[]): Datum[] {
         }
         return d;
     });
+    return output;
+}
+
+/**
+ *
+ */
+export function rotateMatrix(_: MatrixRotateTransform, data: Datum[]): Datum[] {
+    // const { startField1, endField1, startField2, endField2 } = _;
+    return data;
+
+    const output: Datum[] = [];
+
+    Array.from(data).forEach(d => {
+        if (d[genomicField1] && d[genomicField2]) {
+            d[`x_rotated`] = (+d[genomicField1] + +d[genomicField2]) / 2.0;
+            d[`y_rotated`] = Math.abs(+d[genomicField1] - +d[genomicField2]) / 2.0;
+
+            // output.push(d);
+
+            // if(scale.invert(0) <= d[`x_rotated`] && d[`x_rotated`] <= scale.invert(trackWidth)) {
+            //     // For the performance issue, we only store the data rows that are visible in the current view.
+            //     output.push(d);
+            // }
+
+            // if(d[`y_rotated`] <= 5000) {
+            // For the performance issue, we only store the data rows that are visible in the current view.
+            // output.push(d);
+            // }
+
+            // TESSTING
+            // if(scale.invert(0) <= d.x && d.x <= scale.invert(trackWidth)) {
+            //     // For the performance issue, we only store the data rows that are visible in the current view.
+            //     output.push(d);
+            // }
+        }
+    });
+    // console.log('scale.invert(0)', scale.invert(0), 'scale.invert(trackWidth)', scale.invert(trackWidth));
     return output;
 }
 
