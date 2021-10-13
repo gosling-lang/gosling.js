@@ -189,7 +189,9 @@ export type MarkType =
     | 'header';
 
 /* ----------------------------- TRACK ----------------------------- */
-export interface SingleTrack extends CommonTrackDef {
+export type SingleTrack = SingleTrackBase & Encoding;
+
+interface SingleTrackBase extends CommonTrackDef {
     // Data
     data: DataDeep;
 
@@ -201,28 +203,6 @@ export interface SingleTrack extends CommonTrackDef {
     // Mark
     mark: Mark;
 
-    // Visual channels
-    x?: Channel;
-    y?: Channel;
-    xe?: Channel;
-    ye?: Channel;
-
-    x1?: Channel;
-    y1?: Channel;
-    x1e?: Channel;
-    y1e?: Channel;
-
-    row?: Channel;
-    column?: Channel;
-
-    color?: Channel;
-    size?: Channel;
-    text?: Channel;
-
-    stroke?: Channel;
-    strokeWidth?: Channel;
-    opacity?: Channel;
-
     // Resolving overlaps
     displacement?: Displacement;
 
@@ -233,6 +213,29 @@ export interface SingleTrack extends CommonTrackDef {
     flipY?: boolean; // This is only supported for `link` marks.
     stretch?: boolean; // Stretch the size to the given range? (e.g., [x, xe])
     overrideTemplate?: boolean; // Override a spec template that is defined for a given data type.
+}
+
+export interface Encoding {
+    x?: X | ChannelValue;
+    y?: Y | ChannelValue;
+    xe?: X | ChannelValue;
+    ye?: Y | ChannelValue;
+
+    x1?: X | ChannelValue;
+    y1?: Y | ChannelValue;
+    x1e?: X | ChannelValue;
+    y1e?: Y | ChannelValue;
+
+    row?: Row | ChannelValue;
+    column?: Column | ChannelValue;
+
+    color?: Color | ChannelValue;
+    size?: Size | ChannelValue;
+    text?: Text | ChannelValue;
+
+    stroke?: Stroke | ChannelValue;
+    strokeWidth?: StrokeWidth | ChannelValue;
+    opacity?: Opacity | ChannelValue;
 }
 
 export interface Tooltip {
@@ -457,24 +460,101 @@ export type ChannelType = keyof typeof ChannelTypes | string;
 
 export type Channel = ChannelDeep | ChannelValue; // TODO: support null to allow removing spec when overriding
 
-export interface ChannelDeep {
+export interface ChannelDeepCommon {
     field?: string;
-    type?: FieldType;
+}
+
+export interface X extends ChannelDeepCommon {
+    type?: 'genomic';
+    domain?: GenomicDomain;
+    range?: ValueExtent;
+    axis?: AxisPosition;
+    legend?: boolean;
+    grid?: boolean;
+    linkingId?: string;
     aggregate?: Aggregate;
-    domain?: Domain;
-    range?: Range;
+}
+
+export interface Y extends ChannelDeepCommon {
+    type?: 'quantitative' | 'nominal' | 'genomic';
+    domain?: ValueExtent;
+    range?: ValueExtent;
     axis?: AxisPosition;
     legend?: boolean;
     baseline?: string | number;
     zeroBaseline?: boolean; // We could remove this and use the `baseline` option instead
     mirrored?: boolean; // Show baseline on the top or right instead of bottom or left
+    aggregate?: Aggregate;
     grid?: boolean;
     linkingId?: string;
     flip?: boolean; // Flip a track vertically or horizontally?
-    stack?: boolean; // Experimental: We could use this option to stack visual marks, addressing the visual overlap (e.g., stacked bar).
     padding?: number; // Experimental: Used in `row` and `column` for vertical and horizontal padding.
-    sort?: string[]; // Experimental: Fix order by categories (e.g., stacked bars).
 }
+
+export interface Row extends ChannelDeepCommon {
+    type?: 'nominal';
+    domain?: ValueExtent;
+    range?: ValueExtent;
+    legend?: boolean;
+    padding?: number; // Experimental: Used in `row` and `column` for vertical and horizontal padding.
+    grid?: boolean;
+}
+
+export interface Column extends ChannelDeepCommon {
+    type?: 'nominal';
+    domain?: ValueExtent;
+    range?: ValueExtent;
+}
+
+export interface Color extends ChannelDeepCommon {
+    type?: 'quantitative' | 'nominal';
+    domain?: ValueExtent;
+    range?: Range;
+    legend?: boolean;
+    baseline?: string | number;
+    zeroBaseline?: boolean; // We could remove this and use the `baseline` option instead
+}
+
+export interface Size extends ChannelDeepCommon {
+    type?: 'quantitative' | 'nominal';
+    domain?: ValueExtent;
+    range?: ValueExtent;
+    legend?: boolean; // TODO: Support this
+    baseline?: string | number;
+    zeroBaseline?: boolean; // We could remove this and use the `baseline` option instead
+}
+
+export interface Stroke extends ChannelDeepCommon {
+    type?: 'quantitative' | 'nominal';
+    domain?: ValueExtent;
+    range?: Range;
+    baseline?: string | number;
+    zeroBaseline?: boolean; // We could remove this and use the `baseline` option instead
+}
+
+export interface StrokeWidth extends ChannelDeepCommon {
+    type?: 'quantitative' | 'nominal';
+    domain?: ValueExtent;
+    range?: ValueExtent;
+    baseline?: string | number;
+    zeroBaseline?: boolean; // We could remove this and use the `baseline` option instead
+}
+
+export interface Opacity extends ChannelDeepCommon {
+    type?: 'quantitative' | 'nominal';
+    domain?: ValueExtent;
+    range?: ValueExtent;
+    baseline?: string | number;
+    zeroBaseline?: boolean; // We could remove this and use the `baseline` option instead
+}
+
+export interface Text extends ChannelDeepCommon {
+    type?: 'quantitative' | 'nominal';
+    domain?: string[];
+    range?: string[];
+}
+
+export type ChannelDeep = X | Y | Row | Color | Size | Stroke | StrokeWidth | Opacity | Text;
 
 export interface ChannelValue {
     value: number | string;
@@ -482,8 +562,10 @@ export interface ChannelValue {
 
 export type AxisPosition = 'none' | 'top' | 'bottom' | 'left' | 'right';
 export type FieldType = 'genomic' | 'nominal' | 'quantitative';
-export type Domain = string[] | number[] | DomainInterval | DomainChrInterval | DomainChr | DomainGene;
-export type Range = string[] | number[] | PREDEFINED_COLORS;
+export type ValueExtent = string[] | number[];
+export type GenomicDomain = DomainInterval | DomainChrInterval | DomainChr | DomainGene;
+export type Domain = ValueExtent | GenomicDomain;
+export type Range = ValueExtent | PREDEFINED_COLORS;
 export type PREDEFINED_COLORS = 'viridis' | 'grey' | 'spectral' | 'warm' | 'cividis' | 'bupu' | 'rdbu';
 
 export interface DomainChr {

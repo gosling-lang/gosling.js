@@ -18,15 +18,6 @@ describe('gosling track model should properly validate the original spec', () =>
         expect(model.validateSpec().valid).toBe(true);
     });
 
-    it('row cannot be encoded with quantitative field', () => {
-        const track: Track = {
-            ...MINIMAL_TRACK_SPEC,
-            row: { field: 'x', type: 'quantitative' }
-        };
-        const model = new GoslingTrackModel(track, [], getTheme());
-        expect(model.validateSpec().valid).toBe(false);
-    });
-
     it('genomic coordinate should be present in the spec', () => {
         const track: Track = {
             data: { url: '', type: 'vector', column: '', value: '' },
@@ -38,21 +29,6 @@ describe('gosling track model should properly validate the original spec', () =>
         expect(model.validateSpec().valid).toBe(false);
 
         const model2 = new GoslingTrackModel({ ...track, x: { field: 'x', type: 'genomic' } }, [], getTheme());
-        expect(model2.validateSpec().valid).toBe(true);
-    });
-
-    it('genomic coordinate cannot be encoded with a color channel', () => {
-        const track: Track = {
-            ...MINIMAL_TRACK_SPEC,
-            color: { field: 'f', type: 'genomic' }
-        };
-        const model = new GoslingTrackModel(track, [], getTheme());
-        expect(model.validateSpec().valid).toBe(false);
-
-        if (IsChannelDeep(track.color)) {
-            track.color.type = 'nominal';
-        }
-        const model2 = new GoslingTrackModel(track, [], getTheme());
         expect(model2.validateSpec().valid).toBe(true);
     });
 });
@@ -84,30 +60,6 @@ describe('default options should be added into the original spec', () => {
 });
 
 describe('Gosling track model should be properly generated with data', () => {
-    it('Ill-defined scales (e.g., row = quantitative) should not crash the compiler', () => {
-        const track: Track = {
-            ...MINIMAL_TRACK_SPEC,
-            row: { field: 'row', type: 'quantitative' },
-            size: { value: 1 },
-            stroke: { value: 'white' },
-            strokeWidth: { value: 0.5 },
-            opacity: { value: 1 },
-            height: 300
-        };
-        const model = new GoslingTrackModel(track, [{ row: 'a' }, { row: 'b' }, { row: 'a' }], getTheme());
-        const spec = model.spec();
-        const rowDomain = IsChannelDeep(spec.row) ? (spec.row.domain as string[]) : [];
-
-        // scale
-        expect(model.getChannelScale('row')).toBeUndefined();
-
-        // domain
-        expect(rowDomain).toBeUndefined();
-
-        // encoded value
-        expect(model.encodedValue('row', 'a')).toBeUndefined();
-    });
-
     it('Default values, such as domain, should be correctly generated based on the data', () => {
         const track: Track = {
             ...MINIMAL_TRACK_SPEC,
@@ -211,10 +163,9 @@ describe('Visual marks should be correctly encoded with data', () => {
         expect(model.encodedValue('row', 'b')).toBe((size.height / nSize) * 1);
         expect(model.encodedValue('row', 'missing')).toBeUndefined();
 
-        // size is encoded with quantitative values, so linear scale values without zero baseline
-        expect(model.encodedValue('size', 1)).toBe(1);
+        // size is encoded with quantitative values, so linear scale values with zero baseline
+        expect(model.encodedValue('size', 0)).toBe(1);
         expect(model.encodedValue('size', 3)).toBe(3);
-        expect(model.encodedValue('size', 4)).toBe(4);
         expect(model.encodedValue('size', 'missing')).toBeUndefined();
 
         // text just returns the value, currently
