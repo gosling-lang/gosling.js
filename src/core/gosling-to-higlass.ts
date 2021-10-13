@@ -62,7 +62,7 @@ export function goslingToHiGlass(
                 ? HIGLASS_AXIS_SIZE
                 : 0);
         const hgTrack: HiGlassTrack = {
-            uid: firstResolvedSpec.id ?? uuid.v4(), // This is being used to cache the visualization
+            uid: `${firstResolvedSpec.id ?? uuid.v4()}-track`, // This is being used to cache the visualization
             type: Is2DTrack(firstResolvedSpec) ? 'gosling-2d-track' : 'gosling-track',
             server,
             tilesetUid,
@@ -138,7 +138,7 @@ export function goslingToHiGlass(
             hgModel
                 .setViewOrientation(firstResolvedSpec.orientation) // TODO: Orientation should be assigned to 'individual' views
                 .setAssembly(assembly) // TODO: Assembly should be assigned to 'individual' views
-                .addDefaultView(firstResolvedSpec.id ? `${firstResolvedSpec.id}-view` : uuid.v1(), assembly)
+                .addDefaultView(firstResolvedSpec.id ?? uuid.v1(), assembly)
                 .setDomain(xDomain, Is2DTrack(firstResolvedSpec) ? yDomain : xDomain)
                 .adjustDomain(firstResolvedSpec.orientation, width, height)
                 .setMainTrack(hgTrack)
@@ -195,6 +195,7 @@ export function goslingToHiGlass(
             ) {
                 const narrowType = getAxisNarrowType(c as any, gosTrack.orientation, bb.width, bb.height);
                 hgModel.setAxisTrack(channel.axis, narrowType, {
+                    id: `${firstResolvedSpec.id ?? uuid.v4()}-axis`,
                     layout: firstResolvedSpec.layout,
                     innerRadius:
                         channel.axis === 'top'
@@ -216,7 +217,7 @@ export function goslingToHiGlass(
         hgModel.validateSpec(true);
     } else if (firstResolvedSpec.mark === 'header') {
         // `text` tracks are used to show title and subtitle of the views
-        hgModel.addDefaultView(gosTrack.id ?? uuid.v1()).setLayout(layout);
+        hgModel.addDefaultView(`${firstResolvedSpec.id ?? uuid.v1()}-title`).setLayout(layout);
         if (typeof firstResolvedSpec.title === 'string') {
             hgModel.setTextTrack(
                 bb.width,
