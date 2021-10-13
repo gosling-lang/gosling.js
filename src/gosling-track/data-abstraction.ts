@@ -227,8 +227,16 @@ export function getTabularData(
             let value = 0;
             for (let c = 0; c < binLen; c++) {
                 for (let r = 0; r < binLen; r++) {
-                    value += numericValues[(yIndex + r) * tileSize + (xIndex + c)];
+                    const curVal = numericValues[(yIndex + r) * tileSize + (xIndex + c)];
+                    if (!isNaN(value)) {
+                        value += curVal;
+                    }
                 }
+            }
+
+            if (isNaN(value)) {
+                // if this is NaN, skip.
+                continue;
             }
 
             value /= binSize;

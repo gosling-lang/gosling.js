@@ -248,9 +248,7 @@ export class GoslingTrackModel {
      */
     public encodedValue(channelKey: keyof typeof ChannelTypes, value?: number | string) {
         if (channelKey === 'text' && value !== undefined) {
-            return `${+value ? ~~value : value}`;
-            // TODO: Better formatting?
-            // return `${+value ? (+value - ~~value) > 0 ? (+value).toExponential(1) : ~~value : value}`;
+            return `${+value ? (+value - ~~value > 0 ? (+value).toExponential(1) : ~~value) : value}`;
         }
 
         const channel = this.spec()[channelKey];

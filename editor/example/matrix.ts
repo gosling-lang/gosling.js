@@ -11,12 +11,53 @@ export const EX_SPEC_NATIVE_MATRIX: GoslingSpec = {
                         url: GOSLING_PUBLIC_DATA.matrix,
                         type: 'matrix'
                     },
-                    mark: 'bar',
-                    x: { field: 'xs', type: 'genomic', axis: 'top' },
-                    xe: { field: 'xe', type: 'genomic' },
-                    y: { field: 'ys', type: 'genomic', axis: 'right' }, // TODO: axis position
-                    ye: { field: 'ye', type: 'genomic' }, // TODO: axis position
-                    color: { field: 'value', type: 'quantitative', legend: true },
+                    alignment: 'overlay',
+                    tracks: [
+                        {
+                            mark: 'bar',
+                            x: { field: 'xs', type: 'genomic', axis: 'top' },
+                            xe: { field: 'xe', type: 'genomic' },
+                            y: { field: 'ys', type: 'genomic', axis: 'right' }, // TODO: axis position
+                            ye: { field: 'ye', type: 'genomic' }, // TODO: axis position
+                            color: { field: 'value', type: 'quantitative', legend: true }
+                        },
+                        {
+                            mark: 'betweenLink',
+                            // dataTransform: [
+                            //     {type: 'filter', field: 'value', oneOf: ['NaN', 0], not: true}
+                            // ],
+                            x: { field: 'x', type: 'genomic' },
+                            y: { field: 'y', type: 'genomic' },
+                            stroke: { value: 'lightgray' },
+                            visibility: [
+                                {
+                                    target: 'track',
+                                    measure: 'zoomLevel',
+                                    threshold: 500000,
+                                    operation: 'lt'
+                                }
+                            ]
+                        },
+                        {
+                            mark: 'text',
+                            text: { field: 'value', type: 'quantitative' },
+                            x: { field: 'xs', type: 'genomic', axis: 'top' },
+                            xe: { field: 'xe', type: 'genomic' },
+                            y: { field: 'y', type: 'genomic' },
+                            color: { value: 'black' },
+                            strokeWidth: { value: 2 },
+                            stroke: { value: 'white' },
+                            visibility: [
+                                {
+                                    target: 'mark',
+                                    threshold: '|xe-x|',
+                                    measure: 'width',
+                                    transitionPadding: 10,
+                                    operation: 'LTET'
+                                }
+                            ]
+                        }
+                    ],
                     width: 600,
                     height: 600
                 }
