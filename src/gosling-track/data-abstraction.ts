@@ -240,6 +240,7 @@ export function getTabularData(
             }
 
             value /= binSize;
+            value = Math.log(value); // TODO: just to see the pattern more clearly
             const xs = tileX + xIndex * tileXUnitSize;
             const xe = tileX + (xIndex + binLen) * tileXUnitSize;
             const ys = tileY + yIndex * tileYUnitSize;

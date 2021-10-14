@@ -69,7 +69,7 @@ export const EX_SPEC_NATIVE_MATRIX: GoslingSpec = {
 export const EX_SPEC_1D_MATRIX: GoslingSpec = {
     views: [
         {
-            xDomain: { chromosome: '1', interval: [4900000, 5200000] },
+            // xDomain: { chromosome: '1', interval: [4900000, 5200000] },
             tracks: [
                 {
                     data: {
@@ -81,15 +81,15 @@ export const EX_SPEC_1D_MATRIX: GoslingSpec = {
                             type: 'rotateMatrix',
                             startField1: 'xs',
                             endField1: 'xe',
-                            startField2: 'ys',
-                            endField2: 'ye'
+                            startField2: 'ye',
+                            endField2: 'ys' // TODO: this should be swapped
                         }
                     ],
-                    mark: 'point',
-                    x: { field: 'xs', type: 'genomic', axis: 'top' },
-                    xe: { field: 'xe', type: 'genomic' },
-                    y: { field: 'ys', type: 'quantitative', axis: 'none' }, // TODO: axis position
-                    ye: { field: 'ye', type: 'quantitative', axis: 'none' }, // TODO: axis position
+                    mark: 'bar',
+                    x: { field: 'xs-r', type: 'genomic', axis: 'bottom' },
+                    xe: { field: 'xe-r', type: 'genomic' },
+                    y: { field: 'ys-r', type: 'quantitative', axis: 'none' }, // TODO: axis position
+                    ye: { field: 'ye-r', type: 'quantitative', axis: 'none' }, // TODO: axis position
                     color: { field: 'value', type: 'quantitative', legend: true },
                     width: 600,
                     height: 200

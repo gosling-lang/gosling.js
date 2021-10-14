@@ -957,7 +957,12 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                                 tile.gos.tabularDataFiltered = calculateData(t, tile.gos.tabularDataFiltered);
                                 break;
                             case 'rotateMatrix':
-                                tile.gos.tabularDataFiltered = rotateMatrix(t, tile.gos.tabularDataFiltered);
+                                tile.gos.tabularDataFiltered = rotateMatrix(
+                                    t,
+                                    tile.gos.tabularDataFiltered,
+                                    this._xScale.copy(),
+                                    this.dimensions[1]
+                                );
                                 break;
                             case 'exonSplit':
                                 tile.gos.tabularDataFiltered = splitExon(
