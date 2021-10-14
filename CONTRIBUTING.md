@@ -56,7 +56,7 @@ When writing the comments:
 - Please use block comment (`/** */`) rather than line comment (`//`) when describing a property. Only the block comment before a property will be converted into the description of this property in `gosling.schema.json`.
 - Please write the comment in Markdown syntax.
 - No need to specify a) whether a property is required or b) the acceptable values for a string property. Such information will be generated automatically. 
-- Please add __Default:__ line at the end to describe the property's default value.
+- Please add `__Default:__ default_value` line at the end to describe the property's default value.
 
 ## Commit Messages
 
