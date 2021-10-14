@@ -126,13 +126,11 @@ export function drawTriangle(g: PIXI.Graphics, model: GoslingTrackModel, trackWi
                     xm -= markWidth;
                 }
 
-                const markToPoints: number[] = (
-                    {
-                        triangleLeft: [x1, y0, x0, ym, x1, y1, x1, y0],
-                        triangleRight: [x0, y0, x1, ym, x0, y1, x0, y0],
-                        triangleBottom: [x0, y0, x1, y0, xm, y1, x0, y0]
-                    } as any
-                )[spec.mark as MarkType];
+                const markToPoints: number[] = ({
+                    triangleLeft: [x1, y0, x0, ym, x1, y1, x1, y0],
+                    triangleRight: [x0, y0, x1, ym, x0, y1, x0, y0],
+                    triangleBottom: [x0, y0, x1, y0, xm, y1, x0, y0]
+                } as any)[spec.mark as MarkType];
 
                 const alphaTransition = model.markVisibility(d, { width: x1 - x0, zoomLevel });
                 const actualOpacity = Math.min(alphaTransition, opacity);

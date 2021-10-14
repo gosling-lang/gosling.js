@@ -170,7 +170,8 @@ export const EX_SPEC_SARS_COV_2: GoslingSpec = {
                     title: 'TRS-L-Dependent Recombination Events',
                     data: {
                         type: 'csv',
-                        url: 'https://s3.amazonaws.com/gosling-lang.org/data/COVID/TRS-L-dependent_recombinationEvents_sorted.bed',
+                        url:
+                            'https://s3.amazonaws.com/gosling-lang.org/data/COVID/TRS-L-dependent_recombinationEvents_sorted.bed',
                         genomicFields: ['Start1', 'Stop1', 'Start2', 'Stop2'],
                         sampleLength: 100
                     },

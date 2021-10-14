@@ -102,7 +102,8 @@ export const EX_SPEC_DEBUG: GoslingSpec =
                             },
                             {
                                 data: {
-                                    url: 'https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/circos-segdup-edited.txt',
+                                    url:
+                                        'https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/circos-segdup-edited.txt',
                                     type: 'csv',
                                     chromosomeField: 'c2',
                                     genomicFields: ['s1', 'e1', 's2', 'e2']
@@ -129,7 +130,8 @@ export const EX_SPEC_DEBUG: GoslingSpec =
                                 tracks: [
                                     {
                                         data: {
-                                            url: 'https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/circos-segdup-edited.txt',
+                                            url:
+                                                'https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/circos-segdup-edited.txt',
                                             type: 'csv',
                                             chromosomeField: 'c2',
                                             genomicFields: ['s1', 'e1', 's2', 'e2']
@@ -148,7 +150,8 @@ export const EX_SPEC_DEBUG: GoslingSpec =
                                     },
                                     {
                                         data: {
-                                            url: 'https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/circos-segdup-edited.txt',
+                                            url:
+                                                'https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/circos-segdup-edited.txt',
                                             type: 'csv',
                                             chromosomeField: 'c2',
                                             genomicFields: ['s1', 'e1', 's2', 'e2']
@@ -173,7 +176,8 @@ export const EX_SPEC_DEBUG: GoslingSpec =
                                         title: 'Curved Connection',
                                         alignment: 'overlay',
                                         data: {
-                                            url: 'https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/circos-segdup-edited.txt',
+                                            url:
+                                                'https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/circos-segdup-edited.txt',
                                             type: 'csv',
                                             chromosomeField: 'c2',
                                             genomicFields: ['s1', 'e1', 's2', 'e2']
@@ -222,7 +226,8 @@ export const EX_SPEC_DEBUG: GoslingSpec =
                         tracks: [
                             {
                                 data: {
-                                    url: 'https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/circos-segdup-edited.txt',
+                                    url:
+                                        'https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/circos-segdup-edited.txt',
                                     type: 'csv',
                                     chromosomeField: 'c2',
                                     genomicFields: ['s1', 'e1', 's2', 'e2']
@@ -269,7 +274,8 @@ export const EX_SPEC_DEBUG: GoslingSpec =
                         tracks: [
                             {
                                 data: {
-                                    url: 'https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/circos-segdup-edited.txt',
+                                    url:
+                                        'https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/circos-segdup-edited.txt',
                                     type: 'csv',
                                     chromosomeField: 'c2',
                                     genomicFields: ['s1', 'e1', 's2', 'e2']
@@ -288,7 +294,8 @@ export const EX_SPEC_DEBUG: GoslingSpec =
                             },
                             {
                                 data: {
-                                    url: 'https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/circos-segdup-edited.txt',
+                                    url:
+                                        'https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/circos-segdup-edited.txt',
                                     type: 'csv',
                                     chromosomeField: 'c2',
                                     genomicFields: ['s1', 'e1', 's2', 'e2']
