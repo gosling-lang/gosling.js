@@ -51,8 +51,7 @@ This will create the `gosling.schema.json` file based on the `gosling.schema.ts`
 
 `gosling.schema.json` is updated everytime when you `commit` changes, so you do not have to run `yarn schema` by yourselves before the `commit`.
 
-Since `gosling.schema.json` is used to generate property tables in [Gosling Documentation](http://gosling-lang.org/docs), we highly recommend you to **provide comments** for added/modified grammar properties in `gosling.schema.ts`.
-These comments will be used to explain properties in the documentation (e.g., [BigWig Data](http://gosling-lang.org/docs/data#bigwig-no-higlass-server)).
+Since `gosling.schema.json` is used to generate property tables in [Gosling Documentation](http://gosling-lang.org/docs), we highly recommend you to **provide comments** for added/modified grammar properties in `gosling.schema.ts`. These comments will be used to explain properties in the documentation (e.g., [BigWig Data](http://gosling-lang.org/docs/data#bigwig-no-higlass-server)).
 When writing the comments:
 - Please use block comment (`/** */`) rather than line comment (`//`) when describing a property. Only the block comment before a property will be converted into the description of this property in `gosling.schema.json`.
 - Please write the comment in Markdown syntax.
