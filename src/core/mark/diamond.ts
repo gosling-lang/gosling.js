@@ -2,7 +2,7 @@ import { GoslingTrackModel } from '../gosling-track-model';
 import { Channel } from '../gosling.schema';
 import { PIXIVisualProperty } from '../visual-property.schema';
 import { IsChannelDeep, getValueUsingChannel } from '../gosling.schema.guards';
-import { cartesianToPolar, valueToRadian } from '../utils/polar';
+import { cartesianToPolar } from '../utils/polar';
 import colorToHex from '../utils/color-to-hex';
 
 export function drawDiamond(trackInfo: any, tile: any, model: GoslingTrackModel) {
@@ -98,15 +98,15 @@ export function drawDiamond(trackInfo: any, tile: any, model: GoslingTrackModel)
             if (circular) {
                 const farR = trackOuterRadius - (yTop / trackHeight) * trackRingSize;
                 const nearR = trackOuterRadius - (yBottom / trackHeight) * trackRingSize;
+                const midR = (farR + nearR) / 2.0;
 
-                const sPos = cartesianToPolar(xLeft, trackWidth, nearR, cx, cy, startAngle, endAngle);
-                const startRad = valueToRadian(xLeft, trackWidth, startAngle, endAngle);
-                const endRad = valueToRadian(xLeft + barWidth, trackWidth, startAngle, endAngle);
+                const p0 = cartesianToPolar(xLeft + barWidth / 2.0, trackWidth, farR, cx, cy, startAngle, endAngle);
+                const p1 = cartesianToPolar(xLeft + barWidth, trackWidth, midR, cx, cy, startAngle, endAngle);
+                const p2 = cartesianToPolar(xLeft + barWidth / 2.0, trackWidth, nearR, cx, cy, startAngle, endAngle);
+                const p3 = cartesianToPolar(xLeft, trackWidth, midR, cx, cy, startAngle, endAngle);
 
                 g.beginFill(colorToHex(color), actualOpacity);
-                g.moveTo(sPos.x, sPos.y);
-                g.arc(cx, cy, nearR, startRad, endRad, true);
-                g.arc(cx, cy, farR, endRad, startRad, false);
+                g.drawPolygon([p0.x, p0.y, p1.x, p1.y, p2.x, p2.y, p3.x, p3.y, p0.x, p0.y]);
                 g.closePath();
             } else {
                 g.beginFill(colorToHex(color), actualOpacity);
