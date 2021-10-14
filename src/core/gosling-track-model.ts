@@ -34,6 +34,7 @@ import {
 } from './gosling.schema.guards';
 import { CHANNEL_DEFAULTS } from './channel';
 import { CompleteThemeDeep } from './utils/theme';
+import { diamondProperty } from './mark/diamond';
 
 export type ScaleType =
     | ScaleLinear<any, any>
@@ -476,6 +477,8 @@ export class GoslingTrackModel {
                 return pointProperty(this, propertyKey, datum);
             case 'rect':
                 return rectProperty(this, propertyKey, datum, additionalInfo);
+            case 'diamond':
+                return diamondProperty(this, propertyKey, datum, additionalInfo);
             default:
                 // Mark type that is not supported yet
                 return undefined;
@@ -579,6 +582,7 @@ export class GoslingTrackModel {
                             if (spec.mark === 'line') value = this.theme.line.size;
                             else if (spec.mark === 'bar') value = undefined;
                             else if (spec.mark === 'rect') value = undefined;
+                            else if (spec.mark === 'diamond') value = undefined;
                             else if (spec.mark === 'triangleRight') value = undefined;
                             else if (spec.mark === 'triangleLeft') value = undefined;
                             else if (spec.mark === 'triangleBottom') value = undefined;

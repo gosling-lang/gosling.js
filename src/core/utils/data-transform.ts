@@ -119,28 +119,27 @@ export function rotateMatrix(
     const output: Datum[] = [];
 
     Array.from(data).forEach(d => {
-        if (+d[startField1] > +d[startField2]) {
+        if (+d[startField1] >= +d[startField2]) {
             // Only a single side (right-top) along the diagonal is needed.
             return;
         }
 
+        const unitGenomicLen = Math.abs(+d[startField1] - +d[endField1]) * 0.5;
         const unitSize = Math.abs(xScale(+d[startField1]) - xScale(+d[endField1]));
-        const newStartX = (+d[startField1] + +d[startField2]) / 2.0;
-        const newEndX = newStartX + Math.abs(+d[startField1] - +d[endField1]);
-        const newStartY = Math.abs(xScale(+d[startField1]) - xScale(+d[startField2]));
-        const newEndY = newStartY + unitSize;
+        const newStartX = (+d[startField1] + +d[startField2]) / 2.0 - unitGenomicLen / 2.0;
+        const newEndX = newStartX + unitGenomicLen * 2;
+        const newStartY = Math.abs(xScale(+d[startField1]) - xScale(+d[startField2])) - unitSize / 2.0;
+        const newEndY = newStartY + unitSize * 2.0;
 
         if (newStartY > trackHeight || newEndY > trackHeight) {
             // We do not need data that exceed the visible height
             return;
         }
 
-        // x positions are used as is
-        d[`${startField1}-r`] = newStartX; //+d[startField1];
-        d[`${endField1}-r`] = newEndX; // +d[endField1];
-
-        d[`${startField2}-r`] = newStartY;
-        d[`${endField2}-r`] = newEndY;
+        d[`${startField1}`] = newStartX;
+        d[`${endField1}`] = newEndX;
+        d[`${startField2}`] = newStartY;
+        d[`${endField2}`] = newEndY;
 
         /// DEBUG
         // console.log(d);

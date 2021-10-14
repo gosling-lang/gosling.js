@@ -18,6 +18,7 @@ import { drawCircularOutlines } from './outline-circular';
 import { drawBackground } from './background';
 import { CompleteThemeDeep } from '../utils/theme';
 import { Is2DTrack } from '../gosling.schema.guards';
+import { drawDiamond } from './diamond';
 
 /**
  * Visual channels currently supported for visual encoding.
@@ -100,6 +101,9 @@ export function drawMark(HGC: any, trackInfo: any, tile: any, model: GoslingTrac
             break;
         case 'rect':
             drawRect(HGC, trackInfo, tile, model);
+            break;
+        case 'diamond':
+            drawDiamond(trackInfo, tile, model);
             break;
         case 'triangleLeft':
         case 'triangleRight':

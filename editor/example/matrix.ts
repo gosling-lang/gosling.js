@@ -49,6 +49,12 @@ export const EX_SPEC_NATIVE_MATRIX: GoslingSpec = {
                             stroke: { value: 'white' },
                             visibility: [
                                 {
+                                    target: 'track',
+                                    threshold: 100000,
+                                    measure: 'zoomLevel',
+                                    operation: 'LTET'
+                                },
+                                {
                                     target: 'mark',
                                     threshold: '|xe-x|',
                                     measure: 'width',
@@ -69,11 +75,11 @@ export const EX_SPEC_NATIVE_MATRIX: GoslingSpec = {
 export const EX_SPEC_1D_MATRIX: GoslingSpec = {
     views: [
         {
-            // xDomain: { chromosome: '1', interval: [4900000, 5200000] },
+            xDomain: { chromosome: '5' }, //"interval": [4900000, 5200000]},
             tracks: [
                 {
                     data: {
-                        url: GOSLING_PUBLIC_DATA.matrix,
+                        url: 'https://server.gosling-lang.org/api/v1/tileset_info/?d=leung2015-hg38',
                         type: 'matrix'
                     },
                     dataTransform: [
@@ -82,21 +88,22 @@ export const EX_SPEC_1D_MATRIX: GoslingSpec = {
                             startField1: 'xs',
                             endField1: 'xe',
                             startField2: 'ye',
-                            endField2: 'ys' // TODO: this should be swapped
+                            endField2: 'ys'
                         }
                     ],
-                    mark: 'bar',
-                    x: { field: 'xs-r', type: 'genomic', axis: 'bottom' },
-                    xe: { field: 'xe-r', type: 'genomic' },
-                    y: { field: 'ys-r', type: 'quantitative', axis: 'none' }, // TODO: axis position
-                    ye: { field: 'ye-r', type: 'quantitative', axis: 'none' }, // TODO: axis position
+                    mark: 'diamond',
+                    x: { field: 'xs', type: 'genomic', axis: 'bottom' },
+                    xe: { field: 'xe', type: 'genomic' },
+                    y: { field: 'ys', type: 'quantitative', axis: 'none' },
+                    ye: { field: 'ye', type: 'quantitative', axis: 'none' },
                     color: { field: 'value', type: 'quantitative', legend: true },
                     width: 600,
                     height: 200
                 }
             ]
         }
-    ]
+    ],
+    style: { background: '#FAFAFA', backgroundOpacity: 1 }
 };
 
 export const EX_SPEC_MATRIX: GoslingSpec = {
