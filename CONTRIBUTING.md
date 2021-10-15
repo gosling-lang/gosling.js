@@ -51,6 +51,14 @@ This will create the `gosling.schema.json` file based on the `gosling.schema.ts`
 
 `gosling.schema.json` is updated everytime when you `commit` changes, so you do not have to run `yarn schema` by yourselves before the `commit`.
 
+Since `gosling.schema.json` is used to semi-automatically generate property tables in [Gosling Documentation](http://gosling-lang.org/docs), we highly recommend you to **provide comments** for added/modified grammar properties in `gosling.schema.ts`. These comments will be used to explain properties in the documentation (e.g., [BigWig Data](http://gosling-lang.org/docs/data#bigwig-no-higlass-server)).
+When writing the comments:
+- Please use block comment (`/** */`) rather than line comment (`//`) when describing a property. 
+  Only the block comment before a property will be converted into the description of this property in `gosling.schema.json`.
+- Please write the comment in Markdown syntax (e.g., `__Default__`).
+- No need to specify a) whether a property is required or b) the acceptable values for a string property. Such information will be generated automatically. 
+- Please add `__Default:__ default_value` line at the end to describe the property's default value.
+
 ## Commit Messages
 
 We use [commitlint](https://github.com/conventional-changelog/commitlint#what-is-commitlint) to maintain commit messages in a consistent manner and automatically update a [CHANGELOG.md](/CHANGELOG.md) based on the commit messages.
@@ -74,4 +82,4 @@ git commit -m 'docs: add details about commitlint in README.md'
 To learn more about the commitlint, please visit [conventional-changelog/commitlint](https://github.com/conventional-changelog/commitlint#what-is-commitlint).
 
 ## Opening Pull Requests
-We use the [commitlint](#commitlint) for the title of PR. When your PR is accepted and merged into the master branch, the title of the PR will be recorded as a single commit message which will then added as a single item in [CHANGELOG.md](/CHANGELOG.md).
+We use the [commitlint](#commitlint) for the title of PR. So, if the title of PR is not following the commitlint conventions, [Semantic Pull Request](https://github.com/zeke/semantic-pull-requests) will complain about it, disallowing your PR to be merged. When your PR is accepted and merged into the master branch, the title of the PR will be recorded as a single commit message which will then added as a single item in [CHANGELOG.md](/CHANGELOG.md).
