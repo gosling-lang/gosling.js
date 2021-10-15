@@ -2,7 +2,6 @@ import { defineConfig } from 'vite';
 import reactRefresh from '@vitejs/plugin-react-refresh';
 import * as esbuild from 'esbuild';
 import path from 'path';
-
 import pkg from './package.json';
 
 /**

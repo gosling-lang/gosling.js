@@ -2202,10 +2202,10 @@ base@^0.11.1:
     mixin-deep "^1.2.0"
     pascalcase "^0.1.1"
 
-bezier-js@^4.1.1:
-  version "4.1.1"
-  resolved "https://registry.yarnpkg.com/bezier-js/-/bezier-js-4.1.1.tgz#414df656833104e86765c0fa5e31439fb3e83a34"
-  integrity sha512-oVOS6SSFFFlfnZdzC+lsfvhs/RRcbxJ47U04M4s5QIBaJmr3YWmTIL3qmrOK9uW+nUUcl9Jccmo/xpTrG+bBoQ==
+bezier-js@4.0.3:
+  version "4.0.3"
+  resolved "https://registry.yarnpkg.com/bezier-js/-/bezier-js-4.0.3.tgz#9e076d66f609bca9fc08dd22201596d52d3cc49d"
+  integrity sha512-w85AFcZ7EkszFgxuHYQ2/BI2G7H5bEotZD9vcg8+Hx4S8zF2odJBoFSFvGbcFDH5ScSxG27/IhW03SigVmkXNQ==
 
 big-integer@^1.6.16:
   version "1.6.49"
@@ -4571,10 +4571,10 @@ genbank-parser@^1.0.0:
   resolved "https://registry.yarnpkg.com/genbank-parser/-/genbank-parser-1.2.4.tgz#ee2f9c32f66875024af0c09ee0ec5e10fb231802"
   integrity sha512-r3pTgKHZx/rol90v2cezrNhfMhq3yHWCnBYyETNIJkvnJk+cwx/D/ZVgAy1SX8zwtnfvYQmFbqlpbh2f4t0h2w==
 
-generic-filehandle@^2.0.0, generic-filehandle@^2.2.0:
-  version "2.2.0"
-  resolved "https://registry.yarnpkg.com/generic-filehandle/-/generic-filehandle-2.2.0.tgz#d3d17f0ee5d6813e6bcb60396be28802a7158d1f"
-  integrity sha512-cFmLs1ptKALiBs2ExsobnjQ8Y9x/YbiRmynhYiB87Xyrpuk3HV4uR+EpwBiUKS/1C6TXjR+GkWxL58PP1C2hKA==
+generic-filehandle@^2.0.0, generic-filehandle@^2.2.1:
+  version "2.2.1"
+  resolved "https://registry.yarnpkg.com/generic-filehandle/-/generic-filehandle-2.2.1.tgz#395ecf5e44113ec33472df86e1c0a4f64fbb1012"
+  integrity sha512-aI1uusDj0zrAvz8t7DfWKn2hjWEZBXhqW063MJB8gsvgCt8LOBJkuNOPXhWik237NMqI2m/ffQ4oKbaO+32vqg==
   dependencies:
     "@babel/runtime" "^7.9.6"
     es6-promisify "^6.1.1"
@@ -8992,12 +8992,12 @@ slice-ansi@^4.0.0:
     astral-regex "^2.0.0"
     is-fullwidth-code-point "^3.0.0"
 
-slugid@^1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/slugid/-/slugid-1.1.0.tgz#e09f00899c09f5a7058edc36dd49f046fd50a82a"
-  integrity sha1-4J8AiZwJ9acFjtw23UnwRv1QqCo=
+slugid@^1.1.0, slugid@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/slugid/-/slugid-3.0.0.tgz#57cb692641a20feb4a1d774b2ad11594c9aa6125"
+  integrity sha512-MIir9SJS6BQFjFg8DHGMgPkDg21huT0+kYHiS6NkkWZXHSEdgIECo3nUVEG3GDkmecBTy+zRs6pCvPhpk4bKcg==
   dependencies:
-    uuid "^2.0.1"
+    uuid "^8.3.2"
 
 snapdragon-node@^2.0.1:
   version "2.1.1"
@@ -10076,11 +10076,6 @@ utrie@^1.0.1:
   integrity sha512-JPaDXF3vzgZxfeEwutdGzlrNoVFL5UvZcbO6Qo9D4GoahrieUPoMU8GCpVpR7MQqcKhmShIh8VlbEN3PLM3EBg==
   dependencies:
     base64-arraybuffer "^1.0.1"
-
-uuid@^2.0.1:
-  version "2.0.3"
-  resolved "https://registry.yarnpkg.com/uuid/-/uuid-2.0.3.tgz#67e2e863797215530dff318e5bf9dcebfd47b21a"
-  integrity sha1-Z+LoY3lyFVMN/zGOW/nc6/1Hsho=
 
 uuid@^3.3.2:
   version "3.4.0"
