@@ -51,7 +51,7 @@
         "@types/node": "^12.0.0",
         "@types/rbush": "^3.0.0",
         "@types/uuid": "^8.3.1",
-        "bezier-js": "^4.1.1",
+        "bezier-js": "4.0.3",
         "buffer": "^6.0.3",
         "d3-array": "^2.5.1",
         "d3-color": "^2.0.0",
