@@ -81,8 +81,7 @@ export const EX_SPEC_CIRCOS: GoslingSpec = {
         // },
         {
             data: {
-                url:
-                    'https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/UCSC.HG38.Human.CytoBandIdeogram.csv',
+                url: 'https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/UCSC.HG38.Human.CytoBandIdeogram.csv',
                 type: 'csv',
                 chromosomeField: 'Chromosome',
                 genomicFields: ['chromStart', 'chromEnd']
@@ -181,8 +180,7 @@ export const EX_SPEC_CIRCOS_BETWEEN_LINK: GoslingSpec = {
         },
         {
             data: {
-                url:
-                    'https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/UCSC.HG38.Human.CytoBandIdeogram.csv',
+                url: 'https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/UCSC.HG38.Human.CytoBandIdeogram.csv',
                 type: 'csv',
                 chromosomeField: 'Chromosome',
                 genomicFields: ['chromStart', 'chromEnd']
@@ -246,8 +244,7 @@ export const EX_SPEC_CIRCOS_BETWEEN_LINK: GoslingSpec = {
         },
         {
             data: {
-                url:
-                    'https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/UCSC.HG38.Human.CytoBandIdeogram.csv',
+                url: 'https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/UCSC.HG38.Human.CytoBandIdeogram.csv',
                 type: 'csv',
                 chromosomeField: 'Chromosome',
                 genomicFields: ['chromStart', 'chromEnd']
