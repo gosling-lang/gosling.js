@@ -51,8 +51,7 @@ const example = {
                                         yOffset: 0,
                                         style: { outlineWidth: 0.5 },
                                         data: {
-                                            url:
-                                                'https://server.gosling-lang.org/api/v1/tileset_info/?d=cistrome-multivec',
+                                            url: 'https://server.gosling-lang.org/api/v1/tileset_info/?d=cistrome-multivec',
                                             type: 'multivec',
                                             row: 'sample',
                                             column: 'position',
@@ -673,8 +672,7 @@ const example = {
                                         yOffset: 0,
                                         style: { outlineWidth: 0.5 },
                                         data: {
-                                            url:
-                                                'https://server.gosling-lang.org/api/v1/tileset_info/?d=cistrome-multivec',
+                                            url: 'https://server.gosling-lang.org/api/v1/tileset_info/?d=cistrome-multivec',
                                             type: 'multivec',
                                             row: 'sample',
                                             column: 'position',

@@ -20,8 +20,7 @@ export const EX_SPEC_CORCES_ET_AL: GoslingSpec = {
                     alignment: 'overlay',
                     title: 'chr3',
                     data: {
-                        url:
-                            'https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/cytogenetic_band.csv',
+                        url: 'https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/cytogenetic_band.csv',
                         type: 'csv',
                         chromosomeField: 'Chr.',
                         genomicFields: ['ISCN_start', 'ISCN_stop', 'Basepair_start', 'Basepair_stop'],
@@ -91,8 +90,7 @@ export const EX_SPEC_CORCES_ET_AL: GoslingSpec = {
             tracks: [
                 {
                     data: {
-                        url:
-                            'https://s3.amazonaws.com/gosling-lang.org/data/ExcitatoryNeurons-insertions_bin100_RIPnorm.bw',
+                        url: 'https://s3.amazonaws.com/gosling-lang.org/data/ExcitatoryNeurons-insertions_bin100_RIPnorm.bw',
                         type: 'bigwig',
                         column: 'position',
                         value: 'peak'
@@ -102,8 +100,7 @@ export const EX_SPEC_CORCES_ET_AL: GoslingSpec = {
                 },
                 {
                     data: {
-                        url:
-                            'https://s3.amazonaws.com/gosling-lang.org/data/InhibitoryNeurons-insertions_bin100_RIPnorm.bw',
+                        url: 'https://s3.amazonaws.com/gosling-lang.org/data/InhibitoryNeurons-insertions_bin100_RIPnorm.bw',
                         type: 'bigwig',
                         column: 'position',
                         value: 'peak'
@@ -113,8 +110,7 @@ export const EX_SPEC_CORCES_ET_AL: GoslingSpec = {
                 },
                 {
                     data: {
-                        url:
-                            'https://s3.amazonaws.com/gosling-lang.org/data/DopaNeurons_Cluster10_AllFrags_projSUNI2_insertions_bin100_RIPnorm.bw',
+                        url: 'https://s3.amazonaws.com/gosling-lang.org/data/DopaNeurons_Cluster10_AllFrags_projSUNI2_insertions_bin100_RIPnorm.bw',
                         type: 'bigwig',
                         column: 'position',
                         value: 'peak'
@@ -135,8 +131,7 @@ export const EX_SPEC_CORCES_ET_AL: GoslingSpec = {
                 },
                 {
                     data: {
-                        url:
-                            'https://s3.amazonaws.com/gosling-lang.org/data/Oligodendrocytes-insertions_bin100_RIPnorm.bw',
+                        url: 'https://s3.amazonaws.com/gosling-lang.org/data/Oligodendrocytes-insertions_bin100_RIPnorm.bw',
                         type: 'bigwig',
                         column: 'position',
                         value: 'peak'
