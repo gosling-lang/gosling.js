@@ -60,7 +60,7 @@
         "d3-scale-chromatic": "^2.0.0",
         "d3-shape": "^2.0.0",
         "fflate": "^0.7.1",
-        "generic-filehandle": "^2.2.0",
+        "generic-filehandle": "^2.2.1",
         "gosling-theme": "^0.0.10",
         "higlass": "^1.11.7",
         "higlass-register": "^0.3.0",
@@ -136,7 +136,8 @@
         "vite": "^2.5.10"
     },
     "resolutions": {
-        "slugid": "^3.0.0"
+        "slugid": "^3.0.0",
+        "file-uri-to-path": "^2.0.0"
     },
     "browserslist": {
         "production": [
