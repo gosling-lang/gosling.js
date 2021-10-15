@@ -771,9 +771,8 @@ function Editor(props: any) {
                                                                 key={JSON.stringify(d)}
                                                                 onClick={() => setSelectedPreviewData(i)}
                                                             >
-                                                                {`${(
-                                                                    JSON.parse(d.dataConfig).data.type as string
-                                                                ).toLocaleLowerCase()} `}
+                                                                {`${(JSON.parse(d.dataConfig).data
+                                                                    .type as string).toLocaleLowerCase()} `}
                                                                 <small>{i}</small>
                                                             </button>
                                                         ))}
