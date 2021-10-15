@@ -49,7 +49,8 @@ export const EX_SPEC_CIRCULAR_OVERVIEW_LINEAR_DETAIL: GoslingSpec = {
                 {
                     data: {
                         type: 'csv',
-                        url: 'https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/rearrangements.bulk.1639.simple.filtered.pub',
+                        url:
+                            'https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/rearrangements.bulk.1639.simple.filtered.pub',
                         headerNames: [
                             'chr1',
                             'p1s',

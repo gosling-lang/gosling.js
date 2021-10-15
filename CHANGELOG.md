@@ -168,9 +168,9 @@
 
 ### Bug Fixes
 
-* convert to numbers when quantitative fields are strings ([#402](https://github.com/gosling-lang/gosling.js/issues/402)) ([95212bd](https://github.com/gosling-lang/gosling.js/commit/95212bd42fc8cccf26517ea1da24d35ed7706e8d))
-* **editor:** address hiccups in editor ([#411](https://github.com/gosling-lang/gosling.js/issues/411)) ([3025533](https://github.com/gosling-lang/gosling.js/commit/30255337e4eb0a6601319068a8be141edd19b861))
 * remove improper loading message in track ([#418](https://github.com/gosling-lang/gosling.js/issues/418)) ([62bf073](https://github.com/gosling-lang/gosling.js/commit/62bf073d6a67bca03ddb5687b9ef4c51f99d3ea2))
+* **editor:** address hiccups in editor ([#411](https://github.com/gosling-lang/gosling.js/issues/411)) ([3025533](https://github.com/gosling-lang/gosling.js/commit/30255337e4eb0a6601319068a8be141edd19b861))
+* convert to numbers when quantitative fields are strings ([#402](https://github.com/gosling-lang/gosling.js/issues/402)) ([95212bd](https://github.com/gosling-lang/gosling.js/commit/95212bd42fc8cccf26517ea1da24d35ed7706e8d))
 
 
 ### Features
@@ -178,9 +178,9 @@
 * add `margin` and `border` as props of GoslingComponent ([#420](https://github.com/gosling-lang/gosling.js/issues/420)) ([4df2b2e](https://github.com/gosling-lang/gosling.js/commit/4df2b2e00445a786833ce4a3d79bf1a07837c79c))
 * add a between-link mark ([#405](https://github.com/gosling-lang/gosling.js/issues/405)) ([c7a76e2](https://github.com/gosling-lang/gosling.js/commit/c7a76e22df9e7755242a764c70400c6beeb9cdb8))
 * allow specifying `id` and `className` in `GoslingComponent` ([#419](https://github.com/gosling-lang/gosling.js/issues/419)) ([30d45a3](https://github.com/gosling-lang/gosling.js/commit/30d45a31b057ee5884b55a14224417dddaee96a4))
-* **api:** zoom to extent ([#408](https://github.com/gosling-lang/gosling.js/issues/408)) ([0b3c71f](https://github.com/gosling-lang/gosling.js/commit/0b3c71ff3ab99ee7b5cb445c704c2fe35145be99))
 * background of circular tracks, legend titles, and better brush style ([#429](https://github.com/gosling-lang/gosling.js/issues/429)) ([e469efe](https://github.com/gosling-lang/gosling.js/commit/e469efe67c520d10a36c31863a5dab73f3ca2ab9))
 * rename link marks to betweenLink and withinLink ([#416](https://github.com/gosling-lang/gosling.js/issues/416)) ([8e7556c](https://github.com/gosling-lang/gosling.js/commit/8e7556cfbfd674ec21e7783df8e37513d0cad7ec))
+* **api:** zoom to extent ([#408](https://github.com/gosling-lang/gosling.js/issues/408)) ([0b3c71f](https://github.com/gosling-lang/gosling.js/commit/0b3c71ff3ab99ee7b5cb445c704c2fe35145be99))
 
 
 
@@ -189,8 +189,8 @@
 
 ### Features
 
-* allow vertical band connection w/o independent scales yet ([#394](https://github.com/gosling-lang/gosling.js/issues/394)) ([5591e2d](https://github.com/gosling-lang/gosling.js/commit/5591e2d7ba6339c4a5eb7cc6a4e105a3c633c8f0))
 * **api:** support mouseover event listener ([#388](https://github.com/gosling-lang/gosling.js/issues/388)) ([e56e32c](https://github.com/gosling-lang/gosling.js/commit/e56e32cdbbcf3a68bb9ecebc45f2ff39d4833c94))
+* allow vertical band connection w/o independent scales yet ([#394](https://github.com/gosling-lang/gosling.js/issues/394)) ([5591e2d](https://github.com/gosling-lang/gosling.js/commit/5591e2d7ba6339c4a5eb7cc6a4e105a3c633c8f0))
 
 
 
@@ -249,8 +249,8 @@
 * add 'about' model view ([#347](https://github.com/gosling-lang/gosling.js/issues/347)) ([53cb362](https://github.com/gosling-lang/gosling.js/commit/53cb3625ca79b7364bec756cd149797825d3ef0c))
 * add exon split transformation ([#364](https://github.com/gosling-lang/gosling.js/issues/364)) ([1413494](https://github.com/gosling-lang/gosling.js/commit/141349482645d3357442abc1c8fbfbd04ab727dd))
 * allow defining track styles in the upper level ([#363](https://github.com/gosling-lang/gosling.js/issues/363)) ([d00b871](https://github.com/gosling-lang/gosling.js/commit/d00b87191a8e7e0000dfe03ea9f8fcf7b6abb8af))
-* **api:** allow specifying transition duration in zoom ([#358](https://github.com/gosling-lang/gosling.js/issues/358)) ([78db378](https://github.com/gosling-lang/gosling.js/commit/78db378e95784c49013af8fb03abadc9a7bd76d3))
 * support a dark theme ([#359](https://github.com/gosling-lang/gosling.js/issues/359)) ([2248fc4](https://github.com/gosling-lang/gosling.js/commit/2248fc493dc39c9420bb903c0c09c8dab793e82d))
+* **api:** allow specifying transition duration in zoom ([#358](https://github.com/gosling-lang/gosling.js/issues/358)) ([78db378](https://github.com/gosling-lang/gosling.js/commit/78db378e95784c49013af8fb03abadc9a7bd76d3))
 
 
 
@@ -268,8 +268,8 @@
 
 ### Features
 
-* **api:** zoom to gene ([#353](https://github.com/gosling-lang/gosling.js/issues/353)) ([3021b82](https://github.com/gosling-lang/gosling.js/commit/3021b82350d524fcfa3b55105fae06cd3cebd8c7))
 * data transform as ordered array ([#355](https://github.com/gosling-lang/gosling.js/issues/355)) ([38ed0e4](https://github.com/gosling-lang/gosling.js/commit/38ed0e4fde5cfeba7a41ca6ab6bb59ad2a6559d5))
+* **api:** zoom to gene ([#353](https://github.com/gosling-lang/gosling.js/issues/353)) ([3021b82](https://github.com/gosling-lang/gosling.js/commit/3021b82350d524fcfa3b55105fae06cd3cebd8c7))
 * enable customizing stroke of brush ([#352](https://github.com/gosling-lang/gosling.js/issues/352)) ([b713b94](https://github.com/gosling-lang/gosling.js/commit/b713b948351bec90b21c57cae96f869b4955f708))
 
 
