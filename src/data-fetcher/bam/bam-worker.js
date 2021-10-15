@@ -458,9 +458,9 @@ const tile = async (uid, z, x) => {
         const { chromLengths, cumPositions } = chromInfo;
 
         const opt = {
-            viewAsPairs: typeof loadMates === 'undefined' ? false : loadMates,
-            pairAcrossChr: typeof loadMates === 'undefined' ? false : loadMates,
-            maxInsertSize: maxInsertSize ?? 50000
+            viewAsPairs: true, // typeof loadMates === 'undefined' ? false : loadMates,
+            pairAcrossChr: true, //typeof loadMates === 'undefined' ? false : loadMates,
+            maxInsertSize: 1000000 // maxInsertSize ?? 50000
         }
 
         for (let i = 0; i < cumPositions.length; i++) {
