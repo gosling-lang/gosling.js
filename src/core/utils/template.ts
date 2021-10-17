@@ -1,4 +1,4 @@
-import assign from 'lodash/assign';
+import { assign } from 'lodash-es';
 import {
     CustomChannelDef,
     DataTransform,
@@ -351,6 +351,7 @@ export function replaceTrackTemplates(spec: GoslingSpec, templates: TemplateTrac
                         if ('base' in channelMap) {
                             delete channelMap.base;
                         }
+                        // @ts-ignore
                         convertedTrack[channelKey as keyof TemplateTrackMappingDef] = channelMap;
                     });
             } else {

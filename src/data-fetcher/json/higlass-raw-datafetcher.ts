@@ -1,5 +1,5 @@
 import { GET_CHROM_SIZES } from '../../core/utils/assembly';
-import { sampleSize } from 'lodash';
+import { sampleSize } from 'lodash-es';
 
 /**
  * HiGlass data fetcher specific for Gosling which ultimately will accept any types of data other than CSV files.

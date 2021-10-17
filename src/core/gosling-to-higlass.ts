@@ -1,4 +1,4 @@
-import uuid from 'uuid';
+import * as uuid from 'uuid';
 import { Track as HiGlassTrack } from './higlass.schema';
 import { HiGlassModel, HIGLASS_AXIS_SIZE } from './higlass-model';
 import { parseServerAndTilesetUidFromUrl } from './utils';
@@ -144,6 +144,7 @@ export function goslingToHiGlass(
                 .setMainTrack(hgTrack)
                 .addTrackSourceServers(server)
                 .setZoomFixed(firstResolvedSpec.static === true)
+                .setZoomLimits(firstResolvedSpec.zoomLimits ?? [1, null])
                 .setLayout(layout);
         }
 
@@ -185,7 +186,13 @@ export function goslingToHiGlass(
         // check whether to show axis
         ['x', 'y'].forEach(c => {
             const channel = (firstResolvedSpec as any)[c];
-            if (IsChannelDeep(channel) && channel.axis && channel.axis !== 'none' && channel.type === 'genomic') {
+            if (
+                IsChannelDeep(channel) &&
+                'axis' in channel &&
+                channel.axis &&
+                channel.axis !== 'none' &&
+                channel.type === 'genomic'
+            ) {
                 const narrowType = getAxisNarrowType(c as any, gosTrack.orientation, bb.width, bb.height);
                 hgModel.setAxisTrack(channel.axis, narrowType, {
                     layout: firstResolvedSpec.layout,

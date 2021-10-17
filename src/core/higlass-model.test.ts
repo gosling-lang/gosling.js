@@ -1,4 +1,4 @@
-import uuid from 'uuid';
+import * as uuid from 'uuid';
 import { HiGlassModel } from './higlass-model';
 import { GET_CHROM_SIZES } from './utils/assembly';
 import { getTheme } from './utils/theme';

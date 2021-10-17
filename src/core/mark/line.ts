@@ -6,7 +6,13 @@ import colorToHex from '../utils/color-to-hex';
 import { cartesianToPolar } from '../utils/polar';
 import { TooltipData, TOOLTIP_MOUSEOVER_MARGIN as G } from '../../gosling-tooltip';
 
-export function drawLine(g: PIXI.Graphics, tm: GoslingTrackModel, tooltips: TooltipData[]) {
+export function drawLine(
+    g: PIXI.Graphics,
+    tm: GoslingTrackModel,
+    tooltips: TooltipData[],
+    trackWidth: number,
+    trackHeight: number
+) {
     /* track spec */
     const spec = tm.spec();
 
@@ -17,10 +23,6 @@ export function drawLine(g: PIXI.Graphics, tm: GoslingTrackModel, tooltips: Tool
 
     /* data */
     const data = tm.data();
-
-    /* track size */
-    const trackWidth = spec.width;
-    const trackHeight = spec.height;
 
     /* circular parameters */
     const circular = spec.layout === 'circular';

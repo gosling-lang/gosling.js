@@ -90,6 +90,13 @@ const CRHOM_SIZES: { [assembly: string]: ChromSize } = Object.freeze({
         interval: getChromInterval(CHROM_SIZE_MM9),
         total: getChromTotalSize(CHROM_SIZE_MM9),
         path: basePath('mm9')
+    },
+    // `unknown` assembly contains only one chromosome with max length
+    unknown: {
+        size: { chr: Number.MAX_VALUE },
+        interval: { chr: [0, Number.MAX_VALUE] },
+        total: Number.MAX_VALUE,
+        path: basePath('hg38') // just to ensure this does not make crash
     }
 });
 

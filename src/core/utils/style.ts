@@ -1,4 +1,4 @@
-import { assign } from 'lodash';
+import { assign } from 'lodash-es';
 import { Style } from '../gosling.schema';
 
 export function getStyleOverridden(parent: Style | undefined, child: Style | undefined) {

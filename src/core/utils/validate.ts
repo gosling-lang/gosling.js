@@ -54,18 +54,9 @@ export function validateTrack(track: Track) {
             // EXPERIMENTAL: we are removing this rule in our spec.
             valid = false;
         }
-        const color = spec.color;
-        if (IsChannelDeep(color) && color.type === 'genomic') {
-            errorMessages.push('genomic type cannot be used for a color channel');
-            valid = false;
-        }
-        const row = spec.row;
-        if (IsChannelDeep(row) && row.type !== 'nominal') {
-            errorMessages.push(`${row.type} type cannot be used for a row channel`);
-            valid = false;
-        }
 
         // combination of visual mark and channel
+        const color = spec.color;
         if (spec.mark === 'line' && IsChannelDeep(color) && color.type === 'quantitative') {
             errorMessages.push('`line` mark cannot be used with `quantitative` value');
             valid = false;

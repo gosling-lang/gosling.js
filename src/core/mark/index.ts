@@ -95,7 +95,7 @@ export function drawMark(HGC: any, trackInfo: any, tile: any, model: GoslingTrac
             drawBar(trackInfo, tile, model);
             break;
         case 'line':
-            drawLine(tile.graphics, model, trackInfo.tooltips);
+            drawLine(tile.graphics, model, trackInfo.tooltips, trackWidth, trackHeight);
             break;
         case 'area':
             drawArea(HGC, trackInfo, tile, model);

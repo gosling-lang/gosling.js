@@ -1,5 +1,5 @@
 import { AxisPosition, SingleTrack, OverlaidTrack, Track, ChannelDeep, DataDeep } from '../gosling.schema';
-import assign from 'lodash/assign';
+import { assign } from 'lodash-es';
 import { IsChannelDeep, IsDataTrack, IsOverlaidTrack, IsSingleTrack } from '../gosling.schema.guards';
 
 /**
@@ -117,7 +117,7 @@ export function spreadTracksByData(tracks: Track[]): Track[] {
                 if (track.title && i !== arr.length - 1 && arr.length !== 1) {
                     delete track.title; // remove `title` except the last one
                 }
-                return { ...track, overlayOnPreviousTrack, y };
+                return { ...track, overlayOnPreviousTrack, y } as Track;
             });
         })
     );

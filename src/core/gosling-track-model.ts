@@ -1,4 +1,4 @@
-import uuid from 'uuid';
+import * as uuid from 'uuid';
 import { ChannelDeep, PREDEFINED_COLORS, ChannelTypes, ChannelValue, SingleTrack, Channel } from './gosling.schema';
 import { validateTrack, getGenomicChannelFromTrack, getGenomicChannelKeyFromTrack } from './utils/validate';
 import {
@@ -162,13 +162,8 @@ export class GoslingTrackModel {
         // zero baseline
         SUPPORTED_CHANNELS.forEach(channelKey => {
             const channel = spec[channelKey];
-            if (
-                IsChannelDeep(channel) &&
-                typeof channel.zeroBaseline === 'undefined' &&
-                channel.type !== 'genomic' &&
-                ['x', 'y'].includes(channelKey)
-            ) {
-                channel.zeroBaseline = true;
+            if (IsChannelDeep(channel) && !('zeroBaseline' in channel) && channel.type === 'quantitative') {
+                (channel as any).zeroBaseline = true;
             }
         });
 
@@ -177,12 +172,9 @@ export class GoslingTrackModel {
 
     /**
      * TODO: This is experimental. For bar charts, for example, additional care should be taken to correctly flip the visual marks.
-     * Flip the x or y scales when `flip` options are used.
+     * Flip the y scales when `flip` options is used.
      */
     private flipRanges(spec: SingleTrack) {
-        if (IsChannelDeep(spec.x) && spec.x.flip && Array.isArray(spec.x.range)) {
-            spec.x.range = spec.x.range.reverse();
-        }
         if (IsChannelDeep(spec.y) && spec.y.flip && Array.isArray(spec.y.range)) {
             spec.y.range = spec.y.range.reverse();
         }
@@ -451,9 +443,21 @@ export class GoslingTrackModel {
 
         // common visual properties, not specific to visual marks
         if (
-            ['text', 'color', 'row', 'stroke', 'opacity', 'strokeWidth', 'x', 'y', 'xe', 'x1', 'x1e', 'size'].includes(
-                propertyKey
-            )
+            [
+                'text',
+                'color',
+                'row',
+                'stroke',
+                'opacity',
+                'strokeWidth',
+                'x',
+                'y',
+                'xe',
+                'x1',
+                'x1e',
+                'ye',
+                'size'
+            ].includes(propertyKey)
         ) {
             return this.visualPropertyByChannel(propertyKey as any, datum);
         }
@@ -505,17 +509,18 @@ export class GoslingTrackModel {
 
                 if (!channel.domain) {
                     // TODO: consider data ranges in negative values
-                    const min = channel.zeroBaseline
-                        ? 0
-                        : d3min(
-                              xKeys.map(d =>
-                                  d3sum(
-                                      (pivotedData.get(d) as any).map((_d: any) =>
-                                          channel.field ? _d[channel.field] : undefined
+                    const min =
+                        'zeroBaseline' in channel && channel.zeroBaseline
+                            ? 0
+                            : d3min(
+                                  xKeys.map(d =>
+                                      d3sum(
+                                          (pivotedData.get(d) as any).map((_d: any) =>
+                                              channel.field ? _d[channel.field] : undefined
+                                          )
                                       )
-                                  )
-                              ) as number[]
-                          );
+                                  ) as number[]
+                              );
                     const max = d3max(
                         xKeys.map(d =>
                             d3sum(
@@ -615,9 +620,10 @@ export class GoslingTrackModel {
                     }
                 } else if (IsChannelDeep(channel) && (channel.type === 'quantitative' || channel.type === 'genomic')) {
                     if (channel.domain === undefined) {
-                        const min = channel.zeroBaseline
-                            ? 0
-                            : (d3min(data.map(d => +d[channel.field as string]) as number[]) as number) ?? 0;
+                        const min =
+                            'zeroBaseline' in channel && channel.zeroBaseline
+                                ? 0
+                                : (d3min(data.map(d => +d[channel.field as string]) as number[]) as number) ?? 0;
                         const max = (d3max(data.map(d => +d[channel.field as string]) as number[]) as number) ?? 0;
                         channel.domain = [min, max]; // TODO: what if data ranges in negative values
                     } else if (channel.type === 'genomic' && !IsDomainArray(channel.domain)) {
@@ -634,6 +640,7 @@ export class GoslingTrackModel {
                                 range = [0, spec.width];
                                 break;
                             case 'y':
+                            case 'ye':
                                 range = [0, rowHeight];
                                 break;
                             case 'color':
@@ -670,6 +677,7 @@ export class GoslingTrackModel {
                                 range = [0, spec.width];
                                 break;
                             case 'y':
+                            case 'ye':
                                 range = [rowHeight, 0]; // reversed because the origin is on the top
                                 break;
                             case 'color':
@@ -759,6 +767,7 @@ export class GoslingTrackModel {
                         case 'xe':
                         case 'x1e':
                         case 'y':
+                        case 'ye':
                         case 'size':
                         case 'opacity':
                         case 'strokeWidth':
@@ -785,6 +794,7 @@ export class GoslingTrackModel {
                         case 'x':
                         case 'xe':
                         case 'y':
+                        case 'ye':
                         case 'row':
                             this.channelScales[channelKey] = scaleBand()
                                 .domain(domain as string[])

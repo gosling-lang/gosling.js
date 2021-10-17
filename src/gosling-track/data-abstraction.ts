@@ -44,24 +44,33 @@ export function getTabularData(
         const startName = spec.data.start ?? 'start';
         const endName = spec.data.end ?? 'end';
 
+        // additional columns with different aggregation functions
+        const minValueName = `${valueName}_min`;
+        const maxValueName = `${valueName}_max`;
+
         // convert data to a visualization-friendly format
         let cumVal = 0;
+        let minVal = Number.MAX_SAFE_INTEGER;
+        let maxVal = Number.MIN_SAFE_INTEGER;
         let binStart = Number.MIN_SAFE_INTEGER;
         let binEnd = Number.MAX_SAFE_INTEGER;
         Array.from(Array(numOfGenomicPositions).keys()).forEach((g: number, j: number) => {
             // add individual rows
             if (bin === 1) {
+                const value = numericValues[j] / tileUnitSize;
                 tabularData.push({
-                    [valueName]: numericValues[j] / tileUnitSize,
+                    [valueName]: value,
                     [columnName]: data.tileX + (j + 0.5) * tileUnitSize,
                     [startName]: data.tileX + j * tileUnitSize,
-                    [endName]: data.tileX + (j + 1) * tileUnitSize
+                    [endName]: data.tileX + (j + 1) * tileUnitSize,
+                    [minValueName]: value,
+                    [maxValueName]: value
                 });
             } else {
-                // EXPERIMENTAL: bin the data considering the `bin` options
+                // bin the data considering the `binSize` option
                 if (j % bin === 0) {
                     // Start storing information for this bin
-                    cumVal = numericValues[j];
+                    cumVal = minVal = maxVal = numericValues[j];
                     binStart = j;
                     binEnd = j + bin;
                 } else if (j % bin === bin - 1) {
@@ -70,7 +79,9 @@ export function getTabularData(
                         [valueName]: cumVal / bin / tileUnitSize,
                         [columnName]: data.tileX + (binStart + bin / 2.0) * tileUnitSize,
                         [startName]: data.tileX + binStart * tileUnitSize,
-                        [endName]: data.tileX + binEnd * tileUnitSize
+                        [endName]: data.tileX + binEnd * tileUnitSize,
+                        [minValueName]: minVal,
+                        [maxValueName]: maxVal
                     });
                 } else if (j === numOfGenomicPositions - 1) {
                     // Manage the remainders. Just add them as a single row.
@@ -80,11 +91,15 @@ export function getTabularData(
                         [valueName]: cumVal / smallBin / tileUnitSize,
                         [columnName]: data.tileX + (binStart + smallBin / 2.0) * tileUnitSize,
                         [startName]: data.tileX + binStart * tileUnitSize,
-                        [endName]: data.tileX + correctedBinEnd * tileUnitSize
+                        [endName]: data.tileX + correctedBinEnd * tileUnitSize,
+                        [minValueName]: minVal,
+                        [maxValueName]: maxVal
                     });
                 } else {
                     // Add a current value
                     cumVal += numericValues[j];
+                    if (minVal > numericValues[j]) minVal = numericValues[j];
+                    if (maxVal < numericValues[j]) maxVal = numericValues[j];
                 }
             }
         });
@@ -102,6 +117,7 @@ export function getTabularData(
         const bin = spec.data.binSize ?? 1;
 
         const numOfTotalCategories = data.shape[0];
+        const categories: any = spec.data.categories ?? [...Array(numOfTotalCategories).keys()];
         const numericValues = data.dense;
         const numOfGenomicPositions = data.shape[1];
         const tileUnitSize = data.tileWidth / data.tileSize;
@@ -111,28 +127,36 @@ export function getTabularData(
         const columnName = spec.data.column;
         const startName = spec.data.start ?? 'start';
         const endName = spec.data.end ?? 'end';
-        const categories: any = spec.data.categories ?? [...Array(numOfTotalCategories).keys()]; // TODO:
+
+        // additional columns with different aggregation functions
+        const minValueName = `${valueName}_min`;
+        const maxValueName = `${valueName}_max`;
 
         // convert data to a visualization-friendly format
         categories.forEach((c: string, i: number) => {
             let cumVal = 0;
             let binStart = Number.MIN_SAFE_INTEGER;
             let binEnd = Number.MAX_SAFE_INTEGER;
+            let minVal = Number.MAX_SAFE_INTEGER;
+            let maxVal = Number.MIN_SAFE_INTEGER;
             Array.from(Array(numOfGenomicPositions).keys()).forEach((g: number, j: number) => {
                 // add individual rows
                 if (bin === 1) {
+                    const value = numericValues[numOfGenomicPositions * i + j] / tileUnitSize;
                     tabularData.push({
                         [rowName]: c,
-                        [valueName]: numericValues[numOfGenomicPositions * i + j] / tileUnitSize,
+                        [valueName]: value,
                         [columnName]: data.tileX + (j + 0.5) * tileUnitSize,
                         [startName]: data.tileX + j * tileUnitSize,
-                        [endName]: data.tileX + (j + 1) * tileUnitSize
+                        [endName]: data.tileX + (j + 1) * tileUnitSize,
+                        [minValueName]: value,
+                        [maxValueName]: value
                     });
                 } else {
                     // EXPERIMENTAL: bin the data considering the `bin` options
                     if (j % bin === 0) {
                         // Start storing information for this bin
-                        cumVal = numericValues[numOfGenomicPositions * i + j];
+                        cumVal = minVal = maxVal = numericValues[numOfGenomicPositions * i + j];
                         binStart = j;
                         binEnd = j + bin;
                     } else if (j % bin === bin - 1) {
@@ -142,7 +166,9 @@ export function getTabularData(
                             [valueName]: cumVal / bin / tileUnitSize,
                             [columnName]: data.tileX + (binStart + bin / 2.0) * tileUnitSize,
                             [startName]: data.tileX + binStart * tileUnitSize,
-                            [endName]: data.tileX + binEnd * tileUnitSize
+                            [endName]: data.tileX + binEnd * tileUnitSize,
+                            [minValueName]: minVal,
+                            [maxValueName]: maxVal
                         });
                     } else if (j === numOfGenomicPositions - 1) {
                         // Manage the remainders. Just add them as a single row.
@@ -153,11 +179,16 @@ export function getTabularData(
                             [valueName]: cumVal / smallBin / tileUnitSize,
                             [columnName]: data.tileX + (binStart + smallBin / 2.0) * tileUnitSize,
                             [startName]: data.tileX + binStart * tileUnitSize,
-                            [endName]: data.tileX + correctedBinEnd * tileUnitSize
+                            [endName]: data.tileX + correctedBinEnd * tileUnitSize,
+                            [minValueName]: minVal,
+                            [maxValueName]: maxVal
                         });
                     } else {
                         // Add a current value
-                        cumVal += numericValues[numOfGenomicPositions * i + j];
+                        const value = numericValues[numOfGenomicPositions * i + j];
+                        cumVal += value;
+                        if (minVal > value) minVal = value;
+                        if (maxVal < value) maxVal = value;
                     }
                 }
             });

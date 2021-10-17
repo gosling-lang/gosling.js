@@ -36,7 +36,7 @@ import {
     TemplateTrack
 } from './gosling.schema';
 import { SUPPORTED_CHANNELS } from './mark';
-import { isArray } from 'lodash';
+import { isArray } from 'lodash-es';
 import {
     interpolateGreys,
     interpolateWarm,
@@ -130,10 +130,10 @@ export function IsTemplateTrack(track: Partial<Track>): track is TemplateTrack {
 export function Is2DTrack(track: Track) {
     return (
         IsSingleTrack(track) &&
-        IsChannelDeep(track['x']) &&
-        track['x'].type === 'genomic' &&
-        IsChannelDeep(track['y']) &&
-        track['y'].type === 'genomic'
+        IsChannelDeep(track.x) &&
+        track.x.type === 'genomic' &&
+        IsChannelDeep(track.y) &&
+        track.y.type === 'genomic'
     );
 }
 
@@ -205,7 +205,8 @@ export function IsStackedMark(track: SingleTrack): boolean {
         (!track.row || IsChannelValue(track.row)) &&
         // TODO: determine whether to use stacked bar for nominal fields or not
         IsChannelDeep(track.y) &&
-        track.y.type === 'quantitative'
+        track.y.type === 'quantitative' &&
+        !IsChannelDeep(track.ye)
     );
 }
 

@@ -20,16 +20,25 @@
     "strict": true,
     "strictNullChecks": true,
     "resolveJsonModule": true,
-    "jsx": "react"
+    "jsx": "react",
+    "paths": {
+      "gosling.js": ["./src/index.ts"],
+      "@gosling.schema": ["./src/core/gosling.schema.ts"],
+      "@higlass.schema": ["./src/core/higlass.schema.ts"],
+      "zlib": ["./src/alias/zlib.ts"]
+    },
+    "baseUrl": "."
   },
   "files": [
-    "src/index.ts"
+    "src/index.ts",
+    "editor/index.tsx",
+    "embed/index.ts"
   ],
   "include": ["src", "src/**/*.d.ts"],
   "exclude": [
     "node_modules",
     "public",
     "build",
-    "dist",
+    "dist"
   ]
 }

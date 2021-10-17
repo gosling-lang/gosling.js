@@ -39,38 +39,69 @@ export interface OverlaidTracks extends CommonViewDef, Partial<SingleTrack> {
 }
 
 export interface MultipleViews extends CommonViewDef {
+    /**
+     * Specify how multiple views are arranged.
+     */
     arrangement?: 'parallel' | 'serial' | 'horizontal' | 'vertical';
+    /** An array of view specifications */
     views: Array<SingleView | MultipleViews>;
 }
 
 export type Layout = 'linear' | 'circular';
 export type Orientation = 'horizontal' | 'vertical';
 export type Assembly = 'hg38' | 'hg19' | 'hg18' | 'hg17' | 'hg16' | 'mm10' | 'mm9' | 'unknown';
+export type ZoomLimits = [number | null, number | null];
 
 export interface CommonViewDef {
+    /** Specify the layout type of all tracks. */
     layout?: Layout;
+    /** Specify the orientation. */
     orientation?: Orientation;
 
+    /**
+     * - If `{"layout": "linear"}`, specify the space between tracks in pixels;
+     *
+     * - If `{"layout": "circular"}`, specify the space between tracks in percentage ranging from 0 to 100.
+     */
     spacing?: number;
+    /** Whether to disable [Zooming and Panning](http://gosling-lang.org/docs/user-interaction#zooming-and-panning),
+     * __Default:__ `false`.
+     */
     static?: boolean;
+    zoomLimits?: ZoomLimits; // limits of zoom levels. default: [1, null]
 
-    // offsets
+    /** Specify the x offset of views in the unit of pixels */
     xOffset?: number;
+    /** Specify the y offset of views in the unit of pixels */
     yOffset?: number;
 
+    /**
+     * A string that specifies the genome builds to use.
+     * Currently support `"hg38"`, `"hg19"`, `"hg18"`, `"hg17"`, `"hg16"`, `"mm10"`, `"mm9"`, and `"unknown"`.
+     *
+     * __Note:__: with `"unknown"` assembly, genomic axes do not show chrN: in labels.
+     */
     assembly?: Assembly;
 
     // TODO: Change to domain?
     xDomain?: DomainInterval | DomainChrInterval | DomainChr;
+    /** Specify an ID for [linking multiple views](http://gosling-lang.org/docs/user-interaction#linking-views) */
     linkingId?: string;
+    /** not supported  */
     xAxis?: AxisPosition; // not supported currently
 
     /**
      * Proportion of the radius of the center white space.
+     *
+     * __Default:__ 0.3
+     * @Range [0, 1]
      */
     centerRadius?: number; // [0, 1] (default: 0.3)
 
-    // Overriden by children
+    /**
+     * Define the [style](http://gosling-lang.org/docs/visual-channel#style-related-properties) of multive views.
+     * Will be overriden by the style of children elements (e.g., view, track).
+     */
     style?: Style;
 }
 
@@ -78,7 +109,9 @@ export interface CommonViewDef {
 export type Track = SingleTrack | OverlaidTrack | DataTrack | TemplateTrack;
 
 export interface CommonRequiredTrackDef {
+    /** Specify the track width in pixels. */
     width: number;
+    /** Specify the track height in pixels. */
     height: number;
 }
 
@@ -87,24 +120,42 @@ export interface CommonTrackDef extends CommonViewDef, CommonRequiredTrackDef {
     // !! TODO: this should be track-specific and not defined in views.
     id?: string; // Assigned to `uid` in a HiGlass view config, used for API and caching.
 
-    title?: string; // Shows textual label on the left-top corner of a track
+    /** If defined, will show the textual label on the left-top corner of a track. */
+    title?: string;
     subtitle?: string; // Being used only for a title track (i.e., 'text-track')
 
     // Arrangement
     overlayOnPreviousTrack?: boolean;
 
     // Circular Layout
+    /**
+     * Specify the outer radius of tracks when `{"layout": "circular"}`.
+     */
     outerRadius?: number;
+    /**
+     * Specify the inner radius of tracks when (`{"layout": "circular"}`).
+     */
     innerRadius?: number;
+    /**
+     * Specify the start angle (in the range of [0, 360]) of circular tracks (`{"layout": "circular"}`).
+     */
     startAngle?: number; // [0, 360]
+    /**
+     * Specify the end angle (in the range of [0, 360]) of circular tracks (`{"layout": "circular"}`).
+     */
     endAngle?: number; // [0, 360]
 
     // Internally used properties
+    /** internal */
     _renderingId?: string;
+    /** internal */
     _invalidTrack?: boolean; // flag to ignore rendering certain tracks if they have problems // !!! TODO: add tests
 
     // To test upcoming feature.
-    prerelease?: { testUsingNewRectRenderingForBAM?: boolean };
+    /** internal */
+    prerelease?: {
+        // ...
+    };
 }
 
 /**
@@ -137,7 +188,9 @@ export type MarkType =
     | 'header';
 
 /* ----------------------------- TRACK ----------------------------- */
-export interface SingleTrack extends CommonTrackDef {
+export type SingleTrack = SingleTrackBase & Encoding;
+
+interface SingleTrackBase extends CommonTrackDef {
     // Data
     data: DataDeep;
 
@@ -149,28 +202,6 @@ export interface SingleTrack extends CommonTrackDef {
     // Mark
     mark: Mark;
 
-    // Visual channels
-    x?: Channel;
-    y?: Channel;
-    xe?: Channel;
-    ye?: Channel;
-
-    x1?: Channel;
-    y1?: Channel;
-    x1e?: Channel;
-    y1e?: Channel;
-
-    row?: Channel;
-    column?: Channel;
-
-    color?: Channel;
-    size?: Channel;
-    text?: Channel;
-
-    stroke?: Channel;
-    strokeWidth?: Channel;
-    opacity?: Channel;
-
     // Resolving overlaps
     displacement?: Displacement;
 
@@ -181,6 +212,29 @@ export interface SingleTrack extends CommonTrackDef {
     flipY?: boolean; // This is only supported for `link` marks.
     stretch?: boolean; // Stretch the size to the given range? (e.g., [x, xe])
     overrideTemplate?: boolean; // Override a spec template that is defined for a given data type.
+}
+
+export interface Encoding {
+    x?: X | ChannelValue;
+    y?: Y | ChannelValue;
+    xe?: X | ChannelValue;
+    ye?: Y | ChannelValue;
+
+    x1?: X | ChannelValue;
+    y1?: Y | ChannelValue;
+    x1e?: X | ChannelValue;
+    y1e?: Y | ChannelValue;
+
+    row?: Row | ChannelValue;
+    column?: Column | ChannelValue;
+
+    color?: Color | ChannelValue;
+    size?: Size | ChannelValue;
+    text?: Text | ChannelValue;
+
+    stroke?: Stroke | ChannelValue;
+    strokeWidth?: StrokeWidth | ChannelValue;
+    opacity?: Opacity | ChannelValue;
 }
 
 export interface Tooltip {
@@ -218,25 +272,83 @@ export interface Style {
     backgroundOpacity?: number;
     outline?: string;
     outlineWidth?: number;
+    /**
+     * Whether to enable smooth paths when drawing curves.
+     *
+     * __Default__: false
+     */
     enableSmoothPath?: boolean;
 
     // Mark-level styles
+    /**
+     * Specify the pattern of dashes and gaps for `rule` marks.
+     */
     dashed?: [number, number];
+    /**
+     * Specify the pattern of dashes and gaps for `rule` marks.
+     */
     linePattern?: { type: 'triangleLeft' | 'triangleRight'; size: number };
-    curve?: 'top' | 'bottom' | 'left' | 'right'; // for genomic range rules
-    align?: 'left' | 'right'; // currently, only supported for triangles
-    dx?: number; // currently, only used for text marks
-    dy?: number; // currently, only used for text marks
-    bazierLink?: boolean; // use bazier curves instead
-    circularLink?: boolean; // !! Deprecated: draw arc instead of bazier curve?
-    inlineLegend?: boolean; // show legend in a single horizontal line?
-    legendTitle?: string; // if defined, show legend title on the top or left
+    /**
+     * Specify the curve of `rule` marks.
+     */
+    curve?: 'top' | 'bottom' | 'left' | 'right';
+    /**
+     * Specify the alignment of marks.
+     * This property is currently only supported for `triangle` marks.
+     */
+    align?: 'left' | 'right';
+    /**
+     * Offset the position of marks in x direction.
+     * This property is currently only supported for `text` marks
+     */
+    dx?: number;
+    /**
+     * Offset the position of marks in y direction.
+     * This property is currently only supported for `text` marks.
+     */
+    dy?: number;
+    /**
+     *  Specify whether to use bazier curves for the `link` marks.
+     */
+    bazierLink?: boolean;
+    /**
+     * Deprecated: draw arc instead of bazier curve?
+     */
+    circularLink?: boolean;
+    /**
+     * Specify whether to show legend in a single horizontal line?
+     */
+    inlineLegend?: boolean;
+    /**
+     * If defined, show legend title on the top or left
+     */
+    legendTitle?: string;
+
     // below options could instead be used with channel options (e.g., size, stroke, strokeWidth)
+    /**
+     * Specify the font size of `text` marks.
+     * Can also be specified using the `size` channel option of `text` marks.
+     */
     textFontSize?: number;
+    /**
+     * Specify the stroke of `text` marks.
+     * Can also be specified using the `stroke` channel option of `text` marks.
+     */
     textStroke?: string;
+    /**
+     * Specify the stroke width of `text` marks.
+     * Can also be specified using the `strokeWidth` channel option of `text` marks.
+     */
     textStrokeWidth?: number;
+    /** Specify the font weight of `text` marks. */
     textFontWeight?: 'bold' | 'normal';
+    /** Specify the alignment of `text` marks to a given point.
+     */
     textAnchor?: 'start' | 'middle' | 'end';
+    /** Specify the connetion type of `betweenLink` marks.
+     *
+     * __Default__: "corner"
+     */
     linkConnectionType?: 'straight' | 'curve' | 'corner';
 }
 
@@ -244,20 +356,64 @@ export interface Style {
 export type VisibilityCondition = SizeVisibilityCondition | ZoomLevelVisibilityCondition;
 
 interface CommonVisibilityCondition {
+    /**
+     * A string that pecifies the logical operation to conduct between `threshold` and the `measure` of `target`.
+     * Support
+     *
+     * - greater than : "greater-than", "gt", "GT"
+     *
+     * - less than : "less-than", "lt", "LT"
+     *
+     * - greater than or equal to : "greater-than-or-equal-to", "gtet", "GTET"
+     *
+     * - less than or equal to : "less-than-or-equal-to", "ltet", "LTET"
+     */
     operation: LogicalOperation;
+    /**
+     * Specify the buffer size (in pixel) of width or height when calculating the visibility.
+     *
+     * __Default__: 0
+     */
     conditionPadding?: number;
+    /**
+     * Specify the buffer size (in pixel) of width or height for smooth transition.
+     *
+     * __Default__: 0
+     */
     transitionPadding?: number;
 }
 
 export interface SizeVisibilityCondition extends CommonVisibilityCondition {
+    /**
+     * Target specifies the object that you want to compare with the threshold.
+     */
     target: 'track' | 'mark';
+    /**
+     * Specify which aspect of the `target` will be compared to the `threshold`.
+     */
     measure: 'width' | 'height';
+    /**
+     * Specify the threshold as one of:
+     *
+     * - A number representing a fixed threshold in the unit of pixels;
+     *
+     * - `"|xe-x|"`, using the distance between `xe` and `x` as threshold
+     */
     threshold: number | '|xe-x|';
 }
 
 export interface ZoomLevelVisibilityCondition extends CommonVisibilityCondition {
+    /**
+     * Target specifies the object that you want to compare with the threshold.
+     */
     target: 'track' | 'mark';
+    /**
+     * Specify which aspect of the `target` will be compared to the `threshold`.
+     */
     measure: 'zoomLevel';
+    /**
+     * Set a threshold in the unit of base pairs (bp)
+     */
     threshold: number;
 }
 
@@ -301,24 +457,101 @@ export type ChannelType = keyof typeof ChannelTypes | string;
 
 export type Channel = ChannelDeep | ChannelValue; // TODO: support null to allow removing spec when overriding
 
-export interface ChannelDeep {
+export interface ChannelDeepCommon {
     field?: string;
-    type?: FieldType;
+}
+
+export interface X extends ChannelDeepCommon {
+    type?: 'genomic';
+    domain?: GenomicDomain;
+    range?: ValueExtent;
+    axis?: AxisPosition;
+    legend?: boolean;
+    grid?: boolean;
+    linkingId?: string;
     aggregate?: Aggregate;
-    domain?: Domain;
-    range?: Range;
+}
+
+export interface Y extends ChannelDeepCommon {
+    type?: 'quantitative' | 'nominal' | 'genomic';
+    domain?: ValueExtent;
+    range?: ValueExtent;
     axis?: AxisPosition;
     legend?: boolean;
     baseline?: string | number;
     zeroBaseline?: boolean; // We could remove this and use the `baseline` option instead
     mirrored?: boolean; // Show baseline on the top or right instead of bottom or left
+    aggregate?: Aggregate;
     grid?: boolean;
     linkingId?: string;
     flip?: boolean; // Flip a track vertically or horizontally?
-    stack?: boolean; // Experimental: We could use this option to stack visual marks, addressing the visual overlap (e.g., stacked bar).
     padding?: number; // Experimental: Used in `row` and `column` for vertical and horizontal padding.
-    sort?: string[]; // Experimental: Fix order by categories (e.g., stacked bars).
 }
+
+export interface Row extends ChannelDeepCommon {
+    type?: 'nominal';
+    domain?: ValueExtent;
+    range?: ValueExtent;
+    legend?: boolean;
+    padding?: number; // Experimental: Used in `row` and `column` for vertical and horizontal padding.
+    grid?: boolean;
+}
+
+export interface Column extends ChannelDeepCommon {
+    type?: 'nominal';
+    domain?: ValueExtent;
+    range?: ValueExtent;
+}
+
+export interface Color extends ChannelDeepCommon {
+    type?: 'quantitative' | 'nominal';
+    domain?: ValueExtent;
+    range?: Range;
+    legend?: boolean;
+    baseline?: string | number;
+    zeroBaseline?: boolean; // We could remove this and use the `baseline` option instead
+}
+
+export interface Size extends ChannelDeepCommon {
+    type?: 'quantitative' | 'nominal';
+    domain?: ValueExtent;
+    range?: ValueExtent;
+    legend?: boolean; // TODO: Support this
+    baseline?: string | number;
+    zeroBaseline?: boolean; // We could remove this and use the `baseline` option instead
+}
+
+export interface Stroke extends ChannelDeepCommon {
+    type?: 'quantitative' | 'nominal';
+    domain?: ValueExtent;
+    range?: Range;
+    baseline?: string | number;
+    zeroBaseline?: boolean; // We could remove this and use the `baseline` option instead
+}
+
+export interface StrokeWidth extends ChannelDeepCommon {
+    type?: 'quantitative' | 'nominal';
+    domain?: ValueExtent;
+    range?: ValueExtent;
+    baseline?: string | number;
+    zeroBaseline?: boolean; // We could remove this and use the `baseline` option instead
+}
+
+export interface Opacity extends ChannelDeepCommon {
+    type?: 'quantitative' | 'nominal';
+    domain?: ValueExtent;
+    range?: ValueExtent;
+    baseline?: string | number;
+    zeroBaseline?: boolean; // We could remove this and use the `baseline` option instead
+}
+
+export interface Text extends ChannelDeepCommon {
+    type?: 'quantitative' | 'nominal';
+    domain?: string[];
+    range?: string[];
+}
+
+export type ChannelDeep = X | Y | Row | Color | Size | Stroke | StrokeWidth | Opacity | Text;
 
 export interface ChannelValue {
     value: number | string;
@@ -326,8 +559,10 @@ export interface ChannelValue {
 
 export type AxisPosition = 'none' | 'top' | 'bottom' | 'left' | 'right';
 export type FieldType = 'genomic' | 'nominal' | 'quantitative';
-export type Domain = string[] | number[] | DomainInterval | DomainChrInterval | DomainChr | DomainGene;
-export type Range = string[] | number[] | PREDEFINED_COLORS;
+export type ValueExtent = string[] | number[];
+export type GenomicDomain = DomainInterval | DomainChrInterval | DomainChr | DomainGene;
+export type Domain = ValueExtent | GenomicDomain;
+export type Range = ValueExtent | PREDEFINED_COLORS;
 export type PREDEFINED_COLORS = 'viridis' | 'grey' | 'spectral' | 'warm' | 'cividis' | 'bupu' | 'rdbu';
 
 export interface DomainChr {
@@ -354,97 +589,264 @@ export type Aggregate = 'max' | 'min' | 'mean' | 'bin' | 'count';
 /* ----------------------------- DATA ----------------------------- */
 export type DataDeep = JSONData | CSVData | BIGWIGData | MultivecData | BEDDBData | VectorData | MatrixData | BAMData;
 
+/** Values in the form of JSON. */
 export interface Datum {
     [k: string]: number | string;
 }
 
-export interface JSONData {
-    type: 'json';
-    values: Datum[];
-    quantitativeFields?: string[];
-    chromosomeField?: string;
-    genomicFields?: string[];
-    sampleLength?: number; // This limit the total number of rows fetched (default: 1000)
+/**
+ * The JSON data format allows users to include data directly in the Gosling's JSON specification.
+ */
 
-    // !!! experimental
+export interface JSONData {
+    /**
+     * Define data type.
+     */
+    type: 'json';
+
+    /** Values in the form of JSON. */
+    values: Datum[];
+
+    /** Specify the name of quantitative data fields. */
+    quantitativeFields?: string[];
+
+    /** Specify the name of chromosome data fields. */
+    chromosomeField?: string;
+
+    /** Specify the name of genomic data fields. */
+    genomicFields?: string[];
+
+    /** Specify the number of rows loaded from the URL.
+     *
+     * __Default:__ 1000
+     */
+    sampleLength?: number;
+
+    /** experimental */
     genomicFieldsToConvert?: {
         chromosomeField: string;
         genomicFields: string[];
     }[];
 }
+
+/**
+ * Any small enough tabular data files, such as tsv, csv, BED, BEDPE, and GFF, can be loaded using "csv" data specification.
+ */
 
 export interface CSVData {
     type: 'csv';
+
+    /**
+     * Specify the URL address of the data file.
+     */
     url: string;
+
+    /**
+     * Specify file separator, __Default:__ ','
+     */
     separator?: string;
+
+    /**
+     * Specify the name of quantitative data fields.
+     */
     quantitativeFields?: string[];
+
+    /**
+     * Specify the name of chromosome data fields.
+     */
     chromosomeField?: string;
+
+    /**
+     * Specify the name of genomic data fields.
+     */
     genomicFields?: string[];
+
+    /**
+     * Specify the number of rows loaded from the URL.
+     *
+     * __Default:__ `1000`
+     */
     sampleLength?: number; // This limit the total number of rows fetched (default: 1000)
 
-    // !!! below is experimental
+    /**
+     * Specify the names of data fields if a CSV file is headerless.
+     */
     headerNames?: string[];
+
+    /**
+     * experimental
+     */
     chromosomePrefix?: string;
+
+    /**
+     * experimental
+     */
     longToWideId?: string;
+
+    /**
+     * experimental
+     */
     genomicFieldsToConvert?: {
         chromosomeField: string;
         genomicFields: string[];
     }[];
 }
 
+/**
+ * Two-dimensional quantitative values,
+ * one axis for genomic coordinate and the other for different samples, can be converted into HiGlass' `"multivec"` data.
+ * For example, multiple BigWig files can be converted into a single multivec file.
+ * You can also convert sequence data (FASTA) into this format where rows will be different nucleotide bases (e.g., A, T, G, C)
+ * and quantitative values represent the frequency. Find out more about this format at [HiGlass Docs](https://docs.higlass.io/data_preparation.html#multivec-files).
+ */
 export interface MultivecData {
     type: 'multivec';
+
+    /**
+     * Specify the URL address of the data file.
+     */
     url: string;
+
+    /**
+     * Assign a field name of the middle position of genomic intervals.
+     */
     column: string;
+
+    /**
+     * Assign a field name of samples.
+     */
     row: string;
+
+    /**
+     * Assign a field name of quantitative values.
+     */
     value: string;
+
+    /**
+     *  assign names of individual samples.
+     */
     categories?: string[];
+
+    /**
+     * Assign a field name of the start position of genomic intervals.
+     */
     start?: string;
+
+    /**
+     * Assign a field name of the end position of genomic intervals.
+     */
     end?: string;
-    binSize?: number; // Binning the genomic interval in tiles (unit size: 256)
+
+    /**
+     * Binning the genomic interval in tiles (unit size: 256).
+     */
+    binSize?: number;
 }
 
 export interface BIGWIGData {
     type: 'bigwig';
+
+    /**
+     * Specify the URL address of the data file.
+     */
     url: string;
+
+    /**
+     * Assign a field name of the middle position of genomic intervals.
+     */
     column: string;
+
+    /**
+     * Assign a field name of quantitative values.
+     */
     value: string;
+    /**
+     * Assign a field name of the start position of genomic intervals.
+     */
     start?: string;
+
+    /**
+     * Assign a field name of the end position of genomic intervals.
+     */
     end?: string;
-    binSize?: number; // Binning the genomic interval in tiles (unit size: 256)
+
+    /**
+     * Binning the genomic interval in tiles (unit size: 256).
+     */
+    binSize?: number;
 }
+
+/**
+ * One-dimensional quantitative values along genomic position (e.g., bigwig) can be converted into HiGlass' `"vector"` format data.
+ * Find out more about this format at [HiGlass Docs](https://docs.higlass.io/data_preparation.html#bigwig-files).
+ */
 
 export interface VectorData {
     type: 'vector';
+    /**
+     * Specify the URL address of the data file.
+     */
     url: string;
+
+    /** Assign a field name of the middle position of genomic intervals. */
     column: string;
+
+    /** Assign a field name of quantitative values. */
     value: string;
+
+    /** Assign a field name of the start position of genomic intervals. */
     start?: string;
+
+    /** Assign a field name of the end position of genomic intervals. */
     end?: string;
-    binSize?: number; // Binning the genomic interval in tiles (unit size: 256)
+
+    /** Binning the genomic interval in tiles (unit size: 256). */
+    binSize?: number;
 }
 
+/**
+ * Regular BED or similar files can be pre-aggregated for the scalable data exploration.
+ * Find our more about this format at [HiGlass Docs](https://docs.higlass.io/data_preparation.html#bed-files).
+ */
 export interface BEDDBData {
     type: 'beddb';
+    /** Specify the URL address of the data file. */
     url: string;
+
+    /** Specify the name of genomic data fields. */
     genomicFields: { index: number; name: string }[];
+
+    /** Specify the column indexes, field names, and field types. */
     valueFields?: { index: number; name: string; type: 'nominal' | 'quantitative' }[];
+
     // this is a somewhat arbitrary option for reading gene annotation datasets
     // should be multi-value fields (e.g., "1,2,3")
+    /** experimental */
     exonIntervalFields?: [{ index: number; name: string }, { index: number; name: string }];
 }
 
+/**
+ * Binary Alignment Map (BAM) is the comprehensive raw data of genome sequencing;
+ * it consists of the lossless, compressed binary representation of the Sequence Alignment Map-files.
+ */
 export interface BAMData {
     type: 'bam';
+
+    /** URL link to the BAM data file */
     url: string;
+
+    /** URL link to the index file of the BAM file */
     indexUrl: string;
+    loadMates?: boolean; // load mates as well?
+    maxInsertSize?: number; // default 50,000bp, only applied for across-chr, JBrowse https://github.com/GMOD/bam-js#async-getrecordsforrangerefname-start-end-opts
 }
 
-/* ----------------------------- DATA TRANSFORM ----------------------------- */
 export interface MatrixData {
     type: 'matrix';
     url: string;
 }
+
+/* ----------------------------- DATA TRANSFORM ----------------------------- */
 
 export type DataTransform =
     | FilterTransform
@@ -453,38 +855,47 @@ export type DataTransform =
     | LogTransform
     | DisplaceTransform
     | ExonSplitTransform
+    | GenomicLengthTransform
     | CoverageTransform
+    | CombineMatesTransform
     | JSONParseTransform;
 
 export type FilterTransform = OneOfFilter | RangeFilter | IncludeFilter;
 
-export interface RangeFilter {
+interface CommonFilterTransform {
     type: 'filter';
+    /** A filter is applied based on the values of the specified data field */
     field: string;
+    /**
+     * when `{"not": true}`, apply a NOT logical operation to the filter.
+     *
+     * __Default:__ false */
+    not?: boolean;
+}
+
+export interface RangeFilter extends CommonFilterTransform {
+    /** Check whether the value is in a number range. */
     inRange: number[];
-    not?: boolean;
 }
 
-export interface IncludeFilter {
-    type: 'filter';
-    field: string;
+export interface IncludeFilter extends CommonFilterTransform {
+    /** Check whether the value includes a substring. */
     include: string;
-    not?: boolean;
 }
 
-export interface OneOfFilter {
-    type: 'filter';
-    field: string;
+export interface OneOfFilter extends CommonFilterTransform {
+    /** Check whether the value is an element in the provided list. */
     oneOf: string[] | number[];
-    not?: boolean;
 }
 
 export type LogBase = number | 'e';
 export interface LogTransform {
     type: 'log';
     field: string;
-    base?: LogBase; // If not specified, 10 is used
-    newField?: string; // If specified, store transformed values in a new field.
+    /** If not specified, 10 is used. */
+    base?: LogBase;
+    /** If specified, store transformed values in a new field. */
+    newField?: string;
 }
 
 export interface StrConcatTransform {
@@ -505,17 +916,27 @@ export interface DisplaceTransform {
     type: 'displace';
     // We could support different types of bounding boxes (e.g., using a center position and a size)
     boundingBox: {
-        startField: string; // The name of a quantitative field that represents the start position
-        endField: string; // The name of a quantitative field that represents the end position
-        padding?: number; // The padding around visual lements. Either px or bp
-        isPaddingBP?: boolean; // whether to consider `padding` as the bp length.
-        groupField?: string; // The name of a nominal field to group rows by in prior to piling-up
+        /** The name of a quantitative field that represents the start position. */
+        startField: string;
+
+        /** The name of a quantitative field that represents the end position. */
+        endField: string;
+
+        /** The padding around visual lements. Either px or bp */
+        padding?: number;
+
+        /** Whether to consider `padding` as the bp length. */
+        isPaddingBP?: boolean;
+
+        /** The name of a nominal field to group rows by in prior to piling-up. */
+        groupField?: string;
     };
+    /** A string that specifies the type of diseplancement.  */
     method: DisplacementType;
     newField: string;
 
-    // "pile" specific parameters (TODO: make this a separate interface)
-    maxRows?: number; // Specify maximum rows to be generated (default: `undefined` meaning no limit)
+    /** Specify maximum rows to be generated (default has no limit). */
+    maxRows?: number;
 }
 
 export interface ExonSplitTransform {
@@ -526,6 +947,16 @@ export interface ExonSplitTransform {
 }
 
 /**
+ * Calculate genomic length using two genomic fields
+ */
+export interface GenomicLengthTransform {
+    type: 'genomicLength';
+    startField: string;
+    endField: string;
+    newField: string;
+}
+
+/**
  * Aggregate rows and calculate coverage
  */
 export interface CoverageTransform {
@@ -533,7 +964,20 @@ export interface CoverageTransform {
     startField: string;
     endField: string;
     newField?: string;
-    groupField?: string; // The name of a nominal field to group rows by in prior to piling-up
+    /** The name of a nominal field to group rows by in prior to piling-up */
+    groupField?: string;
+}
+
+/**
+ * By looking up ids, combine mates (a pair of reads) into a single row, performing long-to-wide operation.
+ * Result data have `{field}` and `{field}_2` names.
+ */
+export interface CombineMatesTransform {
+    type: 'combineMates';
+    idField: string;
+    isLongField?: string; // is this pair long reads, exceeding max insert size? default, `is_long`
+    maxInsertSize?: number; // thresold to determine long reads, default 360
+    maintainDuplicates?: boolean; // do not want to remove duplicated row? If true, the original reads will be contained in `{field}`
 }
 
 /**
@@ -541,16 +985,20 @@ export interface CoverageTransform {
  */
 export interface JSONParseTransform {
     type: 'subjson';
-    field: string; // The field that contains the JSON object array
-    baseGenomicField: string; // Base genomic position when parsing relative position
-    genomicField: string; // Relative genomic position to parse
-    genomicLengthField: string; // Length of genomic interval
+    /** The field that contains the JSON object array. */
+    field: string;
+    /** Base genomic position when parsing relative position. */
+    baseGenomicField: string;
+    /** Relative genomic position to parse. */
+    genomicField: string;
+    /** Length of genomic interval. */
+    genomicLengthField: string;
 }
 
 /* ----------------------------- Templates ----------------------------- */
 
 /**
- * Template specification that will be internally converted into `SingleTrack` for rendering
+ * Template specification that will be internally converted into `SingleTrack` for rendering.
  */
 export interface TemplateTrack extends CommonRequiredTrackDef, CommonTrackDef {
     // Template name (e.g., 'gene')
@@ -569,7 +1017,7 @@ export interface TemplateTrack extends CommonRequiredTrackDef, CommonTrackDef {
 }
 
 /**
- * Definition of Track Templates
+ * Definition of Track Templates.
  */
 export interface TemplateTrackDef {
     name: string;

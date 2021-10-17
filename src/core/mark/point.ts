@@ -20,8 +20,7 @@ export function drawPoint(trackInfo: any, g: PIXI.Graphics, model: GoslingTrackM
     const data = model.data();
 
     /* track size */
-    const trackWidth = spec.width;
-    const trackHeight = spec.height;
+    const [trackWidth, trackHeight] = trackInfo.dimensions;
     const zoomLevel =
         (model.getChannelScale('x') as any).invert(trackWidth) - (model.getChannelScale('x') as any).invert(0);
 

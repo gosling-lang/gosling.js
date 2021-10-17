@@ -1,8 +1,8 @@
 // This plugin track is based on higlass/HorizontalChromosomeLabels
 // https://github.com/higlass/higlass/blob/83dc4fddb33582ef3c26b608c04a81e8f33c7f5f/app/scripts/HorizontalChromosomeLabels.js
 
-// @ts-ignore
-import boxIntersect from 'box-intersect';
+import type * as PIXI from 'pixi.js';
+import RBush from 'rbush';
 import { scaleLinear } from 'd3-scale';
 import { format, precisionPrefix, formatPrefix } from 'd3-format';
 import { GET_CHROM_SIZES } from '../core/utils/assembly';
@@ -14,6 +14,12 @@ const TICK_HEIGHT = 6;
 const TICK_TEXT_SEPARATION = 2;
 const TICK_COLOR = 0x777777;
 
+type TickLabelInfo = {
+    importance: number;
+    text: PIXI.Text;
+    rope: PIXI.SimpleRope;
+};
+
 function AxisTrack(HGC: any, ...args: any[]): any {
     if (!new.target) {
         throw new Error('Uncaught TypeError: Class constructor cannot be invoked without "new"');
@@ -22,6 +28,8 @@ function AxisTrack(HGC: any, ...args: any[]): any {
     const { absToChr, colorToHex, pixiTextToSvg, showMousePosition, svgLine } = HGC.utils;
 
     class AxisTrackClass extends HGC.tracks.PixiTrack {
+        allTexts: TickLabelInfo[];
+
         constructor(params: any[]) {
             super(...params); // context, options
             const [context, options] = params;
@@ -30,6 +38,8 @@ function AxisTrack(HGC: any, ...args: any[]): any {
             this.searchField = null;
             this.chromInfo = null;
             this.dataConfig = dataConfig;
+
+            this.allTexts = [];
 
             this.pTicksCircular = new HGC.libraries.PIXI.Graphics();
             this.pTicks = new HGC.libraries.PIXI.Graphics();
@@ -161,8 +171,7 @@ function AxisTrack(HGC: any, ...args: any[]): any {
 
                 const text = new HGC.libraries.PIXI.Text(chromName, this.pixiTextConfig);
 
-                // give each string a random hash so that some get hidden
-                // when there's overlaps
+                // give each string a random hash so that some get hidden when there's overlaps
                 text.hashValue = Math.random();
 
                 this.pTicks.addChild(text);
@@ -266,11 +275,17 @@ function AxisTrack(HGC: any, ...args: any[]): any {
             this.leftBoundTick.y = this.options.reverseOrientation
                 ? lineYEnd + this.tickTextSeparation
                 : lineYEnd - this.tickTextSeparation;
-            this.leftBoundTick.text = `${x1[0]}: ${this.formatTick(x1[1])}`;
+            this.leftBoundTick.text =
+                this.options.assembly === 'unknown'
+                    ? `${this.formatTick(x1[1])}`
+                    : `${x1[0]}: ${this.formatTick(x1[1])}`;
             this.leftBoundTick.anchor.y = this.options.reverseOrientation ? 0 : 1;
 
             this.rightBoundTick.x = this.dimensions[0];
-            this.rightBoundTick.text = `${x2[0]}: ${this.formatTick(x2[1])}`;
+            this.rightBoundTick.text =
+                this.options.assembly === 'unknown'
+                    ? `${this.formatTick(x2[1])}`
+                    : `${x2[0]}: ${this.formatTick(x2[1])}`;
             this.rightBoundTick.y = this.options.reverseOrientation
                 ? lineYEnd + this.tickTextSeparation
                 : lineYEnd - this.tickTextSeparation;
@@ -361,7 +376,8 @@ function AxisTrack(HGC: any, ...args: any[]): any {
 
                 if (this.flipText) tickTexts[i].scale.x = -1;
 
-                tickTexts[i].text = ticks[i] === 0 ? `${cumPos.chr}: 1` : `${cumPos.chr}: ${this.formatTick(ticks[i])}`;
+                const chrText = this.options.assembly === 'unknown' ? '' : `${cumPos.chr}: `;
+                tickTexts[i].text = ticks[i] === 0 ? `${chrText}1` : `${chrText}${this.formatTick(ticks[i])}`;
 
                 const x = this._xScale(cumPos.pos + ticks[i]);
 
@@ -540,7 +556,6 @@ function AxisTrack(HGC: any, ...args: any[]): any {
                 this.allTexts.push({
                     importance: chrText.hashValue,
                     text: chrText,
-                    caption: null,
                     rope
                 });
             }
@@ -550,30 +565,33 @@ function AxisTrack(HGC: any, ...args: any[]): any {
             this.hideOverlaps(this.allTexts);
         }
 
-        hideOverlaps(allTexts: any) {
-            let allBoxes = []; // store the bounding boxes of the text objects so we can calculate overlaps
-            allBoxes = allTexts.map(({ text }: any) => {
-                text.updateTransform();
-                const b = text.getBounds();
-                const m = 5;
-                const box = [b.x - m, b.y - m, b.x + b.width + m * 2, b.y + b.height + m * 2];
+        hideOverlaps(allTexts: TickLabelInfo[]) {
+            const tree = new RBush<{ minX: number; minY: number; maxX: number; maxY: number }>();
 
-                return box;
-            });
-
-            boxIntersect(allBoxes, (i: number, j: number) => {
-                if (allTexts[i].importance > allTexts[j].importance) {
-                    allTexts[j].text.visible = false;
-                    if (this.options.layout === 'circular' && allTexts[j].rope) {
-                        this.pTicksCircular.removeChild(allTexts[j].rope);
+            // using bounding boxes of the text objects, calculate overlaps
+            allTexts
+                .sort((a, b) => b.importance - a.importance)
+                .forEach(({ text, rope }: any) => {
+                    text.updateTransform();
+                    const b = text.getBounds();
+                    const m = 5;
+                    const boxWithMargin = {
+                        minX: b.x - m,
+                        minY: b.y - m,
+                        maxX: b.x + b.width + m * 2,
+                        maxY: b.y + b.height + m * 2
+                    };
+                    if (!tree.collides(boxWithMargin)) {
+                        // if not overlapping, add a new boundingbox
+                        tree.insert(boxWithMargin);
+                    } else {
+                        // if overlapping, hide text labels
+                        text.visible = false;
+                        if (this.options.layout === 'circular' && rope) {
+                            this.pTicksCircular.removeChild(rope);
+                        }
                     }
-                } else {
-                    allTexts[i].text.visible = false;
-                    if (this.options.layout === 'circular' && allTexts[i].rope) {
-                        this.pTicksCircular.removeChild(allTexts[i].rope);
-                    }
-                }
-            });
+                });
         }
 
         setPosition(newPosition: [number, number]) {
