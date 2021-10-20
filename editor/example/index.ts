@@ -112,8 +112,7 @@ export const examples: ReadonlyArray<{
     {
         name: 'Rotated Matrix (Hi-C)',
         id: '1D_MATRIX',
-        spec: EX_SPEC_1D_MATRIX,
-        forceShow: true
+        spec: EX_SPEC_1D_MATRIX
     },
     {
         name: 'Comparative Matrices (Micro-C vs. Hi-C)',

@@ -180,7 +180,7 @@ export const EX_SPEC_NATIVE_MATRIX: GoslingSpec = {
                     ]
                 },
                 {
-                    xDomain: { chromosome: '1', interval: [4900000, 5200000] },
+                    xDomain: { chromosome: '1' }, //, interval: [4900000, 5200000] },
                     tracks: [
                         {
                             data: {

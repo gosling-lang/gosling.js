@@ -707,7 +707,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
 
                 // TODO: `binsPerTile` is 1024, but somehow 256 works.
                 // So, 4 is additionally divided as workaround.
-                if (Is1DMatrix(this.options.spec)) {
+                if (this.options.spec.data.type === 'matrix') {
                     tileX = (tileWidth * xTilePos) / 4;
                     tileY = (tileHeight * yTilePos) / 4;
                 }
