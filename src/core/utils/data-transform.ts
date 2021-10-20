@@ -13,7 +13,8 @@ import {
     CoverageTransform,
     CombineMatesTransform,
     DisplaceTransform,
-    JSONParseTransform
+    JSONParseTransform,
+    MatrixRotateTransform
 } from '../gosling.schema';
 import {
     getChannelKeysByAggregateFnc,
@@ -100,6 +101,50 @@ export function calculateData(log: LogTransform, data: Datum[]): Datum[] {
             }
         }
         return d;
+    });
+    return output;
+}
+
+/**
+ *
+ */
+export function rotateMatrix(
+    _: MatrixRotateTransform,
+    data: Datum[],
+    xScale: ScaleLinear<any, any>,
+    trackHeight: number
+): Datum[] {
+    const { startField1, endField1, startField2, endField2 } = _;
+
+    const output: Datum[] = [];
+
+    Array.from(data).forEach(d => {
+        if (+d[startField1] >= +d[startField2]) {
+            // Only a single side (right-top) along the diagonal is needed.
+            return;
+        }
+
+        const unitGenomicLen = Math.abs(+d[startField1] - +d[endField1]) * 0.5;
+        const unitSize = Math.abs(xScale(+d[startField1]) - xScale(+d[endField1]));
+        const newStartX = (+d[startField1] + +d[startField2]) / 2.0 - unitGenomicLen / 2.0;
+        const newEndX = newStartX + unitGenomicLen * 2;
+        const newStartY = Math.abs(xScale(+d[startField1]) - xScale(+d[startField2])) - unitSize / 2.0;
+        const newEndY = newStartY + unitSize * 2.0;
+
+        if (newStartY > trackHeight || newEndY > trackHeight) {
+            // We do not need data that exceed the visible height
+            return;
+        }
+
+        d[`${startField1}`] = newStartX;
+        d[`${endField1}`] = newEndX;
+        d[`${startField2}`] = newStartY;
+        d[`${endField2}`] = newEndY;
+
+        /// DEBUG
+        // console.log(d);
+
+        output.push(d);
     });
     return output;
 }

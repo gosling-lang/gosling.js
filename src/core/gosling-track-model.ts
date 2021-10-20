@@ -30,10 +30,12 @@ import {
     IsStackedChannel,
     IsDomainArray,
     PREDEFINED_COLOR_STR_MAP,
-    IsRangeArray
+    IsRangeArray,
+    Is1DMatrix
 } from './gosling.schema.guards';
 import { CHANNEL_DEFAULTS } from './channel';
 import { CompleteThemeDeep } from './utils/theme';
+import { diamondProperty } from './mark/diamond';
 
 export type ScaleType =
     | ScaleLinear<any, any>
@@ -240,9 +242,7 @@ export class GoslingTrackModel {
      */
     public encodedValue(channelKey: keyof typeof ChannelTypes, value?: number | string) {
         if (channelKey === 'text' && value !== undefined) {
-            return `${+value ? ~~value : value}`;
-            // TODO: Better formatting?
-            // return `${+value ? (+value - ~~value) > 0 ? (+value).toExponential(1) : ~~value : value}`;
+            return `${+value ? (+value - ~~value > 0 ? (+value).toExponential(1) : ~~value) : value}`;
         }
 
         const channel = this.spec()[channelKey];
@@ -272,6 +272,7 @@ export class GoslingTrackModel {
             return undefined;
         }
 
+        // TODO: for the performance, remove `as` part.
         // The type of a channel scale is determined by a { channel type, field type } pair
         switch (channelKey) {
             case 'x':
@@ -470,6 +471,8 @@ export class GoslingTrackModel {
                 return pointProperty(this, propertyKey, datum);
             case 'rect':
                 return rectProperty(this, propertyKey, datum, additionalInfo);
+            case 'diamond':
+                return diamondProperty(this, propertyKey, datum, additionalInfo);
             default:
                 // Mark type that is not supported yet
                 return undefined;
@@ -574,6 +577,7 @@ export class GoslingTrackModel {
                             if (spec.mark === 'line') value = this.theme.line.size;
                             else if (spec.mark === 'bar') value = undefined;
                             else if (spec.mark === 'rect') value = undefined;
+                            else if (spec.mark === 'diamond') value = undefined;
                             else if (spec.mark === 'triangleRight') value = undefined;
                             else if (spec.mark === 'triangleLeft') value = undefined;
                             else if (spec.mark === 'triangleBottom') value = undefined;
@@ -620,11 +624,26 @@ export class GoslingTrackModel {
                     }
                 } else if (IsChannelDeep(channel) && (channel.type === 'quantitative' || channel.type === 'genomic')) {
                     if (channel.domain === undefined) {
-                        const min =
-                            'zeroBaseline' in channel && channel.zeroBaseline
-                                ? 0
-                                : (d3min(data.map(d => +d[channel.field as string]) as number[]) as number) ?? 0;
-                        const max = (d3max(data.map(d => +d[channel.field as string]) as number[]) as number) ?? 0;
+                        let min = channel.zeroBaseline
+                            ? 0
+                            : (d3min(data.map(d => +d[channel.field as string]) as number[]) as number) ?? 0;
+                        let max = (d3max(data.map(d => +d[channel.field as string]) as number[]) as number) ?? 0;
+                        if (
+                            Is1DMatrix(spec) &&
+                            (channelKey === 'y' || channelKey === 'ye') &&
+                            spec.mark === 'diamond'
+                        ) {
+                            // we want to remove a half of unit size for diamond so that zig-zag patterns are not visible at y extent
+                            if (
+                                data.length !== 0 &&
+                                typeof data[0].ye !== 'undefined' &&
+                                typeof data[0].ys !== 'undefined'
+                            ) {
+                                const unitHeight = Math.abs((data[0].ye as number) - (data[0].ys as number));
+                                min += unitHeight / 2.0;
+                                max -= unitHeight / 2.0;
+                            }
+                        }
                         channel.domain = [min, max]; // TODO: what if data ranges in negative values
                     } else if (channel.type === 'genomic' && !IsDomainArray(channel.domain)) {
                         channel.domain = getNumericDomain(channel.domain);

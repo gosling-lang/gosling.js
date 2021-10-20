@@ -6,7 +6,7 @@ import { Track, Domain } from './gosling.schema';
 import { BoundingBox, RelativePosition } from './utils/bounding-box';
 import { resolveSuperposedTracks } from './utils/overlay';
 import { getGenomicChannelKeyFromTrack, getGenomicChannelFromTrack } from './utils/validate';
-import { viridisColorMap } from './utils/colors';
+// import { viridisColorMap } from './utils/colors';
 import { IsDataDeep, IsChannelDeep, IsDataDeepTileset, Is2DTrack, IsXAxis } from './gosling.schema.guards';
 import { DEWFAULT_TITLE_PADDING_ON_TOP_AND_BOTTOM } from './layout/defaults';
 import { CompleteThemeDeep } from './utils/theme';
@@ -115,19 +115,6 @@ export function goslingToHiGlass(
                 // Add a data transformation spec so that the fetcher can properly sample datasets
                 // filter: (firstResolvedSpec as any).dataTransform?.filter((f: DataTransform) => f.type === 'filter')
             };
-        }
-
-        const isMatrix = firstResolvedSpec.data?.type === 'matrix';
-        if (isMatrix) {
-            // Use HiGlass' heatmap track for matrix data
-            hgTrack.type = 'heatmap';
-            hgTrack.options.colorRange =
-                (firstResolvedSpec as any)?.color.range === 'warm'
-                    ? ['white', 'rgba(245,166,35,1.0)', 'rgba(208,2,27,1.0)', 'black']
-                    : viridisColorMap;
-            hgTrack.options.trackBorderWidth = 1;
-            hgTrack.options.trackBorderColor = 'black';
-            hgTrack.options.colorbarPosition = (firstResolvedSpec.color as any)?.legend ? 'topRight' : 'hidden';
         }
 
         if (firstResolvedSpec.overlayOnPreviousTrack) {

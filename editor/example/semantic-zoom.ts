@@ -43,7 +43,7 @@ const ScalableSequenceTrack: OverlaidTracks = {
                 {
                     operation: 'LT',
                     measure: 'zoomLevel',
-                    threshold: 10,
+                    threshold: 40,
                     target: 'track'
                 }
             ]

@@ -181,6 +181,7 @@ export type MarkType =
     | 'triangleLeft'
     | 'triangleRight'
     | 'triangleBottom'
+    | 'diamond'
     // experimental
     | 'brush'
     // TODO: perhaps need to make this invisible to users
@@ -743,6 +744,17 @@ export interface MultivecData {
     binSize?: number;
 }
 
+export interface MatrixData {
+    type: 'matrix';
+    url: string;
+    column?: string;
+    row?: string;
+    value?: string;
+    start?: string;
+    end?: string;
+    binSize?: number; // Binning the genomic interval in tiles (unit size: 256)
+}
+
 export interface BIGWIGData {
     type: 'bigwig';
 
@@ -858,7 +870,8 @@ export type DataTransform =
     | GenomicLengthTransform
     | CoverageTransform
     | CombineMatesTransform
-    | JSONParseTransform;
+    | JSONParseTransform
+    | MatrixRotateTransform;
 
 export type FilterTransform = OneOfFilter | RangeFilter | IncludeFilter;
 
@@ -993,6 +1006,34 @@ export interface JSONParseTransform {
     genomicField: string;
     /** Length of genomic interval. */
     genomicLengthField: string;
+}
+
+/**
+ * Rotate Matrix by 45 deg, anti-clockwise. Four genomic fields that represent the start and end positions along two genomic axes
+ * are converted to four positions, two x positions and two y positions.
+ */
+export interface MatrixRotateTransform {
+    type: 'rotateMatrix';
+
+    /**
+     * Data field that represents the start position of the first genomic axis.
+     */
+    startField1: string;
+
+    /**
+     * Data field that represents the end position of the first genomic axis.
+     */
+    endField1: string;
+
+    /**
+     * Data field that represents the start position of the second genomic axis.
+     */
+    startField2: string;
+
+    /**
+     * Data field that represents the end position of the second genomic axis.
+     */
+    endField2: string;
 }
 
 /* ----------------------------- Templates ----------------------------- */

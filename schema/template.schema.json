@@ -225,6 +225,14 @@
         "endField": {
           "type": "string"
         },
+        "endField1": {
+          "description": "Data field that represents the end position of the first genomic axis.",
+          "type": "string"
+        },
+        "endField2": {
+          "description": "Data field that represents the end position of the second genomic axis.",
+          "type": "string"
+        },
         "field": {
           "description": "A filter is applied based on the values of the specified data field",
           "type": "string"
@@ -377,6 +385,14 @@
         "startField": {
           "type": "string"
         },
+        "startField1": {
+          "description": "Data field that represents the start position of the first genomic axis.",
+          "type": "string"
+        },
+        "startField2": {
+          "description": "Data field that represents the start position of the second genomic axis.",
+          "type": "string"
+        },
         "type": {
           "enum": [
             "filter",
@@ -388,7 +404,8 @@
             "genomicLength",
             "coverage",
             "combineMates",
-            "subjson"
+            "subjson",
+            "rotateMatrix"
           ],
           "type": "string"
         }
@@ -929,6 +946,7 @@
         "triangleLeft",
         "triangleRight",
         "triangleBottom",
+        "diamond",
         "brush",
         "header"
       ],

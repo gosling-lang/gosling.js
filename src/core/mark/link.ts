@@ -206,6 +206,9 @@ export function drawLink(g: PIXI.Graphics, trackInfo: any, model: GoslingTrackMo
             } else {
                 /* Line Connection */
 
+                // Must not fill color for `line`, just use `stroke`
+                g.beginFill(colorToHex('white'), 0);
+
                 // Experimental
                 if (Is2DTrack(spec) && spec.mark === 'betweenLink') {
                     if (spec.style?.linkConnectionType === 'curve') {
@@ -283,9 +286,6 @@ export function drawLink(g: PIXI.Graphics, trackInfo: any, model: GoslingTrackMo
                 }
 
                 const midX = (x + xe) / 2.0;
-
-                // Must not fill color for `line`, just use `stroke`
-                g.beginFill(colorToHex('white'), 0);
 
                 if (circular) {
                     if (x < 0 || xe > trackWidth) {
