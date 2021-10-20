@@ -117,7 +117,7 @@ export function spreadTracksByData(tracks: Track[]): Track[] {
                 if (track.title && i !== arr.length - 1 && arr.length !== 1) {
                     delete track.title; // remove `title` except the last one
                 }
-                return { ...track, overlayOnPreviousTrack, y };
+                return { ...track, overlayOnPreviousTrack, y } as Track;
             });
         })
     );
