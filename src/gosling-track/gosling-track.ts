@@ -702,9 +702,15 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                 const tileWidth = chosenResolution * binsPerTile;
                 const tileHeight = tileWidth;
 
-                // TODO: `binsPerTile` is 1024, but somehow 256 works. So, 4 is additionally divided as workaround.
-                const tileX = (tileWidth * xTilePos) / 4;
-                const tileY = (tileHeight * yTilePos) / 4;
+                let tileX = chosenResolution * binsPerTile * xTilePos;
+                let tileY = chosenResolution * binsPerTile * yTilePos;
+
+                // TODO: `binsPerTile` is 1024, but somehow 256 works.
+                // So, 4 is additionally divided as workaround.
+                if (Is1DMatrix(this.options.spec)) {
+                    tileX = (tileWidth * xTilePos) / 4;
+                    tileY = (tileHeight * yTilePos) / 4;
+                }
 
                 return {
                     tileX,
