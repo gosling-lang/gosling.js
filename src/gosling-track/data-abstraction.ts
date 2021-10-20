@@ -207,16 +207,15 @@ export function getTabularData(
         if (tileSize !== 256) {
             console.warn('The bin size of the matrix tilesets is not 256');
         }
-        // console.log(data);
+
         const { tileX, tileY } = data;
         const numericValues = data.dense;
-        // TODO: somehow, 1024 works
+
+        // TODO: Not sure why 1024 works instead of tileSize
         const tileXUnitSize = data.tileWidth / 1024; // tileSize / 4;
         const tileYUnitSize = data.tileHeight / 1024; // tileSize / 4;
 
-        // console.log(tileXUnitSize, tileYUnitSize, tileSize, data.tileWidth);
-
-        // For the rendering performance, we aggregate 16 cells into one.
+        // For the rendering performance, we aggregate multiple cells into one.
         const binSize = 16; // assuming that # of cells can be divided by binSize
         for (let i = 0; i < numericValues.length / binSize; i++) {
             const binLen = Math.sqrt(binSize);
@@ -235,7 +234,9 @@ export function getTabularData(
             }
 
             value /= binSize;
-            value = Math.log(value); // TODO: just to see the pattern more clearly
+
+            // TODO: just to see the pattern more clearly. support `log` scale.
+            value = Math.log(value);
 
             if (isNaN(value)) {
                 // if this is NaN, skip.
