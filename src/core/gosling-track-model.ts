@@ -635,9 +635,17 @@ export class GoslingTrackModel {
                             ? 0
                             : (d3min(data.map(d => +d[channel.field as string]) as number[]) as number) ?? 0;
                         let max = (d3max(data.map(d => +d[channel.field as string]) as number[]) as number) ?? 0;
-                        if (Is1DMatrix(spec) && channelKey.includes('y') && spec.mark === 'diamond') {
+                        if (
+                            Is1DMatrix(spec) &&
+                            (channelKey === 'y' || channelKey === 'ye') &&
+                            spec.mark === 'diamond'
+                        ) {
                             // we want to remove a half of unit size for diamond so that zig-zag patterns are not visible at y extent
-                            if (data.length !== 0 && typeof data[0].ye !== 'undefined' && data[0].ys !== 'undefined') {
+                            if (
+                                data.length !== 0 &&
+                                typeof data[0].ye !== 'undefined' &&
+                                typeof data[0].ys !== 'undefined'
+                            ) {
                                 const unitHeight = Math.abs((data[0].ye as number) - (data[0].ys as number));
                                 min += unitHeight / 2.0;
                                 max -= unitHeight / 2.0;

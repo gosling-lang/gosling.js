@@ -123,7 +123,6 @@ export function drawDiamond(trackInfo: any, tile: any, model: GoslingTrackModel)
                     yTop
                 ]);
                 g.endFill();
-                // g.drawRect(xLeft, yTop, barWidth, yBottom - yTop);
 
                 /* Tooltip data */
                 // if (spec.tooltip) {

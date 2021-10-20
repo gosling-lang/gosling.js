@@ -105,12 +105,12 @@ export const examples: ReadonlyArray<{
         spec: EX_SPEC_GENE_ANNOTATION
     },
     {
-        name: 'Simple Matrix',
+        name: 'Matrix (Hi-C)',
         id: 'MATRIX',
         spec: EX_SPEC_NATIVE_MATRIX
     },
     {
-        name: 'Rotated Matrix',
+        name: 'Rotated Matrix (Hi-C)',
         id: '1D_MATRIX',
         spec: EX_SPEC_1D_MATRIX,
         forceShow: true
@@ -118,7 +118,8 @@ export const examples: ReadonlyArray<{
     {
         name: 'Comparative Matrices (Micro-C vs. Hi-C)',
         id: 'MATRIX_HFFC6',
-        spec: EX_SPEC_MATRIX_HFFC6
+        spec: EX_SPEC_MATRIX_HFFC6,
+        hidden: true
     },
     {
         name: 'Circos',

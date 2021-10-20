@@ -242,7 +242,7 @@ export const EX_SPEC_MATRIX_HFFC6: GoslingSpec = {
                                         url: GOSLING_PUBLIC_DATA.matrixMicroC,
                                         type: 'matrix'
                                     },
-                                    mark: 'rect',
+                                    mark: 'bar',
                                     x: { field: 'xs', type: 'genomic', axis: 'none' },
                                     xe: { field: 'xe', type: 'genomic', axis: 'none' },
                                     y: { field: 'ys', type: 'genomic', axis: 'none' },
@@ -434,12 +434,12 @@ export const EX_SPEC_MATRIX_HFFC6: GoslingSpec = {
                                         url: GOSLING_PUBLIC_DATA.matrixHiC,
                                         type: 'matrix'
                                     },
-                                    mark: 'rect',
+                                    mark: 'bar',
                                     x: { field: 'xs', type: 'genomic', axis: 'none' },
                                     xe: { field: 'xe', type: 'genomic', axis: 'none' },
                                     y: { field: 'ys', type: 'genomic', axis: 'none' },
                                     ye: { field: 'ye', type: 'genomic', axis: 'none' },
-                                    color: { field: 'value', type: 'quantitative', range: 'grey', legend: true },
+                                    color: { field: 'value', type: 'quantitative', legend: true },
                                     width: 400,
                                     height: 400
                                 }

@@ -2,76 +2,254 @@ import type { GoslingSpec } from 'gosling.js';
 import { GOSLING_PUBLIC_DATA } from './gosling-data';
 
 export const EX_SPEC_NATIVE_MATRIX: GoslingSpec = {
+    linkingId: '-',
+    spacing: 0,
+    arrangement: 'horizontal',
     views: [
         {
-            xDomain: { chromosome: '1', interval: [4900000, 5200000] },
+            orientation: 'vertical',
+            yOffset: 70,
             tracks: [
                 {
-                    data: {
-                        url: GOSLING_PUBLIC_DATA.matrix,
-                        type: 'matrix'
-                    },
                     alignment: 'overlay',
                     tracks: [
                         {
+                            data: {
+                                url: 'https://s3.amazonaws.com/gosling-lang.org/data/HFFC6_CTCF.mRp.clN.bigWig',
+                                type: 'bigwig',
+                                column: 'position',
+                                value: 'peak',
+                                binSize: 8
+                            },
                             mark: 'bar',
-                            x: { field: 'xs', type: 'genomic', axis: 'top' },
-                            xe: { field: 'xe', type: 'genomic' },
-                            y: { field: 'ys', type: 'genomic', axis: 'right' }, // TODO: axis position
-                            ye: { field: 'ye', type: 'genomic' }, // TODO: axis position
-                            color: { field: 'value', type: 'quantitative', legend: true }
+                            x: { field: 'start', type: 'genomic' },
+                            xe: { field: 'end', type: 'genomic' },
+                            y: {
+                                field: 'peak',
+                                type: 'quantitative',
+                                axis: 'none'
+                            },
+                            color: { value: '#0072B2' }
                         },
                         {
-                            mark: 'betweenLink',
-                            // dataTransform: [
-                            //     {type: 'filter', field: 'value', oneOf: ['NaN', 0], not: true}
-                            // ],
-                            x: { field: 'x', type: 'genomic' },
-                            y: { field: 'y', type: 'genomic' },
-                            stroke: { value: 'lightgray' },
-                            visibility: [
-                                {
-                                    target: 'track',
-                                    measure: 'zoomLevel',
-                                    threshold: 500000,
-                                    operation: 'lt'
-                                }
-                            ]
-                        },
-                        {
-                            mark: 'text',
-                            text: { field: 'value', type: 'quantitative' },
-                            x: { field: 'xs', type: 'genomic', axis: 'top' },
-                            xe: { field: 'xe', type: 'genomic' },
-                            y: { field: 'y', type: 'genomic' },
-                            color: { value: 'black' },
-                            strokeWidth: { value: 2 },
+                            style: { backgroundOpacity: 0 },
+                            data: {
+                                url: 'https://server.gosling-lang.org/api/v1/tileset_info/?d=gene-annotation',
+                                type: 'beddb',
+                                genomicFields: [
+                                    { index: 1, name: 'start' },
+                                    { index: 2, name: 'end' }
+                                ],
+                                valueFields: [
+                                    { index: 5, name: 'strand', type: 'nominal' },
+                                    { index: 3, name: 'name', type: 'nominal' }
+                                ]
+                            },
+                            dataTransform: [{ type: 'filter', field: 'strand', oneOf: ['+'] }],
+                            mark: 'triangleRight',
+                            x: { field: 'start', type: 'genomic' },
+                            size: { value: 13 },
                             stroke: { value: 'white' },
-                            visibility: [
-                                {
-                                    target: 'track',
-                                    threshold: 100000,
-                                    measure: 'zoomLevel',
-                                    operation: 'LTET'
-                                },
-                                {
-                                    target: 'mark',
-                                    threshold: '|xe-x|',
-                                    measure: 'width',
-                                    transitionPadding: 10,
-                                    operation: 'LTET'
-                                }
-                            ]
+                            strokeWidth: { value: 1 },
+                            row: {
+                                field: 'strand',
+                                type: 'nominal',
+                                domain: ['+', '-']
+                            },
+                            color: { value: '#CB7AA7' }
+                        },
+                        {
+                            style: { backgroundOpacity: 0 },
+                            title: 'HFFC6_CTCF',
+                            data: {
+                                url: 'https://server.gosling-lang.org/api/v1/tileset_info/?d=gene-annotation',
+                                type: 'beddb',
+                                genomicFields: [
+                                    { index: 1, name: 'start' },
+                                    { index: 2, name: 'end' }
+                                ],
+                                valueFields: [
+                                    { index: 5, name: 'strand', type: 'nominal' },
+                                    { index: 3, name: 'name', type: 'nominal' }
+                                ]
+                            },
+                            dataTransform: [{ type: 'filter', field: 'strand', oneOf: ['-'] }],
+                            mark: 'triangleLeft',
+                            x: { field: 'start', type: 'genomic' },
+                            size: { value: 13 },
+                            stroke: { value: 'white' },
+                            strokeWidth: { value: 1 },
+                            row: {
+                                field: 'strand',
+                                type: 'nominal',
+                                domain: ['+', '-']
+                            },
+                            color: { value: '#029F73' }
                         }
                     ],
-                    width: 600,
-                    height: 600
+                    height: 630,
+                    width: 40
+                }
+            ]
+        },
+        {
+            arrangement: 'vertical',
+            views: [
+                {
+                    tracks: [
+                        {
+                            alignment: 'overlay',
+                            tracks: [
+                                {
+                                    data: {
+                                        url: 'https://s3.amazonaws.com/gosling-lang.org/data/HFFC6_CTCF.mRp.clN.bigWig',
+                                        type: 'bigwig',
+                                        column: 'position',
+                                        value: 'peak',
+                                        binSize: 8
+                                    },
+                                    mark: 'bar',
+                                    x: { field: 'start', type: 'genomic' },
+                                    xe: { field: 'end', type: 'genomic' },
+                                    y: {
+                                        field: 'peak',
+                                        type: 'quantitative',
+                                        axis: 'none'
+                                    },
+                                    color: { value: '#0072B2' }
+                                },
+                                {
+                                    style: { backgroundOpacity: 0 },
+                                    data: {
+                                        url: 'https://server.gosling-lang.org/api/v1/tileset_info/?d=gene-annotation',
+                                        type: 'beddb',
+                                        genomicFields: [
+                                            { index: 1, name: 'start' },
+                                            { index: 2, name: 'end' }
+                                        ],
+                                        valueFields: [
+                                            { index: 5, name: 'strand', type: 'nominal' },
+                                            { index: 3, name: 'name', type: 'nominal' }
+                                        ]
+                                    },
+                                    dataTransform: [{ type: 'filter', field: 'strand', oneOf: ['+'] }],
+                                    mark: 'triangleRight',
+                                    x: { field: 'start', type: 'genomic' },
+                                    size: { value: 13 },
+                                    stroke: { value: 'white' },
+                                    strokeWidth: { value: 1 },
+                                    row: {
+                                        field: 'strand',
+                                        type: 'nominal',
+                                        domain: ['+', '-']
+                                    },
+                                    color: { value: '#CB7AA7' }
+                                },
+                                {
+                                    style: { backgroundOpacity: 0 },
+                                    title: 'HFFC6_CTCF',
+                                    data: {
+                                        url: 'https://server.gosling-lang.org/api/v1/tileset_info/?d=gene-annotation',
+                                        type: 'beddb',
+                                        genomicFields: [
+                                            { index: 1, name: 'start' },
+                                            { index: 2, name: 'end' }
+                                        ],
+                                        valueFields: [
+                                            { index: 5, name: 'strand', type: 'nominal' },
+                                            { index: 3, name: 'name', type: 'nominal' }
+                                        ]
+                                    },
+                                    dataTransform: [{ type: 'filter', field: 'strand', oneOf: ['-'] }],
+                                    mark: 'triangleLeft',
+                                    x: { field: 'start', type: 'genomic' },
+                                    size: { value: 13 },
+                                    stroke: { value: 'white' },
+                                    strokeWidth: { value: 1 },
+                                    row: {
+                                        field: 'strand',
+                                        type: 'nominal',
+                                        domain: ['+', '-']
+                                    },
+                                    color: { value: '#029F73' }
+                                }
+                            ],
+                            height: 40,
+                            width: 600
+                        }
+                    ]
+                },
+                {
+                    xDomain: { chromosome: '1', interval: [4900000, 5200000] },
+                    tracks: [
+                        {
+                            data: {
+                                url: 'https://server.gosling-lang.org/api/v1/tileset_info/?d=leung2015-hg38',
+                                type: 'matrix'
+                            },
+                            alignment: 'overlay',
+                            tracks: [
+                                {
+                                    mark: 'bar',
+                                    x: { field: 'xs', type: 'genomic', axis: 'none' },
+                                    xe: { field: 'xe', type: 'genomic' },
+                                    y: { field: 'ys', type: 'genomic', axis: 'none' },
+                                    ye: { field: 'ye', type: 'genomic' },
+                                    color: {
+                                        field: 'value',
+                                        type: 'quantitative',
+                                        legend: true
+                                    }
+                                },
+                                {
+                                    mark: 'betweenLink',
+                                    x: { field: 'x', type: 'genomic' },
+                                    y: { field: 'y', type: 'genomic' },
+                                    stroke: { value: 'lightgray' },
+                                    visibility: [
+                                        {
+                                            target: 'track',
+                                            measure: 'zoomLevel',
+                                            threshold: 500000,
+                                            operation: 'lt'
+                                        }
+                                    ]
+                                },
+                                {
+                                    mark: 'text',
+                                    text: { field: 'value', type: 'quantitative' },
+                                    x: { field: 'xs', type: 'genomic' },
+                                    xe: { field: 'xe', type: 'genomic' },
+                                    y: { field: 'y', type: 'genomic' },
+                                    color: { value: 'black' },
+                                    strokeWidth: { value: 2 },
+                                    stroke: { value: 'white' },
+                                    visibility: [
+                                        {
+                                            target: 'track',
+                                            threshold: 100000,
+                                            measure: 'zoomLevel',
+                                            operation: 'LTET'
+                                        },
+                                        {
+                                            target: 'mark',
+                                            threshold: '|xe-x|',
+                                            measure: 'width',
+                                            transitionPadding: 10,
+                                            operation: 'LTET'
+                                        }
+                                    ]
+                                }
+                            ],
+                            width: 600,
+                            height: 600
+                        }
+                    ]
                 }
             ]
         }
     ]
 };
-
 export const EX_SPEC_1D_MATRIX: GoslingSpec = {
     views: [
         {
@@ -96,8 +274,189 @@ export const EX_SPEC_1D_MATRIX: GoslingSpec = {
                     mark: 'diamond',
                     x: { field: 'xs', type: 'genomic', axis: 'top' },
                     xe: { field: 'xe', type: 'genomic', axis: 'none' },
-                    y: { field: 'ys', type: 'quantitative', axis: 'none' },
-                    ye: { field: 'ye', type: 'quantitative', axis: 'none' },
+                    y: { field: 'ys', type: 'quantitative', axis: 'none', range: [-15, 200], zeroBaseline: false },
+                    ye: { field: 'ye', type: 'quantitative', axis: 'none', range: [-15, 200], zeroBaseline: false },
+                    color: { field: 'value', type: 'quantitative', legend: true },
+                    style: { background: '#F6F6F6', backgroundOpacity: 1 },
+                    width: 700,
+                    height: 200
+                },
+                {
+                    alignment: 'overlay',
+                    data: {
+                        url: 'https://server.gosling-lang.org/api/v1/tileset_info/?d=gene-annotation',
+                        type: 'beddb',
+                        genomicFields: [
+                            { index: 1, name: 'start' },
+                            { index: 2, name: 'end' }
+                        ],
+                        valueFields: [
+                            { index: 5, name: 'strand', type: 'nominal' },
+                            { index: 3, name: 'name', type: 'nominal' }
+                        ],
+                        exonIntervalFields: [
+                            { index: 12, name: 'start' },
+                            { index: 13, name: 'end' }
+                        ]
+                    },
+                    tracks: [
+                        {
+                            dataTransform: [
+                                { type: 'filter', field: 'type', oneOf: ['gene'] },
+                                { type: 'filter', field: 'strand', oneOf: ['+'] }
+                            ],
+                            mark: 'triangleRight',
+                            x: { field: 'end', type: 'genomic' },
+                            size: { value: 15 }
+                        },
+                        {
+                            dataTransform: [{ type: 'filter', field: 'type', oneOf: ['gene'] }],
+                            mark: 'text',
+                            text: { field: 'name', type: 'nominal' },
+                            x: { field: 'start', type: 'genomic' },
+                            xe: { field: 'end', type: 'genomic' },
+                            style: { dy: -15, outline: 'black', outlineWidth: 0 }
+                        },
+                        {
+                            dataTransform: [
+                                { type: 'filter', field: 'type', oneOf: ['gene'] },
+                                { type: 'filter', field: 'strand', oneOf: ['-'] }
+                            ],
+                            mark: 'triangleLeft',
+                            x: { field: 'start', type: 'genomic' },
+                            size: { value: 15 },
+                            style: {
+                                align: 'right',
+                                outline: 'black',
+                                outlineWidth: 0
+                            }
+                        },
+                        {
+                            dataTransform: [{ type: 'filter', field: 'type', oneOf: ['exon'] }],
+                            mark: 'rect',
+                            x: { field: 'start', type: 'genomic' },
+                            size: { value: 15 },
+                            xe: { field: 'end', type: 'genomic' }
+                        },
+                        {
+                            dataTransform: [
+                                { type: 'filter', field: 'type', oneOf: ['gene'] },
+                                { type: 'filter', field: 'strand', oneOf: ['+'] }
+                            ],
+                            mark: 'rule',
+                            x: { field: 'start', type: 'genomic' },
+                            strokeWidth: { value: 2 },
+                            xe: { field: 'end', type: 'genomic' },
+                            style: {
+                                linePattern: { type: 'triangleRight', size: 3.5 },
+                                outline: 'black',
+                                outlineWidth: 0
+                            }
+                        },
+                        {
+                            dataTransform: [
+                                { type: 'filter', field: 'type', oneOf: ['gene'] },
+                                { type: 'filter', field: 'strand', oneOf: ['-'] }
+                            ],
+                            mark: 'rule',
+                            x: { field: 'start', type: 'genomic' },
+                            strokeWidth: { value: 2 },
+                            xe: { field: 'end', type: 'genomic' },
+                            style: {
+                                linePattern: { type: 'triangleLeft', size: 3.5 },
+                                outline: 'black',
+                                outlineWidth: 0,
+                                background: '#F6F6F6'
+                            }
+                        }
+                    ],
+                    row: {
+                        field: 'strand',
+                        type: 'nominal',
+                        domain: ['+', '-']
+                    },
+                    color: {
+                        field: 'strand',
+                        type: 'nominal',
+                        domain: ['+', '-'],
+                        range: ['#97A8B2', '#D4C6BA']
+                    },
+                    visibility: [
+                        {
+                            operation: 'less-than',
+                            measure: 'width',
+                            threshold: '|xe-x|',
+                            transitionPadding: 10,
+                            target: 'mark'
+                        }
+                    ],
+                    width: 700,
+                    height: 100
+                },
+                {
+                    data: {
+                        url: 'https://s3.amazonaws.com/gosling-lang.org/data/cancer/rearrangement.PD35930a.csv',
+                        type: 'csv',
+                        genomicFieldsToConvert: [
+                            {
+                                chromosomeField: 'chr1',
+                                genomicFields: ['start1', 'end1']
+                            },
+                            {
+                                chromosomeField: 'chr2',
+                                genomicFields: ['start2', 'end2']
+                            }
+                        ]
+                    },
+                    dataTransform: [{ type: 'filter', field: 'svclass', oneOf: ['inversion'] }],
+                    mark: 'withinLink',
+                    x: { field: 'start1', type: 'genomic', axis: 'none' },
+                    xe: { field: 'end2', type: 'genomic' },
+                    color: {
+                        field: 'svclass',
+                        type: 'nominal',
+                        domain: ['tandem-duplication', 'translocation', 'delection', 'inversion'],
+                        range: ['#569C4D', '#4C75A2', '#DA5456', '#EA8A2A']
+                    },
+                    stroke: {
+                        field: 'svclass',
+                        type: 'nominal',
+                        domain: ['tandem-duplication', 'translocation', 'delection', 'inversion'],
+                        range: ['#569C4D', '#4C75A2', '#DA5456', '#EA8A2A']
+                    },
+                    strokeWidth: { value: 1 },
+                    opacity: { value: 0.6 },
+                    style: { bazierLink: true, outlineWidth: 0 },
+                    width: 700,
+                    height: 130
+                }
+            ]
+        },
+        {
+            layout: 'circular',
+            spacing: 0.1,
+            xDomain: { chromosome: '3' }, //"interval": [4900000, 5200000]},
+            // xDomain: { chromosome: '3', "interval": [100000000, 200000000]},
+            tracks: [
+                {
+                    data: {
+                        url: 'https://server.gosling-lang.org/api/v1/tileset_info/?d=leung2015-hg38',
+                        type: 'matrix'
+                    },
+                    dataTransform: [
+                        {
+                            type: 'rotateMatrix',
+                            startField1: 'xs',
+                            endField1: 'xe',
+                            startField2: 'ye',
+                            endField2: 'ys'
+                        }
+                    ],
+                    mark: 'diamond',
+                    x: { field: 'xs', type: 'genomic', axis: 'top' },
+                    xe: { field: 'xe', type: 'genomic', axis: 'none' },
+                    y: { field: 'ys', type: 'quantitative', axis: 'none', zeroBaseline: false },
+                    ye: { field: 'ye', type: 'quantitative', axis: 'none', zeroBaseline: false },
                     color: { field: 'value', type: 'quantitative', legend: true },
                     style: { background: '#F6F6F6', backgroundOpacity: 1 },
                     width: 700,
