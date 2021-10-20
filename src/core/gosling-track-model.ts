@@ -30,7 +30,8 @@ import {
     IsStackedChannel,
     IsDomainArray,
     PREDEFINED_COLOR_STR_MAP,
-    IsRangeArray
+    IsRangeArray,
+    Is1DMatrix
 } from './gosling.schema.guards';
 import { CHANNEL_DEFAULTS } from './channel';
 import { CompleteThemeDeep } from './utils/theme';
@@ -279,6 +280,7 @@ export class GoslingTrackModel {
             return undefined;
         }
 
+        // TODO: for the performance, remove `as` part.
         // The type of a channel scale is determined by a { channel type, field type } pair
         switch (channelKey) {
             case 'x':
@@ -629,10 +631,18 @@ export class GoslingTrackModel {
                     }
                 } else if (IsChannelDeep(channel) && (channel.type === 'quantitative' || channel.type === 'genomic')) {
                     if (channel.domain === undefined) {
-                        const min = channel.zeroBaseline
+                        let min = channel.zeroBaseline
                             ? 0
                             : (d3min(data.map(d => +d[channel.field as string]) as number[]) as number) ?? 0;
-                        const max = (d3max(data.map(d => +d[channel.field as string]) as number[]) as number) ?? 0;
+                        let max = (d3max(data.map(d => +d[channel.field as string]) as number[]) as number) ?? 0;
+                        if (Is1DMatrix(spec) && channelKey.includes('y') && spec.mark === 'diamond') {
+                            // we want to remove a half of unit size for diamond so that zig-zag patterns are not visible at y extent
+                            if (data.length !== 0 && typeof data[0].ye !== 'undefined' && data[0].ys !== 'undefined') {
+                                const unitHeight = Math.abs((data[0].ye as number) - (data[0].ys as number));
+                                min += unitHeight / 2.0;
+                                max -= unitHeight / 2.0;
+                            }
+                        }
                         channel.domain = [min, max]; // TODO: what if data ranges in negative values
                     } else if (channel.type === 'genomic' && !IsDomainArray(channel.domain)) {
                         channel.domain = getNumericDomain(channel.domain);
