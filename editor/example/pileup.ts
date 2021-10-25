@@ -41,7 +41,7 @@ export function EX_SPEC_VIEW_PILEUP(
                         color: { value: '#C6C6C6' }
                     }
                 ],
-                style: { outlineWidth: 0.5},
+                style: { outlineWidth: 0.5 },
                 width,
                 height: 80
             },
@@ -62,7 +62,7 @@ export function EX_SPEC_VIEW_PILEUP(
                                 type: 'combineMates',
                                 idField: 'name',
                                 maintainDuplicates: true,
-                                maxInsertSize, // 360 // + 79 * 3
+                                maxInsertSize // 360 // + 79 * 3
                             },
                             {
                                 type: 'displace',
@@ -78,18 +78,35 @@ export function EX_SPEC_VIEW_PILEUP(
                         ],
                         x: { field: 'from', type: 'genomic' },
                         xe: { field: 'to', type: 'genomic' },
-                        color: [{
-                            field: 'is_long',
-                            type: 'nominal',
-                            legend: true,
-                            domain: ['normal reads', 'deletion (+-)', 'inversion (++)', 'inversion (--)', 'translocation or duplication (-+)'],
-                            range: ['#C8C8C8', '#E79F00', '#029F73', '#0072B2', '#CB7AA7', '#D45E00', '#57B4E9', '#EFE441']
-                        },
-                        {
-                           field: 'insertSize',
-                           type: 'quantitative',
-                           legend: true
-                        }][1]
+                        color: [
+                            {
+                                field: 'is_long',
+                                type: 'nominal',
+                                legend: true,
+                                domain: [
+                                    'normal reads',
+                                    'deletion (+-)',
+                                    'inversion (++)',
+                                    'inversion (--)',
+                                    'translocation or duplication (-+)'
+                                ],
+                                range: [
+                                    '#C8C8C8',
+                                    '#E79F00',
+                                    '#029F73',
+                                    '#0072B2',
+                                    '#CB7AA7',
+                                    '#D45E00',
+                                    '#57B4E9',
+                                    '#EFE441'
+                                ]
+                            },
+                            {
+                                field: 'insertSize',
+                                type: 'quantitative',
+                                legend: true
+                            }
+                        ][1]
                     }
                 ],
                 tooltip: [
@@ -101,7 +118,7 @@ export function EX_SPEC_VIEW_PILEUP(
                 row: { field: 'pileup-row', type: 'nominal', padding: 0.5 },
                 // stroke: { value: 'grey' },
                 // strokeWidth: { value: 0.5 },
-                style: { outlineWidth: 0.5, legendTitle: `Max Insert Size = ${maxInsertSize}bp`},
+                style: { outlineWidth: 0.5, legendTitle: `Max Insert Size = ${maxInsertSize}bp` },
                 width,
                 height
             }

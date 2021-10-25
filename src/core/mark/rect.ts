@@ -3,7 +3,7 @@ import { GoslingTrackModel } from '../gosling-track-model';
 import { cartesianToPolar, valueToRadian } from '../utils/polar';
 import { PIXIVisualProperty } from '../visual-property.schema';
 import colorToHex from '../utils/color-to-hex';
-import {IsChannelDeep} from '../gosling.schema.guards';
+import { IsChannelDeep } from '../gosling.schema.guards';
 
 export function drawRect(HGC: any, trackInfo: any, tile: any, model: GoslingTrackModel) {
     /* track spec */
@@ -34,8 +34,8 @@ export function drawRect(HGC: any, trackInfo: any, tile: any, model: GoslingTrac
     /* row separation */
     const rowCategories: string[] = (model.getChannelDomainArray('row') as string[]) ?? ['___SINGLE_ROW___'];
     const rowHeight = trackHeight / rowCategories.length;
-    const RPAD = IsChannelDeep(spec.row) && spec.row.padding ? spec.row.padding :  0;
-    
+    const RPAD = IsChannelDeep(spec.row) && spec.row.padding ? spec.row.padding : 0;
+
     // TODO: what if quantitative Y field is used?
     const yCategories = (model.getChannelDomainArray('y') as string[]) ?? ['___SINGLE_Y_POSITION___'];
     const cellHeight = rowHeight / yCategories.length - RPAD * 2;
