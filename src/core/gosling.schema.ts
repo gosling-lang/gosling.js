@@ -166,9 +166,7 @@ export interface DataTrack extends CommonTrackDef {
 }
 
 /* ----------------------------- MARK ----------------------------- */
-export type Mark = MarkType | MarkDeep;
-
-export type MarkType =
+export type Mark =
     | 'point'
     | 'line'
     | 'area'
@@ -1093,71 +1091,3 @@ export type TemplateTrackMappingDef = Omit<
 export type ChannelWithBase = Channel & {
     base?: string;
 };
-
-/* ----------------------- Below is deprecated ----------------------- */
-export type MarkDeep = MarkGlyphPreset | MarkGlyph;
-
-export interface MarkGlyphPreset {
-    type: string; //GLYPH_LOCAL_PRESET_TYPE | GLYPH_HIGLASS_PRESET_TYPE;
-    server: string; // TODO: Not supported yet
-}
-
-export interface MarkGlyph {
-    type: 'compositeMark';
-    name: string;
-    referenceColumn?: string; // reference column for selecting data tuples for each glyph
-    requiredChannels: ChannelType[]; // channels that must be assigned // TODO: What about optional channels?
-    elements: GlyphElement[];
-}
-
-export interface GlyphElement {
-    // primitives
-    description?: string;
-    select?: { channel: ChannelType; oneOf: string[] }[];
-    mark: MarkType | MarkBind;
-    // coordinates
-    x?: ChannelBind | ChannelValue | 'none';
-    y?: ChannelBind | ChannelValue | 'none';
-    xe?: ChannelBind | ChannelValue | 'none';
-    ye?: ChannelBind | ChannelValue | 'none';
-    // coordinates for link
-    x1?: ChannelBind | ChannelValue | 'none';
-    y1?: ChannelBind | ChannelValue | 'none';
-    x1e?: ChannelBind | ChannelValue | 'none';
-    y1e?: ChannelBind | ChannelValue | 'none';
-    // others
-    stroke?: ChannelBind | ChannelValue | 'none';
-    strokeWidth?: ChannelBind | ChannelValue | 'none';
-    row?: ChannelBind | ChannelValue | 'none';
-    color?: ChannelBind | ChannelValue | 'none';
-    size?: ChannelBind | ChannelValue | 'none';
-    w?: ChannelBind | ChannelValue | 'none';
-    opacity?: ChannelBind | ChannelValue | 'none';
-    text?: ChannelBind | ChannelValue | 'none';
-    background?: ChannelBind | ChannelValue | 'none';
-    style?: MarkStyleInGlyph;
-}
-
-export interface MarkStyleInGlyph {
-    dashed?: string;
-    dy?: number;
-    stroke?: string;
-    strokeWidth?: number;
-    background?: string;
-}
-
-export interface MarkBind {
-    bind: string;
-    domain: string[];
-    range: MarkType[];
-}
-
-export interface ChannelBind {
-    bind: ChannelType;
-    aggregate?: Aggregate;
-}
-
-export interface AnyGlyphChannels {
-    // Allow defining any kinds of chennels for binding data in Glyph
-    [key: string]: ChannelBind | ChannelValue;
-}

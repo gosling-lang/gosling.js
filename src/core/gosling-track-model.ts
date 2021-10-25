@@ -26,7 +26,6 @@ import {
     IsChannelDeep,
     IsChannelValue,
     getValueUsingChannel,
-    IsShallowMark,
     IsStackedChannel,
     IsDomainArray,
     PREDEFINED_COLOR_STR_MAP,
@@ -435,11 +434,6 @@ export class GoslingTrackModel {
         additionalInfo?: any
     ) {
         const mark = this.spec().mark;
-
-        if (!IsShallowMark(mark)) {
-            // we do not consider deep marks, yet
-            return undefined;
-        }
 
         // common visual properties, not specific to visual marks
         if (
