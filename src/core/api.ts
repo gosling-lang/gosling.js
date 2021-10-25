@@ -26,6 +26,17 @@ type PubSubEvent<EventName extends string, Payload> = {
 type EventMap = PubSubEvent<'mouseover' | 'click', CommonEventData>;
 // & PubSubEvent<'my-event', { hello: 'world' }> & PubSubEvent<'foo', "bar">;
 
+/**
+ * Information of suggested genes.
+ */
+interface geneSuggestion {
+    geneName: string; // gene symbol
+    score: number; // higher score means suggested gene is more likely to match the searched keyword
+    chr: string; // chromosome name
+    txStart: number; // absolute genomic position assuming chromosomes are concat end-to-end
+    txEnd: number; // absolute genomic position assuming chromosomes are concat end-to-end
+}
+
 export interface GoslingApi {
     subscribe<EventName extends keyof EventMap>(
         type: EventName,
@@ -35,6 +46,7 @@ export interface GoslingApi {
     zoomTo(viewId: string, position: string, padding?: number, duration?: number): void;
     zoomToExtent(viewId: string, duration?: number): void;
     zoomToGene(viewId: string, gene: string, padding?: number, duration?: number): void;
+    suggestGene(viewId: string, keyword: string, callback: (suggestions: geneSuggestion[]) => void): void;
     getViewIds(): string[];
     exportPng(transparentBackground?: boolean): void;
     exportPdf(transparentBackground?: boolean): void;
@@ -136,6 +148,9 @@ export function createApi(
         },
         zoomToGene: (viewId, gene, padding = 0, duration = 1000) => {
             getHg().api.zoomToGene(viewId, gene, padding, duration);
+        },
+        suggestGene: (viewId: string, keyword: string, callback: (suggestions: geneSuggestion[]) => void) => {
+            getHg().api.suggestGene(viewId, keyword, callback);
         },
         getViewIds: () => {
             if (!hgSpec) return [];
