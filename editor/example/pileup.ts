@@ -8,6 +8,7 @@ export function EX_SPEC_VIEW_PILEUP(
     xDomain: Exclude<Domain, string[] | number[] | DomainGene>,
     strandColor?: [number, number]
 ): View {
+    const maxInsertSize = 300;
     return {
         static: false,
         layout: 'linear',
@@ -15,152 +16,42 @@ export function EX_SPEC_VIEW_PILEUP(
         xDomain: xDomain,
         spacing: 0.01,
         tracks: [
-            //  {
-            //      id,
-            //      title: 'Coverage',
-            //      data: {
-            //          type: 'bam',
-            //          // url: 'https://s3.amazonaws.com/gosling-lang.org/data/example_higlass.bam'
-            //          url: 'https://aveit.s3.amazonaws.com/higlass/bam/example_higlass.bam',
-            //          indexUrl: 'https://aveit.s3.amazonaws.com/higlass/bam/example_higlass.bam.bai'
-            //      },
-            //      dataTransform: [{ type: 'coverage', startField: 'from', endField: 'to' }],
-            //      mark: 'bar',
-            //      x: { field: 'from', type: 'genomic' },
-            //      xe: { field: 'to', type: 'genomic' },
-            //      y: { field: 'coverage', type: 'quantitative', axis: 'right', grid: true },
-            //      color: { value: 'lightgray' },
-            //      stroke: { value: 'gray' },
-            //      width,
-            //      height: 80
-            //  },
-            //  {
-            //      alignment: 'overlay',
-            //      title: 'hg38 | Genes',
-            //      data: {
-            //          url: 'https://server.gosling-lang.org/api/v1/tileset_info/?d=gene-annotation',
-            //          type: 'beddb',
-            //          genomicFields: [
-            //              { index: 1, name: 'start' },
-            //              { index: 2, name: 'end' }
-            //          ],
-            //          valueFields: [
-            //              { index: 5, name: 'strand', type: 'nominal' },
-            //              { index: 3, name: 'name', type: 'nominal' }
-            //          ],
-            //          exonIntervalFields: [
-            //              { index: 12, name: 'start' },
-            //              { index: 13, name: 'end' }
-            //          ]
-            //      },
-            //      tracks: [
-            //          {
-            //              dataTransform: [
-            //                  { type: 'filter', field: 'type', oneOf: ['gene'] },
-            //                  { type: 'filter', field: 'strand', oneOf: ['+'] }
-            //              ],
-            //              mark: 'triangleRight',
-            //              x: { field: 'end', type: 'genomic' },
-            //              size: { value: 15 }
-            //          },
-            //          {
-            //              dataTransform: [{ type: 'filter', field: 'type', oneOf: ['gene'] }],
-            //              mark: 'text',
-            //              text: { field: 'name', type: 'nominal' },
-            //              x: { field: 'start', type: 'genomic' },
-            //              xe: { field: 'end', type: 'genomic' },
-            //              style: { dy: -15, outline: 'black', outlineWidth: 0 }
-            //          },
-            //          {
-            //              dataTransform: [
-            //                  { type: 'filter', field: 'type', oneOf: ['gene'] },
-            //                  { type: 'filter', field: 'strand', oneOf: ['-'] }
-            //              ],
-            //              mark: 'triangleLeft',
-            //              x: { field: 'start', type: 'genomic' },
-            //              size: { value: 15 },
-            //              style: {
-            //                  align: 'right',
-            //                  outline: 'black',
-            //                  outlineWidth: 0
-            //              }
-            //          },
-            //          {
-            //              dataTransform: [{ type: 'filter', field: 'type', oneOf: ['exon'] }],
-            //              mark: 'rect',
-            //              x: { field: 'start', type: 'genomic' },
-            //              size: { value: 15 },
-            //              xe: { field: 'end', type: 'genomic' }
-            //          },
-            //          {
-            //              dataTransform: [
-            //                  { type: 'filter', field: 'type', oneOf: ['gene'] },
-            //                  { type: 'filter', field: 'strand', oneOf: ['+'] }
-            //              ],
-            //              mark: 'rule',
-            //              x: { field: 'start', type: 'genomic' },
-            //              strokeWidth: { value: 2 },
-            //              xe: { field: 'end', type: 'genomic' },
-            //              style: {
-            //                  linePattern: { type: 'triangleRight', size: 3.5 },
-            //                  outline: 'black',
-            //                  outlineWidth: 0
-            //              }
-            //          },
-            //          {
-            //              dataTransform: [
-            //                  { type: 'filter', field: 'type', oneOf: ['gene'] },
-            //                  { type: 'filter', field: 'strand', oneOf: ['-'] }
-            //              ],
-            //              mark: 'rule',
-            //              x: { field: 'start', type: 'genomic' },
-            //              strokeWidth: { value: 2 },
-            //              xe: { field: 'end', type: 'genomic' },
-            //              style: {
-            //                  linePattern: { type: 'triangleLeft', size: 3.5 },
-            //                  outline: 'black',
-            //                  outlineWidth: 0
-            //              }
-            //          }
-            //      ],
-            //      row: {
-            //          field: 'strand',
-            //          type: 'nominal',
-            //          domain: ['+', '-']
-            //      },
-            //      color: {
-            //          field: 'strand',
-            //          type: 'nominal',
-            //          domain: ['+', '-'],
-            //          range: ['#97A8B2', '#D4C6BA'] //['blue', 'red']
-            //      },
-            //      visibility: [
-            //          {
-            //              operation: 'less-than',
-            //              measure: 'width',
-            //              threshold: '|xe-x|',
-            //              transitionPadding: 10,
-            //              target: 'mark'
-            //          }
-            //      ],
-            //      // opacity: { value: 0.4 },
-            //      width,
-            //      height: 100
-            //  },
-            //  {
-            //      title: 'Sequence',
-            //      ...EX_TRACK_SEMANTIC_ZOOM.sequence,
-            //      style: { inlineLegend: true, outline: 'white' },
-            //      width,
-            //      height: 40
-            //  },
             {
                 alignment: 'overlay',
-                title: 'Reads',
+                title: 'example_higlass.bam',
                 data: {
                     type: 'bam',
-                    url: 'https://aveit.s3.amazonaws.com/higlass/bam/example_higlass.bam',
-                    indexUrl: 'https://aveit.s3.amazonaws.com/higlass/bam/example_higlass.bam.bai',
+                    url: 'https://s3.amazonaws.com/gosling-lang.org/data/example_higlass.bam', // https://s3.amazonaws.com/gosling-lang.org/data/SV/PCAWG.c8e7bbdb-6d87-445f-bf43-dbf88805b1ed.bam',
+                    indexUrl: 'https://s3.amazonaws.com/gosling-lang.org/data/example_higlass.bam.bai', // https://s3.amazonaws.com/gosling-lang.org/data/SV/PCAWG.c8e7bbdb-6d87-445f-bf43-dbf88805b1ed.bam.bai',
+                    loadMates: true
+                },
+                mark: 'bar',
+                tracks: [
+                    {
+                        dataTransform: [
+                            {
+                                type: 'coverage',
+                                startField: 'from',
+                                endField: 'to'
+                            }
+                        ],
+                        x: { field: 'from', type: 'genomic' },
+                        xe: { field: 'to', type: 'genomic' },
+                        y: { field: 'coverage', type: 'quantitative', axis: 'right' },
+                        color: { value: '#C6C6C6' }
+                    }
+                ],
+                style: { outlineWidth: 0.5},
+                width,
+                height: 80
+            },
+            {
+                alignment: 'overlay',
+                title: 'example_higlass.bam',
+                data: {
+                    type: 'bam',
+                    url: 'https://s3.amazonaws.com/gosling-lang.org/data/example_higlass.bam', // https://s3.amazonaws.com/gosling-lang.org/data/SV/PCAWG.c8e7bbdb-6d87-445f-bf43-dbf88805b1ed.bam',
+                    indexUrl: 'https://s3.amazonaws.com/gosling-lang.org/data/example_higlass.bam.bai', // https://s3.amazonaws.com/gosling-lang.org/data/SV/PCAWG.c8e7bbdb-6d87-445f-bf43-dbf88805b1ed.bam.bai',
                     loadMates: true
                 },
                 mark: 'rect',
@@ -171,7 +62,7 @@ export function EX_SPEC_VIEW_PILEUP(
                                 type: 'combineMates',
                                 idField: 'name',
                                 maintainDuplicates: true,
-                                maxInsertSize: 360 + 79 * 3
+                                maxInsertSize, // 360 // + 79 * 3
                             },
                             {
                                 type: 'displace',
@@ -187,18 +78,30 @@ export function EX_SPEC_VIEW_PILEUP(
                         ],
                         x: { field: 'from', type: 'genomic' },
                         xe: { field: 'to', type: 'genomic' },
-                        color: {
+                        color: [{
                             field: 'is_long',
                             type: 'nominal',
-                            domain: ['false', 'true'],
-                            range: ['#97A8B2', 'red']
+                            legend: true,
+                            domain: ['normal reads', 'deletion (+-)', 'inversion (++)', 'inversion (--)', 'translocation or duplication (-+)'],
+                            range: ['#C8C8C8', '#E79F00', '#029F73', '#0072B2', '#CB7AA7', '#D45E00', '#57B4E9', '#EFE441']
                         },
-                        stroke: { value: 'white' },
-                        strokeWidth: { value: 0.5 }
+                        {
+                           field: 'insertSize',
+                           type: 'quantitative',
+                           legend: true
+                        }][1]
                     }
                 ],
-                row: { field: 'pileup-row', type: 'nominal' },
-                style: { outlineWidth: 0.5 },
+                tooltip: [
+                    { field: 'from', type: 'genomic' },
+                    { field: 'to', type: 'genomic' },
+                    { field: 'is_long', type: 'nominal' },
+                    { field: 'strand', type: 'nominal' }
+                ],
+                row: { field: 'pileup-row', type: 'nominal', padding: 0.5 },
+                // stroke: { value: 'grey' },
+                // strokeWidth: { value: 0.5 },
+                style: { outlineWidth: 0.5, legendTitle: `Max Insert Size = ${maxInsertSize}bp`},
                 width,
                 height
             }
@@ -207,7 +110,8 @@ export function EX_SPEC_VIEW_PILEUP(
 }
 
 export const EX_SPEC_PILEUP: GoslingSpec = {
-    title: 'Pileup Track Using BAM Data',
-    subtitle: '',
-    ...EX_SPEC_VIEW_PILEUP('bam', 1250, 600, { chromosome: '1', interval: [136750, 139450] })
+    // title: 'Pileup Track Using BAM Data',
+    // subtitle: '',
+    // ...EX_SPEC_VIEW_PILEUP('bam', 1250, 600, { chromosome: '1', interval: [136750, 139450] })
+    ...EX_SPEC_VIEW_PILEUP('bam', 1250, 600, { chromosome: '1', interval: [196000, 208000] })
 };

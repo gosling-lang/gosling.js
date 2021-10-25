@@ -201,9 +201,21 @@ export function combineMates(t: CombineMatesTransform, data: Datum[]) {
             // no mate found. this read will not be included to the result data.
             return;
         }
-        const mate = copyData[mateIndex];
+        
+        const mate = rest[mateIndex];
+
+        if(!d.data.from || !d.data.to || !mate.data.from || !mate.data.to) {
+            // no distance
+            //console.log(
+            //    d,
+            //    mate
+            //);
+            return;
+        }
+
         const newRow: Datum = {};
-        // assuming that keys are the same for mates
+        
+        // iterate all keys, assuming that keys are the same between mates
         Object.keys(d.data).forEach(k => {
             // if not maintaining duplicated rows, left mate should be stored in the first field
             const [f, s] = maintainDuplicates ? [d, mate] : [d, mate].sort((a, b) => +a.data.from - +b.data.from);
@@ -211,14 +223,25 @@ export function combineMates(t: CombineMatesTransform, data: Datum[]) {
             newRow[`${k}_2`] = s.data[k];
 
             const [left, right] = [d, mate].sort((a, b) => +a.data.from - +b.data.from);
-            newRow[isLongField] = Math.abs(+left.data.to - +right.data.from) >= maxInsertSize ? 'true' : 'false';
+            const size = Math.abs(+left.data.to - +right.data.from);
+            
+            // https://software.broadinstitute.org/software/igv/interpreting_pair_orientations
+            const orientation = `${left.data.strand}${right.data.strand}`;
+            const svType = `${{
+                '+-': 'deletion',
+                '++': 'inversion',
+                '--': 'inversion',
+                '-+': 'translocation or duplication'
+            }[orientation]} (${orientation})`;
+            newRow[isLongField] = size >= maxInsertSize ? svType : 'normal reads';
+            newRow['insertSize'] = Math.abs(+left.data.to - +right.data.from);
         });
         output.push(newRow);
-
         if (!maintainDuplicates) {
             mate.added = true; // set a flag so that we can skip this later
         }
     });
+    // console.log(output);
     return output;
 }
 

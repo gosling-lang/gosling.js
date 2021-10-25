@@ -2,7 +2,6 @@
 import { text } from 'd3-request';
 import { bisector } from 'd3-array';
 import { tsvParseRows } from 'd3-dsv';
-import { color } from 'd3-color';
 import { expose, Transfer } from 'threads/worker';
 import { BamFile } from '@gmod/bam';
 import LRU from 'lru-cache';
@@ -197,12 +196,6 @@ export const getSubstitutions = (segment, seq) => {
 
 const chromInfoBisector = bisector(d => d.pos).left;
 
-const groupBy = (xs, key) =>
-    xs.reduce((rv, x) => {
-        (rv[x[key]] = rv[x[key]] || []).push(x);
-        return rv;
-    }, {});
-
 const chrToAbs = (chrom, chromPos, chromInfo) => chromInfo.chrPositions[chrom].pos + chromPos;
 
 const absToChr = (absPosition, chromInfo) => {
@@ -344,7 +337,6 @@ function ChromosomeInfo(filepath, success) {
 
 const bamRecordToJson = (bamRecord, chrName, chrOffset) => {
     const seq = bamRecord.get('seq');
-
     const segment = {
         // if two segments have the same name but different id, they are paired reads.
         // https://github.com/GMOD/bam-js/blob/7a57d24b6aef08a1366cca86ba5092254c7a7f56/src/bamFile.ts#L386
@@ -358,12 +350,9 @@ const bamRecordToJson = (bamRecord, chrName, chrOffset) => {
         cigar: bamRecord.get('cigar'),
         mapq: bamRecord.get('mq'),
         strand: bamRecord.get('strand') === 1 ? '+' : '-',
-        row: null,
         substitutions: []
     };
-
     segment.substitutions = getSubstitutions(segment, seq);
-
     return segment;
 };
 
@@ -387,10 +376,10 @@ const init = (uid, { bamUrl, baiUrl, chromSizesUrl, loadMates, maxInsertSize }) 
     // chromSizesUrl = chromSizesUrl || `https://s3.amazonaws.com/gosling-lang.org/data/hg19.chrom.sizes`;
     
     if (!bamFiles[bamUrl]) {
-        // We do not yet have this file cached.
-        bamFiles[bamUrl] = new BamFile({ bamUrl, baiUrl });
+        // we do not yet have this file cached
+        bamFiles[bamUrl] = new BamFile({ bamUrl, baiUrl, fetchSizeLimit: 500000000, chunkSizeLimit: 100000000 , yieldThreadTime: 1000});
 
-        // We have to fetch the header before we can fetch data
+        // we have to fetch the header before we can fetch data
         bamHeaders[bamUrl] = bamFiles[bamUrl].getHeader();
     }
 
@@ -409,10 +398,10 @@ const tilesetInfo = uid => {
         let chromInfo = null;
 
         if (values.length > 1) {
-            // This means we received a chromInfo file
+            // this means we received a chromInfo file
             chromInfo = values[1];
         } else {
-            // No chromInfo provided so we have to take it from the bam file index
+            // no chromInfo provided so we have to take it from the bam file index
             const chroms = [];
             for (const { refName, length } of bamFiles[bamUrl].indexToChr) {
                 chroms.push([refName, length]); // refName is the chromosome name
@@ -458,15 +447,14 @@ const tile = async (uid, z, x) => {
         const { chromLengths, cumPositions } = chromInfo;
 
         const opt = {
-            viewAsPairs: true, // typeof loadMates === 'undefined' ? false : loadMates,
-            pairAcrossChr: true, //typeof loadMates === 'undefined' ? false : loadMates,
-            maxInsertSize: 1000000 // maxInsertSize ?? 50000
+            viewAsPairs: typeof loadMates === 'undefined' ? false : loadMates,
+            pairAcrossChr: typeof loadMates === 'undefined' ? false : loadMates,
+            maxInsertSize: 500 // maxInsertSize ?? 50000
         }
-
+        
         for (let i = 0; i < cumPositions.length; i++) {
             const chromName = cumPositions[i].chr;
             const chromStart = cumPositions[i].pos;
-
             const chromEnd = cumPositions[i].pos + chromLengths[chromName];
             tileValues.set(`${uid}.${z}.${x}`, []);
 
@@ -492,14 +480,16 @@ const tile = async (uid, z, x) => {
                                     `${uid}.${z}.${x}`,
                                     tileValues.get(`${uid}.${z}.${x}`).concat(mappedRecords)
                                 );
+                                // return mappedRecords;
                             })
                     );
 
                     // continue onto the next chromosome
                     minX = chromEnd;
                 } else {
-                    const endPos = Math.ceil(maxX - chromStart);
                     const startPos = Math.floor(minX - chromStart);
+                    const endPos = Math.ceil(maxX - chromStart);
+                    
                     // the end of the region is within this chromosome
                     recordPromises.push(
                         bamFile
@@ -508,15 +498,15 @@ const tile = async (uid, z, x) => {
                                 const mappedRecords = records.map(rec =>
                                     bamRecordToJson(rec, chromName, cumPositions[i].pos)
                                 );
-
                                 tileValues.set(
                                     `${uid}.${z}.${x}`,
                                     tileValues.get(`${uid}.${z}.${x}`).concat(mappedRecords)
                                 );
+                                // TODO:
+                                // return mappedRecords;
                                 return [];
                             })
                     );
-
                     // end the loop because we've retrieved the last chromosome
                     break;
                 }
