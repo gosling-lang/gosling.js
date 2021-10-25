@@ -13,6 +13,7 @@ import SplitPane from 'react-split-pane';
 import ErrorBoundary from './error-boundary';
 import { debounce, isEqual } from 'lodash-es';
 import { examples } from './example';
+import { traverseTracksAndViews } from '../src/core/utils/spec-preprocess';
 import stripJsonComments from 'strip-json-comments';
 import * as qs from 'qs';
 import JSONCrush from 'jsoncrush';
@@ -86,6 +87,23 @@ const emptySpec = (message?: string) => (message !== undefined ? `{\n\t// ${mess
 
 const getDescPanelDefultWidth = () => Math.min(500, window.innerWidth);
 
+/**
+ * Convert relative CSV data URLs to absolute URLs.
+ * (e.g., './example.csv' => 'https://gist.githubusercontent.com/{urlGist}/raw/example.csv')
+ */
+function resolveRelativeCsvUrls(spec: string, importMeta: URL) {
+    const newSpec = JSON.parse(spec);
+    // https://regex101.com/r/l87Q5q/1
+    // eslint-disable-next-line
+    const relativePathRegex = /^[.\/]|^\.[.\/]|^\.\.[^\/]/;
+    traverseTracksAndViews(newSpec as gosling.GoslingSpec, (tv: any) => {
+        if (tv.data && tv.data.type === 'csv' && relativePathRegex.test(tv.data.url)) {
+            tv.data.url = new URL(tv.data.url, importMeta).href;
+        }
+    });
+    return stringify(newSpec);
+}
+
 const fetchSpecFromGist = async (gist: string) => {
     let metadata: any = null;
     try {
@@ -104,8 +122,9 @@ const fetchSpecFromGist = async (gist: string) => {
 
     if (!dataFile) return Promise.reject(new Error('Gist does not contain a Gosling spec.'));
 
-    const whenCode = fetch(`https://gist.githubusercontent.com/${gist}/raw/${dataFile}`).then(response =>
-        response.status === 200 ? response.text() : null
+    const specUrl = new URL(`https://gist.githubusercontent.com/${gist}/raw/${dataFile}`);
+    const whenCode = fetch(specUrl.href).then(async response =>
+        response.status === 200 ? resolveRelativeCsvUrls(await response.text(), specUrl) : null
     );
 
     const whenText = fetch(`https://gist.githubusercontent.com/${gist}/raw/${textFile}`).then(response =>
@@ -235,20 +254,6 @@ function Editor(props: any) {
         setHg(undefined);
     }, [demo]);
 
-    /**
-     * Convert relative CSV data URLs to absolute URLs.
-     * (e.g., './example.csv' => 'https://gist.githubusercontent.com/{urlGist}/raw/example.csv')
-     */
-    function resolveRelativeCsvUrls(spec: string) {
-        const newSpec = JSON.parse(spec);
-        gosling.traverseTracksAndViews(newSpec as gosling.GoslingSpec, (tv: any) => {
-            if (tv.data && tv.data.type === 'csv' && tv.data.url.indexOf('./') === 0) {
-                tv.data.url = tv.data.url.replace('./', `https://gist.githubusercontent.com/${urlGist}/raw/`);
-            }
-        });
-        return stringify(newSpec);
-    }
-
     useEffect(() => {
         let active = true;
 
@@ -258,7 +263,7 @@ function Editor(props: any) {
             .then(({ code, description, title }) => {
                 if (active && !!code) {
                     setReadOnly(false);
-                    setCode(resolveRelativeCsvUrls(code));
+                    setCode(code);
                     setGistTitle(title);
                     setDescription(description);
                 }
