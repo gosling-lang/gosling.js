@@ -287,7 +287,7 @@ export class HiGlassModel {
         position: Exclude<AxisPosition, 'none'>,
         type: 'regular' | 'narrow' | 'narrower' = 'regular',
         options: {
-            // These are currently used for circular layout
+            id?: string;
             layout?: 'circular' | 'linear';
             innerRadius?: number;
             outerRadius?: number;
@@ -302,7 +302,7 @@ export class HiGlassModel {
 
         const widthOrHeight = position === 'left' || position === 'right' ? 'width' : 'height';
         const axisTrackTemplate: Track = {
-            uid: uuid.v1(),
+            uid: options.id ?? uuid.v1(),
             type: 'axis-track',
             chromInfoPath: this.hg.chromInfoPath,
             options: {
