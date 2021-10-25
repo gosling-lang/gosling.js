@@ -1,3 +1,34 @@
+## [0.9.9](https://github.com/gosling-lang/gosling.js/compare/v0.9.8...v0.9.9) (2021-10-25)
+
+
+### Bug Fixes
+
+* fix errors with `process` and `global` when gosling.js package is used externally ([#554](https://github.com/gosling-lang/gosling.js/issues/554)) ([6b3a564](https://github.com/gosling-lang/gosling.js/commit/6b3a5640fe2ce95063c08f0b3ffdad674edc5d2b))
+* inject Buffer polyfill for BamWorker ([#537](https://github.com/gosling-lang/gosling.js/issues/537)) ([e8c792c](https://github.com/gosling-lang/gosling.js/commit/e8c792c26ce4c9be8e1d19d140faeec8e3642346))
+* refer to actual track size instead of spec.width and spec.height for track encoding ([#517](https://github.com/gosling-lang/gosling.js/issues/517)) ([70ace60](https://github.com/gosling-lang/gosling.js/commit/70ace60fa473931f52c8a46bfcdde732c1474366))
+* visibility affects on rect and rules; add padding to API types ([#512](https://github.com/gosling-lang/gosling.js/issues/512)) ([2c134ed](https://github.com/gosling-lang/gosling.js/commit/2c134ed43df37be3d555d8a787558dba658e105c))
+
+
+### Features
+
+* `unknown` assembly does not display `chrN:` on the genomic axis ([#532](https://github.com/gosling-lang/gosling.js/issues/532)) ([19ad4d4](https://github.com/gosling-lang/gosling.js/commit/19ad4d4d67b4306e3d52e8d76987d9ee17b5c842))
+* add `gosling.js/embed` package export ([#524](https://github.com/gosling-lang/gosling.js/issues/524)) ([0439755](https://github.com/gosling-lang/gosling.js/commit/0439755c1755bb9f9e412010ca557f4cab174494))
+* allow access to HiGlass `ref` from JS API ([#558](https://github.com/gosling-lang/gosling.js/issues/558)) ([2f372ee](https://github.com/gosling-lang/gosling.js/commit/2f372ee41076598a4e245337ac31186bf5ebfc93))
+* **api:** support searching for a gene position ([#567](https://github.com/gosling-lang/gosling.js/issues/567)) ([05b82bd](https://github.com/gosling-lang/gosling.js/commit/05b82bd49670cccb212ec414ea89c52db72cd0ea))
+* built-in min and max columns for multivec and vector ([#519](https://github.com/gosling-lang/gosling.js/issues/519)) ([41e48d4](https://github.com/gosling-lang/gosling.js/commit/41e48d4313f843e308301596742db22343b448d0))
+* **editor:** add a small triangle at the right-end of dropdown menu for affordance ([#520](https://github.com/gosling-lang/gosling.js/issues/520)) ([7ed9a35](https://github.com/gosling-lang/gosling.js/commit/7ed9a3541d6f253cf8aec685329a8445f2b0231f))
+* **editor:** support using relative CSV file URLs for Gist specs ([#540](https://github.com/gosling-lang/gosling.js/issues/540)) ([af5f08e](https://github.com/gosling-lang/gosling.js/commit/af5f08e962d4aca0f1f8a34bd97973a4527644b9))
+* enable auto doc generate ([#503](https://github.com/gosling-lang/gosling.js/issues/503)) ([de231fe](https://github.com/gosling-lang/gosling.js/commit/de231fe1a7f4b87e3d9695acdef9ad873c23bdbd))
+* migrate `uuid` &  `box-intersect` to browser-compatible deps ([#527](https://github.com/gosling-lang/gosling.js/issues/527)) ([d1fbbb3](https://github.com/gosling-lang/gosling.js/commit/d1fbbb3de0fea051f08f42623e1c956ae66bc330)), closes [#532](https://github.com/gosling-lang/gosling.js/issues/532)
+* more precise channel types (e.g., `X`, `Y`, and `Color` instead of `Channel`) ([#533](https://github.com/gosling-lang/gosling.js/issues/533)) ([aa2cd62](https://github.com/gosling-lang/gosling.js/commit/aa2cd626f0a43efc8e697cab271b29f02bb1b0c1))
+* remove aliases & update gmod deps ([#526](https://github.com/gosling-lang/gosling.js/issues/526)) ([6be5195](https://github.com/gosling-lang/gosling.js/commit/6be5195cd1551b53dc65d72aeb6b7b221c80c65e))
+* support `ye` with `bar` ([#518](https://github.com/gosling-lang/gosling.js/issues/518)) ([ef0fd59](https://github.com/gosling-lang/gosling.js/commit/ef0fd595db9cf477a03936afb6799ca078e0be16)), closes [#517](https://github.com/gosling-lang/gosling.js/issues/517) [#519](https://github.com/gosling-lang/gosling.js/issues/519)
+* support specifying zoom limits (`zoomLimits`) ([#521](https://github.com/gosling-lang/gosling.js/issues/521)) ([0517bc5](https://github.com/gosling-lang/gosling.js/commit/0517bc58ad2bae89c97c99a76d5f6e36b5980972)), closes [#522](https://github.com/gosling-lang/gosling.js/issues/522) [#505](https://github.com/gosling-lang/gosling.js/issues/505) [#511](https://github.com/gosling-lang/gosling.js/issues/511) [#526](https://github.com/gosling-lang/gosling.js/issues/526)
+* support viewing paired reads in BAM files ([#538](https://github.com/gosling-lang/gosling.js/issues/538)) ([109d119](https://github.com/gosling-lang/gosling.js/commit/109d1193ad1e9d196a525f1346ec449fec52db66)), closes [#536](https://github.com/gosling-lang/gosling.js/issues/536) [#537](https://github.com/gosling-lang/gosling.js/issues/537)
+* unify ESM/UMD build and development with Vite ([#522](https://github.com/gosling-lang/gosling.js/issues/522)) ([ac7722c](https://github.com/gosling-lang/gosling.js/commit/ac7722c9a9c7c0f72cea2b0a4c17feec5b8bff65)), closes [#505](https://github.com/gosling-lang/gosling.js/issues/505) [#511](https://github.com/gosling-lang/gosling.js/issues/511)
+
+
+
 ## [0.9.8](https://github.com/gosling-lang/gosling.js/compare/v0.9.7...v0.9.8) (2021-08-30)
 
 
