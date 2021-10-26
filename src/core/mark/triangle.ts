@@ -1,6 +1,6 @@
 import * as PIXI from 'pixi.js';
 import { GoslingTrackModel } from '../gosling-track-model';
-import { Channel, MarkType } from '../gosling.schema';
+import { Channel, Mark } from '../gosling.schema';
 import { getValueUsingChannel } from '../gosling.schema.guards';
 import colorToHex from '../utils/color-to-hex';
 import { cartesianToPolar } from '../utils/polar';
@@ -132,7 +132,7 @@ export function drawTriangle(g: PIXI.Graphics, model: GoslingTrackModel, trackWi
                         triangleRight: [x0, y0, x1, ym, x0, y1, x0, y0],
                         triangleBottom: [x0, y0, x1, y0, xm, y1, x0, y0]
                     } as any
-                )[spec.mark as MarkType];
+                )[spec.mark as Mark];
 
                 const alphaTransition = model.markVisibility(d, { width: x1 - x0, zoomLevel });
                 const actualOpacity = Math.min(alphaTransition, opacity);
