@@ -8,12 +8,9 @@ import {
     DomainChrInterval,
     DomainGene,
     Style,
-    MarkType,
-    MarkDeep,
     Track,
     SingleTrack,
     OverlaidTrack,
-    ChannelBind,
     ChannelTypes,
     Channel,
     FieldType,
@@ -104,14 +101,6 @@ export function IsTrackStyle(track: Style | undefined): track is Style {
     return track !== undefined;
 }
 
-export function IsShallowMark(mark: any /* TODO */): mark is MarkType {
-    return typeof mark !== 'object';
-}
-
-export function IsMarkDeep(mark: any /* TODO */): mark is MarkDeep {
-    return typeof mark === 'object';
-}
-
 export function IsSingleTrack(track: Track): track is SingleTrack {
     return !('overlay' in track);
 }
@@ -137,16 +126,8 @@ export function Is2DTrack(track: Track) {
     );
 }
 
-export function IsChannelValue(
-    channel: ChannelDeep | ChannelValue | ChannelBind | undefined | 'none'
-): channel is ChannelValue {
+export function IsChannelValue(channel: ChannelDeep | ChannelValue | undefined | 'none'): channel is ChannelValue {
     return channel !== null && typeof channel === 'object' && 'value' in channel;
-}
-
-export function IsChannelBind(
-    channel: ChannelDeep | ChannelValue | ChannelBind | undefined | 'none'
-): channel is ChannelBind {
-    return channel !== null && typeof channel === 'object' && 'bind' in channel;
 }
 
 export function IsDataDeepTileset(
