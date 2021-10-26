@@ -481,10 +481,10 @@ function Editor(props: any) {
                         style={{ maxWidth: IS_SMALL_SCREEN ? window.innerWidth - 180 : 'none' }}
                         onChange={e => {
                             if (Object.keys(Themes).indexOf(e.target.value) !== -1) {
-                                setTheme(e.target.value);
+                                setTheme(e.target.value as any);
                             }
                         }}
-                        defaultValue={theme}
+                        defaultValue={theme as any}
                     >
                         {Object.keys(Themes).map((d: string) => (
                             <option key={d} value={d}>
