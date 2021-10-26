@@ -5,7 +5,7 @@ import { CHANNEL_DEFAULTS } from '../channel';
 
 /* ----------------------------- THEME ----------------------------- */
 export type Theme = ThemeType | ThemeDeep;
-export type ThemeType = 'light' | 'dark' | string;
+export type ThemeType = keyof typeof gt.Themes; // Looks like this converts to `string` in the generated json schema
 export enum Themes {
     light = 'light',
     dark = 'dark'
