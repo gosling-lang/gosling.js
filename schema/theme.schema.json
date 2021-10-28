@@ -330,6 +330,19 @@
       "type": "object"
     },
     "ThemeType": {
+      "enum": [
+        "light",
+        "dark",
+        "warm",
+        "ggplot",
+        "igv",
+        "ensembl",
+        "jbrowse",
+        "ucsc",
+        "washu",
+        "excel",
+        "google"
+      ],
       "type": "string"
     },
     "TrackStyle": {

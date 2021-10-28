@@ -19,11 +19,10 @@ import * as qs from 'qs';
 import JSONCrush from 'jsoncrush';
 import './editor.css';
 import { ICONS, ICON_INFO } from './icon';
-// @ts-ignore
-import { Themes } from 'gosling-theme';
-
 import type { HiGlassSpec } from '@higlass.schema';
 import type { Datum } from '@gosling.schema';
+// @ts-ignore
+import { Themes } from 'gosling-theme';
 
 const INIT_DEMO_INDEX = examples.findIndex(d => d.forceShow) !== -1 ? examples.findIndex(d => d.forceShow) : 0;
 
@@ -167,7 +166,7 @@ function Editor(props: any) {
     const [refreshData, setRefreshData] = useState<boolean>(false);
 
     const [demo, setDemo] = useState(examples[urlExampleIndex === -1 ? INIT_DEMO_INDEX : urlExampleIndex]);
-    const [theme, setTheme] = useState('light');
+    const [theme, setTheme] = useState<gosling.Theme>('light');
     const [hg, setHg] = useState<HiGlassSpec>();
     const [code, setCode] = useState(defaultCode);
     const [goslingSpec, setGoslingSpec] = useState<gosling.GoslingSpec>();
@@ -482,10 +481,10 @@ function Editor(props: any) {
                         style={{ maxWidth: IS_SMALL_SCREEN ? window.innerWidth - 180 : 'none' }}
                         onChange={e => {
                             if (Object.keys(Themes).indexOf(e.target.value) !== -1) {
-                                setTheme(e.target.value);
+                                setTheme(e.target.value as any);
                             }
                         }}
-                        defaultValue={theme}
+                        defaultValue={theme as any}
                     >
                         {Object.keys(Themes).map((d: string) => (
                             <option key={d} value={d}>
