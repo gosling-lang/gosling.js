@@ -456,42 +456,63 @@ export type ChannelType = keyof typeof ChannelTypes | string;
 export type Channel = ChannelDeep | ChannelValue; // TODO: support null to allow removing spec when overriding
 
 export interface ChannelDeepCommon {
+    /** Name of the data field. */
     field?: string;
 }
 
-export interface X extends ChannelDeepCommon {
+export interface X extends AxisCommon {
+    /** Specify the data type. */
     type?: 'genomic';
+    /** Values of the data filed */
     domain?: GenomicDomain;
-    range?: ValueExtent;
-    axis?: AxisPosition;
-    legend?: boolean;
-    grid?: boolean;
-    linkingId?: string;
-    aggregate?: Aggregate;
 }
 
-export interface Y extends ChannelDeepCommon {
+export interface Y extends AxisCommon {
+    /** Specify the data type. */
     type?: 'quantitative' | 'nominal' | 'genomic';
+    /** Values of the data */
     domain?: ValueExtent;
-    range?: ValueExtent;
-    axis?: AxisPosition;
-    legend?: boolean;
+    /** ?? */
     baseline?: string | number;
-    zeroBaseline?: boolean; // We could remove this and use the `baseline` option instead
+    /**
+     * deprecated: We could remove this and use the `baseline` option instead
+     **/
+    zeroBaseline?: boolean;
+    /** ?? */
     mirrored?: boolean; // Show baseline on the top or right instead of bottom or left
-    aggregate?: Aggregate;
-    grid?: boolean;
+    /** experimental: Flip a track vertically or horizontally */
+    flip?: boolean;
+    /** Experimental: Used in `row` and `column` for vertical and horizontal padding. */
+    padding?: number;
+}
+
+export interface AxisCommon extends ChannelDeepCommon {
+    /** Values of the visual channel. */
+    range?: ValueExtent;
+    /** Specify where should the axis be put.  */
+    axis?: AxisPosition;
+    /** Whether to display legend */
+    legend?: boolean;
+    /** Users need to assign a unique linkingId for [linking views](/docs/user-interaction#linking-views) and [Brushing and Linking](/docs/user-interaction#brushing-and-linking) */
     linkingId?: string;
-    flip?: boolean; // Flip a track vertically or horizontally?
-    padding?: number; // Experimental: Used in `row` and `column` for vertical and horizontal padding.
+    /** Specify how to aggregate data. */
+    aggregate?: Aggregate;
+    /** Whether to display grid. */
+    grid?: boolean;
 }
 
 export interface Row extends ChannelDeepCommon {
+    /** Data type */
     type?: 'nominal';
+    /** Values of the data */
     domain?: ValueExtent;
+    /** ?? */
     range?: ValueExtent;
+    /** Whether to display legend */
     legend?: boolean;
-    padding?: number; // Experimental: Used in `row` and `column` for vertical and horizontal padding.
+    /** Experimental: Used in `row` and `column` for vertical and horizontal padding. */
+    padding?: number;
+    /** Whether to display grid. */
     grid?: boolean;
 }
 
@@ -502,49 +523,68 @@ export interface Column extends ChannelDeepCommon {
 }
 
 export interface Color extends ChannelDeepCommon {
+    /** Data type */
     type?: 'quantitative' | 'nominal';
+    /** Values of the data */
     domain?: ValueExtent;
+    /** Values of the visual channel. */
     range?: Range;
+    /** Whether to display legend */
     legend?: boolean;
     baseline?: string | number;
     zeroBaseline?: boolean; // We could remove this and use the `baseline` option instead
 }
 
 export interface Size extends ChannelDeepCommon {
+    /** Data type */
     type?: 'quantitative' | 'nominal';
+    /** Values of the data */
     domain?: ValueExtent;
+    /** Values of the visual channel. */
     range?: ValueExtent;
+    /** not supported */
     legend?: boolean; // TODO: Support this
     baseline?: string | number;
     zeroBaseline?: boolean; // We could remove this and use the `baseline` option instead
 }
 
 export interface Stroke extends ChannelDeepCommon {
+    /** Data type */
     type?: 'quantitative' | 'nominal';
+    /** Values of the data */
     domain?: ValueExtent;
+    /** Values of the visual channel. */
     range?: Range;
     baseline?: string | number;
     zeroBaseline?: boolean; // We could remove this and use the `baseline` option instead
 }
 
 export interface StrokeWidth extends ChannelDeepCommon {
+    /** Data type */
     type?: 'quantitative' | 'nominal';
+    /** Values of the data */
     domain?: ValueExtent;
+    /** Values of the stroke width. */
     range?: ValueExtent;
     baseline?: string | number;
     zeroBaseline?: boolean; // We could remove this and use the `baseline` option instead
 }
 
 export interface Opacity extends ChannelDeepCommon {
+    /** Data type */
     type?: 'quantitative' | 'nominal';
+    /** Values of the data */
     domain?: ValueExtent;
+    /** Range of the opacity. */
     range?: ValueExtent;
     baseline?: string | number;
     zeroBaseline?: boolean; // We could remove this and use the `baseline` option instead
 }
 
 export interface Text extends ChannelDeepCommon {
+    /** Data type */
     type?: 'quantitative' | 'nominal';
+    /** Values of the data */
     domain?: string[];
     range?: string[];
 }
@@ -552,6 +592,7 @@ export interface Text extends ChannelDeepCommon {
 export type ChannelDeep = X | Y | Row | Color | Size | Stroke | StrokeWidth | Opacity | Text;
 
 export interface ChannelValue {
+    /** Assign a constant value for a visual channel. */
     value: number | string;
 }
 
@@ -568,7 +609,7 @@ export interface DomainChr {
     chromosome: Chromosome;
 }
 export interface DomainChrInterval {
-    // For showing a certain interval in a chromosome
+    /** If specified, only showing a certain interval in a chromosome. */
     chromosome: Chromosome;
     interval: [number, number];
 }

@@ -341,6 +341,7 @@
       "additionalProperties": false,
       "properties": {
         "value": {
+          "description": "Assign a constant value for a visual channel.",
           "type": [
             "number",
             "string"
@@ -417,18 +418,23 @@
           ]
         },
         "domain": {
-          "$ref": "#/definitions/ValueExtent"
+          "$ref": "#/definitions/ValueExtent",
+          "description": "Values of the data"
         },
         "field": {
+          "description": "Name of the data field.",
           "type": "string"
         },
         "legend": {
+          "description": "Whether to display legend",
           "type": "boolean"
         },
         "range": {
-          "$ref": "#/definitions/Range"
+          "$ref": "#/definitions/Range",
+          "description": "Values of the visual channel."
         },
         "type": {
+          "description": "Data type",
           "enum": [
             "quantitative",
             "nominal"
@@ -448,6 +454,7 @@
           "$ref": "#/definitions/ValueExtent"
         },
         "field": {
+          "description": "Name of the data field.",
           "type": "string"
         },
         "range": {
@@ -808,7 +815,8 @@
       "additionalProperties": false,
       "properties": {
         "chromosome": {
-          "$ref": "#/definitions/Chromosome"
+          "$ref": "#/definitions/Chromosome",
+          "description": "If specified, only showing a certain interval in a chromosome."
         },
         "interval": {
           "items": [
@@ -1515,15 +1523,19 @@
           ]
         },
         "domain": {
-          "$ref": "#/definitions/ValueExtent"
+          "$ref": "#/definitions/ValueExtent",
+          "description": "Values of the data"
         },
         "field": {
+          "description": "Name of the data field.",
           "type": "string"
         },
         "range": {
-          "$ref": "#/definitions/ValueExtent"
+          "$ref": "#/definitions/ValueExtent",
+          "description": "Range of the opacity."
         },
         "type": {
+          "description": "Data type",
           "enum": [
             "quantitative",
             "nominal"
@@ -4014,25 +4026,32 @@
       "additionalProperties": false,
       "properties": {
         "domain": {
-          "$ref": "#/definitions/ValueExtent"
+          "$ref": "#/definitions/ValueExtent",
+          "description": "Values of the data"
         },
         "field": {
+          "description": "Name of the data field.",
           "type": "string"
         },
         "grid": {
+          "description": "Whether to display grid.",
           "type": "boolean"
         },
         "legend": {
+          "description": "Whether to display legend",
           "type": "boolean"
         },
         "padding": {
+          "description": "Experimental: Used in `row` and `column` for vertical and horizontal padding.",
           "type": "number"
         },
         "range": {
-          "$ref": "#/definitions/ValueExtent"
+          "$ref": "#/definitions/ValueExtent",
+          "description": "??"
         },
         "type": {
           "const": "nominal",
+          "description": "Data type",
           "type": "string"
         }
       },
@@ -4379,18 +4398,23 @@
           ]
         },
         "domain": {
-          "$ref": "#/definitions/ValueExtent"
+          "$ref": "#/definitions/ValueExtent",
+          "description": "Values of the data"
         },
         "field": {
+          "description": "Name of the data field.",
           "type": "string"
         },
         "legend": {
+          "description": "not supported",
           "type": "boolean"
         },
         "range": {
-          "$ref": "#/definitions/ValueExtent"
+          "$ref": "#/definitions/ValueExtent",
+          "description": "Values of the visual channel."
         },
         "type": {
+          "description": "Data type",
           "enum": [
             "quantitative",
             "nominal"
@@ -4866,15 +4890,19 @@
           ]
         },
         "domain": {
-          "$ref": "#/definitions/ValueExtent"
+          "$ref": "#/definitions/ValueExtent",
+          "description": "Values of the data"
         },
         "field": {
+          "description": "Name of the data field.",
           "type": "string"
         },
         "range": {
-          "$ref": "#/definitions/Range"
+          "$ref": "#/definitions/Range",
+          "description": "Values of the visual channel."
         },
         "type": {
+          "description": "Data type",
           "enum": [
             "quantitative",
             "nominal"
@@ -4897,15 +4925,19 @@
           ]
         },
         "domain": {
-          "$ref": "#/definitions/ValueExtent"
+          "$ref": "#/definitions/ValueExtent",
+          "description": "Values of the data"
         },
         "field": {
+          "description": "Name of the data field.",
           "type": "string"
         },
         "range": {
-          "$ref": "#/definitions/ValueExtent"
+          "$ref": "#/definitions/ValueExtent",
+          "description": "Values of the stroke width."
         },
         "type": {
+          "description": "Data type",
           "enum": [
             "quantitative",
             "nominal"
@@ -5194,12 +5226,14 @@
       "additionalProperties": false,
       "properties": {
         "domain": {
+          "description": "Values of the data",
           "items": {
             "type": "string"
           },
           "type": "array"
         },
         "field": {
+          "description": "Name of the data field.",
           "type": "string"
         },
         "range": {
@@ -5209,6 +5243,7 @@
           "type": "array"
         },
         "type": {
+          "description": "Data type",
           "enum": [
             "quantitative",
             "nominal"
@@ -5327,31 +5362,40 @@
       "additionalProperties": false,
       "properties": {
         "aggregate": {
-          "$ref": "#/definitions/Aggregate"
+          "$ref": "#/definitions/Aggregate",
+          "description": "Specify how to aggregate data."
         },
         "axis": {
-          "$ref": "#/definitions/AxisPosition"
+          "$ref": "#/definitions/AxisPosition",
+          "description": "Specify where should the axis be put."
         },
         "domain": {
-          "$ref": "#/definitions/GenomicDomain"
+          "$ref": "#/definitions/GenomicDomain",
+          "description": "Values of the data filed"
         },
         "field": {
+          "description": "Name of the data field.",
           "type": "string"
         },
         "grid": {
+          "description": "Whether to display grid.",
           "type": "boolean"
         },
         "legend": {
+          "description": "Whether to display legend",
           "type": "boolean"
         },
         "linkingId": {
+          "description": "Users need to assign a unique linkingId for [linking views](/docs/user-interaction#linking-views) and [Brushing and Linking](/docs/user-interaction#brushing-and-linking)",
           "type": "string"
         },
         "range": {
-          "$ref": "#/definitions/ValueExtent"
+          "$ref": "#/definitions/ValueExtent",
+          "description": "Values of the visual channel."
         },
         "type": {
           "const": "genomic",
+          "description": "Specify the data type.",
           "type": "string"
         }
       },
@@ -5361,45 +5405,58 @@
       "additionalProperties": false,
       "properties": {
         "aggregate": {
-          "$ref": "#/definitions/Aggregate"
+          "$ref": "#/definitions/Aggregate",
+          "description": "Specify how to aggregate data."
         },
         "axis": {
-          "$ref": "#/definitions/AxisPosition"
+          "$ref": "#/definitions/AxisPosition",
+          "description": "Specify where should the axis be put."
         },
         "baseline": {
+          "description": "??",
           "type": [
             "string",
             "number"
           ]
         },
         "domain": {
-          "$ref": "#/definitions/ValueExtent"
+          "$ref": "#/definitions/ValueExtent",
+          "description": "Values of the data"
         },
         "field": {
+          "description": "Name of the data field.",
           "type": "string"
         },
         "flip": {
+          "description": "experimental: Flip a track vertically or horizontally",
           "type": "boolean"
         },
         "grid": {
+          "description": "Whether to display grid.",
           "type": "boolean"
         },
         "legend": {
+          "description": "Whether to display legend",
           "type": "boolean"
         },
         "linkingId": {
+          "description": "Users need to assign a unique linkingId for [linking views](/docs/user-interaction#linking-views) and [Brushing and Linking](/docs/user-interaction#brushing-and-linking)",
           "type": "string"
         },
         "mirrored": {
+          "description": "??",
           "type": "boolean"
         },
         "padding": {
+          "description": "Experimental: Used in `row` and `column` for vertical and horizontal padding.",
           "type": "number"
         },
         "range": {
-          "$ref": "#/definitions/ValueExtent"
+          "$ref": "#/definitions/ValueExtent",
+          "description": "Values of the visual channel."
         },
         "type": {
+          "description": "Specify the data type.",
           "enum": [
             "quantitative",
             "nominal",
@@ -5408,6 +5465,7 @@
           "type": "string"
         },
         "zeroBaseline": {
+          "description": "deprecated: We could remove this and use the `baseline` option instead",
           "type": "boolean"
         }
       },

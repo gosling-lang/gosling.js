@@ -42,6 +42,7 @@
               "type": "string"
             },
             "value": {
+              "description": "Assign a constant value for a visual channel.",
               "type": [
                 "number",
                 "string"
@@ -390,7 +391,8 @@
       "additionalProperties": false,
       "properties": {
         "chromosome": {
-          "$ref": "#/definitions/Chromosome"
+          "$ref": "#/definitions/Chromosome",
+          "description": "If specified, only showing a certain interval in a chromosome."
         },
         "interval": {
           "items": [
