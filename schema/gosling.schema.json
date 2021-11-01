@@ -411,13 +411,6 @@
     "Color": {
       "additionalProperties": false,
       "properties": {
-        "baseline": {
-          "description": "Custom baseline of the y-axis. __Default__: `0`",
-          "type": [
-            "string",
-            "number"
-          ]
-        },
         "domain": {
           "$ref": "#/definitions/ValueExtent",
           "description": "Values of the data"
@@ -441,10 +434,6 @@
             "nominal"
           ],
           "type": "string"
-        },
-        "zeroBaseline": {
-          "description": "Specify whether to use zero baseline. __Default__: `true`",
-          "type": "boolean"
         }
       },
       "type": "object"
@@ -1498,13 +1487,6 @@
     "Opacity": {
       "additionalProperties": false,
       "properties": {
-        "baseline": {
-          "description": "Custom baseline of the y-axis. __Default__: `0`",
-          "type": [
-            "string",
-            "number"
-          ]
-        },
         "domain": {
           "$ref": "#/definitions/ValueExtent",
           "description": "Values of the data"
@@ -1524,10 +1506,6 @@
             "nominal"
           ],
           "type": "string"
-        },
-        "zeroBaseline": {
-          "description": "Specify whether to use zero baseline. __Default__: `true`",
-          "type": "boolean"
         }
       },
       "type": "object"
@@ -4295,13 +4273,6 @@
     "Size": {
       "additionalProperties": false,
       "properties": {
-        "baseline": {
-          "description": "Custom baseline of the y-axis. __Default__: `0`",
-          "type": [
-            "string",
-            "number"
-          ]
-        },
         "domain": {
           "$ref": "#/definitions/ValueExtent",
           "description": "Values of the data"
@@ -4325,10 +4296,6 @@
             "nominal"
           ],
           "type": "string"
-        },
-        "zeroBaseline": {
-          "description": "Specify whether to use zero baseline. __Default__: `true`",
-          "type": "boolean"
         }
       },
       "type": "object"
@@ -4779,13 +4746,6 @@
     "Stroke": {
       "additionalProperties": false,
       "properties": {
-        "baseline": {
-          "description": "Custom baseline of the y-axis. __Default__: `0`",
-          "type": [
-            "string",
-            "number"
-          ]
-        },
         "domain": {
           "$ref": "#/definitions/ValueExtent",
           "description": "Values of the data"
@@ -4805,10 +4765,6 @@
             "nominal"
           ],
           "type": "string"
-        },
-        "zeroBaseline": {
-          "description": "Specify whether to use zero baseline. __Default__: `true`",
-          "type": "boolean"
         }
       },
       "type": "object"
@@ -4816,13 +4772,6 @@
     "StrokeWidth": {
       "additionalProperties": false,
       "properties": {
-        "baseline": {
-          "description": "Custom baseline of the y-axis. __Default__: `0`",
-          "type": [
-            "string",
-            "number"
-          ]
-        },
         "domain": {
           "$ref": "#/definitions/ValueExtent",
           "description": "Values of the data"
@@ -4842,10 +4791,6 @@
             "nominal"
           ],
           "type": "string"
-        },
-        "zeroBaseline": {
-          "description": "Specify whether to use zero baseline. __Default__: `true`",
-          "type": "boolean"
         }
       },
       "type": "object"
@@ -5329,7 +5274,7 @@
           "type": "string"
         },
         "flip": {
-          "description": "Flip the y-axis. This is done by inverting the `range` property. __Default__: `false`",
+          "description": "Whether to flip the y-axis. This is done by inverting the `range` property. __Default__: `false`",
           "type": "boolean"
         },
         "grid": {

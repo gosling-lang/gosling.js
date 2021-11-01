@@ -487,14 +487,14 @@ export interface Y extends AxisCommon {
     baseline?: string | number;
     /** Specify whether to use zero baseline. __Default__: `true`  */
     zeroBaseline?: boolean; // TODO: We could remove this and use the `baseline` option instead
-    /** Flip the y-axis. This is done by inverting the `range` property. __Default__: `false` */
+    /** Whether to flip the y-axis. This is done by inverting the `range` property. __Default__: `false` */
     flip?: boolean;
 }
 
 export interface ChannelDeepCommon {
     /** Name of the data field */
     field?: string;
-    /** Data type */
+    /** Specify the data type */
     type?: 'quantitative' | 'nominal' | 'genomic';
     /** Values of the data */
     domain?: ValueExtent;
@@ -522,10 +522,6 @@ export interface Color extends ChannelDeepCommon {
     range?: Range;
     /** Whether to display legend. __Default__: `false` */
     legend?: boolean;
-    /** Custom baseline of the y-axis. __Default__: `0` */
-    baseline?: string | number;
-    /** Specify whether to use zero baseline. __Default__: `true`  */
-    zeroBaseline?: boolean; // We could remove this and use the `baseline` option instead
 }
 
 export interface Size extends ChannelDeepCommon {
@@ -534,43 +530,27 @@ export interface Size extends ChannelDeepCommon {
     range?: ValueExtent;
     /** not supported: Whether to display legend. __Default__: `false` */
     legend?: boolean;
-    /** Custom baseline of the y-axis. __Default__: `0` */
-    baseline?: string | number;
-    /** Specify whether to use zero baseline. __Default__: `true`  */
-    zeroBaseline?: boolean; // We could remove this and use the `baseline` option instead
 }
 
 export interface Stroke extends ChannelDeepCommon {
     type?: 'quantitative' | 'nominal';
     domain?: ValueExtent;
     range?: Range;
-    /** Custom baseline of the y-axis. __Default__: `0` */
-    baseline?: string | number;
-    /** Specify whether to use zero baseline. __Default__: `true`  */
-    zeroBaseline?: boolean; // We could remove this and use the `baseline` option instead
 }
 
 export interface StrokeWidth extends ChannelDeepCommon {
     type?: 'quantitative' | 'nominal';
     domain?: ValueExtent;
     range?: ValueExtent;
-    /** Custom baseline of the y-axis. __Default__: `0` */
-    baseline?: string | number;
-    /** Specify whether to use zero baseline. __Default__: `true`  */
-    zeroBaseline?: boolean; // We could remove this and use the `baseline` option instead
 }
 
 export interface Opacity extends ChannelDeepCommon {
     type?: 'quantitative' | 'nominal';
     domain?: ValueExtent;
     range?: ValueExtent;
-    /** Custom baseline of the y-axis. __Default__: `0` */
-    baseline?: string | number;
-    /** Specify whether to use zero baseline. __Default__: `true`  */
-    zeroBaseline?: boolean; // We could remove this and use the `baseline` option instead
 }
 
-export interface Text extends ChannelDeepCommon {
+export interface Text extends Omit<ChannelDeepCommon, 'baseline'> {
     type?: 'quantitative' | 'nominal';
     domain?: string[];
     range?: string[];
