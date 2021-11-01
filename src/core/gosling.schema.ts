@@ -93,7 +93,7 @@ export interface CommonViewDef {
     /**
      * Proportion of the radius of the center white space.
      *
-     * __Default:__ 0.3
+     * __Default:__ `0.3`
      * @Range [0, 1]
      */
     centerRadius?: number; // [0, 1] (default: 0.3)
@@ -224,7 +224,6 @@ export interface Encoding {
     y1e?: Y | ChannelValue;
 
     row?: Row | ChannelValue;
-    column?: Column | ChannelValue;
 
     color?: Color | ChannelValue;
     size?: Size | ChannelValue;
@@ -273,7 +272,7 @@ export interface Style {
     /**
      * Whether to enable smooth paths when drawing curves.
      *
-     * __Default__: false
+     * __Default__: `false`
      */
     enableSmoothPath?: boolean;
 
@@ -345,7 +344,7 @@ export interface Style {
     textAnchor?: 'start' | 'middle' | 'end';
     /** Specify the connetion type of `betweenLink` marks.
      *
-     * __Default__: "corner"
+     * __Default__: `"corner"`
      */
     linkConnectionType?: 'straight' | 'curve' | 'corner';
 }
@@ -370,13 +369,13 @@ interface CommonVisibilityCondition {
     /**
      * Specify the buffer size (in pixel) of width or height when calculating the visibility.
      *
-     * __Default__: 0
+     * __Default__: `0`
      */
     conditionPadding?: number;
     /**
      * Specify the buffer size (in pixel) of width or height for smooth transition.
      *
-     * __Default__: 0
+     * __Default__: `0`
      */
     transitionPadding?: number;
 }
@@ -464,15 +463,15 @@ export interface AxisCommon {
     domain?: ValueExtent | GenomicDomain;
     /** Values of the visual channel. */
     range?: ValueExtent;
-    /** Specify where should the axis be put.  */
+    /** Specify where should the axis be put  */
     axis?: AxisPosition;
-    /** Whether to display legend */
+    /** Whether to display legend. __Default__: `false` */
     legend?: boolean;
     /** Users need to assign a unique linkingId for [linking views](/docs/user-interaction#linking-views) and [Brushing and Linking](/docs/user-interaction#brushing-and-linking) */
     linkingId?: string;
-    /** Specify how to aggregate data. */
+    /** Specify how to aggregate data. __Default__: `undefined` */
     aggregate?: Aggregate;
-    /** Whether to display grid. */
+    /** Whether to display grid. __Default__: `false` */
     grid?: boolean;
 }
 
@@ -484,56 +483,48 @@ export interface X extends AxisCommon {
 export interface Y extends AxisCommon {
     type?: 'quantitative' | 'nominal' | 'genomic';
     domain?: ValueExtent;
-    /** ?? */
+    /** Custom baseline of the y-axis. __Default__: `0` */
     baseline?: string | number;
-    /**
-     * deprecated: We could remove this and use the `baseline` option instead
-     **/
-    zeroBaseline?: boolean;
-    /** ?? */
-    mirrored?: boolean; // Show baseline on the top or right instead of bottom or left
-    /** experimental: Flip a track vertically or horizontally */
+    /** Specify whether to use zero baseline. __Default__: `true`  */
+    zeroBaseline?: boolean; // TODO: We could remove this and use the `baseline` option instead
+    /** Flip the y-axis. This is done by inverting the `range` property. __Default__: `false` */
     flip?: boolean;
-    /** Experimental: Used in `row` and `column` for vertical and horizontal padding. */
-    padding?: number;
 }
 
 export interface ChannelDeepCommon {
-    /** Name of the data field. */
+    /** Name of the data field */
     field?: string;
     /** Data type */
     type?: 'quantitative' | 'nominal' | 'genomic';
-    /** Value s of the data */
+    /** Values of the data */
     domain?: ValueExtent;
-    /** Ranges of visual channel values. */
+    /** Ranges of visual channel values */
     range?: ValueExtent | Range;
 }
 
 export interface Row extends ChannelDeepCommon {
     type?: 'nominal';
     domain?: ValueExtent;
+    /** Determine the start and end position of rendering area of this track along vertical axis. __Default__: `[0, height]` */
     range?: ValueExtent;
-    /** Whether to display legend */
+    /** Whether to display legend. __Default__: `false` */
     legend?: boolean;
-    /** Experimental: Used in `row` and `column` for vertical and horizontal padding. */
+    /** Determines the size of inner white spaces on the top and bottom of individiual rows. __Default__: `0` */
     padding?: number;
-    /** Whether to display grid. */
+    /** Whether to display grid. __Default__: `false` */
     grid?: boolean;
-}
-
-export interface Column extends ChannelDeepCommon {
-    type?: 'nominal';
-    domain?: ValueExtent;
-    range?: ValueExtent;
 }
 
 export interface Color extends ChannelDeepCommon {
     type?: 'quantitative' | 'nominal';
     domain?: ValueExtent;
+    /** Determine the colors that should be bound to data value. Default properties are determined considering the field type. */
     range?: Range;
-    /** Whether to display legend */
+    /** Whether to display legend. __Default__: `false` */
     legend?: boolean;
+    /** Custom baseline of the y-axis. __Default__: `0` */
     baseline?: string | number;
+    /** Specify whether to use zero baseline. __Default__: `true`  */
     zeroBaseline?: boolean; // We could remove this and use the `baseline` option instead
 }
 
@@ -541,9 +532,11 @@ export interface Size extends ChannelDeepCommon {
     type?: 'quantitative' | 'nominal';
     domain?: ValueExtent;
     range?: ValueExtent;
-    /** not supported */
-    legend?: boolean; // TODO: Support this
+    /** not supported: Whether to display legend. __Default__: `false` */
+    legend?: boolean;
+    /** Custom baseline of the y-axis. __Default__: `0` */
     baseline?: string | number;
+    /** Specify whether to use zero baseline. __Default__: `true`  */
     zeroBaseline?: boolean; // We could remove this and use the `baseline` option instead
 }
 
@@ -551,7 +544,9 @@ export interface Stroke extends ChannelDeepCommon {
     type?: 'quantitative' | 'nominal';
     domain?: ValueExtent;
     range?: Range;
+    /** Custom baseline of the y-axis. __Default__: `0` */
     baseline?: string | number;
+    /** Specify whether to use zero baseline. __Default__: `true`  */
     zeroBaseline?: boolean; // We could remove this and use the `baseline` option instead
 }
 
@@ -559,7 +554,9 @@ export interface StrokeWidth extends ChannelDeepCommon {
     type?: 'quantitative' | 'nominal';
     domain?: ValueExtent;
     range?: ValueExtent;
+    /** Custom baseline of the y-axis. __Default__: `0` */
     baseline?: string | number;
+    /** Specify whether to use zero baseline. __Default__: `true`  */
     zeroBaseline?: boolean; // We could remove this and use the `baseline` option instead
 }
 
@@ -567,7 +564,9 @@ export interface Opacity extends ChannelDeepCommon {
     type?: 'quantitative' | 'nominal';
     domain?: ValueExtent;
     range?: ValueExtent;
+    /** Custom baseline of the y-axis. __Default__: `0` */
     baseline?: string | number;
+    /** Specify whether to use zero baseline. __Default__: `true`  */
     zeroBaseline?: boolean; // We could remove this and use the `baseline` option instead
 }
 
@@ -645,7 +644,7 @@ export interface JSONData {
 
     /** Specify the number of rows loaded from the URL.
      *
-     * __Default:__ 1000
+     * __Default:__ `1000`
      */
     sampleLength?: number;
 
@@ -896,7 +895,7 @@ interface CommonFilterTransform {
     /**
      * when `{"not": true}`, apply a NOT logical operation to the filter.
      *
-     * __Default:__ false */
+     * __Default:__ `false` */
     not?: boolean;
 }
 
