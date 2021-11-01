@@ -419,7 +419,7 @@
         },
         "domain": {
           "$ref": "#/definitions/ValueExtent",
-          "description": "Values of the data"
+          "description": "Value s of the data"
         },
         "field": {
           "description": "Name of the data field.",
@@ -431,7 +431,7 @@
         },
         "range": {
           "$ref": "#/definitions/Range",
-          "description": "Values of the visual channel."
+          "description": "Ranges of visual channel values."
         },
         "type": {
           "description": "Data type",
@@ -451,17 +451,20 @@
       "additionalProperties": false,
       "properties": {
         "domain": {
-          "$ref": "#/definitions/ValueExtent"
+          "$ref": "#/definitions/ValueExtent",
+          "description": "Value s of the data"
         },
         "field": {
           "description": "Name of the data field.",
           "type": "string"
         },
         "range": {
-          "$ref": "#/definitions/ValueExtent"
+          "$ref": "#/definitions/ValueExtent",
+          "description": "Ranges of visual channel values."
         },
         "type": {
           "const": "nominal",
+          "description": "Data type",
           "type": "string"
         }
       },
@@ -1524,7 +1527,7 @@
         },
         "domain": {
           "$ref": "#/definitions/ValueExtent",
-          "description": "Values of the data"
+          "description": "Value s of the data"
         },
         "field": {
           "description": "Name of the data field.",
@@ -1532,7 +1535,7 @@
         },
         "range": {
           "$ref": "#/definitions/ValueExtent",
-          "description": "Range of the opacity."
+          "description": "Ranges of visual channel values."
         },
         "type": {
           "description": "Data type",
@@ -4027,7 +4030,7 @@
       "properties": {
         "domain": {
           "$ref": "#/definitions/ValueExtent",
-          "description": "Values of the data"
+          "description": "Value s of the data"
         },
         "field": {
           "description": "Name of the data field.",
@@ -4047,7 +4050,7 @@
         },
         "range": {
           "$ref": "#/definitions/ValueExtent",
-          "description": "??"
+          "description": "Ranges of visual channel values."
         },
         "type": {
           "const": "nominal",
@@ -4399,7 +4402,7 @@
         },
         "domain": {
           "$ref": "#/definitions/ValueExtent",
-          "description": "Values of the data"
+          "description": "Value s of the data"
         },
         "field": {
           "description": "Name of the data field.",
@@ -4411,7 +4414,7 @@
         },
         "range": {
           "$ref": "#/definitions/ValueExtent",
-          "description": "Values of the visual channel."
+          "description": "Ranges of visual channel values."
         },
         "type": {
           "description": "Data type",
@@ -4891,7 +4894,7 @@
         },
         "domain": {
           "$ref": "#/definitions/ValueExtent",
-          "description": "Values of the data"
+          "description": "Value s of the data"
         },
         "field": {
           "description": "Name of the data field.",
@@ -4899,7 +4902,7 @@
         },
         "range": {
           "$ref": "#/definitions/Range",
-          "description": "Values of the visual channel."
+          "description": "Ranges of visual channel values."
         },
         "type": {
           "description": "Data type",
@@ -4926,7 +4929,7 @@
         },
         "domain": {
           "$ref": "#/definitions/ValueExtent",
-          "description": "Values of the data"
+          "description": "Value s of the data"
         },
         "field": {
           "description": "Name of the data field.",
@@ -4934,7 +4937,7 @@
         },
         "range": {
           "$ref": "#/definitions/ValueExtent",
-          "description": "Values of the stroke width."
+          "description": "Ranges of visual channel values."
         },
         "type": {
           "description": "Data type",
@@ -5226,7 +5229,7 @@
       "additionalProperties": false,
       "properties": {
         "domain": {
-          "description": "Values of the data",
+          "description": "Value s of the data",
           "items": {
             "type": "string"
           },
@@ -5237,6 +5240,7 @@
           "type": "string"
         },
         "range": {
+          "description": "Ranges of visual channel values.",
           "items": {
             "type": "string"
           },
@@ -5371,7 +5375,7 @@
         },
         "domain": {
           "$ref": "#/definitions/GenomicDomain",
-          "description": "Values of the data filed"
+          "description": "Values of the data"
         },
         "field": {
           "description": "Name of the data field.",

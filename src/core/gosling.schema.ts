@@ -455,22 +455,34 @@ export type ChannelType = keyof typeof ChannelTypes | string;
 
 export type Channel = ChannelDeep | ChannelValue; // TODO: support null to allow removing spec when overriding
 
-export interface ChannelDeepCommon {
+export interface AxisCommon {
     /** Name of the data field. */
     field?: string;
+    /** Specify the data type. */
+    type?: 'quantitative' | 'nominal' | 'genomic';
+    /** Values of the data */
+    domain?: ValueExtent | GenomicDomain;
+    /** Values of the visual channel. */
+    range?: ValueExtent;
+    /** Specify where should the axis be put.  */
+    axis?: AxisPosition;
+    /** Whether to display legend */
+    legend?: boolean;
+    /** Users need to assign a unique linkingId for [linking views](/docs/user-interaction#linking-views) and [Brushing and Linking](/docs/user-interaction#brushing-and-linking) */
+    linkingId?: string;
+    /** Specify how to aggregate data. */
+    aggregate?: Aggregate;
+    /** Whether to display grid. */
+    grid?: boolean;
 }
 
 export interface X extends AxisCommon {
-    /** Specify the data type. */
     type?: 'genomic';
-    /** Values of the data filed */
     domain?: GenomicDomain;
 }
 
 export interface Y extends AxisCommon {
-    /** Specify the data type. */
     type?: 'quantitative' | 'nominal' | 'genomic';
-    /** Values of the data */
     domain?: ValueExtent;
     /** ?? */
     baseline?: string | number;
@@ -486,27 +498,20 @@ export interface Y extends AxisCommon {
     padding?: number;
 }
 
-export interface AxisCommon extends ChannelDeepCommon {
-    /** Values of the visual channel. */
-    range?: ValueExtent;
-    /** Specify where should the axis be put.  */
-    axis?: AxisPosition;
-    /** Whether to display legend */
-    legend?: boolean;
-    /** Users need to assign a unique linkingId for [linking views](/docs/user-interaction#linking-views) and [Brushing and Linking](/docs/user-interaction#brushing-and-linking) */
-    linkingId?: string;
-    /** Specify how to aggregate data. */
-    aggregate?: Aggregate;
-    /** Whether to display grid. */
-    grid?: boolean;
+export interface ChannelDeepCommon {
+    /** Name of the data field. */
+    field?: string;
+    /** Data type */
+    type?: 'quantitative' | 'nominal' | 'genomic';
+    /** Value s of the data */
+    domain?: ValueExtent;
+    /** Ranges of visual channel values. */
+    range?: ValueExtent | Range;
 }
 
 export interface Row extends ChannelDeepCommon {
-    /** Data type */
     type?: 'nominal';
-    /** Values of the data */
     domain?: ValueExtent;
-    /** ?? */
     range?: ValueExtent;
     /** Whether to display legend */
     legend?: boolean;
@@ -523,11 +528,8 @@ export interface Column extends ChannelDeepCommon {
 }
 
 export interface Color extends ChannelDeepCommon {
-    /** Data type */
     type?: 'quantitative' | 'nominal';
-    /** Values of the data */
     domain?: ValueExtent;
-    /** Values of the visual channel. */
     range?: Range;
     /** Whether to display legend */
     legend?: boolean;
@@ -536,11 +538,8 @@ export interface Color extends ChannelDeepCommon {
 }
 
 export interface Size extends ChannelDeepCommon {
-    /** Data type */
     type?: 'quantitative' | 'nominal';
-    /** Values of the data */
     domain?: ValueExtent;
-    /** Values of the visual channel. */
     range?: ValueExtent;
     /** not supported */
     legend?: boolean; // TODO: Support this
@@ -549,42 +548,31 @@ export interface Size extends ChannelDeepCommon {
 }
 
 export interface Stroke extends ChannelDeepCommon {
-    /** Data type */
     type?: 'quantitative' | 'nominal';
-    /** Values of the data */
     domain?: ValueExtent;
-    /** Values of the visual channel. */
     range?: Range;
     baseline?: string | number;
     zeroBaseline?: boolean; // We could remove this and use the `baseline` option instead
 }
 
 export interface StrokeWidth extends ChannelDeepCommon {
-    /** Data type */
     type?: 'quantitative' | 'nominal';
-    /** Values of the data */
     domain?: ValueExtent;
-    /** Values of the stroke width. */
     range?: ValueExtent;
     baseline?: string | number;
     zeroBaseline?: boolean; // We could remove this and use the `baseline` option instead
 }
 
 export interface Opacity extends ChannelDeepCommon {
-    /** Data type */
     type?: 'quantitative' | 'nominal';
-    /** Values of the data */
     domain?: ValueExtent;
-    /** Range of the opacity. */
     range?: ValueExtent;
     baseline?: string | number;
     zeroBaseline?: boolean; // We could remove this and use the `baseline` option instead
 }
 
 export interface Text extends ChannelDeepCommon {
-    /** Data type */
     type?: 'quantitative' | 'nominal';
-    /** Values of the data */
     domain?: string[];
     range?: string[];
 }
