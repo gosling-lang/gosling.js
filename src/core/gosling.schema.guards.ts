@@ -30,7 +30,9 @@ import {
     StackedTracks,
     BAMData,
     Range,
-    TemplateTrack
+    TemplateTrack,
+    XMultipleFields,
+    YMultipleFields
 } from './gosling.schema';
 import { SUPPORTED_CHANNELS } from './mark';
 import { isArray } from 'lodash-es';
@@ -119,10 +121,10 @@ export function IsTemplateTrack(track: Partial<Track>): track is TemplateTrack {
 export function Is2DTrack(track: Track) {
     return (
         IsSingleTrack(track) &&
-        IsChannelDeep(track.x) &&
-        track.x.type === 'genomic' &&
-        IsChannelDeep(track.y) &&
-        track.y.type === 'genomic'
+        IsChannelDeep(track.encoding.x) &&
+        track.encoding.x.type === 'genomic' &&
+        IsChannelDeep(track.encoding.y) &&
+        track.encoding.y.type === 'genomic'
     );
 }
 
@@ -146,6 +148,12 @@ export function IsDataDeepTileset(
 
 export function IsChannelDeep(channel: ChannelDeep | ChannelValue | undefined): channel is ChannelDeep {
     return typeof channel === 'object' && !('value' in channel);
+}
+
+export function IsMultiFieldChannel(
+    channel: ChannelDeep | ChannelValue | undefined
+): channel is XMultipleFields | YMultipleFields {
+    return typeof channel === 'object' && 'startField' in channel && 'endField' in channel;
 }
 
 export function IsOneOfFilter(_: FilterTransform): _ is OneOfFilter {
@@ -176,18 +184,18 @@ export function IsRangeArray(range?: Range): range is string[] | number[] {
 
 // TODO: perhaps, combine this with `isStackedChannel`
 /**
- * Check whether visual marks can be stacked on top of each other.
+ * Check whether visual marks are stacked on top of each other.
  */
 export function IsStackedMark(track: SingleTrack): boolean {
     return (
         (track.mark === 'bar' || track.mark === 'area' || track.mark === 'text') &&
-        IsChannelDeep(track.color) &&
-        track.color.type === 'nominal' &&
-        (!track.row || IsChannelValue(track.row)) &&
+        IsChannelDeep(track.encoding.color) &&
+        track.encoding.color.type === 'nominal' &&
+        (!track.encoding.row || IsChannelValue(track.encoding.row)) &&
         // TODO: determine whether to use stacked bar for nominal fields or not
-        IsChannelDeep(track.y) &&
-        track.y.type === 'quantitative' &&
-        !IsChannelDeep(track.ye)
+        IsChannelDeep(track.encoding.y) &&
+        track.encoding.y.type === 'quantitative' &&
+        !IsMultiFieldChannel(track.encoding.y)
     );
 }
 
@@ -196,7 +204,7 @@ export function IsStackedMark(track: SingleTrack): boolean {
  * For example, `area` marks with a `quantitative` `y` channel are being stacked.
  */
 export function IsStackedChannel(track: SingleTrack, channelKey: keyof typeof ChannelTypes): boolean {
-    const channel = track[channelKey];
+    const channel = track.encoding[channelKey];
     return (
         IsStackedMark(track) &&
         // only x or y channel can be stacked
@@ -211,17 +219,43 @@ export function IsStackedChannel(track: SingleTrack, channelKey: keyof typeof Ch
  * Retreive value using a `channel`.
  * `undefined` if unable to retreive the value.
  */
-export function getValueUsingChannel(datum: { [k: string]: string | number }, channel: Channel) {
-    if (IsChannelDeep(channel) && channel.field) {
-        return datum[channel?.field];
+export function getValueUsingChannel(
+    datum: { [k: string]: string | number },
+    channel: Channel,
+    fieldKey?: 'field' | 'startField' | 'endField' | 'startField2' | 'endField2'
+) {
+    const field = getChannelField(channel, fieldKey);
+    if (IsChannelDeep(channel) && field) {
+        return datum[field];
     }
+    return undefined;
+}
+
+/**
+ * Get a field name from a channel. If there are multiple fields (e.g., start and end fields), get the first one
+ * unless `channelKey` is defined. Return `undefined` if a channel does not have any fields specified.
+ */
+export function getChannelField(
+    channel: Channel | undefined,
+    fieldKey?: 'field' | 'startField' | 'endField' | 'startField2' | 'endField2'
+): string | undefined {
+    if (IsMultiFieldChannel(channel)) {
+        // This means a channel is either X or Y and contains multiple fields (e.g., start and end fields).
+        return channel[!fieldKey || fieldKey === 'field' ? 'startField' : fieldKey];
+    } else if (channel && 'field' in channel) {
+        // This means a channel contains a single field
+        if (!fieldKey || fieldKey === 'field') {
+            return channel.field;
+        }
+    }
+    // Otherwise, just return `undefined`
     return undefined;
 }
 
 export function getChannelKeysByAggregateFnc(spec: SingleTrack) {
     const keys: (keyof typeof ChannelTypes)[] = [];
     SUPPORTED_CHANNELS.forEach(k => {
-        const c = spec[k];
+        const c = spec.encoding[k];
         if (IsChannelDeep(c) && 'aggregate' in c) {
             keys.push(k);
         }
@@ -235,7 +269,7 @@ export function getChannelKeysByAggregateFnc(spec: SingleTrack) {
 export function getChannelKeysByType(spec: SingleTrack, t: FieldType) {
     const keys: (keyof typeof ChannelTypes)[] = [];
     SUPPORTED_CHANNELS.forEach(k => {
-        const c = spec[k];
+        const c = spec.encoding[k];
         if (IsChannelDeep(c) && c.type === t) {
             keys.push(k);
         }
@@ -244,14 +278,19 @@ export function getChannelKeysByType(spec: SingleTrack, t: FieldType) {
 }
 
 export function IsXAxis(_: Track) {
-    if ((IsSingleTrack(_) || IsOverlaidTrack(_)) && IsChannelDeep(_.x) && _.x.axis && _.x.axis !== 'none') {
+    if (
+        (IsSingleTrack(_) || IsOverlaidTrack(_)) &&
+        IsChannelDeep(_.encoding?.x) &&
+        _.encoding?.x.axis &&
+        _.encoding?.x.axis !== 'none'
+    ) {
         return true;
     } else if (IsOverlaidTrack(_)) {
         let isFound = false;
         _.overlay.forEach(t => {
             if (isFound) return;
 
-            if (IsChannelDeep(t.x) && t.x.axis && t.x.axis !== 'none') {
+            if (IsChannelDeep(t.encoding?.x) && t.encoding?.x.axis && t.encoding?.x.axis !== 'none') {
                 isFound = true;
             }
         });

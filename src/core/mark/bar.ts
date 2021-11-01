@@ -45,7 +45,7 @@ export function drawBar(trackInfo: any, tile: any, model: GoslingTrackModel) {
     const rowHeight = trackHeight / rowCategories.length;
 
     /* baseline */
-    const baselineValue = IsChannelDeep(spec.y) ? spec.y?.baseline : undefined;
+    const baselineValue = IsChannelDeep(spec.encoding.y) ? spec.encoding.y?.baseline : undefined;
     const staticBaseY = model.encodedValue('y', baselineValue) ?? 0;
 
     /* render */
@@ -131,7 +131,7 @@ export function drawBar(trackInfo: any, tile: any, model: GoslingTrackModel) {
             const rowPosition = model.encodedValue('row', rowCategory);
 
             data.filter(d => {
-                const rowValue = getValueUsingChannel(d, spec.row as Channel);
+                const rowValue = getValueUsingChannel(d, spec.encoding.row as Channel);
                 return !rowValue || rowValue === rowCategory;
             }).forEach(d => {
                 const color = model.encodedPIXIProperty('color', d);
@@ -217,7 +217,7 @@ export function barProperty(
     }
 ) {
     const x = gm.visualPropertyByChannel('x', datum);
-    const xe = gm.visualPropertyByChannel('xe', datum);
+    const xe = gm.visualPropertyByChannel('x', datum, 'endField');
     const size = gm.visualPropertyByChannel('size', datum);
     switch (propertyKey) {
         case 'width':

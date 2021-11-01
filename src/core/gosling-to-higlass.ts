@@ -41,11 +41,11 @@ export function goslingToHiGlass(
 
         const genomicChannel = getGenomicChannelFromTrack(firstResolvedSpec);
         const genomicChannelKey = getGenomicChannelKeyFromTrack(firstResolvedSpec);
-        const isXGenomic = genomicChannelKey === 'x' || genomicChannelKey === 'xe';
+        const isXGenomic = genomicChannelKey === 'x';
         const xDomain = isXGenomic && IsChannelDeep(genomicChannel) ? (genomicChannel.domain as Domain) : undefined;
         const yDomain =
-            Is2DTrack(firstResolvedSpec) && IsChannelDeep(firstResolvedSpec.y)
-                ? (firstResolvedSpec.y.domain as Domain)
+            Is2DTrack(firstResolvedSpec) && IsChannelDeep(firstResolvedSpec.encoding.y)
+                ? (firstResolvedSpec.encoding.y.domain as Domain)
                 : undefined;
         const width =
             bb.width -
@@ -127,7 +127,9 @@ export function goslingToHiGlass(
                     : viridisColorMap;
             hgTrack.options.trackBorderWidth = 1;
             hgTrack.options.trackBorderColor = 'black';
-            hgTrack.options.colorbarPosition = (firstResolvedSpec.color as any)?.legend ? 'topRight' : 'hidden';
+            hgTrack.options.colorbarPosition = (firstResolvedSpec.encoding.color as any)?.legend
+                ? 'topRight'
+                : 'hidden';
         }
 
         if (firstResolvedSpec.overlayOnPreviousTrack) {
@@ -185,7 +187,7 @@ export function goslingToHiGlass(
 
         // check whether to show axis
         ['x', 'y'].forEach(c => {
-            const channel = (firstResolvedSpec as any)[c];
+            const channel = (firstResolvedSpec as any).encoding?.[c];
             if (
                 IsChannelDeep(channel) &&
                 'axis' in channel &&

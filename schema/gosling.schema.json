@@ -792,6 +792,16 @@
       ],
       "type": "string"
     },
+    "Domain": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/ValueExtent"
+        },
+        {
+          "$ref": "#/definitions/GenomicDomain"
+        }
+      ]
+    },
     "DomainChr": {
       "additionalProperties": false,
       "properties": {
@@ -879,6 +889,112 @@
       "required": [
         "interval"
       ],
+      "type": "object"
+    },
+    "Encoding": {
+      "additionalProperties": false,
+      "properties": {
+        "color": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Color"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
+        },
+        "column": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Column"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
+        },
+        "opacity": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Opacity"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
+        },
+        "row": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Row"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
+        },
+        "size": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Size"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
+        },
+        "stroke": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Stroke"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
+        },
+        "strokeWidth": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/StrokeWidth"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
+        },
+        "text": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Text"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
+        },
+        "x": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/X"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
+        },
+        "y": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Y"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
+        }
+      },
       "type": "object"
     },
     "ExonSplitTransform": {
@@ -1563,26 +1679,6 @@
           "description": "Proportion of the radius of the center white space.\n\n__Default:__ 0.3",
           "type": "number"
         },
-        "color": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/Color"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
-        "column": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/Column"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
         "data": {
           "$ref": "#/definitions/DataDeep"
         },
@@ -1594,6 +1690,9 @@
         },
         "displacement": {
           "$ref": "#/definitions/Displacement"
+        },
+        "encoding": {
+          "$ref": "#/definitions/Encoding"
         },
         "endAngle": {
           "description": "Specify the end angle (in the range of [0, 360]) of circular tracks (`{\"layout\": \"circular\"}`).",
@@ -1624,16 +1723,6 @@
         "mark": {
           "$ref": "#/definitions/Mark"
         },
-        "opacity": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/Opacity"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
         "orientation": {
           "$ref": "#/definitions/Orientation",
           "description": "Specify the orientation."
@@ -1662,26 +1751,6 @@
                 "description": "Proportion of the radius of the center white space.\n\n__Default:__ 0.3",
                 "type": "number"
               },
-              "color": {
-                "anyOf": [
-                  {
-                    "$ref": "#/definitions/Color"
-                  },
-                  {
-                    "$ref": "#/definitions/ChannelValue"
-                  }
-                ]
-              },
-              "column": {
-                "anyOf": [
-                  {
-                    "$ref": "#/definitions/Column"
-                  },
-                  {
-                    "$ref": "#/definitions/ChannelValue"
-                  }
-                ]
-              },
               "data": {
                 "$ref": "#/definitions/DataDeep"
               },
@@ -1693,6 +1762,9 @@
               },
               "displacement": {
                 "$ref": "#/definitions/Displacement"
+              },
+              "encoding": {
+                "$ref": "#/definitions/Encoding"
               },
               "endAngle": {
                 "description": "Specify the end angle (in the range of [0, 360]) of circular tracks (`{\"layout\": \"circular\"}`).",
@@ -1715,16 +1787,6 @@
               "mark": {
                 "$ref": "#/definitions/Mark"
               },
-              "opacity": {
-                "anyOf": [
-                  {
-                    "$ref": "#/definitions/Opacity"
-                  },
-                  {
-                    "$ref": "#/definitions/ChannelValue"
-                  }
-                ]
-              },
               "orientation": {
                 "$ref": "#/definitions/Orientation",
                 "description": "Specify the orientation."
@@ -1744,26 +1806,6 @@
                 "description": "internal",
                 "type": "object"
               },
-              "row": {
-                "anyOf": [
-                  {
-                    "$ref": "#/definitions/Row"
-                  },
-                  {
-                    "$ref": "#/definitions/ChannelValue"
-                  }
-                ]
-              },
-              "size": {
-                "anyOf": [
-                  {
-                    "$ref": "#/definitions/Size"
-                  },
-                  {
-                    "$ref": "#/definitions/ChannelValue"
-                  }
-                ]
-              },
               "spacing": {
                 "description": "- If `{\"layout\": \"linear\"}`, specify the space between tracks in pixels;\n\n- If `{\"layout\": \"circular\"}`, specify the space between tracks in percentage ranging from 0 to 100.",
                 "type": "number"
@@ -1779,39 +1821,9 @@
               "stretch": {
                 "type": "boolean"
               },
-              "stroke": {
-                "anyOf": [
-                  {
-                    "$ref": "#/definitions/Stroke"
-                  },
-                  {
-                    "$ref": "#/definitions/ChannelValue"
-                  }
-                ]
-              },
-              "strokeWidth": {
-                "anyOf": [
-                  {
-                    "$ref": "#/definitions/StrokeWidth"
-                  },
-                  {
-                    "$ref": "#/definitions/ChannelValue"
-                  }
-                ]
-              },
               "style": {
                 "$ref": "#/definitions/Style",
                 "description": "Define the [style](http://gosling-lang.org/docs/visual-channel#style-related-properties) of multive views. Will be overriden by the style of children elements (e.g., view, track)."
-              },
-              "text": {
-                "anyOf": [
-                  {
-                    "$ref": "#/definitions/Text"
-                  },
-                  {
-                    "$ref": "#/definitions/ChannelValue"
-                  }
-                ]
               },
               "tooltip": {
                 "items": {
@@ -1824,36 +1836,6 @@
                   "$ref": "#/definitions/VisibilityCondition"
                 },
                 "type": "array"
-              },
-              "x": {
-                "anyOf": [
-                  {
-                    "$ref": "#/definitions/X"
-                  },
-                  {
-                    "$ref": "#/definitions/ChannelValue"
-                  }
-                ]
-              },
-              "x1": {
-                "anyOf": [
-                  {
-                    "$ref": "#/definitions/X"
-                  },
-                  {
-                    "$ref": "#/definitions/ChannelValue"
-                  }
-                ]
-              },
-              "x1e": {
-                "anyOf": [
-                  {
-                    "$ref": "#/definitions/X"
-                  },
-                  {
-                    "$ref": "#/definitions/ChannelValue"
-                  }
-                ]
               },
               "xAxis": {
                 "$ref": "#/definitions/AxisPosition",
@@ -1876,59 +1858,9 @@
                 "description": "Specify the x offset of views in the unit of pixels",
                 "type": "number"
               },
-              "xe": {
-                "anyOf": [
-                  {
-                    "$ref": "#/definitions/X"
-                  },
-                  {
-                    "$ref": "#/definitions/ChannelValue"
-                  }
-                ]
-              },
-              "y": {
-                "anyOf": [
-                  {
-                    "$ref": "#/definitions/Y"
-                  },
-                  {
-                    "$ref": "#/definitions/ChannelValue"
-                  }
-                ]
-              },
-              "y1": {
-                "anyOf": [
-                  {
-                    "$ref": "#/definitions/Y"
-                  },
-                  {
-                    "$ref": "#/definitions/ChannelValue"
-                  }
-                ]
-              },
-              "y1e": {
-                "anyOf": [
-                  {
-                    "$ref": "#/definitions/Y"
-                  },
-                  {
-                    "$ref": "#/definitions/ChannelValue"
-                  }
-                ]
-              },
               "yOffset": {
                 "description": "Specify the y offset of views in the unit of pixels",
                 "type": "number"
-              },
-              "ye": {
-                "anyOf": [
-                  {
-                    "$ref": "#/definitions/Y"
-                  },
-                  {
-                    "$ref": "#/definitions/ChannelValue"
-                  }
-                ]
               },
               "zoomLimits": {
                 "$ref": "#/definitions/ZoomLimits"
@@ -1949,26 +1881,6 @@
           "description": "internal",
           "type": "object"
         },
-        "row": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/Row"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
-        "size": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/Size"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
         "spacing": {
           "description": "- If `{\"layout\": \"linear\"}`, specify the space between tracks in pixels;\n\n- If `{\"layout\": \"circular\"}`, specify the space between tracks in percentage ranging from 0 to 100.",
           "type": "number"
@@ -1984,42 +1896,12 @@
         "stretch": {
           "type": "boolean"
         },
-        "stroke": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/Stroke"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
-        "strokeWidth": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/StrokeWidth"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
         "style": {
           "$ref": "#/definitions/Style",
           "description": "Define the [style](http://gosling-lang.org/docs/visual-channel#style-related-properties) of multive views. Will be overriden by the style of children elements (e.g., view, track)."
         },
         "subtitle": {
           "type": "string"
-        },
-        "text": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/Text"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
         },
         "title": {
           "description": "If defined, will show the textual label on the left-top corner of a track.",
@@ -2040,36 +1922,6 @@
         "width": {
           "description": "Specify the track width in pixels.",
           "type": "number"
-        },
-        "x": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/X"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
-        "x1": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/X"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
-        "x1e": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/X"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
         },
         "xAxis": {
           "$ref": "#/definitions/AxisPosition",
@@ -2092,59 +1944,9 @@
           "description": "Specify the x offset of views in the unit of pixels",
           "type": "number"
         },
-        "xe": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/X"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
-        "y": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/Y"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
-        "y1": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/Y"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
-        "y1e": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/Y"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
         "yOffset": {
           "description": "Specify the y offset of views in the unit of pixels",
           "type": "number"
-        },
-        "ye": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/Y"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
         },
         "zoomLimits": {
           "$ref": "#/definitions/ZoomLimits"
@@ -2180,26 +1982,6 @@
           "description": "Proportion of the radius of the center white space.\n\n__Default:__ 0.3",
           "type": "number"
         },
-        "color": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/Color"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
-        "column": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/Column"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
         "data": {
           "$ref": "#/definitions/DataDeep"
         },
@@ -2211,6 +1993,9 @@
         },
         "displacement": {
           "$ref": "#/definitions/Displacement"
+        },
+        "encoding": {
+          "$ref": "#/definitions/Encoding"
         },
         "endAngle": {
           "description": "Specify the end angle (in the range of [0, 360]) of circular tracks (`{\"layout\": \"circular\"}`).",
@@ -2241,16 +2026,6 @@
         "mark": {
           "$ref": "#/definitions/Mark"
         },
-        "opacity": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/Opacity"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
         "orientation": {
           "$ref": "#/definitions/Orientation",
           "description": "Specify the orientation."
@@ -2270,26 +2045,6 @@
           "description": "internal",
           "type": "object"
         },
-        "row": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/Row"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
-        "size": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/Size"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
         "spacing": {
           "description": "- If `{\"layout\": \"linear\"}`, specify the space between tracks in pixels;\n\n- If `{\"layout\": \"circular\"}`, specify the space between tracks in percentage ranging from 0 to 100.",
           "type": "number"
@@ -2305,42 +2060,12 @@
         "stretch": {
           "type": "boolean"
         },
-        "stroke": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/Stroke"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
-        "strokeWidth": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/StrokeWidth"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
         "style": {
           "$ref": "#/definitions/Style",
           "description": "Define the [style](http://gosling-lang.org/docs/visual-channel#style-related-properties) of multive views. Will be overriden by the style of children elements (e.g., view, track)."
         },
         "subtitle": {
           "type": "string"
-        },
-        "text": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/Text"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
         },
         "title": {
           "description": "If defined, will show the textual label on the left-top corner of a track.",
@@ -2368,36 +2093,6 @@
           "description": "Specify the track width in pixels.",
           "type": "number"
         },
-        "x": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/X"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
-        "x1": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/X"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
-        "x1e": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/X"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
         "xAxis": {
           "$ref": "#/definitions/AxisPosition",
           "description": "not supported"
@@ -2419,59 +2114,9 @@
           "description": "Specify the x offset of views in the unit of pixels",
           "type": "number"
         },
-        "xe": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/X"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
-        "y": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/Y"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
-        "y1": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/Y"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
-        "y1e": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/Y"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
         "yOffset": {
           "description": "Specify the y offset of views in the unit of pixels",
           "type": "number"
-        },
-        "ye": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/Y"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
         },
         "zoomLimits": {
           "$ref": "#/definitions/ZoomLimits"
@@ -2516,26 +2161,6 @@
           "description": "Proportion of the radius of the center white space.\n\n__Default:__ 0.3",
           "type": "number"
         },
-        "color": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/Color"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
-        "column": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/Column"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
         "data": {
           "$ref": "#/definitions/DataDeep"
         },
@@ -2549,10 +2174,17 @@
           "$ref": "#/definitions/Displacement"
         },
         "encoding": {
-          "additionalProperties": {
-            "$ref": "#/definitions/Channel"
-          },
-          "type": "object"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Encoding"
+            },
+            {
+              "additionalProperties": {
+                "$ref": "#/definitions/Channel"
+              },
+              "type": "object"
+            }
+          ]
         },
         "endAngle": {
           "description": "Specify the end angle (in the range of [0, 360]) of circular tracks (`{\"layout\": \"circular\"}`).",
@@ -2583,16 +2215,6 @@
         "mark": {
           "$ref": "#/definitions/Mark"
         },
-        "opacity": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/Opacity"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
         "orientation": {
           "$ref": "#/definitions/Orientation",
           "description": "Specify the orientation."
@@ -2621,26 +2243,6 @@
                 "description": "Proportion of the radius of the center white space.\n\n__Default:__ 0.3",
                 "type": "number"
               },
-              "color": {
-                "anyOf": [
-                  {
-                    "$ref": "#/definitions/Color"
-                  },
-                  {
-                    "$ref": "#/definitions/ChannelValue"
-                  }
-                ]
-              },
-              "column": {
-                "anyOf": [
-                  {
-                    "$ref": "#/definitions/Column"
-                  },
-                  {
-                    "$ref": "#/definitions/ChannelValue"
-                  }
-                ]
-              },
               "data": {
                 "$ref": "#/definitions/DataDeep"
               },
@@ -2652,6 +2254,9 @@
               },
               "displacement": {
                 "$ref": "#/definitions/Displacement"
+              },
+              "encoding": {
+                "$ref": "#/definitions/Encoding"
               },
               "endAngle": {
                 "description": "Specify the end angle (in the range of [0, 360]) of circular tracks (`{\"layout\": \"circular\"}`).",
@@ -2674,16 +2279,6 @@
               "mark": {
                 "$ref": "#/definitions/Mark"
               },
-              "opacity": {
-                "anyOf": [
-                  {
-                    "$ref": "#/definitions/Opacity"
-                  },
-                  {
-                    "$ref": "#/definitions/ChannelValue"
-                  }
-                ]
-              },
               "orientation": {
                 "$ref": "#/definitions/Orientation",
                 "description": "Specify the orientation."
@@ -2703,26 +2298,6 @@
                 "description": "internal",
                 "type": "object"
               },
-              "row": {
-                "anyOf": [
-                  {
-                    "$ref": "#/definitions/Row"
-                  },
-                  {
-                    "$ref": "#/definitions/ChannelValue"
-                  }
-                ]
-              },
-              "size": {
-                "anyOf": [
-                  {
-                    "$ref": "#/definitions/Size"
-                  },
-                  {
-                    "$ref": "#/definitions/ChannelValue"
-                  }
-                ]
-              },
               "spacing": {
                 "description": "- If `{\"layout\": \"linear\"}`, specify the space between tracks in pixels;\n\n- If `{\"layout\": \"circular\"}`, specify the space between tracks in percentage ranging from 0 to 100.",
                 "type": "number"
@@ -2738,39 +2313,9 @@
               "stretch": {
                 "type": "boolean"
               },
-              "stroke": {
-                "anyOf": [
-                  {
-                    "$ref": "#/definitions/Stroke"
-                  },
-                  {
-                    "$ref": "#/definitions/ChannelValue"
-                  }
-                ]
-              },
-              "strokeWidth": {
-                "anyOf": [
-                  {
-                    "$ref": "#/definitions/StrokeWidth"
-                  },
-                  {
-                    "$ref": "#/definitions/ChannelValue"
-                  }
-                ]
-              },
               "style": {
                 "$ref": "#/definitions/Style",
                 "description": "Define the [style](http://gosling-lang.org/docs/visual-channel#style-related-properties) of multive views. Will be overriden by the style of children elements (e.g., view, track)."
-              },
-              "text": {
-                "anyOf": [
-                  {
-                    "$ref": "#/definitions/Text"
-                  },
-                  {
-                    "$ref": "#/definitions/ChannelValue"
-                  }
-                ]
               },
               "tooltip": {
                 "items": {
@@ -2783,36 +2328,6 @@
                   "$ref": "#/definitions/VisibilityCondition"
                 },
                 "type": "array"
-              },
-              "x": {
-                "anyOf": [
-                  {
-                    "$ref": "#/definitions/X"
-                  },
-                  {
-                    "$ref": "#/definitions/ChannelValue"
-                  }
-                ]
-              },
-              "x1": {
-                "anyOf": [
-                  {
-                    "$ref": "#/definitions/X"
-                  },
-                  {
-                    "$ref": "#/definitions/ChannelValue"
-                  }
-                ]
-              },
-              "x1e": {
-                "anyOf": [
-                  {
-                    "$ref": "#/definitions/X"
-                  },
-                  {
-                    "$ref": "#/definitions/ChannelValue"
-                  }
-                ]
               },
               "xAxis": {
                 "$ref": "#/definitions/AxisPosition",
@@ -2835,59 +2350,9 @@
                 "description": "Specify the x offset of views in the unit of pixels",
                 "type": "number"
               },
-              "xe": {
-                "anyOf": [
-                  {
-                    "$ref": "#/definitions/X"
-                  },
-                  {
-                    "$ref": "#/definitions/ChannelValue"
-                  }
-                ]
-              },
-              "y": {
-                "anyOf": [
-                  {
-                    "$ref": "#/definitions/Y"
-                  },
-                  {
-                    "$ref": "#/definitions/ChannelValue"
-                  }
-                ]
-              },
-              "y1": {
-                "anyOf": [
-                  {
-                    "$ref": "#/definitions/Y"
-                  },
-                  {
-                    "$ref": "#/definitions/ChannelValue"
-                  }
-                ]
-              },
-              "y1e": {
-                "anyOf": [
-                  {
-                    "$ref": "#/definitions/Y"
-                  },
-                  {
-                    "$ref": "#/definitions/ChannelValue"
-                  }
-                ]
-              },
               "yOffset": {
                 "description": "Specify the y offset of views in the unit of pixels",
                 "type": "number"
-              },
-              "ye": {
-                "anyOf": [
-                  {
-                    "$ref": "#/definitions/Y"
-                  },
-                  {
-                    "$ref": "#/definitions/ChannelValue"
-                  }
-                ]
               },
               "zoomLimits": {
                 "$ref": "#/definitions/ZoomLimits"
@@ -2908,26 +2373,6 @@
           "description": "internal",
           "type": "object"
         },
-        "row": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/Row"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
-        "size": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/Size"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
         "spacing": {
           "description": "- If `{\"layout\": \"linear\"}`, specify the space between tracks in pixels;\n\n- If `{\"layout\": \"circular\"}`, specify the space between tracks in percentage ranging from 0 to 100.",
           "type": "number"
@@ -2943,26 +2388,6 @@
         "stretch": {
           "type": "boolean"
         },
-        "stroke": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/Stroke"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
-        "strokeWidth": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/StrokeWidth"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
         "style": {
           "$ref": "#/definitions/Style",
           "description": "Define the [style](http://gosling-lang.org/docs/visual-channel#style-related-properties) of multive views. Will be overriden by the style of children elements (e.g., view, track)."
@@ -2972,16 +2397,6 @@
         },
         "template": {
           "type": "string"
-        },
-        "text": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/Text"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
         },
         "title": {
           "description": "If defined, will show the textual label on the left-top corner of a track.",
@@ -3002,36 +2417,6 @@
         "width": {
           "description": "Specify the track width in pixels.",
           "type": "number"
-        },
-        "x": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/X"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
-        "x1": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/X"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
-        "x1e": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/X"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
         },
         "xAxis": {
           "$ref": "#/definitions/AxisPosition",
@@ -3054,59 +2439,9 @@
           "description": "Specify the x offset of views in the unit of pixels",
           "type": "number"
         },
-        "xe": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/X"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
-        "y": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/Y"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
-        "y1": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/Y"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
-        "y1e": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/Y"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
         "yOffset": {
           "description": "Specify the y offset of views in the unit of pixels",
           "type": "number"
-        },
-        "ye": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/Y"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
         },
         "zoomLimits": {
           "$ref": "#/definitions/ZoomLimits"
@@ -3281,26 +2616,6 @@
               "description": "Proportion of the radius of the center white space.\n\n__Default:__ 0.3",
               "type": "number"
             },
-            "color": {
-              "anyOf": [
-                {
-                  "$ref": "#/definitions/Color"
-                },
-                {
-                  "$ref": "#/definitions/ChannelValue"
-                }
-              ]
-            },
-            "column": {
-              "anyOf": [
-                {
-                  "$ref": "#/definitions/Column"
-                },
-                {
-                  "$ref": "#/definitions/ChannelValue"
-                }
-              ]
-            },
             "data": {
               "$ref": "#/definitions/DataDeep"
             },
@@ -3315,6 +2630,9 @@
             },
             "displacement": {
               "$ref": "#/definitions/Displacement"
+            },
+            "encoding": {
+              "$ref": "#/definitions/Encoding"
             },
             "endAngle": {
               "description": "Specify the end angle (in the range of [0, 360]) of circular tracks (`{\"layout\": \"circular\"}`).",
@@ -3345,16 +2663,6 @@
             "mark": {
               "$ref": "#/definitions/Mark"
             },
-            "opacity": {
-              "anyOf": [
-                {
-                  "$ref": "#/definitions/Opacity"
-                },
-                {
-                  "$ref": "#/definitions/ChannelValue"
-                }
-              ]
-            },
             "orientation": {
               "$ref": "#/definitions/Orientation",
               "description": "Specify the orientation."
@@ -3374,26 +2682,6 @@
               "description": "internal",
               "type": "object"
             },
-            "row": {
-              "anyOf": [
-                {
-                  "$ref": "#/definitions/Row"
-                },
-                {
-                  "$ref": "#/definitions/ChannelValue"
-                }
-              ]
-            },
-            "size": {
-              "anyOf": [
-                {
-                  "$ref": "#/definitions/Size"
-                },
-                {
-                  "$ref": "#/definitions/ChannelValue"
-                }
-              ]
-            },
             "spacing": {
               "description": "- If `{\"layout\": \"linear\"}`, specify the space between tracks in pixels;\n\n- If `{\"layout\": \"circular\"}`, specify the space between tracks in percentage ranging from 0 to 100.",
               "type": "number"
@@ -3409,42 +2697,12 @@
             "stretch": {
               "type": "boolean"
             },
-            "stroke": {
-              "anyOf": [
-                {
-                  "$ref": "#/definitions/Stroke"
-                },
-                {
-                  "$ref": "#/definitions/ChannelValue"
-                }
-              ]
-            },
-            "strokeWidth": {
-              "anyOf": [
-                {
-                  "$ref": "#/definitions/StrokeWidth"
-                },
-                {
-                  "$ref": "#/definitions/ChannelValue"
-                }
-              ]
-            },
             "style": {
               "$ref": "#/definitions/Style",
               "description": "Define the [style](http://gosling-lang.org/docs/visual-channel#style-related-properties) of multive views. Will be overriden by the style of children elements (e.g., view, track)."
             },
             "subtitle": {
               "type": "string"
-            },
-            "text": {
-              "anyOf": [
-                {
-                  "$ref": "#/definitions/Text"
-                },
-                {
-                  "$ref": "#/definitions/ChannelValue"
-                }
-              ]
             },
             "title": {
               "description": "If defined, will show the textual label on the left-top corner of a track.",
@@ -3472,36 +2730,6 @@
               "description": "Specify the track width in pixels.",
               "type": "number"
             },
-            "x": {
-              "anyOf": [
-                {
-                  "$ref": "#/definitions/X"
-                },
-                {
-                  "$ref": "#/definitions/ChannelValue"
-                }
-              ]
-            },
-            "x1": {
-              "anyOf": [
-                {
-                  "$ref": "#/definitions/X"
-                },
-                {
-                  "$ref": "#/definitions/ChannelValue"
-                }
-              ]
-            },
-            "x1e": {
-              "anyOf": [
-                {
-                  "$ref": "#/definitions/X"
-                },
-                {
-                  "$ref": "#/definitions/ChannelValue"
-                }
-              ]
-            },
             "xAxis": {
               "$ref": "#/definitions/AxisPosition",
               "description": "not supported"
@@ -3523,59 +2751,9 @@
               "description": "Specify the x offset of views in the unit of pixels",
               "type": "number"
             },
-            "xe": {
-              "anyOf": [
-                {
-                  "$ref": "#/definitions/X"
-                },
-                {
-                  "$ref": "#/definitions/ChannelValue"
-                }
-              ]
-            },
-            "y": {
-              "anyOf": [
-                {
-                  "$ref": "#/definitions/Y"
-                },
-                {
-                  "$ref": "#/definitions/ChannelValue"
-                }
-              ]
-            },
-            "y1": {
-              "anyOf": [
-                {
-                  "$ref": "#/definitions/Y"
-                },
-                {
-                  "$ref": "#/definitions/ChannelValue"
-                }
-              ]
-            },
-            "y1e": {
-              "anyOf": [
-                {
-                  "$ref": "#/definitions/Y"
-                },
-                {
-                  "$ref": "#/definitions/ChannelValue"
-                }
-              ]
-            },
             "yOffset": {
               "description": "Specify the y offset of views in the unit of pixels",
               "type": "number"
-            },
-            "ye": {
-              "anyOf": [
-                {
-                  "$ref": "#/definitions/Y"
-                },
-                {
-                  "$ref": "#/definitions/ChannelValue"
-                }
-              ]
             },
             "zoomLimits": {
               "$ref": "#/definitions/ZoomLimits"
@@ -3612,26 +2790,6 @@
               "description": "Proportion of the radius of the center white space.\n\n__Default:__ 0.3",
               "type": "number"
             },
-            "color": {
-              "anyOf": [
-                {
-                  "$ref": "#/definitions/Color"
-                },
-                {
-                  "$ref": "#/definitions/ChannelValue"
-                }
-              ]
-            },
-            "column": {
-              "anyOf": [
-                {
-                  "$ref": "#/definitions/Column"
-                },
-                {
-                  "$ref": "#/definitions/ChannelValue"
-                }
-              ]
-            },
             "data": {
               "$ref": "#/definitions/DataDeep"
             },
@@ -3646,6 +2804,9 @@
             },
             "displacement": {
               "$ref": "#/definitions/Displacement"
+            },
+            "encoding": {
+              "$ref": "#/definitions/Encoding"
             },
             "endAngle": {
               "description": "Specify the end angle (in the range of [0, 360]) of circular tracks (`{\"layout\": \"circular\"}`).",
@@ -3676,16 +2837,6 @@
             "mark": {
               "$ref": "#/definitions/Mark"
             },
-            "opacity": {
-              "anyOf": [
-                {
-                  "$ref": "#/definitions/Opacity"
-                },
-                {
-                  "$ref": "#/definitions/ChannelValue"
-                }
-              ]
-            },
             "orientation": {
               "$ref": "#/definitions/Orientation",
               "description": "Specify the orientation."
@@ -3705,26 +2856,6 @@
               "description": "internal",
               "type": "object"
             },
-            "row": {
-              "anyOf": [
-                {
-                  "$ref": "#/definitions/Row"
-                },
-                {
-                  "$ref": "#/definitions/ChannelValue"
-                }
-              ]
-            },
-            "size": {
-              "anyOf": [
-                {
-                  "$ref": "#/definitions/Size"
-                },
-                {
-                  "$ref": "#/definitions/ChannelValue"
-                }
-              ]
-            },
             "spacing": {
               "description": "- If `{\"layout\": \"linear\"}`, specify the space between tracks in pixels;\n\n- If `{\"layout\": \"circular\"}`, specify the space between tracks in percentage ranging from 0 to 100.",
               "type": "number"
@@ -3740,42 +2871,12 @@
             "stretch": {
               "type": "boolean"
             },
-            "stroke": {
-              "anyOf": [
-                {
-                  "$ref": "#/definitions/Stroke"
-                },
-                {
-                  "$ref": "#/definitions/ChannelValue"
-                }
-              ]
-            },
-            "strokeWidth": {
-              "anyOf": [
-                {
-                  "$ref": "#/definitions/StrokeWidth"
-                },
-                {
-                  "$ref": "#/definitions/ChannelValue"
-                }
-              ]
-            },
             "style": {
               "$ref": "#/definitions/Style",
               "description": "Define the [style](http://gosling-lang.org/docs/visual-channel#style-related-properties) of multive views. Will be overriden by the style of children elements (e.g., view, track)."
             },
             "subtitle": {
               "type": "string"
-            },
-            "text": {
-              "anyOf": [
-                {
-                  "$ref": "#/definitions/Text"
-                },
-                {
-                  "$ref": "#/definitions/ChannelValue"
-                }
-              ]
             },
             "title": {
               "description": "If defined, will show the textual label on the left-top corner of a track.",
@@ -3810,36 +2911,6 @@
               "description": "Specify the track width in pixels.",
               "type": "number"
             },
-            "x": {
-              "anyOf": [
-                {
-                  "$ref": "#/definitions/X"
-                },
-                {
-                  "$ref": "#/definitions/ChannelValue"
-                }
-              ]
-            },
-            "x1": {
-              "anyOf": [
-                {
-                  "$ref": "#/definitions/X"
-                },
-                {
-                  "$ref": "#/definitions/ChannelValue"
-                }
-              ]
-            },
-            "x1e": {
-              "anyOf": [
-                {
-                  "$ref": "#/definitions/X"
-                },
-                {
-                  "$ref": "#/definitions/ChannelValue"
-                }
-              ]
-            },
             "xAxis": {
               "$ref": "#/definitions/AxisPosition",
               "description": "not supported"
@@ -3861,59 +2932,9 @@
               "description": "Specify the x offset of views in the unit of pixels",
               "type": "number"
             },
-            "xe": {
-              "anyOf": [
-                {
-                  "$ref": "#/definitions/X"
-                },
-                {
-                  "$ref": "#/definitions/ChannelValue"
-                }
-              ]
-            },
-            "y": {
-              "anyOf": [
-                {
-                  "$ref": "#/definitions/Y"
-                },
-                {
-                  "$ref": "#/definitions/ChannelValue"
-                }
-              ]
-            },
-            "y1": {
-              "anyOf": [
-                {
-                  "$ref": "#/definitions/Y"
-                },
-                {
-                  "$ref": "#/definitions/ChannelValue"
-                }
-              ]
-            },
-            "y1e": {
-              "anyOf": [
-                {
-                  "$ref": "#/definitions/Y"
-                },
-                {
-                  "$ref": "#/definitions/ChannelValue"
-                }
-              ]
-            },
             "yOffset": {
               "description": "Specify the y offset of views in the unit of pixels",
               "type": "number"
-            },
-            "ye": {
-              "anyOf": [
-                {
-                  "$ref": "#/definitions/Y"
-                },
-                {
-                  "$ref": "#/definitions/ChannelValue"
-                }
-              ]
             },
             "zoomLimits": {
               "$ref": "#/definitions/ZoomLimits"
@@ -4057,26 +3078,6 @@
           "description": "Proportion of the radius of the center white space.\n\n__Default:__ 0.3",
           "type": "number"
         },
-        "color": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/Color"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
-        "column": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/Column"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
         "data": {
           "$ref": "#/definitions/DataDeep"
         },
@@ -4088,6 +3089,9 @@
         },
         "displacement": {
           "$ref": "#/definitions/Displacement"
+        },
+        "encoding": {
+          "$ref": "#/definitions/Encoding"
         },
         "endAngle": {
           "description": "Specify the end angle (in the range of [0, 360]) of circular tracks (`{\"layout\": \"circular\"}`).",
@@ -4118,16 +3122,6 @@
         "mark": {
           "$ref": "#/definitions/Mark"
         },
-        "opacity": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/Opacity"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
         "orientation": {
           "$ref": "#/definitions/Orientation",
           "description": "Specify the orientation."
@@ -4147,26 +3141,6 @@
           "description": "internal",
           "type": "object"
         },
-        "row": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/Row"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
-        "size": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/Size"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
         "spacing": {
           "description": "- If `{\"layout\": \"linear\"}`, specify the space between tracks in pixels;\n\n- If `{\"layout\": \"circular\"}`, specify the space between tracks in percentage ranging from 0 to 100.",
           "type": "number"
@@ -4182,42 +3156,12 @@
         "stretch": {
           "type": "boolean"
         },
-        "stroke": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/Stroke"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
-        "strokeWidth": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/StrokeWidth"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
         "style": {
           "$ref": "#/definitions/Style",
           "description": "Define the [style](http://gosling-lang.org/docs/visual-channel#style-related-properties) of multive views. Will be overriden by the style of children elements (e.g., view, track)."
         },
         "subtitle": {
           "type": "string"
-        },
-        "text": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/Text"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
         },
         "title": {
           "description": "If defined, will show the textual label on the left-top corner of a track.",
@@ -4238,36 +3182,6 @@
         "width": {
           "description": "Specify the track width in pixels.",
           "type": "number"
-        },
-        "x": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/X"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
-        "x1": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/X"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
-        "x1e": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/X"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
         },
         "xAxis": {
           "$ref": "#/definitions/AxisPosition",
@@ -4290,59 +3204,9 @@
           "description": "Specify the x offset of views in the unit of pixels",
           "type": "number"
         },
-        "xe": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/X"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
-        "y": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/Y"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
-        "y1": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/Y"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
-        "y1e": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/Y"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
         "yOffset": {
           "description": "Specify the y offset of views in the unit of pixels",
           "type": "number"
-        },
-        "ye": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/Y"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
         },
         "zoomLimits": {
           "$ref": "#/definitions/ZoomLimits"
@@ -4350,6 +3214,7 @@
       },
       "required": [
         "data",
+        "encoding",
         "height",
         "mark",
         "width"
@@ -4478,26 +3343,6 @@
           "description": "Proportion of the radius of the center white space.\n\n__Default:__ 0.3",
           "type": "number"
         },
-        "color": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/Color"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
-        "column": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/Column"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
         "data": {
           "$ref": "#/definitions/DataDeep"
         },
@@ -4509,6 +3354,9 @@
         },
         "displacement": {
           "$ref": "#/definitions/Displacement"
+        },
+        "encoding": {
+          "$ref": "#/definitions/Encoding"
         },
         "endAngle": {
           "description": "Specify the end angle (in the range of [0, 360]) of circular tracks (`{\"layout\": \"circular\"}`).",
@@ -4539,16 +3387,6 @@
         "mark": {
           "$ref": "#/definitions/Mark"
         },
-        "opacity": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/Opacity"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
         "orientation": {
           "$ref": "#/definitions/Orientation",
           "description": "Specify the orientation."
@@ -4568,26 +3406,6 @@
           "description": "internal",
           "type": "object"
         },
-        "row": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/Row"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
-        "size": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/Size"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
         "spacing": {
           "description": "- If `{\"layout\": \"linear\"}`, specify the space between tracks in pixels;\n\n- If `{\"layout\": \"circular\"}`, specify the space between tracks in percentage ranging from 0 to 100.",
           "type": "number"
@@ -4603,42 +3421,12 @@
         "stretch": {
           "type": "boolean"
         },
-        "stroke": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/Stroke"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
-        "strokeWidth": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/StrokeWidth"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
         "style": {
           "$ref": "#/definitions/Style",
           "description": "Define the [style](http://gosling-lang.org/docs/visual-channel#style-related-properties) of multive views. Will be overriden by the style of children elements (e.g., view, track)."
         },
         "subtitle": {
           "type": "string"
-        },
-        "text": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/Text"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
         },
         "title": {
           "description": "If defined, will show the textual label on the left-top corner of a track.",
@@ -4673,36 +3461,6 @@
           "description": "Specify the track width in pixels.",
           "type": "number"
         },
-        "x": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/X"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
-        "x1": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/X"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
-        "x1e": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/X"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
         "xAxis": {
           "$ref": "#/definitions/AxisPosition",
           "description": "not supported"
@@ -4724,59 +3482,9 @@
           "description": "Specify the x offset of views in the unit of pixels",
           "type": "number"
         },
-        "xe": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/X"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
-        "y": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/Y"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
-        "y1": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/Y"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
-        "y1e": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/Y"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
         "yOffset": {
           "description": "Specify the y offset of views in the unit of pixels",
           "type": "number"
-        },
-        "ye": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/Y"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
         },
         "zoomLimits": {
           "$ref": "#/definitions/ZoomLimits"
@@ -5324,6 +4032,16 @@
       ]
     },
     "X": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/XSingleField"
+        },
+        {
+          "$ref": "#/definitions/XMultipleFields"
+        }
+      ]
+    },
+    "XMultipleFields": {
       "additionalProperties": false,
       "properties": {
         "aggregate": {
@@ -5333,7 +4051,54 @@
           "$ref": "#/definitions/AxisPosition"
         },
         "domain": {
-          "$ref": "#/definitions/GenomicDomain"
+          "$ref": "#/definitions/Domain"
+        },
+        "endField": {
+          "type": "string"
+        },
+        "endField2": {
+          "type": "string"
+        },
+        "grid": {
+          "type": "boolean"
+        },
+        "legend": {
+          "type": "boolean"
+        },
+        "linkingId": {
+          "type": "string"
+        },
+        "range": {
+          "$ref": "#/definitions/ValueExtent"
+        },
+        "startField": {
+          "type": "string"
+        },
+        "startField2": {
+          "type": "string"
+        },
+        "type": {
+          "const": "genomic",
+          "type": "string"
+        }
+      },
+      "required": [
+        "endField",
+        "startField"
+      ],
+      "type": "object"
+    },
+    "XSingleField": {
+      "additionalProperties": false,
+      "properties": {
+        "aggregate": {
+          "$ref": "#/definitions/Aggregate"
+        },
+        "axis": {
+          "$ref": "#/definitions/AxisPosition"
+        },
+        "domain": {
+          "$ref": "#/definitions/Domain"
         },
         "field": {
           "type": "string"
@@ -5358,6 +4123,85 @@
       "type": "object"
     },
     "Y": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/YSingleField"
+        },
+        {
+          "$ref": "#/definitions/YMultipleFields"
+        }
+      ]
+    },
+    "YMultipleFields": {
+      "additionalProperties": false,
+      "properties": {
+        "aggregate": {
+          "$ref": "#/definitions/Aggregate"
+        },
+        "axis": {
+          "$ref": "#/definitions/AxisPosition"
+        },
+        "baseline": {
+          "type": [
+            "string",
+            "number"
+          ]
+        },
+        "domain": {
+          "$ref": "#/definitions/ValueExtent"
+        },
+        "endField": {
+          "type": "string"
+        },
+        "endField2": {
+          "type": "string"
+        },
+        "flip": {
+          "type": "boolean"
+        },
+        "grid": {
+          "type": "boolean"
+        },
+        "legend": {
+          "type": "boolean"
+        },
+        "linkingId": {
+          "type": "string"
+        },
+        "mirrored": {
+          "type": "boolean"
+        },
+        "padding": {
+          "type": "number"
+        },
+        "range": {
+          "$ref": "#/definitions/ValueExtent"
+        },
+        "startField": {
+          "type": "string"
+        },
+        "startField2": {
+          "type": "string"
+        },
+        "type": {
+          "enum": [
+            "quantitative",
+            "nominal",
+            "genomic"
+          ],
+          "type": "string"
+        },
+        "zeroBaseline": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "endField",
+        "startField"
+      ],
+      "type": "object"
+    },
+    "YSingleField": {
       "additionalProperties": false,
       "properties": {
         "aggregate": {

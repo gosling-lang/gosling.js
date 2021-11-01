@@ -20,7 +20,8 @@ import {
     IsOverlaidTrack,
     IsFlatTracks,
     IsStackedTracks,
-    Is2DTrack
+    Is2DTrack,
+    IsMultiFieldChannel
 } from '../gosling.schema.guards';
 import {
     DEFAULT_INNER_RADIUS_PROP,
@@ -194,18 +195,17 @@ export function traverseToFixSpecDownstream(spec: GoslingSpec | SingleView, pare
              * Process a stack option.
              */
             if ('displacement' in track) {
+                const x = track.encoding?.x;
                 if (
                     track.displacement?.type === 'pile' &&
-                    track.row === undefined &&
-                    IsChannelDeep(track.x) &&
-                    track.x.field &&
-                    IsChannelDeep(track.xe) &&
-                    track.xe.field
+                    track.encoding &&
+                    track.encoding?.row === undefined &&
+                    IsMultiFieldChannel(x)
                     // Question: Should we consider mark types? (e.g., link might not be supported?)
                 ) {
                     const newField = uuid.v4();
-                    const startField = track.x.field;
-                    const endField = track.xe.field;
+                    const startField = x.startField;
+                    const endField = x.endField;
                     const padding = track.displacement.padding;
                     const displaceTransform: DisplaceTransform = {
                         type: 'displace',
@@ -219,7 +219,7 @@ export function traverseToFixSpecDownstream(spec: GoslingSpec | SingleView, pare
                         track.dataTransform = [];
                     }
                     track.dataTransform = [...track.dataTransform, displaceTransform];
-                    track.row = { field: newField, type: 'nominal' };
+                    track.encoding.row = { field: newField, type: 'nominal' };
                 } else if (track.displacement?.type === 'spread') {
                     // ...
                 }
@@ -266,12 +266,17 @@ export function traverseToFixSpecDownstream(spec: GoslingSpec | SingleView, pare
             /**
              * Add x-axis domain
              */
-            if ((IsSingleTrack(track) || IsOverlaidTrack(track)) && IsChannelDeep(track.x) && !track.x.domain) {
-                track.x.domain = spec.xDomain;
+            if (
+                (IsSingleTrack(track) || IsOverlaidTrack(track)) &&
+                track.encoding &&
+                IsChannelDeep(track.encoding.x) &&
+                !track.encoding.x.domain
+            ) {
+                track.encoding.x.domain = spec.xDomain;
             } else if (IsOverlaidTrack(track)) {
                 track.overlay.forEach(o => {
-                    if (IsChannelDeep(o.x) && !o.x.domain) {
-                        o.x.domain = spec.xDomain;
+                    if (o.encoding && IsChannelDeep(o.encoding.x) && !o.encoding.x.domain) {
+                        o.encoding.x.domain = spec.xDomain;
                     }
                 });
             }
@@ -279,16 +284,21 @@ export function traverseToFixSpecDownstream(spec: GoslingSpec | SingleView, pare
             /**
              * Link tracks in a single view
              */
-            if ((IsSingleTrack(track) || IsOverlaidTrack(track)) && IsChannelDeep(track.x) && !track.x.linkingId) {
-                track.x.linkingId = spec.linkingId ?? linkID;
+            if (
+                (IsSingleTrack(track) || IsOverlaidTrack(track)) &&
+                track.encoding &&
+                IsChannelDeep(track.encoding.x) &&
+                !track.encoding.x.linkingId
+            ) {
+                track.encoding.x.linkingId = spec.linkingId ?? linkID;
             } else if (IsOverlaidTrack(track)) {
                 let isAdded = false;
                 track.overlay.forEach(o => {
                     if (isAdded) return; // We want to add only once
 
-                    if (IsChannelDeep(o.x) && !o.x.linkingId) {
+                    if (o.encoding && IsChannelDeep(o.encoding.x) && !o.encoding.x.linkingId) {
                         // TODO: Is this safe?
-                        o.x.linkingId = spec.linkingId ?? linkID;
+                        o.encoding.x.linkingId = spec.linkingId ?? linkID;
                         isAdded = true;
                     }
                 });
@@ -309,20 +319,25 @@ export function traverseToFixSpecDownstream(spec: GoslingSpec | SingleView, pare
                 /**
                  * Add axis to the first track, i.e., the track on the top, if undefined
                  */
-                if ((IsSingleTrack(track) || IsOverlaidTrack(track)) && IsChannelDeep(track.x) && !track.x.axis) {
+                if (
+                    (IsSingleTrack(track) || IsOverlaidTrack(track)) &&
+                    track.encoding &&
+                    IsChannelDeep(track.encoding.x) &&
+                    !track.encoding.x.axis
+                ) {
                     if (track.orientation === 'vertical') {
-                        track.x.axis = 'left';
+                        track.encoding.x.axis = 'left';
                     } else {
-                        track.x.axis = 'top';
+                        track.encoding.x.axis = 'top';
                     }
                 } else if (IsOverlaidTrack(track)) {
                     // let isNone = false; // If there is at least one 'none' axis, should not render axis.
                     track.overlay.forEach(o => {
-                        if (IsChannelDeep(o.x) && !o.x.axis) {
+                        if (o.encoding && IsChannelDeep(o.encoding.x) && !o.encoding.x.axis) {
                             if (track.orientation === 'vertical') {
-                                o.x.axis = 'left';
+                                o.encoding.x.axis = 'left';
                             } else {
-                                o.x.axis = 'top';
+                                o.encoding.x.axis = 'top';
                             }
                         }
                         //  else if (IsChannelDeep(o.x) && o.x.axis === 'none') {
@@ -337,38 +352,44 @@ export function traverseToFixSpecDownstream(spec: GoslingSpec | SingleView, pare
              */
             if (
                 (IsSingleTrack(track) || IsOverlaidTrack(track)) &&
-                IsChannelDeep(track.x) &&
-                track.x.axis &&
-                track.x.axis !== 'none'
+                track.encoding &&
+                IsChannelDeep(track.encoding.x) &&
+                track.encoding.x.axis &&
+                track.encoding.x.axis !== 'none'
             ) {
                 if (track.orientation === 'vertical') {
-                    if (track.x.axis === 'top') {
-                        track.x.axis = 'left';
-                    } else if (track.x.axis === 'bottom') {
-                        track.x.axis = 'right';
+                    if (track.encoding.x.axis === 'top') {
+                        track.encoding.x.axis = 'left';
+                    } else if (track.encoding.x.axis === 'bottom') {
+                        track.encoding.x.axis = 'right';
                     }
                 } else {
-                    if (track.x.axis === 'left') {
-                        track.x.axis = 'top';
-                    } else if (track.x.axis === 'right') {
-                        track.x.axis = 'bottom';
+                    if (track.encoding.x.axis === 'left') {
+                        track.encoding.x.axis = 'top';
+                    } else if (track.encoding.x.axis === 'right') {
+                        track.encoding.x.axis = 'bottom';
                     }
                 }
             } else if (IsOverlaidTrack(track)) {
                 // let isNone = false; // If there is at least one 'none' axis, should not render axis.
                 track.overlay.forEach(o => {
-                    if (IsChannelDeep(o.x) && o.x.axis && o.x.axis !== 'none') {
+                    if (
+                        o.encoding &&
+                        IsChannelDeep(o.encoding.x) &&
+                        o.encoding.x.axis &&
+                        o.encoding.x.axis !== 'none'
+                    ) {
                         if (track.orientation === 'vertical') {
-                            if (o.x.axis === 'top') {
-                                o.x.axis = 'left';
-                            } else if (o.x.axis === 'bottom') {
-                                o.x.axis = 'right';
+                            if (o.encoding.x.axis === 'top') {
+                                o.encoding.x.axis = 'left';
+                            } else if (o.encoding.x.axis === 'bottom') {
+                                o.encoding.x.axis = 'right';
                             }
                         } else {
-                            if (o.x.axis === 'left') {
-                                o.x.axis = 'top';
-                            } else if (o.x.axis === 'right') {
-                                o.x.axis = 'bottom';
+                            if (o.encoding.x.axis === 'left') {
+                                o.encoding.x.axis = 'top';
+                            } else if (o.encoding.x.axis === 'right') {
+                                o.encoding.x.axis = 'bottom';
                             }
                         }
                     }
@@ -438,8 +459,10 @@ export function getVectorTemplate(column: string, value: string): SingleTrack {
             value
         },
         mark: 'bar',
-        x: { field: column, type: 'genomic', axis: 'top' },
-        y: { field: value, type: 'quantitative' },
+        encoding: {
+            x: { field: column, type: 'genomic', axis: 'top' },
+            y: { field: value, type: 'quantitative' }
+        },
         width: 400,
         height: 100
     };
@@ -462,10 +485,12 @@ export function getMultivecTemplate(
                   categories
               },
               mark: 'bar',
-              x: { field: column, type: 'genomic', axis: 'top' },
-              y: { field: value, type: 'quantitative' },
-              row: { field: row, type: 'nominal', legend: true },
-              color: { field: row, type: 'nominal' },
+              encoding: {
+                  x: { field: column, type: 'genomic', axis: 'top' },
+                  y: { field: value, type: 'quantitative' },
+                  row: { field: row, type: 'nominal', legend: true },
+                  color: { field: row, type: 'nominal' }
+              },
               width: 400,
               height: 100
           }
@@ -479,9 +504,11 @@ export function getMultivecTemplate(
                   categories
               },
               mark: 'rect',
-              x: { field: column, type: 'genomic', axis: 'top' },
-              row: { field: row, type: 'nominal', legend: true },
-              color: { field: value, type: 'quantitative' },
+              encoding: {
+                  x: { field: column, type: 'genomic', axis: 'top' },
+                  row: { field: row, type: 'nominal', legend: true },
+                  color: { field: value, type: 'quantitative' }
+              },
               width: 400,
               height: 100
           };

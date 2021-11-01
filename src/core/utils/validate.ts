@@ -56,7 +56,7 @@ export function validateTrack(track: Track) {
         }
 
         // combination of visual mark and channel
-        const color = spec.color;
+        const color = spec.encoding.color;
         if (spec.mark === 'line' && IsChannelDeep(color) && color.type === 'quantitative') {
             errorMessages.push('`line` mark cannot be used with `quantitative` value');
             valid = false;
@@ -78,8 +78,8 @@ export function validateTrack(track: Track) {
 export function getGenomicChannelFromTrack(track: SingleTrack | OverlaidTrack): ChannelDeep | undefined {
     // we do not support using two genomic coordinates yet
     let genomicChannel: ChannelDeep | undefined = undefined;
-    ['x', 'y', 'xe', 'ye', 'x1', 'y1', 'x1e', 'y1e'].reverse().forEach(channelType => {
-        const channel = track[channelType as keyof typeof ChannelTypes];
+    ['x', 'y'].reverse().forEach(channelType => {
+        const channel = track.encoding?.[channelType as keyof typeof ChannelTypes];
         if (IsChannelDeep(channel) && channel.type === 'genomic') {
             genomicChannel = channel;
         }
@@ -91,13 +91,11 @@ export function getGenomicChannelFromTrack(track: SingleTrack | OverlaidTrack): 
  * Find an axis channel that is encoded with genomic coordinate and return 'x' or 'y'.
  * `undefined` if not found.
  */
-export function getGenomicChannelKeyFromTrack(
-    track: SingleTrack | OverlaidTrack
-): 'x' | 'xe' | 'y' | 'ye' | 'x1' | 'y1' | 'x1e' | 'y1e' | undefined {
+export function getGenomicChannelKeyFromTrack(track: SingleTrack | OverlaidTrack): 'x' | 'y' | undefined {
     // we do not support using two genomic coordinates yet
     let genomicChannelKey: string | undefined = undefined;
-    ['x', 'xe', 'y', 'ye', 'x1', 'y1', 'x1e', 'y1e'].reverse().forEach(channelKey => {
-        const channel = track[channelKey as keyof typeof ChannelTypes];
+    ['x', 'y'].reverse().forEach(channelKey => {
+        const channel = track.encoding?.[channelKey as keyof typeof ChannelTypes];
         if (IsChannelDeep(channel) && channel.type === 'genomic') {
             genomicChannelKey = channelKey;
         }

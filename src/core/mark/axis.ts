@@ -48,7 +48,7 @@ export function drawLinearYAxis(
     }
 
     /* Axis components */
-    const yChannel = gos.spec().y;
+    const yChannel = gos.spec().encoding.y;
     const isLeft = IsChannelDeep(yChannel) && 'axis' in yChannel && yChannel.axis === 'right' ? false : true; // Right position only if explicitly specified
     const yScale = scaleLinear()
         .domain(yDomain as number[])
@@ -177,7 +177,7 @@ export function drawCircularYAxis(
     }
 
     /* Axis components */
-    const yChannel = gos.spec().y;
+    const yChannel = gos.spec().encoding.y;
     const isLeft = IsChannelDeep(yChannel) && 'axis' in yChannel && yChannel.axis === 'right' ? false : true; // Right position only if explicitly specified
     const yScale = scaleLinear()
         .domain(yDomain as number[])

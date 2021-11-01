@@ -186,9 +186,7 @@ export type Mark =
     | 'header';
 
 /* ----------------------------- TRACK ----------------------------- */
-export type SingleTrack = SingleTrackBase & Encoding;
-
-interface SingleTrackBase extends CommonTrackDef {
+export interface SingleTrack extends CommonTrackDef {
     // Data
     data: DataDeep;
 
@@ -199,6 +197,9 @@ interface SingleTrackBase extends CommonTrackDef {
 
     // Mark
     mark: Mark;
+
+    // Encoding
+    encoding: Encoding;
 
     // Resolving overlaps
     displacement?: Displacement;
@@ -215,13 +216,6 @@ interface SingleTrackBase extends CommonTrackDef {
 export interface Encoding {
     x?: X | ChannelValue;
     y?: Y | ChannelValue;
-    xe?: X | ChannelValue;
-    ye?: Y | ChannelValue;
-
-    x1?: X | ChannelValue;
-    y1?: Y | ChannelValue;
-    x1e?: X | ChannelValue;
-    y1e?: Y | ChannelValue;
 
     row?: Row | ChannelValue;
     column?: Column | ChannelValue;
@@ -431,17 +425,8 @@ export type LogicalOperation =
 
 /* ----------------------------- VISUAL CHANNEL ----------------------------- */
 export const ChannelTypes = {
-    // coordinates
     x: 'x',
     y: 'y',
-    xe: 'xe',
-    ye: 'ye',
-    // coordinates for link
-    x1: 'x1',
-    y1: 'y1',
-    x1e: 'x1e',
-    y1e: 'y1e',
-    // others
     color: 'color',
     row: 'row',
     opacity: 'opacity',
@@ -459,9 +444,11 @@ export interface ChannelDeepCommon {
     field?: string;
 }
 
-export interface X extends ChannelDeepCommon {
+export type X = XSingleField | XMultipleFields;
+
+export interface XSingleField extends ChannelDeepCommon {
     type?: 'genomic';
-    domain?: GenomicDomain;
+    domain?: Domain;
     range?: ValueExtent;
     axis?: AxisPosition;
     legend?: boolean;
@@ -470,7 +457,16 @@ export interface X extends ChannelDeepCommon {
     aggregate?: Aggregate;
 }
 
-export interface Y extends ChannelDeepCommon {
+export type XMultipleFields = Omit<XSingleField, 'field'> & {
+    startField: string;
+    endField: string;
+    startField2?: string;
+    endField2?: string;
+};
+
+export type Y = YSingleField | YMultipleFields;
+
+export interface YSingleField extends ChannelDeepCommon {
     type?: 'quantitative' | 'nominal' | 'genomic';
     domain?: ValueExtent;
     range?: ValueExtent;
@@ -485,6 +481,13 @@ export interface Y extends ChannelDeepCommon {
     flip?: boolean; // Flip a track vertically or horizontally?
     padding?: number; // Experimental: Used in `row` and `column` for vertical and horizontal padding.
 }
+
+export type YMultipleFields = Omit<YSingleField, 'field'> & {
+    startField: string;
+    endField: string;
+    startField2?: string;
+    endField2?: string;
+};
 
 export interface Row extends ChannelDeepCommon {
     type?: 'nominal';

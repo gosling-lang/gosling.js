@@ -13,7 +13,7 @@ export function drawGrid(trackInfo: any, tm: GoslingTrackModel, theme: Required<
 export function drawRowGrid(trackInfo: any, tm: GoslingTrackModel, theme: Required<CompleteThemeDeep>) {
     const spec = tm.spec();
 
-    if (!IsChannelDeep(spec.row) || spec.row.grid !== true) {
+    if (!IsChannelDeep(spec.encoding.row) || spec.encoding.row.grid !== true) {
         // we do not need to draw grid
         return;
     }
@@ -95,7 +95,7 @@ export function drawRowGrid(trackInfo: any, tm: GoslingTrackModel, theme: Requir
 export function drawYGridQuantitative(trackInfo: any, tm: GoslingTrackModel, theme: Required<CompleteThemeDeep>) {
     const spec = tm.spec();
 
-    if (!IsChannelDeep(spec.y) || spec.y.grid !== true) {
+    if (!IsChannelDeep(spec.encoding.y) || spec.encoding.y.grid !== true) {
         // we do not need to draw grid
         return;
     }
