@@ -1092,7 +1092,6 @@ export type TemplateTrackMappingDef = Omit<
     y1e?: ChannelWithBase;
 
     row?: ChannelWithBase;
-    column?: ChannelWithBase;
 
     color?: ChannelWithBase;
     size?: ChannelWithBase;

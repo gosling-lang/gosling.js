@@ -737,9 +737,6 @@
         "color": {
           "$ref": "#/definitions/ChannelWithBase"
         },
-        "column": {
-          "$ref": "#/definitions/ChannelWithBase"
-        },
         "dataTransform": {
           "items": {
             "$ref": "#/definitions/DataTransformWithBase"
