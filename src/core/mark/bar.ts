@@ -60,7 +60,7 @@ export function drawBar(trackInfo: any, tile: any, model: GoslingTrackModel) {
             console.warn('Genomic field is not provided in the specification');
             return;
         }
-        const pivotedData = group(data, d => d[genomicField as string]);
+        const pivotedData = group(data, d => d[genomicField]);
         const xKeys = [...pivotedData.keys()];
 
         // TODO: users may want to align rows by values
@@ -138,7 +138,7 @@ export function drawBar(trackInfo: any, tile: any, model: GoslingTrackModel) {
                 const color = model.encodedPIXIProperty('color', d);
                 const stroke = model.encodedPIXIProperty('stroke', d);
                 const strokeWidth = model.encodedPIXIProperty('strokeWidth', d);
-                const opacity = model.encodedPIXIProperty('opacity');
+                const opacity = model.encodedPIXIProperty('opacity', d);
                 let y = model.encodedPIXIProperty('y', d);
                 let ye = model.encodedPIXIProperty('y', d, { fieldKey: 'endField' });
 

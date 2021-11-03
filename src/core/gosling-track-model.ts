@@ -478,7 +478,8 @@ export class GoslingTrackModel {
         const data = this.data();
 
         const genomicChannel = this.getGenomicChannel();
-        if (!genomicChannel || !('field' in genomicChannel || 'startField' in genomicChannel)) {
+        const genomicField = getChannelField(genomicChannel);
+        if (!genomicChannel || !genomicField) {
             console.warn('Genomic field is not provided in the specification');
             // EXPERIMENTAL: we are removing this rule in our spec.
             return;
@@ -498,7 +499,7 @@ export class GoslingTrackModel {
 
             if (IsStackedChannel(spec, channelKey) && IsChannelDeep(channel) && field) {
                 // we need to group data before calculating scales because marks are going to be stacked
-                const pivotedData = group(data, d => d[field]);
+                const pivotedData = group(data, d => d[genomicField]);
                 const xKeys = [...pivotedData.keys()];
 
                 if (!channel.domain) {
@@ -599,6 +600,7 @@ export class GoslingTrackModel {
                     }
                 } else if (IsChannelDeep(channel) && (channel.type === 'quantitative' || channel.type === 'genomic')) {
                     if (channel.domain === undefined && field) {
+                        // TOOD: do this for all fields
                         const min =
                             'zeroBaseline' in channel && channel.zeroBaseline
                                 ? 0

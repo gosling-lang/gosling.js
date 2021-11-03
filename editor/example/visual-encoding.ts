@@ -262,17 +262,12 @@ export const EX_SPEC_VISUAL_ENCODING: GoslingSpec = {
                     mark: 'bar',
                     encoding: {
                         x: {
-                            field: 'start',
+                            startField: 'start',
+                            endField: 'end',
                             type: 'genomic',
                             axis: 'top'
                         },
-                        xe: {
-                            field: 'end',
-                            type: 'genomic',
-                            axis: 'top'
-                        },
-                        y: { field: 'peak_min', type: 'quantitative' },
-                        ye: { field: 'peak_max', type: 'quantitative' },
+                        y: { startField: 'peak_min', endField: 'peak_max', type: 'quantitative' },
                         row: { field: 'sample', type: 'nominal' },
                         color: { field: 'sample', type: 'nominal', legend: true },
                         stroke: { value: 'black' },

@@ -60,7 +60,7 @@ export function drawArea(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackMo
             console.warn('Genomic field is not provided in the specification');
             return;
         }
-        const pivotedData = group(data, d => d[genomicField as string]);
+        const pivotedData = group(data, d => d[genomicField]);
         const genomicPosCategories = [...pivotedData.keys()]; // TODO: make sure to be sorted from left to right or top to bottom
 
         // stroke

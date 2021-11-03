@@ -190,9 +190,7 @@ export function IsStackedMark(track: SingleTrack): boolean {
         (track.mark === 'bar' || track.mark === 'area' || track.mark === 'text') &&
         IsChannelDeep(track.encoding.color) &&
         track.encoding.color.type === 'nominal' &&
-        (!track.encoding.row ||
-            IsChannelValue(track.encoding.row) ||
-            track.encoding.row.field !== track.encoding.color.field) &&
+        (!track.encoding.row || IsChannelValue(track.encoding.row)) &&
         IsChannelDeep(track.encoding.y) &&
         track.encoding.y.type === 'quantitative' &&
         !IsMultiFieldChannel(track.encoding.y)
