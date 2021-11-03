@@ -18,14 +18,15 @@ export const EX_SPEC_BASIC_SEMANTIC_ZOOM: GoslingSpec = {
         binSize: 12
     },
     mark: 'rect',
-    x: { field: 'start', type: 'genomic' },
-    xe: { field: 'end', type: 'genomic' },
+    encoding: {
+        x: { startField: 'start', endField: 'end', type: 'genomic' }
+    },
     style: { outline: 'black', outlineWidth: 1 },
     width: 720,
     height: 130,
     tracks: [
         {
-            color: { value: '#E79F00' },
+            encoding: { color: { value: '#E79F00' } },
             visibility: [
                 {
                     operation: 'GT',
@@ -36,7 +37,7 @@ export const EX_SPEC_BASIC_SEMANTIC_ZOOM: GoslingSpec = {
             ]
         },
         {
-            color: { value: '#57B4E9' },
+            encoding: { color: { value: '#57B4E9' } },
             visibility: [
                 {
                     operation: 'GT',
@@ -53,7 +54,7 @@ export const EX_SPEC_BASIC_SEMANTIC_ZOOM: GoslingSpec = {
             ]
         },
         {
-            color: { value: '#029F73' },
+            encoding: { color: { value: '#029F73' } },
             visibility: [
                 {
                     operation: 'GT',
@@ -70,7 +71,7 @@ export const EX_SPEC_BASIC_SEMANTIC_ZOOM: GoslingSpec = {
             ]
         },
         {
-            color: { value: '#0072B2' },
+            encoding: { color: { value: '#0072B2' } },
             visibility: [
                 {
                     operation: 'GT',
@@ -87,7 +88,7 @@ export const EX_SPEC_BASIC_SEMANTIC_ZOOM: GoslingSpec = {
             ]
         },
         {
-            color: { value: '#D45E00' },
+            encoding: { color: { value: '#D45E00' } },
             visibility: [
                 {
                     operation: 'GT',
@@ -104,7 +105,7 @@ export const EX_SPEC_BASIC_SEMANTIC_ZOOM: GoslingSpec = {
             ]
         },
         {
-            color: { value: '#CB7AA7' },
+            encoding: { color: { value: '#CB7AA7' } },
             visibility: [
                 {
                     operation: 'GT',

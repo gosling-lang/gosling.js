@@ -609,7 +609,7 @@ export class GoslingTrackModel {
                             return [min, max];
                         };
                         if (IsMultiFieldChannel(channel)) {
-                            // this means domains of multiple fields should be merged
+                            // this means multiple fields are used for a single axis, so we need to merge (union) domains
                             let min = Number.MAX_SAFE_INTEGER;
                             let max = Number.MIN_SAFE_INTEGER;
                             ['startField', 'endField', 'startField2', 'endField2'].forEach(fieldKey => {

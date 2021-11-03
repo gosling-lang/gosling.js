@@ -36,24 +36,27 @@ export const EX_SPEC_CANCER_VARIANT_PROTOTYPE: GoslingSpec = {
                                 { mark: 'rect' },
                                 {
                                     mark: 'brush',
-                                    x: { linkingId: 'mid-scale' },
-                                    strokeWidth: { value: 1.5 },
-                                    stroke: { value: '#0070DC' },
-                                    color: { value: '#AFD8FF' },
-                                    opacity: { value: 0.5 }
+                                    encoding: {
+                                        x: { linkingId: 'mid-scale' },
+                                        strokeWidth: { value: 1.5 },
+                                        stroke: { value: '#0070DC' },
+                                        color: { value: '#AFD8FF' },
+                                        opacity: { value: 0.5 }
+                                    }
                                 }
                             ],
-                            color: {
-                                field: 'Stain',
-                                type: 'nominal',
-                                domain: ['gneg', 'gpos25', 'gpos50', 'gpos75', 'gpos100', 'gvar', 'acen'],
-                                range: ['white', 'lightgray', 'gray', 'gray', 'black', '#7B9CC8', '#DC4542']
+                            encoding: {
+                                color: {
+                                    field: 'Stain',
+                                    type: 'nominal',
+                                    domain: ['gneg', 'gpos25', 'gpos50', 'gpos75', 'gpos100', 'gvar', 'acen'],
+                                    range: ['white', 'lightgray', 'gray', 'gray', 'black', '#7B9CC8', '#DC4542']
+                                },
+                                size: { value: 18 },
+                                x: { startField: 'chromStart', endField: 'chromEnd', type: 'genomic' },
+                                stroke: { value: 'gray' },
+                                strokeWidth: { value: 0.3 }
                             },
-                            size: { value: 18 },
-                            x: { field: 'chromStart', type: 'genomic' },
-                            xe: { field: 'chromEnd', type: 'genomic' },
-                            stroke: { value: 'gray' },
-                            strokeWidth: { value: 0.3 },
                             width: 500,
                             height: 100
                         },
@@ -67,11 +70,12 @@ export const EX_SPEC_CANCER_VARIANT_PROTOTYPE: GoslingSpec = {
                                 genomicFields: ['ChrStart', 'ChrEnd']
                             },
                             dataTransform: [{ type: 'filter', field: 'Sample', oneOf: ['PD35930a'] }],
-                            tracks: [{ mark: 'text' }, { mark: 'triangleBottom', size: { value: 5 } }],
-                            x: { field: 'ChrStart', type: 'genomic' },
-                            xe: { field: 'ChrEnd', type: 'genomic' },
-                            text: { field: 'Gene', type: 'nominal' },
-                            color: { value: 'black' },
+                            tracks: [{ mark: 'text' }, { mark: 'triangleBottom', encoding: { size: { value: 5 } } }],
+                            encoding: {
+                                x: { startField: 'ChrStart', endField: 'ChrEnd', type: 'genomic' },
+                                text: { field: 'Gene', type: 'nominal' },
+                                color: { value: 'black' }
+                            },
                             style: {
                                 textFontWeight: 'normal',
                                 dx: -10,
@@ -105,15 +109,18 @@ export const EX_SPEC_CANCER_VARIANT_PROTOTYPE: GoslingSpec = {
                                 { mark: 'rect' },
                                 {
                                     mark: 'brush',
-                                    x: { linkingId: 'mid-scale' },
-                                    strokeWidth: { value: 1 },
-                                    stroke: { value: '#94C2EF' },
-                                    color: { value: '#AFD8FF' }
+                                    encoding: {
+                                        x: { linkingId: 'mid-scale' },
+                                        strokeWidth: { value: 1 },
+                                        stroke: { value: '#94C2EF' },
+                                        color: { value: '#AFD8FF' }
+                                    }
                                 }
                             ],
-                            x: { field: 'start', type: 'genomic' },
-                            xe: { field: 'end', type: 'genomic' },
-                            color: { value: '#FB6A4B' },
+                            encoding: {
+                                x: { startField: 'start', endField: 'end', type: 'genomic' },
+                                color: { value: '#FB6A4B' }
+                            },
                             width: 620,
                             height: 40
                         },
@@ -148,13 +155,14 @@ export const EX_SPEC_CANCER_VARIANT_PROTOTYPE: GoslingSpec = {
                                 { mark: 'rect' },
                                 {
                                     mark: 'brush',
-                                    x: { linkingId: 'mid-scale' },
+                                    encoding: { x: { linkingId: 'mid-scale' } },
                                     strokeWidth: { value: 0 }
                                 }
                             ],
-                            x: { field: 'start', type: 'genomic' },
-                            xe: { field: 'end', type: 'genomic' },
-                            color: { value: '#73C475' },
+                            encoding: {
+                                x: { startField: 'start', endField: 'end', type: 'genomic' },
+                                color: { value: '#73C475' }
+                            },
                             width: 500,
                             height: 40
                         },
@@ -175,23 +183,24 @@ export const EX_SPEC_CANCER_VARIANT_PROTOTYPE: GoslingSpec = {
                                 ]
                             },
                             mark: 'withinLink',
-                            x: { field: 'start1', type: 'genomic' },
-                            xe: { field: 'end2', type: 'genomic' },
-                            color: {
-                                field: 'svclass',
-                                type: 'nominal',
-                                legend: true,
-                                domain: ['tandem-duplication', 'translocation', 'delection', 'inversion'],
-                                range: ['#569C4D', '#4C75A2', '#DA5456', '#EA8A2A']
+                            encoding: {
+                                x: { startField: 'start1', endField: 'end2', type: 'genomic' },
+                                color: {
+                                    field: 'svclass',
+                                    type: 'nominal',
+                                    legend: true,
+                                    domain: ['tandem-duplication', 'translocation', 'delection', 'inversion'],
+                                    range: ['#569C4D', '#4C75A2', '#DA5456', '#EA8A2A']
+                                },
+                                stroke: {
+                                    field: 'svclass',
+                                    type: 'nominal',
+                                    domain: ['tandem-duplication', 'translocation', 'delection', 'inversion'],
+                                    range: ['#569C4D', '#4C75A2', '#DA5456', '#EA8A2A']
+                                },
+                                strokeWidth: { value: 1 },
+                                opacity: { value: 0.6 }
                             },
-                            stroke: {
-                                field: 'svclass',
-                                type: 'nominal',
-                                domain: ['tandem-duplication', 'translocation', 'delection', 'inversion'],
-                                range: ['#569C4D', '#4C75A2', '#DA5456', '#EA8A2A']
-                            },
-                            strokeWidth: { value: 1 },
-                            opacity: { value: 0.6 },
                             style: { legendTitle: 'SV Class' },
                             width: 500,
                             height: 80
@@ -253,12 +262,14 @@ export const EX_SPEC_CANCER_VARIANT_PROTOTYPE: GoslingSpec = {
                                             not: true
                                         }
                                     ],
-                                    size: { value: 12 },
-                                    color: {
-                                        field: 'Stain',
-                                        type: 'nominal',
-                                        domain: ['gneg', 'gpos25', 'gpos50', 'gpos75', 'gpos100', 'gvar'],
-                                        range: ['black', 'black', 'black', 'black', 'white', 'black']
+                                    encoding: {
+                                        size: { value: 12 },
+                                        color: {
+                                            field: 'Stain',
+                                            type: 'nominal',
+                                            domain: ['gneg', 'gpos25', 'gpos50', 'gpos75', 'gpos100', 'gvar'],
+                                            range: ['black', 'black', 'black', 'black', 'white', 'black']
+                                        }
                                     },
                                     visibility: [
                                         {
@@ -271,18 +282,19 @@ export const EX_SPEC_CANCER_VARIANT_PROTOTYPE: GoslingSpec = {
                                     ]
                                 }
                             ],
-                            color: {
-                                field: 'Stain',
-                                type: 'nominal',
-                                domain: ['gneg', 'gpos25', 'gpos50', 'gpos75', 'gpos100', 'gvar', 'acen'],
-                                range: ['white', 'lightgray', 'gray', 'gray', 'black', '#7B9CC8', '#DC4542']
+                            encoding: {
+                                color: {
+                                    field: 'Stain',
+                                    type: 'nominal',
+                                    domain: ['gneg', 'gpos25', 'gpos50', 'gpos75', 'gpos100', 'gvar', 'acen'],
+                                    range: ['white', 'lightgray', 'gray', 'gray', 'black', '#7B9CC8', '#DC4542']
+                                },
+                                size: { value: 18 },
+                                x: { startField: 'chromStart', endField: 'chromEnd', type: 'genomic' },
+                                text: { field: 'Name', type: 'nominal' },
+                                stroke: { value: 'gray' },
+                                strokeWidth: { value: 0.3 }
                             },
-                            size: { value: 18 },
-                            x: { field: 'chromStart', type: 'genomic' },
-                            xe: { field: 'chromEnd', type: 'genomic' },
-                            text: { field: 'Name', type: 'nominal' },
-                            stroke: { value: 'gray' },
-                            strokeWidth: { value: 0.3 },
                             width: 500,
                             height: 30
                         },
@@ -296,10 +308,11 @@ export const EX_SPEC_CANCER_VARIANT_PROTOTYPE: GoslingSpec = {
                             },
                             dataTransform: [{ type: 'filter', field: 'Sample', oneOf: ['PD35930a'] }],
                             mark: 'text',
-                            x: { field: 'ChrStart', type: 'genomic' },
-                            xe: { field: 'ChrEnd', type: 'genomic' },
-                            text: { field: 'Gene', type: 'nominal' },
-                            color: { value: 'black' },
+                            encoding: {
+                                x: { startField: 'ChrStart', endField: 'ChrEnd', type: 'genomic' },
+                                text: { field: 'Gene', type: 'nominal' },
+                                color: { value: 'black' }
+                            },
                             style: { textFontWeight: 'normal', dx: -10 },
                             width: 500,
                             height: 20
@@ -330,15 +343,18 @@ export const EX_SPEC_CANCER_VARIANT_PROTOTYPE: GoslingSpec = {
                                         { type: 'filter', field: 'strand', oneOf: ['+'] }
                                     ],
                                     mark: 'triangleRight',
-                                    x: { field: 'end', type: 'genomic' },
-                                    size: { value: 15 }
+                                    encoding: {
+                                        x: { field: 'end', type: 'genomic' },
+                                        size: { value: 15 }
+                                    }
                                 },
                                 {
                                     dataTransform: [{ type: 'filter', field: 'type', oneOf: ['gene'] }],
                                     mark: 'text',
-                                    text: { field: 'name', type: 'nominal' },
-                                    x: { field: 'start', type: 'genomic' },
-                                    xe: { field: 'end', type: 'genomic' },
+                                    encoding: {
+                                        text: { field: 'name', type: 'nominal' },
+                                        x: { startField: 'start', endField: 'end', type: 'genomic' }
+                                    },
                                     style: { dy: -15, outline: 'black', outlineWidth: 0 }
                                 },
                                 {
@@ -347,8 +363,10 @@ export const EX_SPEC_CANCER_VARIANT_PROTOTYPE: GoslingSpec = {
                                         { type: 'filter', field: 'strand', oneOf: ['-'] }
                                     ],
                                     mark: 'triangleLeft',
-                                    x: { field: 'start', type: 'genomic' },
-                                    size: { value: 15 },
+                                    encoding: {
+                                        x: { field: 'start', type: 'genomic' },
+                                        size: { value: 15 }
+                                    },
                                     style: {
                                         align: 'right',
                                         outline: 'black',
@@ -358,9 +376,10 @@ export const EX_SPEC_CANCER_VARIANT_PROTOTYPE: GoslingSpec = {
                                 {
                                     dataTransform: [{ type: 'filter', field: 'type', oneOf: ['exon'] }],
                                     mark: 'rect',
-                                    x: { field: 'start', type: 'genomic' },
-                                    size: { value: 15 },
-                                    xe: { field: 'end', type: 'genomic' }
+                                    encoding: {
+                                        x: { startField: 'start', endField: 'end', type: 'genomic' },
+                                        size: { value: 15 }
+                                    }
                                 },
                                 {
                                     dataTransform: [
@@ -368,9 +387,10 @@ export const EX_SPEC_CANCER_VARIANT_PROTOTYPE: GoslingSpec = {
                                         { type: 'filter', field: 'strand', oneOf: ['+'] }
                                     ],
                                     mark: 'rule',
-                                    x: { field: 'start', type: 'genomic' },
-                                    strokeWidth: { value: 2 },
-                                    xe: { field: 'end', type: 'genomic' },
+                                    encoding: {
+                                        x: { startField: 'start', endField: 'end', type: 'genomic' },
+                                        strokeWidth: { value: 2 }
+                                    },
                                     style: {
                                         linePattern: { type: 'triangleRight', size: 3.5 },
                                         outline: 'black',
@@ -383,9 +403,10 @@ export const EX_SPEC_CANCER_VARIANT_PROTOTYPE: GoslingSpec = {
                                         { type: 'filter', field: 'strand', oneOf: ['-'] }
                                     ],
                                     mark: 'rule',
-                                    x: { field: 'start', type: 'genomic' },
-                                    strokeWidth: { value: 2 },
-                                    xe: { field: 'end', type: 'genomic' },
+                                    encoding: {
+                                        x: { startField: 'start', endField: 'end', type: 'genomic' },
+                                        strokeWidth: { value: 2 }
+                                    },
                                     style: {
                                         linePattern: { type: 'triangleLeft', size: 3.5 },
                                         outline: 'black',
@@ -394,29 +415,35 @@ export const EX_SPEC_CANCER_VARIANT_PROTOTYPE: GoslingSpec = {
                                 },
                                 {
                                     mark: 'brush',
-                                    x: { linkingId: 'detail-1' },
-                                    strokeWidth: { value: 0 },
-                                    color: { value: 'gray' },
-                                    opacity: { value: 0.3 }
+                                    encoding: {
+                                        x: { linkingId: 'detail-1' },
+                                        strokeWidth: { value: 0 },
+                                        color: { value: 'gray' },
+                                        opacity: { value: 0.3 }
+                                    }
                                 },
                                 {
                                     mark: 'brush',
-                                    x: { linkingId: 'detail-2' },
-                                    strokeWidth: { value: 0 },
-                                    color: { value: 'gray' },
-                                    opacity: { value: 0.3 }
+                                    encoding: {
+                                        x: { linkingId: 'detail-2' },
+                                        strokeWidth: { value: 0 },
+                                        color: { value: 'gray' },
+                                        opacity: { value: 0.3 }
+                                    }
                                 }
                             ],
-                            row: {
-                                field: 'strand',
-                                type: 'nominal',
-                                domain: ['+', '-']
-                            },
-                            color: {
-                                field: 'strand',
-                                type: 'nominal',
-                                domain: ['+', '-'],
-                                range: ['#97A8B2', '#D4C6BA'] //['blue', 'red']
+                            encoding: {
+                                row: {
+                                    field: 'strand',
+                                    type: 'nominal',
+                                    domain: ['+', '-']
+                                },
+                                color: {
+                                    field: 'strand',
+                                    type: 'nominal',
+                                    domain: ['+', '-'],
+                                    range: ['#97A8B2', '#D4C6BA'] //['blue', 'red']
+                                }
                             },
                             visibility: [
                                 {
@@ -452,9 +479,10 @@ export const EX_SPEC_CANCER_VARIANT_PROTOTYPE: GoslingSpec = {
                             },
                             dataTransform: [{ type: 'filter', field: 'minor_cn_tumor', oneOf: ['0'] }],
                             mark: 'rect',
-                            x: { field: 'start', type: 'genomic' },
-                            xe: { field: 'end', type: 'genomic' },
-                            color: { value: '#FB6A4B' },
+                            encoding: {
+                                x: { startField: 'start', endField: 'end', type: 'genomic' },
+                                color: { value: '#FB6A4B' }
+                            },
                             width: 620,
                             height: 20
                         },
@@ -485,9 +513,10 @@ export const EX_SPEC_CANCER_VARIANT_PROTOTYPE: GoslingSpec = {
                                 }
                             ],
                             mark: 'rect',
-                            x: { field: 'start', type: 'genomic' },
-                            xe: { field: 'end', type: 'genomic' },
-                            color: { value: '#73C475' },
+                            encoding: {
+                                x: { startField: 'start', endField: 'end', type: 'genomic' },
+                                color: { value: '#73C475' }
+                            },
                             width: 500,
                             height: 20
                         },
@@ -511,36 +540,43 @@ export const EX_SPEC_CANCER_VARIANT_PROTOTYPE: GoslingSpec = {
                             tracks: [
                                 {
                                     mark: 'withinLink',
-                                    x: { field: 'start1', type: 'genomic' },
-                                    xe: { field: 'end2', type: 'genomic' }
+                                    encoding: {
+                                        x: { startField: 'start1', endField: 'end2', type: 'genomic' }
+                                    }
                                 },
                                 {
                                     mark: 'point',
-                                    x: { field: 'start1', type: 'genomic' },
-                                    y: { value: 400 }
+                                    encoding: {
+                                        x: { field: 'start1', type: 'genomic' },
+                                        y: { value: 400 }
+                                    }
                                 },
                                 {
                                     mark: 'point',
-                                    x: { field: 'end2', type: 'genomic' },
-                                    y: { value: 400 }
+                                    encoding: {
+                                        x: { field: 'end2', type: 'genomic' },
+                                        y: { value: 400 }
+                                    }
                                 }
                             ],
-                            color: {
-                                field: 'svclass',
-                                type: 'nominal',
-                                domain: ['tandem-duplication', 'translocation', 'delection', 'inversion'],
-                                range: ['#569C4D', '#4C75A2', '#DA5456', '#EA8A2A'],
-                                legend: true
+                            encoding: {
+                                color: {
+                                    field: 'svclass',
+                                    type: 'nominal',
+                                    domain: ['tandem-duplication', 'translocation', 'delection', 'inversion'],
+                                    range: ['#569C4D', '#4C75A2', '#DA5456', '#EA8A2A'],
+                                    legend: true
+                                },
+                                stroke: {
+                                    field: 'svclass',
+                                    type: 'nominal',
+                                    domain: ['tandem-duplication', 'translocation', 'delection', 'inversion'],
+                                    range: ['#569C4D', '#4C75A2', '#DA5456', '#EA8A2A']
+                                },
+                                strokeWidth: { value: 1 },
+                                opacity: { value: 0.6 },
+                                size: { value: 4 }
                             },
-                            stroke: {
-                                field: 'svclass',
-                                type: 'nominal',
-                                domain: ['tandem-duplication', 'translocation', 'delection', 'inversion'],
-                                range: ['#569C4D', '#4C75A2', '#DA5456', '#EA8A2A']
-                            },
-                            strokeWidth: { value: 1 },
-                            opacity: { value: 0.6 },
-                            size: { value: 4 },
                             tooltip: [
                                 { field: 'start1', type: 'genomic' },
                                 { field: 'end2', type: 'genomic' },
@@ -583,17 +619,18 @@ export function view(sample: string): GoslingSpec {
                     chromosomeField: 'Chromosome',
                     genomicFields: ['chromStart', 'chromEnd']
                 },
-                tracks: [{ mark: 'rect' }, { mark: 'brush', x: { linkingId: 'mid-scale' } }],
-                color: {
-                    field: 'Stain',
-                    type: 'nominal',
-                    domain: ['gneg', 'gpos25', 'gpos50', 'gpos75', 'gpos100', 'gvar', 'acen'],
-                    range: ['#C0C0C0', '#808080', '#404040', 'black', 'black', 'black', '#B74780']
+                tracks: [{ mark: 'rect' }, { mark: 'brush', encoding: { x: { linkingId: 'mid-scale' } } }],
+                encoding: {
+                    color: {
+                        field: 'Stain',
+                        type: 'nominal',
+                        domain: ['gneg', 'gpos25', 'gpos50', 'gpos75', 'gpos100', 'gvar', 'acen'],
+                        range: ['#C0C0C0', '#808080', '#404040', 'black', 'black', 'black', '#B74780']
+                    },
+                    size: { value: 18 },
+                    x: { startField: 'chromStart', endField: 'chromEnd', type: 'genomic' },
+                    opacity: { value: 0.3 }
                 },
-                size: { value: 18 },
-                x: { field: 'chromStart', type: 'genomic' },
-                xe: { field: 'chromEnd', type: 'genomic' },
-                opacity: { value: 0.3 },
                 width: 500,
                 height: 40
             },
@@ -663,18 +700,19 @@ export function view(sample: string): GoslingSpec {
                     ]
                 },
                 mark: 'withinLink',
-                x: { field: 'start1', type: 'genomic' },
-                xe: { field: 'end2', type: 'genomic' },
-                color: {
-                    field: 'svclass',
-                    type: 'nominal',
-                    legend: true,
-                    domain: ['translocation', 'delection', 'tandem-duplication', 'inversion']
-                },
-                stroke: {
-                    field: 'svclass',
-                    type: 'nominal',
-                    domain: ['translocation', 'delection', 'tandem-duplication', 'inversion']
+                encoding: {
+                    x: { startField: 'start1', endField: 'end2', type: 'genomic' },
+                    color: {
+                        field: 'svclass',
+                        type: 'nominal',
+                        legend: true,
+                        domain: ['translocation', 'delection', 'tandem-duplication', 'inversion']
+                    },
+                    stroke: {
+                        field: 'svclass',
+                        type: 'nominal',
+                        domain: ['translocation', 'delection', 'tandem-duplication', 'inversion']
+                    }
                 },
                 width: 500,
                 height: 80
