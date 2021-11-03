@@ -600,13 +600,36 @@ export class GoslingTrackModel {
                     }
                 } else if (IsChannelDeep(channel) && (channel.type === 'quantitative' || channel.type === 'genomic')) {
                     if (channel.domain === undefined && field) {
-                        // TOOD: do this for all fields
-                        const min =
-                            'zeroBaseline' in channel && channel.zeroBaseline
-                                ? 0
-                                : (d3min(data.map(d => +d[field]) as number[]) as number) ?? 0;
-                        const max = (d3max(data.map(d => +d[field]) as number[]) as number) ?? 0;
-                        channel.domain = [min, max]; // TODO: what if data ranges in negative values
+                        const getExtent = (field: string) => {
+                            const min =
+                                'zeroBaseline' in channel && channel.zeroBaseline
+                                    ? 0
+                                    : (d3min(data.map(d => +d[field]) as number[]) as number) ?? 0;
+                            const max = (d3max(data.map(d => +d[field]) as number[]) as number) ?? 0;
+                            return [min, max];
+                        };
+                        if (IsMultiFieldChannel(channel)) {
+                            // this means domains of multiple fields should be merged
+                            let min = Number.MAX_SAFE_INTEGER;
+                            let max = Number.MIN_SAFE_INTEGER;
+                            ['startField', 'endField', 'startField2', 'endField2'].forEach(fieldKey => {
+                                const f = (channel as any)[fieldKey];
+                                if (!f) {
+                                    // this field is not specified by a user
+                                    return;
+                                }
+                                const [newMin, newMax] = getExtent(f);
+                                if (newMin < min) {
+                                    min = newMin;
+                                }
+                                if (newMax > max) {
+                                    max = newMax;
+                                }
+                            });
+                            channel.domain = [min, max];
+                        } else {
+                            channel.domain = getExtent(field);
+                        }
                     } else if (
                         channel.domain !== undefined &&
                         channel.type === 'genomic' &&

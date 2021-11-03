@@ -597,8 +597,7 @@ export const EX_SPEC_VISUAL_ENCODING_CIRCULAR: GoslingSpec = {
                             type: 'genomic',
                             axis: 'top'
                         },
-                        y: { field: 'peak_min', type: 'quantitative' },
-                        ye: { field: 'peak_max', type: 'quantitative' },
+                        y: { startField: 'peak_min', endField: 'peak_max', type: 'quantitative' },
                         row: { field: 'sample', type: 'nominal' },
                         color: { field: 'sample', type: 'nominal', legend: true },
                         stroke: { value: 'black' },
@@ -619,15 +618,6 @@ export const EX_SPEC_VISUAL_ENCODING_CIRCULAR: GoslingSpec = {
 };
 
 export const EX_SPEC_DARK_THEME: GoslingSpec = {
-    // theme: {
-    //     base: 'dark',
-    //     axis: { gridColor: '#333', baselineColor: 'transparent', tickColor: 'transparent' },
-    //     markCommon: {
-    //         color: 'gray',
-    //         nominalColorRange: ['white', 'gray'],
-    //         stroke: 'black'
-    //     }
-    // },
     title: 'Dark Theme (Beta)',
     subtitle: 'Gosling allows to easily change the color theme using a `theme` property',
     layout: 'circular',
