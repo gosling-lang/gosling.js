@@ -399,7 +399,7 @@ export class GoslingTrackModel {
 
                 if (mark === 'text' && threshold === '|xe-x|' && measure === 'width') {
                     // compare between the actual width and the |xe-x|
-                    const xe = this.encodedPIXIProperty('xe', datum);
+                    const xe = this.encodedPIXIProperty('x', datum, { fieldKey: 'endField' });
                     const x = this.encodedPIXIProperty('x', datum);
 
                     if (xe !== undefined && metrics?.width) {
@@ -675,34 +675,6 @@ export class GoslingTrackModel {
                             channel.range = range as number[] | string[];
                         }
                     }
-                }
-            }
-        });
-
-        /* Merge domains of neighbor channels (e.g., x and xe) */
-        [
-            ['x', 'xe'],
-            ['y', 'ye']
-        ].forEach(pair => {
-            const [k1, k2] = pair as [keyof typeof ChannelTypes, keyof typeof ChannelTypes];
-            const c1 = spec.encoding[k1],
-                c2 = spec.encoding[k2];
-            if (
-                IsChannelDeep(c1) &&
-                IsChannelDeep(c2) &&
-                c1.type === c2.type &&
-                c1.domain &&
-                c2.domain &&
-                Array.isArray(c1.domain) &&
-                Array.isArray(c2.domain)
-            ) {
-                if (c1.type === 'genomic' || c1.type === 'quantitative') {
-                    const min = d3min([c1.domain[0] as number, c2.domain[0] as number]) as number;
-                    const max = d3max([c1.domain[1] as number, c2.domain[1] as number]) as number;
-                    c1.domain = c2.domain = [min, max];
-                } else if (c1.type === 'nominal') {
-                    const range = Array.from(new Set([...c1.domain, ...c2.domain])) as string[];
-                    c1.range = c2.range = range;
                 }
             }
         });

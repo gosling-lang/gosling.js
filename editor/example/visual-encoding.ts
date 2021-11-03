@@ -302,22 +302,12 @@ export const EX_SPEC_VISUAL_ENCODING: GoslingSpec = {
                     mark: 'withinLink',
                     encoding: {
                         x: {
-                            field: 's1',
+                            startField: 's1',
+                            endField: 'e1',
+                            startField2: 's2',
+                            endField2: 'e2',
                             type: 'genomic',
                             domain: { chromosome: '1', interval: [103900000, 104100000] }
-                        },
-                        xe: {
-                            field: 'e1',
-                            type: 'genomic'
-                        },
-                        x1: {
-                            field: 's2',
-                            type: 'genomic',
-                            domain: { chromosome: '1' }
-                        },
-                        x1e: {
-                            field: 'e2',
-                            type: 'genomic'
                         },
                         color: { field: 's1', type: 'nominal' },
                         stroke: { value: 'black' },

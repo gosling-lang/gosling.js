@@ -15,9 +15,6 @@ export function compile(
     // Make sure to keep the original spec as is
     const _spec = JSON.parse(JSON.stringify(spec));
 
-    // Override default visual encoding (i.e., `DataTrack` => `BasicSingleTrack`)
-    // overrideDataTemplates(_spec); // deprecated
-
     // Replace track templates with raw gosling specs (i.e., `TemplateTrack` => `SingleTrack | OverlaidTrack`)
     replaceTrackTemplates(_spec, templates);
 

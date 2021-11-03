@@ -1,4 +1,4 @@
-import { AxisPosition, SingleTrack, OverlaidTrack, Track, ChannelDeep, DataDeep } from '../gosling.schema';
+import { AxisPosition, Encoding, SingleTrack, OverlaidTrack, Track, ChannelDeep, DataDeep } from '../gosling.schema';
 import { assign } from 'lodash-es';
 import { IsChannelDeep, IsDataTrack, IsOverlaidTrack, IsSingleTrack } from '../gosling.schema.guards';
 
@@ -23,11 +23,13 @@ export function resolveSuperposedTracks(track: Track): SingleTrack[] {
     }
 
     const base: SingleTrack = JSON.parse(JSON.stringify(track));
-    delete (base as Partial<OverlaidTrack>).overlay; // remove `superpose` from the base spec
+    delete (base as Partial<OverlaidTrack>).overlay; // remove `overlay` from the base spec
 
     const resolved: SingleTrack[] = [];
     track.overlay.forEach((subSpec, i) => {
+        const encoding = assign(JSON.parse(JSON.stringify(base.encoding ?? {})), subSpec.encoding ?? {}) as Encoding;
         const spec = assign(JSON.parse(JSON.stringify(base)), subSpec) as SingleTrack;
+        spec.encoding = encoding;
         if (spec.title && i !== 0) {
             delete spec.title;
         }
