@@ -40,11 +40,11 @@ export function drawRule(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackMo
 
         data.filter(
             d =>
-                !getValueUsingChannel(d, spec.row as Channel) ||
-                (getValueUsingChannel(d, spec.row as Channel) as string) === rowCategory
+                !getValueUsingChannel(d, spec.encoding.row as Channel) ||
+                (getValueUsingChannel(d, spec.encoding.row as Channel) as string) === rowCategory
         ).forEach(d => {
             const x = tm.encodedPIXIProperty('x', d);
-            const xe = tm.encodedPIXIProperty('xe', d);
+            const xe = tm.encodedPIXIProperty('x', d, { fieldKey: 'endField' });
             const y = tm.encodedPIXIProperty('y', d); // y middle position
             const color = tm.encodedPIXIProperty('color', d);
             const strokeWidth = tm.encodedPIXIProperty('strokeWidth', d);

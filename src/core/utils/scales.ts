@@ -53,7 +53,7 @@ export function shareScaleAcrossTracks(trackModels: GoslingTrackModel[], force?:
     // generate global domains
     trackModels.forEach(model => {
         channelKeys.forEach(channelKey => {
-            const channel = model.spec()[channelKey];
+            const channel = model.spec().encoding[channelKey];
             if (!IsChannelDeep(channel) || channel.domain === undefined) {
                 return;
             }
@@ -90,7 +90,7 @@ export function shareScaleAcrossTracks(trackModels: GoslingTrackModel[], force?:
     // replace the domain and update scales
     trackModels.forEach(model => {
         channelKeys.forEach(channelKey => {
-            const channel = model.spec()[channelKey];
+            const channel = model.spec().encoding[channelKey];
             if (IsChannelDeep(channel) && channel.type === 'genomic') return;
             model.setChannelDomain(channelKey, globalDomain[channelKey], force);
             model.generateScales();

@@ -18,9 +18,11 @@ export const EX_SPEC_CIRCULR_RANGE: GoslingSpec = {
                 value: 'peak'
             },
             mark: 'bar',
-            x: { field: 'position', type: 'genomic', axis: 'top' },
-            y: { field: 'peak', type: 'quantitative' },
-            color: { value: '#EEEDA1' },
+            encoding: {
+                x: { field: 'position', type: 'genomic', axis: 'top' },
+                y: { field: 'peak', type: 'quantitative' },
+                color: { value: '#EEEDA1' }
+            },
             width: 700,
             height: 60
         }
@@ -44,9 +46,11 @@ export const EX_SPEC_CIRCOS: GoslingSpec = {
                 value: 'peak'
             },
             mark: 'bar',
-            x: { field: 'position', type: 'genomic', axis: 'top' },
-            y: { field: 'peak', type: 'quantitative', axis: 'right' },
-            color: { value: '#EEEDA1' },
+            encoding: {
+                x: { field: 'position', type: 'genomic', axis: 'top' },
+                y: { field: 'peak', type: 'quantitative', axis: 'right' },
+                color: { value: '#EEEDA1' }
+            },
             width: 700,
             height: 60
         },
@@ -87,16 +91,17 @@ export const EX_SPEC_CIRCOS: GoslingSpec = {
                 genomicFields: ['chromStart', 'chromEnd']
             },
             mark: 'rect',
-            color: {
-                field: 'Stain',
-                type: 'nominal',
-                domain: ['gneg', 'gpos25', 'gpos50', 'gpos75', 'gpos100', 'gvar', 'acen'],
-                range: ['white', '#D9D9D9', '#979797', '#636363', 'black', '#F0F0F0', '#8D8D8D']
+            encoding: {
+                color: {
+                    field: 'Stain',
+                    type: 'nominal',
+                    domain: ['gneg', 'gpos25', 'gpos50', 'gpos75', 'gpos100', 'gvar', 'acen'],
+                    range: ['white', '#D9D9D9', '#979797', '#636363', 'black', '#F0F0F0', '#8D8D8D']
+                },
+                x: { startField: 'chromStart', endField: 'chromEnd', type: 'genomic' },
+                stroke: { value: 'lightgray' },
+                strokeWidth: { value: 0.5 }
             },
-            x: { field: 'chromStart', type: 'genomic' },
-            xe: { field: 'chromEnd', type: 'genomic' },
-            stroke: { value: 'lightgray' },
-            strokeWidth: { value: 0.5 },
             width: 700,
             height: 30
         },
@@ -112,7 +117,7 @@ export const EX_SPEC_CIRCOS: GoslingSpec = {
                 separator: ' ',
                 longToWideId: 'id'
             },
-            opacity: { value: 0.4 },
+            encoding: { opacity: { value: 0.4 } },
             tracks: [
                 {
                     dataTransform: [
@@ -124,26 +129,36 @@ export const EX_SPEC_CIRCOS: GoslingSpec = {
                         }
                     ],
                     mark: 'withinLink',
-                    x: { field: 'p1', type: 'genomic' },
-                    xe: { field: 'p1_2', type: 'genomic' },
-                    x1: { field: 'p2', type: 'genomic' },
-                    x1e: { field: 'P2_2', type: 'genomic' },
-                    stroke: { value: 'lightgray' },
-                    strokeWidth: { value: 1 }
+                    encoding: {
+                        x: {
+                            startField: 'p1',
+                            endField: 'p1_2',
+                            startField2: 'p2',
+                            endField2: 'p2_2',
+                            type: 'genomic'
+                        },
+                        stroke: { value: 'lightgray' },
+                        strokeWidth: { value: 1 }
+                    }
                 },
                 {
                     dataTransform: [{ type: 'filter', field: 'chr', oneOf: ['hs1'] }],
                     mark: 'withinLink',
-                    x: { field: 'p1', type: 'genomic' },
-                    xe: { field: 'p1_2', type: 'genomic' },
-                    x1: { field: 'p2', type: 'genomic' },
-                    x1e: { field: 'P2_2', type: 'genomic' },
-                    stroke: {
-                        field: 'chr_2',
-                        type: 'nominal',
-                        range: ['#E79F00', '#029F73', '#0072B2', '#CB7AA7', '#D45E00', '#57B4E9', '#EFE441']
-                    },
-                    strokeWidth: { value: 1.5 }
+                    encoding: {
+                        x: {
+                            startField: 'p1',
+                            endField: 'p1_2',
+                            startField2: 'p2',
+                            endField2: 'p2_2',
+                            type: 'genomic'
+                        },
+                        stroke: {
+                            field: 'chr_2',
+                            type: 'nominal',
+                            range: ['#E79F00', '#029F73', '#0072B2', '#CB7AA7', '#D45E00', '#57B4E9', '#EFE441']
+                        },
+                        strokeWidth: { value: 1.5 }
+                    }
                 }
             ],
             width: 700,
@@ -171,10 +186,11 @@ export const EX_SPEC_CIRCOS_BETWEEN_LINK: GoslingSpec = {
                 binSize: 1
             },
             mark: 'bar',
-            x: { field: 'start', type: 'genomic', axis: 'top' },
-            xe: { field: 'end', type: 'genomic', axis: 'top' },
-            y: { field: 'peak', type: 'quantitative', axis: 'right' },
-            color: { value: 'lightgray' },
+            encoding: {
+                x: { startField: 'start', endField: 'end', type: 'genomic', axis: 'top' },
+                y: { field: 'peak', type: 'quantitative', axis: 'right' },
+                color: { value: 'lightgray' }
+            },
             width: 700,
             height: 60
         },
@@ -186,16 +202,17 @@ export const EX_SPEC_CIRCOS_BETWEEN_LINK: GoslingSpec = {
                 genomicFields: ['chromStart', 'chromEnd']
             },
             mark: 'rect',
-            color: {
-                field: 'Stain',
-                type: 'nominal',
-                domain: ['gneg', 'gpos25', 'gpos50', 'gpos75', 'gpos100', 'gvar', 'acen'],
-                range: ['white', '#D9D9D9', '#979797', '#636363', 'black', '#F0F0F0', '#8D8D8D']
+            encoding: {
+                color: {
+                    field: 'Stain',
+                    type: 'nominal',
+                    domain: ['gneg', 'gpos25', 'gpos50', 'gpos75', 'gpos100', 'gvar', 'acen'],
+                    range: ['white', '#D9D9D9', '#979797', '#636363', 'black', '#F0F0F0', '#8D8D8D']
+                },
+                x: { startField: 'chromStart', endField: 'chromEnd', type: 'genomic' },
+                stroke: { value: 'black' },
+                strokeWidth: { value: 0.5 }
             },
-            x: { field: 'chromStart', type: 'genomic' },
-            xe: { field: 'chromEnd', type: 'genomic' },
-            stroke: { value: 'black' },
-            strokeWidth: { value: 0.5 },
             width: 700,
             height: 30
         },
@@ -212,7 +229,6 @@ export const EX_SPEC_CIRCOS_BETWEEN_LINK: GoslingSpec = {
                 longToWideId: 'id',
                 sampleLength: 5000
             },
-            opacity: { value: 0.1 },
             tracks: [
                 {
                     dataTransform: [
@@ -224,21 +240,26 @@ export const EX_SPEC_CIRCOS_BETWEEN_LINK: GoslingSpec = {
                         }
                     ],
                     mark: 'betweenLink',
-                    x: { field: 'p2_2', type: 'genomic' },
-                    xe: { field: 'p1', type: 'genomic' },
-                    stroke: { value: 'lightgray' },
-                    strokeWidth: { value: 1 }
+                    encoding: {
+                        x: { startField: 'p2_2', endField: 'p1', type: 'genomic' },
+                        stroke: { value: 'lightgray' },
+                        strokeWidth: { value: 1 }
+                    }
                 },
                 {
                     dataTransform: [{ type: 'filter', field: 'chr', oneOf: ['hs1'] }],
                     mark: 'betweenLink',
-                    x: { field: 'p2_2', type: 'genomic' },
-                    xe: { field: 'p1', type: 'genomic' },
-                    stroke: { value: 'black' },
-                    // stroke: { field: 'chr_2', type: 'nominal' },
-                    strokeWidth: { value: 1 }
+                    encoding: {
+                        x: { startField: 'p2_2', endField: 'p1', type: 'genomic' },
+                        stroke: { value: 'black' },
+                        // stroke: { field: 'chr_2', type: 'nominal' },
+                        strokeWidth: { value: 1 }
+                    }
                 }
             ],
+            encoding: {
+                opacity: { value: 0.1 }
+            },
             width: 1000,
             height: 300
         },
@@ -250,16 +271,17 @@ export const EX_SPEC_CIRCOS_BETWEEN_LINK: GoslingSpec = {
                 genomicFields: ['chromStart', 'chromEnd']
             },
             mark: 'rect',
-            color: {
-                field: 'Stain',
-                type: 'nominal',
-                domain: ['gneg', 'gpos25', 'gpos50', 'gpos75', 'gpos100', 'gvar', 'acen'],
-                range: ['white', '#D9D9D9', '#979797', '#636363', 'black', '#F0F0F0', '#8D8D8D']
+            encoding: {
+                color: {
+                    field: 'Stain',
+                    type: 'nominal',
+                    domain: ['gneg', 'gpos25', 'gpos50', 'gpos75', 'gpos100', 'gvar', 'acen'],
+                    range: ['white', '#D9D9D9', '#979797', '#636363', 'black', '#F0F0F0', '#8D8D8D']
+                },
+                x: { startField: 'chromStart', endField: 'chromEnd', type: 'genomic' },
+                stroke: { value: 'black' },
+                strokeWidth: { value: 0.5 }
             },
-            x: { field: 'chromStart', type: 'genomic' },
-            xe: { field: 'chromEnd', type: 'genomic' },
-            stroke: { value: 'black' },
-            strokeWidth: { value: 0.5 },
             width: 700,
             height: 30
         }

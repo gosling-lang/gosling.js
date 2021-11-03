@@ -15,12 +15,12 @@ export function drawColorLegend(
 ) {
     const spec = tm.spec();
 
-    if (!IsChannelDeep(spec.color) || !spec.color.legend) {
+    if (!IsChannelDeep(spec.encoding.color) || !spec.encoding.color.legend) {
         // This means we do not need to draw a legend
         return;
     }
 
-    switch (spec.color.type) {
+    switch (spec.encoding.color.type) {
         case 'nominal':
             drawColorLegendCategories(HGC, trackInfo, tile, tm, theme);
             break;
@@ -39,7 +39,11 @@ export function drawColorLegendQuantitative(
 ) {
     const spec = tm.spec();
 
-    if (!IsChannelDeep(spec.color) || spec.color.type !== 'quantitative' || !spec.color.legend) {
+    if (
+        !IsChannelDeep(spec.encoding.color) ||
+        spec.encoding.color.type !== 'quantitative' ||
+        !spec.encoding.color.legend
+    ) {
         // This means we do not need to draw legend
         return;
     }
@@ -165,7 +169,7 @@ export function drawColorLegendCategories(
 ) {
     /* track spec */
     const spec = tm.spec();
-    if (!IsChannelDeep(spec.color) || spec.color.type !== 'nominal' || !spec.color.legend) {
+    if (!IsChannelDeep(spec.encoding.color) || spec.encoding.color.type !== 'nominal' || !spec.encoding.color.legend) {
         // This means we do not need to draw legend
         return;
     }
@@ -322,9 +326,9 @@ export function drawRowLegend(
     /* track spec */
     const spec = tm.spec();
     if (
-        !IsChannelDeep(spec.row) ||
-        spec.row.type !== 'nominal' ||
-        !spec.row.legend
+        !IsChannelDeep(spec.encoding.row) ||
+        spec.encoding.row.type !== 'nominal' ||
+        !spec.encoding.row.legend
         // || (!IsChannelDeep(spec.y) || spec.y.type !== 'nominal' || !spec.y.legend)
     ) {
         // we do not need to draw a legend

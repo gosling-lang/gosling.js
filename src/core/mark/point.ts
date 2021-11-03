@@ -44,8 +44,8 @@ export function drawPoint(trackInfo: any, g: PIXI.Graphics, model: GoslingTrackM
 
         data.filter(
             d =>
-                !getValueUsingChannel(d, spec.row as Channel) ||
-                (getValueUsingChannel(d, spec.row as Channel) as string) === rowCategory
+                !getValueUsingChannel(d, spec.encoding.row as Channel) ||
+                (getValueUsingChannel(d, spec.encoding.row as Channel) as string) === rowCategory
         ).forEach(d => {
             const cx = model.encodedPIXIProperty('x-center', d);
             const cy = model.encodedPIXIProperty('y-center', d);
@@ -103,7 +103,7 @@ export function pointProperty(
     propertyKey: PIXIVisualProperty,
     datum?: { [k: string]: string | number }
 ) {
-    const xe = model.visualPropertyByChannel('xe', datum);
+    const xe = model.visualPropertyByChannel('x', datum, 'endField');
     const x = model.visualPropertyByChannel('x', datum);
     const size = model.visualPropertyByChannel('size', datum);
 
@@ -112,7 +112,7 @@ export function pointProperty(
         case 'x-center':
             return xe ? (xe + x) / 2.0 : x;
         case 'y-center':
-            const ye = model.visualPropertyByChannel('ye', datum);
+            const ye = model.visualPropertyByChannel('y', datum, 'endField');
             const y = model.visualPropertyByChannel('y', datum);
             return ye ? (ye + y) / 2.0 : y;
         case 'p-size':

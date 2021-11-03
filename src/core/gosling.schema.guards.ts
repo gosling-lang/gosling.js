@@ -182,7 +182,6 @@ export function IsRangeArray(range?: Range): range is string[] | number[] {
     return isArray(range);
 }
 
-// TODO: perhaps, combine this with `isStackedChannel`
 /**
  * Check whether visual marks are stacked on top of each other.
  */
@@ -191,8 +190,9 @@ export function IsStackedMark(track: SingleTrack): boolean {
         (track.mark === 'bar' || track.mark === 'area' || track.mark === 'text') &&
         IsChannelDeep(track.encoding.color) &&
         track.encoding.color.type === 'nominal' &&
-        (!track.encoding.row || IsChannelValue(track.encoding.row)) &&
-        // TODO: determine whether to use stacked bar for nominal fields or not
+        (!track.encoding.row ||
+            IsChannelValue(track.encoding.row) ||
+            track.encoding.row.field !== track.encoding.color.field) &&
         IsChannelDeep(track.encoding.y) &&
         track.encoding.y.type === 'quantitative' &&
         !IsMultiFieldChannel(track.encoding.y)
@@ -207,8 +207,8 @@ export function IsStackedChannel(track: SingleTrack, channelKey: keyof typeof Ch
     const channel = track.encoding[channelKey];
     return (
         IsStackedMark(track) &&
-        // only x or y channel can be stacked
-        (channelKey === 'x' || channelKey === 'y') &&
+        // only the y channel can be stacked
+        channelKey === 'y' &&
         // only quantitative channel can be stacked
         IsChannelDeep(channel) &&
         channel.type === 'quantitative'

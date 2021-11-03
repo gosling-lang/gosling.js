@@ -46,11 +46,11 @@ export function drawTriangle(g: PIXI.Graphics, model: GoslingTrackModel, trackWi
 
         data.filter(
             d =>
-                !getValueUsingChannel(d, spec.row as Channel) ||
-                (getValueUsingChannel(d, spec.row as Channel) as string) === rowCategory
+                !getValueUsingChannel(d, spec.encoding.row as Channel) ||
+                (getValueUsingChannel(d, spec.encoding.row as Channel) as string) === rowCategory
         ).forEach(d => {
             const x = model.encodedPIXIProperty('x', d);
-            const xe = model.encodedPIXIProperty('xe', d);
+            const xe = model.encodedPIXIProperty('x', d, { fieldKey: 'endField' });
             const markWidth = model.encodedPIXIProperty('size', d) ?? (xe === undefined ? triHeight : xe - x);
 
             const y = model.encodedPIXIProperty('y', d);

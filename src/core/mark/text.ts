@@ -54,11 +54,12 @@ export function drawText(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackMo
         const rowGraphics = tile.graphics; // new HGC.libraries.PIXI.Graphics(); // only one row for stacked marks
 
         const genomicChannel = tm.getGenomicChannel();
-        if (!genomicChannel || !genomicChannel.field) {
+        const genomicField = getChannelField(genomicChannel);
+        if (!genomicChannel || !genomicField) {
             console.warn('Genomic field is not provided in the specification');
             return;
         }
-        const pivotedData = group(data, d => d[genomicChannel.field as string]);
+        const pivotedData = group(data, d => d[genomicField as string]);
         const xKeys = [...pivotedData.keys()];
 
         // TODO: users may want to align rows by values
@@ -68,7 +69,7 @@ export function drawText(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackMo
                 const text = tm.encodedPIXIProperty('text', d);
                 const color = tm.encodedPIXIProperty('color', d);
                 const x = tm.encodedPIXIProperty('x', d) + dx;
-                const xe = tm.encodedPIXIProperty('xe', d) + dx;
+                const xe = tm.encodedPIXIProperty('x', d, { fieldKey: 'endField' }) + dx;
                 const cx = tm.encodedPIXIProperty('x-center', d) + dx;
                 const y = tm.encodedPIXIProperty('y', d) + dy;
                 const size = tm.encodedPIXIProperty('size', d);
@@ -154,8 +155,8 @@ export function drawText(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackMo
 
             data.filter(
                 d =>
-                    !getValueUsingChannel(d, spec.row as Channel) ||
-                    (getValueUsingChannel(d, spec.row as Channel) as string) === rowCategory
+                    !getValueUsingChannel(d, spec.encoding.row as Channel) ||
+                    (getValueUsingChannel(d, spec.encoding.row as Channel) as string) === rowCategory
             ).forEach(d => {
                 const text = tm.encodedPIXIProperty('text', d);
                 const color = tm.encodedPIXIProperty('color', d);

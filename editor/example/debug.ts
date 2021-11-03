@@ -93,10 +93,11 @@ export const EX_SPEC_DEBUG: GoslingSpec =
                                     binSize: 4
                                 },
                                 mark: 'rect',
-                                x: { field: 'start', type: 'genomic', axis: 'left' },
-                                xe: { field: 'end', type: 'genomic' },
-                                row: { field: 'sample', type: 'nominal', legend: false },
-                                color: { field: 'peak', type: 'quantitative', legend: false, range: 'grey' },
+                                encoding: {
+                                    x: { startField: 'start', endField: 'end', type: 'genomic', axis: 'left' },
+                                    row: { field: 'sample', type: 'nominal', legend: false },
+                                    color: { field: 'peak', type: 'quantitative', legend: false, range: 'grey' }
+                                },
                                 width: 100,
                                 height: 500
                             },
@@ -109,13 +110,14 @@ export const EX_SPEC_DEBUG: GoslingSpec =
                                 },
                                 style: { linkConnectionType: 'corner' },
                                 mark: 'withinLink',
-                                x: { field: 's1', type: 'genomic', axis: 'none' },
-                                xe: { field: 's2', type: 'genomic' },
+                                encoding: {
+                                    x: { startField: 's1', endField: 's2', type: 'genomic', axis: 'none' },
+                                    color: { value: '#3275B4' },
+                                    size: { value: 2 },
+                                    stroke: { value: '#3275B4' },
+                                    opacity: { value: 0.2 }
+                                },
                                 flipY: false,
-                                color: { value: '#3275B4' },
-                                size: { value: 2 },
-                                stroke: { value: '#3275B4' },
-                                opacity: { value: 0.2 },
                                 width: 100,
                                 height: 500
                             }
@@ -136,13 +138,14 @@ export const EX_SPEC_DEBUG: GoslingSpec =
                                         },
                                         style: { linkConnectionType: 'corner' },
                                         mark: 'withinLink',
-                                        x: { field: 's1', type: 'genomic' },
-                                        xe: { field: 's2', type: 'genomic' },
+                                        encoding: {
+                                            x: { startField: 's1', endField: 's2', type: 'genomic' },
+                                            color: { value: '#3275B4' },
+                                            size: { value: 2 },
+                                            stroke: { value: '#3275B4' },
+                                            opacity: { value: 0.2 }
+                                        },
                                         flipY: false,
-                                        color: { value: '#3275B4' },
-                                        size: { value: 2 },
-                                        stroke: { value: '#3275B4' },
-                                        opacity: { value: 0.2 },
                                         width: 500,
                                         height: 100
                                     },
@@ -155,13 +158,14 @@ export const EX_SPEC_DEBUG: GoslingSpec =
                                         },
                                         style: { linkConnectionType: 'corner' },
                                         mark: 'withinLink',
-                                        x: { field: 's1', type: 'genomic' },
-                                        xe: { field: 's2', type: 'genomic' },
+                                        encoding: {
+                                            x: { startField: 's1', endField: 's2', type: 'genomic' },
+                                            color: { value: '#3275B4' },
+                                            size: { value: 2 },
+                                            stroke: { value: '#3275B4' },
+                                            opacity: { value: 0.2 }
+                                        },
                                         flipY: false,
-                                        color: { value: '#3275B4' },
-                                        size: { value: 2 },
-                                        stroke: { value: '#3275B4' },
-                                        opacity: { value: 0.2 },
                                         width: 500,
                                         height: 100
                                     }
@@ -182,31 +186,41 @@ export const EX_SPEC_DEBUG: GoslingSpec =
                                         tracks: [
                                             {
                                                 mark: 'betweenLink',
-                                                x: { field: 's1', type: 'genomic', axis: 'none' },
-                                                y: { field: 's2', type: 'genomic', axis: 'none' }
+                                                encoding: {
+                                                    x: { field: 's1', type: 'genomic', axis: 'none' },
+                                                    y: { field: 's2', type: 'genomic', axis: 'none' }
+                                                }
                                             },
                                             {
                                                 mark: 'betweenLink',
-                                                y: { field: 's1', type: 'genomic', axis: 'none' },
-                                                x: { field: 's2', type: 'genomic', axis: 'none' }
+                                                encoding: {
+                                                    y: { field: 's1', type: 'genomic', axis: 'none' },
+                                                    x: { field: 's2', type: 'genomic', axis: 'none' }
+                                                }
                                             },
                                             {
                                                 mark: 'point',
-                                                x: { field: 's1', type: 'genomic', axis: 'none' },
-                                                y: { field: 's2', type: 'genomic', axis: 'none' },
-                                                opacity: { value: 1 }
+                                                encoding: {
+                                                    x: { field: 's1', type: 'genomic', axis: 'none' },
+                                                    y: { field: 's2', type: 'genomic', axis: 'none' },
+                                                    opacity: { value: 1 }
+                                                }
                                             },
                                             {
                                                 mark: 'point',
-                                                y: { field: 's1', type: 'genomic', axis: 'none' },
-                                                x: { field: 's2', type: 'genomic', axis: 'none' },
-                                                opacity: { value: 1 }
+                                                encoding: {
+                                                    y: { field: 's1', type: 'genomic', axis: 'none' },
+                                                    x: { field: 's2', type: 'genomic', axis: 'none' },
+                                                    opacity: { value: 1 }
+                                                }
                                             }
                                         ],
-                                        color: { value: '#3275B4' },
-                                        size: { value: 1 },
-                                        stroke: { value: '#3275B4' },
-                                        opacity: { value: 0.2 },
+                                        encoding: {
+                                            color: { value: '#3275B4' },
+                                            size: { value: 1 },
+                                            stroke: { value: '#3275B4' },
+                                            opacity: { value: 0.2 }
+                                        },
                                         width: 500,
                                         height: 500
                                     }
@@ -229,13 +243,14 @@ export const EX_SPEC_DEBUG: GoslingSpec =
                                 },
                                 style: { linkConnectionType: 'corner' },
                                 mark: 'withinLink',
-                                x: { field: 's1', type: 'genomic', axis: 'none' },
-                                xe: { field: 's2', type: 'genomic' },
+                                encoding: {
+                                    x: { startField: 's1', endField: 's2', type: 'genomic', axis: 'none' },
+                                    color: { value: '#3275B4' },
+                                    size: { value: 2 },
+                                    stroke: { value: '#3275B4' },
+                                    opacity: { value: 0.2 }
+                                },
                                 flipY: true,
-                                color: { value: '#3275B4' },
-                                size: { value: 2 },
-                                stroke: { value: '#3275B4' },
-                                opacity: { value: 0.2 },
                                 width: 100,
                                 height: 500
                             },
@@ -250,10 +265,11 @@ export const EX_SPEC_DEBUG: GoslingSpec =
                                     binSize: 4
                                 },
                                 mark: 'rect',
-                                x: { field: 'start', type: 'genomic', axis: 'right' },
-                                xe: { field: 'end', type: 'genomic' },
-                                row: { field: 'sample', type: 'nominal', legend: false },
-                                color: { field: 'peak', type: 'quantitative', legend: false, range: 'rdbu' },
+                                encoding: {
+                                    x: { startField: 'start', endField: 'end', type: 'genomic', axis: 'right' },
+                                    row: { field: 'sample', type: 'nominal', legend: false },
+                                    color: { field: 'peak', type: 'quantitative', legend: false, range: 'rdbu' }
+                                },
                                 width: 100,
                                 height: 500
                             }
@@ -276,13 +292,14 @@ export const EX_SPEC_DEBUG: GoslingSpec =
                                 },
                                 style: { linkConnectionType: 'corner' },
                                 mark: 'withinLink',
-                                x: { field: 's1', type: 'genomic', axis: 'none' },
-                                xe: { field: 's2', type: 'genomic' },
+                                encoding: {
+                                    x: { startField: 's1', endField: 's2', type: 'genomic', axis: 'none' },
+                                    color: { value: '#3275B4' },
+                                    size: { value: 2 },
+                                    stroke: { value: '#3275B4' },
+                                    opacity: { value: 0.2 }
+                                },
                                 flipY: true,
-                                color: { value: '#3275B4' },
-                                size: { value: 2 },
-                                stroke: { value: '#3275B4' },
-                                opacity: { value: 0.2 },
                                 width: 500,
                                 height: 100
                             },
@@ -295,13 +312,14 @@ export const EX_SPEC_DEBUG: GoslingSpec =
                                 },
                                 style: { linkConnectionType: 'corner' },
                                 mark: 'withinLink',
-                                x: { field: 's1', type: 'genomic', axis: 'bottom' },
-                                xe: { field: 's2', type: 'genomic' },
+                                encoding: {
+                                    x: { startField: 's1', endField: 's2', type: 'genomic', axis: 'bottom' },
+                                    color: { value: '#3275B4' },
+                                    size: { value: 2 },
+                                    stroke: { value: '#3275B4' },
+                                    opacity: { value: 0.2 }
+                                },
                                 flipY: true,
-                                color: { value: '#3275B4' },
-                                size: { value: 2 },
-                                stroke: { value: '#3275B4' },
-                                opacity: { value: 0.2 },
                                 width: 500,
                                 height: 100
                             }

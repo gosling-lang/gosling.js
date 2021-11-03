@@ -49,16 +49,16 @@ export function drawLine(
         colorCategories.forEach(colorCategory => {
             data.filter(
                 d =>
-                    (!getValueUsingChannel(d, spec.row as Channel) ||
-                        (getValueUsingChannel(d, spec.row as Channel) as string) === rowCategory) &&
-                    (!getValueUsingChannel(d, spec.color as Channel) ||
-                        (getValueUsingChannel(d, spec.color as Channel) as string) === colorCategory)
+                    (!getValueUsingChannel(d, spec.encoding.row as Channel) ||
+                        (getValueUsingChannel(d, spec.encoding.row as Channel) as string) === rowCategory) &&
+                    (!getValueUsingChannel(d, spec.encoding.color as Channel) ||
+                        (getValueUsingChannel(d, spec.encoding.color as Channel) as string) === colorCategory)
             )
                 .sort(
                     (d1, d2) =>
                         // draw from the left to right
-                        (getValueUsingChannel(d1, spec.x as Channel) as number) -
-                        (getValueUsingChannel(d2, spec.x as Channel) as number)
+                        (getValueUsingChannel(d1, spec.encoding.x as Channel) as number) -
+                        (getValueUsingChannel(d2, spec.encoding.x as Channel) as number)
                 )
                 .forEach((d, i) => {
                     const cx = tm.encodedPIXIProperty('x', d);

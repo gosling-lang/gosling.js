@@ -52,7 +52,7 @@ export function drawCircularOutlines(
         g.closePath();
     }
 
-    if (IsChannelDeep(spec.x) && spec.x.axis === 'top') {
+    if (IsChannelDeep(spec.encoding.x) && spec.encoding.x.axis === 'top') {
         // outer line
         g.lineStyle(
             0.5,

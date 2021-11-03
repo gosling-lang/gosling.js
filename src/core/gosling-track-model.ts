@@ -453,7 +453,7 @@ export class GoslingTrackModel {
 
         // common visual properties, not specific to visual marks
         if (['text', 'color', 'row', 'stroke', 'opacity', 'strokeWidth', 'x', 'y', 'size'].includes(propertyKey)) {
-            return this.visualPropertyByChannel(propertyKey as any, datum);
+            return this.visualPropertyByChannel(propertyKey as any, datum, additionalInfo?.fieldKey);
         }
 
         switch (mark) {
@@ -498,7 +498,6 @@ export class GoslingTrackModel {
 
             if (IsStackedChannel(spec, channelKey) && IsChannelDeep(channel) && field) {
                 // we need to group data before calculating scales because marks are going to be stacked
-                // (spec as any /* TODO: select more accurately */).x
                 const pivotedData = group(data, d => d[field]);
                 const xKeys = [...pivotedData.keys()];
 
@@ -523,13 +522,13 @@ export class GoslingTrackModel {
                     const rowField = IsChannelDeep(rowChannel) ? rowChannel.field : undefined;
                     const rowCategories =
                         this.getChannelDomainArray('row') ??
-                        (rowField ? Array.from(new Set(data.map(d => d[rowField as string]))) : [1]);
+                        (rowField ? Array.from(new Set(data.map(d => d[rowField]))) : [1]);
                     const rowHeight = (spec.height as number) / rowCategories.length;
 
                     // `channel` here is either `x` or `y` because they only can ba stacked
                     switch (channelKey) {
                         case 'x':
-                            channel.range = [0, spec.width] as [number, number]; // TODO: not considering vertical direction tracks
+                            channel.range = [0, spec.width] as [number, number];
                             break;
                         case 'y':
                             channel.range = [0, rowHeight];
@@ -541,7 +540,7 @@ export class GoslingTrackModel {
                 const rowField = IsChannelDeep(rowChannel) ? rowChannel.field : undefined;
                 const rowCategories =
                     this.getChannelDomainArray('row') ??
-                    (rowField ? Array.from(new Set(data.map(d => d[rowField as string]))) : [1]);
+                    (rowField ? Array.from(new Set(data.map(d => d[rowField]))) : [1]);
                 const rowHeight = (spec.height as number) / rowCategories.length;
 
                 if (!channel) {
@@ -603,8 +602,8 @@ export class GoslingTrackModel {
                         const min =
                             'zeroBaseline' in channel && channel.zeroBaseline
                                 ? 0
-                                : (d3min(data.map(d => +d[field as string]) as number[]) as number) ?? 0;
-                        const max = (d3max(data.map(d => +d[field as string]) as number[]) as number) ?? 0;
+                                : (d3min(data.map(d => +d[field]) as number[]) as number) ?? 0;
+                        const max = (d3max(data.map(d => +d[field]) as number[]) as number) ?? 0;
                         channel.domain = [min, max]; // TODO: what if data ranges in negative values
                     } else if (
                         channel.domain !== undefined &&

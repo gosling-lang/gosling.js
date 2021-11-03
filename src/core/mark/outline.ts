@@ -58,7 +58,7 @@ export function drawChartOutlines(HGC: any, trackInfo: any, tm: GoslingTrackMode
     g.drawRect(l, t, w, h);
 
     // Borders
-    const x = tm.spec().x;
+    const x = tm.spec().encoding.x;
 
     g.lineStyle(
         1,

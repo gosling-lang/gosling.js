@@ -37,7 +37,7 @@ export function getLinkingInfo(hgModel: HiGlassModel) {
 
         resolved.forEach(spec => {
             SUPPORTED_CHANNELS.forEach(cKey => {
-                const channel = spec[cKey];
+                const channel = spec.encoding[cKey];
 
                 if (IsChannelDeep(channel) && 'linkingId' in channel && channel.linkingId) {
                     linkingInfo.push({

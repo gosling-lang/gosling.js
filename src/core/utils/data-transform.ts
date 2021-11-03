@@ -18,6 +18,7 @@ import {
 import {
     getChannelKeysByAggregateFnc,
     getChannelKeysByType,
+    getChannelField,
     IsChannelDeep,
     IsIncludeFilter,
     IsOneOfFilter,
@@ -451,13 +452,13 @@ export function aggregateData(spec: SingleTrack, data: Datum[]): Datum[] {
         return data;
     }
 
-    const nFieldSpec = spec[nChannelKeys[0]];
+    const nFieldSpec = spec.encoding[nChannelKeys[0]];
     if (!IsChannelDeep(nFieldSpec)) {
         // this shouldn't be reached
         return data;
     }
 
-    const nField = nFieldSpec.field;
+    const nField = getChannelField(nFieldSpec);
     if (!nField) {
         // this shouldn't be reached
         return data;
@@ -476,14 +477,14 @@ export function aggregateData(spec: SingleTrack, data: Datum[]): Datum[] {
 
         // for each quantitative fields
         qChannelKeys.forEach(q => {
-            const qFieldSpec = spec[q];
+            const qFieldSpec = spec.encoding[q];
             if (!IsChannelDeep(qFieldSpec)) {
                 // this shouldn't be reached
                 failed = true;
                 return;
             }
 
-            const { field: qField } = qFieldSpec;
+            const qField = getChannelField(qFieldSpec);
             if (!qField || !('aggregate' in qFieldSpec)) {
                 // this shouldn't be reached
                 failed = true;

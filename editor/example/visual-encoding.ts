@@ -358,17 +358,16 @@ export const EX_SPEC_VISUAL_ENCODING_CIRCULAR: GoslingSpec = {
                                 binSize: 4
                             },
                             mark: 'rect',
-                            x: {
-                                field: 'start',
-                                type: 'genomic',
-                                axis: 'top'
+                            encoding: {
+                                x: {
+                                    startField: 'start',
+                                    endField: 'end',
+                                    type: 'genomic',
+                                    axis: 'top'
+                                },
+                                row: { field: 'sample', type: 'nominal', legend: true },
+                                color: { field: 'peak', type: 'quantitative', legend: true }
                             },
-                            xe: {
-                                field: 'end',
-                                type: 'genomic'
-                            },
-                            row: { field: 'sample', type: 'nominal', legend: true },
-                            color: { field: 'peak', type: 'quantitative', legend: true },
                             width: 350,
                             height: 130
                         }
@@ -387,14 +386,16 @@ export const EX_SPEC_VISUAL_ENCODING_CIRCULAR: GoslingSpec = {
                                 categories: ['sample 1', 'sample 2', 'sample 3', 'sample 4']
                             },
                             mark: 'bar',
-                            x: {
-                                field: 'position',
-                                type: 'genomic',
-                                axis: 'top'
+                            encoding: {
+                                x: {
+                                    field: 'position',
+                                    type: 'genomic',
+                                    axis: 'top'
+                                },
+                                y: { field: 'peak', type: 'quantitative' },
+                                row: { field: 'sample', type: 'nominal' },
+                                color: { field: 'sample', type: 'nominal', legend: true }
                             },
-                            y: { field: 'peak', type: 'quantitative' },
-                            row: { field: 'sample', type: 'nominal' },
-                            color: { field: 'sample', type: 'nominal', legend: true },
                             width: 350,
                             height: 130
                         }
@@ -418,13 +419,15 @@ export const EX_SPEC_VISUAL_ENCODING_CIRCULAR: GoslingSpec = {
                                 categories: ['sample 1', 'sample 2', 'sample 3', 'sample 4']
                             },
                             mark: 'bar',
-                            x: {
-                                field: 'position',
-                                type: 'genomic',
-                                axis: 'top'
+                            encoding: {
+                                x: {
+                                    field: 'position',
+                                    type: 'genomic',
+                                    axis: 'top'
+                                },
+                                y: { field: 'peak', type: 'quantitative', grid: true },
+                                color: { field: 'sample', type: 'nominal', legend: true }
                             },
-                            y: { field: 'peak', type: 'quantitative', grid: true },
-                            color: { field: 'sample', type: 'nominal', legend: true },
                             width: 350,
                             height: 130
                         }
@@ -441,17 +444,19 @@ export const EX_SPEC_VISUAL_ENCODING_CIRCULAR: GoslingSpec = {
                         value: 'peak',
                         categories: ['sample 1', 'sample 2', 'sample 3', 'sample 4']
                     },
-                    x: {
-                        field: 'position',
-                        type: 'genomic',
-                        axis: 'top'
+                    encoding: {
+                        x: {
+                            field: 'position',
+                            type: 'genomic',
+                            axis: 'top'
+                        },
+                        y: { field: 'peak', type: 'quantitative' },
+                        row: { field: 'sample', type: 'nominal' },
+                        color: { field: 'sample', type: 'nominal', legend: true }
                     },
-                    y: { field: 'peak', type: 'quantitative' },
-                    row: { field: 'sample', type: 'nominal' },
-                    color: { field: 'sample', type: 'nominal', legend: true },
                     tracks: [
                         { mark: 'line' },
-                        { mark: 'point', size: { field: 'peak', type: 'quantitative', range: [0, 2] } }
+                        { mark: 'point', encoding: { size: { field: 'peak', type: 'quantitative', range: [0, 2] } } }
                     ],
                     width: 350,
                     height: 130
@@ -474,16 +479,18 @@ export const EX_SPEC_VISUAL_ENCODING_CIRCULAR: GoslingSpec = {
                                 categories: ['sample 1', 'sample 2', 'sample 3', 'sample 4']
                             },
                             mark: 'point',
-                            x: {
-                                field: 'position',
-                                type: 'genomic',
-                                axis: 'top'
+                            encoding: {
+                                x: {
+                                    field: 'position',
+                                    type: 'genomic',
+                                    axis: 'top'
+                                },
+                                y: { field: 'peak', type: 'quantitative' },
+                                row: { field: 'sample', type: 'nominal' },
+                                size: { field: 'peak', type: 'quantitative' },
+                                color: { field: 'sample', type: 'nominal', legend: true },
+                                opacity: { value: 0.5 }
                             },
-                            y: { field: 'peak', type: 'quantitative' },
-                            row: { field: 'sample', type: 'nominal' },
-                            size: { field: 'peak', type: 'quantitative' },
-                            color: { field: 'sample', type: 'nominal', legend: true },
-                            opacity: { value: 0.5 },
                             width: 350,
                             height: 130
                         }
@@ -502,15 +509,17 @@ export const EX_SPEC_VISUAL_ENCODING_CIRCULAR: GoslingSpec = {
                                 categories: ['sample 1', 'sample 2', 'sample 3', 'sample 4']
                             },
                             mark: 'point',
-                            x: {
-                                field: 'position',
-                                type: 'genomic',
-                                axis: 'top'
+                            encoding: {
+                                x: {
+                                    field: 'position',
+                                    type: 'genomic',
+                                    axis: 'top'
+                                },
+                                y: { field: 'peak', type: 'quantitative', grid: true },
+                                size: { field: 'peak', type: 'quantitative' },
+                                color: { field: 'sample', type: 'nominal', legend: true },
+                                opacity: { value: 0.5 }
                             },
-                            y: { field: 'peak', type: 'quantitative', grid: true },
-                            size: { field: 'peak', type: 'quantitative' },
-                            color: { field: 'sample', type: 'nominal', legend: true },
-                            opacity: { value: 0.5 },
                             width: 350,
                             height: 130
                         }
@@ -534,16 +543,18 @@ export const EX_SPEC_VISUAL_ENCODING_CIRCULAR: GoslingSpec = {
                                 categories: ['sample 1', 'sample 2', 'sample 3', 'sample 4']
                             },
                             mark: 'area',
-                            x: {
-                                field: 'position',
-                                type: 'genomic',
-                                axis: 'top'
+                            encoding: {
+                                x: {
+                                    field: 'position',
+                                    type: 'genomic',
+                                    axis: 'top'
+                                },
+                                y: { field: 'peak', type: 'quantitative' },
+                                row: { field: 'sample', type: 'nominal' },
+                                color: { field: 'sample', type: 'nominal', legend: true },
+                                stroke: { value: 'white' },
+                                strokeWidth: { value: 0.5 }
                             },
-                            y: { field: 'peak', type: 'quantitative' },
-                            row: { field: 'sample', type: 'nominal' },
-                            color: { field: 'sample', type: 'nominal', legend: true },
-                            stroke: { value: 'white' },
-                            strokeWidth: { value: 0.5 },
                             width: 350,
                             height: 130
                         }
@@ -560,28 +571,20 @@ export const EX_SPEC_VISUAL_ENCODING_CIRCULAR: GoslingSpec = {
                                 genomicFields: ['s1', 'e1', 's2', 'e2']
                             },
                             mark: 'withinLink',
-                            x: {
-                                field: 's1',
-                                type: 'genomic',
-                                domain: { chromosome: '1', interval: [103900000, 104100000] }
+                            encoding: {
+                                x: {
+                                    startField: 's1',
+                                    endField: 'e1',
+                                    startField2: 's2',
+                                    endField2: 'e2',
+                                    type: 'genomic',
+                                    domain: { chromosome: '1', interval: [103900000, 104100000] }
+                                },
+                                color: { field: 's1', type: 'nominal' },
+                                stroke: { value: 'black' },
+                                strokeWidth: { value: 0.5 },
+                                opacity: { value: 0.4 }
                             },
-                            xe: {
-                                field: 'e1',
-                                type: 'genomic'
-                            },
-                            x1: {
-                                field: 's2',
-                                type: 'genomic',
-                                domain: { chromosome: '1' }
-                            },
-                            x1e: {
-                                field: 'e2',
-                                type: 'genomic'
-                            },
-                            color: { field: 's1', type: 'nominal' },
-                            stroke: { value: 'black' },
-                            strokeWidth: { value: 0.5 },
-                            opacity: { value: 0.4 },
                             width: 350,
                             height: 130
                         }
@@ -602,22 +605,20 @@ export const EX_SPEC_VISUAL_ENCODING_CIRCULAR: GoslingSpec = {
                         binSize: 4
                     },
                     mark: 'bar',
-                    x: {
-                        field: 'start',
-                        type: 'genomic',
-                        axis: 'top'
+                    encoding: {
+                        x: {
+                            startField: 'start',
+                            endField: 'end',
+                            type: 'genomic',
+                            axis: 'top'
+                        },
+                        y: { field: 'peak_min', type: 'quantitative' },
+                        ye: { field: 'peak_max', type: 'quantitative' },
+                        row: { field: 'sample', type: 'nominal' },
+                        color: { field: 'sample', type: 'nominal', legend: true },
+                        stroke: { value: 'black' },
+                        strokeWidth: { value: 0.2 }
                     },
-                    xe: {
-                        field: 'end',
-                        type: 'genomic',
-                        axis: 'top'
-                    },
-                    y: { field: 'peak_min', type: 'quantitative' },
-                    ye: { field: 'peak_max', type: 'quantitative' },
-                    row: { field: 'sample', type: 'nominal' },
-                    color: { field: 'sample', type: 'nominal', legend: true },
-                    stroke: { value: 'black' },
-                    strokeWidth: { value: 0.2 },
                     tooltip: [
                         { field: 'position', type: 'genomic', alt: 'Position' },
                         { field: 'peak_min', type: 'quantitative', alt: 'min(Value)', format: '.2' },

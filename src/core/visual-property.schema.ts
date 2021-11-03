@@ -6,11 +6,7 @@ export type PIXIVisualProperty =
     | 'strokeWidth' // stroke width of visual marks
     | 'opacity' // transparent level of visual marks
     | 'x' // naive x value encoded
-    | 'xe' // naive xe value encoded
-    | 'x1' // naive x1 value encoded
-    | 'x1e' // naive x1e value encoded
     | 'y' // naive y value encoded
-    | 'ye' // naive ye value encoded
     | 'size' // size of visual marks, such as radius of points
     | 'text' // text annotations
     /* mark-specific visual properties */

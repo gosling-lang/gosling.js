@@ -1,7 +1,7 @@
 import { GoslingSpec, TemplateTrackDef } from './gosling.schema';
 import { compileLayout } from './layout/layout';
 import { HiGlassSpec } from './higlass.schema';
-import { traverseToFixSpecDownstream, overrideDataTemplates } from './utils/spec-preprocess';
+import { traverseToFixSpecDownstream } from './utils/spec-preprocess';
 import { replaceTrackTemplates } from './utils/template';
 import { Size } from './utils/bounding-box';
 import { CompleteThemeDeep } from './utils/theme';
@@ -16,7 +16,7 @@ export function compile(
     const _spec = JSON.parse(JSON.stringify(spec));
 
     // Override default visual encoding (i.e., `DataTrack` => `BasicSingleTrack`)
-    overrideDataTemplates(_spec);
+    // overrideDataTemplates(_spec); // deprecated
 
     // Replace track templates with raw gosling specs (i.e., `TemplateTrack` => `SingleTrack | OverlaidTrack`)
     replaceTrackTemplates(_spec, templates);

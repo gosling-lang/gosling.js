@@ -37,7 +37,7 @@ export function drawBackground(
     if (theme.track.alternatingBackground && theme.track.alternatingBackground !== 'transparent') {
         const spec = tm.spec();
 
-        if (!IsChannelDeep(spec.row) || spec.row.type !== 'nominal') {
+        if (!IsChannelDeep(spec.encoding.row) || spec.encoding.row.type !== 'nominal') {
             // we do not use a `row` channel, so no need to draw alternating backgrounds
             return;
         }

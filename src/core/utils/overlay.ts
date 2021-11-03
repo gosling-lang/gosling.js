@@ -38,15 +38,15 @@ export function resolveSuperposedTracks(track: Track): SingleTrack[] {
     // x-axis
     let xAxisPosition: undefined | AxisPosition = undefined;
     resolved.forEach(d => {
-        if (IsChannelDeep(d.x) && d.x.axis && !xAxisPosition) {
-            xAxisPosition = d.x.axis;
+        if (IsChannelDeep(d.encoding.x) && d.encoding.x.axis && !xAxisPosition) {
+            xAxisPosition = d.encoding.x.axis;
         }
     });
 
     const corrected = resolved.map(d => {
         return {
             ...d,
-            x: { ...d.x, axis: xAxisPosition }
+            x: { ...d.encoding.x, axis: xAxisPosition }
         } as SingleTrack;
     });
 
@@ -108,16 +108,19 @@ export function spreadTracksByData(tracks: Track[]): Track[] {
                 // Y axis should be positioned on the right or hidden if multiple tracks are overlaid to prevent visual occlussion.
                 // Refer to this issue: https://github.com/gosling-lang/gosling.js/issues/400
                 const y =
-                    IsSingleTrack(track) && IsChannelDeep(track.y) && !track.y.axis && overlayOnPreviousTrack
-                        ? ({ ...track.y, axis: i === 1 ? 'right' : 'none' } as ChannelDeep)
+                    IsSingleTrack(track) &&
+                    IsChannelDeep(track.encoding.y) &&
+                    !track.encoding.y.axis &&
+                    overlayOnPreviousTrack
+                        ? ({ ...track.encoding.y, axis: i === 1 ? 'right' : 'none' } as ChannelDeep)
                         : IsSingleTrack(track)
-                        ? track.y
+                        ? track.encoding.y
                         : undefined;
 
                 if (track.title && i !== arr.length - 1 && arr.length !== 1) {
                     delete track.title; // remove `title` except the last one
                 }
-                return { ...track, overlayOnPreviousTrack, y } as Track;
+                return { ...track, overlayOnPreviousTrack, encoding: { ...track.encoding, y } } as Track;
             });
         })
     );

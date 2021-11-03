@@ -2,7 +2,7 @@ import { GoslingTrackModel } from '../gosling-track-model';
 import { Channel } from '../gosling.schema';
 import { group } from 'd3-array';
 import { PIXIVisualProperty } from '../visual-property.schema';
-import { IsChannelDeep, IsStackedMark, getValueUsingChannel } from '../gosling.schema.guards';
+import { IsChannelDeep, IsStackedMark, getValueUsingChannel, getChannelField } from '../gosling.schema.guards';
 import { cartesianToPolar, valueToRadian } from '../utils/polar';
 import colorToHex from '../utils/color-to-hex';
 import { TooltipData, TOOLTIP_MOUSEOVER_MARGIN as G } from '../../gosling-tooltip';
@@ -55,11 +55,12 @@ export function drawBar(trackInfo: any, tile: any, model: GoslingTrackModel) {
         // const rowGraphics = tile.graphics; // new HGC.libraries.PIXI.Graphics(); // only one row for stacked marks
 
         const genomicChannel = model.getGenomicChannel();
-        if (!genomicChannel || !genomicChannel.field) {
+        const genomicField = getChannelField(genomicChannel);
+        if (!genomicChannel || !genomicField) {
             console.warn('Genomic field is not provided in the specification');
             return;
         }
-        const pivotedData = group(data, d => d[genomicChannel.field as string]);
+        const pivotedData = group(data, d => d[genomicField as string]);
         const xKeys = [...pivotedData.keys()];
 
         // TODO: users may want to align rows by values
@@ -139,7 +140,7 @@ export function drawBar(trackInfo: any, tile: any, model: GoslingTrackModel) {
                 const strokeWidth = model.encodedPIXIProperty('strokeWidth', d);
                 const opacity = model.encodedPIXIProperty('opacity');
                 let y = model.encodedPIXIProperty('y', d);
-                let ye = model.encodedPIXIProperty('ye', d);
+                let ye = model.encodedPIXIProperty('y', d, { fieldKey: 'endField' });
 
                 if (typeof ye !== 'undefined') {
                     // make sure `ye` is a larger range value

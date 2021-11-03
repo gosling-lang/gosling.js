@@ -2,7 +2,7 @@ import { TooltipData, TOOLTIP_MOUSEOVER_MARGIN as G } from '../../gosling-toolti
 import { GoslingTrackModel } from '../gosling-track-model';
 import { Channel, Datum } from '../gosling.schema';
 import { min as d3min, max as d3max, group } from 'd3-array';
-import { IsStackedMark, getValueUsingChannel } from '../gosling.schema.guards';
+import { IsStackedMark, getValueUsingChannel, getChannelField } from '../gosling.schema.guards';
 import { cartesianToPolar } from '../utils/polar';
 import colorToHex from '../utils/color-to-hex';
 
@@ -55,11 +55,12 @@ export function drawArea(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackMo
         // TODO: many parts in this scope are identical as the below `else` statement, so encaptulate this?
 
         const genomicChannel = tm.getGenomicChannel();
-        if (!genomicChannel || !genomicChannel.field) {
+        const genomicField = getChannelField(genomicChannel);
+        if (!genomicChannel || !genomicField) {
             console.warn('Genomic field is not provided in the specification');
             return;
         }
-        const pivotedData = group(data, d => d[genomicChannel.field as string]);
+        const pivotedData = group(data, d => d[genomicField as string]);
         const genomicPosCategories = [...pivotedData.keys()]; // TODO: make sure to be sorted from left to right or top to bottom
 
         // stroke
@@ -83,7 +84,7 @@ export function drawArea(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackMo
             genomicPosCategories.forEach((genomicPosCategory, i, array) => {
                 pivotedData
                     .get(genomicPosCategory)
-                    ?.filter(d => getValueUsingChannel(d, spec.color as Channel) === colorCategory)
+                    ?.filter(d => getValueUsingChannel(d, spec.encoding.color as Channel) === colorCategory)
                     ?.forEach(d => {
                         const xValue = +genomicPosCategory;
 
@@ -218,10 +219,10 @@ export function drawArea(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackMo
 
                 data.filter(
                     d =>
-                        (typeof getValueUsingChannel(d, spec.row as Channel) === 'undefined' ||
-                            (getValueUsingChannel(d, spec.row as Channel) as string) === rowCategory) &&
-                        (typeof getValueUsingChannel(d, spec.color as Channel) === 'undefined' ||
-                            (getValueUsingChannel(d, spec.color as Channel) as string) === colorCategory)
+                        (typeof getValueUsingChannel(d, spec.encoding.row as Channel) === 'undefined' ||
+                            (getValueUsingChannel(d, spec.encoding.row as Channel) as string) === rowCategory) &&
+                        (typeof getValueUsingChannel(d, spec.encoding.color as Channel) === 'undefined' ||
+                            (getValueUsingChannel(d, spec.encoding.color as Channel) as string) === colorCategory)
                 )
                     .sort(
                         // should sort properly before visualizing it so that the path is correctly drawn

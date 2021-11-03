@@ -106,7 +106,7 @@ export interface CommonViewDef {
 }
 
 /* ----------------------------- TRACK ----------------------------- */
-export type Track = SingleTrack | OverlaidTrack | DataTrack | TemplateTrack;
+export type Track = SingleTrack | OverlaidTrack | TemplateTrack;
 
 export interface CommonRequiredTrackDef {
     /** Specify the track width in pixels. */

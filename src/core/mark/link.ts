@@ -46,13 +46,13 @@ export function drawLink(g: PIXI.Graphics, trackInfo: any, model: GoslingTrackMo
 
         data.filter(
             d =>
-                !getValueUsingChannel(d, spec.row as Channel) ||
-                (getValueUsingChannel(d, spec.row as Channel) as string) === rowCategory
+                !getValueUsingChannel(d, spec.encoding.row as Channel) ||
+                (getValueUsingChannel(d, spec.encoding.row as Channel) as string) === rowCategory
         ).forEach(d => {
             let x = model.encodedPIXIProperty('x', d);
-            let xe = model.encodedPIXIProperty('xe', d);
-            const x1 = model.encodedPIXIProperty('x1', d);
-            const x1e = model.encodedPIXIProperty('x1e', d);
+            let xe = model.encodedPIXIProperty('x', d, { fieldKey: 'endField' });
+            const x1 = model.encodedPIXIProperty('x', d, { fieldKey: 'startField2' });
+            const x1e = model.encodedPIXIProperty('x', d, { fieldKey: 'endField2' });
             const y = model.encodedPIXIProperty('y', d);
             const stroke = model.encodedPIXIProperty('stroke', d);
             const color = model.encodedPIXIProperty('color', d);
@@ -90,7 +90,7 @@ export function drawLink(g: PIXI.Graphics, trackInfo: any, model: GoslingTrackMo
                 0.5 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
             );
 
-            const flipY = (IsChannelDeep(spec.y) && spec.y.flip) || spec.flipY;
+            const flipY = (IsChannelDeep(spec.encoding.y) && spec.encoding.y.flip) || spec.flipY;
             const baseY = rowPosition + (flipY ? 0 : rowHeight);
 
             if (isBand) {
