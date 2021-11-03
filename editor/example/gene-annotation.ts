@@ -32,25 +32,26 @@ const HiGlass: OverlaidTracks = {
                 { type: 'filter', field: 'strand', oneOf: ['+'] }
             ],
             mark: 'triangleRight',
-            x: {
-                field: 'end',
-                type: 'genomic',
-                domain,
-                axis: 'top'
-            },
-            size: { value: 15 }
+            encoding: {
+                x: {
+                    field: 'end',
+                    type: 'genomic',
+                    domain,
+                    axis: 'top'
+                },
+                size: { value: 15 }
+            }
         },
         {
             dataTransform: [{ type: 'filter', field: 'type', oneOf: ['gene'] }],
             mark: 'text',
-            text: { field: 'name', type: 'nominal' },
-            x: {
-                field: 'start',
-                type: 'genomic'
-            },
-            xe: {
-                field: 'end',
-                type: 'genomic'
+            encoding: {
+                text: { field: 'name', type: 'nominal' },
+                x: {
+                    startField: 'start',
+                    endField: 'end',
+                    type: 'genomic'
+                }
             },
             style: {
                 dy: -15
@@ -62,24 +63,25 @@ const HiGlass: OverlaidTracks = {
                 { type: 'filter', field: 'strand', oneOf: ['-'] }
             ],
             mark: 'triangleLeft',
-            x: {
-                field: 'start',
-                type: 'genomic'
+            encoding: {
+                x: {
+                    field: 'start',
+                    type: 'genomic'
+                },
+                size: { value: 15 }
             },
-            size: { value: 15 },
             style: { align: 'right' }
         },
         {
             dataTransform: [{ type: 'filter', field: 'type', oneOf: ['exon'] }],
             mark: 'rect',
-            x: {
-                field: 'start',
-                type: 'genomic'
-            },
-            size: { value: 15 },
-            xe: {
-                field: 'end',
-                type: 'genomic'
+            encoding: {
+                x: {
+                    startField: 'start',
+                    endField: 'end',
+                    type: 'genomic'
+                },
+                size: { value: 15 }
             }
         },
         {
@@ -88,14 +90,13 @@ const HiGlass: OverlaidTracks = {
                 { type: 'filter', field: 'strand', oneOf: ['+'] }
             ],
             mark: 'rule',
-            x: {
-                field: 'start',
-                type: 'genomic'
-            },
-            strokeWidth: { value: 3 },
-            xe: {
-                field: 'end',
-                type: 'genomic'
+            encoding: {
+                x: {
+                    startField: 'start',
+                    endField: 'end',
+                    type: 'genomic'
+                },
+                strokeWidth: { value: 3 }
             },
             style: {
                 linePattern: { type: 'triangleRight', size: 5 }
@@ -107,22 +108,24 @@ const HiGlass: OverlaidTracks = {
                 { type: 'filter', field: 'strand', oneOf: ['-'] }
             ],
             mark: 'rule',
-            x: {
-                field: 'start',
-                type: 'genomic'
-            },
-            strokeWidth: { value: 3 },
-            xe: {
-                field: 'end',
-                type: 'genomic'
+            encoding: {
+                x: {
+                    startField: 'start',
+                    endField: 'end',
+                    type: 'genomic'
+                },
+                strokeWidth: { value: 3 }
             },
             style: {
                 linePattern: { type: 'triangleLeft', size: 5 }
             }
         }
     ],
-    row: { field: 'strand', type: 'nominal', domain: ['+', '-'] },
-    color: { field: 'strand', type: 'nominal', domain: ['+', '-'], range: ['#7585FF', '#FF8A85'] },
+    encoding: {
+        row: { field: 'strand', type: 'nominal', domain: ['+', '-'] },
+        color: { field: 'strand', type: 'nominal', domain: ['+', '-'], range: ['#7585FF', '#FF8A85'] },
+        opacity: { value: 0.8 }
+    },
     visibility: [
         {
             operation: 'less-than',
@@ -132,7 +135,6 @@ const HiGlass: OverlaidTracks = {
             target: 'mark'
         }
     ],
-    opacity: { value: 0.8 },
     width,
     height
 };
@@ -145,30 +147,28 @@ const IGV: OverlaidTracks = {
         {
             dataTransform: [{ type: 'filter', field: 'type', oneOf: ['gene'] }],
             mark: 'text',
-            text: { field: 'name', type: 'nominal' },
-            x: {
-                field: 'start',
-                type: 'genomic',
-                domain,
-                axis: 'top'
-            },
-            xe: {
-                field: 'end',
-                type: 'genomic'
+            encoding: {
+                text: { field: 'name', type: 'nominal' },
+                x: {
+                    startField: 'start',
+                    endField: 'end',
+                    type: 'genomic',
+                    domain,
+                    axis: 'top'
+                }
             }
         },
         {
             dataTransform: [{ type: 'filter', field: 'type', oneOf: ['gene'] }],
             mark: 'rect',
-            x: {
-                field: 'start',
-                type: 'genomic',
-                axis: 'top'
-            },
-            size: { value: 15 },
-            xe: {
-                field: 'end',
-                type: 'genomic'
+            encoding: {
+                x: {
+                    startField: 'start',
+                    endField: 'end',
+                    type: 'genomic',
+                    axis: 'top'
+                },
+                size: { value: 15 }
             }
         },
         {
@@ -177,18 +177,17 @@ const IGV: OverlaidTracks = {
                 { type: 'filter', field: 'strand', oneOf: ['-'] }
             ],
             mark: 'rule',
-            x: {
-                field: 'start',
-                type: 'genomic',
-                axis: 'top'
+            encoding: {
+                x: {
+                    startField: 'start',
+                    endField: 'end',
+                    type: 'genomic',
+                    axis: 'top'
+                },
+                strokeWidth: { value: 0 },
+                color: { value: 'white' },
+                opacity: { value: 0.6 }
             },
-            strokeWidth: { value: 0 },
-            xe: {
-                field: 'end',
-                type: 'genomic'
-            },
-            color: { value: 'white' },
-            opacity: { value: 0.6 },
             style: {
                 linePattern: { type: 'triangleLeft', size: 10 }
             }
@@ -199,26 +198,27 @@ const IGV: OverlaidTracks = {
                 { type: 'filter', field: 'strand', oneOf: ['+'] }
             ],
             mark: 'rule',
-            x: {
-                field: 'start',
-                type: 'genomic',
-                axis: 'top'
+            encoding: {
+                x: {
+                    startField: 'start',
+                    endField: 'end',
+                    type: 'genomic',
+                    axis: 'top'
+                },
+                strokeWidth: { value: 0 },
+                color: { value: 'white' },
+                opacity: { value: 0.6 }
             },
-            strokeWidth: { value: 0 },
-            xe: {
-                field: 'end',
-                type: 'genomic'
-            },
-            color: { value: 'white' },
-            opacity: { value: 0.6 },
             style: {
                 linePattern: { type: 'triangleRight', size: 10 }
             }
         }
     ],
     // y: { field: 'strand', type: 'nominal' },
-    row: { field: 'strand', type: 'nominal', domain: ['+', '-'] },
-    color: { value: '#0900B1' },
+    encoding: {
+        row: { field: 'strand', type: 'nominal', domain: ['+', '-'] },
+        color: { value: '#0900B1' }
+    },
     visibility: [
         {
             operation: 'less-than',
@@ -240,17 +240,16 @@ const CyverseQUBES: OverlaidTracks = {
         {
             dataTransform: [{ type: 'filter', field: 'type', oneOf: ['gene'] }],
             mark: 'text',
-            text: { field: 'name', type: 'nominal' },
-            x: {
-                field: 'start',
-                type: 'genomic',
-                domain
-            },
-            xe: {
-                field: 'end',
-                type: 'genomic'
-            },
-            color: { value: 'black' }
+            encoding: {
+                text: { field: 'name', type: 'nominal' },
+                x: {
+                    startField: 'start',
+                    endField: 'end',
+                    type: 'genomic',
+                    domain
+                },
+                color: { value: 'black' }
+            }
         },
         {
             dataTransform: [
@@ -258,12 +257,14 @@ const CyverseQUBES: OverlaidTracks = {
                 { type: 'filter', field: 'strand', oneOf: ['+'] }
             ],
             mark: 'triangleRight',
-            x: {
-                field: 'end',
-                type: 'genomic',
-                axis: 'top'
-            },
-            color: { value: '#999999' }
+            encoding: {
+                x: {
+                    field: 'end',
+                    type: 'genomic',
+                    axis: 'top'
+                },
+                color: { value: '#999999' }
+            }
         },
         {
             dataTransform: [
@@ -271,12 +272,14 @@ const CyverseQUBES: OverlaidTracks = {
                 { type: 'filter', field: 'strand', oneOf: ['-'] }
             ],
             mark: 'triangleLeft',
-            x: {
-                field: 'start',
-                type: 'genomic',
-                axis: 'top'
+            encoding: {
+                x: {
+                    field: 'start',
+                    type: 'genomic',
+                    axis: 'top'
+                },
+                color: { value: '#999999' }
             },
-            color: { value: '#999999' },
             style: {
                 align: 'right'
             }
@@ -284,50 +287,50 @@ const CyverseQUBES: OverlaidTracks = {
         {
             dataTransform: [{ type: 'filter', field: 'type', oneOf: ['gene'] }],
             mark: 'rect',
-            x: {
-                field: 'start',
-                type: 'genomic',
-                axis: 'top'
-            },
-            xe: {
-                field: 'end',
-                type: 'genomic'
-            },
-            color: { value: 'lightgray' }
+            encoding: {
+                x: {
+                    startField: 'start',
+                    endField: 'end',
+                    type: 'genomic',
+                    axis: 'top'
+                },
+                color: { value: 'lightgray' }
+            }
         },
         {
             dataTransform: [{ type: 'filter', field: 'type', oneOf: ['gene'] }],
             mark: 'rule',
-            x: {
-                field: 'start',
-                type: 'genomic',
-                axis: 'top'
-            },
-            strokeWidth: { value: 5 },
-            xe: {
-                field: 'end',
-                type: 'genomic'
-            },
-            color: { value: 'gray' }
+            encoding: {
+                x: {
+                    startField: 'start',
+                    endField: 'end',
+                    type: 'genomic',
+                    axis: 'top'
+                },
+                strokeWidth: { value: 5 },
+                color: { value: 'gray' }
+            }
         },
         {
             dataTransform: [{ type: 'filter', field: 'type', oneOf: ['exon'] }],
             mark: 'rect',
-            x: {
-                field: 'start',
-                type: 'genomic',
-                axis: 'top'
-            },
-            xe: {
-                field: 'end',
-                type: 'genomic'
-            },
-            color: { value: '#E2A6F5' },
-            stroke: { value: '#BB57C9' },
-            strokeWidth: { value: 1 }
+            encoding: {
+                x: {
+                    startField: 'start',
+                    endField: 'end',
+                    type: 'genomic',
+                    axis: 'top'
+                },
+                color: { value: '#E2A6F5' },
+                stroke: { value: '#BB57C9' },
+                strokeWidth: { value: 1 }
+            }
         }
     ],
-    row: { field: 'strand', type: 'nominal', domain: ['+', '-'] },
+    encoding: {
+        row: { field: 'strand', type: 'nominal', domain: ['+', '-'] },
+        size: { value: 15 }
+    },
     visibility: [
         {
             operation: 'less-than',
@@ -337,7 +340,6 @@ const CyverseQUBES: OverlaidTracks = {
             target: 'mark'
         }
     ],
-    size: { value: 15 },
     width,
     height
 };
@@ -350,16 +352,15 @@ const GmGDB: OverlaidTracks = {
         {
             dataTransform: [{ type: 'filter', field: 'type', oneOf: ['gene'] }],
             mark: 'text',
-            text: { field: 'name', type: 'nominal' },
-            x: {
-                field: 'start',
-                type: 'genomic',
-                domain,
-                axis: 'top'
-            },
-            xe: {
-                field: 'end',
-                type: 'genomic'
+            encoding: {
+                text: { field: 'name', type: 'nominal' },
+                x: {
+                    startField: 'start',
+                    endField: 'end',
+                    type: 'genomic',
+                    domain,
+                    axis: 'top'
+                }
             },
             style: {
                 dy: -14
@@ -371,12 +372,14 @@ const GmGDB: OverlaidTracks = {
                 { type: 'filter', field: 'strand', oneOf: ['+'] }
             ],
             mark: 'triangleRight',
-            x: {
-                field: 'end',
-                type: 'genomic',
-                axis: 'top'
-            },
-            size: { value: 15 }
+            encoding: {
+                x: {
+                    field: 'end',
+                    type: 'genomic',
+                    axis: 'top'
+                },
+                size: { value: 15 }
+            }
         },
         {
             dataTransform: [
@@ -384,12 +387,14 @@ const GmGDB: OverlaidTracks = {
                 { type: 'filter', field: 'strand', oneOf: ['-'] }
             ],
             mark: 'triangleLeft',
-            x: {
-                field: 'start',
-                type: 'genomic',
-                axis: 'top'
+            encoding: {
+                x: {
+                    field: 'start',
+                    type: 'genomic',
+                    axis: 'top'
+                },
+                size: { value: 15 }
             },
-            size: { value: 15 },
             style: {
                 align: 'right'
             }
@@ -397,29 +402,27 @@ const GmGDB: OverlaidTracks = {
         {
             dataTransform: [{ type: 'filter', field: 'type', oneOf: ['exon'] }],
             mark: 'rect',
-            x: {
-                field: 'start',
-                type: 'genomic',
-                axis: 'top'
-            },
-            size: { value: 10 },
-            xe: {
-                field: 'end',
-                type: 'genomic'
+            encoding: {
+                x: {
+                    startField: 'start',
+                    endField: 'end',
+                    type: 'genomic',
+                    axis: 'top'
+                },
+                size: { value: 10 }
             }
         },
         {
             dataTransform: [{ type: 'filter', field: 'type', oneOf: ['gene'] }],
             mark: 'rule',
-            x: {
-                field: 'start',
-                type: 'genomic',
-                axis: 'top'
-            },
-            strokeWidth: { value: 3 },
-            xe: {
-                field: 'end',
-                type: 'genomic'
+            encoding: {
+                x: {
+                    startField: 'start',
+                    endField: 'end',
+                    type: 'genomic',
+                    axis: 'top'
+                },
+                strokeWidth: { value: 3 }
             }
         }
         // {
@@ -429,8 +432,10 @@ const GmGDB: OverlaidTracks = {
         //     ]
         // }
     ],
-    row: { field: 'strand', type: 'nominal', domain: ['+', '-'] },
-    color: { field: 'strand', type: 'nominal', domain: ['+', '-'], range: ['blue', 'red'] },
+    encoding: {
+        row: { field: 'strand', type: 'nominal', domain: ['+', '-'] },
+        color: { field: 'strand', type: 'nominal', domain: ['+', '-'], range: ['blue', 'red'] }
+    },
     visibility: [
         {
             operation: 'less-than',
@@ -451,16 +456,15 @@ const g6: OverlaidTracks = {
         {
             dataTransform: [{ type: 'filter', field: 'type', oneOf: ['gene'] }],
             mark: 'text',
-            text: { field: 'name', type: 'nominal' },
-            x: {
-                field: 'start',
-                type: 'genomic',
-                domain,
-                axis: 'top'
-            },
-            xe: {
-                field: 'end',
-                type: 'genomic'
+            encoding: {
+                text: { field: 'name', type: 'nominal' },
+                x: {
+                    startField: 'start',
+                    endField: 'end',
+                    type: 'genomic',
+                    domain,
+                    axis: 'top'
+                }
             },
             style: {
                 dy: -14
@@ -469,37 +473,37 @@ const g6: OverlaidTracks = {
         {
             dataTransform: [{ type: 'filter', field: 'type', oneOf: ['exon'] }],
             mark: 'rect',
-            x: {
-                field: 'start',
-                type: 'genomic',
-                axis: 'top'
-            },
-            size: { value: 10 },
-            xe: {
-                field: 'end',
-                type: 'genomic'
+            encoding: {
+                x: {
+                    startField: 'start',
+                    endField: 'end',
+                    type: 'genomic',
+                    axis: 'top'
+                },
+                size: { value: 10 }
             }
         },
         {
             dataTransform: [{ type: 'filter', field: 'type', oneOf: ['intron'] }],
             mark: 'rule',
-            x: {
-                field: 'start',
-                type: 'genomic',
-                axis: 'top'
-            },
-            strokeWidth: { value: 2 },
-            xe: {
-                field: 'end',
-                type: 'genomic'
+            encoding: {
+                x: {
+                    startField: 'start',
+                    endField: 'end',
+                    type: 'genomic',
+                    axis: 'top'
+                },
+                strokeWidth: { value: 2 }
             },
             style: {
                 curve: 'top'
             }
         }
     ],
-    row: { field: 'strand', type: 'nominal', domain: ['+', '-'] },
-    color: { value: '#B54F4A' },
+    encoding: {
+        row: { field: 'strand', type: 'nominal', domain: ['+', '-'] },
+        color: { value: '#B54F4A' }
+    },
     visibility: [
         {
             operation: 'less-than',
@@ -519,66 +523,64 @@ const g7: OverlaidTracks = {
         {
             dataTransform: [{ type: 'filter', field: 'type', oneOf: ['gene'] }],
             mark: 'text',
-            text: { field: 'name', type: 'nominal' },
-            x: {
-                field: 'start',
-                type: 'genomic',
-                domain,
-                axis: 'top'
-            },
-            color: { value: 'black' },
-            xe: {
-                field: 'end',
-                type: 'genomic'
+            encoding: {
+                text: { field: 'name', type: 'nominal' },
+                x: {
+                    startField: 'start',
+                    endField: 'end',
+                    type: 'genomic',
+                    domain,
+                    axis: 'top'
+                },
+                color: { value: 'black' }
             }
         },
         {
             dataTransform: [{ type: 'filter', field: 'type', oneOf: ['gene'] }],
             mark: 'rect',
-            x: {
-                field: 'start',
-                type: 'genomic',
-                axis: 'top'
-            },
-            xe: {
-                field: 'end',
-                type: 'genomic'
-            },
-            color: { value: '#666666' }
+            encoding: {
+                x: {
+                    startField: 'start',
+                    endField: 'end',
+                    type: 'genomic',
+                    axis: 'top'
+                },
+                color: { value: '#666666' }
+            }
         },
         {
             dataTransform: [{ type: 'filter', field: 'type', oneOf: ['exon'] }],
             mark: 'rect',
-            x: {
-                field: 'start',
-                type: 'genomic',
-                axis: 'top'
-            },
-            xe: {
-                field: 'end',
-                type: 'genomic'
-            },
-            color: { value: '#FF6666' }
+            encoding: {
+                x: {
+                    startField: 'start',
+                    endField: 'end',
+                    type: 'genomic',
+                    axis: 'top'
+                },
+                color: { value: '#FF6666' }
+            }
         },
         {
             dataTransform: [{ type: 'filter', field: 'type', oneOf: ['intron'] }],
             mark: 'rect',
-            x: {
-                field: 'start',
-                type: 'genomic',
-                axis: 'top'
-            },
-            xe: {
-                field: 'end',
-                type: 'genomic'
-            },
-            color: { value: '#99FEFF' }
+            encoding: {
+                x: {
+                    startField: 'start',
+                    endField: 'end',
+                    type: 'genomic',
+                    axis: 'top'
+                },
+                color: { value: '#99FEFF' }
+            }
         }
     ],
-    size: { value: 30 },
-    row: { field: 'strand', type: 'nominal', domain: ['+', '-'] },
-    stroke: { value: '#777777' },
-    strokeWidth: { value: 1 },
+    encoding: {
+        size: { value: 30 },
+        row: { field: 'strand', type: 'nominal', domain: ['+', '-'] },
+        stroke: { value: '#777777' },
+        strokeWidth: { value: 1 }
+    },
     visibility: [
         {
             operation: 'less-than',
@@ -603,12 +605,14 @@ const GIVE: OverlaidTracks = {
                 { type: 'filter', field: 'strand', oneOf: ['+'] }
             ],
             mark: 'rect',
-            x: {
-                field: 'end',
-                type: 'genomic',
-                axis: 'top'
-            },
-            size: { value: 7 }
+            encoding: {
+                x: {
+                    field: 'end',
+                    type: 'genomic',
+                    axis: 'top'
+                },
+                size: { value: 7 }
+            }
         },
         {
             dataTransform: [
@@ -616,26 +620,32 @@ const GIVE: OverlaidTracks = {
                 { type: 'filter', field: 'strand', oneOf: ['-'] }
             ],
             mark: 'rect',
-            x: { field: 'start', type: 'genomic' },
-            size: { value: 7 }
+            encoding: {
+                x: { field: 'start', type: 'genomic' },
+                size: { value: 7 }
+            }
         },
         {
             dataTransform: [{ type: 'filter', field: 'type', oneOf: ['exon'] }],
             mark: 'rect',
-            x: { field: 'start', type: 'genomic' },
-            xe: { field: 'end', type: 'genomic' },
-            size: { value: 14 }
+            encoding: {
+                x: { startField: 'start', endField: 'end', type: 'genomic' },
+                size: { value: 14 }
+            }
         },
         {
             dataTransform: [{ type: 'filter', field: 'type', oneOf: ['gene'] }],
             mark: 'rule',
-            x: { field: 'start', type: 'genomic' },
-            xe: { field: 'end', type: 'genomic' },
-            strokeWidth: { value: 3 }
+            encoding: {
+                x: { startField: 'start', endField: 'end', type: 'genomic' },
+                strokeWidth: { value: 3 }
+            }
         }
     ],
-    row: { field: 'strand', type: 'nominal', domain: ['+', '-'] },
-    color: { value: '#4050B4' },
+    encoding: {
+        row: { field: 'strand', type: 'nominal', domain: ['+', '-'] },
+        color: { value: '#4050B4' }
+    },
     width,
     height
 };
@@ -652,13 +662,15 @@ const CorcesEtAl: OverlaidTracks = {
             ],
             mark: 'text',
             text: { field: 'name', type: 'nominal' },
-            x: {
-                field: 'start',
-                type: 'genomic',
-                domain
+            encoding: {
+                x: {
+                    startField: 'start',
+                    endField: 'end',
+                    type: 'genomic',
+                    domain
+                },
+                size: { value: 8 }
             },
-            xe: { field: 'end', type: 'genomic' },
-            size: { value: 8 },
             style: { textFontSize: 8, dy: -12 }
         },
         {
@@ -667,10 +679,11 @@ const CorcesEtAl: OverlaidTracks = {
                 { type: 'filter', field: 'strand', oneOf: ['-'] }
             ],
             mark: 'text',
-            text: { field: 'name', type: 'nominal' },
-            x: { field: 'start', type: 'genomic' },
-            xe: { field: 'end', type: 'genomic' },
-            size: { value: 8 },
+            encoding: {
+                text: { field: 'name', type: 'nominal' },
+                x: { startField: 'start', endField: 'end', type: 'genomic' },
+                size: { value: 8 }
+            },
             style: { textFontSize: 8, dy: 10 }
         },
         {
@@ -679,8 +692,10 @@ const CorcesEtAl: OverlaidTracks = {
                 { type: 'filter', field: 'strand', oneOf: ['+'] }
             ],
             mark: 'rect',
-            x: { field: 'end', type: 'genomic' },
-            size: { value: 7 }
+            encoding: {
+                x: { field: 'end', type: 'genomic' },
+                size: { value: 7 }
+            }
         },
         {
             dataTransform: [
@@ -688,26 +703,32 @@ const CorcesEtAl: OverlaidTracks = {
                 { type: 'filter', field: 'strand', oneOf: ['-'] }
             ],
             mark: 'rect',
-            x: { field: 'start', type: 'genomic' },
-            size: { value: 7 }
+            encoding: {
+                x: { field: 'start', type: 'genomic' },
+                size: { value: 7 }
+            }
         },
         {
             dataTransform: [{ type: 'filter', field: 'type', oneOf: ['exon'] }],
             mark: 'rect',
-            x: { field: 'start', type: 'genomic' },
-            xe: { field: 'end', type: 'genomic' },
-            size: { value: 14 }
+            encoding: {
+                x: { startField: 'start', endField: 'end', type: 'genomic' },
+                size: { value: 14 }
+            }
         },
         {
             dataTransform: [{ type: 'filter', field: 'type', oneOf: ['gene'] }],
             mark: 'rule',
-            x: { field: 'start', type: 'genomic' },
-            xe: { field: 'end', type: 'genomic' },
-            strokeWidth: { value: 3 }
+            encoding: {
+                x: { startField: 'start', endField: 'end', type: 'genomic' },
+                strokeWidth: { value: 3 }
+            }
         }
     ],
-    row: { field: 'strand', type: 'nominal', domain: ['+', '-'] },
-    color: { field: 'strand', type: 'nominal', domain: ['+', '-'], range: ['#012DB8', '#BE1E2C'] },
+    encoding: {
+        row: { field: 'strand', type: 'nominal', domain: ['+', '-'] },
+        color: { field: 'strand', type: 'nominal', domain: ['+', '-'], range: ['#012DB8', '#BE1E2C'] }
+    },
     visibility: [
         {
             operation: 'less-than',

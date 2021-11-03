@@ -25,10 +25,11 @@ export const EX_SPEC_MATRIX_HFFC6: GoslingSpec = {
                             },
                             title: 'HFFc6_H3K4me3',
                             mark: 'bar',
-                            x: { field: 'start', type: 'genomic', axis: 'top' },
-                            xe: { field: 'end', type: 'genomic' },
-                            y: { field: 'peak', type: 'quantitative', axis: 'none' },
-                            color: { value: 'darkgreen' },
+                            encoding: {
+                                x: { startField: 'start', endField: 'end', type: 'genomic', axis: 'top' },
+                                y: { field: 'peak', type: 'quantitative', axis: 'none' },
+                                color: { value: 'darkgreen' }
+                            },
                             height: 600,
                             width: 40
                         },
@@ -42,10 +43,11 @@ export const EX_SPEC_MATRIX_HFFC6: GoslingSpec = {
                             },
                             title: 'HFFc6_ATAC',
                             mark: 'bar',
-                            x: { field: 'start', type: 'genomic' },
-                            xe: { field: 'end', type: 'genomic' },
-                            y: { field: 'peak', type: 'quantitative', axis: 'none' },
-                            color: { value: '#E79F00' },
+                            encoding: {
+                                x: { startField: 'start', endField: 'end', type: 'genomic' },
+                                y: { field: 'peak', type: 'quantitative', axis: 'none' },
+                                color: { value: '#E79F00' }
+                            },
                             height: 600,
                             width: 40
                         },
@@ -61,10 +63,11 @@ export const EX_SPEC_MATRIX_HFFC6: GoslingSpec = {
                                         binSize: 8
                                     },
                                     mark: 'bar',
-                                    x: { field: 'start', type: 'genomic' },
-                                    xe: { field: 'end', type: 'genomic' },
-                                    y: { field: 'peak', type: 'quantitative', axis: 'none' },
-                                    color: { value: '#0072B2' }
+                                    encoding: {
+                                        x: { startField: 'start', endField: 'end', type: 'genomic' },
+                                        y: { field: 'peak', type: 'quantitative', axis: 'none' },
+                                        color: { value: '#0072B2' }
+                                    }
                                 },
                                 {
                                     style: { backgroundOpacity: 0 },
@@ -82,12 +85,14 @@ export const EX_SPEC_MATRIX_HFFC6: GoslingSpec = {
                                     },
                                     dataTransform: [{ type: 'filter', field: 'strand', oneOf: ['+'] }],
                                     mark: 'triangleRight',
-                                    x: { field: 'start', type: 'genomic' },
-                                    size: { value: 13 },
-                                    stroke: { value: 'white' },
-                                    strokeWidth: { value: 1 },
-                                    row: { field: 'strand', type: 'nominal', domain: ['+', '-'] },
-                                    color: { value: '#CB7AA7' }
+                                    encoding: {
+                                        x: { field: 'start', type: 'genomic' },
+                                        size: { value: 13 },
+                                        stroke: { value: 'white' },
+                                        strokeWidth: { value: 1 },
+                                        row: { field: 'strand', type: 'nominal', domain: ['+', '-'] },
+                                        color: { value: '#CB7AA7' }
+                                    }
                                 },
                                 {
                                     style: { backgroundOpacity: 0 },
@@ -106,12 +111,14 @@ export const EX_SPEC_MATRIX_HFFC6: GoslingSpec = {
                                     },
                                     dataTransform: [{ type: 'filter', field: 'strand', oneOf: ['-'] }],
                                     mark: 'triangleLeft',
-                                    x: { field: 'start', type: 'genomic' },
-                                    size: { value: 13 },
-                                    stroke: { value: 'white' },
-                                    strokeWidth: { value: 1 },
-                                    row: { field: 'strand', type: 'nominal', domain: ['+', '-'] },
-                                    color: { value: '#029F73' }
+                                    encoding: {
+                                        x: { field: 'start', type: 'genomic' },
+                                        size: { value: 13 },
+                                        stroke: { value: 'white' },
+                                        strokeWidth: { value: 1 },
+                                        row: { field: 'strand', type: 'nominal', domain: ['+', '-'] },
+                                        color: { value: '#029F73' }
+                                    }
                                 }
                             ],
                             height: 600,
@@ -140,10 +147,11 @@ export const EX_SPEC_MATRIX_HFFC6: GoslingSpec = {
                                     },
                                     title: 'HFFc6_H3K4me3',
                                     mark: 'bar',
-                                    x: { field: 'start', type: 'genomic', axis: 'top' },
-                                    xe: { field: 'end', type: 'genomic' },
-                                    y: { field: 'peak', type: 'quantitative', axis: 'none' },
-                                    color: { value: 'darkgreen' },
+                                    encoding: {
+                                        x: { startField: 'start', endField: 'end', type: 'genomic', axis: 'top' },
+                                        y: { field: 'peak', type: 'quantitative', axis: 'none' },
+                                        color: { value: 'darkgreen' }
+                                    },
                                     width: 570,
                                     height: 40
                                 },
@@ -157,10 +165,11 @@ export const EX_SPEC_MATRIX_HFFC6: GoslingSpec = {
                                     },
                                     title: 'HFFc6_ATAC',
                                     mark: 'bar',
-                                    x: { field: 'start', type: 'genomic' },
-                                    xe: { field: 'end', type: 'genomic' },
-                                    y: { field: 'peak', type: 'quantitative', axis: 'none' },
-                                    color: { value: '#E79F00' },
+                                    encoding: {
+                                        x: { startField: 'start', endField: 'end', type: 'genomic' },
+                                        y: { field: 'peak', type: 'quantitative', axis: 'none' },
+                                        color: { value: '#E79F00' }
+                                    },
                                     width: 600,
                                     height: 40
                                 },
@@ -176,10 +185,11 @@ export const EX_SPEC_MATRIX_HFFC6: GoslingSpec = {
                                                 binSize: 8
                                             },
                                             mark: 'bar',
-                                            x: { field: 'start', type: 'genomic' },
-                                            xe: { field: 'end', type: 'genomic' },
-                                            y: { field: 'peak', type: 'quantitative', axis: 'none' },
-                                            color: { value: '#0072B2' }
+                                            encoding: {
+                                                x: { startField: 'start', endField: 'end', type: 'genomic' },
+                                                y: { field: 'peak', type: 'quantitative', axis: 'none' },
+                                                color: { value: '#0072B2' }
+                                            }
                                         },
                                         {
                                             style: { backgroundOpacity: 0 },
@@ -197,12 +207,14 @@ export const EX_SPEC_MATRIX_HFFC6: GoslingSpec = {
                                             },
                                             dataTransform: [{ type: 'filter', field: 'strand', oneOf: ['+'] }],
                                             mark: 'triangleRight',
-                                            x: { field: 'start', type: 'genomic' },
-                                            size: { value: 13 },
-                                            stroke: { value: 'white' },
-                                            strokeWidth: { value: 1 },
-                                            row: { field: 'strand', type: 'nominal', domain: ['+', '-'] },
-                                            color: { value: '#CB7AA7' }
+                                            encoding: {
+                                                x: { field: 'start', type: 'genomic' },
+                                                size: { value: 13 },
+                                                stroke: { value: 'white' },
+                                                strokeWidth: { value: 1 },
+                                                row: { field: 'strand', type: 'nominal', domain: ['+', '-'] },
+                                                color: { value: '#CB7AA7' }
+                                            }
                                         },
                                         {
                                             style: { backgroundOpacity: 0 },
@@ -221,12 +233,14 @@ export const EX_SPEC_MATRIX_HFFC6: GoslingSpec = {
                                             },
                                             dataTransform: [{ type: 'filter', field: 'strand', oneOf: ['-'] }],
                                             mark: 'triangleLeft',
-                                            x: { field: 'start', type: 'genomic' },
-                                            stroke: { value: 'white' },
-                                            strokeWidth: { value: 1 },
-                                            size: { value: 13 },
-                                            row: { field: 'strand', type: 'nominal', domain: ['+', '-'] },
-                                            color: { value: '#029F73' }
+                                            encoding: {
+                                                x: { field: 'start', type: 'genomic' },
+                                                stroke: { value: 'white' },
+                                                strokeWidth: { value: 1 },
+                                                size: { value: 13 },
+                                                row: { field: 'strand', type: 'nominal', domain: ['+', '-'] },
+                                                color: { value: '#029F73' }
+                                            }
                                         }
                                     ],
                                     width: 600,
@@ -243,9 +257,11 @@ export const EX_SPEC_MATRIX_HFFC6: GoslingSpec = {
                                         type: 'matrix'
                                     },
                                     mark: 'rect',
-                                    x: { field: 'position1', type: 'genomic', axis: 'none' },
-                                    y: { field: 'position2', type: 'genomic', axis: 'none' },
-                                    color: { field: 'value', type: 'quantitative', range: 'warm' },
+                                    encoding: {
+                                        x: { field: 'position1', type: 'genomic', axis: 'none' },
+                                        y: { field: 'position2', type: 'genomic', axis: 'none' },
+                                        color: { field: 'value', type: 'quantitative', range: 'warm' }
+                                    },
                                     width: 600,
                                     height: 600
                                 }
@@ -282,31 +298,32 @@ export const EX_SPEC_MATRIX_HFFC6: GoslingSpec = {
                                     },
                                     dataTransform: [{ type: 'filter', field: 'value', inRange: [0, 999999] }],
                                     mark: 'bar',
-                                    x: { field: 'start', type: 'genomic', axis: 'none' },
-                                    xe: { field: 'end', type: 'genomic' },
-                                    y: { field: 'value', type: 'quantitative', axis: 'none' },
-                                    color: {
-                                        field: 'category',
-                                        type: 'nominal',
-                                        range: [
-                                            '#FF0000',
-                                            '#FF4500',
-                                            '#32CD32',
-                                            '#008000',
-                                            '#006400',
-                                            '#C2E105',
-                                            '#FFFF00',
-                                            '#66CDAA',
-                                            '#8A91D0',
-                                            '#CD5C5C',
-                                            '#E9967A',
-                                            '#BDB76B',
-                                            '#808080',
-                                            '#C0C0C0',
-                                            'gray'
-                                        ]
+                                    encoding: {
+                                        x: { startField: 'start', endField: 'end', type: 'genomic', axis: 'none' },
+                                        y: { field: 'value', type: 'quantitative', axis: 'none' },
+                                        color: {
+                                            field: 'category',
+                                            type: 'nominal',
+                                            range: [
+                                                '#FF0000',
+                                                '#FF4500',
+                                                '#32CD32',
+                                                '#008000',
+                                                '#006400',
+                                                '#C2E105',
+                                                '#FFFF00',
+                                                '#66CDAA',
+                                                '#8A91D0',
+                                                '#CD5C5C',
+                                                '#E9967A',
+                                                '#BDB76B',
+                                                '#808080',
+                                                '#C0C0C0',
+                                                'gray'
+                                            ]
+                                        }
+                                        // strokeWidth: {value: 0.5},
                                     },
-                                    // strokeWidth: {value: 0.5},
                                     width: 600,
                                     height: 40
                                 }
@@ -330,10 +347,11 @@ export const EX_SPEC_MATRIX_HFFC6: GoslingSpec = {
                                     },
                                     title: 'HFFc6_H3K4me3',
                                     mark: 'bar',
-                                    x: { field: 'start', type: 'genomic', axis: 'top' },
-                                    xe: { field: 'end', type: 'genomic' },
-                                    y: { field: 'peak', type: 'quantitative', axis: 'none' },
-                                    color: { value: 'darkgreen' },
+                                    encoding: {
+                                        x: { startField: 'start', endField: 'end', type: 'genomic', axis: 'top' },
+                                        y: { field: 'peak', type: 'quantitative', axis: 'none' },
+                                        color: { value: 'darkgreen' }
+                                    },
                                     width: 600,
                                     height: 40
                                 },
@@ -347,10 +365,11 @@ export const EX_SPEC_MATRIX_HFFC6: GoslingSpec = {
                                     },
                                     title: 'HFFc6_ATAC',
                                     mark: 'bar',
-                                    x: { field: 'start', type: 'genomic' },
-                                    xe: { field: 'end', type: 'genomic' },
-                                    y: { field: 'peak', type: 'quantitative', axis: 'none' },
-                                    color: { value: '#E79F00' },
+                                    encoding: {
+                                        x: { startField: 'start', endField: 'end', type: 'genomic' },
+                                        y: { field: 'peak', type: 'quantitative', axis: 'none' },
+                                        color: { value: '#E79F00' }
+                                    },
                                     width: 600,
                                     height: 40
                                 },
@@ -366,10 +385,11 @@ export const EX_SPEC_MATRIX_HFFC6: GoslingSpec = {
                                                 binSize: 8
                                             },
                                             mark: 'bar',
-                                            x: { field: 'start', type: 'genomic' },
-                                            xe: { field: 'end', type: 'genomic' },
-                                            y: { field: 'peak', type: 'quantitative', axis: 'none' },
-                                            color: { value: '#0072B2' }
+                                            encoding: {
+                                                x: { startField: 'start', endField: 'end', type: 'genomic' },
+                                                y: { field: 'peak', type: 'quantitative', axis: 'none' },
+                                                color: { value: '#0072B2' }
+                                            }
                                         },
                                         {
                                             style: { backgroundOpacity: 0 },
@@ -387,12 +407,14 @@ export const EX_SPEC_MATRIX_HFFC6: GoslingSpec = {
                                             },
                                             dataTransform: [{ type: 'filter', field: 'strand', oneOf: ['+'] }],
                                             mark: 'triangleRight',
-                                            x: { field: 'start', type: 'genomic' },
-                                            size: { value: 13 },
-                                            stroke: { value: 'white' },
-                                            strokeWidth: { value: 1 },
-                                            row: { field: 'strand', type: 'nominal', domain: ['+', '-'] },
-                                            color: { value: '#CB7AA7' }
+                                            encoding: {
+                                                x: { field: 'start', type: 'genomic' },
+                                                size: { value: 13 },
+                                                stroke: { value: 'white' },
+                                                strokeWidth: { value: 1 },
+                                                row: { field: 'strand', type: 'nominal', domain: ['+', '-'] },
+                                                color: { value: '#CB7AA7' }
+                                            }
                                         },
                                         {
                                             style: { backgroundOpacity: 0 },
@@ -411,12 +433,14 @@ export const EX_SPEC_MATRIX_HFFC6: GoslingSpec = {
                                             },
                                             dataTransform: [{ type: 'filter', field: 'strand', oneOf: ['-'] }],
                                             mark: 'triangleLeft',
-                                            x: { field: 'start', type: 'genomic' },
-                                            size: { value: 13 },
-                                            stroke: { value: 'white' },
-                                            strokeWidth: { value: 1 },
-                                            row: { field: 'strand', type: 'nominal', domain: ['+', '-'] },
-                                            color: { value: '#029F73' }
+                                            encoding: {
+                                                x: { field: 'start', type: 'genomic' },
+                                                size: { value: 13 },
+                                                stroke: { value: 'white' },
+                                                strokeWidth: { value: 1 },
+                                                row: { field: 'strand', type: 'nominal', domain: ['+', '-'] },
+                                                color: { value: '#029F73' }
+                                            }
                                         }
                                     ],
                                     width: 600,
@@ -433,9 +457,11 @@ export const EX_SPEC_MATRIX_HFFC6: GoslingSpec = {
                                         type: 'matrix'
                                     },
                                     mark: 'rect',
-                                    x: { field: 'position1', type: 'genomic', axis: 'none' },
-                                    y: { field: 'position2', type: 'genomic', axis: 'none' },
-                                    color: { field: 'value', type: 'quantitative', range: 'warm' },
+                                    encoding: {
+                                        x: { field: 'position1', type: 'genomic', axis: 'none' },
+                                        y: { field: 'position2', type: 'genomic', axis: 'none' },
+                                        color: { field: 'value', type: 'quantitative', range: 'warm' }
+                                    },
                                     width: 600,
                                     height: 600
                                 }
@@ -472,31 +498,32 @@ export const EX_SPEC_MATRIX_HFFC6: GoslingSpec = {
                                     },
                                     dataTransform: [{ type: 'filter', field: 'value', inRange: [0, 999999] }],
                                     mark: 'bar',
-                                    x: { field: 'start', type: 'genomic', axis: 'none' },
-                                    xe: { field: 'end', type: 'genomic' },
-                                    y: { field: 'value', type: 'quantitative', axis: 'none' },
-                                    color: {
-                                        field: 'category',
-                                        type: 'nominal',
-                                        range: [
-                                            '#FF0000',
-                                            '#FF4500',
-                                            '#32CD32',
-                                            '#008000',
-                                            '#006400',
-                                            '#C2E105',
-                                            '#FFFF00',
-                                            '#66CDAA',
-                                            '#8A91D0',
-                                            '#CD5C5C',
-                                            '#E9967A',
-                                            '#BDB76B',
-                                            '#808080',
-                                            '#C0C0C0',
-                                            'gray'
-                                        ]
+                                    encoding: {
+                                        x: { startField: 'start', endField: 'end', type: 'genomic', axis: 'none' },
+                                        y: { field: 'value', type: 'quantitative', axis: 'none' },
+                                        color: {
+                                            field: 'category',
+                                            type: 'nominal',
+                                            range: [
+                                                '#FF0000',
+                                                '#FF4500',
+                                                '#32CD32',
+                                                '#008000',
+                                                '#006400',
+                                                '#C2E105',
+                                                '#FFFF00',
+                                                '#66CDAA',
+                                                '#8A91D0',
+                                                '#CD5C5C',
+                                                '#E9967A',
+                                                '#BDB76B',
+                                                '#808080',
+                                                '#C0C0C0',
+                                                'gray'
+                                            ]
+                                        }
+                                        // strokeWidth: {value: 0.5},
                                     },
-                                    // strokeWidth: {value: 0.5},
                                     width: 600,
                                     height: 40
                                 }

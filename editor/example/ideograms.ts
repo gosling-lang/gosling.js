@@ -14,8 +14,10 @@ export const CytoBands: OverlaidTracks = {
         {
             mark: 'text',
             dataTransform: [{ type: 'filter', field: 'Stain', oneOf: ['acen-1', 'acen-2'], not: true }],
-            text: { field: 'Band', type: 'nominal' },
-            color: { value: 'black' },
+            encoding: {
+                text: { field: 'Band', type: 'nominal' },
+                color: { value: 'black' }
+            },
             visibility: [
                 {
                     operation: 'less-than',
@@ -29,33 +31,42 @@ export const CytoBands: OverlaidTracks = {
         {
             mark: 'rect',
             dataTransform: [{ type: 'filter', field: 'Stain', oneOf: ['acen-1', 'acen-2'], not: true }],
-            color: {
-                field: 'Density',
-                type: 'nominal',
-                domain: ['', '25', '50', '75', '100'],
-                range: ['white', '#D9D9D9', '#979797', '#636363', 'black']
+            encoding: {
+                color: {
+                    field: 'Density',
+                    type: 'nominal',
+                    domain: ['', '25', '50', '75', '100'],
+                    range: ['white', '#D9D9D9', '#979797', '#636363', 'black']
+                }
             }
         },
         {
             mark: 'rect',
             dataTransform: [{ type: 'filter', field: 'Stain', oneOf: ['gvar'] }],
-            color: { value: '#A0A0F2' }
+            encoding: {
+                color: { value: '#A0A0F2' }
+            }
         },
         {
             mark: 'triangleRight',
             dataTransform: [{ type: 'filter', field: 'Stain', oneOf: ['acen-1'] }],
-            color: { value: '#B40101' }
+            encoding: {
+                color: { value: '#B40101' }
+            }
         },
         {
             mark: 'triangleLeft',
             dataTransform: [{ type: 'filter', field: 'Stain', oneOf: ['acen-2'] }],
-            color: { value: '#B40101' }
+            encoding: {
+                color: { value: '#B40101' }
+            }
         }
     ],
-    x: { field: 'Basepair_start', type: 'genomic' },
-    xe: { field: 'Basepair_stop', type: 'genomic' },
-    stroke: { value: 'gray' },
-    strokeWidth: { value: 0.5 },
+    encoding: {
+        x: { startField: 'Basepair_start', endField: 'Basepair_stop', type: 'genomic' },
+        stroke: { value: 'gray' },
+        strokeWidth: { value: 0.5 }
+    },
     width: 600,
     height: 20
 };
@@ -70,12 +81,14 @@ const StackedPeaks: Track = {
         categories: ['sample 1', 'sample 2', 'sample 3', 'sample 4']
     },
     mark: 'area',
-    x: {
-        field: 'position',
-        type: 'genomic'
+    encoding: {
+        x: {
+            field: 'position',
+            type: 'genomic'
+        },
+        y: { field: 'peak', type: 'quantitative' },
+        color: { field: 'sample', type: 'nominal' }
     },
-    y: { field: 'peak', type: 'quantitative' },
-    color: { field: 'sample', type: 'nominal' },
     width: 600,
     height: 30
 };

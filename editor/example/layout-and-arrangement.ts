@@ -28,10 +28,11 @@ export const getSingleView: (
                 binSize: 32
             },
             mark: 'rect',
-            x: { field: 'start', type: 'genomic', axis: 'none' },
-            xe: { field: 'end', type: 'genomic' },
-            row: { field: '_', type: 'nominal' },
-            color: { value: 'lightgray' },
+            encoding: {
+                x: { startField: 'start', endField: 'end', type: 'genomic', axis: 'none' },
+                row: { field: '_', type: 'nominal' },
+                color: { value: 'lightgray' }
+            },
             style: { outline: color, outlineWidth: 7 },
             width: width + numHSpacing * spacing,
             height: height + numVSpacing * spacing

@@ -51,29 +51,43 @@ export const EX_SPEC_MARK_DISPLACEMENT: GoslingSpec = {
                     tracks: [
                         {
                             mark: 'point',
-                            size: { value: 4 },
-                            color: { value: '#029F73' },
-                            stroke: { value: 'black' },
-                            strokeWidth: { value: 1 }
+                            encoding: {
+                                size: { value: 4 },
+                                color: { value: '#029F73' },
+                                stroke: { value: 'black' },
+                                strokeWidth: { value: 1 }
+                            }
                         },
                         {
                             mark: 'text',
-                            color: { field: '3', type: 'nominal', domain: ['A', 'T', 'G', 'C'], legend: true },
-                            text: { field: '3', type: 'nominal' },
-                            y: { value: 48 }
+                            encoding: {
+                                color: { field: '3', type: 'nominal', domain: ['A', 'T', 'G', 'C'], legend: true },
+                                text: { field: '3', type: 'nominal' },
+                                y: { value: 48 }
+                            }
                         },
                         {
                             mark: 'text',
-                            color: { field: '4', type: 'nominal', domain: ['A', 'T', 'G', 'C'] },
-                            text: { field: '4', type: 'nominal' },
-                            y: { value: 18 }
+                            encoding: {
+                                color: { field: '4', type: 'nominal', domain: ['A', 'T', 'G', 'C'] },
+                                text: { field: '4', type: 'nominal' },
+                                y: { value: 18 }
+                            }
                         },
-                        { mark: 'text', color: { value: 'gray' }, text: { value: '↓' }, y: { value: 33 } }
+                        {
+                            mark: 'text',
+                            encoding: {
+                                color: { value: 'gray' },
+                                text: { value: '↓' },
+                                y: { value: 33 }
+                            }
+                        }
                     ],
-                    x: { field: 'aStart', type: 'genomic' },
-                    xe: { field: 'aEnd', type: 'genomic' },
-                    y: { value: 5 },
-                    opacity: { value: 0.8 },
+                    encoding: {
+                        x: { startField: 'aStart', endField: 'aEnd', type: 'genomic' },
+                        y: { value: 5 },
+                        opacity: { value: 0.8 }
+                    },
                     style: { inlineLegend: true },
                     width: 700,
                     height: 60
@@ -98,15 +112,16 @@ export const EX_SPEC_MARK_DISPLACEMENT: GoslingSpec = {
                         }
                     ],
                     mark: 'betweenLink',
-                    xe: { field: 'start', type: 'genomic' },
-                    x: { field: 'aStart', type: 'genomic' },
-                    // xe: { field: 'end', type: 'genomic' },
-                    // x1: { field: 'aStart', type: 'genomic' },
-                    // x1e: { field: 'aEnd', type: 'genomic' },
-                    color: { value: '#029F73' },
-                    stroke: { value: 'lightgrey' },
-                    strokeWidth: { value: 0.5 },
-                    opacity: { value: 0.8 },
+                    encoding: {
+                        xe: { startField: 'start', endField: 'aStart', type: 'genomic' },
+                        // xe: { field: 'end', type: 'genomic' },
+                        // x1: { field: 'aStart', type: 'genomic' },
+                        // x1e: { field: 'aEnd', type: 'genomic' },
+                        color: { value: '#029F73' },
+                        stroke: { value: 'lightgrey' },
+                        strokeWidth: { value: 0.5 },
+                        opacity: { value: 0.8 }
+                    },
                     width: 700,
                     height: 60
                 },
@@ -125,198 +140,12 @@ export const EX_SPEC_MARK_DISPLACEMENT: GoslingSpec = {
                             },
                             dataTransform: [{ type: 'filter', field: 'significance', oneOf: ['Likely_benign'] }],
                             mark: 'rect',
-                            color: { value: 'lightgray' },
-                            stroke: { value: 'lightgray' },
-                            strokeWidth: { value: 0.5 },
-                            x: { field: 'start', type: 'genomic' },
-                            xe: { field: 'end', type: 'genomic' },
-                            opacity: { value: 0.8 }
-                        },
-                        {
-                            data: {
-                                url: GOSLING_PUBLIC_DATA.geneAnnotation,
-                                type: 'beddb',
-                                genomicFields: [
-                                    { index: 1, name: 'start' },
-                                    { index: 2, name: 'end' }
-                                ],
-                                valueFields: [
-                                    { index: 5, name: 'strand', type: 'nominal' },
-                                    { index: 3, name: 'name', type: 'nominal' }
-                                ],
-                                exonIntervalFields: [
-                                    { index: 12, name: 'start' },
-                                    { index: 13, name: 'end' }
-                                ]
-                            },
-                            row: { field: 'strand', type: 'nominal', domain: ['+', '-'] },
-                            color: {
-                                field: 'strand',
-                                type: 'nominal',
-                                domain: ['+', '-'],
-                                range: ['#7585FF', '#FF8A85']
-                            },
-                            visibility: [
-                                {
-                                    operation: 'less-than',
-                                    measure: 'width',
-                                    threshold: '|xe-x|',
-                                    transitionPadding: 10,
-                                    target: 'mark'
-                                }
-                            ],
-                            opacity: { value: 0.8 },
-                            dataTransform: [
-                                { type: 'filter', field: 'type', oneOf: ['gene'] },
-                                { type: 'filter', field: 'strand', oneOf: ['+'] }
-                            ],
-                            mark: 'triangleRight',
-                            x: {
-                                field: 'end',
-                                type: 'genomic',
-                                axis: 'none'
-                            },
-                            size: { value: 15 }
-                        },
-                        {
-                            data: {
-                                url: GOSLING_PUBLIC_DATA.geneAnnotation,
-                                type: 'beddb',
-                                genomicFields: [
-                                    { index: 1, name: 'start' },
-                                    { index: 2, name: 'end' }
-                                ],
-                                valueFields: [
-                                    { index: 5, name: 'strand', type: 'nominal' },
-                                    { index: 3, name: 'name', type: 'nominal' }
-                                ],
-                                exonIntervalFields: [
-                                    { index: 12, name: 'start' },
-                                    { index: 13, name: 'end' }
-                                ]
-                            },
-
-                            row: { field: 'strand', type: 'nominal', domain: ['+', '-'] },
-                            color: {
-                                field: 'strand',
-                                type: 'nominal',
-                                domain: ['+', '-'],
-                                range: ['#7585FF', '#FF8A85']
-                            },
-                            visibility: [
-                                {
-                                    operation: 'less-than',
-                                    measure: 'width',
-                                    threshold: '|xe-x|',
-                                    transitionPadding: 10,
-                                    target: 'mark'
-                                }
-                            ],
-                            opacity: { value: 0.8 },
-                            dataTransform: [{ type: 'filter', field: 'type', oneOf: ['gene'] }],
-                            mark: 'text',
-                            text: { field: 'name', type: 'nominal' },
-                            x: {
-                                field: 'start',
-                                type: 'genomic'
-                            },
-                            xe: {
-                                field: 'end',
-                                type: 'genomic'
-                            },
-                            style: { dy: -15 }
-                        },
-                        {
-                            data: {
-                                url: GOSLING_PUBLIC_DATA.geneAnnotation,
-                                type: 'beddb',
-                                genomicFields: [
-                                    { index: 1, name: 'start' },
-                                    { index: 2, name: 'end' }
-                                ],
-                                valueFields: [
-                                    { index: 5, name: 'strand', type: 'nominal' },
-                                    { index: 3, name: 'name', type: 'nominal' }
-                                ],
-                                exonIntervalFields: [
-                                    { index: 12, name: 'start' },
-                                    { index: 13, name: 'end' }
-                                ]
-                            },
-                            row: { field: 'strand', type: 'nominal', domain: ['+', '-'] },
-                            color: {
-                                field: 'strand',
-                                type: 'nominal',
-                                domain: ['+', '-'],
-                                range: ['#7585FF', '#FF8A85']
-                            },
-                            visibility: [
-                                {
-                                    operation: 'less-than',
-                                    measure: 'width',
-                                    threshold: '|xe-x|',
-                                    transitionPadding: 10,
-                                    target: 'mark'
-                                }
-                            ],
-                            opacity: { value: 0.8 },
-                            dataTransform: [
-                                { type: 'filter', field: 'type', oneOf: ['gene'] },
-                                { type: 'filter', field: 'strand', oneOf: ['-'] }
-                            ],
-                            mark: 'triangleLeft',
-                            x: {
-                                field: 'start',
-                                type: 'genomic'
-                            },
-                            size: { value: 15 },
-                            style: { align: 'right' }
-                        },
-                        {
-                            data: {
-                                url: GOSLING_PUBLIC_DATA.geneAnnotation,
-                                type: 'beddb',
-                                genomicFields: [
-                                    { index: 1, name: 'start' },
-                                    { index: 2, name: 'end' }
-                                ],
-                                valueFields: [
-                                    { index: 5, name: 'strand', type: 'nominal' },
-                                    { index: 3, name: 'name', type: 'nominal' }
-                                ],
-                                exonIntervalFields: [
-                                    { index: 12, name: 'start' },
-                                    { index: 13, name: 'end' }
-                                ]
-                            },
-
-                            row: { field: 'strand', type: 'nominal', domain: ['+', '-'] },
-                            color: {
-                                field: 'strand',
-                                type: 'nominal',
-                                domain: ['+', '-'],
-                                range: ['#7585FF', '#FF8A85']
-                            },
-                            visibility: [
-                                {
-                                    operation: 'less-than',
-                                    measure: 'width',
-                                    threshold: '|xe-x|',
-                                    transitionPadding: 10,
-                                    target: 'mark'
-                                }
-                            ],
-                            opacity: { value: 0.8 },
-                            dataTransform: [{ type: 'filter', field: 'type', oneOf: ['exon'] }],
-                            mark: 'rect',
-                            x: {
-                                field: 'start',
-                                type: 'genomic'
-                            },
-                            size: { value: 15 },
-                            xe: {
-                                field: 'end',
-                                type: 'genomic'
+                            encoding: {
+                                color: { value: 'lightgray' },
+                                stroke: { value: 'lightgray' },
+                                strokeWidth: { value: 0.5 },
+                                x: { startField: 'start', endField: 'end', type: 'genomic' },
+                                opacity: { value: 0.8 }
                             }
                         },
                         {
@@ -336,13 +165,21 @@ export const EX_SPEC_MARK_DISPLACEMENT: GoslingSpec = {
                                     { index: 13, name: 'end' }
                                 ]
                             },
-
-                            row: { field: 'strand', type: 'nominal', domain: ['+', '-'] },
-                            color: {
-                                field: 'strand',
-                                type: 'nominal',
-                                domain: ['+', '-'],
-                                range: ['#7585FF', '#FF8A85']
+                            encoding: {
+                                row: { field: 'strand', type: 'nominal', domain: ['+', '-'] },
+                                color: {
+                                    field: 'strand',
+                                    type: 'nominal',
+                                    domain: ['+', '-'],
+                                    range: ['#7585FF', '#FF8A85']
+                                },
+                                opacity: { value: 0.8 },
+                                x: {
+                                    field: 'end',
+                                    type: 'genomic',
+                                    axis: 'none'
+                                },
+                                size: { value: 15 }
                             },
                             visibility: [
                                 {
@@ -353,21 +190,191 @@ export const EX_SPEC_MARK_DISPLACEMENT: GoslingSpec = {
                                     target: 'mark'
                                 }
                             ],
-                            opacity: { value: 0.8 },
+                            dataTransform: [
+                                { type: 'filter', field: 'type', oneOf: ['gene'] },
+                                { type: 'filter', field: 'strand', oneOf: ['+'] }
+                            ],
+                            mark: 'triangleRight'
+                        },
+                        {
+                            data: {
+                                url: GOSLING_PUBLIC_DATA.geneAnnotation,
+                                type: 'beddb',
+                                genomicFields: [
+                                    { index: 1, name: 'start' },
+                                    { index: 2, name: 'end' }
+                                ],
+                                valueFields: [
+                                    { index: 5, name: 'strand', type: 'nominal' },
+                                    { index: 3, name: 'name', type: 'nominal' }
+                                ],
+                                exonIntervalFields: [
+                                    { index: 12, name: 'start' },
+                                    { index: 13, name: 'end' }
+                                ]
+                            },
+                            encoding: {
+                                row: { field: 'strand', type: 'nominal', domain: ['+', '-'] },
+                                color: {
+                                    field: 'strand',
+                                    type: 'nominal',
+                                    domain: ['+', '-'],
+                                    range: ['#7585FF', '#FF8A85']
+                                },
+                                opacity: { value: 0.8 },
+                                text: { field: 'name', type: 'nominal' },
+                                x: { startField: 'start', endField: 'end', type: 'genomic' }
+                            },
+                            visibility: [
+                                {
+                                    operation: 'less-than',
+                                    measure: 'width',
+                                    threshold: '|xe-x|',
+                                    transitionPadding: 10,
+                                    target: 'mark'
+                                }
+                            ],
+                            dataTransform: [{ type: 'filter', field: 'type', oneOf: ['gene'] }],
+                            mark: 'text',
+                            style: { dy: -15 }
+                        },
+                        {
+                            data: {
+                                url: GOSLING_PUBLIC_DATA.geneAnnotation,
+                                type: 'beddb',
+                                genomicFields: [
+                                    { index: 1, name: 'start' },
+                                    { index: 2, name: 'end' }
+                                ],
+                                valueFields: [
+                                    { index: 5, name: 'strand', type: 'nominal' },
+                                    { index: 3, name: 'name', type: 'nominal' }
+                                ],
+                                exonIntervalFields: [
+                                    { index: 12, name: 'start' },
+                                    { index: 13, name: 'end' }
+                                ]
+                            },
+                            encoding: {
+                                row: { field: 'strand', type: 'nominal', domain: ['+', '-'] },
+                                color: {
+                                    field: 'strand',
+                                    type: 'nominal',
+                                    domain: ['+', '-'],
+                                    range: ['#7585FF', '#FF8A85']
+                                },
+                                opacity: { value: 0.8 },
+                                x: { field: 'start', type: 'genomic' },
+                                size: { value: 15 }
+                            },
+                            visibility: [
+                                {
+                                    operation: 'less-than',
+                                    measure: 'width',
+                                    threshold: '|xe-x|',
+                                    transitionPadding: 10,
+                                    target: 'mark'
+                                }
+                            ],
+                            dataTransform: [
+                                { type: 'filter', field: 'type', oneOf: ['gene'] },
+                                { type: 'filter', field: 'strand', oneOf: ['-'] }
+                            ],
+                            mark: 'triangleLeft',
+                            style: { align: 'right' }
+                        },
+                        {
+                            data: {
+                                url: GOSLING_PUBLIC_DATA.geneAnnotation,
+                                type: 'beddb',
+                                genomicFields: [
+                                    { index: 1, name: 'start' },
+                                    { index: 2, name: 'end' }
+                                ],
+                                valueFields: [
+                                    { index: 5, name: 'strand', type: 'nominal' },
+                                    { index: 3, name: 'name', type: 'nominal' }
+                                ],
+                                exonIntervalFields: [
+                                    { index: 12, name: 'start' },
+                                    { index: 13, name: 'end' }
+                                ]
+                            },
+                            encoding: {
+                                row: { field: 'strand', type: 'nominal', domain: ['+', '-'] },
+                                color: {
+                                    field: 'strand',
+                                    type: 'nominal',
+                                    domain: ['+', '-'],
+                                    range: ['#7585FF', '#FF8A85']
+                                },
+                                x: {
+                                    startField: 'start',
+                                    endField: 'end',
+                                    type: 'genomic'
+                                },
+                                size: { value: 15 },
+                                opacity: { value: 0.8 }
+                            },
+                            visibility: [
+                                {
+                                    operation: 'less-than',
+                                    measure: 'width',
+                                    threshold: '|xe-x|',
+                                    transitionPadding: 10,
+                                    target: 'mark'
+                                }
+                            ],
+                            dataTransform: [{ type: 'filter', field: 'type', oneOf: ['exon'] }],
+                            mark: 'rect'
+                        },
+                        {
+                            data: {
+                                url: GOSLING_PUBLIC_DATA.geneAnnotation,
+                                type: 'beddb',
+                                genomicFields: [
+                                    { index: 1, name: 'start' },
+                                    { index: 2, name: 'end' }
+                                ],
+                                valueFields: [
+                                    { index: 5, name: 'strand', type: 'nominal' },
+                                    { index: 3, name: 'name', type: 'nominal' }
+                                ],
+                                exonIntervalFields: [
+                                    { index: 12, name: 'start' },
+                                    { index: 13, name: 'end' }
+                                ]
+                            },
+                            encoding: {
+                                row: { field: 'strand', type: 'nominal', domain: ['+', '-'] },
+                                opacity: { value: 0.8 },
+                                color: {
+                                    field: 'strand',
+                                    type: 'nominal',
+                                    domain: ['+', '-'],
+                                    range: ['#7585FF', '#FF8A85']
+                                },
+                                x: {
+                                    startField: 'start',
+                                    endField: 'end',
+                                    type: 'genomic'
+                                },
+                                strokeWidth: { value: 3 }
+                            },
+                            visibility: [
+                                {
+                                    operation: 'less-than',
+                                    measure: 'width',
+                                    threshold: '|xe-x|',
+                                    transitionPadding: 10,
+                                    target: 'mark'
+                                }
+                            ],
                             dataTransform: [
                                 { type: 'filter', field: 'type', oneOf: ['gene'] },
                                 { type: 'filter', field: 'strand', oneOf: ['+'] }
                             ],
                             mark: 'rule',
-                            x: {
-                                field: 'start',
-                                type: 'genomic'
-                            },
-                            strokeWidth: { value: 3 },
-                            xe: {
-                                field: 'end',
-                                type: 'genomic'
-                            },
                             style: {
                                 linePattern: { type: 'triangleRight', size: 5 }
                             }
@@ -389,13 +396,21 @@ export const EX_SPEC_MARK_DISPLACEMENT: GoslingSpec = {
                                     { index: 13, name: 'end' }
                                 ]
                             },
-
-                            row: { field: 'strand', type: 'nominal', domain: ['+', '-'] },
-                            color: {
-                                field: 'strand',
-                                type: 'nominal',
-                                domain: ['+', '-'],
-                                range: ['#7585FF', '#FF8A85']
+                            encoding: {
+                                row: { field: 'strand', type: 'nominal', domain: ['+', '-'] },
+                                color: {
+                                    field: 'strand',
+                                    type: 'nominal',
+                                    domain: ['+', '-'],
+                                    range: ['#7585FF', '#FF8A85']
+                                },
+                                opacity: { value: 0.8 },
+                                strokeWidth: { value: 3 },
+                                x: {
+                                    startField: 'start',
+                                    endField: 'end',
+                                    type: 'genomic'
+                                }
                             },
                             visibility: [
                                 {
@@ -406,21 +421,11 @@ export const EX_SPEC_MARK_DISPLACEMENT: GoslingSpec = {
                                     target: 'mark'
                                 }
                             ],
-                            opacity: { value: 0.8 },
                             dataTransform: [
                                 { type: 'filter', field: 'type', oneOf: ['gene'] },
                                 { type: 'filter', field: 'strand', oneOf: ['-'] }
                             ],
                             mark: 'rule',
-                            x: {
-                                field: 'start',
-                                type: 'genomic'
-                            },
-                            strokeWidth: { value: 3 },
-                            xe: {
-                                field: 'end',
-                                type: 'genomic'
-                            },
                             style: {
                                 linePattern: { type: 'triangleLeft', size: 5 }
                             }
@@ -445,23 +450,24 @@ export const EX_SPEC_MARK_DISPLACEMENT: GoslingSpec = {
                     },
                     displacement: { type: 'pile', padding: 3.5 },
                     mark: 'point',
-                    x: { field: 'start', type: 'genomic' },
-                    xe: { field: 'end', type: 'genomic' },
-                    size: { value: 3 },
-                    color: {
-                        field: 'significance',
-                        type: 'nominal',
-                        domain: [
-                            'Pathogenic',
-                            'Pathogenic/Likely_pathogenic',
-                            'Likely_pathogenic',
-                            'Uncertain_significance',
-                            'Likely_benign',
-                            'Benign/Likely_benign',
-                            'Benign'
-                        ],
-                        range: ['#CB3B8C', '#CB71A3', '#CB96B3', 'gray', '#029F73', '#5A9F8C', '#5A9F8C'],
-                        legend: true
+                    encoding: {
+                        x: { startField: 'start', endField: 'end', type: 'genomic' },
+                        size: { value: 3 },
+                        color: {
+                            field: 'significance',
+                            type: 'nominal',
+                            domain: [
+                                'Pathogenic',
+                                'Pathogenic/Likely_pathogenic',
+                                'Likely_pathogenic',
+                                'Uncertain_significance',
+                                'Likely_benign',
+                                'Benign/Likely_benign',
+                                'Benign'
+                            ],
+                            range: ['#CB3B8C', '#CB71A3', '#CB96B3', 'gray', '#029F73', '#5A9F8C', '#5A9F8C'],
+                            legend: true
+                        }
                     },
                     width: 700,
                     height: 260

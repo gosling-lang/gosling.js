@@ -44,13 +44,15 @@ export const EX_SPEC_GENE_TRANSCRIPT: GoslingSpec = {
                 { type: 'filter', field: 'strand', oneOf: ['+'] }
             ],
             mark: 'triangleRight',
-            x: {
-                field: 'end',
-                type: 'genomic',
-                axis: 'top'
-            },
-            xe: undefined,
-            size: { value: 15 }
+            encoding: {
+                x: {
+                    startField: 'end',
+                    endField: undefined,
+                    type: 'genomic',
+                    axis: 'top'
+                },
+                size: { value: 15 }
+            }
         },
         {
             dataTransform: [
@@ -64,14 +66,13 @@ export const EX_SPEC_GENE_TRANSCRIPT: GoslingSpec = {
                 { type: 'filter', field: 'type', oneOf: ['gene'] }
             ],
             mark: 'text',
-            text: { field: 'name', type: 'nominal' },
-            x: {
-                field: 'start',
-                type: 'genomic'
-            },
-            xe: {
-                field: 'end',
-                type: 'genomic'
+            encoding: {
+                text: { field: 'name', type: 'nominal' },
+                x: {
+                    startField: 'start',
+                    endField: 'end',
+                    type: 'genomic'
+                }
             },
             style: {
                 dy: -10
@@ -90,11 +91,13 @@ export const EX_SPEC_GENE_TRANSCRIPT: GoslingSpec = {
                 { type: 'filter', field: 'strand', oneOf: ['-'] }
             ],
             mark: 'triangleLeft',
-            x: {
-                field: 'start',
-                type: 'genomic'
+            encoding: {
+                x: {
+                    field: 'start',
+                    type: 'genomic'
+                },
+                size: { value: 15 }
             },
-            size: { value: 15 },
             style: { align: 'right' }
         },
         {
@@ -118,14 +121,13 @@ export const EX_SPEC_GENE_TRANSCRIPT: GoslingSpec = {
                 { type: 'filter', field: 'type', oneOf: ['exon'] }
             ],
             mark: 'rect',
-            size: { value: 10 },
-            x: {
-                field: 'start',
-                type: 'genomic'
-            },
-            xe: {
-                field: 'end',
-                type: 'genomic'
+            encoding: {
+                size: { value: 10 },
+                x: {
+                    startField: 'start',
+                    endField: 'end',
+                    type: 'genomic'
+                }
             }
         },
         {
@@ -141,14 +143,13 @@ export const EX_SPEC_GENE_TRANSCRIPT: GoslingSpec = {
                 { type: 'filter', field: 'strand', oneOf: ['+'] }
             ],
             mark: 'rule',
-            x: {
-                field: 'start',
-                type: 'genomic'
-            },
-            strokeWidth: { value: 3 },
-            xe: {
-                field: 'end',
-                type: 'genomic'
+            encoding: {
+                x: {
+                    startField: 'start',
+                    endField: 'end',
+                    type: 'genomic'
+                },
+                strokeWidth: { value: 3 }
             },
             style: {
                 linePattern: { type: 'triangleRight', size: 5 }
@@ -167,22 +168,24 @@ export const EX_SPEC_GENE_TRANSCRIPT: GoslingSpec = {
                 { type: 'filter', field: 'strand', oneOf: ['-'] }
             ],
             mark: 'rule',
-            x: {
-                field: 'start',
-                type: 'genomic'
-            },
-            strokeWidth: { value: 3 },
-            xe: {
-                field: 'end',
-                type: 'genomic'
+            encoding: {
+                x: {
+                    startField: 'start',
+                    endField: 'end',
+                    type: 'genomic'
+                },
+                strokeWidth: { value: 3 }
             },
             style: {
                 linePattern: { type: 'triangleRight', size: 5 }
             }
         }
     ],
-    row: { field: 'row', type: 'nominal' },
-    color: { field: 'strand', type: 'nominal', domain: ['+', '-'], range: ['#0072B2', '#D45E00'] },
+    encoding: {
+        row: { field: 'row', type: 'nominal' },
+        color: { field: 'strand', type: 'nominal', domain: ['+', '-'], range: ['#0072B2', '#D45E00'] },
+        opacity: { value: 0.8 }
+    },
     visibility: [
         {
             operation: 'less-than',
@@ -192,7 +195,6 @@ export const EX_SPEC_GENE_TRANSCRIPT: GoslingSpec = {
             target: 'mark'
         }
     ],
-    opacity: { value: 0.8 },
     style: { outline: 'black' },
     width: 700,
     height: 500

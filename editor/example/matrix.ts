@@ -24,17 +24,21 @@ export const EX_SPEC_MATRIX: GoslingSpec = {
                         },
                         {
                             mark: 'brush',
-                            x: { linkingId: 'all' },
-                            color: { value: 'blue' }
+                            encoding: {
+                                x: { linkingId: 'all' },
+                                color: { value: 'blue' }
+                            }
                         }
                     ],
-                    x: {
-                        field: 'position',
-                        type: 'genomic',
-                        axis: 'top'
+                    encoding: {
+                        x: {
+                            field: 'position',
+                            type: 'genomic',
+                            axis: 'top'
+                        },
+                        y: { field: 'peak', type: 'quantitative' },
+                        color: { field: 'sample', type: 'nominal' }
                     },
-                    y: { field: 'peak', type: 'quantitative' },
-                    color: { field: 'sample', type: 'nominal' },
                     width: 570,
                     height: 30
                 },
@@ -49,50 +53,49 @@ export const EX_SPEC_MATRIX: GoslingSpec = {
                     tracks: [
                         {
                             mark: 'rect',
-                            color: {
-                                field: 'Chromosome',
-                                type: 'nominal',
-                                domain: [
-                                    'chr1',
-                                    'chr2',
-                                    'chr3',
-                                    'chr4',
-                                    'chr5',
-                                    'chr6',
-                                    'chr7',
-                                    'chr8',
-                                    'chr9',
-                                    'chr10',
-                                    'chr11',
-                                    'chr12',
-                                    'chr13',
-                                    'chr14',
-                                    'chr15',
-                                    'chr16',
-                                    'chr17',
-                                    'chr18',
-                                    'chr19',
-                                    'chr20',
-                                    'chr21',
-                                    'chr22',
-                                    'chrX',
-                                    'chrY'
-                                ],
-                                range: ['#F6F6F6', 'gray']
+                            encoding: {
+                                color: {
+                                    field: 'Chromosome',
+                                    type: 'nominal',
+                                    domain: [
+                                        'chr1',
+                                        'chr2',
+                                        'chr3',
+                                        'chr4',
+                                        'chr5',
+                                        'chr6',
+                                        'chr7',
+                                        'chr8',
+                                        'chr9',
+                                        'chr10',
+                                        'chr11',
+                                        'chr12',
+                                        'chr13',
+                                        'chr14',
+                                        'chr15',
+                                        'chr16',
+                                        'chr17',
+                                        'chr18',
+                                        'chr19',
+                                        'chr20',
+                                        'chr21',
+                                        'chr22',
+                                        'chrX',
+                                        'chrY'
+                                    ],
+                                    range: ['#F6F6F6', 'gray']
+                                },
+                                x: {
+                                    startField: 'chromStart',
+                                    endField: 'chromEnd',
+                                    type: 'genomic',
+                                    aggregate: 'min',
+                                    aggregate: 'max', // TODO:
+                                    domain: { chromosome: '5' }
+                                },
+                                strokeWidth: { value: 2 },
+                                stroke: { value: 'gray' }
                             },
-                            x: {
-                                field: 'chromStart',
-                                type: 'genomic',
-                                aggregate: 'min',
-                                domain: { chromosome: '5' }
-                            },
-                            xe: {
-                                field: 'chromEnd',
-                                aggregate: 'max',
-                                type: 'genomic'
-                            },
-                            strokeWidth: { value: 2 },
-                            stroke: { value: 'gray' },
                             visibility: [
                                 {
                                     operation: 'greater-than',
@@ -106,12 +109,14 @@ export const EX_SPEC_MATRIX: GoslingSpec = {
                         {
                             mark: 'text',
                             dataTransform: [{ type: 'filter', field: 'Stain', oneOf: ['acen'], not: true }],
-                            text: { field: 'Name', type: 'nominal' },
-                            color: {
-                                field: 'Stain',
-                                type: 'nominal',
-                                domain: ['gneg', 'gpos25', 'gpos50', 'gpos75', 'gpos100', 'gvar'],
-                                range: ['black', 'black', 'black', 'black', 'white', 'black']
+                            encoding: {
+                                text: { field: 'Name', type: 'nominal' },
+                                color: {
+                                    field: 'Stain',
+                                    type: 'nominal',
+                                    domain: ['gneg', 'gpos25', 'gpos50', 'gpos75', 'gpos100', 'gvar'],
+                                    range: ['black', 'black', 'black', 'black', 'white', 'black']
+                                }
                             },
                             visibility: [
                                 {
@@ -126,11 +131,13 @@ export const EX_SPEC_MATRIX: GoslingSpec = {
                         {
                             mark: 'rect',
                             dataTransform: [{ type: 'filter', field: 'Stain', oneOf: ['acen'], not: true }],
-                            color: {
-                                field: 'Stain',
-                                type: 'nominal',
-                                domain: ['gneg', 'gpos25', 'gpos50', 'gpos75', 'gpos100', 'gvar'],
-                                range: ['white', '#D9D9D9', '#979797', '#636363', 'black', '#A0A0F2']
+                            encoding: {
+                                color: {
+                                    field: 'Stain',
+                                    type: 'nominal',
+                                    domain: ['gneg', 'gpos25', 'gpos50', 'gpos75', 'gpos100', 'gvar'],
+                                    range: ['white', '#D9D9D9', '#979797', '#636363', 'black', '#A0A0F2']
+                                }
                             }
                         },
                         {
@@ -139,7 +146,9 @@ export const EX_SPEC_MATRIX: GoslingSpec = {
                                 { type: 'filter', field: 'Stain', oneOf: ['acen'] },
                                 { type: 'filter', field: 'Name', include: 'q' }
                             ],
-                            color: { value: '#B40101' }
+                            encoding: {
+                                color: { value: '#B40101' }
+                            }
                         },
                         {
                             mark: 'triangleLeft',
@@ -147,19 +156,24 @@ export const EX_SPEC_MATRIX: GoslingSpec = {
                                 { type: 'filter', field: 'Stain', oneOf: ['acen'] },
                                 { type: 'filter', field: 'Name', include: 'p' }
                             ],
-                            color: { value: '#B40101' }
+                            encoding: {
+                                color: { value: '#B40101' }
+                            }
                         },
                         {
                             mark: 'brush',
-                            x: { linkingId: 'all' },
-                            color: { value: 'blue' }
+                            encoding: {
+                                x: { linkingId: 'all' },
+                                color: { value: 'blue' }
+                            }
                         }
                     ],
-                    x: { field: 'chromStart', type: 'genomic' },
-                    xe: { field: 'chromEnd', type: 'genomic' },
-                    size: { value: 20 },
-                    stroke: { value: 'gray' },
-                    strokeWidth: { value: 0.5 },
+                    encoding: {
+                        x: { startField: 'chromStart', endField: 'chromEnd', type: 'genomic' },
+                        size: { value: 20 },
+                        stroke: { value: 'gray' },
+                        strokeWidth: { value: 0.5 }
+                    },
                     visibility: [
                         {
                             operation: 'greater-than',
@@ -194,13 +208,15 @@ export const EX_SPEC_MATRIX: GoslingSpec = {
                                 categories: ['sample 1', 'sample 2', 'sample 3', 'sample 4']
                             },
                             mark: 'bar',
-                            x: {
-                                field: 'position',
-                                type: 'genomic',
-                                axis: 'top'
+                            encoding: {
+                                x: {
+                                    field: 'position',
+                                    type: 'genomic',
+                                    axis: 'top'
+                                },
+                                y: { field: 'peak', type: 'quantitative' },
+                                color: { field: 'sample', type: 'nominal' }
                             },
-                            y: { field: 'peak', type: 'quantitative' },
-                            color: { field: 'sample', type: 'nominal' },
                             width: 570,
                             height: 50
                         }
@@ -231,24 +247,25 @@ export const EX_SPEC_MATRIX: GoslingSpec = {
                                 { type: 'filter', field: 'strand', oneOf: ['+'] }
                             ],
                             mark: 'triangleRight',
-                            x: {
-                                field: 'end',
-                                type: 'genomic',
-                                axis: 'none'
-                            },
-                            size: { value: 15 }
+                            encoding: {
+                                x: {
+                                    field: 'end',
+                                    type: 'genomic',
+                                    axis: 'none'
+                                },
+                                size: { value: 15 }
+                            }
                         },
                         {
                             dataTransform: [{ type: 'filter', field: 'type', oneOf: ['gene'] }],
                             mark: 'text',
-                            text: { field: 'name', type: 'nominal' },
-                            x: {
-                                field: 'start',
-                                type: 'genomic'
-                            },
-                            xe: {
-                                field: 'end',
-                                type: 'genomic'
+                            encoding: {
+                                text: { field: 'name', type: 'nominal' },
+                                x: {
+                                    startField: 'start',
+                                    endField: 'end',
+                                    type: 'genomic'
+                                }
                             },
                             style: {
                                 dy: -15
@@ -260,24 +277,25 @@ export const EX_SPEC_MATRIX: GoslingSpec = {
                                 { type: 'filter', field: 'strand', oneOf: ['-'] }
                             ],
                             mark: 'triangleLeft',
-                            x: {
-                                field: 'start',
-                                type: 'genomic'
+                            encoding: {
+                                x: {
+                                    field: 'start',
+                                    type: 'genomic'
+                                },
+                                size: { value: 15 }
                             },
-                            size: { value: 15 },
                             style: { align: 'right' }
                         },
                         {
                             dataTransform: [{ type: 'filter', field: 'type', oneOf: ['exon'] }],
                             mark: 'rect',
-                            x: {
-                                field: 'start',
-                                type: 'genomic'
-                            },
-                            size: { value: 15 },
-                            xe: {
-                                field: 'end',
-                                type: 'genomic'
+                            encoding: {
+                                x: {
+                                    startField: 'start',
+                                    endField: 'end',
+                                    type: 'genomic'
+                                },
+                                size: { value: 15 }
                             }
                         },
                         {
@@ -286,14 +304,13 @@ export const EX_SPEC_MATRIX: GoslingSpec = {
                                 { type: 'filter', field: 'strand', oneOf: ['+'] }
                             ],
                             mark: 'rule',
-                            x: {
-                                field: 'start',
-                                type: 'genomic'
-                            },
-                            strokeWidth: { value: 3 },
-                            xe: {
-                                field: 'end',
-                                type: 'genomic'
+                            encoding: {
+                                x: {
+                                    startField: 'start',
+                                    endField: 'end',
+                                    type: 'genomic'
+                                },
+                                strokeWidth: { value: 3 }
                             },
                             style: {
                                 linePattern: { type: 'triangleRight', size: 5 }
@@ -305,22 +322,24 @@ export const EX_SPEC_MATRIX: GoslingSpec = {
                                 { type: 'filter', field: 'strand', oneOf: ['-'] }
                             ],
                             mark: 'rule',
-                            x: {
-                                field: 'start',
-                                type: 'genomic'
-                            },
-                            strokeWidth: { value: 3 },
-                            xe: {
-                                field: 'end',
-                                type: 'genomic'
+                            encoding: {
+                                x: {
+                                    startField: 'start',
+                                    endField: 'end',
+                                    type: 'genomic'
+                                },
+                                strokeWidth: { value: 3 }
                             },
                             style: {
                                 linePattern: { type: 'triangleLeft', size: 5 }
                             }
                         }
                     ],
-                    row: { field: 'strand', type: 'nominal', domain: ['+', '-'] },
-                    color: { field: 'strand', type: 'nominal', domain: ['+', '-'], range: ['#7585FF', '#FF8A85'] },
+                    encoding: {
+                        row: { field: 'strand', type: 'nominal', domain: ['+', '-'] },
+                        color: { field: 'strand', type: 'nominal', domain: ['+', '-'], range: ['#7585FF', '#FF8A85'] },
+                        opacity: { value: 0.8 }
+                    },
                     visibility: [
                         {
                             operation: 'less-than',
@@ -330,7 +349,6 @@ export const EX_SPEC_MATRIX: GoslingSpec = {
                             target: 'mark'
                         }
                     ],
-                    opacity: { value: 0.8 },
                     width: 570,
                     height: 60
                 },
@@ -342,9 +360,11 @@ export const EX_SPEC_MATRIX: GoslingSpec = {
                                 type: 'matrix'
                             },
                             mark: 'rect',
-                            x: { field: 'position1', type: 'genomic', axis: 'none' },
-                            y: { field: 'position2', type: 'genomic', axis: 'right' },
-                            color: { field: 'value', type: 'quantitative' },
+                            encoding: {
+                                x: { field: 'position1', type: 'genomic', axis: 'none' },
+                                y: { field: 'position2', type: 'genomic', axis: 'right' },
+                                color: { field: 'value', type: 'quantitative' }
+                            },
                             width: 600,
                             height: 600
                         }

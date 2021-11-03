@@ -20,24 +20,31 @@ export const EX_SPEC_GREMLIN: GoslingSpec = {
                         {
                             mark: 'rect',
                             dataTransform: [{ type: 'filter', field: 'Stain', oneOf: ['acen'], not: true }],
-                            color: {
-                                field: 'Stain',
-                                type: 'nominal',
-                                domain: ['gneg', 'gpos25', 'gpos50', 'gpos75', 'gpos100', 'gvar'],
-                                range: ['#C0C0C0', '#808080', '#404040', 'black', 'black', 'black']
-                            },
-                            size: { value: 20 }
+                            encoding: {
+                                color: {
+                                    field: 'Stain',
+                                    type: 'nominal',
+                                    domain: ['gneg', 'gpos25', 'gpos50', 'gpos75', 'gpos100', 'gvar'],
+                                    range: ['#C0C0C0', '#808080', '#404040', 'black', 'black', 'black']
+                                },
+                                size: { value: 20 }
+                            }
                         },
                         {
                             mark: 'rect',
                             dataTransform: [{ type: 'filter', field: 'Stain', oneOf: ['acen'] }],
-                            size: { value: 10 },
-                            color: { value: '#B74780' }
+                            encoding: {
+                                size: { value: 10 },
+                                color: { value: '#B74780' }
+                            }
                         },
                         {
                             mark: 'text',
                             dataTransform: [{ type: 'filter', field: 'Stain', oneOf: ['gpos25', 'gpos50', 'gpos100'] }],
-                            text: { field: 'Name', type: 'nominal' },
+                            encoding: {
+                                text: { field: 'Name', type: 'nominal' },
+                                size: { value: 6 }
+                            },
                             visibility: [
                                 {
                                     operation: 'less-than',
@@ -47,7 +54,6 @@ export const EX_SPEC_GREMLIN: GoslingSpec = {
                                     target: 'mark'
                                 }
                             ],
-                            size: { value: 6 },
                             style: {
                                 dy: 16,
                                 outline: 'white'
@@ -56,7 +62,10 @@ export const EX_SPEC_GREMLIN: GoslingSpec = {
                         {
                             mark: 'text',
                             dataTransform: [{ type: 'filter', field: 'Stain', oneOf: ['gneg', 'gpos75', 'gvar'] }],
-                            text: { field: 'Name', type: 'nominal' },
+                            encoding: {
+                                text: { field: 'Name', type: 'nominal' },
+                                size: { value: 6 }
+                            },
                             visibility: [
                                 {
                                     operation: 'less-than',
@@ -66,7 +75,6 @@ export const EX_SPEC_GREMLIN: GoslingSpec = {
                                     target: 'mark'
                                 }
                             ],
-                            size: { value: 6 },
                             style: {
                                 dy: -16,
                                 outline: 'white'
@@ -74,18 +82,22 @@ export const EX_SPEC_GREMLIN: GoslingSpec = {
                         },
                         {
                             mark: 'brush',
-                            x: { linkingId: 'view2' },
-                            strokeWidth: { value: 0 }
+                            encoding: {
+                                x: { linkingId: 'view2' },
+                                strokeWidth: { value: 0 }
+                            }
                         }
                     ],
-                    x: {
-                        field: 'chromStart',
-                        type: 'genomic'
+                    encoding: {
+                        x: {
+                            startField: 'chromStart',
+                            endField: 'chromEnd',
+                            type: 'genomic'
+                        },
+                        color: { value: 'black' },
+                        stroke: { value: 'white' },
+                        strokeWidth: { value: 1 }
                     },
-                    xe: { field: 'chromEnd', type: 'genomic' },
-                    color: { value: 'black' },
-                    stroke: { value: 'white' },
-                    strokeWidth: { value: 1 },
                     style: { outline: 'white' },
                     width: 800,
                     height: 60
@@ -111,34 +123,38 @@ export const EX_SPEC_GREMLIN: GoslingSpec = {
                         { mark: 'rect' },
                         {
                             mark: 'brush',
-                            x: { linkingId: 'view2' },
-                            strokeWidth: { value: 0 }
+                            encoding: {
+                                x: { linkingId: 'view2' },
+                                strokeWidth: { value: 0 }
+                            }
                         }
                     ],
-                    x: {
-                        field: 'p1',
-                        type: 'genomic'
+                    encoding: {
+                        x: {
+                            startField: 'p1',
+                            endField: 'p2',
+                            type: 'genomic'
+                        },
+                        row: {
+                            field: 'chr_2',
+                            type: 'nominal',
+                            domain: ['hs5', 'hs4', 'hs6']
+                        },
+                        color: {
+                            field: 'chr_2',
+                            type: 'nominal',
+                            domain: ['hs5', 'hs4', 'hs6'],
+                            range: ['#62AAD7', '#D1A74F', '#6CB74C']
+                        },
+                        stroke: {
+                            field: 'chr_2',
+                            type: 'nominal',
+                            domain: ['hs5', 'hs4', 'hs6'],
+                            range: ['#62AAD7', '#D1A74F', '#6CB74C']
+                        },
+                        strokeWidth: { value: 2 },
+                        opacity: { value: 0.4 }
                     },
-                    xe: { field: 'p2', type: 'genomic' },
-                    row: {
-                        field: 'chr_2',
-                        type: 'nominal',
-                        domain: ['hs5', 'hs4', 'hs6']
-                    },
-                    color: {
-                        field: 'chr_2',
-                        type: 'nominal',
-                        domain: ['hs5', 'hs4', 'hs6'],
-                        range: ['#62AAD7', '#D1A74F', '#6CB74C']
-                    },
-                    stroke: {
-                        field: 'chr_2',
-                        type: 'nominal',
-                        domain: ['hs5', 'hs4', 'hs6'],
-                        range: ['#62AAD7', '#D1A74F', '#6CB74C']
-                    },
-                    strokeWidth: { value: 2 },
-                    opacity: { value: 0.4 },
                     style: { outline: 'black', outlineWidth: 1 },
                     width: 800,
                     height: 80
@@ -164,17 +180,25 @@ export const EX_SPEC_GREMLIN: GoslingSpec = {
                         { mark: 'withinLink' },
                         {
                             mark: 'brush',
-                            x: { linkingId: 'view2' },
-                            strokeWidth: { value: 0 }
+                            encoding: {
+                                x: { linkingId: 'view2' },
+                                strokeWidth: { value: 0 }
+                            }
                         }
                     ],
-                    x: { field: 'p1', type: 'genomic', linkingId: 'view1' },
-                    xe: { field: 'p1_2', type: 'genomic' },
-                    x1: { field: 'p2', type: 'genomic' },
-                    x1e: { field: 'P2_2', type: 'genomic' },
-                    stroke: { value: '#6CB74C' },
-                    strokeWidth: { value: 1 },
-                    opacity: { value: 0.4 },
+                    encoding: {
+                        x: {
+                            startField: 'p1',
+                            endField: 'p1_2',
+                            startField2: 'p2',
+                            endField2: 'p2_2',
+                            type: 'genomic',
+                            linkingId: 'view1'
+                        },
+                        stroke: { value: '#6CB74C' },
+                        strokeWidth: { value: 1 },
+                        opacity: { value: 0.4 }
+                    },
                     style: { outline: 'white' },
                     width: 800,
                     height: 220
@@ -203,28 +227,30 @@ export const EX_SPEC_GREMLIN: GoslingSpec = {
                                 { type: 'filter', field: 'chr_2', oneOf: ['hs5', 'hs4', 'hs6'] }
                             ],
                             mark: 'withinLink',
-                            x: {
-                                field: 'p1',
-                                type: 'genomic',
-                                linkingId: 'view2',
-                                axis: 'bottom',
-                                domain: { chromosome: '5', interval: [68000000, 71000000] }
+                            encoding: {
+                                x: {
+                                    startField: 'p1',
+                                    endField: 'p2',
+                                    type: 'genomic',
+                                    linkingId: 'view2',
+                                    axis: 'bottom',
+                                    domain: { chromosome: '5', interval: [68000000, 71000000] }
+                                },
+                                row: {
+                                    field: 'chr_2',
+                                    type: 'nominal',
+                                    domain: ['hs5', 'hs4', 'hs6', 'empty']
+                                },
+                                color: { value: 'none' },
+                                stroke: {
+                                    field: 'chr_2',
+                                    type: 'nominal',
+                                    domain: ['hs5', 'hs4', 'hs6'],
+                                    range: ['#62AAD7', '#D1A74F', '#6CB74C']
+                                },
+                                strokeWidth: { value: 6 },
+                                opacity: { value: 0.4 }
                             },
-                            xe: { field: 'p2', type: 'genomic' },
-                            row: {
-                                field: 'chr_2',
-                                type: 'nominal',
-                                domain: ['hs5', 'hs4', 'hs6', 'empty']
-                            },
-                            color: { value: 'none' },
-                            stroke: {
-                                field: 'chr_2',
-                                type: 'nominal',
-                                domain: ['hs5', 'hs4', 'hs6'],
-                                range: ['#62AAD7', '#D1A74F', '#6CB74C']
-                            },
-                            strokeWidth: { value: 6 },
-                            opacity: { value: 0.4 },
                             style: {
                                 outline: 'lightgray',
                                 outlineWidth: 3,
@@ -254,20 +280,22 @@ export const EX_SPEC_GREMLIN: GoslingSpec = {
                                     },
                                     dataTransform: [{ type: 'filter', field: 'chr', oneOf: ['hs5'] }],
                                     mark: 'withinLink',
-                                    x: {
-                                        field: 'p1',
-                                        type: 'genomic',
-                                        axis: 'bottom',
-                                        domain: {
-                                            chromosome: '5',
-                                            interval: [69276000, 69282000]
-                                        }
+                                    encoding: {
+                                        x: {
+                                            startField: 'p1',
+                                            endField: 'p2',
+                                            type: 'genomic',
+                                            axis: 'bottom',
+                                            domain: {
+                                                chromosome: '5',
+                                                interval: [69276000, 69282000]
+                                            }
+                                        },
+                                        color: { value: 'none' },
+                                        stroke: { value: '#62AAD7' },
+                                        strokeWidth: { value: 6 },
+                                        opacity: { value: 0.4 }
                                     },
-                                    xe: { field: 'p2', type: 'genomic' },
-                                    color: { value: 'none' },
-                                    stroke: { value: '#62AAD7' },
-                                    strokeWidth: { value: 6 },
-                                    opacity: { value: 0.4 },
                                     style: { outline: 'lightgray', outlineWidth: 3 },
                                     width: 600,
                                     height: 200
