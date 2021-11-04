@@ -121,6 +121,10 @@ export function convertToFlatTracks(spec: SingleView): Track[] {
                     const base = JSON.parse(JSON.stringify(spec));
                     delete (base as any).tracks;
                     const newSpec = assign(JSON.parse(JSON.stringify(base)), track) as SingleTrack;
+                    newSpec['encoding'] = assign(
+                        JSON.parse(JSON.stringify(base.encoding ?? {})),
+                        newSpec.encoding ?? {}
+                    );
                     newTracks.push(newSpec);
                 }
             });

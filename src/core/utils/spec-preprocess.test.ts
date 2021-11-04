@@ -329,7 +329,7 @@ describe('Spec Preprocess', () => {
                     { title: 'B', alignment: 'overlay', tracks: [{ ...dummySpec }], width: 10, height: 10 }
                 ]
             });
-            expect((flat2[0] as any).color).toEqual({ value: 'red' });
+            expect((flat2[0] as any).encoding.color).toEqual({ value: 'red' });
         }
         {
             const flat = convertToFlatTracks({

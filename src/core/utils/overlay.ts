@@ -1,4 +1,4 @@
-import { AxisPosition, Encoding, SingleTrack, OverlaidTrack, Track, ChannelDeep, DataDeep } from '../gosling.schema';
+import { AxisPosition, SingleTrack, OverlaidTrack, Track, ChannelDeep, DataDeep } from '../gosling.schema';
 import { assign } from 'lodash-es';
 import { IsChannelDeep, IsTemplateTrack, IsOverlaidTrack, IsSingleTrack } from '../gosling.schema.guards';
 
@@ -27,9 +27,8 @@ export function resolveSuperposedTracks(track: Track): SingleTrack[] {
 
     const resolved: SingleTrack[] = [];
     track.overlay.forEach((subSpec, i) => {
-        const encoding = assign(JSON.parse(JSON.stringify(base.encoding ?? {})), subSpec.encoding ?? {}) as Encoding;
         const spec = assign(JSON.parse(JSON.stringify(base)), subSpec) as SingleTrack;
-        spec.encoding = encoding;
+        spec['encoding'] = assign(JSON.parse(JSON.stringify(base.encoding ?? {})), subSpec.encoding ?? {});
         if (spec.title && i !== 0) {
             delete spec.title;
         }
@@ -48,7 +47,7 @@ export function resolveSuperposedTracks(track: Track): SingleTrack[] {
     const corrected = resolved.map(d => {
         return {
             ...d,
-            x: { ...d.encoding.x, axis: xAxisPosition }
+            encoding: { x: { ...d.encoding.x, axis: xAxisPosition } }
         } as SingleTrack;
     });
 
@@ -100,6 +99,7 @@ export function spreadTracksByData(tracks: Track[]): Track[] {
                 }
 
                 const spec = assign(JSON.parse(JSON.stringify(base)), subSpec) as SingleTrack;
+                spec['encoding'] = assign(JSON.parse(JSON.stringify(base.encoding ?? {})), spec.encoding ?? {});
                 spread.push(spec);
             });
 
@@ -111,7 +111,7 @@ export function spreadTracksByData(tracks: Track[]): Track[] {
                 // Refer to this issue: https://github.com/gosling-lang/gosling.js/issues/400
                 const y =
                     IsSingleTrack(track) &&
-                    IsChannelDeep(track.encoding.y) &&
+                    IsChannelDeep(track.encoding?.y) &&
                     !track.encoding.y.axis &&
                     overlayOnPreviousTrack
                         ? ({ ...track.encoding.y, axis: i === 1 ? 'right' : 'none' } as ChannelDeep)

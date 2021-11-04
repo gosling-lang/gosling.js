@@ -98,7 +98,7 @@ export function IsTrackStyle(track: Style | undefined): track is Style {
 }
 
 export function IsSingleTrack(track: Track): track is SingleTrack {
-    return !('overlay' in track);
+    return 'mark' in track && 'encoding' in track && !('overlay' in track);
 }
 
 export function IsOverlaidTrack(track: Partial<Track>): track is OverlaidTrack {
@@ -115,6 +115,7 @@ export function IsTemplateTrack(track: Partial<Track>): track is TemplateTrack {
 export function Is2DTrack(track: Track) {
     return (
         IsSingleTrack(track) &&
+        track.encoding &&
         IsChannelDeep(track.encoding.x) &&
         track.encoding.x.type === 'genomic' &&
         IsChannelDeep(track.encoding.y) &&

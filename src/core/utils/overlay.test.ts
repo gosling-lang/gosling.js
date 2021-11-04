@@ -142,8 +142,8 @@ describe('Spread Tracks By Data', () => {
         expect(spread[0].overlayOnPreviousTrack).toBe(false);
         expect(spread[1].overlayOnPreviousTrack).toBe(true);
         expect(spread[2].overlayOnPreviousTrack).toBe(true);
-        expect((spread[1] as any).y.axis).toBe('right'); // position axis on the right to prevent visual occlusion
-        expect((spread[2] as any).y.axis).toBe('none'); // hide axis
+        expect((spread[1] as any).encoding.y.axis).toBe('right'); // position axis on the right to prevent visual occlusion
+        expect((spread[2] as any).encoding.y.axis).toBe('none'); // hide axis
     });
     it('title of overlay: [{ data1 }]', () => {
         const spread = spreadTracksByData([
