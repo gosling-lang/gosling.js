@@ -17,21 +17,22 @@ const ScalableSequenceTrack: OverlaidTracks = {
     tracks: [
         {
             mark: 'bar',
-            y: { field: 'count', type: 'quantitative', axis: 'none' }
+            encoding: {
+                y: { field: 'count', type: 'quantitative', axis: 'none' }
+            }
         },
         {
             dataTransform: [{ type: 'filter', field: 'count', oneOf: [0], not: true }],
             mark: 'text',
-            x: {
-                field: 'start',
-                type: 'genomic'
+            encoding: {
+                x: {
+                    startField: 'start',
+                    endField: 'end',
+                    type: 'genomic'
+                },
+                size: { value: 24 },
+                color: { value: 'white' }
             },
-            xe: {
-                field: 'end',
-                type: 'genomic'
-            },
-            size: { value: 24 },
-            color: { value: 'white' },
             visibility: [
                 {
                     operation: 'less-than',
@@ -49,19 +50,21 @@ const ScalableSequenceTrack: OverlaidTracks = {
             ]
         }
     ],
-    x: {
-        field: 'position',
-        type: 'genomic'
-    },
-    color: {
-        field: 'base',
-        type: 'nominal',
-        domain: ['A', 'T', 'G', 'C'],
-        legend: true
-    },
-    text: {
-        field: 'base',
-        type: 'nominal'
+    encoding: {
+        x: {
+            field: 'position',
+            type: 'genomic'
+        },
+        color: {
+            field: 'base',
+            type: 'nominal',
+            domain: ['A', 'T', 'G', 'C'],
+            legend: true
+        },
+        text: {
+            field: 'base',
+            type: 'nominal'
+        }
     },
     style: {
         textFontWeight: 'bold'
@@ -81,49 +84,50 @@ const ScalableCytoBand: OverlaidTracks = {
     tracks: [
         {
             mark: 'rect',
-            color: {
-                field: 'Chromosome',
-                type: 'nominal',
-                domain: [
-                    'chr1',
-                    'chr2',
-                    'chr3',
-                    'chr4',
-                    'chr5',
-                    'chr6',
-                    'chr7',
-                    'chr8',
-                    'chr9',
-                    'chr10',
-                    'chr11',
-                    'chr12',
-                    'chr13',
-                    'chr14',
-                    'chr15',
-                    'chr16',
-                    'chr17',
-                    'chr18',
-                    'chr19',
-                    'chr20',
-                    'chr21',
-                    'chr22',
-                    'chrX',
-                    'chrY'
-                ],
-                range: ['#F6F6F6', 'gray']
+            encoding: {
+                color: {
+                    field: 'Chromosome',
+                    type: 'nominal',
+                    domain: [
+                        'chr1',
+                        'chr2',
+                        'chr3',
+                        'chr4',
+                        'chr5',
+                        'chr6',
+                        'chr7',
+                        'chr8',
+                        'chr9',
+                        'chr10',
+                        'chr11',
+                        'chr12',
+                        'chr13',
+                        'chr14',
+                        'chr15',
+                        'chr16',
+                        'chr17',
+                        'chr18',
+                        'chr19',
+                        'chr20',
+                        'chr21',
+                        'chr22',
+                        'chrX',
+                        'chrY'
+                    ],
+                    range: ['#F6F6F6', 'gray']
+                }
             },
-            x: {
-                field: 'chromStart',
-                type: 'genomic',
-                aggregate: 'min'
+            encoding: {
+                x: {
+                    startField: 'chromStart',
+                    endField: 'chromEnd',
+                    type: 'genomic',
+                    aggregate: 'min',
+                    aggregate: 'max' // TODO:
+                },
+                strokeWidth: { value: 2 },
+                stroke: { value: 'gray' }
             },
-            xe: {
-                field: 'chromEnd',
-                aggregate: 'max',
-                type: 'genomic'
-            },
-            strokeWidth: { value: 2 },
-            stroke: { value: 'gray' },
             visibility: [
                 {
                     operation: 'greater-than',
@@ -137,12 +141,14 @@ const ScalableCytoBand: OverlaidTracks = {
         {
             mark: 'text',
             dataTransform: [{ type: 'filter', field: 'Stain', oneOf: ['acen'], not: true }],
-            text: { field: 'Name', type: 'nominal' },
-            color: {
-                field: 'Stain',
-                type: 'nominal',
-                domain: ['gneg', 'gpos25', 'gpos50', 'gpos75', 'gpos100', 'gvar'],
-                range: ['black', 'black', 'black', 'black', 'white', 'black']
+            encoding: {
+                text: { field: 'Name', type: 'nominal' },
+                color: {
+                    field: 'Stain',
+                    type: 'nominal',
+                    domain: ['gneg', 'gpos25', 'gpos50', 'gpos75', 'gpos100', 'gvar'],
+                    range: ['black', 'black', 'black', 'black', 'white', 'black']
+                }
             },
             visibility: [
                 {
@@ -157,11 +163,13 @@ const ScalableCytoBand: OverlaidTracks = {
         {
             mark: 'rect',
             dataTransform: [{ type: 'filter', field: 'Stain', oneOf: ['acen'], not: true }],
-            color: {
-                field: 'Stain',
-                type: 'nominal',
-                domain: ['gneg', 'gpos25', 'gpos50', 'gpos75', 'gpos100', 'gvar'],
-                range: ['white', '#D9D9D9', '#979797', '#636363', 'black', '#A0A0F2']
+            encoding: {
+                color: {
+                    field: 'Stain',
+                    type: 'nominal',
+                    domain: ['gneg', 'gpos25', 'gpos50', 'gpos75', 'gpos100', 'gvar'],
+                    range: ['white', '#D9D9D9', '#979797', '#636363', 'black', '#A0A0F2']
+                }
             }
         },
         {
@@ -170,7 +178,9 @@ const ScalableCytoBand: OverlaidTracks = {
                 { type: 'filter', field: 'Stain', oneOf: ['acen'] },
                 { type: 'filter', field: 'Name', include: 'q' }
             ],
-            color: { value: '#B40101' }
+            encoding: {
+                color: { value: '#B40101' }
+            }
         },
         {
             mark: 'triangleLeft',
@@ -178,14 +188,17 @@ const ScalableCytoBand: OverlaidTracks = {
                 { type: 'filter', field: 'Stain', oneOf: ['acen'] },
                 { type: 'filter', field: 'Name', include: 'p' }
             ],
-            color: { value: '#B40101' }
+            encoding: {
+                color: { value: '#B40101' }
+            }
         }
     ],
-    x: { field: 'chromStart', type: 'genomic' },
-    xe: { field: 'chromEnd', type: 'genomic' },
-    size: { value: 20 },
-    stroke: { value: 'gray' },
-    strokeWidth: { value: 0.5 },
+    encoding: {
+        x: { startField: 'chromStart', endField: 'chromEnd', type: 'genomic' },
+        size: { value: 20 },
+        stroke: { value: 'gray' },
+        strokeWidth: { value: 0.5 }
+    },
     visibility: [
         {
             operation: 'greater-than',
@@ -221,7 +234,9 @@ export const EX_SPEC_SEMANTIC_ZOOM: GoslingSpec = {
             layout: 'linear',
             ...EX_TRACK_SEMANTIC_ZOOM.cytoband,
             width: 800,
-            size: undefined
+            encoding: {
+                size: undefined
+            }
         },
         {
             ...EX_SPEC_PATHOGENIC,

@@ -53,8 +53,10 @@ export const EX_SPEC_CUSTOM_THEME: GoslingSpec = {
                                     not: true
                                 }
                             ],
-                            text: { field: 'Band', type: 'nominal' },
-                            color: { value: 'black' },
+                            encoding: {
+                                text: { field: 'Band', type: 'nominal' },
+                                color: { value: 'black' }
+                            },
                             visibility: [
                                 {
                                     operation: 'less-than',
@@ -68,42 +70,53 @@ export const EX_SPEC_CUSTOM_THEME: GoslingSpec = {
                         {
                             mark: 'rect',
                             dataTransform: [{ type: 'filter', field: 'Stain', oneOf: ['acen-1', 'acen-2'], not: true }],
-                            color: {
-                                field: 'Density',
-                                type: 'nominal',
-                                domain: ['', '25', '50', '75', '100'],
-                                range: ['#E3E3E3', '#D9D9D9', '#979797', '#636363', 'black']
-                            },
-                            size: { value: 20 }
+                            encoding: {
+                                color: {
+                                    field: 'Density',
+                                    type: 'nominal',
+                                    domain: ['', '25', '50', '75', '100'],
+                                    range: ['#E3E3E3', '#D9D9D9', '#979797', '#636363', 'black']
+                                },
+                                size: { value: 20 }
+                            }
                         },
                         {
                             mark: 'rect',
                             dataTransform: [{ type: 'filter', field: 'Stain', oneOf: ['gvar'] }],
-                            color: { value: 'black' },
-                            size: { value: 20 }
+                            encoding: {
+                                color: { value: 'black' },
+                                size: { value: 20 }
+                            }
                         },
                         {
                             mark: 'triangleRight',
                             dataTransform: [{ type: 'filter', field: 'Stain', oneOf: ['acen-1'] }],
-                            color: { value: '#963232' },
-                            size: { value: 20 }
+                            encoding: {
+                                color: { value: '#963232' },
+                                size: { value: 20 }
+                            }
                         },
                         {
                             mark: 'triangleLeft',
                             dataTransform: [{ type: 'filter', field: 'Stain', oneOf: ['acen-2'] }],
-                            color: { value: '#963232' },
-                            size: { value: 20 }
+                            encoding: {
+                                color: { value: '#963232' },
+                                size: { value: 20 }
+                            }
                         },
                         {
                             mark: 'brush',
-                            x: { linkingId: 'detail' },
-                            strokeWidth: { value: 0 }
+                            encoding: {
+                                x: { linkingId: 'detail' },
+                                strokeWidth: { value: 0 }
+                            }
                         }
                     ],
-                    x: { field: 'Basepair_start', type: 'genomic', axis: 'none' },
-                    xe: { field: 'Basepair_stop', type: 'genomic' },
-                    stroke: { value: 'black' },
-                    strokeWidth: { value: 1 },
+                    encoding: {
+                        x: { startField: 'Basepair_start', endField: 'Basepair_stop', type: 'genomic', axis: 'none' },
+                        stroke: { value: 'black' },
+                        strokeWidth: { value: 1 }
+                    },
                     width: 600,
                     height: 25
                 }
@@ -113,11 +126,13 @@ export const EX_SPEC_CUSTOM_THEME: GoslingSpec = {
             xDomain: { chromosome: '3', interval: [52168000, 52890000] },
             linkingId: 'detail',
             mark: 'bar',
-            x: {
-                field: 'position',
-                type: 'genomic'
+            encoding: {
+                x: {
+                    field: 'position',
+                    type: 'genomic'
+                },
+                y: { field: 'peak', type: 'quantitative' }
             },
-            y: { field: 'peak', type: 'quantitative' },
             width: 400,
             height: 40,
             tracks: [
@@ -175,12 +190,14 @@ export const EX_SPEC_CUSTOM_THEME: GoslingSpec = {
                                 { type: 'filter', field: 'strand', oneOf: ['+'] }
                             ],
                             mark: 'text',
-                            text: { field: 'name', type: 'nominal' },
-                            x: {
-                                field: 'start',
-                                type: 'genomic'
+                            encoding: {
+                                text: { field: 'name', type: 'nominal' },
+                                x: {
+                                    startField: 'start',
+                                    endField: 'end',
+                                    type: 'genomic'
+                                }
                             },
-                            xe: { field: 'end', type: 'genomic' },
                             style: { textFontSize: 8, dy: -12 }
                         },
                         {
@@ -189,9 +206,10 @@ export const EX_SPEC_CUSTOM_THEME: GoslingSpec = {
                                 { type: 'filter', field: 'strand', oneOf: ['-'] }
                             ],
                             mark: 'text',
-                            text: { field: 'name', type: 'nominal' },
-                            x: { field: 'start', type: 'genomic' },
-                            xe: { field: 'end', type: 'genomic' },
+                            encoding: {
+                                text: { field: 'name', type: 'nominal' },
+                                x: { startField: 'start', endField: 'end', type: 'genomic' }
+                            },
                             style: { textFontSize: 8, dy: 10 }
                         },
                         {
@@ -200,8 +218,10 @@ export const EX_SPEC_CUSTOM_THEME: GoslingSpec = {
                                 { type: 'filter', field: 'strand', oneOf: ['+'] }
                             ],
                             mark: 'rect',
-                            x: { field: 'end', type: 'genomic' },
-                            size: { value: 7 }
+                            encoding: {
+                                x: { field: 'end', type: 'genomic' },
+                                size: { value: 7 }
+                            }
                         },
                         {
                             dataTransform: [
@@ -209,15 +229,18 @@ export const EX_SPEC_CUSTOM_THEME: GoslingSpec = {
                                 { type: 'filter', field: 'strand', oneOf: ['-'] }
                             ],
                             mark: 'rect',
-                            x: { field: 'start', type: 'genomic' },
-                            size: { value: 7 }
+                            encoding: {
+                                x: { field: 'start', type: 'genomic' },
+                                size: { value: 7 }
+                            }
                         },
                         {
                             dataTransform: [{ type: 'filter', field: 'type', oneOf: ['exon'] }],
                             mark: 'rect',
-                            x: { field: 'start', type: 'genomic' },
-                            xe: { field: 'end', type: 'genomic' },
-                            size: { value: 14 }
+                            encoding: {
+                                x: { startField: 'start', endField: 'end', type: 'genomic' },
+                                size: { value: 14 }
+                            }
                         },
                         {
                             dataTransform: [
@@ -225,9 +248,10 @@ export const EX_SPEC_CUSTOM_THEME: GoslingSpec = {
                                 { type: 'filter', field: 'strand', oneOf: ['-'] }
                             ],
                             mark: 'rule',
-                            x: { field: 'start', type: 'genomic' },
-                            xe: { field: 'end', type: 'genomic' },
-                            strokeWidth: { value: 1 },
+                            encoding: {
+                                x: { startField: 'start', endField: 'end', type: 'genomic' },
+                                strokeWidth: { value: 1 }
+                            },
                             style: { linePattern: { size: 3, type: 'triangleLeft' } }
                         },
                         {
@@ -236,14 +260,17 @@ export const EX_SPEC_CUSTOM_THEME: GoslingSpec = {
                                 { type: 'filter', field: 'strand', oneOf: ['+'] }
                             ],
                             mark: 'rule',
-                            x: { field: 'start', type: 'genomic' },
-                            xe: { field: 'end', type: 'genomic' },
-                            strokeWidth: { value: 1 },
+                            encoding: {
+                                x: { startField: 'start', endField: 'end', type: 'genomic' },
+                                strokeWidth: { value: 1 }
+                            },
                             style: { linePattern: { size: 3, type: 'triangleRight' } }
                         }
                     ],
-                    row: { field: 'strand', type: 'nominal', domain: ['+', '-'] },
-                    color: { field: 'strand', type: 'nominal', domain: ['+', '-'], range: ['#006300', '#0C0C78'] },
+                    encoding: {
+                        row: { field: 'strand', type: 'nominal', domain: ['+', '-'] },
+                        color: { field: 'strand', type: 'nominal', domain: ['+', '-'], range: ['#006300', '#0C0C78'] }
+                    },
                     visibility: [
                         {
                             operation: 'less-than',

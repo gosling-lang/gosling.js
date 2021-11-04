@@ -26,11 +26,12 @@ export function EX_SPEC_VIEW_PILEUP(
                 },
                 dataTransform: [{ type: 'coverage', startField: 'from', endField: 'to' }],
                 mark: 'bar',
-                x: { field: 'from', type: 'genomic' },
-                xe: { field: 'to', type: 'genomic' },
-                y: { field: 'coverage', type: 'quantitative', axis: 'right', grid: true },
-                color: { value: 'lightgray' },
-                stroke: { value: 'gray' },
+                encoding: {
+                    x: { startField: 'from', endField: 'to', type: 'genomic' },
+                    y: { field: 'coverage', type: 'quantitative', axis: 'right', grid: true },
+                    color: { value: 'lightgray' },
+                    stroke: { value: 'gray' }
+                },
                 width,
                 height: 80
             },
@@ -60,15 +61,18 @@ export function EX_SPEC_VIEW_PILEUP(
                             { type: 'filter', field: 'strand', oneOf: ['+'] }
                         ],
                         mark: 'triangleRight',
-                        x: { field: 'end', type: 'genomic' },
-                        size: { value: 15 }
+                        encoding: {
+                            x: { field: 'end', type: 'genomic' },
+                            size: { value: 15 }
+                        }
                     },
                     {
                         dataTransform: [{ type: 'filter', field: 'type', oneOf: ['gene'] }],
                         mark: 'text',
-                        text: { field: 'name', type: 'nominal' },
-                        x: { field: 'start', type: 'genomic' },
-                        xe: { field: 'end', type: 'genomic' },
+                        encoding: {
+                            text: { field: 'name', type: 'nominal' },
+                            x: { startField: 'start', endField: 'end', type: 'genomic' }
+                        },
                         style: { dy: -15, outline: 'black', outlineWidth: 0 }
                     },
                     {
@@ -77,8 +81,10 @@ export function EX_SPEC_VIEW_PILEUP(
                             { type: 'filter', field: 'strand', oneOf: ['-'] }
                         ],
                         mark: 'triangleLeft',
-                        x: { field: 'start', type: 'genomic' },
-                        size: { value: 15 },
+                        encoding: {
+                            x: { field: 'start', type: 'genomic' },
+                            size: { value: 15 }
+                        },
                         style: {
                             align: 'right',
                             outline: 'black',
@@ -88,9 +94,10 @@ export function EX_SPEC_VIEW_PILEUP(
                     {
                         dataTransform: [{ type: 'filter', field: 'type', oneOf: ['exon'] }],
                         mark: 'rect',
-                        x: { field: 'start', type: 'genomic' },
-                        size: { value: 15 },
-                        xe: { field: 'end', type: 'genomic' }
+                        encoding: {
+                            x: { startField: 'start', endField: 'end', type: 'genomic' },
+                            size: { value: 15 }
+                        }
                     },
                     {
                         dataTransform: [
@@ -98,9 +105,10 @@ export function EX_SPEC_VIEW_PILEUP(
                             { type: 'filter', field: 'strand', oneOf: ['+'] }
                         ],
                         mark: 'rule',
-                        x: { field: 'start', type: 'genomic' },
-                        strokeWidth: { value: 2 },
-                        xe: { field: 'end', type: 'genomic' },
+                        encoding: {
+                            x: { startField: 'start', endField: 'end', type: 'genomic' },
+                            strokeWidth: { value: 2 }
+                        },
                         style: {
                             linePattern: { type: 'triangleRight', size: 3.5 },
                             outline: 'black',
@@ -113,9 +121,10 @@ export function EX_SPEC_VIEW_PILEUP(
                             { type: 'filter', field: 'strand', oneOf: ['-'] }
                         ],
                         mark: 'rule',
-                        x: { field: 'start', type: 'genomic' },
-                        strokeWidth: { value: 2 },
-                        xe: { field: 'end', type: 'genomic' },
+                        encoding: {
+                            x: { startField: 'start', endField: 'end', type: 'genomic' },
+                            strokeWidth: { value: 2 }
+                        },
                         style: {
                             linePattern: { type: 'triangleLeft', size: 3.5 },
                             outline: 'black',
@@ -123,16 +132,18 @@ export function EX_SPEC_VIEW_PILEUP(
                         }
                     }
                 ],
-                row: {
-                    field: 'strand',
-                    type: 'nominal',
-                    domain: ['+', '-']
-                },
-                color: {
-                    field: 'strand',
-                    type: 'nominal',
-                    domain: ['+', '-'],
-                    range: ['#97A8B2', '#D4C6BA'] //['blue', 'red']
+                encoding: {
+                    row: {
+                        field: 'strand',
+                        type: 'nominal',
+                        domain: ['+', '-']
+                    },
+                    color: {
+                        field: 'strand',
+                        type: 'nominal',
+                        domain: ['+', '-'],
+                        range: ['#97A8B2', '#D4C6BA'] //['blue', 'red']
+                    }
                 },
                 visibility: [
                     {
@@ -180,10 +191,11 @@ export function EX_SPEC_VIEW_PILEUP(
                                 newField: 'pileup-row'
                             }
                         ],
-                        x: { field: 'from', type: 'genomic' },
-                        xe: { field: 'to', type: 'genomic' },
-                        stroke: { value: 'white' },
-                        strokeWidth: { value: 0.5 }
+                        encoding: {
+                            x: { startField: 'from', endField: 'to', type: 'genomic' },
+                            stroke: { value: 'white' },
+                            strokeWidth: { value: 0.5 }
+                        }
                     },
                     {
                         dataTransform: [
@@ -208,23 +220,26 @@ export function EX_SPEC_VIEW_PILEUP(
                             },
                             { type: 'filter', field: 'type', oneOf: ['sub'] }
                         ],
-                        x: { field: 'pos_start', type: 'genomic' },
-                        xe: { field: 'pos_end', type: 'genomic' },
-                        color: {
-                            field: 'variant',
-                            type: 'nominal',
-                            domain: ['A', 'T', 'G', 'C', 'S', 'H', 'X', 'I', 'D'],
-                            legend: true
+                        encoding: {
+                            x: { startField: 'pos_start', endField: 'pos_end', type: 'genomic' },
+                            color: {
+                                field: 'variant',
+                                type: 'nominal',
+                                domain: ['A', 'T', 'G', 'C', 'S', 'H', 'X', 'I', 'D'],
+                                legend: true
+                            }
                         }
                     }
                 ],
-                y: { field: 'pileup-row', type: 'nominal', flip: false },
-                row: { field: 'strand', type: 'nominal', domain: ['+', '-'], padding: 1 },
-                color: {
-                    field: 'strand',
-                    type: 'nominal',
-                    domain: ['+', '-'],
-                    range: strandColor ?? ['#97A8B2', '#D4C6BA']
+                encoding: {
+                    y: { field: 'pileup-row', type: 'nominal', flip: false },
+                    row: { field: 'strand', type: 'nominal', domain: ['+', '-'], padding: 1 },
+                    color: {
+                        field: 'strand',
+                        type: 'nominal',
+                        domain: ['+', '-'],
+                        range: strandColor ?? ['#97A8B2', '#D4C6BA']
+                    }
                 },
                 style: { outlineWidth: 0.5 },
                 width,

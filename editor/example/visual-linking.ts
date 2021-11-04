@@ -21,7 +21,9 @@ export const EX_SPEC_LINKING: GoslingSpec = {
                         { mark: 'bar' },
                         {
                             mark: 'brush',
-                            x: { linkingId: 'detail' }
+                            encoding: {
+                                x: { linkingId: 'detail' }
+                            }
                         }
                     ],
                     data: {
@@ -32,11 +34,12 @@ export const EX_SPEC_LINKING: GoslingSpec = {
                         value: 'peak',
                         categories: ['sample 1', 'sample 2', 'sample 3', 'sample 4']
                     },
-                    x: { field: 'start', type: 'genomic' },
-                    xe: { field: 'end', type: 'genomic' },
-                    y: { field: 'peak', type: 'quantitative' },
-                    row: { field: 'sample', type: 'nominal' },
-                    color: { field: 'sample', type: 'nominal' },
+                    encoding: {
+                        x: { startField: 'start', endField: 'end', type: 'genomic' },
+                        y: { field: 'peak', type: 'quantitative' },
+                        row: { field: 'sample', type: 'nominal' },
+                        color: { field: 'sample', type: 'nominal' }
+                    },
                     width: 250,
                     height: 130
                 },
@@ -48,7 +51,9 @@ export const EX_SPEC_LINKING: GoslingSpec = {
                         { mark: 'bar' },
                         {
                             mark: 'brush',
-                            x: { linkingId: 'detail' }
+                            encoding: {
+                                x: { linkingId: 'detail' }
+                            }
                         }
                     ],
                     data: {
@@ -59,11 +64,12 @@ export const EX_SPEC_LINKING: GoslingSpec = {
                         value: 'peak',
                         categories: ['sample 1', 'sample 2', 'sample 3', 'sample 4']
                     },
-                    x: { field: 'start', type: 'genomic' },
-                    xe: { field: 'end', type: 'genomic' },
-                    y: { field: 'peak', type: 'quantitative' },
-                    row: { field: 'sample', type: 'nominal' },
-                    color: { field: 'sample', type: 'nominal' },
+                    encoding: {
+                        x: { startField: 'start', endField: 'end', type: 'genomic' },
+                        y: { field: 'peak', type: 'quantitative' },
+                        row: { field: 'sample', type: 'nominal' },
+                        color: { field: 'sample', type: 'nominal' }
+                    },
                     width: 400,
                     height: 200
                 }
@@ -84,14 +90,16 @@ export const EX_SPEC_LINKING: GoslingSpec = {
                         categories: ['sample 1', 'sample 2', 'sample 3', 'sample 4']
                     },
                     mark: 'bar',
-                    x: {
-                        field: 'position',
-                        type: 'genomic',
-                        axis: 'top'
+                    encoding: {
+                        x: {
+                            field: 'position',
+                            type: 'genomic',
+                            axis: 'top'
+                        },
+                        y: { field: 'peak', type: 'quantitative' },
+                        row: { field: 'sample', type: 'nominal' },
+                        color: { field: 'sample', type: 'nominal' }
                     },
-                    y: { field: 'peak', type: 'quantitative' },
-                    row: { field: 'sample', type: 'nominal' },
-                    color: { field: 'sample', type: 'nominal' },
                     width: 690,
                     height: 200
                 }

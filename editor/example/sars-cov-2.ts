@@ -12,23 +12,29 @@ export const EX_TRACK_SARS_COV_2_GENES: OverlaidTracks = {
     tracks: [
         {
             mark: 'rect',
-            color: { value: '#0072B2' },
-            stroke: { value: 'white' },
-            strokeWidth: { value: 2 }
+            encoding: {
+                color: { value: '#0072B2' },
+                stroke: { value: 'white' },
+                strokeWidth: { value: 2 }
+            }
         },
         {
             mark: 'rule',
-            color: { value: 'white' },
-            opacity: { value: 0.6 },
-            strokeWidth: { value: 0 },
+            encoding: {
+                color: { value: 'white' },
+                opacity: { value: 0.6 },
+                strokeWidth: { value: 0 }
+            },
             style: { linePattern: { type: 'triangleRight', size: 10 } }
         },
         {
             mark: 'text',
-            text: { field: 'Gene symbol', type: 'nominal' },
-            color: { value: 'black' },
-            stroke: { value: 'white' },
-            strokeWidth: { value: 3 },
+            encoding: {
+                text: { field: 'Gene symbol', type: 'nominal' },
+                color: { value: 'black' },
+                stroke: { value: 'white' },
+                strokeWidth: { value: 3 }
+            },
             visibility: [
                 {
                     target: 'mark',
@@ -40,8 +46,9 @@ export const EX_TRACK_SARS_COV_2_GENES: OverlaidTracks = {
             ]
         }
     ],
-    x: { field: 'Start', type: 'genomic' },
-    xe: { field: 'Stop', type: 'genomic' },
+    encoding: {
+        x: { startField: 'Start', endField: 'Stop', type: 'genomic' }
+    },
     width: 800,
     height: 30
 };
@@ -62,7 +69,9 @@ export const EX_SPEC_SARS_COV_2: GoslingSpec = {
                 ...EX_TRACK_SARS_COV_2_GENES.tracks,
                 {
                     mark: 'brush',
-                    x: { linkingId: 'detail' }
+                    encoding: {
+                        x: { linkingId: 'detail' }
+                    }
                 }
             ]
         },
@@ -117,39 +126,45 @@ export const EX_SPEC_SARS_COV_2: GoslingSpec = {
                     tracks: [
                         {
                             mark: 'rect',
-                            color: {
-                                field: 'Protein',
-                                type: 'nominal',
-                                domain: [
-                                    'receptor-binding domain (RBD)',
-                                    'receptor-binding motif (RBM)',
-                                    'S1/S2 cleavage site',
-                                    'heptad repeat 1 (HR1)',
-                                    'heptad repeat 2 (HR2)'
-                                ]
-                            },
-                            xe: { field: 'Stop', type: 'genomic' }
+                            encoding: {
+                                color: {
+                                    field: 'Protein',
+                                    type: 'nominal',
+                                    domain: [
+                                        'receptor-binding domain (RBD)',
+                                        'receptor-binding motif (RBM)',
+                                        'S1/S2 cleavage site',
+                                        'heptad repeat 1 (HR1)',
+                                        'heptad repeat 2 (HR2)'
+                                    ]
+                                },
+                                x: { startField: 'Start', endField: 'Stop', type: 'genomic' }
+                            }
                         },
                         {
                             mark: 'text',
-                            text: { field: 'Protein', type: 'nominal' },
-                            color: { value: '#333' },
-                            stroke: { value: 'white' },
-                            strokeWidth: { value: 3 },
+                            encoding: {
+                                text: { field: 'Protein', type: 'nominal' },
+                                color: { value: '#333' },
+                                stroke: { value: 'white' },
+                                strokeWidth: { value: 3 }
+                            },
                             style: { textAnchor: 'end' }
                         }
                     ],
-                    x: { field: 'Start', type: 'genomic' },
-                    row: {
-                        field: 'Protein',
-                        type: 'nominal',
-                        domain: [
-                            'receptor-binding domain (RBD)',
-                            'receptor-binding motif (RBM)',
-                            'S1/S2 cleavage site',
-                            'heptad repeat 1 (HR1)',
-                            'heptad repeat 2 (HR2)'
-                        ]
+                    encoding: {
+                        x: { field: 'Start', type: 'genomic' },
+                        row: {
+                            field: 'Protein',
+                            type: 'nominal',
+                            domain: [
+                                'receptor-binding domain (RBD)',
+                                'receptor-binding motif (RBM)',
+                                'S1/S2 cleavage site',
+                                'heptad repeat 1 (HR1)',
+                                'heptad repeat 2 (HR2)'
+                            ]
+                        }
                     },
                     width: 800,
                     height: 80
@@ -175,13 +190,18 @@ export const EX_SPEC_SARS_COV_2: GoslingSpec = {
                         sampleLength: 100
                     },
                     mark: 'withinLink',
-                    x: { field: 'Start1', type: 'genomic' },
-                    xe: { field: 'Stop1', type: 'genomic' },
-                    x1: { field: 'Start2', type: 'genomic' },
-                    x1e: { field: 'Stop2', type: 'genomic' },
-                    stroke: { value: '#0072B2' },
-                    color: { value: '#0072B2' },
-                    opacity: { value: 0.1 },
+                    encoding: {
+                        x: {
+                            startField: 'Start1',
+                            endField: 'Stop1',
+                            startField2: 'Start2',
+                            endField2: 'Stop2',
+                            type: 'genomic'
+                        },
+                        stroke: { value: '#0072B2' },
+                        color: { value: '#0072B2' },
+                        opacity: { value: 0.1 }
+                    },
                     width: 800,
                     height: 400
                 }

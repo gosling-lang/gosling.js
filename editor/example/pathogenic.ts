@@ -34,27 +34,29 @@ export const EX_SPEC_PATHOGENIC: GoslingSpec = {
             tracks: [
                 {
                     mark: 'bar',
-                    x: { field: 'start', type: 'genomic' },
-                    y: {
-                        field: 'significance',
-                        type: 'nominal',
-                        domain: [
-                            'Pathogenic',
-                            'Pathogenic/Likely_pathogenic',
-                            'Likely_pathogenic',
-                            'Uncertain_significance',
-                            'Likely_benign',
-                            'Benign/Likely_benign',
-                            'Benign'
-                        ],
-                        baseline: 'Uncertain_significance',
-                        range: [150, 20]
+                    encoding: {
+                        x: { field: 'start', type: 'genomic' },
+                        y: {
+                            field: 'significance',
+                            type: 'nominal',
+                            domain: [
+                                'Pathogenic',
+                                'Pathogenic/Likely_pathogenic',
+                                'Likely_pathogenic',
+                                'Uncertain_significance',
+                                'Likely_benign',
+                                'Benign/Likely_benign',
+                                'Benign'
+                            ],
+                            baseline: 'Uncertain_significance',
+                            range: [150, 20]
+                        },
+                        size: { value: 1 },
+                        color: { value: 'lightgray' },
+                        stroke: { value: 'lightgray' },
+                        strokeWidth: { value: 1 },
+                        opacity: { value: 0.3 }
                     },
-                    size: { value: 1 },
-                    color: { value: 'lightgray' },
-                    stroke: { value: 'lightgray' },
-                    strokeWidth: { value: 1 },
-                    opacity: { value: 0.3 },
                     visibility: [
                         {
                             measure: 'zoomLevel',
@@ -67,22 +69,24 @@ export const EX_SPEC_PATHOGENIC: GoslingSpec = {
                 },
                 {
                     mark: 'point',
-                    x: { field: 'start', type: 'genomic' },
-                    row: {
-                        field: 'significance',
-                        type: 'nominal',
-                        domain: [
-                            'Pathogenic',
-                            'Pathogenic/Likely_pathogenic',
-                            'Likely_pathogenic',
-                            'Uncertain_significance',
-                            'Likely_benign',
-                            'Benign/Likely_benign',
-                            'Benign'
-                        ]
+                    encoding: {
+                        x: { field: 'start', type: 'genomic' },
+                        row: {
+                            field: 'significance',
+                            type: 'nominal',
+                            domain: [
+                                'Pathogenic',
+                                'Pathogenic/Likely_pathogenic',
+                                'Likely_pathogenic',
+                                'Uncertain_significance',
+                                'Likely_benign',
+                                'Benign/Likely_benign',
+                                'Benign'
+                            ]
+                        },
+                        size: { value: 7 },
+                        opacity: { value: 0.8 }
                     },
-                    size: { value: 7 },
-                    opacity: { value: 0.8 },
                     visibility: [
                         {
                             measure: 'zoomLevel',
@@ -112,23 +116,24 @@ export const EX_SPEC_PATHOGENIC: GoslingSpec = {
                         binSize: 4
                     },
                     mark: 'bar',
-                    x: { field: 'start', type: 'genomic' },
-                    xe: { field: 'end', type: 'genomic' },
-                    y: { field: 'count', type: 'quantitative', axis: 'none' },
-                    color: {
-                        field: 'significance',
-                        type: 'nominal',
-                        domain: [
-                            'Pathogenic',
-                            'Pathogenic/Likely_pathogenic',
-                            'Likely_pathogenic',
-                            'Uncertain_significance',
-                            'Likely_benign',
-                            'Benign/Likely_benign',
-                            'Benign'
-                        ],
-                        range: ['#CB3B8C', '#CB71A3', '#CB96B3', 'gray', '#029F73', '#5A9F8C', '#5A9F8C'],
-                        legend: true
+                    encoding: {
+                        x: { startField: 'start', endField: 'end', type: 'genomic' },
+                        y: { field: 'count', type: 'quantitative', axis: 'none' },
+                        color: {
+                            field: 'significance',
+                            type: 'nominal',
+                            domain: [
+                                'Pathogenic',
+                                'Pathogenic/Likely_pathogenic',
+                                'Likely_pathogenic',
+                                'Uncertain_significance',
+                                'Likely_benign',
+                                'Benign/Likely_benign',
+                                'Benign'
+                            ],
+                            range: ['#CB3B8C', '#CB71A3', '#CB96B3', 'gray', '#029F73', '#5A9F8C', '#5A9F8C'],
+                            legend: true
+                        }
                     },
                     visibility: [
                         {
@@ -141,19 +146,21 @@ export const EX_SPEC_PATHOGENIC: GoslingSpec = {
                     ]
                 }
             ],
-            color: {
-                field: 'significance',
-                type: 'nominal',
-                domain: [
-                    'Pathogenic',
-                    'Pathogenic/Likely_pathogenic',
-                    'Likely_pathogenic',
-                    'Uncertain_significance',
-                    'Likely_benign',
-                    'Benign/Likely_benign',
-                    'Benign'
-                ],
-                range: ['#CB3B8C', '#CB71A3', '#CB96B3', 'gray', '#029F73', '#5A9F8C', '#5A9F8C']
+            encoding: {
+                color: {
+                    field: 'significance',
+                    type: 'nominal',
+                    domain: [
+                        'Pathogenic',
+                        'Pathogenic/Likely_pathogenic',
+                        'Likely_pathogenic',
+                        'Uncertain_significance',
+                        'Likely_benign',
+                        'Benign/Likely_benign',
+                        'Benign'
+                    ],
+                    range: ['#CB3B8C', '#CB71A3', '#CB96B3', 'gray', '#029F73', '#5A9F8C', '#5A9F8C']
+                }
             },
             width: 800,
             height: 150

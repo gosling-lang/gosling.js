@@ -13,16 +13,17 @@ export const EX_SPEC_BAND: GoslingSpec = {
                 genomicFields: ['s1', 'e1', 's2', 'e2']
             },
             mark: 'rect',
-            x: { field: 's1', type: 'genomic' },
-            xe: { field: 'e1', type: 'genomic' },
-            stroke: { value: '#4C6629' },
-            strokeWidth: { value: 0.8 },
+            encoding: {
+                x: { startField: 's1', endField: 'e1', type: 'genomic' },
+                stroke: { value: '#4C6629' },
+                strokeWidth: { value: 0.8 },
+                color: { value: '#85B348' },
+                opacity: { value: 0.15 }
+            },
             tooltip: [
                 { field: 's1', type: 'genomic', alt: '<b style="color:green">Start Position</b>' },
                 { field: 'e1', type: 'genomic', alt: '<b style="color:green">End Position</b>' }
             ],
-            opacity: { value: 0.15 },
-            color: { value: '#85B348' },
             width: 500,
             height: 16
         },
@@ -34,14 +35,13 @@ export const EX_SPEC_BAND: GoslingSpec = {
                 genomicFields: ['s1', 'e1', 's2', 'e2']
             },
             mark: 'betweenLink',
-            x: { field: 's1', type: 'genomic' },
-            xe: { field: 'e1', type: 'genomic' },
-            x1: { field: 's2', type: 'genomic' },
-            x1e: { field: 'e2', type: 'genomic' },
-            stroke: { value: '#4C6629' },
-            strokeWidth: { value: 0.8 },
-            opacity: { value: 0.15 },
-            color: { value: '#85B348' },
+            encoding: {
+                x: { startField: 's1', endField: 'e1', startField2: 's2', endField2: 'e2', type: 'genomic' },
+                stroke: { value: '#4C6629' },
+                strokeWidth: { value: 0.8 },
+                opacity: { value: 0.15 },
+                color: { value: '#85B348' }
+            },
             style: { outlineWidth: 0 },
             width: 500,
             height: 100
@@ -54,16 +54,17 @@ export const EX_SPEC_BAND: GoslingSpec = {
                 genomicFields: ['s1', 'e1', 's2', 'e2']
             },
             mark: 'rect',
-            x: { field: 's2', type: 'genomic' },
-            xe: { field: 'e2', type: 'genomic' },
-            stroke: { value: '#4C6629' },
-            strokeWidth: { value: 0.8 },
+            encoding: {
+                x: { startField: 's2', endField: 'e2', type: 'genomic' },
+                stroke: { value: '#4C6629' },
+                strokeWidth: { value: 0.8 },
+                opacity: { value: 0.15 },
+                color: { value: '#85B348' }
+            },
             tooltip: [
                 { field: 's2', type: 'genomic', alt: '<b style="color:green">Start Position</b>' },
                 { field: 'e2', type: 'genomic', alt: '<b style="color:green">End Position</b>' }
             ],
-            opacity: { value: 0.15 },
-            color: { value: '#85B348' },
             width: 500,
             height: 16
         },
@@ -75,14 +76,13 @@ export const EX_SPEC_BAND: GoslingSpec = {
                 genomicFields: ['s1', 'e1', 's2', 'e2']
             },
             mark: 'betweenLink',
-            x1: { field: 's1', type: 'genomic' },
-            x1e: { field: 'e1', type: 'genomic' },
-            x: { field: 's2', type: 'genomic' },
-            xe: { field: 'e2', type: 'genomic' },
-            stroke: { value: '#4C6629' },
-            strokeWidth: { value: 0.8 },
-            opacity: { value: 0.15 },
-            color: { value: '#85B348' },
+            encoding: {
+                x: { startField: 's2', endField: 'e2', startField2: 's1', endField2: 'e1', type: 'genomic' },
+                stroke: { value: '#4C6629' },
+                strokeWidth: { value: 0.8 },
+                opacity: { value: 0.15 },
+                color: { value: '#85B348' }
+            },
             style: { outlineWidth: 0 },
             width: 500,
             height: 100
@@ -95,16 +95,17 @@ export const EX_SPEC_BAND: GoslingSpec = {
                 genomicFields: ['s1', 'e1', 's2', 'e2']
             },
             mark: 'rect',
-            x: { field: 's1', type: 'genomic' },
-            xe: { field: 'e1', type: 'genomic' },
-            stroke: { value: '#4C6629' },
-            strokeWidth: { value: 0.8 },
+            encoding: {
+                x: { startField: 's1', endField: 'e1', type: 'genomic' },
+                stroke: { value: '#4C6629' },
+                strokeWidth: { value: 0.8 },
+                opacity: { value: 0.15 },
+                color: { value: '#85B348' }
+            },
             tooltip: [
                 { field: 's1', type: 'genomic', alt: '<b style="color:green">Start Position</b>' },
                 { field: 'e1', type: 'genomic', alt: '<b style="color:green">End Position</b>' }
             ],
-            opacity: { value: 0.15 },
-            color: { value: '#85B348' },
             width: 500,
             height: 16
         },
@@ -116,14 +117,13 @@ export const EX_SPEC_BAND: GoslingSpec = {
                 genomicFields: ['s1', 'e1', 's2', 'e2']
             },
             mark: 'betweenLink',
-            x: { field: 's1', type: 'genomic' },
-            xe: { field: 'e1', type: 'genomic' },
-            x1: { field: 's2', type: 'genomic' },
-            x1e: { field: 'e2', type: 'genomic' },
-            stroke: { value: '#4C6629' },
-            strokeWidth: { value: 0.8 },
-            opacity: { value: 0.15 },
-            color: { value: '#85B348' },
+            encoding: {
+                x: { startField: 's1', endField: 'e1', startField2: 's2', endField2: 'e2', type: 'genomic' },
+                stroke: { value: '#4C6629' },
+                strokeWidth: { value: 0.8 },
+                opacity: { value: 0.15 },
+                color: { value: '#85B348' }
+            },
             style: { outlineWidth: 0 },
             width: 500,
             height: 100
@@ -136,16 +136,17 @@ export const EX_SPEC_BAND: GoslingSpec = {
                 genomicFields: ['s1', 'e1', 's2', 'e2']
             },
             mark: 'rect',
-            x: { field: 's2', type: 'genomic' },
-            xe: { field: 'e2', type: 'genomic' },
-            stroke: { value: '#4C6629' },
-            strokeWidth: { value: 0.8 },
+            encoding: {
+                x: { startField: 's2', endField: 'e2', type: 'genomic' },
+                stroke: { value: '#4C6629' },
+                strokeWidth: { value: 0.8 },
+                opacity: { value: 0.15 },
+                color: { value: '#85B348' }
+            },
             tooltip: [
                 { field: 's2', type: 'genomic', alt: '<b style="color:green">Start Position</b>' },
                 { field: 'e2', type: 'genomic', alt: '<b style="color:green">End Position</b>' }
             ],
-            opacity: { value: 0.15 },
-            color: { value: '#85B348' },
             width: 500,
             height: 16
         }
