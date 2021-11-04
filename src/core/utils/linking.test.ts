@@ -12,11 +12,15 @@ describe('Should get linking information correctly', () => {
                 overlay: [
                     {
                         mark: 'point',
-                        x: { linkingId: 'regular' }
+                        encoding: {
+                            x: { linkingId: 'regular' }
+                        }
                     },
                     {
                         mark: 'brush',
-                        x: { linkingId: 'brush' }
+                        encoding: {
+                            x: { linkingId: 'brush' }
+                        }
                     }
                 ],
                 width: 1000,

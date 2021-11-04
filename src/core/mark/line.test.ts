@@ -10,8 +10,10 @@ describe('Rendering Point', () => {
         const t: SingleTrack = {
             data: { type: 'csv', url: '' },
             mark: 'line',
-            x: { field: 'x', type: 'genomic' },
-            y: { field: 'y', type: 'quantitative' },
+            encoding: {
+                x: { field: 'x', type: 'genomic' },
+                y: { field: 'y', type: 'quantitative' }
+            },
             width: 100,
             height: 100
         };

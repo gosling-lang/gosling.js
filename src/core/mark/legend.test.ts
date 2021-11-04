@@ -10,8 +10,10 @@ describe('Color Legend', () => {
         const t: SingleTrack = {
             data: { type: 'csv', url: '' },
             mark: 'line',
-            x: { field: 'x', type: 'genomic' },
-            color: { field: 'v', type: 'quantitative', legend: true },
+            encoding: {
+                x: { field: 'x', type: 'genomic' },
+                color: { field: 'v', type: 'quantitative', legend: true }
+            },
             width: 100,
             height: 100
         };
@@ -51,8 +53,10 @@ describe('Color Legend', () => {
             outerRadius: 40,
             data: { type: 'csv', url: '' },
             mark: 'point',
-            x: { field: 'x', type: 'genomic' },
-            color: { field: 'v', type: 'nominal', legend: true },
+            encoding: {
+                x: { field: 'x', type: 'genomic' },
+                color: { field: 'v', type: 'nominal', legend: true }
+            },
             width: 100,
             height: 100
         };

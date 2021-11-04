@@ -9,7 +9,7 @@ import { IsChannelDeep, IsDataTrack, IsOverlaidTrack, IsSingleTrack } from '../g
 export function resolveSuperposedTracks(track: Track): SingleTrack[] {
     if (IsDataTrack(track)) {
         // no BasicSingleTrack to return
-        return [];
+        return []; // TODO: handle TemplateTrack
     }
 
     if (!IsOverlaidTrack(track)) {
@@ -65,7 +65,7 @@ export function resolveSuperposedTracks(track: Track): SingleTrack[] {
 export function spreadTracksByData(tracks: Track[]): Track[] {
     return ([] as Track[]).concat(
         ...tracks.map(t => {
-            if (IsDataTrack(t) || !IsOverlaidTrack(t) || t.overlay.length <= 1) {
+            if (!IsOverlaidTrack(t) || t.overlay.length <= 1) {
                 // no overlaid tracks to spread
                 return [t];
             }

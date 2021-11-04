@@ -290,7 +290,7 @@ describe('Spec Preprocess', () => {
     });
 
     it('Convert To FlatTracks', () => {
-        const dummySpec: Track = { data: { type: 'csv', url: '' }, mark: 'bar', width: 10, height: 10 };
+        const dummySpec: Track = { data: { type: 'csv', url: '' }, mark: 'bar', encoding: {}, width: 10, height: 10 };
         {
             const flat = convertToFlatTracks({
                 tracks: []
@@ -321,7 +321,9 @@ describe('Spec Preprocess', () => {
         {
             const flat2 = convertToFlatTracks({
                 alignment: 'stack',
-                color: { value: 'red' }, // should be overriden
+                encoding: {
+                    color: { value: 'red' }
+                }, // should be overriden
                 tracks: [
                     { ...dummySpec, title: 'A' },
                     { title: 'B', alignment: 'overlay', tracks: [{ ...dummySpec }], width: 10, height: 10 }

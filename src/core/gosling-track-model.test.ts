@@ -7,7 +7,7 @@ import { getTheme } from './utils/theme';
 const MINIMAL_TRACK_SPEC: Track = {
     data: { url: '', type: 'csv' },
     mark: 'bar',
-    x: { field: 'x', type: 'genomic' },
+    encoding: { x: { field: 'x', type: 'genomic' } },
     width: 300,
     height: 300
 };
@@ -22,13 +22,18 @@ describe('gosling track model should properly validate the original spec', () =>
         const track: Track = {
             data: { url: '', type: 'vector', column: '', value: '' },
             mark: 'bar',
+            encoding: {},
             width: 300,
             height: 300
         };
         const model = new GoslingTrackModel(track, [], getTheme());
         expect(model.validateSpec().valid).toBe(false);
 
-        const model2 = new GoslingTrackModel({ ...track, x: { field: 'x', type: 'genomic' } }, [], getTheme());
+        const model2 = new GoslingTrackModel(
+            { ...track, encoding: { x: { field: 'x', type: 'genomic' } } },
+            [],
+            getTheme()
+        );
         expect(model2.validateSpec().valid).toBe(true);
     });
 });
@@ -42,18 +47,20 @@ describe('default options should be added into the original spec', () => {
     it('default opacity should be added if it is missing in the spec', () => {
         const model = new GoslingTrackModel(MINIMAL_TRACK_SPEC, [], getTheme());
         const spec = model.spec();
-        expect(spec.opacity).not.toBeUndefined();
-        expect(IsChannelValue(spec.opacity) ? spec.opacity.value : undefined).toBe(1);
+        expect(spec.encoding.opacity).not.toBeUndefined();
+        expect(IsChannelValue(spec.encoding.opacity) ? spec.encoding.opacity.value : undefined).toBe(1);
     });
 
     it('default color scheme for quantitative data field should be added if range is not specified', () => {
         const track: Track = {
             ...MINIMAL_TRACK_SPEC,
-            color: { field: 'f', type: 'quantitative' }
+            encoding: {
+                color: { field: 'f', type: 'quantitative' }
+            }
         };
         const model = new GoslingTrackModel(track, [], getTheme());
         const spec = model.spec();
-        const range = IsChannelDeep(spec.color) ? spec.color.range : [];
+        const range = IsChannelDeep(spec.encoding.color) ? spec.encoding.color.range : [];
         expect(range).not.toBeUndefined();
         expect(range).toBe('viridis');
     });
@@ -63,14 +70,16 @@ describe('Gosling track model should be properly generated with data', () => {
     it('Default values, such as domain, should be correctly generated based on the data', () => {
         const track: Track = {
             ...MINIMAL_TRACK_SPEC,
-            color: { field: 'color', type: 'nominal' },
-            row: { field: 'row', type: 'nominal' },
-            y: { field: 'y', type: 'quantitative' },
-            text: { field: 'row', type: 'nominal' },
-            size: { value: 1 },
-            stroke: { value: 'white' },
-            strokeWidth: { value: 0.5 },
-            opacity: { field: 'yStr', type: 'quantitative' },
+            encoding: {
+                color: { field: 'color', type: 'nominal' },
+                row: { field: 'row', type: 'nominal' },
+                y: { field: 'y', type: 'quantitative' },
+                text: { field: 'row', type: 'nominal' },
+                size: { value: 1 },
+                stroke: { value: 'white' },
+                strokeWidth: { value: 0.5 },
+                opacity: { field: 'yStr', type: 'quantitative' }
+            },
             height: 300
         };
         const model = new GoslingTrackModel(
@@ -83,10 +92,10 @@ describe('Gosling track model should be properly generated with data', () => {
             getTheme()
         );
         const spec = model.spec();
-        const colorDomain = IsChannelDeep(spec.color) ? (spec.color.domain as string[]) : [];
-        const rowDomain = IsChannelDeep(spec.row) ? (spec.row.domain as string[]) : [];
-        const yDomain = IsChannelDeep(spec.y) ? (spec.y.domain as number[]) : [];
-        const opacityDomain = IsChannelDeep(spec.opacity) ? (spec.opacity.domain as number[]) : [];
+        const colorDomain = IsChannelDeep(spec.encoding.color) ? (spec.encoding.color.domain as string[]) : [];
+        const rowDomain = IsChannelDeep(spec.encoding.row) ? (spec.encoding.row.domain as string[]) : [];
+        const yDomain = IsChannelDeep(spec.encoding.y) ? (spec.encoding.y.domain as number[]) : [];
+        const opacityDomain = IsChannelDeep(spec.encoding.opacity) ? (spec.encoding.opacity.domain as number[]) : [];
 
         // model properties
         expect(model.getChannelDomainArray('color')).toHaveLength(3);
@@ -144,10 +153,12 @@ describe('Visual marks should be correctly encoded with data', () => {
         const track: Track = {
             data: { type: 'csv', url: 'dummy' },
             mark: 'point',
-            x: { field: 'g', type: 'genomic' },
-            row: { field: 'n', type: 'nominal' },
-            size: { field: 'q', type: 'quantitative', range: [1, 3] },
-            text: { field: 'n', type: 'nominal' },
+            encoding: {
+                x: { field: 'g', type: 'genomic' },
+                row: { field: 'n', type: 'nominal' },
+                size: { field: 'q', type: 'quantitative', range: [1, 3] },
+                text: { field: 'n', type: 'nominal' }
+            },
             width: size.width,
             height: size.height
         };
@@ -176,9 +187,11 @@ describe('Visual marks should be correctly encoded with data', () => {
         const track2: Track = {
             data: { type: 'csv', url: 'dummy' },
             mark: 'point',
-            x: { field: 'g', type: 'genomic' },
-            y: { field: 'q', type: 'quantitative', range: [0, size.height] },
-            size: { field: 'n', type: 'nominal', range: [1, 3] },
+            encoding: {
+                x: { field: 'g', type: 'genomic' },
+                y: { field: 'q', type: 'quantitative', range: [0, size.height] },
+                size: { field: 'n', type: 'nominal', range: [1, 3] }
+            },
             width: size.width,
             height: size.height
         };

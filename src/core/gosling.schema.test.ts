@@ -29,18 +29,22 @@ describe('gosling schema should be checked correctly', () => {
         expect(
             IsStackedMark({
                 mark: 'bar',
-                x: { field: 'x', type: 'genomic' },
-                y: { field: 'y', type: 'quantitative' },
-                color: { field: 'y', type: 'nominal' }
+                encoding: {
+                    x: { field: 'x', type: 'genomic' },
+                    y: { field: 'y', type: 'quantitative' },
+                    color: { field: 'y', type: 'nominal' }
+                }
             } as SingleTrack)
         ).toBe(true);
 
         expect(
             IsStackedMark({
                 mark: 'area',
-                x: { field: 'x', type: 'genomic' },
-                y: { field: 'y', type: 'quantitative' },
-                color: { field: 'y', type: 'nominal' }
+                encoding: {
+                    x: { field: 'x', type: 'genomic' },
+                    y: { field: 'y', type: 'quantitative' },
+                    color: { field: 'y', type: 'nominal' }
+                }
             } as SingleTrack)
         ).toBe(true);
     });
@@ -49,28 +53,34 @@ describe('gosling schema should be checked correctly', () => {
         expect(
             IsStackedMark({
                 mark: 'bar',
-                x: { field: 'x', type: 'genomic' },
-                y: { field: 'y', type: 'quantitative' },
-                color: { field: 'y', type: 'quantitative' }
+                encoding: {
+                    x: { field: 'x', type: 'genomic' },
+                    y: { field: 'y', type: 'quantitative' },
+                    color: { field: 'y', type: 'quantitative' }
+                }
             } as SingleTrack)
         ).toBe(false);
 
         expect(
             IsStackedMark({
                 mark: 'bar',
-                x: { field: 'x', type: 'genomic' },
-                y: { field: 'y', type: 'quantitative' },
-                color: { field: 'y', type: 'nominal' },
-                row: { field: 'y', type: 'nominal' }
+                encoding: {
+                    x: { field: 'x', type: 'genomic' },
+                    y: { field: 'y', type: 'quantitative' },
+                    color: { field: 'y', type: 'nominal' },
+                    row: { field: 'y', type: 'nominal' }
+                }
             } as SingleTrack)
         ).toBe(false);
 
         expect(
             IsStackedMark({
                 mark: 'line',
-                x: { field: 'x', type: 'genomic' },
-                y: { field: 'y', type: 'quantitative' },
-                color: { field: 'y', type: 'nominal' }
+                encoding: {
+                    x: { field: 'x', type: 'genomic' },
+                    y: { field: 'y', type: 'quantitative' },
+                    color: { field: 'y', type: 'nominal' }
+                }
             } as SingleTrack)
         ).toBe(false);
     });
@@ -80,9 +90,11 @@ describe('gosling schema should be checked correctly', () => {
             IsStackedChannel(
                 {
                     mark: 'bar',
-                    x: { field: 'x', type: 'genomic' },
-                    y: { field: 'y', type: 'quantitative' },
-                    color: { field: 'y', type: 'nominal' }
+                    encoding: {
+                        x: { field: 'x', type: 'genomic' },
+                        y: { field: 'y', type: 'quantitative' },
+                        color: { field: 'y', type: 'nominal' }
+                    }
                 } as SingleTrack,
                 'y'
             )
@@ -92,9 +104,11 @@ describe('gosling schema should be checked correctly', () => {
             IsStackedChannel(
                 {
                     mark: 'bar',
-                    x: { field: 'x', type: 'genomic' },
-                    y: { field: 'y', type: 'quantitative' },
-                    color: { field: 'y', type: 'nominal' }
+                    encoding: {
+                        x: { field: 'x', type: 'genomic' },
+                        y: { field: 'y', type: 'quantitative' },
+                        color: { field: 'y', type: 'nominal' }
+                    }
                 } as SingleTrack,
                 'x'
             )

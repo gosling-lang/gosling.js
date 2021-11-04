@@ -7,6 +7,7 @@ describe('Should handle superposition options correctly', () => {
         const tracks = resolveSuperposedTracks({
             mark: 'line',
             data: { type: 'csv', url: '' },
+            encoding: {},
             width: 100,
             height: 100
         });
@@ -34,19 +35,21 @@ describe('Should handle superposition options correctly', () => {
     });
     it('Should correct several options for consistency', () => {
         const tracks = resolveSuperposedTracks({
-            overlay: [{ x: { axis: 'top' } }, { x: { axis: 'bottom' } }],
+            overlay: [{ encoding: { x: { axis: 'top' } } }, { encoding: { x: { axis: 'bottom' } } }],
             width: 100,
             height: 100
         });
-        expect(IsChannelDeep(tracks[0].x) && tracks[0].x.axis === 'top').toBe(true);
-        expect(IsChannelDeep(tracks[0].x) && IsChannelDeep(tracks[1].x) && tracks[0].x.axis === tracks[1].x.axis).toBe(
-            true
-        );
+        expect(IsChannelDeep(tracks[0].encoding.x) && tracks[0].encoding.x.axis === 'top').toBe(true);
+        expect(
+            IsChannelDeep(tracks[0].encoding.x) &&
+                IsChannelDeep(tracks[1].encoding.x) &&
+                tracks[0].encoding.x.axis === tracks[1].encoding.x.axis
+        ).toBe(true);
     });
     it('Should delete title except the last one in overlaid tracks', () => {
         const tracks = resolveSuperposedTracks({
             title: 'title',
-            overlay: [{ x: { axis: 'top' } }, { x: { axis: 'bottom' } }],
+            overlay: [{ encoding: { x: { axis: 'top' } } }, { encoding: { x: { axis: 'bottom' } } }],
             width: 100,
             height: 100
         });
@@ -58,7 +61,9 @@ describe('Should handle superposition options correctly', () => {
 
 describe('Spread Tracks By Data', () => {
     it('No overlay property', () => {
-        const spread = spreadTracksByData([{ mark: 'line', data: { type: 'csv', url: '' }, width: 100, height: 100 }]);
+        const spread = spreadTracksByData([
+            { mark: 'line', data: { type: 'csv', url: '' }, encoding: {}, width: 100, height: 100 }
+        ]);
         expect(spread).toHaveLength(1);
     });
     it('overlay: []', () => {
@@ -120,12 +125,12 @@ describe('Spread Tracks By Data', () => {
         const spread = spreadTracksByData([
             {
                 overlay: [
-                    { data: { type: 'csv', url: '' }, y: { field: 'y', type: 'quantitative' } },
+                    { data: { type: 'csv', url: '' }, encoding: { y: { field: 'y', type: 'quantitative' } } },
                     {
                         data: { type: 'vector', url: '', column: 'c', value: 'p' },
-                        y: { field: 'y', type: 'quantitative' }
+                        encoding: { y: { field: 'y', type: 'quantitative' } }
                     },
-                    { data: { type: 'csv', url: '2' }, y: { field: 'y', type: 'quantitative' } }
+                    { data: { type: 'csv', url: '2' }, encoding: { y: { field: 'y', type: 'quantitative' } } }
                 ],
                 width: 100,
                 height: 100

@@ -10,9 +10,10 @@ describe('Rendering triangle', () => {
         const t: SingleTrack = {
             data: { type: 'csv', url: '' },
             mark: 'triangleLeft',
-            x: { field: 'x', type: 'genomic' },
-            xe: { field: 'xe', type: 'genomic' },
-            y: { field: 'y', type: 'quantitative' },
+            encoding: {
+                x: { startField: 'x', endField: 'xe', type: 'genomic' },
+                y: { field: 'y', type: 'quantitative' }
+            },
             width: 100,
             height: 100
         };
@@ -30,9 +31,10 @@ describe('Rendering triangle', () => {
             layout: 'circular',
             data: { type: 'csv', url: '' },
             mark: 'triangleLeft',
-            x: { field: 'x', type: 'genomic' },
-            xe: { field: 'xe', type: 'genomic' },
-            y: { field: 'y', type: 'quantitative' },
+            encoding: {
+                x: { startField: 'x', endField: 'xe', type: 'genomic' },
+                y: { field: 'y', type: 'quantitative' }
+            },
             width: 100,
             height: 100
         };

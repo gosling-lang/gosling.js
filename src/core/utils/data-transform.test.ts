@@ -68,8 +68,10 @@ describe('Data Transformation', () => {
             {
                 data: { type: 'csv', url: '' },
                 mark: 'point',
-                color: { field: 'c', type: 'nominal' },
-                y: { field: 'q', type: 'quantitative', aggregate: 'max' },
+                encoding: {
+                    color: { field: 'c', type: 'nominal' },
+                    y: { field: 'q', type: 'quantitative', aggregate: 'max' }
+                },
                 width: 100,
                 height: 100
             },
@@ -87,8 +89,10 @@ describe('Data Transformation', () => {
             {
                 data: { type: 'csv', url: '' },
                 mark: 'point',
-                // no categorical field should not work
-                y: { field: 'q', type: 'quantitative', aggregate: 'max' },
+                encoding: {
+                    // no categorical field should not work
+                    y: { field: 'q', type: 'quantitative', aggregate: 'max' }
+                },
                 width: 100,
                 height: 100
             },

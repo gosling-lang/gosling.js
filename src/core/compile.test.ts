@@ -22,6 +22,7 @@ describe('gosling track.id => higlass view.uid', () => {
                         url: ''
                     },
                     mark: 'rect',
+                    encoding: {},
                     width: 100,
                     height: 100
                 }

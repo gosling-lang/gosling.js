@@ -13,8 +13,10 @@ describe('Rendering Point', () => {
         const t: SingleTrack = {
             data: { type: 'csv', url: '' },
             mark: 'point',
-            x: { field: 'x', type: 'genomic' },
-            y: { field: 'y', type: 'quantitative' },
+            encoding: {
+                x: { field: 'x', type: 'genomic' },
+                y: { field: 'y', type: 'quantitative' }
+            },
             width: 100,
             height: 100
         };
@@ -42,12 +44,13 @@ describe('Point marks should correctly encode visual channels', () => {
     const baseTrack: Track = {
         mark: 'point',
         data: { type: 'vector', url: 'dummy', column: '', value: '' },
+        encoding: {},
         width,
         height
     };
 
     it('x --> G', () => {
-        const track: Track = { ...baseTrack, x: { field: 'G', type: 'genomic' } };
+        const track: Track = { ...baseTrack, encoding: { x: { field: 'G', type: 'genomic' } } };
         const model = new GoslingTrackModel(track, data, getTheme());
 
         const cx = model.encodedPIXIProperty('x-center', data[1]);
@@ -62,8 +65,10 @@ describe('Point marks should correctly encode visual channels', () => {
         {
             const track: Track = {
                 ...baseTrack,
-                x: { field: 'G', type: 'genomic' },
-                y: { field: 'Q', type: 'quantitative' }
+                encoding: {
+                    x: { field: 'G', type: 'genomic' },
+                    y: { field: 'Q', type: 'quantitative' }
+                }
             };
             const model = new GoslingTrackModel(track, data, getTheme());
 
@@ -78,8 +83,10 @@ describe('Point marks should correctly encode visual channels', () => {
             // with axis labels
             const track: Track = {
                 ...baseTrack,
-                x: { field: 'G', type: 'genomic', axis: 'top' },
-                y: { field: 'Q', type: 'quantitative' }
+                encoding: {
+                    x: { field: 'G', type: 'genomic', axis: 'top' },
+                    y: { field: 'Q', type: 'quantitative' }
+                }
             };
             const model = new GoslingTrackModel(track, data, getTheme());
 
@@ -95,9 +102,10 @@ describe('Point marks should correctly encode visual channels', () => {
     it('x --> G, xe --> G, y --> Q', () => {
         const track: Track = {
             ...baseTrack,
-            x: { field: 'G', type: 'genomic' },
-            xe: { field: 'G2', type: 'genomic' },
-            y: { field: 'Q', type: 'quantitative' }
+            encoding: {
+                x: { startField: 'G', endField: 'G2', type: 'genomic' },
+                y: { field: 'Q', type: 'quantitative' }
+            }
         };
         const model = new GoslingTrackModel(track, data, getTheme());
 
@@ -112,10 +120,11 @@ describe('Point marks should correctly encode visual channels', () => {
     it('x --> G, xe --> G, y --> Q, row --> nominal', () => {
         const track: Track = {
             ...baseTrack,
-            x: { field: 'G', type: 'genomic' },
-            xe: { field: 'G2', type: 'genomic' },
-            y: { field: 'Q', type: 'quantitative' },
-            row: { field: 'N', type: 'nominal' }
+            encoding: {
+                x: { startField: 'G', endField: 'G2', type: 'genomic' },
+                y: { field: 'Q', type: 'quantitative' },
+                row: { field: 'N', type: 'nominal' }
+            }
         };
         const model = new GoslingTrackModel(track, data, getTheme());
 
@@ -132,11 +141,12 @@ describe('Point marks should correctly encode visual channels', () => {
     it('x --> G, xe --> G, y --> Q, row --> N, size --> Q', () => {
         const track: Track = {
             ...baseTrack,
-            x: { field: 'G', type: 'genomic' },
-            xe: { field: 'G2', type: 'genomic' },
-            y: { field: 'Q', type: 'quantitative' },
-            size: { field: 'Q', type: 'quantitative' },
-            row: { field: 'N', type: 'nominal' }
+            encoding: {
+                x: { startField: 'G', endField: 'G2', type: 'genomic' },
+                y: { field: 'Q', type: 'quantitative' },
+                size: { field: 'Q', type: 'quantitative' },
+                row: { field: 'N', type: 'nominal' }
+            }
         };
         const model = new GoslingTrackModel(track, data, getTheme());
 

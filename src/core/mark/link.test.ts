@@ -11,10 +11,9 @@ describe('Rendering link', () => {
         const t: SingleTrack = {
             data: { type: 'csv', url: '' },
             mark: 'withinLink',
-            x: { field: 'x', type: 'genomic' },
-            xe: { field: 'xe', type: 'genomic' },
-            x1: { field: 'x1', type: 'genomic' },
-            x1e: { field: 'x1e', type: 'genomic' },
+            encoding: {
+                x: { startField: 'x', endField: 'xe', startField2: 'x1', endField2: 'x1e', type: 'genomic' }
+            },
             width: 100,
             height: 100
         };
@@ -31,10 +30,9 @@ describe('Rendering link', () => {
             layout: 'circular',
             data: { type: 'csv', url: '' },
             mark: 'withinLink',
-            x: { field: 'x', type: 'genomic' },
-            xe: { field: 'xe', type: 'genomic' },
-            x1: { field: 'x1', type: 'genomic' },
-            x1e: { field: 'x1e', type: 'genomic' },
+            encoding: {
+                x: { startField: 'x', endField: 'xe', startField2: 'x1', endField2: 'x1e', type: 'genomic' }
+            },
             width: 100,
             height: 100
         };
@@ -51,8 +49,9 @@ describe('Rendering link', () => {
             layout: 'linear',
             data: { type: 'csv', url: '' },
             mark: 'withinLink',
-            x: { field: 'x', type: 'genomic' },
-            xe: { field: 'xe', type: 'genomic' },
+            encoding: {
+                x: { startField: 'x', endField: 'xe', type: 'genomic' }
+            },
             width: 100,
             height: 100
         };
@@ -69,8 +68,9 @@ describe('Rendering link', () => {
             layout: 'circular',
             data: { type: 'csv', url: '' },
             mark: 'withinLink',
-            x: { field: 'x', type: 'genomic' },
-            xe: { field: 'xe', type: 'genomic' },
+            encoding: {
+                x: { startField: 'x', endField: 'xe', type: 'genomic' }
+            },
             width: 100,
             height: 100
         };

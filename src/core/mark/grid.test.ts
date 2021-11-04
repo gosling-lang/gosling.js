@@ -15,8 +15,10 @@ describe('Grid', () => {
         const t: SingleTrack = {
             data: { type: 'csv', url: '' },
             mark: 'line',
-            x: { field: 'x', type: 'genomic' },
-            y: { field: 'y', type: 'quantitative', grid: true },
+            encoding: {
+                x: { field: 'x', type: 'genomic' },
+                y: { field: 'y', type: 'quantitative', grid: true }
+            },
             width: 100,
             height: 100
         };
@@ -33,8 +35,10 @@ describe('Grid', () => {
         const t: SingleTrack = {
             data: { type: 'csv', url: '' },
             mark: 'line',
-            x: { field: 'x', type: 'genomic' },
-            row: { field: 'y', type: 'nominal', grid: true },
+            encoding: {
+                x: { field: 'x', type: 'genomic' },
+                row: { field: 'y', type: 'nominal', grid: true }
+            },
             width: 100,
             height: 100
         };
@@ -56,8 +60,10 @@ describe('Grid', () => {
             outerRadius: 40,
             data: { type: 'csv', url: '' },
             mark: 'line',
-            x: { field: 'x', type: 'genomic' },
-            y: { field: 'y', type: 'quantitative', grid: true },
+            encoding: {
+                x: { field: 'x', type: 'genomic' },
+                y: { field: 'y', type: 'quantitative', grid: true }
+            },
             width: 100,
             height: 100
         };
@@ -79,8 +85,10 @@ describe('Grid', () => {
             outerRadius: 40,
             data: { type: 'csv', url: '' },
             mark: 'line',
-            x: { field: 'x', type: 'genomic' },
-            row: { field: 'y', type: 'nominal', grid: true },
+            encoding: {
+                x: { field: 'x', type: 'genomic' },
+                row: { field: 'y', type: 'nominal', grid: true }
+            },
             width: 100,
             height: 100
         };
