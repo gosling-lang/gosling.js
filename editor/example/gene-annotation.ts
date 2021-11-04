@@ -661,8 +661,8 @@ const CorcesEtAl: OverlaidTracks = {
                 { type: 'filter', field: 'strand', oneOf: ['+'] }
             ],
             mark: 'text',
-            text: { field: 'name', type: 'nominal' },
             encoding: {
+                text: { field: 'name', type: 'nominal' },
                 x: {
                     startField: 'start',
                     endField: 'end',

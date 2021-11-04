@@ -1,15 +1,15 @@
 import { AxisPosition, Encoding, SingleTrack, OverlaidTrack, Track, ChannelDeep, DataDeep } from '../gosling.schema';
 import { assign } from 'lodash-es';
-import { IsChannelDeep, IsDataTrack, IsOverlaidTrack, IsSingleTrack } from '../gosling.schema.guards';
+import { IsChannelDeep, IsTemplateTrack, IsOverlaidTrack, IsSingleTrack } from '../gosling.schema.guards';
 
 /**
  * Resolve superposed tracks into multiple track specifications.
  * Some options are corrected to ensure the resolved tracks use consistent visual properties, such as the existence of the axis for genomic coordinates.
  */
 export function resolveSuperposedTracks(track: Track): SingleTrack[] {
-    if (IsDataTrack(track)) {
+    if (IsTemplateTrack(track)) {
         // no BasicSingleTrack to return
-        return []; // TODO: handle TemplateTrack
+        return [];
     }
 
     if (!IsOverlaidTrack(track)) {

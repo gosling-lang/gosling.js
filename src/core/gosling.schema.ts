@@ -158,13 +158,6 @@ export interface CommonTrackDef extends CommonViewDef, CommonRequiredTrackDef {
     };
 }
 
-/**
- * Partial specification of `BasicSingleTrack` to use default visual encoding predefined by data type.
- */
-export interface DataTrack extends CommonTrackDef {
-    data: DataDeep;
-}
-
 /* ----------------------------- MARK ----------------------------- */
 export type Mark =
     | 'point'
@@ -457,11 +450,17 @@ export interface XSingleField extends ChannelDeepCommon {
     aggregate?: Aggregate;
 }
 
-export type XMultipleFields = Omit<XSingleField, 'field'> & {
+export type XMultipleFields = Omit<XSingleField, 'field' | 'aggregate'> & {
     startField: string;
     endField: string;
     startField2?: string;
     endField2?: string;
+    aggregate?: {
+        startField?: Aggregate;
+        endField?: Aggregate;
+        startField2?: Aggregate;
+        endField2?: Aggregate;
+    };
 };
 
 export type Y = YSingleField | YMultipleFields;
@@ -482,11 +481,17 @@ export interface YSingleField extends ChannelDeepCommon {
     padding?: number; // Experimental: Used in `row` and `column` for vertical and horizontal padding.
 }
 
-export type YMultipleFields = Omit<YSingleField, 'field'> & {
+export type YMultipleFields = Omit<YSingleField, 'field' | 'aggregate'> & {
     startField: string;
     endField: string;
     startField2?: string;
     endField2?: string;
+    aggregate?: {
+        startField?: Aggregate;
+        endField?: Aggregate;
+        startField2?: Aggregate;
+        endField2?: Aggregate;
+    };
 };
 
 export interface Row extends ChannelDeepCommon {
@@ -585,7 +590,7 @@ export interface DomainGene {
     gene: string | [string, string];
 }
 
-export type Aggregate = 'max' | 'min' | 'mean' | 'bin' | 'count';
+export type Aggregate = 'max' | 'min'; // TODO: support 'mean' | 'bin' | 'count'
 
 /* ----------------------------- DATA ----------------------------- */
 export type DataDeep = JSONData | CSVData | BIGWIGData | MultivecData | BEDDBData | VectorData | MatrixData | BAMData;

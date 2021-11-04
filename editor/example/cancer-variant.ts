@@ -155,8 +155,7 @@ export const EX_SPEC_CANCER_VARIANT_PROTOTYPE: GoslingSpec = {
                                 { mark: 'rect' },
                                 {
                                     mark: 'brush',
-                                    encoding: { x: { linkingId: 'mid-scale' } },
-                                    strokeWidth: { value: 0 }
+                                    encoding: { x: { linkingId: 'mid-scale' }, strokeWidth: { value: 0 } }
                                 }
                             ],
                             encoding: {

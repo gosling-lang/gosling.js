@@ -115,15 +115,15 @@ const ScalableCytoBand: OverlaidTracks = {
                         'chrY'
                     ],
                     range: ['#F6F6F6', 'gray']
-                }
-            },
-            encoding: {
+                },
                 x: {
                     startField: 'chromStart',
                     endField: 'chromEnd',
                     type: 'genomic',
-                    aggregate: 'min',
-                    aggregate: 'max' // TODO:
+                    aggregate: {
+                        startField: 'min',
+                        endField: 'max'
+                    }
                 },
                 strokeWidth: { value: 2 },
                 stroke: { value: 'gray' }

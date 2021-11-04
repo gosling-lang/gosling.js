@@ -22,7 +22,6 @@ import {
     BEDDBData,
     MultivecData,
     VectorData,
-    DataTrack,
     BIGWIGData,
     SingleView,
     FlatTracks,
@@ -64,11 +63,6 @@ export function IsOverlaidTracks(_: SingleView): _ is OverlaidTracks {
 }
 export function IsStackedTracks(_: SingleView): _ is StackedTracks {
     return !IsFlatTracks(_) && !IsOverlaidTracks(_);
-}
-
-export function IsDataTrack(_: Track): _ is DataTrack {
-    // !!! Track might not contain `mark` when it is superposed one
-    return !IsOverlaidTrack(_) && 'data' in _ && !('mark' in _);
 }
 
 export function IsDataTemplate(_: Partial<Track>): boolean {

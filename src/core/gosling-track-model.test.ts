@@ -127,11 +127,13 @@ describe('Gosling track model should be properly generated with data', () => {
     it('Correctly generate default domains when no data presents', () => {
         const track: Track = {
             ...MINIMAL_TRACK_SPEC,
-            y: { field: 'y', type: 'quantitative' }
+            encoding: {
+                y: { field: 'y', type: 'quantitative' }
+            }
         };
         const model = new GoslingTrackModel(track, [], getTheme());
         const spec = model.spec();
-        const yDomain = IsChannelDeep(spec.y) ? (spec.y.domain as number[]) : [];
+        const yDomain = IsChannelDeep(spec.encoding.y) ? (spec.encoding.y.domain as number[]) : [];
 
         // This shouldn't be undefined
         expect(yDomain[0]).toBe(0);

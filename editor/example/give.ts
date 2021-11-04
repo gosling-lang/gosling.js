@@ -68,7 +68,7 @@ export const EX_SPEC_GIVE: GoslingSpec = {
                             dataTransform: [{ type: 'filter', field: 'type', oneOf: ['gene'] }],
                             mark: 'rule',
                             encoding: {
-                                x: { starField: 'start', endField: 'end', type: 'genomic' },
+                                x: { startField: 'start', endField: 'end', type: 'genomic' },
                                 strokeWidth: { value: 3 }
                             }
                         }
@@ -382,7 +382,7 @@ export const EX_SPEC_GIVE: GoslingSpec = {
                     },
                     mark: 'bar',
                     encoding: {
-                        x: { istartField: 'start', endField: 'end', type: 'genomic' },
+                        x: { startField: 'start', endField: 'end', type: 'genomic' },
                         y: { field: 'peak', type: 'quantitative' },
                         color: { value: '#8A96D5' },
                         stroke: { value: '#3C4DB4' },

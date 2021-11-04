@@ -13,7 +13,8 @@ import {
     CoverageTransform,
     CombineMatesTransform,
     DisplaceTransform,
-    JSONParseTransform
+    JSONParseTransform,
+    Aggregate
 } from '../gosling.schema';
 import {
     getChannelKeysByAggregateFnc,
@@ -22,7 +23,8 @@ import {
     IsChannelDeep,
     IsIncludeFilter,
     IsOneOfFilter,
-    IsRangeFilter
+    IsRangeFilter,
+    IsMultiFieldChannel
 } from '../gosling.schema.guards';
 import { GET_CHROM_SIZES } from './assembly';
 // import Logging from './log';
@@ -491,10 +493,29 @@ export function aggregateData(spec: SingleTrack, data: Datum[]): Datum[] {
                 return;
             }
 
-            datum[qField] =
-                qFieldSpec.aggregate === 'max'
-                    ? Math.max(...data.filter(d => d[nField] === c).map(d => +d[qField]))
-                    : Math.min(...data.filter(d => d[nField] === c).map(d => +d[qField]));
+            const aggregated = (f: string, agg: Aggregate) =>
+                agg === 'max'
+                    ? Math.max(...data.filter(d => d[nField] === c).map(d => +d[f]))
+                    : Math.min(...data.filter(d => d[nField] === c).map(d => +d[f]));
+            if (IsMultiFieldChannel(qFieldSpec)) {
+                // This means multiple aggregation function could be used for multiple `field`s
+                (
+                    ['startField', 'endField', 'startField2', 'endField2'] as (
+                        | 'startField'
+                        | 'endField'
+                        | 'startField2'
+                        | 'endField2'
+                    )[]
+                ).forEach(fieldKey => {
+                    const f = getChannelField(qFieldSpec, fieldKey);
+                    const agg = qFieldSpec.aggregate?.[fieldKey];
+                    if (f && agg) {
+                        datum[qField] = aggregated(f, agg);
+                    }
+                });
+            } else {
+                datum[qField] = aggregated(qField, qFieldSpec.aggregate!);
+            }
         });
 
         aggregated.push(datum);

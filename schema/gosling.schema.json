@@ -5,10 +5,7 @@
     "Aggregate": {
       "enum": [
         "max",
-        "min",
-        "mean",
-        "bin",
-        "count"
+        "min"
       ],
       "type": "string"
     },
@@ -3917,7 +3914,22 @@
       "additionalProperties": false,
       "properties": {
         "aggregate": {
-          "$ref": "#/definitions/Aggregate"
+          "additionalProperties": false,
+          "properties": {
+            "endField": {
+              "$ref": "#/definitions/Aggregate"
+            },
+            "endField2": {
+              "$ref": "#/definitions/Aggregate"
+            },
+            "startField": {
+              "$ref": "#/definitions/Aggregate"
+            },
+            "startField2": {
+              "$ref": "#/definitions/Aggregate"
+            }
+          },
+          "type": "object"
         },
         "axis": {
           "$ref": "#/definitions/AxisPosition"
@@ -4008,7 +4020,22 @@
       "additionalProperties": false,
       "properties": {
         "aggregate": {
-          "$ref": "#/definitions/Aggregate"
+          "additionalProperties": false,
+          "properties": {
+            "endField": {
+              "$ref": "#/definitions/Aggregate"
+            },
+            "endField2": {
+              "$ref": "#/definitions/Aggregate"
+            },
+            "startField": {
+              "$ref": "#/definitions/Aggregate"
+            },
+            "startField2": {
+              "$ref": "#/definitions/Aggregate"
+            }
+          },
+          "type": "object"
         },
         "axis": {
           "$ref": "#/definitions/AxisPosition"
