@@ -232,7 +232,7 @@ export function combineMates(t: CombineMatesTransform, data: Datum[]) {
                     '+-': 'deletion',
                     '++': 'inversion',
                     '--': 'inversion',
-                    '-+': 'translocation or duplication'
+                    '-+': 'duplication'
                 }[orientation]
             } (${orientation})`;
             newRow[isLongField] = size >= maxInsertSize ? svType : 'normal reads';

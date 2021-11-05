@@ -371,13 +371,16 @@ const tilesetInfos = {};
 // indexed by uuid
 const dataConfs = {};
 
-const init = (uid, { bamUrl, baiUrl, chromSizesUrl, loadMates, maxInsertSize }) => {
-    // TODO: Support different URLs
-    // chromSizesUrl = chromSizesUrl || `https://s3.amazonaws.com/gosling-lang.org/data/hg19.chrom.sizes`;
-    
+const init = (uid, { bamUrl, baiUrl, chromSizesUrl, loadMates = false, maxInsertSize = 5000 }) => {
     if (!bamFiles[bamUrl]) {
         // we do not yet have this file cached
-        bamFiles[bamUrl] = new BamFile({ bamUrl, baiUrl, fetchSizeLimit: 500000000, chunkSizeLimit: 100000000 , yieldThreadTime: 1000});
+        bamFiles[bamUrl] = new BamFile({ 
+            bamUrl, 
+            baiUrl, 
+            // fetchSizeLimit: 500000000, 
+            // chunkSizeLimit: 100000000 , 
+            // yieldThreadTime: 1000
+        });
 
         // we have to fetch the header before we can fetch data
         bamHeaders[bamUrl] = bamFiles[bamUrl].getHeader();
@@ -403,8 +406,8 @@ const tilesetInfo = uid => {
         } else {
             // no chromInfo provided so we have to take it from the bam file index
             const chroms = [];
-            for (const { refName, length } of bamFiles[bamUrl].indexToChr) {
-                chroms.push([refName, length]); // refName is the chromosome name
+            for (const { refName: chrName, length } of bamFiles[bamUrl].indexToChr) {
+                chroms.push([chrName, length]);
             }
             chroms.sort(natcmp);
             chromInfo = parseChromsizesRows(chroms);
@@ -447,9 +450,11 @@ const tile = async (uid, z, x) => {
         const { chromLengths, cumPositions } = chromInfo;
 
         const opt = {
-            viewAsPairs: typeof loadMates === 'undefined' ? false : loadMates,
-            pairAcrossChr: typeof loadMates === 'undefined' ? false : loadMates,
-            maxInsertSize: 500 // maxInsertSize ?? 50000
+            viewAsPairs: loadMates,
+            // TODO: Turning this on results in "too many requests error"
+            // https://github.com/gosling-lang/gosling.js/pull/556
+            // pairAcrossChr: typeof loadMates === 'undefined' ? false : loadMates, 
+            // maxInsertSize: 500 // maxInsertSize ?? 50000
         }
         
         for (let i = 0; i < cumPositions.length; i++) {
@@ -502,8 +507,7 @@ const tile = async (uid, z, x) => {
                                     `${uid}.${z}.${x}`,
                                     tileValues.get(`${uid}.${z}.${x}`).concat(mappedRecords)
                                 );
-                                // TODO:
-                                // return mappedRecords;
+                                // TODO: return mappedRecords;
                                 return [];
                             })
                     );
@@ -551,6 +555,8 @@ const fetchTilesDebounced = async (uid, tileIds) => {
 };
 
 const getTabularData = (uid, tileIds) => {
+    const { loadMates } = dataConfs[uid];
+
     const allSegments = {};
     for (const tileId of tileIds) {
         const tileValue = tileValues.get(`${uid}.${tileId}`);
@@ -568,9 +574,75 @@ const getTabularData = (uid, tileIds) => {
     }
 
     const segmentList = Object.values(allSegments);
+
+    if(loadMates) {
+        // find and set mate info when the `data.loadMates` flag is on.
+        findMates(uid, segmentList);
+    }
+    
     const buffer = Buffer.from(JSON.stringify(segmentList)).buffer;
     return Transfer(buffer, [buffer]);
 };
+
+const groupBy = (xs, key) =>
+    xs.reduce((rv, x) => {
+        (rv[x[key]] = rv[x[key]] || []).push(x);
+        return rv;
+}, {});
+
+const findMates = (uid, segments) => {
+    const { maxInsertSize } = dataConfs[uid];
+
+    const segmentsByReadName = groupBy(segments, "name");
+
+    // Iterate entries and set information about mates
+    Object.entries(segmentsByReadName).forEach(([name, segmentGroup]) => {
+        if(segmentGroup.length === 2){
+            const read = segmentGroup[0];
+            const mate = segmentGroup[1];
+            read.mateIds = [mate.id];
+            mate.mateIds = [read.id];
+           
+            // Additional info we want
+            const [l, r] = [read, mate].sort((a, b) => +a.from - +b.from);
+            const insertSize = Math.max(0, +r.from - +l.to);
+            const largeInsertSize = insertSize >= maxInsertSize;
+            let svType;
+            if(!largeInsertSize) {
+                svType = 'normal read';
+            } else if(l.strand === '+' && r.strand === '-') {
+                svType = 'deletion (+-)';
+            } else if(l.strand === '+' && r.strand === '+') {
+                svType = 'inversion (++)';
+            } else if(l.strand === '-' && r.strand === '-') {
+                svType = 'inversion (--)';
+            } else if(l.strand === '-' && r.strand === '+') {
+                svType = 'duplication (-+)';
+            } else {
+                svType = `(${l.strand}${r.strand})`;
+            }
+
+            // if(largeInsertSize) console.log(svType);
+            [read, mate].forEach(d => {
+                d.foundMate = true;
+                d.insertSize = insertSize;
+                d.largeInsertSize = largeInsertSize;
+                d.svType = svType;
+                d.numMates = 2;
+            });
+        } else {
+            // We do not handle such cases for now
+            segmentGroup.forEach(d => {
+                d.foundMate = false;
+                d.insertSize = -1;
+                d.largInsertSize = false; 
+                d.svType = segmentGroup.length === 1 ? 'mates not found' : 'more than two mates';
+                d.numMates = segmentGroup.length;
+            });
+        }
+    });
+    return segmentsByReadName;
+}
 
 const tileFunctions = {
     init,
