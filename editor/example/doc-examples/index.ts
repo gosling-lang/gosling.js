@@ -4,12 +4,12 @@ import { BRUSH } from './brush';
 import { LINE } from './line';
 import { LINK } from './link';
 import { LINKING_TRACKS } from './linking-tracks';
-import { OVERLAY_TRACKS_BAR_POINT } from './overlay_tracks_bar_point';
-import { OVERLAY_TRACKS_LINE_POINT } from './overlay_tracks_line_point';
-import { OVERLAY_TRACKS_RECT_TEXT } from './overlay_tracks_rect_text';
+import { OVERLAY_TRACKS_BAR_POINT } from './overlay-tracks-bar-point';
+import { OVERLAY_TRACKS_LINE_POINT } from './overlay-tracks-line-point';
+import { OVERLAY_TRACKS_RECT_TEXT } from './overlay-tracks-rect-text';
 import { POINT } from './point';
 import { RECT } from './rect';
-import { SEMANTIC_ZOOM } from './semantic-zoom';
+import { SEMANTIC_ZOOM_SEQUENCE } from './semantic-zoom-sequence';
 import { SEMANTIC_ZOOM_CYTO } from './semantic-zoom-cyto';
 import { TEXT } from './text';
 import { TRIANGLE } from './triangle';
@@ -75,28 +75,28 @@ export const DOC_EXAMPLES = {
         spec: TRIANGLE,
         hidden: true
     },
-    doc_overlay_1: {
-        id: 'doc_overlay_1',
+    doc_overlay_bar_point: {
+        id: 'doc_overlay_bar_point',
         name: '',
         spec: OVERLAY_TRACKS_BAR_POINT,
         hidden: true
     },
-    doc_overlay_2: {
-        id: 'doc_overlay_2',
+    doc_overlay_rect_text: {
+        id: 'doc_overlay_rect_text',
         name: '',
         spec: OVERLAY_TRACKS_RECT_TEXT,
         hidden: true
     },
-    doc_overlay_3: {
-        id: 'doc_overlay_3',
+    doc_overlay_line_point: {
+        id: 'doc_overlay_line_point',
         name: '',
         spec: OVERLAY_TRACKS_LINE_POINT,
         hidden: true
     },
-    doc_semantic_zoom: {
-        id: 'doc_semantic_zoom',
+    doc_semantic_zoom_sequence: {
+        id: 'doc_semantic_zoom_sequence',
         name: '',
-        spec: SEMANTIC_ZOOM,
+        spec: SEMANTIC_ZOOM_SEQUENCE,
         hidden: true
     },
     doc_semantic_zoom_cyto: {

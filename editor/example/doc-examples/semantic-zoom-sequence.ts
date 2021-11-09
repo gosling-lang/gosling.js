@@ -1,4 +1,4 @@
-export const SEMANTIC_ZOOM = `{
+export const SEMANTIC_ZOOM_SEQUENCE = `{
     "title": "Example: Semantic Zooming",
     "subtitle": "hide text annotation and only show bar charts when zooming out",
     "views": [
