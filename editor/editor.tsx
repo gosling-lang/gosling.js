@@ -24,7 +24,8 @@ import type { Datum } from '@gosling.schema';
 // @ts-ignore
 import { Themes } from 'gosling-theme';
 
-const INIT_DEMO_INDEX = examples.findIndex(d => d.forceShow) !== -1 ? examples.findIndex(d => d.forceShow) : 0;
+const SHOWN_EXAMPLE_LIST = Object.values(examples).filter(d => !d.hidden);
+const INIT_DEMO = SHOWN_EXAMPLE_LIST.find(d => d.forceShow) ?? SHOWN_EXAMPLE_LIST[0];
 
 // Limit of the character length to allow copy to clipboard
 const LIMIT_CLIPBOARD_LEN = 4096;
@@ -154,18 +155,14 @@ function Editor(props: any) {
     const urlParams = qs.parse(props.location.search, { ignoreQueryPrefix: true });
     const urlSpec = urlParams?.spec ? JSONCrush.uncrush(urlParams.spec as string) : null;
     const urlGist = urlParams?.gist ?? null;
-    const urlExampleIndex = urlParams?.example
-        ? examples.map(d => d.id).indexOf(urlParams.example as string)
-        : INIT_DEMO_INDEX;
+    const urlExampleId = urlParams?.example as string;
 
-    const defaultCode = urlGist
-        ? emptySpec()
-        : stringify(urlSpec ?? (examples[INIT_DEMO_INDEX].spec as gosling.GoslingSpec));
+    const defaultCode = urlGist ? emptySpec() : stringify(urlSpec ?? (INIT_DEMO.spec as gosling.GoslingSpec));
 
     const previewData = useRef<PreviewData[]>([]);
     const [refreshData, setRefreshData] = useState<boolean>(false);
 
-    const [demo, setDemo] = useState(examples[urlExampleIndex === -1 ? INIT_DEMO_INDEX : urlExampleIndex]);
+    const [demo, setDemo] = useState(examples[urlExampleId] ?? INIT_DEMO);
     const [theme, setTheme] = useState<gosling.Theme>('light');
     const [hg, setHg] = useState<HiGlassSpec>();
     const [code, setCode] = useState(defaultCode);
@@ -465,11 +462,11 @@ function Editor(props: any) {
                     <select
                         style={{ maxWidth: IS_SMALL_SCREEN ? window.innerWidth - 180 : 'none' }}
                         onChange={e => {
-                            setDemo(examples.find(d => d.id === e.target.value) as any);
+                            setDemo(examples[e.target.value] as any);
                         }}
                         defaultValue={demo.id}
                     >
-                        {examples.map(d => (
+                        {SHOWN_EXAMPLE_LIST.map(d => (
                             <option key={d.id} value={d.id}>
                                 {d.name + (d.underDevelopment ? ' (under development)' : '')}
                             </option>

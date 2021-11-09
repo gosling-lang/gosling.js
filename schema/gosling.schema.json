@@ -428,7 +428,7 @@
           "description": "Determine the colors that should be bound to data value. Default properties are determined considering the field type."
         },
         "type": {
-          "description": "Data type",
+          "description": "Specify the data type",
           "enum": [
             "quantitative",
             "nominal"
@@ -1500,7 +1500,7 @@
           "description": "Ranges of visual channel values"
         },
         "type": {
-          "description": "Data type",
+          "description": "Specify the data type",
           "enum": [
             "quantitative",
             "nominal"
@@ -3943,7 +3943,7 @@
         },
         "type": {
           "const": "nominal",
-          "description": "Data type",
+          "description": "Specify the data type",
           "type": "string"
         }
       },
@@ -4290,7 +4290,7 @@
           "description": "Ranges of visual channel values"
         },
         "type": {
-          "description": "Data type",
+          "description": "Specify the data type",
           "enum": [
             "quantitative",
             "nominal"
@@ -4759,7 +4759,7 @@
           "description": "Ranges of visual channel values"
         },
         "type": {
-          "description": "Data type",
+          "description": "Specify the data type",
           "enum": [
             "quantitative",
             "nominal"
@@ -4785,7 +4785,7 @@
           "description": "Ranges of visual channel values"
         },
         "type": {
-          "description": "Data type",
+          "description": "Specify the data type",
           "enum": [
             "quantitative",
             "nominal"
@@ -5089,7 +5089,7 @@
           "type": "array"
         },
         "type": {
-          "description": "Data type",
+          "description": "Specify the data type",
           "enum": [
             "quantitative",
             "nominal"
