@@ -246,7 +246,14 @@ function Editor(props: any) {
     useEffect(() => {
         previewData.current = [];
         setSelectedPreviewData(0);
-        setCode(urlSpec ?? (urlGist ? emptySpec() : stringify(demo.spec as gosling.GoslingSpec)));
+        setCode(
+            urlSpec ??
+                (urlGist
+                    ? emptySpec()
+                    : typeof demo.spec == 'string'
+                    ? demo.spec
+                    : stringify(demo.spec as gosling.GoslingSpec))
+        );
         setHg(undefined);
     }, [demo]);
 
@@ -464,7 +471,7 @@ function Editor(props: any) {
                         onChange={e => {
                             setDemo(examples[e.target.value] as any);
                         }}
-                        defaultValue={demo.id}
+                        value={demo.id}
                     >
                         {SHOWN_EXAMPLE_LIST.map(d => (
                             <option key={d.id} value={d.id}>

@@ -20,10 +20,12 @@ import { EX_SPEC_BAND } from './vertical-band';
 import { EX_SPEC_TEMPLATE } from './track-template';
 import { EX_SPEC_DEBUG } from './debug';
 
+import { DOC_EXAMPLES } from './doc-examples';
+
 export const examples: {
     readonly [id: string]: {
         name: string;
-        spec: GoslingSpec;
+        spec: GoslingSpec | string;
         id: string;
         description?: string;
         underDevelopment?: boolean;
@@ -166,5 +168,6 @@ export const examples: {
         id: 'TEMPLATE',
         spec: EX_SPEC_TEMPLATE,
         underDevelopment: true
-    }
+    },
+    ...DOC_EXAMPLES
 };
