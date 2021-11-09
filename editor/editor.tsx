@@ -85,9 +85,13 @@ const getIconSVG = (d: ICON_INFO, w?: number, h?: number, f?: string) => (
 
 const emptySpec = (message?: string) => (message !== undefined ? `{\n\t// ${message}\n}` : '{}');
 
-const stringifySpec = (spec: string | gosling.GoslingSpec) => {
+const stringifySpec = (spec: string | gosling.GoslingSpec): string => {
     if (typeof spec === 'string') return spec;
     else return stringify(spec);
+};
+
+const validateExampleId = (id: string): boolean => {
+    return examples[id] ? true : false;
 };
 
 const getDescPanelDefultWidth = () => Math.min(500, window.innerWidth);
@@ -260,7 +264,11 @@ function Editor(props: any) {
     useEffect(() => {
         previewData.current = [];
         setSelectedPreviewData(0);
-        setCode(urlSpec ?? (urlGist ? emptySpec() : stringifySpec(demo.spec as gosling.GoslingSpec)));
+        if (urlExampleId && !validateExampleId(urlExampleId)) {
+            setCode(emptySpec(`Example id "${urlExampleId}" does not exist.`));
+        } else {
+            setCode(urlSpec ?? (urlGist ? emptySpec() : stringifySpec(demo.spec as gosling.GoslingSpec)));
+        }
         setHg(undefined);
     }, [demo]);
 
@@ -472,7 +480,7 @@ function Editor(props: any) {
                         </span>
                     </>
                 )}
-                <span className="demo-dropdown" hidden={urlSpec !== null || urlGist !== null || demo.hidden}>
+                <span className="demo-dropdown" hidden={urlSpec !== null || urlGist !== null || urlExampleId !== null}>
                     <select
                         style={{ maxWidth: IS_SMALL_SCREEN ? window.innerWidth - 180 : 'none' }}
                         onChange={e => {
