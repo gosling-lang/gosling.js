@@ -5,6 +5,7 @@ export const OVERLAY_TRACKS_LINE_POINT = `{
         "height": 200,
         "width": 1000,        
         "layout": "linear",
+        // data is shared between the two tracks
         "data": {
             "url": "https://resgen.io/api/v1/tileset_info/?d=UvVPeLHuRDiYA3qwFlm7xQ",
             "type": "multivec",
@@ -17,10 +18,11 @@ export const OVERLAY_TRACKS_LINE_POINT = `{
         "tracks": [
             {"mark": "line"},
             {
-                "mark": "point",
-                "size": {"field": "peak", "type": "quantitative", "range": [0, 6]}
+              "mark": "point",
+              "size": {"field": "peak", "type": "quantitative", "range": [0, 6]}
             }
         ],
+        // the encoding below is shared between the two tracks
         "x": {
             "field": "position",
             "type": "genomic",
