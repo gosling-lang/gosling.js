@@ -62,12 +62,6 @@ export function EX_SPEC_VIEW_PILEUP(
                 tracks: [
                     {
                         dataTransform: [
-                            //  {
-                            //      type: 'combineMates',
-                            //      idField: 'name',
-                            //      maintainDuplicates: true,
-                            //      maxInsertSize // 360 // + 79 * 3
-                            //  },
                             {
                                 type: 'displace',
                                 method: 'pile',
@@ -93,8 +87,9 @@ export function EX_SPEC_VIEW_PILEUP(
                                     'inversion (++)',
                                     'inversion (--)',
                                     'duplication (-+)',
+                                    'more than two mates',
                                     'mates not found',
-                                    'more than two mates'
+                                    'clipping'
                                 ],
                                 range: [
                                     '#C8C8C8',
@@ -102,9 +97,9 @@ export function EX_SPEC_VIEW_PILEUP(
                                     '#029F73',
                                     '#0072B2',
                                     '#CB7AA7',
-                                    'gray',
                                     '#57B4E9',
-                                    '#EFE441'
+                                    '#D61E2E',
+                                    '#414141'
                                 ]
                             },
                             {
@@ -113,6 +108,32 @@ export function EX_SPEC_VIEW_PILEUP(
                                 legend: true
                             }
                         ][0]
+                    },
+                    {
+                        dataTransform: [
+                            {
+                                type: 'displace',
+                                method: 'pile',
+                                boundingBox: {
+                                    startField: 'from',
+                                    endField: 'to',
+                                    padding: 5,
+                                    isPaddingBP: true
+                                },
+                                newField: 'pileup-row'
+                            },
+                            {
+                                type: 'subjson',
+                                field: 'substitutions',
+                                genomicField: 'pos',
+                                baseGenomicField: 'from',
+                                genomicLengthField: 'length'
+                            },
+                            { type: 'filter', field: 'type', oneOf: ['S', 'H'] }
+                        ],
+                        x: { field: 'pos_start', type: 'genomic' },
+                        xe: { field: 'pos_end', type: 'genomic' },
+                        color: { value: '#414141' }
                     }
                 ],
                 tooltip: [
@@ -124,10 +145,10 @@ export function EX_SPEC_VIEW_PILEUP(
                     { field: 'numMates', type: 'quantitative' },
                     { field: 'mateIds', type: 'nominal' }
                 ],
-                row: { field: 'pileup-row', type: 'nominal', padding: 0.5 },
+                row: { field: 'pileup-row', type: 'nominal', padding: 0.2 },
                 // stroke: { value: 'grey' },
                 // strokeWidth: { value: 0.5 },
-                style: { outlineWidth: 0.5, legendTitle: `Insert Size Threshold = ${maxInsertSize}bp` },
+                style: { outlineWidth: 0.5, legendTitle: `Insert Size = ${maxInsertSize}bp` },
                 width,
                 height
             }
@@ -139,5 +160,5 @@ export const EX_SPEC_PILEUP: GoslingSpec = {
     // title: 'Pileup Track Using BAM Data',
     // subtitle: '',
     // ...EX_SPEC_VIEW_PILEUP('bam', 1250, 600, { chromosome: '1', interval: [136750, 139450] })
-    ...EX_SPEC_VIEW_PILEUP('bam', 1250, 600, { chromosome: '1', interval: [596000, 608000] })
+    ...EX_SPEC_VIEW_PILEUP('bam', 1250, 600, { chromosome: '1', interval: [98000, 101000] })
 };

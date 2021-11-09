@@ -454,7 +454,7 @@ const tile = async (uid, z, x) => {
             // TODO: Turning this on results in "too many requests error"
             // https://github.com/gosling-lang/gosling.js/pull/556
             // pairAcrossChr: typeof loadMates === 'undefined' ? false : loadMates, 
-            // maxInsertSize: 500 // maxInsertSize ?? 50000
+            maxInsertSize: 248956422 / 2.0 // sufficiently large value to search entire chromosome 
         }
         
         for (let i = 0; i < cumPositions.length; i++) {
@@ -579,7 +579,7 @@ const getTabularData = (uid, tileIds) => {
         // find and set mate info when the `data.loadMates` flag is on.
         findMates(uid, segmentList);
     }
-    
+
     const buffer = Buffer.from(JSON.stringify(segmentList)).buffer;
     return Transfer(buffer, [buffer]);
 };
@@ -633,6 +633,7 @@ const findMates = (uid, segments) => {
         } else {
             // We do not handle such cases for now
             segmentGroup.forEach(d => {
+                d.mateIds = segmentGroup.filter(mate => mate.id !== d.id).map(mate => mate.id);
                 d.foundMate = false;
                 d.insertSize = -1;
                 d.largInsertSize = false; 
