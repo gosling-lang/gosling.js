@@ -17,91 +17,91 @@ import { TRIANGLE } from './triangle';
 export const DOC_EXAMPLES = {
     doc_area: {
         id: 'doc_area',
-        name: '',
+        name: 'Basic Example: Area Mark',
         spec: AREA,
         hidden: true
     },
     doc_bar: {
         id: 'doc_bar',
-        name: '',
+        name: 'Basic Example: Bar Mark',
         spec: BAR,
         hidden: true
     },
     doc_brush: {
         id: 'doc_brush',
-        name: '',
+        name: 'Basic Example: Brush Mark',
         spec: BRUSH,
         hidden: true
     },
     doc_line: {
         id: 'doc_line',
-        name: '',
+        name: 'Basic Example: Line Mark',
         spec: LINE,
         hidden: true
     },
     doc_link: {
         id: 'doc_link',
-        name: '',
+        name: 'Basic Example: Link Mark',
         spec: LINK,
         hidden: true
     },
     doc_linking_tracks: {
         id: 'doc_linking_tracks',
-        name: '',
+        name: 'Basic Example: Linking Tracks',
         spec: LINKING_TRACKS,
         hidden: true
     },
     doc_point: {
         id: 'doc_point',
-        name: '',
+        name: 'Basic Example: Point Mark',
         spec: POINT,
         hidden: true
     },
     doc_rect: {
         id: 'doc_rect',
-        name: '',
+        name: 'Basic Example: React Mark',
         spec: RECT,
         hidden: true
     },
     doc_text: {
         id: 'doc_text',
-        name: '',
+        name: 'Basic Example: Text Mark',
         spec: TEXT,
         hidden: true
     },
     doc_triangle: {
         id: 'doc_triangle',
-        name: '',
+        name: 'Basic Example: Triangle Mark',
         spec: TRIANGLE,
         hidden: true
     },
     doc_overlay_bar_point: {
         id: 'doc_overlay_bar_point',
-        name: '',
+        name: 'Overlay Tracks: Bar + Point',
         spec: OVERLAY_TRACKS_BAR_POINT,
         hidden: true
     },
     doc_overlay_rect_text: {
         id: 'doc_overlay_rect_text',
-        name: '',
+        name: 'Overlay Tracks: Rect + Text',
         spec: OVERLAY_TRACKS_RECT_TEXT,
         hidden: true
     },
     doc_overlay_line_point: {
         id: 'doc_overlay_line_point',
-        name: '',
+        name: 'Overlay Tracks: Line + Point',
         spec: OVERLAY_TRACKS_LINE_POINT,
         hidden: true
     },
     doc_semantic_zoom_sequence: {
         id: 'doc_semantic_zoom_sequence',
-        name: '',
+        name: 'Semantic Zoom: A Sequence Example',
         spec: SEMANTIC_ZOOM_SEQUENCE,
         hidden: true
     },
     doc_semantic_zoom_cyto: {
         id: 'doc_semantic_zoom_cyto',
-        name: '',
+        name: 'Semantic Zoom: Cyto',
         spec: SEMANTIC_ZOOM_CYTO,
         hidden: true
     }

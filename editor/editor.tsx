@@ -85,6 +85,11 @@ const getIconSVG = (d: ICON_INFO, w?: number, h?: number, f?: string) => (
 
 const emptySpec = (message?: string) => (message !== undefined ? `{\n\t// ${message}\n}` : '{}');
 
+const stringifySpec = (spec: string | gosling.GoslingSpec) => {
+    if (typeof spec === 'string') return spec;
+    else return stringify(spec);
+};
+
 const getDescPanelDefultWidth = () => Math.min(500, window.innerWidth);
 
 /**
@@ -158,6 +163,15 @@ function Editor(props: any) {
     const urlExampleId = urlParams?.example as string;
 
     const defaultCode = urlGist ? emptySpec() : stringify(urlSpec ?? (INIT_DEMO.spec as gosling.GoslingSpec));
+
+    // let defaultCode = stringify(INIT_DEMO.spec as gosling.GoslingSpec);
+    // if (urlGist) {
+    //     defaultCode = emptySpec();
+    // } else if (urlExampleId) {
+    //     defaultCode = stringifySpec(examples[urlExampleId]?.spec) ?? `wrong example id`;
+    // } else if (urlSpec) {
+    //     defaultCode = stringifySpec(urlSpec);
+    // }
 
     const previewData = useRef<PreviewData[]>([]);
     const [refreshData, setRefreshData] = useState<boolean>(false);
@@ -246,14 +260,7 @@ function Editor(props: any) {
     useEffect(() => {
         previewData.current = [];
         setSelectedPreviewData(0);
-        setCode(
-            urlSpec ??
-                (urlGist
-                    ? emptySpec()
-                    : typeof demo.spec == 'string'
-                    ? demo.spec
-                    : stringify(demo.spec as gosling.GoslingSpec))
-        );
+        setCode(urlSpec ?? (urlGist ? emptySpec() : stringifySpec(demo.spec as gosling.GoslingSpec)));
         setHg(undefined);
     }, [demo]);
 
@@ -465,7 +472,7 @@ function Editor(props: any) {
                         </span>
                     </>
                 )}
-                <span className="demo-dropdown" hidden={urlSpec !== null || urlGist !== null}>
+                <span className="demo-dropdown" hidden={urlSpec !== null || urlGist !== null || demo.hidden}>
                     <select
                         style={{ maxWidth: IS_SMALL_SCREEN ? window.innerWidth - 180 : 'none' }}
                         onChange={e => {
