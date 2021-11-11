@@ -11,7 +11,6 @@ import {
     StrReplaceTransform,
     GenomicLengthTransform,
     CoverageTransform,
-    CombineMatesTransform,
     DisplaceTransform,
     JSONParseTransform
 } from '../gosling.schema';
@@ -167,83 +166,6 @@ export function aggregateCoverage(_: CoverageTransform, data: Datum[], scale: Sc
 
     // console.log(coverage);
     // Logging.printTime('aggregateCoverage');
-    return output;
-}
-
-export function combineMates(t: CombineMatesTransform, data: Datum[]) {
-    const { idField, maintainDuplicates } = t;
-    const isLongField = t.isLongField ?? 'is_long';
-    const maxInsertSize = t.maxInsertSize ?? 360;
-    const copyData: { data: Datum; added: boolean }[] = data.map(d => {
-        return { data: d, added: false };
-    });
-    const output: Datum[] = [];
-    copyData.forEach((d, i) => {
-        if (d.added) {
-            // this row is added already, so just skip
-            return;
-        }
-        if (i === copyData.length - 1) {
-            // no additional reads to search for
-            return;
-        }
-
-        if (!d.data[idField]) {
-            // id does not exist
-            console.warn(`[CombineMates] The id field (${idField}) does not exist.`);
-            return;
-        }
-
-        const id = d.data[idField];
-        const rest = copyData.slice(maintainDuplicates ? 0 : i + 1, copyData.length).filter((_, j) => i !== j);
-        const mateIndex = rest.findIndex(r => r.data[idField] === id);
-        if (mateIndex === -1) {
-            // no mate found. this read will not be included to the result data.
-            return;
-        }
-
-        const mate = rest[mateIndex];
-
-        if (!d.data.from || !d.data.to || !mate.data.from || !mate.data.to) {
-            // no distance
-            //console.log(
-            //    d,
-            //    mate
-            //);
-            return;
-        }
-
-        const newRow: Datum = {};
-
-        // iterate all keys, assuming that keys are the same between mates
-        Object.keys(d.data).forEach(k => {
-            // if not maintaining duplicated rows, left mate should be stored in the first field
-            const [f, s] = maintainDuplicates ? [d, mate] : [d, mate].sort((a, b) => +a.data.from - +b.data.from);
-            newRow[`${k}`] = f.data[k];
-            newRow[`${k}_2`] = s.data[k];
-
-            const [left, right] = [d, mate].sort((a, b) => +a.data.from - +b.data.from);
-            const size = Math.abs(+left.data.to - +right.data.from);
-
-            // https://software.broadinstitute.org/software/igv/interpreting_pair_orientations
-            const orientation = `${left.data.strand}${right.data.strand}`;
-            const svType = `${
-                {
-                    '+-': 'deletion',
-                    '++': 'inversion',
-                    '--': 'inversion',
-                    '-+': 'duplication'
-                }[orientation]
-            } (${orientation})`;
-            newRow[isLongField] = size >= maxInsertSize ? svType : 'normal reads';
-            newRow['insertSize'] = Math.abs(+left.data.to - +right.data.from);
-        });
-        output.push(newRow);
-        if (!maintainDuplicates) {
-            mate.added = true; // set a flag so that we can skip this later
-        }
-    });
-    // console.log(output);
     return output;
 }
 

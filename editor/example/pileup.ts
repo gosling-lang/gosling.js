@@ -88,7 +88,7 @@ export function EX_SPEC_VIEW_PILEUP(
                                     'inversion (--)',
                                     'duplication (-+)',
                                     'more than two mates',
-                                    'mates not found',
+                                    'mates not found within chromosome',
                                     'clipping'
                                 ],
                                 range: [

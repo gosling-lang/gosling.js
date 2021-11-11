@@ -18,7 +18,6 @@ import {
     concatString,
     displace,
     filterData,
-    combineMates,
     calculateGenomicLength,
     parseSubJSON,
     replaceString,
@@ -719,6 +718,14 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
 
             shareScaleAcrossTracks(gms);
 
+            const flatTileData = ([] as Datum[]).concat(...gms.map(d => d.data()));
+            if (flatTileData.length !== 0) {
+                PubSub.publish('rawdata', {
+                    id: this.options.spec.id,
+                    data: flatTileData
+                });
+            }
+
             // console.log('processed gosling model', gms);
 
             // IMPORTANT: If no genomic fields specified, no point to use multiple tiles, i.e., we need to draw a track only once with the data combined.
@@ -827,9 +834,6 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                                     tile.gos.tabularDataFiltered,
                                     this._xScale.copy()
                                 );
-                                break;
-                            case 'combineMates':
-                                tile.gos.tabularDataFiltered = combineMates(t, tile.gos.tabularDataFiltered);
                                 break;
                             case 'subjson':
                                 tile.gos.tabularDataFiltered = parseSubJSON(t, tile.gos.tabularDataFiltered);

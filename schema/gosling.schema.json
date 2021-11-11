@@ -44,9 +44,11 @@
           "type": "string"
         },
         "loadMates": {
+          "description": "Load mates that are located in the same chromosome. __Default__: `false`",
           "type": "boolean"
         },
         "maxInsertSize": {
+          "description": "Determines the threshold of insert sizes for determining the structural variants. __Default__: `5000`",
           "type": "number"
         },
         "type": {
@@ -428,7 +430,7 @@
           "description": "Determine the colors that should be bound to data value. Default properties are determined considering the field type."
         },
         "type": {
-          "description": "Data type",
+          "description": "Specify the data type",
           "enum": [
             "quantitative",
             "nominal"
@@ -436,33 +438,6 @@
           "type": "string"
         }
       },
-      "type": "object"
-    },
-    "CombineMatesTransform": {
-      "additionalProperties": false,
-      "description": "By looking up ids, combine mates (a pair of reads) into a single row, performing long-to-wide operation. Result data have `{field}` and `{field}_2` names.",
-      "properties": {
-        "idField": {
-          "type": "string"
-        },
-        "isLongField": {
-          "type": "string"
-        },
-        "maintainDuplicates": {
-          "type": "boolean"
-        },
-        "maxInsertSize": {
-          "type": "number"
-        },
-        "type": {
-          "const": "combineMates",
-          "type": "string"
-        }
-      },
-      "required": [
-        "type",
-        "idField"
-      ],
       "type": "object"
     },
     "CoverageTransform": {
@@ -672,9 +647,6 @@
         },
         {
           "$ref": "#/definitions/CoverageTransform"
-        },
-        {
-          "$ref": "#/definitions/CombineMatesTransform"
         },
         {
           "$ref": "#/definitions/JSONParseTransform"
@@ -1500,7 +1472,7 @@
           "description": "Ranges of visual channel values"
         },
         "type": {
-          "description": "Data type",
+          "description": "Specify the data type",
           "enum": [
             "quantitative",
             "nominal"
@@ -3943,7 +3915,7 @@
         },
         "type": {
           "const": "nominal",
-          "description": "Data type",
+          "description": "Specify the data type",
           "type": "string"
         }
       },
@@ -4290,7 +4262,7 @@
           "description": "Ranges of visual channel values"
         },
         "type": {
-          "description": "Data type",
+          "description": "Specify the data type",
           "enum": [
             "quantitative",
             "nominal"
@@ -4759,7 +4731,7 @@
           "description": "Ranges of visual channel values"
         },
         "type": {
-          "description": "Data type",
+          "description": "Specify the data type",
           "enum": [
             "quantitative",
             "nominal"
@@ -4785,7 +4757,7 @@
           "description": "Ranges of visual channel values"
         },
         "type": {
-          "description": "Data type",
+          "description": "Specify the data type",
           "enum": [
             "quantitative",
             "nominal"
@@ -5089,7 +5061,7 @@
           "type": "array"
         },
         "type": {
-          "description": "Data type",
+          "description": "Specify the data type",
           "enum": [
             "quantitative",
             "nominal"

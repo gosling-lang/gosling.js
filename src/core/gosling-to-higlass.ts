@@ -28,6 +28,10 @@ export function goslingToHiGlass(
     // we only look into the first resolved spec to get information, such as size of the track
     const firstResolvedSpec = resolveSuperposedTracks(gosTrack)[0];
 
+    if (!gosTrack.id) {
+        gosTrack.id = uuid.v4();
+    }
+
     const assembly = firstResolvedSpec.assembly;
 
     if (IsDataDeep(firstResolvedSpec.data)) {
@@ -62,7 +66,7 @@ export function goslingToHiGlass(
                 ? HIGLASS_AXIS_SIZE
                 : 0);
         const hgTrack: HiGlassTrack = {
-            uid: `${firstResolvedSpec.id ?? uuid.v4()}-track`, // This is being used to cache the visualization
+            uid: `${gosTrack.id}-track`, // This is being used to cache the visualization
             type: Is2DTrack(firstResolvedSpec) ? 'gosling-2d-track' : 'gosling-track',
             server,
             tilesetUid,
@@ -138,7 +142,7 @@ export function goslingToHiGlass(
             hgModel
                 .setViewOrientation(firstResolvedSpec.orientation) // TODO: Orientation should be assigned to 'individual' views
                 .setAssembly(assembly) // TODO: Assembly should be assigned to 'individual' views
-                .addDefaultView(firstResolvedSpec.id ?? uuid.v1(), assembly)
+                .addDefaultView(gosTrack.id, assembly)
                 .setDomain(xDomain, Is2DTrack(firstResolvedSpec) ? yDomain : xDomain)
                 .adjustDomain(firstResolvedSpec.orientation, width, height)
                 .setMainTrack(hgTrack)
@@ -195,7 +199,7 @@ export function goslingToHiGlass(
             ) {
                 const narrowType = getAxisNarrowType(c as any, gosTrack.orientation, bb.width, bb.height);
                 hgModel.setAxisTrack(channel.axis, narrowType, {
-                    id: `${firstResolvedSpec.id ?? uuid.v4()}-axis`,
+                    id: `${gosTrack.id}-axis`,
                     layout: firstResolvedSpec.layout,
                     innerRadius:
                         channel.axis === 'top'
@@ -217,7 +221,7 @@ export function goslingToHiGlass(
         hgModel.validateSpec(true);
     } else if (firstResolvedSpec.mark === 'header') {
         // `text` tracks are used to show title and subtitle of the views
-        hgModel.addDefaultView(`${firstResolvedSpec.id ?? uuid.v1()}-title`).setLayout(layout);
+        hgModel.addDefaultView(`${gosTrack.id}-title`).setLayout(layout);
         if (typeof firstResolvedSpec.title === 'string') {
             hgModel.setTextTrack(
                 bb.width,
