@@ -107,7 +107,7 @@ export function EX_SPEC_VIEW_PILEUP(
                                 type: 'quantitative',
                                 legend: true
                             }
-                        ][0]
+                        ][0] as any
                     },
                     {
                         dataTransform: [
