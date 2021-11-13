@@ -101,20 +101,6 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             this.drawnAtScale = HGC.libraries.d3Scale.scaleLinear();
             this.scalableGraphics = {};
 
-            // this.loadingText = new HGC.libraries.PIXI.Text('Loading', {
-            //     fontSize: '14px',
-            //     fontFamily: 'Arial',
-            //     fill: 'black'
-            // });
-
-            // this.loadingText.x = 0;
-            // this.loadingText.y = 0;
-
-            // this.loadingText.anchor.x = 0;
-            // this.loadingText.anchor.y = 0;
-
-            // this.pLabel.addChild(this.loadingText);
-
             const { valid, errorMessages } = validateTrack(this.options.spec);
 
             if (!valid) {
@@ -152,16 +138,16 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                 );
             }
 
-            // Custom error label
-            // this.errorText = new HGC.libraries.PIXI.Text('', {
-            //     fontSize: '16px',
-            //     fontFamily: 'Arial',
-            //     fill: 'black',
-            //     fontWeight: 'bold',
-            // });
-            // this.errorText.anchor.x = 0.5;
-            // this.errorText.anchor.y = 0.5;
-            // this.pLabel.addChild(this.errorText);
+            // Custom loading label
+            this.loadingText = new HGC.libraries.PIXI.Text('', {
+                fontSize: '18px',
+                fontFamily: 'Arial',
+                fill: 'gray',
+                fontWeight: 'bold'
+            });
+            this.loadingText.anchor.x = 0.5;
+            this.loadingText.anchor.y = 0.5;
+            this.pLabel.addChild(this.loadingText);
 
             this.tooltips = [];
             this.svgData = [];
@@ -207,6 +193,9 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
 
                 // Record tiles so that we ignore loading same tiles again
                 this.prevVisibleAndFetchedTiles = this.visibleAndFetchedTiles();
+
+                //
+                this.drawLoading(false);
             };
 
             if (
@@ -398,7 +387,8 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             this.xDomain = this._xScale.domain();
             this.xRange = this._xScale.range();
 
-            this.labelText.text = ' Loading...';
+            this.drawLoading();
+            this.trackNotFoundText.text = ''; // HiGlass complains about tileset, but we are using BAM files.
 
             this.worker.then((tileFunctions: any) => {
                 tileFunctions
@@ -421,8 +411,6 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                             tile.tileData.tilePos = [refTile[1]];
                         }
                         callback();
-
-                        this.labelText.text = this.options.spec.title ?? '';
                     });
             });
         }
@@ -458,7 +446,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             return this.visibleAndFetchedIds().map((x: any) => this.fetchedTiles[x]);
         }
 
-        // !! This is called in the constructor, `super(context, options)`. So be aware not to use variables that is not prepared.
+        // !! This is called in the constructor, `super(context, options)`. So be aware to use variables that is prepared.
         calculateVisibleTiles() {
             if (usePrereleaseRendering(this.options.spec)) {
                 const tiles = HGC.utils.trackUtils.calculate1DVisibleTiles(this.tilesetInfo, this._xScale);
@@ -600,27 +588,32 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             }
         }
 
-        // Custom error message
-        // drawError() {
-        //     this.errorText.x = this.position[0] + this.dimensions[0] / 2;
-        //     this.errorText.y = this.position[1] + this.dimensions[1] / 2;
+        // Custom loading message
+        drawLoading(show = true) {
+            const loadingLabelNotReady = true;
+            if (loadingLabelNotReady) return; // TODO: not used yet
 
-        //     this.errorText.text = this.errorTextText;
+            this.loadingText.x = this.position[0] + this.dimensions[0] / 2;
+            this.loadingText.y = this.position[1] + this.dimensions[1] / 2;
 
-        //     if (this.errorTextText && this.errorTextText.length) {
-        //       // draw a red border around the track to bring attention to its error
-        //       const g = this.pBorder;
-        //       g.clear();
-        //       g.lineStyle(1, colorToHex('black'), 1);
-        //       g.beginFill(colorToHex('black'), 0.2);
-        //       g.drawRect(
-        //             this.position[0],
-        //             this.position[1],
-        //             this.dimensions[0],
-        //             this.dimensions[1],
-        //         );
-        //     }
-        // }
+            this.loadingText.text = show ? 'Loading...' : '';
+
+            if (show) {
+                // draw a border around the track to bring attention to the loading message
+                // const g = this.pBorder;
+                // g.clear();
+                // g.lineStyle(2, colorToHex('lightgray'), 1);
+                // g.beginFill(colorToHex('lightgray'), 0.1);
+                // g.drawRect(
+                //       this.position[0],
+                //       this.position[1],
+                //       this.dimensions[0],
+                //       this.dimensions[1],
+                //   );
+            } else {
+                // this.pBorder.clear();
+            }
+        }
 
         /**
          * This function reorganize the tileset information so that it can be more conveniently managed afterwards.

@@ -1,12 +1,10 @@
 import type { Domain, DomainGene, GoslingSpec, View } from '@gosling.schema';
-// import { EX_TRACK_SEMANTIC_ZOOM } from './semantic-zoom';
 
 export function EX_SPEC_VIEW_PILEUP(
     id: string,
     width: number,
     height: number,
     xDomain: Exclude<Domain, string[] | number[] | DomainGene>
-    // strandColor?: [number, number]
 ): View {
     const maxInsertSize = 300;
     return {
@@ -16,45 +14,42 @@ export function EX_SPEC_VIEW_PILEUP(
         xDomain: xDomain,
         spacing: 0.01,
         tracks: [
-            // {
-            //     alignment: 'overlay',
-            //     title: 'example_higlass.bam',
-            //     data: {
-            //         type: 'bam',
-            //         url: 'https://s3.amazonaws.com/gosling-lang.org/data/example_higlass.bam', // https://s3.amazonaws.com/gosling-lang.org/data/SV/PCAWG.c8e7bbdb-6d87-445f-bf43-dbf88805b1ed.bam',
-            //         indexUrl: 'https://s3.amazonaws.com/gosling-lang.org/data/example_higlass.bam.bai', // https://s3.amazonaws.com/gosling-lang.org/data/SV/PCAWG.c8e7bbdb-6d87-445f-bf43-dbf88805b1ed.bam.bai',
-            //         loadMates: true
-            //     },
-            //     mark: 'bar',
-            //     tracks: [
-            //         {
-            //             dataTransform: [
-            //                 {
-            //                     type: 'coverage',
-            //                     startField: 'from',
-            //                     endField: 'to'
-            //                 }
-            //             ],
-            //             x: { field: 'from', type: 'genomic' },
-            //             xe: { field: 'to', type: 'genomic' },
-            //             y: { field: 'coverage', type: 'quantitative', axis: 'right' },
-            //             color: { value: '#C6C6C6' }
-            //         }
-            //     ],
-            //     style: { outlineWidth: 0.5 },
-            //     width,
-            //     height: 80
-            // },
             {
                 alignment: 'overlay',
-                // title: 'example_higlass.bam',
+                title: 'example_higlass.bam',
                 data: {
                     type: 'bam',
-                    // url: 'https://s3.amazonaws.com/gosling-lang.org/data/example_higlass.bam',
-                    // indexUrl: 'https://s3.amazonaws.com/gosling-lang.org/data/example_higlass.bam.bai',
-                    url: 'https://s3.amazonaws.com/gosling-lang.org/data/PCAWG.00e7f3bd-5c87-40c2-aeb6-4e4ca4a8e720.bam', // https://s3.amazonaws.com/gosling-lang.org/data/SV/PCAWG.c8e7bbdb-6d87-445f-bf43-dbf88805b1ed.bam',
-                    indexUrl:
-                        'https://s3.amazonaws.com/gosling-lang.org/data/PCAWG.00e7f3bd-5c87-40c2-aeb6-4e4ca4a8e720.bam.bai', //'https://s3.amazonaws.com/gosling-lang.org/data/SV/PCAWG.c8e7bbdb-6d87-445f-bf43-dbf88805b1ed.bam.bai',
+                    url: 'https://s3.amazonaws.com/gosling-lang.org/data/example_higlass.bam',
+                    indexUrl: 'https://s3.amazonaws.com/gosling-lang.org/data/example_higlass.bam.bai',
+                    loadMates: true
+                },
+                mark: 'bar',
+                tracks: [
+                    {
+                        dataTransform: [
+                            {
+                                type: 'coverage',
+                                startField: 'from',
+                                endField: 'to'
+                            }
+                        ],
+                        x: { field: 'from', type: 'genomic' },
+                        xe: { field: 'to', type: 'genomic' },
+                        y: { field: 'coverage', type: 'quantitative', axis: 'right' },
+                        color: { value: '#C6C6C6' }
+                    }
+                ],
+                style: { outlineWidth: 0.5 },
+                width,
+                height: 80
+            },
+            {
+                alignment: 'overlay',
+                title: 'example_higlass.bam',
+                data: {
+                    type: 'bam',
+                    url: 'https://s3.amazonaws.com/gosling-lang.org/data/example_higlass.bam',
+                    indexUrl: 'https://s3.amazonaws.com/gosling-lang.org/data/example_higlass.bam.bai',
                     loadMates: true,
                     maxInsertSize
                 },
@@ -146,8 +141,6 @@ export function EX_SPEC_VIEW_PILEUP(
                     { field: 'mateIds', type: 'nominal' }
                 ],
                 row: { field: 'pileup-row', type: 'nominal', padding: 0.2 },
-                // stroke: { value: 'grey' },
-                // strokeWidth: { value: 0.5 },
                 style: { outlineWidth: 0.5, legendTitle: `Insert Size = ${maxInsertSize}bp` },
                 width,
                 height
@@ -157,8 +150,7 @@ export function EX_SPEC_VIEW_PILEUP(
 }
 
 export const EX_SPEC_PILEUP: GoslingSpec = {
-    // title: 'Pileup Track Using BAM Data',
-    // subtitle: '',
-    // ...EX_SPEC_VIEW_PILEUP('bam', 1250, 600, { chromosome: '1', interval: [136750, 139450] })
-    ...EX_SPEC_VIEW_PILEUP('bam', 1250, 600, { chromosome: '1', interval: [98000, 101000] })
+    title: 'Pileup Track Using BAM Data',
+    subtitle: '',
+    ...EX_SPEC_VIEW_PILEUP('bam', 1250, 600, { chromosome: '1', interval: [136750, 139450] })
 };
