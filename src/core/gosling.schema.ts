@@ -203,7 +203,6 @@ export interface SingleTrack extends CommonTrackDef {
     // Experimental
     flipY?: boolean; // This is only supported for `link` marks.
     stretch?: boolean; // Stretch the size to the given range? (e.g., [x, xe])
-    overrideTemplate?: boolean; // Override a spec template that is defined for a given data type.
 }
 
 export interface Encoding {
@@ -1013,9 +1012,8 @@ export interface TemplateTrack extends CommonRequiredTrackDef, CommonTrackDef {
     // Data specification that is identical to the one in `SingleTrack`
     data: DataDeep;
 
-    // ! TODO: Is there a way to make this not nested while preserving the other specific properties like `data` and `template`?
-    // https://basarat.gitbook.io/typescript/type-system/index-signatures#excluding-certain-properties-from-the-index-signature
-    // https://stackoverflow.com/questions/51465182/how-to-remove-index-signature-using-mapped-types
+    // TODO: make this required, consistent to SingleTrack
+    // Custom encoding
     encoding?: {
         // Custom channels (e.g., geneHeight, strandColor, ...)
         [k: string]: Channel;
@@ -1061,26 +1059,17 @@ export type TemplateTrackMappingDef = Omit<
     mark: Mark;
 
     // Visual channels
-    x?: ChannelWithBase;
-    y?: ChannelWithBase;
-    xe?: ChannelWithBase;
-    ye?: ChannelWithBase;
-
-    x1?: ChannelWithBase;
-    y1?: ChannelWithBase;
-    x1e?: ChannelWithBase;
-    y1e?: ChannelWithBase;
-
-    row?: ChannelWithBase;
-    column?: ChannelWithBase;
-
-    color?: ChannelWithBase;
-    size?: ChannelWithBase;
-    text?: ChannelWithBase;
-
-    stroke?: ChannelWithBase;
-    strokeWidth?: ChannelWithBase;
-    opacity?: ChannelWithBase;
+    encoding: {
+        x?: ChannelWithBase;
+        y?: ChannelWithBase;
+        row?: ChannelWithBase;
+        color?: ChannelWithBase;
+        size?: ChannelWithBase;
+        text?: ChannelWithBase;
+        stroke?: ChannelWithBase;
+        strokeWidth?: ChannelWithBase;
+        opacity?: ChannelWithBase;
+    };
 
     // Resolving overlaps
     displacement?: Displacement;
@@ -1092,10 +1081,9 @@ export type TemplateTrackMappingDef = Omit<
     // Experimental
     flipY?: boolean; // This is only supported for `link` marks.
     stretch?: boolean; // Stretch the size to the given range? (e.g., [x, xe])
-    overrideTemplate?: boolean; // Override a spec template that is defined for a given data type.
 };
 
 // The main difference is that this allows to specify a `base` property
 export type ChannelWithBase = Channel & {
-    base?: string;
+    base?: string | { startField: string; endField: string; startField2?: string; endField2?: string };
 };

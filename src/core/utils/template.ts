@@ -3,11 +3,14 @@ import {
     CustomChannelDef,
     DataTransform,
     DataTransformWithBase,
+    Encoding,
     GoslingSpec,
     OverlaidTracks,
     TemplateTrackDef,
     TemplateTrackMappingDef,
-    Track
+    Track,
+    XSingleField,
+    YSingleField
 } from '../gosling.schema';
 import { IsTemplateTrack } from '../gosling.schema.guards';
 import { traverseTracks } from './spec-preprocess';
@@ -40,11 +43,13 @@ export const GoslingTemplates: TemplateTrackDef[] = [
                     { type: 'filter', base: 'strandColor', oneOf: ['-'] }
                 ],
                 mark: 'triangleLeft',
-                x: { base: 'startPosition', type: 'genomic' },
-                size: { base: 'geneHeight', value: 12 },
-                row: { base: 'strandRow', type: 'nominal', domain: ['+', '-'] },
-                color: { base: 'strandColor', type: 'nominal', domain: ['+', '-'], range: ['blue', 'red'] },
-                opacity: { base: 'opacity', value: 0.4 },
+                encoding: {
+                    x: { base: 'startPosition', type: 'genomic' },
+                    size: { base: 'geneHeight', value: 12 },
+                    row: { base: 'strandRow', type: 'nominal', domain: ['+', '-'] },
+                    color: { base: 'strandColor', type: 'nominal', domain: ['+', '-'], range: ['blue', 'red'] },
+                    opacity: { base: 'opacity', value: 0.4 }
+                },
                 style: { align: 'right' }
             },
             {
@@ -53,22 +58,25 @@ export const GoslingTemplates: TemplateTrackDef[] = [
                     { type: 'filter', base: 'strandColor', oneOf: ['+'] }
                 ],
                 mark: 'triangleRight',
-                x: { base: 'endPosition', type: 'genomic' },
-                size: { base: 'geneHeight', value: 12 },
-                row: { base: 'strandRow', type: 'nominal', domain: ['+', '-'] },
-                color: { base: 'strandColor', type: 'nominal', domain: ['+', '-'], range: ['blue', 'red'] },
-                opacity: { base: 'opacity', value: 0.4 },
+                encoding: {
+                    x: { base: 'endPosition', type: 'genomic' },
+                    size: { base: 'geneHeight', value: 12 },
+                    row: { base: 'strandRow', type: 'nominal', domain: ['+', '-'] },
+                    color: { base: 'strandColor', type: 'nominal', domain: ['+', '-'], range: ['blue', 'red'] },
+                    opacity: { base: 'opacity', value: 0.4 }
+                },
                 style: { align: 'left' }
             },
             {
                 dataTransform: [{ type: 'filter', base: 'type', oneOf: ['exon'] }],
                 mark: 'rect',
-                x: { base: 'startPosition', type: 'genomic' },
-                xe: { base: 'endPosition', type: 'genomic' },
-                size: { base: 'geneHeight', value: 12 },
-                row: { base: 'strandRow', type: 'nominal', domain: ['+', '-'] },
-                color: { base: 'strandColor', type: 'nominal', domain: ['+', '-'], range: ['blue', 'red'] },
-                opacity: { base: 'opacity', value: 0.4 }
+                encoding: {
+                    x: { base: { startField: 'startPosition', endField: 'endPosition' }, type: 'genomic' },
+                    size: { base: 'geneHeight', value: 12 },
+                    row: { base: 'strandRow', type: 'nominal', domain: ['+', '-'] },
+                    color: { base: 'strandColor', type: 'nominal', domain: ['+', '-'], range: ['blue', 'red'] },
+                    opacity: { base: 'opacity', value: 0.4 }
+                }
             },
             {
                 dataTransform: [
@@ -76,12 +84,13 @@ export const GoslingTemplates: TemplateTrackDef[] = [
                     { type: 'filter', base: 'strandColor', oneOf: ['+'] }
                 ],
                 mark: 'rect',
-                x: { base: 'startPosition', type: 'genomic' },
-                xe: { base: 'endPosition', type: 'genomic' },
-                row: { base: 'strandRow', type: 'nominal', domain: ['+', '-'] },
-                color: { base: 'strandColor', type: 'nominal', domain: ['+', '-'], range: ['blue', 'red'] },
-                opacity: { base: 'opacity', value: 0.4 },
-                size: { value: 3 }
+                encoding: {
+                    x: { base: { startField: 'startPosition', endField: 'endPosition' }, type: 'genomic' },
+                    row: { base: 'strandRow', type: 'nominal', domain: ['+', '-'] },
+                    color: { base: 'strandColor', type: 'nominal', domain: ['+', '-'], range: ['blue', 'red'] },
+                    opacity: { base: 'opacity', value: 0.4 },
+                    size: { value: 3 }
+                }
                 // style: {
                 //     linePattern: { type: 'triangleRight', size: 5 }
                 // }
@@ -92,12 +101,13 @@ export const GoslingTemplates: TemplateTrackDef[] = [
                     { type: 'filter', base: 'strandColor', oneOf: ['-'] }
                 ],
                 mark: 'rect',
-                x: { base: 'startPosition', type: 'genomic' },
-                xe: { base: 'endPosition', type: 'genomic' },
-                row: { base: 'strandRow', type: 'nominal', domain: ['+', '-'] },
-                color: { base: 'strandColor', type: 'nominal', domain: ['+', '-'], range: ['blue', 'red'] },
-                opacity: { base: 'opacity', value: 0.4 },
-                size: { value: 3 }
+                encoding: {
+                    x: { base: { startField: 'startPosition', endField: 'endPosition' }, type: 'genomic' },
+                    row: { base: 'strandRow', type: 'nominal', domain: ['+', '-'] },
+                    color: { base: 'strandColor', type: 'nominal', domain: ['+', '-'], range: ['blue', 'red'] },
+                    opacity: { base: 'opacity', value: 0.4 },
+                    size: { value: 3 }
+                }
                 // style: {
                 //     linePattern: { type: 'triangleLeft', size: 5 }
                 // }
@@ -105,15 +115,16 @@ export const GoslingTemplates: TemplateTrackDef[] = [
             {
                 dataTransform: [{ type: 'filter', base: 'type', oneOf: ['gene'] }],
                 mark: 'text',
-                text: { base: 'geneLabel', type: 'nominal' }, // TODO: add dy here
-                x: { base: 'startPosition', type: 'genomic' },
-                xe: { base: 'endPosition', type: 'genomic' },
-                row: { base: 'strandRow', type: 'nominal', domain: ['+', '-'] },
-                color: { base: 'geneLabelColor', type: 'nominal', domain: ['+', '-'], range: ['blue', 'red'] },
-                opacity: { base: 'opacity', value: 1 },
-                size: { base: 'geneLabelFontSize', value: 18 },
-                stroke: { base: 'geneLabelStroke', value: 'white' },
-                strokeWidth: { base: 'geneLabelStrokeThickness', value: 2 },
+                encoding: {
+                    text: { base: 'geneLabel', type: 'nominal' }, // TODO: add dy here
+                    x: { base: { startField: 'startPosition', endField: 'endPosition' }, type: 'genomic' },
+                    row: { base: 'strandRow', type: 'nominal', domain: ['+', '-'] },
+                    color: { base: 'geneLabelColor', type: 'nominal', domain: ['+', '-'], range: ['blue', 'red'] },
+                    opacity: { base: 'opacity', value: 1 },
+                    size: { base: 'geneLabelFontSize', value: 18 },
+                    stroke: { base: 'geneLabelStroke', value: 'white' },
+                    strokeWidth: { base: 'geneLabelStrokeThickness', value: 2 }
+                },
                 // TODO: how to redefine style from the users' side? (e.g., dy: -30)
                 visibility: [
                     {
@@ -143,17 +154,18 @@ export const GoslingTemplates: TemplateTrackDef[] = [
             {
                 mark: 'rect',
                 dataTransform: [{ type: 'filter', base: 'stainBackgroundColor', oneOf: ['acen'], not: true }],
-                color: {
-                    base: 'stainBackgroundColor',
-                    type: 'nominal',
-                    domain: ['gneg', 'gpos25', 'gpos50', 'gpos75', 'gpos100', 'gvar', 'acen'],
-                    range: ['white', 'lightgray', 'gray', 'gray', 'black', '#7B9CC8', '#DC4542']
-                },
-                size: { base: 'chrHeight', value: 18 },
-                x: { base: 'startPosition', type: 'genomic' },
-                xe: { base: 'endPosition', type: 'genomic' },
-                stroke: { base: 'stainStroke', value: 'gray' },
-                strokeWidth: { base: 'stainStrokeWidth', value: 0.3 }
+                encoding: {
+                    color: {
+                        base: 'stainBackgroundColor',
+                        type: 'nominal',
+                        domain: ['gneg', 'gpos25', 'gpos50', 'gpos75', 'gpos100', 'gvar', 'acen'],
+                        range: ['white', 'lightgray', 'gray', 'gray', 'black', '#7B9CC8', '#DC4542']
+                    },
+                    size: { base: 'chrHeight', value: 18 },
+                    x: { base: { startField: 'startPosition', endField: 'endPosition' }, type: 'genomic' },
+                    stroke: { base: 'stainStroke', value: 'gray' },
+                    strokeWidth: { base: 'stainStrokeWidth', value: 0.3 }
+                }
             },
             {
                 mark: 'triangleRight',
@@ -161,17 +173,18 @@ export const GoslingTemplates: TemplateTrackDef[] = [
                     { type: 'filter', base: 'stainBackgroundColor', oneOf: ['acen'] },
                     { type: 'filter', base: 'name', include: 'q' }
                 ],
-                color: {
-                    base: 'stainBackgroundColor',
-                    type: 'nominal',
-                    domain: ['gneg', 'gpos25', 'gpos50', 'gpos75', 'gpos100', 'gvar', 'acen'],
-                    range: ['white', 'lightgray', 'gray', 'gray', 'black', '#7B9CC8', '#DC4542']
-                },
-                size: { base: 'chrHeight', value: 18 },
-                x: { base: 'startPosition', type: 'genomic' },
-                xe: { base: 'endPosition', type: 'genomic' },
-                stroke: { base: 'stainStroke', value: 'gray' },
-                strokeWidth: { base: 'stainStrokeWidth', value: 0.3 }
+                encoding: {
+                    color: {
+                        base: 'stainBackgroundColor',
+                        type: 'nominal',
+                        domain: ['gneg', 'gpos25', 'gpos50', 'gpos75', 'gpos100', 'gvar', 'acen'],
+                        range: ['white', 'lightgray', 'gray', 'gray', 'black', '#7B9CC8', '#DC4542']
+                    },
+                    size: { base: 'chrHeight', value: 18 },
+                    x: { base: { startField: 'startPosition', endField: 'endPosition' }, type: 'genomic' },
+                    stroke: { base: 'stainStroke', value: 'gray' },
+                    strokeWidth: { base: 'stainStrokeWidth', value: 0.3 }
+                }
             },
             {
                 mark: 'triangleLeft',
@@ -179,30 +192,32 @@ export const GoslingTemplates: TemplateTrackDef[] = [
                     { type: 'filter', base: 'stainBackgroundColor', oneOf: ['acen'] },
                     { type: 'filter', base: 'name', include: 'p' }
                 ],
-                color: {
-                    base: 'stainBackgroundColor',
-                    type: 'nominal',
-                    domain: ['gneg', 'gpos25', 'gpos50', 'gpos75', 'gpos100', 'gvar', 'acen'],
-                    range: ['white', 'lightgray', 'gray', 'gray', 'black', '#7B9CC8', '#DC4542']
-                },
-                size: { base: 'chrHeight', value: 18 },
-                x: { base: 'startPosition', type: 'genomic' },
-                xe: { base: 'endPosition', type: 'genomic' },
-                stroke: { base: 'stainStroke', value: 'gray' },
-                strokeWidth: { base: 'stainStrokeWidth', value: 0.3 }
+                encoding: {
+                    color: {
+                        base: 'stainBackgroundColor',
+                        type: 'nominal',
+                        domain: ['gneg', 'gpos25', 'gpos50', 'gpos75', 'gpos100', 'gvar', 'acen'],
+                        range: ['white', 'lightgray', 'gray', 'gray', 'black', '#7B9CC8', '#DC4542']
+                    },
+                    size: { base: 'chrHeight', value: 18 },
+                    x: { base: { startField: 'startPosition', endField: 'endPosition' }, type: 'genomic' },
+                    stroke: { base: 'stainStroke', value: 'gray' },
+                    strokeWidth: { base: 'stainStrokeWidth', value: 0.3 }
+                }
             },
             {
                 mark: 'text',
                 dataTransform: [{ type: 'filter', base: 'stainLabelColor', oneOf: ['acen'], not: true }],
-                color: {
-                    base: 'stainLabelColor',
-                    type: 'nominal',
-                    domain: ['gneg', 'gpos25', 'gpos50', 'gpos75', 'gpos100', 'gvar'],
-                    range: ['black', 'black', 'black', 'black', 'white', 'black']
+                encoding: {
+                    color: {
+                        base: 'stainLabelColor',
+                        type: 'nominal',
+                        domain: ['gneg', 'gpos25', 'gpos50', 'gpos75', 'gpos100', 'gvar'],
+                        range: ['black', 'black', 'black', 'black', 'white', 'black']
+                    },
+                    text: { base: 'name', type: 'nominal' },
+                    x: { base: { startField: 'startPosition', endField: 'endPosition' }, type: 'genomic' }
                 },
-                text: { base: 'name', type: 'nominal' },
-                x: { base: 'startPosition', type: 'genomic' },
-                xe: { base: 'endPosition', type: 'genomic' },
                 visibility: [
                     {
                         operation: 'less-than',
@@ -228,20 +243,21 @@ export const GoslingTemplates: TemplateTrackDef[] = [
         mapping: [
             {
                 mark: 'bar',
-                // x: { base: 'position', type: 'genomic' },
-                x: { base: 'startPosition', type: 'genomic' },
-                xe: { base: 'endPosition', type: 'genomic' },
-                y: { base: 'barLength', type: 'quantitative', axis: 'none' },
-                color: { base: 'baseBackground', type: 'nominal', domain: ['A', 'T', 'G', 'C'] }
+                encoding: {
+                    x: { base: { startField: 'startPosition', endField: 'endPosition' }, type: 'genomic' },
+                    y: { base: 'barLength', type: 'quantitative', axis: 'none' },
+                    color: { base: 'baseBackground', type: 'nominal', domain: ['A', 'T', 'G', 'C'] }
+                }
             },
             {
                 dataTransform: [{ type: 'filter', base: 'barLength', oneOf: [0], not: true }],
                 mark: 'text',
-                x: { base: 'startPosition', type: 'genomic' },
-                xe: { base: 'endPosition', type: 'genomic' },
-                color: { base: 'baseLabelColor', type: 'nominal', domain: ['A', 'T', 'G', 'C'], range: ['white'] },
-                text: { base: 'baseBackground', type: 'nominal' },
-                size: { base: 'baseLabelFontSize', value: 18 },
+                encoding: {
+                    x: { base: { startField: 'startPosition', endField: 'endPosition' }, type: 'genomic' },
+                    color: { base: 'baseLabelColor', type: 'nominal', domain: ['A', 'T', 'G', 'C'], range: ['white'] },
+                    text: { base: 'baseBackground', type: 'nominal' },
+                    size: { base: 'baseLabelFontSize', value: 18 }
+                },
                 visibility: [
                     {
                         operation: 'less-than',
@@ -300,7 +316,7 @@ export function replaceTrackTemplates(spec: GoslingSpec, templates: TemplateTrac
         }
 
         /* conversion */
-        const viewBase = JSON.parse(JSON.stringify(t));
+        const viewBase = JSON.parse(JSON.stringify({ ...t, template: undefined }));
         if ('encoding' in viewBase) {
             delete viewBase.encoding;
         }
@@ -313,9 +329,11 @@ export function replaceTrackTemplates(spec: GoslingSpec, templates: TemplateTrac
         };
         templateDef.mapping.forEach((singleTrackMappingDef: TemplateTrackMappingDef) => {
             // Set required properties
-            const convertedTrack: Partial<Track> = {
+            const convertedTrack: Partial<Track> & { encoding: Encoding } = {
+                ...singleTrackMappingDef,
                 data: t.data,
-                mark: singleTrackMappingDef.mark
+                mark: singleTrackMappingDef.mark,
+                encoding: {}
             };
 
             // Handle data transform
@@ -343,41 +361,59 @@ export function replaceTrackTemplates(spec: GoslingSpec, templates: TemplateTrac
             const encodingSpec = t.encoding;
             if (!encodingSpec) {
                 // This means we do not need to override anything, so use default encodings
-                Object.keys(singleTrackMappingDef)
-                    .filter(k => k !== 'mark')
-                    .forEach(channelKey => {
-                        // Iterate all channels
-                        const channelMap = JSON.parse(JSON.stringify((singleTrackMappingDef as any)[channelKey]));
-                        if ('base' in channelMap) {
-                            delete channelMap.base;
-                        }
-                        // @ts-ignore
-                        convertedTrack[channelKey as keyof TemplateTrackMappingDef] = channelMap;
-                    });
+                Object.keys(singleTrackMappingDef.encoding).forEach(channelKey => {
+                    // Iterate all channels
+                    const channelMap = JSON.parse(JSON.stringify((singleTrackMappingDef as any).encoding[channelKey]));
+                    if ('base' in channelMap) {
+                        delete channelMap.base;
+                    }
+                    convertedTrack.encoding[channelKey as keyof Encoding] = channelMap;
+                });
             } else {
-                Object.keys(singleTrackMappingDef)
-                    .filter(k => k !== 'mark')
-                    .forEach(channelKey => {
-                        // Iterate all channels
-                        const channelMap = JSON.parse(JSON.stringify((singleTrackMappingDef as any)[channelKey]));
-                        if ('base' in channelMap) {
-                            const baseChannelName = channelMap.base;
-                            if (baseChannelName in encodingSpec) {
-                                // This means we need to override a user's spec for this channel
-                                const base = JSON.parse(JSON.stringify(encodingSpec[baseChannelName]));
+                Object.keys(singleTrackMappingDef.encoding).forEach(channelKey => {
+                    // Iterate all channels
+                    const channelMap = JSON.parse(JSON.stringify((singleTrackMappingDef as any).encoding[channelKey]));
+                    if ('base' in channelMap) {
+                        const baseChannelName = channelMap.base;
+                        if (typeof baseChannelName === 'object') {
+                            // This means multiple custom channels are specified for this channel, i.e., either x or y
+                            Object.keys(baseChannelName).forEach(fieldKey => {
+                                let base = {};
                                 delete channelMap.base;
+                                const _baseChannelName = baseChannelName[fieldKey];
+                                if (_baseChannelName in encodingSpec && 'field' in encodingSpec[_baseChannelName]) {
+                                    base = assign(
+                                        base,
+                                        JSON.parse(
+                                            JSON.stringify({
+                                                ...encodingSpec[_baseChannelName],
+                                                field: undefined,
+                                                [fieldKey]: (
+                                                    encodingSpec[_baseChannelName] as XSingleField | YSingleField
+                                                ).field
+                                            })
+                                        )
+                                    );
+                                }
                                 const newChannelSpec = assign(channelMap, JSON.parse(JSON.stringify(base)));
-                                convertedTrack[channelKey as keyof TemplateTrackMappingDef] = newChannelSpec;
-                            } else {
-                                // This means a user did not specify a optional custom channel, so just remove a `base` property.
-                                delete channelMap.base;
-                                convertedTrack[channelKey as keyof TemplateTrackMappingDef] = channelMap;
-                            }
+                                convertedTrack.encoding[channelKey as keyof Encoding] = newChannelSpec;
+                            });
+                        } else if (baseChannelName in encodingSpec) {
+                            // This means we need to override a user's spec for this channel
+                            const base = JSON.parse(JSON.stringify(encodingSpec[baseChannelName]));
+                            delete channelMap.base;
+                            const newChannelSpec = assign(channelMap, JSON.parse(JSON.stringify(base)));
+                            convertedTrack.encoding[channelKey as keyof Encoding] = newChannelSpec;
                         } else {
-                            // This means we use encoding that is constant.
-                            convertedTrack[channelKey as keyof TemplateTrackMappingDef] = channelMap;
+                            // This means a user did not specify an optional custom channel, so just remove a `base` property.
+                            delete channelMap.base;
+                            convertedTrack.encoding[channelKey as keyof Encoding] = channelMap;
                         }
-                    });
+                    } else {
+                        // This means we use encoding that is constant.
+                        convertedTrack.encoding[channelKey as keyof Encoding] = channelMap;
+                    }
+                });
             }
 
             convertedView.tracks.push(convertedTrack);

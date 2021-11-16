@@ -30,7 +30,33 @@
         {
           "properties": {
             "base": {
-              "type": "string"
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "additionalProperties": false,
+                  "properties": {
+                    "endField": {
+                      "type": "string"
+                    },
+                    "endField2": {
+                      "type": "string"
+                    },
+                    "startField": {
+                      "type": "string"
+                    },
+                    "startField2": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "startField",
+                    "endField"
+                  ],
+                  "type": "object"
+                }
+              ]
             }
           },
           "type": "object"
@@ -39,7 +65,33 @@
           "additionalProperties": false,
           "properties": {
             "base": {
-              "type": "string"
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "additionalProperties": false,
+                  "properties": {
+                    "endField": {
+                      "type": "string"
+                    },
+                    "endField2": {
+                      "type": "string"
+                    },
+                    "startField": {
+                      "type": "string"
+                    },
+                    "startField2": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "startField",
+                    "endField"
+                  ],
+                  "type": "object"
+                }
+              ]
             },
             "value": {
               "type": [
@@ -732,12 +784,6 @@
           "description": "Proportion of the radius of the center white space.\n\n__Default:__ 0.3",
           "type": "number"
         },
-        "color": {
-          "$ref": "#/definitions/ChannelWithBase"
-        },
-        "column": {
-          "$ref": "#/definitions/ChannelWithBase"
-        },
         "dataTransform": {
           "items": {
             "$ref": "#/definitions/DataTransformWithBase"
@@ -746,6 +792,39 @@
         },
         "displacement": {
           "$ref": "#/definitions/Displacement"
+        },
+        "encoding": {
+          "additionalProperties": false,
+          "properties": {
+            "color": {
+              "$ref": "#/definitions/ChannelWithBase"
+            },
+            "opacity": {
+              "$ref": "#/definitions/ChannelWithBase"
+            },
+            "row": {
+              "$ref": "#/definitions/ChannelWithBase"
+            },
+            "size": {
+              "$ref": "#/definitions/ChannelWithBase"
+            },
+            "stroke": {
+              "$ref": "#/definitions/ChannelWithBase"
+            },
+            "strokeWidth": {
+              "$ref": "#/definitions/ChannelWithBase"
+            },
+            "text": {
+              "$ref": "#/definitions/ChannelWithBase"
+            },
+            "x": {
+              "$ref": "#/definitions/ChannelWithBase"
+            },
+            "y": {
+              "$ref": "#/definitions/ChannelWithBase"
+            }
+          },
+          "type": "object"
         },
         "endAngle": {
           "description": "Specify the end angle (in the range of [0, 360]) of circular tracks (`{\"layout\": \"circular\"}`).",
@@ -768,9 +847,6 @@
         "mark": {
           "$ref": "#/definitions/Mark"
         },
-        "opacity": {
-          "$ref": "#/definitions/ChannelWithBase"
-        },
         "orientation": {
           "$ref": "#/definitions/Orientation",
           "description": "Specify the orientation."
@@ -782,19 +858,10 @@
         "overlayOnPreviousTrack": {
           "type": "boolean"
         },
-        "overrideTemplate": {
-          "type": "boolean"
-        },
         "prerelease": {
           "additionalProperties": false,
           "description": "internal",
           "type": "object"
-        },
-        "row": {
-          "$ref": "#/definitions/ChannelWithBase"
-        },
-        "size": {
-          "$ref": "#/definitions/ChannelWithBase"
         },
         "spacing": {
           "description": "- If `{\"layout\": \"linear\"}`, specify the space between tracks in pixels;\n\n- If `{\"layout\": \"circular\"}`, specify the space between tracks in percentage ranging from 0 to 100.",
@@ -811,18 +878,9 @@
         "stretch": {
           "type": "boolean"
         },
-        "stroke": {
-          "$ref": "#/definitions/ChannelWithBase"
-        },
-        "strokeWidth": {
-          "$ref": "#/definitions/ChannelWithBase"
-        },
         "style": {
           "$ref": "#/definitions/Style",
           "description": "Define the [style](http://gosling-lang.org/docs/visual-channel#style-related-properties) of multive views. Will be overriden by the style of children elements (e.g., view, track)."
-        },
-        "text": {
-          "$ref": "#/definitions/ChannelWithBase"
         },
         "tooltip": {
           "items": {
@@ -835,15 +893,6 @@
             "$ref": "#/definitions/VisibilityCondition"
           },
           "type": "array"
-        },
-        "x": {
-          "$ref": "#/definitions/ChannelWithBase"
-        },
-        "x1": {
-          "$ref": "#/definitions/ChannelWithBase"
-        },
-        "x1e": {
-          "$ref": "#/definitions/ChannelWithBase"
         },
         "xAxis": {
           "$ref": "#/definitions/AxisPosition",
@@ -866,30 +915,16 @@
           "description": "Specify the x offset of views in the unit of pixels",
           "type": "number"
         },
-        "xe": {
-          "$ref": "#/definitions/ChannelWithBase"
-        },
-        "y": {
-          "$ref": "#/definitions/ChannelWithBase"
-        },
-        "y1": {
-          "$ref": "#/definitions/ChannelWithBase"
-        },
-        "y1e": {
-          "$ref": "#/definitions/ChannelWithBase"
-        },
         "yOffset": {
           "description": "Specify the y offset of views in the unit of pixels",
           "type": "number"
-        },
-        "ye": {
-          "$ref": "#/definitions/ChannelWithBase"
         },
         "zoomLimits": {
           "$ref": "#/definitions/ZoomLimits"
         }
       },
       "required": [
+        "encoding",
         "mark"
       ],
       "type": "object"
