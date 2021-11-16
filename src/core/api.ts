@@ -11,6 +11,11 @@ export type CommonEventData = {
     genomicPosition: string;
 };
 
+export type RawDataEventData = {
+    id: string;
+    data: Datum[];
+};
+
 // Utility type for building strongly typed PubSub API.
 //
 // Add named events using a string union for `EventName`
@@ -23,7 +28,7 @@ type PubSubEvent<EventName extends string, Payload> = {
 };
 
 // New `PubSubEvent`s should be added to the `EventMap`...
-type EventMap = PubSubEvent<'mouseover' | 'click', CommonEventData>;
+type EventMap = PubSubEvent<'mouseover' | 'click', CommonEventData> & PubSubEvent<'rawdata', RawDataEventData>;
 // & PubSubEvent<'my-event', { hello: 'world' }> & PubSubEvent<'foo', "bar">;
 
 /**
@@ -111,6 +116,8 @@ export function createApi(
                 case 'mouseover':
                     return PubSub.subscribe(type, callback);
                 case 'click':
+                    return PubSub.subscribe(type, callback);
+                case 'rawdata':
                     return PubSub.subscribe(type, callback);
                 default: {
                     console.error(`Event type not recognized, got ${JSON.stringify(type)}.`);

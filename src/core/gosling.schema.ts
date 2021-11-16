@@ -837,14 +837,22 @@ export interface BEDDBData {
  */
 export interface BAMData {
     type: 'bam';
-
-    /** URL link to the BAM data file */
+    /**
+     * URL link to the BAM data file
+     */
     url: string;
-
-    /** URL link to the index file of the BAM file */
+    /**
+     * URL link to the index file of the BAM file
+     */
     indexUrl: string;
-    loadMates?: boolean; // load mates as well?
-    maxInsertSize?: number; // default 50,000bp, only applied for across-chr, JBrowse https://github.com/GMOD/bam-js#async-getrecordsforrangerefname-start-end-opts
+    /**
+     * Load mates that are located in the same chromosome. __Default__: `false`
+     */
+    loadMates?: boolean;
+    /**
+     * Determines the threshold of insert sizes for determining the structural variants. __Default__: `5000`
+     */
+    maxInsertSize?: number; // https://github.com/GMOD/bam-js#async-getrecordsforrangerefname-start-end-opts
 }
 
 export interface MatrixData {
@@ -863,7 +871,6 @@ export type DataTransform =
     | ExonSplitTransform
     | GenomicLengthTransform
     | CoverageTransform
-    | CombineMatesTransform
     | JSONParseTransform;
 
 export type FilterTransform = OneOfFilter | RangeFilter | IncludeFilter;
@@ -972,18 +979,6 @@ export interface CoverageTransform {
     newField?: string;
     /** The name of a nominal field to group rows by in prior to piling-up */
     groupField?: string;
-}
-
-/**
- * By looking up ids, combine mates (a pair of reads) into a single row, performing long-to-wide operation.
- * Result data have `{field}` and `{field}_2` names.
- */
-export interface CombineMatesTransform {
-    type: 'combineMates';
-    idField: string;
-    isLongField?: string; // is this pair long reads, exceeding max insert size? default, `is_long`
-    maxInsertSize?: number; // thresold to determine long reads, default 360
-    maintainDuplicates?: boolean; // do not want to remove duplicated row? If true, the original reads will be contained in `{field}`
 }
 
 /**
