@@ -32,7 +32,7 @@ import {
     IsRangeArray
 } from './gosling.schema.guards';
 import { CHANNEL_DEFAULTS } from './channel';
-import { CompleteThemeDeep } from './utils/theme';
+import { CompleteThemeDeep, getTheme } from './utils/theme';
 
 export type ScaleType =
     | ScaleLinear<any, any>
@@ -62,7 +62,7 @@ export class GoslingTrackModel {
     constructor(spec: SingleTrack, data: { [k: string]: number | string }[], theme: Required<CompleteThemeDeep>) {
         this.id = uuid.v1();
 
-        this.theme = theme;
+        this.theme = theme ?? getTheme();
 
         this.dataOriginal = JSON.parse(JSON.stringify(data));
         this.dataAggregated = JSON.parse(JSON.stringify(data));
