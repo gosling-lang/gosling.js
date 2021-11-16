@@ -89,6 +89,15 @@ export function traverseViewArrangements(spec: GoslingSpec, callback: (tv: Multi
     }
 }
 
+/*
+ * Overide track properties from the base spec
+ */
+export function overrideTrack(base: Track, spec: Partial<Track>) {
+    const newSpec = assign(JSON.parse(JSON.stringify(base)), spec);
+    newSpec['encoding'] = assign(JSON.parse(JSON.stringify(base.encoding ?? {})), spec.encoding ?? {});
+    return newSpec as SingleTrack;
+}
+
 /**
  * This convert the nested track definitions into a flat array.
  * @param spec
@@ -98,9 +107,7 @@ export function convertToFlatTracks(spec: SingleView): Track[] {
         // This is already `FlatTracks`, so just override the view definition
         const base = JSON.parse(JSON.stringify(spec));
         delete (base as any).tracks;
-        return spec.tracks
-            .filter(track => !track._invalidTrack)
-            .map(track => assign(JSON.parse(JSON.stringify(base)), track) as SingleTrack);
+        return spec.tracks.filter(track => !track._invalidTrack).map(track => overrideTrack(base, track));
     }
 
     const newTracks: Track[] = [];
@@ -120,11 +127,8 @@ export function convertToFlatTracks(spec: SingleView): Track[] {
                     // Override track definitions from views
                     const base = JSON.parse(JSON.stringify(spec));
                     delete (base as any).tracks;
-                    const newSpec = assign(JSON.parse(JSON.stringify(base)), track) as SingleTrack;
-                    newSpec['encoding'] = assign(
-                        JSON.parse(JSON.stringify(base.encoding ?? {})),
-                        newSpec.encoding ?? {}
-                    );
+
+                    const newSpec = overrideTrack(base, track);
                     newTracks.push(newSpec);
                 }
             });

@@ -1,6 +1,6 @@
 import { AxisPosition, SingleTrack, OverlaidTrack, Track, ChannelDeep, DataDeep } from '../gosling.schema';
-import { assign } from 'lodash-es';
 import { IsChannelDeep, IsTemplateTrack, IsOverlaidTrack, IsSingleTrack } from '../gosling.schema.guards';
+import { overrideTrack } from './spec-preprocess';
 
 /**
  * Resolve superposed tracks into multiple track specifications.
@@ -13,13 +13,13 @@ export function resolveSuperposedTracks(track: Track): SingleTrack[] {
     }
 
     if (!IsOverlaidTrack(track)) {
-        // no `superpose` to resolve
+        // no `overlay` to resolve
         return [track];
     }
 
     if (track.overlay.length === 0) {
         // This makes sure not to return empty object
-        return [{ ...track, superpose: undefined } as SingleTrack];
+        return [{ ...track, overlay: undefined } as SingleTrack];
     }
 
     const base: SingleTrack = JSON.parse(JSON.stringify(track));
@@ -27,8 +27,7 @@ export function resolveSuperposedTracks(track: Track): SingleTrack[] {
 
     const resolved: SingleTrack[] = [];
     track.overlay.forEach((subSpec, i) => {
-        const spec = assign(JSON.parse(JSON.stringify(base)), subSpec) as SingleTrack;
-        spec['encoding'] = assign(JSON.parse(JSON.stringify(base.encoding ?? {})), subSpec.encoding ?? {});
+        const spec = overrideTrack(base, subSpec);
         if (spec.title && i !== 0) {
             delete spec.title;
         }
@@ -47,7 +46,7 @@ export function resolveSuperposedTracks(track: Track): SingleTrack[] {
     const corrected = resolved.map(d => {
         return {
             ...d,
-            encoding: { x: { ...d.encoding.x, axis: xAxisPosition } }
+            encoding: { ...d.encoding, x: { ...d.encoding.x, axis: xAxisPosition } }
         } as SingleTrack;
     });
 
@@ -98,8 +97,7 @@ export function spreadTracksByData(tracks: Track[]): Track[] {
                     return;
                 }
 
-                const spec = assign(JSON.parse(JSON.stringify(base)), subSpec) as SingleTrack;
-                spec['encoding'] = assign(JSON.parse(JSON.stringify(base.encoding ?? {})), spec.encoding ?? {});
+                const spec = overrideTrack(base, subSpec);
                 spread.push(spec);
             });
 

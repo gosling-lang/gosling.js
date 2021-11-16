@@ -113,10 +113,7 @@ export const EX_SPEC_MARK_DISPLACEMENT: GoslingSpec = {
                     ],
                     mark: 'betweenLink',
                     encoding: {
-                        xe: { startField: 'start', endField: 'aStart', type: 'genomic' },
-                        // xe: { field: 'end', type: 'genomic' },
-                        // x1: { field: 'aStart', type: 'genomic' },
-                        // x1e: { field: 'aEnd', type: 'genomic' },
+                        x: { startField: 'aStart', endField: 'start', type: 'genomic' },
                         color: { value: '#029F73' },
                         stroke: { value: 'lightgrey' },
                         strokeWidth: { value: 0.5 },

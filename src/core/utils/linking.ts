@@ -1,4 +1,4 @@
-import { IsChannelDeep } from '../gosling.schema.guards';
+import { IsChannelDeep, IsChannelValue } from '../gosling.schema.guards';
 import { HiGlassModel } from '../higlass-model';
 import { SUPPORTED_CHANNELS } from '../mark';
 import { resolveSuperposedTracks } from './overlay';
@@ -46,10 +46,12 @@ export function getLinkingInfo(hgModel: HiGlassModel) {
                         linkId: channel.linkingId,
                         isBrush: spec.mark === 'brush',
                         style: {
-                            color: (spec as any).color?.value,
-                            stroke: (spec as any).stroke?.value,
-                            strokeWidth: (spec as any).strokeWidth?.value,
-                            opacity: (spec as any).opacity?.value,
+                            color: IsChannelValue(spec.encoding.color) ? spec.encoding.color?.value : undefined,
+                            stroke: IsChannelValue(spec.encoding.stroke) ? spec.encoding.stroke.value : undefined,
+                            strokeWidth: IsChannelValue(spec.encoding.strokeWidth)
+                                ? spec.encoding.strokeWidth.value
+                                : undefined,
+                            opacity: IsChannelValue(spec.encoding.opacity) ? spec.encoding.opacity.value : undefined,
                             startAngle: spec.startAngle,
                             endAngle: spec.endAngle,
                             innerRadius: spec.innerRadius,

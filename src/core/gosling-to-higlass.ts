@@ -122,7 +122,7 @@ export function goslingToHiGlass(
             // Use HiGlass' heatmap track for matrix data
             hgTrack.type = 'heatmap';
             hgTrack.options.colorRange =
-                (firstResolvedSpec as any)?.color.range === 'warm'
+                IsChannelDeep(firstResolvedSpec.encoding.color) && firstResolvedSpec.encoding.color.range === 'warm'
                     ? ['white', 'rgba(245,166,35,1.0)', 'rgba(208,2,27,1.0)', 'black']
                     : viridisColorMap;
             hgTrack.options.trackBorderWidth = 1;

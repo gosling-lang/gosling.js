@@ -46,8 +46,7 @@ export const EX_SPEC_GENE_TRANSCRIPT: GoslingSpec = {
             mark: 'triangleRight',
             encoding: {
                 x: {
-                    startField: 'end',
-                    endField: undefined,
+                    field: 'end',
                     type: 'genomic',
                     axis: 'top'
                 },
