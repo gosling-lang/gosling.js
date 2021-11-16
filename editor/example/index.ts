@@ -157,8 +157,7 @@ export const examples: ReadonlyArray<{
         name: 'BAM file pileup tracks',
         id: 'BAM_PILEUP',
         spec: EX_SPEC_PILEUP,
-        underDevelopment: true,
-        forceShow: true
+        underDevelopment: true
     },
     {
         name: 'Track Template',
