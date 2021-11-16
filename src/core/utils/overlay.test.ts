@@ -124,6 +124,7 @@ describe('Spread Tracks By Data', () => {
     it('Axis Position of overlay: [{ data1 }, { data2 }]', () => {
         const spread = spreadTracksByData([
             {
+                mark: 'rect',
                 overlay: [
                     { data: { type: 'csv', url: '' }, encoding: { y: { field: 'y', type: 'quantitative' } } },
                     {

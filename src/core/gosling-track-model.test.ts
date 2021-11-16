@@ -55,6 +55,7 @@ describe('default options should be added into the original spec', () => {
         const track: Track = {
             ...MINIMAL_TRACK_SPEC,
             encoding: {
+                ...MINIMAL_TRACK_SPEC.encoding,
                 color: { field: 'f', type: 'quantitative' }
             }
         };
@@ -71,6 +72,7 @@ describe('Gosling track model should be properly generated with data', () => {
         const track: Track = {
             ...MINIMAL_TRACK_SPEC,
             encoding: {
+                ...MINIMAL_TRACK_SPEC.encoding,
                 color: { field: 'color', type: 'nominal' },
                 row: { field: 'row', type: 'nominal' },
                 y: { field: 'y', type: 'quantitative' },
@@ -128,6 +130,7 @@ describe('Gosling track model should be properly generated with data', () => {
         const track: Track = {
             ...MINIMAL_TRACK_SPEC,
             encoding: {
+                ...MINIMAL_TRACK_SPEC.encoding,
                 y: { field: 'y', type: 'quantitative' }
             }
         };

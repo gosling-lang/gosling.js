@@ -65,10 +65,6 @@ export function IsStackedTracks(_: SingleView): _ is StackedTracks {
     return !IsFlatTracks(_) && !IsOverlaidTracks(_);
 }
 
-export function IsDataTemplate(_: Partial<Track>): boolean {
-    return !!('data' in _ && 'overrideTemplate' in _ && _.overrideTemplate);
-}
-
 export function IsDataDeep(data: DataDeep | Datum[]): data is DataDeep {
     return typeof data === 'object';
 }

@@ -13,8 +13,6 @@ import {
     DisplaceTransform
 } from '../gosling.schema';
 import {
-    IsDataTemplate,
-    IsDataDeepTileset,
     IsSingleTrack,
     IsChannelDeep,
     IsOverlaidTrack,
@@ -451,106 +449,4 @@ export function traverseToFixSpecDownstream(spec: GoslingSpec | SingleView, pare
             traverseToFixSpecDownstream(v, spec as CommonViewDef);
         });
     }
-}
-
-/**
- * Get an encoding template for the `higlass-vector` data type.
- * @param column
- * @param value
- */
-export function getVectorTemplate(column: string, value: string): SingleTrack {
-    return {
-        data: {
-            type: 'vector',
-            url: '',
-            column,
-            value
-        },
-        mark: 'bar',
-        encoding: {
-            x: { field: column, type: 'genomic', axis: 'top' },
-            y: { field: value, type: 'quantitative' }
-        },
-        width: 400,
-        height: 100
-    };
-}
-
-export function getMultivecTemplate(
-    row: string,
-    column: string,
-    value: string,
-    categories: string[] | undefined
-): SingleTrack {
-    return categories && categories.length < 10
-        ? {
-              data: {
-                  type: 'multivec',
-                  url: '',
-                  row,
-                  column,
-                  value,
-                  categories
-              },
-              mark: 'bar',
-              encoding: {
-                  x: { field: column, type: 'genomic', axis: 'top' },
-                  y: { field: value, type: 'quantitative' },
-                  row: { field: row, type: 'nominal', legend: true },
-                  color: { field: row, type: 'nominal' }
-              },
-              width: 400,
-              height: 100
-          }
-        : {
-              data: {
-                  type: 'multivec',
-                  url: '',
-                  row,
-                  column,
-                  value,
-                  categories
-              },
-              mark: 'rect',
-              encoding: {
-                  x: { field: column, type: 'genomic', axis: 'top' },
-                  row: { field: row, type: 'nominal', legend: true },
-                  color: { field: value, type: 'quantitative' }
-              },
-              width: 400,
-              height: 100
-          };
-}
-
-/**
- * Override default visual encoding in each track for given data type.
- * @param spec
- */
-export function overrideDataTemplates(spec: GoslingSpec) {
-    traverseTracks(spec, (t, i, ts) => {
-        if (!t.data || !IsDataDeepTileset(t.data)) {
-            // if `data` is not specified, we can not provide a correct template.
-            return;
-        }
-
-        if ('alignment' in t) {
-            // This is an OverlaidTracks, so skip this.
-            return;
-        }
-
-        if (!IsDataTemplate(t)) {
-            // This is not partial specification that we need to use templates
-            return;
-        }
-
-        switch (t.data.type) {
-            case 'vector':
-            case 'bigwig':
-                ts[i] = assign(getVectorTemplate(t.data.column, t.data.value), t);
-                break;
-            case 'multivec':
-                ts[i] = assign(getMultivecTemplate(t.data.row, t.data.column, t.data.value, t.data.categories), t);
-                break;
-        }
-    });
 }

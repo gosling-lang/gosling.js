@@ -1,6 +1,6 @@
 import { GoslingSpec, SingleView, Track } from '../gosling.schema';
 import { getBoundingBox, getRelativeTrackInfo } from './bounding-box';
-import { traverseToFixSpecDownstream, overrideDataTemplates, convertToFlatTracks } from './spec-preprocess';
+import { traverseToFixSpecDownstream, convertToFlatTracks } from './spec-preprocess';
 import { getTheme } from './theme';
 
 describe('Fix Spec Downstream', () => {
@@ -259,36 +259,6 @@ describe('Spec Preprocess', () => {
         expect(spec.tracks[1].static).toEqual(false);
     });
 
-    it('override template (higlass-vector)', () => {
-        const spec: GoslingSpec = {
-            tracks: [{ data: { type: 'vector', url: '', column: 'c', value: 'v' }, overrideTemplate: true } as Track]
-        };
-        overrideDataTemplates(spec);
-        expect(spec.tracks[0]).toHaveProperty('mark');
-    });
-
-    it('override template (higlass-multivec)', () => {
-        {
-            const spec: GoslingSpec = {
-                tracks: [
-                    {
-                        data: { type: 'multivec', url: '', row: 'r', column: 'c', value: 'v' },
-                        overrideTemplate: true
-                    } as Track
-                ]
-            };
-            overrideDataTemplates(spec);
-            expect(spec.tracks[0]).toHaveProperty('mark');
-        }
-        {
-            const spec: GoslingSpec = {
-                tracks: [{ data: { type: 'multivec', url: '', row: 'r', column: 'c', value: 'v' } } as Track]
-            };
-            overrideDataTemplates(spec);
-            expect(spec.tracks[0]).not.toHaveProperty('mark'); // overrideTemplate is not set, so do not override templates
-        }
-    });
-
     it('Convert To FlatTracks', () => {
         const dummySpec: Track = { data: { type: 'csv', url: '' }, mark: 'bar', encoding: {}, width: 10, height: 10 };
         {
@@ -335,7 +305,14 @@ describe('Spec Preprocess', () => {
             const flat = convertToFlatTracks({
                 tracks: [
                     { ...dummySpec, title: 'A' },
-                    { title: 'B', alignment: 'overlay', tracks: [{ ...dummySpec }], width: 10, height: 10 }
+                    {
+                        title: 'B',
+                        alignment: 'overlay',
+                        encoding: {},
+                        tracks: [{ ...dummySpec }],
+                        width: 10,
+                        height: 10
+                    }
                 ]
             });
             // Should be consistent when called multiple times.

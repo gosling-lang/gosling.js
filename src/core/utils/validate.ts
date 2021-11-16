@@ -56,7 +56,7 @@ export function validateTrack(track: Track) {
         }
 
         // combination of visual mark and channel
-        const color = spec.encoding.color;
+        const color = spec.encoding?.color;
         if (spec.mark === 'line' && IsChannelDeep(color) && color.type === 'quantitative') {
             errorMessages.push('`line` mark cannot be used with `quantitative` value');
             valid = false;
