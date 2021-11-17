@@ -172,15 +172,6 @@ function Editor(props: any) {
 
     const defaultCode = urlGist ? emptySpec() : stringify(urlSpec ?? (INIT_DEMO.spec as gosling.GoslingSpec));
 
-    // let defaultCode = stringify(INIT_DEMO.spec as gosling.GoslingSpec);
-    // if (urlGist) {
-    //     defaultCode = emptySpec();
-    // } else if (urlExampleId) {
-    //     defaultCode = stringifySpec(examples[urlExampleId]?.spec) ?? `wrong example id`;
-    // } else if (urlSpec) {
-    //     defaultCode = stringifySpec(urlSpec);
-    // }
-
     const previewData = useRef<PreviewData[]>([]);
     const [refreshData, setRefreshData] = useState<boolean>(false);
 

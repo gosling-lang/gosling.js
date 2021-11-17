@@ -1,4 +1,6 @@
-export const MATRIX = {
+import type { GoslingSpec } from 'gosling.js';
+
+export const MATRIX: GoslingSpec = {
     title: 'Basic Marks: Rect in Matrix',
     subtitle: 'Tutorial Examples',
     width: 600,

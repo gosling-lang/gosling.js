@@ -20,7 +20,7 @@ import { EX_SPEC_BAND } from './vertical-band';
 import { EX_SPEC_TEMPLATE } from './track-template';
 import { EX_SPEC_DEBUG } from './debug';
 
-import { DOC_EXAMPLES } from './doc-examples';
+import * as docExamples from './doc-examples';
 
 export const examples: {
     readonly [id: string]: {
@@ -143,5 +143,80 @@ export const examples: {
         spec: EX_SPEC_TEMPLATE,
         underDevelopment: true
     },
-    ...DOC_EXAMPLES
+    // ...DOC_EXAMPLES
+    doc_area: {
+        name: 'Basic Example: Area Mark',
+        spec: docExamples.AREA,
+        hidden: true
+    },
+    doc_bar: {
+        name: 'Basic Example: Bar Mark',
+        spec: docExamples.BAR,
+        hidden: true
+    },
+    doc_brush: {
+        name: 'Basic Example: Brush Mark',
+        spec: docExamples.BRUSH,
+        hidden: true
+    },
+    doc_line: {
+        name: 'Basic Example: Line Mark',
+        spec: docExamples.LINE,
+        hidden: true
+    },
+    doc_link: {
+        name: 'Basic Example: Link Mark',
+        spec: docExamples.LINK,
+        hidden: true
+    },
+    doc_linking_tracks: {
+        name: 'Basic Example: Linking Tracks',
+        spec: docExamples.LINKING_TRACKS,
+        hidden: true
+    },
+    doc_point: {
+        name: 'Basic Example: Point Mark',
+        spec: docExamples.POINT,
+        hidden: true
+    },
+    doc_rect: {
+        name: 'Basic Example: React Mark',
+        spec: docExamples.RECT,
+        hidden: true
+    },
+    doc_text: {
+        name: 'Basic Example: Text Mark',
+        spec: docExamples.TEXT,
+        hidden: true
+    },
+    doc_triangle: {
+        name: 'Basic Example: Triangle Mark',
+        spec: docExamples.TRIANGLE,
+        hidden: true
+    },
+    doc_overlay_bar_point: {
+        name: 'Overlay Tracks: Bar + Point',
+        spec: docExamples.OVERLAY_TRACKS_BAR_POINT,
+        hidden: true
+    },
+    doc_overlay_rect_text: {
+        name: 'Overlay Tracks: Rect + Text',
+        spec: docExamples.OVERLAY_TRACKS_RECT_TEXT,
+        hidden: true
+    },
+    doc_overlay_line_point: {
+        name: 'Overlay Tracks: Line + Point',
+        spec: docExamples.OVERLAY_TRACKS_LINE_POINT,
+        hidden: true
+    },
+    doc_semantic_zoom_sequence: {
+        name: 'Semantic Zoom: A Sequence Example',
+        spec: docExamples.SEMANTIC_ZOOM_SEQUENCE,
+        hidden: true
+    },
+    doc_semantic_zoom_cyto: {
+        name: 'Semantic Zoom: Cyto',
+        spec: docExamples.SEMANTIC_ZOOM_CYTO,
+        hidden: true
+    }
 };
