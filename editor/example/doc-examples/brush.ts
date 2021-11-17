@@ -1,4 +1,5 @@
 import type { GoslingSpec } from 'gosling.js';
+import { data } from './single-mark';
 
 export const BRUSH: GoslingSpec = {
     title: 'Example: Brushing and Linking',
@@ -7,14 +8,7 @@ export const BRUSH: GoslingSpec = {
         {
             width: 800,
             height: 200,
-            data: {
-                url: 'https://resgen.io/api/v1/tileset_info/?d=UvVPeLHuRDiYA3qwFlm7xQ',
-                type: 'multivec',
-                row: 'sample',
-                column: 'position',
-                value: 'peak',
-                categories: ['sample 1']
-            },
+            data,
             mark: 'line',
             x: {
                 field: 'position',
@@ -46,14 +40,7 @@ export const BRUSH: GoslingSpec = {
         {
             width: 800,
             height: 200,
-            data: {
-                url: 'https://resgen.io/api/v1/tileset_info/?d=UvVPeLHuRDiYA3qwFlm7xQ',
-                type: 'multivec',
-                row: 'sample',
-                column: 'position',
-                value: 'peak',
-                categories: ['sample 1']
-            },
+            data,
             mark: 'line',
             x: {
                 field: 'position',

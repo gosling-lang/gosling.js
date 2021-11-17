@@ -1,13 +1,11 @@
-export { AREA } from './area';
-export { BAR } from './bar';
+export { AREA, LINE, POINT, BAR } from './single-mark';
 export { BRUSH } from './brush';
-export { LINE } from './line';
 export { LINK } from './link';
 export { LINKING_TRACKS } from './linking-tracks';
 export { OVERLAY_TRACKS_BAR_POINT } from './overlay-tracks-bar-point';
 export { OVERLAY_TRACKS_LINE_POINT } from './overlay-tracks-line-point';
 export { OVERLAY_TRACKS_RECT_TEXT } from './overlay-tracks-rect-text';
-export { POINT } from './point';
+
 export { RECT } from './rect';
 export { SEMANTIC_ZOOM_SEQUENCE } from './semantic-zoom-sequence';
 export { SEMANTIC_ZOOM_CYTO } from './semantic-zoom-cyto';
