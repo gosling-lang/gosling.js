@@ -175,7 +175,9 @@ function Editor(props: any) {
     const previewData = useRef<PreviewData[]>([]);
     const [refreshData, setRefreshData] = useState<boolean>(false);
 
-    const [demo, setDemo] = useState(examples[urlExampleId] ?? INIT_DEMO);
+    const [demo, setDemo] = useState(
+        examples[urlExampleId] ? { id: urlExampleId, ...examples[urlExampleId] } : INIT_DEMO
+    );
     const [theme, setTheme] = useState<gosling.Theme>('light');
     const [hg, setHg] = useState<HiGlassSpec>();
     const [code, setCode] = useState(defaultCode);
@@ -479,7 +481,7 @@ function Editor(props: any) {
                     <select
                         style={{ maxWidth: IS_SMALL_SCREEN ? window.innerWidth - 180 : 'none' }}
                         onChange={e => {
-                            setDemo(examples[e.target.value] as any);
+                            setDemo({ id: e.target.value, ...examples[e.target.value] } as any);
                         }}
                         value={demo.id}
                     >
