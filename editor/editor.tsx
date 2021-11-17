@@ -164,7 +164,7 @@ function Editor(props: any) {
     const urlParams = qs.parse(props.location.search, { ignoreQueryPrefix: true });
     const urlSpec = urlParams?.spec ? JSONCrush.uncrush(urlParams.spec as string) : null;
     const urlGist = urlParams?.gist ?? null;
-    const urlExampleId = urlParams?.example as string;
+    const urlExampleId = (urlParams?.example ?? '') as string;
 
     const defaultCode = urlGist ? emptySpec() : stringify(urlSpec ?? (INIT_DEMO.spec as gosling.GoslingSpec));
 
@@ -480,7 +480,7 @@ function Editor(props: any) {
                         </span>
                     </>
                 )}
-                <span className="demo-dropdown" hidden={urlSpec !== null || urlGist !== null || urlExampleId !== null}>
+                <span className="demo-dropdown" hidden={urlSpec !== null || urlGist !== null || urlExampleId !== ''}>
                     <select
                         style={{ maxWidth: IS_SMALL_SCREEN ? window.innerWidth - 180 : 'none' }}
                         onChange={e => {

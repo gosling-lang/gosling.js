@@ -3150,7 +3150,7 @@
           "$ref": "#/definitions/AxisPosition",
           "description": "not supported"
         },
-        "xD": {
+        "xDomain": {
           "anyOf": [
             {
               "$ref": "#/definitions/DomainInterval"
