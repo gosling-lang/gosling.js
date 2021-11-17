@@ -558,10 +558,6 @@
           "description": "Specify whether to use bazier curves for the `link` marks.",
           "type": "boolean"
         },
-        "circularLink": {
-          "description": "Deprecated: draw arc instead of bazier curve?",
-          "type": "boolean"
-        },
         "curve": {
           "description": "Specify the curve of `rule` marks.",
           "enum": [
@@ -596,6 +592,10 @@
         },
         "enableSmoothPath": {
           "description": "Whether to enable smooth paths when drawing curves.\n\n__Default__: `false`",
+          "type": "boolean"
+        },
+        "flatWithinLink": {
+          "description": "Specify whether to use a flat within-links. __Default__: `false`",
           "type": "boolean"
         },
         "inlineLegend": {

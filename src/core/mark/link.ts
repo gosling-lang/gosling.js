@@ -55,6 +55,7 @@ export function drawLink(g: PIXI.Graphics, trackInfo: any, model: GoslingTrackMo
             const x1e = model.encodedPIXIProperty('x1e', d);
             const y = model.encodedPIXIProperty('y', d);
             const stroke = model.encodedPIXIProperty('stroke', d);
+            const strokeWidth = model.encodedPIXIProperty('strokeWidth', d);
             const color = model.encodedPIXIProperty('color', d);
             const opacity = model.encodedPIXIProperty('opacity', d);
 
@@ -84,7 +85,7 @@ export function drawLink(g: PIXI.Graphics, trackInfo: any, model: GoslingTrackMo
 
             // stroke
             g.lineStyle(
-                model.encodedValue('strokeWidth'),
+                strokeWidth,
                 colorToHex(stroke),
                 opacity, // alpha
                 0.5 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
@@ -255,7 +256,7 @@ export function drawLink(g: PIXI.Graphics, trackInfo: any, model: GoslingTrackMo
                         const _y = tcy + movingRadius(t) * Math.sin(-getRadian(t, x, xe) * 2 * Math.PI - Math.PI / 2.0);
                         if (prevX && prevY) {
                             g.lineStyle(
-                                model.encodedValue('strokeWidth'),
+                                strokeWidth,
                                 colorToHex(stroke),
                                 opacity, // alpha
                                 0.5 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
@@ -325,6 +326,11 @@ export function drawLink(g: PIXI.Graphics, trackInfo: any, model: GoslingTrackMo
                                 markInfo: {}
                             } as TooltipData);
                         }
+                    } else if (spec.style?.flatWithinLink) {
+                        g.moveTo(x, baseY);
+                        g.lineTo(x, rowPosition + rowHeight - y);
+                        g.lineTo(xe, rowPosition + rowHeight - y);
+                        g.lineTo(xe, baseY);
                     } else {
                         if (xe < 0 || x > trackWidth) {
                             // Q: Do we really need this?

@@ -308,10 +308,11 @@ export interface Style {
      *  Specify whether to use bazier curves for the `link` marks.
      */
     bazierLink?: boolean;
-    /**
-     * Deprecated: draw arc instead of bazier curve?
-     */
-    circularLink?: boolean;
+
+    // TODO: betweenLinkStyle: 'regular' | 'bazier' | 'flat'
+    /** Specify whether to use a flat within-links. __Default__: `false` */
+    flatWithinLink?: boolean;
+
     /**
      * Specify whether to show legend in a single horizontal line?
      */
