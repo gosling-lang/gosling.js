@@ -1,4 +1,4 @@
-import type { GoslingSpec, Mark, DataDeep } from 'gosling.js';
+import type { GoslingSpec, Mark, DataDeep } from '@gosling.schema';
 
 export const data: DataDeep = {
     url: 'https://resgen.io/api/v1/tileset_info/?d=UvVPeLHuRDiYA3qwFlm7xQ',
@@ -22,6 +22,7 @@ const getSingleTrackExample = (mark: Mark, data: DataDeep, constSize = 0, xPoint
               x: { field: 'start', type: 'genomic', axis: 'bottom' },
               xe: { field: 'end', type: 'genomic' }
           };
+
     return {
         title: `Basic Marks: ${mark}`,
         subtitle: 'Tutorial Examples',

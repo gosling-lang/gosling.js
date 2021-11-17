@@ -21,7 +21,7 @@ const data = {
 } as DataDeep;
 const domain = undefined; // { chromosome: '3', interval: [52168000, 52890000] };
 
-const HiGlass: OverlaidTracks = {
+export const HiGlass: OverlaidTracks = {
     alignment: 'overlay',
     title: 'HiGlass',
     data,
