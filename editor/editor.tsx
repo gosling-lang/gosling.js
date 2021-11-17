@@ -24,7 +24,11 @@ import type { Datum } from '@gosling.schema';
 // @ts-ignore
 import { Themes } from 'gosling-theme';
 
-const SHOWN_EXAMPLE_LIST = Object.values(examples).filter(d => !d.hidden);
+const SHOWN_EXAMPLE_LIST = Object.entries(examples)
+    .map(([k, v]) => {
+        return { id: k, ...v };
+    })
+    .filter(d => !d.hidden);
 const INIT_DEMO = SHOWN_EXAMPLE_LIST.find(d => d.forceShow) ?? SHOWN_EXAMPLE_LIST[0];
 
 // Limit of the character length to allow copy to clipboard
