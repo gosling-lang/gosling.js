@@ -335,7 +335,7 @@ function ChromosomeInfo(filepath, success) {
 /// End Chrominfo
 /////////////////////////////////////////////////////
 
-const bamRecordToJson = (bamRecord, chrName, chrOffset, junctions) => {
+const bamRecordToJson = (bamRecord, chrName, chrOffset) => {
     const seq = bamRecord.get('seq');
     const segment = {
         // if two segments have the same name but different id, they are paired reads.
@@ -352,7 +352,7 @@ const bamRecordToJson = (bamRecord, chrName, chrOffset, junctions) => {
         strand: bamRecord.get('strand') === 1 ? '+' : '-',
         substitutions: []
     };
-    segment.substitutions = getSubstitutions(segment, seq, junctions);
+    segment.substitutions = getSubstitutions(segment, seq);
     return segment;
 };
 
@@ -430,7 +430,6 @@ const tile = async (uid, z, x) => {
     const MAX_TILE_WIDTH = 200000;
     const { bamUrl, chromSizesUrl, loadMates, maxInsertSize } = dataConfs[uid];
     const bamFile = bamFiles[bamUrl];
-    const junctions = [];
 
     return tilesetInfo(uid).then(tilesetInfo => {
         const tileWidth = +tilesetInfo.max_width / 2 ** +z;
@@ -478,7 +477,7 @@ const tile = async (uid, z, x) => {
                             )
                             .then(records => {
                                 const mappedRecords = records.map(rec =>
-                                    bamRecordToJson(rec, chromName, cumPositions[i].pos, junctions)
+                                    bamRecordToJson(rec, chromName, cumPositions[i].pos)
                                 );
                                 tileValues.set(
                                     `${uid}.${z}.${x}`,
@@ -500,7 +499,7 @@ const tile = async (uid, z, x) => {
                             .getRecordsForRange(chromName, startPos, endPos, opt)
                             .then(records => {
                                 const mappedRecords = records.map(rec =>
-                                    bamRecordToJson(rec, chromName, cumPositions[i].pos, junctions)
+                                    bamRecordToJson(rec, chromName, cumPositions[i].pos)
                                 );
                                 tileValues.set(
                                     `${uid}.${z}.${x}`,
@@ -571,17 +570,19 @@ const getTabularData = (uid, tileIds) => {
         }
     }
 
-    let segmentList = Object.values(allSegments);
+    let output = Object.values(allSegments);
 
     if(loadMates) {
         // find and set mate info when the `data.loadMates` flag is on.
-        findMates(uid, segmentList);
+        findMates(uid, output);
     }
 
     if(extractJunction) {
-        segmentList = findJunctions(uid, segmentList);
+        // Reference(ggsashimi): https://github.com/guigolab/ggsashimi/blob/d686d59b4e342b8f9dcd484f0af4831cc092e5de/ggsashimi.py#L136
+        output = findJunctions(uid, output);
     }
-    const buffer = Buffer.from(JSON.stringify(segmentList)).buffer;
+
+    const buffer = Buffer.from(JSON.stringify(output)).buffer;
     return Transfer(buffer, [buffer]);
 };
 
@@ -651,21 +652,20 @@ const findJunctions = (uid, segments) => {
     const junctions = []; 
     
     segments.forEach(segment => {
-    const substitutions = JSON.parse(segment.substitutions);
+        const substitutions = JSON.parse(segment.substitutions);
         substitutions.forEach(sub => {
-    const don = segment.from + sub.pos;
-    const acc = segment.from + sub.pos + sub.length;
-    if(segment.from < don && acc < segment.to) {
-        const j = junctions.find(d => d.start === don && d.end === acc);
-        if(j) {
-            j.score += 1;
-        } else {
-            junctions.push({ start: don, end: acc, score: 1 });
-        }
-    } 
+            const don = segment.from + sub.pos;
+            const acc = segment.from + sub.pos + sub.length;
+            if(segment.from < don && acc < segment.to) {
+                const j = junctions.find(d => d.start === don && d.end === acc);
+                if(j) {
+                    j.score += 1;
+                } else {
+                    junctions.push({ start: don, end: acc, score: 1 });
+                }
+            } 
         });
     });
-    console.log(junctionMinCoverage);
     return junctions.filter(d => d.score >= junctionMinCoverage);
 }
 
