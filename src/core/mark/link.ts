@@ -331,12 +331,21 @@ export function drawLink(g: PIXI.Graphics, trackInfo: any, model: GoslingTrackMo
                         const radius = Math.min(10, arcWidth / 2.0);
                         const topY = rowPosition + rowHeight - y;
 
-                        g.moveTo(x, baseY);
-                        g.lineTo(x, topY + radius);
-                        g.arc(x + radius, topY + radius, radius, -Math.PI, -Math.PI / 2.0);
-                        g.lineTo(xe - radius, topY);
-                        g.arc(xe - radius, topY + radius, radius, -Math.PI / 2.0, 0);
-                        g.lineTo(xe, baseY);
+                        if (flipY) {
+                            g.moveTo(x, baseY);
+                            g.lineTo(x, topY - radius);
+                            g.arc(x + radius, topY - radius, radius, -Math.PI, Math.PI / 2.0, true);
+                            g.lineTo(xe - radius, topY);
+                            g.arc(xe - radius, topY - radius, radius, Math.PI / 2.0, 0, true);
+                            g.lineTo(xe, baseY);
+                        } else {
+                            g.moveTo(x, baseY);
+                            g.lineTo(x, topY + radius);
+                            g.arc(x + radius, topY + radius, radius, -Math.PI, -Math.PI / 2.0);
+                            g.lineTo(xe - radius, topY);
+                            g.arc(xe - radius, topY + radius, radius, -Math.PI / 2.0, 0);
+                            g.lineTo(xe, baseY);
+                        }
                     } else {
                         if (xe < 0 || x > trackWidth) {
                             // Q: Do we really need this?

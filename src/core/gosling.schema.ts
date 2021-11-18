@@ -850,6 +850,13 @@ export interface BAMData {
      * Load mates that are located in the same chromosome. __Default__: `false`
      */
     loadMates?: boolean;
+
+    /** Determine whether to extract exon-to-exon junctions. __Default__: `false` */
+    extractJunction?: boolean;
+
+    /** Determine the threshold of coverage when extracting exon-to-exon junctions. __Default__: `1` */
+    junctionMinCoverage?: number;
+
     /**
      * Determines the threshold of insert sizes for determining the structural variants. __Default__: `5000`
      */

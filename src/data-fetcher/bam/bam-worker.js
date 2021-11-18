@@ -109,7 +109,7 @@ export const getSubstitutions = (segment, seq) => {
                     pos: currPos,
                     length: sub.length,
                     type: 'N'
-                });
+                }); 
                 currPos += sub.length;
             } else if (sub.type === '=' || sub.type === 'M') {
                 currPos += sub.length;
@@ -335,7 +335,7 @@ function ChromosomeInfo(filepath, success) {
 /// End Chrominfo
 /////////////////////////////////////////////////////
 
-const bamRecordToJson = (bamRecord, chrName, chrOffset) => {
+const bamRecordToJson = (bamRecord, chrName, chrOffset, junctions) => {
     const seq = bamRecord.get('seq');
     const segment = {
         // if two segments have the same name but different id, they are paired reads.
@@ -352,7 +352,7 @@ const bamRecordToJson = (bamRecord, chrName, chrOffset) => {
         strand: bamRecord.get('strand') === 1 ? '+' : '-',
         substitutions: []
     };
-    segment.substitutions = getSubstitutions(segment, seq);
+    segment.substitutions = getSubstitutions(segment, seq, junctions);
     return segment;
 };
 
@@ -371,7 +371,7 @@ const tilesetInfos = {};
 // indexed by uuid
 const dataConfs = {};
 
-const init = (uid, { bamUrl, baiUrl, chromSizesUrl, loadMates = false, maxInsertSize = 5000 }) => {
+const init = (uid, { bamUrl, baiUrl, chromSizesUrl, loadMates = false, maxInsertSize = 5000, extractJunction = false, junctionMinCoverage = 1}) => {
     if (!bamFiles[bamUrl]) {
         // we do not yet have this file cached
         bamFiles[bamUrl] = new BamFile({ 
@@ -389,7 +389,7 @@ const init = (uid, { bamUrl, baiUrl, chromSizesUrl, loadMates = false, maxInsert
     // if no chromsizes are passed in, we'll retrieve them from the BAM file
     chromSizes[chromSizesUrl] = chromSizes[chromSizesUrl] || new Promise(resolve => { ChromosomeInfo(chromSizesUrl, resolve) });
 
-    dataConfs[uid] = { bamUrl, chromSizesUrl, loadMates, maxInsertSize };
+    dataConfs[uid] = { bamUrl, chromSizesUrl, loadMates, maxInsertSize, extractJunction, junctionMinCoverage };
 };
 
 const tilesetInfo = uid => {
@@ -413,7 +413,6 @@ const tilesetInfo = uid => {
             chromInfo = parseChromsizesRows(chroms);
         }
         chromInfos[chromSizesUrl] = chromInfo;
-
         tilesetInfos[uid] = {
             tile_size: TILE_SIZE,
             bins_per_dimension: TILE_SIZE,
@@ -431,6 +430,7 @@ const tile = async (uid, z, x) => {
     const MAX_TILE_WIDTH = 200000;
     const { bamUrl, chromSizesUrl, loadMates, maxInsertSize } = dataConfs[uid];
     const bamFile = bamFiles[bamUrl];
+    const junctions = [];
 
     return tilesetInfo(uid).then(tilesetInfo => {
         const tileWidth = +tilesetInfo.max_width / 2 ** +z;
@@ -478,7 +478,7 @@ const tile = async (uid, z, x) => {
                             )
                             .then(records => {
                                 const mappedRecords = records.map(rec =>
-                                    bamRecordToJson(rec, chromName, cumPositions[i].pos)
+                                    bamRecordToJson(rec, chromName, cumPositions[i].pos, junctions)
                                 );
                                 tileValues.set(
                                     `${uid}.${z}.${x}`,
@@ -500,13 +500,12 @@ const tile = async (uid, z, x) => {
                             .getRecordsForRange(chromName, startPos, endPos, opt)
                             .then(records => {
                                 const mappedRecords = records.map(rec =>
-                                    bamRecordToJson(rec, chromName, cumPositions[i].pos)
+                                    bamRecordToJson(rec, chromName, cumPositions[i].pos, junctions)
                                 );
                                 tileValues.set(
                                     `${uid}.${z}.${x}`,
                                     tileValues.get(`${uid}.${z}.${x}`).concat(mappedRecords)
                                 );
-                                // TODO: return mappedRecords;
                                 return [];
                             })
                     );
@@ -554,7 +553,7 @@ const fetchTilesDebounced = async (uid, tileIds) => {
 };
 
 const getTabularData = (uid, tileIds) => {
-    const { loadMates } = dataConfs[uid];
+    const { loadMates, extractJunction } = dataConfs[uid];
 
     const allSegments = {};
     for (const tileId of tileIds) {
@@ -572,13 +571,16 @@ const getTabularData = (uid, tileIds) => {
         }
     }
 
-    const segmentList = Object.values(allSegments);
+    let segmentList = Object.values(allSegments);
 
     if(loadMates) {
         // find and set mate info when the `data.loadMates` flag is on.
         findMates(uid, segmentList);
     }
 
+    if(extractJunction) {
+        segmentList = findJunctions(uid, segmentList);
+    }
     const buffer = Buffer.from(JSON.stringify(segmentList)).buffer;
     return Transfer(buffer, [buffer]);
 };
@@ -642,6 +644,29 @@ const findMates = (uid, segments) => {
         }
     });
     return segmentsByReadName;
+}
+
+const findJunctions = (uid, segments) => {
+    const { junctionMinCoverage } = dataConfs[uid];
+    const junctions = []; 
+    
+    segments.forEach(segment => {
+    const substitutions = JSON.parse(segment.substitutions);
+        substitutions.forEach(sub => {
+    const don = segment.from + sub.pos;
+    const acc = segment.from + sub.pos + sub.length;
+    if(segment.from < don && acc < segment.to) {
+        const j = junctions.find(d => d.start === don && d.end === acc);
+        if(j) {
+            j.score += 1;
+        } else {
+            junctions.push({ start: don, end: acc, score: 1 });
+        }
+    } 
+        });
+    });
+    console.log(junctionMinCoverage);
+    return junctions.filter(d => d.score >= junctionMinCoverage);
 }
 
 const tileFunctions = {
