@@ -2,13 +2,14 @@ import { GoslingSpec } from 'gosling.js';
 
 export const EX_SPEC_SASHIMI: GoslingSpec = {
     title: 'Sashimi Plot',
-    subtitle: 'Sashimi plot based on a juction annotation file',
-    description: 'https://regtools.readthedocs.io/en/latest/commands/junctions-annotate/',
+    subtitle: 'Junction extraction from a BAM file',
+    description: 'https://github.com/guigolab/ggsashimi/blob/master/examples/sashimi.pdf',
     style: { outlineWidth: 0 },
     spacing: 0,
     static: true,
     views: [
         {
+            // TODO: assembly not properly chosen
             xDomain: { interval: [1707408143 + (27040527 - 27035000), 1707408143 + (27040527 - 27035000) + 7549] },
             tracks: [
                 {
@@ -50,7 +51,6 @@ export const EX_SPEC_SASHIMI: GoslingSpec = {
                     width: 800,
                     height: 80
                 },
-
                 {
                     data: {
                         type: 'bam',
@@ -66,7 +66,7 @@ export const EX_SPEC_SASHIMI: GoslingSpec = {
                         }
                     ],
                     mark: 'bar',
-                    x: { field: 'from', type: 'genomic', axis: 'none' },
+                    x: { field: 'from', type: 'genomic' },
                     xe: { field: 'to', type: 'genomic' },
                     y: { field: 'coverage', type: 'quantitative' },
                     color: { value: '#FFC153' },
