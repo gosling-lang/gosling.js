@@ -327,9 +327,15 @@ export function drawLink(g: PIXI.Graphics, trackInfo: any, model: GoslingTrackMo
                             } as TooltipData);
                         }
                     } else if (spec.style?.flatWithinLink) {
+                        const arcWidth = xe - x;
+                        const radius = Math.min(10, arcWidth / 2.0);
+                        const topY = rowPosition + rowHeight - y;
+
                         g.moveTo(x, baseY);
-                        g.lineTo(x, rowPosition + rowHeight - y);
-                        g.lineTo(xe, rowPosition + rowHeight - y);
+                        g.lineTo(x, topY + radius);
+                        g.arc(x + radius, topY + radius, radius, -Math.PI, -Math.PI / 2.0);
+                        g.lineTo(xe - radius, topY);
+                        g.arc(xe - radius, topY + radius, radius, -Math.PI / 2.0, 0);
                         g.lineTo(xe, baseY);
                     } else {
                         if (xe < 0 || x > trackWidth) {

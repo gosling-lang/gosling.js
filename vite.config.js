@@ -85,7 +85,6 @@ const esm = defineConfig({
 });
 
 const dev = defineConfig({
-    server: { hmr: false },
     build: { outDir: 'build' },
     resolve: { alias },
     define: {

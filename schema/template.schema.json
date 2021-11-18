@@ -595,7 +595,7 @@
           "type": "boolean"
         },
         "flatWithinLink": {
-          "description": "Specify whether to use a flat within-links. __Default__: `false`",
+          "description": "Specify whether to use a flat within-links, such as the one in Sashimi plots. __Default__: `false`",
           "type": "boolean"
         },
         "inlineLegend": {

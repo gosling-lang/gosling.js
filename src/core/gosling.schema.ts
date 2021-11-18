@@ -310,7 +310,7 @@ export interface Style {
     bazierLink?: boolean;
 
     // TODO: betweenLinkStyle: 'regular' | 'bazier' | 'flat'
-    /** Specify whether to use a flat within-links. __Default__: `false` */
+    /** Specify whether to use a flat within-links, such as the one in Sashimi plots. __Default__: `false` */
     flatWithinLink?: boolean;
 
     /**
