@@ -134,8 +134,7 @@ export const examples: ReadonlyArray<{
         name: 'Sashimi Plot',
         id: 'SASHIMI PLOT',
         spec: EX_SPEC_SASHIMI,
-        underDevelopment: true,
-        forceShow: true
+        underDevelopment: true
     },
     {
         name: 'Circular Between Bands',
