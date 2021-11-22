@@ -838,17 +838,14 @@ export interface BEDDBData {
  */
 export interface BAMData {
     type: 'bam';
-    /**
-     * URL link to the BAM data file
-     */
+
+    /** URL link to the BAM data file */
     url: string;
-    /**
-     * URL link to the index file of the BAM file
-     */
+
+    /** URL link to the index file of the BAM file */
     indexUrl: string;
-    /**
-     * Load mates that are located in the same chromosome. __Default__: `false`
-     */
+
+    /** Load mates that are located in the same chromosome. __Default__: `false` */
     loadMates?: boolean;
 
     /** Determine whether to extract exon-to-exon junctions. __Default__: `false` */
@@ -857,9 +854,7 @@ export interface BAMData {
     /** Determine the threshold of coverage when extracting exon-to-exon junctions. __Default__: `1` */
     junctionMinCoverage?: number;
 
-    /**
-     * Determines the threshold of insert sizes for determining the structural variants. __Default__: `5000`
-     */
+    /** Determines the threshold of insert sizes for determining the structural variants. __Default__: `5000` */
     maxInsertSize?: number; // https://github.com/GMOD/bam-js#async-getrecordsforrangerefname-start-end-opts
 }
 

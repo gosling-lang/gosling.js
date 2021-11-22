@@ -29,12 +29,12 @@ export function EX_SPEC_VIEW_PILEUP(
                         dataTransform: [
                             {
                                 type: 'coverage',
-                                startField: 'from',
-                                endField: 'to'
+                                startField: 'start',
+                                endField: 'end'
                             }
                         ],
-                        x: { field: 'from', type: 'genomic' },
-                        xe: { field: 'to', type: 'genomic' },
+                        x: { field: 'start', type: 'genomic' },
+                        xe: { field: 'end', type: 'genomic' },
                         y: { field: 'coverage', type: 'quantitative', axis: 'right' },
                         color: { value: '#C6C6C6' }
                     }
@@ -61,16 +61,16 @@ export function EX_SPEC_VIEW_PILEUP(
                                 type: 'displace',
                                 method: 'pile',
                                 boundingBox: {
-                                    startField: 'from',
-                                    endField: 'to',
+                                    startField: 'start',
+                                    endField: 'end',
                                     padding: 5,
                                     isPaddingBP: true
                                 },
                                 newField: 'pileup-row'
                             }
                         ],
-                        x: { field: 'from', type: 'genomic' },
-                        xe: { field: 'to', type: 'genomic' },
+                        x: { field: 'start', type: 'genomic' },
+                        xe: { field: 'end', type: 'genomic' },
                         color: [
                             {
                                 field: 'svType',
@@ -110,8 +110,8 @@ export function EX_SPEC_VIEW_PILEUP(
                                 type: 'displace',
                                 method: 'pile',
                                 boundingBox: {
-                                    startField: 'from',
-                                    endField: 'to',
+                                    startField: 'start',
+                                    endField: 'end',
                                     padding: 5,
                                     isPaddingBP: true
                                 },
@@ -121,7 +121,7 @@ export function EX_SPEC_VIEW_PILEUP(
                                 type: 'subjson',
                                 field: 'substitutions',
                                 genomicField: 'pos',
-                                baseGenomicField: 'from',
+                                baseGenomicField: 'start',
                                 genomicLengthField: 'length'
                             },
                             { type: 'filter', field: 'type', oneOf: ['S', 'H'] }
@@ -132,8 +132,8 @@ export function EX_SPEC_VIEW_PILEUP(
                     }
                 ],
                 tooltip: [
-                    { field: 'from', type: 'genomic' },
-                    { field: 'to', type: 'genomic' },
+                    { field: 'start', type: 'genomic' },
+                    { field: 'end', type: 'genomic' },
                     { field: 'insertSize', type: 'quantitative' },
                     { field: 'svType', type: 'nominal' },
                     { field: 'strand', type: 'nominal' },

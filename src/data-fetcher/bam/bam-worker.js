@@ -143,7 +143,7 @@ export const getSubstitutions = (segment, seq) => {
         // soft clipping at the end
         if (lastSub.type === 'S') {
             substitutions.push({
-                pos: segment.to - segment.from,
+                pos: segment.end - segment.start,
                 length: lastSub.length,
                 type: 'S'
             });
@@ -160,7 +160,7 @@ export const getSubstitutions = (segment, seq) => {
         }
         if (lastSub.type === 'H') {
             substitutions.push({
-                pos: segment.to - segment.from,
+                pos: segment.end - segment.start,
                 length: lastSub.length,
                 type: 'H'
             });
@@ -342,8 +342,8 @@ const bamRecordToJson = (bamRecord, chrName, chrOffset) => {
         // https://github.com/GMOD/bam-js/blob/7a57d24b6aef08a1366cca86ba5092254c7a7f56/src/bamFile.ts#L386
         id: bamRecord._id,
         name: bamRecord.get('name'), 
-        from: +bamRecord.data.start + 1 + chrOffset,
-        to: +bamRecord.data.end + 1 + chrOffset,
+        start: +bamRecord.data.start + 1 + chrOffset,
+        end: +bamRecord.data.end + 1 + chrOffset,
         md: bamRecord.get('MD'),
         chrName,
         chrOffset,
@@ -606,8 +606,8 @@ const findMates = (uid, segments) => {
             mate.mateIds = [read.id];
            
             // Additional info we want
-            const [l, r] = [read, mate].sort((a, b) => +a.from - +b.from);
-            const insertSize = Math.max(0, +r.from - +l.to);
+            const [l, r] = [read, mate].sort((a, b) => +a.start - +b.start);
+            const insertSize = Math.max(0, +r.start - +l.end);
             const largeInsertSize = insertSize >= maxInsertSize;
             let svType;
             if(!largeInsertSize) {
@@ -654,9 +654,9 @@ const findJunctions = (uid, segments) => {
     segments.forEach(segment => {
         const substitutions = JSON.parse(segment.substitutions);
         substitutions.forEach(sub => {
-            const don = segment.from + sub.pos;
-            const acc = segment.from + sub.pos + sub.length;
-            if(segment.from < don && acc < segment.to) {
+            const don = segment.start + sub.pos;
+            const acc = segment.start + sub.pos + sub.length;
+            if(segment.start < don && acc < segment.end) {
                 const j = junctions.find(d => d.start === don && d.end === acc);
                 if(j) {
                     j.score += 1;

@@ -61,13 +61,13 @@ export const EX_SPEC_SASHIMI: GoslingSpec = {
                     dataTransform: [
                         {
                             type: 'coverage',
-                            startField: 'from',
-                            endField: 'to'
+                            startField: 'start',
+                            endField: 'end'
                         }
                     ],
                     mark: 'bar',
-                    x: { field: 'from', type: 'genomic' },
-                    xe: { field: 'to', type: 'genomic' },
+                    x: { field: 'start', type: 'genomic' },
+                    xe: { field: 'end', type: 'genomic' },
                     y: { field: 'coverage', type: 'quantitative' },
                     color: { value: '#FFC153' },
                     width: 800,
@@ -123,13 +123,13 @@ export const EX_SPEC_SASHIMI: GoslingSpec = {
                         {
                             type: 'displace',
                             method: 'pile',
-                            boundingBox: { startField: 'from', endField: 'to', padding: 4, isPaddingBP: true },
+                            boundingBox: { startField: 'start', endField: 'end', padding: 4, isPaddingBP: true },
                             newField: 'pileup-row'
                         }
                     ],
                     mark: 'bar',
-                    x: { field: 'from', type: 'genomic', axis: 'none' },
-                    xe: { field: 'to', type: 'genomic' },
+                    x: { field: 'start', type: 'genomic', axis: 'none' },
+                    xe: { field: 'end', type: 'genomic' },
                     row: { field: 'pileup-row', type: 'nominal', padding: 0.05 },
                     color: { value: 'grey' },
                     width: 800,
