@@ -32,8 +32,7 @@ export const LINK: GoslingSpec = {
             x1e: { field: 'e2', type: 'genomic' },
 
             // specify styles of the mark
-            stroke: { value: 'steelblue' },
-            style: { circularLink: true }
+            stroke: { value: 'steelblue' }
         }
     ]
 };

@@ -136,11 +136,11 @@ export const examples: {
     },
     CANCER_VARIANT: {
         name: 'Breast Cancer Variant (Staaf et al. 2019)',
-        spec: EX_SPEC_CANCER_VARIANT_PROTOTYPE,
+        spec: EX_SPEC_CANCER_VARIANT_PROTOTYPE
     },
     BAM_PILEUP: {
         name: 'BAM file pileup tracks',
-        spec: EX_SPEC_PILEUP,
+        spec: EX_SPEC_PILEUP
     },
     TEMPLATE: {
         name: 'Track Template',
