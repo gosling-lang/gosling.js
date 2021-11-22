@@ -255,9 +255,6 @@
           "description": "The name of a nominal field to group rows by in prior to piling-up",
           "type": "string"
         },
-        "idField": {
-          "type": "string"
-        },
         "inRange": {
           "description": "Check whether the value is in a number range.",
           "items": {
@@ -268,15 +265,6 @@
         "include": {
           "description": "Check whether the value includes a substring.",
           "type": "string"
-        },
-        "isLongField": {
-          "type": "string"
-        },
-        "maintainDuplicates": {
-          "type": "boolean"
-        },
-        "maxInsertSize": {
-          "type": "number"
         },
         "maxRows": {
           "description": "Specify maximum rows to be generated (default has no limit).",
@@ -345,7 +333,6 @@
             "exonSplit",
             "genomicLength",
             "coverage",
-            "combineMates",
             "subjson"
           ],
           "type": "string"
@@ -571,10 +558,6 @@
           "description": "Specify whether to use bazier curves for the `link` marks.",
           "type": "boolean"
         },
-        "circularLink": {
-          "description": "Deprecated: draw arc instead of bazier curve?",
-          "type": "boolean"
-        },
         "curve": {
           "description": "Specify the curve of `rule` marks.",
           "enum": [
@@ -609,6 +592,10 @@
         },
         "enableSmoothPath": {
           "description": "Whether to enable smooth paths when drawing curves.\n\n__Default__: `false`",
+          "type": "boolean"
+        },
+        "flatWithinLink": {
+          "description": "Specify whether to use a flat within-links, such as the one in Sashimi plots. __Default__: `false`",
           "type": "boolean"
         },
         "inlineLegend": {

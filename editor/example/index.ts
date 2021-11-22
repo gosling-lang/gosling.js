@@ -14,6 +14,7 @@ import { EX_SPEC_GENE_ANNOTATION } from './gene-annotation';
 import { EX_SPEC_CLINVAR_LOLLIPOP, EX_SPEC_SEQUENCE_TRACK } from './semantic-zoom';
 import { EX_SPEC_GIVE } from './give';
 import { EX_SPEC_CORCES_ET_AL } from './corces';
+import { EX_SPEC_SASHIMI } from './sashimi';
 import { EX_SPEC_CYTOBANDS } from './ideograms';
 import { EX_SPEC_PILEUP } from './pileup';
 import { EX_SPEC_BAND } from './vertical-band';
@@ -113,6 +114,11 @@ export const examples: {
         name: 'Corces et al. 2020',
         spec: EX_SPEC_CORCES_ET_AL
     },
+    SASHIMI_PLOT: {
+        name: 'Sashimi Plot',
+        spec: EX_SPEC_SASHIMI,
+        underDevelopment: true
+    },
     CIRCULAR_BETWEEN_BANDS: {
         name: 'Circular Between Bands',
         spec: EX_SPEC_CIRCOS_BETWEEN_LINK,
@@ -131,12 +137,10 @@ export const examples: {
     CANCER_VARIANT: {
         name: 'Breast Cancer Variant (Staaf et al. 2019)',
         spec: EX_SPEC_CANCER_VARIANT_PROTOTYPE,
-        underDevelopment: true
     },
     BAM_PILEUP: {
         name: 'BAM file pileup tracks',
         spec: EX_SPEC_PILEUP,
-        underDevelopment: true
     },
     TEMPLATE: {
         name: 'Track Template',
