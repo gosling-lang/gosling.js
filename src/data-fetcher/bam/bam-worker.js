@@ -109,7 +109,7 @@ export const getSubstitutions = (segment, seq) => {
                     pos: currPos,
                     length: sub.length,
                     type: 'N'
-                });
+                }); 
                 currPos += sub.length;
             } else if (sub.type === '=' || sub.type === 'M') {
                 currPos += sub.length;
@@ -371,7 +371,7 @@ const tilesetInfos = {};
 // indexed by uuid
 const dataConfs = {};
 
-const init = (uid, { bamUrl, baiUrl, chromSizesUrl, loadMates = false, maxInsertSize = 5000 }) => {
+const init = (uid, { bamUrl, baiUrl, chromSizesUrl, loadMates = false, maxInsertSize = 5000, extractJunction = false, junctionMinCoverage = 1}) => {
     if (!bamFiles[bamUrl]) {
         // we do not yet have this file cached
         bamFiles[bamUrl] = new BamFile({ 
@@ -389,7 +389,7 @@ const init = (uid, { bamUrl, baiUrl, chromSizesUrl, loadMates = false, maxInsert
     // if no chromsizes are passed in, we'll retrieve them from the BAM file
     chromSizes[chromSizesUrl] = chromSizes[chromSizesUrl] || new Promise(resolve => { ChromosomeInfo(chromSizesUrl, resolve) });
 
-    dataConfs[uid] = { bamUrl, chromSizesUrl, loadMates, maxInsertSize };
+    dataConfs[uid] = { bamUrl, chromSizesUrl, loadMates, maxInsertSize, extractJunction, junctionMinCoverage };
 };
 
 const tilesetInfo = uid => {
@@ -413,7 +413,6 @@ const tilesetInfo = uid => {
             chromInfo = parseChromsizesRows(chroms);
         }
         chromInfos[chromSizesUrl] = chromInfo;
-
         tilesetInfos[uid] = {
             tile_size: TILE_SIZE,
             bins_per_dimension: TILE_SIZE,
@@ -506,7 +505,6 @@ const tile = async (uid, z, x) => {
                                     `${uid}.${z}.${x}`,
                                     tileValues.get(`${uid}.${z}.${x}`).concat(mappedRecords)
                                 );
-                                // TODO: return mappedRecords;
                                 return [];
                             })
                     );
@@ -554,7 +552,7 @@ const fetchTilesDebounced = async (uid, tileIds) => {
 };
 
 const getTabularData = (uid, tileIds) => {
-    const { loadMates } = dataConfs[uid];
+    const { loadMates, extractJunction } = dataConfs[uid];
 
     const allSegments = {};
     for (const tileId of tileIds) {
@@ -572,14 +570,19 @@ const getTabularData = (uid, tileIds) => {
         }
     }
 
-    const segmentList = Object.values(allSegments);
+    let output = Object.values(allSegments);
 
     if(loadMates) {
         // find and set mate info when the `data.loadMates` flag is on.
-        findMates(uid, segmentList);
+        findMates(uid, output);
     }
 
-    const buffer = Buffer.from(JSON.stringify(segmentList)).buffer;
+    if(extractJunction) {
+        // Reference(ggsashimi): https://github.com/guigolab/ggsashimi/blob/d686d59b4e342b8f9dcd484f0af4831cc092e5de/ggsashimi.py#L136
+        output = findJunctions(uid, output);
+    }
+
+    const buffer = Buffer.from(JSON.stringify(output)).buffer;
     return Transfer(buffer, [buffer]);
 };
 
@@ -642,6 +645,28 @@ const findMates = (uid, segments) => {
         }
     });
     return segmentsByReadName;
+}
+
+const findJunctions = (uid, segments) => {
+    const { junctionMinCoverage } = dataConfs[uid];
+    const junctions = []; 
+    
+    segments.forEach(segment => {
+        const substitutions = JSON.parse(segment.substitutions);
+        substitutions.forEach(sub => {
+            const don = segment.from + sub.pos;
+            const acc = segment.from + sub.pos + sub.length;
+            if(segment.from < don && acc < segment.to) {
+                const j = junctions.find(d => d.start === don && d.end === acc);
+                if(j) {
+                    j.score += 1;
+                } else {
+                    junctions.push({ start: don, end: acc, score: 1 });
+                }
+            } 
+        });
+    });
+    return junctions.filter(d => d.score >= junctionMinCoverage);
 }
 
 const tileFunctions = {

@@ -39,9 +39,17 @@
       "additionalProperties": false,
       "description": "Binary Alignment Map (BAM) is the comprehensive raw data of genome sequencing; it consists of the lossless, compressed binary representation of the Sequence Alignment Map-files.",
       "properties": {
+        "extractJunction": {
+          "description": "Determine whether to extract exon-to-exon junctions. __Default__: `false`",
+          "type": "boolean"
+        },
         "indexUrl": {
           "description": "URL link to the index file of the BAM file",
           "type": "string"
+        },
+        "junctionMinCoverage": {
+          "description": "Determine the threshold of coverage when extracting exon-to-exon junctions. __Default__: `1`",
+          "type": "number"
         },
         "loadMates": {
           "description": "Load mates that are located in the same chromosome. __Default__: `false`",
@@ -4788,10 +4796,6 @@
           "description": "Specify whether to use bazier curves for the `link` marks.",
           "type": "boolean"
         },
-        "circularLink": {
-          "description": "Deprecated: draw arc instead of bazier curve?",
-          "type": "boolean"
-        },
         "curve": {
           "description": "Specify the curve of `rule` marks.",
           "enum": [
@@ -4826,6 +4830,10 @@
         },
         "enableSmoothPath": {
           "description": "Whether to enable smooth paths when drawing curves.\n\n__Default__: `false`",
+          "type": "boolean"
+        },
+        "flatWithinLink": {
+          "description": "Specify whether to use a flat within-links, such as the one in Sashimi plots. __Default__: `false`",
           "type": "boolean"
         },
         "inlineLegend": {
