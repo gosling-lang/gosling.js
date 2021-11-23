@@ -8,6 +8,5 @@ export { OVERLAY_TRACKS_RECT_TEXT } from './overlay-tracks-rect-text';
 
 export { RECT } from './rect';
 export { SEMANTIC_ZOOM_SEQUENCE, SEMANTIC_ZOOM_CYTO } from './semantic-zoom';
-// export { SEMANTIC_ZOOM_CYTO } from './semantic-zoom-cyto';
 export { TEXT } from './text';
 export { TRIANGLE } from './triangle';

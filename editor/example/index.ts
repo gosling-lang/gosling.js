@@ -147,7 +147,8 @@ export const examples: {
         spec: EX_SPEC_TEMPLATE,
         underDevelopment: true
     },
-    // ...DOC_EXAMPLES
+    // Followings are doc examples that are only accessible via URLs using the key, such as
+    // https://gosling.js.org/?example=doc_area
     doc_area: {
         name: 'Basic Example: Area Mark',
         spec: docExamples.AREA,
