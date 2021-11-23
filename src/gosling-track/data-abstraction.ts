@@ -57,7 +57,7 @@ export function getTabularData(
         Array.from(Array(numOfGenomicPositions).keys()).forEach((g: number, j: number) => {
             // add individual rows
             if (bin === 1) {
-                const value = numericValues[j] / tileUnitSize;
+                const value = numericValues[j];
                 tabularData.push({
                     [valueName]: value,
                     [columnName]: data.tileX + (j + 0.5) * tileUnitSize,
@@ -76,7 +76,7 @@ export function getTabularData(
                 } else if (j % bin === bin - 1) {
                     // Add a row using the cumulative value
                     tabularData.push({
-                        [valueName]: cumVal / bin / tileUnitSize,
+                        [valueName]: cumVal / bin,
                         [columnName]: data.tileX + (binStart + bin / 2.0) * tileUnitSize,
                         [startName]: data.tileX + binStart * tileUnitSize,
                         [endName]: data.tileX + binEnd * tileUnitSize,
@@ -88,7 +88,7 @@ export function getTabularData(
                     const smallBin = numOfGenomicPositions % bin;
                     const correctedBinEnd = binStart + smallBin;
                     tabularData.push({
-                        [valueName]: cumVal / smallBin / tileUnitSize,
+                        [valueName]: cumVal / smallBin,
                         [columnName]: data.tileX + (binStart + smallBin / 2.0) * tileUnitSize,
                         [startName]: data.tileX + binStart * tileUnitSize,
                         [endName]: data.tileX + correctedBinEnd * tileUnitSize,
@@ -142,7 +142,7 @@ export function getTabularData(
             Array.from(Array(numOfGenomicPositions).keys()).forEach((g: number, j: number) => {
                 // add individual rows
                 if (bin === 1) {
-                    const value = numericValues[numOfGenomicPositions * i + j] / tileUnitSize;
+                    const value = numericValues[numOfGenomicPositions * i + j];
                     tabularData.push({
                         [rowName]: c,
                         [valueName]: value,
@@ -163,7 +163,7 @@ export function getTabularData(
                         // Add a row using the cumulative value
                         tabularData.push({
                             [rowName]: c,
-                            [valueName]: cumVal / bin / tileUnitSize,
+                            [valueName]: cumVal / bin,
                             [columnName]: data.tileX + (binStart + bin / 2.0) * tileUnitSize,
                             [startName]: data.tileX + binStart * tileUnitSize,
                             [endName]: data.tileX + binEnd * tileUnitSize,
@@ -176,7 +176,7 @@ export function getTabularData(
                         const correctedBinEnd = binStart + smallBin;
                         tabularData.push({
                             [rowName]: c,
-                            [valueName]: cumVal / smallBin / tileUnitSize,
+                            [valueName]: cumVal / smallBin,
                             [columnName]: data.tileX + (binStart + smallBin / 2.0) * tileUnitSize,
                             [startName]: data.tileX + binStart * tileUnitSize,
                             [endName]: data.tileX + correctedBinEnd * tileUnitSize,
