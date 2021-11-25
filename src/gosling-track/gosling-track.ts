@@ -34,7 +34,7 @@ import BamWorker from '../data-fetcher/bam/bam-worker.js?worker&inline';
 import { InteractionEvent } from 'pixi.js';
 
 // Set `true` to print in what order each function is called
-export const PRINT_RENDERING_CYCLE = true;
+export const PRINT_RENDERING_CYCLE = false;
 
 // Experimental function to test with prerelease rendering
 function usePrereleaseRendering(spec: SingleTrack | OverlaidTrack) {
