@@ -1,6 +1,6 @@
 import * as uuid from 'uuid';
 import { HiGlassSpec, Track } from './higlass.schema';
-import HiGlassSchema from './higlass.schema.json';
+import HiGlassSchema from '../../schema/higlass.schema.json';
 import { Assembly, AxisPosition, Domain, Orientation, ZoomLimits } from './gosling.schema';
 import { getNumericDomain } from './utils/scales';
 import { RelativePosition } from './utils/bounding-box';
