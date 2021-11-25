@@ -26,6 +26,7 @@ import {
 import { getTabularData } from './data-abstraction';
 import { BAMDataFetcher } from '../data-fetcher/bam';
 import { getRelativeGenomicPosition } from '../core/utils/assembly';
+import { getTextStyle } from '../core/utils/text-style';
 import { Is2DTrack } from '../core/gosling.schema.guards';
 import { spawn } from 'threads';
 
@@ -39,6 +40,8 @@ export const PRINT_RENDERING_CYCLE = false;
 function usePrereleaseRendering(spec: SingleTrack | OverlaidTrack) {
     return spec.data?.type === 'bam';
 }
+
+type LoadingStage = 'loading' | 'processing' | 'rendering';
 
 // For using libraries, refer to https://github.com/higlass/higlass/blob/f82c0a4f7b2ab1c145091166b0457638934b15f3/app/scripts/configs/available-for-plugins.js
 // `getTilePosAndDimensions()` definition: https://github.com/higlass/higlass/blob/1e1146409c7d7c7014505dd80d5af3e9357c77b6/app/scripts/Tiled1DPixiTrack.js#L133
@@ -64,6 +67,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
         private tooltips: TooltipData[];
         private tileSize: number;
         private worker: any;
+        // private loadingStatus: { [k: LoadingStage]: number };
         // TODO: add members that are used explicitly in the code
 
         constructor(params: any[]) {
@@ -138,21 +142,24 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                 );
             }
 
-            // Custom loading label
-            this.loadingText = new HGC.libraries.PIXI.Text('', {
-                fontSize: '18px',
-                fontFamily: 'Arial',
-                fill: 'gray',
-                fontWeight: 'bold'
-            });
-            this.loadingText.anchor.x = 0.5;
-            this.loadingText.anchor.y = 0.5;
+            // We do not use HiGlass' trackNotFoundText
+            this.pLabel.removeChild(this.trackNotFoundText);
+
+            /* Custom loading label */
+            const loadingTextStyle = getTextStyle({ color: 'black', size: 12 });
+            this.loadingTextStyleObj = new HGC.libraries.PIXI.TextStyle(loadingTextStyle);
+            this.loadingTextBg = new HGC.libraries.PIXI.Graphics();
+            this.loadingText = new HGC.libraries.PIXI.Text('', loadingTextStyle);
+            this.loadingText.anchor.x = 1;
+            this.loadingText.anchor.y = 1;
+            this.pLabel.addChild(this.loadingTextBg);
             this.pLabel.addChild(this.loadingText);
 
             this.tooltips = [];
             this.svgData = [];
             this.textGraphics = [];
             this.textsBeingUsed = 0; // this variable is being used to improve the performance of text rendering
+            this.loadingStatus = { loading: 0, processing: 0, rendering: 0 };
 
             // This improves the arc/link rendering performance
             HGC.libraries.PIXI.GRAPHICS_CURVES.adaptive = this.options.spec.style?.enableSmoothPath ?? false;
@@ -193,9 +200,6 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
 
                 // Record tiles so that we ignore loading same tiles again
                 this.prevVisibleAndFetchedTiles = this.visibleAndFetchedTiles();
-
-                //
-                this.drawLoading(false);
             };
 
             if (
@@ -387,8 +391,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             this.xDomain = this._xScale.domain();
             this.xRange = this._xScale.range();
 
-            this.drawLoading();
-            this.trackNotFoundText.text = ''; // HiGlass complains about tileset, but we are using BAM files.
+            this.drawLoadingCue('loading');
 
             this.worker.then((tileFunctions: any) => {
                 tileFunctions
@@ -397,6 +400,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                         Object.values(this.fetchedTiles).map((x: any) => x.remoteId)
                     )
                     .then((toRender: any) => {
+                        this.drawLoadingCue('processing');
                         const tiles = this.visibleAndFetchedTiles();
 
                         const tabularData = JSON.parse(Buffer.from(toRender).toString());
@@ -410,7 +414,10 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                             tile.tileData.zoomLevel = refTile[0];
                             tile.tileData.tilePos = [refTile[1]];
                         }
+
+                        this.drawLoadingCue('rendering');
                         callback();
+                        this.drawLoadingCue('done');
                     });
             });
         }
@@ -588,31 +595,52 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             }
         }
 
-        // Custom loading message
-        drawLoading(show = true) {
-            const loadingLabelNotReady = true;
-            if (loadingLabelNotReady) return; // TODO: not used yet
-
-            this.loadingText.x = this.position[0] + this.dimensions[0] / 2;
-            this.loadingText.y = this.position[1] + this.dimensions[1] / 2;
-
-            this.loadingText.text = show ? 'Loading...' : '';
-
-            if (show) {
-                // draw a border around the track to bring attention to the loading message
-                // const g = this.pBorder;
-                // g.clear();
-                // g.lineStyle(2, colorToHex('lightgray'), 1);
-                // g.beginFill(colorToHex('lightgray'), 0.1);
-                // g.drawRect(
-                //       this.position[0],
-                //       this.position[1],
-                //       this.dimensions[0],
-                //       this.dimensions[1],
-                //   );
-            } else {
-                // this.pBorder.clear();
+        /**
+         * Show visual cue during waiting for visualizations being rendered.
+         */
+        drawLoadingCue(stage: LoadingStage | 'done') {
+            let curStage = stage;
+            if (this.loadingStatus) {
+                if (stage === 'done') {
+                    this.loadingStatus.loading--;
+                    this.loadingStatus.processing--;
+                    this.loadingStatus.rendering--;
+                    if (this.loadingStatus.loading !== 0) {
+                        curStage = 'loading';
+                    }
+                } else {
+                    this.loadingStatus[stage]++;
+                }
             }
+            // console.log(curStage, this.loadingStatus);
+            setTimeout(() => {
+                this.loadingText.x = this.position[0] + this.dimensions[0] - 1;
+                this.loadingText.y = this.position[1] + this.dimensions[1] - 0;
+
+                const text = {
+                    loading: 'Loading Tiles...',
+                    processing: 'Processing Tiles...',
+                    rendering: 'Rendering Tiles...',
+                    done: ''
+                }[curStage];
+
+                this.loadingText.text = text;
+
+                // this.loadingTextBg.clear();
+                // const metric = HGC.libraries.PIXI.TextMetrics.measureText(text, this.loadingTextStyleObj);
+                // const { width: w, height: h }= metric;
+
+                // this.loadingTextBg.lineStyle(
+                //     1,
+                //     colorToHex('gray'),
+                //     0, // alpha
+                //     0 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
+                // );
+
+                // this.loadingTextBg.beginFill(colorToHex('white'), 0.5);
+                // this.loadingTextBg.drawRect(this.position[0] + 1, this.position[1] + 1, this.dimensions[0] - 2, 20);
+                this.forceDraw();
+            }, 10);
         }
 
         /**
