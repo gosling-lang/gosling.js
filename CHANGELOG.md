@@ -1,3 +1,12 @@
+## [0.9.11](https://github.com/gosling-lang/gosling.js/compare/v0.9.10...v0.9.11) (2021-11-29)
+
+
+### Bug Fixes
+
+* ensure to assign proper `uid`s to overlaid tracks ([#598](https://github.com/gosling-lang/gosling.js/issues/598)) ([066c0d2](https://github.com/gosling-lang/gosling.js/commit/066c0d2d12222fb7b89c7615c725bb85651d7c73))
+
+
+
 ## [0.9.10](https://github.com/gosling-lang/gosling.js/compare/v0.9.9...v0.9.10) (2021-11-29)
 
 
