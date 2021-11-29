@@ -1,3 +1,17 @@
+## [0.9.10](https://github.com/gosling-lang/gosling.js/compare/v0.9.9...v0.9.10) (2021-11-29)
+
+
+### Features
+
+* add available theme names to `theme.schema.json` ([#570](https://github.com/gosling-lang/gosling.js/issues/570)) ([5115859](https://github.com/gosling-lang/gosling.js/commit/5115859d1d46eaa0a0c278e11ef1baec51d27044))
+* allow extracting splice junctions from BAM, flat `withinLink`, toward supporting sashimi plot ([#586](https://github.com/gosling-lang/gosling.js/issues/586)) ([a6ef69e](https://github.com/gosling-lang/gosling.js/commit/a6ef69ebdcec9057e61d4a5303e9dec1af9e004d))
+* infer SV types and find mates from `bam` files; add an API to get raw data in JSON format ([#556](https://github.com/gosling-lang/gosling.js/issues/556)) ([2e2fd79](https://github.com/gosling-lang/gosling.js/commit/2e2fd798ec8a0c35c0bd205e9ec6df128b093ae3))
+* show loading messages in BAM tracks ([#593](https://github.com/gosling-lang/gosling.js/issues/593)) ([bc9846f](https://github.com/gosling-lang/gosling.js/commit/bc9846fd855d50c34a35255575af52de57b420f4)), closes [#594](https://github.com/gosling-lang/gosling.js/issues/594)
+* update higlass.schema.json upon changes on its TS file ([#594](https://github.com/gosling-lang/gosling.js/issues/594)) ([23b7393](https://github.com/gosling-lang/gosling.js/commit/23b739378605cee33edd57ec6d4f65a4fd5d01a4))
+* use a default theme in gosling-track when missing ([#584](https://github.com/gosling-lang/gosling.js/issues/584)) ([5b1c242](https://github.com/gosling-lang/gosling.js/commit/5b1c242a6996ff0775e6afbd4588ad61ffab2590))
+
+
+
 ## [0.9.9](https://github.com/gosling-lang/gosling.js/compare/v0.9.8...v0.9.9) (2021-10-25)
 
 
