@@ -298,8 +298,29 @@ export function drawLink(g: PIXI.Graphics, trackInfo: any, model: GoslingTrackMo
                     const posS = cartesianToPolar(x, trackWidth, r, tcx, tcy, startAngle, endAngle);
                     const posE = cartesianToPolar(xe, trackWidth, r, tcx, tcy, startAngle, endAngle);
 
-                    g.moveTo(posS.x, posS.y);
-                    g.bezierCurveTo(posS.x, posS.y, trackWidth / 2.0, trackHeight / 2.0, posE.x, posE.y);
+                    const x1 = posS.x;
+                    const y1 = posS.y;
+                    const x2 = posS.x;
+                    const y2 = posS.y;
+                    const x3 = trackWidth / 2.0;
+                    const y3 = trackHeight / 2.0;
+                    const x4 = posE.x;
+                    const y4 = posE.y;
+
+                    g.moveTo(x1, y1);
+                    g.bezierCurveTo(x2, y2, x3, y3, x4, y4);
+
+                    const bezier = new Bezier(x1, y1, x2, y2, x3, y3, x4, y4);
+                    const points = bezier.getLUT(1000);
+                    /* click event data */
+                    if (spec.tooltip) {
+                        trackInfo.tooltips.push({
+                            datum: d,
+                            isMouseOver: (mouseX: number, mouseY: number) =>
+                                points.findIndex(d => Math.sqrt((d.x - mouseX) ** 2 + (d.y - mouseY) ** 2) < 5) !== -1,
+                            markInfo: {}
+                        } as TooltipData);
+                    }
                 } else {
                     g.moveTo(x, baseY);
 
