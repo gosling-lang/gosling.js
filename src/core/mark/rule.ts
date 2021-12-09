@@ -63,6 +63,26 @@ export function drawRule(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackMo
                 0.5 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
             );
 
+            if (!xe) {
+                /* vertical rule */
+                if (circular) {
+                    // TODO:
+                } else {
+                    g.moveTo(x, 0);
+                    g.lineTo(x, trackHeight);
+                }
+                return;
+            } else if (!x) {
+                // TODO: draw only single rule regardless of multiple tiles.
+                /* horizontal rule */
+                if (circular) {
+                } else {
+                    g.moveTo(0, rowPosition + rowHeight - y);
+                    g.lineTo(trackWidth, rowPosition + rowHeight - y);
+                }
+                return;
+            }
+
             if (circular) {
                 // !!! Currently, we only support simple straight lines for circular layouts.
                 if (strokeWidth === 0) {
