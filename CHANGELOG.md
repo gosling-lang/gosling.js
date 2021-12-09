@@ -1,3 +1,12 @@
+## [0.9.12](https://github.com/gosling-lang/gosling.js/compare/v0.9.11...v0.9.12) (2021-12-09)
+
+
+### Features
+
+* allow tooltip and mouse events on circular arc ([#602](https://github.com/gosling-lang/gosling.js/issues/602)) ([40d8809](https://github.com/gosling-lang/gosling.js/commit/40d8809ee89a0ed19735ef5f488a8f0381bf2ca5))
+
+
+
 ## [0.9.11](https://github.com/gosling-lang/gosling.js/compare/v0.9.10...v0.9.11) (2021-11-29)
 
 
