@@ -51,18 +51,27 @@ export function drawLink(g: PIXI.Graphics, trackInfo: any, model: GoslingTrackMo
         ).forEach(d => {
             let x = model.encodedPIXIProperty('x', d);
             let xe = model.encodedPIXIProperty('xe', d);
-            const x1 = model.encodedPIXIProperty('x1', d);
-            const x1e = model.encodedPIXIProperty('x1e', d);
+            let x1 = model.encodedPIXIProperty('x1', d);
+            let x1e = model.encodedPIXIProperty('x1e', d);
             const y = model.encodedPIXIProperty('y', d);
             const stroke = model.encodedPIXIProperty('stroke', d);
             const strokeWidth = model.encodedPIXIProperty('strokeWidth', d);
             const color = model.encodedPIXIProperty('color', d);
             const opacity = model.encodedPIXIProperty('opacity', d);
 
+            // sort properly
+            if (typeof xe !== 'undefined') {
+                [x, xe] = [x, xe].sort((a, b) => a - b);
+            }
+            if (typeof x1 !== 'undefined' && typeof x1e !== 'undefined') {
+                [x1, x1e] = [x1, x1e].sort((a, b) => a - b);
+            }
+
             // Is this band or line?
             const isBand =
-                xe !== undefined &&
-                x1e !== undefined &&
+                typeof xe !== 'undefined' &&
+                typeof x1 !== 'undefined' &&
+                typeof x1e !== 'undefined' &&
                 // This means the strokeWidth of a band is too small, so we just need to draw a line instead
                 Math.abs(x - xe) > 0.1 &&
                 Math.abs(x1 - x1e) > 0.1;
