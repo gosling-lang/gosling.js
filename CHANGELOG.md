@@ -6,6 +6,7 @@
 * do not filter out small `withinLink` marks by default ([#604](https://github.com/gosling-lang/gosling.js/issues/604)) ([3b2311c](https://github.com/gosling-lang/gosling.js/commit/3b2311cd0568267222374465e5b3c7da52d72724))
 * do not generate gosling model with undefined tilePos ([#603](https://github.com/gosling-lang/gosling.js/issues/603)) ([2208e43](https://github.com/gosling-lang/gosling.js/commit/2208e432220ec417e55d357f93f9babc395e1460))
 
+## [0.9.12](https://github.com/gosling-lang/gosling.js/compare/v0.9.11...v0.9.12) (2021-12-09)
 
 ### Features
 
