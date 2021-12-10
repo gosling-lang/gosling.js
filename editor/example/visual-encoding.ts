@@ -826,7 +826,8 @@ export const EX_SPEC_RULE: GoslingSpec = {
                         row: 'sample',
                         column: 'position',
                         value: 'peak',
-                        categories: ['sample 1']
+                        categories: ['sample 1'],
+                        binSize: 4
                     },
                     mark: 'bar',
                     x: { field: 'start', type: 'genomic' },
