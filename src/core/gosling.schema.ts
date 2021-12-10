@@ -592,6 +592,7 @@ export interface DomainGene {
 }
 
 export type Aggregate = 'max' | 'min' | 'mean' | 'bin' | 'count';
+export type BinAggregate = 'mean' | 'sum';
 
 /* ----------------------------- DATA ----------------------------- */
 export type DataDeep = JSONData | CSVData | BIGWIGData | MultivecData | BEDDBData | VectorData | MatrixData | BAMData;
@@ -604,7 +605,6 @@ export interface Datum {
 /**
  * The JSON data format allows users to include data directly in the Gosling's JSON specification.
  */
-
 export interface JSONData {
     /**
      * Define data type.
@@ -748,6 +748,9 @@ export interface MultivecData {
      * Binning the genomic interval in tiles (unit size: 256).
      */
     binSize?: number;
+
+    /** Determine aggregation function to apply within bins. __Default__: `"mean"` */
+    aggregation?: BinAggregate;
 }
 
 export interface BIGWIGData {
@@ -781,6 +784,9 @@ export interface BIGWIGData {
      * Binning the genomic interval in tiles (unit size: 256).
      */
     binSize?: number;
+
+    /** Determine aggregation function to apply within bins. __Default__: `"mean"` */
+    aggregation?: BinAggregate;
 }
 
 /**
@@ -809,6 +815,9 @@ export interface VectorData {
 
     /** Binning the genomic interval in tiles (unit size: 256). */
     binSize?: number;
+
+    /** Determine aggregation function to apply within bins. __Default__: `"mean"` */
+    aggregation?: BinAggregate;
 }
 
 /**

@@ -48,6 +48,9 @@ export function getTabularData(
         const minValueName = `${valueName}_min`;
         const maxValueName = `${valueName}_max`;
 
+        // user's aggregation function
+        const agg = spec.data.aggregation ?? 'mean';
+
         // convert data to a visualization-friendly format
         let cumVal = 0;
         let minVal = Number.MAX_SAFE_INTEGER;
@@ -57,7 +60,7 @@ export function getTabularData(
         Array.from(Array(numOfGenomicPositions).keys()).forEach((g: number, j: number) => {
             // add individual rows
             if (bin === 1) {
-                const value = numericValues[j] / tileUnitSize;
+                const value = numericValues[j] / (agg === 'mean' ? tileUnitSize : 1);
                 tabularData.push({
                     [valueName]: value,
                     [columnName]: data.tileX + (j + 0.5) * tileUnitSize,
@@ -76,7 +79,7 @@ export function getTabularData(
                 } else if (j % bin === bin - 1) {
                     // Add a row using the cumulative value
                     tabularData.push({
-                        [valueName]: cumVal / bin / tileUnitSize,
+                        [valueName]: cumVal / bin / (agg === 'mean' ? tileUnitSize : 1),
                         [columnName]: data.tileX + (binStart + bin / 2.0) * tileUnitSize,
                         [startName]: data.tileX + binStart * tileUnitSize,
                         [endName]: data.tileX + binEnd * tileUnitSize,
@@ -88,7 +91,7 @@ export function getTabularData(
                     const smallBin = numOfGenomicPositions % bin;
                     const correctedBinEnd = binStart + smallBin;
                     tabularData.push({
-                        [valueName]: cumVal / smallBin / tileUnitSize,
+                        [valueName]: cumVal / smallBin / (agg === 'mean' ? tileUnitSize : 1),
                         [columnName]: data.tileX + (binStart + smallBin / 2.0) * tileUnitSize,
                         [startName]: data.tileX + binStart * tileUnitSize,
                         [endName]: data.tileX + correctedBinEnd * tileUnitSize,
@@ -132,6 +135,9 @@ export function getTabularData(
         const minValueName = `${valueName}_min`;
         const maxValueName = `${valueName}_max`;
 
+        // user's aggregation function
+        const agg = spec.data.aggregation ?? 'mean';
+
         // convert data to a visualization-friendly format
         categories.forEach((c: string, i: number) => {
             let cumVal = 0;
@@ -142,7 +148,7 @@ export function getTabularData(
             Array.from(Array(numOfGenomicPositions).keys()).forEach((g: number, j: number) => {
                 // add individual rows
                 if (bin === 1) {
-                    const value = numericValues[numOfGenomicPositions * i + j] / tileUnitSize;
+                    const value = numericValues[numOfGenomicPositions * i + j] / (agg === 'mean' ? tileUnitSize : 1);
                     tabularData.push({
                         [rowName]: c,
                         [valueName]: value,
@@ -153,7 +159,6 @@ export function getTabularData(
                         [maxValueName]: value
                     });
                 } else {
-                    // EXPERIMENTAL: bin the data considering the `bin` options
                     if (j % bin === 0) {
                         // Start storing information for this bin
                         cumVal = minVal = maxVal = numericValues[numOfGenomicPositions * i + j];
@@ -163,7 +168,7 @@ export function getTabularData(
                         // Add a row using the cumulative value
                         tabularData.push({
                             [rowName]: c,
-                            [valueName]: cumVal / bin / tileUnitSize,
+                            [valueName]: cumVal / (agg === 'mean' ? bin / tileUnitSize : 1),
                             [columnName]: data.tileX + (binStart + bin / 2.0) * tileUnitSize,
                             [startName]: data.tileX + binStart * tileUnitSize,
                             [endName]: data.tileX + binEnd * tileUnitSize,
@@ -176,7 +181,7 @@ export function getTabularData(
                         const correctedBinEnd = binStart + smallBin;
                         tabularData.push({
                             [rowName]: c,
-                            [valueName]: cumVal / smallBin / tileUnitSize,
+                            [valueName]: cumVal / (agg === 'mean' ? smallBin / tileUnitSize : 1),
                             [columnName]: data.tileX + (binStart + smallBin / 2.0) * tileUnitSize,
                             [startName]: data.tileX + binStart * tileUnitSize,
                             [endName]: data.tileX + correctedBinEnd * tileUnitSize,
