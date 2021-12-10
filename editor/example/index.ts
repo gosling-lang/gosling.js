@@ -20,7 +20,6 @@ import { EX_SPEC_PILEUP } from './pileup';
 import { EX_SPEC_BAND } from './vertical-band';
 import { EX_SPEC_TEMPLATE } from './track-template';
 import { EX_SPEC_DEBUG } from './debug';
-
 import * as docExamples from './doc-examples';
 
 export const examples: {
