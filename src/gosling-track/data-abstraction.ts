@@ -166,9 +166,10 @@ export function getTabularData(
                         binEnd = j + bin;
                     } else if (j % bin === bin - 1) {
                         // Add a row using the cumulative value
+
                         tabularData.push({
                             [rowName]: c,
-                            [valueName]: cumVal / (agg === 'mean' ? bin / tileUnitSize : 1),
+                            [valueName]: agg === 'mean' ? cumVal / bin / tileUnitSize : cumVal,
                             [columnName]: data.tileX + (binStart + bin / 2.0) * tileUnitSize,
                             [startName]: data.tileX + binStart * tileUnitSize,
                             [endName]: data.tileX + binEnd * tileUnitSize,
@@ -181,7 +182,7 @@ export function getTabularData(
                         const correctedBinEnd = binStart + smallBin;
                         tabularData.push({
                             [rowName]: c,
-                            [valueName]: cumVal / (agg === 'mean' ? smallBin / tileUnitSize : 1),
+                            [valueName]: agg === 'mean' ? cumVal / smallBin / tileUnitSize : cumVal,
                             [columnName]: data.tileX + (binStart + smallBin / 2.0) * tileUnitSize,
                             [startName]: data.tileX + binStart * tileUnitSize,
                             [endName]: data.tileX + correctedBinEnd * tileUnitSize,

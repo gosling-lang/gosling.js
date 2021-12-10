@@ -63,90 +63,156 @@ export function drawRule(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackMo
                 0.5 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
             );
 
-            if (circular) {
-                // !!! Currently, we only support simple straight lines for circular layouts.
-                if (strokeWidth === 0) {
-                    // Do not render invisible elements.
+            // TODO: Large parts of the following code blocks can be reused, reducing the lines
+            // Does this rule span entire width or height of a track?
+            if (!xe && (!spec.y || !('field' in spec.y))) {
+                /* vertical rule */
+                if (circular) {
+                    // TODO:
                     return;
+                } else {
+                    if (dashed) {
+                        const [dashSize, gapSize] = dashed;
+                        let curPos = 0;
+
+                        do {
+                            g.moveTo(x, curPos);
+                            g.lineTo(x, curPos + dashSize);
+                            curPos += dashSize + gapSize;
+                        } while (curPos < trackHeight);
+                    } else {
+                        g.moveTo(x, 0);
+                        g.lineTo(x, trackHeight);
+                    }
                 }
+            } else if (!xe && y) {
+                // TODO: draw only single rule regardless of multiple tiles.
+                /* horizontal rule */
+                if (circular) {
+                    // Actually, we are drawing arcs instead of lines, so lets remove stroke.
+                    g.lineStyle(
+                        strokeWidth,
+                        colorToHex(color),
+                        0, // alpha
+                        0.5 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
+                    );
 
-                // Actually, we are drawing arcs instead of lines, so lets remove stroke.
-                g.lineStyle(
-                    strokeWidth,
-                    colorToHex(color),
-                    0, // alpha
-                    0.5 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
-                );
+                    const midR = trackOuterRadius - ((rowPosition + y) / trackHeight) * trackRingSize;
+                    const farR = midR + strokeWidth / 2.0;
+                    const nearR = midR - strokeWidth / 2.0;
 
-                const midR = trackOuterRadius - ((rowPosition + y) / trackHeight) * trackRingSize;
-                const farR = midR + strokeWidth / 2.0;
-                const nearR = midR - strokeWidth / 2.0;
-
-                const sPos = cartesianToPolar(x, trackWidth, nearR, cx, cy, startAngle, endAngle);
-                const startRad = valueToRadian(x, trackWidth, startAngle, endAngle);
-                const endRad = valueToRadian(xe, trackWidth, startAngle, endAngle);
-
-                g.beginFill(colorToHex(color), actualOpacity);
-                g.moveTo(sPos.x, sPos.y);
-                g.arc(cx, cy, nearR, startRad, endRad, true);
-                g.arc(cx, cy, farR, endRad, startRad, false);
-                g.closePath();
-            } else if (dashed) {
-                const [dashSize, gapSize] = dashed;
-                let curPos = x;
-
-                do {
-                    g.moveTo(curPos, rowPosition + rowHeight - y);
-                    g.lineTo(curPos + dashSize, rowPosition + rowHeight - y);
-                    curPos += dashSize + gapSize;
-                } while (curPos < xe);
-            } else {
-                /* regular horizontal lines */
-                if (curved === undefined) {
-                    g.moveTo(x, rowPosition + rowHeight - y);
-                    g.lineTo(xe, rowPosition + rowHeight - y);
-                } else if (curved === 'top') {
-                    // TODO: to default value
-                    const CURVE_HEIGHT = 2;
-                    ///
-
-                    const xm = x + (xe - x) / 2.0;
-
-                    g.moveTo(x, rowPosition + rowHeight - y + CURVE_HEIGHT / 2.0);
-                    g.lineTo(xm, rowPosition + rowHeight - y - CURVE_HEIGHT / 2.0);
-                    g.moveTo(xm, rowPosition + rowHeight - y - CURVE_HEIGHT / 2.0);
-                    g.lineTo(xe, rowPosition + rowHeight - y + CURVE_HEIGHT / 2.0);
-                }
-            }
-
-            if (linePattern && curved === undefined && !circular) {
-                const { type: pType, size: pSize } = linePattern;
-                let curPos = Math.max(x, 0); // saftly start from visible position
-
-                g.lineStyle(0);
-
-                // TODO: to default value
-                const PATTERN_GAP_SIZE = pSize * 2;
-                ///
-
-                let count = 0;
-                while (curPos < Math.min(xe, trackWidth) && count < 100) {
-                    const x0 = curPos;
-                    const x1 = curPos + pSize;
-                    const ym = rowPosition + rowHeight - y;
-                    const y0 = ym - pSize / 2.0;
-                    const y1 = ym + pSize / 2.0;
+                    const sPos = cartesianToPolar(0, trackWidth, nearR, cx, cy, startAngle, endAngle);
+                    const startRad = valueToRadian(0, trackWidth, startAngle, endAngle);
+                    const endRad = valueToRadian(trackWidth, trackWidth, startAngle, endAngle);
 
                     g.beginFill(colorToHex(color), actualOpacity);
-                    g.drawPolygon(
-                        pType === 'triangleLeft' ? [x1, y0, x0, ym, x1, y1, x1, y0] : [x0, y0, x1, ym, x0, y1, x0, y0]
+                    g.moveTo(sPos.x, sPos.y);
+                    g.arc(cx, cy, nearR, startRad, endRad, true);
+                    g.arc(cx, cy, farR, endRad, startRad, false);
+                    g.closePath();
+                } else {
+                    if (dashed) {
+                        const [dashSize, gapSize] = dashed;
+                        let curPos = 0;
+
+                        do {
+                            g.moveTo(curPos, rowPosition + rowHeight - y);
+                            g.lineTo(curPos + dashSize, rowPosition + rowHeight - y);
+                            curPos += dashSize + gapSize;
+                        } while (curPos < trackWidth);
+                    } else {
+                        g.moveTo(0, rowPosition + rowHeight - y);
+                        g.lineTo(trackWidth, rowPosition + rowHeight - y);
+                    }
+                }
+            } else {
+                if (circular) {
+                    // !!! Currently, we only support simple straight lines for circular layouts.
+                    if (strokeWidth === 0) {
+                        // Do not render invisible elements.
+                        return;
+                    }
+
+                    // Actually, we are drawing arcs instead of lines, so lets remove stroke.
+                    g.lineStyle(
+                        strokeWidth,
+                        colorToHex(color),
+                        0, // alpha
+                        0.5 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
                     );
-                    g.endFill();
-                    curPos += pSize + PATTERN_GAP_SIZE;
 
-                    count++;
+                    const midR = trackOuterRadius - ((rowPosition + y) / trackHeight) * trackRingSize;
+                    const farR = midR + strokeWidth / 2.0;
+                    const nearR = midR - strokeWidth / 2.0;
 
-                    // saftly end before the visible position
+                    const sPos = cartesianToPolar(x, trackWidth, nearR, cx, cy, startAngle, endAngle);
+                    const startRad = valueToRadian(x, trackWidth, startAngle, endAngle);
+                    const endRad = valueToRadian(xe, trackWidth, startAngle, endAngle);
+
+                    g.beginFill(colorToHex(color), actualOpacity);
+                    g.moveTo(sPos.x, sPos.y);
+                    g.arc(cx, cy, nearR, startRad, endRad, true);
+                    g.arc(cx, cy, farR, endRad, startRad, false);
+                    g.closePath();
+                } else if (dashed) {
+                    const [dashSize, gapSize] = dashed;
+                    let curPos = x;
+
+                    do {
+                        g.moveTo(curPos, rowPosition + rowHeight - y);
+                        g.lineTo(curPos + dashSize, rowPosition + rowHeight - y);
+                        curPos += dashSize + gapSize;
+                    } while (curPos < xe);
+                } else {
+                    /* regular horizontal lines */
+                    if (curved === undefined) {
+                        g.moveTo(x, rowPosition + rowHeight - y);
+                        g.lineTo(xe, rowPosition + rowHeight - y);
+                    } else if (curved === 'top') {
+                        // TODO: to default value
+                        const CURVE_HEIGHT = 2;
+                        ///
+
+                        const xm = x + (xe - x) / 2.0;
+
+                        g.moveTo(x, rowPosition + rowHeight - y + CURVE_HEIGHT / 2.0);
+                        g.lineTo(xm, rowPosition + rowHeight - y - CURVE_HEIGHT / 2.0);
+                        g.moveTo(xm, rowPosition + rowHeight - y - CURVE_HEIGHT / 2.0);
+                        g.lineTo(xe, rowPosition + rowHeight - y + CURVE_HEIGHT / 2.0);
+                    }
+                }
+
+                if (linePattern && curved === undefined && !circular) {
+                    const { type: pType, size: pSize } = linePattern;
+                    let curPos = Math.max(x, 0); // saftly start from visible position
+
+                    g.lineStyle(0);
+
+                    // TODO: to default value
+                    const PATTERN_GAP_SIZE = pSize * 2;
+                    ///
+
+                    let count = 0;
+                    while (curPos < Math.min(xe, trackWidth) && count < 100) {
+                        const x0 = curPos;
+                        const x1 = curPos + pSize;
+                        const ym = rowPosition + rowHeight - y;
+                        const y0 = ym - pSize / 2.0;
+                        const y1 = ym + pSize / 2.0;
+
+                        g.beginFill(colorToHex(color), actualOpacity);
+                        g.drawPolygon(
+                            pType === 'triangleLeft'
+                                ? [x1, y0, x0, ym, x1, y1, x1, y0]
+                                : [x0, y0, x1, ym, x0, y1, x0, y0]
+                        );
+                        g.endFill();
+                        curPos += pSize + PATTERN_GAP_SIZE;
+
+                        count++;
+
+                        // saftly end before the visible position
+                    }
                 }
             }
         });
