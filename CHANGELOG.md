@@ -1,3 +1,20 @@
+## [0.9.13](https://github.com/gosling-lang/gosling.js/compare/v0.9.12...v0.9.13) (2021-12-10)
+
+
+### Bug Fixes
+
+* correctly show arcs when x is larger than xe ([#605](https://github.com/gosling-lang/gosling.js/issues/605)) ([3d8fa38](https://github.com/gosling-lang/gosling.js/commit/3d8fa38faffb57cc5ea2b95b67e9a890ac38ea05))
+* do not filter out small `withinLink` marks by default ([#604](https://github.com/gosling-lang/gosling.js/issues/604)) ([dabecd7](https://github.com/gosling-lang/gosling.js/commit/dabecd74ac76d02819457dc568839686b9a858a2))
+* do not generate gosling model with undefined tilePos ([#603](https://github.com/gosling-lang/gosling.js/issues/603)) ([42439a8](https://github.com/gosling-lang/gosling.js/commit/42439a85dd94037467f7d65c09ded1bc8d71989f))
+
+
+### Features
+
+* allow aggregation functions (`mean` and `sum`) for vector, bigwig, and multivec ([#591](https://github.com/gosling-lang/gosling.js/issues/591)) ([5ace48d](https://github.com/gosling-lang/gosling.js/commit/5ace48daa8373fc3bba3f7de4c4d421bd0f03264))
+* horizontal and vertical `rule` marks in `linear` layout ([#601](https://github.com/gosling-lang/gosling.js/issues/601)) ([4eca209](https://github.com/gosling-lang/gosling.js/commit/4eca20948c89d42f8b8ffb8b229bfb1b4c78cc6b)), closes [#602](https://github.com/gosling-lang/gosling.js/issues/602) [#603](https://github.com/gosling-lang/gosling.js/issues/603) [#604](https://github.com/gosling-lang/gosling.js/issues/604) [#591](https://github.com/gosling-lang/gosling.js/issues/591)
+
+
+
 ## [0.9.12](https://github.com/gosling-lang/gosling.js/compare/v0.9.11...v0.9.12) (2021-12-09)
 
 
