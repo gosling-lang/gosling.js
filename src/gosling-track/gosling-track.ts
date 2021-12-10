@@ -785,6 +785,11 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                 return tile.goslingModels;
             }
 
+            if (!tile.gos.tilePos) {
+                // we do not have this information ready yet, so we cannot get tileX
+                return;
+            }
+
             // Single tile can contain multiple gosling models if multiple tracks are superposed.
             tile.goslingModels = [];
 
@@ -802,7 +807,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                     // we do not draw matrix ourselves, higlass does.
                     return;
                 }
-                // console.log(tile);
+
                 if (!tile.gos.tabularData) {
                     // If the data is not already stored in a tabular form, convert them.
                     const { tileX, tileWidth } = this.getTilePosAndDimensions(
