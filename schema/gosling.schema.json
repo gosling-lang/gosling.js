@@ -230,9 +230,7 @@
     "BinAggregate": {
       "enum": [
         "mean",
-        "sum",
-        "min",
-        "max"
+        "sum"
       ],
       "type": "string"
     },

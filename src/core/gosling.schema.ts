@@ -592,7 +592,7 @@ export interface DomainGene {
 }
 
 export type Aggregate = 'max' | 'min' | 'mean' | 'bin' | 'count';
-export type BinAggregate = 'mean' | 'sum' | 'min' | 'max';
+export type BinAggregate = 'mean' | 'sum';
 
 /* ----------------------------- DATA ----------------------------- */
 export type DataDeep = JSONData | CSVData | BIGWIGData | MultivecData | BEDDBData | VectorData | MatrixData | BAMData;

@@ -79,12 +79,7 @@ export function getTabularData(
                 } else if (j % bin === bin - 1) {
                     // Add a row using the cumulative value
                     tabularData.push({
-                        [valueName]:
-                            agg === 'min'
-                                ? minVal
-                                : agg === 'max'
-                                ? maxVal
-                                : cumVal / bin / (agg === 'mean' ? tileUnitSize : 1),
+                        [valueName]: cumVal / bin / (agg === 'mean' ? tileUnitSize : 1),
                         [columnName]: data.tileX + (binStart + bin / 2.0) * tileUnitSize,
                         [startName]: data.tileX + binStart * tileUnitSize,
                         [endName]: data.tileX + binEnd * tileUnitSize,
@@ -96,12 +91,7 @@ export function getTabularData(
                     const smallBin = numOfGenomicPositions % bin;
                     const correctedBinEnd = binStart + smallBin;
                     tabularData.push({
-                        [valueName]:
-                            agg === 'min'
-                                ? minVal
-                                : agg === 'max'
-                                ? maxVal
-                                : cumVal / smallBin / (agg === 'mean' ? tileUnitSize : 1),
+                        [valueName]: cumVal / smallBin / (agg === 'mean' ? tileUnitSize : 1),
                         [columnName]: data.tileX + (binStart + smallBin / 2.0) * tileUnitSize,
                         [startName]: data.tileX + binStart * tileUnitSize,
                         [endName]: data.tileX + correctedBinEnd * tileUnitSize,
@@ -169,7 +159,6 @@ export function getTabularData(
                         [maxValueName]: value
                     });
                 } else {
-                    // EXPERIMENTAL: bin the data considering the `bin` options
                     if (j % bin === 0) {
                         // Start storing information for this bin
                         cumVal = minVal = maxVal = numericValues[numOfGenomicPositions * i + j];
@@ -179,12 +168,7 @@ export function getTabularData(
                         // Add a row using the cumulative value
                         tabularData.push({
                             [rowName]: c,
-                            [valueName]:
-                                agg === 'max'
-                                    ? maxVal
-                                    : agg === 'min'
-                                    ? minVal
-                                    : cumVal / bin / (agg === 'mean' ? tileUnitSize : 1),
+                            [valueName]: cumVal / (agg === 'mean' ? bin / tileUnitSize : 1),
                             [columnName]: data.tileX + (binStart + bin / 2.0) * tileUnitSize,
                             [startName]: data.tileX + binStart * tileUnitSize,
                             [endName]: data.tileX + binEnd * tileUnitSize,
@@ -197,12 +181,7 @@ export function getTabularData(
                         const correctedBinEnd = binStart + smallBin;
                         tabularData.push({
                             [rowName]: c,
-                            [valueName]:
-                                agg === 'min'
-                                    ? minVal
-                                    : agg === 'max'
-                                    ? maxVal
-                                    : cumVal / smallBin / (agg === 'mean' ? tileUnitSize : 1),
+                            [valueName]: cumVal / (agg === 'mean' ? smallBin / tileUnitSize : 1),
                             [columnName]: data.tileX + (binStart + smallBin / 2.0) * tileUnitSize,
                             [startName]: data.tileX + binStart * tileUnitSize,
                             [endName]: data.tileX + correctedBinEnd * tileUnitSize,
