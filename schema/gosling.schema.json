@@ -186,6 +186,10 @@
     "BIGWIGData": {
       "additionalProperties": false,
       "properties": {
+        "aggregation": {
+          "$ref": "#/definitions/BinAggregate",
+          "description": "Determine aggregation function to apply within bins. __Default__: `\"mean\"`"
+        },
         "binSize": {
           "description": "Binning the genomic interval in tiles (unit size: 256).",
           "type": "number"
@@ -222,6 +226,13 @@
         "value"
       ],
       "type": "object"
+    },
+    "BinAggregate": {
+      "enum": [
+        "mean",
+        "sum"
+      ],
+      "type": "string"
     },
     "CSVData": {
       "additionalProperties": false,
@@ -1375,6 +1386,10 @@
       "additionalProperties": false,
       "description": "Two-dimensional quantitative values, one axis for genomic coordinate and the other for different samples, can be converted into HiGlass' `\"multivec\"` data. For example, multiple BigWig files can be converted into a single multivec file. You can also convert sequence data (FASTA) into this format where rows will be different nucleotide bases (e.g., A, T, G, C) and quantitative values represent the frequency. Find out more about this format at [HiGlass Docs](https://docs.higlass.io/data_preparation.html#multivec-files).",
       "properties": {
+        "aggregation": {
+          "$ref": "#/definitions/BinAggregate",
+          "description": "Determine aggregation function to apply within bins. __Default__: `\"mean\"`"
+        },
         "binSize": {
           "description": "Binning the genomic interval in tiles (unit size: 256).",
           "type": "number"
@@ -5137,6 +5152,10 @@
       "additionalProperties": false,
       "description": "One-dimensional quantitative values along genomic position (e.g., bigwig) can be converted into HiGlass' `\"vector\"` format data. Find out more about this format at [HiGlass Docs](https://docs.higlass.io/data_preparation.html#bigwig-files).",
       "properties": {
+        "aggregation": {
+          "$ref": "#/definitions/BinAggregate",
+          "description": "Determine aggregation function to apply within bins. __Default__: `\"mean\"`"
+        },
         "binSize": {
           "description": "Binning the genomic interval in tiles (unit size: 256).",
           "type": "number"
