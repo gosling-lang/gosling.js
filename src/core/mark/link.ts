@@ -278,11 +278,6 @@ export function drawLink(g: PIXI.Graphics, trackInfo: any, model: GoslingTrackMo
                     return;
                 }
 
-                if (xe - x <= 0.1) {
-                    // Do not draw very small links
-                    return;
-                }
-
                 const midX = (x + xe) / 2.0;
 
                 // Must not fill color for `line`, just use `stroke`
