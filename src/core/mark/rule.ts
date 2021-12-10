@@ -69,6 +69,7 @@ export function drawRule(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackMo
                 /* vertical rule */
                 if (circular) {
                     // TODO:
+                    return;
                 } else {
                     if (dashed) {
                         const [dashSize, gapSize] = dashed;
