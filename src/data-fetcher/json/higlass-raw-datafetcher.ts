@@ -151,14 +151,23 @@ function RawDataFetcher(HGC: any, ...args: any): any {
             const maxX = tsInfo.min_pos[0] + (x + 1) * tileWidth;
 
             // filter the data so that visible data is sent to tracks
-            const tabularData = this.values.filter((d: any) => {
-                return this.dataConfig.genomicFields.find((g: any) => minX < d[g] && d[g] <= maxX);
-            });
+            let tabularData = this.values;
 
             const sizeLimit = this.dataConfig.sampleLength ?? 1000;
+
+            if (sizeLimit < tabularData.length) {
+                tabularData = tabularData.filter((d: any) => {
+                    return this.dataConfig.genomicFields.find((g: any) => minX < d[g] && d[g] <= maxX);
+                });
+            }
+
+            // sample the data to make it managable for visualization components
+            if (sizeLimit < tabularData.length) {
+                tabularData = sampleSize(tabularData, sizeLimit);
+            }
+
             return {
-                // sample the data to make it managable for visualization components
-                tabularData: tabularData.length > sizeLimit ? sampleSize(tabularData, sizeLimit) : tabularData,
+                tabularData,
                 server: null,
                 tilePos: [x],
                 zoomLevel: z

@@ -1,9 +1,16 @@
-## [0.9.12](https://github.com/gosling-lang/gosling.js/compare/v0.9.11...v0.9.12) (2021-12-09)
+## [0.9.12](https://github.com/gosling-lang/gosling.js/compare/v0.9.11...v0.9.12) (2021-12-10)
+
+
+### Bug Fixes
+
+* do not filter out small `withinLink` marks by default ([#604](https://github.com/gosling-lang/gosling.js/issues/604)) ([3b2311c](https://github.com/gosling-lang/gosling.js/commit/3b2311cd0568267222374465e5b3c7da52d72724))
+* do not generate gosling model with undefined tilePos ([#603](https://github.com/gosling-lang/gosling.js/issues/603)) ([2208e43](https://github.com/gosling-lang/gosling.js/commit/2208e432220ec417e55d357f93f9babc395e1460))
 
 
 ### Features
 
-* allow tooltip and mouse events on circular arc ([#602](https://github.com/gosling-lang/gosling.js/issues/602)) ([40d8809](https://github.com/gosling-lang/gosling.js/commit/40d8809ee89a0ed19735ef5f488a8f0381bf2ca5))
+* allow aggregation functions (`mean` and `sum`) for vector, bigwig, and multivec ([#591](https://github.com/gosling-lang/gosling.js/issues/591)) ([992415d](https://github.com/gosling-lang/gosling.js/commit/992415d36f588ccf18f0d08991beaa25824bb68a))
+* allow tooltip and mouse events on circular arc ([#602](https://github.com/gosling-lang/gosling.js/issues/602)) ([ce630f2](https://github.com/gosling-lang/gosling.js/commit/ce630f21594765a51e1147927ccb8463bb7bd60a))
 
 
 
