@@ -334,9 +334,11 @@ export function drawLink(g: PIXI.Graphics, trackInfo: any, model: GoslingTrackMo
                         const x1 = x;
                         const y1 = baseY;
                         const x2 = x + (xe - x) / 3.0;
-                        const y2 = baseY + Math.max(10, Math.min(rowHeight, (xe - x) / 2.0)) * (flipY ? 1 : -1);
+                        const y2 =
+                            baseY + Math.max(rowHeight / 2.0, Math.min(rowHeight, (xe - x) / 2.0)) * (flipY ? 1 : -1);
                         const x3 = x + ((xe - x) / 3.0) * 2;
-                        const y3 = baseY + Math.max(10, Math.min(rowHeight, (xe - x) / 2.0)) * (flipY ? 1 : -1);
+                        const y3 =
+                            baseY + Math.max(rowHeight / 2.0, Math.min(rowHeight, (xe - x) / 2.0)) * (flipY ? 1 : -1);
                         const x4 = xe;
                         const y4 = baseY;
 
