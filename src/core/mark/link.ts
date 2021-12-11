@@ -7,9 +7,6 @@ import colorToHex from '../utils/color-to-hex';
 import { Bezier } from 'bezier-js';
 import { TooltipData } from '../../gosling-tooltip';
 
-// Bezier deprecated
-const DISABLE_BEZIER = true;
-
 export function drawLink(g: PIXI.Graphics, trackInfo: any, model: GoslingTrackModel) {
     /* track spec */
     const spec = model.spec();
@@ -39,8 +36,8 @@ export function drawLink(g: PIXI.Graphics, trackInfo: any, model: GoslingTrackMo
     const rowCategories: string[] = (model.getChannelDomainArray('row') as string[]) ?? ['___SINGLE_ROW___'];
     const rowHeight = trackHeight / rowCategories.length;
 
-    /* render */
     // TODO: Can row be actually used for circular layouts?
+    /* render */
     rowCategories.forEach(rowCategory => {
         const rowPosition = model.encodedValue('row', rowCategory);
 
@@ -176,7 +173,7 @@ export function drawLink(g: PIXI.Graphics, trackInfo: any, model: GoslingTrackMo
 
                     g.moveTo(_x1, baseY);
 
-                    if (spec.style?.bazierLink || DISABLE_BEZIER) {
+                    if (spec.style?.bazierLink) {
                         g.arc(
                             (_x1 + _x4) / 2.0, // cx
                             baseY, // cy
@@ -312,42 +309,50 @@ export function drawLink(g: PIXI.Graphics, trackInfo: any, model: GoslingTrackMo
                     const y4 = posE.y;
 
                     g.moveTo(x1, y1);
-                    g.bezierCurveTo(x2, y2, x3, y3, x4, y4);
 
                     const bezier = new Bezier(x1, y1, x2, y2, x3, y3, x4, y4);
-                    const points = bezier.getLUT(1000);
+                    const points = bezier.getLUT(20);
+                    points.forEach(d => g.lineTo(d.x, d.y));
+
                     /* click event data */
+                    const morePoints = bezier.getLUT(1000);
                     if (spec.tooltip) {
                         trackInfo.tooltips.push({
                             datum: d,
                             isMouseOver: (mouseX: number, mouseY: number) =>
-                                points.findIndex(d => Math.sqrt((d.x - mouseX) ** 2 + (d.y - mouseY) ** 2) < 5) !== -1,
+                                morePoints.findIndex(d => Math.sqrt((d.x - mouseX) ** 2 + (d.y - mouseY) ** 2) < 5) !==
+                                -1,
                             markInfo: {}
                         } as TooltipData);
                     }
                 } else {
+                    // linear line connection
+
                     g.moveTo(x, baseY);
 
                     if (spec.style?.bazierLink) {
                         const x1 = x;
                         const y1 = baseY;
                         const x2 = x + (xe - x) / 3.0;
-                        const y2 = baseY + Math.min(rowHeight, (xe - x) / 2.0) * (flipY ? 1 : -1);
+                        const y2 = baseY + Math.max(10, Math.min(rowHeight, (xe - x) / 2.0)) * (flipY ? 1 : -1);
                         const x3 = x + ((xe - x) / 3.0) * 2;
-                        const y3 = baseY + Math.min(rowHeight, (xe - x) / 2.0) * (flipY ? 1 : -1);
+                        const y3 = baseY + Math.max(10, Math.min(rowHeight, (xe - x) / 2.0)) * (flipY ? 1 : -1);
                         const x4 = xe;
                         const y4 = baseY;
-                        g.bezierCurveTo(x2, y2, x3, y3, x4, y4);
+
                         const bezier = new Bezier(x1, y1, x2, y2, x3, y3, x4, y4);
-                        const points = bezier.getLUT(1000);
+                        const points = bezier.getLUT(20);
+                        points.forEach(d => g.lineTo(d.x, d.y));
 
                         /* click event data */
+                        const morePoints = bezier.getLUT(1000);
                         if (spec.tooltip) {
                             trackInfo.tooltips.push({
                                 datum: d,
                                 isMouseOver: (mouseX: number, mouseY: number) =>
-                                    points.findIndex(d => Math.sqrt((d.x - mouseX) ** 2 + (d.y - mouseY) ** 2) < 5) !==
-                                    -1,
+                                    morePoints.findIndex(
+                                        d => Math.sqrt((d.x - mouseX) ** 2 + (d.y - mouseY) ** 2) < 5
+                                    ) !== -1,
                                 markInfo: {}
                             } as TooltipData);
                         }
