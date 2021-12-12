@@ -311,7 +311,7 @@ export function drawLink(g: PIXI.Graphics, trackInfo: any, model: GoslingTrackMo
                     g.moveTo(x1, y1);
 
                     const bezier = new Bezier(x1, y1, x2, y2, x3, y3, x4, y4);
-                    const points = bezier.getLUT(20);
+                    const points = bezier.getLUT(14);
                     points.forEach(d => g.lineTo(d.x, d.y));
 
                     /* click event data */
@@ -343,7 +343,7 @@ export function drawLink(g: PIXI.Graphics, trackInfo: any, model: GoslingTrackMo
                         const y4 = baseY;
 
                         const bezier = new Bezier(x1, y1, x2, y2, x3, y3, x4, y4);
-                        const points = bezier.getLUT(20);
+                        const points = bezier.getLUT(14);
                         points.forEach(d => g.lineTo(d.x, d.y));
 
                         /* click event data */
