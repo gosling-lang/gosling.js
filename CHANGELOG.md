@@ -1,3 +1,13 @@
+## [0.9.14](https://github.com/gosling-lang/gosling.js/compare/v0.9.13...v0.9.14) (2021-12-12)
+
+
+### Bug Fixes
+
+* correct bezier curve condition for if statement ([f525927](https://github.com/gosling-lang/gosling.js/commit/f525927869b65ef33032a85b2b95a97bf95ff858))
+* fix circular brush hiccup upon dragging ([#607](https://github.com/gosling-lang/gosling.js/issues/607)) ([50d7ee4](https://github.com/gosling-lang/gosling.js/commit/50d7ee4c33f34e26450e0a7fe66f2ae8aebc66c4))
+
+
+
 ## [0.9.13](https://github.com/gosling-lang/gosling.js/compare/v0.9.12...v0.9.13) (2021-12-10)
 
 
