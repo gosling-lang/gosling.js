@@ -173,7 +173,7 @@ export function drawLink(g: PIXI.Graphics, trackInfo: any, model: GoslingTrackMo
 
                     g.moveTo(_x1, baseY);
 
-                    if (spec.style?.bezierLink) {
+                    if (!spec.style?.bezierLink) {
                         g.arc(
                             (_x1 + _x4) / 2.0, // cx
                             baseY, // cy
