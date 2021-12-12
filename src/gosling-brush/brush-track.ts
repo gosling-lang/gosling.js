@@ -158,14 +158,10 @@ function BrushTrack(HGC: any, ...args: any[]): any {
         /**
          * Function to call upon hearing click event on the brush
          */
-
         dragged() {
             const start = () => {
                 this.startEvent = HGC.libraries.d3Selection.event.sourceEvent;
-                this.prevExtent = [
-                    this.circularBrushData[0].startAngle - this.RR,
-                    this.circularBrushData[0].endAngle + this.RR
-                ];
+                this.prevExtent = [this.circularBrushData[0].startAngle, this.circularBrushData[0].endAngle];
             };
 
             const drag = (d: CircularBrushData) => {
