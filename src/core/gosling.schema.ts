@@ -7,12 +7,18 @@ export type RootSpecWithSingleView = SingleView & {
     title?: string;
     subtitle?: string;
     description?: string;
+
+    /** Gap between chromosomes in base pairs. __Default__: `0`*/
+    chrGap?: number;
 };
 
 export interface RootSpecWithMultipleViews extends MultipleViews {
     title?: string;
     subtitle?: string;
     description?: string;
+
+    /** Gap between chromosomes in base pairs. __Default__: `0`*/
+    chrGap?: number;
 }
 
 /* ----------------------------- VIEW ----------------------------- */

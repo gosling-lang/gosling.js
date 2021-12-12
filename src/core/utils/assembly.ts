@@ -107,16 +107,33 @@ export function getChromInterval(chromSize: { [k: string]: number }) {
     const interval: { [k: string]: [number, number] } = {};
 
     Object.keys(chromSize).reduce((sum, k) => {
-        interval[k] = [sum, sum + chromSize[k]];
-        return sum + chromSize[k];
+        interval[k] = [sum, sum + chromSize[k] + 100000000];
+        return sum + chromSize[k] + 100000000;
     }, 0);
 
     return interval;
+}
+
+// TODO: assembly
+export function relativePositionWithGaps(abs: number) {
+    const s = GET_CHROM_SIZES().size;
+    let gap = 0;
+    let cum = 0;
+
+    Object.values(s).forEach(size => {
+        if(abs < cum + size) {
+
+        } else {
+            cum = cum + size + 100000000;
+            gap += 100000000;
+        }
+    });
+    return abs + gap;
 }
 
 /**
  * Calculate total size of entire chromosomes.
  */
 export function getChromTotalSize(chromSize: { [k: string]: number }) {
-    return Object.values(chromSize).reduce((sum, current) => sum + current, 0);
+    return Object.values(chromSize).reduce((sum, current) => sum + current + 100000000, 0);
 }

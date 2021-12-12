@@ -3094,6 +3094,10 @@
           "description": "Proportion of the radius of the center white space.\n\n__Default:__ `0.3`",
           "type": "number"
         },
+        "chrGap": {
+          "description": "Gap between chromosomes in base pairs. __Default__: `0`",
+          "type": "number"
+        },
         "description": {
           "type": "string"
         },
@@ -3198,6 +3202,10 @@
             },
             "centerRadius": {
               "description": "Proportion of the radius of the center white space.\n\n__Default:__ `0.3`",
+              "type": "number"
+            },
+            "chrGap": {
+              "description": "Gap between chromosomes in base pairs. __Default__: `0`",
               "type": "number"
             },
             "color": {
@@ -3521,6 +3529,10 @@
               "description": "Proportion of the radius of the center white space.\n\n__Default:__ `0.3`",
               "type": "number"
             },
+            "chrGap": {
+              "description": "Gap between chromosomes in base pairs. __Default__: `0`",
+              "type": "number"
+            },
             "color": {
               "anyOf": [
                 {
@@ -3832,6 +3844,10 @@
             },
             "centerRadius": {
               "description": "Proportion of the radius of the center white space.\n\n__Default:__ `0.3`",
+              "type": "number"
+            },
+            "chrGap": {
+              "description": "Gap between chromosomes in base pairs. __Default__: `0`",
               "type": "number"
             },
             "description": {

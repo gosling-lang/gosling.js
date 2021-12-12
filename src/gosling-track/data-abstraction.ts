@@ -1,5 +1,6 @@
 import { Datum, SingleTrack } from '../core/gosling.schema';
 import { IsDataDeepTileset } from '../core/gosling.schema.guards';
+import { relativePositionWithGaps } from '../core/utils/assembly';
 
 /**
  * Convert genomic data formats to common tabular formats for given tile.
@@ -152,7 +153,7 @@ export function getTabularData(
                     tabularData.push({
                         [rowName]: c,
                         [valueName]: value,
-                        [columnName]: data.tileX + (j + 0.5) * tileUnitSize,
+                        [columnName]: relativePositionWithGaps(data.tileX + (j + 0.5) * tileUnitSize),
                         [startName]: data.tileX + j * tileUnitSize,
                         [endName]: data.tileX + (j + 1) * tileUnitSize,
                         [minValueName]: value,

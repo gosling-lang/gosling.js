@@ -4,6 +4,7 @@ import { EX_SPEC_VIEW_PILEUP } from './pileup';
 export const EX_SPEC_CANCER_VARIANT_PROTOTYPE: GoslingSpec = {
     title: 'Breast Cancer Variant (Staaf et al. 2019)',
     subtitle: 'Genetic characteristics of RAD51C- and PALB2-altered TNBCs',
+    chrGap: 10000,
     layout: 'linear',
     arrangement: 'vertical',
     centerRadius: 0.5,
