@@ -305,11 +305,11 @@ export interface Style {
      */
     dy?: number;
     /**
-     *  Specify whether to use bazier curves for the `link` marks.
+     *  Specify whether to use bezier curves for the `link` marks.
      */
-    bazierLink?: boolean;
+    bezierLink?: boolean;
 
-    // TODO: betweenLinkStyle: 'regular' | 'bazier' | 'flat'
+    // TODO: betweenLinkStyle: 'regular' | 'bezier' | 'flat'
     /** Specify whether to use a flat within-links, such as the one in Sashimi plots. __Default__: `false` */
     flatWithinLink?: boolean;
 

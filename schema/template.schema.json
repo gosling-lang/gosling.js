@@ -554,8 +554,8 @@
         "backgroundOpacity": {
           "type": "number"
         },
-        "bazierLink": {
-          "description": "Specify whether to use bazier curves for the `link` marks.",
+        "bezierLink": {
+          "description": "Specify whether to use bezier curves for the `link` marks.",
           "type": "boolean"
         },
         "curve": {
