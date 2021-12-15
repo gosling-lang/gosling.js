@@ -494,7 +494,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
 
                     if (Is2DTrack(resolveSuperposedTracks(this.options.spec)[0])) {
                         // it makes sense only when the y-axis is being used for a genomic field
-                        tileProxy.calculateTilesFromResolution(
+                        this.yTiles = tileProxy.calculateTilesFromResolution(
                             sortedResolutions[this.zoomLevel],
                             this._yScale,
                             this.tilesetInfo.min_pos[0],
@@ -545,11 +545,20 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
 
                 const chosenResolution = sortedResolutions[zoomLevel];
 
+                const [xTilePos, yTilePos] = tilePos;
+
                 const tileWidth = chosenResolution * binsPerTile;
                 const tileHeight = tileWidth;
 
-                const tileX = chosenResolution * binsPerTile * tilePos[0];
-                const tileY = chosenResolution * binsPerTile * tilePos[1];
+                let tileX = chosenResolution * binsPerTile * xTilePos;
+                let tileY = chosenResolution * binsPerTile * yTilePos;
+
+                // TODO: `binsPerTile` is 1024, but somehow 256 works.
+                // So, 4 is additionally divided as workaround.
+                if (resolveSuperposedTracks(this.options.spec)[0].data.type === 'matrix') {
+                    tileX = (tileWidth * xTilePos) / 4;
+                    tileY = (tileHeight * yTilePos) / 4;
+                }
 
                 return {
                     tileX,
@@ -558,8 +567,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                     tileHeight
                 };
             } else {
-                const xTilePos = tilePos[0];
-                const yTilePos = tilePos[1];
+                const [xTilePos, yTilePos] = tilePos;
 
                 const minX = this.tilesetInfo.min_pos[0];
 
@@ -799,18 +807,13 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
 
             resolveSuperposedTracks(spec).forEach(resolved => {
                 if (resolved.mark === 'brush') {
-                    // we do not draw rectangular brush ourselves, higlass does.
-                    return;
-                }
-
-                if (resolved.data.type === 'matrix') {
-                    // we do not draw matrix ourselves, higlass does.
+                    // interactive brushes are drawn by another plugin track, called `gosling-brush`
                     return;
                 }
 
                 if (!tile.gos.tabularData) {
                     // If the data is not already stored in a tabular form, convert them.
-                    const { tileX, tileWidth } = this.getTilePosAndDimensions(
+                    const { tileX, tileY, tileWidth, tileHeight } = this.getTilePosAndDimensions(
                         tile.gos.zoomLevel,
                         tile.gos.tilePos,
                         this.tileSize
@@ -819,7 +822,9 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                     tile.gos.tabularData = getTabularData(resolved, {
                         ...tile.gos,
                         tileX,
+                        tileY,
                         tileWidth,
+                        tileHeight,
                         tileSize: this.tileSize
                     });
                 }

@@ -1,6 +1,7 @@
 import type { GoslingSpec } from 'gosling.js';
 import { EX_SPEC_LAYOUT_AND_ARRANGEMENT_1, EX_SPEC_LAYOUT_AND_ARRANGEMENT_2 } from './layout-and-arrangement';
 import { EX_SPEC_VISUAL_ENCODING, EX_SPEC_VISUAL_ENCODING_CIRCULAR, EX_SPEC_RULE } from './visual-encoding';
+import { EX_SPEC_MATRIX } from './matrix';
 import { EX_SPEC_CANCER_VARIANT_PROTOTYPE } from './cancer-variant';
 import { EX_SPEC_MATRIX_HFFC6 } from './matrix-hffc6';
 import { EX_SPEC_LINKING } from './visual-linking';
@@ -52,6 +53,11 @@ export const examples: {
     RULE: {
         name: 'Basic Example: Rule Mark',
         spec: EX_SPEC_RULE
+    },
+    MATRIX: {
+        name: 'Basic Example: Hi-C Matrix',
+        spec: EX_SPEC_MATRIX,
+        forceShow: true
     },
     LINKING: {
         name: 'Basic Example: Visual Linking',

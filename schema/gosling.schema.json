@@ -448,6 +448,13 @@
           "$ref": "#/definitions/Range",
           "description": "Determine the colors that should be bound to data value. Default properties are determined considering the field type."
         },
+        "scale": {
+          "enum": [
+            "linear",
+            "log"
+          ],
+          "type": "string"
+        },
         "type": {
           "description": "Specify the data type",
           "enum": [
@@ -1275,11 +1282,28 @@
     "MatrixData": {
       "additionalProperties": false,
       "properties": {
+        "binSize": {
+          "description": "Determine the number of nearby cells to aggregate. __Default__: `1`",
+          "type": "number"
+        },
+        "column": {
+          "description": "The name of the first genomic field. __Default__: `position1`",
+          "type": "string"
+        },
+        "row": {
+          "description": "The name of the first genomic field. __Default__: `position2`",
+          "type": "string"
+        },
         "type": {
           "const": "matrix",
           "type": "string"
         },
         "url": {
+          "description": "URL link to the BAM data file",
+          "type": "string"
+        },
+        "value": {
+          "description": "The name of the value field. __Default__: `value`",
           "type": "string"
         }
       },

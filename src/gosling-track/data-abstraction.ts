@@ -13,6 +13,8 @@ export function getTabularData(
         tileX: number;
         tileWidth: number;
         tileSize: number;
+        tileY?: number; // used for matrix
+        tileHeight?: number; // used for matrix
     }
 ) {
     const tabularData: Datum[] = [];
@@ -199,6 +201,58 @@ export function getTabularData(
                 }
             });
         });
+    } else if (spec.data.type === 'matrix') {
+        if (!data.dense || typeof data.tileY === 'undefined' || typeof data.tileHeight === 'undefined') {
+            // we do not have sufficient data.
+            return;
+        }
+
+        // width and height of the tile
+        const tileSize = Math.sqrt(data.dense.length);
+        if (tileSize !== 256) {
+            console.warn('The bin size of the matrix tilesets is not 256');
+        }
+
+        const { tileX, tileY } = data;
+        const numericValues = data.dense;
+
+        // TODO: Not sure why 1024 works instead of tileSize
+        const tileXUnitSize = data.tileWidth / 1024; // tileSize / 4;
+        const tileYUnitSize = data.tileHeight / 1024; // tileSize / 4;
+
+        // For the rendering performance, we aggregate multiple cells into one.
+        const binSize = 16; // assuming that # of cells can be divided by binSize
+        for (let i = 0; i < numericValues.length / binSize; i++) {
+            const binLen = Math.sqrt(binSize);
+            const xIndex = (i * binLen) % tileSize;
+            const yIndex = Math.floor((i * binLen) / tileSize) * binLen;
+
+            // Being xIndex and yIndex the top-let origin, aggregate 4 x 4 cells
+            let value = 0;
+            for (let c = 0; c < binLen; c++) {
+                for (let r = 0; r < binLen; r++) {
+                    const curVal = numericValues[(yIndex + r) * tileSize + (xIndex + c)];
+                    if (!isNaN(+value)) {
+                        value += curVal;
+                    }
+                }
+            }
+
+            value /= binSize;
+
+            if (isNaN(value)) {
+                // if this is NaN, just skip this.
+                continue;
+            }
+
+            const xs = tileX + xIndex * tileXUnitSize;
+            const xe = tileX + (xIndex + binLen) * tileXUnitSize;
+            const ys = tileY + yIndex * tileYUnitSize;
+            const ye = tileY + (yIndex + binLen) * tileYUnitSize;
+            const x = (xs + xe) / 2.0;
+            const y = (ys + ye) / 2.0;
+            tabularData.push({ value, x, xs, xe, y, ys, ye });
+        }
     } else if (spec.data.type === 'beddb') {
         if (!data.raw) {
             // we did not get sufficient data.
@@ -254,8 +308,6 @@ export function getTabularData(
                 });
             }
         });
-    } else if (spec.data.type === 'bam') {
-        // TODO: Do we need this?
     }
 
     /// DEBUG

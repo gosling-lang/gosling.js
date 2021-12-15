@@ -55,7 +55,7 @@ export function drawMark(HGC: any, trackInfo: any, tile: any, model: GoslingTrac
     }
 
     if (model.spec().mark === 'brush') {
-        // We do not draw brush. Instead, higlass do.
+        // Interactive brushes are rendered by our another plugin track, called `gosling-brush`
         return;
     }
 
