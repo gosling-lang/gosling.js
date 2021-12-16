@@ -535,7 +535,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
         /**
          * Get the tile's position in its coordinate system.
          */
-        getTilePosAndDimensions(zoomLevel: number, tilePos: any, binsPerTileIn: any) {
+        getTilePosAndDimensions(zoomLevel: number, tilePos: [number, number], binsPerTileIn?: number) {
             const binsPerTile = binsPerTileIn || this.tilesetInfo.bins_per_dimension || 256;
 
             if (this.tilesetInfo.resolutions) {
@@ -543,6 +543,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                     .map((x: number) => +x)
                     .sort((a: number, b: number) => b - a);
 
+                // A resolution specifies the number of BP per bin
                 const chosenResolution = sortedResolutions[zoomLevel];
 
                 const [xTilePos, yTilePos] = tilePos;
@@ -550,15 +551,8 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                 const tileWidth = chosenResolution * binsPerTile;
                 const tileHeight = tileWidth;
 
-                let tileX = chosenResolution * binsPerTile * xTilePos;
-                let tileY = chosenResolution * binsPerTile * yTilePos;
-
-                // TODO: `binsPerTile` is 1024, but somehow 256 works.
-                // So, 4 is additionally divided as workaround.
-                if (resolveSuperposedTracks(this.options.spec)[0].data.type === 'matrix') {
-                    tileX = (tileWidth * xTilePos) / 4;
-                    tileY = (tileHeight * yTilePos) / 4;
-                }
+                const tileX = tileWidth * xTilePos;
+                const tileY = tileHeight * yTilePos;
 
                 return {
                     tileX,
@@ -816,7 +810,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                     const { tileX, tileY, tileWidth, tileHeight } = this.getTilePosAndDimensions(
                         tile.gos.zoomLevel,
                         tile.gos.tilePos,
-                        this.tileSize
+                        this.tilesetInfo.bins_per_dimension || this.tilesetInfo?.tile_size
                     );
 
                     tile.gos.tabularData = getTabularData(resolved, {

@@ -208,47 +208,47 @@ export function getTabularData(
         }
 
         // width and height of the tile
-        const tileSize = Math.sqrt(data.dense.length);
-        if (tileSize !== 256) {
-            console.warn('The bin size of the matrix tilesets is not 256');
-        }
+        const numBins = Math.sqrt(data.dense.length);
 
-        const { tileX, tileY } = data;
+        const { tileX, tileY, tileWidth, tileHeight } = data;
         const numericValues = data.dense;
 
-        // TODO: Not sure why 1024 works instead of tileSize
-        const tileXUnitSize = data.tileWidth / 1024; // tileSize / 4;
-        const tileYUnitSize = data.tileHeight / 1024; // tileSize / 4;
+        const tileXUnitSize = tileWidth / numBins;
+        const tileYUnitSize = tileHeight / numBins;
 
-        // For the rendering performance, we aggregate multiple cells into one.
-        const binSize = 16; // assuming that # of cells can be divided by binSize
-        for (let i = 0; i < numericValues.length / binSize; i++) {
-            const binLen = Math.sqrt(binSize);
-            const xIndex = (i * binLen) % tileSize;
-            const yIndex = Math.floor((i * binLen) / tileSize) * binLen;
+        // TODO: a way to improve rendering performance?
+        // For the rendering performance, we aggregate cells so that we draw smaller number of marks.
+        const aggSize = 16; // assuming that # of cells can be divided by binSize, which is mostly 256 or 1024
+        for (let i = 0; i < numericValues.length / aggSize; i++) {
+            const aggLen = Math.sqrt(aggSize);
+            const xIndex = (i * aggLen) % numBins;
+            const yIndex = Math.floor((i * aggLen) / numBins) * aggLen;
 
             // Being xIndex and yIndex the top-let origin, aggregate 4 x 4 cells
-            let value = 0;
-            for (let c = 0; c < binLen; c++) {
-                for (let r = 0; r < binLen; r++) {
-                    const curVal = numericValues[(yIndex + r) * tileSize + (xIndex + c)];
-                    if (!isNaN(+value)) {
+            let value = NaN;
+            for (let c = 0; c < aggLen; c++) {
+                for (let r = 0; r < aggLen; r++) {
+                    const curVal = numericValues[(yIndex + r) * numBins + (xIndex + c)];
+                    if (!isNaN(+curVal)) {
+                        if (isNaN(value)) {
+                            value = 0;
+                        }
                         value += curVal;
                     }
                 }
             }
 
-            value /= binSize;
-
             if (isNaN(value)) {
-                // if this is NaN, just skip this.
+                // this is a missing value
                 continue;
             }
 
+            value /= aggSize;
+
             const xs = tileX + xIndex * tileXUnitSize;
-            const xe = tileX + (xIndex + binLen) * tileXUnitSize;
+            const xe = tileX + (xIndex + aggLen) * tileXUnitSize;
             const ys = tileY + yIndex * tileYUnitSize;
-            const ye = tileY + (yIndex + binLen) * tileYUnitSize;
+            const ye = tileY + (yIndex + aggLen) * tileYUnitSize;
             const x = (xs + xe) / 2.0;
             const y = (ys + ye) / 2.0;
             tabularData.push({ value, x, xs, xe, y, ys, ye });

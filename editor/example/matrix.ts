@@ -43,29 +43,11 @@ export const EX_SPEC_MATRIX: GoslingSpec = {
                             },
                             mark: 'bar',
                             x: { field: 'xs', type: 'genomic', axis: 'none' },
-                            xe: { field: 'xe', type: 'genomic' },
+                            xe: { field: 'xe', type: 'genomic', axis: 'none' },
                             y: { field: 'ys', type: 'genomic', axis: 'none' },
-                            ye: { field: 'ye', type: 'genomic' },
+                            ye: { field: 'ye', type: 'genomic', axis: 'none' },
                             color: { field: 'value', type: 'quantitative', legend: true },
                             style: { background: 'lightgray' }
-                        },
-                        {
-                            data: {
-                                type: 'json',
-                                values: [
-                                    { c: 'chr2', p: 100000, v: 0.0001 },
-                                    { c: 'chr5', p: 100000, v: 0.0004 },
-                                    { c: 'chr10', p: 100000, v: 0.0009 }
-                                ],
-                                chromosomeField: 'c',
-                                genomicFields: ['p'],
-                                quantitativeFields: ['v']
-                            },
-                            mark: 'rule',
-                            x: { field: 'p', type: 'genomic' },
-                            y: { field: 'v', type: 'genomic' },
-                            strokeWidth: { field: 'v', type: 'quantitative' },
-                            color: { value: 'red' }
                         },
                         {
                             data: {
@@ -80,9 +62,9 @@ export const EX_SPEC_MATRIX: GoslingSpec = {
                                 quantitativeFields: ['v']
                             },
                             mark: 'rule',
-                            x: { field: 'p', type: 'genomic' },
+                            x: { field: 'p', type: 'genomic', axis: 'none' },
                             strokeWidth: { value: 2 },
-                            color: { value: 'blue' }
+                            color: { value: 'red' }
                         }
                     ],
                     width: 600,

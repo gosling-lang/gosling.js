@@ -242,9 +242,11 @@ export const EX_SPEC_MATRIX_HFFC6: GoslingSpec = {
                                         url: GOSLING_PUBLIC_DATA.matrixMicroC,
                                         type: 'matrix'
                                     },
-                                    mark: 'rect',
-                                    x: { field: 'position1', type: 'genomic', axis: 'none' },
-                                    y: { field: 'position2', type: 'genomic', axis: 'none' },
+                                    mark: 'bar',
+                                    x: { field: 'xs', type: 'genomic', axis: 'none' },
+                                    xe: { field: 'xe', type: 'genomic', axis: 'none' },
+                                    y: { field: 'ys', type: 'genomic', axis: 'none' },
+                                    ye: { field: 'ye', type: 'genomic', axis: 'none' },
                                     color: { field: 'value', type: 'quantitative', range: 'warm' },
                                     width: 600,
                                     height: 600
@@ -432,9 +434,11 @@ export const EX_SPEC_MATRIX_HFFC6: GoslingSpec = {
                                         url: GOSLING_PUBLIC_DATA.matrixHiC,
                                         type: 'matrix'
                                     },
-                                    mark: 'rect',
-                                    x: { field: 'position1', type: 'genomic', axis: 'none' },
-                                    y: { field: 'position2', type: 'genomic', axis: 'none' },
+                                    mark: 'bar',
+                                    x: { field: 'xs', type: 'genomic', axis: 'none' },
+                                    xe: { field: 'xe', type: 'genomic', axis: 'none' },
+                                    y: { field: 'ys', type: 'genomic', axis: 'none' },
+                                    ye: { field: 'ye', type: 'genomic', axis: 'none' },
                                     color: { field: 'value', type: 'quantitative', range: 'warm' },
                                     width: 600,
                                     height: 600
