@@ -215,6 +215,8 @@ export function getTabularData(
 
         const tileXUnitSize = tileWidth / numBins;
         const tileYUnitSize = tileHeight / numBins;
+        const columnField = spec.data.column ?? 'x';
+        const rowField = spec.data.row ?? 'y';
 
         // TODO: a way to improve rendering performance?
         // For the rendering performance, we aggregate cells so that we draw smaller number of marks.
@@ -251,7 +253,15 @@ export function getTabularData(
             const ye = tileY + (yIndex + aggLen) * tileYUnitSize;
             const x = (xs + xe) / 2.0;
             const y = (ys + ye) / 2.0;
-            tabularData.push({ value, x, xs, xe, y, ys, ye });
+            tabularData.push({
+                value,
+                [columnField]: x,
+                [`${columnField}s`]: xs,
+                [`${columnField}e`]: xe,
+                [rowField]: y,
+                [`${rowField}s`]: ys,
+                [`${rowField}e`]: ye
+            });
         }
     } else if (spec.data.type === 'beddb') {
         if (!data.raw) {

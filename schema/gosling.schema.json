@@ -1287,11 +1287,11 @@
           "type": "number"
         },
         "column": {
-          "description": "The name of the first genomic field. __Default__: `position1`",
+          "description": "The name of the first genomic field. __Default__: `x`",
           "type": "string"
         },
         "row": {
-          "description": "The name of the first genomic field. __Default__: `position2`",
+          "description": "The name of the first genomic field. __Default__: `y`",
           "type": "string"
         },
         "type": {
@@ -1299,7 +1299,7 @@
           "type": "string"
         },
         "url": {
-          "description": "URL link to the BAM data file",
+          "description": "URL link to the matrix data file",
           "type": "string"
         },
         "value": {

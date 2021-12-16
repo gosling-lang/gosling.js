@@ -872,13 +872,13 @@ export interface BAMData {
 export interface MatrixData {
     type: 'matrix';
 
-    /** URL link to the BAM data file */
+    /** URL link to the matrix data file */
     url: string;
 
-    /** The name of the first genomic field. __Default__: `position1` */
+    /** The name of the first genomic field. __Default__: `x` */
     column?: string;
 
-    /** The name of the first genomic field. __Default__: `position2` */
+    /** The name of the first genomic field. __Default__: `y` */
     row?: string;
 
     /** The name of the value field. __Default__: `value` */

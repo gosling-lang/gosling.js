@@ -459,7 +459,11 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                 const tiles = HGC.utils.trackUtils.calculate1DVisibleTiles(this.tilesetInfo, this._xScale);
 
                 for (const tile of tiles) {
-                    const { tileWidth } = this.getTilePosAndDimensions(tile[0], [tile[1]], this.tilesetInfo.tile_size);
+                    const { tileWidth } = this.getTilePosAndDimensions(
+                        tile[0],
+                        [tile[1], tile[1]],
+                        this.tilesetInfo.tile_size
+                    );
 
                     const DEFAULT_MAX_TILE_WIDTH = 2e4; // base pairs
 
