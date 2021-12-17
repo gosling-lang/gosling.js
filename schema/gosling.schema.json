@@ -287,13 +287,6 @@
           "description": "experimental",
           "type": "string"
         },
-        "quantitativeFields": {
-          "description": "Specify the name of quantitative data fields.",
-          "items": {
-            "type": "string"
-          },
-          "type": "array"
-        },
         "sampleLength": {
           "description": "Specify the number of rows loaded from the URL.\n\n__Default:__ `1000`",
           "type": "number"
@@ -1126,13 +1119,6 @@
               "genomicFields"
             ],
             "type": "object"
-          },
-          "type": "array"
-        },
-        "quantitativeFields": {
-          "description": "Specify the name of quantitative data fields.",
-          "items": {
-            "type": "string"
           },
           "type": "array"
         },

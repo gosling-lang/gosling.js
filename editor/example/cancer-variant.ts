@@ -603,8 +603,7 @@ export function view(sample: string): GoslingSpec {
             //         url: `https://s3.amazonaws.com/gosling-lang.org/data/cancer/substitution.${sample}.csv`,
             //         type: 'csv',
             //         chromosomeField: 'Chrom',
-            //         genomicFields: ['Pos'],
-            //         quantitativeFields: ['GP', 'SP', 'DP', 'PosDiff']
+            //         genomicFields: ['Pos']
             //     },
             //     dataTransform: [
             //         { type: 'concat', fields: ['Ref', 'Alt'], separator: ' > ', newField: 'sub' },

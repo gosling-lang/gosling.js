@@ -9,8 +9,7 @@ describe('Type Guard', () => {
                     url: 'https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/cytogenetic_band.csv',
                     type: 'csv',
                     chromosomeField: 'Chr.',
-                    genomicFields: ['ISCN_start', 'ISCN_stop', 'Basepair_start', 'Basepair_stop'],
-                    quantitativeFields: ['Band', 'Density']
+                    genomicFields: ['ISCN_start', 'ISCN_stop', 'Basepair_start', 'Basepair_stop']
                 },
                 overlay: [
                     {

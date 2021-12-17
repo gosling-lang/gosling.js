@@ -74,7 +74,6 @@ function CSVDataFetcher(HGC: any, ...args: any): any {
                 url,
                 chromosomeField,
                 genomicFields,
-                quantitativeFields,
                 headerNames,
                 chromosomePrefix,
                 longToWideId,
@@ -141,10 +140,6 @@ function CSVDataFetcher(HGC: any, ...args: any): any {
                             // store row only when chromosome information is correctly parsed
                             return undefined;
                         }
-
-                        quantitativeFields?.forEach((q: string) => {
-                            row[q] = +row[q];
-                        });
 
                         return row;
                     });
