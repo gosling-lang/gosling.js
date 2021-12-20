@@ -83,9 +83,6 @@ function RawDataFetcher(HGC: any, ...args: any): any {
                     return undefined;
                 }
 
-                this.dataConfig.quantitativeFields?.forEach((q: string) => {
-                    row[q] = +row[q];
-                });
                 return row;
             });
         }

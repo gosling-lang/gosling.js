@@ -7,8 +7,7 @@ describe('CSV data fetcher', () => {
             type: 'csv',
             values: [{ chr: 'chr1', start: 1, end: 778094, id: 'peak1', peak: 4.38368 }],
             chromosomeField: 'Chr.',
-            genomicFields: ['ISCN_start', 'ISCN_stop', 'Basepair_start', 'Basepair_stop'],
-            quantitativeFields: ['Band', 'Density']
+            genomicFields: ['ISCN_start', 'ISCN_stop', 'Basepair_start', 'Basepair_stop']
         }
     );
 

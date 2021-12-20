@@ -614,9 +614,6 @@ export interface JSONData {
     /** Values in the form of JSON. */
     values: Datum[];
 
-    /** Specify the name of quantitative data fields. */
-    quantitativeFields?: string[];
-
     /** Specify the name of chromosome data fields. */
     chromosomeField?: string;
 
@@ -652,11 +649,6 @@ export interface CSVData {
      * Specify file separator, __Default:__ ','
      */
     separator?: string;
-
-    /**
-     * Specify the name of quantitative data fields.
-     */
-    quantitativeFields?: string[];
 
     /**
      * Specify the name of chromosome data fields.

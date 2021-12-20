@@ -108,8 +108,6 @@ export interface Data {
     url?: string;
 
     // Options Gosling internally use
-    // csv
-    quantitativeFields?: string[];
     assembly?: Assembly;
 
     // Option to filter datasets
