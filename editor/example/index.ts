@@ -117,6 +117,10 @@ export const examples: {
         name: 'Corces et al. 2020',
         spec: EX_SPEC_CORCES_ET_AL
     },
+    GREMLIN: {
+        name: "Gremlin (O'Brien et al. 2010)",
+        spec: EX_SPEC_GREMLIN
+    },
     SASHIMI_PLOT: {
         name: 'Sashimi Plot',
         spec: EX_SPEC_SASHIMI,
@@ -125,11 +129,6 @@ export const examples: {
     CIRCULAR_BETWEEN_BANDS: {
         name: 'Circular Between Bands',
         spec: EX_SPEC_CIRCOS_BETWEEN_LINK,
-        underDevelopment: true
-    },
-    GREMLIN: {
-        name: "Gremlin (O'Brien et al. 2010)",
-        spec: EX_SPEC_GREMLIN,
         underDevelopment: true
     },
     GIVE: {
