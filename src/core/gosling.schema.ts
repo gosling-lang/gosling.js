@@ -523,6 +523,8 @@ export interface Color extends ChannelDeepCommon {
     range?: Range;
     /** Whether to display legend. __Default__: `false` */
     legend?: boolean;
+
+    scale?: 'linear' | 'log';
 }
 
 export interface Size extends ChannelDeepCommon {
@@ -861,7 +863,21 @@ export interface BAMData {
 
 export interface MatrixData {
     type: 'matrix';
+
+    /** URL link to the matrix data file */
     url: string;
+
+    /** The name of the first genomic field. __Default__: `x` */
+    column?: string;
+
+    /** The name of the first genomic field. __Default__: `y` */
+    row?: string;
+
+    /** The name of the value field. __Default__: `value` */
+    value?: string;
+
+    /** Determine the number of nearby cells to aggregate. __Default__: `1` */
+    binSize?: number;
 }
 
 /* ----------------------------- DATA TRANSFORM ----------------------------- */

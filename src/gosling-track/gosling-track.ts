@@ -459,7 +459,11 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                 const tiles = HGC.utils.trackUtils.calculate1DVisibleTiles(this.tilesetInfo, this._xScale);
 
                 for (const tile of tiles) {
-                    const { tileWidth } = this.getTilePosAndDimensions(tile[0], [tile[1]], this.tilesetInfo.tile_size);
+                    const { tileWidth } = this.getTilePosAndDimensions(
+                        tile[0],
+                        [tile[1], tile[1]],
+                        this.tilesetInfo.tile_size
+                    );
 
                     const DEFAULT_MAX_TILE_WIDTH = 2e4; // base pairs
 
@@ -494,7 +498,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
 
                     if (Is2DTrack(resolveSuperposedTracks(this.options.spec)[0])) {
                         // it makes sense only when the y-axis is being used for a genomic field
-                        tileProxy.calculateTilesFromResolution(
+                        this.yTiles = tileProxy.calculateTilesFromResolution(
                             sortedResolutions[this.zoomLevel],
                             this._yScale,
                             this.tilesetInfo.min_pos[0],
@@ -535,7 +539,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
         /**
          * Get the tile's position in its coordinate system.
          */
-        getTilePosAndDimensions(zoomLevel: number, tilePos: any, binsPerTileIn: any) {
+        getTilePosAndDimensions(zoomLevel: number, tilePos: [number, number], binsPerTileIn?: number) {
             const binsPerTile = binsPerTileIn || this.tilesetInfo.bins_per_dimension || 256;
 
             if (this.tilesetInfo.resolutions) {
@@ -543,13 +547,16 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                     .map((x: number) => +x)
                     .sort((a: number, b: number) => b - a);
 
+                // A resolution specifies the number of BP per bin
                 const chosenResolution = sortedResolutions[zoomLevel];
+
+                const [xTilePos, yTilePos] = tilePos;
 
                 const tileWidth = chosenResolution * binsPerTile;
                 const tileHeight = tileWidth;
 
-                const tileX = chosenResolution * binsPerTile * tilePos[0];
-                const tileY = chosenResolution * binsPerTile * tilePos[1];
+                const tileX = tileWidth * xTilePos;
+                const tileY = tileHeight * yTilePos;
 
                 return {
                     tileX,
@@ -558,8 +565,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                     tileHeight
                 };
             } else {
-                const xTilePos = tilePos[0];
-                const yTilePos = tilePos[1];
+                const [xTilePos, yTilePos] = tilePos;
 
                 const minX = this.tilesetInfo.min_pos[0];
 
@@ -799,27 +805,24 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
 
             resolveSuperposedTracks(spec).forEach(resolved => {
                 if (resolved.mark === 'brush') {
-                    // we do not draw rectangular brush ourselves, higlass does.
-                    return;
-                }
-
-                if (resolved.data.type === 'matrix') {
-                    // we do not draw matrix ourselves, higlass does.
+                    // interactive brushes are drawn by another plugin track, called `gosling-brush`
                     return;
                 }
 
                 if (!tile.gos.tabularData) {
                     // If the data is not already stored in a tabular form, convert them.
-                    const { tileX, tileWidth } = this.getTilePosAndDimensions(
+                    const { tileX, tileY, tileWidth, tileHeight } = this.getTilePosAndDimensions(
                         tile.gos.zoomLevel,
                         tile.gos.tilePos,
-                        this.tileSize
+                        this.tilesetInfo.bins_per_dimension || this.tilesetInfo?.tile_size
                     );
 
                     tile.gos.tabularData = getTabularData(resolved, {
                         ...tile.gos,
                         tileX,
+                        tileY,
                         tileWidth,
+                        tileHeight,
                         tileSize: this.tileSize
                     });
                 }

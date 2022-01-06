@@ -13,6 +13,8 @@ export function getTabularData(
         tileX: number;
         tileWidth: number;
         tileSize: number;
+        tileY?: number; // used for matrix
+        tileHeight?: number; // used for matrix
     }
 ) {
     const tabularData: Datum[] = [];
@@ -199,6 +201,69 @@ export function getTabularData(
                 }
             });
         });
+    } else if (spec.data.type === 'matrix') {
+        if (!data.dense || typeof data.tileY === 'undefined' || typeof data.tileHeight === 'undefined') {
+            // we do not have sufficient data.
+            return;
+        }
+
+        // width and height of the tile
+        const numBins = Math.sqrt(data.dense.length);
+
+        const { tileX, tileY, tileWidth, tileHeight } = data;
+        const numericValues = data.dense;
+
+        const tileXUnitSize = tileWidth / numBins;
+        const tileYUnitSize = tileHeight / numBins;
+        const columnField = spec.data.column ?? 'x';
+        const rowField = spec.data.row ?? 'y';
+
+        // TODO: a way to improve rendering performance?
+        // For the rendering performance, we aggregate cells so that we draw smaller number of marks.
+        const aggSize = 16; // assuming that # of cells can be divided by binSize, which is mostly 256 or 1024
+        for (let i = 0; i < numericValues.length / aggSize; i++) {
+            const aggLen = Math.sqrt(aggSize);
+            const xIndex = (i * aggLen) % numBins;
+            const yIndex = Math.floor((i * aggLen) / numBins) * aggLen;
+
+            // Being xIndex and yIndex the top-let origin, aggregate 4 x 4 cells
+            let value = NaN;
+            for (let c = 0; c < aggLen; c++) {
+                for (let r = 0; r < aggLen; r++) {
+                    const curVal = numericValues[(yIndex + r) * numBins + (xIndex + c)];
+                    // If the current value is NaN, we do not need to do anything
+                    if (!isNaN(+curVal)) {
+                        // If the cumulative value is still NaN, which is the default value,
+                        // set that to zero so that we are able to add a value
+                        if (isNaN(value)) {
+                            value = 0;
+                        }
+                        value += curVal;
+                    }
+                }
+            }
+
+            if (isNaN(value)) {
+                // this means all values for this bin is NaN, hence a missing value
+                continue;
+            }
+
+            const xs = tileX + xIndex * tileXUnitSize;
+            const xe = tileX + (xIndex + aggLen) * tileXUnitSize;
+            const ys = tileY + yIndex * tileYUnitSize;
+            const ye = tileY + (yIndex + aggLen) * tileYUnitSize;
+            const x = (xs + xe) / 2.0;
+            const y = (ys + ye) / 2.0;
+            tabularData.push({
+                value,
+                [columnField]: x,
+                [`${columnField}s`]: xs,
+                [`${columnField}e`]: xe,
+                [rowField]: y,
+                [`${rowField}s`]: ys,
+                [`${rowField}e`]: ye
+            });
+        }
     } else if (spec.data.type === 'beddb') {
         if (!data.raw) {
             // we did not get sufficient data.
@@ -254,8 +319,6 @@ export function getTabularData(
                 });
             }
         });
-    } else if (spec.data.type === 'bam') {
-        // TODO: Do we need this?
     }
 
     /// DEBUG

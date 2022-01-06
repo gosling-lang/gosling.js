@@ -21,6 +21,7 @@ import {
     IncludeFilter,
     BEDDBData,
     MultivecData,
+    MatrixData,
     VectorData,
     DataTrack,
     BIGWIGData,
@@ -132,7 +133,7 @@ export function IsChannelValue(channel: ChannelDeep | ChannelValue | undefined |
 
 export function IsDataDeepTileset(
     _: DataDeep | undefined
-): _ is BEDDBData | VectorData | MultivecData | BIGWIGData | BAMData {
+): _ is BEDDBData | VectorData | MultivecData | BIGWIGData | BAMData | MatrixData {
     return (
         _ !== undefined &&
         (_.type === 'vector' ||
