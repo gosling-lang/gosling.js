@@ -104,8 +104,7 @@ export const examples: {
     },
     MATRIX_HFFC6: {
         name: 'Comparative Matrices (Micro-C vs. Hi-C)',
-        spec: EX_SPEC_MATRIX_HFFC6,
-        underDevelopment: true
+        spec: EX_SPEC_MATRIX_HFFC6
     },
     CIRCOS: {
         name: 'Circos',
