@@ -136,7 +136,7 @@ export function goslingToHiGlass(
             // By changing the track type, HiGlass uses its native heatmap track
             hgTrack.type = 'heatmap';
             const colorStr =
-                IsChannelDeep(firstResolvedSpec.color) && typeof firstResolvedSpec.color === 'string'
+                IsChannelDeep(firstResolvedSpec.color) && typeof firstResolvedSpec.color.range === 'string'
                     ? firstResolvedSpec.color.range
                     : 'viridis';
             hgTrack.options.colorRange = getHiGlassColorRange(colorStr);
