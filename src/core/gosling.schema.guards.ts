@@ -127,6 +127,19 @@ export function Is2DTrack(track: Track) {
     );
 }
 
+/**
+ * Do we want to use HiGlass matrix to rendering the given visualization?
+ */
+export function IsHiGlassMatrix(track: SingleTrack) {
+    return (
+        Is2DTrack(track) &&
+        track.data.type === 'matrix' &&
+        (track.mark === 'bar' || track.mark === 'rect') &&
+        track.xe &&
+        track.ye
+    );
+}
+
 export function IsChannelValue(channel: ChannelDeep | ChannelValue | undefined | 'none'): channel is ChannelValue {
     return channel !== null && typeof channel === 'object' && 'value' in channel;
 }
