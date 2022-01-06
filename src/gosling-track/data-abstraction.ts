@@ -231,7 +231,10 @@ export function getTabularData(
             for (let c = 0; c < aggLen; c++) {
                 for (let r = 0; r < aggLen; r++) {
                     const curVal = numericValues[(yIndex + r) * numBins + (xIndex + c)];
+                    // If the current value is NaN, we do not need to do anything
                     if (!isNaN(+curVal)) {
+                        // If the cumulative value is still NaN, which is the default value,
+                        // set that to zero so that we are able to add a value
                         if (isNaN(value)) {
                             value = 0;
                         }
@@ -241,11 +244,9 @@ export function getTabularData(
             }
 
             if (isNaN(value)) {
-                // this is a missing value
+                // this means all values for this bin is NaN, hence a missing value
                 continue;
             }
-
-            value /= aggSize;
 
             const xs = tileX + xIndex * tileXUnitSize;
             const xe = tileX + (xIndex + aggLen) * tileXUnitSize;

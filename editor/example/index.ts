@@ -57,7 +57,7 @@ export const examples: {
     MATRIX: {
         name: 'Basic Example: Hi-C Matrix',
         spec: EX_SPEC_MATRIX,
-        forceShow: true
+        underDevelopment: true
     },
     LINKING: {
         name: 'Basic Example: Visual Linking',
@@ -104,7 +104,8 @@ export const examples: {
     },
     MATRIX_HFFC6: {
         name: 'Comparative Matrices (Micro-C vs. Hi-C)',
-        spec: EX_SPEC_MATRIX_HFFC6
+        spec: EX_SPEC_MATRIX_HFFC6,
+        underDevelopment: true
     },
     CIRCOS: {
         name: 'Circos',
