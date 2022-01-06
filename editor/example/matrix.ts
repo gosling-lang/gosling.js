@@ -58,8 +58,7 @@ export const EX_SPEC_MATRIX: GoslingSpec = {
                                     { c: 'chr10', p: 100000, v: 0.009 }
                                 ],
                                 chromosomeField: 'c',
-                                genomicFields: ['p'],
-                                quantitativeFields: ['v']
+                                genomicFields: ['p']
                             },
                             mark: 'rule',
                             x: { field: 'p', type: 'genomic', axis: 'none' },
