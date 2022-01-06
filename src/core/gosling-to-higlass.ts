@@ -12,7 +12,8 @@ import {
     IsDataDeepTileset,
     Is2DTrack,
     IsXAxis,
-    IsHiGlassMatrix
+    IsHiGlassMatrix,
+    getHiGlassColorRange
 } from './gosling.schema.guards';
 import { DEWFAULT_TITLE_PADDING_ON_TOP_AND_BOTTOM } from './layout/defaults';
 import { CompleteThemeDeep } from './utils/theme';
@@ -134,8 +135,11 @@ export function goslingToHiGlass(
         if (IsHiGlassMatrix(firstResolvedSpec)) {
             // By changing the track type, HiGlass uses its native heatmap track
             hgTrack.type = 'heatmap';
-            // TODO: use consistent color scheme w/ Gosling
-            hgTrack.options.colorRange = ['white', 'rgba(245,166,35,1.0)', 'rgba(208,2,27,1.0)', 'black'];
+            const colorStr =
+                IsChannelDeep(firstResolvedSpec.color) && typeof firstResolvedSpec.color === 'string'
+                    ? firstResolvedSpec.color.range
+                    : 'viridis';
+            hgTrack.options.colorRange = getHiGlassColorRange(colorStr);
             hgTrack.options.trackBorderWidth = firstResolvedSpec.style?.outlineWidth ?? theme.track.outlineWidth;
             hgTrack.options.trackBorderColor = firstResolvedSpec.style?.outline ?? theme.track.outline;
             hgTrack.options.colorbarPosition = (firstResolvedSpec.color as any)?.legend ? 'topRight' : 'hidden';
