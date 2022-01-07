@@ -128,7 +128,7 @@ export function goslingToHiGlass(
             };
         }
 
-        // We use higlass 'matrix' track instead of 'gosling-track' for rendering performance.
+        // We use higlass 'heatmap' track instead of 'gosling-track' for rendering performance.
         // HiGlass is really well-optimized for matrix visualization, and rendering it in Gosling
         // makes the zooming interaction slow.
         // See https://github.com/gosling-lang/gosling.js/pull/612#discussion_r771623844
