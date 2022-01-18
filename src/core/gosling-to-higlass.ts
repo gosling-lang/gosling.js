@@ -6,7 +6,15 @@ import { Track, Domain } from './gosling.schema';
 import { BoundingBox, RelativePosition } from './utils/bounding-box';
 import { resolveSuperposedTracks } from './utils/overlay';
 import { getGenomicChannelKeyFromTrack, getGenomicChannelFromTrack } from './utils/validate';
-import { IsDataDeep, IsChannelDeep, IsDataDeepTileset, Is2DTrack, IsXAxis } from './gosling.schema.guards';
+import {
+    IsDataDeep,
+    IsChannelDeep,
+    IsDataDeepTileset,
+    Is2DTrack,
+    IsXAxis,
+    IsHiGlassMatrix,
+    getHiGlassColorRange
+} from './gosling.schema.guards';
 import { DEWFAULT_TITLE_PADDING_ON_TOP_AND_BOTTOM } from './layout/defaults';
 import { CompleteThemeDeep } from './utils/theme';
 import { DEFAULT_TEXT_STYLE } from './utils/text-style';
@@ -118,6 +126,23 @@ export function goslingToHiGlass(
                 // Add a data transformation spec so that the fetcher can properly sample datasets
                 // filter: (firstResolvedSpec as any).dataTransform?.filter((f: DataTransform) => f.type === 'filter')
             };
+        }
+
+        // We use higlass 'heatmap' track instead of 'gosling-track' for rendering performance.
+        // HiGlass is really well-optimized for matrix visualization, and rendering it in Gosling
+        // instead makes the zooming interaction slow.
+        // See https://github.com/gosling-lang/gosling.js/pull/612#discussion_r771623844
+        if (IsHiGlassMatrix(firstResolvedSpec)) {
+            // By changing the track type, HiGlass uses its native heatmap track
+            hgTrack.type = 'heatmap';
+            const colorStr =
+                IsChannelDeep(firstResolvedSpec.color) && typeof firstResolvedSpec.color.range === 'string'
+                    ? firstResolvedSpec.color.range
+                    : 'viridis';
+            hgTrack.options.colorRange = getHiGlassColorRange(colorStr);
+            hgTrack.options.trackBorderWidth = firstResolvedSpec.style?.outlineWidth ?? theme.track.outlineWidth;
+            hgTrack.options.trackBorderColor = firstResolvedSpec.style?.outline ?? theme.track.outline;
+            hgTrack.options.colorbarPosition = (firstResolvedSpec.color as any)?.legend ? 'topRight' : 'hidden';
         }
 
         if (firstResolvedSpec.overlayOnPreviousTrack) {

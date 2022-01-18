@@ -55,6 +55,14 @@ export const PREDEFINED_COLOR_STR_MAP: { [k: string]: (t: number) => string } = 
     rdbu: interpolateRdBu
 };
 
+/**
+ * This returns an array of color strings that can be assigned to HiGlass' option, `colorRange`
+ */
+export function getHiGlassColorRange(colorStr = 'viridis', step = 100) {
+    const interpolate = PREDEFINED_COLOR_STR_MAP[colorStr] ?? PREDEFINED_COLOR_STR_MAP['viridis'];
+    return [...Array(step)].map((v, i) => interpolate((1 / step) * i));
+}
+
 export function IsFlatTracks(_: SingleView): _ is FlatTracks {
     return !('alignment' in _) && !_.tracks.find(d => (d as any).alignment === 'overlay' || 'tracks' in d);
 }
@@ -124,6 +132,19 @@ export function Is2DTrack(track: Track) {
         track.x.type === 'genomic' &&
         IsChannelDeep(track.y) &&
         track.y.type === 'genomic'
+    );
+}
+
+/**
+ * Do we want to use HiGlass matrix track (i.e., 'heatmap') to rendering the given visualization?
+ */
+export function IsHiGlassMatrix(track: SingleTrack) {
+    return (
+        Is2DTrack(track) &&
+        track.data.type === 'matrix' &&
+        (track.mark === 'bar' || track.mark === 'rect') &&
+        track.xe &&
+        track.ye
     );
 }
 
