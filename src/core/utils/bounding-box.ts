@@ -116,13 +116,15 @@ export function getRelativeTrackInfo(spec: GoslingSpec, theme: CompleteThemeDeep
         size.height = size.height + (8 - (size.height % 8));
     }
 
+    const pixelPreciseMarginPadding = typeof spec.responsive !== 'object' ? !spec.responsive : !spec.responsive.height;
+
     // Calculate `layout`s for React Grid Layout (RGL).
     trackInfos.forEach(_ => {
         _.layout.x = (_.boundingBox.x / size.width) * 12;
         _.layout.w = (_.boundingBox.width / size.width) * 12;
-        // Because we set `pixelPreciseMarginPadding` `true`, we use actual values for `y` and `height`
-        _.layout.y = _.boundingBox.y;
-        _.layout.h = _.boundingBox.height;
+        // If we set `pixelPreciseMarginPadding` `true`, we need to use actual values for `y` and `height`
+        _.layout.y = pixelPreciseMarginPadding ? _.boundingBox.y : (_.boundingBox.y / size.height) * 12;
+        _.layout.h = pixelPreciseMarginPadding ? _.boundingBox.height : (_.boundingBox.height / size.height) * 12;
     });
 
     // console.log(trackInfos);

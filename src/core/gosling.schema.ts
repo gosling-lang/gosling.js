@@ -3,16 +3,20 @@ import { Chromosome } from './utils/chrom-size';
 /* ----------------------------- ROOT SPEC ----------------------------- */
 export type GoslingSpec = RootSpecWithSingleView | RootSpecWithMultipleViews;
 
+export type Responsive = boolean | { width?: true; height?: true };
+
 export type RootSpecWithSingleView = SingleView & {
     title?: string;
     subtitle?: string;
     description?: string;
+    responsive?: Responsive;
 };
 
 export interface RootSpecWithMultipleViews extends MultipleViews {
     title?: string;
     subtitle?: string;
     description?: string;
+    responsive?: Responsive;
 }
 
 /* ----------------------------- VIEW ----------------------------- */

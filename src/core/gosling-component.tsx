@@ -11,7 +11,7 @@ interface GoslingCompProps {
     spec?: gosling.GoslingSpec;
     compiled?: (goslingSpec: gosling.GoslingSpec, higlassSpec: gosling.HiGlassSpec) => void;
     padding?: number;
-    margin?: number | string;
+    margin?: number;
     border?: string;
     id?: string;
     className?: string;
@@ -92,6 +92,14 @@ export const GoslingComponent = forwardRef<
                     padding: props.padding,
                     border: props.border,
                     margin: props.margin,
+                    responsiveWidth:
+                        typeof props.spec?.responsive !== 'object'
+                            ? props.spec?.responsive
+                            : props.spec.responsive.width,
+                    responsiveHeight:
+                        typeof props.spec?.responsive !== 'object'
+                            ? props.spec?.responsive
+                            : props.spec.responsive.height,
                     background: theme.root.background
                 }}
             />

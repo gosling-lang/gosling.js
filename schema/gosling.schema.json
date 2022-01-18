@@ -3083,6 +3083,27 @@
       ],
       "type": "object"
     },
+    "Responsive": {
+      "anyOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "height": {
+              "const": true,
+              "type": "boolean"
+            },
+            "width": {
+              "const": true,
+              "type": "boolean"
+            }
+          },
+          "type": "object"
+        }
+      ]
+    },
     "RootSpecWithMultipleViews": {
       "additionalProperties": false,
       "properties": {
@@ -3118,6 +3139,9 @@
         "orientation": {
           "$ref": "#/definitions/Orientation",
           "description": "Specify the orientation."
+        },
+        "responsive": {
+          "$ref": "#/definitions/Responsive"
         },
         "spacing": {
           "description": "- If `{\"layout\": \"linear\"}`, specify the space between tracks in pixels;\n\n- If `{\"layout\": \"circular\"}`, specify the space between tracks in percentage ranging from 0 to 100.",
@@ -3292,6 +3316,9 @@
               "additionalProperties": false,
               "description": "internal",
               "type": "object"
+            },
+            "responsive": {
+              "$ref": "#/definitions/Responsive"
             },
             "row": {
               "anyOf": [
@@ -3614,6 +3641,9 @@
               "description": "internal",
               "type": "object"
             },
+            "responsive": {
+              "$ref": "#/definitions/Responsive"
+            },
             "row": {
               "anyOf": [
                 {
@@ -3858,6 +3888,9 @@
             "orientation": {
               "$ref": "#/definitions/Orientation",
               "description": "Specify the orientation."
+            },
+            "responsive": {
+              "$ref": "#/definitions/Responsive"
             },
             "spacing": {
               "description": "- If `{\"layout\": \"linear\"}`, specify the space between tracks in pixels;\n\n- If `{\"layout\": \"circular\"}`, specify the space between tracks in percentage ranging from 0 to 100.",
