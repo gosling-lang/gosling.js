@@ -32,6 +32,7 @@ import { spawn } from 'threads';
 
 import BamWorker from '../data-fetcher/bam/bam-worker.js?worker&inline';
 import { InteractionEvent } from 'pixi.js';
+import { HIGLASS_AXIS_SIZE } from '../core/higlass-model';
 
 // Set `true` to print in what order each function is called
 export const PRINT_RENDERING_CYCLE = false;
@@ -801,7 +802,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
 
             const spec = JSON.parse(JSON.stringify(this.options.spec));
 
-            // const [trackWidth, trackHeight] = this.dimensions; // actual size of a track
+            const [trackWidth, trackHeight] = this.dimensions; // actual size of a track
 
             resolveSuperposedTracks(spec).forEach(resolved => {
                 if (resolved.mark === 'brush') {
@@ -898,9 +899,8 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                 }
 
                 // Replace width and height information with the actual values
-                // TODO: we don't need this?
-                // resolved.width = trackWidth;
-                // resolved.height = trackHeight;
+                resolved.width = trackWidth;
+                resolved.height = trackHeight + HIGLASS_AXIS_SIZE; // Why the axis size must be added here?
 
                 // Construct separate gosling models for individual tiles
                 const gm = new GoslingTrackModel(resolved, tile.gos.tabularDataFiltered, this.options.theme);

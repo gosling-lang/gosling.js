@@ -4,6 +4,7 @@ import { GOSLING_PUBLIC_DATA } from './gosling-data';
 export const EX_SPEC_VISUAL_ENCODING: GoslingSpec = {
     title: 'Visual Encoding',
     subtitle: 'Gosling provides diverse visual encoding methods',
+    responsive: true,
     layout: 'linear',
     arrangement: 'vertical',
     centerRadius: 0.8,
@@ -871,6 +872,48 @@ export const EX_SPEC_RULE: GoslingSpec = {
             ],
             width: 500,
             height: 200
+        }
+    ]
+};
+
+export const EX_SPEC_RESPONSIVE: GoslingSpec = {
+    title: 'Basic Example: Responsive Sizing',
+    subtitle: 'Use a "responsive" option to make the size of Gosling visualization bound to its parent element',
+    responsive: { width: true, height: true },
+    xDomain: { chromosome: '1', interval: [1, 3000500] },
+    views: [
+        {
+            tracks: [
+                {
+                    data: {
+                        url: 'https://server.gosling-lang.org/api/v1/tileset_info/?d=cistrome-multivec',
+                        type: 'multivec',
+                        row: 'sample',
+                        column: 'position',
+                        value: 'peak',
+                        categories: ['sample 1', 'sample 2', 'sample 3', 'sample 4'],
+                        binSize: 4
+                    },
+                    mark: 'rect',
+                    x: { field: 'start', type: 'genomic', axis: 'top' },
+                    xe: { field: 'end', type: 'genomic' },
+                    row: { field: 'sample', type: 'nominal', legend: true },
+                    color: { field: 'peak', type: 'quantitative', legend: true },
+                    tooltip: [
+                        { field: 'start', type: 'genomic', alt: 'Start Position' },
+                        { field: 'end', type: 'genomic', alt: 'End Position' },
+                        {
+                            field: 'peak',
+                            type: 'quantitative',
+                            alt: 'Value',
+                            format: '.2'
+                        },
+                        { field: 'sample', type: 'nominal', alt: 'Sample' }
+                    ],
+                    width: 600,
+                    height: 130
+                }
+            ]
         }
     ]
 };

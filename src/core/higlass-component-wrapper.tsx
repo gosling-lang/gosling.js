@@ -66,7 +66,6 @@ export const HiGlassComponentWrapper = forwardRef<HiGlassApi | undefined, HiGlas
                         viewPaddingLeft: 0,
                         viewPaddingRight: 0,
                         sizeMode: 'bounded',
-                        bounded: true,
                         rangeSelectionOnAlt: true // this allows switching between `selection` and `zoom&pan` mode
                     }}
                     viewConfig={viewConfig}
