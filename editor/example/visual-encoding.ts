@@ -4,7 +4,6 @@ import { GOSLING_PUBLIC_DATA } from './gosling-data';
 export const EX_SPEC_VISUAL_ENCODING: GoslingSpec = {
     title: 'Visual Encoding',
     subtitle: 'Gosling provides diverse visual encoding methods',
-    responsive: true,
     layout: 'linear',
     arrangement: 'vertical',
     centerRadius: 0.8,

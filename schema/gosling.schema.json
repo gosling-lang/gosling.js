@@ -3092,11 +3092,9 @@
           "additionalProperties": false,
           "properties": {
             "height": {
-              "const": true,
               "type": "boolean"
             },
             "width": {
-              "const": true,
               "type": "boolean"
             }
           },
