@@ -101,8 +101,7 @@ export const examples: {
     },
     RESPONSIVE_ENCODING: {
         name: 'Responsive Encoding',
-        spec: EX_SPEC_RESPONSIVE,
-        forceShow: true
+        spec: EX_SPEC_RESPONSIVE
     },
     CYTOBANDS: {
         name: 'Ideograms',
