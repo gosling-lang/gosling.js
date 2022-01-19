@@ -876,38 +876,59 @@ export const EX_SPEC_RULE: GoslingSpec = {
 };
 
 export const EX_SPEC_RESPONSIVE: GoslingSpec = {
-    title: 'Basic Example: Responsive Sizing',
-    subtitle: 'Use a "responsive" option to make the size of Gosling visualization bound to its parent element',
-    responsive: { width: true, height: true },
+    // title: 'Responsive Visualization',
+    // subtitle: 'Resize your browser to see visualization changes...',
+    responsiveSize: { width: true, height: true },
     xDomain: { chromosome: '1', interval: [1, 3000500] },
     views: [
         {
             tracks: [
                 {
+                    alignment: 'overlay',
                     data: {
                         url: 'https://server.gosling-lang.org/api/v1/tileset_info/?d=cistrome-multivec',
                         type: 'multivec',
                         row: 'sample',
                         column: 'position',
                         value: 'peak',
-                        categories: ['sample 1', 'sample 2', 'sample 3', 'sample 4'],
+                        categories: [
+                            'sample 1',
+                            'sample 2',
+                            'sample 3',
+                            'sample 4',
+                            'sample 5',
+                            'sample 6',
+                            'sample 7',
+                            'sample 8'
+                        ],
                         binSize: 4
                     },
-                    mark: 'rect',
-                    x: { field: 'start', type: 'genomic', axis: 'top' },
-                    xe: { field: 'end', type: 'genomic' },
-                    row: { field: 'sample', type: 'nominal', legend: true },
-                    color: { field: 'peak', type: 'quantitative', legend: true },
-                    tooltip: [
-                        { field: 'start', type: 'genomic', alt: 'Start Position' },
-                        { field: 'end', type: 'genomic', alt: 'End Position' },
+                    mark: 'line',
+                    x: { field: 'position', type: 'genomic' },
+                    y: { field: 'peak', type: 'quantitative', axis: 'right' },
+                    color: { field: 'sample', type: 'nominal' },
+                    tracks: [
                         {
-                            field: 'peak',
-                            type: 'quantitative',
-                            alt: 'Value',
-                            format: '.2'
+                            row: { field: 'sample', type: 'nominal', legend: true },
+                            visibility: [
+                                {
+                                    target: 'track',
+                                    measure: 'height',
+                                    operation: 'GT',
+                                    threshold: 8 * 10
+                                }
+                            ]
                         },
-                        { field: 'sample', type: 'nominal', alt: 'Sample' }
+                        {
+                            visibility: [
+                                {
+                                    target: 'track',
+                                    measure: 'height',
+                                    operation: 'LT',
+                                    threshold: 8 * 10
+                                }
+                            ]
+                        }
                     ],
                     width: 600,
                     height: 130

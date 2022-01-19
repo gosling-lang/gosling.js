@@ -93,13 +93,13 @@ export const GoslingComponent = forwardRef<
                     border: props.border,
                     margin: props.margin,
                     responsiveWidth:
-                        typeof props.spec?.responsive !== 'object'
-                            ? props.spec?.responsive
-                            : props.spec.responsive.width,
+                        typeof props.spec?.responsiveSize !== 'object'
+                            ? props.spec?.responsiveSize
+                            : props.spec.responsiveSize.width,
                     responsiveHeight:
-                        typeof props.spec?.responsive !== 'object'
-                            ? props.spec?.responsive
-                            : props.spec.responsive.height,
+                        typeof props.spec?.responsiveSize !== 'object'
+                            ? props.spec?.responsiveSize
+                            : props.spec.responsiveSize.height,
                     background: theme.root.background
                 }}
             />

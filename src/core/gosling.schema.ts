@@ -3,20 +3,22 @@ import { Chromosome } from './utils/chrom-size';
 /* ----------------------------- ROOT SPEC ----------------------------- */
 export type GoslingSpec = RootSpecWithSingleView | RootSpecWithMultipleViews;
 
-export type Responsive = boolean | { width?: boolean; height?: boolean };
+export type ResponsiveSize = boolean | { width?: boolean; height?: boolean };
 
 export type RootSpecWithSingleView = SingleView & {
     title?: string;
     subtitle?: string;
     description?: string;
-    responsive?: Responsive;
+    /** Determine whether to make the size of `GoslingComponent` bound to its parent element. __Default__: `false` */
+    responsiveSize?: ResponsiveSize;
 };
 
 export interface RootSpecWithMultipleViews extends MultipleViews {
     title?: string;
     subtitle?: string;
     description?: string;
-    responsive?: Responsive;
+    /** Determine whether to make the size of `GoslingComponent` bound to its parent element. __Default__: `false` */
+    responsiveSize?: ResponsiveSize;
 }
 
 /* ----------------------------- VIEW ----------------------------- */

@@ -3083,7 +3083,7 @@
       ],
       "type": "object"
     },
-    "Responsive": {
+    "ResponsiveSize": {
       "anyOf": [
         {
           "type": "boolean"
@@ -3138,8 +3138,9 @@
           "$ref": "#/definitions/Orientation",
           "description": "Specify the orientation."
         },
-        "responsive": {
-          "$ref": "#/definitions/Responsive"
+        "responsiveSize": {
+          "$ref": "#/definitions/ResponsiveSize",
+          "description": "Determine whether to make the size of `GoslingComponent` bound to its parent element. __Default__: `false`"
         },
         "spacing": {
           "description": "- If `{\"layout\": \"linear\"}`, specify the space between tracks in pixels;\n\n- If `{\"layout\": \"circular\"}`, specify the space between tracks in percentage ranging from 0 to 100.",
@@ -3315,8 +3316,9 @@
               "description": "internal",
               "type": "object"
             },
-            "responsive": {
-              "$ref": "#/definitions/Responsive"
+            "responsiveSize": {
+              "$ref": "#/definitions/ResponsiveSize",
+              "description": "Determine whether to make the size of `GoslingComponent` bound to its parent element. __Default__: `false`"
             },
             "row": {
               "anyOf": [
@@ -3639,8 +3641,9 @@
               "description": "internal",
               "type": "object"
             },
-            "responsive": {
-              "$ref": "#/definitions/Responsive"
+            "responsiveSize": {
+              "$ref": "#/definitions/ResponsiveSize",
+              "description": "Determine whether to make the size of `GoslingComponent` bound to its parent element. __Default__: `false`"
             },
             "row": {
               "anyOf": [
@@ -3887,8 +3890,9 @@
               "$ref": "#/definitions/Orientation",
               "description": "Specify the orientation."
             },
-            "responsive": {
-              "$ref": "#/definitions/Responsive"
+            "responsiveSize": {
+              "$ref": "#/definitions/ResponsiveSize",
+              "description": "Determine whether to make the size of `GoslingComponent` bound to its parent element. __Default__: `false`"
             },
             "spacing": {
               "description": "- If `{\"layout\": \"linear\"}`, specify the space between tracks in pixels;\n\n- If `{\"layout\": \"circular\"}`, specify the space between tracks in percentage ranging from 0 to 100.",

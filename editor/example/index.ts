@@ -51,11 +51,6 @@ export const examples: {
         name: 'Basic Example: Circular Visual Encoding',
         spec: EX_SPEC_VISUAL_ENCODING_CIRCULAR
     },
-    RESPONSIVE_SIZE: {
-        name: 'Basic Example: Responsive Size',
-        spec: EX_SPEC_RESPONSIVE,
-        forceShow: true
-    },
     BAND: {
         name: 'Basic Example: Band Connection',
         spec: EX_SPEC_BAND
@@ -103,6 +98,11 @@ export const examples: {
     SEMANTIC_ZOOM: {
         name: 'Multi-Scale Clinvar Lollipop Plot',
         spec: EX_SPEC_CLINVAR_LOLLIPOP
+    },
+    RESPONSIVE_ENCODING: {
+        name: 'Responsive Encoding',
+        spec: EX_SPEC_RESPONSIVE,
+        forceShow: true
     },
     CYTOBANDS: {
         name: 'Ideograms',

@@ -116,7 +116,8 @@ export function getRelativeTrackInfo(spec: GoslingSpec, theme: CompleteThemeDeep
         size.height = size.height + (8 - (size.height % 8));
     }
 
-    const pixelPreciseMarginPadding = typeof spec.responsive !== 'object' ? !spec.responsive : !spec.responsive.height;
+    const pixelPreciseMarginPadding =
+        typeof spec.responsiveSize !== 'object' ? !spec.responsiveSize : !spec.responsiveSize.height;
 
     // Calculate `layout`s for React Grid Layout (RGL).
     trackInfos.forEach(_ => {
