@@ -11,6 +11,7 @@ import exampleHg from './example/hg-view-config-1';
 import { insertItemToArray } from './utils/array';
 
 export const HIGLASS_AXIS_SIZE = 30;
+
 const getViewTemplate = (assembly?: string) => {
     return {
         genomePositionSearchBoxVisible: false,

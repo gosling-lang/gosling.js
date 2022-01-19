@@ -32,6 +32,7 @@ import { spawn } from 'threads';
 
 import BamWorker from '../data-fetcher/bam/bam-worker.js?worker&inline';
 import { InteractionEvent } from 'pixi.js';
+import { HIGLASS_AXIS_SIZE } from '../core/higlass-model';
 
 // Set `true` to print in what order each function is called
 export const PRINT_RENDERING_CYCLE = false;
@@ -244,26 +245,13 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             tile.graphics.clear();
             tile.graphics.removeChildren();
 
-            /* Embellishment before rendering marks */
-            if (tile.goslingModels && tile.goslingModels[0]) {
-                const tm = tile.goslingModels[0];
-
-                // check visibility condition
-                const trackWidth = this.dimensions[1];
-                const zoomLevel = this._xScale.invert(trackWidth) - this._xScale.invert(0);
-                if (!tm.trackVisibility({ zoomLevel })) {
-                    return;
-                }
-
-                drawPreEmbellishment(HGC, this, tile, tm, this.options.theme);
-            }
-
-            /* Mark */
-            // A single tile contains one track or multiple tracks overlaid
+            // !! A single tile contains one track or multiple tracks overlaid
+            /* Render marks and embellishments */
             tile.goslingModels.forEach((tm: GoslingTrackModel) => {
                 // check visibility condition
-                const trackWidth = this.dimensions[1];
+                const trackWidth = this.dimensions[0];
                 const zoomLevel = this._xScale.invert(trackWidth) - this._xScale.invert(0);
+
                 if (!tm.trackVisibility({ zoomLevel })) {
                     return;
                 }
@@ -275,22 +263,10 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                 //     return;
                 // }
 
+                drawPreEmbellishment(HGC, this, tile, tm, this.options.theme);
                 drawMark(HGC, this, tile, tm);
-            });
-
-            /* Embellishment after rendering marks */
-            if (tile.goslingModels && tile.goslingModels[0]) {
-                const tm = tile.goslingModels[0];
-
-                // check visibility condition
-                const trackWidth = this.dimensions[1];
-                const zoomLevel = this._xScale.invert(trackWidth) - this._xScale.invert(0);
-                if (!tm.trackVisibility({ zoomLevel })) {
-                    return;
-                }
-
                 drawPostEmbellishment(HGC, this, tile, tm, this.options.theme);
-            }
+            });
 
             this.forceDraw();
         }
@@ -801,7 +777,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
 
             const spec = JSON.parse(JSON.stringify(this.options.spec));
 
-            // const [trackWidth, trackHeight] = this.dimensions; // actual size of a track
+            const [trackWidth, trackHeight] = this.dimensions; // actual size of a track
 
             resolveSuperposedTracks(spec).forEach(resolved => {
                 if (resolved.mark === 'brush') {
@@ -898,9 +874,8 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                 }
 
                 // Replace width and height information with the actual values
-                // TODO: we don't need this?
-                // resolved.width = trackWidth;
-                // resolved.height = trackHeight;
+                resolved.width = trackWidth;
+                resolved.height = trackHeight + HIGLASS_AXIS_SIZE; // Why the axis size must be added here?
 
                 // Construct separate gosling models for individual tiles
                 const gm = new GoslingTrackModel(resolved, tile.gos.tabularDataFiltered, this.options.theme);

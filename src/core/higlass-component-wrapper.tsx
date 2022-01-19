@@ -25,9 +25,11 @@ export interface HiGlassComponentWrapperProps {
     viewConfig?: HiGlassSpec;
     options: {
         padding?: number;
-        margin?: number | string;
+        margin?: number;
         border?: string;
         background?: string;
+        responsiveWidth?: boolean;
+        responsiveHeight?: boolean;
     };
     id?: string;
     className?: string;
@@ -47,7 +49,12 @@ export const HiGlassComponentWrapper = forwardRef<HiGlassApi | undefined, HiGlas
                 <HiGlassComponent
                     ref={ref}
                     options={{
-                        pixelPreciseMarginPadding: true, // this uses `rowHeight: 1` in react-grid-layout
+                        // This uses `rowHeight: 1` in react-grid-layout, allowing to set height precisely.
+                        // Since using this disallows responsive resizing of track heights in HiGlass,
+                        // we need to use this only when users do not want to use responsive height.
+                        // (See https://github.com/higlass/higlass/blob/2a3786e13c2415a52abc1227f75512f128e784a0/app/scripts/HiGlassComponent.js#L2199)
+                        pixelPreciseMarginPadding: !props.options.responsiveHeight,
+
                         containerPaddingX: 0,
                         containerPaddingY: 0,
                         viewMarginTop: 0,
@@ -80,8 +87,7 @@ export const HiGlassComponentWrapper = forwardRef<HiGlassApi | undefined, HiGlas
                         margin: margin,
                         border: border,
                         background: background,
-                        width: props.size.width,
-                        height: props.size.height,
+                        height: props.options.responsiveHeight ? `calc(100% - ${padding * 2}px)` : props.size.height,
                         textAlign: 'left'
                     }}
                 >
@@ -95,8 +101,8 @@ export const HiGlassComponentWrapper = forwardRef<HiGlassApi | undefined, HiGlas
                             background: background,
                             margin: 0,
                             padding: 0, // non-zero padding acts unexpectedly w/ HiGlassComponent
-                            width: props.size.width,
-                            height: props.size.height
+                            width: props.options.responsiveWidth ? '100%' : props.size.width,
+                            height: props.options.responsiveHeight ? '100%' : props.size.height
                         }}
                         // onClick={(e) => {
                         //     PubSub.publish('gosling.click', {
