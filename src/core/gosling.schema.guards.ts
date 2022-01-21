@@ -123,6 +123,13 @@ export function IsTemplateTrack(track: Partial<Track>): track is TemplateTrack {
 }
 
 /**
+ * Is this a vertical rule, i.e., y genomic axis?
+ */
+export function IsVerticalRule(track: Track) {
+    return IsSingleTrack(track) && !IsChannelDeep(track.x) && IsChannelDeep(track.y) && track.y.type === 'genomic';
+}
+
+/**
  * Is this 2D track, i.e., two genomic axes?
  */
 export function Is2DTrack(track: Track) {
