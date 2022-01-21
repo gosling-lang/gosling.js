@@ -288,3 +288,20 @@ export function IsXAxis(_: Track) {
     }
     return false;
 }
+
+export function IsYAxis(_: Track) {
+    if ((IsSingleTrack(_) || IsOverlaidTrack(_)) && IsChannelDeep(_.y) && _.y.axis && _.y.axis !== 'none') {
+        return true;
+    } else if (IsOverlaidTrack(_)) {
+        let isFound = false;
+        _.overlay.forEach(t => {
+            if (isFound) return;
+
+            if (IsChannelDeep(t.y) && t.y.axis && t.y.axis !== 'none') {
+                isFound = true;
+            }
+        });
+        return isFound;
+    }
+    return false;
+}

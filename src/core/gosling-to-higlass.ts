@@ -210,7 +210,7 @@ export function goslingToHiGlass(
             ) {
                 const narrowType = getAxisNarrowType(c as any, gosTrack.orientation, bb.width, bb.height);
                 hgModel.setAxisTrack(channel.axis, narrowType, {
-                    id: `${firstResolvedSpec.id}-axis`,
+                    id: `${firstResolvedSpec.id}-${channel.axis}-axis`,
                     layout: firstResolvedSpec.layout,
                     innerRadius:
                         channel.axis === 'top'

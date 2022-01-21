@@ -338,11 +338,11 @@ export class HiGlassModel {
                 }
                 this.getLastView().tracks.left = insertItemToArray(this.getLastView().tracks.left, 0, axisTrack);
             } else if (position === 'right') {
-                if (this.getLastView().tracks.left.filter(d => d.type === 'axis-track').length !== 0) {
+                if (this.getLastView().tracks.right.filter(d => d.type === 'axis-track').length !== 0) {
                     // we already have an axis
                     return this;
                 }
-                this.getLastView().tracks.left.push(axisTrack);
+                this.getLastView().tracks.right.push(axisTrack);
             } else {
                 if (this.getLastView().tracks[position].filter(d => d.type === 'axis-track').length !== 0) {
                     // we already have an axis
