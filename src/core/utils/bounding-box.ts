@@ -214,7 +214,7 @@ function traverseAndCollectTrackInfo(
                 }
             });
         } else {
-            // This is a horizontal, so use the largest `width` for this view.
+            // This is a horizontal view, so use the largest `width` for this view.
             cumWidth = Math.max(...tracks.map(d => d.width)); //forceWidth ? forceWidth : spec.tracks[0]?.width;
             tracks.forEach((track, i, array) => {
                 // let scaledHeight = track.height;
