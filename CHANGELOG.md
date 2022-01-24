@@ -1,3 +1,16 @@
+## [0.9.15](https://github.com/gosling-lang/gosling.js/compare/v0.9.14...v0.9.15) (2022-01-24)
+
+
+### Features
+
+* add responsive sizing options ([#617](https://github.com/gosling-lang/gosling.js/issues/617)) ([0470dd0](https://github.com/gosling-lang/gosling.js/commit/0470dd08df6d3378aedf035c7e24c3c9a0803e47))
+* support horizontal rules on matrix ([#620](https://github.com/gosling-lang/gosling.js/issues/620)) ([b205fef](https://github.com/gosling-lang/gosling.js/commit/b205fefc5be727c3a3c1af7374978bb4408d519c))
+* support native matrix visualization ([#612](https://github.com/gosling-lang/gosling.js/issues/612)) ([d9c967c](https://github.com/gosling-lang/gosling.js/commit/d9c967c834ad66c35122287d367d3a120ec48692))
+* support responsive resizing in circular layouts ([#623](https://github.com/gosling-lang/gosling.js/issues/623)) ([cabaa51](https://github.com/gosling-lang/gosling.js/commit/cabaa512c96faeb65b03d3a3e620a331ada507f2))
+* use HiGlass `heatmap` for conventional 2D matrix ([#615](https://github.com/gosling-lang/gosling.js/issues/615)) ([93fac44](https://github.com/gosling-lang/gosling.js/commit/93fac44130b405b008614cf3fc10007b5dbbf6c4))
+
+
+
 ## [0.9.14](https://github.com/gosling-lang/gosling.js/compare/v0.9.13...v0.9.14) (2021-12-12)
 
 
