@@ -96,8 +96,7 @@ export const examples: {
     },
     RESPONSIVE_MULTIVEC: {
         name: 'Responsive Encoding: Multiple Vectors',
-        spec: EX_SPEC_RESPONSIVE_MULTIVEC,
-        forceShow: true
+        spec: EX_SPEC_RESPONSIVE_MULTIVEC
     },
     RESPONSIVE_IDEOGRAM: {
         name: 'Responsive Encoding: Ideogram',
