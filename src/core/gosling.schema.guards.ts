@@ -123,6 +123,13 @@ export function IsTemplateTrack(track: Partial<Track>): track is TemplateTrack {
 }
 
 /**
+ * Is this a vertical rule, i.e., y genomic axis?
+ */
+export function IsVerticalRule(track: Track) {
+    return IsSingleTrack(track) && !IsChannelDeep(track.x) && IsChannelDeep(track.y) && track.y.type === 'genomic';
+}
+
+/**
  * Is this 2D track, i.e., two genomic axes?
  */
 export function Is2DTrack(track: Track) {
@@ -274,6 +281,23 @@ export function IsXAxis(_: Track) {
             if (isFound) return;
 
             if (IsChannelDeep(t.x) && t.x.axis && t.x.axis !== 'none') {
+                isFound = true;
+            }
+        });
+        return isFound;
+    }
+    return false;
+}
+
+export function IsYAxis(_: Track) {
+    if ((IsSingleTrack(_) || IsOverlaidTrack(_)) && IsChannelDeep(_.y) && _.y.axis && _.y.axis !== 'none') {
+        return true;
+    } else if (IsOverlaidTrack(_)) {
+        let isFound = false;
+        _.overlay.forEach(t => {
+            if (isFound) return;
+
+            if (IsChannelDeep(t.y) && t.y.axis && t.y.axis !== 'none') {
                 isFound = true;
             }
         });

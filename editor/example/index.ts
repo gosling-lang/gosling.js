@@ -61,8 +61,7 @@ export const examples: {
     },
     MATRIX: {
         name: 'Basic Example: Hi-C Matrix',
-        spec: EX_SPEC_MATRIX,
-        underDevelopment: true
+        spec: EX_SPEC_MATRIX
     },
     LINKING: {
         name: 'Basic Example: Visual Linking',

@@ -1,5 +1,5 @@
 import { MultipleViews, CommonViewDef, GoslingSpec, Track, SingleView } from '../gosling.schema';
-import { IsOverlaidTrack, IsXAxis } from '../gosling.schema.guards';
+import { Is2DTrack, IsOverlaidTrack, IsXAxis, IsYAxis } from '../gosling.schema.guards';
 import { HIGLASS_AXIS_SIZE } from '../higlass-model';
 import {
     DEFAULT_CIRCULAR_VIEW_PADDING,
@@ -7,6 +7,7 @@ import {
     DEFAULT_VIEW_SPACING,
     DEWFAULT_TITLE_PADDING_ON_TOP_AND_BOTTOM
 } from '../layout/defaults';
+import { resolveSuperposedTracks } from './overlay';
 import { traverseTracksAndViews, traverseViewArrangements } from './spec-preprocess';
 import { CompleteThemeDeep } from './theme';
 
@@ -222,6 +223,11 @@ function traverseAndCollectTrackInfo(
                     track.height += HIGLASS_AXIS_SIZE;
                 }
 
+                if (Is2DTrack(resolveSuperposedTracks(track)[0]) && getNumOfYAxes([track]) === 1) {
+                    // If this is a 2D track (e.g., matrix), we need to reserve a space for the y-axis track
+                    cumWidth += HIGLASS_AXIS_SIZE;
+                }
+
                 track.width = cumWidth;
 
                 output.push({
@@ -358,6 +364,10 @@ function traverseAndCollectTrackInfo(
 
 export function getNumOfXAxes(tracks: Track[]): number {
     return tracks.filter(t => IsXAxis(t)).length;
+}
+
+export function getNumOfYAxes(tracks: Track[]): number {
+    return tracks.filter(t => IsYAxis(t)).length;
 }
 
 /**
