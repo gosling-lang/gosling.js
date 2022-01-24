@@ -1,16 +1,12 @@
 import type { GoslingSpec } from 'gosling.js';
-import {
-    EX_SPEC_VISUAL_ENCODING,
-    EX_SPEC_VISUAL_ENCODING_CIRCULAR,
-    EX_SPEC_RESPONSIVE,
-    EX_SPEC_RULE
-} from './visual-encoding';
+import { EX_SPEC_VISUAL_ENCODING, EX_SPEC_VISUAL_ENCODING_CIRCULAR, EX_SPEC_RULE } from './visual-encoding';
 import { EX_SPEC_LAYOUT_AND_ARRANGEMENT_1, EX_SPEC_LAYOUT_AND_ARRANGEMENT_2 } from './layout-and-arrangement';
 import { EX_SPEC_MATRIX } from './matrix';
 import { EX_SPEC_CANCER_VARIANT_PROTOTYPE } from './cancer-variant';
 import { EX_SPEC_MATRIX_HFFC6 } from './matrix-hffc6';
 import { EX_SPEC_LINKING } from './visual-linking';
 import { EX_SPEC_BASIC_SEMANTIC_ZOOM } from './basic-semantic-zoom';
+import { EX_SPEC_RESPONSIVE_HORIZON_CHART, EX_SPEC_RESPONSIVE_SEGREGATED_AREA_CHART } from './responsive';
 import { EX_SPEC_MARK_DISPLACEMENT } from './mark-displacement';
 import { EX_SPEC_CIRCULAR_OVERVIEW_LINEAR_DETAIL } from './circular-overview-linear-detail-views';
 import { EX_SPEC_SARS_COV_2 } from './sars-cov-2';
@@ -98,9 +94,14 @@ export const examples: {
         name: 'Multi-Scale Clinvar Lollipop Plot',
         spec: EX_SPEC_CLINVAR_LOLLIPOP
     },
-    RESPONSIVE_ENCODING: {
-        name: 'Responsive Encoding',
-        spec: EX_SPEC_RESPONSIVE
+    RESPONSIVE_SEGREGATED_AREA: {
+        name: 'Responsive Encoding: Segregated Area Chart',
+        spec: EX_SPEC_RESPONSIVE_SEGREGATED_AREA_CHART
+    },
+    RESPONSIVE_HORIZON_CHART: {
+        name: 'Responsive Encoding: Horizon Chart',
+        spec: EX_SPEC_RESPONSIVE_HORIZON_CHART,
+        forceShow: true
     },
     CYTOBANDS: {
         name: 'Ideograms',
