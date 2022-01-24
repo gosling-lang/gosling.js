@@ -27,7 +27,7 @@ import { getTabularData } from './data-abstraction';
 import { BAMDataFetcher } from '../data-fetcher/bam';
 import { getRelativeGenomicPosition } from '../core/utils/assembly';
 import { getTextStyle } from '../core/utils/text-style';
-import { Is2DTrack } from '../core/gosling.schema.guards';
+import { Is2DTrack, IsXAxis } from '../core/gosling.schema.guards';
 import { spawn } from 'threads';
 
 import BamWorker from '../data-fetcher/bam/bam-worker.js?worker&inline';
@@ -874,7 +874,8 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                 }
 
                 // Replace width and height information with the actual values for responsive encoding
-                const [w, h] = [trackWidth, trackHeight + HIGLASS_AXIS_SIZE]; // Why the axis size must be added here?
+                const axisSize = IsXAxis(resolved) ? HIGLASS_AXIS_SIZE : 0; // Why the axis size must be added here?
+                const [w, h] = [trackWidth, trackHeight + axisSize];
                 const circularFactor = Math.min(w, h) / Math.min(resolved.width, resolved.height);
                 if (resolved.innerRadius) {
                     resolved.innerRadius = resolved.innerRadius * circularFactor;
