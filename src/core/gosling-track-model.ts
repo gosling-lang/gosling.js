@@ -484,7 +484,7 @@ export class GoslingTrackModel {
             return;
         }
 
-        if (!spec.width || !spec.height) {
+        if (typeof spec.width === 'undefined' || typeof spec.height === 'undefined') {
             console.warn('Track size is not determined yet');
             return;
         }

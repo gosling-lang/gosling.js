@@ -18,8 +18,7 @@ export function drawArea(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackMo
     const data = tm.data();
 
     /* track size */
-    const trackWidth = trackInfo.dimensions[0];
-    const trackHeight = trackInfo.dimensions[1];
+    const [trackWidth, trackHeight] = trackInfo.dimensions;
     const tileSize = trackInfo.tilesetInfo.tile_size;
     const { tileX } = trackInfo.getTilePosAndDimensions(tile.gos.zoomLevel, tile.gos.tilePos, tileSize);
 

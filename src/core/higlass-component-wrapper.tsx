@@ -87,6 +87,7 @@ export const HiGlassComponentWrapper = forwardRef<HiGlassApi | undefined, HiGlas
                         margin: margin,
                         border: border,
                         background: background,
+                        width: props.options.responsiveWidth ? `calc(100% - ${padding * 2}px)` : props.size.width,
                         height: props.options.responsiveHeight ? `calc(100% - ${padding * 2}px)` : props.size.height,
                         textAlign: 'left'
                     }}
