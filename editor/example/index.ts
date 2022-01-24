@@ -1,16 +1,12 @@
 import type { GoslingSpec } from 'gosling.js';
-import {
-    EX_SPEC_VISUAL_ENCODING,
-    EX_SPEC_VISUAL_ENCODING_CIRCULAR,
-    EX_SPEC_RESPONSIVE,
-    EX_SPEC_RULE
-} from './visual-encoding';
+import { EX_SPEC_VISUAL_ENCODING, EX_SPEC_VISUAL_ENCODING_CIRCULAR, EX_SPEC_RULE } from './visual-encoding';
 import { EX_SPEC_LAYOUT_AND_ARRANGEMENT_1, EX_SPEC_LAYOUT_AND_ARRANGEMENT_2 } from './layout-and-arrangement';
 import { EX_SPEC_MATRIX } from './matrix';
 import { EX_SPEC_CANCER_VARIANT_PROTOTYPE } from './cancer-variant';
 import { EX_SPEC_MATRIX_HFFC6 } from './matrix-hffc6';
 import { EX_SPEC_LINKING } from './visual-linking';
 import { EX_SPEC_BASIC_SEMANTIC_ZOOM } from './basic-semantic-zoom';
+import { EX_SPEC_RESPONSIVE_IDEOGRAM, EX_SPEC_RESPONSIVE_MULTIVEC } from './responsive';
 import { EX_SPEC_MARK_DISPLACEMENT } from './mark-displacement';
 import { EX_SPEC_CIRCULAR_OVERVIEW_LINEAR_DETAIL } from './circular-overview-linear-detail-views';
 import { EX_SPEC_SARS_COV_2 } from './sars-cov-2';
@@ -91,16 +87,21 @@ export const examples: {
         spec: EX_SPEC_CIRCULAR_OVERVIEW_LINEAR_DETAIL
     },
     SEQUENCE: {
-        name: 'Multi-Scale Sequence Track',
+        name: 'Semantic Zoom: Multi-Scale Sequence Track',
         spec: EX_SPEC_SEQUENCE_TRACK
     },
     SEMANTIC_ZOOM: {
-        name: 'Multi-Scale Clinvar Lollipop Plot',
+        name: 'Semantic Zoom: Multi-Scale Clinvar Lollipop Plot',
         spec: EX_SPEC_CLINVAR_LOLLIPOP
     },
-    RESPONSIVE_ENCODING: {
-        name: 'Responsive Encoding',
-        spec: EX_SPEC_RESPONSIVE
+    RESPONSIVE_MULTIVEC: {
+        name: 'Responsive Encoding: Multiple Vectors',
+        spec: EX_SPEC_RESPONSIVE_MULTIVEC
+    },
+    RESPONSIVE_IDEOGRAM: {
+        name: 'Responsive Encoding: Ideogram',
+        spec: EX_SPEC_RESPONSIVE_IDEOGRAM,
+        underDevelopment: true
     },
     CYTOBANDS: {
         name: 'Ideograms',
