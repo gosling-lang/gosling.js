@@ -42,7 +42,7 @@ export const EX_SPEC_RESPONSIVE_SEGREGATED_AREA_CHART: GoslingSpec = {
                     color: { field: 'sample', type: 'nominal' },
                     tracks: [
                         {
-                            y: { field: 'peak', type: 'quantitative', axis: 'right', domain: [0, 0.02] },
+                            y: { field: 'peak', type: 'quantitative', axis: 'right', domain: [0, 0.02], grid: true },
                             row: { field: 'sample', type: 'nominal', legend: true },
                             visibility: [
                                 {
@@ -74,7 +74,9 @@ export const EX_SPEC_RESPONSIVE_SEGREGATED_AREA_CHART: GoslingSpec = {
     ]
 };
 
+const TotalChartSizes = [400, 100]; // [192, 96, 48]; // from the paper below
 export const EX_SPEC_RESPONSIVE_HORIZON_CHART: GoslingSpec = {
+    description: 'Reference: Javed et al. Graphical perception of Multiple Time Series. TVCG 2010.',
     responsiveSize: { width: false, height: true },
     xDomain: { chromosome: '12', interval: [5000000, 15000000] },
     views: [
@@ -111,67 +113,110 @@ export const EX_SPEC_RESPONSIVE_HORIZON_CHART: GoslingSpec = {
                     dataTransform: [{ type: 'filter', field: 'sample', oneOf: ['sample -'], not: true }],
                     mark: 'area',
                     x: { field: 'position', type: 'genomic' },
-                    row: { field: 'sample', type: 'nominal', legend: true },
                     color: { value: '#2270B5' },
                     tracks: [
                         {
                             // Sufficient Height
-                            y: { field: 'peak', type: 'quantitative', axis: 'right', domain: [0, 0.01] },
+                            y: { field: 'peak', type: 'quantitative', axis: 'right', domain: [0, 0.01], grid: true },
+                            row: { field: 'sample', type: 'nominal', legend: true },
                             opacity: { value: 0.6 },
                             visibility: [
                                 {
                                     target: 'track',
                                     measure: 'height',
-                                    operation: 'GT',
-                                    threshold: 400
+                                    operation: 'GTET',
+                                    threshold: TotalChartSizes[0]
                                 }
                             ]
                         },
                         {
                             y: { field: 'peak', type: 'quantitative', axis: 'right', domain: [0, 0.0025] },
+                            row: { field: 'sample', type: 'nominal', legend: true },
                             opacity: { value: 0.3 },
                             visibility: [
                                 {
                                     target: 'track',
                                     measure: 'height',
                                     operation: 'LT',
-                                    threshold: 400
+                                    threshold: TotalChartSizes[0]
+                                },
+                                {
+                                    target: 'track',
+                                    measure: 'height',
+                                    operation: 'GT',
+                                    threshold: TotalChartSizes[1]
                                 }
                             ]
                         },
                         {
                             y: { field: 'peak', type: 'quantitative', axis: 'none', domain: [0.0025, 0.005] },
+                            row: { field: 'sample', type: 'nominal', legend: true },
                             opacity: { value: 0.3 },
                             visibility: [
                                 {
                                     target: 'track',
                                     measure: 'height',
                                     operation: 'LT',
-                                    threshold: 400
+                                    threshold: TotalChartSizes[0]
+                                },
+                                {
+                                    target: 'track',
+                                    measure: 'height',
+                                    operation: 'GT',
+                                    threshold: TotalChartSizes[1]
                                 }
                             ]
                         },
                         {
                             y: { field: 'peak', type: 'quantitative', axis: 'none', domain: [0.005, 0.0075] },
+                            row: { field: 'sample', type: 'nominal', legend: true },
                             opacity: { value: 0.3 },
                             visibility: [
                                 {
                                     target: 'track',
                                     measure: 'height',
                                     operation: 'LT',
-                                    threshold: 400
+                                    threshold: TotalChartSizes[0]
+                                },
+                                {
+                                    target: 'track',
+                                    measure: 'height',
+                                    operation: 'GT',
+                                    threshold: TotalChartSizes[1]
                                 }
                             ]
                         },
                         {
                             y: { field: 'peak', type: 'quantitative', axis: 'none', domain: [0.0075, 0.01] },
+                            row: { field: 'sample', type: 'nominal', legend: true },
                             opacity: { value: 0.3 },
                             visibility: [
                                 {
                                     target: 'track',
                                     measure: 'height',
                                     operation: 'LT',
-                                    threshold: 400
+                                    threshold: TotalChartSizes[0]
+                                },
+                                {
+                                    target: 'track',
+                                    measure: 'height',
+                                    operation: 'GT',
+                                    threshold: TotalChartSizes[1]
+                                }
+                            ]
+                        },
+                        {
+                            y: { field: 'peak', type: 'quantitative' },
+                            color: { field: 'sample', type: 'nominal', range: ['#2270B5'] },
+                            opacity: { value: 0.5 },
+                            stroke: { value: 'white' },
+                            strokeWidth: { value: 1 },
+                            visibility: [
+                                {
+                                    target: 'track',
+                                    measure: 'height',
+                                    operation: 'LTET',
+                                    threshold: TotalChartSizes[1]
                                 }
                             ]
                         }
