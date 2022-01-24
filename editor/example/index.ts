@@ -6,7 +6,7 @@ import { EX_SPEC_CANCER_VARIANT_PROTOTYPE } from './cancer-variant';
 import { EX_SPEC_MATRIX_HFFC6 } from './matrix-hffc6';
 import { EX_SPEC_LINKING } from './visual-linking';
 import { EX_SPEC_BASIC_SEMANTIC_ZOOM } from './basic-semantic-zoom';
-import { EX_SPEC_RESPONSIVE_HORIZON_CHART, EX_SPEC_RESPONSIVE_SEGREGATED_AREA_CHART } from './responsive';
+import { EX_SPEC_RESPONSIVE_IDEOGRAM, EX_SPEC_RESPONSIVE_MULTIVEC } from './responsive';
 import { EX_SPEC_MARK_DISPLACEMENT } from './mark-displacement';
 import { EX_SPEC_CIRCULAR_OVERVIEW_LINEAR_DETAIL } from './circular-overview-linear-detail-views';
 import { EX_SPEC_SARS_COV_2 } from './sars-cov-2';
@@ -87,20 +87,21 @@ export const examples: {
         spec: EX_SPEC_CIRCULAR_OVERVIEW_LINEAR_DETAIL
     },
     SEQUENCE: {
-        name: 'Multi-Scale Sequence Track',
+        name: 'Semantic Zoom: Multi-Scale Sequence Track',
         spec: EX_SPEC_SEQUENCE_TRACK
     },
     SEMANTIC_ZOOM: {
-        name: 'Multi-Scale Clinvar Lollipop Plot',
+        name: 'Semantic Zoom: Multi-Scale Clinvar Lollipop Plot',
         spec: EX_SPEC_CLINVAR_LOLLIPOP
     },
-    RESPONSIVE_SEGREGATED_AREA: {
-        name: 'Responsive Encoding: Segregated Area Chart',
-        spec: EX_SPEC_RESPONSIVE_SEGREGATED_AREA_CHART
+    RESPONSIVE_MULTIVEC: {
+        name: 'Responsive Encoding: Multiple Vectors',
+        spec: EX_SPEC_RESPONSIVE_MULTIVEC
     },
-    RESPONSIVE_HORIZON_CHART: {
-        name: 'Responsive Encoding: Horizon Chart',
-        spec: EX_SPEC_RESPONSIVE_HORIZON_CHART,
+    RESPONSIVE_IDEOGRAM: {
+        name: 'Responsive Encoding: Ideogram',
+        spec: EX_SPEC_RESPONSIVE_IDEOGRAM,
+        underDevelopment: true,
         forceShow: true
     },
     CYTOBANDS: {

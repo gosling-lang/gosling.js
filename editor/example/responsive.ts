@@ -75,7 +75,7 @@ export const EX_SPEC_RESPONSIVE_SEGREGATED_AREA_CHART: GoslingSpec = {
 };
 
 const TotalChartSizes = [400, 100]; // [192, 96, 48]; // from the paper below
-export const EX_SPEC_RESPONSIVE_HORIZON_CHART: GoslingSpec = {
+export const EX_SPEC_RESPONSIVE_MULTIVEC: GoslingSpec = {
     description: 'Reference: Javed et al. Graphical perception of Multiple Time Series. TVCG 2010.',
     responsiveSize: { width: false, height: true },
     xDomain: { chromosome: '12', interval: [5000000, 15000000] },
@@ -206,7 +206,7 @@ export const EX_SPEC_RESPONSIVE_HORIZON_CHART: GoslingSpec = {
                             ]
                         },
                         {
-                            y: { field: 'peak', type: 'quantitative' },
+                            y: { field: 'peak', type: 'quantitative', axis: 'right' },
                             color: { field: 'sample', type: 'nominal', range: ['#2270B5'] },
                             opacity: { value: 0.5 },
                             stroke: { value: 'white' },
@@ -223,6 +223,115 @@ export const EX_SPEC_RESPONSIVE_HORIZON_CHART: GoslingSpec = {
                     ],
                     width: 600,
                     height: 130
+                }
+            ]
+        }
+    ]
+};
+
+// TODO: Add genes and allow rotation
+export const EX_SPEC_RESPONSIVE_IDEOGRAM: GoslingSpec = {
+    responsiveSize: { width: true, height: true },
+    xDomain: { chromosome: '12' },
+    views: [
+        {
+            tracks: [
+                {
+                    alignment: 'overlay',
+                    data: {
+                        url: 'https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/UCSC.HG38.Human.CytoBandIdeogram.csv',
+                        type: 'csv',
+                        chromosomeField: 'Chromosome',
+                        genomicFields: ['chromStart', 'chromEnd']
+                    },
+                    tracks: [
+                        {
+                            mark: 'text',
+                            dataTransform: [{ type: 'filter', field: 'Stain', oneOf: ['acen'], not: true }],
+                            text: { field: 'Name', type: 'nominal' },
+                            color: {
+                                field: 'Stain',
+                                type: 'nominal',
+                                domain: ['gneg', 'gpos25', 'gpos50', 'gpos75', 'gpos100', 'gvar'],
+                                range: ['black', 'black', 'black', 'black', 'white', 'black']
+                            },
+                            size: { value: 12 },
+                            visibility: [
+                                {
+                                    target: 'mark',
+                                    measure: 'width',
+                                    threshold: '|xe-x|',
+                                    operation: 'LT'
+                                },
+                                {
+                                    target: 'track',
+                                    measure: 'height',
+                                    threshold: 60,
+                                    operation: 'LT'
+                                }
+                            ]
+                        },
+                        {
+                            mark: 'text',
+                            dataTransform: [{ type: 'filter', field: 'Stain', oneOf: ['acen'], not: true }],
+                            text: { field: 'Name', type: 'nominal' },
+                            color: {
+                                field: 'Stain',
+                                type: 'nominal',
+                                domain: ['gneg', 'gpos25', 'gpos50', 'gpos75', 'gpos100', 'gvar'],
+                                range: ['black', 'black', 'black', 'black', 'black', 'black']
+                            },
+                            size: { value: 12 },
+                            style: { dy: -20 },
+                            visibility: [
+                                {
+                                    target: 'mark',
+                                    measure: 'width',
+                                    threshold: '|xe-x|',
+                                    operation: 'LT'
+                                },
+                                {
+                                    target: 'track',
+                                    measure: 'height',
+                                    threshold: 60,
+                                    operation: 'GTET'
+                                }
+                            ]
+                        },
+                        {
+                            mark: 'rect',
+                            dataTransform: [{ type: 'filter', field: 'Stain', oneOf: ['acen'], not: true }],
+                            color: {
+                                field: 'Stain',
+                                type: 'nominal',
+                                domain: ['gneg', 'gpos25', 'gpos50', 'gpos75', 'gpos100', 'gvar'],
+                                range: ['white', '#D9D9D9', '#979797', '#636363', 'black', '#A0A0F2']
+                            }
+                        },
+                        {
+                            mark: 'triangleRight',
+                            dataTransform: [
+                                { type: 'filter', field: 'Stain', oneOf: ['acen'] },
+                                { type: 'filter', field: 'Name', include: 'q' }
+                            ],
+                            color: { value: '#B40101' }
+                        },
+                        {
+                            mark: 'triangleLeft',
+                            dataTransform: [
+                                { type: 'filter', field: 'Stain', oneOf: ['acen'] },
+                                { type: 'filter', field: 'Name', include: 'p' }
+                            ],
+                            color: { value: '#B40101' }
+                        }
+                    ],
+                    x: { field: 'chromStart', type: 'genomic' },
+                    xe: { field: 'chromEnd', type: 'genomic' },
+                    size: { value: 20 },
+                    stroke: { value: 'gray' },
+                    strokeWidth: { value: 0.5 },
+                    width: 400,
+                    height: 25
                 }
             ]
         }
