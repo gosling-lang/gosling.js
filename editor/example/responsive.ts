@@ -130,6 +130,55 @@ export const EX_SPEC_RESPONSIVE_MULTIVEC: GoslingSpec = {
                             ]
                         },
                         {
+                            // Sufficient Height
+                            mark: 'point',
+                            y: { field: 'peak', type: 'quantitative', axis: 'right', domain: [0, 0.01], grid: true },
+                            row: { field: 'sample', type: 'nominal', legend: true },
+                            opacity: { value: 1 },
+                            size: { value: 1.5 },
+                            visibility: [
+                                {
+                                    target: 'track',
+                                    measure: 'height',
+                                    operation: 'GTET',
+                                    threshold: TotalChartSizes[0] + 200
+                                }
+                            ]
+                        },
+                        {
+                            // Sufficient Height
+                            mark: 'bar',
+                            y: { field: 'peak', type: 'quantitative', axis: 'right', domain: [0, 0.01], grid: true },
+                            row: { field: 'sample', type: 'nominal', legend: true },
+                            opacity: { value: 1 },
+                            size: { value: 0.5 },
+                            visibility: [
+                                {
+                                    target: 'track',
+                                    measure: 'height',
+                                    operation: 'GTET',
+                                    threshold: TotalChartSizes[0] + 200
+                                }
+                            ]
+                        },
+                        // {
+                        //     // Max Annotation
+                        //     dataTransform: [
+                        //         { type: 'filter', field: 'sample', oneOf: ['sample -'], not: true }
+                        //     ],
+                        //     y: { field: 'peak', type: 'quantitative', axis: 'right', aggregate: 'max' },
+                        //     row: { field: 'sample', type: 'nominal', legend: true },
+                        //     opacity: { value: 0.6 },
+                        //     visibility: [
+                        //         {
+                        //             target: 'track',
+                        //             measure: 'height',
+                        //             operation: 'GTET',
+                        //             threshold: TotalChartSizes[0]
+                        //         }
+                        //     ]
+                        // },
+                        {
                             y: { field: 'peak', type: 'quantitative', axis: 'right', domain: [0, 0.0025] },
                             row: { field: 'sample', type: 'nominal', legend: true },
                             opacity: { value: 0.3 },
@@ -268,6 +317,12 @@ export const EX_SPEC_RESPONSIVE_IDEOGRAM: GoslingSpec = {
                                     measure: 'height',
                                     threshold: 60,
                                     operation: 'LT'
+                                },
+                                {
+                                    target: 'track',
+                                    measure: 'height',
+                                    threshold: 10,
+                                    operation: 'GTET'
                                 }
                             ]
                         },

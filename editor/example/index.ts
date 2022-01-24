@@ -96,13 +96,13 @@ export const examples: {
     },
     RESPONSIVE_MULTIVEC: {
         name: 'Responsive Encoding: Multiple Vectors',
-        spec: EX_SPEC_RESPONSIVE_MULTIVEC
+        spec: EX_SPEC_RESPONSIVE_MULTIVEC,
+        forceShow: true
     },
     RESPONSIVE_IDEOGRAM: {
         name: 'Responsive Encoding: Ideogram',
         spec: EX_SPEC_RESPONSIVE_IDEOGRAM,
-        underDevelopment: true,
-        forceShow: true
+        underDevelopment: true
     },
     CYTOBANDS: {
         name: 'Ideograms',
