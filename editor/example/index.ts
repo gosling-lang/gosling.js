@@ -100,13 +100,11 @@ export const examples: {
     },
     RESPONSIVE_MULTIVEC: {
         name: 'Responsive Encoding: Multiple Vectors',
-        spec: EX_SPEC_RESPONSIVE_MULTIVEC,
-        forceShow: true
+        spec: EX_SPEC_RESPONSIVE_MULTIVEC
     },
     RESPONSIVE_MULTIVEC_CIRCULAR: {
         name: 'Responsive Encoding: Circular Multiple Vectors',
-        spec: EX_SPEC_RESPONSIVE_MULTIVEC_CIRCULAR,
-        forceShow: true
+        spec: EX_SPEC_RESPONSIVE_MULTIVEC_CIRCULAR
     },
     RESPONSIVE_IDEOGRAM: {
         name: 'Responsive Encoding: Ideogram',
