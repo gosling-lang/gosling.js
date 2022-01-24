@@ -424,7 +424,10 @@ function AxisTrack(HGC: any, ...args: any[]): any {
 
         addCurvedText(textObj: any, cx: number) {
             const [width, height] = this.dimensions;
-            const { innerRadius, outerRadius, startAngle, endAngle } = this.options;
+            const { startAngle, endAngle } = this.options;
+            const factor = Math.min(width, height) / Math.min(this.options.width, this.options.height);
+            const innerRadius = this.options.innerRadius * factor;
+            const outerRadius = this.options.outerRadius * factor;
 
             const r = (outerRadius + innerRadius) / 2.0;
             const centerPos = cartesianToPolar(cx, width, r, width / 2.0, height / 2.0, startAngle, endAngle);

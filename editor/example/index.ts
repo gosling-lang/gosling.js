@@ -6,7 +6,11 @@ import { EX_SPEC_CANCER_VARIANT_PROTOTYPE } from './cancer-variant';
 import { EX_SPEC_MATRIX_HFFC6 } from './matrix-hffc6';
 import { EX_SPEC_LINKING } from './visual-linking';
 import { EX_SPEC_BASIC_SEMANTIC_ZOOM } from './basic-semantic-zoom';
-import { EX_SPEC_RESPONSIVE_IDEOGRAM, EX_SPEC_RESPONSIVE_MULTIVEC } from './responsive';
+import {
+    EX_SPEC_RESPONSIVE_IDEOGRAM,
+    EX_SPEC_RESPONSIVE_MULTIVEC,
+    EX_SPEC_RESPONSIVE_MULTIVEC_CIRCULAR
+} from './responsive';
 import { EX_SPEC_MARK_DISPLACEMENT } from './mark-displacement';
 import { EX_SPEC_CIRCULAR_OVERVIEW_LINEAR_DETAIL } from './circular-overview-linear-detail-views';
 import { EX_SPEC_SARS_COV_2 } from './sars-cov-2';
@@ -96,7 +100,13 @@ export const examples: {
     },
     RESPONSIVE_MULTIVEC: {
         name: 'Responsive Encoding: Multiple Vectors',
-        spec: EX_SPEC_RESPONSIVE_MULTIVEC
+        spec: EX_SPEC_RESPONSIVE_MULTIVEC,
+        forceShow: true
+    },
+    RESPONSIVE_MULTIVEC_CIRCULAR: {
+        name: 'Responsive Encoding: Circular Multiple Vectors',
+        spec: EX_SPEC_RESPONSIVE_MULTIVEC_CIRCULAR,
+        forceShow: true
     },
     RESPONSIVE_IDEOGRAM: {
         name: 'Responsive Encoding: Ideogram',

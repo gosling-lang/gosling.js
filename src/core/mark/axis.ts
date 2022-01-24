@@ -156,7 +156,7 @@ export function drawCircularYAxis(
     }
 
     /* track size */
-    const [tw, th] = [spec.width, spec.height];
+    const [tw, th] = trackInfo.dimensions;
 
     /* circular parameters */
     const trackInnerRadius = spec.innerRadius ?? 220;

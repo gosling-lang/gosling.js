@@ -309,10 +309,10 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
          * Rerender all tiles when track size is changed.
          * (Refer to https://github.com/higlass/higlass/blob/54f5aae61d3474f9e868621228270f0c90ef9343/app/scripts/PixiTrack.js#L186).
          */
-        setDimensions(newDimensions: any) {
+        setDimensions(newDimensions: [number, number]) {
             if (PRINT_RENDERING_CYCLE) console.warn('setDimensions()');
 
-            this.oldDimensions = this.dimensions;
+            this.oldDimensions = this.dimensions; // initially, [1, 1]
             super.setDimensions(newDimensions); // This simply updates `this._xScale` and `this._yScale`
 
             // const visibleAndFetched = this.visibleAndFetchedTiles();
@@ -873,9 +873,17 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                     // ..
                 }
 
-                // Replace width and height information with the actual values
-                resolved.width = trackWidth;
-                resolved.height = trackHeight + HIGLASS_AXIS_SIZE; // Why the axis size must be added here?
+                // Replace width and height information with the actual values for responsive encoding
+                const [w, h] = [trackWidth, trackHeight + HIGLASS_AXIS_SIZE]; // Why the axis size must be added here?
+                const circularFactor = Math.min(w, h) / Math.min(resolved.width, resolved.height);
+                if (resolved.innerRadius) {
+                    resolved.innerRadius = resolved.innerRadius * circularFactor;
+                }
+                if (resolved.outerRadius) {
+                    resolved.outerRadius = resolved.outerRadius * circularFactor;
+                }
+                resolved.width = w;
+                resolved.height = h;
 
                 // Construct separate gosling models for individual tiles
                 const gm = new GoslingTrackModel(resolved, tile.gos.tabularDataFiltered, this.options.theme);
