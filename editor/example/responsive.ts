@@ -232,7 +232,7 @@ export const EX_SPEC_RESPONSIVE_MULTIVEC: GoslingSpec = {
 // TODO: Add genes and allow rotation
 export const EX_SPEC_RESPONSIVE_IDEOGRAM: GoslingSpec = {
     responsiveSize: { width: true, height: true },
-    xDomain: { chromosome: '12' },
+    xDomain: { chromosome: '7' },
     views: [
         {
             tracks: [
@@ -290,6 +290,294 @@ export const EX_SPEC_RESPONSIVE_IDEOGRAM: GoslingSpec = {
                                     threshold: '|xe-x|',
                                     operation: 'LT'
                                 },
+                                {
+                                    target: 'track',
+                                    measure: 'height',
+                                    threshold: 60,
+                                    operation: 'GTET'
+                                }
+                            ]
+                        },
+                        {
+                            mark: 'text',
+                            data: {
+                                type: 'json',
+                                values: [
+                                    {
+                                        c: '1',
+                                        chromStart: 1654193086,
+                                        chromEnd: 1654206403,
+                                        strand: '+',
+                                        name: 'TLR4'
+                                    },
+                                    {
+                                        c: '1',
+                                        chromStart: 1707783946,
+                                        chromEnd: 1707841994,
+                                        strand: '-',
+                                        name: 'ITGB1'
+                                    },
+                                    {
+                                        c: '1',
+                                        chromStart: 1319508165,
+                                        chromEnd: 1319717626,
+                                        strand: '-',
+                                        name: 'ABCB1'
+                                    },
+                                    {
+                                        c: '1',
+                                        chromStart: 1349484265,
+                                        chromEnd: 1349672967,
+                                        strand: '+',
+                                        name: 'CFTR'
+                                    },
+                                    {
+                                        c: '1',
+                                        chromStart: 1360245580,
+                                        chromEnd: 1360261932,
+                                        strand: '+',
+                                        name: 'LEP'
+                                    },
+                                    {
+                                        c: '1',
+                                        chromStart: 1372738315,
+                                        chromEnd: 1372929067,
+                                        strand: '-',
+                                        name: 'BRAF'
+                                    },
+                                    {
+                                        c: '1',
+                                        chromStart: 1382995358,
+                                        chromEnd: 1383018902,
+                                        strand: '+',
+                                        name: 'NOS3'
+                                    },
+                                    {
+                                        c: '1',
+                                        chromStart: 1333131391,
+                                        chromEnd: 1333143569,
+                                        strand: '+',
+                                        name: 'SERPINE1'
+                                    },
+                                    {
+                                        c: '1',
+                                        chromStart: 1876264645,
+                                        chromEnd: 1876267704,
+                                        strand: '+',
+                                        name: 'GSTP1'
+                                    },
+                                    {
+                                        c: '1',
+                                        chromStart: 1878322155,
+                                        chromEnd: 1878335525,
+                                        strand: '+',
+                                        name: 'CCND1'
+                                    },
+                                    {
+                                        c: '1',
+                                        chromStart: 1916903882,
+                                        chromEnd: 1917050150,
+                                        strand: '+',
+                                        name: 'ATM'
+                                    },
+                                    {
+                                        c: '1',
+                                        chromStart: 1950557144,
+                                        chromEnd: 1950588483,
+                                        strand: '+',
+                                        name: 'CD4'
+                                    },
+                                    {
+                                        c: '1',
+                                        chromStart: 1968972461,
+                                        chromEnd: 1969018604,
+                                        strand: '-',
+                                        name: 'KRAS'
+                                    },
+                                    {
+                                        c: '1',
+                                        chromStart: 1874334646,
+                                        chromEnd: 1874344023,
+                                        strand: '-',
+                                        name: 'RELA'
+                                    },
+                                    {
+                                        c: '1',
+                                        chromStart: 2109358461,
+                                        chromEnd: 2109442654,
+                                        strand: '+',
+                                        name: 'BRCA2'
+                                    },
+                                    {
+                                        c: '1',
+                                        chromStart: 1212888819,
+                                        chromEnd: 1213327927,
+                                        strand: '+',
+                                        name: 'ESR1'
+                                    },
+                                    {
+                                        c: '1',
+                                        chromStart: 1254731444,
+                                        chromEnd: 1254736305,
+                                        strand: '+',
+                                        name: 'IL6'
+                                    },
+                                    {
+                                        c: '1',
+                                        chromStart: 1287023323,
+                                        chromEnd: 1287212383,
+                                        strand: '+',
+                                        name: 'EGFR'
+                                    },
+                                    {
+                                        c: '1',
+                                        chromStart: 1519086344,
+                                        chromEnd: 1519091710,
+                                        strand: '+',
+                                        name: 'MYC'
+                                    },
+                                    {
+                                        c: '1',
+                                        chromStart: 1541473997,
+                                        chromEnd: 1541617095,
+                                        strand: '+',
+                                        name: 'JAK2'
+                                    },
+                                    {
+                                        c: '1',
+                                        chromStart: 1558456663,
+                                        chromEnd: 1558483403,
+                                        strand: '-',
+                                        name: 'CDKN2A'
+                                    },
+                                    {
+                                        c: '1',
+                                        chromStart: 1719253781,
+                                        chromEnd: 1719268726,
+                                        strand: '-',
+                                        name: 'CXCL12'
+                                    },
+                                    {
+                                        c: '1',
+                                        chromStart: 1762747066,
+                                        chromEnd: 1762855559,
+                                        strand: '+',
+                                        name: 'PTEN'
+                                    },
+                                    {
+                                        c: '1',
+                                        chromStart: 1836335945,
+                                        chromEnd: 1836403109,
+                                        strand: '-',
+                                        name: 'BDNF'
+                                    },
+                                    {
+                                        c: '1',
+                                        chromStart: 1855400216,
+                                        chromEnd: 1855420559,
+                                        strand: '+',
+                                        name: 'F2'
+                                    },
+                                    {
+                                        c: '1',
+                                        chromStart: 1763874187,
+                                        chromEnd: 1763900690,
+                                        strand: '+',
+                                        name: 'FAS'
+                                    },
+                                    {
+                                        c: '1',
+                                        chromStart: 1991609209,
+                                        chromEnd: 1991672704,
+                                        strand: '-',
+                                        name: 'VDR'
+                                    },
+                                    {
+                                        c: '1',
+                                        chromStart: 2011922442,
+                                        chromEnd: 2011927414,
+                                        strand: '-',
+                                        name: 'IFNG'
+                                    },
+                                    {
+                                        c: '1',
+                                        chromStart: 2012575844,
+                                        chromEnd: 2012613217,
+                                        strand: '+',
+                                        name: 'MDM2'
+                                    },
+                                    {
+                                        c: '1',
+                                        chromStart: 2046163539,
+                                        chromEnd: 2046248318,
+                                        strand: '-',
+                                        name: 'IGF1'
+                                    },
+                                    {
+                                        c: '1',
+                                        chromStart: 1091140793,
+                                        chromEnd: 1091144208,
+                                        strand: '+',
+                                        name: 'HLA-A'
+                                    },
+                                    {
+                                        c: '1',
+                                        chromStart: 1092552189,
+                                        chromEnd: 1092555569,
+                                        strand: '-',
+                                        name: 'HLA-B'
+                                    },
+                                    {
+                                        c: '1',
+                                        chromStart: 1092773890,
+                                        chromEnd: 1092776659,
+                                        strand: '+',
+                                        name: 'TNF'
+                                    },
+                                    {
+                                        c: '1',
+                                        chromStart: 1093777093,
+                                        chromEnd: 1093788160,
+                                        strand: '-',
+                                        name: 'HLA-DRB1'
+                                    },
+                                    {
+                                        c: '1',
+                                        chromStart: 1093857787,
+                                        chromEnd: 1093865013,
+                                        strand: '-',
+                                        name: 'HLA-DQB1'
+                                    },
+                                    {
+                                        c: '1',
+                                        chromStart: 1097226000,
+                                        chromEnd: 1097309560,
+                                        strand: '+',
+                                        name: 'MAPK14'
+                                    },
+                                    {
+                                        c: '1',
+                                        chromStart: 1097874783,
+                                        chromEnd: 1097885663,
+                                        strand: '+',
+                                        name: 'CDKN1A'
+                                    },
+                                    {
+                                        c: '1',
+                                        chromStart: 1104968532,
+                                        chromEnd: 1104984810,
+                                        strand: '+',
+                                        name: 'VEGFA'
+                                    }
+                                ],
+                                // chromosomeField: 'c',
+                                genomicFields: ['chromStart', 'chromEnd']
+                            },
+                            text: { field: 'name', type: 'nominal' },
+                            color: { value: 'grey' },
+                            size: { value: 12 },
+                            style: { dy: 20 },
+                            visibility: [
                                 {
                                     target: 'track',
                                     measure: 'height',
