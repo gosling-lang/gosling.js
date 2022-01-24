@@ -24,7 +24,19 @@ export interface RootSpecWithMultipleViews extends MultipleViews {
 /* ----------------------------- VIEW ----------------------------- */
 export type View = SingleView | MultipleViews;
 
-export type SingleView = OverlaidTracks | StackedTracks | FlatTracks;
+export type SingleView = (OverlaidTracks | StackedTracks | FlatTracks) & ResponsiveSpecOfSingleView;
+
+export type ResponsiveSpecOfSingleView = {
+    responsiveSpec?: {
+        spec: Partial<OverlaidTracks | StackedTracks>;
+        // Similar to VisibilityCondition
+        if: {
+            operation: LogicalOperation;
+            measure: 'width' | 'height';
+            threshold: number;
+        }[];
+    }[];
+};
 
 export interface FlatTracks extends CommonViewDef {
     tracks: Track[];
