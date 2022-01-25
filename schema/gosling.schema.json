@@ -1090,319 +1090,101 @@
     "GoslingSpec": {
       "anyOf": [
         {
-          "$ref": "#/definitions/RootSpecWithSingleView"
-        },
-        {
-          "$ref": "#/definitions/RootSpecWithMultipleViews"
-        }
-      ]
-    },
-    "IncludeFilter": {
-      "additionalProperties": false,
-      "properties": {
-        "field": {
-          "description": "A filter is applied based on the values of the specified data field",
-          "type": "string"
-        },
-        "include": {
-          "description": "Check whether the value includes a substring.",
-          "type": "string"
-        },
-        "not": {
-          "description": "when `{\"not\": true}`, apply a NOT logical operation to the filter.\n\n__Default:__ `false`",
-          "type": "boolean"
-        },
-        "type": {
-          "const": "filter",
-          "type": "string"
-        }
-      },
-      "required": [
-        "field",
-        "include",
-        "type"
-      ],
-      "type": "object"
-    },
-    "JSONData": {
-      "additionalProperties": false,
-      "description": "The JSON data format allows users to include data directly in the Gosling's JSON specification.",
-      "properties": {
-        "chromosomeField": {
-          "description": "Specify the name of chromosome data fields.",
-          "type": "string"
-        },
-        "genomicFields": {
-          "description": "Specify the name of genomic data fields.",
-          "items": {
-            "type": "string"
-          },
-          "type": "array"
-        },
-        "genomicFieldsToConvert": {
-          "description": "experimental",
-          "items": {
-            "additionalProperties": false,
-            "properties": {
-              "chromosomeField": {
-                "type": "string"
-              },
-              "genomicFields": {
-                "items": {
-                  "type": "string"
+          "additionalProperties": false,
+          "properties": {
+            "_invalidTrack": {
+              "description": "internal",
+              "type": "boolean"
+            },
+            "_renderingId": {
+              "description": "internal",
+              "type": "string"
+            },
+            "alignment": {
+              "const": "overlay",
+              "type": "string"
+            },
+            "assembly": {
+              "$ref": "#/definitions/Assembly",
+              "description": "A string that specifies the genome builds to use. Currently support `\"hg38\"`, `\"hg19\"`, `\"hg18\"`, `\"hg17\"`, `\"hg16\"`, `\"mm10\"`, `\"mm9\"`, and `\"unknown\"`.\n\n__Note:__: with `\"unknown\"` assembly, genomic axes do not show chrN: in labels."
+            },
+            "centerRadius": {
+              "description": "Proportion of the radius of the center white space.\n\n__Default:__ `0.3`",
+              "type": "number"
+            },
+            "color": {
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/Color"
                 },
-                "type": "array"
-              }
+                {
+                  "$ref": "#/definitions/ChannelValue"
+                }
+              ]
             },
-            "required": [
-              "chromosomeField",
-              "genomicFields"
-            ],
-            "type": "object"
-          },
-          "type": "array"
-        },
-        "sampleLength": {
-          "description": "Specify the number of rows loaded from the URL.\n\n__Default:__ `1000`",
-          "type": "number"
-        },
-        "type": {
-          "const": "json",
-          "description": "Define data type.",
-          "type": "string"
-        },
-        "values": {
-          "description": "Values in the form of JSON.",
-          "items": {
-            "$ref": "#/definitions/Datum"
-          },
-          "type": "array"
-        }
-      },
-      "required": [
-        "type",
-        "values"
-      ],
-      "type": "object"
-    },
-    "JSONParseTransform": {
-      "additionalProperties": false,
-      "description": "Parse JSON Object Array and append vertically",
-      "properties": {
-        "baseGenomicField": {
-          "description": "Base genomic position when parsing relative position.",
-          "type": "string"
-        },
-        "field": {
-          "description": "The field that contains the JSON object array.",
-          "type": "string"
-        },
-        "genomicField": {
-          "description": "Relative genomic position to parse.",
-          "type": "string"
-        },
-        "genomicLengthField": {
-          "description": "Length of genomic interval.",
-          "type": "string"
-        },
-        "type": {
-          "const": "subjson",
-          "type": "string"
-        }
-      },
-      "required": [
-        "type",
-        "field",
-        "baseGenomicField",
-        "genomicField",
-        "genomicLengthField"
-      ],
-      "type": "object"
-    },
-    "Layout": {
-      "enum": [
-        "linear",
-        "circular"
-      ],
-      "type": "string"
-    },
-    "LogBase": {
-      "anyOf": [
-        {
-          "type": "number"
-        },
-        {
-          "const": "e",
-          "type": "string"
-        }
-      ]
-    },
-    "LogTransform": {
-      "additionalProperties": false,
-      "properties": {
-        "base": {
-          "$ref": "#/definitions/LogBase",
-          "description": "If not specified, 10 is used."
-        },
-        "field": {
-          "type": "string"
-        },
-        "newField": {
-          "description": "If specified, store transformed values in a new field.",
-          "type": "string"
-        },
-        "type": {
-          "const": "log",
-          "type": "string"
-        }
-      },
-      "required": [
-        "type",
-        "field"
-      ],
-      "type": "object"
-    },
-    "LogicalOperation": {
-      "enum": [
-        "less-than",
-        "lt",
-        "LT",
-        "greater-than",
-        "gt",
-        "GT",
-        "less-than-or-equal-to",
-        "ltet",
-        "LTET",
-        "greater-than-or-equal-to",
-        "gtet",
-        "GTET"
-      ],
-      "type": "string"
-    },
-    "Mark": {
-      "enum": [
-        "point",
-        "line",
-        "area",
-        "bar",
-        "rect",
-        "text",
-        "withinLink",
-        "betweenLink",
-        "rule",
-        "triangleLeft",
-        "triangleRight",
-        "triangleBottom",
-        "brush",
-        "header"
-      ],
-      "type": "string"
-    },
-    "MatrixData": {
-      "additionalProperties": false,
-      "properties": {
-        "binSize": {
-          "description": "Determine the number of nearby cells to aggregate. __Default__: `1`",
-          "type": "number"
-        },
-        "column": {
-          "description": "The name of the first genomic field. __Default__: `x`",
-          "type": "string"
-        },
-        "row": {
-          "description": "The name of the first genomic field. __Default__: `y`",
-          "type": "string"
-        },
-        "type": {
-          "const": "matrix",
-          "type": "string"
-        },
-        "url": {
-          "description": "URL link to the matrix data file",
-          "type": "string"
-        },
-        "value": {
-          "description": "The name of the value field. __Default__: `value`",
-          "type": "string"
-        }
-      },
-      "required": [
-        "type",
-        "url"
-      ],
-      "type": "object"
-    },
-    "MultipleViews": {
-      "additionalProperties": false,
-      "properties": {
-        "arrangement": {
-          "description": "Specify how multiple views are arranged.",
-          "enum": [
-            "parallel",
-            "serial",
-            "horizontal",
-            "vertical"
-          ],
-          "type": "string"
-        },
-        "assembly": {
-          "$ref": "#/definitions/Assembly",
-          "description": "A string that specifies the genome builds to use. Currently support `\"hg38\"`, `\"hg19\"`, `\"hg18\"`, `\"hg17\"`, `\"hg16\"`, `\"mm10\"`, `\"mm9\"`, and `\"unknown\"`.\n\n__Note:__: with `\"unknown\"` assembly, genomic axes do not show chrN: in labels."
-        },
-        "centerRadius": {
-          "description": "Proportion of the radius of the center white space.\n\n__Default:__ `0.3`",
-          "type": "number"
-        },
-        "layout": {
-          "$ref": "#/definitions/Layout",
-          "description": "Specify the layout type of all tracks."
-        },
-        "linkingId": {
-          "description": "Specify an ID for [linking multiple views](http://gosling-lang.org/docs/user-interaction#linking-views)",
-          "type": "string"
-        },
-        "orientation": {
-          "$ref": "#/definitions/Orientation",
-          "description": "Specify the orientation."
-        },
-        "spacing": {
-          "description": "- If `{\"layout\": \"linear\"}`, specify the space between tracks in pixels;\n\n- If `{\"layout\": \"circular\"}`, specify the space between tracks in percentage ranging from 0 to 100.",
-          "type": "number"
-        },
-        "static": {
-          "description": "Whether to disable [Zooming and Panning](http://gosling-lang.org/docs/user-interaction#zooming-and-panning), __Default:__ `false`.",
-          "type": "boolean"
-        },
-        "style": {
-          "$ref": "#/definitions/Style",
-          "description": "Define the [style](http://gosling-lang.org/docs/visual-channel#style-related-properties) of multive views. Will be overriden by the style of children elements (e.g., view, track)."
-        },
-        "views": {
-          "description": "An array of view specifications",
-          "items": {
-            "anyOf": [
-              {
-                "$ref": "#/definitions/SingleView"
+            "data": {
+              "$ref": "#/definitions/DataDeep"
+            },
+            "dataTransform": {
+              "items": {
+                "$ref": "#/definitions/DataTransform"
               },
-              {
-                "$ref": "#/definitions/MultipleViews"
-              }
-            ]
-          },
-          "type": "array"
-        },
-        "xAxis": {
-          "$ref": "#/definitions/AxisPosition",
-          "description": "not supported"
-        },
-        "xDomain": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/DomainInterval"
+              "type": "array"
             },
-            {
-              "$ref": "#/definitions/DomainChrInterval"
+            "description": {
+              "type": "string"
             },
+            "displacement": {
+              "$ref": "#/definitions/Displacement"
+            },
+            "endAngle": {
+              "description": "Specify the end angle (in the range of [0, 360]) of circular tracks (`{\"layout\": \"circular\"}`).",
+              "type": "number"
+            },
+            "flipY": {
+              "type": "boolean"
+            },
+            "height": {
+              "description": "Specify the track height in pixels.",
+              "type": "number"
+            },
+            "id": {
+              "type": "string"
+            },
+            "innerRadius": {
+              "description": "Specify the inner radius of tracks when (`{\"layout\": \"circular\"}`).",
+              "type": "number"
+            },
+            "layout": {
+              "$ref": "#/definitions/Layout",
+              "description": "Specify the layout type of all tracks."
+            },
+            "linkingId": {
+              "description": "Specify an ID for [linking multiple views](http://gosling-lang.org/docs/user-interaction#linking-views)",
+              "type": "string"
+            },
+            "mark": {
+              "$ref": "#/definitions/Mark"
+            },
+            "opacity": {
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/Opacity"
+                },
+                {
+                  "$ref": "#/definitions/ChannelValue"
+                }
+              ]
+            },
+            "orientation": {
+              "$ref": "#/definitions/Orientation",
+              "description": "Specify the orientation."
+            },
+            "outerRadius": {
+              "description": "Specify the outer radius of tracks when `{\"layout\": \"circular\"}`.",
+              "type": "number"
+            },
+<<<<<<< HEAD
             {
               "$ref": "#/definitions/DomainChr"
             }
@@ -1515,257 +1297,34 @@
                 "type": "string"
               },
               "type": "array"
+=======
+            "overlayOnPreviousTrack": {
+              "type": "boolean"
+>>>>>>> 94b4142 (chore: update grammar for responsive spec)
             },
-            {
+            "overrideTemplate": {
+              "type": "boolean"
+            },
+            "prerelease": {
+              "additionalProperties": false,
+              "description": "internal",
+              "type": "object"
+            },
+            "responsiveSize": {
+              "$ref": "#/definitions/ResponsiveSize",
+              "description": "Determine whether to make the size of `GoslingComponent` bound to its parent element. __Default__: `false`"
+            },
+            "responsiveSpec": {
               "items": {
-                "type": "number"
-              },
-              "type": "array"
-            }
-          ],
-          "description": "Check whether the value is an element in the provided list."
-        },
-        "type": {
-          "const": "filter",
-          "type": "string"
-        }
-      },
-      "required": [
-        "field",
-        "oneOf",
-        "type"
-      ],
-      "type": "object"
-    },
-    "Opacity": {
-      "additionalProperties": false,
-      "properties": {
-        "domain": {
-          "$ref": "#/definitions/ValueExtent",
-          "description": "Values of the data"
-        },
-        "field": {
-          "description": "Name of the data field",
-          "type": "string"
-        },
-        "range": {
-          "$ref": "#/definitions/ValueExtent",
-          "description": "Ranges of visual channel values"
-        },
-        "type": {
-          "description": "Specify the data type",
-          "enum": [
-            "quantitative",
-            "nominal"
-          ],
-          "type": "string"
-        }
-      },
-      "type": "object"
-    },
-    "Orientation": {
-      "enum": [
-        "horizontal",
-        "vertical"
-      ],
-      "type": "string"
-    },
-    "OverlaidTrack": {
-      "additionalProperties": false,
-      "description": "Superposing multiple tracks.",
-      "properties": {
-        "_invalidTrack": {
-          "description": "internal",
-          "type": "boolean"
-        },
-        "_renderingId": {
-          "description": "internal",
-          "type": "string"
-        },
-        "assembly": {
-          "$ref": "#/definitions/Assembly",
-          "description": "A string that specifies the genome builds to use. Currently support `\"hg38\"`, `\"hg19\"`, `\"hg18\"`, `\"hg17\"`, `\"hg16\"`, `\"mm10\"`, `\"mm9\"`, and `\"unknown\"`.\n\n__Note:__: with `\"unknown\"` assembly, genomic axes do not show chrN: in labels."
-        },
-        "centerRadius": {
-          "description": "Proportion of the radius of the center white space.\n\n__Default:__ `0.3`",
-          "type": "number"
-        },
-        "color": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/Color"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
-        "data": {
-          "$ref": "#/definitions/DataDeep"
-        },
-        "dataTransform": {
-          "items": {
-            "$ref": "#/definitions/DataTransform"
-          },
-          "type": "array"
-        },
-        "displacement": {
-          "$ref": "#/definitions/Displacement"
-        },
-        "endAngle": {
-          "description": "Specify the end angle (in the range of [0, 360]) of circular tracks (`{\"layout\": \"circular\"}`).",
-          "type": "number"
-        },
-        "flipY": {
-          "type": "boolean"
-        },
-        "height": {
-          "description": "Specify the track height in pixels.",
-          "type": "number"
-        },
-        "id": {
-          "type": "string"
-        },
-        "innerRadius": {
-          "description": "Specify the inner radius of tracks when (`{\"layout\": \"circular\"}`).",
-          "type": "number"
-        },
-        "layout": {
-          "$ref": "#/definitions/Layout",
-          "description": "Specify the layout type of all tracks."
-        },
-        "linkingId": {
-          "description": "Specify an ID for [linking multiple views](http://gosling-lang.org/docs/user-interaction#linking-views)",
-          "type": "string"
-        },
-        "mark": {
-          "$ref": "#/definitions/Mark"
-        },
-        "opacity": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/Opacity"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
-        "orientation": {
-          "$ref": "#/definitions/Orientation",
-          "description": "Specify the orientation."
-        },
-        "outerRadius": {
-          "description": "Specify the outer radius of tracks when `{\"layout\": \"circular\"}`.",
-          "type": "number"
-        },
-        "overlay": {
-          "items": {
-            "additionalProperties": false,
-            "properties": {
-              "_invalidTrack": {
-                "description": "internal",
-                "type": "boolean"
-              },
-              "_renderingId": {
-                "description": "internal",
-                "type": "string"
-              },
-              "assembly": {
-                "$ref": "#/definitions/Assembly",
-                "description": "A string that specifies the genome builds to use. Currently support `\"hg38\"`, `\"hg19\"`, `\"hg18\"`, `\"hg17\"`, `\"hg16\"`, `\"mm10\"`, `\"mm9\"`, and `\"unknown\"`.\n\n__Note:__: with `\"unknown\"` assembly, genomic axes do not show chrN: in labels."
-              },
-              "centerRadius": {
-                "description": "Proportion of the radius of the center white space.\n\n__Default:__ `0.3`",
-                "type": "number"
-              },
-              "color": {
-                "anyOf": [
-                  {
-                    "$ref": "#/definitions/Color"
-                  },
-                  {
-                    "$ref": "#/definitions/ChannelValue"
-                  }
-                ]
-              },
-              "data": {
-                "$ref": "#/definitions/DataDeep"
-              },
-              "dataTransform": {
-                "items": {
-                  "$ref": "#/definitions/DataTransform"
-                },
-                "type": "array"
-              },
-              "displacement": {
-                "$ref": "#/definitions/Displacement"
-              },
-              "endAngle": {
-                "description": "Specify the end angle (in the range of [0, 360]) of circular tracks (`{\"layout\": \"circular\"}`).",
-                "type": "number"
-              },
-              "flipY": {
-                "type": "boolean"
-              },
-              "id": {
-                "type": "string"
-              },
-              "innerRadius": {
-                "description": "Specify the inner radius of tracks when (`{\"layout\": \"circular\"}`).",
-                "type": "number"
-              },
-              "linkingId": {
-                "description": "Specify an ID for [linking multiple views](http://gosling-lang.org/docs/user-interaction#linking-views)",
-                "type": "string"
-              },
-              "mark": {
-                "$ref": "#/definitions/Mark"
-              },
-              "opacity": {
-                "anyOf": [
-                  {
-                    "$ref": "#/definitions/Opacity"
-                  },
-                  {
-                    "$ref": "#/definitions/ChannelValue"
-                  }
-                ]
-              },
-              "orientation": {
-                "$ref": "#/definitions/Orientation",
-                "description": "Specify the orientation."
-              },
-              "outerRadius": {
-                "description": "Specify the outer radius of tracks when `{\"layout\": \"circular\"}`.",
-                "type": "number"
-              },
-              "overlayOnPreviousTrack": {
-                "type": "boolean"
-              },
-              "overrideTemplate": {
-                "type": "boolean"
-              },
-              "prerelease": {
                 "additionalProperties": false,
-                "description": "internal",
-                "type": "object"
-              },
-              "row": {
-                "anyOf": [
-                  {
-                    "$ref": "#/definitions/Row"
+                "properties": {
+                  "selectivity": {
+                    "items": {
+                      "$ref": "#/definitions/SelectivityCondition"
+                    },
+                    "type": "array"
                   },
-                  {
-                    "$ref": "#/definitions/ChannelValue"
-                  }
-                ]
-              },
-              "size": {
-                "anyOf": [
-                  {
-                    "$ref": "#/definitions/Size"
-                  },
+<<<<<<< HEAD
                   {
                     "$ref": "#/definitions/ChannelValue"
                   }
@@ -2925,572 +2484,7 @@
                   },
                   {
                     "$ref": "#/definitions/ChannelValue"
-                  }
-                ]
-              },
-              "zoomLimits": {
-                "$ref": "#/definitions/ZoomLimits"
-              }
-            },
-            "type": "object"
-          },
-          "type": "array"
-        },
-        "overlayOnPreviousTrack": {
-          "type": "boolean"
-        },
-        "overrideTemplate": {
-          "type": "boolean"
-        },
-        "prerelease": {
-          "additionalProperties": false,
-          "description": "internal",
-          "type": "object"
-        },
-        "row": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/Row"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
-        "size": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/Size"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
-        "spacing": {
-          "description": "- If `{\"layout\": \"linear\"}`, specify the space between tracks in pixels;\n\n- If `{\"layout\": \"circular\"}`, specify the space between tracks in percentage ranging from 0 to 100.",
-          "type": "number"
-        },
-        "startAngle": {
-          "description": "Specify the start angle (in the range of [0, 360]) of circular tracks (`{\"layout\": \"circular\"}`).",
-          "type": "number"
-        },
-        "static": {
-          "description": "Whether to disable [Zooming and Panning](http://gosling-lang.org/docs/user-interaction#zooming-and-panning), __Default:__ `false`.",
-          "type": "boolean"
-        },
-        "stretch": {
-          "type": "boolean"
-        },
-        "stroke": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/Stroke"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
-        "strokeWidth": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/StrokeWidth"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
-        "style": {
-          "$ref": "#/definitions/Style",
-          "description": "Define the [style](http://gosling-lang.org/docs/visual-channel#style-related-properties) of multive views. Will be overriden by the style of children elements (e.g., view, track)."
-        },
-        "subtitle": {
-          "type": "string"
-        },
-        "template": {
-          "type": "string"
-        },
-        "text": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/Text"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
-        "title": {
-          "description": "If defined, will show the textual label on the left-top corner of a track.",
-          "type": "string"
-        },
-        "tooltip": {
-          "items": {
-            "$ref": "#/definitions/Tooltip"
-          },
-          "type": "array"
-        },
-        "visibility": {
-          "items": {
-            "$ref": "#/definitions/VisibilityCondition"
-          },
-          "type": "array"
-        },
-        "width": {
-          "description": "Specify the track width in pixels.",
-          "type": "number"
-        },
-        "x": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/X"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
-        "x1": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/X"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
-        "x1e": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/X"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
-        "xAxis": {
-          "$ref": "#/definitions/AxisPosition",
-          "description": "not supported"
-        },
-        "xDomain": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/DomainInterval"
-            },
-            {
-              "$ref": "#/definitions/DomainChrInterval"
-            },
-            {
-              "$ref": "#/definitions/DomainChr"
-            }
-          ],
-          "description": "Specify the visible region of genomic x-axis"
-        },
-        "xOffset": {
-          "description": "Specify the x offset of views in the unit of pixels",
-          "type": "number"
-        },
-        "xe": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/X"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
-        "y": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/Y"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
-        "y1": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/Y"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
-        "y1e": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/Y"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
-        "yDomain": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/DomainInterval"
-            },
-            {
-              "$ref": "#/definitions/DomainChrInterval"
-            },
-            {
-              "$ref": "#/definitions/DomainChr"
-            }
-          ],
-          "description": "Specify the visible region of genomic y-axis"
-        },
-        "yOffset": {
-          "description": "Specify the y offset of views in the unit of pixels",
-          "type": "number"
-        },
-        "ye": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/Y"
-            },
-            {
-              "$ref": "#/definitions/ChannelValue"
-            }
-          ]
-        },
-        "zoomLimits": {
-          "$ref": "#/definitions/ZoomLimits"
-        }
-      },
-      "type": "object"
-    },
-    "Range": {
-      "anyOf": [
-        {
-          "$ref": "#/definitions/ValueExtent"
-        },
-        {
-          "$ref": "#/definitions/PREDEFINED_COLORS"
-        }
-      ]
-    },
-    "RangeFilter": {
-      "additionalProperties": false,
-      "properties": {
-        "field": {
-          "description": "A filter is applied based on the values of the specified data field",
-          "type": "string"
-        },
-        "inRange": {
-          "description": "Check whether the value is in a number range.",
-          "items": {
-            "type": "number"
-          },
-          "type": "array"
-        },
-        "not": {
-          "description": "when `{\"not\": true}`, apply a NOT logical operation to the filter.\n\n__Default:__ `false`",
-          "type": "boolean"
-        },
-        "type": {
-          "const": "filter",
-          "type": "string"
-        }
-      },
-      "required": [
-        "field",
-        "inRange",
-        "type"
-      ],
-      "type": "object"
-    },
-    "ResponsiveSize": {
-      "anyOf": [
-        {
-          "type": "boolean"
-        },
-        {
-          "additionalProperties": false,
-          "properties": {
-            "height": {
-              "type": "boolean"
-            },
-            "width": {
-              "type": "boolean"
-            }
-          },
-          "type": "object"
-        }
-      ]
-    },
-    "RootSpecWithMultipleViews": {
-      "additionalProperties": false,
-      "properties": {
-        "arrangement": {
-          "description": "Specify how multiple views are arranged.",
-          "enum": [
-            "parallel",
-            "serial",
-            "horizontal",
-            "vertical"
-          ],
-          "type": "string"
-        },
-        "assembly": {
-          "$ref": "#/definitions/Assembly",
-          "description": "A string that specifies the genome builds to use. Currently support `\"hg38\"`, `\"hg19\"`, `\"hg18\"`, `\"hg17\"`, `\"hg16\"`, `\"mm10\"`, `\"mm9\"`, and `\"unknown\"`.\n\n__Note:__: with `\"unknown\"` assembly, genomic axes do not show chrN: in labels."
-        },
-        "centerRadius": {
-          "description": "Proportion of the radius of the center white space.\n\n__Default:__ `0.3`",
-          "type": "number"
-        },
-        "description": {
-          "type": "string"
-        },
-        "layout": {
-          "$ref": "#/definitions/Layout",
-          "description": "Specify the layout type of all tracks."
-        },
-        "linkingId": {
-          "description": "Specify an ID for [linking multiple views](http://gosling-lang.org/docs/user-interaction#linking-views)",
-          "type": "string"
-        },
-        "orientation": {
-          "$ref": "#/definitions/Orientation",
-          "description": "Specify the orientation."
-        },
-        "responsiveSize": {
-          "$ref": "#/definitions/ResponsiveSize",
-          "description": "Determine whether to make the size of `GoslingComponent` bound to its parent element. __Default__: `false`"
-        },
-        "spacing": {
-          "description": "- If `{\"layout\": \"linear\"}`, specify the space between tracks in pixels;\n\n- If `{\"layout\": \"circular\"}`, specify the space between tracks in percentage ranging from 0 to 100.",
-          "type": "number"
-        },
-        "static": {
-          "description": "Whether to disable [Zooming and Panning](http://gosling-lang.org/docs/user-interaction#zooming-and-panning), __Default:__ `false`.",
-          "type": "boolean"
-        },
-        "style": {
-          "$ref": "#/definitions/Style",
-          "description": "Define the [style](http://gosling-lang.org/docs/visual-channel#style-related-properties) of multive views. Will be overriden by the style of children elements (e.g., view, track)."
-        },
-        "subtitle": {
-          "type": "string"
-        },
-        "title": {
-          "type": "string"
-        },
-        "views": {
-          "description": "An array of view specifications",
-          "items": {
-            "anyOf": [
-              {
-                "$ref": "#/definitions/SingleView"
-              },
-              {
-                "$ref": "#/definitions/MultipleViews"
-              }
-            ]
-          },
-          "type": "array"
-        },
-        "xAxis": {
-          "$ref": "#/definitions/AxisPosition",
-          "description": "not supported"
-        },
-        "xDomain": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/DomainInterval"
-            },
-            {
-              "$ref": "#/definitions/DomainChrInterval"
-            },
-            {
-              "$ref": "#/definitions/DomainChr"
-            }
-          ],
-          "description": "Specify the visible region of genomic x-axis"
-        },
-        "xOffset": {
-          "description": "Specify the x offset of views in the unit of pixels",
-          "type": "number"
-        },
-        "yDomain": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/DomainInterval"
-            },
-            {
-              "$ref": "#/definitions/DomainChrInterval"
-            },
-            {
-              "$ref": "#/definitions/DomainChr"
-            }
-          ],
-          "description": "Specify the visible region of genomic y-axis"
-        },
-        "yOffset": {
-          "description": "Specify the y offset of views in the unit of pixels",
-          "type": "number"
-        },
-        "zoomLimits": {
-          "$ref": "#/definitions/ZoomLimits"
-        }
-      },
-      "required": [
-        "views"
-      ],
-      "type": "object"
-    },
-    "RootSpecWithSingleView": {
-      "anyOf": [
-        {
-          "additionalProperties": false,
-          "properties": {
-            "_invalidTrack": {
-              "description": "internal",
-              "type": "boolean"
-            },
-            "_renderingId": {
-              "description": "internal",
-              "type": "string"
-            },
-            "alignment": {
-              "const": "overlay",
-              "type": "string"
-            },
-            "assembly": {
-              "$ref": "#/definitions/Assembly",
-              "description": "A string that specifies the genome builds to use. Currently support `\"hg38\"`, `\"hg19\"`, `\"hg18\"`, `\"hg17\"`, `\"hg16\"`, `\"mm10\"`, `\"mm9\"`, and `\"unknown\"`.\n\n__Note:__: with `\"unknown\"` assembly, genomic axes do not show chrN: in labels."
-            },
-            "centerRadius": {
-              "description": "Proportion of the radius of the center white space.\n\n__Default:__ `0.3`",
-              "type": "number"
-            },
-            "color": {
-              "anyOf": [
-                {
-                  "$ref": "#/definitions/Color"
-                },
-                {
-                  "$ref": "#/definitions/ChannelValue"
-                }
-              ]
-            },
-            "data": {
-              "$ref": "#/definitions/DataDeep"
-            },
-            "dataTransform": {
-              "items": {
-                "$ref": "#/definitions/DataTransform"
-              },
-              "type": "array"
-            },
-            "description": {
-              "type": "string"
-            },
-            "displacement": {
-              "$ref": "#/definitions/Displacement"
-            },
-            "endAngle": {
-              "description": "Specify the end angle (in the range of [0, 360]) of circular tracks (`{\"layout\": \"circular\"}`).",
-              "type": "number"
-            },
-            "flipY": {
-              "type": "boolean"
-            },
-            "height": {
-              "description": "Specify the track height in pixels.",
-              "type": "number"
-            },
-            "id": {
-              "type": "string"
-            },
-            "innerRadius": {
-              "description": "Specify the inner radius of tracks when (`{\"layout\": \"circular\"}`).",
-              "type": "number"
-            },
-            "layout": {
-              "$ref": "#/definitions/Layout",
-              "description": "Specify the layout type of all tracks."
-            },
-            "linkingId": {
-              "description": "Specify an ID for [linking multiple views](http://gosling-lang.org/docs/user-interaction#linking-views)",
-              "type": "string"
-            },
-            "mark": {
-              "$ref": "#/definitions/Mark"
-            },
-            "opacity": {
-              "anyOf": [
-                {
-                  "$ref": "#/definitions/Opacity"
-                },
-                {
-                  "$ref": "#/definitions/ChannelValue"
-                }
-              ]
-            },
-            "orientation": {
-              "$ref": "#/definitions/Orientation",
-              "description": "Specify the orientation."
-            },
-            "outerRadius": {
-              "description": "Specify the outer radius of tracks when `{\"layout\": \"circular\"}`.",
-              "type": "number"
-            },
-            "overlayOnPreviousTrack": {
-              "type": "boolean"
-            },
-            "overrideTemplate": {
-              "type": "boolean"
-            },
-            "prerelease": {
-              "additionalProperties": false,
-              "description": "internal",
-              "type": "object"
-            },
-            "responsiveSize": {
-              "$ref": "#/definitions/ResponsiveSize",
-              "description": "Determine whether to make the size of `GoslingComponent` bound to its parent element. __Default__: `false`"
-            },
-            "responsiveSpec": {
-              "items": {
-                "additionalProperties": false,
-                "properties": {
-                  "if": {
-                    "items": {
-                      "additionalProperties": false,
-                      "properties": {
-                        "measure": {
-                          "enum": [
-                            "width",
-                            "height"
-                          ],
-                          "type": "string"
-                        },
-                        "operation": {
-                          "$ref": "#/definitions/LogicalOperation"
-                        },
-                        "threshold": {
-                          "type": "number"
-                        }
-                      },
-                      "required": [
-                        "operation",
-                        "measure",
-                        "threshold"
-                      ],
-                      "type": "object"
-                    },
-                    "type": "array"
-                  },
+=======
                   "spec": {
                     "additionalProperties": false,
                     "properties": {
@@ -3822,11 +2816,12 @@
                       }
                     },
                     "type": "object"
+>>>>>>> 94b4142 (chore: update grammar for responsive spec)
                   }
                 },
                 "required": [
                   "spec",
-                  "if"
+                  "selectivity"
                 ],
                 "type": "object"
               },
@@ -3908,11 +2903,28 @@
               "description": "If defined, will show the textual label on the left-top corner of a track.",
               "type": "string"
             },
+<<<<<<< HEAD
+            {
+              "$ref": "#/definitions/DomainChr"
+            }
+          ],
+          "description": "Specify the visible region of genomic x-axis"
+        },
+        "xOffset": {
+          "description": "Specify the x offset of views in the unit of pixels",
+          "type": "number"
+        },
+        "xe": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/X"
+=======
             "tooltip": {
               "items": {
                 "$ref": "#/definitions/Tooltip"
               },
               "type": "array"
+>>>>>>> 94b4142 (chore: update grammar for responsive spec)
             },
             "tracks": {
               "items": {
@@ -3930,6 +2942,35 @@
               "description": "Specify the track width in pixels.",
               "type": "number"
             },
+<<<<<<< HEAD
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
+        },
+        "yDomain": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/DomainInterval"
+            },
+            {
+              "$ref": "#/definitions/DomainChrInterval"
+            },
+            {
+              "$ref": "#/definitions/DomainChr"
+            }
+          ],
+          "description": "Specify the visible region of genomic y-axis"
+        },
+        "yOffset": {
+          "description": "Specify the y offset of views in the unit of pixels",
+          "type": "number"
+        },
+        "ye": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Y"
+=======
             "x": {
               "anyOf": [
                 {
@@ -3939,6 +2980,7 @@
                   "$ref": "#/definitions/ChannelValue"
                 }
               ]
+>>>>>>> 94b4142 (chore: update grammar for responsive spec)
             },
             "x1": {
               "anyOf": [
@@ -3975,8 +3017,7 @@
                 {
                   "$ref": "#/definitions/DomainChr"
                 }
-              ],
-              "description": "Specify the visible region of genomic x-axis"
+              ]
             },
             "xOffset": {
               "description": "Specify the x offset of views in the unit of pixels",
@@ -4022,20 +3063,6 @@
                 }
               ]
             },
-            "yDomain": {
-              "anyOf": [
-                {
-                  "$ref": "#/definitions/DomainInterval"
-                },
-                {
-                  "$ref": "#/definitions/DomainChrInterval"
-                },
-                {
-                  "$ref": "#/definitions/DomainChr"
-                }
-              ],
-              "description": "Specify the visible region of genomic y-axis"
-            },
             "yOffset": {
               "description": "Specify the y offset of views in the unit of pixels",
               "type": "number"
@@ -4053,6 +3080,32 @@
             "zoomLimits": {
               "$ref": "#/definitions/ZoomLimits"
             }
+<<<<<<< HEAD
+          ],
+          "description": "Specify the visible region of genomic x-axis"
+        },
+        "xOffset": {
+          "description": "Specify the x offset of views in the unit of pixels",
+          "type": "number"
+        },
+        "yDomain": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/DomainInterval"
+            },
+            {
+              "$ref": "#/definitions/DomainChrInterval"
+            },
+            {
+              "$ref": "#/definitions/DomainChr"
+            }
+          ],
+          "description": "Specify the visible region of genomic y-axis"
+        },
+        "yOffset": {
+          "description": "Specify the y offset of views in the unit of pixels",
+          "type": "number"
+=======
           },
           "required": [
             "alignment",
@@ -4061,6 +3114,7 @@
             "width"
           ],
           "type": "object"
+>>>>>>> 94b4142 (chore: update grammar for responsive spec)
         },
         {
           "additionalProperties": false,
@@ -4176,30 +3230,9 @@
               "items": {
                 "additionalProperties": false,
                 "properties": {
-                  "if": {
+                  "selectivity": {
                     "items": {
-                      "additionalProperties": false,
-                      "properties": {
-                        "measure": {
-                          "enum": [
-                            "width",
-                            "height"
-                          ],
-                          "type": "string"
-                        },
-                        "operation": {
-                          "$ref": "#/definitions/LogicalOperation"
-                        },
-                        "threshold": {
-                          "type": "number"
-                        }
-                      },
-                      "required": [
-                        "operation",
-                        "measure",
-                        "threshold"
-                      ],
-                      "type": "object"
+                      "$ref": "#/definitions/SelectivityCondition"
                     },
                     "type": "array"
                   },
@@ -4538,7 +3571,7 @@
                 },
                 "required": [
                   "spec",
-                  "if"
+                  "selectivity"
                 ],
                 "type": "object"
               },
@@ -4812,30 +3845,9 @@
               "items": {
                 "additionalProperties": false,
                 "properties": {
-                  "if": {
+                  "selectivity": {
                     "items": {
-                      "additionalProperties": false,
-                      "properties": {
-                        "measure": {
-                          "enum": [
-                            "width",
-                            "height"
-                          ],
-                          "type": "string"
-                        },
-                        "operation": {
-                          "$ref": "#/definitions/LogicalOperation"
-                        },
-                        "threshold": {
-                          "type": "number"
-                        }
-                      },
-                      "required": [
-                        "operation",
-                        "measure",
-                        "threshold"
-                      ],
-                      "type": "object"
+                      "$ref": "#/definitions/SelectivityCondition"
                     },
                     "type": "array"
                   },
@@ -5174,7 +4186,7 @@
                 },
                 "required": [
                   "spec",
-                  "if"
+                  "selectivity"
                 ],
                 "type": "object"
               },
@@ -5226,6 +4238,2264 @@
               "description": "Specify the x offset of views in the unit of pixels",
               "type": "number"
             },
+<<<<<<< HEAD
+            "xe": {
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/X"
+                },
+                {
+                  "$ref": "#/definitions/ChannelValue"
+                }
+              ]
+            },
+            "y": {
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/Y"
+                },
+                {
+                  "$ref": "#/definitions/ChannelValue"
+                }
+              ]
+            },
+            "y1": {
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/Y"
+                },
+                {
+                  "$ref": "#/definitions/ChannelValue"
+                }
+              ]
+            },
+            "y1e": {
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/Y"
+                },
+                {
+                  "$ref": "#/definitions/ChannelValue"
+                }
+              ]
+            },
+            "yDomain": {
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/DomainInterval"
+                },
+                {
+                  "$ref": "#/definitions/DomainChrInterval"
+                },
+                {
+                  "$ref": "#/definitions/DomainChr"
+                }
+              ],
+              "description": "Specify the visible region of genomic y-axis"
+            },
+=======
+>>>>>>> 94b4142 (chore: update grammar for responsive spec)
+            "yOffset": {
+              "description": "Specify the y offset of views in the unit of pixels",
+              "type": "number"
+            },
+            "zoomLimits": {
+              "$ref": "#/definitions/ZoomLimits"
+            }
+          },
+          "required": [
+            "tracks"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "arrangement": {
+              "description": "Specify how multiple views are arranged.",
+              "enum": [
+                "parallel",
+                "serial",
+                "horizontal",
+                "vertical"
+              ],
+              "type": "string"
+            },
+            "assembly": {
+              "$ref": "#/definitions/Assembly",
+              "description": "A string that specifies the genome builds to use. Currently support `\"hg38\"`, `\"hg19\"`, `\"hg18\"`, `\"hg17\"`, `\"hg16\"`, `\"mm10\"`, `\"mm9\"`, and `\"unknown\"`.\n\n__Note:__: with `\"unknown\"` assembly, genomic axes do not show chrN: in labels."
+            },
+            "centerRadius": {
+              "description": "Proportion of the radius of the center white space.\n\n__Default:__ `0.3`",
+              "type": "number"
+            },
+            "description": {
+              "type": "string"
+            },
+            "layout": {
+              "$ref": "#/definitions/Layout",
+              "description": "Specify the layout type of all tracks."
+            },
+            "linkingId": {
+              "description": "Specify an ID for [linking multiple views](http://gosling-lang.org/docs/user-interaction#linking-views)",
+              "type": "string"
+            },
+            "orientation": {
+              "$ref": "#/definitions/Orientation",
+              "description": "Specify the orientation."
+            },
+            "responsiveSize": {
+              "$ref": "#/definitions/ResponsiveSize",
+              "description": "Determine whether to make the size of `GoslingComponent` bound to its parent element. __Default__: `false`"
+            },
+            "responsiveSpec": {
+              "items": {
+                "additionalProperties": false,
+                "properties": {
+                  "selectivity": {
+                    "items": {
+                      "$ref": "#/definitions/SelectivityCondition"
+                    },
+                    "type": "array"
+                  },
+                  "spec": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "arrangement": {
+                        "description": "Specify how multiple views are arranged.",
+                        "enum": [
+                          "parallel",
+                          "serial",
+                          "horizontal",
+                          "vertical"
+                        ],
+                        "type": "string"
+                      },
+                      "assembly": {
+                        "$ref": "#/definitions/Assembly",
+                        "description": "A string that specifies the genome builds to use. Currently support `\"hg38\"`, `\"hg19\"`, `\"hg18\"`, `\"hg17\"`, `\"hg16\"`, `\"mm10\"`, `\"mm9\"`, and `\"unknown\"`.\n\n__Note:__: with `\"unknown\"` assembly, genomic axes do not show chrN: in labels."
+                      },
+                      "centerRadius": {
+                        "description": "Proportion of the radius of the center white space.\n\n__Default:__ `0.3`",
+                        "type": "number"
+                      },
+                      "layout": {
+                        "$ref": "#/definitions/Layout",
+                        "description": "Specify the layout type of all tracks."
+                      },
+                      "linkingId": {
+                        "description": "Specify an ID for [linking multiple views](http://gosling-lang.org/docs/user-interaction#linking-views)",
+                        "type": "string"
+                      },
+                      "orientation": {
+                        "$ref": "#/definitions/Orientation",
+                        "description": "Specify the orientation."
+                      },
+                      "spacing": {
+                        "description": "- If `{\"layout\": \"linear\"}`, specify the space between tracks in pixels;\n\n- If `{\"layout\": \"circular\"}`, specify the space between tracks in percentage ranging from 0 to 100.",
+                        "type": "number"
+                      },
+                      "static": {
+                        "description": "Whether to disable [Zooming and Panning](http://gosling-lang.org/docs/user-interaction#zooming-and-panning), __Default:__ `false`.",
+                        "type": "boolean"
+                      },
+                      "style": {
+                        "$ref": "#/definitions/Style",
+                        "description": "Define the [style](http://gosling-lang.org/docs/visual-channel#style-related-properties) of multive views. Will be overriden by the style of children elements (e.g., view, track)."
+                      },
+                      "views": {
+                        "description": "An array of view specifications",
+                        "items": {
+                          "anyOf": [
+                            {
+                              "$ref": "#/definitions/SingleView"
+                            },
+                            {
+                              "$ref": "#/definitions/MultipleViews"
+                            }
+                          ]
+                        },
+                        "type": "array"
+                      },
+                      "xAxis": {
+                        "$ref": "#/definitions/AxisPosition",
+                        "description": "not supported"
+                      },
+                      "xDomain": {
+                        "anyOf": [
+                          {
+                            "$ref": "#/definitions/DomainInterval"
+                          },
+                          {
+                            "$ref": "#/definitions/DomainChrInterval"
+                          },
+                          {
+                            "$ref": "#/definitions/DomainChr"
+                          }
+                        ]
+                      },
+                      "xOffset": {
+                        "description": "Specify the x offset of views in the unit of pixels",
+                        "type": "number"
+                      },
+                      "yOffset": {
+                        "description": "Specify the y offset of views in the unit of pixels",
+                        "type": "number"
+                      },
+                      "zoomLimits": {
+                        "$ref": "#/definitions/ZoomLimits"
+                      }
+                    },
+                    "type": "object"
+                  }
+                },
+                "required": [
+                  "spec",
+                  "selectivity"
+                ],
+                "type": "object"
+              },
+              "type": "array"
+            },
+            "spacing": {
+              "description": "- If `{\"layout\": \"linear\"}`, specify the space between tracks in pixels;\n\n- If `{\"layout\": \"circular\"}`, specify the space between tracks in percentage ranging from 0 to 100.",
+              "type": "number"
+            },
+            "static": {
+              "description": "Whether to disable [Zooming and Panning](http://gosling-lang.org/docs/user-interaction#zooming-and-panning), __Default:__ `false`.",
+              "type": "boolean"
+            },
+            "style": {
+              "$ref": "#/definitions/Style",
+              "description": "Define the [style](http://gosling-lang.org/docs/visual-channel#style-related-properties) of multive views. Will be overriden by the style of children elements (e.g., view, track)."
+            },
+            "subtitle": {
+              "type": "string"
+            },
+            "title": {
+              "type": "string"
+            },
+            "views": {
+              "description": "An array of view specifications",
+              "items": {
+                "anyOf": [
+                  {
+                    "$ref": "#/definitions/SingleView"
+                  },
+                  {
+                    "$ref": "#/definitions/MultipleViews"
+                  }
+                ]
+              },
+              "type": "array"
+            },
+            "xAxis": {
+              "$ref": "#/definitions/AxisPosition",
+              "description": "not supported"
+            },
+            "xDomain": {
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/DomainInterval"
+                },
+                {
+                  "$ref": "#/definitions/DomainChrInterval"
+                },
+                {
+                  "$ref": "#/definitions/DomainChr"
+                }
+              ]
+            },
+            "xOffset": {
+              "description": "Specify the x offset of views in the unit of pixels",
+              "type": "number"
+            },
+            "yOffset": {
+              "description": "Specify the y offset of views in the unit of pixels",
+              "type": "number"
+            },
+            "zoomLimits": {
+              "$ref": "#/definitions/ZoomLimits"
+            }
+          },
+          "required": [
+            "views"
+          ],
+          "type": "object"
+        }
+      ]
+    },
+    "IncludeFilter": {
+      "additionalProperties": false,
+      "properties": {
+        "field": {
+          "description": "A filter is applied based on the values of the specified data field",
+          "type": "string"
+        },
+        "include": {
+          "description": "Check whether the value includes a substring.",
+          "type": "string"
+        },
+        "not": {
+          "description": "when `{\"not\": true}`, apply a NOT logical operation to the filter.\n\n__Default:__ `false`",
+          "type": "boolean"
+        },
+        "type": {
+          "const": "filter",
+          "type": "string"
+        }
+      },
+      "required": [
+        "field",
+        "include",
+        "type"
+      ],
+      "type": "object"
+    },
+    "JSONData": {
+      "additionalProperties": false,
+      "description": "The JSON data format allows users to include data directly in the Gosling's JSON specification.",
+      "properties": {
+        "chromosomeField": {
+          "description": "Specify the name of chromosome data fields.",
+          "type": "string"
+        },
+        "genomicFields": {
+          "description": "Specify the name of genomic data fields.",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "genomicFieldsToConvert": {
+          "description": "experimental",
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "chromosomeField": {
+                "type": "string"
+              },
+              "genomicFields": {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              }
+            },
+            "required": [
+              "chromosomeField",
+              "genomicFields"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "sampleLength": {
+          "description": "Specify the number of rows loaded from the URL.\n\n__Default:__ `1000`",
+          "type": "number"
+        },
+        "type": {
+          "const": "json",
+          "description": "Define data type.",
+          "type": "string"
+        },
+        "values": {
+          "description": "Values in the form of JSON.",
+          "items": {
+            "$ref": "#/definitions/Datum"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "type",
+        "values"
+      ],
+      "type": "object"
+    },
+    "JSONParseTransform": {
+      "additionalProperties": false,
+      "description": "Parse JSON Object Array and append vertically",
+      "properties": {
+        "baseGenomicField": {
+          "description": "Base genomic position when parsing relative position.",
+          "type": "string"
+        },
+        "field": {
+          "description": "The field that contains the JSON object array.",
+          "type": "string"
+        },
+        "genomicField": {
+          "description": "Relative genomic position to parse.",
+          "type": "string"
+        },
+        "genomicLengthField": {
+          "description": "Length of genomic interval.",
+          "type": "string"
+        },
+        "type": {
+          "const": "subjson",
+          "type": "string"
+        }
+      },
+      "required": [
+        "type",
+        "field",
+        "baseGenomicField",
+        "genomicField",
+        "genomicLengthField"
+      ],
+      "type": "object"
+    },
+    "Layout": {
+      "enum": [
+        "linear",
+        "circular"
+      ],
+      "type": "string"
+    },
+    "LogBase": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "const": "e",
+          "type": "string"
+        }
+      ]
+    },
+    "LogTransform": {
+      "additionalProperties": false,
+      "properties": {
+        "base": {
+          "$ref": "#/definitions/LogBase",
+          "description": "If not specified, 10 is used."
+        },
+        "field": {
+          "type": "string"
+        },
+        "newField": {
+          "description": "If specified, store transformed values in a new field.",
+          "type": "string"
+        },
+        "type": {
+          "const": "log",
+          "type": "string"
+        }
+      },
+      "required": [
+        "type",
+        "field"
+      ],
+      "type": "object"
+    },
+    "LogicalOperation": {
+      "enum": [
+        "less-than",
+        "lt",
+        "LT",
+        "greater-than",
+        "gt",
+        "GT",
+        "less-than-or-equal-to",
+        "ltet",
+        "LTET",
+        "greater-than-or-equal-to",
+        "gtet",
+        "GTET"
+      ],
+      "type": "string"
+    },
+    "Mark": {
+      "enum": [
+        "point",
+        "line",
+        "area",
+        "bar",
+        "rect",
+        "text",
+        "withinLink",
+        "betweenLink",
+        "rule",
+        "triangleLeft",
+        "triangleRight",
+        "triangleBottom",
+        "brush",
+        "header"
+      ],
+      "type": "string"
+    },
+    "MatrixData": {
+      "additionalProperties": false,
+      "properties": {
+        "binSize": {
+          "description": "Determine the number of nearby cells to aggregate. __Default__: `1`",
+          "type": "number"
+        },
+        "column": {
+          "description": "The name of the first genomic field. __Default__: `x`",
+          "type": "string"
+        },
+        "row": {
+          "description": "The name of the first genomic field. __Default__: `y`",
+          "type": "string"
+        },
+        "type": {
+          "const": "matrix",
+          "type": "string"
+        },
+        "url": {
+          "description": "URL link to the matrix data file",
+          "type": "string"
+        },
+        "value": {
+          "description": "The name of the value field. __Default__: `value`",
+          "type": "string"
+        }
+      },
+      "required": [
+        "type",
+        "url"
+      ],
+      "type": "object"
+    },
+    "MultipleViews": {
+      "additionalProperties": false,
+      "properties": {
+        "arrangement": {
+          "description": "Specify how multiple views are arranged.",
+          "enum": [
+            "parallel",
+            "serial",
+            "horizontal",
+            "vertical"
+          ],
+          "type": "string"
+        },
+        "assembly": {
+          "$ref": "#/definitions/Assembly",
+          "description": "A string that specifies the genome builds to use. Currently support `\"hg38\"`, `\"hg19\"`, `\"hg18\"`, `\"hg17\"`, `\"hg16\"`, `\"mm10\"`, `\"mm9\"`, and `\"unknown\"`.\n\n__Note:__: with `\"unknown\"` assembly, genomic axes do not show chrN: in labels."
+        },
+        "centerRadius": {
+          "description": "Proportion of the radius of the center white space.\n\n__Default:__ `0.3`",
+          "type": "number"
+        },
+        "layout": {
+          "$ref": "#/definitions/Layout",
+          "description": "Specify the layout type of all tracks."
+        },
+        "linkingId": {
+          "description": "Specify an ID for [linking multiple views](http://gosling-lang.org/docs/user-interaction#linking-views)",
+          "type": "string"
+        },
+        "orientation": {
+          "$ref": "#/definitions/Orientation",
+          "description": "Specify the orientation."
+        },
+        "spacing": {
+          "description": "- If `{\"layout\": \"linear\"}`, specify the space between tracks in pixels;\n\n- If `{\"layout\": \"circular\"}`, specify the space between tracks in percentage ranging from 0 to 100.",
+          "type": "number"
+        },
+        "static": {
+          "description": "Whether to disable [Zooming and Panning](http://gosling-lang.org/docs/user-interaction#zooming-and-panning), __Default:__ `false`.",
+          "type": "boolean"
+        },
+        "style": {
+          "$ref": "#/definitions/Style",
+          "description": "Define the [style](http://gosling-lang.org/docs/visual-channel#style-related-properties) of multive views. Will be overriden by the style of children elements (e.g., view, track)."
+        },
+        "views": {
+          "description": "An array of view specifications",
+          "items": {
+            "anyOf": [
+              {
+                "$ref": "#/definitions/SingleView"
+              },
+              {
+                "$ref": "#/definitions/MultipleViews"
+              }
+            ]
+          },
+          "type": "array"
+        },
+        "xAxis": {
+          "$ref": "#/definitions/AxisPosition",
+          "description": "not supported"
+        },
+        "xDomain": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/DomainInterval"
+            },
+            {
+              "$ref": "#/definitions/DomainChrInterval"
+            },
+            {
+              "$ref": "#/definitions/DomainChr"
+            }
+          ]
+        },
+        "xOffset": {
+          "description": "Specify the x offset of views in the unit of pixels",
+          "type": "number"
+        },
+        "yOffset": {
+          "description": "Specify the y offset of views in the unit of pixels",
+          "type": "number"
+        },
+        "zoomLimits": {
+          "$ref": "#/definitions/ZoomLimits"
+        }
+      },
+      "required": [
+        "views"
+      ],
+      "type": "object"
+    },
+    "MultivecData": {
+      "additionalProperties": false,
+      "description": "Two-dimensional quantitative values, one axis for genomic coordinate and the other for different samples, can be converted into HiGlass' `\"multivec\"` data. For example, multiple BigWig files can be converted into a single multivec file. You can also convert sequence data (FASTA) into this format where rows will be different nucleotide bases (e.g., A, T, G, C) and quantitative values represent the frequency. Find out more about this format at [HiGlass Docs](https://docs.higlass.io/data_preparation.html#multivec-files).",
+      "properties": {
+        "aggregation": {
+          "$ref": "#/definitions/BinAggregate",
+          "description": "Determine aggregation function to apply within bins. __Default__: `\"mean\"`"
+        },
+        "binSize": {
+          "description": "Binning the genomic interval in tiles (unit size: 256).",
+          "type": "number"
+        },
+        "categories": {
+          "description": "assign names of individual samples.",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "column": {
+          "description": "Assign a field name of the middle position of genomic intervals.",
+          "type": "string"
+        },
+        "end": {
+          "description": "Assign a field name of the end position of genomic intervals.",
+          "type": "string"
+        },
+        "row": {
+          "description": "Assign a field name of samples.",
+          "type": "string"
+        },
+        "start": {
+          "description": "Assign a field name of the start position of genomic intervals.",
+          "type": "string"
+        },
+        "type": {
+          "const": "multivec",
+          "type": "string"
+        },
+        "url": {
+          "description": "Specify the URL address of the data file.",
+          "type": "string"
+        },
+        "value": {
+          "description": "Assign a field name of quantitative values.",
+          "type": "string"
+        }
+      },
+      "required": [
+        "type",
+        "url",
+        "column",
+        "row",
+        "value"
+      ],
+      "type": "object"
+    },
+    "OneOfFilter": {
+      "additionalProperties": false,
+      "properties": {
+        "field": {
+          "description": "A filter is applied based on the values of the specified data field",
+          "type": "string"
+        },
+        "not": {
+          "description": "when `{\"not\": true}`, apply a NOT logical operation to the filter.\n\n__Default:__ `false`",
+          "type": "boolean"
+        },
+        "oneOf": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "items": {
+                "type": "number"
+              },
+              "type": "array"
+            }
+          ],
+          "description": "Check whether the value is an element in the provided list."
+        },
+        "type": {
+          "const": "filter",
+          "type": "string"
+        }
+      },
+      "required": [
+        "field",
+        "oneOf",
+        "type"
+      ],
+      "type": "object"
+    },
+    "Opacity": {
+      "additionalProperties": false,
+      "properties": {
+        "domain": {
+          "$ref": "#/definitions/ValueExtent",
+          "description": "Values of the data"
+        },
+        "field": {
+          "description": "Name of the data field",
+          "type": "string"
+        },
+        "range": {
+          "$ref": "#/definitions/ValueExtent",
+          "description": "Ranges of visual channel values"
+        },
+        "type": {
+          "description": "Specify the data type",
+          "enum": [
+            "quantitative",
+            "nominal"
+          ],
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "Orientation": {
+      "enum": [
+        "horizontal",
+        "vertical"
+      ],
+      "type": "string"
+    },
+    "OverlaidTrack": {
+      "additionalProperties": false,
+      "description": "Superposing multiple tracks.",
+      "properties": {
+        "_invalidTrack": {
+          "description": "internal",
+          "type": "boolean"
+        },
+        "_renderingId": {
+          "description": "internal",
+          "type": "string"
+        },
+        "assembly": {
+          "$ref": "#/definitions/Assembly",
+          "description": "A string that specifies the genome builds to use. Currently support `\"hg38\"`, `\"hg19\"`, `\"hg18\"`, `\"hg17\"`, `\"hg16\"`, `\"mm10\"`, `\"mm9\"`, and `\"unknown\"`.\n\n__Note:__: with `\"unknown\"` assembly, genomic axes do not show chrN: in labels."
+        },
+        "centerRadius": {
+          "description": "Proportion of the radius of the center white space.\n\n__Default:__ `0.3`",
+          "type": "number"
+        },
+        "color": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Color"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
+        },
+        "data": {
+          "$ref": "#/definitions/DataDeep"
+        },
+        "dataTransform": {
+          "items": {
+            "$ref": "#/definitions/DataTransform"
+          },
+          "type": "array"
+        },
+        "displacement": {
+          "$ref": "#/definitions/Displacement"
+        },
+        "endAngle": {
+          "description": "Specify the end angle (in the range of [0, 360]) of circular tracks (`{\"layout\": \"circular\"}`).",
+          "type": "number"
+        },
+        "flipY": {
+          "type": "boolean"
+        },
+        "height": {
+          "description": "Specify the track height in pixels.",
+          "type": "number"
+        },
+        "id": {
+          "type": "string"
+        },
+        "innerRadius": {
+          "description": "Specify the inner radius of tracks when (`{\"layout\": \"circular\"}`).",
+          "type": "number"
+        },
+        "layout": {
+          "$ref": "#/definitions/Layout",
+          "description": "Specify the layout type of all tracks."
+        },
+        "linkingId": {
+          "description": "Specify an ID for [linking multiple views](http://gosling-lang.org/docs/user-interaction#linking-views)",
+          "type": "string"
+        },
+        "mark": {
+          "$ref": "#/definitions/Mark"
+        },
+        "opacity": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Opacity"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
+        },
+        "orientation": {
+          "$ref": "#/definitions/Orientation",
+          "description": "Specify the orientation."
+        },
+        "outerRadius": {
+          "description": "Specify the outer radius of tracks when `{\"layout\": \"circular\"}`.",
+          "type": "number"
+        },
+        "overlay": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "_invalidTrack": {
+                "description": "internal",
+                "type": "boolean"
+              },
+              "_renderingId": {
+                "description": "internal",
+                "type": "string"
+              },
+              "assembly": {
+                "$ref": "#/definitions/Assembly",
+                "description": "A string that specifies the genome builds to use. Currently support `\"hg38\"`, `\"hg19\"`, `\"hg18\"`, `\"hg17\"`, `\"hg16\"`, `\"mm10\"`, `\"mm9\"`, and `\"unknown\"`.\n\n__Note:__: with `\"unknown\"` assembly, genomic axes do not show chrN: in labels."
+              },
+              "centerRadius": {
+                "description": "Proportion of the radius of the center white space.\n\n__Default:__ `0.3`",
+                "type": "number"
+              },
+              "color": {
+                "anyOf": [
+                  {
+                    "$ref": "#/definitions/Color"
+                  },
+                  {
+                    "$ref": "#/definitions/ChannelValue"
+                  }
+                ]
+              },
+              "data": {
+                "$ref": "#/definitions/DataDeep"
+              },
+              "dataTransform": {
+                "items": {
+                  "$ref": "#/definitions/DataTransform"
+                },
+                "type": "array"
+              },
+              "displacement": {
+                "$ref": "#/definitions/Displacement"
+              },
+              "endAngle": {
+                "description": "Specify the end angle (in the range of [0, 360]) of circular tracks (`{\"layout\": \"circular\"}`).",
+                "type": "number"
+              },
+              "flipY": {
+                "type": "boolean"
+              },
+              "id": {
+                "type": "string"
+              },
+              "innerRadius": {
+                "description": "Specify the inner radius of tracks when (`{\"layout\": \"circular\"}`).",
+                "type": "number"
+              },
+              "linkingId": {
+                "description": "Specify an ID for [linking multiple views](http://gosling-lang.org/docs/user-interaction#linking-views)",
+                "type": "string"
+              },
+              "mark": {
+                "$ref": "#/definitions/Mark"
+              },
+              "opacity": {
+                "anyOf": [
+                  {
+                    "$ref": "#/definitions/Opacity"
+                  },
+                  {
+                    "$ref": "#/definitions/ChannelValue"
+                  }
+                ]
+              },
+              "orientation": {
+                "$ref": "#/definitions/Orientation",
+                "description": "Specify the orientation."
+              },
+              "outerRadius": {
+                "description": "Specify the outer radius of tracks when `{\"layout\": \"circular\"}`.",
+                "type": "number"
+              },
+              "overlayOnPreviousTrack": {
+                "type": "boolean"
+              },
+              "overrideTemplate": {
+                "type": "boolean"
+              },
+              "prerelease": {
+                "additionalProperties": false,
+                "description": "internal",
+                "type": "object"
+              },
+              "row": {
+                "anyOf": [
+                  {
+                    "$ref": "#/definitions/Row"
+                  },
+                  {
+                    "$ref": "#/definitions/ChannelValue"
+                  }
+                ]
+              },
+              "size": {
+                "anyOf": [
+                  {
+                    "$ref": "#/definitions/Size"
+                  },
+                  {
+                    "$ref": "#/definitions/ChannelValue"
+                  }
+                ]
+              },
+              "spacing": {
+                "description": "- If `{\"layout\": \"linear\"}`, specify the space between tracks in pixels;\n\n- If `{\"layout\": \"circular\"}`, specify the space between tracks in percentage ranging from 0 to 100.",
+                "type": "number"
+              },
+              "startAngle": {
+                "description": "Specify the start angle (in the range of [0, 360]) of circular tracks (`{\"layout\": \"circular\"}`).",
+                "type": "number"
+              },
+              "static": {
+                "description": "Whether to disable [Zooming and Panning](http://gosling-lang.org/docs/user-interaction#zooming-and-panning), __Default:__ `false`.",
+                "type": "boolean"
+              },
+              "stretch": {
+                "type": "boolean"
+              },
+              "stroke": {
+                "anyOf": [
+                  {
+                    "$ref": "#/definitions/Stroke"
+                  },
+                  {
+                    "$ref": "#/definitions/ChannelValue"
+                  }
+                ]
+              },
+              "strokeWidth": {
+                "anyOf": [
+                  {
+                    "$ref": "#/definitions/StrokeWidth"
+                  },
+                  {
+                    "$ref": "#/definitions/ChannelValue"
+                  }
+                ]
+              },
+              "style": {
+                "$ref": "#/definitions/Style",
+                "description": "Define the [style](http://gosling-lang.org/docs/visual-channel#style-related-properties) of multive views. Will be overriden by the style of children elements (e.g., view, track)."
+              },
+              "text": {
+                "anyOf": [
+                  {
+                    "$ref": "#/definitions/Text"
+                  },
+                  {
+                    "$ref": "#/definitions/ChannelValue"
+                  }
+                ]
+              },
+              "tooltip": {
+                "items": {
+                  "$ref": "#/definitions/Tooltip"
+                },
+                "type": "array"
+              },
+              "visibility": {
+                "items": {
+                  "$ref": "#/definitions/VisibilityCondition"
+                },
+                "type": "array"
+              },
+              "x": {
+                "anyOf": [
+                  {
+                    "$ref": "#/definitions/X"
+                  },
+                  {
+                    "$ref": "#/definitions/ChannelValue"
+                  }
+                ]
+              },
+              "x1": {
+                "anyOf": [
+                  {
+                    "$ref": "#/definitions/X"
+                  },
+                  {
+                    "$ref": "#/definitions/ChannelValue"
+                  }
+                ]
+              },
+              "x1e": {
+                "anyOf": [
+                  {
+                    "$ref": "#/definitions/X"
+                  },
+                  {
+                    "$ref": "#/definitions/ChannelValue"
+                  }
+                ]
+              },
+              "xAxis": {
+                "$ref": "#/definitions/AxisPosition",
+                "description": "not supported"
+              },
+              "xDomain": {
+                "anyOf": [
+                  {
+                    "$ref": "#/definitions/DomainInterval"
+                  },
+                  {
+                    "$ref": "#/definitions/DomainChrInterval"
+                  },
+                  {
+                    "$ref": "#/definitions/DomainChr"
+                  }
+                ]
+              },
+              "xOffset": {
+                "description": "Specify the x offset of views in the unit of pixels",
+                "type": "number"
+              },
+              "xe": {
+                "anyOf": [
+                  {
+                    "$ref": "#/definitions/X"
+                  },
+                  {
+                    "$ref": "#/definitions/ChannelValue"
+                  }
+                ]
+              },
+              "y": {
+                "anyOf": [
+                  {
+                    "$ref": "#/definitions/Y"
+                  },
+                  {
+                    "$ref": "#/definitions/ChannelValue"
+                  }
+                ]
+              },
+              "y1": {
+                "anyOf": [
+                  {
+                    "$ref": "#/definitions/Y"
+                  },
+                  {
+                    "$ref": "#/definitions/ChannelValue"
+                  }
+                ]
+              },
+              "y1e": {
+                "anyOf": [
+                  {
+                    "$ref": "#/definitions/Y"
+                  },
+                  {
+                    "$ref": "#/definitions/ChannelValue"
+                  }
+                ]
+              },
+              "yOffset": {
+                "description": "Specify the y offset of views in the unit of pixels",
+                "type": "number"
+              },
+              "ye": {
+                "anyOf": [
+                  {
+                    "$ref": "#/definitions/Y"
+                  },
+                  {
+                    "$ref": "#/definitions/ChannelValue"
+                  }
+                ]
+              },
+              "zoomLimits": {
+                "$ref": "#/definitions/ZoomLimits"
+              }
+            },
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "overlayOnPreviousTrack": {
+          "type": "boolean"
+        },
+        "overrideTemplate": {
+          "type": "boolean"
+        },
+        "prerelease": {
+          "additionalProperties": false,
+          "description": "internal",
+          "type": "object"
+        },
+        "row": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Row"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
+        },
+        "size": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Size"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
+        },
+        "spacing": {
+          "description": "- If `{\"layout\": \"linear\"}`, specify the space between tracks in pixels;\n\n- If `{\"layout\": \"circular\"}`, specify the space between tracks in percentage ranging from 0 to 100.",
+          "type": "number"
+        },
+        "startAngle": {
+          "description": "Specify the start angle (in the range of [0, 360]) of circular tracks (`{\"layout\": \"circular\"}`).",
+          "type": "number"
+        },
+        "static": {
+          "description": "Whether to disable [Zooming and Panning](http://gosling-lang.org/docs/user-interaction#zooming-and-panning), __Default:__ `false`.",
+          "type": "boolean"
+        },
+        "stretch": {
+          "type": "boolean"
+        },
+        "stroke": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Stroke"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
+        },
+        "strokeWidth": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/StrokeWidth"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
+        },
+        "style": {
+          "$ref": "#/definitions/Style",
+          "description": "Define the [style](http://gosling-lang.org/docs/visual-channel#style-related-properties) of multive views. Will be overriden by the style of children elements (e.g., view, track)."
+        },
+        "subtitle": {
+          "type": "string"
+        },
+        "text": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Text"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
+        },
+        "title": {
+          "description": "If defined, will show the textual label on the left-top corner of a track.",
+          "type": "string"
+        },
+        "tooltip": {
+          "items": {
+            "$ref": "#/definitions/Tooltip"
+          },
+          "type": "array"
+        },
+        "visibility": {
+          "items": {
+            "$ref": "#/definitions/VisibilityCondition"
+          },
+          "type": "array"
+        },
+        "width": {
+          "description": "Specify the track width in pixels.",
+          "type": "number"
+        },
+        "x": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/X"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
+        },
+        "x1": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/X"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
+        },
+        "x1e": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/X"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
+        },
+        "xAxis": {
+          "$ref": "#/definitions/AxisPosition",
+          "description": "not supported"
+        },
+        "xDomain": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/DomainInterval"
+            },
+            {
+              "$ref": "#/definitions/DomainChrInterval"
+            },
+            {
+              "$ref": "#/definitions/DomainChr"
+            }
+          ]
+        },
+        "xOffset": {
+          "description": "Specify the x offset of views in the unit of pixels",
+          "type": "number"
+        },
+        "xe": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/X"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
+        },
+        "y": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Y"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
+        },
+        "y1": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Y"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
+        },
+        "y1e": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Y"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
+        },
+        "yOffset": {
+          "description": "Specify the y offset of views in the unit of pixels",
+          "type": "number"
+        },
+        "ye": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Y"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
+        },
+        "zoomLimits": {
+          "$ref": "#/definitions/ZoomLimits"
+        }
+      },
+      "required": [
+        "height",
+        "overlay",
+        "width"
+      ],
+      "type": "object"
+    },
+    "OverlaidTracks": {
+      "additionalProperties": false,
+      "properties": {
+        "_invalidTrack": {
+          "description": "internal",
+          "type": "boolean"
+        },
+        "_renderingId": {
+          "description": "internal",
+          "type": "string"
+        },
+        "alignment": {
+          "const": "overlay",
+          "type": "string"
+        },
+        "assembly": {
+          "$ref": "#/definitions/Assembly",
+          "description": "A string that specifies the genome builds to use. Currently support `\"hg38\"`, `\"hg19\"`, `\"hg18\"`, `\"hg17\"`, `\"hg16\"`, `\"mm10\"`, `\"mm9\"`, and `\"unknown\"`.\n\n__Note:__: with `\"unknown\"` assembly, genomic axes do not show chrN: in labels."
+        },
+        "centerRadius": {
+          "description": "Proportion of the radius of the center white space.\n\n__Default:__ `0.3`",
+          "type": "number"
+        },
+        "color": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Color"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
+        },
+        "data": {
+          "$ref": "#/definitions/DataDeep"
+        },
+        "dataTransform": {
+          "items": {
+            "$ref": "#/definitions/DataTransform"
+          },
+          "type": "array"
+        },
+        "displacement": {
+          "$ref": "#/definitions/Displacement"
+        },
+        "endAngle": {
+          "description": "Specify the end angle (in the range of [0, 360]) of circular tracks (`{\"layout\": \"circular\"}`).",
+          "type": "number"
+        },
+        "flipY": {
+          "type": "boolean"
+        },
+        "height": {
+          "description": "Specify the track height in pixels.",
+          "type": "number"
+        },
+        "id": {
+          "type": "string"
+        },
+        "innerRadius": {
+          "description": "Specify the inner radius of tracks when (`{\"layout\": \"circular\"}`).",
+          "type": "number"
+        },
+        "layout": {
+          "$ref": "#/definitions/Layout",
+          "description": "Specify the layout type of all tracks."
+        },
+        "linkingId": {
+          "description": "Specify an ID for [linking multiple views](http://gosling-lang.org/docs/user-interaction#linking-views)",
+          "type": "string"
+        },
+        "mark": {
+          "$ref": "#/definitions/Mark"
+        },
+        "opacity": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Opacity"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
+        },
+        "orientation": {
+          "$ref": "#/definitions/Orientation",
+          "description": "Specify the orientation."
+        },
+        "outerRadius": {
+          "description": "Specify the outer radius of tracks when `{\"layout\": \"circular\"}`.",
+          "type": "number"
+        },
+        "overlayOnPreviousTrack": {
+          "type": "boolean"
+        },
+        "overrideTemplate": {
+          "type": "boolean"
+        },
+        "prerelease": {
+          "additionalProperties": false,
+          "description": "internal",
+          "type": "object"
+        },
+        "row": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Row"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
+        },
+        "size": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Size"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
+        },
+        "spacing": {
+          "description": "- If `{\"layout\": \"linear\"}`, specify the space between tracks in pixels;\n\n- If `{\"layout\": \"circular\"}`, specify the space between tracks in percentage ranging from 0 to 100.",
+          "type": "number"
+        },
+        "startAngle": {
+          "description": "Specify the start angle (in the range of [0, 360]) of circular tracks (`{\"layout\": \"circular\"}`).",
+          "type": "number"
+        },
+        "static": {
+          "description": "Whether to disable [Zooming and Panning](http://gosling-lang.org/docs/user-interaction#zooming-and-panning), __Default:__ `false`.",
+          "type": "boolean"
+        },
+        "stretch": {
+          "type": "boolean"
+        },
+        "stroke": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Stroke"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
+        },
+        "strokeWidth": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/StrokeWidth"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
+        },
+        "style": {
+          "$ref": "#/definitions/Style",
+          "description": "Define the [style](http://gosling-lang.org/docs/visual-channel#style-related-properties) of multive views. Will be overriden by the style of children elements (e.g., view, track)."
+        },
+        "subtitle": {
+          "type": "string"
+        },
+        "text": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Text"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
+        },
+        "title": {
+          "description": "If defined, will show the textual label on the left-top corner of a track.",
+          "type": "string"
+        },
+        "tooltip": {
+          "items": {
+            "$ref": "#/definitions/Tooltip"
+          },
+          "type": "array"
+        },
+        "tracks": {
+          "items": {
+            "$ref": "#/definitions/PartialTrack"
+          },
+          "type": "array"
+        },
+        "visibility": {
+          "items": {
+            "$ref": "#/definitions/VisibilityCondition"
+          },
+          "type": "array"
+        },
+        "width": {
+          "description": "Specify the track width in pixels.",
+          "type": "number"
+        },
+        "x": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/X"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
+        },
+        "x1": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/X"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
+        },
+        "x1e": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/X"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
+        },
+        "xAxis": {
+          "$ref": "#/definitions/AxisPosition",
+          "description": "not supported"
+        },
+        "xDomain": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/DomainInterval"
+            },
+            {
+              "$ref": "#/definitions/DomainChrInterval"
+            },
+            {
+              "$ref": "#/definitions/DomainChr"
+            }
+          ]
+        },
+        "xOffset": {
+          "description": "Specify the x offset of views in the unit of pixels",
+          "type": "number"
+        },
+        "xe": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/X"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
+        },
+        "y": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Y"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
+        },
+        "y1": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Y"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
+        },
+        "y1e": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Y"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
+        },
+        "yOffset": {
+          "description": "Specify the y offset of views in the unit of pixels",
+          "type": "number"
+        },
+        "ye": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Y"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
+        },
+        "zoomLimits": {
+          "$ref": "#/definitions/ZoomLimits"
+        }
+      },
+      "required": [
+        "alignment",
+        "tracks",
+        "width",
+        "height"
+      ],
+      "type": "object"
+    },
+    "PREDEFINED_COLORS": {
+      "enum": [
+        "viridis",
+        "grey",
+        "spectral",
+        "warm",
+        "cividis",
+        "bupu",
+        "rdbu"
+      ],
+      "type": "string"
+    },
+    "PartialTrack": {
+      "additionalProperties": false,
+      "properties": {
+        "_invalidTrack": {
+          "description": "internal",
+          "type": "boolean"
+        },
+        "_renderingId": {
+          "description": "internal",
+          "type": "string"
+        },
+        "assembly": {
+          "$ref": "#/definitions/Assembly",
+          "description": "A string that specifies the genome builds to use. Currently support `\"hg38\"`, `\"hg19\"`, `\"hg18\"`, `\"hg17\"`, `\"hg16\"`, `\"mm10\"`, `\"mm9\"`, and `\"unknown\"`.\n\n__Note:__: with `\"unknown\"` assembly, genomic axes do not show chrN: in labels."
+        },
+        "centerRadius": {
+          "description": "Proportion of the radius of the center white space.\n\n__Default:__ `0.3`",
+          "type": "number"
+        },
+        "color": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Color"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
+        },
+        "data": {
+          "$ref": "#/definitions/DataDeep"
+        },
+        "dataTransform": {
+          "items": {
+            "$ref": "#/definitions/DataTransform"
+          },
+          "type": "array"
+        },
+        "displacement": {
+          "$ref": "#/definitions/Displacement"
+        },
+        "encoding": {
+          "additionalProperties": {
+            "$ref": "#/definitions/Channel"
+          },
+          "type": "object"
+        },
+        "endAngle": {
+          "description": "Specify the end angle (in the range of [0, 360]) of circular tracks (`{\"layout\": \"circular\"}`).",
+          "type": "number"
+        },
+        "flipY": {
+          "type": "boolean"
+        },
+        "height": {
+          "description": "Specify the track height in pixels.",
+          "type": "number"
+        },
+        "id": {
+          "type": "string"
+        },
+        "innerRadius": {
+          "description": "Specify the inner radius of tracks when (`{\"layout\": \"circular\"}`).",
+          "type": "number"
+        },
+        "layout": {
+          "$ref": "#/definitions/Layout",
+          "description": "Specify the layout type of all tracks."
+        },
+        "linkingId": {
+          "description": "Specify an ID for [linking multiple views](http://gosling-lang.org/docs/user-interaction#linking-views)",
+          "type": "string"
+        },
+        "mark": {
+          "$ref": "#/definitions/Mark"
+        },
+        "opacity": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Opacity"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
+        },
+        "orientation": {
+          "$ref": "#/definitions/Orientation",
+          "description": "Specify the orientation."
+        },
+        "outerRadius": {
+          "description": "Specify the outer radius of tracks when `{\"layout\": \"circular\"}`.",
+          "type": "number"
+        },
+        "overlay": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "_invalidTrack": {
+                "description": "internal",
+                "type": "boolean"
+              },
+              "_renderingId": {
+                "description": "internal",
+                "type": "string"
+              },
+              "assembly": {
+                "$ref": "#/definitions/Assembly",
+                "description": "A string that specifies the genome builds to use. Currently support `\"hg38\"`, `\"hg19\"`, `\"hg18\"`, `\"hg17\"`, `\"hg16\"`, `\"mm10\"`, `\"mm9\"`, and `\"unknown\"`.\n\n__Note:__: with `\"unknown\"` assembly, genomic axes do not show chrN: in labels."
+              },
+              "centerRadius": {
+                "description": "Proportion of the radius of the center white space.\n\n__Default:__ `0.3`",
+                "type": "number"
+              },
+              "color": {
+                "anyOf": [
+                  {
+                    "$ref": "#/definitions/Color"
+                  },
+                  {
+                    "$ref": "#/definitions/ChannelValue"
+                  }
+                ]
+              },
+              "data": {
+                "$ref": "#/definitions/DataDeep"
+              },
+              "dataTransform": {
+                "items": {
+                  "$ref": "#/definitions/DataTransform"
+                },
+                "type": "array"
+              },
+              "displacement": {
+                "$ref": "#/definitions/Displacement"
+              },
+              "endAngle": {
+                "description": "Specify the end angle (in the range of [0, 360]) of circular tracks (`{\"layout\": \"circular\"}`).",
+                "type": "number"
+              },
+              "flipY": {
+                "type": "boolean"
+              },
+              "id": {
+                "type": "string"
+              },
+              "innerRadius": {
+                "description": "Specify the inner radius of tracks when (`{\"layout\": \"circular\"}`).",
+                "type": "number"
+              },
+              "linkingId": {
+                "description": "Specify an ID for [linking multiple views](http://gosling-lang.org/docs/user-interaction#linking-views)",
+                "type": "string"
+              },
+              "mark": {
+                "$ref": "#/definitions/Mark"
+              },
+              "opacity": {
+                "anyOf": [
+                  {
+                    "$ref": "#/definitions/Opacity"
+                  },
+                  {
+                    "$ref": "#/definitions/ChannelValue"
+                  }
+                ]
+              },
+              "orientation": {
+                "$ref": "#/definitions/Orientation",
+                "description": "Specify the orientation."
+              },
+              "outerRadius": {
+                "description": "Specify the outer radius of tracks when `{\"layout\": \"circular\"}`.",
+                "type": "number"
+              },
+              "overlayOnPreviousTrack": {
+                "type": "boolean"
+              },
+              "overrideTemplate": {
+                "type": "boolean"
+              },
+              "prerelease": {
+                "additionalProperties": false,
+                "description": "internal",
+                "type": "object"
+              },
+              "row": {
+                "anyOf": [
+                  {
+                    "$ref": "#/definitions/Row"
+                  },
+                  {
+                    "$ref": "#/definitions/ChannelValue"
+                  }
+                ]
+              },
+              "size": {
+                "anyOf": [
+                  {
+                    "$ref": "#/definitions/Size"
+                  },
+                  {
+                    "$ref": "#/definitions/ChannelValue"
+                  }
+                ]
+              },
+              "spacing": {
+                "description": "- If `{\"layout\": \"linear\"}`, specify the space between tracks in pixels;\n\n- If `{\"layout\": \"circular\"}`, specify the space between tracks in percentage ranging from 0 to 100.",
+                "type": "number"
+              },
+              "startAngle": {
+                "description": "Specify the start angle (in the range of [0, 360]) of circular tracks (`{\"layout\": \"circular\"}`).",
+                "type": "number"
+              },
+              "static": {
+                "description": "Whether to disable [Zooming and Panning](http://gosling-lang.org/docs/user-interaction#zooming-and-panning), __Default:__ `false`.",
+                "type": "boolean"
+              },
+              "stretch": {
+                "type": "boolean"
+              },
+              "stroke": {
+                "anyOf": [
+                  {
+                    "$ref": "#/definitions/Stroke"
+                  },
+                  {
+                    "$ref": "#/definitions/ChannelValue"
+                  }
+                ]
+              },
+              "strokeWidth": {
+                "anyOf": [
+                  {
+                    "$ref": "#/definitions/StrokeWidth"
+                  },
+                  {
+                    "$ref": "#/definitions/ChannelValue"
+                  }
+                ]
+              },
+              "style": {
+                "$ref": "#/definitions/Style",
+                "description": "Define the [style](http://gosling-lang.org/docs/visual-channel#style-related-properties) of multive views. Will be overriden by the style of children elements (e.g., view, track)."
+              },
+              "text": {
+                "anyOf": [
+                  {
+                    "$ref": "#/definitions/Text"
+                  },
+                  {
+                    "$ref": "#/definitions/ChannelValue"
+                  }
+                ]
+              },
+              "tooltip": {
+                "items": {
+                  "$ref": "#/definitions/Tooltip"
+                },
+                "type": "array"
+              },
+              "visibility": {
+                "items": {
+                  "$ref": "#/definitions/VisibilityCondition"
+                },
+                "type": "array"
+              },
+              "x": {
+                "anyOf": [
+                  {
+                    "$ref": "#/definitions/X"
+                  },
+                  {
+                    "$ref": "#/definitions/ChannelValue"
+                  }
+                ]
+              },
+              "x1": {
+                "anyOf": [
+                  {
+                    "$ref": "#/definitions/X"
+                  },
+                  {
+                    "$ref": "#/definitions/ChannelValue"
+                  }
+                ]
+              },
+              "x1e": {
+                "anyOf": [
+                  {
+                    "$ref": "#/definitions/X"
+                  },
+                  {
+                    "$ref": "#/definitions/ChannelValue"
+                  }
+                ]
+              },
+              "xAxis": {
+                "$ref": "#/definitions/AxisPosition",
+                "description": "not supported"
+              },
+              "xDomain": {
+                "anyOf": [
+                  {
+                    "$ref": "#/definitions/DomainInterval"
+                  },
+                  {
+                    "$ref": "#/definitions/DomainChrInterval"
+                  },
+                  {
+                    "$ref": "#/definitions/DomainChr"
+                  }
+                ]
+              },
+              "xOffset": {
+                "description": "Specify the x offset of views in the unit of pixels",
+                "type": "number"
+              },
+              "xe": {
+                "anyOf": [
+                  {
+                    "$ref": "#/definitions/X"
+                  },
+                  {
+                    "$ref": "#/definitions/ChannelValue"
+                  }
+                ]
+              },
+              "y": {
+                "anyOf": [
+                  {
+                    "$ref": "#/definitions/Y"
+                  },
+                  {
+                    "$ref": "#/definitions/ChannelValue"
+                  }
+                ]
+              },
+              "y1": {
+                "anyOf": [
+                  {
+                    "$ref": "#/definitions/Y"
+                  },
+                  {
+                    "$ref": "#/definitions/ChannelValue"
+                  }
+                ]
+              },
+              "y1e": {
+                "anyOf": [
+                  {
+                    "$ref": "#/definitions/Y"
+                  },
+                  {
+                    "$ref": "#/definitions/ChannelValue"
+                  }
+                ]
+              },
+              "yOffset": {
+                "description": "Specify the y offset of views in the unit of pixels",
+                "type": "number"
+              },
+              "ye": {
+                "anyOf": [
+                  {
+                    "$ref": "#/definitions/Y"
+                  },
+                  {
+                    "$ref": "#/definitions/ChannelValue"
+                  }
+                ]
+              },
+              "zoomLimits": {
+                "$ref": "#/definitions/ZoomLimits"
+              }
+            },
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "overlayOnPreviousTrack": {
+          "type": "boolean"
+        },
+        "overrideTemplate": {
+          "type": "boolean"
+        },
+        "prerelease": {
+          "additionalProperties": false,
+          "description": "internal",
+          "type": "object"
+        },
+        "row": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Row"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
+        },
+        "size": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Size"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
+        },
+        "spacing": {
+          "description": "- If `{\"layout\": \"linear\"}`, specify the space between tracks in pixels;\n\n- If `{\"layout\": \"circular\"}`, specify the space between tracks in percentage ranging from 0 to 100.",
+          "type": "number"
+        },
+        "startAngle": {
+          "description": "Specify the start angle (in the range of [0, 360]) of circular tracks (`{\"layout\": \"circular\"}`).",
+          "type": "number"
+        },
+        "static": {
+          "description": "Whether to disable [Zooming and Panning](http://gosling-lang.org/docs/user-interaction#zooming-and-panning), __Default:__ `false`.",
+          "type": "boolean"
+        },
+        "stretch": {
+          "type": "boolean"
+        },
+        "stroke": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Stroke"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
+        },
+        "strokeWidth": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/StrokeWidth"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
+        },
+        "style": {
+          "$ref": "#/definitions/Style",
+          "description": "Define the [style](http://gosling-lang.org/docs/visual-channel#style-related-properties) of multive views. Will be overriden by the style of children elements (e.g., view, track)."
+        },
+        "subtitle": {
+          "type": "string"
+        },
+        "template": {
+          "type": "string"
+        },
+        "text": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Text"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
+        },
+        "title": {
+          "description": "If defined, will show the textual label on the left-top corner of a track.",
+          "type": "string"
+        },
+        "tooltip": {
+          "items": {
+            "$ref": "#/definitions/Tooltip"
+          },
+          "type": "array"
+        },
+        "visibility": {
+          "items": {
+            "$ref": "#/definitions/VisibilityCondition"
+          },
+          "type": "array"
+        },
+        "width": {
+          "description": "Specify the track width in pixels.",
+          "type": "number"
+        },
+        "x": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/X"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
+        },
+        "x1": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/X"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
+        },
+        "x1e": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/X"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
+        },
+        "xAxis": {
+          "$ref": "#/definitions/AxisPosition",
+          "description": "not supported"
+        },
+        "xDomain": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/DomainInterval"
+            },
+            {
+              "$ref": "#/definitions/DomainChrInterval"
+            },
+            {
+              "$ref": "#/definitions/DomainChr"
+            }
+          ]
+        },
+        "xOffset": {
+          "description": "Specify the x offset of views in the unit of pixels",
+          "type": "number"
+        },
+        "xe": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/X"
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
+        },
+        "y": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Y"
+            },
+<<<<<<< HEAD
+            "xDomain": {
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/DomainInterval"
+                },
+                {
+                  "$ref": "#/definitions/DomainChrInterval"
+                },
+                {
+                  "$ref": "#/definitions/DomainChr"
+                }
+              ],
+              "description": "Specify the visible region of genomic x-axis"
+=======
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
+        },
+        "y1": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Y"
+>>>>>>> 94b4142 (chore: update grammar for responsive spec)
+            },
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
+        },
+        "y1e": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Y"
+            },
+<<<<<<< HEAD
             "yDomain": {
               "anyOf": [
                 {
@@ -5243,14 +6513,88 @@
             "yOffset": {
               "description": "Specify the y offset of views in the unit of pixels",
               "type": "number"
+=======
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
+        },
+        "yOffset": {
+          "description": "Specify the y offset of views in the unit of pixels",
+          "type": "number"
+        },
+        "ye": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Y"
+>>>>>>> 94b4142 (chore: update grammar for responsive spec)
             },
-            "zoomLimits": {
-              "$ref": "#/definitions/ZoomLimits"
+            {
+              "$ref": "#/definitions/ChannelValue"
+            }
+          ]
+        },
+        "zoomLimits": {
+          "$ref": "#/definitions/ZoomLimits"
+        }
+      },
+      "type": "object"
+    },
+    "Range": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/ValueExtent"
+        },
+        {
+          "$ref": "#/definitions/PREDEFINED_COLORS"
+        }
+      ]
+    },
+    "RangeFilter": {
+      "additionalProperties": false,
+      "properties": {
+        "field": {
+          "description": "A filter is applied based on the values of the specified data field",
+          "type": "string"
+        },
+        "inRange": {
+          "description": "Check whether the value is in a number range.",
+          "items": {
+            "type": "number"
+          },
+          "type": "array"
+        },
+        "not": {
+          "description": "when `{\"not\": true}`, apply a NOT logical operation to the filter.\n\n__Default:__ `false`",
+          "type": "boolean"
+        },
+        "type": {
+          "const": "filter",
+          "type": "string"
+        }
+      },
+      "required": [
+        "field",
+        "inRange",
+        "type"
+      ],
+      "type": "object"
+    },
+    "ResponsiveSize": {
+      "anyOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "height": {
+              "type": "boolean"
+            },
+            "width": {
+              "type": "boolean"
             }
           },
-          "required": [
-            "tracks"
-          ],
           "type": "object"
         }
       ]
@@ -5288,6 +6632,30 @@
           "type": "string"
         }
       },
+      "type": "object"
+    },
+    "SelectivityCondition": {
+      "additionalProperties": false,
+      "properties": {
+        "measure": {
+          "enum": [
+            "width",
+            "height"
+          ],
+          "type": "string"
+        },
+        "operation": {
+          "$ref": "#/definitions/LogicalOperation"
+        },
+        "threshold": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "operation",
+        "measure",
+        "threshold"
+      ],
       "type": "object"
     },
     "SingleTrack": {
@@ -5722,30 +7090,9 @@
               "items": {
                 "additionalProperties": false,
                 "properties": {
-                  "if": {
+                  "selectivity": {
                     "items": {
-                      "additionalProperties": false,
-                      "properties": {
-                        "measure": {
-                          "enum": [
-                            "width",
-                            "height"
-                          ],
-                          "type": "string"
-                        },
-                        "operation": {
-                          "$ref": "#/definitions/LogicalOperation"
-                        },
-                        "threshold": {
-                          "type": "number"
-                        }
-                      },
-                      "required": [
-                        "operation",
-                        "measure",
-                        "threshold"
-                      ],
-                      "type": "object"
+                      "$ref": "#/definitions/SelectivityCondition"
                     },
                     "type": "array"
                   },
@@ -6084,7 +7431,7 @@
                 },
                 "required": [
                   "spec",
-                  "if"
+                  "selectivity"
                 ],
                 "type": "object"
               },
@@ -6412,30 +7759,9 @@
               "items": {
                 "additionalProperties": false,
                 "properties": {
-                  "if": {
+                  "selectivity": {
                     "items": {
-                      "additionalProperties": false,
-                      "properties": {
-                        "measure": {
-                          "enum": [
-                            "width",
-                            "height"
-                          ],
-                          "type": "string"
-                        },
-                        "operation": {
-                          "$ref": "#/definitions/LogicalOperation"
-                        },
-                        "threshold": {
-                          "type": "number"
-                        }
-                      },
-                      "required": [
-                        "operation",
-                        "measure",
-                        "threshold"
-                      ],
-                      "type": "object"
+                      "$ref": "#/definitions/SelectivityCondition"
                     },
                     "type": "array"
                   },
@@ -6774,7 +8100,7 @@
                 },
                 "required": [
                   "spec",
-                  "if"
+                  "selectivity"
                 ],
                 "type": "object"
               },
@@ -7026,30 +8352,9 @@
               "items": {
                 "additionalProperties": false,
                 "properties": {
-                  "if": {
+                  "selectivity": {
                     "items": {
-                      "additionalProperties": false,
-                      "properties": {
-                        "measure": {
-                          "enum": [
-                            "width",
-                            "height"
-                          ],
-                          "type": "string"
-                        },
-                        "operation": {
-                          "$ref": "#/definitions/LogicalOperation"
-                        },
-                        "threshold": {
-                          "type": "number"
-                        }
-                      },
-                      "required": [
-                        "operation",
-                        "measure",
-                        "threshold"
-                      ],
-                      "type": "object"
+                      "$ref": "#/definitions/SelectivityCondition"
                     },
                     "type": "array"
                   },
@@ -7388,7 +8693,7 @@
                 },
                 "required": [
                   "spec",
-                  "if"
+                  "selectivity"
                 ],
                 "type": "object"
               },

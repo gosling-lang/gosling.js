@@ -1,7 +1,9 @@
 import { Chromosome } from './utils/chrom-size';
 
 /* ----------------------------- ROOT SPEC ----------------------------- */
-export type GoslingSpec = RootSpecWithSingleView | RootSpecWithMultipleViews;
+export type GoslingSpec =
+    | (RootSpecWithSingleView & ResponsiveSpecOfSingleView)
+    | (RootSpecWithMultipleViews & ResponsiveSpecOfMultipleViews);
 
 export type ResponsiveSize = boolean | { width?: boolean; height?: boolean };
 
@@ -22,19 +24,20 @@ export interface RootSpecWithMultipleViews extends MultipleViews {
 }
 
 /* ----------------------------- VIEW ----------------------------- */
-export type View = SingleView | MultipleViews;
+export type View = SingleView | (MultipleViews & ResponsiveSpecOfMultipleViews);
 
 export type SingleView = (OverlaidTracks | StackedTracks | FlatTracks) & ResponsiveSpecOfSingleView;
+
+export type SelectivityCondition = {
+    operation: LogicalOperation;
+    measure: 'width' | 'height';
+    threshold: number;
+};
 
 export type ResponsiveSpecOfSingleView = {
     responsiveSpec?: {
         spec: Partial<OverlaidTracks | StackedTracks>;
-        // Similar to VisibilityCondition
-        if: {
-            operation: LogicalOperation;
-            measure: 'width' | 'height';
-            threshold: number;
-        }[];
+        selectivity: SelectivityCondition[];
     }[];
 };
 
@@ -64,6 +67,13 @@ export interface MultipleViews extends CommonViewDef {
     /** An array of view specifications */
     views: Array<SingleView | MultipleViews>;
 }
+
+export type ResponsiveSpecOfMultipleViews = {
+    responsiveSpec?: {
+        spec: Partial<MultipleViews>;
+        selectivity: SelectivityCondition[];
+    }[];
+};
 
 export type Layout = 'linear' | 'circular';
 export type Orientation = 'horizontal' | 'vertical';
