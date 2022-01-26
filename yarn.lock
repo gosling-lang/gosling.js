@@ -3035,6 +3035,11 @@ cross-spawn@^7.0.0, cross-spawn@^7.0.2:
     shebang-command "^2.0.0"
     which "^2.0.1"
 
+css-element-queries@^1.2.3:
+  version "1.2.3"
+  resolved "https://registry.yarnpkg.com/css-element-queries/-/css-element-queries-1.2.3.tgz#e14940b1fcd4bf0da60ea4145d05742d7172e516"
+  integrity sha512-QK9uovYmKTsV2GXWQiMOByVNrLn2qz6m3P7vWpOR4IdD6I3iXoDw5qtgJEN3Xq7gIbdHVKvzHjdAtcl+4Arc4Q==
+
 "css-element-queries@github:marcj/css-element-queries":
   version "1.2.3"
   resolved "https://codeload.github.com/marcj/css-element-queries/tar.gz/4eae4654f4683923153d8dd8f5c0d1bc2067b2a8"

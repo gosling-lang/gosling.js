@@ -66,6 +66,10 @@ export interface MultipleViews extends CommonViewDef {
     arrangement?: 'parallel' | 'serial' | 'horizontal' | 'vertical';
     /** An array of view specifications */
     views: Array<SingleView | MultipleViews>;
+
+    /** Internal: Used for responsive spec */
+    _assignedWidth?: number;
+    _assignedHeight?: number;
 }
 
 export type ResponsiveSpecOfMultipleViews = {
@@ -135,6 +139,10 @@ export interface CommonViewDef {
      * Will be overriden by the style of children elements (e.g., view, track).
      */
     style?: Style;
+
+    /** Internal: Used for responsive spec */
+    _assignedWidth?: number;
+    _assignedHeight?: number;
 }
 
 /* ----------------------------- TRACK ----------------------------- */

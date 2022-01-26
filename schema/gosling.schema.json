@@ -520,6 +520,13 @@
       "additionalProperties": false,
       "description": "Partial specification of `BasicSingleTrack` to use default visual encoding predefined by data type.",
       "properties": {
+        "_assignedHeight": {
+          "type": "number"
+        },
+        "_assignedWidth": {
+          "description": "Internal: Used for responsive spec",
+          "type": "number"
+        },
         "_invalidTrack": {
           "description": "internal",
           "type": "boolean"
@@ -1092,6 +1099,13 @@
         {
           "additionalProperties": false,
           "properties": {
+            "_assignedHeight": {
+              "type": "number"
+            },
+            "_assignedWidth": {
+              "description": "Internal: Used for responsive spec",
+              "type": "number"
+            },
             "_invalidTrack": {
               "description": "internal",
               "type": "boolean"
@@ -2488,6 +2502,13 @@
                   "spec": {
                     "additionalProperties": false,
                     "properties": {
+                      "_assignedHeight": {
+                        "type": "number"
+                      },
+                      "_assignedWidth": {
+                        "description": "Internal: Used for responsive spec",
+                        "type": "number"
+                      },
                       "_invalidTrack": {
                         "description": "internal",
                         "type": "boolean"
@@ -3119,6 +3140,13 @@
         {
           "additionalProperties": false,
           "properties": {
+            "_assignedHeight": {
+              "type": "number"
+            },
+            "_assignedWidth": {
+              "description": "Internal: Used for responsive spec",
+              "type": "number"
+            },
             "_invalidTrack": {
               "description": "internal",
               "type": "boolean"
@@ -3239,6 +3267,13 @@
                   "spec": {
                     "additionalProperties": false,
                     "properties": {
+                      "_assignedHeight": {
+                        "type": "number"
+                      },
+                      "_assignedWidth": {
+                        "description": "Internal: Used for responsive spec",
+                        "type": "number"
+                      },
                       "_invalidTrack": {
                         "description": "internal",
                         "type": "boolean"
@@ -3814,6 +3849,13 @@
         {
           "additionalProperties": false,
           "properties": {
+            "_assignedHeight": {
+              "type": "number"
+            },
+            "_assignedWidth": {
+              "description": "Internal: Used for responsive spec",
+              "type": "number"
+            },
             "assembly": {
               "$ref": "#/definitions/Assembly",
               "description": "A string that specifies the genome builds to use. Currently support `\"hg38\"`, `\"hg19\"`, `\"hg18\"`, `\"hg17\"`, `\"hg16\"`, `\"mm10\"`, `\"mm9\"`, and `\"unknown\"`.\n\n__Note:__: with `\"unknown\"` assembly, genomic axes do not show chrN: in labels."
@@ -3854,6 +3896,13 @@
                   "spec": {
                     "additionalProperties": false,
                     "properties": {
+                      "_assignedHeight": {
+                        "type": "number"
+                      },
+                      "_assignedWidth": {
+                        "description": "Internal: Used for responsive spec",
+                        "type": "number"
+                      },
                       "_invalidTrack": {
                         "description": "internal",
                         "type": "boolean"
@@ -4311,6 +4360,13 @@
         {
           "additionalProperties": false,
           "properties": {
+            "_assignedHeight": {
+              "type": "number"
+            },
+            "_assignedWidth": {
+              "description": "Internal: Used for responsive spec",
+              "type": "number"
+            },
             "arrangement": {
               "description": "Specify how multiple views are arranged.",
               "enum": [
@@ -4361,6 +4417,13 @@
                   "spec": {
                     "additionalProperties": false,
                     "properties": {
+                      "_assignedHeight": {
+                        "type": "number"
+                      },
+                      "_assignedWidth": {
+                        "description": "Internal: Used for responsive spec",
+                        "type": "number"
+                      },
                       "arrangement": {
                         "description": "Specify how multiple views are arranged.",
                         "enum": [
@@ -4763,6 +4826,13 @@
     "MultipleViews": {
       "additionalProperties": false,
       "properties": {
+        "_assignedHeight": {
+          "type": "number"
+        },
+        "_assignedWidth": {
+          "description": "Internal: Used for responsive spec",
+          "type": "number"
+        },
         "arrangement": {
           "description": "Specify how multiple views are arranged.",
           "enum": [
@@ -4987,6 +5057,13 @@
       "additionalProperties": false,
       "description": "Superposing multiple tracks.",
       "properties": {
+        "_assignedHeight": {
+          "type": "number"
+        },
+        "_assignedWidth": {
+          "description": "Internal: Used for responsive spec",
+          "type": "number"
+        },
         "_invalidTrack": {
           "description": "internal",
           "type": "boolean"
@@ -5076,6 +5153,13 @@
           "items": {
             "additionalProperties": false,
             "properties": {
+              "_assignedHeight": {
+                "type": "number"
+              },
+              "_assignedWidth": {
+                "description": "Internal: Used for responsive spec",
+                "type": "number"
+              },
               "_invalidTrack": {
                 "description": "internal",
                 "type": "boolean"
@@ -5580,6 +5664,13 @@
     "OverlaidTracks": {
       "additionalProperties": false,
       "properties": {
+        "_assignedHeight": {
+          "type": "number"
+        },
+        "_assignedWidth": {
+          "description": "Internal: Used for responsive spec",
+          "type": "number"
+        },
         "_invalidTrack": {
           "description": "internal",
           "type": "boolean"
@@ -5910,6 +6001,13 @@
     "PartialTrack": {
       "additionalProperties": false,
       "properties": {
+        "_assignedHeight": {
+          "type": "number"
+        },
+        "_assignedWidth": {
+          "description": "Internal: Used for responsive spec",
+          "type": "number"
+        },
         "_invalidTrack": {
           "description": "internal",
           "type": "boolean"
@@ -6005,6 +6103,13 @@
           "items": {
             "additionalProperties": false,
             "properties": {
+              "_assignedHeight": {
+                "type": "number"
+              },
+              "_assignedWidth": {
+                "description": "Internal: Used for responsive spec",
+                "type": "number"
+              },
               "_invalidTrack": {
                 "description": "internal",
                 "type": "boolean"
@@ -6661,6 +6766,13 @@
     "SingleTrack": {
       "additionalProperties": false,
       "properties": {
+        "_assignedHeight": {
+          "type": "number"
+        },
+        "_assignedWidth": {
+          "description": "Internal: Used for responsive spec",
+          "type": "number"
+        },
         "_invalidTrack": {
           "description": "internal",
           "type": "boolean"
@@ -6986,6 +7098,13 @@
         {
           "additionalProperties": false,
           "properties": {
+            "_assignedHeight": {
+              "type": "number"
+            },
+            "_assignedWidth": {
+              "description": "Internal: Used for responsive spec",
+              "type": "number"
+            },
             "_invalidTrack": {
               "description": "internal",
               "type": "boolean"
@@ -7099,6 +7218,13 @@
                   "spec": {
                     "additionalProperties": false,
                     "properties": {
+                      "_assignedHeight": {
+                        "type": "number"
+                      },
+                      "_assignedWidth": {
+                        "description": "Internal: Used for responsive spec",
+                        "type": "number"
+                      },
                       "_invalidTrack": {
                         "description": "internal",
                         "type": "boolean"
@@ -7655,6 +7781,13 @@
         {
           "additionalProperties": false,
           "properties": {
+            "_assignedHeight": {
+              "type": "number"
+            },
+            "_assignedWidth": {
+              "description": "Internal: Used for responsive spec",
+              "type": "number"
+            },
             "_invalidTrack": {
               "description": "internal",
               "type": "boolean"
@@ -7768,6 +7901,13 @@
                   "spec": {
                     "additionalProperties": false,
                     "properties": {
+                      "_assignedHeight": {
+                        "type": "number"
+                      },
+                      "_assignedWidth": {
+                        "description": "Internal: Used for responsive spec",
+                        "type": "number"
+                      },
                       "_invalidTrack": {
                         "description": "internal",
                         "type": "boolean"
@@ -8328,6 +8468,13 @@
         {
           "additionalProperties": false,
           "properties": {
+            "_assignedHeight": {
+              "type": "number"
+            },
+            "_assignedWidth": {
+              "description": "Internal: Used for responsive spec",
+              "type": "number"
+            },
             "assembly": {
               "$ref": "#/definitions/Assembly",
               "description": "A string that specifies the genome builds to use. Currently support `\"hg38\"`, `\"hg19\"`, `\"hg18\"`, `\"hg17\"`, `\"hg16\"`, `\"mm10\"`, `\"mm9\"`, and `\"unknown\"`.\n\n__Note:__: with `\"unknown\"` assembly, genomic axes do not show chrN: in labels."
@@ -8361,6 +8508,13 @@
                   "spec": {
                     "additionalProperties": false,
                     "properties": {
+                      "_assignedHeight": {
+                        "type": "number"
+                      },
+                      "_assignedWidth": {
+                        "description": "Internal: Used for responsive spec",
+                        "type": "number"
+                      },
                       "_invalidTrack": {
                         "description": "internal",
                         "type": "boolean"
@@ -9122,6 +9276,13 @@
       "additionalProperties": false,
       "description": "Template specification that will be internally converted into `SingleTrack` for rendering.",
       "properties": {
+        "_assignedHeight": {
+          "type": "number"
+        },
+        "_assignedWidth": {
+          "description": "Internal: Used for responsive spec",
+          "type": "number"
+        },
         "_invalidTrack": {
           "description": "internal",
           "type": "boolean"

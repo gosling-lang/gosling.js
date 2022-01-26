@@ -1,6 +1,7 @@
 /* eslint-disable react/prop-types */
 import { HiGlassApi, HiGlassComponentWrapper } from './higlass-component-wrapper';
 import React, { useState, useEffect, useMemo, useRef, forwardRef } from 'react';
+import { ResizeSensor } from 'css-element-queries';
 import * as gosling from '..';
 import { getTheme, Theme } from './utils/theme';
 import { createApi, GoslingApi } from './api';
@@ -28,6 +29,8 @@ export const GoslingComponent = forwardRef<
 >((props, ref) => {
     const [viewConfig, setViewConfig] = useState<gosling.HiGlassSpec>();
     const [size, setSize] = useState({ width: 200, height: 200 });
+    const wrapperSize = useRef({ width: 200, height: 200 });
+    // const [responsiveSpec, setResponsiveSpec] = useState({ width: 200, height: 200 });
 
     // HiGlass API
     const hgRef = useRef<HiGlassApi>();
@@ -44,6 +47,29 @@ export const GoslingComponent = forwardRef<
             ref.current = { hgRef, api };
         }
     }, [ref, hgRef, viewConfig, theme]);
+
+    useEffect(() => {
+        const parentElement = document.getElementById('higlass-wrapper');
+        if (!parentElement) return;
+
+        const resizer = new ResizeSensor(parentElement, newSize => {
+            if (wrapperSize.current.height !== newSize.height || wrapperSize.current.width !== newSize.width) {
+                wrapperSize.current = newSize;
+                // setResponsiveSpec(newSize);
+            }
+        });
+        return () => {
+            resizer.detach();
+        };
+    });
+
+    // TODO: Using props.spec,
+    // (1) compile,
+    // (2) see sizes to the spec (_assignedWidth)
+    // using the updated size, get responsive spec (that override `responsiveSpec`)
+    // (3) and then compare prev and current responsive specs
+    // (4) use this resulting spec
+    // Perhaps, we can add _width and _height to each view in `traverseAndCollectTrackInfo`
 
     useEffect(() => {
         if (props.spec) {
