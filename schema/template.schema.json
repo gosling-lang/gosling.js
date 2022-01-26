@@ -846,7 +846,8 @@
             {
               "$ref": "#/definitions/DomainChr"
             }
-          ]
+          ],
+          "description": "Specify the visible region of genomic x-axis"
         },
         "xOffset": {
           "description": "Specify the x offset of views in the unit of pixels",
@@ -863,6 +864,20 @@
         },
         "y1e": {
           "$ref": "#/definitions/ChannelWithBase"
+        },
+        "yDomain": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/DomainInterval"
+            },
+            {
+              "$ref": "#/definitions/DomainChrInterval"
+            },
+            {
+              "$ref": "#/definitions/DomainChr"
+            }
+          ],
+          "description": "Specify the visible region of genomic y-axis"
         },
         "yOffset": {
           "description": "Specify the y offset of views in the unit of pixels",
