@@ -134,8 +134,8 @@ export function IsVerticalRule(track: Track) {
  * Is this 2D track, i.e., two genomic axes?
  */
 export function Is2DTrack(track: Track) {
-    // If this is an overlaid tracks (e.g., matrix on top of rules),
-    // we get the first `SingleTrack` to check the type of two axes.
+    // If this is an overlaid tracks (e.g., matrix w/ rules),
+    // we use the first `SingleTrack` to check the type of two axes.
     const t = IsSingleTrack(track) ? track : resolveSuperposedTracks(track)[0];
     return IsChannelDeep(t.x) && t.x.type === 'genomic' && IsChannelDeep(t.y) && t.y.type === 'genomic';
 }
