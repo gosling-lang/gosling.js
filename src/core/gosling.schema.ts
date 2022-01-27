@@ -89,8 +89,12 @@ export interface CommonViewDef {
      */
     assembly?: Assembly;
 
-    // TODO: Change to domain?
+    /** Specify the visible region of genomic x-axis */
     xDomain?: DomainInterval | DomainChrInterval | DomainChr;
+
+    /** Specify the visible region of genomic y-axis */
+    yDomain?: DomainInterval | DomainChrInterval | DomainChr;
+
     /** Specify an ID for [linking multiple views](http://gosling-lang.org/docs/user-interaction#linking-views) */
     linkingId?: string;
     /** not supported  */
@@ -488,8 +492,6 @@ export interface X extends AxisCommon {
 }
 
 export interface Y extends AxisCommon {
-    type?: 'quantitative' | 'nominal' | 'genomic';
-    domain?: ValueExtent;
     /** Custom baseline of the y-axis. __Default__: `0` */
     baseline?: string | number;
     /** Specify whether to use zero baseline. __Default__: `true`  */

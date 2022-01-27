@@ -150,6 +150,7 @@ export function traverseToFixSpecDownstream(spec: GoslingSpec | SingleView, pare
         if (spec.static === undefined) spec.static = parentDef.static !== undefined ? parentDef.static : false;
         if (spec.zoomLimits === undefined) spec.zoomLimits = parentDef.zoomLimits;
         if (spec.xDomain === undefined) spec.xDomain = parentDef.xDomain;
+        if (spec.yDomain === undefined) spec.yDomain = parentDef.yDomain;
         if (spec.linkingId === undefined) spec.linkingId = parentDef.linkingId;
         if (spec.centerRadius === undefined) spec.centerRadius = parentDef.centerRadius;
         if (spec.spacing === undefined && !('tracks' in spec)) spec.spacing = parentDef.spacing;
@@ -261,6 +262,19 @@ export function traverseToFixSpecDownstream(spec: GoslingSpec | SingleView, pare
             if (Is2DTrack(track)) {
                 // TODO: Add a test for this.
                 track.layout = 'linear';
+
+                /**
+                 * Add y-axis domain
+                 */
+                if ((IsSingleTrack(track) || IsOverlaidTrack(track)) && IsChannelDeep(track.y) && !track.y.domain) {
+                    track.y.domain = spec.yDomain;
+                } else if (IsOverlaidTrack(track)) {
+                    track.overlay.forEach(o => {
+                        if (IsChannelDeep(o.y) && !o.y.domain) {
+                            o.y.domain = spec.yDomain;
+                        }
+                    });
+                }
             }
 
             /**

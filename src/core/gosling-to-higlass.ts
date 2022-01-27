@@ -154,7 +154,7 @@ export function goslingToHiGlass(
                 .setViewOrientation(firstResolvedSpec.orientation) // TODO: Orientation should be assigned to 'individual' views
                 .setAssembly(assembly) // TODO: Assembly should be assigned to 'individual' views
                 .addDefaultView(firstResolvedSpec.id, assembly)
-                .setDomain(xDomain, Is2DTrack(firstResolvedSpec) ? yDomain : xDomain)
+                .setDomain(xDomain, yDomain ?? xDomain)
                 .adjustDomain(firstResolvedSpec.orientation, width, height)
                 .setMainTrack(hgTrack)
                 .addTrackSourceServers(server)
