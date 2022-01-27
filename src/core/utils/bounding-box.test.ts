@@ -7,7 +7,7 @@ import { getTheme } from './theme';
 describe('Arrangement', () => {
     it('1 View, 1 Track', () => {
         const spec = { tracks: [{ overlay: [], width: 40, height: 40 }] };
-        const info = getRelativeTrackInfo(spec, getTheme());
+        const info = getRelativeTrackInfo(spec, getTheme()).trackInfos;
         expect(info).toHaveLength(1);
 
         expect(info[0].track).toEqual(spec.tracks[0]);
@@ -22,8 +22,8 @@ describe('Arrangement', () => {
                 { overlay: [], width: 40, height: 40, overlayOnPreviousTrack: true }
             ]
         };
-        expect(getRelativeTrackInfo(spec1, getTheme())).toHaveLength(2);
-        expect(getRelativeTrackInfo(spec1, getTheme())[1].boundingBox.y).toEqual(0);
+        expect(getRelativeTrackInfo(spec1, getTheme()).trackInfos).toHaveLength(2);
+        expect(getRelativeTrackInfo(spec1, getTheme()).trackInfos[1].boundingBox.y).toEqual(0);
     });
 
     it('1 View, 2 Tracks (N Overlaid Tracks)', () => {
@@ -47,11 +47,11 @@ describe('Arrangement', () => {
                 { overlay: [], width: 10, height: 10 }
             ]
         };
-        expect(getBoundingBox(getRelativeTrackInfo(spec1, getTheme()))).toEqual(
-            getBoundingBox(getRelativeTrackInfo(spec2, getTheme()))
+        expect(getBoundingBox(getRelativeTrackInfo(spec1, getTheme()).trackInfos)).toEqual(
+            getBoundingBox(getRelativeTrackInfo(spec2, getTheme()).trackInfos)
         );
-        expect(getBoundingBox(getRelativeTrackInfo(spec1, getTheme()))).toEqual(
-            getBoundingBox(getRelativeTrackInfo(spec3, getTheme()))
+        expect(getBoundingBox(getRelativeTrackInfo(spec1, getTheme()).trackInfos)).toEqual(
+            getBoundingBox(getRelativeTrackInfo(spec3, getTheme()).trackInfos)
         );
     });
 
@@ -62,7 +62,7 @@ describe('Arrangement', () => {
                 { overlay: [], width: 10, height: 10 }
             ]
         };
-        const info = getRelativeTrackInfo(spec, getTheme());
+        const info = getRelativeTrackInfo(spec, getTheme()).trackInfos;
         expect(info).toHaveLength(2);
 
         expect(info[0].track).toEqual(spec.tracks[0]);
@@ -92,7 +92,7 @@ describe('Arrangement', () => {
                 }
             ]
         };
-        const info = getRelativeTrackInfo(spec, getTheme());
+        const info = getRelativeTrackInfo(spec, getTheme()).trackInfos;
         expect(info).toHaveLength(4);
 
         const size = getBoundingBox(info);
@@ -122,7 +122,7 @@ describe('Arrangement', () => {
                 }
             ]
         };
-        const info = getRelativeTrackInfo(spec, getTheme());
+        const info = getRelativeTrackInfo(spec, getTheme()).trackInfos;
         expect(info).toHaveLength(4);
 
         const size = getBoundingBox(info);
@@ -226,7 +226,7 @@ describe('Arrangement', () => {
                     }
                 ]
             };
-            const info = getRelativeTrackInfo(spec, getTheme());
+            const info = getRelativeTrackInfo(spec, getTheme()).trackInfos;
             expect(info).toHaveLength(2);
 
             const size = getBoundingBox(info);
@@ -253,7 +253,7 @@ describe('Arrangement', () => {
                     }
                 ]
             };
-            const info = getRelativeTrackInfo(spec, getTheme());
+            const info = getRelativeTrackInfo(spec, getTheme()).trackInfos;
             expect(info).toHaveLength(2);
 
             const size = getBoundingBox(info);
@@ -283,7 +283,7 @@ describe('Arrangement', () => {
                 ]
             };
             traverseToFixSpecDownstream(spec);
-            const info = getRelativeTrackInfo(spec, getTheme());
+            const info = getRelativeTrackInfo(spec, getTheme()).trackInfos;
             expect(info).toHaveLength(2);
 
             const size = getBoundingBox(info);
@@ -349,7 +349,7 @@ describe('Arrangement', () => {
                     }
                 ]
             };
-            const info = getRelativeTrackInfo(spec, getTheme());
+            const info = getRelativeTrackInfo(spec, getTheme()).trackInfos;
             expect(info).toHaveLength(3);
 
             const size = getBoundingBox(info);
@@ -378,7 +378,7 @@ describe('Arrangement', () => {
                     }
                 ]
             };
-            const info = getRelativeTrackInfo(spec, getTheme());
+            const info = getRelativeTrackInfo(spec, getTheme()).trackInfos;
             expect(info).toHaveLength(3);
 
             const size = getBoundingBox(info);
