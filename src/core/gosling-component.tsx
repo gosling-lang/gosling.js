@@ -1,12 +1,13 @@
 /* eslint-disable react/prop-types */
 import { HiGlassApi, HiGlassComponentWrapper } from './higlass-component-wrapper';
-import React, { useState, useEffect, useMemo, useRef, forwardRef } from 'react';
+import React, { useState, useEffect, useMemo, useRef, forwardRef, useCallback } from 'react';
 import { ResizeSensor } from 'css-element-queries';
 import * as gosling from '..';
 import { getTheme, Theme } from './utils/theme';
 import { createApi, GoslingApi } from './api';
 import { TemplateTrackDef } from './gosling.schema';
 import { GoslingTemplates } from '..';
+import { isEqual } from 'lodash';
 
 interface GoslingCompProps {
     spec?: gosling.GoslingSpec;
@@ -29,8 +30,8 @@ export const GoslingComponent = forwardRef<
 >((props, ref) => {
     const [viewConfig, setViewConfig] = useState<gosling.HiGlassSpec>();
     const [size, setSize] = useState({ width: 200, height: 200 });
-    const wrapperSize = useRef({ width: 200, height: 200 });
-    // const [responsiveSpec, setResponsiveSpec] = useState({ width: 200, height: 200 });
+    const wrapperSize = useRef<undefined | { width: number; height: number }>();
+    const prevSpec = useRef<undefined | gosling.GoslingSpec>();
 
     // HiGlass API
     const hgRef = useRef<HiGlassApi>();
@@ -48,30 +49,7 @@ export const GoslingComponent = forwardRef<
         }
     }, [ref, hgRef, viewConfig, theme]);
 
-    useEffect(() => {
-        const parentElement = document.getElementById('higlass-wrapper');
-        if (!parentElement) return;
-
-        const resizer = new ResizeSensor(parentElement, newSize => {
-            if (wrapperSize.current.height !== newSize.height || wrapperSize.current.width !== newSize.width) {
-                wrapperSize.current = newSize;
-                // setResponsiveSpec(newSize);
-            }
-        });
-        return () => {
-            resizer.detach();
-        };
-    });
-
-    // TODO: Using props.spec,
-    // (1) compile,
-    // (2) see sizes to the spec (_assignedWidth)
-    // using the updated size, get responsive spec (that override `responsiveSpec`)
-    // (3) and then compare prev and current responsive specs
-    // (4) use this resulting spec
-    // Perhaps, we can add _width and _height to each view in `traverseAndCollectTrackInfo`
-
-    useEffect(() => {
+    const compile = useCallback(() => {
         if (props.spec) {
             const valid = gosling.validateGoslingSpec(props.spec);
 
@@ -82,7 +60,13 @@ export const GoslingComponent = forwardRef<
 
             gosling.compile(
                 props.spec,
-                (newHs, newSize) => {
+                (newHs, newSize, newGs) => {
+                    // TODO: `linkingId` should be updated
+                    // We may not want to re-render this
+                    if (prevSpec.current && isEqual(prevSpec.current, newGs)) {
+                        return;
+                    }
+
                     // If a callback function is provided, return compiled information.
                     props.compiled?.(props.spec!, newHs);
 
@@ -98,11 +82,37 @@ export const GoslingComponent = forwardRef<
                         // Mount `HiGlassComponent` using this view config.
                         setViewConfig(newHs);
                     }
+
+                    prevSpec.current = newGs;
                 },
                 [...GoslingTemplates], // TODO: allow user definitions
-                theme
+                theme,
+                wrapperSize.current
             );
         }
+    }, [props.spec, theme]);
+
+    useEffect(() => {
+        const parentElement = document.getElementById('higlass-wrapper');
+        if (!parentElement) return;
+
+        const resizer = new ResizeSensor(parentElement, newSize => {
+            if (
+                !wrapperSize.current ||
+                wrapperSize.current.height !== newSize.height ||
+                wrapperSize.current.width !== newSize.width
+            ) {
+                wrapperSize.current = newSize;
+                compile();
+            }
+        });
+        return () => {
+            resizer.detach();
+        };
+    });
+
+    useEffect(() => {
+        compile();
     }, [props.spec, theme]);
 
     // HiGlass component should be mounted only once

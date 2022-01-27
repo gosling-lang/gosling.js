@@ -9,7 +9,7 @@ import { CompleteThemeDeep } from './utils/theme';
 export function renderHiGlass(
     spec: GoslingSpec,
     trackInfos: TrackInfo[],
-    setHg: (hg: HiGlassSpec, size: Size) => void,
+    setHg: (hg: HiGlassSpec, size: Size, gs: GoslingSpec) => void,
     theme: CompleteThemeDeep
 ) {
     if (trackInfos.length === 0) {
@@ -68,5 +68,5 @@ export function renderHiGlass(
             });
     });
 
-    setHg(hgModel.spec(), getBoundingBox(trackInfos));
+    setHg(hgModel.spec(), getBoundingBox(trackInfos), spec);
 }

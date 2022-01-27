@@ -76,7 +76,10 @@ export function getBoundingBox(trackInfos: TrackInfo[]) {
  * Collect information of individual tracks including their size/position and specs
  * @param spec
  */
-export function getRelativeTrackInfo(spec: GoslingSpec, theme: CompleteThemeDeep): TrackInfo[] {
+export function getRelativeTrackInfo(
+    spec: GoslingSpec,
+    theme: CompleteThemeDeep
+): { trackInfos: TrackInfo[]; size: { width: number; height: number } } {
     let trackInfos: TrackInfo[] = [] as TrackInfo[];
 
     // Collect track information including spec, bounding boxes, and RGL' `layout`.
@@ -131,7 +134,7 @@ export function getRelativeTrackInfo(spec: GoslingSpec, theme: CompleteThemeDeep
 
     // console.log(trackInfos);
 
-    return trackInfos;
+    return { trackInfos, size };
 }
 
 /**

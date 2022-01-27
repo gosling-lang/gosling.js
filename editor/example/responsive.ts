@@ -841,13 +841,14 @@ export const EX_SPEC_RESPONSIVE_IDEOGRAM: GoslingSpec = {
 export const EX_SPEC_RESPONSIVE_COMPARATIVE_VIEWS: GoslingSpec = {
     responsiveSize: { width: true, height: false },
     arrangement: 'horizontal',
+    linkingId: '1',
     responsiveSpec: [
         {
             spec: { arrangement: 'vertical' },
             selectivity: [
                 {
                     measure: 'width',
-                    threshold: 500,
+                    threshold: 1200,
                     operation: 'LT'
                 }
             ]
@@ -856,8 +857,21 @@ export const EX_SPEC_RESPONSIVE_COMPARATIVE_VIEWS: GoslingSpec = {
     views: [
         {
             xDomain: { chromosome: '12', interval: [5000000, 15000000] },
+            responsiveSpec: [
+                {
+                    spec: { layout: 'circular' },
+                    selectivity: [
+                        {
+                            measure: 'width',
+                            threshold: 600,
+                            operation: 'LT'
+                        }
+                    ]
+                }
+            ],
             tracks: [
                 {
+                    id: 'left',
                     data: {
                         url: 'https://server.gosling-lang.org/api/v1/tileset_info/?d=cistrome-multivec',
                         type: 'multivec',
@@ -881,8 +895,21 @@ export const EX_SPEC_RESPONSIVE_COMPARATIVE_VIEWS: GoslingSpec = {
         },
         {
             xDomain: { chromosome: '9', interval: [5000000, 15000000] },
+            responsiveSpec: [
+                {
+                    spec: { layout: 'circular' },
+                    selectivity: [
+                        {
+                            measure: 'width',
+                            threshold: 600,
+                            operation: 'LT'
+                        }
+                    ]
+                }
+            ],
             tracks: [
                 {
+                    id: 'right',
                     data: {
                         url: 'https://server.gosling-lang.org/api/v1/tileset_info/?d=cistrome-multivec',
                         type: 'multivec',

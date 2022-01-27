@@ -9,6 +9,7 @@ export function getMaxZoomLevel() {
 
 /**
  * Perform logical operation between a target and a reference value.
+ * If the condition is `true`, return `1`.
  */
 export function logicalComparison(
     value: number,
