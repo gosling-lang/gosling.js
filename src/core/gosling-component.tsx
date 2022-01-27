@@ -7,6 +7,7 @@ import { getTheme, Theme } from './utils/theme';
 import { createApi, GoslingApi } from './api';
 import { TemplateTrackDef } from './gosling.schema';
 import { GoslingTemplates } from '..';
+import { omitDeep } from './utils/omit-deep';
 import { isEqual } from 'lodash';
 import * as uuid from 'uuid';
 
@@ -65,7 +66,10 @@ export const GoslingComponent = forwardRef<
                 (newHs, newSize, newGs) => {
                     // TODO: `linkingId` should be updated
                     // We may not want to re-render this
-                    if (prevSpec.current && isEqual(prevSpec.current, newGs)) {
+                    if (
+                        prevSpec.current &&
+                        isEqual(omitDeep(prevSpec.current, ['linkingId']), omitDeep(newGs, ['linkingId']))
+                    ) {
                         return;
                     }
 
