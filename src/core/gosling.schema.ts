@@ -580,7 +580,7 @@ export type ValueExtent = string[] | number[];
 export type GenomicDomain = DomainInterval | DomainChrInterval | DomainChr | DomainGene;
 export type Domain = ValueExtent | GenomicDomain;
 export type Range = ValueExtent | PREDEFINED_COLORS;
-export type PREDEFINED_COLORS = 'viridis' | 'grey' | 'spectral' | 'warm' | 'cividis' | 'bupu' | 'rdbu';
+export type PREDEFINED_COLORS = 'viridis' | 'grey' | 'spectral' | 'warm' | 'cividis' | 'bupu' | 'rdbu' | 'hot' | 'pink';
 
 export interface DomainChr {
     // For showing a certain chromosome

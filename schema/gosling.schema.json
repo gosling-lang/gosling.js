@@ -2532,7 +2532,9 @@
         "warm",
         "cividis",
         "bupu",
-        "rdbu"
+        "rdbu",
+        "hot",
+        "pink"
       ],
       "type": "string"
     },

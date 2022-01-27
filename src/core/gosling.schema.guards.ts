@@ -42,7 +42,9 @@ import {
     interpolateCividis,
     interpolateBuPu,
     interpolateRdBu,
-    interpolateViridis
+    interpolateViridis,
+    interpolateYlOrBr,
+    interpolateRdPu
 } from 'd3-scale-chromatic';
 import { resolveSuperposedTracks } from './utils/overlay';
 
@@ -53,7 +55,9 @@ export const PREDEFINED_COLOR_STR_MAP: { [k: string]: (t: number) => string } = 
     spectral: interpolateSpectral,
     cividis: interpolateCividis,
     bupu: interpolateBuPu,
-    rdbu: interpolateRdBu
+    rdbu: interpolateRdBu,
+    hot: interpolateYlOrBr,
+    pink: interpolateRdPu
 };
 
 /**
