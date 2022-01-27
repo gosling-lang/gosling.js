@@ -15,7 +15,8 @@ export function manageResponsiveSpecs(spec: GoslingSpec | SingleView, wFactor: n
 
     // Check whether any alternative specs fullfil the condition
     if (responsiveSpec) {
-        responsiveSpec.forEach(specAndCondition => {
+        // TODO: Specify types for `specAndCondition`
+        responsiveSpec.forEach((specAndCondition: any) => {
             const { spec: alternativeSpec, selectivity } = specAndCondition;
 
             if (isSelectResponsiveSpec(selectivity, size)) {

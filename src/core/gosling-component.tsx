@@ -8,6 +8,7 @@ import { createApi, GoslingApi } from './api';
 import { TemplateTrackDef } from './gosling.schema';
 import { GoslingTemplates } from '..';
 import { isEqual } from 'lodash';
+import * as uuid from 'uuid';
 
 interface GoslingCompProps {
     spec?: gosling.GoslingSpec;
@@ -37,6 +38,7 @@ export const GoslingComponent = forwardRef<
     const hgRef = useRef<HiGlassApi>();
 
     const theme = getTheme(props.theme || 'light');
+    const wrapperDivId = props.id ?? uuid.v4();
 
     // Gosling APIs
     useEffect(() => {
@@ -92,8 +94,9 @@ export const GoslingComponent = forwardRef<
         }
     }, [props.spec, theme]);
 
+    // TODO: If not necessary, do not update `wrapperSize` (i.e., when responsiveSize is not set)
     useEffect(() => {
-        const parentElement = document.getElementById('higlass-wrapper');
+        const parentElement = document.getElementById(wrapperDivId);
         if (!parentElement) return;
 
         const resizer = new ResizeSensor(parentElement, newSize => {
@@ -122,7 +125,7 @@ export const GoslingComponent = forwardRef<
                 ref={hgRef}
                 viewConfig={viewConfig}
                 size={size}
-                id={props.id}
+                id={wrapperDivId}
                 className={props.className}
                 options={{
                     padding: props.padding,
