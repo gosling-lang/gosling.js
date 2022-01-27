@@ -6,7 +6,7 @@ import {
     DEFAULT_INNER_RADIUS_PROP,
     DEFAULT_VIEW_SPACING,
     DEWFAULT_TITLE_PADDING_ON_TOP_AND_BOTTOM
-} from '../layout/defaults';
+} from '../defaults';
 import { resolveSuperposedTracks } from './overlay';
 import { traverseTracksAndViews, traverseViewArrangements } from './spec-preprocess';
 import { CompleteThemeDeep } from './theme';
@@ -358,6 +358,10 @@ function traverseAndCollectTrackInfo(
 
     // DEBUG
     // console.log(output);
+
+    // Record assigned sizes of this view so that we can determine whether to use alternative responsive spec
+    spec._assignedWidth = cumWidth;
+    spec._assignedHeight = cumHeight;
 
     return { x: dx, y: dy, width: cumWidth, height: cumHeight };
 }

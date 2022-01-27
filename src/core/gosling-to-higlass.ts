@@ -15,7 +15,7 @@ import {
     IsHiGlassMatrix,
     getHiGlassColorRange
 } from './gosling.schema.guards';
-import { DEWFAULT_TITLE_PADDING_ON_TOP_AND_BOTTOM } from './layout/defaults';
+import { DEWFAULT_TITLE_PADDING_ON_TOP_AND_BOTTOM } from './defaults';
 import { CompleteThemeDeep } from './utils/theme';
 import { DEFAULT_TEXT_STYLE } from './utils/text-style';
 
