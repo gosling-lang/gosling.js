@@ -1,3 +1,13 @@
+## [0.9.16](https://github.com/gosling-lang/gosling.js/compare/v0.9.15...v0.9.16) (2022-01-31)
+
+
+### Features
+
+* add hot and pink color schemes ([#629](https://github.com/gosling-lang/gosling.js/issues/629)) ([9b170a7](https://github.com/gosling-lang/gosling.js/commit/9b170a7d687d844c7fd9e3724105743b4ba08d40))
+* support `yDomain` for 2D tracks ([#627](https://github.com/gosling-lang/gosling.js/issues/627)) ([8675fdc](https://github.com/gosling-lang/gosling.js/commit/8675fdcbfd5f27ad83f9e5b62d1f141122641d0c))
+
+
+
 ## [0.9.15](https://github.com/gosling-lang/gosling.js/compare/v0.9.14...v0.9.15) (2022-01-24)
 
 
