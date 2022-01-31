@@ -76,7 +76,7 @@ export const alignmentWithText: (prop: AlignmentProp) => OverlaidTracks = prop =
                 x: { field: 'start', type: 'genomic' },
                 xe: { field: 'end', type: 'genomic' },
                 color: { value: 'black' },
-                size: { value: 24 },
+                size: { value: 12 },
                 visibility: [
                     {
                         measure: 'zoomLevel',
