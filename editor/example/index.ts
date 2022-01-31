@@ -12,6 +12,7 @@ import {
     EX_SPEC_RESPONSIVE_MULTIVEC,
     EX_SPEC_RESPONSIVE_MULTIVEC_CIRCULAR
 } from './responsive';
+import { EX_SPEC_ALIGNMENT_CHART, EX_SPEC_RESPONSIVE_ALIGNMENT_CHART } from './responsive-alignment';
 import { EX_SPEC_MARK_DISPLACEMENT } from './mark-displacement';
 import { EX_SPEC_CIRCULAR_OVERVIEW_LINEAR_DETAIL } from './circular-overview-linear-detail-views';
 import { EX_SPEC_SARS_COV_2 } from './sars-cov-2';
@@ -115,8 +116,12 @@ export const examples: {
     RESPONSIVE_COMPARATIVE_VIEWS: {
         name: 'Responsive Visualization: Comparative Views',
         spec: EX_SPEC_RESPONSIVE_COMPARATIVE_VIEWS,
-        underDevelopment: true,
-        forceShow: true
+        underDevelopment: true
+    },
+    RESPONSIVE_ALIGNMENT: {
+        name: 'Responsive Visualization: Alignment Views',
+        spec: EX_SPEC_RESPONSIVE_ALIGNMENT_CHART,
+        underDevelopment: true
     },
     CYTOBANDS: {
         name: 'Ideograms',
@@ -142,6 +147,10 @@ export const examples: {
     SARS_COV_2: {
         name: 'SARS-CoV-2',
         spec: EX_SPEC_SARS_COV_2
+    },
+    ALIGNMENT: {
+        name: 'Alignment Chart',
+        spec: EX_SPEC_ALIGNMENT_CHART
     },
     CORCES_ET_AL: {
         name: 'Corces et al. 2020',

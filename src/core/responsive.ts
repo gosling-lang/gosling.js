@@ -19,7 +19,7 @@ export function manageResponsiveSpecs(spec: GoslingSpec | SingleView, wFactor: n
         responsiveSpec.forEach((specAndCondition: any) => {
             const { spec: alternativeSpec, selectivity } = specAndCondition;
 
-            if (isSelectResponsiveSpec(selectivity, size)) {
+            if (isSelectResponsiveSpec(selectivity, size) && !replaced) {
                 // Override this alternative spec in this view
                 Object.keys(alternativeSpec).forEach(k => {
                     (spec as any)[k] = (alternativeSpec as any)[k];
