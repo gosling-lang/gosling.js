@@ -52,6 +52,7 @@ export const GoslingComponent = forwardRef<
         }
     }, [ref, hgRef, viewConfig, theme]);
 
+    // TODO: add a `force` parameter since changing `linkingId` might not update vis
     const compile = useCallback(() => {
         if (props.spec) {
             const valid = gosling.validateGoslingSpec(props.spec);
