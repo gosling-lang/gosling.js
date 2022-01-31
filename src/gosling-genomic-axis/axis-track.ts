@@ -460,6 +460,10 @@ function AxisTrack(HGC: any, ...args: any[]): any {
                 ropePoints.push(new HGC.libraries.PIXI.Point(p.x, p.y));
             }
 
+            if (ropePoints.length === 0) {
+                return null;
+            }
+
             textObj.updateText();
             const rope = new HGC.libraries.PIXI.SimpleRope(textObj.texture, ropePoints);
             return rope;
@@ -536,7 +540,9 @@ function AxisTrack(HGC: any, ...args: any[]): any {
                 let rope;
                 if (circular) {
                     rope = this.addCurvedText(chrText, viewportMidX);
-                    this.pTicksCircular.addChild(rope);
+                    if (rope) {
+                        this.pTicksCircular.addChild(rope);
+                    }
                 } else {
                     chrText.x = viewportMidX;
                     chrText.y = this.dimensions[1] - yPadding;
