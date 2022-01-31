@@ -1,7 +1,9 @@
 import { Chromosome } from './utils/chrom-size';
 
 /* ----------------------------- ROOT SPEC ----------------------------- */
-export type GoslingSpec = RootSpecWithSingleView | RootSpecWithMultipleViews;
+export type GoslingSpec =
+    | (RootSpecWithSingleView & ResponsiveSpecOfSingleView)
+    | (RootSpecWithMultipleViews & ResponsiveSpecOfMultipleViews);
 
 export type ResponsiveSize = boolean | { width?: boolean; height?: boolean };
 
@@ -22,9 +24,22 @@ export interface RootSpecWithMultipleViews extends MultipleViews {
 }
 
 /* ----------------------------- VIEW ----------------------------- */
-export type View = SingleView | MultipleViews;
+export type View = SingleView | (MultipleViews & ResponsiveSpecOfMultipleViews);
 
-export type SingleView = OverlaidTracks | StackedTracks | FlatTracks;
+export type SingleView = (OverlaidTracks | StackedTracks | FlatTracks) & ResponsiveSpecOfSingleView;
+
+export type SelectivityCondition = {
+    operation: LogicalOperation;
+    measure: 'width' | 'height';
+    threshold: number;
+};
+
+export type ResponsiveSpecOfSingleView = {
+    responsiveSpec?: {
+        spec: Partial<OverlaidTracks | StackedTracks>;
+        selectivity: SelectivityCondition[];
+    }[];
+};
 
 export interface FlatTracks extends CommonViewDef {
     tracks: Track[];
@@ -51,7 +66,18 @@ export interface MultipleViews extends CommonViewDef {
     arrangement?: 'parallel' | 'serial' | 'horizontal' | 'vertical';
     /** An array of view specifications */
     views: Array<SingleView | MultipleViews>;
+
+    /** Internal: Used for responsive spec */
+    _assignedWidth?: number;
+    _assignedHeight?: number;
 }
+
+export type ResponsiveSpecOfMultipleViews = {
+    responsiveSpec?: {
+        spec: Partial<MultipleViews>;
+        selectivity: SelectivityCondition[];
+    }[];
+};
 
 export type Layout = 'linear' | 'circular';
 export type Orientation = 'horizontal' | 'vertical';
@@ -113,6 +139,10 @@ export interface CommonViewDef {
      * Will be overriden by the style of children elements (e.g., view, track).
      */
     style?: Style;
+
+    /** Internal: Used for responsive spec */
+    _assignedWidth?: number;
+    _assignedHeight?: number;
 }
 
 /* ----------------------------- TRACK ----------------------------- */

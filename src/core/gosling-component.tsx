@@ -1,11 +1,15 @@
 /* eslint-disable react/prop-types */
 import { HiGlassApi, HiGlassComponentWrapper } from './higlass-component-wrapper';
-import React, { useState, useEffect, useMemo, useRef, forwardRef } from 'react';
+import React, { useState, useEffect, useMemo, useRef, forwardRef, useCallback } from 'react';
+import { ResizeSensor } from 'css-element-queries';
 import * as gosling from '..';
 import { getTheme, Theme } from './utils/theme';
 import { createApi, GoslingApi } from './api';
 import { TemplateTrackDef } from './gosling.schema';
 import { GoslingTemplates } from '..';
+import { omitDeep } from './utils/omit-deep';
+import { isEqual } from 'lodash';
+import * as uuid from 'uuid';
 
 interface GoslingCompProps {
     spec?: gosling.GoslingSpec;
@@ -28,11 +32,14 @@ export const GoslingComponent = forwardRef<
 >((props, ref) => {
     const [viewConfig, setViewConfig] = useState<gosling.HiGlassSpec>();
     const [size, setSize] = useState({ width: 200, height: 200 });
+    const wrapperSize = useRef<undefined | { width: number; height: number }>();
+    const prevSpec = useRef<undefined | gosling.GoslingSpec>();
 
     // HiGlass API
     const hgRef = useRef<HiGlassApi>();
 
     const theme = getTheme(props.theme || 'light');
+    const wrapperDivId = props.id ?? uuid.v4();
 
     // Gosling APIs
     useEffect(() => {
@@ -45,7 +52,8 @@ export const GoslingComponent = forwardRef<
         }
     }, [ref, hgRef, viewConfig, theme]);
 
-    useEffect(() => {
+    // TODO: add a `force` parameter since changing `linkingId` might not update vis
+    const compile = useCallback(() => {
         if (props.spec) {
             const valid = gosling.validateGoslingSpec(props.spec);
 
@@ -56,7 +64,16 @@ export const GoslingComponent = forwardRef<
 
             gosling.compile(
                 props.spec,
-                (newHs, newSize) => {
+                (newHs, newSize, newGs) => {
+                    // TODO: `linkingId` should be updated
+                    // We may not want to re-render this
+                    if (
+                        prevSpec.current &&
+                        isEqual(omitDeep(prevSpec.current, ['linkingId']), omitDeep(newGs, ['linkingId']))
+                    ) {
+                        return;
+                    }
+
                     // If a callback function is provided, return compiled information.
                     props.compiled?.(props.spec!, newHs);
 
@@ -72,11 +89,38 @@ export const GoslingComponent = forwardRef<
                         // Mount `HiGlassComponent` using this view config.
                         setViewConfig(newHs);
                     }
+
+                    prevSpec.current = newGs;
                 },
                 [...GoslingTemplates], // TODO: allow user definitions
-                theme
+                theme,
+                wrapperSize.current
             );
         }
+    }, [props.spec, theme]);
+
+    // TODO: If not necessary, do not update `wrapperSize` (i.e., when responsiveSize is not set)
+    useEffect(() => {
+        const parentElement = document.getElementById(wrapperDivId);
+        if (!parentElement) return;
+
+        const resizer = new ResizeSensor(parentElement, newSize => {
+            if (
+                !wrapperSize.current ||
+                wrapperSize.current.height !== newSize.height ||
+                wrapperSize.current.width !== newSize.width
+            ) {
+                wrapperSize.current = newSize;
+                compile();
+            }
+        });
+        return () => {
+            resizer.detach();
+        };
+    });
+
+    useEffect(() => {
+        compile();
     }, [props.spec, theme]);
 
     // HiGlass component should be mounted only once
@@ -86,7 +130,7 @@ export const GoslingComponent = forwardRef<
                 ref={hgRef}
                 viewConfig={viewConfig}
                 size={size}
-                id={props.id}
+                id={wrapperDivId}
                 className={props.className}
                 options={{
                     padding: props.padding,

@@ -705,6 +705,13 @@
       "additionalProperties": false,
       "description": "This is based on `SingleTrack` but the differeces are only the type of channels which additionally have `base` properties to override properties from a template spec and remove of certain properties (e.g., `data`)",
       "properties": {
+        "_assignedHeight": {
+          "type": "number"
+        },
+        "_assignedWidth": {
+          "description": "Internal: Used for responsive spec",
+          "type": "number"
+        },
         "_invalidTrack": {
           "description": "internal",
           "type": "boolean"

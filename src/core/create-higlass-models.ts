@@ -1,15 +1,15 @@
-import { getBoundingBox, Size, TrackInfo } from '../utils/bounding-box';
-import { goslingToHiGlass } from '../gosling-to-higlass';
-import { HiGlassModel } from '../higlass-model';
-import { HiGlassSpec } from '../higlass.schema';
-import { getLinkingInfo } from '../utils/linking';
-import { GoslingSpec } from '../gosling.schema';
-import { CompleteThemeDeep } from '../utils/theme';
+import { getBoundingBox, Size, TrackInfo } from './utils/bounding-box';
+import { goslingToHiGlass } from './gosling-to-higlass';
+import { HiGlassModel } from './higlass-model';
+import { HiGlassSpec } from './higlass.schema';
+import { getLinkingInfo } from './utils/linking';
+import { GoslingSpec } from './gosling.schema';
+import { CompleteThemeDeep } from './utils/theme';
 
 export function renderHiGlass(
     spec: GoslingSpec,
     trackInfos: TrackInfo[],
-    setHg: (hg: HiGlassSpec, size: Size) => void,
+    setHg: (hg: HiGlassSpec, size: Size, gs: GoslingSpec) => void,
     theme: CompleteThemeDeep
 ) {
     if (trackInfos.length === 0) {
@@ -68,5 +68,5 @@ export function renderHiGlass(
             });
     });
 
-    setHg(hgModel.spec(), getBoundingBox(trackInfos));
+    setHg(hgModel.spec(), getBoundingBox(trackInfos), spec);
 }

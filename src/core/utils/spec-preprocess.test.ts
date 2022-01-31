@@ -15,7 +15,7 @@ describe('Fix Spec Downstream', () => {
                 ]
             },
             getTheme()
-        );
+        ).trackInfos;
         const size = getBoundingBox(info);
         expect(!isNaN(+size.width) && isFinite(size.width)).toEqual(true);
         expect(!isNaN(+size.height) && isFinite(size.height)).toEqual(true);

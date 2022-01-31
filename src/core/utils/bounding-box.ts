@@ -6,7 +6,7 @@ import {
     DEFAULT_INNER_RADIUS_PROP,
     DEFAULT_VIEW_SPACING,
     DEWFAULT_TITLE_PADDING_ON_TOP_AND_BOTTOM
-} from '../layout/defaults';
+} from '../defaults';
 import { resolveSuperposedTracks } from './overlay';
 import { traverseTracksAndViews, traverseViewArrangements } from './spec-preprocess';
 import { CompleteThemeDeep } from './theme';
@@ -76,7 +76,10 @@ export function getBoundingBox(trackInfos: TrackInfo[]) {
  * Collect information of individual tracks including their size/position and specs
  * @param spec
  */
-export function getRelativeTrackInfo(spec: GoslingSpec, theme: CompleteThemeDeep): TrackInfo[] {
+export function getRelativeTrackInfo(
+    spec: GoslingSpec,
+    theme: CompleteThemeDeep
+): { trackInfos: TrackInfo[]; size: { width: number; height: number } } {
     let trackInfos: TrackInfo[] = [] as TrackInfo[];
 
     // Collect track information including spec, bounding boxes, and RGL' `layout`.
@@ -131,7 +134,7 @@ export function getRelativeTrackInfo(spec: GoslingSpec, theme: CompleteThemeDeep
 
     // console.log(trackInfos);
 
-    return trackInfos;
+    return { trackInfos, size };
 }
 
 /**
@@ -358,6 +361,10 @@ function traverseAndCollectTrackInfo(
 
     // DEBUG
     // console.log(output);
+
+    // Record assigned sizes of this view so that we can determine whether to use alternative responsive spec
+    spec._assignedWidth = cumWidth;
+    spec._assignedHeight = cumHeight;
 
     return { x: dx, y: dy, width: cumWidth, height: cumHeight };
 }

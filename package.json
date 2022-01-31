@@ -54,6 +54,7 @@
         "@types/uuid": "^8.3.1",
         "bezier-js": "4.0.3",
         "buffer": "^6.0.3",
+        "css-element-queries": "^1.2.3",
         "d3-array": "^2.5.1",
         "d3-color": "^2.0.0",
         "d3-dsv": "^2.0.0",

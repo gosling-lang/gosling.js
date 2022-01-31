@@ -7,6 +7,7 @@ import { EX_SPEC_MATRIX_HFFC6 } from './matrix-hffc6';
 import { EX_SPEC_LINKING } from './visual-linking';
 import { EX_SPEC_BASIC_SEMANTIC_ZOOM } from './basic-semantic-zoom';
 import {
+    EX_SPEC_RESPONSIVE_COMPARATIVE_VIEWS,
     EX_SPEC_RESPONSIVE_IDEOGRAM,
     EX_SPEC_RESPONSIVE_MULTIVEC,
     EX_SPEC_RESPONSIVE_MULTIVEC_CIRCULAR
@@ -99,17 +100,23 @@ export const examples: {
         spec: EX_SPEC_CLINVAR_LOLLIPOP
     },
     RESPONSIVE_MULTIVEC: {
-        name: 'Responsive Encoding: Multiple Vectors',
+        name: 'Responsive Visualization: Multiple Vectors',
         spec: EX_SPEC_RESPONSIVE_MULTIVEC
     },
     RESPONSIVE_MULTIVEC_CIRCULAR: {
-        name: 'Responsive Encoding: Circular Multiple Vectors',
+        name: 'Responsive Visualization: Circular Multiple Vectors',
         spec: EX_SPEC_RESPONSIVE_MULTIVEC_CIRCULAR
     },
     RESPONSIVE_IDEOGRAM: {
-        name: 'Responsive Encoding: Ideogram',
+        name: 'Responsive Visualization: Ideogram',
         spec: EX_SPEC_RESPONSIVE_IDEOGRAM,
         underDevelopment: true
+    },
+    RESPONSIVE_COMPARATIVE_VIEWS: {
+        name: 'Responsive Visualization: Comparative Views',
+        spec: EX_SPEC_RESPONSIVE_COMPARATIVE_VIEWS,
+        underDevelopment: true,
+        forceShow: true
     },
     CYTOBANDS: {
         name: 'Ideograms',

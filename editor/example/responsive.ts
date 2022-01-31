@@ -837,3 +837,101 @@ export const EX_SPEC_RESPONSIVE_IDEOGRAM: GoslingSpec = {
         }
     ]
 };
+
+export const EX_SPEC_RESPONSIVE_COMPARATIVE_VIEWS: GoslingSpec = {
+    responsiveSize: { width: true, height: false },
+    arrangement: 'horizontal',
+    linkingId: '1',
+    responsiveSpec: [
+        {
+            spec: { arrangement: 'vertical' },
+            selectivity: [
+                {
+                    measure: 'width',
+                    threshold: 1200,
+                    operation: 'LT'
+                }
+            ]
+        }
+    ],
+    views: [
+        {
+            xDomain: { chromosome: '12', interval: [5000000, 15000000] },
+            tracks: [
+                {
+                    id: 'left',
+                    data: {
+                        url: 'https://server.gosling-lang.org/api/v1/tileset_info/?d=cistrome-multivec',
+                        type: 'multivec',
+                        row: 'sample',
+                        column: 'position',
+                        value: 'peak',
+                        categories: ['sample 1'],
+                        binSize: 8
+                    },
+                    mark: 'bar',
+                    x: { field: 'start', type: 'genomic' },
+                    xe: { field: 'end', type: 'genomic' },
+                    y: { field: 'peak', type: 'quantitative' },
+                    color: { value: '#2270B5' },
+                    stroke: { value: 'white' },
+                    strokeWidth: { value: 0.5 },
+                    width: 600,
+                    height: 130
+                }
+            ]
+        },
+        {
+            xDomain: { chromosome: '9', interval: [5000000, 15000000] },
+            tracks: [
+                {
+                    id: 'middle',
+                    data: {
+                        url: 'https://server.gosling-lang.org/api/v1/tileset_info/?d=cistrome-multivec',
+                        type: 'multivec',
+                        row: 'sample',
+                        column: 'position',
+                        value: 'peak',
+                        categories: ['sample 1'],
+                        binSize: 8
+                    },
+                    mark: 'bar',
+                    x: { field: 'start', type: 'genomic' },
+                    xe: { field: 'end', type: 'genomic' },
+                    y: { field: 'peak', type: 'quantitative' },
+                    color: { value: '#FC8D3D' },
+                    stroke: { value: 'white' },
+                    strokeWidth: { value: 0.5 },
+                    width: 600,
+                    height: 130
+                }
+            ]
+        },
+        {
+            xDomain: { chromosome: '12', interval: [5000000, 15000000] },
+            tracks: [
+                {
+                    id: 'right',
+                    data: {
+                        url: 'https://server.gosling-lang.org/api/v1/tileset_info/?d=cistrome-multivec',
+                        type: 'multivec',
+                        row: 'sample',
+                        column: 'position',
+                        value: 'peak',
+                        categories: ['sample 1'],
+                        binSize: 8
+                    },
+                    mark: 'bar',
+                    x: { field: 'start', type: 'genomic' },
+                    xe: { field: 'end', type: 'genomic' },
+                    y: { field: 'peak', type: 'quantitative' },
+                    color: { value: 'darkyellow' },
+                    stroke: { value: 'white' },
+                    strokeWidth: { value: 0.5 },
+                    width: 600,
+                    height: 130
+                }
+            ]
+        }
+    ]
+};
