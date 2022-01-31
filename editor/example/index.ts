@@ -121,8 +121,7 @@ export const examples: {
     RESPONSIVE_ALIGNMENT: {
         name: 'Responsive Visualization: Alignment Views',
         spec: EX_SPEC_RESPONSIVE_ALIGNMENT_CHART,
-        underDevelopment: true,
-        forceShow: true
+        underDevelopment: true
     },
     CYTOBANDS: {
         name: 'Ideograms',
