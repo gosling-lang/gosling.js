@@ -308,12 +308,12 @@ function Editor(props: any) {
                         }}
                     >
                         {[...Object.keys(deviceToResolution)].map(d =>
-                            // https://stackoverflow.com/questions/899148/html-select-option-separator
                             d !== '-' ? (
                                 <option key={d} value={d}>
                                     {d}
                                 </option>
                             ) : (
+                                // separator (https://stackoverflow.com/questions/899148/html-select-option-separator)
                                 <optgroup label="──────────"></optgroup>
                             )
                         )}
@@ -414,15 +414,18 @@ function Editor(props: any) {
      * Things to do upon spec change
      */
     useEffect(() => {
-        setIsResponsive(
+        const newIsResponsive =
             typeof goslingSpec?.responsiveSize === 'undefined'
                 ? false
                 : typeof goslingSpec?.responsiveSize === 'boolean'
                 ? goslingSpec?.responsiveSize === true
                 : typeof goslingSpec?.responsiveSize === 'object'
                 ? goslingSpec?.responsiveSize.width === true || goslingSpec?.responsiveSize.height === true
-                : false
-        );
+                : false;
+        if (newIsResponsive !== isResponsive && newIsResponsive) {
+            setScreenSize(undefined); // reset the screen
+        }
+        setIsResponsive(newIsResponsive);
     }, [goslingSpec]);
 
     /**
@@ -851,8 +854,11 @@ function Editor(props: any) {
                                     {isResponsive && !IS_SMALL_SCREEN ? ResponsiveWidget : null}
                                     <div
                                         style={{
-                                            width: screenSize?.width ?? '100%',
-                                            height: screenSize?.height ?? 'calc(100% - 50px)',
+                                            width: isResponsive && screenSize?.width ? screenSize.width : '100%',
+                                            height:
+                                                isResponsive && screenSize?.height
+                                                    ? screenSize.height
+                                                    : 'calc(100% - 50px)',
                                             background: isResponsive ? 'white' : 'none'
                                         }}
                                     >
