@@ -307,11 +307,16 @@ function Editor(props: any) {
                             }
                         }}
                     >
-                        {Object.keys(deviceToResolution).map(d => (
-                            <option key={d} value={d}>
-                                {d}
-                            </option>
-                        ))}
+                        {[...Object.keys(deviceToResolution)].map(d =>
+                            // https://stackoverflow.com/questions/899148/html-select-option-separator
+                            d !== '-' ? (
+                                <option key={d} value={d}>
+                                    {d}
+                                </option>
+                            ) : (
+                                <optgroup label="──────────"></optgroup>
+                            )
+                        )}
                     </select>
                 </span>
                 <span style={{ marginLeft: '20px', visibility: screenSize ? 'visible' : 'collapse' }}>
