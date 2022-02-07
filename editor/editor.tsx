@@ -1,5 +1,5 @@
 import * as gosling from 'gosling.js';
-import React, { useRef, useState, useEffect, useCallback } from 'react';
+import React, { useRef, useState, useEffect, useCallback, useMemo } from 'react';
 import ReactMarkdown from 'react-markdown';
 import gfm from 'remark-gfm';
 import PubSub from 'pubsub-js';
@@ -206,6 +206,10 @@ function Editor(props: any) {
         IS_SMALL_SCREEN || (urlParams?.full as string) === 'true' || false
     );
 
+    // whether to show widgets for responsive window
+    const [isResponsive, setIsResponsive] = useState<boolean>(true);
+    const [screenSize, setScreenSize] = useState<undefined | { width: number; height: number }>();
+
     // whether to show data preview on the right-bottom
     const [isShowDataPreview, setIsShowDataPreview] = useState<boolean>(false);
 
@@ -268,6 +272,74 @@ function Editor(props: any) {
         }
         setHg(undefined);
     }, [demo]);
+
+    const deviceToResolution = {
+        Auto: undefined,
+        FHD: { width: 1920, height: 1080 },
+        'Rotated FHD': { width: 1080, height: 1920 },
+        HD: { width: 1280, height: 720 },
+        'Rotated HD': { width: 720, height: 1280 },
+        'iPad Mini': { width: 768, height: 1024 }
+    };
+
+    const ResponsiveWidget = useMemo(() => {
+        return (
+            <div
+                style={{
+                    width: screenSize ? screenSize.width - 20 : 'calc(100% - 20px)',
+                    background: 'white',
+                    marginBottom: '6px',
+                    padding: '10px',
+                    height: '20px',
+                    lineHeight: '20px'
+                }}
+            >
+                {'Screen Size: '}
+                <span
+                    className="screen-size-dropdown"
+                    hidden={urlSpec !== null || urlGist !== null || urlExampleId !== ''}
+                >
+                    <select
+                        onChange={e => {
+                            const device = e.target.value;
+                            if (Object.keys(deviceToResolution).includes(device)) {
+                                setScreenSize((deviceToResolution as any)[device]);
+                            }
+                        }}
+                    >
+                        {Object.keys(deviceToResolution).map(d => (
+                            <option key={d} value={d}>
+                                {d}
+                            </option>
+                        ))}
+                    </select>
+                </span>
+                <span style={{ marginLeft: '20px', visibility: screenSize ? 'visible' : 'collapse' }}>
+                    <input
+                        type="number"
+                        min="100"
+                        max="3000"
+                        value={screenSize?.width}
+                        onChange={e => {
+                            const width = +e.target.value >= 300 ? +e.target.value : 300;
+                            setScreenSize({ width, height: screenSize?.height ?? 1000 });
+                        }}
+                    />
+                    {' x '}
+                    <input
+                        type="number"
+                        min="300"
+                        max="3000"
+                        value={screenSize?.height}
+                        onChange={e => {
+                            const height = +e.target.value >= 300 ? +e.target.value : 300;
+                            setScreenSize({ width: screenSize?.width ?? 1000, height });
+                        }}
+                    />
+                </span>
+            </div>
+        );
+    }, [screenSize]);
 
     useEffect(() => {
         let active = true;
@@ -332,6 +404,21 @@ function Editor(props: any) {
     //         setTheme(gosTheme.base);
     //     }
     // }, [goslingSpec]);
+
+    /**
+     * Things to do upon spec change
+     */
+    useEffect(() => {
+        setIsResponsive(
+            typeof goslingSpec?.responsiveSize === 'undefined'
+                ? false
+                : typeof goslingSpec?.responsiveSize === 'boolean'
+                ? goslingSpec?.responsiveSize === true
+                : typeof goslingSpec?.responsiveSize === 'object'
+                ? goslingSpec?.responsiveSize.width === true || goslingSpec?.responsiveSize.height === true
+                : false
+        );
+    }, [goslingSpec]);
 
     /**
      * Subscribe preview data that is being processed in the Gosling tracks.
@@ -756,20 +843,29 @@ function Editor(props: any) {
                                     id="preview-container"
                                     className={`preview-container ${theme === 'dark' ? 'dark' : ''}`}
                                 >
-                                    <gosling.GoslingComponent
-                                        ref={gosRef}
-                                        spec={goslingSpec}
-                                        theme={theme}
-                                        padding={60}
-                                        margin={0}
-                                        border={'none'}
-                                        id={'goslig-component-root'}
-                                        className={'goslig-component'}
-                                        experimental={{ reactive: false }}
-                                        compiled={(g, h) => {
-                                            setHg(h);
+                                    {isResponsive && !IS_SMALL_SCREEN ? ResponsiveWidget : null}
+                                    <div
+                                        style={{
+                                            width: screenSize?.width ?? '100%',
+                                            height: screenSize?.height ?? 'calc(100% - 50px)',
+                                            background: isResponsive ? 'white' : 'none'
                                         }}
-                                    />
+                                    >
+                                        <gosling.GoslingComponent
+                                            ref={gosRef}
+                                            spec={goslingSpec}
+                                            theme={theme}
+                                            padding={60}
+                                            margin={0}
+                                            border={'none'}
+                                            id={'goslig-component-root'}
+                                            className={'goslig-component'}
+                                            experimental={{ reactive: false }}
+                                            compiled={(g, h) => {
+                                                setHg(h);
+                                            }}
+                                        />
+                                    </div>
                                 </div>
                                 <SplitPane split="vertical" defaultSize="100%">
                                     <>
