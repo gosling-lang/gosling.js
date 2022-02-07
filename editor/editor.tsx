@@ -294,7 +294,10 @@ function Editor(props: any) {
                     lineHeight: '20px'
                 }}
             >
-                {'Screen Size: '}
+                {/* {'Screen Size: '} */}
+                <span style={{ marginRight: 10, color: 'gray', verticalAlign: 'middle' }}>
+                    {getIconSVG(ICONS.SCREEN, 16, 16)}
+                </span>
                 <span
                     className="screen-size-dropdown"
                     hidden={urlSpec !== null || urlGist !== null || urlExampleId !== ''}
@@ -320,9 +323,10 @@ function Editor(props: any) {
                     </select>
                 </span>
                 <span style={{ marginLeft: '20px', visibility: screenSize ? 'visible' : 'collapse' }}>
+                    <span style={{ marginRight: 10, color: '#EEBF4D' }}>{getIconSVG(ICONS.RULER, 12, 12)}</span>
                     <input
                         type="number"
-                        min="100"
+                        min="300"
                         max="3000"
                         value={screenSize?.width}
                         onChange={e => {
@@ -333,11 +337,11 @@ function Editor(props: any) {
                     {' x '}
                     <input
                         type="number"
-                        min="300"
+                        min="100"
                         max="3000"
                         value={screenSize?.height}
                         onChange={e => {
-                            const height = +e.target.value >= 300 ? +e.target.value : 300;
+                            const height = +e.target.value >= 100 ? +e.target.value : 100;
                             setScreenSize({ width: screenSize?.width ?? 1000, height });
                         }}
                     />
