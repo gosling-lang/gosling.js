@@ -209,6 +209,7 @@ function Editor(props: any) {
     // whether to show widgets for responsive window
     const [isResponsive, setIsResponsive] = useState<boolean>(true);
     const [screenSize, setScreenSize] = useState<undefined | { width: number; height: number }>();
+    const [visibleScreenSize, setVisibleScreenSize] = useState<undefined | { width: number; height: number }>();
 
     // whether to show data preview on the right-bottom
     const [isShowDataPreview, setIsShowDataPreview] = useState<boolean>(false);
@@ -294,7 +295,6 @@ function Editor(props: any) {
                     lineHeight: '20px'
                 }}
             >
-                {/* {'Screen Size: '} */}
                 <span
                     style={{
                         marginRight: 10,
@@ -315,6 +315,7 @@ function Editor(props: any) {
                             const device = e.target.value;
                             if (Object.keys(deviceToResolution).includes(device)) {
                                 setScreenSize((deviceToResolution as any)[device]);
+                                setVisibleScreenSize((deviceToResolution as any)[device]);
                             }
                         }}
                     >
@@ -334,11 +335,12 @@ function Editor(props: any) {
                     <span style={{ marginRight: 10, color: '#EEBF4D' }}>{getIconSVG(ICONS.RULER, 12, 12)}</span>
                     <input
                         type="number"
-                        min="300"
+                        min="350"
                         max="3000"
-                        value={screenSize?.width}
+                        value={visibleScreenSize?.width}
                         onChange={e => {
-                            const width = +e.target.value >= 300 ? +e.target.value : 300;
+                            const width = +e.target.value >= 350 ? +e.target.value : 350;
+                            setVisibleScreenSize({ width: +e.target.value, height: screenSize?.height ?? 1000 });
                             setScreenSize({ width, height: screenSize?.height ?? 1000 });
                         }}
                     />
@@ -347,9 +349,10 @@ function Editor(props: any) {
                         type="number"
                         min="100"
                         max="3000"
-                        value={screenSize?.height}
+                        value={visibleScreenSize?.height}
                         onChange={e => {
                             const height = +e.target.value >= 100 ? +e.target.value : 100;
+                            setVisibleScreenSize({ width: screenSize?.width ?? 1000, height: +e.target.value });
                             setScreenSize({ width: screenSize?.width ?? 1000, height });
                         }}
                     />
@@ -436,6 +439,7 @@ function Editor(props: any) {
                 : false;
         if (newIsResponsive !== isResponsive && newIsResponsive) {
             setScreenSize(undefined); // reset the screen
+            setVisibleScreenSize(undefined);
         }
         setIsResponsive(newIsResponsive);
     }, [goslingSpec]);
