@@ -116,8 +116,7 @@ export const examples: {
     RESPONSIVE_COMPARATIVE_VIEWS: {
         name: 'Responsive Visualization: Comparative Views',
         spec: EX_SPEC_RESPONSIVE_COMPARATIVE_VIEWS,
-        underDevelopment: true,
-        forceShow: true
+        underDevelopment: true
     },
     RESPONSIVE_ALIGNMENT: {
         name: 'Responsive Visualization: Alignment Views',

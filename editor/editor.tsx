@@ -295,7 +295,15 @@ function Editor(props: any) {
                 }}
             >
                 {/* {'Screen Size: '} */}
-                <span style={{ marginRight: 10, color: 'gray', verticalAlign: 'middle' }}>
+                <span
+                    style={{
+                        marginRight: 10,
+                        color: 'gray',
+                        verticalAlign: 'middle',
+                        display: 'inline-block',
+                        marginTop: '2px'
+                    }}
+                >
                     {getIconSVG(ICONS.SCREEN, 16, 16)}
                 </span>
                 <span
