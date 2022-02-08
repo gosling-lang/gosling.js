@@ -123,6 +123,16 @@ export const ICONS: { [k: string]: ICON_INFO } = {
         stroke: 'none',
         fill: 'currentColor'
     },
+    RULER: {
+        width: 16,
+        height: 16,
+        viewBox: '0 0 16 16',
+        path: [
+            'M1 0a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h5v-1H2v-1h4v-1H4v-1h2v-1H2v-1h4V9H4V8h2V7H2V6h4V2h1v4h1V4h1v2h1V2h1v4h1V4h1v2h1V2h1v4h1V1a1 1 0 0 0-1-1H1z'
+        ],
+        stroke: 'none',
+        fill: 'currentColor'
+    },
     TABLE: {
         width: 20,
         height: 20,
@@ -161,6 +171,17 @@ export const ICONS: { [k: string]: ICON_INFO } = {
         viewBox: '0 0 16 16',
         path: [
             'M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z'
+        ],
+        stroke: 'none',
+        fill: 'currentColor'
+    },
+    SCREEN: {
+        width: 16,
+        height: 16,
+        viewBox: '0 0 16 16',
+        path: [
+            'M2.5 4a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1zm2-.5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0zm1 .5a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1z',
+            'M2 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2H2zm13 2v2H1V3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1zM2 14a1 1 0 0 1-1-1V6h14v7a1 1 0 0 1-1 1H2z'
         ],
         stroke: 'none',
         fill: 'currentColor'

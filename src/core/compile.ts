@@ -32,8 +32,12 @@ export function compile(
     const { size } = trackInfosAndSize;
 
     // Handle responsive specs, either remove them or replace original specs w/ them
-    const wFactor = curSize ? curSize?.width / size.width : 1;
-    const hFactor = curSize ? curSize?.height / size.height : 1;
+    const isResponsiveWidth =
+        (typeof spec.responsiveSize === 'object' && spec.responsiveSize?.width) || spec.responsiveSize;
+    const isResponsiveHeight =
+        (typeof spec.responsiveSize === 'object' && spec.responsiveSize?.height) || spec.responsiveSize;
+    const wFactor = isResponsiveWidth && curSize ? curSize?.width / size.width : 1;
+    const hFactor = isResponsiveHeight && curSize ? curSize?.height / size.height : 1;
     const replaced = manageResponsiveSpecs(specCopy, wFactor, hFactor);
 
     // Do the downstream-fix and track arrangement again using the updated spec
