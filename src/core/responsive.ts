@@ -11,7 +11,9 @@ export function manageResponsiveSpecs(spec: GoslingSpec | SingleView, wFactor: n
 
     const { responsiveSpec } = spec;
 
-    const size = { width: spec._assignedWidth * wFactor, height: spec._assignedHeight * hFactor };
+    const width = spec._assignedWidth * wFactor;
+    const height = spec._assignedHeight * hFactor;
+    const dimensions = { width, height, aspectRatio: width / height };
 
     // Check whether any alternative specs fullfil the condition
     if (responsiveSpec) {
@@ -19,7 +21,7 @@ export function manageResponsiveSpecs(spec: GoslingSpec | SingleView, wFactor: n
         responsiveSpec.forEach((specAndCondition: any) => {
             const { spec: alternativeSpec, selectivity } = specAndCondition;
 
-            if (isSelectResponsiveSpec(selectivity, size) && !replaced) {
+            if (isSelectResponsiveSpec(selectivity, dimensions) && !replaced) {
                 // Override this alternative spec in this view
                 Object.keys(alternativeSpec).forEach(k => {
                     (spec as any)[k] = (alternativeSpec as any)[k];
@@ -47,12 +49,12 @@ export function manageResponsiveSpecs(spec: GoslingSpec | SingleView, wFactor: n
 /**
  * Test if given conditions are all `true`.
  * @param conditions
- * @param assignedSize
+ * @param assignedDimensions
  * @returns
  */
 function isSelectResponsiveSpec(
     conditions: SelectivityCondition[],
-    assignedSize: { width: number; height: number }
+    assignedDimensions: { width: number; height: number; aspectRatio: number }
 ): boolean {
     if (conditions.length === 0) return false;
 
@@ -60,7 +62,7 @@ function isSelectResponsiveSpec(
 
     conditions.forEach(condition => {
         const { measure, operation, threshold } = condition;
-        isSelect = isSelect && logicalComparison(assignedSize[measure], operation, threshold) === 1;
+        isSelect = isSelect && logicalComparison(assignedDimensions[measure], operation, threshold) === 1;
     });
 
     return isSelect;

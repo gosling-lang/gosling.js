@@ -30,7 +30,7 @@ export type SingleView = (OverlaidTracks | StackedTracks | FlatTracks) & Respons
 
 export type SelectivityCondition = {
     operation: LogicalOperation;
-    measure: 'width' | 'height';
+    measure: 'width' | 'height' | 'aspectRatio';
     threshold: number;
 };
 
