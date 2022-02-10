@@ -5404,7 +5404,8 @@
         "measure": {
           "enum": [
             "width",
-            "height"
+            "height",
+            "aspectRatio"
           ],
           "type": "string"
         },

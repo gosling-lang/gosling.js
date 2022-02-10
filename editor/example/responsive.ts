@@ -286,6 +286,12 @@ export const EX_SPEC_RESPONSIVE_MULTIVEC_CIRCULAR: GoslingSpec = {
     views: [
         {
             layout: 'circular',
+            responsiveSpec: [
+                {
+                    spec: { layout: 'linear' },
+                    selectivity: [{ measure: 'aspectRatio', operation: 'GT', threshold: 1.5 }]
+                }
+            ],
             spacing: 1,
             tracks: [
                 {
@@ -331,7 +337,7 @@ export const EX_SPEC_RESPONSIVE_MULTIVEC_CIRCULAR: GoslingSpec = {
                                     target: 'track',
                                     measure: 'height',
                                     operation: 'GTET',
-                                    threshold: TotalChartSizes[0] + 200
+                                    threshold: TotalChartSizes[0] + 100
                                 }
                             ]
                         },
@@ -344,13 +350,13 @@ export const EX_SPEC_RESPONSIVE_MULTIVEC_CIRCULAR: GoslingSpec = {
                                     target: 'track',
                                     measure: 'height',
                                     operation: 'LT',
-                                    threshold: TotalChartSizes[0] + 200
+                                    threshold: TotalChartSizes[0] + 100
                                 },
                                 {
                                     target: 'track',
                                     measure: 'height',
                                     operation: 'GT',
-                                    threshold: TotalChartSizes[1] + 200
+                                    threshold: TotalChartSizes[1] + 100
                                 }
                             ]
                         },
@@ -363,13 +369,13 @@ export const EX_SPEC_RESPONSIVE_MULTIVEC_CIRCULAR: GoslingSpec = {
                                     target: 'track',
                                     measure: 'height',
                                     operation: 'LT',
-                                    threshold: TotalChartSizes[0] + 200
+                                    threshold: TotalChartSizes[0] + 100
                                 },
                                 {
                                     target: 'track',
                                     measure: 'height',
                                     operation: 'GT',
-                                    threshold: TotalChartSizes[1] + 200
+                                    threshold: TotalChartSizes[1] + 100
                                 }
                             ]
                         },
@@ -382,13 +388,13 @@ export const EX_SPEC_RESPONSIVE_MULTIVEC_CIRCULAR: GoslingSpec = {
                                     target: 'track',
                                     measure: 'height',
                                     operation: 'LT',
-                                    threshold: TotalChartSizes[0] + 200
+                                    threshold: TotalChartSizes[0] + 100
                                 },
                                 {
                                     target: 'track',
                                     measure: 'height',
                                     operation: 'GT',
-                                    threshold: TotalChartSizes[1] + 200
+                                    threshold: TotalChartSizes[1] + 100
                                 }
                             ]
                         },
@@ -401,13 +407,13 @@ export const EX_SPEC_RESPONSIVE_MULTIVEC_CIRCULAR: GoslingSpec = {
                                     target: 'track',
                                     measure: 'height',
                                     operation: 'LT',
-                                    threshold: TotalChartSizes[0] + 200
+                                    threshold: TotalChartSizes[0] + 100
                                 },
                                 {
                                     target: 'track',
                                     measure: 'height',
                                     operation: 'GT',
-                                    threshold: TotalChartSizes[1] + 200
+                                    threshold: TotalChartSizes[1] + 100
                                 }
                             ]
                         },
@@ -422,7 +428,7 @@ export const EX_SPEC_RESPONSIVE_MULTIVEC_CIRCULAR: GoslingSpec = {
                                     target: 'track',
                                     measure: 'height',
                                     operation: 'LTET',
-                                    threshold: TotalChartSizes[1] + 200
+                                    threshold: TotalChartSizes[1] + 100
                                 }
                             ]
                         }
