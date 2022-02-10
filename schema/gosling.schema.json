@@ -7965,6 +7965,10 @@
         "outlineWidth": {
           "type": "number"
         },
+        "svWithinLink": {
+          "description": "Specify whether to use within-links that are more flat than bezier link. __Default__: `false`",
+          "type": "boolean"
+        },
         "textAnchor": {
           "description": "Specify the alignment of `text` marks to a given point.",
           "enum": [

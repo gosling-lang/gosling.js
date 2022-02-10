@@ -329,8 +329,41 @@ export function drawLink(g: PIXI.Graphics, trackInfo: any, model: GoslingTrackMo
                     // linear line connection
 
                     g.moveTo(x, baseY);
+                    const morePoints: { x: number; y: number }[] = [];
+                    if (spec.style?.svWithinLink) {
+                        // https://github.com/gosling-lang/gosling.js/issues/634
+                        const numSteps = 1000;
+                        const topY = rowPosition + rowHeight;
+                        for (let step = 0; step <= numSteps; step++) {
+                            const theta = (Math.PI * step) / numSteps;
+                            const mx = ((xe - x) / 2.0) * Math.cos(theta) + (x + xe) / 2.0;
+                            const my =
+                                topY -
+                                (rowHeight - 4) *
+                                    Math.sin(theta) *
+                                    Math.max(
+                                        0.05,
+                                        Math.min(Math.log10(xe - x), Math.log10(trackWidth)) / Math.log10(trackWidth)
+                                    );
 
-                    if (spec.style?.bezierLink) {
+                            if (step % 10 === 0 || step === numSteps) {
+                                // we draw less points than the hidden points for mouse events
+                                g.lineTo(mx, my);
+                            }
+
+                            morePoints.push({ x: mx, y: my });
+                        }
+                        if (spec.tooltip) {
+                            trackInfo.tooltips.push({
+                                datum: d,
+                                isMouseOver: (mouseX: number, mouseY: number) =>
+                                    morePoints.findIndex(
+                                        d => Math.sqrt((d.x - mouseX) ** 2 + (d.y - mouseY) ** 2) < 5
+                                    ) !== -1,
+                                markInfo: {}
+                            } as TooltipData);
+                        }
+                    } else if (spec.style?.bezierLink) {
                         const x1 = x;
                         const y1 = baseY;
                         const x2 = x + (xe - x) / 3.0;
