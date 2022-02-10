@@ -306,10 +306,7 @@ function Editor(props: any) {
                 >
                     {getIconSVG(ICONS.SCREEN, 16, 16)}
                 </span>
-                <span
-                    className="screen-size-dropdown"
-                    hidden={urlSpec !== null || urlGist !== null || urlExampleId !== ''}
-                >
+                <span className="screen-size-dropdown">
                     <select
                         onChange={e => {
                             const device = e.target.value;
