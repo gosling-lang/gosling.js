@@ -353,8 +353,8 @@ export interface Style {
     /** Specify whether to use a flat within-links, such as the one in Sashimi plots. __Default__: `false` */
     flatWithinLink?: boolean;
 
-    /** Specify whether to use within-links that are more flat than bezier link. __Default__: `false` */
-    svWithinLink?: boolean;
+    /** Experimental: Specify which style of `withinLink` to use. __Default__: `'regular'` */
+    withinLinkStyle?: 'regular' | 'bezier' | 'flat' | 'sv';
 
     /**
      * Specify whether to show legend in a single horizontal line?

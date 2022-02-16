@@ -295,42 +295,7 @@ export function drawLink(g: PIXI.Graphics, trackInfo: any, model: GoslingTrackMo
                         return;
                     }
 
-                    const r = trackOuterRadius - (rowPosition / trackHeight) * trackRingSize;
-                    const posS = cartesianToPolar(x, trackWidth, r, tcx, tcy, startAngle, endAngle);
-                    const posE = cartesianToPolar(xe, trackWidth, r, tcx, tcy, startAngle, endAngle);
-
-                    const x1 = posS.x;
-                    const y1 = posS.y;
-                    const x2 = posS.x;
-                    const y2 = posS.y;
-                    const x3 = trackWidth / 2.0;
-                    const y3 = trackHeight / 2.0;
-                    const x4 = posE.x;
-                    const y4 = posE.y;
-
-                    g.moveTo(x1, y1);
-
-                    const bezier = new Bezier(x1, y1, x2, y2, x3, y3, x4, y4);
-                    const points = bezier.getLUT(14);
-                    points.forEach(d => g.lineTo(d.x, d.y));
-
-                    /* click event data */
-                    const morePoints = bezier.getLUT(1000);
-                    if (spec.tooltip) {
-                        trackInfo.tooltips.push({
-                            datum: d,
-                            isMouseOver: (mouseX: number, mouseY: number) =>
-                                morePoints.findIndex(d => Math.sqrt((d.x - mouseX) ** 2 + (d.y - mouseY) ** 2) < 5) !==
-                                -1,
-                            markInfo: {}
-                        } as TooltipData);
-                    }
-                } else {
-                    // linear line connection
-
-                    g.moveTo(x, baseY);
-
-                    if (spec.style?.svWithinLink) {
+                    if (spec.style?.withinLinkStyle === 'sv') {
                         const morePoints: { x: number; y: number }[] = [];
 
                         // https://github.com/gosling-lang/gosling.js/issues/634
@@ -339,22 +304,104 @@ export function drawLink(g: PIXI.Graphics, trackInfo: any, model: GoslingTrackMo
                             const theta = (Math.PI * step) / numSteps;
                             const mx = ((xe - x) / 2.0) * Math.cos(theta) + (x + xe) / 2.0;
                             const my =
-                                baseY -
                                 (rowHeight - 4) *
+                                Math.sin(theta) *
+                                Math.max(
+                                    0.05,
+                                    Math.min(Math.log10(xe - x), Math.log10(trackWidth)) / Math.log10(trackWidth)
+                                );
+
+                            const r = trackOuterRadius - (my / trackHeight) * trackRingSize;
+                            const cmx = cartesianToPolar(mx, trackWidth, r, tcx, tcy, startAngle, endAngle);
+
+                            if (step % 10 === 0 || step === numSteps) {
+                                // we draw less points than the hidden points for mouse events
+                                if (step === 0) g.moveTo(cmx.x, cmx.y);
+                                else g.lineTo(cmx.x, cmx.y);
+                            }
+                            morePoints.push({ ...cmx });
+                        }
+
+                        if (spec.tooltip) {
+                            trackInfo.tooltips.push({
+                                datum: d,
+                                isMouseOver: (mouseX: number, mouseY: number) =>
+                                    morePoints.findIndex(
+                                        d => Math.sqrt((d.x - mouseX) ** 2 + (d.y - mouseY) ** 2) < 5
+                                    ) !== -1,
+                                markInfo: {}
+                            } as TooltipData);
+                        }
+                    } else {
+                        const r = trackOuterRadius - (rowPosition / trackHeight) * trackRingSize;
+                        const posS = cartesianToPolar(x, trackWidth, r, tcx, tcy, startAngle, endAngle);
+                        const posE = cartesianToPolar(xe, trackWidth, r, tcx, tcy, startAngle, endAngle);
+
+                        const x1 = posS.x;
+                        const y1 = posS.y;
+                        const x2 = posS.x;
+                        const y2 = posS.y;
+                        const x3 = trackWidth / 2.0;
+                        const y3 = trackHeight / 2.0;
+                        const x4 = posE.x;
+                        const y4 = posE.y;
+
+                        g.moveTo(x1, y1);
+
+                        const bezier = new Bezier(x1, y1, x2, y2, x3, y3, x4, y4);
+                        const points = bezier.getLUT(14);
+                        points.forEach(d => g.lineTo(d.x, d.y));
+
+                        /* click event data */
+                        const morePoints = bezier.getLUT(1000);
+                        if (spec.tooltip) {
+                            trackInfo.tooltips.push({
+                                datum: d,
+                                isMouseOver: (mouseX: number, mouseY: number) =>
+                                    morePoints.findIndex(
+                                        d => Math.sqrt((d.x - mouseX) ** 2 + (d.y - mouseY) ** 2) < 5
+                                    ) !== -1,
+                                markInfo: {}
+                            } as TooltipData);
+                        }
+                    }
+                } else {
+                    // linear line connection
+
+                    if (spec.style?.withinLinkStyle === 'sv') {
+                        if (!(0 <= x && x <= trackWidth) && !(0 <= xe && xe <= trackWidth)) {
+                            // not within this window
+                            return;
+                        }
+
+                        const morePoints: { x: number; y: number }[] = [];
+
+                        // https://github.com/gosling-lang/gosling.js/issues/634
+                        const numSteps = 1000;
+                        for (let step = 0; step <= numSteps; step++) {
+                            const theta = Math.PI * (step / numSteps);
+                            const mx = ((xe - x) / 2.0) * Math.cos(theta) + (x + xe) / 2.0;
+                            const my =
+                                baseY -
+                                (rowHeight - y) *
                                     Math.sin(theta) *
-                                    Math.max(
-                                        0.05,
-                                        Math.min(Math.log10(xe - x), Math.log10(trackWidth)) / Math.log10(trackWidth)
-                                    ) *
+                                    // Math.max(
+                                    //     0.5,
+                                    //     Math.min(Math.log10(xe - x), Math.log10(trackWidth)) / Math.log10(trackWidth)
+                                    // ) *
                                     (flipY ? -1 : 1);
 
                             if (step % 10 === 0 || step === numSteps) {
                                 // we draw less points than the hidden points for mouse events
-                                g.lineTo(mx, my);
+                                if (step === 0) {
+                                    g.moveTo(mx, my);
+                                } else {
+                                    g.lineTo(mx, my);
+                                }
                             }
-
                             morePoints.push({ x: mx, y: my });
                         }
+
                         if (spec.tooltip) {
                             trackInfo.tooltips.push({
                                 datum: d,

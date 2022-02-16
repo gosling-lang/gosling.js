@@ -7965,10 +7965,6 @@
         "outlineWidth": {
           "type": "number"
         },
-        "svWithinLink": {
-          "description": "Specify whether to use within-links that are more flat than bezier link. __Default__: `false`",
-          "type": "boolean"
-        },
         "textAnchor": {
           "description": "Specify the alignment of `text` marks to a given point.",
           "enum": [
@@ -7997,6 +7993,16 @@
         "textStrokeWidth": {
           "description": "Specify the stroke width of `text` marks. Can also be specified using the `strokeWidth` channel option of `text` marks.",
           "type": "number"
+        },
+        "withinLinkStyle": {
+          "description": "Experimental: Specify which style of `withinLink` to use. __Default__: `'regular'`",
+          "enum": [
+            "regular",
+            "bezier",
+            "flat",
+            "sv"
+          ],
+          "type": "string"
         }
       },
       "type": "object"
