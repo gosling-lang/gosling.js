@@ -98,7 +98,7 @@ export function drawLink(g: PIXI.Graphics, trackInfo: any, model: GoslingTrackMo
             );
 
             const flipY = (IsChannelDeep(spec.y) && spec.y.flip) || spec.flipY;
-            const baseY = rowPosition + (flipY ? 0 : rowHeight);
+            const baseY = spec.baselineY ?? rowPosition + (flipY ? 0 : rowHeight);
 
             if (isBand) {
                 g.beginFill(color === 'none' ? colorToHex('white') : colorToHex(color), color === 'none' ? 0 : opacity);
@@ -296,6 +296,7 @@ export function drawLink(g: PIXI.Graphics, trackInfo: any, model: GoslingTrackMo
                     }
 
                     if (spec.style?.withinLinkStyle === 'sv') {
+                        // !! Not ready to use
                         const morePoints: { x: number; y: number }[] = [];
 
                         // https://github.com/gosling-lang/gosling.js/issues/634
@@ -304,20 +305,24 @@ export function drawLink(g: PIXI.Graphics, trackInfo: any, model: GoslingTrackMo
                             const theta = (Math.PI * step) / numSteps;
                             const mx = ((xe - x) / 2.0) * Math.cos(theta) + (x + xe) / 2.0;
                             const my =
-                                (rowHeight - 4) *
-                                Math.sin(theta) *
-                                Math.max(
-                                    0.05,
-                                    Math.min(Math.log10(xe - x), Math.log10(trackWidth)) / Math.log10(trackWidth)
-                                );
+                                baseY -
+                                (((rowHeight - y) *
+                                    Math.sin(theta) *
+                                    Math.min(xe - x + trackWidth * 0.5, trackWidth * 1.5)) /
+                                    trackWidth /
+                                    1.5) *
+                                    (flipY ? -1 : 1);
 
                             const r = trackOuterRadius - (my / trackHeight) * trackRingSize;
                             const cmx = cartesianToPolar(mx, trackWidth, r, tcx, tcy, startAngle, endAngle);
 
-                            if (step % 10 === 0 || step === numSteps) {
+                            if (step % 20 === 0 || step === numSteps) {
                                 // we draw less points than the hidden points for mouse events
-                                if (step === 0) g.moveTo(cmx.x, cmx.y);
-                                else g.lineTo(cmx.x, cmx.y);
+                                if (step === 0) {
+                                    g.moveTo(cmx.x, cmx.y);
+                                } else {
+                                    g.lineTo(cmx.x, cmx.y);
+                                }
                             }
                             morePoints.push({ ...cmx });
                         }
@@ -383,12 +388,11 @@ export function drawLink(g: PIXI.Graphics, trackInfo: any, model: GoslingTrackMo
                             const mx = ((xe - x) / 2.0) * Math.cos(theta) + (x + xe) / 2.0;
                             const my =
                                 baseY -
-                                (rowHeight - y) *
+                                (((rowHeight - y) *
                                     Math.sin(theta) *
-                                    Math.max(
-                                        0.0,
-                                        Math.min(Math.log10(xe - x), Math.log10(trackWidth)) / Math.log10(trackWidth)
-                                    ) *
+                                    Math.min(xe - x + trackWidth * 0.5, trackWidth * 1.5)) /
+                                    trackWidth /
+                                    1.5) *
                                     (flipY ? -1 : 1);
 
                             if (step % 20 === 0 || step === numSteps) {

@@ -1029,6 +1029,9 @@
               "$ref": "#/definitions/Assembly",
               "description": "A string that specifies the genome builds to use. Currently support `\"hg38\"`, `\"hg19\"`, `\"hg18\"`, `\"hg17\"`, `\"hg16\"`, `\"mm10\"`, `\"mm9\"`, and `\"unknown\"`.\n\n__Note:__: with `\"unknown\"` assembly, genomic axes do not show chrN: in labels."
             },
+            "baselineY": {
+              "type": "number"
+            },
             "centerRadius": {
               "description": "Proportion of the radius of the center white space.\n\n__Default:__ `0.3`",
               "type": "number"
@@ -1158,6 +1161,9 @@
                       "assembly": {
                         "$ref": "#/definitions/Assembly",
                         "description": "A string that specifies the genome builds to use. Currently support `\"hg38\"`, `\"hg19\"`, `\"hg18\"`, `\"hg17\"`, `\"hg16\"`, `\"mm10\"`, `\"mm9\"`, and `\"unknown\"`.\n\n__Note:__: with `\"unknown\"` assembly, genomic axes do not show chrN: in labels."
+                      },
+                      "baselineY": {
+                        "type": "number"
                       },
                       "centerRadius": {
                         "description": "Proportion of the radius of the center white space.\n\n__Default:__ `0.3`",
@@ -1749,6 +1755,9 @@
               "$ref": "#/definitions/Assembly",
               "description": "A string that specifies the genome builds to use. Currently support `\"hg38\"`, `\"hg19\"`, `\"hg18\"`, `\"hg17\"`, `\"hg16\"`, `\"mm10\"`, `\"mm9\"`, and `\"unknown\"`.\n\n__Note:__: with `\"unknown\"` assembly, genomic axes do not show chrN: in labels."
             },
+            "baselineY": {
+              "type": "number"
+            },
             "centerRadius": {
               "description": "Proportion of the radius of the center white space.\n\n__Default:__ `0.3`",
               "type": "number"
@@ -1878,6 +1887,9 @@
                       "assembly": {
                         "$ref": "#/definitions/Assembly",
                         "description": "A string that specifies the genome builds to use. Currently support `\"hg38\"`, `\"hg19\"`, `\"hg18\"`, `\"hg17\"`, `\"hg16\"`, `\"mm10\"`, `\"mm9\"`, and `\"unknown\"`.\n\n__Note:__: with `\"unknown\"` assembly, genomic axes do not show chrN: in labels."
+                      },
+                      "baselineY": {
+                        "type": "number"
                       },
                       "centerRadius": {
                         "description": "Proportion of the radius of the center white space.\n\n__Default:__ `0.3`",
@@ -2522,6 +2534,9 @@
                       "assembly": {
                         "$ref": "#/definitions/Assembly",
                         "description": "A string that specifies the genome builds to use. Currently support `\"hg38\"`, `\"hg19\"`, `\"hg18\"`, `\"hg17\"`, `\"hg16\"`, `\"mm10\"`, `\"mm9\"`, and `\"unknown\"`.\n\n__Note:__: with `\"unknown\"` assembly, genomic axes do not show chrN: in labels."
+                      },
+                      "baselineY": {
+                        "type": "number"
                       },
                       "centerRadius": {
                         "description": "Proportion of the radius of the center white space.\n\n__Default:__ `0.3`",
@@ -3694,6 +3709,9 @@
           "$ref": "#/definitions/Assembly",
           "description": "A string that specifies the genome builds to use. Currently support `\"hg38\"`, `\"hg19\"`, `\"hg18\"`, `\"hg17\"`, `\"hg16\"`, `\"mm10\"`, `\"mm9\"`, and `\"unknown\"`.\n\n__Note:__: with `\"unknown\"` assembly, genomic axes do not show chrN: in labels."
         },
+        "baselineY": {
+          "type": "number"
+        },
         "centerRadius": {
           "description": "Proportion of the radius of the center white space.\n\n__Default:__ `0.3`",
           "type": "number"
@@ -3789,6 +3807,9 @@
               "assembly": {
                 "$ref": "#/definitions/Assembly",
                 "description": "A string that specifies the genome builds to use. Currently support `\"hg38\"`, `\"hg19\"`, `\"hg18\"`, `\"hg17\"`, `\"hg16\"`, `\"mm10\"`, `\"mm9\"`, and `\"unknown\"`.\n\n__Note:__: with `\"unknown\"` assembly, genomic axes do not show chrN: in labels."
+              },
+              "baselineY": {
+                "type": "number"
               },
               "centerRadius": {
                 "description": "Proportion of the radius of the center white space.\n\n__Default:__ `0.3`",
@@ -4335,6 +4356,9 @@
           "$ref": "#/definitions/Assembly",
           "description": "A string that specifies the genome builds to use. Currently support `\"hg38\"`, `\"hg19\"`, `\"hg18\"`, `\"hg17\"`, `\"hg16\"`, `\"mm10\"`, `\"mm9\"`, and `\"unknown\"`.\n\n__Note:__: with `\"unknown\"` assembly, genomic axes do not show chrN: in labels."
         },
+        "baselineY": {
+          "type": "number"
+        },
         "centerRadius": {
           "description": "Proportion of the radius of the center white space.\n\n__Default:__ `0.3`",
           "type": "number"
@@ -4685,6 +4709,9 @@
           "$ref": "#/definitions/Assembly",
           "description": "A string that specifies the genome builds to use. Currently support `\"hg38\"`, `\"hg19\"`, `\"hg18\"`, `\"hg17\"`, `\"hg16\"`, `\"mm10\"`, `\"mm9\"`, and `\"unknown\"`.\n\n__Note:__: with `\"unknown\"` assembly, genomic axes do not show chrN: in labels."
         },
+        "baselineY": {
+          "type": "number"
+        },
         "centerRadius": {
           "description": "Proportion of the radius of the center white space.\n\n__Default:__ `0.3`",
           "type": "number"
@@ -4786,6 +4813,9 @@
               "assembly": {
                 "$ref": "#/definitions/Assembly",
                 "description": "A string that specifies the genome builds to use. Currently support `\"hg38\"`, `\"hg19\"`, `\"hg18\"`, `\"hg17\"`, `\"hg16\"`, `\"mm10\"`, `\"mm9\"`, and `\"unknown\"`.\n\n__Note:__: with `\"unknown\"` assembly, genomic axes do not show chrN: in labels."
+              },
+              "baselineY": {
+                "type": "number"
               },
               "centerRadius": {
                 "description": "Proportion of the radius of the center white space.\n\n__Default:__ `0.3`",
@@ -5445,6 +5475,9 @@
           "$ref": "#/definitions/Assembly",
           "description": "A string that specifies the genome builds to use. Currently support `\"hg38\"`, `\"hg19\"`, `\"hg18\"`, `\"hg17\"`, `\"hg16\"`, `\"mm10\"`, `\"mm9\"`, and `\"unknown\"`.\n\n__Note:__: with `\"unknown\"` assembly, genomic axes do not show chrN: in labels."
         },
+        "baselineY": {
+          "type": "number"
+        },
         "centerRadius": {
           "description": "Proportion of the radius of the center white space.\n\n__Default:__ `0.3`",
           "type": "number"
@@ -5781,6 +5814,9 @@
               "$ref": "#/definitions/Assembly",
               "description": "A string that specifies the genome builds to use. Currently support `\"hg38\"`, `\"hg19\"`, `\"hg18\"`, `\"hg17\"`, `\"hg16\"`, `\"mm10\"`, `\"mm9\"`, and `\"unknown\"`.\n\n__Note:__: with `\"unknown\"` assembly, genomic axes do not show chrN: in labels."
             },
+            "baselineY": {
+              "type": "number"
+            },
             "centerRadius": {
               "description": "Proportion of the radius of the center white space.\n\n__Default:__ `0.3`",
               "type": "number"
@@ -5903,6 +5939,9 @@
                       "assembly": {
                         "$ref": "#/definitions/Assembly",
                         "description": "A string that specifies the genome builds to use. Currently support `\"hg38\"`, `\"hg19\"`, `\"hg18\"`, `\"hg17\"`, `\"hg16\"`, `\"mm10\"`, `\"mm9\"`, and `\"unknown\"`.\n\n__Note:__: with `\"unknown\"` assembly, genomic axes do not show chrN: in labels."
+                      },
+                      "baselineY": {
+                        "type": "number"
                       },
                       "centerRadius": {
                         "description": "Proportion of the radius of the center white space.\n\n__Default:__ `0.3`",
@@ -6494,6 +6533,9 @@
               "$ref": "#/definitions/Assembly",
               "description": "A string that specifies the genome builds to use. Currently support `\"hg38\"`, `\"hg19\"`, `\"hg18\"`, `\"hg17\"`, `\"hg16\"`, `\"mm10\"`, `\"mm9\"`, and `\"unknown\"`.\n\n__Note:__: with `\"unknown\"` assembly, genomic axes do not show chrN: in labels."
             },
+            "baselineY": {
+              "type": "number"
+            },
             "centerRadius": {
               "description": "Proportion of the radius of the center white space.\n\n__Default:__ `0.3`",
               "type": "number"
@@ -6616,6 +6658,9 @@
                       "assembly": {
                         "$ref": "#/definitions/Assembly",
                         "description": "A string that specifies the genome builds to use. Currently support `\"hg38\"`, `\"hg19\"`, `\"hg18\"`, `\"hg17\"`, `\"hg16\"`, `\"mm10\"`, `\"mm9\"`, and `\"unknown\"`.\n\n__Note:__: with `\"unknown\"` assembly, genomic axes do not show chrN: in labels."
+                      },
+                      "baselineY": {
+                        "type": "number"
                       },
                       "centerRadius": {
                         "description": "Proportion of the radius of the center white space.\n\n__Default:__ `0.3`",
@@ -7253,6 +7298,9 @@
                       "assembly": {
                         "$ref": "#/definitions/Assembly",
                         "description": "A string that specifies the genome builds to use. Currently support `\"hg38\"`, `\"hg19\"`, `\"hg18\"`, `\"hg17\"`, `\"hg16\"`, `\"mm10\"`, `\"mm9\"`, and `\"unknown\"`.\n\n__Note:__: with `\"unknown\"` assembly, genomic axes do not show chrN: in labels."
+                      },
+                      "baselineY": {
+                        "type": "number"
                       },
                       "centerRadius": {
                         "description": "Proportion of the radius of the center white space.\n\n__Default:__ `0.3`",

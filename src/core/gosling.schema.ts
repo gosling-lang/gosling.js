@@ -248,6 +248,7 @@ interface SingleTrackBase extends CommonTrackDef {
 
     // Experimental
     flipY?: boolean; // This is only supported for `link` marks.
+    baselineY?: number; // This is only supported for `link` marks.
     stretch?: boolean; // Stretch the size to the given range? (e.g., [x, xe])
     overrideTemplate?: boolean; // Override a spec template that is defined for a given data type.
 }
