@@ -47,7 +47,7 @@ export const EX_SPEC_SASHIMI: GoslingSpec = {
                     stroke: { value: '#FFC153' },
                     strokeWidth: { field: 'score', type: 'quantitative', range: [1, 4] },
                     opacity: { value: 0.8 },
-                    style: { linkStyle: 'sashimi' },
+                    style: { linkStyle: 'elliptical' },
                     width: 800,
                     height: 80
                 },

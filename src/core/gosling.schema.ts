@@ -132,7 +132,7 @@ export interface CommonViewDef {
      * __Default:__ `0.3`
      * @Range [0, 1]
      */
-    centerRadius?: number; // [0, 1] (default: 0.3)
+    centerRadius?: number;
 
     /**
      * Define the [style](http://gosling-lang.org/docs/visual-channel#style-related-properties) of multive views.
@@ -347,9 +347,16 @@ export interface Style {
     dy?: number;
 
     /**
-     * Specify the style of link marks. __Default__: `'regular'`
+     * The style of `withinLink` and `betweenLink` marks. __Default__: `'circular'`
+     * `'elliptical'` will be used as a default option.
      */
-    linkStyle?: 'regular' | 'bezier' | 'sashimi' | 'sv';
+    linkStyle?: 'elliptical' | 'circular' | '_bezier_deprecated_';
+
+    /**
+     * The minimum height of `withinLink` and `betweenLink` marks. Unit is a percentagle. __Default__: `0.5`
+     * @Range [0, 1]
+     */
+    linkMinHeight?: number;
 
     /**
      * Specify whether to show legend in a single horizontal line?

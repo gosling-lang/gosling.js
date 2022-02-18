@@ -2,7 +2,7 @@ import type { GoslingSpec } from 'gosling.js';
 
 export const EX_SPEC_GREMLIN: GoslingSpec = {
     title: "Gremlin (O'Brien et al. 2010)",
-    style: { linkStyle: 'bezier' },
+    style: { linkStyle: 'elliptical' },
     views: [
         {
             linkingId: 'view1',

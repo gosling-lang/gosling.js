@@ -2,7 +2,7 @@ import * as PIXI from 'pixi.js';
 import { GoslingTrackModel } from '../gosling-track-model';
 import { SingleTrack } from '../gosling.schema';
 import { getTheme } from '../utils/theme';
-import { drawLink } from './link';
+import { drawWithinLink } from './withinLink';
 
 describe('Rendering link', () => {
     const g = new PIXI.Graphics();
@@ -24,7 +24,7 @@ describe('Rendering link', () => {
             { x: 111, x1: 222, xe: 333, x1e: 444 }
         ];
         const model = new GoslingTrackModel(t, d, getTheme());
-        drawLink(g, trackInfo, model);
+        drawWithinLink(g, trackInfo, model);
     });
     it('Circular Band', () => {
         const t: SingleTrack = {
@@ -44,7 +44,7 @@ describe('Rendering link', () => {
             { x: 111, x1: 222, xe: 333, x1e: 444 }
         ];
         const model = new GoslingTrackModel(t, d, getTheme());
-        drawLink(g, trackInfo, model);
+        drawWithinLink(g, trackInfo, model);
     });
     it('Linear line', () => {
         const t: SingleTrack = {
@@ -62,7 +62,7 @@ describe('Rendering link', () => {
             { x: 111, x1: 222, xe: 333, x1e: 444 }
         ];
         const model = new GoslingTrackModel(t, d, getTheme());
-        drawLink(g, trackInfo, model);
+        drawWithinLink(g, trackInfo, model);
     });
     it('Circular line', () => {
         const t: SingleTrack = {
@@ -80,6 +80,6 @@ describe('Rendering link', () => {
             { x: 111, x1: 222, xe: 333, x1e: 444 }
         ];
         const model = new GoslingTrackModel(t, d, getTheme());
-        drawLink(g, trackInfo, model);
+        drawWithinLink(g, trackInfo, model);
     });
 });

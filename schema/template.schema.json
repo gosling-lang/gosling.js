@@ -628,13 +628,16 @@
           ],
           "type": "string"
         },
+        "linkMinHeight": {
+          "description": "The minimum height of `withinLink` and `betweenLink` marks. Unit is a percentagle. __Default__: `0.5`",
+          "type": "number"
+        },
         "linkStyle": {
-          "description": "Specify the style of link marks. __Default__: `'regular'`",
+          "description": "The style of `withinLink` and `betweenLink` marks. __Default__: `'circular'` `'elliptical'` will be used as a default option.",
           "enum": [
-            "regular",
-            "bezier",
-            "sashimi",
-            "sv"
+            "elliptical",
+            "circular",
+            "_bezier_deprecated_"
           ],
           "type": "string"
         },
