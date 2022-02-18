@@ -385,13 +385,13 @@ export function drawLink(g: PIXI.Graphics, trackInfo: any, model: GoslingTrackMo
                                 baseY -
                                 (rowHeight - y) *
                                     Math.sin(theta) *
-                                    // Math.max(
-                                    //     0.5,
-                                    //     Math.min(Math.log10(xe - x), Math.log10(trackWidth)) / Math.log10(trackWidth)
-                                    // ) *
+                                    Math.max(
+                                        0.0,
+                                        Math.min(Math.log10(xe - x), Math.log10(trackWidth)) / Math.log10(trackWidth)
+                                    ) *
                                     (flipY ? -1 : 1);
 
-                            if (step % 10 === 0 || step === numSteps) {
+                            if (step % 20 === 0 || step === numSteps) {
                                 // we draw less points than the hidden points for mouse events
                                 if (step === 0) {
                                     g.moveTo(mx, my);

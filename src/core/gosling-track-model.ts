@@ -228,7 +228,7 @@ export class GoslingTrackModel {
         if (this.originalSpec().y === undefined) {
             const y = this.spec().y;
             const rowCategories = this.getChannelDomainArray('row');
-            if (y && IsChannelValue(y) && rowCategories) {
+            if (y && IsChannelValue(y) && rowCategories && this.spec().mark !== 'withinLink') {
                 y.value = (this.spec().height as number) / rowCategories.length / 2.0;
             }
         }
@@ -561,10 +561,10 @@ export class GoslingTrackModel {
                             value = (spec.width as number) / 2.0;
                             break;
                         case 'y':
-                            value = rowHeight / 2.0;
+                            if (spec.mark === 'withinLink') value = 0;
+                            else value = rowHeight / 2.0;
                             break;
                         case 'size':
-                            // TODO: make as an object
                             if (spec.mark === 'line') value = this.theme.line.size;
                             else if (spec.mark === 'bar') value = undefined;
                             else if (spec.mark === 'rect') value = undefined;
