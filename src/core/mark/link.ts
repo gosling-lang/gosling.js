@@ -173,7 +173,7 @@ export function drawLink(g: PIXI.Graphics, trackInfo: any, model: GoslingTrackMo
 
                     g.moveTo(_x1, baseY);
 
-                    if (!spec.style?.bezierLink) {
+                    if (spec.style?.linkStyle !== 'bezier') {
                         g.arc(
                             (_x1 + _x4) / 2.0, // cx
                             baseY, // cy
@@ -295,7 +295,7 @@ export function drawLink(g: PIXI.Graphics, trackInfo: any, model: GoslingTrackMo
                         return;
                     }
 
-                    if (spec.style?.withinLinkStyle === 'sv') {
+                    if (spec.style?.linkStyle === 'sv') {
                         // !! Not ready to use
                         const morePoints: { x: number; y: number }[] = [];
 
@@ -373,7 +373,7 @@ export function drawLink(g: PIXI.Graphics, trackInfo: any, model: GoslingTrackMo
                 } else {
                     // linear line connection
 
-                    if (spec.style?.withinLinkStyle === 'sv') {
+                    if (spec.style?.linkStyle === 'sv') {
                         if (!(0 <= x && x <= trackWidth) && !(0 <= xe && xe <= trackWidth)) {
                             // not within this window
                             return;
@@ -416,7 +416,7 @@ export function drawLink(g: PIXI.Graphics, trackInfo: any, model: GoslingTrackMo
                                 markInfo: {}
                             } as TooltipData);
                         }
-                    } else if (spec.style?.bezierLink) {
+                    } else if (spec.style?.linkStyle === 'bezier') {
                         const x1 = x;
                         const y1 = baseY;
                         const x2 = x + (xe - x) / 3.0;
@@ -444,7 +444,7 @@ export function drawLink(g: PIXI.Graphics, trackInfo: any, model: GoslingTrackMo
                                 markInfo: {}
                             } as TooltipData);
                         }
-                    } else if (spec.style?.flatWithinLink) {
+                    } else if (spec.style?.linkStyle === 'sashimi') {
                         const arcWidth = xe - x;
                         const radius = Math.min(10, arcWidth / 2.0);
                         const topY = rowPosition + rowHeight - y;

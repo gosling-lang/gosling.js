@@ -546,7 +546,7 @@ export const EX_SPEC_CANCER_VARIANT_PROTOTYPE: GoslingSpec = {
                                 { field: 'end2', type: 'genomic' },
                                 { field: 'svclass', type: 'nominal' }
                             ],
-                            style: { legendTitle: 'SV Class', withinLinkStyle: 'sv' },
+                            style: { legendTitle: 'SV Class', linkStyle: 'sv' },
                             width: 1000,
                             height: 200
                         }

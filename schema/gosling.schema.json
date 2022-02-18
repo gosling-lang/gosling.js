@@ -7925,10 +7925,6 @@
         "backgroundOpacity": {
           "type": "number"
         },
-        "bezierLink": {
-          "description": "Specify whether to use bezier curves for the `link` marks.",
-          "type": "boolean"
-        },
         "curve": {
           "description": "Specify the curve of `rule` marks.",
           "enum": [
@@ -7963,10 +7959,6 @@
         },
         "enableSmoothPath": {
           "description": "Whether to enable smooth paths when drawing curves.\n\n__Default__: `false`",
-          "type": "boolean"
-        },
-        "flatWithinLink": {
-          "description": "Specify whether to use a flat within-links, such as the one in Sashimi plots. __Default__: `false`",
           "type": "boolean"
         },
         "inlineLegend": {
@@ -8007,6 +7999,16 @@
           ],
           "type": "string"
         },
+        "linkStyle": {
+          "description": "Specify the style of link marks. __Default__: `'regular'`",
+          "enum": [
+            "regular",
+            "bezier",
+            "sashimi",
+            "sv"
+          ],
+          "type": "string"
+        },
         "outline": {
           "type": "string"
         },
@@ -8041,16 +8043,6 @@
         "textStrokeWidth": {
           "description": "Specify the stroke width of `text` marks. Can also be specified using the `strokeWidth` channel option of `text` marks.",
           "type": "number"
-        },
-        "withinLinkStyle": {
-          "description": "Experimental: Specify which style of `withinLink` to use. __Default__: `'regular'`",
-          "enum": [
-            "regular",
-            "bezier",
-            "flat",
-            "sv"
-          ],
-          "type": "string"
         }
       },
       "type": "object"

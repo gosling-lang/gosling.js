@@ -345,17 +345,11 @@ export interface Style {
      * This property is currently only supported for `text` marks.
      */
     dy?: number;
+
     /**
-     *  Specify whether to use bezier curves for the `link` marks.
+     * Specify the style of link marks. __Default__: `'regular'`
      */
-    bezierLink?: boolean;
-
-    // TODO: betweenLinkStyle: 'regular' | 'bezier' | 'flat'
-    /** Specify whether to use a flat within-links, such as the one in Sashimi plots. __Default__: `false` */
-    flatWithinLink?: boolean;
-
-    /** Experimental: Specify which style of `withinLink` to use. __Default__: `'regular'` */
-    withinLinkStyle?: 'regular' | 'bezier' | 'flat' | 'sv';
+    linkStyle?: 'regular' | 'bezier' | 'sashimi' | 'sv';
 
     /**
      * Specify whether to show legend in a single horizontal line?
