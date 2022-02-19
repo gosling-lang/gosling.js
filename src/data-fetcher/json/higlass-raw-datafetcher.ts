@@ -96,8 +96,8 @@ function RawDataFetcher(HGC: any, ...args: any): any {
                 tile_size: TILE_SIZE,
                 max_zoom: Math.ceil(Math.log(totalLength / TILE_SIZE) / Math.log(2)),
                 max_width: totalLength,
-                min_pos: [0],
-                max_pos: [totalLength]
+                min_pos: [0, 0],
+                max_pos: [totalLength, totalLength]
             };
 
             if (callback) {
@@ -117,14 +117,15 @@ function RawDataFetcher(HGC: any, ...args: any): any {
                 const parts = tileId.split('.');
                 const z = parseInt(parts[0], 10);
                 const x = parseInt(parts[1], 10);
+                const y = parseInt(parts[2], 10);
 
                 if (Number.isNaN(x) || Number.isNaN(z)) {
-                    console.warn('[Gosling Data Fetcher] Invalid tile zoom or position:', z, x);
+                    console.warn('[Gosling Data Fetcher] Invalid tile zoom or position:', z, x, y);
                     continue;
                 }
 
                 validTileIds.push(tileId);
-                tilePromises.push(this.tile(z, x));
+                tilePromises.push(this.tile(z, x, y));
             }
 
             Promise.all(tilePromises).then(values => {
@@ -139,7 +140,7 @@ function RawDataFetcher(HGC: any, ...args: any): any {
             return tiles;
         }
 
-        tile(z: any, x: any) {
+        tile(z: any, x: any, y: any) {
             const tsInfo = this.tilesetInfo();
             const tileWidth = +tsInfo.max_width / 2 ** +z;
 
@@ -166,7 +167,7 @@ function RawDataFetcher(HGC: any, ...args: any): any {
             return {
                 tabularData,
                 server: null,
-                tilePos: [x],
+                tilePos: [x, y],
                 zoomLevel: z
             };
         }
