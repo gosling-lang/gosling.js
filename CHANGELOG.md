@@ -1,3 +1,15 @@
+## [0.9.17](https://github.com/gosling-lang/gosling.js/compare/v0.9.16...v0.9.17) (2022-02-21)
+
+
+### Features
+
+* **editor:** add options to change screen dimensions ([#632](https://github.com/gosling-lang/gosling.js/issues/632)) ([5f2b67a](https://github.com/gosling-lang/gosling.js/commit/5f2b67a94207d3559deed172eafed508ebdd671f))
+* **experimental:** allow defining alternative specs for responsive visualization ([#624](https://github.com/gosling-lang/gosling.js/issues/624)) ([458cc90](https://github.com/gosling-lang/gosling.js/commit/458cc907e0de7a081165a6c40a1e169e15a5c173))
+* support 2D annotations using json data ([#641](https://github.com/gosling-lang/gosling.js/issues/641)) ([efb1690](https://github.com/gosling-lang/gosling.js/commit/efb1690337fb76ceac4eaaac0a702abccd430142))
+* support checking `aspectRatio` to use responsive spec ([#635](https://github.com/gosling-lang/gosling.js/issues/635)) ([ea96bc0](https://github.com/gosling-lang/gosling.js/commit/ea96bc0e5473a4ebce93aad7af6901e24f6115a9))
+
+
+
 ## [0.9.16](https://github.com/gosling-lang/gosling.js/compare/v0.9.15...v0.9.16) (2022-01-31)
 
 
