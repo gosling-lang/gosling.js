@@ -557,6 +557,8 @@ export interface Row extends ChannelDeepCommon {
     padding?: number;
     /** Whether to display grid. __Default__: `false` */
     grid?: boolean;
+    /** Clip row when the actual y value exceeds the max value of the y scale. Used only for bar marks at the moment. __Default__: `true` */
+    clip?: boolean;
 }
 
 export interface Color extends ChannelDeepCommon {

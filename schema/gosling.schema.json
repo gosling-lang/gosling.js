@@ -5396,6 +5396,10 @@
     "Row": {
       "additionalProperties": false,
       "properties": {
+        "clip": {
+          "description": "Clip row when the actual y value exceeds the max value of the y scale. Used only for bar marks at the moment. __Default__: `true`",
+          "type": "boolean"
+        },
         "domain": {
           "$ref": "#/definitions/ValueExtent",
           "description": "Values of the data"
