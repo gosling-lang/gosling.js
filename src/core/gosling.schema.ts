@@ -132,7 +132,7 @@ export interface CommonViewDef {
      * __Default:__ `0.3`
      * @Range [0, 1]
      */
-    centerRadius?: number; // [0, 1] (default: 0.3)
+    centerRadius?: number;
 
     /**
      * Define the [style](http://gosling-lang.org/docs/visual-channel#style-related-properties) of multive views.
@@ -248,6 +248,7 @@ interface SingleTrackBase extends CommonTrackDef {
 
     // Experimental
     flipY?: boolean; // This is only supported for `link` marks.
+    baselineY?: number; // This is only supported for `link` marks.
     stretch?: boolean; // Stretch the size to the given range? (e.g., [x, xe])
     overrideTemplate?: boolean; // Override a spec template that is defined for a given data type.
 }
@@ -344,14 +345,18 @@ export interface Style {
      * This property is currently only supported for `text` marks.
      */
     dy?: number;
-    /**
-     *  Specify whether to use bezier curves for the `link` marks.
-     */
-    bezierLink?: boolean;
 
-    // TODO: betweenLinkStyle: 'regular' | 'bezier' | 'flat'
-    /** Specify whether to use a flat within-links, such as the one in Sashimi plots. __Default__: `false` */
-    flatWithinLink?: boolean;
+    /**
+     * The style of `withinLink` and `betweenLink` marks. __Default__: `'circular'`
+     * `'elliptical'` will be used as a default option.
+     */
+    linkStyle?: 'elliptical' | 'circular' | '_bezier_deprecated_';
+
+    /**
+     * The minimum height of `withinLink` and `betweenLink` marks. Unit is a percentagle. __Default__: `0.5`
+     * @Range [0, 1]
+     */
+    linkMinHeight?: number;
 
     /**
      * Specify whether to show legend in a single horizontal line?

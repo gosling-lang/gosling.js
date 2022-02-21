@@ -554,10 +554,6 @@
         "backgroundOpacity": {
           "type": "number"
         },
-        "bezierLink": {
-          "description": "Specify whether to use bezier curves for the `link` marks.",
-          "type": "boolean"
-        },
         "curve": {
           "description": "Specify the curve of `rule` marks.",
           "enum": [
@@ -592,10 +588,6 @@
         },
         "enableSmoothPath": {
           "description": "Whether to enable smooth paths when drawing curves.\n\n__Default__: `false`",
-          "type": "boolean"
-        },
-        "flatWithinLink": {
-          "description": "Specify whether to use a flat within-links, such as the one in Sashimi plots. __Default__: `false`",
           "type": "boolean"
         },
         "inlineLegend": {
@@ -633,6 +625,19 @@
             "straight",
             "curve",
             "corner"
+          ],
+          "type": "string"
+        },
+        "linkMinHeight": {
+          "description": "The minimum height of `withinLink` and `betweenLink` marks. Unit is a percentagle. __Default__: `0.5`",
+          "type": "number"
+        },
+        "linkStyle": {
+          "description": "The style of `withinLink` and `betweenLink` marks. __Default__: `'circular'` `'elliptical'` will be used as a default option.",
+          "enum": [
+            "elliptical",
+            "circular",
+            "_bezier_deprecated_"
           ],
           "type": "string"
         },

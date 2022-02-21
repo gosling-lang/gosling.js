@@ -8,7 +8,7 @@ import { ChannelTypes } from '../gosling.schema';
 import { drawTriangle } from './triangle';
 import { drawText } from './text';
 import { drawRule } from './rule';
-import { drawLink } from './link';
+import { drawWithinLink } from './withinLink';
 import { drawGrid } from './grid';
 import { drawCircularTitle } from './title';
 import { drawChartOutlines } from './outline';
@@ -18,6 +18,7 @@ import { drawCircularOutlines } from './outline-circular';
 import { drawBackground } from './background';
 import { CompleteThemeDeep } from '../utils/theme';
 import { Is2DTrack, IsVerticalRule } from '../gosling.schema.guards';
+import { drawBetweenLink } from './betweenLink';
 
 /**
  * Visual channels currently supported for visual encoding.
@@ -115,8 +116,10 @@ export function drawMark(HGC: any, trackInfo: any, tile: any, model: GoslingTrac
             drawRule(HGC, trackInfo, tile, model);
             break;
         case 'betweenLink':
+            drawBetweenLink(tile.graphics, trackInfo, model);
+            break;
         case 'withinLink':
-            drawLink(tile.graphics, trackInfo, model);
+            drawWithinLink(tile.graphics, trackInfo, model);
             break;
         default:
             console.warn('Unsupported mark type');
