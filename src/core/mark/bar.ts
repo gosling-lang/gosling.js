@@ -100,7 +100,7 @@ export function drawBar(trackInfo: any, tile: any, model: GoslingTrackModel) {
                     const startRad = valueToRadian(xs, trackWidth, startAngle, endAngle);
                     const endRad = valueToRadian(xs + barWidth, trackWidth, startAngle, endAngle);
 
-                    g.beginFill(colorToHex(color), actualOpacity);
+                    g.beginFill(colorToHex(color), color === 'none' ? 0 : actualOpacity);
                     g.moveTo(sPos.x, sPos.y);
                     g.arc(cx, cy, nearR, startRad, endRad, true);
                     g.arc(cx, cy, farR, endRad, startRad, false);
@@ -109,7 +109,7 @@ export function drawBar(trackInfo: any, tile: any, model: GoslingTrackModel) {
                     const ys = rowHeight - y - prevYEnd;
                     const barHeight = y;
 
-                    g.beginFill(colorToHex(color), actualOpacity);
+                    g.beginFill(colorToHex(color), color === 'none' ? 0 : actualOpacity);
                     g.drawRect(xs, rowHeight - y - prevYEnd, barWidth, y);
 
                     /* Tooltip data */
@@ -182,13 +182,13 @@ export function drawBar(trackInfo: any, tile: any, model: GoslingTrackModel) {
                     const startRad = valueToRadian(xLeft, trackWidth, startAngle, endAngle);
                     const endRad = valueToRadian(xLeft + barWidth, trackWidth, startAngle, endAngle);
 
-                    g.beginFill(colorToHex(color), actualOpacity);
+                    g.beginFill(colorToHex(color), color === 'none' ? 0 : actualOpacity);
                     g.moveTo(sPos.x, sPos.y);
                     g.arc(cx, cy, nearR, startRad, endRad, true);
                     g.arc(cx, cy, farR, endRad, startRad, false);
                     g.closePath();
                 } else {
-                    g.beginFill(colorToHex(color), actualOpacity);
+                    g.beginFill(colorToHex(color), color === 'none' ? 0 : actualOpacity);
                     g.drawRect(xLeft, yTop, barWidth, yBottom - yTop);
 
                     /* Tooltip data */

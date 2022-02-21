@@ -62,7 +62,7 @@ export const examples: {
         spec: EX_SPEC_RULE
     },
     MATRIX: {
-        name: 'Basic Example: Hi-C Matrix',
+        name: 'Basic Example: Hi-C Matrix with Annotations',
         spec: EX_SPEC_MATRIX
     },
     LINKING: {
