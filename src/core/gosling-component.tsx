@@ -123,6 +123,9 @@ export const GoslingComponent = forwardRef<
         compile();
     }, [props.spec, theme]);
 
+    const responsiveHeight =
+        typeof props.spec?.responsiveSize !== 'object' ? props.spec?.responsiveSize : props.spec.responsiveSize.height;
+
     // HiGlass component should be mounted only once
     const higlassComponent = useMemo(
         () => (
@@ -140,15 +143,12 @@ export const GoslingComponent = forwardRef<
                         typeof props.spec?.responsiveSize !== 'object'
                             ? props.spec?.responsiveSize
                             : props.spec.responsiveSize.width,
-                    responsiveHeight:
-                        typeof props.spec?.responsiveSize !== 'object'
-                            ? props.spec?.responsiveSize
-                            : props.spec.responsiveSize.height,
+                    responsiveHeight,
                     background: theme.root.background
                 }}
             />
         ),
-        [viewConfig, size, theme]
+        [viewConfig, size, theme, responsiveHeight]
     );
 
     return higlassComponent;

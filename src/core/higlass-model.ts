@@ -303,7 +303,7 @@ export class HiGlassModel {
 
         const widthOrHeight = position === 'left' || position === 'right' ? 'width' : 'height';
         const axisTrackTemplate: Track = {
-            uid: options.id ?? uuid.v1(),
+            // uid: options.id ?? uuid.v1(), // TODO: turning this on makes some tick labels hidden
             type: 'axis-track',
             chromInfoPath: this.hg.chromInfoPath,
             options: {

@@ -120,8 +120,9 @@ export function getRelativeTrackInfo(
         size.height = size.height + (8 - (size.height % 8));
     }
 
-    const pixelPreciseMarginPadding =
-        typeof spec.responsiveSize !== 'object' ? !spec.responsiveSize : !spec.responsiveSize.height;
+    const pixelPreciseMarginPadding = !(typeof spec.responsiveSize !== 'object'
+        ? spec.responsiveSize
+        : spec.responsiveSize.height);
 
     // Calculate `layout`s for React Grid Layout (RGL).
     trackInfos.forEach(_ => {
