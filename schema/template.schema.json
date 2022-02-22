@@ -641,6 +641,15 @@
           ],
           "type": "string"
         },
+        "matrixExtent": {
+          "description": "Determine to show only one side of the diagonal in a HiGlass matrix. __Default__: `\"full\"`",
+          "enum": [
+            "full",
+            "upper-right",
+            "lower-left"
+          ],
+          "type": "string"
+        },
         "outline": {
           "type": "string"
         },

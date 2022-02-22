@@ -1,7 +1,7 @@
 import type { GoslingSpec } from 'gosling.js';
 import { EX_SPEC_VISUAL_ENCODING, EX_SPEC_VISUAL_ENCODING_CIRCULAR, EX_SPEC_RULE } from './visual-encoding';
 import { EX_SPEC_LAYOUT_AND_ARRANGEMENT_1, EX_SPEC_LAYOUT_AND_ARRANGEMENT_2 } from './layout-and-arrangement';
-import { EX_SPEC_MATRIX } from './matrix';
+import { EX_SPEC_MATRIX, EX_SPEC_RESPONSIVE_COMPARATIVE_MATRICES } from './matrix';
 import { EX_SPEC_CANCER_VARIANT_PROTOTYPE } from './cancer-variant';
 import { EX_SPEC_MATRIX_HFFC6 } from './matrix-hffc6';
 import { EX_SPEC_LINKING } from './visual-linking';
@@ -116,6 +116,11 @@ export const examples: {
     RESPONSIVE_COMPARATIVE_VIEWS: {
         name: 'Responsive Visualization: Comparative Views',
         spec: EX_SPEC_RESPONSIVE_COMPARATIVE_VIEWS,
+        underDevelopment: true
+    },
+    RESPONSIVE_COMPARATIVE_MATRICES: {
+        name: 'Responsive Visualization: Comparative Matrices',
+        spec: EX_SPEC_RESPONSIVE_COMPARATIVE_MATRICES,
         underDevelopment: true
     },
     RESPONSIVE_ALIGNMENT: {
