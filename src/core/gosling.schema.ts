@@ -393,6 +393,11 @@ export interface Style {
      * __Default__: `"corner"`
      */
     linkConnectionType?: 'straight' | 'curve' | 'corner';
+
+    /**
+     * Determine to show only one side of the diagonal in a HiGlass matrix. __Default__: `"full"`
+     */
+    matrixExtent?: 'full' | 'upper-right' | 'lower-left';
 }
 
 /* ----------------------------- SEMANTIC ZOOM ----------------------------- */
@@ -964,6 +969,21 @@ export interface IncludeFilter extends CommonFilterTransform {
 export interface OneOfFilter extends CommonFilterTransform {
     /** Check whether the value is an element in the provided list. */
     oneOf: string[] | number[];
+}
+
+// !! Not supported yet
+export interface ComparisonFilter extends CommonFilterTransform {
+    /**
+     * The second field to compare the value with.
+     */
+    field2: string;
+
+    /**
+     * A logical operation to apply between two fields.
+     */
+    operation: LogicalOperation;
+
+    not: undefined; // Not used
 }
 
 export type LogBase = number | 'e';

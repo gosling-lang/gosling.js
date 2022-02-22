@@ -142,7 +142,12 @@ export function goslingToHiGlass(
             hgTrack.options.colorRange = getHiGlassColorRange(colorStr);
             hgTrack.options.trackBorderWidth = firstResolvedSpec.style?.outlineWidth ?? theme.track.outlineWidth;
             hgTrack.options.trackBorderColor = firstResolvedSpec.style?.outline ?? theme.track.outline;
-            hgTrack.options.colorbarPosition = (firstResolvedSpec.color as any)?.legend ? 'topRight' : 'hidden';
+            hgTrack.options.extent = firstResolvedSpec.style?.matrixExtent ?? 'full';
+            hgTrack.options.colorbarPosition = (firstResolvedSpec.color as any)?.legend
+                ? hgTrack.options.extent === 'lower-left'
+                    ? 'bottomLeft'
+                    : 'topRight'
+                : 'hidden';
         }
 
         if (firstResolvedSpec.overlayOnPreviousTrack) {
