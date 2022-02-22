@@ -161,7 +161,7 @@ export const EX_SPEC_RESPONSIVE_COMPARATIVE_MATRICES: GoslingSpec = {
                 {
                     measure: 'width',
                     operation: 'GT',
-                    threshold: 800
+                    threshold: 1000
                 }
             ],
             spec: {
@@ -188,9 +188,65 @@ export const EX_SPEC_RESPONSIVE_COMPARATIVE_MATRICES: GoslingSpec = {
                             )
                         ]
                     }
+                    // {
+                    //     tracks: [
+                    //         getMatrix(
+                    //             'http://higlass.io/api/v1/tileset_info/?d=TdQ_Qc-dQemfpqO_rjHsQQ',
+                    //             'grey',
+                    //             'full',
+                    //             400,
+                    //             400
+                    //         )
+                    //     ]
+                    // },
+                    // {
+                    //     tracks: [
+                    //         getMatrix(
+                    //             'http://higlass.io/api/v1/tileset_info/?d=QvdMEvccQuOxKTEjrVL3wA',
+                    //             'pink',
+                    //             'full',
+                    //             400,
+                    //             400
+                    //         )
+                    //     ]
+                    // },
+                    // {
+                    //     tracks: [
+                    //         getMatrix(
+                    //             'http://higlass.io/api/v1/tileset_info/?d=EV1TR63uTHySVLH27sT_VQ',
+                    //             'grey',
+                    //             'full',
+                    //             400,
+                    //             400
+                    //         )
+                    //     ]
+                    // },
+                    // {
+                    //     tracks: [
+                    //         getMatrix(
+                    //             'http://higlass.io/api/v1/tileset_info/?d=JO9CouMTS_WKLnlYBRcw8A',
+                    //             'pink',
+                    //             'full',
+                    //             400,
+                    //             400
+                    //         )
+                    //     ]
+                    // }
                 ]
             }
         }
+        // {
+        //     selectivity: [
+        //         {
+        //             measure: 'width',
+        //             operation: 'LT',
+        //             threshold: 601
+        //         }
+        //     ],
+        //     spec: {
+        //         arrangement: 'vertical'
+        //     }
+        // }
     ],
     linkingId: 'commonId',
     xDomain: { chromosome: 'chr10' },
@@ -217,5 +273,47 @@ export const EX_SPEC_RESPONSIVE_COMPARATIVE_MATRICES: GoslingSpec = {
             width: 400,
             height: 400
         }
+        // {
+        //     alignment: 'overlay',
+        //     tracks: [
+        //         getMatrix(
+        //             'http://higlass.io/api/v1/tileset_info/?d=TdQ_Qc-dQemfpqO_rjHsQQ',
+        //             'grey',
+        //             'lower-left',
+        //             100,
+        //             100
+        //         ),
+        //         getMatrix(
+        //             'http://higlass.io/api/v1/tileset_info/?d=QvdMEvccQuOxKTEjrVL3wA',
+        //             'pink',
+        //             'upper-right',
+        //             100,
+        //             100
+        //         )
+        //     ],
+        //     width: 400,
+        //     height: 400
+        // },
+        // {
+        //     alignment: 'overlay',
+        //     tracks: [
+        //         getMatrix(
+        //             'http://higlass.io/api/v1/tileset_info/?d=EV1TR63uTHySVLH27sT_VQ',
+        //             'grey',
+        //             'lower-left',
+        //             100,
+        //             100
+        //         ),
+        //         getMatrix(
+        //             'http://higlass.io/api/v1/tileset_info/?d=JO9CouMTS_WKLnlYBRcw8A',
+        //             'pink',
+        //             'upper-right',
+        //             100,
+        //             100
+        //         )
+        //     ],
+        //     width: 400,
+        //     height: 400
+        // }
     ]
 };
