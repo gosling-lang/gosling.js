@@ -132,6 +132,7 @@ const getMatrix: (
     h: number
 ) => SingleTrack = (t, c, e, w, h) => {
     return {
+        id: t,
         data: {
             url: t,
             type: 'matrix'
