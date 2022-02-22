@@ -74,7 +74,7 @@ export const EX_SPEC_RESPONSIVE_SEGREGATED_AREA_CHART: GoslingSpec = {
     ]
 };
 
-const TotalChartSizes = [400, 100]; // [192, 96, 48]; // from the paper below
+const TotalChartSizes = [400, 200]; // [192, 96, 48]; // from the paper below
 export const EX_SPEC_RESPONSIVE_MULTIVEC: GoslingSpec = {
     description: 'Reference: Javed et al. Graphical perception of Multiple Time Series. TVCG 2010.',
     responsiveSize: { width: false, height: true },
@@ -113,37 +113,22 @@ export const EX_SPEC_RESPONSIVE_MULTIVEC: GoslingSpec = {
                         binSize: 4
                     },
                     dataTransform: [{ type: 'filter', field: 'sample', oneOf: ['sample -'], not: true }],
-                    mark: 'area',
-                    x: { field: 'position', type: 'genomic' },
-                    color: { value: '#2270B5' },
+                    mark: 'bar',
+                    x: { field: 'start', type: 'genomic' },
+                    xe: { field: 'end', type: 'genomic' },
+                    color: { field: 'sample', type: 'nominal', legend: false },
                     tracks: [
                         {
                             // Sufficient Height
-                            y: { field: 'peak', type: 'quantitative', axis: 'right', domain: [0, 0.01], grid: true },
-                            row: { field: 'sample', type: 'nominal', legend: true },
-                            opacity: { value: 0.6 },
+                            y: { field: 'peak', type: 'quantitative', axis: 'none', domain: [0, 0.01], grid: true },
+                            row: { field: 'sample', type: 'nominal', legend: false },
+                            opacity: { value: 1 },
                             visibility: [
                                 {
                                     target: 'track',
                                     measure: 'height',
                                     operation: 'GTET',
                                     threshold: TotalChartSizes[0]
-                                }
-                            ]
-                        },
-                        {
-                            // Sufficient Height
-                            mark: 'point',
-                            y: { field: 'peak', type: 'quantitative', axis: 'right', domain: [0, 0.01], grid: true },
-                            row: { field: 'sample', type: 'nominal', legend: true },
-                            opacity: { value: 1 },
-                            size: { value: 1.5 },
-                            visibility: [
-                                {
-                                    target: 'track',
-                                    measure: 'height',
-                                    operation: 'GTET',
-                                    threshold: TotalChartSizes[0] + 200
                                 }
                             ]
                         },
@@ -181,9 +166,9 @@ export const EX_SPEC_RESPONSIVE_MULTIVEC: GoslingSpec = {
                         //     ]
                         // },
                         {
-                            y: { field: 'peak', type: 'quantitative', axis: 'right', domain: [0, 0.0025] },
+                            y: { field: 'peak', type: 'quantitative', axis: 'none', domain: [0, 0.0025] },
                             row: { field: 'sample', type: 'nominal', legend: true },
-                            opacity: { value: 0.3 },
+                            opacity: { value: 0.33 },
                             visibility: [
                                 {
                                     target: 'track',
@@ -202,7 +187,7 @@ export const EX_SPEC_RESPONSIVE_MULTIVEC: GoslingSpec = {
                         {
                             y: { field: 'peak', type: 'quantitative', axis: 'none', domain: [0.0025, 0.005] },
                             row: { field: 'sample', type: 'nominal', legend: true },
-                            opacity: { value: 0.3 },
+                            opacity: { value: 0.33 },
                             visibility: [
                                 {
                                     target: 'track',
@@ -221,7 +206,7 @@ export const EX_SPEC_RESPONSIVE_MULTIVEC: GoslingSpec = {
                         {
                             y: { field: 'peak', type: 'quantitative', axis: 'none', domain: [0.005, 0.0075] },
                             row: { field: 'sample', type: 'nominal', legend: true },
-                            opacity: { value: 0.3 },
+                            opacity: { value: 0.33 },
                             visibility: [
                                 {
                                     target: 'track',
@@ -240,7 +225,7 @@ export const EX_SPEC_RESPONSIVE_MULTIVEC: GoslingSpec = {
                         {
                             y: { field: 'peak', type: 'quantitative', axis: 'none', domain: [0.0075, 0.01] },
                             row: { field: 'sample', type: 'nominal', legend: true },
-                            opacity: { value: 0.3 },
+                            opacity: { value: 0.33 },
                             visibility: [
                                 {
                                     target: 'track',
@@ -257,11 +242,11 @@ export const EX_SPEC_RESPONSIVE_MULTIVEC: GoslingSpec = {
                             ]
                         },
                         {
-                            y: { field: 'peak', type: 'quantitative', axis: 'right' },
-                            color: { field: 'sample', type: 'nominal', range: ['#2270B5'] },
-                            opacity: { value: 0.5 },
-                            stroke: { value: 'white' },
-                            strokeWidth: { value: 1 },
+                            y: { field: 'peak', type: 'quantitative', axis: 'none' },
+                            // color: { field: 'sample', type: 'nominal', range: ['#2270B5'] },
+                            opacity: { value: 1 },
+                            // stroke: { value: 'white' },
+                            // strokeWidth: { value: 1 },
                             visibility: [
                                 {
                                     target: 'track',
@@ -323,15 +308,16 @@ export const EX_SPEC_RESPONSIVE_MULTIVEC_CIRCULAR: GoslingSpec = {
                         binSize: 4
                     },
                     dataTransform: [{ type: 'filter', field: 'sample', oneOf: ['sample -'], not: true }],
-                    mark: 'area',
-                    x: { field: 'position', type: 'genomic' },
-                    color: { value: '#2270B5' },
+                    mark: 'bar',
+                    x: { field: 'start', type: 'genomic' },
+                    xe: { field: 'end', type: 'genomic' },
+                    color: { field: 'sample', type: 'nominal', legend: false },
                     tracks: [
                         {
                             // Sufficient Height
-                            y: { field: 'peak', type: 'quantitative', axis: 'right', domain: [0, 0.01], grid: true },
-                            row: { field: 'sample', type: 'nominal', legend: true },
-                            opacity: { value: 0.6 },
+                            y: { field: 'peak', type: 'quantitative', axis: 'none', domain: [0, 0.01], grid: true },
+                            row: { field: 'sample', type: 'nominal', legend: false },
+                            opacity: { value: 1 },
                             visibility: [
                                 {
                                     target: 'track',
@@ -342,9 +328,9 @@ export const EX_SPEC_RESPONSIVE_MULTIVEC_CIRCULAR: GoslingSpec = {
                             ]
                         },
                         {
-                            y: { field: 'peak', type: 'quantitative', axis: 'right', domain: [0, 0.0025] },
-                            row: { field: 'sample', type: 'nominal', legend: true },
-                            opacity: { value: 0.3 },
+                            y: { field: 'peak', type: 'quantitative', axis: 'none', domain: [0, 0.0025] },
+                            row: { field: 'sample', type: 'nominal', legend: false },
+                            opacity: { value: 0.33 },
                             visibility: [
                                 {
                                     target: 'track',
@@ -363,7 +349,7 @@ export const EX_SPEC_RESPONSIVE_MULTIVEC_CIRCULAR: GoslingSpec = {
                         {
                             y: { field: 'peak', type: 'quantitative', axis: 'none', domain: [0.0025, 0.005] },
                             row: { field: 'sample', type: 'nominal', legend: true },
-                            opacity: { value: 0.3 },
+                            opacity: { value: 0.33 },
                             visibility: [
                                 {
                                     target: 'track',
@@ -382,7 +368,7 @@ export const EX_SPEC_RESPONSIVE_MULTIVEC_CIRCULAR: GoslingSpec = {
                         {
                             y: { field: 'peak', type: 'quantitative', axis: 'none', domain: [0.005, 0.0075] },
                             row: { field: 'sample', type: 'nominal', legend: true },
-                            opacity: { value: 0.3 },
+                            opacity: { value: 0.33 },
                             visibility: [
                                 {
                                     target: 'track',
@@ -401,7 +387,7 @@ export const EX_SPEC_RESPONSIVE_MULTIVEC_CIRCULAR: GoslingSpec = {
                         {
                             y: { field: 'peak', type: 'quantitative', axis: 'none', domain: [0.0075, 0.01] },
                             row: { field: 'sample', type: 'nominal', legend: true },
-                            opacity: { value: 0.3 },
+                            opacity: { value: 0.33 },
                             visibility: [
                                 {
                                     target: 'track',
@@ -419,10 +405,10 @@ export const EX_SPEC_RESPONSIVE_MULTIVEC_CIRCULAR: GoslingSpec = {
                         },
                         {
                             y: { field: 'peak', type: 'quantitative', axis: 'right' },
-                            color: { field: 'sample', type: 'nominal', range: ['#2270B5'] },
-                            opacity: { value: 0.5 },
-                            stroke: { value: 'white' },
-                            strokeWidth: { value: 0.5 },
+                            // color: { field: 'sample', type: 'nominal', range: ['#2270B5'] },
+                            opacity: { value: 1 },
+                            // stroke: { value: 'white' },
+                            // strokeWidth: { value: 0.5 },
                             visibility: [
                                 {
                                     target: 'track',

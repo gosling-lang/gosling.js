@@ -276,11 +276,10 @@ function Editor(props: any) {
 
     const deviceToResolution = {
         Auto: undefined,
+        UHD: { width: 3840, height: 2160 },
         FHD: { width: 1920, height: 1080 },
-        'Rotated FHD': { width: 1080, height: 1920 },
-        HD: { width: 1280, height: 720 },
-        'Rotated HD': { width: 720, height: 1280 },
-        'iPad Mini': { width: 768, height: 1024 }
+        'Google Nexus Tablet': { width: 1024, height: 768 },
+        'iPhone X': { width: 375, height: 812 }
     };
 
     const ResponsiveWidget = useMemo(() => {
@@ -308,6 +307,7 @@ function Editor(props: any) {
                 </span>
                 <span className="screen-size-dropdown">
                     <select
+                        style={{ width: '80px' }}
                         onChange={e => {
                             const device = e.target.value;
                             if (Object.keys(deviceToResolution).includes(device)) {
@@ -353,6 +353,25 @@ function Editor(props: any) {
                             setScreenSize({ width: screenSize?.width ?? 1000, height });
                         }}
                     />
+                    <span
+                        style={{
+                            marginLeft: 10,
+                            color: 'gray',
+                            verticalAlign: 'middle',
+                            display: 'inline-block',
+                            marginTop: '2px',
+                            cursor: 'pointer'
+                        }}
+                        onClick={() => {
+                            setVisibleScreenSize({
+                                width: visibleScreenSize?.height ?? 1000,
+                                height: visibleScreenSize?.width ?? 1000
+                            });
+                            setScreenSize({ width: screenSize?.height ?? 1000, height: screenSize?.width ?? 1000 });
+                        }}
+                    >
+                        {getIconSVG(ICONS.REPEAT, 20, 20)}
+                    </span>
                 </span>
             </div>
         );

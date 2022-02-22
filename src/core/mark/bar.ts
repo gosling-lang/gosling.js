@@ -43,6 +43,8 @@ export function drawBar(trackInfo: any, tile: any, model: GoslingTrackModel) {
     /* row separation */
     const rowCategories = (model.getChannelDomainArray('row') as string[]) ?? ['___SINGLE_ROW___'];
     const rowHeight = trackHeight / rowCategories.length;
+    const clipRow =
+        !IsChannelDeep(spec.row) || (IsChannelDeep(spec.row) && typeof spec.row.clip === 'undefined') || spec.row.clip;
 
     /* baseline */
     const baselineValue = IsChannelDeep(spec.y) ? spec.y?.baseline : undefined;
@@ -157,6 +159,14 @@ export function drawBar(trackInfo: any, tile: any, model: GoslingTrackModel) {
                 } else {
                     yTop = rowPosition + rowHeight - ye;
                     yBottom = rowPosition + rowHeight - y;
+                }
+
+                // If the position exceeds the given scale, clip it!
+                if (clipRow) {
+                    yTop = Math.max(rowPosition, yTop);
+                    yTop = Math.min(yTop, rowPosition + rowHeight);
+                    yBottom = Math.max(rowPosition, yBottom);
+                    yBottom = Math.min(yBottom, rowPosition + rowHeight);
                 }
 
                 const alphaTransition = model.markVisibility(d, { width: barWidth, zoomLevel });
