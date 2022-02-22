@@ -170,7 +170,7 @@ export const EX_SPEC_RESPONSIVE_COMPARATIVE_MATRICES: GoslingSpec = {
                     {
                         tracks: [
                             getMatrix(
-                                'http://higlass.io/api/v1/tileset_info/?d=CQMd6V_cRw6iCI_-Unl3PQ',
+                                'https://higlass.io/api/v1/tileset_info/?d=CQMd6V_cRw6iCI_-Unl3PQ',
                                 'grey',
                                 'full',
                                 400,
@@ -181,7 +181,7 @@ export const EX_SPEC_RESPONSIVE_COMPARATIVE_MATRICES: GoslingSpec = {
                     {
                         tracks: [
                             getMatrix(
-                                'http://higlass.io/api/v1/tileset_info/?d=ZCvntCKST0KUvQPGcCbJGA',
+                                'https://higlass.io/api/v1/tileset_info/?d=ZCvntCKST0KUvQPGcCbJGA',
                                 'pink',
                                 'full',
                                 400,
@@ -192,7 +192,7 @@ export const EX_SPEC_RESPONSIVE_COMPARATIVE_MATRICES: GoslingSpec = {
                     // {
                     //     tracks: [
                     //         getMatrix(
-                    //             'http://higlass.io/api/v1/tileset_info/?d=TdQ_Qc-dQemfpqO_rjHsQQ',
+                    //             'https://higlass.io/api/v1/tileset_info/?d=TdQ_Qc-dQemfpqO_rjHsQQ',
                     //             'grey',
                     //             'full',
                     //             400,
@@ -203,7 +203,7 @@ export const EX_SPEC_RESPONSIVE_COMPARATIVE_MATRICES: GoslingSpec = {
                     // {
                     //     tracks: [
                     //         getMatrix(
-                    //             'http://higlass.io/api/v1/tileset_info/?d=QvdMEvccQuOxKTEjrVL3wA',
+                    //             'https://higlass.io/api/v1/tileset_info/?d=QvdMEvccQuOxKTEjrVL3wA',
                     //             'pink',
                     //             'full',
                     //             400,
@@ -214,7 +214,7 @@ export const EX_SPEC_RESPONSIVE_COMPARATIVE_MATRICES: GoslingSpec = {
                     // {
                     //     tracks: [
                     //         getMatrix(
-                    //             'http://higlass.io/api/v1/tileset_info/?d=EV1TR63uTHySVLH27sT_VQ',
+                    //             'https://higlass.io/api/v1/tileset_info/?d=EV1TR63uTHySVLH27sT_VQ',
                     //             'grey',
                     //             'full',
                     //             400,
@@ -225,7 +225,7 @@ export const EX_SPEC_RESPONSIVE_COMPARATIVE_MATRICES: GoslingSpec = {
                     // {
                     //     tracks: [
                     //         getMatrix(
-                    //             'http://higlass.io/api/v1/tileset_info/?d=JO9CouMTS_WKLnlYBRcw8A',
+                    //             'https://higlass.io/api/v1/tileset_info/?d=JO9CouMTS_WKLnlYBRcw8A',
                     //             'pink',
                     //             'full',
                     //             400,
@@ -257,14 +257,14 @@ export const EX_SPEC_RESPONSIVE_COMPARATIVE_MATRICES: GoslingSpec = {
             alignment: 'overlay',
             tracks: [
                 getMatrix(
-                    'http://higlass.io/api/v1/tileset_info/?d=CQMd6V_cRw6iCI_-Unl3PQ',
+                    'https://higlass.io/api/v1/tileset_info/?d=CQMd6V_cRw6iCI_-Unl3PQ',
                     'grey',
                     'lower-left',
                     100,
                     100
                 ),
                 getMatrix(
-                    'http://higlass.io/api/v1/tileset_info/?d=ZCvntCKST0KUvQPGcCbJGA',
+                    'https://higlass.io/api/v1/tileset_info/?d=ZCvntCKST0KUvQPGcCbJGA',
                     'pink',
                     'upper-right',
                     100,
@@ -278,14 +278,14 @@ export const EX_SPEC_RESPONSIVE_COMPARATIVE_MATRICES: GoslingSpec = {
         //     alignment: 'overlay',
         //     tracks: [
         //         getMatrix(
-        //             'http://higlass.io/api/v1/tileset_info/?d=TdQ_Qc-dQemfpqO_rjHsQQ',
+        //             'https://higlass.io/api/v1/tileset_info/?d=TdQ_Qc-dQemfpqO_rjHsQQ',
         //             'grey',
         //             'lower-left',
         //             100,
         //             100
         //         ),
         //         getMatrix(
-        //             'http://higlass.io/api/v1/tileset_info/?d=QvdMEvccQuOxKTEjrVL3wA',
+        //             'https://higlass.io/api/v1/tileset_info/?d=QvdMEvccQuOxKTEjrVL3wA',
         //             'pink',
         //             'upper-right',
         //             100,
@@ -299,14 +299,14 @@ export const EX_SPEC_RESPONSIVE_COMPARATIVE_MATRICES: GoslingSpec = {
         //     alignment: 'overlay',
         //     tracks: [
         //         getMatrix(
-        //             'http://higlass.io/api/v1/tileset_info/?d=EV1TR63uTHySVLH27sT_VQ',
+        //             'https://higlass.io/api/v1/tileset_info/?d=EV1TR63uTHySVLH27sT_VQ',
         //             'grey',
         //             'lower-left',
         //             100,
         //             100
         //         ),
         //         getMatrix(
-        //             'http://higlass.io/api/v1/tileset_info/?d=JO9CouMTS_WKLnlYBRcw8A',
+        //             'https://higlass.io/api/v1/tileset_info/?d=JO9CouMTS_WKLnlYBRcw8A',
         //             'pink',
         //             'upper-right',
         //             100,
