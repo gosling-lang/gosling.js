@@ -44,7 +44,7 @@ export const HiGlassComponentWrapper = forwardRef<HiGlassApi | undefined, HiGlas
         }, [props.id]);
 
         const viewConfig = props.viewConfig || {};
-        const pixelPreciseMarginPadding = !props.options.responsiveHeight;
+        const pixelPreciseMarginPadding = false; // !props.options.responsiveHeight;
         const higlassComponent = useMemo(
             () => (
                 <HiGlassComponent
