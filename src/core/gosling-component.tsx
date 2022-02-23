@@ -56,34 +56,6 @@ export const GoslingComponent = forwardRef<
         }
     }, [ref, hgRef, viewConfig, theme]);
 
-    const responsiveHeight =
-        typeof props.spec?.responsiveSize !== 'object' ? props.spec?.responsiveSize : props.spec.responsiveSize.height;
-
-    // HiGlass component should be mounted only once
-    const higlassComponent = useMemo(
-        () => (
-            <HiGlassComponentWrapper
-                ref={hgRef}
-                viewConfig={viewConfig}
-                size={size}
-                id={wrapperDivId}
-                className={props.className}
-                options={{
-                    padding: props.padding,
-                    border: props.border,
-                    margin: props.margin,
-                    responsiveWidth:
-                        typeof props.spec?.responsiveSize !== 'object'
-                            ? props.spec?.responsiveSize
-                            : props.spec.responsiveSize.width,
-                    responsiveHeight,
-                    background: theme.root.background
-                }}
-            />
-        ),
-        [viewConfig, size, theme, responsiveHeight]
-    );
-
     // TODO: add a `force` parameter since changing `linkingId` might not update vis
     const compile = useCallback(() => {
         if (props.spec) {
@@ -156,6 +128,34 @@ export const GoslingComponent = forwardRef<
     useEffect(() => {
         compile();
     }, [props.spec, theme]);
+
+    const responsiveHeight =
+        typeof props.spec?.responsiveSize !== 'object' ? props.spec?.responsiveSize : props.spec.responsiveSize.height;
+
+    // HiGlass component should be mounted only once
+    const higlassComponent = useMemo(
+        () => (
+            <HiGlassComponentWrapper
+                ref={hgRef}
+                viewConfig={viewConfig}
+                size={size}
+                id={wrapperDivId}
+                className={props.className}
+                options={{
+                    padding: props.padding,
+                    border: props.border,
+                    margin: props.margin,
+                    responsiveWidth:
+                        typeof props.spec?.responsiveSize !== 'object'
+                            ? props.spec?.responsiveSize
+                            : props.spec.responsiveSize.width,
+                    responsiveHeight,
+                    background: theme.root.background
+                }}
+            />
+        ),
+        [viewConfig, size, theme, responsiveHeight]
+    );
 
     return higlassComponent;
 });
