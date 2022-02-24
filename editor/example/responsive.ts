@@ -85,6 +85,7 @@ export const EX_SPEC_RESPONSIVE_MULTIVEC: GoslingSpec = {
             spacing: 1,
             tracks: [
                 {
+                    id: 'responsive-multivec',
                     alignment: 'overlay',
                     data: {
                         url: 'https://server.gosling-lang.org/api/v1/tileset_info/?d=cistrome-multivec',

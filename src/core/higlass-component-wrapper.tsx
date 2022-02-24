@@ -44,6 +44,7 @@ export const HiGlassComponentWrapper = forwardRef<HiGlassApi | undefined, HiGlas
         }, [props.id]);
 
         const viewConfig = props.viewConfig || {};
+        const pixelPreciseMarginPadding = false; // !props.options.responsiveHeight;
         const higlassComponent = useMemo(
             () => (
                 <HiGlassComponent
@@ -53,7 +54,7 @@ export const HiGlassComponentWrapper = forwardRef<HiGlassApi | undefined, HiGlas
                         // Since using this disallows responsive resizing of track heights in HiGlass,
                         // we need to use this only when users do not want to use responsive height.
                         // (See https://github.com/higlass/higlass/blob/2a3786e13c2415a52abc1227f75512f128e784a0/app/scripts/HiGlassComponent.js#L2199)
-                        pixelPreciseMarginPadding: !props.options.responsiveHeight,
+                        pixelPreciseMarginPadding,
 
                         containerPaddingX: 0,
                         containerPaddingY: 0,
@@ -71,7 +72,7 @@ export const HiGlassComponentWrapper = forwardRef<HiGlassApi | undefined, HiGlas
                     viewConfig={viewConfig}
                 />
             ),
-            [viewConfig]
+            [viewConfig, pixelPreciseMarginPadding]
         );
 
         // Styling

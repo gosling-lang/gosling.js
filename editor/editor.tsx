@@ -903,7 +903,7 @@ function Editor(props: any) {
                                             border={'none'}
                                             id={'goslig-component-root'}
                                             className={'goslig-component'}
-                                            experimental={{ reactive: false }}
+                                            experimental={{ reactive: true }}
                                             compiled={(g, h) => {
                                                 setHg(h);
                                             }}

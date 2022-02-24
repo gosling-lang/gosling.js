@@ -11,6 +11,10 @@ import { omitDeep } from './utils/omit-deep';
 import { isEqual } from 'lodash';
 import * as uuid from 'uuid';
 
+// Before rerendering, wait for a few time so that HiGlass container is resized already.
+// If HiGlass is rendered and then the container resizes, the viewport position changes, unmatching `xDomain` specified by users.
+const DELAY_FOR_CONTAINER_RESIZE_BEFORE_RERENDER = 300;
+
 interface GoslingCompProps {
     spec?: gosling.GoslingSpec;
     compiled?: (goslingSpec: gosling.GoslingSpec, higlassSpec: gosling.HiGlassSpec) => void;
@@ -84,7 +88,9 @@ export const GoslingComponent = forwardRef<
                     const isMountedOnce = typeof viewConfig !== 'undefined';
                     if (props.experimental?.reactive && isMountedOnce) {
                         // Use API to update visualization.
-                        hgRef.current?.api.setViewConfig(newHs);
+                        setTimeout(() => {
+                            hgRef.current?.api.setViewConfig(newHs);
+                        }, DELAY_FOR_CONTAINER_RESIZE_BEFORE_RERENDER);
                     } else {
                         // Mount `HiGlassComponent` using this view config.
                         setViewConfig(newHs);
@@ -123,6 +129,9 @@ export const GoslingComponent = forwardRef<
         compile();
     }, [props.spec, theme]);
 
+    const responsiveHeight =
+        typeof props.spec?.responsiveSize !== 'object' ? props.spec?.responsiveSize : props.spec.responsiveSize.height;
+
     // HiGlass component should be mounted only once
     const higlassComponent = useMemo(
         () => (
@@ -140,15 +149,12 @@ export const GoslingComponent = forwardRef<
                         typeof props.spec?.responsiveSize !== 'object'
                             ? props.spec?.responsiveSize
                             : props.spec.responsiveSize.width,
-                    responsiveHeight:
-                        typeof props.spec?.responsiveSize !== 'object'
-                            ? props.spec?.responsiveSize
-                            : props.spec.responsiveSize.height,
+                    responsiveHeight,
                     background: theme.root.background
                 }}
             />
         ),
-        [viewConfig, size, theme]
+        [viewConfig, size, theme, responsiveHeight]
     );
 
     return higlassComponent;
