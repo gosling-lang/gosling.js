@@ -12,6 +12,7 @@ import {
     EX_SPEC_RESPONSIVE_MULTIVEC,
     EX_SPEC_RESPONSIVE_MULTIVEC_CIRCULAR
 } from './responsive';
+import { EX_SPEC_RESPONSIVE_TRACK_WISE_COMPARISON } from './responsive-track-wise-comparison';
 import { EX_SPEC_ALIGNMENT_CHART, EX_SPEC_RESPONSIVE_ALIGNMENT_CHART } from './responsive-alignment';
 import { EX_SPEC_MARK_DISPLACEMENT } from './mark-displacement';
 import { EX_SPEC_CIRCULAR_OVERVIEW_LINEAR_DETAIL } from './circular-overview-linear-detail-views';
@@ -116,17 +117,22 @@ export const examples: {
     RESPONSIVE_COMPARATIVE_VIEWS: {
         name: 'Responsive Visualization: Comparative Views',
         spec: EX_SPEC_RESPONSIVE_COMPARATIVE_VIEWS,
-        underDevelopment: true
+        underDevelopment: true,
+        hidden: true
     },
     RESPONSIVE_COMPARATIVE_MATRICES: {
         name: 'Responsive Visualization: Comparative Matrices',
-        spec: EX_SPEC_RESPONSIVE_COMPARATIVE_MATRICES,
-        underDevelopment: true
+        spec: EX_SPEC_RESPONSIVE_COMPARATIVE_MATRICES
+    },
+    RESPONSIVE_TRACK_WISE_COMPARISON: {
+        name: 'Responsive Visualization: Track-wise Comparison',
+        spec: EX_SPEC_RESPONSIVE_TRACK_WISE_COMPARISON
     },
     RESPONSIVE_ALIGNMENT: {
         name: 'Responsive Visualization: Alignment Views',
         spec: EX_SPEC_RESPONSIVE_ALIGNMENT_CHART,
-        underDevelopment: true
+        underDevelopment: true,
+        hidden: true
     },
     CYTOBANDS: {
         name: 'Ideograms',

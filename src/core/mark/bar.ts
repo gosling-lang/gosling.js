@@ -156,6 +156,12 @@ export function drawBar(trackInfo: any, tile: any, model: GoslingTrackModel) {
                 if (typeof ye === 'undefined') {
                     yTop = rowPosition + rowHeight - staticBaseY - y;
                     yBottom = rowPosition + rowHeight - staticBaseY;
+
+                    // Flip the bar along y-axis
+                    if ((IsChannelDeep(spec.y) && spec.y.flip) || spec.flipY) {
+                        yBottom = yTop;
+                        yTop = rowPosition;
+                    }
                 } else {
                     yTop = rowPosition + rowHeight - ye;
                     yBottom = rowPosition + rowHeight - y;
