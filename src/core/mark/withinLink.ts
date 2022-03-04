@@ -270,17 +270,23 @@ export function drawWithinLink(g: PIXI.Graphics, trackInfo: any, model: GoslingT
                         g.lineTo(x4, y4);
 
                         /* click event data */
-                        // const morePoints = bezier.getLUT(1000);
-                        // if (spec.tooltip) {
-                        //     trackInfo.tooltips.push({
-                        //         datum: d,
-                        //         isMouseOver: (mouseX: number, mouseY: number) =>
-                        //             morePoints.findIndex(
-                        //                 d => Math.sqrt((d.x - mouseX) ** 2 + (d.y - mouseY) ** 2) < 5
-                        //             ) !== -1,
-                        //         markInfo: {}
-                        //     } as TooltipData);
-                        // }
+                        const length = 100;
+                        const eventPoints = Array.from({ length }, (d, i) => {
+                            return {
+                                x: ((x4 - x1) / (length - 1)) * i + x1,
+                                y: ((y4 - y1) / (length - 1)) * i + y1
+                            };
+                        });
+                        if (spec.tooltip) {
+                            trackInfo.tooltips.push({
+                                datum: d,
+                                isMouseOver: (mouseX: number, mouseY: number) =>
+                                    eventPoints.findIndex(
+                                        d => Math.sqrt((d.x - mouseX) ** 2 + (d.y - mouseY) ** 2) < 5
+                                    ) !== -1,
+                                markInfo: {}
+                            } as TooltipData);
+                        }
                     } else {
                         const r = trackOuterRadius - (rowPosition / trackHeight) * trackRingSize;
                         const posS = cartesianToPolar(x, trackWidth, r, tcx, tcy, startAngle, endAngle);
