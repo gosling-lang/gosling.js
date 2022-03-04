@@ -8012,6 +8012,7 @@
           "enum": [
             "elliptical",
             "circular",
+            "straight",
             "_bezier_deprecated_"
           ],
           "type": "string"
