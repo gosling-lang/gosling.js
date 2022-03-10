@@ -26,7 +26,7 @@ const tracks: (type: 1 | 2, compact?: boolean) => SingleTrack[] = (type, compact
         strokeWidth: { value: 0.2 },
         style: { background: 'lightgray', backgroundOpacity: type === 1 || !compact ? 0 : 0.2 },
         width: 700,
-        height: 40
+        height: 100
     },
     {
         id: `${type}-2`,
@@ -47,7 +47,7 @@ const tracks: (type: 1 | 2, compact?: boolean) => SingleTrack[] = (type, compact
         strokeWidth: { value: 0.2 },
         style: { background: 'lightgray', backgroundOpacity: type === 1 || !compact ? 0 : 0.2 },
         width: 700,
-        height: 40
+        height: 100
     },
     {
         id: `${type}-3`,
@@ -68,7 +68,7 @@ const tracks: (type: 1 | 2, compact?: boolean) => SingleTrack[] = (type, compact
         strokeWidth: { value: 0.2 },
         style: { background: 'lightgray', backgroundOpacity: type === 1 || !compact ? 0 : 0.2 },
         width: 700,
-        height: 40
+        height: 100
     }
 ];
 
@@ -110,7 +110,7 @@ export const gene: (type: 1 | 2, compact?: boolean) => TemplateTrack = (type, co
         },
         style: { background: 'lightgray', backgroundOpacity: type === 1 || !compact ? 0 : 0.1 },
         width: 700,
-        height: 20
+        height: 100
     };
 };
 
@@ -244,7 +244,7 @@ const _gene: (type: 1 | 2, compact?: boolean) => OverlaidTracks = (type, compact
         style: { background: 'lightgray', backgroundOpacity: type === 1 || !compact ? 0 : 0.2 },
         opacity: { value: 0.8 },
         width: 700,
-        height: 20
+        height: 100
     };
 };
 
@@ -254,12 +254,10 @@ const xDomain: (type: 1 | 2) => DomainChrInterval = type => {
 };
 
 export const EX_SPEC_RESPONSIVE_TRACK_WISE_COMPARISON: GoslingSpec = {
-    description: 'TODO: do not bound height; instead just check the screen size.',
-    responsiveSize: { width: false, height: true },
     spacing: 30,
     responsiveSpec: [
         {
-            selectivity: [{ measure: 'height', operation: 'LT', threshold: 1000 }],
+            selectivity: [{ measure: 'height', operation: 'LT', threshold: 1000, target: 'container' }],
             spec: {
                 spacing: 0,
                 views: [
