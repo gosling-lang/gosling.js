@@ -30,6 +30,10 @@ export type SingleView = (OverlaidTracks | StackedTracks | FlatTracks) & Respons
 
 export type SelectivityCondition = {
     operation: LogicalOperation;
+    /**
+     * Does the condition applied to the visualization itself or its container? __Default__: `'self'`
+     */
+    target?: 'self' | 'container';
     measure: 'width' | 'height' | 'aspectRatio';
     threshold: number;
 };

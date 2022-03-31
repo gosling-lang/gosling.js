@@ -5446,6 +5446,14 @@
         "operation": {
           "$ref": "#/definitions/LogicalOperation"
         },
+        "target": {
+          "description": "Does the condition applied to the visualization itself or its container? __Default__: `'self'`",
+          "enum": [
+            "self",
+            "container"
+          ],
+          "type": "string"
+        },
         "threshold": {
           "type": "number"
         }

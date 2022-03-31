@@ -12,7 +12,10 @@ export function compile(
     setHg: (hg: HiGlassSpec, size: Size, gs: GoslingSpec) => void,
     templates: TemplateTrackDef[],
     theme: Required<CompleteThemeDeep>,
-    curSize?: { width: number; height: number }
+    containerStatus: {
+        containerSize?: { width: number; height: number };
+        containerParentSize?: { width: number; height: number };
+    }
 ) {
     // Make sure to keep the original spec as-is
     const specCopy = JSON.parse(JSON.stringify(spec));
@@ -36,9 +39,17 @@ export function compile(
         (typeof spec.responsiveSize === 'object' && spec.responsiveSize?.width) || spec.responsiveSize;
     const isResponsiveHeight =
         (typeof spec.responsiveSize === 'object' && spec.responsiveSize?.height) || spec.responsiveSize;
-    const wFactor = isResponsiveWidth && curSize ? curSize?.width / size.width : 1;
-    const hFactor = isResponsiveHeight && curSize ? curSize?.height / size.height : 1;
-    const replaced = manageResponsiveSpecs(specCopy, wFactor, hFactor);
+    const wFactor =
+        isResponsiveWidth && containerStatus.containerSize ? containerStatus.containerSize.width / size.width : 1;
+    const hFactor =
+        isResponsiveHeight && containerStatus.containerSize ? containerStatus.containerSize.height / size.height : 1;
+    const pWidth = containerStatus.containerParentSize
+        ? containerStatus.containerParentSize.width
+        : Number.MAX_SAFE_INTEGER;
+    const pHeight = containerStatus.containerParentSize
+        ? containerStatus.containerParentSize.height
+        : Number.MAX_SAFE_INTEGER;
+    const replaced = manageResponsiveSpecs(specCopy, wFactor, hFactor, pWidth, pHeight);
 
     // Do the downstream-fix and track arrangement again using the updated spec
     if (replaced) {

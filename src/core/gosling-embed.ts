@@ -83,7 +83,8 @@ export function embed(element: HTMLElement, spec: GoslingSpec, opts: GoslingEmbe
                 resolve(api);
             },
             [...GoslingTemplates],
-            theme
+            theme,
+            {} // TODO: properly specify this
         );
     });
 }

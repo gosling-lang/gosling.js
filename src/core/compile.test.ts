@@ -6,7 +6,7 @@ import { GoslingSpec } from '../index';
 describe('compile', () => {
     it('compile should not touch the original spec of users', () => {
         const spec = JSON.parse(JSON.stringify(EX_SPEC_VISUAL_ENCODING));
-        compile(spec, () => {}, [], getTheme());
+        compile(spec, () => {}, [], getTheme(), {});
         expect(JSON.stringify(spec)).toEqual(JSON.stringify(EX_SPEC_VISUAL_ENCODING));
     });
 });
@@ -35,7 +35,8 @@ describe('gosling track.id => higlass view.uid', () => {
                 expect(h.views[0].uid).toEqual('track-id');
             },
             [],
-            getTheme()
+            getTheme(),
+            {}
         );
     });
 });

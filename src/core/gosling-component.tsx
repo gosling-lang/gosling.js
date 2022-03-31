@@ -37,6 +37,7 @@ export const GoslingComponent = forwardRef<
     const [viewConfig, setViewConfig] = useState<gosling.HiGlassSpec>();
     const [size, setSize] = useState({ width: 200, height: 200 });
     const wrapperSize = useRef<undefined | { width: number; height: number }>();
+    const wrapperParentSize = useRef<undefined | { width: number; height: number }>();
     const prevSpec = useRef<undefined | gosling.GoslingSpec>();
 
     // HiGlass API
@@ -100,17 +101,20 @@ export const GoslingComponent = forwardRef<
                 },
                 [...GoslingTemplates], // TODO: allow user definitions
                 theme,
-                wrapperSize.current
+                {
+                    containerSize: wrapperSize.current,
+                    containerParentSize: wrapperParentSize.current
+                }
             );
         }
     }, [props.spec, theme]);
 
     // TODO: If not necessary, do not update `wrapperSize` (i.e., when responsiveSize is not set)
     useEffect(() => {
-        const parentElement = document.getElementById(wrapperDivId);
-        if (!parentElement) return;
+        const containerElement = document.getElementById(wrapperDivId);
+        if (!containerElement) return;
 
-        const resizer = new ResizeSensor(parentElement, newSize => {
+        const resizer = new ResizeSensor(containerElement, newSize => {
             if (
                 !wrapperSize.current ||
                 wrapperSize.current.height !== newSize.height ||
@@ -120,8 +124,24 @@ export const GoslingComponent = forwardRef<
                 compile();
             }
         });
+
+        const parentElement = containerElement.parentElement;
+        if (!parentElement) return;
+
+        const parentResizer = new ResizeSensor(parentElement, newSize => {
+            if (
+                !wrapperParentSize.current ||
+                wrapperParentSize.current.height !== newSize.height ||
+                wrapperParentSize.current.width !== newSize.width
+            ) {
+                wrapperParentSize.current = newSize;
+                compile();
+            }
+        });
+
         return () => {
             resizer.detach();
+            parentResizer.detach();
         };
     });
 
