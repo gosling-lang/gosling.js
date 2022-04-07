@@ -60,6 +60,13 @@
     color: black;
 }
 
+.demo-label {
+    margin-left: 16px;
+    font-weight: 400;
+    color: #e18343;
+    cursor: pointer;
+}
+
 .demo-navbar select {
     margin-left: 16px;
     padding: 2px 10px;
@@ -503,8 +510,10 @@ td {
 
 .about-modal-container-hidden {
     background-color: #00000000;
+    pointer-events: none;
+
+    /* Adding this since transition is laggy when changing a demo */
     opacity: 0;
-    visibility: hidden;
 }
 
 .about-modal {
@@ -520,6 +529,86 @@ td {
     border-radius: 10px;
     transition: opacity 0.3s ease;
     padding: 30px;
+}
+
+.about-modal-hidden {
+    visibility: hidden;
+}
+
+.example-gallery-container {
+    position: absolute;
+    left: calc(50% - 40% + 50px);
+    top: calc(50% - 40% + 40px);
+    width: calc(80% - 50px); /* sidebar is 50px */
+    height: calc(80% - 40px); /* navbar is 40px */
+    background-color: white;
+    border: 1px solid grey;
+    border-radius: 10px;
+    box-shadow: 0px 0px 35px #00000088;
+    overflow-y: auto;
+    z-index: 999;
+}
+
+.example-gallery {
+    position: relative;
+    margin: 100px;
+    height: calc(100% - 200px);
+    width: calc(100% - 200px);
+}
+
+.example-gallery h2 {
+    margin-bottom: 10px;
+    font-size: 26px;
+}
+
+.example-gallery h5 {
+    margin-top: 0px;
+    font-size: 16px;
+    color: grey;
+    font-weight: normal;
+}
+
+.example-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 40px;
+    margin-bottom: 40px;
+}
+
+.example-card {
+    height: 330px;
+    width: 400px;
+    cursor: pointer;
+}
+
+.example-card-bg {
+    height: 300px;
+    width: 400px;
+    background: rgb(235, 235, 235);
+    /* Scale Images */
+    background-size: cover;
+    background-position: top left;
+    transition: all 1s;
+    /* border: 1px solid lightgrey; */
+}
+
+.example-card-name {
+    /* padding-left: 10px; */
+    padding-top: 10px;
+    font-size: 18px;
+    font-weight: 500;
+    text-decoration: underline;
+    color: #e18343;
+    width: 400px;
+    height: 30px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    display: block;
+}
+
+.example-card-bg:hover {
+    background-position: bottom right;
 }
 
 .about-model-close-button {
