@@ -537,10 +537,11 @@ td {
 
 .example-gallery-container {
     position: absolute;
-    left: calc(50% - 40% + 50px);
-    top: calc(50% - 40% + 40px);
-    width: calc(80% - 50px); /* sidebar is 50px */
-    height: calc(80% - 40px); /* navbar is 40px */
+    /* Make this more readable */
+    left: calc(50% - 45% + 25px);
+    top: calc(50% - 45% + 20px);
+    width: calc(90% - 50px); /* sidebar is 50px */
+    height: calc(90% - 40px); /* navbar is 40px */
     background-color: white;
     border: 1px solid grey;
     border-radius: 10px;
@@ -551,18 +552,23 @@ td {
 
 .example-gallery {
     position: relative;
-    margin: 100px;
-    height: calc(100% - 200px);
-    width: calc(100% - 200px);
+    margin: 50px;
+    height: calc(100% - 100px);
+    width: calc(100% - 100px);
+}
+
+.example-gallery h1 {
+    font-size: 26px;
 }
 
 .example-gallery h2 {
     margin-bottom: 10px;
-    font-size: 26px;
+    font-size: 23px;
 }
 
 .example-gallery h5 {
     margin-top: 0px;
+    margin-bottom: 14px;
     font-size: 16px;
     color: grey;
     font-weight: normal;
@@ -571,25 +577,25 @@ td {
 .example-group {
     display: flex;
     flex-wrap: wrap;
-    gap: 40px;
+    gap: 50px;
     margin-bottom: 40px;
 }
 
 .example-card {
-    height: 330px;
-    width: 400px;
+    height: 280px;
+    width: 250px;
     cursor: pointer;
 }
 
 .example-card-bg {
-    height: 300px;
-    width: 400px;
+    height: 250px;
+    width: 250px;
     background: rgb(235, 235, 235);
     /* Scale Images */
     background-size: cover;
     background-position: top left;
     transition: all 1s;
-    /* border: 1px solid lightgrey; */
+    border: 1px solid rgb(228, 228, 228);
 }
 
 .example-card-name {
@@ -597,9 +603,9 @@ td {
     padding-top: 10px;
     font-size: 18px;
     font-weight: 500;
-    text-decoration: underline;
+    /* text-decoration: dotted; */
     color: #e18343;
-    width: 400px;
+    width: 250px;
     height: 30px;
     text-overflow: ellipsis;
     white-space: nowrap;

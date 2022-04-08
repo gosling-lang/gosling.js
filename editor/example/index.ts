@@ -38,8 +38,10 @@ export type ExampleGroup =
     | 'Responsive Visualization'
     | 'Coordinated Multiple Views'
     | 'Applications'
+    | 'Track Templates'
     | 'Doc'
     | 'Unassigned';
+
 export const ExampleGroups: {
     name: ExampleGroup;
     description: string;
@@ -67,6 +69,10 @@ export const ExampleGroups: {
     {
         name: 'Applications',
         description: 'Analytics visualizations (re)implemented using Gosling.'
+    },
+    {
+        name: 'Track Templates',
+        description: 'Built-in track templates that allow creating common tracks, like ideograms and gene annotations.'
     },
     {
         name: 'Doc',
@@ -129,7 +135,8 @@ export const examples: {
     LINKING: {
         group: 'Coordinated Multiple Views',
         name: 'Visual Linking',
-        spec: EX_SPEC_LINKING
+        spec: EX_SPEC_LINKING,
+        image: THUMBNAILS.LINKING
     },
     LAYOUT_AND_ARRANGEMENT_1: {
         group: 'Unassigned',
@@ -164,12 +171,14 @@ export const examples: {
     SEQUENCE: {
         group: 'Semantic Zooming',
         name: 'Multi-Scale Sequence Track',
-        spec: EX_SPEC_SEQUENCE_TRACK
+        spec: EX_SPEC_SEQUENCE_TRACK,
+        image: THUMBNAILS.SEQUENCE
     },
     SEMANTIC_ZOOM: {
         group: 'Semantic Zooming',
         name: 'Multi-Scale Clinvar Lollipop Plot',
-        spec: EX_SPEC_CLINVAR_LOLLIPOP
+        spec: EX_SPEC_CLINVAR_LOLLIPOP,
+        image: THUMBNAILS.SEMANTIC_ZOOM
     },
     RESPONSIVE_MULTIVEC: {
         group: 'Responsive Visualization',
@@ -180,13 +189,15 @@ export const examples: {
     RESPONSIVE_MULTIVEC_CIRCULAR: {
         group: 'Responsive Visualization',
         name: 'Circular Multiple Vectors',
-        spec: EX_SPEC_RESPONSIVE_MULTIVEC_CIRCULAR
+        spec: EX_SPEC_RESPONSIVE_MULTIVEC_CIRCULAR,
+        image: THUMBNAILS.RESPONSIVE_MULTIVEC_CIRCULAR
     },
     RESPONSIVE_IDEOGRAM: {
         group: 'Responsive Visualization',
         name: 'Ideogram',
         spec: EX_SPEC_RESPONSIVE_IDEOGRAM,
-        underDevelopment: true
+        underDevelopment: true,
+        image: THUMBNAILS.RESPONSIVE_IDEOGRAM
     },
     RESPONSIVE_COMPARATIVE_VIEWS: {
         group: 'Responsive Visualization',
@@ -204,7 +215,8 @@ export const examples: {
     RESPONSIVE_TRACK_WISE_COMPARISON: {
         group: 'Responsive Visualization',
         name: 'Track-wise Comparison',
-        spec: EX_SPEC_RESPONSIVE_TRACK_WISE_COMPARISON
+        spec: EX_SPEC_RESPONSIVE_TRACK_WISE_COMPARISON,
+        image: THUMBNAILS.RESPONSIVE_TRACK_WISE_COMPARISON
     },
     RESPONSIVE_ALIGNMENT: {
         group: 'Responsive Visualization',
@@ -222,17 +234,20 @@ export const examples: {
     GENE_ANNOTATION: {
         group: 'Visual Encoding',
         name: 'Custom Gene Annotation',
-        spec: EX_SPEC_GENE_ANNOTATION
+        spec: EX_SPEC_GENE_ANNOTATION,
+        image: THUMBNAILS.GENE_ANNOTATION
     },
     MATRIX_HFFC6: {
         group: 'Coordinated Multiple Views',
         name: 'Comparative Matrices (Micro-C vs. Hi-C)',
-        spec: EX_SPEC_MATRIX_HFFC6
+        spec: EX_SPEC_MATRIX_HFFC6,
+        image: THUMBNAILS.MATRIX_HFFC6
     },
     CIRCOS: {
         group: 'Visual Encoding',
         name: 'Circos',
-        spec: EX_SPEC_CIRCOS
+        spec: EX_SPEC_CIRCOS,
+        image: THUMBNAILS.CIRCOS
     },
     'Circular Range': {
         group: 'Visual Encoding',
@@ -243,56 +258,66 @@ export const examples: {
     SARS_COV_2: {
         group: 'Applications',
         name: 'SARS-CoV-2',
-        spec: EX_SPEC_SARS_COV_2
+        spec: EX_SPEC_SARS_COV_2,
+        image: THUMBNAILS.SARS_COV_2
     },
     ALIGNMENT: {
         group: 'Applications',
         name: 'Alignment Chart',
-        spec: EX_SPEC_ALIGNMENT_CHART
+        spec: EX_SPEC_ALIGNMENT_CHART,
+        image: THUMBNAILS.ALIGNMENT
     },
     CORCES_ET_AL: {
         group: 'Coordinated Multiple Views',
         name: 'Corces et al. 2020',
-        spec: EX_SPEC_CORCES_ET_AL
+        spec: EX_SPEC_CORCES_ET_AL,
+        image: THUMBNAILS.CORCES_ET_AL
     },
     GREMLIN: {
         group: 'Applications',
         name: "Gremlin (O'Brien et al. 2010)",
-        spec: EX_SPEC_GREMLIN
+        spec: EX_SPEC_GREMLIN,
+        image: THUMBNAILS.GREMLIN
     },
     SASHIMI_PLOT: {
         group: 'Visual Encoding',
         name: 'Sashimi Plot',
         spec: EX_SPEC_SASHIMI,
-        underDevelopment: true
+        underDevelopment: true,
+        image: THUMBNAILS.SASHIMI_PLOT
     },
     CIRCULAR_BETWEEN_BANDS: {
         group: 'Visual Encoding',
         name: 'Circular Between Bands',
         spec: EX_SPEC_CIRCOS_BETWEEN_LINK,
-        underDevelopment: true
+        underDevelopment: true,
+        image: THUMBNAILS.CIRCULAR_BETWEEN_BANDS
     },
     GIVE: {
         group: 'Applications',
         name: 'GIVE (Cao et al. 2018)',
         spec: EX_SPEC_GIVE,
-        underDevelopment: true
+        underDevelopment: true,
+        image: THUMBNAILS.GIVE
     },
     CANCER_VARIANT: {
         group: 'Applications',
         name: 'Breast Cancer Variant (Staaf et al. 2019)',
-        spec: EX_SPEC_CANCER_VARIANT_PROTOTYPE
+        spec: EX_SPEC_CANCER_VARIANT_PROTOTYPE,
+        image: THUMBNAILS.CANCER_VARIANT
     },
     BAM_PILEUP: {
         group: 'Applications',
         name: 'BAM file pileup tracks',
-        spec: EX_SPEC_PILEUP
+        spec: EX_SPEC_PILEUP,
+        image: THUMBNAILS.BAM_PILEUP
     },
     TEMPLATE: {
-        group: 'Unassigned',
-        name: 'Track Template',
+        group: 'Track Templates',
+        name: 'Genes, Sequence, and Ideograms',
         spec: EX_SPEC_TEMPLATE,
-        underDevelopment: true
+        underDevelopment: true,
+        image: THUMBNAILS.TEMPLATE
     },
     // Followings are doc examples that are only accessible via URLs using the key, such as
     // https://gosling.js.org/?example=doc_area

@@ -606,7 +606,7 @@ function Editor(props: any) {
                     </>
                 )}
                 <span className="demo-label" onClick={() => setShowExamples(true)}>
-                    {demo.name}
+                    <b>{demo.group}</b>: {demo.name}
                 </span>
                 {/* <span className="demo-dropdown" hidden={urlSpec !== null || urlGist !== null || urlExampleId !== ''}>
                     <select
@@ -1144,6 +1144,7 @@ function Editor(props: any) {
                                         .map(d => {
                                             return (
                                                 <div
+                                                    title={d[1].name}
                                                     key={d[0]}
                                                     className="example-card"
                                                     onClick={() => {
