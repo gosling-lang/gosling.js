@@ -15,3 +15,11 @@ declare module '*?worker&inline' {
 declare module 'monaco-editor/esm/vs/editor/edcore.main' {
     export * from 'monaco-editor';
 }
+
+declare module '*.png' {
+    export default string;
+}
+
+declare module '*.gif' {
+    export default string;
+}

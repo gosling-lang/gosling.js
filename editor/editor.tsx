@@ -12,7 +12,7 @@ import stringify from 'json-stringify-pretty-compact';
 import SplitPane from 'react-split-pane';
 import ErrorBoundary from './error-boundary';
 import { debounce, isEqual } from 'lodash-es';
-import { examples } from './example';
+import { ExampleGroups, examples } from './example';
 import { traverseTracksAndViews } from '../src/core/utils/spec-preprocess';
 import stripJsonComments from 'strip-json-comments';
 import * as qs from 'qs';
@@ -183,6 +183,7 @@ function Editor(props: any) {
     const [code, setCode] = useState(defaultCode);
     const [goslingSpec, setGoslingSpec] = useState<gosling.GoslingSpec>();
     const [log, setLog] = useState<ReturnType<typeof gosling.validateGoslingSpec>>({ message: '', state: 'success' });
+    const [showExamples, setShowExamples] = useState(false);
     const [autoRun, setAutoRun] = useState(true);
     const [selectedPreviewData, setSelectedPreviewData] = useState<number>(0);
     const [gistTitle, setGistTitle] = useState<string>();
@@ -604,7 +605,10 @@ function Editor(props: any) {
                         </span>
                     </>
                 )}
-                <span className="demo-dropdown" hidden={urlSpec !== null || urlGist !== null || urlExampleId !== ''}>
+                <span className="demo-label" onClick={() => setShowExamples(true)}>
+                    <b>{demo.group}</b>: {demo.name}
+                </span>
+                {/* <span className="demo-dropdown" hidden={urlSpec !== null || urlGist !== null || urlExampleId !== ''}>
                     <select
                         style={{ maxWidth: IS_SMALL_SCREEN ? window.innerWidth - 180 : 'none' }}
                         onChange={e => {
@@ -618,7 +622,7 @@ function Editor(props: any) {
                             </option>
                         ))}
                     </select>
-                </span>
+                </span> */}
                 {expertMode ? (
                     <select
                         style={{ maxWidth: IS_SMALL_SCREEN ? window.innerWidth - 180 : 'none' }}
@@ -659,11 +663,22 @@ function Editor(props: any) {
                 <SplitPane className="side-panel-spliter" split="vertical" defaultSize="50px" allowResize={false}>
                     <div className={`side-panel ${theme === 'dark' ? 'dark' : ''}`}>
                         <span
+                            title="Example Gallery"
+                            className="side-panel-button"
+                            onClick={() => setShowExamples(!showExamples)}
+                        >
+                            {showExamples ? getIconSVG(ICONS.GRID, 20, 20, '#E18343') : getIconSVG(ICONS.GRID)}
+                            <br />
+                            EXAMPLE
+                        </span>
+                        <span
                             title="Automatically update visualization upon editing code"
                             className="side-panel-button"
                             onClick={() => setAutoRun(!autoRun)}
                         >
-                            {autoRun ? getIconSVG(ICONS.TOGGLE_ON, 23, 23, '#E18343') : getIconSVG(ICONS.TOGGLE_OFF)}
+                            {autoRun
+                                ? getIconSVG(ICONS.TOGGLE_ON, 23, 23, '#E18343')
+                                : getIconSVG(ICONS.TOGGLE_OFF, 23, 23)}
                             <br />
                             AUTO
                             <br />
@@ -1031,7 +1046,7 @@ function Editor(props: any) {
                     className={isShowAbout ? 'about-modal-container' : 'about-modal-container-hidden'}
                     onClick={() => setIsShowAbout(false)}
                 ></div>
-                <div className={isShowAbout ? 'about-modal' : 'about-modal-container-hidden'}>
+                <div className={isShowAbout ? 'about-modal' : 'about-modal-hidden'}>
                     <span
                         className="about-model-close-button"
                         onClick={() => {
@@ -1097,6 +1112,62 @@ function Editor(props: any) {
                         Gehlenborg Lab
                     </a>
                     , Harvard Medical School
+                </div>
+            </div>
+            {/* ---------------------- Example Gallery -------------------- */}
+            <div
+                className={showExamples ? 'about-modal-container' : 'about-modal-container-hidden'}
+                onClick={() => setShowExamples(false)}
+            />
+            <div
+                className="example-gallery-container"
+                style={{
+                    visibility: showExamples ? 'visible' : 'collapse'
+                }}
+            >
+                <div
+                    className="example-gallery"
+                    style={{
+                        opacity: showExamples ? 1 : 0
+                    }}
+                >
+                    <h1>Gosling.js Examples</h1>
+                    {ExampleGroups.filter(_ => _.name !== 'Doc' && _.name !== 'Unassigned').map(group => {
+                        return (
+                            <>
+                                <h2>{group.name}</h2>
+                                <h5>{group.description}</h5>
+                                <div className="example-group" key={group.name}>
+                                    {Object.entries(examples)
+                                        .filter(d => !d[1].hidden)
+                                        .filter(d => d[1].group === group.name)
+                                        .map(d => {
+                                            return (
+                                                <div
+                                                    title={d[1].name}
+                                                    key={d[0]}
+                                                    className="example-card"
+                                                    onClick={() => {
+                                                        setShowExamples(false);
+                                                        setDemo({ id: d[0], ...examples[d[0]] } as any);
+                                                    }}
+                                                >
+                                                    <div
+                                                        className="example-card-bg"
+                                                        style={{
+                                                            backgroundImage: d[1].image ? `url(${d[1].image})` : 'none'
+                                                        }}
+                                                    />
+                                                    <div className="example-card-name">{d[1].name}</div>
+                                                </div>
+                                            );
+                                        })}
+                                </div>
+                            </>
+                        );
+                    })}
+                    {/* Just an margin on the bottom */}
+                    <div style={{ height: '40px' }}></div>
                 </div>
             </div>
         </>
