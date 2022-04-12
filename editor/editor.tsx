@@ -1126,6 +1126,30 @@ function Editor(props: any) {
                 }}
             >
                 <div
+                    className="example-gallery-sidebar"
+                    style={{
+                        opacity: showExamples ? 1 : 0
+                    }}
+                >
+                    {ExampleGroups.filter(_ => _.name !== 'Doc' && _.name !== 'Unassigned').map(group => {
+                        return (
+                            <>
+                                <a className="siderbar-group" key={group.name} href={`#${group.name}`}>
+                                    {group.name}
+                                </a>
+                                {Object.entries(examples)
+                                    .filter(d => !d[1].hidden)
+                                    .filter(d => d[1].group === group.name)
+                                    .map(d => (
+                                        <a key={d[1].name} href={`#${d[1].group}_${d[1].name}`}>
+                                            {d[1].name}
+                                        </a>
+                                    ))}
+                            </>
+                        );
+                    })}
+                </div>
+                <div
                     className="example-gallery"
                     style={{
                         opacity: showExamples ? 1 : 0
@@ -1135,7 +1159,7 @@ function Editor(props: any) {
                     {ExampleGroups.filter(_ => _.name !== 'Doc' && _.name !== 'Unassigned').map(group => {
                         return (
                             <>
-                                <h2>{group.name}</h2>
+                                <h2 id={`${group.name}`}>{group.name}</h2>
                                 <h5>{group.description}</h5>
                                 <div className="example-group" key={group.name}>
                                     {Object.entries(examples)
@@ -1144,6 +1168,7 @@ function Editor(props: any) {
                                         .map(d => {
                                             return (
                                                 <div
+                                                    id={`${d[1].group}_${d[1].name}`}
                                                     title={d[1].name}
                                                     key={d[0]}
                                                     className="example-card"
