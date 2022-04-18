@@ -579,6 +579,8 @@ export interface Color extends ChannelDeepCommon {
     legend?: boolean;
 
     scale?: 'linear' | 'log';
+    /** Whether to use offset of the domain proportionally. This is bound to brushes on the color legend. __Default__: `[0, 1]` */
+    scaleOffset?: [number, number];
 }
 
 export interface Size extends ChannelDeepCommon {

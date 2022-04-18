@@ -448,6 +448,20 @@
           ],
           "type": "string"
         },
+        "scaleOffset": {
+          "description": "Whether to use offset of the domain proportionally. This is bound to brushes on the color legend. __Default__: `[0, 1]`",
+          "items": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "maxItems": 2,
+          "minItems": 2,
+          "type": "array"
+        },
         "type": {
           "description": "Specify the data type",
           "enum": [

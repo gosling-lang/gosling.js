@@ -27,7 +27,7 @@ import { getTabularData } from './data-abstraction';
 import { BAMDataFetcher } from '../data-fetcher/bam';
 import { getRelativeGenomicPosition } from '../core/utils/assembly';
 import { getTextStyle } from '../core/utils/text-style';
-import { Is2DTrack, IsXAxis } from '../core/gosling.schema.guards';
+import { Is2DTrack, IsChannelDeep, IsXAxis } from '../core/gosling.schema.guards';
 import { spawn } from 'threads';
 
 import BamWorker from '../data-fetcher/bam/bam-worker.js?worker&inline';
@@ -117,6 +117,9 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             // Graphics for highlighting visual elements under the cursor
             this.mouseOverGraphics = new HGC.libraries.PIXI.Graphics();
             this.pMain.addChild(this.mouseOverGraphics);
+
+            // Brushes on the color legend
+            this.gMain = HGC.libraries.d3Selection.select(this.context.svgElement).append('g');
 
             // Enable click event
             this.pMask.interactive = true;
@@ -647,6 +650,23 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
 
                 // Store raw data
                 t.gos.raw = Array.from(t.tileData);
+            });
+        }
+
+        shareScaleOffsetAcrossTracksAndTiles(scaleOffset: [number, number]) {
+            const gms: GoslingTrackModel[] = [];
+            this.visibleAndFetchedTiles().forEach((tile: any) => {
+                gms.push(...tile.goslingModels);
+            });
+            gms.forEach(d => {
+                const colorChannel = d.spec().color;
+                if (IsChannelDeep(colorChannel)) {
+                    colorChannel.scaleOffset = scaleOffset;
+                }
+                const colorChannelOriginal = d.originalSpec().color;
+                if (IsChannelDeep(colorChannelOriginal)) {
+                    colorChannelOriginal.scaleOffset = scaleOffset;
+                }
             });
         }
 

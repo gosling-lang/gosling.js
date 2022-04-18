@@ -3,7 +3,7 @@ import { IsChannelDeep } from '../gosling.schema.guards';
 import colorToHex from '../utils/color-to-hex';
 import { CompleteThemeDeep } from '../utils/theme';
 import { Dimension } from '../utils/position';
-import { ScaleLinear } from 'd3-scale';
+import { scaleLinear, ScaleLinear } from 'd3-scale';
 import { getTextStyle } from '../utils/text-style';
 
 export function drawColorLegend(
@@ -85,9 +85,22 @@ export function drawColorLegendQuantitative(
     // Color bar
     const [startValue, endValue] = colorDomain as [number, number];
     const extent = endValue - startValue;
+    const scaleOffset = IsChannelDeep(spec.color) && spec.color.scaleOffset ? spec.color.scaleOffset : [0, 1];
+
     [...Array(colorBarDim.height).keys()].forEach(y => {
         // For each pixel, draw a small rectangle with different color
-        const value = ((colorBarDim.height - y) / colorBarDim.height) * extent + startValue;
+        let value;
+        if (y / colorBarDim.height >= scaleOffset[1]) {
+            value = endValue;
+        } else if (y / colorBarDim.height <= scaleOffset[0]) {
+            value = startValue;
+        } else {
+            const s1 = scaleLinear()
+                .domain([colorBarDim.height * scaleOffset[0], colorBarDim.height * scaleOffset[1]])
+                .range([0, colorBarDim.height]);
+            const s2 = scaleLinear().domain([0, colorBarDim.height]).range([startValue, endValue]);
+            value = s2(s1(y));
+        }
 
         graphics.beginFill(
             colorToHex(colorScale(value)),
@@ -99,8 +112,65 @@ export function drawColorLegendQuantitative(
             0, // alpha
             0.5 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
         );
-        graphics.drawRect(legendX + colorBarDim.left, legendY + colorBarDim.top + y, colorBarDim.width, 1);
+        graphics.drawRect(
+            legendX + colorBarDim.left,
+            legendY + colorBarDim.top + colorBarDim.height - y,
+            colorBarDim.width,
+            1
+        );
     });
+
+    // Brush
+    // Refer to https://github.com/higlass/higlass/blob/0b2cac5a770db6d55370a61d5dbbe09c4f577c68/app/scripts/HeatmapTiledPixiTrack.js#L580
+    const BRUSH_HEIGHT = 4;
+    trackInfo.gMain.selectAll('.brush').remove();
+    trackInfo.colorBrushes = trackInfo.gMain
+        .selectAll('.brush')
+        .data(
+            scaleOffset.map((d, i) => {
+                return { y: d, id: i };
+            })
+        )
+        .enter()
+        .append('rect')
+        .attr('class', 'brush')
+        .attr('pointer-events', 'all')
+        .attr('cursor', 'ns-resize')
+        .attr(
+            'transform',
+            (d: { y: number; i: number }) =>
+                `translate(${legendX + colorBarDim.left}, ${
+                    legendY + colorBarDim.top - BRUSH_HEIGHT / 2.0 + colorBarDim.height - colorBarDim.height * d.y
+                })`
+        )
+        .attr('width', `${colorBarDim.width}px`)
+        .attr('height', `${BRUSH_HEIGHT}px`)
+        .attr('fill', 'lightgrey')
+        .attr('stroke', 'black')
+        .attr('stroke-width', '0.5px')
+        .call(
+            HGC.libraries.d3Drag
+                .drag()
+                .on('start', () => {
+                    trackInfo.startEvent = HGC.libraries.d3Selection.event.sourceEvent;
+                })
+                .on('drag', (d: { y: number; id: number }) => {
+                    if (IsChannelDeep(spec.color) && spec.color.scaleOffset) {
+                        const endEvent = HGC.libraries.d3Selection.event.sourceEvent;
+                        const diffY = trackInfo.startEvent.clientY - endEvent.clientY;
+                        if (d.id === 0) {
+                            spec.color.scaleOffset[0] += diffY / colorBarDim.height;
+                        } else {
+                            spec.color.scaleOffset[1] += diffY / colorBarDim.height;
+                        }
+                        spec.color.scaleOffset[0] = Math.min(1, Math.max(0, spec.color.scaleOffset[0]));
+                        spec.color.scaleOffset[1] = Math.min(1, Math.max(0, spec.color.scaleOffset[1]));
+                        trackInfo.startEvent = HGC.libraries.d3Selection.event.sourceEvent;
+                        trackInfo.shareScaleOffsetAcrossTracksAndTiles(spec.color.scaleOffset);
+                        trackInfo.draw(); // TODO: share across tile models
+                    }
+                })
+        );
 
     // Ticks & labels
     const tickCount = Math.max(Math.ceil(colorBarDim.height / 30), 2);
