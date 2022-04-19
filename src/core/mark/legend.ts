@@ -168,7 +168,7 @@ export function drawColorLegendQuantitative(
                         newScaleOffset[1] = Math.min(1, Math.max(0, newScaleOffset[1]));
                         trackInfo.updateScaleOffsetFromOriginalSpec(spec._renderingId, newScaleOffset);
                         trackInfo.shareScaleOffsetAcrossTracksAndTiles(newScaleOffset);
-                        trackInfo.draw(); // TODO: share across tile models
+                        trackInfo.draw();
                         trackInfo.startEvent = HGC.libraries.d3Selection.event.sourceEvent;
                     }
                 })
