@@ -158,16 +158,18 @@ export function drawColorLegendQuantitative(
                     if (IsChannelDeep(spec.color) && spec.color.scaleOffset) {
                         const endEvent = HGC.libraries.d3Selection.event.sourceEvent;
                         const diffY = trackInfo.startEvent.clientY - endEvent.clientY;
+                        const newScaleOffset = [spec.color.scaleOffset[0], spec.color.scaleOffset[1]];
                         if (d.id === 0) {
-                            spec.color.scaleOffset[0] += diffY / colorBarDim.height;
+                            newScaleOffset[0] += diffY / colorBarDim.height;
                         } else {
-                            spec.color.scaleOffset[1] += diffY / colorBarDim.height;
+                            newScaleOffset[1] += diffY / colorBarDim.height;
                         }
-                        spec.color.scaleOffset[0] = Math.min(1, Math.max(0, spec.color.scaleOffset[0]));
-                        spec.color.scaleOffset[1] = Math.min(1, Math.max(0, spec.color.scaleOffset[1]));
-                        trackInfo.startEvent = HGC.libraries.d3Selection.event.sourceEvent;
-                        trackInfo.shareScaleOffsetAcrossTracksAndTiles(spec.color.scaleOffset);
+                        newScaleOffset[0] = Math.min(1, Math.max(0, newScaleOffset[0]));
+                        newScaleOffset[1] = Math.min(1, Math.max(0, newScaleOffset[1]));
+                        trackInfo.updateScaleOffsetFromOriginalSpec(spec._renderingId, newScaleOffset);
+                        trackInfo.shareScaleOffsetAcrossTracksAndTiles(newScaleOffset);
                         trackInfo.draw(); // TODO: share across tile models
+                        trackInfo.startEvent = HGC.libraries.d3Selection.event.sourceEvent;
                     }
                 })
         );
