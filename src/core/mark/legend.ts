@@ -90,13 +90,14 @@ export function drawColorLegendQuantitative(
     [...Array(colorBarDim.height).keys()].forEach(y => {
         // For each pixel, draw a small rectangle with different color
         let value;
-        if (y / colorBarDim.height >= scaleOffset[1]) {
+        const scaleOffsetSorted = Array.from(scaleOffset).sort();
+        if (y / colorBarDim.height >= scaleOffsetSorted[1]) {
             value = endValue;
-        } else if (y / colorBarDim.height <= scaleOffset[0]) {
+        } else if (y / colorBarDim.height <= scaleOffsetSorted[0]) {
             value = startValue;
         } else {
             const s1 = scaleLinear()
-                .domain([colorBarDim.height * scaleOffset[0], colorBarDim.height * scaleOffset[1]])
+                .domain([colorBarDim.height * scaleOffsetSorted[0], colorBarDim.height * scaleOffsetSorted[1]])
                 .range([0, colorBarDim.height]);
             const s2 = scaleLinear().domain([0, colorBarDim.height]).range([startValue, endValue]);
             value = s2(s1(y));
@@ -126,6 +127,7 @@ export function drawColorLegendQuantitative(
     trackInfo.gMain.selectAll('.brush').remove();
     trackInfo.colorBrushes = trackInfo.gMain
         .selectAll('.brush')
+        // We could consider using `_renderingId` to support multiple color legends in overlaid tracks.
         .data(
             scaleOffset.map((d, i) => {
                 return { y: d, id: i };

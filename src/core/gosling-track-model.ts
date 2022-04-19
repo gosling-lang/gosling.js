@@ -309,10 +309,8 @@ export class GoslingTrackModel {
                     const s = (this.channelScales[channelKey] as ScaleSequential<any>).copy();
                     const d = s.domain();
                     const e = d[1] - d[0];
-                    return s.domain([
-                        d[0] + e * ((channel as Color).scaleOffset ?? [0, 1])[0],
-                        d[0] + e * ((channel as Color).scaleOffset ?? [0, 1])[1]
-                    ])(value as number);
+                    const so = Array.from((channel as Color).scaleOffset ?? [0, 1]);
+                    return s.domain([d[0] + e * so.sort()[0], d[0] + e * so.sort()[1]])(value as number);
                 }
                 if (channelFieldType === 'nominal') {
                     return (this.channelScales[channelKey] as ScaleOrdinal<any, any>)(value as string);
