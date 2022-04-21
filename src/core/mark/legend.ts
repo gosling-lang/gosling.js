@@ -15,6 +15,11 @@ export function drawColorLegend(
     tm: GoslingTrackModel,
     theme: Required<CompleteThemeDeep>
 ) {
+    if (!trackInfo.gMain) {
+        // We do not have enough components to draw legends
+        return;
+    }
+
     trackInfo.gMain.selectAll('.brush').remove();
 
     const spec = tm.spec();
