@@ -653,30 +653,34 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             });
         }
 
-        updateScaleOffsetFromOriginalSpec(_renderingId: string, scaleOffset: [number, number]) {
+        updateScaleOffsetFromOriginalSpec(
+            _renderingId: string,
+            scaleOffset: [number, number],
+            channelKey: 'color' | 'stroke'
+        ) {
             resolveSuperposedTracks(this.options.spec).map(spec => {
                 if (spec._renderingId === _renderingId) {
-                    const color = spec.color;
-                    if (IsChannelDeep(color)) {
-                        color.scaleOffset = scaleOffset;
+                    const channel = spec[channelKey];
+                    if (IsChannelDeep(channel)) {
+                        channel.scaleOffset = scaleOffset;
                     }
                 }
             });
         }
 
-        shareScaleOffsetAcrossTracksAndTiles(scaleOffset: [number, number]) {
+        shareScaleOffsetAcrossTracksAndTiles(scaleOffset: [number, number], channelKey: 'color' | 'stroke') {
             const gms: GoslingTrackModel[] = [];
             this.visibleAndFetchedTiles().forEach((tile: any) => {
                 gms.push(...tile.goslingModels);
             });
             gms.forEach(d => {
-                const colorChannel = d.spec().color;
-                if (IsChannelDeep(colorChannel)) {
-                    colorChannel.scaleOffset = scaleOffset;
+                const channel = d.spec()[channelKey];
+                if (IsChannelDeep(channel)) {
+                    channel.scaleOffset = scaleOffset;
                 }
-                const colorChannelOriginal = d.originalSpec().color;
-                if (IsChannelDeep(colorChannelOriginal)) {
-                    colorChannelOriginal.scaleOffset = scaleOffset;
+                const channelOriginal = d.originalSpec()[channelKey];
+                if (IsChannelDeep(channelOriginal)) {
+                    channelOriginal.scaleOffset = scaleOffset;
                 }
             });
         }

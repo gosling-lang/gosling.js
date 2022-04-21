@@ -6,6 +6,8 @@ import { Dimension } from '../utils/position';
 import { scaleLinear, ScaleLinear } from 'd3-scale';
 import { getTextStyle } from '../utils/text-style';
 
+type LegendOffset = { offsetRight: number };
+
 export function drawColorLegend(
     HGC: any,
     trackInfo: any,
@@ -13,20 +15,28 @@ export function drawColorLegend(
     tm: GoslingTrackModel,
     theme: Required<CompleteThemeDeep>
 ) {
-    const spec = tm.spec();
+    trackInfo.gMain.selectAll('.brush').remove();
 
-    if (!IsChannelDeep(spec.color) || !spec.color.legend) {
-        // This means we do not need to draw a legend
-        return;
+    const spec = tm.spec();
+    const offset: LegendOffset = { offsetRight: 0 };
+
+    if (IsChannelDeep(spec.color) && spec.color.legend) {
+        switch (spec.color.type) {
+            case 'nominal':
+                drawColorLegendCategories(HGC, trackInfo, tile, tm, theme);
+                break;
+            case 'quantitative':
+                drawColorLegendQuantitative(HGC, trackInfo, tile, tm, theme, 'color', offset);
+                break;
+        }
     }
 
-    switch (spec.color.type) {
-        case 'nominal':
-            drawColorLegendCategories(HGC, trackInfo, tile, tm, theme);
-            break;
-        case 'quantitative':
-            drawColorLegendQuantitative(HGC, trackInfo, tile, tm, theme);
-            break;
+    if (IsChannelDeep(spec.stroke) && spec.stroke.legend) {
+        switch (spec.stroke.type) {
+            case 'quantitative':
+                drawColorLegendQuantitative(HGC, trackInfo, tile, tm, theme, 'stroke', offset);
+                break;
+        }
     }
 }
 
@@ -35,11 +45,14 @@ export function drawColorLegendQuantitative(
     trackInfo: any,
     tile: any,
     tm: GoslingTrackModel,
-    theme: Required<CompleteThemeDeep>
+    theme: Required<CompleteThemeDeep>,
+    channelKey: 'color' | 'stroke',
+    offset: LegendOffset
 ) {
     const spec = tm.spec();
 
-    if (!IsChannelDeep(spec.color) || spec.color.type !== 'quantitative' || !spec.color.legend) {
+    const channel = spec[channelKey];
+    if (!IsChannelDeep(channel) || channel.type !== 'quantitative' || !channel.legend) {
         // This means we do not need to draw legend
         return;
     }
@@ -57,12 +70,12 @@ export function drawColorLegendQuantitative(
         width: 20,
         height: legendHeight - 20
     };
-    const legendX = trackX + trackWidth - legendWidth - 1;
+    const legendX = trackX + trackWidth - legendWidth - 1 - offset.offsetRight;
     const legendY = trackY + 1;
 
     /* Legend Components */
-    const colorScale = tm.getChannelScale('color');
-    const colorDomain = tm.getChannelDomainArray('color');
+    const colorScale = tm.getChannelScale(channelKey);
+    const colorDomain = tm.getChannelDomainArray(channelKey);
 
     if (!colorScale || !colorDomain) {
         // We do not have enough information for creating a color legend
@@ -82,10 +95,41 @@ export function drawColorLegendQuantitative(
     );
     graphics.drawRect(legendX, legendY, legendWidth, legendHeight);
 
+    /* Lgend title */
+    if (channel.title) {
+        const titleStr = channel.title;
+
+        // label text style
+        const labelTextStyle = getTextStyle({
+            color: theme.legend.labelColor,
+            size: theme.legend.labelFontSize,
+            fontWeight: theme.legend.labelFontWeight,
+            fontFamily: theme.legend.labelFontFamily
+        });
+
+        const textGraphic = new HGC.libraries.PIXI.Text(titleStr, {
+            ...labelTextStyle,
+            fontWeight: 'bold'
+        });
+        textGraphic.anchor.x = 0;
+        textGraphic.anchor.y = 0;
+        textGraphic.position.x = legendX + 10;
+        textGraphic.position.y = legendY + 10;
+
+        const textStyleObj = new HGC.libraries.PIXI.TextStyle({ ...labelTextStyle, fontWeight: 'bold' });
+        const textMetrics = HGC.libraries.PIXI.TextMetrics.measureText(titleStr, textStyleObj);
+
+        graphics.addChild(textGraphic);
+
+        // Adjust the color bar
+        colorBarDim.top += textMetrics.height + 4;
+        colorBarDim.height -= textMetrics.height + 4;
+    }
+
     // Color bar
     const [startValue, endValue] = colorDomain as [number, number];
     const extent = endValue - startValue;
-    const scaleOffset = IsChannelDeep(spec.color) && spec.color.scaleOffset ? spec.color.scaleOffset : [0, 1];
+    const scaleOffset = IsChannelDeep(channel) && channel.scaleOffset ? channel.scaleOffset : [0, 1];
 
     [...Array(colorBarDim.height).keys()].forEach(y => {
         // For each pixel, draw a small rectangle with different color
@@ -124,9 +168,10 @@ export function drawColorLegendQuantitative(
     // Brush
     // Refer to https://github.com/higlass/higlass/blob/0b2cac5a770db6d55370a61d5dbbe09c4f577c68/app/scripts/HeatmapTiledPixiTrack.js#L580
     const BRUSH_HEIGHT = 4;
-    trackInfo.gMain.selectAll('.brush').remove();
     trackInfo.colorBrushes = trackInfo.gMain
-        .selectAll('.brush')
+        .append('g')
+        .attr('class', channelKey)
+        .selectAll(`.brush`)
         // We could consider using `_renderingId` to support multiple color legends in overlaid tracks.
         .data(
             scaleOffset.map((d, i) => {
@@ -135,7 +180,7 @@ export function drawColorLegendQuantitative(
         )
         .enter()
         .append('rect')
-        .attr('class', 'brush')
+        .attr('class', `brush`)
         .attr('pointer-events', 'all')
         .attr('cursor', 'ns-resize')
         .attr(
@@ -157,10 +202,10 @@ export function drawColorLegendQuantitative(
                     trackInfo.startEvent = HGC.libraries.d3Selection.event.sourceEvent;
                 })
                 .on('drag', (d: { y: number; id: number }) => {
-                    if (IsChannelDeep(spec.color) && spec.color.scaleOffset) {
+                    if (channel && channel.scaleOffset) {
                         const endEvent = HGC.libraries.d3Selection.event.sourceEvent;
                         const diffY = trackInfo.startEvent.clientY - endEvent.clientY;
-                        const newScaleOffset = [spec.color.scaleOffset[0], spec.color.scaleOffset[1]];
+                        const newScaleOffset = [channel.scaleOffset[0], channel.scaleOffset[1]];
                         if (d.id === 0) {
                             newScaleOffset[0] += diffY / colorBarDim.height;
                         } else {
@@ -168,8 +213,8 @@ export function drawColorLegendQuantitative(
                         }
                         newScaleOffset[0] = Math.min(1, Math.max(0, newScaleOffset[0]));
                         newScaleOffset[1] = Math.min(1, Math.max(0, newScaleOffset[1]));
-                        trackInfo.updateScaleOffsetFromOriginalSpec(spec._renderingId, newScaleOffset);
-                        trackInfo.shareScaleOffsetAcrossTracksAndTiles(newScaleOffset);
+                        trackInfo.updateScaleOffsetFromOriginalSpec(spec._renderingId, newScaleOffset, channelKey);
+                        trackInfo.shareScaleOffsetAcrossTracksAndTiles(newScaleOffset, channelKey);
                         trackInfo.draw();
                         trackInfo.startEvent = HGC.libraries.d3Selection.event.sourceEvent;
                     }
@@ -228,6 +273,9 @@ export function drawColorLegendQuantitative(
 
         graphics.addChild(textGraphic);
     });
+
+    // Record this info so that additional legends can be displayed on the side
+    offset.offsetRight = trackWidth - legendX;
 }
 
 export function drawColorLegendCategories(

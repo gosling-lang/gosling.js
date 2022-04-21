@@ -575,6 +575,8 @@ export interface Color extends ChannelDeepCommon {
     domain?: ValueExtent;
     /** Determine the colors that should be bound to data value. Default properties are determined considering the field type. */
     range?: Range;
+    /** Title of the legend. __Default__: `undefined` */
+    title?: string;
     /** Whether to display legend. __Default__: `false` */
     legend?: boolean;
 
@@ -583,24 +585,30 @@ export interface Color extends ChannelDeepCommon {
     scaleOffset?: [number, number];
 }
 
-export interface Size extends ChannelDeepCommon {
-    type?: 'quantitative' | 'nominal';
-    domain?: ValueExtent;
-    range?: ValueExtent;
-    /** not supported: Whether to display legend. __Default__: `false` */
-    legend?: boolean;
-}
-
 export interface Stroke extends ChannelDeepCommon {
     type?: 'quantitative' | 'nominal';
     domain?: ValueExtent;
     range?: Range;
+    /** Title of the legend. __Default__: `undefined` */
+    title?: string;
+    /** Whether to display legend. __Default__: `false` */
+    legend?: boolean;
+    /** Whether to use offset of the domain proportionally. This is bound to brushes on the color legend. __Default__: `[0, 1]` */
+    scaleOffset?: [number, number];
 }
 
 export interface StrokeWidth extends ChannelDeepCommon {
     type?: 'quantitative' | 'nominal';
     domain?: ValueExtent;
     range?: ValueExtent;
+}
+
+export interface Size extends ChannelDeepCommon {
+    type?: 'quantitative' | 'nominal';
+    domain?: ValueExtent;
+    range?: ValueExtent;
+    /** not supported: Whether to display legend. __Default__: `false` */
+    legend?: boolean;
 }
 
 export interface Opacity extends ChannelDeepCommon {

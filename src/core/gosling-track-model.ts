@@ -296,14 +296,6 @@ export class GoslingTrackModel {
                 }
                 break;
             case 'stroke':
-                if (channelFieldType === 'quantitative') {
-                    return (this.channelScales[channelKey] as ScaleSequential<any>)(value as number);
-                }
-                if (channelFieldType === 'nominal') {
-                    return (this.channelScales[channelKey] as ScaleOrdinal<any, any>)(value as string);
-                }
-                /* genomic is not supported */
-                break;
             case 'color':
                 if (channelFieldType === 'quantitative') {
                     const s = (this.channelScales[channelKey] as ScaleSequential<any>).copy();

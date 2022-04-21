@@ -462,6 +462,10 @@
           "minItems": 2,
           "type": "array"
         },
+        "title": {
+          "description": "Title of the legend. __Default__: `undefined`",
+          "type": "string"
+        },
         "type": {
           "description": "Specify the data type",
           "enum": [
@@ -7893,9 +7897,31 @@
           "description": "Name of the data field",
           "type": "string"
         },
+        "legend": {
+          "description": "Whether to display legend. __Default__: `false`",
+          "type": "boolean"
+        },
         "range": {
           "$ref": "#/definitions/Range",
           "description": "Ranges of visual channel values"
+        },
+        "scaleOffset": {
+          "description": "Whether to use offset of the domain proportionally. This is bound to brushes on the color legend. __Default__: `[0, 1]`",
+          "items": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "maxItems": 2,
+          "minItems": 2,
+          "type": "array"
+        },
+        "title": {
+          "description": "Title of the legend. __Default__: `undefined`",
+          "type": "string"
         },
         "type": {
           "description": "Specify the data type",
