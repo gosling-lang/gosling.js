@@ -308,6 +308,13 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             this.forceDraw();
         }
 
+        remove() {
+            super.remove();
+
+            if (this.gMain) {
+                this.gMain.selectAll('.brush').remove();
+            }
+        }
         /*
          * Rerender all tiles when track size is changed.
          * (Refer to https://github.com/higlass/higlass/blob/54f5aae61d3474f9e868621228270f0c90ef9343/app/scripts/PixiTrack.js#L186).

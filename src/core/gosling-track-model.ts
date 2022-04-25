@@ -6,7 +6,8 @@ import {
     ChannelValue,
     SingleTrack,
     Channel,
-    Color
+    Color,
+    Stroke
 } from './gosling.schema';
 import { validateTrack, getGenomicChannelFromTrack, getGenomicChannelKeyFromTrack } from './utils/validate';
 import {
@@ -636,8 +637,11 @@ export class GoslingTrackModel {
                         channel.domain = getNumericDomain(channel.domain);
                     }
 
-                    if (channelKey === 'color' && channel.type === 'quantitative' && !(channel as Color).scaleOffset) {
-                        (channel as Color).scaleOffset = [0, 1];
+                    if (
+                        channelKey === 'color' ||
+                        (channelKey === 'stroke' && channel.type === 'quantitative' && !(channel as Color).scaleOffset)
+                    ) {
+                        (channel as Color | Stroke).scaleOffset = [0, 1];
                     }
 
                     if (!channel.range) {
