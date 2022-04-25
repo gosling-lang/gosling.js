@@ -638,8 +638,9 @@ export class GoslingTrackModel {
                     }
 
                     if (
-                        channelKey === 'color' ||
-                        (channelKey === 'stroke' && channel.type === 'quantitative' && !(channel as Color).scaleOffset)
+                        (channelKey === 'color' || channelKey === 'stroke') &&
+                        channel.type === 'quantitative' &&
+                        !(channel as Color).scaleOffset
                     ) {
                         (channel as Color | Stroke).scaleOffset = [0, 1];
                     }
