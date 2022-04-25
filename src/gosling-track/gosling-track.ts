@@ -27,7 +27,7 @@ import { getTabularData } from './data-abstraction';
 import { BAMDataFetcher } from '../data-fetcher/bam';
 import { getRelativeGenomicPosition } from '../core/utils/assembly';
 import { getTextStyle } from '../core/utils/text-style';
-import { Is2DTrack, IsXAxis } from '../core/gosling.schema.guards';
+import { Is2DTrack, IsChannelDeep, IsXAxis } from '../core/gosling.schema.guards';
 import { spawn } from 'threads';
 
 import BamWorker from '../data-fetcher/bam/bam-worker.js?worker&inline';
@@ -91,7 +91,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             context.dataFetcher.track = this;
             this.context = context;
 
-            // Temp. Add ids to each overalid tracks that will be rendered independently
+            // Temp. Add ids to each overlaid tracks that will be rendered independently
             if ('overlay' in this.options.spec) {
                 this.options.spec.overlay = (this.options.spec as OverlaidTrack).overlay.map(o => {
                     return { ...o, _renderingId: uuid.v1() };
@@ -102,7 +102,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
 
             this.tileSize = this.tilesetInfo?.tile_size ?? 1024;
 
-            // This tracks the xScale of an entire view, which is used when no tiling concepts are used
+            // This is tracking the xScale of an entire view, which is used when no tiling concepts are used
             this.drawnAtScale = HGC.libraries.d3Scale.scaleLinear();
             this.scalableGraphics = {};
 
@@ -117,6 +117,9 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             // Graphics for highlighting visual elements under the cursor
             this.mouseOverGraphics = new HGC.libraries.PIXI.Graphics();
             this.pMain.addChild(this.mouseOverGraphics);
+
+            // Brushes on the color legend
+            this.gMain = HGC.libraries.d3Selection.select(this.context.svgElement).append('g');
 
             // Enable click event
             this.pMask.interactive = true;
@@ -305,6 +308,13 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             this.forceDraw();
         }
 
+        remove() {
+            super.remove();
+
+            if (this.gMain) {
+                this.gMain.selectAll('.brush').remove();
+            }
+        }
         /*
          * Rerender all tiles when track size is changed.
          * (Refer to https://github.com/higlass/higlass/blob/54f5aae61d3474f9e868621228270f0c90ef9343/app/scripts/PixiTrack.js#L186).
@@ -647,6 +657,38 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
 
                 // Store raw data
                 t.gos.raw = Array.from(t.tileData);
+            });
+        }
+
+        updateScaleOffsetFromOriginalSpec(
+            _renderingId: string,
+            scaleOffset: [number, number],
+            channelKey: 'color' | 'stroke'
+        ) {
+            resolveSuperposedTracks(this.options.spec).map(spec => {
+                if (spec._renderingId === _renderingId) {
+                    const channel = spec[channelKey];
+                    if (IsChannelDeep(channel)) {
+                        channel.scaleOffset = scaleOffset;
+                    }
+                }
+            });
+        }
+
+        shareScaleOffsetAcrossTracksAndTiles(scaleOffset: [number, number], channelKey: 'color' | 'stroke') {
+            const gms: GoslingTrackModel[] = [];
+            this.visibleAndFetchedTiles().forEach((tile: any) => {
+                gms.push(...tile.goslingModels);
+            });
+            gms.forEach(d => {
+                const channel = d.spec()[channelKey];
+                if (IsChannelDeep(channel)) {
+                    channel.scaleOffset = scaleOffset;
+                }
+                const channelOriginal = d.originalSpec()[channelKey];
+                if (IsChannelDeep(channelOriginal)) {
+                    channelOriginal.scaleOffset = scaleOffset;
+                }
             });
         }
 

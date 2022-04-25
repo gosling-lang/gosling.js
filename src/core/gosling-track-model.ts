@@ -1,5 +1,14 @@
 import * as uuid from 'uuid';
-import { ChannelDeep, PREDEFINED_COLORS, ChannelTypes, ChannelValue, SingleTrack, Channel } from './gosling.schema';
+import {
+    ChannelDeep,
+    PREDEFINED_COLORS,
+    ChannelTypes,
+    ChannelValue,
+    SingleTrack,
+    Channel,
+    Color,
+    Stroke
+} from './gosling.schema';
 import { validateTrack, getGenomicChannelFromTrack, getGenomicChannelKeyFromTrack } from './utils/validate';
 import {
     ScaleLinear,
@@ -287,10 +296,14 @@ export class GoslingTrackModel {
                     return (this.channelScales[channelKey] as ScaleBand<any>)(value as string);
                 }
                 break;
-            case 'color':
             case 'stroke':
+            case 'color':
                 if (channelFieldType === 'quantitative') {
-                    return (this.channelScales[channelKey] as ScaleSequential<any>)(value as number);
+                    const s = (this.channelScales[channelKey] as ScaleSequential<any>).copy();
+                    const d = s.domain();
+                    const e = d[1] - d[0];
+                    const so = Array.from((channel as Color).scaleOffset ?? [0, 1]);
+                    return s.domain([d[0] + e * so.sort()[0], d[0] + e * so.sort()[1]])(value as number);
                 }
                 if (channelFieldType === 'nominal') {
                     return (this.channelScales[channelKey] as ScaleOrdinal<any, any>)(value as string);
@@ -622,6 +635,14 @@ export class GoslingTrackModel {
                         channel.domain = [min, max]; // TODO: what if data ranges in negative values
                     } else if (channel.type === 'genomic' && !IsDomainArray(channel.domain)) {
                         channel.domain = getNumericDomain(channel.domain);
+                    }
+
+                    if (
+                        (channelKey === 'color' || channelKey === 'stroke') &&
+                        channel.type === 'quantitative' &&
+                        !(channel as Color).scaleOffset
+                    ) {
+                        (channel as Color | Stroke).scaleOffset = [0, 1];
                     }
 
                     if (!channel.range) {
