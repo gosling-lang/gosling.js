@@ -145,6 +145,23 @@
             "last 1 safari version"
         ]
     },
+    "jest": {
+        "coverageDirectory": "./coverage/",
+        "collectCoverage": true,
+        "collectCoverageFrom": [
+            "**/src/**/*.{js,ts}",
+            "!**/node_modules/**",
+            "!**/coverage/**",
+            "!**/public/**",
+            "!**/dist/**",
+            "!**/editor/**",
+            "!**/deprecated/**"
+        ],
+        "coverageReporters": [
+            "lcov",
+            "text"
+        ]
+    },
     "husky": {
         "hooks": {
             "pre-commit": "yarn changelog && yarn schema && yarn schema-higlass && yarn schema-theme && yarn schema-template && yarn format && git add .",
