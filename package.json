@@ -26,9 +26,9 @@
         "build-types": "tsc --emitDeclarationOnly",
         "build-editor": "vite build",
         "preview": "vite preview",
-        "test": "jest editor/ src/",
+        "test": "vitest --globals editor/ src/",
         "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s -r 0",
-        "format": "eslint src/ editor/ --fix && prettier 'editor/**/*.css' --write",
+        "format": "eslint src/ editor/ --fix && prettier 'editor/**/*.css' --write vite.config.js scripts/*",
         "schema": "ts-json-schema-generator -p src/index.ts -f tsconfig.json -t GoslingSpec --no-type-check --no-ref-encode > schema/gosling.schema.json",
         "schema-higlass": "ts-json-schema-generator -p src/index.ts -f tsconfig.json -t HiGlassSpec --no-type-check --no-ref-encode > schema/higlass.schema.json",
         "schema-theme": "ts-json-schema-generator -p src/index.ts -f tsconfig.json -t Theme --no-type-check --no-ref-encode > schema/theme.schema.json",
@@ -38,7 +38,7 @@
         "deploy": "gh-pages -d build"
     },
     "peerDependencies": {
-        "pixi.js": "^6.0.4",
+        "pixi.js": "^6.3.0",
         "react": "16.13.1",
         "react-dom": "16.13.1"
     },
@@ -99,7 +99,6 @@
         "@vitejs/plugin-react-refresh": "^1.3.6",
         "ajv": "^6.12.2",
         "babel-jest": "^26.3.0",
-        "canvas": "^2.6.1",
         "conventional-changelog-cli": "^2.1.1",
         "cross-fetch": "^3.0.6",
         "d3-drag": "^1",
@@ -115,12 +114,11 @@
         "gh-pages": "^3.1.0",
         "git-branch-is": "^4.0.0",
         "husky": "^4.2.5",
-        "jest": "^26.4.0",
         "jest-canvas-mock": "^2.3.0",
-        "jest-raw-loader": "^1.0.1",
+        "jsdom": "^19.0.0",
         "jsoncrush": "^1.1.6",
         "npm-run-all": "^4.1.5",
-        "pixi.js": "^6.0.4",
+        "pixi.js": "^6.3.0",
         "prettier": "^2.0.5",
         "qs": "^6.9.4",
         "react": "16.13.1",
@@ -132,10 +130,10 @@
         "react-split-pane": "^0.1.91",
         "remark-gfm": "^1.0.0",
         "strip-json-comments": "^3.1.1",
-        "ts-jest": "^26.2.0",
         "ts-json-schema-generator": "^0.75.0",
         "typescript": "~4.1.2",
-        "vite": "^2.5.10"
+        "vite": "^2.9.5",
+        "vitest": "^0.10.0"
     },
     "resolutions": {
         "slugid": "^3.0.0"

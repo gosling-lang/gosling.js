@@ -20,14 +20,14 @@ const bundleWebWorker = {
                 inject: ['./src/alias/buffer-shim.js'],
                 format: 'iife',
                 bundle: true,
-                write: false,
+                write: false
             });
             if (bundle.outputFiles.length !== 1) {
                 throw new Error('Worker must be a single module.');
             }
             return bundle.outputFiles[0].text;
         }
-    },
+    }
 };
 
 // We can't inject a global `Buffer` polyfill for the worker entrypoint using vite alone,
@@ -50,22 +50,21 @@ export default function() {
   }
 }`;
         }
-    },
+    }
 };
 
 const alias = {
     'gosling.js': path.resolve(__dirname, './src/index.ts'),
     '@gosling.schema': path.resolve(__dirname, './src/core/gosling.schema'),
     '@higlass.schema': path.resolve(__dirname, './src/core/higlass.schema'),
-    'zlib': path.resolve(__dirname, './src/alias/zlib.ts'),
-    'uuid': path.resolve(__dirname, './node_modules/uuid/dist/esm-browser/index.js'),
+    zlib: path.resolve(__dirname, './src/alias/zlib.ts'),
+    uuid: path.resolve(__dirname, './node_modules/uuid/dist/esm-browser/index.js')
 };
 
 const skipExt = new Set(['@gmod/bbi', 'uuid']);
-const external = [
-    ...Object.keys(pkg.dependencies),
-    ...Object.keys(pkg.peerDependencies),
-].filter((dep) => !skipExt.has(dep));
+const external = [...Object.keys(pkg.dependencies), ...Object.keys(pkg.peerDependencies)].filter(
+    dep => !skipExt.has(dep)
+);
 
 const esm = defineConfig({
     build: {
@@ -76,22 +75,32 @@ const esm = defineConfig({
         lib: {
             entry: path.resolve(__dirname, 'src/index.ts'),
             formats: ['es'],
-            fileName: 'gosling',
+            fileName: 'gosling'
         },
-        rollupOptions: { external },
+        rollupOptions: { external }
     },
     resolve: { alias },
-    plugins: [manualInlineWorker],
+    plugins: [manualInlineWorker]
 });
 
 const dev = defineConfig({
     build: { outDir: 'build' },
     resolve: { alias },
     define: {
-        'process.platform': 'undefined',
-        'process.env.THREADS_WORKER_INIT_TIMEOUT': 'undefined',
+        // 'process.platform': 'undefined',
+        'process.env.THREADS_WORKER_INIT_TIMEOUT': 'undefined'
     },
-    plugins: [bundleWebWorker, manualInlineWorker],
+    test: {
+        setupFiles: [path.resolve(__dirname, './scripts/setup-vitest.js')],
+        environment: 'jsdom',
+        threads: false,
+        environmentOptions: {
+            jsdom: {
+                resources: 'usable'
+            }
+        }
+    },
+    plugins: [bundleWebWorker, manualInlineWorker]
 });
 
 export default ({ command, mode }) => {
