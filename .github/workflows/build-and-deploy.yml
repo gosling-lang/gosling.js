@@ -22,7 +22,7 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
     - run: yarn install
-    - run: yarn test
+    - run: yarn coverage
       env:
         NODE_OPTIONS: '--max_old_space_size=4096'
     - run: yarn build-editor

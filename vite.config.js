@@ -96,6 +96,7 @@ const dev = defineConfig({
 const testing = defineConfig({
     resolve: { alias },
     test: {
+        globals: true,
         setupFiles: [path.resolve(__dirname, './scripts/setup-vitest.js')],
         environment: 'jsdom',
         threads: false,
@@ -103,6 +104,11 @@ const testing = defineConfig({
             jsdom: {
                 resources: 'usable'
             }
+        },
+        coverage: {
+          reportsDirectory: './coverage',
+          reporter: ['lcov', 'text'],
+          include: ['src', 'editor'],
         }
     },
 });
