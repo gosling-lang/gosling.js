@@ -87,9 +87,14 @@ const dev = defineConfig({
     build: { outDir: 'build' },
     resolve: { alias },
     define: {
-        // 'process.platform': 'undefined',
+        'process.platform': 'undefined',
         'process.env.THREADS_WORKER_INIT_TIMEOUT': 'undefined'
     },
+    plugins: [bundleWebWorker, manualInlineWorker]
+});
+
+const testing = defineConfig({
+    resolve: { alias },
     test: {
         setupFiles: [path.resolve(__dirname, './scripts/setup-vitest.js')],
         environment: 'jsdom',
@@ -100,11 +105,11 @@ const dev = defineConfig({
             }
         }
     },
-    plugins: [bundleWebWorker, manualInlineWorker]
 });
 
 export default ({ command, mode }) => {
     if (command === 'build' && mode === 'lib') return esm;
+    if (mode == 'test') return testing;
     if (mode === 'editor') {
         dev.plugins.push(reactRefresh());
     }
