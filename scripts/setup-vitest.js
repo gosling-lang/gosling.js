@@ -24,7 +24,7 @@ apis.forEach(api => {
     global.window[api] = canvasWindow[api];
 });
 
-// jsdom doesn't come with a WebCrypto implementation
+// jsdom doesn't come with a WebCrypto implementation (required for uuid)
 beforeAll(() => {
     global.crypto = {
         getRandomValues: function (buffer) {
