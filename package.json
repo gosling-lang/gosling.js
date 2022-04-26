@@ -28,7 +28,7 @@
         "preview": "vite preview",
         "test": "vitest --globals editor/ src/",
         "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s -r 0",
-        "format": "eslint src/ editor/ --fix && prettier 'editor/**/*.css' --write vite.config.js scripts/*",
+        "format": "eslint src/ editor/ --fix && prettier 'editor/**/*.css' --write",
         "schema": "ts-json-schema-generator -p src/index.ts -f tsconfig.json -t GoslingSpec --no-type-check --no-ref-encode > schema/gosling.schema.json",
         "schema-higlass": "ts-json-schema-generator -p src/index.ts -f tsconfig.json -t HiGlassSpec --no-type-check --no-ref-encode > schema/higlass.schema.json",
         "schema-theme": "ts-json-schema-generator -p src/index.ts -f tsconfig.json -t Theme --no-type-check --no-ref-encode > schema/theme.schema.json",
@@ -78,15 +78,12 @@
         "uuid": "^8.3.2"
     },
     "devDependencies": {
-        "@babel/core": "^7.11.1",
         "@commitlint/cli": "^11.0.0",
         "@commitlint/config-conventional": "^11.0.0",
-        "@testing-library/jest-dom": "^5.11.3",
         "@testing-library/react": "^10.4.8",
         "@testing-library/user-event": "^12.1.1",
         "@types/d3-drag": "1",
         "@types/d3-selection": "1",
-        "@types/jest": "^26.0.10",
         "@types/lodash-es": "^4.17.5",
         "@types/pubsub-js": "^1.8.2",
         "@types/qs": "^6.9.5",
@@ -98,7 +95,6 @@
         "@typescript-eslint/parser": "^4.8.1",
         "@vitejs/plugin-react-refresh": "^1.3.6",
         "ajv": "^6.12.2",
-        "babel-jest": "^26.3.0",
         "conventional-changelog-cli": "^2.1.1",
         "cross-fetch": "^3.0.6",
         "d3-drag": "^1",
@@ -107,7 +103,6 @@
         "esbuild": "^0.12.25",
         "eslint": "^7.6.0",
         "eslint-config-prettier": "^6.11.0",
-        "eslint-plugin-jest": "^23.20.0",
         "eslint-plugin-prettier": "^3.1.4",
         "eslint-plugin-react": "^7.20.6",
         "fetch-jsonp": "^1.1.3",
@@ -148,36 +143,6 @@
             "last 1 chrome version",
             "last 1 firefox version",
             "last 1 safari version"
-        ]
-    },
-    "jest": {
-        "moduleNameMapper": {
-            "inline$": "jest-raw-loader",
-            "^lodash-es$": "lodash"
-        },
-        "setupFiles": [
-            "jest-canvas-mock"
-        ],
-        "preset": "ts-jest",
-        "verbose": true,
-        "moduleFileExtensions": [
-            "js",
-            "ts"
-        ],
-        "coverageDirectory": "./coverage/",
-        "collectCoverage": true,
-        "collectCoverageFrom": [
-            "**/src/**/*.{js,ts}",
-            "!**/node_modules/**",
-            "!**/coverage/**",
-            "!**/public/**",
-            "!**/dist/**",
-            "!**/editor/**",
-            "!**/deprecated/**"
-        ],
-        "coverageReporters": [
-            "lcov",
-            "text"
         ]
     },
     "husky": {
