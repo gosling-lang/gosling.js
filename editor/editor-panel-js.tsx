@@ -2,7 +2,6 @@ import React, { useRef, useState, useEffect } from 'react'; // eslint-disable-li
 import MonacoEditor from 'react-monaco-editor';
 
 import ReactResizeDetector from 'react-resize-detector';
-import { GoslingSchema } from 'gosling.js';
 import * as Monaco from './monaco';
 
 function EditorPanelJavascript(props: {
@@ -11,7 +10,7 @@ function EditorPanelJavascript(props: {
     openFindBox?: boolean;
     fontZoomIn?: boolean;
     fontZoomOut?: boolean;
-    onChange?: (code: string) => void;
+    onChange?: (code: string, language: string) => void;
     hide?: boolean;
     isDarkTheme?: boolean;
 }) {
@@ -62,6 +61,7 @@ function EditorPanelJavascript(props: {
                       base: 'vs-dark',
                       inherit: true,
                       rules: [
+                          { token: 'key', foreground: '#eeeeee', fontStyle: 'bold' }, // all keys
                           { token: 'string.key.json', foreground: '#eeeeee', fontStyle: 'bold' }, // all keys
                           { token: 'string.value.json', foreground: '#8BE9FD', fontStyle: 'bold' }, // all values
                           { token: 'number', foreground: '#FF79C6', fontStyle: 'bold' },
@@ -76,8 +76,8 @@ function EditorPanelJavascript(props: {
                       inherit: true,
                       // Complete rules: https://github.com/microsoft/vscode/blob/93028e44ea7752bd53e2471051acbe6362e157e9/src/vs/editor/standalone/common/themes.ts#L13
                       rules: [
-                          { token: 'string.key.json', foreground: '#222222' }, // all keys
-                          { token: 'string.value.json', foreground: '#035CC5' }, // all values
+                          { token: 'key', foreground: '#222222' }, // all keys
+                          { token: 'value', foreground: '#035CC5' }, // all values
                           { token: 'number', foreground: '#E32A4F' },
                           { token: 'keyword.json', foreground: '#E32A4F' } // true and false
                       ],
@@ -90,35 +90,11 @@ function EditorPanelJavascript(props: {
 
     function editorWillMount() {
         updateTheme();
-        Monaco.languages.json.jsonDefaults.setDiagnosticsOptions({
-            allowComments: true,
-            enableSchemaRequest: true,
-            validate: true,
-            schemas: [
-                {
-                    uri: 'https://raw.githubusercontent.com/gosling-lang/gosling.js/master/schema/gosling.schema.json',
-                    fileMatch: ['*'],
-                    schema: GoslingSchema
-                }
-            ]
-        });
-        Monaco.languages.json.jsonDefaults.setModeConfiguration({
-            diagnostics: true,
-            documentFormattingEdits: false,
-            documentRangeFormattingEdits: false,
-            documentSymbols: true,
-            completionItems: true,
-            hovers: true,
-            tokens: true,
-            colors: true,
-            foldingRanges: true,
-            selectionRanges: false
-        });
     }
 
     function onChangeHandle(newCode: string) {
         setCode(newCode);
-        if (props.onChange) props.onChange(newCode);
+        if (props.onChange) props.onChange(newCode, 'Javascript');
     }
 
     return (
@@ -132,7 +108,7 @@ function EditorPanelJavascript(props: {
             ></ReactResizeDetector>
             <MonacoEditor
                 // Refer to https://github.com/react-monaco-editor/react-monaco-editor
-                language="json"
+                language="javascript"
                 value={code}
                 theme={'gosling'}
                 options={{

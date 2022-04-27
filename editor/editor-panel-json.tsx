@@ -11,7 +11,7 @@ function EditorPanelJSON(props: {
     openFindBox?: boolean;
     fontZoomIn?: boolean;
     fontZoomOut?: boolean;
-    onChange?: (code: string) => void;
+    onChange?: (code: string, language: string) => void;
     hide?: boolean;
     isDarkTheme?: boolean;
 }) {
@@ -118,7 +118,7 @@ function EditorPanelJSON(props: {
 
     function onChangeHandle(newCode: string) {
         setCode(newCode);
-        if (props.onChange) props.onChange(newCode);
+        if (props.onChange) props.onChange(newCode, 'JSON');
     }
 
     return (

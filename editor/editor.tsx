@@ -26,6 +26,10 @@ import type { Datum } from '@gosling.schema';
 import { Themes } from 'gosling-theme';
 import 'react-tabs/style/react-tabs.css';
 
+function json2js(jsonCode: string) {
+    return `var spec=${jsonCode}`;
+}
+
 const SHOWN_EXAMPLE_LIST = Object.entries(examples)
     .map(([k, v]) => {
         return { id: k, ...v };
@@ -184,6 +188,7 @@ function Editor(props: any) {
     const [theme, setTheme] = useState<gosling.Theme>('light');
     const [hg, setHg] = useState<HiGlassSpec>();
     const [code, setCode] = useState(defaultCode);
+    const [jsCode, setJsCode] = useState(json2js(defaultCode)); //[TO-DO: more js format examples]
     const [goslingSpec, setGoslingSpec] = useState<gosling.GoslingSpec>();
     const [log, setLog] = useState<ReturnType<typeof gosling.validateGoslingSpec>>({ message: '', state: 'success' });
     const [showExamples, setShowExamples] = useState(false);
@@ -242,8 +247,14 @@ function Editor(props: any) {
     const gosRef = useRef<any>();
 
     const debounceCodeEdit = useRef(
-        debounce((code: string) => {
-            setCode(code);
+        debounce((code: string, language) => {
+            if (language == 'JSON') {
+                setCode(code);
+            } else {
+                // eslint-disable-next-line no-console
+                console.info('change js code');
+                setJsCode(code);
+            }
         }, 1500)
     );
 
@@ -419,20 +430,36 @@ function Editor(props: any) {
 
             let editedGos;
             let valid;
-            try {
-                editedGos = JSON.parse(stripJsonComments(code));
-                valid = gosling.validateGoslingSpec(editedGos);
-                setLog(valid);
-            } catch (e) {
-                const message = '✘ Cannnot parse the code.';
-                console.warn(message);
-                setLog({ message, state: 'error' });
+
+            if (language === 'JSON') {
+                try {
+                    editedGos = JSON.parse(stripJsonComments(code));
+                    valid = gosling.validateGoslingSpec(editedGos);
+                    setLog(valid);
+                } catch (e) {
+                    const message = '✘ Cannnot parse the code.';
+                    console.warn(message);
+                    setLog({ message, state: 'error' });
+                }
+            } else if (language == 'Javascript') {
+                try {
+                    editedGos = window.Function(`${jsCode}\n return spec`)();
+                    valid = gosling.validateGoslingSpec(editedGos);
+                    setLog(valid);
+                    // eslint-disable-next-line no-console
+                    console.info(editedGos, valid);
+                } catch (e) {
+                    const message = '✘ Cannnot parse the code.';
+                    console.warn(message);
+                    setLog({ message, state: 'error' });
+                }
             }
+
             if (!editedGos || valid?.state !== 'success' || (!autoRun && !run)) return;
 
             setGoslingSpec(editedGos);
         },
-        [code, autoRun, readOnly]
+        [code, jsCode, autoRun, readOnly]
     );
 
     /**
@@ -885,7 +912,7 @@ function Editor(props: any) {
                                     </div>
                                     <div className={`tabContent ${language == 'Javascript' ? 'show' : 'hide'}`}>
                                         <EditorPanelJavascript
-                                            code={code}
+                                            code={jsCode}
                                             readOnly={readOnly}
                                             openFindBox={isFindCode}
                                             fontZoomIn={isFontZoomIn}
