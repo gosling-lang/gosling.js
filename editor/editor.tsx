@@ -251,8 +251,6 @@ function Editor(props: any) {
             if (language == 'JSON') {
                 setCode(code);
             } else {
-                // eslint-disable-next-line no-console
-                console.info('change js code');
                 setJsCode(code);
             }
         }, 1500)
@@ -441,13 +439,11 @@ function Editor(props: any) {
                     console.warn(message);
                     setLog({ message, state: 'error' });
                 }
-            } else if (language == 'Javascript') {
+            } else if (language === 'Javascript') {
                 try {
                     editedGos = window.Function(`${jsCode}\n return spec`)();
                     valid = gosling.validateGoslingSpec(editedGos);
                     setLog(valid);
-                    // eslint-disable-next-line no-console
-                    console.info(editedGos, valid);
                 } catch (e) {
                     const message = '✘ Cannnot parse the code.';
                     console.warn(message);
@@ -514,7 +510,7 @@ function Editor(props: any) {
         previewData.current = [];
         setSelectedPreviewData(0);
         runSpecUpdateVis();
-    }, [code, autoRun, theme]);
+    }, [code, jsCode, autoRun, theme]);
 
     // Uncommnet below to use HiGlass APIs
     // useEffect(() => {
