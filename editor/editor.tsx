@@ -4,7 +4,8 @@ import ReactMarkdown from 'react-markdown';
 import gfm from 'remark-gfm';
 import PubSub from 'pubsub-js';
 import fetchJsonp from 'fetch-jsonp';
-import EditorPanel from './editor-panel';
+import EditorPanelJSON from './editor-panel-json';
+import EditorPanelJavascript from './editor-panel-js';
 import { drag as d3Drag } from 'd3-drag';
 import { event as d3Event } from 'd3-selection';
 import { select as d3Select } from 'd3-selection';
@@ -23,6 +24,7 @@ import type { HiGlassSpec } from '@higlass.schema';
 import type { Datum } from '@gosling.schema';
 // @ts-ignore
 import { Themes } from 'gosling-theme';
+import 'react-tabs/style/react-tabs.css';
 
 const SHOWN_EXAMPLE_LIST = Object.entries(examples)
     .map(([k, v]) => {
@@ -174,6 +176,7 @@ function Editor(props: any) {
 
     const previewData = useRef<PreviewData[]>([]);
     const [refreshData, setRefreshData] = useState<boolean>(false);
+    const [language, changeLanguage] = useState<string>('JSON');
 
     const [demo, setDemo] = useState(
         examples[urlExampleId] ? { id: urlExampleId, ...examples[urlExampleId] } : INIT_DEMO
@@ -854,15 +857,44 @@ function Editor(props: any) {
                         >
                             {/* Gosling Editor */}
                             <>
-                                <EditorPanel
-                                    code={code}
-                                    readOnly={readOnly}
-                                    openFindBox={isFindCode}
-                                    fontZoomIn={isFontZoomIn}
-                                    fontZoomOut={isFontZoomOut}
-                                    onChange={debounceCodeEdit.current}
-                                    isDarkTheme={theme === 'dark'}
-                                />
+                                <div className="tabEditor">
+                                    <div className="tab">
+                                        <button
+                                            className={`tablinks ${language == 'JSON' && 'active'}`}
+                                            onClick={() => changeLanguage('JSON')}
+                                        >
+                                            JSON
+                                        </button>
+                                        <button
+                                            className={`tablinks ${language == 'Javascript' && 'active'}`}
+                                            onClick={() => changeLanguage('Javascript')}
+                                        >
+                                            Javascript
+                                        </button>
+                                    </div>
+                                    <div className={`tabContent ${language == 'JSON' ? 'show' : 'hide'}`}>
+                                        <EditorPanelJSON
+                                            code={code}
+                                            readOnly={readOnly}
+                                            openFindBox={isFindCode}
+                                            fontZoomIn={isFontZoomIn}
+                                            fontZoomOut={isFontZoomOut}
+                                            onChange={debounceCodeEdit.current}
+                                            isDarkTheme={theme === 'dark'}
+                                        />
+                                    </div>
+                                    <div className={`tabContent ${language == 'Javascript' ? 'show' : 'hide'}`}>
+                                        <EditorPanelJavascript
+                                            code={code}
+                                            readOnly={readOnly}
+                                            openFindBox={isFindCode}
+                                            fontZoomIn={isFontZoomIn}
+                                            fontZoomOut={isFontZoomOut}
+                                            onChange={debounceCodeEdit.current}
+                                            isDarkTheme={theme === 'dark'}
+                                        />
+                                    </div>
+                                </div>
                                 <div className={`compile-message compile-message-${log.state}`}>{log.message}</div>
                             </>
                             {/* HiGlass View Config */}
@@ -872,7 +904,7 @@ function Editor(props: any) {
                                         Compiled HiGlass ViewConfig (Read Only)
                                     </div>
                                     <div style={{ height: '100%', visibility: showVC ? 'visible' : 'hidden' }}>
-                                        <EditorPanel
+                                        <EditorPanelJSON
                                             code={stringify(hg)}
                                             readOnly={true}
                                             isDarkTheme={theme === 'dark'}

@@ -5,7 +5,7 @@ import ReactResizeDetector from 'react-resize-detector';
 import { GoslingSchema } from 'gosling.js';
 import * as Monaco from './monaco';
 
-function EditorPanel(props: {
+function EditorPanelJavascript(props: {
     code: string;
     readOnly?: boolean;
     openFindBox?: boolean;
@@ -157,4 +157,4 @@ function EditorPanel(props: {
         </>
     );
 }
-export default EditorPanel;
+export default EditorPanelJavascript;
