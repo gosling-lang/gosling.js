@@ -467,7 +467,7 @@ function Editor(props: any) {
 
             setGoslingSpec(editedGos);
         },
-        [code, jsCode, autoRun, readOnly]
+        [code, jsCode, autoRun, language, readOnly]
     );
 
     /**
