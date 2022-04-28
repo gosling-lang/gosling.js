@@ -61,11 +61,10 @@ function EditorPanelJavascript(props: {
                       base: 'vs-dark',
                       inherit: true,
                       rules: [
-                          { token: 'key', foreground: '#eeeeee', fontStyle: 'bold' }, // all keys
-                          { token: 'string.key.json', foreground: '#eeeeee', fontStyle: 'bold' }, // all keys
-                          { token: 'string.value.json', foreground: '#8BE9FD', fontStyle: 'bold' }, // all values
+                          { token: 'attribute.name', foreground: '#eeeeee', fontStyle: 'bold' }, // all keys
+                          { token: 'attribute.value', foreground: '#8BE9FD', fontStyle: 'bold' }, // all values
                           { token: 'number', foreground: '#FF79C6', fontStyle: 'bold' },
-                          { token: 'keyword.json', foreground: '#FF79C6', fontStyle: 'bold' } // true and false
+                          { token: 'keyword', foreground: '#FF79C6', fontStyle: 'bold' } // true and false
                       ],
                       colors: {
                           // ...
@@ -76,10 +75,10 @@ function EditorPanelJavascript(props: {
                       inherit: true,
                       // Complete rules: https://github.com/microsoft/vscode/blob/93028e44ea7752bd53e2471051acbe6362e157e9/src/vs/editor/standalone/common/themes.ts#L13
                       rules: [
-                          { token: 'key', foreground: '#222222' }, // all keys
-                          { token: 'value', foreground: '#035CC5' }, // all values
+                          { token: 'attribute.name', foreground: '#222222' }, // all keys
+                          { token: 'attribute.value', foreground: '#035CC5' }, // all values
                           { token: 'number', foreground: '#E32A4F' },
-                          { token: 'keyword.json', foreground: '#E32A4F' } // true and false
+                          { token: 'keyword', foreground: '#E32A4F' } // true and false
                       ],
                       colors: {
                           // ...
@@ -108,9 +107,10 @@ function EditorPanelJavascript(props: {
             ></ReactResizeDetector>
             <MonacoEditor
                 // Refer to https://github.com/react-monaco-editor/react-monaco-editor
-                language="javascript"
+                language="typescript"
                 value={code}
-                theme={'gosling'}
+                theme="vs"
+                // theme="gosling"
                 options={{
                     autoClosingBrackets: 'beforeWhitespace',
                     autoClosingQuotes: 'beforeWhitespace',

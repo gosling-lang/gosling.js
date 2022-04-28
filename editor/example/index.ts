@@ -1,36 +1,40 @@
+/* eslint-disable @typescript-eslint/no-require-imports */
+/* eslint-disable @typescript-eslint/no-var-requires */
 import type { GoslingSpec } from 'gosling.js';
 import { THUMBNAILS } from './thumbnails';
-import { EX_SPEC_VISUAL_ENCODING, EX_SPEC_VISUAL_ENCODING_CIRCULAR, EX_SPEC_RULE } from './visual-encoding';
-import { EX_SPEC_LAYOUT_AND_ARRANGEMENT_1, EX_SPEC_LAYOUT_AND_ARRANGEMENT_2 } from './layout-and-arrangement';
-import { EX_SPEC_MATRIX, EX_SPEC_RESPONSIVE_COMPARATIVE_MATRICES } from './matrix';
-import { EX_SPEC_CANCER_VARIANT_PROTOTYPE } from './cancer-variant';
-import { EX_SPEC_MATRIX_HFFC6 } from './matrix-hffc6';
-import { EX_SPEC_LINKING } from './visual-linking';
-import { EX_SPEC_BASIC_SEMANTIC_ZOOM } from './basic-semantic-zoom';
+import { EX_SPEC_VISUAL_ENCODING, EX_SPEC_VISUAL_ENCODING_CIRCULAR, EX_SPEC_RULE } from './json-spec/visual-encoding';
+import { EX_SPEC_LAYOUT_AND_ARRANGEMENT_1, EX_SPEC_LAYOUT_AND_ARRANGEMENT_2 } from './json-spec/layout-and-arrangement';
+import { EX_SPEC_MATRIX, EX_SPEC_RESPONSIVE_COMPARATIVE_MATRICES } from './json-spec/matrix';
+import { EX_SPEC_CANCER_VARIANT_PROTOTYPE } from './json-spec/cancer-variant';
+import { EX_SPEC_MATRIX_HFFC6 } from './json-spec/matrix-hffc6';
+import { EX_SPEC_LINKING } from './json-spec/visual-linking';
+import { EX_SPEC_BASIC_SEMANTIC_ZOOM } from './json-spec/basic-semantic-zoom';
 import {
     EX_SPEC_RESPONSIVE_COMPARATIVE_VIEWS,
     EX_SPEC_RESPONSIVE_IDEOGRAM,
     EX_SPEC_RESPONSIVE_MULTIVEC,
     EX_SPEC_RESPONSIVE_MULTIVEC_CIRCULAR
-} from './responsive';
-import { EX_SPEC_RESPONSIVE_TRACK_WISE_COMPARISON } from './responsive-track-wise-comparison';
-import { EX_SPEC_ALIGNMENT_CHART, EX_SPEC_RESPONSIVE_ALIGNMENT_CHART } from './responsive-alignment';
-import { EX_SPEC_MARK_DISPLACEMENT } from './mark-displacement';
-import { EX_SPEC_CIRCULAR_OVERVIEW_LINEAR_DETAIL } from './circular-overview-linear-detail-views';
-import { EX_SPEC_SARS_COV_2 } from './sars-cov-2';
-import { EX_SPEC_CIRCOS, EX_SPEC_CIRCOS_BETWEEN_LINK, EX_SPEC_CIRCULR_RANGE } from './circos';
-import { EX_SPEC_GREMLIN } from './gremlin';
-import { EX_SPEC_GENE_ANNOTATION } from './gene-annotation';
-import { EX_SPEC_CLINVAR_LOLLIPOP, EX_SPEC_SEQUENCE_TRACK } from './semantic-zoom';
-import { EX_SPEC_GIVE } from './give';
-import { EX_SPEC_CORCES_ET_AL } from './corces';
-import { EX_SPEC_SASHIMI } from './sashimi';
-import { EX_SPEC_CYTOBANDS } from './ideograms';
-import { EX_SPEC_PILEUP } from './pileup';
-import { EX_SPEC_BAND } from './vertical-band';
-import { EX_SPEC_TEMPLATE } from './track-template';
-import { EX_SPEC_DEBUG } from './debug';
+} from './json-spec/responsive';
+import { EX_SPEC_RESPONSIVE_TRACK_WISE_COMPARISON } from './json-spec/responsive-track-wise-comparison';
+import { EX_SPEC_ALIGNMENT_CHART, EX_SPEC_RESPONSIVE_ALIGNMENT_CHART } from './json-spec/responsive-alignment';
+import { EX_SPEC_MARK_DISPLACEMENT } from './json-spec/mark-displacement';
+import { EX_SPEC_CIRCULAR_OVERVIEW_LINEAR_DETAIL } from './json-spec/circular-overview-linear-detail-views';
+import { EX_SPEC_SARS_COV_2 } from './json-spec/sars-cov-2';
+import { EX_SPEC_CIRCOS, EX_SPEC_CIRCOS_BETWEEN_LINK, EX_SPEC_CIRCULR_RANGE } from './json-spec/circos';
+import { EX_SPEC_GREMLIN } from './json-spec/gremlin';
+import { EX_SPEC_GENE_ANNOTATION } from './json-spec/gene-annotation';
+import { EX_SPEC_CLINVAR_LOLLIPOP, EX_SPEC_SEQUENCE_TRACK } from './json-spec/semantic-zoom';
+import { EX_SPEC_GIVE } from './json-spec/give';
+import { EX_SPEC_CORCES_ET_AL } from './json-spec/corces';
+import { EX_SPEC_SASHIMI } from './json-spec/sashimi';
+import { EX_SPEC_CYTOBANDS } from './json-spec/ideograms';
+import { EX_SPEC_PILEUP } from './json-spec/pileup';
+import { EX_SPEC_BAND } from './json-spec/vertical-band';
+import { EX_SPEC_TEMPLATE } from './json-spec/track-template';
+import { EX_SPEC_DEBUG } from './json-spec/debug';
 import * as docExamples from './doc-examples';
+
+import { JS_VISUAL_ENCODING } from './js-spec/visual-encoding-js-example';
 
 export type ExampleGroup =
     | 'Visual Encoding'
@@ -91,6 +95,7 @@ export const examples: {
         spec: GoslingSpec | string;
         description?: string;
         underDevelopment?: boolean;
+        specJs?: string;
         hidden?: boolean;
         forceShow?: boolean;
         image?: string;
@@ -106,6 +111,7 @@ export const examples: {
         group: 'Visual Encoding',
         name: 'Visual Encoding',
         spec: EX_SPEC_VISUAL_ENCODING,
+        specJs: JS_VISUAL_ENCODING,
         image: THUMBNAILS.VISUAL_ENCODING
     },
     VISUAL_ENCODING_CIRCULAR: {

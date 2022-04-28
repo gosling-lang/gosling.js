@@ -24,7 +24,6 @@ import type { HiGlassSpec } from '@higlass.schema';
 import type { Datum } from '@gosling.schema';
 // @ts-ignore
 import { Themes } from 'gosling-theme';
-import 'react-tabs/style/react-tabs.css';
 
 function json2js(jsonCode: string) {
     return `var spec=${jsonCode}`;
@@ -178,6 +177,8 @@ function Editor(props: any) {
 
     const defaultCode = urlGist ? emptySpec() : stringify(urlSpec ?? (INIT_DEMO.spec as gosling.GoslingSpec));
 
+    const defaultJsCode = INIT_DEMO.specJs ?? json2js(defaultCode);
+
     const previewData = useRef<PreviewData[]>([]);
     const [refreshData, setRefreshData] = useState<boolean>(false);
     const [language, changeLanguage] = useState<string>('JSON');
@@ -188,7 +189,7 @@ function Editor(props: any) {
     const [theme, setTheme] = useState<gosling.Theme>('light');
     const [hg, setHg] = useState<HiGlassSpec>();
     const [code, setCode] = useState(defaultCode);
-    const [jsCode, setJsCode] = useState(json2js(defaultCode)); //[TO-DO: more js format examples]
+    const [jsCode, setJsCode] = useState(defaultJsCode); //[TO-DO: more js format examples]
     const [goslingSpec, setGoslingSpec] = useState<gosling.GoslingSpec>();
     const [log, setLog] = useState<ReturnType<typeof gosling.validateGoslingSpec>>({ message: '', state: 'success' });
     const [showExamples, setShowExamples] = useState(false);
@@ -895,6 +896,7 @@ function Editor(props: any) {
                                             Javascript
                                         </button>
                                     </div>
+
                                     <div className={`tabContent ${language == 'JSON' ? 'show' : 'hide'}`}>
                                         <EditorPanelJSON
                                             code={code}
