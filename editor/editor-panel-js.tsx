@@ -107,7 +107,7 @@ function EditorPanelJavascript(props: {
             ></ReactResizeDetector>
             <MonacoEditor
                 // Refer to https://github.com/react-monaco-editor/react-monaco-editor
-                language="typescript"
+                language="javascript"
                 value={code}
                 theme="vs"
                 // theme="gosling"

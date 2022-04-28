@@ -1,4 +1,3 @@
-export const JS_VISUAL_ENCODING = `
 const size = { width: 600, height: 130 };
 
 const data = {
@@ -231,4 +230,5 @@ const spec = {
     xDomain: { chromosome: '1', interval: [1, 3000500] },
     views: [heatmapView, barView, stackView, lineView, pointView, pointView2, areaView2, barView2, bandView]
 };
-`;
+
+export { spec };
