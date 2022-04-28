@@ -10,13 +10,11 @@ esbuild.build({
     format: 'cjs',
     minify: false,
     sourcemap: true,
-    inject: [
-        path.resolve(__dirname, '../src/alias/buffer-shim.js'),
-    ],
+    inject: [path.resolve(__dirname, '../src/alias/buffer-shim.js')],
     external: ['react', 'react-dom', 'pixi.js', 'higlass'],
     define: {
         'process.platform': 'undefined',
-        'process.env.THREADS_WORKER_INIT_TIMEOUT': 'undefined',
+        'process.env.THREADS_WORKER_INIT_TIMEOUT': 'undefined'
     },
     // esbuild doesn't support UMD format directy. The banner/footer
     // wraps the commonjs output as a UMD module. The function signature is copied
@@ -32,7 +30,7 @@ esbuild.build({
 
 var __mods = { 'pixi.js': pixi_js, 'react': React, 'react-dom': ReactDOM, 'higlass': higlass };
 var require = name => __mods[name];
-`,
+`
     },
-    footer: { js: '\n})));' },
+    footer: { js: '\n})));' }
 });
