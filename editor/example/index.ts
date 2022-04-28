@@ -1,8 +1,6 @@
-/* eslint-disable @typescript-eslint/no-require-imports */
-/* eslint-disable @typescript-eslint/no-var-requires */
 import type { GoslingSpec } from 'gosling.js';
 import { THUMBNAILS } from './thumbnails';
-import { EX_SPEC_VISUAL_ENCODING_CIRCULAR, EX_SPEC_RULE } from './json-spec/visual-encoding';
+import { EX_SPEC_RULE } from './json-spec/visual-encoding';
 import { EX_SPEC_LAYOUT_AND_ARRANGEMENT_1, EX_SPEC_LAYOUT_AND_ARRANGEMENT_2 } from './json-spec/layout-and-arrangement';
 import { EX_SPEC_MATRIX, EX_SPEC_RESPONSIVE_COMPARATIVE_MATRICES } from './json-spec/matrix';
 import { EX_SPEC_CANCER_VARIANT_PROTOTYPE } from './json-spec/cancer-variant';
@@ -35,8 +33,11 @@ import { EX_SPEC_DEBUG } from './json-spec/debug';
 import * as docExamples from './doc-examples';
 
 // js and json importing from the same file
-import JS_VISUAL_ENCODING from './js-spec/visual-encoding-js-example.ts?raw';
-import { spec as JSON_VISUAL_ENCODING } from './js-spec/visual-encoding-js-example';
+import JS_VISUAL_ENCODING from './js-spec/visual-encoding.ts?raw';
+import { spec as JSON_VISUAL_ENCODING } from './js-spec/visual-encoding';
+
+import JS_VISUAL_ENCODING_CIRCULAR from './js-spec/visual-encoding-circular.ts?raw';
+import { spec as JSON_VISUAL_ENCODING_CIRCULAR } from './js-spec/visual-encoding-circular';
 
 export type ExampleGroup =
     | 'Visual Encoding'
@@ -119,7 +120,8 @@ export const examples: {
     VISUAL_ENCODING_CIRCULAR: {
         group: 'Visual Encoding',
         name: 'Circular Visual Encoding',
-        spec: EX_SPEC_VISUAL_ENCODING_CIRCULAR,
+        spec: JSON_VISUAL_ENCODING_CIRCULAR as GoslingSpec,
+        specJs: JS_VISUAL_ENCODING_CIRCULAR.replace('export { spec };', ''),
         image: THUMBNAILS.VISUAL_ENCODING_CIRCULAR
     },
     BAND: {

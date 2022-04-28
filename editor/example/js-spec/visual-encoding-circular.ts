@@ -1,5 +1,4 @@
-const size = { width: 600, height: 130 };
-
+const size = { width: 350, height: 130 };
 const data = {
     url: 'https://server.gosling-lang.org/api/v1/tileset_info/?d=cistrome-multivec',
     type: 'multivec',
@@ -21,6 +20,7 @@ const tooltip = [
     { field: 'sample', type: 'nominal', alt: 'Sample' }
 ];
 
+/******* start define individual visualizations *******/
 const heatmapView = {
     tracks: [
         {
@@ -157,6 +157,7 @@ const barView2 = {
             id: 'track-8',
             data: {
                 ...data,
+                categories: ['sample 1', 'sample 2'],
                 binSize: 4
             },
             mark: 'bar',
@@ -220,15 +221,39 @@ const bandView = {
         }
     ]
 };
+/******* end define individual visualizations *******/
+
+/******* start define rows (arrangement of two visualizations) *******/
+const row1 = {
+    arrangement: 'horizontal',
+    views: [heatmapView, barView]
+};
+
+const row2 = {
+    arrangement: 'horizontal',
+    views: [stackView, lineView]
+};
+
+const row3 = {
+    arrangement: 'horizontal',
+    views: [pointView, pointView2]
+};
+
+const row4 = {
+    arrangement: 'horizontal',
+    views: [areaView2, bandView]
+};
+/******* end define rows *******/
 
 const spec = {
-    title: 'Visual Encoding',
-    subtitle: 'Gosling provides diverse visual encoding methods',
-    layout: 'linear',
+    title: 'Visual Encoding in Circular Layouts',
+    subtitle: 'Gosling provides diverse visual encoding methods in circular layouts',
+    layout: 'circular',
     arrangement: 'vertical',
-    centerRadius: 0.8,
+    centerRadius: 0.5,
+    static: true,
     xDomain: { chromosome: '1', interval: [1, 3000500] },
-    views: [heatmapView, barView, stackView, lineView, pointView, pointView2, areaView2, barView2, bandView]
+    views: [row1, row2, row3, row4, barView2]
 };
 
 export { spec };
