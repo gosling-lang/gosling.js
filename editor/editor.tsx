@@ -281,9 +281,18 @@ function Editor(props: any) {
         previewData.current = [];
         setSelectedPreviewData(0);
         if (urlExampleId && !validateExampleId(urlExampleId)) {
+            // invalida url example id
             setCode(emptySpec(`Example id "${urlExampleId}" does not exist.`));
+            setJsCode(emptySpec(`Example id "${urlExampleId}" does not exist.`));
+        } else if (urlSpec) {
+            setCode(urlSpec);
+            setJsCode(json2js(urlSpec));
+        } else if (urlGist) {
+            setCode(emptySpec());
         } else {
-            setCode(urlSpec ?? (urlGist ? emptySpec() : stringifySpec(demo.spec as gosling.GoslingSpec)));
+            const jsonCode = stringifySpec(demo.spec as gosling.GoslingSpec);
+            setCode(jsonCode);
+            setJsCode(demo.specJs ?? json2js(jsonCode));
         }
         setHg(undefined);
     }, [demo]);
@@ -401,6 +410,7 @@ function Editor(props: any) {
                 if (active && !!code) {
                     setReadOnly(false);
                     setCode(code);
+                    setCode(json2js(code));
                     setGistTitle(title);
                     setDescription(description);
                 }
@@ -409,6 +419,7 @@ function Editor(props: any) {
                 if (active) {
                     setReadOnly(false);
                     setCode(emptySpec(error));
+                    setJsCode(emptySpec(error));
                     setDescription(undefined);
                     setGistTitle('Error loading gist! See code for details.');
                 }
