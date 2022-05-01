@@ -4,8 +4,7 @@ import ReactMarkdown from 'react-markdown';
 import gfm from 'remark-gfm';
 import PubSub from 'pubsub-js';
 import fetchJsonp from 'fetch-jsonp';
-import EditorPanelJSON from './editor-panel-json';
-import EditorPanelJavascript from './editor-panel-js';
+import EditorPanel from './editor-panel';
 import { drag as d3Drag } from 'd3-drag';
 import { event as d3Event } from 'd3-selection';
 import { select as d3Select } from 'd3-selection';
@@ -181,7 +180,7 @@ function Editor(props: any) {
 
     const previewData = useRef<PreviewData[]>([]);
     const [refreshData, setRefreshData] = useState<boolean>(false);
-    const [language, changeLanguage] = useState<string>('JSON');
+    const [language, changeLanguage] = useState<string>('json');
 
     const [demo, setDemo] = useState(
         examples[urlExampleId] ? { id: urlExampleId, ...examples[urlExampleId] } : INIT_DEMO
@@ -249,7 +248,7 @@ function Editor(props: any) {
 
     const debounceCodeEdit = useRef(
         debounce((code: string, language) => {
-            if (language == 'JSON') {
+            if (language == 'json') {
                 setCode(code);
             } else {
                 setJsCode(code);
@@ -441,7 +440,7 @@ function Editor(props: any) {
             let editedGos;
             let valid;
 
-            if (language === 'JSON') {
+            if (language === 'json') {
                 try {
                     editedGos = JSON.parse(stripJsonComments(code));
                     valid = gosling.validateGoslingSpec(editedGos);
@@ -451,7 +450,7 @@ function Editor(props: any) {
                     console.warn(message);
                     setLog({ message, state: 'error' });
                 }
-            } else if (language === 'Javascript') {
+            } else if (language === 'javascript') {
                 try {
                     editedGos = window.Function(`${jsCode}\n return spec`)();
                     valid = gosling.validateGoslingSpec(editedGos);
@@ -895,18 +894,18 @@ function Editor(props: any) {
                                 <div className="tabEditor">
                                     <div className="tab">
                                         <button
-                                            className={`tablinks ${language == 'JSON' && 'active'}`}
+                                            className={`tablinks ${language == 'json' && 'active'}`}
                                             onClick={() => {
-                                                changeLanguage('JSON');
+                                                changeLanguage('json');
                                                 setLog({ message: '', state: 'success' });
                                             }}
                                         >
                                             JSON
                                         </button>
                                         <button
-                                            className={`tablinks ${language == 'Javascript' && 'active'}`}
+                                            className={`tablinks ${language == 'javascript' && 'active'}`}
                                             onClick={() => {
-                                                changeLanguage('Javascript');
+                                                changeLanguage('javascript');
                                                 setLog({ message: '', state: 'success' });
                                             }}
                                         >
@@ -914,8 +913,8 @@ function Editor(props: any) {
                                         </button>
                                     </div>
 
-                                    <div className={`tabContent ${language == 'JSON' ? 'show' : 'hide'}`}>
-                                        <EditorPanelJSON
+                                    <div className={`tabContent ${language == 'json' ? 'show' : 'hide'}`}>
+                                        <EditorPanel
                                             code={code}
                                             readOnly={readOnly}
                                             openFindBox={isFindCode}
@@ -923,10 +922,11 @@ function Editor(props: any) {
                                             fontZoomOut={isFontZoomOut}
                                             onChange={debounceCodeEdit.current}
                                             isDarkTheme={theme === 'dark'}
+                                            language="json"
                                         />
                                     </div>
-                                    <div className={`tabContent ${language == 'Javascript' ? 'show' : 'hide'}`}>
-                                        <EditorPanelJavascript
+                                    <div className={`tabContent ${language == 'javascript' ? 'show' : 'hide'}`}>
+                                        <EditorPanel
                                             code={jsCode}
                                             readOnly={readOnly}
                                             openFindBox={isFindCode}
@@ -934,6 +934,7 @@ function Editor(props: any) {
                                             fontZoomOut={isFontZoomOut}
                                             onChange={debounceCodeEdit.current}
                                             isDarkTheme={theme === 'dark'}
+                                            language="javascript"
                                         />
                                     </div>
                                 </div>
@@ -946,10 +947,11 @@ function Editor(props: any) {
                                         Compiled HiGlass ViewConfig (Read Only)
                                     </div>
                                     <div style={{ height: '100%', visibility: showVC ? 'visible' : 'hidden' }}>
-                                        <EditorPanelJSON
+                                        <EditorPanel
                                             code={stringify(hg)}
                                             readOnly={true}
                                             isDarkTheme={theme === 'dark'}
+                                            language="json"
                                         />
                                     </div>
                                 </>

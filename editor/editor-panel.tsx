@@ -7,7 +7,7 @@ import { GoslingSchema } from 'gosling.js';
 export * from './monaco_worker';
 import * as Monaco from 'monaco-editor';
 
-function EditorPanelJSON(props: {
+function EditorPanel(props: {
     code: string;
     readOnly?: boolean;
     openFindBox?: boolean;
@@ -16,8 +16,9 @@ function EditorPanelJSON(props: {
     onChange?: (code: string, language: string) => void;
     hide?: boolean;
     isDarkTheme?: boolean;
+    language: string;
 }) {
-    const { code: templateCode, readOnly, openFindBox, fontZoomIn, fontZoomOut, isDarkTheme } = props;
+    const { code: templateCode, readOnly, openFindBox, fontZoomIn, fontZoomOut, isDarkTheme, language } = props;
     const editor = useRef<Monaco.editor.IStandaloneCodeEditor | null>(null);
     const [code, setCode] = useState(templateCode);
 
@@ -123,7 +124,7 @@ function EditorPanelJSON(props: {
 
     function onChangeHandle(newCode: string) {
         setCode(newCode);
-        if (props.onChange) props.onChange(newCode, 'JSON');
+        if (props.onChange) props.onChange(newCode, language);
     }
 
     return (
@@ -137,7 +138,7 @@ function EditorPanelJSON(props: {
             ></ReactResizeDetector>
             <MonacoEditor
                 // Refer to https://github.com/react-monaco-editor/react-monaco-editor
-                language="json"
+                language={language}
                 value={code}
                 theme={'gosling'}
                 options={{
@@ -162,4 +163,4 @@ function EditorPanelJSON(props: {
         </>
     );
 }
-export default EditorPanelJSON;
+export default EditorPanel;
