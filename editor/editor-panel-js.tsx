@@ -2,7 +2,32 @@ import React, { useRef, useState, useEffect } from 'react'; // eslint-disable-li
 import MonacoEditor from 'react-monaco-editor';
 
 import ReactResizeDetector from 'react-resize-detector';
-import * as Monaco from './monaco';
+
+import 'monaco-editor/esm/vs/language/json/monaco.contribution';
+import 'monaco-editor/esm/vs/language/typescript/monaco.contribution';
+import jsonWorker from 'monaco-editor/esm/vs/language/json/json.worker?worker';
+import jsWorker from 'monaco-editor/esm/vs/language/typescript/ts.worker?worker';
+import defaultWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker';
+export * from 'monaco-editor/esm/vs/editor/edcore.main';
+import * as Monaco from 'monaco-editor';
+
+// @ts-ignore
+// https://github.com/Microsoft/monaco-editor/blob/main/docs/integrate-esm.md#using-vite
+// A workaround: have to write the worker at two editors (js editor and json editor) seperatedly to make them work.
+// Not sure what cause this bug though.
+self.MonacoEnvironment = {
+    getWorker(id: string, label: string) {
+        switch (label) {
+            case 'json':
+                return new jsonWorker();
+            case 'typescript':
+            case 'javascript':
+                return new jsWorker();
+            default:
+                return new defaultWorker();
+        }
+    }
+};
 
 function EditorPanelJavascript(props: {
     code: string;
