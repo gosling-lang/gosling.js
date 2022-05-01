@@ -1,11 +1,9 @@
 module.exports = {
     parser: '@typescript-eslint/parser',
-    plugins: ['@typescript-eslint', 'prettier', 'jest'],
+    plugins: ['@typescript-eslint', 'prettier'],
     extends: [
         'eslint:recommended',
         'plugin:react/recommended',
-        'plugin:jest/recommended',
-        'plugin:jest/style',
         'plugin:@typescript-eslint/recommended',
         'prettier',
         'prettier/@typescript-eslint',
@@ -26,9 +24,7 @@ module.exports = {
         }
     },
     rules: {
-        // https://github.com/jest-community/eslint-plugin-jest#rules
         'prettier/prettier': 'warn',
-        'jest/no-test-callback': 'warn',
         // https://github.com/typescript-eslint/typescript-eslint/tree/master/packages/eslint-plugin#supported-rules
         '@typescript-eslint/no-explicit-any': 'off',
         '@typescript-eslint/no-empty-interface': 'off',
