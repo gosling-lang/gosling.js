@@ -1,6 +1,5 @@
 import type { GoslingSpec } from 'gosling.js';
 import { THUMBNAILS } from './thumbnails';
-import { EX_SPEC_RULE } from './json-spec/visual-encoding';
 import { EX_SPEC_LAYOUT_AND_ARRANGEMENT_1, EX_SPEC_LAYOUT_AND_ARRANGEMENT_2 } from './json-spec/layout-and-arrangement';
 import { EX_SPEC_MATRIX, EX_SPEC_RESPONSIVE_COMPARATIVE_MATRICES } from './json-spec/matrix';
 import { EX_SPEC_CANCER_VARIANT_PROTOTYPE } from './json-spec/cancer-variant';
@@ -33,11 +32,14 @@ import { EX_SPEC_DEBUG } from './json-spec/debug';
 import * as docExamples from './doc-examples';
 
 // js and json importing from the same file
-import JS_VISUAL_ENCODING from './js-spec/visual-encoding.ts?raw';
-import { spec as JSON_VISUAL_ENCODING } from './js-spec/visual-encoding';
+import JS_SPEC_VISUAL_ENCODING from './js-spec/visual-encoding.ts?raw';
+import { spec as JSON_SPEC_VISUAL_ENCODING } from './js-spec/visual-encoding';
 
-import JS_VISUAL_ENCODING_CIRCULAR from './js-spec/visual-encoding-circular.ts?raw';
-import { spec as JSON_VISUAL_ENCODING_CIRCULAR } from './js-spec/visual-encoding-circular';
+import JS_SPEC_VISUAL_ENCODING_CIRCULAR from './js-spec/visual-encoding-circular.ts?raw';
+import { spec as JSON_SPEC_VISUAL_ENCODING_CIRCULAR } from './js-spec/visual-encoding-circular';
+
+import JS_SPEC_RULE from './js-spec/rule.ts?raw';
+import { spec as JSON_SPEC_RULE } from './js-spec/rule';
 
 export type ExampleGroup =
     | 'Visual Encoding'
@@ -113,15 +115,15 @@ export const examples: {
     VISUAL_ENCODING: {
         group: 'Visual Encoding',
         name: 'Visual Encoding',
-        spec: JSON_VISUAL_ENCODING as GoslingSpec,
-        specJs: JS_VISUAL_ENCODING.replace('export { spec };', ''),
+        spec: JSON_SPEC_VISUAL_ENCODING as GoslingSpec,
+        specJs: JS_SPEC_VISUAL_ENCODING.replace('export { spec };', ''),
         image: THUMBNAILS.VISUAL_ENCODING
     },
     VISUAL_ENCODING_CIRCULAR: {
         group: 'Visual Encoding',
         name: 'Circular Visual Encoding',
-        spec: JSON_VISUAL_ENCODING_CIRCULAR as GoslingSpec,
-        specJs: JS_VISUAL_ENCODING_CIRCULAR.replace('export { spec };', ''),
+        spec: JSON_SPEC_VISUAL_ENCODING_CIRCULAR as GoslingSpec,
+        specJs: JS_SPEC_VISUAL_ENCODING_CIRCULAR.replace('export { spec };', ''),
         image: THUMBNAILS.VISUAL_ENCODING_CIRCULAR
     },
     BAND: {
@@ -133,7 +135,8 @@ export const examples: {
     RULE: {
         group: 'Visual Encoding',
         name: 'Rule Mark',
-        spec: EX_SPEC_RULE,
+        spec: JSON_SPEC_RULE as GoslingSpec,
+        specJs: JS_SPEC_RULE.replace('export { spec };', ''),
         image: THUMBNAILS.RULE
     },
     MATRIX: {
