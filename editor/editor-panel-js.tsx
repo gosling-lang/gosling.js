@@ -14,7 +14,7 @@ import * as Monaco from 'monaco-editor';
 // @ts-ignore
 // https://github.com/Microsoft/monaco-editor/blob/main/docs/integrate-esm.md#using-vite
 // A workaround: have to write the worker at two editors (js editor and json editor) seperatedly to make them work.
-// Not sure what cause this bug though.
+// TODO: Not sure what causes this bug though.
 self.MonacoEnvironment = {
     getWorker(id: string, label: string) {
         switch (label) {
@@ -79,6 +79,7 @@ function EditorPanelJavascript(props: {
     }
 
     function updateTheme() {
+        // [TODO: what is the proper way to define themes in two editors?]
         Monaco.editor.defineTheme(
             'gosling',
             isDarkTheme
@@ -86,10 +87,10 @@ function EditorPanelJavascript(props: {
                       base: 'vs-dark',
                       inherit: true,
                       rules: [
-                          { token: 'attribute.name', foreground: '#eeeeee', fontStyle: 'bold' }, // all keys
-                          { token: 'attribute.value', foreground: '#8BE9FD', fontStyle: 'bold' }, // all values
+                          { token: 'string.key.json', foreground: '#eeeeee', fontStyle: 'bold' }, // all keys
+                          { token: 'string.value.json', foreground: '#8BE9FD', fontStyle: 'bold' }, // all values
                           { token: 'number', foreground: '#FF79C6', fontStyle: 'bold' },
-                          { token: 'keyword', foreground: '#FF79C6', fontStyle: 'bold' } // true and false
+                          { token: 'keyword.json', foreground: '#FF79C6', fontStyle: 'bold' } // true and false
                       ],
                       colors: {
                           // ...
@@ -100,10 +101,13 @@ function EditorPanelJavascript(props: {
                       inherit: true,
                       // Complete rules: https://github.com/microsoft/vscode/blob/93028e44ea7752bd53e2471051acbe6362e157e9/src/vs/editor/standalone/common/themes.ts#L13
                       rules: [
-                          { token: 'attribute.name', foreground: '#222222' }, // all keys
-                          { token: 'attribute.value', foreground: '#035CC5' }, // all values
+                          { token: 'string', foreground: '#035CC5' }, // general string values in js editor
+                          { token: 'keyword', foreground: '#0000FF' }, // keyword (const, var) in js editor
+
+                          { token: 'string.key.json', foreground: '#222222' }, // all keys in json
+                          { token: 'string.value.json', foreground: '#035CC5' }, // all values in json
                           { token: 'number', foreground: '#E32A4F' },
-                          { token: 'keyword', foreground: '#E32A4F' } // true and false
+                          { token: 'keyword.json', foreground: '#E32A4F' } // true and false in json
                       ],
                       colors: {
                           // ...
@@ -134,8 +138,7 @@ function EditorPanelJavascript(props: {
                 // Refer to https://github.com/react-monaco-editor/react-monaco-editor
                 language="javascript"
                 value={code}
-                theme="vs"
-                // theme="gosling"
+                theme="gosling"
                 options={{
                     autoClosingBrackets: 'beforeWhitespace',
                     autoClosingQuotes: 'beforeWhitespace',

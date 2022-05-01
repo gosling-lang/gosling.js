@@ -102,10 +102,13 @@ function EditorPanelJSON(props: {
                       inherit: true,
                       // Complete rules: https://github.com/microsoft/vscode/blob/93028e44ea7752bd53e2471051acbe6362e157e9/src/vs/editor/standalone/common/themes.ts#L13
                       rules: [
-                          { token: 'string.key.json', foreground: '#222222' }, // all keys
-                          { token: 'string.value.json', foreground: '#035CC5' }, // all values
+                          { token: 'string', foreground: '#035CC5' }, // general string values in js editor
+                          { token: 'keyword', foreground: '#0000FF' }, // keyword (const, var) in js editor
+
+                          { token: 'string.key.json', foreground: '#222222' }, // all keys in json
+                          { token: 'string.value.json', foreground: '#035CC5' }, // all values in json
                           { token: 'number', foreground: '#E32A4F' },
-                          { token: 'keyword.json', foreground: '#E32A4F' } // true and false
+                          { token: 'keyword.json', foreground: '#E32A4F' } // true and false in json
                       ],
                       colors: {
                           // ...
