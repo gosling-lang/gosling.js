@@ -23,3 +23,8 @@ declare module '*.png' {
 declare module '*.gif' {
     export default string;
 }
+
+declare module '*?raw' {
+    const content: string;
+    export default content;
+}
