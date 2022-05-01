@@ -896,13 +896,19 @@ function Editor(props: any) {
                                     <div className="tab">
                                         <button
                                             className={`tablinks ${language == 'JSON' && 'active'}`}
-                                            onClick={() => changeLanguage('JSON')}
+                                            onClick={() => {
+                                                changeLanguage('JSON');
+                                                setLog({ message: '', state: 'success' });
+                                            }}
                                         >
                                             JSON
                                         </button>
                                         <button
                                             className={`tablinks ${language == 'Javascript' && 'active'}`}
-                                            onClick={() => changeLanguage('Javascript')}
+                                            onClick={() => {
+                                                changeLanguage('Javascript');
+                                                setLog({ message: '', state: 'success' });
+                                            }}
                                         >
                                             Javascript
                                         </button>
