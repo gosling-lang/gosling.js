@@ -21,6 +21,7 @@ import './editor.css';
 import { ICONS, ICON_INFO } from './icon';
 import type { HiGlassSpec } from '@higlass.schema';
 import type { Datum } from '@gosling.schema';
+import * as ts from 'typescript';
 // @ts-ignore
 import { Themes } from 'gosling-theme';
 
@@ -452,7 +453,11 @@ function Editor(props: any) {
                 }
             } else if (language === 'javascript') {
                 try {
-                    editedGos = window.Function(`${jsCode}\n return spec`)();
+                    const transplieCode = ts.transpile(jsCode);
+                    // eslint-disable-next-line no-console
+                    // console.info(transplieCode);
+                    editedGos = window.Function(`${transplieCode}\n return spec`)();
+                    // editedGos = window.Function(`${jsCode}\n return spec`)();
                     valid = gosling.validateGoslingSpec(editedGos);
                     setLog(valid);
                 } catch (e) {
@@ -460,6 +465,8 @@ function Editor(props: any) {
                     console.warn(message);
                     setLog({ message, state: 'error' });
                 }
+            } else {
+                setLog({ message: `${language} is not supported`, state: 'error' });
             }
 
             if (!editedGos || valid?.state !== 'success' || (!autoRun && !run)) return;
@@ -934,7 +941,8 @@ function Editor(props: any) {
                                             fontZoomOut={isFontZoomOut}
                                             onChange={debounceCodeEdit.current}
                                             isDarkTheme={theme === 'dark'}
-                                            language="javascript"
+                                            // language="javascript"
+                                            language="typescript"
                                         />
                                     </div>
                                 </div>
