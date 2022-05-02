@@ -453,7 +453,7 @@ function Editor(props: any) {
                 }
             } else if (language === 'javascript') {
                 try {
-                    const transpiledCode = ts.transpile(jsCode);
+                    const transpiledCode = transpile(jsCode);
                     editedGos = window.Function(`${transpiledCode}\n return spec`)();
                     valid = gosling.validateGoslingSpec(editedGos);
                     setLog(valid);
