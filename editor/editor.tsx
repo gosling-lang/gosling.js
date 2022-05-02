@@ -772,7 +772,7 @@ function Editor(props: any) {
                             className="side-panel-button"
                             onClick={() => {
                                 // TODO (05-02-2022): Release a support of `responsiveSize` on `.embed()` first
-                                const spec = { ...goslingSpec, responsiveSpec: false };
+                                const spec = { ...goslingSpec, responsiveSize: false };
 
                                 const a = document.createElement('a');
                                 a.setAttribute(
