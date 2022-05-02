@@ -771,17 +771,20 @@ function Editor(props: any) {
                             title="Save HTML file"
                             className="side-panel-button"
                             onClick={() => {
-                                const downloadableLink = document.createElement('a');
-                                downloadableLink.setAttribute(
+                                // TODO (05-02-2022): Release a support of `responsiveSize` on `.embed()` first
+                                const spec = { ...goslingSpec, responsiveSpec: false };
+
+                                const a = document.createElement('a');
+                                a.setAttribute(
                                     'href',
                                     `data:text/plain;charset=utf-8,${encodeURIComponent(
-                                        getHtmlTemplate(JSON.stringify(goslingSpec))
+                                        getHtmlTemplate(JSON.stringify(spec))
                                     )}`
                                 );
-                                downloadableLink.download = 'gosling-visualization.html';
-                                document.body.appendChild(downloadableLink);
-                                downloadableLink.click();
-                                document.body.removeChild(downloadableLink);
+                                a.download = 'gosling-visualization.html';
+                                document.body.appendChild(a);
+                                a.click();
+                                document.body.removeChild(a);
                             }}
                         >
                             {getIconSVG(ICONS.HTML, 23, 23)}
