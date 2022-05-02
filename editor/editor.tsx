@@ -21,12 +21,12 @@ import './editor.css';
 import { ICONS, ICON_INFO } from './icon';
 import type { HiGlassSpec } from '@higlass.schema';
 import type { Datum } from '@gosling.schema';
-import * as ts from 'typescript';
+import { transpile } from 'typescript';
 // @ts-ignore
 import { Themes } from 'gosling-theme';
 
 function json2js(jsonCode: string) {
-    return `var spec=${jsonCode}`;
+    return `var spec = ${jsonCode}`;
 }
 
 const SHOWN_EXAMPLE_LIST = Object.entries(examples)
@@ -453,8 +453,8 @@ function Editor(props: any) {
                 }
             } else if (language === 'javascript') {
                 try {
-                    const transplieCode = ts.transpile(jsCode);
-                    editedGos = window.Function(`${transplieCode}\n return spec`)();
+                    const transpiledCode = ts.transpile(jsCode);
+                    editedGos = window.Function(`${transpiledCode}\n return spec`)();
                     valid = gosling.validateGoslingSpec(editedGos);
                     setLog(valid);
                 } catch (e) {
@@ -913,7 +913,7 @@ function Editor(props: any) {
                                                 setLog({ message: '', state: 'success' });
                                             }}
                                         >
-                                            Javascript
+                                            JavaScript
                                         </button>
                                     </div>
 
