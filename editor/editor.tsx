@@ -454,10 +454,7 @@ function Editor(props: any) {
             } else if (language === 'javascript') {
                 try {
                     const transplieCode = ts.transpile(jsCode);
-                    // eslint-disable-next-line no-console
-                    // console.info(transplieCode);
                     editedGos = window.Function(`${transplieCode}\n return spec`)();
-                    // editedGos = window.Function(`${jsCode}\n return spec`)();
                     valid = gosling.validateGoslingSpec(editedGos);
                     setLog(valid);
                 } catch (e) {

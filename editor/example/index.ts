@@ -22,24 +22,37 @@ import { EX_SPEC_GREMLIN } from './json-spec/gremlin';
 import { EX_SPEC_GENE_ANNOTATION } from './json-spec/gene-annotation';
 import { EX_SPEC_CLINVAR_LOLLIPOP, EX_SPEC_SEQUENCE_TRACK } from './json-spec/semantic-zoom';
 import { EX_SPEC_GIVE } from './json-spec/give';
-import { EX_SPEC_CORCES_ET_AL } from './json-spec/corces';
-import { EX_SPEC_SASHIMI } from './json-spec/sashimi';
+// import { EX_SPEC_CORCES_ET_AL } from './json-spec/corces';
+// import { EX_SPEC_SASHIMI } from './json-spec/sashimi';
 import { EX_SPEC_CYTOBANDS } from './json-spec/ideograms';
 import { EX_SPEC_PILEUP } from './json-spec/pileup';
-import { EX_SPEC_BAND } from './json-spec/vertical-band';
+// import { EX_SPEC_BAND } from './json-spec/vertical-band';
 import { EX_SPEC_TEMPLATE } from './json-spec/track-template';
 import { EX_SPEC_DEBUG } from './json-spec/debug';
 import * as docExamples from './doc-examples';
 
 // js and json importing from the same file
-import JS_SPEC_VISUAL_ENCODING from './js-spec/visual-encoding.ts?raw';
-import { spec as JSON_SPEC_VISUAL_ENCODING } from './js-spec/visual-encoding';
+import JS_SPEC_VISUAL_ENCODING from './spec/visual-encoding.ts?raw';
+import { spec as JSON_SPEC_VISUAL_ENCODING } from './spec/visual-encoding';
 
-import JS_SPEC_VISUAL_ENCODING_CIRCULAR from './js-spec/visual-encoding-circular.ts?raw';
-import { spec as JSON_SPEC_VISUAL_ENCODING_CIRCULAR } from './js-spec/visual-encoding-circular';
+import JS_SPEC_VISUAL_ENCODING_CIRCULAR from './spec/visual-encoding-circular.ts?raw';
+import { spec as JSON_SPEC_VISUAL_ENCODING_CIRCULAR } from './spec/visual-encoding-circular';
 
-import JS_SPEC_RULE from './js-spec/rule.ts?raw';
-import { spec as JSON_SPEC_RULE } from './js-spec/rule';
+import JS_SPEC_RULE from './spec/rule.ts?raw';
+import { spec as JSON_SPEC_RULE } from './spec/rule';
+
+import JS_SPEC_SASHIMI from './spec/sashimi?raw';
+import { spec as JSON_SPEC_SASHIMI } from './spec/sashimi';
+
+import JS_SPEC_BAND from './spec/vertical-band?raw';
+import { spec as JSON_SPEC_BAND } from './spec/vertical-band';
+
+import JS_SPEC_CORCES_ET_AL from './spec/corces?raw';
+import { spec as JSON_SPEC_CORCES_ET_AL } from './spec/corces';
+
+function jsStringParser(jsfile: string) {
+    return jsfile.replace('export { spec };', '');
+}
 
 export type ExampleGroup =
     | 'Visual Encoding'
@@ -116,27 +129,28 @@ export const examples: {
         group: 'Visual Encoding',
         name: 'Visual Encoding',
         spec: JSON_SPEC_VISUAL_ENCODING as GoslingSpec,
-        specJs: JS_SPEC_VISUAL_ENCODING.replace('export { spec };', ''),
+        specJs: jsStringParser(JS_SPEC_VISUAL_ENCODING),
         image: THUMBNAILS.VISUAL_ENCODING
     },
     VISUAL_ENCODING_CIRCULAR: {
         group: 'Visual Encoding',
         name: 'Circular Visual Encoding',
         spec: JSON_SPEC_VISUAL_ENCODING_CIRCULAR as GoslingSpec,
-        specJs: JS_SPEC_VISUAL_ENCODING_CIRCULAR.replace('export { spec };', ''),
+        specJs: jsStringParser(JS_SPEC_VISUAL_ENCODING_CIRCULAR),
         image: THUMBNAILS.VISUAL_ENCODING_CIRCULAR
     },
     BAND: {
         group: 'Visual Encoding',
         name: 'Band Connection',
-        spec: EX_SPEC_BAND,
+        spec: JSON_SPEC_BAND as GoslingSpec,
+        specJs: jsStringParser(JS_SPEC_BAND),
         image: THUMBNAILS.BAND
     },
     RULE: {
         group: 'Visual Encoding',
         name: 'Rule Mark',
         spec: JSON_SPEC_RULE as GoslingSpec,
-        specJs: JS_SPEC_RULE.replace('export { spec };', ''),
+        specJs: jsStringParser(JS_SPEC_RULE),
         image: THUMBNAILS.RULE
     },
     MATRIX: {
@@ -283,7 +297,8 @@ export const examples: {
     CORCES_ET_AL: {
         group: 'Coordinated Multiple Views',
         name: 'Corces et al. 2020',
-        spec: EX_SPEC_CORCES_ET_AL,
+        spec: JSON_SPEC_CORCES_ET_AL as GoslingSpec,
+        specJs: jsStringParser(JS_SPEC_CORCES_ET_AL),
         image: THUMBNAILS.CORCES_ET_AL
     },
     GREMLIN: {
@@ -295,7 +310,8 @@ export const examples: {
     SASHIMI_PLOT: {
         group: 'Visual Encoding',
         name: 'Sashimi Plot',
-        spec: EX_SPEC_SASHIMI,
+        spec: JSON_SPEC_SASHIMI as GoslingSpec,
+        specJs: jsStringParser(JS_SPEC_SASHIMI),
         underDevelopment: true,
         image: THUMBNAILS.SASHIMI_PLOT
     },
