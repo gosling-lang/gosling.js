@@ -927,7 +927,14 @@ function Editor(props: any) {
                                                 setLog({ message: '', state: 'success' });
                                             }}
                                         >
-                                            JSON
+                                            JSON {` `}
+                                            <span className="tooltip">
+                                                {getIconSVG(ICONS.INFO_CIRCLE, 10, 10)}
+                                                <span className="tooltiptext">
+                                                    In this JSON editor, the whole JSON object will be used to create
+                                                    Gosling visualizations.
+                                                </span>
+                                            </span>
                                         </button>
                                         <button
                                             className={`tablinks ${language == 'javascript' && 'active'}`}
@@ -936,7 +943,15 @@ function Editor(props: any) {
                                                 setLog({ message: '', state: 'success' });
                                             }}
                                         >
-                                            JavaScript
+                                            JavaScript{` `}
+                                            <span className="tooltip">
+                                                {getIconSVG(ICONS.INFO_CIRCLE, 10, 10)}
+                                                <span className="tooltiptext">
+                                                    In this JavaScript Editor, the variable{` `}
+                                                    <code style={{ backgroundColor: '#e18343' }}>spec</code> will be
+                                                    used to create Gosling visualizations.
+                                                </span>
+                                            </span>
                                         </button>
                                     </div>
 

@@ -695,3 +695,22 @@ td {
 .tabContent.hide {
     display: none;
 }
+
+/* tooltip */
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 300px;
+    background-color: gray;
+    color: #fff;
+    border-radius: 2px;
+    padding: 5px 8px;
+    text-align: left;
+
+    /* Position the tooltip */
+    position: absolute;
+    z-index: 10;
+}
+
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+}
