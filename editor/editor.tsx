@@ -21,6 +21,7 @@ import './editor.css';
 import { ICONS, ICON_INFO } from './icon';
 import type { HiGlassSpec } from '@higlass.schema';
 import type { Datum } from '@gosling.schema';
+import { getHtmlTemplate } from './html-template';
 // @ts-ignore
 import { Themes } from 'gosling-theme';
 
@@ -765,6 +766,25 @@ function Editor(props: any) {
                             {getIconSVG(ICONS.PDF, 23, 23)}
                             <br />
                             PDF
+                        </span>
+                        <span
+                            title="Save HTML file"
+                            className="side-panel-button"
+                            onClick={() => {
+                                const downloadableLink = document.createElement('a');
+                                downloadableLink.setAttribute(
+                                    'href',
+                                    `data:text/plain;charset=utf-8,${encodeURIComponent(
+                                        getHtmlTemplate(JSON.stringify(goslingSpec))
+                                    )}`
+                                );
+                                downloadableLink.download = 'gosling-visualization.html';
+                                document.body.appendChild(downloadableLink);
+                                downloadableLink.click();
+                                document.body.removeChild(downloadableLink);
+                            }}
+                        >
+                            {getIconSVG(ICONS.HTML, 23, 23)}
                         </span>
                         <span
                             title={
