@@ -21,6 +21,7 @@ import './editor.css';
 import { ICONS, ICON_INFO } from './icon';
 import type { HiGlassSpec } from '@higlass.schema';
 import type { Datum } from '@gosling.schema';
+import { getHtmlTemplate } from './html-template';
 // @ts-ignore
 import { Themes } from 'gosling-theme';
 
@@ -765,6 +766,28 @@ function Editor(props: any) {
                             {getIconSVG(ICONS.PDF, 23, 23)}
                             <br />
                             PDF
+                        </span>
+                        <span
+                            title="Save HTML file"
+                            className="side-panel-button"
+                            onClick={() => {
+                                // TODO (05-02-2022): Release a support of `responsiveSize` on `.embed()` first
+                                const spec = { ...goslingSpec, responsiveSize: false };
+
+                                const a = document.createElement('a');
+                                a.setAttribute(
+                                    'href',
+                                    `data:text/plain;charset=utf-8,${encodeURIComponent(
+                                        getHtmlTemplate(JSON.stringify(spec))
+                                    )}`
+                                );
+                                a.download = 'gosling-visualization.html';
+                                document.body.appendChild(a);
+                                a.click();
+                                document.body.removeChild(a);
+                            }}
+                        >
+                            {getIconSVG(ICONS.HTML, 23, 23)}
                         </span>
                         <span
                             title={
