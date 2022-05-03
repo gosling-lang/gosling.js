@@ -119,7 +119,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             this.pMain.addChild(this.mouseOverGraphics);
 
             // Brushes on the color legend
-            this.gMain = HGC.libraries.d3Selection.select(this.context.svgElement).append('g');
+            this.gLegend = HGC.libraries.d3Selection.select(this.context.svgElement).append('g');
 
             // Enable click event
             this.pMask.interactive = true;
@@ -311,8 +311,8 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
         remove() {
             super.remove();
 
-            if (this.gMain) {
-                this.gMain.selectAll('.brush').remove();
+            if (this.gLegend) {
+                this.gLegend.selectAll('.brush').remove();
             }
         }
         /*
