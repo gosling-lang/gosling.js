@@ -15,12 +15,12 @@ export function drawColorLegend(
     tm: GoslingTrackModel,
     theme: Required<CompleteThemeDeep>
 ) {
-    if (!trackInfo.gMain) {
+    if (!trackInfo.gLegend) {
         // We do not have enough components to draw legends
         return;
     }
 
-    trackInfo.gMain.selectAll('.brush').remove();
+    trackInfo.gLegend.selectAll('.brush').remove();
 
     const spec = tm.spec();
     const offset: LegendOffset = { offsetRight: 0 };
@@ -173,7 +173,7 @@ export function drawColorLegendQuantitative(
     // Brush
     // Refer to https://github.com/higlass/higlass/blob/0b2cac5a770db6d55370a61d5dbbe09c4f577c68/app/scripts/HeatmapTiledPixiTrack.js#L580
     const BRUSH_HEIGHT = 4;
-    trackInfo.colorBrushes = trackInfo.gMain
+    trackInfo.colorBrushes = trackInfo.gLegend
         .append('g')
         .attr('class', channelKey)
         .selectAll(`.brush`)
