@@ -1,11 +1,9 @@
 import * as PIXI from 'pixi.js';
 import { GoslingTrackModel } from '../gosling-track-model';
 import { Channel } from '../gosling.schema';
-import { IsChannelDeep, getValueUsingChannel, Is2DTrack } from '../gosling.schema.guards';
+import { getValueUsingChannel, Is2DTrack } from '../gosling.schema.guards';
 import { cartesianToPolar, positionToRadian } from '../utils/polar';
 import colorToHex from '../utils/color-to-hex';
-import { Bezier } from 'bezier-js';
-import { TooltipData } from '../../gosling-tooltip';
 
 // TODO: This code is taken from `link.ts` which is for withinLink marks. Large parts should be removed.
 export function drawBetweenLink(g: PIXI.Graphics, trackInfo: any, model: GoslingTrackModel) {
@@ -98,21 +96,14 @@ export function drawBetweenLink(g: PIXI.Graphics, trackInfo: any, model: Gosling
                 0.5 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
             );
 
-            const flipY = (IsChannelDeep(spec.y) && spec.y.flip) || spec.flipY;
-            const baseY = spec.baselineY ?? rowPosition + (flipY ? 0 : rowHeight);
-
             if (isRibon) {
                 g.beginFill(color === 'none' ? colorToHex('white') : colorToHex(color), color === 'none' ? 0 : opacity);
 
                 let [_x1, _x2, _x3, _x4] = [x, xe, x1, x1e];
 
                 // Sort values to safely draw bands
-                if (spec.mark === 'betweenLink') {
-                    [_x1, _x2] = [_x1, _x2].sort((a, b) => a - b);
-                    [_x3, _x4] = [_x3, _x4].sort((a, b) => a - b);
-                } else {
-                    [_x1, _x2, _x3, _x4] = [_x1, _x2, _x3, _x4].sort((a, b) => a - b);
-                }
+                [_x1, _x2] = [_x1, _x2].sort((a, b) => a - b);
+                [_x3, _x4] = [_x3, _x4].sort((a, b) => a - b);
 
                 if (_x1 > trackWidth || _x4 < 0 || Math.abs(_x4 - _x1) < 0.5) {
                     // Do not draw very small visual marks
@@ -160,62 +151,18 @@ export function drawBetweenLink(g: PIXI.Graphics, trackInfo: any, model: Gosling
                     g.endFill();
                 } else {
                     // Linear mark
-
-                    // Experimental
-                    if (spec.mark === 'betweenLink') {
-                        g.moveTo(_x1, rowPosition);
-                        g.lineTo(_x2, rowPosition);
-                        g.lineTo(_x4, rowPosition + rowHeight);
-                        g.lineTo(_x3, rowPosition + rowHeight);
-                        g.lineTo(_x1, rowPosition);
-                        g.closePath();
-                        return;
-                    }
-
-                    g.moveTo(_x1, baseY);
-
-                    if (!spec.style?.linkStyle || spec.style?.linkStyle === 'circular') {
-                        g.arc(
-                            (_x1 + _x4) / 2.0, // cx
-                            baseY, // cy
-                            (_x4 - _x1) / 2.0, // radius
-                            -Math.PI, // start angle
-                            Math.PI, // end angle
-                            false
-                        );
-                        g.arc((_x2 + _x3) / 2.0, baseY, (_x3 - _x2) / 2.0, Math.PI, -Math.PI, true);
-                        g.closePath();
-                    } else {
-                        g.lineTo(_x3, rowPosition + rowHeight);
-                        g.bezierCurveTo(
-                            _x3 + (_x2 - _x3) / 3.0,
-                            // rowPosition + (x1 - x),
-                            rowPosition + rowHeight - (_x2 - _x3) / 2.0, //Math.min(rowHeight - (x1 - x), (xe - x1) / 2.0),
-                            _x3 + ((_x2 - _x3) / 3.0) * 2,
-                            // rowPosition + (x1 - x),
-                            rowPosition + rowHeight - (_x2 - _x3) / 2.0, //Math.min(rowHeight - (x1 - x), (xe - x1) / 2.0),
-                            _x2,
-                            rowPosition + rowHeight
-                        );
-                        g.lineTo(_x4, rowPosition + rowHeight);
-                        g.bezierCurveTo(
-                            _x1 + ((_x4 - _x1) / 3.0) * 2,
-                            // rowPosition,
-                            rowPosition + rowHeight - (_x4 - _x1) / 2.0, //Math.min(rowHeight, (x1e - x) / 2.0),
-                            _x1 + (_x4 - _x1) / 3.0,
-                            // rowPosition,
-                            rowPosition + rowHeight - (_x4 - _x1) / 2.0, //Math.min(rowHeight, (x1e - x) / 2.0),
-                            _x1,
-                            rowPosition + rowHeight
-                        );
-                        g.endFill();
-                    }
+                    g.moveTo(_x1, rowPosition);
+                    g.lineTo(_x2, rowPosition);
+                    g.lineTo(_x4, rowPosition + rowHeight);
+                    g.lineTo(_x3, rowPosition + rowHeight);
+                    g.lineTo(_x1, rowPosition);
+                    g.closePath();
                 }
             } else {
                 /* Line Connection */
 
                 // Experimental
-                if (Is2DTrack(spec) && spec.mark === 'betweenLink') {
+                if (Is2DTrack(spec)) {
                     if (spec.style?.linkConnectionType === 'curve') {
                         g.moveTo(x, 0);
                         g.bezierCurveTo(
@@ -238,7 +185,7 @@ export function drawBetweenLink(g: PIXI.Graphics, trackInfo: any, model: Gosling
                     return;
                 }
 
-                if (spec.mark === 'betweenLink' && circular) {
+                if (circular) {
                     /* Original lines */
                     // const r = trackOuterRadius - (rowPosition / trackHeight) * trackRingSize;
                     // const posX = cartesianToPolar(x, trackWidth, r, tcx, tcy, startAngle, endAngle);
@@ -278,184 +225,9 @@ export function drawBetweenLink(g: PIXI.Graphics, trackInfo: any, model: Gosling
                     return;
                 }
 
-                // Experimental
-                if (spec.mark === 'betweenLink') {
-                    g.moveTo(xe, rowPosition + rowHeight);
-                    g.lineTo(x, rowPosition);
-                    return;
-                }
-
-                const midX = (x + xe) / 2.0;
-
-                // Must not fill color for `line`, just use `stroke`
-                g.beginFill(colorToHex('white'), 0);
-
-                if (circular) {
-                    if (x < 0 || xe > trackWidth) {
-                        // Do not show bands that are partly outside of the current domain
-                        return;
-                    }
-
-                    const IS_ELLIPTICAL_READY = false;
-                    if (IS_ELLIPTICAL_READY && spec.style?.linkStyle === 'elliptical') {
-                        // !! Not ready to use
-                        const morePoints: { x: number; y: number }[] = [];
-
-                        // https://github.com/gosling-lang/gosling.js/issues/634
-                        const numSteps = 1000;
-                        for (let step = 0; step <= numSteps; step++) {
-                            const theta = (Math.PI * step) / numSteps;
-                            const mx = ((xe - x) / 2.0) * Math.cos(theta) + (x + xe) / 2.0;
-                            const my =
-                                baseY -
-                                (((rowHeight - y) *
-                                    Math.sin(theta) *
-                                    Math.min(xe - x + trackWidth * 0.5, trackWidth * 1.5)) /
-                                    trackWidth /
-                                    1.5) *
-                                    (flipY ? -1 : 1);
-
-                            const r = trackOuterRadius - (my / trackHeight) * trackRingSize;
-                            const cmx = cartesianToPolar(mx, trackWidth, r, tcx, tcy, startAngle, endAngle);
-
-                            if (step % 20 === 0 || step === numSteps) {
-                                // we draw less points than the hidden points for mouse events
-                                if (step === 0) {
-                                    g.moveTo(cmx.x, cmx.y);
-                                } else {
-                                    g.lineTo(cmx.x, cmx.y);
-                                }
-                            }
-                            morePoints.push({ ...cmx });
-                        }
-
-                        if (spec.tooltip) {
-                            trackInfo.tooltips.push({
-                                datum: d,
-                                isMouseOver: (mouseX: number, mouseY: number) =>
-                                    morePoints.findIndex(
-                                        d => Math.sqrt((d.x - mouseX) ** 2 + (d.y - mouseY) ** 2) < 5
-                                    ) !== -1,
-                                markInfo: {}
-                            } as TooltipData);
-                        }
-                    } else {
-                        const r = trackOuterRadius - (rowPosition / trackHeight) * trackRingSize;
-                        const posS = cartesianToPolar(x, trackWidth, r, tcx, tcy, startAngle, endAngle);
-                        const posE = cartesianToPolar(xe, trackWidth, r, tcx, tcy, startAngle, endAngle);
-
-                        const x1 = posS.x;
-                        const y1 = posS.y;
-                        const x2 = posS.x;
-                        const y2 = posS.y;
-                        const x3 = trackWidth / 2.0;
-                        const y3 = trackHeight / 2.0;
-                        const x4 = posE.x;
-                        const y4 = posE.y;
-
-                        g.moveTo(x1, y1);
-
-                        const bezier = new Bezier(x1, y1, x2, y2, x3, y3, x4, y4);
-                        const points = bezier.getLUT(14);
-                        points.forEach(d => g.lineTo(d.x, d.y));
-
-                        /* click event data */
-                        const morePoints = bezier.getLUT(1000);
-                        if (spec.tooltip) {
-                            trackInfo.tooltips.push({
-                                datum: d,
-                                isMouseOver: (mouseX: number, mouseY: number) =>
-                                    morePoints.findIndex(
-                                        d => Math.sqrt((d.x - mouseX) ** 2 + (d.y - mouseY) ** 2) < 5
-                                    ) !== -1,
-                                markInfo: {}
-                            } as TooltipData);
-                        }
-                    }
-                } else {
-                    // linear line connection
-
-                    if (spec.style?.linkStyle === 'elliptical') {
-                        if (!(0 <= x && x <= trackWidth) && !(0 <= xe && xe <= trackWidth)) {
-                            // not within this window
-                            return;
-                        }
-
-                        const morePoints: { x: number; y: number }[] = [];
-
-                        // https://github.com/gosling-lang/gosling.js/issues/634
-                        const numSteps = 1000;
-                        const constantY = IsChannelDeep(spec.y);
-                        for (let step = 0; step <= numSteps; step++) {
-                            const theta = Math.PI * (step / numSteps);
-                            const mx = ((xe - x) / 2.0) * Math.cos(theta) + (x + xe) / 2.0;
-                            const my =
-                                baseY -
-                                y *
-                                    Math.sin(theta) *
-                                    (constantY
-                                        ? 1
-                                        : Math.min(xe - x + trackWidth * 0.5, trackWidth * 1.5) / trackWidth / 1.5) *
-                                    (flipY ? -1 : 1);
-
-                            if (step % 20 === 0 || step === numSteps) {
-                                // we draw less points than the hidden points that captures mouse events
-                                if (step === 0) {
-                                    g.moveTo(mx, my);
-                                } else {
-                                    g.lineTo(mx, my);
-                                }
-                            }
-                            morePoints.push({ x: mx, y: my });
-                        }
-
-                        if (spec.tooltip) {
-                            trackInfo.tooltips.push({
-                                datum: d,
-                                isMouseOver: (mouseX: number, mouseY: number) =>
-                                    morePoints.findIndex(
-                                        d => Math.sqrt((d.x - mouseX) ** 2 + (d.y - mouseY) ** 2) < 5
-                                    ) !== -1,
-                                markInfo: {}
-                            } as TooltipData);
-                        }
-                    } else if (spec.style?.linkStyle === '_bezier_deprecated_') {
-                        const x1 = x;
-                        const y1 = baseY;
-                        const x2 = x + (xe - x) / 3.0;
-                        const y2 =
-                            baseY + Math.max(rowHeight / 2.0, Math.min(rowHeight, (xe - x) / 2.0)) * (flipY ? 1 : -1);
-                        const x3 = x + ((xe - x) / 3.0) * 2;
-                        const y3 =
-                            baseY + Math.max(rowHeight / 2.0, Math.min(rowHeight, (xe - x) / 2.0)) * (flipY ? 1 : -1);
-                        const x4 = xe;
-                        const y4 = baseY;
-
-                        const bezier = new Bezier(x1, y1, x2, y2, x3, y3, x4, y4);
-                        const points = bezier.getLUT(14);
-                        points.forEach(d => g.lineTo(d.x, d.y));
-
-                        /* click event data */
-                        const morePoints = bezier.getLUT(1000);
-                        if (spec.tooltip) {
-                            trackInfo.tooltips.push({
-                                datum: d,
-                                isMouseOver: (mouseX: number, mouseY: number) =>
-                                    morePoints.findIndex(
-                                        d => Math.sqrt((d.x - mouseX) ** 2 + (d.y - mouseY) ** 2) < 5
-                                    ) !== -1,
-                                markInfo: {}
-                            } as TooltipData);
-                        }
-                    } else {
-                        if (xe < 0 || x > trackWidth) {
-                            // Q: Do we really need this?
-                            return;
-                        }
-                        g.arc(midX, baseY, (xe - x) / 2.0, -Math.PI, Math.PI);
-                        g.closePath();
-                    }
-                }
+                // TODO: Not yet supported.
+                g.moveTo(xe, rowPosition + rowHeight);
+                g.lineTo(x, rowPosition);
             }
         });
     });

@@ -3,6 +3,7 @@ import { Channel } from '../gosling.schema';
 import { group } from 'd3-array';
 import { getValueUsingChannel, IsStackedMark } from '../gosling.schema.guards';
 import { cartesianToPolar } from '../utils/polar';
+import { MouseEventModel } from '../../gosling-mouse-event';
 
 // Merge with the one in the `utils/text-style.ts`
 export const TEXT_STYLE_GLOBAL = {
@@ -43,6 +44,7 @@ export function drawText(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackMo
     /* styles */
     const dx = spec.style?.dx ?? 0;
     const dy = spec.style?.dy ?? 0;
+    const textAnchor = !spec.style?.textAnchor ? 'middle' : spec.style.textAnchor;
 
     /* render */
     if (IsStackedMark(spec)) {
@@ -219,13 +221,10 @@ export function drawText(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackMo
                 }
 
                 textGraphic.alpha = actualOpacity;
-                textGraphic.anchor.x =
-                    !spec.style?.textAnchor || spec.style?.textAnchor === 'middle'
-                        ? 0.5
-                        : spec.style.textAnchor === 'start'
-                        ? 0
-                        : 1;
                 textGraphic.anchor.y = 0.5;
+                textGraphic.anchor.x = textAnchor === 'middle' ? 0.5 : textAnchor === 'start' ? 0 : 1;
+
+                let polygonForMouseEvents: number[] = [];
 
                 if (circular) {
                     const r = trackOuterRadius - ((rowPosition + rowHeight - y) / trackHeight) * trackRingSize;
@@ -234,8 +233,8 @@ export function drawText(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackMo
                     textGraphic.y = centerPos.y;
 
                     textGraphic.resolution = 4;
-                    const txtStyle = new HGC.libraries.PIXI.TextStyle(textStyleObj);
-                    const metric = HGC.libraries.PIXI.TextMetrics.measureText(textGraphic.text, txtStyle);
+                    // const txtStyle = new HGC.libraries.PIXI.TextStyle(textStyleObj);
+                    // const metric = HGC.libraries.PIXI.TextMetrics.measureText(textGraphic.text, txtStyle);
 
                     // scale the width of text label so that its width is the same when converted into circular form
                     const tw = (metric.width / (2 * r * Math.PI)) * trackWidth;
@@ -253,20 +252,70 @@ export function drawText(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackMo
                     }
 
                     const ropePoints: number[] = [];
+                    const eventPointsFar: number[] = [];
+                    const eventPointsNear: number[] = [];
                     for (let i = maxX; i >= minX; i -= tw / 10.0) {
                         const p = cartesianToPolar(i, trackWidth, r, tcx, tcy, startAngle, endAngle);
                         ropePoints.push(new HGC.libraries.PIXI.Point(p.x, p.y));
+
+                        const pFar = cartesianToPolar(
+                            i,
+                            trackWidth,
+                            r + metric.height / 2.0,
+                            tcx,
+                            tcy,
+                            startAngle,
+                            endAngle
+                        );
+                        const pNear = cartesianToPolar(
+                            i,
+                            trackWidth,
+                            r - metric.height / 2.0,
+                            tcx,
+                            tcy,
+                            startAngle,
+                            endAngle
+                        );
+                        eventPointsFar.push(pFar.x, pFar.y);
+                        if (i === maxX) {
+                            eventPointsNear.push(pFar.y, pFar.x);
+                        }
+                        eventPointsNear.push(pNear.y, pNear.x);
                     }
 
                     textGraphic.updateText();
                     const rope = new HGC.libraries.PIXI.SimpleRope(textGraphic.texture, ropePoints);
                     rope.alpha = actualOpacity;
                     rowGraphics.addChild(rope);
+
+                    /* Mouse Events */
+                    eventPointsNear.reverse();
+                    polygonForMouseEvents = eventPointsFar.concat(eventPointsNear);
                 } else {
                     textGraphic.position.x = cx;
                     textGraphic.position.y = rowPosition + rowHeight - y;
                     rowGraphics.addChild(textGraphic);
+
+                    /* Mouse Events */
+                    const { height: h, width: w } = metric;
+                    const ys = textGraphic.position.y - h / 2.0;
+                    const ye = ys + h;
+                    let xs = 0;
+                    let xe = 0;
+                    if (textAnchor === 'start') {
+                        xs = cx;
+                        xe = cx + w;
+                    } else if (textAnchor === 'middle') {
+                        xs = cx - w / 2;
+                        xe = cx + w / 2;
+                    } else {
+                        xs = cx - w;
+                        xe = cx;
+                    }
+                    polygonForMouseEvents = [xs, ys, xs, ye, xe, ye, xe, ys];
                 }
+
+                (trackInfo.mouseEventModel as MouseEventModel).addPolygonBasedEvent(d, polygonForMouseEvents);
             });
         });
     }

@@ -1,15 +1,15 @@
 import * as PIXI from 'pixi.js';
+import { MouseEventModel } from '../../gosling-mouse-event';
 import { GoslingTrackModel } from '../gosling-track-model';
 import { Channel } from '../gosling.schema';
 import { getValueUsingChannel } from '../gosling.schema.guards';
 import colorToHex from '../utils/color-to-hex';
 import { cartesianToPolar } from '../utils/polar';
-import { TooltipData, TOOLTIP_MOUSEOVER_MARGIN as G } from '../../gosling-tooltip';
 
 export function drawLine(
     g: PIXI.Graphics,
     tm: GoslingTrackModel,
-    tooltips: TooltipData[],
+    mouseEventModel: MouseEventModel,
     trackWidth: number,
     trackHeight: number
 ) {
@@ -91,22 +91,16 @@ export function drawLine(
                         } else {
                             g.lineTo(pos.x, pos.y);
                         }
+                        /* Mouse Events */
+                        mouseEventModel.addPointBasedEvent(d, [pos.x, pos.y, 1]);
                     } else {
                         if (i === 0) {
                             g.moveTo(cx, rowPosition + rowHeight - y);
                         } else {
                             g.lineTo(cx, rowPosition + rowHeight - y);
                         }
-
-                        /* Tooltip data */
-                        if (spec.tooltip) {
-                            tooltips.push({
-                                datum: d,
-                                isMouseOver: (x: number, y: number) =>
-                                    cx - G < x && x < cx + G && rowPosition - G < y && y < rowPosition + rowHeight + G,
-                                markInfo: { x: cx, y, width: G, height: y, type: 'line' }
-                            } as TooltipData);
-                        }
+                        /* Mouse Events */
+                        mouseEventModel.addPointBasedEvent(d, [cx, rowPosition + rowHeight - y, 1]);
                     }
                 });
         });

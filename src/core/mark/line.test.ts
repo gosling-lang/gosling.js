@@ -1,4 +1,5 @@
 import * as PIXI from 'pixi.js';
+import { MouseEventModel } from '../../gosling-mouse-event';
 import { GoslingTrackModel } from '../gosling-track-model';
 import { SingleTrack } from '../gosling.schema';
 import { getTheme } from '../utils/theme';
@@ -21,6 +22,7 @@ describe('Rendering Point', () => {
             { x: 111, y: 222 }
         ];
         const model = new GoslingTrackModel(t, d, getTheme());
-        drawLine(g, model, [], 100, 100);
+        const mouseEventModel = new MouseEventModel();
+        drawLine(g, model, mouseEventModel, 100, 100);
     });
 });

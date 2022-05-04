@@ -1,12 +1,11 @@
-import { TooltipData, TOOLTIP_MOUSEOVER_MARGIN as G } from '../../gosling-tooltip';
 import { GoslingTrackModel } from '../gosling-track-model';
 import { Channel, Datum } from '../gosling.schema';
 import { min as d3min, max as d3max, group } from 'd3-array';
 import { IsStackedMark, getValueUsingChannel } from '../gosling.schema.guards';
 import { cartesianToPolar } from '../utils/polar';
 import colorToHex from '../utils/color-to-hex';
+import { MouseEventModel } from '../../gosling-mouse-event';
 
-// TODO: fill the white gap betwee tiles.
 /**
  * Draw area marks
  */
@@ -33,7 +32,7 @@ export function drawArea(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackMo
     const trackCenterY = trackHeight / 2.0;
 
     /* genomic scale */
-    const xScale = tm.getChannelScale('x');
+    const xScale = trackInfo._xScale;
 
     /* row separation */
     const rowCategories = (tm.getChannelDomainArray('row') as string[]) ?? ['___SINGLE_ROW___'];
@@ -89,6 +88,13 @@ export function drawArea(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackMo
                         const cx = xScale(xValue);
                         const cy = d3max([tm.encodedPIXIProperty('y', d), 0]); // make should not to overflow
 
+                        if (typeof prevYEndByGPos[genomicPosCategory] === 'undefined') {
+                            prevYEndByGPos[genomicPosCategory] = 0;
+                        }
+
+                        const ys = rowHeight - cy - prevYEndByGPos[genomicPosCategory];
+                        const ye = rowHeight - prevYEndByGPos[genomicPosCategory];
+
                         if (circular) {
                             if (i === 0) {
                                 // start position of the polygon
@@ -106,13 +112,7 @@ export function drawArea(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackMo
                                 areaPointsBottom.push([pos.x, pos.y]);
                             }
 
-                            if (typeof prevYEndByGPos[genomicPosCategory] === 'undefined') {
-                                prevYEndByGPos[genomicPosCategory] = 0;
-                            }
-
-                            const rTop =
-                                trackOuterRadius -
-                                ((rowHeight - cy - prevYEndByGPos[genomicPosCategory]) / trackHeight) * trackRingSize;
+                            const rTop = trackOuterRadius - (ys / trackHeight) * trackRingSize;
                             const posTop = cartesianToPolar(
                                 cx,
                                 trackWidth,
@@ -124,9 +124,7 @@ export function drawArea(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackMo
                             );
                             areaPointsTop.push([posTop.x, posTop.y]);
 
-                            const rBot =
-                                trackOuterRadius -
-                                ((rowHeight - prevYEndByGPos[genomicPosCategory]) / trackHeight) * trackRingSize;
+                            const rBot = trackOuterRadius - (ye / trackHeight) * trackRingSize;
                             const posBot = cartesianToPolar(
                                 cx,
                                 trackWidth,
@@ -153,6 +151,13 @@ export function drawArea(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackMo
                                 areaPointsTop.push([pos.x, pos.y]);
                                 areaPointsBottom.push([pos.x, pos.y]);
                             }
+
+                            /* Mouse Events */
+                            (trackInfo.mouseEventModel as MouseEventModel).addPointBasedEvent(d, [
+                                posBot.x,
+                                posBot.y,
+                                1
+                            ]);
                         } else {
                             if (i === 0) {
                                 // start position of the polygon
@@ -160,12 +165,8 @@ export function drawArea(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackMo
                                 areaPointsBottom.push([cx, rowHeight]);
                             }
 
-                            if (typeof prevYEndByGPos[genomicPosCategory] === 'undefined') {
-                                prevYEndByGPos[genomicPosCategory] = 0;
-                            }
-
-                            areaPointsTop.push([cx, rowHeight - cy - prevYEndByGPos[genomicPosCategory]]);
-                            areaPointsBottom.push([cx, rowHeight - prevYEndByGPos[genomicPosCategory]]);
+                            areaPointsTop.push([cx, ys]);
+                            areaPointsBottom.push([cx, ye]);
 
                             if (i === array.length - 1) {
                                 // end position of the polygon
@@ -173,17 +174,8 @@ export function drawArea(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackMo
                                 areaPointsBottom.push([cx, rowHeight]);
                             }
 
-                            /* Tooltip data */
-                            if (spec.tooltip) {
-                                const ys = rowHeight - cy - prevYEndByGPos[genomicPosCategory];
-                                const ye = rowHeight - prevYEndByGPos[genomicPosCategory];
-                                trackInfo.tooltips.push({
-                                    datum: d,
-                                    isMouseOver: (x: number, y: number) =>
-                                        cx - G < x && x < cx + G && ys - G < y && y < ye + G,
-                                    markInfo: { x: cx, y: ys, width: G, height: cy, type: 'area' }
-                                } as TooltipData);
-                            }
+                            /* Mouse Events */
+                            (trackInfo.mouseEventModel as MouseEventModel).addPointBasedEvent(d, [cx, ys, 1]);
                         }
 
                         prevYEndByGPos[genomicPosCategory] += cy;
@@ -278,6 +270,9 @@ export function drawArea(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackMo
 
                                 areaPoints.push(curPos.x, curPos.y);
                             }
+
+                            /* Mouse Events */
+                            (trackInfo.mouseEventModel as MouseEventModel).addPointBasedEvent(d, [pos.x, pos.y, 1]);
                         } else {
                             if (i === 0) {
                                 // start position of the polygon
@@ -293,18 +288,12 @@ export function drawArea(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackMo
                                 areaPoints.push(startX, rowPosition + rowHeight);
                             }
 
-                            /* Tooltip data */
-                            if (spec.tooltip) {
-                                trackInfo.tooltips.push({
-                                    datum: d,
-                                    isMouseOver: (x: number, y: number) =>
-                                        cx - G < x &&
-                                        x < cx + G &&
-                                        rowPosition - G < y &&
-                                        y < rowPosition + rowHeight + G,
-                                    markInfo: { x: cx, y: cy, width: G, height: cy, type: 'area' }
-                                } as TooltipData);
-                            }
+                            /* Mouse Events */
+                            (trackInfo.mouseEventModel as MouseEventModel).addPointBasedEvent(d, [
+                                cx,
+                                rowPosition + rowHeight - cy,
+                                1
+                            ]);
                         }
                     });
 

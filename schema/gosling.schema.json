@@ -8063,8 +8063,7 @@
           "enum": [
             "elliptical",
             "circular",
-            "straight",
-            "_bezier_deprecated_"
+            "straight"
           ],
           "type": "string"
         },

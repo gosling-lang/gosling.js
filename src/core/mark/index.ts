@@ -96,7 +96,7 @@ export function drawMark(HGC: any, trackInfo: any, tile: any, model: GoslingTrac
             drawBar(trackInfo, tile, model);
             break;
         case 'line':
-            drawLine(tile.graphics, model, trackInfo.tooltips, trackWidth, trackHeight);
+            drawLine(tile.graphics, model, trackInfo.mouseEventModel, trackWidth, trackHeight);
             break;
         case 'area':
             drawArea(HGC, trackInfo, tile, model);
@@ -107,7 +107,7 @@ export function drawMark(HGC: any, trackInfo: any, tile: any, model: GoslingTrac
         case 'triangleLeft':
         case 'triangleRight':
         case 'triangleBottom':
-            drawTriangle(tile.graphics, model, trackWidth, trackHeight);
+            drawTriangle(tile.graphics, model, trackInfo.mouseEventModel, trackWidth, trackHeight);
             break;
         case 'text':
             drawText(HGC, trackInfo, tile, model);

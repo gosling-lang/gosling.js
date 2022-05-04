@@ -354,7 +354,7 @@ export interface Style {
      * The style of `withinLink` and `betweenLink` marks. __Default__: `'circular'`
      * `'elliptical'` will be used as a default option.
      */
-    linkStyle?: 'elliptical' | 'circular' | 'straight' | '_bezier_deprecated_';
+    linkStyle?: 'elliptical' | 'circular' | 'straight';
 
     /**
      * The minimum height of `withinLink` and `betweenLink` marks. Unit is a percentagle. __Default__: `0.5`

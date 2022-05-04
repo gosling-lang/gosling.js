@@ -6,6 +6,7 @@ import { HIGLASS_AXIS_SIZE } from '../higlass-model';
 import { SingleTrack } from '../gosling.schema';
 import { drawPoint } from './point';
 import { getTheme } from '../utils/theme';
+import { MouseEventModel } from '../../gosling-mouse-event';
 
 describe('Rendering Point', () => {
     const g = new PIXI.Graphics();
@@ -24,7 +25,7 @@ describe('Rendering Point', () => {
             { x: 111, y: 222 }
         ];
         const model = new GoslingTrackModel(t, d, getTheme());
-        drawPoint({ dimensions: [100, 100] }, g, model);
+        drawPoint({ dimensions: [100, 100], mouseEventModel: new MouseEventModel() }, g, model);
     });
 });
 

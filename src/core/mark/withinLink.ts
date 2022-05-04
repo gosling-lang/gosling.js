@@ -5,7 +5,7 @@ import { IsChannelDeep, getValueUsingChannel, Is2DTrack } from '../gosling.schem
 import { cartesianToPolar, positionToRadian } from '../utils/polar';
 import colorToHex from '../utils/color-to-hex';
 import { Bezier } from 'bezier-js';
-import { TooltipData } from '../../gosling-tooltip';
+import { MouseEventModel } from '../../gosling-mouse-event';
 
 export function drawWithinLink(g: PIXI.Graphics, trackInfo: any, model: GoslingTrackModel) {
     /* track spec */
@@ -103,6 +103,8 @@ export function drawWithinLink(g: PIXI.Graphics, trackInfo: any, model: GoslingT
             const flipY = (IsChannelDeep(spec.y) && spec.y.flip) || spec.flipY;
             const baseY = spec.baselineY ?? rowPosition + (flipY ? 0 : rowHeight);
 
+            let pathForMouseEvent: number[] = [];
+
             if (isRibbon) {
                 g.beginFill(color === 'none' ? colorToHex('white') : colorToHex(color), color === 'none' ? 0 : opacity);
 
@@ -154,6 +156,7 @@ export function drawWithinLink(g: PIXI.Graphics, trackInfo: any, model: GoslingT
                         positionToRadian(posX.x, posX.y, tcx, tcy),
                         false
                     );
+                    pathForMouseEvent = Array.from(g.currentPath.points);
                     g.endFill();
                 } else {
                     // Linear mark
@@ -170,6 +173,7 @@ export function drawWithinLink(g: PIXI.Graphics, trackInfo: any, model: GoslingT
                             false
                         );
                         g.arc((_x2 + _x3) / 2.0, baseY, (_x3 - _x2) / 2.0, Math.PI, -Math.PI, true);
+                        pathForMouseEvent = Array.from(g.currentPath.points);
                         g.closePath();
                     } else {
                         g.lineTo(_x3, rowPosition + rowHeight);
@@ -194,9 +198,12 @@ export function drawWithinLink(g: PIXI.Graphics, trackInfo: any, model: GoslingT
                             _x1,
                             rowPosition + rowHeight
                         );
+                        pathForMouseEvent = Array.from(g.currentPath.points);
                         g.endFill();
                     }
                 }
+                /* Mouse Events */
+                (trackInfo.mouseEventModel as MouseEventModel).addPolygonBasedEvent(d, pathForMouseEvent);
             } else {
                 /**
                  * Line connection and not ribbon style
@@ -246,16 +253,7 @@ export function drawWithinLink(g: PIXI.Graphics, trackInfo: any, model: GoslingT
                             morePoints.push({ ...cmx });
                         }
 
-                        if (spec.tooltip) {
-                            trackInfo.tooltips.push({
-                                datum: d,
-                                isMouseOver: (mouseX: number, mouseY: number) =>
-                                    morePoints.findIndex(
-                                        d => Math.sqrt((d.x - mouseX) ** 2 + (d.y - mouseY) ** 2) < 5
-                                    ) !== -1,
-                                markInfo: {}
-                            } as TooltipData);
-                        }
+                        pathForMouseEvent = morePoints.flatMap(d => [d.x, d.y]);
                     } else if (spec.style?.linkStyle === 'straight') {
                         const r = trackOuterRadius - (rowPosition / trackHeight) * trackRingSize;
                         const posS = cartesianToPolar(x, trackWidth, r, tcx, tcy, startAngle, endAngle);
@@ -277,16 +275,8 @@ export function drawWithinLink(g: PIXI.Graphics, trackInfo: any, model: GoslingT
                                 y: ((y4 - y1) / (length - 1)) * i + y1
                             };
                         });
-                        if (spec.tooltip) {
-                            trackInfo.tooltips.push({
-                                datum: d,
-                                isMouseOver: (mouseX: number, mouseY: number) =>
-                                    eventPoints.findIndex(
-                                        d => Math.sqrt((d.x - mouseX) ** 2 + (d.y - mouseY) ** 2) < 5
-                                    ) !== -1,
-                                markInfo: {}
-                            } as TooltipData);
-                        }
+
+                        pathForMouseEvent = eventPoints.flatMap(d => [d.x, d.y]);
                     } else {
                         const r = trackOuterRadius - (rowPosition / trackHeight) * trackRingSize;
                         const posS = cartesianToPolar(x, trackWidth, r, tcx, tcy, startAngle, endAngle);
@@ -309,16 +299,7 @@ export function drawWithinLink(g: PIXI.Graphics, trackInfo: any, model: GoslingT
 
                         /* click event data */
                         const morePoints = bezier.getLUT(1000);
-                        if (spec.tooltip) {
-                            trackInfo.tooltips.push({
-                                datum: d,
-                                isMouseOver: (mouseX: number, mouseY: number) =>
-                                    morePoints.findIndex(
-                                        d => Math.sqrt((d.x - mouseX) ** 2 + (d.y - mouseY) ** 2) < 5
-                                    ) !== -1,
-                                markInfo: {}
-                            } as TooltipData);
-                        }
+                        pathForMouseEvent = morePoints.flatMap(d => [d.x, d.y]);
                     }
                 } else {
                     // linear line connection
@@ -357,53 +338,20 @@ export function drawWithinLink(g: PIXI.Graphics, trackInfo: any, model: GoslingT
                             morePoints.push({ x: mx, y: my });
                         }
 
-                        if (spec.tooltip) {
-                            trackInfo.tooltips.push({
-                                datum: d,
-                                isMouseOver: (mouseX: number, mouseY: number) =>
-                                    morePoints.findIndex(
-                                        d => Math.sqrt((d.x - mouseX) ** 2 + (d.y - mouseY) ** 2) < 5
-                                    ) !== -1,
-                                markInfo: {}
-                            } as TooltipData);
-                        }
-                    } else if (spec.style?.linkStyle === '_bezier_deprecated_') {
-                        const x1 = x;
-                        const y1 = baseY;
-                        const x2 = x + (xe - x) / 3.0;
-                        const y2 =
-                            baseY + Math.max(rowHeight / 2.0, Math.min(rowHeight, (xe - x) / 2.0)) * (flipY ? 1 : -1);
-                        const x3 = x + ((xe - x) / 3.0) * 2;
-                        const y3 =
-                            baseY + Math.max(rowHeight / 2.0, Math.min(rowHeight, (xe - x) / 2.0)) * (flipY ? 1 : -1);
-                        const x4 = xe;
-                        const y4 = baseY;
-
-                        const bezier = new Bezier(x1, y1, x2, y2, x3, y3, x4, y4);
-                        const points = bezier.getLUT(14);
-                        points.forEach(d => g.lineTo(d.x, d.y));
-
-                        /* click event data */
-                        const morePoints = bezier.getLUT(1000);
-                        if (spec.tooltip) {
-                            trackInfo.tooltips.push({
-                                datum: d,
-                                isMouseOver: (mouseX: number, mouseY: number) =>
-                                    morePoints.findIndex(
-                                        d => Math.sqrt((d.x - mouseX) ** 2 + (d.y - mouseY) ** 2) < 5
-                                    ) !== -1,
-                                markInfo: {}
-                            } as TooltipData);
-                        }
+                        pathForMouseEvent = morePoints.flatMap(d => [d.x, d.y]);
                     } else {
                         if (xe < 0 || x > trackWidth) {
                             // Q: Do we really need this?
                             return;
                         }
                         g.arc(midX, baseY, (xe - x) / 2.0, -Math.PI, Math.PI);
+                        pathForMouseEvent = Array.from(g.currentPath.points);
                         g.closePath();
                     }
                 }
+
+                /* Mouse Events */
+                (trackInfo.mouseEventModel as MouseEventModel).addLineBasedEvent(d, pathForMouseEvent);
             }
         });
     });

@@ -1,4 +1,5 @@
 import * as PIXI from 'pixi.js';
+import { MouseEventModel } from '../../gosling-mouse-event';
 import { GoslingTrackModel } from '../gosling-track-model';
 import { SingleTrack } from '../gosling.schema';
 import { getTheme } from '../utils/theme';
@@ -6,7 +7,7 @@ import { drawWithinLink } from './withinLink';
 
 describe('Rendering link', () => {
     const g = new PIXI.Graphics();
-    const trackInfo = { tooltips: [], dimensions: [100, 100] };
+    const trackInfo = { mouseEventModel: new MouseEventModel(), dimensions: [100, 100] };
     it('Linear Band', () => {
         const t: SingleTrack = {
             data: { type: 'csv', url: '' },

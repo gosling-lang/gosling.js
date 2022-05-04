@@ -10,7 +10,6 @@ import { validateTrack } from '../core/utils/validate';
 import { shareScaleAcrossTracks } from '../core/utils/scales';
 import { resolveSuperposedTracks } from '../core/utils/overlay';
 import { SingleTrack, OverlaidTrack, Datum } from '../core/gosling.schema';
-import { TooltipData } from '../gosling-tooltip';
 import colorToHex from '../core/utils/color-to-hex';
 import {
     aggregateCoverage,
@@ -34,6 +33,8 @@ import { spawn } from 'threads';
 import BamWorker from '../data-fetcher/bam/bam-worker.js?worker&inline';
 import { InteractionEvent } from 'pixi.js';
 import { HIGLASS_AXIS_SIZE } from '../core/higlass-model';
+import { flatArrayToPairArray } from '../gosling-mouse-event/polygon';
+import { MouseEventModel } from '../gosling-mouse-event';
 
 // Set `true` to print in what order each function is called
 export const PRINT_RENDERING_CYCLE = false;
@@ -66,7 +67,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
     const { showMousePosition } = HGC.utils;
 
     class GoslingTrackClass extends HGC.tracks.BarTrack {
-        private tooltips: TooltipData[];
+        private mouseEventModel: MouseEventModel;
         private tileSize: number;
         private worker: any;
         // private loadingStatus: { [k: LoadingStage]: number };
@@ -160,7 +161,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             this.pLabel.addChild(this.loadingTextBg);
             this.pLabel.addChild(this.loadingText);
 
-            this.tooltips = [];
+            this.mouseEventModel = new MouseEventModel();
             this.svgData = [];
             this.textGraphics = [];
             this.textsBeingUsed = 0; // this variable is being used to improve the performance of text rendering
@@ -183,7 +184,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
         draw() {
             if (PRINT_RENDERING_CYCLE) console.warn('draw()');
 
-            this.tooltips = [];
+            this.mouseEventModel.clear();
             this.svgData = [];
             this.textsBeingUsed = 0;
             this.mouseOverGraphics?.clear();
@@ -286,7 +287,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
 
             this.options = newOptions;
 
-            this.tooltips = [];
+            this.mouseEventModel.clear();
             this.svgData = [];
             this.textsBeingUsed = 0;
 
@@ -986,7 +987,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
         }
 
         onClick(mouseX: number, mouseY: number) {
-            if (!this.tilesetInfo || !this.tooltips) {
+            if (!this.tilesetInfo || this.mouseEventModel.size() === 0) {
                 // Do not have enough information to show tooltips
                 return;
             }
@@ -996,36 +997,30 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                 return;
             }
 
-            const tooltip: TooltipData | undefined = this.tooltips.find((d: TooltipData) =>
-                d.isMouseOver(mouseX, mouseY)
-            );
+            const tooltip = this.mouseEventModel.find(mouseX, mouseY);
 
             if (tooltip) {
                 PubSub.publish('click', {
-                    data: { ...tooltip.datum },
+                    data: { ...tooltip.value },
                     genomicPosition: getRelativeGenomicPosition(Math.floor(this._xScale.invert(mouseX)))
                 });
             }
         }
 
         getMouseOverHtml(mouseX: number, mouseY: number) {
-            const isMouseOverPrepared = false; // TODO: We do not support this yet.
-
-            if (!this.tilesetInfo || !this.tooltips) {
+            if (!this.tilesetInfo || this.mouseEventModel.size() === 0) {
                 // Do not have enough information to show tooltips
                 return;
             }
 
             this.mouseOverGraphics.clear();
+
             // place on the top
             this.pMain.removeChild(this.mouseOverGraphics);
             this.pMain.addChild(this.mouseOverGraphics);
 
-            // TODO: Get tooltip information prepared during the mark rendering, and use the info here to show tooltips.
-
-            const tooltip: TooltipData | undefined = this.tooltips.find((d: TooltipData) =>
-                d.isMouseOver(mouseX, mouseY)
-            );
+            // reverse so that it is in the same order of how it is shown
+            const tooltip = this.mouseEventModel.find(mouseX, mouseY, true);
 
             // https://developer.mozilla.org/en-US/docs/Web/CSS/cursor
             if (tooltip) {
@@ -1036,55 +1031,39 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
 
             if (tooltip) {
                 PubSub.publish('mouseover', {
-                    data: { ...tooltip.datum },
+                    data: { ...tooltip.value },
                     genomicPosition: getRelativeGenomicPosition(Math.floor(this._xScale.invert(mouseX)))
                 });
             }
 
             if (tooltip) {
                 // render mouse over effect
-                if (tooltip.markInfo.type === 'rect' && isMouseOverPrepared) {
-                    this.mouseOverGraphics.lineStyle(
-                        1,
+                if (tooltip.polygon) {
+                    const g = this.mouseOverGraphics;
+                    g.lineStyle(
+                        1.5,
                         colorToHex('black'),
                         1, // alpha
                         1 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
                     );
-                    this.mouseOverGraphics.beginFill(colorToHex('white'), 0);
+                    g.beginFill(colorToHex('white'), 0);
 
-                    // Experimental
-                    const showOutline = true;
-                    if (showOutline) {
-                        this.mouseOverGraphics.drawRect(
-                            tooltip.markInfo.x,
-                            tooltip.markInfo.y,
-                            tooltip.markInfo.width,
-                            tooltip.markInfo.height
-                        );
+                    if (tooltip.type === 'point') {
+                        const [x, y, r = 3] = tooltip.polygon;
+                        g.drawCircle(x, y, r);
+                    } else if (tooltip.type === 'line') {
+                        g.moveTo(tooltip.polygon[0], tooltip.polygon[1]);
+                        flatArrayToPairArray(tooltip.polygon).map(d => g.lineTo(d[0], d[1]));
                     } else {
-                        const [tw, th] = this.dimensions;
-                        const cx = tooltip.markInfo.x + tooltip.markInfo.width / 2.0;
-                        const cy = tooltip.markInfo.y + tooltip.markInfo.height / 2.0;
-
-                        // horizontal line
-                        this.mouseOverGraphics.moveTo(0, cy);
-                        this.mouseOverGraphics.lineTo(tw, cy);
-
-                        // vertical line
-                        this.mouseOverGraphics.moveTo(cx, 0);
-                        this.mouseOverGraphics.lineTo(cx, th);
-
-                        // center point
-                        this.mouseOverGraphics.beginFill(colorToHex('black'), 1);
-                        this.mouseOverGraphics.drawCircle(cx, cy, 1);
+                        g.drawPolygon(tooltip.polygon);
                     }
                 }
 
                 // Display a tooltip
-                if (this.options.spec.tooltip) {
+                if (this.options.spec.tooltip && this.options.spec.tooltip.length !== 0) {
                     const content = (this.options.spec.tooltip as any)
                         .map((d: any) => {
-                            const rawValue = tooltip.datum[d.field];
+                            const rawValue = tooltip.value[d.field];
                             let value = rawValue;
                             if (d.type === 'quantitative' && d.format) {
                                 value = format(d.format)(+rawValue);

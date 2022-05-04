@@ -5,7 +5,7 @@ import { getValueUsingChannel } from '../gosling.schema.guards';
 import colorToHex from '../utils/color-to-hex';
 import { cartesianToPolar } from '../utils/polar';
 import { PIXIVisualProperty } from '../visual-property.schema';
-import { TooltipData, TOOLTIP_MOUSEOVER_MARGIN as G } from '../../gosling-tooltip';
+import { MouseEventModel } from '../../gosling-mouse-event';
 
 export function drawPoint(trackInfo: any, g: PIXI.Graphics, model: GoslingTrackModel) {
     /* track spec */
@@ -50,15 +50,15 @@ export function drawPoint(trackInfo: any, g: PIXI.Graphics, model: GoslingTrackM
             const cx = model.encodedPIXIProperty('x-center', d);
             const cy = model.encodedPIXIProperty('y-center', d);
             const color = model.encodedPIXIProperty('color', d);
-            const size = model.encodedPIXIProperty('p-size', d);
+            const radius = model.encodedPIXIProperty('p-size', d);
             const strokeWidth = model.encodedPIXIProperty('strokeWidth', d);
             const stroke = model.encodedPIXIProperty('stroke', d);
             const opacity = model.encodedPIXIProperty('opacity', d);
 
-            const alphaTransition = model.markVisibility(d, { width: size, zoomLevel });
+            const alphaTransition = model.markVisibility(d, { width: radius, zoomLevel });
             const actualOpacity = Math.min(alphaTransition, opacity);
 
-            if (size <= 0.1 || actualOpacity === 0 || cx + size < 0 || cx - size > trackWidth) {
+            if (radius <= 0.1 || actualOpacity === 0 || cx + radius < 0 || cx - radius > trackWidth) {
                 // Don't draw invisible marks
                 return;
             }
@@ -74,25 +74,21 @@ export function drawPoint(trackInfo: any, g: PIXI.Graphics, model: GoslingTrackM
             if (circular) {
                 const r = trackOuterRadius - ((rowPosition + rowHeight - cy) / trackHeight) * trackRingSize;
                 const pos = cartesianToPolar(cx, trackWidth, r, tcx, tcy, startAngle, endAngle);
-
                 g.beginFill(colorToHex(color), actualOpacity);
-                g.drawCircle(pos.x, pos.y, size);
+                g.drawCircle(pos.x, pos.y, radius);
+
+                /* Mouse Events */
+                (trackInfo.mouseEventModel as MouseEventModel).addPointBasedEvent(d, [pos.x, pos.y, radius]);
             } else {
                 g.beginFill(colorToHex(color), actualOpacity);
-                // console.log(rowCategory, rowPosition, rowHeight, cy);
-                g.drawCircle(cx, rowPosition + rowHeight - cy, size);
+                g.drawCircle(cx, rowPosition + rowHeight - cy, radius);
 
-                /* Tooltip data */
-                if (trackInfo?.tooltips) {
-                    const gcy = rowPosition + rowHeight - cy;
-                    trackInfo.tooltips.push({
-                        datum: d,
-                        isMouseOver: (x: number, y: number) =>
-                            Math.sqrt(Math.abs(x - cx) * Math.abs(x - cx) + Math.abs(y - gcy) * Math.abs(y - gcy)) <
-                            size + G,
-                        markInfo: { x: cx, y: rowPosition + rowHeight - cy, width: size, height: size, type: 'point' }
-                    } as TooltipData);
-                }
+                /* Mouse Events */
+                (trackInfo.mouseEventModel as MouseEventModel).addPointBasedEvent(d, [
+                    cx,
+                    rowPosition + rowHeight - cy,
+                    radius
+                ]);
             }
         });
     });

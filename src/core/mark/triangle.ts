@@ -1,11 +1,18 @@
 import * as PIXI from 'pixi.js';
+import { MouseEventModel } from '../../gosling-mouse-event';
 import { GoslingTrackModel } from '../gosling-track-model';
 import { Channel, Mark } from '../gosling.schema';
 import { getValueUsingChannel } from '../gosling.schema.guards';
 import colorToHex from '../utils/color-to-hex';
 import { cartesianToPolar } from '../utils/polar';
 
-export function drawTriangle(g: PIXI.Graphics, model: GoslingTrackModel, trackWidth: number, trackHeight: number) {
+export function drawTriangle(
+    g: PIXI.Graphics,
+    model: GoslingTrackModel,
+    tooltips: MouseEventModel,
+    trackWidth: number,
+    trackHeight: number
+) {
     /* track spec */
     const spec = model.spec();
 
@@ -59,6 +66,8 @@ export function drawTriangle(g: PIXI.Graphics, model: GoslingTrackModel, trackWi
             const color = model.encodedPIXIProperty('color', d);
             const opacity = model.encodedPIXIProperty('opacity', d);
 
+            let polygon: number[] = [];
+
             if (circular) {
                 let x0 = x ? x : xe - markWidth;
                 let x1 = xe ? xe : x + markWidth;
@@ -74,19 +83,18 @@ export function drawTriangle(g: PIXI.Graphics, model: GoslingTrackModel, trackWi
                     xm -= markWidth;
                 }
 
-                let markToPoints: number[] = [];
                 if (spec.mark === 'triangleLeft') {
                     const p0 = cartesianToPolar(x1, trackWidth, r0, cx, cy, startAngle, endAngle);
                     const p1 = cartesianToPolar(x0, trackWidth, rm, cx, cy, startAngle, endAngle);
                     const p2 = cartesianToPolar(x1, trackWidth, r1, cx, cy, startAngle, endAngle);
                     const p3 = cartesianToPolar(x1, trackWidth, r0, cx, cy, startAngle, endAngle);
-                    markToPoints = [p0.x, p0.y, p1.x, p1.y, p2.x, p2.y, p3.x, p3.y];
+                    polygon = [p0.x, p0.y, p1.x, p1.y, p2.x, p2.y, p3.x, p3.y];
                 } else if (spec.mark === 'triangleRight') {
                     const p0 = cartesianToPolar(x0, trackWidth, r0, cx, cy, startAngle, endAngle);
                     const p1 = cartesianToPolar(x1, trackWidth, rm, cx, cy, startAngle, endAngle);
                     const p2 = cartesianToPolar(x0, trackWidth, r1, cx, cy, startAngle, endAngle);
                     const p3 = cartesianToPolar(x0, trackWidth, r0, cx, cy, startAngle, endAngle);
-                    markToPoints = [p0.x, p0.y, p1.x, p1.y, p2.x, p2.y, p3.x, p3.y];
+                    polygon = [p0.x, p0.y, p1.x, p1.y, p2.x, p2.y, p3.x, p3.y];
                 } else if (spec.mark === 'triangleBottom') {
                     x0 = xm - markWidth / 2.0;
                     x1 = xm + markWidth / 2.0;
@@ -94,7 +102,7 @@ export function drawTriangle(g: PIXI.Graphics, model: GoslingTrackModel, trackWi
                     const p1 = cartesianToPolar(x1, trackWidth, r1, cx, cy, startAngle, endAngle);
                     const p2 = cartesianToPolar(xm, trackWidth, r0, cx, cy, startAngle, endAngle);
                     const p3 = cartesianToPolar(x0, trackWidth, r1, cx, cy, startAngle, endAngle);
-                    markToPoints = [p0.x, p0.y, p1.x, p1.y, p2.x, p2.y, p3.x, p3.y];
+                    polygon = [p0.x, p0.y, p1.x, p1.y, p2.x, p2.y, p3.x, p3.y];
                 }
 
                 const alphaTransition = model.markVisibility(d, { width: x1 - x0, zoomLevel });
@@ -110,7 +118,7 @@ export function drawTriangle(g: PIXI.Graphics, model: GoslingTrackModel, trackWi
                 );
 
                 g.beginFill(colorToHex(color), actualOpacity);
-                g.drawPolygon(markToPoints);
+                g.drawPolygon(polygon);
                 g.endFill();
             } else {
                 let x0 = x ? x : xe - markWidth;
@@ -126,7 +134,7 @@ export function drawTriangle(g: PIXI.Graphics, model: GoslingTrackModel, trackWi
                     xm -= markWidth;
                 }
 
-                const markToPoints: number[] = (
+                polygon = (
                     {
                         triangleLeft: [x1, y0, x0, ym, x1, y1, x1, y0],
                         triangleRight: [x0, y0, x1, ym, x0, y1, x0, y0],
@@ -147,9 +155,12 @@ export function drawTriangle(g: PIXI.Graphics, model: GoslingTrackModel, trackWi
                 );
 
                 g.beginFill(colorToHex(color), actualOpacity);
-                g.drawPolygon(markToPoints);
+                g.drawPolygon(polygon);
                 g.endFill();
             }
+
+            /* Mouse Events */
+            tooltips.addPolygonBasedEvent(d, polygon);
         });
     });
 }
