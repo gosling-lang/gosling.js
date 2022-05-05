@@ -239,6 +239,7 @@ interface SingleTrackBase extends CommonTrackDef {
     // Data transformation
     dataTransform?: DataTransform[];
 
+    // Tooltip
     tooltip?: Tooltip[];
 
     // Mark

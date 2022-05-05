@@ -219,7 +219,8 @@ function Editor(props: any) {
     const [jsCode, setJsCode] = useState(defaultJsCode); //[TO-DO: more js format examples]
     const [goslingSpec, setGoslingSpec] = useState<gosling.GoslingSpec>();
     const [log, setLog] = useState<ReturnType<typeof gosling.validateGoslingSpec>>({ message: '', state: 'success' });
-    const [mouseEventInfo, setMouseEventInfo] = useState<{ type: 'mouseover' | 'click'; data: Datum }>();
+    const [mouseEventInfo, setMouseEventInfo] =
+        useState<{ type: 'mouseover' | 'click'; data: Datum[]; position: string }>();
     const [showExamples, setShowExamples] = useState(false);
     const [autoRun, setAutoRun] = useState(true);
     const [selectedPreviewData, setSelectedPreviewData] = useState<number>(0);
@@ -296,10 +297,10 @@ function Editor(props: any) {
 
             // TODO: show messages on the right-bottom of the editor
             gosRef.current.api.subscribe('mouseover', (type: string, eventData: CommonEventData) => {
-                setMouseEventInfo({ type: 'mouseover', data: eventData.data });
+                setMouseEventInfo({ type: 'mouseover', data: eventData.data, position: eventData.genomicPosition });
             });
             gosRef.current.api.subscribe('click', (type: string, eventData: CommonEventData) => {
-                setMouseEventInfo({ type: 'click', data: eventData.data });
+                setMouseEventInfo({ type: 'click', data: eventData.data, position: eventData.genomicPosition });
             });
         }
         return () => {
@@ -1079,25 +1080,35 @@ function Editor(props: any) {
                                             }}
                                         />
                                     </div>
-                                    <div
-                                        style={{
-                                            position: 'absolute',
-                                            right: '20px',
-                                            bottom: '20px'
-                                        }}
-                                    >
-                                        <div>{mouseEventInfo?.type === 'click' ? 'Clicked' : 'Mouse Hovered'}</div>
-                                        <table>
-                                            {mouseEventInfo?.data
-                                                ? Object.entries(mouseEventInfo?.data).map(([k, v]) => (
-                                                      <tr key={k}>
-                                                          <td>{k}</td>
-                                                          <td>{v}</td>
-                                                      </tr>
-                                                  ))
-                                                : null}
-                                        </table>
-                                    </div>
+                                    {expertMode ? (
+                                        <div
+                                            style={{
+                                                position: 'absolute',
+                                                right: '2px',
+                                                bottom: '2px',
+                                                padding: '20px',
+                                                background: '#FAFAFAAA',
+                                                border: '1px solid black'
+                                            }}
+                                        >
+                                            <div style={{ fontWeight: 'bold' }}>
+                                                {`${mouseEventInfo?.data.length} Marks Selected By Mouse ${
+                                                    mouseEventInfo?.type === 'click' ? 'Click' : 'Over'
+                                                }`}
+                                            </div>
+                                            <div style={{}}>{`The event occurs at ${mouseEventInfo?.position}`}</div>
+                                            <table>
+                                                {mouseEventInfo?.data && mouseEventInfo?.data.length !== 0
+                                                    ? Object.entries(mouseEventInfo?.data[0]).map(([k, v]) => (
+                                                          <tr key={k}>
+                                                              <td>{k}</td>
+                                                              <td>{v}</td>
+                                                          </tr>
+                                                      ))
+                                                    : null}
+                                            </table>
+                                        </div>
+                                    ) : null}
                                 </div>
                                 <SplitPane split="vertical" defaultSize="100%">
                                     <>

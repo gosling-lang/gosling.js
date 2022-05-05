@@ -978,6 +978,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
 
         onMouseOut() {
             document.body.style.cursor = 'default';
+            this.mouseOverGraphics.clear();
         }
 
         onMouseDown(mouseX: number, mouseY: number) {
@@ -988,28 +989,28 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
 
         onClick(mouseX: number, mouseY: number) {
             if (!this.tilesetInfo || this.mouseEventModel.size() === 0) {
-                // Do not have enough information to show tooltips
+                // Do not have enough information
                 return;
             }
 
             if (Math.sqrt((this.mouseDownX - mouseX) ** 2 + (this.mouseDownY - mouseY) ** 2) > 1) {
-                // Move distance is relatively long, so this might be a drag
+                // Move distance is relatively long, so this might be a drag instead
                 return;
             }
 
-            const tooltip = this.mouseEventModel.find(mouseX, mouseY);
+            const capturedElements = this.mouseEventModel.findAll(mouseX, mouseY, true);
 
-            if (tooltip) {
+            if (capturedElements.length !== 0) {
                 PubSub.publish('click', {
-                    data: { ...tooltip.value },
-                    genomicPosition: getRelativeGenomicPosition(Math.floor(this._xScale.invert(mouseX)))
+                    genomicPosition: getRelativeGenomicPosition(Math.floor(this._xScale.invert(mouseX))),
+                    data: capturedElements.map(d => d.value)
                 });
             }
         }
 
         getMouseOverHtml(mouseX: number, mouseY: number) {
             if (!this.tilesetInfo || this.mouseEventModel.size() === 0) {
-                // Do not have enough information to show tooltips
+                // Do not have enough information
                 return;
             }
 
@@ -1019,51 +1020,51 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             this.pMain.removeChild(this.mouseOverGraphics);
             this.pMain.addChild(this.mouseOverGraphics);
 
-            // reverse so that it is in the same order of how it is shown
-            const tooltip = this.mouseEventModel.find(mouseX, mouseY, true);
+            // reversing so that it is in the same order of how it is shown
+            const capturedElement = this.mouseEventModel.findAll(mouseX, mouseY, true);
 
+            // Change cursor
             // https://developer.mozilla.org/en-US/docs/Web/CSS/cursor
-            if (tooltip) {
+            if (capturedElement.length !== 0) {
                 document.body.style.cursor = 'pointer';
             } else {
                 document.body.style.cursor = 'default';
             }
 
-            if (tooltip) {
-                PubSub.publish('mouseover', {
-                    data: { ...tooltip.value },
-                    genomicPosition: getRelativeGenomicPosition(Math.floor(this._xScale.invert(mouseX)))
-                });
-            }
+            if (capturedElement.length !== 0) {
+                // Rener mouse over effect graphics
+                const g = this.mouseOverGraphics;
+                g.lineStyle(
+                    1.5,
+                    colorToHex('black'),
+                    1, // alpha
+                    1 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
+                );
+                g.beginFill(colorToHex('white'), 0);
 
-            if (tooltip) {
-                // render mouse over effect
-                if (tooltip.polygon) {
-                    const g = this.mouseOverGraphics;
-                    g.lineStyle(
-                        1.5,
-                        colorToHex('black'),
-                        1, // alpha
-                        1 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
-                    );
-                    g.beginFill(colorToHex('white'), 0);
-
-                    if (tooltip.type === 'point') {
-                        const [x, y, r = 3] = tooltip.polygon;
+                capturedElement.forEach(ele => {
+                    if (ele.type === 'point') {
+                        const [x, y, r = 3] = ele.polygon;
                         g.drawCircle(x, y, r);
-                    } else if (tooltip.type === 'line') {
-                        g.moveTo(tooltip.polygon[0], tooltip.polygon[1]);
-                        flatArrayToPairArray(tooltip.polygon).map(d => g.lineTo(d[0], d[1]));
+                    } else if (ele.type === 'line') {
+                        g.moveTo(ele.polygon[0], ele.polygon[1]);
+                        flatArrayToPairArray(ele.polygon).map(d => g.lineTo(d[0], d[1]));
                     } else {
-                        g.drawPolygon(tooltip.polygon);
+                        g.drawPolygon(ele.polygon);
                     }
-                }
+                });
+
+                // Let API subscribers know
+                PubSub.publish('mouseover', {
+                    genomicPosition: getRelativeGenomicPosition(Math.floor(this._xScale.invert(mouseX))),
+                    data: capturedElement.map(d => d.value)
+                });
 
                 // Display a tooltip
                 if (this.options.spec.tooltip && this.options.spec.tooltip.length !== 0) {
-                    const content = (this.options.spec.tooltip as any)
+                    let content = (this.options.spec.tooltip as any)
                         .map((d: any) => {
-                            const rawValue = tooltip.value[d.field];
+                            const rawValue = capturedElement[0].value[d.field];
                             let value = rawValue;
                             if (d.type === 'quantitative' && d.format) {
                                 value = format(d.format)(+rawValue);
@@ -1080,7 +1081,15 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                             );
                         })
                         .join('');
-                    return `<table style='text-align: left; margin-top: 12px'>${content}</table>`;
+
+                    content = `<table style='text-align: left; margin-top: 12px'>${content}</table>`;
+                    if (capturedElement.length > 1) {
+                        content +=
+                            `<div style='padding: 4px 8px; margin-top: 4px; text-align: center; color: grey'>` +
+                            `${capturedElement.length - 1} Additional Selections...` +
+                            '</div>';
+                    }
+                    return `<div>${content}</div>`;
                 }
             }
         }
