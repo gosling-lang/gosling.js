@@ -50,10 +50,6 @@ import { spec as JSON_SPEC_BAND } from './spec/vertical-band';
 import JS_SPEC_CORCES_ET_AL from './spec/corces?raw';
 import { spec as JSON_SPEC_CORCES_ET_AL } from './spec/corces';
 
-function jsStringParser(jsfile: string) {
-    return jsfile.replace('export { spec };', '');
-}
-
 export type ExampleGroup =
     | 'Visual Encoding'
     | 'Semantic Zooming'
@@ -129,28 +125,28 @@ export const examples: {
         group: 'Visual Encoding',
         name: 'Visual Encoding',
         spec: JSON_SPEC_VISUAL_ENCODING as GoslingSpec,
-        specJs: jsStringParser(JS_SPEC_VISUAL_ENCODING),
+        specJs: JS_SPEC_VISUAL_ENCODING,
         image: THUMBNAILS.VISUAL_ENCODING
     },
     VISUAL_ENCODING_CIRCULAR: {
         group: 'Visual Encoding',
         name: 'Circular Visual Encoding',
         spec: JSON_SPEC_VISUAL_ENCODING_CIRCULAR as GoslingSpec,
-        specJs: jsStringParser(JS_SPEC_VISUAL_ENCODING_CIRCULAR),
+        specJs: JS_SPEC_VISUAL_ENCODING_CIRCULAR,
         image: THUMBNAILS.VISUAL_ENCODING_CIRCULAR
     },
     BAND: {
         group: 'Visual Encoding',
         name: 'Band Connection',
         spec: JSON_SPEC_BAND as GoslingSpec,
-        specJs: jsStringParser(JS_SPEC_BAND),
+        specJs: JS_SPEC_BAND,
         image: THUMBNAILS.BAND
     },
     RULE: {
         group: 'Visual Encoding',
         name: 'Rule Mark',
         spec: JSON_SPEC_RULE as GoslingSpec,
-        specJs: jsStringParser(JS_SPEC_RULE),
+        specJs: JS_SPEC_RULE,
         image: THUMBNAILS.RULE
     },
     MATRIX: {
@@ -298,7 +294,7 @@ export const examples: {
         group: 'Coordinated Multiple Views',
         name: 'Corces et al. 2020',
         spec: JSON_SPEC_CORCES_ET_AL as GoslingSpec,
-        specJs: jsStringParser(JS_SPEC_CORCES_ET_AL),
+        specJs: JS_SPEC_CORCES_ET_AL,
         image: THUMBNAILS.CORCES_ET_AL
     },
     GREMLIN: {
@@ -311,7 +307,7 @@ export const examples: {
         group: 'Visual Encoding',
         name: 'Sashimi Plot',
         spec: JSON_SPEC_SASHIMI as GoslingSpec,
-        specJs: jsStringParser(JS_SPEC_SASHIMI),
+        specJs: JS_SPEC_SASHIMI,
         underDevelopment: true,
         image: THUMBNAILS.SASHIMI_PLOT
     },

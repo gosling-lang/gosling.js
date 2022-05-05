@@ -27,7 +27,7 @@ import { getHtmlTemplate } from './html-template';
 import { Themes } from 'gosling-theme';
 
 function json2js(jsonCode: string) {
-    return `var spec = ${jsonCode}`;
+    return `var spec = ${jsonCode} \nexport { spec };`;
 }
 
 const SHOWN_EXAMPLE_LIST = Object.entries(examples)
@@ -454,8 +454,8 @@ function Editor(props: any) {
                 }
             } else if (language === 'javascript') {
                 try {
-                    const transpiledCode = transpile(jsCode);
-                    editedGos = window.Function(`${transpiledCode}\n return spec`)();
+                    const transpiledCode = transpile(jsCode.replace('export { spec };', 'return spec'));
+                    editedGos = window.Function(transpiledCode)();
                     valid = gosling.validateGoslingSpec(editedGos);
                     setLog(valid);
                 } catch (e) {
