@@ -23,7 +23,7 @@ import {
     splitExon,
     inferSvType
 } from '../core/utils/data-transform';
-import { getTabularData } from './data-abstraction';
+import { getTabularData, GOSLING_DATA_ROW_UID_FIELD } from './data-abstraction';
 import { BAMDataFetcher } from '../data-fetcher/bam';
 import { getRelativeGenomicPosition } from '../core/utils/assembly';
 import { getTextStyle } from '../core/utils/text-style';
@@ -1023,6 +1023,18 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             // reversing so that it is in the same order of how it is shown
             const capturedElement = this.mouseEventModel.findAll(mouseX, mouseY, true);
 
+            // Select the first one if multi-hovering is not enabled
+            if (capturedElement.length !== 0 && !this.options.spec?.experimental?.hovering?.enableMultiHovering) {
+                capturedElement.splice(1);
+            }
+
+            // Select sibling marks (e.g., entire glyphs)
+            if (this.options.spec?.experimental?.hovering?.enableGroupHovering) {
+                const idField =
+                    this.options.spec?.experimental?.hovering?.searchGroupByField ?? GOSLING_DATA_ROW_UID_FIELD;
+                this.mouseEventModel.combineWithSiblings(capturedElement, idField);
+            }
+
             // Change cursor
             // https://developer.mozilla.org/en-US/docs/Web/CSS/cursor
             if (capturedElement.length !== 0) {
@@ -1034,13 +1046,16 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             if (capturedElement.length !== 0) {
                 // Rener mouse over effect graphics
                 const g = this.mouseOverGraphics;
+                const stroke = this.options.spec?.experimental?.hovering?.stroke ?? 'black';
+                const strokeWidth = this.options.spec?.experimental?.hovering?.strokeWidth ?? 1.5;
+                const color = this.options.spec?.experimental?.hovering?.color ?? 'none';
                 g.lineStyle(
-                    1.5,
-                    colorToHex('black'),
+                    strokeWidth,
+                    colorToHex(stroke),
                     1, // alpha
                     1 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
                 );
-                g.beginFill(colorToHex('white'), 0);
+                g.beginFill(colorToHex(color), color === 'none' ? 0 : 1);
 
                 capturedElement.forEach(ele => {
                     if (ele.type === 'point') {

@@ -55,6 +55,14 @@ export const CytoBands: OverlaidTracks = {
     xe: { field: 'Basepair_stop', type: 'genomic' },
     stroke: { value: 'gray' },
     strokeWidth: { value: 0.5 },
+    experimental: {
+        hovering: {
+            enableGroupHovering: true,
+            searchGroupByField: 'Chr.',
+            stroke: 'red',
+            strokeWidth: 2
+        }
+    },
     width: 600,
     height: 20
 };

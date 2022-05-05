@@ -123,6 +123,12 @@ export const HiGlass: OverlaidTracks = {
     ],
     row: { field: 'strand', type: 'nominal', domain: ['+', '-'] },
     color: { field: 'strand', type: 'nominal', domain: ['+', '-'], range: ['#7585FF', '#FF8A85'] },
+    experimental: {
+        hovering: {
+            enableGroupHovering: true,
+            stroke: 'grey'
+        }
+    },
     visibility: [
         {
             operation: 'less-than',

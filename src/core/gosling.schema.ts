@@ -242,6 +242,18 @@ interface SingleTrackBase extends CommonTrackDef {
     // Tooltip
     tooltip?: Tooltip[];
 
+    // Mouse events
+    experimental?: {
+        hovering?: {
+            enableMultiHovering?: boolean;
+            enableGroupHovering?: boolean;
+            searchGroupByField?: string;
+            color?: string;
+            stroke?: string;
+            strokeWidth?: number;
+        };
+    };
+
     // Mark
     mark: Mark;
 

@@ -194,6 +194,14 @@ export const EX_SPEC_VISUAL_ENCODING: GoslingSpec = {
                         { field: 'peak', type: 'quantitative', alt: 'Value', format: '.2' },
                         { field: 'sample', type: 'nominal', alt: 'Sample' }
                     ],
+                    experimental: {
+                        hovering: {
+                            enableMultiHovering: true,
+                            stroke: 'red',
+                            strokeWidth: 2,
+                            color: 'blue'
+                        }
+                    },
                     width: 600,
                     height: 130
                 }
