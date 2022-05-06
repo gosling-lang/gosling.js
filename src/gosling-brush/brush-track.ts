@@ -46,7 +46,7 @@ function BrushTrack(HGC: any, ...args: any[]): any {
                 .innerRadius(this.options.innerRadius ?? 100)
                 .outerRadius(this.options.outerRadius ?? 200);
 
-            this.gBrush = this.gLegend
+            this.gBrush = this.gMain
                 .append('g')
                 .attr('id', `brush-${this.uid}`)
                 .selectAll('.brush')
