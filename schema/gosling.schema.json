@@ -705,6 +705,9 @@
           "$ref": "#/definitions/GenomicLengthTransform"
         },
         {
+          "$ref": "#/definitions/SvTypeTransform"
+        },
+        {
           "$ref": "#/definitions/CoverageTransform"
         },
         {
@@ -8110,6 +8113,67 @@
           "type": "number"
         }
       },
+      "type": "object"
+    },
+    "SvTypeTransform": {
+      "additionalProperties": false,
+      "properties": {
+        "firstBp": {
+          "additionalProperties": false,
+          "description": "Based on the BEDPE, infer SV types.  SV types are specified as one of the following strings: DUP, TRA, DEL, t2tINV, h2hINV.",
+          "properties": {
+            "chrField": {
+              "type": "string"
+            },
+            "posField": {
+              "type": "string"
+            },
+            "strandField": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "chrField",
+            "posField",
+            "strandField"
+          ],
+          "type": "object"
+        },
+        "newField": {
+          "type": "string"
+        },
+        "secondBp": {
+          "additionalProperties": false,
+          "description": "Based on the BEDPE, infer SV types.  SV types are specified as one of the following strings: DUP, TRA, DEL, t2tINV, h2hINV.",
+          "properties": {
+            "chrField": {
+              "type": "string"
+            },
+            "posField": {
+              "type": "string"
+            },
+            "strandField": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "chrField",
+            "posField",
+            "strandField"
+          ],
+          "type": "object"
+        },
+        "type": {
+          "const": "svType",
+          "type": "string"
+        }
+      },
+      "required": [
+        "type",
+        "firstBp",
+        "secondBp",
+        "newField"
+      ],
       "type": "object"
     },
     "TemplateTrack": {
