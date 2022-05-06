@@ -954,6 +954,7 @@ export type DataTransform =
     | DisplaceTransform
     | ExonSplitTransform
     | GenomicLengthTransform
+    | SvTypeTransform
     | CoverageTransform
     | JSONParseTransform;
 
@@ -1065,6 +1066,22 @@ export interface GenomicLengthTransform {
     type: 'genomicLength';
     startField: string;
     endField: string;
+    newField: string;
+}
+
+/**
+ * Based on the BEDPE, infer SV types.
+ * SV types are specified as one of the following strings: DUP, TRA, DEL, t2tINV, h2hINV.
+ */
+type BpFields = {
+    chrField: string;
+    posField: string;
+    strandField: string;
+};
+export interface SvTypeTransform {
+    type: 'svType';
+    firstBp: BpFields;
+    secondBp: BpFields;
     newField: string;
 }
 

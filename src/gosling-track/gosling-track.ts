@@ -21,7 +21,8 @@ import {
     calculateGenomicLength,
     parseSubJSON,
     replaceString,
-    splitExon
+    splitExon,
+    inferSvType
 } from '../core/utils/data-transform';
 import { getTabularData } from './data-abstraction';
 import { BAMDataFetcher } from '../data-fetcher/bam';
@@ -874,6 +875,9 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                                 break;
                             case 'genomicLength':
                                 tile.gos.tabularDataFiltered = calculateGenomicLength(t, tile.gos.tabularDataFiltered);
+                                break;
+                            case 'svType':
+                                tile.gos.tabularDataFiltered = inferSvType(t, tile.gos.tabularDataFiltered);
                                 break;
                             case 'coverage':
                                 tile.gos.tabularDataFiltered = aggregateCoverage(
