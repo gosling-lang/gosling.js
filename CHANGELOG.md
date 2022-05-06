@@ -1,3 +1,29 @@
+## [0.9.18](https://github.com/gosling-lang/gosling.js/compare/v0.9.17...v0.9.18) (2022-05-06)
+
+
+### Bug Fixes
+
+* fix crash on matrix example ([#674](https://github.com/gosling-lang/gosling.js/issues/674)) ([0de295c](https://github.com/gosling-lang/gosling.js/commit/0de295c937dff850dd1f3d40660870eaf6861ddf))
+* revert back to use `gMain` in `gosling-brush` ([753a555](https://github.com/gosling-lang/gosling.js/commit/753a555768ce40dc9fc0bf40a790cdcc307ee58d))
+
+
+### Features
+
+* add data transform to infer sv types ([#676](https://github.com/gosling-lang/gosling.js/issues/676)) ([f31e888](https://github.com/gosling-lang/gosling.js/commit/f31e888d77285dfd6b69d0dc8f32d543eedacb63))
+* add straight link for circular withinLink ([#647](https://github.com/gosling-lang/gosling.js/issues/647)) ([02a60ef](https://github.com/gosling-lang/gosling.js/commit/02a60ef435f25d58f6c65731814b91a82a8e44b1))
+* allow checking the container size or aspect ratio for using responsive spec ([#652](https://github.com/gosling-lang/gosling.js/issues/652)) ([7555ab7](https://github.com/gosling-lang/gosling.js/commit/7555ab711023a0c3e2076a448756a9ba3eeb04f7))
+* allow using one side of diagonal of matrix ([#644](https://github.com/gosling-lang/gosling.js/issues/644)) ([9c19f72](https://github.com/gosling-lang/gosling.js/commit/9c19f7296bea9325c12bab6ed9eaa929fa443370))
+* **editor:** add a showcase modal view ([#657](https://github.com/gosling-lang/gosling.js/issues/657)) ([8a56c5e](https://github.com/gosling-lang/gosling.js/commit/8a56c5edabd89ef46ff6a4206ed988958374ef10))
+* **editor:** add export to html file ([#672](https://github.com/gosling-lang/gosling.js/issues/672)) ([ddbd1e2](https://github.com/gosling-lang/gosling.js/commit/ddbd1e2201fa19fd3b89737df5918dd1ed876d76))
+* **editor:** gallery sidebar ([#659](https://github.com/gosling-lang/gosling.js/issues/659)) ([da5a0c6](https://github.com/gosling-lang/gosling.js/commit/da5a0c65b384f7ad13f149e386a4238711517162))
+* replace jest with vitest ([#666](https://github.com/gosling-lang/gosling.js/issues/666)) ([e8eef28](https://github.com/gosling-lang/gosling.js/commit/e8eef2885199e7804449ccbf1ad2da07746e509e))
+* support brushes on color legends ([#663](https://github.com/gosling-lang/gosling.js/issues/663)) ([f76a3e5](https://github.com/gosling-lang/gosling.js/commit/f76a3e5b9319e50d10e85464171754de0e872916))
+* support clipping rows when using bars ([#643](https://github.com/gosling-lang/gosling.js/issues/643)) ([f858853](https://github.com/gosling-lang/gosling.js/commit/f8588533082e6f3832287f85b1642acb2415c5de))
+* treeshake pkg info in module export ([#665](https://github.com/gosling-lang/gosling.js/issues/665)) ([9ca746f](https://github.com/gosling-lang/gosling.js/commit/9ca746fd556b88abfef291a48810131da069d763))
+* use reactive rendering for responsive specs ([#645](https://github.com/gosling-lang/gosling.js/issues/645)) ([c00f4f8](https://github.com/gosling-lang/gosling.js/commit/c00f4f8ae2fee485df7d153e56fb970815f649cd))
+
+
+
 ## [0.9.17](https://github.com/gosling-lang/gosling.js/compare/v0.9.16...v0.9.17) (2022-02-21)
 
 

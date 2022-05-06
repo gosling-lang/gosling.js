@@ -8120,7 +8120,7 @@
       "properties": {
         "firstBp": {
           "additionalProperties": false,
-          "description": "Based on the BEDPE, infer SV types.  SV types are specified as one of the following strings: DUP, TRA, DEL, t2tINV, h2hINV.",
+          "description": "Based on the BEDPE, infer SV types. SV types are specified as one of the following strings: DUP, TRA, DEL, t2tINV, h2hINV.",
           "properties": {
             "chrField": {
               "type": "string"
@@ -8144,7 +8144,7 @@
         },
         "secondBp": {
           "additionalProperties": false,
-          "description": "Based on the BEDPE, infer SV types.  SV types are specified as one of the following strings: DUP, TRA, DEL, t2tINV, h2hINV.",
+          "description": "Based on the BEDPE, infer SV types. SV types are specified as one of the following strings: DUP, TRA, DEL, t2tINV, h2hINV.",
           "properties": {
             "chrField": {
               "type": "string"
