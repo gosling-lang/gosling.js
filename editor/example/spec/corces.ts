@@ -1,6 +1,8 @@
+import { GoslingSpec, PartialTrack, View, BIGWIGData, BEDDBData } from '@gosling.schema';
+
 const width = 400;
 
-const ideogram = {
+const ideogram: View = {
     layout: 'linear',
     xDomain: { chromosome: '3' },
     centerRadius: 0.8,
@@ -64,18 +66,16 @@ const ideogram = {
     ]
 };
 
-const getBigwigData = (name: string) => {
+const getBigwigData = (name: string): BIGWIGData => {
     return {
-        data: {
-            url: `https://s3.amazonaws.com/gosling-lang.org/data/${name}insertions_bin100_RIPnorm.bw`,
-            type: 'bigwig',
-            column: 'position',
-            value: 'peak'
-        }
+        url: `https://s3.amazonaws.com/gosling-lang.org/data/${name}insertions_bin100_RIPnorm.bw`,
+        type: 'bigwig',
+        column: 'position',
+        value: 'peak'
     };
 };
 
-const barTracks = [
+const barTracks: PartialTrack[] = [
     {
         data: getBigwigData('ExcitatoryNeurons-'),
         title: 'Excitatory neurons',
@@ -120,7 +120,7 @@ const barTracks = [
     }
 ];
 
-const geneAnnotationTrack = {
+const geneAnnotationTrack: View = {
     alignment: 'overlay',
     title: 'Genes',
     data: {
@@ -216,7 +216,7 @@ const geneAnnotationTrack = {
     height: 80
 };
 
-const getBeddbData = (name: string) => {
+const getBeddbData = (name: string): BEDDBData => {
     return {
         url: `https://server.gosling-lang.org/api/v1/tileset_info/?d=${name}-plac-seq-bedpe`,
         type: 'beddb',
@@ -227,7 +227,7 @@ const getBeddbData = (name: string) => {
     };
 };
 
-const withinLinkTrack = [
+const withinLinkTracks = [
     { name: 'oligodendrocyte', color: '#F97E2A' },
     { name: 'microglia', color: '#50ADF9' },
     { name: 'neuron', color: '#7B0EDC' }
@@ -249,7 +249,7 @@ const withinLinkTrack = [
     };
 });
 
-const spec = {
+const spec: GoslingSpec = {
     title: 'Single-cell Epigenomic Analysis',
     subtitle: 'Corces et al. 2020',
     layout: 'linear',
@@ -267,7 +267,7 @@ const spec = {
             style: { outline: '#20102F' },
             width,
             height: 40,
-            tracks: [barTracks, geneAnnotationTrack, ...withinLinkTrack]
+            tracks: [...barTracks, geneAnnotationTrack, ...withinLinkTracks]
         }
     ]
 };

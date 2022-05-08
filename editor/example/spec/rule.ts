@@ -1,4 +1,6 @@
-const barTrack = {
+import { PartialTrack, GoslingSpec, JSONData } from '@gosling.schema';
+
+const barTrack: PartialTrack = {
     data: {
         url: 'https://server.gosling-lang.org/api/v1/tileset_info/?d=cistrome-multivec',
         type: 'multivec',
@@ -15,7 +17,7 @@ const barTrack = {
     color: { value: 'lightgray' }
 };
 
-const referenceData = {
+const referenceData: JSONData = {
     type: 'json',
     values: [
         { c: 'chr2', p: 100000, v: 0.0001 },
@@ -26,7 +28,7 @@ const referenceData = {
     genomicFields: ['p']
 };
 
-const spec = {
+const spec: GoslingSpec = {
     title: 'Rule Mark',
     subtitle: 'Annotate visualization with horizontal and vertical lines',
     style: { dashed: [3, 3] },

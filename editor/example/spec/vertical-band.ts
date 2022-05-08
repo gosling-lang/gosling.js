@@ -1,4 +1,4 @@
-import { GoslingSpec, CSVData, SingleTrack } from '@gosling.schema';
+import { GoslingSpec, CSVData, Track } from '@gosling.schema';
 const data: CSVData = {
     type: 'csv',
     url: 'https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/circos-segdup-edited.txt',
@@ -10,7 +10,7 @@ const width = 500,
     bandHeight = 16,
     linkHeight = 100;
 
-const getRectTrack = (x: string, xe: string): SingleTrack => {
+const getRectTrack = (x: string, xe: string): Track => {
     return {
         data,
         mark: 'rect',
@@ -29,7 +29,7 @@ const getRectTrack = (x: string, xe: string): SingleTrack => {
     };
 };
 
-const getBetweenLinkTrack = (x: string, xe: string, x1: string, x1e: string): SingleTrack => {
+const getBetweenLinkTrack = (x: string, xe: string, x1: string, x1e: string): Track => {
     return {
         data,
         mark: 'betweenLink',

@@ -1,10 +1,12 @@
-const bamData = {
+import { BAMData, GoslingSpec } from '@gosling.schema';
+
+const bamData: BAMData = {
     type: 'bam',
     url: 'https://s3.amazonaws.com/gosling-lang.org/data/sashimi/ENCFF088HTJ.chr10_27035000_27050000.bam',
     indexUrl: 'https://s3.amazonaws.com/gosling-lang.org/data/sashimi/ENCFF088HTJ.chr10_27035000_27050000.bam.bai'
 };
 
-const spec = {
+const spec: GoslingSpec = {
     title: 'Sashimi Plot',
     subtitle: 'Junction extraction from a BAM file',
     description: 'https://github.com/guigolab/ggsashimi/blob/master/examples/sashimi.pdf',

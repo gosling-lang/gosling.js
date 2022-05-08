@@ -1,6 +1,8 @@
+import { GoslingSpec, MultivecData, View, Tooltip } from '@gosling.schema';
+
 const size = { width: 600, height: 130 };
 
-const data = {
+const data: MultivecData = {
     url: 'https://server.gosling-lang.org/api/v1/tileset_info/?d=cistrome-multivec',
     type: 'multivec',
     row: 'sample',
@@ -9,7 +11,7 @@ const data = {
     categories: ['sample 1', 'sample 2', 'sample 3', 'sample 4']
 };
 
-const tooltip = [
+const tooltip: Tooltip[] = [
     { field: 'start', type: 'genomic', alt: 'Start Position' },
     { field: 'end', type: 'genomic', alt: 'End Position' },
     {
@@ -22,7 +24,7 @@ const tooltip = [
 ];
 
 /******* start define invidual visualizations *******/
-const heatmapView = {
+const heatmapView: View = {
     tracks: [
         {
             id: 'track-1',
@@ -40,7 +42,7 @@ const heatmapView = {
         }
     ]
 };
-const barView = {
+const barView: View = {
     tracks: [
         {
             id: 'track-2',
@@ -56,7 +58,7 @@ const barView = {
     ]
 };
 
-const stackView = {
+const stackView: View = {
     tracks: [
         {
             id: 'track-3',
@@ -71,7 +73,7 @@ const stackView = {
     ]
 };
 
-const lineView = {
+const lineView: View = {
     id: 'track-4',
     alignment: 'overlay',
     data,
@@ -99,7 +101,7 @@ const lineView = {
     ...size
 };
 
-const pointView = {
+const pointView: View = {
     tracks: [
         {
             id: 'track-5',
@@ -117,7 +119,7 @@ const pointView = {
     ]
 };
 
-const pointView2 = {
+const pointView2: View = {
     tracks: [
         {
             id: 'track-6',
@@ -134,7 +136,7 @@ const pointView2 = {
     ]
 };
 
-const areaView2 = {
+const areaView2: View = {
     tracks: [
         {
             id: 'track-7',
@@ -152,7 +154,7 @@ const areaView2 = {
     ]
 };
 
-const barView2 = {
+const barView2: View = {
     tracks: [
         {
             id: 'track-8',
@@ -190,7 +192,7 @@ const barView2 = {
     ]
 };
 
-const bandView = {
+const bandView: View = {
     tracks: [
         {
             id: 'track-9',
@@ -223,7 +225,7 @@ const bandView = {
 };
 /******* end define individual visualizations *******/
 
-const spec = {
+const spec: GoslingSpec = {
     title: 'Visual Encoding',
     subtitle: 'Gosling provides diverse visual encoding methods',
     layout: 'linear',
