@@ -138,7 +138,7 @@ export const examples: {
     BAND: {
         group: 'Visual Encoding',
         name: 'Band Connection',
-        spec: JSON_SPEC_BAND as GoslingSpec,
+        spec: JSON_SPEC_BAND,
         specJs: JS_SPEC_BAND,
         image: THUMBNAILS.BAND
     },

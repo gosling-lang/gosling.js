@@ -1,4 +1,5 @@
-const data = {
+import { GoslingSpec, CSVData, SingleTrack } from '@gosling.schema';
+const data: CSVData = {
     type: 'csv',
     url: 'https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/circos-segdup-edited.txt',
     chromosomeField: 'c2',
@@ -9,7 +10,7 @@ const width = 500,
     bandHeight = 16,
     linkHeight = 100;
 
-const getRectTrack = (x: string, xe: string) => {
+const getRectTrack = (x: string, xe: string): SingleTrack => {
     return {
         data,
         mark: 'rect',
@@ -28,7 +29,7 @@ const getRectTrack = (x: string, xe: string) => {
     };
 };
 
-const getBetweenLinkTrack = (x: string, xe: string, x1: string, x1e: string) => {
+const getBetweenLinkTrack = (x: string, xe: string, x1: string, x1e: string): SingleTrack => {
     return {
         data,
         mark: 'betweenLink',
@@ -46,7 +47,7 @@ const getBetweenLinkTrack = (x: string, xe: string, x1: string, x1e: string) => 
     };
 };
 
-const spec = {
+const spec: GoslingSpec = {
     layout: 'linear',
     xDomain: { chromosome: '1', interval: [103900000, 104100000] },
     spacing: 0,

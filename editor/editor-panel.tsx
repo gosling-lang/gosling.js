@@ -3,6 +3,7 @@ import MonacoEditor from 'react-monaco-editor';
 
 import ReactResizeDetector from 'react-resize-detector';
 import { GoslingSchema } from 'gosling.js';
+import goslingSpec from '../src/core/gosling.schema?raw';
 
 export * from './monaco_worker';
 import * as Monaco from 'monaco-editor';
@@ -96,6 +97,10 @@ function EditorPanel(props: {
 
     function editorWillMount() {
         updateTheme();
+        Monaco.languages.typescript.typescriptDefaults.addExtraLib(
+            `declare module '@gosling.schema' { ${goslingSpec} }`,
+            'file:///src/core/gosling.schema.ts'
+        );
         Monaco.languages.json.jsonDefaults.setDiagnosticsOptions({
             allowComments: true,
             enableSchemaRequest: true,

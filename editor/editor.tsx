@@ -34,6 +34,7 @@ function json2js(jsonCode: string) {
 // some posts fixed it thorugh changing ts compiler options, but did not work for me
 // https://stackoverflow.com/questions/34895737/uncaught-referenceerror-exports-is-not-defined-and-require
 function codeParser(jscode: string) {
+    jscode = transpile(jscode);
     jscode = jscode.replace(
         `\r\nObject.defineProperty(exports, "__esModule", { value: true });\r\nexports.spec = void 0;`,
         ''
@@ -44,7 +45,7 @@ function codeParser(jscode: string) {
 }
 
 // a tagged template
-// convert string to base-64 data ur
+// convert string to base-64 data uri
 // e.g., esm`'a' < 'b'` => data:text/javascript;base64,J2EnIDwgJ2In
 function esm(templateStrings: TemplateStringsArray, ...substitutions: string[]) {
     let js = templateStrings.raw[0];
@@ -480,10 +481,8 @@ function Editor(props: any) {
 
                 setGoslingSpec(editedGos);
             } else if (language === 'javascript') {
-                const transpiledCode = transpile(jsCode);
-
                 // vite-ignore to enable dynamic import from data uri
-                import(/* @vite-ignore */ esm`${codeParser(transpiledCode)}`)
+                import(/* @vite-ignore */ esm`${codeParser(jsCode)}`)
                     .then(ns => {
                         const editedGos = ns.spec;
                         valid = gosling.validateGoslingSpec(editedGos);
@@ -496,28 +495,6 @@ function Editor(props: any) {
                         console.warn(message, e);
                         setLog({ message, state: 'error' });
                     });
-                // try {
-                //     const transpiledCode = transpile(jsCode.replace('export { spec };', 'return spec'));
-                //     const transpiledCode2 = transpile(jsCode);
-
-                //     import(/* @vite-ignore */ esm`${codeParser(transpiledCode2)}`)
-                //         // eslint-disable-next-line no-console
-                //         .then(ns => {
-                //             const editedGos = ns.spec;
-                //             valid = gosling.validateGoslingSpec(editedGos);
-                //             setLog(valid);
-                //         })
-                //         // eslint-disable-next-line no-console
-                //         .catch(e => console.error(e, codeParser(transpiledCode2), transpiledCode2));
-
-                //     editedGos = window.Function(transpiledCode)();
-                //     valid = gosling.validateGoslingSpec(editedGos);
-                //     setLog(valid);
-                // } catch (e) {
-                //     const message = '✘ Cannnot parse the code.';
-                //     console.warn(message);
-                //     setLog({ message, state: 'error' });
-                // }
             } else {
                 setLog({ message: `${language} is not supported`, state: 'error' });
             }
