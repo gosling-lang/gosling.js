@@ -56,6 +56,8 @@ function EditorPanel(props: {
 
         // Workaround to make `actions.find` working with Monaco editor 0.22.0 (https://github.com/microsoft/monaco-editor/issues/2355)
         monacoEditor.createContextKey('editorIsOpen', true);
+
+        monacoEditor.getModel()?.updateOptions({ tabSize: 2 });
     }
 
     function updateTheme() {
