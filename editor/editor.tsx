@@ -30,6 +30,30 @@ function json2js(jsonCode: string) {
     return `var spec = ${jsonCode} \nexport { spec };`;
 }
 
+// a hack to solve the reference erro in typescript
+// some posts fixed it thorugh changing ts compiler options, but did not work for me
+// https://stackoverflow.com/questions/34895737/uncaught-referenceerror-exports-is-not-defined-and-require
+function codeParser(jscode: string) {
+    jscode = jscode.replace(
+        `\r\nObject.defineProperty(exports, "__esModule", { value: true });\r\nexports.spec = void 0;`,
+        ''
+    );
+    jscode = jscode.replace('exports.spec = spec;', 'export { spec };');
+
+    return jscode;
+}
+
+// a tagged template
+// convert string to base-64 data ur
+// e.g., esm`'a' < 'b'` => data:text/javascript;base64,J2EnIDwgJ2In
+function esm(templateStrings: TemplateStringsArray, ...substitutions: string[]) {
+    let js = templateStrings.raw[0];
+    for (let i = 0; i < substitutions.length; i++) {
+        js += substitutions[i] + templateStrings.raw[i + 1];
+    }
+    return `data:text/javascript;base64, ${btoa(js)}`;
+}
+
 const SHOWN_EXAMPLE_LIST = Object.entries(examples)
     .map(([k, v]) => {
         return { id: k, ...v };
@@ -452,24 +476,51 @@ function Editor(props: any) {
                     console.warn(message);
                     setLog({ message, state: 'error' });
                 }
+                if (!editedGos || valid?.state !== 'success' || (!autoRun && !run)) return;
+
+                setGoslingSpec(editedGos);
             } else if (language === 'javascript') {
-                try {
-                    const transpiledCode = transpile(jsCode.replace('export { spec };', 'return spec'));
-                    editedGos = window.Function(transpiledCode)();
-                    valid = gosling.validateGoslingSpec(editedGos);
-                    setLog(valid);
-                } catch (e) {
-                    const message = '✘ Cannnot parse the code.';
-                    console.warn(message);
-                    setLog({ message, state: 'error' });
-                }
+                const transpiledCode = transpile(jsCode);
+
+                // vite-ignore to enable dynamic import from data uri
+                import(/* @vite-ignore */ esm`${codeParser(transpiledCode)}`)
+                    .then(ns => {
+                        const editedGos = ns.spec;
+                        valid = gosling.validateGoslingSpec(editedGos);
+                        setLog(valid);
+                        if (!editedGos || valid?.state !== 'success' || (!autoRun && !run)) return;
+                        setGoslingSpec(editedGos);
+                    })
+                    .catch(e => {
+                        const message = '✘ Cannnot parse the code.';
+                        console.warn(message, e);
+                        setLog({ message, state: 'error' });
+                    });
+                // try {
+                //     const transpiledCode = transpile(jsCode.replace('export { spec };', 'return spec'));
+                //     const transpiledCode2 = transpile(jsCode);
+
+                //     import(/* @vite-ignore */ esm`${codeParser(transpiledCode2)}`)
+                //         // eslint-disable-next-line no-console
+                //         .then(ns => {
+                //             const editedGos = ns.spec;
+                //             valid = gosling.validateGoslingSpec(editedGos);
+                //             setLog(valid);
+                //         })
+                //         // eslint-disable-next-line no-console
+                //         .catch(e => console.error(e, codeParser(transpiledCode2), transpiledCode2));
+
+                //     editedGos = window.Function(transpiledCode)();
+                //     valid = gosling.validateGoslingSpec(editedGos);
+                //     setLog(valid);
+                // } catch (e) {
+                //     const message = '✘ Cannnot parse the code.';
+                //     console.warn(message);
+                //     setLog({ message, state: 'error' });
+                // }
             } else {
                 setLog({ message: `${language} is not supported`, state: 'error' });
             }
-
-            if (!editedGos || valid?.state !== 'success' || (!autoRun && !run)) return;
-
-            setGoslingSpec(editedGos);
         },
         [code, jsCode, autoRun, language, readOnly]
     );
