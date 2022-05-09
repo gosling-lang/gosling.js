@@ -34,7 +34,7 @@ import BamWorker from '../data-fetcher/bam/bam-worker.js?worker&inline';
 import { InteractionEvent } from 'pixi.js';
 import { HIGLASS_AXIS_SIZE } from '../core/higlass-model';
 import { flatArrayToPairArray } from '../gosling-mouse-event/polygon';
-import { MouseEventData } from '../gosling-mouse-event';
+import { MouseEventData } from 'src/gosling-mouse-event/mouse-event-model';
 
 // Set `true` to print in what order each function is called
 export const PRINT_RENDERING_CYCLE = false;

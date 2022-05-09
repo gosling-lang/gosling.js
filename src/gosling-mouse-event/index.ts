@@ -1,1 +1,1 @@
-export { MouseEventData, MouseEventModel } from './mouse-event-model';
+export { MouseEventModel } from './mouse-event-model';
