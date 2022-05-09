@@ -5,7 +5,7 @@ import { EX_SPEC_MATRIX, EX_SPEC_RESPONSIVE_COMPARATIVE_MATRICES } from './json-
 import { EX_SPEC_CANCER_VARIANT_PROTOTYPE } from './json-spec/cancer-variant';
 import { EX_SPEC_MATRIX_HFFC6 } from './json-spec/matrix-hffc6';
 import { EX_SPEC_LINKING } from './json-spec/visual-linking';
-import { EX_SPEC_BASIC_SEMANTIC_ZOOM } from './json-spec/basic-semantic-zoom';
+// import { EX_SPEC_BASIC_SEMANTIC_ZOOM } from './json-spec/basic-semantic-zoom';
 import {
     EX_SPEC_RESPONSIVE_COMPARATIVE_VIEWS,
     EX_SPEC_RESPONSIVE_IDEOGRAM,
@@ -49,6 +49,9 @@ import { spec as JSON_SPEC_BAND } from './spec/vertical-band';
 
 import JS_SPEC_CORCES_ET_AL from './spec/corces?raw';
 import { spec as JSON_SPEC_CORCES_ET_AL } from './spec/corces';
+
+import JS_SPEC_BASIC_SEMANTIC_ZOOM from './spec/basic-semantic-zoom';
+import { spec as JSON_SPEC_BASIC_SEMANTIC_ZOOM } from './spec/corces';
 
 export type ExampleGroup =
     | 'Visual Encoding'
@@ -176,7 +179,8 @@ export const examples: {
     BASIC_SEMANTIC_ZOOM: {
         group: 'Semantic Zooming',
         name: 'Basic Idea of Semantic Zoom',
-        spec: EX_SPEC_BASIC_SEMANTIC_ZOOM,
+        spec: JSON_SPEC_BASIC_SEMANTIC_ZOOM,
+        specJs: JS_SPEC_BASIC_SEMANTIC_ZOOM,
         hidden: true
     },
     MARK_DISPLACEMENT: {
