@@ -50,8 +50,8 @@ import { spec as JSON_SPEC_BAND } from './spec/vertical-band';
 import JS_SPEC_CORCES_ET_AL from './spec/corces?raw';
 import { spec as JSON_SPEC_CORCES_ET_AL } from './spec/corces';
 
-import JS_SPEC_BASIC_SEMANTIC_ZOOM from './spec/basic-semantic-zoom';
-import { spec as JSON_SPEC_BASIC_SEMANTIC_ZOOM } from './spec/corces';
+import JS_SPEC_BASIC_SEMANTIC_ZOOM from './spec/basic-semantic-zoom?raw';
+import { spec as JSON_SPEC_BASIC_SEMANTIC_ZOOM } from './spec/basic-semantic-zoom';
 
 export type ExampleGroup =
     | 'Visual Encoding'
