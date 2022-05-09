@@ -27,7 +27,7 @@ import { getHtmlTemplate } from './html-template';
 import { Themes } from 'gosling-theme';
 
 function json2js(jsonCode: string) {
-    return `var spec = ${jsonCode} \nexport { spec };`;
+    return `var spec = ${jsonCode} \nexport { spec }; \n`;
 }
 
 // a hack to solve the reference erro in typescript
