@@ -982,63 +982,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
 
         exportSVG() {} // We do not support SVG export
 
-        onMouseOut() {
-            document.body.style.cursor = 'default';
-            this.mouseOverGraphics.clear();
-        }
-
-        onMouseDown(mouseX: number, mouseY: number) {
-            // Record these so that we do not triger click event when dragged.
-            this.mouseDownX = mouseX;
-            this.mouseDownY = mouseY;
-        }
-
-        onClick(mouseX: number, mouseY: number) {
-            if (!this.tilesetInfo) {
-                // Do not have enough information
-                return;
-            }
-
-            if (Math.sqrt((this.mouseDownX - mouseX) ** 2 + (this.mouseDownY - mouseY) ** 2) > 1) {
-                // Move distance is relatively long, so this might be a drag instead
-                return;
-            }
-
-            // Identify the current position
-            const genomicPosition = getRelativeGenomicPosition(Math.floor(this._xScale.invert(mouseX)));
-
-            // Collect all gosling track models
-            const models: GoslingTrackModel[] = this.visibleAndFetchedTiles()
-                .map(tile => tile.goslingModels ?? [])
-                .flat();
-
-            // Collect all mouse event data
-            const capturedElements: MouseEventData[] = models
-                .map(model => model.getMouseEventModel().findAll(mouseX, mouseY, true))
-                .flat();
-
-            if (capturedElements.length !== 0) {
-                PubSub.publish('click', { genomicPosition, data: capturedElements.map(d => d.value) });
-            }
-        }
-
-        getMouseOverHtml(mouseX: number, mouseY: number) {
-            if (!this.tilesetInfo) {
-                // Do not have enough information
-                return;
-            }
-
-            this.mouseOverGraphics.clear();
-
-            if (!this.options.spec?.experimental?.hovering?.showHoveringOnTheBack) {
-                // place on the top
-                this.pMain.removeChild(this.mouseOverGraphics);
-                this.pMain.addChild(this.mouseOverGraphics);
-            }
-
-            // Current position
-            const genomicPosition = getRelativeGenomicPosition(Math.floor(this._xScale.invert(mouseX)));
-
+        getElementsWithinMouse(mouseX: number, mouseY: number) {
             // Collect all gosling track models
             const models: GoslingTrackModel[] = this.visibleAndFetchedTiles()
                 .map(tile => tile.goslingModels ?? [])
@@ -1070,15 +1014,71 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                 });
             }
 
+            return mergedCapturedElements;
+        }
+
+        onMouseOut() {
+            document.body.style.cursor = 'default';
+            this.mouseOverGraphics.clear();
+        }
+
+        onMouseDown(mouseX: number, mouseY: number) {
+            // Record these so that we do not triger click event when dragged.
+            this.mouseDownX = mouseX;
+            this.mouseDownY = mouseY;
+        }
+
+        onClick(mouseX: number, mouseY: number) {
+            if (!this.tilesetInfo) {
+                // Do not have enough information
+                return;
+            }
+
+            if (Math.sqrt((this.mouseDownX - mouseX) ** 2 + (this.mouseDownY - mouseY) ** 2) > 1) {
+                // Move distance is relatively long, so this might be a drag instead
+                return;
+            }
+
+            // Identify the current position
+            const genomicPosition = getRelativeGenomicPosition(Math.floor(this._xScale.invert(mouseX)));
+
+            // Get elements within mouse
+            const capturedElements = this.getElementsWithinMouse(mouseX, mouseY);
+
+            if (capturedElements.length !== 0) {
+                PubSub.publish('click', { genomicPosition, data: capturedElements.map(d => d.value) });
+            }
+        }
+
+        getMouseOverHtml(mouseX: number, mouseY: number) {
+            if (!this.tilesetInfo) {
+                // Do not have enough information
+                return;
+            }
+
+            this.mouseOverGraphics.clear();
+
+            if (!this.options.spec?.experimental?.hovering?.showHoveringOnTheBack) {
+                // place on the top
+                this.pMain.removeChild(this.mouseOverGraphics);
+                this.pMain.addChild(this.mouseOverGraphics);
+            }
+
+            // Current position
+            const genomicPosition = getRelativeGenomicPosition(Math.floor(this._xScale.invert(mouseX)));
+
+            // Get elements within mouse
+            const capturedElements = this.getElementsWithinMouse(mouseX, mouseY);
+
             // Change cursor
             // https://developer.mozilla.org/en-US/docs/Web/CSS/cursor
-            if (mergedCapturedElements.length !== 0) {
+            if (capturedElements.length !== 0) {
                 document.body.style.cursor = 'pointer';
             } else {
                 document.body.style.cursor = 'default';
             }
 
-            if (mergedCapturedElements.length !== 0) {
+            if (capturedElements.length !== 0) {
                 // Rener mouse over effect graphics
                 const g = this.mouseOverGraphics;
                 const stroke = this.options.spec?.experimental?.hovering?.stroke ?? 'black';
@@ -1095,7 +1095,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                 );
                 g.beginFill(colorToHex(color), color === 'none' ? 0 : fillOpacity);
 
-                mergedCapturedElements.forEach(ele => {
+                capturedElements.forEach(ele => {
                     if (ele.type === 'point') {
                         const [x, y, r = 3] = ele.polygon;
                         g.drawCircle(x, y, r);
@@ -1108,16 +1108,21 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                 });
 
                 // Let API subscribers know
-                PubSub.publish('mouseover', { genomicPosition, data: mergedCapturedElements.map(d => d.value) });
+                PubSub.publish('mouseover', { genomicPosition, data: capturedElements.map(d => d.value) });
 
                 // Display a tooltip
+                const models = this.visibleAndFetchedTiles()
+                    .map(tile => tile.goslingModels ?? [])
+                    .flat();
+
                 const firstTooltipSpec = models
                     .find(m => m.spec().tooltip && m.spec().tooltip?.length !== 0)
                     ?.spec().tooltip;
+
                 if (firstTooltipSpec) {
                     let content = firstTooltipSpec
                         .map((d: any) => {
-                            const rawValue = mergedCapturedElements[0].value[d.field];
+                            const rawValue = capturedElements[0].value[d.field];
                             let value = rawValue;
                             if (d.type === 'quantitative' && d.format) {
                                 value = format(d.format)(+rawValue);
@@ -1136,10 +1141,10 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                         .join('');
 
                     content = `<table style='text-align: left; margin-top: 12px'>${content}</table>`;
-                    if (mergedCapturedElements.length > 1) {
+                    if (capturedElements.length > 1) {
                         content +=
                             `<div style='padding: 4px 8px; margin-top: 4px; text-align: center; color: grey'>` +
-                            `${mergedCapturedElements.length - 1} Additional Selections...` +
+                            `${capturedElements.length - 1} Additional Selections...` +
                             '</div>';
                     }
                     return `<div>${content}</div>`;
