@@ -21,8 +21,14 @@ export const BAR: SingleTrack = {
         field: 'end',
         type: 'genomic'
     },
-    color: { field: 'sample', type: 'nominal', legend: false },
+    color: { field: 'sample', type: 'nominal' },
     y: { field: 'peak', type: 'quantitative', axis: 'none' },
+    tooltip: [
+        { field: 'start', type: 'genomic', alt: 'Start Position' },
+        { field: 'end', type: 'genomic', alt: 'End Position' },
+        { field: 'peak', type: 'quantitative', alt: 'Value', format: '.2' },
+        { field: 'sample', type: 'nominal', alt: 'Sample' }
+    ],
     width: 600,
     height: 60
 };
@@ -118,6 +124,7 @@ export const EX_SPEC_MOUSE_EVENT: GoslingSpec = {
                         geneLabelOpacity: { value: 1 },
                         type: { field: 'type' }
                     },
+                    tooltip: [{ field: 'name', type: 'nominal' }],
                     width: BAR.width,
                     height: BAR.height,
                     experimental: {
@@ -140,6 +147,7 @@ export const EX_SPEC_MOUSE_EVENT: GoslingSpec = {
                     ...CytoBands,
                     size: { value: 20 },
                     height: 60,
+                    tooltip: [{ field: 'Chr.', type: 'nominal' }],
                     experimental: {
                         hovering: {
                             enableGroupHovering: true,
