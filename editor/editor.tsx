@@ -25,7 +25,6 @@ import { transpile } from 'typescript';
 import { getHtmlTemplate } from './html-template';
 // @ts-ignore
 import { Themes } from 'gosling-theme';
-import { CommonEventData } from 'src/core/api';
 
 function json2js(jsonCode: string) {
     return `var spec = ${jsonCode} \nexport { spec }; \n`;
@@ -219,14 +218,14 @@ function Editor(props: any) {
     const [jsCode, setJsCode] = useState(defaultJsCode); //[TO-DO: more js format examples]
     const [goslingSpec, setGoslingSpec] = useState<gosling.GoslingSpec>();
     const [log, setLog] = useState<ReturnType<typeof gosling.validateGoslingSpec>>({ message: '', state: 'success' });
-    const [mouseEventInfo, setMouseEventInfo] =
-        useState<{ type: 'mouseover' | 'click'; data: Datum[]; position: string }>();
+    // const [mouseEventInfo, setMouseEventInfo] =
+    //     useState<{ type: 'mouseover' | 'click'; data: Datum[]; position: string }>();
     const [showExamples, setShowExamples] = useState(false);
     const [autoRun, setAutoRun] = useState(true);
     const [selectedPreviewData, setSelectedPreviewData] = useState<number>(0);
     const [gistTitle, setGistTitle] = useState<string>();
     const [description, setDescription] = useState<string | null>();
-    const [expertMode, setExpertMode] = useState(true);
+    const [expertMode, setExpertMode] = useState(false);
 
     // This parameter only matter when a markdown description was loaded from a gist but the user wants to hide it
     const [hideDescription, setHideDescription] = useState<boolean>(IS_SMALL_SCREEN || false);
@@ -294,18 +293,17 @@ function Editor(props: any) {
             // gosRef.current.api.zoomTo('bam-1', `chr${data.data.chr1}:${data.data.start1}-${data.data.end1}`, 2000);
             // gosRef.current.api.zoomTo('bam-2', `chr${data.data.chr2}:${data.data.start2}-${data.data.end2}`, 2000);
             // console.log('click', data.data);
-
             // TODO: show messages on the right-bottom of the editor
-            gosRef.current.api.subscribe('mouseover', (type: string, eventData: CommonEventData) => {
-                setMouseEventInfo({ type: 'mouseover', data: eventData.data, position: eventData.genomicPosition });
-            });
-            gosRef.current.api.subscribe('click', (type: string, eventData: CommonEventData) => {
-                setMouseEventInfo({ type: 'click', data: eventData.data, position: eventData.genomicPosition });
-            });
+            // gosRef.current.api.subscribe('mouseover', (type: string, eventData: CommonEventData) => {
+            //     setMouseEventInfo({ type: 'mouseover', data: eventData.data, position: eventData.genomicPosition });
+            // });
+            // gosRef.current.api.subscribe('click', (type: string, eventData: CommonEventData) => {
+            //     setMouseEventInfo({ type: 'click', data: eventData.data, position: eventData.genomicPosition });
+            // });
         }
         return () => {
-            gosRef.current.api.unsubscribe('mouseover');
-            gosRef.current.api.unsubscribe('click');
+            // gosRef.current.api.unsubscribe('mouseover');
+            // gosRef.current.api.unsubscribe('click');
         };
     }, [gosRef.current]);
 
@@ -1080,7 +1078,7 @@ function Editor(props: any) {
                                             }}
                                         />
                                     </div>
-                                    {expertMode ? (
+                                    {/* {expertMode && false ? (
                                         <div
                                             style={{
                                                 position: 'absolute',
@@ -1108,7 +1106,7 @@ function Editor(props: any) {
                                                     : null}
                                             </table>
                                         </div>
-                                    ) : null}
+                                    ) : null} */}
                                 </div>
                                 <SplitPane split="vertical" defaultSize="100%">
                                     <>

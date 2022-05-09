@@ -5,7 +5,6 @@ import { PIXIVisualProperty } from '../visual-property.schema';
 import { IsChannelDeep, IsStackedMark, getValueUsingChannel } from '../gosling.schema.guards';
 import { cartesianToPolar, valueToRadian } from '../utils/polar';
 import colorToHex from '../utils/color-to-hex';
-import { MouseEventModel } from '../../gosling-mouse-event';
 
 export function drawBar(trackInfo: any, tile: any, model: GoslingTrackModel) {
     /* track spec */
@@ -119,7 +118,7 @@ export function drawBar(trackInfo: any, tile: any, model: GoslingTrackModel) {
                 }
 
                 /* Mouse Events */
-                (trackInfo.mouseEventModel as MouseEventModel).addPolygonBasedEvent(d, polygonForMouseEvents);
+                model.getMouseEventModel().addPolygonBasedEvent(d, polygonForMouseEvents);
 
                 prevYEnd += y;
             });
@@ -209,7 +208,7 @@ export function drawBar(trackInfo: any, tile: any, model: GoslingTrackModel) {
                 }
 
                 /* Mouse Events */
-                (trackInfo.mouseEventModel as MouseEventModel).addPolygonBasedEvent(d, polygonForMouseEvents);
+                model.getMouseEventModel().addPolygonBasedEvent(d, polygonForMouseEvents);
             });
         });
     }

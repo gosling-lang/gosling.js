@@ -4,17 +4,16 @@ import { min as d3min, max as d3max, group } from 'd3-array';
 import { IsStackedMark, getValueUsingChannel } from '../gosling.schema.guards';
 import { cartesianToPolar } from '../utils/polar';
 import colorToHex from '../utils/color-to-hex';
-import { MouseEventModel } from '../../gosling-mouse-event';
 
 /**
  * Draw area marks
  */
-export function drawArea(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackModel) {
+export function drawArea(HGC: any, trackInfo: any, tile: any, model: GoslingTrackModel) {
     /* track spec */
-    const spec = tm.spec();
+    const spec = model.spec();
 
     /* data */
-    const data = tm.data();
+    const data = model.data();
 
     /* track size */
     const [trackWidth, trackHeight] = trackInfo.dimensions;
@@ -35,24 +34,24 @@ export function drawArea(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackMo
     const xScale = trackInfo._xScale;
 
     /* row separation */
-    const rowCategories = (tm.getChannelDomainArray('row') as string[]) ?? ['___SINGLE_ROW___'];
+    const rowCategories = (model.getChannelDomainArray('row') as string[]) ?? ['___SINGLE_ROW___'];
     const rowHeight = trackHeight / rowCategories.length;
 
     /* color separation */
-    const colorCategories = (tm.getChannelDomainArray('color') as string[]) ?? ['___SINGLE_COLOR___'];
+    const colorCategories = (model.getChannelDomainArray('color') as string[]) ?? ['___SINGLE_COLOR___'];
 
     /* constant values */
     // we do not support encoding opacity, strokeWidth, and stroke for area marks
-    const constantOpacity = tm.encodedPIXIProperty('opacity');
-    const constantStrokeWidth = tm.encodedPIXIProperty('strokeWidth');
-    const constantStroke = tm.encodedPIXIProperty('stroke');
+    const constantOpacity = model.encodedPIXIProperty('opacity');
+    const constantStrokeWidth = model.encodedPIXIProperty('strokeWidth');
+    const constantStroke = model.encodedPIXIProperty('stroke');
 
     /* render */
     const graphics = tile.graphics;
     if (IsStackedMark(spec)) {
         // TODO: many parts in this scope are identical as the below `else` statement, so encaptulate this?
 
-        const genomicChannel = tm.getGenomicChannel();
+        const genomicChannel = model.getGenomicChannel();
         if (!genomicChannel || !genomicChannel.field) {
             console.warn('Genomic field is not provided in the specification');
             return;
@@ -86,7 +85,7 @@ export function drawArea(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackMo
                         const xValue = +genomicPosCategory;
 
                         const cx = xScale(xValue);
-                        const cy = d3max([tm.encodedPIXIProperty('y', d), 0]); // make should not to overflow
+                        const cy = d3max([model.encodedPIXIProperty('y', d), 0]); // make should not to overflow
 
                         if (typeof prevYEndByGPos[genomicPosCategory] === 'undefined') {
                             prevYEndByGPos[genomicPosCategory] = 0;
@@ -153,11 +152,7 @@ export function drawArea(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackMo
                             }
 
                             /* Mouse Events */
-                            (trackInfo.mouseEventModel as MouseEventModel).addPointBasedEvent(d, [
-                                posBot.x,
-                                posBot.y,
-                                1
-                            ]);
+                            model.getMouseEventModel().addPointBasedEvent(d, [posBot.x, posBot.y, 1]);
                         } else {
                             if (i === 0) {
                                 // start position of the polygon
@@ -175,13 +170,13 @@ export function drawArea(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackMo
                             }
 
                             /* Mouse Events */
-                            (trackInfo.mouseEventModel as MouseEventModel).addPointBasedEvent(d, [cx, ys, 1]);
+                            model.getMouseEventModel().addPointBasedEvent(d, [cx, ys, 1]);
                         }
 
                         prevYEndByGPos[genomicPosCategory] += cy;
                     });
             });
-            const color = tm.encodedValue('color', colorCategory);
+            const color = model.encodedValue('color', colorCategory);
             graphics.beginFill(colorToHex(color), constantOpacity);
             graphics.drawPolygon([
                 ...areaPointsTop.reduce((a, b) => a.concat(b)),
@@ -191,7 +186,7 @@ export function drawArea(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackMo
         });
     } else {
         rowCategories.forEach(rowCategory => {
-            const rowPosition = tm.encodedValue('row', rowCategory);
+            const rowPosition = model.encodedValue('row', rowCategory);
 
             // stroke
             graphics.lineStyle(
@@ -216,13 +211,13 @@ export function drawArea(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackMo
                 )
                     .sort(
                         // should sort properly before visualizing it so that the path is correctly drawn
-                        (a: Datum, b: Datum) => tm.encodedPIXIProperty('x', a) - tm.encodedPIXIProperty('x', b)
+                        (a: Datum, b: Datum) => model.encodedPIXIProperty('x', a) - model.encodedPIXIProperty('x', b)
                     )
                     .forEach((d, i, array) => {
                         // TODO: this should be included in the `encodedValue` functions
                         // make should not to overflow when using use-defined `domain`
-                        const cy = d3min([d3max([tm.encodedPIXIProperty('y', d), 0]), rowHeight]);
-                        const cx = tm.encodedPIXIProperty('x', d);
+                        const cy = d3min([d3max([model.encodedPIXIProperty('y', d), 0]), rowHeight]);
+                        const cx = model.encodedPIXIProperty('x', d);
 
                         if (circular) {
                             // we need to prepare the points for drawing baseline
@@ -272,7 +267,7 @@ export function drawArea(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackMo
                             }
 
                             /* Mouse Events */
-                            (trackInfo.mouseEventModel as MouseEventModel).addPointBasedEvent(d, [pos.x, pos.y, 1]);
+                            model.getMouseEventModel().addPointBasedEvent(d, [pos.x, pos.y, 1]);
                         } else {
                             if (i === 0) {
                                 // start position of the polygon
@@ -289,11 +284,7 @@ export function drawArea(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackMo
                             }
 
                             /* Mouse Events */
-                            (trackInfo.mouseEventModel as MouseEventModel).addPointBasedEvent(d, [
-                                cx,
-                                rowPosition + rowHeight - cy,
-                                1
-                            ]);
+                            model.getMouseEventModel().addPointBasedEvent(d, [cx, rowPosition + rowHeight - cy, 1]);
                         }
                     });
 
@@ -302,7 +293,7 @@ export function drawArea(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackMo
                     areaPoints.push(...baselinePoints.reverse().reduce((a, b) => a.concat(b)));
                 }
 
-                const color = tm.encodedValue('color', colorCategory);
+                const color = model.encodedValue('color', colorCategory);
                 graphics.beginFill(colorToHex(color), constantOpacity);
                 graphics.drawPolygon(areaPoints);
                 graphics.endFill();

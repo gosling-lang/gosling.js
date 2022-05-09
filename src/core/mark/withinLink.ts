@@ -5,7 +5,6 @@ import { IsChannelDeep, getValueUsingChannel, Is2DTrack } from '../gosling.schem
 import { cartesianToPolar, positionToRadian } from '../utils/polar';
 import colorToHex from '../utils/color-to-hex';
 import { Bezier } from 'bezier-js';
-import { MouseEventModel } from '../../gosling-mouse-event';
 
 export function drawWithinLink(g: PIXI.Graphics, trackInfo: any, model: GoslingTrackModel) {
     /* track spec */
@@ -203,7 +202,7 @@ export function drawWithinLink(g: PIXI.Graphics, trackInfo: any, model: GoslingT
                     }
                 }
                 /* Mouse Events */
-                (trackInfo.mouseEventModel as MouseEventModel).addPolygonBasedEvent(d, pathForMouseEvent);
+                model.getMouseEventModel().addPolygonBasedEvent(d, pathForMouseEvent);
             } else {
                 /**
                  * Line connection and not ribbon style
@@ -351,7 +350,7 @@ export function drawWithinLink(g: PIXI.Graphics, trackInfo: any, model: GoslingT
                 }
 
                 /* Mouse Events */
-                (trackInfo.mouseEventModel as MouseEventModel).addLineBasedEvent(d, pathForMouseEvent);
+                model.getMouseEventModel().addLineBasedEvent(d, pathForMouseEvent);
             }
         });
     });

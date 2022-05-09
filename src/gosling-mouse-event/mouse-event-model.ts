@@ -2,7 +2,7 @@ import { Datum } from '../core/gosling.schema';
 import { isPointInPolygon, isPointNearLine, isPointNearPoint } from './polygon';
 import * as uuid from 'uuid';
 
-type MouseEventData = PointEventData | LineEventData | PolygonEventData;
+export type MouseEventData = PointEventData | LineEventData | PolygonEventData;
 
 interface CommonEventData {
     uid: string;
@@ -96,16 +96,17 @@ export class MouseEventModel {
     }
 
     /**
-     * TODO: When there is no `idField`, empty array is returned
-     * Find all event data that matches the id values in the source.
+     * Find all event data that matches the id values in the source and return them.
      */
-    public combineWithSiblings(source: MouseEventData[], idField: string) {
+    public getSiblings(source: MouseEventData[], idField: string) {
+        const siblings: MouseEventData[] = [];
         source.forEach(d => {
             const id = d.value[idField];
             if (id) {
-                source.push(...this.data.filter(_ => _.value[idField] === id && d.uid !== _.uid));
+                siblings.push(...this.data.filter(_ => _.value[idField] === id && d.uid !== _.uid));
             }
         });
+        return siblings;
     }
 
     /**

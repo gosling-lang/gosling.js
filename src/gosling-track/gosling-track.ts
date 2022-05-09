@@ -34,7 +34,7 @@ import BamWorker from '../data-fetcher/bam/bam-worker.js?worker&inline';
 import { InteractionEvent } from 'pixi.js';
 import { HIGLASS_AXIS_SIZE } from '../core/higlass-model';
 import { flatArrayToPairArray } from '../gosling-mouse-event/polygon';
-import { MouseEventModel } from '../gosling-mouse-event';
+import { MouseEventData } from '../gosling-mouse-event';
 
 // Set `true` to print in what order each function is called
 export const PRINT_RENDERING_CYCLE = false;
@@ -67,7 +67,6 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
     const { showMousePosition } = HGC.utils;
 
     class GoslingTrackClass extends HGC.tracks.BarTrack {
-        private mouseEventModel: MouseEventModel;
         private tileSize: number;
         private worker: any;
         // private loadingStatus: { [k: LoadingStage]: number };
@@ -93,7 +92,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             context.dataFetcher.track = this;
             this.context = context;
 
-            // Temp. Add ids to each overlaid tracks that will be rendered independently
+            // Add unique IDs to each of the overlaid tracks that will be rendered independently.
             if ('overlay' in this.options.spec) {
                 this.options.spec.overlay = (this.options.spec as OverlaidTrack).overlay.map(o => {
                     return { ...o, _renderingId: uuid.v1() };
@@ -161,7 +160,6 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             this.pLabel.addChild(this.loadingTextBg);
             this.pLabel.addChild(this.loadingText);
 
-            this.mouseEventModel = new MouseEventModel();
             this.svgData = [];
             this.textGraphics = [];
             this.textsBeingUsed = 0; // this variable is being used to improve the performance of text rendering
@@ -184,7 +182,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
         draw() {
             if (PRINT_RENDERING_CYCLE) console.warn('draw()');
 
-            this.mouseEventModel.clear();
+            this.clearMouseEventData();
             this.svgData = [];
             this.textsBeingUsed = 0;
             this.mouseOverGraphics?.clear();
@@ -252,12 +250,12 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
 
             // !! A single tile contains one track or multiple tracks overlaid
             /* Render marks and embellishments */
-            tile.goslingModels.forEach((tm: GoslingTrackModel) => {
+            tile.goslingModels.forEach((model: GoslingTrackModel) => {
                 // check visibility condition
                 const trackWidth = this.dimensions[0];
                 const zoomLevel = this._xScale.invert(trackWidth) - this._xScale.invert(0);
 
-                if (!tm.trackVisibility({ zoomLevel })) {
+                if (!model.trackVisibility({ zoomLevel })) {
                     return;
                 }
 
@@ -268,9 +266,9 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                 //     return;
                 // }
 
-                drawPreEmbellishment(HGC, this, tile, tm, this.options.theme);
-                drawMark(HGC, this, tile, tm);
-                drawPostEmbellishment(HGC, this, tile, tm, this.options.theme);
+                drawPreEmbellishment(HGC, this, tile, model, this.options.theme);
+                drawMark(HGC, this, tile, model);
+                drawPostEmbellishment(HGC, this, tile, model, this.options.theme);
             });
 
             this.forceDraw();
@@ -287,7 +285,8 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
 
             this.options = newOptions;
 
-            this.mouseEventModel.clear();
+            // this.mouseEventModel.clear();
+            this.clearMouseEventData();
             this.svgData = [];
             this.textsBeingUsed = 0;
 
@@ -308,6 +307,13 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             this.preprocessAllTiles(true);
             this.draw();
             this.forceDraw();
+        }
+
+        clearMouseEventData() {
+            const models: GoslingTrackModel[] = this.visibleAndFetchedTiles()
+                .map(tile => tile.goslingModels ?? [])
+                .flat();
+            models.forEach(model => model.getMouseEventModel().clear());
         }
 
         remove() {
@@ -678,11 +684,11 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
         }
 
         shareScaleOffsetAcrossTracksAndTiles(scaleOffset: [number, number], channelKey: 'color' | 'stroke') {
-            const gms: GoslingTrackModel[] = [];
+            const models: GoslingTrackModel[] = [];
             this.visibleAndFetchedTiles().forEach((tile: any) => {
-                gms.push(...tile.goslingModels);
+                models.push(...tile.goslingModels);
             });
-            gms.forEach(d => {
+            models.forEach(d => {
                 const channel = d.spec()[channelKey];
                 if (IsChannelDeep(channel)) {
                     channel.scaleOffset = scaleOffset;
@@ -746,7 +752,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
         }
 
         preprocessAllTiles(force = false) {
-            const gms: GoslingTrackModel[] = [];
+            const models: GoslingTrackModel[] = [];
 
             this.reorganizeTileInfo();
 
@@ -759,13 +765,13 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                 // tile preprocessing is done only once per tile
                 const tileModels = this.preprocessTile(tile);
                 tileModels?.forEach((m: GoslingTrackModel) => {
-                    gms.push(m);
+                    models.push(m);
                 });
             });
 
-            shareScaleAcrossTracks(gms);
+            shareScaleAcrossTracks(models);
 
-            const flatTileData = ([] as Datum[]).concat(...gms.map(d => d.data()));
+            const flatTileData = ([] as Datum[]).concat(...models.map(d => d.data()));
             if (flatTileData.length !== 0) {
                 PubSub.publish('rawdata', {
                     id: this.options.spec.id,
@@ -773,7 +779,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                 });
             }
 
-            // console.log('processed gosling model', gms);
+            // console.log('processed gosling model', models);
 
             // IMPORTANT: If no genomic fields specified, no point to use multiple tiles, i.e., we need to draw a track only once with the data combined.
             /*
@@ -988,7 +994,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
         }
 
         onClick(mouseX: number, mouseY: number) {
-            if (!this.tilesetInfo || this.mouseEventModel.size() === 0) {
+            if (!this.tilesetInfo) {
                 // Do not have enough information
                 return;
             }
@@ -998,18 +1004,26 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                 return;
             }
 
-            const capturedElements = this.mouseEventModel.findAll(mouseX, mouseY, true);
+            // Identify the current position
+            const genomicPosition = getRelativeGenomicPosition(Math.floor(this._xScale.invert(mouseX)));
+
+            // Collect all gosling track models
+            const models: GoslingTrackModel[] = this.visibleAndFetchedTiles()
+                .map(tile => tile.goslingModels ?? [])
+                .flat();
+
+            // Collect all mouse event data
+            const capturedElements: MouseEventData[] = models
+                .map(model => model.getMouseEventModel().findAll(mouseX, mouseY, true))
+                .flat();
 
             if (capturedElements.length !== 0) {
-                PubSub.publish('click', {
-                    genomicPosition: getRelativeGenomicPosition(Math.floor(this._xScale.invert(mouseX))),
-                    data: capturedElements.map(d => d.value)
-                });
+                PubSub.publish('click', { genomicPosition, data: capturedElements.map(d => d.value) });
             }
         }
 
         getMouseOverHtml(mouseX: number, mouseY: number) {
-            if (!this.tilesetInfo || this.mouseEventModel.size() === 0) {
+            if (!this.tilesetInfo) {
                 // Do not have enough information
                 return;
             }
@@ -1020,35 +1034,60 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             this.pMain.removeChild(this.mouseOverGraphics);
             this.pMain.addChild(this.mouseOverGraphics);
 
-            // reversing so that it is in the same order of how it is shown
-            const capturedElement = this.mouseEventModel.findAll(mouseX, mouseY, true);
+            // Current position
+            const genomicPosition = getRelativeGenomicPosition(Math.floor(this._xScale.invert(mouseX)));
 
-            // Select the first one if multi-hovering is not enabled
-            if (capturedElement.length !== 0 && !this.options.spec?.experimental?.hovering?.enableMultiHovering) {
-                capturedElement.splice(1);
-            }
+            // Collect all gosling track models
+            const models: GoslingTrackModel[] = this.visibleAndFetchedTiles()
+                .map(tile => tile.goslingModels ?? [])
+                .flat();
 
-            // Select sibling marks (e.g., entire glyphs)
-            if (this.options.spec?.experimental?.hovering?.enableGroupHovering) {
-                const idField =
-                    this.options.spec?.experimental?.hovering?.searchGroupByField ?? GOSLING_DATA_ROW_UID_FIELD;
-                this.mouseEventModel.combineWithSiblings(capturedElement, idField);
+            // TODO: `Omit` this properties in individual overlaid tracks.
+            // These should be defined once for a group of overlaid traks (09-May-2022)
+            // See https://github.com/gosling-lang/gosling.js/issues/677
+            const multiHovering = this.options.spec?.experimental?.hovering?.enableMultiHovering;
+            const groupHovering = this.options.spec?.experimental?.hovering?.enableGroupHovering;
+            const idField = this.options.spec?.experimental?.hovering?.searchGroupByField ?? GOSLING_DATA_ROW_UID_FIELD;
+
+            // Collect all mouse event data from tiles and overlaid tracks
+            const mergedCapturedElements: MouseEventData[] = models
+                .map(model => {
+                    let capturedElements: MouseEventData[] = [];
+
+                    // Select multiple or one on the top of a cursor
+                    if (multiHovering) {
+                        capturedElements = model.getMouseEventModel().findAll(mouseX, mouseY, true);
+                    } else {
+                        const element = model.getMouseEventModel().find(mouseX, mouseY, true);
+                        capturedElements = element ? [element] : [];
+                    }
+                    return capturedElements;
+                })
+                .flat();
+
+            // Iterate again to select sibling marks (e.g., entire glyphs)
+            if (mergedCapturedElements.length !== 0 && groupHovering) {
+                models.forEach(model => {
+                    const siblings = model.getMouseEventModel().getSiblings(mergedCapturedElements, idField);
+                    mergedCapturedElements.push(...siblings);
+                });
             }
 
             // Change cursor
             // https://developer.mozilla.org/en-US/docs/Web/CSS/cursor
-            if (capturedElement.length !== 0) {
+            if (mergedCapturedElements.length !== 0) {
                 document.body.style.cursor = 'pointer';
             } else {
                 document.body.style.cursor = 'default';
             }
 
-            if (capturedElement.length !== 0) {
+            if (mergedCapturedElements.length !== 0) {
                 // Rener mouse over effect graphics
                 const g = this.mouseOverGraphics;
                 const stroke = this.options.spec?.experimental?.hovering?.stroke ?? 'black';
                 const strokeWidth = this.options.spec?.experimental?.hovering?.strokeWidth ?? 1.5;
                 const color = this.options.spec?.experimental?.hovering?.color ?? 'none';
+
                 g.lineStyle(
                     strokeWidth,
                     colorToHex(stroke),
@@ -1057,7 +1096,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                 );
                 g.beginFill(colorToHex(color), color === 'none' ? 0 : 1);
 
-                capturedElement.forEach(ele => {
+                mergedCapturedElements.forEach(ele => {
                     if (ele.type === 'point') {
                         const [x, y, r = 3] = ele.polygon;
                         g.drawCircle(x, y, r);
@@ -1070,16 +1109,16 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                 });
 
                 // Let API subscribers know
-                PubSub.publish('mouseover', {
-                    genomicPosition: getRelativeGenomicPosition(Math.floor(this._xScale.invert(mouseX))),
-                    data: capturedElement.map(d => d.value)
-                });
+                PubSub.publish('mouseover', { genomicPosition, data: mergedCapturedElements.map(d => d.value) });
 
                 // Display a tooltip
-                if (this.options.spec.tooltip && this.options.spec.tooltip.length !== 0) {
-                    let content = (this.options.spec.tooltip as any)
+                const firstTooltipSpec = models
+                    .find(m => m.spec().tooltip && m.spec().tooltip?.length !== 0)
+                    ?.spec().tooltip;
+                if (firstTooltipSpec) {
+                    let content = firstTooltipSpec
                         .map((d: any) => {
-                            const rawValue = capturedElement[0].value[d.field];
+                            const rawValue = mergedCapturedElements[0].value[d.field];
                             let value = rawValue;
                             if (d.type === 'quantitative' && d.format) {
                                 value = format(d.format)(+rawValue);
@@ -1098,10 +1137,10 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                         .join('');
 
                     content = `<table style='text-align: left; margin-top: 12px'>${content}</table>`;
-                    if (capturedElement.length > 1) {
+                    if (mergedCapturedElements.length > 1) {
                         content +=
                             `<div style='padding: 4px 8px; margin-top: 4px; text-align: center; color: grey'>` +
-                            `${capturedElement.length - 1} Additional Selections...` +
+                            `${mergedCapturedElements.length - 1} Additional Selections...` +
                             '</div>';
                     }
                     return `<div>${content}</div>`;

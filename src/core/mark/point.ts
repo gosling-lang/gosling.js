@@ -5,7 +5,6 @@ import { getValueUsingChannel } from '../gosling.schema.guards';
 import colorToHex from '../utils/color-to-hex';
 import { cartesianToPolar } from '../utils/polar';
 import { PIXIVisualProperty } from '../visual-property.schema';
-import { MouseEventModel } from '../../gosling-mouse-event';
 
 export function drawPoint(trackInfo: any, g: PIXI.Graphics, model: GoslingTrackModel) {
     /* track spec */
@@ -78,17 +77,13 @@ export function drawPoint(trackInfo: any, g: PIXI.Graphics, model: GoslingTrackM
                 g.drawCircle(pos.x, pos.y, radius);
 
                 /* Mouse Events */
-                (trackInfo.mouseEventModel as MouseEventModel).addPointBasedEvent(d, [pos.x, pos.y, radius]);
+                model.getMouseEventModel().addPointBasedEvent(d, [pos.x, pos.y, radius]);
             } else {
                 g.beginFill(colorToHex(color), actualOpacity);
                 g.drawCircle(cx, rowPosition + rowHeight - cy, radius);
 
                 /* Mouse Events */
-                (trackInfo.mouseEventModel as MouseEventModel).addPointBasedEvent(d, [
-                    cx,
-                    rowPosition + rowHeight - cy,
-                    radius
-                ]);
+                model.getMouseEventModel().addPointBasedEvent(d, [cx, rowPosition + rowHeight - cy, radius]);
             }
         });
     });

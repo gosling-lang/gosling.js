@@ -1,18 +1,11 @@
 import * as PIXI from 'pixi.js';
-import { MouseEventModel } from '../../gosling-mouse-event';
 import { GoslingTrackModel } from '../gosling-track-model';
 import { Channel, Mark } from '../gosling.schema';
 import { getValueUsingChannel } from '../gosling.schema.guards';
 import colorToHex from '../utils/color-to-hex';
 import { cartesianToPolar } from '../utils/polar';
 
-export function drawTriangle(
-    g: PIXI.Graphics,
-    model: GoslingTrackModel,
-    tooltips: MouseEventModel,
-    trackWidth: number,
-    trackHeight: number
-) {
+export function drawTriangle(g: PIXI.Graphics, model: GoslingTrackModel, trackWidth: number, trackHeight: number) {
     /* track spec */
     const spec = model.spec();
 
@@ -160,7 +153,7 @@ export function drawTriangle(
             }
 
             /* Mouse Events */
-            tooltips.addPolygonBasedEvent(d, polygon);
+            model.getMouseEventModel().addPolygonBasedEvent(d, polygon);
         });
     });
 }

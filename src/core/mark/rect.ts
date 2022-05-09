@@ -3,7 +3,6 @@ import { cartesianToPolar, valueToRadian } from '../utils/polar';
 import { PIXIVisualProperty } from '../visual-property.schema';
 import colorToHex from '../utils/color-to-hex';
 import { IsChannelDeep } from '../gosling.schema.guards';
-import { MouseEventModel } from '../../gosling-mouse-event';
 
 export function drawRect(HGC: any, trackInfo: any, tile: any, model: GoslingTrackModel) {
     /* track spec */
@@ -116,7 +115,7 @@ export function drawRect(HGC: any, trackInfo: any, tile: any, model: GoslingTrac
         }
 
         /* Mouse Events */
-        (trackInfo.mouseEventModel as MouseEventModel).addPolygonBasedEvent(d, polygonForMouseEvent);
+        model.getMouseEventModel().addPolygonBasedEvent(d, polygonForMouseEvent);
     });
 }
 

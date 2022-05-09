@@ -1,5 +1,4 @@
 import * as PIXI from 'pixi.js';
-import { MouseEventModel } from '../../gosling-mouse-event';
 import { GoslingTrackModel } from '../gosling-track-model';
 import { SingleTrack } from '../gosling.schema';
 import { getTheme } from '../utils/theme';
@@ -23,7 +22,7 @@ describe('Rendering triangle', () => {
             { x: 111, xe: 111, y: 222 }
         ];
         const model = new GoslingTrackModel(t, d, getTheme());
-        drawTriangle(g, model, new MouseEventModel(), 100, 100);
+        drawTriangle(g, model, 100, 100);
     });
 
     it('Circular Triangle', () => {
@@ -43,6 +42,6 @@ describe('Rendering triangle', () => {
             { x: 111, xe: 111, y: 222 }
         ];
         const model = new GoslingTrackModel(t, d, getTheme());
-        drawTriangle(g, model, new MouseEventModel(), 100, 100);
+        drawTriangle(g, model, 100, 100);
     });
 });
