@@ -1030,9 +1030,11 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
 
             this.mouseOverGraphics.clear();
 
-            // place on the top
-            this.pMain.removeChild(this.mouseOverGraphics);
-            this.pMain.addChild(this.mouseOverGraphics);
+            if (!this.options.spec?.experimental?.hovering?.showHoveringOnTheBack) {
+                // place on the top
+                this.pMain.removeChild(this.mouseOverGraphics);
+                this.pMain.addChild(this.mouseOverGraphics);
+            }
 
             // Current position
             const genomicPosition = getRelativeGenomicPosition(Math.floor(this._xScale.invert(mouseX)));
@@ -1067,8 +1069,9 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
 
             // Iterate again to select sibling marks (e.g., entire glyphs)
             if (mergedCapturedElements.length !== 0 && groupHovering) {
+                const source = Array.from(mergedCapturedElements);
                 models.forEach(model => {
-                    const siblings = model.getMouseEventModel().getSiblings(mergedCapturedElements, idField);
+                    const siblings = model.getMouseEventModel().getSiblings(source, idField);
                     mergedCapturedElements.push(...siblings);
                 });
             }
@@ -1086,15 +1089,17 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                 const g = this.mouseOverGraphics;
                 const stroke = this.options.spec?.experimental?.hovering?.stroke ?? 'black';
                 const strokeWidth = this.options.spec?.experimental?.hovering?.strokeWidth ?? 1.5;
+                const strokeOpacity = this.options.spec?.experimental?.hovering?.strokeOpacity ?? 1;
                 const color = this.options.spec?.experimental?.hovering?.color ?? 'none';
+                const fillOpacity = this.options.spec?.experimental?.hovering?.opacity ?? 1;
 
                 g.lineStyle(
                     strokeWidth,
                     colorToHex(stroke),
-                    1, // alpha
-                    1 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
+                    strokeOpacity, // alpha
+                    0.5 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
                 );
-                g.beginFill(colorToHex(color), color === 'none' ? 0 : 1);
+                g.beginFill(colorToHex(color), color === 'none' ? 0 : fillOpacity);
 
                 mergedCapturedElements.forEach(ele => {
                     if (ele.type === 'point') {

@@ -1101,11 +1101,20 @@
                     "enableMultiHovering": {
                       "type": "boolean"
                     },
+                    "opacity": {
+                      "type": "number"
+                    },
                     "searchGroupByField": {
                       "type": "string"
                     },
+                    "showHoveringOnTheBack": {
+                      "type": "boolean"
+                    },
                     "stroke": {
                       "type": "string"
+                    },
+                    "strokeOpacity": {
+                      "type": "number"
                     },
                     "strokeWidth": {
                       "type": "number"
@@ -1261,11 +1270,20 @@
                               "enableMultiHovering": {
                                 "type": "boolean"
                               },
+                              "opacity": {
+                                "type": "number"
+                              },
                               "searchGroupByField": {
                                 "type": "string"
                               },
+                              "showHoveringOnTheBack": {
+                                "type": "boolean"
+                              },
                               "stroke": {
                                 "type": "string"
+                              },
+                              "strokeOpacity": {
+                                "type": "number"
                               },
                               "strokeWidth": {
                                 "type": "number"
@@ -1887,11 +1905,20 @@
                     "enableMultiHovering": {
                       "type": "boolean"
                     },
+                    "opacity": {
+                      "type": "number"
+                    },
                     "searchGroupByField": {
                       "type": "string"
                     },
+                    "showHoveringOnTheBack": {
+                      "type": "boolean"
+                    },
                     "stroke": {
                       "type": "string"
+                    },
+                    "strokeOpacity": {
+                      "type": "number"
                     },
                     "strokeWidth": {
                       "type": "number"
@@ -2047,11 +2074,20 @@
                               "enableMultiHovering": {
                                 "type": "boolean"
                               },
+                              "opacity": {
+                                "type": "number"
+                              },
                               "searchGroupByField": {
                                 "type": "string"
                               },
+                              "showHoveringOnTheBack": {
+                                "type": "boolean"
+                              },
                               "stroke": {
                                 "type": "string"
+                              },
+                              "strokeOpacity": {
+                                "type": "number"
                               },
                               "strokeWidth": {
                                 "type": "number"
@@ -2724,11 +2760,20 @@
                               "enableMultiHovering": {
                                 "type": "boolean"
                               },
+                              "opacity": {
+                                "type": "number"
+                              },
                               "searchGroupByField": {
                                 "type": "string"
                               },
+                              "showHoveringOnTheBack": {
+                                "type": "boolean"
+                              },
                               "stroke": {
                                 "type": "string"
+                              },
+                              "strokeOpacity": {
+                                "type": "number"
                               },
                               "strokeWidth": {
                                 "type": "number"
@@ -3928,11 +3973,20 @@
                 "enableMultiHovering": {
                   "type": "boolean"
                 },
+                "opacity": {
+                  "type": "number"
+                },
                 "searchGroupByField": {
                   "type": "string"
                 },
+                "showHoveringOnTheBack": {
+                  "type": "boolean"
+                },
                 "stroke": {
                   "type": "string"
+                },
+                "strokeOpacity": {
+                  "type": "number"
                 },
                 "strokeWidth": {
                   "type": "number"
@@ -4057,11 +4111,20 @@
                       "enableMultiHovering": {
                         "type": "boolean"
                       },
+                      "opacity": {
+                        "type": "number"
+                      },
                       "searchGroupByField": {
                         "type": "string"
                       },
+                      "showHoveringOnTheBack": {
+                        "type": "boolean"
+                      },
                       "stroke": {
                         "type": "string"
+                      },
+                      "strokeOpacity": {
+                        "type": "number"
                       },
                       "strokeWidth": {
                         "type": "number"
@@ -4635,11 +4698,20 @@
                 "enableMultiHovering": {
                   "type": "boolean"
                 },
+                "opacity": {
+                  "type": "number"
+                },
                 "searchGroupByField": {
                   "type": "string"
                 },
+                "showHoveringOnTheBack": {
+                  "type": "boolean"
+                },
                 "stroke": {
                   "type": "string"
+                },
+                "strokeOpacity": {
+                  "type": "number"
                 },
                 "strokeWidth": {
                   "type": "number"
@@ -5024,11 +5096,20 @@
                 "enableMultiHovering": {
                   "type": "boolean"
                 },
+                "opacity": {
+                  "type": "number"
+                },
                 "searchGroupByField": {
                   "type": "string"
                 },
+                "showHoveringOnTheBack": {
+                  "type": "boolean"
+                },
                 "stroke": {
                   "type": "string"
+                },
+                "strokeOpacity": {
+                  "type": "number"
                 },
                 "strokeWidth": {
                   "type": "number"
@@ -5153,11 +5234,20 @@
                       "enableMultiHovering": {
                         "type": "boolean"
                       },
+                      "opacity": {
+                        "type": "number"
+                      },
                       "searchGroupByField": {
                         "type": "string"
                       },
+                      "showHoveringOnTheBack": {
+                        "type": "boolean"
+                      },
                       "stroke": {
                         "type": "string"
+                      },
+                      "strokeOpacity": {
+                        "type": "number"
                       },
                       "strokeWidth": {
                         "type": "number"
@@ -5856,11 +5946,20 @@
                 "enableMultiHovering": {
                   "type": "boolean"
                 },
+                "opacity": {
+                  "type": "number"
+                },
                 "searchGroupByField": {
                   "type": "string"
                 },
+                "showHoveringOnTheBack": {
+                  "type": "boolean"
+                },
                 "stroke": {
                   "type": "string"
+                },
+                "strokeOpacity": {
+                  "type": "number"
                 },
                 "strokeWidth": {
                   "type": "number"
@@ -6225,11 +6324,20 @@
                     "enableMultiHovering": {
                       "type": "boolean"
                     },
+                    "opacity": {
+                      "type": "number"
+                    },
                     "searchGroupByField": {
                       "type": "string"
                     },
+                    "showHoveringOnTheBack": {
+                      "type": "boolean"
+                    },
                     "stroke": {
                       "type": "string"
+                    },
+                    "strokeOpacity": {
+                      "type": "number"
                     },
                     "strokeWidth": {
                       "type": "number"
@@ -6381,11 +6489,20 @@
                               "enableMultiHovering": {
                                 "type": "boolean"
                               },
+                              "opacity": {
+                                "type": "number"
+                              },
                               "searchGroupByField": {
                                 "type": "string"
                               },
+                              "showHoveringOnTheBack": {
+                                "type": "boolean"
+                              },
                               "stroke": {
                                 "type": "string"
+                              },
+                              "strokeOpacity": {
+                                "type": "number"
                               },
                               "strokeWidth": {
                                 "type": "number"
@@ -7004,11 +7121,20 @@
                     "enableMultiHovering": {
                       "type": "boolean"
                     },
+                    "opacity": {
+                      "type": "number"
+                    },
                     "searchGroupByField": {
                       "type": "string"
                     },
+                    "showHoveringOnTheBack": {
+                      "type": "boolean"
+                    },
                     "stroke": {
                       "type": "string"
+                    },
+                    "strokeOpacity": {
+                      "type": "number"
                     },
                     "strokeWidth": {
                       "type": "number"
@@ -7160,11 +7286,20 @@
                               "enableMultiHovering": {
                                 "type": "boolean"
                               },
+                              "opacity": {
+                                "type": "number"
+                              },
                               "searchGroupByField": {
                                 "type": "string"
                               },
+                              "showHoveringOnTheBack": {
+                                "type": "boolean"
+                              },
                               "stroke": {
                                 "type": "string"
+                              },
+                              "strokeOpacity": {
+                                "type": "number"
                               },
                               "strokeWidth": {
                                 "type": "number"
@@ -7830,11 +7965,20 @@
                               "enableMultiHovering": {
                                 "type": "boolean"
                               },
+                              "opacity": {
+                                "type": "number"
+                              },
                               "searchGroupByField": {
                                 "type": "string"
                               },
+                              "showHoveringOnTheBack": {
+                                "type": "boolean"
+                              },
                               "stroke": {
                                 "type": "string"
+                              },
+                              "strokeOpacity": {
+                                "type": "number"
                               },
                               "strokeWidth": {
                                 "type": "number"

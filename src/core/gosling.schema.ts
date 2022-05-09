@@ -248,9 +248,12 @@ interface SingleTrackBase extends CommonTrackDef {
             enableMultiHovering?: boolean;
             enableGroupHovering?: boolean;
             searchGroupByField?: string;
+            showHoveringOnTheBack?: boolean;
             color?: string;
             stroke?: string;
             strokeWidth?: number;
+            strokeOpacity?: number;
+            opacity?: number;
         };
     };
 
