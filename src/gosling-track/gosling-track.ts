@@ -1053,19 +1053,13 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
 
             // Collect all mouse event data from tiles and overlaid tracks
             const mergedCapturedElements: MouseEventData[] = models
-                .map(model => {
-                    let capturedElements: MouseEventData[] = [];
-
-                    // Select multiple or one on the top of a cursor
-                    if (multiHovering) {
-                        capturedElements = model.getMouseEventModel().findAll(mouseX, mouseY, true);
-                    } else {
-                        const element = model.getMouseEventModel().find(mouseX, mouseY, true);
-                        capturedElements = element ? [element] : [];
-                    }
-                    return capturedElements;
-                })
+                .map(model => model.getMouseEventModel().findAll(mouseX, mouseY, true))
                 .flat();
+
+            if (!multiHovering) {
+                // Select only one on the top of a cursor
+                mergedCapturedElements.splice(1, mergedCapturedElements.length - 1);
+            }
 
             // Iterate again to select sibling marks (e.g., entire glyphs)
             if (mergedCapturedElements.length !== 0 && groupHovering) {
