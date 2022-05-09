@@ -554,7 +554,7 @@ function Editor(props: any) {
         previewData.current = [];
         setSelectedPreviewData(0);
         runSpecUpdateVis();
-    }, [code, jsCode, autoRun, theme]);
+    }, [code, jsCode, autoRun, language, theme]);
 
     // Uncommnet below to use HiGlass APIs
     // useEffect(() => {
