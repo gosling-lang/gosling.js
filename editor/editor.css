@@ -656,3 +656,61 @@ td {
     right: 10px;
     top: 10px;
 }
+
+.tabEditor {
+    width: 100%;
+}
+.tab {
+    overflow: hidden;
+    background-color: #f1f1f1;
+    border-bottom: 2px solid white;
+    line-height: 20px;
+}
+
+.tab button {
+    border: none;
+    outline: none;
+    line-height: 20px;
+    background-color: #f1f1f1;
+    color: black;
+}
+.tab button:hover {
+    background-color: #ddd;
+}
+
+/* Create an active/current tablink class */
+.tab button.active {
+    background-color: #fff;
+}
+
+.tabContent {
+    width: 100%;
+    height: calc(100% - 24px);
+}
+
+.tabContent.show {
+    display: block;
+}
+
+.tabContent.hide {
+    display: none;
+}
+
+/* tooltip */
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 300px;
+    background-color: gray;
+    color: #fff;
+    border-radius: 2px;
+    padding: 5px 8px;
+    text-align: left;
+
+    /* Position the tooltip */
+    position: absolute;
+    z-index: 10;
+}
+
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+}

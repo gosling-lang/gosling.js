@@ -21,9 +21,39 @@ import './editor.css';
 import { ICONS, ICON_INFO } from './icon';
 import type { HiGlassSpec } from '@higlass.schema';
 import type { Datum } from '@gosling.schema';
+import { transpile } from 'typescript';
 import { getHtmlTemplate } from './html-template';
 // @ts-ignore
 import { Themes } from 'gosling-theme';
+
+function json2js(jsonCode: string) {
+    return `var spec = ${jsonCode} \nexport { spec }; \n`;
+}
+
+// a hack to solve the reference erro in typescript
+// some posts fixed it thorugh changing ts compiler options, but did not work for me
+// https://stackoverflow.com/questions/34895737/uncaught-referenceerror-exports-is-not-defined-and-require
+function codeParser(jscode: string) {
+    jscode = transpile(jscode);
+    jscode = jscode.replace(
+        `\r\nObject.defineProperty(exports, "__esModule", { value: true });\r\nexports.spec = void 0;`,
+        ''
+    );
+    jscode = jscode.replace('exports.spec = spec;', 'export { spec };');
+
+    return jscode;
+}
+
+// a tagged template
+// convert string to base-64 data uri
+// e.g., esm`'a' < 'b'` => data:text/javascript;base64,J2EnIDwgJ2In
+function esm(templateStrings: TemplateStringsArray, ...substitutions: string[]) {
+    let js = templateStrings.raw[0];
+    for (let i = 0; i < substitutions.length; i++) {
+        js += substitutions[i] + templateStrings.raw[i + 1];
+    }
+    return `data:text/javascript;base64, ${btoa(js)}`;
+}
 
 const SHOWN_EXAMPLE_LIST = Object.entries(examples)
     .map(([k, v]) => {
@@ -173,8 +203,11 @@ function Editor(props: any) {
 
     const defaultCode = urlGist ? emptySpec() : stringify(urlSpec ?? (INIT_DEMO.spec as gosling.GoslingSpec));
 
+    const defaultJsCode = INIT_DEMO.specJs ?? json2js(defaultCode);
+
     const previewData = useRef<PreviewData[]>([]);
     const [refreshData, setRefreshData] = useState<boolean>(false);
+    const [language, changeLanguage] = useState<string>('json');
 
     const [demo, setDemo] = useState(
         examples[urlExampleId] ? { id: urlExampleId, ...examples[urlExampleId] } : INIT_DEMO
@@ -182,6 +215,7 @@ function Editor(props: any) {
     const [theme, setTheme] = useState<gosling.Theme>('light');
     const [hg, setHg] = useState<HiGlassSpec>();
     const [code, setCode] = useState(defaultCode);
+    const [jsCode, setJsCode] = useState(defaultJsCode); //[TO-DO: more js format examples]
     const [goslingSpec, setGoslingSpec] = useState<gosling.GoslingSpec>();
     const [log, setLog] = useState<ReturnType<typeof gosling.validateGoslingSpec>>({ message: '', state: 'success' });
     const [showExamples, setShowExamples] = useState(false);
@@ -240,8 +274,12 @@ function Editor(props: any) {
     const gosRef = useRef<any>();
 
     const debounceCodeEdit = useRef(
-        debounce((code: string) => {
-            setCode(code);
+        debounce((code: string, language) => {
+            if (language == 'json') {
+                setCode(code);
+            } else {
+                setJsCode(code);
+            }
         }, 1500)
     );
 
@@ -269,9 +307,18 @@ function Editor(props: any) {
         previewData.current = [];
         setSelectedPreviewData(0);
         if (urlExampleId && !validateExampleId(urlExampleId)) {
+            // invalida url example id
             setCode(emptySpec(`Example id "${urlExampleId}" does not exist.`));
+            setJsCode(emptySpec(`Example id "${urlExampleId}" does not exist.`));
+        } else if (urlSpec) {
+            setCode(urlSpec);
+            setJsCode(json2js(urlSpec));
+        } else if (urlGist) {
+            setCode(emptySpec());
         } else {
-            setCode(urlSpec ?? (urlGist ? emptySpec() : stringifySpec(demo.spec as gosling.GoslingSpec)));
+            const jsonCode = stringifySpec(demo.spec as gosling.GoslingSpec);
+            setCode(jsonCode);
+            setJsCode(demo.specJs ?? json2js(jsonCode));
         }
         setHg(undefined);
     }, [demo]);
@@ -389,6 +436,7 @@ function Editor(props: any) {
                 if (active && !!code) {
                     setReadOnly(false);
                     setCode(code);
+                    setCode(json2js(code));
                     setGistTitle(title);
                     setDescription(description);
                 }
@@ -397,6 +445,7 @@ function Editor(props: any) {
                 if (active) {
                     setReadOnly(false);
                     setCode(emptySpec(error));
+                    setJsCode(emptySpec(error));
                     setDescription(undefined);
                     setGistTitle('Error loading gist! See code for details.');
                 }
@@ -417,20 +466,40 @@ function Editor(props: any) {
 
             let editedGos;
             let valid;
-            try {
-                editedGos = JSON.parse(stripJsonComments(code));
-                valid = gosling.validateGoslingSpec(editedGos);
-                setLog(valid);
-            } catch (e) {
-                const message = '✘ Cannnot parse the code.';
-                console.warn(message);
-                setLog({ message, state: 'error' });
-            }
-            if (!editedGos || valid?.state !== 'success' || (!autoRun && !run)) return;
 
-            setGoslingSpec(editedGos);
+            if (language === 'json') {
+                try {
+                    editedGos = JSON.parse(stripJsonComments(code));
+                    valid = gosling.validateGoslingSpec(editedGos);
+                    setLog(valid);
+                } catch (e) {
+                    const message = '✘ Cannnot parse the code.';
+                    console.warn(message);
+                    setLog({ message, state: 'error' });
+                }
+                if (!editedGos || valid?.state !== 'success' || (!autoRun && !run)) return;
+
+                setGoslingSpec(editedGos);
+            } else if (language === 'javascript') {
+                // vite-ignore to enable dynamic import from data uri
+                import(/* @vite-ignore */ esm`${codeParser(jsCode)}`)
+                    .then(ns => {
+                        const editedGos = ns.spec;
+                        valid = gosling.validateGoslingSpec(editedGos);
+                        setLog(valid);
+                        if (!editedGos || valid?.state !== 'success' || (!autoRun && !run)) return;
+                        setGoslingSpec(editedGos);
+                    })
+                    .catch(e => {
+                        const message = '✘ Cannnot parse the code.';
+                        console.warn(message, e);
+                        setLog({ message, state: 'error' });
+                    });
+            } else {
+                setLog({ message: `${language} is not supported`, state: 'error' });
+            }
         },
-        [code, autoRun, readOnly]
+        [code, jsCode, autoRun, language, readOnly]
     );
 
     /**
@@ -485,7 +554,7 @@ function Editor(props: any) {
         previewData.current = [];
         setSelectedPreviewData(0);
         runSpecUpdateVis();
-    }, [code, autoRun, theme]);
+    }, [code, jsCode, autoRun, language, theme]);
 
     // Uncommnet below to use HiGlass APIs
     // useEffect(() => {
@@ -877,15 +946,69 @@ function Editor(props: any) {
                         >
                             {/* Gosling Editor */}
                             <>
-                                <EditorPanel
-                                    code={code}
-                                    readOnly={readOnly}
-                                    openFindBox={isFindCode}
-                                    fontZoomIn={isFontZoomIn}
-                                    fontZoomOut={isFontZoomOut}
-                                    onChange={debounceCodeEdit.current}
-                                    isDarkTheme={theme === 'dark'}
-                                />
+                                <div className="tabEditor">
+                                    <div className="tab">
+                                        <button
+                                            className={`tablinks ${language == 'json' && 'active'}`}
+                                            onClick={() => {
+                                                changeLanguage('json');
+                                                setLog({ message: '', state: 'success' });
+                                            }}
+                                        >
+                                            JSON {` `}
+                                            <span className="tooltip">
+                                                {getIconSVG(ICONS.INFO_CIRCLE, 10, 10)}
+                                                <span className="tooltiptext">
+                                                    In this JSON editor, the whole JSON object will be used to create
+                                                    Gosling visualizations.
+                                                </span>
+                                            </span>
+                                        </button>
+                                        <button
+                                            className={`tablinks ${language == 'javascript' && 'active'}`}
+                                            onClick={() => {
+                                                changeLanguage('javascript');
+                                                setLog({ message: '', state: 'success' });
+                                            }}
+                                        >
+                                            JavaScript{` `}
+                                            <span className="tooltip">
+                                                {getIconSVG(ICONS.INFO_CIRCLE, 10, 10)}
+                                                <span className="tooltiptext">
+                                                    In this JavaScript Editor, the variable{` `}
+                                                    <code style={{ backgroundColor: '#e18343' }}>spec</code> will be
+                                                    used to create Gosling visualizations.
+                                                </span>
+                                            </span>
+                                        </button>
+                                    </div>
+
+                                    <div className={`tabContent ${language == 'json' ? 'show' : 'hide'}`}>
+                                        <EditorPanel
+                                            code={code}
+                                            readOnly={readOnly}
+                                            openFindBox={isFindCode}
+                                            fontZoomIn={isFontZoomIn}
+                                            fontZoomOut={isFontZoomOut}
+                                            onChange={debounceCodeEdit.current}
+                                            isDarkTheme={theme === 'dark'}
+                                            language="json"
+                                        />
+                                    </div>
+                                    <div className={`tabContent ${language == 'javascript' ? 'show' : 'hide'}`}>
+                                        <EditorPanel
+                                            code={jsCode}
+                                            readOnly={readOnly}
+                                            openFindBox={isFindCode}
+                                            fontZoomIn={isFontZoomIn}
+                                            fontZoomOut={isFontZoomOut}
+                                            onChange={debounceCodeEdit.current}
+                                            isDarkTheme={theme === 'dark'}
+                                            // language="javascript"
+                                            language="typescript"
+                                        />
+                                    </div>
+                                </div>
                                 <div className={`compile-message compile-message-${log.state}`}>{log.message}</div>
                             </>
                             {/* HiGlass View Config */}
@@ -899,6 +1022,7 @@ function Editor(props: any) {
                                             code={stringify(hg)}
                                             readOnly={true}
                                             isDarkTheme={theme === 'dark'}
+                                            language="json"
                                         />
                                     </div>
                                 </>
