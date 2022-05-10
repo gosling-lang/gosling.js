@@ -24,7 +24,7 @@
         "build": "run-p build-types build-lib",
         "build-lib": "vite build --mode lib && node scripts/build-umd && node scripts/build-embed",
         "build-types": "tsc --emitDeclarationOnly",
-        "build-editor": "vite build",
+        "build-editor": "node --max_old_space_size=4096 ./node_modules/vite/bin/vite.js build",
         "preview": "vite preview",
         "test": "vitest",
         "coverage": "vitest run --coverage",
