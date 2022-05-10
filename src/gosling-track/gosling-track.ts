@@ -33,8 +33,8 @@ import { spawn } from 'threads';
 import BamWorker from '../data-fetcher/bam/bam-worker.js?worker&inline';
 import { InteractionEvent } from 'pixi.js';
 import { HIGLASS_AXIS_SIZE } from '../core/higlass-model';
-import { flatArrayToPairArray } from '../gosling-mouse-event/polygon';
-import { MouseEventData } from 'src/gosling-mouse-event/mouse-event-model';
+import { MouseEventData } from '../gosling-mouse-event/mouse-event-model';
+import { flatArrayToPairArray } from '../core/utils/array';
 
 // Set `true` to print in what order each function is called
 export const PRINT_RENDERING_CYCLE = false;
@@ -982,14 +982,17 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
 
         exportSVG() {} // We do not support SVG export
 
+        /**
+         * From all tiles and overlaid tracks, collect element(s) that are withing a mouse position.
+         */
         getElementsWithinMouse(mouseX: number, mouseY: number) {
             // Collect all gosling track models
             const models: GoslingTrackModel[] = this.visibleAndFetchedTiles()
                 .map(tile => tile.goslingModels ?? [])
                 .flat();
 
-            // TODO: `Omit` this properties in individual overlaid tracks.
-            // These should be defined once for a group of overlaid traks (09-May-2022)
+            // TODO: `Omit` this properties in the schema of individual overlaid tracks.
+            // These should be defined only once for a group of overlaid traks (09-May-2022)
             // See https://github.com/gosling-lang/gosling.js/issues/677
             const multiHovering = this.options.spec?.experimental?.hovering?.enableMultiHovering;
             const groupHovering = this.options.spec?.experimental?.hovering?.enableGroupHovering;
@@ -1107,7 +1110,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                     }
                 });
 
-                // Let API subscribers know
+                // API call
                 PubSub.publish('mouseover', { genomicPosition, data: capturedElements.map(d => d.value) });
 
                 // Display a tooltip

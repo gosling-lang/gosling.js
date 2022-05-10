@@ -45,3 +45,16 @@ export function modifyItemInArray(array: any[], index: number, item: any) {
 export function removeItemFromArray(array: any[], index: number) {
     return [...array.slice(0, index), ...array.slice(index + 1)];
 }
+
+/**
+ * Convert 1D array into 2D array where each pair of elements are grouped.
+ * @prop {array} array Array to be used.
+ * @returns Updated array.
+ */
+export const flatArrayToPairArray: (array: number[]) => [number, number][] = array => {
+    const output: [number, number][] = [];
+    for (let i = 0; i < array.length; i += 2) {
+        output.push([array[i], array[i + 1]]);
+    }
+    return output;
+};

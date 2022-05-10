@@ -59,8 +59,9 @@ export const isPointNearLine: (point: [number, number], path: number[], dist?: n
 };
 
 /**
- * Taken from https://github.com/flekschas/utils
- * From: https://wrf.ecse.rpi.edu//Research/Short_Notes/pnpoly.html
+ * Adopted from
+ * https://github.com/flekschas/utils
+ * https://wrf.ecse.rpi.edu//Research/Short_Notes/pnpoly.html
  * @param {Array} point Tuple of the form `[x,y]` to be tested.
  * @param {Array} polygon 1D list of vertices defining the polygon.
  * @return {boolean} If `true` point lies within the polygon.
@@ -82,12 +83,4 @@ export const isPointInPolygon: (point: [number, number], polygon: number[]) => b
         j = i;
     }
     return isWithin;
-};
-
-export const flatArrayToPairArray: (flat: number[]) => [number, number][] = flat => {
-    const output: [number, number][] = [];
-    for (let i = 0; i < flat.length; i += 2) {
-        output.push([flat[i], flat[i + 1]]);
-    }
-    return output;
 };
