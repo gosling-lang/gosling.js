@@ -213,7 +213,7 @@ export function drawCircularYAxis(
         /* Ticks */
         // Since we use the polar system, we use numbers 'scaled' for the polar system.
         const SCALED_TICK_SIZE = (r: number) => (TICK_SIZE * tw) / 2 / Math.PI / r;
-        const SCALED_EXTENT_TICK_SIZE = (r: number) => (EXTENT_TICK_SIZE * tw) / 2 / Math.PI / r;
+        // const SCALED_EXTENT_TICK_SIZE = (r: number) => (EXTENT_TICK_SIZE * tw) / 2 / Math.PI / r;
 
         // Determine ticks to display
         const axisHeight = (rowHeight / th) * trackRingSize;
@@ -255,32 +255,32 @@ export function drawCircularYAxis(
         });
 
         // Two ticks on the bottom and top
-        {
-            // The inner tick
-            const scaledStartX = isLeft ? 0 : tw - SCALED_EXTENT_TICK_SIZE(trackInnerRadius);
-            const scaledEndX = isLeft ? SCALED_EXTENT_TICK_SIZE(trackInnerRadius) : tw;
+        // {
+        //     // The inner tick
+        //     const scaledStartX = isLeft ? 0 : tw - SCALED_EXTENT_TICK_SIZE(trackInnerRadius);
+        //     const scaledEndX = isLeft ? SCALED_EXTENT_TICK_SIZE(trackInnerRadius) : tw;
 
-            const startRad = valueToRadian(scaledStartX, tw, startAngle, endAngle);
-            const endRad = valueToRadian(scaledEndX, tw, startAngle, endAngle);
+        //     const startRad = valueToRadian(scaledStartX, tw, startAngle, endAngle);
+        //     const endRad = valueToRadian(scaledEndX, tw, startAngle, endAngle);
 
-            graphics.moveTo(innerPos.x, innerPos.y);
-            graphics.arc(cx, cy, trackInnerRadius, startRad, endRad, true);
-            graphics.arc(cx, cy, trackInnerRadius, endRad, startRad, false);
-            graphics.closePath();
-        }
-        {
-            // The outer tick
-            const scaledStartX = isLeft ? 0 : tw - SCALED_EXTENT_TICK_SIZE(trackOuterRadius);
-            const scaledEndX = isLeft ? SCALED_EXTENT_TICK_SIZE(trackOuterRadius) : tw;
+        //     graphics.moveTo(innerPos.x, innerPos.y);
+        //     graphics.arc(cx, cy, trackInnerRadius, startRad, endRad, true);
+        //     graphics.arc(cx, cy, trackInnerRadius, endRad, startRad, false);
+        //     graphics.closePath();
+        // }
+        // {
+        //     // The outer tick
+        //     const scaledStartX = isLeft ? 0 : tw - SCALED_EXTENT_TICK_SIZE(trackOuterRadius);
+        //     const scaledEndX = isLeft ? SCALED_EXTENT_TICK_SIZE(trackOuterRadius) : tw;
 
-            const startRad = valueToRadian(scaledStartX, tw, startAngle, endAngle);
-            const endRad = valueToRadian(scaledEndX, tw, startAngle, endAngle);
+        //     const startRad = valueToRadian(scaledStartX, tw, startAngle, endAngle);
+        //     const endRad = valueToRadian(scaledEndX, tw, startAngle, endAngle);
 
-            graphics.moveTo(outerPos.x, outerPos.y);
-            graphics.arc(cx, cy, trackOuterRadius, startRad, endRad, true);
-            graphics.arc(cx, cy, trackOuterRadius, endRad, startRad, false);
-            graphics.closePath();
-        }
+        //     graphics.moveTo(outerPos.x, outerPos.y);
+        //     graphics.arc(cx, cy, trackOuterRadius, startRad, endRad, true);
+        //     graphics.arc(cx, cy, trackOuterRadius, endRad, startRad, false);
+        //     graphics.closePath();
+        // }
 
         /* Labels */
         ticks.forEach(t => {

@@ -33,25 +33,6 @@ export function drawCircularOutlines(
     /* render */
     const g = trackInfo.pBackground;
 
-    if (!(spec.layout === 'circular' && spec.mark === 'withinLink')) {
-        // circular link marks usually use entire inner space
-        g.lineStyle(
-            spec.style?.outlineWidth ? spec.style?.outlineWidth / 2.5 : 0,
-            colorToHex(spec.style?.outline ?? '#DBDBDB'),
-            1, // 0.4, // alpha
-            1 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
-        );
-        g.beginFill(
-            colorToHex(tm.spec().style?.background ?? theme.track.background),
-            tm.spec().style?.backgroundOpacity ??
-                (!theme.track.background || theme.track.background === 'transparent' ? 0 : 1)
-        );
-        g.moveTo(posStartInner.x, posStartInner.y);
-        g.arc(cx, cy, trackInnerRadius, startRad, endRad, true);
-        g.arc(cx, cy, trackOuterRadius, endRad, startRad, false);
-        g.closePath();
-    }
-
     if (IsChannelDeep(spec.x) && spec.x.axis === 'top') {
         // outer line
         g.lineStyle(
@@ -101,4 +82,25 @@ export function drawCircularOutlines(
     );
     g.beginFill(colorToHex('white'), 0);
     g.drawCircle(cx, cy, trackInnerRadius - 1);
+
+    if (!(spec.layout === 'circular' && spec.mark === 'withinLink')) {
+        // circular link marks usually use entire inner space
+        HGC.libraries.PIXI.GRAPHICS_CURVES.adaptive = true;
+        g.lineStyle(
+            spec.style?.outlineWidth ?? 0.5,
+            colorToHex(spec.style?.outline ?? theme.track.outline),
+            1, // 0.4, // alpha
+            1 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
+        );
+        g.beginFill(
+            colorToHex(tm.spec().style?.background ?? theme.track.background),
+            tm.spec().style?.backgroundOpacity ??
+                (!theme.track.background || theme.track.background === 'transparent' ? 0 : 1)
+        );
+        g.moveTo(posStartInner.x, posStartInner.y);
+        g.arc(cx, cy, trackInnerRadius, startRad, endRad, true);
+        g.arc(cx, cy, trackOuterRadius, endRad, startRad, false);
+        g.closePath();
+        HGC.libraries.PIXI.GRAPHICS_CURVES.adaptive = false;
+    }
 }

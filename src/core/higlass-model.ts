@@ -314,6 +314,7 @@ export class HiGlassModel {
                 fontSize: options.theme.axis.labelFontSize,
                 fontFamily: options.theme.axis.labelFontFamily,
                 fontWeight: options.theme.axis.labelFontWeight,
+                baselineColor: options.theme.axis.baselineColor,
                 tickColor: options.theme.axis.tickColor,
                 tickFormat: type === 'narrower' ? 'si' : 'plain',
                 tickPositions: type === 'regular' ? 'even' : 'ends',

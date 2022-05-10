@@ -1,5 +1,4 @@
 import { GoslingTrackModel } from '../gosling-track-model';
-import { IsChannelDeep } from '../gosling.schema.guards';
 import colorToHex from '../utils/color-to-hex';
 import { CompleteThemeDeep } from '../utils/theme';
 
@@ -56,32 +55,4 @@ export function drawChartOutlines(HGC: any, trackInfo: any, tm: GoslingTrackMode
     );
     g.beginFill(colorToHex('white'), 0);
     g.drawRect(l, t, w, h);
-
-    // Borders
-    const x = tm.spec().x;
-
-    g.lineStyle(
-        1,
-        colorToHex(theme.axis.baselineColor),
-        1, // alpha
-        0.5 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
-    );
-
-    if (IsChannelDeep(x) && x.axis === 'top') {
-        // top
-        g.moveTo(l, t);
-        g.lineTo(l + w, t);
-
-        // left
-        // g.moveTo(l, t);
-        // g.lineTo(l, t + h);
-    } else if (IsChannelDeep(x) && x.axis === 'bottom') {
-        // bottom
-        g.moveTo(l, t + h);
-        g.lineTo(l + w, t + h);
-
-        // left
-        // g.moveTo(l, t);
-        // g.lineTo(l, t + h);
-    }
 }

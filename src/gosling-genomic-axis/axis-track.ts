@@ -1,6 +1,3 @@
-// This plugin track is based on higlass/HorizontalChromosomeLabels
-// https://github.com/higlass/higlass/blob/83dc4fddb33582ef3c26b608c04a81e8f33c7f5f/app/scripts/HorizontalChromosomeLabels.js
-
 import type * as PIXI from 'pixi.js';
 import RBush from 'rbush';
 import { scaleLinear } from 'd3-scale';
@@ -30,6 +27,14 @@ function AxisTrack(HGC: any, ...args: any[]): any {
     class AxisTrackClass extends HGC.tracks.PixiTrack {
         allTexts: TickLabelInfo[];
 
+        isCircular: boolean;
+        startAngle: number;
+        endAngle: number;
+        innerRadius: number;
+        outerRadius: number;
+
+        baselineColor: string;
+
         constructor(params: any[]) {
             super(...params); // context, options
             const [context, options] = params;
@@ -38,20 +43,25 @@ function AxisTrack(HGC: any, ...args: any[]): any {
             this.searchField = null;
             this.chromInfo = null;
             this.dataConfig = dataConfig;
+            this.options = options;
+
+            this.isCircular = this.options.layout === 'circular';
 
             this.allTexts = [];
 
+            this.pBaseline = new HGC.libraries.PIXI.Graphics();
             this.pTicksCircular = new HGC.libraries.PIXI.Graphics();
             this.pTicks = new HGC.libraries.PIXI.Graphics();
+            this.pBorder.addChild(this.pBaseline);
             this.pMain.addChild(this.pTicks);
             this.pMain.addChild(this.pTicksCircular);
 
             this.gTicks = {};
             this.tickTexts = {};
 
-            this.options = options;
             this.isShowGlobalMousePosition = isShowGlobalMousePosition;
 
+            this.baselineColor = this.options.baselineColor;
             this.textFontSize = 12;
             this.textFontFamily = 'sans-serif'; //'Arial';
             this.textFontWeight = 'normal';
@@ -67,10 +77,20 @@ function AxisTrack(HGC: any, ...args: any[]): any {
             });
             this.stroke = colorToHex(this.pixiTextConfig.stroke);
 
-            // text objects to use if the tick style is "bounds", meaning
-            // we only draw two ticks on the left and the right of the screen
+            const [width, height] = this.dimensions;
+            const factor = Math.min(width, height) / Math.min(this.options.width, this.options.height);
 
-            this.tickWidth = TICK_WIDTH;
+            this.startAngle = this.options.startAngle;
+            this.endAngle = this.options.endAngle;
+            this.innerRadius = this.options.innerRadius * factor;
+            this.outerRadius = this.options.outerRadius * factor;
+
+            const r = (this.outerRadius + this.innerRadius) / 2.0;
+
+            // this determines the number of ticks to be visible
+            this.tickWidth = !this.isCircular
+                ? TICK_WIDTH
+                : ((TICK_WIDTH / (2 * r * Math.PI)) * width * 360) / (this.endAngle - this.startAngle);
             this.tickHeight = TICK_HEIGHT;
             this.tickTextSeparation = TICK_TEXT_SEPARATION;
             this.tickColor = this.options.tickColor ? colorToHex(this.options.tickColor) : TICK_COLOR;
@@ -198,7 +218,7 @@ function AxisTrack(HGC: any, ...args: any[]): any {
 
             this.tickColor = this.options.tickColor ? colorToHex(this.options.tickColor) : TICK_COLOR;
 
-            if (this.options.tickPositions === 'ends' && this.options.layout !== 'circular') {
+            if (this.options.tickPositions === 'ends' && !this.isCircular) {
                 this.initBoundsTicks();
             } else {
                 this.initChromLabels();
@@ -237,8 +257,7 @@ function AxisTrack(HGC: any, ...args: any[]): any {
             } else if (this.options.tickFormat === 'plain') {
                 f = fPlain;
             } else if (this.options.tickPositions === 'ends') {
-                // if no format is specified but tickPositions are at 'ends'
-                // then use precision format
+                // if no format is specified but tickPositions are at 'ends', use precision format
                 f = fPrecision;
             }
 
@@ -250,8 +269,9 @@ function AxisTrack(HGC: any, ...args: any[]): any {
          * @param x1
          * @param x2
          */
-        drawBoundsTicks(x1: any, x2: any) {
+        drawBoundsTicks([chr1, pos1]: [string, number], [chr2, pos2]: [string, number]) {
             const graphics = this.gBoundTicks;
+
             graphics.clear();
             graphics.lineStyle(1, 0);
 
@@ -259,13 +279,13 @@ function AxisTrack(HGC: any, ...args: any[]): any {
             const lineYStart = this.options.reverseOrientation ? 0 : this.dimensions[1];
             const lineYEnd = this.options.reverseOrientation ? this.tickHeight : this.dimensions[1] - this.tickHeight;
 
-            // left tick
+            /* first tick */
             // line is offset by one because it's right on the edge of the
             // visible region and we want to get the full width
             graphics.moveTo(1, lineYStart);
             graphics.lineTo(1, lineYEnd);
 
-            // right tick
+            /* second tick */
             graphics.moveTo(this.dimensions[0] - 1, lineYStart);
             graphics.lineTo(this.dimensions[0] - 1, lineYEnd);
 
@@ -276,16 +296,12 @@ function AxisTrack(HGC: any, ...args: any[]): any {
                 ? lineYEnd + this.tickTextSeparation
                 : lineYEnd - this.tickTextSeparation;
             this.leftBoundTick.text =
-                this.options.assembly === 'unknown'
-                    ? `${this.formatTick(x1[1])}`
-                    : `${x1[0]}: ${this.formatTick(x1[1])}`;
+                this.options.assembly === 'unknown' ? `${this.formatTick(pos1)}` : `${chr1}: ${this.formatTick(pos1)}`;
             this.leftBoundTick.anchor.y = this.options.reverseOrientation ? 0 : 1;
 
             this.rightBoundTick.x = this.dimensions[0];
             this.rightBoundTick.text =
-                this.options.assembly === 'unknown'
-                    ? `${this.formatTick(x2[1])}`
-                    : `${x2[0]}: ${this.formatTick(x2[1])}`;
+                this.options.assembly === 'unknown' ? `${this.formatTick(pos2)}` : `${chr2}: ${this.formatTick(pos2)}`;
             this.rightBoundTick.y = this.options.reverseOrientation
                 ? lineYEnd + this.tickTextSeparation
                 : lineYEnd - this.tickTextSeparation;
@@ -312,7 +328,6 @@ function AxisTrack(HGC: any, ...args: any[]): any {
 
             this.tickTexts = {};
             this.tickTexts.all = [this.leftBoundTick, this.rightBoundTick];
-            // this.rightBoundTick
         }
 
         drawTicks(cumPos: { chr: string; pos: number }) {
@@ -371,8 +386,7 @@ function AxisTrack(HGC: any, ...args: any[]): any {
                 tickTexts[i].visible = true;
 
                 tickTexts[i].anchor.x = 0.5;
-                tickTexts[i].anchor.y =
-                    this.options.layout === 'circular' ? 0 : this.options.reverseOrientation ? 0 : 1;
+                tickTexts[i].anchor.y = this.isCircular ? 0 : this.options.reverseOrientation ? 0 : 1;
 
                 if (this.flipText) tickTexts[i].scale.x = -1;
 
@@ -382,7 +396,7 @@ function AxisTrack(HGC: any, ...args: any[]): any {
                 const x = this._xScale(cumPos.pos + ticks[i]);
 
                 // show the tick text labels
-                if (this.options.layout === 'circular') {
+                if (this.isCircular) {
                     const rope = this.addCurvedText(tickTexts[i], x + xPadding);
                     this.pTicksCircular.addChild(rope);
                 } else {
@@ -390,19 +404,11 @@ function AxisTrack(HGC: any, ...args: any[]): any {
                     tickTexts[i].y = this.dimensions[1] - yPadding;
 
                     // store the position of the tick line so that it can be used in the export function
-                    // TODO:
                     tickTexts[i].tickLine = [x - 1, this.dimensions[1], x - 1, this.dimensions[1] - tickHeight - 1];
 
-                    // draw outline
+                    // draw the vertical tick lines
                     const lineYStart = this.options.reverseOrientation ? 0 : this.dimensions[1];
                     const lineYEnd = this.options.reverseOrientation ? tickHeight : this.dimensions[1] - tickHeight;
-                    // graphics.lineStyle(1, this.stroke);
-                    // graphics.moveTo(x - 1, lineYStart);
-                    // graphics.lineTo(x - 1, lineYEnd - 1);
-                    // graphics.lineTo(x + 1, lineYEnd - 1);
-                    // graphics.lineTo(x + 1, lineYStart);
-
-                    // draw the vertical tick lines
                     graphics.lineStyle(1, this.tickColor);
                     graphics.moveTo(x, lineYStart);
                     graphics.lineTo(x, lineYEnd);
@@ -411,7 +417,8 @@ function AxisTrack(HGC: any, ...args: any[]): any {
                 i += 1;
             }
 
-            if (this.options.layout === 'circular') i = 0;
+            if (this.isCircular) i = 0;
+
             while (i < tickTexts.length) {
                 // we don't need this text so we'll turn it off for now
                 tickTexts[i].visible = false;
@@ -428,9 +435,9 @@ function AxisTrack(HGC: any, ...args: any[]): any {
             const factor = Math.min(width, height) / Math.min(this.options.width, this.options.height);
             const innerRadius = this.options.innerRadius * factor;
             const outerRadius = this.options.outerRadius * factor;
-
             const r = (outerRadius + innerRadius) / 2.0;
             const centerPos = cartesianToPolar(cx, width, r, width / 2.0, height / 2.0, startAngle, endAngle);
+
             textObj.x = centerPos.x;
             textObj.y = centerPos.y;
 
@@ -482,7 +489,7 @@ function AxisTrack(HGC: any, ...args: any[]): any {
                 return;
             }
 
-            if (this.options.tickPositions === 'ends' && this.options.layout !== 'circular') {
+            if (this.options.tickPositions === 'ends' && !this.isCircular) {
                 // We only support linear layouts for this.
                 if (!this.gBoundTicks) return;
 
@@ -498,7 +505,51 @@ function AxisTrack(HGC: any, ...args: any[]): any {
                 return;
             }
 
-            const circular = this.options.layout === 'circular';
+            // Borders
+            const [l, t] = this.position;
+            const [w, h] = this.dimensions;
+            this.pBaseline.clear();
+            this.pBaseline.lineStyle(
+                1,
+                colorToHex(this.baselineColor),
+                1 // alpha
+                // 0.5 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
+            );
+
+            if (!this.isCircular) {
+                if (!this.options.reverseOrientation) {
+                    // This means the axis is rendered on the top of a data track,
+                    // so the baseline should be rendered of the bottom of this track
+                    this.pBaseline.moveTo(l, t + h);
+                    this.pBaseline.lineTo(l + w, t + h);
+                } else {
+                    this.pBaseline.moveTo(0, 0);
+                    this.pBaseline.lineTo(w, 0);
+                }
+            } else {
+                if (!this.options.reverseOrientation) {
+                    // This means the axis is rendered on the top of a data track,
+                    // so the baseline should be rendered of the bottom of this track
+                    HGC.libraries.PIXI.GRAPHICS_CURVES.adaptive = true;
+                    this.pBaseline.lineStyle(
+                        0.5,
+                        colorToHex('black'),
+                        1, // alpha
+                        0.5 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
+                    );
+                    this.pBaseline.beginFill(colorToHex('white'), 0);
+                    this.pBaseline.drawCircle(l + w / 2, t + h / 2, this.innerRadius);
+
+                    this.pBaseline.lineStyle(0, colorToHex('black'));
+                    this.pBaseline.beginFill(colorToHex('white'), 1);
+                    this.pBaseline.moveTo(l + w / 2, t + h / 2);
+                    // const startRad = valueToRadian(0, w, this.startAngle, this.endAngle);
+                    // const endRad = valueToRadian(w, w, this.startAngle, this.endAngle);
+                    // this.pBaseline.arc(l + w / 2, t + h / 2, this.outerRadius, startRad, endRad, false);
+                    // this.pBaseline.closePath();
+                    HGC.libraries.PIXI.GRAPHICS_CURVES.adaptive = false;
+                }
+            }
 
             for (let i = 0; i < this.texts.length; i++) {
                 this.texts[i].visible = false;
@@ -535,10 +586,10 @@ function AxisTrack(HGC: any, ...args: any[]): any {
                 const chrText = this.texts[i];
 
                 chrText.anchor.x = 0.5;
-                chrText.anchor.y = circular ? 0.5 : this.options.reverseOrientation ? 0 : 1;
+                chrText.anchor.y = this.isCircular ? 0.5 : this.options.reverseOrientation ? 0 : 1;
 
                 let rope;
-                if (circular) {
+                if (this.isCircular) {
                     rope = this.addCurvedText(chrText, viewportMidX);
                     if (rope) {
                         this.pTicksCircular.addChild(rope);
@@ -555,7 +606,7 @@ function AxisTrack(HGC: any, ...args: any[]): any {
                 const numTicksDrawn = this.drawTicks(xCumPos);
 
                 // only show chromsome labels if there's no ticks drawn
-                if (!circular) {
+                if (!this.isCircular) {
                     chrText.visible = numTicksDrawn <= 0;
                 } else {
                     if (numTicksDrawn > 0) {
@@ -597,16 +648,27 @@ function AxisTrack(HGC: any, ...args: any[]): any {
                     } else {
                         // if overlapping, hide text labels
                         text.visible = false;
-                        if (this.options.layout === 'circular' && rope) {
+                        if (this.isCircular && rope) {
                             this.pTicksCircular.removeChild(rope);
                         }
                     }
                 });
         }
 
+        setDimensions(newDimensions: [number, number]) {
+            super.setDimensions(newDimensions);
+
+            const [width, height] = newDimensions;
+            const factor = Math.min(width, height) / Math.min(this.options.width, this.options.height);
+
+            this.startAngle = this.options.startAngle;
+            this.endAngle = this.options.endAngle;
+            this.innerRadius = this.options.innerRadius * factor;
+            this.outerRadius = this.options.outerRadius * factor;
+        }
+
         setPosition(newPosition: [number, number]) {
             super.setPosition(newPosition);
-
             [this.pMain.position.x, this.pMain.position.y] = this.position;
         }
 
@@ -614,7 +676,6 @@ function AxisTrack(HGC: any, ...args: any[]): any {
             const domainValues = [...newXScale.domain(), ...newYScale.domain()];
             if (domainValues.filter(d => isNaN(d)).length !== 0) {
                 // we received an invalid scale somehow
-                // console.warn('');
                 return;
             }
 
