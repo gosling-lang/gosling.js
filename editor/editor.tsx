@@ -436,7 +436,7 @@ function Editor(props: any) {
                 if (active && !!code) {
                     setReadOnly(false);
                     setCode(code);
-                    setCode(json2js(code));
+                    setJsCode(json2js(code));
                     setGistTitle(title);
                     setDescription(description);
                 }
