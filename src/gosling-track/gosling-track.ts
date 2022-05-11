@@ -313,7 +313,8 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             super.remove();
 
             if (this.gLegend) {
-                this.gLegend.selectAll('.brush').remove();
+                this.gLegend.remove();
+                this.gLegend = null;
             }
         }
         /*
