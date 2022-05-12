@@ -880,7 +880,7 @@ function Editor(props: any) {
                                 if (code.length <= LIMIT_CLIPBOARD_LEN) {
                                     // copy the unique url to clipboard using `<input/>`
                                     const crushedSpec = encodeURIComponent(JSONCrush.crush(code));
-                                    const url = `https://gosling-lang.github.io/gosling.js/?full=${isHideCode}&spec=${crushedSpec}`;
+                                    const url = `${window.location.origin}${window.location.pathname}?full=${isHideCode}&spec=${crushedSpec}`;
                                     const element = document.getElementById('spec-url-exporter');
                                     (element as any).type = 'text';
                                     (element as any).value = url;
