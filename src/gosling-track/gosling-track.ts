@@ -21,26 +21,26 @@ import {
     calculateGenomicLength,
     parseSubJSON,
     replaceString,
-    splitExon,
-    inferSvType
+    splitExon
 } from '../core/utils/data-transform';
-import { getTabularData } from './data-abstraction';
-import { BAMDataFetcher } from '../data-fetcher/bam';
 import { getRelativeGenomicPosition } from '../core/utils/assembly';
 import { getTextStyle } from '../core/utils/text-style';
 import { Is2DTrack, IsChannelDeep, IsXAxis } from '../core/gosling.schema.guards';
-import { spawn } from 'threads';
-
-import BamWorker from '../data-fetcher/bam/bam-worker.js?worker&inline';
 import { InteractionEvent } from 'pixi.js';
 import { HIGLASS_AXIS_SIZE } from '../core/higlass-model';
+import { getTabularData } from './data-abstraction';
+import { spawn } from 'threads';
+import { BAMDataFetcher } from '../data-fetcher/bam';
+import { GoslingVcfData } from '../data-fetcher/vcf';
+import BamWorker from '../data-fetcher/bam/bam-worker.js?worker&inline';
+import VcfWorker from '../data-fetcher/vcf/vcf-worker.js?worker&inline';
 
 // Set `true` to print in what order each function is called
 export const PRINT_RENDERING_CYCLE = false;
 
 // Experimental function to test with prerelease rendering
 function usePrereleaseRendering(spec: SingleTrack | OverlaidTrack) {
-    return spec.data?.type === 'bam';
+    return spec.data?.type === 'bam' || spec.data?.type === 'vcf';
 }
 
 type LoadingStage = 'loading' | 'processing' | 'rendering';
@@ -76,11 +76,16 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             const [context, options] = params;
 
             // Check whether to load a worker
-            let bamWorker;
+            let dataWorker;
             if (usePrereleaseRendering(options.spec)) {
                 try {
-                    bamWorker = spawn(new BamWorker());
-                    context.dataFetcher = new BAMDataFetcher(HGC, context.dataConfig, bamWorker);
+                    if (options.spec.data?.type === 'bam') {
+                        dataWorker = spawn(new BamWorker());
+                        context.dataFetcher = new BAMDataFetcher(HGC, context.dataConfig, dataWorker);
+                    } else if (options.spec.data?.type === 'vcf') {
+                        dataWorker = spawn(new VcfWorker());
+                        context.dataFetcher = new GoslingVcfData(HGC, context.dataConfig, dataWorker);
+                    }
                 } catch (e) {
                     console.warn('Error loading worker', e);
                 }
@@ -88,7 +93,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
 
             super(context, options);
 
-            this.worker = bamWorker;
+            this.worker = dataWorker;
             context.dataFetcher.track = this;
             this.context = context;
 
@@ -313,8 +318,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             super.remove();
 
             if (this.gLegend) {
-                this.gLegend.remove();
-                this.gLegend = null;
+                this.gLegend.selectAll('.brush').remove();
             }
         }
         /*
@@ -453,7 +457,9 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                         this.tilesetInfo.tile_size
                     );
 
-                    const DEFAULT_MAX_TILE_WIDTH = 2e4; // base pairs
+                    // base pairs
+                    const DEFAULT_MAX_TILE_WIDTH =
+                        this.options.spec?.data?.type === 'bam' ? 2e4 : Number.MAX_SAFE_INTEGER;
 
                     if (tileWidth > (this.tilesetInfo.max_tile_width || DEFAULT_MAX_TILE_WIDTH)) {
                         this.forceDraw();
@@ -703,8 +709,9 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                     this.visibleAndFetchedTiles()?.[0]?.tileData &&
                     // we do not need to combine tiles w/ multivec, vector, matrix
                     !this.visibleAndFetchedTiles()?.[0]?.tileData.dense) ||
+                // BAM data fetcher already combines the datasets;
                 this.options.spec.data?.type === 'bam'
-            ); // BAM data fetcher already combines the datasets;
+            );
         }
 
         /**
@@ -876,9 +883,6 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                                 break;
                             case 'genomicLength':
                                 tile.gos.tabularDataFiltered = calculateGenomicLength(t, tile.gos.tabularDataFiltered);
-                                break;
-                            case 'svType':
-                                tile.gos.tabularDataFiltered = inferSvType(t, tile.gos.tabularDataFiltered);
                                 break;
                             case 'coverage':
                                 tile.gos.tabularDataFiltered = aggregateCoverage(

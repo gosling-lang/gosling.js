@@ -1,3 +1,19 @@
+## [0.9.17](https://github.com/gosling-lang/gosling.js/compare/v0.9.18...v0.9.17) (2022-05-12)
+
+
+### Bug Fixes
+
+* gist example with jscode ([#684](https://github.com/gosling-lang/gosling.js/issues/684)) ([a94e1c1](https://github.com/gosling-lang/gosling.js/commit/a94e1c1391674c807a518121bf76e49a2a3c9e73))
+* out of memory when deploy ([#680](https://github.com/gosling-lang/gosling.js/issues/680)) ([9253f48](https://github.com/gosling-lang/gosling.js/commit/9253f48f7659ccdc00279c3a9107b24f4e48a209))
+* remove legend layer in `remove()`; do not render twice on Editor when example ID is specified in URL ([#686](https://github.com/gosling-lang/gosling.js/issues/686)) ([d3f22c9](https://github.com/gosling-lang/gosling.js/commit/d3f22c94f7ef1cbfe1a9e1022c9d6e187833a9fb))
+
+
+### Features
+
+* **editor:** support javascript editor ([#671](https://github.com/gosling-lang/gosling.js/issues/671)) ([410d049](https://github.com/gosling-lang/gosling.js/commit/410d0496af8b5c6cec49b6e446058061ec1f8914))
+
+
+
 ## [0.9.18](https://github.com/gosling-lang/gosling.js/compare/v0.9.17...v0.9.18) (2022-05-06)
 
 

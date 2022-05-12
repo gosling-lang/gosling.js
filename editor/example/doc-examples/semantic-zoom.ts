@@ -1,5 +1,5 @@
 import type { GoslingSpec } from 'gosling.js';
-import { EX_TRACK_SEMANTIC_ZOOM } from '../json-spec/semantic-zoom';
+import { EX_TRACK_SEMANTIC_ZOOM } from '../semantic-zoom';
 
 export const SEMANTIC_ZOOM_SEQUENCE: GoslingSpec = {
     title: 'Example: Semantic Zooming',

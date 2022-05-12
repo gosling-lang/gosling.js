@@ -149,16 +149,16 @@ function BBIDataFetcher(HGC, ...args) {
                 };
 
                 // get the bounds of the tile
-                const minXOriginal = tsInfo.min_pos[0] + x * tileWidth;
-                let minX = minXOriginal;
+                const minX = tsInfo.min_pos[0] + x * tileWidth;
+                let curMinX = minX;
                 const maxX = tsInfo.min_pos[0] + (x + 1) * tileWidth;
 
-                const basesPerPixel = this.determineScale(minX, maxX);
-                const basesPerBin = (maxX - minX) / this.TILE_SIZE;
+                const basesPerPixel = this.determineScale(curMinX, maxX);
+                const basesPerBin = (maxX - curMinX) / this.TILE_SIZE;
 
                 const binStarts = [];
                 for (let i = 0; i < this.TILE_SIZE; i++) {
-                    binStarts.push(minX + i * basesPerBin);
+                    binStarts.push(curMinX + i * basesPerBin);
                 }
 
                 const { chromLengths, cumPositions } = this.chromSizes;
@@ -170,13 +170,13 @@ function BBIDataFetcher(HGC, ...args) {
 
                     let startPos, endPos;
 
-                    if (chromStart <= minX && minX < chromEnd) {
+                    if (chromStart <= curMinX && curMinX < chromEnd) {
                         // start of the visible region is within this chromosome
 
                         if (maxX > chromEnd) {
                             // the visible region extends beyond the end of this chromosome
                             // fetch from the start until the end of the chromosome
-                            startPos = minX - chromStart;
+                            startPos = curMinX - chromStart;
                             endPos = chromEnd - chromStart;
                             recordPromises.push(
                                 this.bwFile
@@ -192,9 +192,9 @@ function BBIDataFetcher(HGC, ...args) {
                                     })
                             );
 
-                            minX = chromEnd;
+                            curMinX = chromEnd;
                         } else {
-                            startPos = Math.floor(minX - chromStart);
+                            startPos = Math.floor(curMinX - chromStart);
                             endPos = Math.ceil(maxX - chromStart);
                             recordPromises.push(
                                 this.bwFile
@@ -224,7 +224,7 @@ function BBIDataFetcher(HGC, ...args) {
 
                     // Currently we use the same binning strategy in all cases (basesPerBin =>< basesPerBinInFile)
                     binStarts.forEach((curStart, index) => {
-                        if (curStart < minXOriginal || curStart > maxX) {
+                        if (curStart < minX || curStart > maxX) {
                             return;
                         }
                         const filtered = values

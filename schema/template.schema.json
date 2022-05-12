@@ -224,27 +224,6 @@
             }
           ]
         },
-        "firstBp": {
-          "additionalProperties": false,
-          "description": "Based on the BEDPE, infer SV types. SV types are specified as one of the following strings: DUP, TRA, DEL, t2tINV, h2hINV.",
-          "properties": {
-            "chrField": {
-              "type": "string"
-            },
-            "posField": {
-              "type": "string"
-            },
-            "strandField": {
-              "type": "string"
-            }
-          },
-          "required": [
-            "chrField",
-            "posField",
-            "strandField"
-          ],
-          "type": "object"
-        },
         "flag": {
           "additionalProperties": false,
           "properties": {
@@ -338,27 +317,6 @@
           },
           "type": "array"
         },
-        "secondBp": {
-          "additionalProperties": false,
-          "description": "Based on the BEDPE, infer SV types. SV types are specified as one of the following strings: DUP, TRA, DEL, t2tINV, h2hINV.",
-          "properties": {
-            "chrField": {
-              "type": "string"
-            },
-            "posField": {
-              "type": "string"
-            },
-            "strandField": {
-              "type": "string"
-            }
-          },
-          "required": [
-            "chrField",
-            "posField",
-            "strandField"
-          ],
-          "type": "object"
-        },
         "separator": {
           "type": "string"
         },
@@ -374,7 +332,6 @@
             "displace",
             "exonSplit",
             "genomicLength",
-            "svType",
             "coverage",
             "subjson"
           ],

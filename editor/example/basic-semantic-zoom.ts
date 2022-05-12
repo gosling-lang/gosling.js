@@ -41,7 +41,7 @@ export const EX_SPEC_BASIC_SEMANTIC_ZOOM: GoslingSpec = {
                 {
                     operation: 'GT',
                     target: 'mark',
-                    threshold: 10 ** 7,
+                    threshold: 10000000,
                     measure: 'zoomLevel'
                 },
                 {

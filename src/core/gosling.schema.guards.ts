@@ -171,7 +171,8 @@ export function IsDataDeepTileset(
             _.type === 'multivec' ||
             _.type === 'bigwig' ||
             _.type === 'matrix' ||
-            _.type === 'bam')
+            _.type === 'bam' ||
+            _.type === 'vcf')
     );
 }
 

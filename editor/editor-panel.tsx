@@ -3,10 +3,7 @@ import MonacoEditor from 'react-monaco-editor';
 
 import ReactResizeDetector from 'react-resize-detector';
 import { GoslingSchema } from 'gosling.js';
-import goslingSpec from '../src/core/gosling.schema?raw';
-
-export * from './monaco_worker';
-import * as Monaco from 'monaco-editor';
+import * as Monaco from './monaco';
 
 function EditorPanel(props: {
     code: string;
@@ -14,12 +11,11 @@ function EditorPanel(props: {
     openFindBox?: boolean;
     fontZoomIn?: boolean;
     fontZoomOut?: boolean;
-    onChange?: (code: string, language: string) => void;
+    onChange?: (code: string) => void;
     hide?: boolean;
     isDarkTheme?: boolean;
-    language: string;
 }) {
-    const { code: templateCode, readOnly, openFindBox, fontZoomIn, fontZoomOut, isDarkTheme, language } = props;
+    const { code: templateCode, readOnly, openFindBox, fontZoomIn, fontZoomOut, isDarkTheme } = props;
     const editor = useRef<Monaco.editor.IStandaloneCodeEditor | null>(null);
     const [code, setCode] = useState(templateCode);
 
@@ -56,8 +52,6 @@ function EditorPanel(props: {
 
         // Workaround to make `actions.find` working with Monaco editor 0.22.0 (https://github.com/microsoft/monaco-editor/issues/2355)
         monacoEditor.createContextKey('editorIsOpen', true);
-
-        monacoEditor.getModel()?.updateOptions({ tabSize: 2 });
     }
 
     function updateTheme() {
@@ -82,13 +76,10 @@ function EditorPanel(props: {
                       inherit: true,
                       // Complete rules: https://github.com/microsoft/vscode/blob/93028e44ea7752bd53e2471051acbe6362e157e9/src/vs/editor/standalone/common/themes.ts#L13
                       rules: [
-                          { token: 'string', foreground: '#035CC5' }, // general string values in js editor
-                          { token: 'keyword', foreground: '#0000FF' }, // keyword (const, var) in js editor
-
-                          { token: 'string.key.json', foreground: '#222222' }, // all keys in json
-                          { token: 'string.value.json', foreground: '#035CC5' }, // all values in json
+                          { token: 'string.key.json', foreground: '#222222' }, // all keys
+                          { token: 'string.value.json', foreground: '#035CC5' }, // all values
                           { token: 'number', foreground: '#E32A4F' },
-                          { token: 'keyword.json', foreground: '#E32A4F' } // true and false in json
+                          { token: 'keyword.json', foreground: '#E32A4F' } // true and false
                       ],
                       colors: {
                           // ...
@@ -99,10 +90,6 @@ function EditorPanel(props: {
 
     function editorWillMount() {
         updateTheme();
-        Monaco.languages.typescript.typescriptDefaults.addExtraLib(
-            `declare module '@gosling.schema' { ${goslingSpec} }`,
-            'file:///src/core/gosling.schema.ts'
-        );
         Monaco.languages.json.jsonDefaults.setDiagnosticsOptions({
             allowComments: true,
             enableSchemaRequest: true,
@@ -131,7 +118,7 @@ function EditorPanel(props: {
 
     function onChangeHandle(newCode: string) {
         setCode(newCode);
-        if (props.onChange) props.onChange(newCode, language);
+        if (props.onChange) props.onChange(newCode);
     }
 
     return (
@@ -145,7 +132,7 @@ function EditorPanel(props: {
             ></ReactResizeDetector>
             <MonacoEditor
                 // Refer to https://github.com/react-monaco-editor/react-monaco-editor
-                language={language}
+                language="json"
                 value={code}
                 theme={'gosling'}
                 options={{

@@ -115,7 +115,8 @@ export function goslingToHiGlass(
             (firstResolvedSpec.data.type === 'csv' ||
                 firstResolvedSpec.data.type === 'json' ||
                 firstResolvedSpec.data.type === 'bigwig' ||
-                firstResolvedSpec.data.type === 'bam')
+                firstResolvedSpec.data.type === 'bam' ||
+                firstResolvedSpec.data.type === 'vcf')
         ) {
             // use gosling's custom data fetchers
             hgTrack.data = {

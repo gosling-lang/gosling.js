@@ -10,7 +10,6 @@ import {
     StrConcatTransform,
     StrReplaceTransform,
     GenomicLengthTransform,
-    SvTypeTransform,
     CoverageTransform,
     DisplaceTransform,
     JSONParseTransform
@@ -119,58 +118,6 @@ export function calculateGenomicLength(_: GenomicLengthTransform, data: Datum[])
             return;
         }
         d[newField] = Math.abs(+e - +s);
-    });
-    return output;
-}
-
-/*
- * Infer SV types (i.e., one of DUP, TRA, DEL, t2tINV, h2hINV).
- */
-export function inferSvType(_: SvTypeTransform, data: Datum[]): Datum[] {
-    const { firstBp, secondBp, newField } = _;
-    const output = Array.from(data);
-    const [DUP, TRA, DEL, t2tINV, h2hINV] = ['DUP', 'TRA', 'DEL', 't2tINV', 'h2hINV'];
-
-    output.forEach(d => {
-        const chr1 = d[firstBp.chrField];
-        const chr2 = d[secondBp.chrField];
-
-        if (chr1 !== chr2) {
-            d[newField] = TRA;
-            return;
-        }
-
-        let pos1 = d[firstBp.posField];
-        let pos2 = d[secondBp.posField];
-        let strand1 = d[firstBp.strandField];
-        let strand2 = d[secondBp.strandField];
-
-        if (pos1 > pos2) {
-            // need to sort first
-            const _pos = pos1;
-            const _strand = strand1;
-            pos1 = pos2;
-            strand1 = strand2;
-            pos2 = _pos;
-            strand2 = _strand;
-        }
-
-        switch (`${strand1}${strand2}`) {
-            case '+-':
-                d[newField] = DEL;
-                break;
-            case '--':
-                d[newField] = t2tINV;
-                break;
-            case '++':
-                d[newField] = h2hINV;
-                break;
-            case '-+':
-                d[newField] = DUP;
-                break;
-            default:
-                d[newField] = 'unknown';
-        }
     });
     return output;
 }

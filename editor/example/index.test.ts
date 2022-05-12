@@ -2,7 +2,7 @@ import { GoslingTrackModel } from '../../src/core/gosling-track-model';
 import { resolveSuperposedTracks } from '../../src/core/utils/overlay';
 import { convertToFlatTracks } from '../../src/core/utils/spec-preprocess';
 import { getTheme } from '../../src/core/utils/theme';
-import { EX_TRACK_SEMANTIC_ZOOM } from './json-spec/semantic-zoom';
+import { EX_TRACK_SEMANTIC_ZOOM } from './semantic-zoom';
 
 describe('Example specs should be valid', () => {
     it('Ideogram', () => {

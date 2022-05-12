@@ -661,7 +661,16 @@ export type Aggregate = 'max' | 'min' | 'mean' | 'bin' | 'count';
 export type BinAggregate = 'mean' | 'sum';
 
 /* ----------------------------- DATA ----------------------------- */
-export type DataDeep = JSONData | CSVData | BIGWIGData | MultivecData | BEDDBData | VectorData | MatrixData | BAMData;
+export type DataDeep =
+    | JSONData
+    | CSVData
+    | BIGWIGData
+    | MultivecData
+    | BEDDBData
+    | VectorData
+    | MatrixData
+    | BAMData
+    | VCFData;
 
 /** Values in the form of JSON. */
 export interface Datum {
@@ -925,6 +934,22 @@ export interface BAMData {
     maxInsertSize?: number; // https://github.com/GMOD/bam-js#async-getrecordsforrangerefname-start-end-opts
 }
 
+/**
+ * The Variant Call Format (VCF).
+ */
+export interface VCFData {
+    type: 'vcf';
+
+    /** URL link to the VCF file */
+    url: string;
+
+    /** URL link to the tabix index file */
+    indexUrl: string;
+
+    /** The maximum number of rows to be loaded from the URL. __Default:__ `1000` */
+    sampleLength?: number;
+}
+
 export interface MatrixData {
     type: 'matrix';
 
@@ -954,7 +979,6 @@ export type DataTransform =
     | DisplaceTransform
     | ExonSplitTransform
     | GenomicLengthTransform
-    | SvTypeTransform
     | CoverageTransform
     | JSONParseTransform;
 
@@ -1066,22 +1090,6 @@ export interface GenomicLengthTransform {
     type: 'genomicLength';
     startField: string;
     endField: string;
-    newField: string;
-}
-
-/**
- * Based on the BEDPE, infer SV types.
- * SV types are specified as one of the following strings: DUP, TRA, DEL, t2tINV, h2hINV.
- */
-type BpFields = {
-    chrField: string;
-    posField: string;
-    strandField: string;
-};
-export interface SvTypeTransform {
-    type: 'svType';
-    firstBp: BpFields;
-    secondBp: BpFields;
     newField: string;
 }
 

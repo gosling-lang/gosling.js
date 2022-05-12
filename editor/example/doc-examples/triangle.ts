@@ -1,7 +1,7 @@
 import { SingleTrack } from '@gosling.schema';
 import type { GoslingSpec } from 'gosling.js';
 
-import { HiGlass } from '../json-spec/gene-annotation';
+import { HiGlass } from '../gene-annotation';
 
 export const TRIANGLE: GoslingSpec = {
     ...HiGlass,

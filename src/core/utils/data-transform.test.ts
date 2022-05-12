@@ -1,4 +1,4 @@
-import { filterData, calculateData, aggregateData, splitExon, inferSvType } from './data-transform';
+import { filterData, calculateData, aggregateData, splitExon } from './data-transform';
 
 describe('Data Transformation', () => {
     it('Filter', () => {
@@ -11,60 +11,6 @@ describe('Data Transformation', () => {
         expect(filtered).toHaveLength(2);
         expect(filtered.filter(d => d['c'] === 'b')).toHaveLength(0);
         expect(filtered.filter(d => d['q'] === 4)).toHaveLength(0);
-    });
-    it('SV', () => {
-        const svTypes = inferSvType(
-            {
-                type: 'svType',
-                firstBp: { chrField: 'chr1', posField: 'start1', strandField: 'strand1' },
-                secondBp: { chrField: 'chr2', posField: 'start2', strandField: 'strand2' },
-                newField: 'svclass'
-            },
-            [
-                {
-                    chr1: 7,
-                    start1: 51456884,
-                    chr2: 7,
-                    start2: 51457472,
-                    strand1: '+',
-                    strand2: '-'
-                },
-                {
-                    chr1: 10,
-                    start1: 72295397,
-                    chr2: 10,
-                    start2: 1000,
-                    strand1: '-',
-                    strand2: '-'
-                },
-                {
-                    chr1: 10,
-                    start1: 133252888,
-                    chr2: 10,
-                    start2: 1000,
-                    strand1: '+',
-                    strand2: '-'
-                },
-                {
-                    chr1: 10,
-                    start1: 134996297,
-                    chr2: 10,
-                    start2: 134996635,
-                    strand1: '+',
-                    strand2: '+'
-                },
-                {
-                    chr1: 1,
-                    start1: 169963,
-                    chr2: 2,
-                    start2: 170300,
-                    strand1: '+',
-                    strand2: '-'
-                }
-            ]
-        );
-        expect(svTypes).toHaveLength(5);
-        expect(svTypes.map(d => d['svclass'])).toEqual(['DEL', 't2tINV', 'DUP', 'h2hINV', 'TRA']);
     });
     it('Log', () => {
         {

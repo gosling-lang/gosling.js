@@ -1,57 +1,36 @@
 import type { GoslingSpec } from 'gosling.js';
 import { THUMBNAILS } from './thumbnails';
-import { EX_SPEC_LAYOUT_AND_ARRANGEMENT_1, EX_SPEC_LAYOUT_AND_ARRANGEMENT_2 } from './json-spec/layout-and-arrangement';
-import { EX_SPEC_MATRIX, EX_SPEC_RESPONSIVE_COMPARATIVE_MATRICES } from './json-spec/matrix';
-import { EX_SPEC_CANCER_VARIANT_PROTOTYPE } from './json-spec/cancer-variant';
-import { EX_SPEC_MATRIX_HFFC6 } from './json-spec/matrix-hffc6';
-import { EX_SPEC_LINKING } from './json-spec/visual-linking';
-// import { EX_SPEC_BASIC_SEMANTIC_ZOOM } from './json-spec/basic-semantic-zoom';
+import { EX_SPEC_VISUAL_ENCODING, EX_SPEC_VISUAL_ENCODING_CIRCULAR, EX_SPEC_RULE } from './visual-encoding';
+import { EX_SPEC_LAYOUT_AND_ARRANGEMENT_1, EX_SPEC_LAYOUT_AND_ARRANGEMENT_2 } from './layout-and-arrangement';
+import { EX_SPEC_MATRIX, EX_SPEC_RESPONSIVE_COMPARATIVE_MATRICES } from './matrix';
+import { EX_SPEC_CANCER_VARIANT_PROTOTYPE } from './cancer-variant';
+import { EX_SPEC_MATRIX_HFFC6 } from './matrix-hffc6';
+import { EX_SPEC_LINKING } from './visual-linking';
+import { EX_SPEC_BASIC_SEMANTIC_ZOOM } from './basic-semantic-zoom';
 import {
     EX_SPEC_RESPONSIVE_COMPARATIVE_VIEWS,
     EX_SPEC_RESPONSIVE_IDEOGRAM,
     EX_SPEC_RESPONSIVE_MULTIVEC,
     EX_SPEC_RESPONSIVE_MULTIVEC_CIRCULAR
-} from './json-spec/responsive';
-import { EX_SPEC_RESPONSIVE_TRACK_WISE_COMPARISON } from './json-spec/responsive-track-wise-comparison';
-import { EX_SPEC_ALIGNMENT_CHART, EX_SPEC_RESPONSIVE_ALIGNMENT_CHART } from './json-spec/responsive-alignment';
-import { EX_SPEC_MARK_DISPLACEMENT } from './json-spec/mark-displacement';
-import { EX_SPEC_CIRCULAR_OVERVIEW_LINEAR_DETAIL } from './json-spec/circular-overview-linear-detail-views';
-import { EX_SPEC_SARS_COV_2 } from './json-spec/sars-cov-2';
-import { EX_SPEC_CIRCOS, EX_SPEC_CIRCOS_BETWEEN_LINK, EX_SPEC_CIRCULR_RANGE } from './json-spec/circos';
-import { EX_SPEC_GREMLIN } from './json-spec/gremlin';
-import { EX_SPEC_GENE_ANNOTATION } from './json-spec/gene-annotation';
-import { EX_SPEC_CLINVAR_LOLLIPOP, EX_SPEC_SEQUENCE_TRACK } from './json-spec/semantic-zoom';
-import { EX_SPEC_GIVE } from './json-spec/give';
-// import { EX_SPEC_CORCES_ET_AL } from './json-spec/corces';
-// import { EX_SPEC_SASHIMI } from './json-spec/sashimi';
-import { EX_SPEC_CYTOBANDS } from './json-spec/ideograms';
-import { EX_SPEC_PILEUP } from './json-spec/pileup';
-// import { EX_SPEC_BAND } from './json-spec/vertical-band';
-import { EX_SPEC_TEMPLATE } from './json-spec/track-template';
-import { EX_SPEC_DEBUG } from './json-spec/debug';
+} from './responsive';
+import { EX_SPEC_RESPONSIVE_TRACK_WISE_COMPARISON } from './responsive-track-wise-comparison';
+import { EX_SPEC_ALIGNMENT_CHART, EX_SPEC_RESPONSIVE_ALIGNMENT_CHART } from './responsive-alignment';
+import { EX_SPEC_MARK_DISPLACEMENT } from './mark-displacement';
+import { EX_SPEC_CIRCULAR_OVERVIEW_LINEAR_DETAIL } from './circular-overview-linear-detail-views';
+import { EX_SPEC_SARS_COV_2 } from './sars-cov-2';
+import { EX_SPEC_CIRCOS, EX_SPEC_CIRCOS_BETWEEN_LINK, EX_SPEC_CIRCULR_RANGE } from './circos';
+import { EX_SPEC_GREMLIN } from './gremlin';
+import { EX_SPEC_GENE_ANNOTATION } from './gene-annotation';
+import { EX_SPEC_CLINVAR_LOLLIPOP, EX_SPEC_SEQUENCE_TRACK } from './semantic-zoom';
+import { EX_SPEC_GIVE } from './give';
+import { EX_SPEC_CORCES_ET_AL } from './corces';
+import { EX_SPEC_SASHIMI } from './sashimi';
+import { EX_SPEC_CYTOBANDS } from './ideograms';
+import { EX_SPEC_PILEUP } from './pileup';
+import { EX_SPEC_BAND } from './vertical-band';
+import { EX_SPEC_TEMPLATE } from './track-template';
+import { EX_SPEC_DEBUG } from './debug';
 import * as docExamples from './doc-examples';
-
-// js and json importing from the same file
-import JS_SPEC_VISUAL_ENCODING from './spec/visual-encoding.ts?raw';
-import { spec as JSON_SPEC_VISUAL_ENCODING } from './spec/visual-encoding';
-
-import JS_SPEC_VISUAL_ENCODING_CIRCULAR from './spec/visual-encoding-circular.ts?raw';
-import { spec as JSON_SPEC_VISUAL_ENCODING_CIRCULAR } from './spec/visual-encoding-circular';
-
-import JS_SPEC_RULE from './spec/rule.ts?raw';
-import { spec as JSON_SPEC_RULE } from './spec/rule';
-
-import JS_SPEC_SASHIMI from './spec/sashimi?raw';
-import { spec as JSON_SPEC_SASHIMI } from './spec/sashimi';
-
-import JS_SPEC_BAND from './spec/vertical-band?raw';
-import { spec as JSON_SPEC_BAND } from './spec/vertical-band';
-
-import JS_SPEC_CORCES_ET_AL from './spec/corces?raw';
-import { spec as JSON_SPEC_CORCES_ET_AL } from './spec/corces';
-
-import JS_SPEC_BASIC_SEMANTIC_ZOOM from './spec/basic-semantic-zoom?raw';
-import { spec as JSON_SPEC_BASIC_SEMANTIC_ZOOM } from './spec/basic-semantic-zoom';
 
 export type ExampleGroup =
     | 'Visual Encoding'
@@ -112,7 +91,6 @@ export const examples: {
         spec: GoslingSpec | string;
         description?: string;
         underDevelopment?: boolean;
-        specJs?: string;
         hidden?: boolean;
         forceShow?: boolean;
         image?: string;
@@ -127,29 +105,25 @@ export const examples: {
     VISUAL_ENCODING: {
         group: 'Visual Encoding',
         name: 'Visual Encoding',
-        spec: JSON_SPEC_VISUAL_ENCODING,
-        specJs: JS_SPEC_VISUAL_ENCODING,
+        spec: EX_SPEC_VISUAL_ENCODING,
         image: THUMBNAILS.VISUAL_ENCODING
     },
     VISUAL_ENCODING_CIRCULAR: {
         group: 'Visual Encoding',
         name: 'Circular Visual Encoding',
-        spec: JSON_SPEC_VISUAL_ENCODING_CIRCULAR,
-        specJs: JS_SPEC_VISUAL_ENCODING_CIRCULAR,
+        spec: EX_SPEC_VISUAL_ENCODING_CIRCULAR,
         image: THUMBNAILS.VISUAL_ENCODING_CIRCULAR
     },
     BAND: {
         group: 'Visual Encoding',
         name: 'Band Connection',
-        spec: JSON_SPEC_BAND,
-        specJs: JS_SPEC_BAND,
+        spec: EX_SPEC_BAND,
         image: THUMBNAILS.BAND
     },
     RULE: {
         group: 'Visual Encoding',
         name: 'Rule Mark',
-        spec: JSON_SPEC_RULE,
-        specJs: JS_SPEC_RULE,
+        spec: EX_SPEC_RULE,
         image: THUMBNAILS.RULE
     },
     MATRIX: {
@@ -179,8 +153,7 @@ export const examples: {
     BASIC_SEMANTIC_ZOOM: {
         group: 'Semantic Zooming',
         name: 'Basic Idea of Semantic Zoom',
-        spec: JSON_SPEC_BASIC_SEMANTIC_ZOOM,
-        specJs: JS_SPEC_BASIC_SEMANTIC_ZOOM,
+        spec: EX_SPEC_BASIC_SEMANTIC_ZOOM,
         hidden: true
     },
     MARK_DISPLACEMENT: {
@@ -297,8 +270,7 @@ export const examples: {
     CORCES_ET_AL: {
         group: 'Coordinated Multiple Views',
         name: 'Corces et al. 2020',
-        spec: JSON_SPEC_CORCES_ET_AL,
-        specJs: JS_SPEC_CORCES_ET_AL,
+        spec: EX_SPEC_CORCES_ET_AL,
         image: THUMBNAILS.CORCES_ET_AL
     },
     GREMLIN: {
@@ -310,8 +282,7 @@ export const examples: {
     SASHIMI_PLOT: {
         group: 'Visual Encoding',
         name: 'Sashimi Plot',
-        spec: JSON_SPEC_SASHIMI,
-        specJs: JS_SPEC_SASHIMI,
+        spec: EX_SPEC_SASHIMI,
         underDevelopment: true,
         image: THUMBNAILS.SASHIMI_PLOT
     },
