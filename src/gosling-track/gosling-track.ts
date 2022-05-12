@@ -44,8 +44,6 @@ function usePrereleaseRendering(spec: SingleTrack | OverlaidTrack) {
     return spec.data?.type === 'bam' || spec.data?.type === 'vcf';
 }
 
-type LoadingStage = 'loading' | 'processing' | 'rendering';
-
 // For using libraries, refer to https://github.com/higlass/higlass/blob/f82c0a4f7b2ab1c145091166b0457638934b15f3/app/scripts/configs/available-for-plugins.js
 // `getTilePosAndDimensions()` definition: https://github.com/higlass/higlass/blob/1e1146409c7d7c7014505dd80d5af3e9357c77b6/app/scripts/Tiled1DPixiTrack.js#L133
 // Refer to the following already supported graphics:
@@ -385,7 +383,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             this.xDomain = this._xScale.domain();
             this.xRange = this._xScale.range();
 
-            this.drawLoadingCue('loading');
+            this.drawLoadingCue();
 
             this.worker.then((tileFunctions: any) => {
                 tileFunctions
@@ -394,7 +392,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                         Object.values(this.fetchedTiles).map((x: any) => x.remoteId)
                     )
                     .then((toRender: any) => {
-                        this.drawLoadingCue('processing');
+                        this.drawLoadingCue();
                         const tiles = this.visibleAndFetchedTiles();
 
                         const tabularData = JSON.parse(Buffer.from(toRender).toString());
@@ -409,9 +407,9 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                             tile.tileData.tilePos = [refTile[1]];
                         }
 
-                        this.drawLoadingCue('rendering');
+                        this.drawLoadingCue();
                         callback();
-                        this.drawLoadingCue('done');
+                        this.drawLoadingCue();
                     });
             });
         }
@@ -600,49 +598,36 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
         /**
          * Show visual cue during waiting for visualizations being rendered.
          */
-        drawLoadingCue(stage: LoadingStage | 'done') {
-            let curStage = stage;
-            if (this.loadingStatus) {
-                if (stage === 'done') {
-                    this.loadingStatus.loading--;
-                    this.loadingStatus.processing--;
-                    this.loadingStatus.rendering--;
-                    if (this.loadingStatus.loading !== 0) {
-                        curStage = 'loading';
-                    }
-                } else {
-                    this.loadingStatus[stage]++;
-                }
-            }
-            // console.log(curStage, this.loadingStatus);
-            setTimeout(() => {
-                this.loadingText.x = this.position[0] + this.dimensions[0] - 1;
-                this.loadingText.y = this.position[1] + this.dimensions[1] - 0;
+        drawLoadingCue() {
+            if (this.fetching.size) {
+                const margin = 6;
 
-                const text = {
-                    loading: 'Loading Tiles...',
-                    processing: 'Processing Tiles...',
-                    rendering: 'Rendering Tiles...',
-                    done: ''
-                }[curStage];
-
+                // Show textual message
+                const text = `Fetching... ${Array.from(this.fetching).join(' ')}`;
                 this.loadingText.text = text;
+                this.loadingText.x = this.position[0] + this.dimensions[0] - margin / 2.0;
+                this.loadingText.y = this.position[1] + this.dimensions[1] - margin / 2.0;
 
-                // this.loadingTextBg.clear();
-                // const metric = HGC.libraries.PIXI.TextMetrics.measureText(text, this.loadingTextStyleObj);
-                // const { width: w, height: h }= metric;
+                // Show background
+                const metric = HGC.libraries.PIXI.TextMetrics.measureText(text, this.loadingTextStyleObj);
+                const { width: w, height: h } = metric;
 
-                // this.loadingTextBg.lineStyle(
-                //     1,
-                //     colorToHex('gray'),
-                //     0, // alpha
-                //     0 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
-                // );
+                this.loadingTextBg.clear();
+                this.loadingTextBg.lineStyle(1, colorToHex('grey'), 1, 0.5);
+                this.loadingTextBg.beginFill(colorToHex('white'), 0.8);
+                this.loadingTextBg.drawRect(
+                    this.position[0] + this.dimensions[0] - w - margin - 1,
+                    this.position[1] + this.dimensions[1] - h - margin - 1,
+                    w + margin,
+                    h + margin
+                );
 
-                // this.loadingTextBg.beginFill(colorToHex('white'), 0.5);
-                // this.loadingTextBg.drawRect(this.position[0] + 1, this.position[1] + 1, this.dimensions[0] - 2, 20);
-                this.forceDraw();
-            }, 10);
+                this.loadingText.visible = true;
+                this.loadingTextBg.visible = true;
+            } else {
+                this.loadingText.visible = false;
+                this.loadingTextBg.visible = false;
+            }
         }
 
         /**

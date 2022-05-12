@@ -131,14 +131,15 @@ const tile = async (uid, z, x) => {
 
     const CACHE_KEY = `${uid}.${z}.${x}`;
 
-    if (!tileValues[CACHE_KEY]) {
-        tileValues[CACHE_KEY] = [];
-    }
+    // TODO: Caching is needed
+    // if (!tileValues[CACHE_KEY]) {
+    tileValues[CACHE_KEY] = [];
+    // }
 
     return tilesetInfo(uid).then(tsInfo => {
-        const tileWidth = +tsInfo.max_width / 2 ** +z;
-
         const recordPromises = [];
+
+        const tileWidth = +tsInfo.max_width / 2 ** +z;
 
         // get bounds of this tile
         const minX = tsInfo.min_pos[0] + x * tileWidth;
@@ -181,18 +182,31 @@ const tile = async (uid, z, x) => {
 
             const parseLineStoreData = (line, prevPos) => {
                 const vcfRecord = tbiVCFParser.parseLine(line);
-                const DISTPREV = !prevPos ? null : Math.log(vcfRecord.POS - prevPos);
+
+                // Additionally inferred values
+                const DISTPREV = !prevPos ? null : vcfRecord.POS - prevPos;
+                const DISTPREVLOGE = !prevPos ? null : Math.log(vcfRecord.POS - prevPos);
                 const TYPE = getMutationType(vcfRecord.REF, vcfRecord.ALT);
 
-                tileValues[CACHE_KEY] = tileValues[CACHE_KEY].concat([
-                    {
-                        ...vcfRecord,
-                        TYPE,
-                        INFO: JSON.stringify(vcfRecord),
-                        POS: vcfRecord.POS + 1 + cumPos.pos,
-                        DISTPREV
-                    }
-                ]);
+                // Create key values
+                const data = {
+                    ...vcfRecord,
+                    TYPE,
+                    INFO: JSON.stringify(vcfRecord.INFO),
+                    POS: vcfRecord.POS + 1 + cumPos.pos,
+                    DISTPREV,
+                    DISTPREVLOGE
+                };
+
+                // Parse INFO fields
+                Object.keys(vcfRecord.INFO).forEach(key => {
+                    data[key] = vcfRecord.INFO[key][0];
+                });
+
+                // Store this column
+                tileValues[CACHE_KEY] = tileValues[CACHE_KEY].concat([data]);
+
+                // Return current POS
                 return vcfRecord.POS;
             };
 

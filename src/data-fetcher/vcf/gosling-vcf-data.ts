@@ -69,6 +69,8 @@ class GoslingVcfData {
         //     this.toFetch.clear();
         // }
 
+        this.track.drawLoadingCue();
+
         tileIds.forEach((tileId: any) => this.toFetch.add(tileId));
 
         if (this.fetchTimeout) {
@@ -82,8 +84,6 @@ class GoslingVcfData {
     }
 
     sendFetch(receivedTiles: any, tileIds: any) {
-        // this.track.updateLoadingText();
-
         this.worker.then((tileFunctions: any) => {
             tileFunctions.fetchTilesDebounced(this.uid, tileIds).then(receivedTiles);
         });
