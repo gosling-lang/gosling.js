@@ -47,6 +47,8 @@
     "dependencies": {
         "@gmod/bam": "^1.1.8",
         "@gmod/bbi": "^1.0.30",
+        "@gmod/tabix": "^1.5.3",
+        "@gmod/vcf": "^5.0.6",
         "@types/bezier-js": "^4.1.0",
         "@types/d3": "^7.0.0",
         "@types/lodash": "^4.14.151",
