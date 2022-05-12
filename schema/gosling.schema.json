@@ -531,6 +531,9 @@
         },
         {
           "$ref": "#/definitions/BAMData"
+        },
+        {
+          "$ref": "#/definitions/VCFData"
         }
       ]
     },
@@ -8402,6 +8405,34 @@
           "$ref": "#/definitions/TemplateTrack"
         }
       ]
+    },
+    "VCFData": {
+      "additionalProperties": false,
+      "description": "The Variant Call Format (VCF).",
+      "properties": {
+        "indexUrl": {
+          "description": "URL link to the tabix index file",
+          "type": "string"
+        },
+        "sampleLength": {
+          "description": "The maximum number of rows to be loaded from the URL. __Default:__ `1000`",
+          "type": "number"
+        },
+        "type": {
+          "const": "vcf",
+          "type": "string"
+        },
+        "url": {
+          "description": "URL link to the VCF file",
+          "type": "string"
+        }
+      },
+      "required": [
+        "type",
+        "url",
+        "indexUrl"
+      ],
+      "type": "object"
     },
     "ValueExtent": {
       "anyOf": [

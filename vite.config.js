@@ -35,7 +35,7 @@ const bundleWebWorker = {
 const manualInlineWorker = {
     apply: 'build',
     async transform(code, id) {
-        if (id.endsWith('bam-worker.js?worker&inline')) {
+        if (id.endsWith('bam-worker.js?worker&inline') || id.endsWith('vcf-worker.js?worker&inline')) {
             const bundle = await bundleWebWorker.transform(code, id + '?worker_file');
             const base64 = Buffer.from(bundle).toString('base64');
             // https://github.com/vitejs/vite/blob/72cb33e947e7aa72d27ed0c5eacb2457d523dfbf/packages/vite/src/node/plugins/worker.ts#L78-L87

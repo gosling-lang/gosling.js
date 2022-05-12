@@ -8,7 +8,7 @@ export function validTilesetUrl(url: string) {
 export function parseServerAndTilesetUidFromUrl(url: string) {
     if (!url.includes('tileset_info/?d=') || (!url.includes('https:') && !url.includes('http:'))) {
         // TODO: Add regular expression to validate the format.
-        console.warn(`Data url format is incorrect:${url}`);
+        // console.warn(`Data url format is incorrect:${url}`);
         return { server: undefined, tilesetUid: undefined };
     }
 
