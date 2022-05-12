@@ -4,17 +4,10 @@ import { Channel } from '../gosling.schema';
 import { getValueUsingChannel } from '../gosling.schema.guards';
 import colorToHex from '../utils/color-to-hex';
 import { cartesianToPolar } from '../utils/polar';
-import { TooltipData, TOOLTIP_MOUSEOVER_MARGIN as G } from '../../gosling-tooltip';
 
-export function drawLine(
-    g: PIXI.Graphics,
-    tm: GoslingTrackModel,
-    tooltips: TooltipData[],
-    trackWidth: number,
-    trackHeight: number
-) {
+export function drawLine(g: PIXI.Graphics, model: GoslingTrackModel, trackWidth: number, trackHeight: number) {
     /* track spec */
-    const spec = tm.spec();
+    const spec = model.spec();
 
     if (!spec.width || !spec.height) {
         console.warn('Size of a track is not properly determined, so visual mark cannot be rendered');
@@ -22,7 +15,7 @@ export function drawLine(
     }
 
     /* data */
-    const data = tm.data();
+    const data = model.data();
 
     /* circular parameters */
     const circular = spec.layout === 'circular';
@@ -35,15 +28,15 @@ export function drawLine(
     const trackCenterY = trackHeight / 2.0;
 
     /* row separation */
-    const rowCategories = (tm.getChannelDomainArray('row') as string[]) ?? ['___SINGLE_ROW___'];
+    const rowCategories = (model.getChannelDomainArray('row') as string[]) ?? ['___SINGLE_ROW___'];
     const rowHeight = trackHeight / rowCategories.length;
 
     /* color separation */
-    const colorCategories = (tm.getChannelDomainArray('color') as string[]) ?? ['___SINGLE_COLOR___'];
+    const colorCategories = (model.getChannelDomainArray('color') as string[]) ?? ['___SINGLE_COLOR___'];
 
     /* render */
     rowCategories.forEach(rowCategory => {
-        const rowPosition = tm.encodedValue('row', rowCategory);
+        const rowPosition = model.encodedValue('row', rowCategory);
 
         // line marks are drawn for each color
         colorCategories.forEach(colorCategory => {
@@ -61,11 +54,11 @@ export function drawLine(
                         (getValueUsingChannel(d2, spec.x as Channel) as number)
                 )
                 .forEach((d, i) => {
-                    const cx = tm.encodedPIXIProperty('x', d);
-                    const y = tm.encodedPIXIProperty('y', d);
-                    const size = tm.encodedPIXIProperty('size', d);
-                    const color = tm.encodedPIXIProperty('color', d); // should be identical for a single line
-                    const opacity = tm.encodedPIXIProperty('opacity', d);
+                    const cx = model.encodedPIXIProperty('x', d);
+                    const y = model.encodedPIXIProperty('y', d);
+                    const size = model.encodedPIXIProperty('size', d);
+                    const color = model.encodedPIXIProperty('color', d); // should be identical for a single line
+                    const opacity = model.encodedPIXIProperty('opacity', d);
 
                     g.lineStyle(
                         size,
@@ -91,22 +84,16 @@ export function drawLine(
                         } else {
                             g.lineTo(pos.x, pos.y);
                         }
+                        /* Mouse Events */
+                        model.getMouseEventModel().addPointBasedEvent(d, [pos.x, pos.y, 1]);
                     } else {
                         if (i === 0) {
                             g.moveTo(cx, rowPosition + rowHeight - y);
                         } else {
                             g.lineTo(cx, rowPosition + rowHeight - y);
                         }
-
-                        /* Tooltip data */
-                        if (spec.tooltip) {
-                            tooltips.push({
-                                datum: d,
-                                isMouseOver: (x: number, y: number) =>
-                                    cx - G < x && x < cx + G && rowPosition - G < y && y < rowPosition + rowHeight + G,
-                                markInfo: { x: cx, y, width: G, height: y, type: 'line' }
-                            } as TooltipData);
-                        }
+                        /* Mouse Events */
+                        model.getMouseEventModel().addPointBasedEvent(d, [cx, rowPosition + rowHeight - y, 1]);
                     }
                 });
         });

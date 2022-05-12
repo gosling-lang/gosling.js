@@ -1,4 +1,3 @@
-import { TooltipData, TOOLTIP_MOUSEOVER_MARGIN as G } from '../../gosling-tooltip';
 import { GoslingTrackModel } from '../gosling-track-model';
 import { cartesianToPolar, valueToRadian } from '../utils/polar';
 import { PIXIVisualProperty } from '../visual-property.schema';
@@ -64,11 +63,13 @@ export function drawRect(HGC: any, trackInfo: any, tile: any, model: GoslingTrac
             return;
         }
 
-        const xs = x;
-        const xe = x + rectWidth;
-        // const ys = y;
-        // const ye = y + rectHeight;
-        // y = y + rectHeight / 2.0;
+        const [xs, xe, ys, ye] = [
+            x,
+            x + rectWidth,
+            rowPosition + rowHeight - y - rectHeight / 2.0,
+            rowPosition + rowHeight - y + rectHeight / 2.0
+        ];
+
         const absoluteHeight = model.visualPropertyByChannel('size', d) ?? undefined; // TODO: this is making it complicated, way to simplify this?
 
         // stroke
@@ -79,6 +80,8 @@ export function drawRect(HGC: any, trackInfo: any, tile: any, model: GoslingTrac
             0.5 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
         );
 
+        let polygonForMouseEvent: number[] = [];
+
         if (circular) {
             if (xe < 0 || trackWidth < xs) {
                 // do not draw overflewed visual marks
@@ -86,10 +89,8 @@ export function drawRect(HGC: any, trackInfo: any, tile: any, model: GoslingTrac
             }
 
             // TODO: Does a `row` channel affect here?
-            let farR =
-                trackOuterRadius - ((rowPosition + rowHeight - y - rectHeight / 2.0) / trackHeight) * trackRingSize;
-            let nearR =
-                trackOuterRadius - ((rowPosition + rowHeight - y + rectHeight / 2.0) / trackHeight) * trackRingSize;
+            let farR = trackOuterRadius - (ys / trackHeight) * trackRingSize;
+            let nearR = trackOuterRadius - (ye / trackHeight) * trackRingSize;
 
             if (absoluteHeight) {
                 const midR = trackOuterRadius - ((rowPosition + y) / trackHeight) * trackRingSize;
@@ -105,34 +106,16 @@ export function drawRect(HGC: any, trackInfo: any, tile: any, model: GoslingTrac
             g.moveTo(sPos.x, sPos.y);
             g.arc(cx, cy, nearR, startRad, endRad, true);
             g.arc(cx, cy, farR, endRad, startRad, false);
+            polygonForMouseEvent = Array.from(g.currentPath.points);
             g.closePath();
         } else {
             g.beginFill(colorToHex(color === 'none' ? 'white' : color), color === 'none' ? 0 : actualOpacity);
-            g.drawRect(xs, rowPosition + rowHeight - y - rectHeight / 2.0, xe - xs, rectHeight);
-
-            /* SVG data */
-            // We do not currently plan to support SVG elements.
-            // trackInfo.svgData.push({ type: 'rect', xs, xe, ys, ye, color, stroke, actualOpacity });
-
-            /* Tooltip data */
-            if (spec.tooltip) {
-                trackInfo.tooltips.push({
-                    datum: d,
-                    isMouseOver: (mouseX: number, mouseY: number) =>
-                        xs - G < mouseX &&
-                        mouseX < xe + G &&
-                        rowPosition + rowHeight - y - rectHeight / 2.0 - G < mouseY &&
-                        mouseY < rowPosition + rowHeight - y + rectHeight / 2.0 + G,
-                    markInfo: {
-                        x: xs,
-                        y: rowPosition + rowHeight - y - rectHeight / 2.0,
-                        width: xe - xs,
-                        height: rectHeight,
-                        type: 'rect'
-                    }
-                } as TooltipData);
-            }
+            g.drawRect(xs, ys, xe - xs, ye - ys);
+            polygonForMouseEvent = [xs, ys, xs, ye, xe, ye, xe, ys];
         }
+
+        /* Mouse Events */
+        model.getMouseEventModel().addPolygonBasedEvent(d, polygonForMouseEvent);
     });
 }
 

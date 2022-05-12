@@ -22,12 +22,10 @@ import { EX_SPEC_GREMLIN } from './json-spec/gremlin';
 import { EX_SPEC_GENE_ANNOTATION } from './json-spec/gene-annotation';
 import { EX_SPEC_CLINVAR_LOLLIPOP, EX_SPEC_SEQUENCE_TRACK } from './json-spec/semantic-zoom';
 import { EX_SPEC_GIVE } from './json-spec/give';
-// import { EX_SPEC_CORCES_ET_AL } from './json-spec/corces';
-// import { EX_SPEC_SASHIMI } from './json-spec/sashimi';
 import { EX_SPEC_CYTOBANDS } from './json-spec/ideograms';
 import { EX_SPEC_PILEUP } from './json-spec/pileup';
-// import { EX_SPEC_BAND } from './json-spec/vertical-band';
 import { EX_SPEC_TEMPLATE } from './json-spec/track-template';
+import { EX_SPEC_MOUSE_EVENT } from './json-spec/mouse-event';
 import { EX_SPEC_DEBUG } from './json-spec/debug';
 import * as docExamples from './doc-examples';
 
@@ -321,6 +319,13 @@ export const examples: {
         spec: EX_SPEC_CIRCOS_BETWEEN_LINK,
         underDevelopment: true,
         image: THUMBNAILS.CIRCULAR_BETWEEN_BANDS
+    },
+    MOUSE_EVENT: {
+        group: 'Visual Encoding',
+        name: 'Mouse Hovering Effects',
+        spec: EX_SPEC_MOUSE_EVENT,
+        underDevelopment: true,
+        image: THUMBNAILS.MOUSE_EVENT
     },
     GIVE: {
         group: 'Applications',

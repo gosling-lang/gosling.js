@@ -1,6 +1,8 @@
 import { Datum, SingleTrack } from '../core/gosling.schema';
 import { IsDataDeepTileset } from '../core/gosling.schema.guards';
 
+export const GOSLING_DATA_ROW_UID_FIELD = 'gosling-data-row-uid';
+
 /**
  * Convert genomic data formats to common tabular formats for given tile.
  */
@@ -272,10 +274,13 @@ export function getTabularData(
 
         const { genomicFields, exonIntervalFields, valueFields } = spec.data;
 
-        data.raw.forEach((d: any) => {
+        data.raw.forEach((d: any, i: number) => {
             const { chrOffset, fields } = d;
 
             const datum: { [k: string]: number | string } = {};
+
+            datum[GOSLING_DATA_ROW_UID_FIELD] = `${i}`;
+
             genomicFields.forEach(g => {
                 datum[g.name] = +fields[g.index] + chrOffset;
             });

@@ -1089,6 +1089,45 @@
               "description": "Specify the end angle (in the range of [0, 360]) of circular tracks (`{\"layout\": \"circular\"}`).",
               "type": "number"
             },
+            "experimental": {
+              "additionalProperties": false,
+              "properties": {
+                "hovering": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "color": {
+                      "type": "string"
+                    },
+                    "enableGroupHovering": {
+                      "type": "boolean"
+                    },
+                    "enableMultiHovering": {
+                      "type": "boolean"
+                    },
+                    "opacity": {
+                      "type": "number"
+                    },
+                    "searchGroupByField": {
+                      "type": "string"
+                    },
+                    "showHoveringOnTheBack": {
+                      "type": "boolean"
+                    },
+                    "stroke": {
+                      "type": "string"
+                    },
+                    "strokeOpacity": {
+                      "type": "number"
+                    },
+                    "strokeWidth": {
+                      "type": "number"
+                    }
+                  },
+                  "type": "object"
+                }
+              },
+              "type": "object"
+            },
             "flipY": {
               "type": "boolean"
             },
@@ -1218,6 +1257,45 @@
                       "endAngle": {
                         "description": "Specify the end angle (in the range of [0, 360]) of circular tracks (`{\"layout\": \"circular\"}`).",
                         "type": "number"
+                      },
+                      "experimental": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "hovering": {
+                            "additionalProperties": false,
+                            "properties": {
+                              "color": {
+                                "type": "string"
+                              },
+                              "enableGroupHovering": {
+                                "type": "boolean"
+                              },
+                              "enableMultiHovering": {
+                                "type": "boolean"
+                              },
+                              "opacity": {
+                                "type": "number"
+                              },
+                              "searchGroupByField": {
+                                "type": "string"
+                              },
+                              "showHoveringOnTheBack": {
+                                "type": "boolean"
+                              },
+                              "stroke": {
+                                "type": "string"
+                              },
+                              "strokeOpacity": {
+                                "type": "number"
+                              },
+                              "strokeWidth": {
+                                "type": "number"
+                              }
+                            },
+                            "type": "object"
+                          }
+                        },
+                        "type": "object"
                       },
                       "flipY": {
                         "type": "boolean"
@@ -1815,6 +1893,45 @@
               "description": "Specify the end angle (in the range of [0, 360]) of circular tracks (`{\"layout\": \"circular\"}`).",
               "type": "number"
             },
+            "experimental": {
+              "additionalProperties": false,
+              "properties": {
+                "hovering": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "color": {
+                      "type": "string"
+                    },
+                    "enableGroupHovering": {
+                      "type": "boolean"
+                    },
+                    "enableMultiHovering": {
+                      "type": "boolean"
+                    },
+                    "opacity": {
+                      "type": "number"
+                    },
+                    "searchGroupByField": {
+                      "type": "string"
+                    },
+                    "showHoveringOnTheBack": {
+                      "type": "boolean"
+                    },
+                    "stroke": {
+                      "type": "string"
+                    },
+                    "strokeOpacity": {
+                      "type": "number"
+                    },
+                    "strokeWidth": {
+                      "type": "number"
+                    }
+                  },
+                  "type": "object"
+                }
+              },
+              "type": "object"
+            },
             "flipY": {
               "type": "boolean"
             },
@@ -1944,6 +2061,45 @@
                       "endAngle": {
                         "description": "Specify the end angle (in the range of [0, 360]) of circular tracks (`{\"layout\": \"circular\"}`).",
                         "type": "number"
+                      },
+                      "experimental": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "hovering": {
+                            "additionalProperties": false,
+                            "properties": {
+                              "color": {
+                                "type": "string"
+                              },
+                              "enableGroupHovering": {
+                                "type": "boolean"
+                              },
+                              "enableMultiHovering": {
+                                "type": "boolean"
+                              },
+                              "opacity": {
+                                "type": "number"
+                              },
+                              "searchGroupByField": {
+                                "type": "string"
+                              },
+                              "showHoveringOnTheBack": {
+                                "type": "boolean"
+                              },
+                              "stroke": {
+                                "type": "string"
+                              },
+                              "strokeOpacity": {
+                                "type": "number"
+                              },
+                              "strokeWidth": {
+                                "type": "number"
+                              }
+                            },
+                            "type": "object"
+                          }
+                        },
+                        "type": "object"
                       },
                       "flipY": {
                         "type": "boolean"
@@ -2591,6 +2747,45 @@
                       "endAngle": {
                         "description": "Specify the end angle (in the range of [0, 360]) of circular tracks (`{\"layout\": \"circular\"}`).",
                         "type": "number"
+                      },
+                      "experimental": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "hovering": {
+                            "additionalProperties": false,
+                            "properties": {
+                              "color": {
+                                "type": "string"
+                              },
+                              "enableGroupHovering": {
+                                "type": "boolean"
+                              },
+                              "enableMultiHovering": {
+                                "type": "boolean"
+                              },
+                              "opacity": {
+                                "type": "number"
+                              },
+                              "searchGroupByField": {
+                                "type": "string"
+                              },
+                              "showHoveringOnTheBack": {
+                                "type": "boolean"
+                              },
+                              "stroke": {
+                                "type": "string"
+                              },
+                              "strokeOpacity": {
+                                "type": "number"
+                              },
+                              "strokeWidth": {
+                                "type": "number"
+                              }
+                            },
+                            "type": "object"
+                          }
+                        },
+                        "type": "object"
                       },
                       "flipY": {
                         "type": "boolean"
@@ -3766,6 +3961,45 @@
           "description": "Specify the end angle (in the range of [0, 360]) of circular tracks (`{\"layout\": \"circular\"}`).",
           "type": "number"
         },
+        "experimental": {
+          "additionalProperties": false,
+          "properties": {
+            "hovering": {
+              "additionalProperties": false,
+              "properties": {
+                "color": {
+                  "type": "string"
+                },
+                "enableGroupHovering": {
+                  "type": "boolean"
+                },
+                "enableMultiHovering": {
+                  "type": "boolean"
+                },
+                "opacity": {
+                  "type": "number"
+                },
+                "searchGroupByField": {
+                  "type": "string"
+                },
+                "showHoveringOnTheBack": {
+                  "type": "boolean"
+                },
+                "stroke": {
+                  "type": "string"
+                },
+                "strokeOpacity": {
+                  "type": "number"
+                },
+                "strokeWidth": {
+                  "type": "number"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "type": "object"
+        },
         "flipY": {
           "type": "boolean"
         },
@@ -3864,6 +4098,45 @@
               "endAngle": {
                 "description": "Specify the end angle (in the range of [0, 360]) of circular tracks (`{\"layout\": \"circular\"}`).",
                 "type": "number"
+              },
+              "experimental": {
+                "additionalProperties": false,
+                "properties": {
+                  "hovering": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "color": {
+                        "type": "string"
+                      },
+                      "enableGroupHovering": {
+                        "type": "boolean"
+                      },
+                      "enableMultiHovering": {
+                        "type": "boolean"
+                      },
+                      "opacity": {
+                        "type": "number"
+                      },
+                      "searchGroupByField": {
+                        "type": "string"
+                      },
+                      "showHoveringOnTheBack": {
+                        "type": "boolean"
+                      },
+                      "stroke": {
+                        "type": "string"
+                      },
+                      "strokeOpacity": {
+                        "type": "number"
+                      },
+                      "strokeWidth": {
+                        "type": "number"
+                      }
+                    },
+                    "type": "object"
+                  }
+                },
+                "type": "object"
               },
               "flipY": {
                 "type": "boolean"
@@ -4413,6 +4686,45 @@
           "description": "Specify the end angle (in the range of [0, 360]) of circular tracks (`{\"layout\": \"circular\"}`).",
           "type": "number"
         },
+        "experimental": {
+          "additionalProperties": false,
+          "properties": {
+            "hovering": {
+              "additionalProperties": false,
+              "properties": {
+                "color": {
+                  "type": "string"
+                },
+                "enableGroupHovering": {
+                  "type": "boolean"
+                },
+                "enableMultiHovering": {
+                  "type": "boolean"
+                },
+                "opacity": {
+                  "type": "number"
+                },
+                "searchGroupByField": {
+                  "type": "string"
+                },
+                "showHoveringOnTheBack": {
+                  "type": "boolean"
+                },
+                "stroke": {
+                  "type": "string"
+                },
+                "strokeOpacity": {
+                  "type": "number"
+                },
+                "strokeWidth": {
+                  "type": "number"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "type": "object"
+        },
         "flipY": {
           "type": "boolean"
         },
@@ -4772,6 +5084,45 @@
           "description": "Specify the end angle (in the range of [0, 360]) of circular tracks (`{\"layout\": \"circular\"}`).",
           "type": "number"
         },
+        "experimental": {
+          "additionalProperties": false,
+          "properties": {
+            "hovering": {
+              "additionalProperties": false,
+              "properties": {
+                "color": {
+                  "type": "string"
+                },
+                "enableGroupHovering": {
+                  "type": "boolean"
+                },
+                "enableMultiHovering": {
+                  "type": "boolean"
+                },
+                "opacity": {
+                  "type": "number"
+                },
+                "searchGroupByField": {
+                  "type": "string"
+                },
+                "showHoveringOnTheBack": {
+                  "type": "boolean"
+                },
+                "stroke": {
+                  "type": "string"
+                },
+                "strokeOpacity": {
+                  "type": "number"
+                },
+                "strokeWidth": {
+                  "type": "number"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "type": "object"
+        },
         "flipY": {
           "type": "boolean"
         },
@@ -4870,6 +5221,45 @@
               "endAngle": {
                 "description": "Specify the end angle (in the range of [0, 360]) of circular tracks (`{\"layout\": \"circular\"}`).",
                 "type": "number"
+              },
+              "experimental": {
+                "additionalProperties": false,
+                "properties": {
+                  "hovering": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "color": {
+                        "type": "string"
+                      },
+                      "enableGroupHovering": {
+                        "type": "boolean"
+                      },
+                      "enableMultiHovering": {
+                        "type": "boolean"
+                      },
+                      "opacity": {
+                        "type": "number"
+                      },
+                      "searchGroupByField": {
+                        "type": "string"
+                      },
+                      "showHoveringOnTheBack": {
+                        "type": "boolean"
+                      },
+                      "stroke": {
+                        "type": "string"
+                      },
+                      "strokeOpacity": {
+                        "type": "number"
+                      },
+                      "strokeWidth": {
+                        "type": "number"
+                      }
+                    },
+                    "type": "object"
+                  }
+                },
+                "type": "object"
               },
               "flipY": {
                 "type": "boolean"
@@ -5544,6 +5934,45 @@
           "description": "Specify the end angle (in the range of [0, 360]) of circular tracks (`{\"layout\": \"circular\"}`).",
           "type": "number"
         },
+        "experimental": {
+          "additionalProperties": false,
+          "properties": {
+            "hovering": {
+              "additionalProperties": false,
+              "properties": {
+                "color": {
+                  "type": "string"
+                },
+                "enableGroupHovering": {
+                  "type": "boolean"
+                },
+                "enableMultiHovering": {
+                  "type": "boolean"
+                },
+                "opacity": {
+                  "type": "number"
+                },
+                "searchGroupByField": {
+                  "type": "string"
+                },
+                "showHoveringOnTheBack": {
+                  "type": "boolean"
+                },
+                "stroke": {
+                  "type": "string"
+                },
+                "strokeOpacity": {
+                  "type": "number"
+                },
+                "strokeWidth": {
+                  "type": "number"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "type": "object"
+        },
         "flipY": {
           "type": "boolean"
         },
@@ -5883,6 +6312,45 @@
               "description": "Specify the end angle (in the range of [0, 360]) of circular tracks (`{\"layout\": \"circular\"}`).",
               "type": "number"
             },
+            "experimental": {
+              "additionalProperties": false,
+              "properties": {
+                "hovering": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "color": {
+                      "type": "string"
+                    },
+                    "enableGroupHovering": {
+                      "type": "boolean"
+                    },
+                    "enableMultiHovering": {
+                      "type": "boolean"
+                    },
+                    "opacity": {
+                      "type": "number"
+                    },
+                    "searchGroupByField": {
+                      "type": "string"
+                    },
+                    "showHoveringOnTheBack": {
+                      "type": "boolean"
+                    },
+                    "stroke": {
+                      "type": "string"
+                    },
+                    "strokeOpacity": {
+                      "type": "number"
+                    },
+                    "strokeWidth": {
+                      "type": "number"
+                    }
+                  },
+                  "type": "object"
+                }
+              },
+              "type": "object"
+            },
             "flipY": {
               "type": "boolean"
             },
@@ -6008,6 +6476,45 @@
                       "endAngle": {
                         "description": "Specify the end angle (in the range of [0, 360]) of circular tracks (`{\"layout\": \"circular\"}`).",
                         "type": "number"
+                      },
+                      "experimental": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "hovering": {
+                            "additionalProperties": false,
+                            "properties": {
+                              "color": {
+                                "type": "string"
+                              },
+                              "enableGroupHovering": {
+                                "type": "boolean"
+                              },
+                              "enableMultiHovering": {
+                                "type": "boolean"
+                              },
+                              "opacity": {
+                                "type": "number"
+                              },
+                              "searchGroupByField": {
+                                "type": "string"
+                              },
+                              "showHoveringOnTheBack": {
+                                "type": "boolean"
+                              },
+                              "stroke": {
+                                "type": "string"
+                              },
+                              "strokeOpacity": {
+                                "type": "number"
+                              },
+                              "strokeWidth": {
+                                "type": "number"
+                              }
+                            },
+                            "type": "object"
+                          }
+                        },
+                        "type": "object"
                       },
                       "flipY": {
                         "type": "boolean"
@@ -6602,6 +7109,45 @@
               "description": "Specify the end angle (in the range of [0, 360]) of circular tracks (`{\"layout\": \"circular\"}`).",
               "type": "number"
             },
+            "experimental": {
+              "additionalProperties": false,
+              "properties": {
+                "hovering": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "color": {
+                      "type": "string"
+                    },
+                    "enableGroupHovering": {
+                      "type": "boolean"
+                    },
+                    "enableMultiHovering": {
+                      "type": "boolean"
+                    },
+                    "opacity": {
+                      "type": "number"
+                    },
+                    "searchGroupByField": {
+                      "type": "string"
+                    },
+                    "showHoveringOnTheBack": {
+                      "type": "boolean"
+                    },
+                    "stroke": {
+                      "type": "string"
+                    },
+                    "strokeOpacity": {
+                      "type": "number"
+                    },
+                    "strokeWidth": {
+                      "type": "number"
+                    }
+                  },
+                  "type": "object"
+                }
+              },
+              "type": "object"
+            },
             "flipY": {
               "type": "boolean"
             },
@@ -6727,6 +7273,45 @@
                       "endAngle": {
                         "description": "Specify the end angle (in the range of [0, 360]) of circular tracks (`{\"layout\": \"circular\"}`).",
                         "type": "number"
+                      },
+                      "experimental": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "hovering": {
+                            "additionalProperties": false,
+                            "properties": {
+                              "color": {
+                                "type": "string"
+                              },
+                              "enableGroupHovering": {
+                                "type": "boolean"
+                              },
+                              "enableMultiHovering": {
+                                "type": "boolean"
+                              },
+                              "opacity": {
+                                "type": "number"
+                              },
+                              "searchGroupByField": {
+                                "type": "string"
+                              },
+                              "showHoveringOnTheBack": {
+                                "type": "boolean"
+                              },
+                              "stroke": {
+                                "type": "string"
+                              },
+                              "strokeOpacity": {
+                                "type": "number"
+                              },
+                              "strokeWidth": {
+                                "type": "number"
+                              }
+                            },
+                            "type": "object"
+                          }
+                        },
+                        "type": "object"
                       },
                       "flipY": {
                         "type": "boolean"
@@ -7367,6 +7952,45 @@
                       "endAngle": {
                         "description": "Specify the end angle (in the range of [0, 360]) of circular tracks (`{\"layout\": \"circular\"}`).",
                         "type": "number"
+                      },
+                      "experimental": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "hovering": {
+                            "additionalProperties": false,
+                            "properties": {
+                              "color": {
+                                "type": "string"
+                              },
+                              "enableGroupHovering": {
+                                "type": "boolean"
+                              },
+                              "enableMultiHovering": {
+                                "type": "boolean"
+                              },
+                              "opacity": {
+                                "type": "number"
+                              },
+                              "searchGroupByField": {
+                                "type": "string"
+                              },
+                              "showHoveringOnTheBack": {
+                                "type": "boolean"
+                              },
+                              "stroke": {
+                                "type": "string"
+                              },
+                              "strokeOpacity": {
+                                "type": "number"
+                              },
+                              "strokeWidth": {
+                                "type": "number"
+                              }
+                            },
+                            "type": "object"
+                          }
+                        },
+                        "type": "object"
                       },
                       "flipY": {
                         "type": "boolean"
@@ -8066,8 +8690,7 @@
           "enum": [
             "elliptical",
             "circular",
-            "straight",
-            "_bezier_deprecated_"
+            "straight"
           ],
           "type": "string"
         },

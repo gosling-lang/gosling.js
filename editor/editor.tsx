@@ -218,6 +218,8 @@ function Editor(props: any) {
     const [jsCode, setJsCode] = useState(defaultJsCode); //[TO-DO: more js format examples]
     const [goslingSpec, setGoslingSpec] = useState<gosling.GoslingSpec>();
     const [log, setLog] = useState<ReturnType<typeof gosling.validateGoslingSpec>>({ message: '', state: 'success' });
+    // const [mouseEventInfo, setMouseEventInfo] =
+    //     useState<{ type: 'mouseover' | 'click'; data: Datum[]; position: string }>();
     const [showExamples, setShowExamples] = useState(false);
     const [autoRun, setAutoRun] = useState(true);
     const [selectedPreviewData, setSelectedPreviewData] = useState<number>(0);
@@ -285,19 +287,24 @@ function Editor(props: any) {
 
     // publish event listeners to Gosling.js
     useEffect(() => {
-        // if (gosRef.current) {
-        //    gosRef.current.api.subscribe('rawdata', (type: string, data: RawDataEventData) => {
-        //        console.log('rawdata', data);
-        //    });
-        //     gosRef.current.api.subscribe('click', (type: string, data: CommonEventData) => {
-        //         gosRef.current.api.zoomTo('bam-1', `chr${data.data.chr1}:${data.data.start1}-${data.data.end1}`, 2000);
-        //         gosRef.current.api.zoomTo('bam-2', `chr${data.data.chr2}:${data.data.start2}-${data.data.end2}`, 2000);
-        //         console.log('click', data.data);
-        //     });
-        // }
-        // return () => {
-        //     gosRef.current.api.unsubscribe('rawdata');
-        // }
+        if (gosRef.current) {
+            // gosRef.current.api.subscribe('rawdata', (type: string, data: RawDataEventData) => {
+            // console.log('rawdata', data);
+            // gosRef.current.api.zoomTo('bam-1', `chr${data.data.chr1}:${data.data.start1}-${data.data.end1}`, 2000);
+            // gosRef.current.api.zoomTo('bam-2', `chr${data.data.chr2}:${data.data.start2}-${data.data.end2}`, 2000);
+            // console.log('click', data.data);
+            // TODO: show messages on the right-bottom of the editor
+            // gosRef.current.api.subscribe('mouseover', (type: string, eventData: CommonEventData) => {
+            //     setMouseEventInfo({ type: 'mouseover', data: eventData.data, position: eventData.genomicPosition });
+            // });
+            // gosRef.current.api.subscribe('click', (type: string, eventData: CommonEventData) => {
+            //     setMouseEventInfo({ type: 'click', data: eventData.data, position: eventData.genomicPosition });
+            // });
+        }
+        return () => {
+            // gosRef.current.api.unsubscribe('mouseover');
+            // gosRef.current.api.unsubscribe('click');
+        };
     }, [gosRef.current]);
 
     /**
@@ -705,7 +712,7 @@ function Editor(props: any) {
                     >
                         {Object.keys(Themes).map((d: string) => (
                             <option key={d} value={d}>
-                                {d}
+                                {`Theme: ${d}`}
                             </option>
                         ))}
                     </select>
@@ -1071,6 +1078,35 @@ function Editor(props: any) {
                                             }}
                                         />
                                     </div>
+                                    {/* {expertMode && false ? (
+                                        <div
+                                            style={{
+                                                position: 'absolute',
+                                                right: '2px',
+                                                bottom: '2px',
+                                                padding: '20px',
+                                                background: '#FAFAFAAA',
+                                                border: '1px solid black'
+                                            }}
+                                        >
+                                            <div style={{ fontWeight: 'bold' }}>
+                                                {`${mouseEventInfo?.data.length} Marks Selected By Mouse ${
+                                                    mouseEventInfo?.type === 'click' ? 'Click' : 'Over'
+                                                }`}
+                                            </div>
+                                            <div style={{}}>{`The event occurs at ${mouseEventInfo?.position}`}</div>
+                                            <table>
+                                                {mouseEventInfo?.data && mouseEventInfo?.data.length !== 0
+                                                    ? Object.entries(mouseEventInfo?.data[0]).map(([k, v]) => (
+                                                          <tr key={k}>
+                                                              <td>{k}</td>
+                                                              <td>{v}</td>
+                                                          </tr>
+                                                      ))
+                                                    : null}
+                                            </table>
+                                        </div>
+                                    ) : null} */}
                                 </div>
                                 <SplitPane split="vertical" defaultSize="100%">
                                     <>

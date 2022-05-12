@@ -14,6 +14,7 @@ import LINKING from './thumbnails/LINKING.gif';
 import MARK_DISPLACEMENT from './thumbnails/MARK_DISPLACEMENT.png';
 import MATRIX_HFFC6 from './thumbnails/MATRIX_HFFC6.gif';
 import MATRIX from './thumbnails/MATRIX.png';
+import MOUSE_EVENT from './thumbnails/MOUSE_EVENT.png';
 import RESPONSIVE_COMPARATIVE_MATRICES from './thumbnails/RESPONSIVE_COMPARATIVE_MATRICES.gif';
 import RESPONSIVE_IDEOGRAM from './thumbnails/RESPONSIVE_IDEOGRAM.gif';
 import RESPONSIVE_MULTIVEC from './thumbnails/RESPONSIVE_MULTIVEC.gif';
@@ -45,6 +46,7 @@ export const THUMBNAILS = {
     MARK_DISPLACEMENT,
     MATRIX_HFFC6,
     MATRIX,
+    MOUSE_EVENT,
     RESPONSIVE_COMPARATIVE_MATRICES,
     RESPONSIVE_IDEOGRAM,
     RESPONSIVE_MULTIVEC,

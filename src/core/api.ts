@@ -7,8 +7,8 @@ import { CompleteThemeDeep } from './utils/theme';
 import { traverseViewsInViewConfig } from './utils/view-config';
 
 export type CommonEventData = {
-    data: Datum;
     genomicPosition: string;
+    data: Datum[];
 };
 
 export type RawDataEventData = {
