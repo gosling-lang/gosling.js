@@ -43,7 +43,11 @@ preferred-citation:
       given-names: "Nils"
       orcid: "https://orcid.org/0000-0003-0327-8297"
       affiliation: "Harvard Medical School"
-journal: "IEEE Transactions on Visualization and Computer Graphics"
-doi: 10.1109/TVCG.2021.3114876
-month: 10
-year: 2021
+  journal: "IEEE Transactions on Visualization and Computer Graphics"
+  doi: 10.1109/TVCG.2021.3114876
+  month: 1
+  year: 2022
+  issue: 1
+  volumne: 28
+  start: 140
+  end: 150
