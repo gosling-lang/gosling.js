@@ -677,7 +677,16 @@ export type Aggregate = 'max' | 'min' | 'mean' | 'bin' | 'count';
 export type BinAggregate = 'mean' | 'sum';
 
 /* ----------------------------- DATA ----------------------------- */
-export type DataDeep = JSONData | CSVData | BIGWIGData | MultivecData | BEDDBData | VectorData | MatrixData | BAMData;
+export type DataDeep =
+    | JSONData
+    | CSVData
+    | BIGWIGData
+    | MultivecData
+    | BEDDBData
+    | VectorData
+    | MatrixData
+    | BAMData
+    | VCFData;
 
 /** Values in the form of JSON. */
 export interface Datum {
@@ -939,6 +948,22 @@ export interface BAMData {
 
     /** Determines the threshold of insert sizes for determining the structural variants. __Default__: `5000` */
     maxInsertSize?: number; // https://github.com/GMOD/bam-js#async-getrecordsforrangerefname-start-end-opts
+}
+
+/**
+ * The Variant Call Format (VCF).
+ */
+export interface VCFData {
+    type: 'vcf';
+
+    /** URL link to the VCF file */
+    url: string;
+
+    /** URL link to the tabix index file */
+    indexUrl: string;
+
+    /** The maximum number of rows to be loaded from the URL. __Default:__ `1000` */
+    sampleLength?: number;
 }
 
 export interface MatrixData {

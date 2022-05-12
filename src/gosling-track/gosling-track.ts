@@ -24,27 +24,26 @@ import {
     inferSvType
 } from '../core/utils/data-transform';
 import { getTabularData, GOSLING_DATA_ROW_UID_FIELD } from './data-abstraction';
-import { BAMDataFetcher } from '../data-fetcher/bam';
 import { getRelativeGenomicPosition } from '../core/utils/assembly';
 import { getTextStyle } from '../core/utils/text-style';
 import { Is2DTrack, IsChannelDeep, IsXAxis } from '../core/gosling.schema.guards';
 import { spawn } from 'threads';
-
-import BamWorker from '../data-fetcher/bam/bam-worker.js?worker&inline';
 import { InteractionEvent } from 'pixi.js';
 import { HIGLASS_AXIS_SIZE } from '../core/higlass-model';
 import { MouseEventData } from '../gosling-mouse-event/mouse-event-model';
 import { flatArrayToPairArray } from '../core/utils/array';
+import { BAMDataFetcher } from '../data-fetcher/bam';
+import { GoslingVcfData } from '../data-fetcher/vcf';
+import BamWorker from '../data-fetcher/bam/bam-worker.js?worker&inline';
+import VcfWorker from '../data-fetcher/vcf/vcf-worker.js?worker&inline';
 
 // Set `true` to print in what order each function is called
 export const PRINT_RENDERING_CYCLE = false;
 
 // Experimental function to test with prerelease rendering
 function usePrereleaseRendering(spec: SingleTrack | OverlaidTrack) {
-    return spec.data?.type === 'bam';
+    return spec.data?.type === 'bam' || spec.data?.type === 'vcf';
 }
-
-type LoadingStage = 'loading' | 'processing' | 'rendering';
 
 // For using libraries, refer to https://github.com/higlass/higlass/blob/f82c0a4f7b2ab1c145091166b0457638934b15f3/app/scripts/configs/available-for-plugins.js
 // `getTilePosAndDimensions()` definition: https://github.com/higlass/higlass/blob/1e1146409c7d7c7014505dd80d5af3e9357c77b6/app/scripts/Tiled1DPixiTrack.js#L133
@@ -76,11 +75,16 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             const [context, options] = params;
 
             // Check whether to load a worker
-            let bamWorker;
+            let dataWorker;
             if (usePrereleaseRendering(options.spec)) {
                 try {
-                    bamWorker = spawn(new BamWorker());
-                    context.dataFetcher = new BAMDataFetcher(HGC, context.dataConfig, bamWorker);
+                    if (options.spec.data?.type === 'bam') {
+                        dataWorker = spawn(new BamWorker());
+                        context.dataFetcher = new BAMDataFetcher(HGC, context.dataConfig, dataWorker);
+                    } else if (options.spec.data?.type === 'vcf') {
+                        dataWorker = spawn(new VcfWorker());
+                        context.dataFetcher = new GoslingVcfData(HGC, context.dataConfig, dataWorker);
+                    }
                 } catch (e) {
                     console.warn('Error loading worker', e);
                 }
@@ -88,7 +92,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
 
             super(context, options);
 
-            this.worker = bamWorker;
+            this.worker = dataWorker;
             context.dataFetcher.track = this;
             this.context = context;
 
@@ -320,7 +324,8 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             super.remove();
 
             if (this.gLegend) {
-                this.gLegend.selectAll('.brush').remove();
+                this.gLegend.remove();
+                this.gLegend = null;
             }
         }
         /*
@@ -385,7 +390,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             this.xDomain = this._xScale.domain();
             this.xRange = this._xScale.range();
 
-            this.drawLoadingCue('loading');
+            this.drawLoadingCue();
 
             this.worker.then((tileFunctions: any) => {
                 tileFunctions
@@ -394,7 +399,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                         Object.values(this.fetchedTiles).map((x: any) => x.remoteId)
                     )
                     .then((toRender: any) => {
-                        this.drawLoadingCue('processing');
+                        this.drawLoadingCue();
                         const tiles = this.visibleAndFetchedTiles();
 
                         const tabularData = JSON.parse(Buffer.from(toRender).toString());
@@ -409,9 +414,9 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                             tile.tileData.tilePos = [refTile[1]];
                         }
 
-                        this.drawLoadingCue('rendering');
+                        this.drawLoadingCue();
                         callback();
-                        this.drawLoadingCue('done');
+                        this.drawLoadingCue();
                     });
             });
         }
@@ -459,7 +464,9 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                         this.tilesetInfo.tile_size
                     );
 
-                    const DEFAULT_MAX_TILE_WIDTH = 2e4; // base pairs
+                    // base pairs
+                    const DEFAULT_MAX_TILE_WIDTH =
+                        this.options.spec?.data?.type === 'bam' ? 2e4 : Number.MAX_SAFE_INTEGER;
 
                     if (tileWidth > (this.tilesetInfo.max_tile_width || DEFAULT_MAX_TILE_WIDTH)) {
                         this.forceDraw();
@@ -598,49 +605,36 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
         /**
          * Show visual cue during waiting for visualizations being rendered.
          */
-        drawLoadingCue(stage: LoadingStage | 'done') {
-            let curStage = stage;
-            if (this.loadingStatus) {
-                if (stage === 'done') {
-                    this.loadingStatus.loading--;
-                    this.loadingStatus.processing--;
-                    this.loadingStatus.rendering--;
-                    if (this.loadingStatus.loading !== 0) {
-                        curStage = 'loading';
-                    }
-                } else {
-                    this.loadingStatus[stage]++;
-                }
-            }
-            // console.log(curStage, this.loadingStatus);
-            setTimeout(() => {
-                this.loadingText.x = this.position[0] + this.dimensions[0] - 1;
-                this.loadingText.y = this.position[1] + this.dimensions[1] - 0;
+        drawLoadingCue() {
+            if (this.fetching.size) {
+                const margin = 6;
 
-                const text = {
-                    loading: 'Loading Tiles...',
-                    processing: 'Processing Tiles...',
-                    rendering: 'Rendering Tiles...',
-                    done: ''
-                }[curStage];
-
+                // Show textual message
+                const text = `Fetching... ${Array.from(this.fetching).join(' ')}`;
                 this.loadingText.text = text;
+                this.loadingText.x = this.position[0] + this.dimensions[0] - margin / 2.0;
+                this.loadingText.y = this.position[1] + this.dimensions[1] - margin / 2.0;
 
-                // this.loadingTextBg.clear();
-                // const metric = HGC.libraries.PIXI.TextMetrics.measureText(text, this.loadingTextStyleObj);
-                // const { width: w, height: h }= metric;
+                // Show background
+                const metric = HGC.libraries.PIXI.TextMetrics.measureText(text, this.loadingTextStyleObj);
+                const { width: w, height: h } = metric;
 
-                // this.loadingTextBg.lineStyle(
-                //     1,
-                //     colorToHex('gray'),
-                //     0, // alpha
-                //     0 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
-                // );
+                this.loadingTextBg.clear();
+                this.loadingTextBg.lineStyle(1, colorToHex('grey'), 1, 0.5);
+                this.loadingTextBg.beginFill(colorToHex('white'), 0.8);
+                this.loadingTextBg.drawRect(
+                    this.position[0] + this.dimensions[0] - w - margin - 1,
+                    this.position[1] + this.dimensions[1] - h - margin - 1,
+                    w + margin,
+                    h + margin
+                );
 
-                // this.loadingTextBg.beginFill(colorToHex('white'), 0.5);
-                // this.loadingTextBg.drawRect(this.position[0] + 1, this.position[1] + 1, this.dimensions[0] - 2, 20);
-                this.forceDraw();
-            }, 10);
+                this.loadingText.visible = true;
+                this.loadingTextBg.visible = true;
+            } else {
+                this.loadingText.visible = false;
+                this.loadingTextBg.visible = false;
+            }
         }
 
         /**

@@ -201,9 +201,9 @@ function Editor(props: any) {
     const urlGist = urlParams?.gist ?? null;
     const urlExampleId = (urlParams?.example ?? '') as string;
 
-    const defaultCode = urlGist ? emptySpec() : stringify(urlSpec ?? (INIT_DEMO.spec as gosling.GoslingSpec));
-
-    const defaultJsCode = INIT_DEMO.specJs ?? json2js(defaultCode);
+    const defaultCode =
+        urlGist || urlExampleId ? emptySpec() : stringify(urlSpec ?? (INIT_DEMO.spec as gosling.GoslingSpec));
+    const defaultJsCode = urlGist || urlExampleId || !INIT_DEMO.specJs ? json2js(defaultCode) : INIT_DEMO.specJs;
 
     const previewData = useRef<PreviewData[]>([]);
     const [refreshData, setRefreshData] = useState<boolean>(false);
@@ -443,7 +443,7 @@ function Editor(props: any) {
                 if (active && !!code) {
                     setReadOnly(false);
                     setCode(code);
-                    setCode(json2js(code));
+                    setJsCode(json2js(code));
                     setGistTitle(title);
                     setDescription(description);
                 }
