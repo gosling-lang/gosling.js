@@ -1,4 +1,3 @@
-$ ts-json-schema-generator -f tsconfig.json --no-type-check --no-ref-encode -p packages/schema/src/gosling.schema.ts -t GoslingSpec
 {
   "$ref": "#/definitions/GoslingSpec",
   "$schema": "http://json-schema.org/draft-07/schema#",

@@ -1,4 +1,3 @@
-$ ts-json-schema-generator -f tsconfig.json --no-type-check --no-ref-encode -p packages/core/src/utils/theme.ts -t Theme
 {
   "$ref": "#/definitions/Theme",
   "$schema": "http://json-schema.org/draft-07/schema#",
