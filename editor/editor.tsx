@@ -17,14 +17,16 @@ import { traverseTracksAndViews } from '../src/core/utils/spec-preprocess';
 import stripJsonComments from 'strip-json-comments';
 import * as qs from 'qs';
 import JSONCrush from 'jsoncrush';
-import './editor.css';
 import { ICONS, ICON_INFO } from './icon';
-import type { HiGlassSpec } from '@higlass.schema';
-import type { Datum } from '@gosling.schema';
 import { transpile } from 'typescript';
 import { getHtmlTemplate } from './html-template';
-// @ts-ignore
 import { Themes } from 'gosling-theme';
+
+import type { RouteComponentProps } from 'react-router-dom';
+import type { HiGlassSpec } from '@higlass.schema';
+import type { Datum } from '@gosling.schema';
+
+import './editor.css';
 
 function json2js(jsonCode: string) {
     return `var spec = ${jsonCode} \nexport { spec }; \n`;
@@ -191,7 +193,7 @@ interface PreviewData {
 /**
  * React component for editing Gosling specs
  */
-function Editor(props: any) {
+function Editor(props: RouteComponentProps) {
     // Determines whether the screen is too small (e.g., mobile)
     const IS_SMALL_SCREEN = window.innerWidth <= 500;
 
