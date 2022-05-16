@@ -272,7 +272,7 @@ function Editor(props: RouteComponentProps) {
 
     // for using HiGlass JS API
     // const hgRef = useRef<any>();
-    const gosRef = useRef<any>();
+    const gosRef = useRef<gosling.GoslingRef>(null);
 
     const debounceCodeEdit = useRef(
         debounce((code: string, language) => {
@@ -824,7 +824,7 @@ function Editor(props: RouteComponentProps) {
                             title="Save PNG file"
                             className="side-panel-button"
                             onClick={() => {
-                                gosRef.current.api.exportPng();
+                                gosRef.current?.api.exportPng();
                             }}
                         >
                             {getIconSVG(ICONS.IMAGE, 23, 23)}
@@ -835,7 +835,7 @@ function Editor(props: RouteComponentProps) {
                             title="Save PDF file"
                             className="side-panel-button"
                             onClick={() => {
-                                gosRef.current.api.exportPdf();
+                                gosRef.current?.api.exportPdf();
                             }}
                         >
                             {getIconSVG(ICONS.PDF, 23, 23)}
@@ -1072,7 +1072,7 @@ function Editor(props: RouteComponentProps) {
                                             id={'goslig-component-root'}
                                             className={'goslig-component'}
                                             experimental={{ reactive: true }}
-                                            compiled={(g, h) => {
+                                            compiled={(_, h) => {
                                                 setHg(h);
                                             }}
                                         />
