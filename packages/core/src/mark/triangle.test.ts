@@ -1,0 +1,48 @@
+import * as PIXI from 'pixi.js';
+import { GoslingTrackModel } from '../gosling-track-model';
+import { getTheme } from '../utils/theme';
+import { drawTriangle } from './triangle';
+
+import type { SingleTrack } from '@gosling/schema';
+
+describe('Rendering triangle', () => {
+    const g = new PIXI.Graphics();
+    it('Linear Triangle', () => {
+        const t: SingleTrack = {
+            data: { type: 'csv', url: '' },
+            mark: 'triangleLeft',
+            x: { field: 'x', type: 'genomic' },
+            xe: { field: 'xe', type: 'genomic' },
+            y: { field: 'y', type: 'quantitative' },
+            width: 100,
+            height: 100
+        };
+        const d = [
+            { x: 1, xe: 1, y: 2 },
+            { x: 11, xe: 11, y: 22 },
+            { x: 111, xe: 111, y: 222 }
+        ];
+        const model = new GoslingTrackModel(t, d, getTheme());
+        drawTriangle(g, model, 100, 100);
+    });
+
+    it('Circular Triangle', () => {
+        const t: SingleTrack = {
+            layout: 'circular',
+            data: { type: 'csv', url: '' },
+            mark: 'triangleLeft',
+            x: { field: 'x', type: 'genomic' },
+            xe: { field: 'xe', type: 'genomic' },
+            y: { field: 'y', type: 'quantitative' },
+            width: 100,
+            height: 100
+        };
+        const d = [
+            { x: 1, xe: 1, y: 2 },
+            { x: 11, xe: 11, y: 22 },
+            { x: 111, xe: 111, y: 222 }
+        ];
+        const model = new GoslingTrackModel(t, d, getTheme());
+        drawTriangle(g, model, 100, 100);
+    });
+});

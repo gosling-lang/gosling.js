@@ -1,0 +1,385 @@
+$ ts-json-schema-generator -f tsconfig.json --no-type-check --no-ref-encode -p packages/core/src/utils/theme.ts -t Theme
+{
+  "$ref": "#/definitions/Theme",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "AxisStyle": {
+      "additionalProperties": false,
+      "properties": {
+        "baselineColor": {
+          "type": "string"
+        },
+        "gridColor": {
+          "type": "string"
+        },
+        "gridStrokeDash": {
+          "items": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "maxItems": 2,
+          "minItems": 2,
+          "type": "array"
+        },
+        "gridStrokeType": {
+          "enum": [
+            "solid",
+            "dashed"
+          ],
+          "type": "string"
+        },
+        "gridStrokeWidth": {
+          "type": "number"
+        },
+        "labelColor": {
+          "type": "string"
+        },
+        "labelFontFamily": {
+          "type": "string"
+        },
+        "labelFontSize": {
+          "type": "number"
+        },
+        "labelFontWeight": {
+          "enum": [
+            "bold",
+            "normal",
+            "light"
+          ],
+          "type": "string"
+        },
+        "tickColor": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "LegendStyle": {
+      "additionalProperties": false,
+      "properties": {
+        "background": {
+          "type": "string"
+        },
+        "backgroundOpacity": {
+          "type": "number"
+        },
+        "backgroundStroke": {
+          "type": "string"
+        },
+        "labelColor": {
+          "type": "string"
+        },
+        "labelFontFamily": {
+          "type": "string"
+        },
+        "labelFontSize": {
+          "type": "number"
+        },
+        "labelFontWeight": {
+          "enum": [
+            "bold",
+            "normal",
+            "light"
+          ],
+          "type": "string"
+        },
+        "position": {
+          "enum": [
+            "top",
+            "right"
+          ],
+          "type": "string"
+        },
+        "tickColor": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "MarkStyle": {
+      "additionalProperties": false,
+      "properties": {
+        "color": {
+          "type": "string"
+        },
+        "nominalColorRange": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "opacity": {
+          "type": "number"
+        },
+        "quantitativeSizeRange": {
+          "items": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "maxItems": 2,
+          "minItems": 2,
+          "type": "array"
+        },
+        "size": {
+          "type": "number"
+        },
+        "stroke": {
+          "type": "string"
+        },
+        "strokeWidth": {
+          "type": "number"
+        }
+      },
+      "type": "object"
+    },
+    "RootStyle": {
+      "additionalProperties": false,
+      "properties": {
+        "background": {
+          "type": "string"
+        },
+        "mousePositionColor": {
+          "type": "string"
+        },
+        "showMousePosition": {
+          "type": "boolean"
+        },
+        "subtitleAlign": {
+          "enum": [
+            "left",
+            "middle",
+            "right"
+          ],
+          "type": "string"
+        },
+        "subtitleBackgroundColor": {
+          "type": "string"
+        },
+        "subtitleColor": {
+          "type": "string"
+        },
+        "subtitleFontFamily": {
+          "type": "string"
+        },
+        "subtitleFontSize": {
+          "type": "number"
+        },
+        "subtitleFontWeight": {
+          "enum": [
+            "bold",
+            "normal",
+            "light"
+          ],
+          "type": "string"
+        },
+        "titleAlign": {
+          "enum": [
+            "left",
+            "middle",
+            "right"
+          ],
+          "type": "string"
+        },
+        "titleBackgroundColor": {
+          "type": "string"
+        },
+        "titleColor": {
+          "type": "string"
+        },
+        "titleFontFamily": {
+          "type": "string"
+        },
+        "titleFontSize": {
+          "type": "number"
+        },
+        "titleFontWeight": {
+          "enum": [
+            "bold",
+            "normal",
+            "light"
+          ],
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "Theme": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/ThemeType"
+        },
+        {
+          "$ref": "#/definitions/ThemeDeep"
+        }
+      ]
+    },
+    "ThemeDeep": {
+      "additionalProperties": false,
+      "properties": {
+        "area": {
+          "$ref": "#/definitions/MarkStyle"
+        },
+        "axis": {
+          "$ref": "#/definitions/AxisStyle"
+        },
+        "bar": {
+          "$ref": "#/definitions/MarkStyle"
+        },
+        "base": {
+          "$ref": "#/definitions/ThemeType"
+        },
+        "brush": {
+          "$ref": "#/definitions/MarkStyle"
+        },
+        "legend": {
+          "$ref": "#/definitions/LegendStyle"
+        },
+        "line": {
+          "$ref": "#/definitions/MarkStyle"
+        },
+        "link": {
+          "$ref": "#/definitions/MarkStyle"
+        },
+        "markCommon": {
+          "$ref": "#/definitions/MarkStyle"
+        },
+        "point": {
+          "$ref": "#/definitions/MarkStyle"
+        },
+        "rect": {
+          "$ref": "#/definitions/MarkStyle"
+        },
+        "root": {
+          "$ref": "#/definitions/RootStyle"
+        },
+        "rule": {
+          "$ref": "#/definitions/MarkStyle"
+        },
+        "text": {
+          "additionalProperties": false,
+          "properties": {
+            "color": {
+              "type": "string"
+            },
+            "nominalColorRange": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "opacity": {
+              "type": "number"
+            },
+            "quantitativeSizeRange": {
+              "items": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                }
+              ],
+              "maxItems": 2,
+              "minItems": 2,
+              "type": "array"
+            },
+            "size": {
+              "type": "number"
+            },
+            "stroke": {
+              "type": "string"
+            },
+            "strokeWidth": {
+              "type": "number"
+            },
+            "textAnchor": {
+              "enum": [
+                "start",
+                "middle",
+                "end"
+              ],
+              "type": "string"
+            },
+            "textFontWeight": {
+              "enum": [
+                "bold",
+                "normal"
+              ],
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "track": {
+          "$ref": "#/definitions/TrackStyle"
+        },
+        "triangle": {
+          "$ref": "#/definitions/MarkStyle"
+        }
+      },
+      "required": [
+        "base"
+      ],
+      "type": "object"
+    },
+    "ThemeType": {
+      "enum": [
+        "light",
+        "dark",
+        "warm",
+        "ggplot",
+        "igv",
+        "ensembl",
+        "jbrowse",
+        "ucsc",
+        "washu",
+        "excel",
+        "google"
+      ],
+      "type": "string"
+    },
+    "TrackStyle": {
+      "additionalProperties": false,
+      "properties": {
+        "alternatingBackground": {
+          "type": "string"
+        },
+        "background": {
+          "type": "string"
+        },
+        "outline": {
+          "type": "string"
+        },
+        "outlineWidth": {
+          "type": "number"
+        },
+        "titleAlign": {
+          "enum": [
+            "left",
+            "middle",
+            "right"
+          ],
+          "type": "string"
+        },
+        "titleBackground": {
+          "type": "string"
+        },
+        "titleColor": {
+          "type": "string"
+        },
+        "titleFontSize": {
+          "type": "number"
+        }
+      },
+      "type": "object"
+    }
+  }
+}

@@ -30,12 +30,13 @@
         "test": "vitest",
         "coverage": "vitest run --coverage",
         "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s -r 0",
-        "format": "eslint src/ editor/ --fix && prettier 'editor/**/*.css' --write",
-        "schema": "ts-json-schema-generator -p src/index.ts -f tsconfig.json -t GoslingSpec --no-type-check --no-ref-encode > schema/gosling.schema.json",
-        "schema-higlass": "ts-json-schema-generator -p src/index.ts -f tsconfig.json -t HiGlassSpec --no-type-check --no-ref-encode > schema/higlass.schema.json",
-        "schema-theme": "ts-json-schema-generator -p src/index.ts -f tsconfig.json -t Theme --no-type-check --no-ref-encode > schema/theme.schema.json",
-        "schema-template": "ts-json-schema-generator -p src/index.ts -f tsconfig.json -t TemplateTrackDef --no-type-check --no-ref-encode > schema/template.schema.json",
-        "schema-versioning": "mkdir -p schema/history/$npm_package_version && cp schema/gosling.schema.json schema/history/$npm_package_version/gosling$npm_package_version.schema.json && cp src/core/gosling.schema.ts schema/history/$npm_package_version/gosling$npm_package_version.schema.ts",
+        "format": "eslint packages/ --fix && prettier --write",
+        "schema-base": "ts-json-schema-generator -f tsconfig.json --no-type-check --no-ref-encode",
+        "schema-gosling": "yarn schema-base -p packages/schema/src/gosling.schema.ts -t GoslingSpec > packages/schema/src/gosling.schema.json",
+        "schema-higlass": "yarn schema-base -p packages/schema/src/higlass.schema.ts -t HiGlassSpec > packages/schema/src/higlass.schema.json",
+        "schema-theme": "yarn schema-base -p packages/core/src/utils/theme.ts -t Theme > packages/schema/src/theme.schema.json",
+        "schema-template": "yarn schema-base -p packages/schema/src/gosling.schema.ts -t TemplateTrackDef > packages/schema/src/template.schema.json",
+        "schema-all": "run-p schema-gosling schema-higlass schema-theme schema-template",
         "predeploy": "yarn build-editor; echo \"gosling.js.org\" >> build/CNAME",
         "deploy": "gh-pages -d build"
     },
@@ -150,7 +151,7 @@
     },
     "husky": {
         "hooks": {
-            "pre-commit": "yarn changelog && yarn schema && yarn schema-higlass && yarn schema-theme && yarn schema-template && yarn format && git add .",
+            "pre-commit": "run-p changelog schema-all format && git add .",
             "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
         }
     }

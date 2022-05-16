@@ -1,0 +1,1056 @@
+$ ts-json-schema-generator -f tsconfig.json --no-type-check --no-ref-encode -p packages/schema/src/gosling.schema.ts -t TemplateTrackDef
+{
+  "$ref": "#/definitions/TemplateTrackDef",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "Assembly": {
+      "enum": [
+        "hg38",
+        "hg19",
+        "hg18",
+        "hg17",
+        "hg16",
+        "mm10",
+        "mm9",
+        "unknown"
+      ],
+      "type": "string"
+    },
+    "AxisPosition": {
+      "enum": [
+        "none",
+        "top",
+        "bottom",
+        "left",
+        "right"
+      ],
+      "type": "string"
+    },
+    "ChannelWithBase": {
+      "anyOf": [
+        {
+          "properties": {
+            "base": {
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "base": {
+              "type": "string"
+            },
+            "value": {
+              "description": "Assign a constant value for a visual channel.",
+              "type": [
+                "number",
+                "string"
+              ]
+            }
+          },
+          "required": [
+            "value"
+          ],
+          "type": "object"
+        }
+      ]
+    },
+    "Chromosome": {
+      "enum": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9",
+        "10",
+        "11",
+        "12",
+        "13",
+        "14",
+        "15",
+        "16",
+        "17",
+        "18",
+        "19",
+        "20",
+        "21",
+        "22",
+        "X",
+        "Y",
+        "M",
+        "chr1",
+        "chr2",
+        "chr3",
+        "chr4",
+        "chr5",
+        "chr6",
+        "chr7",
+        "chr8",
+        "chr9",
+        "chr10",
+        "chr11",
+        "chr12",
+        "chr13",
+        "chr14",
+        "chr15",
+        "chr16",
+        "chr17",
+        "chr18",
+        "chr19",
+        "chr20",
+        "chr21",
+        "chr22",
+        "chrX",
+        "chrY",
+        "chrM"
+      ],
+      "type": "string"
+    },
+    "CustomChannelDef": {
+      "additionalProperties": false,
+      "description": "Definition of custom channels used in a track template.",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "required": {
+          "type": "boolean"
+        },
+        "type": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/FieldType"
+            },
+            {
+              "const": "value",
+              "type": "string"
+            }
+          ]
+        }
+      },
+      "required": [
+        "name",
+        "type"
+      ],
+      "type": "object"
+    },
+    "DataTransformWithBase": {
+      "additionalProperties": false,
+      "properties": {
+        "base": {
+          "$ref": "#/definitions/LogBase",
+          "description": "If not specified, 10 is used."
+        },
+        "baseGenomicField": {
+          "description": "Base genomic position when parsing relative position.",
+          "type": "string"
+        },
+        "boundingBox": {
+          "additionalProperties": false,
+          "properties": {
+            "endField": {
+              "description": "The name of a quantitative field that represents the end position.",
+              "type": "string"
+            },
+            "groupField": {
+              "description": "The name of a nominal field to group rows by in prior to piling-up.",
+              "type": "string"
+            },
+            "isPaddingBP": {
+              "description": "Whether to consider `padding` as the bp length.",
+              "type": "boolean"
+            },
+            "padding": {
+              "description": "The padding around visual lements. Either px or bp",
+              "type": "number"
+            },
+            "startField": {
+              "description": "The name of a quantitative field that represents the start position.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "startField",
+            "endField"
+          ],
+          "type": "object"
+        },
+        "endField": {
+          "type": "string"
+        },
+        "field": {
+          "description": "A filter is applied based on the values of the specified data field",
+          "type": "string"
+        },
+        "fields": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "items": {
+                "additionalProperties": false,
+                "properties": {
+                  "chrField": {
+                    "type": "string"
+                  },
+                  "field": {
+                    "type": "string"
+                  },
+                  "newField": {
+                    "type": "string"
+                  },
+                  "type": {
+                    "$ref": "#/definitions/FieldType"
+                  }
+                },
+                "required": [
+                  "field",
+                  "type",
+                  "newField",
+                  "chrField"
+                ],
+                "type": "object"
+              },
+              "type": "array"
+            }
+          ]
+        },
+        "firstBp": {
+          "additionalProperties": false,
+          "description": "Based on the BEDPE, infer SV types. SV types are specified as one of the following strings: DUP, TRA, DEL, t2tINV, h2hINV.",
+          "properties": {
+            "chrField": {
+              "type": "string"
+            },
+            "posField": {
+              "type": "string"
+            },
+            "strandField": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "chrField",
+            "posField",
+            "strandField"
+          ],
+          "type": "object"
+        },
+        "flag": {
+          "additionalProperties": false,
+          "properties": {
+            "field": {
+              "type": "string"
+            },
+            "value": {
+              "type": [
+                "number",
+                "string"
+              ]
+            }
+          },
+          "required": [
+            "field",
+            "value"
+          ],
+          "type": "object"
+        },
+        "genomicField": {
+          "description": "Relative genomic position to parse.",
+          "type": "string"
+        },
+        "genomicLengthField": {
+          "description": "Length of genomic interval.",
+          "type": "string"
+        },
+        "groupField": {
+          "description": "The name of a nominal field to group rows by in prior to piling-up",
+          "type": "string"
+        },
+        "inRange": {
+          "description": "Check whether the value is in a number range.",
+          "items": {
+            "type": "number"
+          },
+          "type": "array"
+        },
+        "include": {
+          "description": "Check whether the value includes a substring.",
+          "type": "string"
+        },
+        "maxRows": {
+          "description": "Specify maximum rows to be generated (default has no limit).",
+          "type": "number"
+        },
+        "method": {
+          "$ref": "#/definitions/DisplacementType",
+          "description": "A string that specifies the type of diseplancement."
+        },
+        "newField": {
+          "type": "string"
+        },
+        "not": {
+          "description": "when `{\"not\": true}`, apply a NOT logical operation to the filter.\n\n__Default:__ `false`",
+          "type": "boolean"
+        },
+        "oneOf": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "items": {
+                "type": "number"
+              },
+              "type": "array"
+            }
+          ],
+          "description": "Check whether the value is an element in the provided list."
+        },
+        "replace": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "from": {
+                "type": "string"
+              },
+              "to": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "from",
+              "to"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "secondBp": {
+          "additionalProperties": false,
+          "description": "Based on the BEDPE, infer SV types. SV types are specified as one of the following strings: DUP, TRA, DEL, t2tINV, h2hINV.",
+          "properties": {
+            "chrField": {
+              "type": "string"
+            },
+            "posField": {
+              "type": "string"
+            },
+            "strandField": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "chrField",
+            "posField",
+            "strandField"
+          ],
+          "type": "object"
+        },
+        "separator": {
+          "type": "string"
+        },
+        "startField": {
+          "type": "string"
+        },
+        "type": {
+          "enum": [
+            "filter",
+            "concat",
+            "replace",
+            "log",
+            "displace",
+            "exonSplit",
+            "genomicLength",
+            "svType",
+            "coverage",
+            "subjson"
+          ],
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "Displacement": {
+      "additionalProperties": false,
+      "properties": {
+        "padding": {
+          "type": "number"
+        },
+        "type": {
+          "$ref": "#/definitions/DisplacementType"
+        }
+      },
+      "required": [
+        "type"
+      ],
+      "type": "object"
+    },
+    "DisplacementType": {
+      "enum": [
+        "pile",
+        "spread"
+      ],
+      "type": "string"
+    },
+    "DomainChr": {
+      "additionalProperties": false,
+      "properties": {
+        "chromosome": {
+          "$ref": "#/definitions/Chromosome"
+        }
+      },
+      "required": [
+        "chromosome"
+      ],
+      "type": "object"
+    },
+    "DomainChrInterval": {
+      "additionalProperties": false,
+      "properties": {
+        "chromosome": {
+          "$ref": "#/definitions/Chromosome",
+          "description": "If specified, only showing a certain interval in a chromosome."
+        },
+        "interval": {
+          "items": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "maxItems": 2,
+          "minItems": 2,
+          "type": "array"
+        }
+      },
+      "required": [
+        "chromosome",
+        "interval"
+      ],
+      "type": "object"
+    },
+    "DomainInterval": {
+      "additionalProperties": false,
+      "properties": {
+        "interval": {
+          "items": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "maxItems": 2,
+          "minItems": 2,
+          "type": "array"
+        }
+      },
+      "required": [
+        "interval"
+      ],
+      "type": "object"
+    },
+    "FieldType": {
+      "enum": [
+        "genomic",
+        "nominal",
+        "quantitative"
+      ],
+      "type": "string"
+    },
+    "LogBase": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "const": "e",
+          "type": "string"
+        }
+      ]
+    },
+    "LogicalOperation": {
+      "enum": [
+        "less-than",
+        "lt",
+        "LT",
+        "greater-than",
+        "gt",
+        "GT",
+        "less-than-or-equal-to",
+        "ltet",
+        "LTET",
+        "greater-than-or-equal-to",
+        "gtet",
+        "GTET"
+      ],
+      "type": "string"
+    },
+    "Mark": {
+      "enum": [
+        "point",
+        "line",
+        "area",
+        "bar",
+        "rect",
+        "text",
+        "withinLink",
+        "betweenLink",
+        "rule",
+        "triangleLeft",
+        "triangleRight",
+        "triangleBottom",
+        "brush",
+        "header"
+      ],
+      "type": "string"
+    },
+    "Orientation": {
+      "enum": [
+        "horizontal",
+        "vertical"
+      ],
+      "type": "string"
+    },
+    "SizeVisibilityCondition": {
+      "additionalProperties": false,
+      "properties": {
+        "conditionPadding": {
+          "description": "Specify the buffer size (in pixel) of width or height when calculating the visibility.\n\n__Default__: `0`",
+          "type": "number"
+        },
+        "measure": {
+          "description": "Specify which aspect of the `target` will be compared to the `threshold`.",
+          "enum": [
+            "width",
+            "height"
+          ],
+          "type": "string"
+        },
+        "operation": {
+          "$ref": "#/definitions/LogicalOperation",
+          "description": "A string that pecifies the logical operation to conduct between `threshold` and the `measure` of `target`. Support\n\n- greater than : \"greater-than\", \"gt\", \"GT\"\n\n- less than : \"less-than\", \"lt\", \"LT\"\n\n- greater than or equal to : \"greater-than-or-equal-to\", \"gtet\", \"GTET\"\n\n- less than or equal to : \"less-than-or-equal-to\", \"ltet\", \"LTET\""
+        },
+        "target": {
+          "description": "Target specifies the object that you want to compare with the threshold.",
+          "enum": [
+            "track",
+            "mark"
+          ],
+          "type": "string"
+        },
+        "threshold": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "const": "|xe-x|",
+              "type": "string"
+            }
+          ],
+          "description": "Specify the threshold as one of:\n\n- A number representing a fixed threshold in the unit of pixels;\n\n- `\"|xe-x|\"`, using the distance between `xe` and `x` as threshold"
+        },
+        "transitionPadding": {
+          "description": "Specify the buffer size (in pixel) of width or height for smooth transition.\n\n__Default__: `0`",
+          "type": "number"
+        }
+      },
+      "required": [
+        "measure",
+        "operation",
+        "target",
+        "threshold"
+      ],
+      "type": "object"
+    },
+    "Style": {
+      "additionalProperties": false,
+      "properties": {
+        "align": {
+          "description": "Specify the alignment of marks. This property is currently only supported for `triangle` marks.",
+          "enum": [
+            "left",
+            "right"
+          ],
+          "type": "string"
+        },
+        "background": {
+          "type": "string"
+        },
+        "backgroundOpacity": {
+          "type": "number"
+        },
+        "curve": {
+          "description": "Specify the curve of `rule` marks.",
+          "enum": [
+            "top",
+            "bottom",
+            "left",
+            "right"
+          ],
+          "type": "string"
+        },
+        "dashed": {
+          "description": "Specify the pattern of dashes and gaps for `rule` marks.",
+          "items": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "maxItems": 2,
+          "minItems": 2,
+          "type": "array"
+        },
+        "dx": {
+          "description": "Offset the position of marks in x direction. This property is currently only supported for `text` marks",
+          "type": "number"
+        },
+        "dy": {
+          "description": "Offset the position of marks in y direction. This property is currently only supported for `text` marks.",
+          "type": "number"
+        },
+        "enableSmoothPath": {
+          "description": "Whether to enable smooth paths when drawing curves.\n\n__Default__: `false`",
+          "type": "boolean"
+        },
+        "inlineLegend": {
+          "description": "Specify whether to show legend in a single horizontal line?",
+          "type": "boolean"
+        },
+        "legendTitle": {
+          "description": "If defined, show legend title on the top or left",
+          "type": "string"
+        },
+        "linePattern": {
+          "additionalProperties": false,
+          "description": "Specify the pattern of dashes and gaps for `rule` marks.",
+          "properties": {
+            "size": {
+              "type": "number"
+            },
+            "type": {
+              "enum": [
+                "triangleLeft",
+                "triangleRight"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "type",
+            "size"
+          ],
+          "type": "object"
+        },
+        "linkConnectionType": {
+          "description": "Specify the connetion type of `betweenLink` marks.\n\n__Default__: `\"corner\"`",
+          "enum": [
+            "straight",
+            "curve",
+            "corner"
+          ],
+          "type": "string"
+        },
+        "linkMinHeight": {
+          "description": "The minimum height of `withinLink` and `betweenLink` marks. Unit is a percentagle. __Default__: `0.5`",
+          "type": "number"
+        },
+        "linkStyle": {
+          "description": "The style of `withinLink` and `betweenLink` marks. __Default__: `'circular'` `'elliptical'` will be used as a default option.",
+          "enum": [
+            "elliptical",
+            "circular",
+            "straight"
+          ],
+          "type": "string"
+        },
+        "matrixExtent": {
+          "description": "Determine to show only one side of the diagonal in a HiGlass matrix. __Default__: `\"full\"`",
+          "enum": [
+            "full",
+            "upper-right",
+            "lower-left"
+          ],
+          "type": "string"
+        },
+        "outline": {
+          "type": "string"
+        },
+        "outlineWidth": {
+          "type": "number"
+        },
+        "textAnchor": {
+          "description": "Specify the alignment of `text` marks to a given point.",
+          "enum": [
+            "start",
+            "middle",
+            "end"
+          ],
+          "type": "string"
+        },
+        "textFontSize": {
+          "description": "Specify the font size of `text` marks. Can also be specified using the `size` channel option of `text` marks.",
+          "type": "number"
+        },
+        "textFontWeight": {
+          "description": "Specify the font weight of `text` marks.",
+          "enum": [
+            "bold",
+            "normal"
+          ],
+          "type": "string"
+        },
+        "textStroke": {
+          "description": "Specify the stroke of `text` marks. Can also be specified using the `stroke` channel option of `text` marks.",
+          "type": "string"
+        },
+        "textStrokeWidth": {
+          "description": "Specify the stroke width of `text` marks. Can also be specified using the `strokeWidth` channel option of `text` marks.",
+          "type": "number"
+        }
+      },
+      "type": "object"
+    },
+    "TemplateTrackDef": {
+      "additionalProperties": false,
+      "description": "Definition of Track Templates.",
+      "properties": {
+        "channels": {
+          "items": {
+            "$ref": "#/definitions/CustomChannelDef"
+          },
+          "type": "array"
+        },
+        "mapping": {
+          "items": {
+            "$ref": "#/definitions/TemplateTrackMappingDef"
+          },
+          "type": "array"
+        },
+        "name": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "channels",
+        "mapping"
+      ],
+      "type": "object"
+    },
+    "TemplateTrackMappingDef": {
+      "additionalProperties": false,
+      "description": "This is based on `SingleTrack` but the differeces are only the type of channels which additionally have `base` properties to override properties from a template spec and remove of certain properties (e.g., `data`)",
+      "properties": {
+        "_assignedHeight": {
+          "type": "number"
+        },
+        "_assignedWidth": {
+          "description": "Internal: Used for responsive spec",
+          "type": "number"
+        },
+        "_invalidTrack": {
+          "description": "internal",
+          "type": "boolean"
+        },
+        "_renderingId": {
+          "description": "internal",
+          "type": "string"
+        },
+        "assembly": {
+          "$ref": "#/definitions/Assembly",
+          "description": "A string that specifies the genome builds to use. Currently support `\"hg38\"`, `\"hg19\"`, `\"hg18\"`, `\"hg17\"`, `\"hg16\"`, `\"mm10\"`, `\"mm9\"`, and `\"unknown\"`.\n\n__Note:__: with `\"unknown\"` assembly, genomic axes do not show chrN: in labels."
+        },
+        "centerRadius": {
+          "description": "Proportion of the radius of the center white space.\n\n__Default:__ `0.3`",
+          "type": "number"
+        },
+        "color": {
+          "$ref": "#/definitions/ChannelWithBase"
+        },
+        "dataTransform": {
+          "items": {
+            "$ref": "#/definitions/DataTransformWithBase"
+          },
+          "type": "array"
+        },
+        "displacement": {
+          "$ref": "#/definitions/Displacement"
+        },
+        "endAngle": {
+          "description": "Specify the end angle (in the range of [0, 360]) of circular tracks (`{\"layout\": \"circular\"}`).",
+          "type": "number"
+        },
+        "flipY": {
+          "type": "boolean"
+        },
+        "id": {
+          "type": "string"
+        },
+        "innerRadius": {
+          "description": "Specify the inner radius of tracks when (`{\"layout\": \"circular\"}`).",
+          "type": "number"
+        },
+        "linkingId": {
+          "description": "Specify an ID for [linking multiple views](http://gosling-lang.org/docs/user-interaction#linking-views)",
+          "type": "string"
+        },
+        "mark": {
+          "$ref": "#/definitions/Mark"
+        },
+        "opacity": {
+          "$ref": "#/definitions/ChannelWithBase"
+        },
+        "orientation": {
+          "$ref": "#/definitions/Orientation",
+          "description": "Specify the orientation."
+        },
+        "outerRadius": {
+          "description": "Specify the outer radius of tracks when `{\"layout\": \"circular\"}`.",
+          "type": "number"
+        },
+        "overlayOnPreviousTrack": {
+          "type": "boolean"
+        },
+        "overrideTemplate": {
+          "type": "boolean"
+        },
+        "prerelease": {
+          "additionalProperties": false,
+          "description": "internal",
+          "type": "object"
+        },
+        "row": {
+          "$ref": "#/definitions/ChannelWithBase"
+        },
+        "size": {
+          "$ref": "#/definitions/ChannelWithBase"
+        },
+        "spacing": {
+          "description": "- If `{\"layout\": \"linear\"}`, specify the space between tracks in pixels;\n\n- If `{\"layout\": \"circular\"}`, specify the space between tracks in percentage ranging from 0 to 100.",
+          "type": "number"
+        },
+        "startAngle": {
+          "description": "Specify the start angle (in the range of [0, 360]) of circular tracks (`{\"layout\": \"circular\"}`).",
+          "type": "number"
+        },
+        "static": {
+          "description": "Whether to disable [Zooming and Panning](http://gosling-lang.org/docs/user-interaction#zooming-and-panning), __Default:__ `false`.",
+          "type": "boolean"
+        },
+        "stretch": {
+          "type": "boolean"
+        },
+        "stroke": {
+          "$ref": "#/definitions/ChannelWithBase"
+        },
+        "strokeWidth": {
+          "$ref": "#/definitions/ChannelWithBase"
+        },
+        "style": {
+          "$ref": "#/definitions/Style",
+          "description": "Define the [style](http://gosling-lang.org/docs/visual-channel#style-related-properties) of multive views. Will be overriden by the style of children elements (e.g., view, track)."
+        },
+        "text": {
+          "$ref": "#/definitions/ChannelWithBase"
+        },
+        "tooltip": {
+          "items": {
+            "$ref": "#/definitions/Tooltip"
+          },
+          "type": "array"
+        },
+        "visibility": {
+          "items": {
+            "$ref": "#/definitions/VisibilityCondition"
+          },
+          "type": "array"
+        },
+        "x": {
+          "$ref": "#/definitions/ChannelWithBase"
+        },
+        "x1": {
+          "$ref": "#/definitions/ChannelWithBase"
+        },
+        "x1e": {
+          "$ref": "#/definitions/ChannelWithBase"
+        },
+        "xAxis": {
+          "$ref": "#/definitions/AxisPosition",
+          "description": "not supported"
+        },
+        "xDomain": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/DomainInterval"
+            },
+            {
+              "$ref": "#/definitions/DomainChrInterval"
+            },
+            {
+              "$ref": "#/definitions/DomainChr"
+            }
+          ],
+          "description": "Specify the visible region of genomic x-axis"
+        },
+        "xOffset": {
+          "description": "Specify the x offset of views in the unit of pixels",
+          "type": "number"
+        },
+        "xe": {
+          "$ref": "#/definitions/ChannelWithBase"
+        },
+        "y": {
+          "$ref": "#/definitions/ChannelWithBase"
+        },
+        "y1": {
+          "$ref": "#/definitions/ChannelWithBase"
+        },
+        "y1e": {
+          "$ref": "#/definitions/ChannelWithBase"
+        },
+        "yDomain": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/DomainInterval"
+            },
+            {
+              "$ref": "#/definitions/DomainChrInterval"
+            },
+            {
+              "$ref": "#/definitions/DomainChr"
+            }
+          ],
+          "description": "Specify the visible region of genomic y-axis"
+        },
+        "yOffset": {
+          "description": "Specify the y offset of views in the unit of pixels",
+          "type": "number"
+        },
+        "ye": {
+          "$ref": "#/definitions/ChannelWithBase"
+        },
+        "zoomLimits": {
+          "$ref": "#/definitions/ZoomLimits"
+        }
+      },
+      "required": [
+        "mark"
+      ],
+      "type": "object"
+    },
+    "Tooltip": {
+      "additionalProperties": false,
+      "properties": {
+        "alt": {
+          "type": "string"
+        },
+        "field": {
+          "type": "string"
+        },
+        "format": {
+          "type": "string"
+        },
+        "type": {
+          "$ref": "#/definitions/FieldType"
+        }
+      },
+      "required": [
+        "field",
+        "type"
+      ],
+      "type": "object"
+    },
+    "VisibilityCondition": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/SizeVisibilityCondition"
+        },
+        {
+          "$ref": "#/definitions/ZoomLevelVisibilityCondition"
+        }
+      ]
+    },
+    "ZoomLevelVisibilityCondition": {
+      "additionalProperties": false,
+      "properties": {
+        "conditionPadding": {
+          "description": "Specify the buffer size (in pixel) of width or height when calculating the visibility.\n\n__Default__: `0`",
+          "type": "number"
+        },
+        "measure": {
+          "const": "zoomLevel",
+          "description": "Specify which aspect of the `target` will be compared to the `threshold`.",
+          "type": "string"
+        },
+        "operation": {
+          "$ref": "#/definitions/LogicalOperation",
+          "description": "A string that pecifies the logical operation to conduct between `threshold` and the `measure` of `target`. Support\n\n- greater than : \"greater-than\", \"gt\", \"GT\"\n\n- less than : \"less-than\", \"lt\", \"LT\"\n\n- greater than or equal to : \"greater-than-or-equal-to\", \"gtet\", \"GTET\"\n\n- less than or equal to : \"less-than-or-equal-to\", \"ltet\", \"LTET\""
+        },
+        "target": {
+          "description": "Target specifies the object that you want to compare with the threshold.",
+          "enum": [
+            "track",
+            "mark"
+          ],
+          "type": "string"
+        },
+        "threshold": {
+          "description": "Set a threshold in the unit of base pairs (bp)",
+          "type": "number"
+        },
+        "transitionPadding": {
+          "description": "Specify the buffer size (in pixel) of width or height for smooth transition.\n\n__Default__: `0`",
+          "type": "number"
+        }
+      },
+      "required": [
+        "measure",
+        "operation",
+        "target",
+        "threshold"
+      ],
+      "type": "object"
+    },
+    "ZoomLimits": {
+      "items": [
+        {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        {
+          "type": [
+            "number",
+            "null"
+          ]
+        }
+      ],
+      "maxItems": 2,
+      "minItems": 2,
+      "type": "array"
+    }
+  }
+}

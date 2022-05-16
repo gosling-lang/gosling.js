@@ -1,0 +1,11 @@
+{
+  "name": "@gosling/data-fetcher",
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "exports": {
+    ".": "./dist/*"
+  }
+}
