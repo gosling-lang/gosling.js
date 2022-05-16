@@ -8,7 +8,6 @@ import { init } from '@gosling/core/init';
 import { HiGlassComponent } from 'higlass';
 import type { HiGlassSpec } from '@gosling/schema/higlass.schema';
 
-
 /**
  * Register plugin tracks and data fetchers to HiGlass. This is necessary for the first time before using Gosling.
  */

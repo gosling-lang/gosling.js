@@ -14,7 +14,7 @@ import { GoslingTemplates } from './utils/template';
 
 import type { TemplateTrackDef, GoslingSpec } from '@gosling/schema';
 import type { HiGlassSpec } from '@gosling/schema/higlass.schema';
-import type { GoslingApi } from "./api";
+import type { GoslingApi } from './api';
 
 // Before rerendering, wait for a few time so that HiGlass container is resized already.
 // If HiGlass is rendered and then the container resizes, the viewport position changes, unmatching `xDomain` specified by users.

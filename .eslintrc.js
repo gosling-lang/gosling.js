@@ -13,11 +13,6 @@ module.exports = {
         browser: true,
         node: true
     },
-    parserOptions: {
-        project: 'tsconfig.editor.json',
-        ecmaVersion: 6,
-        sourceType: 'module'
-    },
     settings: {
         react: {
             version: "detect"

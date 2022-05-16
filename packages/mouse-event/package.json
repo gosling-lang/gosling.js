@@ -1,9 +1,9 @@
 {
-  "name": "@gosling/mouse-event",
-  "version": "0.0.0",
-  "type": "module",
-  "main": "dist/index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  }
+    "name": "@gosling/mouse-event",
+    "version": "0.0.0",
+    "type": "module",
+    "main": "dist/index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    }
 }

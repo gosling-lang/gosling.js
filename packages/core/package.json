@@ -1,8 +1,8 @@
 {
-  "name": "@gosling/core",
-  "version": "0.0.0",
-  "main": "dist/index.js",
-  "scripts": {
-    "check": "tsc --noEmit"
-  }
+    "name": "@gosling/core",
+    "version": "0.0.0",
+    "main": "dist/index.js",
+    "scripts": {
+        "check": "tsc --noEmit"
+    }
 }

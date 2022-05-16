@@ -109,7 +109,7 @@ export const getSubstitutions = (segment, seq) => {
                     pos: currPos,
                     length: sub.length,
                     type: 'N'
-                }); 
+                });
                 currPos += sub.length;
             } else if (sub.type === '=' || sub.type === 'M') {
                 currPos += sub.length;
@@ -341,7 +341,7 @@ const bamRecordToJson = (bamRecord, chrName, chrOffset) => {
         // if two segments have the same name but different id, they are paired reads.
         // https://github.com/GMOD/bam-js/blob/7a57d24b6aef08a1366cca86ba5092254c7a7f56/src/bamFile.ts#L386
         id: bamRecord._id,
-        name: bamRecord.get('name'), 
+        name: bamRecord.get('name'),
         start: +bamRecord.data.start + 1 + chrOffset,
         end: +bamRecord.data.end + 1 + chrOffset,
         md: bamRecord.get('MD'),
@@ -371,14 +371,25 @@ const tilesetInfos = {};
 // indexed by uuid
 const dataConfs = {};
 
-const init = (uid, { bamUrl, baiUrl, chromSizesUrl, loadMates = false, maxInsertSize = 5000, extractJunction = false, junctionMinCoverage = 1}) => {
+const init = (
+    uid,
+    {
+        bamUrl,
+        baiUrl,
+        chromSizesUrl,
+        loadMates = false,
+        maxInsertSize = 5000,
+        extractJunction = false,
+        junctionMinCoverage = 1
+    }
+) => {
     if (!bamFiles[bamUrl]) {
         // we do not yet have this file cached
-        bamFiles[bamUrl] = new BamFile({ 
-            bamUrl, 
-            baiUrl, 
-            // fetchSizeLimit: 500000000, 
-            // chunkSizeLimit: 100000000 , 
+        bamFiles[bamUrl] = new BamFile({
+            bamUrl,
+            baiUrl
+            // fetchSizeLimit: 500000000,
+            // chunkSizeLimit: 100000000 ,
             // yieldThreadTime: 1000
         });
 
@@ -387,7 +398,11 @@ const init = (uid, { bamUrl, baiUrl, chromSizesUrl, loadMates = false, maxInsert
     }
 
     // if no chromsizes are passed in, we'll retrieve them from the BAM file
-    chromSizes[chromSizesUrl] = chromSizes[chromSizesUrl] || new Promise(resolve => { ChromosomeInfo(chromSizesUrl, resolve) });
+    chromSizes[chromSizesUrl] =
+        chromSizes[chromSizesUrl] ||
+        new Promise(resolve => {
+            ChromosomeInfo(chromSizesUrl, resolve);
+        });
 
     dataConfs[uid] = { bamUrl, chromSizesUrl, loadMates, maxInsertSize, extractJunction, junctionMinCoverage };
 };
@@ -449,12 +464,12 @@ const tile = async (uid, z, x) => {
         const { chromLengths, cumPositions } = chromInfo;
 
         const opt = {
-            viewAsPairs: loadMates,
+            viewAsPairs: loadMates
             // TODO: Turning this on results in "too many requests error"
             // https://github.com/gosling-lang/gosling.js/pull/556
-            // pairAcrossChr: typeof loadMates === 'undefined' ? false : loadMates, 
-        }
-        
+            // pairAcrossChr: typeof loadMates === 'undefined' ? false : loadMates,
+        };
+
         for (let i = 0; i < cumPositions.length; i++) {
             const chromName = cumPositions[i].chr;
             const chromStart = cumPositions[i].pos;
@@ -469,12 +484,7 @@ const tile = async (uid, z, x) => {
                     // fetch from the start until the end of the chromosome
                     recordPromises.push(
                         bamFile
-                            .getRecordsForRange(
-                                chromName, 
-                                minX - chromStart, 
-                                chromEnd - chromStart,
-                                opt
-                            )
+                            .getRecordsForRange(chromName, minX - chromStart, chromEnd - chromStart, opt)
                             .then(records => {
                                 const mappedRecords = records.map(rec =>
                                     bamRecordToJson(rec, chromName, cumPositions[i].pos)
@@ -492,21 +502,19 @@ const tile = async (uid, z, x) => {
                 } else {
                     const startPos = Math.floor(minX - chromStart);
                     const endPos = Math.ceil(maxX - chromStart);
-                    
+
                     // the end of the region is within this chromosome
                     recordPromises.push(
-                        bamFile
-                            .getRecordsForRange(chromName, startPos, endPos, opt)
-                            .then(records => {
-                                const mappedRecords = records.map(rec =>
-                                    bamRecordToJson(rec, chromName, cumPositions[i].pos)
-                                );
-                                tileValues.set(
-                                    `${uid}.${z}.${x}`,
-                                    tileValues.get(`${uid}.${z}.${x}`).concat(mappedRecords)
-                                );
-                                return [];
-                            })
+                        bamFile.getRecordsForRange(chromName, startPos, endPos, opt).then(records => {
+                            const mappedRecords = records.map(rec =>
+                                bamRecordToJson(rec, chromName, cumPositions[i].pos)
+                            );
+                            tileValues.set(
+                                `${uid}.${z}.${x}`,
+                                tileValues.get(`${uid}.${z}.${x}`).concat(mappedRecords)
+                            );
+                            return [];
+                        })
                     );
                     // end the loop because we've retrieved the last chromosome
                     break;
@@ -572,12 +580,12 @@ const getTabularData = (uid, tileIds) => {
 
     let output = Object.values(allSegments);
 
-    if(loadMates) {
+    if (loadMates) {
         // find and set mate info when the `data.loadMates` flag is on.
         findMates(uid, output);
     }
 
-    if(extractJunction) {
+    if (extractJunction) {
         // Reference(ggsashimi): https://github.com/guigolab/ggsashimi/blob/d686d59b4e342b8f9dcd484f0af4831cc092e5de/ggsashimi.py#L136
         output = findJunctions(uid, output);
     }
@@ -590,35 +598,35 @@ const groupBy = (xs, key) =>
     xs.reduce((rv, x) => {
         (rv[x[key]] = rv[x[key]] || []).push(x);
         return rv;
-}, {});
+    }, {});
 
 const findMates = (uid, segments) => {
     const { maxInsertSize } = dataConfs[uid];
 
-    const segmentsByReadName = groupBy(segments, "name");
+    const segmentsByReadName = groupBy(segments, 'name');
 
     // Iterate entries and set information about mates
     Object.entries(segmentsByReadName).forEach(([name, segmentGroup]) => {
-        if(segmentGroup.length === 2){
+        if (segmentGroup.length === 2) {
             const read = segmentGroup[0];
             const mate = segmentGroup[1];
             read.mateIds = [mate.id];
             mate.mateIds = [read.id];
-           
+
             // Additional info we want
             const [l, r] = [read, mate].sort((a, b) => +a.start - +b.start);
             const insertSize = Math.max(0, +r.start - +l.end);
             const largeInsertSize = insertSize >= maxInsertSize;
             let svType;
-            if(!largeInsertSize) {
+            if (!largeInsertSize) {
                 svType = 'normal read';
-            } else if(l.strand === '+' && r.strand === '-') {
+            } else if (l.strand === '+' && r.strand === '-') {
                 svType = 'deletion (+-)';
-            } else if(l.strand === '+' && r.strand === '+') {
+            } else if (l.strand === '+' && r.strand === '+') {
                 svType = 'inversion (++)';
-            } else if(l.strand === '-' && r.strand === '-') {
+            } else if (l.strand === '-' && r.strand === '-') {
                 svType = 'inversion (--)';
-            } else if(l.strand === '-' && r.strand === '+') {
+            } else if (l.strand === '-' && r.strand === '+') {
                 svType = 'duplication (-+)';
             } else {
                 svType = `(${l.strand}${r.strand})`;
@@ -638,36 +646,36 @@ const findMates = (uid, segments) => {
                 d.mateIds = segmentGroup.filter(mate => mate.id !== d.id).map(mate => mate.id);
                 d.foundMate = false;
                 d.insertSize = -1;
-                d.largInsertSize = false; 
+                d.largInsertSize = false;
                 d.svType = segmentGroup.length === 1 ? 'mates not found within chromosome' : 'more than two mates';
                 d.numMates = segmentGroup.length;
             });
         }
     });
     return segmentsByReadName;
-}
+};
 
 const findJunctions = (uid, segments) => {
     const { junctionMinCoverage } = dataConfs[uid];
-    const junctions = []; 
-    
+    const junctions = [];
+
     segments.forEach(segment => {
         const substitutions = JSON.parse(segment.substitutions);
         substitutions.forEach(sub => {
             const don = segment.start + sub.pos;
             const acc = segment.start + sub.pos + sub.length;
-            if(segment.start < don && acc < segment.end) {
+            if (segment.start < don && acc < segment.end) {
                 const j = junctions.find(d => d.start === don && d.end === acc);
-                if(j) {
+                if (j) {
                     j.score += 1;
                 } else {
                     junctions.push({ start: don, end: acc, score: 1 });
                 }
-            } 
+            }
         });
     });
     return junctions.filter(d => d.score >= junctionMinCoverage);
-}
+};
 
 const tileFunctions = {
     init,

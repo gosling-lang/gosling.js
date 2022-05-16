@@ -15,19 +15,12 @@ const container = async (spec: GoslingSpec, opt = {}) => {
 const isElement = (x: unknown) => x instanceof HTMLElement;
 const isString = (x: unknown) => typeof x === 'string';
 function isURL(s: string): boolean {
-  return s.startsWith('http://') || s.startsWith('https://') || s.startsWith('//');
+    return s.startsWith('http://') || s.startsWith('https://') || s.startsWith('//');
 }
 
 export function embed(...args: any[]) {
-    if (
-        args.length > 1 &&
-        (
-          (isString(args[0]) && !isURL(args[0])) ||
-          isElement(args[0]) ||
-          args.length === 3
-        )
-    ) {
+    if (args.length > 1 && ((isString(args[0]) && !isURL(args[0])) || isElement(args[0]) || args.length === 3)) {
         return goslingEmbed(args[0], args[1], args[2]);
     }
     return container(args[0], args[1]);
-};
+}
