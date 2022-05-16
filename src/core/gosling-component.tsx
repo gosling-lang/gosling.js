@@ -30,10 +30,12 @@ interface GoslingCompProps {
     };
 }
 
-export const GoslingComponent = forwardRef<
-    { api: GoslingApi; hgRef: React.RefObject<HiGlassApi | undefined> | HiGlassApi },
-    GoslingCompProps
->((props, ref) => {
+export type GoslingRef = {
+    api: GoslingApi;
+    hgApi: HiGlassApi;
+};
+
+export const GoslingComponent = forwardRef<GoslingRef, GoslingCompProps>((props, ref) => {
     const [viewConfig, setViewConfig] = useState<gosling.HiGlassSpec>();
     const [size, setSize] = useState({ width: 200, height: 200 });
     const wrapperSize = useRef<undefined | { width: number; height: number }>();
@@ -41,21 +43,23 @@ export const GoslingComponent = forwardRef<
     const prevSpec = useRef<undefined | gosling.GoslingSpec>();
 
     // HiGlass API
-    const hgRef = useRef<HiGlassApi>();
+    // https://dev.to/wojciechmatuszewski/mutable-and-immutable-useref-semantics-with-react-typescript-30c9
+    const hgRef = useRef<HiGlassApi>(null);
 
     const theme = getTheme(props.theme || 'light');
     const wrapperDivId = props.id ?? uuid.v4();
 
     // Gosling APIs
     useEffect(() => {
-        if (!ref) return;
-        const api = createApi(hgRef, viewConfig, theme);
+        if (!ref || !hgRef?.current) return;
+        const hgApi = hgRef.current;
+        const api = createApi(hgApi, viewConfig, theme);
         if (typeof ref == 'function') {
-            ref({ hgRef, api });
+            ref({ api, hgApi });
         } else {
-            ref.current = { hgRef, api };
+            ref.current = { api, hgApi };
         }
-    }, [ref, hgRef, viewConfig, theme]);
+    }, [viewConfig, theme]);
 
     // TODO: add a `force` parameter since changing `linkingId` might not update vis
     const compile = useCallback(() => {

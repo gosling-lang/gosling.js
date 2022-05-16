@@ -28,7 +28,7 @@
       "zlib": ["./src/alias/zlib.ts"]
     },
     "baseUrl": ".",
-    "types": ["vitest/globals"]
+    "types": ["vitest/globals", "vite/client"]
   },
   "files": [
     "src/index.ts",

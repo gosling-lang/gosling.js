@@ -15,16 +15,17 @@ import { debounce, isEqual } from 'lodash-es';
 import { ExampleGroups, examples } from './example';
 import { traverseTracksAndViews } from '../src/core/utils/spec-preprocess';
 import stripJsonComments from 'strip-json-comments';
-import * as qs from 'qs';
 import JSONCrush from 'jsoncrush';
-import './editor.css';
 import { ICONS, ICON_INFO } from './icon';
-import type { HiGlassSpec } from '@higlass.schema';
-import type { Datum } from '@gosling.schema';
 import { transpile } from 'typescript';
 import { getHtmlTemplate } from './html-template';
-// @ts-ignore
 import { Themes } from 'gosling-theme';
+
+import type { RouteComponentProps } from 'react-router-dom';
+import type { HiGlassSpec } from '@higlass.schema';
+import type { Datum } from '@gosling.schema';
+
+import './editor.css';
 
 function json2js(jsonCode: string) {
     return `var spec = ${jsonCode} \nexport { spec }; \n`;
@@ -191,15 +192,15 @@ interface PreviewData {
 /**
  * React component for editing Gosling specs
  */
-function Editor(props: any) {
+function Editor(props: RouteComponentProps) {
     // Determines whether the screen is too small (e.g., mobile)
     const IS_SMALL_SCREEN = window.innerWidth <= 500;
 
     // custom spec contained in the URL
-    const urlParams = qs.parse(props.location.search, { ignoreQueryPrefix: true });
-    const urlSpec = urlParams?.spec ? JSONCrush.uncrush(urlParams.spec as string) : null;
-    const urlGist = urlParams?.gist ?? null;
-    const urlExampleId = (urlParams?.example ?? '') as string;
+    const urlParams = new URLSearchParams(props.location.search);
+    const urlSpec = urlParams.has('spec') ? JSONCrush.uncrush(urlParams.get('spec')!) : null;
+    const urlGist = urlParams.get('gist');
+    const urlExampleId = urlParams.get('example') ?? '';
 
     const defaultCode =
         urlGist || urlExampleId ? emptySpec() : stringify(urlSpec ?? (INIT_DEMO.spec as gosling.GoslingSpec));
@@ -240,9 +241,7 @@ function Editor(props: any) {
     const [readOnly, setReadOnly] = useState<boolean>(urlGist ? true : false);
 
     // whether to hide source code on the left
-    const [isHideCode, setIsHideCode] = useState<boolean>(
-        IS_SMALL_SCREEN || (urlParams?.full as string) === 'true' || false
-    );
+    const [isHideCode, setIsHideCode] = useState<boolean>(IS_SMALL_SCREEN || urlParams.get('full') === 'true' || false);
 
     // whether to show widgets for responsive window
     const [isResponsive, setIsResponsive] = useState<boolean>(true);
@@ -273,7 +272,7 @@ function Editor(props: any) {
 
     // for using HiGlass JS API
     // const hgRef = useRef<any>();
-    const gosRef = useRef<any>();
+    const gosRef = useRef<gosling.GoslingRef>(null);
 
     const debounceCodeEdit = useRef(
         debounce((code: string, language) => {
@@ -825,7 +824,7 @@ function Editor(props: any) {
                             title="Save PNG file"
                             className="side-panel-button"
                             onClick={() => {
-                                gosRef.current.api.exportPng();
+                                gosRef.current?.api.exportPng();
                             }}
                         >
                             {getIconSVG(ICONS.IMAGE, 23, 23)}
@@ -836,7 +835,7 @@ function Editor(props: any) {
                             title="Save PDF file"
                             className="side-panel-button"
                             onClick={() => {
-                                gosRef.current.api.exportPdf();
+                                gosRef.current?.api.exportPdf();
                             }}
                         >
                             {getIconSVG(ICONS.PDF, 23, 23)}
@@ -1073,7 +1072,7 @@ function Editor(props: any) {
                                             id={'goslig-component-root'}
                                             className={'goslig-component'}
                                             experimental={{ reactive: true }}
-                                            compiled={(g, h) => {
+                                            compiled={(_, h) => {
                                                 setHg(h);
                                             }}
                                         />
