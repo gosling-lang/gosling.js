@@ -15,7 +15,6 @@ import { debounce, isEqual } from 'lodash-es';
 import { ExampleGroups, examples } from './example';
 import { traverseTracksAndViews } from '../src/core/utils/spec-preprocess';
 import stripJsonComments from 'strip-json-comments';
-import * as qs from 'qs';
 import JSONCrush from 'jsoncrush';
 import { ICONS, ICON_INFO } from './icon';
 import { transpile } from 'typescript';
@@ -198,10 +197,10 @@ function Editor(props: RouteComponentProps) {
     const IS_SMALL_SCREEN = window.innerWidth <= 500;
 
     // custom spec contained in the URL
-    const urlParams = qs.parse(props.location.search, { ignoreQueryPrefix: true });
-    const urlSpec = urlParams?.spec ? JSONCrush.uncrush(urlParams.spec as string) : null;
-    const urlGist = urlParams?.gist ?? null;
-    const urlExampleId = (urlParams?.example ?? '') as string;
+    const urlParams = new URLSearchParams(props.location.search);
+    const urlSpec = urlParams.has('spec') ? JSONCrush.uncrush(urlParams.get('spec')!) : null;
+    const urlGist = urlParams.get('gist');
+    const urlExampleId = urlParams.get('example') ?? '';
 
     const defaultCode =
         urlGist || urlExampleId ? emptySpec() : stringify(urlSpec ?? (INIT_DEMO.spec as gosling.GoslingSpec));
@@ -242,9 +241,7 @@ function Editor(props: RouteComponentProps) {
     const [readOnly, setReadOnly] = useState<boolean>(urlGist ? true : false);
 
     // whether to hide source code on the left
-    const [isHideCode, setIsHideCode] = useState<boolean>(
-        IS_SMALL_SCREEN || (urlParams?.full as string) === 'true' || false
-    );
+    const [isHideCode, setIsHideCode] = useState<boolean>(IS_SMALL_SCREEN || urlParams.get('full') === 'true' || false);
 
     // whether to show widgets for responsive window
     const [isResponsive, setIsResponsive] = useState<boolean>(true);
