@@ -5,8 +5,7 @@
     "main": "src/index.ts",
     "types": "src/index.ts",
     "scripts": {
-        "check": "tsc --noEmit",
-        "test": "vitest --globals"
+        "check": "tsc --noEmit"
     },
     "dependencies": {
         "@gosling/core": "workspace:*",

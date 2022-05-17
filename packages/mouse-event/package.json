@@ -12,7 +12,8 @@
         }
     },
     "scripts": {
-        "check": "tsc --noEmit"
+        "check": "tsc --noEmit",
+        "test": "vitest --globals"
     },
     "dependencies": {
         "@gosling/schema": "workspace:*",

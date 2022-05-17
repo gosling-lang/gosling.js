@@ -3,7 +3,8 @@
     "version": "0.0.0",
     "main": "src/index.ts",
     "scripts": {
-        "check": "tsc --noEmit"
+        "check": "tsc --noEmit",
+        "test": "vitest --globals"
     },
     "devDependencies": {
         "@types/d3-format": "^3.0.1",

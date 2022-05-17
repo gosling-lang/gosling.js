@@ -13,7 +13,7 @@
     },
     "scripts": {
         "check": "tsc --noEmit",
-        "test": "vitest"
+        "test": "vitest --config ../../vite.config.js"
     },
     "peerDependencies": {
         "higlass": "^1.11.11",
