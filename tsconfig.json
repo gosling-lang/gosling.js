@@ -10,10 +10,21 @@
     "resolveJsonModule": true,
     "skipDefaultLibCheck": true,
     "skipLibCheck": true,
-    "outDir": "./dist",
     "declaration": true,
     "inlineSourceMap": true,
-    "types": ["vitest/globals"]
+    "noImplicitAny": true,
+    "types": ["vitest/globals", "vite/client"],
+    "rootDir": "./",
+    "composite": true
   },
-  "exclude": ["**/dist/**"]
+  "exclude": ["**/dist/**"],
+  "references": [
+      { "path": "./packages/core" },
+      { "path": "./packages/schema" },
+      { "path": "./packages/brush" },
+      { "path": "./packages/mouse-event" },
+      { "path": "./packages/genomic-axis" },
+      { "path": "./packages/data-fetcher" },
+      { "path": "./packages/track" }
+  ]
 }
