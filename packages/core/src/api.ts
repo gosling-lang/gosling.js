@@ -18,7 +18,7 @@ export type RawDataEventData = {
     data: Datum[];
 };
 
-import type PubSubJS from "pubsub-js";
+import type PubSubJS from 'pubsub-js';
 
 declare const PubSub: typeof PubSubJS;
 

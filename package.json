@@ -16,7 +16,7 @@
         "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s -r 0",
         "lint-": "eslint \"packages/*/src/*.{js,jsx,ts,tsx}\"",
         "lint": "eslint \"packages/**/*.{js,jsx,ts,tsx}\"",
-        "format": "prettier --write",
+        "format": "prettier --write scripts packages *.js",
         "predeploy": "yarn build-editor; echo \"gosling.js.org\" >> build/CNAME",
         "deploy": "gh-pages -d build"
     },
