@@ -11,6 +11,7 @@
     "scripts": {
         "start": "pnpm -r --parallel dev",
         "build": "pnpm -r --parallel build",
+        "check": "pnpm -r --parallel check",
         "test": "vitest run",
         "clean": "pnpm -r exec -- rm -rf node_modules",
         "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s -r 0",

@@ -16,7 +16,8 @@
         "types": ["vitest/globals", "vite/client"],
         "rootDir": "./",
         "composite": true,
-        "allowJs": true
+        "allowJs": true,
+        "jsx": "react"
     },
     "exclude": ["**/dist/**"],
     "references": [
