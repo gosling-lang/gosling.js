@@ -1,8 +1,9 @@
 {
-  "extends": "../../tsconfig.json",
-  "exclude": ["./dist"],
-  "compilerOptions": {
-    "composite": true,
-    "allowJs": true
-  }
+    "extends": "../../tsconfig.json",
+    "references": [],
+    "include": ["src/**/*"],
+    "compilerOptions": {
+        "allowJs": true,
+        "outDir": "./dist"
+    }
 }

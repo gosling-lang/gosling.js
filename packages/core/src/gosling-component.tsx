@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo, useRef, forwardRef, useCallback } from 'react';
 import { ResizeSensor } from 'css-element-queries';
-import { isEqual } from 'lodash';
+import { isEqual } from 'lodash-es';
 import * as uuid from 'uuid';
 
 /* eslint-disable react/prop-types */

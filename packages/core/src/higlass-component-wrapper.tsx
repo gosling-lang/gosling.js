@@ -2,7 +2,7 @@
 import * as PIXI from 'pixi.js';
 import React, { useEffect, useState, forwardRef, useMemo } from 'react';
 import * as uuid from 'uuid';
-import { init } from '@gosling/core/init';
+import { init } from './init';
 
 // @ts-ignore
 import { HiGlassComponent } from 'higlass';

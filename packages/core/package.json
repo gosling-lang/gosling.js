@@ -1,8 +1,40 @@
 {
-    "name": "@gosling/core",
-    "version": "0.0.0",
-    "main": "dist/index.js",
-    "scripts": {
-        "check": "tsc --noEmit"
+  "name": "@gosling/core",
+  "version": "0.0.0",
+  "exports": {
+    "./*": "./src/*"
+  },
+  "typesVersions": {
+    "*": {
+      "*": [
+        "src/*"
+      ]
     }
+  },
+  "scripts": {
+    "check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@gosling/brush": "workspace:*",
+    "@gosling/data-fetcher": "workspace:*",
+    "@gosling/genomic-axis": "workspace:*",
+    "@gosling/mouse-event": "workspace:*",
+    "@gosling/schema": "workspace:*",
+    "@gosling/track": "workspace:*",
+    "@types/pubsub-js": "^1.8.3",
+    "ajv": "^6.12.2",
+    "bezier-js": "^6.1.0",
+    "css-element-queries": "^1.2.3",
+    "d3-array": "^3.1.6",
+    "d3-color": "^3.1.0",
+    "d3-format": "^3.1.0",
+    "d3-scale": "^4.0.2",
+    "d3-scale-chromatic": "^3.0.0",
+    "gosling-theme": "^0.0.10",
+    "jspdf": "^2.5.1",
+    "lodash-es": "^4.17.21",
+    "pixi.js": "^6.3.2",
+    "pubsub-js": "^1.9.4",
+    "uuid": "^8.3.2"
+  }
 }

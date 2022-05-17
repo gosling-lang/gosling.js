@@ -10,6 +10,7 @@ import { event as d3Event } from 'd3-selection';
 import { select as d3Select } from 'd3-selection';
 import stringify from 'json-stringify-pretty-compact';
 import SplitPane from 'react-split-pane';
+import { useLocation } from 'react-router-dom';
 import ErrorBoundary from './error-boundary';
 import { debounce, isEqual } from 'lodash-es';
 import { ExampleGroups, examples } from './example';
@@ -21,7 +22,6 @@ import { transpile } from 'typescript';
 import { getHtmlTemplate } from './html-template';
 import { Themes } from 'gosling-theme';
 
-import type { RouteComponentProps } from 'react-router-dom';
 import type { HiGlassSpec } from '@gosling/schema/higlass.schema';
 import type { Datum } from '@gosling/schema';
 
@@ -192,12 +192,14 @@ interface PreviewData {
 /**
  * React component for editing Gosling specs
  */
-function Editor(props: RouteComponentProps) {
+function Editor() {
+    const location = useLocation();
+
     // Determines whether the screen is too small (e.g., mobile)
     const IS_SMALL_SCREEN = window.innerWidth <= 500;
 
     // custom spec contained in the URL
-    const urlParams = new URLSearchParams(props.location.search);
+    const urlParams = new URLSearchParams(location.search);
     const urlSpec = urlParams.has('spec') ? JSONCrush.uncrush(urlParams.get('spec')!) : null;
     const urlGist = urlParams.get('gist');
     const urlExampleId = urlParams.get('example') ?? '';

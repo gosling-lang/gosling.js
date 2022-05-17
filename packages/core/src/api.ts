@@ -18,6 +18,10 @@ export type RawDataEventData = {
     data: Datum[];
 };
 
+import type PubSubJS from "pubsub-js";
+
+declare var PubSub: typeof PubSubJS;
+
 // Utility type for building strongly typed PubSub API.
 //
 // Add named events using a string union for `EventName`
@@ -169,7 +173,7 @@ export function createApi(
                 const a = document.createElement('a');
                 document.body.append(a);
                 a.download = 'gosling-visualization';
-                a.href = URL.createObjectURL(blob);
+                a.href = URL.createObjectURL(blob!);
                 a.click();
                 a.remove();
             }, 'image/png');

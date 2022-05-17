@@ -3,6 +3,7 @@
     "references": [],
     "include": ["src/**/*"],
     "compilerOptions": {
-        "outDir": "./dist"
+        "outDir": "./dist",
+        "jsx": "preserve"
     }
 }

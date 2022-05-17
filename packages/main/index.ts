@@ -1,8 +1,7 @@
-import pkg from './package.json';
 import GoslingSchema from '@gosling/schema/gosling.schema.json';
 import ThemeSchema from '@gosling/schema/theme.schema.json';
 
-export const { name, version } = pkg;
+export { name, version } from './package.json';
 export { GoslingSchema, ThemeSchema };
 
 export { GoslingTemplates } from '@gosling/core/utils/template';

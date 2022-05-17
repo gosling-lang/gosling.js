@@ -4,9 +4,9 @@ import { default as higlassRegister } from 'higlass-register';
 import { TextTrack } from 'higlass-text';
 import { AxisTrack } from '@gosling/genomic-axis';
 import { BrushTrack } from '@gosling/brush';
-import { CSVDataFetcher } from '@gosling/data-fetcher/csv';
-import { RawDataFetcher } from '@gosling/data-fetcher/json';
-import { BBIDataFetcher } from '@gosling/data-fetcher/bigwig';
+import { CSVDataFetcher } from '@gosling/data-fetcher/csv/index';
+import { RawDataFetcher } from '@gosling/data-fetcher/json/index';
+import { BBIDataFetcher } from '@gosling/data-fetcher/bigwig/index';
 import { GoslingTrack } from '@gosling/track';
 
 let once = false;
