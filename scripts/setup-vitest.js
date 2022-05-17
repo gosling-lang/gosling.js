@@ -1,5 +1,5 @@
 import { afterAll, vi, beforeAll } from 'vitest';
-import { randomFillSync } from 'crypto';
+import { randomFillSync } from 'node:crypto';
 
 // global needs to be set before import jest-canvas-mock
 global.jest = vi;
