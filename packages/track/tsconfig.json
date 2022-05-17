@@ -1,0 +1,7 @@
+{
+    "extends": "../../tsconfig.json",
+    "exclude": ["./dist"],
+    "compilerOptions": {
+        "types": ["vite/client", "vitest/globals"]
+    }
+}

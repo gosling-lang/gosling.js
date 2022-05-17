@@ -1,8 +1,18 @@
 {
     "name": "@gosling/track",
     "version": "0.0.0",
-    "main": "dist/index.js",
+    "main": "src/index.ts",
     "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1"
+        "check": "tsc --noEmit"
+    },
+    "devDependencies": {
+        "pixi.js": "^6.3.2"
+    },
+    "dependencies": {
+        "@gosling/core": "workspace*",
+        "@gosling/data-fetcher": "workspace*",
+        "@gosling/schema": "workspace*",
+        "@gosling/mouse-event": "workspace*",
+        "threads": "^1.7.0"
     }
 }

@@ -6,7 +6,7 @@ import { scaleLinear } from 'd3-scale';
 import { format } from 'd3-format';
 import { spawn } from 'threads';
 
-import { drawMark, drawPostEmbellishment, drawPreEmbellishment } from '@gosling/core/mark';
+import { drawMark, drawPostEmbellishment, drawPreEmbellishment } from '@gosling/core/mark/index';
 import { validateTrack } from '@gosling/core/utils/validate';
 import { shareScaleAcrossTracks } from '@gosling/core/utils/scales';
 import { resolveSuperposedTracks } from '@gosling/core/utils/overlay';
@@ -29,14 +29,15 @@ import { Is2DTrack, IsChannelDeep, IsXAxis } from '@gosling/core/gosling.schema.
 import { GoslingTrackModel } from '@gosling/core/gosling-track-model';
 import { HIGLASS_AXIS_SIZE } from '@gosling/core/higlass-model';
 import { flatArrayToPairArray } from '@gosling/core/utils/array';
-import { BAMDataFetcher } from '@gosling/data-fetcher/bam';
-import { GoslingVcfData } from '@gosling/data-fetcher/vcf';
+import { BAMDataFetcher } from '@gosling/data-fetcher/bam/index';
+import { GoslingVcfData } from '@gosling/data-fetcher/vcf/index';
 
 import type { InteractionEvent } from 'pixi.js';
 import type { SingleTrack, OverlaidTrack, Datum } from '@gosling/schema';
 import type { MouseEventData } from '@gosling/mouse-event/mouse-event-model';
 
 import { getTabularData, GOSLING_DATA_ROW_UID_FIELD } from './data-abstraction';
+
 import BamWorker from '@gosling/data-fetcher/bam/bam-worker.js?worker&inline';
 import VcfWorker from '@gosling/data-fetcher/vcf/vcf-worker.js?worker&inline';
 
@@ -404,8 +405,8 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                     .then((toRender: any) => {
                         this.drawLoadingCue();
                         const tiles = this.visibleAndFetchedTiles();
+                        const tabularData = JSON.parse(new TextDecoder().decode(toRender));
 
-                        const tabularData = JSON.parse(Buffer.from(toRender).toString());
                         if (tiles?.[0]) {
                             const tile = tiles[0];
                             tile.tileData.tabularData = tabularData;
