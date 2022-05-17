@@ -6,6 +6,11 @@
         "check": "tsc --noEmit"
     },
     "devDependencies": {
+        "@types/d3-format": "^3.0.1",
+        "@types/d3-scale": "^4.0.2",
+        "@types/lodash-es": "^4.17.6",
+        "@types/pubsub-js": "^1.8.3",
+        "@types/uuid": "^8.3.4",
         "pixi.js": "^6.3.2"
     },
     "dependencies": {
@@ -14,6 +19,8 @@
         "@gosling/mouse-event": "workspace*",
         "@gosling/schema": "workspace*",
         "d3-scale": "^4.0.2",
+        "lodash-es": "^4.17.21",
+        "pubsub-js": "^1.9.4",
         "threads": "^1.7.0"
     }
 }

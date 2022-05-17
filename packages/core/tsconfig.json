@@ -4,6 +4,7 @@
     "include": ["src/**/*"],
     "compilerOptions": {
         "outDir": "./dist",
-        "jsx": "preserve"
+        "jsx": "preserve",
+        "allowJs": true
     }
 }

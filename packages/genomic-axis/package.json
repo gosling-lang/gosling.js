@@ -13,5 +13,10 @@
         "d3-scale": "^4.0.2",
         "pixi.js": "^6.3.2",
         "rbush": "^3.0.1"
+    },
+    "devDependencies": {
+        "@types/d3-format": "^3.0.1",
+        "@types/d3-scale": "^4.0.2",
+        "@types/rbush": "^3.0.0"
     }
 }

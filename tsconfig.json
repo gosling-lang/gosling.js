@@ -15,7 +15,8 @@
     "noImplicitAny": true,
     "types": ["vitest/globals", "vite/client"],
     "rootDir": "./",
-    "composite": true
+    "composite": true,
+    "allowJs": true
   },
   "exclude": ["**/dist/**"],
   "references": [

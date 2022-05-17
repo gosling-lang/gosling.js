@@ -1,4 +1,4 @@
-import { version as goslingVersion } from '../package.json';
+import { version as goslingVersion } from 'gosling.js';
 const higlassVersion = '1.11';
 const reactVersion = '17';
 const pixiVersion = '6';

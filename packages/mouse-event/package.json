@@ -5,13 +5,20 @@
     "main": "./src/index.ts",
     "types": "./index.ts",
     "typesVersions": {
-      "*": {"*": [ "src/*" ] }
+        "*": {
+            "*": [
+                "src/*"
+            ]
+        }
     },
     "scripts": {
-      "check": "tsc --noEmit"
+        "check": "tsc --noEmit"
     },
     "dependencies": {
-        "uuid": "^8.3.2",
-        "@gosling/schema": "workspace:*"
+        "@gosling/schema": "workspace:*",
+        "uuid": "^8.3.2"
+    },
+    "devDependencies": {
+        "@types/uuid": "^8.3.4"
     }
 }
