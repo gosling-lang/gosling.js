@@ -1,7 +1,5 @@
-/node_modules
 /coverage
 /build
-/dist
 /.pnp
 /lib
 /bin
@@ -15,8 +13,12 @@
 *.profraw
 npm-debug.log*
 yarn-debug.log*
+.pnpm-debug.log*
 yarn-error.log*
 report.*
 *.swp
 *.swo
 *~
+
+dist
+node_modules

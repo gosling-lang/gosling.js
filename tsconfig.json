@@ -1,39 +1,19 @@
 {
   "compilerOptions": {
-    "target": "es6",
+    "target": "esnext",
     "module": "esnext",
+    "lib": ["esnext", "dom"],
     "moduleResolution": "node",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
-    "allowJs": true,
-    "sourceMap": true,
-    "declaration": true,
-    "declarationMap": true,
-    "skipLibCheck": true,
     "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
     "strict": true,
     "strictNullChecks": true,
     "resolveJsonModule": true,
-    "jsx": "react",
-    "baseUrl": ".",
-    "paths": {
-      "gosling.js": ["packages/main/index.ts"],
-      "@gosling/core/*": ["packages/core/src/*"],
-      "@gosling/brush": ["packages/brush/src"],
-      "@gosling/track": ["packages/track/src"],
-      "@gosling/genomic-axis": ["packages/genomic-axis/src"],
-      "@gosling/data-fetcher/*": ["packages/data-fetcher/src/*"],
-      "@gosling/editor/*": ["packages/editor/src/*"],
-      "@gosling/mouse-event/*": ["packages/mouse-event/src/*"],
-      "@gosling/mouse-event": ["packages/mouse-event/src"],
-      "@gosling/schema": ["packages/schema/src"],
-      "@gosling/schema/*": ["packages/schema/src/*"]
-    },
-    "types": ["vitest/globals", "vite/client"]
+    "skipDefaultLibCheck": true,
+    "skipLibCheck": true,
+    "outDir": "./dist",
+    "declaration": true,
+    "inlineSourceMap": true,
+    "types": ["vitest/globals"]
   },
-  "include": ["packages"]
+  "exclude": ["**/dist/**"]
 }

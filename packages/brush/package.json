@@ -1,12 +1,14 @@
 {
-    "name": "brush",
-    "version": "1.0.0",
-    "description": "",
-    "main": "index.js",
+    "name": "@gosling/brush",
+    "version": "0.0.0",
+    "types": "./src/index.ts",
+    "main": "./src/index.ts",
     "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1"
+        "check": "tsc --noEmit"
     },
-    "keywords": [],
-    "author": "",
-    "license": "ISC"
+    "dependencies": {
+        "@gosling/core": "workspace:*",
+        "d3-shape": "^3.1.0",
+        "uuid": "^8.3.2"
+    }
 }
