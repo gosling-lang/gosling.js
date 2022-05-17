@@ -2,8 +2,16 @@
     "name": "@gosling/mouse-event",
     "version": "0.0.0",
     "type": "module",
-    "main": "dist/index.js",
+    "main": "./src/index.ts",
+    "types": "./index.ts",
+    "typesVersions": {
+      "*": {"*": [ "src/*" ] }
+    },
     "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1"
+      "check": "tsc --noEmit"
+    },
+    "dependencies": {
+        "uuid": "^8.3.2",
+        "@gosling/schema": "workspace:*"
     }
 }
