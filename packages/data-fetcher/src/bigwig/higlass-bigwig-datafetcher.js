@@ -1,5 +1,3 @@
-/* eslint no-console: "error" */
-
 /* TODO: Support esm.
  * This code is based on the following repo:
  * https://github.com/higlass/higlass-bigwig-datafetcher/blob/main/src/BigwigDataFetcher.js

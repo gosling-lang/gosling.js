@@ -1,11 +1,16 @@
 module.exports = {
     root: true,
+    parser: '@typescript-eslint/parser',
+    plugins: ['@typescript-eslint'],
     extends: [
         'eslint:recommended',
-        'plugin:react/recommended',
         'plugin:@typescript-eslint/recommended',
+        'plugin:react/recommended',
     ],
-    parser: '@typescript-eslint/parser',
+    settings: {
+        react: { version: "detect" },
+    },
+    env: { browser: true, node: true },
     rules: {
         // https://github.com/typescript-eslint/typescript-eslint/tree/master/packages/eslint-plugin#supported-rules
         '@typescript-eslint/no-explicit-any': 'off',
@@ -17,7 +22,6 @@ module.exports = {
         '@typescript-eslint/explicit-module-boundary-types': 'off',
         '@typescript-eslint/no-namespace': 'off',
         '@typescript-eslint/ban-ts-comment': 'off',
-        'no-unused-vars': 'off', // must disable the base rule as it can report incorrect errors
         '@typescript-eslint/no-unused-vars': [
             'error',
             {
@@ -27,6 +31,7 @@ module.exports = {
             }
         ],
         // https://eslint.org/docs/rules/
+        'no-unused-vars': 'off', // must disable the base rule as it can report incorrect errors
         'linebreak-style': ['error', 'unix'],
         'no-console': ['error', { allow: ['warn', 'error'] }],
         'no-trailing-spaces': 'error',
