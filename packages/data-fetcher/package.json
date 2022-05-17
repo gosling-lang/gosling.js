@@ -3,9 +3,34 @@
     "version": "0.0.0",
     "type": "module",
     "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1"
+        "check": "tsc --noEmit"
     },
     "exports": {
-        ".": "./dist/*"
+        "./*": "./src/*"
+    },
+    "typesVersions": {
+      "*": {
+        "*": [
+          "src/*"
+        ]
+      }
+    },
+    "dependencies": {
+        "@gmod/bam": "^1.1.16",
+        "@gmod/bbi": "^1.0.35",
+        "@gmod/tabix": "^1.5.3",
+        "@gmod/vcf": "^5.0.6",
+        "@gosling/core": "workspace:*",
+        "@gosling/schema": "workspace:*",
+        "d3-array": "^3.1.6",
+        "d3-dsv": "^3.0.1",
+        "d3-request": "^1.0.6",
+        "generic-filehandle": "^2.2.2",
+        "lodash-es": "^4.17.21",
+        "lru-cache": "^7.10.1",
+        "threads": "^1.7.0"
+    },
+    "devDependencies": {
+        "cross-fetch": "^3.1.5"
     }
 }
