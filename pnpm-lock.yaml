@@ -75,6 +75,9 @@ importers:
       d3-scale: ^4.0.2
       d3-scale-chromatic: ^3.0.0
       gosling-theme: ^0.0.10
+      higlass: ^1.11.11
+      higlass-register: ^0.3.0
+      higlass-text: ^0.1.5
       jspdf: ^2.5.1
       lodash-es: ^4.17.21
       pixi.js: ^6.3.2
@@ -97,6 +100,9 @@ importers:
       d3-scale: 4.0.2
       d3-scale-chromatic: 3.0.0
       gosling-theme: 0.0.10
+      higlass: 1.11.11_pixi.js@6.3.2
+      higlass-register: 0.3.0
+      higlass-text: 0.1.5
       jspdf: 2.5.1
       lodash-es: 4.17.21
       pixi.js: 6.3.2
@@ -171,7 +177,7 @@ importers:
       d3-selection: 1.4.2
       fetch-jsonp: 1.2.1
       gosling-theme: 0.0.10
-      gosling.js: link:../..
+      gosling.js: link:../main
       higlass: 1.11.11_hq3lthv7pwaafpt2owirosfxqq
       json-stringify-pretty-compact: 4.0.0
       jsoncrush: 1.1.6
@@ -202,10 +208,14 @@ importers:
   packages/genomic-axis:
     specifiers:
       '@gosling/core': workspace:*
+      d3-format: ^3.1.0
+      d3-scale: ^4.0.2
       pixi.js: ^6.3.2
       rbush: ^3.0.1
     dependencies:
       '@gosling/core': link:../core
+      d3-format: 3.1.0
+      d3-scale: 4.0.2
       pixi.js: 6.3.2
       rbush: 3.0.1
 
@@ -234,6 +244,7 @@ importers:
       '@gosling/data-fetcher': workspace*
       '@gosling/mouse-event': workspace*
       '@gosling/schema': workspace*
+      d3-scale: ^4.0.2
       pixi.js: ^6.3.2
       threads: ^1.7.0
     dependencies:
@@ -241,6 +252,7 @@ importers:
       '@gosling/data-fetcher': link:../data-fetcher
       '@gosling/mouse-event': link:../mouse-event
       '@gosling/schema': link:../schema
+      d3-scale: 4.0.2
       threads: 1.7.0
     devDependencies:
       pixi.js: 6.3.2
@@ -1382,6 +1394,10 @@ packages:
     resolution: {integrity: sha512-uX1KG+x9h5hIJsaKR9xHUeUraxf8IODOwq9JLNPq6BwB04a/xgpq3rcx47l5BZu5zBPlgD342tdke3Hom/nJRA==}
     dev: true
 
+  /d3-array/1.2.4:
+    resolution: {integrity: sha512-KHW6M86R+FUPYGb3R5XiYjXPq7VzwxZ22buHhAEVG5ztoEcZZMLov530mmccaqA1GghZArjQV46fuc8kUqhhHw==}
+    dev: false
+
   /d3-array/3.1.6:
     resolution: {integrity: sha512-DCbBBNuKOeiR9h04ySRBMW52TFVc91O9wJziuyXw6Ztmy8D3oZbmCkOO3UHKC7ceNJsN2Mavo9+vwV8EAEUXzA==}
     engines: {node: '>=12'}
@@ -1391,6 +1407,10 @@ packages:
 
   /d3-collection/1.0.7:
     resolution: {integrity: sha512-ii0/r5f4sjKNTfh84Di+DpztYwqKhEyUlKoPrzUFfeSkWxjW49xU2QzO9qrPrNkpdI0XJkfzvmTu8V2Zylln6A==}
+    dev: false
+
+  /d3-color/1.4.1:
+    resolution: {integrity: sha512-p2sTHSLCJI2QKunbGb7ocOh7DgTAn8IrLx21QRc/BSnodXM4sv6aLQlnfpvehFMLZEfBc6g9pH9SWQccFYfJ9Q==}
     dev: false
 
   /d3-color/3.1.0:
@@ -1434,9 +1454,19 @@ packages:
       rw: 1.3.3
     dev: false
 
+  /d3-format/1.4.5:
+    resolution: {integrity: sha512-J0piedu6Z8iB6TbIGfZgDzfXxUFN3qQRMofy2oPdXzQibYGqPB/9iMcxr/TGalU+2RsyDO+U4f33id8tbnSRMQ==}
+    dev: false
+
   /d3-format/3.1.0:
     resolution: {integrity: sha512-YyUI6AEuY/Wpt8KWLgZHsIU86atmikuoOmCfommt0LYHiQSPjvX2AcFc38PX0CBpr2RCyZhjex+NS/LPOv6YqA==}
     engines: {node: '>=12'}
+    dev: false
+
+  /d3-interpolate/1.4.0:
+    resolution: {integrity: sha512-V9znK0zc3jOPV4VD2zZn0sDhZU3WAE2bmlxdIwwQPPzPjvyLkd8B3JUVdS1IDUFDkWZ72c9qnv1GK2ZagTZ8EA==}
+    dependencies:
+      d3-color: 1.4.1
     dev: false
 
   /d3-interpolate/3.0.1:
@@ -1468,6 +1498,18 @@ packages:
       d3-interpolate: 3.0.1
     dev: false
 
+  /d3-scale/1.0.7:
+    resolution: {integrity: sha512-KvU92czp2/qse5tUfGms6Kjig0AhHOwkzXG0+PqIJB3ke0WUv088AHMZI0OssO9NCkXt4RP8yju9rpH8aGB7Lw==}
+    dependencies:
+      d3-array: 1.2.4
+      d3-collection: 1.0.7
+      d3-color: 1.4.1
+      d3-format: 1.4.5
+      d3-interpolate: 1.4.0
+      d3-time: 1.1.0
+      d3-time-format: 2.3.0
+    dev: false
+
   /d3-scale/4.0.2:
     resolution: {integrity: sha512-GZW464g1SH7ag3Y7hXjf8RoUuAFIqklOAq3MRl4OaWabTFJY9PN/E1YklhXLh+OQ3fM9yS2nOkCoS+WLZ6kvxQ==}
     engines: {node: '>=12'}
@@ -1495,11 +1537,21 @@ packages:
       d3-path: 3.0.1
     dev: false
 
+  /d3-time-format/2.3.0:
+    resolution: {integrity: sha512-guv6b2H37s2Uq/GefleCDtbe0XZAuy7Wa49VGkPVPMfLL9qObgBST3lEHJBMUp8S7NdLQAGIvr2KXk8Hc98iKQ==}
+    dependencies:
+      d3-time: 1.1.0
+    dev: false
+
   /d3-time-format/4.1.0:
     resolution: {integrity: sha512-dJxPBlzC7NugB2PDLwo9Q8JiTR3M3e4/XANkreKSUxF8vvXKqm1Yfq4Q5dl8budlunRVlUUaDUgFt7eA8D6NLg==}
     engines: {node: '>=12'}
     dependencies:
       d3-time: 3.0.0
+    dev: false
+
+  /d3-time/1.1.0:
+    resolution: {integrity: sha512-Xh0isrZ5rPYYdqhAVk8VLnMEidhz5aP7htAADH6MfzgmmicPkTo8LhkLxci61/lCB7n7UmE3bN0leRt+qvkLxA==}
     dev: false
 
   /d3-time/3.0.0:
@@ -1880,6 +1932,19 @@ packages:
     resolution: {integrity: sha512-Pkw+xBHuV6xFeJprJe2BBEoDV+AvQySaz3pPDRUs5PNZEMQjpXJJueqrpcHIXxnWTcAGi/UOCgVShlkY6kLoqg==}
     dev: false
 
+  /higlass-register/0.3.0:
+    resolution: {integrity: sha512-D4I+ATxFuTn+Q6p8Y9rUa+X3b3cqMqhu9Tya6uHtvgV5cs39Mk7i6Z+7PMA8YuwQd5gLMSxCm2lCyWmxRVBQsQ==}
+    dev: false
+
+  /higlass-text/0.1.5:
+    resolution: {integrity: sha512-+BzxCgUL/wNvuIGLl2rsNB00y8q1EPMvzKeRKLnlqh6Pj5rZied4lYgvQBr2BRciOw1XvoOKPpwaKrY2zQvsLw==}
+    dependencies:
+      d3-color: 1.4.1
+      d3-scale: 1.0.7
+      higlass-register: 0.3.0
+      slugid: 3.0.0
+    dev: false
+
   /higlass/1.11.11_hq3lthv7pwaafpt2owirosfxqq:
     resolution: {integrity: sha512-czinplxb7S2XWbYL+2avfGpQ+sKGAtoNk7Nn0eKT429uAz2QvNqvok2r+JqX6DXPaMp844WE7S5IPDIaHsI7ow==}
     engines: {node: '>=0.12.0'}
@@ -1892,6 +1957,18 @@ packages:
       pixi.js: 6.3.2
       react: 16.14.0
       react-dom: 16.14.0_react@16.14.0
+    dev: false
+
+  /higlass/1.11.11_pixi.js@6.3.2:
+    resolution: {integrity: sha512-czinplxb7S2XWbYL+2avfGpQ+sKGAtoNk7Nn0eKT429uAz2QvNqvok2r+JqX6DXPaMp844WE7S5IPDIaHsI7ow==}
+    engines: {node: '>=0.12.0'}
+    peerDependencies:
+      pixi.js: ^5.0.3
+      react: ^16.6.3
+      react-bootstrap: 0.32.1
+      react-dom: ^16.6.3
+    dependencies:
+      pixi.js: 6.3.2
     dev: false
 
   /history/5.3.0:
@@ -2827,6 +2904,13 @@ packages:
     resolution: {integrity: sha512-b39TBaTSfV6yBrapU89p5fKekE2m/NwnDocOVruQFS1/veMgdzuPcnOM34M6CwxW8jH/lxEa5rBoDeUwu5HHTw==}
     hasBin: true
     dev: true
+
+  /slugid/3.0.0:
+    resolution: {integrity: sha512-MIir9SJS6BQFjFg8DHGMgPkDg21huT0+kYHiS6NkkWZXHSEdgIECo3nUVEG3GDkmecBTy+zRs6pCvPhpk4bKcg==}
+    engines: {node: '>=6.0'}
+    dependencies:
+      uuid: 8.3.2
+    dev: false
 
   /source-map-js/1.0.2:
     resolution: {integrity: sha512-R0XvVJ9WusLiqTCEiGCmICCMplcCkIwwR11mOSD9CR5u+IXYdiseeEuXCVAjS54zqwkLcPNnmU4OeJ6tUrWhDw==}

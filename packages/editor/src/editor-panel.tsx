@@ -3,7 +3,7 @@ import MonacoEditor from 'react-monaco-editor';
 
 import ReactResizeDetector from 'react-resize-detector';
 import { GoslingSchema } from 'gosling.js';
-import goslingSpec from '../src/core/gosling.schema?raw';
+import goslingSpec from '@gosling/schema/gosling.schema?raw';
 
 export * from './monaco_worker';
 import * as Monaco from 'monaco-editor';

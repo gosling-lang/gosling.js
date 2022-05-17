@@ -11,8 +11,9 @@
     "dependencies": {
         "@gosling/core": "workspace*",
         "@gosling/data-fetcher": "workspace*",
-        "@gosling/schema": "workspace*",
         "@gosling/mouse-event": "workspace*",
+        "@gosling/schema": "workspace*",
+        "d3-scale": "^4.0.2",
         "threads": "^1.7.0"
     }
 }

@@ -9,7 +9,7 @@
     },
     "homepage": "https://gosling-lang.github.io/gosling.js",
     "scripts": {
-        "start": "vite --mode editor",
+        "start": "pnpm -r dev",
         "start-embed": "vite",
         "build": "run-p build-types build-lib",
         "build-lib": "vite build --mode lib && node scripts/build-umd && node scripts/build-embed",

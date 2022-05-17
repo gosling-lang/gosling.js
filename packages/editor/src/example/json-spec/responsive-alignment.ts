@@ -1,5 +1,5 @@
 import type { GoslingSpec } from 'gosling.js';
-import { CHANNEL_DEFAULTS } from '@gosling/core/channel';
+import { CHANNEL_DEFAULTS } from '@gosling/core/channel/index';
 
 import type { OverlaidTracks, SingleTrack, SingleView } from '@gosling/schema';
 

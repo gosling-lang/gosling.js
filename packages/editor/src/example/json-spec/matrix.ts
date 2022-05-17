@@ -1,6 +1,6 @@
 import { PREDEFINED_COLORS, SingleTrack } from '@gosling/schema';
 import type { GoslingSpec } from 'gosling.js';
-import { random } from 'lodash';
+import { random } from 'lodash-es';
 import { GOSLING_PUBLIC_DATA } from './gosling-data';
 
 const generateToyJson = (length: number, chr: string, size: number) =>
