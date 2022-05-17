@@ -11,5 +11,8 @@
     },
     "exports": {
       "./*": "./src/*"
+    },
+    "devDependencies": {
+      "@gosling/core": "workspace:*"
     }
 }

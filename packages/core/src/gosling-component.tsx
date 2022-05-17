@@ -40,7 +40,7 @@ export type GoslingRef = {
     hgApi: HiGlassApi;
 };
 
-export const GoslingComponent = forwardRef<GoslingRef, GoslingCompProps>((props, ref) => {
+export const GoslingComponent = forwardRef<GoslingRef, GoslingCompProps>(function GoslingComponent(props, ref) {
     const [viewConfig, setViewConfig] = useState<HiGlassSpec>();
     const [size, setSize] = useState({ width: 200, height: 200 });
     const wrapperSize = useRef<undefined | { width: number; height: number }>();

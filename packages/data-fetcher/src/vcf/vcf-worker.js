@@ -307,7 +307,7 @@ const getTabularData = (uid, tileIds) => {
         output = sampleSize(output, sampleLength / 2.0).concat(highPriority);
     }
 
-    const buffer = Buffer.from(JSON.stringify(output)).buffer;
+    const buffer = new TextEncoder().encode(JSON.stringify(output)).buffer;
     return Transfer(buffer, [buffer]);
 };
 

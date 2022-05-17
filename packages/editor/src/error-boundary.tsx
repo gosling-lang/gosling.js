@@ -5,6 +5,7 @@ interface State {
 }
 
 interface Props {}
+
 export default class ErrorBoundary extends React.Component<Props, State> {
     constructor(props: Props) {
         super(props);

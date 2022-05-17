@@ -19,9 +19,11 @@
         "@gosling/data-fetcher": "workspace*",
         "@gosling/mouse-event": "workspace*",
         "@gosling/schema": "workspace*",
+        "d3-format": "^3.1.0",
         "d3-scale": "^4.0.2",
         "lodash-es": "^4.17.21",
         "pubsub-js": "^1.9.4",
-        "threads": "^1.7.0"
+        "threads": "^1.7.0",
+        "uuid": "^8.3.2"
     }
 }

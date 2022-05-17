@@ -1,25 +1,12 @@
 module.exports = {
-    parser: '@typescript-eslint/parser',
-    plugins: ['@typescript-eslint', 'prettier'],
+    root: true,
     extends: [
         'eslint:recommended',
         'plugin:react/recommended',
         'plugin:@typescript-eslint/recommended',
-        'prettier',
-        'prettier/@typescript-eslint',
-        'plugin:prettier/recommended'
     ],
-    env: {
-        browser: true,
-        node: true
-    },
-    settings: {
-        react: {
-            version: "detect"
-        }
-    },
+    parser: '@typescript-eslint/parser',
     rules: {
-        'prettier/prettier': 'warn',
         // https://github.com/typescript-eslint/typescript-eslint/tree/master/packages/eslint-plugin#supported-rules
         '@typescript-eslint/no-explicit-any': 'off',
         '@typescript-eslint/no-empty-interface': 'off',

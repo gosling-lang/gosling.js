@@ -20,7 +20,7 @@ export type RawDataEventData = {
 
 import type PubSubJS from "pubsub-js";
 
-declare var PubSub: typeof PubSubJS;
+declare const PubSub: typeof PubSubJS;
 
 // Utility type for building strongly typed PubSub API.
 //
