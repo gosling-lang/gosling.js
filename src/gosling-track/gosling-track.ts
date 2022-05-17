@@ -2,7 +2,7 @@ import * as PIXI from 'pixi.js';
 import PubSub from 'pubsub-js';
 import * as uuid from 'uuid';
 import { isEqual, sampleSize, uniqBy } from 'lodash-es';
-import { scaleLinear } from 'd3-scale';
+import { ScaleLinear, scaleLinear } from 'd3-scale';
 import { format } from 'd3-format';
 import { drawMark, drawPostEmbellishment, drawPreEmbellishment } from '../core/mark';
 import { GoslingTrackModel } from '../core/gosling-track-model';
@@ -36,6 +36,7 @@ import { BAMDataFetcher } from '../data-fetcher/bam';
 import { GoslingVcfData } from '../data-fetcher/vcf';
 import BamWorker from '../data-fetcher/bam/bam-worker.js?worker&inline';
 import VcfWorker from '../data-fetcher/vcf/vcf-worker.js?worker&inline';
+import { OneDimBrushModel } from '../gosling-brush/linear-brush-model';
 
 // Set `true` to print in what order each function is called
 export const PRINT_RENDERING_CYCLE = false;
@@ -68,7 +69,10 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
     class GoslingTrackClass extends HGC.tracks.BarTrack {
         private tileSize: number;
         private worker: any;
-        // private loadingStatus: { [k: LoadingStage]: number };
+        private isBrushActivated: boolean;
+        private mRangeBrush: OneDimBrushModel;
+        private _xScale!: ScaleLinear<number, number>;
+        private _yScale!: ScaleLinear<number, number>;
         // TODO: add members that are used explicitly in the code
 
         constructor(params: any[]) {
@@ -127,12 +131,20 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             this.gLegend = HGC.libraries.d3Selection.select(this.context.svgElement).append('g');
 
             // Enable click event
+            this.isBrushActivated = false;
             this.pMask.interactive = true;
+            this.gBrush = HGC.libraries.d3Selection.select(this.context.svgElement).append('g');
+            this.mRangeBrush = new OneDimBrushModel(this.gBrush, HGC.libraries);
             this.pMask.mousedown = (e: InteractionEvent) =>
-                this.onMouseDown(e.data.getLocalPosition(this.pMain).x, e.data.getLocalPosition(this.pMain).y);
+                this.onMouseDown(
+                    e.data.getLocalPosition(this.pMain).x,
+                    e.data.getLocalPosition(this.pMain).y,
+                    e.data.originalEvent.altKey
+                );
             this.pMask.mouseup = (e: InteractionEvent) =>
-                this.onClick(e.data.getLocalPosition(this.pMain).x, e.data.getLocalPosition(this.pMain).y);
-            this.pMask.mousemove = () => this.onMouseOut();
+                this.onMouseUp(e.data.getLocalPosition(this.pMain).x, e.data.getLocalPosition(this.pMain).y);
+            this.pMask.mousemove = (e: InteractionEvent) => this.onMouseMove(e.data.getLocalPosition(this.pMain).x);
+            this.pMask.mouseout = () => this.onMouseOut();
 
             // Remove a mouse graphic if created by a parent, and draw ourselves
             // https://github.com/higlass/higlass/blob/38f0c4415f0595c3b9d685a754d6661dc9612f7c/app/scripts/utils/show-mouse-position.js#L28
@@ -338,6 +350,8 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             this.oldDimensions = this.dimensions; // initially, [1, 1]
             super.setDimensions(newDimensions); // This simply updates `this._xScale` and `this._yScale`
 
+            this.mRangeBrush.setSize(newDimensions[1]);
+
             // const visibleAndFetched = this.visibleAndFetchedTiles();
             // visibleAndFetched.map((tile: any) => this.initTile(tile));
         }
@@ -345,10 +359,12 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
         /**
          * Record new position.
          */
-        setPosition(newPosition: any) {
+        setPosition(newPosition: [number, number]) {
             super.setPosition(newPosition); // This simply changes `this.position`
 
             [this.pMain.position.x, this.pMain.position.y] = this.position;
+
+            this.mRangeBrush.setOffset(...newPosition);
         }
 
         /**
@@ -364,12 +380,17 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
          * (https://github.com/higlass/higlass/blob/54f5aae61d3474f9e868621228270f0c90ef9343/app/scripts/HorizontalLine1DPixiTrack.js#L215)
          * For brushing, refer to https://github.com/higlass/higlass/blob/caf230b5ee41168ea491572618612ac0cc804e5a/app/scripts/HeatmapTiledPixiTrack.js#L1493
          */
-        zoomed(newXScale: any, newYScale: any) {
+        zoomed(newXScale: ScaleLinear<number, number>, newYScale: ScaleLinear<number, number>) {
             if (PRINT_RENDERING_CYCLE) console.warn('zoomed()');
+
+            const [min, max] = this.mRangeBrush.getRange();
+            this.mRangeBrush.updateRange(newXScale(this._xScale.invert(min)), newXScale(this._xScale.invert(max)));
 
             // super.zoomed(newXScale, newYScale); // This function updates `this._xScale` and `this._yScale` and call this.draw();
             this.xScale(newXScale);
             this.yScale(newYScale);
+
+            this.mRangeBrush.drawBrush();
 
             this.refreshTiles();
 
@@ -1014,18 +1035,29 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             return mergedCapturedElements;
         }
 
-        onMouseOut() {
-            document.body.style.cursor = 'default';
-            this.mouseOverGraphics.clear();
-        }
-
-        onMouseDown(mouseX: number, mouseY: number) {
+        onMouseDown(mouseX: number, mouseY: number, isAlt: boolean) {
             // Record these so that we do not triger click event when dragged.
             this.mouseDownX = mouseX;
             this.mouseDownY = mouseY;
+            this.isBrushActivated = isAlt;
         }
 
-        onClick(mouseX: number, mouseY: number) {
+        onMouseMove(mouseX: number) {
+            if (this.options.spec.circular) {
+                // TODO: We need to support range selection on circular layout as well
+                return;
+            }
+
+            if (this.isBrushActivated) {
+                this.mRangeBrush.updateRange(mouseX, this.mouseDownX).drawBrush().disable();
+            }
+        }
+
+        onMouseUp(mouseX: number, mouseY: number) {
+            this.isBrushActivated = false;
+
+            this.mRangeBrush.enable();
+
             if (!this.tilesetInfo) {
                 // Do not have enough information
                 return;
@@ -1045,6 +1077,12 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             if (capturedElements.length !== 0) {
                 PubSub.publish('click', { genomicPosition, data: capturedElements.map(d => d.value) });
             }
+        }
+
+        onMouseOut() {
+            this.isBrushActivated = false;
+            document.body.style.cursor = 'default';
+            this.mouseOverGraphics.clear();
         }
 
         getMouseOverHtml(mouseX: number, mouseY: number) {
