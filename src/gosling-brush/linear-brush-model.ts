@@ -27,6 +27,8 @@ export interface OneDimBrushEndEdgeData extends OneDimBrushDataCommon {
     cursor: 'move';
 }
 
+export type OnBrushCallbackFn = (start: number, end: number) => void;
+
 /**
  * A model to manage 1D brush graphics and its data.
  */
@@ -52,7 +54,14 @@ export class OneDimBrushModel {
         d3Drag: typeof d3Drag;
     };
 
-    constructor(selection: d3Selection.Selection<SVGGElement, unknown, HTMLElement, unknown>, HGC: any) {
+    /* Callback function */
+    private onBrush: OnBrushCallbackFn;
+
+    constructor(
+        selection: d3Selection.Selection<SVGGElement, unknown, HTMLElement, unknown>,
+        HGC: any,
+        onBrush: OnBrushCallbackFn
+    ) {
         this.range = [0, 1];
         this.prevExtent = [0, 1];
         this.data = this.rangeToData(...this.range);
@@ -72,15 +81,78 @@ export class OneDimBrushModel {
             .append('rect')
             .attr('class', 'genomic-range-brush')
             .call(this.onDrag());
+
+        this.onBrush = onBrush;
     }
 
-    /* --------------------------------------------- GET/SET --------------------------------------------- */
     public getRange() {
         return this.range;
     }
 
     public setSize(size: number) {
         this.size = size;
+        return this;
+    }
+
+    /**
+     * Update the left and top offsets for drawing the brush.
+     */
+    public setOffset(offsetX: number, offsetY: number) {
+        this.offset = [offsetX, offsetY];
+        return this;
+    }
+
+    /**
+     * Update brush data based on the positions of two edges.
+     */
+    public updateRange(value1: number, value2: number) {
+        this.range = [value1, value2].sort((a, b) => a - b) as [number, number];
+        this.data = this.rangeToData(...this.range);
+        return this;
+    }
+
+    public drawBrush(skipCb = false) {
+        const [x, y] = this.offset;
+        const height = this.size;
+        const getWidth = (d: OneDimBrushDataUnion) => Math.abs(d.end - d.start); // the start and end can be minus values
+        this.brushSelection
+            .data(this.data)
+            .attr('visibility', 'visible')
+            .attr('transform', d => `translate(${x + d.start}, ${y + 1})`)
+            .attr('width', d => `${getWidth(d)}px`)
+            .attr('height', `${height - 2}px`)
+            .attr('fill', 'red')
+            .attr('stroke', 'red')
+            .attr('stroke-width', '1px')
+            .attr('fill-opacity', d => (d.type === 'body' ? 0.3 : 0))
+            .attr('stroke-opacity', d => (d.type === 'body' ? 1 : 0))
+            .attr('cursor', d => d.cursor);
+
+        if (!skipCb) {
+            this.onBrush(...this.range);
+        }
+        return this;
+    }
+
+    public enable() {
+        this.brushSelection.attr('pointer-events', 'all');
+        return this;
+    }
+
+    public disable() {
+        this.brushSelection.attr('pointer-events', 'none');
+        return this;
+    }
+
+    public clear() {
+        this.updateRange(0, 0).drawBrush();
+        this.brushSelection.attr('visibility', 'hidden');
+        this.disable();
+        return this;
+    }
+
+    public remove() {
+        this.brushSelection.remove();
         return this;
     }
 
@@ -110,52 +182,7 @@ export class OneDimBrushModel {
         ];
     }
 
-    /**
-     * Update the left and top offsets for drawing the brush.
-     */
-    public setOffset(offsetX: number, offsetY: number) {
-        this.offset = [offsetX, offsetY];
-        return this;
-    }
-
-    /**
-     * Update brush data based on the positions of two edges.
-     */
-    public updateRange(value1: number, value2: number) {
-        this.range = [value1, value2].sort((a, b) => a - b) as [number, number];
-        this.data = this.rangeToData(...this.range);
-        return this;
-    }
-
-    public drawBrush() {
-        const [x, y] = this.offset;
-        const height = this.size;
-        const getWidth = (d: OneDimBrushDataUnion) => Math.abs(d.end - d.start); // the start and end can be minus values
-        this.brushSelection
-            .data(this.data)
-            .attr('transform', d => `translate(${x + d.start}, ${y + 1})`)
-            .attr('width', d => `${getWidth(d)}px`)
-            .attr('height', `${height - 2}px`)
-            .attr('fill', 'red')
-            .attr('stroke', 'red')
-            .attr('stroke-width', '1px')
-            .attr('fill-opacity', d => (d.type === 'body' ? 0.3 : 0))
-            .attr('stroke-opacity', d => (d.type === 'body' ? 1 : 0))
-            .attr('cursor', d => d.cursor);
-        return this;
-    }
-
-    public enable() {
-        this.brushSelection.attr('pointer-events', 'all');
-        return this;
-    }
-
-    public disable() {
-        this.brushSelection.attr('pointer-events', 'none');
-        return this;
-    }
-
-    onDrag() {
+    private onDrag() {
         const started = () => {
             this.startEvent = this.externals.d3Selection.event.sourceEvent;
             this.prevExtent = this.range;

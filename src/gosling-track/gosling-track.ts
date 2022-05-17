@@ -134,7 +134,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             this.isBrushActivated = false;
             this.pMask.interactive = true;
             this.gBrush = HGC.libraries.d3Selection.select(this.context.svgElement).append('g');
-            this.mRangeBrush = new OneDimBrushModel(this.gBrush, HGC.libraries);
+            this.mRangeBrush = new OneDimBrushModel(this.gBrush, HGC.libraries, this.onRangeBrush);
             this.pMask.mousedown = (e: InteractionEvent) =>
                 this.onMouseDown(
                     e.data.getLocalPosition(this.pMain).x,
@@ -339,6 +339,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                 this.gLegend.remove();
                 this.gLegend = null;
             }
+            this.mRangeBrush.remove();
         }
         /*
          * Rerender all tiles when track size is changed.
@@ -390,7 +391,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             this.xScale(newXScale);
             this.yScale(newYScale);
 
-            this.mRangeBrush.drawBrush();
+            this.mRangeBrush.drawBrush(true);
 
             this.refreshTiles();
 
@@ -1035,6 +1036,10 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             return mergedCapturedElements;
         }
 
+        onRangeBrush(start: number, end: number) {
+            console.warn('Range brush updated: ', start, end);
+        }
+
         onMouseDown(mouseX: number, mouseY: number, isAlt: boolean) {
             // Record these so that we do not triger click event when dragged.
             this.mouseDownX = mouseX;
@@ -1054,16 +1059,22 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
         }
 
         onMouseUp(mouseX: number, mouseY: number) {
+            const isDrag = Math.sqrt((this.mouseDownX - mouseX) ** 2 + (this.mouseDownY - mouseY) ** 2) > 1;
+
+            if (!this.isBrushActivated && !isDrag) {
+                // clicking on the outside should clear the graphics.
+                this.mRangeBrush.clear();
+            }
             this.isBrushActivated = false;
 
-            this.mRangeBrush.enable();
+            this.mRangeBrush.enable(); // enable dragging on the range brush
 
             if (!this.tilesetInfo) {
                 // Do not have enough information
                 return;
             }
 
-            if (Math.sqrt((this.mouseDownX - mouseX) ** 2 + (this.mouseDownY - mouseY) ** 2) > 1) {
+            if (isDrag) {
                 // Move distance is relatively long, so this might be a drag instead
                 return;
             }
