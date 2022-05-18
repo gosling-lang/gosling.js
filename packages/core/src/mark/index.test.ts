@@ -1,6 +1,6 @@
 import { drawMark } from '.';
 import { GoslingTrackModel } from '../gosling-track-model';
-import { getTheme } from '../utils/theme';
+import { getTheme } from '@gosling/theme';
 
 import type { SingleTrack } from '@gosling/schema';
 

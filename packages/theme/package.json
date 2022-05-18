@@ -1,0 +1,13 @@
+{
+  "name": "@gosling/theme",
+  "version": "0.0.0",
+  "types": "./src/index.ts",
+  "main": "./src/index.ts",
+  "type": "module",
+  "scripts": {
+    "check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "gosling-theme": "^0.0.10"
+  }
+}

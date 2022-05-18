@@ -5,7 +5,7 @@ import { scaleLinear, ScaleLinear } from 'd3-scale';
 import { getTextStyle } from '../utils/text-style';
 
 import type { Dimension } from '../utils/position';
-import type { CompleteThemeDeep } from '../utils/theme';
+import type { CompleteThemeDeep } from '@gosling/theme';
 
 type LegendOffset = { offsetRight: number };
 

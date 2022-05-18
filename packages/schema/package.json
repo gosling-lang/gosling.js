@@ -1,18 +1,27 @@
 {
-    "name": "@gosling/schema",
-    "version": "0.0.0",
-    "types": "./index.ts",
-    "typesVersions": {
-      "*": {
-        "*": [
-          "src/*"
-        ]
-      }
-    },
-    "exports": {
-      "./*": "./src/*"
-    },
-    "devDependencies": {
-      "@gosling/core": "workspace:*"
+  "name": "@gosling/schema",
+  "version": "0.0.0",
+  "types": "./index.ts",
+  "typesVersions": {
+    "*": {
+      "*": [
+        "src/*"
+      ]
     }
+  },
+  "exports": {
+    "./*": "./src/*"
+  },
+  "scripts": {
+    "schema-generator": "ts-json-schema-generator -f tsconfig.json --no-type-check --no-ref-encode",
+    "schema:gosling": "pnpm schema-generator -p src/index.ts -t GoslingSpec -o src/gosling.schema.json",
+    "schema:template": "pnpm schema-generator -p src/index.ts -t TemplateTrackDef -o src/template.schema.json",
+    "schema:higlass": "pnpm schema-generator -p src/higlass.schema.ts -t HiGlassSpec -o src/higlass.schema.json",
+    "schema:all": "run-p schema:gosling schema:template schema:higlass"
+  },
+  "devDependencies": {
+    "@gosling/core": "workspace:*",
+    "npm-run-all": "^4.1.5",
+    "ts-json-schema-generator": "0.75.0"
+  }
 }

@@ -3,7 +3,7 @@ import { GET_CHROM_SIZES } from './utils/assembly';
 import { traverseViewsInViewConfig } from './utils/view-config';
 
 import type { HiGlassApi } from './higlass-component-wrapper';
-import type { CompleteThemeDeep } from './utils/theme';
+import type { CompleteThemeDeep } from '@gosling/theme';
 
 import type { Datum } from '@gosling/schema';
 import type { HiGlassSpec } from '@gosling/schema/higlass.schema';

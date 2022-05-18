@@ -1,6 +1,6 @@
 import { getBoundingBox, getRelativeTrackInfo } from './bounding-box';
 import { traverseToFixSpecDownstream, overrideDataTemplates, convertToFlatTracks } from './spec-preprocess';
-import { getTheme } from './theme';
+import { getTheme } from '@gosling/theme';
 
 import type { GoslingSpec, SingleView, Track } from '@gosling/schema';
 

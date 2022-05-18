@@ -1,7 +1,7 @@
 import { getNumericDomain, shareScaleAcrossTracks } from './scales';
 import { GoslingTrackModel } from '../gosling-track-model';
 import { IsChannelDeep } from '../gosling.schema.guards';
-import { getTheme } from './theme';
+import { getTheme } from '@gosling/theme';
 
 describe('Genomic domain', () => {
     it('With Chromosome', () => {

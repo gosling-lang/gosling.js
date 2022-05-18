@@ -3,7 +3,7 @@ import { GoslingTrackModel } from '../gosling-track-model';
 import { IsChannelDeep } from '../gosling.schema.guards';
 import colorToHex from '../utils/color-to-hex';
 
-import type { CompleteThemeDeep } from '../utils/theme';
+import type { CompleteThemeDeep } from '@gosling/theme';
 
 export function drawBackground(
     HGC: any,

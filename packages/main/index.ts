@@ -1,8 +1,9 @@
 import GoslingSchema from '@gosling/schema/gosling.schema.json';
-import ThemeSchema from '@gosling/schema/theme.schema.json';
+// TODO: generate theme schema again
+// import ThemeSchema from '@gosling/schema/theme.schema.json';
 
 export { name, version } from './package.json';
-export { GoslingSchema, ThemeSchema };
+export { GoslingSchema };
 
 export { GoslingTemplates } from '@gosling/core/utils/template';
 export { init } from '@gosling/core/init';
@@ -14,4 +15,4 @@ export { embed } from '@gosling/core/gosling-embed';
 export type { GoslingSpec, TemplateTrackDef } from '@gosling/schema';
 export type { HiGlassSpec } from '@gosling/schema/higlass.schema';
 export type { GoslingRef } from '@gosling/core/gosling-component';
-export type { Theme } from '@gosling/core/utils/theme';
+export type { Theme } from '@gosling/theme';

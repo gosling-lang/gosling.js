@@ -1,6 +1,6 @@
 import * as PIXI from 'pixi.js';
+import { getTheme } from '@gosling/theme';
 import { GoslingTrackModel } from '../gosling-track-model';
-import { getTheme } from '../utils/theme';
 import { drawTriangle } from './triangle';
 
 import type { SingleTrack } from '@gosling/schema';

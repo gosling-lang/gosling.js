@@ -13,6 +13,7 @@ import {
 import { interpolateViridis } from 'd3-scale-chromatic';
 import { min as d3min, max as d3max, sum as d3sum, group } from 'd3-array';
 import { MouseEventModel } from '@gosling/mouse-event';
+import { getTheme } from '@gosling/theme';
 
 import { HIGLASS_AXIS_SIZE } from './higlass-model';
 import { SUPPORTED_CHANNELS } from './mark';
@@ -33,7 +34,8 @@ import {
     IsRangeArray
 } from './gosling.schema.guards';
 import { CHANNEL_DEFAULTS } from './channel';
-import { CompleteThemeDeep, getTheme } from './utils/theme';
+
+import type { CompleteThemeDeep } from '@gosling/theme';
 import type {
     ChannelDeep,
     PREDEFINED_COLORS,

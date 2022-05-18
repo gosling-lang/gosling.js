@@ -1,6 +1,4 @@
 import * as gt from 'gosling-theme';
-import { assign } from 'lodash-es';
-import { CHANNEL_DEFAULTS } from '../channel';
 
 /* ----------------------------- THEME ----------------------------- */
 export type Theme = ThemeType | ThemeDeep;
@@ -152,7 +150,7 @@ export function getTheme(theme: Theme = 'light'): Required<CompleteThemeDeep> {
         // Override defaults from `base`
         Object.keys(baseSpec).forEach(k => {
             if ((theme as any)[k] && k !== 'base') {
-                baseSpec[k] = assign(
+                baseSpec[k] = Object.assign(
                     JSON.parse(JSON.stringify(baseSpec[k])),
                     JSON.parse(JSON.stringify((theme as any)[k]))
                 );
@@ -162,13 +160,17 @@ export function getTheme(theme: Theme = 'light'): Required<CompleteThemeDeep> {
     }
 }
 
+// TODO: Move into contants package? 
+// Copied here from `@gosling/core/src/channel` to remove circular dep
+const DEFAULT_NOMINAL_COLORS = ['#E79F00', '#029F73', '#0072B2', '#CB7AA7', '#D45E00', '#57B4E9', '#EFE441' /*'#000000'*/];
+
 const LightThemeMarkCommonStyle: Required<MarkStyle> = {
-    color: CHANNEL_DEFAULTS.NOMINAL_COLOR[0],
+    color: DEFAULT_NOMINAL_COLORS[0],
     size: 1,
     stroke: 'black',
     strokeWidth: 0,
     opacity: 1,
-    nominalColorRange: CHANNEL_DEFAULTS.NOMINAL_COLOR,
+    nominalColorRange: DEFAULT_NOMINAL_COLORS,
     quantitativeSizeRange: [2, 6]
 };
 

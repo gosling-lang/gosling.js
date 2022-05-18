@@ -19,7 +19,7 @@ import { Is2DTrack, IsVerticalRule } from '../gosling.schema.guards';
 import { drawBetweenLink } from './betweenLink';
 
 import type { ChannelTypes } from '@gosling/schema';
-import type { CompleteThemeDeep } from '../utils/theme';
+import type { CompleteThemeDeep } from '@gosling/theme';
 
 /**
  * Visual channels currently supported for visual encoding.

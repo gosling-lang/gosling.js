@@ -1,7 +1,7 @@
 import { goslingToHiGlass } from '../gosling-to-higlass';
 import { HiGlassModel } from '../higlass-model';
 import { getLinkingInfo } from './linking';
-import { getTheme } from './theme';
+import { getTheme } from '@gosling/theme';
 
 describe('Should get linking information correctly', () => {
     it('Simple linking', () => {

@@ -1,6 +1,6 @@
 import { EX_SPEC_VISUAL_ENCODING } from '@gosling/editor/example/json-spec/visual-encoding';
 import { compile } from './compile';
-import { getTheme } from './utils/theme';
+import { getTheme } from '@gosling/theme';
 
 import type { GoslingSpec } from '@gosling/schema';
 

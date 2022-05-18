@@ -1,4 +1,4 @@
-import { ThemeDeep, getTheme } from './theme';
+import { ThemeDeep, getTheme } from './index';
 
 describe('Theme', () => {
     it('Defualt Themes', () => {

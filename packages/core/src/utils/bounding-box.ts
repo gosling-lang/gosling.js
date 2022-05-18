@@ -9,7 +9,7 @@ import {
 import { resolveSuperposedTracks } from './overlay';
 import { traverseTracksAndViews, traverseViewArrangements } from './spec-preprocess';
 
-import type { CompleteThemeDeep } from './theme';
+import type { CompleteThemeDeep } from '@gosling/theme';
 import type { MultipleViews, CommonViewDef, GoslingSpec, Track, SingleView } from '@gosling/schema';
 
 export interface Size {

@@ -2,16 +2,17 @@ import React, { useState, useEffect, useMemo, useRef, forwardRef, useCallback } 
 import { ResizeSensor } from 'css-element-queries';
 import { isEqual } from 'lodash-es';
 import * as uuid from 'uuid';
+import { getTheme } from '@gosling/theme';
 
 /* eslint-disable react/prop-types */
 import { HiGlassApi, HiGlassComponentWrapper } from './higlass-component-wrapper';
 import { createApi } from './api';
 import { compile as goslingCompile } from './compile';
-import { getTheme, Theme } from './utils/theme';
 import { omitDeep } from './utils/omit-deep';
 import { validateGoslingSpec } from './utils/validate';
 import { GoslingTemplates } from './utils/template';
 
+import type { Theme } from '@gosling/theme';
 import type { TemplateTrackDef, GoslingSpec } from '@gosling/schema';
 import type { HiGlassSpec } from '@gosling/schema/higlass.schema';
 import type { GoslingApi } from './api';

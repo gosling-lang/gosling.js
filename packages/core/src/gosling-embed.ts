@@ -3,16 +3,16 @@ import ReactDOM from 'react-dom';
 
 import { validateGoslingSpec } from './utils/validate';
 import { compile } from './compile';
-import { getTheme } from './utils/theme';
+import { getTheme } from '@gosling/theme';
 import { GoslingTemplates } from './utils/template';
 import { createApi } from './api';
 
 import { HiGlassApi, HiGlassComponentWrapper, HiGlassComponentWrapperProps } from './higlass-component-wrapper';
 
+import type { Theme } from '@gosling/theme';
 import type { GoslingSpec } from '@gosling/schema';
 import type { HiGlassSpec } from '@gosling/schema/higlass.schema';
 import type { GoslingApi } from './api';
-import type { Theme } from './utils/theme';
 
 export type GoslingEmbedOptions = Omit<HiGlassComponentWrapperProps['options'], 'background'> & {
     id?: string;

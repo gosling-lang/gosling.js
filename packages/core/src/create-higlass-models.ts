@@ -3,9 +3,9 @@ import { goslingToHiGlass } from './gosling-to-higlass';
 import { HiGlassModel } from './higlass-model';
 import { getLinkingInfo } from './utils/linking';
 
+import type { CompleteThemeDeep } from '@gosling/theme';
 import type { GoslingSpec } from '@gosling/schema';
 import type { HiGlassSpec } from '@gosling/schema/higlass.schema';
-import type { CompleteThemeDeep } from './utils/theme';
 
 export function renderHiGlass(
     spec: GoslingSpec,

@@ -4,10 +4,10 @@ import { getNumericDomain } from './utils/scales';
 import { RelativePosition } from './utils/bounding-box';
 import { validateSpec } from './utils/validate';
 import { GET_CHROM_SIZES } from './utils/assembly';
-import { CompleteThemeDeep } from './utils/theme';
 import exampleHg from './example/hg-view-config-1';
 import { insertItemToArray } from './utils/array';
 
+import type { CompleteThemeDeep } from '@gosling/theme';
 import type { Assembly, AxisPosition, Domain, Orientation, ZoomLimits } from '@gosling/schema';
 import type { HiGlassSpec, Track } from '@gosling/schema/higlass.schema';
 

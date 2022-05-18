@@ -1,10 +1,11 @@
 import { GoslingTrackModel } from '../gosling-track-model';
 import { IsChannelDeep } from '../gosling.schema.guards';
 import colorToHex from '../utils/color-to-hex';
-import { CompleteThemeDeep } from '../utils/theme';
 import { scaleLinear } from 'd3-scale';
 import { cartesianToPolar, valueToRadian } from '../utils/polar';
 import { getTextStyle } from '../utils/text-style';
+
+import type { CompleteThemeDeep } from '@gosling/theme';
 
 const EXTENT_TICK_SIZE = 8;
 const TICK_SIZE = 6;

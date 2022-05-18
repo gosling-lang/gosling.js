@@ -3,7 +3,8 @@ import { GoslingTrackModel } from '../gosling-track-model';
 import { IsChannelDeep } from '../gosling.schema.guards';
 import colorToHex from '../utils/color-to-hex';
 import { cartesianToPolar, valueToRadian } from '../utils/polar';
-import { CompleteThemeDeep } from '../utils/theme';
+
+import type { CompleteThemeDeep } from '@gosling/theme';
 
 export function drawGrid(trackInfo: any, tm: GoslingTrackModel, theme: Required<CompleteThemeDeep>) {
     drawYGridQuantitative(trackInfo, tm, theme);

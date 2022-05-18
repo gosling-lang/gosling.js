@@ -3,7 +3,7 @@ import { EX_TRACK_SEMANTIC_ZOOM } from '@gosling/editor/example/json-spec/semant
 import { goslingToHiGlass } from './gosling-to-higlass';
 import { HiGlassModel } from './higlass-model';
 import { convertToFlatTracks } from './utils/spec-preprocess';
-import { getTheme } from './utils/theme';
+import { getTheme } from '@gosling/theme';
 
 import type { SingleTrack } from '@gosling/schema';
 
