@@ -1,5 +1,11 @@
 import { Datum } from '../core/gosling.schema';
-import { isPointInPolygon, isPointNearLine, isPointNearPoint } from './polygon';
+import {
+    isPointsWithinRange,
+    isPointInPolygon,
+    isPointNearLine,
+    isPointNearPoint,
+    isPointWithinRange
+} from './polygon';
 import * as uuid from 'uuid';
 
 export type MouseEventData = PointEventData | LineEventData | PolygonEventData;
@@ -122,5 +128,36 @@ export class MouseEventModel {
             default:
                 return isPointInPolygon([x, y], data.polygon);
         }
+    }
+
+    /**
+     * Find all event data that is within the range along the x-axis.
+     */
+    public findAllWithinRange(x1: number, x2: number, reverse = false) {
+        const _ = Array.from(this.data);
+        if (reverse) _.reverse();
+        return _.filter(d => this.isWithinRange(d, x1, x2));
+    }
+
+    /**
+     * Test if a given object is within an 1D range.
+     */
+    public isWithinRange(data: MouseEventData, x1: number, x2: number) {
+        switch (data.type) {
+            case 'point':
+                return isPointWithinRange([x1, x2], data.polygon);
+            case 'line':
+            case 'polygon':
+            default:
+                return isPointsWithinRange([x1, x2], data.polygon);
+        }
+    }
+
+    /**
+     * Find all event data using UIDs.
+     */
+    public findAllBasedOnUids(uids: string[]) {
+        const _ = Array.from(this.data);
+        return _.filter(d => uids.indexOf(d.uid) !== -1);
     }
 }

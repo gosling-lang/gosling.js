@@ -28,7 +28,7 @@ import { getRelativeGenomicPosition } from '../core/utils/assembly';
 import { getTextStyle } from '../core/utils/text-style';
 import { Is2DTrack, IsChannelDeep, IsXAxis } from '../core/gosling.schema.guards';
 import { spawn } from 'threads';
-import { InteractionEvent } from 'pixi.js';
+import { Graphics, InteractionEvent } from 'pixi.js';
 import { HIGLASS_AXIS_SIZE } from '../core/higlass-model';
 import { MouseEventData } from '../gosling-mouse-event/mouse-event-model';
 import { flatArrayToPairArray } from '../core/utils/array';
@@ -73,6 +73,8 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
         private mRangeBrush: OneDimBrushModel;
         private _xScale!: ScaleLinear<number, number>;
         private _yScale!: ScaleLinear<number, number>;
+        private mouseOverGraphics: Graphics;
+        private pMouseSelection: Graphics;
         // TODO: add members that are used explicitly in the code
 
         constructor(params: any[]) {
@@ -125,7 +127,9 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
 
             // Graphics for highlighting visual elements under the cursor
             this.mouseOverGraphics = new HGC.libraries.PIXI.Graphics();
+            this.pMouseSelection = new HGC.libraries.PIXI.Graphics();
             this.pMain.addChild(this.mouseOverGraphics);
+            this.pMain.addChild(this.pMouseSelection);
 
             // Brushes on the color legend
             this.gLegend = HGC.libraries.d3Selection.select(this.context.svgElement).append('g');
@@ -134,7 +138,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             this.isBrushActivated = false;
             this.pMask.interactive = true;
             this.gBrush = HGC.libraries.d3Selection.select(this.context.svgElement).append('g');
-            this.mRangeBrush = new OneDimBrushModel(this.gBrush, HGC.libraries, this.onRangeBrush);
+            this.mRangeBrush = new OneDimBrushModel(this.gBrush, HGC.libraries, this);
             this.pMask.mousedown = (e: InteractionEvent) =>
                 this.onMouseDown(
                     e.data.getLocalPosition(this.pMain).x,
@@ -287,6 +291,8 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                 drawPostEmbellishment(HGC, this, tile, model, this.options.theme);
             });
 
+            this.mRangeBrush.drawBrush();
+
             this.forceDraw();
         }
 
@@ -390,8 +396,6 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             // super.zoomed(newXScale, newYScale); // This function updates `this._xScale` and `this._yScale` and call this.draw();
             this.xScale(newXScale);
             this.yScale(newYScale);
-
-            this.mRangeBrush.drawBrush(true);
 
             this.refreshTiles();
 
@@ -1036,8 +1040,71 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             return mergedCapturedElements;
         }
 
-        onRangeBrush(start: number, end: number) {
-            console.warn('Range brush updated: ', start, end);
+        /**
+         * From all tiles and overlaid tracks, collect element(s) that are withing a genomic range.
+         */
+        getElementsWithinRange(startX: number, endX: number) {
+            // Collect all gosling track models
+            const models: GoslingTrackModel[] = this.visibleAndFetchedTiles()
+                .map(tile => tile.goslingModels ?? [])
+                .flat();
+
+            // Collect all mouse event data from tiles and overlaid tracks
+            const mergedCapturedElements: MouseEventData[] = models
+                .map(model => model.getMouseEventModel().findAll(startX, endX, true))
+                .flat();
+
+            return mergedCapturedElements;
+        }
+
+        onRangeBrush(startX: number, endX: number) {
+            this.pMouseSelection.clear();
+
+            // Collect all gosling track models
+            const models: GoslingTrackModel[] = this.visibleAndFetchedTiles()
+                .map(tile => tile.goslingModels ?? [])
+                .flat();
+
+            // Collect all mouse event data from tiles and overlaid tracks
+            const capturedElements: MouseEventData[] = models
+                .map(model => model.getMouseEventModel().findAllWithinRange(startX, endX, true))
+                .flat();
+
+            if (capturedElements.length !== 0) {
+                // Rener mouse over effect graphics
+                const g = this.pMouseSelection;
+                const stroke = this.options.spec?.experimental?.hovering?.stroke ?? 'black';
+                const strokeWidth = this.options.spec?.experimental?.hovering?.strokeWidth ?? 1;
+                const strokeOpacity = this.options.spec?.experimental?.hovering?.strokeOpacity ?? 1;
+                const color = this.options.spec?.experimental?.hovering?.color ?? 'none';
+                const fillOpacity = this.options.spec?.experimental?.hovering?.opacity ?? 1;
+
+                // place on the top
+                this.pMain.removeChild(g);
+                this.pMain.addChild(g);
+
+                g.lineStyle(
+                    strokeWidth,
+                    colorToHex(stroke),
+                    strokeOpacity, // alpha
+                    0.5 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
+                );
+                g.beginFill(colorToHex(color), color === 'none' ? 0 : fillOpacity);
+
+                capturedElements.forEach(ele => {
+                    if (ele.type === 'point') {
+                        const [x, y, r = 3] = ele.polygon;
+                        g.drawCircle(x, y, r);
+                    } else if (ele.type === 'line') {
+                        g.moveTo(ele.polygon[0], ele.polygon[1]);
+                        flatArrayToPairArray(ele.polygon).map(d => g.lineTo(d[0], d[1]));
+                    } else {
+                        g.drawPolygon(ele.polygon);
+                    }
+                });
+            }
+
+            this.forceDraw();
         }
 
         onMouseDown(mouseX: number, mouseY: number, isAlt: boolean) {
@@ -1062,8 +1129,9 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             const isDrag = Math.sqrt((this.mouseDownX - mouseX) ** 2 + (this.mouseDownY - mouseY) ** 2) > 1;
 
             if (!this.isBrushActivated && !isDrag) {
-                // clicking on the outside should clear the graphics.
+                // clicking on the outside of the brush should clear the graphics.
                 this.mRangeBrush.clear();
+                this.pMouseSelection.clear();
             }
             this.isBrushActivated = false;
 

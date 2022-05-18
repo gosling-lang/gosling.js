@@ -13,6 +13,37 @@ export const isPointNearPoint: (point: [number, number], point2: number[], radiu
 };
 
 /**
+ * @param {Array} range Tuple of the form `[x1,x2]` to be tested.
+ * @param {Array} point Tuple of the form `[x,y]` to be tested.
+ * @param {number} radius A radius of the second point.
+ * @returns {boolean} If `true` point lies within the point.
+ */
+export const isPointWithinRange: (range: [number, number], point: number[], radius?: number) => boolean = (
+    [x1, x2],
+    [px],
+    radius = 5
+) => {
+    return x1 <= px - radius && px + radius <= x2;
+};
+
+/**
+ * @param {Array} point Tuple of the form `[x1,x2]` to be tested.
+ * @param {Array} path 1D list of vertices defining the line segments.
+ * @return {boolean} If `true` point lies within the polygon.
+ */
+export const isPointsWithinRange: (range: [number, number], path: number[]) => boolean = ([x1, x2], path) => {
+    let lx;
+    let ly;
+    let isWithin = true;
+    for (let i = 0; i < path.length; i += 2) {
+        lx = path[i];
+        ly = path[i + 1];
+        isWithin = isWithin && isPointWithinRange([x1, x2], [lx, ly], 0);
+    }
+    return isWithin;
+};
+
+/**
  * From: https://www.geeksforgeeks.org/minimum-distance-from-a-point-to-the-line-segment-using-vectors/
  * @param {Array} point Tuple of the form `[x,y]` to be tested.
  * @param {Array} path 1D list of vertices defining the line segments.

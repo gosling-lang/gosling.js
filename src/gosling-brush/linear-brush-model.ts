@@ -54,14 +54,11 @@ export class OneDimBrushModel {
         d3Drag: typeof d3Drag;
     };
 
-    /* Callback function */
-    private onBrush: OnBrushCallbackFn;
+    // TODO: A way to pass only the required function (e.g., onRangeBrush)?
+    /* gosling track */
+    private track: any;
 
-    constructor(
-        selection: d3Selection.Selection<SVGGElement, unknown, HTMLElement, unknown>,
-        HGC: any,
-        onBrush: OnBrushCallbackFn
-    ) {
+    constructor(selection: d3Selection.Selection<SVGGElement, unknown, HTMLElement, unknown>, HGC: any, track: any) {
         this.range = [0, 1];
         this.prevExtent = [0, 1];
         this.data = this.rangeToData(...this.range);
@@ -82,7 +79,7 @@ export class OneDimBrushModel {
             .attr('class', 'genomic-range-brush')
             .call(this.onDrag());
 
-        this.onBrush = onBrush;
+        this.track = track;
     }
 
     public getRange() {
@@ -111,7 +108,7 @@ export class OneDimBrushModel {
         return this;
     }
 
-    public drawBrush(skipCb = false) {
+    public drawBrush(skipCallback = false) {
         const [x, y] = this.offset;
         const height = this.size;
         const getWidth = (d: OneDimBrushDataUnion) => Math.abs(d.end - d.start); // the start and end can be minus values
@@ -128,8 +125,8 @@ export class OneDimBrushModel {
             .attr('stroke-opacity', d => (d.type === 'body' ? 1 : 0))
             .attr('cursor', d => d.cursor);
 
-        if (!skipCb) {
-            this.onBrush(...this.range);
+        if (!skipCallback) {
+            this.track.onRangeBrush(...this.getRange());
         }
         return this;
     }
