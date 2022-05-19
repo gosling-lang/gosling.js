@@ -2,6 +2,7 @@
  * This document is heavily based on the following repo by @alexander-veit:
  * https://github.com/dbmi-bgm/higlass-sv/blob/main/src/sv-fetcher.js
  */
+import { GET_CHROM_SIZES } from 'src/core/utils/assembly';
 import { Assembly, VCFData } from '../../core/gosling.schema';
 
 const DEBOUNCE_TIME = 200;
@@ -43,7 +44,7 @@ class GoslingVcfData {
                     this.uid,
                     dataConfig.url,
                     dataConfig.indexUrl,
-                    `https://s3.amazonaws.com/gosling-lang.org/data/${dataConfig.assembly}.chrom.sizes`,
+                    GET_CHROM_SIZES(this.assembly).path,
                     dataConfig.sampleLength ?? 1000
                 )
                 .then(() => this.worker);
