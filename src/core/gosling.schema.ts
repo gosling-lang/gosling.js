@@ -255,6 +255,20 @@ interface SingleTrackBase extends CommonTrackDef {
             strokeOpacity?: number;
             opacity?: number;
         };
+        selection?: {
+            color?: string;
+            stroke?: string;
+            strokeWidth?: number;
+            strokeOpacity?: number;
+            opacity?: number;
+        };
+        brush?: {
+            color?: string;
+            stroke?: string;
+            strokeWidth?: number;
+            strokeOpacity?: number;
+            opacity?: number;
+        };
     };
 
     // Mark

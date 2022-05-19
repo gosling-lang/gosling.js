@@ -1092,6 +1092,27 @@
             "experimental": {
               "additionalProperties": false,
               "properties": {
+                "brush": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "color": {
+                      "type": "string"
+                    },
+                    "opacity": {
+                      "type": "number"
+                    },
+                    "stroke": {
+                      "type": "string"
+                    },
+                    "strokeOpacity": {
+                      "type": "number"
+                    },
+                    "strokeWidth": {
+                      "type": "number"
+                    }
+                  },
+                  "type": "object"
+                },
                 "hovering": {
                   "additionalProperties": false,
                   "properties": {
@@ -1112,6 +1133,27 @@
                     },
                     "showHoveringOnTheBack": {
                       "type": "boolean"
+                    },
+                    "stroke": {
+                      "type": "string"
+                    },
+                    "strokeOpacity": {
+                      "type": "number"
+                    },
+                    "strokeWidth": {
+                      "type": "number"
+                    }
+                  },
+                  "type": "object"
+                },
+                "selection": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "color": {
+                      "type": "string"
+                    },
+                    "opacity": {
+                      "type": "number"
                     },
                     "stroke": {
                       "type": "string"
@@ -1261,6 +1303,27 @@
                       "experimental": {
                         "additionalProperties": false,
                         "properties": {
+                          "brush": {
+                            "additionalProperties": false,
+                            "properties": {
+                              "color": {
+                                "type": "string"
+                              },
+                              "opacity": {
+                                "type": "number"
+                              },
+                              "stroke": {
+                                "type": "string"
+                              },
+                              "strokeOpacity": {
+                                "type": "number"
+                              },
+                              "strokeWidth": {
+                                "type": "number"
+                              }
+                            },
+                            "type": "object"
+                          },
                           "hovering": {
                             "additionalProperties": false,
                             "properties": {
@@ -1281,6 +1344,27 @@
                               },
                               "showHoveringOnTheBack": {
                                 "type": "boolean"
+                              },
+                              "stroke": {
+                                "type": "string"
+                              },
+                              "strokeOpacity": {
+                                "type": "number"
+                              },
+                              "strokeWidth": {
+                                "type": "number"
+                              }
+                            },
+                            "type": "object"
+                          },
+                          "selection": {
+                            "additionalProperties": false,
+                            "properties": {
+                              "color": {
+                                "type": "string"
+                              },
+                              "opacity": {
+                                "type": "number"
                               },
                               "stroke": {
                                 "type": "string"
@@ -1896,6 +1980,27 @@
             "experimental": {
               "additionalProperties": false,
               "properties": {
+                "brush": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "color": {
+                      "type": "string"
+                    },
+                    "opacity": {
+                      "type": "number"
+                    },
+                    "stroke": {
+                      "type": "string"
+                    },
+                    "strokeOpacity": {
+                      "type": "number"
+                    },
+                    "strokeWidth": {
+                      "type": "number"
+                    }
+                  },
+                  "type": "object"
+                },
                 "hovering": {
                   "additionalProperties": false,
                   "properties": {
@@ -1916,6 +2021,27 @@
                     },
                     "showHoveringOnTheBack": {
                       "type": "boolean"
+                    },
+                    "stroke": {
+                      "type": "string"
+                    },
+                    "strokeOpacity": {
+                      "type": "number"
+                    },
+                    "strokeWidth": {
+                      "type": "number"
+                    }
+                  },
+                  "type": "object"
+                },
+                "selection": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "color": {
+                      "type": "string"
+                    },
+                    "opacity": {
+                      "type": "number"
                     },
                     "stroke": {
                       "type": "string"
@@ -2065,6 +2191,27 @@
                       "experimental": {
                         "additionalProperties": false,
                         "properties": {
+                          "brush": {
+                            "additionalProperties": false,
+                            "properties": {
+                              "color": {
+                                "type": "string"
+                              },
+                              "opacity": {
+                                "type": "number"
+                              },
+                              "stroke": {
+                                "type": "string"
+                              },
+                              "strokeOpacity": {
+                                "type": "number"
+                              },
+                              "strokeWidth": {
+                                "type": "number"
+                              }
+                            },
+                            "type": "object"
+                          },
                           "hovering": {
                             "additionalProperties": false,
                             "properties": {
@@ -2085,6 +2232,27 @@
                               },
                               "showHoveringOnTheBack": {
                                 "type": "boolean"
+                              },
+                              "stroke": {
+                                "type": "string"
+                              },
+                              "strokeOpacity": {
+                                "type": "number"
+                              },
+                              "strokeWidth": {
+                                "type": "number"
+                              }
+                            },
+                            "type": "object"
+                          },
+                          "selection": {
+                            "additionalProperties": false,
+                            "properties": {
+                              "color": {
+                                "type": "string"
+                              },
+                              "opacity": {
+                                "type": "number"
                               },
                               "stroke": {
                                 "type": "string"
@@ -2751,6 +2919,27 @@
                       "experimental": {
                         "additionalProperties": false,
                         "properties": {
+                          "brush": {
+                            "additionalProperties": false,
+                            "properties": {
+                              "color": {
+                                "type": "string"
+                              },
+                              "opacity": {
+                                "type": "number"
+                              },
+                              "stroke": {
+                                "type": "string"
+                              },
+                              "strokeOpacity": {
+                                "type": "number"
+                              },
+                              "strokeWidth": {
+                                "type": "number"
+                              }
+                            },
+                            "type": "object"
+                          },
                           "hovering": {
                             "additionalProperties": false,
                             "properties": {
@@ -2771,6 +2960,27 @@
                               },
                               "showHoveringOnTheBack": {
                                 "type": "boolean"
+                              },
+                              "stroke": {
+                                "type": "string"
+                              },
+                              "strokeOpacity": {
+                                "type": "number"
+                              },
+                              "strokeWidth": {
+                                "type": "number"
+                              }
+                            },
+                            "type": "object"
+                          },
+                          "selection": {
+                            "additionalProperties": false,
+                            "properties": {
+                              "color": {
+                                "type": "string"
+                              },
+                              "opacity": {
+                                "type": "number"
                               },
                               "stroke": {
                                 "type": "string"
@@ -3964,6 +4174,27 @@
         "experimental": {
           "additionalProperties": false,
           "properties": {
+            "brush": {
+              "additionalProperties": false,
+              "properties": {
+                "color": {
+                  "type": "string"
+                },
+                "opacity": {
+                  "type": "number"
+                },
+                "stroke": {
+                  "type": "string"
+                },
+                "strokeOpacity": {
+                  "type": "number"
+                },
+                "strokeWidth": {
+                  "type": "number"
+                }
+              },
+              "type": "object"
+            },
             "hovering": {
               "additionalProperties": false,
               "properties": {
@@ -3984,6 +4215,27 @@
                 },
                 "showHoveringOnTheBack": {
                   "type": "boolean"
+                },
+                "stroke": {
+                  "type": "string"
+                },
+                "strokeOpacity": {
+                  "type": "number"
+                },
+                "strokeWidth": {
+                  "type": "number"
+                }
+              },
+              "type": "object"
+            },
+            "selection": {
+              "additionalProperties": false,
+              "properties": {
+                "color": {
+                  "type": "string"
+                },
+                "opacity": {
+                  "type": "number"
                 },
                 "stroke": {
                   "type": "string"
@@ -4102,6 +4354,27 @@
               "experimental": {
                 "additionalProperties": false,
                 "properties": {
+                  "brush": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "color": {
+                        "type": "string"
+                      },
+                      "opacity": {
+                        "type": "number"
+                      },
+                      "stroke": {
+                        "type": "string"
+                      },
+                      "strokeOpacity": {
+                        "type": "number"
+                      },
+                      "strokeWidth": {
+                        "type": "number"
+                      }
+                    },
+                    "type": "object"
+                  },
                   "hovering": {
                     "additionalProperties": false,
                     "properties": {
@@ -4122,6 +4395,27 @@
                       },
                       "showHoveringOnTheBack": {
                         "type": "boolean"
+                      },
+                      "stroke": {
+                        "type": "string"
+                      },
+                      "strokeOpacity": {
+                        "type": "number"
+                      },
+                      "strokeWidth": {
+                        "type": "number"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "selection": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "color": {
+                        "type": "string"
+                      },
+                      "opacity": {
+                        "type": "number"
                       },
                       "stroke": {
                         "type": "string"
@@ -4689,6 +4983,27 @@
         "experimental": {
           "additionalProperties": false,
           "properties": {
+            "brush": {
+              "additionalProperties": false,
+              "properties": {
+                "color": {
+                  "type": "string"
+                },
+                "opacity": {
+                  "type": "number"
+                },
+                "stroke": {
+                  "type": "string"
+                },
+                "strokeOpacity": {
+                  "type": "number"
+                },
+                "strokeWidth": {
+                  "type": "number"
+                }
+              },
+              "type": "object"
+            },
             "hovering": {
               "additionalProperties": false,
               "properties": {
@@ -4709,6 +5024,27 @@
                 },
                 "showHoveringOnTheBack": {
                   "type": "boolean"
+                },
+                "stroke": {
+                  "type": "string"
+                },
+                "strokeOpacity": {
+                  "type": "number"
+                },
+                "strokeWidth": {
+                  "type": "number"
+                }
+              },
+              "type": "object"
+            },
+            "selection": {
+              "additionalProperties": false,
+              "properties": {
+                "color": {
+                  "type": "string"
+                },
+                "opacity": {
+                  "type": "number"
                 },
                 "stroke": {
                   "type": "string"
@@ -5087,6 +5423,27 @@
         "experimental": {
           "additionalProperties": false,
           "properties": {
+            "brush": {
+              "additionalProperties": false,
+              "properties": {
+                "color": {
+                  "type": "string"
+                },
+                "opacity": {
+                  "type": "number"
+                },
+                "stroke": {
+                  "type": "string"
+                },
+                "strokeOpacity": {
+                  "type": "number"
+                },
+                "strokeWidth": {
+                  "type": "number"
+                }
+              },
+              "type": "object"
+            },
             "hovering": {
               "additionalProperties": false,
               "properties": {
@@ -5107,6 +5464,27 @@
                 },
                 "showHoveringOnTheBack": {
                   "type": "boolean"
+                },
+                "stroke": {
+                  "type": "string"
+                },
+                "strokeOpacity": {
+                  "type": "number"
+                },
+                "strokeWidth": {
+                  "type": "number"
+                }
+              },
+              "type": "object"
+            },
+            "selection": {
+              "additionalProperties": false,
+              "properties": {
+                "color": {
+                  "type": "string"
+                },
+                "opacity": {
+                  "type": "number"
                 },
                 "stroke": {
                   "type": "string"
@@ -5225,6 +5603,27 @@
               "experimental": {
                 "additionalProperties": false,
                 "properties": {
+                  "brush": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "color": {
+                        "type": "string"
+                      },
+                      "opacity": {
+                        "type": "number"
+                      },
+                      "stroke": {
+                        "type": "string"
+                      },
+                      "strokeOpacity": {
+                        "type": "number"
+                      },
+                      "strokeWidth": {
+                        "type": "number"
+                      }
+                    },
+                    "type": "object"
+                  },
                   "hovering": {
                     "additionalProperties": false,
                     "properties": {
@@ -5245,6 +5644,27 @@
                       },
                       "showHoveringOnTheBack": {
                         "type": "boolean"
+                      },
+                      "stroke": {
+                        "type": "string"
+                      },
+                      "strokeOpacity": {
+                        "type": "number"
+                      },
+                      "strokeWidth": {
+                        "type": "number"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "selection": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "color": {
+                        "type": "string"
+                      },
+                      "opacity": {
+                        "type": "number"
                       },
                       "stroke": {
                         "type": "string"
@@ -5937,6 +6357,27 @@
         "experimental": {
           "additionalProperties": false,
           "properties": {
+            "brush": {
+              "additionalProperties": false,
+              "properties": {
+                "color": {
+                  "type": "string"
+                },
+                "opacity": {
+                  "type": "number"
+                },
+                "stroke": {
+                  "type": "string"
+                },
+                "strokeOpacity": {
+                  "type": "number"
+                },
+                "strokeWidth": {
+                  "type": "number"
+                }
+              },
+              "type": "object"
+            },
             "hovering": {
               "additionalProperties": false,
               "properties": {
@@ -5957,6 +6398,27 @@
                 },
                 "showHoveringOnTheBack": {
                   "type": "boolean"
+                },
+                "stroke": {
+                  "type": "string"
+                },
+                "strokeOpacity": {
+                  "type": "number"
+                },
+                "strokeWidth": {
+                  "type": "number"
+                }
+              },
+              "type": "object"
+            },
+            "selection": {
+              "additionalProperties": false,
+              "properties": {
+                "color": {
+                  "type": "string"
+                },
+                "opacity": {
+                  "type": "number"
                 },
                 "stroke": {
                   "type": "string"
@@ -6315,6 +6777,27 @@
             "experimental": {
               "additionalProperties": false,
               "properties": {
+                "brush": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "color": {
+                      "type": "string"
+                    },
+                    "opacity": {
+                      "type": "number"
+                    },
+                    "stroke": {
+                      "type": "string"
+                    },
+                    "strokeOpacity": {
+                      "type": "number"
+                    },
+                    "strokeWidth": {
+                      "type": "number"
+                    }
+                  },
+                  "type": "object"
+                },
                 "hovering": {
                   "additionalProperties": false,
                   "properties": {
@@ -6335,6 +6818,27 @@
                     },
                     "showHoveringOnTheBack": {
                       "type": "boolean"
+                    },
+                    "stroke": {
+                      "type": "string"
+                    },
+                    "strokeOpacity": {
+                      "type": "number"
+                    },
+                    "strokeWidth": {
+                      "type": "number"
+                    }
+                  },
+                  "type": "object"
+                },
+                "selection": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "color": {
+                      "type": "string"
+                    },
+                    "opacity": {
+                      "type": "number"
                     },
                     "stroke": {
                       "type": "string"
@@ -6480,6 +6984,27 @@
                       "experimental": {
                         "additionalProperties": false,
                         "properties": {
+                          "brush": {
+                            "additionalProperties": false,
+                            "properties": {
+                              "color": {
+                                "type": "string"
+                              },
+                              "opacity": {
+                                "type": "number"
+                              },
+                              "stroke": {
+                                "type": "string"
+                              },
+                              "strokeOpacity": {
+                                "type": "number"
+                              },
+                              "strokeWidth": {
+                                "type": "number"
+                              }
+                            },
+                            "type": "object"
+                          },
                           "hovering": {
                             "additionalProperties": false,
                             "properties": {
@@ -6500,6 +7025,27 @@
                               },
                               "showHoveringOnTheBack": {
                                 "type": "boolean"
+                              },
+                              "stroke": {
+                                "type": "string"
+                              },
+                              "strokeOpacity": {
+                                "type": "number"
+                              },
+                              "strokeWidth": {
+                                "type": "number"
+                              }
+                            },
+                            "type": "object"
+                          },
+                          "selection": {
+                            "additionalProperties": false,
+                            "properties": {
+                              "color": {
+                                "type": "string"
+                              },
+                              "opacity": {
+                                "type": "number"
                               },
                               "stroke": {
                                 "type": "string"
@@ -7112,6 +7658,27 @@
             "experimental": {
               "additionalProperties": false,
               "properties": {
+                "brush": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "color": {
+                      "type": "string"
+                    },
+                    "opacity": {
+                      "type": "number"
+                    },
+                    "stroke": {
+                      "type": "string"
+                    },
+                    "strokeOpacity": {
+                      "type": "number"
+                    },
+                    "strokeWidth": {
+                      "type": "number"
+                    }
+                  },
+                  "type": "object"
+                },
                 "hovering": {
                   "additionalProperties": false,
                   "properties": {
@@ -7132,6 +7699,27 @@
                     },
                     "showHoveringOnTheBack": {
                       "type": "boolean"
+                    },
+                    "stroke": {
+                      "type": "string"
+                    },
+                    "strokeOpacity": {
+                      "type": "number"
+                    },
+                    "strokeWidth": {
+                      "type": "number"
+                    }
+                  },
+                  "type": "object"
+                },
+                "selection": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "color": {
+                      "type": "string"
+                    },
+                    "opacity": {
+                      "type": "number"
                     },
                     "stroke": {
                       "type": "string"
@@ -7277,6 +7865,27 @@
                       "experimental": {
                         "additionalProperties": false,
                         "properties": {
+                          "brush": {
+                            "additionalProperties": false,
+                            "properties": {
+                              "color": {
+                                "type": "string"
+                              },
+                              "opacity": {
+                                "type": "number"
+                              },
+                              "stroke": {
+                                "type": "string"
+                              },
+                              "strokeOpacity": {
+                                "type": "number"
+                              },
+                              "strokeWidth": {
+                                "type": "number"
+                              }
+                            },
+                            "type": "object"
+                          },
                           "hovering": {
                             "additionalProperties": false,
                             "properties": {
@@ -7297,6 +7906,27 @@
                               },
                               "showHoveringOnTheBack": {
                                 "type": "boolean"
+                              },
+                              "stroke": {
+                                "type": "string"
+                              },
+                              "strokeOpacity": {
+                                "type": "number"
+                              },
+                              "strokeWidth": {
+                                "type": "number"
+                              }
+                            },
+                            "type": "object"
+                          },
+                          "selection": {
+                            "additionalProperties": false,
+                            "properties": {
+                              "color": {
+                                "type": "string"
+                              },
+                              "opacity": {
+                                "type": "number"
                               },
                               "stroke": {
                                 "type": "string"
@@ -7956,6 +8586,27 @@
                       "experimental": {
                         "additionalProperties": false,
                         "properties": {
+                          "brush": {
+                            "additionalProperties": false,
+                            "properties": {
+                              "color": {
+                                "type": "string"
+                              },
+                              "opacity": {
+                                "type": "number"
+                              },
+                              "stroke": {
+                                "type": "string"
+                              },
+                              "strokeOpacity": {
+                                "type": "number"
+                              },
+                              "strokeWidth": {
+                                "type": "number"
+                              }
+                            },
+                            "type": "object"
+                          },
                           "hovering": {
                             "additionalProperties": false,
                             "properties": {
@@ -7976,6 +8627,27 @@
                               },
                               "showHoveringOnTheBack": {
                                 "type": "boolean"
+                              },
+                              "stroke": {
+                                "type": "string"
+                              },
+                              "strokeOpacity": {
+                                "type": "number"
+                              },
+                              "strokeWidth": {
+                                "type": "number"
+                              }
+                            },
+                            "type": "object"
+                          },
+                          "selection": {
+                            "additionalProperties": false,
+                            "properties": {
+                              "color": {
+                                "type": "string"
+                              },
+                              "opacity": {
+                                "type": "number"
                               },
                               "stroke": {
                                 "type": "string"

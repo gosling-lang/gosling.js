@@ -4,12 +4,12 @@ import * as uuid from 'uuid';
 import { isEqual, sampleSize, uniqBy } from 'lodash-es';
 import { ScaleLinear, scaleLinear } from 'd3-scale';
 import { format } from 'd3-format';
+import { SingleTrack, OverlaidTrack, Datum } from '@gosling.schema';
 import { drawMark, drawPostEmbellishment, drawPreEmbellishment } from '../core/mark';
 import { GoslingTrackModel } from '../core/gosling-track-model';
 import { validateTrack } from '../core/utils/validate';
 import { shareScaleAcrossTracks } from '../core/utils/scales';
 import { resolveSuperposedTracks } from '../core/utils/overlay';
-import { SingleTrack, OverlaidTrack, Datum } from '../core/gosling.schema';
 import colorToHex from '../core/utils/color-to-hex';
 import {
     aggregateCoverage,
@@ -37,6 +37,7 @@ import { GoslingVcfData } from '../data-fetcher/vcf';
 import BamWorker from '../data-fetcher/bam/bam-worker.js?worker&inline';
 import VcfWorker from '../data-fetcher/vcf/vcf-worker.js?worker&inline';
 import { OneDimBrushModel } from '../gosling-brush/linear-brush-model';
+import { CompleteThemeDeep } from 'src/core/utils/theme';
 
 // Set `true` to print in what order each function is called
 export const PRINT_RENDERING_CYCLE = false;
@@ -50,6 +51,12 @@ function usePrereleaseRendering(spec: SingleTrack | OverlaidTrack) {
 // `getTilePosAndDimensions()` definition: https://github.com/higlass/higlass/blob/1e1146409c7d7c7014505dd80d5af3e9357c77b6/app/scripts/Tiled1DPixiTrack.js#L133
 // Refer to the following already supported graphics:
 // https://github.com/higlass/higlass/blob/54f5aae61d3474f9e868621228270f0c90ef9343/app/scripts/PixiTrack.js#L115
+
+interface GoslingTrackOption {
+    spec: SingleTrack | OverlaidTrack;
+    showMousePosition: boolean;
+    theme: CompleteThemeDeep;
+}
 
 /**
  * Each GoslingTrack draws either a track of multiple tracks with SAME DATA that are overlaid.
@@ -67,6 +74,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
     const { showMousePosition } = HGC.utils;
 
     class GoslingTrackClass extends HGC.tracks.BarTrack {
+        private options!: GoslingTrackOption;
         private tileSize: number;
         private worker: any;
         private isBrushActivated: boolean;
@@ -138,7 +146,12 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             this.isBrushActivated = false;
             this.pMask.interactive = true;
             this.gBrush = HGC.libraries.d3Selection.select(this.context.svgElement).append('g');
-            this.mRangeBrush = new OneDimBrushModel(this.gBrush, HGC.libraries, this);
+            this.mRangeBrush = new OneDimBrushModel(
+                this.gBrush,
+                HGC.libraries,
+                this,
+                this.options.spec.experimental?.brush
+            );
             this.pMask.mousedown = (e: InteractionEvent) =>
                 this.onMouseDown(
                     e.data.getLocalPosition(this.pMain).x,
@@ -492,7 +505,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
 
                     // base pairs
                     const DEFAULT_MAX_TILE_WIDTH =
-                        this.options.spec?.data?.type === 'bam' ? 2e4 : Number.MAX_SAFE_INTEGER;
+                        this.options.spec.data?.type === 'bam' ? 2e4 : Number.MAX_SAFE_INTEGER;
 
                     if (tileWidth > (this.tilesetInfo.max_tile_width || DEFAULT_MAX_TILE_WIDTH)) {
                         this.forceDraw();
@@ -596,7 +609,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
 
                 const minX = this.tilesetInfo.min_pos[0];
 
-                const minY = this.options.reverseYAxis ? -this.tilesetInfo.max_pos[1] : this.tilesetInfo.min_pos[1];
+                const minY = this.tilesetInfo.min_pos[1];
 
                 const tileWidth = this.tilesetInfo.max_width / 2 ** zoomLevel;
                 const tileHeight = this.tilesetInfo.max_width / 2 ** zoomLevel;
@@ -1014,9 +1027,9 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             // TODO: `Omit` this properties in the schema of individual overlaid tracks.
             // These should be defined only once for a group of overlaid traks (09-May-2022)
             // See https://github.com/gosling-lang/gosling.js/issues/677
-            const multiHovering = this.options.spec?.experimental?.hovering?.enableMultiHovering;
-            const groupHovering = this.options.spec?.experimental?.hovering?.enableGroupHovering;
-            const idField = this.options.spec?.experimental?.hovering?.searchGroupByField ?? GOSLING_DATA_ROW_UID_FIELD;
+            const multiHovering = this.options.spec.experimental?.hovering?.enableMultiHovering;
+            const groupHovering = this.options.spec.experimental?.hovering?.enableGroupHovering;
+            const idField = this.options.spec.experimental?.hovering?.searchGroupByField ?? GOSLING_DATA_ROW_UID_FIELD;
 
             // Collect all mouse event data from tiles and overlaid tracks
             const mergedCapturedElements: MouseEventData[] = models
@@ -1041,7 +1054,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
         }
 
         /**
-         * From all tiles and overlaid tracks, collect element(s) that are withing a genomic range.
+         * From all tiles and overlaid tracks, collect elements that are withing a genomic range.
          */
         getElementsWithinRange(startX: number, endX: number) {
             // Collect all gosling track models
@@ -1055,6 +1068,39 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                 .flat();
 
             return mergedCapturedElements;
+        }
+
+        /**
+         * Highlight marks that are either hovered or selected.
+         */
+        highlightMarks(
+            g: Graphics,
+            marks: MouseEventData[],
+            stroke: string,
+            strokeWidth: number,
+            strokeOpacity: number,
+            color: string,
+            fillOpacity: number
+        ) {
+            g.lineStyle(
+                strokeWidth,
+                colorToHex(stroke),
+                strokeOpacity, // alpha
+                0.5 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
+            );
+            g.beginFill(colorToHex(color), color === 'none' ? 0 : fillOpacity);
+
+            marks.forEach(d => {
+                if (d.type === 'point') {
+                    const [x, y, r = 3] = d.polygon;
+                    g.drawCircle(x, y, r);
+                } else if (d.type === 'line') {
+                    g.moveTo(d.polygon[0], d.polygon[1]);
+                    flatArrayToPairArray(d.polygon).map(d => g.lineTo(d[0], d[1]));
+                } else {
+                    g.drawPolygon(d.polygon);
+                }
+            });
         }
 
         onRangeBrush(startX: number, endX: number) {
@@ -1071,37 +1117,19 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                 .flat();
 
             if (capturedElements.length !== 0) {
-                // Rener mouse over effect graphics
+                // selection effect graphics
                 const g = this.pMouseSelection;
-                const stroke = this.options.spec?.experimental?.hovering?.stroke ?? 'black';
-                const strokeWidth = this.options.spec?.experimental?.hovering?.strokeWidth ?? 1;
-                const strokeOpacity = this.options.spec?.experimental?.hovering?.strokeOpacity ?? 1;
-                const color = this.options.spec?.experimental?.hovering?.color ?? 'none';
-                const fillOpacity = this.options.spec?.experimental?.hovering?.opacity ?? 1;
+                const stroke = this.options.spec.experimental?.selection?.stroke ?? 'black';
+                const strokeWidth = this.options.spec.experimental?.selection?.strokeWidth ?? 1;
+                const strokeOpacity = this.options.spec.experimental?.selection?.strokeOpacity ?? 1;
+                const color = this.options.spec.experimental?.selection?.color ?? 'none';
+                const fillOpacity = this.options.spec.experimental?.selection?.opacity ?? 1;
 
                 // place on the top
                 this.pMain.removeChild(g);
                 this.pMain.addChild(g);
 
-                g.lineStyle(
-                    strokeWidth,
-                    colorToHex(stroke),
-                    strokeOpacity, // alpha
-                    0.5 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
-                );
-                g.beginFill(colorToHex(color), color === 'none' ? 0 : fillOpacity);
-
-                capturedElements.forEach(ele => {
-                    if (ele.type === 'point') {
-                        const [x, y, r = 3] = ele.polygon;
-                        g.drawCircle(x, y, r);
-                    } else if (ele.type === 'line') {
-                        g.moveTo(ele.polygon[0], ele.polygon[1]);
-                        flatArrayToPairArray(ele.polygon).map(d => g.lineTo(d[0], d[1]));
-                    } else {
-                        g.drawPolygon(ele.polygon);
-                    }
-                });
+                this.highlightMarks(g, capturedElements, stroke, strokeWidth, strokeOpacity, color, fillOpacity);
             }
 
             this.forceDraw();
@@ -1115,8 +1143,8 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
         }
 
         onMouseMove(mouseX: number) {
-            if (this.options.spec.circular) {
-                // TODO: We need to support range selection on circular layout as well
+            if (this.options.spec.layout === 'circular') {
+                // TODO: We do not yet support range selection on circular tracks
                 return;
             }
 
@@ -1128,33 +1156,33 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
         onMouseUp(mouseX: number, mouseY: number) {
             const isDrag = Math.sqrt((this.mouseDownX - mouseX) ** 2 + (this.mouseDownY - mouseY) ** 2) > 1;
 
+            // Clicking outside the brush should remove the brush and the selection.
             if (!this.isBrushActivated && !isDrag) {
-                // clicking on the outside of the brush should clear the graphics.
                 this.mRangeBrush.clear();
                 this.pMouseSelection.clear();
             }
+
             this.isBrushActivated = false;
 
-            this.mRangeBrush.enable(); // enable dragging on the range brush
+            // Enable dragging on the range brush
+            this.mRangeBrush.enable();
 
             if (!this.tilesetInfo) {
                 // Do not have enough information
                 return;
             }
 
-            if (isDrag) {
-                // Move distance is relatively long, so this might be a drag instead
-                return;
-            }
+            // click API
+            if (!isDrag) {
+                // Identify the current position
+                const genomicPosition = getRelativeGenomicPosition(Math.floor(this._xScale.invert(mouseX)));
 
-            // Identify the current position
-            const genomicPosition = getRelativeGenomicPosition(Math.floor(this._xScale.invert(mouseX)));
+                // Get elements within mouse
+                const capturedElements = this.getElementsWithinMouse(mouseX, mouseY);
 
-            // Get elements within mouse
-            const capturedElements = this.getElementsWithinMouse(mouseX, mouseY);
-
-            if (capturedElements.length !== 0) {
-                PubSub.publish('click', { genomicPosition, data: capturedElements.map(d => d.value) });
+                if (capturedElements.length !== 0) {
+                    PubSub.publish('click', { genomicPosition, data: capturedElements.map(d => d.value) });
+                }
             }
         }
 
@@ -1171,12 +1199,6 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             }
 
             this.mouseOverGraphics.clear();
-
-            if (!this.options.spec?.experimental?.hovering?.showHoveringOnTheBack) {
-                // place on the top
-                this.pMain.removeChild(this.mouseOverGraphics);
-                this.pMain.addChild(this.mouseOverGraphics);
-            }
 
             // Current position
             const genomicPosition = getRelativeGenomicPosition(Math.floor(this._xScale.invert(mouseX)));
@@ -1195,31 +1217,19 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             if (capturedElements.length !== 0) {
                 // Rener mouse over effect graphics
                 const g = this.mouseOverGraphics;
-                const stroke = this.options.spec?.experimental?.hovering?.stroke ?? 'black';
-                const strokeWidth = this.options.spec?.experimental?.hovering?.strokeWidth ?? 1.5;
-                const strokeOpacity = this.options.spec?.experimental?.hovering?.strokeOpacity ?? 1;
-                const color = this.options.spec?.experimental?.hovering?.color ?? 'none';
-                const fillOpacity = this.options.spec?.experimental?.hovering?.opacity ?? 1;
+                const stroke = this.options.spec.experimental?.hovering?.stroke ?? 'black';
+                const strokeWidth = this.options.spec.experimental?.hovering?.strokeWidth ?? 1.5;
+                const strokeOpacity = this.options.spec.experimental?.hovering?.strokeOpacity ?? 1;
+                const color = this.options.spec.experimental?.hovering?.color ?? 'none';
+                const fillOpacity = this.options.spec.experimental?.hovering?.opacity ?? 1;
 
-                g.lineStyle(
-                    strokeWidth,
-                    colorToHex(stroke),
-                    strokeOpacity, // alpha
-                    0.5 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
-                );
-                g.beginFill(colorToHex(color), color === 'none' ? 0 : fillOpacity);
+                if (!this.options.spec.experimental?.hovering?.showHoveringOnTheBack) {
+                    // place on the top
+                    this.pMain.removeChild(g);
+                    this.pMain.addChild(g);
+                }
 
-                capturedElements.forEach(ele => {
-                    if (ele.type === 'point') {
-                        const [x, y, r = 3] = ele.polygon;
-                        g.drawCircle(x, y, r);
-                    } else if (ele.type === 'line') {
-                        g.moveTo(ele.polygon[0], ele.polygon[1]);
-                        flatArrayToPairArray(ele.polygon).map(d => g.lineTo(d[0], d[1]));
-                    } else {
-                        g.drawPolygon(ele.polygon);
-                    }
-                });
+                this.highlightMarks(g, capturedElements, stroke, strokeWidth, strokeOpacity, color, fillOpacity);
 
                 // API call
                 PubSub.publish('mouseover', { genomicPosition, data: capturedElements.map(d => d.value) });

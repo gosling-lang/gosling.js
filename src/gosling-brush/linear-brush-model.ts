@@ -19,15 +19,23 @@ export interface OneDimBrushBodyData extends OneDimBrushDataCommon {
 
 export interface OneDimBrushStartEdgeData extends OneDimBrushDataCommon {
     type: 'start';
-    cursor: 'move';
+    cursor: 'ew-resize';
 }
 
 export interface OneDimBrushEndEdgeData extends OneDimBrushDataCommon {
     type: 'end';
-    cursor: 'move';
+    cursor: 'ew-resize';
 }
 
 export type OnBrushCallbackFn = (start: number, end: number) => void;
+
+interface BrushStyle {
+    color: string;
+    stroke: string;
+    strokeWidth: number;
+    strokeOpacity: number;
+    opacity: number;
+}
 
 /**
  * A model to manage 1D brush graphics and its data.
@@ -35,6 +43,7 @@ export type OnBrushCallbackFn = (start: number, end: number) => void;
 export class OneDimBrushModel {
     /* graphical elements */
     private brushSelection: d3Selection.Selection<SVGRectElement, OneDimBrushDataUnion, SVGGElement, any>;
+    private readonly style: BrushStyle;
 
     /* data */
     private range: [number, number];
@@ -55,10 +64,16 @@ export class OneDimBrushModel {
     };
 
     // TODO: A way to pass only the required function (e.g., onRangeBrush)?
+    // note that inside `onRangeBrush()` uses `this` which points to the GoslingTrack
     /* gosling track */
     private track: any;
 
-    constructor(selection: d3Selection.Selection<SVGGElement, unknown, HTMLElement, unknown>, HGC: any, track: any) {
+    constructor(
+        selection: d3Selection.Selection<SVGGElement, unknown, HTMLElement, unknown>,
+        HGC: any,
+        track: any,
+        style: Partial<BrushStyle> = {}
+    ) {
         this.range = [0, 1];
         this.prevExtent = [0, 1];
         this.data = this.rangeToData(...this.range);
@@ -69,6 +84,14 @@ export class OneDimBrushModel {
         this.externals = {
             d3Selection: HGC.d3Selection,
             d3Drag: HGC.d3Drag.drag
+        };
+
+        this.style = {
+            color: style.color ?? '#777',
+            stroke: style.stroke ?? '#777',
+            strokeWidth: style.strokeWidth ?? 1,
+            strokeOpacity: style.strokeOpacity ?? 0.7,
+            opacity: style.opacity ?? 0.3
         };
 
         this.brushSelection = selection
@@ -108,6 +131,10 @@ export class OneDimBrushModel {
         return this;
     }
 
+    /**
+     * Update the brush using the internal range value. By default,
+     * This function calls a callback function from gosling-track.
+     */
     public drawBrush(skipCallback = false) {
         const [x, y] = this.offset;
         const height = this.size;
@@ -118,11 +145,11 @@ export class OneDimBrushModel {
             .attr('transform', d => `translate(${x + d.start}, ${y + 1})`)
             .attr('width', d => `${getWidth(d)}px`)
             .attr('height', `${height - 2}px`)
-            .attr('fill', 'red')
-            .attr('stroke', 'red')
-            .attr('stroke-width', '1px')
-            .attr('fill-opacity', d => (d.type === 'body' ? 0.3 : 0))
-            .attr('stroke-opacity', d => (d.type === 'body' ? 1 : 0))
+            .attr('fill', this.style.color)
+            .attr('stroke', this.style.stroke)
+            .attr('stroke-width', `${this.style.strokeWidth}px`)
+            .attr('fill-opacity', d => (d.type === 'body' ? this.style.opacity : 0))
+            .attr('stroke-opacity', d => (d.type === 'body' ? this.style.strokeOpacity : 0))
             .attr('cursor', d => d.cursor);
 
         if (!skipCallback) {
@@ -166,13 +193,13 @@ export class OneDimBrushModel {
             },
             {
                 type: 'start',
-                cursor: 'move',
+                cursor: 'ew-resize',
                 start: start - HIDDEN_BRUSH_EDGE_SIZE,
                 end: start
             },
             {
                 type: 'end',
-                cursor: 'move',
+                cursor: 'ew-resize',
                 start: end,
                 end: end + HIDDEN_BRUSH_EDGE_SIZE
             }
