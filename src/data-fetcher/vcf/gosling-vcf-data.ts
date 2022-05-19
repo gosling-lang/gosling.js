@@ -2,9 +2,11 @@
  * This document is heavily based on the following repo by @alexander-veit:
  * https://github.com/dbmi-bgm/higlass-sv/blob/main/src/sv-fetcher.js
  */
-import { Assembly } from '../../core/gosling.schema';
+import { Assembly, VCFData } from '../../core/gosling.schema';
 
 const DEBOUNCE_TIME = 200;
+
+type VcfDataConfig = VCFData & { assembly: Assembly };
 
 class GoslingVcfData {
     private dataPromise: Promise<any> | undefined;
@@ -12,7 +14,7 @@ class GoslingVcfData {
     private values: any;
     private assembly: Assembly;
     private initPromise: any;
-    private dataConfig: any;
+    private dataConfig: VcfDataConfig;
     private worker: any;
     private uid: string;
     private fetchTimeout: any;
@@ -22,12 +24,12 @@ class GoslingVcfData {
     private tbiIndexed: any;
     private tbiVCFParser: any;
 
-    constructor(HGC: any, dataConfig: any, worker: any) {
+    constructor(HGC: any, dataConfig: VcfDataConfig, worker: any) {
         this.dataConfig = dataConfig;
         this.uid = HGC.libraries.slugid.nice();
         this.worker = worker;
         this.prevRequestTime = 0;
-        this.assembly = 'hg38';
+        this.assembly = dataConfig.assembly;
 
         this.toFetch = new Set();
         this.fetchTimeout = null;
@@ -36,14 +38,12 @@ class GoslingVcfData {
         this.tbiVCFParser = null;
 
         this.initPromise = this.worker.then((tileFunctions: any) => {
-            dataConfig['vcfUrl'] = dataConfig.url;
-            dataConfig['tbiUrl'] = dataConfig.indexUrl ?? `${dataConfig['vcfUrl']}.tbi`;
-            dataConfig['chromSizesUrl'] = 'https://s3.amazonaws.com/gosling-lang.org/data/hg19.chrom.sizes';
-            dataConfig['sampleLength'] = dataConfig.sampleLength ?? 1000;
+            const vcfUrl = dataConfig.url;
+            const tbiUrl = dataConfig.indexUrl ?? `${vcfUrl}.tbi`;
+            const chromSizesUrl = `https://s3.amazonaws.com/gosling-lang.org/data/${dataConfig.assembly}.chrom.sizes`;
+            const sampleLength = dataConfig.sampleLength ?? 1000;
 
-            return tileFunctions
-                .init(this.uid, dataConfig.vcfUrl, dataConfig.tbiUrl, dataConfig.chromSizesUrl, dataConfig.sampleLength)
-                .then(() => this.worker);
+            return tileFunctions.init(this.uid, vcfUrl, tbiUrl, chromSizesUrl, sampleLength).then(() => this.worker);
         });
     }
 
