@@ -38,12 +38,15 @@ class GoslingVcfData {
         this.tbiVCFParser = null;
 
         this.initPromise = this.worker.then((tileFunctions: any) => {
-            const vcfUrl = dataConfig.url;
-            const tbiUrl = dataConfig.indexUrl ?? `${vcfUrl}.tbi`;
-            const chromSizesUrl = `https://s3.amazonaws.com/gosling-lang.org/data/${dataConfig.assembly}.chrom.sizes`;
-            const sampleLength = dataConfig.sampleLength ?? 1000;
-
-            return tileFunctions.init(this.uid, vcfUrl, tbiUrl, chromSizesUrl, sampleLength).then(() => this.worker);
+            return tileFunctions
+                .init(
+                    this.uid,
+                    dataConfig.url,
+                    dataConfig.indexUrl,
+                    `https://s3.amazonaws.com/gosling-lang.org/data/${dataConfig.assembly}.chrom.sizes`,
+                    dataConfig.sampleLength ?? 1000
+                )
+                .then(() => this.worker);
         });
     }
 
