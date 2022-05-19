@@ -1132,6 +1132,14 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                 this.highlightMarks(g, capturedElements, stroke, strokeWidth, strokeOpacity, color, fillOpacity);
             }
 
+            /* API call */
+            const genomicRange = [
+                getRelativeGenomicPosition(Math.floor(this._xScale.invert(startX))),
+                getRelativeGenomicPosition(Math.floor(this._xScale.invert(endX)))
+            ];
+
+            PubSub.publish('rangeselect', { genomicRange, data: capturedElements.map(d => d.value) });
+
             this.forceDraw();
         }
 
@@ -1160,6 +1168,8 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             if (!this.isBrushActivated && !isDrag) {
                 this.mRangeBrush.clear();
                 this.pMouseSelection.clear();
+
+                PubSub.publish('rangeselect', { genomicRange: null, data: [] });
             }
 
             this.isBrushActivated = false;

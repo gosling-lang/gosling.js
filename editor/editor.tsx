@@ -26,6 +26,7 @@ import type { HiGlassSpec } from '@higlass.schema';
 import type { Datum } from '@gosling.schema';
 
 import './editor.css';
+import { RangeSelectEventData } from 'src/core/api';
 
 function json2js(jsonCode: string) {
     return `var spec = ${jsonCode} \nexport { spec }; \n`;
@@ -299,10 +300,16 @@ function Editor(props: RouteComponentProps) {
             // gosRef.current.api.subscribe('click', (type: string, eventData: CommonEventData) => {
             //     setMouseEventInfo({ type: 'click', data: eventData.data, position: eventData.genomicPosition });
             // });
+
+            // Range Select API
+            gosRef.current.api.subscribe('rangeselect', (type: string, eventData: RangeSelectEventData) => {
+                console.warn(type, eventData.genomicRange, eventData.data);
+            });
         }
         return () => {
             // gosRef.current.api.unsubscribe('mouseover');
             // gosRef.current.api.unsubscribe('click');
+            // gosRef.current.api.unsubscribe('rangeselect');
         };
     }, [gosRef.current]);
 

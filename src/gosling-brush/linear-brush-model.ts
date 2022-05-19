@@ -63,8 +63,8 @@ export class OneDimBrushModel {
         d3Drag: typeof d3Drag;
     };
 
-    // TODO: A way to pass only the required function (e.g., onRangeBrush)?
-    // note that inside `onRangeBrush()` uses `this` which points to the GoslingTrack
+    // TODO (May-19-2022): A way to pass only the required function (e.g., onRangeBrush) and allow
+    // to use `this` (i.e., instance of GoslingTrack) in the function?
     /* gosling track */
     private track: any;
 
