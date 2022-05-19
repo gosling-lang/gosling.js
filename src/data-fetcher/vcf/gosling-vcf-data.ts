@@ -2,7 +2,7 @@
  * This document is heavily based on the following repo by @alexander-veit:
  * https://github.com/dbmi-bgm/higlass-sv/blob/main/src/sv-fetcher.js
  */
-import { GET_CHROM_SIZES } from 'src/core/utils/assembly';
+import { GET_CHROM_SIZES } from '../../core/utils/assembly';
 import { Assembly, VCFData } from '../../core/gosling.schema';
 
 const DEBOUNCE_TIME = 200;
