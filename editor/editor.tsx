@@ -1314,7 +1314,7 @@ function Editor(props: any) {
                                                     className="example-card"
                                                     onClick={() => {
                                                         setShowExamples(false);
-                                                        // urlGist = undefined, urlSpec = undefined, urlExampleId=undefined
+                                                        closeDescription();
                                                         setDemo({ id: d[0], ...examples[d[0]] } as any);
                                                     }}
                                                 >
