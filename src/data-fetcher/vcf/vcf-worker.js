@@ -204,7 +204,7 @@ const tile = async (uid, z, x) => {
                 const DISTPREVLOGE = !prevPos ? null : Math.log(vcfRecord.POS - prevPos);
                 const MUTTYPE = getMutationType(vcfRecord.REF, vcfRecord.ALT);
                 const SUBTYPE = getSubstitutionType(vcfRecord.REF, vcfRecord.ALT);
-                const POSEND = POS + Math.max(vcfRecord.REF.length, vcfRecord.ALT.length);
+                const POSEND = POS + vcfRecord.REF.length;
 
                 // Create key values
                 const data = {
