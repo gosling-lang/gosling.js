@@ -662,7 +662,7 @@ function Editor(props: RouteComponentProps) {
             >
                 <span
                     style={{ cursor: 'pointer', lineHeight: '40px' }}
-                    onClick={() => window.open('https://gosling.js.org', '_blank')}
+                    onClick={() => window.open(`${window.location.origin}${window.location.pathname}`, '_blank')}
                 >
                     <span className="logo">{GoslingLogoSVG(20, 20)}</span>
                     Gosling.js Editor
