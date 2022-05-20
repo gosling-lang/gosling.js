@@ -59,9 +59,8 @@ export const EX_SPEC_MOUSE_EVENT: GoslingSpec = {
                     title: 'Group Hovering By Sample',
                     ...BAR,
                     experimental: {
+                        groupMarksByField: 'sample',
                         hovering: {
-                            enableGroupHovering: true,
-                            searchGroupByField: 'sample',
                             color: 'blue',
                             opacity: 0.5,
                             strokeWidth: 0
@@ -76,9 +75,8 @@ export const EX_SPEC_MOUSE_EVENT: GoslingSpec = {
                     title: 'Group Hovering By Genomic Position',
                     ...BAR,
                     experimental: {
+                        groupMarksByField: 'position',
                         hovering: {
-                            enableGroupHovering: true,
-                            searchGroupByField: 'position',
                             color: 'blue',
                             opacity: 0.5,
                             strokeWidth: 0
@@ -128,8 +126,8 @@ export const EX_SPEC_MOUSE_EVENT: GoslingSpec = {
                     width: BAR.width,
                     height: BAR.height,
                     experimental: {
+                        groupMarksByField: 'name',
                         hovering: {
-                            enableGroupHovering: true,
                             showHoveringOnTheBack: true,
                             color: '#E0E0E0',
                             stroke: '#E0E0E0',
@@ -149,9 +147,8 @@ export const EX_SPEC_MOUSE_EVENT: GoslingSpec = {
                     height: 60,
                     tooltip: [{ field: 'Chr.', type: 'nominal' }],
                     experimental: {
+                        groupMarksByField: 'Chr.',
                         hovering: {
-                            enableGroupHovering: true,
-                            searchGroupByField: 'Chr.',
                             color: 'blue',
                             opacity: 0.5,
                             strokeWidth: 0

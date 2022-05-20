@@ -244,10 +244,11 @@ interface SingleTrackBase extends CommonTrackDef {
 
     // Mouse events
     experimental?: {
+        /* Group marks using keys in a field. This affects how a set of marks are highlighted/selected by interaction. */
+        groupMarksByField?: string;
+
         hovering?: {
             enableMultiHovering?: boolean;
-            enableGroupHovering?: boolean;
-            searchGroupByField?: string;
             showHoveringOnTheBack?: boolean;
             color?: string;
             stroke?: string;

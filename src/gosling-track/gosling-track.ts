@@ -23,7 +23,7 @@ import {
     splitExon,
     inferSvType
 } from '../core/utils/data-transform';
-import { getTabularData, GOSLING_DATA_ROW_UID_FIELD } from './data-abstraction';
+import { getTabularData } from './data-abstraction';
 import { getRelativeGenomicPosition } from '../core/utils/assembly';
 import { getTextStyle } from '../core/utils/text-style';
 import { Is2DTrack, IsChannelDeep, IsXAxis } from '../core/gosling.schema.guards';
@@ -1028,8 +1028,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             // These should be defined only once for a group of overlaid traks (09-May-2022)
             // See https://github.com/gosling-lang/gosling.js/issues/677
             const multiHovering = this.options.spec.experimental?.hovering?.enableMultiHovering;
-            const groupHovering = this.options.spec.experimental?.hovering?.enableGroupHovering;
-            const idField = this.options.spec.experimental?.hovering?.searchGroupByField ?? GOSLING_DATA_ROW_UID_FIELD;
+            const idField = this.options.spec.experimental?.groupMarksByField;
 
             // Collect all mouse event data from tiles and overlaid tracks
             const mergedCapturedElements: MouseEventData[] = models
@@ -1042,30 +1041,13 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             }
 
             // Iterate again to select sibling marks (e.g., entire glyphs)
-            if (mergedCapturedElements.length !== 0 && groupHovering) {
+            if (mergedCapturedElements.length !== 0 && idField) {
                 const source = Array.from(mergedCapturedElements);
                 models.forEach(model => {
                     const siblings = model.getMouseEventModel().getSiblings(source, idField);
                     mergedCapturedElements.push(...siblings);
                 });
             }
-
-            return mergedCapturedElements;
-        }
-
-        /**
-         * From all tiles and overlaid tracks, collect elements that are withing a genomic range.
-         */
-        getElementsWithinRange(startX: number, endX: number) {
-            // Collect all gosling track models
-            const models: GoslingTrackModel[] = this.visibleAndFetchedTiles()
-                .map(tile => tile.goslingModels ?? [])
-                .flat();
-
-            // Collect all mouse event data from tiles and overlaid tracks
-            const mergedCapturedElements: MouseEventData[] = models
-                .map(model => model.getMouseEventModel().findAll(startX, endX, true))
-                .flat();
 
             return mergedCapturedElements;
         }
@@ -1128,6 +1110,16 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                 // place on the top
                 this.pMain.removeChild(g);
                 this.pMain.addChild(g);
+
+                // Iterate again to select sibling marks (e.g., entire glyphs)
+                const idField = this.options.spec.experimental?.groupMarksByField;
+                if (capturedElements.length !== 0 && idField) {
+                    const source = Array.from(capturedElements);
+                    models.forEach(model => {
+                        const siblings = model.getMouseEventModel().getSiblings(source, idField);
+                        capturedElements.push(...siblings);
+                    });
+                }
 
                 this.highlightMarks(g, capturedElements, stroke, strokeWidth, strokeOpacity, color, fillOpacity);
             }

@@ -1,10 +1,10 @@
 import { Datum } from '../core/gosling.schema';
 import {
-    isPointsWithinRange,
+    isAnyPointsWithinRange,
     isPointInPolygon,
     isPointNearLine,
     isPointNearPoint,
-    isPointWithinRange
+    isCircleOverlapRange
 } from './polygon';
 import * as uuid from 'uuid';
 
@@ -145,11 +145,11 @@ export class MouseEventModel {
     public isWithinRange(data: MouseEventData, x1: number, x2: number) {
         switch (data.type) {
             case 'point':
-                return isPointWithinRange([x1, x2], data.polygon);
+                return isCircleOverlapRange([x1, x2], data.polygon[0], data.polygon[2]);
             case 'line':
             case 'polygon':
             default:
-                return isPointsWithinRange([x1, x2], data.polygon);
+                return isAnyPointsWithinRange([x1, x2], data.polygon);
         }
     }
 
