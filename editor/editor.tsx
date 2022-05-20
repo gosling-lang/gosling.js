@@ -860,19 +860,21 @@ function Editor(props: any) {
                         </span>
                         <span
                             title={
-                                code.length <= LIMIT_CLIPBOARD_LEN
+                                JSON.stringify(goslingSpec).length <= LIMIT_CLIPBOARD_LEN
                                     ? `Copy unique URL of current view to clipboard (limit: ${LIMIT_CLIPBOARD_LEN} characters)`
                                     : `The current code contains characters more than ${LIMIT_CLIPBOARD_LEN}`
                             }
                             className={
-                                code.length <= LIMIT_CLIPBOARD_LEN
+                                JSON.stringify(goslingSpec).length <= LIMIT_CLIPBOARD_LEN
                                     ? 'side-panel-button'
                                     : 'side-panel-button side-panel-button-not-active'
                             }
                             onClick={() => {
-                                if (code.length <= LIMIT_CLIPBOARD_LEN) {
+                                if (JSON.stringify(goslingSpec).length <= LIMIT_CLIPBOARD_LEN) {
                                     // copy the unique url to clipboard using `<input/>`
-                                    const crushedSpec = encodeURIComponent(JSONCrush.crush(code));
+                                    const crushedSpec = encodeURIComponent(
+                                        JSONCrush.crush(JSON.stringify(goslingSpec))
+                                    );
                                     const url = `https://gosling-lang.github.io/gosling.js/?full=${isHideCode}&spec=${crushedSpec}`;
                                     const element = document.getElementById('spec-url-exporter');
                                     (element as any).type = 'text';
