@@ -125,10 +125,6 @@ const stringifySpec = (spec: string | gosling.GoslingSpec): string => {
     else return stringify(spec);
 };
 
-const validateExampleId = (id: string): boolean => {
-    return examples[id] ? true : false;
-};
-
 const getDescPanelDefultWidth = () => Math.min(500, window.innerWidth);
 
 /**
@@ -306,20 +302,9 @@ function Editor(props: any) {
     useEffect(() => {
         previewData.current = [];
         setSelectedPreviewData(0);
-        if (urlExampleId && !validateExampleId(urlExampleId)) {
-            // invalida url example id
-            setCode(emptySpec(`Example id "${urlExampleId}" does not exist.`));
-            setJsCode(emptySpec(`Example id "${urlExampleId}" does not exist.`));
-        } else if (urlSpec) {
-            setCode(urlSpec);
-            setJsCode(json2js(urlSpec));
-        } else if (urlGist) {
-            setCode(emptySpec());
-        } else {
-            const jsonCode = stringifySpec(demo.spec as gosling.GoslingSpec);
-            setCode(jsonCode);
-            setJsCode(demo.specJs ?? json2js(jsonCode));
-        }
+        const jsonCode = stringifySpec(demo.spec as gosling.GoslingSpec);
+        setCode(jsonCode);
+        setJsCode(demo.specJs ?? json2js(jsonCode));
         setHg(undefined);
     }, [demo]);
 
@@ -436,7 +421,7 @@ function Editor(props: any) {
                 if (active && !!code) {
                     setReadOnly(false);
                     setCode(code);
-                    setCode(json2js(code));
+                    setJsCode(json2js(code));
                     setGistTitle(title);
                     setDescription(description);
                 }
@@ -1329,6 +1314,7 @@ function Editor(props: any) {
                                                     className="example-card"
                                                     onClick={() => {
                                                         setShowExamples(false);
+                                                        // urlGist = undefined, urlSpec = undefined, urlExampleId=undefined
                                                         setDemo({ id: d[0], ...examples[d[0]] } as any);
                                                     }}
                                                 >
