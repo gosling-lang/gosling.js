@@ -151,6 +151,13 @@ const tile = async (uid, z, x) => {
         const tbiVCFParser = tbiVCFParsers[vcfUrl];
 
         const getMutationType = (ref, alt) => {
+            if (ref.length === alt.length) return 'substitution';
+            else if (ref.length > alt.length) return 'deletion';
+            else if (ref.length < alt.length) return 'insertion';
+            else return 'unknown';
+        };
+
+        const getSubstitutionType = (ref, alt) => {
             switch (ref + alt) {
                 case 'CA':
                 case 'GT':
@@ -182,18 +189,32 @@ const tile = async (uid, z, x) => {
 
             const parseLineStoreData = (line, prevPos) => {
                 const vcfRecord = tbiVCFParser.parseLine(line);
+                const POS = cumPos.pos + vcfRecord.POS + 1;
+
+                // We consider only the first ALT and REF if they are arrays
+                if (Array.isArray(vcfRecord.ALT) && vcfRecord.ALT.length !== 0) {
+                    vcfRecord.ALT = vcfRecord.ALT[0];
+                }
+                if (Array.isArray(vcfRecord.REF) && vcfRecord.REF.length !== 0) {
+                    vcfRecord.REF = vcfRecord.REF[0];
+                }
 
                 // Additionally inferred values
                 const DISTPREV = !prevPos ? null : vcfRecord.POS - prevPos;
                 const DISTPREVLOGE = !prevPos ? null : Math.log(vcfRecord.POS - prevPos);
-                const TYPE = getMutationType(vcfRecord.REF, vcfRecord.ALT);
+                const MUTTYPE = getMutationType(vcfRecord.REF, vcfRecord.ALT);
+                const SUBTYPE = getSubstitutionType(vcfRecord.REF, vcfRecord.ALT);
+                const POSEND = POS + Math.max(vcfRecord.REF.length, vcfRecord.ALT.length);
 
                 // Create key values
                 const data = {
                     ...vcfRecord,
-                    TYPE,
+                    MUTTYPE,
+                    SUBTYPE,
                     INFO: JSON.stringify(vcfRecord.INFO),
-                    POS: vcfRecord.POS + 1 + cumPos.pos,
+                    ORIGINALPOS: vcfRecord.POS,
+                    POS,
+                    POSEND,
                     DISTPREV,
                     DISTPREVLOGE
                 };
