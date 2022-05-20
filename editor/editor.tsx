@@ -841,13 +841,13 @@ function Editor(props: any) {
                             className="side-panel-button"
                             onClick={() => {
                                 // TODO (05-02-2022): Release a support of `responsiveSize` on `.embed()` first
-                                const spec = { ...goslingSpec, responsiveSize: false };
+                                const spec = { ...goslingSpec, responsiveSize: false } as gosling.GoslingSpec;
 
                                 const a = document.createElement('a');
                                 a.setAttribute(
                                     'href',
                                     `data:text/plain;charset=utf-8,${encodeURIComponent(
-                                        getHtmlTemplate(JSON.stringify(spec))
+                                        getHtmlTemplate(stringifySpec(spec))
                                     )}`
                                 );
                                 a.download = 'gosling-visualization.html';
@@ -860,20 +860,20 @@ function Editor(props: any) {
                         </span>
                         <span
                             title={
-                                JSON.stringify(goslingSpec).length <= LIMIT_CLIPBOARD_LEN
+                                stringifySpec(goslingSpec || '').length <= LIMIT_CLIPBOARD_LEN
                                     ? `Copy unique URL of current view to clipboard (limit: ${LIMIT_CLIPBOARD_LEN} characters)`
                                     : `The current code contains characters more than ${LIMIT_CLIPBOARD_LEN}`
                             }
                             className={
-                                JSON.stringify(goslingSpec).length <= LIMIT_CLIPBOARD_LEN
+                                stringifySpec(goslingSpec || '').length <= LIMIT_CLIPBOARD_LEN
                                     ? 'side-panel-button'
                                     : 'side-panel-button side-panel-button-not-active'
                             }
                             onClick={() => {
-                                if (JSON.stringify(goslingSpec).length <= LIMIT_CLIPBOARD_LEN) {
+                                if (stringifySpec(goslingSpec || '').length <= LIMIT_CLIPBOARD_LEN) {
                                     // copy the unique url to clipboard using `<input/>`
                                     const crushedSpec = encodeURIComponent(
-                                        JSONCrush.crush(JSON.stringify(goslingSpec))
+                                        JSONCrush.crush(stringifySpec(goslingSpec || ''))
                                     );
                                     const url = `https://gosling-lang.github.io/gosling.js/?full=${isHideCode}&spec=${crushedSpec}`;
                                     const element = document.getElementById('spec-url-exporter');
@@ -882,6 +882,8 @@ function Editor(props: any) {
                                     (element as any).select();
                                     document.execCommand('copy');
                                     (element as any).type = 'hidden';
+                                    // eslint-disable-next-line no-alert
+                                    alert(`URL of the current view has been copied to your clipboard!`);
                                 }
                             }}
                         >
