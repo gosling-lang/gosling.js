@@ -15,16 +15,17 @@ import { debounce, isEqual } from 'lodash-es';
 import { ExampleGroups, examples } from './example';
 import { traverseTracksAndViews } from '../src/core/utils/spec-preprocess';
 import stripJsonComments from 'strip-json-comments';
-import * as qs from 'qs';
 import JSONCrush from 'jsoncrush';
-import './editor.css';
 import { ICONS, ICON_INFO } from './icon';
-import type { HiGlassSpec } from '@higlass.schema';
-import type { Datum } from '@gosling.schema';
 import { transpile } from 'typescript';
 import { getHtmlTemplate } from './html-template';
-// @ts-ignore
 import { Themes } from 'gosling-theme';
+
+import type { RouteComponentProps } from 'react-router-dom';
+import type { HiGlassSpec } from '@higlass.schema';
+import type { Datum } from '@gosling.schema';
+
+import './editor.css';
 
 function json2js(jsonCode: string) {
     return `var spec = ${jsonCode} \nexport { spec }; \n`;
@@ -187,19 +188,19 @@ interface PreviewData {
 /**
  * React component for editing Gosling specs
  */
-function Editor(props: any) {
+function Editor(props: RouteComponentProps) {
     // Determines whether the screen is too small (e.g., mobile)
     const IS_SMALL_SCREEN = window.innerWidth <= 500;
 
     // custom spec contained in the URL
-    const urlParams = qs.parse(props.location.search, { ignoreQueryPrefix: true });
-    const urlSpec = urlParams?.spec ? JSONCrush.uncrush(urlParams.spec as string) : null;
-    const urlGist = urlParams?.gist ?? null;
-    const urlExampleId = (urlParams?.example ?? '') as string;
+    const urlParams = new URLSearchParams(props.location.search);
+    const urlSpec = urlParams.has('spec') ? JSONCrush.uncrush(urlParams.get('spec')!) : null;
+    const urlGist = urlParams.get('gist');
+    const urlExampleId = urlParams.get('example') ?? '';
 
-    const defaultCode = urlGist ? emptySpec() : stringify(urlSpec ?? (INIT_DEMO.spec as gosling.GoslingSpec));
-
-    const defaultJsCode = INIT_DEMO.specJs ?? json2js(defaultCode);
+    const defaultCode =
+        urlGist || urlExampleId ? emptySpec() : stringify(urlSpec ?? (INIT_DEMO.spec as gosling.GoslingSpec));
+    const defaultJsCode = urlGist || urlExampleId || !INIT_DEMO.specJs ? json2js(defaultCode) : INIT_DEMO.specJs;
 
     const previewData = useRef<PreviewData[]>([]);
     const [refreshData, setRefreshData] = useState<boolean>(false);
@@ -214,6 +215,8 @@ function Editor(props: any) {
     const [jsCode, setJsCode] = useState(defaultJsCode); //[TO-DO: more js format examples]
     const [goslingSpec, setGoslingSpec] = useState<gosling.GoslingSpec>();
     const [log, setLog] = useState<ReturnType<typeof gosling.validateGoslingSpec>>({ message: '', state: 'success' });
+    // const [mouseEventInfo, setMouseEventInfo] =
+    //     useState<{ type: 'mouseover' | 'click'; data: Datum[]; position: string }>();
     const [showExamples, setShowExamples] = useState(false);
     const [autoRun, setAutoRun] = useState(true);
     const [selectedPreviewData, setSelectedPreviewData] = useState<number>(0);
@@ -234,9 +237,7 @@ function Editor(props: any) {
     const [readOnly, setReadOnly] = useState<boolean>(urlGist ? true : false);
 
     // whether to hide source code on the left
-    const [isHideCode, setIsHideCode] = useState<boolean>(
-        IS_SMALL_SCREEN || (urlParams?.full as string) === 'true' || false
-    );
+    const [isHideCode, setIsHideCode] = useState<boolean>(IS_SMALL_SCREEN || urlParams.get('full') === 'true' || false);
 
     // whether to show widgets for responsive window
     const [isResponsive, setIsResponsive] = useState<boolean>(true);
@@ -267,7 +268,7 @@ function Editor(props: any) {
 
     // for using HiGlass JS API
     // const hgRef = useRef<any>();
-    const gosRef = useRef<any>();
+    const gosRef = useRef<gosling.GoslingRef>(null);
 
     const debounceCodeEdit = useRef(
         debounce((code: string, language) => {
@@ -281,19 +282,24 @@ function Editor(props: any) {
 
     // publish event listeners to Gosling.js
     useEffect(() => {
-        // if (gosRef.current) {
-        //    gosRef.current.api.subscribe('rawdata', (type: string, data: RawDataEventData) => {
-        //        console.log('rawdata', data);
-        //    });
-        //     gosRef.current.api.subscribe('click', (type: string, data: CommonEventData) => {
-        //         gosRef.current.api.zoomTo('bam-1', `chr${data.data.chr1}:${data.data.start1}-${data.data.end1}`, 2000);
-        //         gosRef.current.api.zoomTo('bam-2', `chr${data.data.chr2}:${data.data.start2}-${data.data.end2}`, 2000);
-        //         console.log('click', data.data);
-        //     });
-        // }
-        // return () => {
-        //     gosRef.current.api.unsubscribe('rawdata');
-        // }
+        if (gosRef.current) {
+            // gosRef.current.api.subscribe('rawdata', (type: string, data: RawDataEventData) => {
+            // console.log('rawdata', data);
+            // gosRef.current.api.zoomTo('bam-1', `chr${data.data.chr1}:${data.data.start1}-${data.data.end1}`, 2000);
+            // gosRef.current.api.zoomTo('bam-2', `chr${data.data.chr2}:${data.data.start2}-${data.data.end2}`, 2000);
+            // console.log('click', data.data);
+            // TODO: show messages on the right-bottom of the editor
+            // gosRef.current.api.subscribe('mouseover', (type: string, eventData: CommonEventData) => {
+            //     setMouseEventInfo({ type: 'mouseover', data: eventData.data, position: eventData.genomicPosition });
+            // });
+            // gosRef.current.api.subscribe('click', (type: string, eventData: CommonEventData) => {
+            //     setMouseEventInfo({ type: 'click', data: eventData.data, position: eventData.genomicPosition });
+            // });
+        }
+        return () => {
+            // gosRef.current.api.unsubscribe('mouseover');
+            // gosRef.current.api.unsubscribe('click');
+        };
     }, [gosRef.current]);
 
     /**
@@ -690,7 +696,7 @@ function Editor(props: any) {
                     >
                         {Object.keys(Themes).map((d: string) => (
                             <option key={d} value={d}>
-                                {d}
+                                {`Theme: ${d}`}
                             </option>
                         ))}
                     </select>
@@ -803,7 +809,7 @@ function Editor(props: any) {
                             title="Save PNG file"
                             className="side-panel-button"
                             onClick={() => {
-                                gosRef.current.api.exportPng();
+                                gosRef.current?.api.exportPng();
                             }}
                         >
                             {getIconSVG(ICONS.IMAGE, 23, 23)}
@@ -814,7 +820,7 @@ function Editor(props: any) {
                             title="Save PDF file"
                             className="side-panel-button"
                             onClick={() => {
-                                gosRef.current.api.exportPdf();
+                                gosRef.current?.api.exportPdf();
                             }}
                         >
                             {getIconSVG(ICONS.PDF, 23, 23)}
@@ -860,7 +866,7 @@ function Editor(props: any) {
                                     const crushedSpec = encodeURIComponent(
                                         JSONCrush.crush(stringifySpec(goslingSpec || ''))
                                     );
-                                    const url = `https://gosling.js.org/?full=${isHideCode}&spec=${crushedSpec}`;
+                                    const url = `${window.location.origin}${window.location.pathname}?full=${isHideCode}&spec=${crushedSpec}`;
 
                                     // fix execCommand("copy") is obsolete
                                     navigator.clipboard
@@ -1059,11 +1065,40 @@ function Editor(props: any) {
                                             id={'goslig-component-root'}
                                             className={'goslig-component'}
                                             experimental={{ reactive: true }}
-                                            compiled={(g, h) => {
+                                            compiled={(_, h) => {
                                                 setHg(h);
                                             }}
                                         />
                                     </div>
+                                    {/* {expertMode && false ? (
+                                        <div
+                                            style={{
+                                                position: 'absolute',
+                                                right: '2px',
+                                                bottom: '2px',
+                                                padding: '20px',
+                                                background: '#FAFAFAAA',
+                                                border: '1px solid black'
+                                            }}
+                                        >
+                                            <div style={{ fontWeight: 'bold' }}>
+                                                {`${mouseEventInfo?.data.length} Marks Selected By Mouse ${
+                                                    mouseEventInfo?.type === 'click' ? 'Click' : 'Over'
+                                                }`}
+                                            </div>
+                                            <div style={{}}>{`The event occurs at ${mouseEventInfo?.position}`}</div>
+                                            <table>
+                                                {mouseEventInfo?.data && mouseEventInfo?.data.length !== 0
+                                                    ? Object.entries(mouseEventInfo?.data[0]).map(([k, v]) => (
+                                                          <tr key={k}>
+                                                              <td>{k}</td>
+                                                              <td>{v}</td>
+                                                          </tr>
+                                                      ))
+                                                    : null}
+                                            </table>
+                                        </div>
+                                    ) : null} */}
                                 </div>
                                 <SplitPane split="vertical" defaultSize="100%">
                                     <>

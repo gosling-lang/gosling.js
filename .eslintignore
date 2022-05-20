@@ -2,4 +2,4 @@ public
 build
 dist
 
-*worker.js
+bam-worker.js

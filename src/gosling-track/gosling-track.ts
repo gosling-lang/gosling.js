@@ -10,7 +10,6 @@ import { validateTrack } from '../core/utils/validate';
 import { shareScaleAcrossTracks } from '../core/utils/scales';
 import { resolveSuperposedTracks } from '../core/utils/overlay';
 import { SingleTrack, OverlaidTrack, Datum } from '../core/gosling.schema';
-import { TooltipData } from '../gosling-tooltip';
 import colorToHex from '../core/utils/color-to-hex';
 import {
     aggregateCoverage,
@@ -24,26 +23,27 @@ import {
     splitExon,
     inferSvType
 } from '../core/utils/data-transform';
-import { getTabularData } from './data-abstraction';
-import { BAMDataFetcher } from '../data-fetcher/bam';
+import { getTabularData, GOSLING_DATA_ROW_UID_FIELD } from './data-abstraction';
 import { getRelativeGenomicPosition } from '../core/utils/assembly';
 import { getTextStyle } from '../core/utils/text-style';
 import { Is2DTrack, IsChannelDeep, IsXAxis } from '../core/gosling.schema.guards';
 import { spawn } from 'threads';
-
-import BamWorker from '../data-fetcher/bam/bam-worker.js?worker&inline';
 import { InteractionEvent } from 'pixi.js';
 import { HIGLASS_AXIS_SIZE } from '../core/higlass-model';
+import { MouseEventData } from '../gosling-mouse-event/mouse-event-model';
+import { flatArrayToPairArray } from '../core/utils/array';
+import { BAMDataFetcher } from '../data-fetcher/bam';
+import { GoslingVcfData } from '../data-fetcher/vcf';
+import BamWorker from '../data-fetcher/bam/bam-worker.js?worker&inline';
+import VcfWorker from '../data-fetcher/vcf/vcf-worker.js?worker&inline';
 
 // Set `true` to print in what order each function is called
 export const PRINT_RENDERING_CYCLE = false;
 
 // Experimental function to test with prerelease rendering
 function usePrereleaseRendering(spec: SingleTrack | OverlaidTrack) {
-    return spec.data?.type === 'bam';
+    return spec.data?.type === 'bam' || spec.data?.type === 'vcf';
 }
-
-type LoadingStage = 'loading' | 'processing' | 'rendering';
 
 // For using libraries, refer to https://github.com/higlass/higlass/blob/f82c0a4f7b2ab1c145091166b0457638934b15f3/app/scripts/configs/available-for-plugins.js
 // `getTilePosAndDimensions()` definition: https://github.com/higlass/higlass/blob/1e1146409c7d7c7014505dd80d5af3e9357c77b6/app/scripts/Tiled1DPixiTrack.js#L133
@@ -66,7 +66,6 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
     const { showMousePosition } = HGC.utils;
 
     class GoslingTrackClass extends HGC.tracks.BarTrack {
-        private tooltips: TooltipData[];
         private tileSize: number;
         private worker: any;
         // private loadingStatus: { [k: LoadingStage]: number };
@@ -76,11 +75,16 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             const [context, options] = params;
 
             // Check whether to load a worker
-            let bamWorker;
+            let dataWorker;
             if (usePrereleaseRendering(options.spec)) {
                 try {
-                    bamWorker = spawn(new BamWorker());
-                    context.dataFetcher = new BAMDataFetcher(HGC, context.dataConfig, bamWorker);
+                    if (options.spec.data?.type === 'bam') {
+                        dataWorker = spawn(new BamWorker());
+                        context.dataFetcher = new BAMDataFetcher(HGC, context.dataConfig, dataWorker);
+                    } else if (options.spec.data?.type === 'vcf') {
+                        dataWorker = spawn(new VcfWorker());
+                        context.dataFetcher = new GoslingVcfData(HGC, context.dataConfig, dataWorker);
+                    }
                 } catch (e) {
                     console.warn('Error loading worker', e);
                 }
@@ -88,11 +92,11 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
 
             super(context, options);
 
-            this.worker = bamWorker;
+            this.worker = dataWorker;
             context.dataFetcher.track = this;
             this.context = context;
 
-            // Temp. Add ids to each overlaid tracks that will be rendered independently
+            // Add unique IDs to each of the overlaid tracks that will be rendered independently.
             if ('overlay' in this.options.spec) {
                 this.options.spec.overlay = (this.options.spec as OverlaidTrack).overlay.map(o => {
                     return { ...o, _renderingId: uuid.v1() };
@@ -160,7 +164,6 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             this.pLabel.addChild(this.loadingTextBg);
             this.pLabel.addChild(this.loadingText);
 
-            this.tooltips = [];
             this.svgData = [];
             this.textGraphics = [];
             this.textsBeingUsed = 0; // this variable is being used to improve the performance of text rendering
@@ -183,7 +186,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
         draw() {
             if (PRINT_RENDERING_CYCLE) console.warn('draw()');
 
-            this.tooltips = [];
+            this.clearMouseEventData();
             this.svgData = [];
             this.textsBeingUsed = 0;
             this.mouseOverGraphics?.clear();
@@ -251,12 +254,12 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
 
             // !! A single tile contains one track or multiple tracks overlaid
             /* Render marks and embellishments */
-            tile.goslingModels.forEach((tm: GoslingTrackModel) => {
+            tile.goslingModels.forEach((model: GoslingTrackModel) => {
                 // check visibility condition
                 const trackWidth = this.dimensions[0];
                 const zoomLevel = this._xScale.invert(trackWidth) - this._xScale.invert(0);
 
-                if (!tm.trackVisibility({ zoomLevel })) {
+                if (!model.trackVisibility({ zoomLevel })) {
                     return;
                 }
 
@@ -267,9 +270,9 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                 //     return;
                 // }
 
-                drawPreEmbellishment(HGC, this, tile, tm, this.options.theme);
-                drawMark(HGC, this, tile, tm);
-                drawPostEmbellishment(HGC, this, tile, tm, this.options.theme);
+                drawPreEmbellishment(HGC, this, tile, model, this.options.theme);
+                drawMark(HGC, this, tile, model);
+                drawPostEmbellishment(HGC, this, tile, model, this.options.theme);
             });
 
             this.forceDraw();
@@ -286,7 +289,8 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
 
             this.options = newOptions;
 
-            this.tooltips = [];
+            // this.mouseEventModel.clear();
+            this.clearMouseEventData();
             this.svgData = [];
             this.textsBeingUsed = 0;
 
@@ -309,11 +313,19 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             this.forceDraw();
         }
 
+        clearMouseEventData() {
+            const models: GoslingTrackModel[] = this.visibleAndFetchedTiles()
+                .map(tile => tile.goslingModels ?? [])
+                .flat();
+            models.forEach(model => model.getMouseEventModel().clear());
+        }
+
         remove() {
             super.remove();
 
             if (this.gLegend) {
-                this.gLegend.selectAll('.brush').remove();
+                this.gLegend.remove();
+                this.gLegend = null;
             }
         }
         /*
@@ -378,7 +390,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             this.xDomain = this._xScale.domain();
             this.xRange = this._xScale.range();
 
-            this.drawLoadingCue('loading');
+            this.drawLoadingCue();
 
             this.worker.then((tileFunctions: any) => {
                 tileFunctions
@@ -387,7 +399,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                         Object.values(this.fetchedTiles).map((x: any) => x.remoteId)
                     )
                     .then((toRender: any) => {
-                        this.drawLoadingCue('processing');
+                        this.drawLoadingCue();
                         const tiles = this.visibleAndFetchedTiles();
 
                         const tabularData = JSON.parse(Buffer.from(toRender).toString());
@@ -402,9 +414,9 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                             tile.tileData.tilePos = [refTile[1]];
                         }
 
-                        this.drawLoadingCue('rendering');
+                        this.drawLoadingCue();
                         callback();
-                        this.drawLoadingCue('done');
+                        this.drawLoadingCue();
                     });
             });
         }
@@ -452,7 +464,9 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                         this.tilesetInfo.tile_size
                     );
 
-                    const DEFAULT_MAX_TILE_WIDTH = 2e4; // base pairs
+                    // base pairs
+                    const DEFAULT_MAX_TILE_WIDTH =
+                        this.options.spec?.data?.type === 'bam' ? 2e4 : Number.MAX_SAFE_INTEGER;
 
                     if (tileWidth > (this.tilesetInfo.max_tile_width || DEFAULT_MAX_TILE_WIDTH)) {
                         this.forceDraw();
@@ -591,49 +605,36 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
         /**
          * Show visual cue during waiting for visualizations being rendered.
          */
-        drawLoadingCue(stage: LoadingStage | 'done') {
-            let curStage = stage;
-            if (this.loadingStatus) {
-                if (stage === 'done') {
-                    this.loadingStatus.loading--;
-                    this.loadingStatus.processing--;
-                    this.loadingStatus.rendering--;
-                    if (this.loadingStatus.loading !== 0) {
-                        curStage = 'loading';
-                    }
-                } else {
-                    this.loadingStatus[stage]++;
-                }
-            }
-            // console.log(curStage, this.loadingStatus);
-            setTimeout(() => {
-                this.loadingText.x = this.position[0] + this.dimensions[0] - 1;
-                this.loadingText.y = this.position[1] + this.dimensions[1] - 0;
+        drawLoadingCue() {
+            if (this.fetching.size) {
+                const margin = 6;
 
-                const text = {
-                    loading: 'Loading Tiles...',
-                    processing: 'Processing Tiles...',
-                    rendering: 'Rendering Tiles...',
-                    done: ''
-                }[curStage];
-
+                // Show textual message
+                const text = `Fetching... ${Array.from(this.fetching).join(' ')}`;
                 this.loadingText.text = text;
+                this.loadingText.x = this.position[0] + this.dimensions[0] - margin / 2.0;
+                this.loadingText.y = this.position[1] + this.dimensions[1] - margin / 2.0;
 
-                // this.loadingTextBg.clear();
-                // const metric = HGC.libraries.PIXI.TextMetrics.measureText(text, this.loadingTextStyleObj);
-                // const { width: w, height: h }= metric;
+                // Show background
+                const metric = HGC.libraries.PIXI.TextMetrics.measureText(text, this.loadingTextStyleObj);
+                const { width: w, height: h } = metric;
 
-                // this.loadingTextBg.lineStyle(
-                //     1,
-                //     colorToHex('gray'),
-                //     0, // alpha
-                //     0 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
-                // );
+                this.loadingTextBg.clear();
+                this.loadingTextBg.lineStyle(1, colorToHex('grey'), 1, 0.5);
+                this.loadingTextBg.beginFill(colorToHex('white'), 0.8);
+                this.loadingTextBg.drawRect(
+                    this.position[0] + this.dimensions[0] - w - margin - 1,
+                    this.position[1] + this.dimensions[1] - h - margin - 1,
+                    w + margin,
+                    h + margin
+                );
 
-                // this.loadingTextBg.beginFill(colorToHex('white'), 0.5);
-                // this.loadingTextBg.drawRect(this.position[0] + 1, this.position[1] + 1, this.dimensions[0] - 2, 20);
-                this.forceDraw();
-            }, 10);
+                this.loadingText.visible = true;
+                this.loadingTextBg.visible = true;
+            } else {
+                this.loadingText.visible = false;
+                this.loadingTextBg.visible = false;
+            }
         }
 
         /**
@@ -677,11 +678,11 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
         }
 
         shareScaleOffsetAcrossTracksAndTiles(scaleOffset: [number, number], channelKey: 'color' | 'stroke') {
-            const gms: GoslingTrackModel[] = [];
+            const models: GoslingTrackModel[] = [];
             this.visibleAndFetchedTiles().forEach((tile: any) => {
-                gms.push(...tile.goslingModels);
+                models.push(...tile.goslingModels);
             });
-            gms.forEach(d => {
+            models.forEach(d => {
                 const channel = d.spec()[channelKey];
                 if (IsChannelDeep(channel)) {
                     channel.scaleOffset = scaleOffset;
@@ -745,7 +746,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
         }
 
         preprocessAllTiles(force = false) {
-            const gms: GoslingTrackModel[] = [];
+            const models: GoslingTrackModel[] = [];
 
             this.reorganizeTileInfo();
 
@@ -758,13 +759,13 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                 // tile preprocessing is done only once per tile
                 const tileModels = this.preprocessTile(tile);
                 tileModels?.forEach((m: GoslingTrackModel) => {
-                    gms.push(m);
+                    models.push(m);
                 });
             });
 
-            shareScaleAcrossTracks(gms);
+            shareScaleAcrossTracks(models);
 
-            const flatTileData = ([] as Datum[]).concat(...gms.map(d => d.data()));
+            const flatTileData = ([] as Datum[]).concat(...models.map(d => d.data()));
             if (flatTileData.length !== 0) {
                 PubSub.publish('rawdata', {
                     id: this.options.spec.id,
@@ -772,7 +773,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                 });
             }
 
-            // console.log('processed gosling model', gms);
+            // console.log('processed gosling model', models);
 
             // IMPORTANT: If no genomic fields specified, no point to use multiple tiles, i.e., we need to draw a track only once with the data combined.
             /*
@@ -975,8 +976,47 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
 
         exportSVG() {} // We do not support SVG export
 
+        /**
+         * From all tiles and overlaid tracks, collect element(s) that are withing a mouse position.
+         */
+        getElementsWithinMouse(mouseX: number, mouseY: number) {
+            // Collect all gosling track models
+            const models: GoslingTrackModel[] = this.visibleAndFetchedTiles()
+                .map(tile => tile.goslingModels ?? [])
+                .flat();
+
+            // TODO: `Omit` this properties in the schema of individual overlaid tracks.
+            // These should be defined only once for a group of overlaid traks (09-May-2022)
+            // See https://github.com/gosling-lang/gosling.js/issues/677
+            const multiHovering = this.options.spec?.experimental?.hovering?.enableMultiHovering;
+            const groupHovering = this.options.spec?.experimental?.hovering?.enableGroupHovering;
+            const idField = this.options.spec?.experimental?.hovering?.searchGroupByField ?? GOSLING_DATA_ROW_UID_FIELD;
+
+            // Collect all mouse event data from tiles and overlaid tracks
+            const mergedCapturedElements: MouseEventData[] = models
+                .map(model => model.getMouseEventModel().findAll(mouseX, mouseY, true))
+                .flat();
+
+            if (!multiHovering) {
+                // Select only one on the top of a cursor
+                mergedCapturedElements.splice(1, mergedCapturedElements.length - 1);
+            }
+
+            // Iterate again to select sibling marks (e.g., entire glyphs)
+            if (mergedCapturedElements.length !== 0 && groupHovering) {
+                const source = Array.from(mergedCapturedElements);
+                models.forEach(model => {
+                    const siblings = model.getMouseEventModel().getSiblings(source, idField);
+                    mergedCapturedElements.push(...siblings);
+                });
+            }
+
+            return mergedCapturedElements;
+        }
+
         onMouseOut() {
             document.body.style.cursor = 'default';
+            this.mouseOverGraphics.clear();
         }
 
         onMouseDown(mouseX: number, mouseY: number) {
@@ -986,105 +1026,100 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
         }
 
         onClick(mouseX: number, mouseY: number) {
-            if (!this.tilesetInfo || !this.tooltips) {
-                // Do not have enough information to show tooltips
+            if (!this.tilesetInfo) {
+                // Do not have enough information
                 return;
             }
 
             if (Math.sqrt((this.mouseDownX - mouseX) ** 2 + (this.mouseDownY - mouseY) ** 2) > 1) {
-                // Move distance is relatively long, so this might be a drag
+                // Move distance is relatively long, so this might be a drag instead
                 return;
             }
 
-            const tooltip: TooltipData | undefined = this.tooltips.find((d: TooltipData) =>
-                d.isMouseOver(mouseX, mouseY)
-            );
+            // Identify the current position
+            const genomicPosition = getRelativeGenomicPosition(Math.floor(this._xScale.invert(mouseX)));
 
-            if (tooltip) {
-                PubSub.publish('click', {
-                    data: { ...tooltip.datum },
-                    genomicPosition: getRelativeGenomicPosition(Math.floor(this._xScale.invert(mouseX)))
-                });
+            // Get elements within mouse
+            const capturedElements = this.getElementsWithinMouse(mouseX, mouseY);
+
+            if (capturedElements.length !== 0) {
+                PubSub.publish('click', { genomicPosition, data: capturedElements.map(d => d.value) });
             }
         }
 
         getMouseOverHtml(mouseX: number, mouseY: number) {
-            const isMouseOverPrepared = false; // TODO: We do not support this yet.
-
-            if (!this.tilesetInfo || !this.tooltips) {
-                // Do not have enough information to show tooltips
+            if (!this.tilesetInfo) {
+                // Do not have enough information
                 return;
             }
 
             this.mouseOverGraphics.clear();
-            // place on the top
-            this.pMain.removeChild(this.mouseOverGraphics);
-            this.pMain.addChild(this.mouseOverGraphics);
 
-            // TODO: Get tooltip information prepared during the mark rendering, and use the info here to show tooltips.
+            if (!this.options.spec?.experimental?.hovering?.showHoveringOnTheBack) {
+                // place on the top
+                this.pMain.removeChild(this.mouseOverGraphics);
+                this.pMain.addChild(this.mouseOverGraphics);
+            }
 
-            const tooltip: TooltipData | undefined = this.tooltips.find((d: TooltipData) =>
-                d.isMouseOver(mouseX, mouseY)
-            );
+            // Current position
+            const genomicPosition = getRelativeGenomicPosition(Math.floor(this._xScale.invert(mouseX)));
 
+            // Get elements within mouse
+            const capturedElements = this.getElementsWithinMouse(mouseX, mouseY);
+
+            // Change cursor
             // https://developer.mozilla.org/en-US/docs/Web/CSS/cursor
-            if (tooltip) {
+            if (capturedElements.length !== 0) {
                 document.body.style.cursor = 'pointer';
             } else {
                 document.body.style.cursor = 'default';
             }
 
-            if (tooltip) {
-                PubSub.publish('mouseover', {
-                    data: { ...tooltip.datum },
-                    genomicPosition: getRelativeGenomicPosition(Math.floor(this._xScale.invert(mouseX)))
-                });
-            }
+            if (capturedElements.length !== 0) {
+                // Rener mouse over effect graphics
+                const g = this.mouseOverGraphics;
+                const stroke = this.options.spec?.experimental?.hovering?.stroke ?? 'black';
+                const strokeWidth = this.options.spec?.experimental?.hovering?.strokeWidth ?? 1.5;
+                const strokeOpacity = this.options.spec?.experimental?.hovering?.strokeOpacity ?? 1;
+                const color = this.options.spec?.experimental?.hovering?.color ?? 'none';
+                const fillOpacity = this.options.spec?.experimental?.hovering?.opacity ?? 1;
 
-            if (tooltip) {
-                // render mouse over effect
-                if (tooltip.markInfo.type === 'rect' && isMouseOverPrepared) {
-                    this.mouseOverGraphics.lineStyle(
-                        1,
-                        colorToHex('black'),
-                        1, // alpha
-                        1 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
-                    );
-                    this.mouseOverGraphics.beginFill(colorToHex('white'), 0);
+                g.lineStyle(
+                    strokeWidth,
+                    colorToHex(stroke),
+                    strokeOpacity, // alpha
+                    0.5 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
+                );
+                g.beginFill(colorToHex(color), color === 'none' ? 0 : fillOpacity);
 
-                    // Experimental
-                    const showOutline = true;
-                    if (showOutline) {
-                        this.mouseOverGraphics.drawRect(
-                            tooltip.markInfo.x,
-                            tooltip.markInfo.y,
-                            tooltip.markInfo.width,
-                            tooltip.markInfo.height
-                        );
+                capturedElements.forEach(ele => {
+                    if (ele.type === 'point') {
+                        const [x, y, r = 3] = ele.polygon;
+                        g.drawCircle(x, y, r);
+                    } else if (ele.type === 'line') {
+                        g.moveTo(ele.polygon[0], ele.polygon[1]);
+                        flatArrayToPairArray(ele.polygon).map(d => g.lineTo(d[0], d[1]));
                     } else {
-                        const [tw, th] = this.dimensions;
-                        const cx = tooltip.markInfo.x + tooltip.markInfo.width / 2.0;
-                        const cy = tooltip.markInfo.y + tooltip.markInfo.height / 2.0;
-
-                        // horizontal line
-                        this.mouseOverGraphics.moveTo(0, cy);
-                        this.mouseOverGraphics.lineTo(tw, cy);
-
-                        // vertical line
-                        this.mouseOverGraphics.moveTo(cx, 0);
-                        this.mouseOverGraphics.lineTo(cx, th);
-
-                        // center point
-                        this.mouseOverGraphics.beginFill(colorToHex('black'), 1);
-                        this.mouseOverGraphics.drawCircle(cx, cy, 1);
+                        g.drawPolygon(ele.polygon);
                     }
-                }
+                });
+
+                // API call
+                PubSub.publish('mouseover', { genomicPosition, data: capturedElements.map(d => d.value) });
 
                 // Display a tooltip
-                if (this.options.spec.tooltip) {
-                    const content = (this.options.spec.tooltip as any)
+                const models = this.visibleAndFetchedTiles()
+                    .map(tile => tile.goslingModels ?? [])
+                    .flat();
+
+                const firstTooltipSpec = models
+                    .find(m => m.spec().tooltip && m.spec().tooltip?.length !== 0)
+                    ?.spec().tooltip;
+
+                if (firstTooltipSpec) {
+                    let content = firstTooltipSpec
                         .map((d: any) => {
-                            const rawValue = tooltip.datum[d.field];
+                            const rawValue = capturedElements[0].value[d.field];
                             let value = rawValue;
                             if (d.type === 'quantitative' && d.format) {
                                 value = format(d.format)(+rawValue);
@@ -1101,7 +1136,15 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                             );
                         })
                         .join('');
-                    return `<table style='text-align: left; margin-top: 12px'>${content}</table>`;
+
+                    content = `<table style='text-align: left; margin-top: 12px'>${content}</table>`;
+                    if (capturedElements.length > 1) {
+                        content +=
+                            `<div style='padding: 4px 8px; margin-top: 4px; text-align: center; color: grey'>` +
+                            `${capturedElements.length - 1} Additional Selections...` +
+                            '</div>';
+                    }
+                    return `<div>${content}</div>`;
                 }
             }
         }

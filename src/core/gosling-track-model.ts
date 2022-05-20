@@ -42,6 +42,7 @@ import {
 } from './gosling.schema.guards';
 import { CHANNEL_DEFAULTS } from './channel';
 import { CompleteThemeDeep, getTheme } from './utils/theme';
+import { MouseEventModel } from '../gosling-mouse-event';
 
 export type ScaleType =
     | ScaleLinear<any, any>
@@ -68,6 +69,9 @@ export class GoslingTrackModel {
         [channel: string]: ScaleType;
     };
 
+    /* mouse events */
+    private mouseEventModel: MouseEventModel;
+
     constructor(spec: SingleTrack, data: { [k: string]: number | string }[], theme: Required<CompleteThemeDeep>) {
         this.id = uuid.v1();
 
@@ -80,6 +84,8 @@ export class GoslingTrackModel {
         this.specComplete = JSON.parse(JSON.stringify(spec));
 
         this.channelScales = {};
+
+        this.mouseEventModel = new MouseEventModel();
 
         const validity = this.validateSpec();
         if (!validity.valid) {
@@ -123,6 +129,10 @@ export class GoslingTrackModel {
 
     public data(): { [k: string]: number | string }[] {
         return this.dataAggregated;
+    }
+
+    public getMouseEventModel(): MouseEventModel {
+        return this.mouseEventModel;
     }
 
     /**

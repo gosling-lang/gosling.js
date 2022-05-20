@@ -6,7 +6,7 @@ import { drawWithinLink } from './withinLink';
 
 describe('Rendering link', () => {
     const g = new PIXI.Graphics();
-    const trackInfo = { tooltips: [], dimensions: [100, 100] };
+    const trackInfo = { dimensions: [100, 100] };
     it('Linear Band', () => {
         const t: SingleTrack = {
             data: { type: 'csv', url: '' },

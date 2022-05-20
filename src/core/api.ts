@@ -7,8 +7,8 @@ import { CompleteThemeDeep } from './utils/theme';
 import { traverseViewsInViewConfig } from './utils/view-config';
 
 export type CommonEventData = {
-    data: Datum;
     genomicPosition: string;
+    data: Datum[];
 };
 
 export type RawDataEventData = {
@@ -64,18 +64,11 @@ export interface GoslingApi {
 }
 
 export function createApi(
-    hgRef: React.RefObject<HiGlassApi | undefined> | HiGlassApi,
+    hg: HiGlassApi,
     hgSpec: HiGlassSpec | undefined,
     theme: Required<CompleteThemeDeep>
 ): GoslingApi {
-    const getHg = () => {
-        // Safely get higlass API
-        if ('api' in hgRef) return hgRef;
-        if (hgRef.current) return hgRef.current;
-        throw new Error('HiGlass ref not initalized');
-    };
     const getCanvas: GoslingApi['getCanvas'] = options => {
-        const hg = getHg();
         const resolution = options?.resolution ?? 4;
         const transparentBackground = options?.transparentBackground ?? false;
 
@@ -146,18 +139,18 @@ export function createApi(
             const start = +s + chrStart - padding;
             const end = +e + chrStart + padding;
 
-            getHg().api.zoomTo(viewId, start, end, start, end, duration);
+            hg.api.zoomTo(viewId, start, end, start, end, duration);
         },
         // TODO: Support assemblies (we can infer this from the spec)
         zoomToExtent: (viewId, duration = 1000) => {
             const [start, end] = [0, GET_CHROM_SIZES().total];
-            getHg().api.zoomTo(viewId, start, end, start, end, duration);
+            hg.api.zoomTo(viewId, start, end, start, end, duration);
         },
         zoomToGene: (viewId, gene, padding = 0, duration = 1000) => {
-            getHg().api.zoomToGene(viewId, gene, padding, duration);
+            hg.api.zoomToGene(viewId, gene, padding, duration);
         },
         suggestGene: (viewId: string, keyword: string, callback: (suggestions: geneSuggestion[]) => void) => {
-            getHg().api.suggestGene(viewId, keyword, callback);
+            hg.api.suggestGene(viewId, keyword, callback);
         },
         getViewIds: () => {
             if (!hgSpec) return [];

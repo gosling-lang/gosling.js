@@ -12,4 +12,5 @@ export { init } from './core/init';
 export { compile } from './core/compile';
 export { validateGoslingSpec } from './core/utils/validate';
 export { GoslingComponent } from './core/gosling-component';
+export type { GoslingRef } from './core/gosling-component';
 export { embed } from './core/gosling-embed';

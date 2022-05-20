@@ -5,7 +5,6 @@ import { PIXIVisualProperty } from '../visual-property.schema';
 import { IsChannelDeep, IsStackedMark, getValueUsingChannel } from '../gosling.schema.guards';
 import { cartesianToPolar, valueToRadian } from '../utils/polar';
 import colorToHex from '../utils/color-to-hex';
-import { TooltipData, TOOLTIP_MOUSEOVER_MARGIN as G } from '../../gosling-tooltip';
 
 export function drawBar(trackInfo: any, tile: any, model: GoslingTrackModel) {
     /* track spec */
@@ -94,6 +93,8 @@ export function drawBar(trackInfo: any, tile: any, model: GoslingTrackModel) {
                     0 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
                 );
 
+                let polygonForMouseEvents: number[] = [];
+
                 if (circular) {
                     const farR = trackOuterRadius - ((rowHeight - prevYEnd) / trackHeight) * trackRingSize;
                     const nearR = trackOuterRadius - ((rowHeight - y - prevYEnd) / trackHeight) * trackRingSize;
@@ -106,24 +107,18 @@ export function drawBar(trackInfo: any, tile: any, model: GoslingTrackModel) {
                     g.moveTo(sPos.x, sPos.y);
                     g.arc(cx, cy, nearR, startRad, endRad, true);
                     g.arc(cx, cy, farR, endRad, startRad, false);
+                    polygonForMouseEvents = Array.from(g.currentPath.points);
                     g.closePath();
                 } else {
-                    const ys = rowHeight - y - prevYEnd;
-                    const barHeight = y;
-
                     g.beginFill(colorToHex(color), color === 'none' ? 0 : actualOpacity);
                     g.drawRect(xs, rowHeight - y - prevYEnd, barWidth, y);
-
-                    /* Tooltip data */
-                    if (spec.tooltip) {
-                        trackInfo.tooltips.push({
-                            datum: d,
-                            isMouseOver: (x: number, y: number) =>
-                                xs - G < x && x < xe + G && ys - G < y && y < ys + barHeight + G,
-                            markInfo: { x: xs, y: ys, width: barWidth, height: barHeight, type: 'bar' }
-                        } as TooltipData);
-                    }
+                    const ys = rowHeight - y - prevYEnd;
+                    const ye = ys + y;
+                    polygonForMouseEvents = [xs, ys, xs, ye, xe, ye, xe, ys];
                 }
+
+                /* Mouse Events */
+                model.getMouseEventModel().addPolygonBasedEvent(d, polygonForMouseEvents);
 
                 prevYEnd += y;
             });
@@ -149,30 +144,30 @@ export function drawBar(trackInfo: any, tile: any, model: GoslingTrackModel) {
                 }
 
                 const barWidth = model.encodedPIXIProperty('width', d, { tileUnitWidth });
-                const xLeft = model.encodedPIXIProperty('x-start', d, { markWidth: barWidth });
-                const xRight = xLeft + barWidth;
+                const xs = model.encodedPIXIProperty('x-start', d, { markWidth: barWidth });
+                const xe = xs + barWidth;
 
-                let yTop: number, yBottom: number;
+                let ys: number;
                 if (typeof ye === 'undefined') {
-                    yTop = rowPosition + rowHeight - staticBaseY - y;
-                    yBottom = rowPosition + rowHeight - staticBaseY;
+                    ys = rowPosition + rowHeight - staticBaseY - y;
+                    ye = rowPosition + rowHeight - staticBaseY;
 
                     // Flip the bar along y-axis
                     if ((IsChannelDeep(spec.y) && spec.y.flip) || spec.flipY) {
-                        yBottom = yTop;
-                        yTop = rowPosition;
+                        ye = ys;
+                        ys = rowPosition;
                     }
                 } else {
-                    yTop = rowPosition + rowHeight - ye;
-                    yBottom = rowPosition + rowHeight - y;
+                    ys = rowPosition + rowHeight - ye;
+                    ye = rowPosition + rowHeight - y;
                 }
 
                 // If the position exceeds the given scale, clip it!
                 if (clipRow) {
-                    yTop = Math.max(rowPosition, yTop);
-                    yTop = Math.min(yTop, rowPosition + rowHeight);
-                    yBottom = Math.max(rowPosition, yBottom);
-                    yBottom = Math.min(yBottom, rowPosition + rowHeight);
+                    ys = Math.max(rowPosition, ys);
+                    ys = Math.min(ys, rowPosition + rowHeight);
+                    ye = Math.max(rowPosition, ye);
+                    ye = Math.min(ye, rowPosition + rowHeight);
                 }
 
                 const alphaTransition = model.markVisibility(d, { width: barWidth, zoomLevel });
@@ -190,34 +185,30 @@ export function drawBar(trackInfo: any, tile: any, model: GoslingTrackModel) {
                     0 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
                 );
 
-                if (circular) {
-                    const farR = trackOuterRadius - (yTop / trackHeight) * trackRingSize;
-                    const nearR = trackOuterRadius - (yBottom / trackHeight) * trackRingSize;
+                let polygonForMouseEvents: number[] = [];
 
-                    const sPos = cartesianToPolar(xLeft, trackWidth, nearR, cx, cy, startAngle, endAngle);
-                    const startRad = valueToRadian(xLeft, trackWidth, startAngle, endAngle);
-                    const endRad = valueToRadian(xLeft + barWidth, trackWidth, startAngle, endAngle);
+                if (circular) {
+                    const farR = trackOuterRadius - (ys / trackHeight) * trackRingSize;
+                    const nearR = trackOuterRadius - (ye / trackHeight) * trackRingSize;
+
+                    const sPos = cartesianToPolar(xs, trackWidth, nearR, cx, cy, startAngle, endAngle);
+                    const startRad = valueToRadian(xs, trackWidth, startAngle, endAngle);
+                    const endRad = valueToRadian(xs + barWidth, trackWidth, startAngle, endAngle);
 
                     g.beginFill(colorToHex(color), color === 'none' ? 0 : actualOpacity);
                     g.moveTo(sPos.x, sPos.y);
                     g.arc(cx, cy, nearR, startRad, endRad, true);
                     g.arc(cx, cy, farR, endRad, startRad, false);
+                    polygonForMouseEvents = Array.from(g.currentPath.points);
                     g.closePath();
                 } else {
                     g.beginFill(colorToHex(color), color === 'none' ? 0 : actualOpacity);
-                    g.drawRect(xLeft, yTop, barWidth, yBottom - yTop);
-
-                    /* Tooltip data */
-                    if (spec.tooltip) {
-                        const barHeight = yBottom - yTop;
-                        trackInfo.tooltips.push({
-                            datum: d,
-                            isMouseOver: (x: number, y: number) =>
-                                xLeft - G < x && x < xRight + G && yTop - G < y && y < yBottom + G,
-                            markInfo: { x: xLeft, y: yTop, width: barWidth, height: barHeight, type: 'bar' }
-                        } as TooltipData);
-                    }
+                    g.drawRect(xs, ys, barWidth, ye - ys);
+                    polygonForMouseEvents = [xs, ys, xs, ye, xe, ye, xe, ys];
                 }
+
+                /* Mouse Events */
+                model.getMouseEventModel().addPolygonBasedEvent(d, polygonForMouseEvents);
             });
         });
     }

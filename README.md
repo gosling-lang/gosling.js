@@ -46,12 +46,14 @@ We welcome and greatly appreciate your contribution to this project! Please read
 
 ```bib
 @article{lyi2021gosling,
-  title={Gosling: A Grammar-based Toolkit for Scalable and Interactive Genomics Data Visualization},
-  author={Sehi L'Yi and Qianwen Wang and Fritz Lekschas and Nils Gehlenborg},
-  year={2021},
-  journal={IEEE Transactions on Visualization and Computer Graphics},
-  publisher={IEEE},
-  doi={10.1109/TVCG.2021.3114876},
+  author = {L'Yi, Sehi and Wang, Qianwen and Lekschas, Fritz and Gehlenborg, Nils},
+  doi = {10.1109/TVCG.2021.3114876},
+  journal = {IEEE Transactions on Visualization and Computer Graphics},
+  month = {1},
+  number = {1},
+  pages = {140--150},
+  title = {{Gosling: A Grammar-based Toolkit forScalable and Interactive Genomics Data Visualization}},
+  year = {2022}
 }
 ```
 

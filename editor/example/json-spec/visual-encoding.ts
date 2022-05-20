@@ -306,6 +306,12 @@ export const EX_SPEC_VISUAL_ENCODING: GoslingSpec = {
                     stroke: { value: 'black' },
                     strokeWidth: { value: 0.5 },
                     opacity: { value: 0.2 },
+                    tooltip: [
+                        { field: 's1', type: 'genomic' },
+                        { field: 'e1', type: 'genomic' },
+                        { field: 's2', type: 'genomic' },
+                        { field: 'e2', type: 'genomic' }
+                    ],
                     width: 600,
                     height: 130
                 }

@@ -4,12 +4,12 @@ import { getValueUsingChannel } from '../gosling.schema.guards';
 import { cartesianToPolar, valueToRadian } from '../utils/polar';
 import colorToHex from '../utils/color-to-hex';
 
-export function drawRule(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackModel) {
+export function drawRule(HGC: any, trackInfo: any, tile: any, model: GoslingTrackModel) {
     /* track spec */
-    const spec = tm.spec();
+    const spec = model.spec();
 
     /* data */
-    const data = tm.data();
+    const data = model.data();
 
     /* track size */
     const [trackWidth, trackHeight] = trackInfo.dimensions;
@@ -25,7 +25,7 @@ export function drawRule(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackMo
     const cy = trackHeight / 2.0;
 
     /* row separation */
-    const rowCategories: string[] = (tm.getChannelDomainArray('row') as string[]) ?? ['___SINGLE_ROW___'];
+    const rowCategories: string[] = (model.getChannelDomainArray('row') as string[]) ?? ['___SINGLE_ROW___'];
     const rowHeight = trackHeight / rowCategories.length;
 
     /* style */
@@ -36,21 +36,21 @@ export function drawRule(HGC: any, trackInfo: any, tile: any, tm: GoslingTrackMo
     /* render */
     const g = tile.graphics;
     rowCategories.forEach(rowCategory => {
-        const rowPosition = tm.encodedValue('row', rowCategory);
+        const rowPosition = model.encodedValue('row', rowCategory);
 
         data.filter(
             d =>
                 !getValueUsingChannel(d, spec.row as Channel) ||
                 (getValueUsingChannel(d, spec.row as Channel) as string) === rowCategory
         ).forEach(d => {
-            const x = tm.encodedPIXIProperty('x', d);
-            const xe = tm.encodedPIXIProperty('xe', d);
-            const y = tm.encodedPIXIProperty('y', d); // y middle position
-            const color = tm.encodedPIXIProperty('color', d);
-            const strokeWidth = tm.encodedPIXIProperty('strokeWidth', d);
-            const opacity = tm.encodedPIXIProperty('opacity', d);
+            const x = model.encodedPIXIProperty('x', d);
+            const xe = model.encodedPIXIProperty('xe', d);
+            const y = model.encodedPIXIProperty('y', d); // y middle position
+            const color = model.encodedPIXIProperty('color', d);
+            const strokeWidth = model.encodedPIXIProperty('strokeWidth', d);
+            const opacity = model.encodedPIXIProperty('opacity', d);
 
-            const alphaTransition = tm.markVisibility(d, {
+            const alphaTransition = model.markVisibility(d, {
                 width: xe - x,
                 zoomLevel: trackInfo._xScale.invert(trackWidth) - trackInfo._xScale.invert(0)
             });

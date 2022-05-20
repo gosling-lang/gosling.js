@@ -239,7 +239,23 @@ interface SingleTrackBase extends CommonTrackDef {
     // Data transformation
     dataTransform?: DataTransform[];
 
+    // Tooltip
     tooltip?: Tooltip[];
+
+    // Mouse events
+    experimental?: {
+        hovering?: {
+            enableMultiHovering?: boolean;
+            enableGroupHovering?: boolean;
+            searchGroupByField?: string;
+            showHoveringOnTheBack?: boolean;
+            color?: string;
+            stroke?: string;
+            strokeWidth?: number;
+            strokeOpacity?: number;
+            opacity?: number;
+        };
+    };
 
     // Mark
     mark: Mark;
@@ -354,7 +370,7 @@ export interface Style {
      * The style of `withinLink` and `betweenLink` marks. __Default__: `'circular'`
      * `'elliptical'` will be used as a default option.
      */
-    linkStyle?: 'elliptical' | 'circular' | 'straight' | '_bezier_deprecated_';
+    linkStyle?: 'elliptical' | 'circular' | 'straight';
 
     /**
      * The minimum height of `withinLink` and `betweenLink` marks. Unit is a percentagle. __Default__: `0.5`
@@ -661,7 +677,16 @@ export type Aggregate = 'max' | 'min' | 'mean' | 'bin' | 'count';
 export type BinAggregate = 'mean' | 'sum';
 
 /* ----------------------------- DATA ----------------------------- */
-export type DataDeep = JSONData | CSVData | BIGWIGData | MultivecData | BEDDBData | VectorData | MatrixData | BAMData;
+export type DataDeep =
+    | JSONData
+    | CSVData
+    | BIGWIGData
+    | MultivecData
+    | BEDDBData
+    | VectorData
+    | MatrixData
+    | BAMData
+    | VCFData;
 
 /** Values in the form of JSON. */
 export interface Datum {
@@ -923,6 +948,22 @@ export interface BAMData {
 
     /** Determines the threshold of insert sizes for determining the structural variants. __Default__: `5000` */
     maxInsertSize?: number; // https://github.com/GMOD/bam-js#async-getrecordsforrangerefname-start-end-opts
+}
+
+/**
+ * The Variant Call Format (VCF).
+ */
+export interface VCFData {
+    type: 'vcf';
+
+    /** URL link to the VCF file */
+    url: string;
+
+    /** URL link to the tabix index file */
+    indexUrl: string;
+
+    /** The maximum number of rows to be loaded from the URL. __Default:__ `1000` */
+    sampleLength?: number;
 }
 
 export interface MatrixData {
