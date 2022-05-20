@@ -875,15 +875,19 @@ function Editor(props: any) {
                                     const crushedSpec = encodeURIComponent(
                                         JSONCrush.crush(stringifySpec(goslingSpec || ''))
                                     );
-                                    const url = `https://gosling-lang.github.io/gosling.js/?full=${isHideCode}&spec=${crushedSpec}`;
-                                    const element = document.getElementById('spec-url-exporter');
-                                    (element as any).type = 'text';
-                                    (element as any).value = url;
-                                    (element as any).select();
-                                    document.execCommand('copy');
-                                    (element as any).type = 'hidden';
-                                    // eslint-disable-next-line no-alert
-                                    alert(`URL of the current view has been copied to your clipboard!`);
+                                    const url = `https://gosling.js.org/?full=${isHideCode}&spec=${crushedSpec}`;
+
+                                    // fix execCommand("copy") is obsolete
+                                    navigator.clipboard
+                                        .writeText(url)
+                                        .then(() =>
+                                            // eslint-disable-next-line no-alert
+                                            alert(`URL of the current visualization is copied to your clipboard! `)
+                                        )
+                                        .catch(
+                                            // eslint-disable-next-line no-alert
+                                            e => alert(`something went wrong ${e}`)
+                                        );
                                 }
                             }}
                         >
