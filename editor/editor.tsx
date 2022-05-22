@@ -867,7 +867,6 @@ function Editor(props: RouteComponentProps) {
                                     const crushedSpec = encodeURIComponent(JSONCrush.crush(stringifySpec(goslingSpec)));
                                     const url = `https://gosling.js.org/?full=${isHideCode}&spec=${crushedSpec}`;
 
-                                    // fix execCommand("copy") is obsolete
                                     navigator.clipboard
                                         .writeText(url)
                                         .then(() =>
