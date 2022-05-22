@@ -6,7 +6,8 @@
 
 <img width="1549" alt="teaser" src="https://user-images.githubusercontent.com/9922882/109852545-e05f3400-7c22-11eb-90f3-7371e4ddeb42.png">
 
-> ⚠️ Please be aware that the grammar of Gosling.js may change to some extent before the first official release.
+> **Warning**
+> Please be aware that the grammar of Gosling.js may change to some extent before the first official release.
 
 ## Why Gosling?
 
