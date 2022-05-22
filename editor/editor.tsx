@@ -121,8 +121,9 @@ const getIconSVG = (d: ICON_INFO, w?: number, h?: number, f?: string) => (
 
 const emptySpec = (message?: string) => (message !== undefined ? `{\n\t// ${message}\n}` : '{}');
 
-const stringifySpec = (spec: string | gosling.GoslingSpec): string => {
-    if (typeof spec === 'string') return spec;
+const stringifySpec = (spec: string | gosling.GoslingSpec | undefined): string => {
+    if (!spec) return '';
+    else if (typeof spec === 'string') return spec;
     else return stringify(spec);
 };
 
@@ -851,21 +852,19 @@ function Editor(props: RouteComponentProps) {
                         </span>
                         <span
                             title={
-                                stringifySpec(goslingSpec || '').length <= LIMIT_CLIPBOARD_LEN
+                                stringifySpec(goslingSpec).length <= LIMIT_CLIPBOARD_LEN
                                     ? `Copy unique URL of current view to clipboard (limit: ${LIMIT_CLIPBOARD_LEN} characters)`
                                     : `The current code contains characters more than ${LIMIT_CLIPBOARD_LEN}`
                             }
                             className={
-                                stringifySpec(goslingSpec || '').length <= LIMIT_CLIPBOARD_LEN
+                                stringifySpec(goslingSpec).length <= LIMIT_CLIPBOARD_LEN
                                     ? 'side-panel-button'
                                     : 'side-panel-button side-panel-button-not-active'
                             }
                             onClick={() => {
-                                if (stringifySpec(goslingSpec || '').length <= LIMIT_CLIPBOARD_LEN) {
+                                if (stringifySpec(goslingSpec).length <= LIMIT_CLIPBOARD_LEN) {
                                     // copy the unique url to clipboard using `<input/>`
-                                    const crushedSpec = encodeURIComponent(
-                                        JSONCrush.crush(stringifySpec(goslingSpec || ''))
-                                    );
+                                    const crushedSpec = encodeURIComponent(JSONCrush.crush(stringifySpec(goslingSpec)));
                                     const url = `https://gosling.js.org/?full=${isHideCode}&spec=${crushedSpec}`;
 
                                     // fix execCommand("copy") is obsolete
