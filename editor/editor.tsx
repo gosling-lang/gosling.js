@@ -866,7 +866,7 @@ function Editor(props: RouteComponentProps) {
                                     const crushedSpec = encodeURIComponent(
                                         JSONCrush.crush(stringifySpec(goslingSpec || ''))
                                     );
-                                    const url = `${window.location.origin}${window.location.pathname}?full=${isHideCode}&spec=${crushedSpec}`;
+                                    const url = `https://gosling.js.org/?full=${isHideCode}&spec=${crushedSpec}`;
 
                                     // fix execCommand("copy") is obsolete
                                     navigator.clipboard
