@@ -4,7 +4,7 @@ import {
     isPointInPolygon,
     isPointNearLine,
     isPointNearPoint,
-    isCircleOverlapRange
+    isCircleWithinRange
 } from './polygon';
 import * as uuid from 'uuid';
 
@@ -46,13 +46,6 @@ export class MouseEventModel {
      */
     public size() {
         return this.data.length;
-    }
-
-    /**
-     * Add a new mouse event at the end.
-     */
-    public add(eventData: MouseEventData) {
-        this.data.push(eventData);
     }
 
     /**
@@ -145,7 +138,7 @@ export class MouseEventModel {
     public isWithinRange(data: MouseEventData, x1: number, x2: number) {
         switch (data.type) {
             case 'point':
-                return isCircleOverlapRange([x1, x2], data.polygon[0], data.polygon[2]);
+                return isCircleWithinRange([x1, x2], data.polygon[0], data.polygon[2]);
             case 'line':
             case 'polygon':
             default:

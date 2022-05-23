@@ -27,12 +27,12 @@ export const isPointInsideRange: (range: [number, number], x: number) => boolean
  * @param {number} radius A radius of the point.
  * @returns {boolean} If `true` point lies within the point.
  */
-export const isCircleOverlapRange: (range: [number, number], x: number, radius?: number) => boolean = (
+export const isCircleWithinRange: (range: [number, number], x: number, radius?: number) => boolean = (
     range,
     x,
     radius = 5
 ) => {
-    return isPointInsideRange(range, x - radius) || isPointInsideRange(range, x + radius);
+    return isPointInsideRange(range, x - radius) && isPointInsideRange(range, x + radius);
 };
 
 /**
@@ -42,10 +42,10 @@ export const isCircleOverlapRange: (range: [number, number], x: number, radius?:
  */
 export const isAnyPointsWithinRange: (range: [number, number], path: number[]) => boolean = ([x1, x2], path) => {
     let lx;
-    let isWithin = false;
+    let isWithin = true;
     for (let i = 0; i < path.length; i += 2) {
         lx = path[i];
-        isWithin = isWithin || isPointInsideRange([x1, x2], lx);
+        isWithin = isWithin && isPointInsideRange([x1, x2], lx);
     }
     return isWithin;
 };

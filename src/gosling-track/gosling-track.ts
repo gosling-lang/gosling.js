@@ -1094,7 +1094,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                 .flat();
 
             // Collect all mouse event data from tiles and overlaid tracks
-            const capturedElements: MouseEventData[] = models
+            let capturedElements: MouseEventData[] = models
                 .map(model => model.getMouseEventModel().findAllWithinRange(startX, endX, true))
                 .flat();
 
@@ -1111,13 +1111,15 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                 this.pMain.removeChild(g);
                 this.pMain.addChild(g);
 
-                // Iterate again to select sibling marks (e.g., entire glyphs)
+                // Deselect marks if their siblings are not selected.
+                // i.e., if only one exon is selected in a gene, we do not select it.
                 const idField = this.options.spec.experimental?.groupMarksByField;
                 if (capturedElements.length !== 0 && idField) {
-                    const source = Array.from(capturedElements);
                     models.forEach(model => {
-                        const siblings = model.getMouseEventModel().getSiblings(source, idField);
-                        capturedElements.push(...siblings);
+                        const siblings = model.getMouseEventModel().getSiblings(capturedElements, idField);
+                        const siblingIds = Array.from(new Set(siblings.map(d => d.value[idField])));
+                        capturedElements = capturedElements.filter(d => siblingIds.indexOf(d.value[idField]) === -1);
+                        // console.log(siblings, siblingIds, capturedElements);
                     });
                 }
 
