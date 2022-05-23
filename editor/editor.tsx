@@ -127,6 +127,10 @@ const stringifySpec = (spec: string | gosling.GoslingSpec | undefined): string =
     else return stringify(spec);
 };
 
+const validateExampleId = (id: string): boolean => {
+    return examples[id] ? true : false;
+};
+
 const getDescPanelDefultWidth = () => Math.min(500, window.innerWidth);
 
 /**
@@ -210,6 +214,7 @@ function Editor(props: RouteComponentProps) {
     const [demo, setDemo] = useState(
         examples[urlExampleId] ? { id: urlExampleId, ...examples[urlExampleId] } : INIT_DEMO
     );
+    const [isImportDemo, setIsImportDemo] = useState(false);
     const [theme, setTheme] = useState<gosling.Theme>('light');
     const [hg, setHg] = useState<HiGlassSpec>();
     const [code, setCode] = useState(defaultCode);
@@ -309,9 +314,24 @@ function Editor(props: RouteComponentProps) {
     useEffect(() => {
         previewData.current = [];
         setSelectedPreviewData(0);
-        const jsonCode = stringifySpec(demo.spec as gosling.GoslingSpec);
-        setCode(jsonCode);
-        setJsCode(demo.specJs ?? json2js(jsonCode));
+        if (isImportDemo) {
+            const jsonCode = stringifySpec(demo.spec as gosling.GoslingSpec);
+            setCode(jsonCode);
+            setJsCode(demo.specJs ?? json2js(jsonCode));
+        } else if (urlExampleId && !validateExampleId(urlExampleId)) {
+            // invalida url example id
+            setCode(emptySpec(`Example id "${urlExampleId}" does not exist.`));
+            setJsCode(emptySpec(`Example id "${urlExampleId}" does not exist.`));
+        } else if (urlSpec) {
+            setCode(urlSpec);
+            setJsCode(json2js(urlSpec));
+        } else if (urlGist) {
+            setCode(emptySpec());
+        } else {
+            const jsonCode = stringifySpec(demo.spec as gosling.GoslingSpec);
+            setCode(jsonCode);
+            setJsCode(demo.specJs ?? json2js(jsonCode));
+        }
         setHg(undefined);
     }, [demo]);
 
@@ -865,7 +885,7 @@ function Editor(props: RouteComponentProps) {
                                 if (stringifySpec(goslingSpec).length <= LIMIT_CLIPBOARD_LEN) {
                                     // copy the unique url to clipboard using `<input/>`
                                     const crushedSpec = encodeURIComponent(JSONCrush.crush(stringifySpec(goslingSpec)));
-                                    const url = `https://gosling.js.org/?full=${isHideCode}&spec=${crushedSpec}`;
+                                    const url = `${window.location.origin}${window.location.pathname}?full=${isHideCode}&spec=${crushedSpec}`;
 
                                     navigator.clipboard
                                         .writeText(url)
@@ -1348,6 +1368,7 @@ function Editor(props: RouteComponentProps) {
                                                     onClick={() => {
                                                         setShowExamples(false);
                                                         closeDescription();
+                                                        setIsImportDemo(true);
                                                         setDemo({ id: d[0], ...examples[d[0]] } as any);
                                                     }}
                                                 >
