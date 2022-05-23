@@ -121,8 +121,9 @@ const getIconSVG = (d: ICON_INFO, w?: number, h?: number, f?: string) => (
 
 const emptySpec = (message?: string) => (message !== undefined ? `{\n\t// ${message}\n}` : '{}');
 
-const stringifySpec = (spec: string | gosling.GoslingSpec): string => {
-    if (typeof spec === 'string') return spec;
+const stringifySpec = (spec: string | gosling.GoslingSpec | undefined): string => {
+    if (!spec) return '';
+    else if (typeof spec === 'string') return spec;
     else return stringify(spec);
 };
 
@@ -213,6 +214,7 @@ function Editor(props: RouteComponentProps) {
     const [demo, setDemo] = useState(
         examples[urlExampleId] ? { id: urlExampleId, ...examples[urlExampleId] } : INIT_DEMO
     );
+    const [isImportDemo, setIsImportDemo] = useState(false);
     const [theme, setTheme] = useState<gosling.Theme>('light');
     const [hg, setHg] = useState<HiGlassSpec>();
     const [code, setCode] = useState(defaultCode);
@@ -312,7 +314,11 @@ function Editor(props: RouteComponentProps) {
     useEffect(() => {
         previewData.current = [];
         setSelectedPreviewData(0);
-        if (urlExampleId && !validateExampleId(urlExampleId)) {
+        if (isImportDemo) {
+            const jsonCode = stringifySpec(demo.spec as gosling.GoslingSpec);
+            setCode(jsonCode);
+            setJsCode(demo.specJs ?? json2js(jsonCode));
+        } else if (urlExampleId && !validateExampleId(urlExampleId)) {
             // invalida url example id
             setCode(emptySpec(`Example id "${urlExampleId}" does not exist.`));
             setJsCode(emptySpec(`Example id "${urlExampleId}" does not exist.`));
@@ -847,13 +853,13 @@ function Editor(props: RouteComponentProps) {
                             className="side-panel-button"
                             onClick={() => {
                                 // TODO (05-02-2022): Release a support of `responsiveSize` on `.embed()` first
-                                const spec = { ...goslingSpec, responsiveSize: false };
+                                const spec = { ...goslingSpec, responsiveSize: false } as gosling.GoslingSpec;
 
                                 const a = document.createElement('a');
                                 a.setAttribute(
                                     'href',
                                     `data:text/plain;charset=utf-8,${encodeURIComponent(
-                                        getHtmlTemplate(JSON.stringify(spec))
+                                        getHtmlTemplate(stringifySpec(spec))
                                     )}`
                                 );
                                 a.download = 'gosling-visualization.html';
@@ -866,26 +872,31 @@ function Editor(props: RouteComponentProps) {
                         </span>
                         <span
                             title={
-                                code.length <= LIMIT_CLIPBOARD_LEN
+                                stringifySpec(goslingSpec).length <= LIMIT_CLIPBOARD_LEN
                                     ? `Copy unique URL of current view to clipboard (limit: ${LIMIT_CLIPBOARD_LEN} characters)`
                                     : `The current code contains characters more than ${LIMIT_CLIPBOARD_LEN}`
                             }
                             className={
-                                code.length <= LIMIT_CLIPBOARD_LEN
+                                stringifySpec(goslingSpec).length <= LIMIT_CLIPBOARD_LEN
                                     ? 'side-panel-button'
                                     : 'side-panel-button side-panel-button-not-active'
                             }
                             onClick={() => {
-                                if (code.length <= LIMIT_CLIPBOARD_LEN) {
+                                if (stringifySpec(goslingSpec).length <= LIMIT_CLIPBOARD_LEN) {
                                     // copy the unique url to clipboard using `<input/>`
-                                    const crushedSpec = encodeURIComponent(JSONCrush.crush(code));
+                                    const crushedSpec = encodeURIComponent(JSONCrush.crush(stringifySpec(goslingSpec)));
                                     const url = `${window.location.origin}${window.location.pathname}?full=${isHideCode}&spec=${crushedSpec}`;
-                                    const element = document.getElementById('spec-url-exporter');
-                                    (element as any).type = 'text';
-                                    (element as any).value = url;
-                                    (element as any).select();
-                                    document.execCommand('copy');
-                                    (element as any).type = 'hidden';
+
+                                    navigator.clipboard
+                                        .writeText(url)
+                                        .then(() =>
+                                            // eslint-disable-next-line no-alert
+                                            alert(`URL of the current visualization is copied to your clipboard! `)
+                                        )
+                                        .catch(
+                                            // eslint-disable-next-line no-alert
+                                            e => alert(`something went wrong ${e}`)
+                                        );
                                 }
                             }}
                         >
@@ -1356,6 +1367,8 @@ function Editor(props: RouteComponentProps) {
                                                     className="example-card"
                                                     onClick={() => {
                                                         setShowExamples(false);
+                                                        closeDescription();
+                                                        setIsImportDemo(true);
                                                         setDemo({ id: d[0], ...examples[d[0]] } as any);
                                                     }}
                                                 >
