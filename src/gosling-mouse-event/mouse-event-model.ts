@@ -99,10 +99,11 @@ export class MouseEventModel {
      */
     public getSiblings(source: MouseEventData[], idField: string) {
         const siblings: MouseEventData[] = [];
-        source.forEach(d => {
-            const id = d.value[idField];
+        const sourceUids = Array.from(new Set(source.map(d => d.uid)));
+        source.forEach(s => {
+            const id = s.value[idField];
             if (id) {
-                siblings.push(...this.data.filter(_ => _.value[idField] === id && d.uid !== _.uid));
+                siblings.push(...this.data.filter(_ => _.value[idField] === id && sourceUids.indexOf(_.uid) === -1));
             }
         });
         return siblings;

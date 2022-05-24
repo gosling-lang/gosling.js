@@ -46,12 +46,12 @@ export class OneDimBrushModel {
     private readonly style: BrushStyle;
 
     /* data */
-    private range: [number, number];
+    private range?: [number, number];
     private data: oneDimBrushData;
 
     /* drag */
     private startEvent: typeof d3Selection.event;
-    private prevExtent: [number, number];
+    private prevExtent?: [number, number];
 
     /* visual parameters */
     private offset: [number, number];
@@ -106,7 +106,7 @@ export class OneDimBrushModel {
     }
 
     public getRange() {
-        return this.range;
+        return this.range ?? [0, 0];
     }
 
     public setSize(size: number) {
@@ -133,9 +133,9 @@ export class OneDimBrushModel {
 
     /**
      * Update the brush using the internal range value. By default,
-     * This function calls a callback function from gosling-track.
+     * This function calls a render function from gosling-track.
      */
-    public drawBrush(skipCallback = false) {
+    public drawBrush(skipApiTrigger = false) {
         const [x, y] = this.offset;
         const height = this.size;
         const getWidth = (d: OneDimBrushDataUnion) => Math.abs(d.end - d.start); // the start and end can be minus values
@@ -152,9 +152,8 @@ export class OneDimBrushModel {
             .attr('stroke-opacity', d => (d.type === 'body' ? this.style.strokeOpacity : 0))
             .attr('cursor', d => d.cursor);
 
-        if (!skipCallback) {
-            this.track.onRangeBrush(...this.getRange());
-        }
+        this.track.onRangeBrush(...this.getRange(), skipApiTrigger);
+
         return this;
     }
 
@@ -216,7 +215,7 @@ export class OneDimBrushModel {
             const delta = this.externals.d3Selection.event.sourceEvent.layerX - this.startEvent.layerX;
 
             // previous extent of brush
-            let [s, e]: [number, number] = this.prevExtent;
+            let [s, e]: [number, number] = this.prevExtent ?? [0, 0];
 
             if (d.type === 'body') {
                 s += delta;

@@ -257,6 +257,7 @@ interface SingleTrackBase extends CommonTrackDef {
             opacity?: number;
         };
         selection?: {
+            showOnTheBack?: boolean;
             color?: string;
             stroke?: string;
             strokeWidth?: number;

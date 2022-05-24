@@ -74,6 +74,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
     const { showMousePosition } = HGC.utils;
 
     class GoslingTrackClass extends HGC.tracks.BarTrack {
+        private viewUid: string;
         private options!: GoslingTrackOption;
         private tileSize: number;
         private worker: any;
@@ -81,7 +82,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
         private mRangeBrush: OneDimBrushModel;
         private _xScale!: ScaleLinear<number, number>;
         private _yScale!: ScaleLinear<number, number>;
-        private mouseOverGraphics: Graphics;
+        private pMouseHover: Graphics;
         private pMouseSelection: Graphics;
         // TODO: add members that are used explicitly in the code
 
@@ -109,6 +110,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             this.worker = dataWorker;
             context.dataFetcher.track = this;
             this.context = context;
+            this.viewUid = context.viewUid;
 
             // Add unique IDs to each of the overlaid tracks that will be rendered independently.
             if ('overlay' in this.options.spec) {
@@ -134,9 +136,9 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             this.extent = { min: Number.MAX_SAFE_INTEGER, max: Number.MIN_SAFE_INTEGER };
 
             // Graphics for highlighting visual elements under the cursor
-            this.mouseOverGraphics = new HGC.libraries.PIXI.Graphics();
+            this.pMouseHover = new HGC.libraries.PIXI.Graphics();
             this.pMouseSelection = new HGC.libraries.PIXI.Graphics();
-            this.pMain.addChild(this.mouseOverGraphics);
+            this.pMain.addChild(this.pMouseHover);
             this.pMain.addChild(this.pMouseSelection);
 
             // Brushes on the color legend
@@ -218,7 +220,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             this.clearMouseEventData();
             this.svgData = [];
             this.textsBeingUsed = 0;
-            this.mouseOverGraphics?.clear();
+            this.pMouseHover?.clear();
 
             // this.pMain.clear();
             // this.pMain.removeChildren();
@@ -247,6 +249,9 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             } else {
                 processTilesAndDraw();
             }
+
+            // Based on the updated marks, update range selection
+            this.mRangeBrush.drawBrush(true);
         }
 
         /*
@@ -303,8 +308,6 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                 drawMark(HGC, this, tile, model);
                 drawPostEmbellishment(HGC, this, tile, model, this.options.theme);
             });
-
-            this.mRangeBrush.drawBrush();
 
             this.forceDraw();
         }
@@ -807,7 +810,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             const flatTileData = ([] as Datum[]).concat(...models.map(d => d.data()));
             if (flatTileData.length !== 0) {
                 PubSub.publish('rawdata', {
-                    id: this.options.spec.id,
+                    id: this.viewUid,
                     data: flatTileData
                 });
             }
@@ -946,7 +949,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                         const NUM_OF_ROWS_IN_PREVIEW = 100;
                         const numOrRows = tile.gos.tabularDataFiltered.length;
                         PubSub.publish('data-preview', {
-                            id: this.context.id,
+                            id: this.viewUid,
                             dataConfig: JSON.stringify({ data: resolved.data }),
                             data:
                                 NUM_OF_ROWS_IN_PREVIEW > numOrRows
@@ -1085,7 +1088,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             });
         }
 
-        onRangeBrush(startX: number, endX: number) {
+        onRangeBrush(startX: number, endX: number, skipApiTrigger = false) {
             this.pMouseSelection.clear();
 
             // Collect all gosling track models
@@ -1098,6 +1101,19 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                 .map(model => model.getMouseEventModel().findAllWithinRange(startX, endX, true))
                 .flat();
 
+            // Deselect marks if their siblings are not selected.
+            // e.g., if only one exon is selected in a gene, we do not select it.
+            const idField = this.options.spec.experimental?.groupMarksByField;
+            if (capturedElements.length !== 0 && idField) {
+                models.forEach(model => {
+                    const siblings = model.getMouseEventModel().getSiblings(capturedElements, idField);
+                    // console.log(siblings, capturedElements);
+                    const siblingIds = Array.from(new Set(siblings.map(d => d.value[idField])));
+                    capturedElements = capturedElements.filter(d => siblingIds.indexOf(d.value[idField]) === -1);
+                    // console.log(siblings, siblingIds, capturedElements);
+                });
+            }
+
             if (capturedElements.length !== 0) {
                 // selection effect graphics
                 const g = this.pMouseSelection;
@@ -1107,32 +1123,28 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                 const color = this.options.spec.experimental?.selection?.color ?? 'none';
                 const fillOpacity = this.options.spec.experimental?.selection?.opacity ?? 1;
 
-                // place on the top
-                this.pMain.removeChild(g);
-                this.pMain.addChild(g);
-
-                // Deselect marks if their siblings are not selected.
-                // i.e., if only one exon is selected in a gene, we do not select it.
-                const idField = this.options.spec.experimental?.groupMarksByField;
-                if (capturedElements.length !== 0 && idField) {
-                    models.forEach(model => {
-                        const siblings = model.getMouseEventModel().getSiblings(capturedElements, idField);
-                        const siblingIds = Array.from(new Set(siblings.map(d => d.value[idField])));
-                        capturedElements = capturedElements.filter(d => siblingIds.indexOf(d.value[idField]) === -1);
-                        // console.log(siblings, siblingIds, capturedElements);
-                    });
+                if (!this.options.spec.experimental?.selection?.showOnTheBack) {
+                    // place on the top
+                    this.pMain.removeChild(g);
+                    this.pMain.addChild(g);
                 }
 
                 this.highlightMarks(g, capturedElements, stroke, strokeWidth, strokeOpacity, color, fillOpacity);
             }
 
             /* API call */
-            const genomicRange = [
-                getRelativeGenomicPosition(Math.floor(this._xScale.invert(startX))),
-                getRelativeGenomicPosition(Math.floor(this._xScale.invert(endX)))
-            ];
+            if (!skipApiTrigger) {
+                const genomicRange = [
+                    getRelativeGenomicPosition(Math.floor(this._xScale.invert(startX))),
+                    getRelativeGenomicPosition(Math.floor(this._xScale.invert(endX)))
+                ];
 
-            PubSub.publish('rangeselect', { genomicRange, data: capturedElements.map(d => d.value) });
+                PubSub.publish('rangeselect', {
+                    id: this.viewUid,
+                    genomicRange,
+                    data: capturedElements.map(d => d.value)
+                });
+            }
 
             this.forceDraw();
         }
@@ -1142,6 +1154,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             this.mouseDownX = mouseX;
             this.mouseDownY = mouseY;
             this.isBrushActivated = isAlt;
+            this.pMouseHover.clear();
         }
 
         onMouseMove(mouseX: number) {
@@ -1162,8 +1175,6 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             if (!this.isBrushActivated && !isDrag) {
                 this.mRangeBrush.clear();
                 this.pMouseSelection.clear();
-
-                PubSub.publish('rangeselect', { genomicRange: null, data: [] });
             }
 
             this.isBrushActivated = false;
@@ -1185,7 +1196,11 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                 const capturedElements = this.getElementsWithinMouse(mouseX, mouseY);
 
                 if (capturedElements.length !== 0) {
-                    PubSub.publish('click', { genomicPosition, data: capturedElements.map(d => d.value) });
+                    PubSub.publish('click', {
+                        id: this.viewUid,
+                        genomicPosition,
+                        data: capturedElements.map(d => d.value)
+                    });
                 }
             }
         }
@@ -1193,16 +1208,21 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
         onMouseOut() {
             this.isBrushActivated = false;
             document.body.style.cursor = 'default';
-            this.mouseOverGraphics.clear();
+            this.pMouseHover.clear();
         }
 
         getMouseOverHtml(mouseX: number, mouseY: number) {
+            if (this.isBrushActivated) {
+                // In the middle of drawing range brush.
+                return;
+            }
+
             if (!this.tilesetInfo) {
                 // Do not have enough information
                 return;
             }
 
-            this.mouseOverGraphics.clear();
+            this.pMouseHover.clear();
 
             // Current position
             const genomicPosition = getRelativeGenomicPosition(Math.floor(this._xScale.invert(mouseX)));
@@ -1220,7 +1240,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
 
             if (capturedElements.length !== 0) {
                 // Rener mouse over effect graphics
-                const g = this.mouseOverGraphics;
+                const g = this.pMouseHover;
                 const stroke = this.options.spec.experimental?.hovering?.stroke ?? 'black';
                 const strokeWidth = this.options.spec.experimental?.hovering?.strokeWidth ?? 1.5;
                 const strokeOpacity = this.options.spec.experimental?.hovering?.strokeOpacity ?? 1;
@@ -1236,7 +1256,11 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                 this.highlightMarks(g, capturedElements, stroke, strokeWidth, strokeOpacity, color, fillOpacity);
 
                 // API call
-                PubSub.publish('mouseover', { genomicPosition, data: capturedElements.map(d => d.value) });
+                PubSub.publish('mouseover', {
+                    id: this.viewUid,
+                    genomicPosition,
+                    data: capturedElements.map(d => d.value)
+                });
 
                 // Display a tooltip
                 const models = this.visibleAndFetchedTiles()

@@ -26,7 +26,7 @@ import type { HiGlassSpec } from '@higlass.schema';
 import type { Datum } from '@gosling.schema';
 
 import './editor.css';
-import { RangeSelectEventData } from 'src/core/api';
+import { RangeMouseEventData } from 'src/core/api';
 
 function json2js(jsonCode: string) {
     return `var spec = ${jsonCode} \nexport { spec }; \n`;
@@ -302,14 +302,14 @@ function Editor(props: RouteComponentProps) {
             // });
 
             // Range Select API
-            gosRef.current.api.subscribe('rangeselect', (type: string, eventData: RangeSelectEventData) => {
-                console.warn(type, eventData.genomicRange, eventData.data);
+            gosRef.current.api.subscribe('rangeselect', (type: string, eventData: RangeMouseEventData) => {
+                console.warn(type, eventData.id, eventData.genomicRange, eventData.data);
             });
         }
         return () => {
             // gosRef.current.api.unsubscribe('mouseover');
             // gosRef.current.api.unsubscribe('click');
-            // gosRef.current.api.unsubscribe('rangeselect');
+            gosRef.current?.api.unsubscribe('rangeselect');
         };
     }, [gosRef.current]);
 
