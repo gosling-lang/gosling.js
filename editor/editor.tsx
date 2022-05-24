@@ -32,6 +32,15 @@ function json2js(jsonCode: string | null) {
     return `var spec = ${jsonCode} \nexport { spec }; \n`;
 }
 
+function isJSON(str: string | null) {
+    if (!str) return false;
+    try {
+        return JSON.parse(str);
+    } catch (e) {
+        return false;
+    }
+}
+
 // a hack to solve the reference erro in typescript
 // some posts fixed it thorugh changing ts compiler options, but did not work for me
 // https://stackoverflow.com/questions/34895737/uncaught-referenceerror-exports-is-not-defined-and-require
@@ -179,7 +188,7 @@ const fetchSpecFromGist = async (gist: string) => {
 
     return Promise.all([whenCode, whenText]).then(([code, description]) => {
         let jsonCode: string | null, jsCode: string, language: string;
-        if (code?.startsWith('{')) {
+        if (isJSON(code)) {
             language = 'json';
             jsonCode = resolveRelativeCsvUrls(code, specUrl);
             jsCode = json2js(jsonCode);
