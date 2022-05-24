@@ -27,8 +27,7 @@ import type { Datum } from '@gosling.schema';
 
 import './editor.css';
 
-function json2js(jsonCode: string | null) {
-    if (!jsonCode) return '';
+function json2js(jsonCode: string) {
     return `var spec = ${jsonCode} \nexport { spec }; \n`;
 }
 
@@ -129,7 +128,7 @@ const getIconSVG = (d: ICON_INFO, w?: number, h?: number, f?: string) => (
     </svg>
 );
 
-const emptySpec = (message?: string) => (message !== undefined ? `{\n\t// ${message}\n}` : '{}');
+const emptySpec = (message?: string) => (message !== undefined ? `\n\t// ${message}\n` : '//empty spec');
 
 const stringifySpec = (spec: string | gosling.GoslingSpec | undefined): string => {
     if (!spec) return '';
@@ -147,8 +146,7 @@ const getDescPanelDefultWidth = () => Math.min(500, window.innerWidth);
  * Convert relative CSV data URLs to absolute URLs.
  * (e.g., './example.csv' => 'https://gist.githubusercontent.com/{urlGist}/raw/example.csv')
  */
-function resolveRelativeCsvUrls(spec: string | null, importMeta: URL) {
-    if (!spec) return null;
+function resolveRelativeCsvUrls(spec: string, importMeta: URL) {
     const newSpec = JSON.parse(spec);
     // https://regex101.com/r/l87Q5q/1
     // eslint-disable-next-line
@@ -187,14 +185,18 @@ const fetchSpecFromGist = async (gist: string) => {
     );
 
     return Promise.all([whenCode, whenText]).then(([code, description]) => {
-        let jsonCode: string | null, jsCode: string, language: string;
-        if (isJSON(code)) {
+        let jsonCode: string, jsCode: string, language: string;
+        if (!code) {
+            language = 'json';
+            jsCode = emptySpec('no content from the gist');
+            jsonCode = emptySpec('no content from the gist');
+        } else if (isJSON(code)) {
             language = 'json';
             jsonCode = resolveRelativeCsvUrls(code, specUrl);
             jsCode = json2js(jsonCode);
         } else {
-            jsCode = code || '';
-            jsonCode = '{}';
+            jsCode = code;
+            jsonCode = emptySpec('compiling...'); // set json code later in dynamic import
             language = 'javascript';
         }
         return {
@@ -300,7 +302,7 @@ function Editor(props: RouteComponentProps) {
     const gosRef = useRef<gosling.GoslingRef>(null);
 
     const debounceCodeEdit = useRef(
-        debounce((code: string, language) => {
+        debounce((code: string, language: string) => {
             if (language == 'json') {
                 setCode(code);
             } else {
@@ -468,7 +470,7 @@ function Editor(props: RouteComponentProps) {
 
         fetchSpecFromGist(urlGist)
             .then(({ code, jsCode, language, description, title }) => {
-                if (active && !!code) {
+                if (active) {
                     setReadOnly(false);
                     setJsCode(jsCode);
                     setCode(code);
@@ -521,6 +523,9 @@ function Editor(props: RouteComponentProps) {
                 import(/* @vite-ignore */ esm`${codeParser(jsCode)}`)
                     .then(ns => {
                         const editedGos = ns.spec;
+                        if (urlGist && !isImportDemo) {
+                            setCode(stringifySpec(editedGos));
+                        }
                         valid = gosling.validateGoslingSpec(editedGos);
                         setLog(valid);
                         if (!editedGos || valid?.state !== 'success' || (!autoRun && !run)) return;
@@ -1176,9 +1181,8 @@ function Editor(props: RouteComponentProps) {
                                                                 key={JSON.stringify(d)}
                                                                 onClick={() => setSelectedPreviewData(i)}
                                                             >
-                                                                {`${(
-                                                                    JSON.parse(d.dataConfig).data.type as string
-                                                                ).toLocaleLowerCase()} `}
+                                                                {`${(JSON.parse(d.dataConfig).data
+                                                                    .type as string).toLocaleLowerCase()} `}
                                                                 <small>{i}</small>
                                                             </button>
                                                         ))}
