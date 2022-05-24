@@ -351,7 +351,7 @@ function Editor(props: RouteComponentProps) {
             setCode(urlSpec);
             setJsCode(json2js(urlSpec));
         } else if (urlGist) {
-            setCode(emptySpec());
+            setCode(emptySpec('loading....'));
         } else {
             const jsonCode = stringifySpec(demo.spec as gosling.GoslingSpec);
             setCode(jsonCode);
@@ -1181,8 +1181,9 @@ function Editor(props: RouteComponentProps) {
                                                                 key={JSON.stringify(d)}
                                                                 onClick={() => setSelectedPreviewData(i)}
                                                             >
-                                                                {`${(JSON.parse(d.dataConfig).data
-                                                                    .type as string).toLocaleLowerCase()} `}
+                                                                {`${(
+                                                                    JSON.parse(d.dataConfig).data.type as string
+                                                                ).toLocaleLowerCase()} `}
                                                                 <small>{i}</small>
                                                             </button>
                                                         ))}
