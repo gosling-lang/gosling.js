@@ -17,7 +17,7 @@ const getVisibilityCondition = (thresholds: [number | undefined, number | undefi
             conditions.push({
                 operation: i == 0 ? 'GT' : 'LT',
                 target: 'mark',
-                threshold: 100000000,
+                threshold,
                 measure: 'zoomLevel'
             });
         }

@@ -27,7 +27,8 @@ import type { Datum } from '@gosling.schema';
 
 import './editor.css';
 
-function json2js(jsonCode: string) {
+function json2js(jsonCode: string | null) {
+    if (!jsonCode) return '';
     return `var spec = ${jsonCode} \nexport { spec }; \n`;
 }
 
@@ -137,7 +138,8 @@ const getDescPanelDefultWidth = () => Math.min(500, window.innerWidth);
  * Convert relative CSV data URLs to absolute URLs.
  * (e.g., './example.csv' => 'https://gist.githubusercontent.com/{urlGist}/raw/example.csv')
  */
-function resolveRelativeCsvUrls(spec: string, importMeta: URL) {
+function resolveRelativeCsvUrls(spec: string | null, importMeta: URL) {
+    if (!spec) return null;
     const newSpec = JSON.parse(spec);
     // https://regex101.com/r/l87Q5q/1
     // eslint-disable-next-line
@@ -169,19 +171,31 @@ const fetchSpecFromGist = async (gist: string) => {
     if (!dataFile) return Promise.reject(new Error('Gist does not contain a Gosling spec.'));
 
     const specUrl = new URL(`https://gist.githubusercontent.com/${gist}/raw/${dataFile}`);
-    const whenCode = fetch(specUrl.href).then(async response =>
-        response.status === 200 ? resolveRelativeCsvUrls(await response.text(), specUrl) : null
-    );
+    const whenCode = fetch(specUrl.href).then(async response => (response.status === 200 ? response.text() : null));
 
     const whenText = fetch(`https://gist.githubusercontent.com/${gist}/raw/${textFile}`).then(response =>
         response.status === 200 ? response.text() : null
     );
 
-    return Promise.all([whenCode, whenText]).then(([code, description]) => ({
-        code,
-        description,
-        title: metadata.description
-    }));
+    return Promise.all([whenCode, whenText]).then(([code, description]) => {
+        let jsonCode: string | null, jsCode: string, language: string;
+        if (code?.startsWith('{')) {
+            language = 'json';
+            jsonCode = resolveRelativeCsvUrls(code, specUrl);
+            jsCode = json2js(jsonCode);
+        } else {
+            jsCode = code || '';
+            jsonCode = '{}';
+            language = 'javascript';
+        }
+        return {
+            code: jsonCode,
+            jsCode,
+            language,
+            description,
+            title: metadata.description
+        };
+    });
 };
 
 interface PreviewData {
@@ -444,11 +458,12 @@ function Editor(props: RouteComponentProps) {
         if (!urlGist || typeof urlGist !== 'string') return undefined;
 
         fetchSpecFromGist(urlGist)
-            .then(({ code, description, title }) => {
+            .then(({ code, jsCode, language, description, title }) => {
                 if (active && !!code) {
                     setReadOnly(false);
+                    setJsCode(jsCode);
                     setCode(code);
-                    setJsCode(json2js(code));
+                    changeLanguage(language);
                     setGistTitle(title);
                     setDescription(description);
                 }
@@ -471,7 +486,7 @@ function Editor(props: RouteComponentProps) {
 
     const runSpecUpdateVis = useCallback(
         (run?: boolean) => {
-            if (isEqual(emptySpec(), code)) {
+            if (isEqual(emptySpec(), code) && isEqual(emptySpec(), jsCode)) {
                 // this means we do not have to compile. This is when we are in the middle of loading data from gist.
                 return;
             }
