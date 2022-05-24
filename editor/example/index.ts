@@ -322,7 +322,7 @@ export const examples: {
     },
     MOUSE_EVENT: {
         group: 'Visual Encoding',
-        name: 'Mouse Hovering Effects',
+        name: 'Custom Mouse Events',
         spec: EX_SPEC_MOUSE_EVENT,
         underDevelopment: true,
         image: THUMBNAILS.MOUSE_EVENT
