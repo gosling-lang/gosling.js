@@ -316,14 +316,17 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
          * Rerender tiles using the manually changed options.
          * (Refer to https://github.com/higlass/higlass/blob/54f5aae61d3474f9e868621228270f0c90ef9343/app/scripts/HorizontalLine1DPixiTrack.js#L75)
          */
-        rerender(newOptions: any) {
+        rerender(newOptions: GoslingTrackOption) {
             if (PRINT_RENDERING_CYCLE) console.warn('rerender(options)');
             // !! We only call draw for the simplicity
             // super.rerender(newOptions); // This calls `renderTile()` on every tiles
 
             this.options = newOptions;
 
-            // this.mouseEventModel.clear();
+            if (this.options.spec.layout === 'circular') {
+                this.mRangeBrush.remove();
+            }
+
             this.clearMouseEventData();
             this.svgData = [];
             this.textsBeingUsed = 0;
