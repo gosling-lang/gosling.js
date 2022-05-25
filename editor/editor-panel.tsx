@@ -8,16 +8,18 @@ import goslingSpec from '../src/core/gosling.schema?raw';
 export * from './monaco_worker';
 import * as Monaco from 'monaco-editor';
 
+export type EditorLangauge = 'json' | 'typescript';
+
 function EditorPanel(props: {
     code: string;
     readOnly?: boolean;
     openFindBox?: boolean;
     fontZoomIn?: boolean;
     fontZoomOut?: boolean;
-    onChange?: (code: string, language: string) => void;
+    onChange?: (code: string, language: EditorLangauge) => void;
     hide?: boolean;
     isDarkTheme?: boolean;
-    language: string;
+    language: EditorLangauge;
 }) {
     const { code: templateCode, readOnly, openFindBox, fontZoomIn, fontZoomOut, isDarkTheme, language } = props;
     const editor = useRef<Monaco.editor.IStandaloneCodeEditor | null>(null);

@@ -4,7 +4,7 @@ import ReactMarkdown from 'react-markdown';
 import gfm from 'remark-gfm';
 import PubSub from 'pubsub-js';
 import fetchJsonp from 'fetch-jsonp';
-import EditorPanel from './editor-panel';
+import EditorPanel, { EditorLangauge } from './editor-panel';
 import { drag as d3Drag } from 'd3-drag';
 import { event as d3Event } from 'd3-selection';
 import { select as d3Select } from 'd3-selection';
@@ -29,6 +29,15 @@ import './editor.css';
 
 function json2js(jsonCode: string) {
     return `var spec = ${jsonCode} \nexport { spec }; \n`;
+}
+
+function isJSON(str: string | null) {
+    if (!str) return false;
+    try {
+        return JSON.parse(str);
+    } catch (e) {
+        return false;
+    }
 }
 
 // a hack to solve the reference erro in typescript
@@ -119,7 +128,7 @@ const getIconSVG = (d: ICON_INFO, w?: number, h?: number, f?: string) => (
     </svg>
 );
 
-const emptySpec = (message?: string) => (message !== undefined ? `{\n\t// ${message}\n}` : '{}');
+const emptySpec = (message?: string) => (message !== undefined ? `\n\t// ${message}\n` : '//empty spec');
 
 const stringifySpec = (spec: string | gosling.GoslingSpec | undefined): string => {
     if (!spec) return '';
@@ -169,19 +178,35 @@ const fetchSpecFromGist = async (gist: string) => {
     if (!dataFile) return Promise.reject(new Error('Gist does not contain a Gosling spec.'));
 
     const specUrl = new URL(`https://gist.githubusercontent.com/${gist}/raw/${dataFile}`);
-    const whenCode = fetch(specUrl.href).then(async response =>
-        response.status === 200 ? resolveRelativeCsvUrls(await response.text(), specUrl) : null
-    );
+    const whenCode = fetch(specUrl.href).then(async response => (response.status === 200 ? response.text() : null));
 
     const whenText = fetch(`https://gist.githubusercontent.com/${gist}/raw/${textFile}`).then(response =>
         response.status === 200 ? response.text() : null
     );
 
-    return Promise.all([whenCode, whenText]).then(([code, description]) => ({
-        code,
-        description,
-        title: metadata.description
-    }));
+    return Promise.all([whenCode, whenText]).then(([code, description]) => {
+        let jsonCode: string, jsCode: string, language: EditorLangauge;
+        if (!code) {
+            language = 'json';
+            jsCode = emptySpec('no content from the gist');
+            jsonCode = emptySpec('no content from the gist');
+        } else if (isJSON(code)) {
+            language = 'json';
+            jsonCode = resolveRelativeCsvUrls(code, specUrl);
+            jsCode = json2js(jsonCode);
+        } else {
+            jsCode = code;
+            jsonCode = emptySpec('compiling...'); // set json code later in dynamic import
+            language = 'typescript';
+        }
+        return {
+            code: jsonCode,
+            jsCode,
+            language,
+            description,
+            title: metadata.description
+        };
+    });
 };
 
 interface PreviewData {
@@ -209,7 +234,7 @@ function Editor(props: RouteComponentProps) {
 
     const previewData = useRef<PreviewData[]>([]);
     const [refreshData, setRefreshData] = useState<boolean>(false);
-    const [language, changeLanguage] = useState<string>('json');
+    const [language, changeLanguage] = useState<EditorLangauge>('json');
 
     const [demo, setDemo] = useState(
         examples[urlExampleId] ? { id: urlExampleId, ...examples[urlExampleId] } : INIT_DEMO
@@ -277,7 +302,7 @@ function Editor(props: RouteComponentProps) {
     const gosRef = useRef<gosling.GoslingRef>(null);
 
     const debounceCodeEdit = useRef(
-        debounce((code: string, language) => {
+        debounce((code: string, language: EditorLangauge) => {
             if (language == 'json') {
                 setCode(code);
             } else {
@@ -326,7 +351,7 @@ function Editor(props: RouteComponentProps) {
             setCode(urlSpec);
             setJsCode(json2js(urlSpec));
         } else if (urlGist) {
-            setCode(emptySpec());
+            setCode(emptySpec('loading....'));
         } else {
             const jsonCode = stringifySpec(demo.spec as gosling.GoslingSpec);
             setCode(jsonCode);
@@ -444,11 +469,12 @@ function Editor(props: RouteComponentProps) {
         if (!urlGist || typeof urlGist !== 'string') return undefined;
 
         fetchSpecFromGist(urlGist)
-            .then(({ code, description, title }) => {
-                if (active && !!code) {
+            .then(({ code, jsCode, language, description, title }) => {
+                if (active) {
                     setReadOnly(false);
+                    setJsCode(jsCode);
                     setCode(code);
-                    setJsCode(json2js(code));
+                    changeLanguage(language);
                     setGistTitle(title);
                     setDescription(description);
                 }
@@ -471,7 +497,7 @@ function Editor(props: RouteComponentProps) {
 
     const runSpecUpdateVis = useCallback(
         (run?: boolean) => {
-            if (isEqual(emptySpec(), code)) {
+            if (isEqual(emptySpec(), code) && isEqual(emptySpec(), jsCode)) {
                 // this means we do not have to compile. This is when we are in the middle of loading data from gist.
                 return;
             }
@@ -492,11 +518,14 @@ function Editor(props: RouteComponentProps) {
                 if (!editedGos || valid?.state !== 'success' || (!autoRun && !run)) return;
 
                 setGoslingSpec(editedGos);
-            } else if (language === 'javascript') {
+            } else if (language === 'typescript') {
                 // vite-ignore to enable dynamic import from data uri
                 import(/* @vite-ignore */ esm`${codeParser(jsCode)}`)
                     .then(ns => {
                         const editedGos = ns.spec;
+                        if (urlGist && !isImportDemo) {
+                            setCode(stringifySpec(editedGos));
+                        }
                         valid = gosling.validateGoslingSpec(editedGos);
                         setLog(valid);
                         if (!editedGos || valid?.state !== 'success' || (!autoRun && !run)) return;
@@ -982,9 +1011,9 @@ function Editor(props: RouteComponentProps) {
                                             </span>
                                         </button>
                                         <button
-                                            className={`tablinks ${language == 'javascript' && 'active'}`}
+                                            className={`tablinks ${language == 'typescript' && 'active'}`}
                                             onClick={() => {
-                                                changeLanguage('javascript');
+                                                changeLanguage('typescript');
                                                 setLog({ message: '', state: 'success' });
                                             }}
                                         >
@@ -1012,7 +1041,7 @@ function Editor(props: RouteComponentProps) {
                                             language="json"
                                         />
                                     </div>
-                                    <div className={`tabContent ${language == 'javascript' ? 'show' : 'hide'}`}>
+                                    <div className={`tabContent ${language == 'typescript' ? 'show' : 'hide'}`}>
                                         <EditorPanel
                                             code={jsCode}
                                             readOnly={readOnly}
@@ -1021,7 +1050,6 @@ function Editor(props: RouteComponentProps) {
                                             fontZoomOut={isFontZoomOut}
                                             onChange={debounceCodeEdit.current}
                                             isDarkTheme={theme === 'dark'}
-                                            // language="javascript"
                                             language="typescript"
                                         />
                                     </div>
