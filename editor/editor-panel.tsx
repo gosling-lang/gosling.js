@@ -8,7 +8,7 @@ import goslingSpec from '../src/core/gosling.schema?raw';
 export * from './monaco_worker';
 import * as Monaco from 'monaco-editor';
 
-export type EditorLangauge = 'json' | 'javascript';
+export type EditorLangauge = 'json' | 'javascript' | 'typescript';
 
 function EditorPanel(props: {
     code: string;
