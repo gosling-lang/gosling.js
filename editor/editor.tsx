@@ -4,7 +4,7 @@ import ReactMarkdown from 'react-markdown';
 import gfm from 'remark-gfm';
 import PubSub from 'pubsub-js';
 import fetchJsonp from 'fetch-jsonp';
-import EditorPanel from './editor-panel';
+import EditorPanel, { EditorLangauge } from './editor-panel';
 import { drag as d3Drag } from 'd3-drag';
 import { event as d3Event } from 'd3-selection';
 import { select as d3Select } from 'd3-selection';
@@ -185,7 +185,7 @@ const fetchSpecFromGist = async (gist: string) => {
     );
 
     return Promise.all([whenCode, whenText]).then(([code, description]) => {
-        let jsonCode: string, jsCode: string, language: string;
+        let jsonCode: string, jsCode: string, language: EditorLangauge;
         if (!code) {
             language = 'json';
             jsCode = emptySpec('no content from the gist');
@@ -234,7 +234,7 @@ function Editor(props: RouteComponentProps) {
 
     const previewData = useRef<PreviewData[]>([]);
     const [refreshData, setRefreshData] = useState<boolean>(false);
-    const [language, changeLanguage] = useState<string>('json');
+    const [language, changeLanguage] = useState<EditorLangauge>('json');
 
     const [demo, setDemo] = useState(
         examples[urlExampleId] ? { id: urlExampleId, ...examples[urlExampleId] } : INIT_DEMO
@@ -302,7 +302,7 @@ function Editor(props: RouteComponentProps) {
     const gosRef = useRef<gosling.GoslingRef>(null);
 
     const debounceCodeEdit = useRef(
-        debounce((code: string, language: string) => {
+        debounce((code: string, language: EditorLangauge) => {
             if (language == 'json') {
                 setCode(code);
             } else {
