@@ -2,7 +2,7 @@ import * as PIXI from 'pixi.js';
 import PubSub from 'pubsub-js';
 import * as uuid from 'uuid';
 import { isEqual, sampleSize, uniqBy } from 'lodash-es';
-import { ScaleLinear, scaleLinear } from 'd3-scale';
+import { ScaleLinear } from 'd3-scale';
 import { format } from 'd3-format';
 import { SingleTrack, OverlaidTrack, Datum } from '@gosling.schema';
 import { drawMark, drawPostEmbellishment, drawPreEmbellishment } from '../core/mark';
@@ -409,8 +409,10 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
         zoomed(newXScale: ScaleLinear<number, number>, newYScale: ScaleLinear<number, number>) {
             if (PRINT_RENDERING_CYCLE) console.warn('zoomed()');
 
-            const [min, max] = this.mRangeBrush.getRange();
-            this.mRangeBrush.updateRange(newXScale(this._xScale.invert(min)), newXScale(this._xScale.invert(max)));
+            const range = this.mRangeBrush.getRange();
+            this.mRangeBrush.updateRange(
+                range ? [newXScale(this._xScale.invert(range[0])), newXScale(this._xScale.invert(range[1]))] : null
+            );
 
             // super.zoomed(newXScale, newYScale); // This function updates `this._xScale` and `this._yScale` and call this.draw();
             this.xScale(newXScale);
@@ -999,7 +1001,8 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                 this.tilesetInfo.bins_per_dimension || this.tilesetInfo?.tile_size
             );
 
-            const tileXScale = scaleLinear()
+            const tileXScale = HGC.libraries.d3Scale
+                .scaleLinear()
                 .domain([0, this.tilesetInfo?.tile_size || this.tilesetInfo?.bins_per_dimension])
                 .range([tileX, tileX + tileWidth]);
 
@@ -1091,8 +1094,18 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             });
         }
 
-        onRangeBrush(startX: number, endX: number, skipApiTrigger = false) {
+        onRangeBrush(range: [number, number] | null, skipApiTrigger = false) {
             this.pMouseSelection.clear();
+
+            if (range === null) {
+                // brush just removed
+                if (!skipApiTrigger) {
+                    PubSub.publish('rangeselect', { id: this.viewUid, genomicRange: null, data: [] });
+                }
+                return;
+            }
+
+            const [startX, endX] = range;
 
             // Collect all gosling track models
             const models: GoslingTrackModel[] = this.visibleAndFetchedTiles()
@@ -1110,10 +1123,8 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             if (capturedElements.length !== 0 && idField) {
                 models.forEach(model => {
                     const siblings = model.getMouseEventModel().getSiblings(capturedElements, idField);
-                    // console.log(siblings, capturedElements);
                     const siblingIds = Array.from(new Set(siblings.map(d => d.value[idField])));
                     capturedElements = capturedElements.filter(d => siblingIds.indexOf(d.value[idField]) === -1);
-                    // console.log(siblings, siblingIds, capturedElements);
                 });
             }
 
@@ -1167,23 +1178,23 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             }
 
             if (this.isBrushActivated) {
-                this.mRangeBrush.updateRange(mouseX, this.mouseDownX).drawBrush().disable();
+                this.mRangeBrush.updateRange([mouseX, this.mouseDownX]).drawBrush().disable();
             }
         }
 
         onMouseUp(mouseX: number, mouseY: number) {
             const isDrag = Math.sqrt((this.mouseDownX - mouseX) ** 2 + (this.mouseDownY - mouseY) ** 2) > 1;
 
-            // Clicking outside the brush should remove the brush and the selection.
             if (!this.isBrushActivated && !isDrag) {
+                // Clicking outside the brush should remove the brush and the selection.
                 this.mRangeBrush.clear();
                 this.pMouseSelection.clear();
+            } else {
+                // Dragging ended, so enable adjusting the range brush
+                this.mRangeBrush.enable();
             }
 
             this.isBrushActivated = false;
-
-            // Enable dragging on the range brush
-            this.mRangeBrush.enable();
 
             if (!this.tilesetInfo) {
                 // Do not have enough information

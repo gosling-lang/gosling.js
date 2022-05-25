@@ -146,12 +146,4 @@ export class MouseEventModel {
                 return isAnyPointsWithinRange([x1, x2], data.polygon);
         }
     }
-
-    /**
-     * Find all event data using UIDs.
-     */
-    public findAllBasedOnUids(uids: string[]) {
-        const _ = Array.from(this.data);
-        return _.filter(d => uids.indexOf(d.uid) !== -1);
-    }
 }

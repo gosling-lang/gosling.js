@@ -46,12 +46,12 @@ export class OneDimBrushModel {
     private readonly style: BrushStyle;
 
     /* data */
-    private range?: [number, number];
+    private range: [number, number] | null;
     private data: oneDimBrushData;
 
     /* drag */
     private startEvent: typeof d3Selection.event;
-    private prevExtent?: [number, number];
+    private prevExtent: [number, number] | null;
 
     /* visual parameters */
     private offset: [number, number];
@@ -74,9 +74,9 @@ export class OneDimBrushModel {
         track: any,
         style: Partial<BrushStyle> = {}
     ) {
-        this.range = [0, 1];
-        this.prevExtent = [0, 1];
-        this.data = this.rangeToData(...this.range);
+        this.range = null;
+        this.prevExtent = [0, 0];
+        this.data = this.rangeToData(0, 0);
 
         this.offset = [0, 0];
         this.size = 0;
@@ -106,7 +106,7 @@ export class OneDimBrushModel {
     }
 
     public getRange() {
-        return this.range ?? [0, 0];
+        return this.range;
     }
 
     public setSize(size: number) {
@@ -125,9 +125,13 @@ export class OneDimBrushModel {
     /**
      * Update brush data based on the positions of two edges.
      */
-    public updateRange(value1: number, value2: number) {
-        this.range = [value1, value2].sort((a, b) => a - b) as [number, number];
-        this.data = this.rangeToData(...this.range);
+    public updateRange(range: [number, number] | null) {
+        if (range) {
+            this.range = range.sort((a, b) => a - b) as [number, number];
+            this.data = this.rangeToData(...this.range);
+        } else {
+            this.range = null;
+        }
         return this;
     }
 
@@ -152,7 +156,7 @@ export class OneDimBrushModel {
             .attr('stroke-opacity', d => (d.type === 'body' ? this.style.strokeOpacity : 0))
             .attr('cursor', d => d.cursor);
 
-        this.track.onRangeBrush(...this.getRange(), skipApiTrigger);
+        this.track.onRangeBrush(this.getRange(), skipApiTrigger);
 
         return this;
     }
@@ -168,7 +172,7 @@ export class OneDimBrushModel {
     }
 
     public clear() {
-        this.updateRange(0, 0).drawBrush();
+        this.updateRange(null).drawBrush();
         this.brushSelection.attr('visibility', 'hidden');
         this.disable();
         return this;
@@ -226,7 +230,7 @@ export class OneDimBrushModel {
                 e += delta;
             }
 
-            this.updateRange(s, e).drawBrush();
+            this.updateRange([s, e]).drawBrush();
         };
 
         return this.externals.d3Drag<SVGRectElement, OneDimBrushDataUnion>().on('start', started).on('drag', dragged);
