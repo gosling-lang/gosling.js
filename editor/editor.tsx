@@ -197,7 +197,7 @@ const fetchSpecFromGist = async (gist: string) => {
         } else {
             jsCode = code;
             jsonCode = emptySpec('compiling...'); // set json code later in dynamic import
-            language = 'javascript';
+            language = 'typescript';
         }
         return {
             code: jsonCode,
@@ -518,7 +518,7 @@ function Editor(props: RouteComponentProps) {
                 if (!editedGos || valid?.state !== 'success' || (!autoRun && !run)) return;
 
                 setGoslingSpec(editedGos);
-            } else if (language === 'javascript') {
+            } else if (language === 'typescript') {
                 // vite-ignore to enable dynamic import from data uri
                 import(/* @vite-ignore */ esm`${codeParser(jsCode)}`)
                     .then(ns => {
@@ -1011,9 +1011,9 @@ function Editor(props: RouteComponentProps) {
                                             </span>
                                         </button>
                                         <button
-                                            className={`tablinks ${language == 'javascript' && 'active'}`}
+                                            className={`tablinks ${language == 'typescript' && 'active'}`}
                                             onClick={() => {
-                                                changeLanguage('javascript');
+                                                changeLanguage('typescript');
                                                 setLog({ message: '', state: 'success' });
                                             }}
                                         >
@@ -1041,7 +1041,7 @@ function Editor(props: RouteComponentProps) {
                                             language="json"
                                         />
                                     </div>
-                                    <div className={`tabContent ${language == 'javascript' ? 'show' : 'hide'}`}>
+                                    <div className={`tabContent ${language == 'typescript' ? 'show' : 'hide'}`}>
                                         <EditorPanel
                                             code={jsCode}
                                             readOnly={readOnly}
@@ -1050,7 +1050,6 @@ function Editor(props: RouteComponentProps) {
                                             fontZoomOut={isFontZoomOut}
                                             onChange={debounceCodeEdit.current}
                                             isDarkTheme={theme === 'dark'}
-                                            // language="javascript"
                                             language="typescript"
                                         />
                                     </div>
