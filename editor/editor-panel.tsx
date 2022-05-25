@@ -16,7 +16,7 @@ function EditorPanel(props: {
     openFindBox?: boolean;
     fontZoomIn?: boolean;
     fontZoomOut?: boolean;
-    onChange?: (code: string, language: string) => void;
+    onChange?: (code: string, language: EditorLangauge) => void;
     hide?: boolean;
     isDarkTheme?: boolean;
     language: EditorLangauge;
