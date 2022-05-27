@@ -232,6 +232,14 @@ export type Mark =
 /* ----------------------------- TRACK ----------------------------- */
 export type SingleTrack = SingleTrackBase & Encoding;
 
+export interface BrushAndMarkHighlightingStyle {
+    color: string;
+    stroke: string;
+    strokeWidth: number;
+    strokeOpacity: number;
+    opacity: number;
+}
+
 interface SingleTrackBase extends CommonTrackDef {
     // Data
     data: DataDeep;
@@ -250,27 +258,9 @@ interface SingleTrackBase extends CommonTrackDef {
         hovering?: {
             enableMultiHovering?: boolean;
             showHoveringOnTheBack?: boolean;
-            color?: string;
-            stroke?: string;
-            strokeWidth?: number;
-            strokeOpacity?: number;
-            opacity?: number;
-        };
-        selection?: {
-            showOnTheBack?: boolean;
-            color?: string;
-            stroke?: string;
-            strokeWidth?: number;
-            strokeOpacity?: number;
-            opacity?: number;
-        };
-        brush?: {
-            color?: string;
-            stroke?: string;
-            strokeWidth?: number;
-            strokeOpacity?: number;
-            opacity?: number;
-        };
+        } & Partial<BrushAndMarkHighlightingStyle>;
+        selection?: { showOnTheBack?: boolean } & Partial<BrushAndMarkHighlightingStyle>;
+        brush?: Partial<BrushAndMarkHighlightingStyle>;
     };
 
     // Mark

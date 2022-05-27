@@ -1,5 +1,6 @@
 import type * as D3Selection from 'd3-selection';
 import type * as D3Drag from 'd3-drag';
+import { BrushAndMarkHighlightingStyle } from '@gosling.schema';
 
 const HIDDEN_BRUSH_EDGE_SIZE = 3;
 
@@ -29,14 +30,6 @@ export interface LinearBrushEndEdgeData extends LinearBrushDataCommon {
 
 export type OnBrushCallbackFn = (start: number, end: number) => void;
 
-interface BrushStyle {
-    color: string;
-    stroke: string;
-    strokeWidth: number;
-    strokeOpacity: number;
-    opacity: number;
-}
-
 // default styles for brush
 const BRUSH_STYLE_DEFAULT = {
     color: '#777',
@@ -52,7 +45,7 @@ const BRUSH_STYLE_DEFAULT = {
 export class LinearBrushModel {
     /* graphical elements */
     private brushSelection: D3Selection.Selection<SVGRectElement, LinearBrushDataUnion, SVGGElement, any>;
-    private readonly style: BrushStyle;
+    private readonly style: BrushAndMarkHighlightingStyle;
 
     /* data */
     private range: [number, number] | null;
@@ -79,7 +72,7 @@ export class LinearBrushModel {
         selection: D3Selection.Selection<SVGGElement, unknown, HTMLElement, unknown>,
         hgLibraries: any,
         onBrush: (range: [number, number] | null, skipApiTrigger: boolean) => void,
-        style: Partial<BrushStyle> = {}
+        style: Partial<BrushAndMarkHighlightingStyle> = {}
     ) {
         this.range = null;
         this.prevExtent = [0, 0];
