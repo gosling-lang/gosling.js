@@ -158,7 +158,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             this.mRangeBrush = new LinearBrushModel(
                 this.gBrush,
                 HGC.libraries,
-                this,
+                this.onRangeBrush.bind(this),
                 this.options.spec.experimental?.brush
             );
             this.pMask.mousedown = (e: InteractionEvent) =>

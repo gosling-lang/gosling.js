@@ -72,15 +72,13 @@ export class LinearBrushModel {
         d3Drag: typeof D3Drag;
     };
 
-    // TODO (May-19-2022): A way to pass only the required function (e.g., onRangeBrush) and allow
-    // to use `this` (i.e., instance of GoslingTrack) in the function?
-    /* gosling track */
-    private track: any;
+    /* A function that is called every time when the brush has been updated */
+    private onBrush: (range: [number, number] | null, skipApiTrigger: boolean) => void;
 
     constructor(
         selection: D3Selection.Selection<SVGGElement, unknown, HTMLElement, unknown>,
         hgLibraries: any,
-        track: any,
+        onBrush: (range: [number, number] | null, skipApiTrigger: boolean) => void,
         style: Partial<BrushStyle> = {}
     ) {
         this.range = null;
@@ -105,7 +103,7 @@ export class LinearBrushModel {
             .attr('class', 'genomic-range-brush')
             .call(this.onDrag());
 
-        this.track = track;
+        this.onBrush = onBrush;
     }
 
     public getRange() {
@@ -159,7 +157,7 @@ export class LinearBrushModel {
             .attr('stroke-opacity', d => (d.type === 'body' ? this.style.strokeOpacity : 0))
             .attr('cursor', d => d.cursor);
 
-        this.track.onRangeBrush(this.getRange(), skipApiTrigger);
+        this.onBrush(this.getRange(), skipApiTrigger);
 
         return this;
     }
