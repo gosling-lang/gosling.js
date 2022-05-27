@@ -79,7 +79,7 @@ export class LinearBrushModel {
 
     constructor(
         selection: D3Selection.Selection<SVGGElement, unknown, HTMLElement, unknown>,
-        HGC: any,
+        hgLibraries: any,
         track: any,
         style: Partial<BrushStyle> = {}
     ) {
@@ -91,8 +91,8 @@ export class LinearBrushModel {
         this.size = 0;
 
         this.externals = {
-            d3Selection: HGC.d3Selection,
-            d3Drag: HGC.d3Drag
+            d3Selection: hgLibraries.d3Selection,
+            d3Drag: hgLibraries.d3Drag
         };
 
         this.style = Object.assign(BRUSH_STYLE_DEFAULT, style);
