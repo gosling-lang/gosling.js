@@ -130,7 +130,8 @@ export class LinearBrushModel {
      */
     public updateRange(range: [number, number] | null) {
         if (range) {
-            this.data = this.rangeToData(Math.min(...range), Math.max(...range));
+            this.range = [Math.min(...range), Math.max(...range)];
+            this.data = this.rangeToData(...this.range);
         } else {
             this.range = null;
         }

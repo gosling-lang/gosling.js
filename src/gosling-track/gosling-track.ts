@@ -320,7 +320,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
         }
 
         /**
-         * Rerender tiles using the manually changed options.
+         * Render this track again using a new option when a user changed the option.
          * (Refer to https://github.com/higlass/higlass/blob/54f5aae61d3474f9e868621228270f0c90ef9343/app/scripts/HorizontalLine1DPixiTrack.js#L75)
          */
         rerender(newOptions: GoslingTrackOption) {
