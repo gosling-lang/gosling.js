@@ -6,8 +6,6 @@ const HIDDEN_BRUSH_EDGE_SIZE = 3;
 
 export type LinearBrushData = [LinearBrushBodyData, LinearBrushStartEdgeData, LinearBrushEndEdgeData];
 
-export type LinearBrushDataUnion = LinearBrushBodyData | LinearBrushStartEdgeData | LinearBrushEndEdgeData;
-
 export interface LinearBrushDataCommon {
     start: number;
     end: number;
@@ -44,7 +42,7 @@ const BRUSH_STYLE_DEFAULT = {
  */
 export class LinearBrushModel {
     /* graphical elements */
-    private brushSelection: D3Selection.Selection<SVGRectElement, LinearBrushDataUnion, SVGGElement, any>;
+    private brushSelection: D3Selection.Selection<SVGRectElement, LinearBrushData[number], SVGGElement, any>;
     private readonly style: BrushAndMarkHighlightingStyle;
 
     /* data */
@@ -136,7 +134,7 @@ export class LinearBrushModel {
     public drawBrush(skipApiTrigger = false) {
         const [x, y] = this.offset;
         const height = this.size;
-        const getWidth = (d: LinearBrushDataUnion) => Math.abs(d.end - d.start); // the start and end can be minus values
+        const getWidth = (d: LinearBrushData[number]) => Math.abs(d.end - d.start); // the start and end can be minus values
         this.brushSelection
             .data(this.data)
             .attr('visibility', 'visible')
@@ -209,7 +207,7 @@ export class LinearBrushModel {
             this.prevExtent = this.range;
         };
 
-        const dragged = (d: LinearBrushDataUnion) => {
+        const dragged = (d: LinearBrushData[number]) => {
             const delta = this.externals.d3Selection.event.sourceEvent.layerX - this.startEvent.layerX;
 
             // previous extent of brush
@@ -228,7 +226,7 @@ export class LinearBrushModel {
         };
 
         return this.externals.d3Drag
-            .drag<SVGRectElement, LinearBrushDataUnion>()
+            .drag<SVGRectElement, LinearBrushData[number]>()
             .on('start', started)
             .on('drag', dragged);
     }
