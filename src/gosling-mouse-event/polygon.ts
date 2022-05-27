@@ -40,14 +40,8 @@ export const isCircleWithinRange: (range: [number, number], x: number, radius?: 
  * @param {Array} path 1D list of vertices defining the line segments.
  * @return {boolean} If `true` point lies within the polygon.
  */
-export const isAnyPointsWithinRange: (range: [number, number], path: number[]) => boolean = ([x1, x2], path) => {
-    let lx;
-    let isWithin = true;
-    for (let i = 0; i < path.length; i += 2) {
-        lx = path[i];
-        isWithin = isWithin && isPointInsideRange([x1, x2], lx);
-    }
-    return isWithin;
+export const isAllPointsWithinRange: (range: [number, number], path: number[]) => boolean = (range, path) => {
+    return path.filter((_, i) => i % 2 === 0).every(x => isPointInsideRange(range, x));
 };
 
 /**

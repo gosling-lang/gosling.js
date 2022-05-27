@@ -1,10 +1,11 @@
-import * as PIXI from 'pixi.js';
+import type { Graphics, InteractionEvent } from 'pixi.js';
 import PubSub from 'pubsub-js';
 import * as uuid from 'uuid';
 import { isEqual, sampleSize, uniqBy } from 'lodash-es';
-import { ScaleLinear } from 'd3-scale';
 import { format } from 'd3-format';
-import { SingleTrack, OverlaidTrack, Datum } from '@gosling.schema';
+import type { ScaleLinear } from 'd3-scale';
+import type { SingleTrack, OverlaidTrack, Datum } from '@gosling.schema';
+import type { CompleteThemeDeep } from 'src/core/utils/theme';
 import { drawMark, drawPostEmbellishment, drawPreEmbellishment } from '../core/mark';
 import { GoslingTrackModel } from '../core/gosling-track-model';
 import { validateTrack } from '../core/utils/validate';
@@ -28,7 +29,6 @@ import { getRelativeGenomicPosition } from '../core/utils/assembly';
 import { getTextStyle } from '../core/utils/text-style';
 import { Is2DTrack, IsChannelDeep, IsXAxis } from '../core/gosling.schema.guards';
 import { spawn } from 'threads';
-import { Graphics, InteractionEvent } from 'pixi.js';
 import { HIGLASS_AXIS_SIZE } from '../core/higlass-model';
 import { MouseEventData } from '../gosling-mouse-event/mouse-event-model';
 import { flatArrayToPairArray } from '../core/utils/array';
@@ -36,8 +36,7 @@ import { BAMDataFetcher } from '../data-fetcher/bam';
 import { GoslingVcfData } from '../data-fetcher/vcf';
 import BamWorker from '../data-fetcher/bam/bam-worker.js?worker&inline';
 import VcfWorker from '../data-fetcher/vcf/vcf-worker.js?worker&inline';
-import { OneDimBrushModel } from '../gosling-brush/linear-brush-model';
-import { CompleteThemeDeep } from 'src/core/utils/theme';
+import { LinearBrushModel } from '../gosling-brush/linear-brush-model';
 
 // Set `true` to print in what order each function is called
 export const PRINT_RENDERING_CYCLE = false;
@@ -51,6 +50,14 @@ function usePrereleaseRendering(spec: SingleTrack | OverlaidTrack) {
 // `getTilePosAndDimensions()` definition: https://github.com/higlass/higlass/blob/1e1146409c7d7c7014505dd80d5af3e9357c77b6/app/scripts/Tiled1DPixiTrack.js#L133
 // Refer to the following already supported graphics:
 // https://github.com/higlass/higlass/blob/54f5aae61d3474f9e868621228270f0c90ef9343/app/scripts/PixiTrack.js#L115
+
+const DEFAULT_MARK_HIGHLIGHT_STYLE = {
+    stroke: 'black',
+    strokeWidth: 1,
+    strokeOpacity: 1,
+    color: 'none',
+    opacity: 1
+};
 
 interface GoslingTrackOption {
     spec: SingleTrack | OverlaidTrack;
@@ -79,7 +86,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
         private tileSize: number;
         private worker: any;
         private isBrushActivated: boolean;
-        private mRangeBrush: OneDimBrushModel;
+        private mRangeBrush: LinearBrushModel;
         private _xScale!: ScaleLinear<number, number>;
         private _yScale!: ScaleLinear<number, number>;
         private pMouseHover: Graphics;
@@ -148,7 +155,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             this.isBrushActivated = false;
             this.pMask.interactive = true;
             this.gBrush = HGC.libraries.d3Selection.select(this.context.svgElement).append('g');
-            this.mRangeBrush = new OneDimBrushModel(
+            this.mRangeBrush = new LinearBrushModel(
                 this.gBrush,
                 HGC.libraries,
                 this,
@@ -324,6 +331,9 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             this.options = newOptions;
 
             if (this.options.spec.layout === 'circular') {
+                // TODO (May-27-2022): remove the following line when we support a circular brush.
+                // If the spec is changed to use the circular layout, we remove the current linear brush
+                // because circular brush is not supported.
                 this.mRangeBrush.remove();
             }
 
@@ -357,6 +367,9 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             models.forEach(model => model.getMouseEventModel().clear());
         }
 
+        /**
+         * End of the rendering cycle. This function is called when the track is removed entirely.
+         */
         remove() {
             super.remove();
 
@@ -471,7 +484,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
         /**
          * Stretch out the scaleble graphics to have proper effect upon zoom and pan.
          */
-        scaleScalableGraphics(graphics: PIXI.Graphics[], xScale: any, drawnAtScale: any) {
+        scaleScalableGraphics(graphics: Graphics[], xScale: any, drawnAtScale: any) {
             const drawnAtScaleExtent = drawnAtScale.domain()[1] - drawnAtScale.domain()[0];
             const xScaleExtent = xScale.domain()[1] - xScale.domain()[0];
 
@@ -1067,19 +1080,21 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
         highlightMarks(
             g: Graphics,
             marks: MouseEventData[],
-            stroke: string,
-            strokeWidth: number,
-            strokeOpacity: number,
-            color: string,
-            fillOpacity: number
+            style: {
+                stroke: string;
+                strokeWidth: number;
+                strokeOpacity: number;
+                color: string;
+                opacity: number;
+            }
         ) {
             g.lineStyle(
-                strokeWidth,
-                colorToHex(stroke),
-                strokeOpacity, // alpha
+                style.strokeWidth,
+                colorToHex(style.stroke),
+                style.strokeOpacity, // alpha
                 0.5 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
             );
-            g.beginFill(colorToHex(color), color === 'none' ? 0 : fillOpacity);
+            g.beginFill(colorToHex(style.color), style.color === 'none' ? 0 : style.opacity);
 
             marks.forEach(d => {
                 if (d.type === 'point') {
@@ -1131,11 +1146,6 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             if (capturedElements.length !== 0) {
                 // selection effect graphics
                 const g = this.pMouseSelection;
-                const stroke = this.options.spec.experimental?.selection?.stroke ?? 'black';
-                const strokeWidth = this.options.spec.experimental?.selection?.strokeWidth ?? 1;
-                const strokeOpacity = this.options.spec.experimental?.selection?.strokeOpacity ?? 1;
-                const color = this.options.spec.experimental?.selection?.color ?? 'none';
-                const fillOpacity = this.options.spec.experimental?.selection?.opacity ?? 1;
 
                 if (!this.options.spec.experimental?.selection?.showOnTheBack) {
                     // place on the top
@@ -1143,7 +1153,11 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                     this.pMain.addChild(g);
                 }
 
-                this.highlightMarks(g, capturedElements, stroke, strokeWidth, strokeOpacity, color, fillOpacity);
+                this.highlightMarks(
+                    g,
+                    capturedElements,
+                    Object.assign(DEFAULT_MARK_HIGHLIGHT_STYLE, this.options.spec.experimental?.selection)
+                );
             }
 
             /* API call */
@@ -1255,11 +1269,6 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             if (capturedElements.length !== 0) {
                 // Rener mouse over effect graphics
                 const g = this.pMouseHover;
-                const stroke = this.options.spec.experimental?.hovering?.stroke ?? 'black';
-                const strokeWidth = this.options.spec.experimental?.hovering?.strokeWidth ?? 1.5;
-                const strokeOpacity = this.options.spec.experimental?.hovering?.strokeOpacity ?? 1;
-                const color = this.options.spec.experimental?.hovering?.color ?? 'none';
-                const fillOpacity = this.options.spec.experimental?.hovering?.opacity ?? 1;
 
                 if (!this.options.spec.experimental?.hovering?.showHoveringOnTheBack) {
                     // place on the top
@@ -1267,7 +1276,11 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                     this.pMain.addChild(g);
                 }
 
-                this.highlightMarks(g, capturedElements, stroke, strokeWidth, strokeOpacity, color, fillOpacity);
+                this.highlightMarks(
+                    g,
+                    capturedElements,
+                    Object.assign(DEFAULT_MARK_HIGHLIGHT_STYLE, this.options.spec.experimental?.hovering)
+                );
 
                 // API call
                 PubSub.publish('mouseover', {

@@ -1,6 +1,6 @@
 import { Datum } from '../core/gosling.schema';
 import {
-    isAnyPointsWithinRange,
+    isAllPointsWithinRange,
     isPointInPolygon,
     isPointNearLine,
     isPointNearPoint,
@@ -143,7 +143,7 @@ export class MouseEventModel {
             case 'line':
             case 'polygon':
             default:
-                return isAnyPointsWithinRange([x1, x2], data.polygon);
+                return isAllPointsWithinRange([x1, x2], data.polygon);
         }
     }
 }

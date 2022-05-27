@@ -1,28 +1,28 @@
-import * as d3Selection from 'd3-selection';
-import { drag as d3Drag } from 'd3-drag';
+import type * as D3Selection from 'd3-selection';
+import type * as D3Drag from 'd3-drag';
 
 const HIDDEN_BRUSH_EDGE_SIZE = 3;
 
-export type oneDimBrushData = [OneDimBrushBodyData, OneDimBrushStartEdgeData, OneDimBrushEndEdgeData];
+export type LinearBrushData = [LinearBrushBodyData, LinearBrushStartEdgeData, LinearBrushEndEdgeData];
 
-export type OneDimBrushDataUnion = OneDimBrushBodyData | OneDimBrushStartEdgeData | OneDimBrushEndEdgeData;
+export type LinearBrushDataUnion = LinearBrushBodyData | LinearBrushStartEdgeData | LinearBrushEndEdgeData;
 
-export interface OneDimBrushDataCommon {
+export interface LinearBrushDataCommon {
     start: number;
     end: number;
 }
 
-export interface OneDimBrushBodyData extends OneDimBrushDataCommon {
+export interface LinearBrushBodyData extends LinearBrushDataCommon {
     type: 'body';
     cursor: 'grab';
 }
 
-export interface OneDimBrushStartEdgeData extends OneDimBrushDataCommon {
+export interface LinearBrushStartEdgeData extends LinearBrushDataCommon {
     type: 'start';
     cursor: 'ew-resize';
 }
 
-export interface OneDimBrushEndEdgeData extends OneDimBrushDataCommon {
+export interface LinearBrushEndEdgeData extends LinearBrushDataCommon {
     type: 'end';
     cursor: 'ew-resize';
 }
@@ -37,20 +37,29 @@ interface BrushStyle {
     opacity: number;
 }
 
+// default styles for brush
+const BRUSH_STYLE_DEFAULT = {
+    color: '#777',
+    stroke: '#777',
+    strokeWidth: 1,
+    strokeOpacity: 0.7,
+    opacity: 0.3
+};
+
 /**
  * A model to manage 1D brush graphics and its data.
  */
-export class OneDimBrushModel {
+export class LinearBrushModel {
     /* graphical elements */
-    private brushSelection: d3Selection.Selection<SVGRectElement, OneDimBrushDataUnion, SVGGElement, any>;
+    private brushSelection: D3Selection.Selection<SVGRectElement, LinearBrushDataUnion, SVGGElement, any>;
     private readonly style: BrushStyle;
 
     /* data */
     private range: [number, number] | null;
-    private data: oneDimBrushData;
+    private data: LinearBrushData;
 
     /* drag */
-    private startEvent: typeof d3Selection.event;
+    private startEvent: typeof D3Selection.event;
     private prevExtent: [number, number] | null;
 
     /* visual parameters */
@@ -59,8 +68,8 @@ export class OneDimBrushModel {
 
     /* External libraries that we re-use from HiGlass */
     private externals: {
-        d3Selection: typeof d3Selection;
-        d3Drag: typeof d3Drag;
+        d3Selection: typeof D3Selection;
+        d3Drag: typeof D3Drag;
     };
 
     // TODO (May-19-2022): A way to pass only the required function (e.g., onRangeBrush) and allow
@@ -69,7 +78,7 @@ export class OneDimBrushModel {
     private track: any;
 
     constructor(
-        selection: d3Selection.Selection<SVGGElement, unknown, HTMLElement, unknown>,
+        selection: D3Selection.Selection<SVGGElement, unknown, HTMLElement, unknown>,
         HGC: any,
         track: any,
         style: Partial<BrushStyle> = {}
@@ -83,16 +92,10 @@ export class OneDimBrushModel {
 
         this.externals = {
             d3Selection: HGC.d3Selection,
-            d3Drag: HGC.d3Drag.drag
+            d3Drag: HGC.d3Drag
         };
 
-        this.style = {
-            color: style.color ?? '#777',
-            stroke: style.stroke ?? '#777',
-            strokeWidth: style.strokeWidth ?? 1,
-            strokeOpacity: style.strokeOpacity ?? 0.7,
-            opacity: style.opacity ?? 0.3
-        };
+        this.style = Object.assign(BRUSH_STYLE_DEFAULT, style);
 
         this.brushSelection = selection
             .selectAll('.genomic-range-brush')
@@ -127,8 +130,7 @@ export class OneDimBrushModel {
      */
     public updateRange(range: [number, number] | null) {
         if (range) {
-            this.range = range.sort((a, b) => a - b) as [number, number];
-            this.data = this.rangeToData(...this.range);
+            this.data = this.rangeToData(Math.min(...range), Math.max(...range));
         } else {
             this.range = null;
         }
@@ -142,7 +144,7 @@ export class OneDimBrushModel {
     public drawBrush(skipApiTrigger = false) {
         const [x, y] = this.offset;
         const height = this.size;
-        const getWidth = (d: OneDimBrushDataUnion) => Math.abs(d.end - d.start); // the start and end can be minus values
+        const getWidth = (d: LinearBrushDataUnion) => Math.abs(d.end - d.start); // the start and end can be minus values
         this.brushSelection
             .data(this.data)
             .attr('visibility', 'visible')
@@ -186,7 +188,7 @@ export class OneDimBrushModel {
     /**
      * Based on the extent values, generate a JSON object for the brush.
      */
-    private rangeToData(start: number, end: number): oneDimBrushData {
+    private rangeToData(start: number, end: number): LinearBrushData {
         return [
             {
                 type: 'body',
@@ -215,7 +217,7 @@ export class OneDimBrushModel {
             this.prevExtent = this.range;
         };
 
-        const dragged = (d: OneDimBrushDataUnion) => {
+        const dragged = (d: LinearBrushDataUnion) => {
             const delta = this.externals.d3Selection.event.sourceEvent.layerX - this.startEvent.layerX;
 
             // previous extent of brush
@@ -233,6 +235,9 @@ export class OneDimBrushModel {
             this.updateRange([s, e]).drawBrush();
         };
 
-        return this.externals.d3Drag<SVGRectElement, OneDimBrushDataUnion>().on('start', started).on('drag', dragged);
+        return this.externals.d3Drag
+            .drag<SVGRectElement, LinearBrushDataUnion>()
+            .on('start', started)
+            .on('drag', dragged);
     }
 }
