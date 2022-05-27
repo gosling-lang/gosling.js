@@ -1,4 +1,3 @@
-import { assign } from 'lodash-es';
 import type {
     CustomChannelDef,
     DataTransform,
@@ -366,7 +365,7 @@ export function replaceTrackTemplates(spec: GoslingSpec, templates: TemplateTrac
                                 // This means we need to override a user's spec for this channel
                                 const base = JSON.parse(JSON.stringify(encodingSpec[baseChannelName]));
                                 delete channelMap.base;
-                                const newChannelSpec = assign(channelMap, JSON.parse(JSON.stringify(base)));
+                                const newChannelSpec = Object.assign(channelMap, JSON.parse(JSON.stringify(base)));
                                 convertedTrack[channelKey as keyof TemplateTrackMappingDef] = newChannelSpec;
                             } else {
                                 // This means a user did not specify a optional custom channel, so just remove a `base` property.
