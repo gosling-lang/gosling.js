@@ -1,4 +1,4 @@
-import { PartialTrack, GoslingSpec, JSONData } from '@gosling.schema';
+import type { PartialTrack, GoslingSpec, JSONData } from '@gosling.schema';
 
 const barTrack: PartialTrack = {
     data: {

@@ -1,5 +1,5 @@
 import Ajv from 'ajv';
-import { SingleTrack, ChannelDeep, ChannelTypes, OverlaidTrack, Track } from '../gosling.schema';
+import type { SingleTrack, ChannelDeep, ChannelTypes, OverlaidTrack, Track } from '../gosling.schema';
 import { IsChannelDeep } from '../gosling.schema.guards';
 import { resolveSuperposedTracks } from './overlay';
 import GoslingSchema from '../../../schema/gosling.schema.json';

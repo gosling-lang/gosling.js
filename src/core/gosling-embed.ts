@@ -1,8 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import { GoslingSpec } from './gosling.schema';
-import { HiGlassSpec } from './higlass.schema';
+import type { GoslingSpec } from './gosling.schema';
+import type { HiGlassSpec } from './higlass.schema';
 
 import { validateGoslingSpec } from './utils/validate';
 import { compile } from './compile';

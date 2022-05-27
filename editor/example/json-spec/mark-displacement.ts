@@ -1,4 +1,4 @@
-import { GoslingSpec } from 'gosling.js';
+import type { GoslingSpec } from 'gosling.js';
 import { EX_SPEC_GENE_TRANSCRIPT } from './gene-transcript';
 import { GOSLING_PUBLIC_DATA } from './gosling-data';
 

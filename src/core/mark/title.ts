@@ -1,7 +1,7 @@
-import { GoslingTrackModel } from '../gosling-track-model';
+import type { GoslingTrackModel } from '../gosling-track-model';
 import { cartesianToPolar, valueToRadian } from '../utils/polar';
 import colorToHex from '../utils/color-to-hex';
-import { CompleteThemeDeep } from '../utils/theme';
+import type { CompleteThemeDeep } from '../utils/theme';
 import { getTextStyle } from '../utils/text-style';
 
 export function drawCircularTitle(

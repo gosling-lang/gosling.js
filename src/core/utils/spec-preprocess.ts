@@ -1,6 +1,6 @@
 import { assign } from 'lodash-es';
 import * as uuid from 'uuid';
-import {
+import type {
     SingleTrack,
     GoslingSpec,
     View,

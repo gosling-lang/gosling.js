@@ -1,4 +1,4 @@
-import { HiGlassSpec, View } from '../higlass.schema';
+import type { HiGlassSpec, View } from '../higlass.schema';
 
 /**
  * Traverse all views in a HiGlass viewConfig.

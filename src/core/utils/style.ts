@@ -1,5 +1,5 @@
 import { assign } from 'lodash-es';
-import { Style } from '../gosling.schema';
+import type { Style } from '../gosling.schema';
 
 export function getStyleOverridden(parent: Style | undefined, child: Style | undefined) {
     // Deep overriding instead of replacing.

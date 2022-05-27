@@ -1,6 +1,6 @@
-import { GoslingTrackModel } from '../gosling-track-model';
+import type { GoslingTrackModel } from '../gosling-track-model';
 import { cartesianToPolar, valueToRadian } from '../utils/polar';
-import { PIXIVisualProperty } from '../visual-property.schema';
+import type { PIXIVisualProperty } from '../visual-property.schema';
 import colorToHex from '../utils/color-to-hex';
 import { IsChannelDeep } from '../gosling.schema.guards';
 

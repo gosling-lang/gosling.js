@@ -1,7 +1,7 @@
 import * as uuid from 'uuid';
-import {
+import type {
     ChannelDeep,
-    PREDEFINED_COLORS,
+    PredefinedColors,
     ChannelTypes,
     ChannelValue,
     SingleTrack,
@@ -24,7 +24,7 @@ import { interpolateViridis } from 'd3-scale-chromatic';
 import { min as d3min, max as d3max, sum as d3sum, group } from 'd3-array';
 import { HIGLASS_AXIS_SIZE } from './higlass-model';
 import { SUPPORTED_CHANNELS } from './mark';
-import { PIXIVisualProperty } from './visual-property.schema';
+import type { PIXIVisualProperty } from './visual-property.schema';
 import { rectProperty } from './mark/rect';
 import { pointProperty } from './mark/point';
 import { barProperty } from './mark/bar';
@@ -670,7 +670,7 @@ export class GoslingTrackModel {
                                 break;
                             case 'color':
                             case 'stroke':
-                                range = CHANNEL_DEFAULTS.QUANTITATIVE_COLOR as PREDEFINED_COLORS;
+                                range = CHANNEL_DEFAULTS.QUANTITATIVE_COLOR as PredefinedColors;
                                 break;
                             case 'size':
                                 range = this.theme.markCommon.quantitativeSizeRange;
@@ -686,7 +686,7 @@ export class GoslingTrackModel {
                                 break;
                         }
                         if (range) {
-                            channel.range = range as PREDEFINED_COLORS | number[];
+                            channel.range = range as PredefinedColors | number[];
                         }
                     }
                 } else if (IsChannelDeep(channel) && channel.type === 'nominal') {

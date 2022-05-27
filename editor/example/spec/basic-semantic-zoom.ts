@@ -1,4 +1,4 @@
-import { GoslingSpec, VisibilityCondition, MultivecData } from '@gosling.schema';
+import type { GoslingSpec, VisibilityCondition, MultivecData } from '@gosling.schema';
 
 const data: MultivecData = {
     type: 'multivec',

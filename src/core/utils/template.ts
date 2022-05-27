@@ -1,5 +1,5 @@
 import { assign } from 'lodash-es';
-import {
+import type {
     CustomChannelDef,
     DataTransform,
     DataTransformWithBase,

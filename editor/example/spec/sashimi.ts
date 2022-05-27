@@ -1,4 +1,4 @@
-import { BAMData, GoslingSpec } from '@gosling.schema';
+import type { BAMData, GoslingSpec } from '@gosling.schema';
 
 const bamData: BAMData = {
     type: 'bam',

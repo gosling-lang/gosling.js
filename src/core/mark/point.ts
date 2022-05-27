@@ -1,10 +1,10 @@
-import * as PIXI from 'pixi.js';
-import { GoslingTrackModel } from '../gosling-track-model';
-import { Channel } from '../gosling.schema';
+import type * as PIXI from 'pixi.js';
+import type { GoslingTrackModel } from '../gosling-track-model';
+import type { Channel } from '../gosling.schema';
 import { getValueUsingChannel } from '../gosling.schema.guards';
 import colorToHex from '../utils/color-to-hex';
 import { cartesianToPolar } from '../utils/polar';
-import { PIXIVisualProperty } from '../visual-property.schema';
+import type { PIXIVisualProperty } from '../visual-property.schema';
 
 export function drawPoint(trackInfo: any, g: PIXI.Graphics, model: GoslingTrackModel) {
     /* track spec */
@@ -102,10 +102,11 @@ export function pointProperty(
     switch (propertyKey) {
         case 'x-center':
             return xe ? (xe + x) / 2.0 : x;
-        case 'y-center':
+        case 'y-center': {
             const ye = model.visualPropertyByChannel('ye', datum);
             const y = model.visualPropertyByChannel('y', datum);
             return ye ? (ye + y) / 2.0 : y;
+        }
         case 'p-size':
             return xe && model.spec().stretch ? (xe - x) / 2.0 : size;
         default:

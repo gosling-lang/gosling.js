@@ -1,4 +1,4 @@
-import { GoslingSpec } from 'gosling.js';
+import type { GoslingSpec } from 'gosling.js';
 import { GOSLING_PUBLIC_DATA } from './gosling-data';
 
 export const EX_SPEC_BASIC_SEMANTIC_ZOOM: GoslingSpec = {

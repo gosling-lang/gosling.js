@@ -1,4 +1,4 @@
-import { Channel, SingleTrack } from './gosling.schema';
+import type { Channel, SingleTrack } from './gosling.schema';
 import {
     IsChannelDeep,
     IsChannelValue,

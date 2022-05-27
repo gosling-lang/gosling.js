@@ -1,9 +1,9 @@
 import * as PIXI from 'pixi.js';
-import { Datum } from './gosling.schema';
-import { HiGlassApi } from './higlass-component-wrapper';
-import { HiGlassSpec } from './higlass.schema';
+import type { Datum } from './gosling.schema';
+import type { HiGlassApi } from './higlass-component-wrapper';
+import type { HiGlassSpec } from './higlass.schema';
 import { GET_CHROM_SIZES } from './utils/assembly';
-import { CompleteThemeDeep } from './utils/theme';
+import type { CompleteThemeDeep } from './utils/theme';
 import { traverseViewsInViewConfig } from './utils/view-config';
 
 export type CommonEventData = {

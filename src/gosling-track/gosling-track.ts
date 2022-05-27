@@ -1,4 +1,4 @@
-import * as PIXI from 'pixi.js';
+import type * as PIXI from 'pixi.js';
 import PubSub from 'pubsub-js';
 import * as uuid from 'uuid';
 import { isEqual, sampleSize, uniqBy } from 'lodash-es';
@@ -9,7 +9,7 @@ import { GoslingTrackModel } from '../core/gosling-track-model';
 import { validateTrack } from '../core/utils/validate';
 import { shareScaleAcrossTracks } from '../core/utils/scales';
 import { resolveSuperposedTracks } from '../core/utils/overlay';
-import { SingleTrack, OverlaidTrack, Datum } from '../core/gosling.schema';
+import type { SingleTrack, OverlaidTrack, Datum } from '../core/gosling.schema';
 import colorToHex from '../core/utils/color-to-hex';
 import {
     aggregateCoverage,
@@ -28,9 +28,9 @@ import { getRelativeGenomicPosition } from '../core/utils/assembly';
 import { getTextStyle } from '../core/utils/text-style';
 import { Is2DTrack, IsChannelDeep, IsXAxis } from '../core/gosling.schema.guards';
 import { spawn } from 'threads';
-import { InteractionEvent } from 'pixi.js';
+import type { InteractionEvent } from 'pixi.js';
 import { HIGLASS_AXIS_SIZE } from '../core/higlass-model';
-import { MouseEventData } from '../gosling-mouse-event/mouse-event-model';
+import type { MouseEventData } from '../gosling-mouse-event/mouse-event-model';
 import { flatArrayToPairArray } from '../core/utils/array';
 import { BAMDataFetcher } from '../data-fetcher/bam';
 import { GoslingVcfData } from '../data-fetcher/vcf';

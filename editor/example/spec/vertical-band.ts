@@ -1,4 +1,4 @@
-import { GoslingSpec, CSVData, Track } from '@gosling.schema';
+import type { GoslingSpec, CSVData, Track } from '@gosling.schema';
 const data: CSVData = {
     type: 'csv',
     url: 'https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/circos-segdup-edited.txt',
