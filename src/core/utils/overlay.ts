@@ -1,5 +1,4 @@
-import { AxisPosition, SingleTrack, OverlaidTrack, Track, ChannelDeep, DataDeep } from '../gosling.schema';
-import { assign } from 'lodash-es';
+import type { AxisPosition, SingleTrack, OverlaidTrack, Track, ChannelDeep, DataDeep } from '../gosling.schema';
 import { IsChannelDeep, IsDataTrack, IsOverlaidTrack, IsSingleTrack } from '../gosling.schema.guards';
 
 /**
@@ -27,7 +26,7 @@ export function resolveSuperposedTracks(track: Track): SingleTrack[] {
 
     const resolved: SingleTrack[] = [];
     track.overlay.forEach((subSpec, i) => {
-        const spec = assign(JSON.parse(JSON.stringify(base)), subSpec) as SingleTrack;
+        const spec = Object.assign(JSON.parse(JSON.stringify(base)), subSpec) as SingleTrack;
         if (spec.title && i !== 0) {
             delete spec.title;
         }
@@ -97,7 +96,7 @@ export function spreadTracksByData(tracks: Track[]): Track[] {
                     return;
                 }
 
-                const spec = assign(JSON.parse(JSON.stringify(base)), subSpec) as SingleTrack;
+                const spec = Object.assign(JSON.parse(JSON.stringify(base)), subSpec) as SingleTrack;
                 spread.push(spec);
             });
 

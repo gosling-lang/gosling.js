@@ -1,9 +1,9 @@
-import { ScaleLinear } from 'd3-scale';
-import { GoslingTrackModel } from '../gosling-track-model';
+import type { ScaleLinear } from 'd3-scale';
+import type { GoslingTrackModel } from '../gosling-track-model';
 import { IsChannelDeep } from '../gosling.schema.guards';
 import colorToHex from '../utils/color-to-hex';
 import { cartesianToPolar, valueToRadian } from '../utils/polar';
-import { CompleteThemeDeep } from '../utils/theme';
+import type { CompleteThemeDeep } from '../utils/theme';
 
 export function drawGrid(trackInfo: any, tm: GoslingTrackModel, theme: Required<CompleteThemeDeep>) {
     drawYGridQuantitative(trackInfo, tm, theme);

@@ -1,4 +1,4 @@
-import { Datum } from '../core/gosling.schema';
+import type { Datum } from '../core/gosling.schema';
 import { isPointInPolygon, isPointNearLine, isPointNearPoint } from './polygon';
 import * as uuid from 'uuid';
 

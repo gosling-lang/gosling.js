@@ -1,5 +1,4 @@
-import { SingleTrack } from '@gosling.schema';
-import type { GoslingSpec } from 'gosling.js';
+import type { GoslingSpec, SingleTrack } from '@gosling.schema';
 
 import { HiGlass } from '../json-spec/gene-annotation';
 

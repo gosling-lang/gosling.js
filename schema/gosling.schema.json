@@ -5009,20 +5009,6 @@
       ],
       "type": "object"
     },
-    "PREDEFINED_COLORS": {
-      "enum": [
-        "viridis",
-        "grey",
-        "spectral",
-        "warm",
-        "cividis",
-        "bupu",
-        "rdbu",
-        "hot",
-        "pink"
-      ],
-      "type": "string"
-    },
     "PartialTrack": {
       "additionalProperties": false,
       "properties": {
@@ -5748,13 +5734,27 @@
       },
       "type": "object"
     },
+    "PredefinedColors": {
+      "enum": [
+        "viridis",
+        "grey",
+        "spectral",
+        "warm",
+        "cividis",
+        "bupu",
+        "rdbu",
+        "hot",
+        "pink"
+      ],
+      "type": "string"
+    },
     "Range": {
       "anyOf": [
         {
           "$ref": "#/definitions/ValueExtent"
         },
         {
-          "$ref": "#/definitions/PREDEFINED_COLORS"
+          "$ref": "#/definitions/PredefinedColors"
         }
       ]
     },

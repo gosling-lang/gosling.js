@@ -1,5 +1,5 @@
-import { GoslingTrackModel } from '../gosling-track-model';
-import { Assembly, Domain } from '../gosling.schema';
+import type { GoslingTrackModel } from '../gosling-track-model';
+import type { Assembly, Domain } from '../gosling.schema';
 import { SUPPORTED_CHANNELS } from '../mark';
 import {
     IsDomainChr,
@@ -9,7 +9,7 @@ import {
     IsChannelDeep
 } from '../gosling.schema.guards';
 import { GET_CHROM_SIZES } from './assembly';
-import { Chromosome } from './chrom-size';
+import type { Chromosome } from './chrom-size';
 
 /**
  * Get a numeric domain based on a domain specification.

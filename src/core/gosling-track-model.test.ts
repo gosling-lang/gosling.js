@@ -1,5 +1,5 @@
 import { GoslingTrackModel } from './gosling-track-model';
-import { Track } from './gosling.schema';
+import type { Track } from './gosling.schema';
 import { isEqual } from 'lodash-es';
 import { IsChannelDeep, IsChannelValue } from './gosling.schema.guards';
 import { getTheme } from './utils/theme';

@@ -2,7 +2,7 @@
  * This code is based on the following repo:
  * https://github.com/higlass/higlass-pileup
  */
-import { Assembly } from '../../core/gosling.schema';
+import type { Assembly } from '../../core/gosling.schema';
 
 const DEBOUNCE_TIME = 200;
 
