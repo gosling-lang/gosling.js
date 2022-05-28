@@ -7,19 +7,10 @@
         "build": "vite build",
         "check": "tsc --noEmit"
     },
-    "exports": {
-        "./*": "./src/*"
-    },
-    "typesVersions": {
-        "*": {
-            "*": [
-                "src/*"
-            ]
-        }
-    },
     "dependencies": {
         "@gosling/core": "workspace:*",
         "@gosling/schema": "workspace:*",
+        "@gosling/theme": "workspace:*",
         "d3-drag": "^3.0.0",
         "d3-selection": "1",
         "fetch-jsonp": "^1.2.1",

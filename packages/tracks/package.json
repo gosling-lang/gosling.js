@@ -9,8 +9,10 @@
     "devDependencies": {
         "@types/d3-format": "^3.0.1",
         "@types/d3-scale": "^4.0.2",
+        "@types/d3-shape": "^3.1.0",
         "@types/lodash-es": "^4.17.6",
         "@types/pubsub-js": "^1.8.3",
+        "@types/rbush": "^3.0.0",
         "@types/uuid": "^8.3.4",
         "pixi.js": "^6.3.2"
     },
@@ -21,8 +23,10 @@
         "@gosling/schema": "workspace*",
         "d3-format": "^3.1.0",
         "d3-scale": "^4.0.2",
+        "d3-shape": "^3.1.0",
         "lodash-es": "^4.17.21",
         "pubsub-js": "^1.9.4",
+        "rbush": "^3.0.1",
         "uuid": "^8.3.2"
     }
 }

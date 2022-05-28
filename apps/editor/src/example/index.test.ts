@@ -1,7 +1,7 @@
 import { GoslingTrackModel } from '@gosling/core/gosling-track-model';
 import { resolveSuperposedTracks } from '@gosling/core/utils/overlay';
 import { convertToFlatTracks } from '@gosling/core/utils/spec-preprocess';
-import { getTheme } from '@gosling/core/utils/theme';
+import { getTheme } from '@gosling/theme';
 import { EX_TRACK_SEMANTIC_ZOOM } from './json-spec/semantic-zoom';
 
 describe('Example specs should be valid', () => {

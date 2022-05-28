@@ -32,6 +32,73 @@ importers:
       vite: 2.9.9
       vitest: 0.12.9_jsdom@19.0.0
 
+  apps/editor:
+    specifiers:
+      '@gosling/core': workspace:*
+      '@gosling/schema': workspace:*
+      '@gosling/theme': workspace:*
+      '@types/d3-drag': ^3.0.1
+      '@types/d3-selection': '1'
+      '@types/lodash-es': ^4.17.6
+      '@types/react': ^16.9.46
+      '@types/react-dom': ^16.9.8
+      '@types/react-router-dom': ^5.3.3
+      '@vitejs/plugin-react': ^1.3.2
+      d3-drag: ^3.0.0
+      d3-selection: '1'
+      fetch-jsonp: ^1.2.1
+      gosling-theme: ^0.0.10
+      gosling.js: workspace:*
+      higlass: ^1.11.11
+      json-stringify-pretty-compact: ^4.0.0
+      jsoncrush: ^1.1.6
+      lodash-es: ^4.17.21
+      monaco-editor: ^0.33.0
+      pixi.js: ^6.3.2
+      pubsub-js: ^1.9.4
+      react: ^16.13.1
+      react-dom: ^16.14.0
+      react-markdown: ^5.0.3
+      react-monaco-editor: ^0.45.0
+      react-resize-detector: ^7.0.0
+      react-router-dom: ^5.2.0
+      react-split-pane: ~0.1.91
+      remark-gfm: ^3.0.1
+      strip-json-comments: ^4.0.0
+    dependencies:
+      '@gosling/core': link:../../packages/core
+      '@gosling/schema': link:../../packages/schema
+      '@gosling/theme': link:../../packages/theme
+      d3-drag: 3.0.0
+      d3-selection: 1.4.2
+      fetch-jsonp: 1.2.1
+      gosling-theme: 0.0.10
+      gosling.js: link:../../packages/main
+      higlass: 1.11.11_hq3lthv7pwaafpt2owirosfxqq
+      json-stringify-pretty-compact: 4.0.0
+      jsoncrush: 1.1.6
+      lodash-es: 4.17.21
+      monaco-editor: 0.33.0
+      pixi.js: 6.3.2
+      pubsub-js: 1.9.4
+      react: 16.14.0
+      react-dom: 16.14.0_react@16.14.0
+      react-markdown: 5.0.3_6272qtgevkf4piug7x52dbvy2u
+      react-monaco-editor: 0.45.0_6272qtgevkf4piug7x52dbvy2u
+      react-resize-detector: 7.1.1_wcqkhtmu7mswc6yz4uyexck3ty
+      react-router-dom: 5.3.3_react@16.14.0
+      react-split-pane: 0.1.92_wcqkhtmu7mswc6yz4uyexck3ty
+      remark-gfm: 3.0.1
+      strip-json-comments: 4.0.0
+    devDependencies:
+      '@types/d3-drag': 3.0.1
+      '@types/d3-selection': 1.4.3
+      '@types/lodash-es': 4.17.6
+      '@types/react': 16.14.26
+      '@types/react-dom': 16.9.16
+      '@types/react-router-dom': 5.3.3
+      '@vitejs/plugin-react': 1.3.2
+
   packages/core:
     specifiers:
       '@gosling/data-fetchers': workspace:*
@@ -48,8 +115,8 @@ importers:
       '@types/d3-scale-chromatic': ^3.0.0
       '@types/lodash-es': ^4.17.6
       '@types/pubsub-js': ^1.8.3
-      '@types/react': ^18.0.9
-      '@types/react-dom': ^18.0.4
+      '@types/react': ^16.9.46
+      '@types/react-dom': ^16.9.8
       '@types/uuid': ^8.3.4
       ajv: ^6.12.2
       bezier-js: ^6.1.0
@@ -91,7 +158,7 @@ importers:
       pubsub-js: 1.9.4
       uuid: 8.3.2
     devDependencies:
-      '@gosling/editor': link:../editor
+      '@gosling/editor': link:../../apps/editor
       '@types/bezier-js': 4.1.0
       '@types/d3-array': 3.0.3
       '@types/d3-color': 3.1.0
@@ -99,8 +166,8 @@ importers:
       '@types/d3-scale': 4.0.2
       '@types/d3-scale-chromatic': 3.0.0
       '@types/lodash-es': 4.17.6
-      '@types/react': 18.0.9
-      '@types/react-dom': 18.0.5
+      '@types/react': 16.14.26
+      '@types/react-dom': 16.9.16
       '@types/uuid': 8.3.4
       higlass: 1.11.11_hq3lthv7pwaafpt2owirosfxqq
       pixi.js: 6.3.2
@@ -143,79 +210,6 @@ importers:
       '@types/d3-dsv': 3.0.0
       '@types/lodash-es': 4.17.6
       cross-fetch: 3.1.5
-
-  packages/editor:
-    specifiers:
-      '@gosling/core': workspace:*
-      '@gosling/schema': workspace:*
-      '@types/d3-drag': ^3.0.1
-      '@types/d3-selection': '1'
-      '@types/lodash-es': ^4.17.6
-      '@types/react': ^16.9.46
-      '@types/react-dom': ^16.9.8
-      '@types/react-router-dom': ^5.3.3
-      '@vitejs/plugin-react': ^1.3.2
-      d3-drag: ^3.0.0
-      d3-selection: '1'
-      fetch-jsonp: ^1.2.1
-      gosling-theme: ^0.0.10
-      gosling.js: workspace:*
-      higlass: ^1.11.11
-      json-stringify-pretty-compact: ^4.0.0
-      jsoncrush: ^1.1.6
-      lodash-es: ^4.17.21
-      monaco-editor: ^0.33.0
-      pixi.js: ^6.3.2
-      pubsub-js: ^1.9.4
-      react: ^16.13.1
-      react-dom: ^16.14.0
-      react-markdown: ^5.0.3
-      react-monaco-editor: ^0.45.0
-      react-resize-detector: ^7.0.0
-      react-router-dom: ^5.2.0
-      react-split-pane: ~0.1.91
-      remark-gfm: ^3.0.1
-      strip-json-comments: ^4.0.0
-    dependencies:
-      '@gosling/core': link:../core
-      '@gosling/schema': link:../schema
-      d3-drag: 3.0.0
-      d3-selection: 1.4.2
-      fetch-jsonp: 1.2.1
-      gosling-theme: 0.0.10
-      gosling.js: link:../main
-      higlass: 1.11.11_hq3lthv7pwaafpt2owirosfxqq
-      json-stringify-pretty-compact: 4.0.0
-      jsoncrush: 1.1.6
-      lodash-es: 4.17.21
-      monaco-editor: 0.33.0
-      pixi.js: 6.3.2
-      pubsub-js: 1.9.4
-      react: 16.14.0
-      react-dom: 16.14.0_react@16.14.0
-      react-markdown: 5.0.3_6272qtgevkf4piug7x52dbvy2u
-      react-monaco-editor: 0.45.0_6272qtgevkf4piug7x52dbvy2u
-      react-resize-detector: 7.1.1_wcqkhtmu7mswc6yz4uyexck3ty
-      react-router-dom: 5.3.3_react@16.14.0
-      react-split-pane: 0.1.92_wcqkhtmu7mswc6yz4uyexck3ty
-      remark-gfm: 3.0.1
-      strip-json-comments: 4.0.0
-    devDependencies:
-      '@types/d3-drag': 3.0.1
-      '@types/d3-selection': 1.4.3
-      '@types/lodash-es': 4.17.6
-      '@types/react': 16.14.26
-      '@types/react-dom': 16.9.16
-      '@types/react-router-dom': 5.3.3
-      '@vitejs/plugin-react': 1.3.2
-
-  packages/embed:
-    specifiers:
-      '@gosling/core': workspace:*
-      '@gosling/schema': workspace:*
-    dependencies:
-      '@gosling/core': link:../core
-      '@gosling/schema': link:../schema
 
   packages/main:
     specifiers:
@@ -262,14 +256,18 @@ importers:
       '@gosling/schema': workspace*
       '@types/d3-format': ^3.0.1
       '@types/d3-scale': ^4.0.2
+      '@types/d3-shape': ^3.1.0
       '@types/lodash-es': ^4.17.6
       '@types/pubsub-js': ^1.8.3
+      '@types/rbush': ^3.0.0
       '@types/uuid': ^8.3.4
       d3-format: ^3.1.0
       d3-scale: ^4.0.2
+      d3-shape: ^3.1.0
       lodash-es: ^4.17.21
       pixi.js: ^6.3.2
       pubsub-js: ^1.9.4
+      rbush: ^3.0.1
       uuid: ^8.3.2
     dependencies:
       '@gosling/core': link:../core
@@ -278,14 +276,18 @@ importers:
       '@gosling/schema': link:../schema
       d3-format: 3.1.0
       d3-scale: 4.0.2
+      d3-shape: 3.1.0
       lodash-es: 4.17.21
       pubsub-js: 1.9.4
+      rbush: 3.0.1
       uuid: 8.3.2
     devDependencies:
       '@types/d3-format': 3.0.1
       '@types/d3-scale': 4.0.2
+      '@types/d3-shape': 3.1.0
       '@types/lodash-es': 4.17.6
       '@types/pubsub-js': 1.8.3
+      '@types/rbush': 3.0.0
       '@types/uuid': 8.3.4
       pixi.js: 6.3.2
 
@@ -771,7 +773,7 @@ packages:
       '@pixi/settings': 6.3.2
       '@pixi/ticker': 6.3.2_@pixi+settings@6.3.2
       '@pixi/utils': 6.3.2_zm75i452lauch4w72pktyv5ezi
-      '@types/offscreencanvas': 2019.6.4
+      '@types/offscreencanvas': 2019.7.0
 
   /@pixi/display/6.3.2_47cmrieohhdv7ltpupsiwihjhu:
     resolution: {integrity: sha512-D+WiM0BcyPK91RYxl7TXXVNz/5lOGs8Q6jtCMcWgTHwCXxWPOHFnNZ4KPJZpUQ7me8Tl2u+c9hfB5Oh1+17r/Q==}
@@ -1163,6 +1165,10 @@ packages:
     resolution: {integrity: sha512-5KY70ifCCzorkLuIkDe0Z9YTf9RR2CjBX1iaJG+rgM/cPP+sO+q9YdQ9WdhQcgPj1EQiJ2/0+yUkkziTG6Lubg==}
     dev: true
 
+  /@types/d3-path/3.0.0:
+    resolution: {integrity: sha512-0g/A+mZXgFkQxN3HniRDbXMN79K3CdTpLsevj+PXiTcb2hVyvkZUBg37StmgCQkaD84cUJ4uaDAWq7UJOQy2Tg==}
+    dev: true
+
   /@types/d3-scale-chromatic/3.0.0:
     resolution: {integrity: sha512-dsoJGEIShosKVRBZB0Vo3C8nqSDqVGujJU6tPznsBJxNJNwMF8utmS83nvCBKQYPpjCzaaHcrf66iTRpZosLPw==}
     dev: true
@@ -1175,6 +1181,12 @@ packages:
 
   /@types/d3-selection/1.4.3:
     resolution: {integrity: sha512-GjKQWVZO6Sa96HiKO6R93VBE8DUW+DDkFpIMf9vpY5S78qZTlRRSNUsHr/afDpF7TvLDV7VxrUFOWW7vdIlYkA==}
+    dev: true
+
+  /@types/d3-shape/3.1.0:
+    resolution: {integrity: sha512-jYIYxFFA9vrJ8Hd4Se83YI6XF+gzDL1aC5DCsldai4XYYiVNdhtpGbA/GM6iyQ8ayhSp3a148LY34hy7A4TxZA==}
+    dependencies:
+      '@types/d3-path': 3.0.0
     dev: true
 
   /@types/d3-time/3.0.0:
@@ -1230,8 +1242,8 @@ packages:
     resolution: {integrity: sha512-Gj7cI7z+98M282Tqmp2K5EIsoouUEzbBJhQQzDE3jSIRk6r9gsz0oUokqIUR4u1R3dMHo0pDHM7sNOHyhulypw==}
     dev: true
 
-  /@types/offscreencanvas/2019.6.4:
-    resolution: {integrity: sha512-u8SAgdZ8ROtkTF+mfZGOscl0or6BSj9A4g37e6nvxDc+YB/oDut0wHkK2PBBiC2bNR8TS0CPV+1gAk4fNisr1Q==}
+  /@types/offscreencanvas/2019.7.0:
+    resolution: {integrity: sha512-PGcyveRIpL1XIqK8eBsmRBt76eFgtzuPiSTyKHZxnGemp2yzGzWpjYKAfK3wIMiU7eH+851yEpiuP8JZerTmWg==}
 
   /@types/prop-types/15.7.5:
     resolution: {integrity: sha512-JCB8C6SnDoQf0cNycqd/35A7MjcnK+ZTqE7judS6o7utxUCg6imJg3QK2qzHKszlTjcj2cn+NwMB2i96ubpj7w==}
@@ -1244,16 +1256,14 @@ packages:
     dev: false
     optional: true
 
+  /@types/rbush/3.0.0:
+    resolution: {integrity: sha512-W3ue/GYWXBOpkRm0VSoifrP3HV0Ni47aVJWvXyWMcbtpBy/l/K/smBRiJ+fI8f7shXRjZBiux+iJzYbh7VmcZg==}
+    dev: true
+
   /@types/react-dom/16.9.16:
     resolution: {integrity: sha512-Oqc0RY4fggGA3ltEgyPLc3IV9T73IGoWjkONbsyJ3ZBn+UPPCYpU2ec0i3cEbJuEdZtkqcCF2l1zf2pBdgUGSg==}
     dependencies:
       '@types/react': 16.14.26
-    dev: true
-
-  /@types/react-dom/18.0.5:
-    resolution: {integrity: sha512-OWPWTUrY/NIrjsAPkAk1wW9LZeIjSvkXRhclsFO8CZcZGCOg2G0YZy4ft+rOyYxy8B7ui5iZzi9OkDebZ7/QSA==}
-    dependencies:
-      '@types/react': 18.0.9
     dev: true
 
   /@types/react-router-dom/5.3.3:
@@ -1277,14 +1287,6 @@ packages:
       '@types/prop-types': 15.7.5
       '@types/scheduler': 0.16.2
       csstype: 3.1.0
-
-  /@types/react/18.0.9:
-    resolution: {integrity: sha512-9bjbg1hJHUm4De19L1cHiW0Jvx3geel6Qczhjd0qY5VKVE2X5+x77YxAepuCwVh4vrgZJdgEJw48zrhRIeF4Nw==}
-    dependencies:
-      '@types/prop-types': 15.7.5
-      '@types/scheduler': 0.16.2
-      csstype: 3.1.0
-    dev: true
 
   /@types/scheduler/0.16.2:
     resolution: {integrity: sha512-hppQEBDmlwhFAXKJX2KnWLYu5yMfi91yazPb2l+lbJiwW+wdo1gNeRA+3RgNSO39WYX2euey41KEwnqesU2Jew==}
@@ -1770,7 +1772,7 @@ packages:
     dev: true
 
   /color-name/1.1.3:
-    resolution: {integrity: sha1-p9BVi9icQveV3UIyj3QIMcpTvCU=}
+    resolution: {integrity: sha512-72fSenhMw2HZMTVHeCA9KCmpEIbzWiQsjN+BHcBbS9vr1mtt+vJjPdksIBNUmKAW8TFUDPJK5SUU3QhE9NEXDw==}
     dev: true
 
   /color-name/1.1.4:
@@ -2125,6 +2127,11 @@ packages:
       d3-color: 3.1.0
     dev: false
 
+  /d3-path/3.0.1:
+    resolution: {integrity: sha512-gq6gZom9AFZby0YLduxT1qmrp4xpBA1YZr19OI717WIdKE2OM5ETq5qrHLb301IgxhLwcuxvGZVLeeWc/k1I6w==}
+    engines: {node: '>=12'}
+    dev: false
+
   /d3-request/1.0.6:
     resolution: {integrity: sha512-FJj8ySY6GYuAJHZMaCQ83xEYE4KbkPkmxZ3Hu6zA1xxG2GD+z6P+Lyp+zjdsHf0xEbp2xcluDI50rCS855EQ6w==}
     dependencies:
@@ -2172,6 +2179,13 @@ packages:
   /d3-selection/3.0.0:
     resolution: {integrity: sha512-fmTRWbNMmsmWq6xJV8D19U/gw/bwrHfNXxrIN+HfZgnzqTHp9jOmKMhsTUjXOJnZOdZY9Q28y4yebKzqDKlxlQ==}
     engines: {node: '>=12'}
+    dev: false
+
+  /d3-shape/3.1.0:
+    resolution: {integrity: sha512-tGDh1Muf8kWjEDT/LswZJ8WF85yDZLvVJpYU9Nq+8+yW1Z5enxrmXOhTArlkaElU+CTn0OTVNli+/i+HP45QEQ==}
+    engines: {node: '>=12'}
+    dependencies:
+      d3-path: 3.0.1
     dev: false
 
   /d3-time-format/2.3.0:
@@ -4729,6 +4743,10 @@ packages:
     resolution: {integrity: sha512-ARhCpm70fzdcvNQfPoy49IaanKkTlRWF2JMzqhcJbhSFRZv7nPTvZJdcY7301IPmvW+/p0RgIWnQDLJxifsQ7g==}
     engines: {node: '>=8'}
 
+  /quickselect/2.0.0:
+    resolution: {integrity: sha512-RKJ22hX8mHe3Y6wH/N3wCM6BWtjaxIyyUIkpHOvfFnxdI4yD4tBXEBKSbriGujF6jnSVkJrffuo6vxACiSSxIw==}
+    dev: false
+
   /raf/3.4.1:
     resolution: {integrity: sha512-Sq4CW4QhwOHE8ucn6J34MqtZCeWFP2aQSmrlroYgqAV1PjStIhJXxYuTgUIfkEk7zTLjmIjLmU5q+fbD1NnOJA==}
     dependencies:
@@ -4738,6 +4756,12 @@ packages:
 
   /ramda/0.28.0:
     resolution: {integrity: sha512-9QnLuG/kPVgWvMQ4aODhsBUFKOUmnbUnsSXACv+NCQZcHbeb+v8Lodp8OVxtRULN1/xOyYLLaL6npE6dMq5QTA==}
+    dev: false
+
+  /rbush/3.0.1:
+    resolution: {integrity: sha512-XRaVO0YecOpEuIvbhbpTrZgoiI6xBlz6hnlr6EHhd+0x9ase6EmeN+hdwwUaJvLcsFFQ8iWVF1GAK1yB0BWi0w==}
+    dependencies:
+      quickselect: 2.0.0
     dev: false
 
   /react-dom/16.14.0_react@16.14.0:
