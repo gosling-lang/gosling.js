@@ -14,19 +14,9 @@
         "inlineSourceMap": true,
         "noImplicitAny": true,
         "types": ["vitest/globals", "vite/client"],
-        "rootDir": "./",
         "composite": true,
         "allowJs": true,
         "jsx": "react"
     },
-    "exclude": ["**/dist/**"],
-    "references": [
-        { "path": "./packages/core" },
-        { "path": "./packages/schema" },
-        { "path": "./packages/brush" },
-        { "path": "./packages/mouse-event" },
-        { "path": "./packages/genomic-axis" },
-        { "path": "./packages/data-fetcher" },
-        { "path": "./packages/track" }
-    ]
+    "exclude": ["**/dist/**", "**/node_modules/**"],
 }

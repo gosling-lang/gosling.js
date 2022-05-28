@@ -22,13 +22,11 @@
         "react-dom": "^16.0.0 || ^17.0.0"
     },
     "dependencies": {
-        "@gosling/brush": "workspace:*",
-        "@gosling/data-fetcher": "workspace:*",
-        "@gosling/genomic-axis": "workspace:*",
+        "@gosling/data-fetchers": "workspace:*",
         "@gosling/mouse-event": "workspace:*",
         "@gosling/schema": "workspace:*",
         "@gosling/theme": "workspace:*",
-        "@gosling/track": "workspace:*",
+        "@gosling/tracks": "workspace:*",
         "@types/pubsub-js": "^1.8.3",
         "ajv": "^6.12.2",
         "bezier-js": "^6.1.0",
