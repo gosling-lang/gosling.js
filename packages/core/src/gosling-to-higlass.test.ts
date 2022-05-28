@@ -1,4 +1,5 @@
-import { EX_TRACK_SEMANTIC_ZOOM } from '@gosling/editor/example/json-spec/semantic-zoom';
+// @ts-ignore
+import { EX_TRACK_SEMANTIC_ZOOM } from '../../../apps/editor/src/example/json-spec/semantic-zoom';
 
 import { goslingToHiGlass } from './gosling-to-higlass';
 import { HiGlassModel } from './higlass-model';

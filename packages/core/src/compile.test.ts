@@ -1,4 +1,5 @@
-import { EX_SPEC_VISUAL_ENCODING } from '@gosling/editor/example/json-spec/visual-encoding';
+// @ts-ignore should avoid circular imports, especially from editor
+import { EX_SPEC_VISUAL_ENCODING } from '../../../apps/editor/src/example/json-spec/visual-encoding';
 import { compile } from './compile';
 import { getTheme } from '@gosling/theme';
 

@@ -1,5 +1,6 @@
 import { validateGoslingSpec } from './validate';
-import { EX_SPEC_CYTOBANDS } from '@gosling/editor/example/json-spec/ideograms';
+// @ts-ignore shouldn't import from editor. Perhaps move into own package.
+import { EX_SPEC_CYTOBANDS } from '../../../../apps/editor/src/example/json-spec/ideograms';
 
 describe('Validate Spec', () => {
     it('Example Specs', () => {
