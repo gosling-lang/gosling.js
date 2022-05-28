@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
-import MonacoEditor from 'react-monaco-editor';
+import MonacoEditor, { type EditorDidMount } from 'react-monaco-editor';
 
 import ReactResizeDetector from 'react-resize-detector';
 import { GoslingSchema } from 'gosling.js';
@@ -7,6 +7,9 @@ import goslingSpec from '@gosling/schema/gosling.schema.ts?raw';
 
 export * from './monaco_worker';
 import * as Monaco from 'monaco-editor';
+
+// Workaround to get correct type for our ref.
+type IStandaloneCodeEditor = Parameters<EditorDidMount>[0];
 
 function EditorPanel(props: {
     code: string;
@@ -20,7 +23,7 @@ function EditorPanel(props: {
     language: string;
 }) {
     const { code: templateCode, readOnly, openFindBox, fontZoomIn, fontZoomOut, isDarkTheme, language } = props;
-    const editor = useRef<Monaco.editor.IStandaloneCodeEditor | null>(null);
+    const editor = useRef<IStandaloneCodeEditor>();
     const [code, setCode] = useState(templateCode);
 
     useEffect(() => {
@@ -50,7 +53,7 @@ function EditorPanel(props: {
         }
     }, [fontZoomOut]);
 
-    function editorDidMount(monacoEditor: Monaco.editor.IStandaloneCodeEditor) {
+    function editorDidMount(monacoEditor: IStandaloneCodeEditor) {
         editor.current = monacoEditor;
         monacoEditor.focus();
 
@@ -139,8 +142,10 @@ function EditorPanel(props: {
             <ReactResizeDetector
                 handleWidth
                 handleHeight
-                onResize={(width: number, height: number) => {
-                    editor?.current?.layout({ width, height });
+                onResize={(width, height) => {
+                    if (width && height) {
+                        editor?.current?.layout({ width, height });
+                    }
                 }}
             ></ReactResizeDetector>
             <MonacoEditor

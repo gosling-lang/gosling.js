@@ -11,6 +11,7 @@
         "@gosling/core": "workspace:*",
         "@gosling/schema": "workspace:*",
         "@gosling/theme": "workspace:*",
+        "buffer": "^6.0.3",
         "d3-drag": "^3.0.0",
         "d3-selection": "1",
         "fetch-jsonp": "^1.2.1",
@@ -26,11 +27,11 @@
         "react": "^16.13.1",
         "react-dom": "^16.14.0",
         "react-markdown": "^5.0.3",
-        "react-monaco-editor": "^0.45.0",
-        "react-resize-detector": "^7.0.0",
+        "react-monaco-editor": "~0.45.0",
+        "react-resize-detector": "^7.1.1",
         "react-router-dom": "^5.2.0",
-        "react-split-pane": "~0.1.91",
-        "remark-gfm": "^3.0.1",
+        "react-split-pane": "^0.1.91",
+        "remark-gfm": "^1.0.0",
         "strip-json-comments": "^4.0.0"
     },
     "devDependencies": {

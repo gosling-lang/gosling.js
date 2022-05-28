@@ -32,7 +32,7 @@ import { BAMDataFetcher, GoslingVcfData } from '@gosling/data-fetchers';
 
 import type { InteractionEvent } from 'pixi.js';
 import type { SingleTrack, OverlaidTrack, Datum } from '@gosling/schema';
-import type { MouseEventData } from '@gosling/mouse-event/mouse-event-model';
+import type { MouseEventData } from '@gosling/mouse-event';
 
 import { getTabularData, GOSLING_DATA_ROW_UID_FIELD } from './data-abstraction';
 
