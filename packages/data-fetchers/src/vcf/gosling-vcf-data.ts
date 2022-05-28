@@ -3,6 +3,8 @@
  * https://github.com/dbmi-bgm/higlass-sv/blob/main/src/sv-fetcher.js
  */
 import type { Assembly } from '@gosling/schema';
+import Worker from './vcf-worker.js?worker&inline';
+import { spawn } from 'threads';
 
 const DEBOUNCE_TIME = 200;
 
@@ -22,10 +24,10 @@ class GoslingVcfData {
     private tbiIndexed: any;
     private tbiVCFParser: any;
 
-    constructor(HGC: any, dataConfig: any, worker: any) {
+    constructor(HGC: any, dataConfig: any) {
         this.dataConfig = dataConfig;
         this.uid = HGC.libraries.slugid.nice();
-        this.worker = worker;
+        this.worker = spawn(new Worker());
         this.prevRequestTime = 0;
         this.assembly = 'hg38';
 

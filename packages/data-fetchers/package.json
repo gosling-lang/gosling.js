@@ -1,20 +1,12 @@
 {
-    "name": "@gosling/data-fetcher",
+    "name": "@gosling/data-fetchers",
     "version": "0.0.0",
     "type": "module",
+    "main": "src/index.ts",
+    "types": "src/index.ts",
     "scripts": {
         "check": "tsc --noEmit",
         "test": "vitest --globals"
-    },
-    "exports": {
-        "./*": "./src/*"
-    },
-    "typesVersions": {
-        "*": {
-            "*": [
-                "src/*"
-            ]
-        }
     },
     "dependencies": {
         "@gmod/bam": "^1.1.16",

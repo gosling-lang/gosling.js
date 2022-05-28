@@ -3,6 +3,8 @@
  * https://github.com/higlass/higlass-pileup
  */
 import type { Assembly } from '@gosling/schema';
+import Worker from './bam-worker.js?worker&inline';
+import { spawn } from 'threads';
 
 const DEBOUNCE_TIME = 200;
 
@@ -19,8 +21,8 @@ class BAMDataFetcher {
     private toFetch: Set<any>;
     private track: any;
 
-    constructor(HGC: any, dataConfig: any, worker: any) {
-        this.worker = worker;
+    constructor(HGC: any, dataConfig: any) {
+        this.worker = spawn(new Worker());
         this.dataConfig = dataConfig;
         this.uid = HGC.libraries.slugid.nice();
         this.assembly = 'hg38';
