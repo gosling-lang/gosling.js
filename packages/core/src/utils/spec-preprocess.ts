@@ -1,6 +1,18 @@
 import { assign } from 'lodash-es';
 import * as uuid from 'uuid';
 import {
+    SingleTrack,
+    GoslingSpec,
+    View,
+    SingleView,
+    Track,
+    PartialTrack,
+    CommonTrackDef,
+    CommonViewDef,
+    MultipleViews,
+    DisplaceTransform
+} from '@gosling/schema';
+import {
     IsDataTemplate,
     IsDataDeepTileset,
     IsSingleTrack,
@@ -18,19 +30,6 @@ import {
 } from '../defaults';
 import { spreadTracksByData } from './overlay';
 import { getStyleOverridden } from '../utils/style';
-
-import type {
-    SingleTrack,
-    GoslingSpec,
-    View,
-    SingleView,
-    Track,
-    PartialTrack,
-    CommonTrackDef,
-    CommonViewDef,
-    MultipleViews,
-    DisplaceTransform
-} from '@gosling/schema';
 
 /**
  * Traverse individual tracks and call the callback function to read and/or update the track definition.

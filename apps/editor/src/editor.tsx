@@ -26,6 +26,7 @@ import type { HiGlassSpec } from '@gosling/schema/higlass.schema';
 import type { Datum } from '@gosling/schema';
 
 import './editor.css';
+import { IsDataTrack } from '@gosling/core/gosling.schema.guards';
 
 function json2js(jsonCode: string) {
     return `var spec = ${jsonCode} \nexport { spec }; \n`;
@@ -137,12 +138,12 @@ const getDescPanelDefultWidth = () => Math.min(500, window.innerWidth);
  * (e.g., './example.csv' => 'https://gist.githubusercontent.com/{urlGist}/raw/example.csv')
  */
 function resolveRelativeCsvUrls(spec: string, importMeta: URL) {
-    const newSpec = JSON.parse(spec);
+    const newSpec: gosling.GoslingSpec = JSON.parse(spec);
     // https://regex101.com/r/l87Q5q/1
     // eslint-disable-next-line
     const relativePathRegex = /^[.\/]|^\.[.\/]|^\.\.[^\/]/;
-    traverseTracksAndViews(newSpec as gosling.GoslingSpec, (tv: any) => {
-        if (tv.data && tv.data.type === 'csv' && relativePathRegex.test(tv.data.url)) {
+    traverseTracksAndViews(newSpec, (tv) => {
+        if (IsDataTrack(tv) && tv.data.type === 'csv' && relativePathRegex.test(tv.data.url)) {
             tv.data.url = new URL(tv.data.url, importMeta).href;
         }
     });
@@ -210,7 +211,7 @@ function Editor() {
 
     const previewData = useRef<PreviewData[]>([]);
     const [refreshData, setRefreshData] = useState<boolean>(false);
-    const [language, changeLanguage] = useState<string>('json');
+    const [language, changeLanguage] = useState<'javascript' | 'json'>('json');
 
     const [demo, setDemo] = useState(
         examples[urlExampleId] ? { id: urlExampleId, ...examples[urlExampleId] } : INIT_DEMO
@@ -1317,8 +1318,8 @@ function Editor() {
                 >
                     {ExampleGroups.filter(_ => _.name !== 'Doc' && _.name !== 'Unassigned').map(group => {
                         return (
-                            <>
-                                <a className="siderbar-group" key={group.name} href={`#${group.name}`}>
+                            <div key={group.name}>
+                                <a className="siderbar-group" href={`#${group.name}`}>
                                     {group.name}
                                 </a>
                                 {Object.entries(examples)
@@ -1329,7 +1330,7 @@ function Editor() {
                                             {d[1].name}
                                         </a>
                                     ))}
-                            </>
+                            </div>
                         );
                     })}
                 </div>
@@ -1340,41 +1341,44 @@ function Editor() {
                     }}
                 >
                     <h1>Gosling.js Examples</h1>
-                    {ExampleGroups.filter(_ => _.name !== 'Doc' && _.name !== 'Unassigned').map(group => {
-                        return (
-                            <>
-                                <h2 id={`${group.name}`}>{group.name}</h2>
-                                <h5>{group.description}</h5>
-                                <div className="example-group" key={group.name}>
-                                    {Object.entries(examples)
-                                        .filter(d => !d[1].hidden)
-                                        .filter(d => d[1].group === group.name)
-                                        .map(d => {
-                                            return (
-                                                <div
-                                                    id={`${d[1].group}_${d[1].name}`}
-                                                    title={d[1].name}
-                                                    key={d[0]}
-                                                    className="example-card"
-                                                    onClick={() => {
-                                                        setShowExamples(false);
-                                                        setDemo({ id: d[0], ...examples[d[0]] } as any);
-                                                    }}
-                                                >
+                    {ExampleGroups
+                        .filter(_ => _.name !== 'Doc' && _.name !== 'Unassigned')
+                        .map(group => {
+                            return (
+                                <div key={group.name}>
+                                    <h2 id={`${group.name}`}>{group.name}</h2>
+                                    <h5>{group.description}</h5>
+                                    <div className="example-group" key={group.name}>
+                                        {Object.entries(examples)
+                                            .filter(d => !d[1].hidden)
+                                            .filter(d => d[1].group === group.name)
+                                            .map(d => {
+                                                return (
                                                     <div
-                                                        className="example-card-bg"
-                                                        style={{
-                                                            backgroundImage: d[1].image ? `url(${d[1].image})` : 'none'
+                                                        id={`${d[1].group}_${d[1].name}`}
+                                                        title={d[1].name}
+                                                        key={d[0]}
+                                                        className="example-card"
+                                                        onClick={() => {
+                                                            setShowExamples(false);
+                                                            setDemo({ id: d[0], ...examples[d[0]] } as any);
                                                         }}
-                                                    />
-                                                    <div className="example-card-name">{d[1].name}</div>
-                                                </div>
-                                            );
-                                        })}
+                                                    >
+                                                        <div
+                                                            className="example-card-bg"
+                                                            style={{
+                                                                backgroundImage: d[1].image ? `url(${d[1].image})` : 'none'
+                                                            }}
+                                                        />
+                                                        <div className="example-card-name">{d[1].name}</div>
+                                                    </div>
+                                                );
+                                            })}
+                                    </div>
                                 </div>
-                            </>
-                        );
-                    })}
+                            );
+                        })
+                    }
                     {/* Just an margin on the bottom */}
                     <div style={{ height: '40px' }}></div>
                 </div>
