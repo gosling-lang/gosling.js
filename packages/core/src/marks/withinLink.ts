@@ -1,10 +1,8 @@
 import * as PIXI from 'pixi.js';
 import { Bezier } from 'bezier-js';
-
 import { GoslingTrackModel } from '../gosling-track-model';
-import { IsChannelDeep, getValueUsingChannel, Is2DTrack } from '../gosling.schema.guards';
-import { cartesianToPolar, positionToRadian } from '../utils/polar';
-import colorToHex from '../utils/color-to-hex';
+import { IsChannelDeep, Is2DTrack, getValueUsingChannel } from '../gosling.schema.guards';
+import { colorToHex, cartesianToPolar, positionToRadian } from '../utils';
 
 import type { Channel } from '@gosling/schema';
 

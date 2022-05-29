@@ -2,8 +2,7 @@ import { GoslingTrackModel } from '../gosling-track-model';
 import { group } from 'd3-array';
 import { PIXIVisualProperty } from '../visual-property.schema';
 import { IsChannelDeep, IsStackedMark, getValueUsingChannel } from '../gosling.schema.guards';
-import { cartesianToPolar, valueToRadian } from '../utils/polar';
-import colorToHex from '../utils/color-to-hex';
+import { cartesianToPolar, valueToRadian, colorToHex } from '../utils';
 
 import type { Channel } from '@gosling/schema';
 

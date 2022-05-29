@@ -1,7 +1,7 @@
 import { GoslingTrackModel } from '../gosling-track-model';
 import { group } from 'd3-array';
 import { getValueUsingChannel, IsStackedMark } from '../gosling.schema.guards';
-import { cartesianToPolar } from '../utils/polar';
+import { cartesianToPolar } from '../utils';
 
 import type { Channel } from '@gosling/schema';
 

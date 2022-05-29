@@ -1,7 +1,5 @@
 import { GoslingTrackModel } from '../gosling-track-model';
-import { cartesianToPolar, valueToRadian } from '../utils/polar';
-import colorToHex from '../utils/color-to-hex';
-import { getTextStyle } from '../utils/text-style';
+import { cartesianToPolar, valueToRadian, getTextStyle, colorToHex } from '../utils';
 
 import type { CompleteThemeDeep } from '@gosling/theme';
 

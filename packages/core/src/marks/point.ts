@@ -1,8 +1,7 @@
 import * as PIXI from 'pixi.js';
 import { GoslingTrackModel } from '../gosling-track-model';
 import { getValueUsingChannel } from '../gosling.schema.guards';
-import colorToHex from '../utils/color-to-hex';
-import { cartesianToPolar } from '../utils/polar';
+import { cartesianToPolar, colorToHex } from '../utils';
 import { PIXIVisualProperty } from '../visual-property.schema';
 
 import type { Channel } from '@gosling/schema';

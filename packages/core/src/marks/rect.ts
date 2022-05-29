@@ -1,7 +1,6 @@
 import { GoslingTrackModel } from '../gosling-track-model';
-import { cartesianToPolar, valueToRadian } from '../utils/polar';
+import { cartesianToPolar, valueToRadian, colorToHex } from '../utils';
 import { PIXIVisualProperty } from '../visual-property.schema';
-import colorToHex from '../utils/color-to-hex';
 import { IsChannelDeep } from '../gosling.schema.guards';
 
 export function drawRect(HGC: any, trackInfo: any, tile: any, model: GoslingTrackModel) {

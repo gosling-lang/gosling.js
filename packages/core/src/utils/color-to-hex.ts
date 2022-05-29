@@ -5,7 +5,7 @@ import { DEFAULT_BACKUP_COLOR } from '../defaults';
 /**
  * Convert a regular color value (e.g. 'red', '#FF0000', 'rgb(255,0,0)') to a hex value which is legible by PIXI.
  */
-const colorToHex = (colorStr: string) => {
+export function colorToHex(colorStr: string) {
     let c = color(colorStr) as any;
 
     if (!c) {
@@ -14,6 +14,4 @@ const colorToHex = (colorStr: string) => {
 
     const hex = PIXI.utils.rgb2hex([c.rgb().r / 255.0, c.rgb().g / 255.0, c.rgb().b / 255.0]);
     return hex;
-};
-
-export default colorToHex;
+}
