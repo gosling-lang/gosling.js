@@ -25,6 +25,7 @@
     },
     "devDependencies": {
         "@types/d3-dsv": "^3.0.0",
-        "@types/lodash-es": "^4.17.6"
+        "@types/lodash-es": "^4.17.6",
+        "cross-fetch": "^3.1.5"
     }
 }
