@@ -1,5 +1,5 @@
 import type { Datum, SingleTrack } from '@gosling/schema';
-import { IsDataDeepTileset } from '@gosling/core/gosling.schema.guards';
+import { IsDataDeepTileset } from '@gosling/core';
 
 export const GOSLING_DATA_ROW_UID_FIELD = 'gosling-data-row-uid';
 

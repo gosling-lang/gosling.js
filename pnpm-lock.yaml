@@ -104,7 +104,6 @@ importers:
   packages/core:
     specifiers:
       '@gosling/data-fetchers': workspace:*
-      '@gosling/editor': workspace:*
       '@gosling/mouse-event': workspace:*
       '@gosling/schema': workspace:*
       '@gosling/theme': workspace:*
@@ -160,7 +159,6 @@ importers:
       pubsub-js: 1.9.4
       uuid: 8.3.2
     devDependencies:
-      '@gosling/editor': link:../../apps/editor
       '@types/bezier-js': 4.1.0
       '@types/d3-array': 3.0.3
       '@types/d3-color': 3.1.0

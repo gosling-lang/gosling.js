@@ -1,4 +1,4 @@
-import { GET_CHROM_SIZES } from '@gosling/core/utils/assembly';
+import { GET_CHROM_SIZES } from '@gosling/core';
 import { sampleSize } from 'lodash-es';
 
 /**

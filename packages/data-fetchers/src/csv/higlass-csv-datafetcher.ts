@@ -1,7 +1,6 @@
 import { dsvFormat as d3dsvFormat } from 'd3-dsv';
 import { sampleSize } from 'lodash-es';
-import { GET_CHROM_SIZES } from '@gosling/core/utils/assembly';
-import { filterData } from '@gosling/core/utils/data-transform';
+import { GET_CHROM_SIZES, filterData } from '@gosling/core';
 
 import type { Assembly, FilterTransform } from '@gosling/schema';
 

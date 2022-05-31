@@ -1,6 +1,4 @@
-import { GoslingTrackModel } from '@gosling/core/gosling-track-model';
-import { resolveSuperposedTracks } from '@gosling/core/utils/overlay';
-import { convertToFlatTracks } from '@gosling/core/utils/spec-preprocess';
+import { GoslingTrackModel, resolveSuperposedTracks, convertToFlatTracks } from '@gosling/core';
 import { getTheme } from '@gosling/theme';
 import { EX_TRACK_SEMANTIC_ZOOM } from './json-spec/semantic-zoom';
 

@@ -1,6 +1,6 @@
 import { arc as d3arc } from 'd3-shape';
 import * as uuid from 'uuid';
-import { RADIAN_GAP, valueToRadian } from '@gosling/core/utils/polar';
+import { RADIAN_GAP, valueToRadian } from '@gosling/core';
 
 type CircularBrushData = {
     type: 'brush' | 'start' | 'end';

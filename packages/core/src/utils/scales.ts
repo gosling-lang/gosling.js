@@ -1,5 +1,5 @@
 import { GoslingTrackModel } from '../gosling-track-model';
-import { SUPPORTED_CHANNELS } from '../mark';
+import { SUPPORTED_CHANNELS } from '../marks';
 import {
     IsDomainChr,
     IsDomainInterval,

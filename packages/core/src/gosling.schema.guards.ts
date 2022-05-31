@@ -1,4 +1,4 @@
-import { SUPPORTED_CHANNELS } from './mark';
+import { SUPPORTED_CHANNELS } from './marks';
 import { isArray } from 'lodash-es';
 import {
     interpolateGreys,

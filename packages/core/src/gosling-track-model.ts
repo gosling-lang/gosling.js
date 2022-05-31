@@ -16,14 +16,12 @@ import { MouseEventModel } from '@gosling/mouse-event';
 import { getTheme } from '@gosling/theme';
 
 import { HIGLASS_AXIS_SIZE } from './higlass-model';
-import { SUPPORTED_CHANNELS } from './mark';
 import { PIXIVisualProperty } from './visual-property.schema';
-import { rectProperty } from './mark/rect';
-import { pointProperty } from './mark/point';
-import { barProperty } from './mark/bar';
-import { getNumericDomain } from './utils/scales';
-import { logicalComparison } from './utils/semantic-zoom';
-import { aggregateData } from './utils/data-transform';
+import { SUPPORTED_CHANNELS } from './marks';
+import { rectProperty } from './marks/rect';
+import { pointProperty } from './marks/point';
+import { barProperty } from './marks/bar';
+import { getNumericDomain, logicalComparison, aggregateData } from './utils';
 import {
     IsChannelDeep,
     IsChannelValue,

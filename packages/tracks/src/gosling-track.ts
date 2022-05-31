@@ -4,13 +4,11 @@ import * as uuid from 'uuid';
 import { isEqual, sampleSize, uniqBy } from 'lodash-es';
 import { scaleLinear } from 'd3-scale';
 import { format } from 'd3-format';
-
-import { drawMark, drawPostEmbellishment, drawPreEmbellishment } from '@gosling/core/mark/index';
-import { validateTrack } from '@gosling/core/utils/validate';
-import { shareScaleAcrossTracks } from '@gosling/core/utils/scales';
-import { resolveSuperposedTracks } from '@gosling/core/utils/overlay';
-import colorToHex from '@gosling/core/utils/color-to-hex';
 import {
+    validateTrack,
+    shareScaleAcrossTracks,
+    resolveSuperposedTracks,
+    colorToHex,
     aggregateCoverage,
     calculateData,
     concatString,
@@ -20,21 +18,26 @@ import {
     parseSubJSON,
     replaceString,
     splitExon,
-    inferSvType
-} from '@gosling/core/utils/data-transform';
-import { getRelativeGenomicPosition } from '@gosling/core/utils/assembly';
-import { getTextStyle } from '@gosling/core/utils/text-style';
-import { Is2DTrack, IsChannelDeep, IsXAxis } from '@gosling/core/gosling.schema.guards';
-import { GoslingTrackModel } from '@gosling/core/gosling-track-model';
-import { HIGLASS_AXIS_SIZE } from '@gosling/core/higlass-model';
-import { flatArrayToPairArray } from '@gosling/core/utils/array';
+    inferSvType,
+    getRelativeGenomicPosition,
+    getTextStyle,
+    flatArrayToPairArray,
+    HIGLASS_AXIS_SIZE,
+    GoslingTrackModel,
+    Is2DTrack,
+    IsChannelDeep,
+    IsXAxis,
+    drawMark,
+    drawPreEmbellishment,
+    drawPostEmbellishment
+} from '@gosling/core';
 import { BAMDataFetcher, GoslingVcfData } from '@gosling/data-fetchers';
+
+import { getTabularData, GOSLING_DATA_ROW_UID_FIELD } from './data-abstraction';
 
 import type { InteractionEvent } from 'pixi.js';
 import type { SingleTrack, OverlaidTrack, Datum } from '@gosling/schema';
 import type { MouseEventData } from '@gosling/mouse-event';
-
-import { getTabularData, GOSLING_DATA_ROW_UID_FIELD } from './data-abstraction';
 
 // Set `true` to print in what order each function is called
 export const PRINT_RENDERING_CYCLE = false;

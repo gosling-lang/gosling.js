@@ -5,9 +5,7 @@ import type * as PIXI from 'pixi.js';
 import RBush from 'rbush';
 import { scaleLinear } from 'd3-scale';
 import { format, precisionPrefix, formatPrefix } from 'd3-format';
-import { GET_CHROM_SIZES } from '@gosling/core/utils/assembly';
-import { cartesianToPolar } from '@gosling/core/utils/polar';
-import { getTextStyle } from '@gosling/core/utils/text-style';
+import { GET_CHROM_SIZES, cartesianToPolar, getTextStyle } from '@gosling/core';
 
 const TICK_WIDTH = 200;
 const TICK_HEIGHT = 6;

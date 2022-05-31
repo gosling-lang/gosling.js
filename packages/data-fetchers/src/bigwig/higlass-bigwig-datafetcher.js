@@ -4,7 +4,7 @@
  */
 import { BigWig } from '@gmod/bbi';
 import { RemoteFile } from 'generic-filehandle';
-import { GET_CHROM_SIZES } from '@gosling/core/utils/assembly';
+import { GET_CHROM_SIZES } from '@gosling/core';
 
 function BBIDataFetcher(HGC, ...args) {
     if (!new.target) {

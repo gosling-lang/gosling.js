@@ -14,7 +14,6 @@ import { useLocation } from 'react-router-dom';
 import ErrorBoundary from './error-boundary';
 import { debounce, isEqual } from 'lodash-es';
 import { ExampleGroups, examples } from './example';
-import { traverseTracksAndViews } from '@gosling/core/utils/spec-preprocess';
 import stripJsonComments from 'strip-json-comments';
 import JSONCrush from 'jsoncrush';
 import { ICONS, ICON_INFO } from './icon';
@@ -26,7 +25,7 @@ import type { HiGlassSpec } from '@gosling/schema/higlass.schema';
 import type { Datum } from '@gosling/schema';
 
 import './editor.css';
-import { IsDataTrack } from '@gosling/core/gosling.schema.guards';
+import { traverseTracksAndViews } from '@gosling/core';
 
 function json2js(jsonCode: string) {
     return `var spec = ${jsonCode} \nexport { spec }; \n`;
@@ -142,8 +141,8 @@ function resolveRelativeCsvUrls(spec: string, importMeta: URL) {
     // https://regex101.com/r/l87Q5q/1
     // eslint-disable-next-line
     const relativePathRegex = /^[.\/]|^\.[.\/]|^\.\.[^\/]/;
-    traverseTracksAndViews(newSpec, (tv) => {
-        if (IsDataTrack(tv) && tv.data.type === 'csv' && relativePathRegex.test(tv.data.url)) {
+    traverseTracksAndViews(newSpec, (tv: any) => {
+        if (tv.data?.type === 'csv' && relativePathRegex.test(tv.data.url)) {
             tv.data.url = new URL(tv.data.url, importMeta).href;
         }
     });

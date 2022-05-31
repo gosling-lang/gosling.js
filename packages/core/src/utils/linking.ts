@@ -1,6 +1,6 @@
 import { IsChannelDeep } from '../gosling.schema.guards';
 import { HiGlassModel } from '../higlass-model';
-import { SUPPORTED_CHANNELS } from '../mark';
+import { SUPPORTED_CHANNELS } from '../marks';
 import { resolveSuperposedTracks } from './overlay';
 
 /**
