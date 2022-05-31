@@ -4,14 +4,7 @@ import GoslingSchema from '@gosling/schema/gosling.schema.json';
 
 export { name, version } from '../package.json';
 export { GoslingSchema };
-export {
-    init,
-    compile,
-    embed,
-    validateGoslingSpec,
-    GoslingComponent,
-    GoslingTemplates,
-} from '@gosling/core';
+export { init, compile, embed, validateGoslingSpec, GoslingComponent, GoslingTemplates } from '@gosling/core';
 
 export type { GoslingSpec, TemplateTrackDef } from '@gosling/schema';
 export type { HiGlassSpec } from '@gosling/schema/higlass.schema';

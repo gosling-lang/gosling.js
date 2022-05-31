@@ -160,9 +160,17 @@ export function getTheme(theme: Theme = 'light'): Required<CompleteThemeDeep> {
     }
 }
 
-// TODO: Move into contants package? 
+// TODO: Move into contants package?
 // Copied here from `@gosling/core/src/channel` to remove circular dep
-const DEFAULT_NOMINAL_COLORS = ['#E79F00', '#029F73', '#0072B2', '#CB7AA7', '#D45E00', '#57B4E9', '#EFE441' /*'#000000'*/];
+const DEFAULT_NOMINAL_COLORS = [
+    '#E79F00',
+    '#029F73',
+    '#0072B2',
+    '#CB7AA7',
+    '#D45E00',
+    '#57B4E9',
+    '#EFE441' /*'#000000'*/
+];
 
 const LightThemeMarkCommonStyle: Required<MarkStyle> = {
     color: DEFAULT_NOMINAL_COLORS[0],

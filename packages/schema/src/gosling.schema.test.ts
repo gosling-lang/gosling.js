@@ -2,11 +2,11 @@ import {
     IsChannelDeep,
     IsChannelValue,
     IsDomainChrInterval,
-    getValueUsingChannel,
     IsStackedMark,
     IsStackedChannel,
-    IsDataDeepTileset
-} from '@gosling/core/gosling.schema.guards';
+    IsDataDeepTileset,
+    getValueUsingChannel,
+} from '@gosling/core';
 
 import type { Channel, SingleTrack } from './gosling.schema';
 

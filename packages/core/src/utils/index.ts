@@ -8,7 +8,7 @@ export * from './linking';
 export * from './log';
 export * from './omit-deep';
 export * from './overlay';
-export * from './polar'
+export * from './polar';
 export * from './position';
 export * from './scalable-rendering';
 export * from './scales';

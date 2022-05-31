@@ -12,7 +12,7 @@
         "start": "pnpm -r --parallel dev",
         "build": "pnpm -r --parallel build",
         "check": "pnpm -r --parallel check",
-        "test": "vitest run",
+        "test": "vitest",
         "clean": "pnpm -r exec -- rm -rf node_modules",
         "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s -r 0",
         "lint": "eslint \"packages/**/*.{js,jsx,ts,tsx}\"",
@@ -22,6 +22,7 @@
     },
     "sideEffect": false,
     "devDependencies": {
+        "@pnpm/types": "^8.0.1",
         "@types/node": "^17.0.34",
         "@typescript-eslint/eslint-plugin": "^5.25.0",
         "@typescript-eslint/parser": "^5.25.0",

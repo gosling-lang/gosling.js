@@ -1,8 +1,6 @@
 {
     "extends": "../../tsconfig.json",
-    "references": [
-      { "path": "../../apps/editor" }
-    ],
+    "references": [{ "path": "../../apps/editor" }],
     "include": ["src/**/*"],
     "compilerOptions": {
         "outDir": "./dist",

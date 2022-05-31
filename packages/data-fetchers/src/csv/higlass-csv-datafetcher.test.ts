@@ -1,7 +1,4 @@
 import CSVDataFetcher from './higlass-csv-datafetcher';
-import fetch from 'cross-fetch';
-
-if (!globalThis.fetch) globalThis.fetch = fetch;
 
 describe('CSV data fetcher', () => {
     const f = new (CSVDataFetcher as any)(
