@@ -17,7 +17,6 @@ import { traverseTracksAndViews } from '../src/core/utils/spec-preprocess';
 import stripJsonComments from 'strip-json-comments';
 import JSONCrush from 'jsoncrush';
 import { ICONS, ICON_INFO } from './icon';
-import { transpile } from 'typescript';
 import { getHtmlTemplate } from './html-template';
 import { Themes } from 'gosling-theme';
 
@@ -40,29 +39,13 @@ function isJSON(str: string | null) {
     }
 }
 
-// a hack to solve the reference erro in typescript
-// some posts fixed it thorugh changing ts compiler options, but did not work for me
-// https://stackoverflow.com/questions/34895737/uncaught-referenceerror-exports-is-not-defined-and-require
-function codeParser(jscode: string) {
-    jscode = transpile(jscode);
-    jscode = jscode.replace(
-        `\r\nObject.defineProperty(exports, "__esModule", { value: true });\r\nexports.spec = void 0;`,
-        ''
-    );
-    jscode = jscode.replace('exports.spec = spec;', 'export { spec };');
-
-    return jscode;
+async function transpile(typescriptCode: string) {
+    const { transpile, ScriptTarget } = await import('typescript');
+    return transpile(typescriptCode, { target: ScriptTarget.ES2018 });
 }
 
-// a tagged template
-// convert string to base-64 data uri
-// e.g., esm`'a' < 'b'` => data:text/javascript;base64,J2EnIDwgJ2In
-function esm(templateStrings: TemplateStringsArray, ...substitutions: string[]) {
-    let js = templateStrings.raw[0];
-    for (let i = 0; i < substitutions.length; i++) {
-        js += substitutions[i] + templateStrings.raw[i + 1];
-    }
-    return `data:text/javascript;base64, ${btoa(js)}`;
+function toJavaScriptDataURI(jsCode: string) {
+    return `data:text/javascript;base64, ${btoa(jsCode)}`;
 }
 
 const SHOWN_EXAMPLE_LIST = Object.entries(examples)
@@ -519,8 +502,9 @@ function Editor(props: RouteComponentProps) {
 
                 setGoslingSpec(editedGos);
             } else if (language === 'typescript') {
-                // vite-ignore to enable dynamic import from data uri
-                import(/* @vite-ignore */ esm`${codeParser(jsCode)}`)
+                transpile(jsCode)
+                    .then(toJavaScriptDataURI)
+                    .then(uri => import(/* @vite-ignore */ uri))
                     .then(ns => {
                         const editedGos = ns.spec;
                         if (urlGist && !isImportDemo) {
