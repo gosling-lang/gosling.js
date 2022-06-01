@@ -10,7 +10,6 @@
     "homepage": "https://gosling-lang.github.io/gosling.js",
     "scripts": {
         "start": "pnpm -r --parallel dev",
-        "build": "pnpm -r --parallel build",
         "check": "pnpm -r --parallel check",
         "test": "vitest",
         "clean": "pnpm -r exec -- rm -rf node_modules",
