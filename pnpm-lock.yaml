@@ -4538,8 +4538,8 @@ packages:
   /react-monaco-editor/0.45.0_6272qtgevkf4piug7x52dbvy2u:
     resolution: {integrity: sha512-QgAFXdXm5e9QRCnjFBt5fHqmUWL2qIMHZuZSLR6rU9E3Bbo2pQO7FSqgVmB5trc5U+hs7KdIWVoWIOzQvZMu3w==}
     peerDependencies:
-      '@types/react': ^17.x
-      react: ^17.x
+      '@types/react': ^16.0.0 || ^17.0.0
+      react: ^16.0.0 || ^17.0.0
     dependencies:
       '@types/react': 16.14.26
       monaco-editor: 0.27.0

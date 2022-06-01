@@ -8,7 +8,6 @@ import { init } from './init';
 import { HiGlassComponent } from 'higlass';
 import type { HiGlassSpec } from '@gosling/schema/higlass.schema';
 
-
 // TODO: Complete the API
 export type HiGlassApi = {
     api: Record<string, any>;
@@ -33,7 +32,6 @@ export interface HiGlassComponentWrapperProps {
 
 export const HiGlassComponentWrapper = forwardRef<HiGlassApi | undefined, HiGlassComponentWrapperProps>(
     (props, ref) => {
-
         /**
          * Register plugin tracks and data fetchers to HiGlass. This is necessary for the first time before using Gosling.
          */
