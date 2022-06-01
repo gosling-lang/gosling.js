@@ -1,6 +1,5 @@
-import { ScaleLinear } from 'd3-scale';
-import { assign } from 'lodash-es';
-import {
+import type { ScaleLinear } from 'd3-scale';
+import type {
     SingleTrack,
     Datum,
     FilterTransform,
@@ -391,7 +390,7 @@ export function splitExon(split: ExonSplitTransform, data: Datum[], assembly: As
                     }
                     if (!newRows[i]) {
                         // No row exist, so create one.
-                        newRows[i] = assign(JSON.parse(JSON.stringify(d)), {
+                        newRows[i] = Object.assign(JSON.parse(JSON.stringify(d)), {
                             [newField]: newValue,
                             [flag.field]: flag.value
                         });
@@ -420,7 +419,7 @@ export function parseSubJSON(_: JSONParseTransform, data: Datum[]): Datum[] {
                     row[`${genomicField}_end`] = +row[genomicField] + +d[baseGenomicField] + +row[genomicLengthField];
                 }
 
-                return assign(JSON.parse(JSON.stringify(d)), {
+                return Object.assign(JSON.parse(JSON.stringify(d)), {
                     ...row,
                     [`${genomicField}_start`]: row[`${genomicField}_start`],
                     [`${genomicField}_end`]: row[`${genomicField}_end`],

@@ -1,6 +1,5 @@
-import { assign } from 'lodash-es';
 import * as uuid from 'uuid';
-import {
+import type {
     SingleTrack,
     GoslingSpec,
     View,
@@ -99,7 +98,7 @@ export function convertToFlatTracks(spec: SingleView): Track[] {
         delete (base as any).tracks;
         return spec.tracks
             .filter(track => !track._invalidTrack)
-            .map(track => assign(JSON.parse(JSON.stringify(base)), track) as SingleTrack);
+            .map(track => Object.assign(JSON.parse(JSON.stringify(base)), track) as SingleTrack);
     }
 
     const newTracks: Track[] = [];
@@ -119,7 +118,7 @@ export function convertToFlatTracks(spec: SingleView): Track[] {
                     // Override track definitions from views
                     const base = JSON.parse(JSON.stringify(spec));
                     delete (base as any).tracks;
-                    const newSpec = assign(JSON.parse(JSON.stringify(base)), track) as SingleTrack;
+                    const newSpec = Object.assign(JSON.parse(JSON.stringify(base)), track) as SingleTrack;
                     newTracks.push(newSpec);
                 }
             });
@@ -141,7 +140,7 @@ export function convertToFlatTracks(spec: SingleView): Track[] {
  * @param callback
  */
 export function traverseToFixSpecDownstream(spec: GoslingSpec | SingleView, parentDef?: CommonViewDef | MultipleViews) {
-    // TODO: Instead of overriding props individually, use lodash.assign()
+    // TODO: Instead of overriding props individually, use Object.assign()
     if (parentDef) {
         // For assembly and layout, we use the ones defiend by the parents if missing
         if (spec.assembly === undefined) spec.assembly = parentDef.assembly;
@@ -525,10 +524,13 @@ export function overrideDataTemplates(spec: GoslingSpec) {
         switch (t.data.type) {
             case 'vector':
             case 'bigwig':
-                ts[i] = assign(getVectorTemplate(t.data.column, t.data.value), t);
+                ts[i] = Object.assign(getVectorTemplate(t.data.column, t.data.value), t);
                 break;
             case 'multivec':
-                ts[i] = assign(getMultivecTemplate(t.data.row, t.data.column, t.data.value, t.data.categories), t);
+                ts[i] = Object.assign(
+                    getMultivecTemplate(t.data.row, t.data.column, t.data.value, t.data.categories),
+                    t
+                );
                 break;
         }
     });

@@ -1,7 +1,7 @@
 import { EX_SPEC_VISUAL_ENCODING } from '../../editor/example/json-spec/visual-encoding';
 import { compile } from './compile';
 import { getTheme } from './utils/theme';
-import { GoslingSpec } from '../index';
+import type { GoslingSpec } from '../index';
 
 describe('compile', () => {
     it('compile should not touch the original spec of users', () => {

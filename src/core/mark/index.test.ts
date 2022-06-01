@@ -1,6 +1,6 @@
 import { drawMark } from '.';
 import { GoslingTrackModel } from '../gosling-track-model';
-import { SingleTrack } from '../gosling.schema';
+import type { SingleTrack } from '../gosling.schema';
 import { getTheme } from '../utils/theme';
 
 describe('Should draw marks correctly', () => {

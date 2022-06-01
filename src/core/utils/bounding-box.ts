@@ -1,4 +1,4 @@
-import { MultipleViews, CommonViewDef, GoslingSpec, Track, SingleView } from '../gosling.schema';
+import type { MultipleViews, CommonViewDef, GoslingSpec, Track, SingleView } from '../gosling.schema';
 import { Is2DTrack, IsOverlaidTrack, IsXAxis, IsYAxis } from '../gosling.schema.guards';
 import { HIGLASS_AXIS_SIZE } from '../higlass-model';
 import {
@@ -9,7 +9,7 @@ import {
 } from '../defaults';
 import { resolveSuperposedTracks } from './overlay';
 import { traverseTracksAndViews, traverseViewArrangements } from './spec-preprocess';
-import { CompleteThemeDeep } from './theme';
+import type { CompleteThemeDeep } from './theme';
 
 export interface Size {
     width: number;

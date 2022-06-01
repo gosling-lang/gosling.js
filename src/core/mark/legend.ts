@@ -1,8 +1,8 @@
-import { GoslingTrackModel } from '../gosling-track-model';
+import type { GoslingTrackModel } from '../gosling-track-model';
 import { IsChannelDeep } from '../gosling.schema.guards';
 import colorToHex from '../utils/color-to-hex';
-import { CompleteThemeDeep } from '../utils/theme';
-import { Dimension } from '../utils/position';
+import type { CompleteThemeDeep } from '../utils/theme';
+import type { Dimension } from '../utils/position';
 import { scaleLinear, ScaleLinear } from 'd3-scale';
 import { getTextStyle } from '../utils/text-style';
 

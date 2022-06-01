@@ -1,4 +1,4 @@
-import { GoslingSpec, PartialTrack, View, BIGWIGData, BEDDBData } from '@gosling.schema';
+import type { GoslingSpec, PartialTrack, View, BIGWIGData, BEDDBData } from '@gosling.schema';
 
 const width = 400;
 

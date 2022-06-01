@@ -20,6 +20,7 @@
     "strict": true,
     "strictNullChecks": true,
     "resolveJsonModule": true,
+    "importsNotUsedAsValues": "error",
     "jsx": "react",
     "paths": {
       "gosling.js": ["./src/index.ts"],

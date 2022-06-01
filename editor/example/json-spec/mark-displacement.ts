@@ -1,10 +1,10 @@
-import { GoslingSpec } from 'gosling.js';
+import type { GoslingSpec } from 'gosling.js';
 import { EX_SPEC_GENE_TRANSCRIPT } from './gene-transcript';
 import { GOSLING_PUBLIC_DATA } from './gosling-data';
 
 export const EX_SPEC_MARK_DISPLACEMENT: GoslingSpec = {
     title: 'Mark Displacement',
-    subtitle: 'Reposition marks to address visual overlaps using `displacement` options',
+    subtitle: 'Reposition marks to address visual overlaps using displacement options',
     // static: true,
     spacing: 1,
     centerRadius: 0.8,

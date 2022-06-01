@@ -1,6 +1,5 @@
 // @ts-ignore
 import * as gt from 'gosling-theme';
-import { assign } from 'lodash-es';
 import { CHANNEL_DEFAULTS } from '../channel';
 
 /* ----------------------------- THEME ----------------------------- */
@@ -153,7 +152,7 @@ export function getTheme(theme: Theme = 'light'): Required<CompleteThemeDeep> {
         // Override defaults from `base`
         Object.keys(baseSpec).forEach(k => {
             if ((theme as any)[k] && k !== 'base') {
-                baseSpec[k] = assign(
+                baseSpec[k] = Object.assign(
                     JSON.parse(JSON.stringify(baseSpec[k])),
                     JSON.parse(JSON.stringify((theme as any)[k]))
                 );

@@ -1,4 +1,4 @@
-import type { GoslingSpec } from 'gosling.js';
+import type { GoslingSpec } from '@gosling.schema';
 import { GOSLING_PUBLIC_DATA } from './gosling-data';
 
 export const EX_SPEC_LINKING: GoslingSpec = {

@@ -1,5 +1,5 @@
-import { GoslingTrackModel } from '../gosling-track-model';
-import { Channel } from '../gosling.schema';
+import type { GoslingTrackModel } from '../gosling-track-model';
+import type { Channel } from '../gosling.schema';
 import { getValueUsingChannel } from '../gosling.schema.guards';
 import { cartesianToPolar, valueToRadian } from '../utils/polar';
 import colorToHex from '../utils/color-to-hex';

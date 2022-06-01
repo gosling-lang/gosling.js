@@ -1,10 +1,10 @@
 import { getBoundingBox, Size, TrackInfo } from './utils/bounding-box';
 import { goslingToHiGlass } from './gosling-to-higlass';
 import { HiGlassModel } from './higlass-model';
-import { HiGlassSpec } from './higlass.schema';
 import { getLinkingInfo } from './utils/linking';
-import { GoslingSpec } from './gosling.schema';
-import { CompleteThemeDeep } from './utils/theme';
+import type { HiGlassSpec } from './higlass.schema';
+import type { GoslingSpec } from './gosling.schema';
+import type { CompleteThemeDeep } from './utils/theme';
 
 export function renderHiGlass(
     spec: GoslingSpec,

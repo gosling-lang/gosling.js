@@ -30,7 +30,7 @@ import { getTextStyle } from '../core/utils/text-style';
 import { Is2DTrack, IsChannelDeep, IsXAxis } from '../core/gosling.schema.guards';
 import { spawn } from 'threads';
 import { HIGLASS_AXIS_SIZE } from '../core/higlass-model';
-import { MouseEventData } from '../gosling-mouse-event/mouse-event-model';
+import type { MouseEventData } from '../gosling-mouse-event/mouse-event-model';
 import { flatArrayToPairArray } from '../core/utils/array';
 import { BAMDataFetcher } from '../data-fetcher/bam';
 import { GoslingVcfData } from '../data-fetcher/vcf';

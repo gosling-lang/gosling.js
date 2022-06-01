@@ -1,8 +1,8 @@
-import { GoslingTrackModel } from '../gosling-track-model';
+import type { GoslingTrackModel } from '../gosling-track-model';
 import { IsChannelDeep } from '../gosling.schema.guards';
 import { cartesianToPolar, valueToRadian } from '../utils/polar';
 import colorToHex from '../utils/color-to-hex';
-import { CompleteThemeDeep } from '../utils/theme';
+import type { CompleteThemeDeep } from '../utils/theme';
 
 export function drawCircularOutlines(
     HGC: any,

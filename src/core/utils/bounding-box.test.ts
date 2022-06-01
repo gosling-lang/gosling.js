@@ -1,4 +1,4 @@
-import { GoslingSpec, Track } from '../gosling.schema';
+import type { GoslingSpec, Track } from '../gosling.schema';
 import { DEFAULT_CIRCULAR_VIEW_PADDING, DEFAULT_VIEW_SPACING } from '../defaults';
 import { getBoundingBox, getRelativeTrackInfo } from './bounding-box';
 import { traverseToFixSpecDownstream } from './spec-preprocess';

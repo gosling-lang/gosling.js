@@ -1,4 +1,4 @@
-import { GoslingSpec, VisibilityCondition, MultivecData } from '@gosling.schema';
+import type { GoslingSpec, VisibilityCondition, MultivecData } from '@gosling.schema';
 
 const data: MultivecData = {
     type: 'multivec',
@@ -17,7 +17,7 @@ const getVisibilityCondition = (thresholds: [number | undefined, number | undefi
             conditions.push({
                 operation: i == 0 ? 'GT' : 'LT',
                 target: 'mark',
-                threshold: 100000000,
+                threshold,
                 measure: 'zoomLevel'
             });
         }

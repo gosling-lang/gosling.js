@@ -5,11 +5,12 @@ import { ResizeSensor } from 'css-element-queries';
 import * as gosling from '..';
 import { getTheme, Theme } from './utils/theme';
 import { createApi, GoslingApi } from './api';
-import { TemplateTrackDef } from './gosling.schema';
 import { GoslingTemplates } from '..';
 import { omitDeep } from './utils/omit-deep';
 import { isEqual } from 'lodash';
 import * as uuid from 'uuid';
+
+import type { TemplateTrackDef } from './gosling.schema';
 
 // Before rerendering, wait for a few time so that HiGlass container is resized already.
 // If HiGlass is rendered and then the container resizes, the viewport position changes, unmatching `xDomain` specified by users.

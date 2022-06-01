@@ -1,12 +1,12 @@
 /* eslint-disable react/prop-types */
-import * as PIXI from 'pixi.js';
+import type * as PIXI from 'pixi.js';
 import React, { useEffect, useState, forwardRef, useMemo } from 'react';
 import * as uuid from 'uuid';
 
 import * as gosling from '..';
 // @ts-ignore
 import { HiGlassComponent } from 'higlass';
-import { HiGlassSpec } from './higlass.schema';
+import type { HiGlassSpec } from './higlass.schema';
 
 /**
  * Register plugin tracks and data fetchers to HiGlass. This is necessary for the first time before using Gosling.

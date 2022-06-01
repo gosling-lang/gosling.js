@@ -1,9 +1,9 @@
-import { GoslingSpec, TemplateTrackDef } from './gosling.schema';
-import { HiGlassSpec } from './higlass.schema';
+import type { GoslingSpec, TemplateTrackDef } from './gosling.schema';
+import type { HiGlassSpec } from './higlass.schema';
 import { traverseToFixSpecDownstream, overrideDataTemplates } from './utils/spec-preprocess';
 import { replaceTrackTemplates } from './utils/template';
 import { getRelativeTrackInfo, Size } from './utils/bounding-box';
-import { CompleteThemeDeep } from './utils/theme';
+import type { CompleteThemeDeep } from './utils/theme';
 import { renderHiGlass as createHiGlassModels } from './create-higlass-models';
 import { manageResponsiveSpecs } from './responsive';
 

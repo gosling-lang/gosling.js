@@ -1,6 +1,6 @@
 import * as PIXI from 'pixi.js';
 import { GoslingTrackModel } from '../gosling-track-model';
-import { SingleTrack } from '../gosling.schema';
+import type { SingleTrack } from '../gosling.schema';
 import { getTheme } from '../utils/theme';
 import { drawLinearYAxis } from './axis';
 

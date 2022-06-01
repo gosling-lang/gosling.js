@@ -1,4 +1,4 @@
-import { PREDEFINED_COLORS, SingleTrack } from '@gosling.schema';
+import type { PredefinedColors, SingleTrack } from '@gosling.schema';
 import type { GoslingSpec } from 'gosling.js';
 import { random } from 'lodash';
 import { GOSLING_PUBLIC_DATA } from './gosling-data';
@@ -126,7 +126,7 @@ export const EX_SPEC_MATRIX: GoslingSpec = {
 
 const getMatrix: (
     t: string,
-    c: PREDEFINED_COLORS,
+    c: PredefinedColors,
     e: 'full' | 'upper-right' | 'lower-left',
     w: number,
     h: number

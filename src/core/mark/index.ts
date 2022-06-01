@@ -1,10 +1,10 @@
-import { GoslingTrackModel } from '../gosling-track-model';
+import type { GoslingTrackModel } from '../gosling-track-model';
 import { drawPoint } from './point';
 import { drawLine } from './line';
 import { drawBar } from './bar';
 import { drawArea } from './area';
 import { drawRect } from './rect';
-import { ChannelTypes } from '../gosling.schema';
+import type { ChannelTypes } from '../gosling.schema';
 import { drawTriangle } from './triangle';
 import { drawText } from './text';
 import { drawRule } from './rule';
@@ -16,7 +16,7 @@ import { drawColorLegend, drawRowLegend } from './legend';
 import { drawCircularYAxis, drawLinearYAxis } from './axis';
 import { drawCircularOutlines } from './outline-circular';
 import { drawBackground } from './background';
-import { CompleteThemeDeep } from '../utils/theme';
+import type { CompleteThemeDeep } from '../utils/theme';
 import { Is2DTrack, IsVerticalRule } from '../gosling.schema.guards';
 import { drawBetweenLink } from './betweenLink';
 
