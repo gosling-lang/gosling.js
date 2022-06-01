@@ -34,20 +34,28 @@ export const BAR: SingleTrack = {
 };
 
 export const EX_SPEC_MOUSE_EVENT: GoslingSpec = {
-    title: 'Mouse Hover Effects',
-    subtitle: 'Customize mouse hovering events reflecting on your use cases!',
+    title: 'Custom Mouse Events',
+    subtitle: 'Customize mouse hovering and range selection events',
     xDomain: { chromosome: '1' },
     views: [
         {
             tracks: [
                 {
-                    title: 'Hover Individual Marks',
+                    title: 'Individual Marks',
                     ...BAR,
                     experimental: {
                         hovering: {
                             color: 'blue',
                             opacity: 0.5,
                             strokeWidth: 0
+                        },
+                        selection: {
+                            color: 'red',
+                            opacity: 0.5
+                        },
+                        brush: {
+                            color: 'purple',
+                            stroke: 'purple'
                         }
                     }
                 }
@@ -56,15 +64,22 @@ export const EX_SPEC_MOUSE_EVENT: GoslingSpec = {
         {
             tracks: [
                 {
-                    title: 'Group Hovering By Sample',
+                    title: 'Group Marks By Sample',
                     ...BAR,
                     experimental: {
+                        groupMarksByField: 'sample',
                         hovering: {
-                            enableGroupHovering: true,
-                            searchGroupByField: 'sample',
                             color: 'blue',
                             opacity: 0.5,
                             strokeWidth: 0
+                        },
+                        selection: {
+                            color: 'red',
+                            opacity: 0.5
+                        },
+                        brush: {
+                            color: 'green',
+                            stroke: 'green'
                         }
                     }
                 }
@@ -73,15 +88,22 @@ export const EX_SPEC_MOUSE_EVENT: GoslingSpec = {
         {
             tracks: [
                 {
-                    title: 'Group Hovering By Genomic Position',
+                    title: 'Group Marks By Genomic Position',
                     ...BAR,
                     experimental: {
+                        groupMarksByField: 'position',
                         hovering: {
-                            enableGroupHovering: true,
-                            searchGroupByField: 'position',
                             color: 'blue',
                             opacity: 0.5,
                             strokeWidth: 0
+                        },
+                        selection: {
+                            color: 'red',
+                            opacity: 0.5
+                        },
+                        brush: {
+                            color: 'yellow',
+                            stroke: 'yellow'
                         }
                     }
                 }
@@ -91,7 +113,7 @@ export const EX_SPEC_MOUSE_EVENT: GoslingSpec = {
             xDomain: { chromosome: '3', interval: [52168000, 52890000] },
             tracks: [
                 {
-                    title: 'Group Hovering By Gene',
+                    title: 'Group Marks By Gene',
                     template: 'gene',
                     data: {
                         url: GOSLING_PUBLIC_DATA.geneAnnotation,
@@ -128,11 +150,17 @@ export const EX_SPEC_MOUSE_EVENT: GoslingSpec = {
                     width: BAR.width,
                     height: BAR.height,
                     experimental: {
+                        groupMarksByField: 'name',
                         hovering: {
-                            enableGroupHovering: true,
                             showHoveringOnTheBack: true,
                             color: '#E0E0E0',
                             stroke: '#E0E0E0',
+                            strokeWidth: 4
+                        },
+                        selection: {
+                            showOnTheBack: true,
+                            color: '#B9D4FA',
+                            stroke: '#B9D4FA',
                             strokeWidth: 4
                         }
                     }
@@ -143,16 +171,20 @@ export const EX_SPEC_MOUSE_EVENT: GoslingSpec = {
             xDomain: { interval: [1, 1000000000] },
             tracks: [
                 {
-                    title: 'Group Hovering By Chromosome',
+                    title: 'Group Marks By Chromosome',
                     ...CytoBands,
                     size: { value: 20 },
                     height: 60,
                     tooltip: [{ field: 'Chr.', type: 'nominal' }],
                     experimental: {
+                        groupMarksByField: 'Chr.',
                         hovering: {
-                            enableGroupHovering: true,
-                            searchGroupByField: 'Chr.',
                             color: 'blue',
+                            opacity: 0.5,
+                            strokeWidth: 0
+                        },
+                        selection: {
+                            color: 'red',
                             opacity: 0.5,
                             strokeWidth: 0
                         }

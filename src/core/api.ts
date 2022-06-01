@@ -6,15 +6,22 @@ import { GET_CHROM_SIZES } from './utils/assembly';
 import type { CompleteThemeDeep } from './utils/theme';
 import { traverseViewsInViewConfig } from './utils/view-config';
 
-export type CommonEventData = {
-    genomicPosition: string;
-    data: Datum[];
-};
-
-export type RawDataEventData = {
+export interface CommonEventData {
+    /** Source visualization ID, i.e., `track.id` */
     id: string;
+    /** Values in a JSON array that represent data after data transformation */
     data: Datum[];
-};
+}
+
+export interface PointMouseEventData extends CommonEventData {
+    /* A genomic coordinate, e.g., `chr1:100,000`. */
+    genomicPosition: string;
+}
+
+export interface RangeMouseEventData extends CommonEventData {
+    /* Start and end genomic coordinates, e.g., `chr1:100,000`. NULL if a range is deselected. */
+    genomicRange: [string, string] | null;
+}
 
 // Utility type for building strongly typed PubSub API.
 //
@@ -28,8 +35,9 @@ type PubSubEvent<EventName extends string, Payload> = {
 };
 
 // New `PubSubEvent`s should be added to the `EventMap`...
-type EventMap = PubSubEvent<'mouseover' | 'click', CommonEventData> & PubSubEvent<'rawdata', RawDataEventData>;
-// & PubSubEvent<'my-event', { hello: 'world' }> & PubSubEvent<'foo', "bar">;
+type EventMap = PubSubEvent<'mouseover' | 'click', PointMouseEventData> &
+    PubSubEvent<'rangeselect', RangeMouseEventData> &
+    PubSubEvent<'rawdata', CommonEventData>;
 
 /**
  * Information of suggested genes.
@@ -107,10 +115,9 @@ export function createApi(
         subscribe: (type, callback) => {
             switch (type) {
                 case 'mouseover':
-                    return PubSub.subscribe(type, callback);
                 case 'click':
-                    return PubSub.subscribe(type, callback);
                 case 'rawdata':
+                case 'rangeselect':
                     return PubSub.subscribe(type, callback);
                 default: {
                     console.error(`Event type not recognized, got ${JSON.stringify(type)}.`);

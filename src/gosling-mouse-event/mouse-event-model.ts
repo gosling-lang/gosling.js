@@ -1,5 +1,11 @@
-import type { Datum } from '../core/gosling.schema';
-import { isPointInPolygon, isPointNearLine, isPointNearPoint } from './polygon';
+import type { Datum } from '@gosling.schema';
+import {
+    isAllPointsWithinRange,
+    isPointInPolygon,
+    isPointNearLine,
+    isPointNearPoint,
+    isCircleWithinRange
+} from './polygon';
 import * as uuid from 'uuid';
 
 export type MouseEventData = PointEventData | LineEventData | PolygonEventData;
@@ -40,13 +46,6 @@ export class MouseEventModel {
      */
     public size() {
         return this.data.length;
-    }
-
-    /**
-     * Add a new mouse event at the end.
-     */
-    public add(eventData: MouseEventData) {
-        this.data.push(eventData);
     }
 
     /**
@@ -100,10 +99,11 @@ export class MouseEventModel {
      */
     public getSiblings(source: MouseEventData[], idField: string) {
         const siblings: MouseEventData[] = [];
-        source.forEach(d => {
-            const id = d.value[idField];
+        const sourceUids = Array.from(new Set(source.map(d => d.uid)));
+        source.forEach(s => {
+            const id = s.value[idField];
             if (id) {
-                siblings.push(...this.data.filter(_ => _.value[idField] === id && d.uid !== _.uid));
+                siblings.push(...this.data.filter(_ => _.value[idField] === id && sourceUids.indexOf(_.uid) === -1));
             }
         });
         return siblings;
@@ -121,6 +121,29 @@ export class MouseEventModel {
             case 'polygon':
             default:
                 return isPointInPolygon([x, y], data.polygon);
+        }
+    }
+
+    /**
+     * Find all event data that is within the range along the x-axis.
+     */
+    public findAllWithinRange(x1: number, x2: number, reverse = false) {
+        const _ = Array.from(this.data);
+        if (reverse) _.reverse();
+        return _.filter(d => this.isWithinRange(d, x1, x2));
+    }
+
+    /**
+     * Test if a given object is within an 1D range.
+     */
+    public isWithinRange(data: MouseEventData, x1: number, x2: number) {
+        switch (data.type) {
+            case 'point':
+                return isCircleWithinRange([x1, x2], data.polygon[0], data.polygon[2]);
+            case 'line':
+            case 'polygon':
+            default:
+                return isAllPointsWithinRange([x1, x2], data.polygon);
         }
     }
 }

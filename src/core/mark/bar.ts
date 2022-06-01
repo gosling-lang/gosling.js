@@ -138,9 +138,9 @@ export function drawBar(trackInfo: any, tile: any, model: GoslingTrackModel) {
                 let y = model.encodedPIXIProperty('y', d);
                 let ye = model.encodedPIXIProperty('ye', d);
 
-                if (typeof ye !== 'undefined') {
-                    // make sure `ye` is a larger range value
-                    [y, ye] = [y, ye].sort();
+                if (typeof ye !== 'undefined' && y > ye) {
+                    // ensure `ye` is larger
+                    [y, ye] = [ye, y];
                 }
 
                 const barWidth = model.encodedPIXIProperty('width', d, { tileUnitWidth });

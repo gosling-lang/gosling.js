@@ -1092,14 +1092,35 @@
             "experimental": {
               "additionalProperties": false,
               "properties": {
-                "hovering": {
+                "brush": {
                   "additionalProperties": false,
                   "properties": {
                     "color": {
                       "type": "string"
                     },
-                    "enableGroupHovering": {
-                      "type": "boolean"
+                    "opacity": {
+                      "type": "number"
+                    },
+                    "stroke": {
+                      "type": "string"
+                    },
+                    "strokeOpacity": {
+                      "type": "number"
+                    },
+                    "strokeWidth": {
+                      "type": "number"
+                    }
+                  },
+                  "type": "object"
+                },
+                "groupMarksByField": {
+                  "type": "string"
+                },
+                "hovering": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "color": {
+                      "type": "string"
                     },
                     "enableMultiHovering": {
                       "type": "boolean"
@@ -1107,10 +1128,31 @@
                     "opacity": {
                       "type": "number"
                     },
-                    "searchGroupByField": {
+                    "showHoveringOnTheBack": {
+                      "type": "boolean"
+                    },
+                    "stroke": {
                       "type": "string"
                     },
-                    "showHoveringOnTheBack": {
+                    "strokeOpacity": {
+                      "type": "number"
+                    },
+                    "strokeWidth": {
+                      "type": "number"
+                    }
+                  },
+                  "type": "object"
+                },
+                "selection": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "color": {
+                      "type": "string"
+                    },
+                    "opacity": {
+                      "type": "number"
+                    },
+                    "showOnTheBack": {
                       "type": "boolean"
                     },
                     "stroke": {
@@ -1261,14 +1303,35 @@
                       "experimental": {
                         "additionalProperties": false,
                         "properties": {
-                          "hovering": {
+                          "brush": {
                             "additionalProperties": false,
                             "properties": {
                               "color": {
                                 "type": "string"
                               },
-                              "enableGroupHovering": {
-                                "type": "boolean"
+                              "opacity": {
+                                "type": "number"
+                              },
+                              "stroke": {
+                                "type": "string"
+                              },
+                              "strokeOpacity": {
+                                "type": "number"
+                              },
+                              "strokeWidth": {
+                                "type": "number"
+                              }
+                            },
+                            "type": "object"
+                          },
+                          "groupMarksByField": {
+                            "type": "string"
+                          },
+                          "hovering": {
+                            "additionalProperties": false,
+                            "properties": {
+                              "color": {
+                                "type": "string"
                               },
                               "enableMultiHovering": {
                                 "type": "boolean"
@@ -1276,10 +1339,31 @@
                               "opacity": {
                                 "type": "number"
                               },
-                              "searchGroupByField": {
+                              "showHoveringOnTheBack": {
+                                "type": "boolean"
+                              },
+                              "stroke": {
                                 "type": "string"
                               },
-                              "showHoveringOnTheBack": {
+                              "strokeOpacity": {
+                                "type": "number"
+                              },
+                              "strokeWidth": {
+                                "type": "number"
+                              }
+                            },
+                            "type": "object"
+                          },
+                          "selection": {
+                            "additionalProperties": false,
+                            "properties": {
+                              "color": {
+                                "type": "string"
+                              },
+                              "opacity": {
+                                "type": "number"
+                              },
+                              "showOnTheBack": {
                                 "type": "boolean"
                               },
                               "stroke": {
@@ -1896,14 +1980,35 @@
             "experimental": {
               "additionalProperties": false,
               "properties": {
-                "hovering": {
+                "brush": {
                   "additionalProperties": false,
                   "properties": {
                     "color": {
                       "type": "string"
                     },
-                    "enableGroupHovering": {
-                      "type": "boolean"
+                    "opacity": {
+                      "type": "number"
+                    },
+                    "stroke": {
+                      "type": "string"
+                    },
+                    "strokeOpacity": {
+                      "type": "number"
+                    },
+                    "strokeWidth": {
+                      "type": "number"
+                    }
+                  },
+                  "type": "object"
+                },
+                "groupMarksByField": {
+                  "type": "string"
+                },
+                "hovering": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "color": {
+                      "type": "string"
                     },
                     "enableMultiHovering": {
                       "type": "boolean"
@@ -1911,10 +2016,31 @@
                     "opacity": {
                       "type": "number"
                     },
-                    "searchGroupByField": {
+                    "showHoveringOnTheBack": {
+                      "type": "boolean"
+                    },
+                    "stroke": {
                       "type": "string"
                     },
-                    "showHoveringOnTheBack": {
+                    "strokeOpacity": {
+                      "type": "number"
+                    },
+                    "strokeWidth": {
+                      "type": "number"
+                    }
+                  },
+                  "type": "object"
+                },
+                "selection": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "color": {
+                      "type": "string"
+                    },
+                    "opacity": {
+                      "type": "number"
+                    },
+                    "showOnTheBack": {
                       "type": "boolean"
                     },
                     "stroke": {
@@ -2065,14 +2191,35 @@
                       "experimental": {
                         "additionalProperties": false,
                         "properties": {
-                          "hovering": {
+                          "brush": {
                             "additionalProperties": false,
                             "properties": {
                               "color": {
                                 "type": "string"
                               },
-                              "enableGroupHovering": {
-                                "type": "boolean"
+                              "opacity": {
+                                "type": "number"
+                              },
+                              "stroke": {
+                                "type": "string"
+                              },
+                              "strokeOpacity": {
+                                "type": "number"
+                              },
+                              "strokeWidth": {
+                                "type": "number"
+                              }
+                            },
+                            "type": "object"
+                          },
+                          "groupMarksByField": {
+                            "type": "string"
+                          },
+                          "hovering": {
+                            "additionalProperties": false,
+                            "properties": {
+                              "color": {
+                                "type": "string"
                               },
                               "enableMultiHovering": {
                                 "type": "boolean"
@@ -2080,10 +2227,31 @@
                               "opacity": {
                                 "type": "number"
                               },
-                              "searchGroupByField": {
+                              "showHoveringOnTheBack": {
+                                "type": "boolean"
+                              },
+                              "stroke": {
                                 "type": "string"
                               },
-                              "showHoveringOnTheBack": {
+                              "strokeOpacity": {
+                                "type": "number"
+                              },
+                              "strokeWidth": {
+                                "type": "number"
+                              }
+                            },
+                            "type": "object"
+                          },
+                          "selection": {
+                            "additionalProperties": false,
+                            "properties": {
+                              "color": {
+                                "type": "string"
+                              },
+                              "opacity": {
+                                "type": "number"
+                              },
+                              "showOnTheBack": {
                                 "type": "boolean"
                               },
                               "stroke": {
@@ -2751,14 +2919,35 @@
                       "experimental": {
                         "additionalProperties": false,
                         "properties": {
-                          "hovering": {
+                          "brush": {
                             "additionalProperties": false,
                             "properties": {
                               "color": {
                                 "type": "string"
                               },
-                              "enableGroupHovering": {
-                                "type": "boolean"
+                              "opacity": {
+                                "type": "number"
+                              },
+                              "stroke": {
+                                "type": "string"
+                              },
+                              "strokeOpacity": {
+                                "type": "number"
+                              },
+                              "strokeWidth": {
+                                "type": "number"
+                              }
+                            },
+                            "type": "object"
+                          },
+                          "groupMarksByField": {
+                            "type": "string"
+                          },
+                          "hovering": {
+                            "additionalProperties": false,
+                            "properties": {
+                              "color": {
+                                "type": "string"
                               },
                               "enableMultiHovering": {
                                 "type": "boolean"
@@ -2766,10 +2955,31 @@
                               "opacity": {
                                 "type": "number"
                               },
-                              "searchGroupByField": {
+                              "showHoveringOnTheBack": {
+                                "type": "boolean"
+                              },
+                              "stroke": {
                                 "type": "string"
                               },
-                              "showHoveringOnTheBack": {
+                              "strokeOpacity": {
+                                "type": "number"
+                              },
+                              "strokeWidth": {
+                                "type": "number"
+                              }
+                            },
+                            "type": "object"
+                          },
+                          "selection": {
+                            "additionalProperties": false,
+                            "properties": {
+                              "color": {
+                                "type": "string"
+                              },
+                              "opacity": {
+                                "type": "number"
+                              },
+                              "showOnTheBack": {
                                 "type": "boolean"
                               },
                               "stroke": {
@@ -3964,14 +4174,35 @@
         "experimental": {
           "additionalProperties": false,
           "properties": {
-            "hovering": {
+            "brush": {
               "additionalProperties": false,
               "properties": {
                 "color": {
                   "type": "string"
                 },
-                "enableGroupHovering": {
-                  "type": "boolean"
+                "opacity": {
+                  "type": "number"
+                },
+                "stroke": {
+                  "type": "string"
+                },
+                "strokeOpacity": {
+                  "type": "number"
+                },
+                "strokeWidth": {
+                  "type": "number"
+                }
+              },
+              "type": "object"
+            },
+            "groupMarksByField": {
+              "type": "string"
+            },
+            "hovering": {
+              "additionalProperties": false,
+              "properties": {
+                "color": {
+                  "type": "string"
                 },
                 "enableMultiHovering": {
                   "type": "boolean"
@@ -3979,10 +4210,31 @@
                 "opacity": {
                   "type": "number"
                 },
-                "searchGroupByField": {
+                "showHoveringOnTheBack": {
+                  "type": "boolean"
+                },
+                "stroke": {
                   "type": "string"
                 },
-                "showHoveringOnTheBack": {
+                "strokeOpacity": {
+                  "type": "number"
+                },
+                "strokeWidth": {
+                  "type": "number"
+                }
+              },
+              "type": "object"
+            },
+            "selection": {
+              "additionalProperties": false,
+              "properties": {
+                "color": {
+                  "type": "string"
+                },
+                "opacity": {
+                  "type": "number"
+                },
+                "showOnTheBack": {
                   "type": "boolean"
                 },
                 "stroke": {
@@ -4102,14 +4354,35 @@
               "experimental": {
                 "additionalProperties": false,
                 "properties": {
-                  "hovering": {
+                  "brush": {
                     "additionalProperties": false,
                     "properties": {
                       "color": {
                         "type": "string"
                       },
-                      "enableGroupHovering": {
-                        "type": "boolean"
+                      "opacity": {
+                        "type": "number"
+                      },
+                      "stroke": {
+                        "type": "string"
+                      },
+                      "strokeOpacity": {
+                        "type": "number"
+                      },
+                      "strokeWidth": {
+                        "type": "number"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "groupMarksByField": {
+                    "type": "string"
+                  },
+                  "hovering": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "color": {
+                        "type": "string"
                       },
                       "enableMultiHovering": {
                         "type": "boolean"
@@ -4117,10 +4390,31 @@
                       "opacity": {
                         "type": "number"
                       },
-                      "searchGroupByField": {
+                      "showHoveringOnTheBack": {
+                        "type": "boolean"
+                      },
+                      "stroke": {
                         "type": "string"
                       },
-                      "showHoveringOnTheBack": {
+                      "strokeOpacity": {
+                        "type": "number"
+                      },
+                      "strokeWidth": {
+                        "type": "number"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "selection": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "color": {
+                        "type": "string"
+                      },
+                      "opacity": {
+                        "type": "number"
+                      },
+                      "showOnTheBack": {
                         "type": "boolean"
                       },
                       "stroke": {
@@ -4689,14 +4983,35 @@
         "experimental": {
           "additionalProperties": false,
           "properties": {
-            "hovering": {
+            "brush": {
               "additionalProperties": false,
               "properties": {
                 "color": {
                   "type": "string"
                 },
-                "enableGroupHovering": {
-                  "type": "boolean"
+                "opacity": {
+                  "type": "number"
+                },
+                "stroke": {
+                  "type": "string"
+                },
+                "strokeOpacity": {
+                  "type": "number"
+                },
+                "strokeWidth": {
+                  "type": "number"
+                }
+              },
+              "type": "object"
+            },
+            "groupMarksByField": {
+              "type": "string"
+            },
+            "hovering": {
+              "additionalProperties": false,
+              "properties": {
+                "color": {
+                  "type": "string"
                 },
                 "enableMultiHovering": {
                   "type": "boolean"
@@ -4704,10 +5019,31 @@
                 "opacity": {
                   "type": "number"
                 },
-                "searchGroupByField": {
+                "showHoveringOnTheBack": {
+                  "type": "boolean"
+                },
+                "stroke": {
                   "type": "string"
                 },
-                "showHoveringOnTheBack": {
+                "strokeOpacity": {
+                  "type": "number"
+                },
+                "strokeWidth": {
+                  "type": "number"
+                }
+              },
+              "type": "object"
+            },
+            "selection": {
+              "additionalProperties": false,
+              "properties": {
+                "color": {
+                  "type": "string"
+                },
+                "opacity": {
+                  "type": "number"
+                },
+                "showOnTheBack": {
                   "type": "boolean"
                 },
                 "stroke": {
@@ -5073,14 +5409,35 @@
         "experimental": {
           "additionalProperties": false,
           "properties": {
-            "hovering": {
+            "brush": {
               "additionalProperties": false,
               "properties": {
                 "color": {
                   "type": "string"
                 },
-                "enableGroupHovering": {
-                  "type": "boolean"
+                "opacity": {
+                  "type": "number"
+                },
+                "stroke": {
+                  "type": "string"
+                },
+                "strokeOpacity": {
+                  "type": "number"
+                },
+                "strokeWidth": {
+                  "type": "number"
+                }
+              },
+              "type": "object"
+            },
+            "groupMarksByField": {
+              "type": "string"
+            },
+            "hovering": {
+              "additionalProperties": false,
+              "properties": {
+                "color": {
+                  "type": "string"
                 },
                 "enableMultiHovering": {
                   "type": "boolean"
@@ -5088,10 +5445,31 @@
                 "opacity": {
                   "type": "number"
                 },
-                "searchGroupByField": {
+                "showHoveringOnTheBack": {
+                  "type": "boolean"
+                },
+                "stroke": {
                   "type": "string"
                 },
-                "showHoveringOnTheBack": {
+                "strokeOpacity": {
+                  "type": "number"
+                },
+                "strokeWidth": {
+                  "type": "number"
+                }
+              },
+              "type": "object"
+            },
+            "selection": {
+              "additionalProperties": false,
+              "properties": {
+                "color": {
+                  "type": "string"
+                },
+                "opacity": {
+                  "type": "number"
+                },
+                "showOnTheBack": {
                   "type": "boolean"
                 },
                 "stroke": {
@@ -5211,14 +5589,35 @@
               "experimental": {
                 "additionalProperties": false,
                 "properties": {
-                  "hovering": {
+                  "brush": {
                     "additionalProperties": false,
                     "properties": {
                       "color": {
                         "type": "string"
                       },
-                      "enableGroupHovering": {
-                        "type": "boolean"
+                      "opacity": {
+                        "type": "number"
+                      },
+                      "stroke": {
+                        "type": "string"
+                      },
+                      "strokeOpacity": {
+                        "type": "number"
+                      },
+                      "strokeWidth": {
+                        "type": "number"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "groupMarksByField": {
+                    "type": "string"
+                  },
+                  "hovering": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "color": {
+                        "type": "string"
                       },
                       "enableMultiHovering": {
                         "type": "boolean"
@@ -5226,10 +5625,31 @@
                       "opacity": {
                         "type": "number"
                       },
-                      "searchGroupByField": {
+                      "showHoveringOnTheBack": {
+                        "type": "boolean"
+                      },
+                      "stroke": {
                         "type": "string"
                       },
-                      "showHoveringOnTheBack": {
+                      "strokeOpacity": {
+                        "type": "number"
+                      },
+                      "strokeWidth": {
+                        "type": "number"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "selection": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "color": {
+                        "type": "string"
+                      },
+                      "opacity": {
+                        "type": "number"
+                      },
+                      "showOnTheBack": {
                         "type": "boolean"
                       },
                       "stroke": {
@@ -5937,14 +6357,35 @@
         "experimental": {
           "additionalProperties": false,
           "properties": {
-            "hovering": {
+            "brush": {
               "additionalProperties": false,
               "properties": {
                 "color": {
                   "type": "string"
                 },
-                "enableGroupHovering": {
-                  "type": "boolean"
+                "opacity": {
+                  "type": "number"
+                },
+                "stroke": {
+                  "type": "string"
+                },
+                "strokeOpacity": {
+                  "type": "number"
+                },
+                "strokeWidth": {
+                  "type": "number"
+                }
+              },
+              "type": "object"
+            },
+            "groupMarksByField": {
+              "type": "string"
+            },
+            "hovering": {
+              "additionalProperties": false,
+              "properties": {
+                "color": {
+                  "type": "string"
                 },
                 "enableMultiHovering": {
                   "type": "boolean"
@@ -5952,10 +6393,31 @@
                 "opacity": {
                   "type": "number"
                 },
-                "searchGroupByField": {
+                "showHoveringOnTheBack": {
+                  "type": "boolean"
+                },
+                "stroke": {
                   "type": "string"
                 },
-                "showHoveringOnTheBack": {
+                "strokeOpacity": {
+                  "type": "number"
+                },
+                "strokeWidth": {
+                  "type": "number"
+                }
+              },
+              "type": "object"
+            },
+            "selection": {
+              "additionalProperties": false,
+              "properties": {
+                "color": {
+                  "type": "string"
+                },
+                "opacity": {
+                  "type": "number"
+                },
+                "showOnTheBack": {
                   "type": "boolean"
                 },
                 "stroke": {
@@ -6315,14 +6777,35 @@
             "experimental": {
               "additionalProperties": false,
               "properties": {
-                "hovering": {
+                "brush": {
                   "additionalProperties": false,
                   "properties": {
                     "color": {
                       "type": "string"
                     },
-                    "enableGroupHovering": {
-                      "type": "boolean"
+                    "opacity": {
+                      "type": "number"
+                    },
+                    "stroke": {
+                      "type": "string"
+                    },
+                    "strokeOpacity": {
+                      "type": "number"
+                    },
+                    "strokeWidth": {
+                      "type": "number"
+                    }
+                  },
+                  "type": "object"
+                },
+                "groupMarksByField": {
+                  "type": "string"
+                },
+                "hovering": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "color": {
+                      "type": "string"
                     },
                     "enableMultiHovering": {
                       "type": "boolean"
@@ -6330,10 +6813,31 @@
                     "opacity": {
                       "type": "number"
                     },
-                    "searchGroupByField": {
+                    "showHoveringOnTheBack": {
+                      "type": "boolean"
+                    },
+                    "stroke": {
                       "type": "string"
                     },
-                    "showHoveringOnTheBack": {
+                    "strokeOpacity": {
+                      "type": "number"
+                    },
+                    "strokeWidth": {
+                      "type": "number"
+                    }
+                  },
+                  "type": "object"
+                },
+                "selection": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "color": {
+                      "type": "string"
+                    },
+                    "opacity": {
+                      "type": "number"
+                    },
+                    "showOnTheBack": {
                       "type": "boolean"
                     },
                     "stroke": {
@@ -6480,14 +6984,35 @@
                       "experimental": {
                         "additionalProperties": false,
                         "properties": {
-                          "hovering": {
+                          "brush": {
                             "additionalProperties": false,
                             "properties": {
                               "color": {
                                 "type": "string"
                               },
-                              "enableGroupHovering": {
-                                "type": "boolean"
+                              "opacity": {
+                                "type": "number"
+                              },
+                              "stroke": {
+                                "type": "string"
+                              },
+                              "strokeOpacity": {
+                                "type": "number"
+                              },
+                              "strokeWidth": {
+                                "type": "number"
+                              }
+                            },
+                            "type": "object"
+                          },
+                          "groupMarksByField": {
+                            "type": "string"
+                          },
+                          "hovering": {
+                            "additionalProperties": false,
+                            "properties": {
+                              "color": {
+                                "type": "string"
                               },
                               "enableMultiHovering": {
                                 "type": "boolean"
@@ -6495,10 +7020,31 @@
                               "opacity": {
                                 "type": "number"
                               },
-                              "searchGroupByField": {
+                              "showHoveringOnTheBack": {
+                                "type": "boolean"
+                              },
+                              "stroke": {
                                 "type": "string"
                               },
-                              "showHoveringOnTheBack": {
+                              "strokeOpacity": {
+                                "type": "number"
+                              },
+                              "strokeWidth": {
+                                "type": "number"
+                              }
+                            },
+                            "type": "object"
+                          },
+                          "selection": {
+                            "additionalProperties": false,
+                            "properties": {
+                              "color": {
+                                "type": "string"
+                              },
+                              "opacity": {
+                                "type": "number"
+                              },
+                              "showOnTheBack": {
                                 "type": "boolean"
                               },
                               "stroke": {
@@ -7112,14 +7658,35 @@
             "experimental": {
               "additionalProperties": false,
               "properties": {
-                "hovering": {
+                "brush": {
                   "additionalProperties": false,
                   "properties": {
                     "color": {
                       "type": "string"
                     },
-                    "enableGroupHovering": {
-                      "type": "boolean"
+                    "opacity": {
+                      "type": "number"
+                    },
+                    "stroke": {
+                      "type": "string"
+                    },
+                    "strokeOpacity": {
+                      "type": "number"
+                    },
+                    "strokeWidth": {
+                      "type": "number"
+                    }
+                  },
+                  "type": "object"
+                },
+                "groupMarksByField": {
+                  "type": "string"
+                },
+                "hovering": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "color": {
+                      "type": "string"
                     },
                     "enableMultiHovering": {
                       "type": "boolean"
@@ -7127,10 +7694,31 @@
                     "opacity": {
                       "type": "number"
                     },
-                    "searchGroupByField": {
+                    "showHoveringOnTheBack": {
+                      "type": "boolean"
+                    },
+                    "stroke": {
                       "type": "string"
                     },
-                    "showHoveringOnTheBack": {
+                    "strokeOpacity": {
+                      "type": "number"
+                    },
+                    "strokeWidth": {
+                      "type": "number"
+                    }
+                  },
+                  "type": "object"
+                },
+                "selection": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "color": {
+                      "type": "string"
+                    },
+                    "opacity": {
+                      "type": "number"
+                    },
+                    "showOnTheBack": {
                       "type": "boolean"
                     },
                     "stroke": {
@@ -7277,14 +7865,35 @@
                       "experimental": {
                         "additionalProperties": false,
                         "properties": {
-                          "hovering": {
+                          "brush": {
                             "additionalProperties": false,
                             "properties": {
                               "color": {
                                 "type": "string"
                               },
-                              "enableGroupHovering": {
-                                "type": "boolean"
+                              "opacity": {
+                                "type": "number"
+                              },
+                              "stroke": {
+                                "type": "string"
+                              },
+                              "strokeOpacity": {
+                                "type": "number"
+                              },
+                              "strokeWidth": {
+                                "type": "number"
+                              }
+                            },
+                            "type": "object"
+                          },
+                          "groupMarksByField": {
+                            "type": "string"
+                          },
+                          "hovering": {
+                            "additionalProperties": false,
+                            "properties": {
+                              "color": {
+                                "type": "string"
                               },
                               "enableMultiHovering": {
                                 "type": "boolean"
@@ -7292,10 +7901,31 @@
                               "opacity": {
                                 "type": "number"
                               },
-                              "searchGroupByField": {
+                              "showHoveringOnTheBack": {
+                                "type": "boolean"
+                              },
+                              "stroke": {
                                 "type": "string"
                               },
-                              "showHoveringOnTheBack": {
+                              "strokeOpacity": {
+                                "type": "number"
+                              },
+                              "strokeWidth": {
+                                "type": "number"
+                              }
+                            },
+                            "type": "object"
+                          },
+                          "selection": {
+                            "additionalProperties": false,
+                            "properties": {
+                              "color": {
+                                "type": "string"
+                              },
+                              "opacity": {
+                                "type": "number"
+                              },
+                              "showOnTheBack": {
                                 "type": "boolean"
                               },
                               "stroke": {
@@ -7956,14 +8586,35 @@
                       "experimental": {
                         "additionalProperties": false,
                         "properties": {
-                          "hovering": {
+                          "brush": {
                             "additionalProperties": false,
                             "properties": {
                               "color": {
                                 "type": "string"
                               },
-                              "enableGroupHovering": {
-                                "type": "boolean"
+                              "opacity": {
+                                "type": "number"
+                              },
+                              "stroke": {
+                                "type": "string"
+                              },
+                              "strokeOpacity": {
+                                "type": "number"
+                              },
+                              "strokeWidth": {
+                                "type": "number"
+                              }
+                            },
+                            "type": "object"
+                          },
+                          "groupMarksByField": {
+                            "type": "string"
+                          },
+                          "hovering": {
+                            "additionalProperties": false,
+                            "properties": {
+                              "color": {
+                                "type": "string"
                               },
                               "enableMultiHovering": {
                                 "type": "boolean"
@@ -7971,10 +8622,31 @@
                               "opacity": {
                                 "type": "number"
                               },
-                              "searchGroupByField": {
+                              "showHoveringOnTheBack": {
+                                "type": "boolean"
+                              },
+                              "stroke": {
                                 "type": "string"
                               },
-                              "showHoveringOnTheBack": {
+                              "strokeOpacity": {
+                                "type": "number"
+                              },
+                              "strokeWidth": {
+                                "type": "number"
+                              }
+                            },
+                            "type": "object"
+                          },
+                          "selection": {
+                            "additionalProperties": false,
+                            "properties": {
+                              "color": {
+                                "type": "string"
+                              },
+                              "opacity": {
+                                "type": "number"
+                              },
+                              "showOnTheBack": {
                                 "type": "boolean"
                               },
                               "stroke": {

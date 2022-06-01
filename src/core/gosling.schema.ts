@@ -232,6 +232,14 @@ export type Mark =
 /* ----------------------------- TRACK ----------------------------- */
 export type SingleTrack = SingleTrackBase & Encoding;
 
+export interface BrushAndMarkHighlightingStyle {
+    color: string;
+    stroke: string;
+    strokeWidth: number;
+    strokeOpacity: number;
+    opacity: number;
+}
+
 interface SingleTrackBase extends CommonTrackDef {
     // Data
     data: DataDeep;
@@ -244,17 +252,15 @@ interface SingleTrackBase extends CommonTrackDef {
 
     // Mouse events
     experimental?: {
+        /* Group marks using keys in a field. This affects how a set of marks are highlighted/selected by interaction. */
+        groupMarksByField?: string;
+
         hovering?: {
             enableMultiHovering?: boolean;
-            enableGroupHovering?: boolean;
-            searchGroupByField?: string;
             showHoveringOnTheBack?: boolean;
-            color?: string;
-            stroke?: string;
-            strokeWidth?: number;
-            strokeOpacity?: number;
-            opacity?: number;
-        };
+        } & Partial<BrushAndMarkHighlightingStyle>;
+        selection?: { showOnTheBack?: boolean } & Partial<BrushAndMarkHighlightingStyle>;
+        brush?: Partial<BrushAndMarkHighlightingStyle>;
     };
 
     // Mark

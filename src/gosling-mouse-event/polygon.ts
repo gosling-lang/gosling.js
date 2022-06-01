@@ -13,6 +13,38 @@ export const isPointNearPoint: (point: [number, number], point2: number[], radiu
 };
 
 /**
+ * @param {Array} range Tuple of the form `[x1,x2]` to be tested.
+ * @param {Array} point A value x to be tested.
+ * @returns {boolean} If `true` point lies within the point.
+ */
+export const isPointInsideRange: (range: [number, number], x: number) => boolean = ([x1, x2], x) => {
+    return x1 <= x && x <= x2;
+};
+
+/**
+ * @param {Array} range Tuple of the form `[x1,x2]` to be tested.
+ * @param {Array} x A value x to be tested.
+ * @param {number} radius A radius of the point.
+ * @returns {boolean} If `true` point lies within the point.
+ */
+export const isCircleWithinRange: (range: [number, number], x: number, radius?: number) => boolean = (
+    range,
+    x,
+    radius = 5
+) => {
+    return isPointInsideRange(range, x - radius) && isPointInsideRange(range, x + radius);
+};
+
+/**
+ * @param {Array} point Tuple of the form `[x1,x2]` to be tested.
+ * @param {Array} path 1D list of vertices defining the line segments.
+ * @return {boolean} If `true` point lies within the polygon.
+ */
+export const isAllPointsWithinRange: (range: [number, number], path: number[]) => boolean = (range, path) => {
+    return path.filter((_, i) => i % 2 === 0).every(x => isPointInsideRange(range, x));
+};
+
+/**
  * From: https://www.geeksforgeeks.org/minimum-distance-from-a-point-to-the-line-segment-using-vectors/
  * @param {Array} point Tuple of the form `[x,y]` to be tested.
  * @param {Array} path 1D list of vertices defining the line segments.
