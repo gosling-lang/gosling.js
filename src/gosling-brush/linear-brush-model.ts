@@ -1,6 +1,6 @@
 import type * as D3Selection from 'd3-selection';
 import type * as D3Drag from 'd3-drag';
-import { BrushAndMarkHighlightingStyle } from '@gosling.schema';
+import type { BrushAndMarkHighlightingStyle } from '@gosling.schema';
 
 const HIDDEN_BRUSH_EDGE_SIZE = 3;
 
