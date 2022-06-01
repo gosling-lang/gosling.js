@@ -326,16 +326,15 @@ function Editor(props: RouteComponentProps) {
             // gosRef.current.api.subscribe('click', (type, eventData) => {
             //     setMouseEventInfo({ type: 'click', data: eventData.data, position: eventData.genomicPosition });
             // });
-
             // Range Select API
-            gosRef.current.api.subscribe('rangeselect', (type, eventData) => {
-                console.warn(type, eventData.id, eventData.genomicRange, eventData.data);
-            });
+            // gosRef.current.api.subscribe('rangeselect', (type, eventData) => {
+            //     console.warn(type, eventData.id, eventData.genomicRange, eventData.data);
+            // });
         }
         return () => {
             // gosRef.current.api.unsubscribe('mouseover');
             // gosRef.current.api.unsubscribe('click');
-            gosRef.current?.api.unsubscribe('rangeselect');
+            // gosRef.current?.api.unsubscribe('rangeselect');
         };
     }, [gosRef.current]);
 
