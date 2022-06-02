@@ -229,6 +229,42 @@ export type Mark =
     // being used to show title/subtitle internally
     | 'header';
 
+/* ----------------------------- API & MOUSE EVENTS ----------------------------- */
+interface CommonEventData {
+    /** Source visualization ID, i.e., `track.id` */
+    id: string;
+    /** Values in a JSON array that represent data after data transformation */
+    data: Datum[];
+}
+
+interface PointMouseEventData extends CommonEventData {
+    /* A genomic coordinate, e.g., `chr1:100,000`. */
+    genomicPosition: string;
+}
+
+interface RangeMouseEventData extends CommonEventData {
+    /* Start and end genomic coordinates, e.g., `chr1:100,000`. NULL if a range is deselected. */
+    genomicRange: [string, string] | null;
+}
+
+export type _EventMap = {
+    mouseOver: PointMouseEventData;
+    click: PointMouseEventData;
+    rangeSelect: RangeMouseEventData;
+    rawData: CommonEventData;
+};
+
+export type MouseEventsDeep = {
+    /* Turn on and off individual mouse events. */
+    [Event in keyof Omit<_EventMap, 'rawData'>]?: boolean;
+} & {
+    /* Group marks using keys in a data field. This affects how a set of marks are highlighted/selected by interaction. __Default__: `undefined` */
+    groupMarksByField?: string;
+
+    /* Determine whether all marks underneath the mouse point should be affected by mouse over. __Default__: `false` */
+    enableMouseOverOnMultipleMarks?: boolean;
+};
+
 /* ----------------------------- TRACK ----------------------------- */
 export type SingleTrack = SingleTrackBase & Encoding;
 
@@ -239,19 +275,6 @@ export interface BrushAndMarkHighlightingStyle {
     strokeOpacity: number;
     opacity: number;
 }
-
-// Mouse events
-type MouseEvent = 'click' | 'mouseOver' | 'rangeSelect';
-export type MouseEventsDeep = {
-    /* Turn on and off individual mouse events. */
-    [Event in MouseEvent]?: boolean;
-} & {
-    /* Group marks using keys in a data field. This affects how a set of marks are highlighted/selected by interaction. __Default__: `undefined` */
-    groupMarksByField?: string;
-
-    /* Determine whether all marks underneath the mouse point should be affected by mouse over. __Default__: `false` */
-    enableMouseOverOnMultipleMarks?: boolean;
-};
 
 interface SingleTrackBase extends CommonTrackDef {
     // Data

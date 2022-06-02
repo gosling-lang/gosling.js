@@ -25,6 +25,7 @@ import {
     inferSvType
 } from '../core/utils/data-transform';
 import { getTabularData } from './data-abstraction';
+import { publish } from '../core/pubsub';
 import { getRelativeGenomicPosition } from '../core/utils/assembly';
 import { getTextStyle } from '../core/utils/text-style';
 import { Is2DTrack, IsChannelDeep, IsMouseEventsDeep, IsXAxis } from '../core/gosling.schema.guards';
@@ -827,10 +828,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
 
             const flatTileData = ([] as Datum[]).concat(...models.map(d => d.data()));
             if (flatTileData.length !== 0) {
-                PubSub.publish('rawdata', {
-                    id: this.viewUid,
-                    data: flatTileData
-                });
+                publish('rawData', { id: this.viewUid, data: flatTileData });
             }
 
             // console.log('processed gosling model', models);
@@ -961,6 +959,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                     });
                 }
 
+                // TODO: Remove the following block entirely and use the `rawData` API in the Editor (June-02-2022)
                 // Send data preview to the editor so that it can be shown to users.
                 try {
                     if (PubSub) {
@@ -1116,7 +1115,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             if (range === null) {
                 // brush just removed
                 if (!skipApiTrigger) {
-                    PubSub.publish('rangeSelect', { id: this.viewUid, genomicRange: null, data: [] });
+                    publish('rangeSelect', { id: this.viewUid, genomicRange: null, data: [] });
                 }
                 return;
             }
@@ -1164,12 +1163,12 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
 
             /* API call */
             if (!skipApiTrigger) {
-                const genomicRange = [
+                const genomicRange: [string, string] = [
                     getRelativeGenomicPosition(Math.floor(this._xScale.invert(startX))),
                     getRelativeGenomicPosition(Math.floor(this._xScale.invert(endX)))
                 ];
 
-                PubSub.publish('rangeSelect', {
+                publish('rangeSelect', {
                     id: this.viewUid,
                     genomicRange,
                     data: capturedElements.map(d => d.value)
@@ -1233,7 +1232,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                 const capturedElements = this.getElementsWithinMouse(mouseX, mouseY);
 
                 if (capturedElements.length !== 0) {
-                    PubSub.publish('click', {
+                    publish('click', {
                         id: this.viewUid,
                         genomicPosition,
                         data: capturedElements.map(d => d.value)
@@ -1299,7 +1298,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                     );
 
                     // API call
-                    PubSub.publish('mouseOver', {
+                    publish('mouseOver', {
                         id: this.viewUid,
                         genomicPosition,
                         data: capturedElements.map(d => d.value)
