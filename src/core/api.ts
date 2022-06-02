@@ -27,17 +27,17 @@ export interface RangeMouseEventData extends CommonEventData {
 //
 // Add named events using a string union for `EventName`
 //
-// - Two different events ('mouseover' & 'my-event') with the same payload
+// - Two different events ('mouseOver' & 'my-event') with the same payload
 //
-// PubSubEvent<'mouseover' | 'my-event', { same: 'payload' }>
+// PubSubEvent<'mouseOver' | 'my-event', { same: 'payload' }>
 type PubSubEvent<EventName extends string, Payload> = {
     [Key in EventName]: Payload;
 };
 
 // New `PubSubEvent`s should be added to the `EventMap`...
-type EventMap = PubSubEvent<'mouseover' | 'click', PointMouseEventData> &
-    PubSubEvent<'rangeselect', RangeMouseEventData> &
-    PubSubEvent<'rawdata', CommonEventData>;
+type EventMap = PubSubEvent<'mouseOver' | 'click', PointMouseEventData> &
+    PubSubEvent<'rangeSelect', RangeMouseEventData> &
+    PubSubEvent<'rawData', CommonEventData>;
 
 /**
  * Information of suggested genes.
@@ -114,10 +114,10 @@ export function createApi(
     return {
         subscribe: (type, callback) => {
             switch (type) {
-                case 'mouseover':
+                case 'mouseOver':
                 case 'click':
-                case 'rawdata':
-                case 'rangeselect':
+                case 'rawData':
+                case 'rangeSelect':
                     return PubSub.subscribe(type, callback);
                 default: {
                     console.error(`Event type not recognized, got ${JSON.stringify(type)}.`);

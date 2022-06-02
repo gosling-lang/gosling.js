@@ -27,7 +27,7 @@ import {
 import { getTabularData } from './data-abstraction';
 import { getRelativeGenomicPosition } from '../core/utils/assembly';
 import { getTextStyle } from '../core/utils/text-style';
-import { Is2DTrack, IsChannelDeep, IsXAxis } from '../core/gosling.schema.guards';
+import { Is2DTrack, IsChannelDeep, IsMouseEventsDeep, IsXAxis } from '../core/gosling.schema.guards';
 import { spawn } from 'threads';
 import { HIGLASS_AXIS_SIZE } from '../core/higlass-model';
 import type { MouseEventData } from '../gosling-mouse-event/mouse-event-model';
@@ -85,7 +85,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
         private options!: GoslingTrackOption;
         private tileSize: number;
         private worker: any;
-        private isBrushActivated: boolean;
+        private isRangeBrushActivated: boolean;
         private mRangeBrush: LinearBrushModel;
         private _xScale!: ScaleLinear<number, number>;
         private _yScale!: ScaleLinear<number, number>;
@@ -152,14 +152,14 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             this.gLegend = HGC.libraries.d3Selection.select(this.context.svgElement).append('g');
 
             // Enable click event
-            this.isBrushActivated = false;
+            this.isRangeBrushActivated = false;
             this.pMask.interactive = true;
             this.gBrush = HGC.libraries.d3Selection.select(this.context.svgElement).append('g');
             this.mRangeBrush = new LinearBrushModel(
                 this.gBrush,
                 HGC.libraries,
                 this.onRangeBrush.bind(this),
-                this.options.spec.experimental?.brush
+                this.options.spec.experimental?.rangeSelectBrush
             );
             this.pMask.mousedown = (e: InteractionEvent) =>
                 this.onMouseDown(
@@ -1049,8 +1049,9 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             // TODO: `Omit` this properties in the schema of individual overlaid tracks.
             // These should be defined only once for a group of overlaid traks (09-May-2022)
             // See https://github.com/gosling-lang/gosling.js/issues/677
-            const multiHovering = this.options.spec.experimental?.hovering?.enableMultiHovering;
-            const idField = this.options.spec.experimental?.groupMarksByField;
+            const mouseEvents = this.options.spec.experimental?.mouseEvents;
+            const multiHovering = IsMouseEventsDeep(mouseEvents) && mouseEvents.enableMouseOverOnMultipleMarks;
+            const idField = IsMouseEventsDeep(mouseEvents) && mouseEvents.groupMarksByField;
 
             // Collect all mouse event data from tiles and overlaid tracks
             const mergedCapturedElements: MouseEventData[] = models
@@ -1075,7 +1076,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
         }
 
         /**
-         * Highlight marks that are either hovered or selected.
+         * Highlight marks that are either mouse overed or selected.
          */
         highlightMarks(
             g: Graphics,
@@ -1115,7 +1116,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             if (range === null) {
                 // brush just removed
                 if (!skipApiTrigger) {
-                    PubSub.publish('rangeselect', { id: this.viewUid, genomicRange: null, data: [] });
+                    PubSub.publish('rangeSelect', { id: this.viewUid, genomicRange: null, data: [] });
                 }
                 return;
             }
@@ -1134,7 +1135,8 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
 
             // Deselect marks if their siblings are not selected.
             // e.g., if only one exon is selected in a gene, we do not select it.
-            const idField = this.options.spec.experimental?.groupMarksByField;
+            const mouseEvents = this.options.spec.experimental?.mouseEvents;
+            const idField = IsMouseEventsDeep(mouseEvents) && mouseEvents.groupMarksByField;
             if (capturedElements.length !== 0 && idField) {
                 models.forEach(model => {
                     const siblings = model.getMouseEventModel().getSiblings(capturedElements, idField);
@@ -1147,7 +1149,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                 // selection effect graphics
                 const g = this.pMouseSelection;
 
-                if (!this.options.spec.experimental?.selection?.showOnTheBack) {
+                if (!this.options.spec.experimental?.selectedMarks?.showOnTheBack) {
                     // place on the top
                     this.pMain.removeChild(g);
                     this.pMain.addChild(g);
@@ -1156,7 +1158,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                 this.highlightMarks(
                     g,
                     capturedElements,
-                    Object.assign(DEFAULT_MARK_HIGHLIGHT_STYLE, this.options.spec.experimental?.selection)
+                    Object.assign({}, DEFAULT_MARK_HIGHLIGHT_STYLE, this.options.spec.experimental?.selectedMarks)
                 );
             }
 
@@ -1167,7 +1169,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                     getRelativeGenomicPosition(Math.floor(this._xScale.invert(endX)))
                 ];
 
-                PubSub.publish('rangeselect', {
+                PubSub.publish('rangeSelect', {
                     id: this.viewUid,
                     genomicRange,
                     data: capturedElements.map(d => d.value)
@@ -1177,11 +1179,16 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             this.forceDraw();
         }
 
-        onMouseDown(mouseX: number, mouseY: number, isAlt: boolean) {
+        onMouseDown(mouseX: number, mouseY: number, isAltPressed: boolean) {
             // Record these so that we do not triger click event when dragged.
             this.mouseDownX = mouseX;
             this.mouseDownY = mouseY;
-            this.isBrushActivated = isAlt;
+
+            // Determine whether to activate a range brush
+            const mouseEvents = this.options.spec.experimental?.mouseEvents;
+            const rangeSelectEnabled = !!mouseEvents || (IsMouseEventsDeep(mouseEvents) && !!mouseEvents.rangeSelect);
+            this.isRangeBrushActivated = rangeSelectEnabled && isAltPressed;
+
             this.pMouseHover.clear();
         }
 
@@ -1191,15 +1198,17 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                 return;
             }
 
-            if (this.isBrushActivated) {
-                this.mRangeBrush.updateRange([mouseX, this.mouseDownX]).drawBrush().disable();
+            if (this.isRangeBrushActivated) {
+                this.mRangeBrush.updateRange([mouseX, this.mouseDownX]).drawBrush().visible().disable();
             }
         }
 
         onMouseUp(mouseX: number, mouseY: number) {
+            const mouseEvents = this.options.spec.experimental?.mouseEvents;
+            const clickEnabled = !!mouseEvents || (IsMouseEventsDeep(mouseEvents) && !!mouseEvents.click);
             const isDrag = Math.sqrt((this.mouseDownX - mouseX) ** 2 + (this.mouseDownY - mouseY) ** 2) > 1;
 
-            if (!this.isBrushActivated && !isDrag) {
+            if (!this.isRangeBrushActivated && !isDrag) {
                 // Clicking outside the brush should remove the brush and the selection.
                 this.mRangeBrush.clear();
                 this.pMouseSelection.clear();
@@ -1208,7 +1217,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                 this.mRangeBrush.enable();
             }
 
-            this.isBrushActivated = false;
+            this.isRangeBrushActivated = false;
 
             if (!this.tilesetInfo) {
                 // Do not have enough information
@@ -1216,7 +1225,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             }
 
             // click API
-            if (!isDrag) {
+            if (!isDrag && clickEnabled) {
                 // Identify the current position
                 const genomicPosition = getRelativeGenomicPosition(Math.floor(this._xScale.invert(mouseX)));
 
@@ -1234,13 +1243,13 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
         }
 
         onMouseOut() {
-            this.isBrushActivated = false;
+            this.isRangeBrushActivated = false;
             document.body.style.cursor = 'default';
             this.pMouseHover.clear();
         }
 
         getMouseOverHtml(mouseX: number, mouseY: number) {
-            if (this.isBrushActivated) {
+            if (this.isRangeBrushActivated) {
                 // In the middle of drawing range brush.
                 return;
             }
@@ -1267,27 +1276,35 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             }
 
             if (capturedElements.length !== 0) {
-                // Rener mouse over effect graphics
-                const g = this.pMouseHover;
+                const mouseEvents = this.options.spec.experimental?.mouseEvents;
+                const mouseOverEnabled = !!mouseEvents || (IsMouseEventsDeep(mouseEvents) && !!mouseEvents.mouseOver);
+                if (mouseOverEnabled) {
+                    // Display mouse over effects
+                    const g = this.pMouseHover;
 
-                if (!this.options.spec.experimental?.hovering?.showHoveringOnTheBack) {
-                    // place on the top
-                    this.pMain.removeChild(g);
-                    this.pMain.addChild(g);
+                    if (!this.options.spec.experimental?.mouseOveredMarks?.showHoveringOnTheBack) {
+                        // place on the top
+                        this.pMain.removeChild(g);
+                        this.pMain.addChild(g);
+                    }
+
+                    this.highlightMarks(
+                        g,
+                        capturedElements,
+                        Object.assign(
+                            {},
+                            DEFAULT_MARK_HIGHLIGHT_STYLE,
+                            this.options.spec.experimental?.mouseOveredMarks
+                        )
+                    );
+
+                    // API call
+                    PubSub.publish('mouseOver', {
+                        id: this.viewUid,
+                        genomicPosition,
+                        data: capturedElements.map(d => d.value)
+                    });
                 }
-
-                this.highlightMarks(
-                    g,
-                    capturedElements,
-                    Object.assign(DEFAULT_MARK_HIGHLIGHT_STYLE, this.options.spec.experimental?.hovering)
-                );
-
-                // API call
-                PubSub.publish('mouseover', {
-                    id: this.viewUid,
-                    genomicPosition,
-                    data: capturedElements.map(d => d.value)
-                });
 
                 // Display a tooltip
                 const models = this.visibleAndFetchedTiles()

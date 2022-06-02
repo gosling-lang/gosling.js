@@ -240,6 +240,19 @@ export interface BrushAndMarkHighlightingStyle {
     opacity: number;
 }
 
+// Mouse events
+type MouseEvent = 'click' | 'mouseOver' | 'rangeSelect';
+export type MouseEventsDeep = {
+    /* Turn on and off individual mouse events. */
+    [Event in MouseEvent]?: boolean;
+} & {
+    /* Group marks using keys in a data field. This affects how a set of marks are highlighted/selected by interaction. __Default__: `undefined` */
+    groupMarksByField?: string;
+
+    /* Determine whether all marks underneath the mouse point should be affected by mouse over. __Default__: `false` */
+    enableMouseOverOnMultipleMarks?: boolean;
+};
+
 interface SingleTrackBase extends CommonTrackDef {
     // Data
     data: DataDeep;
@@ -250,17 +263,17 @@ interface SingleTrackBase extends CommonTrackDef {
     // Tooltip
     tooltip?: Tooltip[];
 
-    // Mouse events
+    // Experimental
     experimental?: {
-        /* Group marks using keys in a field. This affects how a set of marks are highlighted/selected by interaction. */
-        groupMarksByField?: string;
+        // Mouse events
+        mouseEvents?: boolean | MouseEventsDeep;
 
-        hovering?: {
-            enableMultiHovering?: boolean;
+        // TODO: move all following style-related properties to `style` (June-02-2022)
+        mouseOveredMarks?: {
             showHoveringOnTheBack?: boolean;
         } & Partial<BrushAndMarkHighlightingStyle>;
-        selection?: { showOnTheBack?: boolean } & Partial<BrushAndMarkHighlightingStyle>;
-        brush?: Partial<BrushAndMarkHighlightingStyle>;
+        selectedMarks?: { showOnTheBack?: boolean } & Partial<BrushAndMarkHighlightingStyle>;
+        rangeSelectBrush?: Partial<BrushAndMarkHighlightingStyle>;
     };
 
     // Mark

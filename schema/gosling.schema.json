@@ -1092,38 +1092,21 @@
             "experimental": {
               "additionalProperties": false,
               "properties": {
-                "brush": {
-                  "additionalProperties": false,
-                  "properties": {
-                    "color": {
-                      "type": "string"
-                    },
-                    "opacity": {
-                      "type": "number"
-                    },
-                    "stroke": {
-                      "type": "string"
-                    },
-                    "strokeOpacity": {
-                      "type": "number"
-                    },
-                    "strokeWidth": {
-                      "type": "number"
-                    }
-                  },
-                  "type": "object"
-                },
-                "groupMarksByField": {
-                  "type": "string"
-                },
-                "hovering": {
-                  "additionalProperties": false,
-                  "properties": {
-                    "color": {
-                      "type": "string"
-                    },
-                    "enableMultiHovering": {
+                "mouseEvents": {
+                  "anyOf": [
+                    {
                       "type": "boolean"
+                    },
+                    {
+                      "$ref": "#/definitions/MouseEventsDeep"
+                    }
+                  ]
+                },
+                "mouseOveredMarks": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "color": {
+                      "type": "string"
                     },
                     "opacity": {
                       "type": "number"
@@ -1143,7 +1126,28 @@
                   },
                   "type": "object"
                 },
-                "selection": {
+                "rangeSelectBrush": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "color": {
+                      "type": "string"
+                    },
+                    "opacity": {
+                      "type": "number"
+                    },
+                    "stroke": {
+                      "type": "string"
+                    },
+                    "strokeOpacity": {
+                      "type": "number"
+                    },
+                    "strokeWidth": {
+                      "type": "number"
+                    }
+                  },
+                  "type": "object"
+                },
+                "selectedMarks": {
                   "additionalProperties": false,
                   "properties": {
                     "color": {
@@ -1303,38 +1307,21 @@
                       "experimental": {
                         "additionalProperties": false,
                         "properties": {
-                          "brush": {
-                            "additionalProperties": false,
-                            "properties": {
-                              "color": {
-                                "type": "string"
-                              },
-                              "opacity": {
-                                "type": "number"
-                              },
-                              "stroke": {
-                                "type": "string"
-                              },
-                              "strokeOpacity": {
-                                "type": "number"
-                              },
-                              "strokeWidth": {
-                                "type": "number"
-                              }
-                            },
-                            "type": "object"
-                          },
-                          "groupMarksByField": {
-                            "type": "string"
-                          },
-                          "hovering": {
-                            "additionalProperties": false,
-                            "properties": {
-                              "color": {
-                                "type": "string"
-                              },
-                              "enableMultiHovering": {
+                          "mouseEvents": {
+                            "anyOf": [
+                              {
                                 "type": "boolean"
+                              },
+                              {
+                                "$ref": "#/definitions/MouseEventsDeep"
+                              }
+                            ]
+                          },
+                          "mouseOveredMarks": {
+                            "additionalProperties": false,
+                            "properties": {
+                              "color": {
+                                "type": "string"
                               },
                               "opacity": {
                                 "type": "number"
@@ -1354,7 +1341,28 @@
                             },
                             "type": "object"
                           },
-                          "selection": {
+                          "rangeSelectBrush": {
+                            "additionalProperties": false,
+                            "properties": {
+                              "color": {
+                                "type": "string"
+                              },
+                              "opacity": {
+                                "type": "number"
+                              },
+                              "stroke": {
+                                "type": "string"
+                              },
+                              "strokeOpacity": {
+                                "type": "number"
+                              },
+                              "strokeWidth": {
+                                "type": "number"
+                              }
+                            },
+                            "type": "object"
+                          },
+                          "selectedMarks": {
                             "additionalProperties": false,
                             "properties": {
                               "color": {
@@ -1980,38 +1988,21 @@
             "experimental": {
               "additionalProperties": false,
               "properties": {
-                "brush": {
-                  "additionalProperties": false,
-                  "properties": {
-                    "color": {
-                      "type": "string"
-                    },
-                    "opacity": {
-                      "type": "number"
-                    },
-                    "stroke": {
-                      "type": "string"
-                    },
-                    "strokeOpacity": {
-                      "type": "number"
-                    },
-                    "strokeWidth": {
-                      "type": "number"
-                    }
-                  },
-                  "type": "object"
-                },
-                "groupMarksByField": {
-                  "type": "string"
-                },
-                "hovering": {
-                  "additionalProperties": false,
-                  "properties": {
-                    "color": {
-                      "type": "string"
-                    },
-                    "enableMultiHovering": {
+                "mouseEvents": {
+                  "anyOf": [
+                    {
                       "type": "boolean"
+                    },
+                    {
+                      "$ref": "#/definitions/MouseEventsDeep"
+                    }
+                  ]
+                },
+                "mouseOveredMarks": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "color": {
+                      "type": "string"
                     },
                     "opacity": {
                       "type": "number"
@@ -2031,7 +2022,28 @@
                   },
                   "type": "object"
                 },
-                "selection": {
+                "rangeSelectBrush": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "color": {
+                      "type": "string"
+                    },
+                    "opacity": {
+                      "type": "number"
+                    },
+                    "stroke": {
+                      "type": "string"
+                    },
+                    "strokeOpacity": {
+                      "type": "number"
+                    },
+                    "strokeWidth": {
+                      "type": "number"
+                    }
+                  },
+                  "type": "object"
+                },
+                "selectedMarks": {
                   "additionalProperties": false,
                   "properties": {
                     "color": {
@@ -2191,38 +2203,21 @@
                       "experimental": {
                         "additionalProperties": false,
                         "properties": {
-                          "brush": {
-                            "additionalProperties": false,
-                            "properties": {
-                              "color": {
-                                "type": "string"
-                              },
-                              "opacity": {
-                                "type": "number"
-                              },
-                              "stroke": {
-                                "type": "string"
-                              },
-                              "strokeOpacity": {
-                                "type": "number"
-                              },
-                              "strokeWidth": {
-                                "type": "number"
-                              }
-                            },
-                            "type": "object"
-                          },
-                          "groupMarksByField": {
-                            "type": "string"
-                          },
-                          "hovering": {
-                            "additionalProperties": false,
-                            "properties": {
-                              "color": {
-                                "type": "string"
-                              },
-                              "enableMultiHovering": {
+                          "mouseEvents": {
+                            "anyOf": [
+                              {
                                 "type": "boolean"
+                              },
+                              {
+                                "$ref": "#/definitions/MouseEventsDeep"
+                              }
+                            ]
+                          },
+                          "mouseOveredMarks": {
+                            "additionalProperties": false,
+                            "properties": {
+                              "color": {
+                                "type": "string"
                               },
                               "opacity": {
                                 "type": "number"
@@ -2242,7 +2237,28 @@
                             },
                             "type": "object"
                           },
-                          "selection": {
+                          "rangeSelectBrush": {
+                            "additionalProperties": false,
+                            "properties": {
+                              "color": {
+                                "type": "string"
+                              },
+                              "opacity": {
+                                "type": "number"
+                              },
+                              "stroke": {
+                                "type": "string"
+                              },
+                              "strokeOpacity": {
+                                "type": "number"
+                              },
+                              "strokeWidth": {
+                                "type": "number"
+                              }
+                            },
+                            "type": "object"
+                          },
+                          "selectedMarks": {
                             "additionalProperties": false,
                             "properties": {
                               "color": {
@@ -2919,38 +2935,21 @@
                       "experimental": {
                         "additionalProperties": false,
                         "properties": {
-                          "brush": {
-                            "additionalProperties": false,
-                            "properties": {
-                              "color": {
-                                "type": "string"
-                              },
-                              "opacity": {
-                                "type": "number"
-                              },
-                              "stroke": {
-                                "type": "string"
-                              },
-                              "strokeOpacity": {
-                                "type": "number"
-                              },
-                              "strokeWidth": {
-                                "type": "number"
-                              }
-                            },
-                            "type": "object"
-                          },
-                          "groupMarksByField": {
-                            "type": "string"
-                          },
-                          "hovering": {
-                            "additionalProperties": false,
-                            "properties": {
-                              "color": {
-                                "type": "string"
-                              },
-                              "enableMultiHovering": {
+                          "mouseEvents": {
+                            "anyOf": [
+                              {
                                 "type": "boolean"
+                              },
+                              {
+                                "$ref": "#/definitions/MouseEventsDeep"
+                              }
+                            ]
+                          },
+                          "mouseOveredMarks": {
+                            "additionalProperties": false,
+                            "properties": {
+                              "color": {
+                                "type": "string"
                               },
                               "opacity": {
                                 "type": "number"
@@ -2970,7 +2969,28 @@
                             },
                             "type": "object"
                           },
-                          "selection": {
+                          "rangeSelectBrush": {
+                            "additionalProperties": false,
+                            "properties": {
+                              "color": {
+                                "type": "string"
+                              },
+                              "opacity": {
+                                "type": "number"
+                              },
+                              "stroke": {
+                                "type": "string"
+                              },
+                              "strokeOpacity": {
+                                "type": "number"
+                              },
+                              "strokeWidth": {
+                                "type": "number"
+                              }
+                            },
+                            "type": "object"
+                          },
+                          "selectedMarks": {
                             "additionalProperties": false,
                             "properties": {
                               "color": {
@@ -3870,6 +3890,27 @@
       ],
       "type": "object"
     },
+    "MouseEventsDeep": {
+      "additionalProperties": false,
+      "properties": {
+        "click": {
+          "type": "boolean"
+        },
+        "enableMouseOverOnMultipleMarks": {
+          "type": "boolean"
+        },
+        "groupMarksByField": {
+          "type": "string"
+        },
+        "mouseOver": {
+          "type": "boolean"
+        },
+        "rangeSelect": {
+          "type": "boolean"
+        }
+      },
+      "type": "object"
+    },
     "MultipleViews": {
       "additionalProperties": false,
       "properties": {
@@ -4174,38 +4215,21 @@
         "experimental": {
           "additionalProperties": false,
           "properties": {
-            "brush": {
-              "additionalProperties": false,
-              "properties": {
-                "color": {
-                  "type": "string"
-                },
-                "opacity": {
-                  "type": "number"
-                },
-                "stroke": {
-                  "type": "string"
-                },
-                "strokeOpacity": {
-                  "type": "number"
-                },
-                "strokeWidth": {
-                  "type": "number"
-                }
-              },
-              "type": "object"
-            },
-            "groupMarksByField": {
-              "type": "string"
-            },
-            "hovering": {
-              "additionalProperties": false,
-              "properties": {
-                "color": {
-                  "type": "string"
-                },
-                "enableMultiHovering": {
+            "mouseEvents": {
+              "anyOf": [
+                {
                   "type": "boolean"
+                },
+                {
+                  "$ref": "#/definitions/MouseEventsDeep"
+                }
+              ]
+            },
+            "mouseOveredMarks": {
+              "additionalProperties": false,
+              "properties": {
+                "color": {
+                  "type": "string"
                 },
                 "opacity": {
                   "type": "number"
@@ -4225,7 +4249,28 @@
               },
               "type": "object"
             },
-            "selection": {
+            "rangeSelectBrush": {
+              "additionalProperties": false,
+              "properties": {
+                "color": {
+                  "type": "string"
+                },
+                "opacity": {
+                  "type": "number"
+                },
+                "stroke": {
+                  "type": "string"
+                },
+                "strokeOpacity": {
+                  "type": "number"
+                },
+                "strokeWidth": {
+                  "type": "number"
+                }
+              },
+              "type": "object"
+            },
+            "selectedMarks": {
               "additionalProperties": false,
               "properties": {
                 "color": {
@@ -4354,38 +4399,21 @@
               "experimental": {
                 "additionalProperties": false,
                 "properties": {
-                  "brush": {
-                    "additionalProperties": false,
-                    "properties": {
-                      "color": {
-                        "type": "string"
-                      },
-                      "opacity": {
-                        "type": "number"
-                      },
-                      "stroke": {
-                        "type": "string"
-                      },
-                      "strokeOpacity": {
-                        "type": "number"
-                      },
-                      "strokeWidth": {
-                        "type": "number"
-                      }
-                    },
-                    "type": "object"
-                  },
-                  "groupMarksByField": {
-                    "type": "string"
-                  },
-                  "hovering": {
-                    "additionalProperties": false,
-                    "properties": {
-                      "color": {
-                        "type": "string"
-                      },
-                      "enableMultiHovering": {
+                  "mouseEvents": {
+                    "anyOf": [
+                      {
                         "type": "boolean"
+                      },
+                      {
+                        "$ref": "#/definitions/MouseEventsDeep"
+                      }
+                    ]
+                  },
+                  "mouseOveredMarks": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "color": {
+                        "type": "string"
                       },
                       "opacity": {
                         "type": "number"
@@ -4405,7 +4433,28 @@
                     },
                     "type": "object"
                   },
-                  "selection": {
+                  "rangeSelectBrush": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "color": {
+                        "type": "string"
+                      },
+                      "opacity": {
+                        "type": "number"
+                      },
+                      "stroke": {
+                        "type": "string"
+                      },
+                      "strokeOpacity": {
+                        "type": "number"
+                      },
+                      "strokeWidth": {
+                        "type": "number"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "selectedMarks": {
                     "additionalProperties": false,
                     "properties": {
                       "color": {
@@ -4983,38 +5032,21 @@
         "experimental": {
           "additionalProperties": false,
           "properties": {
-            "brush": {
-              "additionalProperties": false,
-              "properties": {
-                "color": {
-                  "type": "string"
-                },
-                "opacity": {
-                  "type": "number"
-                },
-                "stroke": {
-                  "type": "string"
-                },
-                "strokeOpacity": {
-                  "type": "number"
-                },
-                "strokeWidth": {
-                  "type": "number"
-                }
-              },
-              "type": "object"
-            },
-            "groupMarksByField": {
-              "type": "string"
-            },
-            "hovering": {
-              "additionalProperties": false,
-              "properties": {
-                "color": {
-                  "type": "string"
-                },
-                "enableMultiHovering": {
+            "mouseEvents": {
+              "anyOf": [
+                {
                   "type": "boolean"
+                },
+                {
+                  "$ref": "#/definitions/MouseEventsDeep"
+                }
+              ]
+            },
+            "mouseOveredMarks": {
+              "additionalProperties": false,
+              "properties": {
+                "color": {
+                  "type": "string"
                 },
                 "opacity": {
                   "type": "number"
@@ -5034,7 +5066,28 @@
               },
               "type": "object"
             },
-            "selection": {
+            "rangeSelectBrush": {
+              "additionalProperties": false,
+              "properties": {
+                "color": {
+                  "type": "string"
+                },
+                "opacity": {
+                  "type": "number"
+                },
+                "stroke": {
+                  "type": "string"
+                },
+                "strokeOpacity": {
+                  "type": "number"
+                },
+                "strokeWidth": {
+                  "type": "number"
+                }
+              },
+              "type": "object"
+            },
+            "selectedMarks": {
               "additionalProperties": false,
               "properties": {
                 "color": {
@@ -5409,38 +5462,21 @@
         "experimental": {
           "additionalProperties": false,
           "properties": {
-            "brush": {
-              "additionalProperties": false,
-              "properties": {
-                "color": {
-                  "type": "string"
-                },
-                "opacity": {
-                  "type": "number"
-                },
-                "stroke": {
-                  "type": "string"
-                },
-                "strokeOpacity": {
-                  "type": "number"
-                },
-                "strokeWidth": {
-                  "type": "number"
-                }
-              },
-              "type": "object"
-            },
-            "groupMarksByField": {
-              "type": "string"
-            },
-            "hovering": {
-              "additionalProperties": false,
-              "properties": {
-                "color": {
-                  "type": "string"
-                },
-                "enableMultiHovering": {
+            "mouseEvents": {
+              "anyOf": [
+                {
                   "type": "boolean"
+                },
+                {
+                  "$ref": "#/definitions/MouseEventsDeep"
+                }
+              ]
+            },
+            "mouseOveredMarks": {
+              "additionalProperties": false,
+              "properties": {
+                "color": {
+                  "type": "string"
                 },
                 "opacity": {
                   "type": "number"
@@ -5460,7 +5496,28 @@
               },
               "type": "object"
             },
-            "selection": {
+            "rangeSelectBrush": {
+              "additionalProperties": false,
+              "properties": {
+                "color": {
+                  "type": "string"
+                },
+                "opacity": {
+                  "type": "number"
+                },
+                "stroke": {
+                  "type": "string"
+                },
+                "strokeOpacity": {
+                  "type": "number"
+                },
+                "strokeWidth": {
+                  "type": "number"
+                }
+              },
+              "type": "object"
+            },
+            "selectedMarks": {
               "additionalProperties": false,
               "properties": {
                 "color": {
@@ -5589,38 +5646,21 @@
               "experimental": {
                 "additionalProperties": false,
                 "properties": {
-                  "brush": {
-                    "additionalProperties": false,
-                    "properties": {
-                      "color": {
-                        "type": "string"
-                      },
-                      "opacity": {
-                        "type": "number"
-                      },
-                      "stroke": {
-                        "type": "string"
-                      },
-                      "strokeOpacity": {
-                        "type": "number"
-                      },
-                      "strokeWidth": {
-                        "type": "number"
-                      }
-                    },
-                    "type": "object"
-                  },
-                  "groupMarksByField": {
-                    "type": "string"
-                  },
-                  "hovering": {
-                    "additionalProperties": false,
-                    "properties": {
-                      "color": {
-                        "type": "string"
-                      },
-                      "enableMultiHovering": {
+                  "mouseEvents": {
+                    "anyOf": [
+                      {
                         "type": "boolean"
+                      },
+                      {
+                        "$ref": "#/definitions/MouseEventsDeep"
+                      }
+                    ]
+                  },
+                  "mouseOveredMarks": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "color": {
+                        "type": "string"
                       },
                       "opacity": {
                         "type": "number"
@@ -5640,7 +5680,28 @@
                     },
                     "type": "object"
                   },
-                  "selection": {
+                  "rangeSelectBrush": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "color": {
+                        "type": "string"
+                      },
+                      "opacity": {
+                        "type": "number"
+                      },
+                      "stroke": {
+                        "type": "string"
+                      },
+                      "strokeOpacity": {
+                        "type": "number"
+                      },
+                      "strokeWidth": {
+                        "type": "number"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "selectedMarks": {
                     "additionalProperties": false,
                     "properties": {
                       "color": {
@@ -6357,38 +6418,21 @@
         "experimental": {
           "additionalProperties": false,
           "properties": {
-            "brush": {
-              "additionalProperties": false,
-              "properties": {
-                "color": {
-                  "type": "string"
-                },
-                "opacity": {
-                  "type": "number"
-                },
-                "stroke": {
-                  "type": "string"
-                },
-                "strokeOpacity": {
-                  "type": "number"
-                },
-                "strokeWidth": {
-                  "type": "number"
-                }
-              },
-              "type": "object"
-            },
-            "groupMarksByField": {
-              "type": "string"
-            },
-            "hovering": {
-              "additionalProperties": false,
-              "properties": {
-                "color": {
-                  "type": "string"
-                },
-                "enableMultiHovering": {
+            "mouseEvents": {
+              "anyOf": [
+                {
                   "type": "boolean"
+                },
+                {
+                  "$ref": "#/definitions/MouseEventsDeep"
+                }
+              ]
+            },
+            "mouseOveredMarks": {
+              "additionalProperties": false,
+              "properties": {
+                "color": {
+                  "type": "string"
                 },
                 "opacity": {
                   "type": "number"
@@ -6408,7 +6452,28 @@
               },
               "type": "object"
             },
-            "selection": {
+            "rangeSelectBrush": {
+              "additionalProperties": false,
+              "properties": {
+                "color": {
+                  "type": "string"
+                },
+                "opacity": {
+                  "type": "number"
+                },
+                "stroke": {
+                  "type": "string"
+                },
+                "strokeOpacity": {
+                  "type": "number"
+                },
+                "strokeWidth": {
+                  "type": "number"
+                }
+              },
+              "type": "object"
+            },
+            "selectedMarks": {
               "additionalProperties": false,
               "properties": {
                 "color": {
@@ -6777,38 +6842,21 @@
             "experimental": {
               "additionalProperties": false,
               "properties": {
-                "brush": {
-                  "additionalProperties": false,
-                  "properties": {
-                    "color": {
-                      "type": "string"
-                    },
-                    "opacity": {
-                      "type": "number"
-                    },
-                    "stroke": {
-                      "type": "string"
-                    },
-                    "strokeOpacity": {
-                      "type": "number"
-                    },
-                    "strokeWidth": {
-                      "type": "number"
-                    }
-                  },
-                  "type": "object"
-                },
-                "groupMarksByField": {
-                  "type": "string"
-                },
-                "hovering": {
-                  "additionalProperties": false,
-                  "properties": {
-                    "color": {
-                      "type": "string"
-                    },
-                    "enableMultiHovering": {
+                "mouseEvents": {
+                  "anyOf": [
+                    {
                       "type": "boolean"
+                    },
+                    {
+                      "$ref": "#/definitions/MouseEventsDeep"
+                    }
+                  ]
+                },
+                "mouseOveredMarks": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "color": {
+                      "type": "string"
                     },
                     "opacity": {
                       "type": "number"
@@ -6828,7 +6876,28 @@
                   },
                   "type": "object"
                 },
-                "selection": {
+                "rangeSelectBrush": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "color": {
+                      "type": "string"
+                    },
+                    "opacity": {
+                      "type": "number"
+                    },
+                    "stroke": {
+                      "type": "string"
+                    },
+                    "strokeOpacity": {
+                      "type": "number"
+                    },
+                    "strokeWidth": {
+                      "type": "number"
+                    }
+                  },
+                  "type": "object"
+                },
+                "selectedMarks": {
                   "additionalProperties": false,
                   "properties": {
                     "color": {
@@ -6984,38 +7053,21 @@
                       "experimental": {
                         "additionalProperties": false,
                         "properties": {
-                          "brush": {
-                            "additionalProperties": false,
-                            "properties": {
-                              "color": {
-                                "type": "string"
-                              },
-                              "opacity": {
-                                "type": "number"
-                              },
-                              "stroke": {
-                                "type": "string"
-                              },
-                              "strokeOpacity": {
-                                "type": "number"
-                              },
-                              "strokeWidth": {
-                                "type": "number"
-                              }
-                            },
-                            "type": "object"
-                          },
-                          "groupMarksByField": {
-                            "type": "string"
-                          },
-                          "hovering": {
-                            "additionalProperties": false,
-                            "properties": {
-                              "color": {
-                                "type": "string"
-                              },
-                              "enableMultiHovering": {
+                          "mouseEvents": {
+                            "anyOf": [
+                              {
                                 "type": "boolean"
+                              },
+                              {
+                                "$ref": "#/definitions/MouseEventsDeep"
+                              }
+                            ]
+                          },
+                          "mouseOveredMarks": {
+                            "additionalProperties": false,
+                            "properties": {
+                              "color": {
+                                "type": "string"
                               },
                               "opacity": {
                                 "type": "number"
@@ -7035,7 +7087,28 @@
                             },
                             "type": "object"
                           },
-                          "selection": {
+                          "rangeSelectBrush": {
+                            "additionalProperties": false,
+                            "properties": {
+                              "color": {
+                                "type": "string"
+                              },
+                              "opacity": {
+                                "type": "number"
+                              },
+                              "stroke": {
+                                "type": "string"
+                              },
+                              "strokeOpacity": {
+                                "type": "number"
+                              },
+                              "strokeWidth": {
+                                "type": "number"
+                              }
+                            },
+                            "type": "object"
+                          },
+                          "selectedMarks": {
                             "additionalProperties": false,
                             "properties": {
                               "color": {
@@ -7658,38 +7731,21 @@
             "experimental": {
               "additionalProperties": false,
               "properties": {
-                "brush": {
-                  "additionalProperties": false,
-                  "properties": {
-                    "color": {
-                      "type": "string"
-                    },
-                    "opacity": {
-                      "type": "number"
-                    },
-                    "stroke": {
-                      "type": "string"
-                    },
-                    "strokeOpacity": {
-                      "type": "number"
-                    },
-                    "strokeWidth": {
-                      "type": "number"
-                    }
-                  },
-                  "type": "object"
-                },
-                "groupMarksByField": {
-                  "type": "string"
-                },
-                "hovering": {
-                  "additionalProperties": false,
-                  "properties": {
-                    "color": {
-                      "type": "string"
-                    },
-                    "enableMultiHovering": {
+                "mouseEvents": {
+                  "anyOf": [
+                    {
                       "type": "boolean"
+                    },
+                    {
+                      "$ref": "#/definitions/MouseEventsDeep"
+                    }
+                  ]
+                },
+                "mouseOveredMarks": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "color": {
+                      "type": "string"
                     },
                     "opacity": {
                       "type": "number"
@@ -7709,7 +7765,28 @@
                   },
                   "type": "object"
                 },
-                "selection": {
+                "rangeSelectBrush": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "color": {
+                      "type": "string"
+                    },
+                    "opacity": {
+                      "type": "number"
+                    },
+                    "stroke": {
+                      "type": "string"
+                    },
+                    "strokeOpacity": {
+                      "type": "number"
+                    },
+                    "strokeWidth": {
+                      "type": "number"
+                    }
+                  },
+                  "type": "object"
+                },
+                "selectedMarks": {
                   "additionalProperties": false,
                   "properties": {
                     "color": {
@@ -7865,38 +7942,21 @@
                       "experimental": {
                         "additionalProperties": false,
                         "properties": {
-                          "brush": {
-                            "additionalProperties": false,
-                            "properties": {
-                              "color": {
-                                "type": "string"
-                              },
-                              "opacity": {
-                                "type": "number"
-                              },
-                              "stroke": {
-                                "type": "string"
-                              },
-                              "strokeOpacity": {
-                                "type": "number"
-                              },
-                              "strokeWidth": {
-                                "type": "number"
-                              }
-                            },
-                            "type": "object"
-                          },
-                          "groupMarksByField": {
-                            "type": "string"
-                          },
-                          "hovering": {
-                            "additionalProperties": false,
-                            "properties": {
-                              "color": {
-                                "type": "string"
-                              },
-                              "enableMultiHovering": {
+                          "mouseEvents": {
+                            "anyOf": [
+                              {
                                 "type": "boolean"
+                              },
+                              {
+                                "$ref": "#/definitions/MouseEventsDeep"
+                              }
+                            ]
+                          },
+                          "mouseOveredMarks": {
+                            "additionalProperties": false,
+                            "properties": {
+                              "color": {
+                                "type": "string"
                               },
                               "opacity": {
                                 "type": "number"
@@ -7916,7 +7976,28 @@
                             },
                             "type": "object"
                           },
-                          "selection": {
+                          "rangeSelectBrush": {
+                            "additionalProperties": false,
+                            "properties": {
+                              "color": {
+                                "type": "string"
+                              },
+                              "opacity": {
+                                "type": "number"
+                              },
+                              "stroke": {
+                                "type": "string"
+                              },
+                              "strokeOpacity": {
+                                "type": "number"
+                              },
+                              "strokeWidth": {
+                                "type": "number"
+                              }
+                            },
+                            "type": "object"
+                          },
+                          "selectedMarks": {
                             "additionalProperties": false,
                             "properties": {
                               "color": {
@@ -8586,38 +8667,21 @@
                       "experimental": {
                         "additionalProperties": false,
                         "properties": {
-                          "brush": {
-                            "additionalProperties": false,
-                            "properties": {
-                              "color": {
-                                "type": "string"
-                              },
-                              "opacity": {
-                                "type": "number"
-                              },
-                              "stroke": {
-                                "type": "string"
-                              },
-                              "strokeOpacity": {
-                                "type": "number"
-                              },
-                              "strokeWidth": {
-                                "type": "number"
-                              }
-                            },
-                            "type": "object"
-                          },
-                          "groupMarksByField": {
-                            "type": "string"
-                          },
-                          "hovering": {
-                            "additionalProperties": false,
-                            "properties": {
-                              "color": {
-                                "type": "string"
-                              },
-                              "enableMultiHovering": {
+                          "mouseEvents": {
+                            "anyOf": [
+                              {
                                 "type": "boolean"
+                              },
+                              {
+                                "$ref": "#/definitions/MouseEventsDeep"
+                              }
+                            ]
+                          },
+                          "mouseOveredMarks": {
+                            "additionalProperties": false,
+                            "properties": {
+                              "color": {
+                                "type": "string"
                               },
                               "opacity": {
                                 "type": "number"
@@ -8637,7 +8701,28 @@
                             },
                             "type": "object"
                           },
-                          "selection": {
+                          "rangeSelectBrush": {
+                            "additionalProperties": false,
+                            "properties": {
+                              "color": {
+                                "type": "string"
+                              },
+                              "opacity": {
+                                "type": "number"
+                              },
+                              "stroke": {
+                                "type": "string"
+                              },
+                              "strokeOpacity": {
+                                "type": "number"
+                              },
+                              "strokeWidth": {
+                                "type": "number"
+                              }
+                            },
+                            "type": "object"
+                          },
+                          "selectedMarks": {
                             "additionalProperties": false,
                             "properties": {
                               "color": {

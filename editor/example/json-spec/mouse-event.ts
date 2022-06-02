@@ -44,16 +44,20 @@ export const EX_SPEC_MOUSE_EVENT: GoslingSpec = {
                     title: 'Individual Marks',
                     ...BAR,
                     experimental: {
-                        hovering: {
+                        mouseEvents: {
+                            mouseOver: true,
+                            rangeSelect: true
+                        },
+                        mouseOveredMarks: {
                             color: 'blue',
                             opacity: 0.5,
                             strokeWidth: 0
                         },
-                        selection: {
+                        selectedMarks: {
                             color: 'red',
                             opacity: 0.5
                         },
-                        brush: {
+                        rangeSelectBrush: {
                             color: 'purple',
                             stroke: 'purple'
                         }
@@ -67,17 +71,21 @@ export const EX_SPEC_MOUSE_EVENT: GoslingSpec = {
                     title: 'Group Marks By Sample',
                     ...BAR,
                     experimental: {
-                        groupMarksByField: 'sample',
-                        hovering: {
+                        mouseEvents: {
+                            mouseOver: true,
+                            rangeSelect: true,
+                            groupMarksByField: 'smaple'
+                        },
+                        mouseOveredMarks: {
                             color: 'blue',
                             opacity: 0.5,
                             strokeWidth: 0
                         },
-                        selection: {
+                        selectedMarks: {
                             color: 'red',
                             opacity: 0.5
                         },
-                        brush: {
+                        rangeSelectBrush: {
                             color: 'green',
                             stroke: 'green'
                         }
@@ -91,17 +99,21 @@ export const EX_SPEC_MOUSE_EVENT: GoslingSpec = {
                     title: 'Group Marks By Genomic Position',
                     ...BAR,
                     experimental: {
-                        groupMarksByField: 'position',
-                        hovering: {
+                        mouseEvents: {
+                            mouseOver: true,
+                            rangeSelect: true,
+                            groupMarksByField: 'position'
+                        },
+                        mouseOveredMarks: {
                             color: 'blue',
                             opacity: 0.5,
                             strokeWidth: 0
                         },
-                        selection: {
+                        selectedMarks: {
                             color: 'red',
                             opacity: 0.5
                         },
-                        brush: {
+                        rangeSelectBrush: {
                             color: 'yellow',
                             stroke: 'yellow'
                         }
@@ -150,14 +162,18 @@ export const EX_SPEC_MOUSE_EVENT: GoslingSpec = {
                     width: BAR.width,
                     height: BAR.height,
                     experimental: {
-                        groupMarksByField: 'name',
-                        hovering: {
+                        mouseEvents: {
+                            mouseOver: true,
+                            rangeSelect: true,
+                            groupMarksByField: 'name'
+                        },
+                        mouseOveredMarks: {
                             showHoveringOnTheBack: true,
                             color: '#E0E0E0',
                             stroke: '#E0E0E0',
                             strokeWidth: 4
                         },
-                        selection: {
+                        selectedMarks: {
                             showOnTheBack: true,
                             color: '#B9D4FA',
                             stroke: '#B9D4FA',
@@ -177,13 +193,18 @@ export const EX_SPEC_MOUSE_EVENT: GoslingSpec = {
                     height: 60,
                     tooltip: [{ field: 'Chr.', type: 'nominal' }],
                     experimental: {
-                        groupMarksByField: 'Chr.',
-                        hovering: {
+                        mouseEvents: {
+                            click: true,
+                            mouseOver: true,
+                            rangeSelect: true,
+                            groupMarksByField: 'Chr.'
+                        },
+                        mouseOveredMarks: {
                             color: 'blue',
                             opacity: 0.5,
                             strokeWidth: 0
                         },
-                        selection: {
+                        selectedMarks: {
                             color: 'red',
                             opacity: 0.5,
                             strokeWidth: 0
