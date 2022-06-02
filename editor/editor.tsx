@@ -230,7 +230,7 @@ function Editor(props: RouteComponentProps) {
     const [goslingSpec, setGoslingSpec] = useState<gosling.GoslingSpec>();
     const [log, setLog] = useState<ReturnType<typeof gosling.validateGoslingSpec>>({ message: '', state: 'success' });
     // const [mouseEventInfo, setMouseEventInfo] =
-    //     useState<{ type: 'mouseover' | 'click'; data: Datum[]; position: string }>();
+    //     useState<{ type: 'mouseOver' | 'click'; data: Datum[]; position: string }>();
     const [showExamples, setShowExamples] = useState(false);
     const [autoRun, setAutoRun] = useState(true);
     const [selectedPreviewData, setSelectedPreviewData] = useState<number>(0);
@@ -303,21 +303,21 @@ function Editor(props: RouteComponentProps) {
             // gosRef.current.api.zoomTo('bam-2', `chr${data.data.chr2}:${data.data.start2}-${data.data.end2}`, 2000);
             // console.log('click', data.data);
             // TODO: show messages on the right-bottom of the editor
-            // gosRef.current.api.subscribe('mouseover', (type, eventData) => {
-            //     setMouseEventInfo({ type: 'mouseover', data: eventData.data, position: eventData.genomicPosition });
+            // gosRef.current.api.subscribe('mouseOver', (type, eventData) => {
+            //     setMouseEventInfo({ type: 'mouseOver', data: eventData.data, position: eventData.genomicPosition });
             // });
             // gosRef.current.api.subscribe('click', (type, eventData) => {
             //     setMouseEventInfo({ type: 'click', data: eventData.data, position: eventData.genomicPosition });
             // });
             // Range Select API
-            // gosRef.current.api.subscribe('rangeselect', (type, eventData) => {
+            // gosRef.current.api.subscribe('rangeSelect', (type, eventData) => {
             //     console.warn(type, eventData.id, eventData.genomicRange, eventData.data);
             // });
         }
         return () => {
-            // gosRef.current.api.unsubscribe('mouseover');
+            // gosRef.current.api.unsubscribe('mouseOver');
             // gosRef.current.api.unsubscribe('click');
-            // gosRef.current?.api.unsubscribe('rangeselect');
+            // gosRef.current?.api.unsubscribe('rangeSelect');
         };
     }, [gosRef.current]);
 

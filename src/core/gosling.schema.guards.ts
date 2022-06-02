@@ -31,7 +31,8 @@ import type {
     StackedTracks,
     BAMData,
     Range,
-    TemplateTrack
+    TemplateTrack,
+    MouseEventsDeep
 } from './gosling.schema';
 import { SUPPORTED_CHANNELS } from './mark';
 import { isArray } from 'lodash-es';
@@ -307,4 +308,10 @@ export function IsYAxis(_: Track) {
         return isFound;
     }
     return false;
+}
+
+/* ----------------------------- MOUSE EVENT ----------------------------- */
+
+export function IsMouseEventsDeep(_?: boolean | MouseEventsDeep): _ is MouseEventsDeep {
+    return typeof _ === 'object';
 }

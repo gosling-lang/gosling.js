@@ -84,7 +84,7 @@ export class LinearBrushModel {
             d3Drag: hgLibraries.d3Drag
         };
 
-        this.style = Object.assign(BRUSH_STYLE_DEFAULT, style);
+        this.style = Object.assign({}, BRUSH_STYLE_DEFAULT, style);
 
         this.brushSelection = selection
             .selectAll('.genomic-range-brush')
@@ -137,7 +137,6 @@ export class LinearBrushModel {
         const getWidth = (d: LinearBrushData[number]) => Math.abs(d.end - d.start); // the start and end can be minus values
         this.brushSelection
             .data(this.data)
-            .attr('visibility', 'visible')
             .attr('transform', d => `translate(${x + d.start}, ${y + 1})`)
             .attr('width', d => `${getWidth(d)}px`)
             .attr('height', `${height - 2}px`)
@@ -163,10 +162,18 @@ export class LinearBrushModel {
         return this;
     }
 
-    public clear() {
-        this.updateRange(null).drawBrush();
+    public visible() {
+        this.brushSelection.attr('visibility', 'visible');
+        return this;
+    }
+
+    public hidden() {
         this.brushSelection.attr('visibility', 'hidden');
-        this.disable();
+        return this;
+    }
+
+    public clear() {
+        this.updateRange(null).drawBrush().hidden().disable();
         return this;
     }
 

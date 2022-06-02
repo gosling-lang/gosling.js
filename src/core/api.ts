@@ -1,43 +1,10 @@
 import * as PIXI from 'pixi.js';
-import type { Datum } from './gosling.schema';
 import type { HiGlassApi } from './higlass-component-wrapper';
 import type { HiGlassSpec } from './higlass.schema';
+import { subscribe, unsubscribe } from './pubsub';
 import { GET_CHROM_SIZES } from './utils/assembly';
 import type { CompleteThemeDeep } from './utils/theme';
 import { traverseViewsInViewConfig } from './utils/view-config';
-
-export interface CommonEventData {
-    /** Source visualization ID, i.e., `track.id` */
-    id: string;
-    /** Values in a JSON array that represent data after data transformation */
-    data: Datum[];
-}
-
-export interface PointMouseEventData extends CommonEventData {
-    /* A genomic coordinate, e.g., `chr1:100,000`. */
-    genomicPosition: string;
-}
-
-export interface RangeMouseEventData extends CommonEventData {
-    /* Start and end genomic coordinates, e.g., `chr1:100,000`. NULL if a range is deselected. */
-    genomicRange: [string, string] | null;
-}
-
-// Utility type for building strongly typed PubSub API.
-//
-// Add named events using a string union for `EventName`
-//
-// - Two different events ('mouseover' & 'my-event') with the same payload
-//
-// PubSubEvent<'mouseover' | 'my-event', { same: 'payload' }>
-type PubSubEvent<EventName extends string, Payload> = {
-    [Key in EventName]: Payload;
-};
-
-// New `PubSubEvent`s should be added to the `EventMap`...
-type EventMap = PubSubEvent<'mouseover' | 'click', PointMouseEventData> &
-    PubSubEvent<'rangeselect', RangeMouseEventData> &
-    PubSubEvent<'rawdata', CommonEventData>;
 
 /**
  * Information of suggested genes.
@@ -51,11 +18,8 @@ interface geneSuggestion {
 }
 
 export interface GoslingApi {
-    subscribe<EventName extends keyof EventMap>(
-        type: EventName,
-        callback: (message: string, payload: EventMap[EventName]) => void
-    ): void;
-    unsubscribe(tokenOrFunction: string | ((...args: unknown[]) => unknown)): void;
+    subscribe: typeof subscribe;
+    unsubscribe: typeof unsubscribe;
     zoomTo(viewId: string, position: string, padding?: number, duration?: number): void;
     zoomToExtent(viewId: string, duration?: number): void;
     zoomToGene(viewId: string, gene: string, padding?: number, duration?: number): void;
@@ -112,20 +76,8 @@ export function createApi(
         };
     };
     return {
-        subscribe: (type, callback) => {
-            switch (type) {
-                case 'mouseover':
-                case 'click':
-                case 'rawdata':
-                case 'rangeselect':
-                    return PubSub.subscribe(type, callback);
-                default: {
-                    console.error(`Event type not recognized, got ${JSON.stringify(type)}.`);
-                    return undefined;
-                }
-            }
-        },
-        unsubscribe: tokenOrFunction => PubSub.unsubscribe(tokenOrFunction),
+        subscribe,
+        unsubscribe,
         // TODO: Support assemblies (we can infer this from the spec)
         zoomTo: (viewId, position, padding = 0, duration = 1000) => {
             // Accepted input: 'chr1' or 'chr1:1-1000'
