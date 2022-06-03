@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import { HiGlassApi, HiGlassComponentWrapper } from './higlass-component-wrapper';
 import React, { useState, useEffect, useMemo, useRef, forwardRef, useCallback } from 'react';
-import { ResizeSensor } from 'css-element-queries';
+import ResizeSensor from 'css-element-queries/src/ResizeSensor';
 import * as gosling from '..';
 import { getTheme, Theme } from './utils/theme';
 import { createApi, GoslingApi } from './api';
