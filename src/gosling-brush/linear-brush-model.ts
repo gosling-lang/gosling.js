@@ -29,7 +29,7 @@ export interface LinearBrushEndEdgeData extends LinearBrushDataCommon {
 export type OnBrushCallbackFn = (start: number, end: number) => void;
 
 // default styles for brush
-const BRUSH_STYLE_DEFAULT = {
+const BRUSH_STYLE_DEFAULT: Required<BrushAndMarkHighlightingStyle> = {
     color: '#777',
     stroke: '#777',
     strokeWidth: 1,
@@ -43,7 +43,7 @@ const BRUSH_STYLE_DEFAULT = {
 export class LinearBrushModel {
     /* graphical elements */
     private brushSelection: D3Selection.Selection<SVGRectElement, LinearBrushData[number], SVGGElement, any>;
-    private readonly style: BrushAndMarkHighlightingStyle;
+    private readonly style: Required<BrushAndMarkHighlightingStyle>;
 
     /* data */
     private range: [number, number] | null;
@@ -70,7 +70,7 @@ export class LinearBrushModel {
         selection: D3Selection.Selection<SVGGElement, unknown, HTMLElement, unknown>,
         hgLibraries: any,
         onBrush: (range: [number, number] | null, skipApiTrigger: boolean) => void,
-        style: Partial<BrushAndMarkHighlightingStyle> = {}
+        style: BrushAndMarkHighlightingStyle = {}
     ) {
         this.range = null;
         this.prevExtent = [0, 0];

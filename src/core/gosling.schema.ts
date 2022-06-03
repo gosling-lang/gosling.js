@@ -138,6 +138,14 @@ export interface CommonViewDef {
      */
     centerRadius?: number;
 
+    // Experimental
+    experimental?: {
+        /*
+         * Determine whether to use mouse events, such as click and mouse over on marks. __Default__: `false`
+         */
+        mouseEvents?: boolean | MouseEventsDeep;
+    };
+
     /**
      * Define the [style](http://gosling-lang.org/docs/visual-channel#style-related-properties) of multive views.
      * Will be overriden by the style of children elements (e.g., view, track).
@@ -268,14 +276,6 @@ export type MouseEventsDeep = {
 /* ----------------------------- TRACK ----------------------------- */
 export type SingleTrack = SingleTrackBase & Encoding;
 
-export interface BrushAndMarkHighlightingStyle {
-    color: string;
-    stroke: string;
-    strokeWidth: number;
-    strokeOpacity: number;
-    opacity: number;
-}
-
 interface SingleTrackBase extends CommonTrackDef {
     // Data
     data: DataDeep;
@@ -285,19 +285,6 @@ interface SingleTrackBase extends CommonTrackDef {
 
     // Tooltip
     tooltip?: Tooltip[];
-
-    // Experimental
-    experimental?: {
-        // Mouse events
-        mouseEvents?: boolean | MouseEventsDeep;
-
-        // TODO: move all following style-related properties to `style` (June-02-2022)
-        mouseOveredMarks?: {
-            showHoveringOnTheBack?: boolean;
-        } & Partial<BrushAndMarkHighlightingStyle>;
-        selectedMarks?: { showOnTheBack?: boolean } & Partial<BrushAndMarkHighlightingStyle>;
-        rangeSelectBrush?: Partial<BrushAndMarkHighlightingStyle>;
-    };
 
     // Mark
     mark: Mark;
@@ -365,6 +352,14 @@ export type OverlaidTrack = Partial<SingleTrack> &
         // This is a property internally used when compiling
         overlay: Partial<Omit<SingleTrack, 'height' | 'width' | 'layout' | 'title' | 'subtitle'>>[];
     };
+
+export interface BrushAndMarkHighlightingStyle {
+    color?: string;
+    stroke?: string;
+    strokeWidth?: number;
+    strokeOpacity?: number;
+    opacity?: number;
+}
 
 export interface Style {
     // Top-level Styles
@@ -460,6 +455,21 @@ export interface Style {
      * Determine to show only one side of the diagonal in a HiGlass matrix. __Default__: `"full"`
      */
     matrixExtent?: 'full' | 'upper-right' | 'lower-left';
+
+    /**
+     * Customize visual effects of mouse over events on marks.
+     */
+    mouseOveredMarks?: { showOnTheBack?: boolean } & BrushAndMarkHighlightingStyle;
+
+    /**
+     * Customize visual effects selection events on marks with range brushes.
+     */
+    selectedMarks?: { showOnTheBack?: boolean } & BrushAndMarkHighlightingStyle;
+
+    /**
+     * Customize the style of range brushes.
+     */
+    rangeSelectBrush?: BrushAndMarkHighlightingStyle;
 }
 
 /* ----------------------------- SEMANTIC ZOOM ----------------------------- */
