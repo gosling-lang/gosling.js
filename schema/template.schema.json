@@ -542,27 +542,6 @@
       ],
       "type": "string"
     },
-    "MouseEventsDeep": {
-      "additionalProperties": false,
-      "properties": {
-        "click": {
-          "type": "boolean"
-        },
-        "enableMouseOverOnMultipleMarks": {
-          "type": "boolean"
-        },
-        "groupMarksByField": {
-          "type": "string"
-        },
-        "mouseOver": {
-          "type": "boolean"
-        },
-        "rangeSelect": {
-          "type": "boolean"
-        }
-      },
-      "type": "object"
-    },
     "Orientation": {
       "enum": [
         "horizontal",
@@ -896,22 +875,6 @@
         "endAngle": {
           "description": "Specify the end angle (in the range of [0, 360]) of circular tracks (`{\"layout\": \"circular\"}`).",
           "type": "number"
-        },
-        "experimental": {
-          "additionalProperties": false,
-          "properties": {
-            "mouseEvents": {
-              "anyOf": [
-                {
-                  "type": "boolean"
-                },
-                {
-                  "$ref": "#/definitions/MouseEventsDeep"
-                }
-              ]
-            }
-          },
-          "type": "object"
         },
         "flipY": {
           "type": "boolean"

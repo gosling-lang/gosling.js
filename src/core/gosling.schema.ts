@@ -138,14 +138,6 @@ export interface CommonViewDef {
      */
     centerRadius?: number;
 
-    // Experimental
-    experimental?: {
-        /*
-         * Determine whether to use mouse events, such as click and mouse over on marks. __Default__: `false`
-         */
-        mouseEvents?: boolean | MouseEventsDeep;
-    };
-
     /**
      * Define the [style](http://gosling-lang.org/docs/visual-channel#style-related-properties) of multive views.
      * Will be overriden by the style of children elements (e.g., view, track).
@@ -285,6 +277,14 @@ interface SingleTrackBase extends CommonTrackDef {
 
     // Tooltip
     tooltip?: Tooltip[];
+
+    // Experimental
+    experimental?: {
+        /*
+         * Determine whether to use mouse events, such as click and mouse over on marks. __Default__: `false`
+         */
+        mouseEvents?: boolean | MouseEventsDeep;
+    };
 
     // Mark
     mark: Mark;

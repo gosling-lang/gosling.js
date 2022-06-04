@@ -592,22 +592,6 @@
           "description": "Specify the end angle (in the range of [0, 360]) of circular tracks (`{\"layout\": \"circular\"}`).",
           "type": "number"
         },
-        "experimental": {
-          "additionalProperties": false,
-          "properties": {
-            "mouseEvents": {
-              "anyOf": [
-                {
-                  "type": "boolean"
-                },
-                {
-                  "$ref": "#/definitions/MouseEventsDeep"
-                }
-              ]
-            }
-          },
-          "type": "object"
-        },
         "height": {
           "description": "Specify the track height in pixels.",
           "type": "number"
@@ -2605,22 +2589,6 @@
             "description": {
               "type": "string"
             },
-            "experimental": {
-              "additionalProperties": false,
-              "properties": {
-                "mouseEvents": {
-                  "anyOf": [
-                    {
-                      "type": "boolean"
-                    },
-                    {
-                      "$ref": "#/definitions/MouseEventsDeep"
-                    }
-                  ]
-                }
-              },
-              "type": "object"
-            },
             "layout": {
               "$ref": "#/definitions/Layout",
               "description": "Specify the layout type of all tracks."
@@ -3133,22 +3101,6 @@
             "description": {
               "type": "string"
             },
-            "experimental": {
-              "additionalProperties": false,
-              "properties": {
-                "mouseEvents": {
-                  "anyOf": [
-                    {
-                      "type": "boolean"
-                    },
-                    {
-                      "$ref": "#/definitions/MouseEventsDeep"
-                    }
-                  ]
-                }
-              },
-              "type": "object"
-            },
             "layout": {
               "$ref": "#/definitions/Layout",
               "description": "Specify the layout type of all tracks."
@@ -3202,22 +3154,6 @@
                       "centerRadius": {
                         "description": "Proportion of the radius of the center white space.\n\n__Default:__ `0.3`",
                         "type": "number"
-                      },
-                      "experimental": {
-                        "additionalProperties": false,
-                        "properties": {
-                          "mouseEvents": {
-                            "anyOf": [
-                              {
-                                "type": "boolean"
-                              },
-                              {
-                                "$ref": "#/definitions/MouseEventsDeep"
-                              }
-                            ]
-                          }
-                        },
-                        "type": "object"
                       },
                       "layout": {
                         "$ref": "#/definitions/Layout",
@@ -3678,22 +3614,6 @@
         "centerRadius": {
           "description": "Proportion of the radius of the center white space.\n\n__Default:__ `0.3`",
           "type": "number"
-        },
-        "experimental": {
-          "additionalProperties": false,
-          "properties": {
-            "mouseEvents": {
-              "anyOf": [
-                {
-                  "type": "boolean"
-                },
-                {
-                  "$ref": "#/definitions/MouseEventsDeep"
-                }
-              ]
-            }
-          },
-          "type": "object"
         },
         "layout": {
           "$ref": "#/definitions/Layout",
@@ -7646,22 +7566,6 @@
               "description": "Proportion of the radius of the center white space.\n\n__Default:__ `0.3`",
               "type": "number"
             },
-            "experimental": {
-              "additionalProperties": false,
-              "properties": {
-                "mouseEvents": {
-                  "anyOf": [
-                    {
-                      "type": "boolean"
-                    },
-                    {
-                      "$ref": "#/definitions/MouseEventsDeep"
-                    }
-                  ]
-                }
-              },
-              "type": "object"
-            },
             "layout": {
               "$ref": "#/definitions/Layout",
               "description": "Specify the layout type of all tracks."
@@ -8665,22 +8569,6 @@
         "endAngle": {
           "description": "Specify the end angle (in the range of [0, 360]) of circular tracks (`{\"layout\": \"circular\"}`).",
           "type": "number"
-        },
-        "experimental": {
-          "additionalProperties": false,
-          "properties": {
-            "mouseEvents": {
-              "anyOf": [
-                {
-                  "type": "boolean"
-                },
-                {
-                  "$ref": "#/definitions/MouseEventsDeep"
-                }
-              ]
-            }
-          },
-          "type": "object"
         },
         "height": {
           "description": "Specify the track height in pixels.",
