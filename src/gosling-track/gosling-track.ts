@@ -218,6 +218,9 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
 
         /* ----------------------------------- RENDERING CYCLE ----------------------------------- */
 
+        // !! Be aware that this function is called in the middle of `constructor()` by a parent class (i.e., `super(...)`).
+        // https://github.com/higlass/higlass/blob/387a03e877dcfa4c2cfeabc0869375b58c0b362d/app/scripts/TiledPixiTrack.js#L216
+        // This means, some class properties can be still `undefined`.
         /**
          * Draw all tiles from the bottom.
          * (https://github.com/higlass/higlass/blob/54f5aae61d3474f9e868621228270f0c90ef9343/app/scripts/TiledPixiTrack.js#L727)
@@ -259,7 +262,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
             }
 
             // Based on the updated marks, update range selection
-            this.mRangeBrush.drawBrush(true);
+            this.mRangeBrush?.drawBrush(true);
         }
 
         /*
