@@ -368,7 +368,9 @@ export interface EventStyle {
  * Show event effects behind or in front of marks.
  * __Default__: `'front'`
  */
-export type EventArrange = 'behind' | 'front';
+export interface EventArrange {
+    arrange?: 'behind' | 'front';
+}
 
 export interface Style {
     // Top-level Styles
@@ -468,12 +470,12 @@ export interface Style {
     /**
      * Customize visual effects of mouse over events on marks.
      */
-    mouseOver?: { arrange?: EventArrange } & EventStyle;
+    mouseOver?: EventArrange & EventStyle;
 
     /**
      * Customize visual effects selection events on marks with range brushes.
      */
-    select?: { arrange?: EventArrange } & EventStyle;
+    select?: EventArrange & EventStyle;
 
     /**
      * Customize the style of range brushes.

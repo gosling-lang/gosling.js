@@ -466,13 +466,6 @@
       ],
       "type": "object"
     },
-    "EventArrange": {
-      "enum": [
-        "behind",
-        "front"
-      ],
-      "type": "string"
-    },
     "EventStyle": {
       "additionalProperties": false,
       "properties": {
@@ -730,7 +723,11 @@
           "description": "Customize visual effects of mouse over events on marks.",
           "properties": {
             "arrange": {
-              "$ref": "#/definitions/EventArrange"
+              "enum": [
+                "behind",
+                "front"
+              ],
+              "type": "string"
             },
             "color": {
               "type": "string"
@@ -761,7 +758,11 @@
           "description": "Customize visual effects selection events on marks with range brushes.",
           "properties": {
             "arrange": {
-              "$ref": "#/definitions/EventArrange"
+              "enum": [
+                "behind",
+                "front"
+              ],
+              "type": "string"
             },
             "color": {
               "type": "string"
