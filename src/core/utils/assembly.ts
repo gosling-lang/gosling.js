@@ -1,4 +1,4 @@
-import { format } from 'd3-format';
+import type { GenomicPosition } from '@gosling.schema';
 import {
     CHROM_SIZE_HG16,
     CHROM_SIZE_HG17,
@@ -19,7 +19,7 @@ export interface ChromSize {
 /**
  * Get relative chromosome position (e.g., `100` => `chr:100`)
  */
-export function getRelativeGenomicPosition(absPos: number, assembly?: string): string {
+export function getRelativeGenomicPosition(absPos: number, assembly?: string): GenomicPosition {
     const chrAndRange = Object.entries(GET_CHROM_SIZES(assembly).interval).find(d => {
         const [, [start, end]] = d;
         return start <= absPos && absPos < end;
@@ -27,11 +27,12 @@ export function getRelativeGenomicPosition(absPos: number, assembly?: string): s
 
     if (!chrAndRange) {
         // The number is out of range
-        return `${absPos}`;
+        return { chromosome: 'unknown', position: absPos };
     }
 
-    const pos = format(',')(absPos - chrAndRange[1][0]);
-    return `${chrAndRange[0]}:${pos}`;
+    const chromosome = chrAndRange[0];
+    const position = absPos - chrAndRange[1][0];
+    return { chromosome, position };
 }
 
 /**

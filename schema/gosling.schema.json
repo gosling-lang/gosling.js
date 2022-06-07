@@ -900,6 +900,14 @@
     "EventStyle": {
       "additionalProperties": false,
       "properties": {
+        "arrange": {
+          "description": "Show event effects behind or in front of marks.",
+          "enum": [
+            "behind",
+            "front"
+          ],
+          "type": "string"
+        },
         "color": {
           "type": "string"
         },
@@ -8282,8 +8290,26 @@
           "type": "number"
         },
         "brush": {
-          "$ref": "#/definitions/EventStyle",
-          "description": "Customize the style of range brushes."
+          "additionalProperties": false,
+          "description": "Customize the style of range brushes.",
+          "properties": {
+            "color": {
+              "type": "string"
+            },
+            "opacity": {
+              "type": "number"
+            },
+            "stroke": {
+              "type": "string"
+            },
+            "strokeOpacity": {
+              "type": "number"
+            },
+            "strokeWidth": {
+              "type": "number"
+            }
+          },
+          "type": "object"
         },
         "curve": {
           "description": "Specify the curve of `rule` marks.",
@@ -8382,33 +8408,8 @@
           "type": "string"
         },
         "mouseOver": {
-          "additionalProperties": false,
-          "description": "Customize visual effects of mouse over events on marks.",
-          "properties": {
-            "arrange": {
-              "enum": [
-                "behind",
-                "front"
-              ],
-              "type": "string"
-            },
-            "color": {
-              "type": "string"
-            },
-            "opacity": {
-              "type": "number"
-            },
-            "stroke": {
-              "type": "string"
-            },
-            "strokeOpacity": {
-              "type": "number"
-            },
-            "strokeWidth": {
-              "type": "number"
-            }
-          },
-          "type": "object"
+          "$ref": "#/definitions/EventStyle",
+          "description": "Customize visual effects of mouse over events on marks."
         },
         "outline": {
           "type": "string"
@@ -8417,33 +8418,8 @@
           "type": "number"
         },
         "select": {
-          "additionalProperties": false,
-          "description": "Customize visual effects selection events on marks with range brushes.",
-          "properties": {
-            "arrange": {
-              "enum": [
-                "behind",
-                "front"
-              ],
-              "type": "string"
-            },
-            "color": {
-              "type": "string"
-            },
-            "opacity": {
-              "type": "number"
-            },
-            "stroke": {
-              "type": "string"
-            },
-            "strokeOpacity": {
-              "type": "number"
-            },
-            "strokeWidth": {
-              "type": "number"
-            }
-          },
-          "type": "object"
+          "$ref": "#/definitions/EventStyle",
+          "description": "Customize visual effects selection events on marks with range brushes."
         },
         "textAnchor": {
           "description": "Specify the alignment of `text` marks to a given point.",

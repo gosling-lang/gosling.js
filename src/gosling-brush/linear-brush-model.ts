@@ -29,7 +29,7 @@ export interface LinearBrushEndEdgeData extends LinearBrushDataCommon {
 export type OnBrushCallbackFn = (start: number, end: number) => void;
 
 // default styles for brush
-const BRUSH_STYLE_DEFAULT: Required<EventStyle> = {
+const BRUSH_STYLE_DEFAULT: Required<Omit<EventStyle, 'arrange'>> = {
     color: '#777',
     stroke: '#777',
     strokeWidth: 1,
@@ -43,7 +43,7 @@ const BRUSH_STYLE_DEFAULT: Required<EventStyle> = {
 export class LinearBrushModel {
     /* graphical elements */
     private brushSelection: D3Selection.Selection<SVGRectElement, LinearBrushData[number], SVGGElement, any>;
-    private readonly style: Required<EventStyle>;
+    private readonly style: Required<Omit<EventStyle, 'arrange'>>;
 
     /* data */
     private range: [number, number] | null;

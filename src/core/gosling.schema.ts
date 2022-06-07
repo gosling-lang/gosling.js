@@ -237,14 +237,20 @@ interface CommonEventData {
     data: Datum[];
 }
 
+export interface GenomicPosition {
+    chromosome: string;
+    position: number;
+}
+
 interface PointMouseEventData extends CommonEventData {
     /* A genomic coordinate, e.g., `chr1:100,000`. */
-    genomicPosition: string;
+    genomicPosition: GenomicPosition;
 }
 
 interface RangeMouseEventData extends CommonEventData {
-    /* Start and end genomic coordinates, e.g., `chr1:100,000`. NULL if a range is deselected. */
-    genomicRange: [string, string] | null;
+    // NOTE: We could include this type to `GenomicDomain`, i.e., enabling users to display genomic range across multiple chromosomes
+    /* Start and end genomic coordinates. Null if a range is deselected. */
+    genomicRange: [GenomicPosition, GenomicPosition] | null;
 }
 
 export type _EventMap = {
@@ -362,13 +368,8 @@ export interface EventStyle {
     strokeWidth?: number;
     strokeOpacity?: number;
     opacity?: number;
-}
 
-/*
- * Show event effects behind or in front of marks.
- * __Default__: `'front'`
- */
-export interface EventArrange {
+    /** Show event effects behind or in front of marks. */
     arrange?: 'behind' | 'front';
 }
 
@@ -470,17 +471,17 @@ export interface Style {
     /**
      * Customize visual effects of mouse over events on marks.
      */
-    mouseOver?: EventArrange & EventStyle;
+    mouseOver?: EventStyle;
 
     /**
      * Customize visual effects selection events on marks with range brushes.
      */
-    select?: EventArrange & EventStyle;
+    select?: EventStyle;
 
     /**
      * Customize the style of range brushes.
      */
-    brush?: EventStyle;
+    brush?: Omit<EventStyle, 'arrange'>;
 }
 
 /* ----------------------------- SEMANTIC ZOOM ----------------------------- */
