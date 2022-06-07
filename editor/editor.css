@@ -131,7 +131,15 @@
     height: 100%;
 }
 
-.side-panel .side-panel-button {
+.side-subpanel {
+    padding-top: 5px;
+    background-color: #fff;
+    border-bottom: gray solid 1px;
+    border-top: gray solid 1px;
+}
+
+.side-panel .side-panel-button,
+.side-subpanel .side-subpanel-button {
     margin-top: 10px;
     margin-bottom: 24px;
     font-size: 9px;
@@ -149,9 +157,24 @@
     /* justify-content: center; */
 }
 
-.side-panel .side-panel-button-not-active {
+.side-subpanel .side-subpanel-button {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    font-size: 6px;
+}
+
+.side-panel .side-panel-button-not-active,
+.side-subpanel .side-subpanel-button-not-active {
     color: lightgray;
     cursor: not-allowed;
+}
+
+.side-panel .side-panel-button .side-subpanel {
+    display: none;
+}
+
+.side-panel .side-panel-button:hover .side-subpanel {
+    display: block;
 }
 
 .editor-header {
