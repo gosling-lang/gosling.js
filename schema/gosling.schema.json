@@ -897,6 +897,27 @@
       ],
       "type": "object"
     },
+    "EventStyle": {
+      "additionalProperties": false,
+      "properties": {
+        "color": {
+          "type": "string"
+        },
+        "opacity": {
+          "type": "number"
+        },
+        "stroke": {
+          "type": "string"
+        },
+        "strokeOpacity": {
+          "type": "number"
+        },
+        "strokeWidth": {
+          "type": "number"
+        }
+      },
+      "type": "object"
+    },
     "ExonSplitTransform": {
       "additionalProperties": false,
       "properties": {
@@ -1101,75 +1122,6 @@
                       "$ref": "#/definitions/MouseEventsDeep"
                     }
                   ]
-                },
-                "mouseOveredMarks": {
-                  "additionalProperties": false,
-                  "properties": {
-                    "color": {
-                      "type": "string"
-                    },
-                    "opacity": {
-                      "type": "number"
-                    },
-                    "showHoveringOnTheBack": {
-                      "type": "boolean"
-                    },
-                    "stroke": {
-                      "type": "string"
-                    },
-                    "strokeOpacity": {
-                      "type": "number"
-                    },
-                    "strokeWidth": {
-                      "type": "number"
-                    }
-                  },
-                  "type": "object"
-                },
-                "rangeSelectBrush": {
-                  "additionalProperties": false,
-                  "properties": {
-                    "color": {
-                      "type": "string"
-                    },
-                    "opacity": {
-                      "type": "number"
-                    },
-                    "stroke": {
-                      "type": "string"
-                    },
-                    "strokeOpacity": {
-                      "type": "number"
-                    },
-                    "strokeWidth": {
-                      "type": "number"
-                    }
-                  },
-                  "type": "object"
-                },
-                "selectedMarks": {
-                  "additionalProperties": false,
-                  "properties": {
-                    "color": {
-                      "type": "string"
-                    },
-                    "opacity": {
-                      "type": "number"
-                    },
-                    "showOnTheBack": {
-                      "type": "boolean"
-                    },
-                    "stroke": {
-                      "type": "string"
-                    },
-                    "strokeOpacity": {
-                      "type": "number"
-                    },
-                    "strokeWidth": {
-                      "type": "number"
-                    }
-                  },
-                  "type": "object"
                 }
               },
               "type": "object"
@@ -1316,75 +1268,6 @@
                                 "$ref": "#/definitions/MouseEventsDeep"
                               }
                             ]
-                          },
-                          "mouseOveredMarks": {
-                            "additionalProperties": false,
-                            "properties": {
-                              "color": {
-                                "type": "string"
-                              },
-                              "opacity": {
-                                "type": "number"
-                              },
-                              "showHoveringOnTheBack": {
-                                "type": "boolean"
-                              },
-                              "stroke": {
-                                "type": "string"
-                              },
-                              "strokeOpacity": {
-                                "type": "number"
-                              },
-                              "strokeWidth": {
-                                "type": "number"
-                              }
-                            },
-                            "type": "object"
-                          },
-                          "rangeSelectBrush": {
-                            "additionalProperties": false,
-                            "properties": {
-                              "color": {
-                                "type": "string"
-                              },
-                              "opacity": {
-                                "type": "number"
-                              },
-                              "stroke": {
-                                "type": "string"
-                              },
-                              "strokeOpacity": {
-                                "type": "number"
-                              },
-                              "strokeWidth": {
-                                "type": "number"
-                              }
-                            },
-                            "type": "object"
-                          },
-                          "selectedMarks": {
-                            "additionalProperties": false,
-                            "properties": {
-                              "color": {
-                                "type": "string"
-                              },
-                              "opacity": {
-                                "type": "number"
-                              },
-                              "showOnTheBack": {
-                                "type": "boolean"
-                              },
-                              "stroke": {
-                                "type": "string"
-                              },
-                              "strokeOpacity": {
-                                "type": "number"
-                              },
-                              "strokeWidth": {
-                                "type": "number"
-                              }
-                            },
-                            "type": "object"
                           }
                         },
                         "type": "object"
@@ -1997,75 +1880,6 @@
                       "$ref": "#/definitions/MouseEventsDeep"
                     }
                   ]
-                },
-                "mouseOveredMarks": {
-                  "additionalProperties": false,
-                  "properties": {
-                    "color": {
-                      "type": "string"
-                    },
-                    "opacity": {
-                      "type": "number"
-                    },
-                    "showHoveringOnTheBack": {
-                      "type": "boolean"
-                    },
-                    "stroke": {
-                      "type": "string"
-                    },
-                    "strokeOpacity": {
-                      "type": "number"
-                    },
-                    "strokeWidth": {
-                      "type": "number"
-                    }
-                  },
-                  "type": "object"
-                },
-                "rangeSelectBrush": {
-                  "additionalProperties": false,
-                  "properties": {
-                    "color": {
-                      "type": "string"
-                    },
-                    "opacity": {
-                      "type": "number"
-                    },
-                    "stroke": {
-                      "type": "string"
-                    },
-                    "strokeOpacity": {
-                      "type": "number"
-                    },
-                    "strokeWidth": {
-                      "type": "number"
-                    }
-                  },
-                  "type": "object"
-                },
-                "selectedMarks": {
-                  "additionalProperties": false,
-                  "properties": {
-                    "color": {
-                      "type": "string"
-                    },
-                    "opacity": {
-                      "type": "number"
-                    },
-                    "showOnTheBack": {
-                      "type": "boolean"
-                    },
-                    "stroke": {
-                      "type": "string"
-                    },
-                    "strokeOpacity": {
-                      "type": "number"
-                    },
-                    "strokeWidth": {
-                      "type": "number"
-                    }
-                  },
-                  "type": "object"
                 }
               },
               "type": "object"
@@ -2212,75 +2026,6 @@
                                 "$ref": "#/definitions/MouseEventsDeep"
                               }
                             ]
-                          },
-                          "mouseOveredMarks": {
-                            "additionalProperties": false,
-                            "properties": {
-                              "color": {
-                                "type": "string"
-                              },
-                              "opacity": {
-                                "type": "number"
-                              },
-                              "showHoveringOnTheBack": {
-                                "type": "boolean"
-                              },
-                              "stroke": {
-                                "type": "string"
-                              },
-                              "strokeOpacity": {
-                                "type": "number"
-                              },
-                              "strokeWidth": {
-                                "type": "number"
-                              }
-                            },
-                            "type": "object"
-                          },
-                          "rangeSelectBrush": {
-                            "additionalProperties": false,
-                            "properties": {
-                              "color": {
-                                "type": "string"
-                              },
-                              "opacity": {
-                                "type": "number"
-                              },
-                              "stroke": {
-                                "type": "string"
-                              },
-                              "strokeOpacity": {
-                                "type": "number"
-                              },
-                              "strokeWidth": {
-                                "type": "number"
-                              }
-                            },
-                            "type": "object"
-                          },
-                          "selectedMarks": {
-                            "additionalProperties": false,
-                            "properties": {
-                              "color": {
-                                "type": "string"
-                              },
-                              "opacity": {
-                                "type": "number"
-                              },
-                              "showOnTheBack": {
-                                "type": "boolean"
-                              },
-                              "stroke": {
-                                "type": "string"
-                              },
-                              "strokeOpacity": {
-                                "type": "number"
-                              },
-                              "strokeWidth": {
-                                "type": "number"
-                              }
-                            },
-                            "type": "object"
                           }
                         },
                         "type": "object"
@@ -2944,75 +2689,6 @@
                                 "$ref": "#/definitions/MouseEventsDeep"
                               }
                             ]
-                          },
-                          "mouseOveredMarks": {
-                            "additionalProperties": false,
-                            "properties": {
-                              "color": {
-                                "type": "string"
-                              },
-                              "opacity": {
-                                "type": "number"
-                              },
-                              "showHoveringOnTheBack": {
-                                "type": "boolean"
-                              },
-                              "stroke": {
-                                "type": "string"
-                              },
-                              "strokeOpacity": {
-                                "type": "number"
-                              },
-                              "strokeWidth": {
-                                "type": "number"
-                              }
-                            },
-                            "type": "object"
-                          },
-                          "rangeSelectBrush": {
-                            "additionalProperties": false,
-                            "properties": {
-                              "color": {
-                                "type": "string"
-                              },
-                              "opacity": {
-                                "type": "number"
-                              },
-                              "stroke": {
-                                "type": "string"
-                              },
-                              "strokeOpacity": {
-                                "type": "number"
-                              },
-                              "strokeWidth": {
-                                "type": "number"
-                              }
-                            },
-                            "type": "object"
-                          },
-                          "selectedMarks": {
-                            "additionalProperties": false,
-                            "properties": {
-                              "color": {
-                                "type": "string"
-                              },
-                              "opacity": {
-                                "type": "number"
-                              },
-                              "showOnTheBack": {
-                                "type": "boolean"
-                              },
-                              "stroke": {
-                                "type": "string"
-                              },
-                              "strokeOpacity": {
-                                "type": "number"
-                              },
-                              "strokeWidth": {
-                                "type": "number"
-                              }
-                            },
-                            "type": "object"
                           }
                         },
                         "type": "object"
@@ -4224,75 +3900,6 @@
                   "$ref": "#/definitions/MouseEventsDeep"
                 }
               ]
-            },
-            "mouseOveredMarks": {
-              "additionalProperties": false,
-              "properties": {
-                "color": {
-                  "type": "string"
-                },
-                "opacity": {
-                  "type": "number"
-                },
-                "showHoveringOnTheBack": {
-                  "type": "boolean"
-                },
-                "stroke": {
-                  "type": "string"
-                },
-                "strokeOpacity": {
-                  "type": "number"
-                },
-                "strokeWidth": {
-                  "type": "number"
-                }
-              },
-              "type": "object"
-            },
-            "rangeSelectBrush": {
-              "additionalProperties": false,
-              "properties": {
-                "color": {
-                  "type": "string"
-                },
-                "opacity": {
-                  "type": "number"
-                },
-                "stroke": {
-                  "type": "string"
-                },
-                "strokeOpacity": {
-                  "type": "number"
-                },
-                "strokeWidth": {
-                  "type": "number"
-                }
-              },
-              "type": "object"
-            },
-            "selectedMarks": {
-              "additionalProperties": false,
-              "properties": {
-                "color": {
-                  "type": "string"
-                },
-                "opacity": {
-                  "type": "number"
-                },
-                "showOnTheBack": {
-                  "type": "boolean"
-                },
-                "stroke": {
-                  "type": "string"
-                },
-                "strokeOpacity": {
-                  "type": "number"
-                },
-                "strokeWidth": {
-                  "type": "number"
-                }
-              },
-              "type": "object"
             }
           },
           "type": "object"
@@ -4408,75 +4015,6 @@
                         "$ref": "#/definitions/MouseEventsDeep"
                       }
                     ]
-                  },
-                  "mouseOveredMarks": {
-                    "additionalProperties": false,
-                    "properties": {
-                      "color": {
-                        "type": "string"
-                      },
-                      "opacity": {
-                        "type": "number"
-                      },
-                      "showHoveringOnTheBack": {
-                        "type": "boolean"
-                      },
-                      "stroke": {
-                        "type": "string"
-                      },
-                      "strokeOpacity": {
-                        "type": "number"
-                      },
-                      "strokeWidth": {
-                        "type": "number"
-                      }
-                    },
-                    "type": "object"
-                  },
-                  "rangeSelectBrush": {
-                    "additionalProperties": false,
-                    "properties": {
-                      "color": {
-                        "type": "string"
-                      },
-                      "opacity": {
-                        "type": "number"
-                      },
-                      "stroke": {
-                        "type": "string"
-                      },
-                      "strokeOpacity": {
-                        "type": "number"
-                      },
-                      "strokeWidth": {
-                        "type": "number"
-                      }
-                    },
-                    "type": "object"
-                  },
-                  "selectedMarks": {
-                    "additionalProperties": false,
-                    "properties": {
-                      "color": {
-                        "type": "string"
-                      },
-                      "opacity": {
-                        "type": "number"
-                      },
-                      "showOnTheBack": {
-                        "type": "boolean"
-                      },
-                      "stroke": {
-                        "type": "string"
-                      },
-                      "strokeOpacity": {
-                        "type": "number"
-                      },
-                      "strokeWidth": {
-                        "type": "number"
-                      }
-                    },
-                    "type": "object"
                   }
                 },
                 "type": "object"
@@ -5041,75 +4579,6 @@
                   "$ref": "#/definitions/MouseEventsDeep"
                 }
               ]
-            },
-            "mouseOveredMarks": {
-              "additionalProperties": false,
-              "properties": {
-                "color": {
-                  "type": "string"
-                },
-                "opacity": {
-                  "type": "number"
-                },
-                "showHoveringOnTheBack": {
-                  "type": "boolean"
-                },
-                "stroke": {
-                  "type": "string"
-                },
-                "strokeOpacity": {
-                  "type": "number"
-                },
-                "strokeWidth": {
-                  "type": "number"
-                }
-              },
-              "type": "object"
-            },
-            "rangeSelectBrush": {
-              "additionalProperties": false,
-              "properties": {
-                "color": {
-                  "type": "string"
-                },
-                "opacity": {
-                  "type": "number"
-                },
-                "stroke": {
-                  "type": "string"
-                },
-                "strokeOpacity": {
-                  "type": "number"
-                },
-                "strokeWidth": {
-                  "type": "number"
-                }
-              },
-              "type": "object"
-            },
-            "selectedMarks": {
-              "additionalProperties": false,
-              "properties": {
-                "color": {
-                  "type": "string"
-                },
-                "opacity": {
-                  "type": "number"
-                },
-                "showOnTheBack": {
-                  "type": "boolean"
-                },
-                "stroke": {
-                  "type": "string"
-                },
-                "strokeOpacity": {
-                  "type": "number"
-                },
-                "strokeWidth": {
-                  "type": "number"
-                }
-              },
-              "type": "object"
             }
           },
           "type": "object"
@@ -5471,75 +4940,6 @@
                   "$ref": "#/definitions/MouseEventsDeep"
                 }
               ]
-            },
-            "mouseOveredMarks": {
-              "additionalProperties": false,
-              "properties": {
-                "color": {
-                  "type": "string"
-                },
-                "opacity": {
-                  "type": "number"
-                },
-                "showHoveringOnTheBack": {
-                  "type": "boolean"
-                },
-                "stroke": {
-                  "type": "string"
-                },
-                "strokeOpacity": {
-                  "type": "number"
-                },
-                "strokeWidth": {
-                  "type": "number"
-                }
-              },
-              "type": "object"
-            },
-            "rangeSelectBrush": {
-              "additionalProperties": false,
-              "properties": {
-                "color": {
-                  "type": "string"
-                },
-                "opacity": {
-                  "type": "number"
-                },
-                "stroke": {
-                  "type": "string"
-                },
-                "strokeOpacity": {
-                  "type": "number"
-                },
-                "strokeWidth": {
-                  "type": "number"
-                }
-              },
-              "type": "object"
-            },
-            "selectedMarks": {
-              "additionalProperties": false,
-              "properties": {
-                "color": {
-                  "type": "string"
-                },
-                "opacity": {
-                  "type": "number"
-                },
-                "showOnTheBack": {
-                  "type": "boolean"
-                },
-                "stroke": {
-                  "type": "string"
-                },
-                "strokeOpacity": {
-                  "type": "number"
-                },
-                "strokeWidth": {
-                  "type": "number"
-                }
-              },
-              "type": "object"
             }
           },
           "type": "object"
@@ -5655,75 +5055,6 @@
                         "$ref": "#/definitions/MouseEventsDeep"
                       }
                     ]
-                  },
-                  "mouseOveredMarks": {
-                    "additionalProperties": false,
-                    "properties": {
-                      "color": {
-                        "type": "string"
-                      },
-                      "opacity": {
-                        "type": "number"
-                      },
-                      "showHoveringOnTheBack": {
-                        "type": "boolean"
-                      },
-                      "stroke": {
-                        "type": "string"
-                      },
-                      "strokeOpacity": {
-                        "type": "number"
-                      },
-                      "strokeWidth": {
-                        "type": "number"
-                      }
-                    },
-                    "type": "object"
-                  },
-                  "rangeSelectBrush": {
-                    "additionalProperties": false,
-                    "properties": {
-                      "color": {
-                        "type": "string"
-                      },
-                      "opacity": {
-                        "type": "number"
-                      },
-                      "stroke": {
-                        "type": "string"
-                      },
-                      "strokeOpacity": {
-                        "type": "number"
-                      },
-                      "strokeWidth": {
-                        "type": "number"
-                      }
-                    },
-                    "type": "object"
-                  },
-                  "selectedMarks": {
-                    "additionalProperties": false,
-                    "properties": {
-                      "color": {
-                        "type": "string"
-                      },
-                      "opacity": {
-                        "type": "number"
-                      },
-                      "showOnTheBack": {
-                        "type": "boolean"
-                      },
-                      "stroke": {
-                        "type": "string"
-                      },
-                      "strokeOpacity": {
-                        "type": "number"
-                      },
-                      "strokeWidth": {
-                        "type": "number"
-                      }
-                    },
-                    "type": "object"
                   }
                 },
                 "type": "object"
@@ -6427,75 +5758,6 @@
                   "$ref": "#/definitions/MouseEventsDeep"
                 }
               ]
-            },
-            "mouseOveredMarks": {
-              "additionalProperties": false,
-              "properties": {
-                "color": {
-                  "type": "string"
-                },
-                "opacity": {
-                  "type": "number"
-                },
-                "showHoveringOnTheBack": {
-                  "type": "boolean"
-                },
-                "stroke": {
-                  "type": "string"
-                },
-                "strokeOpacity": {
-                  "type": "number"
-                },
-                "strokeWidth": {
-                  "type": "number"
-                }
-              },
-              "type": "object"
-            },
-            "rangeSelectBrush": {
-              "additionalProperties": false,
-              "properties": {
-                "color": {
-                  "type": "string"
-                },
-                "opacity": {
-                  "type": "number"
-                },
-                "stroke": {
-                  "type": "string"
-                },
-                "strokeOpacity": {
-                  "type": "number"
-                },
-                "strokeWidth": {
-                  "type": "number"
-                }
-              },
-              "type": "object"
-            },
-            "selectedMarks": {
-              "additionalProperties": false,
-              "properties": {
-                "color": {
-                  "type": "string"
-                },
-                "opacity": {
-                  "type": "number"
-                },
-                "showOnTheBack": {
-                  "type": "boolean"
-                },
-                "stroke": {
-                  "type": "string"
-                },
-                "strokeOpacity": {
-                  "type": "number"
-                },
-                "strokeWidth": {
-                  "type": "number"
-                }
-              },
-              "type": "object"
             }
           },
           "type": "object"
@@ -6851,75 +6113,6 @@
                       "$ref": "#/definitions/MouseEventsDeep"
                     }
                   ]
-                },
-                "mouseOveredMarks": {
-                  "additionalProperties": false,
-                  "properties": {
-                    "color": {
-                      "type": "string"
-                    },
-                    "opacity": {
-                      "type": "number"
-                    },
-                    "showHoveringOnTheBack": {
-                      "type": "boolean"
-                    },
-                    "stroke": {
-                      "type": "string"
-                    },
-                    "strokeOpacity": {
-                      "type": "number"
-                    },
-                    "strokeWidth": {
-                      "type": "number"
-                    }
-                  },
-                  "type": "object"
-                },
-                "rangeSelectBrush": {
-                  "additionalProperties": false,
-                  "properties": {
-                    "color": {
-                      "type": "string"
-                    },
-                    "opacity": {
-                      "type": "number"
-                    },
-                    "stroke": {
-                      "type": "string"
-                    },
-                    "strokeOpacity": {
-                      "type": "number"
-                    },
-                    "strokeWidth": {
-                      "type": "number"
-                    }
-                  },
-                  "type": "object"
-                },
-                "selectedMarks": {
-                  "additionalProperties": false,
-                  "properties": {
-                    "color": {
-                      "type": "string"
-                    },
-                    "opacity": {
-                      "type": "number"
-                    },
-                    "showOnTheBack": {
-                      "type": "boolean"
-                    },
-                    "stroke": {
-                      "type": "string"
-                    },
-                    "strokeOpacity": {
-                      "type": "number"
-                    },
-                    "strokeWidth": {
-                      "type": "number"
-                    }
-                  },
-                  "type": "object"
                 }
               },
               "type": "object"
@@ -7062,75 +6255,6 @@
                                 "$ref": "#/definitions/MouseEventsDeep"
                               }
                             ]
-                          },
-                          "mouseOveredMarks": {
-                            "additionalProperties": false,
-                            "properties": {
-                              "color": {
-                                "type": "string"
-                              },
-                              "opacity": {
-                                "type": "number"
-                              },
-                              "showHoveringOnTheBack": {
-                                "type": "boolean"
-                              },
-                              "stroke": {
-                                "type": "string"
-                              },
-                              "strokeOpacity": {
-                                "type": "number"
-                              },
-                              "strokeWidth": {
-                                "type": "number"
-                              }
-                            },
-                            "type": "object"
-                          },
-                          "rangeSelectBrush": {
-                            "additionalProperties": false,
-                            "properties": {
-                              "color": {
-                                "type": "string"
-                              },
-                              "opacity": {
-                                "type": "number"
-                              },
-                              "stroke": {
-                                "type": "string"
-                              },
-                              "strokeOpacity": {
-                                "type": "number"
-                              },
-                              "strokeWidth": {
-                                "type": "number"
-                              }
-                            },
-                            "type": "object"
-                          },
-                          "selectedMarks": {
-                            "additionalProperties": false,
-                            "properties": {
-                              "color": {
-                                "type": "string"
-                              },
-                              "opacity": {
-                                "type": "number"
-                              },
-                              "showOnTheBack": {
-                                "type": "boolean"
-                              },
-                              "stroke": {
-                                "type": "string"
-                              },
-                              "strokeOpacity": {
-                                "type": "number"
-                              },
-                              "strokeWidth": {
-                                "type": "number"
-                              }
-                            },
-                            "type": "object"
                           }
                         },
                         "type": "object"
@@ -7740,75 +6864,6 @@
                       "$ref": "#/definitions/MouseEventsDeep"
                     }
                   ]
-                },
-                "mouseOveredMarks": {
-                  "additionalProperties": false,
-                  "properties": {
-                    "color": {
-                      "type": "string"
-                    },
-                    "opacity": {
-                      "type": "number"
-                    },
-                    "showHoveringOnTheBack": {
-                      "type": "boolean"
-                    },
-                    "stroke": {
-                      "type": "string"
-                    },
-                    "strokeOpacity": {
-                      "type": "number"
-                    },
-                    "strokeWidth": {
-                      "type": "number"
-                    }
-                  },
-                  "type": "object"
-                },
-                "rangeSelectBrush": {
-                  "additionalProperties": false,
-                  "properties": {
-                    "color": {
-                      "type": "string"
-                    },
-                    "opacity": {
-                      "type": "number"
-                    },
-                    "stroke": {
-                      "type": "string"
-                    },
-                    "strokeOpacity": {
-                      "type": "number"
-                    },
-                    "strokeWidth": {
-                      "type": "number"
-                    }
-                  },
-                  "type": "object"
-                },
-                "selectedMarks": {
-                  "additionalProperties": false,
-                  "properties": {
-                    "color": {
-                      "type": "string"
-                    },
-                    "opacity": {
-                      "type": "number"
-                    },
-                    "showOnTheBack": {
-                      "type": "boolean"
-                    },
-                    "stroke": {
-                      "type": "string"
-                    },
-                    "strokeOpacity": {
-                      "type": "number"
-                    },
-                    "strokeWidth": {
-                      "type": "number"
-                    }
-                  },
-                  "type": "object"
                 }
               },
               "type": "object"
@@ -7951,75 +7006,6 @@
                                 "$ref": "#/definitions/MouseEventsDeep"
                               }
                             ]
-                          },
-                          "mouseOveredMarks": {
-                            "additionalProperties": false,
-                            "properties": {
-                              "color": {
-                                "type": "string"
-                              },
-                              "opacity": {
-                                "type": "number"
-                              },
-                              "showHoveringOnTheBack": {
-                                "type": "boolean"
-                              },
-                              "stroke": {
-                                "type": "string"
-                              },
-                              "strokeOpacity": {
-                                "type": "number"
-                              },
-                              "strokeWidth": {
-                                "type": "number"
-                              }
-                            },
-                            "type": "object"
-                          },
-                          "rangeSelectBrush": {
-                            "additionalProperties": false,
-                            "properties": {
-                              "color": {
-                                "type": "string"
-                              },
-                              "opacity": {
-                                "type": "number"
-                              },
-                              "stroke": {
-                                "type": "string"
-                              },
-                              "strokeOpacity": {
-                                "type": "number"
-                              },
-                              "strokeWidth": {
-                                "type": "number"
-                              }
-                            },
-                            "type": "object"
-                          },
-                          "selectedMarks": {
-                            "additionalProperties": false,
-                            "properties": {
-                              "color": {
-                                "type": "string"
-                              },
-                              "opacity": {
-                                "type": "number"
-                              },
-                              "showOnTheBack": {
-                                "type": "boolean"
-                              },
-                              "stroke": {
-                                "type": "string"
-                              },
-                              "strokeOpacity": {
-                                "type": "number"
-                              },
-                              "strokeWidth": {
-                                "type": "number"
-                              }
-                            },
-                            "type": "object"
                           }
                         },
                         "type": "object"
@@ -8676,75 +7662,6 @@
                                 "$ref": "#/definitions/MouseEventsDeep"
                               }
                             ]
-                          },
-                          "mouseOveredMarks": {
-                            "additionalProperties": false,
-                            "properties": {
-                              "color": {
-                                "type": "string"
-                              },
-                              "opacity": {
-                                "type": "number"
-                              },
-                              "showHoveringOnTheBack": {
-                                "type": "boolean"
-                              },
-                              "stroke": {
-                                "type": "string"
-                              },
-                              "strokeOpacity": {
-                                "type": "number"
-                              },
-                              "strokeWidth": {
-                                "type": "number"
-                              }
-                            },
-                            "type": "object"
-                          },
-                          "rangeSelectBrush": {
-                            "additionalProperties": false,
-                            "properties": {
-                              "color": {
-                                "type": "string"
-                              },
-                              "opacity": {
-                                "type": "number"
-                              },
-                              "stroke": {
-                                "type": "string"
-                              },
-                              "strokeOpacity": {
-                                "type": "number"
-                              },
-                              "strokeWidth": {
-                                "type": "number"
-                              }
-                            },
-                            "type": "object"
-                          },
-                          "selectedMarks": {
-                            "additionalProperties": false,
-                            "properties": {
-                              "color": {
-                                "type": "string"
-                              },
-                              "opacity": {
-                                "type": "number"
-                              },
-                              "showOnTheBack": {
-                                "type": "boolean"
-                              },
-                              "stroke": {
-                                "type": "string"
-                              },
-                              "strokeOpacity": {
-                                "type": "number"
-                              },
-                              "strokeWidth": {
-                                "type": "number"
-                              }
-                            },
-                            "type": "object"
                           }
                         },
                         "type": "object"
@@ -9364,6 +8281,10 @@
         "backgroundOpacity": {
           "type": "number"
         },
+        "brush": {
+          "$ref": "#/definitions/EventStyle",
+          "description": "Customize the style of range brushes."
+        },
         "curve": {
           "description": "Specify the curve of `rule` marks.",
           "enum": [
@@ -9460,11 +8381,69 @@
           ],
           "type": "string"
         },
+        "mouseOver": {
+          "additionalProperties": false,
+          "description": "Customize visual effects of mouse over events on marks.",
+          "properties": {
+            "arrange": {
+              "enum": [
+                "behind",
+                "front"
+              ],
+              "type": "string"
+            },
+            "color": {
+              "type": "string"
+            },
+            "opacity": {
+              "type": "number"
+            },
+            "stroke": {
+              "type": "string"
+            },
+            "strokeOpacity": {
+              "type": "number"
+            },
+            "strokeWidth": {
+              "type": "number"
+            }
+          },
+          "type": "object"
+        },
         "outline": {
           "type": "string"
         },
         "outlineWidth": {
           "type": "number"
+        },
+        "select": {
+          "additionalProperties": false,
+          "description": "Customize visual effects selection events on marks with range brushes.",
+          "properties": {
+            "arrange": {
+              "enum": [
+                "behind",
+                "front"
+              ],
+              "type": "string"
+            },
+            "color": {
+              "type": "string"
+            },
+            "opacity": {
+              "type": "number"
+            },
+            "stroke": {
+              "type": "string"
+            },
+            "strokeOpacity": {
+              "type": "number"
+            },
+            "strokeWidth": {
+              "type": "number"
+            }
+          },
+          "type": "object"
         },
         "textAnchor": {
           "description": "Specify the alignment of `text` marks to a given point.",

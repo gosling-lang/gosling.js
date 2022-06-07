@@ -268,14 +268,6 @@ export type MouseEventsDeep = {
 /* ----------------------------- TRACK ----------------------------- */
 export type SingleTrack = SingleTrackBase & Encoding;
 
-export interface BrushAndMarkHighlightingStyle {
-    color: string;
-    stroke: string;
-    strokeWidth: number;
-    strokeOpacity: number;
-    opacity: number;
-}
-
 interface SingleTrackBase extends CommonTrackDef {
     // Data
     data: DataDeep;
@@ -288,15 +280,10 @@ interface SingleTrackBase extends CommonTrackDef {
 
     // Experimental
     experimental?: {
-        // Mouse events
+        /*
+         * Determine whether to use mouse events, such as click and mouse over on marks. __Default__: `false`
+         */
         mouseEvents?: boolean | MouseEventsDeep;
-
-        // TODO: move all following style-related properties to `style` (June-02-2022)
-        mouseOveredMarks?: {
-            showHoveringOnTheBack?: boolean;
-        } & Partial<BrushAndMarkHighlightingStyle>;
-        selectedMarks?: { showOnTheBack?: boolean } & Partial<BrushAndMarkHighlightingStyle>;
-        rangeSelectBrush?: Partial<BrushAndMarkHighlightingStyle>;
     };
 
     // Mark
@@ -365,6 +352,25 @@ export type OverlaidTrack = Partial<SingleTrack> &
         // This is a property internally used when compiling
         overlay: Partial<Omit<SingleTrack, 'height' | 'width' | 'layout' | 'title' | 'subtitle'>>[];
     };
+
+/*
+ * The styles of the effects of mouse events, such as mouse over on marks.
+ */
+export interface EventStyle {
+    color?: string;
+    stroke?: string;
+    strokeWidth?: number;
+    strokeOpacity?: number;
+    opacity?: number;
+}
+
+/*
+ * Show event effects behind or in front of marks.
+ * __Default__: `'front'`
+ */
+export interface EventArrange {
+    arrange?: 'behind' | 'front';
+}
 
 export interface Style {
     // Top-level Styles
@@ -460,6 +466,21 @@ export interface Style {
      * Determine to show only one side of the diagonal in a HiGlass matrix. __Default__: `"full"`
      */
     matrixExtent?: 'full' | 'upper-right' | 'lower-left';
+
+    /**
+     * Customize visual effects of mouse over events on marks.
+     */
+    mouseOver?: EventArrange & EventStyle;
+
+    /**
+     * Customize visual effects selection events on marks with range brushes.
+     */
+    select?: EventArrange & EventStyle;
+
+    /**
+     * Customize the style of range brushes.
+     */
+    brush?: EventStyle;
 }
 
 /* ----------------------------- SEMANTIC ZOOM ----------------------------- */

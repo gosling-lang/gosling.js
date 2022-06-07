@@ -47,17 +47,19 @@ export const EX_SPEC_MOUSE_EVENT: GoslingSpec = {
                         mouseEvents: {
                             mouseOver: true,
                             rangeSelect: true
-                        },
-                        mouseOveredMarks: {
+                        }
+                    },
+                    style: {
+                        mouseOver: {
                             color: 'blue',
                             opacity: 0.5,
                             strokeWidth: 0
                         },
-                        selectedMarks: {
+                        select: {
                             color: 'red',
                             opacity: 0.5
                         },
-                        rangeSelectBrush: {
+                        brush: {
                             color: 'purple',
                             stroke: 'purple'
                         }
@@ -75,17 +77,19 @@ export const EX_SPEC_MOUSE_EVENT: GoslingSpec = {
                             mouseOver: true,
                             rangeSelect: true,
                             groupMarksByField: 'smaple'
-                        },
-                        mouseOveredMarks: {
+                        }
+                    },
+                    style: {
+                        mouseOver: {
                             color: 'blue',
                             opacity: 0.5,
                             strokeWidth: 0
                         },
-                        selectedMarks: {
+                        select: {
                             color: 'red',
                             opacity: 0.5
                         },
-                        rangeSelectBrush: {
+                        brush: {
                             color: 'green',
                             stroke: 'green'
                         }
@@ -103,17 +107,19 @@ export const EX_SPEC_MOUSE_EVENT: GoslingSpec = {
                             mouseOver: true,
                             rangeSelect: true,
                             groupMarksByField: 'position'
-                        },
-                        mouseOveredMarks: {
+                        }
+                    },
+                    style: {
+                        mouseOver: {
                             color: 'blue',
                             opacity: 0.5,
                             strokeWidth: 0
                         },
-                        selectedMarks: {
+                        select: {
                             color: 'red',
                             opacity: 0.5
                         },
-                        rangeSelectBrush: {
+                        brush: {
                             color: 'yellow',
                             stroke: 'yellow'
                         }
@@ -166,15 +172,17 @@ export const EX_SPEC_MOUSE_EVENT: GoslingSpec = {
                             mouseOver: true,
                             rangeSelect: true,
                             groupMarksByField: 'name'
-                        },
-                        mouseOveredMarks: {
-                            showHoveringOnTheBack: true,
+                        }
+                    },
+                    style: {
+                        mouseOver: {
+                            arrange: 'behind',
                             color: '#E0E0E0',
                             stroke: '#E0E0E0',
                             strokeWidth: 4
                         },
-                        selectedMarks: {
-                            showOnTheBack: true,
+                        select: {
+                            arrange: 'behind',
                             color: '#B9D4FA',
                             stroke: '#B9D4FA',
                             strokeWidth: 4
@@ -198,13 +206,15 @@ export const EX_SPEC_MOUSE_EVENT: GoslingSpec = {
                             mouseOver: true,
                             rangeSelect: true,
                             groupMarksByField: 'Chr.'
-                        },
-                        mouseOveredMarks: {
+                        }
+                    },
+                    style: {
+                        mouseOver: {
                             color: 'blue',
                             opacity: 0.5,
                             strokeWidth: 0
                         },
-                        selectedMarks: {
+                        select: {
                             color: 'red',
                             opacity: 0.5,
                             strokeWidth: 0

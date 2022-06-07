@@ -466,6 +466,27 @@
       ],
       "type": "object"
     },
+    "EventStyle": {
+      "additionalProperties": false,
+      "properties": {
+        "color": {
+          "type": "string"
+        },
+        "opacity": {
+          "type": "number"
+        },
+        "stroke": {
+          "type": "string"
+        },
+        "strokeOpacity": {
+          "type": "number"
+        },
+        "strokeWidth": {
+          "type": "number"
+        }
+      },
+      "type": "object"
+    },
     "FieldType": {
       "enum": [
         "genomic",
@@ -597,6 +618,10 @@
         "backgroundOpacity": {
           "type": "number"
         },
+        "brush": {
+          "$ref": "#/definitions/EventStyle",
+          "description": "Customize the style of range brushes."
+        },
         "curve": {
           "description": "Specify the curve of `rule` marks.",
           "enum": [
@@ -693,11 +718,69 @@
           ],
           "type": "string"
         },
+        "mouseOver": {
+          "additionalProperties": false,
+          "description": "Customize visual effects of mouse over events on marks.",
+          "properties": {
+            "arrange": {
+              "enum": [
+                "behind",
+                "front"
+              ],
+              "type": "string"
+            },
+            "color": {
+              "type": "string"
+            },
+            "opacity": {
+              "type": "number"
+            },
+            "stroke": {
+              "type": "string"
+            },
+            "strokeOpacity": {
+              "type": "number"
+            },
+            "strokeWidth": {
+              "type": "number"
+            }
+          },
+          "type": "object"
+        },
         "outline": {
           "type": "string"
         },
         "outlineWidth": {
           "type": "number"
+        },
+        "select": {
+          "additionalProperties": false,
+          "description": "Customize visual effects selection events on marks with range brushes.",
+          "properties": {
+            "arrange": {
+              "enum": [
+                "behind",
+                "front"
+              ],
+              "type": "string"
+            },
+            "color": {
+              "type": "string"
+            },
+            "opacity": {
+              "type": "number"
+            },
+            "stroke": {
+              "type": "string"
+            },
+            "strokeOpacity": {
+              "type": "number"
+            },
+            "strokeWidth": {
+              "type": "number"
+            }
+          },
+          "type": "object"
         },
         "textAnchor": {
           "description": "Specify the alignment of `text` marks to a given point.",
