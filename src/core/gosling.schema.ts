@@ -353,13 +353,22 @@ export type OverlaidTrack = Partial<SingleTrack> &
         overlay: Partial<Omit<SingleTrack, 'height' | 'width' | 'layout' | 'title' | 'subtitle'>>[];
     };
 
-export interface BrushAndMarkHighlightingStyle {
+/*
+ * The styles of the effects of mouse events, such as mouse over on marks.
+ */
+export interface EventStyle {
     color?: string;
     stroke?: string;
     strokeWidth?: number;
     strokeOpacity?: number;
     opacity?: number;
 }
+
+/*
+ * Show event effects behind or in front of marks.
+ * __Default__: `'front'`
+ */
+export type EventArrange = 'behind' | 'front';
 
 export interface Style {
     // Top-level Styles
@@ -459,17 +468,17 @@ export interface Style {
     /**
      * Customize visual effects of mouse over events on marks.
      */
-    mouseOveredMarks?: { showOnTheBack?: boolean } & BrushAndMarkHighlightingStyle;
+    mouseOver?: { arrange?: EventArrange } & EventStyle;
 
     /**
      * Customize visual effects selection events on marks with range brushes.
      */
-    selectedMarks?: { showOnTheBack?: boolean } & BrushAndMarkHighlightingStyle;
+    select?: { arrange?: EventArrange } & EventStyle;
 
     /**
      * Customize the style of range brushes.
      */
-    rangeSelectBrush?: BrushAndMarkHighlightingStyle;
+    brush?: EventStyle;
 }
 
 /* ----------------------------- SEMANTIC ZOOM ----------------------------- */

@@ -25,27 +25,6 @@
       ],
       "type": "string"
     },
-    "BrushAndMarkHighlightingStyle": {
-      "additionalProperties": false,
-      "properties": {
-        "color": {
-          "type": "string"
-        },
-        "opacity": {
-          "type": "number"
-        },
-        "stroke": {
-          "type": "string"
-        },
-        "strokeOpacity": {
-          "type": "number"
-        },
-        "strokeWidth": {
-          "type": "number"
-        }
-      },
-      "type": "object"
-    },
     "ChannelWithBase": {
       "anyOf": [
         {
@@ -487,6 +466,34 @@
       ],
       "type": "object"
     },
+    "EventArrange": {
+      "enum": [
+        "behind",
+        "front"
+      ],
+      "type": "string"
+    },
+    "EventStyle": {
+      "additionalProperties": false,
+      "properties": {
+        "color": {
+          "type": "string"
+        },
+        "opacity": {
+          "type": "number"
+        },
+        "stroke": {
+          "type": "string"
+        },
+        "strokeOpacity": {
+          "type": "number"
+        },
+        "strokeWidth": {
+          "type": "number"
+        }
+      },
+      "type": "object"
+    },
     "FieldType": {
       "enum": [
         "genomic",
@@ -618,6 +625,10 @@
         "backgroundOpacity": {
           "type": "number"
         },
+        "brush": {
+          "$ref": "#/definitions/EventStyle",
+          "description": "Customize the style of range brushes."
+        },
         "curve": {
           "description": "Specify the curve of `rule` marks.",
           "enum": [
@@ -714,18 +725,18 @@
           ],
           "type": "string"
         },
-        "mouseOveredMarks": {
+        "mouseOver": {
           "additionalProperties": false,
           "description": "Customize visual effects of mouse over events on marks.",
           "properties": {
+            "arrange": {
+              "$ref": "#/definitions/EventArrange"
+            },
             "color": {
               "type": "string"
             },
             "opacity": {
               "type": "number"
-            },
-            "showOnTheBack": {
-              "type": "boolean"
             },
             "stroke": {
               "type": "string"
@@ -745,22 +756,18 @@
         "outlineWidth": {
           "type": "number"
         },
-        "rangeSelectBrush": {
-          "$ref": "#/definitions/BrushAndMarkHighlightingStyle",
-          "description": "Customize the style of range brushes."
-        },
-        "selectedMarks": {
+        "select": {
           "additionalProperties": false,
           "description": "Customize visual effects selection events on marks with range brushes.",
           "properties": {
+            "arrange": {
+              "$ref": "#/definitions/EventArrange"
+            },
             "color": {
               "type": "string"
             },
             "opacity": {
               "type": "number"
-            },
-            "showOnTheBack": {
-              "type": "boolean"
             },
             "stroke": {
               "type": "string"

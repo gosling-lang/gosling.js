@@ -50,16 +50,16 @@ export const EX_SPEC_MOUSE_EVENT: GoslingSpec = {
                         }
                     },
                     style: {
-                        mouseOveredMarks: {
+                        mouseOver: {
                             color: 'blue',
                             opacity: 0.5,
                             strokeWidth: 0
                         },
-                        selectedMarks: {
+                        select: {
                             color: 'red',
                             opacity: 0.5
                         },
-                        rangeSelectBrush: {
+                        brush: {
                             color: 'purple',
                             stroke: 'purple'
                         }
@@ -80,16 +80,16 @@ export const EX_SPEC_MOUSE_EVENT: GoslingSpec = {
                         }
                     },
                     style: {
-                        mouseOveredMarks: {
+                        mouseOver: {
                             color: 'blue',
                             opacity: 0.5,
                             strokeWidth: 0
                         },
-                        selectedMarks: {
+                        select: {
                             color: 'red',
                             opacity: 0.5
                         },
-                        rangeSelectBrush: {
+                        brush: {
                             color: 'green',
                             stroke: 'green'
                         }
@@ -110,16 +110,16 @@ export const EX_SPEC_MOUSE_EVENT: GoslingSpec = {
                         }
                     },
                     style: {
-                        mouseOveredMarks: {
+                        mouseOver: {
                             color: 'blue',
                             opacity: 0.5,
                             strokeWidth: 0
                         },
-                        selectedMarks: {
+                        select: {
                             color: 'red',
                             opacity: 0.5
                         },
-                        rangeSelectBrush: {
+                        brush: {
                             color: 'yellow',
                             stroke: 'yellow'
                         }
@@ -175,13 +175,13 @@ export const EX_SPEC_MOUSE_EVENT: GoslingSpec = {
                         }
                     },
                     style: {
-                        mouseOveredMarks: {
+                        mouseOver: {
                             showOnTheBack: true,
                             color: '#E0E0E0',
                             stroke: '#E0E0E0',
                             strokeWidth: 4
                         },
-                        selectedMarks: {
+                        select: {
                             showOnTheBack: true,
                             color: '#B9D4FA',
                             stroke: '#B9D4FA',
@@ -209,12 +209,12 @@ export const EX_SPEC_MOUSE_EVENT: GoslingSpec = {
                         }
                     },
                     style: {
-                        mouseOveredMarks: {
+                        mouseOver: {
                             color: 'blue',
                             opacity: 0.5,
                             strokeWidth: 0
                         },
-                        selectedMarks: {
+                        select: {
                             color: 'red',
                             opacity: 0.5,
                             strokeWidth: 0

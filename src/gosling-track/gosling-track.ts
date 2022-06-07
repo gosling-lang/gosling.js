@@ -4,7 +4,7 @@ import * as uuid from 'uuid';
 import { isEqual, sampleSize, uniqBy } from 'lodash-es';
 import { format } from 'd3-format';
 import type { ScaleLinear } from 'd3-scale';
-import type { SingleTrack, OverlaidTrack, Datum, BrushAndMarkHighlightingStyle } from '@gosling.schema';
+import type { SingleTrack, OverlaidTrack, Datum, EventStyle } from '@gosling.schema';
 import type { CompleteThemeDeep } from 'src/core/utils/theme';
 import { drawMark, drawPostEmbellishment, drawPreEmbellishment } from '../core/mark';
 import { GoslingTrackModel } from '../core/gosling-track-model';
@@ -52,7 +52,7 @@ function usePrereleaseRendering(spec: SingleTrack | OverlaidTrack) {
 // Refer to the following already supported graphics:
 // https://github.com/higlass/higlass/blob/54f5aae61d3474f9e868621228270f0c90ef9343/app/scripts/PixiTrack.js#L115
 
-const DEFAULT_MARK_HIGHLIGHT_STYLE: Required<BrushAndMarkHighlightingStyle> = {
+const DEFAULT_MARK_HIGHLIGHT_STYLE: Required<EventStyle> = {
     stroke: 'black',
     strokeWidth: 1,
     strokeOpacity: 1,
@@ -160,7 +160,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                 this.gBrush,
                 HGC.libraries,
                 this.onRangeBrush.bind(this),
-                this.options.spec.style?.rangeSelectBrush
+                this.options.spec.style?.brush
             );
             this.pMask.mousedown = (e: InteractionEvent) =>
                 this.onMouseDown(
@@ -1148,7 +1148,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                 // selection effect graphics
                 const g = this.pMouseSelection;
 
-                if (!this.options.spec.style?.selectedMarks?.showOnTheBack) {
+                if (this.options.spec.style?.select?.arrange !== 'behind') {
                     // place on the top
                     this.pMain.removeChild(g);
                     this.pMain.addChild(g);
@@ -1157,7 +1157,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                 this.highlightMarks(
                     g,
                     capturedElements,
-                    Object.assign({}, DEFAULT_MARK_HIGHLIGHT_STYLE, this.options.spec.style?.selectedMarks)
+                    Object.assign({}, DEFAULT_MARK_HIGHLIGHT_STYLE, this.options.spec.style?.select)
                 );
             }
 
@@ -1281,7 +1281,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                     // Display mouse over effects
                     const g = this.pMouseHover;
 
-                    if (!this.options.spec.style?.mouseOveredMarks?.showOnTheBack) {
+                    if (this.options.spec.style?.mouseOver?.arrange !== 'behind') {
                         // place on the top
                         this.pMain.removeChild(g);
                         this.pMain.addChild(g);
@@ -1290,7 +1290,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                     this.highlightMarks(
                         g,
                         capturedElements,
-                        Object.assign({}, DEFAULT_MARK_HIGHLIGHT_STYLE, this.options.spec.style?.mouseOveredMarks)
+                        Object.assign({}, DEFAULT_MARK_HIGHLIGHT_STYLE, this.options.spec.style?.mouseOver)
                     );
 
                     // API call
