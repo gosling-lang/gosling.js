@@ -176,13 +176,13 @@ export const EX_SPEC_MOUSE_EVENT: GoslingSpec = {
                     },
                     style: {
                         mouseOver: {
-                            showOnTheBack: true,
+                            arrange: 'behind',
                             color: '#E0E0E0',
                             stroke: '#E0E0E0',
                             strokeWidth: 4
                         },
                         select: {
-                            showOnTheBack: true,
+                            arrange: 'behind',
                             color: '#B9D4FA',
                             stroke: '#B9D4FA',
                             strokeWidth: 4
