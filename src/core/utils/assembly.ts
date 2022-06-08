@@ -17,22 +17,20 @@ export interface ChromSize {
 }
 
 /**
- * Get relative chromosome position (e.g., `100` => `chr:100`)
+ * Get relative chromosome position (e.g., `100` => `{ chromosome: 'chr1', position: 100 }`)
  */
 export function getRelativeGenomicPosition(absPos: number, assembly?: string): GenomicPosition {
-    const chrAndRange = Object.entries(GET_CHROM_SIZES(assembly).interval).find(d => {
-        const [, [start, end]] = d;
+    const [chromosome, absInterval] = Object.entries(GET_CHROM_SIZES(assembly).interval).find(d => {
+        const [start, end] = d[1];
         return start <= absPos && absPos < end;
-    });
+    }) ?? [null, null];
 
-    if (!chrAndRange) {
+    if (!chromosome || !absInterval) {
         // The number is out of range
         return { chromosome: 'unknown', position: absPos };
     }
 
-    const chromosome = chrAndRange[0];
-    const position = absPos - chrAndRange[1][0];
-    return { chromosome, position };
+    return { chromosome, position: absPos - absInterval[0] };
 }
 
 /**

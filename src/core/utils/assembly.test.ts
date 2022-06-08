@@ -21,5 +21,10 @@ describe('Assembly', () => {
             chromosome: 'chr2',
             position: 1
         });
+        const outOfPos = GET_CHROM_SIZES('hg38').total + 1;
+        expect(getRelativeGenomicPosition(outOfPos, 'hg38')).toEqual({
+            chromosome: 'unknown',
+            position: outOfPos
+        });
     });
 });
