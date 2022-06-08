@@ -800,30 +800,38 @@ function Editor(props: RouteComponentProps) {
                             <br />
                             FIND
                         </span>
-                        <span
-                            title="Use Larger Font"
-                            className="side-panel-button"
-                            onClick={() => {
-                                setIsfontZoomIn(!isFontZoomIn);
-                            }}
-                        >
+                        <span title="Change Font Size" className="side-panel-button">
                             {getIconSVG(ICONS.TEXT, 23, 23)}
-                            +
                             <br />
-                            LARGER
+                            FONT SIZE
+                            <span className="side-subpanel">
+                                <span
+                                    title="Use Larger Font"
+                                    className="side-subpanel-button"
+                                    onClick={() => {
+                                        setIsfontZoomIn(!isFontZoomIn);
+                                    }}
+                                >
+                                    {getIconSVG(ICONS.TEXT, 23, 23)}
+                                    +
+                                    <br />
+                                    LARGER
+                                </span>
+                                <span
+                                    title="Use Larger Font"
+                                    className="side-subpanel-button"
+                                    onClick={() => {
+                                        setIsfontZoomOut(!isFontZoomOut);
+                                    }}
+                                >
+                                    {getIconSVG(ICONS.TEXT, 15, 15)}
+                                    -
+                                    <br />
+                                    SMALLER
+                                </span>
+                            </span>
                         </span>
-                        <span
-                            title="Use Larger Font"
-                            className="side-panel-button"
-                            onClick={() => {
-                                setIsfontZoomOut(!isFontZoomOut);
-                            }}
-                        >
-                            {getIconSVG(ICONS.TEXT, 15, 15)}
-                            -
-                            <br />
-                            SMALLER
-                        </span>
+
                         <span
                             title="Show or hide a code panel"
                             className="side-panel-button"
@@ -844,86 +852,99 @@ function Editor(props: RouteComponentProps) {
                             <br />
                             PREVIEW
                         </span>
-                        <span
-                            title="Save PNG file"
-                            className="side-panel-button"
-                            onClick={() => {
-                                gosRef.current?.api.exportPng();
-                            }}
-                        >
-                            {getIconSVG(ICONS.IMAGE, 23, 23)}
-                            <br />
-                            PNG
-                        </span>
-                        <span
-                            title="Save PDF file"
-                            className="side-panel-button"
-                            onClick={() => {
-                                gosRef.current?.api.exportPdf();
-                            }}
-                        >
-                            {getIconSVG(ICONS.PDF, 23, 23)}
-                            <br />
-                            PDF
-                        </span>
-                        <span
-                            title="Save HTML file"
-                            className="side-panel-button"
-                            onClick={() => {
-                                // TODO (05-02-2022): Release a support of `responsiveSize` on `.embed()` first
-                                const spec = { ...goslingSpec, responsiveSize: false } as gosling.GoslingSpec;
 
-                                const a = document.createElement('a');
-                                a.setAttribute(
-                                    'href',
-                                    `data:text/plain;charset=utf-8,${encodeURIComponent(
-                                        getHtmlTemplate(stringifySpec(spec))
-                                    )}`
-                                );
-                                a.download = 'gosling-visualization.html';
-                                document.body.appendChild(a);
-                                a.click();
-                                document.body.removeChild(a);
-                            }}
-                        >
-                            {getIconSVG(ICONS.HTML, 23, 23)}
-                        </span>
-                        <span
-                            title={
-                                stringifySpec(goslingSpec).length <= LIMIT_CLIPBOARD_LEN
-                                    ? `Copy unique URL of current view to clipboard (limit: ${LIMIT_CLIPBOARD_LEN} characters)`
-                                    : `The current code contains characters more than ${LIMIT_CLIPBOARD_LEN}`
-                            }
-                            className={
-                                stringifySpec(goslingSpec).length <= LIMIT_CLIPBOARD_LEN
-                                    ? 'side-panel-button'
-                                    : 'side-panel-button side-panel-button-not-active'
-                            }
-                            onClick={() => {
-                                if (stringifySpec(goslingSpec).length <= LIMIT_CLIPBOARD_LEN) {
-                                    // copy the unique url to clipboard using `<input/>`
-                                    const crushedSpec = encodeURIComponent(JSONCrush.crush(stringifySpec(goslingSpec)));
-                                    const url = `${window.location.origin}${window.location.pathname}?full=${isHideCode}&spec=${crushedSpec}`;
+                        <span title="Export" className="side-panel-button">
+                            {getIconSVG(ICONS.UP_RIGHT, 23, 23)}
+                            <br />
+                            EXPORT
+                            <span className="side-subpanel">
+                                <span
+                                    title="Save PNG file"
+                                    className="side-subpanel-button"
+                                    onClick={() => {
+                                        gosRef.current?.api.exportPng();
+                                    }}
+                                >
+                                    {getIconSVG(ICONS.IMAGE, 23, 23)}
+                                    <br />
+                                    PNG
+                                </span>
+                                <span
+                                    title="Save PDF file"
+                                    className="side-subpanel-button"
+                                    onClick={() => {
+                                        gosRef.current?.api.exportPdf();
+                                    }}
+                                >
+                                    {getIconSVG(ICONS.PDF, 23, 23)}
+                                    <br />
+                                    PDF
+                                </span>
+                                <span
+                                    title="Save HTML file"
+                                    className="side-subpanel-button"
+                                    onClick={() => {
+                                        // TODO (05-02-2022): Release a support of `responsiveSize` on `.embed()` first
+                                        const spec = { ...goslingSpec, responsiveSize: false } as gosling.GoslingSpec;
 
-                                    navigator.clipboard
-                                        .writeText(url)
-                                        .then(() =>
-                                            // eslint-disable-next-line no-alert
-                                            alert(`URL of the current visualization is copied to your clipboard! `)
-                                        )
-                                        .catch(
-                                            // eslint-disable-next-line no-alert
-                                            e => alert(`something went wrong ${e}`)
+                                        const a = document.createElement('a');
+                                        a.setAttribute(
+                                            'href',
+                                            `data:text/plain;charset=utf-8,${encodeURIComponent(
+                                                getHtmlTemplate(stringifySpec(spec))
+                                            )}`
                                         );
-                                }
-                            }}
-                        >
-                            {getIconSVG(ICONS.LINK, 23, 23)}
-                            <br />
-                            SAVE
-                            <br />
-                            URL
+                                        a.download = 'gosling-visualization.html';
+                                        document.body.appendChild(a);
+                                        a.click();
+                                        document.body.removeChild(a);
+                                    }}
+                                >
+                                    {getIconSVG(ICONS.HTML, 23, 23)}
+                                </span>
+                                <span
+                                    title={
+                                        stringifySpec(goslingSpec).length <= LIMIT_CLIPBOARD_LEN
+                                            ? `Copy unique URL of current view to clipboard (limit: ${LIMIT_CLIPBOARD_LEN} characters)`
+                                            : `The current code contains characters more than ${LIMIT_CLIPBOARD_LEN}`
+                                    }
+                                    className={
+                                        stringifySpec(goslingSpec).length <= LIMIT_CLIPBOARD_LEN
+                                            ? 'side-subpanel-button'
+                                            : 'side-subpanel-button side-subpanel-button-not-active'
+                                    }
+                                    onClick={() => {
+                                        if (stringifySpec(goslingSpec).length <= LIMIT_CLIPBOARD_LEN) {
+                                            // copy the unique url to clipboard using `<input/>`
+                                            const crushedSpec = encodeURIComponent(
+                                                JSONCrush.crush(stringifySpec(goslingSpec))
+                                            );
+                                            const url = `${window.location.origin}${window.location.pathname}?full=${isHideCode}&spec=${crushedSpec}`;
+
+                                            navigator.clipboard
+                                                .writeText(url)
+                                                .then(() =>
+                                                    // eslint-disable-next-line no-alert
+                                                    alert(
+                                                        `URL of the current visualization is copied to your clipboard! `
+                                                    )
+                                                )
+                                                .catch(
+                                                    // eslint-disable-next-line no-alert
+                                                    e => alert(`something went wrong ${e}`)
+                                                );
+                                        }
+                                    }}
+                                >
+                                    {getIconSVG(ICONS.LINK, 23, 23)}
+                                    <br />
+                                    SAVE
+                                    <br />
+                                    URL
+                                </span>
+                            </span>
                         </span>
+
                         <span
                             title="Expert mode that turns on additional features, such as theme selection"
                             className="side-panel-button"
