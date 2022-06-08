@@ -62,6 +62,9 @@ const LIMIT_CLIPBOARD_LEN = 4096;
 const EDITOR_HEADER_HEIGHT = 40;
 const BOTTOM_PANEL_HEADER_HEIGHT = 30;
 
+// A key to store and get a Gosling spec via sessionStorage
+const SESSION_KEY_SPEC = 'session-gosling-spec';
+
 export const GoslingLogoSVG = (width: number, height: number) => (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width={width} height={height}>
         <rect style={{ fill: 'none' }} width="400" height="400" />
@@ -211,8 +214,16 @@ function Editor(props: RouteComponentProps) {
     const urlGist = urlParams.get('gist');
     const urlExampleId = urlParams.get('example') ?? '';
 
+    // Spec stored in the tab session
+    const sessionSpec = useMemo(() => {
+        const sessionSpecStr = sessionStorage.getItem(SESSION_KEY_SPEC);
+        return sessionSpecStr ? JSON.parse(sessionSpecStr) : null;
+    }, []);
+
     const defaultCode =
-        urlGist || urlExampleId ? emptySpec() : stringify(urlSpec ?? (INIT_DEMO.spec as gosling.GoslingSpec));
+        urlGist || urlExampleId
+            ? emptySpec()
+            : stringify(urlSpec ?? sessionSpec ?? (INIT_DEMO.spec as gosling.GoslingSpec));
     const defaultJsCode = urlGist || urlExampleId || !INIT_DEMO.specJs ? json2js(defaultCode) : INIT_DEMO.specJs;
 
     const previewData = useRef<PreviewData[]>([]);
@@ -342,6 +353,9 @@ function Editor(props: RouteComponentProps) {
             setJsCode(json2js(urlSpec));
         } else if (urlGist) {
             setCode(emptySpec('loading....'));
+        } else if (sessionSpec) {
+            setCode(stringify(sessionSpec));
+            setJsCode(json2js(stringify(sessionSpec)));
         } else {
             const jsonCode = stringifySpec(demo.spec as gosling.GoslingSpec);
             setCode(jsonCode);
@@ -508,6 +522,7 @@ function Editor(props: RouteComponentProps) {
                 if (!editedGos || valid?.state !== 'success' || (!autoRun && !run)) return;
 
                 setGoslingSpec(editedGos);
+                sessionStorage.setItem(SESSION_KEY_SPEC, stringify(editedGos));
             } else if (language === 'typescript') {
                 transpile(jsCode)
                     .then(toJavaScriptDataURI)
@@ -521,6 +536,7 @@ function Editor(props: RouteComponentProps) {
                         setLog(valid);
                         if (!editedGos || valid?.state !== 'success' || (!autoRun && !run)) return;
                         setGoslingSpec(editedGos);
+                        sessionStorage.setItem(SESSION_KEY_SPEC, stringify(editedGos));
                     })
                     .catch(e => {
                         const message = '✘ Cannnot parse the code.';
