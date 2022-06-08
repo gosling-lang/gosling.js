@@ -2,9 +2,8 @@ import type { Graphics, InteractionEvent } from 'pixi.js';
 import PubSub from 'pubsub-js';
 import * as uuid from 'uuid';
 import { isEqual, sampleSize, uniqBy } from 'lodash-es';
-import { format } from 'd3-format';
 import type { ScaleLinear } from 'd3-scale';
-import type { SingleTrack, OverlaidTrack, Datum, EventStyle } from '@gosling.schema';
+import type { SingleTrack, OverlaidTrack, Datum, EventStyle, GenomicPosition } from '@gosling.schema';
 import type { CompleteThemeDeep } from 'src/core/utils/theme';
 import { drawMark, drawPostEmbellishment, drawPreEmbellishment } from '../core/mark';
 import { GoslingTrackModel } from '../core/gosling-track-model';
@@ -52,12 +51,13 @@ function usePrereleaseRendering(spec: SingleTrack | OverlaidTrack) {
 // Refer to the following already supported graphics:
 // https://github.com/higlass/higlass/blob/54f5aae61d3474f9e868621228270f0c90ef9343/app/scripts/PixiTrack.js#L115
 
-const DEFAULT_MARK_HIGHLIGHT_STYLE: Required<EventStyle> = {
+const DEFAULT_MOUSE_EVENT_STYLE: Required<EventStyle> = {
     stroke: 'black',
     strokeWidth: 1,
     strokeOpacity: 1,
     color: 'none',
-    opacity: 1
+    opacity: 1,
+    arrange: 'front'
 };
 
 interface GoslingTrackOption {
@@ -1160,13 +1160,13 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                 this.highlightMarks(
                     g,
                     capturedElements,
-                    Object.assign({}, DEFAULT_MARK_HIGHLIGHT_STYLE, this.options.spec.style?.select)
+                    Object.assign({}, DEFAULT_MOUSE_EVENT_STYLE, this.options.spec.style?.select)
                 );
             }
 
             /* API call */
             if (!skipApiTrigger) {
-                const genomicRange: [string, string] = [
+                const genomicRange: [GenomicPosition, GenomicPosition] = [
                     getRelativeGenomicPosition(Math.floor(this._xScale.invert(startX))),
                     getRelativeGenomicPosition(Math.floor(this._xScale.invert(endX)))
                 ];
@@ -1293,7 +1293,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                     this.highlightMarks(
                         g,
                         capturedElements,
-                        Object.assign({}, DEFAULT_MARK_HIGHLIGHT_STYLE, this.options.spec.style?.mouseOver)
+                        Object.assign({}, DEFAULT_MOUSE_EVENT_STYLE, this.options.spec.style?.mouseOver)
                     );
 
                     // API call
@@ -1319,10 +1319,11 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                             const rawValue = capturedElements[0].value[d.field];
                             let value = rawValue;
                             if (d.type === 'quantitative' && d.format) {
-                                value = format(d.format)(+rawValue);
+                                value = HGC.libraries.d3Format.format(d.format)(+rawValue);
                             } else if (d.type === 'genomic') {
-                                // e.g., chr1:204133
-                                value = getRelativeGenomicPosition(+rawValue);
+                                // e.g., chr1:204,133
+                                const { chromosome, position } = getRelativeGenomicPosition(+rawValue);
+                                value = `${chromosome}:${HGC.libraries.d3Format.format(',')(position)}`;
                             }
 
                             return (

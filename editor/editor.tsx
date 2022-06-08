@@ -304,10 +304,12 @@ function Editor(props: RouteComponentProps) {
             // console.log('click', data.data);
             // TODO: show messages on the right-bottom of the editor
             // gosRef.current.api.subscribe('mouseOver', (type, eventData) => {
-            //     setMouseEventInfo({ type: 'mouseOver', data: eventData.data, position: eventData.genomicPosition });
+            //     console.warn(type, eventData.id, eventData.genomicPosition, eventData.data);
+            //     // setMouseEventInfo({ type: 'mouseOver', data: eventData.data, position: eventData.genomicPosition });
             // });
             // gosRef.current.api.subscribe('click', (type, eventData) => {
-            //     setMouseEventInfo({ type: 'click', data: eventData.data, position: eventData.genomicPosition });
+            //     console.warn(type, eventData.id, eventData.genomicPosition, eventData.data);
+            //     // setMouseEventInfo({ type: 'click', data: eventData.data, position: eventData.genomicPosition });
             // });
             // Range Select API
             // gosRef.current.api.subscribe('rangeSelect', (type, eventData) => {
@@ -315,8 +317,8 @@ function Editor(props: RouteComponentProps) {
             // });
         }
         return () => {
-            // gosRef.current.api.unsubscribe('mouseOver');
-            // gosRef.current.api.unsubscribe('click');
+            // gosRef.current?.api.unsubscribe('mouseOver');
+            // gosRef.current?.api.unsubscribe('click');
             // gosRef.current?.api.unsubscribe('rangeSelect');
         };
     }, [gosRef.current]);
