@@ -133,9 +133,9 @@
 
 .side-subpanel {
     padding-top: 5px;
-    background-color: #fff;
-    border-bottom: gray solid 1px;
-    border-top: gray solid 1px;
+    background-color: #F1F1F1;
+    border-bottom: lightgray solid 1px;
+    border-top: lightgray solid 1px;
 }
 
 .side-panel .side-panel-button,
