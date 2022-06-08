@@ -175,7 +175,8 @@ export const GoslingComponent = forwardRef<GoslingRef, GoslingCompProps>((props,
                             ? props.spec?.responsiveSize
                             : props.spec.responsiveSize.width,
                     responsiveHeight,
-                    background: theme.root.background
+                    background: theme.root.background,
+                    alt: props.spec?.description
                 }}
             />
         ),
