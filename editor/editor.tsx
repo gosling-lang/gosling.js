@@ -803,7 +803,7 @@ function Editor(props: RouteComponentProps) {
                         <span title="Change Font Size" className="side-panel-button">
                             {getIconSVG(ICONS.TEXT, 23, 23)}
                             <br />
-                            FONT
+                            FONT SIZE
                             <span className="side-subpanel">
                                 <span
                                     title="Use Larger Font"

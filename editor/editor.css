@@ -133,7 +133,7 @@
 
 .side-subpanel {
     padding-top: 5px;
-    background-color: #F1F1F1;
+    background-color: #f1f1f1;
     border-bottom: lightgray solid 1px;
     border-top: lightgray solid 1px;
 }
@@ -160,12 +160,11 @@
 .side-subpanel .side-subpanel-button {
     margin-top: 10px;
     margin-bottom: 10px;
-    font-size: 6px;
 }
 
 .side-panel .side-panel-button-not-active,
 .side-subpanel .side-subpanel-button-not-active {
-    color: lightgray;
+    color: #aaa;
     cursor: not-allowed;
 }
 
