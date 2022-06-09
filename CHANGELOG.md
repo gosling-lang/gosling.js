@@ -1,3 +1,33 @@
+## [0.9.19](https://github.com/gosling-lang/gosling.js/compare/v0.9.18...v0.9.19) (2022-06-09)
+
+
+### Bug Fixes
+
+* **editor:** minor bugs when importing & exporting examples ([#701](https://github.com/gosling-lang/gosling.js/issues/701)) ([1fcea27](https://github.com/gosling-lang/gosling.js/commit/1fcea27d1fbb7be84a217682bada6f47ddfbe9c3))
+* fix json track errors due to using undefined mRangeBrush ([#716](https://github.com/gosling-lang/gosling.js/issues/716)) ([2ebde84](https://github.com/gosling-lang/gosling.js/commit/2ebde849e3a34e198ab0001157c187569fe80203))
+* gist example with jscode ([#684](https://github.com/gosling-lang/gosling.js/issues/684)) ([a94e1c1](https://github.com/gosling-lang/gosling.js/commit/a94e1c1391674c807a518121bf76e49a2a3c9e73))
+* out of memory when deploy ([#680](https://github.com/gosling-lang/gosling.js/issues/680)) ([9253f48](https://github.com/gosling-lang/gosling.js/commit/9253f48f7659ccdc00279c3a9107b24f4e48a209))
+* remove legend layer in `remove()`; do not render twice on Editor when example ID is specified in URL ([#686](https://github.com/gosling-lang/gosling.js/issues/686)) ([d3f22c9](https://github.com/gosling-lang/gosling.js/commit/d3f22c94f7ef1cbfe1a9e1022c9d6e187833a9fb))
+* use assembly in vcf data fetcher ([#698](https://github.com/gosling-lang/gosling.js/issues/698)) ([a2440f6](https://github.com/gosling-lang/gosling.js/commit/a2440f629356199944c766f23760bb64341811e3))
+
+
+### Features
+
+* capture mouse events on marks for tooltips, hovering effects, and APIs ([#667](https://github.com/gosling-lang/gosling.js/issues/667)) ([0b67659](https://github.com/gosling-lang/gosling.js/commit/0b6765927bf913393d61814ee3761408acd8d283))
+* **editor:** compact side panel buttons ([#721](https://github.com/gosling-lang/gosling.js/issues/721)) ([c2526ca](https://github.com/gosling-lang/gosling.js/commit/c2526caa5a9b0046e4677d54c8c9aaddabd7e34e))
+* **editor:** preserve spec in session storage ([#722](https://github.com/gosling-lang/gosling.js/issues/722)) ([8597739](https://github.com/gosling-lang/gosling.js/commit/85977396d4f9504ecae7c28cdc4aff006e22d644))
+* **editor:** support javascript editor ([#671](https://github.com/gosling-lang/gosling.js/issues/671)) ([410d049](https://github.com/gosling-lang/gosling.js/commit/410d0496af8b5c6cec49b6e446058061ec1f8914))
+* **editor:** use current hostname and path for SAVE URL ([#690](https://github.com/gosling-lang/gosling.js/issues/690)) ([7507172](https://github.com/gosling-lang/gosling.js/commit/75071720270d1522e6742c159cd77dd8e869cd71))
+* **editor:** visualize JS spec using Gist URL ([#704](https://github.com/gosling-lang/gosling.js/issues/704)) ([0b4c86a](https://github.com/gosling-lang/gosling.js/commit/0b4c86ac39725960de17cf770447c61590c1dfe9))
+* enable adding a root level aria-label using description ([#723](https://github.com/gosling-lang/gosling.js/issues/723)) ([88f8894](https://github.com/gosling-lang/gosling.js/commit/88f8894eb103ee90bf7209fff08508f3756cad6f))
+* genomic range selection in linear tracks ([#693](https://github.com/gosling-lang/gosling.js/issues/693)) ([8d89b60](https://github.com/gosling-lang/gosling.js/commit/8d89b60836caa40b1696c8747c500766aba3e153))
+* support indels in VCF ([#699](https://github.com/gosling-lang/gosling.js/issues/699)) ([377e509](https://github.com/gosling-lang/gosling.js/commit/377e5090886c7a4b91cf1cb4ee5b46fb6091f8c4))
+* support VCF with Tabix ([#689](https://github.com/gosling-lang/gosling.js/issues/689)) ([84d9213](https://github.com/gosling-lang/gosling.js/commit/84d92130933f42aa1ac138c92c379645fdd6e796))
+* treeshake pkg info in module export ([#694](https://github.com/gosling-lang/gosling.js/issues/694)) ([a12d454](https://github.com/gosling-lang/gosling.js/commit/a12d454fa9272a03ce76a6cb8cc513ed9ed8d694))
+* turn off mouse events by default; rename API keys; rename and restructure mouse event properties ([#712](https://github.com/gosling-lang/gosling.js/issues/712)) ([feec1d9](https://github.com/gosling-lang/gosling.js/commit/feec1d9ac9f7b5542e1dea3649ed76a83b6f3a3d))
+
+
+
 ## [0.9.18](https://github.com/gosling-lang/gosling.js/compare/v0.9.17...v0.9.18) (2022-05-06)
 
 
