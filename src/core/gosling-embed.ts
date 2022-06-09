@@ -73,7 +73,11 @@ export function embed(element: HTMLElement, spec: GoslingSpec, opts: GoslingEmbe
         }
 
         const theme = getTheme(opts.theme || 'light');
-        const options = { ...opts, background: theme.root.background };
+        const options = {
+            ...opts,
+            background: theme.root.background,
+            alt: opts.alt ?? spec.description ?? 'Gosling visualization'
+        };
 
         compile(
             spec,

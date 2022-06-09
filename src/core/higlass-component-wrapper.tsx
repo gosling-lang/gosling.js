@@ -30,6 +30,7 @@ export interface HiGlassComponentWrapperProps {
         background?: string;
         responsiveWidth?: boolean;
         responsiveHeight?: boolean;
+        alt?: string;
     };
     id?: string;
     className?: string;
@@ -76,7 +77,13 @@ export const HiGlassComponentWrapper = forwardRef<HiGlassApi | undefined, HiGlas
         );
 
         // Styling
-        const { padding = 60, margin = 0, border = 'none', background } = props.options || {};
+        const {
+            padding = 60,
+            margin = 0,
+            border = 'none',
+            background,
+            alt = 'Gosling visualization'
+        } = props.options || {};
         return (
             <>
                 <div
@@ -92,6 +99,9 @@ export const HiGlassComponentWrapper = forwardRef<HiGlassApi | undefined, HiGlas
                         height: props.options.responsiveHeight ? `calc(100% - ${padding * 2}px)` : props.size.height,
                         textAlign: 'left'
                     }}
+                    aria-label={alt}
+                    role={'graphics-document'} // https://www.w3.org/TR/graphics-aria-1.0/#graphics-document
+                    aria-roledescription="visualization"
                 >
                     <div
                         key={JSON.stringify(viewConfig)}
