@@ -76,7 +76,7 @@ export const EX_SPEC_MOUSE_EVENT: GoslingSpec = {
                         mouseEvents: {
                             mouseOver: true,
                             rangeSelect: true,
-                            groupMarksByField: 'smaple'
+                            groupMarksByField: 'sample'
                         }
                     },
                     style: {
