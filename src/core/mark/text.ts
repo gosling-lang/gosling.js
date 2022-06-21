@@ -14,9 +14,14 @@ export const TEXT_STYLE_GLOBAL = {
     lineJoin: 'round',
     stroke: '#ffffff',
     strokeThickness: 0
-};
+} as const;
 
-export function drawText(HGC: any, trackInfo: any, tile: any, model: GoslingTrackModel) {
+export function drawText(
+    HGC: typeof import('@higlass/available-for-plugins'),
+    trackInfo: any,
+    tile: any,
+    model: GoslingTrackModel
+) {
     /* track spec */
     const spec = model.spec();
 
@@ -250,7 +255,7 @@ export function drawText(HGC: any, trackInfo: any, tile: any, model: GoslingTrac
                         minX -= gap;
                     }
 
-                    const ropePoints: number[] = [];
+                    const ropePoints: import('pixi.js').Point[] = [];
                     const eventPointsFar: number[] = [];
                     const eventPointsNear: number[] = [];
                     for (let i = maxX; i >= minX; i -= tw / 10.0) {

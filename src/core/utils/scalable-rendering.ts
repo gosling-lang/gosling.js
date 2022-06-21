@@ -1,17 +1,19 @@
-const createColorTexture = (PIXI: any, colors: any) => {
+type ColorRGBA = [r: number, g: number, b: number, a: number];
+
+const createColorTexture = (PIXI: typeof import('pixi.js'), colors: ColorRGBA[]) => {
     const colorTexRes = Math.max(2, Math.ceil(Math.sqrt(colors.length)));
     const rgba = new Float32Array(colorTexRes ** 2 * 4);
-    colors.forEach((color: any, i: any) => {
+    colors.forEach((color, i) => {
         rgba[i * 4] = color[0]; // r
         rgba[i * 4 + 1] = color[1]; // g
         rgba[i * 4 + 2] = color[2]; // b
         rgba[i * 4 + 3] = color[3]; // a
     });
 
-    return [PIXI.Texture.fromBuffer(rgba, colorTexRes, colorTexRes), colorTexRes];
+    return [PIXI.Texture.fromBuffer(rgba, colorTexRes, colorTexRes), colorTexRes] as const;
 };
 
-export function setUpShaderAndTextures(HGC: any, colorRGBAs: [number, number, number, number][]) {
+export function setUpShaderAndTextures(HGC: typeof import('@higlass/available-for-plugins'), colorRGBAs: ColorRGBA[]) {
     // console.log(colorRGBAs);
 
     const [colorMapTex, colorMapTexRes] = createColorTexture(HGC.libraries.PIXI, colorRGBAs);

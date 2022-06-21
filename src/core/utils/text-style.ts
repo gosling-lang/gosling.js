@@ -4,7 +4,7 @@ export type TextStyle = {
     color?: string;
     size?: number;
     fontFamily?: string;
-    fontWeight?: 'bold' | 'normal' | 'lighter';
+    fontWeight?: 'bold' | 'normal' | 'light';
     stroke?: string;
     strokeThickness?: number;
 };
@@ -19,10 +19,11 @@ export const DEFAULT_TEXT_STYLE: Required<TextStyle> = {
 };
 
 export function getTextStyle(style: TextStyle = DEFAULT_TEXT_STYLE): Partial<PIXI.ITextStyle> {
+    const fontWeight = style.fontWeight ?? DEFAULT_TEXT_STYLE.fontWeight;
     return {
         fontSize: `${style.size ?? DEFAULT_TEXT_STYLE.size}px`,
         fontFamily: style.fontFamily ?? DEFAULT_TEXT_STYLE.fontFamily,
-        fontWeight: style.fontWeight ?? DEFAULT_TEXT_STYLE.fontWeight,
+        fontWeight: fontWeight === 'light' ? 'lighter' : fontWeight,
         fill: style.color ?? DEFAULT_TEXT_STYLE.color,
         lineJoin: 'round',
         stroke: style.stroke ?? DEFAULT_TEXT_STYLE.stroke,

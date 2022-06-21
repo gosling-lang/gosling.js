@@ -5,6 +5,12 @@ import { getTheme } from '../utils/theme';
 
 describe('Should draw marks correctly', () => {
     it('Should return early when some of parameters are not properly provided', () => {
-        drawMark(null, null, null, new GoslingTrackModel({} as SingleTrack, [], getTheme()));
+        drawMark(
+            // @ts-expect-error should require HGC
+            null,
+            null,
+            null,
+            new GoslingTrackModel({} as SingleTrack, [], getTheme())
+        );
     });
 });

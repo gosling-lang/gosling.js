@@ -20,12 +20,19 @@ type TickLabelInfo = {
     rope: PIXI.SimpleRope;
 };
 
-function AxisTrack(HGC: any, ...args: any[]): any {
+function AxisTrack(HGC: typeof import('@higlass/available-for-plugins'), ...args: any[]): any {
     if (!new.target) {
         throw new Error('Uncaught TypeError: Class constructor cannot be invoked without "new"');
     }
 
-    const { absToChr, colorToHex, pixiTextToSvg, showMousePosition, svgLine } = HGC.utils;
+    const {
+        absToChr,
+        colorToHex,
+        pixiTextToSvg,
+        svgLine,
+        // @ts-expect-error did you mean `setupShowMousePosition`?
+        showMousePosition
+    } = HGC.utils;
 
     class AxisTrackClass extends HGC.tracks.PixiTrack {
         allTexts: TickLabelInfo[];
@@ -172,6 +179,7 @@ function AxisTrack(HGC: any, ...args: any[]): any {
                 const text = new HGC.libraries.PIXI.Text(chromName, this.pixiTextConfig);
 
                 // give each string a random hash so that some get hidden when there's overlaps
+                // @ts-expect-error invalid property?
                 text.hashValue = Math.random();
 
                 this.pTicks.addChild(text);
@@ -453,7 +461,7 @@ function AxisTrack(HGC: any, ...args: any[]): any {
                 minX -= gap;
             }
 
-            const ropePoints: number[] = [];
+            const ropePoints: import('pixi.js').Point[] = [];
             const baseR = innerRadius + metric.height / 2.0 + 3;
             for (let i = maxX; i >= minX; i -= tw / 10.0) {
                 const p = cartesianToPolar(i, width, baseR, width / 2.0, height / 2.0, startAngle, endAngle);
@@ -537,7 +545,7 @@ function AxisTrack(HGC: any, ...args: any[]): any {
                 chrText.anchor.x = 0.5;
                 chrText.anchor.y = circular ? 0.5 : this.options.reverseOrientation ? 0 : 1;
 
-                let rope;
+                let rope: import('pixi.js').SimpleRope | null | undefined;
                 if (circular) {
                     rope = this.addCurvedText(chrText, viewportMidX);
                     if (rope) {
@@ -566,6 +574,7 @@ function AxisTrack(HGC: any, ...args: any[]): any {
                 this.allTexts.push({
                     importance: chrText.hashValue,
                     text: chrText,
+                    // @ts-expect-error possibly null or undefined and should just be SimpleRope
                     rope
                 });
             }

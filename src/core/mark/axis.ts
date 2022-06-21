@@ -13,7 +13,7 @@ const TICK_SIZE = 6;
  * Draw linear scale Y axis
  */
 export function drawLinearYAxis(
-    HGC: any,
+    HGC: { libraries: { PIXI: typeof import('pixi.js') } },
     trackInfo: any,
     tile: any,
     gos: GoslingTrackModel,
@@ -119,6 +119,7 @@ export function drawLinearYAxis(
             const y = yScale(t);
             tickEnd = isLeft ? dx + TICK_SIZE * 2 : dx - TICK_SIZE * 2;
 
+            // @ts-expect-error t should be a string but is a number, should we cast??
             const textGraphic = new HGC.libraries.PIXI.Text(t, styleConfig);
             textGraphic.anchor.x = isLeft ? 0 : 1;
             textGraphic.anchor.y = y === 0 ? 0.9 : 0.5;
@@ -134,7 +135,7 @@ export function drawLinearYAxis(
  * Draw linear scale Y axis
  */
 export function drawCircularYAxis(
-    HGC: any,
+    HGC: typeof import('@higlass/available-for-plugins'),
     trackInfo: any,
     tile: any,
     gos: GoslingTrackModel,
@@ -298,6 +299,7 @@ export function drawCircularYAxis(
                 fontFamily: theme.axis.labelFontFamily,
                 fontWeight: theme.axis.labelFontWeight
             });
+            // @ts-expect-error t should be a string, not a number
             const textGraphic = new HGC.libraries.PIXI.Text(t, styleConfig);
             textGraphic.anchor.x = isLeft ? 1 : 0;
             textGraphic.anchor.y = 0.5;
@@ -316,13 +318,14 @@ export function drawCircularYAxis(
             const scaledEndX = isLeft ? SCALED_TICK_SIZE(currentR) * 2 + txtWidth : tw - SCALED_TICK_SIZE(currentR) * 2;
 
             // Determine the points of a rope element for a lebel
-            const ropePoints: number[] = [];
+            const ropePoints: import('pixi.js').Point[] = [];
             for (let i = scaledEndX; i >= scaledStartX; i -= txtWidth / 10.0) {
                 const p = cartesianToPolar(i, tw, currentR, cx, cy, startAngle, endAngle);
                 ropePoints.push(new HGC.libraries.PIXI.Point(p.x, p.y));
             }
 
             // Render a label
+            // @ts-expect-error missing argument in updateText?
             textGraphic.updateText();
             const rope = new HGC.libraries.PIXI.SimpleRope(textGraphic.texture, ropePoints);
             graphics.addChild(rope);

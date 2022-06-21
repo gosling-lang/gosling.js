@@ -5,7 +5,7 @@ import type { CompleteThemeDeep } from '../utils/theme';
 import { getTextStyle } from '../utils/text-style';
 
 export function drawCircularTitle(
-    HGC: any,
+    HGC: typeof import('@higlass/available-for-plugins'),
     trackInfo: any,
     tile: any,
     gos: GoslingTrackModel,
@@ -67,7 +67,7 @@ export function drawCircularTitle(
     const scaledEndX = padding + txtWidth;
 
     // Determine the points of a rope element for a lebel
-    const ropePoints: number[] = [];
+    const ropePoints: import('pixi.js').Point[] = [];
     for (let i = scaledEndX; i >= scaledStartX; i -= txtWidth / 10.0) {
         const p = cartesianToPolar(i, tw, titleR - metric.height / 2.0, cx, cy, startAngle, endAngle);
         ropePoints.push(new HGC.libraries.PIXI.Point(p.x, p.y));
@@ -85,6 +85,7 @@ export function drawCircularTitle(
     g.closePath();
 
     // Render a label
+    // @ts-expect-error, missing argument to updateText
     textGraphic.updateText();
     const rope = new HGC.libraries.PIXI.SimpleRope(textGraphic.texture, ropePoints);
     g.addChild(rope);

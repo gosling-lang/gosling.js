@@ -5,7 +5,7 @@ import colorToHex from '../utils/color-to-hex';
 import type { CompleteThemeDeep } from '../utils/theme';
 
 export function drawCircularOutlines(
-    HGC: any,
+    HGC: typeof import('@higlass/available-for-plugins'),
     trackInfo: any,
     tile: any,
     tm: GoslingTrackModel,

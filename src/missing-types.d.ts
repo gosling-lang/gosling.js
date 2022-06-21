@@ -11,6 +11,7 @@ declare namespace HGC {
         d3Axis: typeof import('d3-axis');
         d3Brush: typeof import('d3-brush');
         d3Color: typeof import('d3-color');
+        d3Drag: typeof import('d3-drag');
         d3Dsv: typeof import('d3-dsv');
         d3Format: typeof import('d3-format');
         d3Geo: typeof import('d3-geo');
@@ -95,6 +96,7 @@ declare namespace HGC {
 
     type Tracks = {
         BarTrack: Track; // TODO(06-21-22)
+        PixiTrack: Track;
     };
 
     type Track = any;
@@ -104,6 +106,23 @@ declare namespace HGC {
         trackUtils: {
             calculate1DVisibleTiles(tilesetInfo: TilesetInfo, scale: Scale): [zoomLevel: number, x: number][];
         };
+        absToChr(
+            absPosition: number,
+            chrInfo: ChromInfo<string>
+        ): [chr: string, chrPositon: number, offset: number, insertPoint: number];
+        chrToAbs<Name>(chrom: Name, chromPos: number, chromInfo: ChromInfo<Name>): number;
+        colorToHex(colorValue: string): number;
+        pixiTextToSvg(text: import('pixi.js').Text): HTMLElement;
+        svgLine(x1: number, y1: number, x2: number, y2: number, strokeWidth: number, strokeColor: number): HTMLElement;
+        DenseDataExtrema1D: {
+            new (arr: ArrayLike<number>): DenseDataExtrema1D;
+        };
+    };
+
+    type ChromInfo<Name> = {
+        cumPositions: { pos: number; chr: string }[];
+        chrPositions: Record<Name, { pos: number }>;
+        chromLengths: Record<Name, number>;
     };
 
     export const libraries: Libraries;

@@ -6,6 +6,7 @@ import { BigWig } from '@gmod/bbi';
 import { RemoteFile } from 'generic-filehandle';
 import { GET_CHROM_SIZES } from '../../core/utils/assembly';
 
+/** @param {typeof import('@higlass/available-for-plugins')} HGC */
 function BBIDataFetcher(HGC, ...args) {
     if (!new.target) {
         throw new Error('Uncaught TypeError: Class constructor cannot be invoked without "new"');
