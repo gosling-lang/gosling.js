@@ -72,13 +72,14 @@ interface GoslingTrackOption {
  * @param args
  * @returns
  */
-function GoslingTrack(HGC: any, ...args: any[]): any {
+function GoslingTrack(HGC: typeof import('@higlass/available-for-plugins'), ...args: any[]): any {
     if (!new.target) {
         throw new Error('Uncaught TypeError: Class constructor cannot be invoked without "new"');
     }
 
     // Services
     const { tileProxy } = HGC.services;
+    // @ts-expect-error, should be setupShowMousePosition?
     const { showMousePosition } = HGC.utils;
 
     class GoslingTrackClass extends HGC.tracks.BarTrack {
@@ -227,7 +228,6 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
          */
         draw() {
             if (PRINT_RENDERING_CYCLE) console.warn('draw()');
-
             this.clearMouseEventData();
             this.svgData = [];
             this.textsBeingUsed = 0;
