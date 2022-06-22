@@ -2,37 +2,38 @@ declare module 'monaco-editor/esm/vs/editor/edcore.main' {
     export * from 'monaco-editor';
 }
 
+// Partial types from https://github.com/higlass/higlass/blob/develop/app/scripts/configs/available-for-plugins.js
+declare module '@higlass/available-for-plugins' {
+    export * as libraries from '@higlass/libraries';
+    export * as services from '@higlass/services';
+    export * as tracks from '@higlass/tracks';
+    export * as utils from '@higlass/utils';
+}
+
 declare module '@higlass/libraries' {
-    export const PIXI: typeof import('pixi.js');
-
-    export const d3Array: typeof import('d3-array');
-    export const d3Axis: typeof import('d3-axis');
-    export const d3Brush: typeof import('d3-brush');
-    export const d3Color: typeof import('d3-color');
-    export const d3Drag: typeof import('d3-drag');
-    export const d3Dsv: typeof import('d3-dsv');
-    export const d3Format: typeof import('d3-format');
-    export const d3Geo: typeof import('d3-geo');
-    export const d3Scale: typeof import('d3-scale');
-    export const d3Selection: typeof import('d3-selection');
-
-    // Types not installed in this repo.
-    // Can always add later if needed, but this provides
-    // more strictness since unresolved imports resolve to `any`.
-    export const d3Queue: unknown;
-    export const d3Request: unknown;
-    export const d3Transition: unknown;
-    export const d3Zoom: unknown;
-
+    export * as PIXI from 'pixi.js';
+    export * as d3Array from 'd3-array';
+    export * as d3Axis from 'd3-axis';
+    export * as d3Brush from 'd3-brush';
+    export * as d3Color from 'd3-color';
+    export * as d3Drag from 'd3-drag';
+    export * as d3Dsv from 'd3-dsv';
+    export * as d3Format from 'd3-format';
+    export * as d3Geo from 'd3-geo';
+    export * as d3Scale from 'd3-scale';
+    export * as d3Selection from 'd3-selection';
+    // export * as d3Queue from 'd3-queue';
+    // export * as d3Request from 'd3-request';
+    export * as d3Transition from 'd3-transition';
+    export * as d3Zoom from 'd3-zoom';
     // minimal typing of https://github.com/taskcluster/slugid/blob/main/slugid.js
-    export const slugid: {
+    export declare const slugid: {
         nice(): string;
     };
 }
 
 declare module '@higlass/services' {
-    type Scale = import('d3-scale').ScaleContinuousNumeric<number, number>;
-
+    import type { ScaleContinuousNumeric } from 'd3-scale';
     type TilesetInfo = {
         min_pos: number[];
         max_pos: number[];
@@ -46,18 +47,17 @@ declare module '@higlass/services' {
               bins_per_dimension: number;
           }
     );
-
-    type Tile = {
-        tileData: {
-            dense: number[];
-            shape: number[];
-            tilePos: unknown[];
-        };
+    type TileData = {
+        dense: number[];
+        shape: number[];
+        tilePos: unknown[];
     };
-
+    type Tile = {
+        tileData: TileData;
+    };
     type ColorRGBA = [r: number, g: number, b: number, a: number];
 
-    export const tileProxy: {
+    export declare const tileProxy: {
         calculateResolution(tilesetInfo: TilesetInfo, zoomLevel: number): number;
         calculateTileAndPosInTile(
             tilesetInfo: TilesetInfo,
@@ -68,7 +68,7 @@ declare module '@higlass/services' {
         ): [tilePosition: number, positionInTile: number];
         calculateTiles(
             zoomLevel: number,
-            scale: Scale,
+            scale: ScaleContinuousNumeric<number, number>,
             minX: number,
             maxX: number,
             maxZoom: number,
@@ -76,14 +76,14 @@ declare module '@higlass/services' {
         ): number[];
         calculateTilesFromResolution(
             resolution: number,
-            scale: Scale,
+            scale: ScaleContinuousNumeric<number, number>,
             minX: number,
             maxX: number,
             pixelsPerTile?: number
         ): number[];
         calculateTileWidth(tilesetInfo: TilesetInfo, zoomLevel: number, binsPerTile: number): number;
         calculateZoomLevel(scale: Scale, minX: number, maxX: number, binsPerTile?: number): number;
-        calculateZoomLevelFromResolutions(resolutions: number[], scale: Scale): number;
+        calculateZoomLevelFromResolutions(resolutions: number[], scale: ScaleContinuousNumeric<number, number>): number;
         // fetchTilesDebounced();
         // json();
         // text();
@@ -91,10 +91,11 @@ declare module '@higlass/services' {
     };
 }
 
+// TODO(06-21-22)
 declare module '@higlass/tracks' {
     type Track = any;
-    export const BarTrack: Track;
-    export const PixiTrack: Track;
+    export declare const BarTrack: Track;
+    export declare const PixiTrack: Track;
 }
 
 declare module '@higlass/utils' {
@@ -104,18 +105,15 @@ declare module '@higlass/utils' {
         chromLengths: Record<Name, number>;
     };
 
-    export function showMousePosition(context: Track, is2d?: boolean, isGlobal?: boolean): void;
-    export const trackUtils: {
-        calculate1DVisibleTiles(tilesetInfo: TilesetInfo, scale: Scale): [zoomLevel: number, x: number][];
-    };
-    export function absToChr(
+    export declare function showMousePosition(context: Track, is2d?: boolean, isGlobal?: boolean): void;
+    export declare function absToChr(
         absPosition: number,
         chrInfo: ChromInfo<string>
     ): [chr: string, chrPositon: number, offset: number, insertPoint: number];
-    export function chrToAbs<Name>(chrom: Name, chromPos: number, chromInfo: ChromInfo<Name>): number;
-    export function colorToHex(colorValue: string): number;
-    export function pixiTextToSvg(text: import('pixi.js').Text): HTMLElement;
-    export function svgLine(
+    export declare function chrToAbs<Name>(chrom: Name, chromPos: number, chromInfo: ChromInfo<Name>): number;
+    export declare function colorToHex(colorValue: string): number;
+    export declare function pixiTextToSvg(text: import('pixi.js').Text): HTMLElement;
+    export declare function svgLine(
         x1: number,
         y1: number,
         x2: number,
@@ -123,19 +121,10 @@ declare module '@higlass/utils' {
         strokeWidth: number,
         strokeColor: number
     ): HTMLElement;
-    export const DenseDataExtrema1D: {
+    export declare const DenseDataExtrema1D: {
         new (arr: ArrayLike<number>): DenseDataExtrema1D;
     };
-}
-
-// Partial types from https://github.com/higlass/higlass/blob/develop/app/scripts/configs/available-for-plugins.js
-declare namespace HGC {
-    export * as libraries from '@higlass/libraries';
-    export * as services from '@higlass/services';
-    export * as tracks from '@higlass/tracks';
-    export * as utils from '@higlass/utils';
-}
-
-declare module '@higlass/available-for-plugins' {
-    export = HGC;
+    export declare const trackUtils: {
+        calculate1DVisibleTiles(tilesetInfo: TilesetInfo, scale: Scale): [zoomLevel: number, x: number][];
+    };
 }
