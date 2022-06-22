@@ -102,7 +102,7 @@ declare namespace HGC {
     type Track = any;
 
     type Utils = {
-        setupShowMousePosition(context: Track, is2d?: boolean, isGlobal?: boolean): void;
+        showMousePosition(context: Track, is2d?: boolean, isGlobal?: boolean): void;
         trackUtils: {
             calculate1DVisibleTiles(tilesetInfo: TilesetInfo, scale: Scale): [zoomLevel: number, x: number][];
         };

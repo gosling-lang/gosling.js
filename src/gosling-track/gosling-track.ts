@@ -79,8 +79,6 @@ function GoslingTrack(HGC: typeof import('@higlass/available-for-plugins'), ...a
 
     // Services
     const { tileProxy } = HGC.services;
-    // @ts-expect-error, should be setupShowMousePosition?
-    const { showMousePosition } = HGC.utils;
 
     class GoslingTrackClass extends HGC.tracks.BarTrack {
         private viewUid: string;
@@ -184,7 +182,7 @@ function GoslingTrack(HGC: typeof import('@higlass/available-for-plugins'), ...a
                 this.hideMousePosition = undefined;
             }
             if (this.options?.showMousePosition && !this.hideMousePosition) {
-                this.hideMousePosition = showMousePosition(
+                this.hideMousePosition = HGC.utils.showMousePosition(
                     this,
                     Is2DTrack(resolveSuperposedTracks(this.options.spec)[0]),
                     this.isShowGlobalMousePosition()

@@ -25,14 +25,7 @@ function AxisTrack(HGC: typeof import('@higlass/available-for-plugins'), ...args
         throw new Error('Uncaught TypeError: Class constructor cannot be invoked without "new"');
     }
 
-    const {
-        absToChr,
-        colorToHex,
-        pixiTextToSvg,
-        svgLine,
-        // @ts-expect-error did you mean `setupShowMousePosition`?
-        showMousePosition
-    } = HGC.utils;
+    const { absToChr, colorToHex, pixiTextToSvg, svgLine, showMousePosition } = HGC.utils;
 
     class AxisTrackClass extends HGC.tracks.PixiTrack {
         allTexts: TickLabelInfo[];
