@@ -7,7 +7,7 @@ import { scaleLinear, ScaleLinear } from 'd3-scale';
 import { getTextStyle } from '../utils/text-style';
 
 // Just the libraries necesssary fro this module
-type Libraries = Pick<import('@higlass/available-for-plugins').Libraries, 'PIXI' | 'd3Selection' | 'd3Drag'>;
+type Libraries = Pick<typeof import('@higlass/libraries'), 'PIXI' | 'd3Selection' | 'd3Drag'>;
 
 type LegendOffset = { offsetRight: number };
 
