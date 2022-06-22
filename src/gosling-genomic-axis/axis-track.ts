@@ -17,7 +17,7 @@ const TICK_COLOR = 0x777777;
 type TickLabelInfo = {
     importance: number;
     text: PIXI.Text;
-    rope: PIXI.SimpleRope;
+    rope?: PIXI.SimpleRope;
 };
 
 function AxisTrack(HGC: typeof import('@higlass/available-for-plugins'), ...args: any[]): any {
@@ -453,7 +453,7 @@ function AxisTrack(HGC: typeof import('@higlass/available-for-plugins'), ...args
                 minX -= gap;
             }
 
-            const ropePoints: import('pixi.js').Point[] = [];
+            const ropePoints: PIXI.Point[] = [];
             const baseR = innerRadius + metric.height / 2.0 + 3;
             for (let i = maxX; i >= minX; i -= tw / 10.0) {
                 const p = cartesianToPolar(i, width, baseR, width / 2.0, height / 2.0, startAngle, endAngle);
@@ -461,7 +461,7 @@ function AxisTrack(HGC: typeof import('@higlass/available-for-plugins'), ...args
             }
 
             if (ropePoints.length === 0) {
-                return null;
+                return undefined;
             }
 
             // @ts-expect-error missing argument
@@ -538,7 +538,7 @@ function AxisTrack(HGC: typeof import('@higlass/available-for-plugins'), ...args
                 chrText.anchor.x = 0.5;
                 chrText.anchor.y = circular ? 0.5 : this.options.reverseOrientation ? 0 : 1;
 
-                let rope: import('pixi.js').SimpleRope | null | undefined;
+                let rope: PIXI.SimpleRope | undefined;
                 if (circular) {
                     rope = this.addCurvedText(chrText, viewportMidX);
                     if (rope) {
@@ -567,7 +567,6 @@ function AxisTrack(HGC: typeof import('@higlass/available-for-plugins'), ...args
                 this.allTexts.push({
                     importance: chrText.hashValue,
                     text: chrText,
-                    // @ts-expect-error possibly null or undefined and should just be SimpleRope
                     rope
                 });
             }

@@ -1,3 +1,4 @@
+import type * as PIXI from 'pixi.js';
 import type { GoslingTrackModel } from '../gosling-track-model';
 import { cartesianToPolar, valueToRadian } from '../utils/polar';
 import colorToHex from '../utils/color-to-hex';
@@ -67,7 +68,7 @@ export function drawCircularTitle(
     const scaledEndX = padding + txtWidth;
 
     // Determine the points of a rope element for a lebel
-    const ropePoints: import('pixi.js').Point[] = [];
+    const ropePoints: PIXI.Point[] = [];
     for (let i = scaledEndX; i >= scaledStartX; i -= txtWidth / 10.0) {
         const p = cartesianToPolar(i, tw, titleR - metric.height / 2.0, cx, cy, startAngle, endAngle);
         ropePoints.push(new HGC.libraries.PIXI.Point(p.x, p.y));
