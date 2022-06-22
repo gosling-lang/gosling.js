@@ -169,11 +169,10 @@ function AxisTrack(HGC: typeof import('@higlass/available-for-plugins'), ...args
                 // create the array that will store tick TEXT objects
                 if (!this.tickTexts[chromName]) this.tickTexts[chromName] = [];
 
-                const text = new HGC.libraries.PIXI.Text(chromName, this.pixiTextConfig);
-
-                // give each string a random hash so that some get hidden when there's overlaps
-                // @ts-expect-error invalid property?
-                text.hashValue = Math.random();
+                // Give each PIXI text object a random hash so that some get hidden when there's overlaps
+                const text = Object.assign(new HGC.libraries.PIXI.Text(chromName, this.pixiTextConfig), {
+                    hashValue: Math.random()
+                });
 
                 this.pTicks.addChild(text);
                 this.pTicks.addChild(this.gTicks[chromName]);
@@ -423,7 +422,7 @@ function AxisTrack(HGC: typeof import('@higlass/available-for-plugins'), ...args
             return ticks.length;
         }
 
-        addCurvedText(textObj: any, cx: number) {
+        addCurvedText(textObj: PIXI.Text, cx: number) {
             const [width, height] = this.dimensions;
             const { startAngle, endAngle } = this.options;
             const factor = Math.min(width, height) / Math.min(this.options.width, this.options.height);
@@ -465,6 +464,7 @@ function AxisTrack(HGC: typeof import('@higlass/available-for-plugins'), ...args
                 return null;
             }
 
+            // @ts-expect-error missing argument
             textObj.updateText();
             const rope = new HGC.libraries.PIXI.SimpleRope(textObj.texture, ropePoints);
             return rope;
