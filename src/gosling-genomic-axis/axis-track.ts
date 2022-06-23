@@ -17,15 +17,15 @@ const TICK_COLOR = 0x777777;
 type TickLabelInfo = {
     importance: number;
     text: PIXI.Text;
-    rope: PIXI.SimpleRope;
+    rope?: PIXI.SimpleRope;
 };
 
-function AxisTrack(HGC: any, ...args: any[]): any {
+function AxisTrack(HGC: typeof import('@higlass/available-for-plugins'), ...args: any[]): any {
     if (!new.target) {
         throw new Error('Uncaught TypeError: Class constructor cannot be invoked without "new"');
     }
 
-    const { absToChr, colorToHex, pixiTextToSvg, showMousePosition, svgLine } = HGC.utils;
+    const { absToChr, colorToHex, pixiTextToSvg, svgLine, showMousePosition } = HGC.utils;
 
     class AxisTrackClass extends HGC.tracks.PixiTrack {
         allTexts: TickLabelInfo[];
@@ -169,10 +169,10 @@ function AxisTrack(HGC: any, ...args: any[]): any {
                 // create the array that will store tick TEXT objects
                 if (!this.tickTexts[chromName]) this.tickTexts[chromName] = [];
 
-                const text = new HGC.libraries.PIXI.Text(chromName, this.pixiTextConfig);
-
-                // give each string a random hash so that some get hidden when there's overlaps
-                text.hashValue = Math.random();
+                // Give each PIXI text object a random hash so that some get hidden when there's overlaps
+                const text = Object.assign(new HGC.libraries.PIXI.Text(chromName, this.pixiTextConfig), {
+                    hashValue: Math.random()
+                });
 
                 this.pTicks.addChild(text);
                 this.pTicks.addChild(this.gTicks[chromName]);
@@ -422,7 +422,7 @@ function AxisTrack(HGC: any, ...args: any[]): any {
             return ticks.length;
         }
 
-        addCurvedText(textObj: any, cx: number) {
+        addCurvedText(textObj: PIXI.Text, cx: number) {
             const [width, height] = this.dimensions;
             const { startAngle, endAngle } = this.options;
             const factor = Math.min(width, height) / Math.min(this.options.width, this.options.height);
@@ -453,7 +453,7 @@ function AxisTrack(HGC: any, ...args: any[]): any {
                 minX -= gap;
             }
 
-            const ropePoints: number[] = [];
+            const ropePoints: PIXI.Point[] = [];
             const baseR = innerRadius + metric.height / 2.0 + 3;
             for (let i = maxX; i >= minX; i -= tw / 10.0) {
                 const p = cartesianToPolar(i, width, baseR, width / 2.0, height / 2.0, startAngle, endAngle);
@@ -461,9 +461,10 @@ function AxisTrack(HGC: any, ...args: any[]): any {
             }
 
             if (ropePoints.length === 0) {
-                return null;
+                return undefined;
             }
 
+            // @ts-expect-error missing argument
             textObj.updateText();
             const rope = new HGC.libraries.PIXI.SimpleRope(textObj.texture, ropePoints);
             return rope;
@@ -537,7 +538,7 @@ function AxisTrack(HGC: any, ...args: any[]): any {
                 chrText.anchor.x = 0.5;
                 chrText.anchor.y = circular ? 0.5 : this.options.reverseOrientation ? 0 : 1;
 
-                let rope;
+                let rope: PIXI.SimpleRope | undefined;
                 if (circular) {
                     rope = this.addCurvedText(chrText, viewportMidX);
                     if (rope) {

@@ -6,10 +6,13 @@ import type { Dimension } from '../utils/position';
 import { scaleLinear, ScaleLinear } from 'd3-scale';
 import { getTextStyle } from '../utils/text-style';
 
+// Just the libraries necesssary fro this module
+type Libraries = Pick<typeof import('@higlass/libraries'), 'PIXI' | 'd3Selection' | 'd3Drag'>;
+
 type LegendOffset = { offsetRight: number };
 
 export function drawColorLegend(
-    HGC: any,
+    HGC: { libraries: Libraries },
     trackInfo: any,
     tile: any,
     tm: GoslingTrackModel,
@@ -46,7 +49,7 @@ export function drawColorLegend(
 }
 
 export function drawColorLegendQuantitative(
-    HGC: any,
+    HGC: { libraries: Libraries },
     trackInfo: any,
     tile: any,
     tm: GoslingTrackModel,
@@ -173,6 +176,7 @@ export function drawColorLegendQuantitative(
     // Brush
     // Refer to https://github.com/higlass/higlass/blob/0b2cac5a770db6d55370a61d5dbbe09c4f577c68/app/scripts/HeatmapTiledPixiTrack.js#L580
     const BRUSH_HEIGHT = 4;
+    type Datum = { y: number; id: number };
     trackInfo.colorBrushes = trackInfo.gLegend
         .append('g')
         .attr('class', channelKey)
@@ -190,7 +194,7 @@ export function drawColorLegendQuantitative(
         .attr('cursor', 'ns-resize')
         .attr(
             'transform',
-            (d: { y: number; i: number }) =>
+            (d: Datum) =>
                 `translate(${legendX + colorBarDim.left}, ${
                     legendY + colorBarDim.top - BRUSH_HEIGHT / 2.0 + colorBarDim.height - colorBarDim.height * d.y
                 })`
@@ -202,11 +206,11 @@ export function drawColorLegendQuantitative(
         .attr('stroke-width', '0.5px')
         .call(
             HGC.libraries.d3Drag
-                .drag()
+                .drag<Element, Datum>()
                 .on('start', () => {
                     trackInfo.startEvent = HGC.libraries.d3Selection.event.sourceEvent;
                 })
-                .on('drag', (d: { y: number; id: number }) => {
+                .on('drag', d => {
                     if (channel && channel.scaleOffset) {
                         const endEvent = HGC.libraries.d3Selection.event.sourceEvent;
                         const diffY = trackInfo.startEvent.clientY - endEvent.clientY;
@@ -270,6 +274,7 @@ export function drawColorLegendQuantitative(
         graphics.lineTo(tickEnd, y);
 
         // labels
+        // @ts-expect-error value should be text but is a number?
         const textGraphic = new HGC.libraries.PIXI.Text(value, labelTextStyle);
         textGraphic.anchor.x = 1;
         textGraphic.anchor.y = 0.5;
@@ -284,7 +289,7 @@ export function drawColorLegendQuantitative(
 }
 
 export function drawColorLegendCategories(
-    HGC: any,
+    HGC: { libraries: Libraries },
     trackInfo: any,
     tile: any,
     tm: GoslingTrackModel,
@@ -440,7 +445,7 @@ export function drawColorLegendCategories(
 }
 
 export function drawRowLegend(
-    HGC: any,
+    HGC: { libraries: Libraries },
     trackInfo: any,
     tile: any,
     tm: GoslingTrackModel,

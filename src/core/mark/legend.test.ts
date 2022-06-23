@@ -1,8 +1,19 @@
 import * as PIXI from 'pixi.js';
+import * as d3Selection from 'd3-selection';
+import * as d3Drag from 'd3-drag';
+
 import { GoslingTrackModel } from '../gosling-track-model';
 import type { SingleTrack } from '../gosling.schema';
 import { getTheme } from '../utils/theme';
 import { drawColorLegend } from './legend';
+
+const mockHGC = {
+    libraries: {
+        PIXI,
+        d3Selection,
+        d3Drag
+    }
+};
 
 describe('Color Legend', () => {
     const g = new PIXI.Graphics();
@@ -22,15 +33,7 @@ describe('Color Legend', () => {
         ];
         const model = new GoslingTrackModel(t, d, getTheme());
         drawColorLegend(
-            {
-                libraries: {
-                    PIXI: {
-                        Text: PIXI.Text,
-                        TextStyle: PIXI.TextStyle,
-                        TextMetrics: PIXI.TextMetrics
-                    }
-                }
-            },
+            mockHGC,
             {
                 dimensions: [100, 400],
                 position: [0, 0],
@@ -63,15 +66,7 @@ describe('Color Legend', () => {
         ];
         const model = new GoslingTrackModel(t, d, getTheme());
         drawColorLegend(
-            {
-                libraries: {
-                    PIXI: {
-                        Text: PIXI.Text,
-                        TextStyle: PIXI.TextStyle,
-                        TextMetrics: PIXI.TextMetrics
-                    }
-                }
-            },
+            mockHGC,
             {
                 dimensions: [100, 400],
                 position: [0, 0],

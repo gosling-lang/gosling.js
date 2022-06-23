@@ -1,3 +1,5 @@
+import type * as PIXI from 'pixi.js';
+
 export type TextStyle = {
     color?: string;
     size?: number;
@@ -7,7 +9,7 @@ export type TextStyle = {
     strokeThickness?: number;
 };
 
-export const DEFAULT_TEXT_STYLE: TextStyle = {
+export const DEFAULT_TEXT_STYLE: Required<TextStyle> = {
     color: 'black',
     size: 10,
     fontFamily: 'Arial',
@@ -16,13 +18,13 @@ export const DEFAULT_TEXT_STYLE: TextStyle = {
     strokeThickness: 0
 };
 
-export function getTextStyle(style: TextStyle = DEFAULT_TEXT_STYLE) {
+export function getTextStyle(style: TextStyle = DEFAULT_TEXT_STYLE): Partial<PIXI.ITextStyle> {
+    const fontWeight = style.fontWeight ?? DEFAULT_TEXT_STYLE.fontWeight;
     return {
         fontSize: `${style.size ?? DEFAULT_TEXT_STYLE.size}px`,
         fontFamily: style.fontFamily ?? DEFAULT_TEXT_STYLE.fontFamily,
-        fontWeight: style.fontWeight ?? DEFAULT_TEXT_STYLE.fontWeight,
+        fontWeight: fontWeight === 'light' ? 'lighter' : fontWeight,
         fill: style.color ?? DEFAULT_TEXT_STYLE.color,
-        background: 'white',
         lineJoin: 'round',
         stroke: style.stroke ?? DEFAULT_TEXT_STYLE.stroke,
         strokeThickness: style.strokeThickness ?? DEFAULT_TEXT_STYLE.strokeThickness

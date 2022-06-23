@@ -22,13 +22,7 @@ describe('Y Axis', () => {
         ];
         const model = new GoslingTrackModel(t, d, getTheme());
         drawLinearYAxis(
-            {
-                libraries: {
-                    PIXI: {
-                        Text: PIXI.Text
-                    }
-                }
-            },
+            { libraries: { PIXI } },
             {
                 dimensions: [100, 400],
                 position: [0, 0],
@@ -61,13 +55,7 @@ describe('Y Axis', () => {
         ];
         const model = new GoslingTrackModel(t, d, getTheme());
         drawLinearYAxis(
-            {
-                libraries: {
-                    PIXI: {
-                        Text: PIXI.Text
-                    }
-                }
-            },
+            { libraries: { PIXI } },
             {
                 dimensions: [100, 400],
                 position: [0, 0],

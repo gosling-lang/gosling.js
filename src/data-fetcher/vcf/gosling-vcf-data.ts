@@ -25,7 +25,7 @@ class GoslingVcfData {
     private tbiIndexed: any;
     private tbiVCFParser: any;
 
-    constructor(HGC: any, dataConfig: VcfDataConfig, worker: any) {
+    constructor(HGC: typeof import('@higlass/available-for-plugins'), dataConfig: VcfDataConfig, worker: any) {
         this.dataConfig = dataConfig;
         this.uid = HGC.libraries.slugid.nice();
         this.worker = worker;

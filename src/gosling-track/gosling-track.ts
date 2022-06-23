@@ -72,14 +72,13 @@ interface GoslingTrackOption {
  * @param args
  * @returns
  */
-function GoslingTrack(HGC: any, ...args: any[]): any {
+function GoslingTrack(HGC: typeof import('@higlass/available-for-plugins'), ...args: any[]): any {
     if (!new.target) {
         throw new Error('Uncaught TypeError: Class constructor cannot be invoked without "new"');
     }
 
     // Services
     const { tileProxy } = HGC.services;
-    const { showMousePosition } = HGC.utils;
 
     class GoslingTrackClass extends HGC.tracks.BarTrack {
         private viewUid: string;
@@ -183,7 +182,7 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
                 this.hideMousePosition = undefined;
             }
             if (this.options?.showMousePosition && !this.hideMousePosition) {
-                this.hideMousePosition = showMousePosition(
+                this.hideMousePosition = HGC.utils.showMousePosition(
                     this,
                     Is2DTrack(resolveSuperposedTracks(this.options.spec)[0]),
                     this.isShowGlobalMousePosition()
@@ -227,7 +226,6 @@ function GoslingTrack(HGC: any, ...args: any[]): any {
          */
         draw() {
             if (PRINT_RENDERING_CYCLE) console.warn('draw()');
-
             this.clearMouseEventData();
             this.svgData = [];
             this.textsBeingUsed = 0;
