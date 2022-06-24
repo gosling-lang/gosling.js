@@ -1,32 +1,30 @@
 import type * as HiGlass from '@higlass/types';
 
-type TrackConfig<Options> = {
+type TrackConfig<Options extends HiGlass.TrackOptions> = {
     type: string;
     datatype: string[];
     local: boolean;
     orientation: string;
     thumbnail: Element;
-    availableOptions: (keyof Options)[];
+    availableOptions: string[]; // (keyof Options)[]
     defaultOptions: Options;
 };
 
-type PluginTrack<Options> = {
-    new (HGC: HiGlass.HGC, context: HiGlass.TrackContext<Options>, options: Options): HiGlass.Track;
+type PluginTrack<Options extends HiGlass.TrackOptions> = {
+    new (HGC: HiGlass.HGC, context: HiGlass.Context<Options>, options: Options): HiGlass.Track;
     config: TrackConfig<Options>;
 };
 
-export function defineTrack<Options extends HiGlass.TrackOptions>(
-    factory: (HGC: HiGlass.HGC, context: HiGlass.TrackContext<Options>, options: Options) => HiGlass.Track
+export function definePluginTrack<Options extends HiGlass.TrackOptions>(
+    config: TrackConfig<Options>,
+    factory: (HGC: HiGlass.HGC, context: HiGlass.Context<Options>, options: Options) => HiGlass.Track
 ) {
-    const ctr = function (HGC: HiGlass.HGC, context: HiGlass.TrackContext<Options>, options: Options) {
+    function ctr(HGC: HiGlass.HGC, context: HiGlass.Context<Options>, options: Options) {
         if (!new.target) {
             throw new Error('Uncaught TypeError: Class constructor cannot be invoked without "new"');
         }
         return factory(HGC, context, options);
-    };
+    }
+    ctr.config = config;
     return ctr as unknown as PluginTrack<Options>;
-}
-
-export function defineConfig<Options extends HiGlass.TrackOptions>(config: TrackConfig<Options>) {
-    return config;
 }

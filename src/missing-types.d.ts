@@ -10,7 +10,7 @@ declare module '@higlass/types' {
         tracks: typeof import('@higlass/tracks');
         utils: typeof import('@higlass/utils');
     };
-    export type { Track, TrackContext, TrackOptions } from '@higlass/tracks';
+    export type { Track, Context, TrackOptions } from '@higlass/tracks';
 }
 
 declare module '@higlass/libraries' {
@@ -117,7 +117,7 @@ declare module '@higlass/tracks' {
 
     type TrackOptions = Record<string, unknown>;
 
-    export type TrackContext<Options> = {
+    export type Context<Options> = {
         id: string;
         viewUid: string;
         pubSub: PubSub;
@@ -212,7 +212,7 @@ declare module '@higlass/tracks' {
         labelText: PIXI.Text;
         errorText: PIXI.Text;
         /* Constructor */
-        constructor(context: TrackContext<Options>, options: Options);
+        constructor(context: Context<Options>, options: Options);
         /* Methods */
         setMask(position: [number, number], dimensions: [number, number]): void;
         getForeground(): void;
