@@ -16,12 +16,7 @@ export const TEXT_STYLE_GLOBAL = {
     strokeThickness: 0
 } as const;
 
-export function drawText(
-    HGC: typeof import('@higlass/available-for-plugins'),
-    trackInfo: any,
-    tile: any,
-    model: GoslingTrackModel
-) {
+export function drawText(HGC: import('@higlass/types').HGC, trackInfo: any, tile: any, model: GoslingTrackModel) {
     /* track spec */
     const spec = model.spec();
 

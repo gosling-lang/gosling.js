@@ -20,7 +20,7 @@ type TickLabelInfo = {
     rope?: PIXI.SimpleRope;
 };
 
-function AxisTrack(HGC: typeof import('@higlass/available-for-plugins'), ...args: any[]): any {
+function AxisTrack(HGC: import('@higlass/types').HGC, ...args: any[]): any {
     if (!new.target) {
         throw new Error('Uncaught TypeError: Class constructor cannot be invoked without "new"');
     }

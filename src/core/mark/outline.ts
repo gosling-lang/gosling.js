@@ -13,7 +13,7 @@ export const TITLE_STYLE = {
 };
 
 export function drawChartOutlines(
-    HGC: typeof import('@higlass/available-for-plugins'),
+    HGC: import('@higlass/types').HGC,
     trackInfo: any,
     tm: GoslingTrackModel,
     theme: Required<CompleteThemeDeep>

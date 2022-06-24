@@ -4,12 +4,7 @@ import type { PIXIVisualProperty } from '../visual-property.schema';
 import colorToHex from '../utils/color-to-hex';
 import { IsChannelDeep } from '../gosling.schema.guards';
 
-export function drawRect(
-    HGC: typeof import('@higlass/available-for-plugins'),
-    trackInfo: any,
-    tile: any,
-    model: GoslingTrackModel
-) {
+export function drawRect(HGC: import('@higlass/types').HGC, trackInfo: any, tile: any, model: GoslingTrackModel) {
     /* track spec */
     const spec = model.spec();
 

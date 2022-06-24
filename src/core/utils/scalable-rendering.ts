@@ -13,7 +13,7 @@ const createColorTexture = (PIXI: typeof import('pixi.js'), colors: ColorRGBA[])
     return [PIXI.Texture.fromBuffer(rgba, colorTexRes, colorTexRes), colorTexRes] as const;
 };
 
-export function setUpShaderAndTextures(HGC: typeof import('@higlass/available-for-plugins'), colorRGBAs: ColorRGBA[]) {
+export function setUpShaderAndTextures(HGC: import('@higlass/types').HGC, colorRGBAs: ColorRGBA[]) {
     // console.log(colorRGBAs);
 
     const [colorMapTex, colorMapTexRes] = createColorTexture(HGC.libraries.PIXI, colorRGBAs);
