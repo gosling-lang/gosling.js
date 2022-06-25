@@ -1,5 +1,3 @@
-import type * as PIXI from 'pixi.js';
-
 export type TextStyle = {
     color?: string;
     size?: number;
@@ -18,15 +16,20 @@ export const DEFAULT_TEXT_STYLE: Required<TextStyle> = {
     strokeThickness: 0
 };
 
-export function getTextStyle(style: TextStyle = DEFAULT_TEXT_STYLE): Partial<PIXI.ITextStyle> {
-    const fontWeight = style.fontWeight ?? DEFAULT_TEXT_STYLE.fontWeight;
-    return {
-        fontSize: `${style.size ?? DEFAULT_TEXT_STYLE.size}px`,
-        fontFamily: style.fontFamily ?? DEFAULT_TEXT_STYLE.fontFamily,
-        fontWeight: fontWeight === 'light' ? 'lighter' : fontWeight,
-        fill: style.color ?? DEFAULT_TEXT_STYLE.color,
+export function getTextStyle(style: TextStyle = {}) {
+    const merged: Required<TextStyle> = { ...DEFAULT_TEXT_STYLE, ...style };
+    // Use `const` to get object literal which is compatible with `Partial<PIXI.ITextStyle>`
+    const pixiTextStyle = {
+        fontSize: `${merged.size}px`,
+        fontFamily: merged.fontFamily,
+        fontWeight: merged.fontWeight === 'light' ? 'lighter' : merged.fontWeight,
+        fill: merged.color,
         lineJoin: 'round',
-        stroke: style.stroke ?? DEFAULT_TEXT_STYLE.stroke,
-        strokeThickness: style.strokeThickness ?? DEFAULT_TEXT_STYLE.strokeThickness
+        stroke: merged.stroke,
+        strokeThickness: merged.strokeThickness
+    } as const;
+    // Allow returned object to be mutable (strip `readonly` modifier from `const`)
+    return pixiTextStyle as {
+        -readonly [K in keyof typeof pixiTextStyle]: typeof pixiTextStyle[K];
     };
 }

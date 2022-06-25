@@ -97,7 +97,7 @@ declare module '@higlass/services' {
 // TODO(06-21-22)
 declare module '@higlass/tracks' {
     type Track = any;
-    export declare const PixiTrack: Track;
+    // export declare const PixiTrack: Track;
     export declare const BarTrack: Track;
 
     import type { ScaleContinuousNumeric } from 'd3-scale';
@@ -190,7 +190,7 @@ declare module '@higlass/tracks' {
     type DataFetcher = Record<string, any>;
     type TilesetInfo = Record<string, any>;
 
-    export declare class _PixiTrack<Options extends TrackOptions = TrackOptions> extends Track {
+    export declare class PixiTrack<Options extends TrackOptions> extends _Track {
         /* Properties */
         delayDrawing: boolean;
         scene: PIXI.Graphics;
@@ -211,6 +211,8 @@ declare module '@higlass/tracks' {
         labelXOffset: number;
         labelText: PIXI.Text;
         errorText: PIXI.Text;
+        prevOptions: string;
+        flipText?: boolean; // Property never assigned https://github.com/higlass/higlass/blob/develop/app/scripts/PixiTrack.js
         /* Constructor */
         constructor(context: Context<Options>, options: Options);
         /* Methods */
@@ -234,7 +236,13 @@ declare module '@higlass/utils' {
         chromLengths: Record<Name, number>;
     };
 
-    export declare function showMousePosition(context: Track, is2d?: boolean, isGlobal?: boolean): void;
+    /**
+     * @param context Class context, i.e., `this`.
+     * @param is2d If `true` both dimensions of the mouse location should be shown. E.g., on a central track.
+     * @param isGlobal  If `true` local and global events will trigger the mouse position drawing.
+     * @return  {Function}  Method to remove graphics showing the mouse location.
+     */
+    export declare function showMousePosition<T>(context: T, is2d?: boolean, isGlobal?: boolean): () => void;
     export declare function absToChr(
         absPosition: number,
         chrInfo: ChromInfo<string>

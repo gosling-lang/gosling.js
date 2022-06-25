@@ -1,6 +1,3 @@
-// This plugin track is based on higlass/HorizontalChromosomeLabels
-// https://github.com/higlass/higlass/blob/83dc4fddb33582ef3c26b608c04a81e8f33c7f5f/app/scripts/HorizontalChromosomeLabels.js
-
 import type * as PIXI from 'pixi.js';
 import RBush from 'rbush';
 import { scaleLinear } from 'd3-scale';
@@ -9,7 +6,6 @@ import { GET_CHROM_SIZES } from '../core/utils/assembly';
 import { cartesianToPolar } from '../core/utils/polar';
 import { getTextStyle } from '../core/utils/text-style';
 import { definePluginTrack } from '../core/utils/define-plugin-track';
-
 const TICK_WIDTH = 200;
 const TICK_HEIGHT = 6;
 const TICK_TEXT_SEPARATION = 2;
@@ -19,6 +15,16 @@ type TickLabelInfo = {
     importance: number;
     text: PIXI.Text;
     rope?: PIXI.SimpleRope;
+};
+
+type TickLine = [number, number, number, number];
+type TickText = PIXI.Text & { hashValue: number; tickLine?: TickLine };
+
+type ChrPosInfo = { chr: string; pos: number };
+type ChromInfo = {
+    chrPositions: Record<string, ChrPosInfo>;
+    chromLengths: Record<string, number>;
+    cumPositions: ChrPosInfo[];
 };
 
 // TODO: Change the icon
@@ -71,15 +77,52 @@ const AxisTrack = definePluginTrack(
     (HGC, context, options) => {
         const { absToChr, colorToHex, pixiTextToSvg, svgLine, showMousePosition } = HGC.utils;
 
-        class AxisTrackClass extends HGC.tracks.PixiTrack {
+        function createTickText(text: string, style: Partial<PIXI.ITextStyle>): TickText {
+            return Object.assign(new HGC.libraries.PIXI.Text(text, style), { hashValue: Math.random() });
+        }
+
+        class AxisTrackClass extends HGC.tracks.PixiTrack<typeof options> {
             allTexts: TickLabelInfo[];
+            searchField: null;
+            chromInfo: ChromInfo;
+            dataConfig: Record<string, unknown>;
+            pTicksCircular: PIXI.Graphics;
+            pTicks: PIXI.Graphics | null;
+            gTicks: Record<string, PIXI.Graphics>;
+            tickTexts: Record<string, TickText[]>;
+
+            isShowGlobalMousePosition: () => boolean;
+
+            textFontSize: number;
+            textFontFamily: string;
+            textFontWeight: string;
+            textFontColor: string;
+            textStrokeColor: string;
+
+            pixiTextConfig: ReturnType<typeof getTextStyle>;
+            stroke: number;
+
+            tickWidth: number;
+            tickHeight: number;
+            tickTextSeparation: number;
+            tickColor: number;
+
+            animate: () => void;
+
+            hideMousePosition?: ReturnType<typeof HGC.utils.showMousePosition>;
+
+            gBoundTicks?: PIXI.Graphics;
+            leftBoundTick?: TickText;
+            rightBoundTick?: TickText;
+
+            is2d?: boolean;
+            texts?: TickText[];
 
             constructor() {
                 super(context, options);
                 const { dataConfig, animate, chromInfoPath, isShowGlobalMousePosition } = context;
 
                 this.searchField = null;
-                this.chromInfo = null;
                 this.dataConfig = dataConfig;
 
                 this.allTexts = [];
@@ -147,8 +190,6 @@ const AxisTrack = definePluginTrack(
                 // ]
 
                 const assembly = this.options.assembly;
-                type ChrPosInfo = { chr: string; pos: number };
-
                 const chrPositions: { [k: string]: ChrPosInfo } = {};
                 const chromLengths: { [k: string]: number } = { ...GET_CHROM_SIZES(assembly).size };
                 const cumPositions: ChrPosInfo[] = [];
@@ -177,8 +218,8 @@ const AxisTrack = definePluginTrack(
                 if (!this.gBoundTicks) {
                     this.gBoundTicks = new HGC.libraries.PIXI.Graphics();
 
-                    this.leftBoundTick = new HGC.libraries.PIXI.Text('', this.pixiTextConfig);
-                    this.rightBoundTick = new HGC.libraries.PIXI.Text('', this.pixiTextConfig);
+                    this.leftBoundTick = createTickText('', this.pixiTextConfig);
+                    this.rightBoundTick = createTickText('', this.pixiTextConfig);
 
                     this.gBoundTicks.addChild(this.leftBoundTick);
                     this.gBoundTicks.addChild(this.rightBoundTick);
@@ -194,7 +235,7 @@ const AxisTrack = definePluginTrack(
 
                 if (this.gBoundTicks) {
                     this.pMain.removeChild(this.gBoundTicks);
-                    this.gBoundTicks = null;
+                    this.gBoundTicks = undefined;
                 }
 
                 if (!this.pTicks) {
@@ -213,14 +254,12 @@ const AxisTrack = definePluginTrack(
                     if (!this.tickTexts[chromName]) this.tickTexts[chromName] = [];
 
                     // Give each PIXI text object a random hash so that some get hidden when there's overlaps
-                    const text = Object.assign(new HGC.libraries.PIXI.Text(chromName, this.pixiTextConfig), {
-                        hashValue: Math.random()
-                    });
+                    const text = createTickText(chromName, this.pixiTextConfig);
 
-                    this.pTicks.addChild(text);
-                    this.pTicks.addChild(this.gTicks[chromName]);
+                    this.pTicks?.addChild(text);
+                    this.pTicks?.addChild(this.gTicks[chromName]);
 
-                    this.texts.push(text);
+                    this.texts?.push(text);
                 });
             }
 
@@ -233,11 +272,11 @@ const AxisTrack = definePluginTrack(
                 this.options = options;
 
                 this.pixiTextConfig.fontSize = +this.options.fontSize
-                    ? `${+this.options.fontSize}px`
+                    ? (`${+this.options.fontSize}px` as const)
                     : this.pixiTextConfig.fontSize;
                 this.pixiTextConfig.fill = this.options.color || this.pixiTextConfig.fill;
                 this.pixiTextConfig.stroke = this.options.stroke || this.pixiTextConfig.stroke;
-                this.stroke = colorToHex(this.pixiTextConfig.stroke);
+                this.stroke = colorToHex(this.pixiTextConfig.stroke as string);
 
                 this.tickColor = this.options.tickColor ? colorToHex(this.options.tickColor) : TICK_COLOR;
 
@@ -288,12 +327,9 @@ const AxisTrack = definePluginTrack(
                 return f(pos);
             }
 
-            /**
-             * Show two labels at the end of both left and right sides
-             * @param x1
-             * @param x2
-             */
-            drawBoundsTicks(x1: any, x2: any) {
+            /** Show two labels at the end of both left and right sides */
+            drawBoundsTicks(x1: ReturnType<typeof absToChr>, x2: ReturnType<typeof absToChr>) {
+                if (!this.gBoundTicks || !this.leftBoundTick || !this.rightBoundTick) return;
                 const graphics = this.gBoundTicks;
                 graphics.clear();
                 graphics.lineStyle(1, 0);
@@ -401,14 +437,14 @@ const AxisTrack = definePluginTrack(
 
                 // these two loops reuse existing text objects so that we're not constantly recreating texts that already exist
                 while (tickTexts.length < ticks.length) {
-                    const newText = new HGC.libraries.PIXI.Text('', this.pixiTextConfig);
+                    const newText = createTickText('', this.pixiTextConfig);
                     tickTexts.push(newText);
                     this.gTicks[cumPos.chr].addChild(newText);
                 }
 
                 while (tickTexts.length > ticks.length) {
                     const text = tickTexts.pop();
-                    this.gTicks[cumPos.chr].removeChild(text);
+                    this.gTicks[cumPos.chr].removeChild(text!);
                 }
 
                 let i = 0;
@@ -429,7 +465,7 @@ const AxisTrack = definePluginTrack(
                     // show the tick text labels
                     if (this.options.layout === 'circular') {
                         const rope = this.addCurvedText(tickTexts[i], x + xPadding);
-                        this.pTicksCircular.addChild(rope);
+                        rope && this.pTicksCircular.addChild(rope);
                     } else {
                         tickTexts[i].x = x + xPadding;
                         tickTexts[i].y = this.dimensions[1] - yPadding;
@@ -605,7 +641,7 @@ const AxisTrack = definePluginTrack(
                         chrText.visible = numTicksDrawn <= 0;
                     } else {
                         if (numTicksDrawn > 0) {
-                            this.pTicksCircular.removeChild(rope);
+                            rope && this.pTicksCircular.removeChild(rope);
                         }
                     }
 
@@ -670,10 +706,11 @@ const AxisTrack = definePluginTrack(
                 this.draw();
             }
 
-            exportSVG() {
+            exportSVG(): [HTMLElement, HTMLElement] {
                 let track = null;
                 let base = null;
 
+                // @ts-expect-error always true because it's defined on HGC.tracks.PixiTrack
                 if (super.exportSVG) {
                     [base, track] = super.exportSVG();
                 } else {
@@ -688,16 +725,18 @@ const AxisTrack = definePluginTrack(
                 output.setAttribute('transform', `translate(${this.position[0]},${this.position[1]})`);
 
                 this.allTexts
-                    .filter((text: any) => text.text.visible)
-                    .forEach((text: any) => {
+                    .filter(text => text.text.visible)
+                    .forEach(text => {
                         const g = pixiTextToSvg(text.text);
                         output.appendChild(g);
                     });
 
-                Object.values(this.tickTexts).forEach((texts: any) => {
+                Object.values(this.tickTexts).forEach(texts => {
                     texts
-                        .filter((x: any) => x.visible)
-                        .forEach((text: any) => {
+                        .filter(x => x.visible)
+                        .forEach(text => {
+                            if (!text.tickLine) return;
+
                             let g = pixiTextToSvg(text);
                             output.appendChild(g);
                             g = svgLine(
@@ -713,10 +752,10 @@ const AxisTrack = definePluginTrack(
 
                             const line = document.createElement('line');
 
-                            line.setAttribute('x1', text.tickLine[0]);
-                            line.setAttribute('y1', text.tickLine[1]);
-                            line.setAttribute('x2', text.tickLine[2]);
-                            line.setAttribute('y2', text.tickLine[3]);
+                            line.setAttribute('x1', String(text.tickLine[0]));
+                            line.setAttribute('y1', String(text.tickLine[1]));
+                            line.setAttribute('x2', String(text.tickLine[2]));
+                            line.setAttribute('y2', String(text.tickLine[3]));
                             line.setAttribute('style', 'stroke: grey');
 
                             output.appendChild(g);

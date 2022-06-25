@@ -17,7 +17,11 @@ type PluginTrack<Options extends HiGlass.TrackOptions> = {
 
 export function definePluginTrack<Options extends HiGlass.TrackOptions>(
     config: TrackConfig<Options>,
-    factory: (HGC: HiGlass.HGC, context: HiGlass.Context<Options>, options: Options) => HiGlass.Track
+    factory: (
+        HGC: HiGlass.HGC,
+        context: HiGlass.Context<Options>,
+        options: Options & Partial<Record<string, any>>
+    ) => HiGlass.Track
 ) {
     function ctr(HGC: HiGlass.HGC, context: HiGlass.Context<Options>, options: Options) {
         if (!new.target) {
