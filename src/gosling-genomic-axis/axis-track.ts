@@ -1,3 +1,6 @@
+// This plugin track is based on higlass/HorizontalChromosomeLabels
+// https://github.com/higlass/higlass/blob/83dc4fddb33582ef3c26b608c04a81e8f33c7f5f/app/scripts/HorizontalChromosomeLabels.js
+
 import type * as PIXI from 'pixi.js';
 import RBush from 'rbush';
 import { scaleLinear } from 'd3-scale';
