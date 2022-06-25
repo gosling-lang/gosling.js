@@ -135,7 +135,7 @@ export function drawLinearYAxis(
  * Draw linear scale Y axis
  */
 export function drawCircularYAxis(
-    HGC: typeof import('@higlass/available-for-plugins'),
+    HGC: import('@higlass/types').HGC,
     trackInfo: any,
     tile: any,
     gos: GoslingTrackModel,

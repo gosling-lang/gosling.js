@@ -3,11 +3,14 @@ declare module 'monaco-editor/esm/vs/editor/edcore.main' {
 }
 
 // Partial types from https://github.com/higlass/higlass/blob/develop/app/scripts/configs/available-for-plugins.js
-declare module '@higlass/available-for-plugins' {
-    export * as libraries from '@higlass/libraries';
-    export * as services from '@higlass/services';
-    export * as tracks from '@higlass/tracks';
-    export * as utils from '@higlass/utils';
+declare module '@higlass/types' {
+    export type HGC = {
+        libraries: typeof import('@higlass/libraries');
+        services: typeof import('@higlass/services');
+        tracks: typeof import('@higlass/tracks');
+        utils: typeof import('@higlass/utils');
+    };
+    export type { Track, Context, TrackOptions } from '@higlass/tracks';
 }
 
 declare module '@higlass/libraries' {
@@ -94,8 +97,136 @@ declare module '@higlass/services' {
 // TODO(06-21-22)
 declare module '@higlass/tracks' {
     type Track = any;
-    export declare const BarTrack: Track;
     export declare const PixiTrack: Track;
+    export declare const BarTrack: Track;
+
+    import type { ScaleContinuousNumeric } from 'd3-scale';
+    import type * as PIXI from 'pixi.js';
+
+    type Scale = ScaleContinuousNumeric<number, number>;
+
+    type Handler = (data: any) => void;
+
+    type Subscription = { event: string; handler: Handler };
+
+    type PubSub = {
+        publish(msg: string, data: any): void;
+        subscribe(msg: string, handler: Handler): Subscription;
+        unsubscribe(msg: string): void;
+    };
+
+    type TrackOptions = Record<string, unknown>;
+
+    export type Context<Options> = {
+        id: string;
+        viewUid: string;
+        pubSub: PubSub;
+        scene: PIXI.Graphics;
+        dataConfig: DataConfig;
+        dataFetcher: DataFetcher;
+        getLockGroupExtrema(): [min: number, max: number] | null;
+        handleTilesetInfoReceived(tilesetInfo: TilesetInfo): void;
+        animate(): void;
+        svgElement: HTMLElement;
+        isValueScaleLocked(): boolean;
+        onValueScaleChanged(): void;
+        onTrackOptionsChanged(newOptions: Options): void;
+        // TODO: not sure what the props are here
+        onMouseMoveZoom(props: unknown): void;
+        chromInfoPath: string;
+        isShowGlobalMousePosition(): boolean;
+        getTheme(): string;
+    };
+
+    export declare class _Track {
+        /* Properites */
+        id: string;
+        _xScale: Scale;
+        _yScale: Scale;
+        _refXScale: Scale;
+        _refYScale: Scale;
+        position: [number, number];
+        dimensions: [number, number];
+        options: TrackOptions;
+        pubSubs: Subscription[];
+        /* Constructor */
+        constructor(props: { id: string; pubSub: PubSub; getTheme?: () => string });
+        /* Methods */
+        isWithin(x: number, y: number): boolean;
+        getProp<Prop extends keyof this>(prop: Prop): this[Prop];
+        getData(): void;
+        getDimensions(): this['dimensions'];
+        getDimensions(newDimensions: [number, number]): void;
+        refXScale(): this['_refXScale'];
+        refXScale(scale: Scale): void;
+        refYScale(): this['_refYScale'];
+        refYScale(scale: Scale): void;
+        xScale(): this['_xScale'];
+        xScale(scale: Scale): void;
+        yScale(): this['_yScale'];
+        yScale(scale: Scale): void;
+        zoomed(xScale: Scale, yScale: Scale): void;
+        draw(): void;
+        getPosition(): this['position'];
+        setPosition(newPosition: [number, number]): void;
+        /**
+         * A blank handler for MouseMove / Zoom events. Should be overriden
+         * by individual tracks to provide
+         */
+        defaultMouseMoveHandler(evt: MouseEvent): void;
+        remove(): void;
+        rerender(options?: TrackOptions, force?: boolean): void;
+        /**
+         * Whether this track should respond to events at this mouse position.
+         *
+         * The difference to `isWithin()` is that it can be overwritten if a track is inactive for example.
+         */
+        respondsToPosition(x: number, y: number): boolean;
+        zoomedY<T extends Track>(trackY: T, kMultiplier: number): void;
+        movedY(dY: number): void;
+    }
+
+    type DataConfig = Record<string, any>;
+    type DataFetcher = Record<string, any>;
+    type TilesetInfo = Record<string, any>;
+
+    export declare class _PixiTrack<Options extends TrackOptions> extends _Track {
+        /* Properties */
+        delayDrawing: boolean;
+        scene: PIXI.Graphics;
+        pBase: PIXI.Graphics;
+        pMasked: PIXI.Graphics;
+        pMask: PIXI.Graphics;
+        pMain: PIXI.Graphics;
+        pBorder: PIXI.Graphics;
+        pBackground: PIXI.Graphics;
+        pForeground: PIXI.Graphics;
+        pLabel: PIXI.Graphics;
+        pMobile: PIXI.Graphics;
+        pAxis: PIXI.Graphics;
+        pMouseOver: PIXI.Graphics;
+        options: Options;
+        labelTextFontFamily: string;
+        labelTextFontSize: number;
+        labelXOffset: number;
+        labelText: PIXI.Text;
+        errorText: PIXI.Text;
+        prevOptions: string;
+        flipText?: boolean; // Property never assigned https://github.com/higlass/higlass/blob/develop/app/scripts/PixiTrack.js
+        /* Constructor */
+        constructor(context: Context<Options>, options: Options);
+        /* Methods */
+        setMask(position: [number, number], dimensions: [number, number]): void;
+        getForeground(): void;
+        drawBorder(): void;
+        drawError(): void;
+        drawBackground(): void;
+        getLabelColor(): string;
+        getName(): string;
+        drawLabel(): void;
+        rerender(options: Options, force?: boolean): void;
+        exportSVG(): [HTMLElement, HTMLElement];
+    }
 }
 
 declare module '@higlass/utils' {
@@ -105,7 +236,13 @@ declare module '@higlass/utils' {
         chromLengths: Record<Name, number>;
     };
 
-    export declare function showMousePosition(context: Track, is2d?: boolean, isGlobal?: boolean): void;
+    /**
+     * @param context Class context, i.e., `this`.
+     * @param is2d If `true` both dimensions of the mouse location should be shown. E.g., on a central track.
+     * @param isGlobal  If `true` local and global events will trigger the mouse position drawing.
+     * @return  {Function}  Method to remove graphics showing the mouse location.
+     */
+    export declare function showMousePosition<T>(context: T, is2d?: boolean, isGlobal?: boolean): () => void;
     export declare function absToChr(
         absPosition: number,
         chrInfo: ChromInfo<string>
