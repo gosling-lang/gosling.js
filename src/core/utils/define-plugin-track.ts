@@ -1,34 +1,42 @@
 import type * as HiGlass from '@higlass/types';
 
-type TrackConfig<Options extends HiGlass.TrackOptions> = {
-    type: string;
-    datatype: string[];
-    local: boolean;
-    orientation: string;
-    thumbnail: Element;
-    availableOptions: string[]; // (keyof Options)[]
-    defaultOptions: Options;
-};
+type AsConstructor<T> = T extends (...args: infer Args) => infer Ret ? { new (...args: Args): Ret } : never;
 
-type PluginTrack<Options extends HiGlass.TrackOptions> = {
-    new (HGC: HiGlass.HGC, context: HiGlass.Context<Options>, options: Options): HiGlass.Track;
-    config: TrackConfig<Options>;
+type PluginTrackFactory<Options extends HiGlass.TrackOptions> = (
+    HGC: HiGlass.HGC,
+    context: HiGlass.Context<Options>,
+    options: Options
+) => HiGlass.Track;
+
+type PluginTrack<Options extends HiGlass.TrackOptions> = AsConstructor<PluginTrackFactory<Options>> & {
+    config: HiGlass.TrackConfig<Options>;
 };
 
 export function definePluginTrack<Options extends HiGlass.TrackOptions>(
-    config: TrackConfig<Options>,
-    factory: (
-        HGC: HiGlass.HGC,
-        context: HiGlass.Context<Options>,
-        options: Options & Partial<Record<string, any>>
-    ) => HiGlass.Track
+    config: Omit<HiGlass.TrackConfig<Options>, 'availableOptions'>,
+    factory: PluginTrackFactory<Options>
 ) {
-    function ctr(HGC: HiGlass.HGC, context: HiGlass.Context<Options>, options: Options) {
+    function Track(...args: Parameters<typeof factory>) {
         if (!new.target) {
             throw new Error('Uncaught TypeError: Class constructor cannot be invoked without "new"');
         }
-        return factory(HGC, context, options);
+        return factory(...args);
     }
-    ctr.config = config;
-    return ctr as unknown as PluginTrack<Options>;
+    Track.config = {
+        ...config,
+        availableOptions: Object.keys(config.defaultOptions ?? {})
+    };
+    return Track as unknown as PluginTrack<Options> & {
+        config: {
+            // code above ensures this field is always defined when using the plugin.
+            availableOptions: (keyof Options)[];
+        };
+    };
 }
+
+definePluginTrack(
+    {
+        type: 'trevor'
+    },
+    {} as any
+);

@@ -1,7 +1,6 @@
 declare module 'monaco-editor/esm/vs/editor/edcore.main' {
     export * from 'monaco-editor';
 }
-
 // Partial types from https://github.com/higlass/higlass/blob/develop/app/scripts/configs/available-for-plugins.js
 declare module '@higlass/types' {
     export type HGC = {
@@ -10,7 +9,7 @@ declare module '@higlass/types' {
         tracks: typeof import('@higlass/tracks');
         utils: typeof import('@higlass/utils');
     };
-    export type { Track, Context, TrackOptions } from '@higlass/tracks';
+    export type { Context, Track, TrackOptions, TrackConfig } from '@higlass/tracks';
 }
 
 declare module '@higlass/libraries' {
@@ -30,14 +29,14 @@ declare module '@higlass/libraries' {
     export * as d3Transition from 'd3-transition';
     export * as d3Zoom from 'd3-zoom';
     // minimal typing of https://github.com/taskcluster/slugid/blob/main/slugid.js
-    export declare const slugid: {
+    export const slugid: {
         nice(): string;
     };
 }
 
 declare module '@higlass/services' {
     import type { ScaleContinuousNumeric } from 'd3-scale';
-    type TilesetInfo = {
+    export type TilesetInfo = {
         min_pos: number[];
         max_pos: number[];
         max_zoom: number;
@@ -60,7 +59,7 @@ declare module '@higlass/services' {
     };
     type ColorRGBA = [r: number, g: number, b: number, a: number];
 
-    export declare const tileProxy: {
+    export const tileProxy: {
         calculateResolution(tilesetInfo: TilesetInfo, zoomLevel: number): number;
         calculateTileAndPosInTile(
             tilesetInfo: TilesetInfo,
@@ -85,7 +84,12 @@ declare module '@higlass/services' {
             pixelsPerTile?: number
         ): number[];
         calculateTileWidth(tilesetInfo: TilesetInfo, zoomLevel: number, binsPerTile: number): number;
-        calculateZoomLevel(scale: Scale, minX: number, maxX: number, binsPerTile?: number): number;
+        calculateZoomLevel(
+            scale: ScaleContinuousNumeric<number, number>,
+            minX: number,
+            maxX: number,
+            binsPerTile?: number
+        ): number;
         calculateZoomLevelFromResolutions(resolutions: number[], scale: ScaleContinuousNumeric<number, number>): number;
         // fetchTilesDebounced();
         // json();
@@ -96,10 +100,6 @@ declare module '@higlass/services' {
 
 // TODO(06-21-22)
 declare module '@higlass/tracks' {
-    type Track = any;
-    export declare const PixiTrack: Track;
-    export declare const BarTrack: Track;
-
     import type { ScaleContinuousNumeric } from 'd3-scale';
     import type * as PIXI from 'pixi.js';
 
@@ -116,6 +116,10 @@ declare module '@higlass/tracks' {
     };
 
     type TrackOptions = Record<string, unknown>;
+
+    type Track = any;
+    export const PixiTrack: Track;
+    export const BarTrack: Track;
 
     export type Context<Options> = {
         id: string;
@@ -138,7 +142,7 @@ declare module '@higlass/tracks' {
         getTheme(): string;
     };
 
-    export declare class _Track {
+    export class _Track {
         /* Properites */
         id: string;
         _xScale: Scale;
@@ -190,7 +194,7 @@ declare module '@higlass/tracks' {
     type DataFetcher = Record<string, any>;
     type TilesetInfo = Record<string, any>;
 
-    export declare class _PixiTrack<Options extends TrackOptions> extends _Track {
+    export class _PixiTrack<Options extends TrackOptions> extends _Track {
         /* Properties */
         delayDrawing: boolean;
         scene: PIXI.Graphics;
@@ -227,10 +231,64 @@ declare module '@higlass/tracks' {
         rerender(options: Options, force?: boolean): void;
         exportSVG(): [HTMLElement, HTMLElement];
     }
+
+    /* eslint-disable-next-line @typescript-eslint/ban-types */
+    type LiteralUnion<T, U = string> = T | (U & {});
+
+    type Orientation = '2d' | '1d-vertical' | '1d-horizontal' | 'whole' | 'any';
+
+    type DataType =
+        | 'map-tiles'
+        | 'axis'
+        | 'x-coord'
+        | 'y-coord'
+        | 'xy-coord'
+        | 'matrix'
+        | 'vector'
+        | 'multivec'
+        | 'bed-value'
+        | 'stacked-interval'
+        | '1d-projection'
+        | '2d-projection'
+        | 'gene-annotation'
+        | 'arrowhead-domains'
+        | '2d-rectangle-domains'
+        | 'nothing'
+        | '2d-annotations'
+        | 'bedpe'
+        | 'any'
+        | 'chromsizes'
+        | '1d-tiles'
+        | 'image-tiles'
+        | 'bedlike';
+
+    type OptionsInfo<Options> = {
+        [Key in keyof Options]?: {
+            name: string;
+            inlineOptions: Record<string, { name: string; value: Options[Key] }>;
+        };
+    };
+
+    export type TrackConfig<Options extends TrackOptions> = {
+        type: string;
+        defaultOptions?: Options;
+        availableOptions?: (keyof Options)[];
+        name?: string;
+        datatype?: LiteralUnion<DataType>[];
+        aliases?: string[];
+        local?: boolean;
+        orientation?: Orientation;
+        thumbnail?: Element;
+        chromInfoPath?: string;
+        optionsInfo?: OptionsInfo<Options>;
+    };
 }
 
 declare module '@higlass/utils' {
-    type ChromInfo<Name> = {
+    import type { ScaleContinuousNumeric } from 'd3-scale';
+    import type { TilesetInfo } from '@higlass/services';
+
+    type ChromInfo<Name extends string> = {
         cumPositions: { pos: number; chr: string }[];
         chrPositions: Record<Name, { pos: number }>;
         chromLengths: Record<Name, number>;
@@ -242,15 +300,15 @@ declare module '@higlass/utils' {
      * @param isGlobal  If `true` local and global events will trigger the mouse position drawing.
      * @return  {Function}  Method to remove graphics showing the mouse location.
      */
-    export declare function showMousePosition<T>(context: T, is2d?: boolean, isGlobal?: boolean): () => void;
-    export declare function absToChr(
+    export function showMousePosition<T>(context: T, is2d?: boolean, isGlobal?: boolean): () => void;
+    export function absToChr(
         absPosition: number,
         chrInfo: ChromInfo<string>
     ): [chr: string, chrPositon: number, offset: number, insertPoint: number];
-    export declare function chrToAbs<Name>(chrom: Name, chromPos: number, chromInfo: ChromInfo<Name>): number;
-    export declare function colorToHex(colorValue: string): number;
-    export declare function pixiTextToSvg(text: import('pixi.js').Text): HTMLElement;
-    export declare function svgLine(
+    export function chrToAbs<Name>(chrom: Name, chromPos: number, chromInfo: ChromInfo<Name>): number;
+    export function colorToHex(colorValue: string): number;
+    export function pixiTextToSvg(text: import('pixi.js').Text): HTMLElement;
+    export function svgLine(
         x1: number,
         y1: number,
         x2: number,
@@ -258,10 +316,13 @@ declare module '@higlass/utils' {
         strokeWidth: number,
         strokeColor: number
     ): HTMLElement;
-    export declare const DenseDataExtrema1D: {
-        new (arr: ArrayLike<number>): DenseDataExtrema1D;
-    };
-    export declare const trackUtils: {
-        calculate1DVisibleTiles(tilesetInfo: TilesetInfo, scale: Scale): [zoomLevel: number, x: number][];
+    export class DenseDataExtrema1D {
+        constructor(arr: ArrayLike<number>);
+    }
+    export const trackUtils: {
+        calculate1DVisibleTiles(
+            tilesetInfo: TilesetInfo,
+            scale: ScaleContinuousNumeric<number, number>
+        ): [zoomLevel: number, x: number][];
     };
 }
