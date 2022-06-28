@@ -99,6 +99,7 @@ declare module '@higlass/services' {
 }
 
 declare module '@higlass/tracks' {
+    // TODO(2022-06-28): type out `BarTrack`
     type Track = any;
     export const BarTrack: Track;
 
