@@ -100,7 +100,7 @@ declare module '@higlass/services' {
 
 declare module '@higlass/tracks' {
     type Track = any;
-    export declare const BarTrack: Track;
+    export const BarTrack: Track;
 
     import type { ScaleContinuousNumeric } from 'd3-scale';
     import type * as PIXI from 'pixi.js';
@@ -195,7 +195,7 @@ declare module '@higlass/tracks' {
     type DataFetcher = Record<string, any>;
     type TilesetInfo = Record<string, any>;
 
-    export declare class PixiTrack<Options extends TrackOptions> extends _Track {
+    export class PixiTrack<Options extends TrackOptions> extends _Track {
         /* Properties */
         delayDrawing: boolean;
         scene: PIXI.Graphics;
