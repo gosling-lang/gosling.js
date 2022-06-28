@@ -9,6 +9,8 @@ import { GET_CHROM_SIZES } from '../core/utils/assembly';
 import { cartesianToPolar } from '../core/utils/polar';
 import { getTextStyle } from '../core/utils/text-style';
 import { definePluginTrack } from '../core/utils/define-plugin-track';
+
+import type { TextStyle } from '../core/utils/text-style';
 import type { PluginTrackFactory, TrackConfig } from '../core/utils/define-plugin-track';
 
 const TICK_WIDTH = 200;
@@ -32,7 +34,7 @@ type AxisTrackOptions = {
     tickPositions: 'even' | 'ends';
     fontSize: number;
     fontFamily: string; // 'Arial',
-    fontWeight: 'normal' | 'bold' | 'light';
+    fontWeight: NonNullable<TextStyle['fontWeight']>;
     color: string;
     stroke: string;
     backgroundColor: string;
@@ -82,7 +84,7 @@ const config: TrackConfig<AxisTrackOptions> = {
         tickPositions: 'even',
         fontSize: 12,
         fontFamily: 'sans-serif', // 'Arial',
-        fontWeight: 'normal' as 'normal' | 'bold' | 'light',
+        fontWeight: 'normal',
         color: '#808080',
         stroke: '#ffffff',
         backgroundColor: 'transparent',
