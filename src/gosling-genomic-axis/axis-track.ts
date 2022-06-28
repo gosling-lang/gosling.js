@@ -10,20 +10,45 @@ import { cartesianToPolar } from '../core/utils/polar';
 import { getTextStyle } from '../core/utils/text-style';
 import { definePluginTrack } from '../core/utils/define-plugin-track';
 import type { PluginTrackFactory, TrackConfig } from '../core/utils/define-plugin-track';
+
 const TICK_WIDTH = 200;
 const TICK_HEIGHT = 6;
 const TICK_TEXT_SEPARATION = 2;
 const TICK_COLOR = 0x777777;
 
+type AxisTrackOptions = {
+    innerRadius: number;
+    outerRadius: number;
+    startAngle: number;
+    endAngle: number;
+    width: number;
+    height: number;
+    layout: 'linear' | 'circular';
+    labelPosition: string;
+    labelColor: string;
+    labelTextOpacity: number;
+    trackBorderWidth: number;
+    trackBorderColor: string;
+    tickPositions: 'even' | 'ends';
+    fontSize: number;
+    fontFamily: string; // 'Arial',
+    fontWeight: 'normal' | 'bold' | 'light';
+    color: string;
+    stroke: string;
+    backgroundColor: string;
+    showMousePosition: boolean;
+    tickColor: number;
+    tickFormat?: string;
+    assembly?: string;
+    reverseOrientation?: boolean;
+};
 type TickLabelInfo = {
     importance: number;
     text: PIXI.Text;
     rope?: PIXI.SimpleRope;
 };
-
 type TickLine = [number, number, number, number];
 type TickText = PIXI.Text & { hashValue: number; tickLine?: TickLine };
-
 type ChrPosInfo = { chr: string; pos: number };
 type ChromInfo = {
     chrPositions: Record<string, ChrPosInfo>;
@@ -35,42 +60,35 @@ type ChromInfo = {
 const icon =
     '<svg version="1.0" xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" viewBox="0 0 5640 5420" preserveAspectRatio="xMidYMid meet"> <g id="layer101" fill="#000000" stroke="none"> <path d="M0 2710 l0 -2710 2820 0 2820 0 0 2710 0 2710 -2820 0 -2820 0 0 -2710z"/> </g> <g id="layer102" fill="#750075" stroke="none"> <path d="M200 4480 l0 -740 630 0 630 0 0 740 0 740 -630 0 -630 0 0 -740z"/> <path d="M1660 4420 l0 -800 570 0 570 0 0 800 0 800 -570 0 -570 0 0 -800z"/> <path d="M3000 3450 l0 -1770 570 0 570 0 0 1770 0 1770 -570 0 -570 0 0 -1770z"/> <path d="M4340 2710 l0 -2510 560 0 560 0 0 2510 0 2510 -560 0 -560 0 0 -2510z"/> <path d="M200 1870 l0 -1670 630 0 630 0 0 1670 0 1670 -630 0 -630 0 0 -1670z"/> <path d="M1660 1810 l0 -1610 570 0 570 0 0 1610 0 1610 -570 0 -570 0 0 -1610z"/> <path d="M3000 840 l0 -640 570 0 570 0 0 640 0 640 -570 0 -570 0 0 -640z"/> </g> <g id="layer103" fill="#ffff04" stroke="none"> <path d="M200 4480 l0 -740 630 0 630 0 0 740 0 740 -630 0 -630 0 0 -740z"/> <path d="M1660 4420 l0 -800 570 0 570 0 0 800 0 800 -570 0 -570 0 0 -800z"/> <path d="M3000 3450 l0 -1770 570 0 570 0 0 1770 0 1770 -570 0 -570 0 0 -1770z"/> </g> </svg>';
 
-const defaultOptions = {
-    innerRadius: 340,
-    outerRadius: 310,
-    startAngle: 0,
-    endAngle: 360,
-    width: 700,
-    height: 700,
-    layout: 'linear',
-    labelPosition: 'none',
-    labelColor: 'black',
-    labelTextOpacity: 0.4,
-    trackBorderWidth: 0,
-    trackBorderColor: 'black',
-    tickPositions: ['even', 'ends'][0],
-    fontSize: 12,
-    fontFamily: 'sans-serif', //'Arial',
-    fontWeight: 'normal' as 'normal' | 'bold' | 'light',
-    color: '#808080',
-    stroke: '#ffffff',
-    backgroundColor: 'transparent',
-    showMousePosition: false,
-    tickColor: TICK_COLOR,
-    tickFormat: '',
-    assembly: 'hg38',
-    reverseOrientation: false
-};
-
-type AxisTrackOptions = typeof defaultOptions;
-
 const config: TrackConfig<AxisTrackOptions> = {
     type: 'axis-track',
     datatype: ['multivec', 'epilogos'],
     local: false,
     orientation: '1d-horizontal',
     thumbnail: new DOMParser().parseFromString(icon, 'text/xml').documentElement,
-    defaultOptions: defaultOptions
+    defaultOptions: {
+        innerRadius: 340,
+        outerRadius: 310,
+        startAngle: 0,
+        endAngle: 360,
+        width: 700,
+        height: 700,
+        layout: 'linear',
+        labelPosition: 'none',
+        labelColor: 'black',
+        labelTextOpacity: 0.4,
+        trackBorderWidth: 0,
+        trackBorderColor: 'black',
+        tickPositions: 'even',
+        fontSize: 12,
+        fontFamily: 'sans-serif', // 'Arial',
+        fontWeight: 'normal' as 'normal' | 'bold' | 'light',
+        color: '#808080',
+        stroke: '#ffffff',
+        backgroundColor: 'transparent',
+        showMousePosition: false,
+        tickColor: TICK_COLOR
+    }
 };
 
 const factory: PluginTrackFactory<AxisTrackOptions> = (HGC, context, options) => {
