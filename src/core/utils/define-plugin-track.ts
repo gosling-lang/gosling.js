@@ -33,10 +33,3 @@ export function definePluginTrack<Options extends HiGlass.TrackOptions>(
         };
     };
 }
-
-definePluginTrack(
-    {
-        type: 'trevor'
-    },
-    {} as any
-);
