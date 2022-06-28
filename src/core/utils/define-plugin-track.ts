@@ -1,12 +1,13 @@
 import type * as HiGlass from '@higlass/types';
+export type { TrackConfig } from '@higlass/types';
 
-type AsConstructor<T> = T extends (...args: infer Args) => infer Ret ? { new (...args: Args): Ret } : never;
-
-type PluginTrackFactory<Options extends HiGlass.TrackOptions> = (
+export type PluginTrackFactory<Options extends HiGlass.TrackOptions> = (
     HGC: HiGlass.HGC,
     context: HiGlass.Context<Options>,
     options: Options
 ) => HiGlass.Track;
+
+type AsConstructor<T> = T extends (...args: infer Args) => infer Ret ? { new (...args: Args): Ret } : never;
 
 type PluginTrack<Options extends HiGlass.TrackOptions> = AsConstructor<PluginTrackFactory<Options>> & {
     config: HiGlass.TrackConfig<Options>;

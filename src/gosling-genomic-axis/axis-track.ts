@@ -8,35 +8,134 @@ import { format, precisionPrefix, formatPrefix } from 'd3-format';
 import { GET_CHROM_SIZES } from '../core/utils/assembly';
 import { cartesianToPolar } from '../core/utils/polar';
 import { getTextStyle } from '../core/utils/text-style';
+import { definePluginTrack } from '../core/utils/define-plugin-track';
+
+import type { TextStyle } from '../core/utils/text-style';
+import type { PluginTrackFactory, TrackConfig } from '../core/utils/define-plugin-track';
 
 const TICK_WIDTH = 200;
 const TICK_HEIGHT = 6;
 const TICK_TEXT_SEPARATION = 2;
 const TICK_COLOR = 0x777777;
 
+type AxisTrackOptions = {
+    innerRadius: number;
+    outerRadius: number;
+    startAngle: number;
+    endAngle: number;
+    width: number;
+    height: number;
+    layout: 'linear' | 'circular';
+    labelPosition: string;
+    labelColor: string;
+    labelTextOpacity: number;
+    trackBorderWidth: number;
+    trackBorderColor: string;
+    tickPositions: 'even' | 'ends';
+    fontSize: number;
+    fontFamily: string; // 'Arial',
+    fontWeight: NonNullable<TextStyle['fontWeight']>;
+    color: string;
+    stroke: string;
+    backgroundColor: string;
+    showMousePosition: boolean;
+    tickColor: number;
+    tickFormat?: string;
+    assembly?: string;
+    reverseOrientation?: boolean;
+};
 type TickLabelInfo = {
     importance: number;
     text: PIXI.Text;
     rope?: PIXI.SimpleRope;
 };
+type TickLine = [number, number, number, number];
+type TickText = PIXI.Text & { hashValue: number; tickLine?: TickLine };
+type ChrPosInfo = { chr: string; pos: number };
+type ChromInfo = {
+    chrPositions: Record<string, ChrPosInfo>;
+    chromLengths: Record<string, number>;
+    cumPositions: ChrPosInfo[];
+};
 
-function AxisTrack(HGC: import('@higlass/types').HGC, ...args: any[]): any {
-    if (!new.target) {
-        throw new Error('Uncaught TypeError: Class constructor cannot be invoked without "new"');
+// TODO: Change the icon
+const icon =
+    '<svg version="1.0" xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" viewBox="0 0 5640 5420" preserveAspectRatio="xMidYMid meet"> <g id="layer101" fill="#000000" stroke="none"> <path d="M0 2710 l0 -2710 2820 0 2820 0 0 2710 0 2710 -2820 0 -2820 0 0 -2710z"/> </g> <g id="layer102" fill="#750075" stroke="none"> <path d="M200 4480 l0 -740 630 0 630 0 0 740 0 740 -630 0 -630 0 0 -740z"/> <path d="M1660 4420 l0 -800 570 0 570 0 0 800 0 800 -570 0 -570 0 0 -800z"/> <path d="M3000 3450 l0 -1770 570 0 570 0 0 1770 0 1770 -570 0 -570 0 0 -1770z"/> <path d="M4340 2710 l0 -2510 560 0 560 0 0 2510 0 2510 -560 0 -560 0 0 -2510z"/> <path d="M200 1870 l0 -1670 630 0 630 0 0 1670 0 1670 -630 0 -630 0 0 -1670z"/> <path d="M1660 1810 l0 -1610 570 0 570 0 0 1610 0 1610 -570 0 -570 0 0 -1610z"/> <path d="M3000 840 l0 -640 570 0 570 0 0 640 0 640 -570 0 -570 0 0 -640z"/> </g> <g id="layer103" fill="#ffff04" stroke="none"> <path d="M200 4480 l0 -740 630 0 630 0 0 740 0 740 -630 0 -630 0 0 -740z"/> <path d="M1660 4420 l0 -800 570 0 570 0 0 800 0 800 -570 0 -570 0 0 -800z"/> <path d="M3000 3450 l0 -1770 570 0 570 0 0 1770 0 1770 -570 0 -570 0 0 -1770z"/> </g> </svg>';
+
+const config: TrackConfig<AxisTrackOptions> = {
+    type: 'axis-track',
+    datatype: ['multivec', 'epilogos'],
+    local: false,
+    orientation: '1d-horizontal',
+    thumbnail: new DOMParser().parseFromString(icon, 'text/xml').documentElement,
+    defaultOptions: {
+        innerRadius: 340,
+        outerRadius: 310,
+        startAngle: 0,
+        endAngle: 360,
+        width: 700,
+        height: 700,
+        layout: 'linear',
+        labelPosition: 'none',
+        labelColor: 'black',
+        labelTextOpacity: 0.4,
+        trackBorderWidth: 0,
+        trackBorderColor: 'black',
+        tickPositions: 'even',
+        fontSize: 12,
+        fontFamily: 'sans-serif', // 'Arial',
+        fontWeight: 'normal',
+        color: '#808080',
+        stroke: '#ffffff',
+        backgroundColor: 'transparent',
+        showMousePosition: false,
+        tickColor: TICK_COLOR
     }
+};
 
+const factory: PluginTrackFactory<AxisTrackOptions> = (HGC, context, options) => {
     const { absToChr, colorToHex, pixiTextToSvg, svgLine, showMousePosition } = HGC.utils;
 
-    class AxisTrackClass extends HGC.tracks.PixiTrack {
-        allTexts: TickLabelInfo[];
+    function createTickText(text: string, style: Partial<PIXI.ITextStyle>): TickText {
+        return Object.assign(new HGC.libraries.PIXI.Text(text, style), { hashValue: Math.random() });
+    }
 
-        constructor(params: any[]) {
-            super(...params); // context, options
-            const [context, options] = params;
+    class AxisTrackClass extends HGC.tracks.PixiTrack<typeof options> {
+        allTexts: TickLabelInfo[];
+        searchField: null;
+        chromInfo: ChromInfo;
+        dataConfig: Record<string, unknown>;
+        pTicksCircular: PIXI.Graphics;
+        pTicks: PIXI.Graphics | null;
+        gTicks: Record<string, PIXI.Graphics>;
+        tickTexts: Record<string, TickText[]>;
+
+        isShowGlobalMousePosition: () => boolean;
+
+        pixiTextConfig: ReturnType<typeof getTextStyle>;
+        stroke: number;
+
+        tickWidth: number;
+        tickHeight: number;
+        tickTextSeparation: number;
+        tickColor: number;
+
+        animate: () => void;
+
+        hideMousePosition?: ReturnType<typeof HGC.utils.showMousePosition>;
+
+        gBoundTicks?: PIXI.Graphics;
+        leftBoundTick?: TickText;
+        rightBoundTick?: TickText;
+
+        is2d?: boolean;
+        texts?: TickText[];
+
+        constructor() {
+            super(context, options);
             const { dataConfig, animate, chromInfoPath, isShowGlobalMousePosition } = context;
 
             this.searchField = null;
-            this.chromInfo = null;
             this.dataConfig = dataConfig;
 
             this.allTexts = [];
@@ -52,17 +151,12 @@ function AxisTrack(HGC: import('@higlass/types').HGC, ...args: any[]): any {
             this.options = options;
             this.isShowGlobalMousePosition = isShowGlobalMousePosition;
 
-            this.textFontSize = 12;
-            this.textFontFamily = 'sans-serif'; //'Arial';
-            this.textFontWeight = 'normal';
-            this.textFontColor = '#808080';
-            this.textStrokeColor = '#ffffff';
             this.pixiTextConfig = getTextStyle({
-                size: +this.options.fontSize || this.textFontSize,
-                fontFamily: this.options.fontFamily || this.textFontFamily,
-                fontWeight: this.options.fontWeight || this.textFontWeight,
-                color: this.options.color || this.textFontColor,
-                stroke: this.options.stroke || this.textStrokeColor,
+                size: +this.options.fontSize,
+                fontFamily: this.options.fontFamily,
+                fontWeight: this.options.fontWeight,
+                color: this.options.color,
+                stroke: this.options.stroke,
                 strokeThickness: 2
             });
             this.stroke = colorToHex(this.pixiTextConfig.stroke);
@@ -73,7 +167,7 @@ function AxisTrack(HGC: import('@higlass/types').HGC, ...args: any[]): any {
             this.tickWidth = TICK_WIDTH;
             this.tickHeight = TICK_HEIGHT;
             this.tickTextSeparation = TICK_TEXT_SEPARATION;
-            this.tickColor = this.options.tickColor ? colorToHex(this.options.tickColor) : TICK_COLOR;
+            this.tickColor = colorToHex(this.options.tickColor);
 
             this.animate = animate;
 
@@ -104,8 +198,6 @@ function AxisTrack(HGC: import('@higlass/types').HGC, ...args: any[]): any {
             // ]
 
             const assembly = this.options.assembly;
-            type ChrPosInfo = { chr: string; pos: number };
-
             const chrPositions: { [k: string]: ChrPosInfo } = {};
             const chromLengths: { [k: string]: number } = { ...GET_CHROM_SIZES(assembly).size };
             const cumPositions: ChrPosInfo[] = [];
@@ -134,8 +226,8 @@ function AxisTrack(HGC: import('@higlass/types').HGC, ...args: any[]): any {
             if (!this.gBoundTicks) {
                 this.gBoundTicks = new HGC.libraries.PIXI.Graphics();
 
-                this.leftBoundTick = new HGC.libraries.PIXI.Text('', this.pixiTextConfig);
-                this.rightBoundTick = new HGC.libraries.PIXI.Text('', this.pixiTextConfig);
+                this.leftBoundTick = createTickText('', this.pixiTextConfig);
+                this.rightBoundTick = createTickText('', this.pixiTextConfig);
 
                 this.gBoundTicks.addChild(this.leftBoundTick);
                 this.gBoundTicks.addChild(this.rightBoundTick);
@@ -151,7 +243,7 @@ function AxisTrack(HGC: import('@higlass/types').HGC, ...args: any[]): any {
 
             if (this.gBoundTicks) {
                 this.pMain.removeChild(this.gBoundTicks);
-                this.gBoundTicks = null;
+                this.gBoundTicks = undefined;
             }
 
             if (!this.pTicks) {
@@ -170,14 +262,12 @@ function AxisTrack(HGC: import('@higlass/types').HGC, ...args: any[]): any {
                 if (!this.tickTexts[chromName]) this.tickTexts[chromName] = [];
 
                 // Give each PIXI text object a random hash so that some get hidden when there's overlaps
-                const text = Object.assign(new HGC.libraries.PIXI.Text(chromName, this.pixiTextConfig), {
-                    hashValue: Math.random()
-                });
+                const text = createTickText(chromName, this.pixiTextConfig);
 
-                this.pTicks.addChild(text);
-                this.pTicks.addChild(this.gTicks[chromName]);
+                this.pTicks?.addChild(text);
+                this.pTicks?.addChild(this.gTicks[chromName]);
 
-                this.texts.push(text);
+                this.texts?.push(text);
             });
         }
 
@@ -190,11 +280,11 @@ function AxisTrack(HGC: import('@higlass/types').HGC, ...args: any[]): any {
             this.options = options;
 
             this.pixiTextConfig.fontSize = +this.options.fontSize
-                ? `${+this.options.fontSize}px`
+                ? (`${+this.options.fontSize}px` as const)
                 : this.pixiTextConfig.fontSize;
             this.pixiTextConfig.fill = this.options.color || this.pixiTextConfig.fill;
             this.pixiTextConfig.stroke = this.options.stroke || this.pixiTextConfig.stroke;
-            this.stroke = colorToHex(this.pixiTextConfig.stroke);
+            this.stroke = colorToHex(this.pixiTextConfig.stroke as string);
 
             this.tickColor = this.options.tickColor ? colorToHex(this.options.tickColor) : TICK_COLOR;
 
@@ -245,12 +335,9 @@ function AxisTrack(HGC: import('@higlass/types').HGC, ...args: any[]): any {
             return f(pos);
         }
 
-        /**
-         * Show two labels at the end of both left and right sides
-         * @param x1
-         * @param x2
-         */
-        drawBoundsTicks(x1: any, x2: any) {
+        /** Show two labels at the end of both left and right sides */
+        drawBoundsTicks(x1: ReturnType<typeof absToChr>, x2: ReturnType<typeof absToChr>) {
+            if (!this.gBoundTicks || !this.leftBoundTick || !this.rightBoundTick) return;
             const graphics = this.gBoundTicks;
             graphics.clear();
             graphics.lineStyle(1, 0);
@@ -356,14 +443,14 @@ function AxisTrack(HGC: import('@higlass/types').HGC, ...args: any[]): any {
 
             // these two loops reuse existing text objects so that we're not constantly recreating texts that already exist
             while (tickTexts.length < ticks.length) {
-                const newText = new HGC.libraries.PIXI.Text('', this.pixiTextConfig);
+                const newText = createTickText('', this.pixiTextConfig);
                 tickTexts.push(newText);
                 this.gTicks[cumPos.chr].addChild(newText);
             }
 
             while (tickTexts.length > ticks.length) {
                 const text = tickTexts.pop();
-                this.gTicks[cumPos.chr].removeChild(text);
+                this.gTicks[cumPos.chr].removeChild(text!);
             }
 
             let i = 0;
@@ -384,7 +471,7 @@ function AxisTrack(HGC: import('@higlass/types').HGC, ...args: any[]): any {
                 // show the tick text labels
                 if (this.options.layout === 'circular') {
                     const rope = this.addCurvedText(tickTexts[i], x + xPadding);
-                    this.pTicksCircular.addChild(rope);
+                    rope && this.pTicksCircular.addChild(rope);
                 } else {
                     tickTexts[i].x = x + xPadding;
                     tickTexts[i].y = this.dimensions[1] - yPadding;
@@ -560,7 +647,7 @@ function AxisTrack(HGC: import('@higlass/types').HGC, ...args: any[]): any {
                     chrText.visible = numTicksDrawn <= 0;
                 } else {
                     if (numTicksDrawn > 0) {
-                        this.pTicksCircular.removeChild(rope);
+                        rope && this.pTicksCircular.removeChild(rope);
                     }
                 }
 
@@ -625,10 +712,11 @@ function AxisTrack(HGC: import('@higlass/types').HGC, ...args: any[]): any {
             this.draw();
         }
 
-        exportSVG() {
+        exportSVG(): [HTMLElement, HTMLElement] {
             let track = null;
             let base = null;
 
+            // @ts-expect-error always true because it's defined on HGC.tracks.PixiTrack
             if (super.exportSVG) {
                 [base, track] = super.exportSVG();
             } else {
@@ -643,16 +731,18 @@ function AxisTrack(HGC: import('@higlass/types').HGC, ...args: any[]): any {
             output.setAttribute('transform', `translate(${this.position[0]},${this.position[1]})`);
 
             this.allTexts
-                .filter((text: any) => text.text.visible)
-                .forEach((text: any) => {
+                .filter(text => text.text.visible)
+                .forEach(text => {
                     const g = pixiTextToSvg(text.text);
                     output.appendChild(g);
                 });
 
-            Object.values(this.tickTexts).forEach((texts: any) => {
+            Object.values(this.tickTexts).forEach(texts => {
                 texts
-                    .filter((x: any) => x.visible)
-                    .forEach((text: any) => {
+                    .filter(x => x.visible)
+                    .forEach(text => {
+                        if (!text.tickLine) return;
+
                         let g = pixiTextToSvg(text);
                         output.appendChild(g);
                         g = svgLine(
@@ -666,10 +756,10 @@ function AxisTrack(HGC: import('@higlass/types').HGC, ...args: any[]): any {
 
                         const line = document.createElement('line');
 
-                        line.setAttribute('x1', text.tickLine[0]);
-                        line.setAttribute('y1', text.tickLine[1]);
-                        line.setAttribute('x2', text.tickLine[2]);
-                        line.setAttribute('y2', text.tickLine[3]);
+                        line.setAttribute('x1', String(text.tickLine[0]));
+                        line.setAttribute('y1', String(text.tickLine[1]));
+                        line.setAttribute('x2', String(text.tickLine[2]));
+                        line.setAttribute('y2', String(text.tickLine[3]));
                         line.setAttribute('style', 'stroke: grey');
 
                         output.appendChild(g);
@@ -680,55 +770,7 @@ function AxisTrack(HGC: import('@higlass/types').HGC, ...args: any[]): any {
             return [base, track];
         }
     }
-    return new AxisTrackClass(args);
-}
-
-// TODO: Change the icon
-const icon =
-    '<svg version="1.0" xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" viewBox="0 0 5640 5420" preserveAspectRatio="xMidYMid meet"> <g id="layer101" fill="#000000" stroke="none"> <path d="M0 2710 l0 -2710 2820 0 2820 0 0 2710 0 2710 -2820 0 -2820 0 0 -2710z"/> </g> <g id="layer102" fill="#750075" stroke="none"> <path d="M200 4480 l0 -740 630 0 630 0 0 740 0 740 -630 0 -630 0 0 -740z"/> <path d="M1660 4420 l0 -800 570 0 570 0 0 800 0 800 -570 0 -570 0 0 -800z"/> <path d="M3000 3450 l0 -1770 570 0 570 0 0 1770 0 1770 -570 0 -570 0 0 -1770z"/> <path d="M4340 2710 l0 -2510 560 0 560 0 0 2510 0 2510 -560 0 -560 0 0 -2510z"/> <path d="M200 1870 l0 -1670 630 0 630 0 0 1670 0 1670 -630 0 -630 0 0 -1670z"/> <path d="M1660 1810 l0 -1610 570 0 570 0 0 1610 0 1610 -570 0 -570 0 0 -1610z"/> <path d="M3000 840 l0 -640 570 0 570 0 0 640 0 640 -570 0 -570 0 0 -640z"/> </g> <g id="layer103" fill="#ffff04" stroke="none"> <path d="M200 4480 l0 -740 630 0 630 0 0 740 0 740 -630 0 -630 0 0 -740z"/> <path d="M1660 4420 l0 -800 570 0 570 0 0 800 0 800 -570 0 -570 0 0 -800z"/> <path d="M3000 3450 l0 -1770 570 0 570 0 0 1770 0 1770 -570 0 -570 0 0 -1770z"/> </g> </svg>';
-
-// default
-AxisTrack.config = {
-    type: 'axis-track',
-    datatype: ['multivec', 'epilogos'],
-    local: false,
-    orientation: '1d-horizontal',
-    thumbnail: new DOMParser().parseFromString(icon, 'text/xml').documentElement,
-    availableOptions: [
-        'innerRadius',
-        'outerRadius',
-        'startAngle',
-        'endAngle',
-        'width',
-        'height',
-        'layout',
-        'labelPosition',
-        'labelColor',
-        'labelTextOpacity',
-        'labelBackgroundOpacity',
-        'trackBorderWidth',
-        'trackBorderColor',
-        'trackType',
-        'tickPositions',
-        'scaledHeight',
-        'backgroundColor'
-    ],
-    defaultOptions: {
-        innerRadius: 340,
-        outerRadius: 310,
-        startAngle: 0,
-        endAngle: 360,
-        width: 700,
-        height: 700,
-        layout: 'linear',
-        labelPosition: 'none',
-        labelColor: 'black',
-        labelTextOpacity: 0.4,
-        trackBorderWidth: 0,
-        trackBorderColor: 'black',
-        tickPositions: ['even', 'ends'][0],
-        backgroundColor: 'transparent'
-    }
+    return new AxisTrackClass();
 };
 
-export default AxisTrack;
+export default definePluginTrack(config, factory);

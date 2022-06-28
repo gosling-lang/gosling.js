@@ -98,8 +98,10 @@ declare module '@higlass/services' {
     };
 }
 
-// TODO(06-21-22)
 declare module '@higlass/tracks' {
+    type Track = any;
+    export const BarTrack: Track;
+
     import type { ScaleContinuousNumeric } from 'd3-scale';
     import type * as PIXI from 'pixi.js';
 
@@ -118,7 +120,6 @@ declare module '@higlass/tracks' {
     type TrackOptions = Record<string, unknown>;
 
     type Track = any;
-    export const PixiTrack: Track;
     export const BarTrack: Track;
 
     export type Context<Options> = {
@@ -194,7 +195,7 @@ declare module '@higlass/tracks' {
     type DataFetcher = Record<string, any>;
     type TilesetInfo = Record<string, any>;
 
-    export class _PixiTrack<Options extends TrackOptions> extends _Track {
+    export class PixiTrack<Options extends TrackOptions> extends _Track {
         /* Properties */
         delayDrawing: boolean;
         scene: PIXI.Graphics;
@@ -274,7 +275,7 @@ declare module '@higlass/tracks' {
         defaultOptions?: Options;
         availableOptions?: (keyof Options)[];
         name?: string;
-        datatype?: LiteralUnion<DataType>[];
+        datatype?: readonly LiteralUnion<DataType>[];
         aliases?: string[];
         local?: boolean;
         orientation?: Orientation;
@@ -306,7 +307,7 @@ declare module '@higlass/utils' {
         chrInfo: ChromInfo<string>
     ): [chr: string, chrPositon: number, offset: number, insertPoint: number];
     export function chrToAbs<Name>(chrom: Name, chromPos: number, chromInfo: ChromInfo<Name>): number;
-    export function colorToHex(colorValue: string): number;
+    export function colorToHex(colorValue: string | number): number;
     export function pixiTextToSvg(text: import('pixi.js').Text): HTMLElement;
     export function svgLine(
         x1: number,
