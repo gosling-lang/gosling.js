@@ -134,7 +134,8 @@
         "vitest": "^0.10.0"
     },
     "resolutions": {
-        "slugid": "^3.0.0"
+        "slugid": "^3.0.0",
+        "generic-filehandle": "2.2.1"
     },
     "browserslist": {
         "production": [
