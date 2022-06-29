@@ -99,7 +99,7 @@ declare module '@higlass/services' {
 }
 
 declare module '@higlass/tracks' {
-    // TODO(2022-06-28): type out `BarTrack`
+    // TODO(2022-06-28): type out `BarTrack
     type Track = any;
     export const BarTrack: Track;
 
@@ -123,6 +123,32 @@ declare module '@higlass/tracks' {
     type Track = any;
     export const BarTrack: Track;
 
+    interface OnMouseMoveZoomOptions {
+        trackId: string;
+        data: number;
+        absX: number;
+        absY: number;
+        relX: number;
+        relY: number;
+        dataX: number;
+        dataY: number;
+    }
+
+    interface OnMouseMoveZoomOptions1D extends OnMouseMoveZoomOptions {
+        orientation: '1d-horizontal' | '1d-vertical';
+    }
+
+    interface OnMouseMoveZoomOptions2D extends OnMouseMoveZoomOptions {
+        orientation: '2d';
+        dataLens: ArrayLike<number>;
+        dim: number;
+        toRgb: [number, number, number, number];
+        center: [number, number];
+        xRange: [number, number];
+        yRange: [number, number];
+        isGenomicCoords: boolean;
+    }
+
     export type Context<Options> = {
         id: string;
         viewUid: string;
@@ -137,8 +163,7 @@ declare module '@higlass/tracks' {
         isValueScaleLocked(): boolean;
         onValueScaleChanged(): void;
         onTrackOptionsChanged(newOptions: Options): void;
-        // TODO: not sure what the props are here
-        onMouseMoveZoom(props: unknown): void;
+        onMouseMoveZoom(opts: OnMouseMoveZoomOptions1D | OnMouseMoveZoomOptions2D): void;
         chromInfoPath: string;
         isShowGlobalMousePosition(): boolean;
         getTheme(): string;
