@@ -120,9 +120,6 @@ declare module '@higlass/tracks' {
 
     type TrackOptions = Record<string, unknown>;
 
-    type Track = any;
-    export const BarTrack: Track;
-
     interface OnMouseMoveZoomOptions {
         trackId: string;
         data: number;
