@@ -126,7 +126,7 @@ export function createApi(
                 const a = document.createElement('a');
                 document.body.append(a);
                 a.download = 'gosling-visualization';
-                a.href = URL.createObjectURL(blob);
+                a.href = URL.createObjectURL(blob!);
                 a.click();
                 a.remove();
             }, 'image/png');

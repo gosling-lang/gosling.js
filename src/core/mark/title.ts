@@ -6,7 +6,7 @@ import type { CompleteThemeDeep } from '../utils/theme';
 import { getTextStyle } from '../utils/text-style';
 
 export function drawCircularTitle(
-    HGC: typeof import('@higlass/available-for-plugins'),
+    HGC: import('@higlass/types').HGC,
     trackInfo: any,
     tile: any,
     gos: GoslingTrackModel,

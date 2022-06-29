@@ -49,12 +49,7 @@ export const RESOLUTION = 4;
 /**
  * Draw a track based on the track specification in a Gosling grammar.
  */
-export function drawMark(
-    HGC: typeof import('@higlass/available-for-plugins'),
-    trackInfo: any,
-    tile: any,
-    model: GoslingTrackModel
-) {
+export function drawMark(HGC: import('@higlass/types').HGC, trackInfo: any, tile: any, model: GoslingTrackModel) {
     if (!HGC || !trackInfo || !tile) {
         // We did not receive parameters correctly.
         return;
@@ -136,7 +131,7 @@ export function drawMark(
  * Draw chart embellishments before rendering marks.
  */
 export function drawPreEmbellishment(
-    HGC: typeof import('@higlass/available-for-plugins'),
+    HGC: import('@higlass/types').HGC,
     trackInfo: any,
     tile: any,
     model: GoslingTrackModel,
@@ -182,7 +177,7 @@ export function drawPreEmbellishment(
  * Draw chart embellishments after rendering marks.
  */
 export function drawPostEmbellishment(
-    HGC: typeof import('@higlass/available-for-plugins'),
+    HGC: import('@higlass/types').HGC,
     trackInfo: any,
     tile: any,
     model: GoslingTrackModel,
