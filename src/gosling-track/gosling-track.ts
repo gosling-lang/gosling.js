@@ -464,7 +464,7 @@ function GoslingTrack(HGC: import('@higlass/types').HGC, ...args: any[]): any {
                         this.drawLoadingCue();
                         const tiles = this.visibleAndFetchedTiles();
 
-                        const tabularData = JSON.parse(Buffer.from(toRender).toString());
+                        const tabularData = JSON.parse(new TextDecoder().decode(toRender));
                         if (tiles?.[0]) {
                             const tile = tiles[0];
                             tile.tileData.tabularData = tabularData;
