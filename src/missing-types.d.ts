@@ -10,6 +10,8 @@ declare module '@higlass/types' {
         utils: typeof import('@higlass/utils');
     };
     export type { Context, Track, TrackOptions, TrackConfig } from '@higlass/tracks';
+    export type { ChromInfo } from '@higlass/utils';
+    export type { TilesetInfo } from '@higlass/services';
 }
 
 declare module '@higlass/libraries' {
@@ -46,7 +48,7 @@ declare module '@higlass/services' {
           }
         | {
               max_width: number;
-              bins_per_dimension: number;
+              bins_per_dimension?: number;
           }
     );
     type TileData = {
@@ -312,10 +314,11 @@ declare module '@higlass/utils' {
     import type { ScaleContinuousNumeric } from 'd3-scale';
     import type { TilesetInfo } from '@higlass/services';
 
-    type ChromInfo<Name extends string> = {
-        cumPositions: { pos: number; chr: string }[];
+    type ChromInfo<Name extends string = string> = {
+        cumPositions: { id?: number; pos: number; chr: string }[];
         chrPositions: Record<Name, { pos: number }>;
         chromLengths: Record<Name, number>;
+        totalLength: number;
     };
 
     /**
@@ -327,9 +330,13 @@ declare module '@higlass/utils' {
     export function showMousePosition<T>(context: T, is2d?: boolean, isGlobal?: boolean): () => void;
     export function absToChr(
         absPosition: number,
-        chrInfo: ChromInfo<string>
+        chrInfo: Pick<ChromInfo, 'cumPositions' | 'chromLengths'>
     ): [chr: string, chrPositon: number, offset: number, insertPoint: number];
-    export function chrToAbs<Name>(chrom: Name, chromPos: number, chromInfo: ChromInfo<Name>): number;
+    export function chrToAbs<Name = string>(
+        chrom: Name,
+        chromPos: number,
+        chromInfo: Pick<ChromInfo<Name>, 'chrPositions'>
+    ): number;
     export function colorToHex(colorValue: string | number): number;
     export function pixiTextToSvg(text: import('pixi.js').Text): HTMLElement;
     export function svgLine(
@@ -341,7 +348,9 @@ declare module '@higlass/utils' {
         strokeColor: number
     ): HTMLElement;
     export class DenseDataExtrema1D {
-        constructor(arr: ArrayLike<number>);
+        constructor(arr: ArrayLike<number | null>);
+        minNonZeroInTile: number;
+        maxNonZeroInTile: number;
     }
     export const trackUtils: {
         calculate1DVisibleTiles(
