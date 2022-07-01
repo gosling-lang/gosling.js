@@ -5,10 +5,9 @@
 import VCF from '@gmod/vcf';
 import { TabixIndexedFile } from '@gmod/tabix';
 import { expose, Transfer } from 'threads/worker';
-import { RemoteFile } from 'generic-filehandle';
 import { sampleSize } from 'lodash-es';
 
-import { fetchChromInfo } from '../utils';
+import { fetchChromInfo, RemoteFile } from '../utils';
 
 import type { TilesetInfo } from '@higlass/types';
 import type { ExtendedChromInfo } from '../utils';
