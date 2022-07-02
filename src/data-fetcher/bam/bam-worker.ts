@@ -378,17 +378,18 @@ const bamHeaders: Record<string, ReturnType<BamFile['getHeader']>> = {};
 
 const MAX_TILES = 20;
 
-// promises indexed by url
+// promises indexed by chromSizesUrl
 const chromSizes: Record<string, Promise<ExtendedChromInfo | null>> = {};
+// promises indexed by uid
 const chromInfos: Record<string, ChromInfo> = {};
 
 const tileValues = new QuickLRU<string, JsonBamRecord[] | { error: string }>({ maxSize: MAX_TILES });
 const tilesetInfos: Record<string, TilesetInfo> = {};
 
-type DataConfig = {
+export type DataConfig = {
     bamUrl: string;
     baiUrl: string;
-    chromSizesUrl: string;
+    chromSizesUrl?: string;
     loadMates?: boolean;
     maxInsertSize?: number;
     extractJunction?: boolean;
@@ -425,11 +426,12 @@ const init = (
     }
 
     // if no chromsizes are passed in, we'll retrieve them from the BAM file
-    chromSizes[chromSizesUrl] =
-        chromSizes[chromSizesUrl] ||
-        new Promise(resolve => {
+    if (chromSizesUrl) {
+        // cache by bamUrl
+        chromSizes[chromSizesUrl] = new Promise(resolve => {
             ChromosomeInfo(chromSizesUrl, resolve);
-        });
+        }); 
+    }
 
     dataConfs[uid] = { bamUrl, chromSizesUrl, loadMates, maxInsertSize, extractJunction, junctionMinCoverage };
 };
@@ -439,12 +441,11 @@ const tilesetInfo = (uid: string) => {
     const promises = [
         // why do we await bamHeaders if not used in this function?
         bamHeaders[bamUrl],
-        // this is always true unless `chromSizesUrl` is ""
         chromSizesUrl ? chromSizes[chromSizesUrl] : undefined
     ] as const;
 
-    /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-    return Promise.all(promises).then(([_, maybeInfo]) => {
+    return Promise.all(promises).then(res => {
+        const maybeInfo = res[1];
         const TILE_SIZE = 1024;
         let chromInfo: ChromInfo;
 
@@ -465,7 +466,7 @@ const tilesetInfo = (uid: string) => {
             chromInfo = parseChromsizesRows(chroms);
         }
 
-        chromInfos[chromSizesUrl] = chromInfo;
+        chromInfos[uid] = chromInfo;
 
         tilesetInfos[uid] = {
             tile_size: TILE_SIZE,
@@ -504,7 +505,7 @@ const tile = async (uid: string, z: number, x: number): Promise<JsonBamRecord[]>
     let minX = info.min_pos[0] + x * tileWidth;
     const maxX = info.min_pos[0] + (x + 1) * tileWidth;
 
-    const chromInfo = chromInfos[chromSizesUrl];
+    const chromInfo = chromInfos[uid];
 
     const { chromLengths, cumPositions } = chromInfo;
 

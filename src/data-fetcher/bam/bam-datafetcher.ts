@@ -7,12 +7,14 @@ import Worker from './bam-worker.ts?worker&inline';
 
 import type { Assembly } from '../../core/gosling.schema';
 import type { ModuleThread } from 'threads';
-import type { WorkerApi, TilesetInfo, Tiles } from './bam-worker';
+import type { WorkerApi, TilesetInfo, Tiles, DataConfig as WorkerDataConfig } from './bam-worker';
 
 const DEBOUNCE_TIME = 200;
 
+type DataConfig = Partial<WorkerDataConfig> & { url: string, indexUrl?: string };
+
 class BAMDataFetcher {
-    dataConfig: Record<string, any>;
+    dataConfig: DataConfig;
     assembly: Assembly;
     worker: Promise<ModuleThread<WorkerApi>>;
 
@@ -25,22 +27,20 @@ class BAMDataFetcher {
         fetching: { delete(id: string): void };
     };
 
-    constructor(HGC: import('@higlass/types').HGC, dataConfig: any) {
-        this.worker = spawn(new Worker());
+    constructor(HGC: import('@higlass/types').HGC, dataConfig: DataConfig) {
+       this.worker = spawn(new Worker());
         this.dataConfig = dataConfig;
         this.uid = HGC.libraries.slugid.nice();
         this.assembly = 'hg38';
         this.toFetch = new Set();
-        this.worker.then(tileFunctions => {
-            if (dataConfig.url && !dataConfig.bamUrl) {
-                dataConfig['bamUrl'] = dataConfig.url;
+        this.worker.then(api => {
+            const bamUrl = dataConfig.bamUrl ?? dataConfig.url;
+            const workerDataConfig: WorkerDataConfig = { 
+                ...dataConfig,
+                bamUrl,
+                baiUrl: dataConfig.baiUrl ?? dataConfig.indexUrl ?? `${bamUrl}.bai`,
             }
-
-            if (!dataConfig.baiUrl) {
-                dataConfig['baiUrl'] = dataConfig.indexUrl ?? `${dataConfig['bamUrl']}.bai`;
-            }
-
-            return tileFunctions.init(this.uid, dataConfig).then(() => this.worker);
+            return api.init(this.uid, workerDataConfig).then(() => this.worker);
         });
     }
 

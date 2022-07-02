@@ -35,8 +35,8 @@ class GoslingVcfData {
         this.prevRequestTime = 0;
         this.assembly = dataConfig.assembly;
         this.toFetch = new Set();
-        this.initPromise = this.worker.then((tileFunctions: any) => {
-            return tileFunctions
+        this.initPromise = this.worker.then(api => {
+            return api
                 .init(
                     this.uid,
                     dataConfig.url,
@@ -70,7 +70,7 @@ class GoslingVcfData {
 
         this.track.drawLoadingCue();
 
-        tileIds.forEach((tileId: any) => this.toFetch.add(tileId));
+        tileIds.forEach((tileId) => this.toFetch.add(tileId));
 
         if (this.fetchTimeout) {
             clearTimeout(this.fetchTimeout);
@@ -86,7 +86,7 @@ class GoslingVcfData {
         (await this.worker).fetchTilesDebounced(this.uid, tileIds).then(receivedTiles);
     }
 
-    async getTabularData(uid: string, tileIds: string[]): Promise<any[]> {
+    async getTabularData(uid: string, tileIds: string[]): Promise<Tile[]> {
         const buf = await (await this.worker).getTabularData(uid, tileIds);
         return JSON.parse(new TextDecoder().decode(buf));
     }
