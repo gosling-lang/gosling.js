@@ -2,6 +2,9 @@
  * This code is based on the following repo:
  * https://github.com/higlass/higlass-pileup
  */
+import { spawn } from 'threads';
+import Worker from './bam-worker.ts?worker&inline';
+
 import type { Assembly } from '../../core/gosling.schema';
 import type { ModuleThread } from 'threads';
 import type { WorkerApi, TilesetInfo, Tiles } from './bam-worker';
@@ -11,6 +14,7 @@ const DEBOUNCE_TIME = 200;
 class BAMDataFetcher {
     dataConfig: Record<string, any>;
     assembly: Assembly;
+    worker: Promise<ModuleThread<WorkerApi>>;
 
     uid: string;
     fetchTimeout?: ReturnType<typeof setTimeout>;
@@ -21,7 +25,8 @@ class BAMDataFetcher {
         fetching: { delete(id: string): void };
     };
 
-    constructor(HGC: import('@higlass/types').HGC, dataConfig: any, public worker: Promise<ModuleThread<WorkerApi>>) {
+    constructor(HGC: import('@higlass/types').HGC, dataConfig: any) {
+        this.worker = spawn(new Worker());
         this.dataConfig = dataConfig;
         this.uid = HGC.libraries.slugid.nice();
         this.assembly = 'hg38';
@@ -74,6 +79,11 @@ class BAMDataFetcher {
     async sendFetch(receivedTiles: (tiles: Tiles) => void, tileIds: string[]) {
         // this.track.updateLoadingText();
         (await this.worker).fetchTilesDebounced(this.uid, tileIds).then(receivedTiles);
+    }
+
+    async getTabularData(uid: string, tileIds: string[]): Promise<any[]> {
+        const buf = await (await this.worker).getTabularData(uid, tileIds);
+        return JSON.parse(new TextDecoder().decode(buf));
     }
 }
 

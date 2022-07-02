@@ -28,14 +28,11 @@ import { publish } from '../core/pubsub';
 import { getRelativeGenomicPosition } from '../core/utils/assembly';
 import { getTextStyle } from '../core/utils/text-style';
 import { Is2DTrack, IsChannelDeep, IsMouseEventsDeep, IsXAxis } from '../core/gosling.schema.guards';
-import { spawn } from 'threads';
 import { HIGLASS_AXIS_SIZE } from '../core/higlass-model';
 import type { MouseEventData } from '../gosling-mouse-event/mouse-event-model';
 import { flatArrayToPairArray } from '../core/utils/array';
 import { BAMDataFetcher } from '../data-fetcher/bam';
 import { GoslingVcfData } from '../data-fetcher/vcf';
-import BamWorker from '../data-fetcher/bam/bam-worker.js?worker&inline';
-import VcfWorker from '../data-fetcher/vcf/vcf-worker.js?worker&inline';
 import { LinearBrushModel } from '../gosling-brush/linear-brush-model';
 
 // Set `true` to print in what order each function is called
@@ -84,7 +81,6 @@ function GoslingTrack(HGC: import('@higlass/types').HGC, ...args: any[]): any {
         private viewUid: string;
         private options!: GoslingTrackOption;
         private tileSize: number;
-        private worker: any;
         private isRangeBrushActivated: boolean;
         private mRangeBrush: LinearBrushModel;
         private _xScale!: ScaleLinear<number, number>;
@@ -96,27 +92,21 @@ function GoslingTrack(HGC: import('@higlass/types').HGC, ...args: any[]): any {
         constructor(params: any[]) {
             const [context, options] = params;
 
-            // Check whether to load a worker
-            let dataWorker;
+            // Check whether to load tabualr data-fetcher
             if (usePrereleaseRendering(options.spec)) {
                 try {
                     if (options.spec.data?.type === 'bam') {
-                        dataWorker = spawn(new BamWorker());
-                        // @ts-expect-error dataWorker is currently any...
-                        context.dataFetcher = new BAMDataFetcher(HGC, context.dataConfig, dataWorker);
+                        context.dataFetcher = new BAMDataFetcher(HGC, context.dataConfig);
                     } else if (options.spec.data?.type === 'vcf') {
-                        dataWorker = spawn(new VcfWorker());
-                        // @ts-expect-error dataWorker is currently any...
-                        context.dataFetcher = new GoslingVcfData(HGC, context.dataConfig, dataWorker);
+                        context.dataFetcher = new GoslingVcfData(HGC, context.dataConfig);
                     }
                 } catch (e) {
-                    console.warn('Error loading worker', e);
+                    console.warn('Error loading tabular data-fetcher', e);
                 }
             }
 
             super(context, options);
 
-            this.worker = dataWorker;
             context.dataFetcher.track = this;
             this.context = context;
             this.viewUid = context.viewUid;
@@ -253,10 +243,10 @@ function GoslingTrack(HGC: import('@higlass/types').HGC, ...args: any[]): any {
             };
 
             if (
-                usePrereleaseRendering(this.options.spec) &&
+                (this.dataFetcher instanceof BAMDataFetcher || this.dataFetcher instanceof GoslingVcfData) &&
                 !isEqual(this.visibleAndFetchedTiles(), this.prevVisibleAndFetchedTiles)
             ) {
-                this.updateTileAsync(processTilesAndDraw);
+                this.updateTileAsync(this.dataFetcher, processTilesAndDraw);
             } else {
                 processTilesAndDraw();
             }
@@ -450,39 +440,27 @@ function GoslingTrack(HGC: import('@higlass/types').HGC, ...args: any[]): any {
         /**
          * This is currently for testing the new way of rendering visual elements.
          */
-        updateTileAsync(callback: () => void) {
+        async updateTileAsync(tabularDataFetcher: BAMDataFetcher | GoslingVcfData, callback: () => void) {
             this.xDomain = this._xScale.domain();
             this.xRange = this._xScale.range();
+            this.drawLoadingCue();
+            const tabularData = await tabularDataFetcher.getTabularData(
+                this.dataFetcher.uid,
+                Object.values(this.fetchedTiles).map((x: any) => x.remoteId)
+            );
+            this.drawLoadingCue();
+            const tiles = this.visibleAndFetchedTiles();
+            if (tiles?.[0]) {
+                const tile = tiles[0];
+                tile.tileData.tabularData = tabularData;
+                const [refTile] = HGC.utils.trackUtils.calculate1DVisibleTiles(this.tilesetInfo, this._xScale);
+                tile.tileData.zoomLevel = refTile[0];
+                tile.tileData.tilePos = [refTile[1]];
+            }
 
             this.drawLoadingCue();
-
-            this.worker.then((tileFunctions: any) => {
-                tileFunctions
-                    .getTabularData(
-                        this.dataFetcher.uid,
-                        Object.values(this.fetchedTiles).map((x: any) => x.remoteId)
-                    )
-                    .then((toRender: any) => {
-                        this.drawLoadingCue();
-                        const tiles = this.visibleAndFetchedTiles();
-
-                        const tabularData = JSON.parse(new TextDecoder().decode(toRender));
-                        if (tiles?.[0]) {
-                            const tile = tiles[0];
-                            tile.tileData.tabularData = tabularData;
-                            const [refTile] = HGC.utils.trackUtils.calculate1DVisibleTiles(
-                                this.tilesetInfo,
-                                this._xScale
-                            );
-                            tile.tileData.zoomLevel = refTile[0];
-                            tile.tileData.tilePos = [refTile[1]];
-                        }
-
-                        this.drawLoadingCue();
-                        callback();
-                        this.drawLoadingCue();
-                    });
-            });
+            callback();
+            this.drawLoadingCue();
         }
 
         /**

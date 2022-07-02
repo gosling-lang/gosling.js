@@ -2,6 +2,9 @@
  * This document is heavily based on the following repo by @alexander-veit:
  * https://github.com/dbmi-bgm/higlass-sv/blob/main/src/sv-fetcher.js
  */
+import { spawn } from 'threads';
+import Worker from './vcf-worker.ts?worker&inline';
+
 import { GET_CHROM_SIZES } from '../../core/utils/assembly';
 
 import type { ModuleThread } from 'threads';
@@ -13,21 +16,22 @@ const DEBOUNCE_TIME = 200;
 type VcfDataConfig = VCFData & { assembly: Assembly };
 
 class GoslingVcfData {
-    private uid: string;
+    uid: string;
+    worker: Promise<ModuleThread<WorkerApi>>
+    prevRequestTime: number;
+    initPromise: Promise<unknown>;
+    track?: any;
+
     private assembly: Assembly;
     private toFetch: Set<string>;
     private fetchTimeout?: ReturnType<typeof setTimeout>;
-    private track: any;
-
-    prevRequestTime: number;
-    initPromise: Promise<unknown>;
 
     constructor(
         HGC: import('@higlass/types').HGC,
         public dataConfig: VcfDataConfig,
-        public worker: Promise<ModuleThread<WorkerApi>>
     ) {
         this.uid = HGC.libraries.slugid.nice();
+        this.worker = spawn(new Worker);
         this.prevRequestTime = 0;
         this.assembly = dataConfig.assembly;
         this.toFetch = new Set();
@@ -80,6 +84,11 @@ class GoslingVcfData {
 
     async sendFetch(receivedTiles: (tiles: Record<string, Tile>) => void, tileIds: string[]) {
         (await this.worker).fetchTilesDebounced(this.uid, tileIds).then(receivedTiles);
+    }
+
+    async getTabularData(uid: string, tileIds: string[]): Promise<any[]> {
+        const buf = await (await this.worker).getTabularData(uid, tileIds);
+        return JSON.parse(new TextDecoder().decode(buf));
     }
 }
 
