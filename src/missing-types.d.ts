@@ -333,7 +333,7 @@ declare module '@higlass/utils' {
         absPosition: number,
         chrInfo: Pick<ChromInfo, 'cumPositions' | 'chromLengths'>
     ): [chr: string, chrPositon: number, offset: number, insertPoint: number];
-    export function chrToAbs<Name extends string>(
+    export function chrToAbs<Name>(
         chrom: Name,
         chromPos: number,
         chromInfo: Pick<ChromInfo<Name>, 'chrPositions'>
