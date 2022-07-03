@@ -63,7 +63,7 @@ type Substitution = {
     variant?: string;
 };
 
-type Segment = {
+export type Segment = {
     // if two segments have the same name but different id, they are paired reads.
     // https://github.com/GMOD/bam-js/blob/7a57d24b6aef08a1366cca86ba5092254c7a7f56/src/bamFile.ts#L386
     id: string;
@@ -585,7 +585,7 @@ const groupBy = <T, K extends keyof T>(xs: readonly T[], key: K): Record<string,
         return rv;
     }, {});
 
-type SegmentWithMate = Segment & {
+export type SegmentWithMate = Segment & {
     mateIds: string[];
     foundMate: boolean;
     insertSize: number;
@@ -594,10 +594,6 @@ type SegmentWithMate = Segment & {
     numMates: number;
 };
 
-/**
- * @param {string} uid data config UID
- * @param {Segment[]} segments
- */
 const findMates = (segments: Segment[], maxInsertSize = 0) => {
     // @ts-expect-error This methods mutates this above aob
     const segmentsByReadName: Record<string, SegmentWithMate[]> = groupBy(segments, 'name');
@@ -652,7 +648,7 @@ const findMates = (segments: Segment[], maxInsertSize = 0) => {
     return segmentsByReadName;
 };
 
-type Junction = { start: number; end: number; score: number };
+export type Junction = { start: number; end: number; score: number };
 
 const findJunctions = (segments: { start: number; end: number; substitutions: string }[], minCoverage = 0) => {
     const junctions: Junction[] = [];

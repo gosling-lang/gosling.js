@@ -7,7 +7,15 @@ import Worker from './bam-worker.ts?worker&inline';
 
 import type { Assembly } from '../../core/gosling.schema';
 import type { ModuleThread } from 'threads';
-import type { WorkerApi, TilesetInfo, Tiles, DataConfig as WorkerDataConfig } from './bam-worker';
+import type {
+    WorkerApi,
+    TilesetInfo,
+    Tiles,
+    DataConfig as WorkerDataConfig,
+    Segment,
+    SegmentWithMate,
+    Junction
+} from './bam-worker';
 
 const DEBOUNCE_TIME = 200;
 
@@ -83,7 +91,7 @@ class BAMDataFetcher {
         (await this.worker).fetchTilesDebounced(this.uid, tileIds).then(receivedTiles);
     }
 
-    async getTabularData(uid: string, tileIds: string[]): Promise<any[]> {
+    async getTabularData(uid: string, tileIds: string[]): Promise<Segment[] | SegmentWithMate[] | Junction[]> {
         const buf = await (await this.worker).getTabularData(uid, tileIds);
         return JSON.parse(new TextDecoder().decode(buf));
     }
