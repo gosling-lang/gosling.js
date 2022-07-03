@@ -4,30 +4,34 @@ import { bisector } from 'd3-array';
 import { tsvParseRows } from 'd3-dsv';
 import { expose, Transfer } from 'threads/worker';
 import { BamFile } from '@gmod/bam';
-import LRU from 'lru-cache';
+import QuickLRU from 'quick-lru';
 
-export const cigarTypeToText = type => {
-    if (type === 'D') {
-        return 'Deletion';
-    } else if (type === 'S') {
-        return 'Soft clipping';
-    } else if (type === 'H') {
-        return 'Hard clipping';
-    } else if (type === 'I') {
-        return 'Insertion';
-    } else if (type === 'N') {
-        return 'Skipped region';
-    }
-    return type;
-};
+import type { ChromInfo, TilesetInfo } from '@higlass/types';
+import type { BamRecord } from '@gmod/bam';
 
-export const parseMD = (mdString, useCounts) => {
+// not used anywhere?
+/* eslint-disable-next-line @typescript-eslint/no-unused-vars */
+function cigarTypeToText<T extends string>(type: T) {
+    const mapping = {
+        D: 'Deletion',
+        S: 'Soft clipping',
+        H: 'Hard clipping',
+        I: 'Insertion',
+        N: 'Skipped region'
+    } as const;
+    return ((mapping as any)[type] ?? type) as T extends keyof typeof mapping ? typeof mapping[T] : T;
+}
+
+function parseMD(mdString: string, useCounts: true): { type: string; length: number }[];
+function parseMD(mdString: string, useCounts: false): { pos: number; base: string; length: 1; bamSeqShift: number }[];
+function parseMD(mdString: string, useCounts: boolean) {
     let currPos = 0;
     let currNum = 0;
     let deletionEncountered = false;
     let bamSeqShift = 0;
     const substitutions = [];
 
+    /* eslint-disable-next-line @typescript-eslint/prefer-for-of */
     for (let i = 0; i < mdString.length; i++) {
         if (mdString[i].match(/[0-9]/g)) {
             // a number, keep on going
@@ -64,21 +68,41 @@ export const parseMD = (mdString, useCounts) => {
     }
 
     return substitutions;
+}
+
+type Substitution = {
+    pos: number;
+    length: number;
+    type: 'X' | 'I' | 'D' | 'N' | '=' | 'M' | 'S' | 'H';
+    variant?: string;
+};
+
+type Segment = {
+    // if two segments have the same name but different id, they are paired reads.
+    // https://github.com/GMOD/bam-js/blob/7a57d24b6aef08a1366cca86ba5092254c7a7f56/src/bamFile.ts#L386
+    id: string;
+    name: string;
+    start: number;
+    end: number;
+    md: string;
+    chrName: string;
+    chrOffset: number;
+    cigar: string;
+    mapq: string;
+    strand: '+' | '-';
 };
 
 /**
  * Gets an array of all substitutions in the segment
- * @param  {String} segment  Current segment
- * @param  {String} seq   Read sequence from bam file.
- * @return {Array}  Substitutions.
+ * @param segment  Current segment
+ * @param seq  Read sequence from bam file.
  */
-export const getSubstitutions = (segment, seq) => {
-    let substitutions = [];
-    let softClippingAtReadStart = null;
+function getSubstitutions(segment: Segment, seq: string) {
+    let substitutions: Substitution[] = [];
+    let softClippingAtReadStart: null | { type: string; length: number } = null;
 
     if (segment.cigar) {
         const cigarSubs = parseMD(segment.cigar, true);
-
         let currPos = 0;
 
         for (const sub of cigarSubs) {
@@ -109,7 +133,7 @@ export const getSubstitutions = (segment, seq) => {
                     pos: currPos,
                     length: sub.length,
                     type: 'N'
-                }); 
+                });
                 currPos += sub.length;
             } else if (sub.type === '=' || sub.type === 'M') {
                 currPos += sub.length;
@@ -169,9 +193,8 @@ export const getSubstitutions = (segment, seq) => {
 
     if (segment.md) {
         const mdSubstitutions = parseMD(segment.md, false);
-
-        mdSubstitutions.forEach(function (substitution) {
-            let posStart = substitution['pos'] + substitution['bamSeqShift'];
+        mdSubstitutions.forEach(function (substitution: typeof mdSubstitutions[number] & { variant?: string }) {
+            let posStart = substitution['pos'] + substitution['bamSeqShift']!;
             let posEnd = posStart + substitution['length'];
             // When there is soft clipping at the beginning,
             // we need to shift the position where we read the variant from the sequence
@@ -181,24 +204,26 @@ export const getSubstitutions = (segment, seq) => {
                 posEnd += softClippingAtReadStart.length;
             }
             substitution['variant'] = seq.substring(posStart, posEnd);
+            // @ts-expect-error
             delete substitution['bamSeqShift'];
         });
-
+        // @ts-expect-error
         substitutions = mdSubstitutions.concat(substitutions);
     }
 
     return substitutions;
-};
+}
 
 /////////////////////////////////////////////////
 /// ChromInfo
 /////////////////////////////////////////////////
 
-const chromInfoBisector = bisector(d => d.pos).left;
+const chromInfoBisector = bisector((d: { pos: number }) => d.pos).left;
 
-const chrToAbs = (chrom, chromPos, chromInfo) => chromInfo.chrPositions[chrom].pos + chromPos;
+const chrToAbs = (chrom: string, chromPos: number, chromInfo: ChromInfo) =>
+    chromInfo.chrPositions[chrom].pos + chromPos;
 
-const absToChr = (absPosition, chromInfo) => {
+const absToChr = (absPosition: number, chromInfo: ChromInfo) => {
     if (!chromInfo || !chromInfo.cumPositions || !chromInfo.cumPositions.length) {
         return null;
     }
@@ -207,6 +232,7 @@ const absToChr = (absPosition, chromInfo) => {
     const lastChr = chromInfo.cumPositions[chromInfo.cumPositions.length - 1].chr;
     const lastLength = chromInfo.chromLengths[lastChr];
 
+    // @ts-expect-error
     insertPoint -= insertPoint > 0 && 1;
 
     let chrPosition = Math.floor(absPosition - chromInfo.cumPositions[insertPoint].pos);
@@ -224,10 +250,10 @@ const absToChr = (absPosition, chromInfo) => {
         chrPosition = lastLength;
     }
 
-    return [chromInfo.cumPositions[insertPoint].chr, chrPosition, offset, insertPoint];
+    return [chromInfo.cumPositions[insertPoint].chr, chrPosition, offset, insertPoint] as const;
 };
 
-function natcmp(xRow, yRow) {
+function natcmp(xRow: string | [string, number], yRow: string | [string, number]): number {
     const x = xRow[0];
     const y = yRow[0];
 
@@ -251,14 +277,14 @@ function natcmp(xRow, yRow) {
         return -1;
     }
 
-    const xParts = [];
-    const yParts = [];
+    const xParts: (string | number)[] = [];
+    const yParts: (string | number)[] = [];
 
-    for (const part of x.match(/(\d+|[^\d]+)/g)) {
+    for (const part of x.match(/(\d+|[^\d]+)/g) ?? []) {
         xParts.push(Number.isNaN(part) ? part.toLowerCase() : +part);
     }
 
-    for (const part of y.match(/(\d+|[^\d]+)/g)) {
+    for (const part of y.match(/(\d+|[^\d]+)/g) ?? []) {
         xParts.push(Number.isNaN(part) ? part.toLowerCase() : +part);
     }
 
@@ -278,10 +304,10 @@ function natcmp(xRow, yRow) {
     return 0;
 }
 
-function parseChromsizesRows(data) {
-    const cumValues = [];
-    const chromLengths = {};
-    const chrPositions = {};
+function parseChromsizesRows(data: (string[] | [string, number])[]): ChromInfo {
+    const cumValues: ChromInfo['cumPositions'] = [];
+    const chromLengths: ChromInfo['chromLengths'] = {};
+    const chrPositions: ChromInfo['chrPositions'] = {};
 
     let totalLength = 0;
 
@@ -308,25 +334,25 @@ function parseChromsizesRows(data) {
     };
 }
 
-function ChromosomeInfo(filepath, success) {
-    const ret = {};
+type ExtendedChromInfo = ChromInfo & {
+    absToChr(absPos: number): ReturnType<typeof absToChr>;
+    chrToAbs(chr: [name: string, pos: number]): ReturnType<typeof chrToAbs> | null;
+};
 
-    ret.absToChr = absPos => (ret.chrPositions ? absToChr(absPos, ret) : null);
-
-    ret.chrToAbs = ([chrName, chrPos] = []) => (ret.chrPositions ? chrToAbs(chrName, chrPos, ret) : null);
-
+function ChromosomeInfo(filepath: string, success: (info: ExtendedChromInfo | null) => void) {
     return text(filepath, (error, chrInfoText) => {
         if (error) {
             // console.warn('Chromosome info not found at:', filepath);
             if (success) success(null);
         } else {
             const data = tsvParseRows(chrInfoText);
-            const chromInfo = parseChromsizesRows(data);
-
-            Object.keys(chromInfo).forEach(key => {
-                ret[key] = chromInfo[key];
-            });
-            if (success) success(ret);
+            const ret = parseChromsizesRows(data);
+            if (success)
+                success({
+                    ...ret,
+                    absToChr: absPos => (ret.chrPositions ? absToChr(absPos, ret) : null),
+                    chrToAbs: ([chrName, chrPos]) => (ret.chrPositions ? chrToAbs(chrName, chrPos, ret) : null)
+                });
         }
     });
 }
@@ -335,50 +361,75 @@ function ChromosomeInfo(filepath, success) {
 /// End Chrominfo
 /////////////////////////////////////////////////////
 
-const bamRecordToJson = (bamRecord, chrName, chrOffset) => {
+const bamRecordToJson = (bamRecord: BamRecord, chrName: string, chrOffset: number) => {
     const seq = bamRecord.get('seq');
-    const segment = {
+    const segment: Segment = {
         // if two segments have the same name but different id, they are paired reads.
         // https://github.com/GMOD/bam-js/blob/7a57d24b6aef08a1366cca86ba5092254c7a7f56/src/bamFile.ts#L386
+        // @ts-expect-error private field!!
         id: bamRecord._id,
-        name: bamRecord.get('name'), 
+        name: bamRecord.get('name'),
+        // @ts-expect-error private field!!
         start: +bamRecord.data.start + 1 + chrOffset,
+        // @ts-expect-error private field!!
         end: +bamRecord.data.end + 1 + chrOffset,
         md: bamRecord.get('MD'),
         chrName,
         chrOffset,
         cigar: bamRecord.get('cigar'),
         mapq: bamRecord.get('mq'),
-        strand: bamRecord.get('strand') === 1 ? '+' : '-',
-        substitutions: []
+        strand: bamRecord.get('strand') === 1 ? '+' : '-'
     };
-    segment.substitutions = getSubstitutions(segment, seq);
-    return segment;
+    return Object.assign(segment, { substitutions: getSubstitutions(segment, seq) });
 };
 
+type JsonBamRecord = ReturnType<typeof bamRecordToJson>;
+
 // promises indexed by urls
-const bamFiles = {};
-const bamHeaders = {};
+const bamFiles: Record<string, BamFile> = {};
+const bamHeaders: Record<string, ReturnType<BamFile['getHeader']>> = {};
 
 const MAX_TILES = 20;
 
 // promises indexed by url
-const chromSizes = {};
-const chromInfos = {};
-const tileValues = new LRU({ max: MAX_TILES });
-const tilesetInfos = {};
+const chromSizes: Record<string, Promise<ExtendedChromInfo | null>> = {};
+const chromInfos: Record<string, ChromInfo> = {};
+
+const tileValues = new QuickLRU<string, JsonBamRecord[] | { error: string }>({ maxSize: MAX_TILES });
+const tilesetInfos: Record<string, TilesetInfo> = {};
+
+type DataConfig = {
+    bamUrl: string;
+    baiUrl: string;
+    chromSizesUrl: string;
+    loadMates?: boolean;
+    maxInsertSize?: number;
+    extractJunction?: boolean;
+    junctionMinCoverage?: number;
+};
 
 // indexed by uuid
-const dataConfs = {};
+const dataConfs: Record<string, Omit<DataConfig, 'baiUrl'>> = {};
 
-const init = (uid, { bamUrl, baiUrl, chromSizesUrl, loadMates = false, maxInsertSize = 5000, extractJunction = false, junctionMinCoverage = 1}) => {
+const init = (
+    uid: string,
+    {
+        bamUrl,
+        baiUrl,
+        chromSizesUrl,
+        loadMates = false,
+        maxInsertSize = 5000,
+        extractJunction = false,
+        junctionMinCoverage = 1
+    }: DataConfig
+) => {
     if (!bamFiles[bamUrl]) {
         // we do not yet have this file cached
-        bamFiles[bamUrl] = new BamFile({ 
-            bamUrl, 
-            baiUrl, 
-            // fetchSizeLimit: 500000000, 
-            // chunkSizeLimit: 100000000 , 
+        bamFiles[bamUrl] = new BamFile({
+            bamUrl,
+            baiUrl
+            // fetchSizeLimit: 500000000,
+            // chunkSizeLimit: 100000000 ,
             // yieldThreadTime: 1000
         });
 
@@ -387,32 +438,48 @@ const init = (uid, { bamUrl, baiUrl, chromSizesUrl, loadMates = false, maxInsert
     }
 
     // if no chromsizes are passed in, we'll retrieve them from the BAM file
-    chromSizes[chromSizesUrl] = chromSizes[chromSizesUrl] || new Promise(resolve => { ChromosomeInfo(chromSizesUrl, resolve) });
+    chromSizes[chromSizesUrl] =
+        chromSizes[chromSizesUrl] ||
+        new Promise(resolve => {
+            ChromosomeInfo(chromSizesUrl, resolve);
+        });
 
     dataConfs[uid] = { bamUrl, chromSizesUrl, loadMates, maxInsertSize, extractJunction, junctionMinCoverage };
 };
 
-const tilesetInfo = uid => {
+const tilesetInfo = (uid: string) => {
     const { chromSizesUrl, bamUrl } = dataConfs[uid];
-    const promises = chromSizesUrl ? [bamHeaders[bamUrl], chromSizes[chromSizesUrl]] : [bamHeaders[bamUrl]];
+    const promises = [
+        // why do we await bamHeaders if not used in this function?
+        bamHeaders[bamUrl],
+        // this is always true unless `chromSizesUrl` is ""
+        chromSizesUrl ? chromSizes[chromSizesUrl] : undefined
+    ] as const;
 
-    return Promise.all(promises).then(values => {
+    /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
+    return Promise.all(promises).then(([_, maybeInfo]) => {
         const TILE_SIZE = 1024;
-        let chromInfo = null;
+        let chromInfo: ChromInfo;
 
-        if (values.length > 1) {
+        if (maybeInfo) {
             // this means we received a chromInfo file
-            chromInfo = values[1];
+            chromInfo = maybeInfo;
         } else {
             // no chromInfo provided so we have to take it from the bam file index
-            const chroms = [];
-            for (const { refName: chrName, length } of bamFiles[bamUrl].indexToChr) {
+            const chroms: [name: string, length: number][] = [];
+
+            // @ts-expect-error indexToChr is a protected field
+            const indexToChr = bamFiles[bamUrl].indexToChr;
+
+            for (const { refName: chrName, length } of indexToChr) {
                 chroms.push([chrName, length]);
             }
             chroms.sort(natcmp);
             chromInfo = parseChromsizesRows(chroms);
         }
+
         chromInfos[chromSizesUrl] = chromInfo;
+
         tilesetInfos[uid] = {
             tile_size: TILE_SIZE,
             bins_per_dimension: TILE_SIZE,
@@ -426,106 +493,102 @@ const tilesetInfo = uid => {
     });
 };
 
-const tile = async (uid, z, x) => {
+const tile = async (uid: string, z: number, x: number): Promise<JsonBamRecord[]> => {
     const MAX_TILE_WIDTH = 200000;
-    const { bamUrl, chromSizesUrl, loadMates, maxInsertSize } = dataConfs[uid];
+    const { bamUrl, chromSizesUrl, loadMates } = dataConfs[uid];
     const bamFile = bamFiles[bamUrl];
 
-    return tilesetInfo(uid).then(tilesetInfo => {
-        const tileWidth = +tilesetInfo.max_width / 2 ** +z;
-        const recordPromises = [];
+    const info = await tilesetInfo(uid);
 
-        if (tileWidth > MAX_TILE_WIDTH) {
-            // this.errorTextText('Zoomed out too far for this track. Zoomin further to see reads');
-            return new Promise(resolve => resolve([]));
-        }
+    if (!('max_width' in info)) {
+        throw new Error('tilesetInfo does not include `max_width`, which is required for the Gosling BamDataFetcher.');
+    }
 
-        // get the bounds of the tile
-        let minX = tilesetInfo.min_pos[0] + x * tileWidth;
-        const maxX = tilesetInfo.min_pos[0] + (x + 1) * tileWidth;
+    const tileWidth = +info.max_width / 2 ** +z;
 
-        const chromInfo = chromInfos[chromSizesUrl];
+    const recordPromises: Promise<JsonBamRecord[]>[] = [];
 
-        const { chromLengths, cumPositions } = chromInfo;
+    if (tileWidth > MAX_TILE_WIDTH) {
+        // this.errorTextText('Zoomed out too far for this track. Zoomin further to see reads');
+        return new Promise(resolve => resolve([]));
+    }
 
-        const opt = {
-            viewAsPairs: loadMates,
-            // TODO: Turning this on results in "too many requests error"
-            // https://github.com/gosling-lang/gosling.js/pull/556
-            // pairAcrossChr: typeof loadMates === 'undefined' ? false : loadMates, 
-        }
-        
-        for (let i = 0; i < cumPositions.length; i++) {
-            const chromName = cumPositions[i].chr;
-            const chromStart = cumPositions[i].pos;
-            const chromEnd = cumPositions[i].pos + chromLengths[chromName];
-            tileValues.set(`${uid}.${z}.${x}`, []);
+    // get the bounds of the tile
+    let minX = info.min_pos[0] + x * tileWidth;
+    const maxX = info.min_pos[0] + (x + 1) * tileWidth;
 
-            if (chromStart <= minX && minX < chromEnd) {
-                // start of the visible region is within this chromosome
+    const chromInfo = chromInfos[chromSizesUrl];
 
-                if (maxX > chromEnd) {
-                    // the visible region extends beyond the end of this chromosome
-                    // fetch from the start until the end of the chromosome
-                    recordPromises.push(
-                        bamFile
-                            .getRecordsForRange(
-                                chromName, 
-                                minX - chromStart, 
-                                chromEnd - chromStart,
-                                opt
-                            )
-                            .then(records => {
-                                const mappedRecords = records.map(rec =>
-                                    bamRecordToJson(rec, chromName, cumPositions[i].pos)
-                                );
-                                tileValues.set(
-                                    `${uid}.${z}.${x}`,
-                                    tileValues.get(`${uid}.${z}.${x}`).concat(mappedRecords)
-                                );
-                                // return mappedRecords;
-                            })
-                    );
+    const { chromLengths, cumPositions } = chromInfo;
 
-                    // continue onto the next chromosome
-                    minX = chromEnd;
-                } else {
-                    const startPos = Math.floor(minX - chromStart);
-                    const endPos = Math.ceil(maxX - chromStart);
-                    
-                    // the end of the region is within this chromosome
-                    recordPromises.push(
-                        bamFile
-                            .getRecordsForRange(chromName, startPos, endPos, opt)
-                            .then(records => {
-                                const mappedRecords = records.map(rec =>
-                                    bamRecordToJson(rec, chromName, cumPositions[i].pos)
-                                );
-                                tileValues.set(
-                                    `${uid}.${z}.${x}`,
-                                    tileValues.get(`${uid}.${z}.${x}`).concat(mappedRecords)
-                                );
-                                return [];
-                            })
-                    );
-                    // end the loop because we've retrieved the last chromosome
-                    break;
-                }
+    const opt = {
+        viewAsPairs: loadMates
+        // TODO: Turning this on results in "too many requests error"
+        // https://github.com/gosling-lang/gosling.js/pull/556
+        // pairAcrossChr: typeof loadMates === 'undefined' ? false : loadMates,
+    };
+
+    /* eslint-disable-next-line @typescript-eslint/prefer-for-of */
+    for (let i = 0; i < cumPositions.length; i++) {
+        const chromName = cumPositions[i].chr;
+        const chromStart = cumPositions[i].pos;
+        const chromEnd = cumPositions[i].pos + chromLengths[chromName];
+        tileValues.set(`${uid}.${z}.${x}`, []);
+
+        if (chromStart <= minX && minX < chromEnd) {
+            // start of the visible region is within this chromosome
+
+            if (maxX > chromEnd) {
+                // the visible region extends beyond the end of this chromosome
+                // fetch from the start until the end of the chromosome
+                recordPromises.push(
+                    bamFile
+                        .getRecordsForRange(chromName, minX - chromStart, chromEnd - chromStart, opt)
+                        .then(records => {
+                            const mappedRecords = records.map(rec =>
+                                bamRecordToJson(rec, chromName, cumPositions[i].pos)
+                            );
+                            tileValues.set(
+                                `${uid}.${z}.${x}`,
+                                (tileValues.get(`${uid}.${z}.${x}`) as JsonBamRecord[]).concat(mappedRecords)
+                            );
+                            return [];
+                            // return mappedRecords;
+                        })
+                );
+
+                // continue onto the next chromosome
+                minX = chromEnd;
+            } else {
+                const startPos = Math.floor(minX - chromStart);
+                const endPos = Math.ceil(maxX - chromStart);
+                // the end of the region is within this chromosome
+                recordPromises.push(
+                    bamFile.getRecordsForRange(chromName, startPos, endPos, opt).then(records => {
+                        const mappedRecords = records.map(rec => bamRecordToJson(rec, chromName, cumPositions[i].pos));
+                        tileValues.set(
+                            `${uid}.${z}.${x}`,
+                            (tileValues.get(`${uid}.${z}.${x}`) as JsonBamRecord[]).concat(mappedRecords)
+                        );
+                        return [];
+                    })
+                );
+                // end the loop because we've retrieved the last chromosome
+                break;
             }
         }
+    }
 
-        // flatten the array of promises so that it looks like we're getting one long list of value
-        return Promise.all(recordPromises).then(values => {
-            return values.flat();
-        });
+    // flatten the array of promises so that it looks like we're getting one long list of value
+    return Promise.all(recordPromises).then(values => {
+        return values.flat();
     });
 };
 
-const fetchTilesDebounced = async (uid, tileIds) => {
-    const tiles = {};
-
-    const validTileIds = [];
-    const tilePromises = [];
+const fetchTilesDebounced = async (uid: string, tileIds: string[]) => {
+    const tiles: Record<string, JsonBamRecord[] & { tilePositionId: string }> = {};
+    const validTileIds: string[] = [];
+    const tilePromises: Promise<JsonBamRecord[]>[] = [];
 
     for (const tileId of tileIds) {
         const parts = tileId.split('.');
@@ -544,21 +607,24 @@ const fetchTilesDebounced = async (uid, tileIds) => {
     return Promise.all(tilePromises).then(values => {
         values.forEach((d, i) => {
             const validTileId = validTileIds[i];
-            tiles[validTileId] = d;
-            tiles[validTileId].tilePositionId = validTileId;
+            tiles[validTileId] = Object.assign(d, { tilePositionId: validTileId });
         });
         return tiles;
     });
 };
 
-const getTabularData = (uid, tileIds) => {
-    const { loadMates, extractJunction } = dataConfs[uid];
+const getTabularData = (uid: string, tileIds: string[]) => {
+    const config = dataConfs[uid];
+    const allSegments: Record<string, Segment & { substitutions: string }> = {};
 
-    const allSegments = {};
     for (const tileId of tileIds) {
         const tileValue = tileValues.get(`${uid}.${tileId}`);
 
-        if (tileValue.error) {
+        if (!tileValue) {
+            continue;
+        }
+
+        if ('error' in tileValue) {
             throw new Error(tileValue.error);
         }
 
@@ -570,55 +636,72 @@ const getTabularData = (uid, tileIds) => {
         }
     }
 
-    let output = Object.values(allSegments);
+    const segments = Object.values(allSegments);
 
-    if(loadMates) {
-        // find and set mate info when the `data.loadMates` flag is on.
-        findMates(uid, output);
+    // find and set mate info when the `data.loadMates` flag is on.
+    if (config.loadMates) {
+        // TODO: avoid mutation?
+        findMates(segments, config.maxInsertSize);
     }
 
-    if(extractJunction) {
+    let output: Junction[] | SegmentWithMate[] | Segment[];
+    if (config.extractJunction) {
         // Reference(ggsashimi): https://github.com/guigolab/ggsashimi/blob/d686d59b4e342b8f9dcd484f0af4831cc092e5de/ggsashimi.py#L136
-        output = findJunctions(uid, output);
+        output = findJunctions(segments, config.junctionMinCoverage);
+    } else {
+        output = segments;
     }
 
-    const buffer = Buffer.from(JSON.stringify(output)).buffer;
+    const buffer = new TextEncoder().encode(JSON.stringify(output)).buffer;
     return Transfer(buffer, [buffer]);
 };
 
-const groupBy = (xs, key) =>
+const groupBy = <T, K extends keyof T>(xs: readonly T[], key: K): Record<string, T[]> =>
     xs.reduce((rv, x) => {
+        // @ts-expect-error
         (rv[x[key]] = rv[x[key]] || []).push(x);
         return rv;
-}, {});
+    }, {});
 
-const findMates = (uid, segments) => {
-    const { maxInsertSize } = dataConfs[uid];
+type SegmentWithMate = Segment & {
+    mateIds: string[];
+    foundMate: boolean;
+    insertSize: number;
+    largeInsertSize: boolean;
+    svType: string;
+    numMates: number;
+};
 
-    const segmentsByReadName = groupBy(segments, "name");
+/**
+ * @param {string} uid data config UID
+ * @param {Segment[]} segments
+ */
+const findMates = (segments: Segment[], maxInsertSize = 0) => {
+    // @ts-expect-error This methods mutates this above aob
+    const segmentsByReadName: Record<string, SegmentWithMate[]> = groupBy(segments, 'name');
 
     // Iterate entries and set information about mates
-    Object.entries(segmentsByReadName).forEach(([name, segmentGroup]) => {
-        if(segmentGroup.length === 2){
+    Object.values(segmentsByReadName).forEach(segmentGroup => {
+        if (segmentGroup.length === 2) {
             const read = segmentGroup[0];
             const mate = segmentGroup[1];
             read.mateIds = [mate.id];
             mate.mateIds = [read.id];
-           
             // Additional info we want
             const [l, r] = [read, mate].sort((a, b) => +a.start - +b.start);
             const insertSize = Math.max(0, +r.start - +l.end);
             const largeInsertSize = insertSize >= maxInsertSize;
-            let svType;
-            if(!largeInsertSize) {
+
+            let svType: string;
+            if (!largeInsertSize) {
                 svType = 'normal read';
-            } else if(l.strand === '+' && r.strand === '-') {
+            } else if (l.strand === '+' && r.strand === '-') {
                 svType = 'deletion (+-)';
-            } else if(l.strand === '+' && r.strand === '+') {
+            } else if (l.strand === '+' && r.strand === '+') {
                 svType = 'inversion (++)';
-            } else if(l.strand === '-' && r.strand === '-') {
+            } else if (l.strand === '-' && r.strand === '-') {
                 svType = 'inversion (--)';
-            } else if(l.strand === '-' && r.strand === '+') {
+            } else if (l.strand === '-' && r.strand === '+') {
                 svType = 'duplication (-+)';
             } else {
                 svType = `(${l.strand}${r.strand})`;
@@ -638,36 +721,36 @@ const findMates = (uid, segments) => {
                 d.mateIds = segmentGroup.filter(mate => mate.id !== d.id).map(mate => mate.id);
                 d.foundMate = false;
                 d.insertSize = -1;
-                d.largInsertSize = false; 
+                d.largeInsertSize = false;
                 d.svType = segmentGroup.length === 1 ? 'mates not found within chromosome' : 'more than two mates';
                 d.numMates = segmentGroup.length;
             });
         }
     });
     return segmentsByReadName;
-}
+};
 
-const findJunctions = (uid, segments) => {
-    const { junctionMinCoverage } = dataConfs[uid];
-    const junctions = []; 
-    
+type Junction = { start: number; end: number; score: number };
+
+const findJunctions = (segments: { start: number; end: number; substitutions: string }[], minCoverage = 0) => {
+    const junctions: Junction[] = [];
     segments.forEach(segment => {
-        const substitutions = JSON.parse(segment.substitutions);
+        const substitutions: { pos: number; length: number }[] = JSON.parse(segment.substitutions);
         substitutions.forEach(sub => {
             const don = segment.start + sub.pos;
             const acc = segment.start + sub.pos + sub.length;
-            if(segment.start < don && acc < segment.end) {
+            if (segment.start < don && acc < segment.end) {
                 const j = junctions.find(d => d.start === don && d.end === acc);
-                if(j) {
+                if (j) {
                     j.score += 1;
                 } else {
                     junctions.push({ start: don, end: acc, score: 1 });
                 }
-            } 
+            }
         });
     });
-    return junctions.filter(d => d.score >= junctionMinCoverage);
-}
+    return junctions.filter(d => d.score >= minCoverage);
+};
 
 const tileFunctions = {
     init,
@@ -678,3 +761,7 @@ const tileFunctions = {
 };
 
 expose(tileFunctions);
+
+export type WorkerApi = typeof tileFunctions;
+export type { TilesetInfo };
+export type Tiles = Awaited<ReturnType<typeof fetchTilesDebounced>>;

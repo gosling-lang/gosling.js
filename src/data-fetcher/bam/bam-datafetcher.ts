@@ -3,31 +3,30 @@
  * https://github.com/higlass/higlass-pileup
  */
 import type { Assembly } from '../../core/gosling.schema';
+import type { ModuleThread } from 'threads';
+import type { WorkerApi, TilesetInfo, Tiles } from './bam-worker';
 
 const DEBOUNCE_TIME = 200;
 
 class BAMDataFetcher {
-    private dataPromise: Promise<any> | undefined;
-    private chromSizes: any;
-    private values: any;
-    private assembly: Assembly;
-    private initPromise: any;
-    private dataConfig: any;
-    private worker: any;
-    private uid: string;
-    private fetchTimeout: any;
-    private toFetch: Set<any>;
-    private track: any;
+    dataConfig: Record<string, any>;
+    assembly: Assembly;
 
-    constructor(HGC: any, dataConfig: any, worker: any) {
-        this.worker = worker;
+    uid: string;
+    fetchTimeout?: ReturnType<typeof setTimeout>;
+    toFetch: Set<string>;
+
+    // This is set by us but is accessed in `fetchTilesDebounced`
+    track?: {
+        fetching: { delete(id: string): void };
+    };
+
+    constructor(HGC: import('@higlass/types').HGC, dataConfig: any, public worker: Promise<ModuleThread<WorkerApi>>) {
         this.dataConfig = dataConfig;
         this.uid = HGC.libraries.slugid.nice();
         this.assembly = 'hg38';
-        this.fetchTimeout = null;
         this.toFetch = new Set();
-
-        this.initPromise = this.worker.then((tileFunctions: any) => {
+        this.worker.then(tileFunctions => {
             if (dataConfig.url && !dataConfig.bamUrl) {
                 dataConfig['bamUrl'] = dataConfig.url;
             }
@@ -43,13 +42,11 @@ class BAMDataFetcher {
     /*
      * Collect Tileset Information, such as tile size and genomic positions
      */
-    tilesetInfo(callback?: any) {
-        this.worker.then((tileFunctions: any) => {
-            tileFunctions.tilesetInfo(this.uid).then(callback);
-        });
+    async tilesetInfo(callback: (info: TilesetInfo) => void) {
+        (await this.worker).tilesetInfo(this.uid).then(callback);
     }
 
-    fetchTilesDebounced(receivedTiles: any, tileIds: any) {
+    fetchTilesDebounced(receivedTiles: (tiles: Tiles) => void, tileIds: string[]) {
         const { toFetch } = this;
 
         const thisZoomLevel = tileIds[0].split('.')[0]; // Example of tileIds: ["3.0", "3.1"]
@@ -57,12 +54,12 @@ class BAMDataFetcher {
 
         if (thisZoomLevel !== toFetchZoomLevel) {
             for (const tileId of this.toFetch) {
-                this.track.fetching.delete(tileId);
+                this.track?.fetching.delete(tileId);
             }
             this.toFetch.clear();
         }
 
-        tileIds.forEach((x: any) => this.toFetch.add(x));
+        tileIds.forEach(x => this.toFetch.add(x));
 
         if (this.fetchTimeout) {
             clearTimeout(this.fetchTimeout);
@@ -74,12 +71,9 @@ class BAMDataFetcher {
         }, DEBOUNCE_TIME);
     }
 
-    sendFetch(receivedTiles: any, tileIds: any) {
+    async sendFetch(receivedTiles: (tiles: Tiles) => void, tileIds: string[]) {
         // this.track.updateLoadingText();
-
-        this.worker.then((tileFunctions: any) => {
-            tileFunctions.fetchTilesDebounced(this.uid, tileIds).then(receivedTiles);
-        });
+        (await this.worker).fetchTilesDebounced(this.uid, tileIds).then(receivedTiles);
     }
 }
 
