@@ -6,7 +6,7 @@ import QuickLRU from 'quick-lru';
 import type { ChromInfo, TilesetInfo } from '@higlass/types';
 import type { BamRecord } from '@gmod/bam';
 
-import { fetchChromInfo } from '../utils';
+import { fetchChromInfo, RemoteFile } from '../utils';
 
 function parseMD(mdString: string, useCounts: true): { type: string; length: number }[];
 function parseMD(mdString: string, useCounts: false): { pos: number; base: string; length: 1; bamSeqShift: number }[];
@@ -349,10 +349,10 @@ const init = (
     if (!bamFiles[bamUrl]) {
         // we do not yet have this file cached
         bamFiles[bamUrl] = new BamFile({
-            bamUrl,
-            baiUrl
-            // fetchSizeLimit: 500000000,
-            // chunkSizeLimit: 100000000 ,
+            bamFilehandle: new RemoteFile(bamUrl),
+            baiFilehandle: new RemoteFile(baiUrl),
+            // fetchSizeLimit: 500000000, 
+            // chunkSizeLimit: 100000000 , 
             // yieldThreadTime: 1000
         });
 

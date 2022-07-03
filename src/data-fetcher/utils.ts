@@ -1,5 +1,6 @@
 import { bisector } from 'd3-array';
 import { tsvParseRows } from 'd3-dsv';
+import { RemoteFile as _RemoteFile } from 'generic-filehandle';
 
 import type * as HiGlass from '@higlass/types';
 
@@ -77,5 +78,65 @@ export async function fetchChromInfo(url: string): Promise<ExtendedChromInfo> {
         ...info,
         absToChr: absPos => (info.chrPositions ? absToChr(absPos, info) : null),
         chrToAbs: ([chrName, chrPos]) => (info.chrPositions ? chrToAbs(chrName, chrPos, info) : null)
+    };
+}
+
+export class RemoteFile extends _RemoteFile {
+    // Overrides `read` to eagerly read 200 or 206 response
+    // from https://github.com/GMOD/generic-filehandle/blob/0e8209be25e3097307bd15e964edd8c017e808d7/src/remoteFile.ts#L100-L162
+    public read: _RemoteFile['read'] = async (
+        buffer,
+        offset = 0,
+        length,
+        position = 0,
+        opts = {}
+    ): Promise<{ bytesRead: number; buffer: Buffer }> => {
+        const { headers = {}, signal, overrides = {} } = opts;
+
+        if (length < Infinity) {
+            headers.range = `bytes=${position}-${position + length}`;
+        } else if (length === Infinity && position !== 0) {
+            headers.range = `bytes=${position}-`;
+        }
+        const args = {
+            // @ts-expect-error private property
+            ...this.baseOverrides,
+            ...overrides,
+            headers: {
+                ...headers,
+                ...overrides.headers,
+                // @ts-expect-error private property
+                ...this.baseOverrides.headers
+            },
+            method: 'GET',
+            redirect: 'follow',
+            mode: 'cors',
+            signal
+        };
+        const response = await this.fetch(this.url, args);
+
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status} ${response.statusText} ${this.url}`);
+        }
+
+        // Just read the response if it was successful.
+        if (response.status === 200 || response.status === 206) {
+            // @ts-expect-error private method
+            const responseData = await this.getBufferFromResponse(response);
+            const bytesCopied = responseData.copy(buffer, offset, 0, Math.min(length, responseData.length));
+
+            // try to parse out the size of the remote file
+            const res = response.headers.get('content-range');
+            const sizeMatch = /\/(\d+)$/.exec(res || '');
+            if (sizeMatch && sizeMatch[1]) {
+                // @ts-expect-error private property
+                this._stat = { size: parseInt(sizeMatch[1], 10) };
+            }
+
+            return { bytesRead: bytesCopied, buffer };
+        }
+
+        // TODO: try harder here to gather more information about what the problem is
+        throw new Error(`HTTP ${response.status} fetching ${this.url}`);
     };
 }

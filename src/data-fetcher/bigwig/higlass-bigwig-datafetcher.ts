@@ -4,8 +4,8 @@
  */
 import { BigWig } from '@gmod/bbi';
 import type { Assembly } from '@gosling.schema';
-import { RemoteFile } from 'generic-filehandle';
 import { GET_CHROM_SIZES } from '../../core/utils/assembly';
+import { RemoteFile } from '../utils';
 
 import type { Feature } from '@gmod/bbi';
 import type { ChromInfo, TilesetInfo } from '@higlass/types';
