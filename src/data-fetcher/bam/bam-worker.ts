@@ -1,13 +1,12 @@
 // This worker is heavily based on https://github.com/higlass/higlass-pileup/blob/master/src/bam-fetcher-worker.js
-import { text } from 'd3-request';
-import { bisector } from 'd3-array';
-import { tsvParseRows } from 'd3-dsv';
 import { expose, Transfer } from 'threads/worker';
 import { BamFile } from '@gmod/bam';
 import QuickLRU from 'quick-lru';
 
 import type { ChromInfo, TilesetInfo } from '@higlass/types';
 import type { BamRecord } from '@gmod/bam';
+
+import { fetchChromInfo } from '../utils';
 
 function parseMD(mdString: string, useCounts: true): { type: string; length: number }[];
 function parseMD(mdString: string, useCounts: false): { pos: number; base: string; length: 1; bamSeqShift: number }[];
@@ -201,45 +200,6 @@ function getSubstitutions(segment: Segment, seq: string) {
     return substitutions;
 }
 
-/////////////////////////////////////////////////
-/// ChromInfo
-/////////////////////////////////////////////////
-
-const chromInfoBisector = bisector((d: { pos: number }) => d.pos).left;
-
-const chrToAbs = (chrom: string, chromPos: number, chromInfo: ChromInfo) =>
-    chromInfo.chrPositions[chrom].pos + chromPos;
-
-const absToChr = (absPosition: number, chromInfo: ChromInfo) => {
-    if (!chromInfo || !chromInfo.cumPositions || !chromInfo.cumPositions.length) {
-        return null;
-    }
-
-    let insertPoint = chromInfoBisector(chromInfo.cumPositions, absPosition);
-    const lastChr = chromInfo.cumPositions[chromInfo.cumPositions.length - 1].chr;
-    const lastLength = chromInfo.chromLengths[lastChr];
-
-    // @ts-expect-error
-    insertPoint -= insertPoint > 0 && 1;
-
-    let chrPosition = Math.floor(absPosition - chromInfo.cumPositions[insertPoint].pos);
-    let offset = 0;
-
-    if (chrPosition < 0) {
-        // before the start of the genome
-        offset = chrPosition - 1;
-        chrPosition = 1;
-    }
-
-    if (insertPoint === chromInfo.cumPositions.length - 1 && chrPosition > lastLength) {
-        // beyond the last chromosome
-        offset = chrPosition - lastLength;
-        chrPosition = lastLength;
-    }
-
-    return [chromInfo.cumPositions[insertPoint].chr, chrPosition, offset, insertPoint] as const;
-};
-
 function natcmp(xRow: string | [string, number], yRow: string | [string, number]): number {
     const x = xRow[0];
     const y = yRow[0];
@@ -321,29 +281,6 @@ function parseChromsizesRows(data: (string[] | [string, number])[]): ChromInfo {
     };
 }
 
-type ExtendedChromInfo = ChromInfo & {
-    absToChr(absPos: number): ReturnType<typeof absToChr>;
-    chrToAbs(chr: [name: string, pos: number]): ReturnType<typeof chrToAbs> | null;
-};
-
-function ChromosomeInfo(filepath: string, success: (info: ExtendedChromInfo | null) => void) {
-    return text(filepath, (error, chrInfoText) => {
-        if (error) {
-            // console.warn('Chromosome info not found at:', filepath);
-            if (success) success(null);
-        } else {
-            const data = tsvParseRows(chrInfoText);
-            const ret = parseChromsizesRows(data);
-            if (success)
-                success({
-                    ...ret,
-                    absToChr: absPos => (ret.chrPositions ? absToChr(absPos, ret) : null),
-                    chrToAbs: ([chrName, chrPos]) => (ret.chrPositions ? chrToAbs(chrName, chrPos, ret) : null)
-                });
-        }
-    });
-}
-
 /////////////////////////////////////////////////////
 /// End Chrominfo
 /////////////////////////////////////////////////////
@@ -375,16 +312,14 @@ type JsonBamRecord = ReturnType<typeof bamRecordToJson>;
 // promises indexed by urls
 const bamFiles: Record<string, BamFile> = {};
 const bamHeaders: Record<string, ReturnType<BamFile['getHeader']>> = {};
+// promises indexed by chromSizesUrl
+const chromSizes: Record<string, Promise<ChromInfo>> = {};
 
 const MAX_TILES = 20;
 
-// promises indexed by chromSizesUrl
-const chromSizes: Record<string, Promise<ExtendedChromInfo | null>> = {};
-// promises indexed by uid
-const chromInfos: Record<string, ChromInfo> = {};
-
 const tileValues = new QuickLRU<string, JsonBamRecord[] | { error: string }>({ maxSize: MAX_TILES });
-const tilesetInfos: Record<string, TilesetInfo> = {};
+// indexed by uuid
+const tilesetInfos: Record<string, TilesetInfo & { chromInfo: ChromInfo }> = {};
 
 export type DataConfig = {
     bamUrl: string;
@@ -428,15 +363,17 @@ const init = (
     // if no chromsizes are passed in, we'll retrieve them from the BAM file
     if (chromSizesUrl) {
         // cache by bamUrl
-        chromSizes[chromSizesUrl] = new Promise(resolve => {
-            ChromosomeInfo(chromSizesUrl, resolve);
-        });
+        chromSizes[chromSizesUrl] = fetchChromInfo(chromSizesUrl);
     }
 
     dataConfs[uid] = { bamUrl, chromSizesUrl, loadMates, maxInsertSize, extractJunction, junctionMinCoverage };
 };
 
 const tilesetInfo = (uid: string) => {
+    if (uid in tilesetInfos) {
+        // cache hit
+        return tilesetInfos[uid];
+    }
     const { chromSizesUrl, bamUrl } = dataConfs[uid];
     const promises = [
         // why do we await bamHeaders if not used in this function?
@@ -466,15 +403,14 @@ const tilesetInfo = (uid: string) => {
             chromInfo = parseChromsizesRows(chroms);
         }
 
-        chromInfos[uid] = chromInfo;
-
         tilesetInfos[uid] = {
             tile_size: TILE_SIZE,
             bins_per_dimension: TILE_SIZE,
             max_zoom: Math.ceil(Math.log(chromInfo.totalLength / TILE_SIZE) / Math.log(2)),
             max_width: chromInfo.totalLength,
             min_pos: [0],
-            max_pos: [chromInfo.totalLength]
+            max_pos: [chromInfo.totalLength],
+            chromInfo: chromInfo
         };
 
         return tilesetInfos[uid];
@@ -505,9 +441,7 @@ const tile = async (uid: string, z: number, x: number): Promise<JsonBamRecord[]>
     let minX = info.min_pos[0] + x * tileWidth;
     const maxX = info.min_pos[0] + (x + 1) * tileWidth;
 
-    const chromInfo = chromInfos[uid];
-
-    const { chromLengths, cumPositions } = chromInfo;
+    const { chromLengths, cumPositions } = info.chromInfo;
 
     const opt = {
         viewAsPairs: loadMates
