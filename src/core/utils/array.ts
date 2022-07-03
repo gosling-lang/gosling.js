@@ -15,9 +15,9 @@ export function arrayRepeat<T>(base: T[], targetLength: number): T[] {
 
 /**
  * Insert item to an array and return it.
- * @prop {array} array Array to be updated.
- * @prop {number} index Index of array to insert new item.
- * @prop {any} item Item to be inserted.
+ * @param array Array to be updated.
+ * @param index Index of array to insert new item.
+ * @param item Item to be inserted.
  * @returns Updated array.
  */
 export function insertItemToArray<T>(array: T[], index: number, item: T): T[] {
@@ -26,9 +26,9 @@ export function insertItemToArray<T>(array: T[], index: number, item: T): T[] {
 
 /**
  * Insert item to an array and return it.
- * @prop {array} array Array to be updated.
- * @prop {number} index Index of array to change item.
- * @prop {any} item Item to be inserted.
+ * @param array Array to be updated.
+ * @param index Index of array to change item.
+ * @param item Item to be inserted.
  * @returns Updated array.
  */
 export function modifyItemInArray<T>(array: T[], index: number, item: T): T[] {
@@ -37,8 +37,8 @@ export function modifyItemInArray<T>(array: T[], index: number, item: T): T[] {
 
 /**
  * Remove item from an array stored in a certain index.
- * @prop {array} array Array to be updated.
- * @prop {number} index Index of an item to be removed.
+ * @param array Array to be updated.
+ * @param index Index of an item to be removed.
  * @returns Updated array.
  */
 export function removeItemFromArray<T>(array: T[], index: number): T[] {
@@ -47,7 +47,7 @@ export function removeItemFromArray<T>(array: T[], index: number): T[] {
 
 /**
  * Convert 1D array into 2D array where each pair of elements are grouped.
- * @prop {array} array Array to be used.
+ * @param array Array to be used.
  * @returns Updated array.
  */
 export function flatArrayToPairArray<T>(array: T[]): [T, T][] {
