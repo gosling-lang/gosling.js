@@ -68,6 +68,7 @@ const external = [...Object.keys(pkg.dependencies), ...Object.keys(pkg.peerDepen
 
 const esm = defineConfig({
     build: {
+        emptyOutDir: false,
         outDir: 'dist',
         minify: false,
         target: 'es2018',
