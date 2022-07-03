@@ -5,78 +5,61 @@
 import VCF from '@gmod/vcf';
 import { TabixIndexedFile } from '@gmod/tabix';
 import { expose, Transfer } from 'threads/worker';
-import { text } from 'd3-request';
-import { tsvParseRows } from 'd3-dsv';
 import { RemoteFile } from 'generic-filehandle';
 import { sampleSize } from 'lodash-es';
 
-/**
- * Construct size of chromosomes from data.
- */
-export function parseChrSizes(rows) {
-    const cumPositions = [];
-    const chromLengths = {};
-    const chrPositions = {};
+import { fetchChromInfo } from '../utils';
 
-    let totalLength = 0;
-
-    rows.forEach((d, i) => {
-        const chr = d[0];
-        const length = Number(d[1]);
-        const chrPosition = { id: i, chr, pos: totalLength };
-
-        chrPositions[chr] = chrPosition;
-        chromLengths[chr] = length;
-        cumPositions.push(chrPosition);
-
-        totalLength += length;
-    });
-
-    return { cumPositions, chrPositions, totalLength, chromLengths };
-}
-
-function ChromosomeInfo(filepath, success) {
-    const info = {};
-
-    // TODO: why is this used?
-    info.absToChr = () => null;
-    info.chrToAbs = () => null;
-
-    return text(filepath, (error, chrInfoText) => {
-        if (error) {
-            // console.warn('Chromosome info not found at:', filepath);
-            if (success) success(null);
-        } else {
-            const rows = tsvParseRows(chrInfoText);
-            const chromInfo = parseChrSizes(rows);
-
-            Object.keys(chromInfo).forEach(key => {
-                info[key] = chromInfo[key];
-            });
-            if (success) success(info);
-        }
-    });
-}
+import type { TilesetInfo } from '@higlass/types';
+import type { ExtendedChromInfo } from '../utils';
 
 // promises indexed by urls
-const vcfFiles = {};
-const vcfHeaders = {};
-const tbiVCFParsers = {};
+const vcfFiles: Record<string, TabixIndexedFile> = {};
+const vcfHeaders: Record<string, Promise<string>> = {};
+const tbiVCFParsers: Record<string, VCF> = {};
 
 // const MAX_TILES = 20;
+// https://github.com/GMOD/vcf-js/blob/c4a9cbad3ba5a3f0d1c817d685213f111bf9de9b/src/parse.ts#L284-L291
+type VcfRecord = {
+    CHROM: string;
+    POS: number;
+    ID: null | string[];
+    REF: string;
+    ALT: null | string[];
+    QUAL: null | number;
+    FILTER: null | string;
+    INFO: Record<string, true | (number | null)[] | string[]>;
+};
+
+export type Tile = Omit<VcfRecord, 'ALT' | 'INFO'> & {
+    ALT: string | undefined;
+    MUTTYPE: ReturnType<typeof getMutationType>;
+    SUBTYPE: ReturnType<typeof getSubstitutionType>;
+    INFO: string;
+    ORIGINALPOS: number;
+    POS: number;
+    POSEND: number;
+    DISTPREV: number | null;
+    DISTPREVLOGE: number | null;
+};
 
 // promises indexed by url
-const chromSizes = {};
-const chromInfos = {};
-const tileValues = {}; // new LRU({ max: MAX_TILES });
-const tilesetInfos = {};
+const chromSizes: Record<string, Promise<ExtendedChromInfo>> = {};
+const chromInfos: Record<string, ExtendedChromInfo> = {};
+const tileValues: Record<string, Tile[]> = {}; // new LRU({ max: MAX_TILES });
+const tilesetInfos: Record<string, TilesetInfo> = {};
 
 // const vcfData = [];
 
 // indexed by uuid
-const dataConfs = {};
+type DataConfig = {
+    vcfUrl: string;
+    chromSizesUrl: string;
+    sampleLength: number;
+};
+const dataConfs: Record<string, DataConfig> = {};
 
-const init = (uid, vcfUrl, tbiUrl, chromSizesUrl, sampleLength) => {
+const init = (uid: string, vcfUrl: string, tbiUrl: string, chromSizesUrl: string, sampleLength: number) => {
     if (!vcfFiles[vcfUrl]) {
         vcfFiles[vcfUrl] = new TabixIndexedFile({
             filehandle: new RemoteFile(vcfUrl),
@@ -87,27 +70,21 @@ const init = (uid, vcfUrl, tbiUrl, chromSizesUrl, sampleLength) => {
     }
 
     if (chromSizesUrl) {
-        chromSizes[chromSizesUrl] =
-            chromSizes[chromSizesUrl] ??
-            new Promise(resolve => {
-                ChromosomeInfo(chromSizesUrl, resolve);
-            });
+        chromSizes[chromSizesUrl] = chromSizes[chromSizesUrl] ?? fetchChromInfo(chromSizesUrl);
     }
 
     dataConfs[uid] = { vcfUrl, chromSizesUrl, sampleLength };
 };
 
-const tilesetInfo = uid => {
+const tilesetInfo = (uid: string) => {
     const { chromSizesUrl, vcfUrl } = dataConfs[uid];
-    const promises = [vcfHeaders[vcfUrl], chromSizes[chromSizesUrl]];
-
-    return Promise.all(promises).then(values => {
+    const promises = [vcfHeaders[vcfUrl], chromSizes[chromSizesUrl]] as const;
+    return Promise.all(promises).then(([header, chromInfo]) => {
         if (!tbiVCFParsers[vcfUrl]) {
-            tbiVCFParsers[vcfUrl] = new VCF({ header: values[0] });
+            tbiVCFParsers[vcfUrl] = new VCF({ header });
         }
 
         const TILE_SIZE = 1024;
-        const chromInfo = values[1];
         chromInfos[chromSizesUrl] = chromInfo;
 
         const retVal = {
@@ -123,11 +100,44 @@ const tilesetInfo = uid => {
     });
 };
 
+const getMutationType = (ref: string, alt?: string) => {
+    if (!alt) return 'unknown';
+    if (ref.length === alt.length) return 'substitution';
+    if (ref.length > alt.length) return 'deletion';
+    if (ref.length < alt.length) return 'insertion';
+    return 'unknown';
+};
+
+const getSubstitutionType = (ref: string, alt?: string) => {
+    switch (ref + alt) {
+        case 'CA':
+        case 'GT':
+            return 'C>A';
+        case 'CG':
+        case 'GC':
+            return 'C>G';
+        case 'CT':
+        case 'GA':
+            return 'C>T';
+        case 'TA':
+        case 'AT':
+            return 'T>A';
+        case 'TC':
+        case 'AG':
+            return 'T>C';
+        case 'TG':
+        case 'AC':
+            return 'T>G';
+        default:
+            return 'unknown';
+    }
+};
+
 // We return an empty tile. We get the data from SvTrack
-const tile = async (uid, z, x) => {
+const tile = async (uid: string, z: number, x: number): Promise<void[]> => {
     const { chromSizesUrl, vcfUrl } = dataConfs[uid];
 
-    if (!vcfHeaders[vcfUrl]) return;
+    if (!vcfHeaders[vcfUrl]) return [];
 
     const CACHE_KEY = `${uid}.${z}.${x}`;
 
@@ -136,147 +146,109 @@ const tile = async (uid, z, x) => {
     tileValues[CACHE_KEY] = [];
     // }
 
-    return tilesetInfo(uid).then(tsInfo => {
-        const recordPromises = [];
+    const tsInfo = await tilesetInfo(uid);
+    const recordPromises: Promise<void>[] = [];
 
-        const tileWidth = +tsInfo.max_width / 2 ** +z;
+    const tileWidth = +tsInfo.max_width / 2 ** +z;
 
-        // get bounds of this tile
-        const minX = tsInfo.min_pos[0] + x * tileWidth;
-        const maxX = tsInfo.min_pos[0] + (x + 1) * tileWidth;
+    // get bounds of this tile
+    const minX = tsInfo.min_pos[0] + x * tileWidth;
+    const maxX = tsInfo.min_pos[0] + (x + 1) * tileWidth;
 
-        let curMinX = minX;
+    let curMinX = minX;
 
-        const { chromLengths, cumPositions } = chromInfos[chromSizesUrl];
-        const tbiVCFParser = tbiVCFParsers[vcfUrl];
+    const { chromLengths, cumPositions } = chromInfos[chromSizesUrl];
+    const tbiVCFParser = tbiVCFParsers[vcfUrl];
 
-        const getMutationType = (ref, alt) => {
-            if (ref.length === alt.length) return 'substitution';
-            else if (ref.length > alt.length) return 'deletion';
-            else if (ref.length < alt.length) return 'insertion';
-            else return 'unknown';
-        };
+    cumPositions.forEach(cumPos => {
+        const chromName = cumPos.chr;
+        const chromStart = cumPos.pos;
+        const chromEnd = cumPos.pos + chromLengths[chromName];
 
-        const getSubstitutionType = (ref, alt) => {
-            switch (ref + alt) {
-                case 'CA':
-                case 'GT':
-                    return 'C>A';
-                case 'CG':
-                case 'GC':
-                    return 'C>G';
-                case 'CT':
-                case 'GA':
-                    return 'C>T';
-                case 'TA':
-                case 'AT':
-                    return 'T>A';
-                case 'TC':
-                case 'AG':
-                    return 'T>C';
-                case 'TG':
-                case 'AC':
-                    return 'T>G';
-                default:
-                    return 'unknown';
+        const parseLineStoreData = (line: string, prevPos?: number) => {
+            const vcfRecord: VcfRecord = tbiVCFParser.parseLine(line);
+            const POS = cumPos.pos + vcfRecord.POS + 1;
+
+            let ALT: string | undefined;
+            if (Array.isArray(vcfRecord.ALT) && vcfRecord.ALT.length > 0) {
+                ALT = vcfRecord.ALT[0];
             }
-        };
 
-        cumPositions.forEach(cumPos => {
-            const chromName = cumPos.chr;
-            const chromStart = cumPos.pos;
-            const chromEnd = cumPos.pos + chromLengths[chromName];
+            // Additionally inferred values
+            const DISTPREV = !prevPos ? null : vcfRecord.POS - prevPos;
+            const DISTPREVLOGE = !prevPos ? null : Math.log(vcfRecord.POS - prevPos);
+            const MUTTYPE = getMutationType(vcfRecord.REF, ALT);
+            const SUBTYPE = getSubstitutionType(vcfRecord.REF, ALT);
+            const POSEND = POS + vcfRecord.REF.length;
 
-            const parseLineStoreData = (line, prevPos) => {
-                const vcfRecord = tbiVCFParser.parseLine(line);
-                const POS = cumPos.pos + vcfRecord.POS + 1;
-
-                // We consider only the first ALT and REF if they are arrays
-                if (Array.isArray(vcfRecord.ALT) && vcfRecord.ALT.length !== 0) {
-                    vcfRecord.ALT = vcfRecord.ALT[0];
-                }
-                if (Array.isArray(vcfRecord.REF) && vcfRecord.REF.length !== 0) {
-                    vcfRecord.REF = vcfRecord.REF[0];
-                }
-
-                // Additionally inferred values
-                const DISTPREV = !prevPos ? null : vcfRecord.POS - prevPos;
-                const DISTPREVLOGE = !prevPos ? null : Math.log(vcfRecord.POS - prevPos);
-                const MUTTYPE = getMutationType(vcfRecord.REF, vcfRecord.ALT);
-                const SUBTYPE = getSubstitutionType(vcfRecord.REF, vcfRecord.ALT);
-                const POSEND = POS + vcfRecord.REF.length;
-
-                // Create key values
-                const data = {
-                    ...vcfRecord,
-                    MUTTYPE,
-                    SUBTYPE,
-                    INFO: JSON.stringify(vcfRecord.INFO),
-                    ORIGINALPOS: vcfRecord.POS,
-                    POS,
-                    POSEND,
-                    DISTPREV,
-                    DISTPREVLOGE
-                };
-
-                // Parse INFO fields
-                Object.keys(vcfRecord.INFO).forEach(key => {
-                    data[key] = vcfRecord.INFO[key][0];
-                });
-
-                // Store this column
-                tileValues[CACHE_KEY] = tileValues[CACHE_KEY].concat([data]);
-
-                // Return current POS
-                return vcfRecord.POS;
+            // Create key values
+            const data: Tile = {
+                ...vcfRecord,
+                ALT,
+                MUTTYPE,
+                SUBTYPE,
+                INFO: JSON.stringify(vcfRecord.INFO),
+                ORIGINALPOS: vcfRecord.POS,
+                POS,
+                POSEND,
+                DISTPREV,
+                DISTPREVLOGE
             };
 
-            let startPos, endPos;
-            if (chromStart <= curMinX && curMinX < chromEnd) {
-                // start of the visible region is within this chromosome
-                let prevPOS;
-                if (maxX > chromEnd) {
-                    // the visible region extends beyond the end of this chromosome
-                    // fetch from the start until the end of the chromosome
+            Object.keys(vcfRecord.INFO).forEach(key => {
+                const val = vcfRecord.INFO[key];
+                if (Array.isArray(val)) return [key, val[0]] as const;
+                return [key, val] as const;
+            });
 
-                    startPos = curMinX - chromStart;
-                    endPos = chromEnd - chromStart;
-                    recordPromises.push(
-                        vcfFiles[vcfUrl]
-                            .getLines(chromName, startPos, endPos, line => {
-                                prevPOS = parseLineStoreData(line, prevPOS);
-                            })
-                            .then(() => {})
-                    );
-                } else {
-                    startPos = Math.floor(curMinX - chromStart);
-                    endPos = Math.ceil(maxX - chromStart);
+            // Store this column
+            tileValues[CACHE_KEY] = tileValues[CACHE_KEY].concat([data]);
 
-                    recordPromises.push(
-                        vcfFiles[vcfUrl]
-                            .getLines(chromName, startPos, endPos, line => {
-                                prevPOS = parseLineStoreData(line, prevPOS);
-                            })
-                            .then(() => {})
-                    );
-                    return;
-                }
+            // Return current POS
+            return vcfRecord.POS;
+        };
 
-                curMinX = chromEnd;
+        let startPos, endPos;
+        if (chromStart <= curMinX && curMinX < chromEnd) {
+            // start of the visible region is within this chromosome
+            let prevPOS: number | undefined;
+            if (maxX > chromEnd) {
+                // the visible region extends beyond the end of this chromosome
+                // fetch from the start until the end of the chromosome
+
+                startPos = curMinX - chromStart;
+                endPos = chromEnd - chromStart;
+                recordPromises.push(
+                    vcfFiles[vcfUrl]
+                        .getLines(chromName, startPos, endPos, line => {
+                            prevPOS = parseLineStoreData(line, prevPOS);
+                        })
+                        .then(() => {})
+                );
+            } else {
+                startPos = Math.floor(curMinX - chromStart);
+                endPos = Math.ceil(maxX - chromStart);
+                recordPromises.push(
+                    vcfFiles[vcfUrl]
+                        .getLines(chromName, startPos, endPos, line => {
+                            prevPOS = parseLineStoreData(line, prevPOS);
+                        })
+                        .then(() => {})
+                );
+                return;
             }
-        });
 
-        return Promise.all(recordPromises).then(values => {
-            return values.flat();
-        });
+            curMinX = chromEnd;
+        }
     });
+
+    return Promise.all(recordPromises).then(values => values.flat());
 };
 
-const fetchTilesDebounced = async (uid, tileIds) => {
-    const tiles = {};
-
-    const validTileIds = [];
-    const tilePromises = [];
+const fetchTilesDebounced = async (uid: string, tileIds: string[]) => {
+    const tiles: Record<string, Tile> = {};
+    const validTileIds: string[] = [];
+    const tilePromises: Promise<void[]>[] = [];
 
     for (const tileId of tileIds) {
         const parts = tileId.split('.');
@@ -290,19 +262,20 @@ const fetchTilesDebounced = async (uid, tileIds) => {
         validTileIds.push(tileId);
         tilePromises.push(tile(uid, z, x));
     }
-
     return Promise.all(tilePromises).then(values => {
         for (let i = 0; i < values.length; i++) {
             const validTileId = validTileIds[i];
+            // @ts-expect-error values is void, this should never happen.
             tiles[validTileId] = values[i];
+            // @ts-expect-error values is void, this should never happen.
             tiles[validTileId].tilePositionId = validTileId;
         }
         return tiles;
     });
 };
 
-const getTabularData = (uid, tileIds) => {
-    const data = [];
+const getTabularData = (uid: string, tileIds: string[]) => {
+    const data: Tile[][] = [];
 
     tileIds.forEach(tileId => {
         const parts = tileId.split('.');
@@ -324,11 +297,11 @@ const getTabularData = (uid, tileIds) => {
     if (output.length >= sampleLength) {
         // TODO: we can make this more generic
         // priotize that mutations with closer each other are selected when sampling.
-        const highPriority = output.sort((a, b) => -a.DISTPREV + b.DISTPREV).slice(0, sampleLength / 2.0);
+        const highPriority = output.sort((a, b) => -(a.DISTPREV ?? 0) + (b.DISTPREV ?? 0)).slice(0, sampleLength / 2.0);
         output = sampleSize(output, sampleLength / 2.0).concat(highPriority);
     }
 
-    const buffer = new TextEncoder().encode(JSON.stringify(output)).buffer;
+    const buffer = Buffer.from(JSON.stringify(output)).buffer;
     return Transfer(buffer, [buffer]);
 };
 
@@ -339,5 +312,8 @@ const tileFunctions = {
     tile,
     getTabularData
 };
+
+export type WorkerApi = typeof tileFunctions;
+export type { TilesetInfo };
 
 expose(tileFunctions);

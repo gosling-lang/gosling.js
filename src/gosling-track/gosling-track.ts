@@ -105,6 +105,7 @@ function GoslingTrack(HGC: import('@higlass/types').HGC, ...args: any[]): any {
                         context.dataFetcher = new BAMDataFetcher(HGC, context.dataConfig, dataWorker);
                     } else if (options.spec.data?.type === 'vcf') {
                         dataWorker = spawn(new VcfWorker());
+                        // @ts-expect-error dataWorker is currently any...
                         context.dataFetcher = new GoslingVcfData(HGC, context.dataConfig, dataWorker);
                     }
                 } catch (e) {

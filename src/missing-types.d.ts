@@ -42,6 +42,7 @@ declare module '@higlass/services' {
         min_pos: number[];
         max_pos: number[];
         max_zoom: number;
+        tile_size?: number;
     } & (
         | {
               resolutions: number[];
@@ -332,7 +333,7 @@ declare module '@higlass/utils' {
         absPosition: number,
         chrInfo: Pick<ChromInfo, 'cumPositions' | 'chromLengths'>
     ): [chr: string, chrPositon: number, offset: number, insertPoint: number];
-    export function chrToAbs<Name = string>(
+    export function chrToAbs<Name extends string>(
         chrom: Name,
         chromPos: number,
         chromInfo: Pick<ChromInfo<Name>, 'chrPositions'>
