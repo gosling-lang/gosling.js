@@ -1,3 +1,23 @@
+## [0.9.20](https://github.com/gosling-lang/gosling.js/compare/v0.9.19...v0.9.20) (2022-07-03)
+
+
+### Bug Fixes
+
+* **editor:** fix typo on the mouse event example ([#726](https://github.com/gosling-lang/gosling.js/issues/726)) ([c7be92d](https://github.com/gosling-lang/gosling.js/commit/c7be92d327587c4948291e23911697a04e1246b2))
+* fix error when using latest gosling.js by pinning generic-filehandle ([#737](https://github.com/gosling-lang/gosling.js/issues/737)) ([dec0e64](https://github.com/gosling-lang/gosling.js/commit/dec0e6434c39c233cf7cc35fe96c21747f37fa95))
+* include types to the bundle; exclude editor types ([#749](https://github.com/gosling-lang/gosling.js/issues/749)) ([1935062](https://github.com/gosling-lang/gosling.js/commit/1935062a2b9261186ae584adef53306e69a450b2))
+* override RemoteFile.read to be more flexible ([#743](https://github.com/gosling-lang/gosling.js/issues/743)) ([d27fed4](https://github.com/gosling-lang/gosling.js/commit/d27fed4e338364690d0463b542181c77555031d8))
+
+
+### Features
+
+* add partial types for `HGC` ([#728](https://github.com/gosling-lang/gosling.js/issues/728)) ([3364b15](https://github.com/gosling-lang/gosling.js/commit/3364b158aac373a8a304687dbeff512d24b76a7d))
+* **data-fetchers:** migrate BAM worker to TS ([#739](https://github.com/gosling-lang/gosling.js/issues/739)) ([20e989c](https://github.com/gosling-lang/gosling.js/commit/20e989c232750397a8a7547a6de175671757885b))
+* **data-fetchers:** migrate bigwig to TS ([#741](https://github.com/gosling-lang/gosling.js/issues/741)) ([e52b594](https://github.com/gosling-lang/gosling.js/commit/e52b5944da3a3e3f8ced4a50901c0f3f0e8d4b75))
+* **data-fetchers:** migrate VCF data-fetcher to TS ([#740](https://github.com/gosling-lang/gosling.js/issues/740)) ([4aba4df](https://github.com/gosling-lang/gosling.js/commit/4aba4df9b273187bab382e959b7c30578771b481))
+
+
+
 ## [0.9.19](https://github.com/gosling-lang/gosling.js/compare/v0.9.18...v0.9.19) (2022-06-09)
 
 

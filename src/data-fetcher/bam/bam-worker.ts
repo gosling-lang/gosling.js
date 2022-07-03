@@ -350,9 +350,9 @@ const init = (
         // we do not yet have this file cached
         bamFiles[bamUrl] = new BamFile({
             bamFilehandle: new RemoteFile(bamUrl),
-            baiFilehandle: new RemoteFile(baiUrl),
-            // fetchSizeLimit: 500000000, 
-            // chunkSizeLimit: 100000000 , 
+            baiFilehandle: new RemoteFile(baiUrl)
+            // fetchSizeLimit: 500000000,
+            // chunkSizeLimit: 100000000 ,
             // yieldThreadTime: 1000
         });
 
