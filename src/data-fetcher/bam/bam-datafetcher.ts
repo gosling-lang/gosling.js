@@ -11,16 +11,17 @@ import type { WorkerApi, TilesetInfo, Tiles, DataConfig as WorkerDataConfig } fr
 
 const DEBOUNCE_TIME = 200;
 
-type DataConfig = Partial<WorkerDataConfig> & { url: string, indexUrl?: string };
+type DataConfig = Partial<WorkerDataConfig> & { url: string; indexUrl?: string };
 
 class BAMDataFetcher {
     dataConfig: DataConfig;
     assembly: Assembly;
-    worker: Promise<ModuleThread<WorkerApi>>;
 
     uid: string;
     fetchTimeout?: ReturnType<typeof setTimeout>;
     toFetch: Set<string>;
+
+    private worker: Promise<ModuleThread<WorkerApi>>;
 
     // This is set by us but is accessed in `fetchTilesDebounced`
     track?: {
@@ -28,19 +29,20 @@ class BAMDataFetcher {
     };
 
     constructor(HGC: import('@higlass/types').HGC, dataConfig: DataConfig) {
-       this.worker = spawn(new Worker());
         this.dataConfig = dataConfig;
         this.uid = HGC.libraries.slugid.nice();
         this.assembly = 'hg38';
         this.toFetch = new Set();
-        this.worker.then(api => {
+
+        this.worker = spawn<WorkerApi>(new Worker()).then(async worker => {
             const bamUrl = dataConfig.bamUrl ?? dataConfig.url;
-            const workerDataConfig: WorkerDataConfig = { 
+            const workerDataConfig: WorkerDataConfig = {
                 ...dataConfig,
                 bamUrl,
-                baiUrl: dataConfig.baiUrl ?? dataConfig.indexUrl ?? `${bamUrl}.bai`,
-            }
-            return api.init(this.uid, workerDataConfig).then(() => this.worker);
+                baiUrl: dataConfig.baiUrl ?? dataConfig.indexUrl ?? `${bamUrl}.bai`
+            };
+            await worker.init(this.uid, workerDataConfig);
+            return worker;
         });
     }
 

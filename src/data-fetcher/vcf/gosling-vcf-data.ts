@@ -17,34 +17,28 @@ type VcfDataConfig = VCFData & { assembly: Assembly };
 
 class GoslingVcfData {
     uid: string;
-    worker: Promise<ModuleThread<WorkerApi>>
     prevRequestTime: number;
-    initPromise: Promise<unknown>;
     track?: any;
 
     private assembly: Assembly;
     private toFetch: Set<string>;
     private fetchTimeout?: ReturnType<typeof setTimeout>;
+    private worker: Promise<ModuleThread<WorkerApi>>;
 
-    constructor(
-        HGC: import('@higlass/types').HGC,
-        public dataConfig: VcfDataConfig,
-    ) {
+    constructor(HGC: import('@higlass/types').HGC, public dataConfig: VcfDataConfig) {
         this.uid = HGC.libraries.slugid.nice();
-        this.worker = spawn(new Worker);
         this.prevRequestTime = 0;
         this.assembly = dataConfig.assembly;
         this.toFetch = new Set();
-        this.initPromise = this.worker.then(api => {
-            return api
-                .init(
-                    this.uid,
-                    dataConfig.url,
-                    dataConfig.indexUrl,
-                    GET_CHROM_SIZES(this.assembly).path,
-                    dataConfig.sampleLength ?? 1000
-                )
-                .then(() => this.worker);
+        this.worker = spawn<WorkerApi>(new Worker()).then(async worker => {
+            await worker.init(
+                this.uid,
+                dataConfig.url,
+                dataConfig.indexUrl,
+                GET_CHROM_SIZES(this.assembly).path,
+                dataConfig.sampleLength ?? 1000
+            );
+            return worker;
         });
     }
 
@@ -70,7 +64,7 @@ class GoslingVcfData {
 
         this.track.drawLoadingCue();
 
-        tileIds.forEach((tileId) => this.toFetch.add(tileId));
+        tileIds.forEach(tileId => this.toFetch.add(tileId));
 
         if (this.fetchTimeout) {
             clearTimeout(this.fetchTimeout);

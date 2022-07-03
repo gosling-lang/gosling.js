@@ -430,7 +430,7 @@ const init = (
         // cache by bamUrl
         chromSizes[chromSizesUrl] = new Promise(resolve => {
             ChromosomeInfo(chromSizesUrl, resolve);
-        }); 
+        });
     }
 
     dataConfs[uid] = { bamUrl, chromSizesUrl, loadMates, maxInsertSize, extractJunction, junctionMinCoverage };
@@ -483,7 +483,7 @@ const tilesetInfo = (uid: string) => {
 
 const tile = async (uid: string, z: number, x: number): Promise<JsonBamRecord[]> => {
     const MAX_TILE_WIDTH = 200000;
-    const { bamUrl, chromSizesUrl, loadMates } = dataConfs[uid];
+    const { bamUrl, loadMates } = dataConfs[uid];
     const bamFile = bamFiles[bamUrl];
 
     const info = await tilesetInfo(uid);
