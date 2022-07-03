@@ -9,19 +9,6 @@ import QuickLRU from 'quick-lru';
 import type { ChromInfo, TilesetInfo } from '@higlass/types';
 import type { BamRecord } from '@gmod/bam';
 
-// not used anywhere?
-/* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-function cigarTypeToText<T extends string>(type: T) {
-    const mapping = {
-        D: 'Deletion',
-        S: 'Soft clipping',
-        H: 'Hard clipping',
-        I: 'Insertion',
-        N: 'Skipped region'
-    } as const;
-    return ((mapping as any)[type] ?? type) as T extends keyof typeof mapping ? typeof mapping[T] : T;
-}
-
 function parseMD(mdString: string, useCounts: true): { type: string; length: number }[];
 function parseMD(mdString: string, useCounts: false): { pos: number; base: string; length: 1; bamSeqShift: number }[];
 function parseMD(mdString: string, useCounts: boolean) {
