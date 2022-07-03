@@ -2,40 +2,55 @@
  * This code is based on the following repo:
  * https://github.com/higlass/higlass-pileup
  */
+import { spawn } from 'threads';
+import Worker from './bam-worker.ts?worker&inline';
+
 import type { Assembly } from '../../core/gosling.schema';
 import type { ModuleThread } from 'threads';
-import type { WorkerApi, TilesetInfo, Tiles } from './bam-worker';
+import type {
+    WorkerApi,
+    TilesetInfo,
+    Tiles,
+    DataConfig as WorkerDataConfig,
+    Segment,
+    SegmentWithMate,
+    Junction
+} from './bam-worker';
 
 const DEBOUNCE_TIME = 200;
 
+type DataConfig = Partial<WorkerDataConfig> & { url: string; indexUrl?: string };
+
 class BAMDataFetcher {
-    dataConfig: Record<string, any>;
+    dataConfig: DataConfig;
     assembly: Assembly;
 
     uid: string;
     fetchTimeout?: ReturnType<typeof setTimeout>;
     toFetch: Set<string>;
 
+    private worker: Promise<ModuleThread<WorkerApi>>;
+
     // This is set by us but is accessed in `fetchTilesDebounced`
     track?: {
         fetching: { delete(id: string): void };
     };
 
-    constructor(HGC: import('@higlass/types').HGC, dataConfig: any, public worker: Promise<ModuleThread<WorkerApi>>) {
+    constructor(HGC: import('@higlass/types').HGC, dataConfig: DataConfig) {
         this.dataConfig = dataConfig;
         this.uid = HGC.libraries.slugid.nice();
         this.assembly = 'hg38';
         this.toFetch = new Set();
-        this.worker.then(tileFunctions => {
-            if (dataConfig.url && !dataConfig.bamUrl) {
-                dataConfig['bamUrl'] = dataConfig.url;
-            }
 
-            if (!dataConfig.baiUrl) {
-                dataConfig['baiUrl'] = dataConfig.indexUrl ?? `${dataConfig['bamUrl']}.bai`;
-            }
-
-            return tileFunctions.init(this.uid, dataConfig).then(() => this.worker);
+        this.worker = spawn<WorkerApi>(new Worker()).then(async worker => {
+            const bamUrl = dataConfig.bamUrl ?? dataConfig.url;
+            const workerDataConfig: WorkerDataConfig = {
+                ...dataConfig,
+                bamUrl,
+                baiUrl: dataConfig.baiUrl ?? dataConfig.indexUrl ?? `${bamUrl}.bai`
+            };
+            await worker.init(this.uid, workerDataConfig);
+            return worker;
         });
     }
 
@@ -74,6 +89,11 @@ class BAMDataFetcher {
     async sendFetch(receivedTiles: (tiles: Tiles) => void, tileIds: string[]) {
         // this.track.updateLoadingText();
         (await this.worker).fetchTilesDebounced(this.uid, tileIds).then(receivedTiles);
+    }
+
+    async getTabularData(uid: string, tileIds: string[]): Promise<Segment[] | SegmentWithMate[] | Junction[]> {
+        const buf = await (await this.worker).getTabularData(uid, tileIds);
+        return JSON.parse(new TextDecoder().decode(buf));
     }
 }
 

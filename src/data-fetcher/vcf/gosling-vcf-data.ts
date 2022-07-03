@@ -2,6 +2,9 @@
  * This document is heavily based on the following repo by @alexander-veit:
  * https://github.com/dbmi-bgm/higlass-sv/blob/main/src/sv-fetcher.js
  */
+import { spawn } from 'threads';
+import Worker from './vcf-worker.ts?worker&inline';
+
 import { GET_CHROM_SIZES } from '../../core/utils/assembly';
 
 import type { ModuleThread } from 'threads';
@@ -13,34 +16,29 @@ const DEBOUNCE_TIME = 200;
 type VcfDataConfig = VCFData & { assembly: Assembly };
 
 class GoslingVcfData {
-    private uid: string;
+    uid: string;
+    prevRequestTime: number;
+    track?: any;
+
     private assembly: Assembly;
     private toFetch: Set<string>;
     private fetchTimeout?: ReturnType<typeof setTimeout>;
-    private track: any;
+    private worker: Promise<ModuleThread<WorkerApi>>;
 
-    prevRequestTime: number;
-    initPromise: Promise<unknown>;
-
-    constructor(
-        HGC: import('@higlass/types').HGC,
-        public dataConfig: VcfDataConfig,
-        public worker: Promise<ModuleThread<WorkerApi>>
-    ) {
+    constructor(HGC: import('@higlass/types').HGC, public dataConfig: VcfDataConfig) {
         this.uid = HGC.libraries.slugid.nice();
         this.prevRequestTime = 0;
         this.assembly = dataConfig.assembly;
         this.toFetch = new Set();
-        this.initPromise = this.worker.then((tileFunctions: any) => {
-            return tileFunctions
-                .init(
-                    this.uid,
-                    dataConfig.url,
-                    dataConfig.indexUrl,
-                    GET_CHROM_SIZES(this.assembly).path,
-                    dataConfig.sampleLength ?? 1000
-                )
-                .then(() => this.worker);
+        this.worker = spawn<WorkerApi>(new Worker()).then(async worker => {
+            await worker.init(
+                this.uid,
+                dataConfig.url,
+                dataConfig.indexUrl,
+                GET_CHROM_SIZES(this.assembly).path,
+                dataConfig.sampleLength ?? 1000
+            );
+            return worker;
         });
     }
 
@@ -66,7 +64,7 @@ class GoslingVcfData {
 
         this.track.drawLoadingCue();
 
-        tileIds.forEach((tileId: any) => this.toFetch.add(tileId));
+        tileIds.forEach(tileId => this.toFetch.add(tileId));
 
         if (this.fetchTimeout) {
             clearTimeout(this.fetchTimeout);
@@ -80,6 +78,11 @@ class GoslingVcfData {
 
     async sendFetch(receivedTiles: (tiles: Record<string, Tile>) => void, tileIds: string[]) {
         (await this.worker).fetchTilesDebounced(this.uid, tileIds).then(receivedTiles);
+    }
+
+    async getTabularData(uid: string, tileIds: string[]): Promise<Tile[]> {
+        const buf = await (await this.worker).getTabularData(uid, tileIds);
+        return JSON.parse(new TextDecoder().decode(buf));
     }
 }
 
