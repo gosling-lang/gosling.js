@@ -14,7 +14,7 @@ module.exports = {
         node: true
     },
     parserOptions: {
-        project: 'tsconfig.editor.json',
+        project: 'tsconfig.json',
         ecmaVersion: 6,
         sourceType: 'module'
     },

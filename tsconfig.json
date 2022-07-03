@@ -36,7 +36,7 @@
     "editor/index.tsx",
     "embed/index.ts"
   ],
-  "include": ["src", "src/**/*.d.ts"],
+  "include": ["src", "src/**/*.d.ts", "editor"],
   "exclude": [
     "node_modules",
     "public",
