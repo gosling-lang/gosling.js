@@ -899,6 +899,7 @@
     },
     "EventStyle": {
       "additionalProperties": false,
+      "description": "The styles defined here will be applied to the targets of mouse events, such as a point mark after user click mouse.",
       "properties": {
         "arrange": {
           "description": "Show event effects behind or in front of marks.",
@@ -909,18 +910,22 @@
           "type": "string"
         },
         "color": {
+          "description": "color of the marks when mouse events are triggered",
           "type": "string"
         },
         "opacity": {
+          "description": "opacity of the marks when mouse events are triggered",
           "type": "number"
         },
         "stroke": {
+          "description": "stroke color of the marks when mouse events are triggered",
           "type": "string"
         },
         "strokeOpacity": {
           "type": "number"
         },
         "strokeWidth": {
+          "description": "stroke width of the marks when mouse events are triggered",
           "type": "number"
         }
       },
@@ -3581,9 +3586,11 @@
           "type": "boolean"
         },
         "enableMouseOverOnMultipleMarks": {
+          "description": "Determine whether all marks underneath the mouse point should be affected by mouse over. __Default__: `false`",
           "type": "boolean"
         },
         "groupMarksByField": {
+          "description": "Group marks using keys in a data field. This affects how a set of marks are highlighted/selected by interaction. __Default__: `undefined`",
           "type": "string"
         },
         "mouseOver": {
@@ -5689,6 +5696,7 @@
           "type": "string"
         },
         "threshold": {
+          "description": "Threshold in the unit of pixels.",
           "type": "number"
         }
       },
@@ -8291,21 +8299,25 @@
         },
         "brush": {
           "additionalProperties": false,
-          "description": "Customize the style of range brushes.",
+          "description": "Customize the style of the brush mark in the `rangeSelect` mouse event.",
           "properties": {
             "color": {
+              "description": "color of the marks when mouse events are triggered",
               "type": "string"
             },
             "opacity": {
+              "description": "opacity of the marks when mouse events are triggered",
               "type": "number"
             },
             "stroke": {
+              "description": "stroke color of the marks when mouse events are triggered",
               "type": "string"
             },
             "strokeOpacity": {
               "type": "number"
             },
             "strokeWidth": {
+              "description": "stroke width of the marks when mouse events are triggered",
               "type": "number"
             }
           },
@@ -8410,7 +8422,7 @@
         },
         "mouseOver": {
           "$ref": "#/definitions/EventStyle",
-          "description": "Customize visual effects of mouse over events on marks."
+          "description": "Customize visual effects of `mouseOver` events on marks."
         },
         "outline": {
           "type": "string"
@@ -8420,7 +8432,7 @@
         },
         "select": {
           "$ref": "#/definitions/EventStyle",
-          "description": "Customize visual effects selection events on marks with range brushes."
+          "description": "Customize visual effects of `rangeSelect` events on marks ."
         },
         "textAnchor": {
           "description": "Specify the alignment of `text` marks to a given point.",
@@ -8708,16 +8720,20 @@
       "additionalProperties": false,
       "properties": {
         "alt": {
+          "description": "Name of the data field for showing in the tooltip. Will use the field name if not specified.",
           "type": "string"
         },
         "field": {
+          "description": "Specifiy a data field whose value will show in the tooltip.",
           "type": "string"
         },
         "format": {
+          "description": "format of the data value.",
           "type": "string"
         },
         "type": {
-          "$ref": "#/definitions/FieldType"
+          "$ref": "#/definitions/FieldType",
+          "description": "Type of the data filed."
         }
       },
       "required": [
