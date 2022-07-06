@@ -35,6 +35,7 @@ export type SelectivityCondition = {
      */
     target?: 'self' | 'container';
     measure: 'width' | 'height' | 'aspectRatio';
+    /** Threshold in the unit of pixels. */
     threshold: number;
 };
 
@@ -243,13 +244,13 @@ export interface GenomicPosition {
 }
 
 interface PointMouseEventData extends CommonEventData {
-    /* A genomic coordinate, e.g., `chr1:100,000`. */
+    /** A genomic coordinate, e.g., `chr1:100,000`. */
     genomicPosition: GenomicPosition;
 }
 
 interface RangeMouseEventData extends CommonEventData {
     // NOTE: We could include this type to `GenomicDomain`, i.e., enabling users to display genomic range across multiple chromosomes
-    /* Start and end genomic coordinates. Null if a range is deselected. */
+    /** Start and end genomic coordinates. Null if a range is deselected. */
     genomicRange: [GenomicPosition, GenomicPosition] | null;
 }
 
@@ -261,13 +262,13 @@ export type _EventMap = {
 };
 
 export type MouseEventsDeep = {
-    /* Turn on and off individual mouse events. */
+    /** Turn on and off individual mouse events. */
     [Event in keyof Omit<_EventMap, 'rawData'>]?: boolean;
 } & {
-    /* Group marks using keys in a data field. This affects how a set of marks are highlighted/selected by interaction. __Default__: `undefined` */
+    /** Group marks using keys in a data field. This affects how a set of marks are highlighted/selected by interaction. __Default__: `undefined` */
     groupMarksByField?: string;
 
-    /* Determine whether all marks underneath the mouse point should be affected by mouse over. __Default__: `false` */
+    /** Determine whether all marks underneath the mouse point should be affected by mouse over. __Default__: `false` */
     enableMouseOverOnMultipleMarks?: boolean;
 };
 
@@ -331,9 +332,13 @@ export interface Encoding {
 }
 
 export interface Tooltip {
+    /** Specifiy a data field whose value will show in the tooltip. */
     field: string;
+    /** Type of the data filed. */
     type: FieldType;
+    /** Name of the data field for showing in the tooltip. Will use the field name if not specified. */
     alt?: string;
+    /** format of the data value. */
     format?: string;
 }
 
@@ -359,14 +364,18 @@ export type OverlaidTrack = Partial<SingleTrack> &
         overlay: Partial<Omit<SingleTrack, 'height' | 'width' | 'layout' | 'title' | 'subtitle'>>[];
     };
 
-/*
- * The styles of the effects of mouse events, such as mouse over on marks.
+/**
+ * The styles defined here will be applied to the targets of mouse events, such as a point mark after user click mouse.
  */
 export interface EventStyle {
+    /** color of the marks when mouse events are triggered */
     color?: string;
+    /** stroke color of the marks when mouse events are triggered */
     stroke?: string;
+    /** stroke width of the marks when mouse events are triggered */
     strokeWidth?: number;
     strokeOpacity?: number;
+    /** opacity of the marks when mouse events are triggered */
     opacity?: number;
 
     /** Show event effects behind or in front of marks. */
@@ -469,17 +478,17 @@ export interface Style {
     matrixExtent?: 'full' | 'upper-right' | 'lower-left';
 
     /**
-     * Customize visual effects of mouse over events on marks.
+     * Customize visual effects of `mouseOver` events on marks.
      */
     mouseOver?: EventStyle;
 
     /**
-     * Customize visual effects selection events on marks with range brushes.
+     * Customize visual effects of `rangeSelect` events on marks .
      */
     select?: EventStyle;
 
     /**
-     * Customize the style of range brushes.
+     * Customize the style of the brush mark in the `rangeSelect` mouse event.
      */
     brush?: Omit<EventStyle, 'arrange'>;
 }
