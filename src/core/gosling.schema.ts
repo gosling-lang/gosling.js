@@ -365,7 +365,7 @@ export type OverlaidTrack = Partial<SingleTrack> &
     };
 
 /**
- * The styles defined here will be applied to the targets of mouse events, such as a point mark after user click mouse.
+ * The styles defined here will be applied to the target marks of mouse events, such as a point mark after the user clicks on it.
  */
 export interface EventStyle {
     /** color of the marks when mouse events are triggered */
