@@ -5696,6 +5696,7 @@
           "type": "string"
         },
         "threshold": {
+          "description": "Threshold in the unit of pixels.",
           "type": "number"
         }
       },
@@ -8719,16 +8720,20 @@
       "additionalProperties": false,
       "properties": {
         "alt": {
+          "description": "Name of the data field for showing in the tooltip. Will use the field name if not specified.",
           "type": "string"
         },
         "field": {
+          "description": "Specifiy a data field whose value will show in the tooltip.",
           "type": "string"
         },
         "format": {
+          "description": "format of the data value.",
           "type": "string"
         },
         "type": {
-          "$ref": "#/definitions/FieldType"
+          "$ref": "#/definitions/FieldType",
+          "description": "Type of the data filed."
         }
       },
       "required": [
