@@ -293,7 +293,7 @@
         },
         "method": {
           "$ref": "#/definitions/DisplacementType",
-          "description": "A string that specifies the type of diseplancement."
+          "description": "A string that specifies the type of displacement."
         },
         "newField": {
           "type": "string"
@@ -448,6 +448,7 @@
       "additionalProperties": false,
       "properties": {
         "interval": {
+          "description": "Show a certain interval within entire chromosome",
           "items": [
             {
               "type": "number"
@@ -579,7 +580,7 @@
         },
         "operation": {
           "$ref": "#/definitions/LogicalOperation",
-          "description": "A string that pecifies the logical operation to conduct between `threshold` and the `measure` of `target`. Support\n\n- greater than : \"greater-than\", \"gt\", \"GT\"\n\n- less than : \"less-than\", \"lt\", \"LT\"\n\n- greater than or equal to : \"greater-than-or-equal-to\", \"gtet\", \"GTET\"\n\n- less than or equal to : \"less-than-or-equal-to\", \"ltet\", \"LTET\""
+          "description": "A string that specifies the logical operation to conduct between `threshold` and the `measure` of `target`. Support\n\n- greater than : \"greater-than\", \"gt\", \"GT\"\n\n- less than : \"less-than\", \"lt\", \"LT\"\n\n- greater than or equal to : \"greater-than-or-equal-to\", \"gtet\", \"GTET\"\n\n- less than or equal to : \"less-than-or-equal-to\", \"ltet\", \"LTET\""
         },
         "target": {
           "description": "Target specifies the object that you want to compare with the threshold.",
@@ -829,7 +830,7 @@
     },
     "TemplateTrackMappingDef": {
       "additionalProperties": false,
-      "description": "This is based on `SingleTrack` but the differeces are only the type of channels which additionally have `base` properties to override properties from a template spec and remove of certain properties (e.g., `data`)",
+      "description": "This is based on `SingleTrack` but the differences are only the type of channels which additionally have `base` properties to override properties from a template spec and remove of certain properties (e.g., `data`)",
       "properties": {
         "_assignedHeight": {
           "type": "number"
@@ -938,7 +939,7 @@
         },
         "style": {
           "$ref": "#/definitions/Style",
-          "description": "Define the [style](http://gosling-lang.org/docs/visual-channel#style-related-properties) of multive views. Will be overriden by the style of children elements (e.g., view, track)."
+          "description": "Define the [style](http://gosling-lang.org/docs/visual-channel#style-related-properties) of multive views. Will be overwritten by the style of children elements (e.g., view, track)."
         },
         "text": {
           "$ref": "#/definitions/ChannelWithBase"
@@ -1078,7 +1079,7 @@
         },
         "operation": {
           "$ref": "#/definitions/LogicalOperation",
-          "description": "A string that pecifies the logical operation to conduct between `threshold` and the `measure` of `target`. Support\n\n- greater than : \"greater-than\", \"gt\", \"GT\"\n\n- less than : \"less-than\", \"lt\", \"LT\"\n\n- greater than or equal to : \"greater-than-or-equal-to\", \"gtet\", \"GTET\"\n\n- less than or equal to : \"less-than-or-equal-to\", \"ltet\", \"LTET\""
+          "description": "A string that specifies the logical operation to conduct between `threshold` and the `measure` of `target`. Support\n\n- greater than : \"greater-than\", \"gt\", \"GT\"\n\n- less than : \"less-than\", \"lt\", \"LT\"\n\n- greater than or equal to : \"greater-than-or-equal-to\", \"gtet\", \"GTET\"\n\n- less than or equal to : \"less-than-or-equal-to\", \"ltet\", \"LTET\""
         },
         "target": {
           "description": "Target specifies the object that you want to compare with the threshold.",

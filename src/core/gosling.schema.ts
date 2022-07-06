@@ -141,7 +141,7 @@ export interface CommonViewDef {
 
     /**
      * Define the [style](http://gosling-lang.org/docs/visual-channel#style-related-properties) of multive views.
-     * Will be overriden by the style of children elements (e.g., view, track).
+     * Will be overwritten by the style of children elements (e.g., view, track).
      */
     style?: Style;
 
@@ -334,7 +334,7 @@ export interface Encoding {
 export interface Tooltip {
     /** Specifiy a data field whose value will show in the tooltip. */
     field: string;
-    /** Type of the data filed. */
+    /** Type of the data field. */
     type: FieldType;
     /** Name of the data field for showing in the tooltip. Will use the field name if not specified. */
     alt?: string;
@@ -498,7 +498,7 @@ export type VisibilityCondition = SizeVisibilityCondition | ZoomLevelVisibilityC
 
 interface CommonVisibilityCondition {
     /**
-     * A string that pecifies the logical operation to conduct between `threshold` and the `measure` of `target`.
+     * A string that specifies the logical operation to conduct between `threshold` and the `measure` of `target`.
      * Support
      *
      * - greater than : "greater-than", "gt", "GT"
@@ -737,7 +737,7 @@ export interface DomainChrInterval {
     interval: [number, number];
 }
 export interface DomainInterval {
-    // For showing a certain interval in intire chromosomes
+    /** Show a certain interval within entire chromosome */
     interval: [number, number]; // This is consistent to HiGlass's initXDomain and initYDomain.
 }
 export interface DomainGene {
@@ -832,7 +832,7 @@ export interface CSVData {
     sampleLength?: number; // This limit the total number of rows fetched (default: 1000)
 
     /**
-     * Specify the names of data fields if a CSV file is headerless.
+     * Specify the names of data fields if a CSV file does not contain a header.
      */
     headerNames?: string[];
 
@@ -1158,7 +1158,7 @@ export interface DisplaceTransform {
         /** The name of a nominal field to group rows by in prior to piling-up. */
         groupField?: string;
     };
-    /** A string that specifies the type of diseplancement.  */
+    /** A string that specifies the type of displacement.  */
     method: DisplacementType;
     newField: string;
 
@@ -1269,7 +1269,7 @@ export interface CustomChannelDef {
 export type DataTransformWithBase = Partial<DataTransform> & { base?: string };
 
 /**
- * This is based on `SingleTrack` but the differeces are only the type of channels
+ * This is based on `SingleTrack` but the differences are only the type of channels
  * which additionally have `base` properties to override properties from a template spec
  * and remove of certain properties (e.g., `data`)
  */
