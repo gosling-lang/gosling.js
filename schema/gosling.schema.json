@@ -899,7 +899,7 @@
     },
     "EventStyle": {
       "additionalProperties": false,
-      "description": "The styles defined here will be applied to the targets of mouse events, such as a point mark after user click mouse.",
+      "description": "The styles defined here will be applied to the target marks of mouse events, such as a point mark after the user clicks on it.",
       "properties": {
         "arrange": {
           "description": "Show event effects behind or in front of marks.",
