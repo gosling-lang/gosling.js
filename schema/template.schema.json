@@ -1046,7 +1046,7 @@
         },
         "type": {
           "$ref": "#/definitions/FieldType",
-          "description": "Type of the data filed."
+          "description": "Type of the data field."
         }
       },
       "required": [
