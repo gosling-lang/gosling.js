@@ -109,24 +109,21 @@ export function goslingToHiGlass(
             }
         };
 
-        if (
-            firstResolvedSpec.data &&
-            IsDataDeep(firstResolvedSpec.data) &&
-            (firstResolvedSpec.data.type === 'csv' ||
-                firstResolvedSpec.data.type === 'json' ||
-                firstResolvedSpec.data.type === 'bigwig' ||
-                firstResolvedSpec.data.type === 'bam' ||
-                firstResolvedSpec.data.type === 'vcf')
-        ) {
-            // use gosling's custom data fetchers
-            hgTrack.data = {
-                ...firstResolvedSpec.data,
-                // Additionally, add assembly, otherwise, a default genome build is used
-                assembly
-                // TODO: should look all sub tracks' `dataTransform` and apply OR operation.
-                // Add a data transformation spec so that the fetcher can properly sample datasets
-                // filter: (firstResolvedSpec as any).dataTransform?.filter((f: DataTransform) => f.type === 'filter')
-            };
+        if (firstResolvedSpec.data && IsDataDeep(firstResolvedSpec.data)) {
+            const dataType = firstResolvedSpec.data.type;
+            if (
+                dataType === 'csv' ||
+                dataType === 'json' ||
+                dataType === 'bigwig' ||
+                dataType === 'bam' ||
+                dataType === 'vcf'
+            ) {
+                // This means, we are using custom data fetchers defined internally
+                hgTrack.data = { ...firstResolvedSpec.data, assembly };
+            } else if (dataType === 'experimentalPlugin') {
+                // This means, we are using external data fetchers that the user implemented
+                hgTrack.data = { ...firstResolvedSpec.data.options, type: firstResolvedSpec.data.name, assembly };
+            }
         }
 
         // We use higlass 'heatmap' track instead of 'gosling-track' for rendering performance.

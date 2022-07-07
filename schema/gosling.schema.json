@@ -534,6 +534,9 @@
         },
         {
           "$ref": "#/definitions/VCFData"
+        },
+        {
+          "$ref": "#/definitions/PluginData"
         }
       ]
     },
@@ -5560,6 +5563,30 @@
           "$ref": "#/definitions/ZoomLimits"
         }
       },
+      "type": "object"
+    },
+    "PluginData": {
+      "additionalProperties": false,
+      "description": "A data spec to use plugin data fetcher that are defined externally",
+      "properties": {
+        "name": {
+          "description": "The name of the plugin data that should match the `type` of a plugin data fetcher",
+          "type": "string"
+        },
+        "options": {
+          "description": "All custom options used in the plugin data fetcher",
+          "type": "object"
+        },
+        "type": {
+          "const": "experimentalPlugin",
+          "type": "string"
+        }
+      },
+      "required": [
+        "type",
+        "name",
+        "options"
+      ],
       "type": "object"
     },
     "PredefinedColors": {
