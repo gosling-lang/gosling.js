@@ -118,10 +118,10 @@ export function goslingToHiGlass(
                 dataType === 'bam' ||
                 dataType === 'vcf'
             ) {
-                // This means, we are using custom data fetchers defined internally
+                // This means we use data fetchers that are implemented in Gosling
                 hgTrack.data = { ...firstResolvedSpec.data, assembly };
             } else if (dataType === 'experimentalPlugin') {
-                // This means, we are using external data fetchers that the user implemented
+                // This means we use an external data fetcher that a user implemented
                 hgTrack.data = { ...firstResolvedSpec.data.options, type: firstResolvedSpec.data.name, assembly };
             }
         }
