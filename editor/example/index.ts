@@ -53,6 +53,7 @@ import { spec as JSON_SPEC_BASIC_SEMANTIC_ZOOM } from './spec/basic-semantic-zoo
 
 export type ExampleGroup =
     | 'Visual Encoding'
+    | 'Mouse Events'
     | 'Semantic Zooming'
     | 'Responsive Visualization'
     | 'Coordinated Multiple Views'
@@ -69,6 +70,10 @@ export const ExampleGroups: {
         name: 'Visual Encoding',
         description:
             'Common visualizations, such as bar charts, heatmaps, and line charts, and glyph-based visualizations, such as gene annotations and ideograms.'
+    },
+    {
+        name: 'Mouse Events',
+        description: 'Flexible use of interactions using mouse events, such as mouse hover, range select, and tooltips.'
     },
     {
         name: 'Semantic Zooming',
@@ -161,6 +166,13 @@ export const examples: {
         name: 'Visual Linking',
         spec: EX_SPEC_LINKING,
         image: THUMBNAILS.LINKING
+    },
+    MOUSE_EVENT: {
+        group: 'Mouse Events',
+        name: 'Custom Mouse Events',
+        spec: EX_SPEC_MOUSE_EVENT,
+        underDevelopment: true,
+        image: THUMBNAILS.MOUSE_EVENT
     },
     LAYOUT_AND_ARRANGEMENT_1: {
         group: 'Unassigned',
@@ -319,13 +331,6 @@ export const examples: {
         spec: EX_SPEC_CIRCOS_BETWEEN_LINK,
         underDevelopment: true,
         image: THUMBNAILS.CIRCULAR_BETWEEN_BANDS
-    },
-    MOUSE_EVENT: {
-        group: 'Visual Encoding',
-        name: 'Custom Mouse Events',
-        spec: EX_SPEC_MOUSE_EVENT,
-        underDevelopment: true,
-        image: THUMBNAILS.MOUSE_EVENT
     },
     GIVE: {
         group: 'Applications',
