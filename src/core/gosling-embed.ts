@@ -63,8 +63,9 @@ const launchHiglass = (
  * Embed a Gosling component to a given HTMLElement.
  * @param element
  * @param spec
+ * @param opts
  */
-export function embed(element: HTMLElement, spec: GoslingSpec, opts: GoslingEmbedOptions = {}) {
+function _embed(element: HTMLElement, spec: GoslingSpec, opts: GoslingEmbedOptions = {}) {
     return new Promise<GoslingApi>((resolve, reject) => {
         const valid = validateGoslingSpec(spec);
 
@@ -91,4 +92,36 @@ export function embed(element: HTMLElement, spec: GoslingSpec, opts: GoslingEmbe
             {} // TODO: properly specify this
         );
     });
+}
+
+// https://github.com/vega/vega-embed/blob/master/src/container.ts
+const container = async (spec: GoslingSpec, opt = {}) => {
+    const wrapper = document.createElement('div');
+    const div = document.createElement('div');
+    wrapper.appendChild(div);
+    const result = await _embed(div, spec, opt);
+    return Object.assign(wrapper, { value: result });
+};
+
+const isElement = (x: unknown) => x instanceof HTMLElement;
+
+const isString = (x: unknown) => typeof x === 'string';
+
+function isURL(s: string): boolean {
+    return s.startsWith('http://') || s.startsWith('https://') || s.startsWith('//');
+}
+
+/**
+ * Embed a Gosling component in an HTML element.
+ *
+ * If no HTMLElement is provided, one will be created with instance API appended as the `value` property.
+ * This is useful for running Gosling.js directly in Observable notebooks.
+ */
+export function embed(element: HTMLElement, spec: GoslingSpec, opts?: GoslingEmbedOptions): Promise<GoslingApi>;
+export function embed(spec: GoslingSpec, opts?: GoslingEmbedOptions): Promise<HTMLDivElement & { value: GoslingApi }>;
+export function embed(...args: any[]) {
+    if (args.length > 1 && ((isString(args[0]) && !isURL(args[0])) || isElement(args[0]) || args.length === 3)) {
+        return _embed(args[0], args[1], args[2]);
+    }
+    return container(args[0], args[1]);
 }
