@@ -31,8 +31,7 @@ import { Is2DTrack, IsChannelDeep, IsMouseEventsDeep, IsXAxis } from '../core/go
 import { HIGLASS_AXIS_SIZE } from '../core/higlass-model';
 import type { MouseEventData } from '../gosling-mouse-event/mouse-event-model';
 import { flatArrayToPairArray } from '../core/utils/array';
-import { BAMDataFetcher } from '../data-fetcher/bam';
-import { GoslingVcfData } from '../data-fetcher/vcf';
+import { BamDataFetcher, VcfDataFetcher } from '../data-fetchers';
 import { LinearBrushModel } from '../gosling-brush/linear-brush-model';
 
 // Set `true` to print in what order each function is called
@@ -96,9 +95,9 @@ function GoslingTrack(HGC: import('@higlass/types').HGC, ...args: any[]): any {
             if (usePrereleaseRendering(options.spec)) {
                 try {
                     if (options.spec.data?.type === 'bam') {
-                        context.dataFetcher = new BAMDataFetcher(HGC, context.dataConfig);
+                        context.dataFetcher = new BamDataFetcher(HGC, context.dataConfig);
                     } else if (options.spec.data?.type === 'vcf') {
-                        context.dataFetcher = new GoslingVcfData(HGC, context.dataConfig);
+                        context.dataFetcher = new VcfDataFetcher(HGC, context.dataConfig);
                     }
                 } catch (e) {
                     console.warn('Error loading tabular data-fetcher', e);
@@ -243,7 +242,7 @@ function GoslingTrack(HGC: import('@higlass/types').HGC, ...args: any[]): any {
             };
 
             if (
-                (this.dataFetcher instanceof BAMDataFetcher || this.dataFetcher instanceof GoslingVcfData) &&
+                (this.dataFetcher instanceof BamDataFetcher || this.dataFetcher instanceof VcfDataFetcher) &&
                 !isEqual(this.visibleAndFetchedTiles(), this.prevVisibleAndFetchedTiles)
             ) {
                 this.updateTileAsync(this.dataFetcher, processTilesAndDraw);
@@ -440,7 +439,7 @@ function GoslingTrack(HGC: import('@higlass/types').HGC, ...args: any[]): any {
         /**
          * This is currently for testing the new way of rendering visual elements.
          */
-        async updateTileAsync(tabularDataFetcher: BAMDataFetcher | GoslingVcfData, callback: () => void) {
+        async updateTileAsync(tabularDataFetcher: BamDataFetcher | VcfDataFetcher, callback: () => void) {
             this.xDomain = this._xScale.domain();
             this.xRange = this._xScale.range();
             this.drawLoadingCue();

@@ -1,17 +1,19 @@
 import { GET_CHROM_SIZES } from '../../core/utils/assembly';
 import { sampleSize } from 'lodash-es';
+import type { Assembly, JSONData } from '@gosling.schema';
+
+type CsvDataConfig = JSONData & { assembly: Assembly };
 
 /**
  * HiGlass data fetcher specific for Gosling which ultimately will accept any types of data other than CSV files.
  */
-function RawDataFetcher(HGC: any, ...args: any): any {
+function JsonDataFetcher(HGC: any, ...args: any): any {
     if (!new.target) {
         throw new Error('Uncaught TypeError: Class constructor cannot be invoked without "new"');
     }
 
-    class RawDataFetcherClass {
-        // @ts-ignore
-        private dataConfig: GeminiDataConfig;
+    class JsonDataFetcherClass {
+        private dataConfig: CsvDataConfig;
         // @ts-ignore
         private tilesetInfoLoading: boolean;
         private chromSizes: any;
@@ -25,7 +27,7 @@ function RawDataFetcher(HGC: any, ...args: any): any {
             this.assembly = this.dataConfig.assembly;
 
             if (!dataConfig.values) {
-                console.error('Please provide `values` of the raw data');
+                console.error('Please provide `values` of the JSON data');
                 return;
             }
 
@@ -55,28 +57,32 @@ function RawDataFetcher(HGC: any, ...args: any): any {
                 chromLengths: chromosomeSizes
             };
 
+            const { chromosomeField, genomicFields } = this.dataConfig;
+
             this.values = dataConfig.values.map((row: any) => {
                 let successfullyGotChrInfo = true;
 
-                this.dataConfig.genomicFields.forEach((g: any) => {
-                    if (!row[this.dataConfig.chromosomeField]) {
-                        // TODO:
-                        return;
-                    }
-                    try {
-                        const chr = row[this.dataConfig.chromosomeField].includes('chr')
-                            ? row[this.dataConfig.chromosomeField]
-                            : `chr${row[this.dataConfig.chromosomeField]}`;
-                        row[g] = GET_CHROM_SIZES(this.assembly).interval[chr][0] + +row[g];
-                    } catch (e) {
-                        // genomic position did not parse properly
-                        successfullyGotChrInfo = false;
-                        // console.warn(
-                        //     '[Gosling Data Fetcher] Genomic position cannot be parsed correctly.',
-                        //     this.dataConfig.chromosomeField
-                        // );
-                    }
-                });
+                if (genomicFields && chromosomeField) {
+                    genomicFields.forEach((g: any) => {
+                        if (!row[chromosomeField]) {
+                            // TODO:
+                            return;
+                        }
+                        try {
+                            const chr = row[chromosomeField].includes('chr')
+                                ? row[chromosomeField]
+                                : `chr${row[chromosomeField]}`;
+                            row[g] = GET_CHROM_SIZES(this.assembly).interval[chr][0] + +row[g];
+                        } catch (e) {
+                            // genomic position did not parse properly
+                            successfullyGotChrInfo = false;
+                            // console.warn(
+                            //     '[Gosling Data Fetcher] Genomic position cannot be parsed correctly.',
+                            //     this.dataConfig.chromosomeField
+                            // );
+                        }
+                    });
+                }
 
                 if (!successfullyGotChrInfo) {
                     // store row only when chromosome information is correctly parsed
@@ -153,9 +159,10 @@ function RawDataFetcher(HGC: any, ...args: any): any {
 
             const sizeLimit = this.dataConfig.sampleLength ?? 1000;
 
-            if (sizeLimit < tabularData.length) {
+            const { genomicFields } = this.dataConfig;
+            if (sizeLimit < tabularData.length && genomicFields) {
                 tabularData = tabularData.filter((d: any) => {
-                    return this.dataConfig.genomicFields.find((g: any) => minX < d[g] && d[g] <= maxX);
+                    return genomicFields.find((g: any) => minX < d[g] && d[g] <= maxX);
                 });
             }
 
@@ -173,11 +180,11 @@ function RawDataFetcher(HGC: any, ...args: any): any {
         }
     }
 
-    return new RawDataFetcherClass(args);
+    return new JsonDataFetcherClass(args);
 }
 
-RawDataFetcher.config = {
+JsonDataFetcher.config = {
     type: 'json'
 };
 
-export default RawDataFetcher;
+export default JsonDataFetcher;
