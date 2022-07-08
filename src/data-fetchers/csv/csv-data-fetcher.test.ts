@@ -1,10 +1,10 @@
-import { CSVDataFetcher } from '.';
+import CsvDataFetcher from './csv-data-fetcher';
 import fetch from 'cross-fetch';
 
 if (!globalThis.fetch) globalThis.fetch = fetch;
 
 describe('CSV data fetcher', () => {
-    const f = new (CSVDataFetcher as any)(
+    const f = new (CsvDataFetcher as any)(
         {},
         {
             url: 'https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/cytogenetic_band.csv',

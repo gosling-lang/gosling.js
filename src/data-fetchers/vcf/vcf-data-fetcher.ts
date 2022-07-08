@@ -15,7 +15,7 @@ const DEBOUNCE_TIME = 200;
 
 type VcfDataConfig = VCFData & { assembly: Assembly };
 
-class GoslingVcfData {
+class VcfDataFetcher {
     uid: string;
     prevRequestTime: number;
     track?: any;
@@ -86,4 +86,4 @@ class GoslingVcfData {
     }
 }
 
-export default GoslingVcfData;
+export default VcfDataFetcher;

@@ -33,12 +33,12 @@ type BigWigHeader = {
 
 type ExtendedFeature = Feature & { startAbs: number; endAbs: number };
 
-function BBIDataFetcher(HGC: import('@higlass/types').HGC, dataConfig: DataConfig) {
+function BigWigDataFetcher(HGC: import('@higlass/types').HGC, dataConfig: DataConfig) {
     if (!new.target) {
         throw new Error('Uncaught TypeError: Class constructor cannot be invoked without "new"');
     }
 
-    const cls = class BBIDataFetcherClass {
+    const cls = class BigWigDataFetcherClass {
         dataConfig: typeof dataConfig;
         bwFileHeader: BigWigHeader | null;
         bwFile: BigWig | null;
@@ -316,8 +316,8 @@ function BBIDataFetcher(HGC: import('@higlass/types').HGC, dataConfig: DataConfi
     return new cls();
 }
 
-BBIDataFetcher.config = {
+BigWigDataFetcher.config = {
     type: 'bigwig'
 };
 
-export default BBIDataFetcher;
+export default BigWigDataFetcher;

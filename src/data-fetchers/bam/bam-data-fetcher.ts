@@ -21,7 +21,7 @@ const DEBOUNCE_TIME = 200;
 
 type DataConfig = Partial<WorkerDataConfig> & { url: string; indexUrl?: string };
 
-class BAMDataFetcher {
+class BamDataFetcher {
     dataConfig: DataConfig;
     assembly: Assembly;
 
@@ -97,4 +97,4 @@ class BAMDataFetcher {
     }
 }
 
-export default BAMDataFetcher;
+export default BamDataFetcher;

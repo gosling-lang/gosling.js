@@ -1,20 +1,21 @@
 import { dsvFormat as d3dsvFormat } from 'd3-dsv';
 import { GET_CHROM_SIZES } from '../../core/utils/assembly';
 import { sampleSize } from 'lodash-es';
-import type { Assembly, FilterTransform } from '../../core/gosling.schema';
+import type { Assembly, CSVData, FilterTransform } from '@gosling.schema';
 import { filterData } from '../../core/utils/data-transform';
+
+type CsvDataConfig = CSVData & { assembly: Assembly; filter: FilterTransform[] };
 
 /**
  * HiGlass data fetcher specific for Gosling which ultimately will accept any types of data other than CSV files.
  */
-function CSVDataFetcher(HGC: any, ...args: any): any {
+function CsvDataFetcher(HGC: any, ...args: any): any {
     if (!new.target) {
         throw new Error('Uncaught TypeError: Class constructor cannot be invoked without "new"');
     }
 
-    class CSVDataFetcherClass {
-        // @ts-ignore
-        private dataConfig: GeminiDataConfig;
+    class CsvDataFetcherClass {
+        private dataConfig: CsvDataConfig;
         // @ts-ignore
         private tilesetInfoLoading: boolean;
         private dataPromise: Promise<any> | undefined;
@@ -116,7 +117,7 @@ function CSVDataFetcher(HGC: any, ...args: any): any {
                                     }
                                 });
                             });
-                        } else {
+                        } else if (chromosomeField && genomicFields) {
                             genomicFields.forEach((g: string) => {
                                 if (!row[chromosomeField]) {
                                     // TODO:
@@ -249,7 +250,7 @@ function CSVDataFetcher(HGC: any, ...args: any): any {
                 let tabularData = this.values.filter((d: any) => {
                     if (this.dataConfig.genomicFields) {
                         return this.dataConfig.genomicFields.find((g: any) => minX < d[g] && d[g] <= maxX);
-                    } else {
+                    } else if (this.dataConfig.genomicFieldsToConvert) {
                         const allGenomicFields: string[] = [];
                         this.dataConfig.genomicFieldsToConvert.forEach((d: any) =>
                             allGenomicFields.push(...d.genomicFields)
@@ -275,11 +276,11 @@ function CSVDataFetcher(HGC: any, ...args: any): any {
         }
     }
 
-    return new CSVDataFetcherClass(args);
+    return new CsvDataFetcherClass(args);
 }
 
-CSVDataFetcher.config = {
+CsvDataFetcher.config = {
     type: 'csv'
 };
 
-export default CSVDataFetcher;
+export default CsvDataFetcher;
