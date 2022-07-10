@@ -185,3 +185,5 @@ export const GoslingComponent = forwardRef<GoslingRef, GoslingCompProps>((props,
 
     return higlassComponent;
 });
+
+GoslingComponent.displayName = 'GoslingComponent';

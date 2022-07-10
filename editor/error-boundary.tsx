@@ -5,11 +5,9 @@ interface State {
 }
 
 interface Props {}
-export default class ErrorBoundary extends React.Component<Props, State> {
-    constructor(props: Props) {
-        super(props);
-        this.state = { hasError: false };
-    }
+
+export default class ErrorBoundary extends React.Component<React.PropsWithChildren<Props>, State> {
+    state: State = { hasError: false };
 
     componentDidCatch() {
         // Display fallback UI
