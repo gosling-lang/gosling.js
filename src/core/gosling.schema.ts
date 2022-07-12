@@ -759,7 +759,8 @@ export type DataDeep =
     | VectorData
     | MatrixData
     | BAMData
-    | VCFData;
+    | VCFData
+    | PluginData;
 
 /** Values in the form of JSON. */
 export interface Datum {
@@ -1056,6 +1057,18 @@ export interface MatrixData {
 
     /** Determine the number of nearby cells to aggregate. __Default__: `1` */
     binSize?: number;
+}
+
+/** A data spec to use plugin data fetcher that are defined externally */
+export interface PluginData {
+    // TODO (7-Jul-2022): change to 'plugin' for official support
+    type: 'experimentalPlugin';
+
+    /** The name of the plugin data that should match the `type` of a plugin data fetcher */
+    name: string;
+
+    /** All custom options used in the plugin data fetcher */
+    options: Record<string, any>;
 }
 
 /* ----------------------------- DATA TRANSFORM ----------------------------- */
