@@ -118,9 +118,20 @@ export function goslingToHiGlass(
                 firstResolvedSpec.data.type === 'bam' ||
                 firstResolvedSpec.data.type === 'vcf')
         ) {
+            const getFieldName = (c: 'x' | 'xe' | 'x1' | 'x1e') => {
+                const cDef = firstResolvedSpec[c];
+                return cDef && IsChannelDeep(cDef) ? cDef.field : undefined;
+            };
+            const xFields = {
+                x: getFieldName('x'),
+                xe: getFieldName('xe'),
+                x1: getFieldName('x1'),
+                x1e: getFieldName('x1e')
+            } as const;
             // use gosling's custom data fetchers
             hgTrack.data = {
                 ...firstResolvedSpec.data,
+                ...xFields,
                 // Additionally, add assembly, otherwise, a default genome build is used
                 assembly
                 // TODO: should look all sub tracks' `dataTransform` and apply OR operation.

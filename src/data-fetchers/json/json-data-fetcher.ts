@@ -1,11 +1,12 @@
 import { GET_CHROM_SIZES } from '../../core/utils/assembly';
 import { sampleSize } from 'lodash-es';
-import type { Assembly, JSONData } from '@gosling.schema';
+import type { JSONData } from '@gosling.schema';
+import { CommonDataConfig, filterUsingGenoPos } from '../utils';
 
-type CsvDataConfig = JSONData & { assembly: Assembly };
+type CsvDataConfig = JSONData & CommonDataConfig;
 
 /**
- * HiGlass data fetcher specific for Gosling which ultimately will accept any types of data other than CSV files.
+ * HiGlass data fetcher specific for Gosling which ultimately will accept any types of data other than JSON values.
  */
 function JsonDataFetcher(HGC: any, ...args: any): any {
     if (!new.target) {
@@ -155,18 +156,10 @@ function JsonDataFetcher(HGC: any, ...args: any): any {
             const maxX = tsInfo.min_pos[0] + (x + 1) * tileWidth;
 
             // filter the data so that visible data is sent to tracks
-            let tabularData = this.values;
-
-            const sizeLimit = this.dataConfig.sampleLength ?? 1000;
-
-            const { genomicFields } = this.dataConfig;
-            if (sizeLimit < tabularData.length && genomicFields) {
-                tabularData = tabularData.filter((d: any) => {
-                    return genomicFields.find((g: any) => minX < d[g] && d[g] <= maxX);
-                });
-            }
+            let tabularData = filterUsingGenoPos(this.values, [minX, maxX], this.dataConfig);
 
             // sample the data to make it managable for visualization components
+            const sizeLimit = this.dataConfig.sampleLength ?? 1000;
             if (sizeLimit < tabularData.length) {
                 tabularData = sampleSize(tabularData, sizeLimit);
             }

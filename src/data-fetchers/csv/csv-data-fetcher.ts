@@ -3,8 +3,9 @@ import { GET_CHROM_SIZES } from '../../core/utils/assembly';
 import { sampleSize } from 'lodash-es';
 import type { Assembly, CSVData, FilterTransform } from '@gosling.schema';
 import { filterData } from '../../core/utils/data-transform';
+import { CommonDataConfig, filterUsingGenoPos } from '../utils';
 
-type CsvDataConfig = CSVData & { assembly: Assembly; filter: FilterTransform[] };
+type CsvDataConfig = CSVData & CommonDataConfig & { filter: FilterTransform[] };
 
 /**
  * HiGlass data fetcher specific for Gosling which ultimately will accept any types of data other than CSV files.
@@ -247,17 +248,7 @@ function CsvDataFetcher(HGC: any, ...args: any): any {
                 const maxX = tsInfo.min_pos[0] + (x + 1) * tileWidth;
 
                 // filter the data so that only the visible data is sent to tracks
-                let tabularData = this.values.filter((d: any) => {
-                    if (this.dataConfig.genomicFields) {
-                        return this.dataConfig.genomicFields.find((g: any) => minX < d[g] && d[g] <= maxX);
-                    } else if (this.dataConfig.genomicFieldsToConvert) {
-                        const allGenomicFields: string[] = [];
-                        this.dataConfig.genomicFieldsToConvert.forEach((d: any) =>
-                            allGenomicFields.push(...d.genomicFields)
-                        );
-                        return allGenomicFields.find((g: any) => minX < d[g] && d[g] <= maxX);
-                    }
-                });
+                let tabularData = filterUsingGenoPos(this.values, [minX, maxX], this.dataConfig);
 
                 // filter data based on the `DataTransform` spec
                 this.filter?.forEach(f => {

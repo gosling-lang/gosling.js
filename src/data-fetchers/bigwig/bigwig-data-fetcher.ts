@@ -3,17 +3,14 @@
  * https://github.com/higlass/higlass-bigwig-datafetcher/blob/main/src/BigwigDataFetcher.js
  */
 import { BigWig } from '@gmod/bbi';
-import type { Assembly } from '@gosling.schema';
+import type { Assembly, BIGWIGData } from '@gosling.schema';
 import { GET_CHROM_SIZES } from '../../core/utils/assembly';
-import { RemoteFile } from '../utils';
+import { CommonDataConfig, RemoteFile } from '../utils';
 
 import type { Feature } from '@gmod/bbi';
 import type { ChromInfo, TilesetInfo } from '@higlass/types';
 
-type DataConfig = {
-    url: string;
-    chromSizesUrl: string;
-};
+type BigWigDataConfig = BIGWIGData & CommonDataConfig;
 
 type Tile = {
     tilePos: [number];
@@ -33,7 +30,7 @@ type BigWigHeader = {
 
 type ExtendedFeature = Feature & { startAbs: number; endAbs: number };
 
-function BigWigDataFetcher(HGC: import('@higlass/types').HGC, dataConfig: DataConfig) {
+function BigWigDataFetcher(HGC: import('@higlass/types').HGC, dataConfig: BigWigDataConfig) {
     if (!new.target) {
         throw new Error('Uncaught TypeError: Class constructor cannot be invoked without "new"');
     }
@@ -50,9 +47,8 @@ function BigWigDataFetcher(HGC: import('@higlass/types').HGC, dataConfig: DataCo
         tilesetInfoLoading?: boolean;
 
         constructor() {
-            // TODO(2022-06-29): shouldn't have hard coded chromSizesUrl
-            dataConfig.chromSizesUrl = 'https://aveit.s3.amazonaws.com/higlass/data/sequence/hg38.chrom.sizes'; //https://s3.amazonaws.com/gosling-lang.org/data/hg38.chrom.sizes';
             this.dataConfig = dataConfig;
+            this.assembly = this.dataConfig.assembly;
             this.bwFileHeader = null;
             this.bwFile = null;
             this.TILE_SIZE = 1024;
@@ -61,7 +57,6 @@ function BigWigDataFetcher(HGC: import('@higlass/types').HGC, dataConfig: DataCo
             this.dataPromises = [];
 
             // Prepare chromosome interval information
-            // TODO(2022-06-29): this.assembly is never defined!
             const chromosomeSizes = GET_CHROM_SIZES(this.assembly).size;
 
             const chromosomeCumPositions: ChromInfo['cumPositions'] = [];
