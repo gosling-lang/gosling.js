@@ -1,3 +1,14 @@
+## [0.9.21](https://github.com/gosling-lang/gosling.js/compare/v0.9.20...v0.9.21) (2022-07-14)
+
+
+### Bug Fixes
+
+* change worker directory from .js to .ts to inject the buffer shim ([#763](https://github.com/gosling-lang/gosling.js/issues/763)) ([351bbe4](https://github.com/gosling-lang/gosling.js/commit/351bbe44bc60c22289a7ed7d939935550f04223c))
+* **data-fetchers:** fix error using Buffer in VCF worker ([#758](https://github.com/gosling-lang/gosling.js/issues/758)) ([007c3e1](https://github.com/gosling-lang/gosling.js/commit/007c3e11e0678aab32597a2fa74d4747d4f4f6c0))
+* do not make marks disappear when zoomed in very far ([#765](https://github.com/gosling-lang/gosling.js/issues/765)) ([9d279ed](https://github.com/gosling-lang/gosling.js/commit/9d279edd1ebd534e9e32b57ba8f2a66e2deb53d9))
+
+
+
 ## [0.9.20](https://github.com/gosling-lang/gosling.js/compare/v0.9.19...v0.9.20) (2022-07-03)
 
 
