@@ -3,6 +3,44 @@ import { tsvParseRows } from 'd3-dsv';
 import { RemoteFile as _RemoteFile } from 'generic-filehandle';
 
 import type * as HiGlass from '@higlass/types';
+import type { Assembly, Datum } from '@gosling.schema';
+
+export type CommonDataConfig = {
+    assembly: Assembly;
+    x?: string;
+    xe?: string;
+    x1?: string;
+    x1e?: string;
+};
+
+/**
+ * Filter data before sending to a track considering the visible genomic area in the track.
+ * TODO(2022-Jul-13): Consider genomic `y` channels as well.
+ */
+export function filterUsingGenoPos(
+    data: Datum[],
+    [minX, maxX]: [number, number],
+    config: Omit<CommonDataConfig, 'assembly'>
+) {
+    const { x, xe, x1, x1e } = config;
+    const definedXFields = [x, xe, x1, x1e].filter(f => f) as string[];
+    return data.filter((d: Datum) => {
+        if (definedXFields.length === 0) {
+            // no filter applies
+            return true;
+        } else if (definedXFields.length === 1) {
+            // filter based on one genomic position
+            const value = d[definedXFields[0]];
+            return minX < value && value <= maxX;
+        } else {
+            // filter based on two genomic positions, i.e., check overlaps
+            const values = definedXFields.map(f => +d[f]);
+            const maxValue = Math.max(...values);
+            const minValue = Math.min(...values);
+            return minX <= maxValue && minValue <= maxX;
+        }
+    });
+}
 
 const chromInfoBisector = bisector((d: { pos: number }) => d.pos).left;
 

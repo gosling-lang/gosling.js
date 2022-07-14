@@ -10,10 +10,11 @@ import { GET_CHROM_SIZES } from '../../core/utils/assembly';
 import type { ModuleThread } from 'threads';
 import type { Assembly, VCFData } from '../../core/gosling.schema';
 import type { WorkerApi, TilesetInfo, Tile } from './vcf-worker';
+import type { CommonDataConfig } from '../utils';
 
 const DEBOUNCE_TIME = 200;
 
-type VcfDataConfig = VCFData & { assembly: Assembly };
+type VcfDataConfig = VCFData & CommonDataConfig;
 
 class VcfDataFetcher {
     uid: string;
