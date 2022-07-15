@@ -30,41 +30,16 @@ const bundleWebWorker = {
     }
 };
 
-// We can't inject a global `Buffer` polyfill for the worker entrypoint using vite alone,
-// so we reuse the `bundle-web-worker` plugin to inject the buffer shim during production.
-const manualInlineWorker = {
-    apply: 'build',
-    async transform(code, id) {
-        if (id.endsWith('bam-worker.ts?worker&inline') || id.endsWith('vcf-worker.ts?worker&inline')) {
-            const bundle = await bundleWebWorker.transform(code, id + '?worker_file');
-            const base64 = Buffer.from(bundle).toString('base64');
-            // https://github.com/vitejs/vite/blob/72cb33e947e7aa72d27ed0c5eacb2457d523dfbf/packages/vite/src/node/plugins/worker.ts#L78-L87
-            return `const encodedJs = "${base64}";
-const blob = typeof window !== "undefined" && window.Blob && new Blob([atob(encodedJs)], { type: "text/javascript;charset=utf-8" });
-export default function() {
-  const objURL = blob && (window.URL || window.webkitURL).createObjectURL(blob);
-  try {
-    return objURL ? new Worker(objURL) : new Worker("data:application/javascript;base64," + encodedJs, {type: "module"});
-  } finally {
-    objURL && (window.URL || window.webkitURL).revokeObjectURL(objURL);
-  }
-}`;
-        }
-    }
-};
-
 const alias = {
     'gosling.js': path.resolve(__dirname, './src/index.ts'),
     '@gosling.schema': path.resolve(__dirname, './src/core/gosling.schema'),
     '@higlass.schema': path.resolve(__dirname, './src/core/higlass.schema'),
-    zlib: path.resolve(__dirname, './src/alias/zlib.ts'),
-    uuid: path.resolve(__dirname, './node_modules/uuid/dist/esm-browser/index.js')
 };
 
-const skipExt = new Set(['@gmod/bbi', 'uuid']);
-const external = [...Object.keys(pkg.dependencies), ...Object.keys(pkg.peerDependencies)].filter(
-    dep => !skipExt.has(dep)
-);
+const external = [
+	...Object.keys(pkg.dependencies),
+	...Object.keys(pkg.peerDependencies),
+];
 
 const esm = defineConfig({
     build: {
@@ -81,7 +56,11 @@ const esm = defineConfig({
         rollupOptions: { external }
     },
     resolve: { alias },
-    plugins: [manualInlineWorker]
+	optimizeDeps: {
+		esbuildOptions: {
+			inject: [path.resolve(__dirname, './src/alias/buffer-shim.js')],
+		}
+	},
 });
 
 const dev = defineConfig({
@@ -89,9 +68,14 @@ const dev = defineConfig({
     resolve: { alias },
     define: {
         'process.platform': 'undefined',
-        'process.env.THREADS_WORKER_INIT_TIMEOUT': 'undefined'
+        // 'process.env.THREADS_WORKER_INIT_TIMEOUT': 'undefined'
     },
-    plugins: [bundleWebWorker, manualInlineWorker]
+	optimizeDeps: {
+		esbuildOptions: {
+			inject: [path.resolve(__dirname, './src/alias/buffer-shim.js')],
+		}
+	},
+	plugins: [bundleWebWorker],
 });
 
 const testing = defineConfig({
@@ -110,6 +94,9 @@ const testing = defineConfig({
           reportsDirectory: './coverage',
           reporter: ['lcov', 'text'],
           include: ['src', 'editor'],
+        },
+        deps: {
+            inline: ["@pixi/polyfill"]
         }
     },
 });
