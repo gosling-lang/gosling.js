@@ -274,7 +274,6 @@ export function drawColorLegendQuantitative(
         graphics.lineTo(tickEnd, y);
 
         // labels
-        // @ts-expect-error value should be text but is a number?
         const textGraphic = new HGC.libraries.PIXI.Text(value, labelTextStyle);
         textGraphic.anchor.x = 1;
         textGraphic.anchor.y = 0.5;
