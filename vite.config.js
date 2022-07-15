@@ -37,8 +37,8 @@ const alias = {
 };
 
 const external = [
-	...Object.keys(pkg.dependencies),
-	...Object.keys(pkg.peerDependencies),
+    ...Object.keys(pkg.dependencies),
+    ...Object.keys(pkg.peerDependencies),
 ];
 
 const esm = defineConfig({
@@ -56,11 +56,11 @@ const esm = defineConfig({
         rollupOptions: { external }
     },
     resolve: { alias },
-	optimizeDeps: {
-		esbuildOptions: {
-			inject: [path.resolve(__dirname, './src/alias/buffer-shim.js')],
-		}
-	},
+    optimizeDeps: {
+        esbuildOptions: {
+            inject: [path.resolve(__dirname, './src/alias/buffer-shim.js')],
+        }
+    },
 });
 
 const dev = defineConfig({
@@ -68,14 +68,14 @@ const dev = defineConfig({
     resolve: { alias },
     define: {
         'process.platform': 'undefined',
-        // 'process.env.THREADS_WORKER_INIT_TIMEOUT': 'undefined'
+        'process.env.THREADS_WORKER_INIT_TIMEOUT': 'undefined'
     },
-	optimizeDeps: {
-		esbuildOptions: {
-			inject: [path.resolve(__dirname, './src/alias/buffer-shim.js')],
-		}
-	},
-	plugins: [bundleWebWorker],
+    optimizeDeps: {
+        esbuildOptions: {
+            inject: [path.resolve(__dirname, './src/alias/buffer-shim.js')],
+        }
+    },
+    plugins: [bundleWebWorker],
 });
 
 const testing = defineConfig({
