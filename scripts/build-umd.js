@@ -3,7 +3,7 @@ const path = require('path');
 const pkg = require('../package.json');
 
 esbuild.build({
-    entryPoints: [path.resolve(__dirname, '../dist/gosling.es.js')],
+    entryPoints: [path.resolve(__dirname, '../dist/gosling.mjs')],
     target: 'es2018',
     outfile: pkg.main,
     bundle: true,

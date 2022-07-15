@@ -64,7 +64,9 @@ const esm = defineConfig({
 });
 
 const dev = defineConfig({
-    build: { outDir: 'build' },
+    build: {
+        outDir: 'build'
+    },
     resolve: { alias },
     define: {
         'process.platform': 'undefined',
