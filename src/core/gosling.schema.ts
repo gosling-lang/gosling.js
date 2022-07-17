@@ -961,7 +961,7 @@ export interface VectorData {
     /** Assign a field name of the middle position of genomic intervals. __Default__: `"position"` */
     column?: string;
 
-    /** Assign a field name of quantitative values. __Default__: `"position"` */
+    /** Assign a field name of quantitative values. __Default__: `"value"` */
     value?: string;
 
     /** Assign a field name of the start position of genomic intervals. __Default__: `"start"` */

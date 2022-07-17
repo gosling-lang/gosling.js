@@ -8831,7 +8831,7 @@
           "type": "string"
         },
         "value": {
-          "description": "Assign a field name of quantitative values. __Default__: `\"position\"`",
+          "description": "Assign a field name of quantitative values. __Default__: `\"value\"`",
           "type": "string"
         }
       },
