@@ -871,17 +871,17 @@ export interface MultivecData {
     url: string;
 
     /**
-     * Assign a field name of the middle position of genomic intervals.
+     * Assign a field name of the middle position of genomic intervals. __Default__: `"position"`
      */
     column?: string;
 
     /**
-     * Assign a field name of samples.
+     * Assign a field name of samples. __Default__: `"category"`
      */
     row?: string;
 
     /**
-     * Assign a field name of quantitative values.
+     * Assign a field name of quantitative values. __Default__: `"value"`
      */
     value?: string;
 
@@ -891,12 +891,12 @@ export interface MultivecData {
     categories?: string[];
 
     /**
-     * Assign a field name of the start position of genomic intervals.
+     * Assign a field name of the start position of genomic intervals. __Default__: `"start"`
      */
     start?: string;
 
     /**
-     * Assign a field name of the end position of genomic intervals.
+     * Assign a field name of the end position of genomic intervals. __Default__: `"end"`
      */
     end?: string;
 
@@ -918,22 +918,22 @@ export interface BIGWIGData {
     url: string;
 
     /**
-     * Assign a field name of the middle position of genomic intervals.
+     * Assign a field name of the middle position of genomic intervals. __Default__: `"position"`
      */
     column?: string;
 
     /**
-     * Assign a field name of quantitative values.
+     * Assign a field name of quantitative values. __Default__: `"value"`
      */
     value?: string;
 
     /**
-     * Assign a field name of the start position of genomic intervals.
+     * Assign a field name of the start position of genomic intervals. __Default__: `"start"`
      */
     start?: string;
 
     /**
-     * Assign a field name of the end position of genomic intervals.
+     * Assign a field name of the end position of genomic intervals. __Default__: `"end"`
      */
     end?: string;
 
@@ -958,16 +958,16 @@ export interface VectorData {
      */
     url: string;
 
-    /** Assign a field name of the middle position of genomic intervals. */
+    /** Assign a field name of the middle position of genomic intervals. __Default__: `"position"` */
     column?: string;
 
-    /** Assign a field name of quantitative values. */
+    /** Assign a field name of quantitative values. __Default__: `"position"` */
     value?: string;
 
-    /** Assign a field name of the start position of genomic intervals. */
+    /** Assign a field name of the start position of genomic intervals. __Default__: `"start"` */
     start?: string;
 
-    /** Assign a field name of the end position of genomic intervals. */
+    /** Assign a field name of the end position of genomic intervals. __Default__: `"end"` */
     end?: string;
 
     /** Binning the genomic interval in tiles (unit size: 256). */
@@ -983,6 +983,7 @@ export interface VectorData {
  */
 export interface BEDDBData {
     type: 'beddb';
+
     /** Specify the URL address of the data file. */
     url: string;
 
