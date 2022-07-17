@@ -27,11 +27,6 @@ export function getTabularData(
     }
 
     if (spec.data.type === 'vector' || spec.data.type === 'bigwig') {
-        if (!spec.data.column || !spec.data.value) {
-            console.warn('Proper data configuration is not provided. Please specify the name of data fields.');
-            return;
-        }
-
         if (!data.dense) {
             // we did not get sufficient data.
             return;
@@ -43,8 +38,8 @@ export function getTabularData(
         const numOfGenomicPositions = data.tileSize;
         const tileUnitSize = data.tileWidth / data.tileSize;
 
-        const valueName = spec.data.value;
-        const columnName = spec.data.column;
+        const valueName = spec.data.value ?? 'value';
+        const columnName = spec.data.column ?? 'position';
         const startName = spec.data.start ?? 'start';
         const endName = spec.data.end ?? 'end';
 
@@ -111,11 +106,6 @@ export function getTabularData(
             }
         });
     } else if (spec.data.type === 'multivec') {
-        if (!spec.data.row || !spec.data.column || !spec.data.value) {
-            console.warn('Proper data configuration is not provided. Please specify the name of data fields.');
-            return;
-        }
-
         if (!data.dense || data.shape === undefined) {
             // we did not get sufficient data.
             return;
@@ -129,9 +119,9 @@ export function getTabularData(
         const numOfGenomicPositions = data.shape[1];
         const tileUnitSize = data.tileWidth / data.tileSize;
 
-        const rowName = spec.data.row;
-        const valueName = spec.data.value;
-        const columnName = spec.data.column;
+        const rowName = spec.data.row ?? 'category';
+        const valueName = spec.data.value ?? 'value';
+        const columnName = spec.data.column ?? 'position';
         const startName = spec.data.start ?? 'start';
         const endName = spec.data.end ?? 'end';
 

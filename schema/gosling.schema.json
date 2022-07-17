@@ -221,9 +221,7 @@
       },
       "required": [
         "type",
-        "url",
-        "column",
-        "value"
+        "url"
       ],
       "type": "object"
     },
@@ -3768,10 +3766,7 @@
       },
       "required": [
         "type",
-        "url",
-        "column",
-        "row",
-        "value"
+        "url"
       ],
       "type": "object"
     },
@@ -8842,9 +8837,7 @@
       },
       "required": [
         "type",
-        "url",
-        "column",
-        "value"
+        "url"
       ],
       "type": "object"
     },

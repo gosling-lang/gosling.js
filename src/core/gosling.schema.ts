@@ -873,17 +873,17 @@ export interface MultivecData {
     /**
      * Assign a field name of the middle position of genomic intervals.
      */
-    column: string;
+    column?: string;
 
     /**
      * Assign a field name of samples.
      */
-    row: string;
+    row?: string;
 
     /**
      * Assign a field name of quantitative values.
      */
-    value: string;
+    value?: string;
 
     /**
      *  assign names of individual samples.
@@ -920,12 +920,13 @@ export interface BIGWIGData {
     /**
      * Assign a field name of the middle position of genomic intervals.
      */
-    column: string;
+    column?: string;
 
     /**
      * Assign a field name of quantitative values.
      */
-    value: string;
+    value?: string;
+
     /**
      * Assign a field name of the start position of genomic intervals.
      */
@@ -958,10 +959,10 @@ export interface VectorData {
     url: string;
 
     /** Assign a field name of the middle position of genomic intervals. */
-    column: string;
+    column?: string;
 
     /** Assign a field name of quantitative values. */
-    value: string;
+    value?: string;
 
     /** Assign a field name of the start position of genomic intervals. */
     start?: string;
