@@ -35,6 +35,7 @@ module.exports = {
         '@typescript-eslint/no-namespace': 'off',
         '@typescript-eslint/ban-ts-comment': 'off',
         'no-unused-vars': 'off', // must disable the base rule as it can report incorrect errors
+        // https://www.executeprogram.com/blog/the-code-is-the-to-do-list
         "no-warning-comments": ["error", { terms: ["xxx"], location: "anywhere" }],
         '@typescript-eslint/no-unused-vars': [
             'error',
