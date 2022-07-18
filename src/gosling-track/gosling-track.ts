@@ -3,7 +3,7 @@ import PubSub from 'pubsub-js';
 import * as uuid from 'uuid';
 import { isEqual, sampleSize, uniqBy } from 'lodash-es';
 import type { ScaleLinear } from 'd3-scale';
-import type { SingleTrack, OverlaidTrack, Datum, EventStyle, GenomicPosition } from '@gosling.schema';
+import type { SingleTrack, OverlaidTrack, Datum, EventStyle, GenomicPosition, Assembly } from '@gosling.schema';
 import type { CompleteThemeDeep } from 'src/core/utils/theme';
 import { drawMark, drawPostEmbellishment, drawPreEmbellishment } from '../core/mark';
 import { GoslingTrackModel } from '../core/gosling-track-model';
@@ -86,6 +86,7 @@ function GoslingTrack(HGC: import('@higlass/types').HGC, ...args: any[]): any {
         private _yScale!: ScaleLinear<number, number>;
         private pMouseHover: Graphics;
         private pMouseSelection: Graphics;
+        private assembly?: Assembly;
         // TODO: add members that are used explicitly in the code
 
         constructor(params: any[]) {
@@ -109,6 +110,7 @@ function GoslingTrack(HGC: import('@higlass/types').HGC, ...args: any[]): any {
             context.dataFetcher.track = this;
             this.context = context;
             this.viewUid = context.viewUid;
+            this.assembly = this.options.spec.assembly;
 
             // Add unique IDs to each of the overlaid tracks that will be rendered independently.
             if ('overlay' in this.options.spec) {
@@ -1144,8 +1146,8 @@ function GoslingTrack(HGC: import('@higlass/types').HGC, ...args: any[]): any {
             /* API call */
             if (!skipApiTrigger) {
                 const genomicRange: [GenomicPosition, GenomicPosition] = [
-                    getRelativeGenomicPosition(Math.floor(this._xScale.invert(startX))),
-                    getRelativeGenomicPosition(Math.floor(this._xScale.invert(endX)))
+                    getRelativeGenomicPosition(Math.floor(this._xScale.invert(startX)), this.assembly),
+                    getRelativeGenomicPosition(Math.floor(this._xScale.invert(endX)), this.assembly)
                 ];
 
                 publish('rangeSelect', {
@@ -1206,7 +1208,10 @@ function GoslingTrack(HGC: import('@higlass/types').HGC, ...args: any[]): any {
             // click API
             if (!isDrag && clickEnabled) {
                 // Identify the current position
-                const genomicPosition = getRelativeGenomicPosition(Math.floor(this._xScale.invert(mouseX)));
+                const genomicPosition = getRelativeGenomicPosition(
+                    Math.floor(this._xScale.invert(mouseX)),
+                    this.assembly
+                );
 
                 // Get elements within mouse
                 const capturedElements = this.getElementsWithinMouse(mouseX, mouseY);
@@ -1241,7 +1246,7 @@ function GoslingTrack(HGC: import('@higlass/types').HGC, ...args: any[]): any {
             this.pMouseHover.clear();
 
             // Current position
-            const genomicPosition = getRelativeGenomicPosition(Math.floor(this._xScale.invert(mouseX)));
+            const genomicPosition = getRelativeGenomicPosition(Math.floor(this._xScale.invert(mouseX)), this.assembly);
 
             // Get elements within mouse
             const capturedElements = this.getElementsWithinMouse(mouseX, mouseY);
@@ -1299,7 +1304,7 @@ function GoslingTrack(HGC: import('@higlass/types').HGC, ...args: any[]): any {
                                 value = HGC.libraries.d3Format.format(d.format)(+rawValue);
                             } else if (d.type === 'genomic') {
                                 // e.g., chr1:204,133
-                                const { chromosome, position } = getRelativeGenomicPosition(+rawValue);
+                                const { chromosome, position } = getRelativeGenomicPosition(+rawValue, this.assembly);
                                 value = `${chromosome}:${HGC.libraries.d3Format.format(',')(position)}`;
                             }
 
