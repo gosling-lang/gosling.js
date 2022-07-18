@@ -127,7 +127,7 @@ export const EX_SPEC_CIRCOS: GoslingSpec = {
                     x: { field: 'p1', type: 'genomic' },
                     xe: { field: 'p1_2', type: 'genomic' },
                     x1: { field: 'p2', type: 'genomic' },
-                    x1e: { field: 'P2_2', type: 'genomic' },
+                    x1e: { field: 'p2_2', type: 'genomic' },
                     stroke: { value: 'lightgray' },
                     strokeWidth: { value: 1 }
                 },
@@ -137,7 +137,7 @@ export const EX_SPEC_CIRCOS: GoslingSpec = {
                     x: { field: 'p1', type: 'genomic' },
                     xe: { field: 'p1_2', type: 'genomic' },
                     x1: { field: 'p2', type: 'genomic' },
-                    x1e: { field: 'P2_2', type: 'genomic' },
+                    x1e: { field: 'p2_2', type: 'genomic' },
                     stroke: {
                         field: 'chr_2',
                         type: 'nominal',

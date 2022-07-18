@@ -34,9 +34,9 @@ export function filterUsingGenoPos(
             return minX < value && value <= maxX;
         } else {
             // filter based on two genomic positions, i.e., check overlaps
-            const values = definedXFields.map(f => +d[f]);
-            const maxValue = Math.max(...values);
+            const values = definedXFields.map(f => +d[f]).filter(v => +v);
             const minValue = Math.min(...values);
+            const maxValue = Math.max(...values);
             return minX <= maxValue && minValue <= maxX;
         }
     });
