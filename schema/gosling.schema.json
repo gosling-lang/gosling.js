@@ -195,15 +195,15 @@
           "type": "number"
         },
         "column": {
-          "description": "Assign a field name of the middle position of genomic intervals.",
+          "description": "Assign a field name of the middle position of genomic intervals. __Default__: `\"position\"`",
           "type": "string"
         },
         "end": {
-          "description": "Assign a field name of the end position of genomic intervals.",
+          "description": "Assign a field name of the end position of genomic intervals. __Default__: `\"end\"`",
           "type": "string"
         },
         "start": {
-          "description": "Assign a field name of the start position of genomic intervals.",
+          "description": "Assign a field name of the start position of genomic intervals. __Default__: `\"start\"`",
           "type": "string"
         },
         "type": {
@@ -215,15 +215,13 @@
           "type": "string"
         },
         "value": {
-          "description": "Assign a field name of quantitative values.",
+          "description": "Assign a field name of quantitative values. __Default__: `\"value\"`",
           "type": "string"
         }
       },
       "required": [
         "type",
-        "url",
-        "column",
-        "value"
+        "url"
       ],
       "type": "object"
     },
@@ -3738,19 +3736,19 @@
           "type": "array"
         },
         "column": {
-          "description": "Assign a field name of the middle position of genomic intervals.",
+          "description": "Assign a field name of the middle position of genomic intervals. __Default__: `\"position\"`",
           "type": "string"
         },
         "end": {
-          "description": "Assign a field name of the end position of genomic intervals.",
+          "description": "Assign a field name of the end position of genomic intervals. __Default__: `\"end\"`",
           "type": "string"
         },
         "row": {
-          "description": "Assign a field name of samples.",
+          "description": "Assign a field name of samples. __Default__: `\"category\"`",
           "type": "string"
         },
         "start": {
-          "description": "Assign a field name of the start position of genomic intervals.",
+          "description": "Assign a field name of the start position of genomic intervals. __Default__: `\"start\"`",
           "type": "string"
         },
         "type": {
@@ -3762,16 +3760,13 @@
           "type": "string"
         },
         "value": {
-          "description": "Assign a field name of quantitative values.",
+          "description": "Assign a field name of quantitative values. __Default__: `\"value\"`",
           "type": "string"
         }
       },
       "required": [
         "type",
-        "url",
-        "column",
-        "row",
-        "value"
+        "url"
       ],
       "type": "object"
     },
@@ -8816,15 +8811,15 @@
           "type": "number"
         },
         "column": {
-          "description": "Assign a field name of the middle position of genomic intervals.",
+          "description": "Assign a field name of the middle position of genomic intervals. __Default__: `\"position\"`",
           "type": "string"
         },
         "end": {
-          "description": "Assign a field name of the end position of genomic intervals.",
+          "description": "Assign a field name of the end position of genomic intervals. __Default__: `\"end\"`",
           "type": "string"
         },
         "start": {
-          "description": "Assign a field name of the start position of genomic intervals.",
+          "description": "Assign a field name of the start position of genomic intervals. __Default__: `\"start\"`",
           "type": "string"
         },
         "type": {
@@ -8836,15 +8831,13 @@
           "type": "string"
         },
         "value": {
-          "description": "Assign a field name of quantitative values.",
+          "description": "Assign a field name of quantitative values. __Default__: `\"value\"`",
           "type": "string"
         }
       },
       "required": [
         "type",
-        "url",
-        "column",
-        "value"
+        "url"
       ],
       "type": "object"
     },

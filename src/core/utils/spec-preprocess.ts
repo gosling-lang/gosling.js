@@ -524,11 +524,16 @@ export function overrideDataTemplates(spec: GoslingSpec) {
         switch (t.data.type) {
             case 'vector':
             case 'bigwig':
-                ts[i] = Object.assign(getVectorTemplate(t.data.column, t.data.value), t);
+                ts[i] = Object.assign(getVectorTemplate(t.data.column ?? 'position', t.data.value ?? 'value'), t);
                 break;
             case 'multivec':
                 ts[i] = Object.assign(
-                    getMultivecTemplate(t.data.row, t.data.column, t.data.value, t.data.categories),
+                    getMultivecTemplate(
+                        t.data.row ?? 'category',
+                        t.data.column ?? 'position',
+                        t.data.value ?? 'value',
+                        t.data.categories
+                    ),
                     t
                 );
                 break;
