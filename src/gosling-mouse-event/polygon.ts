@@ -1,3 +1,31 @@
+import { pointsToDegree } from '../core/utils/polar';
+
+/**
+ * @param {Array} point Tuple of the form `[x,y]` to be tested.
+ * @param {Array} center Tuple of the form `[x,y]` that correspond to the center of an arc.
+ * @param {number} radius The inner and outer radius of the arc.
+ * @param {number} angle The start and end angle the arc in the range of [0, 360]. Anticlockwise, starting from 12 o'clock.
+ * @returns {boolean} If `true` point lies within the arc, i.e., the slice of the donut.
+ */
+export const isPointInsideDonutSlice: (
+    point: [number, number],
+    center: [number, number],
+    radius: [number, number],
+    angle: [number, number]
+) => boolean = ([x, y], [cx, cy], [innerRadius, outerRadius], [startAngle, endAngle]) => {
+    const dist = Math.sqrt((x - cx) ** 2 + (y - cy) ** 2);
+    if (dist < innerRadius || outerRadius < dist) {
+        // Out of the given radius range
+        return false;
+    }
+    const degree = pointsToDegree(x, y, cx, cy);
+    if (degree < startAngle || endAngle < degree) {
+        // Out of the given angle range
+        return false;
+    }
+    return true;
+};
+
 /**
  * @param {Array} point Tuple of the form `[x,y]` to be tested.
  * @param {Array} point2 Tuple of the form `[x,y]` to be tested.

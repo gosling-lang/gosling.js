@@ -9,7 +9,7 @@ import { traverseViewsInViewConfig } from './utils/view-config';
 /**
  * Information of suggested genes.
  */
-interface geneSuggestion {
+interface GeneSuggestion {
     geneName: string; // gene symbol
     score: number; // higher score means suggested gene is more likely to match the searched keyword
     chr: string; // chromosome name
@@ -23,7 +23,7 @@ export interface GoslingApi {
     zoomTo(viewId: string, position: string, padding?: number, duration?: number): void;
     zoomToExtent(viewId: string, duration?: number): void;
     zoomToGene(viewId: string, gene: string, padding?: number, duration?: number): void;
-    suggestGene(viewId: string, keyword: string, callback: (suggestions: geneSuggestion[]) => void): void;
+    suggestGene(viewId: string, keyword: string, callback: (suggestions: GeneSuggestion[]) => void): void;
     getViewIds(): string[];
     exportPng(transparentBackground?: boolean): void;
     exportPdf(transparentBackground?: boolean): void;
@@ -108,7 +108,7 @@ export function createApi(
         zoomToGene: (viewId, gene, padding = 0, duration = 1000) => {
             hg.api.zoomToGene(viewId, gene, padding, duration);
         },
-        suggestGene: (viewId: string, keyword: string, callback: (suggestions: geneSuggestion[]) => void) => {
+        suggestGene: (viewId: string, keyword: string, callback: (suggestions: GeneSuggestion[]) => void) => {
             hg.api.suggestGene(viewId, keyword, callback);
         },
         getViewIds: () => {

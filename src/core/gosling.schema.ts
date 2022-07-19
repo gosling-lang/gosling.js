@@ -254,16 +254,49 @@ interface RangeMouseEventData extends CommonEventData {
     genomicRange: [GenomicPosition, GenomicPosition] | null;
 }
 
+/** The visual parameters that determine the shape of a linear track */
+interface LinearTrackShape {
+    x: number; // The origin is the left top corner
+    y: number;
+    width: number;
+    height: number;
+}
+
+/** The visual parameters that determine the shape of a circular track */
+interface CircularTrackShape {
+    cx: number;
+    cy: number;
+    innerRadius: number;
+    outerRadius: number;
+    // Anticlockwise, starts from 12 o'clock.
+    startAngle: number; // [0, 360]
+    endAngle: number; // [0, 360]
+}
+
+/** The informatino for a mouse event on a track */
+type c = SingleTrack | OverlaidTrack;
+type TrackMouseEventData = {
+    /** ID of a source track, i.e., `track.id` */
+    id: string;
+
+    /** Source spec that is processed by the Gosling compiler, e.g., default properties filled in. */
+    spec: c;
+
+    /** The shape of the source track */
+    shape: LinearTrackShape | CircularTrackShape;
+};
+
 export type _EventMap = {
     mouseOver: PointMouseEventData;
     click: PointMouseEventData;
     rangeSelect: RangeMouseEventData;
     rawData: CommonEventData;
+    trackMouseOver: TrackMouseEventData;
 };
 
 export type MouseEventsDeep = {
     /** Turn on and off individual mouse events. */
-    [Event in keyof Omit<_EventMap, 'rawData'>]?: boolean;
+    [Event in keyof Omit<_EventMap, 'trackMouseOver' | 'rawData'>]?: boolean;
 } & {
     /** Group marks using keys in a data field. This affects how a set of marks are highlighted/selected by interaction. __Default__: `undefined` */
     groupMarksByField?: string;
@@ -290,7 +323,7 @@ interface SingleTrackBase extends CommonTrackDef {
         /*
          * Determine whether to use mouse events, such as click and mouse over on marks. __Default__: `false`
          */
-        mouseEvents?: boolean | MouseEventsDeep;
+        // mouseEvents?: boolean | MouseEventsDeep;
     };
 
     // Mark

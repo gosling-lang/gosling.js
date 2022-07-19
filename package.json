@@ -131,7 +131,7 @@
         "react-split-pane": "^0.1.91",
         "remark-gfm": "^1.0.0",
         "strip-json-comments": "^3.1.1",
-        "ts-json-schema-generator": "^0.75.0",
+        "ts-json-schema-generator": "^1.0.0",
         "typescript": "^4.7.4",
         "vite": "^2.9.5",
         "vitest": "^0.10.0"
