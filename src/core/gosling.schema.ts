@@ -294,9 +294,11 @@ export type _EventMap = {
 };
 
 export type MouseEventsDeep = {
-    /** Turn on and off individual mouse events. */
+    // TODO(Jul-19-2022): Due to cyclic definition of `SingleTrack`, `ts-json-schema-generator` throws an error
+    // see https://github.com/vega/ts-json-schema-generator/issues/192
     // [Event in keyof Omit<_EventMap, 'rawData'>]?: boolean;
-    [key in 'mouseOver' | 'click' | 'rangeSelect']?: boolean;
+    /** Turn on and off individual mouse events. */
+    [Event in 'mouseOver' | 'click' | 'rangeSelect']?: boolean;
 } & {
     /** Group marks using keys in a data field. This affects how a set of marks are highlighted/selected by interaction. __Default__: `undefined` */
     groupMarksByField?: string;
