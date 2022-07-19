@@ -1,4 +1,4 @@
-import type { PartialTrack, GoslingSpec, JSONData } from '@gosling.schema';
+import type { PartialTrack, GoslingSpec, JsonData } from '@gosling.schema';
 
 const barTrack: PartialTrack = {
     data: {
@@ -17,7 +17,7 @@ const barTrack: PartialTrack = {
     color: { value: 'lightgray' }
 };
 
-const referenceData: JSONData = {
+const referenceData: JsonData = {
     type: 'json',
     values: [
         { c: 'chr2', p: 100000, v: 0.0001 },

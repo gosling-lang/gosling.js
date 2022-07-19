@@ -1,4 +1,4 @@
-import type { GoslingSpec, PartialTrack, View, BIGWIGData, BEDDBData } from '@gosling.schema';
+import type { GoslingSpec, PartialTrack, View, BigWigData, BeddbData } from '@gosling.schema';
 
 const width = 400;
 
@@ -66,7 +66,7 @@ const ideogram: View = {
     ]
 };
 
-const getBigwigData = (name: string): BIGWIGData => {
+const getBigwigData = (name: string): BigWigData => {
     return {
         url: `https://s3.amazonaws.com/gosling-lang.org/data/${name}insertions_bin100_RIPnorm.bw`,
         type: 'bigwig',
@@ -216,7 +216,7 @@ const geneAnnotationTrack: View = {
     height: 80
 };
 
-const getBeddbData = (name: string): BEDDBData => {
+const getBeddbData = (name: string): BeddbData => {
     return {
         url: `https://server.gosling-lang.org/api/v1/tileset_info/?d=${name}-plac-seq-bedpe`,
         type: 'beddb',

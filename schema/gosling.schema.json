@@ -35,7 +35,7 @@
       ],
       "type": "string"
     },
-    "BAMData": {
+    "BamData": {
       "additionalProperties": false,
       "description": "Binary Alignment Map (BAM) is the comprehensive raw data of genome sequencing; it consists of the lossless, compressed binary representation of the Sequence Alignment Map-files.",
       "properties": {
@@ -75,7 +75,7 @@
       ],
       "type": "object"
     },
-    "BEDDBData": {
+    "BeddbData": {
       "additionalProperties": false,
       "description": "Regular BED or similar files can be pre-aggregated for the scalable data exploration. Find our more about this format at [HiGlass Docs](https://docs.higlass.io/data_preparation.html#bed-files).",
       "properties": {
@@ -183,7 +183,7 @@
       ],
       "type": "object"
     },
-    "BIGWIGData": {
+    "BigWigData": {
       "additionalProperties": false,
       "properties": {
         "aggregation": {
@@ -231,82 +231,6 @@
         "sum"
       ],
       "type": "string"
-    },
-    "CSVData": {
-      "additionalProperties": false,
-      "description": "Any small enough tabular data files, such as tsv, csv, BED, BEDPE, and GFF, can be loaded using \"csv\" data specification.",
-      "properties": {
-        "chromosomeField": {
-          "description": "Specify the name of chromosome data fields.",
-          "type": "string"
-        },
-        "chromosomePrefix": {
-          "description": "experimental",
-          "type": "string"
-        },
-        "genomicFields": {
-          "description": "Specify the name of genomic data fields.",
-          "items": {
-            "type": "string"
-          },
-          "type": "array"
-        },
-        "genomicFieldsToConvert": {
-          "description": "experimental",
-          "items": {
-            "additionalProperties": false,
-            "properties": {
-              "chromosomeField": {
-                "type": "string"
-              },
-              "genomicFields": {
-                "items": {
-                  "type": "string"
-                },
-                "type": "array"
-              }
-            },
-            "required": [
-              "chromosomeField",
-              "genomicFields"
-            ],
-            "type": "object"
-          },
-          "type": "array"
-        },
-        "headerNames": {
-          "description": "Specify the names of data fields if a CSV file does not contain a header.",
-          "items": {
-            "type": "string"
-          },
-          "type": "array"
-        },
-        "longToWideId": {
-          "description": "experimental",
-          "type": "string"
-        },
-        "sampleLength": {
-          "description": "Specify the number of rows loaded from the URL.\n\n__Default:__ `1000`",
-          "type": "number"
-        },
-        "separator": {
-          "description": "Specify file separator, __Default:__ ','",
-          "type": "string"
-        },
-        "type": {
-          "const": "csv",
-          "type": "string"
-        },
-        "url": {
-          "description": "Specify the URL address of the data file.",
-          "type": "string"
-        }
-      },
-      "required": [
-        "type",
-        "url"
-      ],
-      "type": "object"
     },
     "Channel": {
       "anyOf": [
@@ -504,22 +428,98 @@
       ],
       "type": "object"
     },
+    "CsvData": {
+      "additionalProperties": false,
+      "description": "Any small enough tabular data files, such as tsv, csv, BED, BEDPE, and GFF, can be loaded using \"csv\" data specification.",
+      "properties": {
+        "chromosomeField": {
+          "description": "Specify the name of chromosome data fields.",
+          "type": "string"
+        },
+        "chromosomePrefix": {
+          "description": "experimental",
+          "type": "string"
+        },
+        "genomicFields": {
+          "description": "Specify the name of genomic data fields.",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "genomicFieldsToConvert": {
+          "description": "experimental",
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "chromosomeField": {
+                "type": "string"
+              },
+              "genomicFields": {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              }
+            },
+            "required": [
+              "chromosomeField",
+              "genomicFields"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "headerNames": {
+          "description": "Specify the names of data fields if a CSV file does not contain a header.",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "longToWideId": {
+          "description": "experimental",
+          "type": "string"
+        },
+        "sampleLength": {
+          "description": "Specify the number of rows loaded from the URL.\n\n__Default:__ `1000`",
+          "type": "number"
+        },
+        "separator": {
+          "description": "Specify file separator, __Default:__ ','",
+          "type": "string"
+        },
+        "type": {
+          "const": "csv",
+          "type": "string"
+        },
+        "url": {
+          "description": "Specify the URL address of the data file.",
+          "type": "string"
+        }
+      },
+      "required": [
+        "type",
+        "url"
+      ],
+      "type": "object"
+    },
     "DataDeep": {
       "anyOf": [
         {
-          "$ref": "#/definitions/JSONData"
+          "$ref": "#/definitions/JsonData"
         },
         {
-          "$ref": "#/definitions/CSVData"
+          "$ref": "#/definitions/CsvData"
         },
         {
-          "$ref": "#/definitions/BIGWIGData"
+          "$ref": "#/definitions/BigWigData"
         },
         {
           "$ref": "#/definitions/MultivecData"
         },
         {
-          "$ref": "#/definitions/BEDDBData"
+          "$ref": "#/definitions/BeddbData"
         },
         {
           "$ref": "#/definitions/VectorData"
@@ -528,10 +528,10 @@
           "$ref": "#/definitions/MatrixData"
         },
         {
-          "$ref": "#/definitions/BAMData"
+          "$ref": "#/definitions/BamData"
         },
         {
-          "$ref": "#/definitions/VCFData"
+          "$ref": "#/definitions/VcfData"
         }
       ]
     },
@@ -3370,7 +3370,41 @@
       ],
       "type": "object"
     },
-    "JSONData": {
+    "JSONParseTransform": {
+      "additionalProperties": false,
+      "description": "Parse JSON Object Array and append vertically",
+      "properties": {
+        "baseGenomicField": {
+          "description": "Base genomic position when parsing relative position.",
+          "type": "string"
+        },
+        "field": {
+          "description": "The field that contains the JSON object array.",
+          "type": "string"
+        },
+        "genomicField": {
+          "description": "Relative genomic position to parse.",
+          "type": "string"
+        },
+        "genomicLengthField": {
+          "description": "Length of genomic interval.",
+          "type": "string"
+        },
+        "type": {
+          "const": "subjson",
+          "type": "string"
+        }
+      },
+      "required": [
+        "type",
+        "field",
+        "baseGenomicField",
+        "genomicField",
+        "genomicLengthField"
+      ],
+      "type": "object"
+    },
+    "JsonData": {
       "additionalProperties": false,
       "description": "The JSON data format allows users to include data directly in the Gosling's JSON specification.",
       "properties": {
@@ -3428,40 +3462,6 @@
       "required": [
         "type",
         "values"
-      ],
-      "type": "object"
-    },
-    "JSONParseTransform": {
-      "additionalProperties": false,
-      "description": "Parse JSON Object Array and append vertically",
-      "properties": {
-        "baseGenomicField": {
-          "description": "Base genomic position when parsing relative position.",
-          "type": "string"
-        },
-        "field": {
-          "description": "The field that contains the JSON object array.",
-          "type": "string"
-        },
-        "genomicField": {
-          "description": "Relative genomic position to parse.",
-          "type": "string"
-        },
-        "genomicLengthField": {
-          "description": "Length of genomic interval.",
-          "type": "string"
-        },
-        "type": {
-          "const": "subjson",
-          "type": "string"
-        }
-      },
-      "required": [
-        "type",
-        "field",
-        "baseGenomicField",
-        "genomicField",
-        "genomicLengthField"
       ],
       "type": "object"
     },
@@ -8754,7 +8754,23 @@
         }
       ]
     },
-    "VCFData": {
+    "ValueExtent": {
+      "anyOf": [
+        {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        {
+          "items": {
+            "type": "number"
+          },
+          "type": "array"
+        }
+      ]
+    },
+    "VcfData": {
       "additionalProperties": false,
       "description": "The Variant Call Format (VCF).",
       "properties": {
@@ -8781,22 +8797,6 @@
         "indexUrl"
       ],
       "type": "object"
-    },
-    "ValueExtent": {
-      "anyOf": [
-        {
-          "items": {
-            "type": "string"
-          },
-          "type": "array"
-        },
-        {
-          "items": {
-            "type": "number"
-          },
-          "type": "array"
-        }
-      ]
     },
     "VectorData": {
       "additionalProperties": false,
