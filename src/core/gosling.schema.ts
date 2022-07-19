@@ -274,13 +274,12 @@ interface CircularTrackShape {
 }
 
 /** The informatino for a mouse event on a track */
-type c = SingleTrack | OverlaidTrack;
 type TrackMouseEventData = {
     /** ID of a source track, i.e., `track.id` */
     id: string;
 
     /** Source spec that is processed by the Gosling compiler, e.g., default properties filled in. */
-    spec: c;
+    spec: SingleTrack | OverlaidTrack;
 
     /** The shape of the source track */
     shape: LinearTrackShape | CircularTrackShape;
@@ -296,7 +295,8 @@ export type _EventMap = {
 
 export type MouseEventsDeep = {
     /** Turn on and off individual mouse events. */
-    [Event in keyof Omit<_EventMap, 'trackMouseOver' | 'rawData'>]?: boolean;
+    // [Event in keyof Omit<_EventMap, 'rawData'>]?: boolean;
+    [key in 'mouseOver' | 'click' | 'rangeSelect']?: boolean;
 } & {
     /** Group marks using keys in a data field. This affects how a set of marks are highlighted/selected by interaction. __Default__: `undefined` */
     groupMarksByField?: string;
@@ -323,7 +323,7 @@ interface SingleTrackBase extends CommonTrackDef {
         /*
          * Determine whether to use mouse events, such as click and mouse over on marks. __Default__: `false`
          */
-        // mouseEvents?: boolean | MouseEventsDeep;
+        mouseEvents?: boolean | MouseEventsDeep;
     };
 
     // Mark

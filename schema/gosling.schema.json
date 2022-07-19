@@ -1104,6 +1104,18 @@
             },
             "experimental": {
               "additionalProperties": false,
+              "properties": {
+                "mouseEvents": {
+                  "anyOf": [
+                    {
+                      "type": "boolean"
+                    },
+                    {
+                      "$ref": "#/definitions/MouseEventsDeep"
+                    }
+                  ]
+                }
+              },
               "type": "object"
             },
             "flipY": {
@@ -1238,6 +1250,18 @@
                       },
                       "experimental": {
                         "additionalProperties": false,
+                        "properties": {
+                          "mouseEvents": {
+                            "anyOf": [
+                              {
+                                "type": "boolean"
+                              },
+                              {
+                                "$ref": "#/definitions/MouseEventsDeep"
+                              }
+                            ]
+                          }
+                        },
                         "type": "object"
                       },
                       "flipY": {
@@ -1838,6 +1862,18 @@
             },
             "experimental": {
               "additionalProperties": false,
+              "properties": {
+                "mouseEvents": {
+                  "anyOf": [
+                    {
+                      "type": "boolean"
+                    },
+                    {
+                      "$ref": "#/definitions/MouseEventsDeep"
+                    }
+                  ]
+                }
+              },
               "type": "object"
             },
             "flipY": {
@@ -1972,6 +2008,18 @@
                       },
                       "experimental": {
                         "additionalProperties": false,
+                        "properties": {
+                          "mouseEvents": {
+                            "anyOf": [
+                              {
+                                "type": "boolean"
+                              },
+                              {
+                                "$ref": "#/definitions/MouseEventsDeep"
+                              }
+                            ]
+                          }
+                        },
                         "type": "object"
                       },
                       "flipY": {
@@ -2623,6 +2671,18 @@
                       },
                       "experimental": {
                         "additionalProperties": false,
+                        "properties": {
+                          "mouseEvents": {
+                            "anyOf": [
+                              {
+                                "type": "boolean"
+                              },
+                              {
+                                "$ref": "#/definitions/MouseEventsDeep"
+                              }
+                            ]
+                          }
+                        },
                         "type": "object"
                       },
                       "flipY": {
@@ -3498,6 +3558,29 @@
       ],
       "type": "object"
     },
+    "MouseEventsDeep": {
+      "additionalProperties": false,
+      "properties": {
+        "click": {
+          "type": "boolean"
+        },
+        "enableMouseOverOnMultipleMarks": {
+          "description": "Determine whether all marks underneath the mouse point should be affected by mouse over. __Default__: `false`",
+          "type": "boolean"
+        },
+        "groupMarksByField": {
+          "description": "Group marks using keys in a data field. This affects how a set of marks are highlighted/selected by interaction. __Default__: `undefined`",
+          "type": "string"
+        },
+        "mouseOver": {
+          "type": "boolean"
+        },
+        "rangeSelect": {
+          "type": "boolean"
+        }
+      },
+      "type": "object"
+    },
     "MultipleViews": {
       "additionalProperties": false,
       "properties": {
@@ -3798,6 +3881,18 @@
         },
         "experimental": {
           "additionalProperties": false,
+          "properties": {
+            "mouseEvents": {
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "$ref": "#/definitions/MouseEventsDeep"
+                }
+              ]
+            }
+          },
           "type": "object"
         },
         "flipY": {
@@ -3901,6 +3996,18 @@
               },
               "experimental": {
                 "additionalProperties": false,
+                "properties": {
+                  "mouseEvents": {
+                    "anyOf": [
+                      {
+                        "type": "boolean"
+                      },
+                      {
+                        "$ref": "#/definitions/MouseEventsDeep"
+                      }
+                    ]
+                  }
+                },
                 "type": "object"
               },
               "flipY": {
@@ -4453,6 +4560,18 @@
         },
         "experimental": {
           "additionalProperties": false,
+          "properties": {
+            "mouseEvents": {
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "$ref": "#/definitions/MouseEventsDeep"
+                }
+              ]
+            }
+          },
           "type": "object"
         },
         "flipY": {
@@ -4802,6 +4921,18 @@
         },
         "experimental": {
           "additionalProperties": false,
+          "properties": {
+            "mouseEvents": {
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "$ref": "#/definitions/MouseEventsDeep"
+                }
+              ]
+            }
+          },
           "type": "object"
         },
         "flipY": {
@@ -4905,6 +5036,18 @@
               },
               "experimental": {
                 "additionalProperties": false,
+                "properties": {
+                  "mouseEvents": {
+                    "anyOf": [
+                      {
+                        "type": "boolean"
+                      },
+                      {
+                        "$ref": "#/definitions/MouseEventsDeep"
+                      }
+                    ]
+                  }
+                },
                 "type": "object"
               },
               "flipY": {
@@ -5597,6 +5740,18 @@
         },
         "experimental": {
           "additionalProperties": false,
+          "properties": {
+            "mouseEvents": {
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "$ref": "#/definitions/MouseEventsDeep"
+                }
+              ]
+            }
+          },
           "type": "object"
         },
         "flipY": {
@@ -5940,6 +6095,18 @@
             },
             "experimental": {
               "additionalProperties": false,
+              "properties": {
+                "mouseEvents": {
+                  "anyOf": [
+                    {
+                      "type": "boolean"
+                    },
+                    {
+                      "$ref": "#/definitions/MouseEventsDeep"
+                    }
+                  ]
+                }
+              },
               "type": "object"
             },
             "flipY": {
@@ -6070,6 +6237,18 @@
                       },
                       "experimental": {
                         "additionalProperties": false,
+                        "properties": {
+                          "mouseEvents": {
+                            "anyOf": [
+                              {
+                                "type": "boolean"
+                              },
+                              {
+                                "$ref": "#/definitions/MouseEventsDeep"
+                              }
+                            ]
+                          }
+                        },
                         "type": "object"
                       },
                       "flipY": {
@@ -6667,6 +6846,18 @@
             },
             "experimental": {
               "additionalProperties": false,
+              "properties": {
+                "mouseEvents": {
+                  "anyOf": [
+                    {
+                      "type": "boolean"
+                    },
+                    {
+                      "$ref": "#/definitions/MouseEventsDeep"
+                    }
+                  ]
+                }
+              },
               "type": "object"
             },
             "flipY": {
@@ -6797,6 +6988,18 @@
                       },
                       "experimental": {
                         "additionalProperties": false,
+                        "properties": {
+                          "mouseEvents": {
+                            "anyOf": [
+                              {
+                                "type": "boolean"
+                              },
+                              {
+                                "$ref": "#/definitions/MouseEventsDeep"
+                              }
+                            ]
+                          }
+                        },
                         "type": "object"
                       },
                       "flipY": {
@@ -7441,6 +7644,18 @@
                       },
                       "experimental": {
                         "additionalProperties": false,
+                        "properties": {
+                          "mouseEvents": {
+                            "anyOf": [
+                              {
+                                "type": "boolean"
+                              },
+                              {
+                                "$ref": "#/definitions/MouseEventsDeep"
+                              }
+                            ]
+                          }
+                        },
                         "type": "object"
                       },
                       "flipY": {
