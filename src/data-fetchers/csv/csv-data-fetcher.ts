@@ -67,11 +67,11 @@ function CsvDataFetcher(HGC: any, ...args: any): any {
                 // we have raw data that we can use right away
                 this.values = dataConfig.data;
             } else {
-                this.dataPromise = this.fetchCSV();
+                this.dataPromise = this.fetchCsv();
             }
         }
 
-        fetchCSV() {
+        fetchCsv() {
             const {
                 url,
                 chromosomeField,

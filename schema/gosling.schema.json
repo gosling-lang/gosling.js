@@ -372,14 +372,9 @@
         },
         "scaleOffset": {
           "description": "Whether to use offset of the domain proportionally. This is bound to brushes on the color legend. __Default__: `[0, 1]`",
-          "items": [
-            {
-              "type": "number"
-            },
-            {
-              "type": "number"
-            }
-          ],
+          "items": {
+            "type": "number"
+          },
           "maxItems": 2,
           "minItems": 2,
           "type": "array"
@@ -712,7 +707,7 @@
           "$ref": "#/definitions/CoverageTransform"
         },
         {
-          "$ref": "#/definitions/JSONParseTransform"
+          "$ref": "#/definitions/JsonParseTransform"
         }
       ]
     },
@@ -825,14 +820,9 @@
           "description": "If specified, only showing a certain interval in a chromosome."
         },
         "interval": {
-          "items": [
-            {
-              "type": "number"
-            },
-            {
-              "type": "number"
-            }
-          ],
+          "items": {
+            "type": "number"
+          },
           "maxItems": 2,
           "minItems": 2,
           "type": "array"
@@ -853,14 +843,9 @@
               "type": "string"
             },
             {
-              "items": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "string"
-                }
-              ],
+              "items": {
+                "type": "string"
+              },
               "maxItems": 2,
               "minItems": 2,
               "type": "array"
@@ -878,14 +863,9 @@
       "properties": {
         "interval": {
           "description": "Show a certain interval within entire chromosome",
-          "items": [
-            {
-              "type": "number"
-            },
-            {
-              "type": "number"
-            }
-          ],
+          "items": {
+            "type": "number"
+          },
           "maxItems": 2,
           "minItems": 2,
           "type": "array"
@@ -3370,40 +3350,6 @@
       ],
       "type": "object"
     },
-    "JSONParseTransform": {
-      "additionalProperties": false,
-      "description": "Parse JSON Object Array and append vertically",
-      "properties": {
-        "baseGenomicField": {
-          "description": "Base genomic position when parsing relative position.",
-          "type": "string"
-        },
-        "field": {
-          "description": "The field that contains the JSON object array.",
-          "type": "string"
-        },
-        "genomicField": {
-          "description": "Relative genomic position to parse.",
-          "type": "string"
-        },
-        "genomicLengthField": {
-          "description": "Length of genomic interval.",
-          "type": "string"
-        },
-        "type": {
-          "const": "subjson",
-          "type": "string"
-        }
-      },
-      "required": [
-        "type",
-        "field",
-        "baseGenomicField",
-        "genomicField",
-        "genomicLengthField"
-      ],
-      "type": "object"
-    },
     "JsonData": {
       "additionalProperties": false,
       "description": "The JSON data format allows users to include data directly in the Gosling's JSON specification.",
@@ -3462,6 +3408,40 @@
       "required": [
         "type",
         "values"
+      ],
+      "type": "object"
+    },
+    "JsonParseTransform": {
+      "additionalProperties": false,
+      "description": "Parse JSON Object Array and append vertically",
+      "properties": {
+        "baseGenomicField": {
+          "description": "Base genomic position when parsing relative position.",
+          "type": "string"
+        },
+        "field": {
+          "description": "The field that contains the JSON object array.",
+          "type": "string"
+        },
+        "genomicField": {
+          "description": "Relative genomic position to parse.",
+          "type": "string"
+        },
+        "genomicLengthField": {
+          "description": "Length of genomic interval.",
+          "type": "string"
+        },
+        "type": {
+          "const": "subjson",
+          "type": "string"
+        }
+      },
+      "required": [
+        "type",
+        "field",
+        "baseGenomicField",
+        "genomicField",
+        "genomicLengthField"
       ],
       "type": "object"
     },
@@ -8223,14 +8203,9 @@
         },
         "scaleOffset": {
           "description": "Whether to use offset of the domain proportionally. This is bound to brushes on the color legend. __Default__: `[0, 1]`",
-          "items": [
-            {
-              "type": "number"
-            },
-            {
-              "type": "number"
-            }
-          ],
+          "items": {
+            "type": "number"
+          },
           "maxItems": 2,
           "minItems": 2,
           "type": "array"
@@ -8331,14 +8306,9 @@
         },
         "dashed": {
           "description": "Specify the pattern of dashes and gaps for `rule` marks.",
-          "items": [
-            {
-              "type": "number"
-            },
-            {
-              "type": "number"
-            }
-          ],
+          "items": {
+            "type": "number"
+          },
           "maxItems": 2,
           "minItems": 2,
           "type": "array"
@@ -9005,20 +8975,12 @@
       "type": "object"
     },
     "ZoomLimits": {
-      "items": [
-        {
-          "type": [
-            "number",
-            "null"
-          ]
-        },
-        {
-          "type": [
-            "number",
-            "null"
-          ]
-        }
-      ],
+      "items": {
+        "type": [
+          "number",
+          "null"
+        ]
+      },
       "maxItems": 2,
       "minItems": 2,
       "type": "array"

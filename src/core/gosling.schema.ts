@@ -1072,7 +1072,7 @@ export type DataTransform =
     | GenomicLengthTransform
     | SvTypeTransform
     | CoverageTransform
-    | JSONParseTransform;
+    | JsonParseTransform;
 
 export type FilterTransform = OneOfFilter | RangeFilter | IncludeFilter;
 
@@ -1216,7 +1216,7 @@ export interface CoverageTransform {
 /**
  * Parse JSON Object Array and append vertically
  */
-export interface JSONParseTransform {
+export interface JsonParseTransform {
     type: 'subjson';
     /** The field that contains the JSON object array. */
     field: string;
