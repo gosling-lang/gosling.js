@@ -8,13 +8,13 @@ import Worker from './vcf-worker.ts?worker&inline';
 import { GET_CHROM_SIZES } from '../../core/utils/assembly';
 
 import type { ModuleThread } from 'threads';
-import type { Assembly, VCFData } from '../../core/gosling.schema';
+import type { Assembly, VcfData } from '../../core/gosling.schema';
 import type { WorkerApi, TilesetInfo, Tile } from './vcf-worker';
 import type { CommonDataConfig } from '../utils';
 
 const DEBOUNCE_TIME = 200;
 
-type VcfDataConfig = VCFData & CommonDataConfig;
+type VcfDataConfig = VcfData & CommonDataConfig;
 
 class VcfDataFetcher {
     uid: string;

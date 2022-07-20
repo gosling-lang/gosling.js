@@ -35,7 +35,7 @@
       ],
       "type": "string"
     },
-    "BAMData": {
+    "BamData": {
       "additionalProperties": false,
       "description": "Binary Alignment Map (BAM) is the comprehensive raw data of genome sequencing; it consists of the lossless, compressed binary representation of the Sequence Alignment Map-files.",
       "properties": {
@@ -75,7 +75,7 @@
       ],
       "type": "object"
     },
-    "BEDDBData": {
+    "BeddbData": {
       "additionalProperties": false,
       "description": "Regular BED or similar files can be pre-aggregated for the scalable data exploration. Find our more about this format at [HiGlass Docs](https://docs.higlass.io/data_preparation.html#bed-files).",
       "properties": {
@@ -183,7 +183,7 @@
       ],
       "type": "object"
     },
-    "BIGWIGData": {
+    "BigWigData": {
       "additionalProperties": false,
       "properties": {
         "aggregation": {
@@ -231,82 +231,6 @@
         "sum"
       ],
       "type": "string"
-    },
-    "CSVData": {
-      "additionalProperties": false,
-      "description": "Any small enough tabular data files, such as tsv, csv, BED, BEDPE, and GFF, can be loaded using \"csv\" data specification.",
-      "properties": {
-        "chromosomeField": {
-          "description": "Specify the name of chromosome data fields.",
-          "type": "string"
-        },
-        "chromosomePrefix": {
-          "description": "experimental",
-          "type": "string"
-        },
-        "genomicFields": {
-          "description": "Specify the name of genomic data fields.",
-          "items": {
-            "type": "string"
-          },
-          "type": "array"
-        },
-        "genomicFieldsToConvert": {
-          "description": "experimental",
-          "items": {
-            "additionalProperties": false,
-            "properties": {
-              "chromosomeField": {
-                "type": "string"
-              },
-              "genomicFields": {
-                "items": {
-                  "type": "string"
-                },
-                "type": "array"
-              }
-            },
-            "required": [
-              "chromosomeField",
-              "genomicFields"
-            ],
-            "type": "object"
-          },
-          "type": "array"
-        },
-        "headerNames": {
-          "description": "Specify the names of data fields if a CSV file does not contain a header.",
-          "items": {
-            "type": "string"
-          },
-          "type": "array"
-        },
-        "longToWideId": {
-          "description": "experimental",
-          "type": "string"
-        },
-        "sampleLength": {
-          "description": "Specify the number of rows loaded from the URL.\n\n__Default:__ `1000`",
-          "type": "number"
-        },
-        "separator": {
-          "description": "Specify file separator, __Default:__ ','",
-          "type": "string"
-        },
-        "type": {
-          "const": "csv",
-          "type": "string"
-        },
-        "url": {
-          "description": "Specify the URL address of the data file.",
-          "type": "string"
-        }
-      },
-      "required": [
-        "type",
-        "url"
-      ],
-      "type": "object"
     },
     "Channel": {
       "anyOf": [
@@ -448,14 +372,9 @@
         },
         "scaleOffset": {
           "description": "Whether to use offset of the domain proportionally. This is bound to brushes on the color legend. __Default__: `[0, 1]`",
-          "items": [
-            {
-              "type": "number"
-            },
-            {
-              "type": "number"
-            }
-          ],
+          "items": {
+            "type": "number"
+          },
           "maxItems": 2,
           "minItems": 2,
           "type": "array"
@@ -504,22 +423,98 @@
       ],
       "type": "object"
     },
+    "CsvData": {
+      "additionalProperties": false,
+      "description": "Any small enough tabular data files, such as tsv, csv, BED, BEDPE, and GFF, can be loaded using \"csv\" data specification.",
+      "properties": {
+        "chromosomeField": {
+          "description": "Specify the name of chromosome data fields.",
+          "type": "string"
+        },
+        "chromosomePrefix": {
+          "description": "experimental",
+          "type": "string"
+        },
+        "genomicFields": {
+          "description": "Specify the name of genomic data fields.",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "genomicFieldsToConvert": {
+          "description": "experimental",
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "chromosomeField": {
+                "type": "string"
+              },
+              "genomicFields": {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              }
+            },
+            "required": [
+              "chromosomeField",
+              "genomicFields"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "headerNames": {
+          "description": "Specify the names of data fields if a CSV file does not contain a header.",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "longToWideId": {
+          "description": "experimental",
+          "type": "string"
+        },
+        "sampleLength": {
+          "description": "Specify the number of rows loaded from the URL.\n\n__Default:__ `1000`",
+          "type": "number"
+        },
+        "separator": {
+          "description": "Specify file separator, __Default:__ ','",
+          "type": "string"
+        },
+        "type": {
+          "const": "csv",
+          "type": "string"
+        },
+        "url": {
+          "description": "Specify the URL address of the data file.",
+          "type": "string"
+        }
+      },
+      "required": [
+        "type",
+        "url"
+      ],
+      "type": "object"
+    },
     "DataDeep": {
       "anyOf": [
         {
-          "$ref": "#/definitions/JSONData"
+          "$ref": "#/definitions/JsonData"
         },
         {
-          "$ref": "#/definitions/CSVData"
+          "$ref": "#/definitions/CsvData"
         },
         {
-          "$ref": "#/definitions/BIGWIGData"
+          "$ref": "#/definitions/BigWigData"
         },
         {
           "$ref": "#/definitions/MultivecData"
         },
         {
-          "$ref": "#/definitions/BEDDBData"
+          "$ref": "#/definitions/BeddbData"
         },
         {
           "$ref": "#/definitions/VectorData"
@@ -528,10 +523,10 @@
           "$ref": "#/definitions/MatrixData"
         },
         {
-          "$ref": "#/definitions/BAMData"
+          "$ref": "#/definitions/BamData"
         },
         {
-          "$ref": "#/definitions/VCFData"
+          "$ref": "#/definitions/VcfData"
         }
       ]
     },
@@ -712,7 +707,7 @@
           "$ref": "#/definitions/CoverageTransform"
         },
         {
-          "$ref": "#/definitions/JSONParseTransform"
+          "$ref": "#/definitions/JsonParseTransform"
         }
       ]
     },
@@ -825,14 +820,9 @@
           "description": "If specified, only showing a certain interval in a chromosome."
         },
         "interval": {
-          "items": [
-            {
-              "type": "number"
-            },
-            {
-              "type": "number"
-            }
-          ],
+          "items": {
+            "type": "number"
+          },
           "maxItems": 2,
           "minItems": 2,
           "type": "array"
@@ -853,14 +843,9 @@
               "type": "string"
             },
             {
-              "items": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "string"
-                }
-              ],
+              "items": {
+                "type": "string"
+              },
               "maxItems": 2,
               "minItems": 2,
               "type": "array"
@@ -878,14 +863,9 @@
       "properties": {
         "interval": {
           "description": "Show a certain interval within entire chromosome",
-          "items": [
-            {
-              "type": "number"
-            },
-            {
-              "type": "number"
-            }
-          ],
+          "items": {
+            "type": "number"
+          },
           "maxItems": 2,
           "minItems": 2,
           "type": "array"
@@ -3370,7 +3350,7 @@
       ],
       "type": "object"
     },
-    "JSONData": {
+    "JsonData": {
       "additionalProperties": false,
       "description": "The JSON data format allows users to include data directly in the Gosling's JSON specification.",
       "properties": {
@@ -3431,7 +3411,7 @@
       ],
       "type": "object"
     },
-    "JSONParseTransform": {
+    "JsonParseTransform": {
       "additionalProperties": false,
       "description": "Parse JSON Object Array and append vertically",
       "properties": {
@@ -8223,14 +8203,9 @@
         },
         "scaleOffset": {
           "description": "Whether to use offset of the domain proportionally. This is bound to brushes on the color legend. __Default__: `[0, 1]`",
-          "items": [
-            {
-              "type": "number"
-            },
-            {
-              "type": "number"
-            }
-          ],
+          "items": {
+            "type": "number"
+          },
           "maxItems": 2,
           "minItems": 2,
           "type": "array"
@@ -8331,14 +8306,9 @@
         },
         "dashed": {
           "description": "Specify the pattern of dashes and gaps for `rule` marks.",
-          "items": [
-            {
-              "type": "number"
-            },
-            {
-              "type": "number"
-            }
-          ],
+          "items": {
+            "type": "number"
+          },
           "maxItems": 2,
           "minItems": 2,
           "type": "array"
@@ -8754,7 +8724,23 @@
         }
       ]
     },
-    "VCFData": {
+    "ValueExtent": {
+      "anyOf": [
+        {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        {
+          "items": {
+            "type": "number"
+          },
+          "type": "array"
+        }
+      ]
+    },
+    "VcfData": {
       "additionalProperties": false,
       "description": "The Variant Call Format (VCF).",
       "properties": {
@@ -8781,22 +8767,6 @@
         "indexUrl"
       ],
       "type": "object"
-    },
-    "ValueExtent": {
-      "anyOf": [
-        {
-          "items": {
-            "type": "string"
-          },
-          "type": "array"
-        },
-        {
-          "items": {
-            "type": "number"
-          },
-          "type": "array"
-        }
-      ]
     },
     "VectorData": {
       "additionalProperties": false,
@@ -9005,20 +8975,12 @@
       "type": "object"
     },
     "ZoomLimits": {
-      "items": [
-        {
-          "type": [
-            "number",
-            "null"
-          ]
-        },
-        {
-          "type": [
-            "number",
-            "null"
-          ]
-        }
-      ],
+      "items": {
+        "type": [
+          "number",
+          "null"
+        ]
+      },
       "maxItems": 2,
       "minItems": 2,
       "type": "array"

@@ -751,15 +751,15 @@ export type BinAggregate = 'mean' | 'sum';
 
 /* ----------------------------- DATA ----------------------------- */
 export type DataDeep =
-    | JSONData
-    | CSVData
-    | BIGWIGData
+    | JsonData
+    | CsvData
+    | BigWigData
     | MultivecData
-    | BEDDBData
+    | BeddbData
     | VectorData
     | MatrixData
-    | BAMData
-    | VCFData;
+    | BamData
+    | VcfData;
 
 /** Values in the form of JSON. */
 export interface Datum {
@@ -769,7 +769,7 @@ export interface Datum {
 /**
  * The JSON data format allows users to include data directly in the Gosling's JSON specification.
  */
-export interface JSONData {
+export interface JsonData {
     /**
      * Define data type.
      */
@@ -801,7 +801,7 @@ export interface JSONData {
  * Any small enough tabular data files, such as tsv, csv, BED, BEDPE, and GFF, can be loaded using "csv" data specification.
  */
 
-export interface CSVData {
+export interface CsvData {
     type: 'csv';
 
     /**
@@ -909,7 +909,7 @@ export interface MultivecData {
     aggregation?: BinAggregate;
 }
 
-export interface BIGWIGData {
+export interface BigWigData {
     type: 'bigwig';
 
     /**
@@ -981,7 +981,7 @@ export interface VectorData {
  * Regular BED or similar files can be pre-aggregated for the scalable data exploration.
  * Find our more about this format at [HiGlass Docs](https://docs.higlass.io/data_preparation.html#bed-files).
  */
-export interface BEDDBData {
+export interface BeddbData {
     type: 'beddb';
 
     /** Specify the URL address of the data file. */
@@ -1003,7 +1003,7 @@ export interface BEDDBData {
  * Binary Alignment Map (BAM) is the comprehensive raw data of genome sequencing;
  * it consists of the lossless, compressed binary representation of the Sequence Alignment Map-files.
  */
-export interface BAMData {
+export interface BamData {
     type: 'bam';
 
     /** URL link to the BAM data file */
@@ -1028,7 +1028,7 @@ export interface BAMData {
 /**
  * The Variant Call Format (VCF).
  */
-export interface VCFData {
+export interface VcfData {
     type: 'vcf';
 
     /** URL link to the VCF file */
@@ -1072,7 +1072,7 @@ export type DataTransform =
     | GenomicLengthTransform
     | SvTypeTransform
     | CoverageTransform
-    | JSONParseTransform;
+    | JsonParseTransform;
 
 export type FilterTransform = OneOfFilter | RangeFilter | IncludeFilter;
 
@@ -1216,7 +1216,7 @@ export interface CoverageTransform {
 /**
  * Parse JSON Object Array and append vertically
  */
-export interface JSONParseTransform {
+export interface JsonParseTransform {
     type: 'subjson';
     /** The field that contains the JSON object array. */
     field: string;

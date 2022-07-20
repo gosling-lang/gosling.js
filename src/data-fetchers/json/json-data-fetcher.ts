@@ -1,9 +1,9 @@
 import { GET_CHROM_SIZES } from '../../core/utils/assembly';
 import { sampleSize } from 'lodash-es';
-import type { JSONData } from '@gosling.schema';
+import type { JsonData } from '@gosling.schema';
 import { CommonDataConfig, filterUsingGenoPos } from '../utils';
 
-type CsvDataConfig = JSONData & CommonDataConfig;
+type CsvDataConfig = JsonData & CommonDataConfig;
 
 /**
  * HiGlass data fetcher specific for Gosling which ultimately will accept any types of data other than JSON values.

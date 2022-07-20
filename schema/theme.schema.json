@@ -12,14 +12,9 @@
           "type": "string"
         },
         "gridStrokeDash": {
-          "items": [
-            {
-              "type": "number"
-            },
-            {
-              "type": "number"
-            }
-          ],
+          "items": {
+            "type": "number"
+          },
           "maxItems": 2,
           "minItems": 2,
           "type": "array"
@@ -115,14 +110,9 @@
           "type": "number"
         },
         "quantitativeSizeRange": {
-          "items": [
-            {
-              "type": "number"
-            },
-            {
-              "type": "number"
-            }
-          ],
+          "items": {
+            "type": "number"
+          },
           "maxItems": 2,
           "minItems": 2,
           "type": "array"
@@ -278,14 +268,9 @@
               "type": "number"
             },
             "quantitativeSizeRange": {
-              "items": [
-                {
-                  "type": "number"
-                },
-                {
-                  "type": "number"
-                }
-              ],
+              "items": {
+                "type": "number"
+              },
               "maxItems": 2,
               "minItems": 2,
               "type": "array"

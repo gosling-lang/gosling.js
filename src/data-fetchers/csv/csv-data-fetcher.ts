@@ -1,11 +1,11 @@
 import { dsvFormat as d3dsvFormat } from 'd3-dsv';
 import { GET_CHROM_SIZES } from '../../core/utils/assembly';
 import { sampleSize } from 'lodash-es';
-import type { Assembly, CSVData, FilterTransform } from '@gosling.schema';
+import type { Assembly, CsvData, FilterTransform } from '@gosling.schema';
 import { filterData } from '../../core/utils/data-transform';
 import { CommonDataConfig, filterUsingGenoPos } from '../utils';
 
-type CsvDataConfig = CSVData & CommonDataConfig & { filter: FilterTransform[] };
+type CsvDataConfig = CsvData & CommonDataConfig & { filter: FilterTransform[] };
 
 /**
  * HiGlass data fetcher specific for Gosling which ultimately will accept any types of data other than CSV files.
@@ -67,11 +67,11 @@ function CsvDataFetcher(HGC: any, ...args: any): any {
                 // we have raw data that we can use right away
                 this.values = dataConfig.data;
             } else {
-                this.dataPromise = this.fetchCSV();
+                this.dataPromise = this.fetchCsv();
             }
         }
 
-        fetchCSV() {
+        fetchCsv() {
             const {
                 url,
                 chromosomeField,

@@ -1,6 +1,6 @@
-import type { BAMData, GoslingSpec } from '@gosling.schema';
+import type { BamData, GoslingSpec } from '@gosling.schema';
 
-const bamData: BAMData = {
+const bamData: BamData = {
     type: 'bam',
     url: 'https://s3.amazonaws.com/gosling-lang.org/data/sashimi/ENCFF088HTJ.chr10_27035000_27050000.bam',
     indexUrl: 'https://s3.amazonaws.com/gosling-lang.org/data/sashimi/ENCFF088HTJ.chr10_27035000_27050000.bam.bai'

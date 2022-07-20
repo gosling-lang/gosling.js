@@ -12,7 +12,7 @@ import type {
     SvTypeTransform,
     CoverageTransform,
     DisplaceTransform,
-    JSONParseTransform
+    JsonParseTransform
 } from '../gosling.schema';
 import {
     getChannelKeysByAggregateFnc,
@@ -406,7 +406,7 @@ export function splitExon(split: ExonSplitTransform, data: Datum[], assembly: As
 }
 
 // TODO: Get this data from the fetcher as a default with a flag variable.
-export function parseSubJSON(_: JSONParseTransform, data: Datum[]): Datum[] {
+export function parseSubJSON(_: JsonParseTransform, data: Datum[]): Datum[] {
     const { field, genomicField, baseGenomicField, genomicLengthField } = _;
     let output: Datum[] = Array.from(data);
     output = output

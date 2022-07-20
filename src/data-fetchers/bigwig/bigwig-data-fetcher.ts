@@ -3,14 +3,14 @@
  * https://github.com/higlass/higlass-bigwig-datafetcher/blob/main/src/BigwigDataFetcher.js
  */
 import { BigWig } from '@gmod/bbi';
-import type { Assembly, BIGWIGData } from '@gosling.schema';
+import type { Assembly, BigWigData } from '@gosling.schema';
 import { GET_CHROM_SIZES } from '../../core/utils/assembly';
 import { CommonDataConfig, RemoteFile } from '../utils';
 
 import type { Feature } from '@gmod/bbi';
 import type { ChromInfo, TilesetInfo } from '@higlass/types';
 
-type BigWigDataConfig = BIGWIGData & CommonDataConfig;
+type BigWigDataConfig = BigWigData & CommonDataConfig;
 
 type Tile = {
     tilePos: [number];
