@@ -7,6 +7,7 @@ export const EX_TRACK_SARS_COV_2_GENES: OverlaidTracks = {
     data: {
         type: 'csv',
         url: 'https://s3.amazonaws.com/gosling-lang.org/data/COVID/NC_045512.2-Genes.csv',
+        chromosomeField: 'Accession',
         genomicFields: ['Start', 'Stop']
     },
     tracks: [
@@ -49,7 +50,7 @@ export const EX_TRACK_SARS_COV_2_GENES: OverlaidTracks = {
 export const EX_SPEC_SARS_COV_2: GoslingSpec = {
     title: 'SARS-CoV-2',
     subtitle: 'Data Source: WashU Virus Genome Browser, NCBI, GISAID',
-    assembly: 'unknown',
+    assembly: [['NC_045512.2', 29903]],
     layout: 'linear',
     spacing: 50,
     views: [
@@ -112,6 +113,7 @@ export const EX_SPEC_SARS_COV_2: GoslingSpec = {
                     data: {
                         type: 'csv',
                         url: 'https://s3.amazonaws.com/gosling-lang.org/data/COVID/sars-cov-2_Sprot_annot_sorted.bed',
+                        chromosomeField: 'Accession',
                         genomicFields: ['Start', 'Stop']
                     },
                     tracks: [
@@ -171,6 +173,7 @@ export const EX_SPEC_SARS_COV_2: GoslingSpec = {
                     data: {
                         type: 'csv',
                         url: 'https://s3.amazonaws.com/gosling-lang.org/data/COVID/TRS-L-dependent_recombinationEvents_sorted.bed',
+                        chromosomeField: 'Accession',
                         genomicFields: ['Start1', 'Stop1', 'Start2', 'Stop2'],
                         sampleLength: 100
                     },

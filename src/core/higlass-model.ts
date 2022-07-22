@@ -12,7 +12,7 @@ import { insertItemToArray } from './utils/array';
 
 export const HIGLASS_AXIS_SIZE = 30;
 
-const getViewTemplate = (assembly?: string) => {
+const getViewTemplate = (assembly?: Assembly) => {
     return {
         genomePositionSearchBoxVisible: false,
         genomePositionSearchBox: {
@@ -74,7 +74,7 @@ export class HiGlassModel {
         return this;
     }
 
-    public addDefaultView(uid: string, assembly?: string) {
+    public addDefaultView(uid: string, assembly?: Assembly) {
         this.hg.views.push(JSON.parse(JSON.stringify({ ...getViewTemplate(assembly), uid })));
         return this;
     }
