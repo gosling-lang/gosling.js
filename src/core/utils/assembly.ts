@@ -1,4 +1,4 @@
-import type { Assembly, GenomicPosition } from '@gosling.schema';
+import type { Assembly, ChromSizes, GenomicPosition } from '@gosling.schema';
 import {
     CHROM_SIZE_HG16,
     CHROM_SIZE_HG17,
@@ -34,6 +34,16 @@ export function getRelativeGenomicPosition(absPos: number, assembly?: Assembly):
 }
 
 /**
+ * Generate a URL for custom chrom sizes
+ * @param chromSizes A custom assembly that specifies chromosomes and their sizes
+ */
+function createChromSizesUrl(chromSizes: ChromSizes): string {
+    const text = chromSizes.map(d => d.join('\t')).join('\n');
+    const tsv = new Blob([text], { type: 'text/tsv' });
+    return URL.createObjectURL(tsv);
+}
+
+/**
  * Get chromosome sizes.
  * @param assembly (default: 'hg38')
  */
@@ -47,7 +57,7 @@ export function GET_CHROM_SIZES(assembly?: Assembly): ChromSize {
             size,
             interval: getChromInterval(size),
             total: getChromTotalSize(size),
-            path: URL.createObjectURL(new Blob([assembly.map(d => d.join('\t')).join('\n')], { type: 'text/tsv' }))
+            path: createChromSizesUrl(assembly)
         };
     } else {
         // We do not have that assembly prepared, so return a default one.
