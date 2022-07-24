@@ -254,9 +254,12 @@ interface RangeMouseEventData extends CommonEventData {
     genomicRange: [GenomicPosition, GenomicPosition] | null;
 }
 
-/** The visual parameters that determine the shape of a linear track */
+/** 
+ * The visual parameters that determine the shape of a linear track. 
+ * Origin is the left top corner.
+ */
 interface LinearTrackShape {
-    x: number; // The origin is the left top corner
+    x: number;
     y: number;
     width: number;
     height: number;
