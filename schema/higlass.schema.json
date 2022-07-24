@@ -3,17 +3,60 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "definitions": {
     "Assembly": {
-      "enum": [
-        "hg38",
-        "hg19",
-        "hg18",
-        "hg17",
-        "hg16",
-        "mm10",
-        "mm9",
-        "unknown"
-      ],
-      "type": "string"
+      "anyOf": [
+        {
+          "const": "hg38",
+          "type": "string"
+        },
+        {
+          "const": "hg19",
+          "type": "string"
+        },
+        {
+          "const": "hg18",
+          "type": "string"
+        },
+        {
+          "const": "hg17",
+          "type": "string"
+        },
+        {
+          "const": "hg16",
+          "type": "string"
+        },
+        {
+          "const": "mm10",
+          "type": "string"
+        },
+        {
+          "const": "mm9",
+          "type": "string"
+        },
+        {
+          "const": "unknown",
+          "type": "string"
+        },
+        {
+          "$ref": "#/definitions/ChromSizes"
+        }
+      ]
+    },
+    "ChromSizes": {
+      "description": "Custom chromosome sizes, e.g., [[\"foo\", 1000], [\"bar\", 300], [\"baz\", 240]]",
+      "items": {
+        "items": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "number"
+          }
+        ],
+        "maxItems": 2,
+        "minItems": 2,
+        "type": "array"
+      },
+      "type": "array"
     },
     "CombinedTrack": {
       "additionalProperties": false,

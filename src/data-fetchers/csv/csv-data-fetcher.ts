@@ -1,11 +1,11 @@
 import { dsvFormat as d3dsvFormat } from 'd3-dsv';
 import { GET_CHROM_SIZES } from '../../core/utils/assembly';
 import { sampleSize } from 'lodash-es';
-import type { Assembly, CSVData, FilterTransform } from '@gosling.schema';
+import type { Assembly, CsvData, FilterTransform } from '@gosling.schema';
 import { filterData } from '../../core/utils/data-transform';
-import { CommonDataConfig, filterUsingGenoPos } from '../utils';
+import { CommonDataConfig, filterUsingGenoPos, sanitizeChrName } from '../utils';
 
-type CsvDataConfig = CSVData & CommonDataConfig & { filter: FilterTransform[] };
+type CsvDataConfig = CsvData & CommonDataConfig & { filter: FilterTransform[] };
 
 /**
  * HiGlass data fetcher specific for Gosling which ultimately will accept any types of data other than CSV files.
@@ -67,11 +67,11 @@ function CsvDataFetcher(HGC: any, ...args: any): any {
                 // we have raw data that we can use right away
                 this.values = dataConfig.data;
             } else {
-                this.dataPromise = this.fetchCSV();
+                this.dataPromise = this.fetchCsv();
             }
         }
 
-        fetchCSV() {
+        fetchCsv() {
             const {
                 url,
                 chromosomeField,
@@ -102,12 +102,12 @@ function CsvDataFetcher(HGC: any, ...args: any): any {
                                     try {
                                         if (this.assembly !== 'unknown') {
                                             // This means we need to use the relative position considering the start position of individual chr.
-                                            const chr = chromosomePrefix
-                                                ? row[cField].replace(chromosomePrefix, 'chr')
-                                                : row[cField].includes('chr')
-                                                ? row[cField]
-                                                : `chr${row[cField]}`;
-                                            row[g] = GET_CHROM_SIZES(this.assembly).interval[chr][0] + +row[g];
+                                            const chrName = sanitizeChrName(
+                                                row[cField],
+                                                this.assembly,
+                                                chromosomePrefix
+                                            );
+                                            row[g] = GET_CHROM_SIZES(this.assembly).interval[chrName][0] + +row[g];
                                         } else {
                                             // In this case, we use the genomic position as it is w/o adding the cumulative length of chr.
                                             // So, nothing to do additionally.
@@ -125,12 +125,17 @@ function CsvDataFetcher(HGC: any, ...args: any): any {
                                     return;
                                 }
                                 try {
-                                    const chr = chromosomePrefix
-                                        ? row[chromosomeField].replace(chromosomePrefix, 'chr')
-                                        : row[chromosomeField].includes('chr')
-                                        ? row[chromosomeField]
-                                        : `chr${row[chromosomeField]}`;
-                                    row[g] = GET_CHROM_SIZES(this.assembly).interval[chr][0] + +row[g];
+                                    if (this.assembly !== 'unknown') {
+                                        const chrName = sanitizeChrName(
+                                            row[chromosomeField],
+                                            this.assembly,
+                                            chromosomePrefix
+                                        );
+                                        row[g] = GET_CHROM_SIZES(this.assembly).interval[chrName][0] + +row[g];
+                                    } else {
+                                        // In this case, we use the genomic position as it is w/o adding the cumulative length of chr.
+                                        // So, nothing to do additionally.
+                                    }
                                 } catch (e) {
                                     // genomic position did not parse properly
                                     successfullyGotChrInfo = false;

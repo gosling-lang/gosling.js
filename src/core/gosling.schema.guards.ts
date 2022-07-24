@@ -19,17 +19,17 @@ import type {
     OneOfFilter,
     RangeFilter,
     IncludeFilter,
-    BEDDBData,
+    BeddbData,
     MultivecData,
     MatrixData,
     VectorData,
     DataTrack,
-    BIGWIGData,
+    BigWigData,
     SingleView,
     FlatTracks,
     OverlaidTracks,
     StackedTracks,
-    BAMData,
+    BamData,
     Range,
     TemplateTrack,
     MouseEventsDeep
@@ -164,7 +164,7 @@ export function IsChannelValue(channel: ChannelDeep | ChannelValue | undefined |
 
 export function IsDataDeepTileset(
     _: DataDeep | undefined
-): _ is BEDDBData | VectorData | MultivecData | BIGWIGData | BAMData | MatrixData {
+): _ is BeddbData | VectorData | MultivecData | BigWigData | BamData | MatrixData {
     return (
         _ !== undefined &&
         (_.type === 'vector' ||

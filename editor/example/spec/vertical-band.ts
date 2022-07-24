@@ -1,5 +1,5 @@
-import type { GoslingSpec, CSVData, Track } from '@gosling.schema';
-const data: CSVData = {
+import type { GoslingSpec, CsvData, Track } from '@gosling.schema';
+const data: CsvData = {
     type: 'csv',
     url: 'https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/circos-segdup-edited.txt',
     chromosomeField: 'c2',

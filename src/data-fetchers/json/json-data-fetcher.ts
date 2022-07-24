@@ -1,9 +1,9 @@
 import { GET_CHROM_SIZES } from '../../core/utils/assembly';
 import { sampleSize } from 'lodash-es';
-import type { JSONData } from '@gosling.schema';
-import { CommonDataConfig, filterUsingGenoPos } from '../utils';
+import type { Assembly, JsonData } from '@gosling.schema';
+import { CommonDataConfig, filterUsingGenoPos, sanitizeChrName } from '../utils';
 
-type CsvDataConfig = JSONData & CommonDataConfig;
+type CsvDataConfig = JsonData & CommonDataConfig;
 
 /**
  * HiGlass data fetcher specific for Gosling which ultimately will accept any types of data other than JSON values.
@@ -19,7 +19,7 @@ function JsonDataFetcher(HGC: any, ...args: any): any {
         private tilesetInfoLoading: boolean;
         private chromSizes: any;
         private values: any;
-        private assembly: string;
+        private assembly: Assembly;
 
         constructor(params: any[]) {
             const [dataConfig] = params;
@@ -59,7 +59,6 @@ function JsonDataFetcher(HGC: any, ...args: any): any {
             };
 
             const { chromosomeField, genomicFields } = this.dataConfig;
-
             this.values = dataConfig.values.map((row: any) => {
                 let successfullyGotChrInfo = true;
 
@@ -70,10 +69,8 @@ function JsonDataFetcher(HGC: any, ...args: any): any {
                             return;
                         }
                         try {
-                            const chr = row[chromosomeField].includes('chr')
-                                ? row[chromosomeField]
-                                : `chr${row[chromosomeField]}`;
-                            row[g] = GET_CHROM_SIZES(this.assembly).interval[chr][0] + +row[g];
+                            const chrName = sanitizeChrName(row[chromosomeField], this.assembly);
+                            row[g] = GET_CHROM_SIZES(this.assembly).interval[chrName][0] + +row[g];
                         } catch (e) {
                             // genomic position did not parse properly
                             successfullyGotChrInfo = false;
