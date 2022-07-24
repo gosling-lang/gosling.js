@@ -276,7 +276,7 @@ interface CircularTrackShape {
     endAngle: number; // [0, 360]
 }
 
-/** The informatino for a mouse event on a track */
+/** The information for a track mouse event */
 type TrackMouseEventData = {
     /** ID of a source track, i.e., `track.id` */
     id: string;
