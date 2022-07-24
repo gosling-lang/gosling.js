@@ -85,8 +85,10 @@ function GoslingTrack(HGC: import('@higlass/types').HGC, ...args: any[]): any {
         private mRangeBrush: LinearBrushModel;
         private _xScale!: ScaleLinear<number, number>;
         private _yScale!: ScaleLinear<number, number>;
-        private position!: [number, number]; // left and top offsets of a track
-        private dimensions!: [number, number]; // width and height of a track
+        /** left and top offsets of a track */
+        private position!: [number, number];
+        /** width and height of a track */
+        private dimensions!: [number, number];
         private pMouseHover: Graphics;
         private pMouseSelection: Graphics;
         private assembly?: Assembly;
