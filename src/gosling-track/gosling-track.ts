@@ -1266,7 +1266,7 @@ function GoslingTrack(HGC: import('@higlass/types').HGC, ...args: any[]): any {
             } else {
                 publish('trackMouseOver', {
                     id: this.viewUid,
-                    spec: JSON.parse(JSON.stringify(this.options.spec)),
+                    spec: structuredClone(this.options.spec),
                     shape: { x, y, width, height }
                 });
             }
