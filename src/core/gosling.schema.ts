@@ -281,7 +281,7 @@ type TrackMouseEventData = {
     /** ID of a source track, i.e., `track.id` */
     id: string;
 
-    /** Source spec that is processed by the Gosling compiler, e.g., default properties filled in. */
+    /** Expanded track specification processed by the Gosling compiler, e.g., default properties filled in. */
     spec: SingleTrack | OverlaidTrack;
 
     /** The shape of the source track */
