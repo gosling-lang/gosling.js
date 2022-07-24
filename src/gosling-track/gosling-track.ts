@@ -1259,7 +1259,7 @@ function GoslingTrack(HGC: import('@higlass/types').HGC, ...args: any[]): any {
                 ) {
                     publish('trackMouseOver', {
                         id: this.viewUid,
-                        spec: JSON.parse(JSON.stringify(this.options.spec)),
+                        spec: structuredClone(this.options.spec),
                         shape: { cx, cy, innerRadius, outerRadius, startAngle, endAngle }
                     });
                 }
