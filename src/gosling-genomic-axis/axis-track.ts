@@ -12,6 +12,7 @@ import { definePluginTrack } from '../core/utils/define-plugin-track';
 
 import type { TextStyle } from '../core/utils/text-style';
 import type { PluginTrackFactory, TrackConfig } from '../core/utils/define-plugin-track';
+import type { Assembly } from '@gosling.schema';
 
 const TICK_WIDTH = 200;
 const TICK_HEIGHT = 6;
@@ -41,7 +42,7 @@ type AxisTrackOptions = {
     showMousePosition: boolean;
     tickColor: number;
     tickFormat?: string;
-    assembly?: string;
+    assembly?: Assembly;
     reverseOrientation?: boolean;
 };
 type TickLabelInfo = {

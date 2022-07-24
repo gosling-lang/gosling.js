@@ -2,13 +2,21 @@ import { getChromInterval, getChromTotalSize, getRelativeGenomicPosition, GET_CH
 import { CHROM_SIZE_HG38 } from './chrom-size';
 
 describe('Assembly', () => {
-    it('Random chromosome name', () => {
+    it('Missing chromosome name', () => {
         expect(GET_CHROM_SIZES().total).toBeDefined();
-        expect(GET_CHROM_SIZES('chrmosome1').total).toBeDefined();
-        expect(GET_CHROM_SIZES('random').total).toBeDefined();
     });
     it('hg38 ChromSizes', () => {
         expect(GET_CHROM_SIZES('hg38').size).toEqual(CHROM_SIZE_HG38);
+    });
+    it('Custom ChromSizes', () => {
+        expect(
+            GET_CHROM_SIZES([
+                ['foo', 100],
+                ['bar', 1000]
+            ]).total
+        ).toEqual(1100);
+        // use default assembly instead when the size is zero
+        expect(GET_CHROM_SIZES([]).total).toEqual(GET_CHROM_SIZES().total);
     });
     it('Chromosome total size calculation', () => {
         expect(getChromTotalSize({ 1: 1, 2: 999 })).toEqual(1000);

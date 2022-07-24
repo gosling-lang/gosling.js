@@ -86,7 +86,10 @@ export type ResponsiveSpecOfMultipleViews = {
 
 export type Layout = 'linear' | 'circular';
 export type Orientation = 'horizontal' | 'vertical';
-export type Assembly = 'hg38' | 'hg19' | 'hg18' | 'hg17' | 'hg16' | 'mm10' | 'mm9' | 'unknown';
+
+/** Custom chromosome sizes, e.g., [["foo", 1000], ["bar", 300], ["baz", 240]] */
+export type ChromSizes = [string, number][];
+export type Assembly = 'hg38' | 'hg19' | 'hg18' | 'hg17' | 'hg16' | 'mm10' | 'mm9' | 'unknown' | ChromSizes;
 export type ZoomLimits = [number | null, number | null];
 
 export interface CommonViewDef {
