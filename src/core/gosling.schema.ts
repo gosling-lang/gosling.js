@@ -60,8 +60,6 @@ export interface StackedTracks extends CommonViewDef, Partial<SingleTrack> {
 export interface OverlaidTracks extends CommonViewDef, Partial<SingleTrack> {
     alignment: 'overlay';
     tracks: PartialTrack[];
-    width: number;
-    height: number;
 }
 
 export interface MultipleViews extends CommonViewDef {
@@ -156,14 +154,7 @@ export interface CommonViewDef {
 /* ----------------------------- TRACK ----------------------------- */
 export type Track = SingleTrack | OverlaidTrack | DataTrack | TemplateTrack;
 
-export interface CommonRequiredTrackDef {
-    /** Specify the track width in pixels. */
-    width: number;
-    /** Specify the track height in pixels. */
-    height: number;
-}
-
-export interface CommonTrackDef extends CommonViewDef, CommonRequiredTrackDef {
+export interface CommonTrackDef extends CommonViewDef {
     // !! TODO: we can check if the same id is used multiple times.
     // !! TODO: this should be track-specific and not defined in views.
     id?: string; // Assigned to `uid` in a HiGlass view config, used for API and caching.
@@ -171,6 +162,11 @@ export interface CommonTrackDef extends CommonViewDef, CommonRequiredTrackDef {
     /** If defined, will show the textual label on the left-top corner of a track. */
     title?: string;
     subtitle?: string; // Being used only for a title track (i.e., 'text-track')
+
+    /** Specify the track width in pixels. */
+    width?: number;
+    /** Specify the track height in pixels. */
+    height?: number;
 
     // Arrangement
     overlayOnPreviousTrack?: boolean;
@@ -405,11 +401,10 @@ export type DisplacementType = 'pile' | 'spread';
 /**
  * Superposing multiple tracks.
  */
-export type OverlaidTrack = Partial<SingleTrack> &
-    CommonRequiredTrackDef & {
-        // This is a property internally used when compiling
-        overlay: Partial<Omit<SingleTrack, 'height' | 'width' | 'layout' | 'title' | 'subtitle'>>[];
-    };
+export type OverlaidTrack = Partial<SingleTrack> & {
+    // This is a property internally used when compiling
+    overlay: Partial<Omit<SingleTrack, 'height' | 'width' | 'layout' | 'title' | 'subtitle'>>[];
+};
 
 /**
  * The styles defined here will be applied to the target marks of mouse events, such as a point mark after the user clicks on it.
@@ -1280,7 +1275,7 @@ export interface JsonParseTransform {
 /**
  * Template specification that will be internally converted into `SingleTrack` for rendering.
  */
-export interface TemplateTrack extends CommonRequiredTrackDef, CommonTrackDef {
+export interface TemplateTrack extends CommonTrackDef {
     // Template name (e.g., 'gene')
     template: string;
 
@@ -1323,7 +1318,7 @@ export type DataTransformWithBase = Partial<DataTransform> & { base?: string };
  * and remove of certain properties (e.g., `data`)
  */
 export type TemplateTrackMappingDef = Omit<
-    CommonRequiredTrackDef & CommonTrackDef,
+    CommonTrackDef,
     'data' | 'height' | 'width' | 'layout' | 'title' | 'subtitle'
 > & {
     // Data transformation

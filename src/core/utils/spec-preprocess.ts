@@ -24,6 +24,7 @@ import {
 import {
     DEFAULT_INNER_RADIUS_PROP,
     DEFAULT_TRACK_HEIGHT_LINEAR,
+    DEFAULT_TRACK_SIZE_2D,
     DEFAULT_TRACK_WIDTH_LINEAR,
     DEFAULT_VIEW_SPACING
 } from '../defaults';
@@ -187,8 +188,12 @@ export function traverseToFixSpecDownstream(spec: GoslingSpec | SingleView, pare
         const linkID = uuid.v4();
         tracks.forEach((track, i, array) => {
             // If size not defined, set default ones
-            if (!track.width) track.width = DEFAULT_TRACK_WIDTH_LINEAR;
-            if (!track.height) track.height = DEFAULT_TRACK_HEIGHT_LINEAR;
+            if (!track.width) {
+                track.width = Is2DTrack(track) ? DEFAULT_TRACK_SIZE_2D : DEFAULT_TRACK_WIDTH_LINEAR;
+            }
+            if (!track.height) {
+                track.height = Is2DTrack(track) ? DEFAULT_TRACK_SIZE_2D : DEFAULT_TRACK_HEIGHT_LINEAR;
+            }
 
             /**
              * Process a stack option.
