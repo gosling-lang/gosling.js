@@ -27,7 +27,8 @@ export interface GoslingApi {
     zoomToGene(viewId: string, gene: string, padding?: number, duration?: number): void;
     suggestGene(viewId: string, keyword: string, callback: (suggestions: GeneSuggestion[]) => void): void;
     getViewIds(): string[];
-    getTrackInfo(trackId: string): TrackMouseEventData | undefined;
+    getTracks(): TrackMouseEventData[];
+    getTrack(trackId: string): TrackMouseEventData | undefined;
     exportPng(transparentBackground?: boolean): void;
     exportPdf(transparentBackground?: boolean): void;
     getCanvas(options?: { resolution?: number; transparentBackground?: boolean }): {
@@ -44,10 +45,13 @@ export function createApi(
     trackInfos: React.MutableRefObject<TrackMouseEventData[]>,
     theme: Required<CompleteThemeDeep>
 ): GoslingApi {
-    const getTrackInfo = (trackId: string) => {
+    const getTracks = () => {
+        return trackInfos.current;
+    };
+    const getTrack = (trackId: string) => {
         const trackInfoFound = trackInfos.current.find(d => d.id === trackId);
         if (!trackInfoFound) {
-            console.warn(`[getTrackInfo()] Unable to find a track using the ID (${trackId})`);
+            console.warn(`[getTrack()] Unable to find a track using the ID (${trackId})`);
         }
         return trackInfoFound;
     };
@@ -96,7 +100,7 @@ export function createApi(
                 return;
             }
 
-            const assembly = getTrackInfo(viewId)?.spec.assembly;
+            const assembly = getTrack(viewId)?.spec.assembly;
             const chr = position.split(':')[0];
             const chrStart = GET_CHROM_SIZES(assembly).interval?.[chr]?.[0];
 
@@ -112,7 +116,7 @@ export function createApi(
             hg.api.zoomTo(viewId, start, end, start, end, duration);
         },
         zoomToExtent: (viewId, duration = 1000) => {
-            const assembly = getTrackInfo(viewId)?.spec.assembly;
+            const assembly = getTrack(viewId)?.spec.assembly;
             const [start, end] = [0, GET_CHROM_SIZES(assembly).total];
             hg.api.zoomTo(viewId, start, end, start, end, duration);
         },
@@ -130,7 +134,8 @@ export function createApi(
             });
             return ids;
         },
-        getTrackInfo,
+        getTracks,
+        getTrack,
         getCanvas,
         exportPng: transparentBackground => {
             const { canvas } = getCanvas({ resolution: 4, transparentBackground });
