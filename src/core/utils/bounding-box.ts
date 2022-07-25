@@ -189,10 +189,10 @@ function traverseAndCollectTrackInfo(
 
         if (spec.orientation === 'vertical') {
             // This is a vertical view, so use the largest `height` of the tracks for this view.
-            cumHeight = Math.max(...tracks.map(d => d.height));
+            cumHeight = Math.max(...tracks.map(d => d.height!));
             tracks.forEach((track, i, array) => {
                 if (getNumOfXAxes([track]) === 1) {
-                    track.width += HIGLASS_AXIS_SIZE;
+                    track.width! += HIGLASS_AXIS_SIZE;
                 }
 
                 track.height = cumHeight;
@@ -202,7 +202,7 @@ function traverseAndCollectTrackInfo(
                     boundingBox: {
                         x: dx + cumWidth,
                         y: dy,
-                        width: track.width,
+                        width: track.width!,
                         height: cumHeight
                     },
                     layout: { x: 0, y: 0, w: 0, h: 0 } // Just put a dummy info here, this should be added after entire bounding box has been determined
@@ -211,7 +211,7 @@ function traverseAndCollectTrackInfo(
                 if (array[i + 1] && array[i + 1].overlayOnPreviousTrack) {
                     // do not add a height
                 } else {
-                    cumWidth += track.width;
+                    cumWidth += track.width!;
                     if (i !== array.length - 1) {
                         cumWidth += spec.spacing !== undefined ? spec.spacing : 0;
                     }
@@ -219,12 +219,12 @@ function traverseAndCollectTrackInfo(
             });
         } else {
             // This is a horizontal view, so use the largest `width` for this view.
-            cumWidth = Math.max(...tracks.map(d => d.width)); //forceWidth ? forceWidth : spec.tracks[0]?.width;
+            cumWidth = Math.max(...tracks.map(d => d.width!)); //forceWidth ? forceWidth : spec.tracks[0]?.width;
             tracks.forEach((track, i, array) => {
                 // let scaledHeight = track.height;
 
                 if (getNumOfXAxes([track]) === 1) {
-                    track.height += HIGLASS_AXIS_SIZE;
+                    track.height! += HIGLASS_AXIS_SIZE;
                 }
 
                 if (Is2DTrack(resolveSuperposedTracks(track)[0]) && getNumOfYAxes([track]) === 1) {
@@ -240,7 +240,7 @@ function traverseAndCollectTrackInfo(
                         x: dx,
                         y: dy + cumHeight,
                         width: cumWidth,
-                        height: track.height
+                        height: track.height!
                     },
                     layout: { x: 0, y: 0, w: 0, h: 0 } // Just put a dummy info here, this should be added after entire bounding box has been determined
                 });
@@ -248,7 +248,7 @@ function traverseAndCollectTrackInfo(
                 if (array[i + 1] && array[i + 1].overlayOnPreviousTrack) {
                     // do not add a height
                 } else {
-                    cumHeight += track.height;
+                    cumHeight += track.height!;
                     if (i !== array.length - 1) {
                         cumHeight += spec.spacing !== undefined ? spec.spacing : 0;
                     }
