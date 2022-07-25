@@ -1,15 +1,15 @@
-import { getBoundingBox, Size, TrackInfo } from './utils/bounding-box';
+import { getBoundingBox, TrackInfo } from './utils/bounding-box';
 import { goslingToHiGlass } from './gosling-to-higlass';
 import { HiGlassModel } from './higlass-model';
 import { getLinkingInfo } from './utils/linking';
-import type { HiGlassSpec } from './higlass.schema';
-import type { GoslingSpec } from './gosling.schema';
+import type { GoslingSpec, OverlaidTrack, SingleTrack, TrackMouseEventData } from './gosling.schema';
 import type { CompleteThemeDeep } from './utils/theme';
+import type { compileCallback } from './compile';
 
 export function renderHiGlass(
     spec: GoslingSpec,
     trackInfos: TrackInfo[],
-    setHg: (hg: HiGlassSpec, size: Size, gs: GoslingSpec) => void,
+    callback: compileCallback,
     theme: CompleteThemeDeep
 ) {
     if (trackInfos.length === 0) {
@@ -68,5 +68,23 @@ export function renderHiGlass(
             });
     });
 
-    setHg(hgModel.spec(), getBoundingBox(trackInfos), spec);
+    const trackInfosWithShapes: TrackMouseEventData[] = trackInfos.map(d => {
+        return {
+            id: d.track.id!,
+            spec: d.track as SingleTrack | OverlaidTrack,
+            shape:
+                d.track.layout === 'linear'
+                    ? d.boundingBox
+                    : {
+                          cx: d.boundingBox.x + d.boundingBox.width / 2.0,
+                          cy: d.boundingBox.y + d.boundingBox.height / 2.0,
+                          innerRadius: d.track.innerRadius!,
+                          outerRadius: d.track.outerRadius!,
+                          startAngle: d.track.startAngle!,
+                          endAngle: d.track.endAngle!
+                      }
+        };
+    });
+
+    callback(hgModel.spec(), getBoundingBox(trackInfos), spec, trackInfosWithShapes);
 }

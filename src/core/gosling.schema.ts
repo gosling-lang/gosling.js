@@ -269,7 +269,7 @@ interface LinearTrackShape {
 }
 
 /** The visual parameters that determine the shape of a circular track */
-interface CircularTrackShape {
+export interface CircularTrackShape {
     cx: number;
     cy: number;
     innerRadius: number;
@@ -281,7 +281,7 @@ interface CircularTrackShape {
 }
 
 /** The information for a track mouse event */
-type TrackMouseEventData = {
+export type TrackMouseEventData = {
     /** ID of a source track, i.e., `track.id` */
     id: string;
 

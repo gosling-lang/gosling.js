@@ -10,7 +10,7 @@ import { omitDeep } from './utils/omit-deep';
 import { isEqual } from 'lodash';
 import * as uuid from 'uuid';
 
-import type { TemplateTrackDef } from './gosling.schema';
+import type { TemplateTrackDef, TrackMouseEventData } from './gosling.schema';
 
 // Before rerendering, wait for a few time so that HiGlass container is resized already.
 // If HiGlass is rendered and then the container resizes, the viewport position changes, unmatching `xDomain` specified by users.
@@ -42,6 +42,7 @@ export const GoslingComponent = forwardRef<GoslingRef, GoslingCompProps>((props,
     const wrapperSize = useRef<undefined | { width: number; height: number }>();
     const wrapperParentSize = useRef<undefined | { width: number; height: number }>();
     const prevSpec = useRef<undefined | gosling.GoslingSpec>();
+    const trackInfos = useRef<TrackMouseEventData[]>([]);
 
     // HiGlass API
     // https://dev.to/wojciechmatuszewski/mutable-and-immutable-useref-semantics-with-react-typescript-30c9
@@ -54,7 +55,7 @@ export const GoslingComponent = forwardRef<GoslingRef, GoslingCompProps>((props,
     useEffect(() => {
         if (!ref || !hgRef?.current) return;
         const hgApi = hgRef.current;
-        const api = createApi(hgApi, viewConfig, theme);
+        const api = createApi(hgApi, viewConfig, trackInfos, theme);
         if (typeof ref == 'function') {
             ref({ api, hgApi });
         } else {
@@ -74,7 +75,7 @@ export const GoslingComponent = forwardRef<GoslingRef, GoslingCompProps>((props,
 
             gosling.compile(
                 props.spec,
-                (newHs, newSize, newGs) => {
+                (newHs, newSize, newGs, newTrackInfos) => {
                     // TODO: `linkingId` should be updated
                     // We may not want to re-render this
                     if (
@@ -103,6 +104,7 @@ export const GoslingComponent = forwardRef<GoslingRef, GoslingCompProps>((props,
                     }
 
                     prevSpec.current = newGs;
+                    trackInfos.current = newTrackInfos;
                 },
                 [...GoslingTemplates], // TODO: allow user definitions
                 theme,

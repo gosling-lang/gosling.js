@@ -1,4 +1,6 @@
+import type { TrackMouseEventData } from '@gosling.schema';
 import * as PIXI from 'pixi.js';
+import type React from 'react';
 import type { HiGlassApi } from './higlass-component-wrapper';
 import type { HiGlassSpec } from './higlass.schema';
 import { subscribe, unsubscribe } from './pubsub';
@@ -25,6 +27,7 @@ export interface GoslingApi {
     zoomToGene(viewId: string, gene: string, padding?: number, duration?: number): void;
     suggestGene(viewId: string, keyword: string, callback: (suggestions: GeneSuggestion[]) => void): void;
     getViewIds(): string[];
+    getTrackInfo(trackId: string): TrackMouseEventData | undefined;
     exportPng(transparentBackground?: boolean): void;
     exportPdf(transparentBackground?: boolean): void;
     getCanvas(options?: { resolution?: number; transparentBackground?: boolean }): {
@@ -38,8 +41,16 @@ export interface GoslingApi {
 export function createApi(
     hg: HiGlassApi,
     hgSpec: HiGlassSpec | undefined,
+    trackInfos: React.MutableRefObject<TrackMouseEventData[]>,
     theme: Required<CompleteThemeDeep>
 ): GoslingApi {
+    const getTrackInfo = (trackId: string) => {
+        const trackInfoFound = trackInfos.current.find(d => d.id === trackId);
+        if (!trackInfoFound) {
+            console.warn(`[getTrackInfo()] Unable to find a track using the ID (${trackId})`);
+        }
+        return trackInfoFound;
+    };
     const getCanvas: GoslingApi['getCanvas'] = options => {
         const resolution = options?.resolution ?? 4;
         const transparentBackground = options?.transparentBackground ?? false;
@@ -78,7 +89,6 @@ export function createApi(
     return {
         subscribe,
         unsubscribe,
-        // TODO: Support assemblies (we can infer this from the spec)
         zoomTo: (viewId, position, padding = 0, duration = 1000) => {
             // Accepted input: 'chr1' or 'chr1:1-1000'
             if (!position.includes('chr')) {
@@ -86,23 +96,24 @@ export function createApi(
                 return;
             }
 
+            const assembly = getTrackInfo(viewId)?.spec.assembly;
             const chr = position.split(':')[0];
-            const chrStart = GET_CHROM_SIZES().interval?.[chr]?.[0];
+            const chrStart = GET_CHROM_SIZES(assembly).interval?.[chr]?.[0];
 
             if (!chr || typeof chrStart === undefined) {
                 console.warn('Chromosome name is not valid', chr);
                 return;
             }
 
-            const [s, e] = position.split(':')[1]?.split('-') ?? [0, GET_CHROM_SIZES().size[chr]];
+            const [s, e] = position.split(':')[1]?.split('-') ?? [0, GET_CHROM_SIZES(assembly).size[chr]];
             const start = +s + chrStart - padding;
             const end = +e + chrStart + padding;
 
             hg.api.zoomTo(viewId, start, end, start, end, duration);
         },
-        // TODO: Support assemblies (we can infer this from the spec)
         zoomToExtent: (viewId, duration = 1000) => {
-            const [start, end] = [0, GET_CHROM_SIZES().total];
+            const assembly = getTrackInfo(viewId)?.spec.assembly;
+            const [start, end] = [0, GET_CHROM_SIZES(assembly).total];
             hg.api.zoomTo(viewId, start, end, start, end, duration);
         },
         zoomToGene: (viewId, gene, padding = 0, duration = 1000) => {
@@ -119,7 +130,8 @@ export function createApi(
             });
             return ids;
         },
-        getCanvas: getCanvas,
+        getTrackInfo,
+        getCanvas,
         exportPng: transparentBackground => {
             const { canvas } = getCanvas({ resolution: 4, transparentBackground });
             canvas.toBlob(blob => {
