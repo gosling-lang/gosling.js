@@ -33,6 +33,7 @@ import type { MouseEventData } from '../gosling-mouse-event/mouse-event-model';
 import { flatArrayToPairArray } from '../core/utils/array';
 import { BamDataFetcher, VcfDataFetcher } from '../data-fetchers';
 import { LinearBrushModel } from '../gosling-brush/linear-brush-model';
+import { isPointInsideDonutSlice } from '../gosling-mouse-event/polygon';
 
 // Set `true` to print in what order each function is called
 export const PRINT_RENDERING_CYCLE = false;
@@ -84,6 +85,10 @@ function GoslingTrack(HGC: import('@higlass/types').HGC, ...args: any[]): any {
         private mRangeBrush: LinearBrushModel;
         private _xScale!: ScaleLinear<number, number>;
         private _yScale!: ScaleLinear<number, number>;
+        /** left and top offsets of a track */
+        private position!: [number, number];
+        /** width and height of a track */
+        private dimensions!: [number, number];
         private pMouseHover: Graphics;
         private pMouseSelection: Graphics;
         private assembly?: Assembly;
@@ -1091,6 +1096,43 @@ function GoslingTrack(HGC: import('@higlass/types').HGC, ...args: any[]): any {
             });
         }
 
+        /**
+         * Call track events (e.g., `trackClick` or `trackMouseOver`) based on a mouse position and the track display area.
+         */
+        publishTrackEvents(eventType: 'trackClick' | 'trackMouseOver', mouseX: number, mouseY: number) {
+            const [x, y] = this.position;
+            const [width, height] = this.dimensions;
+            if (this.options.spec.layout === 'circular') {
+                const cx = x + width / 2.0;
+                const cy = y + height / 2.0;
+                const innerRadius = this.options.spec.innerRadius!;
+                const outerRadius = this.options.spec.outerRadius!;
+                const startAngle = this.options.spec.startAngle!;
+                const endAngle = this.options.spec.endAngle!;
+                // Call the API function only when the mouse is positioned directly on the track display area
+                if (
+                    isPointInsideDonutSlice(
+                        [mouseX, mouseY],
+                        [width / 2.0, height / 2.0],
+                        [innerRadius, outerRadius],
+                        [startAngle, endAngle]
+                    )
+                ) {
+                    publish(eventType, {
+                        id: this.viewUid,
+                        spec: structuredClone(this.options.spec),
+                        shape: { cx, cy, innerRadius, outerRadius, startAngle, endAngle }
+                    });
+                }
+            } else {
+                publish(eventType, {
+                    id: this.viewUid,
+                    spec: structuredClone(this.options.spec),
+                    shape: { x, y, width, height }
+                });
+            }
+        }
+
         onRangeBrush(range: [number, number] | null, skipApiTrigger = false) {
             this.pMouseSelection.clear();
 
@@ -1185,6 +1227,9 @@ function GoslingTrack(HGC: import('@higlass/types').HGC, ...args: any[]): any {
         }
 
         onMouseUp(mouseX: number, mouseY: number) {
+            // `trackClick` API
+            this.publishTrackEvents('trackClick', mouseX, mouseY);
+
             const mouseEvents = this.options.spec.experimental?.mouseEvents;
             const clickEnabled = !!mouseEvents || (IsMouseEventsDeep(mouseEvents) && !!mouseEvents.click);
             const isDrag = Math.sqrt((this.mouseDownX - mouseX) ** 2 + (this.mouseDownY - mouseY) ** 2) > 1;
@@ -1205,7 +1250,7 @@ function GoslingTrack(HGC: import('@higlass/types').HGC, ...args: any[]): any {
                 return;
             }
 
-            // click API
+            // `click` API
             if (!isDrag && clickEnabled) {
                 // Identify the current position
                 const genomicPosition = getRelativeGenomicPosition(
@@ -1233,6 +1278,9 @@ function GoslingTrack(HGC: import('@higlass/types').HGC, ...args: any[]): any {
         }
 
         getMouseOverHtml(mouseX: number, mouseY: number) {
+            // `trackMouseOver` API
+            this.publishTrackEvents('trackMouseOver', mouseX, mouseY);
+
             if (this.isRangeBrushActivated) {
                 // In the middle of drawing range brush.
                 return;

@@ -257,17 +257,61 @@ interface RangeMouseEventData extends CommonEventData {
     genomicRange: [GenomicPosition, GenomicPosition] | null;
 }
 
+/**
+ * The visual parameters that determine the shape of a linear track.
+ * Origin is the left top corner.
+ */
+interface LinearTrackShape {
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+}
+
+/** The visual parameters that determine the shape of a circular track */
+interface CircularTrackShape {
+    cx: number;
+    cy: number;
+    innerRadius: number;
+    outerRadius: number;
+    /** The first angle in the range of [0, 360]. The origin is 12 o'clock. Anticlockwise. */
+    startAngle: number;
+    /** The second angle in the range of [0, 360]. The origin is 12 o'clock. Anticlockwise. */
+    endAngle: number;
+}
+
+/** The information for a track mouse event */
+type TrackMouseEventData = {
+    /** ID of a source track, i.e., `track.id` */
+    id: string;
+
+    /** Expanded track specification processed by the Gosling compiler, e.g., default properties filled in. */
+    spec: SingleTrack | OverlaidTrack;
+
+    /** The shape of the source track */
+    shape: LinearTrackShape | CircularTrackShape;
+};
+
 export type _EventMap = {
     mouseOver: PointMouseEventData;
     click: PointMouseEventData;
     rangeSelect: RangeMouseEventData;
     rawData: CommonEventData;
+    trackMouseOver: TrackMouseEventData;
+    trackClick: TrackMouseEventData; // TODO (Jul-25-2022): with https://github.com/higlass/higlass/pull/1098, we can support circular layouts
 };
 
+/** Options for determining mouse events in detail, e.g., turning on specific events only */
 export type MouseEventsDeep = {
-    /** Turn on and off individual mouse events. */
-    [Event in keyof Omit<_EventMap, 'rawData'>]?: boolean;
-} & {
+    /** Whether to enable mouseover events. */
+    mouseOver?: boolean;
+
+    /** Whether to enable click events. */
+    click?: boolean;
+
+    /** Whether to send range selection events. */
+    rangeSelect?: boolean;
+
     /** Group marks using keys in a data field. This affects how a set of marks are highlighted/selected by interaction. __Default__: `undefined` */
     groupMarksByField?: string;
 

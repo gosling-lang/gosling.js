@@ -29,3 +29,10 @@ export function positionToRadian(x: number, y: number, cx: number, cy: number) {
         return Math.atan((y - cy) / (x - cx)) - Math.PI;
     }
 }
+
+/**
+ * Calculate a degree in the range of [0, 360) based on two points. Anticlockwise, starts from 12 o'clock.
+ */
+export function pointsToDegree(x: number, y: number, cx: number, cy: number) {
+    return ((Math.atan2(-(y - cy), x - cx) / Math.PI) * 180 + 270) % 360;
+}

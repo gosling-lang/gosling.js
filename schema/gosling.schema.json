@@ -3603,8 +3603,10 @@
     },
     "MouseEventsDeep": {
       "additionalProperties": false,
+      "description": "Options for determining mouse events in detail, e.g., turning on specific events only",
       "properties": {
         "click": {
+          "description": "Whether to enable click events.",
           "type": "boolean"
         },
         "enableMouseOverOnMultipleMarks": {
@@ -3616,9 +3618,11 @@
           "type": "string"
         },
         "mouseOver": {
+          "description": "Whether to enable mouseover events.",
           "type": "boolean"
         },
         "rangeSelect": {
+          "description": "Whether to send range selection events.",
           "type": "boolean"
         }
       },
