@@ -274,9 +274,10 @@ interface CircularTrackShape {
     cy: number;
     innerRadius: number;
     outerRadius: number;
-    // Anticlockwise, starts from 12 o'clock.
-    startAngle: number; // [0, 360]
-    endAngle: number; // [0, 360]
+    /** The first angle in the range of [0, 360]. The origin is 12 o'clock. Anticlockwise. */
+    startAngle: number;
+    /** The second angle in the range of [0, 360]. The origin is 12 o'clock. Anticlockwise. */
+    endAngle: number;
 }
 
 /** The information for a track mouse event */
@@ -299,13 +300,17 @@ export type _EventMap = {
     trackMouseOver: TrackMouseEventData;
 };
 
+/** Options for determining mouse events in detail, e.g., turning on specific events only */
 export type MouseEventsDeep = {
-    // TODO(Jul-19-2022): Due to cyclic definition of `SingleTrack`, `ts-json-schema-generator` throws an error
-    // see https://github.com/vega/ts-json-schema-generator/issues/192
-    // [Event in keyof Omit<_EventMap, 'rawData'>]?: boolean;
-    /** Turn on and off individual mouse events. */
-    [Event in 'mouseOver' | 'click' | 'rangeSelect']?: boolean;
-} & {
+    /** Whether to enable mouseover events. */
+    mouseOver: boolean;
+
+    /** Whether to enable click events. */
+    click: boolean;
+
+    /** Whether to send range selection events. */
+    rangeSelect: boolean;
+
     /** Group marks using keys in a data field. This affects how a set of marks are highlighted/selected by interaction. __Default__: `undefined` */
     groupMarksByField?: string;
 
