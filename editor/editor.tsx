@@ -326,8 +326,8 @@ function Editor(props: RouteComponentProps) {
             // gosRef.current.api.subscribe('rangeSelect', (type, eventData) => {
             //     console.warn(type, eventData.id, eventData.genomicRange, eventData.data);
             // });
-            // Mouse over on a track
-            // gosRef.current.api.subscribe('trackMouseOver', (type, eventData) => {
+            // Mouse click on a track
+            // gosRef.current.api.subscribe('trackClick', (type, eventData) => {
             //     console.warn(type, eventData.id, eventData.spec, eventData.shape);
             // });
         }
@@ -335,7 +335,7 @@ function Editor(props: RouteComponentProps) {
             // gosRef.current?.api.unsubscribe('mouseOver');
             // gosRef.current?.api.unsubscribe('click');
             // gosRef.current?.api.unsubscribe('rangeSelect');
-            // gosRef.current?.api.unsubscribe('trackMouseOver');
+            // gosRef.current?.api.unsubscribe('trackClick');
         };
     }, [gosRef.current]);
 

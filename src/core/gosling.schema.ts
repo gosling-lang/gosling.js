@@ -298,6 +298,7 @@ export type _EventMap = {
     rangeSelect: RangeMouseEventData;
     rawData: CommonEventData;
     trackMouseOver: TrackMouseEventData;
+    trackClick: TrackMouseEventData; // TODO (Jul-25-2022): with https://github.com/higlass/higlass/pull/1098, we can support circular layouts
 };
 
 /** Options for determining mouse events in detail, e.g., turning on specific events only */
