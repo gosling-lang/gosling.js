@@ -303,13 +303,13 @@ export type _EventMap = {
 /** Options for determining mouse events in detail, e.g., turning on specific events only */
 export type MouseEventsDeep = {
     /** Whether to enable mouseover events. */
-    mouseOver: boolean;
+    mouseOver?: boolean;
 
     /** Whether to enable click events. */
-    click: boolean;
+    click?: boolean;
 
     /** Whether to send range selection events. */
-    rangeSelect: boolean;
+    rangeSelect?: boolean;
 
     /** Group marks using keys in a data field. This affects how a set of marks are highlighted/selected by interaction. __Default__: `undefined` */
     groupMarksByField?: string;

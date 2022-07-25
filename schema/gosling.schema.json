@@ -3626,11 +3626,6 @@
           "type": "boolean"
         }
       },
-      "required": [
-        "mouseOver",
-        "click",
-        "rangeSelect"
-      ],
       "type": "object"
     },
     "MultipleViews": {
