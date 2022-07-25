@@ -1,6 +1,6 @@
-import type { TrackMouseEventData } from '@gosling.schema';
-import * as PIXI from 'pixi.js';
 import type React from 'react';
+import * as PIXI from 'pixi.js';
+import type { TrackMouseEventData } from '@gosling.schema';
 import type { HiGlassApi } from './higlass-component-wrapper';
 import type { HiGlassSpec } from './higlass.schema';
 import { subscribe, unsubscribe } from './pubsub';

@@ -269,7 +269,7 @@ interface LinearTrackShape {
 }
 
 /** The visual parameters that determine the shape of a circular track */
-export interface CircularTrackShape {
+interface CircularTrackShape {
     cx: number;
     cy: number;
     innerRadius: number;
