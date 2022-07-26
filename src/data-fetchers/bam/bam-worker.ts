@@ -283,7 +283,7 @@ const init = (
     dataConfs[uid] = { bamUrl, chromInfo, loadMates, maxInsertSize, extractJunction, junctionMinCoverage };
 };
 
-const tilesetInfo = async (uid: string) => {
+const tilesetInfo = (uid: string) => {
     const TILE_SIZE = 1024;
     const { chromInfo } = dataConfs[uid];
     return {
