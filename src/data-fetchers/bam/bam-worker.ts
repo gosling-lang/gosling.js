@@ -264,20 +264,20 @@ const init = (
     uid: string,
     bam: { url: string; indexUrl?: string },
     chromSizes: ChromSizes,
-	options: Partial<BamFileOptions> = {}
+    options: Partial<BamFileOptions> = {}
 ) => {
     if (!bamFileCache.has(bam.url)) {
         const bamFile = BamFile.fromUrl(bam.url, bam.indexUrl ?? `${bam.url}.bai`);
         bamFileCache.set(bam.url, bamFile);
     }
     const bamFile = bamFileCache.get(bam.url)!;
-    const dataSource = new DataSource(uid, bamFile, chromSizes, {
+    const dataSource = new DataSource(bamFile, chromSizes, {
         loadMates: false,
         maxInsertSize: 5000,
         extractJunction: false,
         junctionMinCoverage: 1,
         ...options
-    })
+    });
     dataSources.set(uid, dataSource);
 };
 

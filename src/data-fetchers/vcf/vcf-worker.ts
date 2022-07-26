@@ -82,7 +82,7 @@ function init(
     if (!vcfFile) {
         vcfFile = VcfFile.fromUrl(vcf.url, vcf.indexUrl);
     }
-    const dataSource = new DataSource(uid, vcfFile, chromSizes, {
+    const dataSource = new DataSource(vcfFile, chromSizes, {
         sampleLength: 1000,
         ...options
     });
