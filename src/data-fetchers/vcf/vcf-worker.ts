@@ -53,23 +53,27 @@ type DataConfig = {
     chromInfo: ExtendedChromInfo;
     sampleLength: number;
 };
+
 const dataConfs: Record<string, DataConfig> = {};
 
-const init = (uid: string, vcfUrl: string, tbiUrl: string, chromSizes: [string, number][], sampleLength: number) => {
-    if (!vcfFiles[vcfUrl]) {
-        vcfFiles[vcfUrl] = new TabixIndexedFile({
-            filehandle: new RemoteFile(vcfUrl),
-            tbiFilehandle: new RemoteFile(tbiUrl)
+function init(
+    uid: string,
+    config: { vcfUrl: string; tbiUrl: string; chromSizes: [string, number][]; sampleLength: number }
+) {
+    if (!vcfFiles[config.vcfUrl]) {
+        vcfFiles[config.vcfUrl] = new TabixIndexedFile({
+            filehandle: new RemoteFile(config.vcfUrl),
+            tbiFilehandle: new RemoteFile(config.tbiUrl)
         });
 
-        vcfHeaders[vcfUrl] = vcfFiles[vcfUrl].getHeader();
+        vcfHeaders[config.vcfUrl] = vcfFiles[config.vcfUrl].getHeader();
     }
     dataConfs[uid] = {
-        vcfUrl,
-        chromInfo: sizesToChromInfo(chromSizes),
-        sampleLength
+        vcfUrl: config.vcfUrl,
+        chromInfo: sizesToChromInfo(config.chromSizes),
+        sampleLength: config.sampleLength
     };
-};
+}
 
 const tilesetInfo = async (uid: string) => {
     const { chromInfo, vcfUrl } = dataConfs[uid];

@@ -30,13 +30,12 @@ class VcfDataFetcher {
         this.prevRequestTime = 0;
         this.toFetch = new Set();
         this.worker = spawn<WorkerApi>(new Worker()).then(async worker => {
-            await worker.init(
-                this.uid,
-                dataConfig.url,
-                dataConfig.indexUrl,
-                Object.entries(GET_CHROM_SIZES(dataConfig.assembly).size),
-                dataConfig.sampleLength ?? 1000
-            );
+            await worker.init(this.uid, {
+                vcfUrl: dataConfig.url,
+                tbiUrl: dataConfig.indexUrl,
+                chromSizes: Object.entries(GET_CHROM_SIZES(dataConfig.assembly).size),
+                sampleLength: dataConfig.sampleLength ?? 1000
+            });
             return worker;
         });
     }

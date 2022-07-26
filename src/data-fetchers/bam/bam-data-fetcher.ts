@@ -7,15 +7,7 @@ import Worker from './bam-worker.ts?worker&inline';
 
 import type { Assembly } from '../../core/gosling.schema';
 import type { ModuleThread } from 'threads';
-import type {
-    WorkerApi,
-    TilesetInfo,
-    Tiles,
-    DataConfig as WorkerDataConfig,
-    Segment,
-    SegmentWithMate,
-    Junction
-} from './bam-worker';
+import type { WorkerApi, TilesetInfo, Tiles, Segment, SegmentWithMate, Junction } from './bam-worker';
 import { GET_CHROM_SIZES } from '../../core/utils/assembly';
 
 const DEBOUNCE_TIME = 200;
@@ -52,13 +44,12 @@ class BamDataFetcher {
 
         this.worker = spawn<WorkerApi>(new Worker()).then(async worker => {
             const bamUrl = dataConfig.bamUrl ?? dataConfig.url;
-            const workerDataConfig: WorkerDataConfig = {
+            await worker.init(this.uid, {
                 ...dataConfig,
                 bamUrl,
                 baiUrl: dataConfig.baiUrl ?? dataConfig.indexUrl ?? `${bamUrl}.bai`,
                 chromSizes
-            };
-            await worker.init(this.uid, workerDataConfig);
+            });
             return worker;
         });
     }
