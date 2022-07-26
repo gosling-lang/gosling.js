@@ -1,12 +1,13 @@
 // This worker is heavily based on https://github.com/higlass/higlass-pileup/blob/master/src/bam-fetcher-worker.js
 import { expose, Transfer } from 'threads/worker';
-import { BamFile } from '@gmod/bam';
+import { BamFile as _BamFile } from '@gmod/bam';
 import QuickLRU from 'quick-lru';
 
 import type { TilesetInfo } from '@higlass/types';
 import type { BamRecord } from '@gmod/bam';
 
-import { ExtendedChromInfo, RemoteFile, sizesToChromInfo } from '../utils';
+import { DataSource, RemoteFile } from '../utils';
+import type { ChromSizes } from '@gosling.schema';
 
 function parseMD(mdString: string, useCounts: true): { type: string; length: number }[];
 function parseMD(mdString: string, useCounts: false): { pos: number; base: string; length: 1; bamSeqShift: number }[];
@@ -228,78 +229,69 @@ const bamRecordToJson = (bamRecord: BamRecord, chrName: string, chrOffset: numbe
 
 type JsonBamRecord = ReturnType<typeof bamRecordToJson>;
 
-// promises indexed by urls
-const bamFiles: Record<string, BamFile> = {};
-const bamHeaders: Record<string, ReturnType<BamFile['getHeader']>> = {};
+class BamFile extends _BamFile {
+    headerPromise: ReturnType<BamFile['getHeader']>;
+    constructor(...args: ConstructorParameters<typeof _BamFile>) {
+        super(...args);
+        this.headerPromise = this.getHeader();
+    }
+    static fromUrl(url: string, indexUrl: string) {
+        return new BamFile({
+            bamFilehandle: new RemoteFile(url),
+            baiFilehandle: new RemoteFile(indexUrl)
+            // fetchSizeLimit: 500000000,
+            // chunkSizeLimit: 100000000,
+            // yieldThreadTime: 1000,
+        });
+    }
+}
 
+interface BamFileOptions {
+    loadMates: boolean;
+    maxInsertSize: number;
+    extractJunction: boolean;
+    junctionMinCoverage: number;
+}
+
+// indexed by dataset uuid
+const dataSources: Map<string, DataSource<BamFile, BamFileOptions>> = new Map();
+// indexed by bam url
+const bamFileCache: Map<string, BamFile> = new Map();
 const MAX_TILES = 20;
-
 const tileValues = new QuickLRU<string, JsonBamRecord[] | { error: string }>({ maxSize: MAX_TILES });
-
-export type DataConfig = {
-    bamUrl: string;
-    baiUrl: string;
-    chromSizes: [string, number][];
-    loadMates?: boolean;
-    maxInsertSize?: number;
-    extractJunction?: boolean;
-    junctionMinCoverage?: number;
-};
-
-type HiGlassDataConfig = Omit<DataConfig, 'baiUrl' | 'chromSizes'> & {
-    chromInfo: ExtendedChromInfo;
-};
-
-// indexed by uuid
-const dataConfs: Record<string, HiGlassDataConfig> = {};
 
 const init = (
     uid: string,
+    bam: { url: string; indexUrl?: string },
+    chromSizes: ChromSizes,
     {
-        bamUrl,
-        baiUrl,
-        chromSizes,
         loadMates = false,
         maxInsertSize = 5000,
         extractJunction = false,
         junctionMinCoverage = 1
-    }: DataConfig
+    }: Partial<BamFileOptions> = {}
 ) => {
-    if (!bamFiles[bamUrl]) {
-        // we do not yet have this file cached
-        bamFiles[bamUrl] = new BamFile({
-            bamFilehandle: new RemoteFile(bamUrl),
-            baiFilehandle: new RemoteFile(baiUrl)
-            // fetchSizeLimit: 500000000,
-            // chunkSizeLimit: 100000000 ,
-            // yieldThreadTime: 1000
-        });
-
-        // we have to fetch the header before we can fetch data
-        bamHeaders[bamUrl] = bamFiles[bamUrl].getHeader();
+    if (!bamFileCache.has(bam.url)) {
+        const bamFile = BamFile.fromUrl(bam.url, bam.indexUrl ?? `${bam.url}.bai`);
+        bamFileCache.set(bam.url, bamFile);
     }
-    const chromInfo = sizesToChromInfo(chromSizes);
-
-    dataConfs[uid] = { bamUrl, chromInfo, loadMates, maxInsertSize, extractJunction, junctionMinCoverage };
+    const bamFile = bamFileCache.get(bam.url)!;
+    const dataSource = new DataSource(uid, bamFile, chromSizes, {
+        loadMates,
+        maxInsertSize,
+        extractJunction,
+        junctionMinCoverage
+    });
+    dataSources.set(uid, dataSource);
 };
 
 const tilesetInfo = (uid: string) => {
-    const TILE_SIZE = 1024;
-    const { chromInfo } = dataConfs[uid];
-    return {
-        tile_size: TILE_SIZE,
-        bins_per_dimension: TILE_SIZE,
-        max_zoom: Math.ceil(Math.log(chromInfo.totalLength / TILE_SIZE) / Math.log(2)),
-        max_width: chromInfo.totalLength,
-        min_pos: [0],
-        max_pos: [chromInfo.totalLength]
-    };
+    return dataSources.get(uid)!.tilesetInfo;
 };
 
 const tile = async (uid: string, z: number, x: number): Promise<JsonBamRecord[]> => {
     const MAX_TILE_WIDTH = 200000;
-    const { bamUrl, loadMates, chromInfo } = dataConfs[uid];
-    const bamFile = bamFiles[bamUrl];
+    const bam = dataSources.get(uid)!;
 
     const info = tilesetInfo(uid);
 
@@ -320,10 +312,10 @@ const tile = async (uid: string, z: number, x: number): Promise<JsonBamRecord[]>
     let minX = info.min_pos[0] + x * tileWidth;
     const maxX = info.min_pos[0] + (x + 1) * tileWidth;
 
-    const { chromLengths, cumPositions } = chromInfo;
+    const { chromLengths, cumPositions } = bam.chromInfo;
 
     const opt = {
-        viewAsPairs: loadMates
+        viewAsPairs: bam.options.loadMates
         // TODO: Turning this on results in "too many requests error"
         // https://github.com/gosling-lang/gosling.js/pull/556
         // pairAcrossChr: typeof loadMates === 'undefined' ? false : loadMates,
@@ -343,7 +335,7 @@ const tile = async (uid: string, z: number, x: number): Promise<JsonBamRecord[]>
                 // the visible region extends beyond the end of this chromosome
                 // fetch from the start until the end of the chromosome
                 recordPromises.push(
-                    bamFile
+                    bam.file
                         .getRecordsForRange(chromName, minX - chromStart, chromEnd - chromStart, opt)
                         .then(records => {
                             const mappedRecords = records.map(rec =>
@@ -365,7 +357,7 @@ const tile = async (uid: string, z: number, x: number): Promise<JsonBamRecord[]>
                 const endPos = Math.ceil(maxX - chromStart);
                 // the end of the region is within this chromosome
                 recordPromises.push(
-                    bamFile.getRecordsForRange(chromName, startPos, endPos, opt).then(records => {
+                    bam.file.getRecordsForRange(chromName, startPos, endPos, opt).then(records => {
                         const mappedRecords = records.map(rec => bamRecordToJson(rec, chromName, cumPositions[i].pos));
                         tileValues.set(
                             `${uid}.${z}.${x}`,
@@ -415,7 +407,7 @@ const fetchTilesDebounced = async (uid: string, tileIds: string[]) => {
 };
 
 const getTabularData = (uid: string, tileIds: string[]) => {
-    const config = dataConfs[uid];
+    const { options } = dataSources.get(uid)!;
     const allSegments: Record<string, Segment & { substitutions: string }> = {};
 
     for (const tileId of tileIds) {
@@ -440,15 +432,15 @@ const getTabularData = (uid: string, tileIds: string[]) => {
     const segments = Object.values(allSegments);
 
     // find and set mate info when the `data.loadMates` flag is on.
-    if (config.loadMates) {
+    if (options.loadMates) {
         // TODO: avoid mutation?
-        findMates(segments, config.maxInsertSize);
+        findMates(segments, options.maxInsertSize);
     }
 
     let output: Junction[] | SegmentWithMate[] | Segment[];
-    if (config.extractJunction) {
+    if (options.extractJunction) {
         // Reference(ggsashimi): https://github.com/guigolab/ggsashimi/blob/d686d59b4e342b8f9dcd484f0af4831cc092e5de/ggsashimi.py#L136
-        output = findJunctions(segments, config.junctionMinCoverage);
+        output = findJunctions(segments, options.junctionMinCoverage);
     } else {
         output = segments;
     }
