@@ -12,9 +12,14 @@
           "type": "string"
         },
         "gridStrokeDash": {
-          "items": {
-            "type": "number"
-          },
+          "items": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            }
+          ],
           "maxItems": 2,
           "minItems": 2,
           "type": "array"
@@ -110,9 +115,14 @@
           "type": "number"
         },
         "quantitativeSizeRange": {
-          "items": {
-            "type": "number"
-          },
+          "items": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            }
+          ],
           "maxItems": 2,
           "minItems": 2,
           "type": "array"
@@ -268,9 +278,14 @@
               "type": "number"
             },
             "quantitativeSizeRange": {
-              "items": {
-                "type": "number"
-              },
+              "items": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                }
+              ],
               "maxItems": 2,
               "minItems": 2,
               "type": "array"

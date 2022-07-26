@@ -16,14 +16,21 @@ import type {
     SegmentWithMate,
     Junction
 } from './bam-worker';
+import { GET_CHROM_SIZES } from '../../core/utils/assembly';
 
 const DEBOUNCE_TIME = 200;
 
-type DataConfig = Partial<WorkerDataConfig> & { url: string; indexUrl?: string };
+// TODO: why both url/bamUrl & baiUrl/indexUrl
+interface DataConfig {
+    url: string;
+    bamUrl?: string;
+    baiUrl?: string;
+    indexUrl?: string;
+    assembly: Assembly;
+}
 
 class BamDataFetcher {
     dataConfig: DataConfig;
-    assembly: Assembly;
 
     uid: string;
     fetchTimeout?: ReturnType<typeof setTimeout>;
@@ -39,15 +46,17 @@ class BamDataFetcher {
     constructor(HGC: import('@higlass/types').HGC, dataConfig: DataConfig) {
         this.dataConfig = dataConfig;
         this.uid = HGC.libraries.slugid.nice();
-        this.assembly = 'hg38';
         this.toFetch = new Set();
+
+        const chromSizes = Object.entries(GET_CHROM_SIZES(dataConfig.assembly).size);
 
         this.worker = spawn<WorkerApi>(new Worker()).then(async worker => {
             const bamUrl = dataConfig.bamUrl ?? dataConfig.url;
             const workerDataConfig: WorkerDataConfig = {
                 ...dataConfig,
                 bamUrl,
-                baiUrl: dataConfig.baiUrl ?? dataConfig.indexUrl ?? `${bamUrl}.bai`
+                baiUrl: dataConfig.baiUrl ?? dataConfig.indexUrl ?? `${bamUrl}.bai`,
+                chromSizes
             };
             await worker.init(this.uid, workerDataConfig);
             return worker;

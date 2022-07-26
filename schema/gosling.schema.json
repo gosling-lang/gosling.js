@@ -415,9 +415,14 @@
         },
         "scaleOffset": {
           "description": "Whether to use offset of the domain proportionally. This is bound to brushes on the color legend. __Default__: `[0, 1]`",
-          "items": {
-            "type": "number"
-          },
+          "items": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            }
+          ],
           "maxItems": 2,
           "minItems": 2,
           "type": "array"
@@ -863,9 +868,14 @@
           "description": "If specified, only showing a certain interval in a chromosome."
         },
         "interval": {
-          "items": {
-            "type": "number"
-          },
+          "items": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            }
+          ],
           "maxItems": 2,
           "minItems": 2,
           "type": "array"
@@ -886,9 +896,14 @@
               "type": "string"
             },
             {
-              "items": {
-                "type": "string"
-              },
+              "items": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "string"
+                }
+              ],
               "maxItems": 2,
               "minItems": 2,
               "type": "array"
@@ -906,9 +921,14 @@
       "properties": {
         "interval": {
           "description": "Show a certain interval within entire chromosome",
-          "items": {
-            "type": "number"
-          },
+          "items": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            }
+          ],
           "maxItems": 2,
           "minItems": 2,
           "type": "array"
@@ -8250,9 +8270,14 @@
         },
         "scaleOffset": {
           "description": "Whether to use offset of the domain proportionally. This is bound to brushes on the color legend. __Default__: `[0, 1]`",
-          "items": {
-            "type": "number"
-          },
+          "items": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            }
+          ],
           "maxItems": 2,
           "minItems": 2,
           "type": "array"
@@ -8353,9 +8378,14 @@
         },
         "dashed": {
           "description": "Specify the pattern of dashes and gaps for `rule` marks.",
-          "items": {
-            "type": "number"
-          },
+          "items": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            }
+          ],
           "maxItems": 2,
           "minItems": 2,
           "type": "array"
@@ -9022,12 +9052,20 @@
       "type": "object"
     },
     "ZoomLimits": {
-      "items": {
-        "type": [
-          "number",
-          "null"
-        ]
-      },
+      "items": [
+        {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        {
+          "type": [
+            "number",
+            "null"
+          ]
+        }
+      ],
       "maxItems": 2,
       "minItems": 2,
       "type": "array"

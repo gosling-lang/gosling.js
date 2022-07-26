@@ -1,5 +1,4 @@
 import { bisector } from 'd3-array';
-import { tsvParseRows } from 'd3-dsv';
 import { RemoteFile as _RemoteFile } from 'generic-filehandle';
 
 import type * as HiGlass from '@higlass/types';
@@ -78,31 +77,6 @@ const absToChr = (absPosition: number, chromInfo: HiGlass.ChromInfo) => {
 };
 
 /**
- * Construct size of chromosomes from data.
- */
-export function parseChrSizes(rows: string[][]): HiGlass.ChromInfo {
-    const info: HiGlass.ChromInfo = {
-        cumPositions: [],
-        chromLengths: {},
-        chrPositions: {},
-        totalLength: 0
-    };
-
-    rows.forEach((d, i) => {
-        const chr = d[0];
-        const length = Number(d[1]);
-        const chrPosition = { id: i, chr, pos: info.totalLength };
-
-        info.chrPositions[chr] = chrPosition;
-        info.chromLengths[chr] = length;
-        info.cumPositions.push(chrPosition);
-        info.totalLength += length;
-    });
-
-    return info;
-}
-
-/**
  * Get a chromosome name for the consistentcy, e.g., `1` --> `chr1`.
  * @param chrName A chromosome name to be sanitized
  * @param assembly A genome assembly of the data
@@ -131,11 +105,22 @@ export type ExtendedChromInfo = HiGlass.ChromInfo & {
     chrToAbs(chr: [name: string, pos: number]): number | null;
 };
 
-export async function fetchChromInfo(url: string): Promise<ExtendedChromInfo> {
-    const response = await fetch(url);
-    const chrInfoText = await response.text();
-    const data = tsvParseRows(chrInfoText);
-    const info = parseChrSizes(data);
+export function sizesToChromInfo(sizes: [string, number][]): ExtendedChromInfo {
+    const info: HiGlass.ChromInfo = {
+        cumPositions: [],
+        chromLengths: {},
+        chrPositions: {},
+        totalLength: 0
+    };
+
+    sizes.forEach(([chr, length], i) => {
+        const chrPosition = { id: i, chr, pos: info.totalLength };
+        info.chrPositions[chr] = chrPosition;
+        info.chromLengths[chr] = length;
+        info.cumPositions.push(chrPosition);
+        info.totalLength += length;
+    });
+
     return {
         ...info,
         absToChr: absPos => (info.chrPositions ? absToChr(absPos, info) : null),

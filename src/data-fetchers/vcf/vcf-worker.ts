@@ -7,7 +7,7 @@ import { TabixIndexedFile } from '@gmod/tabix';
 import { expose, Transfer } from 'threads/worker';
 import { sampleSize } from 'lodash-es';
 
-import { fetchChromInfo, RemoteFile } from '../utils';
+import { sizesToChromInfo, RemoteFile } from '../utils';
 
 import type { TilesetInfo } from '@higlass/types';
 import type { ExtendedChromInfo } from '../utils';
@@ -43,22 +43,19 @@ export type Tile = Omit<VcfRecord, 'ALT' | 'INFO'> & {
 };
 
 // promises indexed by url
-const chromSizes: Record<string, Promise<ExtendedChromInfo>> = {};
-const chromInfos: Record<string, ExtendedChromInfo> = {};
 const tileValues: Record<string, Tile[]> = {}; // new LRU({ max: MAX_TILES });
-const tilesetInfos: Record<string, TilesetInfo> = {};
 
 // const vcfData = [];
 
 // indexed by uuid
 type DataConfig = {
     vcfUrl: string;
-    chromSizesUrl: string;
+    chromInfo: ExtendedChromInfo;
     sampleLength: number;
 };
 const dataConfs: Record<string, DataConfig> = {};
 
-const init = (uid: string, vcfUrl: string, tbiUrl: string, chromSizesUrl: string, sampleLength: number) => {
+const init = (uid: string, vcfUrl: string, tbiUrl: string, chromSizes: [string, number][], sampleLength: number) => {
     if (!vcfFiles[vcfUrl]) {
         vcfFiles[vcfUrl] = new TabixIndexedFile({
             filehandle: new RemoteFile(vcfUrl),
@@ -67,36 +64,30 @@ const init = (uid: string, vcfUrl: string, tbiUrl: string, chromSizesUrl: string
 
         vcfHeaders[vcfUrl] = vcfFiles[vcfUrl].getHeader();
     }
-
-    if (chromSizesUrl) {
-        chromSizes[chromSizesUrl] = chromSizes[chromSizesUrl] ?? fetchChromInfo(chromSizesUrl);
-    }
-
-    dataConfs[uid] = { vcfUrl, chromSizesUrl, sampleLength };
+    dataConfs[uid] = {
+        vcfUrl,
+        chromInfo: sizesToChromInfo(chromSizes),
+        sampleLength
+    };
 };
 
-const tilesetInfo = (uid: string) => {
-    const { chromSizesUrl, vcfUrl } = dataConfs[uid];
-    const promises = [vcfHeaders[vcfUrl], chromSizes[chromSizesUrl]] as const;
-    return Promise.all(promises).then(([header, chromInfo]) => {
-        if (!tbiVCFParsers[vcfUrl]) {
-            tbiVCFParsers[vcfUrl] = new VCF({ header });
-        }
+const tilesetInfo = async (uid: string) => {
+    const { chromInfo, vcfUrl } = dataConfs[uid];
+    const header = await vcfHeaders[vcfUrl];
 
-        const TILE_SIZE = 1024;
-        chromInfos[chromSizesUrl] = chromInfo;
+    if (!tbiVCFParsers[vcfUrl]) {
+        tbiVCFParsers[vcfUrl] = new VCF({ header });
+    }
 
-        const retVal = {
-            tile_size: TILE_SIZE,
-            max_zoom: Math.ceil(Math.log(chromInfo.totalLength / TILE_SIZE) / Math.log(2)),
-            max_width: chromInfo.totalLength,
-            min_pos: [0],
-            max_pos: [chromInfo.totalLength]
-        };
+    const TILE_SIZE = 1024;
 
-        tilesetInfos[uid] = retVal;
-        return retVal;
-    });
+    return {
+        tile_size: TILE_SIZE,
+        max_zoom: Math.ceil(Math.log(chromInfo.totalLength / TILE_SIZE) / Math.log(2)),
+        max_width: chromInfo.totalLength,
+        min_pos: [0],
+        max_pos: [chromInfo.totalLength]
+    };
 };
 
 const getMutationType = (ref: string, alt?: string) => {
@@ -134,7 +125,7 @@ const getSubstitutionType = (ref: string, alt?: string) => {
 
 // We return an empty tile. We get the data from SvTrack
 const tile = async (uid: string, z: number, x: number): Promise<void[]> => {
-    const { chromSizesUrl, vcfUrl } = dataConfs[uid];
+    const { chromInfo, vcfUrl } = dataConfs[uid];
 
     if (!vcfHeaders[vcfUrl]) return [];
 
@@ -156,7 +147,7 @@ const tile = async (uid: string, z: number, x: number): Promise<void[]> => {
 
     let curMinX = minX;
 
-    const { chromLengths, cumPositions } = chromInfos[chromSizesUrl];
+    const { chromLengths, cumPositions } = chromInfo;
     const tbiVCFParser = tbiVCFParsers[vcfUrl];
 
     cumPositions.forEach(cumPos => {
