@@ -301,7 +301,7 @@ const tile = async (uid: string, z: number, x: number): Promise<JsonBamRecord[]>
     const { bamUrl, loadMates, chromInfo } = dataConfs[uid];
     const bamFile = bamFiles[bamUrl];
 
-    const info = await tilesetInfo(uid);
+    const info = tilesetInfo(uid);
 
     if (!('max_width' in info)) {
         throw new Error('tilesetInfo does not include `max_width`, which is required for the Gosling BamDataFetcher.');
