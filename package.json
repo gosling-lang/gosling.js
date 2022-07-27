@@ -154,7 +154,7 @@
     },
     "husky": {
         "hooks": {
-            "pre-commit": "yarn changelog && yarn schema && yarn schema-higlass && yarn schema-theme && yarn schema-template && yarn format && git add .",
+            "pre-commit": "run-p changelog schema schema-higlass schema-theme schema-template format && git add .",
             "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
         }
     }
