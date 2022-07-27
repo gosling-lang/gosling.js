@@ -5,7 +5,7 @@
 import { spawn } from 'threads';
 import Worker from './bam-worker.ts?worker&inline';
 
-import type { BamFile, Assembly } from '../../core/gosling.schema';
+import type { BamData, Assembly } from '@gosling.schema';
 import type { ModuleThread } from 'threads';
 import type { WorkerApi, TilesetInfo, Tiles, Segment, SegmentWithMate, Junction } from './bam-worker';
 import { GET_CHROM_SIZES } from '../../core/utils/assembly';
@@ -24,7 +24,7 @@ class BamDataFetcher {
         fetching: { delete(id: string): void };
     };
 
-    constructor(HGC: import('@higlass/types').HGC, config: BamFile & { assembly: Assembly }) {
+    constructor(HGC: import('@higlass/types').HGC, config: BamData & { assembly: Assembly }) {
         this.uid = HGC.libraries.slugid.nice();
         this.toFetch = new Set();
         const { url, indexUrl, assembly, ...options } = config;
