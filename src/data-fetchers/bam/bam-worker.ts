@@ -1,12 +1,13 @@
-// This worker is heavily based on https://github.com/higlass/higlass-pileup/blob/master/src/bam-fetcher-worker.js
+// Adopted from https://github.com/higlass/higlass-pileup/blob/master/src/bam-fetcher-worker.js
 import { expose, Transfer } from 'threads/worker';
-import { BamFile } from '@gmod/bam';
+import { BamFile as _BamFile } from '@gmod/bam';
 import QuickLRU from 'quick-lru';
 
-import type { ChromInfo, TilesetInfo } from '@higlass/types';
+import type { TilesetInfo } from '@higlass/types';
 import type { BamRecord } from '@gmod/bam';
 
-import { fetchChromInfo, RemoteFile } from '../utils';
+import { DataSource, RemoteFile } from '../utils';
+import type { ChromSizes } from '@gosling.schema';
 
 function parseMD(mdString: string, useCounts: true): { type: string; length: number }[];
 function parseMD(mdString: string, useCounts: false): { pos: number; base: string; length: 1; bamSeqShift: number }[];
@@ -200,87 +201,6 @@ function getSubstitutions(segment: Segment, seq: string) {
     return substitutions;
 }
 
-function natcmp(xRow: string | [string, number], yRow: string | [string, number]): number {
-    const x = xRow[0];
-    const y = yRow[0];
-
-    if (x.indexOf('_') >= 0) {
-        const xParts = x.split('_');
-        if (y.indexOf('_') >= 0) {
-            // chr_1 vs chr_2
-            const yParts = y.split('_');
-
-            return natcmp(xParts[1], yParts[1]);
-        }
-
-        // chr_1 vs chr1
-        // chr1 comes first
-        return 1;
-    }
-
-    if (y.indexOf('_') >= 0) {
-        // chr1 vs chr_1
-        // y comes second
-        return -1;
-    }
-
-    const xParts: (string | number)[] = [];
-    const yParts: (string | number)[] = [];
-
-    for (const part of x.match(/(\d+|[^\d]+)/g) ?? []) {
-        xParts.push(Number.isNaN(part) ? part.toLowerCase() : +part);
-    }
-
-    for (const part of y.match(/(\d+|[^\d]+)/g) ?? []) {
-        xParts.push(Number.isNaN(part) ? part.toLowerCase() : +part);
-    }
-
-    // order of these parameters is purposefully reverse how they should be
-    // ordered
-    for (const key of ['m', 'y', 'x']) {
-        if (y.toLowerCase().includes(key)) return -1;
-        if (x.toLowerCase().includes(key)) return 1;
-    }
-
-    if (xParts < yParts) {
-        return -1;
-    } else if (yParts > xParts) {
-        return 1;
-    }
-
-    return 0;
-}
-
-function parseChromsizesRows(data: (string[] | [string, number])[]): ChromInfo {
-    const cumValues: ChromInfo['cumPositions'] = [];
-    const chromLengths: ChromInfo['chromLengths'] = {};
-    const chrPositions: ChromInfo['chrPositions'] = {};
-
-    let totalLength = 0;
-
-    for (let i = 0; i < data.length; i++) {
-        const length = Number(data[i][1]);
-        totalLength += length;
-
-        const newValue = {
-            id: i,
-            chr: data[i][0],
-            pos: totalLength - length
-        };
-
-        cumValues.push(newValue);
-        chrPositions[newValue.chr] = newValue;
-        chromLengths[data[i][0]] = length;
-    }
-
-    return {
-        cumPositions: cumValues,
-        chrPositions,
-        totalLength,
-        chromLengths
-    };
-}
-
 /////////////////////////////////////////////////////
 /// End Chrominfo
 /////////////////////////////////////////////////////
@@ -309,120 +229,67 @@ const bamRecordToJson = (bamRecord: BamRecord, chrName: string, chrOffset: numbe
 
 type JsonBamRecord = ReturnType<typeof bamRecordToJson>;
 
-// promises indexed by urls
-const bamFiles: Record<string, BamFile> = {};
-const bamHeaders: Record<string, ReturnType<BamFile['getHeader']>> = {};
-// promises indexed by chromSizesUrl
-const chromSizes: Record<string, Promise<ChromInfo>> = {};
+class BamFile extends _BamFile {
+    headerPromise: ReturnType<BamFile['getHeader']>;
+    constructor(...args: ConstructorParameters<typeof _BamFile>) {
+        super(...args);
+        this.headerPromise = this.getHeader();
+    }
+    static fromUrl(url: string, indexUrl: string) {
+        return new BamFile({
+            bamFilehandle: new RemoteFile(url),
+            baiFilehandle: new RemoteFile(indexUrl)
+            // fetchSizeLimit: 500000000,
+            // chunkSizeLimit: 100000000,
+            // yieldThreadTime: 1000,
+        });
+    }
+}
 
+interface BamFileOptions {
+    loadMates: boolean;
+    maxInsertSize: number;
+    extractJunction: boolean;
+    junctionMinCoverage: number;
+}
+
+// indexed by dataset uuid
+const dataSources: Map<string, DataSource<BamFile, BamFileOptions>> = new Map();
+// indexed by bam url
+const bamFileCache: Map<string, BamFile> = new Map();
 const MAX_TILES = 20;
-
 const tileValues = new QuickLRU<string, JsonBamRecord[] | { error: string }>({ maxSize: MAX_TILES });
-// indexed by uuid
-const tilesetInfos: Record<string, TilesetInfo & { chromInfo: ChromInfo }> = {};
-
-export type DataConfig = {
-    bamUrl: string;
-    baiUrl: string;
-    chromSizesUrl?: string;
-    loadMates?: boolean;
-    maxInsertSize?: number;
-    extractJunction?: boolean;
-    junctionMinCoverage?: number;
-};
-
-// indexed by uuid
-const dataConfs: Record<string, Omit<DataConfig, 'baiUrl'>> = {};
 
 const init = (
     uid: string,
-    {
-        bamUrl,
-        baiUrl,
-        chromSizesUrl,
-        loadMates = false,
-        maxInsertSize = 5000,
-        extractJunction = false,
-        junctionMinCoverage = 1
-    }: DataConfig
+    bam: { url: string; indexUrl: string },
+    chromSizes: ChromSizes,
+    options: Partial<BamFileOptions> = {}
 ) => {
-    if (!bamFiles[bamUrl]) {
-        // we do not yet have this file cached
-        bamFiles[bamUrl] = new BamFile({
-            bamFilehandle: new RemoteFile(bamUrl),
-            baiFilehandle: new RemoteFile(baiUrl)
-            // fetchSizeLimit: 500000000,
-            // chunkSizeLimit: 100000000 ,
-            // yieldThreadTime: 1000
-        });
-
-        // we have to fetch the header before we can fetch data
-        bamHeaders[bamUrl] = bamFiles[bamUrl].getHeader();
+    if (!bamFileCache.has(bam.url)) {
+        const bamFile = BamFile.fromUrl(bam.url, bam.indexUrl);
+        bamFileCache.set(bam.url, bamFile);
     }
-
-    // if no chromsizes are passed in, we'll retrieve them from the BAM file
-    if (chromSizesUrl) {
-        // cache by bamUrl
-        chromSizes[chromSizesUrl] = fetchChromInfo(chromSizesUrl);
-    }
-
-    dataConfs[uid] = { bamUrl, chromSizesUrl, loadMates, maxInsertSize, extractJunction, junctionMinCoverage };
+    const bamFile = bamFileCache.get(bam.url)!;
+    const dataSource = new DataSource(bamFile, chromSizes, {
+        loadMates: false,
+        maxInsertSize: 5000,
+        extractJunction: false,
+        junctionMinCoverage: 1,
+        ...options
+    });
+    dataSources.set(uid, dataSource);
 };
 
 const tilesetInfo = (uid: string) => {
-    if (uid in tilesetInfos) {
-        // cache hit
-        return tilesetInfos[uid];
-    }
-    const { chromSizesUrl, bamUrl } = dataConfs[uid];
-    const promises = [
-        // why do we await bamHeaders if not used in this function?
-        bamHeaders[bamUrl],
-        chromSizesUrl ? chromSizes[chromSizesUrl] : undefined
-    ] as const;
-
-    return Promise.all(promises).then(res => {
-        const maybeInfo = res[1];
-        const TILE_SIZE = 1024;
-        let chromInfo: ChromInfo;
-
-        if (maybeInfo) {
-            // this means we received a chromInfo file
-            chromInfo = maybeInfo;
-        } else {
-            // no chromInfo provided so we have to take it from the bam file index
-            const chroms: [name: string, length: number][] = [];
-
-            // @ts-expect-error indexToChr is a protected field
-            const indexToChr = bamFiles[bamUrl].indexToChr;
-
-            for (const { refName: chrName, length } of indexToChr) {
-                chroms.push([chrName, length]);
-            }
-            chroms.sort(natcmp);
-            chromInfo = parseChromsizesRows(chroms);
-        }
-
-        tilesetInfos[uid] = {
-            tile_size: TILE_SIZE,
-            bins_per_dimension: TILE_SIZE,
-            max_zoom: Math.ceil(Math.log(chromInfo.totalLength / TILE_SIZE) / Math.log(2)),
-            max_width: chromInfo.totalLength,
-            min_pos: [0],
-            max_pos: [chromInfo.totalLength],
-            chromInfo: chromInfo
-        };
-
-        return tilesetInfos[uid];
-    });
+    return dataSources.get(uid)!.tilesetInfo;
 };
 
 const tile = async (uid: string, z: number, x: number): Promise<JsonBamRecord[]> => {
     const MAX_TILE_WIDTH = 200000;
-    const { bamUrl, loadMates } = dataConfs[uid];
-    const bamFile = bamFiles[bamUrl];
+    const bam = dataSources.get(uid)!;
 
-    const info = await tilesetInfo(uid);
+    const info = tilesetInfo(uid);
 
     if (!('max_width' in info)) {
         throw new Error('tilesetInfo does not include `max_width`, which is required for the Gosling BamDataFetcher.');
@@ -441,10 +308,10 @@ const tile = async (uid: string, z: number, x: number): Promise<JsonBamRecord[]>
     let minX = info.min_pos[0] + x * tileWidth;
     const maxX = info.min_pos[0] + (x + 1) * tileWidth;
 
-    const { chromLengths, cumPositions } = info.chromInfo;
+    const { chromLengths, cumPositions } = bam.chromInfo;
 
     const opt = {
-        viewAsPairs: loadMates
+        viewAsPairs: bam.options.loadMates
         // TODO: Turning this on results in "too many requests error"
         // https://github.com/gosling-lang/gosling.js/pull/556
         // pairAcrossChr: typeof loadMates === 'undefined' ? false : loadMates,
@@ -464,7 +331,7 @@ const tile = async (uid: string, z: number, x: number): Promise<JsonBamRecord[]>
                 // the visible region extends beyond the end of this chromosome
                 // fetch from the start until the end of the chromosome
                 recordPromises.push(
-                    bamFile
+                    bam.file
                         .getRecordsForRange(chromName, minX - chromStart, chromEnd - chromStart, opt)
                         .then(records => {
                             const mappedRecords = records.map(rec =>
@@ -486,7 +353,7 @@ const tile = async (uid: string, z: number, x: number): Promise<JsonBamRecord[]>
                 const endPos = Math.ceil(maxX - chromStart);
                 // the end of the region is within this chromosome
                 recordPromises.push(
-                    bamFile.getRecordsForRange(chromName, startPos, endPos, opt).then(records => {
+                    bam.file.getRecordsForRange(chromName, startPos, endPos, opt).then(records => {
                         const mappedRecords = records.map(rec => bamRecordToJson(rec, chromName, cumPositions[i].pos));
                         tileValues.set(
                             `${uid}.${z}.${x}`,
@@ -536,7 +403,7 @@ const fetchTilesDebounced = async (uid: string, tileIds: string[]) => {
 };
 
 const getTabularData = (uid: string, tileIds: string[]) => {
-    const config = dataConfs[uid];
+    const { options } = dataSources.get(uid)!;
     const allSegments: Record<string, Segment & { substitutions: string }> = {};
 
     for (const tileId of tileIds) {
@@ -561,15 +428,15 @@ const getTabularData = (uid: string, tileIds: string[]) => {
     const segments = Object.values(allSegments);
 
     // find and set mate info when the `data.loadMates` flag is on.
-    if (config.loadMates) {
+    if (options.loadMates) {
         // TODO: avoid mutation?
-        findMates(segments, config.maxInsertSize);
+        findMates(segments, options.maxInsertSize);
     }
 
     let output: Junction[] | SegmentWithMate[] | Segment[];
-    if (config.extractJunction) {
+    if (options.extractJunction) {
         // Reference(ggsashimi): https://github.com/guigolab/ggsashimi/blob/d686d59b4e342b8f9dcd484f0af4831cc092e5de/ggsashimi.py#L136
-        output = findJunctions(segments, config.junctionMinCoverage);
+        output = findJunctions(segments, options.junctionMinCoverage);
     } else {
         output = segments;
     }

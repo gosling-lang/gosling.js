@@ -4,7 +4,7 @@ import * as uuid from 'uuid';
 import { isEqual, sampleSize, uniqBy } from 'lodash-es';
 import type { ScaleLinear } from 'd3-scale';
 import type { SingleTrack, OverlaidTrack, Datum, EventStyle, GenomicPosition, Assembly } from '@gosling.schema';
-import type { CompleteThemeDeep } from 'src/core/utils/theme';
+import type { CompleteThemeDeep } from '../core/utils/theme';
 import { drawMark, drawPostEmbellishment, drawPreEmbellishment } from '../core/mark';
 import { GoslingTrackModel } from '../core/gosling-track-model';
 import { validateTrack } from '../core/utils/validate';
