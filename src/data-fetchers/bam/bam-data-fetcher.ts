@@ -5,22 +5,14 @@
 import { spawn } from 'threads';
 import Worker from './bam-worker.ts?worker&inline';
 
-import type { Assembly } from '../../core/gosling.schema';
+import type { BamFile, Assembly } from '../../core/gosling.schema';
 import type { ModuleThread } from 'threads';
 import type { WorkerApi, TilesetInfo, Tiles, Segment, SegmentWithMate, Junction } from './bam-worker';
 import { GET_CHROM_SIZES } from '../../core/utils/assembly';
 
 const DEBOUNCE_TIME = 200;
 
-interface DataConfig {
-    url: string;
-    indexUrl?: string;
-    assembly: Assembly;
-}
-
 class BamDataFetcher {
-    dataConfig: DataConfig;
-
     uid: string;
     fetchTimeout?: ReturnType<typeof setTimeout>;
     toFetch: Set<string>;
@@ -32,14 +24,13 @@ class BamDataFetcher {
         fetching: { delete(id: string): void };
     };
 
-    constructor(HGC: import('@higlass/types').HGC, dataConfig: DataConfig) {
-        this.dataConfig = dataConfig;
+    constructor(HGC: import('@higlass/types').HGC, config: BamFile & { assembly: Assembly }) {
         this.uid = HGC.libraries.slugid.nice();
         this.toFetch = new Set();
-
+        const { url, indexUrl, assembly, ...options } = config;
         this.worker = spawn<WorkerApi>(new Worker()).then(async worker => {
-            const chromSizes = Object.entries(GET_CHROM_SIZES(dataConfig.assembly).size);
-            await worker.init(this.uid, dataConfig, chromSizes);
+            const chromSizes = Object.entries(GET_CHROM_SIZES(assembly).size);
+            await worker.init(this.uid, { url, indexUrl }, chromSizes, options);
             return worker;
         });
     }

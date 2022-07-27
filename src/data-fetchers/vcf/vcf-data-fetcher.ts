@@ -8,13 +8,10 @@ import Worker from './vcf-worker.ts?worker&inline';
 import { GET_CHROM_SIZES } from '../../core/utils/assembly';
 
 import type { ModuleThread } from 'threads';
-import type { VcfData } from '../../core/gosling.schema';
+import type { Assembly, VcfData } from '../../core/gosling.schema';
 import type { WorkerApi, TilesetInfo, Tile } from './vcf-worker';
-import type { CommonDataConfig } from '../utils';
 
 const DEBOUNCE_TIME = 200;
-
-type VcfDataConfig = VcfData & CommonDataConfig;
 
 class VcfDataFetcher {
     uid: string;
@@ -25,13 +22,14 @@ class VcfDataFetcher {
     private fetchTimeout?: ReturnType<typeof setTimeout>;
     private worker: Promise<ModuleThread<WorkerApi>>;
 
-    constructor(HGC: import('@higlass/types').HGC, public dataConfig: VcfDataConfig) {
+    constructor(HGC: import('@higlass/types').HGC, config: VcfData & { assembly: Assembly }) {
         this.uid = HGC.libraries.slugid.nice();
         this.prevRequestTime = 0;
         this.toFetch = new Set();
+        const { url, indexUrl, assembly, ...options } = config;
         this.worker = spawn<WorkerApi>(new Worker()).then(async worker => {
-            const chromSizes = Object.entries(GET_CHROM_SIZES(dataConfig.assembly).size);
-            await worker.init(this.uid, dataConfig, chromSizes, dataConfig);
+            const chromSizes = Object.entries(GET_CHROM_SIZES(assembly).size);
+            await worker.init(this.uid, { url, indexUrl }, chromSizes, options);
             return worker;
         });
     }

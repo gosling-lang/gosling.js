@@ -262,12 +262,12 @@ const tileValues = new QuickLRU<string, JsonBamRecord[] | { error: string }>({ m
 
 const init = (
     uid: string,
-    bam: { url: string; indexUrl?: string },
+    bam: { url: string; indexUrl: string },
     chromSizes: ChromSizes,
     options: Partial<BamFileOptions> = {}
 ) => {
     if (!bamFileCache.has(bam.url)) {
-        const bamFile = BamFile.fromUrl(bam.url, bam.indexUrl ?? `${bam.url}.bai`);
+        const bamFile = BamFile.fromUrl(bam.url, bam.indexUrl);
         bamFileCache.set(bam.url, bamFile);
     }
     const bamFile = bamFileCache.get(bam.url)!;
