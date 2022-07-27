@@ -2,7 +2,7 @@ import { bisector } from 'd3-array';
 import { RemoteFile as _RemoteFile } from 'generic-filehandle';
 
 import type * as HiGlass from '@higlass/types';
-import type { Assembly, Datum } from '@gosling.schema';
+import type { Assembly, ChromSizes, Datum } from '@gosling.schema';
 
 export type CommonDataConfig = {
     assembly: Assembly;
@@ -11,6 +11,16 @@ export type CommonDataConfig = {
     x1?: string;
     x1e?: string;
 };
+
+export class DataSource<File, Options> {
+    chromInfo: ExtendedChromInfo;
+    tilesetInfo: ReturnType<typeof tilesetInfoFromChromInfo>;
+
+    constructor(public file: File, chromSizes: ChromSizes, public options: Options) {
+        this.chromInfo = sizesToChromInfo(chromSizes);
+        this.tilesetInfo = tilesetInfoFromChromInfo(this.chromInfo);
+    }
+}
 
 /**
  * Filter data before sending to a track considering the visible genomic area in the track.
@@ -104,6 +114,17 @@ export type ExtendedChromInfo = HiGlass.ChromInfo & {
     absToChr(absPos: number): ReturnType<typeof absToChr> | null;
     chrToAbs(chr: [name: string, pos: number]): number | null;
 };
+
+export function tilesetInfoFromChromInfo(chromInfo: ExtendedChromInfo, tileSize = 1024) {
+    return {
+        tile_size: tileSize,
+        bins_per_dimension: tileSize,
+        max_zoom: Math.ceil(Math.log(chromInfo.totalLength / tileSize) / Math.log(2)),
+        max_width: chromInfo.totalLength,
+        min_pos: [0],
+        max_pos: [chromInfo.totalLength]
+    };
+}
 
 export function sizesToChromInfo(sizes: [string, number][]): ExtendedChromInfo {
     const info: HiGlass.ChromInfo = {

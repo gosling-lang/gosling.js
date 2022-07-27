@@ -12,11 +12,8 @@ import { GET_CHROM_SIZES } from '../../core/utils/assembly';
 
 const DEBOUNCE_TIME = 200;
 
-// TODO: why both url/bamUrl & baiUrl/indexUrl
 interface DataConfig {
     url: string;
-    bamUrl?: string;
-    baiUrl?: string;
     indexUrl?: string;
     assembly: Assembly;
 }
@@ -40,16 +37,9 @@ class BamDataFetcher {
         this.uid = HGC.libraries.slugid.nice();
         this.toFetch = new Set();
 
-        const chromSizes = Object.entries(GET_CHROM_SIZES(dataConfig.assembly).size);
-
         this.worker = spawn<WorkerApi>(new Worker()).then(async worker => {
-            const bamUrl = dataConfig.bamUrl ?? dataConfig.url;
-            await worker.init(this.uid, {
-                ...dataConfig,
-                bamUrl,
-                baiUrl: dataConfig.baiUrl ?? dataConfig.indexUrl ?? `${bamUrl}.bai`,
-                chromSizes
-            });
+            const chromSizes = Object.entries(GET_CHROM_SIZES(dataConfig.assembly).size);
+            await worker.init(this.uid, dataConfig, chromSizes);
             return worker;
         });
     }

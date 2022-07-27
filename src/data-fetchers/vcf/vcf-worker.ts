@@ -7,15 +7,39 @@ import { TabixIndexedFile } from '@gmod/tabix';
 import { expose, Transfer } from 'threads/worker';
 import { sampleSize } from 'lodash-es';
 
-import { sizesToChromInfo, RemoteFile } from '../utils';
+import { DataSource, RemoteFile } from '../utils';
 
 import type { TilesetInfo } from '@higlass/types';
-import type { ExtendedChromInfo } from '../utils';
+import type { ChromSizes } from '@gosling.schema';
 
 // promises indexed by urls
-const vcfFiles: Record<string, TabixIndexedFile> = {};
-const vcfHeaders: Record<string, Promise<string>> = {};
-const tbiVCFParsers: Record<string, VCF> = {};
+const vcfFiles: Map<string, VcfFile> = new Map();
+
+type VcfFileOptions = {
+    sampleLength: number;
+};
+
+class VcfFile {
+    private parser?: VCF;
+
+    constructor(public tbi: TabixIndexedFile) {}
+
+    async getParser() {
+        if (!this.parser) {
+            const header = await this.tbi.getHeader();
+            this.parser = new VCF({ header });
+        }
+        return this.parser;
+    }
+
+    static fromUrl(url: string, indexUrl: string) {
+        const tbi = new TabixIndexedFile({
+            filehandle: new RemoteFile(url),
+            tbiFilehandle: new RemoteFile(indexUrl)
+        });
+        return new VcfFile(tbi);
+    }
+}
 
 // const MAX_TILES = 20;
 // https://github.com/GMOD/vcf-js/blob/c4a9cbad3ba5a3f0d1c817d685213f111bf9de9b/src/parse.ts#L284-L291
@@ -46,52 +70,27 @@ export type Tile = Omit<VcfRecord, 'ALT' | 'INFO'> & {
 const tileValues: Record<string, Tile[]> = {}; // new LRU({ max: MAX_TILES });
 
 // const vcfData = [];
-
-// indexed by uuid
-type DataConfig = {
-    vcfUrl: string;
-    chromInfo: ExtendedChromInfo;
-    sampleLength: number;
-};
-
-const dataConfs: Record<string, DataConfig> = {};
+const dataSources: Map<string, DataSource<VcfFile, VcfFileOptions>> = new Map();
 
 function init(
     uid: string,
-    config: { vcfUrl: string; tbiUrl: string; chromSizes: [string, number][]; sampleLength: number }
+    vcf: { url: string; indexUrl: string },
+    chromSizes: ChromSizes,
+    options: Partial<VcfFileOptions> = {}
 ) {
-    if (!vcfFiles[config.vcfUrl]) {
-        vcfFiles[config.vcfUrl] = new TabixIndexedFile({
-            filehandle: new RemoteFile(config.vcfUrl),
-            tbiFilehandle: new RemoteFile(config.tbiUrl)
-        });
-
-        vcfHeaders[config.vcfUrl] = vcfFiles[config.vcfUrl].getHeader();
+    let vcfFile = vcfFiles.get(vcf.url);
+    if (!vcfFile) {
+        vcfFile = VcfFile.fromUrl(vcf.url, vcf.indexUrl);
     }
-    dataConfs[uid] = {
-        vcfUrl: config.vcfUrl,
-        chromInfo: sizesToChromInfo(config.chromSizes),
-        sampleLength: config.sampleLength
-    };
+    const dataSource = new DataSource(vcfFile, chromSizes, {
+        sampleLength: 1000,
+        ...options
+    });
+    dataSources.set(uid, dataSource);
 }
 
-const tilesetInfo = async (uid: string) => {
-    const { chromInfo, vcfUrl } = dataConfs[uid];
-    const header = await vcfHeaders[vcfUrl];
-
-    if (!tbiVCFParsers[vcfUrl]) {
-        tbiVCFParsers[vcfUrl] = new VCF({ header });
-    }
-
-    const TILE_SIZE = 1024;
-
-    return {
-        tile_size: TILE_SIZE,
-        max_zoom: Math.ceil(Math.log(chromInfo.totalLength / TILE_SIZE) / Math.log(2)),
-        max_width: chromInfo.totalLength,
-        min_pos: [0],
-        max_pos: [chromInfo.totalLength]
-    };
+const tilesetInfo = (uid: string) => {
+    return dataSources.get(uid)!.tilesetInfo;
 };
 
 const getMutationType = (ref: string, alt?: string) => {
@@ -129,9 +128,8 @@ const getSubstitutionType = (ref: string, alt?: string) => {
 
 // We return an empty tile. We get the data from SvTrack
 const tile = async (uid: string, z: number, x: number): Promise<void[]> => {
-    const { chromInfo, vcfUrl } = dataConfs[uid];
-
-    if (!vcfHeaders[vcfUrl]) return [];
+    const source = dataSources.get(uid)!;
+    const parser = await source.file.getParser();
 
     const CACHE_KEY = `${uid}.${z}.${x}`;
 
@@ -140,19 +138,16 @@ const tile = async (uid: string, z: number, x: number): Promise<void[]> => {
     tileValues[CACHE_KEY] = [];
     // }
 
-    const tsInfo = await tilesetInfo(uid);
     const recordPromises: Promise<void>[] = [];
-
-    const tileWidth = +tsInfo.max_width / 2 ** +z;
+    const tileWidth = +source.tilesetInfo.max_width / 2 ** +z;
 
     // get bounds of this tile
-    const minX = tsInfo.min_pos[0] + x * tileWidth;
-    const maxX = tsInfo.min_pos[0] + (x + 1) * tileWidth;
+    const minX = source.tilesetInfo.min_pos[0] + x * tileWidth;
+    const maxX = source.tilesetInfo.min_pos[0] + (x + 1) * tileWidth;
 
     let curMinX = minX;
 
-    const { chromLengths, cumPositions } = chromInfo;
-    const tbiVCFParser = tbiVCFParsers[vcfUrl];
+    const { chromLengths, cumPositions } = source.chromInfo;
 
     cumPositions.forEach(cumPos => {
         const chromName = cumPos.chr;
@@ -160,7 +155,7 @@ const tile = async (uid: string, z: number, x: number): Promise<void[]> => {
         const chromEnd = cumPos.pos + chromLengths[chromName];
 
         const parseLineStoreData = (line: string, prevPos?: number) => {
-            const vcfRecord: VcfRecord = tbiVCFParser.parseLine(line);
+            const vcfRecord: VcfRecord = parser.parseLine(line);
             const POS = cumPos.pos + vcfRecord.POS + 1;
 
             let ALT: string | undefined;
@@ -213,7 +208,7 @@ const tile = async (uid: string, z: number, x: number): Promise<void[]> => {
                 startPos = curMinX - chromStart;
                 endPos = chromEnd - chromStart;
                 recordPromises.push(
-                    vcfFiles[vcfUrl]
+                    source.file.tbi
                         .getLines(chromName, startPos, endPos, line => {
                             prevPOS = parseLineStoreData(line, prevPOS);
                         })
@@ -223,7 +218,7 @@ const tile = async (uid: string, z: number, x: number): Promise<void[]> => {
                 startPos = Math.floor(curMinX - chromStart);
                 endPos = Math.ceil(maxX - chromStart);
                 recordPromises.push(
-                    vcfFiles[vcfUrl]
+                    source.file.tbi
                         .getLines(chromName, startPos, endPos, line => {
                             prevPOS = parseLineStoreData(line, prevPOS);
                         })
@@ -287,7 +282,7 @@ const getTabularData = (uid: string, tileIds: string[]) => {
 
     let output = Object.values(data).flat();
 
-    const sampleLength = dataConfs[uid].sampleLength;
+    const sampleLength = dataSources.get(uid)!.options.sampleLength;
     if (output.length >= sampleLength) {
         // TODO: we can make this more generic
         // priotize that mutations with closer each other are selected when sampling.
