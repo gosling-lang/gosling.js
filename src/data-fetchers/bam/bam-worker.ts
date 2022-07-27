@@ -1,4 +1,4 @@
-// This worker is heavily based on https://github.com/higlass/higlass-pileup/blob/master/src/bam-fetcher-worker.js
+// Adopted from https://github.com/higlass/higlass-pileup/blob/master/src/bam-fetcher-worker.js
 import { expose, Transfer } from 'threads/worker';
 import { BamFile as _BamFile } from '@gmod/bam';
 import QuickLRU from 'quick-lru';
