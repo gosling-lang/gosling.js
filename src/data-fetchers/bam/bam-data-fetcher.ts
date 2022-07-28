@@ -12,8 +12,16 @@ import { GET_CHROM_SIZES } from '../../core/utils/assembly';
 
 const DEBOUNCE_TIME = 200;
 
+let worker: Promise<ModuleThread<WorkerApi>>;
+
+// Initialize the worker once, scoped to this module.
+async function getWorker() {
+    if (!worker) worker = spawn<WorkerApi>(new Worker());
+    return worker;
+}
+
 class BamDataFetcher {
-    dataConfig = {}; // required for higlass
+    dataConfig = {};
     uid: string;
     fetchTimeout?: ReturnType<typeof setTimeout>;
     toFetch: Set<string>;
@@ -28,8 +36,11 @@ class BamDataFetcher {
     constructor(HGC: import('@higlass/types').HGC, config: BamData & { assembly: Assembly }) {
         this.uid = HGC.libraries.slugid.nice();
         this.toFetch = new Set();
-        const { url, indexUrl, assembly, ...options } = config;
-        this.worker = spawn<WorkerApi>(new Worker()).then(async worker => {
+
+        // create a new promise that resolves to the global worker
+        // after this data source has been initialized.
+        this.worker = getWorker().then(async worker => {
+            const { url, indexUrl, assembly, ...options } = config;
             const chromSizes = Object.entries(GET_CHROM_SIZES(assembly).size);
             await worker.init(this.uid, { url, indexUrl }, chromSizes, options);
             return worker;

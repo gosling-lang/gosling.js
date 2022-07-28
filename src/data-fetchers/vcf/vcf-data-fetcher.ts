@@ -13,6 +13,14 @@ import type { WorkerApi, TilesetInfo, Tile } from './vcf-worker';
 
 const DEBOUNCE_TIME = 200;
 
+let worker: Promise<ModuleThread<WorkerApi>>;
+
+// Initialize the worker once, scoped to this module.
+async function getWorker() {
+    if (!worker) worker = spawn<WorkerApi>(new Worker());
+    return worker;
+}
+
 class VcfDataFetcher {
     dataConfig = {}; // required for higlass
     uid: string;
@@ -27,8 +35,11 @@ class VcfDataFetcher {
         this.uid = HGC.libraries.slugid.nice();
         this.prevRequestTime = 0;
         this.toFetch = new Set();
-        const { url, indexUrl, assembly, ...options } = config;
-        this.worker = spawn<WorkerApi>(new Worker()).then(async worker => {
+
+        // create a new promise that resolves to the global worker
+        // after this data source has been initialized.
+        this.worker = getWorker().then(async worker => {
+            const { url, indexUrl, assembly, ...options } = config;
             const chromSizes = Object.entries(GET_CHROM_SIZES(assembly).size);
             await worker.init(this.uid, { url, indexUrl }, chromSizes, options);
             return worker;

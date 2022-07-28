@@ -72,8 +72,6 @@ export type Segment = {
     start: number;
     end: number;
     md: string;
-    chrName: string;
-    chrOffset: number;
     cigar: string;
     mapq: string;
     strand: '+' | '-';
@@ -201,11 +199,7 @@ function getSubstitutions(segment: Segment, seq: string) {
     return substitutions;
 }
 
-/////////////////////////////////////////////////////
-/// End Chrominfo
-/////////////////////////////////////////////////////
-
-const bamRecordToJson = (bamRecord: BamRecord, chrName: string, chrOffset: number) => {
+const bamRecordToJson = (bamRecord: BamRecord) => {
     const seq = bamRecord.get('seq');
     const segment: Segment = {
         // if two segments have the same name but different id, they are paired reads.
@@ -214,12 +208,10 @@ const bamRecordToJson = (bamRecord: BamRecord, chrName: string, chrOffset: numbe
         id: bamRecord._id,
         name: bamRecord.get('name'),
         // @ts-expect-error private field!!
-        start: +bamRecord.data.start + 1 + chrOffset,
+        start: +bamRecord.data.start,
         // @ts-expect-error private field!!
-        end: +bamRecord.data.end + 1 + chrOffset,
+        end: +bamRecord.data.end,
         md: bamRecord.get('MD'),
-        chrName,
-        chrOffset,
         cigar: bamRecord.get('cigar'),
         mapq: bamRecord.get('mq'),
         strand: bamRecord.get('strand') === 1 ? '+' : '-'
@@ -244,6 +236,11 @@ class BamFile extends _BamFile {
             // yieldThreadTime: 1000,
         });
     }
+
+    async getJsonRecordsForRange(...args: Parameters<_BamFile['getRecordsForRange']>) {
+        const records = await this.getRecordsForRange(...args);
+        return records.map(bamRecordToJson);
+    }
 }
 
 interface BamFileOptions {
@@ -257,8 +254,7 @@ interface BamFileOptions {
 const dataSources: Map<string, DataSource<BamFile, BamFileOptions>> = new Map();
 // indexed by bam url
 const bamFileCache: Map<string, BamFile> = new Map();
-const MAX_TILES = 20;
-const tileValues = new QuickLRU<string, JsonBamRecord[] | { error: string }>({ maxSize: MAX_TILES });
+const tileCache = new QuickLRU<string, JsonBamRecord[] | { error: string }>({ maxSize: 20 });
 
 const init = async (
     uid: string,
@@ -286,121 +282,114 @@ const tilesetInfo = (uid: string) => {
     return dataSources.get(uid)!.tilesetInfo;
 };
 
-const tile = async (uid: string, z: number, x: number): Promise<JsonBamRecord[]> => {
+function getGenomicRegions(
+    tileCoord: { x: number; z: number },
+    { chromInfo, tilesetInfo }: DataSource<BamFile, BamFileOptions>
+) {
     const MAX_TILE_WIDTH = 200000;
-    const bam = dataSources.get(uid)!;
-
-    const info = tilesetInfo(uid);
-
-    if (!('max_width' in info)) {
-        throw new Error('tilesetInfo does not include `max_width`, which is required for the Gosling BamDataFetcher.');
-    }
-
-    const tileWidth = +info.max_width / 2 ** +z;
-
-    const recordPromises: Promise<JsonBamRecord[]>[] = [];
+    const tileWidth = +tilesetInfo.max_width / 2 ** tileCoord.z;
 
     if (tileWidth > MAX_TILE_WIDTH) {
         // this.errorTextText('Zoomed out too far for this track. Zoomin further to see reads');
-        return new Promise(resolve => resolve([]));
+        return [];
     }
 
     // get the bounds of the tile
-    let minX = info.min_pos[0] + x * tileWidth;
-    const maxX = info.min_pos[0] + (x + 1) * tileWidth;
+    let minX = tilesetInfo.min_pos[0] + tileCoord.x * tileWidth;
+    const maxX = tilesetInfo.min_pos[0] + (tileCoord.x + 1) * tileWidth;
 
-    const { chromLengths, cumPositions } = bam.chromInfo;
-
-    const opt = {
-        viewAsPairs: bam.options.loadMates
-        // TODO: Turning this on results in "too many requests error"
-        // https://github.com/gosling-lang/gosling.js/pull/556
-        // pairAcrossChr: typeof loadMates === 'undefined' ? false : loadMates,
+    type RelativeRegion = {
+        start: number;
+        end: number;
     };
 
-    /* eslint-disable-next-line @typescript-eslint/prefer-for-of */
-    for (let i = 0; i < cumPositions.length; i++) {
-        const chromName = cumPositions[i].chr;
-        const chromStart = cumPositions[i].pos;
-        const chromEnd = cumPositions[i].pos + chromLengths[chromName];
-        tileValues.set(`${uid}.${z}.${x}`, []);
+    const regions: [{ chr: string; pos: number }, RelativeRegion][] = [];
 
-        if (chromStart <= minX && minX < chromEnd) {
-            // start of the visible region is within this chromosome
+    for (const c of chromInfo.cumPositions) {
+        const extent = c.pos + chromInfo.chromLengths[c.chr];
 
-            if (maxX > chromEnd) {
-                // the visible region extends beyond the end of this chromosome
-                // fetch from the start until the end of the chromosome
-                recordPromises.push(
-                    bam.file
-                        .getRecordsForRange(chromName, minX - chromStart, chromEnd - chromStart, opt)
-                        .then(records => {
-                            const mappedRecords = records.map(rec =>
-                                bamRecordToJson(rec, chromName, cumPositions[i].pos)
-                            );
-                            tileValues.set(
-                                `${uid}.${z}.${x}`,
-                                (tileValues.get(`${uid}.${z}.${x}`) as JsonBamRecord[]).concat(mappedRecords)
-                            );
-                            return [];
-                            // return mappedRecords;
-                        })
-                );
-
-                // continue onto the next chromosome
-                minX = chromEnd;
-            } else {
-                const startPos = Math.floor(minX - chromStart);
-                const endPos = Math.ceil(maxX - chromStart);
-                // the end of the region is within this chromosome
-                recordPromises.push(
-                    bam.file.getRecordsForRange(chromName, startPos, endPos, opt).then(records => {
-                        const mappedRecords = records.map(rec => bamRecordToJson(rec, chromName, cumPositions[i].pos));
-                        tileValues.set(
-                            `${uid}.${z}.${x}`,
-                            (tileValues.get(`${uid}.${z}.${x}`) as JsonBamRecord[]).concat(mappedRecords)
-                        );
-                        return [];
-                    })
-                );
-                // end the loop because we've retrieved the last chromosome
-                break;
-            }
-        }
-    }
-
-    // flatten the array of promises so that it looks like we're getting one long list of value
-    return Promise.all(recordPromises).then(values => {
-        return values.flat();
-    });
-};
-
-const fetchTilesDebounced = async (uid: string, tileIds: string[]) => {
-    const tiles: Record<string, JsonBamRecord[] & { tilePositionId: string }> = {};
-    const validTileIds: string[] = [];
-    const tilePromises: Promise<JsonBamRecord[]>[] = [];
-
-    for (const tileId of tileIds) {
-        const parts = tileId.split('.');
-        const z = parseInt(parts[0], 10);
-        const x = parseInt(parts[1], 10);
-
-        if (Number.isNaN(x) || Number.isNaN(z)) {
-            console.warn('Invalid tile zoom or position:', z, x);
+        // start of visible region
+        if (!(c.pos <= maxX && minX < extent)) {
             continue;
         }
 
-        validTileIds.push(tileId);
-        tilePromises.push(tile(uid, z, x));
+        if (maxX > extent) {
+            // the visible region extends beyond the end of this chromosome
+            // fetch from the start until the end of the chromosome
+            const region = { start: minX - c.pos, end: extent - c.pos };
+            regions.push([c, region]);
+
+            // continue onto the next chromosome
+            minX = extent;
+        } else {
+            // the end of the region is within this chromosome
+            const region = { start: Math.floor(minX - c.pos), end: Math.ceil(maxX - c.pos) };
+            regions.push([c, region]);
+
+            // end the loop because we've retrieved the last chromosome
+            break;
+        }
     }
 
-    return Promise.all(tilePromises).then(values => {
-        values.forEach((d, i) => {
-            const validTileId = validTileIds[i];
-            tiles[validTileId] = Object.assign(d, { tilePositionId: validTileId });
+    return regions;
+}
+
+const tile = async (uid: string, z: number, x: number): Promise<JsonBamRecord[]> => {
+    const tileCacheKey = `${uid}.${z}.${x}`;
+
+    let data = tileCache.get(tileCacheKey);
+
+    if (data) {
+        return data as JsonBamRecord[];
+    }
+
+    const bam = dataSources.get(uid)!;
+    if (!('max_width' in bam.tilesetInfo)) {
+        throw new Error('tilesetInfo does not include `max_width`, which is required for the Gosling BamDataFetcher.');
+    }
+
+    const recordPromises = getGenomicRegions({ x, z }, bam).map(async ([c, region]) => {
+        const records = await bam.file.getJsonRecordsForRange(c.chr, region.start, region.end, {
+            viewAsPairs: bam.options.loadMates
+            // TODO: Turning this on results in "too many requests error"
+            // https://github.com/gosling-lang/gosling.js/pull/556
+            // pairAcrossChr: typeof loadMates === 'undefined' ? false : loadMates,
         });
-        return tiles;
+        return records.map(r => ({
+            ...r,
+            // increment start/end by offset
+            start: r.start + 1 + c.pos,
+            end: r.end + 1 + c.pos
+        }));
     });
+    data = (await Promise.all(recordPromises)).flat();
+    tileCache.set(tileCacheKey, data);
+    return data;
+};
+
+function parseTileIds(ids: string[]) {
+    const parsed: [string, { z: number; x: number }][] = [];
+    for (const id of ids) {
+        const parts = id.split('.');
+        const z = parseInt(parts[0], 10);
+        const x = parseInt(parts[1], 10);
+        if (Number.isNaN(z) || Number.isNaN(x)) {
+            console.warn('Invalid tile zoom or position:', z, x);
+            continue;
+        }
+        parsed.push([id, { z, x }]);
+    }
+    return parsed;
+}
+
+const fetchTilesDebounced = async (uid: string, tileIds: string[]) => {
+    const promises = parseTileIds(tileIds).map(async ([id, { z, x }]) => {
+        const result = await tile(uid, z, x);
+        // tag each resuilt with the tileId
+        const data = result.map(t => ({ ...t, tilePositionId: id }));
+        return Promise.resolve([id, data] as const);
+    });
+    return Object.fromEntries(await Promise.all(promises));
 };
 
 const getTabularData = (uid: string, tileIds: string[]) => {
@@ -408,7 +397,7 @@ const getTabularData = (uid: string, tileIds: string[]) => {
     const allSegments: Record<string, Segment & { substitutions: string }> = {};
 
     for (const tileId of tileIds) {
-        const tileValue = tileValues.get(`${uid}.${tileId}`);
+        const tileValue = tileCache.get(`${uid}.${tileId}`);
 
         if (!tileValue) {
             continue;
