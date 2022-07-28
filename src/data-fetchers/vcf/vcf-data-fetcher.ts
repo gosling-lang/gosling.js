@@ -14,6 +14,7 @@ import type { WorkerApi, TilesetInfo, Tile } from './vcf-worker';
 const DEBOUNCE_TIME = 200;
 
 class VcfDataFetcher {
+    dataConfig = {}; // required for higlass
     uid: string;
     prevRequestTime: number;
     track?: any;
