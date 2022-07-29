@@ -55,7 +55,7 @@ export const GoslingComponent = forwardRef<GoslingRef, GoslingCompProps>((props,
     useEffect(() => {
         if (!ref || !hgRef?.current) return;
         const hgApi = hgRef.current;
-        const api = createApi(hgApi, viewConfig, trackInfos, theme);
+        const api = createApi(hgApi, viewConfig, trackInfos.current, theme);
         if (typeof ref == 'function') {
             ref({ api, hgApi });
         } else {

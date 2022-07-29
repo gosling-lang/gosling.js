@@ -1,4 +1,3 @@
-import type React from 'react';
 import * as PIXI from 'pixi.js';
 import type { TrackMouseEventData } from '@gosling.schema';
 import type { HiGlassApi } from './higlass-component-wrapper';
@@ -42,14 +41,14 @@ export interface GoslingApi {
 export function createApi(
     hg: HiGlassApi,
     hgSpec: HiGlassSpec | undefined,
-    trackInfos: React.MutableRefObject<TrackMouseEventData[]>,
+    trackInfos: TrackMouseEventData[],
     theme: Required<CompleteThemeDeep>
 ): GoslingApi {
     const getTracks = () => {
-        return trackInfos.current;
+        return trackInfos;
     };
     const getTrack = (trackId: string) => {
-        const trackInfoFound = trackInfos.current.find(d => d.id === trackId);
+        const trackInfoFound = trackInfos.find(d => d.id === trackId);
         if (!trackInfoFound) {
             console.warn(`[getTrack()] Unable to find a track using the ID (${trackId})`);
         }
