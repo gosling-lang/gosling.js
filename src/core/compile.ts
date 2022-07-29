@@ -60,5 +60,5 @@ export function compile(
     }
 
     // Make HiGlass models for individual tracks
-    createHiGlassModels(JSON.parse(JSON.stringify(specCopy)), trackInfos, callback, theme);
+    createHiGlassModels(structuredClone(specCopy), trackInfos, callback, theme);
 }
