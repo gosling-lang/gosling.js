@@ -20,7 +20,7 @@ export function compile(
     }
 ) {
     // Make sure to keep the original spec as-is
-    const specCopy = structuredClone(spec);
+    const specCopy = JSON.parse(JSON.stringify(spec));
 
     // Override default visual encoding (i.e., `DataTrack` => `BasicSingleTrack`)
     overrideDataTemplates(specCopy);
