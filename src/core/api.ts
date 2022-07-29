@@ -4,7 +4,7 @@ import type { TrackMouseEventData } from '@gosling.schema';
 import type { HiGlassApi } from './higlass-component-wrapper';
 import type { HiGlassSpec } from './higlass.schema';
 import { subscribe, unsubscribe } from './pubsub';
-import { GET_CHROM_SIZES } from './utils/assembly';
+import { GET_CHROM_SIZES, parseGenomicPosition } from './utils/assembly';
 import type { CompleteThemeDeep } from './utils/theme';
 import { traverseViewsInViewConfig } from './utils/view-config';
 
@@ -99,22 +99,22 @@ export function createApi(
                 console.warn('Genomic interval you entered is not in a correct form.');
                 return;
             }
-
             const assembly = getTrack(viewId)?.spec.assembly;
-            const chr = position.split(':')[0];
-            const info = GET_CHROM_SIZES(assembly);
-            const chrStart = info.interval?.[chr]?.[0];
-
-            if (!chr || typeof chrStart === undefined) {
+            const chromInfo = GET_CHROM_SIZES(assembly);
+            const parsed = parseGenomicPosition(position);
+            const { chromosome: chr } = parsed;
+            let { start, end } = parsed;
+            if (!chr || chromInfo.interval[chr]) {
                 console.warn('Chromosome name is not valid', chr);
                 return;
             }
-
-            const [s, e] = position.split(':')[1]?.split('-') ?? [0, GET_CHROM_SIZES(assembly).size[chr]];
-            const start = +s + chrStart - padding;
-            const end = +e + chrStart + padding;
-
-            hg.api.zoomTo(viewId, start, end, start, end, duration);
+            if (typeof start === 'undefined' || typeof end === 'undefined') {
+                // if only a chromosome name is specified, zoom to the extent of the chromosome
+                [start, end] = [0, chromInfo.size[chr]];
+            }
+            const chrOffset = chromInfo.interval[chr][0];
+            const relativeGenomicPositions = [start + chrOffset - padding, end + chrOffset + padding];
+            hg.api.zoomTo(viewId, ...relativeGenomicPositions, ...relativeGenomicPositions, duration);
         },
         zoomToExtent: (viewId, duration = 1000) => {
             const assembly = getTrack(viewId)?.spec.assembly;
