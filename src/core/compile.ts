@@ -11,7 +11,7 @@ export type CompileCallback = (hg: HiGlassSpec, size: Size, gs: GoslingSpec, tra
 
 export function compile(
     spec: GoslingSpec,
-    callback: compileCallback,
+    callback: CompileCallback,
     templates: TemplateTrackDef[],
     theme: Required<CompleteThemeDeep>,
     containerStatus: {
@@ -20,7 +20,7 @@ export function compile(
     }
 ) {
     // Make sure to keep the original spec as-is
-    const specCopy = JSON.parse(JSON.stringify(spec));
+    const specCopy = structuredClone(spec);
 
     // Override default visual encoding (i.e., `DataTrack` => `BasicSingleTrack`)
     overrideDataTemplates(specCopy);
@@ -60,5 +60,5 @@ export function compile(
     }
 
     // Make HiGlass models for individual tracks
-    createHiGlassModels(structuredClone(specCopy), trackInfos, callback, theme);
+    createHiGlassModels(specCopy, trackInfos, callback, theme);
 }

@@ -4,12 +4,12 @@ import { HiGlassModel } from './higlass-model';
 import { getLinkingInfo } from './utils/linking';
 import type { GoslingSpec, OverlaidTrack, SingleTrack, TrackMouseEventData } from './gosling.schema';
 import type { CompleteThemeDeep } from './utils/theme';
-import type { compileCallback } from './compile';
+import type { CompileCallback } from './compile';
 
 export function renderHiGlass(
     spec: GoslingSpec,
     trackInfos: TrackInfo[],
-    callback: compileCallback,
+    callback: CompileCallback,
     theme: CompleteThemeDeep
 ) {
     if (trackInfos.length === 0) {
