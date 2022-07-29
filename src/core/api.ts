@@ -102,7 +102,8 @@ export function createApi(
 
             const assembly = getTrack(viewId)?.spec.assembly;
             const chr = position.split(':')[0];
-            const chrStart = GET_CHROM_SIZES(assembly).interval?.[chr]?.[0];
+            const info = GET_CHROM_SIZES(assembly);
+            const chrStart = info.interval?.[chr]?.[0];
 
             if (!chr || typeof chrStart === undefined) {
                 console.warn('Chromosome name is not valid', chr);
