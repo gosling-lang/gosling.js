@@ -1,8 +1,9 @@
 import * as PIXI from 'pixi.js';
+import type { TrackMouseEventData } from '@gosling.schema';
 import type { HiGlassApi } from './higlass-component-wrapper';
 import type { HiGlassSpec } from './higlass.schema';
 import { subscribe, unsubscribe } from './pubsub';
-import { GET_CHROM_SIZES } from './utils/assembly';
+import { GET_CHROM_SIZES, parseGenomicPosition } from './utils/assembly';
 import type { CompleteThemeDeep } from './utils/theme';
 import { traverseViewsInViewConfig } from './utils/view-config';
 
@@ -25,6 +26,8 @@ export interface GoslingApi {
     zoomToGene(viewId: string, gene: string, padding?: number, duration?: number): void;
     suggestGene(viewId: string, keyword: string, callback: (suggestions: GeneSuggestion[]) => void): void;
     getViewIds(): string[];
+    getTracks(): TrackMouseEventData[];
+    getTrack(trackId: string): TrackMouseEventData | undefined;
     exportPng(transparentBackground?: boolean): void;
     exportPdf(transparentBackground?: boolean): void;
     getCanvas(options?: { resolution?: number; transparentBackground?: boolean }): {
@@ -38,8 +41,19 @@ export interface GoslingApi {
 export function createApi(
     hg: HiGlassApi,
     hgSpec: HiGlassSpec | undefined,
+    trackInfos: TrackMouseEventData[],
     theme: Required<CompleteThemeDeep>
 ): GoslingApi {
+    const getTracks = () => {
+        return trackInfos;
+    };
+    const getTrack = (trackId: string) => {
+        const trackInfoFound = trackInfos.find(d => d.id === trackId);
+        if (!trackInfoFound) {
+            console.warn(`[getTrack()] Unable to find a track using the ID (${trackId})`);
+        }
+        return trackInfoFound;
+    };
     const getCanvas: GoslingApi['getCanvas'] = options => {
         const resolution = options?.resolution ?? 4;
         const transparentBackground = options?.transparentBackground ?? false;
@@ -78,31 +92,32 @@ export function createApi(
     return {
         subscribe,
         unsubscribe,
-        // TODO: Support assemblies (we can infer this from the spec)
         zoomTo: (viewId, position, padding = 0, duration = 1000) => {
             // Accepted input: 'chr1' or 'chr1:1-1000'
             if (!position.includes('chr')) {
                 console.warn('Genomic interval you entered is not in a correct form.');
                 return;
             }
-
-            const chr = position.split(':')[0];
-            const chrStart = GET_CHROM_SIZES().interval?.[chr]?.[0];
-
-            if (!chr || typeof chrStart === undefined) {
+            const assembly = getTrack(viewId)?.spec.assembly;
+            const chromInfo = GET_CHROM_SIZES(assembly);
+            const parsed = parseGenomicPosition(position);
+            const { chromosome: chr } = parsed;
+            let { start, end } = parsed;
+            if (!chr || chromInfo.interval[chr]) {
                 console.warn('Chromosome name is not valid', chr);
                 return;
             }
-
-            const [s, e] = position.split(':')[1]?.split('-') ?? [0, GET_CHROM_SIZES().size[chr]];
-            const start = +s + chrStart - padding;
-            const end = +e + chrStart + padding;
-
-            hg.api.zoomTo(viewId, start, end, start, end, duration);
+            if (typeof start === 'undefined' || typeof end === 'undefined') {
+                // if only a chromosome name is specified, zoom to the extent of the chromosome
+                [start, end] = [0, chromInfo.size[chr]];
+            }
+            const chrOffset = chromInfo.interval[chr][0];
+            const relativeGenomicPositions = [start + chrOffset - padding, end + chrOffset + padding];
+            hg.api.zoomTo(viewId, ...relativeGenomicPositions, ...relativeGenomicPositions, duration);
         },
-        // TODO: Support assemblies (we can infer this from the spec)
         zoomToExtent: (viewId, duration = 1000) => {
-            const [start, end] = [0, GET_CHROM_SIZES().total];
+            const assembly = getTrack(viewId)?.spec.assembly;
+            const [start, end] = [0, GET_CHROM_SIZES(assembly).total];
             hg.api.zoomTo(viewId, start, end, start, end, duration);
         },
         zoomToGene: (viewId, gene, padding = 0, duration = 1000) => {
@@ -119,7 +134,9 @@ export function createApi(
             });
             return ids;
         },
-        getCanvas: getCanvas,
+        getTracks,
+        getTrack,
+        getCanvas,
         exportPng: transparentBackground => {
             const { canvas } = getCanvas({ resolution: 4, transparentBackground });
             canvas.toBlob(blob => {

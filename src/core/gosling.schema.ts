@@ -281,7 +281,7 @@ interface CircularTrackShape {
 }
 
 /** The information for a track mouse event */
-type TrackMouseEventData = {
+export type TrackMouseEventData = {
     /** ID of a source track, i.e., `track.id` */
     id: string;
 

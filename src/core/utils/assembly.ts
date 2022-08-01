@@ -138,3 +138,9 @@ export function getChromInterval(chromSize: { [k: string]: number }) {
 export function getChromTotalSize(chromSize: { [k: string]: number }) {
     return Object.values(chromSize).reduce((sum, current) => sum + current, 0);
 }
+
+export function parseGenomicPosition(position: string): { chromosome: string; start?: number; end?: number } {
+    const [chromosome, intervalString] = position.split(':');
+    const [start, end] = intervalString.split('-').map(s => +s.replaceAll(',', ''));
+    return { chromosome, start, end };
+}

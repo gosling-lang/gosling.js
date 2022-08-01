@@ -1,4 +1,4 @@
-import type { GoslingSpec, TemplateTrackDef } from './gosling.schema';
+import type { GoslingSpec, TemplateTrackDef, TrackMouseEventData } from './gosling.schema';
 import type { HiGlassSpec } from './higlass.schema';
 import { traverseToFixSpecDownstream, overrideDataTemplates } from './utils/spec-preprocess';
 import { replaceTrackTemplates } from './utils/template';
@@ -7,9 +7,11 @@ import type { CompleteThemeDeep } from './utils/theme';
 import { renderHiGlass as createHiGlassModels } from './create-higlass-models';
 import { manageResponsiveSpecs } from './responsive';
 
+export type CompileCallback = (hg: HiGlassSpec, size: Size, gs: GoslingSpec, trackInfos: TrackMouseEventData[]) => void;
+
 export function compile(
     spec: GoslingSpec,
-    setHg: (hg: HiGlassSpec, size: Size, gs: GoslingSpec) => void,
+    callback: CompileCallback,
     templates: TemplateTrackDef[],
     theme: Required<CompleteThemeDeep>,
     containerStatus: {
@@ -58,5 +60,5 @@ export function compile(
     }
 
     // Make HiGlass models for individual tracks
-    createHiGlassModels(JSON.parse(JSON.stringify(specCopy)), trackInfos, setHg, theme);
+    createHiGlassModels(specCopy, trackInfos, callback, theme);
 }
