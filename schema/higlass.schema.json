@@ -70,8 +70,7 @@
         "height": {
           "type": "number"
         },
-        "options": {
-        },
+        "options": {},
         "position": {
           "type": "string"
         },
@@ -99,8 +98,7 @@
           "$ref": "#/definitions/Assembly"
         },
         "children": {
-          "items": {
-          },
+          "items": {},
           "type": "array"
         },
         "filter": {
@@ -109,10 +107,8 @@
           },
           "type": "array"
         },
-        "tiles": {
-        },
-        "tilesetInfo": {
-        },
+        "tiles": {},
+        "tilesetInfo": {},
         "type": {
           "type": "string"
         },
@@ -140,8 +136,7 @@
         "height": {
           "type": "number"
         },
-        "options": {
-        },
+        "options": {},
         "server": {
           "type": "string"
         },
@@ -254,8 +249,7 @@
         "locksByViewUid": {
           "$ref": "#/definitions/LocksByViewUid"
         },
-        "locksDict": {
-        }
+        "locksDict": {}
       },
       "required": [
         "locksByViewUid",
@@ -297,8 +291,7 @@
         "height": {
           "type": "number"
         },
-        "options": {
-        },
+        "options": {},
         "position": {
           "type": "string"
         },
@@ -410,8 +403,7 @@
         "fromViewUid": {
           "type": "null"
         },
-        "options": {
-        },
+        "options": {},
         "projectionXDomain": {
           "items": {
             "type": "number"
@@ -425,8 +417,7 @@
           "type": "array"
         },
         "transforms": {
-          "items": {
-          },
+          "items": {},
           "type": "array"
         },
         "type": {
@@ -532,8 +523,7 @@
           "type": "string"
         },
         "includes": {
-          "items": {
-          },
+          "items": {},
           "type": "array"
         },
         "options": {
@@ -552,8 +542,7 @@
       "additionalProperties": false,
       "properties": {
         "extent": {
-          "items": {
-          },
+          "items": {},
           "type": "array"
         },
         "fill": {
@@ -574,8 +563,7 @@
         "outlinePos": {
           "anyOf": [
             {
-              "items": {
-              },
+              "items": {},
               "type": "array"
             },
             {
@@ -595,8 +583,7 @@
         "strokePos": {
           "anyOf": [
             {
-              "items": {
-              },
+              "items": {},
               "type": "array"
             },
             {
@@ -719,8 +706,7 @@
         "locksByViewUid": {
           "$ref": "#/definitions/LocksByViewUid"
         },
-        "locksDict": {
-        }
+        "locksDict": {}
       },
       "required": [
         "locksByViewUid"
@@ -776,20 +762,12 @@
           "type": "boolean"
         },
         "zoomLimits": {
-          "items": [
-            {
-              "type": [
-                "number",
-                "null"
-              ]
-            },
-            {
-              "type": [
-                "number",
-                "null"
-              ]
-            }
-          ],
+          "items": {
+            "type": [
+              "number",
+              "null"
+            ]
+          },
           "maxItems": 2,
           "minItems": 2,
           "type": "array"

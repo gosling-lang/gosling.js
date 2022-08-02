@@ -119,6 +119,23 @@ const CRHOM_SIZES: { [assembly: string]: ChromSize } = Object.freeze({
 });
 
 /**
+ * Some presets of auto-complete IDs (`autocompleteId`) to search for genes using the HiGlass server.
+ */
+export function getAutoCompleteId(assembly?: Assembly) {
+    switch (assembly) {
+        case 'hg19':
+            return 'OHJakQICQD6gTD7skx4EWA';
+        case 'mm10':
+            return 'QDutvmyiSrec5nX4pA5WGQ';
+        case 'mm9':
+            return 'GUm5aBiLRCyz2PsBea7Yzg';
+        case 'hg38':
+        default:
+            return 'P0PLbQMwTYGy-5uPIQid7A';
+    }
+}
+
+/**
  * Calculate cumulative interval of each chromosome.
  */
 export function getChromInterval(chromSize: { [k: string]: number }) {
