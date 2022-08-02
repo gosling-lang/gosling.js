@@ -2,6 +2,16 @@
   "$ref": "#/definitions/TemplateTrackDef",
   "$schema": "http://json-schema.org/draft-07/schema#",
   "definitions": {
+    "Aggregate": {
+      "enum": [
+        "max",
+        "min",
+        "mean",
+        "bin",
+        "count"
+      ],
+      "type": "string"
+    },
     "Assembly": {
       "anyOf": [
         {
@@ -54,8 +64,385 @@
     "ChannelWithBase": {
       "anyOf": [
         {
+          "additionalProperties": false,
+          "properties": {
+            "aggregate": {
+              "$ref": "#/definitions/Aggregate",
+              "description": "Specify how to aggregate data. __Default__: `undefined`"
+            },
+            "axis": {
+              "$ref": "#/definitions/AxisPosition",
+              "description": "Specify where should the axis be put"
+            },
+            "base": {
+              "type": "string"
+            },
+            "domain": {
+              "$ref": "#/definitions/GenomicDomain",
+              "description": "Values of the data"
+            },
+            "field": {
+              "description": "Name of the data field.",
+              "type": "string"
+            },
+            "grid": {
+              "description": "Whether to display grid. __Default__: `false`",
+              "type": "boolean"
+            },
+            "legend": {
+              "description": "Whether to display legend. __Default__: `false`",
+              "type": "boolean"
+            },
+            "linkingId": {
+              "description": "Users need to assign a unique linkingId for [linking views](/docs/user-interaction#linking-views) and [Brushing and Linking](/docs/user-interaction#brushing-and-linking)",
+              "type": "string"
+            },
+            "range": {
+              "$ref": "#/definitions/ValueExtent",
+              "description": "Values of the visual channel."
+            },
+            "type": {
+              "const": "genomic",
+              "description": "Specify the data type.",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "aggregate": {
+              "$ref": "#/definitions/Aggregate",
+              "description": "Specify how to aggregate data. __Default__: `undefined`"
+            },
+            "axis": {
+              "$ref": "#/definitions/AxisPosition",
+              "description": "Specify where should the axis be put"
+            },
+            "base": {
+              "type": "string"
+            },
+            "baseline": {
+              "description": "Custom baseline of the y-axis. __Default__: `0`",
+              "type": [
+                "string",
+                "number"
+              ]
+            },
+            "domain": {
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/ValueExtent"
+                },
+                {
+                  "$ref": "#/definitions/GenomicDomain"
+                }
+              ],
+              "description": "Values of the data"
+            },
+            "field": {
+              "description": "Name of the data field.",
+              "type": "string"
+            },
+            "flip": {
+              "description": "Whether to flip the y-axis. This is done by inverting the `range` property. __Default__: `false`",
+              "type": "boolean"
+            },
+            "grid": {
+              "description": "Whether to display grid. __Default__: `false`",
+              "type": "boolean"
+            },
+            "legend": {
+              "description": "Whether to display legend. __Default__: `false`",
+              "type": "boolean"
+            },
+            "linkingId": {
+              "description": "Users need to assign a unique linkingId for [linking views](/docs/user-interaction#linking-views) and [Brushing and Linking](/docs/user-interaction#brushing-and-linking)",
+              "type": "string"
+            },
+            "range": {
+              "$ref": "#/definitions/ValueExtent",
+              "description": "Values of the visual channel."
+            },
+            "type": {
+              "description": "Specify the data type.",
+              "enum": [
+                "quantitative",
+                "nominal",
+                "genomic"
+              ],
+              "type": "string"
+            },
+            "zeroBaseline": {
+              "description": "Specify whether to use zero baseline. __Default__: `true`",
+              "type": "boolean"
+            }
+          },
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
           "properties": {
             "base": {
+              "type": "string"
+            },
+            "clip": {
+              "description": "Clip row when the actual y value exceeds the max value of the y scale. Used only for bar marks at the moment. __Default__: `true`",
+              "type": "boolean"
+            },
+            "domain": {
+              "$ref": "#/definitions/ValueExtent",
+              "description": "Values of the data"
+            },
+            "field": {
+              "description": "Name of the data field",
+              "type": "string"
+            },
+            "grid": {
+              "description": "Whether to display grid. __Default__: `false`",
+              "type": "boolean"
+            },
+            "legend": {
+              "description": "Whether to display legend. __Default__: `false`",
+              "type": "boolean"
+            },
+            "padding": {
+              "description": "Determines the size of inner white spaces on the top and bottom of individiual rows. __Default__: `0`",
+              "type": "number"
+            },
+            "range": {
+              "$ref": "#/definitions/ValueExtent",
+              "description": "Determine the start and end position of rendering area of this track along vertical axis. __Default__: `[0, height]`"
+            },
+            "type": {
+              "const": "nominal",
+              "description": "Specify the data type",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "base": {
+              "type": "string"
+            },
+            "domain": {
+              "$ref": "#/definitions/ValueExtent",
+              "description": "Values of the data"
+            },
+            "field": {
+              "description": "Name of the data field",
+              "type": "string"
+            },
+            "legend": {
+              "description": "Whether to display legend. __Default__: `false`",
+              "type": "boolean"
+            },
+            "range": {
+              "$ref": "#/definitions/Range",
+              "description": "Determine the colors that should be bound to data value. Default properties are determined considering the field type."
+            },
+            "scale": {
+              "enum": [
+                "linear",
+                "log"
+              ],
+              "type": "string"
+            },
+            "scaleOffset": {
+              "description": "Whether to use offset of the domain proportionally. This is bound to brushes on the color legend. __Default__: `[0, 1]`",
+              "items": {
+                "type": "number"
+              },
+              "maxItems": 2,
+              "minItems": 2,
+              "type": "array"
+            },
+            "title": {
+              "description": "Title of the legend. __Default__: `undefined`",
+              "type": "string"
+            },
+            "type": {
+              "description": "Specify the data type",
+              "enum": [
+                "quantitative",
+                "nominal"
+              ],
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "base": {
+              "type": "string"
+            },
+            "domain": {
+              "$ref": "#/definitions/ValueExtent",
+              "description": "Values of the data"
+            },
+            "field": {
+              "description": "Name of the data field",
+              "type": "string"
+            },
+            "legend": {
+              "description": "not supported: Whether to display legend. __Default__: `false`",
+              "type": "boolean"
+            },
+            "range": {
+              "$ref": "#/definitions/ValueExtent",
+              "description": "Ranges of visual channel values"
+            },
+            "type": {
+              "description": "Specify the data type",
+              "enum": [
+                "quantitative",
+                "nominal"
+              ],
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "base": {
+              "type": "string"
+            },
+            "domain": {
+              "$ref": "#/definitions/ValueExtent",
+              "description": "Values of the data"
+            },
+            "field": {
+              "description": "Name of the data field",
+              "type": "string"
+            },
+            "legend": {
+              "description": "Whether to display legend. __Default__: `false`",
+              "type": "boolean"
+            },
+            "range": {
+              "$ref": "#/definitions/Range",
+              "description": "Ranges of visual channel values"
+            },
+            "scaleOffset": {
+              "description": "Whether to use offset of the domain proportionally. This is bound to brushes on the color legend. __Default__: `[0, 1]`",
+              "items": {
+                "type": "number"
+              },
+              "maxItems": 2,
+              "minItems": 2,
+              "type": "array"
+            },
+            "title": {
+              "description": "Title of the legend. __Default__: `undefined`",
+              "type": "string"
+            },
+            "type": {
+              "description": "Specify the data type",
+              "enum": [
+                "quantitative",
+                "nominal"
+              ],
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "base": {
+              "type": "string"
+            },
+            "domain": {
+              "$ref": "#/definitions/ValueExtent",
+              "description": "Values of the data"
+            },
+            "field": {
+              "description": "Name of the data field",
+              "type": "string"
+            },
+            "range": {
+              "$ref": "#/definitions/ValueExtent",
+              "description": "Ranges of visual channel values"
+            },
+            "type": {
+              "description": "Specify the data type",
+              "enum": [
+                "quantitative",
+                "nominal"
+              ],
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "base": {
+              "type": "string"
+            },
+            "domain": {
+              "$ref": "#/definitions/ValueExtent",
+              "description": "Values of the data"
+            },
+            "field": {
+              "description": "Name of the data field",
+              "type": "string"
+            },
+            "range": {
+              "$ref": "#/definitions/ValueExtent",
+              "description": "Ranges of visual channel values"
+            },
+            "type": {
+              "description": "Specify the data type",
+              "enum": [
+                "quantitative",
+                "nominal"
+              ],
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "base": {
+              "type": "string"
+            },
+            "domain": {
+              "description": "Values of the data",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "field": {
+              "description": "Name of the data field",
+              "type": "string"
+            },
+            "range": {
+              "description": "Ranges of visual channel values",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "type": {
+              "description": "Specify the data type",
+              "enum": [
+                "quantitative",
+                "nominal"
+              ],
               "type": "string"
             }
           },
@@ -468,14 +855,9 @@
           "description": "If specified, only showing a certain interval in a chromosome."
         },
         "interval": {
-          "items": [
-            {
-              "type": "number"
-            },
-            {
-              "type": "number"
-            }
-          ],
+          "items": {
+            "type": "number"
+          },
           "maxItems": 2,
           "minItems": 2,
           "type": "array"
@@ -487,19 +869,38 @@
       ],
       "type": "object"
     },
+    "DomainGene": {
+      "additionalProperties": false,
+      "properties": {
+        "gene": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "items": {
+                "type": "string"
+              },
+              "maxItems": 2,
+              "minItems": 2,
+              "type": "array"
+            }
+          ]
+        }
+      },
+      "required": [
+        "gene"
+      ],
+      "type": "object"
+    },
     "DomainInterval": {
       "additionalProperties": false,
       "properties": {
         "interval": {
           "description": "Show a certain interval within entire chromosome",
-          "items": [
-            {
-              "type": "number"
-            },
-            {
-              "type": "number"
-            }
-          ],
+          "items": {
+            "type": "number"
+          },
           "maxItems": 2,
           "minItems": 2,
           "type": "array"
@@ -551,6 +952,22 @@
         "quantitative"
       ],
       "type": "string"
+    },
+    "GenomicDomain": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/DomainInterval"
+        },
+        {
+          "$ref": "#/definitions/DomainChrInterval"
+        },
+        {
+          "$ref": "#/definitions/DomainChr"
+        },
+        {
+          "$ref": "#/definitions/DomainGene"
+        }
+      ]
     },
     "LogBase": {
       "anyOf": [
@@ -605,6 +1022,30 @@
         "vertical"
       ],
       "type": "string"
+    },
+    "PredefinedColors": {
+      "enum": [
+        "viridis",
+        "grey",
+        "spectral",
+        "warm",
+        "cividis",
+        "bupu",
+        "rdbu",
+        "hot",
+        "pink"
+      ],
+      "type": "string"
+    },
+    "Range": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/ValueExtent"
+        },
+        {
+          "$ref": "#/definitions/PredefinedColors"
+        }
+      ]
     },
     "SizeVisibilityCondition": {
       "additionalProperties": false,
@@ -713,14 +1154,9 @@
         },
         "dashed": {
           "description": "Specify the pattern of dashes and gaps for `rule` marks.",
-          "items": [
-            {
-              "type": "number"
-            },
-            {
-              "type": "number"
-            }
-          ],
+          "items": {
+            "type": "number"
+          },
           "maxItems": 2,
           "minItems": 2,
           "type": "array"
@@ -1098,6 +1534,22 @@
       ],
       "type": "object"
     },
+    "ValueExtent": {
+      "anyOf": [
+        {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        {
+          "items": {
+            "type": "number"
+          },
+          "type": "array"
+        }
+      ]
+    },
     "VisibilityCondition": {
       "anyOf": [
         {
@@ -1150,20 +1602,12 @@
       "type": "object"
     },
     "ZoomLimits": {
-      "items": [
-        {
-          "type": [
-            "number",
-            "null"
-          ]
-        },
-        {
-          "type": [
-            "number",
-            "null"
-          ]
-        }
-      ],
+      "items": {
+        "type": [
+          "number",
+          "null"
+        ]
+      },
       "maxItems": 2,
       "minItems": 2,
       "type": "array"

@@ -5,7 +5,7 @@ import type { Assembly, AxisPosition, Domain, Orientation, ZoomLimits } from './
 import { getNumericDomain } from './utils/scales';
 import type { RelativePosition } from './utils/bounding-box';
 import { validateSpec } from './utils/validate';
-import { GET_CHROM_SIZES } from './utils/assembly';
+import { getAutoCompleteId, GET_CHROM_SIZES } from './utils/assembly';
 import type { CompleteThemeDeep } from './utils/theme';
 import exampleHg from './example/hg-view-config-1';
 import { insertItemToArray } from './utils/array';
@@ -17,7 +17,7 @@ const getViewTemplate = (assembly?: Assembly) => {
         genomePositionSearchBoxVisible: false,
         genomePositionSearchBox: {
             autocompleteServer: 'https://higlass.io/api/v1',
-            autocompleteId: 'P0PLbQMwTYGy-5uPIQid7A',
+            autocompleteId: getAutoCompleteId(assembly),
             chromInfoServer: 'https://higlass.io/api/v1',
             chromInfoId: assembly ?? 'hg38'
         },
