@@ -185,7 +185,8 @@ function traverseAndCollectTrackInfo(
     const numTracksBeforeInsert = output.length;
 
     if ('tracks' in spec) {
-        const tracks = spec.tracks as Track[];
+        // following `traverseToFixSpecDownstream`, the width and height of each track are gaurenteed to be defined
+        const tracks = spec.tracks as (Track & { width: number; height: number })[];
 
         if (spec.orientation === 'vertical') {
             // This is a vertical view, so use the largest `height` of the tracks for this view.

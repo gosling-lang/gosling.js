@@ -714,9 +714,7 @@
         }
       },
       "required": [
-        "data",
-        "height",
-        "width"
+        "data"
       ],
       "type": "object"
     },
@@ -1835,9 +1833,7 @@
           },
           "required": [
             "alignment",
-            "height",
-            "tracks",
-            "width"
+            "tracks"
           ],
           "type": "object"
         },
@@ -4540,9 +4536,7 @@
         }
       },
       "required": [
-        "height",
-        "overlay",
-        "width"
+        "overlay"
       ],
       "type": "object"
     },
@@ -4899,9 +4893,7 @@
       },
       "required": [
         "alignment",
-        "tracks",
-        "width",
-        "height"
+        "tracks"
       ],
       "type": "object"
     },
@@ -6073,9 +6065,7 @@
       },
       "required": [
         "data",
-        "height",
-        "mark",
-        "width"
+        "mark"
       ],
       "type": "object"
     },
@@ -6826,9 +6816,7 @@
           },
           "required": [
             "alignment",
-            "height",
-            "tracks",
-            "width"
+            "tracks"
           ],
           "type": "object"
         },
@@ -8690,10 +8678,8 @@
         }
       },
       "required": [
-        "data",
-        "height",
         "template",
-        "width"
+        "data"
       ],
       "type": "object"
     },

@@ -969,7 +969,7 @@ function GoslingTrack(HGC: import('@higlass/types').HGC, ...args: any[]): any {
                 // Replace width and height information with the actual values for responsive encoding
                 const axisSize = IsXAxis(resolved) ? HIGLASS_AXIS_SIZE : 0; // Why the axis size must be added here?
                 const [w, h] = [trackWidth, trackHeight + axisSize];
-                const circularFactor = Math.min(w, h) / Math.min(resolved.width, resolved.height);
+                const circularFactor = Math.min(w, h) / Math.min(resolved.width!, resolved.height!);
                 if (resolved.innerRadius) {
                     resolved.innerRadius = resolved.innerRadius * circularFactor;
                 }
