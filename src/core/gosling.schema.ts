@@ -100,7 +100,7 @@ export interface CommonViewDef {
      * The size of the gap (1) between tracks, (2) between views, and (3) of the origin of circular tracks.
      * The effect of this property depends on where on the spec you specify the `spacing`.
      *
-     * In a linear layout, this value is used in pixels, 
+     * In a linear layout, this value is used in pixels,
      * while in a circular layout, this value is used relative to the height of the tracks or views.
      */
     spacing?: number;

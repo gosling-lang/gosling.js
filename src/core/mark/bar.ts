@@ -173,7 +173,7 @@ export function drawBar(trackInfo: any, tile: any, model: GoslingTrackModel) {
                 const alphaTransition = model.markVisibility(d, { width: barWidth, zoomLevel });
                 const actualOpacity = Math.min(alphaTransition, opacity);
 
-                if (actualOpacity === 0 || barWidth === 0 || y === 0) {
+                if (actualOpacity === 0 || barWidth === 0 || ye - ys === 0) {
                     // do not draw invisible marks
                     return;
                 }
