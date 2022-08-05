@@ -97,9 +97,11 @@ export interface CommonViewDef {
     orientation?: Orientation;
 
     /**
-     * - If `{"layout": "linear"}`, specify the space between tracks in pixels;
+     * The size of the gap (1) between tracks, (2) between views, and (3) of the origin of circular tracks.
+     * The effect of this property depends on where on the spec you specify the `spacing`.
      *
-     * - If `{"layout": "circular"}`, specify the space between tracks in percentage ranging from 0 to 100.
+     * In a linear layout, this value is used in pixels, 
+     * while in a circular layout, this value is used relative to the height of the tracks or views.
      */
     spacing?: number;
     /** Whether to disable [Zooming and Panning](http://gosling-lang.org/docs/user-interaction#zooming-and-panning),
