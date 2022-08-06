@@ -260,7 +260,7 @@ const bamFileCache: Map<string, BamFile> = new Map();
 const MAX_TILES = 20;
 const tileValues = new QuickLRU<string, JsonBamRecord[] | { error: string }>({ maxSize: MAX_TILES });
 
-const init = (
+const init = async (
     uid: string,
     bam: { url: string; indexUrl: string },
     chromSizes: ChromSizes,
@@ -268,6 +268,7 @@ const init = (
 ) => {
     if (!bamFileCache.has(bam.url)) {
         const bamFile = BamFile.fromUrl(bam.url, bam.indexUrl);
+        await bamFile.getHeader(); // reads bam/bai headers
         bamFileCache.set(bam.url, bamFile);
     }
     const bamFile = bamFileCache.get(bam.url)!;
