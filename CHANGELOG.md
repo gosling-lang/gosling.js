@@ -1,3 +1,24 @@
+## [0.9.22](https://github.com/gosling-lang/gosling.js/compare/v0.9.21...v0.9.22) (2022-08-06)
+
+
+### Bug Fixes
+
+* correctly infer relative genomic positions in tooltip using assembly ([#770](https://github.com/gosling-lang/gosling.js/issues/770)) ([a81be97](https://github.com/gosling-lang/gosling.js/commit/a81be97e9bc1f1ef0516b8b7a8d3b37effe73eea))
+* **editor:** use correct field names in circos example ([#772](https://github.com/gosling-lang/gosling.js/issues/772)) ([29bb840](https://github.com/gosling-lang/gosling.js/commit/29bb8407c7d6fbbe8db60f09f8d37d610d2f0e89))
+* use consistent letter case for data types (e.g., `JSONData` → `JsonData`) ([#773](https://github.com/gosling-lang/gosling.js/issues/773)) ([4fa101d](https://github.com/gosling-lang/gosling.js/commit/4fa101da068904f98182dd14212dd40cb92f355f))
+
+
+### Features
+
+* **api:** capture mouseover event on a track; click event on a linear track ([#774](https://github.com/gosling-lang/gosling.js/issues/774)) ([21edf06](https://github.com/gosling-lang/gosling.js/commit/21edf06b4abdd2f6adcca8d323664147d876ca96))
+* **api:** get track information; correctly use assembly in zoom APIs ([#777](https://github.com/gosling-lang/gosling.js/issues/777)) ([e4c3d1f](https://github.com/gosling-lang/gosling.js/commit/e4c3d1fc4dab6289ea64e83cc9b7234403236cd3))
+* enable using custom assembly by specifying chrom sizes ([#776](https://github.com/gosling-lang/gosling.js/issues/776)) ([b08334a](https://github.com/gosling-lang/gosling.js/commit/b08334a236d10be804ffd384d0582292fbfcbecb))
+* make `column`, `position`, `row` properties optional for `bigwig`, `vector`, and `multivec` ([#769](https://github.com/gosling-lang/gosling.js/issues/769)) ([978a2b3](https://github.com/gosling-lang/gosling.js/commit/978a2b38c454ab991302b75938fc6d8924fc677d))
+* make `width` and `height` of track optional ([#779](https://github.com/gosling-lang/gosling.js/issues/779)) ([a52d969](https://github.com/gosling-lang/gosling.js/commit/a52d969d1fdde22ed97d7d9a1d97e46d2ef5fcc8))
+* run pre-commit hooks in parallel ([#784](https://github.com/gosling-lang/gosling.js/issues/784)) ([edefd8e](https://github.com/gosling-lang/gosling.js/commit/edefd8e8897684f7a36420d451540ccf539f9d65))
+
+
+
 ## [0.9.21](https://github.com/gosling-lang/gosling.js/compare/v0.9.20...v0.9.21) (2022-07-14)
 
 
