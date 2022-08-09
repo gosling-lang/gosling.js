@@ -1,32 +1,24 @@
+import { createNanoEvents, Emitter } from 'nanoevents';
 import type * as D3Selection from 'd3-selection';
 import type * as D3Drag from 'd3-drag';
 import type { EventStyle } from '@gosling.schema';
 
 const HIDDEN_BRUSH_EDGE_SIZE = 3;
 
-export type LinearBrushData = [LinearBrushBodyData, LinearBrushStartEdgeData, LinearBrushEndEdgeData];
-
-export interface LinearBrushDataCommon {
+interface Interval {
     start: number;
     end: number;
 }
 
-export interface LinearBrushBodyData extends LinearBrushDataCommon {
-    type: 'body';
-    cursor: 'grab';
-}
+type LinearBrushData = [
+    { type: 'body'; cursor: 'grab' } & Interval,
+    { type: 'start'; cursor: 'ew-resize' } & Interval,
+    { type: 'end'; cursor: 'ew-resize' } & Interval
+];
 
-export interface LinearBrushStartEdgeData extends LinearBrushDataCommon {
-    type: 'start';
-    cursor: 'ew-resize';
+interface LinearBrushEvents {
+    brush: (range: [number, number] | null, skipApiTrigger: boolean) => void;
 }
-
-export interface LinearBrushEndEdgeData extends LinearBrushDataCommon {
-    type: 'end';
-    cursor: 'ew-resize';
-}
-
-export type OnBrushCallbackFn = (start: number, end: number) => void;
 
 // default styles for brush
 const BRUSH_STYLE_DEFAULT: Required<Omit<EventStyle, 'arrange'>> = {
@@ -63,15 +55,14 @@ export class LinearBrushModel {
         d3Drag: typeof D3Drag;
     };
 
-    /* A function that is called every time when the brush has been updated */
-    private onBrush: (range: [number, number] | null, skipApiTrigger: boolean) => void;
+    private emitter: Emitter<LinearBrushEvents>;
 
     constructor(
         selection: D3Selection.Selection<SVGGElement, unknown, HTMLElement, unknown>,
         hgLibraries: any,
-        onBrush: (range: [number, number] | null, skipApiTrigger: boolean) => void,
         style: EventStyle = {}
     ) {
+        this.emitter = createNanoEvents<LinearBrushEvents>();
         this.range = null;
         this.prevExtent = [0, 0];
         this.data = this.rangeToData(0, 0);
@@ -93,8 +84,6 @@ export class LinearBrushModel {
             .append('rect')
             .attr('class', 'genomic-range-brush')
             .call(this.onDrag());
-
-        this.onBrush = onBrush;
     }
 
     public getRange() {
@@ -147,8 +136,7 @@ export class LinearBrushModel {
             .attr('stroke-opacity', d => (d.type === 'body' ? this.style.strokeOpacity : 0))
             .attr('cursor', d => d.cursor);
 
-        this.onBrush(this.getRange(), skipApiTrigger);
-
+        this.emitter.emit('brush', this.getRange(), skipApiTrigger);
         return this;
     }
 
@@ -236,5 +224,9 @@ export class LinearBrushModel {
             .drag<SVGRectElement, LinearBrushData[number]>()
             .on('start', started)
             .on('drag', dragged);
+    }
+
+    on<E extends keyof LinearBrushEvents>(event: E, callback: LinearBrushEvents[E]) {
+        this.emitter.on(event, callback);
     }
 }
