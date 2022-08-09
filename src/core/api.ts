@@ -94,10 +94,6 @@ export function createApi(
         unsubscribe,
         zoomTo: (viewId, position, padding = 0, duration = 1000) => {
             // Accepted input: 'chr1' or 'chr1:1-1000'
-            if (!position.includes('chr')) {
-                console.warn('Genomic interval you entered is not in a correct form.');
-                return;
-            }
             const assembly = getTrack(viewId)?.spec.assembly;
             const chromInfo = GET_CHROM_SIZES(assembly);
             const parsed = parseGenomicPosition(position);
