@@ -158,6 +158,12 @@ export function getChromTotalSize(chromSize: { [k: string]: number }) {
 
 export function parseGenomicPosition(position: string): { chromosome: string; start?: number; end?: number } {
     const [chromosome, intervalString] = position.split(':');
-    const [start, end] = intervalString.split('-').map(s => +s.replaceAll(',', ''));
-    return { chromosome, start, end };
+    if (intervalString) {
+        const [start, end] = intervalString.split('-').map(s => +s.replaceAll(',', ''));
+        // only return if both are valid
+        if (!Number.isNaN(start) && !Number.isNaN(end)) {
+            return { chromosome, start, end };
+        }
+    }
+    return { chromosome };
 }
