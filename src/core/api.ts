@@ -99,7 +99,7 @@ export function createApi(
             const parsed = parseGenomicPosition(position);
             const { chromosome: chr } = parsed;
             let { start, end } = parsed;
-            if (!chr || chromInfo.interval[chr]) {
+            if (!chr || !chromInfo.interval[chr]) {
                 console.warn('Chromosome name is not valid', chr);
                 return;
             }

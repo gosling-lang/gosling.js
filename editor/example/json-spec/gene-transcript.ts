@@ -3,7 +3,7 @@ import { GOSLING_PUBLIC_DATA } from './gosling-data';
 
 export const EX_SPEC_GENE_TRANSCRIPT: GoslingSpec = {
     alignment: 'overlay',
-    xDomain: { chromosome: '3', interval: [142500000, 143000000] },
+    xDomain: { chromosome: 'chr3', interval: [142500000, 143000000] },
     data: {
         url: GOSLING_PUBLIC_DATA.transcript,
         type: 'beddb',

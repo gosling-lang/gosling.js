@@ -15,7 +15,7 @@ export const EX_SPEC_LINKING: GoslingSpec = {
                     spacing: 5,
                     static: true,
                     layout: 'circular',
-                    xDomain: { chromosome: '1' },
+                    xDomain: { chromosome: 'chr1' },
                     alignment: 'overlay',
                     tracks: [
                         { mark: 'bar' },
@@ -42,7 +42,7 @@ export const EX_SPEC_LINKING: GoslingSpec = {
                 },
                 {
                     layout: 'linear',
-                    xDomain: { chromosome: '1' },
+                    xDomain: { chromosome: 'chr1' },
                     alignment: 'overlay',
                     tracks: [
                         { mark: 'bar' },
@@ -71,7 +71,7 @@ export const EX_SPEC_LINKING: GoslingSpec = {
         },
         {
             layout: 'linear',
-            xDomain: { chromosome: '1', interval: [160000000, 200000000] },
+            xDomain: { chromosome: 'chr1', interval: [160000000, 200000000] },
             linkingId: 'detail',
             tracks: [
                 {

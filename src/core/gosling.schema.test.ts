@@ -16,7 +16,7 @@ describe('gosling schema should be checked correctly', () => {
         expect(IsChannelValue({ value: 1 } as Channel)).toBe(true);
         expect(IsChannelValue({ field: 'x' } as Channel)).toBe(false);
         expect(IsDataDeepTileset({ type: 'multivec', url: '', column: 'c', row: 'r', value: 'v' })).toBe(true);
-        expect(IsDomainChrInterval({ chromosome: '1', interval: [1, 1000] })).toBe(true);
+        expect(IsDomainChrInterval({ chromosome: 'chr1', interval: [1, 1000] })).toBe(true);
     });
 
     it('Should properly retreive values from data with channel spec', () => {

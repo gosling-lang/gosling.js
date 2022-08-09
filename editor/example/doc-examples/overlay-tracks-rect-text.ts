@@ -110,7 +110,7 @@ export const OVERLAY_TRACKS_RECT_TEXT: GoslingSpec = {
                 field: 'chromStart',
                 type: 'genomic',
                 domain: {
-                    chromosome: '1'
+                    chromosome: 'chr1'
                 },
                 axis: 'top'
             },

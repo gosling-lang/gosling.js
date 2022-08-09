@@ -12,7 +12,7 @@ describe('Should produce higlass model correctly', () => {
     it('Should set domain correctly', () => {
         const higlass = new HiGlassModel();
         higlass.addDefaultView(uuid.v1());
-        higlass.setDomain({ chromosome: '2' }, { chromosome: '2', interval: [100, 200] });
+        higlass.setDomain({ chromosome: 'chr2' }, { chromosome: 'chr2', interval: [100, 200] });
         expect(higlass.spec().views?.[0].initialXDomain).toEqual([
             GET_CHROM_SIZES().interval['chr2'][0] + 1,
             GET_CHROM_SIZES().interval['chr2'][1]

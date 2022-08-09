@@ -29,7 +29,7 @@ export const EX_SPEC_CUSTOM_THEME: GoslingSpec = {
     views: [
         {
             layout: 'linear',
-            xDomain: { chromosome: '3' },
+            xDomain: { chromosome: 'chr3' },
             centerRadius: 0.8,
             tracks: [
                 {
@@ -109,7 +109,7 @@ export const EX_SPEC_CUSTOM_THEME: GoslingSpec = {
             ]
         },
         {
-            xDomain: { chromosome: '3', interval: [52168000, 52890000] },
+            xDomain: { chromosome: 'chr3', interval: [52168000, 52890000] },
             linkingId: 'detail',
             mark: 'bar',
             x: {

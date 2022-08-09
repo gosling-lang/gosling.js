@@ -200,7 +200,7 @@ export const EX_SPEC_CANCER_VARIANT_PROTOTYPE: GoslingSpec = {
                 },
                 {
                     linkingId: 'mid-scale',
-                    xDomain: { chromosome: '1' },
+                    xDomain: { chromosome: 'chr1' },
                     layout: 'linear',
                     tracks: [
                         {
@@ -559,10 +559,10 @@ export const EX_SPEC_CANCER_VARIANT_PROTOTYPE: GoslingSpec = {
             spacing: 100,
             views: [
                 {
-                    ...EX_SPEC_VIEW_PILEUP('bam-1', 450, 310, { chromosome: '1', interval: [205000, 207000] })
+                    ...EX_SPEC_VIEW_PILEUP('bam-1', 450, 310, { chromosome: 'chr1', interval: [205000, 207000] })
                 },
                 {
-                    ...EX_SPEC_VIEW_PILEUP('bam-2', 450, 310, { chromosome: '1', interval: [490000, 496000] })
+                    ...EX_SPEC_VIEW_PILEUP('bam-2', 450, 310, { chromosome: 'chr1', interval: [490000, 496000] })
                 }
             ]
         }

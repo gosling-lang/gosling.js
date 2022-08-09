@@ -13,7 +13,7 @@ export const allDomains = [
 ];
 
 export const EX_SPEC_PATHOGENIC: GoslingSpec = {
-    xDomain: { chromosome: '3', interval: [10140000, 10160000] },
+    xDomain: { chromosome: 'chr3', interval: [10140000, 10160000] },
     centerRadius: 0.1,
     layout: 'linear',
     spacing: 0,

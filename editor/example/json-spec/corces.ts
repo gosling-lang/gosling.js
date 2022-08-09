@@ -13,7 +13,7 @@ export const EX_SPEC_CORCES_ET_AL: GoslingSpec = {
     views: [
         {
             layout: 'linear',
-            xDomain: { chromosome: '3' },
+            xDomain: { chromosome: 'chr3' },
             centerRadius: 0.8,
             tracks: [
                 {
@@ -75,7 +75,7 @@ export const EX_SPEC_CORCES_ET_AL: GoslingSpec = {
             ]
         },
         {
-            xDomain: { chromosome: '3', interval: [52168000, 52890000] },
+            xDomain: { chromosome: 'chr3', interval: [52168000, 52890000] },
             linkingId: 'detail',
             mark: 'bar',
             x: {
@@ -420,7 +420,7 @@ export const EX_SPEC_CORCES_ET_AL: GoslingSpec = {
                 //         field: 'start',
                 //         type: 'genomic',
                 //         linkingId: 'l-h',
-                //         domain: { chromosome: '3', interval: [52450000, 52465000] }
+                //         domain: { chromosome: 'chr3', interval: [52450000, 52465000] }
                 //     },
                 //     xe: { field: 'end', type: 'genomic' },
                 //     color: {

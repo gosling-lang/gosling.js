@@ -18,7 +18,7 @@ export const LINKING_TRACKS: GoslingSpec = {
             x: {
                 field: 'position',
                 type: 'genomic',
-                domain: { chromosome: '2' },
+                domain: { chromosome: 'chr2' },
                 axis: 'top',
                 linkingId: 'link1' // assign a linking id
             },
@@ -43,7 +43,7 @@ export const LINKING_TRACKS: GoslingSpec = {
             x: {
                 field: 'position',
                 type: 'genomic',
-                domain: { chromosome: '2' },
+                domain: { chromosome: 'chr2' },
                 axis: 'top',
                 linkingId: 'link1' // assign the same linking id as the first track
             },

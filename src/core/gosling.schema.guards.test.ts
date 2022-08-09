@@ -49,7 +49,7 @@ describe('Type Guard', () => {
                         stroke: { value: 'red' }
                     }
                 ],
-                x: { field: 'Basepair_start', type: 'genomic', domain: { chromosome: '3' }, axis: 'none' },
+                x: { field: 'Basepair_start', type: 'genomic', domain: { chromosome: 'chr3' }, axis: 'none' },
                 xe: { field: 'Basepair_stop', type: 'genomic' },
                 stroke: { value: 'black' },
                 strokeWidth: { value: 1 },

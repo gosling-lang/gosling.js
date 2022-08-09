@@ -83,7 +83,7 @@ export const OVERLAY_TRACKS_BAR_POINT: GoslingSpec = {
                 field: 'start',
                 type: 'genomic',
                 domain: {
-                    chromosome: '3'
+                    chromosome: 'chr3'
                 },
                 axis: 'top'
             },
