@@ -1,10 +1,10 @@
-import type { Domain, DomainGene, GoslingSpec, View } from '@gosling.schema';
+import type { Domain, GoslingSpec, View } from '@gosling.schema';
 
 export function EX_SPEC_VIEW_PILEUP(
     id: string,
     width: number,
     height: number,
-    xDomain: Exclude<Domain, string[] | number[] | DomainGene>
+    xDomain: Exclude<Domain, string[] | number[]>
 ): View {
     const maxInsertSize = 300;
     return {

@@ -782,11 +782,6 @@ export interface DomainInterval {
     /** Show a certain interval within entire chromosome */
     interval: [number, number]; // This is consistent to HiGlass's initXDomain and initYDomain.
 }
-export interface DomainGene {
-    // For showing genes
-    // TODO: Not supported yet
-    gene: string | [string, string];
-}
 
 export type Aggregate = 'max' | 'min' | 'mean' | 'bin' | 'count';
 export type BinAggregate = 'mean' | 'sum';
