@@ -2,29 +2,27 @@ import type { GoslingTrackModel } from '../gosling-track-model';
 import type { Assembly, Domain } from '../gosling.schema';
 import { SUPPORTED_CHANNELS } from '../mark';
 import { IsDomainChr, IsDomainInterval, IsDomainChrInterval, IsChannelDeep } from '../gosling.schema.guards';
-import { GET_CHROM_SIZES } from './assembly';
+import { computeChromSizes } from './assembly';
 
 /**
  * Get a numeric domain based on a domain specification.
  * For example, domain: { chromosome: 'chr1', interval: [1, 300,000] } => domain: [1, 300,000]
  */
 export function getNumericDomain(domain: Domain, assembly?: Assembly) {
+    const chromInterval = computeChromSizes(assembly).interval;
     if ('chromosome' in domain) {
-        const isThereChr = Object.keys(GET_CHROM_SIZES(assembly).interval).find(chr => chr === domain.chromosome);
+        const isThereChr = Object.keys(chromInterval).find(chr => chr === domain.chromosome);
         if (!isThereChr) {
             // Did not find the chromosome, so return early.
             return;
         }
     }
     if (IsDomainChr(domain)) {
-        return [
-            GET_CHROM_SIZES(assembly).interval[domain.chromosome][0] + 1,
-            GET_CHROM_SIZES(assembly).interval[domain.chromosome][1]
-        ];
+        return [chromInterval[domain.chromosome][0] + 1, chromInterval[domain.chromosome][1]];
     } else if (IsDomainInterval(domain)) {
         return domain.interval;
     } else if (IsDomainChrInterval(domain)) {
-        const chrStart = GET_CHROM_SIZES(assembly).interval[domain.chromosome][0];
+        const chrStart = chromInterval[domain.chromosome][0];
         const [start, end] = domain.interval;
         return [chrStart + start, chrStart + end];
     }

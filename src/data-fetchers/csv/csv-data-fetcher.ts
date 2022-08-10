@@ -1,5 +1,5 @@
 import { dsvFormat as d3dsvFormat } from 'd3-dsv';
-import { GET_CHROM_SIZES } from '../../core/utils/assembly';
+import { computeChromSizes } from '../../core/utils/assembly';
 import { sampleSize } from 'lodash-es';
 import type { Assembly, CsvData, FilterTransform } from '@gosling.schema';
 import { filterData } from '../../core/utils/data-transform';
@@ -38,12 +38,12 @@ function CsvDataFetcher(HGC: any, ...args: any): any {
             }
 
             // Prepare chromosome interval information
-            const chromosomeSizes: { [k: string]: number } = GET_CHROM_SIZES(this.assembly).size;
+            const chromosomeSizes: { [k: string]: number } = computeChromSizes(this.assembly).size;
             const chromosomeCumPositions: { id: number; chr: string; pos: number }[] = [];
             const chromosomePositions: { [k: string]: { id: number; chr: string; pos: number } } = {};
             let prevEndPosition = 0;
 
-            Object.keys(GET_CHROM_SIZES(this.assembly).size).forEach((chrStr, i) => {
+            Object.keys(computeChromSizes(this.assembly).size).forEach((chrStr, i) => {
                 const positionInfo = {
                     id: i,
                     chr: chrStr,
@@ -53,7 +53,7 @@ function CsvDataFetcher(HGC: any, ...args: any): any {
                 chromosomeCumPositions.push(positionInfo);
                 chromosomePositions[chrStr] = positionInfo;
 
-                prevEndPosition += GET_CHROM_SIZES(this.assembly).size[chrStr];
+                prevEndPosition += computeChromSizes(this.assembly).size[chrStr];
             });
             this.chromSizes = {
                 chrToAbs: (chrom: string, chromPos: number) => this.chromSizes.chrPositions[chrom].pos + chromPos,
@@ -107,7 +107,7 @@ function CsvDataFetcher(HGC: any, ...args: any): any {
                                                 this.assembly,
                                                 chromosomePrefix
                                             );
-                                            row[g] = GET_CHROM_SIZES(this.assembly).interval[chrName][0] + +row[g];
+                                            row[g] = computeChromSizes(this.assembly).interval[chrName][0] + +row[g];
                                         } else {
                                             // In this case, we use the genomic position as it is w/o adding the cumulative length of chr.
                                             // So, nothing to do additionally.
@@ -131,7 +131,7 @@ function CsvDataFetcher(HGC: any, ...args: any): any {
                                             this.assembly,
                                             chromosomePrefix
                                         );
-                                        row[g] = GET_CHROM_SIZES(this.assembly).interval[chrName][0] + +row[g];
+                                        row[g] = computeChromSizes(this.assembly).interval[chrName][0] + +row[g];
                                     } else {
                                         // In this case, we use the genomic position as it is w/o adding the cumulative length of chr.
                                         // So, nothing to do additionally.

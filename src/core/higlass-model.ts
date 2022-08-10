@@ -5,7 +5,7 @@ import type { Assembly, AxisPosition, Domain, Orientation, ZoomLimits } from './
 import { getNumericDomain } from './utils/scales';
 import type { RelativePosition } from './utils/bounding-box';
 import { validateSpec } from './utils/validate';
-import { getAutoCompleteId, GET_CHROM_SIZES } from './utils/assembly';
+import { getAutoCompleteId, computeChromSizes } from './utils/assembly';
 import type { CompleteThemeDeep } from './utils/theme';
 import exampleHg from './example/hg-view-config-1';
 import { insertItemToArray } from './utils/array';
@@ -31,8 +31,8 @@ const getViewTemplate = (assembly?: Assembly) => {
             gallery: [],
             whole: []
         },
-        initialXDomain: [0, GET_CHROM_SIZES(assembly).total],
-        initialYDomain: [0, GET_CHROM_SIZES(assembly).total],
+        initialXDomain: [0, computeChromSizes(assembly).total],
+        initialYDomain: [0, computeChromSizes(assembly).total],
         zoomFixed: false
     };
 };
@@ -81,7 +81,7 @@ export class HiGlassModel {
 
     public setAssembly(assembly?: Assembly) {
         this.assembly = assembly;
-        this.setChromInfoPath(GET_CHROM_SIZES(this.assembly).path);
+        this.setChromInfoPath(computeChromSizes(this.assembly).path);
         return this;
     }
 

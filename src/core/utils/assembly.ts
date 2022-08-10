@@ -20,7 +20,7 @@ export interface ChromSize {
  * Get relative chromosome position (e.g., `100` => `{ chromosome: 'chr1', position: 100 }`)
  */
 export function getRelativeGenomicPosition(absPos: number, assembly?: Assembly): GenomicPosition {
-    const [chromosome, absInterval] = Object.entries(GET_CHROM_SIZES(assembly).interval).find(d => {
+    const [chromosome, absInterval] = Object.entries(computeChromSizes(assembly).interval).find(d => {
         const [start, end] = d[1];
         return start <= absPos && absPos < end;
     }) ?? [null, null];
@@ -47,7 +47,7 @@ function createChromSizesUrl(chromSizes: ChromSizes): string {
  * Get chromosome sizes.
  * @param assembly (default: 'hg38')
  */
-export function GET_CHROM_SIZES(assembly?: Assembly): ChromSize {
+export function computeChromSizes(assembly?: Assembly): ChromSize {
     if (assembly && typeof assembly === 'string' && assembly in CRHOM_SIZES) {
         return CRHOM_SIZES[assembly];
     } else if (Array.isArray(assembly) && assembly.length !== 0) {
@@ -166,4 +166,30 @@ export function parseGenomicPosition(position: string): { chromosome: string; st
         }
     }
     return { chromosome };
+}
+
+/**
+ * A class that consistently manage and convert genomics positions.
+ */
+export class GenomicPositionHelper {
+    constructor(public chromosome: string, public start?: number, public end?: number) {}
+    static fromString(str: string) {
+        const result = parseGenomicPosition(str);
+        return new GenomicPositionHelper(result.chromosome, result.start, result.end);
+    }
+    toAbsoluteCoordinates(assembly?: Assembly, padding = 0): [number, number] {
+        const info = computeChromSizes(assembly);
+        const size = info.size[this.chromosome];
+        const interval = info.interval[this.chromosome];
+        if (size === undefined || interval === undefined) {
+            throw new Error(`Chromosome name ${this.chromosome} is not valid`);
+        }
+        let { start, end } = this;
+        if (start === undefined || end === undefined) {
+            // if only a chromosome name is specified, set to the extent of the chromosome
+            [start, end] = [1, size];
+        }
+        const offset = interval[0];
+        return [start + offset - padding, end + offset + padding];
+    }
 }
