@@ -20,6 +20,8 @@ class VcfDataFetcher {
     prevRequestTime: number;
     track?: any;
 
+    MAX_TILE_WIDTH = undefined;
+
     private toFetch: Set<string>;
     private fetchTimeout?: ReturnType<typeof setTimeout>;
     private worker: Promise<ModuleThread<WorkerApi>>;

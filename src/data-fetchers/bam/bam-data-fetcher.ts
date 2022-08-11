@@ -19,6 +19,8 @@ class BamDataFetcher {
     fetchTimeout?: ReturnType<typeof setTimeout>;
     toFetch: Set<string>;
 
+    MAX_TILE_WIDTH: 2e4 = 2e4;
+
     private worker: Promise<ModuleThread<WorkerApi>>;
 
     // This is set by us but is accessed in `fetchTilesDebounced`
