@@ -68,10 +68,11 @@ interface GoslingTile extends Tile {
     mergedToAnotherTile: boolean;
     goslingModels?: GoslingTrackModel[];
     gos: Record<string, any> & {
+        tabularData?: Record<string, any>[];
         raw?: Datum[];
     };
     tileData: TileData & {
-        tabularData?: Record<string, any>;
+        tabularData?: Record<string, any>[];
     };
 }
 
@@ -855,7 +856,7 @@ function GoslingTrack(HGC: import('@higlass/types').HGC, ...args: any[]): any {
          * Construct tabular data from a higlass tileset and a gosling track model.
          * Return the generated gosling track model.
          */
-        preprocessTile(tile: any) {
+        preprocessTile(tile: GoslingTile) {
             if (tile.mergedToAnotherTile) {
                 tile.goslingModels = [];
                 return;
@@ -902,7 +903,7 @@ function GoslingTrack(HGC: import('@higlass/types').HGC, ...args: any[]): any {
                     });
                 }
 
-                tile.gos.tabularDataFiltered = Array.from(tile.gos.tabularData);
+                tile.gos.tabularDataFiltered = Array.from(tile.gos.tabularData!);
 
                 /*
                  * Data Transformation applied to each of the overlaid tracks.
@@ -993,13 +994,13 @@ function GoslingTrack(HGC: import('@higlass/types').HGC, ...args: any[]): any {
                 const gm = new GoslingTrackModel(resolved, tile.gos.tabularDataFiltered, this.options.theme);
 
                 // Add a track model to the tile object
-                tile.goslingModels.push(gm);
+                tile.goslingModels!.push(gm);
             });
 
             return tile.goslingModels;
         }
 
-        getIndicesOfVisibleDataInTile(tile: any) {
+        getIndicesOfVisibleDataInTile(tile: GoslingTile) {
             const visible = this._xScale.range();
 
             if (!this.tilesetInfo) return [null, null];
