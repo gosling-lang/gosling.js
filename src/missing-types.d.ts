@@ -52,12 +52,15 @@ declare module '@higlass/services' {
               bins_per_dimension?: number;
           }
     );
-    type TileData = {
+    export type TileData = Array<Record<string, string | number>> & {
         dense: number[];
         shape: number[];
         tilePos: unknown[];
+        zoomLevel: number;
     };
-    type Tile = {
+    export type Tile = {
+        drawnAtScale: Scale;
+        graphics: PIXI.Graphics;
         tileData: TileData;
     };
     type ColorRGBA = [r: number, g: number, b: number, a: number];

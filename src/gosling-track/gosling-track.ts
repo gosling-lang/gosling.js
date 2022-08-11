@@ -34,6 +34,7 @@ import { flatArrayToPairArray } from '../core/utils/array';
 import { BamDataFetcher, VcfDataFetcher } from '../data-fetchers';
 import { LinearBrushModel } from '../gosling-brush/linear-brush-model';
 import { isPointInsideDonutSlice } from '../gosling-mouse-event/polygon';
+import type { Tile, TileData } from '@higlass/services';
 
 // Set `true` to print in what order each function is called
 export const PRINT_RENDERING_CYCLE = false;
@@ -61,6 +62,17 @@ interface GoslingTrackOption {
     spec: SingleTrack | OverlaidTrack;
     showMousePosition: boolean;
     theme: CompleteThemeDeep;
+}
+
+interface GoslingTile extends Tile {
+    mergedToAnotherTile: boolean;
+    goslingModels?: GoslingTrackModel[];
+    gos: Record<string, any> & {
+        raw?: Datum[];
+    };
+    tileData: TileData & {
+        tabularData?: Record<string, any>;
+    };
 }
 
 /**
@@ -265,7 +277,7 @@ function GoslingTrack(HGC: import('@higlass/types').HGC, ...args: any[]): any {
          * Do whatever is necessary before rendering a new tile. This function is called from `receivedTiles()`.
          * (Refer to https://github.com/higlass/higlass/blob/54f5aae61d3474f9e868621228270f0c90ef9343/app/scripts/HorizontalLine1DPixiTrack.js#L50)
          */
-        initTile(tile: any) {
+        initTile(tile: GoslingTile) {
             if (PRINT_RENDERING_CYCLE) console.warn('initTile(tile)');
 
             // super.initTile(tile); // This calls `drawTile()`
@@ -280,7 +292,7 @@ function GoslingTrack(HGC: import('@higlass/types').HGC, ...args: any[]): any {
         /**
          * Display a tile upon receiving a new one or when explicitly called by a developer, e.g., calling `this.draw()`
          */
-        drawTile(tile: any) {
+        drawTile(tile: GoslingTile) {
             if (PRINT_RENDERING_CYCLE) console.warn('drawTile(tile)');
 
             tile.drawnAtScale = this._xScale.copy(); // being used in `super.draw()`
@@ -496,8 +508,8 @@ function GoslingTrack(HGC: import('@higlass/types').HGC, ...args: any[]): any {
         /**
          * Return the set of all tiles which are both visible and fetched.
          */
-        visibleAndFetchedTiles() {
-            return this.visibleAndFetchedIds().map((x: any) => this.fetchedTiles[x]);
+        visibleAndFetchedTiles(): GoslingTile[] {
+            return this.visibleAndFetchedIds().map(x => this.fetchedTiles[x]);
         }
 
         // !! This is called in the constructor, `super(context, options)`. So be aware to use variables that is prepared.
@@ -638,13 +650,13 @@ function GoslingTrack(HGC: import('@higlass/types').HGC, ...args: any[]): any {
         /**
          * Convert tile positions to tile IDs
          */
-        tilesToId(xTiles: any[], yTiles: any[], zoomLevel: any) {
+        tilesToId(xTiles: number[], yTiles: number[], zoomLevel: number) {
             if (xTiles && !yTiles) {
                 // this means only the `x` axis is being used
                 return xTiles.map(x => [zoomLevel, x]);
             } else {
                 // this means both `x` and `y` axes are being used together
-                const tiles: any = [];
+                const tiles: [number, number, number][] = [];
                 xTiles.forEach(x => yTiles.forEach(y => tiles.push([zoomLevel, x, y])));
                 return tiles;
             }
@@ -693,7 +705,7 @@ function GoslingTrack(HGC: import('@higlass/types').HGC, ...args: any[]): any {
 
             this.tileSize = this.tilesetInfo?.tile_size ?? 1024;
 
-            tiles.forEach((t: any) => {
+            tiles.forEach(t => {
                 // A new object to store all datasets
                 t.gos = {};
 
@@ -702,7 +714,7 @@ function GoslingTrack(HGC: import('@higlass/types').HGC, ...args: any[]): any {
 
                 // Store objects first
                 keys.forEach(k => {
-                    t.gos[k] = t.tileData[k];
+                    t.gos[k] = t.tileData[k as keyof TileData];
                 });
 
                 // Store raw data
@@ -726,10 +738,8 @@ function GoslingTrack(HGC: import('@higlass/types').HGC, ...args: any[]): any {
         }
 
         shareScaleOffsetAcrossTracksAndTiles(scaleOffset: [number, number], channelKey: 'color' | 'stroke') {
-            const models: GoslingTrackModel[] = [];
-            this.visibleAndFetchedTiles().forEach((tile: any) => {
-                models.push(...tile.goslingModels);
-            });
+            const visibleTiles = this.visibleAndFetchedTiles();
+            const models = visibleTiles.flatMap(d => d.goslingModels ?? []);
             models.forEach(d => {
                 const channel = d.spec()[channelKey];
                 if (IsChannelDeep(channel)) {
@@ -777,7 +787,7 @@ function GoslingTrack(HGC: import('@higlass/types').HGC, ...args: any[]): any {
 
             let newData: Datum[] = [];
 
-            tiles.forEach((t: any, i: number) => {
+            tiles.forEach((t, i) => {
                 // Combine data
                 newData = [...newData, ...t.tileData];
 
@@ -800,7 +810,7 @@ function GoslingTrack(HGC: import('@higlass/types').HGC, ...args: any[]): any {
 
             this.combineAllTilesIfNeeded();
 
-            this.visibleAndFetchedTiles().forEach((tile: any) => {
+            this.visibleAndFetchedTiles().forEach(tile => {
                 if (force) {
                     tile.goslingModels = [];
                 }
