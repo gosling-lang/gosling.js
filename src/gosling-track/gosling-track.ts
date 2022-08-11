@@ -38,11 +38,6 @@ import { isPointInsideDonutSlice } from '../gosling-mouse-event/polygon';
 // Set `true` to print in what order each function is called
 export const PRINT_RENDERING_CYCLE = false;
 
-// Experimental function to test with prerelease rendering
-function usePrereleaseRendering(spec: SingleTrack | OverlaidTrack) {
-    return spec.data?.type === 'bam' || spec.data?.type === 'vcf';
-}
-
 // For using libraries, refer to https://github.com/higlass/higlass/blob/f82c0a4f7b2ab1c145091166b0457638934b15f3/app/scripts/configs/available-for-plugins.js
 // `getTilePosAndDimensions()` definition: https://github.com/higlass/higlass/blob/1e1146409c7d7c7014505dd80d5af3e9357c77b6/app/scripts/Tiled1DPixiTrack.js#L133
 // Refer to the following already supported graphics:
@@ -96,20 +91,6 @@ function GoslingTrack(HGC: import('@higlass/types').HGC, ...args: any[]): any {
 
         constructor(params: any[]) {
             const [context, options] = params;
-
-            // Check whether to load tabualr data-fetcher
-            if (usePrereleaseRendering(options.spec)) {
-                try {
-                    if (options.spec.data?.type === 'bam') {
-                        context.dataFetcher = new BamDataFetcher(HGC, context.dataConfig);
-                    } else if (options.spec.data?.type === 'vcf') {
-                        context.dataFetcher = new VcfDataFetcher(HGC, context.dataConfig);
-                    }
-                } catch (e) {
-                    console.warn('Error loading tabular data-fetcher', e);
-                }
-            }
-
             super(context, options);
 
             context.dataFetcher.track = this;
@@ -502,86 +483,62 @@ function GoslingTrack(HGC: import('@higlass/types').HGC, ...args: any[]): any {
 
         // !! This is called in the constructor, `super(context, options)`. So be aware to use variables that is prepared.
         calculateVisibleTiles() {
-            if (usePrereleaseRendering(this.options.spec)) {
-                const tiles = HGC.utils.trackUtils.calculate1DVisibleTiles(this.tilesetInfo, this._xScale);
+            if (!this.tilesetInfo) {
+                // if we don't know anything about this dataset, no point in trying to get tiles
+                return;
+            }
 
-                for (const tile of tiles) {
-                    const { tileWidth } = this.getTilePosAndDimensions(
-                        tile[0],
-                        [tile[1], tile[1]],
-                        this.tilesetInfo.tile_size
-                    );
+            // calculate the zoom level given the scales and the data bounds
+            this.zoomLevel = this.calculateZoomLevel();
 
-                    // base pairs
-                    const DEFAULT_MAX_TILE_WIDTH =
-                        this.options.spec.data?.type === 'bam' ? 2e4 : Number.MAX_SAFE_INTEGER;
+            if (this.tilesetInfo.resolutions) {
+                const sortedResolutions = this.tilesetInfo.resolutions
+                    .map((x: number) => +x)
+                    .sort((a: number, b: number) => b - a);
 
-                    if (tileWidth > (this.tilesetInfo.max_tile_width || DEFAULT_MAX_TILE_WIDTH)) {
-                        this.forceDraw();
-                        return;
-                    }
-                    this.forceDraw();
-                }
+                this.xTiles = tileProxy.calculateTilesFromResolution(
+                    sortedResolutions[this.zoomLevel],
+                    this._xScale,
+                    this.tilesetInfo.min_pos[0],
+                    this.tilesetInfo.max_pos[0]
+                );
 
-                this.setVisibleTiles(tiles);
-            } else {
-                if (!this.tilesetInfo) {
-                    // if we don't know anything about this dataset, no point in trying to get tiles
-                    return;
-                }
-
-                // calculate the zoom level given the scales and the data bounds
-                this.zoomLevel = this.calculateZoomLevel();
-
-                if (this.tilesetInfo.resolutions) {
-                    const sortedResolutions = this.tilesetInfo.resolutions
-                        .map((x: number) => +x)
-                        .sort((a: number, b: number) => b - a);
-
-                    this.xTiles = tileProxy.calculateTilesFromResolution(
+                if (Is2DTrack(resolveSuperposedTracks(this.options.spec)[0])) {
+                    // it makes sense only when the y-axis is being used for a genomic field
+                    this.yTiles = tileProxy.calculateTilesFromResolution(
                         sortedResolutions[this.zoomLevel],
-                        this._xScale,
+                        this._yScale,
                         this.tilesetInfo.min_pos[0],
                         this.tilesetInfo.max_pos[0]
                     );
-
-                    if (Is2DTrack(resolveSuperposedTracks(this.options.spec)[0])) {
-                        // it makes sense only when the y-axis is being used for a genomic field
-                        this.yTiles = tileProxy.calculateTilesFromResolution(
-                            sortedResolutions[this.zoomLevel],
-                            this._yScale,
-                            this.tilesetInfo.min_pos[0],
-                            this.tilesetInfo.max_pos[0]
-                        );
-                    }
-
-                    const tiles = this.tilesToId(this.xTiles, this.yTiles, this.zoomLevel);
-                    this.setVisibleTiles(tiles);
-                } else {
-                    this.xTiles = tileProxy.calculateTiles(
-                        this.zoomLevel,
-                        this.relevantScale(),
-                        this.tilesetInfo.min_pos[0],
-                        this.tilesetInfo.max_pos[0],
-                        this.tilesetInfo.max_zoom,
-                        this.tilesetInfo.max_width
-                    );
-
-                    if (Is2DTrack(resolveSuperposedTracks(this.options.spec)[0])) {
-                        // it makes sense only when the y-axis is being used for a genomic field
-                        this.yTiles = tileProxy.calculateTiles(
-                            this.zoomLevel,
-                            this._yScale,
-                            this.tilesetInfo.min_pos[1],
-                            this.tilesetInfo.max_pos[1],
-                            this.tilesetInfo.max_zoom,
-                            this.tilesetInfo.max_width1 || this.tilesetInfo.max_width
-                        );
-                    }
-
-                    const tiles = this.tilesToId(this.xTiles, this.yTiles, this.zoomLevel);
-                    this.setVisibleTiles(tiles);
                 }
+
+                const tiles = this.tilesToId(this.xTiles, this.yTiles, this.zoomLevel);
+                this.setVisibleTiles(tiles);
+            } else {
+                this.xTiles = tileProxy.calculateTiles(
+                    this.zoomLevel,
+                    this.relevantScale(),
+                    this.tilesetInfo.min_pos[0],
+                    this.tilesetInfo.max_pos[0],
+                    this.tilesetInfo.max_zoom,
+                    this.tilesetInfo.max_width
+                );
+
+                if (Is2DTrack(resolveSuperposedTracks(this.options.spec)[0])) {
+                    // it makes sense only when the y-axis is being used for a genomic field
+                    this.yTiles = tileProxy.calculateTiles(
+                        this.zoomLevel,
+                        this._yScale,
+                        this.tilesetInfo.min_pos[1],
+                        this.tilesetInfo.max_pos[1],
+                        this.tilesetInfo.max_zoom,
+                        this.tilesetInfo.max_width1 || this.tilesetInfo.max_width
+                    );
+                }
+
+                const tiles = this.tilesToId(this.xTiles, this.yTiles, this.zoomLevel);
+                this.setVisibleTiles(tiles);
             }
         }
 
