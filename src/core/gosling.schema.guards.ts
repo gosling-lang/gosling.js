@@ -6,7 +6,6 @@ import type {
     DomainChr,
     DomainInterval,
     DomainChrInterval,
-    DomainGene,
     Style,
     Track,
     SingleTrack,
@@ -106,10 +105,6 @@ export function IsDomainInterval(domain: Domain): domain is DomainInterval {
 
 export function IsDomainChrInterval(domain: Domain): domain is DomainChrInterval {
     return 'chromosome' in domain && 'interval' in domain;
-}
-
-export function IsDomainGene(domain: Domain): domain is DomainGene {
-    return 'gene' in domain;
 }
 
 export function IsTrackStyle(track: Style | undefined): track is Style {

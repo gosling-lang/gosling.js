@@ -1,5 +1,3 @@
-import type { Chromosome } from './utils/chrom-size';
-
 /* ----------------------------- ROOT SPEC ----------------------------- */
 export type GoslingSpec =
     | (RootSpecWithSingleView & ResponsiveSpecOfSingleView)
@@ -766,28 +764,23 @@ export interface ChannelValue {
 export type AxisPosition = 'none' | 'top' | 'bottom' | 'left' | 'right';
 export type FieldType = 'genomic' | 'nominal' | 'quantitative';
 export type ValueExtent = string[] | number[];
-export type GenomicDomain = DomainInterval | DomainChrInterval | DomainChr | DomainGene;
+export type GenomicDomain = DomainInterval | DomainChrInterval | DomainChr;
 export type Domain = ValueExtent | GenomicDomain;
 export type Range = ValueExtent | PredefinedColors;
 export type PredefinedColors = 'viridis' | 'grey' | 'spectral' | 'warm' | 'cividis' | 'bupu' | 'rdbu' | 'hot' | 'pink';
 
 export interface DomainChr {
     // For showing a certain chromosome
-    chromosome: Chromosome;
+    chromosome: string;
 }
 export interface DomainChrInterval {
     /** If specified, only showing a certain interval in a chromosome. */
-    chromosome: Chromosome;
+    chromosome: string;
     interval: [number, number];
 }
 export interface DomainInterval {
     /** Show a certain interval within entire chromosome */
     interval: [number, number]; // This is consistent to HiGlass's initXDomain and initYDomain.
-}
-export interface DomainGene {
-    // For showing genes
-    // TODO: Not supported yet
-    gene: string | [string, string];
 }
 
 export type Aggregate = 'max' | 'min' | 'mean' | 'bin' | 'count';

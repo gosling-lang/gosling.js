@@ -249,7 +249,7 @@ const _gene: (type: 1 | 2, compact?: boolean) => OverlaidTracks = (type, compact
 };
 
 const xDomain: (type: 1 | 2) => DomainChrInterval = type => {
-    if (type === 1) return { chromosome: '12', interval: [10140000, 10210000] };
+    if (type === 1) return { chromosome: 'chr12', interval: [10140000, 10210000] };
     else return { chromosome: '8', interval: [127734000, 127744000] };
 };
 

@@ -8,7 +8,7 @@ import Worker from './bam-worker.ts?worker&inline';
 import type { BamData, Assembly } from '@gosling.schema';
 import type { ModuleThread } from 'threads';
 import type { WorkerApi, TilesetInfo, Tiles, Segment, SegmentWithMate, Junction } from './bam-worker';
-import { GET_CHROM_SIZES } from '../../core/utils/assembly';
+import { computeChromSizes } from '../../core/utils/assembly';
 
 const DEBOUNCE_TIME = 200;
 
@@ -30,7 +30,7 @@ class BamDataFetcher {
         this.toFetch = new Set();
         const { url, indexUrl, assembly, ...options } = config;
         this.worker = spawn<WorkerApi>(new Worker()).then(async worker => {
-            const chromSizes = Object.entries(GET_CHROM_SIZES(assembly).size);
+            const chromSizes = Object.entries(computeChromSizes(assembly).size);
             await worker.init(this.uid, { url, indexUrl }, chromSizes, options);
             return worker;
         });

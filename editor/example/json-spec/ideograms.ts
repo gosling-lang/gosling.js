@@ -86,35 +86,35 @@ export const EX_SPEC_CYTOBANDS: GoslingSpec = {
     arrangement: 'parallel',
     views: [
         {
-            xDomain: { chromosome: '1' },
+            xDomain: { chromosome: 'chr1' },
             tracks: [
                 { ...StackedPeaks, width: 1000 },
                 { ...CytoBands, width: 1000 }
             ]
         },
         {
-            xDomain: { chromosome: '2' },
+            xDomain: { chromosome: 'chr2' },
             tracks: [
                 { ...StackedPeaks, width: 970 },
                 { ...CytoBands, width: 970 }
             ]
         },
         {
-            xDomain: { chromosome: '3' },
+            xDomain: { chromosome: 'chr3' },
             tracks: [
                 { ...StackedPeaks, width: 800 },
                 { ...CytoBands, width: 800 }
             ]
         },
         {
-            xDomain: { chromosome: '4' },
+            xDomain: { chromosome: 'chr4' },
             tracks: [
                 { ...StackedPeaks, width: 770 },
                 { ...CytoBands, width: 770 }
             ]
         },
         {
-            xDomain: { chromosome: '5' },
+            xDomain: { chromosome: 'chr5' },
             tracks: [
                 { ...StackedPeaks, width: 740 },
                 { ...CytoBands, width: 740 }

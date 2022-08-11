@@ -1,10 +1,10 @@
-import type { Domain, DomainGene, GoslingSpec, View } from '@gosling.schema';
+import type { Domain, GoslingSpec, View } from '@gosling.schema';
 
 export function EX_SPEC_VIEW_PILEUP(
     id: string,
     width: number,
     height: number,
-    xDomain: Exclude<Domain, string[] | number[] | DomainGene>
+    xDomain: Exclude<Domain, string[] | number[]>
 ): View {
     const maxInsertSize = 300;
     return {
@@ -152,5 +152,5 @@ export function EX_SPEC_VIEW_PILEUP(
 export const EX_SPEC_PILEUP: GoslingSpec = {
     title: 'Pileup Track Using BAM Data',
     subtitle: '',
-    ...EX_SPEC_VIEW_PILEUP('bam', 1250, 600, { chromosome: '1', interval: [136750, 139450] })
+    ...EX_SPEC_VIEW_PILEUP('bam', 1250, 600, { chromosome: 'chr1', interval: [136750, 139450] })
 };

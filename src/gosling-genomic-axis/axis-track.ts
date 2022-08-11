@@ -5,7 +5,7 @@ import type * as PIXI from 'pixi.js';
 import RBush from 'rbush';
 import { scaleLinear } from 'd3-scale';
 import { format, precisionPrefix, formatPrefix } from 'd3-format';
-import { GET_CHROM_SIZES } from '../core/utils/assembly';
+import { computeChromSizes } from '../core/utils/assembly';
 import { cartesianToPolar } from '../core/utils/polar';
 import { getTextStyle } from '../core/utils/text-style';
 import { definePluginTrack } from '../core/utils/define-plugin-track';
@@ -200,15 +200,15 @@ const factory: PluginTrackFactory<AxisTrackOptions> = (HGC, context, options) =>
 
             const assembly = this.options.assembly;
             const chrPositions: { [k: string]: ChrPosInfo } = {};
-            const chromLengths: { [k: string]: number } = { ...GET_CHROM_SIZES(assembly).size };
+            const chromLengths: { [k: string]: number } = { ...computeChromSizes(assembly).size };
             const cumPositions: ChrPosInfo[] = [];
 
-            Object.keys(GET_CHROM_SIZES(assembly).size).forEach(k => {
-                chrPositions[k] = { chr: k, pos: GET_CHROM_SIZES(assembly).size[k] };
+            Object.keys(computeChromSizes(assembly).size).forEach(k => {
+                chrPositions[k] = { chr: k, pos: computeChromSizes(assembly).size[k] };
             });
 
-            Object.keys(GET_CHROM_SIZES(assembly).interval).forEach(k => {
-                cumPositions.push({ chr: k, pos: GET_CHROM_SIZES(assembly).interval[k][0] });
+            Object.keys(computeChromSizes(assembly).interval).forEach(k => {
+                cumPositions.push({ chr: k, pos: computeChromSizes(assembly).interval[k][0] });
             });
 
             this.chromInfo = { chrPositions, chromLengths, cumPositions };

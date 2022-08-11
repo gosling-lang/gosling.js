@@ -19,14 +19,14 @@ export const LINK: GoslingSpec = {
             x: {
                 field: 's1',
                 type: 'genomic',
-                domain: { chromosome: '1' },
+                domain: { chromosome: 'chr1' },
                 axis: 'top'
             },
             xe: { field: 'e1', type: 'genomic' },
             x1: {
                 field: 's2',
                 type: 'genomic',
-                domain: { chromosome: '1' },
+                domain: { chromosome: 'chr1' },
                 axis: 'top'
             },
             x1e: { field: 'e2', type: 'genomic' },

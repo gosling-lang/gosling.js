@@ -7,7 +7,7 @@ export const EX_SPEC_VISUAL_ENCODING: GoslingSpec = {
     layout: 'linear',
     arrangement: 'vertical',
     centerRadius: 0.8,
-    xDomain: { chromosome: '1', interval: [1, 3000500] },
+    xDomain: { chromosome: 'chr1', interval: [1, 3000500] },
     views: [
         {
             tracks: [
@@ -287,7 +287,7 @@ export const EX_SPEC_VISUAL_ENCODING: GoslingSpec = {
                     x: {
                         field: 's1',
                         type: 'genomic',
-                        domain: { chromosome: '1', interval: [103900000, 104100000] }
+                        domain: { chromosome: 'chr1', interval: [103900000, 104100000] }
                     },
                     xe: {
                         field: 'e1',
@@ -296,7 +296,7 @@ export const EX_SPEC_VISUAL_ENCODING: GoslingSpec = {
                     x1: {
                         field: 's2',
                         type: 'genomic',
-                        domain: { chromosome: '1' }
+                        domain: { chromosome: 'chr1' }
                     },
                     x1e: {
                         field: 'e2',
@@ -327,7 +327,7 @@ export const EX_SPEC_VISUAL_ENCODING_CIRCULAR: GoslingSpec = {
     arrangement: 'vertical',
     centerRadius: 0.5,
     static: true,
-    xDomain: { chromosome: '1', interval: [1, 3000500] },
+    xDomain: { chromosome: 'chr1', interval: [1, 3000500] },
     views: [
         {
             arrangement: 'horizontal',
@@ -551,7 +551,7 @@ export const EX_SPEC_VISUAL_ENCODING_CIRCULAR: GoslingSpec = {
                             x: {
                                 field: 's1',
                                 type: 'genomic',
-                                domain: { chromosome: '1', interval: [103900000, 104100000] }
+                                domain: { chromosome: 'chr1', interval: [103900000, 104100000] }
                             },
                             xe: {
                                 field: 'e1',
@@ -560,7 +560,7 @@ export const EX_SPEC_VISUAL_ENCODING_CIRCULAR: GoslingSpec = {
                             x1: {
                                 field: 's2',
                                 type: 'genomic',
-                                domain: { chromosome: '1' }
+                                domain: { chromosome: 'chr1' }
                             },
                             x1e: {
                                 field: 'e2',
@@ -636,7 +636,7 @@ export const EX_SPEC_DARK_THEME: GoslingSpec = {
     arrangement: 'vertical',
     centerRadius: 0,
     static: true,
-    xDomain: { chromosome: '1', interval: [1, 3000500] },
+    xDomain: { chromosome: 'chr1', interval: [1, 3000500] },
     views: [
         {
             arrangement: 'horizontal',
