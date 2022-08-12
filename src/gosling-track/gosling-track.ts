@@ -506,21 +506,25 @@ function GoslingTrack(HGC: import('@higlass/types').HGC, ...args: any[]): any {
             if (isTabularDataFetcher(this.dataFetcher)) {
                 const tiles = HGC.utils.trackUtils.calculate1DVisibleTiles(this.tilesetInfo, this._xScale);
 
+                // determine max tile size
+                let maxTileWith = Number.MAX_SAFE_INTEGER;
+                if ('MAX_TILE_WIDTH' in this.dataFetcher) {
+                    maxTileWith = this.dataFetcher.MAX_TILE_WIDTH;
+                }
+                if (typeof this.tilesetInfo.max_tile_width === 'number') {
+                    maxTileWith = this.tilesetInfo.max_tile_width;
+                }
+
                 for (const tile of tiles) {
                     const { tileWidth } = this.getTilePosAndDimensions(
                         tile[0],
                         [tile[1], tile[1]],
                         this.tilesetInfo.tile_size
                     );
-
-                    // base pairs
-                    const DEFAULT_MAX_TILE_WIDTH = this.dataFetcher?.MAX_TILE_WIDTH ?? Number.MAX_SAFE_INTEGER;
-
-                    if (tileWidth > (this.tilesetInfo.max_tile_width || DEFAULT_MAX_TILE_WIDTH)) {
-                        this.forceDraw();
+                    this.forceDraw();
+                    if (tileWidth > maxTileWith) {
                         return;
                     }
-                    this.forceDraw();
                 }
 
                 this.setVisibleTiles(tiles);
