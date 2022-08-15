@@ -153,12 +153,8 @@ function GoslingTrack(HGC: import('@higlass/types').HGC, ...args: any[]): any {
             this.isRangeBrushActivated = false;
             this.pMask.interactive = true;
             this.gBrush = HGC.libraries.d3Selection.select(this.context.svgElement).append('g');
-            this.mRangeBrush = new LinearBrushModel(
-                this.gBrush,
-                HGC.libraries,
-                this.onRangeBrush.bind(this),
-                this.options.spec.style?.brush
-            );
+            this.mRangeBrush = new LinearBrushModel(this.gBrush, HGC.libraries, this.options.spec.style?.brush);
+            this.mRangeBrush.on('brush', this.onRangeBrush.bind(this));
             this.pMask.mousedown = (e: InteractionEvent) =>
                 this.onMouseDown(
                     e.data.getLocalPosition(this.pMain).x,
