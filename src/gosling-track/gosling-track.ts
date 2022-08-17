@@ -34,7 +34,7 @@ import { flatArrayToPairArray } from '../core/utils/array';
 import { BamDataFetcher, VcfDataFetcher } from '../data-fetchers';
 import { LinearBrushModel } from '../gosling-brush/linear-brush-model';
 import { isPointInsideDonutSlice } from '../gosling-mouse-event/polygon';
-import type { Tile, TileData } from '@higlass/services';
+import type { FetchedTiles, Tile, TileData } from '@higlass/services';
 
 // Set `true` to print in what order each function is called
 export const PRINT_RENDERING_CYCLE = false;
@@ -105,6 +105,7 @@ function GoslingTrack(HGC: import('@higlass/types').HGC, ...args: any[]): any {
         private pMouseHover: Graphics;
         private pMouseSelection: Graphics;
         private assembly?: Assembly;
+        private fetchedTiles: FetchedTiles;
         // TODO: add members that are used explicitly in the code
 
         constructor(params: any[]) {
@@ -139,6 +140,7 @@ function GoslingTrack(HGC: import('@higlass/types').HGC, ...args: any[]): any {
                 this.options.spec._renderingId = uuid.v1();
             }
 
+            this.fetchedTiles = {};
             this.tileSize = this.tilesetInfo?.tile_size ?? 1024;
 
             // This is tracking the xScale of an entire view, which is used when no tiling concepts are used
@@ -465,7 +467,7 @@ function GoslingTrack(HGC: import('@higlass/types').HGC, ...args: any[]): any {
             this.drawLoadingCue();
             const tabularData = await tabularDataFetcher.getTabularData(
                 this.dataFetcher.uid,
-                Object.values(this.fetchedTiles).map((x: any) => x.remoteId)
+                Object.values(this.fetchedTiles).map(x => x.remoteId)
             );
             this.drawLoadingCue();
             const tiles = this.visibleAndFetchedTiles();
