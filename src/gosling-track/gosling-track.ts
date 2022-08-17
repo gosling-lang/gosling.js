@@ -3,15 +3,7 @@ import PubSub from 'pubsub-js';
 import * as uuid from 'uuid';
 import { isEqual, sampleSize, uniqBy } from 'lodash-es';
 import type { ScaleLinear } from 'd3-scale';
-import type {
-    SingleTrack,
-    OverlaidTrack,
-    Datum,
-    EventStyle,
-    GenomicPosition,
-    Assembly,
-    DataTransform
-} from '@gosling.schema';
+import type { SingleTrack, OverlaidTrack, Datum, EventStyle, GenomicPosition, Assembly } from '@gosling.schema';
 import type { CompleteThemeDeep } from '../core/utils/theme';
 import { drawMark, drawPostEmbellishment, drawPreEmbellishment } from '../core/mark';
 import { GoslingTrackModel } from '../core/gosling-track-model';
@@ -35,7 +27,14 @@ import { getTabularData } from './data-abstraction';
 import { publish } from '../core/pubsub';
 import { getRelativeGenomicPosition } from '../core/utils/assembly';
 import { getTextStyle } from '../core/utils/text-style';
-import { Is2DTrack, IsChannelDeep, IsMouseEventsDeep, IsXAxis } from '../core/gosling.schema.guards';
+import {
+    Is2DTrack,
+    IsChannelDeep,
+    IsMouseEventsDeep,
+    IsXAxis,
+    isTabularDataFetcher,
+    hasDataTransform
+} from '../core/gosling.schema.guards';
 import { HIGLASS_AXIS_SIZE } from '../core/higlass-model';
 import type { MouseEventData } from '../gosling-mouse-event/mouse-event-model';
 import { flatArrayToPairArray } from '../core/utils/array';
@@ -64,18 +63,6 @@ interface GoslingTrackOption {
     spec: SingleTrack | OverlaidTrack;
     showMousePosition: boolean;
     theme: CompleteThemeDeep;
-}
-
-function isObject(x: unknown): x is Record<PropertyKey, unknown> {
-    return typeof x === 'object' || x !== null;
-}
-
-function isTabularDataFetcher(dataFetcher: unknown): dataFetcher is BamDataFetcher | VcfDataFetcher {
-    return isObject(dataFetcher) && 'getTabularData' in dataFetcher;
-}
-
-function hasDataTransform(spec: SingleTrack | OverlaidTrack, type: DataTransform['type']) {
-    return (spec.dataTransform ?? []).some(d => d.type === type);
 }
 
 /**
