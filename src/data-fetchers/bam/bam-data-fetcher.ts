@@ -13,10 +13,13 @@ import { computeChromSizes } from '../../core/utils/assembly';
 const DEBOUNCE_TIME = 200;
 
 class BamDataFetcher {
+    static config = { type: 'bam' };
     dataConfig = {}; // required for higlass
     uid: string;
     fetchTimeout?: ReturnType<typeof setTimeout>;
     toFetch: Set<string>;
+
+    MAX_TILE_WIDTH: 2e4 = 2e4;
 
     private worker: Promise<ModuleThread<WorkerApi>>;
 

@@ -1,11 +1,11 @@
 // @ts-ignore
-import { default as higlassRegister } from 'higlass-register';
+import higlassRegister from 'higlass-register';
 // @ts-ignore
 import { TextTrack } from 'higlass-text';
 import { AxisTrack } from '../gosling-genomic-axis';
 import { BrushTrack } from '../gosling-brush';
-import { BigWigDataFetcher, CsvDataFetcher, JsonDataFetcher } from '../data-fetchers';
 import { GoslingTrack } from '../gosling-track/index';
+import * as dataFetchers from '../data-fetchers';
 
 let once = false;
 
@@ -67,12 +67,10 @@ export function init() {
     /**
      * Register data fetchers to HiGlassComponent
      */
-    higlassRegister({ dataFetcher: CsvDataFetcher, config: CsvDataFetcher.config }, { pluginType: 'dataFetcher' });
-    higlassRegister({ dataFetcher: JsonDataFetcher, config: JsonDataFetcher.config }, { pluginType: 'dataFetcher' });
-    higlassRegister(
-        { dataFetcher: BigWigDataFetcher, config: BigWigDataFetcher.config },
-        { pluginType: 'dataFetcher' }
-    );
+    for (const dataFetcher of Object.values(dataFetchers)) {
+        const { config } = dataFetcher;
+        higlassRegister({ dataFetcher, config }, { pluginType: 'dataFetcher' });
+    }
 
     once = true;
 }
