@@ -208,3 +208,8 @@ export class RemoteFile extends _RemoteFile {
         throw new Error(`HTTP ${response.status} fetching ${this.url}`);
     };
 }
+
+export interface TabularDataFetcher<Tile> {
+    getTabularData(tileIds: string[]): Promise<Tile[]>;
+    MAX_TILE_WIDTH?: number;
+}

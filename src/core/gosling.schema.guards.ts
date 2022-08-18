@@ -34,7 +34,6 @@ import type {
     MouseEventsDeep,
     DataTransform
 } from './gosling.schema';
-import type { BamDataFetcher, VcfDataFetcher } from '../data-fetchers';
 import { SUPPORTED_CHANNELS } from './mark';
 import { isArray } from 'lodash-es';
 import {
@@ -49,6 +48,7 @@ import {
     interpolateRdPu
 } from 'd3-scale-chromatic';
 import { resolveSuperposedTracks } from './utils/overlay';
+import type { TabularDataFetcher } from 'src/data-fetchers/utils';
 
 export const PREDEFINED_COLOR_STR_MAP: { [k: string]: (t: number) => string } = {
     viridis: interpolateViridis,
@@ -66,7 +66,7 @@ export function isObject(x: unknown): x is Record<PropertyKey, unknown> {
     return typeof x === 'object' && x !== null;
 }
 
-export function isTabularDataFetcher(dataFetcher: unknown): dataFetcher is BamDataFetcher | VcfDataFetcher {
+export function isTabularDataFetcher(dataFetcher: unknown): dataFetcher is TabularDataFetcher<unknown> {
     return isObject(dataFetcher) && 'getTabularData' in dataFetcher;
 }
 

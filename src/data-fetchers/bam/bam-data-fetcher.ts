@@ -9,10 +9,13 @@ import type { BamData, Assembly } from '@gosling.schema';
 import type { ModuleThread } from 'threads';
 import type { WorkerApi, TilesetInfo, Tiles, Segment, SegmentWithMate, Junction } from './bam-worker';
 import { computeChromSizes } from '../../core/utils/assembly';
+import type { TabularDataFetcher } from '../utils';
 
 const DEBOUNCE_TIME = 200;
 
-class BamDataFetcher {
+type BamTile = Segment | SegmentWithMate | Junction;
+
+class BamDataFetcher implements TabularDataFetcher<BamTile> {
     static config = { type: 'bam' };
     dataConfig = {}; // required for higlass
     uid: string;
@@ -76,8 +79,8 @@ class BamDataFetcher {
         (await this.worker).fetchTilesDebounced(this.uid, tileIds).then(receivedTiles);
     }
 
-    async getTabularData(uid: string, tileIds: string[]): Promise<Segment[] | SegmentWithMate[] | Junction[]> {
-        const buf = await (await this.worker).getTabularData(uid, tileIds);
+    async getTabularData(tileIds: string[]): Promise<BamTile[]> {
+        const buf = await (await this.worker).getTabularData(this.uid, tileIds);
         return JSON.parse(new TextDecoder().decode(buf));
     }
 }

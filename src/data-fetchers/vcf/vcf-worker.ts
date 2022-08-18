@@ -54,7 +54,7 @@ type VcfRecord = {
     INFO: Record<string, true | (number | null)[] | string[]>;
 };
 
-export type Tile = Omit<VcfRecord, 'ALT' | 'INFO'> & {
+export type VcfTile = Omit<VcfRecord, 'ALT' | 'INFO'> & {
     ALT: string | undefined;
     MUTTYPE: ReturnType<typeof getMutationType>;
     SUBTYPE: ReturnType<typeof getSubstitutionType>;
@@ -67,7 +67,7 @@ export type Tile = Omit<VcfRecord, 'ALT' | 'INFO'> & {
 };
 
 // promises indexed by url
-const tileValues: Record<string, Tile[]> = {}; // new LRU({ max: MAX_TILES });
+const tileValues: Record<string, VcfTile[]> = {}; // new LRU({ max: MAX_TILES });
 
 // const vcfData = [];
 const dataSources: Map<string, DataSource<VcfFile, VcfFileOptions>> = new Map();
@@ -171,7 +171,7 @@ const tile = async (uid: string, z: number, x: number): Promise<void[]> => {
             const POSEND = POS + vcfRecord.REF.length;
 
             // Create key values
-            const data: Tile = {
+            const data: VcfTile = {
                 ...vcfRecord,
                 ALT,
                 MUTTYPE,
@@ -235,7 +235,7 @@ const tile = async (uid: string, z: number, x: number): Promise<void[]> => {
 };
 
 const fetchTilesDebounced = async (uid: string, tileIds: string[]) => {
-    const tiles: Record<string, Tile> = {};
+    const tiles: Record<string, VcfTile> = {};
     const validTileIds: string[] = [];
     const tilePromises: Promise<void[]>[] = [];
 
@@ -264,7 +264,7 @@ const fetchTilesDebounced = async (uid: string, tileIds: string[]) => {
 };
 
 const getTabularData = (uid: string, tileIds: string[]) => {
-    const data: Tile[][] = [];
+    const data: VcfTile[][] = [];
 
     tileIds.forEach(tileId => {
         const parts = tileId.split('.');

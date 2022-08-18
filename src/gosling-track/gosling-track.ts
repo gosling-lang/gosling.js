@@ -38,9 +38,10 @@ import {
 import { HIGLASS_AXIS_SIZE } from '../core/higlass-model';
 import type { MouseEventData } from '../gosling-mouse-event/mouse-event-model';
 import { flatArrayToPairArray } from '../core/utils/array';
-import { BamDataFetcher, VcfDataFetcher } from '../data-fetchers';
+import { BamDataFetcher } from '../data-fetchers';
 import { LinearBrushModel } from '../gosling-brush/linear-brush-model';
 import { isPointInsideDonutSlice } from '../gosling-mouse-event/polygon';
+import type { TabularDataFetcher } from 'src/data-fetchers/utils';
 
 // Set `true` to print in what order each function is called
 export const PRINT_RENDERING_CYCLE = false;
@@ -430,15 +431,15 @@ function GoslingTrack(HGC: import('@higlass/types').HGC, ...args: any[]): any {
         /**
          * This is currently for testing the new way of rendering visual elements.
          */
-        async updateTileAsync(tabularDataFetcher: BamDataFetcher | VcfDataFetcher, callback: () => void) {
+        async updateTileAsync(tabularDataFetcher: TabularDataFetcher<unknown>, callback: () => void) {
             this.xDomain = this._xScale.domain();
             this.xRange = this._xScale.range();
-            this.drawLoadingCue();
+
+            const hide = this.showLoadingCue(`Fetching... ${Array.from(this.fetching).join(' ')}`);
             const tabularData = await tabularDataFetcher.getTabularData(
-                this.dataFetcher.uid,
-                Object.values(this.fetchedTiles).map((x: any) => x.remoteId)
+                Object.values(this.fetchedTiles as { remoteId: string }[]).map(x => x.remoteId)
             );
-            this.drawLoadingCue();
+            hide();
             const tiles = this.visibleAndFetchedTiles();
             if (tiles?.[0]) {
                 const tile = tiles[0];
@@ -448,9 +449,11 @@ function GoslingTrack(HGC: import('@higlass/types').HGC, ...args: any[]): any {
                 tile.tileData.tilePos = [refTile[1]];
             }
 
-            this.drawLoadingCue();
-            callback();
-            this.drawLoadingCue();
+            {
+                const hide = this.showLoadingCue(`Fetching... ${Array.from(this.fetching).join(' ')}`);
+                callback();
+                hide();
+            }
         }
 
         /**
@@ -488,15 +491,8 @@ function GoslingTrack(HGC: import('@higlass/types').HGC, ...args: any[]): any {
         calculateVisibleTiles() {
             if (isTabularDataFetcher(this.dataFetcher)) {
                 const tiles = HGC.utils.trackUtils.calculate1DVisibleTiles(this.tilesetInfo, this._xScale);
-
-                // determine max tile size
-                let maxTileWith = Number.MAX_SAFE_INTEGER;
-                if ('MAX_TILE_WIDTH' in this.dataFetcher) {
-                    maxTileWith = this.dataFetcher.MAX_TILE_WIDTH;
-                }
-                if (typeof this.tilesetInfo.max_tile_width === 'number') {
-                    maxTileWith = this.tilesetInfo.max_tile_width;
-                }
+                const maxTileWith =
+                    this.tilesetInfo.max_tile_width ?? this.dataFetcher.MAX_TILE_WIDTH ?? Number.MAX_SAFE_INTEGER;
 
                 for (const tile of tiles) {
                     const { tileWidth } = this.getTilePosAndDimensions(
@@ -640,36 +636,33 @@ function GoslingTrack(HGC: import('@higlass/types').HGC, ...args: any[]): any {
         /**
          * Show visual cue during waiting for visualizations being rendered.
          */
-        drawLoadingCue() {
-            if (this.fetching.size) {
-                const margin = 6;
+        showLoadingCue(text: string) {
+            const margin = 6;
 
-                // Show textual message
-                const text = `Fetching... ${Array.from(this.fetching).join(' ')}`;
-                this.loadingText.text = text;
-                this.loadingText.x = this.position[0] + this.dimensions[0] - margin / 2.0;
-                this.loadingText.y = this.position[1] + this.dimensions[1] - margin / 2.0;
+            this.loadingText.text = text;
+            this.loadingText.x = this.position[0] + this.dimensions[0] - margin / 2.0;
+            this.loadingText.y = this.position[1] + this.dimensions[1] - margin / 2.0;
 
-                // Show background
-                const metric = HGC.libraries.PIXI.TextMetrics.measureText(text, this.loadingTextStyleObj);
-                const { width: w, height: h } = metric;
+            // Show background
+            const metric = HGC.libraries.PIXI.TextMetrics.measureText(text, this.loadingTextStyleObj);
+            const { width: w, height: h } = metric;
 
-                this.loadingTextBg.clear();
-                this.loadingTextBg.lineStyle(1, colorToHex('grey'), 1, 0.5);
-                this.loadingTextBg.beginFill(colorToHex('white'), 0.8);
-                this.loadingTextBg.drawRect(
-                    this.position[0] + this.dimensions[0] - w - margin - 1,
-                    this.position[1] + this.dimensions[1] - h - margin - 1,
-                    w + margin,
-                    h + margin
-                );
+            this.loadingTextBg.clear();
+            this.loadingTextBg.lineStyle(1, colorToHex('grey'), 1, 0.5);
+            this.loadingTextBg.beginFill(colorToHex('white'), 0.8);
+            this.loadingTextBg.drawRect(
+                this.position[0] + this.dimensions[0] - w - margin - 1,
+                this.position[1] + this.dimensions[1] - h - margin - 1,
+                w + margin,
+                h + margin
+            );
 
-                this.loadingText.visible = true;
-                this.loadingTextBg.visible = true;
-            } else {
+            this.loadingText.visible = true;
+            this.loadingTextBg.visible = true;
+            return () => {
                 this.loadingText.visible = false;
                 this.loadingTextBg.visible = false;
-            }
+            };
         }
 
         /**
