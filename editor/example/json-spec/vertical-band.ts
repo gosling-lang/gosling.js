@@ -2,7 +2,7 @@ import type { GoslingSpec } from 'gosling.js';
 
 export const EX_SPEC_BAND: GoslingSpec = {
     layout: 'linear',
-    xDomain: { chromosome: '1', interval: [103900000, 104100000] },
+    xDomain: { chromosome: 'chr1', interval: [103900000, 104100000] },
     spacing: 0,
     tracks: [
         {

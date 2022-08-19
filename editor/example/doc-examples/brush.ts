@@ -14,7 +14,7 @@ export const BRUSH: GoslingSpec = {
                 field: 'position',
                 type: 'genomic',
                 domain: {
-                    chromosome: '1'
+                    chromosome: 'chr1'
                 },
                 axis: 'top'
             },
@@ -46,7 +46,7 @@ export const BRUSH: GoslingSpec = {
                 field: 'position',
                 type: 'genomic',
                 domain: {
-                    chromosome: '1',
+                    chromosome: 'chr1',
                     interval: [200000000, 220000000]
                 },
                 axis: 'top',

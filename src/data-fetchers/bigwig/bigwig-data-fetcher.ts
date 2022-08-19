@@ -4,7 +4,7 @@
  */
 import { BigWig } from '@gmod/bbi';
 import type { Assembly, BigWigData } from '@gosling.schema';
-import { GET_CHROM_SIZES } from '../../core/utils/assembly';
+import { computeChromSizes } from '../../core/utils/assembly';
 import { CommonDataConfig, RemoteFile } from '../utils';
 
 import type { Feature } from '@gmod/bbi';
@@ -57,13 +57,13 @@ function BigWigDataFetcher(HGC: import('@higlass/types').HGC, dataConfig: BigWig
             this.dataPromises = [];
 
             // Prepare chromosome interval information
-            const chromosomeSizes = GET_CHROM_SIZES(this.assembly).size;
+            const chromosomeSizes = computeChromSizes(this.assembly).size;
 
             const chromosomeCumPositions: ChromInfo['cumPositions'] = [];
             const chromosomePositions: Record<string, ChromInfo['cumPositions'][number]> = {};
             let prevEndPosition = 0;
 
-            Object.keys(GET_CHROM_SIZES(this.assembly).size).forEach((chrStr, i) => {
+            Object.keys(computeChromSizes(this.assembly).size).forEach((chrStr, i) => {
                 const positionInfo = {
                     id: i,
                     chr: chrStr,
@@ -73,7 +73,7 @@ function BigWigDataFetcher(HGC: import('@higlass/types').HGC, dataConfig: BigWig
                 chromosomeCumPositions.push(positionInfo);
                 chromosomePositions[chrStr] = positionInfo;
 
-                prevEndPosition += GET_CHROM_SIZES(this.assembly).size[chrStr];
+                prevEndPosition += computeChromSizes(this.assembly).size[chrStr];
             });
             this.chromSizes = {
                 chrToAbs: (chrom, chromPos) => this.chromSizes.chrPositions[chrom].pos + chromPos,

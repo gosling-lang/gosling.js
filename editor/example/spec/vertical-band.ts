@@ -49,7 +49,7 @@ const getBetweenLinkTrack = (x: string, xe: string, x1: string, x1e: string): Tr
 
 const spec: GoslingSpec = {
     layout: 'linear',
-    xDomain: { chromosome: '1', interval: [103900000, 104100000] },
+    xDomain: { chromosome: 'chr1', interval: [103900000, 104100000] },
     spacing: 0,
     tracks: [
         getRectTrack('s1', 'e1'),

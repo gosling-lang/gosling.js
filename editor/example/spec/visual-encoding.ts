@@ -206,13 +206,13 @@ const bandView: View = {
             x: {
                 field: 's1',
                 type: 'genomic',
-                domain: { chromosome: '1', interval: [103900000, 104100000] }
+                domain: { chromosome: 'chr1', interval: [103900000, 104100000] }
             },
             xe: { field: 'e1', type: 'genomic' },
             x1: {
                 field: 's2',
                 type: 'genomic',
-                domain: { chromosome: '1' }
+                domain: { chromosome: 'chr1' }
             },
             x1e: { field: 'e2', type: 'genomic' },
             color: { field: 's1', type: 'nominal' },
@@ -231,7 +231,7 @@ const spec: GoslingSpec = {
     layout: 'linear',
     arrangement: 'vertical',
     centerRadius: 0.8,
-    xDomain: { chromosome: '1', interval: [1, 3000500] },
+    xDomain: { chromosome: 'chr1', interval: [1, 3000500] },
     views: [heatmapView, barView, stackView, lineView, pointView, pointView2, areaView2, barView2, bandView]
 };
 

@@ -1,6 +1,6 @@
 import * as uuid from 'uuid';
 import { HiGlassModel } from './higlass-model';
-import { GET_CHROM_SIZES } from './utils/assembly';
+import { computeChromSizes } from './utils/assembly';
 import { getTheme } from './utils/theme';
 
 describe('Should produce higlass model correctly', () => {
@@ -12,13 +12,13 @@ describe('Should produce higlass model correctly', () => {
     it('Should set domain correctly', () => {
         const higlass = new HiGlassModel();
         higlass.addDefaultView(uuid.v1());
-        higlass.setDomain({ chromosome: '2' }, { chromosome: '2', interval: [100, 200] });
+        higlass.setDomain({ chromosome: 'chr2' }, { chromosome: 'chr2', interval: [100, 200] });
         expect(higlass.spec().views?.[0].initialXDomain).toEqual([
-            GET_CHROM_SIZES().interval['chr2'][0] + 1,
-            GET_CHROM_SIZES().interval['chr2'][1]
+            computeChromSizes().interval['chr2'][0] + 1,
+            computeChromSizes().interval['chr2'][1]
         ]);
-        expect(higlass.spec().views?.[0].initialYDomain?.[0]).toEqual(GET_CHROM_SIZES().interval['chr2'][0] + 100);
-        expect(higlass.spec().views?.[0].initialYDomain?.[1]).toEqual(GET_CHROM_SIZES().interval['chr2'][0] + 200);
+        expect(higlass.spec().views?.[0].initialYDomain?.[0]).toEqual(computeChromSizes().interval['chr2'][0] + 100);
+        expect(higlass.spec().views?.[0].initialYDomain?.[1]).toEqual(computeChromSizes().interval['chr2'][0] + 200);
     });
 
     it('Should add brush correctly', () => {

@@ -2,11 +2,22 @@ import { getNumericDomain, shareScaleAcrossTracks } from './scales';
 import { GoslingTrackModel } from '../gosling-track-model';
 import { IsChannelDeep } from '../gosling.schema.guards';
 import { getTheme } from './theme';
+import type { ChromSizes } from '@gosling.schema';
 
 describe('Genomic domain', () => {
     it('With Chromosome', () => {
-        expect(getNumericDomain({ chromosome: '1' })).toEqual(getNumericDomain({ chromosome: '1' }));
-        expect(getNumericDomain({ chromosome: '1' })).toEqual(getNumericDomain({ chromosome: 'chr1' }));
+        expect(getNumericDomain({ chromosome: '1' }, 'hg38')).toBeUndefined();
+        expect(getNumericDomain({ interval: [1, 100] })).toEqual([1, 100]);
+        expect(getNumericDomain({ chromosome: 'chr1', interval: [1, 100] })).toEqual([1, 100]);
+
+        const customAssembly: ChromSizes = [
+            ['foo', 10],
+            ['bar', 20],
+            ['barz', 30]
+        ];
+        expect(getNumericDomain({ chromosome: 'fool' }, customAssembly)).toBeUndefined();
+        expect(getNumericDomain({ chromosome: 'bar' }, customAssembly)).toEqual([11, 30]);
+        expect(getNumericDomain({ chromosome: 'barz', interval: [1, 2] }, customAssembly)).toEqual([31, 32]);
     });
 });
 

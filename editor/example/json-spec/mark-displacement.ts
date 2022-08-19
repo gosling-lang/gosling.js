@@ -8,11 +8,11 @@ export const EX_SPEC_MARK_DISPLACEMENT: GoslingSpec = {
     // static: true,
     spacing: 1,
     centerRadius: 0.8,
-    xDomain: { chromosome: '17', interval: [43080000, 43120000] },
+    xDomain: { chromosome: 'chr17', interval: [43080000, 43120000] },
     views: [
         EX_SPEC_GENE_TRANSCRIPT,
         {
-            xDomain: { chromosome: '2', interval: [126800000, 127700000] },
+            xDomain: { chromosome: 'chr2', interval: [126800000, 127700000] },
             tracks: [
                 {
                     alignment: 'overlay',

@@ -27,7 +27,14 @@ import { getTabularData } from './data-abstraction';
 import { publish } from '../core/pubsub';
 import { getRelativeGenomicPosition } from '../core/utils/assembly';
 import { getTextStyle } from '../core/utils/text-style';
-import { Is2DTrack, IsChannelDeep, IsMouseEventsDeep, IsXAxis } from '../core/gosling.schema.guards';
+import {
+    Is2DTrack,
+    IsChannelDeep,
+    IsMouseEventsDeep,
+    IsXAxis,
+    isTabularDataFetcher,
+    hasDataTransform
+} from '../core/gosling.schema.guards';
 import { HIGLASS_AXIS_SIZE } from '../core/higlass-model';
 import type { MouseEventData } from '../gosling-mouse-event/mouse-event-model';
 import { flatArrayToPairArray } from '../core/utils/array';
@@ -38,11 +45,6 @@ import type { FetchedTiles, TabularTileData, Tile } from '@higlass/services';
 
 // Set `true` to print in what order each function is called
 export const PRINT_RENDERING_CYCLE = false;
-
-// Experimental function to test with prerelease rendering
-function usePrereleaseRendering(spec: SingleTrack | OverlaidTrack) {
-    return spec.data?.type === 'bam' || spec.data?.type === 'vcf';
-}
 
 // For using libraries, refer to https://github.com/higlass/higlass/blob/f82c0a4f7b2ab1c145091166b0457638934b15f3/app/scripts/configs/available-for-plugins.js
 // `getTilePosAndDimensions()` definition: https://github.com/higlass/higlass/blob/1e1146409c7d7c7014505dd80d5af3e9357c77b6/app/scripts/Tiled1DPixiTrack.js#L133
@@ -114,20 +116,6 @@ function GoslingTrack(HGC: import('@higlass/types').HGC, ...args: any[]): any {
 
         constructor(params: any[]) {
             const [context, options] = params;
-
-            // Check whether to load tabualr data-fetcher
-            if (usePrereleaseRendering(options.spec)) {
-                try {
-                    if (options.spec.data?.type === 'bam') {
-                        context.dataFetcher = new BamDataFetcher(HGC, context.dataConfig);
-                    } else if (options.spec.data?.type === 'vcf') {
-                        context.dataFetcher = new VcfDataFetcher(HGC, context.dataConfig);
-                    }
-                } catch (e) {
-                    console.warn('Error loading tabular data-fetcher', e);
-                }
-            }
-
             super(context, options);
 
             context.dataFetcher.track = this;
@@ -173,12 +161,8 @@ function GoslingTrack(HGC: import('@higlass/types').HGC, ...args: any[]): any {
             this.isRangeBrushActivated = false;
             this.pMask.interactive = true;
             this.gBrush = HGC.libraries.d3Selection.select(this.context.svgElement).append('g');
-            this.mRangeBrush = new LinearBrushModel(
-                this.gBrush,
-                HGC.libraries,
-                this.onRangeBrush.bind(this),
-                this.options.spec.style?.brush
-            );
+            this.mRangeBrush = new LinearBrushModel(this.gBrush, HGC.libraries, this.options.spec.style?.brush);
+            this.mRangeBrush.on('brush', this.onRangeBrush.bind(this));
             this.pMask.mousedown = (e: InteractionEvent) =>
                 this.onMouseDown(
                     e.data.getLocalPosition(this.pMain).x,
@@ -269,7 +253,7 @@ function GoslingTrack(HGC: import('@higlass/types').HGC, ...args: any[]): any {
             };
 
             if (
-                (this.dataFetcher instanceof BamDataFetcher || this.dataFetcher instanceof VcfDataFetcher) &&
+                isTabularDataFetcher(this.dataFetcher) &&
                 !isEqual(this.visibleAndFetchedTiles(), this.prevVisibleAndFetchedTiles)
             ) {
                 this.updateTileAsync(this.dataFetcher, processTilesAndDraw);
@@ -529,8 +513,17 @@ function GoslingTrack(HGC: import('@higlass/types').HGC, ...args: any[]): any {
 
         // !! This is called in the constructor, `super(context, options)`. So be aware to use variables that is prepared.
         calculateVisibleTiles() {
-            if (usePrereleaseRendering(this.options.spec)) {
+            if (isTabularDataFetcher(this.dataFetcher)) {
                 const tiles = HGC.utils.trackUtils.calculate1DVisibleTiles(this.tilesetInfo, this._xScale);
+
+                // determine max tile size
+                let maxTileWith = Number.MAX_SAFE_INTEGER;
+                if ('MAX_TILE_WIDTH' in this.dataFetcher) {
+                    maxTileWith = this.dataFetcher.MAX_TILE_WIDTH;
+                }
+                if (typeof this.tilesetInfo.max_tile_width === 'number') {
+                    maxTileWith = this.tilesetInfo.max_tile_width;
+                }
 
                 for (const tile of tiles) {
                     const { tileWidth } = this.getTilePosAndDimensions(
@@ -538,16 +531,10 @@ function GoslingTrack(HGC: import('@higlass/types').HGC, ...args: any[]): any {
                         [tile[1], tile[1]],
                         this.tilesetInfo.tile_size
                     );
-
-                    // base pairs
-                    const DEFAULT_MAX_TILE_WIDTH =
-                        this.options.spec.data?.type === 'bam' ? 2e4 : Number.MAX_SAFE_INTEGER;
-
-                    if (tileWidth > (this.tilesetInfo.max_tile_width || DEFAULT_MAX_TILE_WIDTH)) {
-                        this.forceDraw();
+                    this.forceDraw();
+                    if (tileWidth > maxTileWith) {
                         return;
                     }
-                    this.forceDraw();
                 }
 
                 this.setVisibleTiles(tiles);
@@ -745,13 +732,15 @@ function GoslingTrack(HGC: import('@higlass/types').HGC, ...args: any[]): any {
          * Check whether tiles should be merged.
          */
         shouldCombineTiles() {
-            return (
-                ((this.options.spec as SingleTrack | OverlaidTrack).dataTransform?.find(t => t.type === 'displace') &&
-                    this.visibleAndFetchedTiles()?.[0]?.tileData &&
-                    // we do not need to combine tiles w/ multivec, vector, matrix
-                    !('dense' in this.visibleAndFetchedTiles()[0].tileData)) ||
-                this.options.spec.data?.type === 'bam'
-            ); // BAM data fetcher already combines the datasets;
+            const includesDisplaceTransform = hasDataTransform(this.options.spec, 'displace');
+            // we do not need to combine dense tiles (from multivec, vector, matrix)
+            const hasDenseTiles = () => {
+                const tiles = this.visibleAndFetchedTiles();
+                return tiles?.[0]?.tileData?.dense;
+            };
+            // BAM data fetcher already combines the datasets;
+            const isBamDataFetcher = this.dataFetcher instanceof BamDataFetcher;
+            return (includesDisplaceTransform && !hasDenseTiles()) || isBamDataFetcher;
         }
 
         /**

@@ -6,7 +6,6 @@ import type {
     DomainChr,
     DomainInterval,
     DomainChrInterval,
-    DomainGene,
     Style,
     Track,
     SingleTrack,
@@ -32,8 +31,10 @@ import type {
     BamData,
     Range,
     TemplateTrack,
-    MouseEventsDeep
+    MouseEventsDeep,
+    DataTransform
 } from './gosling.schema';
+import type { BamDataFetcher, VcfDataFetcher } from '../data-fetchers';
 import { SUPPORTED_CHANNELS } from './mark';
 import { isArray } from 'lodash-es';
 import {
@@ -61,12 +62,24 @@ export const PREDEFINED_COLOR_STR_MAP: { [k: string]: (t: number) => string } = 
     pink: interpolateRdPu
 };
 
+export function isObject(x: unknown): x is Record<PropertyKey, unknown> {
+    return typeof x === 'object' && x !== null;
+}
+
+export function isTabularDataFetcher(dataFetcher: unknown): dataFetcher is BamDataFetcher | VcfDataFetcher {
+    return isObject(dataFetcher) && 'getTabularData' in dataFetcher;
+}
+
+export function hasDataTransform(spec: SingleTrack | OverlaidTrack, type: DataTransform['type']) {
+    return (spec.dataTransform ?? []).some(d => d.type === type);
+}
+
 /**
  * This returns an array of color strings that can be assigned to HiGlass' option, `colorRange`
  */
 export function getHiGlassColorRange(colorStr = 'viridis', step = 100) {
     const interpolate = PREDEFINED_COLOR_STR_MAP[colorStr] ?? PREDEFINED_COLOR_STR_MAP['viridis'];
-    return [...Array(step)].map((v, i) => interpolate((1 / step) * i));
+    return [...Array(step)].map((_, i) => interpolate((1 / step) * i));
 }
 
 export function IsFlatTracks(_: SingleView): _ is FlatTracks {
@@ -106,10 +119,6 @@ export function IsDomainInterval(domain: Domain): domain is DomainInterval {
 
 export function IsDomainChrInterval(domain: Domain): domain is DomainChrInterval {
     return 'chromosome' in domain && 'interval' in domain;
-}
-
-export function IsDomainGene(domain: Domain): domain is DomainGene {
-    return 'gene' in domain;
 }
 
 export function IsTrackStyle(track: Style | undefined): track is Style {

@@ -11,7 +11,7 @@ export const EX_SPEC_TEMPLATE: GoslingSpec = {
     style: { enableSmoothPath: true },
     views: [
         {
-            xDomain: { chromosome: '3', interval: [52168000, 52890000] },
+            xDomain: { chromosome: 'chr3', interval: [52168000, 52890000] },
             tracks: [
                 // {
                 //     data: {
@@ -70,7 +70,7 @@ export const EX_SPEC_TEMPLATE: GoslingSpec = {
             ]
         },
         {
-            xDomain: { chromosome: '1', interval: [77925299, 77925320] },
+            xDomain: { chromosome: 'chr1', interval: [77925299, 77925320] },
             tracks: [
                 {
                     template: 'sequence',
@@ -98,7 +98,7 @@ export const EX_SPEC_TEMPLATE: GoslingSpec = {
             ]
         },
         {
-            xDomain: { chromosome: '1' },
+            xDomain: { chromosome: 'chr1' },
             tracks: [
                 {
                     template: 'ideogram',

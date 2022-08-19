@@ -36,7 +36,7 @@ export const BAR: SingleTrack = {
 export const EX_SPEC_MOUSE_EVENT: GoslingSpec = {
     title: 'Custom Mouse Events',
     subtitle: 'Customize mouse hovering and range selection events',
-    xDomain: { chromosome: '1' },
+    xDomain: { chromosome: 'chr1' },
     views: [
         {
             tracks: [
@@ -128,7 +128,7 @@ export const EX_SPEC_MOUSE_EVENT: GoslingSpec = {
             ]
         },
         {
-            xDomain: { chromosome: '3', interval: [52168000, 52890000] },
+            xDomain: { chromosome: 'chr3', interval: [52168000, 52890000] },
             tracks: [
                 {
                     title: 'Group Marks By Gene',

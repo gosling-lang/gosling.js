@@ -74,8 +74,8 @@ const spec: GoslingSpec = {
             ]
         },
         {
-            // xDomain: { chromosome: '10', interval: [27035000, 27150000] },
-            xDomain: { chromosome: '10', interval: [27040527, 27048076] },
+            // xDomain: { chromosome: 'chr10', interval: [27035000, 27150000] },
+            xDomain: { chromosome: 'chr10', interval: [27040527, 27048076] },
             tracks: [
                 {
                     data: {

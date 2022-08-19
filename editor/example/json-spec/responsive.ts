@@ -4,7 +4,7 @@ export const EX_SPEC_RESPONSIVE_SEGREGATED_AREA_CHART: GoslingSpec = {
     // title: 'Responsive Visualization',
     // subtitle: 'Resize your browser to see visualization changes...',
     responsiveSize: { width: false, height: true },
-    xDomain: { chromosome: '12', interval: [5000000, 15000000] },
+    xDomain: { chromosome: 'chr12', interval: [5000000, 15000000] },
     views: [
         {
             tracks: [
@@ -78,7 +78,7 @@ const TotalChartSizes = [400, 200]; // [192, 96, 48]; // from the paper below
 export const EX_SPEC_RESPONSIVE_MULTIVEC: GoslingSpec = {
     description: 'Reference: Javed et al. Graphical perception of Multiple Time Series. TVCG 2010.',
     responsiveSize: { width: false, height: true },
-    xDomain: { chromosome: '12', interval: [5000000, 15000000] },
+    xDomain: { chromosome: 'chr12', interval: [5000000, 15000000] },
     views: [
         {
             // layout: 'circular', // 'linear',
@@ -268,7 +268,7 @@ export const EX_SPEC_RESPONSIVE_MULTIVEC: GoslingSpec = {
 export const EX_SPEC_RESPONSIVE_MULTIVEC_CIRCULAR: GoslingSpec = {
     description: 'Reference: Javed et al. Graphical perception of Multiple Time Series. TVCG 2010.',
     responsiveSize: { width: false, height: true },
-    xDomain: { chromosome: '12', interval: [5000000, 15000000] },
+    xDomain: { chromosome: 'chr12', interval: [5000000, 15000000] },
     views: [
         {
             layout: 'circular',
@@ -849,7 +849,7 @@ export const EX_SPEC_RESPONSIVE_COMPARATIVE_VIEWS: GoslingSpec = {
     ],
     views: [
         {
-            xDomain: { chromosome: '12', interval: [5000000, 15000000] },
+            xDomain: { chromosome: 'chr12', interval: [5000000, 15000000] },
             tracks: [
                 {
                     id: 'left',
@@ -901,7 +901,7 @@ export const EX_SPEC_RESPONSIVE_COMPARATIVE_VIEWS: GoslingSpec = {
             ]
         },
         {
-            xDomain: { chromosome: '12', interval: [5000000, 15000000] },
+            xDomain: { chromosome: 'chr12', interval: [5000000, 15000000] },
             tracks: [
                 {
                     id: 'right',

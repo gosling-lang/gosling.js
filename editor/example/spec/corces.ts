@@ -4,7 +4,7 @@ const width = 400;
 
 const ideogram: View = {
     layout: 'linear',
-    xDomain: { chromosome: '3' },
+    xDomain: { chromosome: 'chr3' },
     centerRadius: 0.8,
     tracks: [
         {
@@ -257,7 +257,7 @@ const spec: GoslingSpec = {
     views: [
         ideogram,
         {
-            xDomain: { chromosome: '3', interval: [52168000, 52890000] },
+            xDomain: { chromosome: 'chr3', interval: [52168000, 52890000] },
             linkingId: 'detail',
             x: {
                 field: 'position',

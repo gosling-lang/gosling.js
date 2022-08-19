@@ -147,7 +147,7 @@ export const EX_SPEC_CIRCULAR_OVERVIEW_LINEAR_DETAIL: GoslingSpec = {
                             x: {
                                 field: 'start',
                                 type: 'genomic',
-                                domain: { chromosome: '16' },
+                                domain: { chromosome: 'chr16' },
                                 linkingId: 'detail-2'
                             },
                             xe: { field: 'end', type: 'genomic' },

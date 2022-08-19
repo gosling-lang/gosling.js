@@ -32,7 +32,7 @@ export const RECT: GoslingSpec = {
                 field: 'chromStart',
                 type: 'genomic',
                 domain: {
-                    chromosome: '1'
+                    chromosome: 'chr1'
                 },
                 axis: 'top'
             },

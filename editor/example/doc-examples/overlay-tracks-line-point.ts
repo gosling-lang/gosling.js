@@ -28,7 +28,7 @@ export const OVERLAY_TRACKS_LINE_POINT: GoslingSpec = {
             x: {
                 field: 'position',
                 type: 'genomic',
-                domain: { chromosome: '1', interval: [1, 3000500] },
+                domain: { chromosome: 'chr1', interval: [1, 3000500] },
                 axis: 'top'
             },
             y: { field: 'peak', type: 'quantitative' },

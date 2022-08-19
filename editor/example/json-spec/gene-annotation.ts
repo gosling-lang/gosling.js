@@ -19,7 +19,7 @@ const data = {
         { index: 13, name: 'end' }
     ]
 } as DataDeep;
-const domain = undefined; // { chromosome: '3', interval: [52168000, 52890000] };
+const domain = undefined; // { chromosome: 'chr3', interval: [52168000, 52890000] };
 
 export const HiGlass: OverlaidTracks = {
     alignment: 'overlay',
@@ -734,7 +734,7 @@ export const EX_TRACK_GENE_ANNOTATION = {
 
 export const EX_SPEC_GENE_ANNOTATION: GoslingSpec = {
     layout: 'linear',
-    xDomain: { chromosome: '3', interval: [52168000, 52890000] },
+    xDomain: { chromosome: 'chr3', interval: [52168000, 52890000] },
     arrangement: 'horizontal',
     views: [
         {

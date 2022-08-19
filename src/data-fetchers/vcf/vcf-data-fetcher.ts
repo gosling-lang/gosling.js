@@ -5,7 +5,7 @@
 import { spawn } from 'threads';
 import Worker from './vcf-worker.ts?worker&inline';
 
-import { GET_CHROM_SIZES } from '../../core/utils/assembly';
+import { computeChromSizes } from '../../core/utils/assembly';
 
 import type { ModuleThread } from 'threads';
 import type { Assembly, VcfData } from '../../core/gosling.schema';
@@ -14,6 +14,7 @@ import type { WorkerApi, TilesetInfo, Tile } from './vcf-worker';
 const DEBOUNCE_TIME = 200;
 
 class VcfDataFetcher {
+    static config = { type: 'vcf' };
     dataConfig = {}; // required for higlass
     uid: string;
     prevRequestTime: number;
@@ -29,7 +30,7 @@ class VcfDataFetcher {
         this.toFetch = new Set();
         const { url, indexUrl, assembly, ...options } = config;
         this.worker = spawn<WorkerApi>(new Worker()).then(async worker => {
-            const chromSizes = Object.entries(GET_CHROM_SIZES(assembly).size);
+            const chromSizes = Object.entries(computeChromSizes(assembly).size);
             await worker.init(this.uid, { url, indexUrl }, chromSizes, options);
             return worker;
         });

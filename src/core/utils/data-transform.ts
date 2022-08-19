@@ -22,7 +22,7 @@ import {
     IsOneOfFilter,
     IsRangeFilter
 } from '../gosling.schema.guards';
-import { GET_CHROM_SIZES } from './assembly';
+import { computeChromSizes } from './assembly';
 // import Logging from './log';
 
 /**
@@ -386,7 +386,7 @@ export function splitExon(split: ExonSplitTransform, data: Datum[], assembly: As
                 splitted.forEach((s, i) => {
                     let newValue: string | number = s;
                     if (type === 'genomic') {
-                        newValue = GET_CHROM_SIZES(assembly).interval[d[chrField]][0] + +s;
+                        newValue = computeChromSizes(assembly).interval[d[chrField]][0] + +s;
                     }
                     if (!newRows[i]) {
                         // No row exist, so create one.

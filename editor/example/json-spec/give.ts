@@ -38,7 +38,7 @@ export const EX_SPEC_GIVE: GoslingSpec = {
                             x: {
                                 field: 'end',
                                 type: 'genomic',
-                                domain: { chromosome: '17', interval: [200000, 800000] },
+                                domain: { chromosome: 'chr17', interval: [200000, 800000] },
                                 axis: 'top'
                             },
                             size: { value: 7 }
@@ -157,7 +157,7 @@ export const EX_SPEC_GIVE: GoslingSpec = {
                     x: {
                         field: 'chromStart',
                         type: 'genomic',
-                        domain: { chromosome: '17', interval: [20000000, 50000000] }
+                        domain: { chromosome: 'chr17', interval: [20000000, 50000000] }
                     },
                     xe: { field: 'chromEnd', type: 'genomic' },
                     color: { value: 'white' },
@@ -400,7 +400,7 @@ export const EX_SPEC_GIVE: GoslingSpec = {
                             x: {
                                 field: 'end',
                                 type: 'genomic',
-                                domain: { chromosome: '1', interval: [109000000, 112000000] },
+                                domain: { chromosome: 'chr1', interval: [109000000, 112000000] },
                                 axis: 'bottom'
                             },
                             size: { value: 7 }

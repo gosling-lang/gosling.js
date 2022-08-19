@@ -1,4 +1,4 @@
-import { GET_CHROM_SIZES } from '../../core/utils/assembly';
+import { computeChromSizes } from '../../core/utils/assembly';
 import { sampleSize } from 'lodash-es';
 import type { Assembly, JsonData } from '@gosling.schema';
 import { CommonDataConfig, filterUsingGenoPos, sanitizeChrName } from '../utils';
@@ -33,12 +33,12 @@ function JsonDataFetcher(HGC: any, ...args: any): any {
             }
 
             // Prepare chromosome interval information
-            const chromosomeSizes: { [k: string]: number } = GET_CHROM_SIZES(this.assembly).size;
+            const chromosomeSizes: { [k: string]: number } = computeChromSizes(this.assembly).size;
             const chromosomeCumPositions: { id: number; chr: string; pos: number }[] = [];
             const chromosomePositions: { [k: string]: { id: number; chr: string; pos: number } } = {};
             let prevEndPosition = 0;
 
-            Object.keys(GET_CHROM_SIZES(this.assembly).size).forEach((chrStr, i) => {
+            Object.keys(computeChromSizes(this.assembly).size).forEach((chrStr, i) => {
                 const positionInfo = {
                     id: i,
                     chr: chrStr,
@@ -48,7 +48,7 @@ function JsonDataFetcher(HGC: any, ...args: any): any {
                 chromosomeCumPositions.push(positionInfo);
                 chromosomePositions[chrStr] = positionInfo;
 
-                prevEndPosition += GET_CHROM_SIZES(this.assembly).size[chrStr];
+                prevEndPosition += computeChromSizes(this.assembly).size[chrStr];
             });
             this.chromSizes = {
                 chrToAbs: (chrom: string, chromPos: number) => this.chromSizes.chrPositions[chrom].pos + chromPos,
@@ -70,7 +70,7 @@ function JsonDataFetcher(HGC: any, ...args: any): any {
                         }
                         try {
                             const chrName = sanitizeChrName(row[chromosomeField], this.assembly);
-                            row[g] = GET_CHROM_SIZES(this.assembly).interval[chrName][0] + +row[g];
+                            row[g] = computeChromSizes(this.assembly).interval[chrName][0] + +row[g];
                         } catch (e) {
                             // genomic position did not parse properly
                             successfullyGotChrInfo = false;

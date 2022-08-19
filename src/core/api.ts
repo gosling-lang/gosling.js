@@ -3,7 +3,7 @@ import type { TrackMouseEventData } from '@gosling.schema';
 import type { HiGlassApi } from './higlass-component-wrapper';
 import type { HiGlassSpec } from './higlass.schema';
 import { subscribe, unsubscribe } from './pubsub';
-import { GET_CHROM_SIZES, parseGenomicPosition } from './utils/assembly';
+import { computeChromSizes, GenomicPositionHelper } from './utils/assembly';
 import type { CompleteThemeDeep } from './utils/theme';
 import { traverseViewsInViewConfig } from './utils/view-config';
 
@@ -95,25 +95,13 @@ export function createApi(
         zoomTo: (viewId, position, padding = 0, duration = 1000) => {
             // Accepted input: 'chr1' or 'chr1:1-1000'
             const assembly = getTrack(viewId)?.spec.assembly;
-            const chromInfo = GET_CHROM_SIZES(assembly);
-            const parsed = parseGenomicPosition(position);
-            const { chromosome: chr } = parsed;
-            let { start, end } = parsed;
-            if (!chr || chromInfo.interval[chr]) {
-                console.warn('Chromosome name is not valid', chr);
-                return;
-            }
-            if (typeof start === 'undefined' || typeof end === 'undefined') {
-                // if only a chromosome name is specified, zoom to the extent of the chromosome
-                [start, end] = [0, chromInfo.size[chr]];
-            }
-            const chrOffset = chromInfo.interval[chr][0];
-            const relativeGenomicPositions = [start + chrOffset - padding, end + chrOffset + padding];
-            hg.api.zoomTo(viewId, ...relativeGenomicPositions, ...relativeGenomicPositions, duration);
+            const manager = GenomicPositionHelper.fromString(position);
+            const absCoordinates = manager.toAbsoluteCoordinates(assembly, padding);
+            hg.api.zoomTo(viewId, ...absCoordinates, ...absCoordinates, duration);
         },
         zoomToExtent: (viewId, duration = 1000) => {
             const assembly = getTrack(viewId)?.spec.assembly;
-            const [start, end] = [0, GET_CHROM_SIZES(assembly).total];
+            const [start, end] = [0, computeChromSizes(assembly).total];
             hg.api.zoomTo(viewId, start, end, start, end, duration);
         },
         zoomToGene: (viewId, gene, padding = 0, duration = 1000) => {

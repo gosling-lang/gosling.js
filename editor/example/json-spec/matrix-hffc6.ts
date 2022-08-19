@@ -5,7 +5,7 @@ export const EX_SPEC_MATRIX_HFFC6: GoslingSpec = {
     title: 'Matrix Visualization',
     subtitle: 'Comparison of Micro-C and Hi-C for HFFc6 Cells',
     arrangement: 'horizontal',
-    xDomain: { chromosome: '7', interval: [77700000, 81000000] },
+    xDomain: { chromosome: 'chr7', interval: [77700000, 81000000] },
     spacing: 1,
     linkingId: '-',
     views: [
