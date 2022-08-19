@@ -3,6 +3,7 @@ import { IsChannelDeep } from '../gosling.schema.guards';
 import { cartesianToPolar, valueToRadian } from '../utils/polar';
 import colorToHex from '../utils/color-to-hex';
 import type { CompleteThemeDeep } from '../utils/theme';
+import type { Tile } from '@higlass/services';
 
 export function drawCircularOutlines(
     HGC: import('@higlass/types').HGC,
