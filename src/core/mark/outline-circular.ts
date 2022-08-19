@@ -7,7 +7,7 @@ import type { CompleteThemeDeep } from '../utils/theme';
 export function drawCircularOutlines(
     HGC: import('@higlass/types').HGC,
     trackInfo: any,
-    tile: any,
+    tile: Tile,
     tm: GoslingTrackModel,
     theme: Required<CompleteThemeDeep>
 ) {

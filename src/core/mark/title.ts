@@ -4,15 +4,16 @@ import { cartesianToPolar, valueToRadian } from '../utils/polar';
 import colorToHex from '../utils/color-to-hex';
 import type { CompleteThemeDeep } from '../utils/theme';
 import { getTextStyle } from '../utils/text-style';
+import type { Tile } from '@higlass/services';
 
 export function drawCircularTitle(
     HGC: import('@higlass/types').HGC,
     trackInfo: any,
-    tile: any,
-    gos: GoslingTrackModel,
+    tile: Tile,
+    model: GoslingTrackModel,
     theme: Required<CompleteThemeDeep>
 ) {
-    const spec = gos.spec();
+    const spec = model.spec();
     const { title } = spec;
 
     if (spec.layout !== 'circular') {

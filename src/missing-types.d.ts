@@ -56,13 +56,28 @@ declare module '@higlass/services' {
               bins_per_dimension?: number;
           }
     );
-    export type TileData = Array<Record<string, string | number>> & {
-        dense: number[];
-        shape: number[];
-        tilePos: unknown[];
+    interface TileDataBase {
+        shape: [number, number];
+        tilePos?: [number, number];
         zoomLevel: number;
         tileId: string;
+    }
+    interface DenseTileData extends TileDataBase {
+        dense: number[];
+    }
+    type SparseTile = {
+        xStart: number;
+        xEnd: number;
+        chrOffset: number;
+        importance: number;
+        uid: string;
+        fields: string[];
     };
+    interface TabularTileData extends TileDataBase {
+        tabularData: Record<string, any>[];
+    }
+    type SparseTileData = TileDataBase & Array<SparseTile>;
+    export type TileData = DenseTileData | SparseTileData | TabularTileData;
     export type Tile = {
         tileId: string;
         remoteId: string;

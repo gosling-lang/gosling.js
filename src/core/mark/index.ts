@@ -19,6 +19,7 @@ import { drawBackground } from './background';
 import type { CompleteThemeDeep } from '../utils/theme';
 import { Is2DTrack, IsVerticalRule } from '../gosling.schema.guards';
 import { drawBetweenLink } from './betweenLink';
+import type { Tile } from '@higlass/services';
 
 /**
  * Visual channels currently supported for visual encoding.
@@ -49,7 +50,7 @@ export const RESOLUTION = 4;
 /**
  * Draw a track based on the track specification in a Gosling grammar.
  */
-export function drawMark(HGC: import('@higlass/types').HGC, trackInfo: any, tile: any, model: GoslingTrackModel) {
+export function drawMark(HGC: import('@higlass/types').HGC, trackInfo: any, tile: Tile, model: GoslingTrackModel) {
     if (!HGC || !trackInfo || !tile) {
         // We did not receive parameters correctly.
         return;
@@ -133,7 +134,7 @@ export function drawMark(HGC: import('@higlass/types').HGC, trackInfo: any, tile
 export function drawPreEmbellishment(
     HGC: import('@higlass/types').HGC,
     trackInfo: any,
-    tile: any,
+    tile: Tile,
     model: GoslingTrackModel,
     theme: Required<CompleteThemeDeep>
 ) {
@@ -179,7 +180,7 @@ export function drawPreEmbellishment(
 export function drawPostEmbellishment(
     HGC: import('@higlass/types').HGC,
     trackInfo: any,
-    tile: any,
+    tile: Tile,
     model: GoslingTrackModel,
     theme: Required<CompleteThemeDeep>
 ) {

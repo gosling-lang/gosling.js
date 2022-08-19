@@ -5,6 +5,7 @@ import type { CompleteThemeDeep } from '../utils/theme';
 import { scaleLinear } from 'd3-scale';
 import { cartesianToPolar, valueToRadian } from '../utils/polar';
 import { getTextStyle } from '../utils/text-style';
+import type { Tile } from '@higlass/services';
 
 const EXTENT_TICK_SIZE = 8;
 const TICK_SIZE = 6;
@@ -15,21 +16,21 @@ const TICK_SIZE = 6;
 export function drawLinearYAxis(
     HGC: { libraries: { PIXI: typeof import('pixi.js') } },
     trackInfo: any,
-    tile: any,
-    gos: GoslingTrackModel,
+    tile: Tile,
+    model: GoslingTrackModel,
     theme: Required<CompleteThemeDeep>
 ) {
-    const spec = gos.spec();
+    const spec = model.spec();
     const CIRCULAR = spec.layout === 'circular';
-    const yDomain = gos.getChannelDomainArray('y');
-    const yRange = gos.getChannelRangeArray('y');
+    const yDomain = model.getChannelDomainArray('y');
+    const yRange = model.getChannelRangeArray('y');
 
     if (CIRCULAR) {
         // Wrong function call, this is for linear tracks!
         return;
     }
 
-    if (!gos.isShowYAxis() || !yDomain || !yRange) {
+    if (!model.isShowYAxis() || !yDomain || !yRange) {
         // We do not need to draw a y-axis
         return;
     }
@@ -39,7 +40,7 @@ export function drawLinearYAxis(
     const [tx, ty] = trackInfo.position;
 
     /* row separation */
-    const rowCategories: string[] = (gos.getChannelDomainArray('row') as string[]) ?? ['___SINGLE_ROW___'];
+    const rowCategories: string[] = (model.getChannelDomainArray('row') as string[]) ?? ['___SINGLE_ROW___'];
     const rowHeight = th / rowCategories.length;
 
     if (rowHeight <= 20) {
@@ -48,7 +49,7 @@ export function drawLinearYAxis(
     }
 
     /* Axis components */
-    const yChannel = gos.spec().y;
+    const yChannel = model.spec().y;
     const isLeft = IsChannelDeep(yChannel) && 'axis' in yChannel && yChannel.axis === 'right' ? false : true; // Right position only if explicitly specified
     const yScale = scaleLinear()
         .domain(yDomain as number[])
@@ -64,7 +65,7 @@ export function drawLinearYAxis(
         //     return;
         // }
 
-        const rowPosition = gos.encodedValue('row', category);
+        const rowPosition = model.encodedValue('row', category);
         const dx = isLeft ? tx : tx + tw;
         const dy = ty + rowPosition;
 
@@ -137,21 +138,21 @@ export function drawLinearYAxis(
 export function drawCircularYAxis(
     HGC: import('@higlass/types').HGC,
     trackInfo: any,
-    tile: any,
-    gos: GoslingTrackModel,
+    tile: Tile,
+    model: GoslingTrackModel,
     theme: Required<CompleteThemeDeep>
 ) {
-    const spec = gos.spec();
+    const spec = model.spec();
     const CIRCULAR = spec.layout === 'circular';
-    const yDomain = gos.getChannelDomainArray('y');
-    const yRange = gos.getChannelRangeArray('y');
+    const yDomain = model.getChannelDomainArray('y');
+    const yRange = model.getChannelRangeArray('y');
 
     if (!CIRCULAR) {
         // Wrong function call, this is for circular tracks.
         return;
     }
 
-    if (!gos.isShowYAxis() || !yDomain || !yRange) {
+    if (!model.isShowYAxis() || !yDomain || !yRange) {
         // We do not need to draw a y-axis
         return;
     }
@@ -169,7 +170,7 @@ export function drawCircularYAxis(
     const cy = th / 2.0;
 
     /* row separation */
-    const rowCategories: string[] = (gos.getChannelDomainArray('row') as string[]) ?? ['___SINGLE_ROW___'];
+    const rowCategories: string[] = (model.getChannelDomainArray('row') as string[]) ?? ['___SINGLE_ROW___'];
     const rowHeight = th / rowCategories.length;
 
     if ((rowHeight / th) * trackRingSize <= 20) {
@@ -178,7 +179,7 @@ export function drawCircularYAxis(
     }
 
     /* Axis components */
-    const yChannel = gos.spec().y;
+    const yChannel = model.spec().y;
     const isLeft = IsChannelDeep(yChannel) && 'axis' in yChannel && yChannel.axis === 'right' ? false : true; // Right position only if explicitly specified
     const yScale = scaleLinear()
         .domain(yDomain as number[])
@@ -194,7 +195,7 @@ export function drawCircularYAxis(
         //     return;
         // }
 
-        const rowPosition = gos.encodedValue('row', category);
+        const rowPosition = model.encodedValue('row', category);
 
         /* Axis Baseline */
         const innerR = trackOuterRadius - ((rowPosition + rowHeight) / th) * trackRingSize;

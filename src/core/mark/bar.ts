@@ -5,8 +5,9 @@ import type { PIXIVisualProperty } from '../visual-property.schema';
 import { IsChannelDeep, IsStackedMark, getValueUsingChannel } from '../gosling.schema.guards';
 import { cartesianToPolar, valueToRadian } from '../utils/polar';
 import colorToHex from '../utils/color-to-hex';
+import type { Tile } from '@higlass/services';
 
-export function drawBar(trackInfo: any, tile: any, model: GoslingTrackModel) {
+export function drawBar(trackInfo: any, tile: Tile, model: GoslingTrackModel) {
     /* track spec */
     const spec = model.spec();
 
@@ -21,7 +22,11 @@ export function drawBar(trackInfo: any, tile: any, model: GoslingTrackModel) {
     /* track size */
     const [trackWidth, trackHeight] = trackInfo.dimensions;
     const tileSize = trackInfo.tilesetInfo.tile_size;
-    const { tileX, tileWidth } = trackInfo.getTilePosAndDimensions(tile.gos.zoomLevel, tile.gos.tilePos, tileSize);
+    const { tileX, tileWidth } = trackInfo.getTilePosAndDimensions(
+        tile.tileData.zoomLevel,
+        tile.tileData.tilePos,
+        tileSize
+    );
     const zoomLevel =
         (model.getChannelScale('x') as any).invert(trackWidth) - (model.getChannelScale('x') as any).invert(0);
 
