@@ -736,7 +736,7 @@ function GoslingTrack(HGC: import('@higlass/types').HGC, ...args: any[]): any {
             // we do not need to combine dense tiles (from multivec, vector, matrix)
             const hasDenseTiles = () => {
                 const tiles = this.visibleAndFetchedTiles();
-                return tiles?.[0]?.tileData?.dense;
+                return tiles.length >= 1 && 'dense' in tiles[0].tileData;
             };
             // BAM data fetcher already combines the datasets;
             const isBamDataFetcher = this.dataFetcher instanceof BamDataFetcher;
