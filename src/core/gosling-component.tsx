@@ -61,7 +61,7 @@ export const GoslingComponent = forwardRef<GoslingRef, GoslingCompProps>((props,
         } else {
             ref.current = { api, hgApi };
         }
-    }, [viewConfig, theme]);
+    }, [hgRef.current, viewConfig, theme]);
 
     // TODO: add a `force` parameter since changing `linkingId` might not update vis
     const compile = useCallback(() => {
