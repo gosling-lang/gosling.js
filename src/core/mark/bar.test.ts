@@ -24,8 +24,8 @@ describe('mark:= bar', () => {
                 return { tileX: null, tileWidth: null };
             }
         };
-        const tileMock = { graphics: new PIXI.Graphics(), gos: {} };
-        drawBar(trackMock, tileMock, model);
+        const tileMock = { graphics: new PIXI.Graphics(), tileData: {} };
+        drawBar(trackMock, tileMock as any, model);
         // Should render all data (https://github.com/gosling-lang/gosling.js/pull/791)
         expect(model.getMouseEventModel().size()).toEqual(d.length);
     });
