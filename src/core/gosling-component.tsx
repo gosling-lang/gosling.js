@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import { HiGlassApi, HiGlassComponentWrapper } from './higlass-component-wrapper';
-import React, { useState, useEffect, useMemo, useRef, forwardRef, useCallback } from 'react';
+import React, { useState, useEffect, useMemo, useRef, forwardRef, useCallback, useImperativeHandle } from 'react';
 import ResizeSensor from 'css-element-queries/src/ResizeSensor';
 import * as gosling from '..';
 import { getTheme, Theme } from './utils/theme';
@@ -52,16 +52,17 @@ export const GoslingComponent = forwardRef<GoslingRef, GoslingCompProps>((props,
     const wrapperDivId = props.id ?? uuid.v4();
 
     // Gosling APIs
-    useEffect(() => {
-        if (!ref || !hgRef?.current) return;
-        const hgApi = hgRef.current;
-        const api = createApi(hgApi, viewConfig, trackInfos.current, theme);
-        if (typeof ref == 'function') {
-            ref({ api, hgApi });
-        } else {
-            ref.current = { api, hgApi };
-        }
-    }, [hgRef.current, viewConfig, theme]);
+    useImperativeHandle(
+        ref,
+        () => {
+            const hgApi = new Proxy({} as HiGlassApi, {
+                get: (_target, prop, reciever) => Reflect.get(hgRef.current!, prop, reciever)
+            });
+            const api = createApi(hgApi, viewConfig, trackInfos.current, theme);
+            return { api, hgApi };
+        },
+        [viewConfig, theme]
+    );
 
     // TODO: add a `force` parameter since changing `linkingId` might not update vis
     const compile = useCallback(() => {
