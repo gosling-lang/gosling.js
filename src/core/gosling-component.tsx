@@ -55,10 +55,9 @@ export const GoslingComponent = forwardRef<GoslingRef, GoslingCompProps>((props,
     useImperativeHandle(
         ref,
         () => {
-            const hgApi = new Proxy({} as HiGlassApi, {
-                get: (_target, prop, reciever) => Reflect.get(hgRef.current!, prop, reciever)
-            });
-            const api = createApi(hgApi, viewConfig, trackInfos.current, theme);
+            const hgApi = refAsReadonlyProxy(hgRef);
+            const infos = refAsReadonlyProxy(trackInfos);
+            const api = createApi(hgApi, viewConfig, infos, theme);
             return { api, hgApi };
         },
         [viewConfig, theme]
@@ -190,3 +189,14 @@ export const GoslingComponent = forwardRef<GoslingRef, GoslingCompProps>((props,
 });
 
 GoslingComponent.displayName = 'GoslingComponent';
+
+/** Wraps the `.current` property of a React.RefObject as a readonly object. */
+function refAsReadonlyProxy<T extends object>(ref: React.RefObject<T>): Readonly<T> {
+    // Readonly because because we only implement `get`.
+    return new Proxy({} as Readonly<T>, {
+        get(_target, prop, reciever) {
+            if (!ref.current) throw Error('ref is not set!');
+            return Reflect.get(ref.current, prop, reciever);
+        }
+    });
+}

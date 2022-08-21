@@ -26,7 +26,7 @@ export interface GoslingApi {
     zoomToGene(viewId: string, gene: string, padding?: number, duration?: number): void;
     suggestGene(viewId: string, keyword: string, callback: (suggestions: GeneSuggestion[]) => void): void;
     getViewIds(): string[];
-    getTracks(): TrackMouseEventData[];
+    getTracks(): readonly TrackMouseEventData[];
     getTrack(trackId: string): TrackMouseEventData | undefined;
     exportPng(transparentBackground?: boolean): void;
     exportPdf(transparentBackground?: boolean): void;
@@ -41,7 +41,7 @@ export interface GoslingApi {
 export function createApi(
     hg: HiGlassApi,
     hgSpec: HiGlassSpec | undefined,
-    trackInfos: TrackMouseEventData[],
+    trackInfos: readonly TrackMouseEventData[],
     theme: Required<CompleteThemeDeep>
 ): GoslingApi {
     const getTracks = () => {
