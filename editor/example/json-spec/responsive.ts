@@ -431,7 +431,7 @@ export const EX_SPEC_RESPONSIVE_MULTIVEC_CIRCULAR: GoslingSpec = {
 // TODO: Add genes and allow rotation
 export const EX_SPEC_RESPONSIVE_IDEOGRAM: GoslingSpec = {
     responsiveSize: { width: true, height: true },
-    xDomain: { chromosome: '7' },
+    xDomain: { chromosome: 'chr7' },
     views: [
         {
             tracks: [
@@ -875,7 +875,7 @@ export const EX_SPEC_RESPONSIVE_COMPARATIVE_VIEWS: GoslingSpec = {
             ]
         },
         {
-            xDomain: { chromosome: '9', interval: [5000000, 15000000] },
+            xDomain: { chromosome: 'chr9', interval: [5000000, 15000000] },
             tracks: [
                 {
                     id: 'middle',

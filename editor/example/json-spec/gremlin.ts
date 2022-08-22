@@ -6,7 +6,7 @@ export const EX_SPEC_GREMLIN: GoslingSpec = {
     views: [
         {
             linkingId: 'view1',
-            xDomain: { chromosome: '5', interval: [0, 80000000] },
+            xDomain: { chromosome: 'chr5', interval: [0, 80000000] },
             tracks: [
                 {
                     alignment: 'overlay',
@@ -209,7 +209,7 @@ export const EX_SPEC_GREMLIN: GoslingSpec = {
                                 type: 'genomic',
                                 linkingId: 'view2',
                                 axis: 'bottom',
-                                domain: { chromosome: '5', interval: [68000000, 71000000] }
+                                domain: { chromosome: 'chr5', interval: [68000000, 71000000] }
                             },
                             xe: { field: 'p2', type: 'genomic' },
                             row: {
@@ -260,7 +260,7 @@ export const EX_SPEC_GREMLIN: GoslingSpec = {
                                         type: 'genomic',
                                         axis: 'bottom',
                                         domain: {
-                                            chromosome: '5',
+                                            chromosome: 'chr5',
                                             interval: [69276000, 69282000]
                                         }
                                     },

@@ -116,7 +116,12 @@ export const EX_SPEC_CIRCULAR_OVERVIEW_LINEAR_DETAIL: GoslingSpec = {
                                 binSize: 4
                             },
                             mark: 'bar',
-                            x: { field: 'start', type: 'genomic', linkingId: 'detail-1', domain: { chromosome: '5' } },
+                            x: {
+                                field: 'start',
+                                type: 'genomic',
+                                linkingId: 'detail-1',
+                                domain: { chromosome: 'chr5' }
+                            },
                             xe: { field: 'end', type: 'genomic' },
                             y: { field: 'peak', type: 'quantitative' },
                             row: { field: 'sample', type: 'nominal' },
