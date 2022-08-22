@@ -435,11 +435,9 @@ function GoslingTrack(HGC: import('@higlass/types').HGC, ...args: any[]): any {
             this.xDomain = this._xScale.domain();
             this.xRange = this._xScale.range();
 
-            const hide = this.showLoadingCue(`Fetching... ${Array.from(this.fetching).join(' ')}`);
             const tabularData = await tabularDataFetcher.getTabularData(
                 Object.values(this.fetchedTiles as { remoteId: string }[]).map(x => x.remoteId)
             );
-            hide();
             const tiles = this.visibleAndFetchedTiles();
             if (tiles?.[0]) {
                 const tile = tiles[0];
@@ -449,11 +447,7 @@ function GoslingTrack(HGC: import('@higlass/types').HGC, ...args: any[]): any {
                 tile.tileData.tilePos = [refTile[1]];
             }
 
-            {
-                const hide = this.showLoadingCue(`Fetching... ${Array.from(this.fetching).join(' ')}`);
-                callback();
-                hide();
-            }
+            callback();
         }
 
         /**
@@ -633,36 +627,51 @@ function GoslingTrack(HGC: import('@higlass/types').HGC, ...args: any[]): any {
             }
         }
 
+        receivedTiles(...args: unknown[]) {
+            // https://github.com/higlass/higlass/blob/38f0c4415f0595c3b9d685a754d6661dc9612f7c/app/scripts/TiledPixiTrack.js#L637
+            super.receivedTiles(...args);
+            // some items in this.fetching are removed
+            isTabularDataFetcher(this.dataFetcher) && this.drawLoadingCue();
+        }
+
+        // https://github.com/higlass/higlass/blob/38f0c4415f0595c3b9d685a754d6661dc9612f7c/app/scripts/TiledPixiTrack.js#L342
+        removeOldTiles() {
+            super.removeOldTiles(); // some items are added to this.fetching
+            isTabularDataFetcher(this.dataFetcher) && this.drawLoadingCue();
+        }
+
         /**
          * Show visual cue during waiting for visualizations being rendered.
          */
-        showLoadingCue(text: string) {
-            const margin = 6;
+        drawLoadingCue() {
+            if (this.fetching.size) {
+                const margin = 6;
 
-            this.loadingText.text = text;
-            this.loadingText.x = this.position[0] + this.dimensions[0] - margin / 2.0;
-            this.loadingText.y = this.position[1] + this.dimensions[1] - margin / 2.0;
+                const text = `Fetching... ${Array.from(this.fetching).join(' ')}`;
+                this.loadingText.text = text;
+                this.loadingText.x = this.position[0] + this.dimensions[0] - margin / 2.0;
+                this.loadingText.y = this.position[1] + this.dimensions[1] - margin / 2.0;
 
-            // Show background
-            const metric = HGC.libraries.PIXI.TextMetrics.measureText(text, this.loadingTextStyleObj);
-            const { width: w, height: h } = metric;
+                // Show background
+                const metric = HGC.libraries.PIXI.TextMetrics.measureText(text, this.loadingTextStyleObj);
+                const { width: w, height: h } = metric;
 
-            this.loadingTextBg.clear();
-            this.loadingTextBg.lineStyle(1, colorToHex('grey'), 1, 0.5);
-            this.loadingTextBg.beginFill(colorToHex('white'), 0.8);
-            this.loadingTextBg.drawRect(
-                this.position[0] + this.dimensions[0] - w - margin - 1,
-                this.position[1] + this.dimensions[1] - h - margin - 1,
-                w + margin,
-                h + margin
-            );
+                this.loadingTextBg.clear();
+                this.loadingTextBg.lineStyle(1, colorToHex('grey'), 1, 0.5);
+                this.loadingTextBg.beginFill(colorToHex('white'), 0.8);
+                this.loadingTextBg.drawRect(
+                    this.position[0] + this.dimensions[0] - w - margin - 1,
+                    this.position[1] + this.dimensions[1] - h - margin - 1,
+                    w + margin,
+                    h + margin
+                );
 
-            this.loadingText.visible = true;
-            this.loadingTextBg.visible = true;
-            return () => {
+                this.loadingText.visible = true;
+                this.loadingTextBg.visible = true;
+            } else {
                 this.loadingText.visible = false;
                 this.loadingTextBg.visible = false;
-            };
+            }
         }
 
         /**
