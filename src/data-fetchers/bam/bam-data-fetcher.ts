@@ -83,7 +83,7 @@ class BamDataFetcher<Config extends BamData> implements TabularDataFetcher<Infer
         (await this.worker).fetchTilesDebounced(this.uid, tileIds).then(receivedTiles);
     }
 
-    async getTabularData(tileIds: string[]): Promise<Junction[] | Segment[] | SegmentWithMate[]> {
+    async getTabularData(tileIds: string[]): Promise<InferTileType<Config>[]> {
         const buf = await (await this.worker).getTabularData(this.uid, tileIds);
         return JSON.parse(new TextDecoder().decode(buf));
     }
