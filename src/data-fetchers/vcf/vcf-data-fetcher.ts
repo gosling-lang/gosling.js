@@ -14,7 +14,7 @@ import type { TabularDataFetcher } from '../utils';
 
 const DEBOUNCE_TIME = 200;
 
-class VcfDataFetcher implements TabularDataFetcher<VcfTile> {
+class VcfDataFetcher implements TabularDataFetcher<VcfTile[]> {
     static config = { type: 'vcf' };
     dataConfig = {}; // required for higlass
     uid: string;
