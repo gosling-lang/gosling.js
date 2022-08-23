@@ -1,4 +1,3 @@
-// @ts-ignore
 import * as gt from 'gosling-theme';
 import { CHANNEL_DEFAULTS } from '../channel';
 

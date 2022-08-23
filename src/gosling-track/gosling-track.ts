@@ -38,9 +38,10 @@ import {
 import { HIGLASS_AXIS_SIZE } from '../core/higlass-model';
 import type { MouseEventData } from '../gosling-mouse-event/mouse-event-model';
 import { flatArrayToPairArray } from '../core/utils/array';
-import { BamDataFetcher, VcfDataFetcher } from '../data-fetchers';
+import { BamDataFetcher } from '../data-fetchers';
 import { LinearBrushModel } from '../gosling-brush/linear-brush-model';
 import { isPointInsideDonutSlice } from '../gosling-mouse-event/polygon';
+import type { TabularDataFetcher } from 'src/data-fetchers/utils';
 
 // Set `true` to print in what order each function is called
 export const PRINT_RENDERING_CYCLE = false;
@@ -430,15 +431,13 @@ function GoslingTrack(HGC: import('@higlass/types').HGC, ...args: any[]): any {
         /**
          * This is currently for testing the new way of rendering visual elements.
          */
-        async updateTileAsync(tabularDataFetcher: BamDataFetcher | VcfDataFetcher, callback: () => void) {
+        async updateTileAsync(tabularDataFetcher: TabularDataFetcher<unknown>, callback: () => void) {
             this.xDomain = this._xScale.domain();
             this.xRange = this._xScale.range();
-            this.drawLoadingCue();
+
             const tabularData = await tabularDataFetcher.getTabularData(
-                this.dataFetcher.uid,
-                Object.values(this.fetchedTiles).map((x: any) => x.remoteId)
+                Object.values(this.fetchedTiles as { remoteId: string }[]).map(x => x.remoteId)
             );
-            this.drawLoadingCue();
             const tiles = this.visibleAndFetchedTiles();
             if (tiles?.[0]) {
                 const tile = tiles[0];
@@ -448,9 +447,7 @@ function GoslingTrack(HGC: import('@higlass/types').HGC, ...args: any[]): any {
                 tile.tileData.tilePos = [refTile[1]];
             }
 
-            this.drawLoadingCue();
             callback();
-            this.drawLoadingCue();
         }
 
         /**
@@ -488,15 +485,8 @@ function GoslingTrack(HGC: import('@higlass/types').HGC, ...args: any[]): any {
         calculateVisibleTiles() {
             if (isTabularDataFetcher(this.dataFetcher)) {
                 const tiles = HGC.utils.trackUtils.calculate1DVisibleTiles(this.tilesetInfo, this._xScale);
-
-                // determine max tile size
-                let maxTileWith = Number.MAX_SAFE_INTEGER;
-                if ('MAX_TILE_WIDTH' in this.dataFetcher) {
-                    maxTileWith = this.dataFetcher.MAX_TILE_WIDTH;
-                }
-                if (typeof this.tilesetInfo.max_tile_width === 'number') {
-                    maxTileWith = this.tilesetInfo.max_tile_width;
-                }
+                const maxTileWith =
+                    this.tilesetInfo.max_tile_width ?? this.dataFetcher.MAX_TILE_WIDTH ?? Number.MAX_SAFE_INTEGER;
 
                 for (const tile of tiles) {
                     const { tileWidth } = this.getTilePosAndDimensions(
@@ -637,6 +627,19 @@ function GoslingTrack(HGC: import('@higlass/types').HGC, ...args: any[]): any {
             }
         }
 
+        receivedTiles(...args: unknown[]) {
+            // https://github.com/higlass/higlass/blob/38f0c4415f0595c3b9d685a754d6661dc9612f7c/app/scripts/TiledPixiTrack.js#L637
+            super.receivedTiles(...args);
+            // some items in this.fetching are removed
+            isTabularDataFetcher(this.dataFetcher) && this.drawLoadingCue();
+        }
+
+        // https://github.com/higlass/higlass/blob/38f0c4415f0595c3b9d685a754d6661dc9612f7c/app/scripts/TiledPixiTrack.js#L342
+        removeOldTiles() {
+            super.removeOldTiles(); // some items are added to this.fetching
+            isTabularDataFetcher(this.dataFetcher) && this.drawLoadingCue();
+        }
+
         /**
          * Show visual cue during waiting for visualizations being rendered.
          */
@@ -644,7 +647,6 @@ function GoslingTrack(HGC: import('@higlass/types').HGC, ...args: any[]): any {
             if (this.fetching.size) {
                 const margin = 6;
 
-                // Show textual message
                 const text = `Fetching... ${Array.from(this.fetching).join(' ')}`;
                 this.loadingText.text = text;
                 this.loadingText.x = this.position[0] + this.dimensions[0] - margin / 2.0;
