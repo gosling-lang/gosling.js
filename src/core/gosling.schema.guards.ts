@@ -36,7 +36,6 @@ import type {
 } from './gosling.schema';
 import type { BamDataFetcher, VcfDataFetcher } from '../data-fetchers';
 import { SUPPORTED_CHANNELS } from './mark';
-import { isArray } from 'lodash-es';
 import {
     interpolateGreys,
     interpolateWarm,
@@ -206,14 +205,14 @@ export function IsIncludeFilter(_: FilterTransform): _ is IncludeFilter {
  * Check whether domain is in array shape.
  */
 export function IsDomainArray(domain?: Domain): domain is string[] | number[] {
-    return isArray(domain);
+    return Array.isArray(domain);
 }
 
 /**
  * Check whether range is in array shape.
  */
 export function IsRangeArray(range?: Range): range is string[] | number[] {
-    return isArray(range);
+    return Array.isArray(range);
 }
 
 // TODO: perhaps, combine this with `isStackedChannel`
