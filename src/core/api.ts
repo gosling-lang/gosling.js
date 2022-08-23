@@ -39,13 +39,13 @@ export interface GoslingApi {
 }
 
 export function createApi(
-    hg: HiGlassApi,
+    hg: Readonly<HiGlassApi>,
     hgSpec: HiGlassSpec | undefined,
-    trackInfos: TrackMouseEventData[],
+    trackInfos: readonly TrackMouseEventData[],
     theme: Required<CompleteThemeDeep>
 ): GoslingApi {
     const getTracks = () => {
-        return trackInfos;
+        return [...trackInfos];
     };
     const getTrack = (trackId: string) => {
         const trackInfoFound = trackInfos.find(d => d.id === trackId);
