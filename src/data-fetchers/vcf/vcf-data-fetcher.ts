@@ -9,11 +9,12 @@ import { computeChromSizes } from '../../core/utils/assembly';
 
 import type { ModuleThread } from 'threads';
 import type { Assembly, VcfData } from '../../core/gosling.schema';
-import type { WorkerApi, TilesetInfo, Tile } from './vcf-worker';
+import type { WorkerApi, TilesetInfo, VcfTile } from './vcf-worker';
+import type { TabularDataFetcher } from '../utils';
 
 const DEBOUNCE_TIME = 200;
 
-class VcfDataFetcher {
+class VcfDataFetcher implements TabularDataFetcher<VcfTile> {
     static config = { type: 'vcf' };
     dataConfig = {}; // required for higlass
     uid: string;
@@ -43,7 +44,7 @@ class VcfDataFetcher {
         (await this.worker).tilesetInfo(this.uid).then(callback);
     }
 
-    fetchTilesDebounced(receivedTiles: (tiles: Record<string, Tile>) => void, tileIds: string[]) {
+    fetchTilesDebounced(receivedTiles: (tiles: Record<string, VcfTile>) => void, tileIds: string[]) {
         // const { toFetch } = this;
 
         // const thisZoomLevel = tileIds[0].split('.')[0]; // Example of tileIds: ["3.0", "3.1"]
@@ -70,12 +71,12 @@ class VcfDataFetcher {
         }, DEBOUNCE_TIME);
     }
 
-    async sendFetch(receivedTiles: (tiles: Record<string, Tile>) => void, tileIds: string[]) {
+    async sendFetch(receivedTiles: (tiles: Record<string, VcfTile>) => void, tileIds: string[]) {
         (await this.worker).fetchTilesDebounced(this.uid, tileIds).then(receivedTiles);
     }
 
-    async getTabularData(uid: string, tileIds: string[]): Promise<Tile[]> {
-        const buf = await (await this.worker).getTabularData(uid, tileIds);
+    async getTabularData(tileIds: string[]): Promise<VcfTile[]> {
+        const buf = await (await this.worker).getTabularData(this.uid, tileIds);
         return JSON.parse(new TextDecoder().decode(buf));
     }
 }

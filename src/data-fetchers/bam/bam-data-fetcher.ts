@@ -7,12 +7,19 @@ import Worker from './bam-worker.ts?worker&inline';
 
 import type { BamData, Assembly } from '@gosling.schema';
 import type { ModuleThread } from 'threads';
-import type { WorkerApi, TilesetInfo, Tiles, Segment, SegmentWithMate, Junction } from './bam-worker';
+import type { WorkerApi, TilesetInfo, Tiles, Segment, Junction, SegmentWithMate } from './bam-worker';
 import { computeChromSizes } from '../../core/utils/assembly';
+import type { TabularDataFetcher } from '../utils';
 
 const DEBOUNCE_TIME = 200;
 
-class BamDataFetcher {
+type InferTileType<Config extends BamData> = Config['extractJunction'] extends true
+    ? Junction
+    : Config['loadMates'] extends true
+    ? SegmentWithMate
+    : Segment;
+
+class BamDataFetcher<Config extends BamData> implements TabularDataFetcher<InferTileType<Config>> {
     static config = { type: 'bam' };
     dataConfig = {}; // required for higlass
     uid: string;
@@ -28,7 +35,7 @@ class BamDataFetcher {
         fetching: { delete(id: string): void };
     };
 
-    constructor(HGC: import('@higlass/types').HGC, config: BamData & { assembly: Assembly }) {
+    constructor(HGC: import('@higlass/types').HGC, config: Config & { assembly: Assembly }) {
         this.uid = HGC.libraries.slugid.nice();
         this.toFetch = new Set();
         const { url, indexUrl, assembly, ...options } = config;
@@ -76,8 +83,8 @@ class BamDataFetcher {
         (await this.worker).fetchTilesDebounced(this.uid, tileIds).then(receivedTiles);
     }
 
-    async getTabularData(uid: string, tileIds: string[]): Promise<Segment[] | SegmentWithMate[] | Junction[]> {
-        const buf = await (await this.worker).getTabularData(uid, tileIds);
+    async getTabularData(tileIds: string[]): Promise<InferTileType<Config>[]> {
+        const buf = await (await this.worker).getTabularData(this.uid, tileIds);
         return JSON.parse(new TextDecoder().decode(buf));
     }
 }

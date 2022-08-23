@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import { HiGlassApi, HiGlassComponentWrapper } from './higlass-component-wrapper';
-import React, { useState, useEffect, useMemo, useRef, forwardRef, useCallback } from 'react';
+import React, { useState, useEffect, useMemo, useRef, forwardRef, useCallback, useImperativeHandle } from 'react';
 import ResizeSensor from 'css-element-queries/src/ResizeSensor';
 import * as gosling from '..';
 import { getTheme, Theme } from './utils/theme';
@@ -52,16 +52,16 @@ export const GoslingComponent = forwardRef<GoslingRef, GoslingCompProps>((props,
     const wrapperDivId = props.id ?? uuid.v4();
 
     // Gosling APIs
-    useEffect(() => {
-        if (!ref || !hgRef?.current) return;
-        const hgApi = hgRef.current;
-        const api = createApi(hgApi, viewConfig, trackInfos.current, theme);
-        if (typeof ref == 'function') {
-            ref({ api, hgApi });
-        } else {
-            ref.current = { api, hgApi };
-        }
-    }, [viewConfig, theme]);
+    useImperativeHandle(
+        ref,
+        () => {
+            const hgApi = refAsReadonlyProxy(hgRef);
+            const infos = refAsReadonlyProxy(trackInfos);
+            const api = createApi(hgApi, viewConfig, infos, theme);
+            return { api, hgApi };
+        },
+        [viewConfig, theme]
+    );
 
     // TODO: add a `force` parameter since changing `linkingId` might not update vis
     const compile = useCallback(() => {
@@ -189,3 +189,14 @@ export const GoslingComponent = forwardRef<GoslingRef, GoslingCompProps>((props,
 });
 
 GoslingComponent.displayName = 'GoslingComponent';
+
+/** Wraps the `.current` property of a React.RefObject as a readonly object. */
+function refAsReadonlyProxy<T extends object>(ref: React.RefObject<T>): Readonly<T> {
+    // Readonly because because we only implement `get`.
+    return new Proxy({} as Readonly<T>, {
+        get(_target, prop, reciever) {
+            if (!ref.current) throw Error('ref is not set!');
+            return Reflect.get(ref.current, prop, reciever);
+        }
+    });
+}
