@@ -2,4 +2,4 @@ blank_issues_enabled: false
 contact_links:
   - name: Question
     url: https://www.biostars.org/tag/gosling.js/
-    about: Please ask questions on BioStars (https://www.biostars.org/tag/gosling.js/) or Stack Overflow (https://stackoverflow.com/tags/gosling.js).
+    about: Please ask questions on BioStars (https://www.biostars.org/tag/gosling/) or Stack Overflow (https://stackoverflow.com/tags/gosling).
