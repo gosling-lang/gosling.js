@@ -3,6 +3,7 @@ import type { SingleTrack } from '@gosling.schema';
 import { GoslingTrackModel } from '../gosling-track-model';
 import { getTheme } from '../utils/theme';
 import { drawBar } from './bar';
+import { Tile } from '@higlass/services';
 
 describe('mark:= bar', () => {
     it('x:=G, y:=V, ye:=V', () => {
@@ -25,7 +26,7 @@ describe('mark:= bar', () => {
             }
         };
         const tileMock = { graphics: new PIXI.Graphics(), tileData: {} };
-        drawBar(trackMock, tileMock as any, model);
+        drawBar(trackMock, tileMock as Tile, model);
         // Should render all data (https://github.com/gosling-lang/gosling.js/pull/791)
         expect(model.getMouseEventModel().size()).toEqual(d.length);
     });
