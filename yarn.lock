@@ -4144,6 +4144,13 @@ generic-filehandle@2.2.1, generic-filehandle@^2.0.0, generic-filehandle@^2.0.1:
     es6-promisify "^6.1.1"
     file-uri-to-path "^2.0.0"
 
+generic-filehandle@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/generic-filehandle/-/generic-filehandle-3.0.0.tgz#10d5ddc4adf105de616224dba58370f3dcc3877c"
+  integrity sha512-THrFJ1fq7wjwMmSN7sdp0JnQKZDVE7aooVwHTWREKHrCGVJGKKiD5BSaboNHiFU84RIzJ+oBOqQsN//ISWj1ZQ==
+  dependencies:
+    es6-promisify "^6.1.1"
+
 gensync@^1.0.0-beta.1, gensync@^1.0.0-beta.2:
   version "1.0.0-beta.2"
   resolved "https://registry.yarnpkg.com/gensync/-/gensync-1.0.0-beta.2.tgz#32a6ee76c3d7f52d46b2b1ae5d93fea8580a25e0"
@@ -6030,11 +6037,6 @@ mixin-deep@^1.2.0:
   dependencies:
     for-in "^1.0.2"
     is-extendable "^1.0.1"
-
-mixwith@^0.1.1:
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/mixwith/-/mixwith-0.1.1.tgz#c8995918c5b61fbfda9ad377a857cd47750541c0"
-  integrity sha1-yJlZGMW2H7/amtN3qFfNR3UFQcA=
 
 modify-values@^1.0.0:
   version "1.0.1"
