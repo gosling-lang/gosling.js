@@ -9,7 +9,7 @@ declare module '@higlass/types' {
         tracks: typeof import('@higlass/tracks');
         utils: typeof import('@higlass/utils');
     };
-    export type { Context, Track, TrackOptions, TrackConfig } from '@higlass/tracks';
+    export type { Context, Track, TrackConfig } from '@higlass/tracks';
     export type { ChromInfo } from '@higlass/utils';
     export type { TilesetInfo } from '@higlass/services';
 }
@@ -37,10 +37,10 @@ declare module '@higlass/libraries' {
 }
 
 declare module '@higlass/services' {
-    import type { ScaleContinuousNumeric } from 'd3-scale';
+    import type * as d3 from 'd3';
     import type * as PIXI from 'pixi.js';
 
-    type Scale = ScaleContinuousNumeric<number, number>;
+    type Scale = d3.ScaleContinuousNumeric<number, number>;
 
     export type TilesetInfo = {
         min_pos: number[];
@@ -96,7 +96,7 @@ declare module '@higlass/services' {
         ): [tilePosition: number, positionInTile: number];
         calculateTiles(
             zoomLevel: number,
-            scale: ScaleContinuousNumeric<number, number>,
+            scale: Scale, 
             minX: number,
             maxX: number,
             maxZoom: number,
@@ -104,19 +104,19 @@ declare module '@higlass/services' {
         ): number[];
         calculateTilesFromResolution(
             resolution: number,
-            scale: ScaleContinuousNumeric<number, number>,
+            scale: Scale,
             minX: number,
             maxX: number,
             pixelsPerTile?: number
         ): number[];
         calculateTileWidth(tilesetInfo: TilesetInfo, zoomLevel: number, binsPerTile: number): number;
         calculateZoomLevel(
-            scale: ScaleContinuousNumeric<number, number>,
+            scale: Scale,
             minX: number,
             maxX: number,
             binsPerTile?: number
         ): number;
-        calculateZoomLevelFromResolutions(resolutions: number[], scale: ScaleContinuousNumeric<number, number>): number;
+        calculateZoomLevelFromResolutions(resolutions: number[], scale: Scale): number;
         // fetchTilesDebounced();
         // json();
         // text();
@@ -125,14 +125,12 @@ declare module '@higlass/services' {
 }
 
 declare module '@higlass/tracks' {
-    // TODO(2022-06-28): type out `BarTrack
-    type Track = any;
-    export const BarTrack: Track;
-
-    import type { ScaleContinuousNumeric } from 'd3-scale';
+    import type * as d3 from 'd3';
     import type * as PIXI from 'pixi.js';
+    import type { TilesetInfo, ColorRGBA  } from '@higlass/services';
+    import type { ChromInfo } from '@higlass/utils';
 
-    type Scale = ScaleContinuousNumeric<number, number>;
+    type Scale = d3.ScaleContinuousNumeric<number, number>;
 
     type Handler = (data: any) => void;
 
@@ -143,8 +141,6 @@ declare module '@higlass/tracks' {
         subscribe(msg: string, handler: Handler): Subscription;
         unsubscribe(msg: string): void;
     };
-
-    type TrackOptions = Record<string, unknown>;
 
     interface OnMouseMoveZoomOptions {
         trackId: string;
@@ -172,13 +168,13 @@ declare module '@higlass/tracks' {
         isGenomicCoords: boolean;
     }
 
-    export type Context<Options> = {
+    export type Context<TileData, Options> = {
         id: string;
         viewUid: string;
         pubSub: PubSub;
         scene: PIXI.Graphics;
         dataConfig: DataConfig;
-        dataFetcher: DataFetcher;
+        dataFetcher: DataFetcher<TileData>;
         getLockGroupExtrema(): [min: number, max: number] | null;
         handleTilesetInfoReceived(tilesetInfo: TilesetInfo): void;
         animate(): void;
@@ -192,7 +188,7 @@ declare module '@higlass/tracks' {
         getTheme(): string;
     };
 
-    export class _Track {
+    export class Track<Options> {
         /* Properites */
         id: string;
         _xScale: Scale;
@@ -201,7 +197,7 @@ declare module '@higlass/tracks' {
         _refYScale: Scale;
         position: [number, number];
         dimensions: [number, number];
-        options: TrackOptions;
+        options: Options;
         pubSubs: Subscription[];
         /* Constructor */
         constructor(props: { id: string; pubSub: PubSub; getTheme?: () => string });
@@ -229,22 +225,28 @@ declare module '@higlass/tracks' {
          */
         defaultMouseMoveHandler(evt: MouseEvent): void;
         remove(): void;
-        rerender(options?: TrackOptions, force?: boolean): void;
+        rerender(options?: Options, force?: boolean): void;
         /**
          * Whether this track should respond to events at this mouse position.
          *
          * The difference to `isWithin()` is that it can be overwritten if a track is inactive for example.
          */
         respondsToPosition(x: number, y: number): boolean;
-        zoomedY<T extends Track>(trackY: T, kMultiplier: number): void;
+        zoomedY<T extends Track<any>>(trackY: T, kMultiplier: number): void;
         movedY(dY: number): void;
     }
 
     type DataConfig = Record<string, any>;
-    type DataFetcher = Record<string, any>;
-    type TilesetInfo = Record<string, any>;
+    export interface DataFetcher<Tile> {
+      tilesetInfo(finished: (info: TilesetInfo) => void): void;
+      fetchTilesDebounced(receivedTiles: (tiles: Record<string, Tile>) => void, tileIds: string[]): void;
+    }
 
-    export class PixiTrack<Options extends TrackOptions> extends _Track {
+    type TilePosition1D = [zoom: number, x: number];
+    type TilePosition2D = [zoom: number, x: number, y: number];
+    type TilePosition = TilePosition1D | TilePosition2D;
+
+    export class PixiTrack<Options> extends Track<Options> {
         /* Properties */
         delayDrawing: boolean;
         scene: PIXI.Graphics;
@@ -259,7 +261,6 @@ declare module '@higlass/tracks' {
         pMobile: PIXI.Graphics;
         pAxis: PIXI.Graphics;
         pMouseOver: PIXI.Graphics;
-        options: Options;
         labelTextFontFamily: string;
         labelTextFontSize: number;
         labelXOffset: number;
@@ -268,7 +269,7 @@ declare module '@higlass/tracks' {
         prevOptions: string;
         flipText?: boolean; // Property never assigned https://github.com/higlass/higlass/blob/develop/app/scripts/PixiTrack.js
         /* Constructor */
-        constructor(context: Context<Options>, options: Options);
+        constructor(context: Context<unknown, Options>, options: Options);
         /* Methods */
         setMask(position: [number, number], dimensions: [number, number]): void;
         getForeground(): void;
@@ -279,6 +280,289 @@ declare module '@higlass/tracks' {
         getName(): string;
         drawLabel(): void;
         rerender(options: Options, force?: boolean): void;
+        exportSVG(): [HTMLElement, HTMLElement];
+    }
+
+    export abstract class TiledPixiTrack<TileData, Options> extends PixiTrack<Options> {
+        /* Constructor */
+        constructor(context: Context<TileData, Options>, options: Options);
+
+        renderVersion: number;
+
+        // the tiles which should be visible (although they're not necessarily fetched)
+        visibleTiles: Set<TileData>;
+        visibleTileIds: Set<string>;
+
+        // keep track of tiles that are currently being rendered
+        renderingTiles: Set<TileData>;
+        // the tiles we already have requests out for
+        fetching: Set<TileData>;
+        scale: Record<string, unknown>;
+
+        fetchedTiles: Record<string, TileData>;
+
+        // the graphics that have already been drawn for this track
+        tileGraphics: Record<string, PIXI.Graphics>;
+
+        maxZoom: number;
+        medianVisibleValue: number | null;
+
+        backgroundTaskScheduler: unknown;
+
+        continuousScaling: boolean;
+
+        valueScaleMin: null | number;
+        fixedValueScaleMin: null | number;
+        valueScaleMax: null | number;
+        fixedValueScaleMax: null | number;
+
+        listeners: Record<string, unknown>;
+
+        pubSub: Pick<Context<TileData, Options>, 'pubSub'>;
+        animate: Pick<Context<TileData, Options>, 'animate'>;
+        onValueScaleChanged: Pick<Context<TileData, Options>, 'onValueScaleChanged'>;
+
+        // store the server and tileset uid so they can be used in draw()
+        // if the tileset info is not found
+        prevValueScale: number | null;
+        dataFetcher: DataFetcher<TileData>;
+        tilesetInfo: TilesetInfo | null;
+        uuid: string;
+        trackNotFoundText: PIXI.Text;
+
+        refreshTilesDebounced(): void;
+
+        tilesetUid?: string;
+        server?: string;
+        chromInfo?: ChromInfo;
+
+        // methods
+        setError(error: string): void;
+        setFixedValueScaleMin(value: number): void;
+        setFixedValueScaleMax(value: number): void;
+        checkValueScaleLimits(): void;
+        /**
+         * Register an event listener for track events. Currently, the only supported
+         * event is ``dataChanged``.
+         *
+         * @param event The event to listen for.
+         * @param cb The callback to call when the event occurs. The
+         *  parameters for the event depend on the event called.
+         *
+         * @example
+         *
+         *  trackObj.on('dataChanged', (newData) => {
+         *   console.log('newData:', newData)
+         *  });
+         */
+        on(event: 'dataChanged', cb: (data: TileData[]) => void): void;
+        off(event: 'dataChanged', cb: (data: TileData[]) => void): void;
+        visibleAndFetchedIds(): string[];
+        visibleAndFetchedTiles(): TileData[];
+        setVisibleTiles(tilePositions: (TilePosition & { mirrored?: boolean })[]): void;
+        abstract tileToLocalId(tile: TilePosition): string;
+        abstract tileToRemoteId(tile: TilePosition): string;
+        removeOldTiles(): void;
+        refreshTiles(): void;
+        parentInFetched(tile: TileData): boolean;
+        parentTileId(tile: TileData): string;
+        removeTiles(toRemoveIds: string[]): void;
+        zoomed(newXScale: Scale, newYScale: Scale, k?: number, tx?: number, ty?: number): void;
+        /**
+         * Check to see if all the visible tiles are loaded.
+         *
+         * If they are, remove all other tiles.
+         */
+        areAllVisibleTilesLoaded(): boolean;
+        /**
+         * Function is called when all tiles that should be visible have
+         * been received.
+         */
+        allTilesLoaded(): void;
+        minValue(value: number): this;
+        minValue(): number;
+        maxValue(value: number): this;
+        maxValue(): number;
+        minRawValue(): number;
+        maxRawValue(): number;
+        initTile(tile?: TileData): void;
+        updateTile(tile?: TileData): void;
+        destroyTile(tile?: TileData): void;
+        addMissingGraphics(): void;
+        updateExistingGraphics(): void;
+        synchronizeTilesAndGraphics(): void;
+        // Requires this.lruCache which is not implemented anywhere in higlass??
+        // loadTileData<TData, TType>(
+        //     tile: { tileId: string, data: TData, type: TType },
+        //     dataLoader: (data: TData, type: TType) => TileData,
+        // ): TileData;
+        fetchNewTiles(toFetch: { remoteId: string }[]): void;
+        receivedTiles(loadedTiles: Record<string, TileData>): void;
+        /**
+         * Draw a tile on some graphics
+         */
+        drawTile(tile?: TileData): void;
+        calculateMedianVisibleValue(): number;
+        /** Caution! assumes dense tile data */
+        allVisibleValues(): number[];
+        /**
+         * Should be overwriten by child clases to get the true minimum
+         * visible value in the currently viewed area
+         */
+        minVisibleValue(ignoreFixedScale?: boolean): number;
+        minVisibleValueInTiles(ignoreFixedScale?: boolean): number;
+        /**
+         * Should be overwriten by child clases to get the true maximal
+         * visible value in the currently viewed area
+         */
+        maxVisibleValue(ignoreFixedScale?: boolean): number;
+        maxVisibleValueInTiles(ignoreFixedScale?: boolean): number;
+        /**
+         * Create a value scale that will be used to position values along the y axis.
+         *
+         *  @param minValue The minimum value of the data
+         *  @param medianValue The median value of the data. Potentially used for adding a pseudocount
+         *  @param maxValue The maximum value of the data
+         *  @param inMargin A number of pixels to be left free on the top and bottom of the track. For example if the glyphs have a certain width and we want all of them to fit into the space.
+         */
+        makeValueScale(minValue: number, medianValue: number, maxValue: number, inMargin: number): [scale: Scale, offset: number];
+    }
+
+    export abstract class Tiled1DPixiTrack<TileData, Options> extends TiledPixiTrack<TileData, Options> {
+        onMouseMoveZoom: Pick<Context<TileData, Options>, 'onMouseMoveZoom'>;
+        isValueScaleLocked: Pick<Context<TileData, Options>, 'isValueScaleLocked'>;
+        getLockGroupExtrema: Pick<Context<TileData, Options>, 'getLockGroupExtrema'>;
+        initTile(tile: TileData): void;
+        tileToLocalId(tile: TilePosition): string;
+        tileToRemoteId(tile: TilePosition): string;
+        /**
+         * Which scale should we use for calculating tile positions?
+         *
+         * Horizontal tracks should use the xScale and vertical tracks
+         * should use the yScale
+         *
+         * This function should be overwritten by HorizontalTiled1DPixiTrack.js
+         * and VerticalTiled1DPixiTrack.js
+         */
+        abstract relevantScale(): Scale;
+        calculateVisibleTiles(): void;
+        /** Get the tile's position in its coordinate system. */
+        getTilePosAndDimensions(
+            zoomLevel: number,
+            tilePos: [x: number, y: number],
+            binsPerTileIn?: number,
+        ): { tileX: number, tileY: number, tileWidth: number, tileHeight: number };
+        updateTile(tile: TileData): void;
+        scheduleRerender(): void;
+        handleRerender(): void;
+        /** Caution! Assumes dense data */
+        getIndicesOfVisibleDataInTile(
+            tile: { zoomLevel: number, tilePos: [number, number], dense: ArrayLike<number> }
+        ): [start: number, end: number];
+        minVisibleValue(ignoreFixedScale?: boolean): number;
+        maxVisibleValue(ignoreFixedScale?: boolean): number;
+        /**
+         * Return an aggregated visible value. For example, the minimum or maximum.
+         *
+         * @description
+         *   The difference to `minVisibleValueInTiles`
+         *   is that the truly visible min or max value is returned instead of the
+         *   min or max value of the tile. The latter is not necessarily visible.
+         *
+         *   For 'min' and 'max' this is identical to minVisibleValue and maxVisibleValue
+         *
+         * @param aggregator Aggregation method.
+         */
+        getAggregatedVisibleValue(aggregator?: 'min' | 'max'): number;
+        /**
+         * Get the data value at a relative pixel position
+         * @param relPos  Relative pixel position, where 0 indicates the start of the track.
+         * @return The data value at `relPos`.
+         */
+        getDataAtPos(relPos: number): number;
+        mouseMoveHandler(mousePosition?: { x?: number, y?: number }): void;
+        abstract mouseMoveZoomHandler(absX?: number, abxY?: number): void;
+    }
+
+    class AxisPixi<Track> {
+        pAxis: PIXI.Graphics;
+        track: Track;
+        axisTexts: string[];
+        axisTextFontFamily: string;
+        axisTextFontSize: number;
+
+        constructor(track: Track);
+
+        startAxis(axisHeight: number): void;
+        createAxisTexts(valueScale: Scale, axisHeight: number): void;
+        calculateAxisTickValues(valueScale: Scale, axisHeight: number): ReturnType<Scale['ticks']>;
+        drawAxisLeft(valueScale: Scale, axisHeight: number): void;
+        drawAxisRight(valueScale: Scale, axisHeight: number): void;
+        hideOverlappingAxisLabels(): void;
+        exportVerticalAxis(axisHeight: number): SVGGElement;
+        createAxisSVGLine(): SVGPathElement;
+        createAxisSVGText(text: string): SVGTextElement;
+        exportAxisLeftSVG(valueScale: Scale, axisHeight: number): SVGGElement;
+        exportAxisRightSVG(valueScale: Scale, axisHeight: number): SVGGElement;
+        clearAxis(): void;
+    }
+
+    export class HorizontalTiled1DPixiTrack<T, Options> extends Tiled1DPixiTrack<T, Options> {
+        constIndicator: PIXI.Graphics;
+        axis: AxisPixi<this>;
+        animate: Pick<Context<T, Options>, 'animate'>;
+        isShowGlobalMousePosition: Pick<Context<T, Options>, 'isShowGlobalMousePosition'>;
+        is2d?: boolean;
+        calculateZoomLevel(): number;
+        relevantScale(): Scale;
+        drawAxis(valueScale: Scale): void;
+        mouseMoveZoomHandler(absX?: number, absY?: number): void;
+        drawConstIndicator(): void;
+    }
+
+    export class HorizontalLine1DPixiTrack<T, Options> extends HorizontalTiled1DPixiTrack<T, Options> {
+        stopHover(): void;
+        getMouseOverHtml(trackX: number): string;
+        renderTile(tile: T): void;
+        drawTile(tile: T): void;
+        zoomed(newXScale: Scale, newYScale: Scale): void;
+        superSVG(): [HTMLElement, HTMLElement];
+        tileToLocalId(tile: TilePosition): string;
+        tileToRemoteId(tile: TilePosition): string;
+    }
+
+
+    export class BarTrack<T, Options> extends HorizontalLine1DPixiTrack<T, Options> {
+        zeroLine: PIXI.Graphics;
+        valueScaleTransform: d3.ZoomTransform;
+        initialized?: boolean;
+        colorScale?: ColorRGBA[];
+        setColorScale(colorRange: ColorRGBA[]): void;
+        colorGradientColors?: { from: number, color: ColorRGBA }[];
+        setColorGradient(colorGradient: ColorRGBA[]): void;
+        drawZeroLine(): void;
+        drawZeroLineSvg(output: HTMLElement): void;
+        getXScaleAndOffset(drawnAtScale: Scale): [number, number];
+        /**
+         * Adds information to recreate the track in SVG to the tile. 
+         * Warning. Mutates the tile!
+         *
+         * @param tile
+         * @param x x value of bar
+         * @param y y value of bar
+         * @param width width of bar
+         * @param height height of bar
+         * @param color color of bar (not converted to hex)
+         */
+        addSVGInfo(tile: T, x: number, y: number, width: number, height: number, color: string): void;
+        /**
+         * Export an SVG representation of this track
+         *
+         * @returns {Array} The two returned DOM nodes are both SVG
+         * elements [base,track]. Base is a parent which contains track as a
+         * child. Track is clipped with a clipping rectangle contained in base.
+         *
+         */
         exportSVG(): [HTMLElement, HTMLElement];
     }
 
@@ -319,7 +603,7 @@ declare module '@higlass/tracks' {
         };
     };
 
-    export type TrackConfig<Options extends TrackOptions> = {
+    export type TrackConfig<Options> = {
         type: string;
         defaultOptions?: Options;
         availableOptions?: (keyof Options)[];
@@ -338,7 +622,7 @@ declare module '@higlass/utils' {
     import type { ScaleContinuousNumeric } from 'd3-scale';
     import type { TilesetInfo } from '@higlass/services';
 
-    type ChromInfo<Name extends string = string> = {
+    export type ChromInfo<Name extends string = string> = {
         cumPositions: { id?: number; pos: number; chr: string }[];
         chrPositions: Record<Name, { pos: number }>;
         chromLengths: Record<Name, number>;
@@ -356,7 +640,7 @@ declare module '@higlass/utils' {
         absPosition: number,
         chrInfo: Pick<ChromInfo, 'cumPositions' | 'chromLengths'>
     ): [chr: string, chrPositon: number, offset: number, insertPoint: number];
-    export function chrToAbs<Name>(
+    export function chrToAbs<Name extends string>(
         chrom: Name,
         chromPos: number,
         chromInfo: Pick<ChromInfo<Name>, 'chrPositions'>
