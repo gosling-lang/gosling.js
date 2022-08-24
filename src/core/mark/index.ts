@@ -1,4 +1,5 @@
 import type { GoslingTrackModel } from '../gosling-track-model';
+import type { Tile } from '../../gosling-track/gosling-track';
 import { drawPoint } from './point';
 import { drawLine } from './line';
 import { drawBar } from './bar';
@@ -19,7 +20,6 @@ import { drawBackground } from './background';
 import type { CompleteThemeDeep } from '../utils/theme';
 import { Is2DTrack, IsVerticalRule } from '../gosling.schema.guards';
 import { drawBetweenLink } from './betweenLink';
-import type { Tile } from '@higlass/services';
 
 /**
  * Visual channels currently supported for visual encoding.

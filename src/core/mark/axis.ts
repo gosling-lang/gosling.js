@@ -5,7 +5,7 @@ import type { CompleteThemeDeep } from '../utils/theme';
 import { scaleLinear } from 'd3-scale';
 import { cartesianToPolar, valueToRadian } from '../utils/polar';
 import { getTextStyle } from '../utils/text-style';
-import type { Tile } from '@higlass/services';
+import type { Tile } from '../../gosling-track/gosling-track';
 
 const EXTENT_TICK_SIZE = 8;
 const TICK_SIZE = 6;

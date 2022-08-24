@@ -4,7 +4,7 @@ import { min as d3min, max as d3max, group } from 'd3-array';
 import { IsStackedMark, getValueUsingChannel } from '../gosling.schema.guards';
 import { cartesianToPolar } from '../utils/polar';
 import colorToHex from '../utils/color-to-hex';
-import type { Tile } from '@higlass/services';
+import type { Tile } from '../../gosling-track/gosling-track';
 
 /**
  * Draw area marks

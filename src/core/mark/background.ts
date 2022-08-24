@@ -1,4 +1,4 @@
-import type { Tile } from '@higlass/services';
+import type { Tile } from '../../gosling-track/gosling-track';
 import { isUndefined } from 'lodash-es';
 import type { GoslingTrackModel } from '../gosling-track-model';
 import { IsChannelDeep } from '../gosling.schema.guards';

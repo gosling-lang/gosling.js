@@ -5,7 +5,7 @@ import type { CompleteThemeDeep } from '../utils/theme';
 import type { Dimension } from '../utils/position';
 import { scaleLinear, ScaleLinear } from 'd3-scale';
 import { getTextStyle } from '../utils/text-style';
-import type { Tile } from '@higlass/services';
+import type { Tile } from '../../gosling-track/gosling-track';
 
 // Just the libraries necesssary fro this module
 type Libraries = Pick<typeof import('@higlass/libraries'), 'PIXI' | 'd3Selection' | 'd3Drag'>;

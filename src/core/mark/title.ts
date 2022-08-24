@@ -4,7 +4,7 @@ import { cartesianToPolar, valueToRadian } from '../utils/polar';
 import colorToHex from '../utils/color-to-hex';
 import type { CompleteThemeDeep } from '../utils/theme';
 import { getTextStyle } from '../utils/text-style';
-import type { Tile } from '@higlass/services';
+import type { Tile } from '../../gosling-track/gosling-track';
 
 export function drawCircularTitle(
     HGC: import('@higlass/types').HGC,

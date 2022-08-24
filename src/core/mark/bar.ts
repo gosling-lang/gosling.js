@@ -5,7 +5,7 @@ import type { PIXIVisualProperty } from '../visual-property.schema';
 import { IsChannelDeep, IsStackedMark, getValueUsingChannel } from '../gosling.schema.guards';
 import { cartesianToPolar, valueToRadian } from '../utils/polar';
 import colorToHex from '../utils/color-to-hex';
-import type { Tile } from '@higlass/services';
+import type { Tile } from '../../gosling-track/gosling-track';
 
 export function drawBar(trackInfo: any, tile: Tile, model: GoslingTrackModel) {
     /* track spec */

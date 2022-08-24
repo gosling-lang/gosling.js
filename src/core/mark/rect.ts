@@ -3,7 +3,7 @@ import { cartesianToPolar, valueToRadian } from '../utils/polar';
 import type { PIXIVisualProperty } from '../visual-property.schema';
 import colorToHex from '../utils/color-to-hex';
 import { IsChannelDeep } from '../gosling.schema.guards';
-import type { Tile } from '@higlass/services';
+import type { Tile } from '../../gosling-track/gosling-track';
 
 export function drawRect(HGC: import('@higlass/types').HGC, track: any, tile: Tile, model: GoslingTrackModel) {
     /* track spec */

@@ -41,7 +41,7 @@ import { flatArrayToPairArray } from '../core/utils/array';
 import { BamDataFetcher } from '../data-fetchers';
 import { LinearBrushModel } from '../gosling-brush/linear-brush-model';
 import { isPointInsideDonutSlice } from '../gosling-mouse-event/polygon';
-import type { FetchedTiles, TabularTileData, Tile } from '@higlass/services';
+import type { FetchedTiles, Tile as _Tile, TileData, TileDataBase } from '@higlass/services';
 import type { TabularDataFetcher } from 'src/data-fetchers/utils';
 
 // Set `true` to print in what order each function is called
@@ -67,20 +67,27 @@ interface GoslingTrackOption {
     theme: CompleteThemeDeep;
 }
 
-interface ProcessedTileInfo {
-    mergedToAnotherTile: boolean;
-    /** Single tile can contain multiple gosling models if multiple tracks are superposed */
-    goslingModels: GoslingTrackModel[];
+/** Tile data used in Gosling data fetchers */
+interface TabularTileData extends TileDataBase {
     tabularData: Record<string, any>[];
-    tabularDataTransformed: Record<string, any>[];
 }
 
-const DEFAULT_PROCESSED_TILE_INFO: ProcessedTileInfo = {
-    mergedToAnotherTile: false,
-    goslingModels: [],
-    tabularData: [],
-    tabularDataTransformed: []
-};
+/** Mutated type of `Tile` that includes Gosling's tile data, i.e., tabular tile data */
+export interface Tile extends Omit<_Tile, 'tileData'> {
+    tileData: TileData | TabularTileData;
+}
+
+interface ProcessedTileInfo {
+    /** Single tile can contain multiple gosling models if multiple tracks are superposed */
+    goslingModels: GoslingTrackModel[];
+    tabularData: Datum[];
+    /** Flag variable that indicate that this rendering of this tile should be skipped */
+    skipRendering: boolean;
+}
+
+function initProcessedTileInfo(): ProcessedTileInfo {
+    return { goslingModels: [], tabularData: [], skipRendering: false };
+}
 
 /**
  * Each GoslingTrack draws either a track of multiple tracks with SAME DATA that are overlaid.
@@ -244,7 +251,7 @@ function GoslingTrack(HGC: import('@higlass/types').HGC, ...args: any[]): any {
 
             const processTilesAndDraw = () => {
                 // Preprocess all tiles at once so that we can share scales across tiles.
-                this.preprocessAllTiles();
+                this.processAllTiles();
 
                 // This function calls `drawTile` on each tile.
                 super.draw();
@@ -257,7 +264,7 @@ function GoslingTrack(HGC: import('@higlass/types').HGC, ...args: any[]): any {
                 isTabularDataFetcher(this.dataFetcher) &&
                 !isEqual(this.visibleAndFetchedTiles(), this.prevVisibleAndFetchedTiles)
             ) {
-                this.updateTileAsync(this.dataFetcher, processTilesAndDraw);
+                this.updateTileAsync(this.dataFetcher as TabularDataFetcher<Datum[]>, processTilesAndDraw);
             } else {
                 processTilesAndDraw();
             }
@@ -361,7 +368,7 @@ function GoslingTrack(HGC: import('@higlass/types').HGC, ...args: any[]): any {
             //     );
             // }
 
-            this.preprocessAllTiles(true);
+            this.processAllTiles(true);
             this.draw();
             this.forceDraw();
         }
@@ -449,12 +456,11 @@ function GoslingTrack(HGC: import('@higlass/types').HGC, ...args: any[]): any {
         /**
          * This is currently for testing the new way of rendering visual elements.
          */
-        async updateTileAsync(tabularDataFetcher: TabularDataFetcher<unknown>, callback: () => void) {
+        async updateTileAsync(tabularDataFetcher: TabularDataFetcher<Record<string, any>[]>, callback: () => void) {
             this.xDomain = this._xScale.domain();
             this.xRange = this._xScale.range();
 
             const tabularData = await tabularDataFetcher.getTabularData(
-                this.dataFetcher.uid,
                 Object.values(this.fetchedTiles).map(x => x.remoteId)
             );
             const tiles = this.visibleAndFetchedTiles();
@@ -747,15 +753,15 @@ function GoslingTrack(HGC: import('@higlass/types').HGC, ...args: any[]): any {
         }
 
         /**
-         * Combile multiple tiles into a single large tile.
-         * This is sometimes necessary, for example, when applying a displacement algorithm.
+         * Combile multiple tiles into the last tile.
+         * This is sometimes necessary, for example, when applying a displacement algorithm to all tiles at once.
          */
         combineAllTilesIfNeeded() {
             if (!this.shouldCombineTiles()) return;
 
             const tiles = this.visibleAndFetchedTiles();
 
-            if (!tiles || tiles.length === 0) {
+            if (!tiles || tiles.length <= 1) {
                 // Does not make sense to combine tiles
                 return;
             }
@@ -771,8 +777,8 @@ function GoslingTrack(HGC: import('@higlass/types').HGC, ...args: any[]): any {
                     // Combine data
                     merged = [...merged, ...tileInfo.tabularData];
 
-                    // Flag to force using only one tile
-                    tileInfo.mergedToAnotherTile = i !== 0;
+                    // Since we merge the data to the first one, skip rendering the rest
+                    tileInfo.skipRendering = i !== 0;
                 }
             });
 
@@ -785,18 +791,19 @@ function GoslingTrack(HGC: import('@higlass/types').HGC, ...args: any[]): any {
             }
         }
 
-        preprocessAllTiles(force = false) {
-            const models: GoslingTrackModel[] = [];
-
+        processAllTiles(force = false) {
             this.tileSize = this.tilesetInfo?.tile_size ?? 1024;
 
-            this.visibleAndFetchedTiles().forEach(tile => {
-                // tile preprocessing is done only once per tile
-                const tileModels = this.preprocessTile(tile, force);
-                tileModels.forEach((m: GoslingTrackModel) => {
-                    models.push(m);
-                });
-            });
+            const tiles = this.visibleAndFetchedTiles();
+
+            // generated tabular data
+            tiles.forEach(tile => this.generateTabularData(tile, force));
+
+            // combine tabular data to the first tile if needed
+            this.combineAllTilesIfNeeded();
+
+            // apply data transforms to the tabular data and generate track models
+            const models = tiles.flatMap(tile => this.transformDataAndCreateModels(tile));
 
             shareScaleAcrossTracks(models);
 
@@ -828,136 +835,135 @@ function GoslingTrack(HGC: import('@higlass/types').HGC, ...args: any[]): any {
             */
         }
 
+        /** Get resolved tracks that should be rendered by a `gosling-track` track */
+        getResolvedTracks() {
+            const copy = structuredClone(this.options.spec);
+            // Brushes are drawn by another plugin track.
+            return resolveSuperposedTracks(copy).filter(t => t.mark !== 'brush');
+        }
+
         /**
          * Construct tabular data from a higlass tileset and a gosling track model.
          * Return the generated gosling track model.
          */
-        preprocessTile(tile: Tile, force = false): GoslingTrackModel[] {
-            if (force || !this.processedTileInfo[tile.tileId]) {
-                this.processedTileInfo[tile.tileId] = { ...JSON.parse(JSON.stringify(DEFAULT_PROCESSED_TILE_INFO)) };
-            } else {
-                // we already have a processed tile, so early return.
-                const tileInfo = this.processedTileInfo[tile.tileId];
-                if (tileInfo.mergedToAnotherTile) {
-                    // data has been used in another tile.
-                    tileInfo.goslingModels = [];
-                }
-                return tileInfo.goslingModels;
+        generateTabularData(tile: Tile, force = false) {
+            if (this.processedTileInfo[tile.tileId] && !force) {
+                // we do not need to re-construct tabular data
+                return;
             }
 
             if (!tile.tileData.tilePos) {
                 // we do not have this information ready yet, i.e., cannot calculate `tileX`
+                return;
+            }
+
+            const tileInfo = initProcessedTileInfo();
+            const resolvedTracks = this.getResolvedTracks();
+
+            if (resolvedTracks.length === 0) {
+                // we do not have enough track to display
                 return [];
             }
 
+            /* Create tabular data */
+            // The data spec is identical in all overlaid tracks, so we only need the first one.
+            const firstResolvedTrack = resolvedTracks[0];
+
+            if ('tabularData' in tile.tileData) {
+                // some data fetchers directly generates `tabularData`
+                tileInfo.tabularData = tile.tileData.tabularData;
+            } else {
+                // generate tabular data
+                const { tileX, tileY, tileWidth, tileHeight } = this.getTilePosAndDimensions(
+                    tile.tileData.zoomLevel,
+                    tile.tileData.tilePos!,
+                    this.tilesetInfo.bins_per_dimension || this.tilesetInfo?.tile_size
+                );
+
+                const sparse = 'length' in tile.tileData ? Array.from(tile.tileData) : [];
+                const tabularData = getTabularData(firstResolvedTrack, {
+                    ...tile.tileData,
+                    sparse,
+                    tileX,
+                    tileY,
+                    tileWidth,
+                    tileHeight,
+                    tileSize: this.tileSize
+                });
+                if (tabularData) {
+                    tileInfo.tabularData = tabularData;
+                }
+            }
+
+            this.processedTileInfo[tile.tileId] = tileInfo;
+        }
+
+        /**
+         * Apply data transformation to each of the overlaid tracks and generate gosling models
+         */
+        transformDataAndCreateModels(tile: Tile) {
             const tileInfo = this.processedTileInfo[tile.tileId];
-            const specCopy = JSON.parse(JSON.stringify(this.options.spec));
-            // interactive brushes are drawn by another plugin track, called `gosling-brush`
-            const resolvedTracks = resolveSuperposedTracks(specCopy).filter(t => t.mark !== 'brush');
 
-            /* generate tabular data */
+            if (!tileInfo || tileInfo.skipRendering) {
+                // this probably means the tile data has been merged to another tile
+                // so, no need to create track models
+                return [];
+            }
+
+            // clear the array first
+            tileInfo.goslingModels = [];
+
+            const resolvedTracks = this.getResolvedTracks();
             resolvedTracks.forEach(resolvedSpec => {
-                if ('tabularData' in tile.tileData) {
-                    // some data fetchers directly generates `tabularData`
-                    tileInfo.tabularData = tile.tileData.tabularData;
-                } else {
-                    // generated tabular data
-                    const { tileX, tileY, tileWidth, tileHeight } = this.getTilePosAndDimensions(
-                        tile.tileData.zoomLevel,
-                        tile.tileData.tilePos!,
-                        this.tilesetInfo.bins_per_dimension || this.tilesetInfo?.tile_size
-                    );
-
-                    const sparse = 'length' in tile.tileData ? Array.from(tile.tileData) : [];
-                    const tabularData = getTabularData(resolvedSpec, {
-                        ...tile.tileData,
-                        sparse,
-                        tileX,
-                        tileY,
-                        tileWidth,
-                        tileHeight,
-                        tileSize: this.tileSize
-                    });
-                    if (tabularData) {
-                        tileInfo.tabularData = tabularData;
+                let tabularDataTransformed = Array.from(tileInfo.tabularData);
+                resolvedSpec.dataTransform?.forEach(t => {
+                    switch (t.type) {
+                        case 'filter':
+                            tabularDataTransformed = filterData(t, tabularDataTransformed);
+                            break;
+                        case 'concat':
+                            tabularDataTransformed = concatString(t, tabularDataTransformed);
+                            break;
+                        case 'replace':
+                            tabularDataTransformed = replaceString(t, tabularDataTransformed);
+                            break;
+                        case 'log':
+                            tabularDataTransformed = calculateData(t, tabularDataTransformed);
+                            break;
+                        case 'exonSplit':
+                            tabularDataTransformed = splitExon(t, tabularDataTransformed, resolvedSpec.assembly);
+                            break;
+                        case 'genomicLength':
+                            tabularDataTransformed = calculateGenomicLength(t, tabularDataTransformed);
+                            break;
+                        case 'svType':
+                            tabularDataTransformed = inferSvType(t, tabularDataTransformed);
+                            break;
+                        case 'coverage':
+                            tabularDataTransformed = aggregateCoverage(t, tabularDataTransformed, this._xScale.copy());
+                            break;
+                        case 'subjson':
+                            tabularDataTransformed = parseSubJSON(t, tabularDataTransformed);
+                            break;
+                        case 'displace':
+                            tabularDataTransformed = displace(t, tabularDataTransformed, this._xScale.copy());
+                            break;
                     }
-                }
-            });
-
-            this.combineAllTilesIfNeeded();
-
-            /* apply data transforms */
-            resolvedTracks.forEach(resolvedSpec => {
-                tileInfo.tabularDataTransformed = Array.from(tileInfo.tabularData);
-
-                /*
-                 * Data Transformation applied to each of the overlaid tracks.
-                 */
-                if (resolvedSpec.dataTransform) {
-                    resolvedSpec.dataTransform.forEach(t => {
-                        switch (t.type) {
-                            case 'filter':
-                                tileInfo.tabularDataTransformed = filterData(t, tileInfo.tabularDataTransformed);
-                                break;
-                            case 'concat':
-                                tileInfo.tabularDataTransformed = concatString(t, tileInfo.tabularDataTransformed);
-                                break;
-                            case 'replace':
-                                tileInfo.tabularDataTransformed = replaceString(t, tileInfo.tabularDataTransformed);
-                                break;
-                            case 'log':
-                                tileInfo.tabularDataTransformed = calculateData(t, tileInfo.tabularDataTransformed);
-                                break;
-                            case 'exonSplit':
-                                tileInfo.tabularDataTransformed = splitExon(
-                                    t,
-                                    tileInfo.tabularDataTransformed,
-                                    resolvedSpec.assembly
-                                );
-                                break;
-                            case 'genomicLength':
-                                tileInfo.tabularDataTransformed = calculateGenomicLength(
-                                    t,
-                                    tileInfo.tabularDataTransformed
-                                );
-                                break;
-                            case 'svType':
-                                tileInfo.tabularDataTransformed = inferSvType(t, tileInfo.tabularDataTransformed);
-                                break;
-                            case 'coverage':
-                                tileInfo.tabularDataTransformed = aggregateCoverage(
-                                    t,
-                                    tileInfo.tabularDataTransformed,
-                                    this._xScale.copy()
-                                );
-                                break;
-                            case 'subjson':
-                                tileInfo.tabularDataTransformed = parseSubJSON(t, tileInfo.tabularDataTransformed);
-                                break;
-                            case 'displace':
-                                tileInfo.tabularDataTransformed = displace(
-                                    t,
-                                    tileInfo.tabularDataTransformed,
-                                    this._xScale.copy()
-                                );
-                                break;
-                        }
-                    });
-                }
+                });
 
                 // TODO: Remove the following block entirely and use the `rawData` API in the Editor (June-02-2022)
                 // Send data preview to the editor so that it can be shown to users.
                 try {
                     if (PubSub) {
                         const NUM_OF_ROWS_IN_PREVIEW = 100;
-                        const numOrRows = tileInfo.tabularDataTransformed.length;
+                        const numOrRows = tabularDataTransformed.length;
                         PubSub.publish('data-preview', {
                             id: this.viewUid,
                             dataConfig: JSON.stringify({ data: resolvedSpec.data }),
                             data:
                                 NUM_OF_ROWS_IN_PREVIEW > numOrRows
-                                    ? tileInfo.tabularDataTransformed
-                                    : sampleSize(tileInfo.tabularDataTransformed, NUM_OF_ROWS_IN_PREVIEW)
+                                    ? tabularDataTransformed
+                                    : sampleSize(tabularDataTransformed, NUM_OF_ROWS_IN_PREVIEW)
                             // ...
                         });
                     }
@@ -980,7 +986,7 @@ function GoslingTrack(HGC: import('@higlass/types').HGC, ...args: any[]): any {
                 resolvedSpec.height = h;
 
                 // Construct separate gosling models for individual tiles
-                const model = new GoslingTrackModel(resolvedSpec, tileInfo.tabularDataTransformed, this.options.theme);
+                const model = new GoslingTrackModel(resolvedSpec, tabularDataTransformed, this.options.theme);
 
                 // Add a track model to the tile object
                 tileInfo.goslingModels.push(model);
