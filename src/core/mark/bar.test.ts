@@ -3,7 +3,7 @@ import type { SingleTrack } from '@gosling.schema';
 import { GoslingTrackModel } from '../gosling-track-model';
 import { getTheme } from '../utils/theme';
 import { drawBar } from './bar';
-import { Tile } from '@higlass/services';
+import type { Tile } from '@higlass/services';
 
 describe('mark:= bar', () => {
     it('x:=G, y:=V, ye:=V', () => {
