@@ -8,7 +8,7 @@ import { format, precisionPrefix, formatPrefix } from 'd3-format';
 import { computeChromSizes } from '../core/utils/assembly';
 import { cartesianToPolar } from '../core/utils/polar';
 import { getTextStyle } from '../core/utils/text-style';
-import { definePluginTrack } from '../core/utils/define-plugin-track';
+import { createPluginTrack } from '../core/utils/define-plugin-track';
 
 import type { TextStyle } from '../core/utils/text-style';
 import type { PluginTrackFactory, TrackConfig } from '../core/utils/define-plugin-track';
@@ -94,7 +94,7 @@ const config: TrackConfig<AxisTrackOptions> = {
     }
 };
 
-const factory: PluginTrackFactory<AxisTrackOptions> = (HGC, context, options) => {
+const factory: PluginTrackFactory<never, AxisTrackOptions> = (HGC, context, options) => {
     const { absToChr, colorToHex, pixiTextToSvg, svgLine, showMousePosition } = HGC.utils;
 
     function createTickText(text: string, style: Partial<PIXI.ITextStyle>): TickText {
@@ -774,4 +774,4 @@ const factory: PluginTrackFactory<AxisTrackOptions> = (HGC, context, options) =>
     return new AxisTrackClass();
 };
 
-export default definePluginTrack(config, factory);
+export default createPluginTrack(config, factory);

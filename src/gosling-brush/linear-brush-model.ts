@@ -58,7 +58,7 @@ export class LinearBrushModel {
     private emitter: Emitter<LinearBrushEvents>;
 
     constructor(
-        selection: D3Selection.Selection<SVGGElement, unknown, HTMLElement, unknown>,
+        selection: D3Selection.Selection<SVGGElement, unknown, null, unknown>,
         hgLibraries: any,
         style: EventStyle = {}
     ) {

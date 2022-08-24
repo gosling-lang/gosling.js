@@ -47,6 +47,7 @@ declare module '@higlass/services' {
         max_pos: number[];
         max_zoom: number;
         tile_size?: number;
+        max_tile_width?: number;
     } & (
         | {
               resolutions: number[];
@@ -110,12 +111,7 @@ declare module '@higlass/services' {
             pixelsPerTile?: number
         ): number[];
         calculateTileWidth(tilesetInfo: TilesetInfo, zoomLevel: number, binsPerTile: number): number;
-        calculateZoomLevel(
-            scale: Scale,
-            minX: number,
-            maxX: number,
-            binsPerTile?: number
-        ): number;
+        calculateZoomLevel(scale: Scale, minX: number, maxX: number, binsPerTile?: number): number;
         calculateZoomLevelFromResolutions(resolutions: number[], scale: Scale): number;
         // fetchTilesDebounced();
         // json();
@@ -127,7 +123,7 @@ declare module '@higlass/services' {
 declare module '@higlass/tracks' {
     import type * as d3 from 'd3';
     import type * as PIXI from 'pixi.js';
-    import type { TilesetInfo, ColorRGBA  } from '@higlass/services';
+    import type { TilesetInfo, ColorRGBA } from '@higlass/services';
     import type { ChromInfo } from '@higlass/utils';
 
     type Scale = d3.ScaleContinuousNumeric<number, number>;
@@ -178,7 +174,7 @@ declare module '@higlass/tracks' {
         getLockGroupExtrema(): [min: number, max: number] | null;
         handleTilesetInfoReceived(tilesetInfo: TilesetInfo): void;
         animate(): void;
-        svgElement: HTMLElement;
+        svgElement: SVGElement;
         isValueScaleLocked(): boolean;
         onValueScaleChanged(): void;
         onTrackOptionsChanged(newOptions: Options): void;
@@ -206,7 +202,7 @@ declare module '@higlass/tracks' {
         getProp<Prop extends keyof this>(prop: Prop): this[Prop];
         getData(): void;
         getDimensions(): this['dimensions'];
-        getDimensions(newDimensions: [number, number]): void;
+        setDimensions(newDimensions: [number, number]): void;
         refXScale(): this['_refXScale'];
         refXScale(scale: Scale): void;
         refYScale(): this['_refYScale'];
@@ -238,8 +234,9 @@ declare module '@higlass/tracks' {
 
     type DataConfig = Record<string, any>;
     export interface DataFetcher<Tile> {
-      tilesetInfo(finished: (info: TilesetInfo) => void): void;
-      fetchTilesDebounced(receivedTiles: (tiles: Record<string, Tile>) => void, tileIds: string[]): void;
+        tilesetInfo(finished: (info: TilesetInfo) => void): void;
+        fetchTilesDebounced(receivedTiles: (tiles: Record<string, Tile>) => void, tileIds: string[]): void;
+        track?: any;
     }
 
     type TilePosition1D = [zoom: number, x: number];
@@ -425,7 +422,12 @@ declare module '@higlass/tracks' {
          *  @param maxValue The maximum value of the data
          *  @param inMargin A number of pixels to be left free on the top and bottom of the track. For example if the glyphs have a certain width and we want all of them to fit into the space.
          */
-        makeValueScale(minValue: number, medianValue: number, maxValue: number, inMargin: number): [scale: Scale, offset: number];
+        makeValueScale(
+            minValue: number,
+            medianValue: number,
+            maxValue: number,
+            inMargin: number
+        ): [scale: Scale, offset: number];
     }
 
     export abstract class Tiled1DPixiTrack<TileData, Options> extends TiledPixiTrack<TileData, Options> {
@@ -450,15 +452,13 @@ declare module '@higlass/tracks' {
         getTilePosAndDimensions(
             zoomLevel: number,
             tilePos: [x: number, y: number],
-            binsPerTileIn?: number,
-        ): { tileX: number, tileY: number, tileWidth: number, tileHeight: number };
+            binsPerTileIn?: number
+        ): { tileX: number; tileY: number; tileWidth: number; tileHeight: number };
         updateTile(tile: TileData): void;
         scheduleRerender(): void;
         handleRerender(): void;
         /** Caution! Assumes dense data */
-        getIndicesOfVisibleDataInTile(
-            tile: { zoomLevel: number, tilePos: [number, number], dense: ArrayLike<number> }
-        ): [start: number, end: number];
+        getIndicesOfVisibleDataInTile(tile: TileData): [start: number, end: number];
         minVisibleValue(ignoreFixedScale?: boolean): number;
         maxVisibleValue(ignoreFixedScale?: boolean): number;
         /**
@@ -480,7 +480,7 @@ declare module '@higlass/tracks' {
          * @return The data value at `relPos`.
          */
         getDataAtPos(relPos: number): number;
-        mouseMoveHandler(mousePosition?: { x?: number, y?: number }): void;
+        mouseMoveHandler(mousePosition?: { x?: number; y?: number }): void;
         abstract mouseMoveZoomHandler(absX?: number, abxY?: number): void;
     }
 
@@ -510,8 +510,8 @@ declare module '@higlass/tracks' {
     export class HorizontalTiled1DPixiTrack<T, Options> extends Tiled1DPixiTrack<T, Options> {
         constIndicator: PIXI.Graphics;
         axis: AxisPixi<this>;
-        animate: Pick<Context<T, Options>, 'animate'>;
-        isShowGlobalMousePosition: Pick<Context<T, Options>, 'isShowGlobalMousePosition'>;
+        animate(): void;
+        isShowGlobalMousePosition(): boolean;
         is2d?: boolean;
         calculateZoomLevel(): number;
         relevantScale(): Scale;
@@ -522,7 +522,7 @@ declare module '@higlass/tracks' {
 
     export class HorizontalLine1DPixiTrack<T, Options> extends HorizontalTiled1DPixiTrack<T, Options> {
         stopHover(): void;
-        getMouseOverHtml(trackX: number): string;
+        getMouseOverHtml(mouseX: number, mouseY?: number): string;
         renderTile(tile: T): void;
         drawTile(tile: T): void;
         zoomed(newXScale: Scale, newYScale: Scale): void;
@@ -531,20 +531,19 @@ declare module '@higlass/tracks' {
         tileToRemoteId(tile: TilePosition): string;
     }
 
-
     export class BarTrack<T, Options> extends HorizontalLine1DPixiTrack<T, Options> {
         zeroLine: PIXI.Graphics;
         valueScaleTransform: d3.ZoomTransform;
         initialized?: boolean;
         colorScale?: ColorRGBA[];
         setColorScale(colorRange: ColorRGBA[]): void;
-        colorGradientColors?: { from: number, color: ColorRGBA }[];
+        colorGradientColors?: { from: number; color: ColorRGBA }[];
         setColorGradient(colorGradient: ColorRGBA[]): void;
         drawZeroLine(): void;
         drawZeroLineSvg(output: HTMLElement): void;
         getXScaleAndOffset(drawnAtScale: Scale): [number, number];
         /**
-         * Adds information to recreate the track in SVG to the tile. 
+         * Adds information to recreate the track in SVG to the tile.
          * Warning. Mutates the tile!
          *
          * @param tile
