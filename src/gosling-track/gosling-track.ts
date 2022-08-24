@@ -42,8 +42,7 @@ import { LinearBrushModel } from '../gosling-brush/linear-brush-model';
 import { isPointInsideDonutSlice } from '../gosling-mouse-event/polygon';
 import type { Tile as _Tile, TileData, TileDataBase } from '@higlass/services';
 import type { TabularDataFetcher } from 'src/data-fetchers/utils';
-import { createPluginTrack, PluginTrackFactory } from 'src/core/utils/define-plugin-track';
-import type { TrackConfig } from '@higlass/types';
+import { createPluginTrack, PluginTrackFactory, TrackConfig } from '../core/utils/define-plugin-track';
 import { getTheme } from 'gosling-theme';
 
 // Set `true` to print in what order each function is called
@@ -107,12 +106,11 @@ const config: TrackConfig<GoslingTrackOptions> = {
         // barBorder: false,
         // sortLargestOnTop: true,
         // axisPositionHorizontal: 'left',
-        theme: getTheme('light'),
+        theme: getTheme('light')
     }
 };
 
 const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, options) => {
-
     // Services
     const { tileProxy } = HGC.services;
 
@@ -467,7 +465,6 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
             this.forceDraw();
         }
 
-
         /**
          * This is currently for testing the new way of rendering visual elements.
          */
@@ -675,7 +672,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
             if (!yTiles) {
                 // this means only the `x` axis is being used
                 return xTiles.map(x => [zoomLevel, x]);
-            } 
+            }
             // this means both `x` and `y` axes are being used together
             const tiles: [number, number, number][] = [];
             xTiles.forEach(x => yTiles.forEach(y => tiles.push([zoomLevel, x, y])));
@@ -897,7 +894,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
                 // generate tabular data
                 const { tileX, tileY, tileWidth, tileHeight } = this.getTilePosAndDimensions(
                     tile.tileData.zoomLevel,
-                    tile.tileData.tilePos!,
+                    tile.tileData.tilePos!
                 );
 
                 const sparse = 'length' in tile.tileData ? Array.from(tile.tileData) : [];
@@ -918,7 +915,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
             this.processedTileInfo[tile.tileId] = tileInfo;
         }
 
-         /**
+        /**
          * Apply data transformation to each of the overlaid tracks and generate gosling models
          */
         transformDataAndCreateModels(tile: Tile) {
@@ -1022,10 +1019,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
                 return [0, 0];
             }
 
-            const { tileX, tileWidth } = this.getTilePosAndDimensions(
-                tile.tileData.zoomLevel,
-                tile.tileData.tilePos,
-            );
+            const { tileX, tileWidth } = this.getTilePosAndDimensions(tile.tileData.zoomLevel, tile.tileData.tilePos);
 
             const tileXScale = HGC.libraries.d3Scale
                 .scaleLinear()
@@ -1040,7 +1034,6 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
 
             return [start, end];
         }
-
 
         /**
          * Returns the minimum in the visible area (not visible tiles)
@@ -1337,7 +1330,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
                 document.body.style.cursor = 'default';
             }
 
-            if (capturedElements.length === 0) {
+            if (capturedElements.length !== 0) {
                 const mouseEvents = this.options.spec.experimental?.mouseEvents;
                 const mouseOverEnabled = !!mouseEvents || (IsMouseEventsDeep(mouseEvents) && !!mouseEvents.mouseOver);
                 if (mouseOverEnabled) {
@@ -1373,7 +1366,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
 
                 if (firstTooltipSpec) {
                     let content = firstTooltipSpec
-                        .map((d: any) => {
+                        .map(d => {
                             const rawValue = capturedElements[0].value[d.field];
                             let value = rawValue;
                             if (d.type === 'quantitative' && d.format) {

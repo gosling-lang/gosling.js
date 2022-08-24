@@ -177,7 +177,11 @@ export function inferSvType(_: SvTypeTransform, data: Datum[]): Datum[] {
 /**
  * Aggregate data rows and calculate coverage of reads.
  */
-export function aggregateCoverage(_: CoverageTransform, data: Datum[], scale: d3.ScaleContinuousNumeric<number, number>): Datum[] {
+export function aggregateCoverage(
+    _: CoverageTransform,
+    data: Datum[],
+    scale: d3.ScaleContinuousNumeric<number, number>
+): Datum[] {
     // Logging.recordTime('aggregateCoverage');
 
     const { startField, endField, newField, groupField } = _;
@@ -221,7 +225,11 @@ export function aggregateCoverage(_: CoverageTransform, data: Datum[], scale: d3
     return output;
 }
 
-export function displace(t: DisplaceTransform, data: Datum[], scale: d3.ScaleContinuousNumeric<number, number>): Datum[] {
+export function displace(
+    t: DisplaceTransform,
+    data: Datum[],
+    scale: d3.ScaleContinuousNumeric<number, number>
+): Datum[] {
     // Logging.recordTime('displace()');
 
     const { boundingBox, method, newField } = t;

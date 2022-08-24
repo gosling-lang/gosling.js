@@ -16,7 +16,7 @@ const TICK_SIZE = 6;
 export function drawLinearYAxis(
     HGC: { libraries: { PIXI: typeof import('pixi.js') } },
     trackInfo: any,
-    tile: Tile,
+    _tile: unknown,
     model: GoslingTrackModel,
     theme: Required<CompleteThemeDeep>
 ) {

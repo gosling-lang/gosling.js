@@ -97,7 +97,7 @@ declare module '@higlass/services' {
         ): [tilePosition: number, positionInTile: number];
         calculateTiles(
             zoomLevel: number,
-            scale: Scale, 
+            scale: Scale,
             minX: number,
             maxX: number,
             maxZoom: number,
