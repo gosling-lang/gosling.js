@@ -81,7 +81,7 @@ interface ProcessedTileInfo {
     /** Single tile can contain multiple gosling models if multiple tracks are superposed */
     goslingModels: GoslingTrackModel[];
     tabularData: Datum[];
-    /** Flag variable that indicate that this rendering of this tile should be skipped */
+    /** Flag variable that indicate that rendering of this tile should be skipped */
     skipRendering: boolean;
 }
 
