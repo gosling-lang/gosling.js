@@ -3,8 +3,9 @@ import { cartesianToPolar, valueToRadian } from '../utils/polar';
 import type { PIXIVisualProperty } from '../visual-property.schema';
 import colorToHex from '../utils/color-to-hex';
 import { IsChannelDeep } from '../gosling.schema.guards';
+import type { Tile } from '../../gosling-track/gosling-track';
 
-export function drawRect(HGC: import('@higlass/types').HGC, trackInfo: any, tile: any, model: GoslingTrackModel) {
+export function drawRect(HGC: import('@higlass/types').HGC, track: any, tile: Tile, model: GoslingTrackModel) {
     /* track spec */
     const spec = model.spec();
 
@@ -12,9 +13,13 @@ export function drawRect(HGC: import('@higlass/types').HGC, trackInfo: any, tile
     const data = model.data();
 
     /* track size */
-    const [trackWidth, trackHeight] = trackInfo.dimensions;
-    const tileSize = trackInfo.tilesetInfo.tile_size;
-    const { tileX, tileWidth } = trackInfo.getTilePosAndDimensions(tile.gos.zoomLevel, tile.gos.tilePos, tileSize);
+    const [trackWidth, trackHeight] = track.dimensions;
+    const tileSize = track.tilesetInfo.tile_size;
+    const { tileX, tileWidth } = track.getTilePosAndDimensions(
+        tile.tileData.zoomLevel,
+        tile.tileData.tilePos,
+        tileSize
+    );
 
     /* circular parameters */
     const circular = spec.layout === 'circular';
@@ -27,7 +32,7 @@ export function drawRect(HGC: import('@higlass/types').HGC, trackInfo: any, tile
     const cy = trackHeight / 2.0;
 
     /* genomic scale */
-    const xScale = trackInfo._xScale;
+    const xScale = track._xScale;
     const tileUnitWidth = xScale(tileX + tileWidth / tileSize) - xScale(tileX);
 
     /* row separation */
@@ -54,7 +59,7 @@ export function drawRect(HGC: import('@higlass/types').HGC, trackInfo: any, tile
 
         const alphaTransition = model.markVisibility(d, {
             width: rectWidth,
-            zoomLevel: trackInfo._xScale.invert(trackWidth) - trackInfo._xScale.invert(0)
+            zoomLevel: track._xScale.invert(trackWidth) - track._xScale.invert(0)
         });
         const actualOpacity = Math.min(alphaTransition, opacity);
 

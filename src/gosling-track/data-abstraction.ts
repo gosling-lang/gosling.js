@@ -1,3 +1,4 @@
+import type { SparseTile, TileData } from '@higlass/services';
 import type { Datum, SingleTrack } from '../core/gosling.schema';
 import { IsDataDeepTileset } from '../core/gosling.schema.guards';
 
@@ -8,9 +9,8 @@ export const GOSLING_DATA_ROW_UID_FIELD = 'gosling-data-row-uid';
  */
 export function getTabularData(
     spec: SingleTrack,
-    data: {
-        dense?: number[];
-        raw?: Datum[];
+    data: TileData & {
+        sparse?: Array<SparseTile>;
         shape?: [number, number];
         tileX: number;
         tileWidth: number;
@@ -27,7 +27,7 @@ export function getTabularData(
     }
 
     if (spec.data.type === 'vector' || spec.data.type === 'bigwig') {
-        if (!data.dense) {
+        if (!('dense' in data)) {
             // we did not get sufficient data.
             return;
         }
@@ -106,7 +106,7 @@ export function getTabularData(
             }
         });
     } else if (spec.data.type === 'multivec') {
-        if (!data.dense || data.shape === undefined) {
+        if (!('dense' in data) || data.shape === undefined) {
             // we did not get sufficient data.
             return;
         }
@@ -194,7 +194,7 @@ export function getTabularData(
             });
         });
     } else if (spec.data.type === 'matrix') {
-        if (!data.dense || typeof data.tileY === 'undefined' || typeof data.tileHeight === 'undefined') {
+        if (!('dense' in data) || typeof data.tileY === 'undefined' || typeof data.tileHeight === 'undefined') {
             // we do not have sufficient data.
             return;
         }
@@ -257,14 +257,14 @@ export function getTabularData(
             });
         }
     } else if (spec.data.type === 'beddb') {
-        if (!data.raw) {
+        if (!data.sparse) {
             // we did not get sufficient data.
             return;
         }
 
         const { genomicFields, exonIntervalFields, valueFields } = spec.data;
 
-        data.raw.forEach((d: any, i: number) => {
+        data.sparse.forEach((d, i) => {
             const { chrOffset, fields } = d;
 
             const datum: { [k: string]: number | string } = {};

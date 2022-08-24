@@ -38,6 +38,10 @@ declare module '@higlass/libraries' {
 
 declare module '@higlass/services' {
     import type { ScaleContinuousNumeric } from 'd3-scale';
+    import type * as PIXI from 'pixi.js';
+
+    type Scale = ScaleContinuousNumeric<number, number>;
+
     export type TilesetInfo = {
         min_pos: number[];
         max_pos: number[];
@@ -52,14 +56,33 @@ declare module '@higlass/services' {
               bins_per_dimension?: number;
           }
     );
-    type TileData = {
+    export interface TileDataBase {
+        shape: [number, number];
+        tilePos?: [number, number];
+        zoomLevel: number;
+        tileId: string;
+    }
+    interface DenseTileData extends TileDataBase {
         dense: number[];
-        shape: number[];
-        tilePos: unknown[];
+    }
+    type SparseTile = {
+        xStart: number;
+        xEnd: number;
+        chrOffset: number;
+        importance: number;
+        uid: string;
+        fields: string[];
     };
-    type Tile = {
+    type SparseTileData = TileDataBase & Array<SparseTile>;
+    export type TileData = DenseTileData | SparseTileData;
+    export type Tile = {
+        tileId: string;
+        remoteId: string;
+        drawnAtScale: Scale;
+        graphics: PIXI.Graphics;
         tileData: TileData;
     };
+    export type FetchedTiles = Record<string, Tile>;
     type ColorRGBA = [r: number, g: number, b: number, a: number];
 
     export const tileProxy: {

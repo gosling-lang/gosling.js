@@ -5,6 +5,7 @@ import type { CompleteThemeDeep } from '../utils/theme';
 import type { Dimension } from '../utils/position';
 import { scaleLinear, ScaleLinear } from 'd3-scale';
 import { getTextStyle } from '../utils/text-style';
+import type { Tile } from '../../gosling-track/gosling-track';
 
 // Just the libraries necesssary fro this module
 type Libraries = Pick<typeof import('@higlass/libraries'), 'PIXI' | 'd3Selection' | 'd3Drag'>;
@@ -14,8 +15,8 @@ type LegendOffset = { offsetRight: number };
 export function drawColorLegend(
     HGC: { libraries: Libraries },
     trackInfo: any,
-    tile: any,
-    tm: GoslingTrackModel,
+    tile: Tile,
+    model: GoslingTrackModel,
     theme: Required<CompleteThemeDeep>
 ) {
     if (!trackInfo.gLegend) {
@@ -25,16 +26,16 @@ export function drawColorLegend(
 
     trackInfo.gLegend.selectAll('.brush').remove();
 
-    const spec = tm.spec();
+    const spec = model.spec();
     const offset: LegendOffset = { offsetRight: 0 };
 
     if (IsChannelDeep(spec.color) && spec.color.legend) {
         switch (spec.color.type) {
             case 'nominal':
-                drawColorLegendCategories(HGC, trackInfo, tile, tm, theme);
+                drawColorLegendCategories(HGC, trackInfo, tile, model, theme);
                 break;
             case 'quantitative':
-                drawColorLegendQuantitative(HGC, trackInfo, tile, tm, theme, 'color', offset);
+                drawColorLegendQuantitative(HGC, trackInfo, tile, model, theme, 'color', offset);
                 break;
         }
     }
@@ -42,7 +43,7 @@ export function drawColorLegend(
     if (IsChannelDeep(spec.stroke) && spec.stroke.legend) {
         switch (spec.stroke.type) {
             case 'quantitative':
-                drawColorLegendQuantitative(HGC, trackInfo, tile, tm, theme, 'stroke', offset);
+                drawColorLegendQuantitative(HGC, trackInfo, tile, model, theme, 'stroke', offset);
                 break;
         }
     }
@@ -51,13 +52,13 @@ export function drawColorLegend(
 export function drawColorLegendQuantitative(
     HGC: { libraries: Libraries },
     trackInfo: any,
-    tile: any,
-    tm: GoslingTrackModel,
+    tile: Tile,
+    model: GoslingTrackModel,
     theme: Required<CompleteThemeDeep>,
     channelKey: 'color' | 'stroke',
     offset: LegendOffset
 ) {
-    const spec = tm.spec();
+    const spec = model.spec();
 
     const channel = spec[channelKey];
     if (!IsChannelDeep(channel) || channel.type !== 'quantitative' || !channel.legend) {
@@ -82,8 +83,8 @@ export function drawColorLegendQuantitative(
     const legendY = trackY + 1;
 
     /* Legend Components */
-    const colorScale = tm.getChannelScale(channelKey);
-    const colorDomain = tm.getChannelDomainArray(channelKey);
+    const colorScale = model.getChannelScale(channelKey);
+    const colorDomain = model.getChannelDomainArray(channelKey);
 
     if (!colorScale || !colorDomain) {
         // We do not have enough information for creating a color legend
@@ -291,7 +292,7 @@ export function drawColorLegendQuantitative(
 export function drawColorLegendCategories(
     HGC: { libraries: Libraries },
     trackInfo: any,
-    tile: any,
+    tile: Tile,
     tm: GoslingTrackModel,
     theme: Required<CompleteThemeDeep>
 ) {
@@ -447,7 +448,7 @@ export function drawColorLegendCategories(
 export function drawRowLegend(
     HGC: { libraries: Libraries },
     trackInfo: any,
-    tile: any,
+    tile: Tile,
     tm: GoslingTrackModel,
     theme: Required<CompleteThemeDeep>
 ) {

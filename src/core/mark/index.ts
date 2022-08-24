@@ -1,4 +1,5 @@
 import type { GoslingTrackModel } from '../gosling-track-model';
+import type { Tile } from '../../gosling-track/gosling-track';
 import { drawPoint } from './point';
 import { drawLine } from './line';
 import { drawBar } from './bar';
@@ -49,7 +50,7 @@ export const RESOLUTION = 4;
 /**
  * Draw a track based on the track specification in a Gosling grammar.
  */
-export function drawMark(HGC: import('@higlass/types').HGC, trackInfo: any, tile: any, model: GoslingTrackModel) {
+export function drawMark(HGC: import('@higlass/types').HGC, trackInfo: any, tile: Tile, model: GoslingTrackModel) {
     if (!HGC || !trackInfo || !tile) {
         // We did not receive parameters correctly.
         return;
@@ -133,7 +134,7 @@ export function drawMark(HGC: import('@higlass/types').HGC, trackInfo: any, tile
 export function drawPreEmbellishment(
     HGC: import('@higlass/types').HGC,
     trackInfo: any,
-    tile: any,
+    tile: Tile,
     model: GoslingTrackModel,
     theme: Required<CompleteThemeDeep>
 ) {
@@ -179,7 +180,7 @@ export function drawPreEmbellishment(
 export function drawPostEmbellishment(
     HGC: import('@higlass/types').HGC,
     trackInfo: any,
-    tile: any,
+    tile: Tile,
     model: GoslingTrackModel,
     theme: Required<CompleteThemeDeep>
 ) {

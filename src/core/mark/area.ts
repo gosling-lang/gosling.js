@@ -4,11 +4,12 @@ import { min as d3min, max as d3max, group } from 'd3-array';
 import { IsStackedMark, getValueUsingChannel } from '../gosling.schema.guards';
 import { cartesianToPolar } from '../utils/polar';
 import colorToHex from '../utils/color-to-hex';
+import type { Tile } from '../../gosling-track/gosling-track';
 
 /**
  * Draw area marks
  */
-export function drawArea(HGC: import('@higlass/types').HGC, trackInfo: any, tile: any, model: GoslingTrackModel) {
+export function drawArea(HGC: import('@higlass/types').HGC, trackInfo: any, tile: Tile, model: GoslingTrackModel) {
     /* track spec */
     const spec = model.spec();
 
@@ -18,7 +19,7 @@ export function drawArea(HGC: import('@higlass/types').HGC, trackInfo: any, tile
     /* track size */
     const [trackWidth, trackHeight] = trackInfo.dimensions;
     const tileSize = trackInfo.tilesetInfo.tile_size;
-    const { tileX } = trackInfo.getTilePosAndDimensions(tile.gos.zoomLevel, tile.gos.tilePos, tileSize);
+    const { tileX } = trackInfo.getTilePosAndDimensions(tile.tileData.zoomLevel, tile.tileData.tilePos, tileSize);
 
     /* circular parameters */
     const circular = spec.layout === 'circular';
