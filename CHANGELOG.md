@@ -1,3 +1,20 @@
+## [0.9.23](https://github.com/gosling-lang/gosling.js/compare/v0.9.22...v0.9.23) (2022-08-26)
+
+
+### Bug Fixes
+
+* allow custom chromnames in zoomTo api ([#794](https://github.com/gosling-lang/gosling.js/issues/794)) ([bf8948e](https://github.com/gosling-lang/gosling.js/commit/bf8948e2a7328047165c6f5ac2d7d266c0e590a9))
+* ensure to use non-null `hgRef` ([#804](https://github.com/gosling-lang/gosling.js/issues/804)) ([9978eb8](https://github.com/gosling-lang/gosling.js/commit/9978eb83d90b85c98c987bb2baa024f11bf26ee2)), closes [#805](https://github.com/gosling-lang/gosling.js/issues/805)
+* fix `displace` transform on non-higlass data ([#802](https://github.com/gosling-lang/gosling.js/issues/802)) ([3c3b52b](https://github.com/gosling-lang/gosling.js/commit/3c3b52b6b80a0704bceb1f4f739a77477ff4adbc))
+* support using custom chromosome names in genomic domains (`GenomicDomain`); fix `zoomTo()` ([#796](https://github.com/gosling-lang/gosling.js/issues/796)) ([5ea2355](https://github.com/gosling-lang/gosling.js/commit/5ea2355567a2b24e9e73cede87952a8eac142938))
+
+
+### Features
+
+* add TabularDataFetcher interface ([#803](https://github.com/gosling-lang/gosling.js/issues/803)) ([330278f](https://github.com/gosling-lang/gosling.js/commit/330278fffb7f3190e3ce4b8183ae20660224013c))
+
+
+
 ## [0.9.22](https://github.com/gosling-lang/gosling.js/compare/v0.9.21...v0.9.22) (2022-08-06)
 
 
