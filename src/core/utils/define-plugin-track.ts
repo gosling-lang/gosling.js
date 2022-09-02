@@ -1,21 +1,22 @@
 import type * as HiGlass from '@higlass/types';
-export type { TrackConfig } from '@higlass/types';
 
-export type PluginTrackFactory<Options extends HiGlass.TrackOptions> = (
+export type PluginTrackFactory<Tile, Options> = (
     HGC: HiGlass.HGC,
-    context: HiGlass.Context<Options>,
+    context: HiGlass.Context<Tile, Options>,
     options: Options
-) => HiGlass.Track;
+) => HiGlass.Track<Options>;
 
 type AsConstructor<T> = T extends (...args: infer Args) => infer Ret ? { new (...args: Args): Ret } : never;
 
-type PluginTrack<Options extends HiGlass.TrackOptions> = AsConstructor<PluginTrackFactory<Options>> & {
+type PluginTrack<Tile, Options> = AsConstructor<PluginTrackFactory<Tile, Options>> & {
     config: HiGlass.TrackConfig<Options>;
 };
 
-export function definePluginTrack<Options extends HiGlass.TrackOptions>(
-    config: Omit<HiGlass.TrackConfig<Options>, 'availableOptions'>,
-    factory: PluginTrackFactory<Options>
+export type TrackConfig<Options> = Omit<HiGlass.TrackConfig<Options>, 'availableOptions'>;
+
+export function createPluginTrack<Tile, Options>(
+    config: TrackConfig<Options>,
+    factory: PluginTrackFactory<Tile, Options>
 ) {
     function Track(...args: Parameters<typeof factory>) {
         if (!new.target) {
@@ -27,7 +28,7 @@ export function definePluginTrack<Options extends HiGlass.TrackOptions>(
         ...config,
         availableOptions: Object.keys(config.defaultOptions ?? {})
     };
-    return Track as unknown as PluginTrack<Options> & {
+    return Track as unknown as PluginTrack<Tile, Options> & {
         config: {
             // code above ensures this field is always defined when using the plugin.
             availableOptions: (keyof Options)[];
