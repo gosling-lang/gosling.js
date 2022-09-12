@@ -5,15 +5,8 @@ import { IsChannelDeep, getValueUsingChannel, Is2DTrack } from '../gosling.schem
 import { cartesianToPolar, positionToRadian } from '../utils/polar';
 import colorToHex from '../utils/color-to-hex';
 import { Bezier } from 'bezier-js';
-import { drawEdgeBundling } from './edge-bundle';
 
 export function drawWithinLink(g: PIXI.Graphics, trackInfo: any, model: GoslingTrackModel) {
-    /* experimental edge bundling */
-    if (model.spec().style?.linkStyle === 'experimentalEdgeBundling') {
-        drawEdgeBundling(g, trackInfo, model);
-        return;
-    }
-
     /* track spec */
     const spec = model.spec();
 
@@ -319,7 +312,7 @@ export function drawWithinLink(g: PIXI.Graphics, trackInfo: any, model: GoslingT
                         const morePoints: { x: number; y: number }[] = [];
 
                         // https://github.com/gosling-lang/gosling.js/issues/634
-                        const numSteps = 1000;
+                        const numSteps = 100;
                         const constantY = IsChannelDeep(spec.y);
                         for (let step = 0; step <= numSteps; step++) {
                             const theta = Math.PI * (step / numSteps);

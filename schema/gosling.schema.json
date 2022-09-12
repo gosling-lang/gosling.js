@@ -8325,8 +8325,7 @@
           "enum": [
             "elliptical",
             "circular",
-            "straight",
-            "experimentalEdgeBundling"
+            "straight"
           ],
           "type": "string"
         },
