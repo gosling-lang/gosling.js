@@ -334,6 +334,13 @@ interface SingleTrackBase extends CommonTrackDef {
          * Determine whether to use mouse events, such as click and mouse over on marks. __Default__: `false`
          */
         mouseEvents?: boolean | MouseEventsDeep;
+
+        /**
+         * Render visual marks with less smooth curves to increase rendering performance.
+         * Only supported for `elliptical` `linkStyle` `withinLink` currently.
+         * @default false
+         */
+        performanceMode?: boolean;
     };
 
     // Mark
