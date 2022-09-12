@@ -1136,7 +1136,7 @@ export interface IncludeFilter extends CommonFilterTransform {
 
 export interface OneOfFilter extends CommonFilterTransform {
     /** Check whether the value is an element in the provided list. */
-    oneOf: string[] | number[];
+    oneOf: (string | number | null)[];
 }
 
 // !! Not supported yet
