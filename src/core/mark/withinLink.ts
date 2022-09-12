@@ -312,7 +312,7 @@ export function drawWithinLink(g: PIXI.Graphics, trackInfo: any, model: GoslingT
                         const morePoints: { x: number; y: number }[] = [];
 
                         // https://github.com/gosling-lang/gosling.js/issues/634
-                        const numSteps = 100;
+                        const numSteps = 1000;
                         const constantY = IsChannelDeep(spec.y);
                         for (let step = 0; step <= numSteps; step++) {
                             const theta = Math.PI * (step / numSteps);
