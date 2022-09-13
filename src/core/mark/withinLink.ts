@@ -5,15 +5,8 @@ import { IsChannelDeep, getValueUsingChannel, Is2DTrack } from '../gosling.schem
 import { cartesianToPolar, positionToRadian } from '../utils/polar';
 import colorToHex from '../utils/color-to-hex';
 import { Bezier } from 'bezier-js';
-import { drawEdgeBundling } from './edge-bundle';
 
 export function drawWithinLink(g: PIXI.Graphics, trackInfo: any, model: GoslingTrackModel) {
-    /* experimental edge bundling */
-    if (model.spec().style?.linkStyle === 'experimentalEdgeBundling') {
-        drawEdgeBundling(g, trackInfo, model);
-        return;
-    }
-
     /* track spec */
     const spec = model.spec();
 
