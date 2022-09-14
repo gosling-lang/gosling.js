@@ -1073,6 +1073,11 @@
                       "$ref": "#/definitions/MouseEventsDeep"
                     }
                   ]
+                },
+                "performanceMode": {
+                  "default": false,
+                  "description": "Render visual marks with less smooth curves to increase rendering performance. Only supported for `elliptical` `linkStyle` `withinLink` currently.",
+                  "type": "boolean"
                 }
               },
               "type": "object"
@@ -1219,6 +1224,11 @@
                                 "$ref": "#/definitions/MouseEventsDeep"
                               }
                             ]
+                          },
+                          "performanceMode": {
+                            "default": false,
+                            "description": "Render visual marks with less smooth curves to increase rendering performance. Only supported for `elliptical` `linkStyle` `withinLink` currently.",
+                            "type": "boolean"
                           }
                         },
                         "type": "object"
@@ -1829,6 +1839,11 @@
                       "$ref": "#/definitions/MouseEventsDeep"
                     }
                   ]
+                },
+                "performanceMode": {
+                  "default": false,
+                  "description": "Render visual marks with less smooth curves to increase rendering performance. Only supported for `elliptical` `linkStyle` `withinLink` currently.",
+                  "type": "boolean"
                 }
               },
               "type": "object"
@@ -1975,6 +1990,11 @@
                                 "$ref": "#/definitions/MouseEventsDeep"
                               }
                             ]
+                          },
+                          "performanceMode": {
+                            "default": false,
+                            "description": "Render visual marks with less smooth curves to increase rendering performance. Only supported for `elliptical` `linkStyle` `withinLink` currently.",
+                            "type": "boolean"
                           }
                         },
                         "type": "object"
@@ -2638,6 +2658,11 @@
                                 "$ref": "#/definitions/MouseEventsDeep"
                               }
                             ]
+                          },
+                          "performanceMode": {
+                            "default": false,
+                            "description": "Render visual marks with less smooth curves to increase rendering performance. Only supported for `elliptical` `linkStyle` `withinLink` currently.",
+                            "type": "boolean"
                           }
                         },
                         "type": "object"
@@ -3852,6 +3877,11 @@
                   "$ref": "#/definitions/MouseEventsDeep"
                 }
               ]
+            },
+            "performanceMode": {
+              "default": false,
+              "description": "Render visual marks with less smooth curves to increase rendering performance. Only supported for `elliptical` `linkStyle` `withinLink` currently.",
+              "type": "boolean"
             }
           },
           "type": "object"
@@ -3967,6 +3997,11 @@
                         "$ref": "#/definitions/MouseEventsDeep"
                       }
                     ]
+                  },
+                  "performanceMode": {
+                    "default": false,
+                    "description": "Render visual marks with less smooth curves to increase rendering performance. Only supported for `elliptical` `linkStyle` `withinLink` currently.",
+                    "type": "boolean"
                   }
                 },
                 "type": "object"
@@ -4529,6 +4564,11 @@
                   "$ref": "#/definitions/MouseEventsDeep"
                 }
               ]
+            },
+            "performanceMode": {
+              "default": false,
+              "description": "Render visual marks with less smooth curves to increase rendering performance. Only supported for `elliptical` `linkStyle` `withinLink` currently.",
+              "type": "boolean"
             }
           },
           "type": "object"
@@ -4888,6 +4928,11 @@
                   "$ref": "#/definitions/MouseEventsDeep"
                 }
               ]
+            },
+            "performanceMode": {
+              "default": false,
+              "description": "Render visual marks with less smooth curves to increase rendering performance. Only supported for `elliptical` `linkStyle` `withinLink` currently.",
+              "type": "boolean"
             }
           },
           "type": "object"
@@ -5003,6 +5048,11 @@
                         "$ref": "#/definitions/MouseEventsDeep"
                       }
                     ]
+                  },
+                  "performanceMode": {
+                    "default": false,
+                    "description": "Render visual marks with less smooth curves to increase rendering performance. Only supported for `elliptical` `linkStyle` `withinLink` currently.",
+                    "type": "boolean"
                   }
                 },
                 "type": "object"
@@ -5707,6 +5757,11 @@
                   "$ref": "#/definitions/MouseEventsDeep"
                 }
               ]
+            },
+            "performanceMode": {
+              "default": false,
+              "description": "Render visual marks with less smooth curves to increase rendering performance. Only supported for `elliptical` `linkStyle` `withinLink` currently.",
+              "type": "boolean"
             }
           },
           "type": "object"
@@ -6060,6 +6115,11 @@
                       "$ref": "#/definitions/MouseEventsDeep"
                     }
                   ]
+                },
+                "performanceMode": {
+                  "default": false,
+                  "description": "Render visual marks with less smooth curves to increase rendering performance. Only supported for `elliptical` `linkStyle` `withinLink` currently.",
+                  "type": "boolean"
                 }
               },
               "type": "object"
@@ -6202,6 +6262,11 @@
                                 "$ref": "#/definitions/MouseEventsDeep"
                               }
                             ]
+                          },
+                          "performanceMode": {
+                            "default": false,
+                            "description": "Render visual marks with less smooth curves to increase rendering performance. Only supported for `elliptical` `linkStyle` `withinLink` currently.",
+                            "type": "boolean"
                           }
                         },
                         "type": "object"
@@ -6809,6 +6874,11 @@
                       "$ref": "#/definitions/MouseEventsDeep"
                     }
                   ]
+                },
+                "performanceMode": {
+                  "default": false,
+                  "description": "Render visual marks with less smooth curves to increase rendering performance. Only supported for `elliptical` `linkStyle` `withinLink` currently.",
+                  "type": "boolean"
                 }
               },
               "type": "object"
@@ -6951,6 +7021,11 @@
                                 "$ref": "#/definitions/MouseEventsDeep"
                               }
                             ]
+                          },
+                          "performanceMode": {
+                            "default": false,
+                            "description": "Render visual marks with less smooth curves to increase rendering performance. Only supported for `elliptical` `linkStyle` `withinLink` currently.",
+                            "type": "boolean"
                           }
                         },
                         "type": "object"
@@ -7607,6 +7682,11 @@
                                 "$ref": "#/definitions/MouseEventsDeep"
                               }
                             ]
+                          },
+                          "performanceMode": {
+                            "default": false,
+                            "description": "Render visual marks with less smooth curves to increase rendering performance. Only supported for `elliptical` `linkStyle` `withinLink` currently.",
+                            "type": "boolean"
                           }
                         },
                         "type": "object"

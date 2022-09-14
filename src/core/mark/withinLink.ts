@@ -37,6 +37,7 @@ export function drawWithinLink(g: PIXI.Graphics, trackInfo: any, model: GoslingT
 
     /* defaults */
     const MIN_HEIGHT = spec.style?.linkMinHeight ?? 0.5;
+    const NUM_STEPS = spec.experimental?.performanceMode ? 200 : 1000; // https://github.com/gosling-lang/gosling.js/issues/634
 
     // TODO: Can row be actually used for circular layouts?
     /* render */
@@ -224,10 +225,8 @@ export function drawWithinLink(g: PIXI.Graphics, trackInfo: any, model: GoslingT
                         // !! Not ready to use
                         const morePoints: { x: number; y: number }[] = [];
 
-                        // https://github.com/gosling-lang/gosling.js/issues/634
-                        const numSteps = 1000;
-                        for (let step = 0; step <= numSteps; step++) {
-                            const theta = (Math.PI * step) / numSteps;
+                        for (let step = 0; step <= NUM_STEPS; step++) {
+                            const theta = (Math.PI * step) / NUM_STEPS;
                             const mx = ((xe - x) / 2.0) * Math.cos(theta) + (x + xe) / 2.0;
                             const my =
                                 baseY -
@@ -241,7 +240,7 @@ export function drawWithinLink(g: PIXI.Graphics, trackInfo: any, model: GoslingT
                             const r = trackOuterRadius - (my / trackHeight) * trackRingSize;
                             const cmx = cartesianToPolar(mx, trackWidth, r, tcx, tcy, startAngle, endAngle);
 
-                            if (step % 20 === 0 || step === numSteps) {
+                            if (step % 20 === 0 || step === NUM_STEPS) {
                                 // we draw less points than the hidden points for mouse events
                                 if (step === 0) {
                                     g.moveTo(cmx.x, cmx.y);
@@ -312,10 +311,9 @@ export function drawWithinLink(g: PIXI.Graphics, trackInfo: any, model: GoslingT
                         const morePoints: { x: number; y: number }[] = [];
 
                         // https://github.com/gosling-lang/gosling.js/issues/634
-                        const numSteps = 1000;
                         const constantY = IsChannelDeep(spec.y);
-                        for (let step = 0; step <= numSteps; step++) {
-                            const theta = Math.PI * (step / numSteps);
+                        for (let step = 0; step <= NUM_STEPS; step++) {
+                            const theta = Math.PI * (step / NUM_STEPS);
                             const mx = ((xe - x) / 2.0) * Math.cos(theta) + (x + xe) / 2.0;
                             const my =
                                 baseY -
@@ -326,7 +324,7 @@ export function drawWithinLink(g: PIXI.Graphics, trackInfo: any, model: GoslingT
                                         : Math.min(xe - x + trackWidth * MIN_HEIGHT, trackWidth) / trackWidth) *
                                     (flipY ? -1 : 1);
 
-                            if (step % 20 === 0 || step === numSteps) {
+                            if (step % 20 === 0 || step === NUM_STEPS) {
                                 // we draw less points than the hidden points that captures mouse events
                                 if (step === 0) {
                                     g.moveTo(mx, my);
