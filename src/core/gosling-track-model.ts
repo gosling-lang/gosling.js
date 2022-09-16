@@ -269,8 +269,7 @@ export class GoslingTrackModel {
             : IsChannelValue(channel)
             ? 'constant'
             : undefined;
-        // if(channelFieldType === 'quantitative' && value === undefined)
-        //     console.log(value, channel)
+
         if (!channelFieldType) {
             // Shouldn't be reached. Channel should be either encoded with data or a constant value.
             return undefined;
