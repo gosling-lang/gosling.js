@@ -3748,21 +3748,15 @@
           "type": "boolean"
         },
         "oneOf": {
-          "anyOf": [
-            {
-              "items": {
-                "type": "string"
-              },
-              "type": "array"
-            },
-            {
-              "items": {
-                "type": "number"
-              },
-              "type": "array"
-            }
-          ],
-          "description": "Check whether the value is an element in the provided list."
+          "description": "Check whether the value is an element in the provided list.",
+          "items": {
+            "type": [
+              "string",
+              "number",
+              "null"
+            ]
+          },
+          "type": "array"
         },
         "type": {
           "const": "filter",

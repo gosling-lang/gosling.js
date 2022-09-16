@@ -285,6 +285,14 @@ export class GoslingTrackModel {
             return undefined;
         }
 
+        if (value === null) {
+            if (channelFieldType === 'quantitative') {
+                value = 0;
+            } else if (channelFieldType === 'nominal') {
+                value = 'null';
+            }
+        }
+
         if (typeof this.channelScales[channelKey] !== 'function') {
             // Scale is undefined, so returning undefined.
             return undefined;
@@ -691,7 +699,9 @@ export class GoslingTrackModel {
                     }
                 } else if (IsChannelDeep(channel) && channel.type === 'nominal') {
                     if (channel.domain === undefined) {
-                        channel.domain = Array.from(new Set(data.map(d => d[channel.field as string]))) as string[];
+                        channel.domain = Array.from(
+                            new Set(data.map(d => d[channel.field as string] ?? 'null'))
+                        ) as string[];
                     }
                     if (!channel.range) {
                         let startSize = 2;
