@@ -1,3 +1,13 @@
+## [0.9.24](https://github.com/gosling-lang/gosling.js/compare/v0.9.23...v0.9.24) (2022-09-16)
+
+
+### Features
+
+* add type heirarchy for BarTrack ([#808](https://github.com/gosling-lang/gosling.js/issues/808)) ([e00d145](https://github.com/gosling-lang/gosling.js/commit/e00d1456932ad4d2e47d4f9655e5411c6199b881))
+* show `null` `DISTPREVLOGE` from VCF files ([#814](https://github.com/gosling-lang/gosling.js/issues/814)) ([e5282fc](https://github.com/gosling-lang/gosling.js/commit/e5282fc6d2b489251e24a6421fcbdb961a070ee0))
+
+
+
 ## [0.9.23](https://github.com/gosling-lang/gosling.js/compare/v0.9.22...v0.9.23) (2022-08-26)
 
 
