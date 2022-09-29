@@ -61,7 +61,7 @@
         "buffer": "^6.0.3",
         "css-element-queries": "^1.2.3",
         "d3-array": "^2.5.1",
-        "d3-color": "^2.0.0",
+        "d3-color": "^3.1.0",
         "d3-dsv": "^2.0.0",
         "d3-scale": "^3.2.1",
         "d3-scale-chromatic": "^2.0.0",
