@@ -14,12 +14,6 @@ export function drawRect(HGC: import('@higlass/types').HGC, track: any, tile: Ti
 
     /* track size */
     const [trackWidth, trackHeight] = track.dimensions;
-    const tileSize = track.tilesetInfo.tile_size;
-    const { tileX, tileWidth } = track.getTilePosAndDimensions(
-        tile.tileData.zoomLevel,
-        tile.tileData.tilePos,
-        tileSize
-    );
 
     /* circular parameters */
     const circular = spec.layout === 'circular';
@@ -33,7 +27,16 @@ export function drawRect(HGC: import('@higlass/types').HGC, track: any, tile: Ti
 
     /* genomic scale */
     const xScale = track._xScale;
-    const tileUnitWidth = xScale(tileX + tileWidth / tileSize) - xScale(tileX);
+    let tileUnitWidth: number;
+    if (tile.tileData.tilePos) {
+        const tileSize = track.tilesetInfo.tile_size;
+        const { tileX, tileWidth } = track.getTilePosAndDimensions(
+            tile.tileData.zoomLevel,
+            tile.tileData.tilePos, // TODO: required parameter. Typing out `track` should address this issue.
+            tileSize
+        );
+        tileUnitWidth = xScale(tileX + tileWidth / tileSize) - xScale(tileX);
+    }
 
     /* row separation */
     const rowCategories: string[] = (model.getChannelDomainArray('row') as string[]) ?? ['___SINGLE_ROW___'];
