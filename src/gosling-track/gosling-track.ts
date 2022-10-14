@@ -614,8 +614,8 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
         /**
          * Get the tile's position in its coordinate system.
          */
-        getTilePosAndDimensions(zoomLevel: number, tilePos: [number, number]) {
-            if (!this.tilesetInfo) {
+        getTilePosAndDimensions(zoomLevel: number, tilePos?: [number, number]) {
+            if (!this.tilesetInfo || !tilePos) {
                 throw Error('tilesetInfo not parsed');
             }
 
