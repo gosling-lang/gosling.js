@@ -1,3 +1,13 @@
+## [0.9.25](https://github.com/gosling-lang/gosling.js/compare/v0.9.24...v0.9.25) (2022-10-14)
+
+
+### Bug Fixes
+
+* fix an error when tilePos is undefined ([#819](https://github.com/gosling-lang/gosling.js/issues/819)) ([635b531](https://github.com/gosling-lang/gosling.js/commit/635b5313cec5f163b8845d28eca6e09a57dadad5))
+* fix build by adding pubsub ([#820](https://github.com/gosling-lang/gosling.js/issues/820)) ([f4445c6](https://github.com/gosling-lang/gosling.js/commit/f4445c6ba2cc2583d406d6ffcd42daec4d3ff3db))
+
+
+
 ## [0.9.24](https://github.com/gosling-lang/gosling.js/compare/v0.9.23...v0.9.24) (2022-09-16)
 
 
