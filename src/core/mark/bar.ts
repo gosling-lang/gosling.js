@@ -7,7 +7,7 @@ import { cartesianToPolar, valueToRadian } from '../utils/polar';
 import colorToHex from '../utils/color-to-hex';
 import type { Tile } from '../../gosling-track/gosling-track';
 
-export function drawBar(trackInfo: any, tile: Tile, model: GoslingTrackModel) {
+export function drawBar(track: any, tile: Tile, model: GoslingTrackModel) {
     /* track spec */
     const spec = model.spec();
 
@@ -20,13 +20,8 @@ export function drawBar(trackInfo: any, tile: Tile, model: GoslingTrackModel) {
     const data = model.data();
 
     /* track size */
-    const [trackWidth, trackHeight] = trackInfo.dimensions;
-    const tileSize = trackInfo.tilesetInfo.tile_size;
-    const { tileX, tileWidth } = trackInfo.getTilePosAndDimensions(
-        tile.tileData.zoomLevel,
-        tile.tileData.tilePos,
-        tileSize
-    );
+    const [trackWidth, trackHeight] = track.dimensions;
+    const tileSize = track.tilesetInfo.tile_size;
     const zoomLevel =
         (model.getChannelScale('x') as any).invert(trackWidth) - (model.getChannelScale('x') as any).invert(0);
 
@@ -42,7 +37,15 @@ export function drawBar(trackInfo: any, tile: Tile, model: GoslingTrackModel) {
 
     /* genomic scale */
     const xScale = model.getChannelScale('x');
-    const tileUnitWidth = xScale(tileX + tileWidth / tileSize) - xScale(tileX);
+    let tileUnitWidth: number;
+    if (tile.tileData.tilePos) {
+        const { tileX, tileWidth } = track.getTilePosAndDimensions(
+            tile.tileData.zoomLevel,
+            tile.tileData.tilePos,
+            tileSize
+        );
+        tileUnitWidth = xScale(tileX + tileWidth / tileSize) - xScale(tileX);
+    }
 
     /* row separation */
     const rowCategories = (model.getChannelDomainArray('row') as string[]) ?? ['___SINGLE_ROW___'];
