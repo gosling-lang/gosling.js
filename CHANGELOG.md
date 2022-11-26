@@ -1,3 +1,14 @@
+## [0.9.26](https://github.com/gosling-lang/gosling.js/compare/v0.9.25...v0.9.26) (2022-11-26)
+
+
+### Bug Fixes
+
+* do not try to infer tile unit size when info missing ([#821](https://github.com/gosling-lang/gosling.js/issues/821)) ([7edb6c0](https://github.com/gosling-lang/gosling.js/commit/7edb6c0bc31e2245de091f342e8ffb4b07dd4427))
+* fix errors when displaying vcf files ([#826](https://github.com/gosling-lang/gosling.js/issues/826)) ([95791a6](https://github.com/gosling-lang/gosling.js/commit/95791a66fb5cfae4b14bb12b5f51c418dad58a11))
+* improve within link performance by reducing the number of event points ([#828](https://github.com/gosling-lang/gosling.js/issues/828)) ([4562bc9](https://github.com/gosling-lang/gosling.js/commit/4562bc9e6acdcd0d29a8060882306b6c9f2a0271))
+
+
+
 ## [0.9.25](https://github.com/gosling-lang/gosling.js/compare/v0.9.24...v0.9.25) (2022-10-14)
 
 
