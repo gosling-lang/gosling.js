@@ -37,7 +37,7 @@ export function drawWithinLink(g: PIXI.Graphics, trackInfo: any, model: GoslingT
 
     /* defaults */
     const MIN_HEIGHT = spec.style?.linkMinHeight ?? 0.5;
-    const NUM_STEPS = spec.experimental?.performanceMode ? 200 : 1000; // https://github.com/gosling-lang/gosling.js/issues/634
+    const NUM_STEPS = spec.experimental?.performanceMode ? 10 : 50; // https://github.com/gosling-lang/gosling.js/issues/634
 
     // TODO: Can row be actually used for circular layouts?
     /* render */
@@ -324,13 +324,10 @@ export function drawWithinLink(g: PIXI.Graphics, trackInfo: any, model: GoslingT
                                         : Math.min(xe - x + trackWidth * MIN_HEIGHT, trackWidth) / trackWidth) *
                                     (flipY ? -1 : 1);
 
-                            if (step % 20 === 0 || step === NUM_STEPS) {
-                                // we draw less points than the hidden points that captures mouse events
-                                if (step === 0) {
-                                    g.moveTo(mx, my);
-                                } else {
-                                    g.lineTo(mx, my);
-                                }
+                            if (step === 0) {
+                                g.moveTo(mx, my);
+                            } else {
+                                g.lineTo(mx, my);
                             }
                             morePoints.push({ x: mx, y: my });
                         }
