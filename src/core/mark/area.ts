@@ -9,7 +9,7 @@ import type { Tile } from '../../gosling-track/gosling-track';
 /**
  * Draw area marks
  */
-export function drawArea(HGC: import('@higlass/types').HGC, trackInfo: any, tile: Tile, model: GoslingTrackModel) {
+export function drawArea(HGC: import('@higlass/types').HGC, track: any, tile: Tile, model: GoslingTrackModel) {
     /* track spec */
     const spec = model.spec();
 
@@ -17,9 +17,7 @@ export function drawArea(HGC: import('@higlass/types').HGC, trackInfo: any, tile
     const data = model.data();
 
     /* track size */
-    const [trackWidth, trackHeight] = trackInfo.dimensions;
-    const tileSize = trackInfo.tilesetInfo.tile_size;
-    const { tileX } = trackInfo.getTilePosAndDimensions(tile.tileData.zoomLevel, tile.tileData.tilePos, tileSize);
+    const [trackWidth, trackHeight] = track.dimensions;
 
     /* circular parameters */
     const circular = spec.layout === 'circular';
@@ -32,7 +30,7 @@ export function drawArea(HGC: import('@higlass/types').HGC, trackInfo: any, tile
     const trackCenterY = trackHeight / 2.0;
 
     /* genomic scale */
-    const xScale = trackInfo._xScale;
+    const xScale = track._xScale;
 
     /* row separation */
     const rowCategories = (model.getChannelDomainArray('row') as string[]) ?? ['___SINGLE_ROW___'];
@@ -202,6 +200,7 @@ export function drawArea(HGC: import('@higlass/types').HGC, trackInfo: any, tile
                 const baselinePoints: number[][] = [];
                 const areaPoints: number[] = [];
                 const baselineR = trackOuterRadius - ((rowPosition + rowHeight) / trackHeight) * trackRingSize;
+                let startX = 0;
 
                 data.filter(
                     d =>
@@ -273,13 +272,13 @@ export function drawArea(HGC: import('@higlass/types').HGC, trackInfo: any, tile
                             if (i === 0) {
                                 // start position of the polygon
                                 areaPoints.push(cx, rowPosition + rowHeight);
+                                startX = cx;
                             }
 
                             areaPoints.push(cx, rowPosition + rowHeight - cy);
 
                             if (i === array.length - 1) {
                                 // close the polygon with a point at the start
-                                const startX = xScale(tileX);
                                 areaPoints.push(cx, rowPosition + rowHeight);
                                 areaPoints.push(startX, rowPosition + rowHeight);
                             }

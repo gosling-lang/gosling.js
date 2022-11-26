@@ -6,7 +6,7 @@ import colorToHex from '../utils/color-to-hex';
 import { cartesianToPolar } from '../utils/polar';
 import type { PIXIVisualProperty } from '../visual-property.schema';
 
-export function drawPoint(trackInfo: any, g: PIXI.Graphics, model: GoslingTrackModel) {
+export function drawPoint(track: any, g: PIXI.Graphics, model: GoslingTrackModel) {
     /* track spec */
     const spec = model.spec();
 
@@ -19,7 +19,7 @@ export function drawPoint(trackInfo: any, g: PIXI.Graphics, model: GoslingTrackM
     const data = model.data();
 
     /* track size */
-    const [trackWidth, trackHeight] = trackInfo.dimensions;
+    const [trackWidth, trackHeight] = track.dimensions;
     const zoomLevel =
         (model.getChannelScale('x') as any).invert(trackWidth) - (model.getChannelScale('x') as any).invert(0);
 
