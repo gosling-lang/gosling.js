@@ -1,3 +1,17 @@
+## [0.9.27](https://github.com/gosling-lang/gosling.js/compare/v0.9.26...v0.9.27) (2022-12-08)
+
+
+### Bug Fixes
+
+* correctly display legends when multiple tracks are overlaid ([#834](https://github.com/gosling-lang/gosling.js/issues/834)) ([4ea1033](https://github.com/gosling-lang/gosling.js/commit/4ea103305333780886b97f416fa36cc09cbcb7ec))
+
+
+### Features
+
+* add support for drawing vertical lines on withinLink ([#833](https://github.com/gosling-lang/gosling.js/issues/833)) ([c4b4e9d](https://github.com/gosling-lang/gosling.js/commit/c4b4e9d1e9d15d2d255c688c8ce8ba7822f32b10))
+
+
+
 ## [0.9.26](https://github.com/gosling-lang/gosling.js/compare/v0.9.25...v0.9.26) (2022-11-26)
 
 
