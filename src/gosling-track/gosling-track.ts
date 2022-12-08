@@ -2,7 +2,16 @@ import type * as PIXI from 'pixi.js';
 import * as uuid from 'uuid';
 import { isEqual, sampleSize, uniqBy } from 'lodash-es';
 import type { ScaleLinear } from 'd3-scale';
-import type { SingleTrack, OverlaidTrack, Datum, EventStyle, GenomicPosition, Assembly } from '@gosling.schema';
+import type {
+    SingleTrack,
+    OverlaidTrack,
+    Datum,
+    EventStyle,
+    GenomicPosition,
+    Assembly,
+    ValueExtent,
+    Range
+} from '@gosling.schema';
 import type { CompleteThemeDeep } from '../core/utils/theme';
 import { drawMark, drawPostEmbellishment, drawPreEmbellishment } from '../core/mark';
 import { GoslingTrackModel } from '../core/gosling-track-model';
@@ -86,6 +95,12 @@ interface ProcessedTileInfo {
     skipRendering: boolean;
 }
 
+/** Information about the rendered color legend */
+export interface DisplayedLegend {
+    domain: ValueExtent;
+    range: Range;
+}
+
 function initProcessedTileInfo(): ProcessedTileInfo {
     return { goslingModels: [], tabularData: [], skipRendering: false };
 }
@@ -155,6 +170,9 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
 
         private mouseDownX = 0;
         private mouseDownY = 0;
+
+        /** Store the color legends added so far so that we can avoid overlaps and redundancy */
+        private displayedLegends: DisplayedLegend[] = [];
 
         constructor() {
             super(context, options);
@@ -317,6 +335,14 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
 
             tile.graphics?.clear();
             tile.graphics?.removeChildren();
+
+            // This is only to render embellishments only once.
+            // TODO: Instead of rendering and removing for every tiles, render pBorder only once
+            this.pBackground.clear();
+            this.pBackground.removeChildren();
+            this.pBorder.clear();
+            this.pBorder.removeChildren();
+            this.displayedLegends = [];
 
             // !! A single tile contains one track or multiple tracks overlaid
             /* Render marks and embellishments */

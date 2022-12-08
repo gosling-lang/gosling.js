@@ -5,6 +5,7 @@ import type { CompleteThemeDeep } from '../utils/theme';
 import type { Dimension } from '../utils/position';
 import { scaleLinear, ScaleLinear } from 'd3-scale';
 import { getTextStyle } from '../utils/text-style';
+import type { DisplayedLegend } from 'src/gosling-track/gosling-track';
 
 // Just the libraries necesssary fro this module
 type Libraries = Pick<typeof import('@higlass/libraries'), 'PIXI' | 'd3Selection' | 'd3Drag'>;
@@ -290,7 +291,7 @@ export function drawColorLegendQuantitative(
 
 export function drawColorLegendCategories(
     HGC: { libraries: Libraries },
-    trackInfo: any,
+    track: any,
     _tile: unknown,
     tm: GoslingTrackModel,
     theme: Required<CompleteThemeDeep>
@@ -309,8 +310,22 @@ export function drawColorLegendCategories(
         return;
     }
 
+    /* check redundancy */
+    const domain = spec.color.domain!;
+    const range = spec.color.range!;
+    const existingLegends: DisplayedLegend[] = track.displayedLegends;
+    const toStr = (_: any[] | string) => {
+        return typeof _ === 'string' ? _ : _.join();
+    };
+    if (existingLegends.find(d => toStr(d.domain) === toStr(domain) && toStr(d.range) === toStr(range))) {
+        // Identical color legend already added
+        return;
+    } else {
+        existingLegends.push({ domain, range });
+    }
+
     /* render */
-    const graphics = trackInfo.pBorder; // use pBorder not to be affected by zoomming
+    const graphics = track.pBorder; // use pBorder not to be affected by zoomming
 
     const paddingX = 10;
     const paddingY = 4;
@@ -335,7 +350,7 @@ export function drawColorLegendCategories(
             .map(d => d)
             .reverse()
             .forEach(category => {
-                if (maxWidth > trackInfo.dimensions[0]) {
+                if (maxWidth > track.dimensions[0]) {
                     // We do not draw labels overflow
                     return;
                 }
@@ -344,8 +359,8 @@ export function drawColorLegendCategories(
                 const textGraphic = new HGC.libraries.PIXI.Text(category, labelTextStyle);
                 textGraphic.anchor.x = 1;
                 textGraphic.anchor.y = 0;
-                textGraphic.position.x = trackInfo.position[0] + trackInfo.dimensions[0] - maxWidth - paddingX;
-                textGraphic.position.y = trackInfo.position[1] + paddingY;
+                textGraphic.position.x = track.position[0] + track.dimensions[0] - maxWidth - paddingX;
+                textGraphic.position.y = track.position[1] + paddingY;
 
                 graphics.addChild(textGraphic);
 
@@ -357,8 +372,8 @@ export function drawColorLegendCategories(
                 }
 
                 recipe.push({
-                    x: trackInfo.position[0] + trackInfo.dimensions[0] - textMetrics.width - maxWidth - paddingX * 2,
-                    y: trackInfo.position[1] + paddingY + textMetrics.height / 2.0,
+                    x: track.position[0] + track.dimensions[0] - textMetrics.width - maxWidth - paddingX * 2,
+                    y: track.position[1] + paddingY + textMetrics.height / 2.0,
                     color
                 });
 
@@ -374,8 +389,8 @@ export function drawColorLegendCategories(
             });
             textGraphic.anchor.x = 1;
             textGraphic.anchor.y = 0;
-            textGraphic.position.x = trackInfo.position[0] + trackInfo.dimensions[0] - paddingX;
-            textGraphic.position.y = trackInfo.position[1] + cumY;
+            textGraphic.position.x = track.position[0] + track.dimensions[0] - paddingX;
+            textGraphic.position.y = track.position[1] + cumY;
 
             const textStyleObj = new HGC.libraries.PIXI.TextStyle({ ...labelTextStyle, fontWeight: 'bold' });
             const textMetrics = HGC.libraries.PIXI.TextMetrics.measureText(spec.style?.legendTitle, textStyleObj);
@@ -386,7 +401,7 @@ export function drawColorLegendCategories(
         }
 
         colorCategories.forEach(category => {
-            if (cumY > trackInfo.dimensions[1]) {
+            if (cumY > track.dimensions[1]) {
                 // We do not draw labels overflow
                 return;
             }
@@ -396,8 +411,8 @@ export function drawColorLegendCategories(
             const textGraphic = new HGC.libraries.PIXI.Text(category, labelTextStyle);
             textGraphic.anchor.x = 1;
             textGraphic.anchor.y = 0;
-            textGraphic.position.x = trackInfo.position[0] + trackInfo.dimensions[0] - paddingX;
-            textGraphic.position.y = trackInfo.position[1] + cumY;
+            textGraphic.position.x = track.position[0] + track.dimensions[0] - paddingX;
+            textGraphic.position.y = track.position[1] + cumY;
 
             graphics.addChild(textGraphic);
 
@@ -409,8 +424,8 @@ export function drawColorLegendCategories(
             }
 
             recipe.push({
-                x: trackInfo.position[0] + trackInfo.dimensions[0] - textMetrics.width - paddingX * 2,
-                y: trackInfo.position[1] + cumY + textMetrics.height / 2.0,
+                x: track.position[0] + track.dimensions[0] - textMetrics.width - paddingX * 2,
+                y: track.position[1] + cumY + textMetrics.height / 2.0,
                 color
             });
 
@@ -426,8 +441,8 @@ export function drawColorLegendCategories(
         0 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
     );
     graphics.drawRect(
-        trackInfo.position[0] + trackInfo.dimensions[0] - maxWidth - 1,
-        trackInfo.position[1] + 1,
+        track.position[0] + track.dimensions[0] - maxWidth - 1,
+        track.position[1] + 1,
         maxWidth,
         cumY - paddingY
     );
