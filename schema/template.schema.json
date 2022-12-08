@@ -1187,6 +1187,10 @@
         "textStrokeWidth": {
           "description": "Specify the stroke width of `text` marks. Can also be specified using the `strokeWidth` channel option of `text` marks.",
           "type": "number"
+        },
+        "withinLinkVerticalLines": {
+          "description": "Whether to show vertical lines that connect to the baseline (axis) when `y` and `ye` are both used. __Default__: `false`",
+          "type": "boolean"
         }
       },
       "type": "object"

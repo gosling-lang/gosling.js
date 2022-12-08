@@ -38,6 +38,7 @@ export function drawWithinLink(g: PIXI.Graphics, trackInfo: any, model: GoslingT
     /* defaults */
     const MIN_HEIGHT = spec.style?.linkMinHeight ?? 0.5;
     const NUM_STEPS = spec.experimental?.performanceMode ? 10 : 50; // https://github.com/gosling-lang/gosling.js/issues/634
+    const showVerticalLines = spec.style?.withinLinkVerticalLines ?? false;
 
     // TODO: Can row be actually used for circular layouts?
     /* render */
@@ -54,6 +55,7 @@ export function drawWithinLink(g: PIXI.Graphics, trackInfo: any, model: GoslingT
             let x1 = model.encodedPIXIProperty('x1', d);
             let x1e = model.encodedPIXIProperty('x1e', d);
             const y = model.encodedPIXIProperty('y', d);
+            const ye = model.encodedPIXIProperty('ye', d);
             const stroke = model.encodedPIXIProperty('stroke', d);
             const strokeWidth = model.encodedPIXIProperty('strokeWidth', d);
             const color = model.encodedPIXIProperty('color', d);
@@ -308,31 +310,53 @@ export function drawWithinLink(g: PIXI.Graphics, trackInfo: any, model: GoslingT
                             return;
                         }
 
-                        const morePoints: { x: number; y: number }[] = [];
+                        const points: { x: number; y: number }[] = [];
 
                         // https://github.com/gosling-lang/gosling.js/issues/634
-                        const constantY = IsChannelDeep(spec.y);
+                        const isYSpecified = IsChannelDeep(spec.y);
+                        // Iterate from right to left side
                         for (let step = 0; step <= NUM_STEPS; step++) {
                             const theta = Math.PI * (step / NUM_STEPS);
                             const mx = ((xe - x) / 2.0) * Math.cos(theta) + (x + xe) / 2.0;
-                            const my =
+                            let my =
                                 baseY -
                                 y *
                                     Math.sin(theta) *
-                                    (constantY
+                                    (isYSpecified
                                         ? 1
                                         : Math.min(xe - x + trackWidth * MIN_HEIGHT, trackWidth) / trackWidth) *
                                     (flipY ? -1 : 1);
 
+                            if (typeof y !== 'undefined' && typeof ye !== 'undefined') {
+                                // If both defined, we draw link between `y` and `ye`
+                                const linkHeight = Math.abs(ye - y);
+                                const flipShape = ye > y;
+                                my = y - linkHeight * Math.sin(theta) * (flipShape ? -1 : 1);
+                            }
+
                             if (step === 0) {
-                                g.moveTo(mx, my);
+                                if (showVerticalLines) {
+                                    const _y = flipY ? baseY - trackHeight : baseY;
+                                    g.moveTo(mx, _y);
+                                    points.push({ x: mx, y: _y });
+
+                                    g.lineTo(mx, my);
+                                } else {
+                                    g.moveTo(mx, my);
+                                }
                             } else {
                                 g.lineTo(mx, my);
                             }
-                            morePoints.push({ x: mx, y: my });
+                            points.push({ x: mx, y: my });
+
+                            if (step === NUM_STEPS && showVerticalLines) {
+                                const _y = flipY ? baseY - trackHeight : baseY;
+                                g.lineTo(mx, _y);
+                                points.push({ x: mx, y: _y });
+                            }
                         }
 
-                        pathForMouseEvent = morePoints.flatMap(d => [d.x, d.y]);
+                        pathForMouseEvent = points.flatMap(d => [d.x, d.y]);
                     } else {
                         if (xe < 0 || x > trackWidth) {
                             // Q: Do we really need this?
