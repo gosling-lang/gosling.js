@@ -486,6 +486,11 @@ export interface Style {
     linkMinHeight?: number;
 
     /**
+     * Whether to show vertical lines that connect to the baseline (axis) when `y` and `ye` are both used. __Default__: `false`
+     */
+    withinLinkVerticalLines?: boolean;
+
+    /**
      * Specify whether to show legend in a single horizontal line?
      */
     inlineLegend?: boolean;
