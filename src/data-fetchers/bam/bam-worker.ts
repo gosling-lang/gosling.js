@@ -244,6 +244,9 @@ class BamFile extends _BamFile {
             // yieldThreadTime: 1000,
         });
     }
+    getChromNames() {
+        return this.indexToChr.map((v: { refName: string; length: number }) => v.refName);
+    }
 }
 
 interface BamFileOptions {
@@ -269,6 +272,18 @@ const init = async (
     if (!bamFileCache.has(bam.url)) {
         const bamFile = BamFile.fromUrl(bam.url, bam.indexUrl);
         await bamFile.getHeader(); // reads bam/bai headers
+
+        // Infer the correct chromosome names between 'chr1' and '1'
+        const firstChromNameInHeader = bamFile.getChromNames()[0];
+        if (firstChromNameInHeader) {
+            const headerHasPrefix = firstChromNameInHeader.includes('chr');
+            const specHasPrefix = chromSizes[0]?.[0].includes('chr');
+            if (headerHasPrefix && !specHasPrefix) {
+                chromSizes = chromSizes.map(([s, n]) => [`chr${s}`, n]);
+            } else if (!headerHasPrefix && specHasPrefix) {
+                chromSizes = chromSizes.map(([s, n]) => [s.replace('chr', ''), n]);
+            }
+        }
         bamFileCache.set(bam.url, bamFile);
     }
     const bamFile = bamFileCache.get(bam.url)!;
