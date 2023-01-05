@@ -245,7 +245,7 @@ class BamFile extends _BamFile {
         });
     }
     getChromNames() {
-        return this.indexToChr.map(v => v.refName);
+        return this.indexToChr.map((v: { refName: string; length: number }) => v.refName);
     }
 }
 
