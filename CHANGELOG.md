@@ -1,3 +1,12 @@
+## [0.9.28](https://github.com/gosling-lang/gosling.js/compare/v0.9.27...v0.9.28) (2023-01-05)
+
+
+### Features
+
+* infer `chr` prefix in bam file for ease of use ([#837](https://github.com/gosling-lang/gosling.js/issues/837)) ([e3461cf](https://github.com/gosling-lang/gosling.js/commit/e3461cf3c588e9344e59a2e1b60f43a1eaea8c28))
+
+
+
 ## [0.9.27](https://github.com/gosling-lang/gosling.js/compare/v0.9.26...v0.9.27) (2022-12-08)
 
 
