@@ -70,8 +70,6 @@ button {
     font-weight: 400;
     color: #e18343;
     cursor: pointer;
-    background: transparent;
-    border: none;
 }
 
 .demo-navbar select {
