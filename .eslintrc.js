@@ -6,7 +6,8 @@ module.exports = {
         'plugin:react/recommended',
         'plugin:@typescript-eslint/recommended',
         'prettier',
-        'plugin:prettier/recommended'
+        'plugin:prettier/recommended',
+        'plugin:jsx-a11y/recommended',
     ],
     env: {
         browser: true,
