@@ -7,13 +7,19 @@ body {
     margin: 0;
     height: 100%;
     width: 100%;
-    font-size: 14px;
-    line-height: 1.42857143;
-    font-family: 'Helvetica Neue', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu',
-        'Cantarell', 'Droid Sans', sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     overflow: hidden;
+}
+
+/* Common font styles */
+body,
+button {
+    font-family: 'Helvetica Neue', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu',
+        'Cantarell', 'Droid Sans', sans-serif;
+    font-size: 14px;
+    text-align: left;
+    line-height: 1.42857143;
 }
 
 #root {

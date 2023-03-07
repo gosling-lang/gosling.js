@@ -448,7 +448,7 @@ function Editor(props: RouteComponentProps) {
                             setScreenSize({ width: screenSize?.width ?? 1000, height });
                         }}
                     />
-                    <span
+                    <button
                         style={{
                             marginLeft: 10,
                             color: 'gray',
@@ -466,7 +466,7 @@ function Editor(props: RouteComponentProps) {
                         }}
                     >
                         {getIconSVG(ICONS.REPEAT, 20, 20)}
-                    </span>
+                    </button>
                 </span>
             </div>
         );
@@ -686,51 +686,50 @@ function Editor(props: RouteComponentProps) {
         <>
             <div
                 className={`demo-navbar ${theme === 'dark' ? 'dark' : ''}`}
-                onClick={() => {
-                    if (!gosRef.current) return;
-
-                    // To test APIs, uncomment the following code.
-                    // // ! Be aware that the first view is for the title/subtitle track. So navigation API does not work.
-                    // const id = gosRef.current.api.getViewIds()?.[1]; //'view-1';
-                    // if(id) {
-                    //     gosRef.current.api.zoomToExtent(id);
-                    // }
-                    //
-                    // // Static visualization rendered in canvas
-                    // const { canvas } = gosRef.current.api.getCanvas({
-                    //     resolution: 1,
-                    //     transparentBackground: true,
-                    // });
-                    // const testDiv = document.getElementById('preview-container');
-                    // if(canvas && testDiv) {
-                    //     testDiv.appendChild(canvas);
-                    // }
-                }}
+                // To test APIs, uncomment the following code.
+                // onClick={() => {
+                //     if (!gosRef.current) return;
+                // // ! Be aware that the first view is for the title/subtitle track. So navigation API does not work.
+                // const id = gosRef.current.api.getViewIds()?.[1]; //'view-1';
+                // if(id) {
+                //     gosRef.current.api.zoomToExtent(id);
+                // }
+                //
+                // // Static visualization rendered in canvas
+                // const { canvas } = gosRef.current.api.getCanvas({
+                //     resolution: 1,
+                //     transparentBackground: true,
+                // });
+                // const testDiv = document.getElementById('preview-container');
+                // if(canvas && testDiv) {
+                //     testDiv.appendChild(canvas);
+                // }
+                // }}
             >
-                <span
+                <button
                     style={{ cursor: 'pointer', lineHeight: '40px' }}
                     onClick={() => window.open(`${window.location.pathname}`, '_blank')}
                 >
                     <span className="logo">{GoslingLogoSVG(20, 20)}</span>
                     Gosling.js Editor
-                </span>
+                </button>
                 {urlSpec && <small> Displaying a custom spec contained in URL</small>}
                 {gistTitle && !IS_SMALL_SCREEN && (
                     <>
                         <span className="gist-title">{gistTitle}</span>
-                        <span
+                        <button
                             title="Open GitHub Gist"
                             style={{ marginLeft: 10 }}
                             className="description-github-button"
                             onClick={() => window.open(`https://gist.github.com/${urlGist}`, '_blank')}
                         >
                             {getIconSVG(ICONS.UP_RIGHT, 14, 14)}
-                        </span>
+                        </button>
                     </>
                 )}
-                <span className="demo-label" onClick={() => setShowExamples(true)}>
+                <button className="demo-label" onClick={() => setShowExamples(true)}>
                     <b>{demo.group}</b>: {demo.name}
-                </span>
+                </button>
                 {/* <span className="demo-dropdown" hidden={urlSpec !== null || urlGist !== null || urlExampleId !== ''}>
                     <select
                         style={{ maxWidth: IS_SMALL_SCREEN ? window.innerWidth - 180 : 'none' }}
@@ -776,16 +775,16 @@ function Editor(props: RouteComponentProps) {
                 ) : null}
                 <input type="hidden" id="spec-url-exporter" />
                 {description ? (
-                    <span title="Open Textual Description" className="description-button" onClick={openDescription}>
+                    <button title="Open Textual Description" className="description-button" onClick={openDescription}>
                         {getIconSVG(ICONS.INFO_CIRCLE, 23, 23)}
-                    </span>
+                    </button>
                 ) : null}
             </div>
             {/* ------------------------ Main View ------------------------ */}
             <div className={`editor ${theme === 'dark' ? 'dark' : ''}`}>
                 <SplitPane className="side-panel-spliter" split="vertical" defaultSize="50px" allowResize={false}>
                     <div className={`side-panel ${theme === 'dark' ? 'dark' : ''}`}>
-                        <span
+                        <button
                             title="Example Gallery"
                             className="side-panel-button"
                             onClick={() => setShowExamples(!showExamples)}
@@ -793,8 +792,8 @@ function Editor(props: RouteComponentProps) {
                             {showExamples ? getIconSVG(ICONS.GRID, 20, 20, '#E18343') : getIconSVG(ICONS.GRID)}
                             <br />
                             EXAMPLE
-                        </span>
-                        <span
+                        </button>
+                        <button
                             title="Automatically update visualization upon editing code"
                             className="side-panel-button"
                             onClick={() => setAutoRun(!autoRun)}
@@ -806,13 +805,13 @@ function Editor(props: RouteComponentProps) {
                             AUTO
                             <br />
                             RUN
-                        </span>
-                        <span title="Run Code" className="side-panel-button" onClick={() => runSpecUpdateVis(true)}>
+                        </button>
+                        <button title="Run Code" className="side-panel-button" onClick={() => runSpecUpdateVis(true)}>
                             {getIconSVG(ICONS.PLAY, 23, 23)}
                             <br />
                             RUN
-                        </span>
-                        <span
+                        </button>
+                        <button
                             title="Find"
                             className="side-panel-button"
                             onClick={() => {
@@ -822,13 +821,13 @@ function Editor(props: RouteComponentProps) {
                             {getIconSVG(ICONS.FIND, 23, 23)}
                             <br />
                             FIND
-                        </span>
+                        </button>
                         <span title="Change Font Size" className="side-panel-button">
                             {getIconSVG(ICONS.TEXT, 23, 23)}
                             <br />
                             FONT SIZE
                             <span className="side-subpanel">
-                                <span
+                                <button
                                     title="Use Larger Font"
                                     className="side-subpanel-button"
                                     onClick={() => {
@@ -839,8 +838,8 @@ function Editor(props: RouteComponentProps) {
                                     +
                                     <br />
                                     LARGER
-                                </span>
-                                <span
+                                </button>
+                                <button
                                     title="Use Larger Font"
                                     className="side-subpanel-button"
                                     onClick={() => {
@@ -851,11 +850,11 @@ function Editor(props: RouteComponentProps) {
                                     -
                                     <br />
                                     SMALLER
-                                </span>
+                                </button>
                             </span>
                         </span>
 
-                        <span
+                        <button
                             title="Show or hide a code panel"
                             className="side-panel-button"
                             onClick={() => setIsHideCode(!isHideCode)}
@@ -863,8 +862,8 @@ function Editor(props: RouteComponentProps) {
                             {getIconSVG(ICONS.SPLIT, 23, 23)}
                             <br />
                             LAYOUT
-                        </span>
-                        <span
+                        </button>
+                        <button
                             title="Show or hide a data preview"
                             className="side-panel-button"
                             onClick={() => setIsShowDataPreview(!isShowDataPreview)}
@@ -874,14 +873,14 @@ function Editor(props: RouteComponentProps) {
                             DATA
                             <br />
                             PREVIEW
-                        </span>
+                        </button>
 
                         <span title="Export" className="side-panel-button">
                             {getIconSVG(ICONS.UP_RIGHT, 23, 23)}
                             <br />
                             EXPORT
                             <span className="side-subpanel">
-                                <span
+                                <button
                                     title="Save PNG file"
                                     className="side-subpanel-button"
                                     onClick={() => {
@@ -891,8 +890,8 @@ function Editor(props: RouteComponentProps) {
                                     {getIconSVG(ICONS.IMAGE, 23, 23)}
                                     <br />
                                     PNG
-                                </span>
-                                <span
+                                </button>
+                                <button
                                     title="Save PDF file"
                                     className="side-subpanel-button"
                                     onClick={() => {
@@ -902,8 +901,8 @@ function Editor(props: RouteComponentProps) {
                                     {getIconSVG(ICONS.PDF, 23, 23)}
                                     <br />
                                     PDF
-                                </span>
-                                <span
+                                </button>
+                                <button
                                     title="Save HTML file"
                                     className="side-subpanel-button"
                                     onClick={() => {
@@ -924,8 +923,8 @@ function Editor(props: RouteComponentProps) {
                                     }}
                                 >
                                     {getIconSVG(ICONS.HTML, 23, 23)}
-                                </span>
-                                <span
+                                </button>
+                                <button
                                     title={
                                         stringifySpec(goslingSpec).length <= LIMIT_CLIPBOARD_LEN
                                             ? `Copy unique URL of current view to clipboard (limit: ${LIMIT_CLIPBOARD_LEN} characters)`
@@ -964,11 +963,11 @@ function Editor(props: RouteComponentProps) {
                                     SAVE
                                     <br />
                                     URL
-                                </span>
+                                </button>
                             </span>
                         </span>
 
-                        <span
+                        <button
                             title="Expert mode that turns on additional features, such as theme selection"
                             className="side-panel-button"
                             onClick={() => setExpertMode(!expertMode)}
@@ -978,8 +977,8 @@ function Editor(props: RouteComponentProps) {
                             EXPERT
                             <br />
                             MODE
-                        </span>
-                        <span
+                        </button>
+                        <button
                             title="Open GitHub repository"
                             className="side-panel-button"
                             onClick={() => window.open('https://github.com/gosling-lang/gosling.js', '_blank')}
@@ -987,8 +986,8 @@ function Editor(props: RouteComponentProps) {
                             {getIconSVG(ICONS.GITHUB, 23, 23)}
                             <br />
                             GITHUB
-                        </span>
-                        <span
+                        </button>
+                        <button
                             title="Open Docs"
                             className="side-panel-button"
                             onClick={() => window.open('http://gosling-lang.org/docs/', '_blank')}
@@ -996,12 +995,16 @@ function Editor(props: RouteComponentProps) {
                             {getIconSVG(ICONS.DOCS, 23, 23)}
                             <br />
                             DOCS
-                        </span>
-                        <span title="About" className="side-panel-button" onClick={() => setIsShowAbout(!isShowAbout)}>
+                        </button>
+                        <button
+                            title="About"
+                            className="side-panel-button"
+                            onClick={() => setIsShowAbout(!isShowAbout)}
+                        >
                             {getIconSVG(ICONS.INFO_RECT_FILLED, 23, 23)}
                             <br />
                             ABOUT
-                        </span>
+                        </button>
                     </div>
                     <SplitPane
                         split="vertical"
@@ -1181,15 +1184,15 @@ function Editor(props: RouteComponentProps) {
                                 </div>
                                 <SplitPane split="vertical" defaultSize="100%">
                                     <>
-                                        <div
+                                        <button
                                             className={`editor-header ${theme === 'dark' ? 'dark' : ''}`}
                                             style={{ cursor: 'pointer' }}
                                             onClick={() => setIsShowDataPreview(!isShowDataPreview)}
                                         >
                                             Data Preview (~100 Rows, Data Before Transformation)
-                                        </div>
+                                        </button>
                                         <div className="editor-data-preview-panel">
-                                            <div
+                                            <button
                                                 title="Refresh preview data"
                                                 className="data-preview-refresh-button"
                                                 onClick={() => setRefreshData(!refreshData)}
@@ -1197,7 +1200,7 @@ function Editor(props: RouteComponentProps) {
                                                 {getIconSVG(ICONS.REFRESH, 23, 23)}
                                                 <br />
                                                 {'REFRESH DATA'}
-                                            </div>
+                                            </button>
                                             {previewData.current.length > selectedPreviewData &&
                                             previewData.current[selectedPreviewData] &&
                                             previewData.current[selectedPreviewData].data.length > 0 ? (
@@ -1284,31 +1287,31 @@ function Editor(props: RouteComponentProps) {
                             </button>
                             <br />
                             <br />
-                            <span
+                            <button
                                 title="Open GitHub Gist"
                                 className="description-github-button"
                                 onClick={() => window.open(`https://gist.github.com/${urlGist}`, '_blank')}
                             >
                                 {getIconSVG(ICONS.UP_RIGHT, 14, 14)} Open GitHub Gist to see raw files.
-                            </span>
+                            </button>
                         </header>
                         {description && <ReactMarkdown plugins={[gfm]} source={description} />}
                     </div>
                 </div>
                 {/* About Modal View */}
-                <div
+                <button
                     className={isShowAbout ? 'about-modal-container' : 'about-modal-container-hidden'}
                     onClick={() => setIsShowAbout(false)}
-                ></div>
+                ></button>
                 <div className={isShowAbout ? 'about-modal' : 'about-modal-hidden'}>
-                    <span
+                    <button
                         className="about-model-close-button"
                         onClick={() => {
                             setIsShowAbout(false);
                         }}
                     >
                         {getIconSVG(ICONS.CLOSE, 30, 30)}
-                    </span>
+                    </button>
                     <div>
                         <span className="logo">{GoslingLogoSVG(80, 80)}</span>
                     </div>
@@ -1369,7 +1372,7 @@ function Editor(props: RouteComponentProps) {
                 </div>
             </div>
             {/* ---------------------- Example Gallery -------------------- */}
-            <div
+            <button
                 className={showExamples ? 'about-modal-container' : 'about-modal-container-hidden'}
                 onClick={() => setShowExamples(false)}
             />
@@ -1421,7 +1424,7 @@ function Editor(props: RouteComponentProps) {
                                         .filter(d => d[1].group === group.name)
                                         .map(d => {
                                             return (
-                                                <div
+                                                <button
                                                     id={`${d[1].group}_${d[1].name}`}
                                                     title={d[1].name}
                                                     key={d[0]}
@@ -1440,7 +1443,7 @@ function Editor(props: RouteComponentProps) {
                                                         }}
                                                     />
                                                     <div className="example-card-name">{d[1].name}</div>
-                                                </div>
+                                                </button>
                                             );
                                         })}
                                 </div>
