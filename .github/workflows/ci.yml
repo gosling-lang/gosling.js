@@ -1,0 +1,57 @@
+name: CI
+
+on:
+    push:
+        branches:
+            - master
+    pull_request:
+
+jobs:
+    Build:
+        name: Build Editor
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v3
+            - name: Use Node.js
+              uses: actions/setup-node@v3
+              with:
+                  node-version: 16
+                  cache: 'yarn'
+            - run: yarn install
+            - run: yarn build-editor
+              env:
+                  NODE_OPTIONS: '--max_old_space_size=4096'
+
+    Test:
+        name: Test
+        runs-on: ubuntu-latest
+        strategy:
+            matrix:
+                node-version: [14.x, 16.x]
+        steps:
+            - uses: actions/checkout@v3
+            - name: Use Node.js ${{ matrix.node-version }}
+              uses: actions/setup-node@v3
+              with:
+                  node-version: ${{ matrix.node-version }}
+                  cache: 'yarn'
+            - run: yarn install
+            - run: |
+                yarn build-types # typecheck
+                yarn coverage
+              env:
+                  NODE_OPTIONS: '--max_old_space_size=4096'
+            - uses: codecov/codecov-action@v1
+              with:
+                  fail_ci_if_error: true
+
+    Lint:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v3
+            - uses: actions/setup-node@v3
+              with:
+                  node-version: 16
+                  cache: 'yarn'
+            - run: yarn install
+            - run: yarn eslint src/ editor/

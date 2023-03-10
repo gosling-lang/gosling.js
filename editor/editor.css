@@ -1,3 +1,8 @@
+button {
+    background-color: transparent;
+    border: none;
+}
+
 .demo-navbar {
     /* color: white; */
     /* background-color: #24292F; */
@@ -178,6 +183,7 @@
 
 .editor-header {
     width: 100%;
+    height: 28px;
     padding: 4px;
     padding-left: 10px;
     background: #fafafa;
