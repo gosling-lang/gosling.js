@@ -411,16 +411,15 @@ function Editor(props: RouteComponentProps) {
                             }
                         }}
                     >
-                        {[...Object.keys(deviceToResolution)].map(d =>
-                            d !== '-' ? (
+                        {Object.keys(deviceToResolution).map(d => {
+                            // separator (https://stackoverflow.com/questions/899148/html-select-option-separator)
+                            if (d === '-') return <optgroup label="──────────"></optgroup>;
+                            return (
                                 <option key={d} value={d}>
                                     {d}
                                 </option>
-                            ) : (
-                                // separator (https://stackoverflow.com/questions/899148/html-select-option-separator)
-                                <optgroup label="──────────"></optgroup>
-                            )
-                        )}
+                            );
+                        })}
                     </select>
                 </span>
                 <span style={{ marginLeft: '20px', visibility: screenSize ? 'visible' : 'collapse' }}>

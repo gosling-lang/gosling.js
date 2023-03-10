@@ -180,7 +180,7 @@ function getSubstitutions(segment: Segment, seq: string) {
 
     if (segment.md) {
         const mdSubstitutions = parseMD(segment.md, false);
-        mdSubstitutions.forEach(function (substitution: typeof mdSubstitutions[number] & { variant?: string }) {
+        mdSubstitutions.forEach(function (substitution: (typeof mdSubstitutions)[number] & { variant?: string }) {
             let posStart = substitution['pos'] + substitution['bamSeqShift']!;
             let posEnd = posStart + substitution['length'];
             // When there is soft clipping at the beginning,
