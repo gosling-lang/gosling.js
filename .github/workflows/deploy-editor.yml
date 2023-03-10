@@ -1,0 +1,30 @@
+name: Deploy Editor
+
+on:
+    push:
+        branches:
+            - master
+
+jobs:
+
+    deploy:
+        runs-on: ubuntu-latest
+        if: github.ref == 'refs/heads/master'
+        steps:
+            - uses: actions/checkout@v3
+            - uses: actions/setup-node@v3
+              with:
+                  node-version: 16
+            - run: yarn install
+            - run: yarn build-editor
+              env:
+                  NODE_OPTIONS: '--max_old_space_size=4096'
+            - name: Deploy editor
+              run: |
+                  git config --global user.name "action@github.com"
+                  git config --global user.email "GitHub Action"
+                  git remote set-url origin https://${ACCESS_TOKEN}@github.com/${REPO}.git
+                  yarn deploy
+              env:
+                  ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+                  REPO: ${{ github.repository }}
