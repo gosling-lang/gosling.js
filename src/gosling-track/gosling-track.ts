@@ -128,11 +128,12 @@ const config: TrackConfig<GoslingTrackOptions> = {
 const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, options) => {
     // Services
     const { tileProxy } = HGC.services;
+    const { BarTrack } = HGC.tracks;
 
     /* Custom loading label */
     const loadingTextStyle = getTextStyle({ color: 'black', size: 12 });
 
-    class GoslingTrackClass extends HGC.tracks.BarTrack<Tile, typeof options> {
+    class GoslingTrackClass extends BarTrack<Tile, typeof options> {
         // This is tracking the xScale of an entire view, which is used when no tiling concepts are used
         drawnAtScale = HGC.libraries.d3Scale.scaleLinear();
         scalableGraphics: Record<string, PIXI.Graphics> = {};
@@ -924,8 +925,8 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
                 );
 
                 const sparse = 'length' in tile.tileData ? Array.from(tile.tileData) : [];
-                const tabularData = getTabularData(firstResolvedTrack, {
-                    ...tile.tileData,
+
+                const extendedTileData = Object.assign({}, tile.tileData, {
                     sparse,
                     tileX,
                     tileY,
@@ -933,6 +934,8 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
                     tileHeight,
                     tileSize: this.tileSize
                 });
+
+                const tabularData = getTabularData(firstResolvedTrack, extendedTileData);
                 if (tabularData) {
                     tileInfo.tabularData = tabularData;
                 }

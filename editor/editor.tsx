@@ -9,7 +9,7 @@ import { drag as d3Drag } from 'd3-drag';
 import { event as d3Event } from 'd3-selection';
 import { select as d3Select } from 'd3-selection';
 import stringify from 'json-stringify-pretty-compact';
-import SplitPane from 'react-split-pane';
+import _SplitPane, { SplitPaneProps } from 'react-split-pane';
 import ErrorBoundary from './error-boundary';
 import { debounce, isEqual } from 'lodash-es';
 import { ExampleGroups, examples } from './example';
@@ -25,6 +25,9 @@ import type { HiGlassSpec } from '@higlass.schema';
 import type { Datum } from '@gosling.schema';
 
 import './editor.css';
+
+// @ts-expect-error react-split-pane types are incorrect. This is a workaround.
+const SplitPane: React.FC<SplitPaneProps> = _SplitPane;
 
 function json2js(jsonCode: string) {
     return `var spec = ${jsonCode} \nexport { spec }; \n`;
@@ -1294,7 +1297,7 @@ function Editor(props: RouteComponentProps) {
                                 {getIconSVG(ICONS.UP_RIGHT, 14, 14)} Open GitHub Gist to see raw files.
                             </button>
                         </header>
-                        {description && <ReactMarkdown plugins={[gfm]} source={description} />}
+                        {description && <ReactMarkdown plugins={[gfm]}>{description}</ReactMarkdown>}
                     </div>
                 </div>
                 {/* About Modal View */}

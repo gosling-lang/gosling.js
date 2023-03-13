@@ -120,7 +120,6 @@ export function drawLinearYAxis(
             const y = yScale(t);
             tickEnd = isLeft ? dx + TICK_SIZE * 2 : dx - TICK_SIZE * 2;
 
-            // @ts-expect-error t should be a string but is a number, should we cast??
             const textGraphic = new HGC.libraries.PIXI.Text(t, styleConfig);
             textGraphic.anchor.x = isLeft ? 0 : 1;
             textGraphic.anchor.y = y === 0 ? 0.9 : 0.5;
@@ -300,7 +299,6 @@ export function drawCircularYAxis(
                 fontFamily: theme.axis.labelFontFamily,
                 fontWeight: theme.axis.labelFontWeight
             });
-            // @ts-expect-error t should be a string, not a number
             const textGraphic = new HGC.libraries.PIXI.Text(t, styleConfig);
             textGraphic.anchor.x = isLeft ? 1 : 0;
             textGraphic.anchor.y = 0.5;
