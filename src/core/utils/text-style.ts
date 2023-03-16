@@ -30,6 +30,6 @@ export function getTextStyle(style: TextStyle = {}) {
     } as const;
     // Allow returned object to be mutable (strip `readonly` modifier from `const`)
     return pixiTextStyle as {
-        -readonly [K in keyof typeof pixiTextStyle]: typeof pixiTextStyle[K];
+        -readonly [K in keyof typeof pixiTextStyle]: (typeof pixiTextStyle)[K];
     };
 }

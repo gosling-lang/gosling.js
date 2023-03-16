@@ -26,7 +26,7 @@ class BamDataFetcher<Config extends BamData> implements TabularDataFetcher<Infer
     fetchTimeout?: ReturnType<typeof setTimeout>;
     toFetch: Set<string>;
 
-    MAX_TILE_WIDTH: 2e4 = 2e4;
+    MAX_TILE_WIDTH = 2e4 as const;
 
     private worker: Promise<ModuleThread<WorkerApi>>;
 
