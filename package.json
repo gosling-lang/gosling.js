@@ -47,10 +47,10 @@
     },
     "sideEffect": false,
     "dependencies": {
-        "@gmod/bam": "^1.1.8",
-        "@gmod/bbi": "^1.0.30",
-        "@gmod/tabix": "^1.5.3",
-        "@gmod/vcf": "^5.0.6",
+        "@gmod/bam": "^1.1.18",
+        "@gmod/bbi": "^3.0.0",
+        "@gmod/tabix": "^1.5.6",
+        "@gmod/vcf": "^5.0.10",
         "@types/bezier-js": "^4.1.0",
         "@types/d3": "^7.0.0",
         "@types/lodash": "^4.14.151",
@@ -67,7 +67,7 @@
         "d3-scale-chromatic": "^2.0.0",
         "d3-shape": "^2.0.0",
         "fflate": "^0.7.1",
-        "generic-filehandle": "2.2.1",
+        "generic-filehandle": "^3.0.1",
         "gosling-theme": "^0.0.10",
         "higlass": "~1.11.8",
         "higlass-register": "^0.3.0",
@@ -139,8 +139,7 @@
         "vitest": "^0.10.0"
     },
     "resolutions": {
-        "slugid": "^3.0.0",
-        "generic-filehandle": "2.2.1"
+        "slugid": "^3.0.0"
     },
     "browserslist": {
         "production": [
