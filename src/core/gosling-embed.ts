@@ -6,11 +6,15 @@ import type { HiGlassSpec } from './higlass.schema';
 
 import { validateGoslingSpec } from './utils/validate';
 import { compile } from './compile';
-import { getTheme, Theme } from './utils/theme';
+import { getTheme, type Theme } from './utils/theme';
 import { GoslingTemplates } from './utils/template';
-import { GoslingApi, createApi } from './api';
+import { type GoslingApi, createApi } from './api';
 
-import { HiGlassApi, HiGlassComponentWrapper, HiGlassComponentWrapperProps } from './higlass-component-wrapper';
+import {
+    type HiGlassApi,
+    HiGlassComponentWrapper,
+    type HiGlassComponentWrapperProps
+} from './higlass-component-wrapper';
 
 export type GoslingEmbedOptions = Omit<HiGlassComponentWrapperProps['options'], 'background'> & {
     id?: string;

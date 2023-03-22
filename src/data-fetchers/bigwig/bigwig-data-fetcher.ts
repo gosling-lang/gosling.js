@@ -5,7 +5,7 @@
 import { BigWig } from '@gmod/bbi';
 import type { Assembly, BigWigData } from '@gosling.schema';
 import { computeChromSizes } from '../../core/utils/assembly';
-import { CommonDataConfig, RemoteFile } from '../utils';
+import { type CommonDataConfig, RemoteFile } from '../utils';
 
 import type { Feature } from '@gmod/bbi';
 import type { ChromInfo, TilesetInfo } from '@higlass/types';

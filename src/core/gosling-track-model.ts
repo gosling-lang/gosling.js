@@ -11,13 +11,13 @@ import type {
 } from './gosling.schema';
 import { validateTrack, getGenomicChannelFromTrack, getGenomicChannelKeyFromTrack } from './utils/validate';
 import {
-    ScaleLinear,
+    type ScaleLinear,
     scaleLinear,
-    ScaleOrdinal,
+    type ScaleOrdinal,
     scaleOrdinal,
-    ScaleBand,
+    type ScaleBand,
     scaleBand,
-    ScaleSequential,
+    type ScaleSequential,
     scaleSequential
 } from 'd3-scale';
 import { interpolateViridis } from 'd3-scale-chromatic';
@@ -41,7 +41,7 @@ import {
     IsRangeArray
 } from './gosling.schema.guards';
 import { CHANNEL_DEFAULTS } from './channel';
-import { CompleteThemeDeep, getTheme } from './utils/theme';
+import { type CompleteThemeDeep, getTheme } from './utils/theme';
 import { MouseEventModel } from '../gosling-mouse-event';
 
 export type ScaleType =

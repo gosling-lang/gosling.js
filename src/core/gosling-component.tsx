@@ -1,10 +1,10 @@
 /* eslint-disable react/prop-types */
-import { HiGlassApi, HiGlassComponentWrapper } from './higlass-component-wrapper';
+import { type HiGlassApi, HiGlassComponentWrapper } from './higlass-component-wrapper';
 import React, { useState, useEffect, useMemo, useRef, forwardRef, useCallback, useImperativeHandle } from 'react';
 import ResizeSensor from 'css-element-queries/src/ResizeSensor';
 import * as gosling from '..';
-import { getTheme, Theme } from './utils/theme';
-import { createApi, GoslingApi } from './api';
+import { getTheme, type Theme } from './utils/theme';
+import { createApi, type GoslingApi } from './api';
 import { GoslingTemplates } from '..';
 import { omitDeep } from './utils/omit-deep';
 import { isEqual } from 'lodash';

@@ -51,7 +51,7 @@ import { LinearBrushModel } from '../gosling-brush/linear-brush-model';
 import { isPointInsideDonutSlice } from '../gosling-mouse-event/polygon';
 import type { Tile as _Tile, TileData, TileDataBase } from '@higlass/services';
 import type { TabularDataFetcher } from 'src/data-fetchers/utils';
-import { createPluginTrack, PluginTrackFactory, TrackConfig } from '../core/utils/define-plugin-track';
+import { createPluginTrack, type PluginTrackFactory, type TrackConfig } from '../core/utils/define-plugin-track';
 import { getTheme } from 'gosling-theme';
 
 // Set `true` to print in what order each function is called

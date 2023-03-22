@@ -1,46 +1,61 @@
 {
-  "compilerOptions": {
-    "target": "es6",
-    "module": "esnext",
-    "moduleResolution": "node",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
-    "outDir": "dist",
-    "alwaysStrict": true,
-    "allowJs": true,
-    "sourceMap": true,
-    "declaration": true,
-    "declarationMap": true,
-    "skipLibCheck": true,
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "strict": true,
-    "strictNullChecks": true,
-    "resolveJsonModule": true,
-    "importsNotUsedAsValues": "error",
-    "jsx": "react",
-    "paths": {
-      "gosling.js": ["./src/index.ts"],
-      "@gosling.schema": ["./src/core/gosling.schema.ts"],
-      "@higlass.schema": ["./src/core/higlass.schema.ts"],
-      "zlib": ["./src/alias/zlib.ts"]
+    "compilerOptions": {
+        "target": "es6",
+        "module": "esnext",
+        "moduleResolution": "node",
+        "lib": [
+            "dom",
+            "dom.iterable",
+            "esnext"
+        ],
+        "outDir": "dist",
+        "alwaysStrict": true,
+        "allowJs": true,
+        "sourceMap": true,
+        "declaration": true,
+        "declarationMap": true,
+        "skipLibCheck": true,
+        "esModuleInterop": true,
+        "allowSyntheticDefaultImports": true,
+        "strict": true,
+        "strictNullChecks": true,
+        "resolveJsonModule": true,
+        "verbatimModuleSyntax": true,
+        "jsx": "react",
+        "paths": {
+            "gosling.js": [
+                "./src/index.ts"
+            ],
+            "@gosling.schema": [
+                "./src/core/gosling.schema.ts"
+            ],
+            "@higlass.schema": [
+                "./src/core/higlass.schema.ts"
+            ],
+            "zlib": [
+                "./src/alias/zlib.ts"
+            ]
+        },
+        "baseUrl": ".",
+        "types": [
+            "vitest/globals",
+            "vite/client"
+        ]
     },
-    "baseUrl": ".",
-    "types": ["vitest/globals", "vite/client"]
-  },
-  "files": [
-    "src/index.ts",
-    "editor/index.tsx",
-    "embed/index.ts"
-  ],
-  "include": ["src", "src/**/*.d.ts", "editor"],
-  "exclude": [
-    "node_modules",
-    "public",
-    "build",
-    "dist"
-  ]
+    "files": [
+        "src/index.ts",
+        "editor/index.tsx",
+        "embed/index.ts"
+    ],
+    "include": [
+        "src",
+        "src/**/*.d.ts",
+        "editor"
+    ],
+    "exclude": [
+        "node_modules",
+        "public",
+        "build",
+        "dist"
+    ]
 }

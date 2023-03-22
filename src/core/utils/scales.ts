@@ -52,13 +52,15 @@ export function shareScaleAcrossTracks(trackModels: GoslingTrackModel[], force?:
                 if (!globalDomain[channelKey]) {
                     globalDomain[channelKey] = numericDomain;
                 } else {
-                    if (globalDomain[channelKey][0] > numericDomain[0]) {
+                    const channelGlobalDomain = globalDomain[channelKey] as number[];
+
+                    if (channelGlobalDomain[0] > numericDomain[0]) {
                         // min
-                        globalDomain[channelKey][0] = numericDomain[0];
+                        channelGlobalDomain[0] = numericDomain[0];
                     }
-                    if (globalDomain[channelKey][1] < numericDomain[1]) {
+                    if (channelGlobalDomain[1] < numericDomain[1]) {
                         // max
-                        globalDomain[channelKey][1] = numericDomain[1];
+                        channelGlobalDomain[1] = numericDomain[1];
                     }
                 }
             } else if (type === 'nominal') {

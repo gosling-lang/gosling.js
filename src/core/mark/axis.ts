@@ -4,6 +4,7 @@ import colorToHex from '../utils/color-to-hex';
 import type { CompleteThemeDeep } from '../utils/theme';
 import { scaleLinear } from 'd3-scale';
 import { cartesianToPolar, valueToRadian } from '../utils/polar';
+import { isNumberArray, isStringArray } from '../utils/array';
 import { getTextStyle } from '../utils/text-style';
 import type { Tile } from '../../gosling-track/gosling-track';
 
@@ -35,12 +36,21 @@ export function drawLinearYAxis(
         return;
     }
 
+    if (!isNumberArray(yDomain)) {
+        // We can only draw axis for number domains
+        return;
+    }
+
     /* track size */
     const [tw, th] = trackInfo.dimensions;
     const [tx, ty] = trackInfo.position;
 
     /* row separation */
-    const rowCategories: string[] = (model.getChannelDomainArray('row') as string[]) ?? ['___SINGLE_ROW___'];
+    const rowCategories = model.getChannelDomainArray('row') ?? ['___SINGLE_ROW___'];
+    if (!isStringArray(rowCategories)) {
+        // We can only draw axis for string categories
+        return;
+    }
     const rowHeight = th / rowCategories.length;
 
     if (rowHeight <= 20) {
@@ -153,6 +163,11 @@ export function drawCircularYAxis(
 
     if (!model.isShowYAxis() || !yDomain || !yRange) {
         // We do not need to draw a y-axis
+        return;
+    }
+
+    if (!isNumberArray(yDomain)) {
+        // We can only draw axis for number domains
         return;
     }
 

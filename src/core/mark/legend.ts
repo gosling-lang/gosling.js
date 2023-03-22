@@ -3,7 +3,7 @@ import { IsChannelDeep } from '../gosling.schema.guards';
 import colorToHex from '../utils/color-to-hex';
 import type { CompleteThemeDeep } from '../utils/theme';
 import type { Dimension } from '../utils/position';
-import { scaleLinear, ScaleLinear } from 'd3-scale';
+import { scaleLinear, type ScaleLinear } from 'd3-scale';
 import { getTextStyle } from '../utils/text-style';
 import type { DisplayedLegend } from 'src/gosling-track/gosling-track';
 
@@ -84,7 +84,8 @@ export function drawColorLegendQuantitative(
 
     /* Legend Components */
     const colorScale = model.getChannelScale(channelKey);
-    const colorDomain = model.getChannelDomainArray(channelKey);
+    // TODO: Use overloads to remove type-casting (via `as`)
+    const colorDomain = model.getChannelDomainArray(channelKey) as [number, number] | undefined;
 
     if (!colorScale || !colorDomain) {
         // We do not have enough information for creating a color legend

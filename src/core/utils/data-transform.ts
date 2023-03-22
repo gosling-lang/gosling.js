@@ -40,9 +40,12 @@ export function filterData(filter: FilterTransform, data: Datum[]): Datum[] {
     } else if (IsRangeFilter(filter)) {
         const { inRange } = filter;
         output = output.filter((d: Datum) => {
-            return not
-                ? !(inRange[0] <= d[field] && d[field] <= inRange[1])
-                : inRange[0] <= d[field] && d[field] <= inRange[1];
+            const value = d[field];
+            if (typeof value === 'string') {
+                // can't compare string with number
+                return false;
+            }
+            return not ? !(inRange[0] <= value && value <= inRange[1]) : inRange[0] <= value && value <= inRange[1];
         });
     } else if (IsIncludeFilter(filter)) {
         const { include } = filter;
