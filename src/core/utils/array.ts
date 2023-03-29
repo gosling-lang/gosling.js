@@ -57,3 +57,22 @@ export function flatArrayToPairArray<T>(array: T[]): [T, T][] {
     }
     return output;
 }
+
+/**
+ * Check if all elements in an array satisfy a type guard.
+ * @param array Array to check
+ * @param is Type guard to check each element
+ */
+export function isEvery<T, Arr extends any[]>(array: any[], is: (x: Arr[number]) => x is T): array is T[] {
+    return array.every(is);
+}
+
+/** Check if all elements in an array are numbers. */
+export function isNumberArray(array: any[]): array is number[] {
+    return isEvery(array, (x): x is number => typeof x === 'number');
+}
+
+/** Check if all elements in an array are strings. */
+export function isStringArray(array: any[]): array is string[] {
+    return isEvery(array, (x): x is string => typeof x === 'string');
+}

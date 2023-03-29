@@ -3,6 +3,7 @@ import type { GoslingTrackModel } from '../gosling-track-model';
 import { IsChannelDeep } from '../gosling.schema.guards';
 import colorToHex from '../utils/color-to-hex';
 import { cartesianToPolar, valueToRadian } from '../utils/polar';
+import { isNumberArray, isStringArray } from '../utils/array';
 import type { CompleteThemeDeep } from '../utils/theme';
 
 export function drawGrid(trackInfo: any, tm: GoslingTrackModel, theme: Required<CompleteThemeDeep>) {
@@ -117,14 +118,19 @@ export function drawYGridQuantitative(trackInfo: any, tm: GoslingTrackModel, the
     const cy = trackHeight / 2.0;
 
     /* row separation */
-    const rowCategories: string[] = (tm.getChannelDomainArray('row') as string[]) ?? ['___SINGLE_ROW___'];
+    const rowCategories = tm.getChannelDomainArray('row') ?? ['___SINGLE_ROW___'];
     const rowHeight = trackHeight / rowCategories.length;
+
+    if (!isStringArray(rowCategories)) {
+        // We do not have categories mapped to row to draw grid with
+        return;
+    }
 
     /* Grid Components */
     const scale = tm.getChannelScale('y');
     const domain = tm.getChannelDomainArray('y');
 
-    if (!scale || !domain) {
+    if (!scale || !domain || !isNumberArray(domain)) {
         // We do not have sufficient information to draw a grid
         return;
     }

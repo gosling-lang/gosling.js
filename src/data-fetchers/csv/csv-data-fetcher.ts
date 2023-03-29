@@ -3,7 +3,7 @@ import { computeChromSizes } from '../../core/utils/assembly';
 import { sampleSize } from 'lodash-es';
 import type { Assembly, CsvData, FilterTransform } from '@gosling.schema';
 import { filterData } from '../../core/utils/data-transform';
-import { CommonDataConfig, filterUsingGenoPos, sanitizeChrName } from '../utils';
+import { type CommonDataConfig, filterUsingGenoPos, sanitizeChrName } from '../utils';
 
 type CsvDataConfig = CsvData & CommonDataConfig & { filter: FilterTransform[] };
 

@@ -1,4 +1,4 @@
-import { getBoundingBox, TrackInfo } from './utils/bounding-box';
+import { getBoundingBox, type TrackInfo } from './utils/bounding-box';
 import { goslingToHiGlass } from './gosling-to-higlass';
 import { HiGlassModel } from './higlass-model';
 import { getLinkingInfo } from './utils/linking';
