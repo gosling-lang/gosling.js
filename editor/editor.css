@@ -6,6 +6,9 @@ button {
 .demo-navbar {
     /* color: white; */
     /* background-color: #24292F; */
+    display: flex;
+    flex-direction: row;
+    align-items: center;
     border-bottom: 1px solid lightgray;
     font-weight: bold;
     padding-left: 10px;
@@ -39,23 +42,13 @@ button {
 }
 
 .description-button {
-    position: fixed;
-    right: 0;
-    top: 0;
     color: #e18343;
-    display: inline-block;
-    vertical-align: middle;
-    padding-top: 8px;
-    padding-left: 8px;
-    padding-right: 8px;
-    margin-left: 10px;
+    margin-right: 8px;
     cursor: pointer;
     background-color: white;
 }
 
 .editor-nav-button {
-    display: inline-block;
-    vertical-align: middle;
     height: 100%;
     padding-top: 8px;
     padding-left: 8px;
@@ -70,6 +63,11 @@ button {
     font-weight: 400;
     color: #e18343;
     cursor: pointer;
+    margin-right: auto;
+}
+
+.mr-1 {
+    margin-right: 1rem;
 }
 
 .demo-navbar select {
