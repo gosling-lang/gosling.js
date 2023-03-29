@@ -776,7 +776,7 @@ function Editor(props: RouteComponentProps) {
                     </span>
                 ) : null}
                 <input type="hidden" id="spec-url-exporter" />
-                <a href="http://gosling-lang.org/" title="Go to the Gosling Project" className="mr-1" target="_blank">
+                <a href="http://gosling-lang.org/" title="Go to the Gosling Project" className="mr-1" target="_blank" rel="noreferrer">
                     Gosling Project
                 </a>
                 {description ? (
