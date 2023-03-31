@@ -1,30 +1,31 @@
-import * as gosling from 'gosling.js';
 import React, { useRef, useState, useEffect, useCallback, useMemo } from 'react';
+import type { RouteComponentProps } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
+import * as gosling from 'gosling.js';
 import gfm from 'remark-gfm';
 import PubSub from 'pubsub-js';
 import fetchJsonp from 'fetch-jsonp';
-import EditorPanel, { type EditorLangauge } from './editor-panel';
 import { drag as d3Drag } from 'd3-drag';
 import { event as d3Event } from 'd3-selection';
 import { select as d3Select } from 'd3-selection';
 import stringify from 'json-stringify-pretty-compact';
 import _SplitPane, { type SplitPaneProps } from 'react-split-pane';
-import ErrorBoundary from './error-boundary';
 import { debounce, isEqual } from 'lodash-es';
-import { ExampleGroups, examples } from './example';
-import { traverseTracksAndViews } from '../src/core/utils/spec-preprocess';
 import stripJsonComments from 'strip-json-comments';
 import JSONCrush from 'jsoncrush';
-import { ICONS, type ICON_INFO } from './icon';
-import { getHtmlTemplate } from './html-template';
-import { Themes } from 'gosling-theme';
-
-import type { RouteComponentProps } from 'react-router-dom';
 import type { HiGlassSpec } from '@higlass.schema';
 import type { Datum } from '@gosling.schema';
+import { Themes } from 'gosling-theme';
 
-import './editor.css';
+import { ICONS, type ICON_INFO } from './icon';
+import { getHtmlTemplate } from './html-template';
+import ErrorBoundary from './error-boundary';
+import { traverseTracksAndViews } from '../src/core/utils/spec-preprocess';
+import { examples, type Example } from './example';
+import EditorPanel, { type EditorLangauge } from './EditorPanel';
+import EditorExamples from './EditorExamples';
+
+import './Editor.css';
 
 // @ts-expect-error react-split-pane types are incorrect. This is a workaround.
 const SplitPane: React.FC<SplitPaneProps> = _SplitPane;
@@ -233,10 +234,10 @@ function Editor(props: RouteComponentProps) {
     const [refreshData, setRefreshData] = useState<boolean>(false);
     const [language, changeLanguage] = useState<EditorLangauge>('json');
 
-    const [demo, setDemo] = useState(
+    const [demo, setDemo] = useState<Example>(
         examples[urlExampleId] ? { id: urlExampleId, ...examples[urlExampleId] } : INIT_DEMO
     );
-    const [isImportDemo, setIsImportDemo] = useState(false);
+    const [isImportDemo, setIsImportDemo] = useState<boolean>(false);
     const [theme, setTheme] = useState<gosling.Theme>('light');
     const [hg, setHg] = useState<HiGlassSpec>();
     const [code, setCode] = useState(defaultCode);
@@ -245,7 +246,7 @@ function Editor(props: RouteComponentProps) {
     const [log, setLog] = useState<ReturnType<typeof gosling.validateGoslingSpec>>({ message: '', state: 'success' });
     // const [mouseEventInfo, setMouseEventInfo] =
     //     useState<{ type: 'mouseOver' | 'click'; data: Datum[]; position: string }>();
-    const [showExamples, setShowExamples] = useState(false);
+    const [showExamples, setShowExamples] = useState<boolean>(false);
     const [autoRun, setAutoRun] = useState(true);
     const [selectedPreviewData, setSelectedPreviewData] = useState<number>(0);
     const [gistTitle, setGistTitle] = useState<string>();
@@ -776,7 +777,13 @@ function Editor(props: RouteComponentProps) {
                     </span>
                 ) : null}
                 <input type="hidden" id="spec-url-exporter" />
-                <a href="http://gosling-lang.org/" title="Go to the Gosling Project" className="mr-1" target="_blank" rel="noreferrer">
+                <a
+                    href="http://gosling-lang.org/"
+                    title="Go to the Gosling Project"
+                    className="mr-1"
+                    target="_blank"
+                    rel="noreferrer"
+                >
                     Gosling Project
                 </a>
                 {description ? (
@@ -1381,84 +1388,14 @@ function Editor(props: RouteComponentProps) {
                 className={showExamples ? 'about-modal-container' : 'about-modal-container-hidden'}
                 onClick={() => setShowExamples(false)}
             />
-            <div
-                className="example-gallery-container"
-                style={{
-                    visibility: showExamples ? 'visible' : 'collapse'
-                }}
-            >
-                <div
-                    className="example-gallery-sidebar"
-                    style={{
-                        opacity: showExamples ? 1 : 0
-                    }}
-                >
-                    {ExampleGroups.filter(_ => _.name !== 'Doc' && _.name !== 'Unassigned').map(group => {
-                        return (
-                            <>
-                                <a className="siderbar-group" key={group.name} href={`#${group.name}`}>
-                                    {group.name}
-                                </a>
-                                {Object.entries(examples)
-                                    .filter(d => !d[1].hidden)
-                                    .filter(d => d[1].group === group.name)
-                                    .map(d => (
-                                        <a key={d[1].name} href={`#${d[1].group}_${d[1].name}`}>
-                                            {d[1].name}
-                                        </a>
-                                    ))}
-                            </>
-                        );
-                    })}
-                </div>
-                <div
-                    className="example-gallery"
-                    style={{
-                        opacity: showExamples ? 1 : 0
-                    }}
-                >
-                    <h1>Gosling.js Examples</h1>
-                    {ExampleGroups.filter(_ => _.name !== 'Doc' && _.name !== 'Unassigned').map(group => {
-                        return (
-                            <>
-                                <h2 id={`${group.name}`}>{group.name}</h2>
-                                <h5>{group.description}</h5>
-                                <div className="example-group" key={group.name}>
-                                    {Object.entries(examples)
-                                        .filter(d => !d[1].hidden)
-                                        .filter(d => d[1].group === group.name)
-                                        .map(d => {
-                                            return (
-                                                <button
-                                                    id={`${d[1].group}_${d[1].name}`}
-                                                    title={d[1].name}
-                                                    key={d[0]}
-                                                    className="example-card"
-                                                    onClick={() => {
-                                                        setShowExamples(false);
-                                                        closeDescription();
-                                                        setIsImportDemo(true);
-                                                        setDemo({ id: d[0], ...examples[d[0]] } as any);
-                                                    }}
-                                                >
-                                                    <div
-                                                        className="example-card-bg"
-                                                        style={{
-                                                            backgroundImage: d[1].image ? `url(${d[1].image})` : 'none'
-                                                        }}
-                                                    />
-                                                    <div className="example-card-name">{d[1].name}</div>
-                                                </button>
-                                            );
-                                        })}
-                                </div>
-                            </>
-                        );
-                    })}
-                    {/* Just an margin on the bottom */}
-                    <div style={{ height: '40px' }}></div>
-                </div>
-            </div>
+            {showExamples && (
+                <EditorExamples
+                    setShowExamples={setShowExamples}
+                    closeDescription={closeDescription}
+                    setIsImportDemo={setIsImportDemo}
+                    setDemo={setDemo}
+                />
+            )}
         </>
     );
 }

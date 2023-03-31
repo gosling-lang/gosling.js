@@ -108,18 +108,21 @@ export const ExampleGroups: {
     }
 ];
 
+export interface Example {
+    group: ExampleGroup;
+    name: string;
+    spec: GoslingSpec | string;
+    id?: string;
+    description?: string;
+    underDevelopment?: boolean;
+    specJs?: string;
+    hidden?: boolean;
+    forceShow?: boolean;
+    image?: string;
+}
+
 export const examples: {
-    readonly [id: string]: {
-        group: ExampleGroup;
-        name: string;
-        spec: GoslingSpec | string;
-        description?: string;
-        underDevelopment?: boolean;
-        specJs?: string;
-        hidden?: boolean;
-        forceShow?: boolean;
-        image?: string;
-    };
+    readonly [id: string]: Example;
 } = {
     DEBUG: {
         group: 'Unassigned',
