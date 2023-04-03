@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter, Route } from 'react-router-dom';
-import Editor from './editor';
+import Editor from './Editor';
 import './index.css';
 import 'higlass/dist/hglib.css';
 

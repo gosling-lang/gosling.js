@@ -1,0 +1,130 @@
+.example-gallery-container {
+    position: absolute;
+    /* Make this more readable */
+    left: calc(50% - 45% + 25px);
+    top: calc(50% - 45% + 20px);
+    width: calc(90% - 50px); /* sidebar is 50px */
+    height: calc(90% - 40px); /* navbar is 40px */
+    background-color: white;
+    border: 1px solid grey;
+    /* border-radius: 6px; */
+    box-shadow: 0px 0px 35px #00000088;
+    z-index: 999;
+}
+
+.example-gallery-sidebar {
+    width: calc(299px - 60px);
+    height: calc(100% - 30px);
+    background-color: #fafafa;
+    border-right: 1px solid lightgrey;
+    display: inline-block;
+    vertical-align: top;
+    padding: 30px;
+    padding-top: 0px;
+    overflow-y: auto;
+}
+
+.example-gallery-sidebar a {
+    display: block;
+    text-decoration: none;
+    font-size: medium;
+    color: black;
+    padding: 4px;
+}
+
+.example-gallery-sidebar a:hover {
+    /* color: #e18343; */
+    background-color: #eee;
+    /* text-decoration: underline; */
+}
+
+.example-gallery-sidebar a:visited {
+    color: none;
+}
+
+.siderbar-group {
+    margin-top: 20px;
+    font-weight: bold;
+}
+
+.example-gallery {
+    padding: 10px 30px;
+    height: calc(100% - 20px);
+    width: calc(100% - 360px);
+    display: inline-block;
+    overflow-y: auto;
+}
+
+.example-gallery h1 {
+    font-size: 22px;
+}
+
+.example-gallery h2 {
+    margin-bottom: 10px;
+    font-size: 18px;
+}
+
+.example-gallery h5 {
+    margin-top: 0px;
+    margin-bottom: 14px;
+    font-size: 14px;
+    color: grey;
+    font-weight: normal;
+}
+
+.example-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 50px;
+    margin-bottom: 40px;
+}
+
+.example-card {
+    height: 180px;
+    width: 250px;
+    cursor: pointer;
+}
+
+.example-card-bg {
+    height: 150px;
+    width: 250px;
+    background: rgb(235, 235, 235);
+    /* Scale Images */
+    background-size: cover;
+    background-position: top left;
+    transition: all 1s;
+}
+
+.card-img-wrap {
+    height: 150px;
+    width: 250px;
+    overflow: hidden;
+}
+
+.card-img-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top center;
+    transition: all 1s ease-in-out;
+}
+.card-img-wrap:hover img {
+    object-position: bottom center;
+}
+
+.example-card-name {
+    /* padding-left: 10px; */
+    padding-top: 10px;
+    font-size: 16px;
+    color: #e18343;
+    width: 250px;
+    height: 30px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    display: block;
+}
+
+.example-card-bg:hover {
+    background-position: bottom right;
+}

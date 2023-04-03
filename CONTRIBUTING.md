@@ -71,6 +71,20 @@ When writing the comments:
 
 (Original post: https://github.com/gosling-lang/gosling.js/pull/714#issuecomment-1146488723)
 
+## Adding Examples to the Editor
+
+If there is an example you would like to add to the editor example library, please follow the instructions below. 
+
+1. Add a thumbnail for your example to `editor/example/thumbnails`. We try to keep the width of each thumbnail under 500px, so please resize the image using your favorite image resizing tool. 
+
+2. Import your thumbnail image to `editor/example/thumbnails.ts` and add it to the `THUMBNAILS` object. 
+
+3. Add your new example specification file to either `editor/example/json-spec` or `editor/example/spec` depending on whether the example is specified in JSON or Javascript. 
+
+4. In `editor/example/index.ts`, import your specification file. Add another object to the `examples` object with the properties `group`, `name`, `spec`, and `image`, where `image` is your thumbnail added to the `THUMBNAILS` object. 
+
+5. Select the example in the editor to make sure your example works as expected. 
+
 ## Commit Messages
 
 We use [commitlint](https://github.com/conventional-changelog/commitlint#what-is-commitlint) to maintain commit messages in a consistent manner and automatically update a [CHANGELOG.md](/CHANGELOG.md) based on the commit messages.
