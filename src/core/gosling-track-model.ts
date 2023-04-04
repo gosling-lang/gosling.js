@@ -663,6 +663,7 @@ export class GoslingTrackModel {
                         (channel as Color | Stroke).scaleOffset = [0, 1];
                     }
 
+                    const y_bottom_padding = 3;
                     if (!channel.range) {
                         let range;
                         switch (channelKey) {
@@ -673,6 +674,8 @@ export class GoslingTrackModel {
                                 range = [0, spec.width];
                                 break;
                             case 'y':
+                                range = [y_bottom_padding, rowHeight];
+                                break;
                             case 'ye':
                                 range = [0, rowHeight];
                                 break;
