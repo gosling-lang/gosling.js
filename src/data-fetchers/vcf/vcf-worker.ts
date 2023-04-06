@@ -64,7 +64,7 @@ export type VcfTile = Omit<VcfRecord, 'ALT' | 'INFO'> & {
     POSEND: number;
     DISTPREV: number | null;
     DISTPREVLOGE: number | null;
-} & { [k: string]: any };
+} & { [infoFieldKey: string]: any };
 
 // promises indexed by url
 const tileValues: Record<string, VcfTile[]> = {}; // new LRU({ max: MAX_TILES });
@@ -188,7 +188,7 @@ const tile = async (uid: string, z: number, x: number): Promise<void[]> => {
             Object.keys(vcfRecord.INFO).forEach(key => {
                 const val = vcfRecord.INFO[key];
                 if (Array.isArray(val)) {
-                    data[key] = val[0];
+                    data[key] = val.join(',');
                 } else {
                     data[key] = val;
                 }
