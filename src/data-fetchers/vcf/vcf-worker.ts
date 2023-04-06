@@ -191,7 +191,7 @@ const tile = async (uid: string, z: number, x: number): Promise<void[]> => {
                     data[key] = val[0];
                 } else {
                     data[key] = val;
-                 }
+                }
             });
 
             // Store this column
@@ -260,7 +260,6 @@ const fetchTilesDebounced = async (uid: string, tileIds: string[]) => {
             const validTileId = validTileIds[i];
             // @ts-expect-error values is void, this should never happen.
             tiles[validTileId] = values[i];
-            // @ts-expect-error values is void, this should never happen.
             tiles[validTileId].tilePositionId = validTileId;
         }
         return tiles;
