@@ -673,8 +673,6 @@ export class GoslingTrackModel {
                                 range = [0, spec.width];
                                 break;
                             case 'y':
-                                range = [1, rowHeight];
-                                break;
                             case 'ye':
                                 range = [0, rowHeight];
                                 break;
