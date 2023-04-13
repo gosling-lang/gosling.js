@@ -1,17 +1,10 @@
-import type { Tile } from '../../gosling-track/gosling-track';
 import { isUndefined } from 'lodash-es';
 import type { GoslingTrackModel } from '../gosling-track-model';
 import { IsChannelDeep } from '../gosling.schema.guards';
 import colorToHex from '../utils/color-to-hex';
 import type { CompleteThemeDeep } from '../utils/theme';
 
-export function drawBackground(
-    HGC: import('@higlass/types').HGC,
-    trackInfo: any,
-    tile: Tile,
-    tm: GoslingTrackModel,
-    theme: Required<CompleteThemeDeep>
-) {
+export function drawBackground(trackInfo: any, tm: GoslingTrackModel, theme: Required<CompleteThemeDeep>) {
     // size and position
     const [l, t] = trackInfo.position;
     const [w, h] = trackInfo.dimensions;

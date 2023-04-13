@@ -79,7 +79,6 @@ class BamDataFetcher<Config extends BamData> implements TabularDataFetcher<Infer
     }
 
     async sendFetch(receivedTiles: (tiles: Tiles) => void, tileIds: string[]) {
-        // this.track.updateLoadingText();
         (await this.worker).fetchTilesDebounced(this.uid, tileIds).then(receivedTiles);
     }
 
