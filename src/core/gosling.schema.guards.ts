@@ -187,8 +187,6 @@ export function IsDataDeepTileset(
 
 /**
  * Checks if a channel is of type ChannelDeep
- * @param channel
- * @returns boolean
  */
 export function IsChannelDeep(channel: ChannelDeep | ChannelValue | undefined): channel is ChannelDeep {
     return typeof channel === 'object' && !('value' in channel);

@@ -56,7 +56,7 @@ import { createPluginTrack, type PluginTrackFactory, type TrackConfig } from '..
 import { getTheme } from 'gosling-theme';
 
 // Set `true` to print in what order each function is called
-export const PRINT_RENDERING_CYCLE = true;
+export const PRINT_RENDERING_CYCLE = false;
 
 // For using libraries, refer to https://github.com/higlass/higlass/blob/f82c0a4f7b2ab1c145091166b0457638934b15f3/app/scripts/configs/available-for-plugins.js
 // `getTilePosAndDimensions()` definition: https://github.com/higlass/higlass/blob/1e1146409c7d7c7014505dd80d5af3e9357c77b6/app/scripts/Tiled1DPixiTrack.js#L133
