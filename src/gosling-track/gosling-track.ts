@@ -88,7 +88,7 @@ export interface Tile extends Omit<_Tile, 'tileData'> {
     tileData: TileData | TabularTileData;
 }
 
-interface processedTileInfo {
+interface ProcessedTileInfo {
     /** Single tile can contain multiple gosling models if multiple tracks are superposed */
     goslingModels: GoslingTrackModel[];
     tabularData: Datum[];
@@ -102,7 +102,7 @@ export interface DisplayedLegend {
     range: Range;
 }
 
-function initProcessedTileInfo(): processedTileInfo {
+function initProcessedTileInfo(): ProcessedTileInfo {
     return { goslingModels: [], tabularData: [], skipRendering: false };
 }
 
@@ -148,7 +148,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
         #tileSize: number;
         #mRangeBrush: LinearBrushModel;
         #assembly?: Assembly; // Used to get the relative genomic position
-        #processedTileInfo: Record<string, processedTileInfo>;
+        #processedTileInfo: Record<string, ProcessedTileInfo>;
         // Used in mark/legend.ts
         gLegend? = HGC.libraries.d3Selection.select(context.svgElement).append('g');
         displayedLegends: DisplayedLegend[] = []; // Store the color legends added so far so that we can avoid overlaps and redundancy
