@@ -145,8 +145,8 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
          *
          * */
 
-        #tileSize: number;
-        #mRangeBrush: LinearBrushModel;
+        tileSize: number;
+        mRangeBrush: LinearBrushModel;
         #assembly?: Assembly; // Used to get the relative genomic position
         #processedTileInfo: Record<string, ProcessedTileInfo>;
         // Used in mark/legend.ts
@@ -156,7 +156,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
         textGraphics: unknown[] = [];
         textsBeingUsed = 0;
         // Mouse fields
-        #pMouseHover = new HGC.libraries.PIXI.Graphics();
+        pMouseHover = new HGC.libraries.PIXI.Graphics();
         #pMouseSelection = new HGC.libraries.PIXI.Graphics();
         #mouseDownX = 0;
         #mouseDownY = 0;
@@ -165,7 +165,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
         #loadingTextStyleObj = new HGC.libraries.PIXI.TextStyle(loadingTextStyle);
         #loadingTextBg = new HGC.libraries.PIXI.Graphics();
         #loadingText = new HGC.libraries.PIXI.Text('', loadingTextStyle);
-        #prevVisibleAndFetchedTiles?: Tile[];
+        prevVisibleAndFetchedTiles?: Tile[];
 
         /* *
          *
@@ -190,7 +190,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
             }
 
             this.fetchedTiles = {};
-            this.#tileSize = this.tilesetInfo?.tile_size ?? 1024;
+            this.tileSize = this.tilesetInfo?.tile_size ?? 1024;
 
             const { valid, errorMessages } = validateTrack(this.options.spec);
 
@@ -199,13 +199,13 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
             }
 
             // Graphics for highlighting visual elements under the cursor
-            this.pMain.addChild(this.#pMouseHover);
+            this.pMain.addChild(this.pMouseHover);
             this.pMain.addChild(this.#pMouseSelection);
 
             // Enable click event
             this.pMask.interactive = true;
-            this.#mRangeBrush = new LinearBrushModel(this.#gBrush, HGC.libraries, this.options.spec.style?.brush);
-            this.#mRangeBrush.on('brush', this.onRangeBrush.bind(this));
+            this.mRangeBrush = new LinearBrushModel(this.#gBrush, HGC.libraries, this.options.spec.style?.brush);
+            this.mRangeBrush.on('brush', this.onRangeBrush.bind(this));
 
             this.pMask.on('mousedown', (e: PIXI.InteractionEvent) => {
                 const { x, y } = e.data.getLocalPosition(this.pMain);
@@ -267,7 +267,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
             if (PRINT_RENDERING_CYCLE) console.warn('draw()');
             this.clearMouseEventData();
             this.textsBeingUsed = 0;
-            this.#pMouseHover?.clear();
+            this.pMouseHover?.clear();
 
             const processTilesAndDraw = () => {
                 // Preprocess all tiles at once so that we can share scales across tiles.
@@ -277,12 +277,12 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
                 super.draw();
 
                 // Record tiles so that we ignore loading same tiles again
-                this.#prevVisibleAndFetchedTiles = this.visibleAndFetchedTiles();
+                this.prevVisibleAndFetchedTiles = this.visibleAndFetchedTiles();
             };
 
             if (
                 isTabularDataFetcher(this.dataFetcher) &&
-                !isEqual(this.visibleAndFetchedTiles(), this.#prevVisibleAndFetchedTiles)
+                !isEqual(this.visibleAndFetchedTiles(), this.prevVisibleAndFetchedTiles)
             ) {
                 this.updateTileAsync(this.dataFetcher as TabularDataFetcher<Datum>, processTilesAndDraw);
             } else {
@@ -290,7 +290,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
             }
 
             // Based on the updated marks, update range selection
-            this.#mRangeBrush?.drawBrush(true);
+            this.mRangeBrush?.drawBrush(true);
         }
 
         /*
@@ -363,7 +363,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
                 // TODO (May-27-2022): remove the following line when we support a circular brush.
                 // If the spec is changed to use the circular layout, we remove the current linear brush
                 // because circular brush is not supported.
-                this.#mRangeBrush.remove();
+                this.mRangeBrush.remove();
             }
 
             this.clearMouseEventData();
@@ -396,7 +396,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
                 this.gLegend.remove();
                 this.gLegend = undefined;
             }
-            this.#mRangeBrush.remove();
+            this.mRangeBrush.remove();
         }
         /*
          * Rerender all tiles when track size is changed.
@@ -407,7 +407,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
 
             super.setDimensions(newDimensions); // This simply updates `this._xScale` and `this._yScale`
 
-            this.#mRangeBrush.setSize(newDimensions[1]);
+            this.mRangeBrush.setSize(newDimensions[1]);
         }
 
         /**
@@ -418,7 +418,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
 
             [this.pMain.position.x, this.pMain.position.y] = this.position;
 
-            this.#mRangeBrush.setOffset(...newPosition);
+            this.mRangeBrush.setOffset(...newPosition);
         }
 
         /**
@@ -437,8 +437,8 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
         zoomed(newXScale: ScaleLinear<number, number>, newYScale: ScaleLinear<number, number>) {
             if (PRINT_RENDERING_CYCLE) console.warn('zoomed()');
 
-            const range = this.#mRangeBrush.getRange();
-            this.#mRangeBrush.updateRange(
+            const range = this.mRangeBrush.getRange();
+            this.mRangeBrush.updateRange(
                 range ? [newXScale(this._xScale.invert(range[0])), newXScale(this._xScale.invert(range[1]))] : null
             );
 
@@ -723,7 +723,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
             }
 
             // Increase the size of tiles by length
-            this.#tileSize = (this.tilesetInfo?.tile_size ?? 1024) * tiles.length;
+            this.tileSize = (this.tilesetInfo?.tile_size ?? 1024) * tiles.length;
 
             let merged: Datum[] = [];
 
@@ -766,7 +766,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
          * @param force if true then tabular data gets regenerated
          */
         private processAllTiles(force = false) {
-            this.#tileSize = this.tilesetInfo?.tile_size ?? 1024;
+            this.tileSize = this.tilesetInfo?.tile_size ?? 1024;
 
             const tiles = this.visibleAndFetchedTiles();
 
@@ -840,7 +840,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
                     tileY,
                     tileWidth,
                     tileHeight,
-                    tileSize: this.#tileSize
+                    tileSize: this.tileSize
                 });
 
                 const tabularData = getTabularData(firstResolvedTrack, extendedTileData);
@@ -1154,7 +1154,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
             const rangeSelectEnabled = !!mouseEvents || (IsMouseEventsDeep(mouseEvents) && !!mouseEvents.rangeSelect);
             this.#isRangeBrushActivated = rangeSelectEnabled && isAltPressed;
 
-            this.#pMouseHover.clear();
+            this.pMouseHover.clear();
         }
 
         private onMouseMove(mouseX: number) {
@@ -1164,7 +1164,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
             }
 
             if (this.#isRangeBrushActivated) {
-                this.#mRangeBrush.updateRange([mouseX, this.#mouseDownX]).drawBrush().visible().disable();
+                this.mRangeBrush.updateRange([mouseX, this.#mouseDownX]).drawBrush().visible().disable();
             }
         }
 
@@ -1178,11 +1178,11 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
 
             if (!this.#isRangeBrushActivated && !isDrag) {
                 // Clicking outside the brush should remove the brush and the selection.
-                this.#mRangeBrush.clear();
+                this.mRangeBrush.clear();
                 this.#pMouseSelection.clear();
             } else {
                 // Dragging ended, so enable adjusting the range brush
-                this.#mRangeBrush.enable();
+                this.mRangeBrush.enable();
             }
 
             this.#isRangeBrushActivated = false;
@@ -1216,7 +1216,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
         private onMouseOut() {
             this.#isRangeBrushActivated = false;
             document.body.style.cursor = 'default';
-            this.#pMouseHover.clear();
+            this.pMouseHover.clear();
         }
 
         /**
@@ -1236,7 +1236,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
                 return '';
             }
 
-            this.#pMouseHover.clear();
+            this.pMouseHover.clear();
 
             // Current position
             const genomicPosition = getRelativeGenomicPosition(Math.floor(this._xScale.invert(mouseX)), this.#assembly);
@@ -1257,7 +1257,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
                 const mouseOverEnabled = !!mouseEvents || (IsMouseEventsDeep(mouseEvents) && !!mouseEvents.mouseOver);
                 if (mouseOverEnabled) {
                     // Display mouse over effects
-                    const g = this.#pMouseHover;
+                    const g = this.pMouseHover;
 
                     if (this.options.spec.style?.mouseOver?.arrange !== 'behind') {
                         // place on the top
