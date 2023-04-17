@@ -81,7 +81,12 @@ const esm = defineConfig({
         rollupOptions: { external }
     },
     resolve: { alias },
-    plugins: [manualInlineWorker]
+    plugins: [manualInlineWorker],
+    optimizeDeps: {
+        esbuildOptions: {
+            inject: ['./src/alias/buffer-shim.js']
+        }
+    }
 });
 
 const dev = defineConfig({
@@ -91,7 +96,12 @@ const dev = defineConfig({
         'process.platform': 'undefined',
         'process.env.THREADS_WORKER_INIT_TIMEOUT': 'undefined'
     },
-    plugins: [bundleWebWorker, manualInlineWorker]
+    plugins: [bundleWebWorker, manualInlineWorker],
+    optimizeDeps: {
+        esbuildOptions: {
+            inject: ['./src/alias/buffer-shim.js']
+        }
+    }
 });
 
 const testing = defineConfig({
@@ -112,6 +122,11 @@ const testing = defineConfig({
           include: ['src', 'editor'],
         }
     },
+    optimizeDeps: {
+        esbuildOptions: {
+            inject: ['./src/alias/buffer-shim.js']
+        }
+    }
 });
 
 export default ({ command, mode }) => {
