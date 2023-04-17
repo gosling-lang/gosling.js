@@ -157,7 +157,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
         textsBeingUsed = 0;
         // Mouse fields
         pMouseHover = new HGC.libraries.PIXI.Graphics();
-        #pMouseSelection = new HGC.libraries.PIXI.Graphics();
+        pMouseSelection = new HGC.libraries.PIXI.Graphics();
         #mouseDownX = 0;
         #mouseDownY = 0;
         #isRangeBrushActivated = false;
@@ -200,24 +200,24 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
 
             // Graphics for highlighting visual elements under the cursor
             this.pMain.addChild(this.pMouseHover);
-            this.pMain.addChild(this.#pMouseSelection);
+            this.pMain.addChild(this.pMouseSelection);
 
             // Enable click event
             this.pMask.interactive = true;
             this.mRangeBrush = new LinearBrushModel(this.#gBrush, HGC.libraries, this.options.spec.style?.brush);
-            this.mRangeBrush.on('brush', this.onRangeBrush.bind(this));
+            this.mRangeBrush.on('brush', this.#onRangeBrush.bind(this));
 
             this.pMask.on('mousedown', (e: PIXI.InteractionEvent) => {
                 const { x, y } = e.data.getLocalPosition(this.pMain);
-                this.onMouseDown(x, y, e.data.originalEvent.altKey);
+                this.#onMouseDown(x, y, e.data.originalEvent.altKey);
             });
             this.pMask.on('mouseup', (e: PIXI.InteractionEvent) => {
                 const { x, y } = e.data.getLocalPosition(this.pMain);
-                this.onMouseUp(x, y);
+                this.#onMouseUp(x, y);
             });
             this.pMask.on('mousemove', (e: PIXI.InteractionEvent) => {
                 const { x } = e.data.getLocalPosition(this.pMain);
-                this.onMouseMove(x);
+                this.#onMouseMove(x);
             });
             this.pMask.on('mouseout', this.onMouseOut.bind(this));
             this.flipText = this.options.spec.orientation === 'vertical';
@@ -259,8 +259,9 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
          * */
 
         /**
-         * Draw all tiles from the bottom.
-         * This function is called in the middle of `constructor()` by a parent class. https://github.com/higlass/higlass/blob/387a03e877dcfa4c2cfeabc0869375b58c0b362d/app/scripts/TiledPixiTrack.js#L216
+         * Draw all tiles from the bottom. Called from TiledPixiTrack constructor, so all methods called must be
+         * public. https://github.com/higlass/higlass/blob/387a03e877dcfa4c2cfeabc0869375b58c0b362d/app/scripts/TiledPixiTrack.js#L216
+         * Overrides draw() in BarTrack.
          * This means some class properties can be still `undefined`.
          */
         draw() {
@@ -352,8 +353,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
         }
 
         /**
-         * Render this track again using a new option when a user changed the option.
-         * Overrides rerender in BarTrack
+         * Render this track again using a new option when a user changed the option. Overrides rerender in BarTrack.
          */
         rerender(newOptions: GoslingTrackOptions) {
             if (PRINT_RENDERING_CYCLE) console.warn('rerender(options)');
@@ -373,14 +373,16 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
             this.draw();
             this.forceDraw();
         }
-
-        private clearMouseEventData() {
+        /**
+         * Clears MouseEventModel from each GoslingTrackModel. Must be a public method because it is called from draw()
+         */
+        clearMouseEventData() {
             this.visibleAndFetchedGoslingModels().forEach(model => model.getMouseEventModel().clear());
         }
         /**
          * Collect all gosling models that correspond to the tiles that are both visible and fetched.
          */
-        private visibleAndFetchedGoslingModels() {
+        visibleAndFetchedGoslingModels() {
             return this.visibleAndFetchedTiles().flatMap(
                 tile => this.#processedTileInfo[tile.tileId]?.goslingModels ?? []
             );
@@ -523,7 +525,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
                         );
                     }
 
-                    const tiles = GoslingTrackClass.tilesToId(xTiles, yTiles, zoomLevel);
+                    const tiles = GoslingTrackClass.#tilesToId(xTiles, yTiles, zoomLevel);
 
                     this.setVisibleTiles(tiles);
                 } else {
@@ -550,7 +552,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
                         );
                     }
 
-                    const tiles = GoslingTrackClass.tilesToId(xTiles, yTiles, zoomLevel);
+                    const tiles = GoslingTrackClass.#tilesToId(xTiles, yTiles, zoomLevel);
                     this.setVisibleTiles(tiles);
                 }
             }
@@ -558,7 +560,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
         /**
          * Convert tile positions to tile IDs
          */
-        private static tilesToId(
+        static #tilesToId(
             xTiles: number[],
             yTiles: number[] | undefined,
             zoomLevel: number
@@ -591,7 +593,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
 
                 const [xTilePos, yTilePos] = tilePos;
 
-                const tileWidth = chosenResolution * this.binsPerTile;
+                const tileWidth = chosenResolution * this.#binsPerTile;
                 const tileHeight = tileWidth;
 
                 const tileX = tileWidth * xTilePos;
@@ -624,7 +626,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
                 };
             }
         }
-        private get binsPerTile() {
+        get #binsPerTile() {
             let maybeValue: number | undefined;
             if (this.tilesetInfo) {
                 maybeValue =
@@ -649,7 +651,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
 
             const tileXScale = HGC.libraries.d3Scale
                 .scaleLinear()
-                .domain([0, this.binsPerTile])
+                .domain([0, this.#binsPerTile])
                 .range([tileX, tileX + tileWidth]);
 
             const start = Math.max(0, Math.round(tileXScale.invert(this._xScale.invert(visible[0]))));
@@ -712,7 +714,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
          * Combile multiple tiles into the last tile.
          * This is sometimes necessary, for example, when applying a displacement algorithm to all tiles at once.
          */
-        private combineAllTilesIfNeeded() {
+        combineAllTilesIfNeeded() {
             if (!this.shouldCombineTiles()) return;
 
             const tiles = this.visibleAndFetchedTiles();
@@ -749,7 +751,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
         /**
          * Check whether tiles should be merged.
          */
-        private shouldCombineTiles() {
+        shouldCombineTiles() {
             const includesDisplaceTransform = hasDataTransform(this.options.spec, 'displace');
             // we do not need to combine dense tiles (from multivec, vector, matrix)
             const hasDenseTiles = () => {
@@ -762,10 +764,11 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
         }
 
         /**
-         * Gets all tiles and generates tabular data and GoslingTrackModels for each tile
+         * Gets all tiles and generates tabular data and GoslingTrackModels for each tile. Called by this.draw(), so
+         * this method must be public.
          * @param force if true then tabular data gets regenerated
          */
-        private processAllTiles(force = false) {
+        processAllTiles(force = false) {
             this.tileSize = this.tilesetInfo?.tile_size ?? 1024;
 
             const tiles = this.visibleAndFetchedTiles();
@@ -790,7 +793,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
         /**
          * Creates an array of SingleTracks if there are overlaid tracks
          */
-        private getResolvedTracks() {
+        #getResolvedTracks() {
             const copy = structuredClone(this.options.spec);
             // Brushes are drawn by another plugin track.
             return resolveSuperposedTracks(copy).filter(t => t.mark !== 'brush');
@@ -799,7 +802,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
         /**
          * Construct tabular data from a higlass tileset and a gosling track model.
          */
-        private generateTabularData(tile: Tile, force = false) {
+        generateTabularData(tile: Tile, force = false) {
             if (this.#processedTileInfo[tile.tileId] && !force) {
                 // we do not need to re-construct tabular data
                 return;
@@ -811,7 +814,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
             }
 
             const tileInfo = initProcessedTileInfo();
-            const resolvedTracks = this.getResolvedTracks();
+            const resolvedTracks = this.#getResolvedTracks();
 
             if (resolvedTracks.length === 0) {
                 // we do not have enough track to display
@@ -853,9 +856,9 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
         }
 
         /**
-         * Apply data transformation to each of the overlaid tracks and generate gosling models.
+         * Apply data transformation to each of the overlaid tracks and generate GoslingTrackModels.
          */
-        private transformDataAndCreateModels(tile: Tile) {
+        transformDataAndCreateModels(tile: Tile) {
             const tileInfo = this.#processedTileInfo[tile.tileId];
 
             if (!tileInfo || tileInfo.skipRendering) {
@@ -867,7 +870,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
             // clear the array first
             tileInfo.goslingModels = [];
 
-            const resolvedTracks = this.getResolvedTracks();
+            const resolvedTracks = this.#getResolvedTracks();
             resolvedTracks.forEach(resolvedSpec => {
                 let tabularDataTransformed = Array.from(tileInfo.tabularData);
                 resolvedSpec.dataTransform?.forEach(t => {
@@ -976,7 +979,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
         /**
          * From all tiles and overlaid tracks, collect element(s) that are withing a mouse position.
          */
-        private getElementsWithinMouse(mouseX: number, mouseY: number) {
+        #getElementsWithinMouse(mouseX: number, mouseY: number) {
             const models = this.visibleAndFetchedGoslingModels();
 
             // TODO: `Omit` this properties in the schema of individual overlaid tracks.
@@ -1011,7 +1014,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
         /**
          * Call track events (e.g., `trackClick` or `trackMouseOver`) based on a mouse position and the track display area.
          */
-        private publishTrackEvents(eventType: 'trackClick' | 'trackMouseOver', mouseX: number, mouseY: number) {
+        #publishTrackEvents(eventType: 'trackClick' | 'trackMouseOver', mouseX: number, mouseY: number) {
             const [x, y] = this.position;
             const [width, height] = this.dimensions;
             if (this.options.spec.layout === 'circular') {
@@ -1045,8 +1048,8 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
             }
         }
 
-        private onRangeBrush(range: [number, number] | null, skipApiTrigger = false) {
-            this.#pMouseSelection.clear();
+        #onRangeBrush(range: [number, number] | null, skipApiTrigger = false) {
+            this.pMouseSelection.clear();
 
             if (range === null) {
                 // brush just removed
@@ -1078,7 +1081,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
 
             if (capturedElements.length !== 0) {
                 // selection effect graphics
-                const g = this.#pMouseSelection;
+                const g = this.pMouseSelection;
 
                 if (this.options.spec.style?.select?.arrange !== 'behind') {
                     // place on the top
@@ -1086,7 +1089,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
                     this.pMain.addChild(g);
                 }
 
-                this.highlightMarks(
+                this.#highlightMarks(
                     g,
                     capturedElements,
                     Object.assign({}, DEFAULT_MOUSE_EVENT_STYLE, this.options.spec.style?.select)
@@ -1112,7 +1115,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
         /**
          * Highlight marks that are either mouse overed or selected.
          */
-        private highlightMarks(
+        #highlightMarks(
             g: PIXI.Graphics,
             marks: MouseEventData[],
             style: {
@@ -1144,7 +1147,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
             });
         }
 
-        private onMouseDown(mouseX: number, mouseY: number, isAltPressed: boolean) {
+        #onMouseDown(mouseX: number, mouseY: number, isAltPressed: boolean) {
             // Record these so that we do not triger click event when dragged.
             this.#mouseDownX = mouseX;
             this.#mouseDownY = mouseY;
@@ -1157,7 +1160,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
             this.pMouseHover.clear();
         }
 
-        private onMouseMove(mouseX: number) {
+        #onMouseMove(mouseX: number) {
             if (this.options.spec.layout === 'circular') {
                 // TODO: We do not yet support range selection on circular tracks
                 return;
@@ -1168,9 +1171,9 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
             }
         }
 
-        private onMouseUp(mouseX: number, mouseY: number) {
+        #onMouseUp(mouseX: number, mouseY: number) {
             // `trackClick` API
-            this.publishTrackEvents('trackClick', mouseX, mouseY);
+            this.#publishTrackEvents('trackClick', mouseX, mouseY);
 
             const mouseEvents = this.options.spec.experimental?.mouseEvents;
             const clickEnabled = !!mouseEvents || (IsMouseEventsDeep(mouseEvents) && !!mouseEvents.click);
@@ -1179,7 +1182,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
             if (!this.#isRangeBrushActivated && !isDrag) {
                 // Clicking outside the brush should remove the brush and the selection.
                 this.mRangeBrush.clear();
-                this.#pMouseSelection.clear();
+                this.pMouseSelection.clear();
             } else {
                 // Dragging ended, so enable adjusting the range brush
                 this.mRangeBrush.enable();
@@ -1201,7 +1204,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
                 );
 
                 // Get elements within mouse
-                const capturedElements = this.getElementsWithinMouse(mouseX, mouseY);
+                const capturedElements = this.#getElementsWithinMouse(mouseX, mouseY);
 
                 if (capturedElements.length !== 0) {
                     publish('click', {
@@ -1213,7 +1216,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
             }
         }
 
-        private onMouseOut() {
+        onMouseOut() {
             this.#isRangeBrushActivated = false;
             document.body.style.cursor = 'default';
             this.pMouseHover.clear();
@@ -1224,7 +1227,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
          */
         getMouseOverHtml(mouseX: number, mouseY: number) {
             // `trackMouseOver` API
-            this.publishTrackEvents('trackMouseOver', mouseX, mouseY);
+            this.#publishTrackEvents('trackMouseOver', mouseX, mouseY);
 
             if (this.#isRangeBrushActivated) {
                 // In the middle of drawing range brush.
@@ -1242,7 +1245,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
             const genomicPosition = getRelativeGenomicPosition(Math.floor(this._xScale.invert(mouseX)), this.#assembly);
 
             // Get elements within mouse
-            const capturedElements = this.getElementsWithinMouse(mouseX, mouseY);
+            const capturedElements = this.#getElementsWithinMouse(mouseX, mouseY);
 
             // Change cursor
             // https://developer.mozilla.org/en-US/docs/Web/CSS/cursor
@@ -1265,7 +1268,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
                         this.pMain.addChild(g);
                     }
 
-                    this.highlightMarks(
+                    this.#highlightMarks(
                         g,
                         capturedElements,
                         Object.assign({}, DEFAULT_MOUSE_EVENT_STYLE, this.options.spec.style?.mouseOver)
