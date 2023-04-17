@@ -219,7 +219,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
                 const { x } = e.data.getLocalPosition(this.pMain);
                 this.#onMouseMove(x);
             });
-            this.pMask.on('mouseout', this.onMouseOut.bind(this));
+            this.pMask.on('mouseout', this.#onMouseOut.bind(this));
             this.flipText = this.options.spec.orientation === 'vertical';
 
             // Remove a mouse graphic if created by a parent, and draw ourselves.
@@ -264,7 +264,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
          * Overrides draw() in BarTrack.
          * This means some class properties can be still `undefined`.
          */
-        draw() {
+        override draw() {
             if (PRINT_RENDERING_CYCLE) console.warn('draw()');
             this.clearMouseEventData();
             this.textsBeingUsed = 0;
@@ -296,23 +296,24 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
 
         /*
          * Do whatever is necessary before rendering a new tile. This function is called from `receivedTiles()`.
+         * Overrides initTile in BarTrack
          * (Refer to https://github.com/higlass/higlass/blob/54f5aae61d3474f9e868621228270f0c90ef9343/app/scripts/HorizontalLine1DPixiTrack.js#L50)
          */
-        initTile(tile: Tile) {
+        override initTile(tile: Tile) {
             if (PRINT_RENDERING_CYCLE) console.warn('initTile(tile)');
             // Since `super.initTile(tile)` prints warning, we call `drawTile` ourselves without calling
             // `super.initTile(tile)`.
             this.drawTile(tile);
         }
 
-        updateTile(/* tile: Tile */) {} // Never mind about this function for the simplicity.
-        renderTile(/* tile: Tile */) {} // Never mind about this function for the simplicity.
+        override updateTile(/* tile: Tile */) {} // Never mind about this function for the simplicity.
+        override renderTile(/* tile: Tile */) {} // Never mind about this function for the simplicity.
 
         /**
          * Display a tile upon receiving a new one or when explicitly called by a developer, e.g., calling
          * `this.draw()`. Overrides drawTile in BarTrack
          */
-        drawTile(tile: Tile) {
+        override drawTile(tile: Tile) {
             if (PRINT_RENDERING_CYCLE) console.warn('drawTile(tile)');
 
             tile.drawnAtScale = this._xScale.copy(); // being used in `super.draw()`
@@ -355,7 +356,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
         /**
          * Render this track again using a new option when a user changed the option. Overrides rerender in BarTrack.
          */
-        rerender(newOptions: GoslingTrackOptions) {
+        override rerender(newOptions: GoslingTrackOptions) {
             if (PRINT_RENDERING_CYCLE) console.warn('rerender(options)');
             this.options = newOptions;
 
@@ -391,7 +392,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
         /**
          * End of the rendering cycle. This function is called when the track is removed entirely.
          */
-        remove() {
+        override remove() {
             super.remove();
 
             if (this.gLegend) {
@@ -401,10 +402,10 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
             this.mRangeBrush.remove();
         }
         /*
-         * Rerender all tiles when track size is changed.
+         * Rerender all tiles when track size is changed. Overrides method in TiledPixiTrack
          * (Refer to https://github.com/higlass/higlass/blob/54f5aae61d3474f9e868621228270f0c90ef9343/app/scripts/PixiTrack.js#L186).
          */
-        setDimensions(newDimensions: [number, number]) {
+        override setDimensions(newDimensions: [number, number]) {
             if (PRINT_RENDERING_CYCLE) console.warn('setDimensions()');
 
             super.setDimensions(newDimensions); // This simply updates `this._xScale` and `this._yScale`
@@ -415,7 +416,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
         /**
          * Record new position.
          */
-        setPosition(newPosition: [number, number]) {
+        override setPosition(newPosition: [number, number]) {
             super.setPosition(newPosition); // This simply changes `this.position`
 
             [this.pMain.position.x, this.pMain.position.y] = this.position;
@@ -436,7 +437,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
          * (https://github.com/higlass/higlass/blob/54f5aae61d3474f9e868621228270f0c90ef9343/app/scripts/HorizontalLine1DPixiTrack.js#L215)
          * For brushing, refer to https://github.com/higlass/higlass/blob/caf230b5ee41168ea491572618612ac0cc804e5a/app/scripts/HeatmapTiledPixiTrack.js#L1493
          */
-        zoomed(newXScale: ScaleLinear<number, number>, newYScale: ScaleLinear<number, number>) {
+        override zoomed(newXScale: ScaleLinear<number, number>, newYScale: ScaleLinear<number, number>) {
             if (PRINT_RENDERING_CYCLE) console.warn('zoomed()');
 
             const range = this.mRangeBrush.getRange();
@@ -453,7 +454,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
         }
 
         /**
-         * This is currently for testing the new way of rendering visual elements.
+         * This is currently for testing the new way of rendering visual elements. Called by this.draw()
          */
         async updateTileAsync<T extends Datum>(tabularDataFetcher: TabularDataFetcher<T>, callback: () => void) {
             if (!this.tilesetInfo) return;
@@ -477,7 +478,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
          * Overrides method in Tiled1DPixiTrack. It is called in the constructor, `super(context, options)`.
          * So be aware to use defined variables.
          */
-        calculateVisibleTiles() {
+        override calculateVisibleTiles() {
             if (!this.tilesetInfo) return;
             if (isTabularDataFetcher(this.dataFetcher)) {
                 const tiles = HGC.utils.trackUtils.calculate1DVisibleTiles(this.tilesetInfo, this._xScale);
@@ -578,7 +579,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
         /**
          * Get the tile's position in its coordinate system. Overrides method in Tiled1DPixiTrack.
          */
-        getTilePosAndDimensions(zoomLevel: number, tilePos: [number, number]) {
+        override getTilePosAndDimensions(zoomLevel: number, tilePos: [number, number]) {
             if (!this.tilesetInfo) {
                 throw Error('tilesetInfo not parsed');
             }
@@ -640,7 +641,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
         /**
          * Gets the indices of the visible data a tile. Overrides method in Tiled1DPixiTrack
          */
-        getIndicesOfVisibleDataInTile(tile: Tile): [number, number] {
+        override getIndicesOfVisibleDataInTile(tile: Tile): [number, number] {
             const visible = this._xScale.range();
 
             if (!this.tilesetInfo || !tile.tileData.tilePos || !('dense' in tile.tileData)) {
@@ -663,15 +664,21 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
             return [start, end];
         }
 
-        receivedTiles(loadedTiles: Record<string, Tile>) {
+        /**
+         * Overrides method in TiledPixiTrack
+         * @param loadedTiles
+         */
+        override receivedTiles(loadedTiles: Record<string, Tile>) {
             // https://github.com/higlass/higlass/blob/38f0c4415f0595c3b9d685a754d6661dc9612f7c/app/scripts/TiledPixiTrack.js#L637
             super.receivedTiles(loadedTiles);
             // some items in this.fetching are removed
             isTabularDataFetcher(this.dataFetcher) && this.drawLoadingCue();
         }
 
-        // https://github.com/higlass/higlass/blob/38f0c4415f0595c3b9d685a754d6661dc9612f7c/app/scripts/TiledPixiTrack.js#L342
-        removeOldTiles() {
+        /**
+         * Overrides method in TiledPixiTrack
+         */
+        override removeOldTiles() {
             super.removeOldTiles(); // some items are added to this.fetching
             isTabularDataFetcher(this.dataFetcher) && this.drawLoadingCue();
         }
@@ -713,6 +720,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
         /**
          * Combile multiple tiles into the last tile.
          * This is sometimes necessary, for example, when applying a displacement algorithm to all tiles at once.
+         * Called by this.processAllTiles() so this method needs to be public.
          */
         combineAllTilesIfNeeded() {
             if (!this.shouldCombineTiles()) return;
@@ -774,7 +782,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
             const tiles = this.visibleAndFetchedTiles();
 
             // generated tabular data
-            tiles.forEach(tile => this.generateTabularData(tile, force));
+            tiles.forEach(tile => this.#generateTabularData(tile, force));
 
             // combine tabular data to the first tile if needed
             this.combineAllTilesIfNeeded();
@@ -802,7 +810,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
         /**
          * Construct tabular data from a higlass tileset and a gosling track model.
          */
-        generateTabularData(tile: Tile, force = false) {
+        #generateTabularData(tile: Tile, force = false) {
             if (this.#processedTileInfo[tile.tileId] && !force) {
                 // we do not need to re-construct tabular data
                 return;
@@ -956,7 +964,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
          * Returns the minimum in the visible area (not visible tiles).
          * Overrides method in Tiled1DPixiTrack
          */
-        minVisibleValue() {
+        override minVisibleValue() {
             return 0;
         }
 
@@ -964,13 +972,13 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
          * Returns the maximum in the visible area (not visible tiles).
          * Overrides method in Tiled1DPixiTrack.
          */
-        maxVisibleValue() {
+        override maxVisibleValue() {
             return 0;
         }
         /**
          * Overrides method in PixiTrack
          */
-        exportSVG(): never {
+        override exportSVG(): never {
             throw new Error('exportSVG() not supported for gosling-track');
         } // We do not support SVG export
 
@@ -1216,7 +1224,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
             }
         }
 
-        onMouseOut() {
+        #onMouseOut() {
             this.#isRangeBrushActivated = false;
             document.body.style.cursor = 'default';
             this.pMouseHover.clear();
@@ -1225,7 +1233,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
         /**
          * Overrides method in HorizontalLine1DPixiTrack
          */
-        getMouseOverHtml(mouseX: number, mouseY: number) {
+        override getMouseOverHtml(mouseX: number, mouseY: number) {
             // `trackMouseOver` API
             this.#publishTrackEvents('trackMouseOver', mouseX, mouseY);
 
