@@ -42,7 +42,7 @@ export class LinearBrushModel {
     private data: LinearBrushData;
 
     /* drag */
-    private startEvent: any; // D3Drag.D3DragEvent.sourceEvent which is `any`
+    private startEvent: D3Drag.D3DragEvent<SVGElement, LinearBrushData[number], D3Drag.SubjectPosition>['sourceEvent'];
     private prevExtent: [number, number] | null;
 
     /* visual parameters */
