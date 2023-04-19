@@ -802,6 +802,7 @@ export type BinAggregate = 'mean' | 'sum';
 export type DataDeep =
     | JsonData
     | CsvData
+    | BedData
     | BigWigData
     | MultivecData
     | BeddbData
@@ -844,6 +845,31 @@ export interface JsonData {
         chromosomeField: string;
         genomicFields: string[];
     }[];
+}
+
+/**
+ * BED file format
+ */
+export interface BedData {
+    type: 'bed';
+    /**
+     * Specify the URL address of the data file.
+     */
+    url: string;
+    /**
+     * Any non-standard field in the BED file
+     */
+    customFields?: string[];
+    /**
+     * Specify file separator, __Default:__ ','
+     */
+    separator?: string;
+    /**
+     * Specify the number of rows loaded from the URL.
+     *
+     * __Default:__ `1000`
+     */
+    sampleLength?: number; // This limit the total number of rows fetched (default: 1000)
 }
 
 /**

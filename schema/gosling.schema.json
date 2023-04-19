@@ -101,6 +101,40 @@
       ],
       "type": "object"
     },
+    "BedData": {
+      "additionalProperties": false,
+      "description": "BED file format",
+      "properties": {
+        "customFields": {
+          "description": "Any non-standard field in the BED file",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "sampleLength": {
+          "description": "Specify the number of rows loaded from the URL.\n\n__Default:__ `1000`",
+          "type": "number"
+        },
+        "separator": {
+          "description": "Specify file separator, __Default:__ ','",
+          "type": "string"
+        },
+        "type": {
+          "const": "bed",
+          "type": "string"
+        },
+        "url": {
+          "description": "Specify the URL address of the data file.",
+          "type": "string"
+        }
+      },
+      "required": [
+        "type",
+        "url"
+      ],
+      "type": "object"
+    },
     "BeddbData": {
       "additionalProperties": false,
       "description": "Regular BED or similar files can be pre-aggregated for the scalable data exploration. Find our more about this format at [HiGlass Docs](https://docs.higlass.io/data_preparation.html#bed-files).",
@@ -494,6 +528,9 @@
         },
         {
           "$ref": "#/definitions/CsvData"
+        },
+        {
+          "$ref": "#/definitions/BedData"
         },
         {
           "$ref": "#/definitions/BigWigData"
