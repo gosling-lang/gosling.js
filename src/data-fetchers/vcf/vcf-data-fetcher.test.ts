@@ -18,12 +18,12 @@ describe('VCF file parser', () => {
             }
         };
         const chrPos = 123456;
-        const prevPos = chrPos - 100;
+        const prevPos = record.POS - 100;
         const tile = recordToTile(record, chrPos, prevPos);
 
         expect(tile.MUTTYPE).toBe('substitution');
         expect(tile.SUBTYPE).toBe('C>T');
-        expect(tile.DISTPREV).toBe(chrPos + record.POS - prevPos);
+        expect(tile.DISTPREV).toBe(100);
         expect(tile.NS).toBe(3);
     });
 });
