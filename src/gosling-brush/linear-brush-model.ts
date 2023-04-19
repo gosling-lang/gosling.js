@@ -42,7 +42,7 @@ export class LinearBrushModel {
     private data: LinearBrushData;
 
     /* drag */
-    private startEvent: typeof D3Selection.event;
+    private startEvent: D3Drag.D3DragEvent<SVGElement, LinearBrushData[number], D3Drag.SubjectPosition>['sourceEvent'];
     private prevExtent: [number, number] | null;
 
     /* visual parameters */
@@ -197,13 +197,16 @@ export class LinearBrushModel {
     }
 
     private onDrag() {
-        const started = () => {
-            this.startEvent = this.externals.d3Selection.event.sourceEvent;
+        const started = (event: D3Drag.D3DragEvent<SVGElement, LinearBrushData[number], D3Drag.SubjectPosition>) => {
+            this.startEvent = event.sourceEvent;
             this.prevExtent = this.range;
         };
 
-        const dragged = (d: LinearBrushData[number]) => {
-            const delta = this.externals.d3Selection.event.sourceEvent.layerX - this.startEvent.layerX;
+        const dragged = (
+            event: D3Drag.D3DragEvent<SVGElement, LinearBrushData[number], D3Drag.SubjectPosition>,
+            d: LinearBrushData[number]
+        ) => {
+            const delta = event.sourceEvent.layerX - this.startEvent.layerX;
 
             // previous extent of brush
             let [s, e]: [number, number] = this.prevExtent ?? [0, 0];
