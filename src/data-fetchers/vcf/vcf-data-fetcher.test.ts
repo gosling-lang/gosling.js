@@ -22,7 +22,7 @@ describe('VCF file parser', () => {
         const tile = recordToTile(record, chrPos, prevPos);
 
         expect(tile.MUTTYPE).toBe('substitution');
-        expect(tile.SUBTYPE).toBe('G>A');
+        expect(tile.SUBTYPE).toBe('C>T');
         expect(tile.DISTPREV).toBe(chrPos + record.POS - prevPos);
         expect(tile.NS).toBe(3);
     });
