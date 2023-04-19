@@ -24,6 +24,6 @@ describe('VCF file parser', () => {
         expect(tile.MUTTYPE).toBe('substitution');
         expect(tile.SUBTYPE).toBe('C>T');
         expect(tile.DISTPREV).toBe(100);
-        expect(tile.NS).toBe(3);
+        expect(tile.NS).toBe('3'); // always string
     });
 });
