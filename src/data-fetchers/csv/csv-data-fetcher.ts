@@ -15,6 +15,9 @@ interface ChomSizes {
     chromLengths: { [k: string]: number };
 }
 
+/**
+ * Used in #tile() to associate tile coordinates with data
+ */
 interface TileInfo {
     tabularData: Datum[];
     server: null;
@@ -22,6 +25,9 @@ interface TileInfo {
     zoomLevel: number;
 }
 
+/**
+ * Used in #generateTilesetInfo()
+ */
 interface TilesetInfo {
     tile_size: number;
     max_zoom: number;
@@ -44,7 +50,7 @@ function CsvDataFetcher(HGC: any, ...args: any): any {
 
         #dataPromise: Promise<void> | undefined;
         #chromSizes: ChomSizes;
-        #values!: { [k: string]: string | number }[]; // Either set in the constructor or in #fetchCsv()
+        #parsedCSVdata!: { [k: string]: string | number }[]; // Either set in the constructor or in #fetchCsv()
         #assembly: Assembly;
         #filter: FilterTransform[] | undefined;
 
@@ -59,40 +65,19 @@ function CsvDataFetcher(HGC: any, ...args: any): any {
                 console.error('Please provide the `url` of the data');
             }
 
-            // Prepare chromosome interval information
-            const chromosomeSizes: { [k: string]: number } = computeChromSizes(this.#assembly).size;
-            const chromosomeCumPositions: { id: number; chr: string; pos: number }[] = [];
-            const chromosomePositions: { [k: string]: { id: number; chr: string; pos: number } } = {};
-            let prevEndPosition = 0;
-
-            Object.keys(computeChromSizes(this.#assembly).size).forEach((chrStr, i) => {
-                const positionInfo = {
-                    id: i,
-                    chr: chrStr,
-                    pos: prevEndPosition
-                };
-
-                chromosomeCumPositions.push(positionInfo);
-                chromosomePositions[chrStr] = positionInfo;
-
-                prevEndPosition += computeChromSizes(this.#assembly).size[chrStr];
-            });
-            this.#chromSizes = {
-                chrToAbs: (chrom: string, chromPos: number) => this.#chromSizes.chrPositions[chrom].pos + chromPos,
-                cumPositions: chromosomeCumPositions,
-                chrPositions: chromosomePositions,
-                totalLength: prevEndPosition,
-                chromLengths: chromosomeSizes
-            };
+            this.#chromSizes = this.#generateChomSizeInfo();
 
             if (dataConfig.data) {
                 // we have raw data that we can use right away
-                this.#values = dataConfig.data;
+                this.#parsedCSVdata = dataConfig.data;
             } else {
                 this.#dataPromise = this.#fetchCsv();
             }
         }
 
+        /**
+         * Fetches CSV file from url, parses it, and sets this.#parsedCSVdata
+         */
         #fetchCsv(): Promise<void> {
             const {
                 url,
@@ -187,9 +172,9 @@ function CsvDataFetcher(HGC: any, ...args: any): any {
                                 });
                             }
                         });
-                        this.#values = Object.keys(newJson).map(k => newJson[k]);
+                        this.#parsedCSVdata = Object.keys(newJson).map(k => newJson[k]);
                     } else {
-                        this.#values = json;
+                        this.#parsedCSVdata = json;
                     }
                 })
                 .catch(error => {
@@ -200,7 +185,7 @@ function CsvDataFetcher(HGC: any, ...args: any): any {
         /**
          * Called in TiledPixiTrack
          */
-        tilesetInfo(callback?: any): Promise<TilesetInfo | void> | undefined {
+        tilesetInfo(callback?: (loadedTiles: TilesetInfo) => void): Promise<TilesetInfo | void> | undefined {
             if (!this.#dataPromise) {
                 // data promise is not prepared yet
                 return;
@@ -218,7 +203,7 @@ function CsvDataFetcher(HGC: any, ...args: any): any {
         /**
          * Called by this.tilesetInfo() to call a callback function with tileset info.
          */
-        #generateTilesetInfo(callback?: any): TilesetInfo {
+        #generateTilesetInfo(callback?: (loadedTiles: TilesetInfo) => void): TilesetInfo {
             this.tilesetInfoLoading = false;
 
             const TILE_SIZE = 1024;
@@ -288,7 +273,7 @@ function CsvDataFetcher(HGC: any, ...args: any): any {
                 const maxX = tsInfo.min_pos[0] + (x + 1) * tileWidth;
 
                 // filter the data so that only the visible data is sent to tracks
-                let tabularData = filterUsingGenoPos(this.#values, [minX, maxX], this.dataConfig);
+                let tabularData = filterUsingGenoPos(this.#parsedCSVdata, [minX, maxX], this.dataConfig);
 
                 // filter data based on the `DataTransform` spec
                 this.#filter?.forEach(f => {
@@ -304,6 +289,39 @@ function CsvDataFetcher(HGC: any, ...args: any): any {
                     zoomLevel: z
                 };
             });
+        }
+
+        /**
+         * This function calculates chromosome position and size based on the assembly (this.#assembly)
+         * @returns An object containing chromosome information and a way to calculate absolute position
+         */
+        #generateChomSizeInfo(): ChomSizes {
+            // Prepare chromosome interval information
+            const chromosomeSizes: { [k: string]: number } = computeChromSizes(this.#assembly).size;
+            const chromosomeCumPositions: { id: number; chr: string; pos: number }[] = [];
+            const chromosomePositions: { [k: string]: { id: number; chr: string; pos: number } } = {};
+            let prevEndPosition = 0;
+
+            Object.keys(chromosomeSizes).forEach((chrStr, i) => {
+                const positionInfo = {
+                    id: i,
+                    chr: chrStr,
+                    pos: prevEndPosition
+                };
+
+                chromosomeCumPositions.push(positionInfo);
+                chromosomePositions[chrStr] = positionInfo;
+
+                prevEndPosition += chromosomeSizes[chrStr];
+            });
+
+            return {
+                chrToAbs: (chrom: string, chromPos: number) => this.#chromSizes.chrPositions[chrom].pos + chromPos,
+                cumPositions: chromosomeCumPositions,
+                chrPositions: chromosomePositions,
+                totalLength: prevEndPosition,
+                chromLengths: chromosomeSizes
+            };
         }
     }
 
