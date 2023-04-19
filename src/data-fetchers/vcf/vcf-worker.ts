@@ -43,7 +43,7 @@ class VcfFile {
 
 // const MAX_TILES = 20;
 // https://github.com/GMOD/vcf-js/blob/c4a9cbad3ba5a3f0d1c817d685213f111bf9de9b/src/parse.ts#L284-L291
-type VcfRecord = {
+export type VcfRecord = {
     CHROM: string;
     POS: number;
     ID: null | string[];
@@ -126,6 +126,53 @@ const getSubstitutionType = (ref: string, alt?: string) => {
     }
 };
 
+/**
+ * Convert a VCF record to a tile data
+ * @param vcfRecord A row of a VCF files loaded
+ * @param chrPos Cumulative start position of a chromosome
+ * @param prevPos Previous position of a point mutation for calculating 'distance to previous'
+ */
+export function recordToTile(vcfRecord: VcfRecord, chrPos: number, prevPos?: number) {
+    const POS = chrPos + vcfRecord.POS + 1;
+
+    let ALT: string | undefined;
+    if (Array.isArray(vcfRecord.ALT) && vcfRecord.ALT.length > 0) {
+        ALT = vcfRecord.ALT[0];
+    }
+
+    // Additionally inferred values
+    const DISTPREV = !prevPos ? null : vcfRecord.POS - prevPos;
+    const DISTPREVLOGE = !prevPos ? null : Math.log(vcfRecord.POS - prevPos);
+    const MUTTYPE = getMutationType(vcfRecord.REF, ALT);
+    const SUBTYPE = getSubstitutionType(vcfRecord.REF, ALT);
+    const POSEND = POS + vcfRecord.REF.length;
+
+    // Create key values
+    const data: VcfTile = {
+        ...vcfRecord,
+        ALT,
+        MUTTYPE,
+        SUBTYPE,
+        INFO: JSON.stringify(vcfRecord.INFO),
+        ORIGINALPOS: vcfRecord.POS,
+        POS,
+        POSEND,
+        DISTPREV,
+        DISTPREVLOGE
+    };
+
+    // Add optional INFO columns
+    Object.keys(vcfRecord.INFO).forEach(key => {
+        const val = vcfRecord.INFO[key];
+        if (Array.isArray(val)) {
+            data[key] = val.join(', ');
+        } else {
+            data[key] = val;
+        }
+    });
+    return data;
+}
+
 // We return an empty tile. We get the data from SvTrack
 const tile = async (uid: string, z: number, x: number): Promise<void[]> => {
     const source = dataSources.get(uid)!;
@@ -156,43 +203,7 @@ const tile = async (uid: string, z: number, x: number): Promise<void[]> => {
 
         const parseLineStoreData = (line: string, prevPos?: number) => {
             const vcfRecord: VcfRecord = parser.parseLine(line);
-            const POS = cumPos.pos + vcfRecord.POS + 1;
-
-            let ALT: string | undefined;
-            if (Array.isArray(vcfRecord.ALT) && vcfRecord.ALT.length > 0) {
-                ALT = vcfRecord.ALT[0];
-            }
-
-            // Additionally inferred values
-            const DISTPREV = !prevPos ? null : vcfRecord.POS - prevPos;
-            const DISTPREVLOGE = !prevPos ? null : Math.log(vcfRecord.POS - prevPos);
-            const MUTTYPE = getMutationType(vcfRecord.REF, ALT);
-            const SUBTYPE = getSubstitutionType(vcfRecord.REF, ALT);
-            const POSEND = POS + vcfRecord.REF.length;
-
-            // Create key values
-            const data: VcfTile = {
-                ...vcfRecord,
-                ALT,
-                MUTTYPE,
-                SUBTYPE,
-                INFO: JSON.stringify(vcfRecord.INFO),
-                ORIGINALPOS: vcfRecord.POS,
-                POS,
-                POSEND,
-                DISTPREV,
-                DISTPREVLOGE
-            };
-
-            // Add optional INFO columns
-            Object.keys(vcfRecord.INFO).forEach(key => {
-                const val = vcfRecord.INFO[key];
-                if (Array.isArray(val)) {
-                    data[key] = val.join(', ');
-                } else {
-                    data[key] = val;
-                }
-            });
+            const data = recordToTile(vcfRecord, cumPos.pos, prevPos);
 
             // Store this column
             tileValues[CACHE_KEY] = tileValues[CACHE_KEY].concat([data]);
