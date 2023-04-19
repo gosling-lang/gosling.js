@@ -1,5 +1,5 @@
-import { recordToTile } from './vcf-worker';
-import type { VcfRecord } from './vcf-worker';
+import { recordToTile } from './vcf-data-fetcher';
+import type { VcfRecord } from './vcf-data-fetcher';
 
 describe('VCF file parser', () => {
     it('Convert a VCF record to a tile data', () => {
