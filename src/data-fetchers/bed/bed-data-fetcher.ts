@@ -26,6 +26,7 @@ function BedDataFetcher(HGC: any, ...args: any): any {
         private filter: FilterTransform[] | undefined;
 
         constructor(params: any[]) {
+            console.warn('hello');
             const [dataConfig] = params;
             this.dataConfig = dataConfig;
             this.tilesetInfoLoading = false;
@@ -124,6 +125,7 @@ function BedDataFetcher(HGC: any, ...args: any): any {
             const { url } = this.dataConfig;
             const customFields = this.dataConfig.customFields ?? [];
             const separator = this.dataConfig.separator ?? '\t';
+            console.warn('hello');
 
             return fetch(url)
                 .then(response => {
@@ -132,8 +134,7 @@ function BedDataFetcher(HGC: any, ...args: any): any {
                 .then(text => {
                     const n_cols = BedDataFetcherClass.#calcNCols(text, separator);
                     const headerNames = BedDataFetcherClass.#determineHeader(customFields, n_cols);
-
-                    const textWithHeader = headerNames ? `${headerNames.join(separator)}\n${text}` : text;
+                    const textWithHeader = `${headerNames.join(separator)}\n${text}`;
                     return d3dsvFormat(separator).parse(textWithHeader);
                 })
                 .then(json => {

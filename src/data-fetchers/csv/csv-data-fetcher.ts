@@ -1,12 +1,34 @@
 import { dsvFormat as d3dsvFormat } from 'd3-dsv';
 import { computeChromSizes } from '../../core/utils/assembly';
 import { sampleSize } from 'lodash-es';
-import type { Assembly, CsvData, FilterTransform } from '@gosling.schema';
+import type { Assembly, CsvData, FilterTransform, Datum } from '@gosling.schema';
 import { filterData } from '../../core/utils/data-transform';
 import { type CommonDataConfig, filterUsingGenoPos, sanitizeChrName } from '../utils';
 
 type CsvDataConfig = CsvData & CommonDataConfig & { filter: FilterTransform[] };
 
+interface ChomSizes {
+    chrToAbs: (chrom: string, chromPos: number) => number;
+    cumPositions: { id: number; chr: string; pos: number }[];
+    chrPositions: { [k: string]: { id: number; chr: string; pos: number } };
+    totalLength: number;
+    chromLengths: { [k: string]: number };
+}
+
+interface TileInfo {
+    tabularData: Datum[];
+    server: null;
+    tilePos: number[];
+    zoomLevel: number;
+}
+
+interface TilesetInfo {
+    tile_size: number;
+    max_zoom: number;
+    max_width: number;
+    min_pos: number[];
+    max_pos: number[];
+}
 /**
  * HiGlass data fetcher specific for Gosling which ultimately will accept any types of data other than CSV files.
  */
@@ -16,34 +38,34 @@ function CsvDataFetcher(HGC: any, ...args: any): any {
     }
 
     class CsvDataFetcherClass {
-        private dataConfig: CsvDataConfig;
+        dataConfig: CsvDataConfig;
         // @ts-ignore
-        private tilesetInfoLoading: boolean;
-        private dataPromise: Promise<any> | undefined;
-        private chromSizes: any;
-        private values: any;
-        private assembly: Assembly;
-        private filter: FilterTransform[] | undefined;
+        tilesetInfoLoading: boolean; // Used in TiledPixiTrack
+
+        #dataPromise: Promise<void> | undefined;
+        #chromSizes: ChomSizes;
+        #values!: { [k: string]: string | number }[]; // Either set in the constructor or in #fetchCsv()
+        #assembly: Assembly;
+        #filter: FilterTransform[] | undefined;
 
         constructor(params: any[]) {
             const [dataConfig] = params;
             this.dataConfig = dataConfig;
             this.tilesetInfoLoading = false;
-            this.assembly = this.dataConfig.assembly;
-            this.filter = this.dataConfig.filter;
+            this.#assembly = this.dataConfig.assembly;
+            this.#filter = this.dataConfig.filter;
 
             if (!dataConfig.url) {
                 console.error('Please provide the `url` of the data');
-                return;
             }
 
             // Prepare chromosome interval information
-            const chromosomeSizes: { [k: string]: number } = computeChromSizes(this.assembly).size;
+            const chromosomeSizes: { [k: string]: number } = computeChromSizes(this.#assembly).size;
             const chromosomeCumPositions: { id: number; chr: string; pos: number }[] = [];
             const chromosomePositions: { [k: string]: { id: number; chr: string; pos: number } } = {};
             let prevEndPosition = 0;
 
-            Object.keys(computeChromSizes(this.assembly).size).forEach((chrStr, i) => {
+            Object.keys(computeChromSizes(this.#assembly).size).forEach((chrStr, i) => {
                 const positionInfo = {
                     id: i,
                     chr: chrStr,
@@ -53,10 +75,10 @@ function CsvDataFetcher(HGC: any, ...args: any): any {
                 chromosomeCumPositions.push(positionInfo);
                 chromosomePositions[chrStr] = positionInfo;
 
-                prevEndPosition += computeChromSizes(this.assembly).size[chrStr];
+                prevEndPosition += computeChromSizes(this.#assembly).size[chrStr];
             });
-            this.chromSizes = {
-                chrToAbs: (chrom: string, chromPos: number) => this.chromSizes.chrPositions[chrom].pos + chromPos,
+            this.#chromSizes = {
+                chrToAbs: (chrom: string, chromPos: number) => this.#chromSizes.chrPositions[chrom].pos + chromPos,
                 cumPositions: chromosomeCumPositions,
                 chrPositions: chromosomePositions,
                 totalLength: prevEndPosition,
@@ -65,13 +87,13 @@ function CsvDataFetcher(HGC: any, ...args: any): any {
 
             if (dataConfig.data) {
                 // we have raw data that we can use right away
-                this.values = dataConfig.data;
+                this.#values = dataConfig.data;
             } else {
-                this.dataPromise = this.fetchCsv();
+                this.#dataPromise = this.#fetchCsv();
             }
         }
 
-        fetchCsv() {
+        #fetchCsv(): Promise<void> {
             const {
                 url,
                 chromosomeField,
@@ -100,14 +122,14 @@ function CsvDataFetcher(HGC: any, ...args: any): any {
                                 const cField = d.chromosomeField;
                                 d.genomicFields.forEach((g: string) => {
                                     try {
-                                        if (this.assembly !== 'unknown') {
+                                        if (this.#assembly !== 'unknown') {
                                             // This means we need to use the relative position considering the start position of individual chr.
                                             const chrName = sanitizeChrName(
                                                 row[cField],
-                                                this.assembly,
+                                                this.#assembly,
                                                 chromosomePrefix
                                             );
-                                            row[g] = computeChromSizes(this.assembly).interval[chrName][0] + +row[g];
+                                            row[g] = computeChromSizes(this.#assembly).interval[chrName][0] + +row[g];
                                         } else {
                                             // In this case, we use the genomic position as it is w/o adding the cumulative length of chr.
                                             // So, nothing to do additionally.
@@ -125,13 +147,13 @@ function CsvDataFetcher(HGC: any, ...args: any): any {
                                     return;
                                 }
                                 try {
-                                    if (this.assembly !== 'unknown') {
+                                    if (this.#assembly !== 'unknown') {
                                         const chrName = sanitizeChrName(
                                             row[chromosomeField],
-                                            this.assembly,
+                                            this.#assembly,
                                             chromosomePrefix
                                         );
-                                        row[g] = computeChromSizes(this.assembly).interval[chrName][0] + +row[g];
+                                        row[g] = computeChromSizes(this.#assembly).interval[chrName][0] + +row[g];
                                     } else {
                                         // In this case, we use the genomic position as it is w/o adding the cumulative length of chr.
                                         // So, nothing to do additionally.
@@ -165,9 +187,9 @@ function CsvDataFetcher(HGC: any, ...args: any): any {
                                 });
                             }
                         });
-                        this.values = Object.keys(newJson).map(k => newJson[k]);
+                        this.#values = Object.keys(newJson).map(k => newJson[k]);
                     } else {
-                        this.values = json;
+                        this.#values = json;
                     }
                 })
                 .catch(error => {
@@ -175,11 +197,32 @@ function CsvDataFetcher(HGC: any, ...args: any): any {
                 });
         }
 
-        generateTilesetInfo(callback?: any) {
+        /**
+         * Called in TiledPixiTrack
+         */
+        tilesetInfo(callback?: any): Promise<TilesetInfo | void> | undefined {
+            if (!this.#dataPromise) {
+                // data promise is not prepared yet
+                return;
+            }
+
+            this.tilesetInfoLoading = true;
+
+            return this.#dataPromise
+                .then(() => this.#generateTilesetInfo(callback))
+                .catch(err => {
+                    this.tilesetInfoLoading = false;
+                    console.error('[Gosling Data Fetcher] Error parsing data:', err);
+                });
+        }
+        /**
+         * Called by this.tilesetInfo() to call a callback function with tileset info.
+         */
+        #generateTilesetInfo(callback?: any): TilesetInfo {
             this.tilesetInfoLoading = false;
 
             const TILE_SIZE = 1024;
-            const totalLength = this.chromSizes.totalLength;
+            const totalLength = this.#chromSizes.totalLength;
             const retVal = {
                 tile_size: TILE_SIZE,
                 max_zoom: Math.ceil(Math.log(totalLength / TILE_SIZE) / Math.log(2)),
@@ -194,24 +237,12 @@ function CsvDataFetcher(HGC: any, ...args: any): any {
 
             return retVal;
         }
-
-        tilesetInfo(callback?: any) {
-            if (!this.dataPromise) {
-                // data promise is not prepared yet
-                return;
-            }
-
-            this.tilesetInfoLoading = true;
-
-            return this.dataPromise
-                .then(() => this.generateTilesetInfo(callback))
-                .catch(err => {
-                    this.tilesetInfoLoading = false;
-                    console.error('[Gosling Data Fetcher] Error parsing data:', err);
-                });
-        }
-
-        fetchTilesDebounced(receivedTiles: any, tileIds: any) {
+        /**
+         * Called in TiledPixiTrack.
+         * @param receivedTiles A function from TiledPixiTrack
+         * @param tileIds An array of tile IDs
+         */
+        fetchTilesDebounced(receivedTiles: (loadedTiles: any) => void, tileIds: any[]): void {
             const tiles: { [k: string]: any } = {};
 
             const validTileIds: any[] = [];
@@ -229,7 +260,7 @@ function CsvDataFetcher(HGC: any, ...args: any): any {
                 }
 
                 validTileIds.push(tileId);
-                tilePromises.push(this.tile(z, x, y));
+                tilePromises.push(this.#tile(z, x, y));
             }
 
             Promise.all(tilePromises).then(values => {
@@ -240,11 +271,15 @@ function CsvDataFetcher(HGC: any, ...args: any): any {
                 });
                 receivedTiles(tiles);
             });
-
-            return tiles;
         }
-
-        tile(z: any, x: any, y: any) {
+        /**
+         * Creates an object to associate a tile position with the corresponding data
+         * @param z An integer, the z coordinate of the tile
+         * @param x An integer, the x coodinate of the tile
+         * @param y An integer, the y coordinate of the tile
+         * @returns A promise of an object with tile coordinates and data
+         */
+        #tile(z: number, x: number, y: number): Promise<TileInfo> | undefined {
             return this.tilesetInfo()?.then((tsInfo: any) => {
                 const tileWidth = +tsInfo.max_width / 2 ** +z;
 
@@ -253,10 +288,10 @@ function CsvDataFetcher(HGC: any, ...args: any): any {
                 const maxX = tsInfo.min_pos[0] + (x + 1) * tileWidth;
 
                 // filter the data so that only the visible data is sent to tracks
-                let tabularData = filterUsingGenoPos(this.values, [minX, maxX], this.dataConfig);
+                let tabularData = filterUsingGenoPos(this.#values, [minX, maxX], this.dataConfig);
 
                 // filter data based on the `DataTransform` spec
-                this.filter?.forEach(f => {
+                this.#filter?.forEach(f => {
                     tabularData = filterData(f, tabularData);
                 });
 
