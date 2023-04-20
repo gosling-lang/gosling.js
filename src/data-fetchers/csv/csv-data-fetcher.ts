@@ -35,6 +35,7 @@ interface TilesetInfo {
     min_pos: number[];
     max_pos: number[];
 }
+
 /**
  * HiGlass data fetcher specific for Gosling which ultimately will accept any types of data other than CSV files.
  */
@@ -79,15 +80,8 @@ function CsvDataFetcher(HGC: any, ...args: any): any {
          * Fetches CSV file from url, parses it, and sets this.#parsedCSVdata
          */
         #fetchCsv(): Promise<void> {
-            const {
-                url,
-                chromosomeField,
-                genomicFields,
-                headerNames,
-                chromosomePrefix,
-                longToWideId,
-                genomicFieldsToConvert
-            } = this.dataConfig;
+            const { url, chromosomeField, genomicFields, headerNames, longToWideId, genomicFieldsToConvert } =
+                this.dataConfig;
 
             const separator = this.dataConfig.separator ?? ',';
 
@@ -103,22 +97,14 @@ function CsvDataFetcher(HGC: any, ...args: any): any {
                         // !!! Experimental
                         if (genomicFieldsToConvert) {
                             // This spec is used when multiple chromosomes are stored in a single row
-                            genomicFieldsToConvert.forEach((d: any) => {
-                                const cField = d.chromosomeField;
-                                d.genomicFields.forEach((g: string) => {
+                            genomicFieldsToConvert.forEach(chromMap => {
+                                const genomicFields = chromMap.genomicFields;
+                                const chromName = row[chromMap.chromosomeField];
+
+                                genomicFields.forEach((positionCol: string) => {
+                                    const chromPosition = row[positionCol];
                                     try {
-                                        if (this.#assembly !== 'unknown') {
-                                            // This means we need to use the relative position considering the start position of individual chr.
-                                            const chrName = sanitizeChrName(
-                                                row[cField],
-                                                this.#assembly,
-                                                chromosomePrefix
-                                            );
-                                            row[g] = computeChromSizes(this.#assembly).interval[chrName][0] + +row[g];
-                                        } else {
-                                            // In this case, we use the genomic position as it is w/o adding the cumulative length of chr.
-                                            // So, nothing to do additionally.
-                                        }
+                                        row[positionCol] = this.#calcCumulativePos(chromName, chromPosition);
                                     } catch (e) {
                                         // genomic position did not parse properly
                                         successfullyGotChrInfo = false;
@@ -126,34 +112,22 @@ function CsvDataFetcher(HGC: any, ...args: any): any {
                                 });
                             });
                         } else if (chromosomeField && genomicFields) {
-                            genomicFields.forEach((g: string) => {
+                            genomicFields.forEach((positionCol: string) => {
                                 if (!row[chromosomeField]) {
                                     // TODO:
                                     return;
                                 }
+                                const chromPosition = row[positionCol];
+                                const chromName = row[chromosomeField];
                                 try {
-                                    if (this.#assembly !== 'unknown') {
-                                        const chrName = sanitizeChrName(
-                                            row[chromosomeField],
-                                            this.#assembly,
-                                            chromosomePrefix
-                                        );
-                                        row[g] = computeChromSizes(this.#assembly).interval[chrName][0] + +row[g];
-                                    } else {
-                                        // In this case, we use the genomic position as it is w/o adding the cumulative length of chr.
-                                        // So, nothing to do additionally.
-                                    }
+                                    row[positionCol] = this.#calcCumulativePos(chromName, chromPosition);
                                 } catch (e) {
-                                    // genomic position did not parse properly
                                     successfullyGotChrInfo = false;
                                 }
                             });
                         }
-
-                        if (!successfullyGotChrInfo) {
-                            // store row only when chromosome information is correctly parsed
-                            return undefined;
-                        }
+                        // store row only when chromosome information is correctly parsed
+                        if (!successfullyGotChrInfo) return undefined;
 
                         return row;
                     });
@@ -182,6 +156,20 @@ function CsvDataFetcher(HGC: any, ...args: any): any {
                 });
         }
 
+        /**
+         * Calculates the cumulative chromosome position based on the chromosome name and position
+         * @param chromName A string, the name of the chromosome
+         * @param chromPosition A number, the position within the chromosome
+         */
+        #calcCumulativePos(chromName: string, chromPosition: number) {
+            if (this.#assembly !== 'unknown') {
+                // This means we need to use the relative position considering the start position of individual chr.
+                const chrName = sanitizeChrName(chromName, this.#assembly, this.dataConfig.chromosomePrefix);
+                return computeChromSizes(this.#assembly).interval[chrName][0] + +chromPosition;
+            } else {
+                return chromPosition;
+            }
+        }
         /**
          * Called in TiledPixiTrack
          */
