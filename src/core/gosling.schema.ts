@@ -912,7 +912,7 @@ export interface CsvData {
     headerNames?: string[];
 
     /**
-     * experimental
+     * Specify the chromosome prefix if chromosomes are denoted using a prefix besides "chr" or a number
      */
     chromosomePrefix?: string;
 
