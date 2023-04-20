@@ -133,54 +133,51 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
     /* Custom loading label */
     const loadingTextStyle = getTextStyle({ color: 'black', size: 12 });
 
+    /**
+     * The main plugin track in Gosling. This is a versetile plugin track for HiGlass which relies on GoslingTrackModel
+     * to keep track of mouse event and channel scales.
+     */
     class GoslingTrackClass extends BarTrack<Tile, typeof options> {
-        // This is tracking the xScale of an entire view, which is used when no tiling concepts are used
-        drawnAtScale = HGC.libraries.d3Scale.scaleLinear();
-        scalableGraphics: Record<string, PIXI.Graphics> = {};
-        extent = { min: Number.MAX_SAFE_INTEGER, max: Number.MIN_SAFE_INTEGER };
-        hideMousePosition?: () => void;
+        /* *
+         *
+         *  Properties
+         *
+         * */
 
-        private tileSize: number;
-        private mRangeBrush: LinearBrushModel;
+        tileSize: number;
+        mRangeBrush: LinearBrushModel;
+        #assembly?: Assembly; // Used to get the relative genomic position
+        #processedTileInfo: Record<string, ProcessedTileInfo>;
+        // Used in mark/legend.ts
+        gLegend? = HGC.libraries.d3Selection.select(context.svgElement).append('g');
+        displayedLegends: DisplayedLegend[] = []; // Store the color legends added so far so that we can avoid overlaps and redundancy
+        // Used in mark/text.ts
+        textGraphics: unknown[] = [];
+        textsBeingUsed = 0;
+        // Mouse fields
+        pMouseHover = new HGC.libraries.PIXI.Graphics();
+        pMouseSelection = new HGC.libraries.PIXI.Graphics();
+        #mouseDownX = 0;
+        #mouseDownY = 0;
+        #isRangeBrushActivated = false;
+        #gBrush = HGC.libraries.d3Selection.select(context.svgElement).append('g');
+        #loadingTextStyleObj = new HGC.libraries.PIXI.TextStyle(loadingTextStyle);
+        #loadingTextBg = new HGC.libraries.PIXI.Graphics();
+        #loadingText = new HGC.libraries.PIXI.Text('', loadingTextStyle);
+        prevVisibleAndFetchedTiles?: Tile[];
 
-        private assembly?: Assembly;
-        private processedTileInfo: Record<string, ProcessedTileInfo>;
-        // TODO: add members that are used explicitly in the code
-        //
-        // Brushes on the color legend
-        private gLegend? = HGC.libraries.d3Selection.select(context.svgElement).append('g');
-        private pMouseHover = new HGC.libraries.PIXI.Graphics();
-        private pMouseSelection = new HGC.libraries.PIXI.Graphics();
-        private isRangeBrushActivated = false;
-        private gBrush = HGC.libraries.d3Selection.select(context.svgElement).append('g');
-
-        private loadingTextStyleObj = new HGC.libraries.PIXI.TextStyle(loadingTextStyle);
-        private loadingTextBg = new HGC.libraries.PIXI.Graphics();
-        private loadingText = new HGC.libraries.PIXI.Text('', loadingTextStyle);
-
-        private svgData: unknown[] = [];
-        private textGraphics: unknown[] = [];
-        /** used to improve the performance of text rendering */
-        private textsBeingUsed = 0;
-        private loadingStatus = { loading: 0, processing: 0, rendering: 0 };
-
-        private prevVisibleAndFetchedTiles?: Tile[];
-        private oldDimensions?: [number, number];
-        private xDomain?: number[];
-        private xRange?: number[];
-
-        private mouseDownX = 0;
-        private mouseDownY = 0;
-
-        /** Store the color legends added so far so that we can avoid overlaps and redundancy */
-        private displayedLegends: DisplayedLegend[] = [];
+        /* *
+         *
+         *  Constructor
+         *
+         * */
 
         constructor() {
             super(context, options);
 
             context.dataFetcher.track = this;
-            this.processedTileInfo = {};
-            this.assembly = this.options.spec.assembly;
+            this.#processedTileInfo = {};
+            this.#assembly = this.options.spec.assembly;
 
             // Add unique IDs to each of the overlaid tracks that will be rendered independently.
             if ('overlay' in this.options.spec) {
@@ -206,28 +203,26 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
 
             // Enable click event
             this.pMask.interactive = true;
-            this.mRangeBrush = new LinearBrushModel(this.gBrush, HGC.libraries, this.options.spec.style?.brush);
-            this.mRangeBrush.on('brush', this.onRangeBrush.bind(this));
+            this.mRangeBrush = new LinearBrushModel(this.#gBrush, HGC.libraries, this.options.spec.style?.brush);
+            this.mRangeBrush.on('brush', this.#onRangeBrush.bind(this));
 
             this.pMask.on('mousedown', (e: PIXI.InteractionEvent) => {
                 const { x, y } = e.data.getLocalPosition(this.pMain);
-                this.onMouseDown(x, y, e.data.originalEvent.altKey);
+                this.#onMouseDown(x, y, e.data.originalEvent.altKey);
             });
             this.pMask.on('mouseup', (e: PIXI.InteractionEvent) => {
                 const { x, y } = e.data.getLocalPosition(this.pMain);
-                this.onMouseUp(x, y);
+                this.#onMouseUp(x, y);
             });
             this.pMask.on('mousemove', (e: PIXI.InteractionEvent) => {
                 const { x } = e.data.getLocalPosition(this.pMain);
-                this.onMouseMove(x);
+                this.#onMouseMove(x);
             });
-            this.pMask.on('mouseout', this.onMouseOut.bind(this));
-
-            // Remove a mouse graphic if created by a parent, and draw ourselves
-            // https://github.com/higlass/higlass/blob/38f0c4415f0595c3b9d685a754d6661dc9612f7c/app/scripts/utils/show-mouse-position.js#L28
-            // this.getIsFlipped = () => { return this.originalSpec.orientation === 'vertical' };
+            this.pMask.on('mouseout', this.#onMouseOut.bind(this));
             this.flipText = this.options.spec.orientation === 'vertical';
 
+            // Remove a mouse graphic if created by a parent, and draw ourselves.
+            // See https://github.com/higlass/higlass/blob/38f0c4415f0595c3b9d685a754d6661dc9612f7c/app/scripts/utils/show-mouse-position.js#L28
             if (this.hideMousePosition) {
                 this.hideMousePosition();
                 this.hideMousePosition = undefined;
@@ -243,10 +238,10 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
             // We do not use HiGlass' trackNotFoundText
             this.pLabel.removeChild(this.trackNotFoundText);
 
-            this.loadingText.anchor.x = 1;
-            this.loadingText.anchor.y = 1;
-            this.pLabel.addChild(this.loadingTextBg);
-            this.pLabel.addChild(this.loadingText);
+            this.#loadingText.anchor.x = 1;
+            this.#loadingText.anchor.y = 1;
+            this.pLabel.addChild(this.#loadingTextBg);
+            this.pLabel.addChild(this.#loadingText);
 
             // This improves the arc/link rendering performance
             HGC.libraries.PIXI.GRAPHICS_CURVES.adaptive = this.options.spec.style?.enableSmoothPath ?? false;
@@ -256,29 +251,23 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
             }
         }
 
-        /* ----------------------------------- RENDERING CYCLE ----------------------------------- */
+        /* *
+         *
+         *  Rendering Cycle Methods
+         *
+         * */
 
-        // !! Be aware that this function is called in the middle of `constructor()` by a parent class (i.e., `super(...)`).
-        // https://github.com/higlass/higlass/blob/387a03e877dcfa4c2cfeabc0869375b58c0b362d/app/scripts/TiledPixiTrack.js#L216
-        // This means, some class properties can be still `undefined`.
         /**
-         * Draw all tiles from the bottom.
-         * (https://github.com/higlass/higlass/blob/54f5aae61d3474f9e868621228270f0c90ef9343/app/scripts/TiledPixiTrack.js#L727)
+         * Draw all tiles from the bottom. Called from TiledPixiTrack constructor, so all methods called must be
+         * public. https://github.com/higlass/higlass/blob/387a03e877dcfa4c2cfeabc0869375b58c0b362d/app/scripts/TiledPixiTrack.js#L216
+         * Overrides draw() in BarTrack.
+         * This means some class properties can be still `undefined`.
          */
-        draw() {
+        override draw() {
             if (PRINT_RENDERING_CYCLE) console.warn('draw()');
             this.clearMouseEventData();
-            this.svgData = [];
             this.textsBeingUsed = 0;
             this.pMouseHover?.clear();
-
-            // this.pMain.clear();
-            // this.pMain.removeChildren();
-
-            // this.pBackground.clear();
-            // this.pBackground.removeChildren();
-            // this.pBorder.clear();
-            // this.pBorder.removeChildren();
 
             const processTilesAndDraw = () => {
                 // Preprocess all tiles at once so that we can share scales across tiles.
@@ -306,29 +295,29 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
 
         /*
          * Do whatever is necessary before rendering a new tile. This function is called from `receivedTiles()`.
+         * Overrides initTile in BarTrack
          * (Refer to https://github.com/higlass/higlass/blob/54f5aae61d3474f9e868621228270f0c90ef9343/app/scripts/HorizontalLine1DPixiTrack.js#L50)
          */
-        initTile(tile: Tile) {
+        override initTile(tile: Tile) {
             if (PRINT_RENDERING_CYCLE) console.warn('initTile(tile)');
-
-            // super.initTile(tile); // This calls `drawTile()`
-
-            // Since `super.initTile(tile)` prints warning, we call `drawTile` ourselves without calling `super.initTile(tile)`.
+            // Since `super.initTile(tile)` prints warning, we call `drawTile` ourselves without calling
+            // `super.initTile(tile)`.
             this.drawTile(tile);
         }
 
-        updateTile(/* tile: Tile */) {} // Never mind about this function for the simplicity.
-        renderTile(/* tile: Tile */) {} // Never mind about this function for the simplicity.
+        override updateTile(/* tile: Tile */) {} // Never mind about this function for the simplicity.
+        override renderTile(/* tile: Tile */) {} // Never mind about this function for the simplicity.
 
         /**
-         * Display a tile upon receiving a new one or when explicitly called by a developer, e.g., calling `this.draw()`
+         * Display a tile upon receiving a new one or when explicitly called by a developer, e.g., calling
+         * `this.draw()`. Overrides drawTile in BarTrack
          */
-        drawTile(tile: Tile) {
+        override drawTile(tile: Tile) {
             if (PRINT_RENDERING_CYCLE) console.warn('drawTile(tile)');
 
             tile.drawnAtScale = this._xScale.copy(); // being used in `super.draw()`
 
-            const tileInfo = this.processedTileInfo[tile.tileId];
+            const tileInfo = this.#processedTileInfo[tile.tileId];
             if (!tileInfo) {
                 // We do not have a track model prepared to visualize
                 return;
@@ -345,8 +334,8 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
             this.pBorder.removeChildren();
             this.displayedLegends = [];
 
-            // !! A single tile contains one track or multiple tracks overlaid
-            /* Render marks and embellishments */
+            // Because a single tile contains one track or multiple tracks overlaid, we draw marks and embellishments
+            // for each GoslingTrackModel
             tileInfo.goslingModels.forEach((model: GoslingTrackModel) => {
                 // check visibility condition
                 const trackWidth = this.dimensions[0];
@@ -355,14 +344,6 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
                 if (!model.trackVisibility({ zoomLevel })) {
                     return;
                 }
-
-                // This is for testing the upcoming rendering methods
-                // if (usePrereleaseRendering(this.originalSpec)) {
-                //     // Use worker to create visual properties
-                //     drawScaleMark(HGC, this, tile, tm);
-                //     return;
-                // }
-
                 drawPreEmbellishment(HGC, this, tile, model, this.options.theme);
                 drawMark(HGC, this, tile, model);
                 drawPostEmbellishment(HGC, this, tile, model, this.options.theme);
@@ -372,14 +353,10 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
         }
 
         /**
-         * Render this track again using a new option when a user changed the option.
-         * (Refer to https://github.com/higlass/higlass/blob/54f5aae61d3474f9e868621228270f0c90ef9343/app/scripts/HorizontalLine1DPixiTrack.js#L75)
+         * Render this track again using a new option when a user changed the option. Overrides rerender in BarTrack.
          */
-        rerender(newOptions: GoslingTrackOptions) {
+        override rerender(newOptions: GoslingTrackOptions) {
             if (PRINT_RENDERING_CYCLE) console.warn('rerender(options)');
-            // !! We only call draw for the simplicity
-            // super.rerender(newOptions); // This calls `renderTile()` on every tiles
-
             this.options = newOptions;
 
             if (this.options.spec.layout === 'circular') {
@@ -390,36 +367,31 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
             }
 
             this.clearMouseEventData();
-            this.svgData = [];
             this.textsBeingUsed = 0;
-
-            // this.flipText = this.originalSpec.orientation === 'vertical';
-
-            // if (this.hideMousePosition) {
-            //     this.hideMousePosition();
-            //     this.hideMousePosition = undefined;
-            // }
-            // if (this.options?.showMousePosition && !this.hideMousePosition) {
-            //     this.hideMousePosition = showMousePosition(
-            //       this,
-            //       Is2DTrack(resolveSuperposedTracks(this.originalSpec)[0]),
-            //       this.isShowGlobalMousePosition(),
-            //     );
-            // }
 
             this.processAllTiles(true);
             this.draw();
             this.forceDraw();
         }
-
+        /**
+         * Clears MouseEventModel from each GoslingTrackModel. Must be a public method because it is called from draw()
+         */
         clearMouseEventData() {
             this.visibleAndFetchedGoslingModels().forEach(model => model.getMouseEventModel().clear());
+        }
+        /**
+         * Collect all gosling models that correspond to the tiles that are both visible and fetched.
+         */
+        visibleAndFetchedGoslingModels() {
+            return this.visibleAndFetchedTiles().flatMap(
+                tile => this.#processedTileInfo[tile.tileId]?.goslingModels ?? []
+            );
         }
 
         /**
          * End of the rendering cycle. This function is called when the track is removed entirely.
          */
-        remove() {
+        override remove() {
             super.remove();
 
             if (this.gLegend) {
@@ -429,25 +401,21 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
             this.mRangeBrush.remove();
         }
         /*
-         * Rerender all tiles when track size is changed.
+         * Rerender all tiles when track size is changed. Overrides method in TiledPixiTrack
          * (Refer to https://github.com/higlass/higlass/blob/54f5aae61d3474f9e868621228270f0c90ef9343/app/scripts/PixiTrack.js#L186).
          */
-        setDimensions(newDimensions: [number, number]) {
+        override setDimensions(newDimensions: [number, number]) {
             if (PRINT_RENDERING_CYCLE) console.warn('setDimensions()');
 
-            this.oldDimensions = this.dimensions; // initially, [1, 1]
             super.setDimensions(newDimensions); // This simply updates `this._xScale` and `this._yScale`
 
             this.mRangeBrush.setSize(newDimensions[1]);
-
-            // const visibleAndFetched = this.visibleAndFetchedTiles();
-            // visibleAndFetched.map((tile: Tile) => this.initTile(tile));
         }
 
         /**
          * Record new position.
          */
-        setPosition(newPosition: [number, number]) {
+        override setPosition(newPosition: [number, number]) {
             super.setPosition(newPosition); // This simply changes `this.position`
 
             [this.pMain.position.x, this.pMain.position.y] = this.position;
@@ -468,7 +436,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
          * (https://github.com/higlass/higlass/blob/54f5aae61d3474f9e868621228270f0c90ef9343/app/scripts/HorizontalLine1DPixiTrack.js#L215)
          * For brushing, refer to https://github.com/higlass/higlass/blob/caf230b5ee41168ea491572618612ac0cc804e5a/app/scripts/HeatmapTiledPixiTrack.js#L1493
          */
-        zoomed(newXScale: ScaleLinear<number, number>, newYScale: ScaleLinear<number, number>) {
+        override zoomed(newXScale: ScaleLinear<number, number>, newYScale: ScaleLinear<number, number>) {
             if (PRINT_RENDERING_CYCLE) console.warn('zoomed()');
 
             const range = this.mRangeBrush.getRange();
@@ -476,29 +444,52 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
                 range ? [newXScale(this._xScale.invert(range[0])), newXScale(this._xScale.invert(range[1]))] : null
             );
 
-            // super.zoomed(newXScale, newYScale); // This function updates `this._xScale` and `this._yScale` and call this.draw();
             this.xScale(newXScale);
             this.yScale(newYScale);
 
             this.refreshTiles();
-
-            // if (this.scalableGraphics) {
-            // this.scaleScalableGraphics(Object.values(this.scalableGraphics), newXScale, this.drawnAtScale);
-            // }
-
-            // if (!usePrereleaseRendering(this.originalSpec)) {
             this.draw();
-            // }
             this.forceDraw();
         }
 
+        /* *
+         *
+         *  Tile and data processing methods
+         *
+         * */
+
         /**
-         * This is currently for testing the new way of rendering visual elements.
+         * Gets all tiles and generates tabular data and GoslingTrackModels for each tile. Called by this.draw(), so
+         * this method must be public.
+         * @param force if true then tabular data gets regenerated
+         */
+        processAllTiles(force = false) {
+            this.tileSize = this.tilesetInfo?.tile_size ?? 1024;
+
+            const tiles = this.visibleAndFetchedTiles();
+
+            // generated tabular data
+            tiles.forEach(tile => this.#generateTabularData(tile, force));
+
+            // combine tabular data to the first tile if needed
+            this.combineAllTilesIfNeeded();
+
+            // apply data transforms to the tabular data and generate track models
+            const models = tiles.flatMap(tile => this.transformDataAndCreateModels(tile));
+
+            shareScaleAcrossTracks(models);
+
+            const flatTileData = ([] as Datum[]).concat(...models.map(d => d.data()));
+            if (flatTileData.length !== 0) {
+                publish('rawData', { id: context.viewUid, data: flatTileData });
+            }
+        }
+
+        /**
+         * This is currently for testing the new way of rendering visual elements. Called by this.draw()
          */
         async updateTileAsync<T extends Datum>(tabularDataFetcher: TabularDataFetcher<T>, callback: () => void) {
             if (!this.tilesetInfo) return;
-            this.xDomain = this._xScale.domain();
-            this.xRange = this._xScale.range();
 
             const tabularData = await tabularDataFetcher.getTabularData(
                 Object.values(this.fetchedTiles).map(x => x.remoteId)
@@ -516,37 +507,10 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
         }
 
         /**
-         * Stretch out the scaleble graphics to have proper effect upon zoom and pan.
+         * Overrides method in Tiled1DPixiTrack. It is called in the constructor, `super(context, options)`.
+         * So be aware to use defined variables.
          */
-        scaleScalableGraphics(
-            graphics: PIXI.Graphics[],
-            xScale: ScaleLinear<number, number>,
-            drawnAtScale: ScaleLinear<number, number>
-        ) {
-            const drawnAtScaleExtent = drawnAtScale.domain()[1] - drawnAtScale.domain()[0];
-            const xScaleExtent = xScale.domain()[1] - xScale.domain()[0];
-
-            const tileK = drawnAtScaleExtent / xScaleExtent;
-            const newRange = xScale.domain().map(drawnAtScale);
-
-            const posOffset = newRange[0];
-            graphics.forEach(g => {
-                g.scale.x = tileK;
-                g.position.x = -posOffset * tileK;
-            });
-        }
-
-        /**
-         * Collect all gosling models that correspond to the tiles that are both visible and fetched.
-         */
-        visibleAndFetchedGoslingModels() {
-            return this.visibleAndFetchedTiles().flatMap(
-                tile => this.processedTileInfo[tile.tileId]?.goslingModels ?? []
-            );
-        }
-
-        // !! This is called in the constructor, `super(context, options)`. So be aware to use variables that is prepared.
-        calculateVisibleTiles() {
+        override calculateVisibleTiles() {
             if (!this.tilesetInfo) return;
             if (isTabularDataFetcher(this.dataFetcher)) {
                 const tiles = HGC.utils.trackUtils.calculate1DVisibleTiles(this.tilesetInfo, this._xScale);
@@ -594,7 +558,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
                         );
                     }
 
-                    const tiles = this.tilesToId(xTiles, yTiles, zoomLevel);
+                    const tiles = GoslingTrackClass.#tilesToId(xTiles, yTiles, zoomLevel);
 
                     this.setVisibleTiles(tiles);
                 } else {
@@ -621,27 +585,33 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
                         );
                     }
 
-                    const tiles = this.tilesToId(xTiles, yTiles, zoomLevel);
+                    const tiles = GoslingTrackClass.#tilesToId(xTiles, yTiles, zoomLevel);
                     this.setVisibleTiles(tiles);
                 }
             }
         }
-
-        private get binsPerTile() {
-            let maybeValue: number | undefined;
-            if (this.tilesetInfo) {
-                maybeValue =
-                    'bins_per_dimension' in this.tilesetInfo
-                        ? this.tilesetInfo.bins_per_dimension
-                        : this.tilesetInfo.tile_size;
+        /**
+         * Convert tile positions to tile IDs
+         */
+        static #tilesToId(
+            xTiles: number[],
+            yTiles: number[] | undefined,
+            zoomLevel: number
+        ): [number, number][] | [number, number, number][] {
+            if (!yTiles) {
+                // this means only the `x` axis is being used
+                return xTiles.map(x => [zoomLevel, x]);
             }
-            return maybeValue ?? 256;
+            // this means both `x` and `y` axes are being used together
+            const tiles: [number, number, number][] = [];
+            xTiles.forEach(x => yTiles.forEach(y => tiles.push([zoomLevel, x, y])));
+            return tiles;
         }
 
         /**
-         * Get the tile's position in its coordinate system.
+         * Get the tile's position in its coordinate system. Overrides method in Tiled1DPixiTrack.
          */
-        getTilePosAndDimensions(zoomLevel: number, tilePos: [number, number]) {
+        override getTilePosAndDimensions(zoomLevel: number, tilePos: [number, number]) {
             if (!this.tilesetInfo) {
                 throw Error('tilesetInfo not parsed');
             }
@@ -656,7 +626,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
 
                 const [xTilePos, yTilePos] = tilePos;
 
-                const tileWidth = chosenResolution * this.binsPerTile;
+                const tileWidth = chosenResolution * this.#binsPerTile;
                 const tileHeight = tileWidth;
 
                 const tileX = tileWidth * xTilePos;
@@ -689,117 +659,66 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
                 };
             }
         }
-
-        /** Convert tile positions to tile IDs */
-        tilesToId(
-            xTiles: number[],
-            yTiles: number[] | undefined,
-            zoomLevel: number
-        ): [number, number][] | [number, number, number][] {
-            if (!yTiles) {
-                // this means only the `x` axis is being used
-                return xTiles.map(x => [zoomLevel, x]);
+        get #binsPerTile() {
+            let maybeValue: number | undefined;
+            if (this.tilesetInfo) {
+                maybeValue =
+                    'bins_per_dimension' in this.tilesetInfo
+                        ? this.tilesetInfo.bins_per_dimension
+                        : this.tilesetInfo.tile_size;
             }
-            // this means both `x` and `y` axes are being used together
-            const tiles: [number, number, number][] = [];
-            xTiles.forEach(x => yTiles.forEach(y => tiles.push([zoomLevel, x, y])));
-            return tiles;
+            return maybeValue ?? 256;
         }
 
-        receivedTiles(loadedTiles: Record<string, Tile>) {
+        /**
+         * Gets the indices of the visible data a tile. Overrides method in Tiled1DPixiTrack
+         */
+        override getIndicesOfVisibleDataInTile(tile: Tile): [number, number] {
+            const visible = this._xScale.range();
+
+            if (!this.tilesetInfo || !tile.tileData.tilePos || !('dense' in tile.tileData)) {
+                return [0, 0];
+            }
+
+            const { tileX, tileWidth } = this.getTilePosAndDimensions(tile.tileData.zoomLevel, tile.tileData.tilePos);
+
+            const tileXScale = HGC.libraries.d3Scale
+                .scaleLinear()
+                .domain([0, this.#binsPerTile])
+                .range([tileX, tileX + tileWidth]);
+
+            const start = Math.max(0, Math.round(tileXScale.invert(this._xScale.invert(visible[0]))));
+            const end = Math.min(
+                tile.tileData.dense.length,
+                Math.round(tileXScale.invert(this._xScale.invert(visible[1])))
+            );
+
+            return [start, end];
+        }
+
+        /**
+         * Overrides method in TiledPixiTrack
+         * @param loadedTiles
+         */
+        override receivedTiles(loadedTiles: Record<string, Tile>) {
             // https://github.com/higlass/higlass/blob/38f0c4415f0595c3b9d685a754d6661dc9612f7c/app/scripts/TiledPixiTrack.js#L637
             super.receivedTiles(loadedTiles);
             // some items in this.fetching are removed
             isTabularDataFetcher(this.dataFetcher) && this.drawLoadingCue();
         }
 
-        // https://github.com/higlass/higlass/blob/38f0c4415f0595c3b9d685a754d6661dc9612f7c/app/scripts/TiledPixiTrack.js#L342
-        removeOldTiles() {
+        /**
+         * Overrides method in TiledPixiTrack
+         */
+        override removeOldTiles() {
             super.removeOldTiles(); // some items are added to this.fetching
             isTabularDataFetcher(this.dataFetcher) && this.drawLoadingCue();
         }
 
         /**
-         * Show visual cue during waiting for visualizations being rendered.
-         */
-        drawLoadingCue() {
-            if (this.fetching.size) {
-                const margin = 6;
-
-                const text = `Fetching... ${Array.from(this.fetching).join(' ')}`;
-                this.loadingText.text = text;
-                this.loadingText.x = this.position[0] + this.dimensions[0] - margin / 2.0;
-                this.loadingText.y = this.position[1] + this.dimensions[1] - margin / 2.0;
-
-                // Show background
-                const metric = HGC.libraries.PIXI.TextMetrics.measureText(text, this.loadingTextStyleObj);
-                const { width: w, height: h } = metric;
-
-                this.loadingTextBg.clear();
-                this.loadingTextBg.lineStyle(1, colorToHex('grey'), 1, 0.5);
-                this.loadingTextBg.beginFill(colorToHex('white'), 0.8);
-                this.loadingTextBg.drawRect(
-                    this.position[0] + this.dimensions[0] - w - margin - 1,
-                    this.position[1] + this.dimensions[1] - h - margin - 1,
-                    w + margin,
-                    h + margin
-                );
-
-                this.loadingText.visible = true;
-                this.loadingTextBg.visible = true;
-            } else {
-                this.loadingText.visible = false;
-                this.loadingTextBg.visible = false;
-            }
-        }
-
-        updateScaleOffsetFromOriginalSpec(
-            _renderingId: string,
-            scaleOffset: [number, number],
-            channelKey: 'color' | 'stroke'
-        ) {
-            resolveSuperposedTracks(this.options.spec).map(spec => {
-                if (spec._renderingId === _renderingId) {
-                    const channel = spec[channelKey];
-                    if (IsChannelDeep(channel)) {
-                        channel.scaleOffset = scaleOffset;
-                    }
-                }
-            });
-        }
-
-        shareScaleOffsetAcrossTracksAndTiles(scaleOffset: [number, number], channelKey: 'color' | 'stroke') {
-            const models = this.visibleAndFetchedGoslingModels();
-            models.forEach(d => {
-                const channel = d.spec()[channelKey];
-                if (IsChannelDeep(channel)) {
-                    channel.scaleOffset = scaleOffset;
-                }
-                const channelOriginal = d.originalSpec()[channelKey];
-                if (IsChannelDeep(channelOriginal)) {
-                    channelOriginal.scaleOffset = scaleOffset;
-                }
-            });
-        }
-
-        /**
-         * Check whether tiles should be merged.
-         */
-        shouldCombineTiles() {
-            const includesDisplaceTransform = hasDataTransform(this.options.spec, 'displace');
-            // we do not need to combine dense tiles (from multivec, vector, matrix)
-            const hasDenseTiles = () => {
-                const tiles = this.visibleAndFetchedTiles();
-                return tiles.length >= 1 && 'dense' in tiles[0].tileData;
-            };
-            // BAM data fetcher already combines the datasets;
-            const isBamDataFetcher = this.dataFetcher instanceof BamDataFetcher;
-            return (includesDisplaceTransform && !hasDenseTiles()) || isBamDataFetcher;
-        }
-
-        /**
          * Combile multiple tiles into the last tile.
          * This is sometimes necessary, for example, when applying a displacement algorithm to all tiles at once.
+         * Called by this.processAllTiles() so this method needs to be public.
          */
         combineAllTilesIfNeeded() {
             if (!this.shouldCombineTiles()) return;
@@ -817,7 +736,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
             let merged: Datum[] = [];
 
             tiles.forEach((tile, i) => {
-                const tileInfo = this.processedTileInfo[tile.tileId];
+                const tileInfo = this.#processedTileInfo[tile.tileId];
                 if (tileInfo) {
                     // Combine data
                     merged = [...merged, ...tileInfo.tabularData];
@@ -827,7 +746,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
                 }
             });
 
-            const firstTileInfo = this.processedTileInfo[tiles[0].tileId];
+            const firstTileInfo = this.#processedTileInfo[tiles[0].tileId];
             firstTileInfo.tabularData = merged;
 
             // Remove duplicated if any. Sparse tiles can have duplications.
@@ -835,53 +754,25 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
                 firstTileInfo.tabularData = uniqBy(firstTileInfo.tabularData, 'uid');
             }
         }
-
-        processAllTiles(force = false) {
-            this.tileSize = this.tilesetInfo?.tile_size ?? 1024;
-
-            const tiles = this.visibleAndFetchedTiles();
-
-            // generated tabular data
-            tiles.forEach(tile => this.generateTabularData(tile, force));
-
-            // combine tabular data to the first tile if needed
-            this.combineAllTilesIfNeeded();
-
-            // apply data transforms to the tabular data and generate track models
-            const models = tiles.flatMap(tile => this.transformDataAndCreateModels(tile));
-
-            shareScaleAcrossTracks(models);
-
-            const flatTileData = ([] as Datum[]).concat(...models.map(d => d.data()));
-            if (flatTileData.length !== 0) {
-                publish('rawData', { id: context.viewUid, data: flatTileData });
-            }
-
-            // console.log('processed gosling model', models);
-
-            // IMPORTANT: If no genomic fields specified, no point to use multiple tiles, i.e., we need to draw a track only once with the data combined.
-            /*
-            if (!getGenomicChannelKeyFromTrack(this.originalSpec) && false) {
-                // TODO:
-                const visibleModels: GoslingTrackModel[][] = this.visibleAndFetchedTiles().map(
-                    (d: any) => d.goslingModels
-                );
-                const modelsWeUse: GoslingTrackModel[] = visibleModels[0];
-                const modelsWeIgnore: GoslingTrackModel[][] = visibleModels.slice(1);
-
-                // concatenate the rows in the data
-                modelsWeIgnore.forEach((ignored, i) => {
-                    modelsWeUse.forEach(m => {
-                        m.addDataRows(ignored[0].data());
-                    });
-                    this.visibleAndFetchedTiles()[i + 1].goslingModels = [];
-                });
-            }
-            */
+        /**
+         * Check whether tiles should be merged. Needs to be public since called by combineAllTilesIfNeeded()
+         */
+        shouldCombineTiles() {
+            const includesDisplaceTransform = hasDataTransform(this.options.spec, 'displace');
+            // we do not need to combine dense tiles (from multivec, vector, matrix)
+            const hasDenseTiles = () => {
+                const tiles = this.visibleAndFetchedTiles();
+                return tiles.length >= 1 && 'dense' in tiles[0].tileData;
+            };
+            // BAM data fetcher already combines the datasets;
+            const isBamDataFetcher = this.dataFetcher instanceof BamDataFetcher;
+            return (includesDisplaceTransform && !hasDenseTiles()) || isBamDataFetcher;
         }
 
-        /** Get resolved tracks that should be rendered by a `gosling-track` track */
-        getResolvedTracks() {
+        /**
+         * Creates an array of SingleTracks if there are overlaid tracks
+         */
+        #getResolvedTracks() {
             const copy = structuredClone(this.options.spec);
             // Brushes are drawn by another plugin track.
             return resolveSuperposedTracks(copy).filter(t => t.mark !== 'brush');
@@ -889,10 +780,9 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
 
         /**
          * Construct tabular data from a higlass tileset and a gosling track model.
-         * Return the generated gosling track model.
          */
-        generateTabularData(tile: Tile, force = false) {
-            if (this.processedTileInfo[tile.tileId] && !force) {
+        #generateTabularData(tile: Tile, force = false) {
+            if (this.#processedTileInfo[tile.tileId] && !force) {
                 // we do not need to re-construct tabular data
                 return;
             }
@@ -903,7 +793,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
             }
 
             const tileInfo = initProcessedTileInfo();
-            const resolvedTracks = this.getResolvedTracks();
+            const resolvedTracks = this.#getResolvedTracks();
 
             if (resolvedTracks.length === 0) {
                 // we do not have enough track to display
@@ -921,7 +811,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
                 // generate tabular data
                 const { tileX, tileY, tileWidth, tileHeight } = this.getTilePosAndDimensions(
                     tile.tileData.zoomLevel,
-                    tile.tileData.tilePos!
+                    tile.tileData.tilePos
                 );
 
                 const sparse = 'length' in tile.tileData ? Array.from(tile.tileData) : [];
@@ -941,14 +831,14 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
                 }
             }
 
-            this.processedTileInfo[tile.tileId] = tileInfo;
+            this.#processedTileInfo[tile.tileId] = tileInfo;
         }
 
         /**
-         * Apply data transformation to each of the overlaid tracks and generate gosling models
+         * Apply data transformation to each of the overlaid tracks and generate GoslingTrackModels.
          */
         transformDataAndCreateModels(tile: Tile) {
-            const tileInfo = this.processedTileInfo[tile.tileId];
+            const tileInfo = this.#processedTileInfo[tile.tileId];
 
             if (!tileInfo || tileInfo.skipRendering) {
                 // this probably means the tile data has been merged to another tile
@@ -959,7 +849,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
             // clear the array first
             tileInfo.goslingModels = [];
 
-            const resolvedTracks = this.getResolvedTracks();
+            const resolvedTracks = this.#getResolvedTracks();
             resolvedTracks.forEach(resolvedSpec => {
                 let tabularDataTransformed = Array.from(tileInfo.tabularData);
                 resolvedSpec.dataTransform?.forEach(t => {
@@ -1041,51 +931,91 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
             return tileInfo.goslingModels;
         }
 
-        getIndicesOfVisibleDataInTile(tile: Tile): [number, number] {
-            const visible = this._xScale.range();
+        /* *
+         *
+         *  Mouse methods
+         *
+         * */
 
-            if (!this.tilesetInfo || !tile.tileData.tilePos || !('dense' in tile.tileData)) {
-                return [0, 0];
+        #onMouseDown(mouseX: number, mouseY: number, isAltPressed: boolean) {
+            // Record these so that we do not triger click event when dragged.
+            this.#mouseDownX = mouseX;
+            this.#mouseDownY = mouseY;
+
+            // Determine whether to activate a range brush
+            const mouseEvents = this.options.spec.experimental?.mouseEvents;
+            const rangeSelectEnabled = !!mouseEvents || (IsMouseEventsDeep(mouseEvents) && !!mouseEvents.rangeSelect);
+            this.#isRangeBrushActivated = rangeSelectEnabled && isAltPressed;
+
+            this.pMouseHover.clear();
+        }
+
+        #onMouseMove(mouseX: number) {
+            if (this.options.spec.layout === 'circular') {
+                // TODO: We do not yet support range selection on circular tracks
+                return;
             }
 
-            const { tileX, tileWidth } = this.getTilePosAndDimensions(tile.tileData.zoomLevel, tile.tileData.tilePos);
-
-            const tileXScale = HGC.libraries.d3Scale
-                .scaleLinear()
-                .domain([0, this.binsPerTile])
-                .range([tileX, tileX + tileWidth]);
-
-            const start = Math.max(0, Math.round(tileXScale.invert(this._xScale.invert(visible[0]))));
-            const end = Math.min(
-                tile.tileData.dense.length,
-                Math.round(tileXScale.invert(this._xScale.invert(visible[1])))
-            );
-
-            return [start, end];
+            if (this.#isRangeBrushActivated) {
+                this.mRangeBrush.updateRange([mouseX, this.#mouseDownX]).drawBrush().visible().disable();
+            }
         }
 
-        /**
-         * Returns the minimum in the visible area (not visible tiles)
-         */
-        minVisibleValue() {
-            return 0;
+        #onMouseUp(mouseX: number, mouseY: number) {
+            // `trackClick` API
+            this.#publishTrackEvents('trackClick', mouseX, mouseY);
+
+            const mouseEvents = this.options.spec.experimental?.mouseEvents;
+            const clickEnabled = !!mouseEvents || (IsMouseEventsDeep(mouseEvents) && !!mouseEvents.click);
+            const isDrag = Math.sqrt((this.#mouseDownX - mouseX) ** 2 + (this.#mouseDownY - mouseY) ** 2) > 1;
+
+            if (!this.#isRangeBrushActivated && !isDrag) {
+                // Clicking outside the brush should remove the brush and the selection.
+                this.mRangeBrush.clear();
+                this.pMouseSelection.clear();
+            } else {
+                // Dragging ended, so enable adjusting the range brush
+                this.mRangeBrush.enable();
+            }
+
+            this.#isRangeBrushActivated = false;
+
+            if (!this.tilesetInfo) {
+                // Do not have enough information
+                return;
+            }
+
+            // `click` API
+            if (!isDrag && clickEnabled) {
+                // Identify the current position
+                const genomicPosition = getRelativeGenomicPosition(
+                    Math.floor(this._xScale.invert(mouseX)),
+                    this.#assembly
+                );
+
+                // Get elements within mouse
+                const capturedElements = this.#getElementsWithinMouse(mouseX, mouseY);
+
+                if (capturedElements.length !== 0) {
+                    publish('click', {
+                        id: context.viewUid,
+                        genomicPosition,
+                        data: capturedElements.map(d => d.value)
+                    });
+                }
+            }
         }
 
-        /**
-         * Returns the maximum in the visible area (not visible tiles)
-         */
-        maxVisibleValue() {
-            return 0;
+        #onMouseOut() {
+            this.#isRangeBrushActivated = false;
+            document.body.style.cursor = 'default';
+            this.pMouseHover.clear();
         }
-
-        exportSVG(): never {
-            throw new Error('exportSVG() not supported for gosling-track');
-        } // We do not support SVG export
 
         /**
          * From all tiles and overlaid tracks, collect element(s) that are withing a mouse position.
          */
-        getElementsWithinMouse(mouseX: number, mouseY: number) {
+        #getElementsWithinMouse(mouseX: number, mouseY: number) {
             const models = this.visibleAndFetchedGoslingModels();
 
             // TODO: `Omit` this properties in the schema of individual overlaid tracks.
@@ -1118,44 +1048,9 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
         }
 
         /**
-         * Highlight marks that are either mouse overed or selected.
-         */
-        highlightMarks(
-            g: PIXI.Graphics,
-            marks: MouseEventData[],
-            style: {
-                stroke: string;
-                strokeWidth: number;
-                strokeOpacity: number;
-                color: string;
-                opacity: number;
-            }
-        ) {
-            g.lineStyle(
-                style.strokeWidth,
-                colorToHex(style.stroke),
-                style.strokeOpacity, // alpha
-                0.5 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
-            );
-            g.beginFill(colorToHex(style.color), style.color === 'none' ? 0 : style.opacity);
-
-            marks.forEach(d => {
-                if (d.type === 'point') {
-                    const [x, y, r = 3] = d.polygon;
-                    g.drawCircle(x, y, r);
-                } else if (d.type === 'line') {
-                    g.moveTo(d.polygon[0], d.polygon[1]);
-                    flatArrayToPairArray(d.polygon).map(d => g.lineTo(d[0], d[1]));
-                } else {
-                    g.drawPolygon(d.polygon);
-                }
-            });
-        }
-
-        /**
          * Call track events (e.g., `trackClick` or `trackMouseOver`) based on a mouse position and the track display area.
          */
-        publishTrackEvents(eventType: 'trackClick' | 'trackMouseOver', mouseX: number, mouseY: number) {
+        #publishTrackEvents(eventType: 'trackClick' | 'trackMouseOver', mouseX: number, mouseY: number) {
             const [x, y] = this.position;
             const [width, height] = this.dimensions;
             if (this.options.spec.layout === 'circular') {
@@ -1189,7 +1084,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
             }
         }
 
-        onRangeBrush(range: [number, number] | null, skipApiTrigger = false) {
+        #onRangeBrush(range: [number, number] | null, skipApiTrigger = false) {
             this.pMouseSelection.clear();
 
             if (range === null) {
@@ -1230,7 +1125,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
                     this.pMain.addChild(g);
                 }
 
-                this.highlightMarks(
+                this.#highlightMarks(
                     g,
                     capturedElements,
                     Object.assign({}, DEFAULT_MOUSE_EVENT_STYLE, this.options.spec.style?.select)
@@ -1240,8 +1135,8 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
             /* API call */
             if (!skipApiTrigger) {
                 const genomicRange: [GenomicPosition, GenomicPosition] = [
-                    getRelativeGenomicPosition(Math.floor(this._xScale.invert(startX)), this.assembly),
-                    getRelativeGenomicPosition(Math.floor(this._xScale.invert(endX)), this.assembly)
+                    getRelativeGenomicPosition(Math.floor(this._xScale.invert(startX)), this.#assembly),
+                    getRelativeGenomicPosition(Math.floor(this._xScale.invert(endX)), this.#assembly)
                 ];
 
                 publish('rangeSelect', {
@@ -1254,86 +1149,51 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
             this.forceDraw();
         }
 
-        onMouseDown(mouseX: number, mouseY: number, isAltPressed: boolean) {
-            // Record these so that we do not triger click event when dragged.
-            this.mouseDownX = mouseX;
-            this.mouseDownY = mouseY;
-
-            // Determine whether to activate a range brush
-            const mouseEvents = this.options.spec.experimental?.mouseEvents;
-            const rangeSelectEnabled = !!mouseEvents || (IsMouseEventsDeep(mouseEvents) && !!mouseEvents.rangeSelect);
-            this.isRangeBrushActivated = rangeSelectEnabled && isAltPressed;
-
-            this.pMouseHover.clear();
-        }
-
-        onMouseMove(mouseX: number) {
-            if (this.options.spec.layout === 'circular') {
-                // TODO: We do not yet support range selection on circular tracks
-                return;
+        /**
+         * Highlight marks that are either mouse overed or selected.
+         */
+        #highlightMarks(
+            g: PIXI.Graphics,
+            marks: MouseEventData[],
+            style: {
+                stroke: string;
+                strokeWidth: number;
+                strokeOpacity: number;
+                color: string;
+                opacity: number;
             }
+        ) {
+            g.lineStyle(
+                style.strokeWidth,
+                colorToHex(style.stroke),
+                style.strokeOpacity, // alpha
+                0.5 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
+            );
+            g.beginFill(colorToHex(style.color), style.color === 'none' ? 0 : style.opacity);
 
-            if (this.isRangeBrushActivated) {
-                this.mRangeBrush.updateRange([mouseX, this.mouseDownX]).drawBrush().visible().disable();
-            }
-        }
-
-        onMouseUp(mouseX: number, mouseY: number) {
-            // `trackClick` API
-            this.publishTrackEvents('trackClick', mouseX, mouseY);
-
-            const mouseEvents = this.options.spec.experimental?.mouseEvents;
-            const clickEnabled = !!mouseEvents || (IsMouseEventsDeep(mouseEvents) && !!mouseEvents.click);
-            const isDrag = Math.sqrt((this.mouseDownX - mouseX) ** 2 + (this.mouseDownY - mouseY) ** 2) > 1;
-
-            if (!this.isRangeBrushActivated && !isDrag) {
-                // Clicking outside the brush should remove the brush and the selection.
-                this.mRangeBrush.clear();
-                this.pMouseSelection.clear();
-            } else {
-                // Dragging ended, so enable adjusting the range brush
-                this.mRangeBrush.enable();
-            }
-
-            this.isRangeBrushActivated = false;
-
-            if (!this.tilesetInfo) {
-                // Do not have enough information
-                return;
-            }
-
-            // `click` API
-            if (!isDrag && clickEnabled) {
-                // Identify the current position
-                const genomicPosition = getRelativeGenomicPosition(
-                    Math.floor(this._xScale.invert(mouseX)),
-                    this.assembly
-                );
-
-                // Get elements within mouse
-                const capturedElements = this.getElementsWithinMouse(mouseX, mouseY);
-
-                if (capturedElements.length !== 0) {
-                    publish('click', {
-                        id: context.viewUid,
-                        genomicPosition,
-                        data: capturedElements.map(d => d.value)
-                    });
+            marks.forEach(d => {
+                if (d.type === 'point') {
+                    const [x, y, r = 3] = d.polygon;
+                    g.drawCircle(x, y, r);
+                } else if (d.type === 'line') {
+                    g.moveTo(d.polygon[0], d.polygon[1]);
+                    flatArrayToPairArray(d.polygon).map(d => g.lineTo(d[0], d[1]));
+                } else {
+                    g.drawPolygon(d.polygon);
                 }
-            }
+            });
         }
 
-        onMouseOut() {
-            this.isRangeBrushActivated = false;
-            document.body.style.cursor = 'default';
-            this.pMouseHover.clear();
-        }
+        hideMousePosition?: () => void; // set in HorizontalTiled1DPixiTrack
 
-        getMouseOverHtml(mouseX: number, mouseY: number) {
+        /**
+         * Overrides method in HorizontalLine1DPixiTrack
+         */
+        override getMouseOverHtml(mouseX: number, mouseY: number) {
             // `trackMouseOver` API
-            this.publishTrackEvents('trackMouseOver', mouseX, mouseY);
+            this.#publishTrackEvents('trackMouseOver', mouseX, mouseY);
 
-            if (this.isRangeBrushActivated) {
+            if (this.#isRangeBrushActivated) {
                 // In the middle of drawing range brush.
                 return '';
             }
@@ -1346,10 +1206,10 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
             this.pMouseHover.clear();
 
             // Current position
-            const genomicPosition = getRelativeGenomicPosition(Math.floor(this._xScale.invert(mouseX)), this.assembly);
+            const genomicPosition = getRelativeGenomicPosition(Math.floor(this._xScale.invert(mouseX)), this.#assembly);
 
             // Get elements within mouse
-            const capturedElements = this.getElementsWithinMouse(mouseX, mouseY);
+            const capturedElements = this.#getElementsWithinMouse(mouseX, mouseY);
 
             // Change cursor
             // https://developer.mozilla.org/en-US/docs/Web/CSS/cursor
@@ -1372,7 +1232,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
                         this.pMain.addChild(g);
                     }
 
-                    this.highlightMarks(
+                    this.#highlightMarks(
                         g,
                         capturedElements,
                         Object.assign({}, DEFAULT_MOUSE_EVENT_STYLE, this.options.spec.style?.mouseOver)
@@ -1402,7 +1262,7 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
                                 value = HGC.libraries.d3Format.format(d.format)(+rawValue);
                             } else if (d.type === 'genomic') {
                                 // e.g., chr1:204,133
-                                const { chromosome, position } = getRelativeGenomicPosition(+rawValue, this.assembly);
+                                const { chromosome, position } = getRelativeGenomicPosition(+rawValue, this.#assembly);
                                 value = `${chromosome}:${HGC.libraries.d3Format.format(',')(position)}`;
                             }
 
@@ -1426,6 +1286,103 @@ const factory: PluginTrackFactory<Tile, GoslingTrackOptions> = (HGC, context, op
                 }
             }
             return '';
+        }
+
+        /* *
+         *
+         *  Other misc methods and overrides
+         *
+         * */
+
+        /**
+         * Returns the minimum in the visible area (not visible tiles).
+         * Overrides method in Tiled1DPixiTrack
+         */
+        override minVisibleValue() {
+            return 0;
+        }
+
+        /**
+         * Returns the maximum in the visible area (not visible tiles).
+         * Overrides method in Tiled1DPixiTrack.
+         */
+        override maxVisibleValue() {
+            return 0;
+        }
+        /**
+         * Overrides method in PixiTrack. SVG export is not supported.
+         */
+        override exportSVG(): never {
+            throw new Error('exportSVG() not supported for gosling-track');
+        }
+
+        /**
+         * Show visual cue during waiting for visualizations being rendered. Also called by data fetchers
+         */
+        drawLoadingCue() {
+            if (this.fetching.size) {
+                const margin = 6;
+
+                const text = `Fetching... ${Array.from(this.fetching).join(' ')}`;
+                this.#loadingText.text = text;
+                this.#loadingText.x = this.position[0] + this.dimensions[0] - margin / 2.0;
+                this.#loadingText.y = this.position[1] + this.dimensions[1] - margin / 2.0;
+
+                // Show background
+                const metric = HGC.libraries.PIXI.TextMetrics.measureText(text, this.#loadingTextStyleObj);
+                const { width: w, height: h } = metric;
+
+                this.#loadingTextBg.clear();
+                this.#loadingTextBg.lineStyle(1, colorToHex('grey'), 1, 0.5);
+                this.#loadingTextBg.beginFill(colorToHex('white'), 0.8);
+                this.#loadingTextBg.drawRect(
+                    this.position[0] + this.dimensions[0] - w - margin - 1,
+                    this.position[1] + this.dimensions[1] - h - margin - 1,
+                    w + margin,
+                    h + margin
+                );
+
+                this.#loadingText.visible = true;
+                this.#loadingTextBg.visible = true;
+            } else {
+                this.#loadingText.visible = false;
+                this.#loadingTextBg.visible = false;
+            }
+        }
+
+        /**
+         * Called in legend.ts
+         */
+        updateScaleOffsetFromOriginalSpec(
+            _renderingId: string,
+            scaleOffset: [number, number],
+            channelKey: 'color' | 'stroke'
+        ) {
+            resolveSuperposedTracks(this.options.spec).map(spec => {
+                if (spec._renderingId === _renderingId) {
+                    const channel = spec[channelKey];
+                    if (IsChannelDeep(channel)) {
+                        channel.scaleOffset = scaleOffset;
+                    }
+                }
+            });
+        }
+
+        /**
+         * Called in legend.ts
+         */
+        shareScaleOffsetAcrossTracksAndTiles(scaleOffset: [number, number], channelKey: 'color' | 'stroke') {
+            const models = this.visibleAndFetchedGoslingModels();
+            models.forEach(d => {
+                const channel = d.spec()[channelKey];
+                if (IsChannelDeep(channel)) {
+                    channel.scaleOffset = scaleOffset;
+                }
+                const channelOriginal = d.originalSpec()[channelKey];
+                if (IsChannelDeep(channelOriginal)) {
+                    channelOriginal.scaleOffset = scaleOffset;
+                }
+            });
         }
     }
     return new GoslingTrackClass();

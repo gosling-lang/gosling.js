@@ -12,12 +12,7 @@ export const TITLE_STYLE = {
     lineJoin: 'round'
 };
 
-export function drawChartOutlines(
-    HGC: import('@higlass/types').HGC,
-    trackInfo: any,
-    tm: GoslingTrackModel,
-    theme: Required<CompleteThemeDeep>
-) {
+export function drawChartOutlines(trackInfo: any, tm: GoslingTrackModel, theme: Required<CompleteThemeDeep>) {
     const g = trackInfo.pBorder; // use pBorder not to affected by zoomming
 
     // size and position
