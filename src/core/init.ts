@@ -69,6 +69,7 @@ export function init() {
      */
     for (const dataFetcher of Object.values(dataFetchers)) {
         const { config } = dataFetcher;
+        console.warn(dataFetcher);
         higlassRegister({ dataFetcher, config }, { pluginType: 'dataFetcher' });
     }
 

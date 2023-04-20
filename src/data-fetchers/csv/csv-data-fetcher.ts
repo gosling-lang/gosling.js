@@ -79,81 +79,76 @@ function CsvDataFetcher(HGC: any, ...args: any): any {
         /**
          * Fetches CSV file from url, parses it, and sets this.#parsedCSVdata
          */
-        #fetchCsv(): Promise<void> {
+        async #fetchCsv(): Promise<void> {
             const { url, chromosomeField, genomicFields, headerNames, longToWideId, genomicFieldsToConvert } =
                 this.dataConfig;
 
             const separator = this.dataConfig.separator ?? ',';
 
-            return fetch(url)
-                .then(response => {
-                    return response.ok ? response.text() : Promise.reject(response.status);
-                })
-                .then(text => {
-                    const textWithHeader = headerNames ? `${headerNames.join(separator)}\n${text}` : text;
-                    return d3dsvFormat(separator).parse(textWithHeader, (row: any) => {
-                        let successfullyGotChrInfo = true;
+            try {
+                const response = await fetch(url);
+                const text = await (response.ok ? response.text() : Promise.reject(response.status));
+                const textWithHeader = headerNames ? `${headerNames.join(separator)}\n${text}` : text;
+                const json = d3dsvFormat(separator).parse(textWithHeader, (row: any) => {
+                    let successfullyGotChrInfo = true;
 
-                        // !!! Experimental
-                        if (genomicFieldsToConvert) {
-                            // This spec is used when multiple chromosomes are stored in a single row
-                            genomicFieldsToConvert.forEach(chromMap => {
-                                const genomicFields = chromMap.genomicFields;
-                                const chromName = row[chromMap.chromosomeField];
+                    // !!! Experimental
+                    if (genomicFieldsToConvert) {
+                        // This spec is used when multiple chromosomes are stored in a single row
+                        genomicFieldsToConvert.forEach(chromMap => {
+                            const genomicFields_1 = chromMap.genomicFields;
+                            const chromName = row[chromMap.chromosomeField];
 
-                                genomicFields.forEach((positionCol: string) => {
-                                    const chromPosition = row[positionCol];
-                                    try {
-                                        row[positionCol] = this.#calcCumulativePos(chromName, chromPosition);
-                                    } catch (e) {
-                                        // genomic position did not parse properly
-                                        successfullyGotChrInfo = false;
-                                    }
-                                });
-                            });
-                        } else if (chromosomeField && genomicFields) {
-                            genomicFields.forEach((positionCol: string) => {
-                                if (!row[chromosomeField]) {
-                                    // TODO:
-                                    return;
-                                }
+                            genomicFields_1.forEach((positionCol: string) => {
                                 const chromPosition = row[positionCol];
-                                const chromName = row[chromosomeField];
                                 try {
                                     row[positionCol] = this.#calcCumulativePos(chromName, chromPosition);
                                 } catch (e) {
+                                    // genomic position did not parse properly
                                     successfullyGotChrInfo = false;
                                 }
                             });
-                        }
-                        // store row only when chromosome information is correctly parsed
-                        if (!successfullyGotChrInfo) return undefined;
-
-                        return row;
-                    });
-                })
-                .then(json => {
-                    if (longToWideId && json[0]?.[longToWideId]) {
-                        // rows having identical IDs are juxtaposed horizontally
-                        const keys = Object.keys(json[0]);
-                        const newJson: { [k: string]: { [k: string]: string | number } } = {};
-                        json.forEach(d => {
-                            if (!newJson[d[longToWideId]]) {
-                                newJson[d[longToWideId]] = JSON.parse(JSON.stringify(d));
-                            } else {
-                                keys.forEach(k => {
-                                    newJson[d[longToWideId]][`${k}_2`] = d[k];
-                                });
+                        });
+                    } else if (chromosomeField && genomicFields) {
+                        genomicFields.forEach((positionCol_1: string) => {
+                            if (!row[chromosomeField]) {
+                                // TODO:
+                                return;
+                            }
+                            const chromPosition_1 = row[positionCol_1];
+                            const chromName_1 = row[chromosomeField];
+                            try {
+                                row[positionCol_1] = this.#calcCumulativePos(chromName_1, chromPosition_1);
+                            } catch (e_1) {
+                                successfullyGotChrInfo = false;
                             }
                         });
-                        this.#parsedCSVdata = Object.keys(newJson).map(k => newJson[k]);
-                    } else {
-                        this.#parsedCSVdata = json;
                     }
-                })
-                .catch(error => {
-                    console.error('[Gosling Data Fetcher] Error fetching data', error);
+                    // store row only when chromosome information is correctly parsed
+                    if (!successfullyGotChrInfo) return undefined;
+
+                    return row;
                 });
+                if (longToWideId && json[0]?.[longToWideId]) {
+                    // rows having identical IDs are juxtaposed horizontally
+                    const keys = Object.keys(json[0]);
+                    const newJson: { [k: string]: { [k_1: string]: string | number } } = {};
+                    json.forEach(d => {
+                        if (!newJson[d[longToWideId]]) {
+                            newJson[d[longToWideId]] = JSON.parse(JSON.stringify(d));
+                        } else {
+                            keys.forEach(k_2 => {
+                                newJson[d[longToWideId]][`${k_2}_2`] = d[k_2];
+                            });
+                        }
+                    });
+                    this.#parsedCSVdata = Object.keys(newJson).map(k_3 => newJson[k_3]);
+                } else {
+                    this.#parsedCSVdata = json;
+                }
+            } catch (error) {
+                console.error('[Gosling Data Fetcher] Error fetching data', error);
+            }
         }
 
         /**

@@ -1,14 +1,61 @@
 import { dsvFormat as d3dsvFormat } from 'd3-dsv';
 import { computeChromSizes } from '../../core/utils/assembly';
 import { sampleSize } from 'lodash-es';
-import type { Assembly, BedData, FilterTransform } from '@gosling.schema';
+import type { Assembly, BedData, FilterTransform, Datum } from '@gosling.schema';
 import { filterData } from '../../core/utils/data-transform';
 import { type CommonDataConfig, filterUsingGenoPos } from '../utils';
 
 type BedDataConfig = BedData & CommonDataConfig & { filter: FilterTransform[] };
 
+interface ChomSizes {
+    chrToAbs: (chrom: string, chromPos: number) => number;
+    cumPositions: { id: number; chr: string; pos: number }[];
+    chrPositions: { [k: string]: { id: number; chr: string; pos: number } };
+    totalLength: number;
+    chromLengths: { [k: string]: number };
+}
+
 /**
- * HiGlass data fetcher specific for Gosling which fetches BED files
+ * Used in #tile() to associate tile coordinates with data
+ */
+interface TileInfo {
+    tabularData: Datum[];
+    server: null;
+    tilePos: number[];
+    zoomLevel: number;
+}
+
+/**
+ * Used in #generateTilesetInfo()
+ */
+interface TilesetInfo {
+    tile_size: number;
+    max_zoom: number;
+    max_width: number;
+    min_pos: number[];
+    max_pos: number[];
+}
+
+/**
+ * Enum of the BED12 header
+ */
+enum BED12 {
+    Chrom = 'chrom',
+    ChromStart = 'chromStart',
+    ChromEnd = 'chromEnd',
+    Name = 'name',
+    Score = 'score',
+    Strand = 'strand',
+    ThickStart = 'thickStart',
+    ThickEnd = 'thickEnd',
+    ItemRgb = 'itemRgb',
+    BlockCount = 'blockCount',
+    BlockSizes = 'blockSizes',
+    MyField = 'myField'
+}
+
+/**
+ * HiGlass data fetcher specific for Gosling which ultimately will accept any types of data other than CSV files.
  */
 function BedDataFetcher(HGC: any, ...args: any): any {
     if (!new.target) {
@@ -16,59 +63,35 @@ function BedDataFetcher(HGC: any, ...args: any): any {
     }
 
     class BedDataFetcherClass {
-        private dataConfig: BedDataConfig;
+        dataConfig: BedDataConfig;
         // @ts-ignore
-        private tilesetInfoLoading: boolean;
-        private dataPromise: Promise<any> | undefined;
-        private chromSizes: any;
-        private values: any;
-        private assembly: Assembly;
-        private filter: FilterTransform[] | undefined;
+        tilesetInfoLoading: boolean; // Used in TiledPixiTrack
+
+        #dataPromise: Promise<void> | undefined;
+        #chromSizes: ChomSizes;
+        #parsedCSVdata!: { [k: string]: string | number }[]; // Either set in the constructor or in #fetchCsv()
+        #assembly: Assembly;
+        #filter: FilterTransform[] | undefined;
 
         constructor(params: any[]) {
-            console.warn('hello');
+            console.warn('Bed constructor called');
             const [dataConfig] = params;
             this.dataConfig = dataConfig;
             this.tilesetInfoLoading = false;
-            this.assembly = this.dataConfig.assembly;
-            this.filter = this.dataConfig.filter;
+            this.#assembly = this.dataConfig.assembly;
+            this.#filter = this.dataConfig.filter;
 
             if (!dataConfig.url) {
                 console.error('Please provide the `url` of the data');
-                return;
             }
 
-            // Prepare chromosome interval information
-            const chromosomeSizes: { [k: string]: number } = computeChromSizes(this.assembly).size;
-            const chromosomeCumPositions: { id: number; chr: string; pos: number }[] = [];
-            const chromosomePositions: { [k: string]: { id: number; chr: string; pos: number } } = {};
-            let prevEndPosition = 0;
-
-            Object.keys(computeChromSizes(this.assembly).size).forEach((chrStr, i) => {
-                const positionInfo = {
-                    id: i,
-                    chr: chrStr,
-                    pos: prevEndPosition
-                };
-
-                chromosomeCumPositions.push(positionInfo);
-                chromosomePositions[chrStr] = positionInfo;
-
-                prevEndPosition += computeChromSizes(this.assembly).size[chrStr];
-            });
-            this.chromSizes = {
-                chrToAbs: (chrom: string, chromPos: number) => this.chromSizes.chrPositions[chrom].pos + chromPos,
-                cumPositions: chromosomeCumPositions,
-                chrPositions: chromosomePositions,
-                totalLength: prevEndPosition,
-                chromLengths: chromosomeSizes
-            };
+            this.#chromSizes = this.#generateChomSizeInfo();
 
             if (dataConfig.data) {
                 // we have raw data that we can use right away
-                this.values = dataConfig.data;
+                this.#parsedCSVdata = dataConfig.data;
             } else {
-                this.dataPromise = this.fetchBed();
+                this.#dataPromise = this.#fetchBed();
             }
         }
         /**
@@ -80,34 +103,39 @@ function BedDataFetcher(HGC: any, ...args: any): any {
          */
         static #determineHeader(customFields: string[], n_cols: number): string[] {
             const standardHeaders = [
-                'chrom',
-                'chromStart',
-                'chromEnd',
-                'name',
-                'score',
-                'strand',
-                'thickStart',
-                'thickEnd',
-                'itemRgb',
-                'blockCount',
-                'blockSizes',
-                'myField'
+                BED12.Chrom,
+                BED12.ChromStart,
+                BED12.ChromEnd,
+                BED12.Name,
+                BED12.Score,
+                BED12.Strand,
+                BED12.ThickStart,
+                BED12.ThickEnd,
+                BED12.ItemRgb,
+                BED12.BlockCount,
+                BED12.BlockSizes,
+                BED12.MyField
             ];
 
             if (customFields.length === 0) {
                 if (n_cols > standardHeaders.length) {
-                    console.warn('BED file error: more columns found than expected');
+                    throw new Error('BED file error: more columns found than expected');
                 }
                 return standardHeaders.slice(0, n_cols);
             }
             if (n_cols > standardHeaders.length) {
                 if (n_cols !== standardHeaders.length + customFields.length) {
-                    console.warn(`BED file error: unexpected number of custom fields. Found ${n_cols} columns 
+                    throw new Error(`BED file error: unexpected number of custom fields. Found ${n_cols} columns 
                     which is different from the expected ${standardHeaders.length + customFields.length}`);
                 }
-                return standardHeaders.concat(customFields);
+                return (standardHeaders as string[]).concat(customFields);
             } else {
-                return standardHeaders.slice(0, n_cols - customFields.length).concat(customFields);
+                if (standardHeaders.length - n_cols >= 3) {
+                    return (standardHeaders as string[]).slice(0, n_cols - customFields.length).concat(customFields);
+                } else {
+                    throw new Error(`There are ${n_cols} total and ${customFields.length} custom columns. The 
+                    first three columns are required to be ${BED12.Chrom}, ${BED12.ChromStart}, ${BED12.ChromEnd}`);
+                }
             }
         }
         /**
@@ -121,35 +149,84 @@ function BedDataFetcher(HGC: any, ...args: any): any {
             return firstRow.split(separator).length;
         }
 
-        fetchBed() {
-            const { url } = this.dataConfig;
+        /**
+         * Fetches CSV file from url, parses it, and sets this.#parsedCSVdata
+         */
+        async #fetchBed(): Promise<void> {
+            const url = this.dataConfig.url;
             const customFields = this.dataConfig.customFields ?? [];
-            const separator = this.dataConfig.separator ?? '\t';
-            console.warn('hello');
+            const separator = this.dataConfig.separator ?? ',';
 
-            return fetch(url)
-                .then(response => {
-                    return response.ok ? response.text() : Promise.reject(response.status);
-                })
-                .then(text => {
-                    const n_cols = BedDataFetcherClass.#calcNCols(text, separator);
-                    const headerNames = BedDataFetcherClass.#determineHeader(customFields, n_cols);
-                    const textWithHeader = `${headerNames.join(separator)}\n${text}`;
-                    return d3dsvFormat(separator).parse(textWithHeader);
-                })
-                .then(json => {
-                    this.values = json;
-                })
-                .catch(error => {
-                    console.error('[Gosling Data Fetcher] Error fetching data', error);
+            try {
+                const response = await fetch(url);
+                const text = await (response.ok ? response.text() : Promise.reject(response.status));
+
+                const n_cols = BedDataFetcherClass.#calcNCols(text, separator);
+                console.warn(n_cols);
+                const headerNames = BedDataFetcherClass.#determineHeader(customFields, n_cols);
+                // Collect the column names which contain choromosome coordinates
+                const chromPosHeaders = [BED12.ChromStart, BED12.ChromEnd];
+                if (headerNames[6] === BED12.ThickStart) chromPosHeaders.push(BED12.ThickStart);
+                if (headerNames[7] === BED12.ThickEnd) chromPosHeaders.push(BED12.ThickEnd);
+
+                console.warn(headerNames);
+                console.warn('position headers', chromPosHeaders);
+
+                const textWithHeader = `${headerNames.join(separator)}\n${text}`;
+                const json = d3dsvFormat(separator).parse(textWithHeader, row => {
+                    chromPosHeaders.forEach(chromPosCol => {
+                        const chromPosition = row[chromPosCol] as string;
+                        if (typeof row[BED12.Chrom] === 'string' && parseInt(chromPosition) >= 0) {
+                            row[chromPosCol] = this.#calcCumulativePos(row[BED12.Chrom], chromPosition);
+                        }
+                    });
+                    return row;
                 });
+                console.warn(json);
+                this.#parsedCSVdata = json;
+            } catch (error) {
+                console.error('[Gosling Data Fetcher] Error fetching data', error);
+            }
         }
 
-        generateTilesetInfo(callback?: any) {
+        /**
+         * Calculates the cumulative chromosome position based on the chromosome name and position
+         * @param chromName A string, the name of the chromosome
+         * @param chromPosition A number, the position within the chromosome
+         */
+        #calcCumulativePos(chromName: string, chromPosition: string) {
+            if (this.#assembly !== 'unknown') {
+                return computeChromSizes(this.#assembly).interval[chromName][0] + +chromPosition;
+            } else {
+                return chromPosition;
+            }
+        }
+        /**
+         * Called in TiledPixiTrack
+         */
+        tilesetInfo(callback?: (loadedTiles: TilesetInfo) => void): Promise<TilesetInfo | void> | undefined {
+            if (!this.#dataPromise) {
+                // data promise is not prepared yet
+                return;
+            }
+
+            this.tilesetInfoLoading = true;
+
+            return this.#dataPromise
+                .then(() => this.#generateTilesetInfo(callback))
+                .catch(err => {
+                    this.tilesetInfoLoading = false;
+                    console.error('[Gosling Data Fetcher] Error parsing data:', err);
+                });
+        }
+        /**
+         * Called by this.tilesetInfo() to call a callback function with tileset info.
+         */
+        #generateTilesetInfo(callback?: (loadedTiles: TilesetInfo) => void): TilesetInfo {
             this.tilesetInfoLoading = false;
 
             const TILE_SIZE = 1024;
-            const totalLength = this.chromSizes.totalLength;
+            const totalLength = this.#chromSizes.totalLength;
             const retVal = {
                 tile_size: TILE_SIZE,
                 max_zoom: Math.ceil(Math.log(totalLength / TILE_SIZE) / Math.log(2)),
@@ -164,24 +241,12 @@ function BedDataFetcher(HGC: any, ...args: any): any {
 
             return retVal;
         }
-
-        tilesetInfo(callback?: any) {
-            if (!this.dataPromise) {
-                // data promise is not prepared yet
-                return;
-            }
-
-            this.tilesetInfoLoading = true;
-
-            return this.dataPromise
-                .then(() => this.generateTilesetInfo(callback))
-                .catch(err => {
-                    this.tilesetInfoLoading = false;
-                    console.error('[Gosling Data Fetcher] Error parsing data:', err);
-                });
-        }
-
-        fetchTilesDebounced(receivedTiles: any, tileIds: any) {
+        /**
+         * Called in TiledPixiTrack.
+         * @param receivedTiles A function from TiledPixiTrack
+         * @param tileIds An array of tile IDs
+         */
+        fetchTilesDebounced(receivedTiles: (loadedTiles: any) => void, tileIds: any[]): void {
             const tiles: { [k: string]: any } = {};
 
             const validTileIds: any[] = [];
@@ -199,7 +264,7 @@ function BedDataFetcher(HGC: any, ...args: any): any {
                 }
 
                 validTileIds.push(tileId);
-                tilePromises.push(this.tile(z, x, y));
+                tilePromises.push(this.#tile(z, x, y));
             }
 
             Promise.all(tilePromises).then(values => {
@@ -210,11 +275,15 @@ function BedDataFetcher(HGC: any, ...args: any): any {
                 });
                 receivedTiles(tiles);
             });
-
-            return tiles;
         }
-
-        tile(z: any, x: any, y: any) {
+        /**
+         * Creates an object to associate a tile position with the corresponding data
+         * @param z An integer, the z coordinate of the tile
+         * @param x An integer, the x coodinate of the tile
+         * @param y An integer, the y coordinate of the tile
+         * @returns A promise of an object with tile coordinates and data
+         */
+        #tile(z: number, x: number, y: number): Promise<TileInfo> | undefined {
             return this.tilesetInfo()?.then((tsInfo: any) => {
                 const tileWidth = +tsInfo.max_width / 2 ** +z;
 
@@ -223,10 +292,10 @@ function BedDataFetcher(HGC: any, ...args: any): any {
                 const maxX = tsInfo.min_pos[0] + (x + 1) * tileWidth;
 
                 // filter the data so that only the visible data is sent to tracks
-                let tabularData = filterUsingGenoPos(this.values, [minX, maxX], this.dataConfig);
+                let tabularData = filterUsingGenoPos(this.#parsedCSVdata, [minX, maxX], this.dataConfig);
 
                 // filter data based on the `DataTransform` spec
-                this.filter?.forEach(f => {
+                this.#filter?.forEach(f => {
                     tabularData = filterData(f, tabularData);
                 });
 
@@ -239,6 +308,39 @@ function BedDataFetcher(HGC: any, ...args: any): any {
                     zoomLevel: z
                 };
             });
+        }
+
+        /**
+         * This function calculates chromosome position and size based on the assembly (this.#assembly)
+         * @returns An object containing chromosome information and a way to calculate absolute position
+         */
+        #generateChomSizeInfo(): ChomSizes {
+            // Prepare chromosome interval information
+            const chromosomeSizes: { [k: string]: number } = computeChromSizes(this.#assembly).size;
+            const chromosomeCumPositions: { id: number; chr: string; pos: number }[] = [];
+            const chromosomePositions: { [k: string]: { id: number; chr: string; pos: number } } = {};
+            let prevEndPosition = 0;
+
+            Object.keys(chromosomeSizes).forEach((chrStr, i) => {
+                const positionInfo = {
+                    id: i,
+                    chr: chrStr,
+                    pos: prevEndPosition
+                };
+
+                chromosomeCumPositions.push(positionInfo);
+                chromosomePositions[chrStr] = positionInfo;
+
+                prevEndPosition += chromosomeSizes[chrStr];
+            });
+
+            return {
+                chrToAbs: (chrom: string, chromPos: number) => this.#chromSizes.chrPositions[chrom].pos + chromPos,
+                cumPositions: chromosomeCumPositions,
+                chrPositions: chromosomePositions,
+                totalLength: prevEndPosition,
+                chromLengths: chromosomeSizes
+            };
         }
     }
 
