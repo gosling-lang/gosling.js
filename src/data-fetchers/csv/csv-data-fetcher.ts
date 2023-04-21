@@ -39,7 +39,7 @@ interface TilesetInfo {
 /**
  * HiGlass data fetcher specific for Gosling which ultimately will accept any types of data other than CSV files.
  */
-function CsvDataFetcher(HGC: any, ...args: any): any {
+function CsvDataFetcher(HGC: import('@higlass/types').HGC, ...args: any) {
     if (!new.target) {
         throw new Error('Uncaught TypeError: Class constructor cannot be invoked without "new"');
     }

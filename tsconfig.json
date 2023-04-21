@@ -29,7 +29,7 @@
       "zlib": ["./src/alias/zlib.ts"]
     },
     "baseUrl": ".",
-    "types": ["vitest/globals", "vite/client"]
+    "types": ["vitest/globals", "vite/client", "d3-dsv"]
   },
   "files": [
     "src/index.ts",
