@@ -6,7 +6,7 @@ import type { DSVParsedArray, DSVRowString } from 'd3-dsv';
 import { filterData } from '../../core/utils/data-transform';
 import { type CommonDataConfig, filterUsingGenoPos } from '../utils';
 
-type BedDataConfig = BedData & CommonDataConfig & { filter: FilterTransform[] };
+export type BedDataConfig = BedData & CommonDataConfig & { filter?: FilterTransform[] };
 
 interface ChomSizes {
     chrToAbs: (chrom: string, chromPos: number) => number;
@@ -29,7 +29,7 @@ interface TileInfo {
 /**
  * Used in #generateTilesetInfo()
  */
-interface TilesetInfo {
+export interface TilesetInfo {
     tile_size: number;
     max_zoom: number;
     max_width: number;
@@ -55,7 +55,7 @@ enum BED12 {
     MyField = 'myField'
 }
 
-class BedDataFetcherClass {
+export class BedDataFetcherClass {
     dataConfig: BedDataConfig;
     // @ts-ignore
     tilesetInfoLoading: boolean; // Used in TiledPixiTrack
@@ -66,9 +66,7 @@ class BedDataFetcherClass {
     #assembly: Assembly;
     #filter: FilterTransform[] | undefined;
 
-    constructor(params: any[]) {
-        console.warn('Bed constructor called');
-        const [dataConfig] = params;
+    constructor(dataConfig: BedDataConfig) {
         this.dataConfig = dataConfig;
         this.tilesetInfoLoading = false;
         this.#assembly = this.dataConfig.assembly;
@@ -79,13 +77,7 @@ class BedDataFetcherClass {
         }
 
         this.#chromSizes = this.#generateChromSizeInfo();
-
-        if (dataConfig.data) {
-            // we have raw data that we can use right away
-            this.#parsedCSVdata = dataConfig.data;
-        } else {
-            this.#dataPromise = this.#fetchBed();
-        }
+        this.#dataPromise = this.#fetchBed();
     }
 
     /**
@@ -200,7 +192,7 @@ class BedDataFetcherClass {
             chromPosColumns.forEach(chromPosCol => {
                 const chromPosition = row[chromPosCol] as string;
                 const chromName = row[BED12.Chrom] as string;
-                row[chromPosition] = calcCumulativePos(chromName, chromPosition, this.#assembly);
+                row[chromPosCol] = calcCumulativePos(chromName, chromPosition, this.#assembly);
             });
             return row;
         } catch {
@@ -290,31 +282,32 @@ class BedDataFetcherClass {
      * @param y An integer, the y coordinate of the tile
      * @returns A promise of an object with tile coordinates and data
      */
-    #tile(z: number, x: number, y: number): Promise<TileInfo> | undefined {
-        return this.tilesetInfo()?.then((tsInfo: any) => {
-            const tileWidth = +tsInfo.max_width / 2 ** +z;
+    async #tile(z: number, x: number, y: number): Promise<TileInfo | undefined> {
+        const tilesetInfo = await this.tilesetInfo();
+        if (!tilesetInfo) return;
 
-            // get the bounds of the tile
-            const minX = tsInfo.min_pos[0] + x * tileWidth;
-            const maxX = tsInfo.min_pos[0] + (x + 1) * tileWidth;
+        const tileWidth = +tilesetInfo.max_width / 2 ** +z;
 
-            // filter the data so that only the visible data is sent to tracks
-            let tabularData = filterUsingGenoPos(this.#parsedCSVdata as Datum[], [minX, maxX], this.dataConfig);
+        // get the bounds of the tile
+        const minX = tilesetInfo.min_pos[0] + x * tileWidth;
+        const maxX = tilesetInfo.min_pos[0] + (x + 1) * tileWidth;
 
-            // filter data based on the `DataTransform` spec
-            this.#filter?.forEach(f => {
-                tabularData = filterData(f, tabularData);
-            });
+        // filter the data so that only the visible data is sent to tracks
+        let tabularData = filterUsingGenoPos(this.#parsedCSVdata as Datum[], [minX, maxX], this.dataConfig);
 
-            const sizeLimit = this.dataConfig.sampleLength ?? 1000;
-            return {
-                // sample the data to make it managable for visualization components
-                tabularData: tabularData.length > sizeLimit ? sampleSize(tabularData, sizeLimit) : tabularData,
-                server: null,
-                tilePos: [x, y],
-                zoomLevel: z
-            };
+        // filter data based on the `DataTransform` spec
+        this.#filter?.forEach(f => {
+            tabularData = filterData(f, tabularData);
         });
+
+        const sizeLimit = this.dataConfig.sampleLength ?? 1000;
+        return {
+            // sample the data to make it managable for visualization components
+            tabularData: tabularData.length > sizeLimit ? sampleSize(tabularData, sizeLimit) : tabularData,
+            server: null,
+            tilePos: [x, y],
+            zoomLevel: z
+        };
     }
 
     /**
@@ -351,11 +344,16 @@ class BedDataFetcherClass {
     }
 }
 
-function BedDataFetcher(HGC: import('@higlass/types').HGC, ...args: any): BedDataFetcherClass {
+function BedDataFetcher(
+    _HGC: import('@higlass/types').HGC,
+    dataConfig: BedDataConfig,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    _pubsub: Record<string, any>
+): BedDataFetcherClass {
     if (!new.target) {
         throw new Error('Uncaught TypeError: Class constructor cannot be invoked without "new"');
     }
-    return new BedDataFetcherClass(args);
+    return new BedDataFetcherClass(dataConfig);
 }
 
 BedDataFetcher.config = {
