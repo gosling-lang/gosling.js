@@ -81,12 +81,7 @@ const esm = defineConfig({
         rollupOptions: { external }
     },
     resolve: { alias },
-    plugins: [manualInlineWorker],
-    optimizeDeps: {
-        esbuildOptions: {
-            inject: ['./src/alias/buffer-shim.js']
-        }
-    }
+    plugins: [manualInlineWorker]
 });
 
 const dev = defineConfig({
@@ -96,12 +91,7 @@ const dev = defineConfig({
         'process.platform': 'undefined',
         'process.env.THREADS_WORKER_INIT_TIMEOUT': 'undefined'
     },
-    plugins: [bundleWebWorker, manualInlineWorker],
-    optimizeDeps: {
-        esbuildOptions: {
-            inject: ['./src/alias/buffer-shim.js']
-        }
-    }
+    plugins: [bundleWebWorker, manualInlineWorker]
 });
 
 const testing = defineConfig({
@@ -120,11 +110,6 @@ const testing = defineConfig({
           reportsDirectory: './coverage',
           reporter: ['lcov', 'text'],
           include: ['src', 'editor'],
-        }
-    },
-    optimizeDeps: {
-        esbuildOptions: {
-            inject: ['./src/alias/buffer-shim.js']
         }
     }
 });
