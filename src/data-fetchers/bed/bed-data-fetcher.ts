@@ -24,6 +24,13 @@ interface TileInfo {
     server: null;
     tilePos: number[];
     zoomLevel: number;
+    tilePositionId?: string;
+}
+/**
+ * This is what all the tile information eventually gets organized into.
+ */
+interface LoadedTiles {
+    [tilePositionId: string]: TileInfo;
 }
 
 /**
@@ -62,7 +69,7 @@ export class BedDataFetcherClass {
 
     #dataPromise: Promise<void> | undefined;
     #chromSizes: ChomSizes;
-    #parsedCSVdata!: DSVParsedArray<DSVRowString<string>>; // Either set in the constructor or in #fetchCsv()
+    #parsedData!: DSVParsedArray<DSVRowString<string>>; // Either set in the constructor or in #fetchCsv()
     #assembly: Assembly;
     #filter: FilterTransform[] | undefined;
 
@@ -81,7 +88,7 @@ export class BedDataFetcherClass {
     }
 
     /**
-     * Fetches CSV file from url, parses it, and sets this.#parsedCSVdata
+     * Fetches BED file from url, parses it, and sets this.#parsedData
      */
     async #fetchBed(): Promise<void> {
         const url = this.dataConfig.url;
@@ -91,23 +98,29 @@ export class BedDataFetcherClass {
         try {
             const response = await fetch(url);
             const text = await (response.ok ? response.text() : Promise.reject(response.status));
-            this.#parsedCSVdata = this.#parseBed(text, separator, customFields);
+            this.#parsedData = this.#parseBed(text, separator, customFields);
         } catch (error) {
             console.error('[Gosling Data Fetcher] Error fetching data', error);
         }
     }
 
+    /**
+     * BED file parser
+     * @param rawText A string, the raw text of the BED file
+     * @param separator A string, the separator used in the BED file. For example, '\t'
+     * @param customFields An array of strings, where each string is the name of a custom field in the BED file
+     */
     #parseBed(rawText: string, separator: string, customFields: string[]): DSVParsedArray<DSVRowString<string>> {
         const [colNames, chromPositionCols] = this.#processColNames(rawText, separator, customFields);
 
-        console.warn(colNames);
-        console.warn('position headers', chromPositionCols);
+        // console.warn(colNames);
+        // console.warn('position headers', chromPositionCols);
 
         const textWithHeader = `${colNames.join(separator)}\n${rawText}`;
         const parsedBed = d3dsvFormat(separator).parse(textWithHeader, row => {
             return this.#processBedRow(row, chromPositionCols);
         });
-        console.warn(parsedBed);
+        // console.warn(parsedBed);
         return parsedBed;
     }
 
@@ -126,6 +139,7 @@ export class BedDataFetcherClass {
             return firstRow.split(separator).length;
         }
 
+        const n_cols = calcNCols(rawText, separator);
         const standardColumns = [
             BED12.Chrom,
             BED12.ChromStart,
@@ -140,7 +154,8 @@ export class BedDataFetcherClass {
             BED12.BlockSizes,
             BED12.MyField
         ];
-        const n_cols = calcNCols(rawText, separator);
+        const REQUIRED_COLS = 3; // The first three columns are required
+
         let columns: string[];
         if (customFields.length === 0) {
             if (n_cols > standardColumns.length) {
@@ -155,7 +170,7 @@ export class BedDataFetcherClass {
             }
             columns = (standardColumns as string[]).concat(customFields);
         } else {
-            if (standardColumns.length - n_cols >= 3) {
+            if (standardColumns.length - n_cols >= REQUIRED_COLS) {
                 columns = (standardColumns as string[]).slice(0, n_cols - customFields.length).concat(customFields);
             } else {
                 throw new Error(`There are ${n_cols} total and ${customFields.length} custom columns. The 
@@ -203,7 +218,7 @@ export class BedDataFetcherClass {
     /**
      * Called in TiledPixiTrack
      */
-    tilesetInfo(callback?: (loadedTiles: TilesetInfo) => void): Promise<TilesetInfo | void> | undefined {
+    tilesetInfo(callback?: (tilesetInto: TilesetInfo) => void): Promise<TilesetInfo | void> | undefined {
         if (!this.#dataPromise) {
             // data promise is not prepared yet
             return;
@@ -221,7 +236,7 @@ export class BedDataFetcherClass {
     /**
      * Called by this.tilesetInfo() to call a callback function with tileset info.
      */
-    #generateTilesetInfo(callback?: (loadedTiles: TilesetInfo) => void): TilesetInfo {
+    #generateTilesetInfo(callback?: (tilesetInto: TilesetInfo) => void): TilesetInfo {
         this.tilesetInfoLoading = false;
 
         const TILE_SIZE = 1024;
@@ -242,13 +257,13 @@ export class BedDataFetcherClass {
     }
     /**
      * Called in TiledPixiTrack.
-     * @param receivedTiles A function from TiledPixiTrack
-     * @param tileIds An array of tile IDs
+     * @param receivedTiles A function from TiledPixiTrack which takes in all the loaded tiles
+     * @param tileIds An array of tile IDs. Ex. ['1.0', '1.1']
      */
-    fetchTilesDebounced(receivedTiles: (loadedTiles: any) => void, tileIds: any[]): void {
-        const tiles: { [k: string]: any } = {};
+    fetchTilesDebounced(receivedTiles: (loadedTiles: LoadedTiles) => void, tileIds: string[]): void {
+        const tiles: LoadedTiles = {};
 
-        const validTileIds: any[] = [];
+        const validTileIds: string[] = [];
         const tilePromises = [];
 
         for (const tileId of tileIds) {
@@ -266,11 +281,13 @@ export class BedDataFetcherClass {
             tilePromises.push(this.#tile(z, x, y));
         }
 
-        Promise.all(tilePromises).then(values => {
-            values.forEach((value, i) => {
-                const validTileId = validTileIds[i];
-                tiles[validTileId] = value;
-                tiles[validTileId].tilePositionId = validTileId;
+        Promise.all(tilePromises).then(tileInfo => {
+            tileInfo.forEach((tileInfo, i) => {
+                if (tileInfo) {
+                    const validTileId = validTileIds[i];
+                    tiles[validTileId] = tileInfo;
+                    tiles[validTileId].tilePositionId = validTileId;
+                }
             });
             receivedTiles(tiles);
         });
@@ -293,7 +310,7 @@ export class BedDataFetcherClass {
         const maxX = tilesetInfo.min_pos[0] + (x + 1) * tileWidth;
 
         // filter the data so that only the visible data is sent to tracks
-        let tabularData = filterUsingGenoPos(this.#parsedCSVdata as Datum[], [minX, maxX], this.dataConfig);
+        let tabularData = filterUsingGenoPos(this.#parsedData as Datum[], [minX, maxX], this.dataConfig);
 
         // filter data based on the `DataTransform` spec
         this.#filter?.forEach(f => {

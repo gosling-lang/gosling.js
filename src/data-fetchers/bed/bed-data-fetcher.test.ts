@@ -7,7 +7,8 @@ describe('BED fetcher', () => {
     const dataConfig: BedDataConfig = {
         type: 'bed',
         url: 'https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/275_peaks.bed',
-        assembly: 'hg38'
+        assembly: 'hg38',
+        sampleLength: 1000
     };
 
     const fetcher = new BedDataFetcherClass(dataConfig);
@@ -34,19 +35,19 @@ describe('BED fetcher', () => {
             });
         }));
 
-    it('Tile', () =>
+    it('Assign data to a single tile', () =>
         new Promise<void>(resolve => {
             fetcher.fetchTilesDebounced(
                 (t: any) => {
                     expect(t['0.0']).not.toBeUndefined();
-                    expect(t['0.0'].tabularData.length).toBeGreaterThan(0);
+                    expect(t['0.0'].tabularData.length).toEqual(1000);
                     resolve();
                 },
                 ['0.0']
             );
         }));
 
-    it('Two tiles', () =>
+    it('Assign data to two tiles', () =>
         new Promise<void>(resolve => {
             fetcher.fetchTilesDebounced(
                 (t: any) => {
