@@ -1,4 +1,4 @@
-import { recordToTile } from './vcf-data-fetcher';
+import { recordToTile } from './utils';
 import type { VcfRecord } from './vcf-data-fetcher';
 
 describe('VCF file parser', () => {

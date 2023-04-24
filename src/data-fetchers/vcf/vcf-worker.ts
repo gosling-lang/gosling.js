@@ -11,7 +11,8 @@ import { DataSource, RemoteFile } from '../utils';
 
 import type { TilesetInfo } from '@higlass/types';
 import type { ChromSizes } from '@gosling.schema';
-import { recordToTile, type VcfRecord, type VcfTile } from './vcf-data-fetcher';
+import { recordToTile } from './utils';
+import type { VcfRecord, VcfTile } from './vcf-data-fetcher';
 
 // promises indexed by urls
 const vcfFiles: Map<string, VcfFile> = new Map();
