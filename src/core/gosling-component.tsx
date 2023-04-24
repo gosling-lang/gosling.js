@@ -7,7 +7,7 @@ import { getTheme, type Theme } from './utils/theme';
 import { createApi, type GoslingApi } from './api';
 import { GoslingTemplates } from '..';
 import { omitDeep } from './utils/omit-deep';
-import { isEqual } from 'lodash';
+import { isEqual } from 'lodash-es';
 import * as uuid from 'uuid';
 
 import type { TemplateTrackDef, TrackMouseEventData } from './gosling.schema';
