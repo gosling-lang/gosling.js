@@ -140,6 +140,7 @@ export class BedDataFetcherClass {
         }
 
         const n_cols = calcNCols(rawText, separator);
+        console.warn('n_cols', n_cols);
         const standardColumns = [
             BED12.Chrom,
             BED12.ChromStart,
@@ -170,11 +171,14 @@ export class BedDataFetcherClass {
             }
             columns = (standardColumns as string[]).concat(customFields);
         } else {
-            if (standardColumns.length - n_cols >= REQUIRED_COLS) {
+            if (n_cols - customFields.length >= REQUIRED_COLS) {
                 columns = (standardColumns as string[]).slice(0, n_cols - customFields.length).concat(customFields);
             } else {
-                throw new Error(`There are ${n_cols} total and ${customFields.length} custom columns. The 
-                        first three columns are required to be ${BED12.Chrom}, ${BED12.ChromStart}, ${BED12.ChromEnd}`);
+                throw new Error(
+                    `Expected ${REQUIRED_COLS + customFields.length} columns (${REQUIRED_COLS} required columns and ${
+                        customFields.length
+                    } custom columns) but found ${n_cols} columns`
+                );
             }
         }
         // Collect the column names which contain chromosome coordinates
@@ -261,6 +265,9 @@ export class BedDataFetcherClass {
      * @param tileIds An array of tile IDs. Ex. ['1.0', '1.1']
      */
     fetchTilesDebounced(receivedTiles: (loadedTiles: LoadedTiles) => void, tileIds: string[]): void {
+        if (!this.#parsedData) {
+            throw new Error('File was not able to be parsed correctly; no data to associate with tiles');
+        }
         const tiles: LoadedTiles = {};
 
         const validTileIds: string[] = [];
